@@ -1,0 +1,11 @@
+package jcl.types;
+
+/**
+ * This interface is the common parent for all lisp type factories.
+ *
+ * @param <TYPE> the type to get an instance of
+ */
+public interface TypeFactory<TYPE extends LispType> {
+
+	TYPE getInstance();
+}

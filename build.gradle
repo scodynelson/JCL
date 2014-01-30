@@ -1,0 +1,50 @@
+description = 'JCL'
+
+allprojects {
+	group = 'jcl'
+	version = '1.0-SNAPSHOT'
+}
+
+apply plugin: 'sonar-runner'
+apply plugin: 'jacoco'
+
+sonarRunner {
+	sonarProperties {
+		property "sonar.host.url", "http://localhost:9000"
+		property "sonar.jdbc.url", "jdbc:h2:tcp://localhost:9092/sonar"
+		property "sonar.jdbc.username", "sonar"
+		property "sonar.jdbc.password", "sonar"
+		property "sonar.jacoco.reportPath", "${project.buildDir}/jacoco/test.exec"
+		property "sonar.exclusions", "java/util/*"
+	}
+}
+
+subprojects {
+	apply plugin: 'java'
+	sourceCompatibility = 1.7
+	targetCompatibility = 1.7
+
+	repositories {
+		mavenLocal()
+		mavenCentral()
+	}
+
+	String COMMONS_LANG_VERSION = '3.1';
+	String COMMONS_MATH_VERSION = '3.2';
+	String COMMONS_COLLECTIONS_VERSION = '4.0';
+	String SLF4J_VERSION = '1.7.5';
+	String LOGBACK_VERSION = '1.0.13';
+	String JUNIT_VERSION = '4.11';
+
+	dependencies {
+		compile group: 'org.apache.commons', name: 'commons-lang3', version: "$COMMONS_LANG_VERSION"
+		compile group: 'org.apache.commons', name: 'commons-math3', version: "$COMMONS_MATH_VERSION"
+		compile group: 'org.apache.commons', name: 'commons-collections4', version: "$COMMONS_COLLECTIONS_VERSION"
+
+		compile group: 'org.slf4j', name: 'slf4j-api', version: "$SLF4J_VERSION"
+		compile group: 'ch.qos.logback', name: 'logback-core', version: "$LOGBACK_VERSION"
+		compile group: 'ch.qos.logback', name: 'logback-classic', version: "$LOGBACK_VERSION"
+
+		testCompile group: 'junit', name: 'junit', version: "$JUNIT_VERSION"
+	}
+}

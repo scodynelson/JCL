@@ -1,0 +1,51 @@
+package jcl.types.numbers;
+
+import jcl.types.T;
+import jcl.types.TypeFactory;
+import jcl.types.typespecifiers.AtomicTypeSpecifier;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+/**
+ * A {@code Ratio} is a {@code Number} representing the mathematical ratio of two non-zero integers, the numerator and
+ * denominator, whose greatest common divisor is one, and of which the denominator is positive and greater than one.
+ */
+public interface Ratio extends Rational, Real, Number, T {
+
+	Ratio INSTANCE = new Factory.RatioImpl();
+
+	/**
+	 * Factory.
+	 */
+	class Factory implements TypeFactory<Ratio> {
+
+		@Override
+		public Ratio getInstance() {
+			return INSTANCE;
+		}
+
+		/**
+		 * Inner {@code Ratio} type implementation.
+		 */
+		private static class RatioImpl implements Ratio, AtomicTypeSpecifier {
+
+			@Override
+			public boolean equals(final Object obj) {
+				if (this == obj) {
+					return true;
+				}
+
+				if (!(obj instanceof Ratio)) {
+					return false;
+				}
+
+				final Ratio ratio = (Ratio) obj;
+				return ratio == INSTANCE;
+			}
+
+			@Override
+			public int hashCode() {
+				return new HashCodeBuilder().toHashCode();
+			}
+		}
+	}
+}

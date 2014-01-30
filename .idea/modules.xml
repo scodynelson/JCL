@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/JCL.iml" filepath="$PROJECT_DIR$/JCL.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jcl-app/jcl-app.iml" filepath="$PROJECT_DIR$/jcl-app/jcl-app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jcl-compiler/jcl-compiler.iml" filepath="$PROJECT_DIR$/jcl-compiler/jcl-compiler.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jcl-reader/jcl-reader.iml" filepath="$PROJECT_DIR$/jcl-reader/jcl-reader.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jcl-structs/jcl-structs.iml" filepath="$PROJECT_DIR$/jcl-structs/jcl-structs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jcl-types/jcl-types.iml" filepath="$PROJECT_DIR$/jcl-types/jcl-types.iml" />
+    </modules>
+  </component>
+</project>
+

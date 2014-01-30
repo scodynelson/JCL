@@ -1,0 +1,2 @@
+rootProject.name = 'JCL'
+include 'jcl-types', 'jcl-structs', 'jcl-reader', 'jcl-compiler', 'jcl-app'

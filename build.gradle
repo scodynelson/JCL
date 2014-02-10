@@ -6,16 +6,14 @@ allprojects {
 }
 
 apply plugin: 'sonar-runner'
-apply plugin: 'jacoco'
-
 sonarRunner {
 	sonarProperties {
-		property "sonar.host.url", "http://localhost:9000"
-		property "sonar.jdbc.url", "jdbc:h2:tcp://localhost:9092/sonar"
-		property "sonar.jdbc.username", "sonar"
-		property "sonar.jdbc.password", "sonar"
-		property "sonar.jacoco.reportPath", "${project.buildDir}/jacoco/test.exec"
-		property "sonar.exclusions", "java/util/*"
+		setProperty 'sonar.host.url', "http://localhost:9000"
+		setProperty 'sonar.jdbc.url', "jdbc:h2:tcp://localhost:9092/sonar"
+		setProperty 'sonar.jdbc.username', "sonar"
+		setProperty 'sonar.jdbc.password', "sonar"
+		setProperty 'sonar.jacoco.reportPath', "${project.buildDir}/jacoco/test.exec"
+		setProperty 'sonar.exclusions', "java/util/*"
 	}
 }
 
@@ -46,5 +44,27 @@ subprojects {
 		compile group: 'ch.qos.logback', name: 'logback-classic', version: "$LOGBACK_VERSION"
 
 		testCompile group: 'junit', name: 'junit', version: "$JUNIT_VERSION"
+	}
+
+	apply plugin: 'jacoco'
+	jacoco {
+		toolVersion = '0.6.4.201312101107'
+	}
+	test {
+		jacoco {
+			append = true
+			destinationFile = file("${project.buildDir}/jacoco/jacocoTest.exec")
+			classDumpFile = file("${project.buildDir}/jacoco/classpathdumps")
+		}
+	}
+	jacocoTestReport {
+		group = "Reporting"
+		description = "Generate Jacoco coverage reports after running tests."
+		additionalSourceDirs = files(sourceSets.main.allJava.srcDirs)
+		reports {
+			xml.enabled false
+			csv.enabled false
+			html.destination "${project.buildDir}/jacocoHtml"
+		}
 	}
 }

@@ -47,12 +47,9 @@ public class ValuesTypeSpecifier implements CompoundTypeSpecifier {
 		}
 
 		final ValuesTypeSpecifier valuesTypeSpecifier = (ValuesTypeSpecifier) obj;
-
-		// TODO: account for required/optional/etc
 		return ObjectUtils.equals(typeSpecifiers, valuesTypeSpecifier.typeSpecifiers)
 				&& ObjectUtils.equals(optional, valuesTypeSpecifier.optional)
 				&& ObjectUtils.equals(rest, valuesTypeSpecifier.rest);
-
 	}
 
 	@Override

@@ -47,7 +47,6 @@ public final class TypeUtils {
 		return true;
 	}
 
-
 	/**
 	 * This method compares the two provided numbers to test their equality.
 	 * NOTE: This only will compare BigIntegers, BigDecimals, and BigFractions!!

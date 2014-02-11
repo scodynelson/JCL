@@ -4,6 +4,7 @@ import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.compound.AndTypeSpecifier;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.math3.util.ArithmeticUtils;
 
 import java.math.BigInteger;
@@ -78,6 +79,11 @@ public interface UnsignedByte extends SignedByte, Integer, Rational, Real, Numbe
 			@Override
 			public boolean equals(final Object obj) {
 				return super.equals(obj) || (obj == INSTANCE);
+			}
+
+			@Override
+			public int hashCode() {
+				return new HashCodeBuilder().toHashCode();
 			}
 		}
 	}

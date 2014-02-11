@@ -108,8 +108,6 @@ public interface Function extends T {
 
 				if (function instanceof FunctionImpl) {
 					final FunctionImpl functionImpl = (FunctionImpl) function;
-
-					// TODO: account for required/optional/etc
 					return ObjectUtils.equals(typeSpecifiers, functionImpl.typeSpecifiers)
 							&& ObjectUtils.equals(optional, functionImpl.optional)
 							&& ObjectUtils.equals(rest, functionImpl.rest)

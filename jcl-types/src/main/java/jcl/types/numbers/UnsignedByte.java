@@ -1,6 +1,5 @@
 package jcl.types.numbers;
 
-import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.compound.AndTypeSpecifier;
@@ -15,8 +14,10 @@ import java.math.BigInteger;
  * This denotes the set of non-negative {@code Integer}s that can be represented in a byte of size s (bits). This is
  * equivalent to (mod m) for m=2^s, or to (integer 0 n) for n=2^s-1. The type {@code UnsignedByte} or the type
  * (unsigned-byte *) is the same as the type (integer 0 *), the set of non-negative {@code Integer}s.
+ * <p/>
+ * {@code UnsignedByte} -> {@code SignedByte} -> {@code Integer} -> {@code Rational} -> {@code Real} -> {@code Number} -> {@code T}
  */
-public interface UnsignedByte extends SignedByte, Integer, Rational, Real, Number, T {
+public interface UnsignedByte extends SignedByte {
 
 	UnsignedByte INSTANCE = new Factory.UnsignedByteImpl();
 

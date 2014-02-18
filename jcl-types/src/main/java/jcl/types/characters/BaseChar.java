@@ -1,6 +1,5 @@
 package jcl.types.characters;
 
-import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -16,8 +15,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * is 96, the number of standard characters.
  * <p/>
  * The type {@code StandardChar} is a subtype of type {@code BaseChar}.
+ * <p/>
+ * {@code BaseChar} -> {@code Character} -> {@code T}
  */
-public interface BaseChar extends Character, T {
+public interface BaseChar extends Character {
 
 	BaseChar INSTANCE = new Factory.BaseCharImpl();
 

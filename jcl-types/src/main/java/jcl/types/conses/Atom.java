@@ -7,6 +7,8 @@ import jcl.types.typespecifiers.compound.NotTypeSpecifier;
 
 /**
  * An {@code Atom} is a type equivalent to (not cons).
+ * <p/>
+ * {@code Atom} -> {@code T}
  */
 public interface Atom extends T {
 

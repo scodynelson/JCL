@@ -1,7 +1,6 @@
 package jcl.types.arrays;
 
 import jcl.types.LispType;
-import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
@@ -18,8 +17,10 @@ import java.util.List;
  * The types {@code SimpleVector}, {@code SimpleString}, and {@code SimpleBitVector} are disjoint subtypes of type
  * {@code SimpleArray}, for they respectively mean (simple-array t (*)), the union of all (simple-array c (*)) for any
  * c being a subtype of type {@code Character}, and (simple-array bit (*)).
+ * <p/>
+ * {@code SimpleArray} -> {@code Array} -> {@code T}
  */
-public interface SimpleArray extends Array, T {
+public interface SimpleArray extends Array {
 
 	SimpleArray INSTANCE = new Factory.SimpleArrayImpl();
 

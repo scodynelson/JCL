@@ -1,6 +1,5 @@
 package jcl.types.streams;
 
-import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -8,8 +7,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  * A {@code TwoWayStream} is a bidirectional composite stream that receives its input from an associated input stream and
  * sends its output to an associated output stream.
+ * <p/>
+ * {@code TwoWayStream} -> {@code Stream} -> {@code T}
  */
-public interface TwoWayStream extends Stream, T {
+public interface TwoWayStream extends Stream {
 
 	TwoWayStream INSTANCE = new Factory.TwoWayStreamImpl();
 

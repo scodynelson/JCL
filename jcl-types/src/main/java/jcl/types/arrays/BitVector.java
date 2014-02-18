@@ -1,10 +1,8 @@
 package jcl.types.arrays;
 
 import jcl.types.LispType;
-import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.numbers.Bit;
-import jcl.types.sequences.Sequence;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import jcl.types.typespecifiers.designator.DimensionsDesignator;
@@ -15,8 +13,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * A {@code BitVector} is a {@code Vector} the element type of which is {@code Bit}.
  * <p/>
  * The type {@code Vector} is a subtype of type {@code Vector}, for {@code BitVector} means (vector bit).
+ * <p/>
+ * {@code BitVector} -> {@code Vector} -> {@code Array} -> {@code Sequence} -> {@code T}
  */
-public interface BitVector extends Vector, Array, Sequence, T {
+public interface BitVector extends Vector {
 
 	BitVector INSTANCE = new Factory.BitVectorImpl();
 

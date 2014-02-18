@@ -1,0 +1,8 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="jcl-types suite">
+	<test name="TyeUtilsTest">
+		<classes>
+			<class name="jcl.types.util.TypeUtilsTest"/>
+		</classes>
+	</test>
+</suite>

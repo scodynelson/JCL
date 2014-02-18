@@ -1,6 +1,5 @@
 package jcl.types.numbers;
 
-import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.compound.AndTypeSpecifier;
@@ -11,8 +10,10 @@ import java.math.BigInteger;
 /**
  * A {@code Fixnum} is an {@code Integer} whose value is between most-negative-fixnum and most-positive-fixnum inclusive.
  * The type {@code Fixnum} is a supertype of (signed-byte 16).
+ * <p/>
+ * {@code Fixnum} -> {@code Integer} -> {@code Rational} -> {@code Real} -> {@code Number} -> {@code T}
  */
-public interface Fixnum extends Integer, Rational, Real, Number, T {
+public interface Fixnum extends Integer {
 
 	Fixnum INSTANCE = new Factory.FixnumImpl();
 

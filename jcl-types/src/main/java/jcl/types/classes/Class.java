@@ -1,6 +1,5 @@
 package jcl.types.classes;
 
-import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -9,8 +8,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * The type {@code Class} represents objects that determine the structure and behavior of their instances. Associated
  * with an object of type {@code Class} is information describing its place in the directed acyclic graph of classes,
  * its slots, and its options.
+ * <p/>
+ * {@code Class} -> {@code StandardObject} -> {@code T}
  */
-public interface Class extends StandardObject, T {
+public interface Class extends StandardObject {
 
 	Class INSTANCE = new Factory.ClassImpl();
 

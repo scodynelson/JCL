@@ -16,6 +16,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * The {@code MethodCombination} facility controls the selection of {@code Method}s, the order in which they are run,
  * and the values that are returned by the {@code GenericFunction}. The object system offers a default {@code MethodCombination}
  * type and provides a facility for declaring new types of {@code MethodCombination}.
+ * <p/>
+ * {@code Method} -> {@code T}
  */
 public interface Method extends T {
 

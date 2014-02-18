@@ -1,6 +1,5 @@
 package jcl.types.numbers;
 
-import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.compound.AndTypeSpecifier;
@@ -9,8 +8,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The type {@code Bignum} is defined to be exactly (and integer (not fixnum)).
+ * <p/>
+ * {@code Bignum} -> {@code Integer} -> {@code Rational} -> {@code Real} -> {@code Number} -> {@code T}
  */
-public interface Bignum extends Integer, Rational, Real, Number, T {
+public interface Bignum extends Integer {
 
 	Bignum INSTANCE = new Factory.BignumImpl();
 

@@ -7,6 +7,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A {@code RandomState} object contains state information used by the pseudo-random number generator.
+ * <p/>
+ * {@code RandomState} -> {@code T}
  */
 public interface RandomState extends T {
 

@@ -1,14 +1,15 @@
 package jcl.types.functions;
 
-import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The class {@code StandardGenericFunction} is the default {@code Class} of {@code GenericFunction}s.
+ * <p/>
+ * {@code StandardGenericFunction} -> {@code GenericFunction} -> {@code Function} -> {@code T}
  */
-public interface StandardGenericFunction extends GenericFunction, Function, T {
+public interface StandardGenericFunction extends GenericFunction {
 
 	StandardGenericFunction INSTANCE = new Factory.StandardGenericFunctionImpl();
 

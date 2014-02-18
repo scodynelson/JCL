@@ -1,7 +1,6 @@
 package jcl.types.arrays;
 
 import jcl.types.LispType;
-import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.sequences.Sequence;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
@@ -15,10 +14,11 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * <p/>
  * The type {@code Vector} is a subtype of type {@code Array}; for all types x, (vector x) is the same as (array x (*)).
  * <p/>
- * The type (vector t), the type {@code String}, and the type {@code BitVector} are disjoint subtypes of type
- * {@code Vector}.
+ * The type (vector t), the type {@code String}, and the type {@code BitVector} are disjoint subtypes of type {@code Vector}.
+ * <p/>
+ * {@code Vector} -> {@code Array} -> {@code Sequence} -> {@code T}
  */
-public interface Vector extends Array, Sequence, T {
+public interface Vector extends Array, Sequence {
 
 	Vector INSTANCE = new Factory.VectorImpl();
 

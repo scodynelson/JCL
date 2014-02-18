@@ -9,6 +9,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * A {@code Pathname} is a structured object which represents a filename.
  * <p/>
  * There are two kinds of {@code Pathname}s---physical pathnames and {@code LogicalPathname}s.
+ * <p/>
+ * {@code Pathname} -> {@code T}
  */
 public interface Pathname extends T {
 

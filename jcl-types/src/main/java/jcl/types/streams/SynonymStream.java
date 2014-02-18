@@ -1,6 +1,5 @@
 package jcl.types.streams;
 
-import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -12,8 +11,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * Any operations on a {@code SynonymStream} will be performed on the stream that is then the value of the dynamic variable
  * named by the synonym stream symbol. If the value of the variable should change, or if the variable should be bound,
  * then the stream will operate on the new value of the variable.
+ * <p/>
+ * {@code SynonymStream} -> {@code Stream} -> {@code T}
  */
-public interface SynonymStream extends Stream, T {
+public interface SynonymStream extends Stream {
 
 	SynonymStream INSTANCE = new Factory.SynonymStreamImpl();
 

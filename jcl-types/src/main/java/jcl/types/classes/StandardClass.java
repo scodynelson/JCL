@@ -1,14 +1,15 @@
 package jcl.types.classes;
 
-import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A {@code StandardClass} is the default class type {@code Class}.
+ * <p/>
+ * {@code StandardClass} -> {@code Class} -> {@code StandardObject} -> {@code T}
  */
-public interface StandardClass extends Class, StandardObject, T {
+public interface StandardClass extends Class {
 
 	StandardClass INSTANCE = new Factory.StandardClassImpl();
 

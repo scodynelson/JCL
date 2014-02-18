@@ -7,6 +7,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A {@code HashTable} provide a way of mapping any object (a key) to an associated object (a value).
+ * <p/>
+ * {@code HashTable} -> {@code T}
  */
 public interface HashTable extends T {
 

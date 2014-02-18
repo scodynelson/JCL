@@ -1,6 +1,5 @@
 package jcl.types.numbers;
 
-import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.compound.AndTypeSpecifier;
@@ -10,8 +9,10 @@ import java.math.BigInteger;
 
 /**
  * The type {@code Bit} is equivalent to the type (integer 0 1) and (unsigned-byte 1).
+ * <p/>
+ * {@code Bit} -> {@code UnsignedByte} -> {@code SignedByte} -> {@code Integer} -> {@code Rational} -> {@code Real} -> {@code Number} -> {@code T}
  */
-public interface Bit extends UnsignedByte, SignedByte, Integer, Rational, Real, Number, T {
+public interface Bit extends UnsignedByte {
 
 	Bit INSTANCE = new Factory.BitImpl();
 

@@ -18,6 +18,8 @@ import java.util.List;
  * <p/>
  * When an {@code Array} is created, the program requesting its creation may declare that all elements are of a particular
  * type, called the expressed array element type.
+ * <p/>
+ * {@code Array} -> {@code T}
  */
 public interface Array extends T {
 

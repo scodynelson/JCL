@@ -1,6 +1,5 @@
 package jcl.types.numbers;
 
-import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
@@ -13,8 +12,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * The real part and imaginary part are either both {@code Rational} or both of the same {@code Float} type. The imaginary
  * part can be a {@code Float} zero, but can never be a {@code Rational} zero, for such a number is always represented
  * by Common Lisp as a {@code Rational} rather than a {@code Complex}.
+ * <p/>
+ * {@code Complex} -> {@code Number} -> {@code T}
  */
-public interface Complex extends Number, T {
+public interface Complex extends Number {
 
 	Complex INSTANCE = new Factory.ComplexImpl();
 

@@ -1,6 +1,5 @@
 package jcl.types.numbers;
 
-import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
@@ -14,8 +13,10 @@ import java.math.BigInteger;
  * otherwise as a {@code Ratio}.
  * <p/>
  * The types {@code Integer} and {@code Ratio} are disjoint subtypes of type {@code Rational}.
+ * <p/>
+ * {@code Rational} -> {@code Real} -> {@code Number} -> {@code T}
  */
-public interface Rational extends Real, Number, T {
+public interface Rational extends Real {
 
 	Rational INSTANCE = new Factory.RationalImpl();
 

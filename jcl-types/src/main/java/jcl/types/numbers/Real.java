@@ -1,6 +1,5 @@
 package jcl.types.numbers;
 
-import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
@@ -15,8 +14,10 @@ import java.math.BigInteger;
  * (e.g., irrational numbers) that do not have an exact representation in Common Lisp.
  * <p/>
  * The types {@code Rational} and {@code Float} are disjoint subtypes of type {@code Real}.
+ * <p/>
+ * {@code Real} -> {@code Number} -> {@code T}
  */
-public interface Real extends Number, T {
+public interface Real extends Number {
 
 	Real INSTANCE = new Factory.RealImpl();
 

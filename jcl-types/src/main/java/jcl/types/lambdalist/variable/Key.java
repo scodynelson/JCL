@@ -65,11 +65,22 @@ public class Key<VAR> {
 	private final Map<Keyword, KeyVar<VAR>> vars;
 	private final boolean allowOtherKeys;
 
+	/**
+	 * Constructor for a &key parameter.
+	 *
+	 * @param vars the vars of the &key parameter
+	 */
 	public Key(final Map<Keyword, KeyVar<VAR>> vars) {
 		this.vars = vars;
 		allowOtherKeys = false;
 	}
 
+	/**
+	 * Constructor for a &key parameter.
+	 *
+	 * @param vars           the vars of the &key parameter
+	 * @param allowOtherKeys whether to allow keys not provided in the vars
+	 */
 	public Key(final Map<Keyword, KeyVar<VAR>> vars, final boolean allowOtherKeys) {
 		this.vars = vars;
 		this.allowOtherKeys = allowOtherKeys;
@@ -91,18 +102,34 @@ public class Key<VAR> {
 				'}';
 	}
 
+	/**
+	 * An {@code Key} variable type.
+	 *
+	 * @param <TYPE> the type of the initial form
+	 */
 	public static class KeyVar<TYPE> {
 
 		private final String var;
 		private final TYPE initForm;
 		private final boolean suppliedP;
 
+		/**
+		 * Constructor for an @key variable.
+		 *
+		 * @param var the variable name
+		 */
 		public KeyVar(final String var) {
 			this.var = var;
 			initForm = null;
 			suppliedP = false;
 		}
 
+		/**
+		 * Constructor for an @key variable.
+		 *
+		 * @param var      the variable name
+		 * @param initForm the initial form
+		 */
 		public KeyVar(final String var, final TYPE initForm) {
 			this.var = var;
 			this.initForm = initForm;

@@ -9,6 +9,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * every type. No object is of type {@code NIL}.
  * <p/>
  * The type containing the object {@code NIL} is the type {@code Null}, not the type {@code NIL}.
+ * <p/>
+ * {@code NIL}
  */
 public interface NIL extends T { // TODO: this needs to extend ALL types...
 

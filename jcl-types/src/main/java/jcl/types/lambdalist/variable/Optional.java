@@ -18,6 +18,11 @@ public class Optional<VAR> {
 
 	private final List<OptionalVar<VAR>> vars;
 
+	/**
+	 * Constructor for a &optional parameter.
+	 *
+	 * @param vars the vars of the &optional parameter
+	 */
 	public Optional(final List<OptionalVar<VAR>> vars) {
 		this.vars = vars;
 	}
@@ -33,18 +38,34 @@ public class Optional<VAR> {
 				'}';
 	}
 
+	/**
+	 * An {@code Optional} variable type.
+	 *
+	 * @param <TYPE> the type of the initial form
+	 */
 	public static class OptionalVar<TYPE> {
 
 		private final String var;
 		private final TYPE initForm;
 		private final boolean suppliedP;
 
+		/**
+		 * Constructor for an @optional variable.
+		 *
+		 * @param var the variable name
+		 */
 		public OptionalVar(final String var) {
 			this.var = var;
 			initForm = null;
 			suppliedP = false;
 		}
 
+		/**
+		 * Constructor for an @optional variable.
+		 *
+		 * @param var      the variable name
+		 * @param initForm the initial form
+		 */
 		public OptionalVar(final String var, final TYPE initForm) {
 			this.var = var;
 			this.initForm = initForm;

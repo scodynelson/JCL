@@ -8,6 +8,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  * The {@code StandardObject} is an instance of {@code StandardClass} and is a superclass of every {@code Class} that
  * is an instance of {@code StandardClass} except itself.
+ * <p/>
+ * {@code StandardObject} -> {@code T}
  */
 public interface StandardObject extends T {
 

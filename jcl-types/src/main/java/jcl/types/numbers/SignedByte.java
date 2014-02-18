@@ -1,6 +1,5 @@
 package jcl.types.numbers;
 
-import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.compound.AndTypeSpecifier;
@@ -16,8 +15,10 @@ import java.math.BigInteger;
  * This denotes the set of {@code Integer}s that can be represented in two's-complement form in a byte of s bits. This is
  * equivalent to (integer -2^s-1 2^s-1-1). The type {@code SignedByte} or the type (signed-byte *) is the same as the type
  * {@code Integer}.
+ * <p/>
+ * {@code SignedByte} -> {@code Integer} -> {@code Rational} -> {@code Real} -> {@code Number} -> {@code T}
  */
-public interface SignedByte extends Integer, Rational, Real, Number, T {
+public interface SignedByte extends Integer {
 
 	SignedByte INSTANCE = new Factory.SignedByteImpl();
 

@@ -15,6 +15,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * are disjoint. The Common Lisp type which includes all mathematical complex numbers is called number. The reasons for
  * these differences include historical precedent, compatibility with most other popular computer languages, and various
  * issues of time and space efficiency.
+ * <p/>
+ * {@code Number} -> {@code T}
  */
 public interface Number extends T {
 

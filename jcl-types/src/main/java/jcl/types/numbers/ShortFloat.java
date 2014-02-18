@@ -1,6 +1,5 @@
 package jcl.types.numbers;
 
-import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
@@ -11,8 +10,10 @@ import java.math.BigDecimal;
 
 /**
  * A {@code ShortFloat} is a {@code Float} type with a minimum of 13 precision bits and 5 exponent bits.
+ * <p/>
+ * {@code ShortFloat} -> {@code Float} -> {@code Real} -> {@code Number} -> {@code T}
  */
-public interface ShortFloat extends Float, Real, Number, T {
+public interface ShortFloat extends Float {
 
 	ShortFloat INSTANCE = new Factory.ShortFloatImpl();
 

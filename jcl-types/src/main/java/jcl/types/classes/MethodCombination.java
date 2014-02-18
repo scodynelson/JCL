@@ -9,6 +9,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * A {@code MethodCombination} object represents the information about the {@code MethodCombination} being used by a
  * {@code GenericFunction}. A {@code MethodCombination} object contains information about both the type of {@code MethodCombination}
  * and the arguments being used with that type.
+ * <p/>
+ * {@code MethodCombination} -> {@code T}
  */
 public interface MethodCombination extends T {
 

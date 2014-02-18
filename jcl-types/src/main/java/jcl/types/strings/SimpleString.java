@@ -1,13 +1,9 @@
 package jcl.types.strings;
 
 import jcl.types.LispType;
-import jcl.types.T;
 import jcl.types.TypeFactory;
-import jcl.types.arrays.Array;
 import jcl.types.arrays.SimpleArray;
-import jcl.types.arrays.Vector;
 import jcl.types.characters.Character;
-import jcl.types.sequences.Sequence;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import jcl.types.typespecifiers.designator.DimensionsDesignator;
@@ -18,8 +14,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * A {@code SimpleString} is a specialized one-dimensional {@code SimpleArray} whose elements are of type {@code Character}
  * or a subtype of type {@code Character}. When used as a type specifier for object creation, {@code SimpleString} means
  * (simple-array character (size)).
+ * <p/>
+ * {@code SimpleString} -> {@code String} -> {@code Vector} -> {@code SimpleArray} -> {@code Array} -> {@code Sequence} -> {@code T}
  */
-public interface SimpleString extends String, Vector, SimpleArray, Array, Sequence, T {
+public interface SimpleString extends String, SimpleArray {
 
 	SimpleString INSTANCE = new Factory.SimpleStringImpl();
 

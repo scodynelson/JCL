@@ -1,12 +1,9 @@
 package jcl.types.strings;
 
 import jcl.types.LispType;
-import jcl.types.T;
 import jcl.types.TypeFactory;
-import jcl.types.arrays.Array;
 import jcl.types.arrays.Vector;
 import jcl.types.characters.Character;
-import jcl.types.sequences.Sequence;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import jcl.types.typespecifiers.designator.DimensionsDesignator;
@@ -16,8 +13,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  * A {@code String} is a specialized {@code Vector} whose elements are of type {@code Character} or a subtype of type
  * {@code Character}. When used as a type specifier for object creation, {@code String} means (vector character).
+ * <p/>
+ * {@code String} -> {@code Vector} -> {@code Array} -> {@code Sequence} -> {@code T}
  */
-public interface String extends Vector, Array, Sequence, T {
+public interface String extends Vector {
 
 	String INSTANCE = new Factory.StringImpl();
 

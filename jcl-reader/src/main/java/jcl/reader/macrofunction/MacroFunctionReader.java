@@ -395,7 +395,7 @@ public class MacroFunctionReader extends LispReader {
 		ReadResult readResult = stateReader.readChar();
 		int readChar = readResult.getResult();
 
-		if (!ReaderUtils.isSyntaxType(readtable, readChar, SyntaxType.WHITESPACE)) {
+		while (!ReaderUtils.isSyntaxType(readtable, readChar, SyntaxType.WHITESPACE)) {
 			unicodeCharBuilder.appendCodePoint(readChar);
 
 			readResult = stateReader.readChar();

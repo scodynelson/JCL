@@ -6,6 +6,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  * The type {@code T} is the set of all objects. It is a supertype of every type, including itself. Every object is of
  * type {@code T}.
+ * <p/>
+ * {@code T}
  */
 public interface T extends LispType {
 

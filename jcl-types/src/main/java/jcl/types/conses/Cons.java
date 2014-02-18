@@ -1,9 +1,7 @@
 package jcl.types.conses;
 
 import jcl.types.LispType;
-import jcl.types.T;
 import jcl.types.TypeFactory;
-import jcl.types.sequences.Sequence;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -11,8 +9,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  * A {@code Cons} is a compound object having two components, called the car and cdr. These form a dotted pair. Each
  * component can be any object.
+ * <p/>
+ * {@code Cons} -> {@code List} -> {@code Sequence} -> {@code T}
  */
-public interface Cons extends List, Sequence, T {
+public interface Cons extends List {
 
 	Cons INSTANCE = new Factory.ConsImpl();
 

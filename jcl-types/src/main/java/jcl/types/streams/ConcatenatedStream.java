@@ -1,6 +1,5 @@
 package jcl.types.streams;
 
-import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -15,8 +14,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * of file on the associated input streams is always managed invisibly by the {@code ConcatenatedStream}---the only time
  * a client of a {@code ConcatenatedStream} sees an end of file is when an attempt is made to obtain data from the
  * {@code ConcatenatedStream} but it has no remaining input streams from which to obtain such data.
+ * <p/>
+ * {@code ConcatenatedStream} -> {@code Stream} -> {@code T}
  */
-public interface ConcatenatedStream extends Stream, T {
+public interface ConcatenatedStream extends Stream {
 
 	ConcatenatedStream INSTANCE = new Factory.ConcatenatedStreamImpl();
 

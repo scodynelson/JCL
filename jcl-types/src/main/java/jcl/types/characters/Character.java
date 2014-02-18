@@ -9,6 +9,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * A {@code Character} is an object that represents a unitary token in an aggregate quantity of text.
  * <p/>
  * The types {@code BaseChar} and {@code ExtendedChar} form an exhaustive partition of the type {@code Character}.
+ * <p/>
+ * {@code Character} -> {@code T}
  */
 public interface Character extends T {
 

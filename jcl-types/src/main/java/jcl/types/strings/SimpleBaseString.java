@@ -1,23 +1,22 @@
 package jcl.types.strings;
 
 import jcl.types.LispType;
-import jcl.types.T;
 import jcl.types.TypeFactory;
-import jcl.types.arrays.Array;
-import jcl.types.arrays.SimpleArray;
-import jcl.types.arrays.Vector;
 import jcl.types.characters.BaseChar;
-import jcl.types.sequences.Sequence;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import jcl.types.typespecifiers.designator.DimensionsDesignator;
 import jcl.types.util.TypeUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
+
 /**
  * The type {@code SimpleBaseString} is equivalent to (simple-array base-char (*)).
+ * <p/>
+ * {@code SimpleBaseString} -> {@code BaseString} -> {@code SimpleString} -> {@code String} -> {@code Vector} -> {@code SimpleArray} -> {@code Array} -> {@code Sequence} -> {@code T}
  */
-public interface SimpleBaseString extends BaseString, SimpleString, String, Vector, SimpleArray, Array, Sequence, T {
+public interface SimpleBaseString extends BaseString, SimpleString {
 
 	SimpleBaseString INSTANCE = new Factory.SimpleBaseStringImpl();
 
@@ -108,7 +107,7 @@ public interface SimpleBaseString extends BaseString, SimpleString, String, Vect
 			}
 
 			@Override
-			public java.lang.String toString() {
+			public String toString() {
 				return "SimpleBaseStringImpl{" +
 						"size=" + size +
 						", elementType=" + elementType +

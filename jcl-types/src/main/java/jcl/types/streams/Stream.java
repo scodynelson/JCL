@@ -8,6 +8,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  * A {@code Stream} is an object that can be used with an input or output function to identify an appropriate source or
  * sink of characters or bytes for that operation.
+ * <p/>
+ * {@code Stream} -> {@code T}
  */
 public interface Stream extends T {
 

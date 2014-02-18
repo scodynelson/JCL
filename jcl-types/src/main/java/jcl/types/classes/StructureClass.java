@@ -1,14 +1,15 @@
 package jcl.types.classes;
 
-import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A {@code StructureClass} is the default structure type {@code Class}.
+ * <p/>
+ * {@code StructureClass} -> {@code Class} -> {@code StandardObject} -> {@code T}
  */
-public interface StructureClass extends Class, StandardObject, T {
+public interface StructureClass extends Class {
 
 	StructureClass INSTANCE = new Factory.StructureClassImpl();
 

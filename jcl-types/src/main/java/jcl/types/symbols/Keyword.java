@@ -1,6 +1,5 @@
 package jcl.types.symbols;
 
-import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -12,8 +11,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * 1. It causes the {@code Symbol} to become bound to itself.
  * 2. It causes the {@code Symbol} to become an external symbol of the KEYWORD package.
  * 3. It causes the {@code Symbol} to become a constant variable.
+ * <p/>
+ * {@code Keyword} -> {@code Symbol} -> {@code T}
  */
-public interface Keyword extends Symbol, T {
+public interface Keyword extends Symbol {
 
 	Keyword INSTANCE = new Factory.KeywordImpl();
 

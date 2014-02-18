@@ -1,10 +1,8 @@
 package jcl.types.arrays;
 
 import jcl.types.LispType;
-import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.numbers.Bit;
-import jcl.types.sequences.Sequence;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import jcl.types.typespecifiers.designator.DimensionsDesignator;
@@ -14,8 +12,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  * A {@code SimpleBitVector} is a type of a {@code BitVector} that is not displaced to another {@code Array}, has no fill
  * pointer, and is not expressly adjustable is a subtype of type {@code SimpleBitVector}.
+ * <p/>
+ * {@code SimpleBitVector} -> {@code BitVector} -> {@code Vector} -> {@code SimpleArray} -> {@code Array} -> {@code Sequence} -> {@code T}
  */
-public interface SimpleBitVector extends BitVector, Vector, SimpleArray, Array, Sequence, T {
+public interface SimpleBitVector extends BitVector, SimpleArray {
 
 	SimpleBitVector INSTANCE = new Factory.SimpleBitVectorImpl();
 

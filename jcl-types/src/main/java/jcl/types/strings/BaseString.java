@@ -1,12 +1,8 @@
 package jcl.types.strings;
 
 import jcl.types.LispType;
-import jcl.types.T;
 import jcl.types.TypeFactory;
-import jcl.types.arrays.Array;
-import jcl.types.arrays.Vector;
 import jcl.types.characters.BaseChar;
-import jcl.types.sequences.Sequence;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import jcl.types.typespecifiers.designator.DimensionsDesignator;
@@ -16,8 +12,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  * The type {@code BaseString} is equivalent to (vector base-char). The {@code BaseString} representation is the most
  * efficient {@code String} representation that can hold an arbitrary sequence of {@code StandardCharacter}s.
+ * <p/>
+ * {@code BaseString} -> {@code String} -> {@code Vector} -> {@code Array} -> {@code Sequence} -> {@code T}
  */
-public interface BaseString extends String, Vector, Array, Sequence, T {
+public interface BaseString extends String {
 
 	BaseString INSTANCE = new Factory.BaseStringImpl();
 

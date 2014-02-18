@@ -11,6 +11,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * be used by the Lisp reader when parsing {@code Symbol}s.
  * <p/>
  * Each simple {@code Character} must be representable in the {@code Readtable}.
+ * <p/>
+ * {@code Readtable} -> {@code T}
  */
 public interface Readtable extends T {
 

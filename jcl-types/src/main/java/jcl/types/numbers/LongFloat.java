@@ -1,6 +1,5 @@
 package jcl.types.numbers;
 
-import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
@@ -11,8 +10,10 @@ import java.math.BigDecimal;
 
 /**
  * A {@code LongFloat} is a {@code Float} type with a minimum of 50 precision bits and 8 exponent bits.
+ * <p/>
+ * {@code LongFloat} -> {@code Float} -> {@code Real} -> {@code Number} -> {@code T}
  */
-public interface LongFloat extends Float, Real, Number, T {
+public interface LongFloat extends Float {
 
 	LongFloat INSTANCE = new Factory.LongFloatImpl();
 

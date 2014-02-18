@@ -1,6 +1,5 @@
 package jcl.types.numbers;
 
-import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
@@ -13,8 +12,10 @@ import java.math.BigInteger;
  * An {@code Integer} is a mathematical integer. There is no limit on the magnitude of an {@code Integer}.
  * <p/>
  * The types {@code Fixnum} and {@code Bignum} form an exhaustive partition of type {@code Integer}.
+ * <p/>
+ * {@code Integer} -> {@code Rational} -> {@code Real} -> {@code Number} -> {@code T}
  */
-public interface Integer extends Rational, Real, Number, T {
+public interface Integer extends Rational {
 
 	Integer INSTANCE = new Factory.IntegerImpl();
 

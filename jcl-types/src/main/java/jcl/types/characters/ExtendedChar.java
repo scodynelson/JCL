@@ -1,15 +1,16 @@
 package jcl.types.characters;
 
 import jcl.types.LispType;
-import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The type {@code ExtendedChar} is equivalent to the type (and character (not base-char)).
+ * <p/>
+ * {@code ExtendedChar} -> {@code Character} -> {@code T}
  */
-public interface ExtendedChar extends Character, T {
+public interface ExtendedChar extends Character {
 
 	ExtendedChar INSTANCE = new Factory.ExtendedCharImpl();
 

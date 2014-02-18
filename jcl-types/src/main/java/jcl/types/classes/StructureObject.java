@@ -8,6 +8,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  * The {@code StructureObject} is an instance of {@code StructureClass} and is a superclass of every {@code Class} that
  * is an instance of {@code StructureClass} except itself.
+ * <p/>
+ * {@code StructureObject} -> {@code T}
  */
 public interface StructureObject extends T {
 

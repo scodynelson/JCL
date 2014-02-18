@@ -1,6 +1,5 @@
 package jcl.types.numbers;
 
-import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
@@ -11,8 +10,10 @@ import java.math.BigDecimal;
 
 /**
  * A {@code SingleFloat} is a {@code Float} type with a minimum of 24 precision bits and 8 exponent bits.
+ * <p/>
+ * {@code SingleFloat} -> {@code Float} -> {@code Real} -> {@code Number} -> {@code T}
  */
-public interface SingleFloat extends Float, Real, Number, T {
+public interface SingleFloat extends Float {
 
 	SingleFloat INSTANCE = new Factory.SingleFloatImpl();
 

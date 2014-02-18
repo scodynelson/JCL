@@ -10,8 +10,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  * The type {@code Boolean} contains the {@code Symbol}s {@code T} and {@code NIL}, which represent true and false,
  * respectively.
+ * <p/>
+ * {@code Boolean} -> {@code Symbol} -> {@code T}
  */
-public interface Boolean extends Symbol, T {
+public interface Boolean extends Symbol {
 
 	Boolean INSTANCE = new Factory.BooleanImpl();
 

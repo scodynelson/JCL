@@ -3,7 +3,6 @@ package jcl.types.arrays;
 import jcl.types.LispType;
 import jcl.types.T;
 import jcl.types.TypeFactory;
-import jcl.types.sequences.Sequence;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import jcl.types.typespecifiers.designator.DimensionsDesignator;
@@ -15,8 +14,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * is not expressly adjustable, and is able to hold elements of any type is a subtype of type {@code SimpleVector}.
  * <p/>
  * The type {@code SimpleVector} is a subtype of type {@code Vector}, and is a subtype of type (vector t).
+ * <p/>
+ * {@code SimpleVector} -> {@code Vector} -> {@code SimpleArray} -> {@code Array} -> {@code Sequence} -> {@code T}
  */
-public interface SimpleVector extends Vector, SimpleArray, Array, Sequence, T {
+public interface SimpleVector extends Vector, SimpleArray {
 
 	SimpleVector INSTANCE = new Factory.SimpleVectorImpl();
 

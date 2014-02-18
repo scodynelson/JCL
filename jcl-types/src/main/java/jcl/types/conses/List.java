@@ -1,6 +1,5 @@
 package jcl.types.conses;
 
-import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.sequences.Sequence;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
@@ -23,8 +22,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * {@code Cons}.
  * <p/>
  * The types {@code Cons} and {@code Null} form an exhaustive partition of the type {@code List}.
+ * <p/>
+ * {@code List} -> {@code Sequence} -> {@code T}
  */
-public interface List extends Sequence, T {
+public interface List extends Sequence {
 
 	List INSTANCE = new Factory.ListImpl();
 

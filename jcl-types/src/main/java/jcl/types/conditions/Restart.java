@@ -10,6 +10,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * transfer of control to an outer point in the running program.
  * <p/>
  * A {@code Restart} has only dynamic extent relative to the scope of the binding form which establishes it.
+ * <p/>
+ * {@code Restart} -> {@code T}
  */
 public interface Restart extends T {
 

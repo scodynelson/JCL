@@ -7,6 +7,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A {@code Package} is a namespace that maps symbol names to {@code Symbol}s.
+ * <p/>
+ * {@code Package} -> {@code T}
  */
 public interface Package extends T {
 

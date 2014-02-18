@@ -1,6 +1,5 @@
 package jcl.types.functions;
 
-import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -11,8 +10,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * <p/>
  * {@code Function}s whose definitions appear lexically within a file that has been compiled and then loaded are of type
  * {@code CompiledFunction}.
+ * <p/>
+ * {@code CompiledFunction} -> {@code Function} -> {@code T}
  */
-public interface CompiledFunction extends Function, T {
+public interface CompiledFunction extends Function {
 
 	CompiledFunction INSTANCE = new Factory.CompiledFunctionImpl();
 

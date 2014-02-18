@@ -52,6 +52,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * <p/>
  * {@code Symbol}s are used as identifiers for lexical variables and lexical {@code Function} definitions, but in that role,
  * only their object identity is significant.
+ * <p/>
+ * {@code Symbol} -> {@code T}
  */
 public interface Symbol extends T {
 

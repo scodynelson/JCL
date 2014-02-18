@@ -16,6 +16,8 @@ import java.util.List;
 
 /**
  * A {@code Function} is an object that represents code to be executed when an appropriate number of arguments is supplied.
+ * <p/>
+ * {@code Function} -> {@code T}
  */
 public interface Function extends T {
 

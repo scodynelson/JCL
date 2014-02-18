@@ -1,6 +1,5 @@
 package jcl.types.streams;
 
-import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -13,8 +12,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * <p/>
  * The set of operations that may be performed on a broadcast stream is the intersection of those for its associated output
  * streams.
+ * <p/>
+ * {@code BroadcastStream} -> {@code Stream} -> {@code T}
  */
-public interface BroadcastStream extends Stream, T {
+public interface BroadcastStream extends Stream {
 
 	BroadcastStream INSTANCE = new Factory.BroadcastStreamImpl();
 

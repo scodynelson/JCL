@@ -17,6 +17,11 @@ public class Rest<TYPE> {
 
 	private final List<TYPE> forms;
 
+	/**
+	 * Constructor for a &rest parameter.
+	 *
+	 * @param forms the forms of the &rest parameter
+	 */
 	public Rest(final List<TYPE> forms) {
 		this.forms = forms;
 	}

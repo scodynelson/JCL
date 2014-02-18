@@ -1,6 +1,5 @@
 package jcl.types.functions;
 
-import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -14,8 +13,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * of its arguments.
  * <p/>
  * A {@code GenericFunction} can be used in the same ways that an ordinary {@code Function} can be used.
+ * <p/>
+ * {@code GenericFunction} -> {@code Function} -> {@code T}
  */
-public interface GenericFunction extends Function, T {
+public interface GenericFunction extends Function {
 
 	GenericFunction INSTANCE = new Factory.GenericFunctionImpl();
 

@@ -1,17 +1,17 @@
 package jcl.types.conses;
 
 import jcl.types.NIL;
-import jcl.types.T;
 import jcl.types.TypeFactory;
-import jcl.types.sequences.Sequence;
 import jcl.types.symbols.Symbol;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The only object of type {@code Null} is {@code NIL}, which represents the empty {@code List} and can also be notated ().
+ * <p/>
+ * {@code Null} -> {@code Symbol} -> {@code List} -> {@code Sequence} -> {@code T}
  */
-public interface Null extends Symbol, List, Sequence, T {
+public interface Null extends Symbol, List {
 
 	Null INSTANCE = new Factory.NullImpl();
 

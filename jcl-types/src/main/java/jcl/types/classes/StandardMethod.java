@@ -1,14 +1,15 @@
 package jcl.types.classes;
 
-import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A {@code StandardMethod} is the default method type {@code Class}.
+ * <p/>
+ * {@code StandardMethod} -> {@code Method} -> {@code StandardObject} -> {@code T}
  */
-public interface StandardMethod extends Method, StandardObject, T {
+public interface StandardMethod extends Method, StandardObject {
 
 	StandardMethod INSTANCE = new Factory.StandardMethodImpl();
 

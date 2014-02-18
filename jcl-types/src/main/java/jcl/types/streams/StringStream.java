@@ -1,6 +1,5 @@
 package jcl.types.streams;
 
-import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -9,8 +8,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * A {@code StringStream} is a stream which reads input from or writes output to an associated {@code String}.
  * <p/>
  * The stream element type of a {@code StringStream} is always a subtype of type {@code Character}.
+ * <p/>
+ * {@code StringStream} -> {@code Stream} -> {@code T}
  */
-public interface StringStream extends Stream, T {
+public interface StringStream extends Stream {
 
 	StringStream INSTANCE = new Factory.StringStreamImpl();
 

@@ -1,14 +1,15 @@
 package jcl.types.streams;
 
-import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A {@code FileStream} is a stream from which the direct source or sink is a file.
+ * <p/>
+ * {@code FileStream} -> {@code Stream} -> {@code T}
  */
-public interface FileStream extends Stream, T {
+public interface FileStream extends Stream {
 
 	FileStream INSTANCE = new Factory.FileStreamImpl();
 

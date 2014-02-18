@@ -16,6 +16,11 @@ public class Aux<VAR> {
 
 	private final List<AuxVar<VAR>> vars;
 
+	/**
+	 * Constructor for a &aux parameter.
+	 *
+	 * @param vars the vars of the &aux parameter
+	 */
 	public Aux(final List<AuxVar<VAR>> vars) {
 		this.vars = vars;
 	}
@@ -31,16 +36,32 @@ public class Aux<VAR> {
 				'}';
 	}
 
+	/**
+	 * An {@code Aux} variable type.
+	 *
+	 * @param <TYPE> the type of the initial form
+	 */
 	public static class AuxVar<TYPE> {
 
 		private final String var;
 		private final TYPE initForm;
 
+		/**
+		 * Constructor for an @aux variable.
+		 *
+		 * @param var the variable name
+		 */
 		public AuxVar(final String var) {
 			this.var = var;
 			initForm = null;
 		}
 
+		/**
+		 * Constructor for an @aux variable.
+		 *
+		 * @param var      the variable name
+		 * @param initForm the initial form
+		 */
 		public AuxVar(final String var, final TYPE initForm) {
 			this.var = var;
 			this.initForm = initForm;

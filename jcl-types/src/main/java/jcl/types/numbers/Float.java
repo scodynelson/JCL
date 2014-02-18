@@ -1,6 +1,5 @@
 package jcl.types.numbers;
 
-import jcl.types.T;
 import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
@@ -17,8 +16,10 @@ import java.math.BigDecimal;
  * <p/>
  * The types {@code ShortFloat}, {@code SingleFloat}, {@code DoubleFloat}, and {@code LongFloat} are subtypes of type
  * {@code Float}.
+ * <p/>
+ * {@code Float} -> {@code Real} -> {@code Number} -> {@code T}
  */
-public interface Float extends Real, Number, T {
+public interface Float extends Real {
 
 	Float INSTANCE = new Factory.FloatImpl();
 

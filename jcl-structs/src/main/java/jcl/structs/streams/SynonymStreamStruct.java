@@ -11,21 +11,28 @@ import jcl.types.streams.SynonymStream;
  */
 public class SynonymStreamStruct extends StreamStruct implements InputStream, OutputStream {
 
-	private final SymbolStruct<LispStream> symbol;
-	private final LispStream stream;
-
-	private final boolean isInteractive;
-	private boolean isClosed;
+	private final SymbolStruct<StreamStruct> symbol;
+	private final StreamStruct stream;
 
 	/**
-	 * Private constructor.
+	 * Public constructor.
+	 *
+	 * @param symbol the symbol to create a {@code SynonymStreamStruct} from
+	 * @throws StreamErrorException if the struct cannot be created
+	 */
+	public SynonymStreamStruct(final SymbolStruct<StreamStruct> symbol) throws StreamErrorException {
+		this(false, symbol);
+	}
+
+	/**
+	 * Public constructor.
 	 *
 	 * @param isInteractive whether or not the struct created is 'interactive'
 	 * @param symbol        the symbol to create a {@code SynonymStreamStruct} from
 	 * @throws StreamErrorException if the struct cannot be created
 	 */
-	private SynonymStreamStruct(final boolean isInteractive, final SymbolStruct<LispStream> symbol) throws StreamErrorException {
-		this.isInteractive = isInteractive;
+	public SynonymStreamStruct(final boolean isInteractive, final SymbolStruct<StreamStruct> symbol) throws StreamErrorException {
+		super(SynonymStream.INSTANCE, null, null, isInteractive, symbol.getValue().elementType());
 
 		if (symbol == null) {
 			throw new StreamErrorException("Provided Symbol must not be null.");
@@ -34,13 +41,8 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 		stream = symbol.getValue();
 	}
 
-	public SymbolStruct<LispStream> getSymbol() {
+	public SymbolStruct<StreamStruct> getSymbol() {
 		return symbol;
-	}
-
-	@Override
-	public LispType getType() {
-		return SynonymStream.INSTANCE;
 	}
 
 	@Override
@@ -141,13 +143,8 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 
 	@Override
 	public void close() throws StreamErrorException {
-		isClosed = true;
+		super.close();
 		stream.close();
-	}
-
-	@Override
-	public LispType elementType() {
-		return stream.elementType();
 	}
 
 	@Override
@@ -161,47 +158,10 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	}
 
 	@Override
-	public boolean isInteractive() {
-		return !isClosed && isInteractive;
-	}
-
-	@Override
-	public boolean isClosed() {
-		return isClosed;
-	}
-
-	@Override
 	public String toString() {
 		return "SynonymStreamStruct{" +
 				"symbol=" + symbol +
 				", stream=" + stream +
-				", isInteractive=" + isInteractive +
-				", isClosed=" + isClosed +
 				'}';
-	}
-
-	// BUILDERS
-
-	/**
-	 * This method gets the {@code SynonymStreamStruct} for the provided {@code symbol}.
-	 *
-	 * @param symbol the symbol to create a {@code SynonymStreamStruct} from
-	 * @return the created {@code SynonymStreamStruct}
-	 * @throws StreamErrorException if the struct cannot be created
-	 */
-	public static SynonymStreamStruct getStruct(final SymbolStruct<LispStream> symbol) throws StreamErrorException {
-		return new SynonymStreamStruct(false, symbol);
-	}
-
-	/**
-	 * This method gets the {@code SynonymStreamStruct} for the provided {@code symbol}.
-	 *
-	 * @param isInteractive whether or not the struct created is 'interactive'
-	 * @param symbol        the symbol to create a {@code SynonymStreamStruct} from
-	 * @return the created {@code SynonymStreamStruct}
-	 * @throws StreamErrorException if the struct cannot be created
-	 */
-	public static SynonymStreamStruct getStruct(final boolean isInteractive, final SymbolStruct<LispStream> symbol) throws StreamErrorException {
-		return new SynonymStreamStruct(isInteractive, symbol);
 	}
 }

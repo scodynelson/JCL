@@ -20,25 +20,27 @@ public class CharacterStreamStruct extends StreamStruct implements InputStream, 
 	private final LineNumberReader inputStream;
 	private final PrintWriter outputStream;
 
-	private final boolean isInteractive;
-	private boolean isClosed;
+	/**
+	 * Public constructor.
+	 *
+	 * @param inputStream  the {@code java.io.InputStream} to create a {@code CharacterStreamStruct} from
+	 * @param outputStream the {@code java.io.OutputStream} to create a {@code CharacterStreamStruct} from
+	 */
+	public CharacterStreamStruct(final java.io.InputStream inputStream, final java.io.OutputStream outputStream) {
+		this(false, inputStream, outputStream);
+	}
 
 	/**
-	 * Private constructor.
+	 * Public constructor.
 	 *
 	 * @param isInteractive whether or not the struct created is 'interactive'
 	 * @param inputStream   the {@code java.io.InputStream} to create a {@code CharacterStreamStruct} from
 	 * @param outputStream  the {@code java.io.OutputStream} to create a {@code CharacterStreamStruct} from
 	 */
-	private CharacterStreamStruct(final boolean isInteractive, final java.io.InputStream inputStream, final java.io.OutputStream outputStream) {
-		this.isInteractive = isInteractive;
+	public CharacterStreamStruct(final boolean isInteractive, final java.io.InputStream inputStream, final java.io.OutputStream outputStream) {
+		super(null, null, isInteractive, Character.INSTANCE);
 		this.inputStream = new LineNumberReader(new InputStreamReader(inputStream));
 		this.outputStream = new PrintWriter(new OutputStreamWriter(outputStream));
-	}
-
-	@Override
-	public LispType getType() {
-		return null;
 	}
 
 	@Override
@@ -158,12 +160,7 @@ public class CharacterStreamStruct extends StreamStruct implements InputStream, 
 		} catch (final IOException ioe) {
 			throw new StreamErrorException("Could not close stream.", ioe);
 		}
-		isClosed = true;
-	}
-
-	@Override
-	public LispType elementType() {
-		return Character.INSTANCE;
+		super.close();
 	}
 
 	@Override
@@ -177,47 +174,10 @@ public class CharacterStreamStruct extends StreamStruct implements InputStream, 
 	}
 
 	@Override
-	public boolean isInteractive() {
-		return !isClosed && isInteractive;
-	}
-
-	@Override
-	public boolean isClosed() {
-		return isClosed;
-	}
-
-	@Override
 	public String toString() {
 		return "CharacterStreamStruct{" +
 				"inputStream=" + inputStream +
 				", outputStream=" + outputStream +
-				", isInteractive=" + isInteractive +
-				", isClosed=" + isClosed +
 				'}';
-	}
-
-	// BUILDERS
-
-	/**
-	 * This method gets the {@code CharacterStreamStruct} for the provided {@code inputStream} and {@code outputStream}.
-	 *
-	 * @param inputStream  the {@code java.io.InputStream} to create a {@code CharacterStreamStruct} from
-	 * @param outputStream the {@code java.io.OutputStream} to create a {@code CharacterStreamStruct} from
-	 * @return the created {@code CharacterStreamStruct}
-	 */
-	public static CharacterStreamStruct getStruct(final java.io.InputStream inputStream, final java.io.OutputStream outputStream) {
-		return new CharacterStreamStruct(false, inputStream, outputStream);
-	}
-
-	/**
-	 * This method gets the {@code CharacterStreamStruct} for the provided {@code inputStream} and {@code outputStream}.
-	 *
-	 * @param isInteractive whether or not the struct created is 'interactive'
-	 * @param inputStream   the {@code java.io.InputStream} to create a {@code CharacterStreamStruct} from
-	 * @param outputStream  the {@code java.io.OutputStream} to create a {@code CharacterStreamStruct} from
-	 * @return the created {@code CharacterStreamStruct}
-	 */
-	public static CharacterStreamStruct getStruct(final boolean isInteractive, final java.io.InputStream inputStream, final java.io.OutputStream outputStream) {
-		return new CharacterStreamStruct(isInteractive, inputStream, outputStream);
 	}
 }

@@ -21,7 +21,7 @@ public class SharpUReaderMacroFunction implements ReaderMacroFunction {
 			return null;
 		} else {
 			final int unicodeChar = reader.readUnicodeChar();
-			return CharacterStruct.getStruct(unicodeChar);
+			return new CharacterStruct(unicodeChar);
 		}
 	}
 }

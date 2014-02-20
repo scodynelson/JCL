@@ -14,21 +14,27 @@ public class TwoWayStreamStruct extends StreamStruct implements InputStream, Out
 	private final InputStream inputStream;
 	private final OutputStream outputStream;
 
-	private final boolean isInteractive;
-	private boolean isClosed;
-
-	private final LispType elementType;
+	/**
+	 * Public constructor.
+	 *
+	 * @param inputStream  the {@code InputStream} to create a {@code TwoWayStreamStruct} from
+	 * @param outputStream the {@code OutputStream} to create a {@code TwoWayStreamStruct} from
+	 * @throws StreamErrorException if the struct cannot be created
+	 */
+	public TwoWayStreamStruct(final InputStream inputStream, final OutputStream outputStream) throws StreamErrorException {
+		this(false, inputStream, outputStream);
+	}
 
 	/**
-	 * Private constructor.
+	 * Public constructor.
 	 *
 	 * @param isInteractive whether or not the struct created is 'interactive'
 	 * @param inputStream   the {@code InputStream} to create a {@code TwoWayStreamStruct} from
 	 * @param outputStream  the {@code OutputStream} to create a {@code TwoWayStreamStruct} from
 	 * @throws StreamErrorException if the struct cannot be created
 	 */
-	private TwoWayStreamStruct(final boolean isInteractive, final InputStream inputStream, final OutputStream outputStream) throws StreamErrorException {
-		this.isInteractive = isInteractive;
+	public TwoWayStreamStruct(final boolean isInteractive, final InputStream inputStream, final OutputStream outputStream) throws StreamErrorException {
+		super(TwoWayStream.INSTANCE, null, null, isInteractive, getElementType(inputStream, outputStream));
 
 		if (inputStream == null) {
 			throw new StreamErrorException("Provided Input Stream must not be null.");
@@ -39,21 +45,17 @@ public class TwoWayStreamStruct extends StreamStruct implements InputStream, Out
 			throw new StreamErrorException("Provided Output Stream must not be null.");
 		}
 		this.outputStream = outputStream;
+	}
 
-
+	private static LispType getElementType(final InputStream inputStream, final OutputStream outputStream) {
 		final LispType inType = inputStream.elementType();
 		final LispType outType = outputStream.elementType();
 
 		if (inType.equals(outType)) {
-			elementType = inType;
+			return inType;
 		} else {
-			elementType = new AndTypeSpecifier(inType, outType);
+			return new AndTypeSpecifier(inType, outType);
 		}
-	}
-
-	@Override
-	public LispType getType() {
-		return TwoWayStream.INSTANCE;
 	}
 
 	@Override
@@ -117,16 +119,6 @@ public class TwoWayStreamStruct extends StreamStruct implements InputStream, Out
 	}
 
 	@Override
-	public void close() throws StreamErrorException {
-		isClosed = true;
-	}
-
-	@Override
-	public LispType elementType() {
-		return elementType;
-	}
-
-	@Override
 	public Long fileLength() throws StreamErrorException {
 		throw new StreamErrorException("Operation only supported on a FileStream.");
 	}
@@ -137,50 +129,10 @@ public class TwoWayStreamStruct extends StreamStruct implements InputStream, Out
 	}
 
 	@Override
-	public boolean isInteractive() {
-		return !isClosed && isInteractive;
-	}
-
-	@Override
-	public boolean isClosed() {
-		return isClosed;
-	}
-
-	@Override
 	public String toString() {
 		return "TwoWayStreamStruct{" +
 				"inputStream=" + inputStream +
 				", outputStream=" + outputStream +
-				", isInteractive=" + isInteractive +
-				", isClosed=" + isClosed +
-				", elementType=" + elementType +
 				'}';
-	}
-
-	// BUILDERS
-
-	/**
-	 * This method gets the {@code TwoWayStreamStruct} for the provided {@code inputStream} and {@code outputStream}.
-	 *
-	 * @param inputStream  the {@code InputStream} to create a {@code TwoWayStreamStruct} from
-	 * @param outputStream the {@code OutputStream} to create a {@code TwoWayStreamStruct} from
-	 * @return the created {@code TwoWayStreamStruct}
-	 * @throws StreamErrorException if the struct cannot be created
-	 */
-	public static TwoWayStreamStruct getStruct(final InputStream inputStream, final OutputStream outputStream) throws StreamErrorException {
-		return new TwoWayStreamStruct(false, inputStream, outputStream);
-	}
-
-	/**
-	 * This method gets the {@code TwoWayStreamStruct} for the provided {@code inputStream} and {@code outputStream}.
-	 *
-	 * @param isInteractive whether or not the struct created is 'interactive'
-	 * @param inputStream   the {@code InputStream} to create a {@code TwoWayStreamStruct} from
-	 * @param outputStream  the {@code OutputStream} to create a {@code TwoWayStreamStruct} from
-	 * @return the created {@code TwoWayStreamStruct}
-	 * @throws StreamErrorException if the struct cannot be created
-	 */
-	public static TwoWayStreamStruct getStruct(final boolean isInteractive, final InputStream inputStream, final OutputStream outputStream) throws StreamErrorException {
-		return new TwoWayStreamStruct(isInteractive, inputStream, outputStream);
 	}
 }

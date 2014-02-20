@@ -1,7 +1,6 @@
 package jcl.structs.streams;
 
 import jcl.structs.conditions.exceptions.StreamErrorException;
-import jcl.types.LispType;
 import jcl.types.characters.BaseChar;
 import jcl.types.streams.StringStream;
 
@@ -13,21 +12,20 @@ public class StringOutputStreamStruct extends StreamStruct implements OutputStre
 	private final StringBuffer stringBuffer = new StringBuffer();
 	private int index;
 
-	private final boolean isInteractive;
-	private boolean isClosed;
+	/**
+	 * Public constructor.
+	 */
+	public StringOutputStreamStruct() {
+		this(false);
+	}
 
 	/**
-	 * Private constructor.
+	 * Public constructor.
 	 *
 	 * @param isInteractive whether or not the struct created is 'interactive'
 	 */
-	private StringOutputStreamStruct(final boolean isInteractive) {
-		this.isInteractive = isInteractive;
-	}
-
-	@Override
-	public LispType getType() {
-		return StringStream.INSTANCE;
+	public StringOutputStreamStruct(final boolean isInteractive) {
+		super(StringStream.INSTANCE, null, null, isInteractive, BaseChar.INSTANCE);
 	}
 
 	@Override
@@ -61,16 +59,6 @@ public class StringOutputStreamStruct extends StreamStruct implements OutputStre
 	}
 
 	@Override
-	public void close() throws StreamErrorException {
-		isClosed = true;
-	}
-
-	@Override
-	public LispType elementType() {
-		return BaseChar.INSTANCE;
-	}
-
-	@Override
 	public Long fileLength() throws StreamErrorException {
 		throw new StreamErrorException("Operation only supported on a FileStream.");
 	}
@@ -84,43 +72,10 @@ public class StringOutputStreamStruct extends StreamStruct implements OutputStre
 	}
 
 	@Override
-	public boolean isInteractive() {
-		return !isClosed && isInteractive;
-	}
-
-	@Override
-	public boolean isClosed() {
-		return isClosed;
-	}
-
-	@Override
 	public String toString() {
 		return "StringOutputStreamStruct{" +
 				"stringBuffer=" + stringBuffer +
 				", index=" + index +
-				", isInteractive=" + isInteractive +
-				", isClosed=" + isClosed +
 				'}';
-	}
-
-	// BUILDERS
-
-	/**
-	 * This method gets a {@code StringOutputStreamStruct} struct.
-	 *
-	 * @return the created {@code StringOutputStreamStruct}
-	 */
-	public static StringOutputStreamStruct getStruct() {
-		return new StringOutputStreamStruct(false);
-	}
-
-	/**
-	 * This method gets a {@code StringOutputStreamStruct} struct.
-	 *
-	 * @param isInteractive whether or not the struct created is 'interactive'
-	 * @return the created {@code StringOutputStreamStruct}
-	 */
-	public static StringOutputStreamStruct getStruct(final boolean isInteractive) {
-		return new StringOutputStreamStruct(isInteractive);
 	}
 }

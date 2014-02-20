@@ -1,37 +1,48 @@
 package jcl.structs.classes;
 
+import jcl.structs.LispStruct;
+import jcl.types.LispType;
+
+import java.util.Collections;
+import java.util.List;
+
 public class ClassStruct extends StandardObjectStruct {
 
-	/*
-	(defstruct (class
-	     (:conc-name %class-)
-	     (:make-load-form-fun class-make-load-form-fun)
-	     (:print-function %print-class)
-	     (:include ctype
-		       (:class-info (type-class-or-lose 'class)))
-	     (:pure nil))
-  ;;
-  ;; Optional name, for printing.
-  (name nil)
-  ;;
-  ;; Current layout for this class.  Null if not assigned yet.
-  (layout nil :type (or layout null))
-  ;;
-  ;; How sure we are that this class won't be redefined.  If :READ-ONLY, we are
-  ;; committed to not changing the effective slots or superclasses.  If
-  ;; :SEALED, we can't even add subclasses.
-  (state nil :type (member nil :read-only :sealed))
-  ;;
-  ;; Direct superclasses of this class.
-  (direct-superclasses () :type list)
-  ;;
-  ;; Representation of all of the subclasses (direct or indirect) of this
-  ;; class.  NIL if no subclasses or not initalized yet.  Otherwise, an EQ
-  ;; hash-table mapping class-objects to the subclass layout that was in effect
-  ;; at the time the subclass was created.
-  (subclasses nil :type (or hash-table null))
-  ;;
-  ;; The PCL class object, or NIL if none assigned yet.
-  (pcl-class nil))
-	 */
+	private final LispType type;
+	private final List<Class<LispStruct>> directSuperClasses;
+	private final List<Class<LispStruct>> subClasses;
+
+	public ClassStruct() {
+		type = jcl.types.classes.Class.INSTANCE;
+		directSuperClasses = null;
+		subClasses = null;
+	}
+
+	public ClassStruct(final LispType type, final List<Class<LispStruct>> directSuperClasses,
+					   final List<Class<LispStruct>> subClasses) {
+		this.type = type;
+		if (directSuperClasses == null) {
+			this.directSuperClasses = Collections.emptyList();
+		} else {
+			this.directSuperClasses = directSuperClasses;
+		}
+		if (subClasses == null) {
+			this.subClasses = Collections.emptyList();
+		} else {
+			this.subClasses = subClasses;
+		}
+	}
+
+	@Override
+	public LispType getType() {
+		return type;
+	}
+
+	public List<Class<LispStruct>> getDirectSuperClasses() {
+		return directSuperClasses;
+	}
+
+	public List<Class<LispStruct>> getSubClasses() {
+		return subClasses;
+	}
 }

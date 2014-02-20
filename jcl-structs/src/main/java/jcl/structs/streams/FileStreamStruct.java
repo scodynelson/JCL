@@ -19,29 +19,32 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 
 	private final RandomAccessFile fileStream;
 
-	private final boolean isInteractive;
-	private boolean isClosed;
+	/**
+	 * Public constructor.
+	 *
+	 * @param file the file to create a {@code FileStreamStruct} from
+	 * @throws StreamErrorException if the struct cannot be created
+	 */
+	public FileStreamStruct(final File file) throws StreamErrorException {
+		this(false, file);
+	}
 
 	/**
-	 * Private constructor.
+	 * Public constructor.
 	 *
 	 * @param isInteractive whether or not the struct created is 'interactive'
 	 * @param file          the file to create a {@code FileStreamStruct} from
 	 * @throws StreamErrorException if the struct cannot be created
 	 */
-	private FileStreamStruct(final boolean isInteractive, final File file) throws StreamErrorException {
-		this.isInteractive = isInteractive;
+	public FileStreamStruct(final boolean isInteractive, final File file) throws StreamErrorException {
+		super(FileStream.INSTANCE, null, null, isInteractive, null);
+		// TODO: Type will be the type of whatever the "byte" type being read
 
 		try {
 			fileStream = new RandomAccessFile(file, "rw");
 		} catch (final FileNotFoundException fnfe) {
 			throw new StreamErrorException("Failed to open provided file.", fnfe);
 		}
-	}
-
-	@Override
-	public LispType getType() {
-		return FileStream.INSTANCE;
 	}
 
 	@Override
@@ -184,13 +187,7 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 		} catch (final IOException ioe) {
 			throw new StreamErrorException("Could not close stream.", ioe);
 		}
-		isClosed = true;
-	}
-
-	@Override
-	public LispType elementType() {
-		// TODO: This will be the type of whatever the "byte" type being read
-		return null;  //To change body of implemented methods use File | Settings | File Templates.
+		super.close();
 	}
 
 	@Override
@@ -215,46 +212,9 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 	}
 
 	@Override
-	public boolean isInteractive() {
-		return !isClosed && isInteractive;
-	}
-
-	@Override
-	public boolean isClosed() {
-		return isClosed;
-	}
-
-	@Override
 	public String toString() {
 		return "FileStreamStruct{" +
 				"fileStream=" + fileStream +
-				", isInteractive=" + isInteractive +
-				", isClosed=" + isClosed +
 				'}';
-	}
-
-	// BUILDERS
-
-	/**
-	 * This method gets the {@code FileStreamStruct} for the provided {@code file}.
-	 *
-	 * @param file the file to create a {@code FileStreamStruct} from
-	 * @return the created {@code FileStreamStruct}
-	 * @throws StreamErrorException if the struct cannot be created
-	 */
-	public static FileStreamStruct getStruct(final File file) throws StreamErrorException {
-		return new FileStreamStruct(false, file);
-	}
-
-	/**
-	 * This method gets the {@code FileStreamStruct} for the provided {@code file}.
-	 *
-	 * @param isInteractive whether or not the struct created is 'interactive'
-	 * @param file          the file to create a {@code FileStreamStruct} from
-	 * @return the created {@code FileStreamStruct}
-	 * @throws StreamErrorException if the struct cannot be created
-	 */
-	public static FileStreamStruct getStruct(final boolean isInteractive, final File file) throws StreamErrorException {
-		return new FileStreamStruct(isInteractive, file);
 	}
 }

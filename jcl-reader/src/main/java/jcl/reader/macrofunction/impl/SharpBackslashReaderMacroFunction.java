@@ -27,7 +27,7 @@ public class SharpBackslashReaderMacroFunction implements ReaderMacroFunction {
 
 		if (StringUtils.length(charString) == 1) {
 			final char theChar = charString.charAt(0);
-			return CharacterStruct.getStruct(theChar);
+			return new CharacterStruct(theChar);
 		}
 
 		Character charName = null;
@@ -43,6 +43,6 @@ public class SharpBackslashReaderMacroFunction implements ReaderMacroFunction {
 			throw new ReaderErrorException("Unrecognized character name: " + charString);
 		}
 
-		return CharacterStruct.getStruct(charName);
+		return new CharacterStruct(charName);
 	}
 }

@@ -17,23 +17,29 @@ public class EchoStreamStruct extends StreamStruct implements InputStream, Outpu
 	private final InputStream inputStream;
 	private final OutputStream outputStream;
 
-	private final boolean isInteractive;
-	private boolean isClosed;
-
-	private final LispType elementType;
-
 	private final LinkedList<Integer> unreadStuff = new LinkedList<>();
 
 	/**
-	 * Private constructor.
+	 * Public constructor.
+	 *
+	 * @param inputStream  the {@code InputStream} to create a {@code EchoStreamStruct} from
+	 * @param outputStream the {@code OutputStream} to create a {@code EchoStreamStruct} from
+	 * @throws StreamErrorException if the struct cannot be created
+	 */
+	public EchoStreamStruct(final InputStream inputStream, final OutputStream outputStream) throws StreamErrorException {
+		this(false, inputStream, outputStream);
+	}
+
+	/**
+	 * Public constructor.
 	 *
 	 * @param isInteractive whether or not the struct created is 'interactive'
 	 * @param inputStream   the {@code InputStream} to create a {@code EchoStreamStruct} from
 	 * @param outputStream  the {@code OutputStream} to create a {@code EchoStreamStruct} from
 	 * @throws StreamErrorException if the struct cannot be created
 	 */
-	private EchoStreamStruct(final boolean isInteractive, final InputStream inputStream, final OutputStream outputStream) throws StreamErrorException {
-		this.isInteractive = isInteractive;
+	public EchoStreamStruct(final boolean isInteractive, final InputStream inputStream, final OutputStream outputStream) throws StreamErrorException {
+		super(EchoStream.INSTANCE, null, null, isInteractive, getElementType(inputStream, outputStream));
 
 		if (inputStream == null) {
 			throw new StreamErrorException("Provided Input Stream must not be null.");
@@ -44,20 +50,17 @@ public class EchoStreamStruct extends StreamStruct implements InputStream, Outpu
 			throw new StreamErrorException("Provided Output Stream must not be null.");
 		}
 		this.outputStream = outputStream;
+	}
 
+	private static LispType getElementType(final InputStream inputStream, final OutputStream outputStream) {
 		final LispType inType = inputStream.elementType();
 		final LispType outType = outputStream.elementType();
 
 		if (inType.equals(outType)) {
-			elementType = inType;
+			return inType;
 		} else {
-			elementType = new AndTypeSpecifier(inType, outType);
+			return new AndTypeSpecifier(inType, outType);
 		}
-	}
-
-	@Override
-	public LispType getType() {
-		return EchoStream.INSTANCE;
 	}
 
 	@Override
@@ -106,7 +109,6 @@ public class EchoStreamStruct extends StreamStruct implements InputStream, Outpu
 
 	@Override
 	public PeekResult peekChar(final LispType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) throws StreamErrorException {
-
 		if (unreadStuff.isEmpty()) {
 			final ReadResult readResult = inputStream.readChar(eofErrorP, eofValue, recursiveP);
 
@@ -170,16 +172,6 @@ public class EchoStreamStruct extends StreamStruct implements InputStream, Outpu
 	}
 
 	@Override
-	public void close() throws StreamErrorException {
-		isClosed = true;
-	}
-
-	@Override
-	public LispType elementType() {
-		return elementType;
-	}
-
-	@Override
 	public Long fileLength() throws StreamErrorException {
 		throw new StreamErrorException("Operation only supported on a FileStream.");
 	}
@@ -190,51 +182,11 @@ public class EchoStreamStruct extends StreamStruct implements InputStream, Outpu
 	}
 
 	@Override
-	public boolean isInteractive() {
-		return !isClosed && isInteractive;
-	}
-
-	@Override
-	public boolean isClosed() {
-		return isClosed;
-	}
-
-	@Override
 	public String toString() {
 		return "EchoStreamStruct{" +
 				"inputStream=" + inputStream +
 				", outputStream=" + outputStream +
-				", isInteractive=" + isInteractive +
-				", isClosed=" + isClosed +
-				", elementType=" + elementType +
 				", unreadStuff=" + unreadStuff +
 				'}';
-	}
-
-	// BUILDERS
-
-	/**
-	 * This method gets the {@code EchoStreamStruct} for the provided {@code inputStream} and {@code outputStream}.
-	 *
-	 * @param inputStream  the {@code InputStream} to create a {@code EchoStreamStruct} from
-	 * @param outputStream the {@code OutputStream} to create a {@code EchoStreamStruct} from
-	 * @return the created {@code EchoStreamStruct}
-	 * @throws StreamErrorException if the struct cannot be created
-	 */
-	public static EchoStreamStruct getStruct(final InputStream inputStream, final OutputStream outputStream) throws StreamErrorException {
-		return new EchoStreamStruct(false, inputStream, outputStream);
-	}
-
-	/**
-	 * This method gets the {@code EchoStreamStruct} for the provided {@code inputStream} and {@code outputStream}.
-	 *
-	 * @param isInteractive whether or not the struct created is 'interactive'
-	 * @param inputStream   the {@code InputStream} to create a {@code EchoStreamStruct} from
-	 * @param outputStream  the {@code OutputStream} to create a {@code EchoStreamStruct} from
-	 * @return the created {@code EchoStreamStruct}
-	 * @throws StreamErrorException if the struct cannot be created
-	 */
-	public static EchoStreamStruct getStruct(final boolean isInteractive, final InputStream inputStream, final OutputStream outputStream) throws StreamErrorException {
-		return new EchoStreamStruct(isInteractive, inputStream, outputStream);
 	}
 }

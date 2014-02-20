@@ -1,5 +1,8 @@
 package jcl.structs.classes;
 
+import jcl.types.LispType;
+import jcl.types.classes.StructureClass;
+
 public class StructureClassStruct extends ClassStruct {
 
 	/*
@@ -27,4 +30,9 @@ public class StructureClassStruct extends ClassStruct {
 					    :ignore-it
 					    nil)))
 	 */
+
+	@Override
+	public LispType getType() {
+		return StructureClass.INSTANCE;
+	}
 }

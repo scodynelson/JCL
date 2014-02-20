@@ -5,7 +5,6 @@ import jcl.types.LispType;
 import jcl.types.T;
 import jcl.types.streams.BroadcastStream;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 
 /**
@@ -15,23 +14,39 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 
 	private final LinkedList<OutputStream> outputStreams;
 
-	private final boolean isInteractive;
-	private boolean isClosed;
+	/**
+	 * Public constructor.
+	 *
+	 * @param outputStreams the {@code OutputStream}s to create a {@code BroadcastStreamStruct} from
+	 * @throws StreamErrorException if the struct cannot be created
+	 */
+	public BroadcastStreamStruct(final LinkedList<OutputStream> outputStreams) throws StreamErrorException {
+		this(false, outputStreams);
+	}
 
 	/**
-	 * Private constructor.
+	 * Public constructor.
 	 *
 	 * @param isInteractive whether or not the struct created is 'interactive'
 	 * @param outputStreams the {@code OutputStream}s to create a {@code BroadcastStreamStruct} from
 	 * @throws StreamErrorException if the struct cannot be created
 	 */
-	private BroadcastStreamStruct(final boolean isInteractive, final LinkedList<OutputStream> outputStreams) throws StreamErrorException {
-		this.isInteractive = isInteractive;
+	public BroadcastStreamStruct(final boolean isInteractive, final LinkedList<OutputStream> outputStreams) throws StreamErrorException {
+		super(BroadcastStream.INSTANCE, null, null, isInteractive, getElementType(outputStreams));
 
 		if (outputStreams == null) {
 			throw new StreamErrorException("Provided Output Stream List must not be null.");
 		}
 		this.outputStreams = new LinkedList<>(outputStreams);
+	}
+
+	private static LispType getElementType(final LinkedList<OutputStream> outputStreams) {
+		if (outputStreams.isEmpty()) {
+			return T.INSTANCE;
+		}
+
+		final OutputStream last = outputStreams.getLast();
+		return last.elementType();
 	}
 
 	@Override
@@ -82,18 +97,8 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 	}
 
 	@Override
-	public void close() throws StreamErrorException {
-		isClosed = true;
-	}
-
-	@Override
 	public LispType elementType() {
-		if (outputStreams.isEmpty()) {
-			return T.INSTANCE;
-		}
-
-		final OutputStream last = outputStreams.getLast();
-		return last.elementType();
+		return getElementType(outputStreams);
 	}
 
 	@Override
@@ -117,69 +122,9 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 	}
 
 	@Override
-	public boolean isInteractive() {
-		return !isClosed && isInteractive;
-	}
-
-	@Override
-	public boolean isClosed() {
-		return isClosed;
-	}
-
-	@Override
 	public String toString() {
 		return "BroadcastStreamStruct{" +
 				"outputStreams=" + outputStreams +
-				", isInteractive=" + isInteractive +
-				", isClosed=" + isClosed +
 				'}';
-	}
-
-	// BUILDERS
-
-	/**
-	 * This method gets the {@code BroadcastStreamStruct} for the provided {@code outputStreams}.
-	 *
-	 * @param outputStreams the {@code OutputStream}s to create a {@code BroadcastStreamStruct} from
-	 * @return the created {@code BroadcastStreamStruct}
-	 * @throws StreamErrorException if the struct cannot be created
-	 */
-	public static BroadcastStreamStruct getStruct(final OutputStream... outputStreams) throws StreamErrorException {
-		return new BroadcastStreamStruct(false, new LinkedList<>(Arrays.asList(outputStreams)));
-	}
-
-	/**
-	 * This method gets the {@code BroadcastStreamStruct} for the provided {@code outputStreams}.
-	 *
-	 * @param isInteractive whether or not the struct created is 'interactive'
-	 * @param outputStreams the {@code OutputStream}s to create a {@code BroadcastStreamStruct} from
-	 * @return the created {@code BroadcastStreamStruct}
-	 * @throws StreamErrorException if the struct cannot be created
-	 */
-	public static BroadcastStreamStruct getStruct(final boolean isInteractive, final OutputStream... outputStreams) throws StreamErrorException {
-		return new BroadcastStreamStruct(isInteractive, new LinkedList<>(Arrays.asList(outputStreams)));
-	}
-
-	/**
-	 * This method gets the {@code BroadcastStreamStruct} for the provided {@code outputStreams}.
-	 *
-	 * @param outputStreams the {@code OutputStream}s to create a {@code BroadcastStreamStruct} from
-	 * @return the created {@code BroadcastStreamStruct}
-	 * @throws StreamErrorException if the struct cannot be created
-	 */
-	public static BroadcastStreamStruct getStruct(final LinkedList<OutputStream> outputStreams) throws StreamErrorException {
-		return new BroadcastStreamStruct(false, outputStreams);
-	}
-
-	/**
-	 * This method gets the {@code BroadcastStreamStruct} for the provided {@code outputStreams}.
-	 *
-	 * @param isInteractive whether or not the struct created is 'interactive'
-	 * @param outputStreams the {@code OutputStream}s to create a {@code BroadcastStreamStruct} from
-	 * @return the created {@code BroadcastStreamStruct}
-	 * @throws StreamErrorException if the struct cannot be created
-	 */
-	public static BroadcastStreamStruct getStruct(final boolean isInteractive, final LinkedList<OutputStream> outputStreams) throws StreamErrorException {
-		return new BroadcastStreamStruct(isInteractive, outputStreams);
 	}
 }

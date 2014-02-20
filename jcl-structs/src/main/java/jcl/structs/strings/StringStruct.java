@@ -33,7 +33,7 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 
 		final List<CharacterStruct> charList = new ArrayList<>(stringValue.length());
 		for (final char character : stringValue.toCharArray()) {
-			final CharacterStruct characterStruct = CharacterStruct.getStruct(character);
+			final CharacterStruct characterStruct = new CharacterStruct(character);
 			charList.add(characterStruct);
 		}
 		return new StringStruct(charList.size(), charList, Character.INSTANCE, false, null);

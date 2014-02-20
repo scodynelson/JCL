@@ -7,7 +7,6 @@ import jcl.types.LispType;
 import jcl.types.T;
 import jcl.types.streams.ConcatenatedStream;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 
 /**
@@ -17,18 +16,25 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 
 	private final LinkedList<InputStream> inputStreams;
 
-	private final boolean isInteractive;
-	private boolean isClosed;
+	/**
+	 * Public constructor.
+	 *
+	 * @param inputStreams the {@code InputStream}s to create a {@code ConcatenatedStreamStruct} from
+	 * @throws StreamErrorException if the struct cannot be created
+	 */
+	public ConcatenatedStreamStruct(final LinkedList<InputStream> inputStreams) throws StreamErrorException {
+		this(false, inputStreams);
+	}
 
 	/**
-	 * Private constructor.
+	 * Public constructor.
 	 *
 	 * @param isInteractive whether or not the struct created is 'interactive'
 	 * @param inputStreams  the {@code InputStream}s to create a {@code ConcatenatedStreamStruct} from
 	 * @throws StreamErrorException if the struct cannot be created
 	 */
-	private ConcatenatedStreamStruct(final boolean isInteractive, final LinkedList<InputStream> inputStreams) throws StreamErrorException {
-		this.isInteractive = isInteractive;
+	public ConcatenatedStreamStruct(final boolean isInteractive, final LinkedList<InputStream> inputStreams) throws StreamErrorException {
+		super(ConcatenatedStream.INSTANCE, null, null, isInteractive, getElementType(inputStreams));
 
 		if (inputStreams == null) {
 			throw new StreamErrorException("Provided Input Stream List must not be null.");
@@ -36,9 +42,13 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 		this.inputStreams = new LinkedList<>(inputStreams);
 	}
 
-	@Override
-	public LispType getType() {
-		return ConcatenatedStream.INSTANCE;
+	private static LispType getElementType(final LinkedList<InputStream> inputStreams) {
+		if (inputStreams.isEmpty()) {
+			return T.INSTANCE;
+		}
+
+		final InputStream last = inputStreams.getLast();
+		return last.elementType();
 	}
 
 	@Override
@@ -138,18 +148,8 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 	}
 
 	@Override
-	public void close() throws StreamErrorException {
-		isClosed = true;
-	}
-
-	@Override
 	public LispType elementType() {
-		if (inputStreams.isEmpty()) {
-			return T.INSTANCE;
-		}
-
-		final InputStream last = inputStreams.getLast();
-		return last.elementType();
+		return getElementType(inputStreams);
 	}
 
 	@Override
@@ -173,69 +173,9 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 	}
 
 	@Override
-	public boolean isInteractive() {
-		return !isClosed && isInteractive;
-	}
-
-	@Override
-	public boolean isClosed() {
-		return isClosed;
-	}
-
-	@Override
 	public String toString() {
 		return "ConcatenatedStreamStruct{" +
 				"inputStreams=" + inputStreams +
-				", isInteractive=" + isInteractive +
-				", isClosed=" + isClosed +
 				'}';
-	}
-
-	// BUILDERS
-
-	/**
-	 * This method gets the {@code ConcatenatedStreamStruct} for the provided {@code inputStreams}.
-	 *
-	 * @param inputStreams the {@code InputStream}s to create a {@code ConcatenatedStreamStruct} from
-	 * @return the created {@code ConcatenatedStreamStruct}
-	 * @throws StreamErrorException if the struct cannot be created
-	 */
-	public static ConcatenatedStreamStruct getStruct(final InputStream... inputStreams) throws StreamErrorException {
-		return new ConcatenatedStreamStruct(false, new LinkedList<>(Arrays.asList(inputStreams)));
-	}
-
-	/**
-	 * This method gets the {@code ConcatenatedStreamStruct} for the provided {@code inputStreams}.
-	 *
-	 * @param isInteractive whether or not the struct created is 'interactive'
-	 * @param inputStreams  the {@code InputStream}s to create a {@code ConcatenatedStreamStruct} from
-	 * @return the created {@code ConcatenatedStreamStruct}
-	 * @throws StreamErrorException if the struct cannot be created
-	 */
-	public static ConcatenatedStreamStruct getStruct(final boolean isInteractive, final InputStream... inputStreams) throws StreamErrorException {
-		return new ConcatenatedStreamStruct(isInteractive, new LinkedList<>(Arrays.asList(inputStreams)));
-	}
-
-	/**
-	 * This method gets the {@code ConcatenatedStreamStruct} for the provided {@code inputStreams}.
-	 *
-	 * @param inputStreams the {@code InputStream}s to create a {@code ConcatenatedStreamStruct} from
-	 * @return the created {@code ConcatenatedStreamStruct}
-	 * @throws StreamErrorException if the struct cannot be created
-	 */
-	public static ConcatenatedStreamStruct getStruct(final LinkedList<InputStream> inputStreams) throws StreamErrorException {
-		return new ConcatenatedStreamStruct(false, inputStreams);
-	}
-
-	/**
-	 * This method gets the {@code ConcatenatedStreamStruct} struct for the provided {@code inputStreams}.
-	 *
-	 * @param isInteractive whether or not the struct created is 'interactive'
-	 * @param inputStreams  the {@code InputStream}s to create a {@code ConcatenatedStreamStruct} from
-	 * @return the created {@code ConcatenatedStreamStruct}
-	 * @throws StreamErrorException if the struct cannot be created
-	 */
-	public static ConcatenatedStreamStruct getStruct(final boolean isInteractive, final LinkedList<InputStream> inputStreams) throws StreamErrorException {
-		return new ConcatenatedStreamStruct(isInteractive, inputStreams);
 	}
 }

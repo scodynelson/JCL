@@ -43,23 +43,23 @@ public class SharpCReaderMacroFunction implements ReaderMacroFunction {
 		final LispStruct imaginary = lispTokens.get(1);
 
 		if ((real instanceof IntegerStruct) && (imaginary instanceof IntegerStruct)) {
-			return ComplexStruct.getStruct(((IntegerStruct) real).getBigInteger(), ((IntegerStruct) imaginary).getBigInteger());
+			return new ComplexStruct(((IntegerStruct) real).getBigInteger(), ((IntegerStruct) imaginary).getBigInteger());
 		} else if ((real instanceof IntegerStruct) && (imaginary instanceof FloatStruct)) {
-			return ComplexStruct.getStruct(((IntegerStruct) real).getBigInteger(), ((FloatStruct) imaginary).getBigDecimal());
+			return new ComplexStruct(((IntegerStruct) real).getBigInteger(), ((FloatStruct) imaginary).getBigDecimal());
 		} else if ((real instanceof IntegerStruct) && (imaginary instanceof RatioStruct)) {
-			return ComplexStruct.getStruct(((IntegerStruct) real).getBigInteger(), ((RatioStruct) imaginary).getBigFraction());
+			return new ComplexStruct(((IntegerStruct) real).getBigInteger(), ((RatioStruct) imaginary).getBigFraction());
 		} else if ((real instanceof FloatStruct) && (imaginary instanceof IntegerStruct)) {
-			return ComplexStruct.getStruct(((FloatStruct) real).getBigDecimal(), ((IntegerStruct) imaginary).getBigInteger());
+			return new ComplexStruct(((FloatStruct) real).getBigDecimal(), ((IntegerStruct) imaginary).getBigInteger());
 		} else if ((real instanceof FloatStruct) && (imaginary instanceof FloatStruct)) {
-			return ComplexStruct.getStruct(((FloatStruct) real).getBigDecimal(), ((FloatStruct) imaginary).getBigDecimal());
+			return new ComplexStruct(((FloatStruct) real).getBigDecimal(), ((FloatStruct) imaginary).getBigDecimal());
 		} else if ((real instanceof FloatStruct) && (imaginary instanceof RatioStruct)) {
-			return ComplexStruct.getStruct(((FloatStruct) real).getBigDecimal(), ((RatioStruct) imaginary).getBigFraction());
+			return new ComplexStruct(((FloatStruct) real).getBigDecimal(), ((RatioStruct) imaginary).getBigFraction());
 		} else if ((real instanceof RatioStruct) && (imaginary instanceof IntegerStruct)) {
-			return ComplexStruct.getStruct(((RatioStruct) real).getBigFraction(), ((IntegerStruct) imaginary).getBigInteger());
+			return new ComplexStruct(((RatioStruct) real).getBigFraction(), ((IntegerStruct) imaginary).getBigInteger());
 		} else if ((real instanceof RatioStruct) && (imaginary instanceof FloatStruct)) {
-			return ComplexStruct.getStruct(((RatioStruct) real).getBigFraction(), ((FloatStruct) imaginary).getBigDecimal());
+			return new ComplexStruct(((RatioStruct) real).getBigFraction(), ((FloatStruct) imaginary).getBigDecimal());
 		} else if ((real instanceof RatioStruct) && (imaginary instanceof RatioStruct)) {
-			return ComplexStruct.getStruct(((RatioStruct) real).getBigFraction(), ((RatioStruct) imaginary).getBigFraction());
+			return new ComplexStruct(((RatioStruct) real).getBigFraction(), ((RatioStruct) imaginary).getBigFraction());
 		} else {
 			throw new ReaderErrorException("Only reals are valid tokens for #c.");
 		}

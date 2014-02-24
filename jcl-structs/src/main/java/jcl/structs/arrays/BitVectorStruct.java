@@ -20,8 +20,8 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 
 	public static BitVectorStruct getStruct(final String bitString) {
 
-		final IntegerStruct zero = IntegerStruct.getStruct(BigInteger.ZERO);
-		final IntegerStruct one = IntegerStruct.getStruct(BigInteger.ONE);
+		final IntegerStruct zero = new IntegerStruct(BigInteger.ZERO);
+		final IntegerStruct one = new IntegerStruct(BigInteger.ONE);
 
 		final List<IntegerStruct> bitList = new ArrayList<>(bitString.length());
 		for (final char character : bitString.toCharArray()) {

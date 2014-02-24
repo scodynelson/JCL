@@ -3,31 +3,22 @@ package jcl.structs.symbols;
 import jcl.structs.conses.ListStruct;
 import jcl.structs.functions.FunctionStruct;
 import jcl.structs.packages.PackageStruct;
+import jcl.types.symbols.Keyword;
 
 import java.util.List;
 
 public class KeywordSymbolStruct extends SymbolStruct<KeywordSymbolStruct> {
 
 	public KeywordSymbolStruct(final String name) {
-		super(name, PackageStruct.KEYWORD, null, null, null, true, true);
+		this(name, null, null);
 	}
 
 	public KeywordSymbolStruct(final String name, final List<ListStruct> propertyList, final FunctionStruct function) {
-		super(name, PackageStruct.KEYWORD, propertyList, null, function, true, true);
+		super(Keyword.INSTANCE, name, PackageStruct.KEYWORD, propertyList, null, function, true, true);
 	}
 
 	@Override
 	public KeywordSymbolStruct getValue() {
 		return this;
 	}
-
-	// BUILDERS
-
-//	public static KeywordSymbolStruct getStruct(final String name) {
-//		return new KeywordSymbolStruct(name, null, null);
-//	}
-//
-//	public static KeywordSymbolStruct getStruct(final String name, final FunctionStruct function) {
-//		return new KeywordSymbolStruct(name, null, function);
-//	}
 }

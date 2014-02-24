@@ -1,17 +1,13 @@
 package jcl.structs;
 
-import jcl.types.LispType;
+import jcl.structs.classes.BuiltInClassStruct;
 import jcl.types.T;
 
-public class TStruct implements LispStruct {
+public class TStruct extends BuiltInClassStruct {
 
 	public static final TStruct INSTANCE = new TStruct();
 
 	private TStruct() {
-	}
-
-	@Override
-	public LispType getType() {
-		return T.INSTANCE;
+		super(T.INSTANCE, null, null);
 	}
 }

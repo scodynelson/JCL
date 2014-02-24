@@ -1,15 +1,15 @@
 package jcl.structs.symbols;
 
 import jcl.structs.LispStruct;
+import jcl.structs.classes.BuiltInClassStruct;
 import jcl.structs.conses.ListStruct;
 import jcl.structs.functions.FunctionStruct;
 import jcl.structs.packages.PackageStruct;
-import jcl.types.LispType;
 import jcl.types.symbols.Symbol;
 
 import java.util.List;
 
-public class SymbolStruct<TYPE extends LispStruct> implements LispStruct {
+public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 
 	private final String name;
 
@@ -20,8 +20,27 @@ public class SymbolStruct<TYPE extends LispStruct> implements LispStruct {
 	private boolean isSpecial;
 	private boolean isConstant;
 
-	protected SymbolStruct(final String name, final PackageStruct symbolPackage, final List<ListStruct> propertyList,
+	public SymbolStruct(final String name) {
+		this(name, null, null, null, null, false, false);
+	}
+
+	public SymbolStruct(final String name, final TYPE value) {
+		this(name, null, null, value, null, false, false);
+	}
+
+	public SymbolStruct(final String name, final FunctionStruct function) {
+		this(name, null, null, null, function, false, false);
+	}
+
+	public SymbolStruct(final String name, final PackageStruct symbolPackage, final List<ListStruct> propertyList,
+						final TYPE value, final FunctionStruct function, final boolean isSpecial, final boolean isConstant) {
+		this(Symbol.INSTANCE, name, symbolPackage, propertyList, value, function, isSpecial, isConstant);
+	}
+
+	protected SymbolStruct(final Symbol symbolType,
+						   final String name, final PackageStruct symbolPackage, final List<ListStruct> propertyList,
 						   final TYPE value, final FunctionStruct function, final boolean isSpecial, final boolean isConstant) {
+		super(symbolType, null, null);
 		this.name = name;
 
 		this.symbolPackage = symbolPackage;
@@ -30,11 +49,6 @@ public class SymbolStruct<TYPE extends LispStruct> implements LispStruct {
 		this.function = function;
 		this.isConstant = isConstant;
 		this.isSpecial = isSpecial;
-	}
-
-	@Override
-	public LispType getType() {
-		return Symbol.INSTANCE;
 	}
 
 	public String getName() {
@@ -103,26 +117,5 @@ public class SymbolStruct<TYPE extends LispStruct> implements LispStruct {
 				", isSpecial=" + isSpecial +
 				", isConstant=" + isConstant +
 				'}';
-	}
-
-	// BUILDERS
-
-	public static <TYPE extends LispStruct> SymbolStruct<TYPE> getStruct(final String name) {
-		return new SymbolStruct<>(name, null, null, null, null, false, false);
-	}
-
-	public static <TYPE extends LispStruct> SymbolStruct<TYPE> getStruct(final String name, final TYPE value) {
-		return new SymbolStruct<>(name, null, null, value, null, false, false);
-	}
-
-	public static <TYPE extends LispStruct> SymbolStruct<TYPE> getStruct(final String name, final FunctionStruct function) {
-		return new SymbolStruct<>(name, null, null, null, function, false, false);
-	}
-
-	public static <TYPE extends LispStruct> SymbolStruct<TYPE> getStruct(final String name, final PackageStruct symbolPackage,
-																		 final List<ListStruct> propertyList, final TYPE value,
-																		 final FunctionStruct function, final boolean isSpecial,
-																		 final boolean isConstant) {
-		return new SymbolStruct<>(name, symbolPackage, propertyList, value, function, isSpecial, isConstant);
 	}
 }

@@ -74,10 +74,4 @@ public class HashTableStruct implements LispStruct {
 	public void mapHash(final FunctionStruct function) {
 		// TODO: do this...
 	}
-
-	// BUILDERS
-
-	public static HashTableStruct getStruct(final FunctionStruct test, final BigInteger size, final BigInteger rehashSize, final BigDecimal rehashThreshold) {
-		return new HashTableStruct(test, size, rehashSize, rehashThreshold);
-	}
 }

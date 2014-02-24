@@ -1,6 +1,5 @@
 package jcl.structs.numbers;
 
-import jcl.types.LispType;
 import jcl.types.numbers.Integer;
 
 import java.math.BigInteger;
@@ -13,11 +12,12 @@ public class IntegerStruct extends RationalStruct {
 	private final BigInteger bigInteger;
 
 	/**
-	 * Private constructor.
+	 * Public constructor.
 	 *
 	 * @param bigInteger the value of the {@code IntegerStruct}
 	 */
-	private IntegerStruct(final BigInteger bigInteger) {
+	public IntegerStruct(final BigInteger bigInteger) {
+		super(Integer.INSTANCE, null, null); // TODO: determine the type???
 		this.bigInteger = bigInteger;
 	}
 
@@ -31,26 +31,9 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	@Override
-	public LispType getType() {
-		return Integer.INSTANCE;
-	}
-
-	@Override
 	public String toString() {
 		return "IntegerStruct{" +
 				"bigInteger=" + bigInteger +
 				'}';
-	}
-
-	// BUILDERS
-
-	/**
-	 * This method gets the {@code IntegerStruct} for the provided {@code bigInteger}.
-	 *
-	 * @param bigInteger the value of the {@code IntegerStruct}
-	 * @return the created {@code IntegerStruct}
-	 */
-	public static IntegerStruct getStruct(final BigInteger bigInteger) {
-		return new IntegerStruct(bigInteger);
 	}
 }

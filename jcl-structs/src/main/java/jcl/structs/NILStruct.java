@@ -1,17 +1,13 @@
 package jcl.structs;
 
-import jcl.types.LispType;
+import jcl.structs.classes.BuiltInClassStruct;
 import jcl.types.NIL;
 
-public class NILStruct implements LispStruct {
+public class NILStruct extends BuiltInClassStruct {
 
 	public static final NILStruct INSTANCE = new NILStruct();
 
 	private NILStruct() {
-	}
-
-	@Override
-	public LispType getType() {
-		return NIL.INSTANCE;
+		super(NIL.INSTANCE, null, null);
 	}
 }

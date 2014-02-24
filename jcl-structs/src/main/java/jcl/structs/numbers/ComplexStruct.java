@@ -1,5 +1,6 @@
 package jcl.structs.numbers;
 
+import jcl.types.numbers.Complex;
 import org.apache.commons.math3.fraction.BigFraction;
 
 import java.math.BigDecimal;
@@ -14,12 +15,113 @@ public class ComplexStruct extends NumberStruct {
 	private final Number imaginary;
 
 	/**
-	 * Private constructor.
+	 * Public constructor.
 	 *
 	 * @param real      a {@code Number} that represents the value of real part of the {@code ComplexStruct}
 	 * @param imaginary a {@code Number} that represents the value of imaginary part {@code ComplexStruct}
 	 */
-	private ComplexStruct(final Number real, final Number imaginary) {
+	public ComplexStruct(final BigInteger real, final BigInteger imaginary) {
+		super(Complex.INSTANCE, null, null);
+		this.real = real;
+		this.imaginary = imaginary;
+	}
+
+	/**
+	 * Public constructor.
+	 *
+	 * @param real      a {@code Number} that represents the value of real part of the {@code ComplexStruct}
+	 * @param imaginary a {@code Number} that represents the value of imaginary part {@code ComplexStruct}
+	 */
+	public ComplexStruct(final BigInteger real, final BigDecimal imaginary) {
+		super(Complex.INSTANCE, null, null);
+		this.imaginary = imaginary;
+
+		final BigInteger realWithScale = real.multiply(BigInteger.TEN);
+		this.real = new BigDecimal(realWithScale, 1);
+	}
+
+	/**
+	 * Public constructor.
+	 *
+	 * @param real      a {@code Number} that represents the value of real part of the {@code ComplexStruct}
+	 * @param imaginary a {@code Number} that represents the value of imaginary part {@code ComplexStruct}
+	 */
+	public ComplexStruct(final BigInteger real, final BigFraction imaginary) {
+		super(Complex.INSTANCE, null, null);
+		this.real = real;
+		this.imaginary = imaginary;
+	}
+
+	/**
+	 * Public constructor.
+	 *
+	 * @param real      a {@code Number} that represents the value of real part of the {@code ComplexStruct}
+	 * @param imaginary a {@code Number} that represents the value of imaginary part {@code ComplexStruct}
+	 */
+	public ComplexStruct(final BigDecimal real, final BigInteger imaginary) {
+		super(Complex.INSTANCE, null, null);
+		this.real = real;
+
+		final BigInteger imaginaryWithScale = imaginary.multiply(BigInteger.TEN);
+		this.imaginary = new BigDecimal(imaginaryWithScale, 1);
+	}
+
+	/**
+	 * Public constructor.
+	 *
+	 * @param real      a {@code Number} that represents the value of real part of the {@code ComplexStruct}
+	 * @param imaginary a {@code Number} that represents the value of imaginary part {@code ComplexStruct}
+	 */
+	public ComplexStruct(final BigDecimal real, final BigDecimal imaginary) {
+		super(Complex.INSTANCE, null, null);
+		this.real = real;
+		this.imaginary = imaginary;
+	}
+
+	/**
+	 * Public constructor.
+	 *
+	 * @param real      a {@code Number} that represents the value of real part of the {@code ComplexStruct}
+	 * @param imaginary a {@code Number} that represents the value of imaginary part {@code ComplexStruct}
+	 */
+	public ComplexStruct(final BigDecimal real, final BigFraction imaginary) {
+		super(Complex.INSTANCE, null, null);
+		this.real = real;
+		this.imaginary = imaginary.bigDecimalValue();
+	}
+
+	/**
+	 * Public constructor.
+	 *
+	 * @param real      a {@code Number} that represents the value of real part of the {@code ComplexStruct}
+	 * @param imaginary a {@code Number} that represents the value of imaginary part {@code ComplexStruct}
+	 */
+	public ComplexStruct(final BigFraction real, final BigInteger imaginary) {
+		super(Complex.INSTANCE, null, null);
+		this.real = real;
+		this.imaginary = imaginary;
+	}
+
+	/**
+	 * Public constructor.
+	 *
+	 * @param real      a {@code Number} that represents the value of real part of the {@code ComplexStruct}
+	 * @param imaginary a {@code Number} that represents the value of imaginary part {@code ComplexStruct}
+	 */
+	public ComplexStruct(final BigFraction real, final BigDecimal imaginary) {
+		super(Complex.INSTANCE, null, null);
+		this.real = real.bigDecimalValue();
+		this.imaginary = imaginary;
+	}
+
+	/**
+	 * Public constructor.
+	 *
+	 * @param real      a {@code Number} that represents the value of real part of the {@code ComplexStruct}
+	 * @param imaginary a {@code Number} that represents the value of imaginary part {@code ComplexStruct}
+	 */
+	public ComplexStruct(final BigFraction real, final BigFraction imaginary) {
+		super(Complex.INSTANCE, null, null);
 		this.real = real;
 		this.imaginary = imaginary;
 	}
@@ -48,112 +150,5 @@ public class ComplexStruct extends NumberStruct {
 				"real=" + real +
 				", imaginary=" + imaginary +
 				'}';
-	}
-
-	// BUILDERS
-
-	/**
-	 * This method gets the {@code ComplexStruct} for the provided {@code real} and {@code imaginary}.
-	 *
-	 * @param real      a {@code Number} that represents the value of real part of the {@code ComplexStruct}
-	 * @param imaginary a {@code Number} that represents the value of imaginary part {@code ComplexStruct}
-	 * @return the created {@code ComplexStruct}
-	 */
-	public static ComplexStruct getStruct(final BigInteger real, final BigInteger imaginary) {
-		return new ComplexStruct(real, imaginary);
-	}
-
-	/**
-	 * This method gets the {@code ComplexStruct} for the provided {@code real} and {@code imaginary}.
-	 *
-	 * @param real      a {@code Number} that represents the value of real part of the {@code ComplexStruct}
-	 * @param imaginary a {@code Number} that represents the value of imaginary part {@code ComplexStruct}
-	 * @return the created {@code ComplexStruct}
-	 */
-	public static ComplexStruct getStruct(final BigInteger real, final BigDecimal imaginary) {
-		final BigInteger realWithScale = real.multiply(BigInteger.TEN);
-		final BigDecimal realAsBigDecimal = new BigDecimal(realWithScale, 1);
-
-		return new ComplexStruct(realAsBigDecimal, imaginary);
-	}
-
-	/**
-	 * This method gets the {@code ComplexStruct} for the provided {@code real} and {@code imaginary}.
-	 *
-	 * @param real      a {@code Number} that represents the value of real part of the {@code ComplexStruct}
-	 * @param imaginary a {@code Number} that represents the value of imaginary part {@code ComplexStruct}
-	 * @return the created {@code ComplexStruct}
-	 */
-	public static ComplexStruct getStruct(final BigInteger real, final BigFraction imaginary) {
-		return new ComplexStruct(real, imaginary);
-	}
-
-	/**
-	 * This method gets the {@code ComplexStruct} for the provided {@code real} and {@code imaginary}.
-	 *
-	 * @param real      a {@code Number} that represents the value of real part of the {@code ComplexStruct}
-	 * @param imaginary a {@code Number} that represents the value of imaginary part {@code ComplexStruct}
-	 * @return the created {@code ComplexStruct}
-	 */
-	public static ComplexStruct getStruct(final BigDecimal real, final BigInteger imaginary) {
-		final BigInteger imaginaryWithScale = imaginary.multiply(BigInteger.TEN);
-		final BigDecimal imaginaryAsBigDecimal = new BigDecimal(imaginaryWithScale, 1);
-
-		return new ComplexStruct(real, imaginaryAsBigDecimal);
-	}
-
-	/**
-	 * This method gets the {@code ComplexStruct} for the provided {@code real} and {@code imaginary}.
-	 *
-	 * @param real      a {@code Number} that represents the value of real part of the {@code ComplexStruct}
-	 * @param imaginary a {@code Number} that represents the value of imaginary part {@code ComplexStruct}
-	 * @return the created {@code ComplexStruct}
-	 */
-	public static ComplexStruct getStruct(final BigDecimal real, final BigDecimal imaginary) {
-		return new ComplexStruct(real, imaginary);
-	}
-
-	/**
-	 * This method gets the {@code ComplexStruct} for the provided {@code real} and {@code imaginary}.
-	 *
-	 * @param real      a {@code Number} that represents the value of real part of the {@code ComplexStruct}
-	 * @param imaginary a {@code Number} that represents the value of imaginary part {@code ComplexStruct}
-	 * @return the created {@code ComplexStruct}
-	 */
-	public static ComplexStruct getStruct(final BigDecimal real, final BigFraction imaginary) {
-		return new ComplexStruct(real, imaginary.bigDecimalValue());
-	}
-
-	/**
-	 * This method gets the {@code ComplexStruct} for the provided {@code real} and {@code imaginary}.
-	 *
-	 * @param real      a {@code Number} that represents the value of real part of the {@code ComplexStruct}
-	 * @param imaginary a {@code Number} that represents the value of imaginary part {@code ComplexStruct}
-	 * @return the created {@code ComplexStruct}
-	 */
-	public static ComplexStruct getStruct(final BigFraction real, final BigInteger imaginary) {
-		return new ComplexStruct(real, imaginary);
-	}
-
-	/**
-	 * This method gets the {@code ComplexStruct} for the provided {@code real} and {@code imaginary}.
-	 *
-	 * @param real      a {@code Number} that represents the value of real part of the {@code ComplexStruct}
-	 * @param imaginary a {@code Number} that represents the value of imaginary part {@code ComplexStruct}
-	 * @return the created {@code ComplexStruct}
-	 */
-	public static ComplexStruct getStruct(final BigFraction real, final BigDecimal imaginary) {
-		return new ComplexStruct(real.bigDecimalValue(), imaginary);
-	}
-
-	/**
-	 * This method gets the {@code ComplexStruct} for the provided {@code real} and {@code imaginary}.
-	 *
-	 * @param real      a {@code Number} that represents the value of real part of the {@code ComplexStruct}
-	 * @param imaginary a {@code Number} that represents the value of imaginary part {@code ComplexStruct}
-	 * @return the created {@code ComplexStruct}
-	 */
-	public static ComplexStruct getStruct(final BigFraction real, final BigFraction imaginary) {
-		return new ComplexStruct(real, imaginary);
 	}
 }

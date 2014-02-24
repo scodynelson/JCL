@@ -134,7 +134,7 @@ public class NumberTokenAccumulatedState implements State {
 			final BigInteger denominator = new BigInteger(rationalParts[1], currentRadix);
 
 			final BigFraction rational = new BigFraction(numerator, denominator);
-			return RatioStruct.getStruct(rational);
+			return new RatioStruct(rational);
 		} else if (hasDecimal) {
 			final Integer exponentToken = StateUtils.getTokenByAttribute(tokenAttributes, AttributeType.EXPONENTMARKER);
 
@@ -142,10 +142,10 @@ public class NumberTokenAccumulatedState implements State {
 
 			final Float aFloat = getFloatType(exponentToken);
 			final BigDecimal bigDecimal = new BigDecimal(tokenString);
-			return FloatStruct.getStruct(aFloat, bigDecimal);
+			return new FloatStruct(aFloat, bigDecimal);
 		} else {
 			final BigInteger basicInteger = new BigInteger(tokenString, currentRadix);
-			return IntegerStruct.getStruct(basicInteger);
+			return new IntegerStruct(basicInteger);
 		}
 	}
 

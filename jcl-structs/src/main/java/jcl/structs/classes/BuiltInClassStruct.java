@@ -12,8 +12,8 @@ public class BuiltInClassStruct extends ClassStruct {
 		super(BuiltInClass.INSTANCE, directSuperClasses, subClasses);
 	}
 
-	protected BuiltInClassStruct(final LispType type, final List<Class<LispStruct>> directSuperClasses,
-								 final List<Class<LispStruct>> subClasses) {
+	protected BuiltInClassStruct(final LispType type,
+								 final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
 		super(type, directSuperClasses, subClasses);
 	}
 }

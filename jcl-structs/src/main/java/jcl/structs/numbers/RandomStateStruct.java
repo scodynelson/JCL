@@ -1,7 +1,6 @@
 package jcl.structs.numbers;
 
-import jcl.structs.LispStruct;
-import jcl.types.LispType;
+import jcl.structs.classes.BuiltInClassStruct;
 import jcl.types.numbers.RandomState;
 
 import java.math.BigDecimal;
@@ -12,7 +11,7 @@ import java.util.ArrayList;
 /**
  * The {@code RandomStateStruct} is the object representation of a Lisp 'random-state' type.
  */
-public class RandomStateStruct implements LispStruct {
+public class RandomStateStruct extends BuiltInClassStruct {
 
 	private static final BigInteger RANDOM_MAX = BigInteger.valueOf(54);
 	private static final BigInteger RANDOM_UPPER_BOUND = BigInteger.valueOf(Integer.MAX_VALUE - 3);
@@ -29,9 +28,10 @@ public class RandomStateStruct implements LispStruct {
 	private final ArrayList<BigInteger> seed;
 
 	/**
-	 * Private constructor.
+	 * Public constructor.
 	 */
-	private RandomStateStruct() {
+	public RandomStateStruct() {
+		super(RandomState.INSTANCE, null, null);
 		seed = new ArrayList<>(RANDOM_MAX.intValue());
 
 		BigInteger randSeed = BigInteger.ONE;
@@ -39,11 +39,6 @@ public class RandomStateStruct implements LispStruct {
 			randSeed = randSeed.multiply(RANDOM_CONST_A).add(RANDOM_CONST_C).mod(RANDOM_UPPER_BOUND.add(BigInteger.ONE));
 			seed.add(randSeed);
 		}
-	}
-
-	@Override
-	public LispType getType() {
-		return RandomState.INSTANCE;
 	}
 
 	/**
@@ -144,16 +139,5 @@ public class RandomStateStruct implements LispStruct {
 				", k=" + k +
 				", seed=" + seed +
 				'}';
-	}
-
-	// BUILDERS
-
-	/**
-	 * This method gets a new {@code RandomStateStruct}.
-	 *
-	 * @return the created {@code RandomStateStruct}
-	 */
-	public static RandomStateStruct getStruct() {
-		return new RandomStateStruct();
 	}
 }

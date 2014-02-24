@@ -1,5 +1,6 @@
 package jcl.structs.numbers;
 
+import jcl.types.numbers.Ratio;
 import org.apache.commons.math3.fraction.BigFraction;
 
 import java.math.BigInteger;
@@ -12,12 +13,24 @@ public class RatioStruct extends RationalStruct {
 	private final BigFraction bigFraction;
 
 	/**
-	 * Private constructor.
+	 * Public constructor.
 	 *
 	 * @param bigFraction the value of the {@code RatioStruct}
 	 */
-	private RatioStruct(final BigFraction bigFraction) {
+	public RatioStruct(final BigFraction bigFraction) {
+		super(Ratio.INSTANCE, null, null);
 		this.bigFraction = bigFraction;
+	}
+
+	/**
+	 * Public constructor.
+	 *
+	 * @param numerator   the numerator value of the {@code RatioStruct}
+	 * @param denominator the denominator value of the {@code RatioStruct}
+	 */
+	public RatioStruct(final BigInteger numerator, final BigInteger denominator) {
+		super(Ratio.INSTANCE, null, null);
+		bigFraction = new BigFraction(numerator, denominator);
 	}
 
 	/**
@@ -36,27 +49,4 @@ public class RatioStruct extends RationalStruct {
 				'}';
 	}
 
-	// BUILDERS
-
-	/**
-	 * This method gets the {@code RatioStruct} for the provided {@code bigFraction}.
-	 *
-	 * @param bigFraction the value of the {@code RatioStruct}
-	 * @return the created {@code RatioStruct}
-	 */
-	public static RatioStruct getStruct(final BigFraction bigFraction) {
-		return new RatioStruct(bigFraction);
-	}
-
-	/**
-	 * This method gets the {@code RatioStruct} for the provided {@code numerator} and {@code denominator}.
-	 *
-	 * @param numerator   the numerator value of the {@code RatioStruct}
-	 * @param denominator the denominator value of the {@code RatioStruct}
-	 * @return the created {@code RatioStruct}
-	 */
-	public static RatioStruct getStruct(final BigInteger numerator, final BigInteger denominator) {
-		final BigFraction bigFraction = new BigFraction(numerator, denominator);
-		return new RatioStruct(bigFraction);
-	}
 }

@@ -83,7 +83,7 @@ public class SymbolTokenAccumulatedState implements State {
 			final SymbolStruct<?> symbol = Variable.Package.findSymbol(symName);
 			if (symbol == null) {
 //				readerState.setErrorMessage("Unbound variable: " + symName); // TODO: This check will happen in the compiler...
-				return SymbolStruct.getStruct(symName);
+				return new SymbolStruct(symName);
 			}
 			return symbol;
 		}

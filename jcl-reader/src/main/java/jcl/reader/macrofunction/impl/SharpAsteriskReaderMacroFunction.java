@@ -32,7 +32,7 @@ public class SharpAsteriskReaderMacroFunction implements ReaderMacroFunction {
 		final String bitString = readExtendedToken.getToken();
 
 		if (numArg == null) {
-			return BitVectorStruct.getStruct(bitString);
+			return new BitVectorStruct(bitString);
 		}
 
 		final int bitStringLength = bitString.length();
@@ -52,7 +52,7 @@ public class SharpAsteriskReaderMacroFunction implements ReaderMacroFunction {
 			}
 
 			final String newBitString = bitStringBuilder.toString();
-			return BitVectorStruct.getStruct(newBitString);
+			return new BitVectorStruct(newBitString);
 		}
 	}
 }

@@ -32,7 +32,7 @@ public class SharpAReaderMacroFunction implements ReaderMacroFunction {
 			final List<LispStruct> contentsAsJavaList = contentsList.getAsJavaList();
 
 			final List<Integer> dims = getDimensions(numArg, contentsList);
-			return ArrayStruct.getStruct(dims, contentsAsJavaList);
+			return new ArrayStruct<>(dims, contentsAsJavaList);
 		} else {
 			throw new ReaderErrorException("#" + numArg + "A axis " + 0 + " is not a sequence: " + contents);
 		}

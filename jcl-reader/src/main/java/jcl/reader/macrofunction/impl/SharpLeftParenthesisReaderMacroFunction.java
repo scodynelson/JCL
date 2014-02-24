@@ -38,7 +38,7 @@ public class SharpLeftParenthesisReaderMacroFunction implements ReaderMacroFunct
 		final List<LispStruct> lispTokens = listToken.getAsJavaList();
 
 		if (numArg == null) {
-			return VectorStruct.getStruct(lispTokens);
+			return new VectorStruct<>(lispTokens);
 		}
 
 		final int numberOfTokens = lispTokens.size();
@@ -57,7 +57,7 @@ public class SharpLeftParenthesisReaderMacroFunction implements ReaderMacroFunct
 				lispTokens.add(lastToken);
 			}
 
-			return VectorStruct.getStruct(lispTokens);
+			return new VectorStruct<>(lispTokens);
 		}
 	}
 }

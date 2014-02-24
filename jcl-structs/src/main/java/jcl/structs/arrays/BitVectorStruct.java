@@ -2,6 +2,7 @@ package jcl.structs.arrays;
 
 import jcl.structs.numbers.IntegerStruct;
 import jcl.types.LispType;
+import jcl.types.arrays.BitVector;
 import jcl.types.numbers.Bit;
 
 import java.math.BigInteger;
@@ -11,15 +12,16 @@ import java.util.List;
 public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 	// TODO: this should be a "bit" type integer structure
 
-	protected BitVectorStruct(final int size, final List<IntegerStruct> contents, final LispType elementType,
-							  final boolean isAdjustable, final Integer fillPointer) {
-		super(size, contents, elementType, isAdjustable, fillPointer);
+	public BitVectorStruct(final String bitString) {
+		this(bitString.length(), getBitList(bitString), Bit.INSTANCE, false, null);
 	}
 
-	// BUILDERS
+	public BitVectorStruct(final int size, final List<IntegerStruct> contents, final LispType elementType,
+						   final boolean isAdjustable, final Integer fillPointer) {
+		super(BitVector.INSTANCE, size, contents, elementType, isAdjustable, fillPointer);
+	}
 
-	public static BitVectorStruct getStruct(final String bitString) {
-
+	private static List<IntegerStruct> getBitList(final String bitString) {
 		final IntegerStruct zero = new IntegerStruct(BigInteger.ZERO);
 		final IntegerStruct one = new IntegerStruct(BigInteger.ONE);
 
@@ -32,6 +34,6 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 			}
 			// TODO: handle exceptions...
 		}
-		return new BitVectorStruct(bitList.size(), bitList, Bit.INSTANCE, false, null);
+		return bitList;
 	}
 }

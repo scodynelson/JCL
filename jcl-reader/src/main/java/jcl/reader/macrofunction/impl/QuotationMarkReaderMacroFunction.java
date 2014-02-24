@@ -51,7 +51,7 @@ public class QuotationMarkReaderMacroFunction implements ReaderMacroFunction {
 			return null;
 		} else {
 			final String stringValue = stringBuilder.toString();
-			return StringStruct.getStruct(stringValue);
+			return new StringStruct(stringValue);
 		}
 	}
 }

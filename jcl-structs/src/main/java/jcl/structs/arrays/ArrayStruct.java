@@ -1,23 +1,30 @@
 package jcl.structs.arrays;
 
 import jcl.structs.LispStruct;
+import jcl.structs.classes.BuiltInClassStruct;
 import jcl.types.LispType;
 import jcl.types.T;
 import jcl.types.arrays.Array;
 
 import java.util.List;
 
-public class ArrayStruct<TYPE extends LispStruct> implements LispStruct {
+public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 
-	protected final List<TYPE> contents;
-	protected final int rank;
-	protected final List<Integer> dimensions;
-	protected final LispType elementType;
-	protected final boolean isAdjustable;
-	protected final Integer fillPointer;
+	private final List<TYPE> contents;
+	private final int rank;
+	private final List<Integer> dimensions;
+	private final LispType elementType;
+	private final boolean isAdjustable;
+	private final Integer fillPointer;
 
-	protected ArrayStruct(final List<Integer> dimensions, final List<TYPE> contents, final LispType elementType,
+	public ArrayStruct(final List<Integer> dimensions, final List<TYPE> contents) {
+		this(Array.INSTANCE, dimensions, contents, T.INSTANCE, false, null);
+	}
+
+	protected ArrayStruct(final Array arrayType,
+						  final List<Integer> dimensions, final List<TYPE> contents, final LispType elementType,
 						  final boolean isAdjustable, final Integer fillPointer) {
+		super(Array.INSTANCE, null, null);
 
 		this.contents = contents;
 
@@ -25,7 +32,7 @@ public class ArrayStruct<TYPE extends LispStruct> implements LispStruct {
 		this.dimensions = dimensions;
 		rank = dimensions.size();
 
-		// TODO: We really should do a check in here to check each element against the element type; but how do we do this???
+		// TODO: We really should do a check in here to check each element against the element type
 		this.elementType = elementType;
 		this.isAdjustable = isAdjustable;
 
@@ -33,11 +40,6 @@ public class ArrayStruct<TYPE extends LispStruct> implements LispStruct {
 			throw new IllegalArgumentException("Fill pointer supplied for non-singular dimensional array: " + fillPointer);
 		}
 		this.fillPointer = fillPointer;
-	}
-
-	@Override
-	public LispType getType() {
-		return Array.INSTANCE;
 	}
 
 	public List<TYPE> getContents() {
@@ -78,11 +80,5 @@ public class ArrayStruct<TYPE extends LispStruct> implements LispStruct {
 				", isAdjustable=" + isAdjustable +
 				", fillPointer=" + fillPointer +
 				'}';
-	}
-
-	// BUILDERS
-
-	public static <TYPE extends LispStruct> ArrayStruct<TYPE> getStruct(final List<Integer> dimensions, final List<TYPE> contents) {
-		return new ArrayStruct<>(dimensions, contents, T.INSTANCE, false, null);
 	}
 }

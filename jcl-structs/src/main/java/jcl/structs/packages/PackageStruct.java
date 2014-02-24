@@ -27,11 +27,11 @@ public class PackageStruct implements LispStruct {
 		ALL_PACKAGES.put("KEYWORD", KEYWORD);
 	}
 
-	private String name;
-	private List<String> nicknames;
+	private final String name;
+	private final List<String> nicknames;
 
-	private List<PackageStruct> useList = new ArrayList<>();
-	private List<PackageStruct> usedByList = new ArrayList<>();
+	private final List<PackageStruct> useList = new ArrayList<>();
+	private final List<PackageStruct> usedByList = new ArrayList<>();
 
 	private final Map<String, SymbolStruct<?>> internalSymbols = new HashMap<>();
 	private final Map<String, SymbolStruct<?>> inheritedSymbols = new HashMap<>();
@@ -57,7 +57,7 @@ public class PackageStruct implements LispStruct {
 	}
 
 	public SymbolStruct<?> intern(final String symbolName) {
-		final SymbolStruct<?> symbolStruct = SymbolStruct.getStruct(symbolName);
+		final SymbolStruct<?> symbolStruct = new SymbolStruct(symbolName);
 		internalSymbols.put(symbolName, symbolStruct);
 		symbolStruct.setSymbolPackage(this);
 		return symbolStruct;

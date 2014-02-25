@@ -4,6 +4,9 @@ import jcl.structs.LispStruct;
 import jcl.types.LispType;
 import jcl.types.classes.StandardObject;
 
+/**
+ * The {@code StandardObjectStruct} is the object representation of a Lisp 'standard-object' type.
+ */
 public class StandardObjectStruct implements LispStruct {
 
 	@Override

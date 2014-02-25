@@ -1,38 +1,35 @@
 package jcl.structs.classes;
 
+import jcl.structs.LispStruct;
 import jcl.types.LispType;
 import jcl.types.classes.StructureClass;
 
+import java.util.List;
+
+/**
+ * The {@code StructureClassStruct} is the object representation of a Lisp 'structure-class' type.
+ */
 public class StructureClassStruct extends ClassStruct {
 
-	/*
-	;;; Class with print function, but not necessarily a structure class.
-;;; (CONDITIONs)
-;;;
-(defstruct (slot-class (:include class))
-  ;;
-  ;; Print function, or NIL if none.
-  (print-function nil :type (or function symbol null)))
-
-;;; STRUCTURE-CLASS represents what we need to know about structure classes.
-;;; Non-structure "typed" defstructs are a special case, and don't have a
-;;; corresponding class.
-;;;
-(defstruct (basic-structure-class (:include slot-class)))
-
-(defstruct (structure-class (:include basic-structure-class))
-  ;;
-  ;; MAKE-LOAD-FORM method, or NIL if none. :J-D-I-N dumps the slots.
-  ;; :IGNORE-IT is used for magic structures which the compiler inserts in IR1,
-  ;; but that are never actually dumped.
-  (make-load-form-fun nil :type (or function symbol
-				    (member :just-dump-it-normally
-					    :ignore-it
-					    nil)))
+	/**
+	 * Public constructor.
+	 *
+	 * @param directSuperClasses the direct super classes
+	 * @param subClasses         the subclasses
 	 */
+	public StructureClassStruct(final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+		this(StructureClass.INSTANCE, directSuperClasses, subClasses);
+	}
 
-	@Override
-	public LispType getType() {
-		return StructureClass.INSTANCE;
+	/**
+	 * Protected constructor.
+	 *
+	 * @param type               the type of the class object
+	 * @param directSuperClasses the direct super classes
+	 * @param subClasses         the subclasses
+	 */
+	protected StructureClassStruct(final LispType type,
+								   final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+		super(type, directSuperClasses, subClasses);
 	}
 }

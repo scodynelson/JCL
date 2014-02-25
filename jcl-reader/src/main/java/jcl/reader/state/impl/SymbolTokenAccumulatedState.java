@@ -14,6 +14,7 @@ import jcl.types.Variable;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * Step 10.2 of the Reader Algorithm.
@@ -80,7 +81,8 @@ public class SymbolTokenAccumulatedState implements State {
 		if (hasNoPackageMarkers) {
 			final String symName = StateUtils.convertTokensToString(tokenAttributes);
 
-			final SymbolStruct<?> symbol = Variable.Package.findSymbol(symName);
+			final PackageStruct.PackageSymbolStruct packageSymbol = Variable.Package.findSymbol(symName);
+			final SymbolStruct<?> symbol = packageSymbol.getSymbolStruct();
 			if (symbol == null) {
 //				readerState.setErrorMessage("Unbound variable: " + symName); // TODO: This check will happen in the compiler...
 				return new SymbolStruct(symName);
@@ -151,14 +153,18 @@ public class SymbolTokenAccumulatedState implements State {
 			}
 
 			if (packageMarkerCount == 1) {
-				final SymbolStruct<?> externalSymbol = pkg.findExternalSymbol(symName);
+				final Map<String, SymbolStruct<?>> pkgExternalSymbols = pkg.getExternalSymbols();
+
+				final SymbolStruct<?> externalSymbol = pkgExternalSymbols.get(symName);
 				if (externalSymbol == null) {
 					readerState.setErrorMessage("No external symbol named \"" + symName + "\" in package " + pkgName);
 					return null;
 				}
 				return externalSymbol;
 			} else {
-				final SymbolStruct<?> symbol = pkg.findSymbol(symName);
+				final PackageStruct.PackageSymbolStruct packageSymbol = pkg.findSymbol(symName);
+
+				final SymbolStruct<?> symbol = packageSymbol.getSymbolStruct();
 				if (symbol == null) {
 					readerState.setErrorMessage("Unbound variable: " + pkgName + "::" + symName);
 					return null;

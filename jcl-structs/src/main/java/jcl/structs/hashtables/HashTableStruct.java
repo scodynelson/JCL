@@ -1,77 +1,171 @@
 package jcl.structs.hashtables;
 
 import jcl.structs.LispStruct;
+import jcl.structs.classes.BuiltInClassStruct;
+import jcl.structs.functions.EquatorFunctionStruct;
 import jcl.structs.functions.FunctionStruct;
 import jcl.types.LispType;
 import jcl.types.hashtables.HashTable;
+import org.apache.commons.collections4.Equator;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.ResizableHashMap;
 
-public class HashTableStruct implements LispStruct {
+/**
+ * The {@code HashTableStruct} is the object representation of a Lisp 'hash-table' type.
+ * <p/>
+ * NOTE: This implementation does NOT support size tracking or rehash-size customization. These are handled internally by Java.
+ */
+public class HashTableStruct extends BuiltInClassStruct {
 
-	private final FunctionStruct test;
-	private final BigInteger size;
-	private final BigInteger rehashSize;
+	private final EquatorFunctionStruct<LispStruct> test;
 	private final BigDecimal rehashThreshold;
 
 	private final Map<LispStruct, LispStruct> map;
 
-	public HashTableStruct(final FunctionStruct test, final BigInteger size, final BigInteger rehashSize,
-						   final BigDecimal rehashThreshold) {
+	/**
+	 * Public constructor.
+	 *
+	 * @param test            the test function for determining key matching
+	 * @param size            the initial size of the table
+	 * @param rehashThreshold the threshold amount when resizing the table
+	 */
+	public HashTableStruct(final EquatorFunctionStruct<LispStruct> test, final BigInteger size, final BigDecimal rehashThreshold) {
+		super(HashTable.INSTANCE, null, null);
 		this.test = test;
-		this.size = size;
-		this.rehashSize = rehashSize;
 		this.rehashThreshold = rehashThreshold;
 
-		map = new ResizableHashMap<>(size.intValue(), rehashSize.floatValue(), rehashSize.intValue());
-	}
-
-	@Override
-	public LispType getType() {
-		return HashTable.INSTANCE;
+		map = new HashMap<>(size.intValue(), rehashThreshold.floatValue());
 	}
 
 	public FunctionStruct getTest() {
 		return test;
 	}
 
-	public BigInteger getSize() {
-		// TODO: this will need to be updated every time a rehashing happens.
-		return size;
-	}
-
-	public BigInteger getRehashSize() {
-		return rehashSize;
-	}
-
 	public BigDecimal getRehashThreshold() {
 		return rehashThreshold;
 	}
 
+	/**
+	 * This method gets the current number of items in the internal map.
+	 *
+	 * @return the current number of items in the internal map
+	 */
 	public BigInteger getCount() {
 		return BigInteger.valueOf(map.size());
 	}
 
+	/**
+	 * This method returns the value stored in the map matching the provided key.
+	 *
+	 * @param key the key to find the matching stored value
+	 * @return the matching stored value for the provided key
+	 */
 	public LispStruct getHash(final LispStruct key) {
-		return map.get(key);
+		final LispStruct keyWrapper = new KeyWrapper(key, test);
+		return map.get(keyWrapper);
 	}
 
+	/**
+	 * This method sets or inserts the value stored in the map matching the provided key.
+	 *
+	 * @param key   the key to set or insert the provided value
+	 * @param value the value to be stored in the table
+	 */
 	public void setHash(final LispStruct key, final LispStruct value) {
-		map.put(key, value);
+		final LispStruct keyWrapper = new KeyWrapper(key, test);
+		map.put(keyWrapper, value);
 	}
 
+	/**
+	 * This method removes the value stored in the map matching the provided key.
+	 *
+	 * @param key the key to remove the matching stored value
+	 */
 	public void remHash(final LispStruct key) {
-		map.remove(key);
+		final LispStruct keyWrapper = new KeyWrapper(key, test);
+		map.remove(keyWrapper);
 	}
 
+	/**
+	 * This method clears the internal map.
+	 */
 	public void clrHash() {
 		map.clear();
 	}
 
+	/**
+	 * This method runs a mapping function over the internal map.
+	 *
+	 * @param function the mapping function
+	 */
 	public void mapHash(final FunctionStruct function) {
-		// TODO: do this...
+		for (final Map.Entry<LispStruct, LispStruct> entry : map.entrySet()) {
+			final LispStruct keyWrapper = new KeyWrapper(entry.getKey(), test);
+			function.funcall(keyWrapper, entry.getValue());
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "HashTableStruct{" +
+				"test=" + test +
+				", rehashThreshold=" + rehashThreshold +
+				", map=" + map +
+				'}';
+	}
+
+	/**
+	 * Private inner class that acts as a wrapper around hash keys for proper equality testing.
+	 */
+	private static class KeyWrapper implements LispStruct {
+
+		private final LispStruct key;
+		private final Equator<LispStruct> equator;
+
+		/**
+		 * Private constructor.
+		 *
+		 * @param key     the key to wrap
+		 * @param equator the equator function used to test equality of keys
+		 */
+		private KeyWrapper(final LispStruct key, final Equator<LispStruct> equator) {
+			this.key = key;
+			this.equator = equator;
+		}
+
+		@Override
+		public LispType getType() {
+			return key.getType();
+		}
+
+		@Override
+		public boolean equals(final Object obj) {
+			if (!(obj instanceof LispStruct)) {
+				return false;
+			}
+
+			final LispStruct lispStruct = (LispStruct) obj;
+			return key.equals(key) && equator.equate(key, lispStruct);
+		}
+
+		@Override
+		public int hashCode() {
+			return new HashCodeBuilder()
+					.append(key)
+					.append(equator)
+					.toHashCode();
+		}
+
+		@Override
+		public String toString() {
+			return "KeyWrapper{" +
+					"key=" + key +
+					"equator=" + equator +
+					'}';
+		}
 	}
 }

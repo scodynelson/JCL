@@ -15,7 +15,7 @@ public class CharacterStruct extends BuiltInClassStruct {
 	private final int codePoint;
 
 	/**
-	 * Private constructor.
+	 * Public constructor.
 	 *
 	 * @param codePoint the character code point value
 	 */

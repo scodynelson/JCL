@@ -10,4 +10,8 @@ public class FunctionStruct implements LispStruct {
 	public LispType getType() {
 		return Function.INSTANCE;
 	}
+
+	public LispStruct funcall(LispStruct... lispStructs) {
+		return null;
+	}
 }

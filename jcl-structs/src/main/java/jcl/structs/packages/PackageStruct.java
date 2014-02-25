@@ -5,6 +5,8 @@ import jcl.structs.symbols.SymbolStruct;
 import jcl.types.LispType;
 import jcl.types.packages.Package;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,10 +16,10 @@ public class PackageStruct implements LispStruct {
 
 	private static final Map<String, PackageStruct> ALL_PACKAGES = new HashMap<>();
 
-	public static final PackageStruct COMMON_LISP = getStruct("COMMON-LISP");
-	public static final PackageStruct SYSTEM = getStruct("SYSTEM");
-	public static final PackageStruct COMMON_LISP_USER = getStruct("COMMON-LISP-USER");
-	public static final PackageStruct KEYWORD = getStruct("KEYWORD");
+	public static final PackageStruct COMMON_LISP = new PackageStruct("COMMON-LISP");
+	public static final PackageStruct SYSTEM = new PackageStruct("SYSTEM");
+	public static final PackageStruct COMMON_LISP_USER = new PackageStruct("COMMON-LISP-USER");
+	public static final PackageStruct KEYWORD = new PackageStruct("KEYWORD");
 
 	static {
 		ALL_PACKAGES.put("COMMON-LISP", COMMON_LISP);
@@ -38,9 +40,23 @@ public class PackageStruct implements LispStruct {
 	private final Map<String, SymbolStruct<?>> externalSymbols = new HashMap<>();
 	private final Map<String, SymbolStruct<?>> shadowingSymbols = new HashMap<>();
 
-	private PackageStruct(final String name, final List<String> nicknames) {
+	public PackageStruct(final String name) {
+		this(name, new ArrayList<String>());
+	}
+
+	public PackageStruct(final String name, final List<String> nicknames) {
 		this.name = name;
 		this.nicknames = nicknames;
+	}
+
+	@PostConstruct
+	public void init() {
+		ALL_PACKAGES.put(name, this);
+	}
+
+	@PreDestroy
+	public void destroy() {
+		ALL_PACKAGES.remove(name);
 	}
 
 	@Override
@@ -90,7 +106,6 @@ public class PackageStruct implements LispStruct {
 			}
 		}
 
-		// it's not anywhere
 		return null;
 	}
 
@@ -114,19 +129,5 @@ public class PackageStruct implements LispStruct {
 				", externalSymbols=" + externalSymbols +
 				", shadowingSymbols=" + shadowingSymbols +
 				'}';
-	}
-
-	// BUILDERS
-
-	public static PackageStruct getStruct(final String name) {
-		final PackageStruct packageStruct = new PackageStruct(name, new ArrayList<String>());
-		ALL_PACKAGES.put(name, packageStruct);
-		return packageStruct;
-	}
-
-	public static PackageStruct getStruct(final String name, final List<String> nicknames) {
-		final PackageStruct packageStruct = new PackageStruct(name, nicknames);
-		ALL_PACKAGES.put(name, packageStruct);
-		return packageStruct;
 	}
 }

@@ -21,7 +21,7 @@ public class IntervalDesignator<N extends Number> implements CompoundTypeSpecifi
 	 * @param upperBound the upper boundary
 	 */
 	public IntervalDesignator(final N lowerBound, final N upperBound) {
-		if (lowerBound.getClass() != upperBound.getClass()) {
+		if ((lowerBound != null) && (upperBound != null) && (lowerBound.getClass() != upperBound.getClass())) {
 			throw new IllegalArgumentException("Both upper and lower bounds must be of the same class type.");
 		}
 

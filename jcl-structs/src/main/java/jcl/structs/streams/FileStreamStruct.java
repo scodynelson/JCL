@@ -5,6 +5,8 @@ import jcl.structs.conditions.exceptions.EndOfFileException;
 import jcl.structs.conditions.exceptions.StreamErrorException;
 import jcl.types.LispType;
 import jcl.types.streams.FileStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.EOFException;
 import java.io.File;
@@ -18,6 +20,8 @@ import java.io.RandomAccessFile;
 public class FileStreamStruct extends StreamStruct implements InputStream, OutputStream {
 
 	private final RandomAccessFile fileStream;
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(FileStreamStruct.class);
 
 	/**
 	 * Public constructor.
@@ -52,7 +56,8 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 		int readChar;
 		try {
 			readChar = fileStream.read();
-		} catch (final EOFException ignored) {
+		} catch (final EOFException eofe) {
+			LOGGER.warn("End of file reached.", eofe);
 			readChar = -1;
 		} catch (final IOException ioe) {
 			throw new StreamErrorException("Could not read char.", ioe);
@@ -74,7 +79,8 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 		int readByte;
 		try {
 			readByte = fileStream.readByte();
-		} catch (final EOFException ignored) {
+		} catch (final EOFException eofe) {
+			LOGGER.warn("End of file reached.", eofe);
 			readByte = -1;
 		} catch (final IOException ioe) {
 			throw new StreamErrorException("Could not read byte.", ioe);
@@ -97,7 +103,8 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 		try {
 			nextChar = fileStream.readChar();
 			fileStream.seek(fileStream.getFilePointer() - 1);
-		} catch (final EOFException ignored) {
+		} catch (final EOFException eofe) {
+			LOGGER.warn("End of file reached.", eofe);
 			nextChar = -1;
 		} catch (final IOException ioe) {
 			throw new StreamErrorException("Could not peek char", ioe);
@@ -129,9 +136,11 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 		try {
 			final PeekResult peekResult = peekChar(null, false, null, false);
 			return !peekResult.wasEOF();
-		} catch (final EndOfFileException ignored) {
+		} catch (final EndOfFileException eofe) {
+			LOGGER.warn("End of file reached.", eofe);
 			return false;
-		} catch (final StreamErrorException ignored) {
+		} catch (final StreamErrorException see) {
+			LOGGER.warn("Stream error occurred.", see);
 			return false;
 		}
 	}

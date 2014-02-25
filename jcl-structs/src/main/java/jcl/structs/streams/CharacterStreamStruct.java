@@ -5,6 +5,8 @@ import jcl.structs.conditions.exceptions.EndOfFileException;
 import jcl.structs.conditions.exceptions.StreamErrorException;
 import jcl.types.LispType;
 import jcl.types.characters.Character;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,6 +21,8 @@ public class CharacterStreamStruct extends StreamStruct implements InputStream, 
 
 	private final LineNumberReader inputStream;
 	private final PrintWriter outputStream;
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(CharacterStreamStruct.class);
 
 	/**
 	 * Public constructor.
@@ -106,9 +110,11 @@ public class CharacterStreamStruct extends StreamStruct implements InputStream, 
 		try {
 			final PeekResult peekResult = peekChar(null, false, null, false);
 			return !peekResult.wasEOF();
-		} catch (final EndOfFileException ignored) {
+		} catch (final EndOfFileException eofe) {
+			LOGGER.warn("End of file reached.", eofe);
 			return false;
-		} catch (final StreamErrorException ignored) {
+		} catch (final StreamErrorException see) {
+			LOGGER.warn("Stream error occurred.", see);
 			return false;
 		}
 	}
@@ -118,7 +124,8 @@ public class CharacterStreamStruct extends StreamStruct implements InputStream, 
 		try {
 			inputStream.mark(0);
 			inputStream.reset();
-		} catch (final IOException ignored) {
+		} catch (final IOException ioe) {
+			LOGGER.warn("IO exception occurred.", ioe);
 		}
 	}
 

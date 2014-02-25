@@ -35,14 +35,30 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 	 */
 	public ConcatenatedStreamStruct(final boolean isInteractive, final LinkedList<InputStream> inputStreams) throws StreamErrorException {
 		super(ConcatenatedStream.INSTANCE, null, null, isInteractive, getElementType(inputStreams));
-
-		if (inputStreams == null) {
-			throw new StreamErrorException("Provided Input Stream List must not be null.");
-		}
 		this.inputStreams = new LinkedList<>(inputStreams);
 	}
 
-	private static LispType getElementType(final LinkedList<InputStream> inputStreams) {
+	/**
+	 * This private method is used to retrieve the element type for object construction.
+	 *
+	 * @param inputStreams the {@code InputStream}s to create a {@code ConcatenatedStreamStruct} from
+	 * @return the element type for object construction
+	 * @throws StreamErrorException if the element type cannot be retrieved
+	 */
+	private static LispType getElementType(final LinkedList<InputStream> inputStreams) throws StreamErrorException {
+		if (inputStreams == null) {
+			throw new StreamErrorException("Provided Input Stream List must not be null.");
+		}
+		return getElementType_2(inputStreams);
+	}
+
+	/**
+	 * This private method is used to retrieve the element type for object construction.
+	 *
+	 * @param inputStreams the {@code InputStream}s to create a {@code ConcatenatedStreamStruct} from
+	 * @return the element type for object construction
+	 */
+	private static LispType getElementType_2(final LinkedList<InputStream> inputStreams) {
 		if (inputStreams.isEmpty()) {
 			return T.INSTANCE;
 		}
@@ -149,7 +165,7 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 
 	@Override
 	public LispType elementType() {
-		return getElementType(inputStreams);
+		return getElementType_2(inputStreams);
 	}
 
 	@Override

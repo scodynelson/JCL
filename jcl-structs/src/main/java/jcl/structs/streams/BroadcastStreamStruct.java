@@ -33,14 +33,30 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 	 */
 	public BroadcastStreamStruct(final boolean isInteractive, final LinkedList<OutputStream> outputStreams) throws StreamErrorException {
 		super(BroadcastStream.INSTANCE, null, null, isInteractive, getElementType(outputStreams));
-
-		if (outputStreams == null) {
-			throw new StreamErrorException("Provided Output Stream List must not be null.");
-		}
 		this.outputStreams = new LinkedList<>(outputStreams);
 	}
 
-	private static LispType getElementType(final LinkedList<OutputStream> outputStreams) {
+	/**
+	 * This private method is used to retrieve the element type for object construction.
+	 *
+	 * @param outputStreams the {@code OutputStream}s to create a {@code BroadcastStreamStruct} from
+	 * @return the element type for object construction
+	 * @throws StreamErrorException if the element type cannot be retrieved
+	 */
+	private static LispType getElementType(final LinkedList<OutputStream> outputStreams) throws StreamErrorException {
+		if (outputStreams == null) {
+			throw new StreamErrorException("Provided Output Stream List must not be null.");
+		}
+		return getElementType_2(outputStreams);
+	}
+
+	/**
+	 * This private method is used to retrieve the element type for object construction.
+	 *
+	 * @param outputStreams the {@code OutputStream}s to create a {@code BroadcastStreamStruct} from
+	 * @return the element type for object construction
+	 */
+	private static LispType getElementType_2(final LinkedList<OutputStream> outputStreams) {
 		if (outputStreams.isEmpty()) {
 			return T.INSTANCE;
 		}
@@ -98,7 +114,7 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 
 	@Override
 	public LispType elementType() {
-		return getElementType(outputStreams);
+		return getElementType_2(outputStreams);
 	}
 
 	@Override

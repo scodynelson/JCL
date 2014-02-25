@@ -35,19 +35,26 @@ public class TwoWayStreamStruct extends StreamStruct implements InputStream, Out
 	 */
 	public TwoWayStreamStruct(final boolean isInteractive, final InputStream inputStream, final OutputStream outputStream) throws StreamErrorException {
 		super(TwoWayStream.INSTANCE, null, null, isInteractive, getElementType(inputStream, outputStream));
-
-		if (inputStream == null) {
-			throw new StreamErrorException("Provided Input Stream must not be null.");
-		}
 		this.inputStream = inputStream;
-
-		if (outputStream == null) {
-			throw new StreamErrorException("Provided Output Stream must not be null.");
-		}
 		this.outputStream = outputStream;
 	}
 
-	private static LispType getElementType(final InputStream inputStream, final OutputStream outputStream) {
+	/**
+	 * This private method is used to retrieve the element type for object construction.
+	 *
+	 * @param inputStream  the {@code InputStream} to create a {@code TwoWayStreamStruct} from
+	 * @param outputStream the {@code OutputStream} to create a {@code TwoWayStreamStruct} from
+	 * @return the element type for object construction
+	 * @throws StreamErrorException if the element type cannot be retrieved
+	 */
+	private static LispType getElementType(final InputStream inputStream, final OutputStream outputStream) throws StreamErrorException {
+		if (inputStream == null) {
+			throw new StreamErrorException("Provided Input Stream must not be null.");
+		}
+		if (outputStream == null) {
+			throw new StreamErrorException("Provided Output Stream must not be null.");
+		}
+
 		final LispType inType = inputStream.elementType();
 		final LispType outType = outputStream.elementType();
 

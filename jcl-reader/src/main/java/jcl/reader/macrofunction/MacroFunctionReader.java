@@ -18,6 +18,8 @@ import jcl.structs.streams.ReadResult;
 import jcl.structs.symbols.SymbolStruct;
 import jcl.types.Variable;
 import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +29,8 @@ import java.util.Map;
 public class MacroFunctionReader extends LispReader {
 
 	private final StateReader stateReader;
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(MacroFunctionReader.class);
 
 	public MacroFunctionReader(final StateReader stateReader) {
 		this.stateReader = stateReader;
@@ -431,7 +435,8 @@ public class MacroFunctionReader extends LispReader {
 			final LispStruct token = stateReader.read();
 
 			isFeature = isFeature(token);
-		} catch (final ReaderErrorException ignore) {
+		} catch (final ReaderErrorException ree) {
+			LOGGER.debug(ree.getMessage(), ree);
 			isFeature = false;
 		} finally {
 			Variable.setPackage(previousPackage);

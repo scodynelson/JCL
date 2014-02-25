@@ -40,19 +40,26 @@ public class EchoStreamStruct extends StreamStruct implements InputStream, Outpu
 	 */
 	public EchoStreamStruct(final boolean isInteractive, final InputStream inputStream, final OutputStream outputStream) throws StreamErrorException {
 		super(EchoStream.INSTANCE, null, null, isInteractive, getElementType(inputStream, outputStream));
-
-		if (inputStream == null) {
-			throw new StreamErrorException("Provided Input Stream must not be null.");
-		}
 		this.inputStream = inputStream;
-
-		if (outputStream == null) {
-			throw new StreamErrorException("Provided Output Stream must not be null.");
-		}
 		this.outputStream = outputStream;
 	}
 
-	private static LispType getElementType(final InputStream inputStream, final OutputStream outputStream) {
+	/**
+	 * This private method is used to retrieve the element type for object construction.
+	 *
+	 * @param inputStream  the {@code InputStream} to create a {@code EchoStreamStruct} from
+	 * @param outputStream the {@code OutputStream} to create a {@code EchoStreamStruct} from
+	 * @return the element type for object construction
+	 * @throws StreamErrorException if the element type cannot be retrieved
+	 */
+	private static LispType getElementType(final InputStream inputStream, final OutputStream outputStream) throws StreamErrorException {
+		if (inputStream == null) {
+			throw new StreamErrorException("Provided Input Stream must not be null.");
+		}
+		if (outputStream == null) {
+			throw new StreamErrorException("Provided Output Stream must not be null.");
+		}
+
 		final LispType inType = inputStream.elementType();
 		final LispType outType = outputStream.elementType();
 

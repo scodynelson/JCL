@@ -32,13 +32,23 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	 * @throws StreamErrorException if the struct cannot be created
 	 */
 	public SynonymStreamStruct(final boolean isInteractive, final SymbolStruct<StreamStruct> symbol) throws StreamErrorException {
-		super(SynonymStream.INSTANCE, null, null, isInteractive, symbol.getValue().elementType());
+		super(SynonymStream.INSTANCE, null, null, isInteractive, getElementType(symbol));
+		this.symbol = symbol;
+		stream = symbol.getValue();
+	}
 
+	/**
+	 * This private method is used to retrieve the element type for object construction.
+	 *
+	 * @param symbol the symbol to create a {@code SynonymStreamStruct} from
+	 * @return the element type for object construction
+	 * @throws StreamErrorException if the element type cannot be retrieved
+	 */
+	private static LispType getElementType(final SymbolStruct<StreamStruct> symbol) throws StreamErrorException {
 		if (symbol == null) {
 			throw new StreamErrorException("Provided Symbol must not be null.");
 		}
-		this.symbol = symbol;
-		stream = symbol.getValue();
+		return symbol.getValue().elementType();
 	}
 
 	public SymbolStruct<StreamStruct> getSymbol() {

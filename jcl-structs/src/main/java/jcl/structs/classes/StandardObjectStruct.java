@@ -9,6 +9,23 @@ import jcl.types.classes.StandardObject;
  */
 public class StandardObjectStruct implements LispStruct {
 
+	private String documentation;
+
+	/**
+	 * Public constructor.
+	 */
+	public StandardObjectStruct() {
+		documentation = null;
+	}
+
+	public String getDocumentation() {
+		return documentation;
+	}
+
+	public void setDocumentation(final String documentation) {
+		this.documentation = documentation;
+	}
+
 	@Override
 	public LispType getType() {
 		return StandardObject.INSTANCE;

@@ -1,24 +1,23 @@
 package jcl.structs.symbols;
 
-import jcl.structs.conses.ListStruct;
 import jcl.structs.functions.FunctionStruct;
 import jcl.structs.packages.PackageStruct;
 import jcl.types.symbols.Keyword;
 
-import java.util.List;
+import javax.annotation.PostConstruct;
 
 public class KeywordSymbolStruct extends SymbolStruct<KeywordSymbolStruct> {
 
 	public KeywordSymbolStruct(final String name) {
-		this(name, null, null);
+		this(name, null);
 	}
 
-	public KeywordSymbolStruct(final String name, final List<ListStruct> propertyList, final FunctionStruct function) {
-		super(Keyword.INSTANCE, name, PackageStruct.KEYWORD, propertyList, null, function, true, true);
+	public KeywordSymbolStruct(final String name, final FunctionStruct function) {
+		super(Keyword.INSTANCE, name, PackageStruct.KEYWORD, null, function);
 	}
 
-	@Override
-	public KeywordSymbolStruct getValue() {
-		return this;
+	@PostConstruct
+	public void init() {
+		setValue(this);
 	}
 }

@@ -6,6 +6,8 @@ import jcl.reader.syntax.CharacterConstants;
 import jcl.structs.LispStruct;
 import jcl.structs.arrays.VectorStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
+import jcl.structs.conditions.exceptions.SimpleErrorException;
+import jcl.structs.conditions.exceptions.TypeErrorException;
 import jcl.structs.conses.ListStruct;
 import jcl.types.Variable;
 import org.apache.commons.collections4.CollectionUtils;
@@ -38,7 +40,11 @@ public class SharpLeftParenthesisReaderMacroFunction implements ReaderMacroFunct
 		final List<LispStruct> lispTokens = listToken.getAsJavaList();
 
 		if (numArg == null) {
-			return new VectorStruct<>(lispTokens);
+			try {
+				return new VectorStruct<>(lispTokens);
+			} catch (final TypeErrorException | SimpleErrorException e) {
+				throw new ReaderErrorException("Error occurred creating vector.", e);
+			}
 		}
 
 		final int numberOfTokens = lispTokens.size();
@@ -57,7 +63,11 @@ public class SharpLeftParenthesisReaderMacroFunction implements ReaderMacroFunct
 				lispTokens.add(lastToken);
 			}
 
-			return new VectorStruct<>(lispTokens);
+			try {
+				return new VectorStruct<>(lispTokens);
+			} catch (final TypeErrorException | SimpleErrorException e) {
+				throw new ReaderErrorException("Error occurred creating vector.", e);
+			}
 		}
 	}
 }

@@ -7,6 +7,8 @@ import jcl.reader.syntax.CharacterConstants;
 import jcl.structs.LispStruct;
 import jcl.structs.arrays.BitVectorStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
+import jcl.structs.conditions.exceptions.SimpleErrorException;
+import jcl.structs.conditions.exceptions.TypeErrorException;
 import jcl.types.Variable;
 import org.apache.commons.lang3.StringUtils;
 
@@ -32,7 +34,11 @@ public class SharpAsteriskReaderMacroFunction implements ReaderMacroFunction {
 		final String bitString = readExtendedToken.getToken();
 
 		if (numArg == null) {
-			return new BitVectorStruct(bitString);
+			try {
+				return new BitVectorStruct(bitString);
+			} catch (final TypeErrorException | SimpleErrorException e) {
+				throw new ReaderErrorException("Error occurred creating bit-vector.", e);
+			}
 		}
 
 		final int bitStringLength = bitString.length();
@@ -52,7 +58,11 @@ public class SharpAsteriskReaderMacroFunction implements ReaderMacroFunction {
 			}
 
 			final String newBitString = bitStringBuilder.toString();
-			return new BitVectorStruct(newBitString);
+			try {
+				return new BitVectorStruct(newBitString);
+			} catch (final TypeErrorException | SimpleErrorException e) {
+				throw new ReaderErrorException("Error occurred creating bit-vector.", e);
+			}
 		}
 	}
 }

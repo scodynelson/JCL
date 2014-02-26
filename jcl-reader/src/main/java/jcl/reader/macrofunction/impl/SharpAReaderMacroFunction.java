@@ -6,6 +6,8 @@ import jcl.reader.syntax.CharacterConstants;
 import jcl.structs.LispStruct;
 import jcl.structs.arrays.ArrayStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
+import jcl.structs.conditions.exceptions.SimpleErrorException;
+import jcl.structs.conditions.exceptions.TypeErrorException;
 import jcl.structs.conses.ListStruct;
 import jcl.types.Variable;
 
@@ -32,7 +34,11 @@ public class SharpAReaderMacroFunction implements ReaderMacroFunction {
 			final List<LispStruct> contentsAsJavaList = contentsList.getAsJavaList();
 
 			final List<Integer> dims = getDimensions(numArg, contentsList);
-			return new ArrayStruct<>(dims, contentsAsJavaList);
+			try {
+				return new ArrayStruct<>(dims, contentsAsJavaList);
+			} catch (final TypeErrorException | SimpleErrorException e) {
+				throw new ReaderErrorException("Error occurred creating array.", e);
+			}
 		} else {
 			throw new ReaderErrorException("#" + numArg + "A axis " + 0 + " is not a sequence: " + contents);
 		}

@@ -2,72 +2,184 @@ package jcl.structs.arrays;
 
 import jcl.structs.LispStruct;
 import jcl.structs.classes.BuiltInClassStruct;
+import jcl.structs.conditions.exceptions.SimpleErrorException;
+import jcl.structs.conditions.exceptions.TypeErrorException;
 import jcl.types.LispType;
 import jcl.types.T;
 import jcl.types.arrays.Array;
+import jcl.types.arrays.SimpleArray;
 
+import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The {@code ArrayStruct} is the object representation of a Lisp 'array' type.
+ */
 public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 
-	private final List<TYPE> contents;
-	private final int rank;
-	private final List<Integer> dimensions;
-	private final LispType elementType;
-	private final boolean isAdjustable;
-	private final Integer fillPointer;
+	protected List<TYPE> contents;
+	protected List<Integer> dimensions;
+	protected int rank;
+	protected LispType elementType;
+	protected boolean isAdjustable;
 
-	public ArrayStruct(final List<Integer> dimensions, final List<TYPE> contents) {
-		this(Array.INSTANCE, dimensions, contents, T.INSTANCE, false, null);
+	/**
+	 * Public constructor.
+	 *
+	 * @param dimensions the array dimensions
+	 * @param contents   the array contents
+	 * @throws TypeErrorException   if any of the provided {@code contents} are not of type {@code T}
+	 * @throws SimpleErrorException if the provided {@code contents} do not match the provided {@code dimensions}
+	 */
+	public ArrayStruct(final List<Integer> dimensions, final List<TYPE> contents) throws TypeErrorException, SimpleErrorException {
+		this(SimpleArray.INSTANCE, dimensions, contents, T.INSTANCE, false);
 	}
 
+	/**
+	 * Public constructor.
+	 *
+	 * @param dimensions   the array dimensions
+	 * @param contents     the array contents
+	 * @param elementType  the array elementType
+	 * @param isAdjustable whether or not the array is adjustable
+	 * @throws TypeErrorException   if any of the provided {@code contents} are not the same type as the provided {@code elementType}
+	 * @throws SimpleErrorException if the provided {@code contents} do not match the provided {@code dimensions}
+	 */
+	public ArrayStruct(final List<Integer> dimensions, final List<TYPE> contents, final LispType elementType,
+					   final boolean isAdjustable) throws TypeErrorException, SimpleErrorException {
+		this(getArrayType(isAdjustable), dimensions, contents, elementType, isAdjustable);
+	}
+
+	/**
+	 * Protected constructor.
+	 *
+	 * @param arrayType    the array type
+	 * @param dimensions   the array dimensions
+	 * @param contents     the array contents
+	 * @param elementType  the array elementType
+	 * @param isAdjustable whether or not the array is adjustable
+	 * @throws TypeErrorException   if any of the provided {@code contents} are not the same type as the provided {@code elementType}
+	 * @throws SimpleErrorException if the provided {@code contents} do not match the provided {@code dimensions}
+	 */
 	protected ArrayStruct(final Array arrayType,
 						  final List<Integer> dimensions, final List<TYPE> contents, final LispType elementType,
-						  final boolean isAdjustable, final Integer fillPointer) {
-		super(Array.INSTANCE, null, null);
+						  final boolean isAdjustable) throws TypeErrorException, SimpleErrorException {
+		super(arrayType, null, null);
 
-		this.contents = contents;
+		// Check input data
+		areContentsValidForDimensionsAndElementType(dimensions, elementType, contents);
 
-		// TODO: We really should do a check in here to verify the dimensions are the same as the contents
+		this.contents = new ArrayList<>(contents);
 		this.dimensions = dimensions;
+
 		rank = dimensions.size();
 
-		// TODO: We really should do a check in here to check each element against the element type
 		this.elementType = elementType;
 		this.isAdjustable = isAdjustable;
+	}
 
-		if ((rank != 1) && (fillPointer != null)) {
-			throw new IllegalArgumentException("Fill pointer supplied for non-singular dimensional array: " + fillPointer);
+	/**
+	 * This method gets the array type from the provided isAdjustable value.
+	 *
+	 * @param isAdjustable whether or not the array is adjustable
+	 * @return the matching array type for the provided isAdjustable value
+	 */
+	private static Array getArrayType(final boolean isAdjustable) {
+		return isAdjustable ? Array.INSTANCE : SimpleArray.INSTANCE;
+	}
+
+	/**
+	 * This method determines if the provided {@code dimensionsToCheck} and {@code elementTypeToCheck} are valid for the
+	 * provided {@code contentsToCheck}.
+	 *
+	 * @param dimensionsToCheck  the array dimensions to check
+	 * @param elementTypeToCheck the array elementType to check
+	 * @param contentsToCheck    the array contents to check
+	 * @throws TypeErrorException   if any of the provided {@code contentsToCheck} are not the same type as the provided {@code elementTypeToCheck}
+	 * @throws SimpleErrorException if the provided {@code contentsToCheck} do not match the provided {@code dimensionsToCheck}
+	 */
+	private void areContentsValidForDimensionsAndElementType(final List<Integer> dimensionsToCheck, final LispType elementTypeToCheck,
+															 final List<TYPE> contentsToCheck)
+			throws SimpleErrorException, TypeErrorException {
+
+		int totalNumberOfElements = 0;
+		for (final int dimension : dimensionsToCheck) {
+			totalNumberOfElements += dimension;
 		}
-		this.fillPointer = fillPointer;
+
+		final int contentsSize = contentsToCheck.size();
+		if (contentsSize != totalNumberOfElements) {
+			throw new SimpleErrorException(contentsToCheck + " doesn't match array dimensions of #<" + elementTypeToCheck + ' ' + contentsSize + ">.");
+		}
+
+		for (final TYPE current : contentsToCheck) {
+			if (!current.getType().equals(elementTypeToCheck)) {
+				throw new TypeErrorException("Provided element " + current + " is not a subtype of the provided elementType " + elementTypeToCheck + '.');
+			}
+		}
 	}
 
 	public List<TYPE> getContents() {
 		return contents;
 	}
 
-	public int getRank() {
-		return rank;
+	public void setContents(final List<TYPE> contents) {
+		this.contents = new ArrayList<>(contents);
 	}
 
 	public List<Integer> getDimensions() {
 		return dimensions;
 	}
 
+	public void setDimensions(final List<Integer> dimensions) {
+		this.dimensions = dimensions;
+	}
+
+	public int getRank() {
+		return rank;
+	}
+
+	public void setRank(final int rank) {
+		this.rank = rank;
+	}
+
 	public LispType getElementType() {
 		return elementType;
+	}
+
+	public void setElementType(final LispType elementType) {
+		this.elementType = elementType;
 	}
 
 	public boolean isAdjustable() {
 		return isAdjustable;
 	}
 
-	public Integer getFillPointer() {
-		return fillPointer;
+	public void setAdjustable(final boolean isAdjustable) {
+		this.isAdjustable = isAdjustable;
 	}
 
-	public boolean isSimple() {
-		return !isAdjustable && (fillPointer == null);
+	/**
+	 * This method retrieves the element at the provided {@code index} location.
+	 *
+	 * @param index the index location of the element to retrieve
+	 * @return the retrieve element at the provided {@code index} location
+	 */
+	public TYPE getElementAt(final int index) {
+		return contents.get(index);
+	}
+
+	/**
+	 * This method sets the element at the provide {@code index} location to the provided {@code newValue} element.
+	 *
+	 * @param index    the index location of the element to set
+	 * @param newValue the element to set at the index location
+	 */
+	public void setElementAt(final int index, final TYPE newValue) {
+		for (int i = contents.size(); i <= index; i++) {
+			contents.add(null);
+		}
+		contents.set(index, newValue);
 	}
 
 	@Override
@@ -78,7 +190,6 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 				", dimensions=" + dimensions +
 				", elementType=" + elementType +
 				", isAdjustable=" + isAdjustable +
-				", fillPointer=" + fillPointer +
 				'}';
 	}
 }

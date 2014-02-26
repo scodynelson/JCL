@@ -82,12 +82,11 @@ public class SymbolTokenAccumulatedState implements State {
 			final String symName = StateUtils.convertTokensToString(tokenAttributes);
 
 			final PackageStruct.PackageSymbolStruct packageSymbol = Variable.Package.findSymbol(symName);
-			final SymbolStruct<?> symbol = packageSymbol.getSymbolStruct();
-			if (symbol == null) {
+			if (packageSymbol == null) {
 //				readerState.setErrorMessage("Unbound variable: " + symName); // TODO: This check will happen in the compiler...
 				return new SymbolStruct(symName);
 			}
-			return symbol;
+			return packageSymbol.getSymbolStruct();
 		}
 
 		// Check if last element is a 'PACKAGEMARKER'
@@ -172,7 +171,12 @@ public class SymbolTokenAccumulatedState implements State {
 				return symbol;
 			}
 		} else {
-			return new KeywordSymbolStruct(symName);
+			final PackageStruct.PackageSymbolStruct pkgSymStruct = PackageStruct.KEYWORD.findSymbol(symName);
+			if (pkgSymStruct == null) {
+				return new KeywordSymbolStruct(symName);
+			} else {
+				return pkgSymStruct.getSymbolStruct();
+			}
 		}
 	}
 }

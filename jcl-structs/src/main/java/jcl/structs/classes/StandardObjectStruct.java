@@ -30,4 +30,11 @@ public class StandardObjectStruct implements LispStruct {
 	public LispType getType() {
 		return StandardObject.INSTANCE;
 	}
+
+	@Override
+	public String toString() {
+		return "StandardObjectStruct{" +
+				"documentation='" + documentation + '\'' +
+				'}';
+	}
 }

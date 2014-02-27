@@ -31,9 +31,9 @@ public class Aux<VAR> {
 
 	@Override
 	public String toString() {
-		return "Aux{" +
-				"vars=" + vars +
-				'}';
+		return "Aux{"
+				+ "vars=" + vars
+				+ '}';
 	}
 
 	/**

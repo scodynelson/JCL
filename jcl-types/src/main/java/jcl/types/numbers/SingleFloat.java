@@ -115,9 +115,9 @@ public interface SingleFloat extends Float {
 
 			@Override
 			public String toString() {
-				return "SingleFloatImpl{" +
-						"intervalDesignator=" + intervalDesignator +
-						'}';
+				return "SingleFloatImpl{"
+						+ "intervalDesignator=" + intervalDesignator
+						+ '}';
 			}
 		}
 	}

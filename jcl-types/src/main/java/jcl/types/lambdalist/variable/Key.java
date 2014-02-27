@@ -21,9 +21,9 @@ import java.util.Map;
  * the keyword name used to match arguments to parameters is keyword-name, which may be a symbol in any package. (Of course,
  * if it is not a symbol in the KEYWORD package, it does not necessarily self-evaluate, so care must be taken when calling
  * the function to make sure that normal evaluation still yields the keyword name.) Thus
- * <t>(defun foo (&key radix (type 'integer)) ...)</t>
+ * (defun foo (&key radix (type 'integer)) ...)
  * means exactly the same as
- * <t>(defun foo (&key ((:radix radix)) ((:type type) 'integer)) ...)</t>
+ * (defun foo (&key ((:radix radix)) ((:type type) 'integer)) ...)
  * <p/>
  * The keyword parameter specifiers are, like all parameter specifiers, effectively processed from left to right. For each
  * keyword parameter specifier, if there is an argument pair whose name matches that specifier's name (that is, the names
@@ -150,11 +150,11 @@ public class Key<VAR> {
 
 		@Override
 		public String toString() {
-			return "KeyVar{" +
-					"var='" + var + '\'' +
-					", initForm=" + initForm +
-					", suppliedP=" + suppliedP +
-					'}';
+			return "KeyVar{"
+					+ "var='" + var + '\''
+					+ ", initForm=" + initForm
+					+ ", suppliedP=" + suppliedP
+					+ '}';
 		}
 	}
 }

@@ -54,8 +54,8 @@ public class OrTypeSpecifier implements CompoundTypeSpecifier {
 
 	@Override
 	public String toString() {
-		return "OrTypeSpecifier{" +
-				"types=" + types +
-				'}';
+		return "OrTypeSpecifier{"
+				+ "types=" + types
+				+ '}';
 	}
 }

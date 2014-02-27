@@ -7,9 +7,9 @@ import jcl.structs.LispStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.types.Variable;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Implements the '#=' Lisp reader macro.
@@ -36,7 +36,7 @@ public class SharpEqualsSignReaderMacroFunction implements ReaderMacroFunction {
 
 			reader.SHARP_EQUAL_REPL_TABLE.put(tag, token);
 
-			final Map<Long, LispStruct> sharpEqualReplTable = new HashMap<>();
+			final Map<Long, LispStruct> sharpEqualReplTable = new ConcurrentHashMap<>();
 			reader.circleSubst(sharpEqualReplTable, token);
 
 			reader.SHARP_EQUAL_FINAL_TABLE.put(numArg, token);

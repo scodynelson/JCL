@@ -95,10 +95,10 @@ public class ConsStruct extends ListStruct {
 
 	@Override
 	public String toString() {
-		return "ConsStruct{" +
-				"car=" + car +
-				", cdr=" + cdr +
-				'}';
+		return "ConsStruct{"
+				+ "car=" + car
+				+ ", cdr=" + cdr
+				+ '}';
 	}
 
 	// BUILDERS

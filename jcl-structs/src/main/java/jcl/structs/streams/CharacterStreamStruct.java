@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
 
 /**
  * The {@code CharacterStreamStruct} is the object representation of a character reading system level Lisp stream.
@@ -43,7 +44,7 @@ public class CharacterStreamStruct extends StreamStruct implements InputStream, 
 	public CharacterStreamStruct(final boolean isInteractive, final java.io.InputStream inputStream, final java.io.OutputStream outputStream) {
 		super(null, null, isInteractive, Character.INSTANCE);
 		this.inputStream = new LineNumberReader(new InputStreamReader(inputStream));
-		this.outputStream = new PrintWriter(new OutputStreamWriter(outputStream));
+		this.outputStream = new PrintWriter(new OutputStreamWriter(outputStream, Charset.defaultCharset()));
 	}
 
 	@Override
@@ -171,7 +172,7 @@ public class CharacterStreamStruct extends StreamStruct implements InputStream, 
 	@Override
 	public boolean listen() {
 		try {
-			final PeekResult peekResult = peekChar(null, false, null, false);
+			final PeekResult peekResult = peekChar(PeekType.NIL_PEEK_TYPE, false, null, false);
 			return !peekResult.wasEOF();
 		} catch (final EndOfFileException eofe) {
 			LOGGER.warn("End of file reached.", eofe);
@@ -245,9 +246,9 @@ public class CharacterStreamStruct extends StreamStruct implements InputStream, 
 
 	@Override
 	public String toString() {
-		return "CharacterStreamStruct{" +
-				"inputStream=" + inputStream +
-				", outputStream=" + outputStream +
-				'}';
+		return "CharacterStreamStruct{"
+				+ "inputStream=" + inputStream
+				+ ", outputStream=" + outputStream
+				+ '}';
 	}
 }

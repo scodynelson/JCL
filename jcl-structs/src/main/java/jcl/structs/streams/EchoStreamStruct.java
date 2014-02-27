@@ -190,10 +190,10 @@ public class EchoStreamStruct extends StreamStruct implements InputStream, Outpu
 
 	@Override
 	public String toString() {
-		return "EchoStreamStruct{" +
-				"inputStream=" + inputStream +
-				", outputStream=" + outputStream +
-				", unreadStuff=" + unreadStuff +
-				'}';
+		return "EchoStreamStruct{"
+				+ "inputStream=" + inputStream
+				+ ", outputStream=" + outputStream
+				+ ", unreadStuff=" + unreadStuff
+				+ '}';
 	}
 }

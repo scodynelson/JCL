@@ -190,8 +190,8 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 
 	@Override
 	public String toString() {
-		return "ConcatenatedStreamStruct{" +
-				"inputStreams=" + inputStreams +
-				'}';
+		return "ConcatenatedStreamStruct{"
+				+ "inputStreams=" + inputStreams
+				+ '}';
 	}
 }

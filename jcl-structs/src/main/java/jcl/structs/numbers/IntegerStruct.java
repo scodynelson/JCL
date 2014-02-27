@@ -32,8 +32,8 @@ public class IntegerStruct extends RationalStruct {
 
 	@Override
 	public String toString() {
-		return "IntegerStruct{" +
-				"bigInteger=" + bigInteger +
-				'}';
+		return "IntegerStruct{"
+				+ "bigInteger=" + bigInteger
+				+ '}';
 	}
 }

@@ -37,7 +37,7 @@ public interface Integer extends Rational {
 		 * @return the newly created compound {@code Integer} type
 		 */
 		public static Integer getInstance(final BigInteger lowerBound, final BigInteger upperBound) {
-			return new IntegerImpl(lowerBound, true, upperBound, true);
+			return IntegerImpl.getInstance(lowerBound, true, upperBound, true);
 		}
 
 		/**
@@ -51,7 +51,7 @@ public interface Integer extends Rational {
 		 */
 		public static Integer getInstance(final BigInteger lowerBound, final boolean lowerInclusive,
 										  final BigInteger upperBound, final boolean upperInclusive) {
-			return new IntegerImpl(lowerBound, lowerInclusive, upperBound, upperInclusive);
+			return IntegerImpl.getInstance(lowerBound, lowerInclusive, upperBound, upperInclusive);
 		}
 
 		/**
@@ -92,6 +92,20 @@ public interface Integer extends Rational {
 				intervalDesignator = new IntervalDesignator<>(realLower, realUpper);
 			}
 
+			/**
+			 * Gets instance of compound {@code Integer} type.
+			 *
+			 * @param lowerBound     the lower bound that this {@code Integer} type includes
+			 * @param lowerInclusive whether to include the lower bound in the interval
+			 * @param upperBound     the upper bound that this {@code Integer} type includes
+			 * @param upperInclusive whether to include the upper bound in the interval
+			 * @return the newly created compound {@code Integer} type
+			 */
+			public static Integer getInstance(final BigInteger lowerBound, final boolean lowerInclusive,
+											  final BigInteger upperBound, final boolean upperInclusive) {
+				return new IntegerImpl(lowerBound, lowerInclusive, upperBound, upperInclusive);
+			}
+
 			@Override
 			public boolean equals(final Object obj) {
 				if (this == obj) {
@@ -125,9 +139,9 @@ public interface Integer extends Rational {
 
 			@Override
 			public String toString() {
-				return "IntegerImpl{" +
-						"intervalDesignator=" + intervalDesignator +
-						'}';
+				return "IntegerImpl{"
+						+ "intervalDesignator=" + intervalDesignator
+						+ '}';
 			}
 		}
 	}

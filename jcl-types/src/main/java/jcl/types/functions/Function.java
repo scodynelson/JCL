@@ -46,7 +46,7 @@ public interface Function extends T {
 		public static Function getInstance(final List<TypeSpecifier> typeSpecifiers, final Optional<TypeSpecifier> optional,
 										   final Rest<TypeSpecifier> rest, final Key<TypeSpecifier> key,
 										   final ValuesTypeSpecifier valuesTypeSpecifier) {
-			return new FunctionImpl(typeSpecifiers, optional, rest, key, valuesTypeSpecifier);
+			return FunctionImpl.getInstance(typeSpecifiers, optional, rest, key, valuesTypeSpecifier);
 		}
 
 		/**
@@ -93,6 +93,22 @@ public interface Function extends T {
 				this.valuesTypeSpecifier = valuesTypeSpecifier;
 			}
 
+			/**
+			 * Gets instance of compound {@code Function} type.
+			 *
+			 * @param typeSpecifiers      the required arguments
+			 * @param optional            the optional arguments
+			 * @param rest                the rest arguments
+			 * @param key                 the key arguments
+			 * @param valuesTypeSpecifier the values arguments
+			 * @return the newly created compound {@code Function} type
+			 */
+			public static Function getInstance(final List<TypeSpecifier> typeSpecifiers, final Optional<TypeSpecifier> optional,
+											   final Rest<TypeSpecifier> rest, final Key<TypeSpecifier> key,
+											   final ValuesTypeSpecifier valuesTypeSpecifier) {
+				return new FunctionImpl(typeSpecifiers, optional, rest, key, valuesTypeSpecifier);
+			}
+
 			@Override
 			public boolean equals(final Object obj) {
 				if (this == obj) {
@@ -133,13 +149,13 @@ public interface Function extends T {
 
 			@Override
 			public String toString() {
-				return "FunctionImpl{" +
-						"typeSpecifiers=" + typeSpecifiers +
-						", optional=" + optional +
-						", rest=" + rest +
-						", key=" + key +
-						", valuesTypeSpecifier=" + valuesTypeSpecifier +
-						'}';
+				return "FunctionImpl{"
+						+ "typeSpecifiers=" + typeSpecifiers
+						+ ", optional=" + optional
+						+ ", rest=" + rest
+						+ ", key=" + key
+						+ ", valuesTypeSpecifier=" + valuesTypeSpecifier
+						+ '}';
 			}
 		}
 	}

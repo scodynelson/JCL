@@ -6,12 +6,12 @@ import jcl.structs.LispStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.streams.ReadResult;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class DispatchTable implements ReaderMacroFunction {
 
-	private final Map<Integer, ReaderMacroFunction> macroFunctionMap = new HashMap<>();
+	private final Map<Integer, ReaderMacroFunction> macroFunctionMap = new ConcurrentHashMap<>();
 
 	@Override
 	public LispStruct readMacro(final int codePoint, final MacroFunctionReader reader, final Integer numArg) throws ReaderErrorException {

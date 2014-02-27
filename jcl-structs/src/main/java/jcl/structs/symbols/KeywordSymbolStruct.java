@@ -27,12 +27,12 @@ public class KeywordSymbolStruct extends SymbolStruct<KeywordSymbolStruct> {
 
 	@Override
 	public String toString() {
-		return "KeywordSymbolStruct{" +
-				"name='" + name + '\'' +
-				", symbolPackage=" + symbolPackage +
-				", properties=" + properties +
-//				", value=" + value + // NOTE: we are NOT enabling this because right now the printer for default toString() will be an infinite loop
-				", function=" + function +
-				'}';
+		return "KeywordSymbolStruct{"
+				+ "name='" + name + '\''
+				+ ", symbolPackage=" + symbolPackage
+				+ ", properties=" + properties
+//				+ ", value=" + value // NOTE: we are NOT enabling this because right now the printer for default toString() will be an infinite loop
+				+ ", function=" + function
+				+ '}';
 	}
 }

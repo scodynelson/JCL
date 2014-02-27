@@ -40,7 +40,7 @@ public interface Vector extends Array, Sequence {
 		 * @return the newly created compound {@code Vector} type
 		 */
 		public static Vector getInstance(final Integer size, final LispType elementType) {
-			return new VectorImpl(size, elementType);
+			return VectorImpl.getInstance(size, elementType);
 		}
 
 		/**
@@ -78,6 +78,17 @@ public interface Vector extends Array, Sequence {
 			@Override
 			public LispType getElementType() {
 				return elementType;
+			}
+
+			/**
+			 * Gets instance of compound {@code Vector} type.
+			 *
+			 * @param size        the size of the {@code Vector}
+			 * @param elementType the types of elements within the {@code Vector}
+			 * @return the newly created compound {@code Vector} type
+			 */
+			public static Vector getInstance(final Integer size, final LispType elementType) {
+				return new VectorImpl(size, elementType);
 			}
 
 			@Override
@@ -118,10 +129,10 @@ public interface Vector extends Array, Sequence {
 
 			@Override
 			public String toString() {
-				return "VectorImpl{" +
-						"size=" + size +
-						", elementType=" + elementType +
-						'}';
+				return "VectorImpl{"
+						+ "size=" + size
+						+ ", elementType=" + elementType
+						+ '}';
 			}
 		}
 	}

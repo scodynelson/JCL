@@ -57,7 +57,7 @@ public interface Array extends T {
 		 * @return the newly created compound {@code Array} type
 		 */
 		public static Array getInstance(final List<Integer> dimensions, final LispType elementType) {
-			return new ArrayImpl(dimensions, elementType);
+			return ArrayImpl.getInstance(dimensions, elementType);
 		}
 
 		/**
@@ -95,6 +95,17 @@ public interface Array extends T {
 			@Override
 			public LispType getElementType() {
 				return elementType;
+			}
+
+			/**
+			 * Gets instance of compound {@code Array} type.
+			 *
+			 * @param dimensions  the dimensions of the {@code Array}
+			 * @param elementType the types of elements within the {@code Array}
+			 * @return the newly created compound {@code Array} type
+			 */
+			public static Array getInstance(final List<Integer> dimensions, final LispType elementType) {
+				return new ArrayImpl(dimensions, elementType);
 			}
 
 			@Override
@@ -135,10 +146,10 @@ public interface Array extends T {
 
 			@Override
 			public String toString() {
-				return "ArrayImpl{" +
-						"dimensions=" + dimensions +
-						", elementType=" + elementType +
-						'}';
+				return "ArrayImpl{"
+						+ "dimensions=" + dimensions
+						+ ", elementType=" + elementType
+						+ '}';
 			}
 		}
 	}

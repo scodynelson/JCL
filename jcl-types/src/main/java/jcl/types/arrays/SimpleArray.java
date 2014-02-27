@@ -42,7 +42,7 @@ public interface SimpleArray extends Array {
 		 * @return the newly created compound {@code SimpleArray} type
 		 */
 		public static SimpleArray getInstance(final List<Integer> dimensions, final LispType elementType) {
-			return new SimpleArrayImpl(dimensions, elementType);
+			return SimpleArrayImpl.getInstance(dimensions, elementType);
 		}
 
 		/**
@@ -80,6 +80,17 @@ public interface SimpleArray extends Array {
 			@Override
 			public LispType getElementType() {
 				return elementType;
+			}
+
+			/**
+			 * Gets instance of compound {@code SimpleArray} type.
+			 *
+			 * @param dimensions  the dimensions of the {@code SimpleArray}
+			 * @param elementType the types of elements within the {@code SimpleArray}
+			 * @return the newly created compound {@code SimpleArray} type
+			 */
+			public static SimpleArray getInstance(final List<Integer> dimensions, final LispType elementType) {
+				return new SimpleArrayImpl(dimensions, elementType);
 			}
 
 			@Override
@@ -120,10 +131,10 @@ public interface SimpleArray extends Array {
 
 			@Override
 			public String toString() {
-				return "SimpleArrayImpl{" +
-						"dimensions=" + dimensions +
-						", elementType=" + elementType +
-						'}';
+				return "SimpleArrayImpl{"
+						+ "dimensions=" + dimensions
+						+ ", elementType=" + elementType
+						+ '}';
 			}
 		}
 	}

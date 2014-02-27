@@ -35,7 +35,7 @@ public interface ShortFloat extends Float {
 		 * @return the newly created compound {@code ShortFloat} type
 		 */
 		public static ShortFloat getInstance(final BigDecimal lowerBound, final BigDecimal upperBound) {
-			return new ShortFloatImpl(lowerBound, true, upperBound, true);
+			return ShortFloatImpl.getInstance(lowerBound, true, upperBound, true);
 		}
 
 		/**
@@ -49,7 +49,7 @@ public interface ShortFloat extends Float {
 		 */
 		public static ShortFloat getInstance(final BigDecimal lowerBound, final boolean lowerInclusive,
 											 final BigDecimal upperBound, final boolean upperInclusive) {
-			return new ShortFloatImpl(lowerBound, lowerInclusive, upperBound, upperInclusive);
+			return ShortFloatImpl.getInstance(lowerBound, lowerInclusive, upperBound, upperInclusive);
 		}
 
 		/**
@@ -80,6 +80,20 @@ public interface ShortFloat extends Float {
 				final BigDecimal realLower = lowerInclusive ? lowerBound : lowerBound.add(BigDecimal.ONE);
 				final BigDecimal realUpper = upperInclusive ? upperBound : upperBound.subtract(BigDecimal.ONE);
 				intervalDesignator = new IntervalDesignator<>(realLower, realUpper);
+			}
+
+			/**
+			 * Gets instance of compound {@code ShortFloat} type.
+			 *
+			 * @param lowerBound     the lower bound that this {@code ShortFloat} type includes
+			 * @param lowerInclusive whether to include the lower bound in the interval
+			 * @param upperBound     the upper bound that this {@code ShortFloat} type includes
+			 * @param upperInclusive whether to include the upper bound in the interval
+			 * @return the newly created compound {@code ShortFloat} type
+			 */
+			public static ShortFloat getInstance(final BigDecimal lowerBound, final boolean lowerInclusive,
+												 final BigDecimal upperBound, final boolean upperInclusive) {
+				return new ShortFloatImpl(lowerBound, lowerInclusive, upperBound, upperInclusive);
 			}
 
 			@Override
@@ -115,9 +129,9 @@ public interface ShortFloat extends Float {
 
 			@Override
 			public String toString() {
-				return "ShortFloatImpl{" +
-						"intervalDesignator=" + intervalDesignator +
-						'}';
+				return "ShortFloatImpl{"
+						+ "intervalDesignator=" + intervalDesignator
+						+ '}';
 			}
 		}
 	}

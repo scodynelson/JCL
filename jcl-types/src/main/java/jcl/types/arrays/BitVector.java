@@ -37,7 +37,7 @@ public interface BitVector extends Vector {
 		 * @return the newly created compound {@code BitVector} type
 		 */
 		public static BitVector getInstance(final Integer size) {
-			return new BitVectorImpl(size);
+			return BitVectorImpl.getInstance(size);
 		}
 
 		/**
@@ -46,7 +46,7 @@ public interface BitVector extends Vector {
 		private static class BitVectorImpl implements BitVector, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final DimensionsDesignator size;
-			private final LispType elementType = Bit.INSTANCE;
+			private static final LispType ELEMENT_TYPE = Bit.INSTANCE;
 
 			/**
 			 * Private constructor.
@@ -71,7 +71,17 @@ public interface BitVector extends Vector {
 
 			@Override
 			public LispType getElementType() {
-				return elementType;
+				return ELEMENT_TYPE;
+			}
+
+			/**
+			 * Gets instance of compound {@code BitVector} type.
+			 *
+			 * @param size the size of the {@code BitVector}
+			 * @return the newly created compound {@code BitVector} type
+			 */
+			public static BitVector getInstance(final Integer size) {
+				return new BitVectorImpl(size);
 			}
 
 			@Override
@@ -102,16 +112,16 @@ public interface BitVector extends Vector {
 			public int hashCode() {
 				return new HashCodeBuilder()
 						.append(size)
-						.append(elementType)
+						.append(ELEMENT_TYPE)
 						.toHashCode();
 			}
 
 			@Override
 			public String toString() {
-				return "BitVectorImpl{" +
-						"size=" + size +
-						", elementType=" + elementType +
-						'}';
+				return "BitVectorImpl{"
+						+ "size=" + size
+						+ ", elementType=" + ELEMENT_TYPE
+						+ '}';
 			}
 		}
 	}

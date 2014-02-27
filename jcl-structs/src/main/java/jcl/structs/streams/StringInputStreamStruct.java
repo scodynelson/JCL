@@ -157,6 +157,7 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 
 	@Override
 	public void clearInput() {
+		// Do nothing.
 	}
 
 	@Override
@@ -179,10 +180,10 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 
 	@Override
 	public String toString() {
-		return "StringInputStreamStruct{" +
-				"inputString='" + inputString + '\'' +
-				", end=" + end +
-				", current=" + current +
-				'}';
+		return "StringInputStreamStruct{"
+				+ "inputString='" + inputString + '\''
+				+ ", end=" + end
+				+ ", current=" + current
+				+ '}';
 	}
 }

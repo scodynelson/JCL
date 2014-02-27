@@ -61,10 +61,10 @@ public class ClassStruct extends StandardObjectStruct {
 
 	@Override
 	public String toString() {
-		return "ClassStruct{" +
-				"type=" + type +
-				", directSuperClasses=" + directSuperClasses +
-				", subClasses=" + subClasses +
-				'}';
+		return "ClassStruct{"
+				+ "type=" + type
+				+ ", directSuperClasses=" + directSuperClasses
+				+ ", subClasses=" + subClasses
+				+ '}';
 	}
 }

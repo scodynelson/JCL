@@ -45,8 +45,8 @@ public class NotTypeSpecifier implements CompoundTypeSpecifier {
 
 	@Override
 	public String toString() {
-		return "NotTypeSpecifier{" +
-				"type=" + type +
-				'}';
+		return "NotTypeSpecifier{"
+				+ "type=" + type
+				+ '}';
 	}
 }

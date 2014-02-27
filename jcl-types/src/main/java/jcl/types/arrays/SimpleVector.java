@@ -38,7 +38,7 @@ public interface SimpleVector extends Vector, SimpleArray {
 		 * @return the newly created compound {@code SimpleVector} type
 		 */
 		public static SimpleVector getInstance(final Integer size) {
-			return new SimpleVectorImpl(size);
+			return SimpleVectorImpl.getInstance(size);
 		}
 
 		/**
@@ -73,6 +73,16 @@ public interface SimpleVector extends Vector, SimpleArray {
 			@Override
 			public LispType getElementType() {
 				return elementType;
+			}
+
+			/**
+			 * Gets instance of compound {@code SimpleVector} type.
+			 *
+			 * @param size the size of the {@code SimpleVector}
+			 * @return the newly created compound {@code SimpleVector} type
+			 */
+			public static SimpleVector getInstance(final Integer size) {
+				return new SimpleVectorImpl(size);
 			}
 
 			@Override
@@ -113,10 +123,10 @@ public interface SimpleVector extends Vector, SimpleArray {
 
 			@Override
 			public String toString() {
-				return "SimpleVectorImpl{" +
-						"size=" + size +
-						", elementType=" + elementType +
-						'}';
+				return "SimpleVectorImpl{"
+						+ "size=" + size
+						+ ", elementType=" + elementType
+						+ '}';
 			}
 		}
 	}

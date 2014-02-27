@@ -43,8 +43,8 @@ public class FloatStruct extends RealStruct {
 
 	@Override
 	public String toString() {
-		return "FloatStruct{" +
-				", bigDecimal=" + bigDecimal +
-				'}';
+		return "FloatStruct{"
+				+ ", bigDecimal=" + bigDecimal
+				+ '}';
 	}
 }

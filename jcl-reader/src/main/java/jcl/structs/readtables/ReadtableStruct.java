@@ -8,13 +8,13 @@ import jcl.structs.LispStruct;
 import jcl.types.LispType;
 import jcl.types.readtables.Readtable;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ReadtableStruct implements LispStruct {
 
-	private final Map<Integer, ReaderMacroFunction> macroTableMap = new HashMap<>();
-	private final Map<Integer, DispatchTable> dispatchTableMap = new HashMap<>();
+	private final Map<Integer, ReaderMacroFunction> macroTableMap = new ConcurrentHashMap<>();
+	private final Map<Integer, DispatchTable> dispatchTableMap = new ConcurrentHashMap<>();
 
 	private final AttributeTable attributeTable = new AttributeTable();
 	private final SyntaxTable syntaxTable = new SyntaxTable();

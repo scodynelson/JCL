@@ -36,7 +36,7 @@ public interface SimpleBitVector extends BitVector, SimpleArray {
 		 * @return the newly created compound {@code SimpleBitVector} type
 		 */
 		public static SimpleBitVector getInstance(final Integer size) {
-			return new SimpleBitVectorImpl(size);
+			return SimpleBitVectorImpl.getInstance(size);
 		}
 
 		/**
@@ -73,6 +73,16 @@ public interface SimpleBitVector extends BitVector, SimpleArray {
 				return elementType;
 			}
 
+			/**
+			 * Gets instance of compound {@code SimpleBitVector} type.
+			 *
+			 * @param size the size of the {@code SimpleBitVector}
+			 * @return the newly created compound {@code SimpleBitVector} type
+			 */
+			public static SimpleBitVector getInstance(final Integer size) {
+				return new SimpleBitVectorImpl(size);
+			}
+
 			@Override
 			public boolean equals(final Object obj) {
 				if (this == obj) {
@@ -107,10 +117,10 @@ public interface SimpleBitVector extends BitVector, SimpleArray {
 
 			@Override
 			public String toString() {
-				return "SimpleBitVectorImpl{" +
-						"size=" + size +
-						", elementType=" + elementType +
-						'}';
+				return "SimpleBitVectorImpl{"
+						+ "size=" + size
+						+ ", elementType=" + elementType
+						+ '}';
 			}
 		}
 	}

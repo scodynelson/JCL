@@ -38,7 +38,7 @@ public interface Rational extends Real {
 		 * @return the newly created compound {@code Rational} type
 		 */
 		public static Rational getInstance(final BigInteger lowerBound, final BigInteger upperBound) {
-			return new RationalImpl(lowerBound, true, upperBound, true);
+			return RationalImpl.getInstance(lowerBound, true, upperBound, true);
 		}
 
 		/**
@@ -52,7 +52,7 @@ public interface Rational extends Real {
 		 */
 		public static Rational getInstance(final BigInteger lowerBound, final boolean lowerInclusive,
 										   final BigInteger upperBound, final boolean upperInclusive) {
-			return new RationalImpl(lowerBound, lowerInclusive, upperBound, upperInclusive);
+			return RationalImpl.getInstance(lowerBound, lowerInclusive, upperBound, upperInclusive);
 		}
 
 		/**
@@ -83,6 +83,20 @@ public interface Rational extends Real {
 				final BigInteger realLower = lowerInclusive ? lowerBound : lowerBound.add(BigInteger.ONE);
 				final BigInteger realUpper = upperInclusive ? upperBound : upperBound.subtract(BigInteger.ONE);
 				intervalDesignator = new IntervalDesignator<>(realLower, realUpper);
+			}
+
+			/**
+			 * Gets instance of compound {@code Rational} type.
+			 *
+			 * @param lowerBound     the lower bound that this {@code Rational} type includes
+			 * @param lowerInclusive whether to include the lower bound in the interval
+			 * @param upperBound     the upper bound that this {@code Rational} type includes
+			 * @param upperInclusive whether to include the upper bound in the interval
+			 * @return the newly created compound {@code Rational} type
+			 */
+			public static Rational getInstance(final BigInteger lowerBound, final boolean lowerInclusive,
+											   final BigInteger upperBound, final boolean upperInclusive) {
+				return new RationalImpl(lowerBound, lowerInclusive, upperBound, upperInclusive);
 			}
 
 			@Override
@@ -118,9 +132,9 @@ public interface Rational extends Real {
 
 			@Override
 			public String toString() {
-				return "RationalImpl{" +
-						"intervalDesignator=" + intervalDesignator +
-						'}';
+				return "RationalImpl{"
+						+ "intervalDesignator=" + intervalDesignator
+						+ '}';
 			}
 		}
 	}

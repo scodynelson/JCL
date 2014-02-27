@@ -54,8 +54,8 @@ public class AndTypeSpecifier implements CompoundTypeSpecifier {
 
 	@Override
 	public String toString() {
-		return "AndTypeSpecifier{" +
-				"types=" + types +
-				'}';
+		return "AndTypeSpecifier{"
+				+ "types=" + types
+				+ '}';
 	}
 }

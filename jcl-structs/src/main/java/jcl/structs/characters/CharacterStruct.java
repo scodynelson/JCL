@@ -62,8 +62,8 @@ public class CharacterStruct extends BuiltInClassStruct {
 
 	@Override
 	public String toString() {
-		return "CharacterStruct{" +
-				"codePoint=" + codePoint +
-				'}';
+		return "CharacterStruct{"
+				+ "codePoint=" + codePoint
+				+ '}';
 	}
 }

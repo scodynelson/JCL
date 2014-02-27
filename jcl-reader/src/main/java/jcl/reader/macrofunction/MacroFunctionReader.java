@@ -22,9 +22,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class MacroFunctionReader extends LispReader {
 
@@ -502,10 +502,10 @@ public class MacroFunctionReader extends LispReader {
 	//** #= and ## **//
 	//***************//
 
-	public static final Map<Integer, LispStruct> SHARP_EQUAL_FINAL_TABLE = new HashMap<>();
-	public static final Map<Integer, Object> SHARP_EQUAL_TEMP_TABLE = new HashMap<>();
-	public static final Map<Integer, LispStruct> SHARP_EQUAL_REPL_TABLE = new HashMap<>();
-	public static final Map<Integer, LispStruct> SHARP_EQUAL_CIRCLE_TABLE = new HashMap<>();
+	public static final Map<Integer, LispStruct> SHARP_EQUAL_FINAL_TABLE = new ConcurrentHashMap<>();
+	public static final Map<Integer, Object> SHARP_EQUAL_TEMP_TABLE = new ConcurrentHashMap<>();
+	public static final Map<Integer, LispStruct> SHARP_EQUAL_REPL_TABLE = new ConcurrentHashMap<>();
+	public static final Map<Integer, LispStruct> SHARP_EQUAL_CIRCLE_TABLE = new ConcurrentHashMap<>();
 
 	public void circleSubst(final Map<Long, LispStruct> replTable, final LispStruct tree) {
 /*

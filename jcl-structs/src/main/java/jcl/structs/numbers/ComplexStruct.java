@@ -146,9 +146,9 @@ public class ComplexStruct extends NumberStruct {
 
 	@Override
 	public String toString() {
-		return "ComplexStruct{" +
-				"real=" + real +
-				", imaginary=" + imaginary +
-				'}';
+		return "ComplexStruct{"
+				+ "real=" + real
+				+ ", imaginary=" + imaginary
+				+ '}';
 	}
 }

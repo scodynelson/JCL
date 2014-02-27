@@ -32,8 +32,8 @@ public class Rest<TYPE> {
 
 	@Override
 	public String toString() {
-		return "Rest{" +
-				"forms=" + forms +
-				'}';
+		return "Rest{"
+				+ "forms=" + forms
+				+ '}';
 	}
 }

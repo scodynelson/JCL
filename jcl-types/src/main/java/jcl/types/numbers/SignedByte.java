@@ -39,7 +39,7 @@ public interface SignedByte extends Integer {
 		 * @return the newly created compound {@code SignedByte} type
 		 */
 		public static SignedByte getInstance(final BigInteger bits) {
-			return new SignedByteImpl(bits);
+			return SignedByteImpl.getInstance(bits);
 		}
 
 		/**
@@ -78,6 +78,16 @@ public interface SignedByte extends Integer {
 					upper = ArithmeticUtils.pow(BigInteger.valueOf(2L), bits.subtract(BigInteger.ONE));
 				}
 				return Integer.Factory.getInstance(lower, upper);
+			}
+
+			/**
+			 * Gets instance of compound {@code SignedByte} type.
+			 *
+			 * @param bits the bits that comprise the byte value
+			 * @return the newly created compound {@code SignedByte} type
+			 */
+			public static SignedByte getInstance(final BigInteger bits) {
+				return new SignedByteImpl(bits);
 			}
 
 			@Override

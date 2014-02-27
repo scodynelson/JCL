@@ -86,7 +86,7 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 	}
 
 	/**
-	 * This method returns the Java string representation of the StringStruct
+	 * This method returns the Java string representation of the StringStruct.
 	 *
 	 * @return a Java string representation of the StringStruct
 	 */
@@ -103,13 +103,13 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 
 	@Override
 	public java.lang.String toString() {
-		return "StringStruct{" +
-				"contents=" + contents +
-				", rank=" + rank +
-				", dimensions=" + dimensions +
-				", elementType=" + elementType +
-				", isAdjustable=" + isAdjustable +
-				"fillPointer=" + fillPointer +
-				'}';
+		return "StringStruct{"
+				+ "contents=" + contents
+				+ ", rank=" + rank
+				+ ", dimensions=" + dimensions
+				+ ", elementType=" + elementType
+				+ ", isAdjustable=" + isAdjustable
+				+ "fillPointer=" + fillPointer
+				+ '}';
 	}
 }

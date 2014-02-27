@@ -33,8 +33,8 @@ public class StandardObjectStruct implements LispStruct {
 
 	@Override
 	public String toString() {
-		return "StandardObjectStruct{" +
-				"documentation='" + documentation + '\'' +
-				'}';
+		return "StandardObjectStruct{"
+				+ "documentation='" + documentation + '\''
+				+ '}';
 	}
 }

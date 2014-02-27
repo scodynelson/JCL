@@ -36,7 +36,7 @@ public interface BaseString extends String {
 		 * @return the newly created compound {@code BaseString} type
 		 */
 		public static BaseString getInstance(final Integer size) {
-			return new BaseStringImpl(size);
+			return BaseStringImpl.getInstance(size);
 		}
 
 		/**
@@ -73,6 +73,16 @@ public interface BaseString extends String {
 				return elementType;
 			}
 
+			/**
+			 * Gets instance of compound {@code BaseString} type.
+			 *
+			 * @param size the size of the {@code BaseString}
+			 * @return the newly created compound {@code BaseString} type
+			 */
+			public static BaseString getInstance(final Integer size) {
+				return new BaseStringImpl(size);
+			}
+
 			@Override
 			public boolean equals(final Object obj) {
 				if (this == obj) {
@@ -107,10 +117,10 @@ public interface BaseString extends String {
 
 			@Override
 			public java.lang.String toString() {
-				return "BaseStringImpl{" +
-						"size=" + size +
-						", elementType=" + elementType +
-						'}';
+				return "BaseStringImpl{"
+						+ "size=" + size
+						+ ", elementType=" + elementType
+						+ '}';
 			}
 		}
 	}

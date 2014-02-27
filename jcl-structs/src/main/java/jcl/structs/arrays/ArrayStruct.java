@@ -184,12 +184,12 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 
 	@Override
 	public String toString() {
-		return "ArrayStruct{" +
-				"contents=" + contents +
-				", rank=" + rank +
-				", dimensions=" + dimensions +
-				", elementType=" + elementType +
-				", isAdjustable=" + isAdjustable +
-				'}';
+		return "ArrayStruct{"
+				+ "contents=" + contents
+				+ ", rank=" + rank
+				+ ", dimensions=" + dimensions
+				+ ", elementType=" + elementType
+				+ ", isAdjustable=" + isAdjustable
+				+ '}';
 	}
 }

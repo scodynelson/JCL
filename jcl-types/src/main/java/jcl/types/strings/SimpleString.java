@@ -38,7 +38,7 @@ public interface SimpleString extends String, SimpleArray {
 		 * @return the newly created compound {@code SimpleString} type
 		 */
 		public static SimpleString getInstance(final Integer size) {
-			return new SimpleStringImpl(size);
+			return SimpleStringImpl.getInstance(size);
 		}
 
 		/**
@@ -75,6 +75,16 @@ public interface SimpleString extends String, SimpleArray {
 				return elementType;
 			}
 
+			/**
+			 * Gets instance of compound {@code SimpleString} type.
+			 *
+			 * @param size the size of the {@code SimpleString}
+			 * @return the newly created compound {@code SimpleString} type
+			 */
+			public static SimpleString getInstance(final Integer size) {
+				return new SimpleStringImpl(size);
+			}
+
 			@Override
 			public boolean equals(final Object obj) {
 				if (this == obj) {
@@ -109,10 +119,10 @@ public interface SimpleString extends String, SimpleArray {
 
 			@Override
 			public java.lang.String toString() {
-				return "SimpleStringImpl{" +
-						"size=" + size +
-						", elementType=" + elementType +
-						'}';
+				return "SimpleStringImpl{"
+						+ "size=" + size
+						+ ", elementType=" + elementType
+						+ '}';
 			}
 		}
 	}

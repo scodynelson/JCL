@@ -139,8 +139,8 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 
 	@Override
 	public String toString() {
-		return "BroadcastStreamStruct{" +
-				"outputStreams=" + outputStreams +
-				'}';
+		return "BroadcastStreamStruct{"
+				+ "outputStreams=" + outputStreams
+				+ '}';
 	}
 }

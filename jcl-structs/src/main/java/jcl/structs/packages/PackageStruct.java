@@ -8,18 +8,18 @@ import jcl.types.packages.Package;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The {@code PackageStruct} is the object representation of a Lisp 'package' type.
  */
 public class PackageStruct extends BuiltInClassStruct {
 
-	private static final Map<String, PackageStruct> ALL_PACKAGES = new HashMap<>();
+	private static final Map<String, PackageStruct> ALL_PACKAGES = new ConcurrentHashMap<>();
 
 	public static final PackageStruct COMMON_LISP = new PackageStruct("COMMON-LISP");
 	public static final PackageStruct SYSTEM = new PackageStruct("SYSTEM");
@@ -32,13 +32,13 @@ public class PackageStruct extends BuiltInClassStruct {
 	private final Set<PackageStruct> useList;
 	private final Set<PackageStruct> usedByList = new HashSet<>();
 
-	private final Map<String, SymbolStruct<?>> internalSymbols = new HashMap<>();
-	private final Map<String, SymbolStruct<?>> inheritedSymbols = new HashMap<>();
+	private final Map<String, SymbolStruct<?>> internalSymbols = new ConcurrentHashMap<>();
+	private final Map<String, SymbolStruct<?>> inheritedSymbols = new ConcurrentHashMap<>();
 
 	// NOTE: ExternalSymbols and ShadowingSymbols are subsets of InternalSymbols
 	// (aka. anything in ExternalSymbols or ShadowingSymbols are in InternalSymbols but not vice-versa)
-	protected final Map<String, SymbolStruct<?>> externalSymbols = new HashMap<>();
-	private final Map<String, SymbolStruct<?>> shadowingSymbols = new HashMap<>();
+	protected final Map<String, SymbolStruct<?>> externalSymbols = new ConcurrentHashMap<>();
+	private final Map<String, SymbolStruct<?>> shadowingSymbols = new ConcurrentHashMap<>();
 
 	/**
 	 * Public constructor.
@@ -435,29 +435,6 @@ public class PackageStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This private method determines if a name conflict exists with the symbolName and that it is currently resolved
-	 * due to a shadowing symbol existence.
-	 *
-	 * @param symbolName the name of the symbol to check for shadowing conflicts
-	 * @return the conflicting symbols if any exist, or null if no conflicts exist
-	 */
-	private Set<SymbolStruct<?>> getShadowingConflicts(final String symbolName) {
-		if (!shadowingSymbols.containsKey(symbolName)) {
-			return null;
-		}
-
-		final Set<SymbolStruct<?>> conflictingInheritedSymbols = new HashSet<>();
-		for (final PackageStruct usedPackage : useList) {
-			final PackageSymbolStruct inheritedPackageSymbol = usedPackage.findSymbol(symbolName);
-			if (inheritedPackageSymbol != null) {
-				final SymbolStruct<?> inheritedSymbol = inheritedPackageSymbol.getSymbolStruct();
-				conflictingInheritedSymbols.add(inheritedSymbol);
-			}
-		}
-		return (conflictingInheritedSymbols.size() > 1) ? conflictingInheritedSymbols : null;
-	}
-
-	/**
 	 * This static method finds the matching package in the ALL_PACKAGES global package map by the provided {@code packageName}.
 	 *
 	 * @param packageName the name of the package to location within the ALL_PACKAGES global package map
@@ -494,6 +471,29 @@ public class PackageStruct extends BuiltInClassStruct {
 	}
 
 	/**
+	 * This private method determines if a name conflict exists with the symbolName and that it is currently resolved
+	 * due to a shadowing symbol existence.
+	 *
+	 * @param symbolName the name of the symbol to check for shadowing conflicts
+	 * @return the conflicting symbols if any exist, or null if no conflicts exist
+	 */
+	private Set<SymbolStruct<?>> getShadowingConflicts(final String symbolName) {
+		if (!shadowingSymbols.containsKey(symbolName)) {
+			return null;
+		}
+
+		final Set<SymbolStruct<?>> conflictingInheritedSymbols = new HashSet<>();
+		for (final PackageStruct usedPackage : useList) {
+			final PackageSymbolStruct inheritedPackageSymbol = usedPackage.findSymbol(symbolName);
+			if (inheritedPackageSymbol != null) {
+				final SymbolStruct<?> inheritedSymbol = inheritedPackageSymbol.getSymbolStruct();
+				conflictingInheritedSymbols.add(inheritedSymbol);
+			}
+		}
+		return (conflictingInheritedSymbols.size() > 1) ? conflictingInheritedSymbols : null;
+	}
+
+	/**
 	 * This private method locates the non-inherited symbol matching the provided {@code symbolName}.
 	 *
 	 * @param symbolName the name of the symbol to find
@@ -518,6 +518,20 @@ public class PackageStruct extends BuiltInClassStruct {
 		}
 
 		return null;
+	}
+
+	@Override
+	public String toString() {
+		return "PackageStruct{"
+				+ "name='" + name + '\''
+				+ ", nicknames=" + nicknames
+				+ ", useList=" + useList
+				+ ", usedByList=" + usedByList
+				+ ", internalSymbols=" + internalSymbols
+				+ ", inheritedSymbols=" + inheritedSymbols
+				+ ", externalSymbols=" + externalSymbols
+				+ ", shadowingSymbols=" + shadowingSymbols
+				+ '}';
 	}
 
 	public static final KeywordSymbolStruct INTERNAL = new KeywordSymbolStruct("INTERNAL");
@@ -553,24 +567,10 @@ public class PackageStruct extends BuiltInClassStruct {
 
 		@Override
 		public String toString() {
-			return "PackageSymbolStruct{" +
-					"symbolStruct=" + symbolStruct +
-					", packageSymbolType=" + packageSymbolType +
-					'}';
+			return "PackageSymbolStruct{"
+					+ "symbolStruct=" + symbolStruct
+					+ ", packageSymbolType=" + packageSymbolType
+					+ '}';
 		}
-	}
-
-	@Override
-	public String toString() {
-		return "PackageStruct{" +
-				"name='" + name + '\'' +
-				", nicknames=" + nicknames +
-				", useList=" + useList +
-				", usedByList=" + usedByList +
-				", internalSymbols=" + internalSymbols +
-				", inheritedSymbols=" + inheritedSymbols +
-				", externalSymbols=" + externalSymbols +
-				", shadowingSymbols=" + shadowingSymbols +
-				'}';
 	}
 }

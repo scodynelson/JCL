@@ -35,7 +35,7 @@ public interface DoubleFloat extends Float {
 		 * @return the newly created compound {@code DoubleFloat} type
 		 */
 		public static DoubleFloat getInstance(final BigDecimal lowerBound, final BigDecimal upperBound) {
-			return new DoubleFloatImpl(lowerBound, true, upperBound, true);
+			return DoubleFloatImpl.getInstance(lowerBound, true, upperBound, true);
 		}
 
 		/**
@@ -49,7 +49,7 @@ public interface DoubleFloat extends Float {
 		 */
 		public static DoubleFloat getInstance(final BigDecimal lowerBound, final boolean lowerInclusive,
 											  final BigDecimal upperBound, final boolean upperInclusive) {
-			return new DoubleFloatImpl(lowerBound, lowerInclusive, upperBound, upperInclusive);
+			return DoubleFloatImpl.getInstance(lowerBound, lowerInclusive, upperBound, upperInclusive);
 		}
 
 		/**
@@ -80,6 +80,20 @@ public interface DoubleFloat extends Float {
 				final BigDecimal realLower = lowerInclusive ? lowerBound : lowerBound.add(BigDecimal.ONE);
 				final BigDecimal realUpper = upperInclusive ? upperBound : upperBound.subtract(BigDecimal.ONE);
 				intervalDesignator = new IntervalDesignator<>(realLower, realUpper);
+			}
+
+			/**
+			 * Gets instance of compound {@code DoubleFloat} type.
+			 *
+			 * @param lowerBound     the lower bound that this {@code DoubleFloat} type includes
+			 * @param lowerInclusive whether to include the lower bound in the interval
+			 * @param upperBound     the upper bound that this {@code DoubleFloat} type includes
+			 * @param upperInclusive whether to include the upper bound in the interval
+			 * @return the newly created compound {@code DoubleFloat} type
+			 */
+			public static DoubleFloat getInstance(final BigDecimal lowerBound, final boolean lowerInclusive,
+												  final BigDecimal upperBound, final boolean upperInclusive) {
+				return new DoubleFloatImpl(lowerBound, lowerInclusive, upperBound, upperInclusive);
 			}
 
 			@Override
@@ -115,9 +129,9 @@ public interface DoubleFloat extends Float {
 
 			@Override
 			public String toString() {
-				return "DoubleFloatImpl{" +
-						"intervalDesignator=" + intervalDesignator +
-						'}';
+				return "DoubleFloatImpl{"
+						+ "intervalDesignator=" + intervalDesignator
+						+ '}';
 			}
 		}
 	}

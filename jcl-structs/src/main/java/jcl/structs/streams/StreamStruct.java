@@ -71,10 +71,10 @@ public abstract class StreamStruct extends BuiltInClassStruct implements LispStr
 
 	@Override
 	public String toString() {
-		return "StreamStruct{" +
-				"isInteractive=" + isInteractive +
-				", elementType=" + elementType +
-				", isClosed=" + isClosed +
-				'}';
+		return "StreamStruct{"
+				+ "isInteractive=" + isInteractive
+				+ ", elementType=" + elementType
+				+ ", isClosed=" + isClosed
+				+ '}';
 	}
 }

@@ -135,10 +135,10 @@ public class RandomStateStruct extends BuiltInClassStruct {
 
 	@Override
 	public String toString() {
-		return "RandomStateStruct{" +
-				"j=" + j_value +
-				", k=" + k_value +
-				", seed=" + seed +
-				'}';
+		return "RandomStateStruct{"
+				+ "j=" + j_value
+				+ ", k=" + k_value
+				+ ", seed=" + seed
+				+ '}';
 	}
 }

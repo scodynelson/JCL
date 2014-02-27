@@ -36,7 +36,7 @@ public interface Complex extends Number {
 		 * @return the newly created compound {@code Complex} type
 		 */
 		public static Complex getInstance(final Real realType) {
-			return new ComplexImpl(realType);
+			return ComplexImpl.getInstance(realType);
 		}
 
 		/**
@@ -60,6 +60,16 @@ public interface Complex extends Number {
 			 */
 			private ComplexImpl(final Real realType) {
 				this.realType = realType;
+			}
+
+			/**
+			 * Gets instance of compound {@code Complex} type.
+			 *
+			 * @param realType the type of {@code Real} that comprises the {@code Complex}
+			 * @return the newly created compound {@code Complex} type
+			 */
+			public static Complex getInstance(final Real realType) {
+				return new ComplexImpl(realType);
 			}
 
 			@Override
@@ -95,9 +105,9 @@ public interface Complex extends Number {
 
 			@Override
 			public String toString() {
-				return "ComplexImpl{" +
-						"realType=" + realType +
-						'}';
+				return "ComplexImpl{"
+						+ "realType=" + realType
+						+ '}';
 			}
 		}
 	}

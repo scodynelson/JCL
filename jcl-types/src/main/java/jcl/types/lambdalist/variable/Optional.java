@@ -33,9 +33,9 @@ public class Optional<VAR> {
 
 	@Override
 	public String toString() {
-		return "Optional{" +
-				"vars=" + vars +
-				'}';
+		return "Optional{"
+				+ "vars=" + vars
+				+ '}';
 	}
 
 	/**

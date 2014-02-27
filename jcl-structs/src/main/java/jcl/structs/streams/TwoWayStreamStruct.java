@@ -137,9 +137,9 @@ public class TwoWayStreamStruct extends StreamStruct implements InputStream, Out
 
 	@Override
 	public String toString() {
-		return "TwoWayStreamStruct{" +
-				"inputStream=" + inputStream +
-				", outputStream=" + outputStream +
-				'}';
+		return "TwoWayStreamStruct{"
+				+ "inputStream=" + inputStream
+				+ ", outputStream=" + outputStream
+				+ '}';
 	}
 }

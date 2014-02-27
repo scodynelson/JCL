@@ -3,15 +3,15 @@ package jcl.structs.readtables;
 import jcl.reader.syntax.AttributeType;
 import jcl.types.Variable;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class AttributeTable {
 
 	private final Map<Integer, AttributeType> attributeTypeMap;
 
 	public AttributeTable() {
-		attributeTypeMap = new HashMap<>(128);
+		attributeTypeMap = new ConcurrentHashMap<>(128);
 
 		attributeTypeMap.put(0, AttributeType.INVALID);                     // NUL
 		attributeTypeMap.put(1, AttributeType.INVALID);                     // SOH

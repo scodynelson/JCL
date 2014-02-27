@@ -79,13 +79,13 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 
 	@Override
 	public String toString() {
-		return "BitVectorStruct{" +
-				"contents=" + contents +
-				", rank=" + rank +
-				", dimensions=" + dimensions +
-				", elementType=" + elementType +
-				", isAdjustable=" + isAdjustable +
-				"fillPointer=" + fillPointer +
-				'}';
+		return "BitVectorStruct{"
+				+ "contents=" + contents
+				+ ", rank=" + rank
+				+ ", dimensions=" + dimensions
+				+ ", elementType=" + elementType
+				+ ", isAdjustable=" + isAdjustable
+				+ "fillPointer=" + fillPointer
+				+ '}';
 	}
 }

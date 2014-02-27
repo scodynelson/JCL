@@ -63,10 +63,10 @@ public class ValuesTypeSpecifier implements CompoundTypeSpecifier {
 
 	@Override
 	public String toString() {
-		return "ValuesTypeSpecifier{" +
-				"typeSpecifiers=" + typeSpecifiers +
-				", optional=" + optional +
-				", rest=" + rest +
-				'}';
+		return "ValuesTypeSpecifier{"
+				+ "typeSpecifiers=" + typeSpecifiers
+				+ ", optional=" + optional
+				+ ", rest=" + rest
+				+ '}';
 	}
 }

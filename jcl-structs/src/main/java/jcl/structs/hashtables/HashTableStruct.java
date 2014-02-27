@@ -11,8 +11,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The {@code HashTableStruct} is the object representation of a Lisp 'hash-table' type.
@@ -38,7 +38,7 @@ public class HashTableStruct extends BuiltInClassStruct {
 		this.test = test;
 		this.rehashThreshold = rehashThreshold;
 
-		map = new HashMap<>(size.intValue(), rehashThreshold.floatValue());
+		map = new ConcurrentHashMap<>(size.intValue(), rehashThreshold.floatValue());
 	}
 
 	public FunctionStruct getTest() {
@@ -65,7 +65,7 @@ public class HashTableStruct extends BuiltInClassStruct {
 	 * @return the matching stored value for the provided key
 	 */
 	public LispStruct getHash(final LispStruct key) {
-		final LispStruct keyWrapper = new KeyWrapper(key, test);
+		final LispStruct keyWrapper = KeyWrapper.getInstance(key, test);
 		return map.get(keyWrapper);
 	}
 
@@ -76,7 +76,7 @@ public class HashTableStruct extends BuiltInClassStruct {
 	 * @param value the value to be stored in the table
 	 */
 	public void setHash(final LispStruct key, final LispStruct value) {
-		final LispStruct keyWrapper = new KeyWrapper(key, test);
+		final LispStruct keyWrapper = KeyWrapper.getInstance(key, test);
 		map.put(keyWrapper, value);
 	}
 
@@ -86,7 +86,7 @@ public class HashTableStruct extends BuiltInClassStruct {
 	 * @param key the key to remove the matching stored value
 	 */
 	public void remHash(final LispStruct key) {
-		final LispStruct keyWrapper = new KeyWrapper(key, test);
+		final LispStruct keyWrapper = KeyWrapper.getInstance(key, test);
 		map.remove(keyWrapper);
 	}
 
@@ -104,18 +104,18 @@ public class HashTableStruct extends BuiltInClassStruct {
 	 */
 	public void mapHash(final FunctionStruct function) {
 		for (final Map.Entry<LispStruct, LispStruct> entry : map.entrySet()) {
-			final LispStruct keyWrapper = new KeyWrapper(entry.getKey(), test);
+			final LispStruct keyWrapper = KeyWrapper.getInstance(entry.getKey(), test);
 			function.funcall(keyWrapper, entry.getValue());
 		}
 	}
 
 	@Override
 	public String toString() {
-		return "HashTableStruct{" +
-				"test=" + test +
-				", rehashThreshold=" + rehashThreshold +
-				", map=" + map +
-				'}';
+		return "HashTableStruct{"
+				+ "test=" + test
+				+ ", rehashThreshold=" + rehashThreshold
+				+ ", map=" + map
+				+ '}';
 	}
 
 	/**
@@ -142,6 +142,17 @@ public class HashTableStruct extends BuiltInClassStruct {
 			return key.getType();
 		}
 
+		/**
+		 * Gets instance of {@code KeyWrapper} object.
+		 *
+		 * @param key     the key to wrap
+		 * @param equator the equator function used to test equality of keys
+		 * @return the newly created {@code KeyWrapper} object
+		 */
+		public static KeyWrapper getInstance(final LispStruct key, final Equator<LispStruct> equator) {
+			return new KeyWrapper(key, equator);
+		}
+
 		@Override
 		public boolean equals(final Object obj) {
 			if (!(obj instanceof LispStruct)) {
@@ -162,10 +173,10 @@ public class HashTableStruct extends BuiltInClassStruct {
 
 		@Override
 		public String toString() {
-			return "KeyWrapper{" +
-					"key=" + key +
-					"equator=" + equator +
-					'}';
+			return "KeyWrapper{"
+					+ "key=" + key
+					+ "equator=" + equator
+					+ '}';
 		}
 	}
 }

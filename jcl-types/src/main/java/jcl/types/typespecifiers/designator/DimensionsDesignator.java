@@ -87,8 +87,8 @@ public class DimensionsDesignator implements CompoundTypeSpecifier {
 
 	@Override
 	public String toString() {
-		return "DimensionsDesignator{" +
-				"dimensions=" + dimensions +
-				'}';
+		return "DimensionsDesignator{"
+				+ "dimensions=" + dimensions
+				+ '}';
 	}
 }

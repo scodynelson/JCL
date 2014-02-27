@@ -199,7 +199,7 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 	@Override
 	public boolean listen() {
 		try {
-			final PeekResult peekResult = peekChar(null, false, null, false);
+			final PeekResult peekResult = peekChar(PeekType.NIL_PEEK_TYPE, false, null, false);
 			return !peekResult.wasEOF();
 		} catch (final EndOfFileException eofe) {
 			LOGGER.warn("End of file reached.", eofe);
@@ -212,6 +212,7 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 
 	@Override
 	public void clearInput() {
+		// Do nothing.
 	}
 
 	@Override
@@ -244,14 +245,17 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 
 	@Override
 	public void forceOutput() {
+		// Do nothing.
 	}
 
 	@Override
 	public void finishOutput() {
+		// Do nothing.
 	}
 
 	@Override
 	public void clearOutput() {
+		// Do nothing.
 	}
 
 	@Override
@@ -287,8 +291,8 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 
 	@Override
 	public String toString() {
-		return "FileStreamStruct{" +
-				"fileStream=" + fileStream +
-				'}';
+		return "FileStreamStruct{"
+				+ "fileStream=" + fileStream
+				+ '}';
 	}
 }

@@ -146,13 +146,13 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 
 	@Override
 	public String toString() {
-		return "VectorStruct{" +
-				"contents=" + contents +
-				", rank=" + rank +
-				", dimensions=" + dimensions +
-				", elementType=" + elementType +
-				", isAdjustable=" + isAdjustable +
-				"fillPointer=" + fillPointer +
-				'}';
+		return "VectorStruct{"
+				+ "contents=" + contents
+				+ ", rank=" + rank
+				+ ", dimensions=" + dimensions
+				+ ", elementType=" + elementType
+				+ ", isAdjustable=" + isAdjustable
+				+ "fillPointer=" + fillPointer
+				+ '}';
 	}
 }

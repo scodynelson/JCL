@@ -37,7 +37,7 @@ public interface String extends Vector {
 		 * @return the newly created compound {@code String} type
 		 */
 		public static String getInstance(final Integer size) {
-			return new StringImpl(size);
+			return StringImpl.getInstance(size);
 		}
 
 		/**
@@ -74,6 +74,16 @@ public interface String extends Vector {
 				return elementType;
 			}
 
+			/**
+			 * Gets instance of compound {@code String} type.
+			 *
+			 * @param size the size of the {@code String}
+			 * @return the newly created compound {@code String} type
+			 */
+			public static String getInstance(final Integer size) {
+				return new StringImpl(size);
+			}
+
 			@Override
 			public boolean equals(final Object obj) {
 				if (this == obj) {
@@ -108,10 +118,10 @@ public interface String extends Vector {
 
 			@Override
 			public java.lang.String toString() {
-				return "StringImpl{" +
-						"size=" + size +
-						", elementType=" + elementType +
-						'}';
+				return "StringImpl{"
+						+ "size=" + size
+						+ ", elementType=" + elementType
+						+ '}';
 			}
 		}
 	}

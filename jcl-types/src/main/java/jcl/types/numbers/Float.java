@@ -41,7 +41,7 @@ public interface Float extends Real {
 		 * @return the newly created compound {@code Float} type
 		 */
 		public static Float getInstance(final BigDecimal lowerBound, final BigDecimal upperBound) {
-			return new FloatImpl(lowerBound, true, upperBound, true);
+			return FloatImpl.getInstance(lowerBound, true, upperBound, true);
 		}
 
 		/**
@@ -55,7 +55,7 @@ public interface Float extends Real {
 		 */
 		public static Float getInstance(final BigDecimal lowerBound, final boolean lowerInclusive,
 										final BigDecimal upperBound, final boolean upperInclusive) {
-			return new FloatImpl(lowerBound, lowerInclusive, upperBound, upperInclusive);
+			return FloatImpl.getInstance(lowerBound, lowerInclusive, upperBound, upperInclusive);
 		}
 
 		/**
@@ -86,6 +86,20 @@ public interface Float extends Real {
 				final BigDecimal realLower = lowerInclusive ? lowerBound : lowerBound.add(BigDecimal.ONE);
 				final BigDecimal realUpper = upperInclusive ? upperBound : upperBound.subtract(BigDecimal.ONE);
 				intervalDesignator = new IntervalDesignator<>(realLower, realUpper);
+			}
+
+			/**
+			 * Gets instance of compound {@code Float} type.
+			 *
+			 * @param lowerBound     the lower bound that this {@code Float} type includes
+			 * @param lowerInclusive whether to include the lower bound in the interval
+			 * @param upperBound     the upper bound that this {@code Float} type includes
+			 * @param upperInclusive whether to include the upper bound in the interval
+			 * @return the newly created compound {@code Float} type
+			 */
+			public static Float getInstance(final BigDecimal lowerBound, final boolean lowerInclusive,
+											final BigDecimal upperBound, final boolean upperInclusive) {
+				return new FloatImpl(lowerBound, lowerInclusive, upperBound, upperInclusive);
 			}
 
 			@Override
@@ -121,9 +135,9 @@ public interface Float extends Real {
 
 			@Override
 			public String toString() {
-				return "FloatImpl{" +
-						"intervalDesignator=" + intervalDesignator +
-						'}';
+				return "FloatImpl{"
+						+ "intervalDesignator=" + intervalDesignator
+						+ '}';
 			}
 		}
 	}

@@ -7,5 +7,10 @@ package jcl.types;
  */
 public interface TypeFactory<TYPE extends LispType> {
 
+	/**
+	 * This is a factory method to return an instance of the TYPE.
+	 *
+	 * @return an instance of the TYPE
+	 */
 	TYPE getInstance();
 }

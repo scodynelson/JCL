@@ -6,8 +6,8 @@ import jcl.structs.functions.FunctionStruct;
 import jcl.structs.packages.PackageStruct;
 import jcl.types.symbols.Symbol;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The {@code SymbolStruct} is the object representation of a Lisp 'symbol' type.
@@ -20,7 +20,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	protected TYPE value;
 	protected FunctionStruct function;
 
-	protected final Map<LispStruct, LispStruct> properties = new HashMap<>();
+	protected final Map<LispStruct, LispStruct> properties = new ConcurrentHashMap<>();
 
 	/**
 	 * Public constructor.
@@ -158,12 +158,12 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 
 	@Override
 	public String toString() {
-		return "SymbolStruct{" +
-				"name='" + name + '\'' +
-				", symbolPackage=" + symbolPackage +
-				", properties=" + properties +
-				", value=" + value +
-				", function=" + function +
-				'}';
+		return "SymbolStruct{"
+				+ "name='" + name + '\''
+				+ ", symbolPackage=" + symbolPackage
+				+ ", properties=" + properties
+				+ ", value=" + value
+				+ ", function=" + function
+				+ '}';
 	}
 }

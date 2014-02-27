@@ -74,9 +74,9 @@ public class IntervalDesignator<N extends Number> implements CompoundTypeSpecifi
 
 	@Override
 	public String toString() {
-		return "IntervalDesignator{" +
-				"lowerBound=" + lowerBound +
-				", upperBound=" + upperBound +
-				'}';
+		return "IntervalDesignator{"
+				+ "lowerBound=" + lowerBound
+				+ ", upperBound=" + upperBound
+				+ '}';
 	}
 }

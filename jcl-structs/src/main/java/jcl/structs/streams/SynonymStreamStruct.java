@@ -169,9 +169,9 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 
 	@Override
 	public String toString() {
-		return "SynonymStreamStruct{" +
-				"symbol=" + symbol +
-				", stream=" + stream +
-				'}';
+		return "SynonymStreamStruct{"
+				+ "symbol=" + symbol
+				+ ", stream=" + stream
+				+ '}';
 	}
 }

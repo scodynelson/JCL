@@ -37,7 +37,7 @@ public interface SimpleBaseString extends BaseString, SimpleString {
 		 * @return the newly created compound {@code SimpleBaseString} type
 		 */
 		public static SimpleBaseString getInstance(final Integer size) {
-			return new SimpleBaseStringImpl(size);
+			return SimpleBaseStringImpl.getInstance(size);
 		}
 
 		/**
@@ -74,6 +74,16 @@ public interface SimpleBaseString extends BaseString, SimpleString {
 				return elementType;
 			}
 
+			/**
+			 * Gets instance of compound {@code SimpleBaseString} type.
+			 *
+			 * @param size the size of the {@code SimpleBaseString}
+			 * @return the newly created compound {@code SimpleBaseString} type
+			 */
+			public static SimpleBaseString getInstance(final Integer size) {
+				return new SimpleBaseStringImpl(size);
+			}
+
 			@Override
 			public boolean equals(final Object obj) {
 				if (this == obj) {
@@ -108,10 +118,10 @@ public interface SimpleBaseString extends BaseString, SimpleString {
 
 			@Override
 			public String toString() {
-				return "SimpleBaseStringImpl{" +
-						"size=" + size +
-						", elementType=" + elementType +
-						'}';
+				return "SimpleBaseStringImpl{"
+						+ "size=" + size
+						+ ", elementType=" + elementType
+						+ '}';
 			}
 		}
 	}

@@ -35,7 +35,7 @@ public interface LongFloat extends Float {
 		 * @return the newly created compound {@code LongFloat} type
 		 */
 		public static LongFloat getInstance(final BigDecimal lowerBound, final BigDecimal upperBound) {
-			return new LongFloatImpl(lowerBound, true, upperBound, true);
+			return LongFloatImpl.getInstance(lowerBound, true, upperBound, true);
 		}
 
 		/**
@@ -49,7 +49,7 @@ public interface LongFloat extends Float {
 		 */
 		public static LongFloat getInstance(final BigDecimal lowerBound, final boolean lowerInclusive,
 											final BigDecimal upperBound, final boolean upperInclusive) {
-			return new LongFloatImpl(lowerBound, lowerInclusive, upperBound, upperInclusive);
+			return LongFloatImpl.getInstance(lowerBound, lowerInclusive, upperBound, upperInclusive);
 		}
 
 		/**
@@ -80,6 +80,20 @@ public interface LongFloat extends Float {
 				final BigDecimal realLower = lowerInclusive ? lowerBound : lowerBound.add(BigDecimal.ONE);
 				final BigDecimal realUpper = upperInclusive ? upperBound : upperBound.subtract(BigDecimal.ONE);
 				intervalDesignator = new IntervalDesignator<>(realLower, realUpper);
+			}
+
+			/**
+			 * Gets instance of compound {@code LongFloat} type.
+			 *
+			 * @param lowerBound     the lower bound that this {@code LongFloat} type includes
+			 * @param lowerInclusive whether to include the lower bound in the interval
+			 * @param upperBound     the upper bound that this {@code LongFloat} type includes
+			 * @param upperInclusive whether to include the upper bound in the interval
+			 * @return the newly created compound {@code LongFloat} type
+			 */
+			public static LongFloat getInstance(final BigDecimal lowerBound, final boolean lowerInclusive,
+												final BigDecimal upperBound, final boolean upperInclusive) {
+				return new LongFloatImpl(lowerBound, lowerInclusive, upperBound, upperInclusive);
 			}
 
 			@Override
@@ -115,9 +129,9 @@ public interface LongFloat extends Float {
 
 			@Override
 			public String toString() {
-				return "LongFloatImpl{" +
-						"intervalDesignator=" + intervalDesignator +
-						'}';
+				return "LongFloatImpl{"
+						+ "intervalDesignator=" + intervalDesignator
+						+ '}';
 			}
 		}
 	}

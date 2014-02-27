@@ -4,8 +4,8 @@ import jcl.reader.syntax.SyntaxType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SyntaxTable {
 
@@ -14,7 +14,7 @@ public class SyntaxTable {
 	private final Map<Integer, SyntaxType> syntaxTypeMap;
 
 	public SyntaxTable() {
-		syntaxTypeMap = new HashMap<>(128);
+		syntaxTypeMap = new ConcurrentHashMap<>(128);
 
 		syntaxTypeMap.put(0, SyntaxType.INVALID);                     // NUL
 		syntaxTypeMap.put(1, SyntaxType.INVALID);                     // SOH

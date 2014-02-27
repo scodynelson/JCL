@@ -34,7 +34,7 @@ public interface Cons extends List {
 		 * @return the newly created compound {@code Cons} type
 		 */
 		public static Cons getInstance(final LispType carSpec, final LispType cdrSpec) {
-			return new ConsImpl(carSpec, cdrSpec);
+			return ConsImpl.getInstance(carSpec, cdrSpec);
 		}
 
 		/**
@@ -62,6 +62,17 @@ public interface Cons extends List {
 			private ConsImpl(final LispType carSpec, final LispType cdrSpec) {
 				this.carSpec = carSpec;
 				this.cdrSpec = cdrSpec;
+			}
+
+			/**
+			 * Gets instance of compound {@code Cons} type.
+			 *
+			 * @param carSpec the type of the car element
+			 * @param cdrSpec the type of the cdr element
+			 * @return the newly created compound {@code Cons} type
+			 */
+			public static Cons getInstance(final LispType carSpec, final LispType cdrSpec) {
+				return new ConsImpl(carSpec, cdrSpec);
 			}
 
 			@Override
@@ -102,10 +113,10 @@ public interface Cons extends List {
 
 			@Override
 			public String toString() {
-				return "ConsImpl{" +
-						"carSpec=" + carSpec +
-						", cdrSpec=" + cdrSpec +
-						'}';
+				return "ConsImpl{"
+						+ "carSpec=" + carSpec
+						+ ", cdrSpec=" + cdrSpec
+						+ '}';
 			}
 		}
 	}

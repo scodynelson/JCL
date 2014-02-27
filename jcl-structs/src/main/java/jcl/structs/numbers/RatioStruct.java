@@ -44,9 +44,9 @@ public class RatioStruct extends RationalStruct {
 
 	@Override
 	public String toString() {
-		return "RatioStruct{" +
-				"bigFraction=" + bigFraction +
-				'}';
+		return "RatioStruct{"
+				+ "bigFraction=" + bigFraction
+				+ '}';
 	}
 
 }

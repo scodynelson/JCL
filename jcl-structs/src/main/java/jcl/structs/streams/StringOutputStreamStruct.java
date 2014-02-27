@@ -48,14 +48,17 @@ public class StringOutputStreamStruct extends StreamStruct implements OutputStre
 
 	@Override
 	public void clearOutput() {
+		// Do nothing.
 	}
 
 	@Override
 	public void finishOutput() {
+		// Do nothing.
 	}
 
 	@Override
 	public void forceOutput() {
+		// Do nothing.
 	}
 
 	@Override
@@ -73,9 +76,9 @@ public class StringOutputStreamStruct extends StreamStruct implements OutputStre
 
 	@Override
 	public String toString() {
-		return "StringOutputStreamStruct{" +
-				"stringBuffer=" + stringBuffer +
-				", index=" + index +
-				'}';
+		return "StringOutputStreamStruct{"
+				+ "stringBuffer=" + stringBuffer
+				+ ", index=" + index
+				+ '}';
 	}
 }

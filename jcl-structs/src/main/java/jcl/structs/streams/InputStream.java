@@ -2,7 +2,6 @@ package jcl.structs.streams;
 
 import jcl.structs.LispStruct;
 import jcl.structs.conditions.exceptions.StreamErrorException;
-import jcl.types.LispType;
 
 /**
  * The {@code InputStream} is the representation for all Lisp input 'stream' types.

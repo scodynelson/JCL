@@ -12,6 +12,7 @@ import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conses.ConsStruct;
 import jcl.structs.conses.ListStruct;
 import jcl.structs.numbers.IntegerStruct;
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.structs.packages.PackageStruct;
 import jcl.structs.readtables.ReadtableStruct;
 import jcl.structs.streams.ReadResult;
@@ -429,7 +430,7 @@ public class MacroFunctionReader extends LispReader {
 		final PackageStruct previousPackage = Variable.getPackage();
 		final boolean previousReadSuppress = Variable.isReadSuppress();
 		try {
-			Variable.setPackage(PackageStruct.KEYWORD);
+			Variable.setPackage(GlobalPackageStruct.KEYWORD);
 			Variable.setReadSuppress(false);
 
 			final LispStruct token = stateReader.read();

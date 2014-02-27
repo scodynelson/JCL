@@ -43,7 +43,7 @@ public class CharacterStreamStruct extends StreamStruct implements InputStream, 
 	 */
 	public CharacterStreamStruct(final boolean isInteractive, final java.io.InputStream inputStream, final java.io.OutputStream outputStream) {
 		super(null, null, isInteractive, Character.INSTANCE);
-		this.inputStream = new LineNumberReader(new InputStreamReader(inputStream));
+		this.inputStream = new LineNumberReader(new InputStreamReader(inputStream, Charset.defaultCharset()));
 		this.outputStream = new PrintWriter(new OutputStreamWriter(outputStream, Charset.defaultCharset()));
 	}
 

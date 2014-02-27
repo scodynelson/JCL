@@ -70,14 +70,12 @@ public interface SignedByte extends Integer {
 			 * @return the {@code Integer} supertype
 			 */
 			private static Integer getSuper(final BigInteger bits) {
-
-				BigInteger lower = null;
-				BigInteger upper = null;
 				if (bits != null) {
-					lower = ArithmeticUtils.pow(BigInteger.valueOf(-2L), bits.subtract(BigInteger.ONE));
-					upper = ArithmeticUtils.pow(BigInteger.valueOf(2L), bits.subtract(BigInteger.ONE));
+					final BigInteger lower = ArithmeticUtils.pow(BigInteger.valueOf(-2L), bits.subtract(BigInteger.ONE));
+					final BigInteger upper = ArithmeticUtils.pow(BigInteger.valueOf(2L), bits.subtract(BigInteger.ONE));
+					return Integer.Factory.getInstance(lower, upper);
 				}
-				return Integer.Factory.getInstance(lower, upper);
+				return Integer.Factory.getInstance(null, null);
 			}
 
 			/**

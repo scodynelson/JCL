@@ -49,7 +49,7 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 		if (inputStreams == null) {
 			throw new StreamErrorException("Provided Input Stream List must not be null.");
 		}
-		return getElementType_2(inputStreams);
+		return getElementType2(inputStreams);
 	}
 
 	/**
@@ -58,13 +58,13 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 	 * @param inputStreams the {@code InputStream}s to create a {@code ConcatenatedStreamStruct} from
 	 * @return the element type for object construction
 	 */
-	private static LispType getElementType_2(final LinkedList<InputStream> inputStreams) {
+	private static LispType getElementType2(final LinkedList<InputStream> inputStreams) {
 		if (inputStreams.isEmpty()) {
 			return T.INSTANCE;
 		}
 
 		final InputStream last = inputStreams.getLast();
-		return last.elementType();
+		return last.getElementType();
 	}
 
 	@Override
@@ -164,8 +164,8 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 	}
 
 	@Override
-	public LispType elementType() {
-		return getElementType_2(inputStreams);
+	public LispType getElementType() {
+		return getElementType2(inputStreams);
 	}
 
 	@Override

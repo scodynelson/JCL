@@ -41,10 +41,20 @@ public class HashTableStruct extends BuiltInClassStruct {
 		map = new ConcurrentHashMap<>(size.intValue(), rehashThreshold.floatValue());
 	}
 
+	/**
+	 * Getter for hash-table test property.
+	 *
+	 * @return hash-table test property
+	 */
 	public FunctionStruct getTest() {
 		return test;
 	}
 
+	/**
+	 * Getter for hash-table rehashThreshold property.
+	 *
+	 * @return hash-table rehashThreshold property
+	 */
 	public BigDecimal getRehashThreshold() {
 		return rehashThreshold;
 	}
@@ -160,7 +170,7 @@ public class HashTableStruct extends BuiltInClassStruct {
 			}
 
 			final LispStruct lispStruct = (LispStruct) obj;
-			return key.equals(key) && equator.equate(key, lispStruct);
+			return equator.equate(key, lispStruct);
 		}
 
 		@Override

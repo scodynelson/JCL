@@ -7,7 +7,9 @@ import jcl.reader.state.TokenAttribute;
 import jcl.reader.state.impl.util.StateUtils;
 import jcl.reader.syntax.AttributeType;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.structs.packages.PackageStruct;
+import jcl.structs.packages.PackageSymbolStruct;
 import jcl.structs.symbols.KeywordSymbolStruct;
 import jcl.structs.symbols.SymbolStruct;
 import jcl.types.Variable;
@@ -81,7 +83,7 @@ public class SymbolTokenAccumulatedState implements State {
 		if (hasNoPackageMarkers) {
 			final String symName = StateUtils.convertTokensToString(tokenAttributes);
 
-			final PackageStruct.PackageSymbolStruct packageSymbol = Variable.Package.findSymbol(symName);
+			final PackageSymbolStruct packageSymbol = Variable.Package.findSymbol(symName);
 			if (packageSymbol == null) {
 //				readerState.setErrorMessage("Unbound variable: " + symName); // TODO: This check will happen in the compiler...
 				return new SymbolStruct(symName);
@@ -161,7 +163,7 @@ public class SymbolTokenAccumulatedState implements State {
 				}
 				return externalSymbol;
 			} else {
-				final PackageStruct.PackageSymbolStruct packageSymbol = pkg.findSymbol(symName);
+				final PackageSymbolStruct packageSymbol = pkg.findSymbol(symName);
 
 				final SymbolStruct<?> symbol = packageSymbol.getSymbolStruct();
 				if (symbol == null) {
@@ -171,7 +173,7 @@ public class SymbolTokenAccumulatedState implements State {
 				return symbol;
 			}
 		} else {
-			final PackageStruct.PackageSymbolStruct pkgSymStruct = PackageStruct.KEYWORD.findSymbol(symName);
+			final PackageSymbolStruct pkgSymStruct = GlobalPackageStruct.KEYWORD.findSymbol(symName);
 			if (pkgSymStruct == null) {
 				return new KeywordSymbolStruct(symName);
 			} else {

@@ -5,7 +5,7 @@ import jcl.structs.symbols.SymbolStruct;
 /**
  * The {@code KeywordPackageStruct} is the object representation of a Lisp 'package' type specific for 'keyword' symbols.
  */
-public class KeywordPackageStruct extends PackageStruct {
+public final class KeywordPackageStruct extends PackageStruct {
 
 	public static final PackageStruct INSTANCE = new KeywordPackageStruct();
 
@@ -26,6 +26,6 @@ public class KeywordPackageStruct extends PackageStruct {
 		final SymbolStruct<?> symbolStruct = new SymbolStruct(symbolName);
 		externalSymbols.put(symbolName, symbolStruct);
 		symbolStruct.setSymbolPackage(this);
-		return new PackageSymbolStruct(symbolStruct, INTERNAL);
+		return new PackageSymbolStruct(symbolStruct, PackageSymbolStruct.INTERNAL);
 	}
 }

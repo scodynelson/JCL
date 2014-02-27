@@ -27,6 +27,7 @@ import jcl.reader.macrofunction.impl.SharpUReaderMacroFunction;
 import jcl.reader.macrofunction.impl.SharpVerticalBarReaderMacroFunction;
 import jcl.reader.macrofunction.impl.SharpXReaderMacroFunction;
 import jcl.reader.syntax.CharacterConstants;
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.structs.packages.PackageStruct;
 import jcl.structs.readtables.DispatchTable;
 import jcl.structs.readtables.ReadtableStruct;
@@ -44,7 +45,7 @@ public class Variable {
 	public static boolean ReadSuppress;
 	public static boolean ReadEval = true;
 	public static final Float ReadDefaultFloatFormat = SingleFloat.INSTANCE;
-	public static PackageStruct Package = PackageStruct.COMMON_LISP_USER;
+	public static PackageStruct Package = GlobalPackageStruct.COMMON_LISP_USER;
 	public static final List<SymbolStruct<?>> Features = new ArrayList<>();
 
 	static {

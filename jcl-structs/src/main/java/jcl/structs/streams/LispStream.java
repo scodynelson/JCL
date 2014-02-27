@@ -21,7 +21,7 @@ public interface LispStream extends LispStruct {
 	 *
 	 * @return the element type of the stream
 	 */
-	LispType elementType();
+	LispType getElementType();
 
 	/**
 	 * This method returns the length of the stream if it is a {@code FileStreamStruct}.

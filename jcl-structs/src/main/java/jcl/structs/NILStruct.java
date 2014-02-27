@@ -6,7 +6,7 @@ import jcl.types.NIL;
 /**
  * The {@code NILStruct} is the object representation of a Lisp 'nil' type.
  */
-public class NILStruct extends BuiltInClassStruct {
+public final class NILStruct extends BuiltInClassStruct {
 
 	public static final NILStruct INSTANCE = new NILStruct();
 

@@ -15,6 +15,8 @@ import java.util.List;
 
 /**
  * The {@code VectorStruct} is the object representation of a Lisp 'vector' type.
+ *
+ * @param <TYPE> the type of the vector contents
  */
 public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> implements SequenceStruct {
 
@@ -78,10 +80,20 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 		return (isAdjustable || (fillPointer != null)) ? Vector.INSTANCE : SimpleVector.INSTANCE;
 	}
 
+	/**
+	 * Getter for vector fillPointer property.
+	 *
+	 * @return vector fillPointer property
+	 */
 	public Integer getFillPointer() {
 		return fillPointer;
 	}
 
+	/**
+	 * Setter for vector fillPointer property.
+	 *
+	 * @param fillPointer new vector fillPointer property value
+	 */
 	public void setFillPointer(final Integer fillPointer) {
 		this.fillPointer = fillPointer;
 	}

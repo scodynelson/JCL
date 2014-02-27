@@ -48,7 +48,7 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 		if (symbol == null) {
 			throw new StreamErrorException("Provided Symbol must not be null.");
 		}
-		return symbol.getValue().elementType();
+		return symbol.getValue().getElementType();
 	}
 
 	public SymbolStruct<StreamStruct> getSymbol() {

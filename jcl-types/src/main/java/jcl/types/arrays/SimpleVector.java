@@ -38,7 +38,18 @@ public interface SimpleVector extends Vector, SimpleArray {
 		 * @return the newly created compound {@code SimpleVector} type
 		 */
 		public static SimpleVector getInstance(final Integer size) {
-			return SimpleVectorImpl.getInstance(size);
+			return SimpleVectorImpl.getInstance(size, T.INSTANCE);
+		}
+
+		/**
+		 * Gets instance of compound {@code SimpleVector} type.
+		 *
+		 * @param size        the size of the {@code SimpleVector}
+		 * @param elementType the types of elements within the {@code SimpleVector}
+		 * @return the newly created compound {@code SimpleVector} type
+		 */
+		public static SimpleVector getInstance(final Integer size, final LispType elementType) {
+			return SimpleVectorImpl.getInstance(size, elementType);
 		}
 
 		/**
@@ -47,22 +58,25 @@ public interface SimpleVector extends Vector, SimpleArray {
 		private static class SimpleVectorImpl implements SimpleVector, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final DimensionsDesignator size;
-			private final LispType elementType = T.INSTANCE;
+			private final LispType elementType;
 
 			/**
 			 * Private constructor.
 			 */
 			private SimpleVectorImpl() {
 				size = null;
+				elementType = null;
 			}
 
 			/**
 			 * Private constructor for compound {@code SimpleVector} type.
 			 *
-			 * @param size the size of the {@code SimpleVector}
+			 * @param size        the size of the {@code SimpleVector}
+			 * @param elementType the types of elements within the {@code SimpleVector}
 			 */
-			private SimpleVectorImpl(final Integer size) {
+			private SimpleVectorImpl(final Integer size, final LispType elementType) {
 				this.size = new DimensionsDesignator(size);
+				this.elementType = elementType;
 			}
 
 			@Override
@@ -78,11 +92,12 @@ public interface SimpleVector extends Vector, SimpleArray {
 			/**
 			 * Gets instance of compound {@code SimpleVector} type.
 			 *
-			 * @param size the size of the {@code SimpleVector}
+			 * @param size        the size of the {@code SimpleVector}
+			 * @param elementType the types of elements within the {@code SimpleVector}
 			 * @return the newly created compound {@code SimpleVector} type
 			 */
-			public static SimpleVector getInstance(final Integer size) {
-				return new SimpleVectorImpl(size);
+			public static SimpleVector getInstance(final Integer size, final LispType elementType) {
+				return new SimpleVectorImpl(size, elementType);
 			}
 
 			@Override

@@ -38,7 +38,7 @@ public interface UnsignedByte extends SignedByte {
 		 * @return the newly created compound {@code UnsignedByte} type
 		 */
 		public static UnsignedByte getInstance(final BigInteger bits) {
-			return new UnsignedByteImpl(bits);
+			return UnsignedByteImpl.getInstance(bits);
 		}
 
 		/**
@@ -75,6 +75,16 @@ public interface UnsignedByte extends SignedByte {
 					upper = ArithmeticUtils.pow(BigInteger.valueOf(2L), bits.subtract(BigInteger.ONE));
 				}
 				return Integer.Factory.getInstance(BigInteger.ZERO, upper);
+			}
+
+			/**
+			 * Gets instance of compound {@code UnsignedByte} type.
+			 *
+			 * @param bits the bits that comprise the byte value
+			 * @return the newly created compound {@code UnsignedByte} type
+			 */
+			public static UnsignedByte getInstance(final BigInteger bits) {
+				return new UnsignedByteImpl(bits);
 			}
 
 			@Override

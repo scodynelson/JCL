@@ -47,7 +47,7 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 		if (outputStreams == null) {
 			throw new StreamErrorException("Provided Output Stream List must not be null.");
 		}
-		return getElementType_2(outputStreams);
+		return getElementType2(outputStreams);
 	}
 
 	/**
@@ -56,13 +56,13 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 	 * @param outputStreams the {@code OutputStream}s to create a {@code BroadcastStreamStruct} from
 	 * @return the element type for object construction
 	 */
-	private static LispType getElementType_2(final LinkedList<OutputStream> outputStreams) {
+	private static LispType getElementType2(final LinkedList<OutputStream> outputStreams) {
 		if (outputStreams.isEmpty()) {
 			return T.INSTANCE;
 		}
 
 		final OutputStream last = outputStreams.getLast();
-		return last.elementType();
+		return last.getElementType();
 	}
 
 	@Override
@@ -113,8 +113,8 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 	}
 
 	@Override
-	public LispType elementType() {
-		return getElementType_2(outputStreams);
+	public LispType getElementType() {
+		return getElementType2(outputStreams);
 	}
 
 	@Override

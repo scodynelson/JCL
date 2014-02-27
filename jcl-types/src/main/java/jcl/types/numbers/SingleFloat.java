@@ -35,7 +35,7 @@ public interface SingleFloat extends Float {
 		 * @return the newly created compound {@code SingleFloat} type
 		 */
 		public static SingleFloat getInstance(final BigDecimal lowerBound, final BigDecimal upperBound) {
-			return new SingleFloatImpl(lowerBound, true, upperBound, true);
+			return SingleFloatImpl.getInstance(lowerBound, true, upperBound, true);
 		}
 
 		/**
@@ -49,7 +49,7 @@ public interface SingleFloat extends Float {
 		 */
 		public static SingleFloat getInstance(final BigDecimal lowerBound, final boolean lowerInclusive,
 											  final BigDecimal upperBound, final boolean upperInclusive) {
-			return new SingleFloatImpl(lowerBound, lowerInclusive, upperBound, upperInclusive);
+			return SingleFloatImpl.getInstance(lowerBound, lowerInclusive, upperBound, upperInclusive);
 		}
 
 		/**
@@ -80,6 +80,20 @@ public interface SingleFloat extends Float {
 				final BigDecimal realLower = lowerInclusive ? lowerBound : lowerBound.add(BigDecimal.ONE);
 				final BigDecimal realUpper = upperInclusive ? upperBound : upperBound.subtract(BigDecimal.ONE);
 				intervalDesignator = new IntervalDesignator<>(realLower, realUpper);
+			}
+
+			/**
+			 * Gets instance of compound {@code SingleFloat} type.
+			 *
+			 * @param lowerBound     the lower bound that this {@code SingleFloat} type includes
+			 * @param lowerInclusive whether to include the lower bound in the interval
+			 * @param upperBound     the upper bound that this {@code SingleFloat} type includes
+			 * @param upperInclusive whether to include the upper bound in the interval
+			 * @return the newly created compound {@code SingleFloat} type
+			 */
+			public static SingleFloat getInstance(final BigDecimal lowerBound, final boolean lowerInclusive,
+												  final BigDecimal upperBound, final boolean upperInclusive) {
+				return new SingleFloatImpl(lowerBound, lowerInclusive, upperBound, upperInclusive);
 			}
 
 			@Override

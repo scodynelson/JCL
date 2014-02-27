@@ -55,8 +55,8 @@ public class TwoWayStreamStruct extends StreamStruct implements InputStream, Out
 			throw new StreamErrorException("Provided Output Stream must not be null.");
 		}
 
-		final LispType inType = inputStream.elementType();
-		final LispType outType = outputStream.elementType();
+		final LispType inType = inputStream.getElementType();
+		final LispType outType = outputStream.getElementType();
 
 		if (inType.equals(outType)) {
 			return inType;

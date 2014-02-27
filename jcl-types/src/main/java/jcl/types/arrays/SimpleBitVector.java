@@ -45,7 +45,7 @@ public interface SimpleBitVector extends BitVector, SimpleArray {
 		private static class SimpleBitVectorImpl implements SimpleBitVector, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final DimensionsDesignator size;
-			private final LispType elementType = Bit.INSTANCE;
+			private static final LispType ELEMENT_TYPE = Bit.INSTANCE;
 
 			/**
 			 * Private constructor.
@@ -70,7 +70,7 @@ public interface SimpleBitVector extends BitVector, SimpleArray {
 
 			@Override
 			public LispType getElementType() {
-				return elementType;
+				return ELEMENT_TYPE;
 			}
 
 			/**
@@ -111,7 +111,7 @@ public interface SimpleBitVector extends BitVector, SimpleArray {
 			public int hashCode() {
 				return new HashCodeBuilder()
 						.append(size)
-						.append(elementType)
+						.append(ELEMENT_TYPE)
 						.toHashCode();
 			}
 
@@ -119,7 +119,7 @@ public interface SimpleBitVector extends BitVector, SimpleArray {
 			public String toString() {
 				return "SimpleBitVectorImpl{"
 						+ "size=" + size
-						+ ", elementType=" + elementType
+						+ ", elementType=" + ELEMENT_TYPE
 						+ '}';
 			}
 		}

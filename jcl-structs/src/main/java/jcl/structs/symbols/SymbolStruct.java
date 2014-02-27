@@ -11,6 +11,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The {@code SymbolStruct} is the object representation of a Lisp 'symbol' type.
+ *
+ * @param <TYPE> the type of the symbol value
  */
 public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 
@@ -92,16 +94,67 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		this.function = function;
 	}
 
+	/**
+	 * Getter for symbol name property.
+	 *
+	 * @return symbol name property
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Getter for symbol package property.
+	 *
+	 * @return symbol package property
+	 */
 	public PackageStruct getSymbolPackage() {
 		return symbolPackage;
 	}
 
+	/**
+	 * Setter for symbol package property.
+	 *
+	 * @param symbolPackage new symbol package property value
+	 */
 	public void setSymbolPackage(final PackageStruct symbolPackage) {
 		this.symbolPackage = symbolPackage;
+	}
+
+	/**
+	 * Getter for symbol value property.
+	 *
+	 * @return symbol value property
+	 */
+	public TYPE getValue() {
+		return value;
+	}
+
+	/**
+	 * Setter for symbol value property.
+	 *
+	 * @param value new symbol value property value
+	 */
+	public void setValue(final TYPE value) {
+		this.value = value;
+	}
+
+	/**
+	 * Getter for symbol function property.
+	 *
+	 * @return symbol function property
+	 */
+	public FunctionStruct getFunction() {
+		return function;
+	}
+
+	/**
+	 * Setter for symbol function property.
+	 *
+	 * @param function new symbol function property value
+	 */
+	public void setFunction(final FunctionStruct function) {
+		this.function = function;
 	}
 
 	/**
@@ -122,22 +175,6 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 */
 	public void setProperty(final LispStruct key, final LispStruct value) {
 		properties.put(key, value);
-	}
-
-	public TYPE getValue() {
-		return value;
-	}
-
-	public void setValue(final TYPE value) {
-		this.value = value;
-	}
-
-	public FunctionStruct getFunction() {
-		return function;
-	}
-
-	public void setFunction(final FunctionStruct function) {
-		this.function = function;
 	}
 
 	/**

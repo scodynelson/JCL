@@ -14,6 +14,8 @@ import java.util.List;
 
 /**
  * The {@code ArrayStruct} is the object representation of a Lisp 'array' type.
+ *
+ * @param <TYPE> the type of the array contents
  */
 public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 
@@ -119,42 +121,92 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		}
 	}
 
+	/**
+	 * Getter for array contents property.
+	 *
+	 * @return array contents property
+	 */
 	public List<TYPE> getContents() {
 		return contents;
 	}
 
+	/**
+	 * Setter for array contents property.
+	 *
+	 * @param contents new array contents property value
+	 */
 	public void setContents(final List<TYPE> contents) {
 		this.contents = new ArrayList<>(contents);
 	}
 
+	/**
+	 * Getter for array dimensions property.
+	 *
+	 * @return array dimensions property
+	 */
 	public List<Integer> getDimensions() {
 		return dimensions;
 	}
 
+	/**
+	 * Setter for array dimensions property.
+	 *
+	 * @param dimensions new array dimensions property value
+	 */
 	public void setDimensions(final List<Integer> dimensions) {
 		this.dimensions = dimensions;
 	}
 
+	/**
+	 * Getter for array rank property.
+	 *
+	 * @return array rank property
+	 */
 	public int getRank() {
 		return rank;
 	}
 
+	/**
+	 * Setter for array rank property.
+	 *
+	 * @param rank new array rank property value
+	 */
 	public void setRank(final int rank) {
 		this.rank = rank;
 	}
 
+	/**
+	 * Getter for array elementType property.
+	 *
+	 * @return array elementType property
+	 */
 	public LispType getElementType() {
 		return elementType;
 	}
 
+	/**
+	 * Setter for array elementType property.
+	 *
+	 * @param elementType new array elementType property value
+	 */
 	public void setElementType(final LispType elementType) {
 		this.elementType = elementType;
 	}
 
+	/**
+	 * Getter for array isAdjustable property.
+	 *
+	 * @return array isAdjustable property
+	 */
 	public boolean isAdjustable() {
 		return isAdjustable;
 	}
 
+	/**
+	 * Setter for array isAdjustable property.
+	 *
+	 * @param isAdjustable new array isAdjustable property value
+	 */
 	public void setAdjustable(final boolean isAdjustable) {
 		this.isAdjustable = isAdjustable;
 	}

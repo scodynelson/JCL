@@ -7,26 +7,32 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The {@code RandomStateStruct} is the object representation of a Lisp 'random-state' type.
  */
 public class RandomStateStruct extends BuiltInClassStruct {
 
+	private static final int THREE = 3;
+
 	private static final BigInteger RANDOM_MAX = BigInteger.valueOf(54);
-	private static final BigInteger RANDOM_UPPER_BOUND = BigInteger.valueOf(Integer.MAX_VALUE - 3);
+	private static final BigInteger RANDOM_UPPER_BOUND = BigInteger.valueOf(Integer.MAX_VALUE - THREE);
 	private static final BigInteger RANDOM_CONST_A = BigInteger.valueOf(8373);
 	private static final BigInteger RANDOM_CONST_C = BigInteger.valueOf(101010101);
 
-	private static final BigInteger RANDOM_INTEGER_OVERLAP = BigInteger.valueOf(3);
-	private static final BigInteger RANDOM_INTEGER_EXTRA_BITS = BigInteger.TEN;
+	private static final BigInteger RANDOM_INTEGER_OVERLAP = BigInteger.valueOf(THREE);
+	//	private static final BigInteger RANDOM_INTEGER_EXTRA_BITS = BigInteger.TEN;
 	private static final BigInteger RANDOM_CHUNCK_LENGTH = BigInteger.valueOf(RANDOM_UPPER_BOUND.bitLength());
 
-	private static final int J_INITIAL_VALUE = 24;
-	private BigInteger j_value = BigInteger.valueOf(J_INITIAL_VALUE);
-	private BigInteger k_value = BigInteger.ZERO;
+	private static final BigInteger SHIFT_AMOUNT = RANDOM_CHUNCK_LENGTH.subtract(RANDOM_INTEGER_OVERLAP);
+	private static final int SHIFT_AMOUNT_AS_INT = SHIFT_AMOUNT.intValue();
 
-	private final ArrayList<BigInteger> seed;
+	private static final int J_INITIAL_VALUE = 24;
+	private BigInteger jValue = BigInteger.valueOf(J_INITIAL_VALUE);
+	private BigInteger kValue = BigInteger.ZERO;
+
+	private final List<BigInteger> seed;
 
 	/**
 	 * Public constructor.
@@ -50,18 +56,17 @@ public class RandomStateStruct extends BuiltInClassStruct {
 	 */
 	public BigInteger randomInteger(final BigInteger limit) {
 
-		final BigInteger shift = RANDOM_CHUNCK_LENGTH.subtract(RANDOM_INTEGER_OVERLAP);
 
 		final BigInteger limitLength = BigInteger.valueOf(limit.bitLength());
 
 		BigInteger bits = randomChunk();
 		BigInteger count = limitLength.subtract(RANDOM_INTEGER_OVERLAP);
 		while (BigInteger.ZERO.compareTo(count) <= 0) {
-			final BigInteger shiftedBits = ash(bits, shift);
+			final BigInteger shiftedBits = ash(bits);
 			final BigInteger nextChunk = randomChunk();
 
 			bits = shiftedBits.xor(nextChunk);
-			count = count.subtract(shift);
+			count = count.subtract(SHIFT_AMOUNT);
 		}
 
 		return bits.remainder(limit);
@@ -90,19 +95,19 @@ public class RandomStateStruct extends BuiltInClassStruct {
 	 * @return the random {@code BigInteger} 'chunk'
 	 */
 	private BigInteger randomChunk() {
-		final BigInteger tempJ = j_value;
-		final BigInteger tempK = k_value;
+		final BigInteger tempJ = jValue;
+		final BigInteger tempK = kValue;
 
 		// If J part
-		j_value = tempJ.equals(BigInteger.ZERO) ? RANDOM_MAX : tempJ.subtract(BigInteger.ONE);
+		jValue = tempJ.equals(BigInteger.ZERO) ? RANDOM_MAX : tempJ.subtract(BigInteger.ONE);
 
-		// Seed at new j_value
-		final BigInteger seedAtNewJ = seed.get(k_value.intValue());
+		// Seed at new jValue
+		final BigInteger seedAtNewJ = seed.get(kValue.intValue());
 
 		// If K part
-		k_value = tempK.equals(BigInteger.ZERO) ? RANDOM_MAX : tempJ.subtract(BigInteger.ONE);
+		kValue = tempK.equals(BigInteger.ZERO) ? RANDOM_MAX : tempJ.subtract(BigInteger.ONE);
 
-		// Seed at new k_value
+		// Seed at new kValue
 		final BigInteger seedAtNewK = seed.get(tempK.intValue());
 
 		// A part
@@ -119,16 +124,15 @@ public class RandomStateStruct extends BuiltInClassStruct {
 	/**
 	 * This method is a bit shifting method depending on the sign of the shift value.
 	 *
-	 * @param bits  the bits to shift
-	 * @param shift the shift value
+	 * @param bits the bits to shift
 	 * @return a new shifted {@code BigInteger}
 	 */
-	private static BigInteger ash(final BigInteger bits, final BigInteger shift) {
+	private static BigInteger ash(final BigInteger bits) {
 		final BigInteger shiftedBits;
-		if (BigInteger.ZERO.compareTo(shift) <= 0) {
-			shiftedBits = bits.shiftRight(shift.intValue());
+		if (SHIFT_AMOUNT_AS_INT <= 0) {
+			shiftedBits = bits.shiftRight(SHIFT_AMOUNT_AS_INT);
 		} else {
-			shiftedBits = bits.shiftLeft(shift.intValue());
+			shiftedBits = bits.shiftLeft(SHIFT_AMOUNT_AS_INT);
 		}
 		return shiftedBits;
 	}
@@ -136,8 +140,8 @@ public class RandomStateStruct extends BuiltInClassStruct {
 	@Override
 	public String toString() {
 		return "RandomStateStruct{"
-				+ "j=" + j_value
-				+ ", k=" + k_value
+				+ "j=" + jValue
+				+ ", k=" + kValue
 				+ ", seed=" + seed
 				+ '}';
 	}

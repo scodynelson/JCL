@@ -1,6 +1,6 @@
 package jcl.structs.symbols;
 
-import jcl.structs.packages.PackageStruct;
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.types.symbols.Keyword;
 
 /**
@@ -14,7 +14,7 @@ public class KeywordSymbolStruct extends SymbolStruct<KeywordSymbolStruct> {
 	 * @param name the symbol name
 	 */
 	public KeywordSymbolStruct(final String name) {
-		super(Keyword.INSTANCE, name, PackageStruct.KEYWORD, null, null);
+		super(Keyword.INSTANCE, name, GlobalPackageStruct.KEYWORD, null, null);
 		init();
 	}
 

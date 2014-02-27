@@ -55,7 +55,7 @@ public abstract class StreamStruct extends BuiltInClassStruct implements LispStr
 	}
 
 	@Override
-	public LispType elementType() {
+	public LispType getElementType() {
 		return elementType;
 	}
 

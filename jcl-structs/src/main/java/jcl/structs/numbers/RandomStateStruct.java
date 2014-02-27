@@ -22,8 +22,9 @@ public class RandomStateStruct extends BuiltInClassStruct {
 	private static final BigInteger RANDOM_INTEGER_EXTRA_BITS = BigInteger.TEN;
 	private static final BigInteger RANDOM_CHUNCK_LENGTH = BigInteger.valueOf(RANDOM_UPPER_BOUND.bitLength());
 
-	private BigInteger j = BigInteger.valueOf(24);
-	private BigInteger k = BigInteger.ZERO;
+	private static final int J_INITIAL_VALUE = 24;
+	private BigInteger j_value = BigInteger.valueOf(J_INITIAL_VALUE);
+	private BigInteger k_value = BigInteger.ZERO;
 
 	private final ArrayList<BigInteger> seed;
 
@@ -89,19 +90,19 @@ public class RandomStateStruct extends BuiltInClassStruct {
 	 * @return the random {@code BigInteger} 'chunk'
 	 */
 	private BigInteger randomChunk() {
-		final BigInteger tempJ = j;
-		final BigInteger tempK = k;
+		final BigInteger tempJ = j_value;
+		final BigInteger tempK = k_value;
 
 		// If J part
-		j = tempJ.equals(BigInteger.ZERO) ? RANDOM_MAX : tempJ.subtract(BigInteger.ONE);
+		j_value = tempJ.equals(BigInteger.ZERO) ? RANDOM_MAX : tempJ.subtract(BigInteger.ONE);
 
-		// Seed at new j
-		final BigInteger seedAtNewJ = seed.get(k.intValue());
+		// Seed at new j_value
+		final BigInteger seedAtNewJ = seed.get(k_value.intValue());
 
 		// If K part
-		k = tempK.equals(BigInteger.ZERO) ? RANDOM_MAX : tempJ.subtract(BigInteger.ONE);
+		k_value = tempK.equals(BigInteger.ZERO) ? RANDOM_MAX : tempJ.subtract(BigInteger.ONE);
 
-		// Seed at new k
+		// Seed at new k_value
 		final BigInteger seedAtNewK = seed.get(tempK.intValue());
 
 		// A part
@@ -135,8 +136,8 @@ public class RandomStateStruct extends BuiltInClassStruct {
 	@Override
 	public String toString() {
 		return "RandomStateStruct{" +
-				"j=" + j +
-				", k=" + k +
+				"j=" + j_value +
+				", k=" + k_value +
 				", seed=" + seed +
 				'}';
 	}

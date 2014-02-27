@@ -112,7 +112,7 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 	}
 
 	@Override
-	public PeekResult peekChar(final LispType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) throws StreamErrorException {
+	public PeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) throws StreamErrorException {
 		if (inputStreams.isEmpty()) {
 			if (eofErrorP) {
 				throw new EndOfFileException("End of file reached.");

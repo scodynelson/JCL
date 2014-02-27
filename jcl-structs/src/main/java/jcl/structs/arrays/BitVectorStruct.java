@@ -24,7 +24,7 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 	 * @throws SimpleErrorException if the provided {@code contents} do not match the provided {@code dimensions}
 	 */
 	public BitVectorStruct(final String bitString) throws TypeErrorException, SimpleErrorException {
-		this(bitString.length(), getBitList(bitString), Bit.INSTANCE, false, null);
+		this(bitString.length(), getBitList(bitString), false, null);
 	}
 
 	/**
@@ -32,15 +32,14 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 	 *
 	 * @param size         the bit-vector size
 	 * @param contents     the bit-vector contents
-	 * @param elementType  the bit-vector elementType
 	 * @param isAdjustable whether or not the bit-vector is adjustable
 	 * @param fillPointer  the bit-vector fillPointer
 	 * @throws TypeErrorException   if any of the provided {@code contents} are not the same type as the provided {@code elementType}
 	 * @throws SimpleErrorException if the provided {@code contents} do not match the provided {@code dimensions}
 	 */
-	public BitVectorStruct(final int size, final List<IntegerStruct> contents, final Bit elementType,
-						   final boolean isAdjustable, final Integer fillPointer) throws TypeErrorException, SimpleErrorException {
-		super(getBitVectorType(isAdjustable, fillPointer), size, contents, elementType, isAdjustable, fillPointer);
+	public BitVectorStruct(final int size, final List<IntegerStruct> contents, final boolean isAdjustable, final Integer fillPointer)
+			throws TypeErrorException, SimpleErrorException {
+		super(getBitVectorType(isAdjustable, fillPointer), size, contents, Bit.INSTANCE, isAdjustable, fillPointer);
 	}
 
 	/**

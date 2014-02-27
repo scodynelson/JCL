@@ -76,7 +76,7 @@ public class TwoWayStreamStruct extends StreamStruct implements InputStream, Out
 	}
 
 	@Override
-	public PeekResult peekChar(final LispType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) throws StreamErrorException {
+	public PeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) throws StreamErrorException {
 		return inputStream.peekChar(peekType, eofErrorP, eofValue, recursiveP);
 	}
 

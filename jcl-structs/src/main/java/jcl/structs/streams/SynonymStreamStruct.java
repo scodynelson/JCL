@@ -74,7 +74,7 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	}
 
 	@Override
-	public PeekResult peekChar(final LispType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) throws StreamErrorException {
+	public PeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) throws StreamErrorException {
 		if (stream instanceof InputStream) {
 			return ((InputStream) stream).peekChar(peekType, eofErrorP, eofValue, recursiveP);
 		} else {

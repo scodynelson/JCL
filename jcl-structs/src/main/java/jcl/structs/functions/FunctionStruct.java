@@ -11,7 +11,7 @@ public class FunctionStruct implements LispStruct {
 		return Function.INSTANCE;
 	}
 
-	public LispStruct funcall(LispStruct... lispStructs) {
+	public LispStruct funcall(final LispStruct... lispStructs) {
 		return null;
 	}
 }

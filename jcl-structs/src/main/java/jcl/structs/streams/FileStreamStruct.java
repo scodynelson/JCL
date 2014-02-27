@@ -3,7 +3,6 @@ package jcl.structs.streams;
 import jcl.structs.LispStruct;
 import jcl.structs.conditions.exceptions.EndOfFileException;
 import jcl.structs.conditions.exceptions.StreamErrorException;
-import jcl.types.LispType;
 import jcl.types.streams.FileStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,16 +97,19 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 	}
 
 	@Override
-	public PeekResult peekChar(final LispType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) throws StreamErrorException {
-		int nextChar;
-		try {
-			nextChar = fileStream.readChar();
-			fileStream.seek(fileStream.getFilePointer() - 1);
-		} catch (final EOFException eofe) {
-			LOGGER.warn("End of file reached.", eofe);
-			nextChar = -1;
-		} catch (final IOException ioe) {
-			throw new StreamErrorException("Could not peek char", ioe);
+	public PeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) throws StreamErrorException {
+
+		int nextChar = -1;
+		switch (peekType.getType()) {
+			case NIL:
+				nextChar = nilPeekChar();
+				break;
+			case T:
+				nextChar = tPeekChar();
+				break;
+			case CHARACTER:
+				nextChar = characterPeekChar(peekType.getCodePoint());
+				break;
 		}
 
 		if (nextChar == -1) {
@@ -119,6 +121,69 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 		} else {
 			return new PeekResult(nextChar);
 		}
+	}
+
+	/**
+	 * This method attempts to peek ahead to the next available character in the stream.
+	 *
+	 * @return the character peeked from the stream
+	 * @throws StreamErrorException if the next character could not be peeked at from the stream
+	 */
+	private int nilPeekChar() throws StreamErrorException {
+		int nextChar;
+		try {
+			nextChar = fileStream.readChar();
+			fileStream.seek(fileStream.getFilePointer() - 1);
+		} catch (final EOFException eofe) {
+			LOGGER.warn("End of file reached.", eofe);
+			nextChar = -1;
+		} catch (final IOException ioe) {
+			throw new StreamErrorException("Could not peek char", ioe);
+		}
+		return nextChar;
+	}
+
+	/**
+	 * This method attempts to peek ahead to the next available non-whitespace character in the stream.
+	 *
+	 * @return the character peeked from the stream
+	 * @throws StreamErrorException if there are only whitespace characters left in the stream
+	 */
+	private int tPeekChar() throws StreamErrorException {
+		int nextChar = ' '; // Initialize to whitespace, since we are attempting to skip it anyways
+		try {
+			int i = 0;
+			while (Character.isWhitespace(nextChar)) {
+				nextChar = fileStream.readChar();
+				i++;
+			}
+			fileStream.seek(fileStream.getFilePointer() - i);
+		} catch (final IOException ioe) {
+			throw new StreamErrorException("Could not peek char", ioe);
+		}
+		return nextChar;
+	}
+
+	/**
+	 * This method attempts to peek ahead to the provided codePoint in the stream.
+	 *
+	 * @param codePoint the codePoint to peek up to in the stream
+	 * @return the character peeked from the stream
+	 * @throws StreamErrorException if the codePoint could not be peeked at from the stream
+	 */
+	private int characterPeekChar(final Integer codePoint) throws StreamErrorException {
+		int nextChar = -1; // Initialize to -1 value, since this is essentially EOF
+		try {
+			int i = 0;
+			while (nextChar != codePoint) {
+				nextChar = fileStream.readChar();
+				i++;
+			}
+			fileStream.seek(fileStream.getFilePointer() - i);
+		} catch (final IOException ioe) {
+			throw new StreamErrorException("Could not peek char", ioe);
+		}
+		return nextChar;
 	}
 
 	@Override

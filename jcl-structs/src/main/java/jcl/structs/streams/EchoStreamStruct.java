@@ -115,7 +115,7 @@ public class EchoStreamStruct extends StreamStruct implements InputStream, Outpu
 	}
 
 	@Override
-	public PeekResult peekChar(final LispType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) throws StreamErrorException {
+	public PeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) throws StreamErrorException {
 		if (unreadStuff.isEmpty()) {
 			final ReadResult readResult = inputStream.readChar(eofErrorP, eofValue, recursiveP);
 

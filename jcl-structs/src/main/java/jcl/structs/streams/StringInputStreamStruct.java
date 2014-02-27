@@ -3,7 +3,6 @@ package jcl.structs.streams;
 import jcl.structs.LispStruct;
 import jcl.structs.conditions.exceptions.EndOfFileException;
 import jcl.structs.conditions.exceptions.StreamErrorException;
-import jcl.types.LispType;
 import jcl.types.characters.BaseChar;
 import jcl.types.streams.StringStream;
 
@@ -65,7 +64,7 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 	}
 
 	@Override
-	public PeekResult peekChar(final LispType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) throws StreamErrorException {
+	public PeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) throws StreamErrorException {
 		if ((current + 1) == end) {
 			if (eofErrorP) {
 				throw new EndOfFileException("End of file reached.");
@@ -74,8 +73,80 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 			}
 		}
 
-		final int nextChar = inputString.charAt(current + 1);
-		return new PeekResult(nextChar);
+		int nextChar = -1;
+		switch (peekType.getType()) {
+			case NIL:
+				nextChar = nilPeekChar();
+				break;
+			case T:
+				nextChar = tPeekChar();
+				break;
+			case CHARACTER:
+				nextChar = characterPeekChar(peekType.getCodePoint());
+				break;
+		}
+
+		if (nextChar == -1) {
+			if (eofErrorP) {
+				throw new EndOfFileException("End of file reached.");
+			} else {
+				return new PeekResult(eofValue);
+			}
+		} else {
+			return new PeekResult(nextChar);
+		}
+	}
+
+	/**
+	 * This method attempts to peek ahead to the next available character in the stream.
+	 *
+	 * @return the character peeked from the stream
+	 */
+	private int nilPeekChar() {
+		return inputString.charAt(current + 1);
+	}
+
+	/**
+	 * This method attempts to peek ahead to the next available non-whitespace character in the stream.
+	 *
+	 * @return the character peeked from the stream
+	 */
+	private int tPeekChar() {
+		int nextChar = ' '; // Initialize to whitespace, since we are attempting to skip it anyways
+
+		int indexToFind = current + 1;
+		while (Character.isWhitespace(nextChar) && (indexToFind < end)) {
+			nextChar = inputString.charAt(current + indexToFind);
+			indexToFind++;
+		}
+
+		if (indexToFind == end) {
+			return nextChar;
+		} else {
+			return -1;
+		}
+	}
+
+	/**
+	 * This method attempts to peek ahead to the provided codePoint in the stream.
+	 *
+	 * @param codePoint the codePoint to peek up to in the stream
+	 * @return the character peeked from the stream
+	 */
+	private int characterPeekChar(final Integer codePoint) {
+		int nextChar = -1; // Initialize to -1 value, since this is essentially EOF
+
+		int indexToFind = current + 1;
+		while ((nextChar != codePoint) && (indexToFind < end)) {
+			nextChar = inputString.charAt(current + indexToFind);
+			indexToFind++;
+		}
+
+		if (indexToFind == end) {
+			return nextChar;
+		} else {
+			return -1;
+		}
 	}
 
 	@Override

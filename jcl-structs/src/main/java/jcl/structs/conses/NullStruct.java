@@ -1,22 +1,24 @@
 package jcl.structs.conses;
 
 import jcl.structs.LispStruct;
-import jcl.types.LispType;
+import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.types.conses.Null;
 
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * The {@code NullStruct} is the object representation of a Lisp 'null' type.
+ */
 public class NullStruct extends ListStruct {
 
 	public static final NullStruct INSTANCE = new NullStruct();
 
+	/**
+	 * Private constructor.
+	 */
 	private NullStruct() {
-	}
-
-	@Override
-	public LispType getType() {
-		return Null.INSTANCE;
+		super(Null.INSTANCE, null, null);
 	}
 
 	@Override
@@ -25,17 +27,22 @@ public class NullStruct extends ListStruct {
 	}
 
 	@Override
+	public LispStruct getElement(final int index) {
+		return INSTANCE;
+	}
+
+	@Override
+	public void setElement(final int index, final LispStruct newValue) {
+		throw new SimpleErrorException("Cannot set element within NIL.");
+	}
+
+	@Override
 	public LispStruct getFirst() {
 		return INSTANCE;
 	}
 
 	@Override
-	public List<LispStruct> getRest() {
-		return Collections.emptyList();
-	}
-
-	@Override
-	public LispStruct getElement(final int index) {
+	public ListStruct getRest() {
 		return INSTANCE;
 	}
 
@@ -47,5 +54,15 @@ public class NullStruct extends ListStruct {
 	@Override
 	public boolean isDotted() {
 		return false;
+	}
+
+	@Override
+	public boolean isCircular() {
+		return false;
+	}
+
+	@Override
+	public String toString() {
+		return "NullStruct{}";
 	}
 }

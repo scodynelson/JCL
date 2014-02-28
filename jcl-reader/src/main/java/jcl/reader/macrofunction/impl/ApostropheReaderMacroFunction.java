@@ -26,7 +26,7 @@ public class ApostropheReaderMacroFunction implements ReaderMacroFunction {
 			throw new ReaderErrorException("Missing expression.");
 		} else {
 			final SymbolStruct<?> quoteToken = SpecialOperatorSymbolTokens.QUOTE;
-			return ListStruct.getStruct(quoteToken, expression);
+			return ListStruct.buildProperList(quoteToken, expression);
 		}
 	}
 }

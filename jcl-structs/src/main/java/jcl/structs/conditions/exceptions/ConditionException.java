@@ -3,7 +3,7 @@ package jcl.structs.conditions.exceptions;
 import jcl.structs.LispStruct;
 import jcl.types.LispType;
 
-public class ConditionException extends Exception implements LispStruct {
+public class ConditionException extends RuntimeException implements LispStruct {
 
 	private static final long serialVersionUID = -6335987954040250984L;
 

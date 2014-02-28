@@ -313,7 +313,7 @@ public class MacroFunctionReader extends LispReader {
 
 					final LispStruct lispStruct = readAfterDot(nextCodePoint);
 					theList.add(lispStruct);
-					return ListStruct.getStruct(true, theList);
+					return ListStruct.buildDottedList(theList);
 				} else {
 					stateReader.unreadChar(nextCodePoint);
 				}
@@ -328,11 +328,7 @@ public class MacroFunctionReader extends LispReader {
 			codePoint = flushWhitespace();
 		}
 
-		if (theList.isEmpty()) {
-			return ListStruct.getStruct();
-		} else {
-			return ListStruct.getStruct(theList);
-		}
+		return ListStruct.buildProperList(theList);
 	}
 
 	private LispStruct readAfterDot(final int firstCodePoint) throws ReaderErrorException {
@@ -460,7 +456,7 @@ public class MacroFunctionReader extends LispReader {
 			final ListStruct listStruct = (ListStruct) token;
 
 			final LispStruct firstToken = listStruct.getFirst();
-			final List<LispStruct> restTokens = listStruct.getRest();
+			final List<LispStruct> restTokens = listStruct.getRest().getAsJavaList();
 
 			final SymbolStruct<?> symbolToken = (SymbolStruct<?>) firstToken;
 

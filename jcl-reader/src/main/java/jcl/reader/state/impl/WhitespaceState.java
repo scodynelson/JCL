@@ -3,7 +3,6 @@ package jcl.reader.state.impl;
 import jcl.reader.state.ReaderState;
 import jcl.reader.state.State;
 import jcl.reader.state.StateReader;
-import jcl.structs.conditions.exceptions.ReaderErrorException;
 
 /**
  * Step 3 of the Reader Algorithm.
@@ -20,7 +19,7 @@ public class WhitespaceState implements State {
 	 * @return ReadState
 	 */
 	@Override
-	public ReaderState process(final StateReader reader, final ReaderState readerState) throws ReaderErrorException {
+	public ReaderState process(final StateReader reader, final ReaderState readerState) {
 		readerState.setPreviousState(this);
 		readerState.setNextState(ReadState.READ_STATE);
 		return readerState;

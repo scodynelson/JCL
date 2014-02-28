@@ -7,7 +7,6 @@ import jcl.reader.state.TokenAttribute;
 import jcl.reader.state.impl.util.StateUtils;
 import jcl.reader.syntax.AttributeType;
 import jcl.reader.syntax.CharacterConstants;
-import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.numbers.FloatStruct;
 import jcl.structs.numbers.IntegerStruct;
 import jcl.structs.numbers.NumberStruct;
@@ -47,7 +46,7 @@ public class NumberTokenAccumulatedState implements State {
 	 * EndState                       the final accepting state
 	 */
 	@Override
-	public ReaderState process(final StateReader reader, final ReaderState readerState) throws ReaderErrorException {
+	public ReaderState process(final StateReader reader, final ReaderState readerState) {
 		readerState.setPreviousState(this);
 
 		final NumberStruct numberToken = getNumberToken(readerState);

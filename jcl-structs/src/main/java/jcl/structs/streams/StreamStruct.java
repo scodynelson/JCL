@@ -2,7 +2,6 @@ package jcl.structs.streams;
 
 import jcl.structs.LispStruct;
 import jcl.structs.classes.BuiltInClassStruct;
-import jcl.structs.conditions.exceptions.StreamErrorException;
 import jcl.types.LispType;
 import jcl.types.streams.Stream;
 
@@ -50,7 +49,7 @@ public abstract class StreamStruct extends BuiltInClassStruct implements LispStr
 	}
 
 	@Override
-	public void close() throws StreamErrorException {
+	public void close() {
 		isClosed = true;
 	}
 

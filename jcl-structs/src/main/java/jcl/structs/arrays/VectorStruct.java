@@ -26,10 +26,8 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	 * Public constructor.
 	 *
 	 * @param contents the vector contents
-	 * @throws TypeErrorException   if any of the provided {@code contents} are not the same type as the provided {@code elementType}
-	 * @throws SimpleErrorException if the provided {@code contents} do not match the provided {@code dimensions}
 	 */
-	public VectorStruct(final List<TYPE> contents) throws TypeErrorException, SimpleErrorException {
+	public VectorStruct(final List<TYPE> contents) {
 		this(contents.size(), contents, T.INSTANCE, false, null);
 	}
 
@@ -41,11 +39,9 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	 * @param elementType  the vector elementType
 	 * @param isAdjustable whether or not the vector is adjustable
 	 * @param fillPointer  the vector fillPointer
-	 * @throws TypeErrorException   if any of the provided {@code contents} are not the same type as the provided {@code elementType}
-	 * @throws SimpleErrorException if the provided {@code contents} do not match the provided {@code dimensions}
 	 */
 	public VectorStruct(final int size, final List<TYPE> contents, final LispType elementType,
-						final boolean isAdjustable, final Integer fillPointer) throws TypeErrorException, SimpleErrorException {
+						final boolean isAdjustable, final Integer fillPointer) {
 		this(getVectorType(isAdjustable, fillPointer), size, contents, elementType, isAdjustable, fillPointer);
 	}
 
@@ -58,12 +54,11 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	 * @param elementType  the vector elementType
 	 * @param isAdjustable whether or not the vector is adjustable
 	 * @param fillPointer  the vector fillPointer
-	 * @throws TypeErrorException   if any of the provided {@code contents} are not the same type as the provided {@code elementType}
-	 * @throws SimpleErrorException if the provided {@code contents} do not match the provided {@code dimensions}
+	 * @throws SimpleErrorException
 	 */
 	protected VectorStruct(final Vector vectorType,
 						   final int size, final List<TYPE> contents, final LispType elementType,
-						   final boolean isAdjustable, final Integer fillPointer) throws TypeErrorException, SimpleErrorException {
+						   final boolean isAdjustable, final Integer fillPointer) {
 		super(vectorType, Collections.singletonList(size), contents, elementType, isAdjustable);
 
 		this.fillPointer = fillPointer;
@@ -104,7 +99,7 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	 * @return the element popped from the fillPointer index
 	 * @throws ErrorException if the vector has no fill-pointer or the fill-pointer is 0
 	 */
-	public TYPE pop() throws ErrorException {
+	public TYPE pop() {
 		if (fillPointer == null) {
 			throw new TypeErrorException("Vector has no fill-pointer.");
 		}
@@ -126,7 +121,7 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	 * @return the location of the newly added element
 	 * @throws TypeErrorException if the vector has no fill-pointer
 	 */
-	public int push(final TYPE element) throws TypeErrorException {
+	public int push(final TYPE element) {
 		if (fillPointer == null) {
 			throw new TypeErrorException("Vector has no fill-pointer.");
 		}
@@ -149,7 +144,7 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	 * @return the location of the newly added element
 	 * @throws TypeErrorException if the vector has no fill-pointer or the vector is not adjustable
 	 */
-	public int pushExtend(final TYPE element, final int extensionAmount) throws TypeErrorException {
+	public int pushExtend(final TYPE element, final int extensionAmount) {
 		if (!isAdjustable) {
 			throw new TypeErrorException("Vector is not an adjustable array.");
 		}

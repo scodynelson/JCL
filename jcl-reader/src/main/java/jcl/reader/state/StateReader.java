@@ -25,14 +25,12 @@ public class StateReader extends LispReader {
 	}
 
 	@Override
-	public LispStruct read() throws ReaderErrorException {
+	public LispStruct read() {
 		return read(true, null, true);
 	}
 
 	@Override
-	public LispStruct read(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP)
-			throws ReaderErrorException {
-
+	public LispStruct read(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		final StateReader stateReader = new StateReader(inputStream);
 
 		ReaderState readerState = new ReaderState(eofErrorP, eofValue, recursiveP);
@@ -47,12 +45,12 @@ public class StateReader extends LispReader {
 	}
 
 	@Override
-	public ReadResult readChar() throws ReaderErrorException {
+	public ReadResult readChar() {
 		return readChar(true, null, true);
 	}
 
 	@Override
-	public ReadResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) throws ReaderErrorException {
+	public ReadResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		try {
 			return inputStream.readChar(eofErrorP, eofValue, recursiveP);
 		} catch (StreamErrorException e) {
@@ -61,7 +59,7 @@ public class StateReader extends LispReader {
 	}
 
 	@Override
-	public void unreadChar(final int codePoint) throws ReaderErrorException {
+	public void unreadChar(final int codePoint) {
 		try {
 			inputStream.unreadChar(codePoint);
 		} catch (final StreamErrorException see) {

@@ -19,9 +19,8 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 	 * Public constructor.
 	 *
 	 * @param inputString the input to create a {@code StringInputStreamStruct} from
-	 * @throws StreamErrorException if the struct cannot be created
 	 */
-	public StringInputStreamStruct(final String inputString) throws StreamErrorException {
+	public StringInputStreamStruct(final String inputString) {
 		this(false, inputString);
 	}
 
@@ -30,9 +29,8 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 	 *
 	 * @param isInteractive whether or not the struct created is 'interactive'
 	 * @param inputString   the input to create a {@code StringInputStreamStruct} from
-	 * @throws StreamErrorException if the struct cannot be created
 	 */
-	public StringInputStreamStruct(final boolean isInteractive, final String inputString) throws StreamErrorException {
+	public StringInputStreamStruct(final boolean isInteractive, final String inputString) {
 		super(StringStream.INSTANCE, null, null, isInteractive, BaseChar.INSTANCE);
 
 		if (inputString == null) {
@@ -45,7 +43,7 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 	}
 
 	@Override
-	public ReadResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) throws StreamErrorException {
+	public ReadResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		if (current == end) {
 			if (eofErrorP) {
 				throw new EndOfFileException("End of file reached.");
@@ -59,12 +57,12 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 	}
 
 	@Override
-	public ReadResult readByte(final boolean eofErrorP, final LispStruct eofValue) throws StreamErrorException {
+	public ReadResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
 		throw new StreamErrorException("Operation only supported for BinaryStreams.");
 	}
 
 	@Override
-	public PeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) throws StreamErrorException {
+	public PeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		if ((current + 1) == end) {
 			if (eofErrorP) {
 				throw new EndOfFileException("End of file reached.");
@@ -150,7 +148,7 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 	}
 
 	@Override
-	public Integer unreadChar(final Integer codePoint) throws StreamErrorException {
+	public Integer unreadChar(final Integer codePoint) {
 		current--;
 		return codePoint;
 	}
@@ -166,12 +164,12 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 	}
 
 	@Override
-	public Long fileLength() throws StreamErrorException {
+	public Long fileLength() {
 		throw new StreamErrorException("Operation only supported on a FileStream.");
 	}
 
 	@Override
-	public Long filePosition(final Long filePosition) throws StreamErrorException {
+	public Long filePosition(final Long filePosition) {
 		if (filePosition != null) {
 			current = filePosition.intValue();
 		}

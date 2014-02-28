@@ -30,10 +30,8 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 *
 	 * @param dimensions the array dimensions
 	 * @param contents   the array contents
-	 * @throws TypeErrorException   if any of the provided {@code contents} are not of type {@code T}
-	 * @throws SimpleErrorException if the provided {@code contents} do not match the provided {@code dimensions}
 	 */
-	public ArrayStruct(final List<Integer> dimensions, final List<TYPE> contents) throws TypeErrorException, SimpleErrorException {
+	public ArrayStruct(final List<Integer> dimensions, final List<TYPE> contents) {
 		this(SimpleArray.INSTANCE, dimensions, contents, T.INSTANCE, false);
 	}
 
@@ -44,11 +42,8 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 * @param contents     the array contents
 	 * @param elementType  the array elementType
 	 * @param isAdjustable whether or not the array is adjustable
-	 * @throws TypeErrorException   if any of the provided {@code contents} are not the same type as the provided {@code elementType}
-	 * @throws SimpleErrorException if the provided {@code contents} do not match the provided {@code dimensions}
 	 */
-	public ArrayStruct(final List<Integer> dimensions, final List<TYPE> contents, final LispType elementType,
-					   final boolean isAdjustable) throws TypeErrorException, SimpleErrorException {
+	public ArrayStruct(final List<Integer> dimensions, final List<TYPE> contents, final LispType elementType, final boolean isAdjustable) {
 		this(getArrayType(isAdjustable), dimensions, contents, elementType, isAdjustable);
 	}
 
@@ -60,12 +55,9 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 * @param contents     the array contents
 	 * @param elementType  the array elementType
 	 * @param isAdjustable whether or not the array is adjustable
-	 * @throws TypeErrorException   if any of the provided {@code contents} are not the same type as the provided {@code elementType}
-	 * @throws SimpleErrorException if the provided {@code contents} do not match the provided {@code dimensions}
 	 */
 	protected ArrayStruct(final Array arrayType,
-						  final List<Integer> dimensions, final List<TYPE> contents, final LispType elementType,
-						  final boolean isAdjustable) throws TypeErrorException, SimpleErrorException {
+						  final List<Integer> dimensions, final List<TYPE> contents, final LispType elementType, final boolean isAdjustable) {
 		super(arrayType, null, null);
 
 		// Check input data
@@ -97,12 +89,9 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 * @param dimensionsToCheck  the array dimensions to check
 	 * @param elementTypeToCheck the array elementType to check
 	 * @param contentsToCheck    the array contents to check
-	 * @throws TypeErrorException   if any of the provided {@code contentsToCheck} are not the same type as the provided {@code elementTypeToCheck}
-	 * @throws SimpleErrorException if the provided {@code contentsToCheck} do not match the provided {@code dimensionsToCheck}
 	 */
 	private void areContentsValidForDimensionsAndElementType(final List<Integer> dimensionsToCheck, final LispType elementTypeToCheck,
-															 final List<TYPE> contentsToCheck)
-			throws SimpleErrorException, TypeErrorException {
+															 final List<TYPE> contentsToCheck) {
 
 		int totalNumberOfElements = 0;
 		for (final int dimension : dimensionsToCheck) {

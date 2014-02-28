@@ -60,9 +60,8 @@ public class PackageStruct extends BuiltInClassStruct {
 	 * @param name      the package name
 	 * @param nicknames the package nicknames
 	 * @param useList   the packages this package will use/inherit from
-	 * @throws PackageErrorException if constructing the package fails, mainly due to name conflicts in the provided useList
 	 */
-	public PackageStruct(final String name, final List<String> nicknames, final Set<PackageStruct> useList) throws PackageErrorException {
+	public PackageStruct(final String name, final List<String> nicknames, final Set<PackageStruct> useList) {
 		super(Package.INSTANCE, null, null);
 		this.name = name;
 		this.nicknames = nicknames;
@@ -177,9 +176,8 @@ public class PackageStruct extends BuiltInClassStruct {
 	 * This method updates the package to use the provided {@code packagesToUse}.
 	 *
 	 * @param packagesToUse the packages that will be used
-	 * @throws PackageErrorException if one of the provided packages is the 'KEYWORD' package
 	 */
-	public void usePackage(final PackageStruct... packagesToUse) throws PackageErrorException {
+	public void usePackage(final PackageStruct... packagesToUse) {
 		useList.addAll(Arrays.asList(packagesToUse));
 		internalUsePackage(packagesToUse);
 	}
@@ -189,9 +187,8 @@ public class PackageStruct extends BuiltInClassStruct {
 	 * {@code packagesToUse}.
 	 *
 	 * @param packagesToUse the packages that will be used
-	 * @throws PackageErrorException if one of the provided packages is the 'KEYWORD' package
 	 */
-	private void internalUsePackage(final PackageStruct... packagesToUse) throws PackageErrorException {
+	private void internalUsePackage(final PackageStruct... packagesToUse) {
 		for (final PackageStruct packageToUse : packagesToUse) {
 			if (packageToUse.equals(GlobalPackageStruct.KEYWORD)) {
 				throw new PackageErrorException(this + " can't use package " + GlobalPackageStruct.KEYWORD);
@@ -281,9 +278,8 @@ public class PackageStruct extends BuiltInClassStruct {
 	 * current symbols with matching symbol names that already exist in the internal symbols of the package.
 	 *
 	 * @param symbols the symbols to shadow import into the package
-	 * @throws PackageErrorException if uninterning a previous symbol to be shadowed causes an internal name conflict
 	 */
-	public void shadowingImport(final SymbolStruct<?>... symbols) throws PackageErrorException {
+	public void shadowingImport(final SymbolStruct<?>... symbols) {
 		for (final SymbolStruct<?> symbol : symbols) {
 			final String symbolName = symbol.getName();
 
@@ -307,9 +303,8 @@ public class PackageStruct extends BuiltInClassStruct {
 	 * and those not found are stored for throwing in a {@code PackageErrorException}.
 	 *
 	 * @param symbols the symbols to export
-	 * @throws PackageErrorException if any of the symbols provided are not found within the package
 	 */
-	public void export(final SymbolStruct<?>... symbols) throws PackageErrorException {
+	public void export(final SymbolStruct<?>... symbols) {
 		final List<String> notFoundSymbolNames = new ArrayList<>();
 
 		for (final SymbolStruct<?> symbol : symbols) {
@@ -352,9 +347,8 @@ public class PackageStruct extends BuiltInClassStruct {
 	 * un-exported and those not found are stored for throwing in a {@code PackageErrorException}.
 	 *
 	 * @param symbols the symbols to un-export
-	 * @throws PackageErrorException if any of the symbols provided are not found within the package
 	 */
-	public void unexport(final SymbolStruct<?>... symbols) throws PackageErrorException {
+	public void unexport(final SymbolStruct<?>... symbols) {
 		final List<String> notFoundSymbolNames = new ArrayList<>();
 
 		for (final SymbolStruct<?> symbol : symbols) {
@@ -429,9 +423,8 @@ public class PackageStruct extends BuiltInClassStruct {
 	 *
 	 * @param symbol the symbol to un-intern from the package
 	 * @return whether a symbol was indeed un-interned or not
-	 * @throws PackageErrorException if any shadowing conflicts occur due to attempts to un-intern the symbol
 	 */
-	public boolean unintern(final SymbolStruct<?> symbol) throws PackageErrorException {
+	public boolean unintern(final SymbolStruct<?> symbol) {
 		final String symbolName = symbol.getName();
 
 		// Test for conflicts BEFORE we remove anything

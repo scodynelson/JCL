@@ -1,7 +1,5 @@
 package jcl.reader.state;
 
-import jcl.structs.conditions.exceptions.ReaderErrorException;
-
 /**
  * This interface defines a set of anonymous classes that comprise the states of the
  * Reader state machine as defined in CLtL: Ch 22.1.1 pp 511-515. These states are active
@@ -34,5 +32,5 @@ import jcl.structs.conditions.exceptions.ReaderErrorException;
  */
 public interface State {
 
-	ReaderState process(StateReader reader, ReaderState readerState) throws ReaderErrorException;
+	ReaderState process(StateReader reader, ReaderState readerState);
 }

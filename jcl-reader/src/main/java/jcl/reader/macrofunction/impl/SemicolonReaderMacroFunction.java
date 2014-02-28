@@ -5,7 +5,6 @@ import jcl.reader.macrofunction.ReaderMacroFunction;
 import jcl.reader.syntax.CharacterConstants;
 import jcl.structs.LispStruct;
 import jcl.structs.comments.CommentStruct;
-import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.streams.ReadResult;
 import jcl.types.Variable;
 
@@ -15,7 +14,7 @@ import jcl.types.Variable;
 public class SemicolonReaderMacroFunction implements ReaderMacroFunction {
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final MacroFunctionReader reader, final Integer numArg) throws ReaderErrorException {
+	public LispStruct readMacro(final int codePoint, final MacroFunctionReader reader, final Integer numArg) {
 		assert codePoint == CharacterConstants.SEMICOLON;
 
 		final StringBuilder stringBuilder = new StringBuilder();

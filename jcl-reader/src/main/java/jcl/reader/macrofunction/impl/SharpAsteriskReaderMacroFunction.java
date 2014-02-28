@@ -18,7 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 public class SharpAsteriskReaderMacroFunction implements ReaderMacroFunction {
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final MacroFunctionReader reader, final Integer numArg) throws ReaderErrorException {
+	public LispStruct readMacro(final int codePoint, final MacroFunctionReader reader, final Integer numArg) {
 		assert codePoint == CharacterConstants.ASTERISK;
 
 		final ReadExtendedToken readExtendedToken = reader.readExtendedToken();

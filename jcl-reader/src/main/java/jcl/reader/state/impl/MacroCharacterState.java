@@ -37,7 +37,7 @@ public class MacroCharacterState implements State {
 	 * EndState      if the return value of the ReaderMacroFunction is not null
 	 */
 	@Override
-	public ReaderState process(final StateReader reader, final ReaderState readerState) throws ReaderErrorException {
+	public ReaderState process(final StateReader reader, final ReaderState readerState) {
 		readerState.setPreviousState(this);
 
 		Integer codePoint = readerState.getPreviousReadCharacter();

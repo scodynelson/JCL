@@ -1,7 +1,5 @@
 package jcl.structs.streams;
 
-import jcl.structs.conditions.exceptions.StreamErrorException;
-
 /**
  * The {@code OutputStream} is the representation for all Lisp output 'stream' types.
  */
@@ -11,17 +9,15 @@ public interface OutputStream extends LispStream {
 	 * This method writes the provided {@code aChar} out to the stream.
 	 *
 	 * @param aChar the character to write out to the stream
-	 * @throws StreamErrorException if the character could not be written to the stream
 	 */
-	void writeChar(int aChar) throws StreamErrorException;
+	void writeChar(int aChar);
 
 	/**
 	 * This method writes the provided {@code aByte} out to the stream.
 	 *
 	 * @param aByte the byte to write out to the stream
-	 * @throws StreamErrorException if the byte could not be written to the stream
 	 */
-	void writeByte(int aByte) throws StreamErrorException;
+	void writeByte(int aByte);
 
 	/**
 	 * This method writes the provided {@code outputString} from the provided {@code start} index to the provided {@code end}
@@ -30,9 +26,8 @@ public interface OutputStream extends LispStream {
 	 * @param outputString the string to write out to the stream
 	 * @param start        the starting index
 	 * @param end          the ending index
-	 * @throws StreamErrorException if the string could not be written to the stream
 	 */
-	void writeString(String outputString, int start, int end) throws StreamErrorException;
+	void writeString(String outputString, int start, int end);
 
 	/**
 	 * This method clears the output from the stream.

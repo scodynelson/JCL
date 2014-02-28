@@ -6,7 +6,6 @@ import jcl.reader.state.StateReader;
 import jcl.reader.state.TokenAttribute;
 import jcl.reader.state.impl.util.StateUtils;
 import jcl.reader.util.ReaderUtils;
-import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.types.Variable;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -54,7 +53,7 @@ public class TokenAccumulatedState implements State {
 	 * @return EndState       the final accepting state
 	 */
 	@Override
-	public ReaderState process(final StateReader reader, final ReaderState readerState) throws ReaderErrorException {
+	public ReaderState process(final StateReader reader, final ReaderState readerState) {
 		readerState.setPreviousState(this);
 
 		final Integer codePoint = readerState.getPreviousReadCharacter();

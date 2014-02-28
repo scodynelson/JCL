@@ -13,7 +13,7 @@ import jcl.types.Variable;
 public class SharpSharpReaderMacroFunction implements ReaderMacroFunction {
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final MacroFunctionReader reader, final Integer numArg) throws ReaderErrorException {
+	public LispStruct readMacro(final int codePoint, final MacroFunctionReader reader, final Integer numArg) {
 		assert codePoint == CharacterConstants.NUMBER_SIGN;
 
 		if (Variable.ReadSuppress) {

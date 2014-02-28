@@ -15,7 +15,7 @@ import jcl.types.Variable;
 public class SharpPReaderMacroFunction implements ReaderMacroFunction {
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final MacroFunctionReader reader, final Integer numArg) throws ReaderErrorException {
+	public LispStruct readMacro(final int codePoint, final MacroFunctionReader reader, final Integer numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_P) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_P);
 
 		final LispStruct lispStruct = reader.read();

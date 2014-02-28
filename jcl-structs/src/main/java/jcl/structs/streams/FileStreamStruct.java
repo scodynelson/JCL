@@ -26,9 +26,8 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 	 * Public constructor.
 	 *
 	 * @param file the file to create a {@code FileStreamStruct} from
-	 * @throws StreamErrorException if the struct cannot be created
 	 */
-	public FileStreamStruct(final File file) throws StreamErrorException {
+	public FileStreamStruct(final File file) {
 		this(false, file);
 	}
 
@@ -37,9 +36,8 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 	 *
 	 * @param isInteractive whether or not the struct created is 'interactive'
 	 * @param file          the file to create a {@code FileStreamStruct} from
-	 * @throws StreamErrorException if the struct cannot be created
 	 */
-	public FileStreamStruct(final boolean isInteractive, final File file) throws StreamErrorException {
+	public FileStreamStruct(final boolean isInteractive, final File file) {
 		super(FileStream.INSTANCE, null, null, isInteractive, null);
 		// TODO: Type will be the type of whatever the "byte" type being read
 
@@ -51,7 +49,7 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 	}
 
 	@Override
-	public ReadResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) throws StreamErrorException {
+	public ReadResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		int readChar;
 		try {
 			readChar = fileStream.read();
@@ -74,7 +72,7 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 	}
 
 	@Override
-	public ReadResult readByte(final boolean eofErrorP, final LispStruct eofValue) throws StreamErrorException {
+	public ReadResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
 		int readByte;
 		try {
 			readByte = fileStream.readByte();
@@ -97,7 +95,7 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 	}
 
 	@Override
-	public PeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) throws StreamErrorException {
+	public PeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 
 		int nextChar = -1;
 		switch (peekType.getType()) {
@@ -127,9 +125,8 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 	 * This method attempts to peek ahead to the next available character in the stream.
 	 *
 	 * @return the character peeked from the stream
-	 * @throws StreamErrorException if the next character could not be peeked at from the stream
 	 */
-	private int nilPeekChar() throws StreamErrorException {
+	private int nilPeekChar() {
 		int nextChar;
 		try {
 			nextChar = fileStream.readChar();
@@ -147,9 +144,8 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 	 * This method attempts to peek ahead to the next available non-whitespace character in the stream.
 	 *
 	 * @return the character peeked from the stream
-	 * @throws StreamErrorException if there are only whitespace characters left in the stream
 	 */
-	private int tPeekChar() throws StreamErrorException {
+	private int tPeekChar() {
 		int nextChar = ' '; // Initialize to whitespace, since we are attempting to skip it anyways
 		try {
 			int i = 0;
@@ -169,9 +165,8 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 	 *
 	 * @param codePoint the codePoint to peek up to in the stream
 	 * @return the character peeked from the stream
-	 * @throws StreamErrorException if the codePoint could not be peeked at from the stream
 	 */
-	private int characterPeekChar(final Integer codePoint) throws StreamErrorException {
+	private int characterPeekChar(final Integer codePoint) {
 		int nextChar = -1; // Initialize to -1 value, since this is essentially EOF
 		try {
 			int i = 0;
@@ -187,7 +182,7 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 	}
 
 	@Override
-	public Integer unreadChar(final Integer codePoint) throws StreamErrorException {
+	public Integer unreadChar(final Integer codePoint) {
 		try {
 			fileStream.seek(fileStream.getFilePointer() - 1);
 			return codePoint;
@@ -216,7 +211,7 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 	}
 
 	@Override
-	public void writeChar(final int aChar) throws StreamErrorException {
+	public void writeChar(final int aChar) {
 		try {
 			fileStream.writeChar(aChar);
 		} catch (final IOException ioe) {
@@ -225,7 +220,7 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 	}
 
 	@Override
-	public void writeByte(final int aByte) throws StreamErrorException {
+	public void writeByte(final int aByte) {
 		try {
 			fileStream.writeByte(aByte);
 		} catch (final IOException ioe) {
@@ -234,7 +229,7 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 	}
 
 	@Override
-	public void writeString(final String outputString, final int start, final int end) throws StreamErrorException {
+	public void writeString(final String outputString, final int start, final int end) {
 		try {
 			final String subString = outputString.substring(start, end);
 			fileStream.writeChars(subString);
@@ -259,7 +254,7 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 	}
 
 	@Override
-	public void close() throws StreamErrorException {
+	public void close() {
 		try {
 			fileStream.close();
 		} catch (final IOException ioe) {
@@ -269,7 +264,7 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 	}
 
 	@Override
-	public Long fileLength() throws StreamErrorException {
+	public Long fileLength() {
 		try {
 			return fileStream.length();
 		} catch (final IOException ioe) {
@@ -278,7 +273,7 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 	}
 
 	@Override
-	public Long filePosition(final Long filePosition) throws StreamErrorException {
+	public Long filePosition(final Long filePosition) {
 		try {
 			if (filePosition != null) {
 				fileStream.seek(filePosition);

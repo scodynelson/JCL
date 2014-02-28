@@ -1,7 +1,6 @@
 package jcl.structs.streams;
 
 import jcl.structs.LispStruct;
-import jcl.structs.conditions.exceptions.StreamErrorException;
 import jcl.types.LispType;
 
 /**
@@ -11,10 +10,8 @@ public interface LispStream extends LispStruct {
 
 	/**
 	 * This method closes the stream.
-	 *
-	 * @throws StreamErrorException if the stream could not be closed
 	 */
-	void close() throws StreamErrorException;
+	void close();
 
 	/**
 	 * This method returns the element type of the stream.
@@ -27,18 +24,16 @@ public interface LispStream extends LispStruct {
 	 * This method returns the length of the stream if it is a {@code FileStreamStruct}.
 	 *
 	 * @return the length of the stream
-	 * @throws StreamErrorException if the stream is not a {@code FileStreamStruct} or the length could not be obtained
 	 */
-	Long fileLength() throws StreamErrorException;
+	Long fileLength();
 
 	/**
 	 * This method returns the current position in the stream if it is a {@code FileStreamStruct}.
 	 *
 	 * @param filePosition if not null, the current stream position will be set to this value
 	 * @return the current position in the stream
-	 * @throws StreamErrorException if the stream is not a {@code FileStreamStruct} or the position could not be obtained
 	 */
-	Long filePosition(Long filePosition) throws StreamErrorException;
+	Long filePosition(Long filePosition);
 
 	/**
 	 * This method returns whether or not the stream is interactive.

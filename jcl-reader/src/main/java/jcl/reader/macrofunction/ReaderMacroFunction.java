@@ -17,5 +17,5 @@ public interface ReaderMacroFunction {
 	 * @return a LispStruct
 	 * @throws ReaderErrorException if an error is encountered
 	 */
-	LispStruct readMacro(int codePoint, MacroFunctionReader reader, Integer numArg) throws ReaderErrorException;
+	LispStruct readMacro(int codePoint, MacroFunctionReader reader, Integer numArg);
 }

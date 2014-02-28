@@ -20,7 +20,7 @@ import java.util.List;
 public class SharpCReaderMacroFunction implements ReaderMacroFunction {
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final MacroFunctionReader reader, final Integer numArg) throws ReaderErrorException {
+	public LispStruct readMacro(final int codePoint, final MacroFunctionReader reader, final Integer numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_C) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_C);
 
 		final LispStruct lispToken = reader.read();

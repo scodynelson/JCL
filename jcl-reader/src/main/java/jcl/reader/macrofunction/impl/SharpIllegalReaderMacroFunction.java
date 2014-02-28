@@ -11,7 +11,7 @@ import jcl.structs.conditions.exceptions.ReaderErrorException;
 public class SharpIllegalReaderMacroFunction implements ReaderMacroFunction {
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final MacroFunctionReader reader, final Integer numArg) throws ReaderErrorException {
+	public LispStruct readMacro(final int codePoint, final MacroFunctionReader reader, final Integer numArg) {
 		throw new ReaderErrorException("Illegal sharp character " + codePoint);
 	}
 }

@@ -29,18 +29,18 @@ public class StringOutputStreamStruct extends StreamStruct implements OutputStre
 	}
 
 	@Override
-	public void writeChar(final int aChar) throws StreamErrorException {
+	public void writeChar(final int aChar) {
 		stringBuffer.appendCodePoint(aChar);
 		index++;
 	}
 
 	@Override
-	public void writeByte(final int aByte) throws StreamErrorException {
+	public void writeByte(final int aByte) {
 		throw new StreamErrorException("Operation only supported for BinaryStreams.");
 	}
 
 	@Override
-	public void writeString(final String outputString, final int start, final int end) throws StreamErrorException {
+	public void writeString(final String outputString, final int start, final int end) {
 		final String subString = outputString.substring(start, end);
 		stringBuffer.append(subString);
 		index = stringBuffer.length();
@@ -62,12 +62,12 @@ public class StringOutputStreamStruct extends StreamStruct implements OutputStre
 	}
 
 	@Override
-	public Long fileLength() throws StreamErrorException {
+	public Long fileLength() {
 		throw new StreamErrorException("Operation only supported on a FileStream.");
 	}
 
 	@Override
-	public Long filePosition(final Long filePosition) throws StreamErrorException {
+	public Long filePosition(final Long filePosition) {
 		if (filePosition == null) {
 			return (long) index;
 		}

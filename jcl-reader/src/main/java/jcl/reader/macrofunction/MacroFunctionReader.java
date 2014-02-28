@@ -38,28 +38,27 @@ public class MacroFunctionReader extends LispReader {
 	}
 
 	@Override
-	public LispStruct read() throws ReaderErrorException {
+	public LispStruct read() {
 		return stateReader.read();
 	}
 
 	@Override
-	public LispStruct read(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP)
-			throws ReaderErrorException {
+	public LispStruct read(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		return stateReader.read(eofErrorP, eofValue, recursiveP);
 	}
 
 	@Override
-	public ReadResult readChar() throws ReaderErrorException {
+	public ReadResult readChar() {
 		return stateReader.readChar();
 	}
 
 	@Override
-	public ReadResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) throws ReaderErrorException {
+	public ReadResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		return stateReader.readChar(eofErrorP, eofValue, recursiveP);
 	}
 
 	@Override
-	public void unreadChar(final int codePoint) throws ReaderErrorException {
+	public void unreadChar(final int codePoint) {
 		stateReader.unreadChar(codePoint);
 	}
 
@@ -67,7 +66,7 @@ public class MacroFunctionReader extends LispReader {
 	//** READ-EXTENDED-TOKEN **//
 	//*************************//
 
-	public ReadExtendedToken readExtendedToken() throws ReaderErrorException {
+	public ReadExtendedToken readExtendedToken() {
 
 		final StringBuilder stringBuilder = new StringBuilder();
 		final ReadResult readResult = readInternalToken(stringBuilder);
@@ -86,7 +85,7 @@ public class MacroFunctionReader extends LispReader {
 		}
 	}
 
-	public String readExtendedTokenEscaped() throws ReaderErrorException {
+	public String readExtendedTokenEscaped() {
 
 		final StringBuilder stringBuilder = new StringBuilder();
 		final ReadResult readResult = readInternalToken(stringBuilder);
@@ -140,8 +139,7 @@ public class MacroFunctionReader extends LispReader {
 	}
 
 	private InternalReadExtendedToken internalReadExtendedToken(final StringBuilder stringBuilder, final ReadResult firstChar,
-																final boolean escapeFirstChar)
-			throws ReaderErrorException {
+																final boolean escapeFirstChar) {
 
 		final ReadtableStruct readtable = stateReader.getReadtable();
 
@@ -215,7 +213,7 @@ public class MacroFunctionReader extends LispReader {
 		return new InternalReadExtendedToken(escapes, colon);
 	}
 
-	private ReadResult readInternalToken(final StringBuilder stringBuilder) throws ReaderErrorException {
+	private ReadResult readInternalToken(final StringBuilder stringBuilder) {
 
 		final ReadResult readResult = stateReader.readChar(false, null, true);
 		if (!readResult.wasEOF()) {
@@ -247,7 +245,7 @@ public class MacroFunctionReader extends LispReader {
 	//** #R, #B, #O, and #X **//
 	//************************//
 
-	public IntegerStruct readIntegerToken(final Integer radix) throws ReaderErrorException {
+	public IntegerStruct readIntegerToken(final Integer radix) {
 		if (Variable.ReadSuppress) {
 			readExtendedToken();
 			return null;
@@ -284,7 +282,7 @@ public class MacroFunctionReader extends LispReader {
 	//** READ-LIST **//
 	//***************//
 
-	public ListStruct readList() throws ReaderErrorException {
+	public ListStruct readList() {
 
 		final ReadtableStruct readtable = stateReader.getReadtable();
 
@@ -331,7 +329,7 @@ public class MacroFunctionReader extends LispReader {
 		return ListStruct.buildProperList(theList);
 	}
 
-	private LispStruct readAfterDot(final int firstCodePoint) throws ReaderErrorException {
+	private LispStruct readAfterDot(final int firstCodePoint) {
 
 		LispStruct lispStruct;
 
@@ -366,7 +364,7 @@ public class MacroFunctionReader extends LispReader {
 		return lispStruct;
 	}
 
-	private int flushWhitespace() throws ReaderErrorException {
+	private int flushWhitespace() {
 
 		final ReadtableStruct readtable = stateReader.getReadtable();
 
@@ -386,7 +384,7 @@ public class MacroFunctionReader extends LispReader {
 	//** READ-UNICODE-CHAR **//
 	//***********************//
 
-	public int readUnicodeChar() throws ReaderErrorException {
+	public int readUnicodeChar() {
 
 		final ReadtableStruct readtable = stateReader.getReadtable();
 
@@ -419,7 +417,7 @@ public class MacroFunctionReader extends LispReader {
 	//** #+ and #- **//
 	//***************//
 
-	public void readFeatures(final boolean shouldHideFeatures) throws ReaderErrorException {
+	public void readFeatures(final boolean shouldHideFeatures) {
 
 		boolean isFeature;
 
@@ -448,7 +446,7 @@ public class MacroFunctionReader extends LispReader {
 	}
 
 	// TODO: We REALLY need to do this better at some point...
-	private static boolean isFeature(final LispStruct token) throws ReaderErrorException {
+	private static boolean isFeature(final LispStruct token) {
 
 		final boolean returnVal;
 

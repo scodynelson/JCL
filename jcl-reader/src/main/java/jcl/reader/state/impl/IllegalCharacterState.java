@@ -22,7 +22,7 @@ public class IllegalCharacterState implements State {
 	 * @throws ReaderErrorException thrown because we have found a character that is not defined within Unicode
 	 */
 	@Override
-	public ReaderState process(final StateReader reader, final ReaderState readerState) throws ReaderErrorException {
+	public ReaderState process(final StateReader reader, final ReaderState readerState) {
 		readerState.setPreviousState(this);
 
 		final Integer codePoint = readerState.getPreviousReadCharacter();

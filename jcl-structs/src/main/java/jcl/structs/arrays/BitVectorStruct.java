@@ -1,6 +1,5 @@
 package jcl.structs.arrays;
 
-import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.structs.conditions.exceptions.TypeErrorException;
 import jcl.structs.numbers.IntegerStruct;
 import jcl.types.arrays.BitVector;
@@ -20,10 +19,8 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 	 * Public constructor.
 	 *
 	 * @param bitString a Java string used for the bit-vector contents
-	 * @throws TypeErrorException   if any of the provided {@code contents} are not the same type as the provided {@code elementType}
-	 * @throws SimpleErrorException if the provided {@code contents} do not match the provided {@code dimensions}
 	 */
-	public BitVectorStruct(final String bitString) throws TypeErrorException, SimpleErrorException {
+	public BitVectorStruct(final String bitString) {
 		this(bitString.length(), getBitList(bitString), false, null);
 	}
 
@@ -34,11 +31,8 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 	 * @param contents     the bit-vector contents
 	 * @param isAdjustable whether or not the bit-vector is adjustable
 	 * @param fillPointer  the bit-vector fillPointer
-	 * @throws TypeErrorException   if any of the provided {@code contents} are not the same type as the provided {@code elementType}
-	 * @throws SimpleErrorException if the provided {@code contents} do not match the provided {@code dimensions}
 	 */
-	public BitVectorStruct(final int size, final List<IntegerStruct> contents, final boolean isAdjustable, final Integer fillPointer)
-			throws TypeErrorException, SimpleErrorException {
+	public BitVectorStruct(final int size, final List<IntegerStruct> contents, final boolean isAdjustable, final Integer fillPointer) {
 		super(getBitVectorType(isAdjustable, fillPointer), size, contents, Bit.INSTANCE, isAdjustable, fillPointer);
 	}
 
@@ -58,9 +52,8 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 	 *
 	 * @param bitString the Java string to convert to a list of IntegerStruct
 	 * @return a list of IntegerStruct from the provided Java string value
-	 * @throws TypeErrorException if the bitString contains a character element that is not a 'bit' type
 	 */
-	private static List<IntegerStruct> getBitList(final String bitString) throws TypeErrorException {
+	private static List<IntegerStruct> getBitList(final String bitString) {
 		final IntegerStruct zero = new IntegerStruct(BigInteger.ZERO);
 		final IntegerStruct one = new IntegerStruct(BigInteger.ONE);
 

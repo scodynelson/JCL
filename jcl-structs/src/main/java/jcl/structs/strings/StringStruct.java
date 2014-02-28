@@ -2,8 +2,6 @@ package jcl.structs.strings;
 
 import jcl.structs.arrays.VectorStruct;
 import jcl.structs.characters.CharacterStruct;
-import jcl.structs.conditions.exceptions.SimpleErrorException;
-import jcl.structs.conditions.exceptions.TypeErrorException;
 import jcl.types.characters.BaseChar;
 import jcl.types.characters.Character;
 import jcl.types.strings.BaseString;
@@ -23,10 +21,8 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 	 * Public constructor.
 	 *
 	 * @param stringValue a Java string used for the string contents
-	 * @throws TypeErrorException   if any of the provided {@code contents} are not the same type as the provided {@code elementType}
-	 * @throws SimpleErrorException if the provided {@code contents} do not match the provided {@code dimensions}
 	 */
-	public StringStruct(final java.lang.String stringValue) throws TypeErrorException, SimpleErrorException {
+	public StringStruct(final java.lang.String stringValue) {
 		this(stringValue.length(), getCharList(stringValue), Character.INSTANCE, false, null);
 	}
 
@@ -38,11 +34,9 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 	 * @param elementType  the string elementType
 	 * @param isAdjustable whether or not the string is adjustable
 	 * @param fillPointer  the string fillPointer
-	 * @throws TypeErrorException   if any of the provided {@code contents} are not the same type as the provided {@code elementType}
-	 * @throws SimpleErrorException if the provided {@code contents} do not match the provided {@code dimensions}
 	 */
 	public StringStruct(final int size, final List<CharacterStruct> contents, final Character elementType,
-						final boolean isAdjustable, final Integer fillPointer) throws TypeErrorException, SimpleErrorException {
+						final boolean isAdjustable, final Integer fillPointer) {
 		super(getStringType(isAdjustable, fillPointer, elementType), size, contents, elementType, isAdjustable, fillPointer);
 	}
 

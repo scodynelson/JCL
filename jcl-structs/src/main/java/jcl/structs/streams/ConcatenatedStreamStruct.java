@@ -20,9 +20,8 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 	 * Public constructor.
 	 *
 	 * @param inputStreams the {@code InputStream}s to create a {@code ConcatenatedStreamStruct} from
-	 * @throws StreamErrorException if the struct cannot be created
 	 */
-	public ConcatenatedStreamStruct(final LinkedList<InputStream> inputStreams) throws StreamErrorException {
+	public ConcatenatedStreamStruct(final LinkedList<InputStream> inputStreams) {
 		this(false, inputStreams);
 	}
 
@@ -31,9 +30,8 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 	 *
 	 * @param isInteractive whether or not the struct created is 'interactive'
 	 * @param inputStreams  the {@code InputStream}s to create a {@code ConcatenatedStreamStruct} from
-	 * @throws StreamErrorException if the struct cannot be created
 	 */
-	public ConcatenatedStreamStruct(final boolean isInteractive, final LinkedList<InputStream> inputStreams) throws StreamErrorException {
+	public ConcatenatedStreamStruct(final boolean isInteractive, final LinkedList<InputStream> inputStreams) {
 		super(ConcatenatedStream.INSTANCE, null, null, isInteractive, getElementType(inputStreams));
 		this.inputStreams = new LinkedList<>(inputStreams);
 	}
@@ -43,9 +41,8 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 	 *
 	 * @param inputStreams the {@code InputStream}s to create a {@code ConcatenatedStreamStruct} from
 	 * @return the element type for object construction
-	 * @throws StreamErrorException if the element type cannot be retrieved
 	 */
-	private static LispType getElementType(final LinkedList<InputStream> inputStreams) throws StreamErrorException {
+	private static LispType getElementType(final LinkedList<InputStream> inputStreams) {
 		if (inputStreams == null) {
 			throw new StreamErrorException("Provided Input Stream List must not be null.");
 		}
@@ -68,7 +65,7 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 	}
 
 	@Override
-	public ReadResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) throws StreamErrorException {
+	public ReadResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		while (true) {
 			if (inputStreams.isEmpty()) {
 				if (eofErrorP) {
@@ -90,7 +87,7 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 	}
 
 	@Override
-	public ReadResult readByte(final boolean eofErrorP, final LispStruct eofValue) throws StreamErrorException {
+	public ReadResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
 		while (true) {
 			if (inputStreams.isEmpty()) {
 				if (eofErrorP) {
@@ -112,7 +109,7 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 	}
 
 	@Override
-	public PeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) throws StreamErrorException {
+	public PeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		if (inputStreams.isEmpty()) {
 			if (eofErrorP) {
 				throw new EndOfFileException("End of file reached.");
@@ -126,7 +123,7 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 	}
 
 	@Override
-	public Integer unreadChar(final Integer codePoint) throws StreamErrorException {
+	public Integer unreadChar(final Integer codePoint) {
 		if (inputStreams.isEmpty()) {
 			return null;
 		}
@@ -169,7 +166,7 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 	}
 
 	@Override
-	public Long fileLength() throws StreamErrorException {
+	public Long fileLength() {
 		if (inputStreams.isEmpty()) {
 			return 0L;
 		}
@@ -179,7 +176,7 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 	}
 
 	@Override
-	public Long filePosition(final Long filePosition) throws StreamErrorException {
+	public Long filePosition(final Long filePosition) {
 		if (inputStreams.isEmpty()) {
 			return 0L;
 		}

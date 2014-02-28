@@ -6,7 +6,6 @@ import jcl.reader.state.StateReader;
 import jcl.reader.state.TokenAttribute;
 import jcl.reader.state.impl.util.StateUtils;
 import jcl.reader.syntax.AttributeType;
-import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.packages.GlobalPackageStruct;
 import jcl.structs.packages.PackageStruct;
 import jcl.structs.packages.PackageSymbolStruct;
@@ -55,7 +54,7 @@ public class SymbolTokenAccumulatedState implements State {
 	 * @return EndState       the final accepting state
 	 */
 	@Override
-	public ReaderState process(final StateReader reader, final ReaderState readerState) throws ReaderErrorException {
+	public ReaderState process(final StateReader reader, final ReaderState readerState) {
 		readerState.setPreviousState(this);
 
 		final SymbolStruct<?> symbolToken = getSymbolToken(readerState);

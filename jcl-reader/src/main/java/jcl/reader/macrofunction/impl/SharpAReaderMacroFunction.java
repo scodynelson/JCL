@@ -20,7 +20,7 @@ import java.util.List;
 public class SharpAReaderMacroFunction implements ReaderMacroFunction {
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final MacroFunctionReader reader, final Integer numArg) throws ReaderErrorException {
+	public LispStruct readMacro(final int codePoint, final MacroFunctionReader reader, final Integer numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_A) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_A);
 
 		final LispStruct contents = reader.read();
@@ -53,7 +53,7 @@ public class SharpAReaderMacroFunction implements ReaderMacroFunction {
 	 * @return a List of Integers that make up the expected dimensions of the simple array
 	 * @throws ReaderErrorException if dimensions do not match the provided contents list
 	 */
-	private static List<Integer> getDimensions(final int dimensions, final LispStruct contents) throws ReaderErrorException {
+	private static List<Integer> getDimensions(final int dimensions, final LispStruct contents) {
 
 		LispStruct seq = contents;
 		Integer zeroAxis = null;

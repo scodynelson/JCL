@@ -5,7 +5,6 @@ import jcl.reader.state.State;
 import jcl.reader.state.StateReader;
 import jcl.reader.syntax.SyntaxType;
 import jcl.structs.LispStruct;
-import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.readtables.ReadtableStruct;
 import jcl.structs.streams.ReadResult;
 
@@ -35,7 +34,7 @@ public class ReadState implements State {
 	 * <EndIf>
 	 */
 	@Override
-	public ReaderState process(final StateReader reader, final ReaderState readerState) throws ReaderErrorException {
+	public ReaderState process(final StateReader reader, final ReaderState readerState) {
 		readerState.setPreviousState(this);
 
 		final boolean isEofErrorP = readerState.isEofErrorP();

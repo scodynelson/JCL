@@ -18,9 +18,8 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	 * Public constructor.
 	 *
 	 * @param symbol the symbol to create a {@code SynonymStreamStruct} from
-	 * @throws StreamErrorException if the struct cannot be created
 	 */
-	public SynonymStreamStruct(final SymbolStruct<StreamStruct> symbol) throws StreamErrorException {
+	public SynonymStreamStruct(final SymbolStruct<StreamStruct> symbol) {
 		this(false, symbol);
 	}
 
@@ -29,9 +28,8 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	 *
 	 * @param isInteractive whether or not the struct created is 'interactive'
 	 * @param symbol        the symbol to create a {@code SynonymStreamStruct} from
-	 * @throws StreamErrorException if the struct cannot be created
 	 */
-	public SynonymStreamStruct(final boolean isInteractive, final SymbolStruct<StreamStruct> symbol) throws StreamErrorException {
+	public SynonymStreamStruct(final boolean isInteractive, final SymbolStruct<StreamStruct> symbol) {
 		super(SynonymStream.INSTANCE, null, null, isInteractive, getElementType(symbol));
 		this.symbol = symbol;
 		stream = symbol.getValue();
@@ -42,21 +40,25 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	 *
 	 * @param symbol the symbol to create a {@code SynonymStreamStruct} from
 	 * @return the element type for object construction
-	 * @throws StreamErrorException if the element type cannot be retrieved
 	 */
-	private static LispType getElementType(final SymbolStruct<StreamStruct> symbol) throws StreamErrorException {
+	private static LispType getElementType(final SymbolStruct<StreamStruct> symbol) {
 		if (symbol == null) {
 			throw new StreamErrorException("Provided Symbol must not be null.");
 		}
 		return symbol.getValue().getElementType();
 	}
 
+	/**
+	 * Getter for synonym-stream symbol property.
+	 *
+	 * @return synonym-stream symbol property
+	 */
 	public SymbolStruct<StreamStruct> getSymbol() {
 		return symbol;
 	}
 
 	@Override
-	public ReadResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) throws StreamErrorException {
+	public ReadResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		if (stream instanceof InputStream) {
 			return ((InputStream) stream).readChar(eofErrorP, eofValue, recursiveP);
 		} else {
@@ -65,7 +67,7 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	}
 
 	@Override
-	public ReadResult readByte(final boolean eofErrorP, final LispStruct eofValue) throws StreamErrorException {
+	public ReadResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
 		if (stream instanceof InputStream) {
 			return ((InputStream) stream).readByte(eofErrorP, eofValue);
 		} else {
@@ -74,7 +76,7 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	}
 
 	@Override
-	public PeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) throws StreamErrorException {
+	public PeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		if (stream instanceof InputStream) {
 			return ((InputStream) stream).peekChar(peekType, eofErrorP, eofValue, recursiveP);
 		} else {
@@ -83,7 +85,7 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	}
 
 	@Override
-	public Integer unreadChar(final Integer codePoint) throws StreamErrorException {
+	public Integer unreadChar(final Integer codePoint) {
 		if (stream instanceof InputStream) {
 			return ((InputStream) stream).unreadChar(codePoint);
 		} else {
@@ -92,7 +94,7 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	}
 
 	@Override
-	public void writeChar(final int aChar) throws StreamErrorException {
+	public void writeChar(final int aChar) {
 		if (stream instanceof OutputStream) {
 			((OutputStream) stream).writeChar(aChar);
 		} else {
@@ -101,7 +103,7 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	}
 
 	@Override
-	public void writeByte(final int aByte) throws StreamErrorException {
+	public void writeByte(final int aByte) {
 		if (stream instanceof OutputStream) {
 			((OutputStream) stream).writeByte(aByte);
 		} else {
@@ -110,7 +112,7 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	}
 
 	@Override
-	public void writeString(final String outputString, final int start, final int end) throws StreamErrorException {
+	public void writeString(final String outputString, final int start, final int end) {
 		if (stream instanceof OutputStream) {
 			((OutputStream) stream).writeString(outputString, start, end);
 		} else {
@@ -152,18 +154,18 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	}
 
 	@Override
-	public void close() throws StreamErrorException {
+	public void close() {
 		super.close();
 		stream.close();
 	}
 
 	@Override
-	public Long fileLength() throws StreamErrorException {
+	public Long fileLength() {
 		return stream.fileLength();
 	}
 
 	@Override
-	public Long filePosition(final Long filePosition) throws StreamErrorException {
+	public Long filePosition(final Long filePosition) {
 		return stream.filePosition(filePosition);
 	}
 

@@ -8,7 +8,6 @@ import jcl.reader.syntax.AttributeType;
 import jcl.reader.syntax.CaseSpec;
 import jcl.reader.syntax.SyntaxType;
 import jcl.structs.LispStruct;
-import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.readtables.ReadtableStruct;
 import jcl.structs.streams.ReadResult;
 
@@ -36,7 +35,7 @@ public class EvenMultiEscapeState implements State {
 	 * character, or a single escape character
 	 */
 	@Override
-	public ReaderState process(final StateReader reader, final ReaderState readerState) throws ReaderErrorException {
+	public ReaderState process(final StateReader reader, final ReaderState readerState) {
 		readerState.setPreviousState(this);
 
 		final boolean isEofErrorP = readerState.isEofErrorP();

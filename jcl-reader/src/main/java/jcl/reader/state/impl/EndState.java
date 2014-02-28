@@ -22,7 +22,7 @@ public class EndState implements State {
 	 * @throws ReaderErrorException thrown if the process method ever gets called. This can only be done explicitly by a programmer.
 	 */
 	@Override
-	public ReaderState process(final StateReader reader, final ReaderState readerState) throws ReaderErrorException {
+	public ReaderState process(final StateReader reader, final ReaderState readerState) {
 		throw new ReaderErrorException("A PROGRAMMING ERROR HAS OCCURRED. The EndState process method has been explicitly and illegally called!");
 	}
 }

@@ -12,7 +12,7 @@ import jcl.structs.conditions.exceptions.ReaderErrorException;
 public class RightParenthesisReaderMacroFunction implements ReaderMacroFunction {
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final MacroFunctionReader reader, final Integer numArg) throws ReaderErrorException {
+	public LispStruct readMacro(final int codePoint, final MacroFunctionReader reader, final Integer numArg) {
 		assert codePoint == CharacterConstants.RIGHT_PARENTHESIS;
 
 		throw new ReaderErrorException("Unmatched close parenthesis.");

@@ -14,7 +14,7 @@ public class DispatchTable implements ReaderMacroFunction {
 	private final Map<Integer, ReaderMacroFunction> macroFunctionMap = new ConcurrentHashMap<>();
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final MacroFunctionReader reader, final Integer numArg) throws ReaderErrorException {
+	public LispStruct readMacro(final int codePoint, final MacroFunctionReader reader, final Integer numArg) {
 
 		final ReadResult readResult = reader.readChar(false, null, false);
 		if (readResult.wasEOF()) {

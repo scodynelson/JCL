@@ -7,7 +7,6 @@ import jcl.reader.state.impl.util.StateUtils;
 import jcl.reader.syntax.AttributeType;
 import jcl.reader.syntax.CaseSpec;
 import jcl.reader.util.ReaderUtils;
-import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.readtables.ReadtableStruct;
 
 /**
@@ -26,7 +25,7 @@ public class ConstituentState implements State {
 	 * @return EvenMultiEscapeState  We have found 0 Multiple Escape Characters
 	 */
 	@Override
-	public ReaderState process(final StateReader reader, final ReaderState readerState) throws ReaderErrorException {
+	public ReaderState process(final StateReader reader, final ReaderState readerState) {
 		readerState.setPreviousState(this);
 
 		Integer codePoint = readerState.getPreviousReadCharacter();

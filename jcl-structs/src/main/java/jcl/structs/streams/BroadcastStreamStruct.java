@@ -18,9 +18,8 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 	 * Public constructor.
 	 *
 	 * @param outputStreams the {@code OutputStream}s to create a {@code BroadcastStreamStruct} from
-	 * @throws StreamErrorException if the struct cannot be created
 	 */
-	public BroadcastStreamStruct(final LinkedList<OutputStream> outputStreams) throws StreamErrorException {
+	public BroadcastStreamStruct(final LinkedList<OutputStream> outputStreams) {
 		this(false, outputStreams);
 	}
 
@@ -29,9 +28,8 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 	 *
 	 * @param isInteractive whether or not the struct created is 'interactive'
 	 * @param outputStreams the {@code OutputStream}s to create a {@code BroadcastStreamStruct} from
-	 * @throws StreamErrorException if the struct cannot be created
 	 */
-	public BroadcastStreamStruct(final boolean isInteractive, final LinkedList<OutputStream> outputStreams) throws StreamErrorException {
+	public BroadcastStreamStruct(final boolean isInteractive, final LinkedList<OutputStream> outputStreams) {
 		super(BroadcastStream.INSTANCE, null, null, isInteractive, getElementType(outputStreams));
 		this.outputStreams = new LinkedList<>(outputStreams);
 	}
@@ -41,9 +39,8 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 	 *
 	 * @param outputStreams the {@code OutputStream}s to create a {@code BroadcastStreamStruct} from
 	 * @return the element type for object construction
-	 * @throws StreamErrorException if the element type cannot be retrieved
 	 */
-	private static LispType getElementType(final LinkedList<OutputStream> outputStreams) throws StreamErrorException {
+	private static LispType getElementType(final LinkedList<OutputStream> outputStreams) {
 		if (outputStreams == null) {
 			throw new StreamErrorException("Provided Output Stream List must not be null.");
 		}
@@ -71,21 +68,21 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 	}
 
 	@Override
-	public void writeChar(final int aChar) throws StreamErrorException {
+	public void writeChar(final int aChar) {
 		for (final OutputStream outputStream : outputStreams) {
 			outputStream.writeChar(aChar);
 		}
 	}
 
 	@Override
-	public void writeByte(final int aByte) throws StreamErrorException {
+	public void writeByte(final int aByte) {
 		for (final OutputStream outputStream : outputStreams) {
 			outputStream.writeByte(aByte);
 		}
 	}
 
 	@Override
-	public void writeString(final String outputString, final int start, final int end) throws StreamErrorException {
+	public void writeString(final String outputString, final int start, final int end) {
 		for (final OutputStream outputStream : outputStreams) {
 			outputStream.writeString(outputString, start, end);
 		}
@@ -118,7 +115,7 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 	}
 
 	@Override
-	public Long fileLength() throws StreamErrorException {
+	public Long fileLength() {
 		if (outputStreams.isEmpty()) {
 			return 0L;
 		}
@@ -128,7 +125,7 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 	}
 
 	@Override
-	public Long filePosition(final Long filePosition) throws StreamErrorException {
+	public Long filePosition(final Long filePosition) {
 		if (outputStreams.isEmpty()) {
 			return 0L;
 		}

@@ -23,7 +23,7 @@ public class ErrorState implements State {
 	 * @throws ReaderErrorException thrown if the process method ever gets called. This can only be done explicitly by a programmer.
 	 */
 	@Override
-	public ReaderState process(final StateReader reader, final ReaderState readerState) throws ReaderErrorException {
+	public ReaderState process(final StateReader reader, final ReaderState readerState) {
 
 		final Integer codePoint = readerState.getPreviousReadCharacter();
 		if (ReaderUtils.isEndOfFileCharacter(codePoint) && !readerState.isEofErrorP()) {

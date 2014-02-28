@@ -24,9 +24,8 @@ public class EchoStreamStruct extends StreamStruct implements InputStream, Outpu
 	 *
 	 * @param inputStream  the {@code InputStream} to create a {@code EchoStreamStruct} from
 	 * @param outputStream the {@code OutputStream} to create a {@code EchoStreamStruct} from
-	 * @throws StreamErrorException if the struct cannot be created
 	 */
-	public EchoStreamStruct(final InputStream inputStream, final OutputStream outputStream) throws StreamErrorException {
+	public EchoStreamStruct(final InputStream inputStream, final OutputStream outputStream) {
 		this(false, inputStream, outputStream);
 	}
 
@@ -36,9 +35,8 @@ public class EchoStreamStruct extends StreamStruct implements InputStream, Outpu
 	 * @param isInteractive whether or not the struct created is 'interactive'
 	 * @param inputStream   the {@code InputStream} to create a {@code EchoStreamStruct} from
 	 * @param outputStream  the {@code OutputStream} to create a {@code EchoStreamStruct} from
-	 * @throws StreamErrorException if the struct cannot be created
 	 */
-	public EchoStreamStruct(final boolean isInteractive, final InputStream inputStream, final OutputStream outputStream) throws StreamErrorException {
+	public EchoStreamStruct(final boolean isInteractive, final InputStream inputStream, final OutputStream outputStream) {
 		super(EchoStream.INSTANCE, null, null, isInteractive, getElementType(inputStream, outputStream));
 		this.inputStream = inputStream;
 		this.outputStream = outputStream;
@@ -50,9 +48,8 @@ public class EchoStreamStruct extends StreamStruct implements InputStream, Outpu
 	 * @param inputStream  the {@code InputStream} to create a {@code EchoStreamStruct} from
 	 * @param outputStream the {@code OutputStream} to create a {@code EchoStreamStruct} from
 	 * @return the element type for object construction
-	 * @throws StreamErrorException if the element type cannot be retrieved
 	 */
-	private static LispType getElementType(final InputStream inputStream, final OutputStream outputStream) throws StreamErrorException {
+	private static LispType getElementType(final InputStream inputStream, final OutputStream outputStream) {
 		if (inputStream == null) {
 			throw new StreamErrorException("Provided Input Stream must not be null.");
 		}
@@ -71,7 +68,7 @@ public class EchoStreamStruct extends StreamStruct implements InputStream, Outpu
 	}
 
 	@Override
-	public ReadResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) throws StreamErrorException {
+	public ReadResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		if (!unreadStuff.isEmpty()) {
 			final Integer lastUnread = unreadStuff.getFirst();
 			return new ReadResult(lastUnread);
@@ -93,7 +90,7 @@ public class EchoStreamStruct extends StreamStruct implements InputStream, Outpu
 	}
 
 	@Override
-	public ReadResult readByte(final boolean eofErrorP, final LispStruct eofValue) throws StreamErrorException {
+	public ReadResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
 		if (!unreadStuff.isEmpty()) {
 			final Integer lastUnread = unreadStuff.getFirst();
 			return new ReadResult(lastUnread);
@@ -115,7 +112,7 @@ public class EchoStreamStruct extends StreamStruct implements InputStream, Outpu
 	}
 
 	@Override
-	public PeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) throws StreamErrorException {
+	public PeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		if (unreadStuff.isEmpty()) {
 			final ReadResult readResult = inputStream.readChar(eofErrorP, eofValue, recursiveP);
 
@@ -139,17 +136,17 @@ public class EchoStreamStruct extends StreamStruct implements InputStream, Outpu
 	}
 
 	@Override
-	public void writeChar(final int aChar) throws StreamErrorException {
+	public void writeChar(final int aChar) {
 		outputStream.writeChar(aChar);
 	}
 
 	@Override
-	public void writeByte(final int aByte) throws StreamErrorException {
+	public void writeByte(final int aByte) {
 		outputStream.writeByte(aByte);
 	}
 
 	@Override
-	public void writeString(final String outputString, final int start, final int end) throws StreamErrorException {
+	public void writeString(final String outputString, final int start, final int end) {
 		outputStream.writeString(outputString, start, end);
 	}
 
@@ -179,12 +176,12 @@ public class EchoStreamStruct extends StreamStruct implements InputStream, Outpu
 	}
 
 	@Override
-	public Long fileLength() throws StreamErrorException {
+	public Long fileLength() {
 		throw new StreamErrorException("Operation only supported on a FileStream.");
 	}
 
 	@Override
-	public Long filePosition(final Long filePosition) throws StreamErrorException {
+	public Long filePosition(final Long filePosition) {
 		return null;
 	}
 

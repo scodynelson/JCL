@@ -48,7 +48,7 @@ public class CharacterStreamStruct extends StreamStruct implements InputStream, 
 	}
 
 	@Override
-	public ReadResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) throws StreamErrorException {
+	public ReadResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		final int readChar;
 		try {
 			inputStream.mark(1);
@@ -69,12 +69,12 @@ public class CharacterStreamStruct extends StreamStruct implements InputStream, 
 	}
 
 	@Override
-	public ReadResult readByte(final boolean eofErrorP, final LispStruct eofValue) throws StreamErrorException {
+	public ReadResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
 		throw new StreamErrorException("Operation only supported for BinaryStreams.");
 	}
 
 	@Override
-	public PeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) throws StreamErrorException {
+	public PeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 
 		int nextChar = -1;
 		switch (peekType.getType()) {
@@ -104,9 +104,8 @@ public class CharacterStreamStruct extends StreamStruct implements InputStream, 
 	 * This method attempts to peek ahead to the next available character in the stream.
 	 *
 	 * @return the character peeked from the stream
-	 * @throws StreamErrorException if the next character could not be peeked at from the stream
 	 */
-	private int nilPeekChar() throws StreamErrorException {
+	private int nilPeekChar() {
 		final int nextChar;
 		try {
 			inputStream.mark(1);
@@ -122,9 +121,8 @@ public class CharacterStreamStruct extends StreamStruct implements InputStream, 
 	 * This method attempts to peek ahead to the next available non-whitespace character in the stream.
 	 *
 	 * @return the character peeked from the stream
-	 * @throws StreamErrorException if there are only whitespace characters left in the stream
 	 */
-	private int tPeekChar() throws StreamErrorException {
+	private int tPeekChar() {
 		int nextChar = ' '; // Initialize to whitespace, since we are attempting to skip it anyways
 		try {
 			inputStream.mark(1);
@@ -143,9 +141,8 @@ public class CharacterStreamStruct extends StreamStruct implements InputStream, 
 	 *
 	 * @param codePoint the codePoint to peek up to in the stream
 	 * @return the character peeked from the stream
-	 * @throws StreamErrorException if the codePoint could not be peeked at from the stream
 	 */
-	private int characterPeekChar(final Integer codePoint) throws StreamErrorException {
+	private int characterPeekChar(final Integer codePoint) {
 		int nextChar = -1; // Initialize to -1 value, since this is essentially EOF
 		try {
 			inputStream.mark(1);
@@ -160,7 +157,7 @@ public class CharacterStreamStruct extends StreamStruct implements InputStream, 
 	}
 
 	@Override
-	public Integer unreadChar(final Integer codePoint) throws StreamErrorException {
+	public Integer unreadChar(final Integer codePoint) {
 		try {
 			inputStream.reset();
 			return codePoint;
@@ -194,17 +191,17 @@ public class CharacterStreamStruct extends StreamStruct implements InputStream, 
 	}
 
 	@Override
-	public void writeChar(final int aChar) throws StreamErrorException {
+	public void writeChar(final int aChar) {
 		outputStream.append((char) aChar);
 	}
 
 	@Override
-	public void writeByte(final int aByte) throws StreamErrorException {
+	public void writeByte(final int aByte) {
 		throw new StreamErrorException("Operation only supported for BinaryStreams.");
 	}
 
 	@Override
-	public void writeString(final String outputString, final int start, final int end) throws StreamErrorException {
+	public void writeString(final String outputString, final int start, final int end) {
 		outputStream.append(outputString, start, end);
 	}
 
@@ -224,7 +221,7 @@ public class CharacterStreamStruct extends StreamStruct implements InputStream, 
 	}
 
 	@Override
-	public void close() throws StreamErrorException {
+	public void close() {
 		try {
 			inputStream.close();
 			outputStream.close();
@@ -235,12 +232,12 @@ public class CharacterStreamStruct extends StreamStruct implements InputStream, 
 	}
 
 	@Override
-	public Long fileLength() throws StreamErrorException {
+	public Long fileLength() {
 		throw new StreamErrorException("Operation only supported on a FileStream.");
 	}
 
 	@Override
-	public Long filePosition(final Long filePosition) throws StreamErrorException {
+	public Long filePosition(final Long filePosition) {
 		return null;
 	}
 

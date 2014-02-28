@@ -1,7 +1,6 @@
 package jcl.structs.streams;
 
 import jcl.structs.LispStruct;
-import jcl.structs.conditions.exceptions.StreamErrorException;
 
 /**
  * The {@code InputStream} is the representation for all Lisp input 'stream' types.
@@ -15,9 +14,8 @@ public interface InputStream extends LispStream {
 	 * @param eofValue   the graceful return value when an error occurs
 	 * @param recursiveP whether or not to recursively read and process the character
 	 * @return the character read from the stream
-	 * @throws StreamErrorException if the character could not be read from the stream
 	 */
-	ReadResult readChar(boolean eofErrorP, LispStruct eofValue, boolean recursiveP) throws StreamErrorException;
+	ReadResult readChar(boolean eofErrorP, LispStruct eofValue, boolean recursiveP);
 
 	/**
 	 * This method reads a byte from the stream.
@@ -25,9 +23,8 @@ public interface InputStream extends LispStream {
 	 * @param eofErrorP whether or not to either throw an error or return gracefully
 	 * @param eofValue  the graceful return value when an error occurs
 	 * @return the byte read from the stream
-	 * @throws StreamErrorException if the byte could not be read from the stream
 	 */
-	ReadResult readByte(boolean eofErrorP, LispStruct eofValue) throws StreamErrorException;
+	ReadResult readByte(boolean eofErrorP, LispStruct eofValue);
 
 	/**
 	 * This method peeks at the next available character in the stream.
@@ -37,18 +34,16 @@ public interface InputStream extends LispStream {
 	 * @param eofValue   the graceful return value when an error occurs
 	 * @param recursiveP whether or not to recursively read and process the character
 	 * @return the next character available in the stream
-	 * @throws StreamErrorException if the next character could not be peeked at from the stream
 	 */
-	PeekResult peekChar(PeekType peekType, boolean eofErrorP, LispStruct eofValue, boolean recursiveP) throws StreamErrorException;
+	PeekResult peekChar(PeekType peekType, boolean eofErrorP, LispStruct eofValue, boolean recursiveP);
 
 	/**
 	 * This method un-reads a character from the stream.
 	 *
 	 * @param codePoint the codePoint value to un-read back into the stream
 	 * @return the codePoint un-read back into the stream
-	 * @throws StreamErrorException if the character could not be un-read back into the stream
 	 */
-	Integer unreadChar(Integer codePoint) throws StreamErrorException;
+	Integer unreadChar(Integer codePoint);
 
 	/**
 	 * This method clears the input from the stream.

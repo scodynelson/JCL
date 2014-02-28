@@ -7,6 +7,7 @@ import jcl.types.packages.Package;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -429,7 +430,7 @@ public class PackageStruct extends BuiltInClassStruct {
 
 		// Test for conflicts BEFORE we remove anything
 		final Set<SymbolStruct<?>> shadowingConflicts = getShadowingConflicts(symbolName);
-		if (shadowingConflicts != null) {
+		if (shadowingConflicts.size() > 1) {
 			final StringBuilder exceptionStringBuilder
 					= new StringBuilder("Uninterning " + symbolName + " from " + this + " would cause conflicts among : (");
 			for (final SymbolStruct<?> conflictingSymbol : shadowingConflicts) {
@@ -494,7 +495,7 @@ public class PackageStruct extends BuiltInClassStruct {
 	 */
 	private Set<SymbolStruct<?>> getShadowingConflicts(final String symbolName) {
 		if (!shadowingSymbols.containsKey(symbolName)) {
-			return null;
+			return Collections.emptySet();
 		}
 
 		final Set<SymbolStruct<?>> conflictingInheritedSymbols = new HashSet<>();
@@ -505,7 +506,7 @@ public class PackageStruct extends BuiltInClassStruct {
 				conflictingInheritedSymbols.add(inheritedSymbol);
 			}
 		}
-		return (conflictingInheritedSymbols.size() > 1) ? conflictingInheritedSymbols : null;
+		return conflictingInheritedSymbols;
 	}
 
 	/**

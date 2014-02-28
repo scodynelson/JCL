@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * The {@code NullStruct} is the object representation of a Lisp 'null' type.
  */
-public class NullStruct extends ListStruct {
+public final class NullStruct extends ListStruct {
 
 	public static final NullStruct INSTANCE = new NullStruct();
 

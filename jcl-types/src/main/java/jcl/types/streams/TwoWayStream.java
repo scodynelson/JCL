@@ -31,16 +31,7 @@ public interface TwoWayStream extends Stream {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
-
-				if (!(obj instanceof TwoWayStream)) {
-					return false;
-				}
-
-				final TwoWayStream twoWayStream = (TwoWayStream) obj;
-				return twoWayStream == INSTANCE;
+				return (this == obj) || (obj instanceof TwoWayStream);
 			}
 
 			@Override

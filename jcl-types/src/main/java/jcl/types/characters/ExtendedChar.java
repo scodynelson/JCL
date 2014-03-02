@@ -30,16 +30,7 @@ public interface ExtendedChar extends Character {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
-
-				if (!(obj instanceof ExtendedChar)) {
-					return false;
-				}
-
-				final ExtendedChar extendedChar = (ExtendedChar) obj;
-				return (extendedChar == INSTANCE) || ExtendedChar.class.isAssignableFrom(obj.getClass());
+				return (this == obj) || (obj instanceof ExtendedChar);
 			}
 
 			@Override

@@ -32,16 +32,7 @@ public interface Stream extends T {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
-
-				if (!(obj instanceof Stream)) {
-					return false;
-				}
-
-				final Stream stream = (Stream) obj;
-				return stream == INSTANCE;
+				return (this == obj) || (obj instanceof Stream);
 			}
 
 			@Override

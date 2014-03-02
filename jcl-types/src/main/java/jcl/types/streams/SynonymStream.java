@@ -35,16 +35,7 @@ public interface SynonymStream extends Stream {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
-
-				if (!(obj instanceof SynonymStream)) {
-					return false;
-				}
-
-				final SynonymStream synonymStream = (SynonymStream) obj;
-				return synonymStream == INSTANCE;
+				return (this == obj) || (obj instanceof SynonymStream);
 			}
 
 			@Override

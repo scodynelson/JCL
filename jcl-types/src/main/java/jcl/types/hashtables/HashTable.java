@@ -31,16 +31,7 @@ public interface HashTable extends T {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
-
-				if (!(obj instanceof HashTable)) {
-					return false;
-				}
-
-				final HashTable hashTable = (HashTable) obj;
-				return hashTable == INSTANCE;
+				return (this == obj) || (obj instanceof HashTable);
 			}
 
 			@Override

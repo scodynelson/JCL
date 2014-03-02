@@ -30,16 +30,7 @@ public interface T extends LispType {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
-
-				if (!(obj instanceof T)) {
-					return false;
-				}
-
-				final T t = (T) obj;
-				return t == INSTANCE;
+				return (this == obj) || (obj instanceof T);
 			}
 
 			@Override

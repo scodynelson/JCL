@@ -36,16 +36,7 @@ public interface BroadcastStream extends Stream {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
-
-				if (!(obj instanceof BroadcastStream)) {
-					return false;
-				}
-
-				final BroadcastStream broadcastStream = (BroadcastStream) obj;
-				return broadcastStream == INSTANCE;
+				return (this == obj) || (obj instanceof BroadcastStream);
 			}
 
 			@Override

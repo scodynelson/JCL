@@ -32,16 +32,7 @@ public interface StandardChar extends BaseChar {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
-
-				if (!(obj instanceof StandardChar)) {
-					return false;
-				}
-
-				final StandardChar standardChar = (StandardChar) obj;
-				return (standardChar == INSTANCE) || StandardChar.class.isAssignableFrom(obj.getClass());
+				return (this == obj) || (obj instanceof StandardChar);
 			}
 
 			@Override

@@ -32,16 +32,7 @@ public interface StandardObject extends T {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
-
-				if (!(obj instanceof StandardObject)) {
-					return false;
-				}
-
-				final StandardObject standardObject = (StandardObject) obj;
-				return standardObject == INSTANCE;
+				return (this == obj) || (obj instanceof StandardObject);
 			}
 
 			@Override

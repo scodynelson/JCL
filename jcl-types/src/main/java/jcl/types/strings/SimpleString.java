@@ -91,7 +91,7 @@ public interface SimpleString extends String, SimpleArray {
 					return true;
 				}
 
-				if (!(obj instanceof LispType)) {
+				if (!(obj instanceof SimpleString)) {
 					return false;
 				}
 

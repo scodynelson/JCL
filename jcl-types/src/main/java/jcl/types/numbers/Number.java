@@ -39,16 +39,7 @@ public interface Number extends T {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
-
-				if (!(obj instanceof Number)) {
-					return false;
-				}
-
-				final Number number = (Number) obj;
-				return number == INSTANCE;
+				return (this == obj) || (obj instanceof Number);
 			}
 
 			@Override

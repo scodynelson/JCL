@@ -46,16 +46,7 @@ public interface List extends Sequence {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
-
-				if (!(obj instanceof List)) {
-					return false;
-				}
-
-				final List list = (List) obj;
-				return list == INSTANCE;
+				return (this == obj) || (obj instanceof List);
 			}
 
 			@Override

@@ -35,16 +35,7 @@ public interface Keyword extends Symbol {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
-
-				if (!(obj instanceof Keyword)) {
-					return false;
-				}
-
-				final Keyword keyword = (Keyword) obj;
-				return keyword == INSTANCE;
+				return (this == obj) || (obj instanceof Keyword);
 			}
 
 			@Override

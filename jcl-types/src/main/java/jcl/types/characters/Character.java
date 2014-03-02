@@ -33,16 +33,8 @@ public interface Character extends T {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
+				return (this == obj) || (obj instanceof Character);
 
-				if (!(obj instanceof Character)) {
-					return false;
-				}
-
-				final Character character = (Character) obj;
-				return (character == INSTANCE) || Character.class.isAssignableFrom(obj.getClass());
 			}
 
 			@Override

@@ -30,16 +30,7 @@ public interface FileStream extends Stream {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
-
-				if (!(obj instanceof FileStream)) {
-					return false;
-				}
-
-				final FileStream fileStream = (FileStream) obj;
-				return fileStream == INSTANCE;
+				return (this == obj) || (obj instanceof FileStream);
 			}
 
 			@Override

@@ -34,16 +34,7 @@ public interface CompiledFunction extends Function {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
-
-				if (!(obj instanceof CompiledFunction)) {
-					return false;
-				}
-
-				final CompiledFunction compiledFunction = (CompiledFunction) obj;
-				return compiledFunction == INSTANCE;
+				return (this == obj) || (obj instanceof CompiledFunction);
 			}
 
 			@Override

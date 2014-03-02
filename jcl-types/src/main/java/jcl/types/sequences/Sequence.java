@@ -35,16 +35,7 @@ public interface Sequence extends T {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
-
-				if (!(obj instanceof Sequence)) {
-					return false;
-				}
-
-				final Sequence sequence = (Sequence) obj;
-				return sequence == INSTANCE;
+				return (this == obj) || (obj instanceof Sequence);
 			}
 
 			@Override

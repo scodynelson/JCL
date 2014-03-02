@@ -35,16 +35,7 @@ public interface Readtable extends T {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
-
-				if (!(obj instanceof Readtable)) {
-					return false;
-				}
-
-				final Readtable readtable = (Readtable) obj;
-				return readtable == INSTANCE;
+				return (this == obj) || (obj instanceof Readtable);
 			}
 
 			@Override

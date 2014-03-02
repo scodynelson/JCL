@@ -76,16 +76,7 @@ public interface Symbol extends T {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
-
-				if (!(obj instanceof Symbol)) {
-					return false;
-				}
-
-				final Symbol symbol = (Symbol) obj;
-				return symbol == INSTANCE;
+				return (this == obj) || (obj instanceof Symbol);
 			}
 
 			@Override

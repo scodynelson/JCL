@@ -31,16 +31,7 @@ public interface EchoStream extends Stream {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
-
-				if (!(obj instanceof EchoStream)) {
-					return false;
-				}
-
-				final EchoStream echoStream = (EchoStream) obj;
-				return echoStream == INSTANCE;
+				return (this == obj) || (obj instanceof EchoStream);
 			}
 
 			@Override

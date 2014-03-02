@@ -33,16 +33,7 @@ public interface Pathname extends T {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
-
-				if (!(obj instanceof Pathname)) {
-					return false;
-				}
-
-				final Pathname pathname = (Pathname) obj;
-				return pathname == INSTANCE;
+				return (this == obj) || (obj instanceof Pathname);
 			}
 
 			@Override

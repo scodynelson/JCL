@@ -31,16 +31,7 @@ public interface RandomState extends T {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
-
-				if (!(obj instanceof RandomState)) {
-					return false;
-				}
-
-				final RandomState randomState = (RandomState) obj;
-				return randomState == INSTANCE;
+				return (this == obj) || (obj instanceof RandomState);
 			}
 
 			@Override

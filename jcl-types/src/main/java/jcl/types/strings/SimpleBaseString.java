@@ -90,7 +90,7 @@ public interface SimpleBaseString extends BaseString, SimpleString {
 					return true;
 				}
 
-				if (!(obj instanceof LispType)) {
+				if (!(obj instanceof SimpleBaseString)) {
 					return false;
 				}
 

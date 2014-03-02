@@ -31,16 +31,7 @@ public interface Ratio extends Rational {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
-
-				if (!(obj instanceof Ratio)) {
-					return false;
-				}
-
-				final Ratio ratio = (Ratio) obj;
-				return ratio == INSTANCE;
+				return (this == obj) || (obj instanceof Ratio);
 			}
 
 			@Override

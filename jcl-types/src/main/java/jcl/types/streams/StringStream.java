@@ -32,16 +32,7 @@ public interface StringStream extends Stream {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
-
-				if (!(obj instanceof StringStream)) {
-					return false;
-				}
-
-				final StringStream stringStream = (StringStream) obj;
-				return stringStream == INSTANCE;
+				return (this == obj) || (obj instanceof StringStream);
 			}
 
 			@Override

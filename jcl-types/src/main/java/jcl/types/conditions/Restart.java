@@ -34,16 +34,7 @@ public interface Restart extends T {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
-
-				if (!(obj instanceof Restart)) {
-					return false;
-				}
-
-				final Restart restart = (Restart) obj;
-				return restart == INSTANCE;
+				return (this == obj) || (obj instanceof Restart);
 			}
 
 			@Override

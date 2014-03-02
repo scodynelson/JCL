@@ -40,16 +40,7 @@ public interface Method extends T {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
-
-				if (!(obj instanceof Method)) {
-					return false;
-				}
-
-				final Method method = (Method) obj;
-				return method == INSTANCE;
+				return (this == obj) || (obj instanceof Method);
 			}
 
 			@Override

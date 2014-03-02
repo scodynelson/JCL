@@ -103,11 +103,11 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 			throw new SimpleErrorException(contentsToCheck + " doesn't match array dimensions of #<" + elementTypeToCheck + ' ' + contentsSize + ">.");
 		}
 
-//		for (final TYPE current : contentsToCheck) {
-//			if (!current.getType().equals(elementTypeToCheck)) {
-//				throw new TypeErrorException("Provided element " + current + " is not a subtype of the provided elementType " + elementTypeToCheck + '.');
-//			}
-//		}
+		for (final TYPE current : contentsToCheck) {
+			if (!current.getType().equals(elementTypeToCheck) && !elementTypeToCheck.equals(current.getType())) {
+				throw new TypeErrorException("Provided element " + current + " is not a subtype of the provided elementType " + elementTypeToCheck + '.');
+			}
+		}
 	}
 
 	/**

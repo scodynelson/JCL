@@ -30,16 +30,7 @@ public interface StructureClass extends Class {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
-
-				if (!(obj instanceof StructureClass)) {
-					return false;
-				}
-
-				final StructureClass structureClass = (StructureClass) obj;
-				return structureClass == INSTANCE;
+				return (this == obj) || (obj instanceof StructureClass);
 			}
 
 			@Override

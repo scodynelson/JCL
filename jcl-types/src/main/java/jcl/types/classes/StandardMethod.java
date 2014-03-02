@@ -30,16 +30,7 @@ public interface StandardMethod extends Method, StandardObject {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
-
-				if (!(obj instanceof StandardMethod)) {
-					return false;
-				}
-
-				final StandardMethod standardMethod = (StandardMethod) obj;
-				return standardMethod == INSTANCE;
+				return (this == obj) || (obj instanceof StandardMethod);
 			}
 
 			@Override

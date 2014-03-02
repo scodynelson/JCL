@@ -31,16 +31,7 @@ public interface LogicalPathname extends Pathname {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
-
-				if (!(obj instanceof LogicalPathname)) {
-					return false;
-				}
-
-				final LogicalPathname logicalPathname = (LogicalPathname) obj;
-				return logicalPathname == INSTANCE;
+				return (this == obj) || (obj instanceof LogicalPathname);
 			}
 
 			@Override

@@ -31,16 +31,7 @@ public interface BuiltInClass extends Class {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
-
-				if (!(obj instanceof BuiltInClass)) {
-					return false;
-				}
-
-				final BuiltInClass builtInClass = (BuiltInClass) obj;
-				return builtInClass == INSTANCE;
+				return (this == obj) || (obj instanceof BuiltInClass);
 			}
 
 			@Override

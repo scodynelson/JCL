@@ -31,16 +31,7 @@ public interface Package extends T {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
-
-				if (!(obj instanceof Package)) {
-					return false;
-				}
-
-				final Package aPackage = (Package) obj;
-				return aPackage == INSTANCE;
+				return (this == obj) || (obj instanceof Package);
 			}
 
 			@Override

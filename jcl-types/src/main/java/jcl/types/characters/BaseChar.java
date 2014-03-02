@@ -39,16 +39,7 @@ public interface BaseChar extends Character {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
-
-				if (!(obj instanceof BaseChar)) {
-					return false;
-				}
-
-				final BaseChar baseChar = (BaseChar) obj;
-				return (baseChar == INSTANCE) || BaseChar.class.isAssignableFrom(obj.getClass());
+				return (this == obj) || (obj instanceof BaseChar);
 			}
 
 			@Override

@@ -37,16 +37,7 @@ public interface GenericFunction extends Function {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
-
-				if (!(obj instanceof GenericFunction)) {
-					return false;
-				}
-
-				final GenericFunction genericFunction = (GenericFunction) obj;
-				return genericFunction == INSTANCE;
+				return (this == obj) || (obj instanceof GenericFunction);
 			}
 
 			@Override

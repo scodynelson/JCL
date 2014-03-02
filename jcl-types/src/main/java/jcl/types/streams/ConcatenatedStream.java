@@ -38,16 +38,7 @@ public interface ConcatenatedStream extends Stream {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
-
-				if (!(obj instanceof ConcatenatedStream)) {
-					return false;
-				}
-
-				final ConcatenatedStream concatenatedStream = (ConcatenatedStream) obj;
-				return concatenatedStream == INSTANCE;
+				return (this == obj) || (obj instanceof ConcatenatedStream);
 			}
 
 			@Override

@@ -33,16 +33,7 @@ public interface MethodCombination extends T {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
-
-				if (!(obj instanceof MethodCombination)) {
-					return false;
-				}
-
-				final MethodCombination methodCombination = (MethodCombination) obj;
-				return methodCombination == INSTANCE;
+				return (this == obj) || (obj instanceof MethodCombination);
 			}
 
 			@Override

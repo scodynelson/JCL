@@ -32,16 +32,7 @@ public interface StructureObject extends T {
 
 			@Override
 			public boolean equals(final Object obj) {
-				if (this == obj) {
-					return true;
-				}
-
-				if (!(obj instanceof StructureObject)) {
-					return false;
-				}
-
-				final StructureObject structureObject = (StructureObject) obj;
-				return structureObject == INSTANCE;
+				return (this == obj) || (obj instanceof StructureObject);
 			}
 
 			@Override

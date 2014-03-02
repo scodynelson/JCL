@@ -48,7 +48,7 @@ public interface BaseChar extends Character {
 				}
 
 				final BaseChar baseChar = (BaseChar) obj;
-				return baseChar == INSTANCE;
+				return (baseChar == INSTANCE) || BaseChar.class.isAssignableFrom(obj.getClass());
 			}
 
 			@Override

@@ -1,6 +1,5 @@
 package jcl.types.characters;
 
-import jcl.types.LispType;
 import jcl.types.TypeFactory;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -37,12 +36,12 @@ public interface StandardChar extends BaseChar {
 					return true;
 				}
 
-				if (!(obj instanceof LispType)) {
+				if (!(obj instanceof StandardChar)) {
 					return false;
 				}
 
 				final StandardChar standardChar = (StandardChar) obj;
-				return standardChar == INSTANCE;
+				return (standardChar == INSTANCE) || StandardChar.class.isAssignableFrom(obj.getClass());
 			}
 
 			@Override

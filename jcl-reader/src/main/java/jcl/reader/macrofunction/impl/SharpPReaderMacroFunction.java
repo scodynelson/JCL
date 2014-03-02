@@ -24,7 +24,7 @@ public class SharpPReaderMacroFunction implements ReaderMacroFunction {
 		} else {
 			if (lispStruct instanceof StringStruct) {
 				final String javaString = ((StringStruct) lispStruct).getAsJavaString();
-				return PathnameStruct.getStruct(javaString);
+				return PathnameStruct.buildPathname(javaString);
 			} else {
 				throw new ReaderErrorException("Improper namestring provided to #P: " + lispStruct);
 			}

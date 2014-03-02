@@ -30,6 +30,7 @@ subprojects {
 	String COMMONS_LANG_VERSION = '3.1';
 	String COMMONS_MATH_VERSION = '3.2';
 	String COMMONS_COLLECTIONS_VERSION = '4.0';
+	String COMMONS_IO_VERSION = '2.4';
 	String SLF4J_VERSION = '1.7.5';
 	String LOGBACK_VERSION = '1.0.13';
 	String TESTNG_VERSION = '6.8.7';
@@ -38,6 +39,7 @@ subprojects {
 		compile group: 'org.apache.commons', name: 'commons-lang3', version: "$COMMONS_LANG_VERSION"
 		compile group: 'org.apache.commons', name: 'commons-math3', version: "$COMMONS_MATH_VERSION"
 		compile group: 'org.apache.commons', name: 'commons-collections4', version: "$COMMONS_COLLECTIONS_VERSION"
+		compile group: 'commons-io', name: 'commons-io', version: "$COMMONS_IO_VERSION"
 
 		compile group: 'org.slf4j', name: 'slf4j-api', version: "$SLF4J_VERSION"
 		compile group: 'ch.qos.logback', name: 'logback-core', version: "$LOGBACK_VERSION"

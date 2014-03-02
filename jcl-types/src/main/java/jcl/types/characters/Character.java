@@ -42,7 +42,7 @@ public interface Character extends T {
 				}
 
 				final Character character = (Character) obj;
-				return character == INSTANCE;
+				return (character == INSTANCE) || Character.class.isAssignableFrom(obj.getClass());
 			}
 
 			@Override

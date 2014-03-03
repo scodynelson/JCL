@@ -51,26 +51,6 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 		return version;
 	}
 
-	@Override
-	public String toString() {
-		return "PathnameStruct{"
-				+ "\nhost=" + host
-				+ ", \ndevice=" + device
-				+ ", \ndirectory=" + directory
-				+ ", \nname=" + name
-				+ ", \ntype=" + type
-				+ ", \nversion=" + version
-				+ '}';
-	}
-
-	public static PathnameStruct buildPathname(final String pathname) {
-		if (isURI(pathname)) {
-			return new PathnameURIStruct(pathname);
-		} else {
-			return new PathnameFileStruct(pathname);
-		}
-	}
-
 	private static boolean isURI(final String path) {
 		try {
 			final URI uri = new URI(path);
@@ -80,32 +60,70 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 		}
 	}
 
-	protected static class PathnameHost {
+	@Override
+	public String toString() {
+		return "PathnameStruct{"
+				+ "host=" + host
+				+ ", device=" + device
+				+ ", directory=" + directory
+				+ ", name=" + name
+				+ ", type=" + type
+				+ ", version=" + version
+				+ '}';
+	}
+
+	// BUILDERS
+
+	public static PathnameStruct buildPathname(final String pathname) {
+		if (isURI(pathname)) {
+			return new PathnameURIStruct(pathname);
+		} else {
+			return new PathnameFileStruct(pathname);
+		}
+	}
+
+	// PathnameStruct Property Objects
+
+	public static final class PathnameHost {
 
 		private final String host;
+		private final PathnameComponentType componentType;
 
-		protected PathnameHost(final String host) {
+		public PathnameHost(final String host) {
 			this.host = host;
+
+			if (host == null) {
+				componentType = PathnameComponentType.NIL;
+			} else if (host.isEmpty()) {
+				componentType = PathnameComponentType.UNSPECIFIC;
+			} else {
+				componentType = null;
+			}
 		}
 
 		public String getHost() {
 			return host;
 		}
 
+		public PathnameComponentType getComponentType() {
+			return componentType;
+		}
+
 		@Override
 		public String toString() {
 			return "PathnameHost{"
 					+ "\nhost=" + host
+					+ ", \ncomponentType=" + componentType
 					+ '}';
 		}
 	}
 
-	protected static class PathnameDevice {
+	public static final class PathnameDevice {
 
 		private final String device;
 		private final PathnameComponentType componentType;
 
-		protected PathnameDevice(final String device) {
+		public PathnameDevice(final String device) {
 			this.device = device;
 
 			if (device == null) {
@@ -136,12 +154,16 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 		}
 	}
 
-	protected static class PathnameDirectory {
+	public enum PathnameDeviceType {
+		FILE
+	}
+
+	public static final class PathnameDirectory {
 
 		private final List<String> directory;
 		private final PathnameDirectoryType pathnameDirectoryType;
 
-		protected PathnameDirectory(final List<String> directory, final PathnameDirectoryType pathnameDirectoryType) {
+		public PathnameDirectory(final List<String> directory, final PathnameDirectoryType pathnameDirectoryType) {
 			this.directory = directory;
 			this.pathnameDirectoryType = pathnameDirectoryType;
 		}
@@ -163,12 +185,22 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 		}
 	}
 
-	protected static class PathnameName {
+	public enum PathnameDirectoryType {
+		ABSOLUTE,
+		RELATIVE
+	}
+
+	public enum PathnameDirectoryDirectionType {
+		BACK,
+		UP
+	}
+
+	public static final class PathnameName {
 
 		private final String name;
 		private final PathnameComponentType componentType;
 
-		protected PathnameName(final String name) {
+		public PathnameName(final String name) {
 			this.name = name;
 
 			if (name == null) {
@@ -199,12 +231,12 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 		}
 	}
 
-	protected static class PathnameType {
+	public static final class PathnameType {
 
 		private final String type;
 		private final PathnameComponentType componentType;
 
-		protected PathnameType(final String type) {
+		public PathnameType(final String type) {
 			this.type = type;
 
 			if (type == null) {
@@ -235,12 +267,12 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 		}
 	}
 
-	protected static class PathnameVersion {
+	public static final class PathnameVersion {
 
 		private final Integer version;
 		private final PathnameComponentType componentType;
 
-		protected PathnameVersion(final Integer version) {
+		public PathnameVersion(final Integer version) {
 			this.version = version;
 
 			if (version == null) {
@@ -267,21 +299,7 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 		}
 	}
 
-	protected enum PathnameDeviceType {
-		FILE
-	}
-
-	protected enum PathnameDirectoryType {
-		ABSOLUTE,
-		RELATIVE
-	}
-
-	protected enum PathnameDirectoryDirectionType {
-		BACK,
-		UP
-	}
-
-	protected enum PathnameComponentType {
+	public enum PathnameComponentType {
 		UNSPECIFIC,
 		WILD,
 		NEWEST,
@@ -291,7 +309,7 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 		NIL // TODO: or should we just pass null???
 	}
 
-	protected enum PathnameCase {
+	public enum PathnameCase {
 		COMMON,
 		LOCAL
 	}

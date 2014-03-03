@@ -36,13 +36,13 @@ public class PathnameFileStruct extends PathnameStruct {
 	@Override
 	public String toString() {
 		return "PathnameFileStruct{"
-				+ "\nhost=" + host
-				+ ", \ndevice=" + device
-				+ ", \ndirectory=" + directory
-				+ ", \ndirectoryWithDirections=" + directoryWithDirections
-				+ ", \nname=" + name
-				+ ", \ntype=" + type
-				+ ", \nversion=" + version
+				+ "host=" + host
+				+ ", device=" + device
+				+ ", directory=" + directory
+				+ ", directoryWithDirections=" + directoryWithDirections
+				+ ", name=" + name
+				+ ", type=" + type
+				+ ", version=" + version
 				+ '}';
 	}
 
@@ -52,16 +52,42 @@ public class PathnameFileStruct extends PathnameStruct {
 
 	private static PathnameDevice getDevice(final String pathname) {
 		final String realPathname = resolveUserHome(pathname);
-		final String pathPrefix = FilenameUtils.getPrefix(realPathname);
+		String pathPrefix = FilenameUtils.getPrefix(realPathname);
+
+		// Strip off ':' or ':/' from drive letters
+		if (StringUtils.endsWith(pathPrefix, ":") || StringUtils.endsWith(pathPrefix, ":/")) {
+			pathPrefix = pathPrefix.substring(0, 1);
+		}
+
+		// If it is just the file path separator, no device here
+		if (StringUtils.equals(pathPrefix, File.separator)) {
+			pathPrefix = null;
+		}
+
 		return new PathnameDevice(pathPrefix);
 	}
 
 	private static PathnameDirectory getDirectory(final String pathname) {
 		final String realPathname = resolveUserHome(pathname);
-		final String directoryPath = FilenameUtils.getFullPathNoEndSeparator(realPathname);
+		String directoryPath = FilenameUtils.getFullPathNoEndSeparator(realPathname);
+
+		// Remove drive letter from the front if it exists
+		final Pattern driveLetterPattern = Pattern.compile("([A-Z]|[a-z]):.");
+		if (driveLetterPattern.matcher(directoryPath).matches()) {
+			directoryPath = StringUtils.substring(directoryPath, 2);
+		} else if ((realPathname.length() == 2) && (realPathname.charAt(1) == ':')) {
+			directoryPath = "";
+		}
+
 		final String[] tokens = PATHNAME_PATTERN.split(directoryPath);
 
-		final List<String> directoryStrings = Arrays.asList(tokens);
+		final List<String> directoryStrings = new ArrayList<>(tokens.length);
+		directoryStrings.addAll(Arrays.asList(tokens));
+
+		// This means that the path started with a '/'; thus, the resulting empty string artifact would need to be removed
+		if (tokens[0].isEmpty()) {
+			directoryStrings.remove("");
+		}
 
 		final Path path = Paths.get(realPathname);
 		if (path.isAbsolute()) {
@@ -73,33 +99,24 @@ public class PathnameFileStruct extends PathnameStruct {
 
 	private static PathnameName getName(final String pathname) {
 		final String realPathname = resolveUserHome(pathname);
+
+		// This tests the case when the pathname is just a drive letter, in which case it should NOT be the name
+		if ((realPathname.length() == 2) && (realPathname.charAt(1) == ':')) {
+			return new PathnameName(null);
+		}
+
 		final String baseName = FilenameUtils.getBaseName(realPathname);
 		return new PathnameName(baseName);
-
-		//FilenameUtils will muck up the name here, it should just be NIL
-		// There is a special case where FilenameUtils does not properly
-		// handle a string of the form "~username" this method performs
-		// a check for that case.
-		// TODO: Check this case...
-//		if (!realPathname.contains(File.separator)
-//				&& (realPathname.length() > 1)
-//				&& (realPathname.charAt(0) == '~')) {
-//			name = null;
-//		}
-
-		// FilenameUtils will muck up the name here, it should just be NIL
-		// FilenameUtils does not properly handle a string of the
-		// form "C:" (when it is just a drive letter and nothing else)
-		// so we check for that case here.
-		// TODO: Check this case...
-//		if ((realPathname.length() == 2)
-//				&& (realPathname.charAt(1) == ':')) {
-//			name = null;
-//		}
 	}
 
 	private static PathnameType getType(final String pathname) {
 		final String realPathname = resolveUserHome(pathname);
+
+		final int indexOfExtension = FilenameUtils.indexOfExtension(realPathname);
+		if (indexOfExtension == -1) {
+			return new PathnameType(null);
+		}
+
 		final String fileExtension = FilenameUtils.getExtension(realPathname);
 		return new PathnameType(fileExtension);
 	}
@@ -117,8 +134,15 @@ public class PathnameFileStruct extends PathnameStruct {
 			//Leave ".." in the directory list and convert any :BACK encountered
 			//to a ".." in directory list to maintain functionality with other functions
 			if ("..".equals(token)) {
+				final StringBuilder currentPathStringBuilder = new StringBuilder();
+				if (directoryType == PathnameDirectoryType.ABSOLUTE) {
+					currentPathStringBuilder.append(File.separatorChar);
+				}
+
 				final String currentPathString = StringUtils.join(directoryStringsWithDirections, File.separator);
-				final Path currentPath = Paths.get(currentPathString);
+				currentPathStringBuilder.append(currentPathString);
+
+				final Path currentPath = Paths.get(currentPathStringBuilder.toString());
 
 				// Back is for absolutes / up is for symbolic links
 				if (Files.isSymbolicLink(currentPath)) {
@@ -126,7 +150,6 @@ public class PathnameFileStruct extends PathnameStruct {
 				} else {
 					directoryStringsWithDirections.add(PathnameDirectoryDirectionType.BACK.toString());
 				}
-
 			} else {
 				directoryStringsWithDirections.add(token);
 			}
@@ -138,13 +161,26 @@ public class PathnameFileStruct extends PathnameStruct {
 		//there are special situations involving tildes in pathname
 		//handle a tilde at start of pathname; expand it to the user's directory
 
-		final String realPathname;
+		final String userHome = System.getProperty("user.home");
+
+		String realPathname = pathname;
 		if ("~".equals(pathname)) {
-			realPathname = System.getProperty("user.home");
+			realPathname = userHome;
 		} else if (pathname.startsWith("~/") || pathname.startsWith("~\\")) {
-			realPathname = pathname.replace("~", System.getProperty("user.home"));
-		} else {
-			realPathname = pathname;
+			realPathname = pathname.replace("~", userHome);
+		} else if (pathname.startsWith("~")) {
+			final int lastPathSeparatorIndex = userHome.lastIndexOf(File.separatorChar);
+			final String usersDir = userHome.substring(0, lastPathSeparatorIndex);
+
+			final boolean containsSeparator = pathname.contains(File.separator);
+			if (containsSeparator) {
+				final String username = pathname.substring(1, pathname.indexOf(File.separatorChar));
+				final String restOfPath = pathname.substring(pathname.indexOf(File.separatorChar));
+				realPathname = usersDir + File.separatorChar + username + restOfPath;
+			} else {
+				final String username = pathname.substring(1);
+				realPathname = usersDir + File.separatorChar + username;
+			}
 		}
 		return FilenameUtils.separatorsToSystem(realPathname);
 	}

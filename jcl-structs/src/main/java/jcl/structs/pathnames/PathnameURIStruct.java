@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -30,12 +31,12 @@ public class PathnameURIStruct extends PathnameStruct {
 	@Override
 	public String toString() {
 		return "PathnameURIStruct{"
-				+ "\nhost=" + host
-				+ ", \ndevice=" + device
-				+ ", \ndirectory=" + directory
-				+ ", \nname=" + name
-				+ ", \ntype=" + type
-				+ ", \nversion=" + version
+				+ "host=" + host
+				+ ", device=" + device
+				+ ", directory=" + directory
+				+ ", name=" + name
+				+ ", type=" + type
+				+ ", version=" + version
 				+ '}';
 	}
 
@@ -62,7 +63,7 @@ public class PathnameURIStruct extends PathnameStruct {
 			final String directoryPath = FilenameUtils.getFullPathNoEndSeparator(uriPath);
 			final String[] tokens = PATHNAME_PATTERN.split(directoryPath);
 
-			directoryStrings = Arrays.asList(tokens);
+			directoryStrings = new ArrayList<>(Arrays.asList(tokens));
 		} else {
 			directoryStrings = Collections.emptyList();
 		}
@@ -86,22 +87,22 @@ public class PathnameURIStruct extends PathnameStruct {
 
 	private static PathnameName getName(final URI uri) {
 		final String uriPath = uri.getPath();
-		if (StringUtils.isNotEmpty(uriPath)) {
-			final String baseName = FilenameUtils.getBaseName(uriPath);
-			return new PathnameName(baseName);
-		} else {
+		if (StringUtils.isEmpty(uriPath)) {
 			return new PathnameName(null);
 		}
+
+		final String baseName = FilenameUtils.getBaseName(uriPath);
+		return new PathnameName(baseName);
 	}
 
 	private static PathnameType getType(final URI uri) {
 		final String uriPath = uri.getPath();
 		if (StringUtils.isNotEmpty(uriPath)) {
-			final String fileExtension = FilenameUtils.getExtension(uriPath);
-			return new PathnameType(fileExtension);
-		} else {
 			return new PathnameType(null);
 		}
+
+		final String fileExtension = FilenameUtils.getExtension(uriPath);
+		return new PathnameType(fileExtension);
 	}
 
 	private static PathnameVersion getVersion() {

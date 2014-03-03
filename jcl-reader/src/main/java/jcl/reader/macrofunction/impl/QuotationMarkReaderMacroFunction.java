@@ -34,9 +34,20 @@ public class QuotationMarkReaderMacroFunction implements ReaderMacroFunction {
 				final int tmpChar = tmpReadResult.getResult();
 				if ((tmpChar == CharacterConstants.LATIN_SMALL_LETTER_U)
 						|| (tmpChar == CharacterConstants.LATIN_CAPITAL_LETTER_U)) {
-					readChar = reader.readUnicodeChar();
-					stringBuilder.appendCodePoint(readChar);
+
+					final ReadResult nextTmpReadResult = reader.readChar();
+					final int nextTmpChar = nextTmpReadResult.getResult();
+					if (nextTmpChar == CharacterConstants.PLUS_SIGN) {
+						readChar = reader.readUnicodeChar();
+						stringBuilder.appendCodePoint(readChar);
+					} else {
+						// NOTE: Order matters here!!
+						stringBuilder.appendCodePoint(readChar);
+						stringBuilder.appendCodePoint(tmpChar);
+						stringBuilder.appendCodePoint(nextTmpChar);
+					}
 				} else {
+					// NOTE: Order matters here!!
 					stringBuilder.appendCodePoint(readChar);
 					stringBuilder.appendCodePoint(tmpChar);
 				}

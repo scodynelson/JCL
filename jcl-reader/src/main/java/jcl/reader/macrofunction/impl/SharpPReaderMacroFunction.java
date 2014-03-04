@@ -9,6 +9,8 @@ import jcl.structs.pathnames.PathnameStruct;
 import jcl.structs.strings.StringStruct;
 import jcl.types.Variable;
 
+import java.net.URISyntaxException;
+
 /**
  * Implements the '#p' Lisp reader macro.
  */
@@ -24,7 +26,11 @@ public class SharpPReaderMacroFunction implements ReaderMacroFunction {
 		} else {
 			if (lispStruct instanceof StringStruct) {
 				final String javaString = ((StringStruct) lispStruct).getAsJavaString();
-				return PathnameStruct.buildPathname(javaString);
+				try {
+					return PathnameStruct.buildPathname(javaString);
+				} catch (final URISyntaxException use) {
+					throw new ReaderErrorException("Improper namestring provided to #P: " + lispStruct, use);
+				}
 			} else {
 				throw new ReaderErrorException("Improper namestring provided to #P: " + lispStruct);
 			}

@@ -114,7 +114,7 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 	 * This factory method builds and returns a proper list with the provided {@code lispStructs} as the elements.
 	 *
 	 * @param lispStructs the list elements
-	 * @return a proper list with the provided {@code lispStructs} as the elements.
+	 * @return a proper list with the provided {@code lispStructs} as the elements
 	 */
 	public static ListStruct buildProperList(final LispStruct... lispStructs) {
 		if (lispStructs.length == 0) {
@@ -128,7 +128,7 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 	 * This factory method builds and returns a proper list with the provided {@code lispStructs} as the elements.
 	 *
 	 * @param lispStructs the list elements
-	 * @return a proper list with the provided {@code lispStructs} as the elements.
+	 * @return a proper list with the provided {@code lispStructs} as the elements
 	 */
 	public static ListStruct buildProperList(final java.util.List<LispStruct> lispStructs) {
 		if (CollectionUtils.isEmpty(lispStructs)) {
@@ -142,7 +142,7 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 	 * This factory method builds and returns a proper list with the provided {@code lispStructs} as the elements.
 	 *
 	 * @param lispStructs the list elements
-	 * @return a proper list with the provided {@code lispStructs} as the elements.
+	 * @return a proper list with the provided {@code lispStructs} as the elements
 	 */
 	private static ListStruct getProperList(final java.util.List<LispStruct> lispStructs) {
 		final LispStruct car = lispStructs.get(0);
@@ -161,7 +161,7 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 	 * This factory method builds and returns a dotted list with the provided {@code lispStructs} as the elements.
 	 *
 	 * @param lispStructs the list elements
-	 * @return a dotted list with the provided {@code lispStructs} as the elements.
+	 * @return a dotted list with the provided {@code lispStructs} as the elements
 	 */
 	public static ListStruct buildDottedList(final LispStruct... lispStructs) {
 		if (lispStructs.length == 0) {
@@ -177,7 +177,7 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 	 * This factory method builds and returns a dotted list with the provided {@code lispStructs} as the elements.
 	 *
 	 * @param lispStructs the list elements
-	 * @return a dotted list with the provided {@code lispStructs} as the elements.
+	 * @return a dotted list with the provided {@code lispStructs} as the elements
 	 */
 	public static ListStruct buildDottedList(final java.util.List<LispStruct> lispStructs) {
 		if (CollectionUtils.isEmpty(lispStructs)) {
@@ -193,7 +193,7 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 	 * This factory method builds and returns a dotted list with the provided {@code lispStructs} as the elements.
 	 *
 	 * @param lispStructs the list elements
-	 * @return a dotted list with the provided {@code lispStructs} as the elements.
+	 * @return a dotted list with the provided {@code lispStructs} as the elements
 	 */
 	private static ListStruct getDottedList(final java.util.List<LispStruct> lispStructs) {
 		final LispStruct car = lispStructs.get(0);

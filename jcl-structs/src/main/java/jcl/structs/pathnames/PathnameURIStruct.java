@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 /**
@@ -186,7 +187,7 @@ public class PathnameURIStruct extends PathnameStruct {
 	 * @throws URISyntaxException if the provided {@code pathname} cannot be parsed as a URI
 	 */
 	private static URI getURI(final String pathname) throws URISyntaxException {
-		final String realPathname = pathname.toLowerCase();
+		final String realPathname = pathname.toLowerCase(Locale.getDefault());
 		return new URI(realPathname);
 	}
 }

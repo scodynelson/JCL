@@ -3,6 +3,8 @@ package jcl.structs.pathnames;
 import jcl.structs.classes.BuiltInClassStruct;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.types.pathnames.Pathname;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -19,6 +21,8 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 	protected final PathnameName name;
 	protected final PathnameType type;
 	protected final PathnameVersion version;
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(PathnameStruct.class);
 
 	/**
 	 * Protected constructor.
@@ -105,7 +109,8 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 		try {
 			final URI uri = new URI(path);
 			return uri.isAbsolute();
-		} catch (final URISyntaxException ignore) {
+		} catch (final URISyntaxException use) {
+			LOGGER.trace("Provided path cannot be parsed as a URI: {}", path, use);
 			return false;
 		}
 	}

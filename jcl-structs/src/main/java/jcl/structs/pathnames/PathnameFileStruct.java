@@ -19,7 +19,8 @@ public class PathnameFileStruct extends PathnameStruct {
 
 	private final PathnameDirectory directoryWithDirections;
 
-	private static final Pattern PATHNAME_PATTERN = Pattern.compile(File.separator);
+	// NOTE: The following pattern complexity is due to Windows platforms and their usage of backslashes
+	private static final Pattern PATHNAME_PATTERN = Pattern.compile((File.separatorChar == '\\') ? "\\\\" : File.separator);
 	private static final Pattern DRIVE_LETTER_PATTERN = Pattern.compile("([A-Z]|[a-z]):.");
 	private static final String BACK_UP_STRING = "..";
 	private static final String TILDE = "~";

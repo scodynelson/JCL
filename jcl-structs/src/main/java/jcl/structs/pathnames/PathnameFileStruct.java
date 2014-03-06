@@ -17,12 +17,11 @@ import java.util.regex.Pattern;
  */
 public class PathnameFileStruct extends PathnameStruct {
 
-	private final PathnameDirectory directoryWithDirections;
-
 	// NOTE: The following pattern complexity is due to Windows platforms and their usage of backslashes
 	private static final Pattern PATHNAME_PATTERN = Pattern.compile((File.separatorChar == '\\') ? "\\\\" : File.separator);
 	private static final Pattern DRIVE_LETTER_PATTERN = Pattern.compile("([A-Z]|[a-z]):.");
 	private static final String BACK_UP_STRING = "..";
+	private static final String WILDCARD_STRING = "*";
 	private static final String TILDE = "~";
 
 	/**
@@ -38,7 +37,6 @@ public class PathnameFileStruct extends PathnameStruct {
 	public PathnameFileStruct(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
 							  final PathnameName name, final PathnameType type, final PathnameVersion version) {
 		super(host, device, directory, name, type, version);
-		directoryWithDirections = getDirectoryWithDirections(directory);
 	}
 
 	/**
@@ -69,17 +67,11 @@ public class PathnameFileStruct extends PathnameStruct {
 	}
 
 	@Override
-	public PathnameDirectory getPathnameDirectory() {
-		return directoryWithDirections;
-	}
-
-	@Override
 	public String toString() {
 		return "PathnameFileStruct{"
 				+ "host=" + host
 				+ ", device=" + device
 				+ ", directory=" + directory
-				+ ", directoryWithDirections=" + directoryWithDirections
 				+ ", name=" + name
 				+ ", type=" + type
 				+ ", version=" + version
@@ -92,7 +84,7 @@ public class PathnameFileStruct extends PathnameStruct {
 	 * @return the pathname host
 	 */
 	private static PathnameHost getHost() {
-		return new PathnameHost(null);
+		return new PathnameHost();
 	}
 
 	/**
@@ -128,12 +120,19 @@ public class PathnameFileStruct extends PathnameStruct {
 		final String realPathname = resolveUserHome(pathname);
 		String directoryPath = FilenameUtils.getFullPathNoEndSeparator(realPathname);
 
+		// This is used for building the path piece by piece so that we can detect symbolic links
+		final StringBuilder currentPathBuilder = new StringBuilder();
+
 		// Remove drive letter from the front if it exists
 		if (DRIVE_LETTER_PATTERN.matcher(directoryPath).matches()) {
 			directoryPath = StringUtils.substring(directoryPath, 2);
+
+			final String pathPrefix = FilenameUtils.getPrefix(realPathname);
+			currentPathBuilder.append(pathPrefix);
 		} else if ((realPathname.length() == 2) && (realPathname.charAt(1) == ':')) {
 			directoryPath = "";
 		}
+		currentPathBuilder.append(File.separator);
 
 		final String[] tokens = PATHNAME_PATTERN.split(directoryPath);
 
@@ -146,11 +145,37 @@ public class PathnameFileStruct extends PathnameStruct {
 		}
 
 		final Path path = Paths.get(realPathname);
-		if (path.isAbsolute()) {
-			return new PathnameDirectory(directoryStrings, PathnameDirectoryType.ABSOLUTE);
-		} else {
-			return new PathnameDirectory(directoryStrings, PathnameDirectoryType.RELATIVE);
+		final boolean isAbsolute = path.isAbsolute();
+		final PathnameDirectoryType directoryType = isAbsolute ? PathnameDirectoryType.ABSOLUTE : PathnameDirectoryType.RELATIVE;
+
+		final List<PathnameDirectoryLevel> directoryLevels = new ArrayList<>(directoryStrings.size());
+
+		for (final String directoryString : directoryStrings) {
+			final PathnameDirectoryLevel directoryLevel = new PathnameDirectoryLevel(directoryPath);
+
+			currentPathBuilder.append(File.separator);
+			currentPathBuilder.append(directoryString);
+
+			// Leave ".." in the directory list and convert any :BACK encountered
+			// to a ".." in directory list to maintain functionality with other functions
+			if (BACK_UP_STRING.equals(directoryString)) {
+				final Path currentPath = Paths.get(currentPathBuilder.toString());
+
+				// Back is for absolutes / up is for symbolic links
+				if (Files.isSymbolicLink(currentPath)) {
+					directoryLevel.setDirectoryLevelType(PathnameDirectoryLevelType.UP);
+				} else {
+					directoryLevel.setDirectoryLevelType(PathnameDirectoryLevelType.BACK);
+				}
+			} else if (WILDCARD_STRING.equals(directoryString)) {
+				directoryLevel.setDirectoryLevelType(PathnameDirectoryLevelType.WILD);
+			}
+
+			directoryLevels.add(directoryLevel);
 		}
+
+		final PathnameDirectoryComponent pathnameDirectoryComponent = new PathnameDirectoryComponent(directoryType, directoryLevels);
+		return new PathnameDirectory(pathnameDirectoryComponent);
 	}
 
 	/**
@@ -164,7 +189,7 @@ public class PathnameFileStruct extends PathnameStruct {
 
 		// This tests the case when the pathname is just a drive letter, in which case it should NOT be the name
 		if ((realPathname.length() == 2) && (realPathname.charAt(1) == ':')) {
-			return new PathnameName(null);
+			return new PathnameName("");
 		}
 
 		final String baseName = FilenameUtils.getBaseName(realPathname);
@@ -182,7 +207,7 @@ public class PathnameFileStruct extends PathnameStruct {
 
 		final int indexOfExtension = FilenameUtils.indexOfExtension(realPathname);
 		if (indexOfExtension == -1) {
-			return new PathnameType(null);
+			return new PathnameType("");
 		}
 
 		final String fileExtension = FilenameUtils.getExtension(realPathname);
@@ -195,45 +220,7 @@ public class PathnameFileStruct extends PathnameStruct {
 	 * @return the pathname version
 	 */
 	private static PathnameVersion getVersion() {
-		return new PathnameVersion(null);
-	}
-
-	/**
-	 * This method gets the pathname directory with '..' values replaced with :BACK or :UP, based on symbolic linking.
-	 *
-	 * @param pathnameDirectory the pathname directory
-	 * @return the pathname directory with '..' values replaced with :BACK or :UP, based on symbolic linking
-	 */
-	private static PathnameDirectory getDirectoryWithDirections(final PathnameDirectory pathnameDirectory) {
-		final List<String> directory = pathnameDirectory.getDirectory();
-		final PathnameDirectoryType directoryType = pathnameDirectory.getPathnameDirectoryType();
-
-		final List<String> directoryStringsWithDirections = new ArrayList<>(directory.size());
-		for (final String token : directory) {
-			// Leave ".." in the directory list and convert any :BACK encountered
-			// to a ".." in directory list to maintain functionality with other functions
-			if (BACK_UP_STRING.equals(token)) {
-				final StringBuilder currentPathStringBuilder = new StringBuilder();
-				if (directoryType == PathnameDirectoryType.ABSOLUTE) {
-					currentPathStringBuilder.append(File.separatorChar);
-				}
-
-				final String currentPathString = StringUtils.join(directoryStringsWithDirections, File.separator);
-				currentPathStringBuilder.append(currentPathString);
-
-				final Path currentPath = Paths.get(currentPathStringBuilder.toString());
-
-				// Back is for absolutes / up is for symbolic links
-				if (Files.isSymbolicLink(currentPath)) {
-					directoryStringsWithDirections.add(PathnameDirectoryDirectionType.UP.getValue());
-				} else {
-					directoryStringsWithDirections.add(PathnameDirectoryDirectionType.BACK.getValue());
-				}
-			} else {
-				directoryStringsWithDirections.add(token);
-			}
-		}
-		return new PathnameDirectory(directoryStringsWithDirections, directoryType);
+		return new PathnameVersion();
 	}
 
 	/**

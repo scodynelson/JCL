@@ -8,7 +8,6 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -111,31 +110,44 @@ public class PathnameURIStruct extends PathnameStruct {
 	private static PathnameDirectory getDirectory(final URI uri) {
 		final String uriPath = uri.getPath();
 
-		final List<String> directoryStrings;
+		final List<String> directoryStrings = new ArrayList<>();
 		if (StringUtils.isNotEmpty(uriPath)) {
 			final String directoryPath = FilenameUtils.getFullPathNoEndSeparator(uriPath);
 			final String[] tokens = PATHNAME_PATTERN.split(directoryPath);
 
-			directoryStrings = new ArrayList<>(Arrays.asList(tokens));
-		} else {
-			directoryStrings = Collections.emptyList();
+			directoryStrings.addAll(Arrays.asList(tokens));
+		}
+
+		final boolean isAbsolute = uri.isAbsolute();
+		final PathnameDirectoryType directoryType = isAbsolute ? PathnameDirectoryType.ABSOLUTE : PathnameDirectoryType.RELATIVE;
+
+		final List<PathnameDirectoryLevel> directoryLevels = new ArrayList<>(directoryStrings.size());
+
+		for (final String directoryString : directoryStrings) {
+			final PathnameDirectoryLevel directoryLevel = new PathnameDirectoryLevel(directoryString);
+			directoryLevels.add(directoryLevel);
 		}
 
 		// add query, if any, to directory path
-		if (uri.getQuery() != null) {
-			directoryStrings.add('?' + uri.getQuery());
+		final String query = uri.getQuery();
+		if (query != null) {
+			directoryLevels.add(new PathnameDirectoryLevel("?"));
+			if (!query.isEmpty()) {
+				directoryLevels.add(new PathnameDirectoryLevel(query));
+			}
 		}
 
 		// add fragment, if any, to directory path
-		if (uri.getFragment() != null) {
-			directoryStrings.add('#' + uri.getFragment());
+		final String fragment = uri.getFragment();
+		if (fragment != null) {
+			directoryLevels.add(new PathnameDirectoryLevel("#"));
+			if (!fragment.isEmpty()) {
+				directoryLevels.add(new PathnameDirectoryLevel(fragment));
+			}
 		}
 
-		if (uri.isAbsolute()) {
-			return new PathnameDirectory(directoryStrings, PathnameDirectoryType.ABSOLUTE);
-		} else {
-			return new PathnameDirectory(directoryStrings, PathnameDirectoryType.RELATIVE);
-		}
+		final PathnameDirectoryComponent pathnameDirectoryComponent = new PathnameDirectoryComponent(directoryType, directoryLevels);
+		return new PathnameDirectory(pathnameDirectoryComponent);
 	}
 
 	/**
@@ -146,10 +158,6 @@ public class PathnameURIStruct extends PathnameStruct {
 	 */
 	private static PathnameName getName(final URI uri) {
 		final String uriPath = uri.getPath();
-		if (StringUtils.isEmpty(uriPath)) {
-			return new PathnameName(null);
-		}
-
 		final String baseName = FilenameUtils.getBaseName(uriPath);
 		return new PathnameName(baseName);
 	}
@@ -162,10 +170,6 @@ public class PathnameURIStruct extends PathnameStruct {
 	 */
 	private static PathnameType getType(final URI uri) {
 		final String uriPath = uri.getPath();
-		if (StringUtils.isNotEmpty(uriPath)) {
-			return new PathnameType(null);
-		}
-
 		final String fileExtension = FilenameUtils.getExtension(uriPath);
 		return new PathnameType(fileExtension);
 	}
@@ -176,7 +180,7 @@ public class PathnameURIStruct extends PathnameStruct {
 	 * @return the pathname version
 	 */
 	private static PathnameVersion getVersion() {
-		return new PathnameVersion(null);
+		return new PathnameVersion(PathnameVersionComponentType.UNSPECIFIC);
 	}
 
 	/**

@@ -1,8 +1,11 @@
 package jcl.structs.pathnames;
 
 import jcl.structs.classes.BuiltInClassStruct;
+import jcl.structs.conditions.exceptions.FileErrorException;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.types.pathnames.Pathname;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -184,19 +187,35 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 
 		/**
 		 * Public constructor.
+		 */
+		public PathnameHost() {
+			host = null;
+			componentType = PathnameComponentType.UNSPECIFIC;
+		}
+
+		/**
+		 * Public constructor.
 		 *
 		 * @param host the pathname host
 		 */
 		public PathnameHost(final String host) {
 			this.host = host;
 
-			if (host == null) {
+			if (StringUtils.isEmpty(host)) {
 				componentType = PathnameComponentType.NIL;
-			} else if (host.isEmpty()) {
-				componentType = PathnameComponentType.UNSPECIFIC;
 			} else {
 				componentType = null;
 			}
+		}
+
+		/**
+		 * Public constructor.
+		 *
+		 * @param componentType pathname host component type
+		 */
+		public PathnameHost(final PathnameComponentType componentType) {
+			host = null;
+			this.componentType = componentType;
 		}
 
 		/**
@@ -227,12 +246,20 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * The {@code PathnameHost} is the object representation of the 'device' element of a Lisp 'pathname' type.
+	 * The {@code PathnameDevice} is the object representation of the 'device' element of a Lisp 'pathname' type.
 	 */
 	public static final class PathnameDevice {
 
 		private final String device;
 		private final PathnameComponentType componentType;
+
+		/**
+		 * Public constructor.
+		 */
+		public PathnameDevice() {
+			device = null;
+			componentType = PathnameComponentType.UNSPECIFIC;
+		}
 
 		/**
 		 * Public constructor.
@@ -242,15 +269,23 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 		public PathnameDevice(final String device) {
 			this.device = device;
 
-			if (device == null) {
+			if (StringUtils.isEmpty(device)) {
 				componentType = PathnameComponentType.NIL;
-			} else if (device.isEmpty()) {
-				componentType = PathnameComponentType.UNSPECIFIC;
-			} else if ("*".equalsIgnoreCase(device)) {
+			} else if ("*".equals(device)) {
 				componentType = PathnameComponentType.WILD;
 			} else {
 				componentType = null;
 			}
+		}
+
+		/**
+		 * Public constructor.
+		 *
+		 * @param componentType pathname device component type
+		 */
+		public PathnameDevice(final PathnameComponentType componentType) {
+			device = null;
+			this.componentType = componentType;
 		}
 
 		/**
@@ -281,31 +316,99 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * The {@code PathnameHost} is the object representation of the 'directory' element of a Lisp 'pathname' type.
+	 * The {@code PathnameDirectory} is the object representation of the 'directory' element of a Lisp 'pathname' type.
 	 */
 	public static final class PathnameDirectory {
 
-		private final List<String> directory;
-		private final PathnameDirectoryType pathnameDirectoryType;
+		private final PathnameDirectoryComponent directoryComponent;
+		private final PathnameComponentType componentType;
+
+		/**
+		 * Public constructor.
+		 */
+		public PathnameDirectory() {
+			directoryComponent = null;
+			componentType = PathnameComponentType.UNSPECIFIC;
+		}
 
 		/**
 		 * Public constructor.
 		 *
-		 * @param directory             the pathname directory
-		 * @param pathnameDirectoryType the pathname directory type (ABSOLUTE or RELATIVE)
+		 * @param directoryComponent the pathname directory component
 		 */
-		public PathnameDirectory(final List<String> directory, final PathnameDirectoryType pathnameDirectoryType) {
-			this.directory = directory;
-			this.pathnameDirectoryType = pathnameDirectoryType;
+		public PathnameDirectory(final PathnameDirectoryComponent directoryComponent) {
+			this.directoryComponent = directoryComponent;
+
+			if (directoryComponent == null) {
+				componentType = PathnameComponentType.NIL;
+			} else {
+				componentType = null;
+			}
 		}
 
 		/**
-		 * Getter for pathname directory value.
+		 * Public constructor.
 		 *
-		 * @return pathname directory value
+		 * @param componentType pathname directory component type
 		 */
-		public List<String> getDirectory() {
-			return directory;
+		public PathnameDirectory(final PathnameComponentType componentType) {
+			directoryComponent = null;
+			this.componentType = componentType;
+		}
+
+		/**
+		 * Getter for pathname directory component value.
+		 *
+		 * @return pathname directory component value
+		 */
+		public PathnameDirectoryComponent getDirectoryComponent() {
+			return directoryComponent;
+		}
+
+		/**
+		 * Getter for pathname directory component type.
+		 *
+		 * @return pathname directory component type
+		 */
+		public PathnameComponentType getComponentType() {
+			return componentType;
+		}
+
+		@Override
+		public String toString() {
+			return "PathnameDirectory{"
+					+ "directoryComponent=" + directoryComponent
+					+ ", componentType=" + componentType
+					+ '}';
+		}
+	}
+
+	/**
+	 * The {@code PathnameDirectoryComponent} is the object representation of a directory component of the 'directory'
+	 * element of a Lisp 'pathname' type.
+	 */
+	public static final class PathnameDirectoryComponent {
+
+		private final PathnameDirectoryType pathnameDirectoryType;
+		private final List<PathnameDirectoryLevel> directoryLevels;
+
+		/**
+		 * Public constructor.
+		 *
+		 * @param directoryLevels       the pathname directory levels
+		 * @param pathnameDirectoryType the pathname directory type (ABSOLUTE or RELATIVE)
+		 */
+		public PathnameDirectoryComponent(final PathnameDirectoryType pathnameDirectoryType, final List<PathnameDirectoryLevel> directoryLevels) {
+			if (CollectionUtils.isNotEmpty(directoryLevels) && (pathnameDirectoryType == PathnameDirectoryType.ABSOLUTE)) {
+				final PathnameDirectoryLevel firstElement = directoryLevels.get(0);
+				if ((firstElement.getDirectoryLevelType() == PathnameDirectoryLevelType.BACK) ||
+						(firstElement.getDirectoryLevelType() == PathnameDirectoryLevelType.UP)) {
+					throw new FileErrorException(":ABSOLUTE must not be followed by :BACK or :UP.");
+				}
+			}
+
+			this.pathnameDirectoryType = pathnameDirectoryType;
+			this.directoryLevels = directoryLevels;
 		}
 
 		/**
@@ -317,11 +420,89 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 			return pathnameDirectoryType;
 		}
 
+		/**
+		 * Getter for pathname directory levels.
+		 *
+		 * @return pathname directory levels
+		 */
+		public List<PathnameDirectoryLevel> getDirectoryLevels() {
+			return directoryLevels;
+		}
+
 		@Override
 		public String toString() {
 			return "PathnameDirectory{"
-					+ "directory=" + directory
+					+ "directoryLevels=" + directoryLevels
 					+ ", pathnameDirectoryType=" + pathnameDirectoryType
+					+ '}';
+		}
+	}
+
+	/**
+	 * The {@code PathnameDirectoryLevel} is the object representation of a specific directory level of the 'directory'
+	 * element of a Lisp 'pathname' type.
+	 */
+	public static final class PathnameDirectoryLevel {
+
+		private final String directoryLevel;
+		private PathnameDirectoryLevelType directoryLevelType;
+
+		/**
+		 * Public constructor.
+		 *
+		 * @param directoryLevel the directory level value
+		 */
+		public PathnameDirectoryLevel(final String directoryLevel) {
+			if (StringUtils.isEmpty(directoryLevel)) {
+				throw new FileErrorException("Directory level value cannot be null or empty.");
+			}
+
+			this.directoryLevel = directoryLevel;
+			directoryLevelType = null;
+		}
+
+		/**
+		 * Public constructor.
+		 *
+		 * @param directoryLevelType the directory level type (WILD, BACK, or UP)
+		 */
+		public PathnameDirectoryLevel(final PathnameDirectoryLevelType directoryLevelType) {
+			directoryLevel = null;
+			this.directoryLevelType = directoryLevelType;
+		}
+
+		/**
+		 * Getter for pathname directory level value.
+		 *
+		 * @return pathname directory level value
+		 */
+		public String getDirectoryLevel() {
+			return directoryLevel;
+		}
+
+		/**
+		 * Getter for pathname directory level type.
+		 *
+		 * @return pathname directory level type
+		 */
+		public PathnameDirectoryLevelType getDirectoryLevelType() {
+			return directoryLevelType;
+		}
+
+		/**
+		 * Setter for pathname directory level type.
+		 *
+		 * @param directoryLevelType new directoryLevelType value
+		 */
+		public void setDirectoryLevelType(final PathnameDirectoryLevelType directoryLevelType) {
+			this.directoryLevelType = directoryLevelType;
+		}
+
+		@Override
+		public String toString() {
+			return "PathnameDirectoryLevel{"
+					+ "directoryLevel='" + directoryLevel + '\''
+					+ ", directoryLevelType=" + directoryLevelType
 					+ '}';
 		}
 	}
@@ -330,16 +511,37 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 	 * The {@code PathnameDirectoryType} is the enumeration of the type of the 'directory' element of a Lisp 'pathname' type.
 	 */
 	public enum PathnameDirectoryType {
-		ABSOLUTE,
-		RELATIVE
+		ABSOLUTE(":ABSOLUTE"),
+		RELATIVE(":RELATIVE");
+
+		private final String value;
+
+		/**
+		 * Constructor.
+		 *
+		 * @param value value of the directory type
+		 */
+		PathnameDirectoryType(final String value) {
+			this.value = value;
+		}
+
+		/**
+		 * Getter for directory type value.
+		 *
+		 * @return directory type value
+		 */
+		public String getValue() {
+			return value;
+		}
 	}
 
 	/**
-	 * The {@code PathnameDirectoryDirectionType} is the enumeration of the direction type of an individual 'directory'
+	 * The {@code PathnameDirectoryLevelType} is the enumeration of the directory level type of a 'directory' level
 	 * element of a Lisp 'pathname' type.
+	 * NOTE: This implementation does NOT support WildInferiors. Period.
 	 */
-	public enum PathnameDirectoryDirectionType {
-
+	public enum PathnameDirectoryLevelType {
+		WILD(":WILD"),
 		BACK(":BACK"),
 		UP(":UP");
 
@@ -348,16 +550,16 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 		/**
 		 * Constructor.
 		 *
-		 * @param value value of the directory direction type
+		 * @param value value of the directory level type
 		 */
-		PathnameDirectoryDirectionType(final String value) {
+		PathnameDirectoryLevelType(final String value) {
 			this.value = value;
 		}
 
 		/**
-		 * Getter for directory direction type value.
+		 * Getter for directory level type value.
 		 *
-		 * @return directory direction type value
+		 * @return directory level type value
 		 */
 		public String getValue() {
 			return value;
@@ -365,12 +567,20 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * The {@code PathnameHost} is the object representation of the 'name' element of a Lisp 'pathname' type.
+	 * The {@code PathnameName} is the object representation of the 'name' element of a Lisp 'pathname' type.
 	 */
 	public static final class PathnameName {
 
 		private final String name;
 		private final PathnameComponentType componentType;
+
+		/**
+		 * Public constructor.
+		 */
+		public PathnameName() {
+			name = null;
+			componentType = PathnameComponentType.UNSPECIFIC;
+		}
 
 		/**
 		 * Public constructor.
@@ -380,15 +590,23 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 		public PathnameName(final String name) {
 			this.name = name;
 
-			if (name == null) {
+			if (StringUtils.isEmpty(name)) {
 				componentType = PathnameComponentType.NIL;
-			} else if (name.isEmpty()) {
-				componentType = PathnameComponentType.UNSPECIFIC;
 			} else if ("*".equalsIgnoreCase(name)) {
 				componentType = PathnameComponentType.WILD;
 			} else {
 				componentType = null;
 			}
+		}
+
+		/**
+		 * Public constructor.
+		 *
+		 * @param componentType pathname name component type
+		 */
+		public PathnameName(final PathnameComponentType componentType) {
+			name = null;
+			this.componentType = componentType;
 		}
 
 		/**
@@ -419,12 +637,20 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * The {@code PathnameHost} is the object representation of the 'type' element of a Lisp 'pathname' type.
+	 * The {@code PathnameType} is the object representation of the 'type' element of a Lisp 'pathname' type.
 	 */
 	public static final class PathnameType {
 
 		private final String type;
 		private final PathnameComponentType componentType;
+
+		/**
+		 * Public constructor.
+		 */
+		public PathnameType() {
+			type = null;
+			componentType = PathnameComponentType.UNSPECIFIC;
+		}
 
 		/**
 		 * Public constructor.
@@ -434,15 +660,23 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 		public PathnameType(final String type) {
 			this.type = type;
 
-			if (type == null) {
+			if (StringUtils.isEmpty(type)) {
 				componentType = PathnameComponentType.NIL;
-			} else if (type.isEmpty()) {
-				componentType = PathnameComponentType.UNSPECIFIC;
 			} else if ("*".equalsIgnoreCase(type)) {
 				componentType = PathnameComponentType.WILD;
 			} else {
 				componentType = null;
 			}
+		}
+
+		/**
+		 * Public constructor.
+		 *
+		 * @param componentType pathname type component type
+		 */
+		public PathnameType(final PathnameComponentType componentType) {
+			type = null;
+			this.componentType = componentType;
 		}
 
 		/**
@@ -473,12 +707,20 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * The {@code PathnameHost} is the object representation of the 'version' element of a Lisp 'pathname' type.
+	 * The {@code PathnameVersion} is the object representation of the 'version' element of a Lisp 'pathname' type.
 	 */
 	public static final class PathnameVersion {
 
 		private final Integer version;
-		private final PathnameComponentType componentType;
+		private final PathnameVersionComponentType componentType;
+
+		/**
+		 * Public constructor.
+		 */
+		public PathnameVersion() {
+			version = null;
+			componentType = PathnameVersionComponentType.NEWEST;
+		}
 
 		/**
 		 * Public constructor.
@@ -486,13 +728,22 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 		 * @param version the pathname version
 		 */
 		public PathnameVersion(final Integer version) {
-			this.version = version;
-
-			if (version == null) {
-				componentType = PathnameComponentType.NEWEST;
-			} else {
-				componentType = PathnameComponentType.UNSPECIFIC;
+			if ((version == null) || (version < 1)) {
+				throw new FileErrorException("Version value cannot be null or less than 1.");
 			}
+
+			this.version = version;
+			componentType = PathnameVersionComponentType.NEWEST;
+		}
+
+		/**
+		 * Public constructor.
+		 *
+		 * @param componentType pathname version component type
+		 */
+		public PathnameVersion(final PathnameVersionComponentType componentType) {
+			version = null;
+			this.componentType = componentType;
 		}
 
 		/**
@@ -509,7 +760,7 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 		 *
 		 * @return pathname version component type
 		 */
-		public PathnameComponentType getComponentType() {
+		public PathnameVersionComponentType getComponentType() {
 			return componentType;
 		}
 
@@ -523,31 +774,123 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * The {@code PathnameDirectoryType} is the enumeration of the type of the 'directory' element of a Lisp 'pathname' type.
+	 * The {@code PathnameComponentType} is the enumeration of the type of a component element of a Lisp 'pathname' type.
+	 * TODO: support both "wild" singular and plural. right now we only support plural: '*' vs '?'
+	 * TODO: also for UNIX, support character groupings and negation
+	 * NOTE: should 'WILD' things eventually be known as 'GLOB' things???
+	 * http://en.wikipedia.org/wiki/Glob_(programming)
 	 */
 	public enum PathnameComponentType {
-		UNSPECIFIC,
-		WILD,
-		NEWEST,
-		OLDEST,
-		PREVIOUS,
-		INSTALLED,
-		NIL
+		UNSPECIFIC(":UNSPECIFIC"),
+		WILD(":WILD"),
+		NIL("NIL");
+
+		private final String value;
+
+		/**
+		 * Constructor.
+		 *
+		 * @param value value of the component type
+		 */
+		PathnameComponentType(final String value) {
+			this.value = value;
+		}
+
+		/**
+		 * Getter for component type value.
+		 *
+		 * @return component type value
+		 */
+		public String getValue() {
+			return value;
+		}
+	}
+
+	/**
+	 * The {@code PathnameVersionComponentType} is the enumeration of the type of a component element of the version element
+	 * of a Lisp 'pathname' type.
+	 */
+	public enum PathnameVersionComponentType {
+		UNSPECIFIC(":UNSPECIFIC"),
+		WILD(":WILD"),
+		NIL("NIL"),
+		NEWEST(":NEWEST"),
+		OLDEST(":OLDEST");
+
+		private final String value;
+
+		/**
+		 * Constructor.
+		 *
+		 * @param value value of the version component type
+		 */
+		PathnameVersionComponentType(final String value) {
+			this.value = value;
+		}
+
+		/**
+		 * Getter for version component type value.
+		 *
+		 * @return version component type value
+		 */
+		public String getValue() {
+			return value;
+		}
 	}
 
 	/**
 	 * The {@code PathnameCase} is the enumeration of the case types to parse the elements of a Lisp 'pathname' type.
 	 */
-	public enum PathnameCase {
-		COMMON,
-		LOCAL
+	public enum PathnameCaseType {
+		COMMON(":COMMON"),
+		LOCAL(":LOCAL");
+
+		private final String value;
+
+		/**
+		 * Constructor.
+		 *
+		 * @param value value of the case type
+		 */
+		PathnameCaseType(final String value) {
+			this.value = value;
+		}
+
+		/**
+		 * Getter for case type value.
+		 *
+		 * @return case type value
+		 */
+		public String getValue() {
+			return value;
+		}
 	}
 
 	/**
 	 * The {@code PathnameStructType} is the enumeration of the structure type of a Lisp 'pathname' type.
 	 */
 	public enum PathnameStructType {
-		FILE,
-		URI
+		FILE(":FILE"),
+		URI(":URI");
+
+		private final String value;
+
+		/**
+		 * Constructor.
+		 *
+		 * @param value value of the pathname structure type
+		 */
+		PathnameStructType(final String value) {
+			this.value = value;
+		}
+
+		/**
+		 * Getter for pathname structure type value.
+		 *
+		 * @return pathname structure type value
+		 */
+		public String getValue() {
+			return value;
+		}
 	}
 }

@@ -39,7 +39,24 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 	 */
 	protected PathnameStruct(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
 							 final PathnameName name, final PathnameType type, final PathnameVersion version) {
-		super(Pathname.INSTANCE, null, null);
+		this(Pathname.INSTANCE, host, device, directory, name, type, version);
+	}
+
+	/**
+	 * Protected constructor.
+	 *
+	 * @param pathnameType the pathname structure type
+	 * @param host         the pathname host
+	 * @param device       the pathname device
+	 * @param directory    the pathname directory
+	 * @param name         the pathname name
+	 * @param type         the pathname type
+	 * @param version      the pathname version
+	 */
+	protected PathnameStruct(final Pathname pathnameType,
+							 final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
+							 final PathnameName name, final PathnameType type, final PathnameVersion version) {
+		super(pathnameType, null, null);
 		this.host = host;
 		this.device = device;
 		this.directory = directory;

@@ -1,5 +1,8 @@
 package jcl.reader.syntax;
 
+/**
+ * The {@code CharacterConstants} interface defines the standard character constants for the system.
+ */
 public interface CharacterConstants {
 
 	Character NULL = 0;

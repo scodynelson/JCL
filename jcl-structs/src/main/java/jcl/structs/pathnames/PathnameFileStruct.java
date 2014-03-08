@@ -151,7 +151,7 @@ public class PathnameFileStruct extends PathnameStruct {
 		final List<PathnameDirectoryLevel> directoryLevels = new ArrayList<>(directoryStrings.size());
 
 		for (final String directoryString : directoryStrings) {
-			final PathnameDirectoryLevel directoryLevel = new PathnameDirectoryLevel(directoryPath);
+			final PathnameDirectoryLevel directoryLevel = new PathnameDirectoryLevel(directoryString);
 
 			currentPathBuilder.append(File.separator);
 			currentPathBuilder.append(directoryString);

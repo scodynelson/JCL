@@ -2,7 +2,7 @@
 <suite name="jcl-types suite">
 	<test name="TyeUtilsTest">
 		<classes>
-			<class name="jcl.types.util.TypeUtilsTest"/>
+			<class name="jcl.types.TypeUtilsTest"/>
 		</classes>
 	</test>
 </suite>

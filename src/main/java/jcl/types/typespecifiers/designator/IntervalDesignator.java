@@ -1,7 +1,8 @@
 package jcl.types.typespecifiers.designator;
 
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
-import jcl.types.util.TypeUtils;
+import jcl.types.TypeUtils;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * This class represents an interval designator, found within compound type specifiers.
@@ -29,10 +30,20 @@ public class IntervalDesignator<N extends Number> implements CompoundTypeSpecifi
 		this.upperBound = upperBound;
 	}
 
+	/**
+	 * Getter for the lower bound value.
+	 *
+	 * @return the lower bound value
+	 */
 	public N getLowerBound() {
 		return lowerBound;
 	}
 
+	/**
+	 * Getter for the upper bound value.
+	 *
+	 * @return the upper bound value
+	 */
 	public N getUpperBound() {
 		return upperBound;
 	}
@@ -54,9 +65,10 @@ public class IntervalDesignator<N extends Number> implements CompoundTypeSpecifi
 
 	@Override
 	public int hashCode() {
-		int result = (lowerBound != null) ? lowerBound.hashCode() : 0;
-		result = 31 * result + ((upperBound != null) ? upperBound.hashCode() : 0);
-		return result;
+		return new HashCodeBuilder()
+				.append(lowerBound)
+				.append(upperBound)
+				.toHashCode();
 	}
 
 	/**

@@ -2,7 +2,7 @@ package jcl.structs.numbers;
 
 import jcl.structs.LispStruct;
 import jcl.structs.classes.BuiltInClassStruct;
-import jcl.types.numbers.Number;
+import jcl.types.Number;
 
 import java.util.List;
 

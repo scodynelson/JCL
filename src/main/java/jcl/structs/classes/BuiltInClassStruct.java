@@ -2,7 +2,7 @@ package jcl.structs.classes;
 
 import jcl.structs.LispStruct;
 import jcl.types.LispType;
-import jcl.types.classes.BuiltInClass;
+import jcl.types.BuiltInClass;
 
 import java.util.List;
 

@@ -2,7 +2,7 @@ package jcl.structs.classes;
 
 import jcl.structs.LispStruct;
 import jcl.types.LispType;
-import jcl.types.classes.Method;
+import jcl.types.Method;
 
 /**
  * The {@code MethodStruct} is the object representation of a Lisp 'method' type.

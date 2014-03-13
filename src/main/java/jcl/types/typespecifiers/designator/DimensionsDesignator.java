@@ -2,6 +2,7 @@ package jcl.types.typespecifiers.designator;
 
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,6 +33,11 @@ public class DimensionsDesignator implements CompoundTypeSpecifier {
 		this.dimensions = dimensions;
 	}
 
+	/**
+	 * Getter for the dimensions value.
+	 *
+	 * @return the dimensions value
+	 */
 	public List<Integer> getDimensions() {
 		return dimensions;
 	}
@@ -54,7 +60,9 @@ public class DimensionsDesignator implements CompoundTypeSpecifier {
 
 	@Override
 	public int hashCode() {
-		return (dimensions != null) ? dimensions.hashCode() : 0;
+		return new HashCodeBuilder()
+				.append(dimensions)
+				.toHashCode();
 	}
 
 	/**

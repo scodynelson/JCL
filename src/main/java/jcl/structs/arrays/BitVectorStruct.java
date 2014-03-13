@@ -2,9 +2,9 @@ package jcl.structs.arrays;
 
 import jcl.structs.conditions.exceptions.TypeErrorException;
 import jcl.structs.numbers.IntegerStruct;
-import jcl.types.arrays.BitVector;
-import jcl.types.arrays.SimpleBitVector;
-import jcl.types.numbers.Bit;
+import jcl.types.BitVector;
+import jcl.types.SimpleBitVector;
+import jcl.types.Bit;
 
 import java.math.BigInteger;
 import java.util.ArrayList;

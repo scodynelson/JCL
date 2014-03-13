@@ -2,7 +2,7 @@ package jcl.structs.classes;
 
 import jcl.structs.LispStruct;
 import jcl.types.LispType;
-import jcl.types.classes.StandardObject;
+import jcl.types.StandardObject;
 
 /**
  * The {@code StandardObjectStruct} is the object representation of a Lisp 'standard-object' type.

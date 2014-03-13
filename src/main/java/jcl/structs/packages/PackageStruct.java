@@ -3,7 +3,7 @@ package jcl.structs.packages;
 import jcl.structs.classes.BuiltInClassStruct;
 import jcl.structs.conditions.exceptions.PackageErrorException;
 import jcl.structs.symbols.SymbolStruct;
-import jcl.types.packages.Package;
+import jcl.types.Package;
 
 import java.util.ArrayList;
 import java.util.Arrays;

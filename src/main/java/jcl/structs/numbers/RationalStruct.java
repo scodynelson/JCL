@@ -1,7 +1,7 @@
 package jcl.structs.numbers;
 
 import jcl.structs.LispStruct;
-import jcl.types.numbers.Rational;
+import jcl.types.Rational;
 
 import java.util.List;
 

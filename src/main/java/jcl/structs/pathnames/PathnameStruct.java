@@ -3,7 +3,7 @@ package jcl.structs.pathnames;
 import jcl.structs.classes.BuiltInClassStruct;
 import jcl.structs.conditions.exceptions.FileErrorException;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
-import jcl.types.pathnames.Pathname;
+import jcl.types.Pathname;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

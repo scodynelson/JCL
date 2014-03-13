@@ -1,7 +1,7 @@
 package jcl.structs.numbers;
 
 import jcl.structs.LispStruct;
-import jcl.types.numbers.Real;
+import jcl.types.Real;
 
 import java.util.List;
 

@@ -2,7 +2,7 @@ package jcl.structs.functions;
 
 import jcl.structs.LispStruct;
 import jcl.types.LispType;
-import jcl.types.functions.Function;
+import jcl.types.Function;
 
 public class FunctionStruct implements LispStruct {
 

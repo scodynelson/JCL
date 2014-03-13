@@ -1,6 +1,6 @@
 package jcl.structs.numbers;
 
-import jcl.types.numbers.Integer;
+import jcl.types.Integer;
 
 import java.math.BigInteger;
 

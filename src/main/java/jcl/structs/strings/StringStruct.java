@@ -2,12 +2,12 @@ package jcl.structs.strings;
 
 import jcl.structs.arrays.VectorStruct;
 import jcl.structs.characters.CharacterStruct;
-import jcl.types.characters.BaseChar;
-import jcl.types.characters.Character;
-import jcl.types.strings.BaseString;
-import jcl.types.strings.SimpleBaseString;
-import jcl.types.strings.SimpleString;
-import jcl.types.strings.String;
+import jcl.types.BaseChar;
+import jcl.types.Character;
+import jcl.types.BaseString;
+import jcl.types.SimpleBaseString;
+import jcl.types.SimpleString;
+import jcl.types.String;
 
 import java.util.ArrayList;
 import java.util.List;

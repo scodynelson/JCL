@@ -1,7 +1,7 @@
 package jcl.structs.conses;
 
 import jcl.structs.LispStruct;
-import jcl.types.conses.Cons;
+import jcl.types.Cons;
 
 import java.util.ArrayList;
 import java.util.HashSet;

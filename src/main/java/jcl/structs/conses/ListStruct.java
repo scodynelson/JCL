@@ -3,7 +3,7 @@ package jcl.structs.conses;
 import jcl.structs.LispStruct;
 import jcl.structs.classes.BuiltInClassStruct;
 import jcl.structs.sequences.SequenceStruct;
-import jcl.types.conses.List;
+import jcl.types.List;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Arrays;

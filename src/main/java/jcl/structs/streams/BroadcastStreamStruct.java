@@ -3,7 +3,7 @@ package jcl.structs.streams;
 import jcl.structs.conditions.exceptions.StreamErrorException;
 import jcl.types.LispType;
 import jcl.types.T;
-import jcl.types.streams.BroadcastStream;
+import jcl.types.BroadcastStream;
 
 import java.util.LinkedList;
 

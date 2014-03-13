@@ -5,7 +5,7 @@ import jcl.structs.classes.BuiltInClassStruct;
 import jcl.structs.functions.EquatorFunctionStruct;
 import jcl.structs.functions.FunctionStruct;
 import jcl.types.LispType;
-import jcl.types.hashtables.HashTable;
+import jcl.types.HashTable;
 import org.apache.commons.collections4.Equator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 

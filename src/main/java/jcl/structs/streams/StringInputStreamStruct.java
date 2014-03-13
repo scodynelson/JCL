@@ -3,8 +3,8 @@ package jcl.structs.streams;
 import jcl.structs.LispStruct;
 import jcl.structs.conditions.exceptions.EndOfFileException;
 import jcl.structs.conditions.exceptions.StreamErrorException;
-import jcl.types.characters.BaseChar;
-import jcl.types.streams.StringStream;
+import jcl.types.BaseChar;
+import jcl.types.StringStream;
 
 /**
  * The {@code StringInputStreamStruct} is the object representation of a Lisp 'string-stream' input type.

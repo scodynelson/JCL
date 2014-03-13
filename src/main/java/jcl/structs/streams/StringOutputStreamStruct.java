@@ -1,8 +1,8 @@
 package jcl.structs.streams;
 
 import jcl.structs.conditions.exceptions.StreamErrorException;
-import jcl.types.characters.BaseChar;
-import jcl.types.streams.StringStream;
+import jcl.types.BaseChar;
+import jcl.types.StringStream;
 
 /**
  * The {@code StringOutputStreamStruct} is the object representation of a Lisp 'string-stream' output type.

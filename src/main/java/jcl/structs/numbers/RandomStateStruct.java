@@ -1,7 +1,7 @@
 package jcl.structs.numbers;
 
 import jcl.structs.classes.BuiltInClassStruct;
-import jcl.types.numbers.RandomState;
+import jcl.types.RandomState;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

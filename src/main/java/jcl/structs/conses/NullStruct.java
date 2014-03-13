@@ -2,7 +2,7 @@ package jcl.structs.conses;
 
 import jcl.structs.LispStruct;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
-import jcl.types.conses.Null;
+import jcl.types.Null;
 
 import java.util.Collections;
 import java.util.List;

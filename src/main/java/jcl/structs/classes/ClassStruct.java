@@ -19,7 +19,7 @@ public class ClassStruct extends StandardObjectStruct {
 	 * Public constructor.
 	 */
 	public ClassStruct() {
-		type = jcl.types.classes.Class.INSTANCE;
+		type = jcl.types.Class.INSTANCE;
 		directSuperClasses = null;
 		subClasses = null;
 	}

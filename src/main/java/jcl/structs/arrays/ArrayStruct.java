@@ -6,8 +6,8 @@ import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.structs.conditions.exceptions.TypeErrorException;
 import jcl.types.LispType;
 import jcl.types.T;
-import jcl.types.arrays.Array;
-import jcl.types.arrays.SimpleArray;
+import jcl.types.Array;
+import jcl.types.SimpleArray;
 
 import java.util.ArrayList;
 import java.util.List;

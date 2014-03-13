@@ -1,7 +1,7 @@
 package jcl.types.typespecifiers.compound;
 
-import jcl.types.lambdalist.variable.Optional;
-import jcl.types.lambdalist.variable.Rest;
+import jcl.lambdalist.variable.Optional;
+import jcl.lambdalist.variable.Rest;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import jcl.types.typespecifiers.TypeSpecifier;
 import org.apache.commons.lang3.ObjectUtils;

@@ -1,7 +1,7 @@
 package jcl.structs.numbers;
 
-import jcl.types.numbers.Float;
-import jcl.types.numbers.SingleFloat;
+import jcl.types.Float;
+import jcl.types.SingleFloat;
 
 import java.math.BigDecimal;
 

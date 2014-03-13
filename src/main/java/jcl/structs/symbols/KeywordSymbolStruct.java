@@ -1,7 +1,7 @@
 package jcl.structs.symbols;
 
 import jcl.structs.packages.GlobalPackageStruct;
-import jcl.types.symbols.Keyword;
+import jcl.types.Keyword;
 
 /**
  * The {@code KeywordSymbolStruct} is the object representation of a Lisp 'keyword' type.

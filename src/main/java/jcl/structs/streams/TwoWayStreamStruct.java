@@ -3,7 +3,7 @@ package jcl.structs.streams;
 import jcl.structs.LispStruct;
 import jcl.structs.conditions.exceptions.StreamErrorException;
 import jcl.types.LispType;
-import jcl.types.streams.TwoWayStream;
+import jcl.types.TwoWayStream;
 import jcl.types.typespecifiers.compound.AndTypeSpecifier;
 
 /**

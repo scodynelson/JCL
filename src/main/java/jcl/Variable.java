@@ -32,8 +32,8 @@ import jcl.structs.packages.PackageStruct;
 import jcl.structs.readtables.DispatchTable;
 import jcl.structs.readtables.ReadtableStruct;
 import jcl.structs.symbols.SymbolStruct;
-import jcl.types.numbers.Float;
-import jcl.types.numbers.SingleFloat;
+import jcl.types.Float;
+import jcl.types.SingleFloat;
 
 import java.util.ArrayList;
 import java.util.List;

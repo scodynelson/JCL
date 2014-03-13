@@ -1,10 +1,10 @@
 package jcl.structs.characters;
 
 import jcl.structs.classes.BuiltInClassStruct;
-import jcl.types.characters.BaseChar;
-import jcl.types.characters.Character;
-import jcl.types.characters.ExtendedChar;
-import jcl.types.characters.StandardChar;
+import jcl.types.BaseChar;
+import jcl.types.Character;
+import jcl.types.ExtendedChar;
+import jcl.types.StandardChar;
 import org.apache.commons.lang3.CharUtils;
 
 /**

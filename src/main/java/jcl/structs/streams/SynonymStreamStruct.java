@@ -4,7 +4,7 @@ import jcl.structs.LispStruct;
 import jcl.structs.conditions.exceptions.StreamErrorException;
 import jcl.structs.symbols.SymbolStruct;
 import jcl.types.LispType;
-import jcl.types.streams.SynonymStream;
+import jcl.types.SynonymStream;
 
 /**
  * The {@code SynonymStreamStruct} is the object representation of a Lisp 'synonym-stream' type.

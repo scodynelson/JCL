@@ -4,7 +4,7 @@ import jcl.structs.LispStruct;
 import jcl.structs.classes.BuiltInClassStruct;
 import jcl.structs.functions.FunctionStruct;
 import jcl.structs.packages.PackageStruct;
-import jcl.types.symbols.Symbol;
+import jcl.types.Symbol;
 
 import java.util.ArrayList;
 import java.util.List;

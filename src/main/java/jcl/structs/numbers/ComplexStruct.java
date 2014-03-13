@@ -1,6 +1,6 @@
 package jcl.structs.numbers;
 
-import jcl.types.numbers.Complex;
+import jcl.types.Complex;
 import org.apache.commons.math3.fraction.BigFraction;
 
 import java.math.BigDecimal;

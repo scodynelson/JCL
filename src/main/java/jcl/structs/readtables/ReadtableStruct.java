@@ -6,7 +6,7 @@ import jcl.reader.syntax.CaseSpec;
 import jcl.reader.syntax.SyntaxType;
 import jcl.structs.LispStruct;
 import jcl.types.LispType;
-import jcl.types.readtables.Readtable;
+import jcl.types.Readtable;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

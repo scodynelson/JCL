@@ -3,7 +3,7 @@ package jcl.structs.streams;
 import jcl.structs.LispStruct;
 import jcl.structs.conditions.exceptions.EndOfFileException;
 import jcl.structs.conditions.exceptions.StreamErrorException;
-import jcl.types.characters.Character;
+import jcl.types.Character;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,6 +1,6 @@
 package jcl.structs.numbers;
 
-import jcl.types.numbers.Ratio;
+import jcl.types.Ratio;
 import org.apache.commons.math3.fraction.BigFraction;
 
 import java.math.BigInteger;

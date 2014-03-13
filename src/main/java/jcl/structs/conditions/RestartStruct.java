@@ -2,7 +2,7 @@ package jcl.structs.conditions;
 
 import jcl.structs.LispStruct;
 import jcl.types.LispType;
-import jcl.types.conditions.Restart;
+import jcl.types.Restart;
 
 public class RestartStruct implements LispStruct {
 

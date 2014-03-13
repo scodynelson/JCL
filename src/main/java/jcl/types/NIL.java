@@ -1,6 +1,5 @@
 package jcl.types;
 
-import jcl.types.conses.Null;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 

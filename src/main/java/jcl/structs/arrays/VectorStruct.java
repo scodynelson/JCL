@@ -7,8 +7,8 @@ import jcl.structs.conditions.exceptions.TypeErrorException;
 import jcl.structs.sequences.SequenceStruct;
 import jcl.types.LispType;
 import jcl.types.T;
-import jcl.types.arrays.SimpleVector;
-import jcl.types.arrays.Vector;
+import jcl.types.SimpleVector;
+import jcl.types.Vector;
 
 import java.util.Collections;
 import java.util.List;

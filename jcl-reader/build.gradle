@@ -1,5 +1,0 @@
-description = 'JCL-Reader'
-
-dependencies {
-	compile project(':jcl-structs')
-}

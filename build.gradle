@@ -1,9 +1,6 @@
 description = 'JCL'
-
-allprojects {
-	group = 'jcl'
-	version = '1.0-SNAPSHOT'
-}
+group = 'jcl'
+version = '1.0-SNAPSHOT'
 
 apply plugin: 'sonar-runner'
 sonarRunner {
@@ -13,62 +10,67 @@ sonarRunner {
 		setProperty 'sonar.jdbc.username', "sonar"
 		setProperty 'sonar.jdbc.password', "sonar"
 		setProperty 'sonar.jacoco.reportPath', "${project.buildDir}/jacoco/test.exec"
-		setProperty 'sonar.exclusions', "java/util/*"
 	}
 }
 
-subprojects {
-	apply plugin: 'java'
-	sourceCompatibility = 1.7
-	targetCompatibility = 1.7
+apply plugin: 'java'
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
 
-	repositories {
-		mavenLocal()
-		mavenCentral()
-	}
+repositories {
+	mavenLocal()
+	mavenCentral()
+}
 
-	String COMMONS_LANG_VERSION = '3.1';
-	String COMMONS_MATH_VERSION = '3.2';
-	String COMMONS_COLLECTIONS_VERSION = '4.0';
-	String COMMONS_IO_VERSION = '2.4';
-	String SLF4J_VERSION = '1.7.5';
-	String LOGBACK_VERSION = '1.0.13';
-	String TESTNG_VERSION = '6.8.7';
+String COMMONS_LANG_VERSION = '3.1';
+String COMMONS_MATH_VERSION = '3.2';
+String COMMONS_COLLECTIONS_VERSION = '4.0';
+String COMMONS_IO_VERSION = '2.4';
+String SLF4J_VERSION = '1.7.5';
+String LOGBACK_VERSION = '1.0.13';
 
-	dependencies {
-		compile group: 'org.apache.commons', name: 'commons-lang3', version: "$COMMONS_LANG_VERSION"
-		compile group: 'org.apache.commons', name: 'commons-math3', version: "$COMMONS_MATH_VERSION"
-		compile group: 'org.apache.commons', name: 'commons-collections4', version: "$COMMONS_COLLECTIONS_VERSION"
-		compile group: 'commons-io', name: 'commons-io', version: "$COMMONS_IO_VERSION"
+String TESTNG_VERSION = '6.8.7';
 
-		compile group: 'org.slf4j', name: 'slf4j-api', version: "$SLF4J_VERSION"
-		compile group: 'ch.qos.logback', name: 'logback-core', version: "$LOGBACK_VERSION"
-		compile group: 'ch.qos.logback', name: 'logback-classic', version: "$LOGBACK_VERSION"
+String GROOVY_VERSION = '2.1.9';
 
-		testCompile group: 'org.testng', name: 'testng', version: "$TESTNG_VERSION"
-	}
+dependencies {
+	compile group: 'org.apache.commons', name: 'commons-lang3', version: "$COMMONS_LANG_VERSION"
+	compile group: 'org.apache.commons', name: 'commons-math3', version: "$COMMONS_MATH_VERSION"
+	compile group: 'org.apache.commons', name: 'commons-collections4', version: "$COMMONS_COLLECTIONS_VERSION"
+	compile group: 'commons-io', name: 'commons-io', version: "$COMMONS_IO_VERSION"
 
-	apply plugin: 'jacoco'
+	compile group: 'org.slf4j', name: 'slf4j-api', version: "$SLF4J_VERSION"
+	compile group: 'ch.qos.logback', name: 'logback-core', version: "$LOGBACK_VERSION"
+	compile group: 'ch.qos.logback', name: 'logback-classic', version: "$LOGBACK_VERSION"
+
+	testCompile group: 'org.testng', name: 'testng', version: "$TESTNG_VERSION"
+
+	runtime group: 'org.codehaus.groovy', name: 'groovy', version: "$GROOVY_VERSION"
+}
+
+apply plugin: 'application'
+mainClassName = "jcl.JCL"
+
+apply plugin: 'jacoco'
+jacoco {
+	toolVersion = '0.6.4.201312101107'
+}
+test {
+	useTestNG()
+
 	jacoco {
-		toolVersion = '0.6.4.201312101107'
+		append = true
+		destinationFile = file("${project.buildDir}/jacoco/jacocoTest.exec")
+		classDumpFile = file("${project.buildDir}/jacoco/classpathdumps")
 	}
-	test {
-		useTestNG()
-
-		jacoco {
-			append = true
-			destinationFile = file("${project.buildDir}/jacoco/jacocoTest.exec")
-			classDumpFile = file("${project.buildDir}/jacoco/classpathdumps")
-		}
-	}
-	jacocoTestReport {
-		group = "Reporting"
-		description = "Generate Jacoco coverage reports after running tests."
-		additionalSourceDirs = files(sourceSets.main.allJava.srcDirs)
-		reports {
-			xml.enabled false
-			csv.enabled false
-			html.destination "${project.buildDir}/jacocoHtml"
-		}
+}
+jacocoTestReport {
+	group = "Reporting"
+	description = "Generate Jacoco coverage reports after running tests."
+	additionalSourceDirs = files(sourceSets.main.allJava.srcDirs)
+	reports {
+		xml.enabled false
+		csv.enabled false
+		html.destination "${project.buildDir}/jacocoHtml"
 	}
 }

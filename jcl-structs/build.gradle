@@ -1,5 +1,0 @@
-description = 'JCL-Structs'
-
-dependencies {
-	compile project(':jcl-types')
-}

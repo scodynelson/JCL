@@ -1,5 +1,8 @@
 package jcl.structs.packages;
 
+import jcl.structs.KeywordPackageStruct;
+import jcl.structs.PackageStruct;
+
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

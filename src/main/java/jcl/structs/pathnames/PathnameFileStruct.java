@@ -1,5 +1,6 @@
 package jcl.structs.pathnames;
 
+import jcl.structs.PathnameStruct;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 

@@ -8,7 +8,7 @@ import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.structs.conditions.exceptions.TypeErrorException;
 import jcl.structs.streams.ReadResult;
-import jcl.structs.strings.StringStruct;
+import jcl.structs.StringStruct;
 import jcl.Variable;
 
 /**

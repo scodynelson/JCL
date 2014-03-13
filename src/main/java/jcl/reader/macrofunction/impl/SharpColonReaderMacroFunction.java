@@ -6,7 +6,7 @@ import jcl.reader.macrofunction.ReaderMacroFunction;
 import jcl.reader.syntax.CharacterConstants;
 import jcl.structs.LispStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
-import jcl.structs.symbols.SymbolStruct;
+import jcl.structs.SymbolStruct;
 import jcl.Variable;
 
 /**

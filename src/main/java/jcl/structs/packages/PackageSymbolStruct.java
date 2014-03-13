@@ -1,7 +1,7 @@
 package jcl.structs.packages;
 
-import jcl.structs.symbols.KeywordSymbolStruct;
-import jcl.structs.symbols.SymbolStruct;
+import jcl.structs.KeywordSymbolStruct;
+import jcl.structs.SymbolStruct;
 
 /**
  * Internal class for returning a SymbolStruct and it's current package symbol type as a KeywordSymbolStruct.
@@ -21,7 +21,7 @@ public class PackageSymbolStruct {
 	 * @param symbolStruct      the symbol result
 	 * @param packageSymbolType the symbol package location
 	 */
-	PackageSymbolStruct(final SymbolStruct<?> symbolStruct, final KeywordSymbolStruct packageSymbolType) {
+	public PackageSymbolStruct(final SymbolStruct<?> symbolStruct, final KeywordSymbolStruct packageSymbolType) {
 		this.symbolStruct = symbolStruct;
 		this.packageSymbolType = packageSymbolType;
 	}

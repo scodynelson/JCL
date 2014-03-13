@@ -5,8 +5,8 @@ import jcl.reader.state.impl.EndState;
 import jcl.structs.LispStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.StreamErrorException;
-import jcl.structs.readtables.ReadtableStruct;
-import jcl.structs.streams.InputStream;
+import jcl.structs.ReadtableStruct;
+import jcl.structs.InputStream;
 import jcl.structs.streams.ReadResult;
 import jcl.Variable;
 

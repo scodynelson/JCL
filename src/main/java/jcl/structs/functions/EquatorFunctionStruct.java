@@ -1,5 +1,6 @@
 package jcl.structs.functions;
 
+import jcl.structs.FunctionStruct;
 import org.apache.commons.collections4.Equator;
 
 public class EquatorFunctionStruct<T> extends FunctionStruct implements Equator<T> {

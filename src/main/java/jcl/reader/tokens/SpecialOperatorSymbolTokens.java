@@ -1,6 +1,6 @@
 package jcl.reader.tokens;
 
-import jcl.structs.symbols.SymbolStruct;
+import jcl.structs.SymbolStruct;
 
 public interface SpecialOperatorSymbolTokens {
 

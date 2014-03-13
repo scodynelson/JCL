@@ -5,11 +5,11 @@ import jcl.reader.macrofunction.ReaderMacroFunction;
 import jcl.reader.syntax.CharacterConstants;
 import jcl.structs.LispStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
-import jcl.structs.conses.ListStruct;
-import jcl.structs.numbers.ComplexStruct;
-import jcl.structs.numbers.FloatStruct;
-import jcl.structs.numbers.IntegerStruct;
-import jcl.structs.numbers.RatioStruct;
+import jcl.structs.ListStruct;
+import jcl.structs.ComplexStruct;
+import jcl.structs.FloatStruct;
+import jcl.structs.IntegerStruct;
+import jcl.structs.RatioStruct;
 import jcl.Variable;
 
 import java.util.List;

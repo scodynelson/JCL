@@ -6,8 +6,8 @@ import jcl.reader.syntax.CharacterConstants;
 import jcl.reader.tokens.SpecialOperatorSymbolTokens;
 import jcl.structs.LispStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
-import jcl.structs.conses.ListStruct;
-import jcl.structs.symbols.SymbolStruct;
+import jcl.structs.ListStruct;
+import jcl.structs.SymbolStruct;
 import jcl.Variable;
 
 /**

@@ -4,11 +4,11 @@ import jcl.reader.macrofunction.MacroFunctionReader;
 import jcl.reader.macrofunction.ReaderMacroFunction;
 import jcl.reader.syntax.CharacterConstants;
 import jcl.structs.LispStruct;
-import jcl.structs.arrays.ArrayStruct;
+import jcl.structs.ArrayStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.structs.conditions.exceptions.TypeErrorException;
-import jcl.structs.conses.ListStruct;
+import jcl.structs.ListStruct;
 import jcl.Variable;
 
 import java.util.ArrayList;

@@ -7,10 +7,10 @@ import jcl.reader.state.TokenAttribute;
 import jcl.reader.state.impl.util.StateUtils;
 import jcl.reader.syntax.AttributeType;
 import jcl.structs.packages.GlobalPackageStruct;
-import jcl.structs.packages.PackageStruct;
+import jcl.structs.PackageStruct;
 import jcl.structs.packages.PackageSymbolStruct;
-import jcl.structs.symbols.KeywordSymbolStruct;
-import jcl.structs.symbols.SymbolStruct;
+import jcl.structs.KeywordSymbolStruct;
+import jcl.structs.SymbolStruct;
 import jcl.Variable;
 import org.apache.commons.lang3.StringUtils;
 

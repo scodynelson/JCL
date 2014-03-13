@@ -4,10 +4,9 @@ import jcl.reader.LispReader;
 import jcl.structs.LispStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.StreamErrorException;
-import jcl.structs.streams.CharacterStreamStruct;
-import jcl.structs.streams.FileStreamStruct;
-import jcl.structs.streams.InputStream;
-import jcl.Variable;
+import jcl.structs.CharacterStreamStruct;
+import jcl.structs.FileStreamStruct;
+import jcl.structs.InputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

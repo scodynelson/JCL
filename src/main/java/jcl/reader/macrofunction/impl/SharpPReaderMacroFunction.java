@@ -5,8 +5,8 @@ import jcl.reader.macrofunction.ReaderMacroFunction;
 import jcl.reader.syntax.CharacterConstants;
 import jcl.structs.LispStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
-import jcl.structs.pathnames.PathnameStruct;
-import jcl.structs.strings.StringStruct;
+import jcl.structs.PathnameStruct;
+import jcl.structs.StringStruct;
 import jcl.Variable;
 
 import java.net.URISyntaxException;

@@ -28,10 +28,10 @@ import jcl.reader.macrofunction.impl.SharpVerticalBarReaderMacroFunction;
 import jcl.reader.macrofunction.impl.SharpXReaderMacroFunction;
 import jcl.reader.syntax.CharacterConstants;
 import jcl.structs.packages.GlobalPackageStruct;
-import jcl.structs.packages.PackageStruct;
+import jcl.structs.PackageStruct;
 import jcl.structs.readtables.DispatchTable;
-import jcl.structs.readtables.ReadtableStruct;
-import jcl.structs.symbols.SymbolStruct;
+import jcl.structs.ReadtableStruct;
+import jcl.structs.SymbolStruct;
 import jcl.types.Float;
 import jcl.types.SingleFloat;
 

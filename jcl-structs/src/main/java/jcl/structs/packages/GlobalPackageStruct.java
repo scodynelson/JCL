@@ -1,5 +1,6 @@
 package jcl.structs.packages;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -10,8 +11,9 @@ public interface GlobalPackageStruct {
 
 	Map<String, PackageStruct> ALL_PACKAGES = new ConcurrentHashMap<>();
 
-	PackageStruct COMMON_LISP = new PackageStruct("COMMON-LISP");
+	// TODO: Eventually, we must make sure we account for lexical contraints for the CL and Keyword packages defined in the specification.
+	PackageStruct COMMON_LISP = new PackageStruct("COMMON-LISP", Collections.singletonList("CL"));
 	PackageStruct SYSTEM = new PackageStruct("SYSTEM");
-	PackageStruct COMMON_LISP_USER = new PackageStruct("COMMON-LISP-USER");
+	PackageStruct COMMON_LISP_USER = new PackageStruct("COMMON-LISP-USER", Collections.singletonList("CL-USER"));
 	PackageStruct KEYWORD = KeywordPackageStruct.INSTANCE;
 }

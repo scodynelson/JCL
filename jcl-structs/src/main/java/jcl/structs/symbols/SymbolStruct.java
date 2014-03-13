@@ -6,8 +6,8 @@ import jcl.structs.functions.FunctionStruct;
 import jcl.structs.packages.PackageStruct;
 import jcl.types.symbols.Symbol;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The {@code SymbolStruct} is the object representation of a Lisp 'symbol' type.
@@ -22,7 +22,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	protected TYPE value;
 	protected FunctionStruct function;
 
-	protected final Map<LispStruct, LispStruct> properties = new ConcurrentHashMap<>();
+	protected final List<LispStruct> properties = new ArrayList<>();
 
 	/**
 	 * Public constructor.
@@ -158,13 +158,29 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	}
 
 	/**
+	 * Getter for symbol properties property.
+	 *
+	 * @return symbol properties property
+	 */
+	public List<LispStruct> getProperties() {
+		return properties;
+	}
+
+	/**
 	 * This method retrieves a property from the symbol internal properties.
 	 *
 	 * @param key the key for the property to retrieve
 	 * @return the property from the symbol internal properties.
 	 */
 	public LispStruct getProperty(final LispStruct key) {
-		return properties.get(key);
+		for (int i = 0; i < properties.size(); i += 2) {
+			final LispStruct current = properties.get(i);
+			if (key.equals(current)) {
+				final int valueIndex = i + 1;
+				return properties.get(valueIndex);
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -174,7 +190,14 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 * @param value the value of the property
 	 */
 	public void setProperty(final LispStruct key, final LispStruct value) {
-		properties.put(key, value);
+		for (int i = 0; i < properties.size(); i += 2) {
+			final LispStruct current = properties.get(i);
+			if (key.equals(current)) {
+				final int valueIndex = i + 1;
+				properties.remove(valueIndex);
+				properties.add(valueIndex, value);
+			}
+		}
 	}
 
 	/**
@@ -186,7 +209,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	public SymbolStruct<TYPE> copySymbol(final boolean copyProperties) {
 		if (copyProperties) {
 			final SymbolStruct<TYPE> newSymbol = new SymbolStruct<>(name, symbolPackage, value, function);
-			newSymbol.properties.putAll(properties);
+			newSymbol.properties.addAll(properties);
 			return newSymbol;
 		} else {
 			return new SymbolStruct<>(name);

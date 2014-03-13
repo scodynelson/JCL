@@ -3,10 +3,10 @@ package jcl.types;
 import jcl.lambdalist.variable.Key;
 import jcl.lambdalist.variable.Optional;
 import jcl.lambdalist.variable.Rest;
-import jcl.types.typespecifiers.AtomicTypeSpecifier;
-import jcl.types.typespecifiers.CompoundTypeSpecifier;
-import jcl.types.typespecifiers.TypeSpecifier;
-import jcl.types.typespecifiers.compound.ValuesTypeSpecifier;
+import jcl.typespecifiers.AtomicTypeSpecifier;
+import jcl.typespecifiers.CompoundTypeSpecifier;
+import jcl.typespecifiers.TypeSpecifier;
+import jcl.typespecifiers.compound.ValuesTypeSpecifier;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 

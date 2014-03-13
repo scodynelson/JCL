@@ -5,7 +5,7 @@ import jcl.structs.conditions.exceptions.EndOfFileException;
 import jcl.structs.conditions.exceptions.StreamErrorException;
 import jcl.types.LispType;
 import jcl.types.EchoStream;
-import jcl.types.typespecifiers.compound.AndTypeSpecifier;
+import jcl.typespecifiers.compound.AndTypeSpecifier;
 
 import java.util.LinkedList;
 

@@ -1,4 +1,4 @@
-package jcl.types.typespecifiers;
+package jcl.typespecifiers;
 
 public enum CompoundOnlyTypeSpecifier {
 

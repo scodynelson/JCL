@@ -1,7 +1,7 @@
-package jcl.types.typespecifiers.compound;
+package jcl.typespecifiers.compound;
 
 import jcl.structs.functions.FunctionStruct;
-import jcl.types.typespecifiers.CompoundTypeSpecifier;
+import jcl.typespecifiers.CompoundTypeSpecifier;
 
 public class SatisfiesTypeSpecifier implements CompoundTypeSpecifier {
 

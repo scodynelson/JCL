@@ -1,8 +1,8 @@
 package jcl.types;
 
-import jcl.types.typespecifiers.AtomicTypeSpecifier;
-import jcl.types.typespecifiers.CompoundTypeSpecifier;
-import jcl.types.typespecifiers.designator.DimensionsDesignator;
+import jcl.typespecifiers.AtomicTypeSpecifier;
+import jcl.typespecifiers.CompoundTypeSpecifier;
+import jcl.typespecifiers.designator.DimensionsDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.lang.Integer;

@@ -1,6 +1,6 @@
-package jcl.types.typespecifiers.designator;
+package jcl.typespecifiers.designator;
 
-import jcl.types.typespecifiers.CompoundTypeSpecifier;
+import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.types.TypeUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 

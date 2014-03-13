@@ -1,6 +1,6 @@
 package jcl.types;
 
-import jcl.types.typespecifiers.designator.DimensionsDesignator;
+import jcl.typespecifiers.designator.DimensionsDesignator;
 import org.apache.commons.math3.fraction.BigFraction;
 
 import java.lang.Number;

@@ -1,7 +1,7 @@
-package jcl.types.typespecifiers.compound;
+package jcl.typespecifiers.compound;
 
 import jcl.types.LispType;
-import jcl.types.typespecifiers.CompoundTypeSpecifier;
+import jcl.typespecifiers.CompoundTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.ArrayList;
@@ -9,20 +9,20 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * An {@code OrTypeSpecifier} denotes the set of all objects of the type determined by the union of the typespecs.
- * The type specifiers (or) and nil are equivalent. The symbol or is not valid as a type specifier; and, specifically,
- * it is not an abbreviation for (or).
+ * An {@code AndTypeSpecifier} denotes the set of all objects of the type determined by the intersection of the typespecs.
+ * The type specifiers (and) and t are equivalent. The symbol and is not valid as a type specifier, and, specifically,
+ * it is not an abbreviation for (and).
  */
-public class OrTypeSpecifier implements CompoundTypeSpecifier {
+public class AndTypeSpecifier implements CompoundTypeSpecifier {
 
 	private final List<LispType> types;
 
 	/**
-	 * Constructs a new {@code OrTypeSpecifier} that matches the provided types by 'or' logic.
+	 * Constructs a new {@code AndTypeSpecifier} that matches the provided types by 'and' logic.
 	 *
 	 * @param types an array of {@code LispType}s
 	 */
-	public OrTypeSpecifier(final LispType... types) {
+	public AndTypeSpecifier(final LispType... types) {
 		this.types = new ArrayList<>(Arrays.asList(types));
 	}
 
@@ -38,9 +38,9 @@ public class OrTypeSpecifier implements CompoundTypeSpecifier {
 
 		final LispType lispType = (LispType) obj;
 
-		boolean result = false;
+		boolean result = true;
 		for (final LispType type : types) {
-			result = result || lispType.equals(type);
+			result = result && lispType.equals(type);
 		}
 		return result;
 	}
@@ -54,7 +54,7 @@ public class OrTypeSpecifier implements CompoundTypeSpecifier {
 
 	@Override
 	public String toString() {
-		return "OrTypeSpecifier{"
+		return "AndTypeSpecifier{"
 				+ "types=" + types
 				+ '}';
 	}

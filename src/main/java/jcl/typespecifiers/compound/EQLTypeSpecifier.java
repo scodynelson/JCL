@@ -1,8 +1,8 @@
-package jcl.types.typespecifiers.compound;
+package jcl.typespecifiers.compound;
 
 import jcl.types.LispType;
-import jcl.types.typespecifiers.CompoundTypeSpecifier;
-import jcl.types.typespecifiers.TypeSpecifier;
+import jcl.typespecifiers.CompoundTypeSpecifier;
+import jcl.typespecifiers.TypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class EQLTypeSpecifier implements CompoundTypeSpecifier {

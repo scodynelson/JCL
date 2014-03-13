@@ -1,9 +1,9 @@
-package jcl.types.typespecifiers.compound;
+package jcl.typespecifiers.compound;
 
 import jcl.lambdalist.variable.Optional;
 import jcl.lambdalist.variable.Rest;
-import jcl.types.typespecifiers.CompoundTypeSpecifier;
-import jcl.types.typespecifiers.TypeSpecifier;
+import jcl.typespecifiers.CompoundTypeSpecifier;
+import jcl.typespecifiers.TypeSpecifier;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 

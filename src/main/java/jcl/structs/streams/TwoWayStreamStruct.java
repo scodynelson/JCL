@@ -4,7 +4,7 @@ import jcl.structs.LispStruct;
 import jcl.structs.conditions.exceptions.StreamErrorException;
 import jcl.types.LispType;
 import jcl.types.TwoWayStream;
-import jcl.types.typespecifiers.compound.AndTypeSpecifier;
+import jcl.typespecifiers.compound.AndTypeSpecifier;
 
 /**
  * The {@code TwoWayStreamStruct} is the object representation of a Lisp 'two-way-stream' type.

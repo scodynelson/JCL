@@ -1,6 +1,6 @@
 package jcl.types;
 
-import jcl.types.typespecifiers.AtomicTypeSpecifier;
+import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**

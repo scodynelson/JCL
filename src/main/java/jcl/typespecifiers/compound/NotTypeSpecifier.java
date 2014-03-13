@@ -1,7 +1,7 @@
-package jcl.types.typespecifiers.compound;
+package jcl.typespecifiers.compound;
 
 import jcl.types.LispType;
-import jcl.types.typespecifiers.CompoundTypeSpecifier;
+import jcl.typespecifiers.CompoundTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**

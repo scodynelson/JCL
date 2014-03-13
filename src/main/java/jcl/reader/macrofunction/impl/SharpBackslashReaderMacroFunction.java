@@ -7,7 +7,7 @@ import jcl.reader.syntax.CharacterName;
 import jcl.structs.LispStruct;
 import jcl.structs.CharacterStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
-import jcl.Variable;
+import jcl.structs.symbols.Variable;
 import org.apache.commons.lang3.StringUtils;
 
 /**

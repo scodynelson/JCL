@@ -8,7 +8,7 @@ import jcl.structs.LispStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.ListStruct;
 import jcl.structs.SymbolStruct;
-import jcl.Variable;
+import jcl.structs.symbols.Variable;
 
 /**
  * Implements the '#'' Lisp reader macro.

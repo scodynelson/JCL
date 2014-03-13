@@ -9,7 +9,7 @@ import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.structs.conditions.exceptions.TypeErrorException;
 import jcl.structs.streams.ReadResult;
 import jcl.structs.StringStruct;
-import jcl.Variable;
+import jcl.structs.symbols.Variable;
 
 /**
  * Implements the '"..."' Lisp reader macro.

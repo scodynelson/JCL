@@ -5,7 +5,7 @@ import jcl.reader.macrofunction.ReaderMacroFunction;
 import jcl.reader.syntax.CharacterConstants;
 import jcl.structs.LispStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
-import jcl.Variable;
+import jcl.structs.symbols.Variable;
 
 import java.util.Map;
 import java.util.Random;

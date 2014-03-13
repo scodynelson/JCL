@@ -6,7 +6,7 @@ import jcl.reader.state.StateReader;
 import jcl.reader.state.TokenAttribute;
 import jcl.reader.state.impl.util.StateUtils;
 import jcl.reader.util.ReaderUtils;
-import jcl.Variable;
+import jcl.structs.symbols.Variable;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 

@@ -11,7 +11,7 @@ import jcl.structs.FloatStruct;
 import jcl.structs.IntegerStruct;
 import jcl.structs.NumberStruct;
 import jcl.structs.RatioStruct;
-import jcl.Variable;
+import jcl.structs.symbols.Variable;
 import jcl.types.DoubleFloat;
 import jcl.types.Float;
 import jcl.types.LongFloat;

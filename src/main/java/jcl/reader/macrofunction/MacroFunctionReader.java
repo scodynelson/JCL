@@ -17,7 +17,7 @@ import jcl.structs.PackageStruct;
 import jcl.structs.ReadtableStruct;
 import jcl.structs.streams.ReadResult;
 import jcl.structs.SymbolStruct;
-import jcl.Variable;
+import jcl.structs.symbols.Variable;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

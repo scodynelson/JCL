@@ -8,7 +8,7 @@ import jcl.structs.conditions.exceptions.StreamErrorException;
 import jcl.structs.ReadtableStruct;
 import jcl.structs.InputStream;
 import jcl.structs.streams.ReadResult;
-import jcl.Variable;
+import jcl.structs.symbols.Variable;
 
 public class StateReader extends LispReader {
 

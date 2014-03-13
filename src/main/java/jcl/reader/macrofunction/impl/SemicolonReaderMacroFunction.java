@@ -6,7 +6,7 @@ import jcl.reader.syntax.CharacterConstants;
 import jcl.structs.LispStruct;
 import jcl.structs.comments.CommentStruct;
 import jcl.structs.streams.ReadResult;
-import jcl.Variable;
+import jcl.structs.symbols.Variable;
 
 /**
  * Implements the ';' Lisp reader macro.

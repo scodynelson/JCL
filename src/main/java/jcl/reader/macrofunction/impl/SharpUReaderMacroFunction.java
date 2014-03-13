@@ -5,7 +5,7 @@ import jcl.reader.macrofunction.ReaderMacroFunction;
 import jcl.reader.syntax.CharacterConstants;
 import jcl.structs.LispStruct;
 import jcl.structs.CharacterStruct;
-import jcl.Variable;
+import jcl.structs.symbols.Variable;
 
 /**
  * Implements the '#u' Lisp reader macro.

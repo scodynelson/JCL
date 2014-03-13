@@ -9,7 +9,7 @@ import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.structs.conditions.exceptions.TypeErrorException;
 import jcl.structs.ListStruct;
-import jcl.Variable;
+import jcl.structs.symbols.Variable;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.List;

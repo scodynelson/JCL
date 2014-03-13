@@ -7,6 +7,7 @@ import jcl.structs.conditions.exceptions.StreamErrorException;
 import jcl.structs.CharacterStreamStruct;
 import jcl.structs.FileStreamStruct;
 import jcl.structs.InputStream;
+import jcl.structs.symbols.Variable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

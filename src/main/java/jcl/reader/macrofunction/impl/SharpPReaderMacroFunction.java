@@ -7,7 +7,7 @@ import jcl.structs.LispStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.PathnameStruct;
 import jcl.structs.StringStruct;
-import jcl.Variable;
+import jcl.structs.symbols.Variable;
 
 import java.net.URISyntaxException;
 

@@ -10,7 +10,7 @@ import jcl.structs.ComplexStruct;
 import jcl.structs.FloatStruct;
 import jcl.structs.IntegerStruct;
 import jcl.structs.RatioStruct;
-import jcl.Variable;
+import jcl.structs.symbols.Variable;
 
 import java.util.List;
 

@@ -11,7 +11,7 @@ import jcl.structs.PackageStruct;
 import jcl.structs.packages.PackageSymbolStruct;
 import jcl.structs.KeywordSymbolStruct;
 import jcl.structs.SymbolStruct;
-import jcl.Variable;
+import jcl.structs.symbols.Variable;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.LinkedList;

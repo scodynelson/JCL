@@ -1,6 +1,6 @@
 package jcl.structs;
 
-import jcl.types.LispType;
+import jcl.LispType;
 import jcl.types.StandardMethod;
 
 /**

@@ -1,10 +1,11 @@
 package jcl.structs;
 
+import jcl.LispStruct;
 import jcl.structs.conditions.exceptions.StreamErrorException;
 import jcl.structs.streams.PeekResult;
 import jcl.structs.streams.PeekType;
 import jcl.structs.streams.ReadResult;
-import jcl.types.LispType;
+import jcl.LispType;
 import jcl.types.SynonymStream;
 
 /**

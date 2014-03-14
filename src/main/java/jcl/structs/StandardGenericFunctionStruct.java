@@ -1,5 +1,6 @@
 package jcl.structs;
 
+import jcl.LispStruct;
 import jcl.types.StandardGenericFunction;
 
 import java.util.List;

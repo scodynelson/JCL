@@ -5,7 +5,7 @@ import jcl.reader.macrofunction.ReadExtendedToken;
 import jcl.reader.macrofunction.ReaderMacroFunction;
 import jcl.reader.syntax.CharacterConstants;
 import jcl.structs.BitVectorStruct;
-import jcl.structs.LispStruct;
+import jcl.LispStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.structs.conditions.exceptions.TypeErrorException;

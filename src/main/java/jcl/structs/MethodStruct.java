@@ -1,7 +1,7 @@
 package jcl.structs;
 
-import jcl.structs.LispStruct;
-import jcl.types.LispType;
+import jcl.LispStruct;
+import jcl.LispType;
 import jcl.types.Method;
 
 /**

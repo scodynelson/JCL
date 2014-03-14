@@ -1,5 +1,6 @@
 package jcl.types;
 
+import jcl.LispType;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 

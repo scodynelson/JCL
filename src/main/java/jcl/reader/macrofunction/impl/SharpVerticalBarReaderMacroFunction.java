@@ -3,7 +3,7 @@ package jcl.reader.macrofunction.impl;
 import jcl.reader.macrofunction.MacroFunctionReader;
 import jcl.reader.macrofunction.ReaderMacroFunction;
 import jcl.reader.syntax.CharacterConstants;
-import jcl.structs.LispStruct;
+import jcl.LispStruct;
 import jcl.structs.comments.CommentStruct;
 import jcl.structs.streams.ReadResult;
 import jcl.structs.symbols.Variable;

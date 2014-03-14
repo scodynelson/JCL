@@ -1,6 +1,6 @@
 package jcl.structs;
 
-import jcl.structs.LispStruct;
+import jcl.LispStruct;
 
 /**
  * The {@code SequenceStruct} is the object representation of a Lisp 'sequence' type.

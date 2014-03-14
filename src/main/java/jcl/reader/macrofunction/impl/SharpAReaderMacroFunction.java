@@ -4,7 +4,7 @@ import jcl.reader.macrofunction.MacroFunctionReader;
 import jcl.reader.macrofunction.ReaderMacroFunction;
 import jcl.reader.syntax.CharacterConstants;
 import jcl.structs.ArrayStruct;
-import jcl.structs.LispStruct;
+import jcl.LispStruct;
 import jcl.structs.ListStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.SimpleErrorException;

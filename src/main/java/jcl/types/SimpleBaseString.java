@@ -1,5 +1,6 @@
 package jcl.types;
 
+import jcl.LispType;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.DimensionsDesignator;

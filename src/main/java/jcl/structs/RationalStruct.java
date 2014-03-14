@@ -1,5 +1,6 @@
 package jcl.structs;
 
+import jcl.LispStruct;
 import jcl.types.Rational;
 
 import java.util.List;

@@ -1,5 +1,6 @@
 package jcl.structs;
 
+import jcl.LispStruct;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.types.Null;
 

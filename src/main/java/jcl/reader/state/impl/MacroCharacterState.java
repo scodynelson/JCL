@@ -6,7 +6,7 @@ import jcl.reader.state.ReaderState;
 import jcl.reader.state.State;
 import jcl.reader.state.StateReader;
 import jcl.reader.util.ReaderUtils;
-import jcl.structs.LispStruct;
+import jcl.LispStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.streams.ReadResult;
 import org.slf4j.Logger;

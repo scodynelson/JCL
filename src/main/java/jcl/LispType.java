@@ -1,4 +1,4 @@
-package jcl.types;
+package jcl;
 
 /**
  * This interface is the common parent for all lisp types.

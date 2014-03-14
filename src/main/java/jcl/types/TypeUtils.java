@@ -1,5 +1,6 @@
 package jcl.types;
 
+import jcl.LispType;
 import jcl.typespecifiers.designator.DimensionsDesignator;
 import org.apache.commons.math3.fraction.BigFraction;
 

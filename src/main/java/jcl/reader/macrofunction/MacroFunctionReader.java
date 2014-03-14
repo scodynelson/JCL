@@ -9,7 +9,7 @@ import jcl.reader.syntax.SyntaxType;
 import jcl.reader.util.ReaderUtils;
 import jcl.structs.ConsStruct;
 import jcl.structs.IntegerStruct;
-import jcl.structs.LispStruct;
+import jcl.LispStruct;
 import jcl.structs.ListStruct;
 import jcl.structs.PackageStruct;
 import jcl.structs.SymbolStruct;

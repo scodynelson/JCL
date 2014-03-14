@@ -1,5 +1,6 @@
 package jcl.structs;
 
+import jcl.LispStruct;
 import jcl.structs.streams.PeekResult;
 import jcl.structs.streams.PeekType;
 import jcl.structs.streams.ReadResult;

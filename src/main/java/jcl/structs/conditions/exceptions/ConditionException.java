@@ -1,7 +1,7 @@
 package jcl.structs.conditions.exceptions;
 
-import jcl.structs.LispStruct;
-import jcl.types.LispType;
+import jcl.LispStruct;
+import jcl.LispType;
 
 public class ConditionException extends RuntimeException implements LispStruct {
 

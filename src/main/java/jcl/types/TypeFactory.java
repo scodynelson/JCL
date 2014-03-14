@@ -1,5 +1,7 @@
 package jcl.types;
 
+import jcl.LispType;
+
 /**
  * This interface is the common parent for all lisp type factories.
  *

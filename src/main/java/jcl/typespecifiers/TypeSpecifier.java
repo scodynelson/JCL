@@ -1,6 +1,6 @@
 package jcl.typespecifiers;
 
-import jcl.types.LispType;
+import jcl.LispType;
 
 /**
  * This interface is the common parent for all lisp type specifiers.

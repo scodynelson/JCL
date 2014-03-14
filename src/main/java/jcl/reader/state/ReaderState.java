@@ -2,7 +2,7 @@ package jcl.reader.state;
 
 import jcl.reader.state.impl.InitialState;
 import jcl.reader.syntax.AttributeType;
-import jcl.structs.LispStruct;
+import jcl.LispStruct;
 
 import java.util.LinkedList;
 

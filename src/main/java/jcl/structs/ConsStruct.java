@@ -1,5 +1,6 @@
 package jcl.structs;
 
+import jcl.LispStruct;
 import jcl.types.Cons;
 
 import java.util.ArrayList;

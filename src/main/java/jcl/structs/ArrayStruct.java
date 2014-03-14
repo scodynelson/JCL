@@ -1,8 +1,9 @@
 package jcl.structs;
 
+import jcl.LispStruct;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.structs.conditions.exceptions.TypeErrorException;
-import jcl.types.LispType;
+import jcl.LispType;
 import jcl.types.T;
 import jcl.types.Array;
 import jcl.types.SimpleArray;

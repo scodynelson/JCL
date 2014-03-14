@@ -1,6 +1,4 @@
-package jcl.structs;
-
-import jcl.types.LispType;
+package jcl;
 
 /**
  * The {@code LispStruct} is the representation for all Lisp types.

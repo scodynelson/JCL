@@ -2,7 +2,7 @@ package jcl.structs;
 
 import jcl.reader.macrofunction.MacroFunctionReader;
 import jcl.reader.macrofunction.ReaderMacroFunction;
-import jcl.structs.LispStruct;
+import jcl.LispStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.streams.ReadResult;
 

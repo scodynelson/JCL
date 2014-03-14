@@ -1,6 +1,6 @@
 package jcl.structs.streams;
 
-import jcl.structs.LispStruct;
+import jcl.LispStruct;
 
 public class ReadResult {
 

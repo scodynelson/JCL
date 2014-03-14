@@ -1,6 +1,6 @@
 package jcl.lambdalist;
 
-import jcl.structs.LispStruct;
+import jcl.LispStruct;
 import jcl.lambdalist.variable.Aux;
 import jcl.lambdalist.variable.Key;
 import jcl.lambdalist.variable.Optional;

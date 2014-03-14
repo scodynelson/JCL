@@ -4,10 +4,8 @@ import jcl.reader.LispReader;
 import jcl.reader.state.impl.EndState;
 import jcl.reader.syntax.CaseSpec;
 import jcl.structs.InputStream;
-import jcl.structs.LispStruct;
+import jcl.LispStruct;
 import jcl.structs.ReadtableStruct;
-import jcl.structs.conditions.exceptions.ReaderErrorException;
-import jcl.structs.conditions.exceptions.StreamErrorException;
 import jcl.structs.streams.ReadResult;
 import jcl.structs.symbols.Variable;
 
@@ -52,20 +50,12 @@ public class StateReader extends LispReader {
 
 	@Override
 	public ReadResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
-		try {
-			return inputStream.readChar(eofErrorP, eofValue, recursiveP);
-		} catch (StreamErrorException e) {
-			throw new ReaderErrorException("Failed to read character.", e);
-		}
+		return inputStream.readChar(eofErrorP, eofValue, recursiveP);
 	}
 
 	@Override
 	public void unreadChar(final int codePoint) {
-		try {
-			inputStream.unreadChar(codePoint);
-		} catch (final StreamErrorException see) {
-			throw new ReaderErrorException("Failed to read character.", see);
-		}
+		inputStream.unreadChar(codePoint);
 	}
 
 	public ReadtableStruct getReadtable() {

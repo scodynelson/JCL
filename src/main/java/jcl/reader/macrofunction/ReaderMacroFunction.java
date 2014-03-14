@@ -1,5 +1,6 @@
 package jcl.reader.macrofunction;
 
+import jcl.reader.MacroFunctionReader;
 import jcl.structs.FunctionStruct;
 import jcl.LispStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;

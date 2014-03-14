@@ -1,10 +1,10 @@
 package jcl.reader.state.impl;
 
-import jcl.reader.macrofunction.MacroFunctionReader;
+import jcl.reader.MacroFunctionReader;
 import jcl.reader.macrofunction.ReaderMacroFunction;
 import jcl.reader.state.ReaderState;
 import jcl.reader.state.State;
-import jcl.reader.state.StateReader;
+import jcl.reader.StateReader;
 import jcl.reader.util.ReaderUtils;
 import jcl.LispStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;

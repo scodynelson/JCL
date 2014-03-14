@@ -1,7 +1,6 @@
-package jcl.reader.macrofunction;
+package jcl.reader;
 
-import jcl.reader.LispReader;
-import jcl.reader.state.StateReader;
+import jcl.reader.macrofunction.ReadExtendedToken;
 import jcl.reader.syntax.AttributeType;
 import jcl.reader.syntax.CaseSpec;
 import jcl.reader.syntax.CharacterConstants;

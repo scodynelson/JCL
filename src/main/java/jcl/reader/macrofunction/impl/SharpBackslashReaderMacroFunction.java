@@ -1,6 +1,6 @@
 package jcl.reader.macrofunction.impl;
 
-import jcl.reader.macrofunction.MacroFunctionReader;
+import jcl.reader.MacroFunctionReader;
 import jcl.reader.macrofunction.ReaderMacroFunction;
 import jcl.reader.syntax.CharacterConstants;
 import jcl.reader.syntax.CharacterName;

@@ -1,6 +1,7 @@
-package jcl.reader.state;
+package jcl.reader;
 
-import jcl.reader.LispReader;
+import jcl.reader.state.ReaderState;
+import jcl.reader.state.State;
 import jcl.reader.state.impl.EndState;
 import jcl.reader.syntax.CaseSpec;
 import jcl.structs.InputStream;

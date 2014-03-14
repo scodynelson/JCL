@@ -2,7 +2,7 @@ package jcl.reader.state.impl;
 
 import jcl.reader.state.ReaderState;
 import jcl.reader.state.State;
-import jcl.reader.state.StateReader;
+import jcl.reader.StateReader;
 import jcl.reader.state.impl.util.StateUtils;
 import jcl.reader.syntax.AttributeType;
 import jcl.reader.syntax.CaseSpec;

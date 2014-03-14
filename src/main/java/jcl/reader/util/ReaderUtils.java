@@ -1,6 +1,6 @@
 package jcl.reader.util;
 
-import jcl.reader.state.StateReader;
+import jcl.reader.StateReader;
 import jcl.reader.syntax.AttributeType;
 import jcl.reader.syntax.SyntaxType;
 import jcl.structs.ReadtableStruct;

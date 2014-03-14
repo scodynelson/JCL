@@ -1,6 +1,5 @@
 package jcl.reader;
 
-import jcl.reader.state.StateReader;
 import jcl.LispStruct;
 import jcl.structs.InputStream;
 import jcl.structs.streams.ReadResult;

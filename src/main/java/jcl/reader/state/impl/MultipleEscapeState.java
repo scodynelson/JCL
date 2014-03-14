@@ -2,7 +2,7 @@ package jcl.reader.state.impl;
 
 import jcl.reader.state.ReaderState;
 import jcl.reader.state.State;
-import jcl.reader.state.StateReader;
+import jcl.reader.StateReader;
 
 /**
  * Step 6 of the Reader Algorithm.

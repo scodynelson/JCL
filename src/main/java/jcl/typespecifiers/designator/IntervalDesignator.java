@@ -1,7 +1,7 @@
 package jcl.typespecifiers.designator;
 
 import jcl.typespecifiers.CompoundTypeSpecifier;
-import jcl.types.TypeUtils;
+import jcl.typespecifiers.TypeSpecifierUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
@@ -78,8 +78,8 @@ public class IntervalDesignator<N extends Number> implements CompoundTypeSpecifi
 	 * @return true if the number is within the interval; false otherwise
 	 */
 	private boolean isWithinBounds(final Number number) {
-		final int lowerCompare = TypeUtils.numberCompareTo(lowerBound, number);
-		final int upperCompare = TypeUtils.numberCompareTo(upperBound, number);
+		final int lowerCompare = TypeSpecifierUtils.numberCompareTo(lowerBound, number);
+		final int upperCompare = TypeSpecifierUtils.numberCompareTo(upperBound, number);
 
 		return (lowerCompare >= 0) && (upperCompare <= 0);
 	}

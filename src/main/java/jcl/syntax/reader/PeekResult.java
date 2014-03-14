@@ -1,4 +1,4 @@
-package jcl.structs.streams;
+package jcl.syntax.reader;
 
 import jcl.LispStruct;
 

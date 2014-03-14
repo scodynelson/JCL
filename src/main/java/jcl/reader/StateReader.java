@@ -7,7 +7,7 @@ import jcl.reader.state.impl.EndState;
 import jcl.syntax.CaseSpec;
 import jcl.structs.InputStream;
 import jcl.structs.ReadtableStruct;
-import jcl.structs.streams.ReadResult;
+import jcl.syntax.reader.ReadResult;
 import jcl.variables.ReadtableVariable;
 
 public class StateReader extends LispReader {

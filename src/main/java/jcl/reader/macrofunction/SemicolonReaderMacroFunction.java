@@ -5,7 +5,7 @@ import jcl.reader.MacroFunctionReader;
 import jcl.functions.ReaderMacroFunction;
 import jcl.syntax.CharacterConstants;
 import jcl.structs.comments.CommentStruct;
-import jcl.structs.streams.ReadResult;
+import jcl.syntax.reader.ReadResult;
 import jcl.variables.ReadSuppressVariable;
 
 /**

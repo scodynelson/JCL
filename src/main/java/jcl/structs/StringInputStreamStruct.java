@@ -3,9 +3,9 @@ package jcl.structs;
 import jcl.LispStruct;
 import jcl.structs.conditions.exceptions.EndOfFileException;
 import jcl.structs.conditions.exceptions.StreamErrorException;
-import jcl.structs.streams.PeekResult;
-import jcl.structs.streams.PeekType;
-import jcl.structs.streams.ReadResult;
+import jcl.syntax.reader.PeekResult;
+import jcl.syntax.reader.PeekType;
+import jcl.syntax.reader.ReadResult;
 import jcl.types.BaseChar;
 import jcl.types.StringStream;
 

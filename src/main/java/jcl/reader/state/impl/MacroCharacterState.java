@@ -8,7 +8,7 @@ import jcl.reader.StateReader;
 import jcl.reader.ReaderUtils;
 import jcl.LispStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
-import jcl.structs.streams.ReadResult;
+import jcl.syntax.reader.ReadResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

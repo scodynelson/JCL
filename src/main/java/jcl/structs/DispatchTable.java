@@ -4,7 +4,7 @@ import jcl.reader.MacroFunctionReader;
 import jcl.functions.ReaderMacroFunction;
 import jcl.LispStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
-import jcl.structs.streams.ReadResult;
+import jcl.syntax.reader.ReadResult;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

@@ -6,7 +6,7 @@ import jcl.reader.StateReader;
 import jcl.syntax.SyntaxType;
 import jcl.LispStruct;
 import jcl.structs.ReadtableStruct;
-import jcl.structs.streams.ReadResult;
+import jcl.syntax.reader.ReadResult;
 
 /**
  * Step 1 of the Reader Algorithm.

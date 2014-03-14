@@ -2,7 +2,7 @@ package jcl.reader.macrofunction;
 
 import jcl.LispStruct;
 import jcl.reader.MacroFunctionReader;
-import jcl.reader.ReadExtendedToken;
+import jcl.syntax.reader.ReadExtendedToken;
 import jcl.functions.ReaderMacroFunction;
 import jcl.syntax.CharacterConstants;
 import jcl.structs.BitVectorStruct;

@@ -49,7 +49,7 @@ dependencies {
 }
 
 apply plugin: 'application'
-mainClassName = "jcl.JCL"
+mainClassName = "jcl.system.JCL"
 
 apply plugin: 'jacoco'
 jacoco {

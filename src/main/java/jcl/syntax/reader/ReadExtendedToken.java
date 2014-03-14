@@ -1,4 +1,4 @@
-package jcl.reader;
+package jcl.syntax.reader;
 
 public class ReadExtendedToken {
 

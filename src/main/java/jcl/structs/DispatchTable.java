@@ -1,4 +1,4 @@
-package jcl.structs.readtables;
+package jcl.structs;
 
 import jcl.reader.macrofunction.MacroFunctionReader;
 import jcl.reader.macrofunction.ReaderMacroFunction;

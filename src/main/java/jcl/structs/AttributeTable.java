@@ -1,4 +1,4 @@
-package jcl.structs.readtables;
+package jcl.structs;
 
 import jcl.reader.syntax.AttributeType;
 import jcl.structs.symbols.Variable;
@@ -6,11 +6,11 @@ import jcl.structs.symbols.Variable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class AttributeTable {
+class AttributeTable {
 
 	private final Map<Integer, AttributeType> attributeTypeMap;
 
-	public AttributeTable() {
+	AttributeTable() {
 		attributeTypeMap = new ConcurrentHashMap<>(128);
 
 		attributeTypeMap.put(0, AttributeType.INVALID);                     // NUL
@@ -143,7 +143,7 @@ public class AttributeTable {
 		attributeTypeMap.put(127, AttributeType.INVALID);                   // DEL
 	}
 
-	public AttributeType getAttribute(final int codePoint) {
+	AttributeType getAttribute(final int codePoint) {
 		if (attributeTypeMap.containsKey(codePoint)) {
 			AttributeType attributeType = attributeTypeMap.get(codePoint);
 

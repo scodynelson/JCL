@@ -1,6 +1,5 @@
-package jcl.structs.pathnames;
+package jcl.structs;
 
-import jcl.structs.PathnameStruct;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -16,12 +15,12 @@ import java.util.regex.Pattern;
 /**
  * The {@code PathnameURIStruct} is the uri-type object representation of a Lisp 'pathname' type.
  */
-public class PathnameURIStruct extends PathnameStruct {
+class PathnameURIStruct extends PathnameStruct {
 
 	private static final Pattern PATHNAME_PATTERN = Pattern.compile("/");
 
 	/**
-	 * Public constructor.
+	 * Package constructor.
 	 *
 	 * @param host      the pathname host
 	 * @param device    the pathname device
@@ -30,36 +29,36 @@ public class PathnameURIStruct extends PathnameStruct {
 	 * @param type      the pathname type
 	 * @param version   the pathname version
 	 */
-	public PathnameURIStruct(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
-							 final PathnameName name, final PathnameType type, final PathnameVersion version) {
+	PathnameURIStruct(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
+					  final PathnameName name, final PathnameType type, final PathnameVersion version) {
 		super(host, device, directory, name, type, version);
 	}
 
 	/**
-	 * Public constructor.
+	 * Package constructor.
 	 *
 	 * @param pathname the pathname string to parse into the pathname object elements
 	 * @throws URISyntaxException if the provided {@code pathname} cannot be parsed as a URI
 	 */
-	public PathnameURIStruct(final String pathname) throws URISyntaxException {
+	PathnameURIStruct(final String pathname) throws URISyntaxException {
 		this(getURI(pathname));
 	}
 
 	/**
-	 * Public constructor.
+	 * Package constructor.
 	 *
 	 * @param path the path to parse into the pathname object elements
 	 */
-	public PathnameURIStruct(final Path path) {
+	PathnameURIStruct(final Path path) {
 		this(path.toUri());
 	}
 
 	/**
-	 * Public constructor.
+	 * Package constructor.
 	 *
 	 * @param uri the uri to parse into the pathname object elements
 	 */
-	public PathnameURIStruct(final URI uri) {
+	PathnameURIStruct(final URI uri) {
 		this(getHost(uri), getDevice(uri), getDirectory(uri), getName(uri), getType(uri), getVersion());
 	}
 

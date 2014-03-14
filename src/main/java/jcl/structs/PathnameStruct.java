@@ -2,8 +2,6 @@ package jcl.structs;
 
 import jcl.structs.conditions.exceptions.FileErrorException;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
-import jcl.structs.pathnames.PathnameFileStruct;
-import jcl.structs.pathnames.PathnameURIStruct;
 import jcl.types.Pathname;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;

@@ -2,11 +2,12 @@ package jcl.reader.state;
 
 import jcl.reader.LispReader;
 import jcl.reader.state.impl.EndState;
+import jcl.reader.syntax.CaseSpec;
+import jcl.structs.InputStream;
 import jcl.structs.LispStruct;
+import jcl.structs.ReadtableStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.StreamErrorException;
-import jcl.structs.ReadtableStruct;
-import jcl.structs.InputStream;
 import jcl.structs.streams.ReadResult;
 import jcl.structs.symbols.Variable;
 
@@ -69,5 +70,9 @@ public class StateReader extends LispReader {
 
 	public ReadtableStruct getReadtable() {
 		return readtable;
+	}
+
+	public CaseSpec getReadtableCase() {
+		return readtable.getReadtableCase();
 	}
 }

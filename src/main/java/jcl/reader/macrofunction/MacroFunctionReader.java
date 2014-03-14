@@ -7,16 +7,15 @@ import jcl.reader.syntax.CaseSpec;
 import jcl.reader.syntax.CharacterConstants;
 import jcl.reader.syntax.SyntaxType;
 import jcl.reader.util.ReaderUtils;
-import jcl.structs.LispStruct;
-import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.ConsStruct;
-import jcl.structs.ListStruct;
 import jcl.structs.IntegerStruct;
-import jcl.structs.packages.GlobalPackageStruct;
+import jcl.structs.LispStruct;
+import jcl.structs.ListStruct;
 import jcl.structs.PackageStruct;
-import jcl.structs.ReadtableStruct;
-import jcl.structs.streams.ReadResult;
 import jcl.structs.SymbolStruct;
+import jcl.structs.conditions.exceptions.ReaderErrorException;
+import jcl.structs.packages.GlobalPackageStruct;
+import jcl.structs.streams.ReadResult;
 import jcl.structs.symbols.Variable;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -79,7 +78,7 @@ public class MacroFunctionReader extends LispReader {
 			final List<Integer> escapeIndices = readExtendedToken.getEscapeIndices();
 			final Integer colon = readExtendedToken.getFirstPackageDelimiter();
 
-			final String tokenWithProperCase = getTokenWithProperCase(stateReader.getReadtable(), stringBuilder, escapeIndices);
+			final String tokenWithProperCase = getTokenWithProperCase(stateReader, stringBuilder, escapeIndices);
 
 			return new ReadExtendedToken(tokenWithProperCase, CollectionUtils.isNotEmpty(escapeIndices), colon != null);
 		}
@@ -97,12 +96,12 @@ public class MacroFunctionReader extends LispReader {
 
 			final List<Integer> escapeIndices = readExtendedToken.getEscapeIndices();
 
-			return getTokenWithProperCase(stateReader.getReadtable(), stringBuilder, escapeIndices);
+			return getTokenWithProperCase(stateReader, stringBuilder, escapeIndices);
 		}
 	}
 
-	private static String getTokenWithProperCase(final ReadtableStruct readtable, final StringBuilder token, final List<Integer> escapeIndices) {
-		final CaseSpec readtableCase = readtable.getReadtableCase();
+	private static String getTokenWithProperCase(final StateReader stateReader, final StringBuilder token, final List<Integer> escapeIndices) {
+		final CaseSpec readtableCase = stateReader.getReadtableCase();
 
 		final StringBuilder stringBuilder = new StringBuilder(token.length());
 		for (int i = 0; i < token.length(); i++) {
@@ -141,8 +140,6 @@ public class MacroFunctionReader extends LispReader {
 	private InternalReadExtendedToken internalReadExtendedToken(final StringBuilder stringBuilder, final ReadResult firstChar,
 																final boolean escapeFirstChar) {
 
-		final ReadtableStruct readtable = stateReader.getReadtable();
-
 		final List<Integer> escapes = new ArrayList<>();
 
 		ReadResult firstResult = firstChar;
@@ -159,14 +156,14 @@ public class MacroFunctionReader extends LispReader {
 		while (!readResult.wasEOF()) {
 
 			final int codePoint = readResult.getResult();
-			if (ReaderUtils.isSyntaxType(readtable, codePoint, SyntaxType.WHITESPACE, SyntaxType.TERMINATING)) {
+			if (ReaderUtils.isSyntaxType(stateReader, codePoint, SyntaxType.WHITESPACE, SyntaxType.TERMINATING)) {
 				// TODO: We want to take "read-preserving-whitespace" into account here before unreading
 				stateReader.unreadChar(codePoint);
 				stringBuilder.deleteCharAt(stringBuilder.length() - 1);
 				break;
 			}
 
-			if (ReaderUtils.isSyntaxType(readtable, codePoint, SyntaxType.SINGLE_ESCAPE)) {
+			if (ReaderUtils.isSyntaxType(stateReader, codePoint, SyntaxType.SINGLE_ESCAPE)) {
 				final ReadResult nextReadResult = readInternalToken(stringBuilder);
 
 				if (nextReadResult.wasEOF()) {
@@ -174,7 +171,7 @@ public class MacroFunctionReader extends LispReader {
 				} else {
 					escapes.add(stringBuilder.length() - 1);
 				}
-			} else if (ReaderUtils.isSyntaxType(readtable, codePoint, SyntaxType.MULTIPLE_ESCAPE)) {
+			} else if (ReaderUtils.isSyntaxType(stateReader, codePoint, SyntaxType.MULTIPLE_ESCAPE)) {
 				while (true) {
 
 					final ReadResult tempReadResult = readInternalToken(stringBuilder);
@@ -184,9 +181,9 @@ public class MacroFunctionReader extends LispReader {
 					}
 
 					final int tempCodePoint = tempReadResult.getResult();
-					if (ReaderUtils.isSyntaxType(readtable, tempCodePoint, SyntaxType.MULTIPLE_ESCAPE)) {
+					if (ReaderUtils.isSyntaxType(stateReader, tempCodePoint, SyntaxType.MULTIPLE_ESCAPE)) {
 						break;
-					} else if (ReaderUtils.isSyntaxType(readtable, tempCodePoint, SyntaxType.SINGLE_ESCAPE)) {
+					} else if (ReaderUtils.isSyntaxType(stateReader, tempCodePoint, SyntaxType.SINGLE_ESCAPE)) {
 
 						final ReadResult nextReadResult = readInternalToken(stringBuilder);
 
@@ -200,8 +197,8 @@ public class MacroFunctionReader extends LispReader {
 					}
 				}
 			} else {
-				if (ReaderUtils.isSyntaxType(readtable, codePoint, SyntaxType.CONSTITUENT)
-						&& ReaderUtils.isAttributeType(readtable, codePoint, AttributeType.PACKAGEMARKER)
+				if (ReaderUtils.isSyntaxType(stateReader, codePoint, SyntaxType.CONSTITUENT)
+						&& ReaderUtils.isAttributeType(stateReader, codePoint, AttributeType.PACKAGEMARKER)
 						&& (colon == null)) {
 					colon = stringBuilder.length() - 1;
 				}
@@ -284,8 +281,6 @@ public class MacroFunctionReader extends LispReader {
 
 	public ListStruct readList() {
 
-		final ReadtableStruct readtable = stateReader.getReadtable();
-
 		final List<LispStruct> theList = new ArrayList<>();
 
 		int codePoint = flushWhitespace();
@@ -296,7 +291,7 @@ public class MacroFunctionReader extends LispReader {
 
 				int nextCodePoint = stateReader.readChar().getResult();
 
-				if (ReaderUtils.isSyntaxType(readtable, nextCodePoint, SyntaxType.WHITESPACE, SyntaxType.TERMINATING)) {
+				if (ReaderUtils.isSyntaxType(stateReader, nextCodePoint, SyntaxType.WHITESPACE, SyntaxType.TERMINATING)) {
 					if (theList.isEmpty()) {
 						if (Variable.ReadSuppress) {
 							return null;
@@ -305,7 +300,7 @@ public class MacroFunctionReader extends LispReader {
 						}
 					}
 
-					if (ReaderUtils.isSyntaxType(readtable, nextCodePoint, SyntaxType.WHITESPACE)) {
+					if (ReaderUtils.isSyntaxType(stateReader, nextCodePoint, SyntaxType.WHITESPACE)) {
 						nextCodePoint = flushWhitespace();
 					}
 
@@ -366,13 +361,11 @@ public class MacroFunctionReader extends LispReader {
 
 	private int flushWhitespace() {
 
-		final ReadtableStruct readtable = stateReader.getReadtable();
-
 		// NOTE: This will throw errors when it reaches an EOF
 		ReadResult readResult = stateReader.readChar();
 		int codePoint = readResult.getResult();
 
-		if (ReaderUtils.isSyntaxType(readtable, codePoint, SyntaxType.WHITESPACE)) {
+		if (ReaderUtils.isSyntaxType(stateReader, codePoint, SyntaxType.WHITESPACE)) {
 			readResult = stateReader.readChar();
 			codePoint = readResult.getResult();
 		}
@@ -386,15 +379,13 @@ public class MacroFunctionReader extends LispReader {
 
 	public int readUnicodeChar() {
 
-		final ReadtableStruct readtable = stateReader.getReadtable();
-
 		final StringBuilder unicodeCharBuilder = new StringBuilder();
 
 		// NOTE: This will throw errors when it reaches an EOF
 		ReadResult readResult = stateReader.readChar();
 		int readChar = readResult.getResult();
 
-		while (!ReaderUtils.isSyntaxType(readtable, readChar, SyntaxType.WHITESPACE)) {
+		while (!ReaderUtils.isSyntaxType(stateReader, readChar, SyntaxType.WHITESPACE)) {
 			unicodeCharBuilder.appendCodePoint(readChar);
 
 			readResult = stateReader.readChar();

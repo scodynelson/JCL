@@ -1,4 +1,4 @@
-package jcl.structs.readtables;
+package jcl.structs;
 
 import jcl.reader.syntax.SyntaxType;
 import org.slf4j.Logger;
@@ -7,13 +7,13 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class SyntaxTable {
+class SyntaxTable {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SyntaxTable.class);
 
 	private final Map<Integer, SyntaxType> syntaxTypeMap;
 
-	public SyntaxTable() {
+	SyntaxTable() {
 		syntaxTypeMap = new ConcurrentHashMap<>(128);
 
 		syntaxTypeMap.put(0, SyntaxType.INVALID);                     // NUL
@@ -146,7 +146,7 @@ public class SyntaxTable {
 		syntaxTypeMap.put(127, SyntaxType.CONSTITUENT);               // DEL
 	}
 
-	public SyntaxType getSyntaxType(final int codePoint) {
+	SyntaxType getSyntaxType(final int codePoint) {
 		if (syntaxTypeMap.containsKey(codePoint)) {
 			return syntaxTypeMap.get(codePoint);
 		} else if (Character.isDefined(codePoint)) {
@@ -167,7 +167,7 @@ public class SyntaxTable {
 		}
 	}
 
-	public void setSyntaxType(final int codePoint, final SyntaxType syntaxType) {
+	void setSyntaxType(final int codePoint, final SyntaxType syntaxType) {
 		syntaxTypeMap.put(codePoint, syntaxType);
 	}
 }

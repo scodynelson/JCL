@@ -1,6 +1,5 @@
-package jcl.structs.pathnames;
+package jcl.structs;
 
-import jcl.structs.PathnameStruct;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -16,7 +15,7 @@ import java.util.regex.Pattern;
 /**
  * The {@code PathnameFileStruct} is the file-type object representation of a Lisp 'pathname' type.
  */
-public class PathnameFileStruct extends PathnameStruct {
+class PathnameFileStruct extends PathnameStruct {
 
 	// NOTE: The following pattern complexity is due to Windows platforms and their usage of backslashes
 	private static final Pattern PATHNAME_PATTERN = Pattern.compile((File.separatorChar == '\\') ? "\\\\" : File.separator);
@@ -26,7 +25,7 @@ public class PathnameFileStruct extends PathnameStruct {
 	private static final String TILDE = "~";
 
 	/**
-	 * Public constructor.
+	 * Package constructor.
 	 *
 	 * @param host      the pathname host
 	 * @param device    the pathname device
@@ -35,35 +34,35 @@ public class PathnameFileStruct extends PathnameStruct {
 	 * @param type      the pathname type
 	 * @param version   the pathname version
 	 */
-	public PathnameFileStruct(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
-							  final PathnameName name, final PathnameType type, final PathnameVersion version) {
+	PathnameFileStruct(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
+					   final PathnameName name, final PathnameType type, final PathnameVersion version) {
 		super(host, device, directory, name, type, version);
 	}
 
 	/**
-	 * Public constructor.
+	 * Package constructor.
 	 *
 	 * @param pathname the pathname string to parse into the pathname object elements
 	 */
-	public PathnameFileStruct(final String pathname) {
+	PathnameFileStruct(final String pathname) {
 		this(getHost(), getDevice(pathname), getDirectory(pathname), getName(pathname), getType(pathname), getVersion());
 	}
 
 	/**
-	 * Public constructor.
+	 * Package constructor.
 	 *
 	 * @param path the path to parse into the pathname object elements
 	 */
-	public PathnameFileStruct(final Path path) {
+	PathnameFileStruct(final Path path) {
 		this(path.toFile().getPath());
 	}
 
 	/**
-	 * Public constructor.
+	 * Package constructor.
 	 *
 	 * @param file the file to parse into the pathname object elements
 	 */
-	public PathnameFileStruct(final File file) {
+	PathnameFileStruct(final File file) {
 		this(file.getPath());
 	}
 

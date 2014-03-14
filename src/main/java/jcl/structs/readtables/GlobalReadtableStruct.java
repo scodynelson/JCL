@@ -27,6 +27,7 @@ import jcl.reader.macrofunction.impl.SharpUReaderMacroFunction;
 import jcl.reader.macrofunction.impl.SharpVerticalBarReaderMacroFunction;
 import jcl.reader.macrofunction.impl.SharpXReaderMacroFunction;
 import jcl.reader.syntax.CharacterConstants;
+import jcl.structs.DispatchTable;
 import jcl.structs.ReadtableStruct;
 
 public final class GlobalReadtableStruct {

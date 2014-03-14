@@ -1,5 +1,6 @@
 package jcl.reader.util;
 
+import jcl.reader.state.StateReader;
 import jcl.reader.syntax.AttributeType;
 import jcl.reader.syntax.SyntaxType;
 import jcl.structs.ReadtableStruct;
@@ -15,7 +16,9 @@ public final class ReaderUtils {
 		return (character == null) || (character == EOF);
 	}
 
-	public static boolean isAttributeType(final ReadtableStruct readtable, final int codePoint, final AttributeType... attributeTypes) {
+	public static boolean isAttributeType(final StateReader stateReader, final int codePoint, final AttributeType... attributeTypes) {
+
+		final ReadtableStruct readtable = stateReader.getReadtable();
 
 		boolean returnVal = false;
 		for (final AttributeType attributeType : attributeTypes) {
@@ -24,7 +27,9 @@ public final class ReaderUtils {
 		return returnVal;
 	}
 
-	public static boolean isSyntaxType(final ReadtableStruct readtable, final int codePoint, final SyntaxType... syntaxTypes) {
+	public static boolean isSyntaxType(final StateReader stateReader, final int codePoint, final SyntaxType... syntaxTypes) {
+
+		final ReadtableStruct readtable = stateReader.getReadtable();
 
 		boolean returnVal = false;
 		for (final SyntaxType syntaxType : syntaxTypes) {

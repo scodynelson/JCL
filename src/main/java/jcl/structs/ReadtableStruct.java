@@ -4,9 +4,6 @@ import jcl.reader.macrofunction.ReaderMacroFunction;
 import jcl.reader.syntax.AttributeType;
 import jcl.reader.syntax.CaseSpec;
 import jcl.reader.syntax.SyntaxType;
-import jcl.structs.readtables.AttributeTable;
-import jcl.structs.readtables.DispatchTable;
-import jcl.structs.readtables.SyntaxTable;
 import jcl.types.LispType;
 import jcl.types.Readtable;
 

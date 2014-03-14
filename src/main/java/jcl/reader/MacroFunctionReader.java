@@ -14,7 +14,7 @@ import jcl.structs.SymbolStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.syntax.reader.ReadResult;
 import jcl.variables.FeaturesVariable;
-import jcl.variables.GlobalPackageStruct;
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.variables.PackageVariable;
 import jcl.variables.ReadBaseVariable;
 import jcl.variables.ReadSuppressVariable;

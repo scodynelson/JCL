@@ -7,7 +7,7 @@ import jcl.reader.state.impl.util.StateUtils;
 import jcl.syntax.AttributeType;
 import jcl.syntax.CaseSpec;
 import jcl.reader.ReaderUtils;
-import jcl.structs.ReadtableStruct;
+import jcl.reader.ReadtableStruct;
 
 /**
  * Step 7 of the Reader Algorithm.

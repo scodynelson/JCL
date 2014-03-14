@@ -1,6 +1,6 @@
 package jcl.structs;
 
-import jcl.variables.GlobalPackageStruct;
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.types.Keyword;
 
 /**

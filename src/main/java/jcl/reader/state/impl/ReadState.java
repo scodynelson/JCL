@@ -5,7 +5,7 @@ import jcl.reader.state.State;
 import jcl.reader.StateReader;
 import jcl.syntax.SyntaxType;
 import jcl.LispStruct;
-import jcl.structs.ReadtableStruct;
+import jcl.reader.ReadtableStruct;
 import jcl.syntax.reader.ReadResult;
 
 /**

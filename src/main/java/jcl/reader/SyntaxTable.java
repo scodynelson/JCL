@@ -1,4 +1,4 @@
-package jcl.structs;
+package jcl.reader;
 
 import jcl.syntax.SyntaxType;
 import org.slf4j.Logger;

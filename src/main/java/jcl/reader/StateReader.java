@@ -6,7 +6,6 @@ import jcl.reader.state.State;
 import jcl.reader.state.impl.EndState;
 import jcl.syntax.CaseSpec;
 import jcl.structs.InputStream;
-import jcl.structs.ReadtableStruct;
 import jcl.syntax.reader.ReadResult;
 import jcl.variables.ReadtableVariable;
 

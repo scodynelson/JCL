@@ -1,4 +1,4 @@
-package jcl.structs;
+package jcl.reader;
 
 import jcl.syntax.AttributeType;
 import jcl.variables.ReadBaseVariable;

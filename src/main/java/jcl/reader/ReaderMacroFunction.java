@@ -1,4 +1,4 @@
-package jcl.functions;
+package jcl.reader;
 
 import jcl.reader.MacroFunctionReader;
 import jcl.structs.FunctionStruct;

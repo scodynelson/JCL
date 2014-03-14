@@ -2,7 +2,6 @@ package jcl.reader;
 
 import jcl.syntax.AttributeType;
 import jcl.syntax.SyntaxType;
-import jcl.structs.ReadtableStruct;
 
 public final class ReaderUtils {
 

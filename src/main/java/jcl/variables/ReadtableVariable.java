@@ -1,10 +1,10 @@
 package jcl.variables;
 
-import jcl.structs.ReadtableStruct;
+import jcl.reader.ReadtableStruct;
 
 public class ReadtableVariable implements LispVariable<ReadtableStruct> {
 
-	public static final ReadtableVariable INSTANCE = new ReadtableVariable(GlobalReadtableStruct.Readtable);
+	public static final ReadtableVariable INSTANCE = new ReadtableVariable(new ReadtableStruct());
 
 	private ReadtableStruct value;
 

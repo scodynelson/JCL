@@ -31,7 +31,7 @@ import jcl.structs.ReadtableStruct;
 
 public final class GlobalReadtableStruct {
 
-	public static final ReadtableStruct Readtable = ReadtableStruct.getStruct();
+	public static final ReadtableStruct Readtable = new ReadtableStruct();
 
 	static {
 		//initialize the Standard-Readtable Reader Macro Functions

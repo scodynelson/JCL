@@ -13,7 +13,7 @@ import jcl.types.Readtable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class ReadtableStruct implements LispStruct {
+public class ReadtableStruct extends BuiltInClassStruct {
 
 	private final Map<Integer, ReaderMacroFunction> macroTableMap = new ConcurrentHashMap<>();
 	private final Map<Integer, DispatchTable> dispatchTableMap = new ConcurrentHashMap<>();
@@ -23,7 +23,12 @@ public class ReadtableStruct implements LispStruct {
 
 	private CaseSpec readtableCase;
 
-	private ReadtableStruct(final CaseSpec caseSpec) {
+	public ReadtableStruct() {
+		this(CaseSpec.UPCASE);
+	}
+
+	public ReadtableStruct(final CaseSpec caseSpec) {
+		super(Readtable.INSTANCE, null, null);
 		readtableCase = caseSpec;
 	}
 
@@ -77,15 +82,5 @@ public class ReadtableStruct implements LispStruct {
 
 	public SyntaxType getSyntaxType(final int codePoint) {
 		return syntaxTable.getSyntaxType(codePoint);
-	}
-
-	// BUILDERS
-
-	public static ReadtableStruct getStruct() {
-		return new ReadtableStruct(CaseSpec.UPCASE);
-	}
-
-	public static ReadtableStruct getStruct(final CaseSpec caseSpec) {
-		return new ReadtableStruct(caseSpec);
 	}
 }

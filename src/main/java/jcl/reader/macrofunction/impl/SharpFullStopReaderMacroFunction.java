@@ -17,7 +17,6 @@ public class SharpFullStopReaderMacroFunction implements ReaderMacroFunction {
 		assert codePoint == CharacterConstants.FULL_STOP;
 
 		final LispStruct lispToken = reader.read();
-
 		if (Variable.ReadSuppress) {
 			return null;
 		}

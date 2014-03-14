@@ -4,8 +4,8 @@ import jcl.reader.macrofunction.MacroFunctionReader;
 import jcl.reader.macrofunction.ReadExtendedToken;
 import jcl.reader.macrofunction.ReaderMacroFunction;
 import jcl.reader.syntax.CharacterConstants;
-import jcl.structs.LispStruct;
 import jcl.structs.BitVectorStruct;
+import jcl.structs.LispStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.structs.conditions.exceptions.TypeErrorException;
@@ -22,7 +22,6 @@ public class SharpAsteriskReaderMacroFunction implements ReaderMacroFunction {
 		assert codePoint == CharacterConstants.ASTERISK;
 
 		final ReadExtendedToken readExtendedToken = reader.readExtendedToken();
-
 		if (Variable.ReadSuppress) {
 			return null;
 		}
@@ -45,24 +44,26 @@ public class SharpAsteriskReaderMacroFunction implements ReaderMacroFunction {
 
 		if (StringUtils.isEmpty(bitString)) {
 			throw new ReaderErrorException("At least one bit must be supplied for non-zero #* bit-vectors.");
-		} else if (bitStringLength > numArg) {
+		}
+
+		if (bitStringLength > numArg) {
 			throw new ReaderErrorException("Bit vector is longer than specified length: #" + numArg + '*' + bitString);
-		} else {
-			final char lastChar = bitString.charAt(bitStringLength - 1);
+		}
 
-			final StringBuilder bitStringBuilder = new StringBuilder(bitString);
+		final char lastChar = bitString.charAt(bitStringLength - 1);
 
-			final int fillAmount = numArg - bitStringLength;
-			for (int i = 0; i < fillAmount; i++) {
-				bitStringBuilder.append(lastChar);
-			}
+		final StringBuilder bitStringBuilder = new StringBuilder(bitString);
 
-			final String newBitString = bitStringBuilder.toString();
-			try {
-				return new BitVectorStruct(newBitString);
-			} catch (final TypeErrorException | SimpleErrorException e) {
-				throw new ReaderErrorException("Error occurred creating bit-vector.", e);
-			}
+		final int fillAmount = numArg - bitStringLength;
+		for (int i = 0; i < fillAmount; i++) {
+			bitStringBuilder.append(lastChar);
+		}
+
+		final String newBitString = bitStringBuilder.toString();
+		try {
+			return new BitVectorStruct(newBitString);
+		} catch (final TypeErrorException | SimpleErrorException e) {
+			throw new ReaderErrorException("Error occurred creating bit-vector.", e);
 		}
 	}
 }

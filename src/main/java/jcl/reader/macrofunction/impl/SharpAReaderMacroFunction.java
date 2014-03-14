@@ -3,12 +3,12 @@ package jcl.reader.macrofunction.impl;
 import jcl.reader.macrofunction.MacroFunctionReader;
 import jcl.reader.macrofunction.ReaderMacroFunction;
 import jcl.reader.syntax.CharacterConstants;
-import jcl.structs.LispStruct;
 import jcl.structs.ArrayStruct;
+import jcl.structs.LispStruct;
+import jcl.structs.ListStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.structs.conditions.exceptions.TypeErrorException;
-import jcl.structs.ListStruct;
 import jcl.structs.symbols.Variable;
 
 import java.util.ArrayList;
@@ -24,23 +24,26 @@ public class SharpAReaderMacroFunction implements ReaderMacroFunction {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_A) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_A);
 
 		final LispStruct contents = reader.read();
-
 		if (Variable.ReadSuppress) {
 			return null;
-		} else if (numArg == null) {
-			throw new ReaderErrorException("#A used without a rank argument.");
-		} else if (contents instanceof ListStruct) {
-			final ListStruct contentsList = (ListStruct) contents;
-			final List<LispStruct> contentsAsJavaList = contentsList.getAsJavaList();
+		}
 
-			final List<Integer> dims = getDimensions(numArg, contentsList);
-			try {
-				return new ArrayStruct<>(dims, contentsAsJavaList);
-			} catch (final TypeErrorException | SimpleErrorException e) {
-				throw new ReaderErrorException("Error occurred creating array.", e);
-			}
-		} else {
+		if (numArg == null) {
+			throw new ReaderErrorException("#A used without a rank argument.");
+		}
+
+		if (!(contents instanceof ListStruct)) {
 			throw new ReaderErrorException("#" + numArg + "A axis " + 0 + " is not a sequence: " + contents);
+		}
+
+		final ListStruct contentsList = (ListStruct) contents;
+		final List<LispStruct> contentsAsJavaList = contentsList.getAsJavaList();
+
+		final List<Integer> dims = getDimensions(numArg, contentsList);
+		try {
+			return new ArrayStruct<>(dims, contentsAsJavaList);
+		} catch (final TypeErrorException | SimpleErrorException e) {
+			throw new ReaderErrorException("Error occurred creating array.", e);
 		}
 	}
 

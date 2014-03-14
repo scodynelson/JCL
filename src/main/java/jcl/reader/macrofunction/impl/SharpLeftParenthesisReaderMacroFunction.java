@@ -4,11 +4,11 @@ import jcl.reader.macrofunction.MacroFunctionReader;
 import jcl.reader.macrofunction.ReaderMacroFunction;
 import jcl.reader.syntax.CharacterConstants;
 import jcl.structs.LispStruct;
+import jcl.structs.ListStruct;
 import jcl.structs.VectorStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.structs.conditions.exceptions.TypeErrorException;
-import jcl.structs.ListStruct;
 import jcl.structs.symbols.Variable;
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -50,24 +50,23 @@ public class SharpLeftParenthesisReaderMacroFunction implements ReaderMacroFunct
 		final int numberOfTokens = lispTokens.size();
 		if (numberOfTokens > numArg) {
 			throw new ReaderErrorException("Vector is longer than specified length: #" + numArg + listToken);
-		} else {
-			final LispStruct lastToken;
-			if (CollectionUtils.isEmpty(lispTokens)) {
-				lastToken = null;
-			} else {
-				lastToken = lispTokens.get(numberOfTokens - 1);
-			}
-
-			final int fillAmount = numArg - numberOfTokens;
-			for (int i = 0; i < fillAmount; i++) {
-				lispTokens.add(lastToken);
-			}
-
-			try {
-				return new VectorStruct<>(lispTokens);
-			} catch (final TypeErrorException | SimpleErrorException e) {
-				throw new ReaderErrorException("Error occurred creating vector.", e);
-			}
 		}
+
+		LispStruct lastToken = null;
+		if (CollectionUtils.isNotEmpty(lispTokens)) {
+			lastToken = lispTokens.get(numberOfTokens - 1);
+		}
+
+		final int fillAmount = numArg - numberOfTokens;
+		for (int i = 0; i < fillAmount; i++) {
+			lispTokens.add(lastToken);
+		}
+
+		try {
+			return new VectorStruct<>(lispTokens);
+		} catch (final TypeErrorException | SimpleErrorException e) {
+			throw new ReaderErrorException("Error occurred creating vector.", e);
+		}
+
 	}
 }

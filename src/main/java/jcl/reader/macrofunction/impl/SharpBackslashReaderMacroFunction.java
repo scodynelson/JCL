@@ -4,8 +4,8 @@ import jcl.reader.macrofunction.MacroFunctionReader;
 import jcl.reader.macrofunction.ReaderMacroFunction;
 import jcl.reader.syntax.CharacterConstants;
 import jcl.reader.syntax.CharacterName;
-import jcl.structs.LispStruct;
 import jcl.structs.CharacterStruct;
+import jcl.structs.LispStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.symbols.Variable;
 import org.apache.commons.lang3.StringUtils;
@@ -20,7 +20,6 @@ public class SharpBackslashReaderMacroFunction implements ReaderMacroFunction {
 		assert codePoint == CharacterConstants.BACKSLASH;
 
 		final String charString = reader.readExtendedTokenEscaped();
-
 		if (Variable.ReadSuppress) {
 			return null;
 		}

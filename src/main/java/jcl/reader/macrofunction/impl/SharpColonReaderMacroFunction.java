@@ -5,8 +5,8 @@ import jcl.reader.macrofunction.ReadExtendedToken;
 import jcl.reader.macrofunction.ReaderMacroFunction;
 import jcl.reader.syntax.CharacterConstants;
 import jcl.structs.LispStruct;
-import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.SymbolStruct;
+import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.symbols.Variable;
 
 /**
@@ -23,10 +23,11 @@ public class SharpColonReaderMacroFunction implements ReaderMacroFunction {
 
 		if (Variable.ReadSuppress) {
 			return null;
-		} else if (readExtendedToken.hasPackageDelimiter()) {
-			throw new ReaderErrorException("Symbol following #: contains a package marker: " + token);
-		} else {
-			return new SymbolStruct(token);
 		}
+
+		if (readExtendedToken.hasPackageDelimiter()) {
+			throw new ReaderErrorException("Symbol following #: contains a package marker: " + token);
+		}
+		return new SymbolStruct(token);
 	}
 }

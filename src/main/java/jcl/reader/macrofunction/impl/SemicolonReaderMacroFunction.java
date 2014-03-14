@@ -30,9 +30,9 @@ public class SemicolonReaderMacroFunction implements ReaderMacroFunction {
 
 		if (Variable.ReadSuppress) {
 			return null;
-		} else {
-			final String stringValue = stringBuilder.toString();
-			return CommentStruct.getStruct(stringValue);
 		}
+
+		final String stringValue = stringBuilder.toString();
+		return CommentStruct.getStruct(stringValue);
 	}
 }

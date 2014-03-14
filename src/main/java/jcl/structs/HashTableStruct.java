@@ -1,8 +1,8 @@
 package jcl.structs;
 
-import jcl.structs.functions.EquatorFunctionStruct;
-import jcl.types.LispType;
+import jcl.functions.EquatorFunctionStruct;
 import jcl.types.HashTable;
+import jcl.types.LispType;
 import org.apache.commons.collections4.Equator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -112,7 +112,7 @@ public class HashTableStruct extends BuiltInClassStruct {
 	public void mapHash(final FunctionStruct function) {
 		for (final Map.Entry<LispStruct, LispStruct> entry : map.entrySet()) {
 			final LispStruct keyWrapper = KeyWrapper.getInstance(entry.getKey(), test);
-			function.funcall(keyWrapper, entry.getValue());
+			function.apply(keyWrapper, entry.getValue());
 		}
 	}
 

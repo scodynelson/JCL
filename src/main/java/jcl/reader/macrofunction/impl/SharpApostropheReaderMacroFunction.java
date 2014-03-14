@@ -5,9 +5,9 @@ import jcl.reader.macrofunction.ReaderMacroFunction;
 import jcl.reader.syntax.CharacterConstants;
 import jcl.reader.tokens.SpecialOperatorSymbolTokens;
 import jcl.structs.LispStruct;
-import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.ListStruct;
 import jcl.structs.SymbolStruct;
+import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.symbols.Variable;
 
 /**
@@ -22,11 +22,13 @@ public class SharpApostropheReaderMacroFunction implements ReaderMacroFunction {
 		final LispStruct expression = reader.read();
 		if (Variable.ReadSuppress) {
 			return null;
-		} else if (expression == null) {
-			throw new ReaderErrorException("Missing expression.");
-		} else {
-			final SymbolStruct<?> quoteToken = SpecialOperatorSymbolTokens.FUNCTION;
-			return ListStruct.buildProperList(quoteToken, expression);
 		}
+
+		if (expression == null) {
+			throw new ReaderErrorException("Missing expression.");
+		}
+
+		final SymbolStruct<?> quoteToken = SpecialOperatorSymbolTokens.FUNCTION;
+		return ListStruct.buildProperList(quoteToken, expression);
 	}
 }

@@ -24,7 +24,6 @@ public class SharpCReaderMacroFunction implements ReaderMacroFunction {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_C) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_C);
 
 		final LispStruct lispToken = reader.read();
-
 		if (Variable.ReadSuppress) {
 			return null;
 		}

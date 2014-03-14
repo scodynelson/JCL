@@ -3,8 +3,8 @@ package jcl.reader.macrofunction.impl;
 import jcl.reader.macrofunction.MacroFunctionReader;
 import jcl.reader.macrofunction.ReaderMacroFunction;
 import jcl.reader.syntax.CharacterConstants;
-import jcl.structs.LispStruct;
 import jcl.structs.CharacterStruct;
+import jcl.structs.LispStruct;
 import jcl.structs.symbols.Variable;
 
 /**
@@ -18,9 +18,9 @@ public class SharpUReaderMacroFunction implements ReaderMacroFunction {
 
 		if (Variable.ReadSuppress) {
 			return null;
-		} else {
-			final int unicodeChar = reader.readUnicodeChar();
-			return new CharacterStruct(unicodeChar);
 		}
+
+		final int unicodeChar = reader.readUnicodeChar();
+		return new CharacterStruct(unicodeChar);
 	}
 }

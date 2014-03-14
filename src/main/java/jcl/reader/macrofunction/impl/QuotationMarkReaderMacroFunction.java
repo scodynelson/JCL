@@ -4,11 +4,11 @@ import jcl.reader.macrofunction.MacroFunctionReader;
 import jcl.reader.macrofunction.ReaderMacroFunction;
 import jcl.reader.syntax.CharacterConstants;
 import jcl.structs.LispStruct;
+import jcl.structs.StringStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.structs.conditions.exceptions.TypeErrorException;
 import jcl.structs.streams.ReadResult;
-import jcl.structs.StringStruct;
 import jcl.structs.symbols.Variable;
 
 /**
@@ -62,13 +62,13 @@ public class QuotationMarkReaderMacroFunction implements ReaderMacroFunction {
 
 		if (Variable.ReadSuppress) {
 			return null;
-		} else {
-			final String stringValue = stringBuilder.toString();
-			try {
-				return new StringStruct(stringValue);
-			} catch (final TypeErrorException | SimpleErrorException e) {
-				throw new ReaderErrorException("Error occurred creating string.", e);
-			}
+		}
+
+		final String stringValue = stringBuilder.toString();
+		try {
+			return new StringStruct(stringValue);
+		} catch (final TypeErrorException | SimpleErrorException e) {
+			throw new ReaderErrorException("Error occurred creating string.", e);
 		}
 	}
 }

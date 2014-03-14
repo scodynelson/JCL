@@ -11,7 +11,7 @@ import jcl.structs.symbols.Variable;
 /**
  * Implements the '#|...|#' Lisp reader macro.
  */
-public class SharpVerticalBarReaderMacroFunction implements ReaderMacroFunction {
+public class SharpVerticalBarReaderMacroFunction extends ReaderMacroFunction {
 
 	@Override
 	public LispStruct readMacro(final int codePoint, final MacroFunctionReader reader, final Integer numArg) {

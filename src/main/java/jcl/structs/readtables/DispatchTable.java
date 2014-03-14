@@ -9,7 +9,7 @@ import jcl.structs.streams.ReadResult;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class DispatchTable implements ReaderMacroFunction {
+public class DispatchTable extends ReaderMacroFunction {
 
 	private final Map<Integer, ReaderMacroFunction> macroFunctionMap = new ConcurrentHashMap<>();
 

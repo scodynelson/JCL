@@ -8,7 +8,7 @@ import jcl.structs.LispStruct;
 /**
  * Implements the '#x' Lisp reader macro.
  */
-public class SharpXReaderMacroFunction implements ReaderMacroFunction {
+public class SharpXReaderMacroFunction extends ReaderMacroFunction {
 
 	@Override
 	public LispStruct readMacro(final int codePoint, final MacroFunctionReader reader, final Integer numArg) {

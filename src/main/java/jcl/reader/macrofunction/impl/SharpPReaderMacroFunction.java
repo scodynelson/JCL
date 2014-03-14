@@ -14,7 +14,7 @@ import java.net.URISyntaxException;
 /**
  * Implements the '#p' Lisp reader macro.
  */
-public class SharpPReaderMacroFunction implements ReaderMacroFunction {
+public class SharpPReaderMacroFunction extends ReaderMacroFunction {
 
 	@Override
 	public LispStruct readMacro(final int codePoint, final MacroFunctionReader reader, final Integer numArg) {

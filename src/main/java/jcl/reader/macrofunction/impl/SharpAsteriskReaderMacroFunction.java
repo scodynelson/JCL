@@ -15,7 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * Implements the '#*' Lisp reader macro.
  */
-public class SharpAsteriskReaderMacroFunction implements ReaderMacroFunction {
+public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunction {
 
 	@Override
 	public LispStruct readMacro(final int codePoint, final MacroFunctionReader reader, final Integer numArg) {

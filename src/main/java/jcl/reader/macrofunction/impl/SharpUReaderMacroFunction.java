@@ -10,7 +10,7 @@ import jcl.structs.symbols.Variable;
 /**
  * Implements the '#u' Lisp reader macro.
  */
-public class SharpUReaderMacroFunction implements ReaderMacroFunction {
+public class SharpUReaderMacroFunction extends ReaderMacroFunction {
 
 	@Override
 	public LispStruct readMacro(final int codePoint, final MacroFunctionReader reader, final Integer numArg) {

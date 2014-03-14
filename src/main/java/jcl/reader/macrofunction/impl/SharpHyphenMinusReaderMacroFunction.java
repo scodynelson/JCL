@@ -8,7 +8,7 @@ import jcl.structs.LispStruct;
 /**
  * Implements the '#-' Lisp reader macro.
  */
-public class SharpHyphenMinusReaderMacroFunction implements ReaderMacroFunction {
+public class SharpHyphenMinusReaderMacroFunction extends ReaderMacroFunction {
 
 	@Override
 	public LispStruct readMacro(final int codePoint, final MacroFunctionReader reader, final Integer numArg) {

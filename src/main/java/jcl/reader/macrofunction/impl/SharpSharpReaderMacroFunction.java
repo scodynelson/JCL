@@ -10,7 +10,7 @@ import jcl.structs.symbols.Variable;
 /**
  * Implements the '##' Lisp reader macro.
  */
-public class SharpSharpReaderMacroFunction implements ReaderMacroFunction {
+public class SharpSharpReaderMacroFunction extends ReaderMacroFunction {
 
 	@Override
 	public LispStruct readMacro(final int codePoint, final MacroFunctionReader reader, final Integer numArg) {

@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Implements the '#(...)' Lisp reader macro.
  */
-public class SharpLeftParenthesisReaderMacroFunction implements ReaderMacroFunction {
+public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction {
 
 	@Override
 	public LispStruct readMacro(final int codePoint, final MacroFunctionReader reader, final Integer numArg) {

@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Implements the '#a' Lisp reader macro.
  */
-public class SharpAReaderMacroFunction implements ReaderMacroFunction {
+public class SharpAReaderMacroFunction extends ReaderMacroFunction {
 
 	@Override
 	public LispStruct readMacro(final int codePoint, final MacroFunctionReader reader, final Integer numArg) {

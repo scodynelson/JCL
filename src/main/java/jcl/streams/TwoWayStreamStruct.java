@@ -7,7 +7,7 @@ import jcl.syntax.reader.PeekType;
 import jcl.syntax.reader.ReadResult;
 import jcl.LispType;
 import jcl.types.TwoWayStream;
-import jcl.typespecifiers.compound.AndTypeSpecifier;
+import jcl.typespecifiers.AndTypeSpecifier;
 
 /**
  * The {@code TwoWayStreamStruct} is the object representation of a Lisp 'two-way-stream' type.

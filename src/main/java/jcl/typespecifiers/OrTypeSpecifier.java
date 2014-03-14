@@ -1,7 +1,6 @@
-package jcl.typespecifiers.compound;
+package jcl.typespecifiers;
 
 import jcl.LispType;
-import jcl.typespecifiers.CompoundTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.ArrayList;
@@ -9,20 +8,20 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * An {@code AndTypeSpecifier} denotes the set of all objects of the type determined by the intersection of the typespecs.
- * The type specifiers (and) and t are equivalent. The symbol and is not valid as a type specifier, and, specifically,
- * it is not an abbreviation for (and).
+ * An {@code OrTypeSpecifier} denotes the set of all objects of the type determined by the union of the typespecs.
+ * The type specifiers (or) and nil are equivalent. The symbol or is not valid as a type specifier; and, specifically,
+ * it is not an abbreviation for (or).
  */
-public class AndTypeSpecifier implements CompoundTypeSpecifier {
+public class OrTypeSpecifier implements CompoundTypeSpecifier {
 
 	private final List<LispType> types;
 
 	/**
-	 * Constructs a new {@code AndTypeSpecifier} that matches the provided types by 'and' logic.
+	 * Constructs a new {@code OrTypeSpecifier} that matches the provided types by 'or' logic.
 	 *
 	 * @param types an array of {@code LispType}s
 	 */
-	public AndTypeSpecifier(final LispType... types) {
+	public OrTypeSpecifier(final LispType... types) {
 		this.types = new ArrayList<>(Arrays.asList(types));
 	}
 
@@ -38,9 +37,9 @@ public class AndTypeSpecifier implements CompoundTypeSpecifier {
 
 		final LispType lispType = (LispType) obj;
 
-		boolean result = true;
+		boolean result = false;
 		for (final LispType type : types) {
-			result = result && lispType.equals(type);
+			result = result || lispType.equals(type);
 		}
 		return result;
 	}
@@ -54,7 +53,7 @@ public class AndTypeSpecifier implements CompoundTypeSpecifier {
 
 	@Override
 	public String toString() {
-		return "AndTypeSpecifier{"
+		return "OrTypeSpecifier{"
 				+ "types=" + types
 				+ '}';
 	}

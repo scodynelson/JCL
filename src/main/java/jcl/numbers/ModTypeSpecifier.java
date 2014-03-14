@@ -1,4 +1,4 @@
-package jcl.typespecifiers.compound;
+package jcl.numbers;
 
 import jcl.numbers.IntegerStruct;
 import jcl.typespecifiers.CompoundTypeSpecifier;

@@ -8,7 +8,7 @@ import jcl.syntax.reader.PeekType;
 import jcl.syntax.reader.ReadResult;
 import jcl.LispType;
 import jcl.types.EchoStream;
-import jcl.typespecifiers.compound.AndTypeSpecifier;
+import jcl.typespecifiers.AndTypeSpecifier;
 
 import java.util.LinkedList;
 

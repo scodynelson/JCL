@@ -1,7 +1,7 @@
 package jcl.types;
 
 import jcl.typespecifiers.AtomicTypeSpecifier;
-import jcl.typespecifiers.compound.AndTypeSpecifier;
+import jcl.typespecifiers.AndTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.math.BigInteger;

@@ -6,7 +6,7 @@ import jcl.lambdalist.variable.Rest;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.TypeSpecifier;
-import jcl.typespecifiers.compound.ValuesTypeSpecifier;
+import jcl.typespecifiers.ValuesTypeSpecifier;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 

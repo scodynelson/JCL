@@ -1,7 +1,7 @@
 package jcl.types;
 
 import jcl.typespecifiers.AtomicTypeSpecifier;
-import jcl.typespecifiers.compound.NotTypeSpecifier;
+import jcl.typespecifiers.NotTypeSpecifier;
 
 /**
  * An {@code Atom} is a type equivalent to (not cons).

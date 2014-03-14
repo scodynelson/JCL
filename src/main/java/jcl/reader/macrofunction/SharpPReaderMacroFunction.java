@@ -4,8 +4,8 @@ import jcl.LispStruct;
 import jcl.reader.MacroFunctionReader;
 import jcl.reader.ReaderMacroFunction;
 import jcl.syntax.CharacterConstants;
-import jcl.structs.PathnameStruct;
-import jcl.structs.StringStruct;
+import jcl.pathnames.PathnameStruct;
+import jcl.arrays.StringStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.variables.ReadSuppressVariable;
 

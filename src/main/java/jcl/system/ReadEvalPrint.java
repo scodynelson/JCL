@@ -2,12 +2,12 @@ package jcl.system;
 
 import jcl.LispStruct;
 import jcl.reader.LispReader;
-import jcl.structs.PackageStruct;
+import jcl.packages.PackageStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.StreamErrorException;
-import jcl.structs.CharacterStreamStruct;
-import jcl.structs.FileStreamStruct;
-import jcl.structs.InputStream;
+import jcl.streams.CharacterStreamStruct;
+import jcl.streams.FileStreamStruct;
+import jcl.streams.InputStream;
 import jcl.variables.PackageVariable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

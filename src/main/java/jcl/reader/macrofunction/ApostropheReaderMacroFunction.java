@@ -5,8 +5,8 @@ import jcl.reader.MacroFunctionReader;
 import jcl.reader.ReaderMacroFunction;
 import jcl.syntax.CharacterConstants;
 import jcl.reader.tokens.SpecialOperatorSymbolTokens;
-import jcl.structs.ListStruct;
-import jcl.structs.SymbolStruct;
+import jcl.lists.ListStruct;
+import jcl.symbols.SymbolStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.variables.ReadSuppressVariable;
 

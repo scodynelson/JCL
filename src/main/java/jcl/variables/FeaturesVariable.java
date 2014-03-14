@@ -1,6 +1,6 @@
 package jcl.variables;
 
-import jcl.structs.SymbolStruct;
+import jcl.symbols.SymbolStruct;
 
 import java.util.ArrayList;
 import java.util.List;

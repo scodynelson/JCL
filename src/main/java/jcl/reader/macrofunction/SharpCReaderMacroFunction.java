@@ -4,11 +4,11 @@ import jcl.LispStruct;
 import jcl.reader.MacroFunctionReader;
 import jcl.reader.ReaderMacroFunction;
 import jcl.syntax.CharacterConstants;
-import jcl.structs.ComplexStruct;
-import jcl.structs.FloatStruct;
-import jcl.structs.IntegerStruct;
-import jcl.structs.ListStruct;
-import jcl.structs.RatioStruct;
+import jcl.numbers.ComplexStruct;
+import jcl.numbers.FloatStruct;
+import jcl.numbers.IntegerStruct;
+import jcl.lists.ListStruct;
+import jcl.numbers.RatioStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.variables.ReadSuppressVariable;
 

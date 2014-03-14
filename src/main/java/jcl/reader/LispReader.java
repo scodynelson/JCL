@@ -1,7 +1,7 @@
 package jcl.reader;
 
 import jcl.LispStruct;
-import jcl.structs.InputStream;
+import jcl.streams.InputStream;
 import jcl.syntax.reader.ReadResult;
 
 public abstract class LispReader {

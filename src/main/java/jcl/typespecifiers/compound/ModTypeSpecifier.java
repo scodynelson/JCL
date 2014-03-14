@@ -1,6 +1,6 @@
 package jcl.typespecifiers.compound;
 
-import jcl.structs.IntegerStruct;
+import jcl.numbers.IntegerStruct;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 
 import java.math.BigInteger;

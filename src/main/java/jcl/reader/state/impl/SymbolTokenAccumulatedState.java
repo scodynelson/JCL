@@ -6,11 +6,11 @@ import jcl.reader.StateReader;
 import jcl.reader.state.TokenAttribute;
 import jcl.reader.state.impl.util.StateUtils;
 import jcl.syntax.AttributeType;
-import jcl.structs.packages.GlobalPackageStruct;
-import jcl.structs.PackageStruct;
-import jcl.structs.packages.PackageSymbolStruct;
-import jcl.structs.KeywordSymbolStruct;
-import jcl.structs.SymbolStruct;
+import jcl.packages.GlobalPackageStruct;
+import jcl.packages.PackageStruct;
+import jcl.packages.PackageSymbolStruct;
+import jcl.symbols.KeywordSymbolStruct;
+import jcl.symbols.SymbolStruct;
 import jcl.variables.PackageVariable;
 import org.apache.commons.lang3.StringUtils;
 

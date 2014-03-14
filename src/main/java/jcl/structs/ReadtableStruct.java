@@ -1,9 +1,9 @@
 package jcl.structs;
 
-import jcl.reader.macrofunction.ReaderMacroFunction;
-import jcl.reader.syntax.AttributeType;
-import jcl.reader.syntax.CaseSpec;
-import jcl.reader.syntax.SyntaxType;
+import jcl.functions.ReaderMacroFunction;
+import jcl.syntax.AttributeType;
+import jcl.syntax.CaseSpec;
+import jcl.syntax.SyntaxType;
 import jcl.types.Readtable;
 
 import java.util.Map;

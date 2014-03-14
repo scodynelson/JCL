@@ -4,7 +4,7 @@ import jcl.LispStruct;
 import jcl.reader.state.ReaderState;
 import jcl.reader.state.State;
 import jcl.reader.state.impl.EndState;
-import jcl.reader.syntax.CaseSpec;
+import jcl.syntax.CaseSpec;
 import jcl.structs.InputStream;
 import jcl.structs.ReadtableStruct;
 import jcl.structs.streams.ReadResult;

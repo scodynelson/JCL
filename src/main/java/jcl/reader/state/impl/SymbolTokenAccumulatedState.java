@@ -5,7 +5,7 @@ import jcl.reader.state.State;
 import jcl.reader.StateReader;
 import jcl.reader.state.TokenAttribute;
 import jcl.reader.state.impl.util.StateUtils;
-import jcl.reader.syntax.AttributeType;
+import jcl.syntax.AttributeType;
 import jcl.variables.GlobalPackageStruct;
 import jcl.structs.PackageStruct;
 import jcl.structs.packages.PackageSymbolStruct;

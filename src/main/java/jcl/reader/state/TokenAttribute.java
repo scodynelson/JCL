@@ -1,6 +1,6 @@
 package jcl.reader.state;
 
-import jcl.reader.syntax.AttributeType;
+import jcl.syntax.AttributeType;
 
 public class TokenAttribute {
 

@@ -1,7 +1,7 @@
 package jcl.reader.state.impl;
 
 import jcl.reader.MacroFunctionReader;
-import jcl.reader.macrofunction.ReaderMacroFunction;
+import jcl.functions.ReaderMacroFunction;
 import jcl.reader.state.ReaderState;
 import jcl.reader.state.State;
 import jcl.reader.StateReader;

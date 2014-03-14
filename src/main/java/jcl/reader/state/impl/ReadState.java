@@ -3,7 +3,7 @@ package jcl.reader.state.impl;
 import jcl.reader.state.ReaderState;
 import jcl.reader.state.State;
 import jcl.reader.StateReader;
-import jcl.reader.syntax.SyntaxType;
+import jcl.syntax.SyntaxType;
 import jcl.LispStruct;
 import jcl.structs.ReadtableStruct;
 import jcl.structs.streams.ReadResult;

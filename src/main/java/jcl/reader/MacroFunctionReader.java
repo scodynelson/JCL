@@ -1,11 +1,10 @@
 package jcl.reader;
 
 import jcl.LispStruct;
-import jcl.reader.macrofunction.ReadExtendedToken;
-import jcl.reader.syntax.AttributeType;
-import jcl.reader.syntax.CaseSpec;
-import jcl.reader.syntax.CharacterConstants;
-import jcl.reader.syntax.SyntaxType;
+import jcl.syntax.AttributeType;
+import jcl.syntax.CaseSpec;
+import jcl.syntax.CharacterConstants;
+import jcl.syntax.SyntaxType;
 import jcl.structs.ConsStruct;
 import jcl.structs.IntegerStruct;
 import jcl.structs.ListStruct;

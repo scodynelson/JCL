@@ -1,6 +1,6 @@
 package jcl.structs;
 
-import jcl.reader.syntax.AttributeType;
+import jcl.syntax.AttributeType;
 import jcl.variables.ReadBaseVariable;
 
 import java.util.Map;

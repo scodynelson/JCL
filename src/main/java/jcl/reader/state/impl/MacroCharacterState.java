@@ -5,7 +5,7 @@ import jcl.reader.macrofunction.ReaderMacroFunction;
 import jcl.reader.state.ReaderState;
 import jcl.reader.state.State;
 import jcl.reader.StateReader;
-import jcl.reader.util.ReaderUtils;
+import jcl.reader.ReaderUtils;
 import jcl.LispStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.streams.ReadResult;

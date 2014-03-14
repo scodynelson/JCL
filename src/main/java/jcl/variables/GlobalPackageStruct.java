@@ -1,4 +1,4 @@
-package jcl.structs.packages;
+package jcl.variables;
 
 import jcl.structs.KeywordPackageStruct;
 import jcl.structs.PackageStruct;

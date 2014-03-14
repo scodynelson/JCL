@@ -1,15 +1,15 @@
 package jcl.reader.macrofunction.impl;
 
+import jcl.LispStruct;
 import jcl.reader.MacroFunctionReader;
 import jcl.reader.macrofunction.ReaderMacroFunction;
 import jcl.reader.syntax.CharacterConstants;
-import jcl.LispStruct;
 import jcl.structs.ListStruct;
 import jcl.structs.VectorStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.structs.conditions.exceptions.TypeErrorException;
-import jcl.structs.symbols.Variable;
+import jcl.variables.ReadSuppressVariable;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 
 		final ListStruct listToken = reader.readList();
 
-		if (Variable.ReadSuppress) {
+		if (ReadSuppressVariable.INSTANCE.getValue()) {
 			return null;
 		}
 

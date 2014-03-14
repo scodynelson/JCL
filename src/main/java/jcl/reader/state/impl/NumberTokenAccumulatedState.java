@@ -1,8 +1,8 @@
 package jcl.reader.state.impl;
 
+import jcl.reader.StateReader;
 import jcl.reader.state.ReaderState;
 import jcl.reader.state.State;
-import jcl.reader.StateReader;
 import jcl.reader.state.TokenAttribute;
 import jcl.reader.state.impl.util.StateUtils;
 import jcl.reader.syntax.AttributeType;
@@ -11,12 +11,13 @@ import jcl.structs.FloatStruct;
 import jcl.structs.IntegerStruct;
 import jcl.structs.NumberStruct;
 import jcl.structs.RatioStruct;
-import jcl.structs.symbols.Variable;
 import jcl.types.DoubleFloat;
 import jcl.types.Float;
 import jcl.types.LongFloat;
 import jcl.types.ShortFloat;
 import jcl.types.SingleFloat;
+import jcl.variables.ReadBaseVariable;
+import jcl.variables.ReadDefaultFloatFormatVariable;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.fraction.BigFraction;
@@ -99,7 +100,7 @@ public class NumberTokenAccumulatedState implements State {
 		// Check all 'ALPHADIGIT' tokens to make sure they are digits within the current radix
 		// Unicode (not in original spec)
 		//  Check to make sure all digits are from the same Unicode block
-		final int currentRadix = Variable.ReadBase;
+		final int currentRadix = ReadBaseVariable.INSTANCE.getValue();
 		final TokenAttribute firstTokenAttribute = tokenAttributes.getFirst();
 		final int firstToken = firstTokenAttribute.getToken();
 		final Character.UnicodeBlock block = Character.UnicodeBlock.of(firstToken);
@@ -155,23 +156,22 @@ public class NumberTokenAccumulatedState implements State {
 	 * @return the proper float type
 	 */
 	private static Float getFloatType(final Integer exponentToken) {
-
-		Float aFloat = Variable.ReadDefaultFloatFormat;
 		if (exponentToken != null) {
 			final int exponentTokenInt = exponentToken;
 			if ((exponentTokenInt == CharacterConstants.LATIN_SMALL_LETTER_S) || (exponentTokenInt == CharacterConstants.LATIN_CAPITAL_LETTER_S)) {
-				aFloat = ShortFloat.INSTANCE;
+				return ShortFloat.INSTANCE;
 			} else if ((exponentTokenInt == CharacterConstants.LATIN_SMALL_LETTER_F) || (exponentTokenInt == CharacterConstants.LATIN_CAPITAL_LETTER_F)) {
-				aFloat = SingleFloat.INSTANCE;
+				return SingleFloat.INSTANCE;
 			} else if ((exponentTokenInt == CharacterConstants.LATIN_SMALL_LETTER_D) || (exponentTokenInt == CharacterConstants.LATIN_CAPITAL_LETTER_D)) {
-				aFloat = DoubleFloat.INSTANCE;
+				return DoubleFloat.INSTANCE;
 			} else if ((exponentTokenInt == CharacterConstants.LATIN_SMALL_LETTER_L) || (exponentTokenInt == CharacterConstants.LATIN_CAPITAL_LETTER_L)) {
-				aFloat = LongFloat.INSTANCE;
-			} else if ((exponentTokenInt == CharacterConstants.LATIN_SMALL_LETTER_E) || (exponentTokenInt == CharacterConstants.LATIN_CAPITAL_LETTER_E)) {
-				aFloat = Variable.ReadDefaultFloatFormat;
+				return LongFloat.INSTANCE;
 			}
+//			else if ((exponentTokenInt == CharacterConstants.LATIN_SMALL_LETTER_E) || (exponentTokenInt == CharacterConstants.LATIN_CAPITAL_LETTER_E)) {
+//				return ReadDefaultFloatFormatVariable.INSTANCE.getValue();
+//			}
 		}
-		return aFloat;
+		return ReadDefaultFloatFormatVariable.INSTANCE.getValue();
 	}
 
 	/**
@@ -183,14 +183,12 @@ public class NumberTokenAccumulatedState implements State {
 	 * @return the proper float token string
 	 */
 	private static String getFloatTokenString(final String tokenString, final Integer exponentToken) {
-
-		String returnString = tokenString;
 		if (exponentToken != null) {
 			final String exponentTokenString = String.valueOf(exponentToken);
 			final String eCapitalLetterString = CharacterConstants.LATIN_CAPITAL_LETTER_E.toString();
-			returnString = StringUtils.replace(tokenString, exponentTokenString, eCapitalLetterString);
+			return StringUtils.replace(tokenString, exponentTokenString, eCapitalLetterString);
 		}
-		return returnString;
+		return tokenString;
 	}
 
 	/**

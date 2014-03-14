@@ -1,21 +1,23 @@
 package jcl.reader;
 
+import jcl.LispStruct;
 import jcl.reader.macrofunction.ReadExtendedToken;
 import jcl.reader.syntax.AttributeType;
 import jcl.reader.syntax.CaseSpec;
 import jcl.reader.syntax.CharacterConstants;
 import jcl.reader.syntax.SyntaxType;
-import jcl.reader.util.ReaderUtils;
 import jcl.structs.ConsStruct;
 import jcl.structs.IntegerStruct;
-import jcl.LispStruct;
 import jcl.structs.ListStruct;
 import jcl.structs.PackageStruct;
 import jcl.structs.SymbolStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
-import jcl.structs.packages.GlobalPackageStruct;
 import jcl.structs.streams.ReadResult;
-import jcl.structs.symbols.Variable;
+import jcl.variables.FeaturesVariable;
+import jcl.variables.GlobalPackageStruct;
+import jcl.variables.PackageVariable;
+import jcl.variables.ReadBaseVariable;
+import jcl.variables.ReadSuppressVariable;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -242,7 +244,7 @@ public class MacroFunctionReader extends LispReader {
 	//************************//
 
 	public IntegerStruct readIntegerToken(final Integer radix) {
-		if (Variable.ReadSuppress) {
+		if (ReadSuppressVariable.INSTANCE.getValue()) {
 			readExtendedToken();
 			return null;
 		} else if (radix == null) {
@@ -250,10 +252,10 @@ public class MacroFunctionReader extends LispReader {
 		} else if ((radix < 2) && (radix > 36)) {
 			throw new ReaderErrorException("Illegal radix for #R: " + radix + '.');
 		} else {
-			final int previousReadBase = Variable.getReadBase();
+			final int previousReadBase = ReadBaseVariable.INSTANCE.getValue();
 
 			// alter the readbase
-			Variable.setReadBase(radix);
+			ReadBaseVariable.INSTANCE.setValue(radix);
 
 			// read integer
 			final LispStruct lispToken = stateReader.read();
@@ -262,12 +264,12 @@ public class MacroFunctionReader extends LispReader {
 				final IntegerStruct integerToken = (IntegerStruct) lispToken;
 
 				// reset the readbase
-				Variable.setReadBase(previousReadBase);
+				ReadBaseVariable.INSTANCE.setValue(previousReadBase);
 
 				return integerToken;
 			} else {
 				// reset the readbase
-				Variable.setReadBase(previousReadBase);
+				ReadBaseVariable.INSTANCE.setValue(previousReadBase);
 
 				throw new ReaderErrorException("#R (base " + radix + ") value is not a rational: " + lispToken + '.');
 			}
@@ -292,7 +294,7 @@ public class MacroFunctionReader extends LispReader {
 
 				if (ReaderUtils.isSyntaxType(stateReader, nextCodePoint, SyntaxType.WHITESPACE, SyntaxType.TERMINATING)) {
 					if (theList.isEmpty()) {
-						if (Variable.ReadSuppress) {
+						if (ReadSuppressVariable.INSTANCE.getValue()) {
 							return null;
 						} else {
 							throw new ReaderErrorException("Nothing appears before . in list.");
@@ -411,11 +413,11 @@ public class MacroFunctionReader extends LispReader {
 
 		boolean isFeature;
 
-		final PackageStruct previousPackage = Variable.getPackage();
-		final boolean previousReadSuppress = Variable.isReadSuppress();
+		final PackageStruct previousPackage = PackageVariable.INSTANCE.getValue();
+		final boolean previousReadSuppress = ReadSuppressVariable.INSTANCE.getValue();
 		try {
-			Variable.setPackage(GlobalPackageStruct.KEYWORD);
-			Variable.setReadSuppress(false);
+			PackageVariable.INSTANCE.setValue(GlobalPackageStruct.KEYWORD);
+			ReadSuppressVariable.INSTANCE.setValue(false);
 
 			final LispStruct token = stateReader.read();
 
@@ -424,14 +426,14 @@ public class MacroFunctionReader extends LispReader {
 			LOGGER.debug(ree.getMessage(), ree);
 			isFeature = false;
 		} finally {
-			Variable.setPackage(previousPackage);
+			PackageVariable.INSTANCE.setValue(previousPackage);
 		}
 
 		if (isFeature && shouldHideFeatures) {
 
-			Variable.setReadSuppress(true);
+			ReadSuppressVariable.INSTANCE.setValue(true);
 			stateReader.read();
-			Variable.setReadSuppress(previousReadSuppress);
+			ReadSuppressVariable.INSTANCE.setValue(previousReadSuppress);
 		}
 	}
 
@@ -474,7 +476,7 @@ public class MacroFunctionReader extends LispReader {
 		} else if (token instanceof SymbolStruct) {
 			final SymbolStruct<?> symbolToken = (SymbolStruct<?>) token;
 
-			final List<SymbolStruct<?>> featuresList = Variable.Features;
+			final List<SymbolStruct<?>> featuresList = FeaturesVariable.INSTANCE.getValue();
 			returnVal = featuresList.contains(symbolToken);
 		} else {
 			throw new ReaderErrorException("");

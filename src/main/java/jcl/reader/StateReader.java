@@ -1,14 +1,14 @@
 package jcl.reader;
 
+import jcl.LispStruct;
 import jcl.reader.state.ReaderState;
 import jcl.reader.state.State;
 import jcl.reader.state.impl.EndState;
 import jcl.reader.syntax.CaseSpec;
 import jcl.structs.InputStream;
-import jcl.LispStruct;
 import jcl.structs.ReadtableStruct;
 import jcl.structs.streams.ReadResult;
-import jcl.structs.symbols.Variable;
+import jcl.variables.ReadtableVariable;
 
 public class StateReader extends LispReader {
 
@@ -16,7 +16,7 @@ public class StateReader extends LispReader {
 	private final ReadtableStruct readtable;
 
 	public StateReader(final InputStream inputStream) {
-		this(inputStream, Variable.Readtable);
+		this(inputStream, ReadtableVariable.INSTANCE.getValue());
 	}
 
 	public StateReader(final InputStream inputStream, final ReadtableStruct readtable) {

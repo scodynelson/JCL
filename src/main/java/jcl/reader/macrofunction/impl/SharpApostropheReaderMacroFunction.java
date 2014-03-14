@@ -1,14 +1,14 @@
 package jcl.reader.macrofunction.impl;
 
+import jcl.LispStruct;
 import jcl.reader.MacroFunctionReader;
 import jcl.reader.macrofunction.ReaderMacroFunction;
 import jcl.reader.syntax.CharacterConstants;
 import jcl.reader.tokens.SpecialOperatorSymbolTokens;
-import jcl.LispStruct;
 import jcl.structs.ListStruct;
 import jcl.structs.SymbolStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
-import jcl.structs.symbols.Variable;
+import jcl.variables.ReadSuppressVariable;
 
 /**
  * Implements the '#'' Lisp reader macro.
@@ -20,7 +20,7 @@ public class SharpApostropheReaderMacroFunction extends ReaderMacroFunction {
 		assert codePoint == CharacterConstants.APOSTROPHE;
 
 		final LispStruct expression = reader.read();
-		if (Variable.ReadSuppress) {
+		if (ReadSuppressVariable.INSTANCE.getValue()) {
 			return null;
 		}
 

@@ -1,12 +1,12 @@
 package jcl.reader.state.impl;
 
+import jcl.reader.ReaderUtils;
+import jcl.reader.StateReader;
 import jcl.reader.state.ReaderState;
 import jcl.reader.state.State;
-import jcl.reader.StateReader;
 import jcl.reader.state.TokenAttribute;
 import jcl.reader.state.impl.util.StateUtils;
-import jcl.reader.util.ReaderUtils;
-import jcl.structs.symbols.Variable;
+import jcl.variables.ReadSuppressVariable;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -63,7 +63,7 @@ public class TokenAccumulatedState implements State {
 			return readerState;
 		}
 
-		if (Variable.ReadSuppress) {
+		if (ReadSuppressVariable.INSTANCE.getValue()) {
 			readerState.setReturnToken(null);
 			readerState.setNextState(EndState.END_STATE);
 			return readerState;

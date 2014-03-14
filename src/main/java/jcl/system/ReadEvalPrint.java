@@ -3,12 +3,13 @@ package jcl.system;
 import jcl.LispStruct;
 import jcl.LoggerOutputStream;
 import jcl.reader.LispReader;
+import jcl.structs.PackageStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.StreamErrorException;
 import jcl.structs.CharacterStreamStruct;
 import jcl.structs.FileStreamStruct;
 import jcl.structs.InputStream;
-import jcl.structs.symbols.Variable;
+import jcl.variables.PackageVariable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,7 +89,8 @@ public final class ReadEvalPrint {
 //				Object value = null;
 				try {
 					// THE PROMPT
-					LOGGER.info("\n{}: {}> ", Variable.Package.getName(), ++lineCounter);
+					final PackageStruct pkg = PackageVariable.INSTANCE.getValue();
+					LOGGER.info("\n{}: {}> ", pkg.getName(), ++lineCounter);
 
 					// READ --------------
 					try {

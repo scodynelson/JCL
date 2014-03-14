@@ -1,15 +1,15 @@
 package jcl.reader.macrofunction.impl;
 
+import jcl.LispStruct;
 import jcl.reader.MacroFunctionReader;
 import jcl.reader.macrofunction.ReaderMacroFunction;
 import jcl.reader.syntax.CharacterConstants;
-import jcl.LispStruct;
 import jcl.structs.StringStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.structs.conditions.exceptions.TypeErrorException;
 import jcl.structs.streams.ReadResult;
-import jcl.structs.symbols.Variable;
+import jcl.variables.ReadSuppressVariable;
 
 /**
  * Implements the '"..."' Lisp reader macro.
@@ -60,7 +60,7 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunction {
 			readChar = readResult.getResult();
 		}
 
-		if (Variable.ReadSuppress) {
+		if (ReadSuppressVariable.INSTANCE.getValue()) {
 			return null;
 		}
 

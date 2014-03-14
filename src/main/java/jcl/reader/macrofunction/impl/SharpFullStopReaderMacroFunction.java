@@ -1,11 +1,12 @@
 package jcl.reader.macrofunction.impl;
 
+import jcl.LispStruct;
 import jcl.reader.MacroFunctionReader;
 import jcl.reader.macrofunction.ReaderMacroFunction;
 import jcl.reader.syntax.CharacterConstants;
-import jcl.LispStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
-import jcl.structs.symbols.Variable;
+import jcl.variables.ReadEvalVariable;
+import jcl.variables.ReadSuppressVariable;
 
 /**
  * Implements the '#.' Lisp reader macro.
@@ -17,11 +18,11 @@ public class SharpFullStopReaderMacroFunction extends ReaderMacroFunction {
 		assert codePoint == CharacterConstants.FULL_STOP;
 
 		final LispStruct lispToken = reader.read();
-		if (Variable.ReadSuppress) {
+		if (ReadSuppressVariable.INSTANCE.getValue()) {
 			return null;
 		}
 
-		if (!Variable.ReadEval) {
+		if (!ReadEvalVariable.INSTANCE.getValue()) {
 			throw new ReaderErrorException("Attempt to read #. while *READ-EVAL* is bound to NIL.");
 		}
 

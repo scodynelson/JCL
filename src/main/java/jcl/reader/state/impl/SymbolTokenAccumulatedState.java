@@ -6,12 +6,12 @@ import jcl.reader.StateReader;
 import jcl.reader.state.TokenAttribute;
 import jcl.reader.state.impl.util.StateUtils;
 import jcl.reader.syntax.AttributeType;
-import jcl.structs.packages.GlobalPackageStruct;
+import jcl.variables.GlobalPackageStruct;
 import jcl.structs.PackageStruct;
 import jcl.structs.packages.PackageSymbolStruct;
 import jcl.structs.KeywordSymbolStruct;
 import jcl.structs.SymbolStruct;
-import jcl.structs.symbols.Variable;
+import jcl.variables.PackageVariable;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.LinkedList;
@@ -82,7 +82,8 @@ public class SymbolTokenAccumulatedState implements State {
 		if (hasNoPackageMarkers) {
 			final String symName = StateUtils.convertTokensToString(tokenAttributes);
 
-			final PackageSymbolStruct packageSymbol = Variable.Package.findSymbol(symName);
+			final PackageStruct pkg = PackageVariable.INSTANCE.getValue();
+			final PackageSymbolStruct packageSymbol = pkg.findSymbol(symName);
 			if (packageSymbol == null) {
 //				readerState.setErrorMessage("Unbound variable: " + symName); // TODO: This check will happen in the compiler...
 				return new SymbolStruct(symName);

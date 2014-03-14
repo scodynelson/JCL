@@ -6,7 +6,7 @@ import jcl.reader.StateReader;
 import jcl.reader.state.impl.util.StateUtils;
 import jcl.reader.syntax.AttributeType;
 import jcl.reader.syntax.CaseSpec;
-import jcl.reader.util.ReaderUtils;
+import jcl.reader.ReaderUtils;
 import jcl.structs.ReadtableStruct;
 
 /**

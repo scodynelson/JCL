@@ -1,4 +1,4 @@
-package jcl.structs.readtables;
+package jcl.variables;
 
 import jcl.reader.macrofunction.impl.ApostropheReaderMacroFunction;
 import jcl.reader.macrofunction.impl.LeftParenthesisReaderMacroFunction;

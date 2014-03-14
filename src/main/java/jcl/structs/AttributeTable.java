@@ -1,7 +1,7 @@
 package jcl.structs;
 
 import jcl.reader.syntax.AttributeType;
-import jcl.structs.symbols.Variable;
+import jcl.variables.ReadBaseVariable;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -147,7 +147,7 @@ class AttributeTable {
 		if (attributeTypeMap.containsKey(codePoint)) {
 			AttributeType attributeType = attributeTypeMap.get(codePoint);
 
-			final boolean hasHighRadix = Variable.ReadBase > 13;
+			final boolean hasHighRadix = ReadBaseVariable.INSTANCE.getValue() > 13;
 			if (hasHighRadix && (attributeType == AttributeType.EXPONENTMARKER)) {
 				attributeType = AttributeType.ALPHADIGIT;
 			}

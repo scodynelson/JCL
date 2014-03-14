@@ -1,12 +1,12 @@
 package jcl.reader.macrofunction.impl;
 
+import jcl.LispStruct;
 import jcl.reader.MacroFunctionReader;
 import jcl.reader.macrofunction.ReaderMacroFunction;
 import jcl.reader.syntax.CharacterConstants;
-import jcl.LispStruct;
 import jcl.structs.comments.CommentStruct;
 import jcl.structs.streams.ReadResult;
-import jcl.structs.symbols.Variable;
+import jcl.variables.ReadSuppressVariable;
 
 /**
  * Implements the '#|...|#' Lisp reader macro.
@@ -51,11 +51,11 @@ public class SharpVerticalBarReaderMacroFunction extends ReaderMacroFunction {
 			nextReadResult = reader.readChar();
 		}
 
-		if (Variable.ReadSuppress) {
+		if (ReadSuppressVariable.INSTANCE.getValue()) {
 			return null;
-		} else {
-			final String stringValue = stringBuilder.toString();
-			return CommentStruct.getStruct(stringValue);
 		}
+
+		final String stringValue = stringBuilder.toString();
+		return CommentStruct.getStruct(stringValue);
 	}
 }

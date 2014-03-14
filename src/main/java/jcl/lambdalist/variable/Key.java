@@ -96,10 +96,10 @@ public class Key<VAR> {
 
 	@Override
 	public String toString() {
-		return "Key{" +
-				"vars=" + vars +
-				", allowOtherKeys=" + allowOtherKeys +
-				'}';
+		return "Key{"
+				+ "vars=" + vars
+				+ ", allowOtherKeys=" + allowOtherKeys
+				+ '}';
 	}
 
 	/**

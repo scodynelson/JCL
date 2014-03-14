@@ -1,5 +1,6 @@
 package jcl.structs;
 
+import jcl.classes.BuiltInClassStruct;
 import jcl.structs.conditions.exceptions.PackageErrorException;
 import jcl.structs.packages.GlobalPackageStruct;
 import jcl.structs.packages.PackageSymbolStruct;

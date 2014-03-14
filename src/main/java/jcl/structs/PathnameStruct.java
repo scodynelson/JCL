@@ -1,5 +1,6 @@
 package jcl.structs;
 
+import jcl.classes.BuiltInClassStruct;
 import jcl.structs.conditions.exceptions.FileErrorException;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.types.Pathname;

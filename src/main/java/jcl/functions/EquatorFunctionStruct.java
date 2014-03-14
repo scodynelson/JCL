@@ -1,6 +1,5 @@
 package jcl.functions;
 
-import jcl.structs.FunctionStruct;
 import org.apache.commons.collections4.Equator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 

@@ -26,7 +26,7 @@ import jcl.reader.macrofunction.SharpSharpReaderMacroFunction;
 import jcl.reader.macrofunction.SharpUReaderMacroFunction;
 import jcl.reader.macrofunction.SharpVerticalBarReaderMacroFunction;
 import jcl.reader.macrofunction.SharpXReaderMacroFunction;
-import jcl.structs.BuiltInClassStruct;
+import jcl.classes.BuiltInClassStruct;
 import jcl.syntax.AttributeType;
 import jcl.syntax.CaseSpec;
 import jcl.syntax.CharacterConstants;

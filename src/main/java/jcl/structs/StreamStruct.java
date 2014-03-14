@@ -2,6 +2,7 @@ package jcl.structs;
 
 import jcl.LispStruct;
 import jcl.LispType;
+import jcl.classes.BuiltInClassStruct;
 import jcl.types.Stream;
 
 import java.util.List;

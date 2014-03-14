@@ -1,5 +1,6 @@
 package jcl.structs;
 
+import jcl.classes.BuiltInClassStruct;
 import jcl.types.BaseChar;
 import jcl.types.Character;
 import jcl.types.ExtendedChar;

@@ -1,6 +1,7 @@
 package jcl.structs;
 
 import jcl.LispStruct;
+import jcl.classes.BuiltInClassStruct;
 import jcl.types.Number;
 
 import java.util.List;

@@ -1,6 +1,7 @@
 package jcl.structs;
 
 import jcl.LispStruct;
+import jcl.classes.BuiltInClassStruct;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.structs.conditions.exceptions.TypeErrorException;
 import jcl.LispType;

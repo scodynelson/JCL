@@ -1,6 +1,7 @@
 package jcl.structs;
 
 import jcl.LispStruct;
+import jcl.classes.BuiltInClassStruct;
 import jcl.types.List;
 import org.apache.commons.collections4.CollectionUtils;
 

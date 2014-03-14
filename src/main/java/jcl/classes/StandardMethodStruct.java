@@ -1,4 +1,4 @@
-package jcl.structs;
+package jcl.classes;
 
 import jcl.LispType;
 import jcl.types.StandardMethod;

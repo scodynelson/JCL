@@ -1,5 +1,6 @@
 package jcl.structs;
 
+import jcl.classes.BuiltInClassStruct;
 import jcl.types.T;
 
 /**

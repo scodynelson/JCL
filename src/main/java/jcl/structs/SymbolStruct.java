@@ -1,6 +1,8 @@
 package jcl.structs;
 
 import jcl.LispStruct;
+import jcl.classes.BuiltInClassStruct;
+import jcl.functions.FunctionStruct;
 import jcl.types.Symbol;
 
 import java.util.ArrayList;

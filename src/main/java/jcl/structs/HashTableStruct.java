@@ -1,7 +1,9 @@
 package jcl.structs;
 
 import jcl.LispStruct;
+import jcl.classes.BuiltInClassStruct;
 import jcl.functions.EquatorFunctionStruct;
+import jcl.functions.FunctionStruct;
 import jcl.types.HashTable;
 import jcl.LispType;
 import org.apache.commons.collections4.Equator;

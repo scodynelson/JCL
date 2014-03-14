@@ -1,4 +1,4 @@
-package jcl.structs;
+package jcl.functions;
 
 import jcl.LispStruct;
 import jcl.types.StandardGenericFunction;

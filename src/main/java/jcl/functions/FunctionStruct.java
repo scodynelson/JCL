@@ -1,6 +1,7 @@
-package jcl.structs;
+package jcl.functions;
 
 import jcl.LispStruct;
+import jcl.classes.BuiltInClassStruct;
 import jcl.types.Function;
 import jcl.LispType;
 

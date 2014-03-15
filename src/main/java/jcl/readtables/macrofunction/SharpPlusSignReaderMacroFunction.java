@@ -1,6 +1,6 @@
 package jcl.readtables.macrofunction;
 
-import jcl.readtables.state.MacroFunctionReader;
+import jcl.readtables.reader.MacroFunctionReader;
 import jcl.syntax.CharacterConstants;
 import jcl.LispStruct;
 

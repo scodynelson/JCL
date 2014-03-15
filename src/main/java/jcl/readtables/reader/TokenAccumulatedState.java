@@ -1,4 +1,4 @@
-package jcl.readtables.state;
+package jcl.readtables.reader;
 
 import jcl.syntax.reader.TokenAttribute;
 import jcl.variables.ReadSuppressVariable;

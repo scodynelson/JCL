@@ -1,4 +1,4 @@
-package jcl.readtables.state;
+package jcl.readtables.reader;
 
 /**
  * Step 3 of the Reader Algorithm.

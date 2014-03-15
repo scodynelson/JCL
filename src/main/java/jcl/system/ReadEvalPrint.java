@@ -1,7 +1,7 @@
 package jcl.system;
 
 import jcl.LispStruct;
-import jcl.readtables.state.LispReader;
+import jcl.readtables.reader.LispReader;
 import jcl.packages.PackageStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.StreamErrorException;

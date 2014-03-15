@@ -1,4 +1,4 @@
-package jcl.readtables.state;
+package jcl.readtables.reader;
 
 import jcl.LispStruct;
 import jcl.syntax.AttributeType;

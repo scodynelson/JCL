@@ -1,4 +1,4 @@
-package jcl.readtables.state;
+package jcl.readtables.reader;
 
 /**
  * This interface defines a set of anonymous classes that comprise the states of the

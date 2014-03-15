@@ -1,4 +1,4 @@
-package jcl.readtables.state;
+package jcl.readtables.reader;
 
 /**
  * Not Specified in the Reader Algorithm.

@@ -1,4 +1,4 @@
-package jcl.readtables.state;
+package jcl.readtables.reader;
 
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 
@@ -9,9 +9,9 @@ import jcl.structs.conditions.exceptions.ReaderErrorException;
  * <p/>
  * This is our Accepting state that says we are done with the Reader.
  */
-public class ErrorState implements State {
+public class EndState implements State {
 
-	public static final State ERROR_STATE = new ErrorState();
+	public static final State END_STATE = new EndState();
 
 	/**
 	 * Processes for the reader for the current State.
@@ -20,12 +20,6 @@ public class ErrorState implements State {
 	 */
 	@Override
 	public ReaderState process(final StateReader reader, final ReaderState readerState) {
-
-		final Integer codePoint = readerState.getPreviousReadCharacter();
-		if (ReaderUtils.isEndOfFileCharacter(codePoint) && !readerState.isEofErrorP()) {
-			readerState.setNextState(EndState.END_STATE);
-			return readerState;
-		}
-		throw new ReaderErrorException("Reader Error " + readerState.getErrorMessage() + " in State " + readerState.getPreviousState());
+		throw new ReaderErrorException("A PROGRAMMING ERROR HAS OCCURRED. The EndState process method has been explicitly and illegally called!");
 	}
 }

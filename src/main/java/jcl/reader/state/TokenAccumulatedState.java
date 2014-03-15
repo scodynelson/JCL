@@ -1,11 +1,6 @@
-package jcl.reader.state.impl;
+package jcl.reader.state;
 
-import jcl.reader.ReaderUtils;
-import jcl.reader.StateReader;
-import jcl.reader.state.ReaderState;
-import jcl.reader.state.State;
-import jcl.reader.state.TokenAttribute;
-import jcl.reader.state.impl.util.StateUtils;
+import jcl.syntax.reader.TokenAttribute;
 import jcl.variables.ReadSuppressVariable;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;

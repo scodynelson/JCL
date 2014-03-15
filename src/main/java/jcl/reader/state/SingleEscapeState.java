@@ -1,8 +1,5 @@
-package jcl.reader.state.impl;
+package jcl.reader.state;
 
-import jcl.reader.state.ReaderState;
-import jcl.reader.state.State;
-import jcl.reader.StateReader;
 import jcl.syntax.AttributeType;
 import jcl.LispStruct;
 import jcl.syntax.reader.ReadResult;

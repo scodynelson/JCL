@@ -1,6 +1,6 @@
-package jcl.reader.state.impl.util;
+package jcl.reader.state;
 
-import jcl.reader.state.TokenAttribute;
+import jcl.syntax.reader.TokenAttribute;
 import jcl.syntax.AttributeType;
 import jcl.syntax.CaseSpec;
 import org.apache.commons.collections4.CollectionUtils;

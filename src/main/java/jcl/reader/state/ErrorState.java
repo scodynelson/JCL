@@ -1,9 +1,5 @@
-package jcl.reader.state.impl;
+package jcl.reader.state;
 
-import jcl.reader.state.ReaderState;
-import jcl.reader.state.State;
-import jcl.reader.StateReader;
-import jcl.reader.ReaderUtils;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 
 /**

@@ -1,8 +1,7 @@
 package jcl.reader.macrofunction;
 
 import jcl.LispStruct;
-import jcl.reader.MacroFunctionReader;
-import jcl.reader.ReaderMacroFunction;
+import jcl.reader.state.MacroFunctionReader;
 import jcl.syntax.CharacterConstants;
 import jcl.classes.StructureObjectStruct;
 import jcl.variables.ReadSuppressVariable;

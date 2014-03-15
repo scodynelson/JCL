@@ -3,6 +3,7 @@ package jcl.reader;
 import jcl.reader.macrofunction.ApostropheReaderMacroFunction;
 import jcl.reader.macrofunction.LeftParenthesisReaderMacroFunction;
 import jcl.reader.macrofunction.QuotationMarkReaderMacroFunction;
+import jcl.reader.macrofunction.ReaderMacroFunction;
 import jcl.reader.macrofunction.RightParenthesisReaderMacroFunction;
 import jcl.reader.macrofunction.SemicolonReaderMacroFunction;
 import jcl.reader.macrofunction.SharpAReaderMacroFunction;

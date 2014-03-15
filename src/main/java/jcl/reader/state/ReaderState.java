@@ -1,8 +1,8 @@
 package jcl.reader.state;
 
-import jcl.reader.state.impl.InitialState;
 import jcl.syntax.AttributeType;
 import jcl.LispStruct;
+import jcl.syntax.reader.TokenAttribute;
 
 import java.util.LinkedList;
 

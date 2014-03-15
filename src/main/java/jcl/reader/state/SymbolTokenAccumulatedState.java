@@ -1,16 +1,12 @@
-package jcl.reader.state.impl;
+package jcl.reader.state;
 
-import jcl.reader.state.ReaderState;
-import jcl.reader.state.State;
-import jcl.reader.StateReader;
-import jcl.reader.state.TokenAttribute;
-import jcl.reader.state.impl.util.StateUtils;
 import jcl.syntax.AttributeType;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageSymbolStruct;
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SymbolStruct;
+import jcl.syntax.reader.TokenAttribute;
 import jcl.variables.PackageVariable;
 import org.apache.commons.lang3.StringUtils;
 

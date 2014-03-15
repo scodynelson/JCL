@@ -1,5 +1,7 @@
-package jcl.reader;
+package jcl.reader.state;
 
+import jcl.reader.ReadtableStruct;
+import jcl.reader.state.StateReader;
 import jcl.syntax.AttributeType;
 import jcl.syntax.SyntaxType;
 

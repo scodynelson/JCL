@@ -1,8 +1,4 @@
-package jcl.reader.state.impl;
-
-import jcl.reader.state.ReaderState;
-import jcl.reader.state.State;
-import jcl.reader.StateReader;
+package jcl.reader.state;
 
 /**
  * Step 3 of the Reader Algorithm.

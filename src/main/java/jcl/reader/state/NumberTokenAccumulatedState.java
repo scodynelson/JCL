@@ -1,16 +1,12 @@
-package jcl.reader.state.impl;
+package jcl.reader.state;
 
-import jcl.reader.StateReader;
-import jcl.reader.state.ReaderState;
-import jcl.reader.state.State;
-import jcl.reader.state.TokenAttribute;
-import jcl.reader.state.impl.util.StateUtils;
 import jcl.syntax.AttributeType;
 import jcl.syntax.CharacterConstants;
 import jcl.numbers.FloatStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.NumberStruct;
 import jcl.numbers.RatioStruct;
+import jcl.syntax.reader.TokenAttribute;
 import jcl.types.DoubleFloat;
 import jcl.types.Float;
 import jcl.types.LongFloat;

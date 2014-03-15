@@ -1,4 +1,4 @@
-package jcl.reader;
+package jcl.reader.state;
 
 import jcl.LispStruct;
 import jcl.streams.InputStream;

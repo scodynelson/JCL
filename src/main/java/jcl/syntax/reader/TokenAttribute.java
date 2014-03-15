@@ -1,4 +1,4 @@
-package jcl.reader.state;
+package jcl.syntax.reader;
 
 import jcl.syntax.AttributeType;
 

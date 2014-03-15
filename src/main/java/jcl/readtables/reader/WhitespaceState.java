@@ -5,19 +5,15 @@ package jcl.readtables.reader;
  * <p/>
  * Discards all white space and returns the ReadState
  */
-public class WhitespaceState implements State {
+public class WhitespaceState extends State {
 
 	public static final State WHITESPACE_STATE = new WhitespaceState();
 
 	/**
 	 * Processes for the reader for the current State.
-	 *
-	 * @return ReadState
 	 */
 	@Override
-	public ReaderState process(final StateReader reader, final ReaderState readerState) {
-		readerState.setPreviousState(this);
-		readerState.setNextState(ReadState.READ_STATE);
-		return readerState;
+	public void process(final StateReader reader, final ReaderState readerState) {
+		ReadState.READ_STATE.process(reader, readerState);
 	}
 }

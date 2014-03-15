@@ -5,19 +5,12 @@ package jcl.readtables.reader;
  * <p/>
  * Begins the the transitions between States that are specified in the Reader Algorithm
  */
-public class InitialState implements State {
+public class InitialState extends State {
 
 	public static final State INITIAL_STATE = new InitialState();
 
-	/**
-	 * Processes for the reader for the current State.
-	 *
-	 * @return ReadState    Returns the first State of the Reader Algorithm
-	 */
 	@Override
-	public ReaderState process(final StateReader reader, final ReaderState readerState) {
-		readerState.setPreviousState(this);
-		readerState.setNextState(ReadState.READ_STATE);
-		return readerState;
+	public void process(final StateReader reader, final ReaderState readerState) {
+		ReadState.READ_STATE.process(reader, readerState);
 	}
 }

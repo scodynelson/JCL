@@ -30,7 +30,7 @@ package jcl.readtables.reader;
  * For online specifications of these states, goto http://www.lispworks.com/documentation/HyperSpec/Body/02_b.htm
  * This site is the Reader Algorithm that is outlined within the CommonLisp HyperSpec (TM).
  */
-public interface State {
+public abstract class State {
 
-	ReaderState process(StateReader reader, ReaderState readerState);
+	public abstract void process(StateReader reader, ReaderState readerState);
 }

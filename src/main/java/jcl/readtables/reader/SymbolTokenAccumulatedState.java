@@ -1,11 +1,11 @@
 package jcl.readtables.reader;
 
-import jcl.syntax.AttributeType;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageSymbolStruct;
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SymbolStruct;
+import jcl.syntax.AttributeType;
 import jcl.syntax.reader.TokenAttribute;
 import jcl.variables.PackageVariable;
 import org.apache.commons.lang3.StringUtils;
@@ -40,7 +40,7 @@ import java.util.Map;
  * and Symbols that are in the Keyword Package!!!
  * <p/>
  */
-public class SymbolTokenAccumulatedState implements State {
+public class SymbolTokenAccumulatedState extends State {
 
 	public static final State SYMBOL_TOKEN_ACCUMULATED_STATE = new SymbolTokenAccumulatedState();
 
@@ -50,17 +50,15 @@ public class SymbolTokenAccumulatedState implements State {
 	 * @return EndState       the final accepting state
 	 */
 	@Override
-	public ReaderState process(final StateReader reader, final ReaderState readerState) {
-		readerState.setPreviousState(this);
+	public void process(final StateReader reader, final ReaderState readerState) {
 
 		final SymbolStruct<?> symbolToken = getSymbolToken(readerState);
 //		if (symbolToken == null) {
-//			readerState.setNextState(ErrorState.ERROR_STATE);
+//			ErrorState.ERROR_STATE.setPreviousState(this);
+//			ErrorState.ERROR_STATE.process(reader, readerState);
 //		} else {
 		readerState.setReturnToken(symbolToken);
-		readerState.setNextState(EndState.END_STATE);
 //		}
-		return readerState;
 	}
 
 	/**
@@ -90,7 +88,7 @@ public class SymbolTokenAccumulatedState implements State {
 		// Check if last element is a 'PACKAGEMARKER'
 		final TokenAttribute lastToken = tokenAttributes.getLast();
 		if (lastToken.getAttributeType() == AttributeType.PACKAGEMARKER) {
-			readerState.setErrorMessage("Illegal symbol syntax.");
+			ErrorState.ERROR_STATE.setErrorMessage("Illegal symbol syntax.");
 			return null;
 		}
 
@@ -145,7 +143,7 @@ public class SymbolTokenAccumulatedState implements State {
 			final PackageStruct pkg = PackageStruct.findPackage(pkgName);
 
 			if (pkg == null) {
-				readerState.setErrorMessage("There is no package named " + pkgName);
+				ErrorState.ERROR_STATE.setErrorMessage("There is no package named " + pkgName);
 				return null;
 			}
 
@@ -154,7 +152,7 @@ public class SymbolTokenAccumulatedState implements State {
 
 				final SymbolStruct<?> externalSymbol = pkgExternalSymbols.get(symName);
 				if (externalSymbol == null) {
-					readerState.setErrorMessage("No external symbol named \"" + symName + "\" in package " + pkgName);
+					ErrorState.ERROR_STATE.setErrorMessage("No external symbol named \"" + symName + "\" in package " + pkgName);
 					return null;
 				}
 				return externalSymbol;
@@ -163,7 +161,7 @@ public class SymbolTokenAccumulatedState implements State {
 
 				final SymbolStruct<?> symbol = packageSymbol.getSymbolStruct();
 				if (symbol == null) {
-					readerState.setErrorMessage("Unbound variable: " + pkgName + "::" + symName);
+					ErrorState.ERROR_STATE.setErrorMessage("Unbound variable: " + pkgName + "::" + symName);
 					return null;
 				}
 				return symbol;

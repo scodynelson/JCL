@@ -1,8 +1,8 @@
 package jcl.readtables.reader;
 
-import jcl.syntax.SyntaxType;
 import jcl.LispStruct;
 import jcl.readtables.ReadtableStruct;
+import jcl.syntax.SyntaxType;
 import jcl.syntax.reader.ReadResult;
 
 /**
@@ -12,7 +12,7 @@ import jcl.syntax.reader.ReadResult;
  * next proper State according to what the SyntaxType of the character that was read
  * from the input stream was.
  */
-public class ReadState implements State {
+public class ReadState extends State {
 
 	public static final State READ_STATE = new ReadState();
 
@@ -31,8 +31,7 @@ public class ReadState implements State {
 	 * <EndIf>
 	 */
 	@Override
-	public ReaderState process(final StateReader reader, final ReaderState readerState) {
-		readerState.setPreviousState(this);
+	public void process(final StateReader reader, final ReaderState readerState) {
 
 		final boolean isEofErrorP = readerState.isEofErrorP();
 		final LispStruct eofValue = readerState.getEofValue();
@@ -41,8 +40,10 @@ public class ReadState implements State {
 		final ReadResult readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
 		if (readResult.wasEOF()) {
 			readerState.setReturnToken(null);
-			readerState.setNextState(ErrorState.ERROR_STATE);
-			return readerState;
+
+			ErrorState.ERROR_STATE.setPreviousState(this);
+			ErrorState.ERROR_STATE.process(reader, readerState);
+			return;
 		}
 
 		final int codePoint = readResult.getResult();
@@ -51,22 +52,18 @@ public class ReadState implements State {
 		final ReadtableStruct readtable = reader.getReadtable();
 		final SyntaxType syntaxType = readtable.getSyntaxType(codePoint);
 
-		final State nextState;
 		if (syntaxType == SyntaxType.WHITESPACE) {
-			nextState = WhitespaceState.WHITESPACE_STATE;
+			WhitespaceState.WHITESPACE_STATE.process(reader, readerState);
 		} else if ((syntaxType == SyntaxType.TERMINATING) || (syntaxType == SyntaxType.NON_TERMINATING)) {
-			nextState = MacroCharacterState.MACRO_CHARACTER_STATE;
+			MacroCharacterState.MACRO_CHARACTER_STATE.process(reader, readerState);
 		} else if (syntaxType == SyntaxType.SINGLE_ESCAPE) {
-			nextState = SingleEscapeState.SINGLE_ESCAPE_STATE;
+			SingleEscapeState.SINGLE_ESCAPE_STATE.process(reader, readerState);
 		} else if (syntaxType == SyntaxType.MULTIPLE_ESCAPE) {
-			nextState = MultipleEscapeState.MULTIPLE_ESCAPE_STATE;
+			MultipleEscapeState.MULTIPLE_ESCAPE_STATE.process(reader, readerState);
 		} else if (syntaxType == SyntaxType.CONSTITUENT) {
-			nextState = ConstituentState.CONSTITUENT_STATE;
+			ConstituentState.CONSTITUENT_STATE.process(reader, readerState);
 		} else {
-			nextState = IllegalCharacterState.ILLEGAL_CHARACTER_STATE;
+			IllegalCharacterState.ILLEGAL_CHARACTER_STATE.process(reader, readerState);
 		}
-
-		readerState.setNextState(nextState);
-		return readerState;
 	}
 }

@@ -9,9 +9,20 @@ import jcl.structs.conditions.exceptions.ReaderErrorException;
  * <p/>
  * This is our Accepting state that says we are done with the Reader.
  */
-public class ErrorState implements State {
+public class ErrorState extends State {
 
-	public static final State ERROR_STATE = new ErrorState();
+	public static final ErrorState ERROR_STATE = new ErrorState();
+
+	private State previousState;
+	private String errorMessage;
+
+	public void setPreviousState(final State previousState) {
+		this.previousState = previousState;
+	}
+
+	public void setErrorMessage(final String errorMessage) {
+		this.errorMessage = errorMessage;
+	}
 
 	/**
 	 * Processes for the reader for the current State.
@@ -19,13 +30,11 @@ public class ErrorState implements State {
 	 * @throws ReaderErrorException thrown if the process method ever gets called. This can only be done explicitly by a programmer.
 	 */
 	@Override
-	public ReaderState process(final StateReader reader, final ReaderState readerState) {
-
+	public void process(final StateReader reader, final ReaderState readerState) {
 		final Integer codePoint = readerState.getPreviousReadCharacter();
 		if (ReaderUtils.isEndOfFileCharacter(codePoint) && !readerState.isEofErrorP()) {
-			readerState.setNextState(EndState.END_STATE);
-			return readerState;
+			return;
 		}
-		throw new ReaderErrorException("Reader Error " + readerState.getErrorMessage() + " in State " + readerState.getPreviousState());
+		throw new ReaderErrorException("Reader Error " + errorMessage + " in State " + previousState);
 	}
 }

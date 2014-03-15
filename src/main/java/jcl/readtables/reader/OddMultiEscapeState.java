@@ -1,9 +1,9 @@
 package jcl.readtables.reader;
 
-import jcl.syntax.AttributeType;
-import jcl.syntax.SyntaxType;
 import jcl.LispStruct;
 import jcl.readtables.ReadtableStruct;
+import jcl.syntax.AttributeType;
+import jcl.syntax.SyntaxType;
 import jcl.syntax.reader.ReadResult;
 
 /**
@@ -16,7 +16,7 @@ import jcl.syntax.reader.ReadResult;
  * each part of this code does.
  * <p/>
  */
-public class OddMultiEscapeState implements State {
+public class OddMultiEscapeState extends State {
 
 	public static final State ODD_MULTI_ESCAPE_STATE = new OddMultiEscapeState();
 
@@ -29,8 +29,7 @@ public class OddMultiEscapeState implements State {
 	 * terminating macro character, whitespace character, or a single escape character
 	 */
 	@Override
-	public ReaderState process(final StateReader reader, final ReaderState readerState) {
-		readerState.setPreviousState(this);
+	public void process(final StateReader reader, final ReaderState readerState) {
 
 		final boolean isEofErrorP = readerState.isEofErrorP();
 		final LispStruct eofValue = readerState.getEofValue();
@@ -38,8 +37,7 @@ public class OddMultiEscapeState implements State {
 
 		ReadResult readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
 		if (readResult.wasEOF()) {
-			readerState.setNextState(IllegalCharacterState.ILLEGAL_CHARACTER_STATE);
-			return readerState;
+			IllegalCharacterState.ILLEGAL_CHARACTER_STATE.process(reader, readerState);
 		}
 
 		int codePoint = readResult.getResult();
@@ -48,7 +46,6 @@ public class OddMultiEscapeState implements State {
 		final ReadtableStruct readtable = reader.getReadtable();
 		final SyntaxType syntaxType = readtable.getSyntaxType(codePoint);
 
-		final State nextState;
 		if ((syntaxType == SyntaxType.CONSTITUENT)
 				|| (syntaxType == SyntaxType.WHITESPACE)
 				|| (syntaxType == SyntaxType.TERMINATING)
@@ -56,27 +53,23 @@ public class OddMultiEscapeState implements State {
 
 			readerState.addToTokenAttributes(codePoint, AttributeType.ALPHABETIC);
 
-			nextState = ODD_MULTI_ESCAPE_STATE;
+			ODD_MULTI_ESCAPE_STATE.process(reader, readerState);
 		} else if (syntaxType == SyntaxType.SINGLE_ESCAPE) {
 
 			readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
 			if (readResult.wasEOF()) {
-				readerState.setNextState(IllegalCharacterState.ILLEGAL_CHARACTER_STATE);
-				return readerState;
+				IllegalCharacterState.ILLEGAL_CHARACTER_STATE.process(reader, readerState);
+			} else {
+				codePoint = readResult.getResult();
+				readerState.setPreviousReadCharacter(codePoint);
+				readerState.addToTokenAttributes(codePoint, AttributeType.ALPHABETIC);
+
+				ODD_MULTI_ESCAPE_STATE.process(reader, readerState);
 			}
-
-			codePoint = readResult.getResult();
-			readerState.setPreviousReadCharacter(codePoint);
-			readerState.addToTokenAttributes(codePoint, AttributeType.ALPHABETIC);
-
-			nextState = ODD_MULTI_ESCAPE_STATE;
 		} else if (syntaxType == SyntaxType.MULTIPLE_ESCAPE) {
-			nextState = EvenMultiEscapeState.EVEN_MULTI_ESCAPE_STATE;
+			EvenMultiEscapeState.EVEN_MULTI_ESCAPE_STATE.process(reader, readerState);
 		} else {
-			nextState = IllegalCharacterState.ILLEGAL_CHARACTER_STATE;
+			IllegalCharacterState.ILLEGAL_CHARACTER_STATE.process(reader, readerState);
 		}
-
-		readerState.setNextState(nextState);
-		return readerState;
 	}
 }

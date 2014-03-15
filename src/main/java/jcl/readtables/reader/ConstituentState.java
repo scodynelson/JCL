@@ -1,8 +1,8 @@
 package jcl.readtables.reader;
 
+import jcl.readtables.ReadtableStruct;
 import jcl.syntax.AttributeType;
 import jcl.syntax.CaseSpec;
-import jcl.readtables.ReadtableStruct;
 
 /**
  * Step 7 of the Reader Algorithm.
@@ -10,25 +10,20 @@ import jcl.readtables.ReadtableStruct;
  * The character that was read in the ReadState is now added to the token accumulator vector and the state attributes
  * value of that character is then appended to the attributeVector.
  */
-public class ConstituentState implements State {
+public class ConstituentState extends State {
 
 	public static final State CONSTITUENT_STATE = new ConstituentState();
 
-	/**
-	 * Processes for the reader for the current State.
-	 *
-	 * @return EvenMultiEscapeState  We have found 0 Multiple Escape Characters
-	 */
 	@Override
-	public ReaderState process(final StateReader reader, final ReaderState readerState) {
-		readerState.setPreviousState(this);
-
+	public void process(final StateReader reader, final ReaderState readerState) {
 		Integer codePoint = readerState.getPreviousReadCharacter();
 
 		if (ReaderUtils.isEndOfFileCharacter(codePoint)) {
 			readerState.setReturnToken(null);
-			readerState.setNextState(ErrorState.ERROR_STATE);
-			return readerState;
+
+			ErrorState.ERROR_STATE.setPreviousState(this);
+			ErrorState.ERROR_STATE.process(reader, readerState);
+			return;
 		}
 
 		final ReadtableStruct readtable = reader.getReadtable();
@@ -38,7 +33,6 @@ public class ConstituentState implements State {
 		codePoint = StateUtils.properCaseCodePoint(codePoint, attributeType, readtableCase);
 		readerState.addToTokenAttributes(codePoint, attributeType);
 
-		readerState.setNextState(EvenMultiEscapeState.EVEN_MULTI_ESCAPE_STATE);
-		return readerState;
+		EvenMultiEscapeState.EVEN_MULTI_ESCAPE_STATE.process(reader, readerState);
 	}
 }

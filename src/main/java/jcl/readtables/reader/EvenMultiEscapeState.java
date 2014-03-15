@@ -1,10 +1,10 @@
 package jcl.readtables.reader;
 
+import jcl.LispStruct;
+import jcl.readtables.ReadtableStruct;
 import jcl.syntax.AttributeType;
 import jcl.syntax.CaseSpec;
 import jcl.syntax.SyntaxType;
-import jcl.LispStruct;
-import jcl.readtables.ReadtableStruct;
 import jcl.syntax.reader.ReadResult;
 
 /**
@@ -17,7 +17,7 @@ import jcl.syntax.reader.ReadResult;
  * each part of this code does.
  * <p/>
  */
-public class EvenMultiEscapeState implements State {
+public class EvenMultiEscapeState extends State {
 
 	public static final State EVEN_MULTI_ESCAPE_STATE = new EvenMultiEscapeState();
 
@@ -31,8 +31,7 @@ public class EvenMultiEscapeState implements State {
 	 * character, or a single escape character
 	 */
 	@Override
-	public ReaderState process(final StateReader reader, final ReaderState readerState) {
-		readerState.setPreviousState(this);
+	public void process(final StateReader reader, final ReaderState readerState) {
 
 		final boolean isEofErrorP = readerState.isEofErrorP();
 		final LispStruct eofValue = readerState.getEofValue();
@@ -40,8 +39,7 @@ public class EvenMultiEscapeState implements State {
 
 		ReadResult readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
 		if (readResult.wasEOF()) {
-			readerState.setNextState(TokenAccumulatedState.TOKEN_ACCUMULATED_STATE);
-			return readerState;
+			TokenAccumulatedState.TOKEN_ACCUMULATED_STATE.process(reader, readerState);
 		}
 
 		int codePoint = readResult.getResult();
@@ -50,7 +48,6 @@ public class EvenMultiEscapeState implements State {
 		final ReadtableStruct readtable = reader.getReadtable();
 		final SyntaxType syntaxType = readtable.getSyntaxType(codePoint);
 
-		final State nextState;
 		if ((syntaxType == SyntaxType.CONSTITUENT) || (syntaxType == SyntaxType.NON_TERMINATING)) {
 			final CaseSpec readtableCase = readtable.getReadtableCase();
 			final AttributeType attributeType = readtable.getAttributeType(codePoint);
@@ -58,36 +55,32 @@ public class EvenMultiEscapeState implements State {
 			codePoint = StateUtils.properCaseCodePoint(codePoint, attributeType, readtableCase);
 			readerState.addToTokenAttributes(codePoint, attributeType);
 
-			nextState = EVEN_MULTI_ESCAPE_STATE;
+			EVEN_MULTI_ESCAPE_STATE.process(reader, readerState);
 		} else if (syntaxType == SyntaxType.SINGLE_ESCAPE) {
 			// NOTE: The only difference in the following logic and the actual SINGLE_ESCAPE_STATE is that
 			//          this one builds on the current token, where as the SES begins a token.
 
 			readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
 			if (readResult.wasEOF()) {
-				readerState.setNextState(IllegalCharacterState.ILLEGAL_CHARACTER_STATE);
-				return readerState;
+				IllegalCharacterState.ILLEGAL_CHARACTER_STATE.process(reader, readerState);
+			} else {
+				codePoint = readResult.getResult();
+				readerState.setPreviousReadCharacter(codePoint);
+				readerState.addToTokenAttributes(codePoint, AttributeType.ALPHABETIC);
+
+				EVEN_MULTI_ESCAPE_STATE.process(reader, readerState);
 			}
-
-			codePoint = readResult.getResult();
-			readerState.setPreviousReadCharacter(codePoint);
-			readerState.addToTokenAttributes(codePoint, AttributeType.ALPHABETIC);
-
-			nextState = EVEN_MULTI_ESCAPE_STATE;
 		} else if (syntaxType == SyntaxType.MULTIPLE_ESCAPE) {
-			nextState = OddMultiEscapeState.ODD_MULTI_ESCAPE_STATE;
+			OddMultiEscapeState.ODD_MULTI_ESCAPE_STATE.process(reader, readerState);
 		} else if (syntaxType == SyntaxType.TERMINATING) {
 			reader.unreadChar(codePoint);
-			nextState = TokenAccumulatedState.TOKEN_ACCUMULATED_STATE;
+			TokenAccumulatedState.TOKEN_ACCUMULATED_STATE.process(reader, readerState);
 		} else if (syntaxType == SyntaxType.WHITESPACE) {
 			// TODO: We want to take "read-preserving-whitespace" into account here before unreading
 			reader.unreadChar(codePoint);
-			nextState = TokenAccumulatedState.TOKEN_ACCUMULATED_STATE;
+			TokenAccumulatedState.TOKEN_ACCUMULATED_STATE.process(reader, readerState);
 		} else {
-			nextState = IllegalCharacterState.ILLEGAL_CHARACTER_STATE;
+			IllegalCharacterState.ILLEGAL_CHARACTER_STATE.process(reader, readerState);
 		}
-
-		readerState.setNextState(nextState);
-		return readerState;
 	}
 }

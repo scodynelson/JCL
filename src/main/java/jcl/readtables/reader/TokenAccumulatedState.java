@@ -38,7 +38,7 @@ import java.util.LinkedList;
  * and Symbols that are in the Keyword Package!!!
  * <p/>
  */
-public class TokenAccumulatedState implements State {
+public class TokenAccumulatedState extends State {
 
 	public static final State TOKEN_ACCUMULATED_STATE = new TokenAccumulatedState();
 
@@ -48,29 +48,28 @@ public class TokenAccumulatedState implements State {
 	 * @return EndState       the final accepting state
 	 */
 	@Override
-	public ReaderState process(final StateReader reader, final ReaderState readerState) {
-		readerState.setPreviousState(this);
+	public void process(final StateReader reader, final ReaderState readerState) {
 
 		final Integer codePoint = readerState.getPreviousReadCharacter();
 		final LinkedList<TokenAttribute> tokenAttributes = readerState.getTokenAttributes();
 		if (ReaderUtils.isEndOfFileCharacter(codePoint) && CollectionUtils.isEmpty(tokenAttributes)) {
-			readerState.setNextState(ErrorState.ERROR_STATE);
-			return readerState;
+			ErrorState.ERROR_STATE.setPreviousState(this);
+			ErrorState.ERROR_STATE.process(reader, readerState);
+			return;
 		}
 
 		if (ReadSuppressVariable.INSTANCE.getValue()) {
 			readerState.setReturnToken(null);
-			readerState.setNextState(EndState.END_STATE);
-			return readerState;
+			return;
 		}
 
 		final String tokenString = StateUtils.convertTokensToString(tokenAttributes);
 		if (StringUtils.equals(tokenString, ".")) {
-			readerState.setErrorMessage("Dot context error in '.'");
-			readerState.setNextState(ErrorState.ERROR_STATE);
+			ErrorState.ERROR_STATE.setPreviousState(this);
+			ErrorState.ERROR_STATE.setErrorMessage("Dot context error in '.'");
+			ErrorState.ERROR_STATE.process(reader, readerState);
 		} else {
-			readerState.setNextState(NumberTokenAccumulatedState.NUMBER_TOKEN_ACCUMULATED_STATE);
+			NumberTokenAccumulatedState.NUMBER_TOKEN_ACCUMULATED_STATE.process(reader, readerState);
 		}
-		return readerState;
 	}
 }

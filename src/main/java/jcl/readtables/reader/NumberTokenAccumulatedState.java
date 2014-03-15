@@ -1,11 +1,11 @@
 package jcl.readtables.reader;
 
-import jcl.syntax.AttributeType;
-import jcl.syntax.CharacterConstants;
 import jcl.numbers.FloatStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.NumberStruct;
 import jcl.numbers.RatioStruct;
+import jcl.syntax.AttributeType;
+import jcl.syntax.CharacterConstants;
 import jcl.syntax.reader.TokenAttribute;
 import jcl.types.DoubleFloat;
 import jcl.types.Float;
@@ -32,7 +32,7 @@ import java.util.LinkedList;
  * be formatted, then we progress to the SymbolTokenAccumulatedState.
  * <p/>
  */
-public class NumberTokenAccumulatedState implements State {
+public class NumberTokenAccumulatedState extends State {
 
 	public static final State NUMBER_TOKEN_ACCUMULATED_STATE = new NumberTokenAccumulatedState();
 
@@ -43,17 +43,14 @@ public class NumberTokenAccumulatedState implements State {
 	 * EndState                       the final accepting state
 	 */
 	@Override
-	public ReaderState process(final StateReader reader, final ReaderState readerState) {
-		readerState.setPreviousState(this);
+	public void process(final StateReader reader, final ReaderState readerState) {
 
 		final NumberStruct numberToken = getNumberToken(readerState);
 		if (numberToken == null) {
-			readerState.setNextState(SymbolTokenAccumulatedState.SYMBOL_TOKEN_ACCUMULATED_STATE);
+			SymbolTokenAccumulatedState.SYMBOL_TOKEN_ACCUMULATED_STATE.process(reader, readerState);
 		} else {
 			readerState.setReturnToken(numberToken);
-			readerState.setNextState(EndState.END_STATE);
 		}
-		return readerState;
 	}
 
 	/**

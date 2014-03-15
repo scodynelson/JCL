@@ -1,7 +1,7 @@
 package jcl.readtables.reader;
 
-import jcl.readtables.macrofunction.ReaderMacroFunction;
 import jcl.LispStruct;
+import jcl.readtables.macrofunction.ReaderMacroFunction;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.syntax.reader.ReadResult;
 import org.slf4j.Logger;
@@ -19,28 +19,23 @@ import org.slf4j.LoggerFactory;
  * it as a result of the Read function, else, Step 1 is re-entered
  * <p/>
  */
-public class MacroCharacterState implements State {
+public class MacroCharacterState extends State {
 
 	public static final State MACRO_CHARACTER_STATE = new MacroCharacterState();
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MacroCharacterState.class);
 
-	/**
-	 * Processes for the reader for the current State.
-	 *
-	 * @return ReadState     if the return value of the ReaderMacroFunction is null
-	 * EndState      if the return value of the ReaderMacroFunction is not null
-	 */
 	@Override
-	public ReaderState process(final StateReader reader, final ReaderState readerState) {
-		readerState.setPreviousState(this);
+	public void process(final StateReader reader, final ReaderState readerState) {
 
 		Integer codePoint = readerState.getPreviousReadCharacter();
 
 		if (ReaderUtils.isEndOfFileCharacter(codePoint)) {
 			readerState.setReturnToken(null);
-			readerState.setNextState(ErrorState.ERROR_STATE);
-			return readerState;
+
+			ErrorState.ERROR_STATE.setPreviousState(this);
+			ErrorState.ERROR_STATE.process(reader, readerState);
+			return;
 		}
 
 		Integer numArg = null;
@@ -65,9 +60,11 @@ public class MacroCharacterState implements State {
 			} catch (final NumberFormatException nfe) {
 				final String errorString = '"' + digitString + "\" does not represent an integer.";
 				LOGGER.error(errorString, nfe);
-				readerState.setErrorMessage(errorString);
-				readerState.setNextState(ErrorState.ERROR_STATE);
-				return readerState;
+
+				ErrorState.ERROR_STATE.setPreviousState(this);
+				ErrorState.ERROR_STATE.setErrorMessage(errorString);
+				ErrorState.ERROR_STATE.process(reader, readerState);
+				return;
 			}
 
 			codePoint = readChar;
@@ -75,9 +72,10 @@ public class MacroCharacterState implements State {
 
 		final ReaderMacroFunction readerMacroFunction = reader.getReadtable().getMacroCharacter(codePoint);
 		if (readerMacroFunction == null) {
-			readerState.setErrorMessage("No reader macro function exists for character: " + codePoint + '.');
-			readerState.setNextState(ErrorState.ERROR_STATE);
-			return readerState;
+			ErrorState.ERROR_STATE.setPreviousState(this);
+			ErrorState.ERROR_STATE.setErrorMessage("No reader macro function exists for character: " + codePoint + '.');
+			ErrorState.ERROR_STATE.process(reader, readerState);
+			return;
 		}
 
 		final LispStruct lispToken;
@@ -87,20 +85,16 @@ public class MacroCharacterState implements State {
 		} catch (final ReaderErrorException re) {
 			final String errorString = re.getMessage();
 			LOGGER.error(errorString, re);
-			readerState.setErrorMessage(errorString);
-			readerState.setNextState(ErrorState.ERROR_STATE);
-			return readerState;
+
+			ErrorState.ERROR_STATE.setPreviousState(this);
+			ErrorState.ERROR_STATE.setErrorMessage(errorString);
+			ErrorState.ERROR_STATE.process(reader, readerState);
+			return;
 		}
 		readerState.setReturnToken(lispToken);
 
-		final State nextState;
 		if (lispToken == null) {
-			nextState = ReadState.READ_STATE;
-		} else {
-			nextState = EndState.END_STATE;
+			ReadState.READ_STATE.process(reader, readerState);
 		}
-
-		readerState.setNextState(nextState);
-		return readerState;
 	}
 }

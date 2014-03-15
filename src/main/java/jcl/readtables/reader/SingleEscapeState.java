@@ -1,7 +1,7 @@
 package jcl.readtables.reader;
 
-import jcl.syntax.AttributeType;
 import jcl.LispStruct;
+import jcl.syntax.AttributeType;
 import jcl.syntax.reader.ReadResult;
 
 /**
@@ -12,35 +12,26 @@ import jcl.syntax.reader.ReadResult;
  * tokenAccumulator, and that character will be treated as an ALPHABETIC character.
  * <p/>
  */
-public class SingleEscapeState implements State {
+public class SingleEscapeState extends State {
 
 	public static final State SINGLE_ESCAPE_STATE = new SingleEscapeState();
 
-	/**
-	 * Processes for the reader for the current State.
-	 *
-	 * @return EvenMultiEscapeState  We have encountered 0 Multiple Escape Characters this far
-	 */
 	@Override
-	public ReaderState process(final StateReader reader, final ReaderState readerState) {
-		readerState.setPreviousState(this);
-
+	public void process(final StateReader reader, final ReaderState readerState) {
 		final boolean isEofErrorP = readerState.isEofErrorP();
 		final LispStruct eofValue = readerState.getEofValue();
 		final boolean isRecursiveP = readerState.isRecursiveP();
 
 		final ReadResult readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
 		if (readResult.wasEOF()) {
-			readerState.setNextState(IllegalCharacterState.ILLEGAL_CHARACTER_STATE);
-			return readerState;
+			IllegalCharacterState.ILLEGAL_CHARACTER_STATE.process(reader, readerState);
+		} else {
+			final int codePoint = readResult.getResult();
+			readerState.setPreviousReadCharacter(codePoint);
+
+			readerState.addToTokenAttributes(codePoint, AttributeType.ALPHABETIC);
+
+			EvenMultiEscapeState.EVEN_MULTI_ESCAPE_STATE.process(reader, readerState);
 		}
-
-		final int codePoint = readResult.getResult();
-		readerState.setPreviousReadCharacter(codePoint);
-
-		readerState.addToTokenAttributes(codePoint, AttributeType.ALPHABETIC);
-
-		readerState.setNextState(EvenMultiEscapeState.EVEN_MULTI_ESCAPE_STATE);
-		return readerState;
 	}
 }

@@ -2,8 +2,8 @@ package jcl.readtables.reader;
 
 import jcl.LispStruct;
 import jcl.readtables.ReadtableStruct;
-import jcl.syntax.CaseSpec;
 import jcl.streams.InputStream;
+import jcl.syntax.CaseSpec;
 import jcl.syntax.reader.ReadResult;
 import jcl.variables.ReadtableVariable;
 
@@ -30,13 +30,8 @@ public class StateReader extends LispReader {
 	public LispStruct read(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		final StateReader stateReader = new StateReader(inputStream);
 
-		ReaderState readerState = new ReaderState(eofErrorP, eofValue, recursiveP);
-		State currentState = readerState.getNextState();
-
-		while (currentState != EndState.END_STATE) {
-			readerState = currentState.process(stateReader, readerState);
-			currentState = readerState.getNextState();
-		}
+		final ReaderState readerState = new ReaderState(eofErrorP, eofValue, recursiveP);
+		InitialState.INITIAL_STATE.process(stateReader, readerState);
 
 		return readerState.getReturnToken();
 	}

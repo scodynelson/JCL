@@ -1,7 +1,7 @@
 package jcl.readtables.reader;
 
-import jcl.syntax.AttributeType;
 import jcl.LispStruct;
+import jcl.syntax.AttributeType;
 import jcl.syntax.reader.TokenAttribute;
 
 import java.util.LinkedList;
@@ -14,10 +14,6 @@ public class ReaderState {
 
 	private LispStruct returnToken;
 	private Integer previousReadCharacter;
-	private String errorMessage;
-
-	private State previousState;
-	private State nextState;
 
 	private final LinkedList<TokenAttribute> tokenAttributes;
 
@@ -26,7 +22,6 @@ public class ReaderState {
 	}
 
 	public ReaderState(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
-		nextState = InitialState.INITIAL_STATE;
 		this.eofErrorP = eofErrorP;
 		this.eofValue = eofValue;
 		this.recursiveP = recursiveP;
@@ -59,30 +54,6 @@ public class ReaderState {
 
 	public void setPreviousReadCharacter(final int previousReadCharacter) {
 		this.previousReadCharacter = previousReadCharacter;
-	}
-
-	public String getErrorMessage() {
-		return errorMessage;
-	}
-
-	public void setErrorMessage(final String errorMessage) {
-		this.errorMessage = errorMessage;
-	}
-
-	public State getPreviousState() {
-		return previousState;
-	}
-
-	public void setPreviousState(final State previousState) {
-		this.previousState = previousState;
-	}
-
-	public State getNextState() {
-		return nextState;
-	}
-
-	public void setNextState(final State nextState) {
-		this.nextState = nextState;
 	}
 
 	public LinkedList<TokenAttribute> getTokenAttributes() {

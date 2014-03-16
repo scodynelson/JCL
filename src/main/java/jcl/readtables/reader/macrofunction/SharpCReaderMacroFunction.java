@@ -9,7 +9,7 @@ import jcl.numbers.RatioStruct;
 import jcl.readtables.reader.impl.macrofunctions.MacroFunctionReader;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.syntax.CharacterConstants;
-import jcl.variables.ReadSuppressVariable;
+import jcl.readtables.ReadSuppressVariable;
 
 import java.util.List;
 

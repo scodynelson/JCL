@@ -1,7 +1,8 @@
-package jcl.variables;
+package jcl.numbers;
 
 import jcl.types.Float;
 import jcl.types.SingleFloat;
+import jcl.variables.LispVariable;
 
 public class ReadDefaultFloatFormatVariable implements LispVariable<Float> {
 

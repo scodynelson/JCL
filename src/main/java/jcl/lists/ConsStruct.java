@@ -161,34 +161,31 @@ public class ConsStruct extends ListStruct {
 	 * @return whether or not the provided {@code consStruct} is circular
 	 */
 	private static boolean innerIsCircular(final ConsStruct consStruct, final Set<ConsStruct> conses) {
+		return isElementCircular(consStruct.car, conses) || isElementCircular(consStruct.cdr, conses);
+	}
 
-		boolean isCarCircular = false;
-		final LispStruct car = consStruct.car;
-
-		if (car instanceof ConsStruct) {
-			final ConsStruct carAsCons = (ConsStruct) car;
-			if (conses.contains(carAsCons)) {
+	/**
+	 * This private method tests the provided {@code element} for circularity. If the element is a consStruct, it tests
+	 * it for circularity appropriately.
+	 *
+	 * @param element the element structure to test for circularity
+	 * @param conses  the set of cons nodes currently found in the tree
+	 * @return whether or not the provided {@code element} is circular
+	 */
+	private static boolean isElementCircular(final LispStruct element, final Set<ConsStruct> conses) {
+		final boolean isElementCircular;
+		if (element instanceof ConsStruct) {
+			final ConsStruct elementAsCons = (ConsStruct) element;
+			if (conses.contains(elementAsCons)) {
 				return true;
 			}
 
-			conses.add(carAsCons);
-			isCarCircular = innerIsCircular(carAsCons, conses);
+			conses.add(elementAsCons);
+			isElementCircular = innerIsCircular(elementAsCons, conses);
+		} else {
+			isElementCircular = false;
 		}
-
-		boolean isCdrCircular = false;
-		final LispStruct cdr = consStruct.cdr;
-
-		if (cdr instanceof ConsStruct) {
-			final ConsStruct cdrAsCons = (ConsStruct) cdr;
-			if (conses.contains(cdrAsCons)) {
-				return true;
-			}
-
-			conses.add(cdrAsCons);
-			isCdrCircular = innerIsCircular(cdrAsCons, conses);
-		}
-
-		return isCarCircular || isCdrCircular;
+		return isElementCircular;
 	}
 
 	@Override

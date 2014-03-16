@@ -6,7 +6,7 @@ import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.symbols.SymbolStruct;
 import jcl.syntax.CharacterConstants;
 import jcl.syntax.reader.ReadExtendedToken;
-import jcl.variables.ReadSuppressVariable;
+import jcl.readtables.ReadSuppressVariable;
 
 /**
  * Implements the '#:' Lisp reader macro.

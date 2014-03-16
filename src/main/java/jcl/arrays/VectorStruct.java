@@ -1,13 +1,13 @@
 package jcl.arrays;
 
 import jcl.LispStruct;
+import jcl.LispType;
 import jcl.sequences.SequenceStruct;
 import jcl.structs.conditions.exceptions.ErrorException;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.structs.conditions.exceptions.TypeErrorException;
-import jcl.LispType;
-import jcl.types.T;
 import jcl.types.SimpleVector;
+import jcl.types.T;
 import jcl.types.Vector;
 
 import java.util.Collections;
@@ -101,7 +101,7 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	 */
 	public TYPE pop() {
 		if (fillPointer == null) {
-			throw new TypeErrorException("Vector has no fill-pointer.");
+			throw new TypeErrorException("Cannot pop from a vector that has no fill-pointer.");
 		}
 		if (fillPointer == 0) {
 			throw new ErrorException("Fill pointer is 0.");
@@ -123,7 +123,7 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	 */
 	public int push(final TYPE element) {
 		if (fillPointer == null) {
-			throw new TypeErrorException("Vector has no fill-pointer.");
+			throw new TypeErrorException("Cannot push into a vector that has no fill-pointer.");
 		}
 		fillPointer++;
 

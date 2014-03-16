@@ -6,7 +6,7 @@ import jcl.syntax.CharacterConstants;
 import jcl.pathnames.PathnameStruct;
 import jcl.arrays.StringStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
-import jcl.variables.ReadSuppressVariable;
+import jcl.readtables.ReadSuppressVariable;
 
 import java.net.URISyntaxException;
 

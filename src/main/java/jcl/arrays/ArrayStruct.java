@@ -1,13 +1,13 @@
 package jcl.arrays;
 
 import jcl.LispStruct;
+import jcl.LispType;
 import jcl.classes.BuiltInClassStruct;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.structs.conditions.exceptions.TypeErrorException;
-import jcl.LispType;
-import jcl.types.T;
 import jcl.types.Array;
 import jcl.types.SimpleArray;
+import jcl.types.T;
 
 import java.util.ArrayList;
 import java.util.List;

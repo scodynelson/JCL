@@ -2,18 +2,24 @@ package jcl.arrays;
 
 import jcl.numbers.IntegerStruct;
 import jcl.structs.conditions.exceptions.TypeErrorException;
+import jcl.types.Bit;
 import jcl.types.BitVector;
 import jcl.types.SimpleBitVector;
-import jcl.types.Bit;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * The {@code BitVectorStruct} is the object representation of a Lisp 'bit-vector' type.
  */
 public class BitVectorStruct extends VectorStruct<IntegerStruct> {
+
+	private static final IntegerStruct ZERO = new IntegerStruct(BigInteger.ZERO);
+	private static final IntegerStruct ONE = new IntegerStruct(BigInteger.ONE);
+
+	private static final Pattern BIT_PATTERN = Pattern.compile("[0|1]+");
 
 	/**
 	 * Public constructor.
@@ -54,17 +60,16 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 	 * @return a list of IntegerStruct from the provided Java string value
 	 */
 	private static List<IntegerStruct> getBitList(final String bitString) {
-		final IntegerStruct zero = new IntegerStruct(BigInteger.ZERO);
-		final IntegerStruct one = new IntegerStruct(BigInteger.ONE);
+		if (!BIT_PATTERN.matcher(bitString).matches()) {
+			throw new TypeErrorException("Input contains characters not of type " + Bit.INSTANCE + ": " + bitString + '.');
+		}
 
 		final List<IntegerStruct> bitList = new ArrayList<>(bitString.length());
 		for (final char character : bitString.toCharArray()) {
 			if (character == '0') {
-				bitList.add(zero);
+				bitList.add(ZERO);
 			} else if (character == '1') {
-				bitList.add(one);
-			} else {
-				throw new TypeErrorException("Element is not of type " + Bit.INSTANCE + ": " + character + '.');
+				bitList.add(ONE);
 			}
 		}
 		return bitList;

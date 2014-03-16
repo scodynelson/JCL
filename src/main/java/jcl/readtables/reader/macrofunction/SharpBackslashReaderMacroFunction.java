@@ -6,7 +6,7 @@ import jcl.readtables.reader.impl.macrofunctions.MacroFunctionReader;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.syntax.CharacterConstants;
 import jcl.syntax.CharacterName;
-import jcl.variables.ReadSuppressVariable;
+import jcl.readtables.ReadSuppressVariable;
 import org.apache.commons.lang3.StringUtils;
 
 /**

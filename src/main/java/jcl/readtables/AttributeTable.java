@@ -1,7 +1,7 @@
 package jcl.readtables;
 
 import jcl.syntax.AttributeType;
-import jcl.variables.ReadBaseVariable;
+import jcl.numbers.ReadBaseVariable;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

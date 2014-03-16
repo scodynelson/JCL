@@ -1,11 +1,11 @@
 package jcl.hashtables;
 
 import jcl.LispStruct;
+import jcl.LispType;
 import jcl.classes.BuiltInClassStruct;
 import jcl.functions.EquatorFunctionStruct;
 import jcl.functions.FunctionStruct;
 import jcl.types.HashTable;
-import jcl.LispType;
 import org.apache.commons.collections4.Equator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 

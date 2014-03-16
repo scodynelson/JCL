@@ -1,4 +1,6 @@
-package jcl.variables;
+package jcl.numbers;
+
+import jcl.variables.LispVariable;
 
 public class ReadBaseVariable implements LispVariable<Integer> {
 

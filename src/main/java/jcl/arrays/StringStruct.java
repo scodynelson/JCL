@@ -2,8 +2,8 @@ package jcl.arrays;
 
 import jcl.characters.CharacterStruct;
 import jcl.types.BaseChar;
-import jcl.types.Character;
 import jcl.types.BaseString;
+import jcl.types.Character;
 import jcl.types.SimpleBaseString;
 import jcl.types.SimpleString;
 import jcl.types.String;

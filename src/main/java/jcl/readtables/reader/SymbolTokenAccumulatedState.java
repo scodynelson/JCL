@@ -3,6 +3,7 @@ package jcl.readtables.reader;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageSymbolStruct;
+import jcl.readtables.TokenBuilder;
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.syntax.AttributeType;
@@ -50,26 +51,26 @@ public class SymbolTokenAccumulatedState extends State {
 	 * @return EndState       the final accepting state
 	 */
 	@Override
-	public void process(final StateReader reader, final ReaderState readerState) {
+	public void process(final StateReader reader, final TokenBuilder tokenBuilder) {
 
-		final SymbolStruct<?> symbolToken = getSymbolToken(readerState);
+		final SymbolStruct<?> symbolToken = getSymbolToken(tokenBuilder);
 //		if (symbolToken == null) {
 //			ErrorState.ERROR_STATE.setPreviousState(this);
-//			ErrorState.ERROR_STATE.process(reader, readerState);
+//			ErrorState.ERROR_STATE.process(reader, tokenBuilder);
 //		} else {
-		readerState.setReturnToken(symbolToken);
+		tokenBuilder.setReturnToken(symbolToken);
 //		}
 	}
 
 	/**
-	 * This method gets a symbolToken from the provided readerState and it's tokenAttributes.
+	 * This method gets a symbolToken from the provided tokenBuilder and it's tokenAttributes.
 	 *
-	 * @param readerState the reader state containing the tokenAttributes to derive the symbolToken
+	 * @param tokenBuilder the reader state containing the tokenAttributes to derive the symbolToken
 	 * @return the built symbolToken value
 	 */
-	private static SymbolStruct<?> getSymbolToken(final ReaderState readerState) {
+	private static SymbolStruct<?> getSymbolToken(final TokenBuilder tokenBuilder) {
 
-		final LinkedList<TokenAttribute> tokenAttributes = readerState.getTokenAttributes();
+		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
 
 		// Check that there is at least 1 'ALPHADIGIT'
 		final boolean hasNoPackageMarkers = StateUtils.hasNoAttribute(tokenAttributes, AttributeType.PACKAGEMARKER);
@@ -79,7 +80,7 @@ public class SymbolTokenAccumulatedState extends State {
 			final PackageStruct pkg = PackageVariable.INSTANCE.getValue();
 			final PackageSymbolStruct packageSymbol = pkg.findSymbol(symName);
 			if (packageSymbol == null) {
-//				readerState.setErrorMessage("Unbound variable: " + symName); // TODO: This check will happen in the compiler...
+//				tokenBuilder.setErrorMessage("Unbound variable: " + symName); // TODO: This check will happen in the compiler...
 				return new SymbolStruct(symName);
 			}
 			return packageSymbol.getSymbolStruct();

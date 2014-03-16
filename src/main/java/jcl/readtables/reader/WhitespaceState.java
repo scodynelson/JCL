@@ -1,5 +1,7 @@
 package jcl.readtables.reader;
 
+import jcl.readtables.TokenBuilder;
+
 /**
  * Step 3 of the Reader Algorithm.
  * <p/>
@@ -13,7 +15,7 @@ public class WhitespaceState extends State {
 	 * Processes for the reader for the current State.
 	 */
 	@Override
-	public void process(final StateReader reader, final ReaderState readerState) {
-		ReadState.READ_STATE.process(reader, readerState);
+	public void process(final StateReader reader, final TokenBuilder tokenBuilder) {
+		ReadState.READ_STATE.process(reader, tokenBuilder);
 	}
 }

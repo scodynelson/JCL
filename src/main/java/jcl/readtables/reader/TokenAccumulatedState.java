@@ -1,5 +1,6 @@
 package jcl.readtables.reader;
 
+import jcl.readtables.TokenBuilder;
 import jcl.syntax.reader.TokenAttribute;
 import jcl.variables.ReadSuppressVariable;
 import org.apache.commons.collections4.CollectionUtils;
@@ -48,18 +49,18 @@ public class TokenAccumulatedState extends State {
 	 * @return EndState       the final accepting state
 	 */
 	@Override
-	public void process(final StateReader reader, final ReaderState readerState) {
+	public void process(final StateReader reader, final TokenBuilder tokenBuilder) {
 
-		final Integer codePoint = readerState.getPreviousReadCharacter();
-		final LinkedList<TokenAttribute> tokenAttributes = readerState.getTokenAttributes();
+		final Integer codePoint = tokenBuilder.getPreviousReadCharacter();
+		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
 		if (StateUtils.isEndOfFileCharacter(codePoint) && CollectionUtils.isEmpty(tokenAttributes)) {
 			ErrorState.ERROR_STATE.setPreviousState(this);
-			ErrorState.ERROR_STATE.process(reader, readerState);
+			ErrorState.ERROR_STATE.process(reader, tokenBuilder);
 			return;
 		}
 
 		if (ReadSuppressVariable.INSTANCE.getValue()) {
-			readerState.setReturnToken(null);
+			tokenBuilder.setReturnToken(null);
 			return;
 		}
 
@@ -67,9 +68,9 @@ public class TokenAccumulatedState extends State {
 		if (StringUtils.equals(tokenString, ".")) {
 			ErrorState.ERROR_STATE.setPreviousState(this);
 			ErrorState.ERROR_STATE.setErrorMessage("Dot context error in '.'");
-			ErrorState.ERROR_STATE.process(reader, readerState);
+			ErrorState.ERROR_STATE.process(reader, tokenBuilder);
 		} else {
-			NumberTokenAccumulatedState.NUMBER_TOKEN_ACCUMULATED_STATE.process(reader, readerState);
+			NumberTokenAccumulatedState.NUMBER_TOKEN_ACCUMULATED_STATE.process(reader, tokenBuilder);
 		}
 	}
 }

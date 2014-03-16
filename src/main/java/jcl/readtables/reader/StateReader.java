@@ -3,6 +3,7 @@ package jcl.readtables.reader;
 import jcl.LispStruct;
 import jcl.readtables.LispReader;
 import jcl.readtables.ReadtableStruct;
+import jcl.readtables.TokenBuilder;
 import jcl.streams.InputStream;
 import jcl.syntax.CaseSpec;
 import jcl.syntax.reader.ReadResult;
@@ -31,10 +32,10 @@ public class StateReader implements LispReader {
 	public LispStruct read(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		final StateReader stateReader = new StateReader(inputStream);
 
-		final ReaderState readerState = new ReaderState(eofErrorP, eofValue, recursiveP);
-		InitialState.INITIAL_STATE.process(stateReader, readerState);
+		final TokenBuilder tokenBuilder = new TokenBuilder(eofErrorP, eofValue, recursiveP);
+		InitialState.INITIAL_STATE.process(stateReader, tokenBuilder);
 
-		return readerState.getReturnToken();
+		return tokenBuilder.getReturnToken();
 	}
 
 	@Override

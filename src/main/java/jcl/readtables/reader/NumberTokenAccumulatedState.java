@@ -4,6 +4,7 @@ import jcl.numbers.FloatStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.NumberStruct;
 import jcl.numbers.RatioStruct;
+import jcl.readtables.TokenBuilder;
 import jcl.syntax.AttributeType;
 import jcl.syntax.CharacterConstants;
 import jcl.syntax.reader.TokenAttribute;
@@ -43,25 +44,25 @@ public class NumberTokenAccumulatedState extends State {
 	 * EndState                       the final accepting state
 	 */
 	@Override
-	public void process(final StateReader reader, final ReaderState readerState) {
+	public void process(final StateReader reader, final TokenBuilder tokenBuilder) {
 
-		final NumberStruct numberToken = getNumberToken(readerState);
+		final NumberStruct numberToken = getNumberToken(tokenBuilder);
 		if (numberToken == null) {
-			SymbolTokenAccumulatedState.SYMBOL_TOKEN_ACCUMULATED_STATE.process(reader, readerState);
+			SymbolTokenAccumulatedState.SYMBOL_TOKEN_ACCUMULATED_STATE.process(reader, tokenBuilder);
 		} else {
-			readerState.setReturnToken(numberToken);
+			tokenBuilder.setReturnToken(numberToken);
 		}
 	}
 
 	/**
-	 * This method gets a numberToken from the provided readerState and it's tokenAttributes.
+	 * This method gets a numberToken from the provided tokenBuilder and it's tokenAttributes.
 	 *
-	 * @param readerState the reader state containing the tokenAttributes to derive the numberToken
+	 * @param tokenBuilder the reader state containing the tokenAttributes to derive the numberToken
 	 * @return the built numberToken value
 	 */
-	private static NumberStruct getNumberToken(final ReaderState readerState) {
+	private static NumberStruct getNumberToken(final TokenBuilder tokenBuilder) {
 
-		final LinkedList<TokenAttribute> tokenAttributes = readerState.getTokenAttributes();
+		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
 
 		// If there are no tokens, not a number
 		if (CollectionUtils.isEmpty(tokenAttributes)) {

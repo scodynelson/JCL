@@ -1,6 +1,7 @@
 package jcl.readtables.reader;
 
 import jcl.readtables.ReadtableStruct;
+import jcl.readtables.TokenBuilder;
 import jcl.syntax.AttributeType;
 import jcl.syntax.CaseSpec;
 
@@ -15,14 +16,14 @@ public class ConstituentState extends State {
 	public static final State CONSTITUENT_STATE = new ConstituentState();
 
 	@Override
-	public void process(final StateReader reader, final ReaderState readerState) {
-		Integer codePoint = readerState.getPreviousReadCharacter();
+	public void process(final StateReader reader, final TokenBuilder tokenBuilder) {
+		Integer codePoint = tokenBuilder.getPreviousReadCharacter();
 
 		if (StateUtils.isEndOfFileCharacter(codePoint)) {
-			readerState.setReturnToken(null);
+			tokenBuilder.setReturnToken(null);
 
 			ErrorState.ERROR_STATE.setPreviousState(this);
-			ErrorState.ERROR_STATE.process(reader, readerState);
+			ErrorState.ERROR_STATE.process(reader, tokenBuilder);
 			return;
 		}
 
@@ -31,8 +32,8 @@ public class ConstituentState extends State {
 		final AttributeType attributeType = readtable.getAttributeType(codePoint);
 
 		codePoint = StateUtils.properCaseCodePoint(codePoint, attributeType, readtableCase);
-		readerState.addToTokenAttributes(codePoint, attributeType);
+		tokenBuilder.addToTokenAttributes(codePoint, attributeType);
 
-		EvenMultiEscapeState.EVEN_MULTI_ESCAPE_STATE.process(reader, readerState);
+		EvenMultiEscapeState.EVEN_MULTI_ESCAPE_STATE.process(reader, tokenBuilder);
 	}
 }

@@ -2,6 +2,7 @@ package jcl.readtables.reader;
 
 import jcl.LispStruct;
 import jcl.readtables.MacroFunctionReader;
+import jcl.readtables.TokenBuilder;
 import jcl.readtables.macrofunction.ReaderMacroFunction;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.syntax.reader.ReadResult;
@@ -27,15 +28,15 @@ public class MacroCharacterState extends State {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MacroCharacterState.class);
 
 	@Override
-	public void process(final StateReader reader, final ReaderState readerState) {
+	public void process(final StateReader reader, final TokenBuilder tokenBuilder) {
 
-		Integer codePoint = readerState.getPreviousReadCharacter();
+		Integer codePoint = tokenBuilder.getPreviousReadCharacter();
 
 		if (StateUtils.isEndOfFileCharacter(codePoint)) {
-			readerState.setReturnToken(null);
+			tokenBuilder.setReturnToken(null);
 
 			ErrorState.ERROR_STATE.setPreviousState(this);
-			ErrorState.ERROR_STATE.process(reader, readerState);
+			ErrorState.ERROR_STATE.process(reader, tokenBuilder);
 			return;
 		}
 
@@ -64,7 +65,7 @@ public class MacroCharacterState extends State {
 
 				ErrorState.ERROR_STATE.setPreviousState(this);
 				ErrorState.ERROR_STATE.setErrorMessage(errorString);
-				ErrorState.ERROR_STATE.process(reader, readerState);
+				ErrorState.ERROR_STATE.process(reader, tokenBuilder);
 				return;
 			}
 
@@ -75,7 +76,7 @@ public class MacroCharacterState extends State {
 		if (readerMacroFunction == null) {
 			ErrorState.ERROR_STATE.setPreviousState(this);
 			ErrorState.ERROR_STATE.setErrorMessage("No reader macro function exists for character: " + codePoint + '.');
-			ErrorState.ERROR_STATE.process(reader, readerState);
+			ErrorState.ERROR_STATE.process(reader, tokenBuilder);
 			return;
 		}
 
@@ -89,13 +90,13 @@ public class MacroCharacterState extends State {
 
 			ErrorState.ERROR_STATE.setPreviousState(this);
 			ErrorState.ERROR_STATE.setErrorMessage(errorString);
-			ErrorState.ERROR_STATE.process(reader, readerState);
+			ErrorState.ERROR_STATE.process(reader, tokenBuilder);
 			return;
 		}
-		readerState.setReturnToken(lispToken);
+		tokenBuilder.setReturnToken(lispToken);
 
 		if (lispToken == null) {
-			ReadState.READ_STATE.process(reader, readerState);
+			ReadState.READ_STATE.process(reader, tokenBuilder);
 		}
 	}
 }

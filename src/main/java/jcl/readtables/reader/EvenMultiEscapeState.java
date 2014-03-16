@@ -2,6 +2,7 @@ package jcl.readtables.reader;
 
 import jcl.LispStruct;
 import jcl.readtables.ReadtableStruct;
+import jcl.readtables.TokenBuilder;
 import jcl.syntax.AttributeType;
 import jcl.syntax.CaseSpec;
 import jcl.syntax.SyntaxType;
@@ -31,19 +32,19 @@ public class EvenMultiEscapeState extends State {
 	 * character, or a single escape character
 	 */
 	@Override
-	public void process(final StateReader reader, final ReaderState readerState) {
+	public void process(final StateReader reader, final TokenBuilder tokenBuilder) {
 
-		final boolean isEofErrorP = readerState.isEofErrorP();
-		final LispStruct eofValue = readerState.getEofValue();
-		final boolean isRecursiveP = readerState.isRecursiveP();
+		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
+		final LispStruct eofValue = tokenBuilder.getEofValue();
+		final boolean isRecursiveP = tokenBuilder.isRecursiveP();
 
 		ReadResult readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
 		if (readResult.wasEOF()) {
-			TokenAccumulatedState.TOKEN_ACCUMULATED_STATE.process(reader, readerState);
+			TokenAccumulatedState.TOKEN_ACCUMULATED_STATE.process(reader, tokenBuilder);
 		}
 
 		int codePoint = readResult.getResult();
-		readerState.setPreviousReadCharacter(codePoint);
+		tokenBuilder.setPreviousReadCharacter(codePoint);
 
 		final ReadtableStruct readtable = reader.getReadtable();
 		final SyntaxType syntaxType = readtable.getSyntaxType(codePoint);
@@ -53,34 +54,34 @@ public class EvenMultiEscapeState extends State {
 			final AttributeType attributeType = readtable.getAttributeType(codePoint);
 
 			codePoint = StateUtils.properCaseCodePoint(codePoint, attributeType, readtableCase);
-			readerState.addToTokenAttributes(codePoint, attributeType);
+			tokenBuilder.addToTokenAttributes(codePoint, attributeType);
 
-			EVEN_MULTI_ESCAPE_STATE.process(reader, readerState);
+			EVEN_MULTI_ESCAPE_STATE.process(reader, tokenBuilder);
 		} else if (syntaxType == SyntaxType.SINGLE_ESCAPE) {
 			// NOTE: The only difference in the following logic and the actual SINGLE_ESCAPE_STATE is that
 			//          this one builds on the current token, where as the SES begins a token.
 
 			readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
 			if (readResult.wasEOF()) {
-				IllegalCharacterState.ILLEGAL_CHARACTER_STATE.process(reader, readerState);
+				IllegalCharacterState.ILLEGAL_CHARACTER_STATE.process(reader, tokenBuilder);
 			} else {
 				codePoint = readResult.getResult();
-				readerState.setPreviousReadCharacter(codePoint);
-				readerState.addToTokenAttributes(codePoint, AttributeType.ALPHABETIC);
+				tokenBuilder.setPreviousReadCharacter(codePoint);
+				tokenBuilder.addToTokenAttributes(codePoint, AttributeType.ALPHABETIC);
 
-				EVEN_MULTI_ESCAPE_STATE.process(reader, readerState);
+				EVEN_MULTI_ESCAPE_STATE.process(reader, tokenBuilder);
 			}
 		} else if (syntaxType == SyntaxType.MULTIPLE_ESCAPE) {
-			OddMultiEscapeState.ODD_MULTI_ESCAPE_STATE.process(reader, readerState);
+			OddMultiEscapeState.ODD_MULTI_ESCAPE_STATE.process(reader, tokenBuilder);
 		} else if (syntaxType == SyntaxType.TERMINATING) {
 			reader.unreadChar(codePoint);
-			TokenAccumulatedState.TOKEN_ACCUMULATED_STATE.process(reader, readerState);
+			TokenAccumulatedState.TOKEN_ACCUMULATED_STATE.process(reader, tokenBuilder);
 		} else if (syntaxType == SyntaxType.WHITESPACE) {
 			// TODO: We want to take "read-preserving-whitespace" into account here before unreading
 			reader.unreadChar(codePoint);
-			TokenAccumulatedState.TOKEN_ACCUMULATED_STATE.process(reader, readerState);
+			TokenAccumulatedState.TOKEN_ACCUMULATED_STATE.process(reader, tokenBuilder);
 		} else {
-			IllegalCharacterState.ILLEGAL_CHARACTER_STATE.process(reader, readerState);
+			IllegalCharacterState.ILLEGAL_CHARACTER_STATE.process(reader, tokenBuilder);
 		}
 	}
 }

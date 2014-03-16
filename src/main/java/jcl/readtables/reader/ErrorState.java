@@ -1,5 +1,6 @@
 package jcl.readtables.reader;
 
+import jcl.readtables.TokenBuilder;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 
 /**
@@ -30,9 +31,9 @@ public class ErrorState extends State {
 	 * @throws ReaderErrorException thrown if the process method ever gets called. This can only be done explicitly by a programmer.
 	 */
 	@Override
-	public void process(final StateReader reader, final ReaderState readerState) {
-		final Integer codePoint = readerState.getPreviousReadCharacter();
-		if (StateUtils.isEndOfFileCharacter(codePoint) && !readerState.isEofErrorP()) {
+	public void process(final StateReader reader, final TokenBuilder tokenBuilder) {
+		final Integer codePoint = tokenBuilder.getPreviousReadCharacter();
+		if (StateUtils.isEndOfFileCharacter(codePoint) && !tokenBuilder.isEofErrorP()) {
 			return;
 		}
 		throw new ReaderErrorException("Reader Error " + errorMessage + " in State " + previousState);

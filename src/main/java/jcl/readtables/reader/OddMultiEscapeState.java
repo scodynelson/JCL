@@ -2,6 +2,7 @@ package jcl.readtables.reader;
 
 import jcl.LispStruct;
 import jcl.readtables.ReadtableStruct;
+import jcl.readtables.TokenBuilder;
 import jcl.syntax.AttributeType;
 import jcl.syntax.SyntaxType;
 import jcl.syntax.reader.ReadResult;
@@ -29,19 +30,19 @@ public class OddMultiEscapeState extends State {
 	 * terminating macro character, whitespace character, or a single escape character
 	 */
 	@Override
-	public void process(final StateReader reader, final ReaderState readerState) {
+	public void process(final StateReader reader, final TokenBuilder tokenBuilder) {
 
-		final boolean isEofErrorP = readerState.isEofErrorP();
-		final LispStruct eofValue = readerState.getEofValue();
-		final boolean isRecursiveP = readerState.isRecursiveP();
+		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
+		final LispStruct eofValue = tokenBuilder.getEofValue();
+		final boolean isRecursiveP = tokenBuilder.isRecursiveP();
 
 		ReadResult readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
 		if (readResult.wasEOF()) {
-			IllegalCharacterState.ILLEGAL_CHARACTER_STATE.process(reader, readerState);
+			IllegalCharacterState.ILLEGAL_CHARACTER_STATE.process(reader, tokenBuilder);
 		}
 
 		int codePoint = readResult.getResult();
-		readerState.setPreviousReadCharacter(codePoint);
+		tokenBuilder.setPreviousReadCharacter(codePoint);
 
 		final ReadtableStruct readtable = reader.getReadtable();
 		final SyntaxType syntaxType = readtable.getSyntaxType(codePoint);
@@ -51,25 +52,25 @@ public class OddMultiEscapeState extends State {
 				|| (syntaxType == SyntaxType.TERMINATING)
 				|| (syntaxType == SyntaxType.NON_TERMINATING)) {
 
-			readerState.addToTokenAttributes(codePoint, AttributeType.ALPHABETIC);
+			tokenBuilder.addToTokenAttributes(codePoint, AttributeType.ALPHABETIC);
 
-			ODD_MULTI_ESCAPE_STATE.process(reader, readerState);
+			ODD_MULTI_ESCAPE_STATE.process(reader, tokenBuilder);
 		} else if (syntaxType == SyntaxType.SINGLE_ESCAPE) {
 
 			readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
 			if (readResult.wasEOF()) {
-				IllegalCharacterState.ILLEGAL_CHARACTER_STATE.process(reader, readerState);
+				IllegalCharacterState.ILLEGAL_CHARACTER_STATE.process(reader, tokenBuilder);
 			} else {
 				codePoint = readResult.getResult();
-				readerState.setPreviousReadCharacter(codePoint);
-				readerState.addToTokenAttributes(codePoint, AttributeType.ALPHABETIC);
+				tokenBuilder.setPreviousReadCharacter(codePoint);
+				tokenBuilder.addToTokenAttributes(codePoint, AttributeType.ALPHABETIC);
 
-				ODD_MULTI_ESCAPE_STATE.process(reader, readerState);
+				ODD_MULTI_ESCAPE_STATE.process(reader, tokenBuilder);
 			}
 		} else if (syntaxType == SyntaxType.MULTIPLE_ESCAPE) {
-			EvenMultiEscapeState.EVEN_MULTI_ESCAPE_STATE.process(reader, readerState);
+			EvenMultiEscapeState.EVEN_MULTI_ESCAPE_STATE.process(reader, tokenBuilder);
 		} else {
-			IllegalCharacterState.ILLEGAL_CHARACTER_STATE.process(reader, readerState);
+			IllegalCharacterState.ILLEGAL_CHARACTER_STATE.process(reader, tokenBuilder);
 		}
 	}
 }

@@ -1,5 +1,6 @@
 package jcl.readtables.reader;
 
+import jcl.readtables.TokenBuilder;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.syntax.CharacterConstants;
 
@@ -19,17 +20,17 @@ public class IllegalCharacterState extends State {
 	 * @throws ReaderErrorException thrown because we have found a character that is not defined within Unicode
 	 */
 	@Override
-	public void process(final StateReader reader, final ReaderState readerState) {
+	public void process(final StateReader reader, final TokenBuilder tokenBuilder) {
 
-		final Integer codePoint = readerState.getPreviousReadCharacter();
+		final Integer codePoint = tokenBuilder.getPreviousReadCharacter();
 		if (codePoint == null) {
 			ErrorState.ERROR_STATE.setPreviousState(this);
 			ErrorState.ERROR_STATE.setErrorMessage("End Of File Character was encountered.");
-			ErrorState.ERROR_STATE.process(reader, readerState);
+			ErrorState.ERROR_STATE.process(reader, tokenBuilder);
 		} else if (codePoint != CharacterConstants.EXIT_CHAR) {
 			ErrorState.ERROR_STATE.setPreviousState(this);
 			ErrorState.ERROR_STATE.setErrorMessage("Illegal Character was encountered: " + codePoint);
-			ErrorState.ERROR_STATE.process(reader, readerState);
+			ErrorState.ERROR_STATE.process(reader, tokenBuilder);
 		}
 	}
 }

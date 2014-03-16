@@ -3,13 +3,13 @@ package jcl.system;
 import jcl.LispStruct;
 import jcl.packages.PackageStruct;
 import jcl.readtables.reader.LispReader;
-import jcl.readtables.reader.StateReader;
+import jcl.readtables.reader.impl.states.StateReader;
 import jcl.streams.CharacterStreamStruct;
 import jcl.streams.FileStreamStruct;
 import jcl.streams.InputStream;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.StreamErrorException;
-import jcl.variables.PackageVariable;
+import jcl.packages.PackageVariable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

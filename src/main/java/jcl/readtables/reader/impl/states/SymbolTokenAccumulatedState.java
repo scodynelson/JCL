@@ -3,12 +3,13 @@ package jcl.readtables.reader.impl.states;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageSymbolStruct;
+import jcl.packages.PackageVariable;
+import jcl.readtables.reader.StateReader;
 import jcl.readtables.reader.impl.TokenBuilder;
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.syntax.AttributeType;
 import jcl.syntax.reader.TokenAttribute;
-import jcl.packages.PackageVariable;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.LinkedList;

@@ -2,23 +2,23 @@ package jcl.readtables.reader.impl.states;
 
 import jcl.LispStruct;
 import jcl.readtables.ReadtableStruct;
-import jcl.readtables.reader.LispReader;
+import jcl.readtables.ReadtableVariable;
+import jcl.readtables.reader.StateReader;
 import jcl.readtables.reader.impl.TokenBuilder;
 import jcl.streams.InputStream;
 import jcl.syntax.CaseSpec;
 import jcl.syntax.reader.ReadResult;
-import jcl.readtables.ReadtableVariable;
 
-public class StateReader implements LispReader {
+public class StateReaderImpl implements StateReader {
 
 	private final InputStream inputStream;
 	private final ReadtableStruct readtable;
 
-	public StateReader(final InputStream inputStream) {
+	public StateReaderImpl(final InputStream inputStream) {
 		this(inputStream, ReadtableVariable.INSTANCE.getValue());
 	}
 
-	public StateReader(final InputStream inputStream, final ReadtableStruct readtable) {
+	public StateReaderImpl(final InputStream inputStream, final ReadtableStruct readtable) {
 		this.inputStream = inputStream;
 		this.readtable = readtable;
 	}
@@ -30,7 +30,7 @@ public class StateReader implements LispReader {
 
 	@Override
 	public LispStruct read(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
-		final StateReader stateReader = new StateReader(inputStream);
+		final StateReaderImpl stateReader = new StateReaderImpl(inputStream);
 
 		final TokenBuilder tokenBuilder = new TokenBuilder(eofErrorP, eofValue, recursiveP);
 		InitialState.INITIAL_STATE.process(stateReader, tokenBuilder);
@@ -53,10 +53,12 @@ public class StateReader implements LispReader {
 		inputStream.unreadChar(codePoint);
 	}
 
+	@Override
 	public ReadtableStruct getReadtable() {
 		return readtable;
 	}
 
+	@Override
 	public CaseSpec getReadtableCase() {
 		return readtable.getReadtableCase();
 	}

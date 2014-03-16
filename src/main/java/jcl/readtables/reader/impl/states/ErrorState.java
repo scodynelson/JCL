@@ -1,5 +1,6 @@
 package jcl.readtables.reader.impl.states;
 
+import jcl.readtables.reader.StateReader;
 import jcl.readtables.reader.impl.TokenBuilder;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 

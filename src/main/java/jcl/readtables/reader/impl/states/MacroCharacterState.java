@@ -2,10 +2,10 @@ package jcl.readtables.reader.impl.states;
 
 import jcl.LispStruct;
 import jcl.readtables.reader.MacroFunctionReader;
-import jcl.readtables.reader.impl.macrofunctions.MacroFunctionReaderImpl;
+import jcl.readtables.reader.StateReader;
 import jcl.readtables.reader.impl.TokenBuilder;
+import jcl.readtables.reader.impl.macrofunctions.MacroFunctionReaderImpl;
 import jcl.readtables.reader.macrofunction.ReaderMacroFunction;
-import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.syntax.reader.ReadResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +41,7 @@ public class MacroCharacterState extends State {
 			return;
 		}
 
-		Integer numArg = null;
+		final Integer numArg;
 		if (Character.isDigit(codePoint)) {
 
 			final StringBuilder digitStringBuilder = new StringBuilder();
@@ -58,19 +58,21 @@ public class MacroCharacterState extends State {
 			}
 
 			final String digitString = digitStringBuilder.toString();
-			try {
-				numArg = Integer.parseInt(digitString);
-			} catch (final NumberFormatException nfe) {
-				final String errorString = '"' + digitString + "\" does not represent an integer.";
-				LOGGER.error(errorString, nfe);
-
-				ErrorState.ERROR_STATE.setPreviousState(this);
-				ErrorState.ERROR_STATE.setErrorMessage(errorString);
-				ErrorState.ERROR_STATE.process(reader, tokenBuilder);
-				return;
-			}
+//			try {
+			numArg = Integer.parseInt(digitString);
+//			} catch (final NumberFormatException nfe) {
+//				final String errorString = '"' + digitString + "\" does not represent an integer.";
+//				LOGGER.error(errorString, nfe);
+//
+//				ErrorState.ERROR_STATE.setPreviousState(this);
+//				ErrorState.ERROR_STATE.setErrorMessage(errorString);
+//				ErrorState.ERROR_STATE.process(reader, tokenBuilder);
+//				return;
+//			}
 
 			codePoint = readChar;
+		} else {
+			numArg = null;
 		}
 
 		final ReaderMacroFunction readerMacroFunction = reader.getReadtable().getMacroCharacter(codePoint);
@@ -81,23 +83,21 @@ public class MacroCharacterState extends State {
 			return;
 		}
 
-		final LispStruct lispToken;
-		try {
-			final MacroFunctionReader macroFunctionReader = new MacroFunctionReaderImpl(reader);
-			lispToken = readerMacroFunction.readMacro(codePoint, macroFunctionReader, numArg);
-		} catch (final ReaderErrorException re) {
-			final String errorString = re.getMessage();
-			LOGGER.error(errorString, re);
-
-			ErrorState.ERROR_STATE.setPreviousState(this);
-			ErrorState.ERROR_STATE.setErrorMessage(errorString);
-			ErrorState.ERROR_STATE.process(reader, tokenBuilder);
-			return;
-		}
+//		try {
+		final MacroFunctionReader macroFunctionReader = new MacroFunctionReaderImpl(reader);
+		final LispStruct lispToken = readerMacroFunction.readMacro(codePoint, macroFunctionReader, numArg);
 		tokenBuilder.setReturnToken(lispToken);
 
 		if (lispToken == null) {
 			ReadState.READ_STATE.process(reader, tokenBuilder);
 		}
+//		} catch (final ReaderErrorException re) {
+//			final String errorString = re.getMessage();
+//			LOGGER.error(errorString, re);
+//
+//			ErrorState.ERROR_STATE.setPreviousState(this);
+//			ErrorState.ERROR_STATE.setErrorMessage(errorString);
+//			ErrorState.ERROR_STATE.process(reader, tokenBuilder);
+//		}
 	}
 }

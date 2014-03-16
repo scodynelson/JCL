@@ -1,6 +1,7 @@
 package jcl.readtables.reader.impl.states;
 
 import jcl.LispStruct;
+import jcl.readtables.reader.StateReader;
 import jcl.readtables.reader.impl.TokenBuilder;
 import jcl.syntax.AttributeType;
 import jcl.syntax.reader.ReadResult;

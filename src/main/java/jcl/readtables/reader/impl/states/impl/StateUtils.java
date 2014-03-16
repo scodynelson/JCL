@@ -1,4 +1,4 @@
-package jcl.readtables.reader.impl.states;
+package jcl.readtables.reader.impl.states.impl;
 
 import jcl.syntax.reader.TokenAttribute;
 import jcl.syntax.AttributeType;

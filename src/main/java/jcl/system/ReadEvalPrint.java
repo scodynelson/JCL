@@ -3,7 +3,7 @@ package jcl.system;
 import jcl.LispStruct;
 import jcl.packages.PackageStruct;
 import jcl.readtables.reader.LispReader;
-import jcl.readtables.reader.impl.states.StateReaderImpl;
+import jcl.readtables.reader.impl.states.impl.StateReaderImpl;
 import jcl.streams.CharacterStreamStruct;
 import jcl.streams.FileStreamStruct;
 import jcl.streams.InputStream;

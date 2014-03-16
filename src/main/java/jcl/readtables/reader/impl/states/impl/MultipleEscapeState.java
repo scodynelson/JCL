@@ -1,7 +1,7 @@
-package jcl.readtables.reader.impl.states;
+package jcl.readtables.reader.impl.states.impl;
 
-import jcl.readtables.reader.StateReader;
-import jcl.readtables.reader.impl.TokenBuilder;
+import jcl.readtables.reader.impl.states.StateReader;
+import jcl.readtables.reader.impl.states.TokenBuilder;
 
 /**
  * Step 6 of the Reader Algorithm.

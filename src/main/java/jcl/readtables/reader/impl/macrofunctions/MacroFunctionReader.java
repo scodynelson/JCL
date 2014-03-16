@@ -1,8 +1,9 @@
-package jcl.readtables.reader;
+package jcl.readtables.reader.impl.macrofunctions;
 
 import jcl.LispStruct;
 import jcl.lists.ListStruct;
 import jcl.numbers.IntegerStruct;
+import jcl.readtables.reader.LispReader;
 import jcl.syntax.reader.ReadExtendedToken;
 
 import java.util.Map;

@@ -2,7 +2,7 @@ package jcl.readtables.reader.macrofunction;
 
 import jcl.LispStruct;
 import jcl.arrays.BitVectorStruct;
-import jcl.readtables.reader.MacroFunctionReader;
+import jcl.readtables.reader.impl.macrofunctions.MacroFunctionReader;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.structs.conditions.exceptions.TypeErrorException;

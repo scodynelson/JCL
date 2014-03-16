@@ -1,4 +1,4 @@
-package jcl.readtables.reader.impl.macrofunctions;
+package jcl.readtables.reader.impl.macrofunctions.impl;
 
 import jcl.LispStruct;
 import jcl.lists.ConsStruct;
@@ -8,8 +8,8 @@ import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariable;
 import jcl.readtables.ReadtableStruct;
-import jcl.readtables.reader.MacroFunctionReader;
-import jcl.readtables.reader.StateReader;
+import jcl.readtables.reader.impl.macrofunctions.MacroFunctionReader;
+import jcl.readtables.reader.impl.states.StateReader;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.symbols.SymbolStruct;
 import jcl.syntax.AttributeType;

@@ -6,7 +6,6 @@ import jcl.lists.ListStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
-import jcl.readtables.MacroFunctionReader;
 import jcl.readtables.ReadtableStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.symbols.SymbolStruct;

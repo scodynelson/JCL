@@ -1,8 +1,6 @@
 package jcl.readtables.reader;
 
 import jcl.LispStruct;
-import jcl.readtables.MacroFunctionReader;
-import jcl.readtables.TokenBuilder;
 import jcl.readtables.macrofunction.ReaderMacroFunction;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.syntax.reader.ReadResult;

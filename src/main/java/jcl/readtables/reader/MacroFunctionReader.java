@@ -1,4 +1,4 @@
-package jcl.readtables;
+package jcl.readtables.reader;
 
 import jcl.LispStruct;
 import jcl.lists.ListStruct;

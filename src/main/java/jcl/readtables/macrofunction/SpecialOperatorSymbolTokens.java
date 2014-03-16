@@ -1,4 +1,4 @@
-package jcl.readtables.tokens;
+package jcl.readtables.macrofunction;
 
 import jcl.symbols.SymbolStruct;
 

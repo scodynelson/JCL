@@ -1,6 +1,5 @@
 package jcl.readtables.reader;
 
-import jcl.readtables.TokenBuilder;
 import jcl.syntax.reader.TokenAttribute;
 import jcl.variables.ReadSuppressVariable;
 import org.apache.commons.collections4.CollectionUtils;

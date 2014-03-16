@@ -1,9 +1,7 @@
 package jcl.readtables.reader;
 
 import jcl.LispStruct;
-import jcl.readtables.LispReader;
 import jcl.readtables.ReadtableStruct;
-import jcl.readtables.TokenBuilder;
 import jcl.streams.InputStream;
 import jcl.syntax.CaseSpec;
 import jcl.syntax.reader.ReadResult;

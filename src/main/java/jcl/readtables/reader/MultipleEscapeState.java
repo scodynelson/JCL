@@ -1,7 +1,5 @@
 package jcl.readtables.reader;
 
-import jcl.readtables.TokenBuilder;
-
 /**
  * Step 6 of the Reader Algorithm.
  */

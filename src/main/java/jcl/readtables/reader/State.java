@@ -1,7 +1,5 @@
 package jcl.readtables.reader;
 
-import jcl.readtables.TokenBuilder;
-
 /**
  * This interface defines a set of anonymous classes that comprise the states of the
  * Reader state machine as defined in CLtL: Ch 22.1.1 pp 511-515. These states are active

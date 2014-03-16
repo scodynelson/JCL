@@ -1,7 +1,6 @@
 package jcl.readtables.reader;
 
 import jcl.readtables.ReadtableStruct;
-import jcl.readtables.TokenBuilder;
 import jcl.syntax.AttributeType;
 import jcl.syntax.CaseSpec;
 

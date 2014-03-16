@@ -1,6 +1,5 @@
 package jcl.readtables.reader;
 
-import jcl.readtables.TokenBuilder;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.syntax.CharacterConstants;
 

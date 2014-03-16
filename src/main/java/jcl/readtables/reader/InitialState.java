@@ -1,7 +1,5 @@
 package jcl.readtables.reader;
 
-import jcl.readtables.TokenBuilder;
-
 /**
  * Not Specified in the Reader Algorithm.
  * <p/>

@@ -2,7 +2,7 @@ package jcl.readtables.macrofunction;
 
 import jcl.LispStruct;
 import jcl.functions.FunctionStruct;
-import jcl.readtables.MacroFunctionReader;
+import jcl.readtables.reader.MacroFunctionReader;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 
 /**

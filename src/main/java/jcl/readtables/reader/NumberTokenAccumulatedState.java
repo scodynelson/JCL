@@ -4,7 +4,6 @@ import jcl.numbers.FloatStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.NumberStruct;
 import jcl.numbers.RatioStruct;
-import jcl.readtables.TokenBuilder;
 import jcl.syntax.AttributeType;
 import jcl.syntax.CharacterConstants;
 import jcl.syntax.reader.TokenAttribute;

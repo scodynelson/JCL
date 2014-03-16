@@ -1,20 +1,21 @@
 package jcl.readtables.reader;
 
 import jcl.LispStruct;
+import jcl.lists.ConsStruct;
+import jcl.lists.ListStruct;
+import jcl.numbers.IntegerStruct;
+import jcl.packages.GlobalPackageStruct;
+import jcl.packages.PackageStruct;
+import jcl.readtables.MacroFunctionReader;
+import jcl.structs.conditions.exceptions.ReaderErrorException;
+import jcl.symbols.SymbolStruct;
 import jcl.syntax.AttributeType;
 import jcl.syntax.CaseSpec;
 import jcl.syntax.CharacterConstants;
-import jcl.syntax.reader.ReadExtendedToken;
 import jcl.syntax.SyntaxType;
-import jcl.lists.ConsStruct;
-import jcl.numbers.IntegerStruct;
-import jcl.lists.ListStruct;
-import jcl.packages.PackageStruct;
-import jcl.symbols.SymbolStruct;
-import jcl.structs.conditions.exceptions.ReaderErrorException;
+import jcl.syntax.reader.ReadExtendedToken;
 import jcl.syntax.reader.ReadResult;
 import jcl.variables.FeaturesVariable;
-import jcl.packages.GlobalPackageStruct;
 import jcl.variables.PackageVariable;
 import jcl.variables.ReadBaseVariable;
 import jcl.variables.ReadSuppressVariable;
@@ -25,15 +26,14 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
-public class MacroFunctionReader extends LispReader {
+public class MacroFunctionReaderImpl implements MacroFunctionReader {
 
 	private final StateReader stateReader;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(MacroFunctionReader.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MacroFunctionReaderImpl.class);
 
-	public MacroFunctionReader(final StateReader stateReader) {
+	public MacroFunctionReaderImpl(final StateReader stateReader) {
 		this.stateReader = stateReader;
 	}
 
@@ -66,6 +66,7 @@ public class MacroFunctionReader extends LispReader {
 	//** READ-EXTENDED-TOKEN **//
 	//*************************//
 
+	@Override
 	public ReadExtendedToken readExtendedToken() {
 
 		final StringBuilder stringBuilder = new StringBuilder();
@@ -85,6 +86,7 @@ public class MacroFunctionReader extends LispReader {
 		}
 	}
 
+	@Override
 	public String readExtendedTokenEscaped() {
 
 		final StringBuilder stringBuilder = new StringBuilder();
@@ -243,6 +245,7 @@ public class MacroFunctionReader extends LispReader {
 	//** #R, #B, #O, and #X **//
 	//************************//
 
+	@Override
 	public IntegerStruct readIntegerToken(final Integer radix) {
 		if (ReadSuppressVariable.INSTANCE.getValue()) {
 			readExtendedToken();
@@ -280,6 +283,7 @@ public class MacroFunctionReader extends LispReader {
 	//** READ-LIST **//
 	//***************//
 
+	@Override
 	public ListStruct readList() {
 
 		final List<LispStruct> theList = new ArrayList<>();
@@ -378,6 +382,7 @@ public class MacroFunctionReader extends LispReader {
 	//** READ-UNICODE-CHAR **//
 	//***********************//
 
+	@Override
 	public int readUnicodeChar() {
 
 		final StringBuilder unicodeCharBuilder = new StringBuilder();
@@ -409,6 +414,7 @@ public class MacroFunctionReader extends LispReader {
 	//** #+ and #- **//
 	//***************//
 
+	@Override
 	public void readFeatures(final boolean shouldHideFeatures) {
 
 		boolean isFeature;
@@ -489,11 +495,7 @@ public class MacroFunctionReader extends LispReader {
 	//** #= and ## **//
 	//***************//
 
-	public static final Map<Integer, LispStruct> SHARP_EQUAL_FINAL_TABLE = new ConcurrentHashMap<>();
-	public static final Map<Integer, Object> SHARP_EQUAL_TEMP_TABLE = new ConcurrentHashMap<>();
-	public static final Map<Integer, LispStruct> SHARP_EQUAL_REPL_TABLE = new ConcurrentHashMap<>();
-	public static final Map<Integer, LispStruct> SHARP_EQUAL_CIRCLE_TABLE = new ConcurrentHashMap<>();
-
+	@Override
 	public void circleSubst(final Map<Long, LispStruct> replTable, final LispStruct tree) {
 /*
 ;; This function is kind of like to NSUBLIS, but checks for circularities and

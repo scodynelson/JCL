@@ -1,6 +1,7 @@
 package jcl.readtables.reader;
 
 import jcl.LispStruct;
+import jcl.readtables.MacroFunctionReader;
 import jcl.readtables.macrofunction.ReaderMacroFunction;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.syntax.reader.ReadResult;
@@ -80,7 +81,7 @@ public class MacroCharacterState extends State {
 
 		final LispStruct lispToken;
 		try {
-			final MacroFunctionReader macroFunctionReader = new MacroFunctionReader(reader);
+			final MacroFunctionReader macroFunctionReader = new MacroFunctionReaderImpl(reader);
 			lispToken = readerMacroFunction.readMacro(codePoint, macroFunctionReader, numArg);
 		} catch (final ReaderErrorException re) {
 			final String errorString = re.getMessage();

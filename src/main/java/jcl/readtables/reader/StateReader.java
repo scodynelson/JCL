@@ -1,13 +1,14 @@
 package jcl.readtables.reader;
 
 import jcl.LispStruct;
+import jcl.readtables.LispReader;
 import jcl.readtables.ReadtableStruct;
 import jcl.streams.InputStream;
 import jcl.syntax.CaseSpec;
 import jcl.syntax.reader.ReadResult;
 import jcl.variables.ReadtableVariable;
 
-public class StateReader extends LispReader {
+public class StateReader implements LispReader {
 
 	private final InputStream inputStream;
 	private final ReadtableStruct readtable;

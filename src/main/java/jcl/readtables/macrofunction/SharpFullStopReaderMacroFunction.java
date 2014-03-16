@@ -1,9 +1,9 @@
 package jcl.readtables.macrofunction;
 
 import jcl.LispStruct;
-import jcl.readtables.reader.MacroFunctionReader;
-import jcl.syntax.CharacterConstants;
+import jcl.readtables.MacroFunctionReader;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
+import jcl.syntax.CharacterConstants;
 import jcl.variables.ReadEvalVariable;
 import jcl.variables.ReadSuppressVariable;
 

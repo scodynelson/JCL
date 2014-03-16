@@ -1,11 +1,11 @@
 package jcl.readtables.macrofunction;
 
 import jcl.LispStruct;
-import jcl.readtables.reader.MacroFunctionReader;
-import jcl.syntax.reader.ReadExtendedToken;
-import jcl.syntax.CharacterConstants;
-import jcl.symbols.SymbolStruct;
+import jcl.readtables.MacroFunctionReader;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
+import jcl.symbols.SymbolStruct;
+import jcl.syntax.CharacterConstants;
+import jcl.syntax.reader.ReadExtendedToken;
 import jcl.variables.ReadSuppressVariable;
 
 /**

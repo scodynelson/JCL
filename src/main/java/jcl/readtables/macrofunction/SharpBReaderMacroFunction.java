@@ -1,8 +1,8 @@
 package jcl.readtables.macrofunction;
 
-import jcl.readtables.reader.MacroFunctionReader;
-import jcl.syntax.CharacterConstants;
 import jcl.LispStruct;
+import jcl.readtables.MacroFunctionReader;
+import jcl.syntax.CharacterConstants;
 
 /**
  * Implements the '#b' Lisp reader macro.

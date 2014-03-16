@@ -1,14 +1,14 @@
 package jcl.readtables.macrofunction;
 
 import jcl.LispStruct;
-import jcl.readtables.reader.MacroFunctionReader;
-import jcl.syntax.CharacterConstants;
+import jcl.lists.ListStruct;
 import jcl.numbers.ComplexStruct;
 import jcl.numbers.FloatStruct;
 import jcl.numbers.IntegerStruct;
-import jcl.lists.ListStruct;
 import jcl.numbers.RatioStruct;
+import jcl.readtables.MacroFunctionReader;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
+import jcl.syntax.CharacterConstants;
 import jcl.variables.ReadSuppressVariable;
 
 import java.util.List;

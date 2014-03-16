@@ -86,11 +86,11 @@ public class Optional<VAR> {
 
 		@Override
 		public String toString() {
-			return "OptionalVar{" +
-					"var='" + var + '\'' +
-					", initForm=" + initForm +
-					", suppliedP=" + suppliedP +
-					'}';
+			return "OptionalVar{"
+					+ "var='" + var + '\''
+					+ ", initForm=" + initForm
+					+ ", suppliedP=" + suppliedP
+					+ '}';
 		}
 	}
 }

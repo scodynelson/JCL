@@ -1,9 +1,5 @@
 package jcl.lambdalist.variable;
 
-import jcl.types.Keyword;
-
-import java.util.Map;
-
 /**
  * If &key is present, all specifiers up to the next lambda list keyword or the end of the list are keyword parameter
  * specifiers. When keyword parameters are processed, the same arguments are processed that would be made into a list for
@@ -62,7 +58,7 @@ import java.util.Map;
  */
 public class Key<VAR> {
 
-	private final Map<Keyword, KeyVar<VAR>> vars;
+	private final KeyVar<VAR> vars;
 	private final boolean allowOtherKeys;
 
 	/**
@@ -70,7 +66,7 @@ public class Key<VAR> {
 	 *
 	 * @param vars the vars of the &key parameter
 	 */
-	public Key(final Map<Keyword, KeyVar<VAR>> vars) {
+	public Key(final KeyVar<VAR> vars) {
 		this.vars = vars;
 		allowOtherKeys = false;
 	}
@@ -81,12 +77,12 @@ public class Key<VAR> {
 	 * @param vars           the vars of the &key parameter
 	 * @param allowOtherKeys whether to allow keys not provided in the vars
 	 */
-	public Key(final Map<Keyword, KeyVar<VAR>> vars, final boolean allowOtherKeys) {
+	public Key(final KeyVar<VAR> vars, final boolean allowOtherKeys) {
 		this.vars = vars;
 		this.allowOtherKeys = allowOtherKeys;
 	}
 
-	public Map<Keyword, KeyVar<VAR>> getVars() {
+	public KeyVar<VAR> getVars() {
 		return vars;
 	}
 

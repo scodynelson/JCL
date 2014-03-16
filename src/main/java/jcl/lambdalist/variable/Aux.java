@@ -77,10 +77,10 @@ public class Aux<VAR> {
 
 		@Override
 		public String toString() {
-			return "AuxVar{" +
-					"var='" + var + '\'' +
-					", initForm=" + initForm +
-					'}';
+			return "AuxVar{"
+					+ "var='" + var + '\''
+					+ ", initForm=" + initForm
+					+ '}';
 		}
 	}
 }

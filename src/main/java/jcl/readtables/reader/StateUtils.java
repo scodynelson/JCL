@@ -10,7 +10,13 @@ import java.util.LinkedList;
 
 public final class StateUtils {
 
+	public static final int EOF = -1;
+
 	private StateUtils() {
+	}
+
+	public static boolean isEndOfFileCharacter(final Integer character) {
+		return (character == null) || (character == EOF);
 	}
 
 	public static int properCaseCodePoint(final int codePoint, final AttributeType attributeType, final CaseSpec caseSpec) {

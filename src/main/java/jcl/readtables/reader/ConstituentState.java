@@ -18,7 +18,7 @@ public class ConstituentState extends State {
 	public void process(final StateReader reader, final ReaderState readerState) {
 		Integer codePoint = readerState.getPreviousReadCharacter();
 
-		if (ReaderUtils.isEndOfFileCharacter(codePoint)) {
+		if (StateUtils.isEndOfFileCharacter(codePoint)) {
 			readerState.setReturnToken(null);
 
 			ErrorState.ERROR_STATE.setPreviousState(this);

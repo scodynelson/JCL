@@ -7,6 +7,7 @@ import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.readtables.MacroFunctionReader;
+import jcl.readtables.ReadtableStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.symbols.SymbolStruct;
 import jcl.syntax.AttributeType;
@@ -159,14 +160,14 @@ public class MacroFunctionReaderImpl implements MacroFunctionReader {
 		while (!readResult.wasEOF()) {
 
 			final int codePoint = readResult.getResult();
-			if (ReaderUtils.isSyntaxType(stateReader, codePoint, SyntaxType.WHITESPACE, SyntaxType.TERMINATING)) {
+			if (isSyntaxType(stateReader, codePoint, SyntaxType.WHITESPACE, SyntaxType.TERMINATING)) {
 				// TODO: We want to take "read-preserving-whitespace" into account here before unreading
 				stateReader.unreadChar(codePoint);
 				stringBuilder.deleteCharAt(stringBuilder.length() - 1);
 				break;
 			}
 
-			if (ReaderUtils.isSyntaxType(stateReader, codePoint, SyntaxType.SINGLE_ESCAPE)) {
+			if (isSyntaxType(stateReader, codePoint, SyntaxType.SINGLE_ESCAPE)) {
 				final ReadResult nextReadResult = readInternalToken(stringBuilder);
 
 				if (nextReadResult.wasEOF()) {
@@ -174,7 +175,7 @@ public class MacroFunctionReaderImpl implements MacroFunctionReader {
 				} else {
 					escapes.add(stringBuilder.length() - 1);
 				}
-			} else if (ReaderUtils.isSyntaxType(stateReader, codePoint, SyntaxType.MULTIPLE_ESCAPE)) {
+			} else if (isSyntaxType(stateReader, codePoint, SyntaxType.MULTIPLE_ESCAPE)) {
 				while (true) {
 
 					final ReadResult tempReadResult = readInternalToken(stringBuilder);
@@ -184,9 +185,9 @@ public class MacroFunctionReaderImpl implements MacroFunctionReader {
 					}
 
 					final int tempCodePoint = tempReadResult.getResult();
-					if (ReaderUtils.isSyntaxType(stateReader, tempCodePoint, SyntaxType.MULTIPLE_ESCAPE)) {
+					if (isSyntaxType(stateReader, tempCodePoint, SyntaxType.MULTIPLE_ESCAPE)) {
 						break;
-					} else if (ReaderUtils.isSyntaxType(stateReader, tempCodePoint, SyntaxType.SINGLE_ESCAPE)) {
+					} else if (isSyntaxType(stateReader, tempCodePoint, SyntaxType.SINGLE_ESCAPE)) {
 
 						final ReadResult nextReadResult = readInternalToken(stringBuilder);
 
@@ -200,8 +201,8 @@ public class MacroFunctionReaderImpl implements MacroFunctionReader {
 					}
 				}
 			} else {
-				if (ReaderUtils.isSyntaxType(stateReader, codePoint, SyntaxType.CONSTITUENT)
-						&& ReaderUtils.isAttributeType(stateReader, codePoint, AttributeType.PACKAGEMARKER)
+				if (isSyntaxType(stateReader, codePoint, SyntaxType.CONSTITUENT)
+						&& isAttributeType(stateReader, codePoint, AttributeType.PACKAGEMARKER)
 						&& (colon == null)) {
 					colon = stringBuilder.length() - 1;
 				}
@@ -296,7 +297,7 @@ public class MacroFunctionReaderImpl implements MacroFunctionReader {
 
 				int nextCodePoint = stateReader.readChar().getResult();
 
-				if (ReaderUtils.isSyntaxType(stateReader, nextCodePoint, SyntaxType.WHITESPACE, SyntaxType.TERMINATING)) {
+				if (isSyntaxType(stateReader, nextCodePoint, SyntaxType.WHITESPACE, SyntaxType.TERMINATING)) {
 					if (theList.isEmpty()) {
 						if (ReadSuppressVariable.INSTANCE.getValue()) {
 							return null;
@@ -305,7 +306,7 @@ public class MacroFunctionReaderImpl implements MacroFunctionReader {
 						}
 					}
 
-					if (ReaderUtils.isSyntaxType(stateReader, nextCodePoint, SyntaxType.WHITESPACE)) {
+					if (isSyntaxType(stateReader, nextCodePoint, SyntaxType.WHITESPACE)) {
 						nextCodePoint = flushWhitespace();
 					}
 
@@ -370,7 +371,7 @@ public class MacroFunctionReaderImpl implements MacroFunctionReader {
 		ReadResult readResult = stateReader.readChar();
 		int codePoint = readResult.getResult();
 
-		if (ReaderUtils.isSyntaxType(stateReader, codePoint, SyntaxType.WHITESPACE)) {
+		if (isSyntaxType(stateReader, codePoint, SyntaxType.WHITESPACE)) {
 			readResult = stateReader.readChar();
 			codePoint = readResult.getResult();
 		}
@@ -391,7 +392,7 @@ public class MacroFunctionReaderImpl implements MacroFunctionReader {
 		ReadResult readResult = stateReader.readChar();
 		int readChar = readResult.getResult();
 
-		while (!ReaderUtils.isSyntaxType(stateReader, readChar, SyntaxType.WHITESPACE)) {
+		while (!isSyntaxType(stateReader, readChar, SyntaxType.WHITESPACE)) {
 			unicodeCharBuilder.appendCodePoint(readChar);
 
 			readResult = stateReader.readChar();
@@ -539,5 +540,29 @@ public class MacroFunctionReaderImpl implements MacroFunctionReader {
 		(t
 		 tree)))
 */
+	}
+
+	// UTILITIES
+
+	private static boolean isAttributeType(final StateReader stateReader, final int codePoint, final AttributeType... attributeTypes) {
+
+		final ReadtableStruct readtable = stateReader.getReadtable();
+
+		boolean returnVal = false;
+		for (final AttributeType attributeType : attributeTypes) {
+			returnVal = returnVal || (readtable.getAttributeType(codePoint) == attributeType);
+		}
+		return returnVal;
+	}
+
+	private static boolean isSyntaxType(final StateReader stateReader, final int codePoint, final SyntaxType... syntaxTypes) {
+
+		final ReadtableStruct readtable = stateReader.getReadtable();
+
+		boolean returnVal = false;
+		for (final SyntaxType syntaxType : syntaxTypes) {
+			returnVal = returnVal || (readtable.getSyntaxType(codePoint) == syntaxType);
+		}
+		return returnVal;
 	}
 }

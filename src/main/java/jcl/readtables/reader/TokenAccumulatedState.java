@@ -52,7 +52,7 @@ public class TokenAccumulatedState extends State {
 
 		final Integer codePoint = readerState.getPreviousReadCharacter();
 		final LinkedList<TokenAttribute> tokenAttributes = readerState.getTokenAttributes();
-		if (ReaderUtils.isEndOfFileCharacter(codePoint) && CollectionUtils.isEmpty(tokenAttributes)) {
+		if (StateUtils.isEndOfFileCharacter(codePoint) && CollectionUtils.isEmpty(tokenAttributes)) {
 			ErrorState.ERROR_STATE.setPreviousState(this);
 			ErrorState.ERROR_STATE.process(reader, readerState);
 			return;

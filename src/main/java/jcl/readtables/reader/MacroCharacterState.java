@@ -31,7 +31,7 @@ public class MacroCharacterState extends State {
 
 		Integer codePoint = readerState.getPreviousReadCharacter();
 
-		if (ReaderUtils.isEndOfFileCharacter(codePoint)) {
+		if (StateUtils.isEndOfFileCharacter(codePoint)) {
 			readerState.setReturnToken(null);
 
 			ErrorState.ERROR_STATE.setPreviousState(this);

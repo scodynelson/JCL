@@ -32,7 +32,7 @@ public class ErrorState extends State {
 	@Override
 	public void process(final StateReader reader, final ReaderState readerState) {
 		final Integer codePoint = readerState.getPreviousReadCharacter();
-		if (ReaderUtils.isEndOfFileCharacter(codePoint) && !readerState.isEofErrorP()) {
+		if (StateUtils.isEndOfFileCharacter(codePoint) && !readerState.isEofErrorP()) {
 			return;
 		}
 		throw new ReaderErrorException("Reader Error " + errorMessage + " in State " + previousState);

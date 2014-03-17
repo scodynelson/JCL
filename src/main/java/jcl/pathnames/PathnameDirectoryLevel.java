@@ -1,6 +1,6 @@
 package jcl.pathnames;
 
-import jcl.structs.conditions.exceptions.FileErrorException;
+import jcl.conditions.exceptions.FileErrorException;
 import org.apache.commons.lang3.StringUtils;
 
 /**

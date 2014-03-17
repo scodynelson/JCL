@@ -1,6 +1,6 @@
 package jcl.pathnames;
 
-import jcl.structs.conditions.exceptions.FileErrorException;
+import jcl.conditions.exceptions.FileErrorException;
 
 /**
  * The {@code PathnameVersion} is the object representation of the 'version' element of a Lisp 'pathname' type.

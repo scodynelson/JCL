@@ -1,7 +1,7 @@
 package jcl.lists;
 
 import jcl.LispStruct;
-import jcl.structs.conditions.exceptions.SimpleErrorException;
+import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.types.Null;
 
 import java.util.Collections;

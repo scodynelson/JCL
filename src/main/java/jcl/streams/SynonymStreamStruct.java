@@ -2,7 +2,7 @@ package jcl.streams;
 
 import jcl.LispStruct;
 import jcl.symbols.SymbolStruct;
-import jcl.structs.conditions.exceptions.StreamErrorException;
+import jcl.conditions.exceptions.StreamErrorException;
 import jcl.syntax.reader.PeekResult;
 import jcl.syntax.reader.PeekType;
 import jcl.syntax.reader.ReadResult;

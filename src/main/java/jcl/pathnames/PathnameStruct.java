@@ -1,7 +1,7 @@
 package jcl.pathnames;
 
 import jcl.classes.BuiltInClassStruct;
-import jcl.structs.conditions.exceptions.SimpleErrorException;
+import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.types.Pathname;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

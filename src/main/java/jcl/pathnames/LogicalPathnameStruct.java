@@ -1,6 +1,6 @@
 package jcl.pathnames;
 
-import jcl.structs.conditions.exceptions.TypeErrorException;
+import jcl.conditions.exceptions.TypeErrorException;
 import jcl.types.LogicalPathname;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

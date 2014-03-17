@@ -5,7 +5,7 @@ import jcl.readtables.reader.impl.macrofunctions.MacroFunctionReader;
 import jcl.syntax.CharacterConstants;
 import jcl.pathnames.PathnameStruct;
 import jcl.arrays.StringStruct;
-import jcl.structs.conditions.exceptions.ReaderErrorException;
+import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.variables.ReadSuppressVariable;
 
 import java.net.URISyntaxException;

@@ -1,6 +1,6 @@
 package jcl.streams;
 
-import jcl.structs.conditions.exceptions.StreamErrorException;
+import jcl.conditions.exceptions.StreamErrorException;
 import jcl.types.BaseChar;
 import jcl.types.StringStream;
 

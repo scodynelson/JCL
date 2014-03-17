@@ -1,7 +1,7 @@
 package jcl.arrays;
 
 import jcl.numbers.IntegerStruct;
-import jcl.structs.conditions.exceptions.TypeErrorException;
+import jcl.conditions.exceptions.TypeErrorException;
 import jcl.types.Bit;
 import jcl.types.BitVector;
 import jcl.types.SimpleBitVector;

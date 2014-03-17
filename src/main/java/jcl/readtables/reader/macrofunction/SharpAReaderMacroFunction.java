@@ -4,9 +4,9 @@ import jcl.LispStruct;
 import jcl.arrays.ArrayStruct;
 import jcl.lists.ListStruct;
 import jcl.readtables.reader.impl.macrofunctions.MacroFunctionReader;
-import jcl.structs.conditions.exceptions.ReaderErrorException;
-import jcl.structs.conditions.exceptions.SimpleErrorException;
-import jcl.structs.conditions.exceptions.TypeErrorException;
+import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.conditions.exceptions.SimpleErrorException;
+import jcl.conditions.exceptions.TypeErrorException;
 import jcl.syntax.CharacterConstants;
 import jcl.variables.ReadSuppressVariable;
 

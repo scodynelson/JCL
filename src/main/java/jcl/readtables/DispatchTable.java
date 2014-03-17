@@ -3,7 +3,7 @@ package jcl.readtables;
 import jcl.LispStruct;
 import jcl.readtables.reader.macrofunction.ReaderMacroFunction;
 import jcl.readtables.reader.impl.macrofunctions.MacroFunctionReader;
-import jcl.structs.conditions.exceptions.ReaderErrorException;
+import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.syntax.reader.ReadResult;
 
 import java.util.Map;

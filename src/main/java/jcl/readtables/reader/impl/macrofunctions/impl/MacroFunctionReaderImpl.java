@@ -10,7 +10,7 @@ import jcl.packages.PackageVariable;
 import jcl.readtables.ReadtableStruct;
 import jcl.readtables.reader.impl.macrofunctions.MacroFunctionReader;
 import jcl.readtables.reader.impl.states.StateReader;
-import jcl.structs.conditions.exceptions.ReaderErrorException;
+import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.symbols.SymbolStruct;
 import jcl.syntax.AttributeType;
 import jcl.syntax.CaseSpec;

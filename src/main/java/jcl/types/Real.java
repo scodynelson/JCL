@@ -176,17 +176,21 @@ public interface Real extends Number {
 					return true;
 				}
 
-				if (real instanceof RealImpl) {
-					final RealImpl realImpl = (RealImpl) real;
+				return (real instanceof RealImpl) && checkRealImplEquality((RealImpl) real);
+			}
 
-					if (integerIntervalDesignator != null) {
-						return integerIntervalDesignator.equals(realImpl.integerIntervalDesignator);
-					}
-
-					return (decimalIntervalDesignator == null) || decimalIntervalDesignator.equals(realImpl.decimalIntervalDesignator);
+			/**
+			 * This method checks the equality of the provide realImpl object to this instance.
+			 *
+			 * @param realImpl the realImpl object to test for equality
+			 * @return true if the realImpl object is equivalent to this instance; false otherwise
+			 */
+			private boolean checkRealImplEquality(final RealImpl realImpl) {
+				if (integerIntervalDesignator != null) {
+					return integerIntervalDesignator.equals(realImpl.integerIntervalDesignator);
 				}
 
-				return false;
+				return (decimalIntervalDesignator == null) || decimalIntervalDesignator.equals(realImpl.decimalIntervalDesignator);
 			}
 
 			@Override

@@ -107,16 +107,24 @@ public interface Vector extends Array, Sequence {
 				}
 
 				if (vector instanceof VectorImpl) {
-					final VectorImpl vectorImpl = (VectorImpl) vector;
-
-					if (size == null) {
-						return elementType.equals(vectorImpl.elementType);
-					}
-
-					return size.equals(vectorImpl.size) && elementType.equals(vectorImpl.elementType);
+					return checkVectorImplEquality((VectorImpl) vector);
 				}
 
 				return TypeUtils.isArrayLispTypeEqual(this, vector);
+			}
+
+			/**
+			 * This method checks the equality of the provide vectorImpl object to this instance.
+			 *
+			 * @param vectorImpl the vectorImpl object to test for equality
+			 * @return true if the vectorImpl object is equivalent to this instance; false otherwise
+			 */
+			private boolean checkVectorImplEquality(final VectorImpl vectorImpl) {
+				if (size == null) {
+					return elementType.equals(vectorImpl.elementType);
+				}
+
+				return size.equals(vectorImpl.size) && elementType.equals(vectorImpl.elementType);
 			}
 
 			@Override

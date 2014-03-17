@@ -44,7 +44,7 @@ public interface SimpleBaseString extends BaseString, SimpleString {
 		private static class SimpleBaseStringImpl implements SimpleBaseString, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final DimensionsDesignator size;
-			private final LispType elementType = BaseChar.INSTANCE;
+			private static final LispType ELEMENT_TYPE = BaseChar.INSTANCE;
 
 			/**
 			 * Private constructor.
@@ -69,7 +69,7 @@ public interface SimpleBaseString extends BaseString, SimpleString {
 
 			@Override
 			public LispType getElementType() {
-				return elementType;
+				return ELEMENT_TYPE;
 			}
 
 			/**
@@ -110,7 +110,7 @@ public interface SimpleBaseString extends BaseString, SimpleString {
 			public int hashCode() {
 				return new HashCodeBuilder()
 						.append(size)
-						.append(elementType)
+						.append(ELEMENT_TYPE)
 						.toHashCode();
 			}
 
@@ -118,7 +118,7 @@ public interface SimpleBaseString extends BaseString, SimpleString {
 			public String toString() {
 				return "SimpleBaseStringImpl{"
 						+ "size=" + size
-						+ ", elementType=" + elementType
+						+ ", elementType=" + ELEMENT_TYPE
 						+ '}';
 			}
 		}

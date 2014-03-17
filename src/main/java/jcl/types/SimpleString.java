@@ -45,7 +45,7 @@ public interface SimpleString extends String, SimpleArray {
 		private static class SimpleStringImpl implements SimpleString, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final DimensionsDesignator size;
-			private final LispType elementType = Character.INSTANCE;
+			private static final LispType ELEMENT_TYPE = Character.INSTANCE;
 
 			/**
 			 * Private constructor.
@@ -70,7 +70,7 @@ public interface SimpleString extends String, SimpleArray {
 
 			@Override
 			public LispType getElementType() {
-				return elementType;
+				return ELEMENT_TYPE;
 			}
 
 			/**
@@ -111,7 +111,7 @@ public interface SimpleString extends String, SimpleArray {
 			public int hashCode() {
 				return new HashCodeBuilder()
 						.append(size)
-						.append(elementType)
+						.append(ELEMENT_TYPE)
 						.toHashCode();
 			}
 
@@ -119,7 +119,7 @@ public interface SimpleString extends String, SimpleArray {
 			public java.lang.String toString() {
 				return "SimpleStringImpl{"
 						+ "size=" + size
-						+ ", elementType=" + elementType
+						+ ", elementType=" + ELEMENT_TYPE
 						+ '}';
 			}
 		}

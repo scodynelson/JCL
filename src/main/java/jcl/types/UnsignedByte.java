@@ -1,7 +1,7 @@
 package jcl.types;
 
-import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.AndTypeSpecifier;
+import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.math3.util.ArithmeticUtils;
 
@@ -68,12 +68,11 @@ public interface UnsignedByte extends SignedByte {
 			 * @return the {@code Integer} supertype
 			 */
 			private static Integer getSuper(final BigInteger bits) {
-
-				BigInteger upper = null;
 				if (bits != null) {
-					upper = ArithmeticUtils.pow(BigInteger.valueOf(2L), bits.subtract(BigInteger.ONE));
+					final BigInteger upper = ArithmeticUtils.pow(BigInteger.valueOf(2L), bits.subtract(BigInteger.ONE));
+					return Integer.Factory.getInstance(BigInteger.ZERO, upper);
 				}
-				return Integer.Factory.getInstance(BigInteger.ZERO, upper);
+				return Integer.Factory.getInstance(BigInteger.ZERO, null);
 			}
 
 			/**

@@ -44,7 +44,7 @@ public interface String extends Vector {
 		private static class StringImpl implements String, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final DimensionsDesignator size;
-			private final LispType elementType = Character.INSTANCE;
+			private static final LispType ELEMENT_TYPE = Character.INSTANCE;
 
 			/**
 			 * Private constructor.
@@ -69,7 +69,7 @@ public interface String extends Vector {
 
 			@Override
 			public LispType getElementType() {
-				return elementType;
+				return ELEMENT_TYPE;
 			}
 
 			/**
@@ -110,7 +110,7 @@ public interface String extends Vector {
 			public int hashCode() {
 				return new HashCodeBuilder()
 						.append(size)
-						.append(elementType)
+						.append(ELEMENT_TYPE)
 						.toHashCode();
 			}
 
@@ -118,7 +118,7 @@ public interface String extends Vector {
 			public java.lang.String toString() {
 				return "StringImpl{"
 						+ "size=" + size
-						+ ", elementType=" + elementType
+						+ ", elementType=" + ELEMENT_TYPE
 						+ '}';
 			}
 		}

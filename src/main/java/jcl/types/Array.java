@@ -123,16 +123,24 @@ public interface Array extends T {
 				}
 
 				if (array instanceof ArrayImpl) {
-					final ArrayImpl arrayImpl = (ArrayImpl) array;
-
-					if (dimensions == null) {
-						return elementType.equals(arrayImpl.elementType);
-					}
-
-					return dimensions.equals(arrayImpl.dimensions) && elementType.equals(arrayImpl.elementType);
+					return checkArrayImplEquality((ArrayImpl) array);
 				}
 
 				return TypeUtils.isArrayLispTypeEqual(this, array);
+			}
+
+			/**
+			 * This method checks the equality of the provide arrayImpl object to this instance.
+			 *
+			 * @param arrayImpl the arrayImpl object to test for equality
+			 * @return true if the arrayImpl object is equivalent to this instance; false otherwise
+			 */
+			private boolean checkArrayImplEquality(final ArrayImpl arrayImpl) {
+				if (dimensions == null) {
+					return elementType.equals(arrayImpl.elementType);
+				}
+
+				return dimensions.equals(arrayImpl.dimensions) && elementType.equals(arrayImpl.elementType);
 			}
 
 			@Override

@@ -109,16 +109,24 @@ public interface SimpleArray extends Array {
 				}
 
 				if (simpleArray instanceof SimpleArrayImpl) {
-					final SimpleArrayImpl simpleArrayImpl = (SimpleArrayImpl) simpleArray;
-
-					if (dimensions == null) {
-						return elementType.equals(simpleArrayImpl.elementType);
-					}
-
-					return dimensions.equals(simpleArrayImpl.dimensions) && elementType.equals(simpleArrayImpl.elementType);
+					return checkSimpleArrayImplEquality((SimpleArrayImpl) simpleArray);
 				}
 
 				return TypeUtils.isArrayLispTypeEqual(this, simpleArray);
+			}
+
+			/**
+			 * This method checks the equality of the provide simpleArrayImpl object to this instance.
+			 *
+			 * @param simpleArrayImpl the simpleArrayImpl object to test for equality
+			 * @return true if the simpleArrayImpl object is equivalent to this instance; false otherwise
+			 */
+			private boolean checkSimpleArrayImplEquality(final SimpleArrayImpl simpleArrayImpl) {
+				if (dimensions == null) {
+					return elementType.equals(simpleArrayImpl.elementType);
+				}
+
+				return dimensions.equals(simpleArrayImpl.dimensions) && elementType.equals(simpleArrayImpl.elementType);
 			}
 
 			@Override

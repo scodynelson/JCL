@@ -123,16 +123,21 @@ public interface Function extends T {
 					return true;
 				}
 
-				if (function instanceof FunctionImpl) {
-					final FunctionImpl functionImpl = (FunctionImpl) function;
-					return ObjectUtils.equals(typeSpecifiers, functionImpl.typeSpecifiers)
-							&& ObjectUtils.equals(optional, functionImpl.optional)
-							&& ObjectUtils.equals(rest, functionImpl.rest)
-							&& ObjectUtils.equals(key, functionImpl.key)
-							&& ObjectUtils.equals(valuesTypeSpecifier, functionImpl.valuesTypeSpecifier);
-				}
+				return function instanceof FunctionImpl && checkFunctionImplEquality((FunctionImpl) function);
+			}
 
-				return false;
+			/**
+			 * This method checks the equality of the provide functionImpl object to this instance.
+			 *
+			 * @param functionImpl the functionImpl object to test for equality
+			 * @return true if the functionImpl object is equivalent to this instance; false otherwise
+			 */
+			private boolean checkFunctionImplEquality(final FunctionImpl functionImpl) {
+				return ObjectUtils.equals(typeSpecifiers, functionImpl.typeSpecifiers)
+						&& ObjectUtils.equals(optional, functionImpl.optional)
+						&& ObjectUtils.equals(rest, functionImpl.rest)
+						&& ObjectUtils.equals(key, functionImpl.key)
+						&& ObjectUtils.equals(valuesTypeSpecifier, functionImpl.valuesTypeSpecifier);
 			}
 
 			@Override

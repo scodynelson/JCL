@@ -91,17 +91,21 @@ public interface Cons extends List {
 					return true;
 				}
 
-				if (cons instanceof ConsImpl) {
-					final ConsImpl consImpl = (ConsImpl) cons;
+				return (cons instanceof ConsImpl) && checkConsImplEquality((ConsImpl) cons);
+			}
 
-					if (carSpec != null) {
-						return carSpec.equals(consImpl.carSpec);
-					}
-
-					return (cdrSpec == null) || cdrSpec.equals(consImpl.cdrSpec);
+			/**
+			 * This method checks the equality of the provide consImpl object to this instance.
+			 *
+			 * @param consImpl the consImpl object to test for equality
+			 * @return true if the consImpl object is equivalent to this instance; false otherwise
+			 */
+			private boolean checkConsImplEquality(final ConsImpl consImpl) {
+				if (carSpec != null) {
+					return carSpec.equals(consImpl.carSpec);
 				}
 
-				return false;
+				return (cdrSpec == null) || cdrSpec.equals(consImpl.cdrSpec);
 			}
 
 			@Override

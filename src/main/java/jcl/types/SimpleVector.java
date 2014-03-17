@@ -116,16 +116,24 @@ public interface SimpleVector extends Vector, SimpleArray {
 				}
 
 				if (simpleVector instanceof SimpleVectorImpl) {
-					final SimpleVectorImpl simpleVectorImpl = (SimpleVectorImpl) simpleVector;
-
-					if (size == null) {
-						return elementType.equals(simpleVectorImpl.elementType);
-					}
-
-					return size.equals(simpleVectorImpl.size) && elementType.equals(simpleVectorImpl.elementType);
+					return checkSimpleVectorImplEquality((SimpleVectorImpl) simpleVector);
 				}
 
 				return TypeUtils.isArrayLispTypeEqual(this, simpleVector);
+			}
+
+			/**
+			 * This method checks the equality of the provide simpleVectorImpl object to this instance.
+			 *
+			 * @param simpleVectorImpl the simpleVectorImpl object to test for equality
+			 * @return true if the simpleVectorImpl object is equivalent to this instance; false otherwise
+			 */
+			private boolean checkSimpleVectorImplEquality(final SimpleVectorImpl simpleVectorImpl) {
+				if (size == null) {
+					return elementType.equals(simpleVectorImpl.elementType);
+				}
+
+				return size.equals(simpleVectorImpl.size) && elementType.equals(simpleVectorImpl.elementType);
 			}
 
 			@Override

@@ -1,4 +1,4 @@
-package jcl.syntax;
+package jcl.readtables.reader.syntax;
 
 /**
  * The {@code CharacterName} enumeration defines the standard graphic characters that have names for the system.

@@ -16,7 +16,7 @@ import jcl.syntax.AttributeType;
 import jcl.syntax.CaseSpec;
 import jcl.syntax.CharacterConstants;
 import jcl.syntax.SyntaxType;
-import jcl.syntax.reader.ReadExtendedToken;
+import jcl.readtables.reader.syntax.ReadExtendedToken;
 import jcl.syntax.reader.ReadResult;
 import jcl.variables.FeaturesVariable;
 import jcl.numbers.ReadBaseVariable;

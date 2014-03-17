@@ -4,7 +4,7 @@ import jcl.LispStruct;
 import jcl.lists.ListStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.readtables.reader.LispReader;
-import jcl.syntax.reader.ReadExtendedToken;
+import jcl.readtables.reader.syntax.ReadExtendedToken;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

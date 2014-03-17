@@ -7,7 +7,7 @@ import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.structs.conditions.exceptions.TypeErrorException;
 import jcl.syntax.CharacterConstants;
-import jcl.syntax.reader.ReadExtendedToken;
+import jcl.readtables.reader.syntax.ReadExtendedToken;
 import jcl.variables.ReadSuppressVariable;
 import org.apache.commons.lang3.StringUtils;
 

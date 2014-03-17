@@ -9,7 +9,7 @@ import jcl.readtables.reader.impl.states.TokenBuilder;
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.syntax.AttributeType;
-import jcl.syntax.reader.TokenAttribute;
+import jcl.readtables.reader.impl.states.TokenAttribute;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.LinkedList;

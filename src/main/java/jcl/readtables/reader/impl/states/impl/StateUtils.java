@@ -1,6 +1,6 @@
 package jcl.readtables.reader.impl.states.impl;
 
-import jcl.syntax.reader.TokenAttribute;
+import jcl.readtables.reader.impl.states.TokenAttribute;
 import jcl.syntax.AttributeType;
 import jcl.syntax.CaseSpec;
 import org.apache.commons.collections4.CollectionUtils;

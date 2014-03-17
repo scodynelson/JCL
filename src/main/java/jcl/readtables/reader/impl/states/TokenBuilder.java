@@ -2,7 +2,6 @@ package jcl.readtables.reader.impl.states;
 
 import jcl.LispStruct;
 import jcl.syntax.AttributeType;
-import jcl.syntax.reader.TokenAttribute;
 
 import java.util.LinkedList;
 

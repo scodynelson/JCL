@@ -8,7 +8,7 @@ import jcl.readtables.reader.impl.states.StateReader;
 import jcl.readtables.reader.impl.states.TokenBuilder;
 import jcl.syntax.AttributeType;
 import jcl.syntax.CharacterConstants;
-import jcl.syntax.reader.TokenAttribute;
+import jcl.readtables.reader.impl.states.TokenAttribute;
 import jcl.types.DoubleFloat;
 import jcl.types.Float;
 import jcl.types.LongFloat;

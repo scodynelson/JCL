@@ -2,7 +2,7 @@ package jcl.readtables.reader.impl.states.impl;
 
 import jcl.readtables.reader.impl.states.StateReader;
 import jcl.readtables.reader.impl.states.TokenBuilder;
-import jcl.syntax.reader.TokenAttribute;
+import jcl.readtables.reader.impl.states.TokenAttribute;
 import jcl.variables.ReadSuppressVariable;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;

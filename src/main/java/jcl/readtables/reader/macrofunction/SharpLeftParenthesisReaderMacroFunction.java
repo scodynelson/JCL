@@ -8,7 +8,7 @@ import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.structs.conditions.exceptions.TypeErrorException;
 import jcl.syntax.CharacterConstants;
-import jcl.readtables.ReadSuppressVariable;
+import jcl.variables.ReadSuppressVariable;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.List;

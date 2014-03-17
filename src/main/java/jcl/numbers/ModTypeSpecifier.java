@@ -1,6 +1,5 @@
 package jcl.numbers;
 
-import jcl.numbers.IntegerStruct;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 
 import java.math.BigInteger;
@@ -28,20 +27,20 @@ public class ModTypeSpecifier implements CompoundTypeSpecifier {
 			return true;
 		}
 
-		if (!(obj instanceof IntegerStruct)) {
-			return false;
+		if (obj instanceof IntegerStruct) {
+			final IntegerStruct objectInteger = (IntegerStruct) obj;
+			final BigInteger objectValue = objectInteger.getBigInteger();
+
+			if (objectValue.compareTo(BigInteger.ZERO) == -1) {
+				return false;
+			}
+
+			final BigInteger integerValue = integerStruct.getBigInteger();
+
+			return objectValue.compareTo(integerValue) <= 0;
 		}
 
-		final IntegerStruct objectInteger = (IntegerStruct) obj;
-		final BigInteger objectValue = objectInteger.getBigInteger();
-
-		if (objectValue.compareTo(BigInteger.ZERO) == -1) {
-			return false;
-		}
-
-		final BigInteger integerValue = integerStruct.getBigInteger();
-
-		return objectValue.compareTo(integerValue) <= 0;
+		return false;
 	}
 
 	@Override

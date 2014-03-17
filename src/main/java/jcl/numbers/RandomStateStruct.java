@@ -22,7 +22,6 @@ public class RandomStateStruct extends BuiltInClassStruct {
 	private static final BigInteger RANDOM_CONST_C = BigInteger.valueOf(101010101);
 
 	private static final BigInteger RANDOM_INTEGER_OVERLAP = BigInteger.valueOf(THREE);
-	//	private static final BigInteger RANDOM_INTEGER_EXTRA_BITS = BigInteger.TEN;
 	private static final BigInteger RANDOM_CHUNCK_LENGTH = BigInteger.valueOf(RANDOM_UPPER_BOUND.bitLength());
 
 	private static final BigInteger SHIFT_AMOUNT = RANDOM_CHUNCK_LENGTH.subtract(RANDOM_INTEGER_OVERLAP);

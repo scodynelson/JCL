@@ -20,7 +20,7 @@ import jcl.syntax.reader.ReadExtendedToken;
 import jcl.syntax.reader.ReadResult;
 import jcl.variables.FeaturesVariable;
 import jcl.numbers.ReadBaseVariable;
-import jcl.readtables.ReadSuppressVariable;
+import jcl.variables.ReadSuppressVariable;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

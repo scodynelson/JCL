@@ -6,7 +6,7 @@ import jcl.readtables.reader.impl.macrofunctions.MacroFunctionReader;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.symbols.SymbolStruct;
 import jcl.syntax.CharacterConstants;
-import jcl.readtables.ReadSuppressVariable;
+import jcl.variables.ReadSuppressVariable;
 
 /**
  * Implements the '#'' Lisp reader macro.

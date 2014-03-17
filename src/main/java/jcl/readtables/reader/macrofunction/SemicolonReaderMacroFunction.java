@@ -5,7 +5,7 @@ import jcl.readtables.reader.impl.macrofunctions.MacroFunctionReader;
 import jcl.structs.comments.CommentStruct;
 import jcl.syntax.CharacterConstants;
 import jcl.syntax.reader.ReadResult;
-import jcl.readtables.ReadSuppressVariable;
+import jcl.variables.ReadSuppressVariable;
 
 /**
  * Implements the ';' Lisp reader macro.

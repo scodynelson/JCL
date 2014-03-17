@@ -17,7 +17,17 @@ public class IntegerStruct extends RationalStruct {
 	 * @param bigInteger the value of the {@code IntegerStruct}
 	 */
 	public IntegerStruct(final BigInteger bigInteger) {
-		super(Integer.INSTANCE, null, null); // TODO: determine the type???
+		this(Integer.INSTANCE, bigInteger);
+	}
+
+	/**
+	 * Public constructor.
+	 *
+	 * @param integerFormat a {@code Integer} that represents the type of {@code Integer}
+	 * @param bigInteger    the value of the {@code IntegerStruct}
+	 */
+	public IntegerStruct(final Integer integerFormat, final BigInteger bigInteger) {
+		super(integerFormat, null, null);
 		this.bigInteger = bigInteger;
 	}
 

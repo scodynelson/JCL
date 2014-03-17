@@ -72,7 +72,7 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 		while (true) {
 			if (inputStreams.isEmpty()) {
 				if (eofErrorP) {
-					throw new EndOfFileException("End of file reached.");
+					throw new EndOfFileException(StreamUtils.END_OF_FILE_REACHED);
 				} else {
 					return new ReadResult(eofValue);
 				}
@@ -94,7 +94,7 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 		while (true) {
 			if (inputStreams.isEmpty()) {
 				if (eofErrorP) {
-					throw new EndOfFileException("End of file reached.");
+					throw new EndOfFileException(StreamUtils.END_OF_FILE_REACHED);
 				} else {
 					return new ReadResult(eofValue);
 				}
@@ -115,7 +115,7 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 	public PeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		if (inputStreams.isEmpty()) {
 			if (eofErrorP) {
-				throw new EndOfFileException("End of file reached.");
+				throw new EndOfFileException(StreamUtils.END_OF_FILE_REACHED);
 			} else {
 				return new PeekResult(eofValue);
 			}

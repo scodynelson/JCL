@@ -49,7 +49,7 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 	public ReadResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		if (current == end) {
 			if (eofErrorP) {
-				throw new EndOfFileException("End of file reached.");
+				throw new EndOfFileException(StreamUtils.END_OF_FILE_REACHED);
 			} else {
 				return new ReadResult(eofValue);
 			}
@@ -61,41 +61,36 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 
 	@Override
 	public ReadResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
-		throw new StreamErrorException("Operation only supported for BinaryStreams.");
+		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_BINARYSTREAM);
 	}
 
 	@Override
 	public PeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		if ((current + 1) == end) {
 			if (eofErrorP) {
-				throw new EndOfFileException("End of file reached.");
+				throw new EndOfFileException(StreamUtils.END_OF_FILE_REACHED);
 			} else {
 				return new PeekResult(eofValue);
 			}
 		}
 
-		int nextChar = -1;
+		final int nextChar;
 		switch (peekType.getType()) {
 			case NIL:
-				nextChar = nilPeekChar();
+				nextChar = nilPeekCharSIS();
 				break;
 			case T:
-				nextChar = tPeekChar();
+				nextChar = tPeekCharSIS();
 				break;
 			case CHARACTER:
-				nextChar = characterPeekChar(peekType.getCodePoint());
+				nextChar = characterPeekCharSIS(peekType.getCodePoint());
+				break;
+			default:
+				nextChar = -1;
 				break;
 		}
 
-		if (nextChar == -1) {
-			if (eofErrorP) {
-				throw new EndOfFileException("End of file reached.");
-			} else {
-				return new PeekResult(eofValue);
-			}
-		} else {
-			return new PeekResult(nextChar);
-		}
+		return StreamUtils.getPeekResult(nextChar, eofErrorP, eofValue);
 	}
 
 	/**
@@ -103,7 +98,7 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 	 *
 	 * @return the character peeked from the stream
 	 */
-	private int nilPeekChar() {
+	private int nilPeekCharSIS() {
 		return inputString.charAt(current + 1);
 	}
 
@@ -112,7 +107,7 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 	 *
 	 * @return the character peeked from the stream
 	 */
-	private int tPeekChar() {
+	private int tPeekCharSIS() {
 		int nextChar = ' '; // Initialize to whitespace, since we are attempting to skip it anyways
 
 		int indexToFind = current + 1;
@@ -134,7 +129,7 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 	 * @param codePoint the codePoint to peek up to in the stream
 	 * @return the character peeked from the stream
 	 */
-	private int characterPeekChar(final Integer codePoint) {
+	private int characterPeekCharSIS(final Integer codePoint) {
 		int nextChar = -1; // Initialize to -1 value, since this is essentially EOF
 
 		int indexToFind = current + 1;
@@ -168,7 +163,7 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 
 	@Override
 	public Long fileLength() {
-		throw new StreamErrorException("Operation only supported on a FileStream.");
+		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_FILESTREAM);
 	}
 
 	@Override

@@ -1,21 +1,15 @@
 package jcl.streams;
 
 import jcl.LispStruct;
-import jcl.conditions.exceptions.StreamErrorException;
 import jcl.syntax.reader.PeekResult;
 import jcl.syntax.reader.PeekType;
 import jcl.syntax.reader.ReadResult;
-import jcl.LispType;
 import jcl.types.TwoWayStream;
-import jcl.typespecifiers.AndTypeSpecifier;
 
 /**
  * The {@code TwoWayStreamStruct} is the object representation of a Lisp 'two-way-stream' type.
  */
-public class TwoWayStreamStruct extends StreamStruct implements InputStream, OutputStream {
-
-	private final InputStream inputStream;
-	private final OutputStream outputStream;
+public class TwoWayStreamStruct extends DualStreamStruct {
 
 	/**
 	 * Public constructor.
@@ -35,34 +29,7 @@ public class TwoWayStreamStruct extends StreamStruct implements InputStream, Out
 	 * @param outputStream  the {@code OutputStream} to create a {@code TwoWayStreamStruct} from
 	 */
 	public TwoWayStreamStruct(final boolean isInteractive, final InputStream inputStream, final OutputStream outputStream) {
-		super(TwoWayStream.INSTANCE, null, null, isInteractive, getElementType(inputStream, outputStream));
-		this.inputStream = inputStream;
-		this.outputStream = outputStream;
-	}
-
-	/**
-	 * This private method is used to retrieve the element type for object construction.
-	 *
-	 * @param inputStream  the {@code InputStream} to create a {@code TwoWayStreamStruct} from
-	 * @param outputStream the {@code OutputStream} to create a {@code TwoWayStreamStruct} from
-	 * @return the element type for object construction
-	 */
-	private static LispType getElementType(final InputStream inputStream, final OutputStream outputStream) {
-		if (inputStream == null) {
-			throw new StreamErrorException("Provided Input Stream must not be null.");
-		}
-		if (outputStream == null) {
-			throw new StreamErrorException("Provided Output Stream must not be null.");
-		}
-
-		final LispType inType = inputStream.getElementType();
-		final LispType outType = outputStream.getElementType();
-
-		if (inType.equals(outType)) {
-			return inType;
-		} else {
-			return new AndTypeSpecifier(inType, outType);
-		}
+		super(TwoWayStream.INSTANCE, isInteractive, inputStream, outputStream);
 	}
 
 	@Override
@@ -83,51 +50,6 @@ public class TwoWayStreamStruct extends StreamStruct implements InputStream, Out
 	@Override
 	public Integer unreadChar(final Integer codePoint) {
 		return inputStream.unreadChar(codePoint);
-	}
-
-	@Override
-	public void writeChar(final int aChar) {
-		outputStream.writeChar(aChar);
-	}
-
-	@Override
-	public void writeByte(final int aByte) {
-		outputStream.writeByte(aByte);
-	}
-
-	@Override
-	public void writeString(final String outputString, final int start, final int end) {
-		outputStream.writeString(outputString, start, end);
-	}
-
-	@Override
-	public void clearInput() {
-		inputStream.clearInput();
-	}
-
-	@Override
-	public boolean listen() {
-		return inputStream.listen();
-	}
-
-	@Override
-	public void clearOutput() {
-		outputStream.clearOutput();
-	}
-
-	@Override
-	public void finishOutput() {
-		outputStream.finishOutput();
-	}
-
-	@Override
-	public void forceOutput() {
-		outputStream.forceOutput();
-	}
-
-	@Override
-	public Long fileLength() {
-		throw new StreamErrorException("Operation only supported on a FileStream.");
 	}
 
 	@Override

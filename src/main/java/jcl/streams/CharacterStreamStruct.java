@@ -1,18 +1,20 @@
 package jcl.streams;
 
 import jcl.LispStruct;
-import jcl.conditions.exceptions.EndOfFileException;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.syntax.reader.PeekResult;
 import jcl.syntax.reader.PeekType;
 import jcl.syntax.reader.ReadResult;
 import jcl.types.Character;
+import jcl.types.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
@@ -20,7 +22,7 @@ import java.nio.charset.Charset;
 /**
  * The {@code CharacterStreamStruct} is the object representation of a character reading system level Lisp stream.
  */
-public class CharacterStreamStruct extends StreamStruct implements InputStream, OutputStream {
+public class CharacterStreamStruct extends NativeStreamStruct {
 
 	private final LineNumberReader inputStream;
 	private final PrintWriter outputStream;
@@ -33,7 +35,7 @@ public class CharacterStreamStruct extends StreamStruct implements InputStream, 
 	 * @param inputStream  the {@code java.io.InputStream} to create a {@code CharacterStreamStruct} from
 	 * @param outputStream the {@code java.io.OutputStream} to create a {@code CharacterStreamStruct} from
 	 */
-	public CharacterStreamStruct(final java.io.InputStream inputStream, final java.io.OutputStream outputStream) {
+	public CharacterStreamStruct(final InputStream inputStream, final OutputStream outputStream) {
 		this(false, inputStream, outputStream);
 	}
 
@@ -44,63 +46,48 @@ public class CharacterStreamStruct extends StreamStruct implements InputStream, 
 	 * @param inputStream   the {@code java.io.InputStream} to create a {@code CharacterStreamStruct} from
 	 * @param outputStream  the {@code java.io.OutputStream} to create a {@code CharacterStreamStruct} from
 	 */
-	public CharacterStreamStruct(final boolean isInteractive, final java.io.InputStream inputStream, final java.io.OutputStream outputStream) {
-		super(null, null, isInteractive, Character.INSTANCE);
+	public CharacterStreamStruct(final boolean isInteractive, final InputStream inputStream, final OutputStream outputStream) {
+		super(Stream.INSTANCE, isInteractive, Character.INSTANCE);
 		this.inputStream = new LineNumberReader(new InputStreamReader(inputStream, Charset.defaultCharset()));
 		this.outputStream = new PrintWriter(new OutputStreamWriter(outputStream, Charset.defaultCharset()));
 	}
 
 	@Override
 	public ReadResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
-		final int readChar;
 		try {
 			inputStream.mark(1);
-			readChar = inputStream.read();
+			final int readChar = inputStream.read();
+			return StreamUtils.getReadResult(readChar, eofErrorP, eofValue);
 		} catch (final IOException ioe) {
-			throw new StreamErrorException("Could not read char.", ioe);
-		}
-
-		if (readChar == -1) {
-			if (eofErrorP) {
-				throw new EndOfFileException("End of file reached.");
-			} else {
-				return new ReadResult(eofValue);
-			}
-		} else {
-			return new ReadResult(readChar);
+			throw new StreamErrorException(StreamUtils.FAILED_TO_READ_CHAR, ioe);
 		}
 	}
 
 	@Override
 	public ReadResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
-		throw new StreamErrorException("Operation only supported for BinaryStreams.");
+		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_BINARYSTREAM);
 	}
 
 	@Override
 	public PeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 
-		int nextChar = -1;
+		final int nextChar;
 		switch (peekType.getType()) {
 			case NIL:
-				nextChar = nilPeekChar();
+				nextChar = nilPeekCharCSS();
 				break;
 			case T:
-				nextChar = tPeekChar();
+				nextChar = tPeekCharCSS();
 				break;
 			case CHARACTER:
-				nextChar = characterPeekChar(peekType.getCodePoint());
+				nextChar = characterPeekCharCSS(peekType.getCodePoint());
+				break;
+			default:
+				nextChar = -1;
 				break;
 		}
 
-		if (nextChar == -1) {
-			if (eofErrorP) {
-				throw new EndOfFileException("End of file reached.");
-			} else {
-				return new PeekResult(eofValue);
-			}
-		} else {
-			return new PeekResult(nextChar);
-		}
+		return StreamUtils.getPeekResult(nextChar, eofErrorP, eofValue);
 	}
 
 	/**
@@ -108,16 +95,15 @@ public class CharacterStreamStruct extends StreamStruct implements InputStream, 
 	 *
 	 * @return the character peeked from the stream
 	 */
-	private int nilPeekChar() {
-		final int nextChar;
+	private int nilPeekCharCSS() {
 		try {
 			inputStream.mark(1);
-			nextChar = inputStream.read();
+			final int nextChar = inputStream.read();
 			inputStream.reset();
+			return nextChar;
 		} catch (final IOException ioe) {
-			throw new StreamErrorException("Could not peek char", ioe);
+			throw new StreamErrorException(StreamUtils.FAILED_TO_PEEK_CHAR, ioe);
 		}
-		return nextChar;
 	}
 
 	/**
@@ -125,18 +111,18 @@ public class CharacterStreamStruct extends StreamStruct implements InputStream, 
 	 *
 	 * @return the character peeked from the stream
 	 */
-	private int tPeekChar() {
-		int nextChar = ' '; // Initialize to whitespace, since we are attempting to skip it anyways
+	private int tPeekCharCSS() {
 		try {
 			inputStream.mark(1);
+			int nextChar = ' '; // Initialize to whitespace, since we are attempting to skip it anyways
 			while (java.lang.Character.isWhitespace(nextChar)) {
 				nextChar = inputStream.read();
 			}
 			inputStream.reset();
+			return nextChar;
 		} catch (final IOException ioe) {
-			throw new StreamErrorException("Could not peek char", ioe);
+			throw new StreamErrorException(StreamUtils.FAILED_TO_PEEK_CHAR, ioe);
 		}
-		return nextChar;
 	}
 
 	/**
@@ -145,18 +131,18 @@ public class CharacterStreamStruct extends StreamStruct implements InputStream, 
 	 * @param codePoint the codePoint to peek up to in the stream
 	 * @return the character peeked from the stream
 	 */
-	private int characterPeekChar(final Integer codePoint) {
-		int nextChar = -1; // Initialize to -1 value, since this is essentially EOF
+	private int characterPeekCharCSS(final Integer codePoint) {
 		try {
 			inputStream.mark(1);
+			int nextChar = -1; // Initialize to -1 value, since this is essentially EOF
 			while (nextChar != codePoint) {
 				nextChar = inputStream.read();
 			}
 			inputStream.reset();
+			return nextChar;
 		} catch (final IOException ioe) {
-			throw new StreamErrorException("Could not peek char", ioe);
+			throw new StreamErrorException(StreamUtils.FAILED_TO_PEEK_CHAR, ioe);
 		}
-		return nextChar;
 	}
 
 	@Override
@@ -165,21 +151,7 @@ public class CharacterStreamStruct extends StreamStruct implements InputStream, 
 			inputStream.reset();
 			return codePoint;
 		} catch (final IOException ioe) {
-			throw new StreamErrorException("Could not unread char.", ioe);
-		}
-	}
-
-	@Override
-	public boolean listen() {
-		try {
-			final PeekResult peekResult = peekChar(PeekType.NIL_PEEK_TYPE, false, null, false);
-			return !peekResult.wasEOF();
-		} catch (final EndOfFileException eofe) {
-			LOGGER.warn("End of file reached.", eofe);
-			return false;
-		} catch (final StreamErrorException see) {
-			LOGGER.warn("Stream error occurred.", see);
-			return false;
+			throw new StreamErrorException(StreamUtils.FAILED_TO_UNREAD_CHAR, ioe);
 		}
 	}
 
@@ -200,7 +172,7 @@ public class CharacterStreamStruct extends StreamStruct implements InputStream, 
 
 	@Override
 	public void writeByte(final int aByte) {
-		throw new StreamErrorException("Operation only supported for BinaryStreams.");
+		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_BINARYSTREAM);
 	}
 
 	@Override
@@ -236,7 +208,7 @@ public class CharacterStreamStruct extends StreamStruct implements InputStream, 
 
 	@Override
 	public Long fileLength() {
-		throw new StreamErrorException("Operation only supported on a FileStream.");
+		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_FILESTREAM);
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package jcl.streams;
 
 import jcl.LispStruct;
-import jcl.conditions.exceptions.EndOfFileException;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.syntax.reader.PeekResult;
 import jcl.syntax.reader.PeekType;
@@ -19,7 +18,7 @@ import java.io.RandomAccessFile;
 /**
  * The {@code FileStreamStruct} is the object representation of a Lisp 'file-stream' type.
  */
-public class FileStreamStruct extends StreamStruct implements InputStream, OutputStream {
+public class FileStreamStruct extends NativeStreamStruct {
 
 	private final RandomAccessFile fileStream;
 
@@ -41,7 +40,7 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 	 * @param file          the file to create a {@code FileStreamStruct} from
 	 */
 	public FileStreamStruct(final boolean isInteractive, final File file) {
-		super(FileStream.INSTANCE, null, null, isInteractive, null);
+		super(FileStream.INSTANCE, isInteractive, null);
 		// TODO: Type will be the type of whatever the "byte" type being read
 
 		try {
@@ -53,75 +52,68 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 
 	@Override
 	public ReadResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
-		int readChar;
-		try {
-			readChar = fileStream.read();
-		} catch (final EOFException eofe) {
-			LOGGER.warn("End of file reached.", eofe);
-			readChar = -1;
-		} catch (final IOException ioe) {
-			throw new StreamErrorException("Could not read char.", ioe);
-		}
+		final int readChar = readChar();
+		return StreamUtils.getReadResult(readChar, eofErrorP, eofValue);
+	}
 
-		if (readChar == -1) {
-			if (eofErrorP) {
-				throw new EndOfFileException("End of file reached.");
-			} else {
-				return new ReadResult(eofValue);
-			}
-		} else {
-			return new ReadResult(readChar);
+	/**
+	 * Internal read method for reading a character from the fileStream.
+	 *
+	 * @return the next character in the fileStream
+	 */
+	private int readChar() {
+		try {
+			return fileStream.read();
+		} catch (final EOFException eofe) {
+			LOGGER.warn(StreamUtils.END_OF_FILE_REACHED, eofe);
+			return -1;
+		} catch (final IOException ioe) {
+			throw new StreamErrorException(StreamUtils.FAILED_TO_READ_CHAR, ioe);
 		}
 	}
 
 	@Override
 	public ReadResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
-		int readByte;
-		try {
-			readByte = fileStream.readByte();
-		} catch (final EOFException eofe) {
-			LOGGER.warn("End of file reached.", eofe);
-			readByte = -1;
-		} catch (final IOException ioe) {
-			throw new StreamErrorException("Could not read byte.", ioe);
-		}
+		final int readByte = readByte();
+		return StreamUtils.getReadResult(readByte, eofErrorP, eofValue);
+	}
 
-		if (readByte == -1) {
-			if (eofErrorP) {
-				throw new EndOfFileException("End of file reached.");
-			} else {
-				return new ReadResult(eofValue);
-			}
-		} else {
-			return new ReadResult(readByte);
+	/**
+	 * Internal read method for reading a byte from the fileStream.
+	 *
+	 * @return the next byte in the fileStream
+	 */
+	private int readByte() {
+		try {
+			return fileStream.readByte();
+		} catch (final EOFException eofe) {
+			LOGGER.warn(StreamUtils.END_OF_FILE_REACHED, eofe);
+			return -1;
+		} catch (final IOException ioe) {
+			throw new StreamErrorException(StreamUtils.FAILED_TO_READ_BYTE, ioe);
 		}
 	}
 
 	@Override
 	public PeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 
-		int nextChar = -1;
+		final int nextChar;
 		switch (peekType.getType()) {
 			case NIL:
-				nextChar = nilPeekChar();
+				nextChar = nilPeekCharFSS();
 				break;
 			case T:
-				nextChar = tPeekChar();
+				nextChar = tPeekCharFSS();
 				break;
 			case CHARACTER:
-				nextChar = characterPeekChar(peekType.getCodePoint());
+				nextChar = characterPeekCharFSS(peekType.getCodePoint());
+				break;
+			default:
+				nextChar = -1;
 				break;
 		}
 
-		if (nextChar == -1) {
-			if (eofErrorP) {
-				throw new EndOfFileException("End of file reached.");
-			} else {
-				return new PeekResult(eofValue);
-			}
-		} else {
-			return new PeekResult(nextChar);
-		}
+		return StreamUtils.getPeekResult(nextChar, eofErrorP, eofValue);
 	}
 
 	/**
@@ -129,18 +121,17 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 	 *
 	 * @return the character peeked from the stream
 	 */
-	private int nilPeekChar() {
-		int nextChar;
+	private int nilPeekCharFSS() {
 		try {
-			nextChar = fileStream.readChar();
+			final int nextChar = fileStream.readChar();
 			fileStream.seek(fileStream.getFilePointer() - 1);
+			return nextChar;
 		} catch (final EOFException eofe) {
-			LOGGER.warn("End of file reached.", eofe);
-			nextChar = -1;
+			LOGGER.warn(StreamUtils.END_OF_FILE_REACHED, eofe);
+			return -1;
 		} catch (final IOException ioe) {
-			throw new StreamErrorException("Could not peek char", ioe);
+			throw new StreamErrorException(StreamUtils.FAILED_TO_PEEK_CHAR, ioe);
 		}
-		return nextChar;
 	}
 
 	/**
@@ -148,19 +139,24 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 	 *
 	 * @return the character peeked from the stream
 	 */
-	private int tPeekChar() {
-		int nextChar = ' '; // Initialize to whitespace, since we are attempting to skip it anyways
+	private int tPeekCharFSS() {
 		try {
+			int nextChar = ' '; // Initialize to whitespace, since we are attempting to skip it anyways
+
 			int i = 0;
 			while (Character.isWhitespace(nextChar)) {
 				nextChar = fileStream.readChar();
 				i++;
 			}
+
 			fileStream.seek(fileStream.getFilePointer() - i);
+			return nextChar;
+		} catch (final EOFException eofe) {
+			LOGGER.warn(StreamUtils.END_OF_FILE_REACHED, eofe);
+			return -1;
 		} catch (final IOException ioe) {
-			throw new StreamErrorException("Could not peek char", ioe);
+			throw new StreamErrorException(StreamUtils.FAILED_TO_PEEK_CHAR, ioe);
 		}
-		return nextChar;
 	}
 
 	/**
@@ -169,19 +165,24 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 	 * @param codePoint the codePoint to peek up to in the stream
 	 * @return the character peeked from the stream
 	 */
-	private int characterPeekChar(final Integer codePoint) {
-		int nextChar = -1; // Initialize to -1 value, since this is essentially EOF
+	private int characterPeekCharFSS(final Integer codePoint) {
 		try {
+			int nextChar = -1; // Initialize to -1 value, since this is essentially EOF
+
 			int i = 0;
 			while (nextChar != codePoint) {
 				nextChar = fileStream.readChar();
 				i++;
 			}
+
 			fileStream.seek(fileStream.getFilePointer() - i);
+			return nextChar;
+		} catch (final EOFException eofe) {
+			LOGGER.warn(StreamUtils.END_OF_FILE_REACHED, eofe);
+			return -1;
 		} catch (final IOException ioe) {
-			throw new StreamErrorException("Could not peek char", ioe);
+			throw new StreamErrorException(StreamUtils.FAILED_TO_PEEK_CHAR, ioe);
 		}
-		return nextChar;
 	}
 
 	@Override
@@ -190,21 +191,7 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 			fileStream.seek(fileStream.getFilePointer() - 1);
 			return codePoint;
 		} catch (final IOException ioe) {
-			throw new StreamErrorException("Could not unread char.", ioe);
-		}
-	}
-
-	@Override
-	public boolean listen() {
-		try {
-			final PeekResult peekResult = peekChar(PeekType.NIL_PEEK_TYPE, false, null, false);
-			return !peekResult.wasEOF();
-		} catch (final EndOfFileException eofe) {
-			LOGGER.warn("End of file reached.", eofe);
-			return false;
-		} catch (final StreamErrorException see) {
-			LOGGER.warn("Stream error occurred.", see);
-			return false;
+			throw new StreamErrorException(StreamUtils.FAILED_TO_UNREAD_CHAR, ioe);
 		}
 	}
 
@@ -218,7 +205,7 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 		try {
 			fileStream.writeChar(aChar);
 		} catch (final IOException ioe) {
-			throw new StreamErrorException("Could not write char.", ioe);
+			throw new StreamErrorException(StreamUtils.FAILED_TO_WRITE_CHAR, ioe);
 		}
 	}
 
@@ -227,7 +214,7 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 		try {
 			fileStream.writeByte(aByte);
 		} catch (final IOException ioe) {
-			throw new StreamErrorException("Could not write byte.", ioe);
+			throw new StreamErrorException(StreamUtils.FAILED_TO_WRITE_BYTE, ioe);
 		}
 	}
 
@@ -237,7 +224,7 @@ public class FileStreamStruct extends StreamStruct implements InputStream, Outpu
 			final String subString = outputString.substring(start, end);
 			fileStream.writeChars(subString);
 		} catch (final IOException ioe) {
-			throw new StreamErrorException("Could not write string.", ioe);
+			throw new StreamErrorException(StreamUtils.FAILED_TO_WRITE_STRING, ioe);
 		}
 	}
 

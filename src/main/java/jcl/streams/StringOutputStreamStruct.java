@@ -36,7 +36,7 @@ public class StringOutputStreamStruct extends StreamStruct implements OutputStre
 
 	@Override
 	public void writeByte(final int aByte) {
-		throw new StreamErrorException("Operation only supported for BinaryStreams.");
+		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_BINARYSTREAM);
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class StringOutputStreamStruct extends StreamStruct implements OutputStre
 
 	@Override
 	public Long fileLength() {
-		throw new StreamErrorException("Operation only supported on a FileStream.");
+		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_FILESTREAM);
 	}
 
 	@Override

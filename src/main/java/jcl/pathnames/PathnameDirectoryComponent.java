@@ -23,8 +23,8 @@ public final class PathnameDirectoryComponent {
 	public PathnameDirectoryComponent(final PathnameDirectoryType pathnameDirectoryType, final List<PathnameDirectoryLevel> directoryLevels) {
 		if (CollectionUtils.isNotEmpty(directoryLevels) && (pathnameDirectoryType == PathnameDirectoryType.ABSOLUTE)) {
 			final PathnameDirectoryLevel firstElement = directoryLevels.get(0);
-			if ((firstElement.getDirectoryLevelType() == PathnameDirectoryLevelType.BACK) ||
-					(firstElement.getDirectoryLevelType() == PathnameDirectoryLevelType.UP)) {
+			if ((firstElement.getDirectoryLevelType() == PathnameDirectoryLevelType.BACK)
+					|| (firstElement.getDirectoryLevelType() == PathnameDirectoryLevelType.UP)) {
 				throw new FileErrorException(":ABSOLUTE must not be followed by :BACK or :UP.");
 			}
 		}

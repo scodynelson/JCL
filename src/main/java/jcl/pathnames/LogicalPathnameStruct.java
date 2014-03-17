@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 /**
@@ -59,7 +60,7 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	 * @return the logical-pathname host
 	 */
 	private static PathnameHost getHost(final String pathname) {
-		final String upperPathname = pathname.toUpperCase();
+		final String upperPathname = pathname.toUpperCase(Locale.getDefault());
 
 		final int hostMarkerIndex = upperPathname.indexOf(HOST_MARKER);
 		if (hostMarkerIndex == -1) {
@@ -163,7 +164,7 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	 * @return the logical-pathname name
 	 */
 	private static PathnameName getName(final String pathname) {
-		final String upperPathname = pathname.toUpperCase();
+		final String upperPathname = pathname.toUpperCase(Locale.getDefault());
 
 		String realPathname = removeHost(upperPathname);
 		realPathname = removeDirectory(realPathname);

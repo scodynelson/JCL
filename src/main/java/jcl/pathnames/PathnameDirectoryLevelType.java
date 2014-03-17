@@ -8,7 +8,8 @@ package jcl.pathnames;
 public enum PathnameDirectoryLevelType {
 	WILD(":WILD"),
 	BACK(":BACK"),
-	UP(":UP");
+	UP(":UP"),
+	NULL(null);
 
 	private final String value;
 

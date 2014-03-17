@@ -104,7 +104,7 @@ class PathnameFileStruct extends PathnameStruct {
 
 		// If it is just the file path separator, no device here
 		if (StringUtils.equals(pathPrefix, File.separator)) {
-			pathPrefix = null;
+			pathPrefix = "";
 		}
 
 		return new PathnameDevice(pathPrefix);

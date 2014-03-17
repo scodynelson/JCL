@@ -23,7 +23,7 @@ public final class PathnameDirectoryLevel {
 		}
 
 		this.directoryLevel = directoryLevel;
-		directoryLevelType = null;
+		directoryLevelType = PathnameDirectoryLevelType.NULL;
 	}
 
 	/**

@@ -7,12 +7,19 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * The {@code SyntaxTable} class represents a lookup table for syntax types matching code points.
+ */
+@SuppressWarnings("all")
 class SyntaxTable {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SyntaxTable.class);
 
 	private final Map<Integer, SyntaxType> syntaxTypeMap;
 
+	/**
+	 * Package constructor.
+	 */
 	SyntaxTable() {
 		syntaxTypeMap = new ConcurrentHashMap<>(128);
 
@@ -146,14 +153,20 @@ class SyntaxTable {
 		syntaxTypeMap.put(127, SyntaxType.CONSTITUENT);               // DEL
 	}
 
+	/**
+	 * This method gets the matching syntax type for the provided {@code codePoint} value.
+	 *
+	 * @param codePoint the {@code codePoint} used to find the matching syntax type
+	 * @return the matching syntax type for the provided {@code codePoint}
+	 */
 	SyntaxType getSyntaxType(final int codePoint) {
 		if (syntaxTypeMap.containsKey(codePoint)) {
 			return syntaxTypeMap.get(codePoint);
 		} else if (Character.isDefined(codePoint)) {
 			if (Character.isWhitespace(codePoint)) {
 				return SyntaxType.WHITESPACE;
-			} else if (Character.isUnicodeIdentifierPart(codePoint) &&
-					!Character.isIdentifierIgnorable(codePoint)) {
+			} else if (Character.isUnicodeIdentifierPart(codePoint)
+					&& !Character.isIdentifierIgnorable(codePoint)) {
 				return SyntaxType.CONSTITUENT;
 			} else {
 				LOGGER.warn("Defined but illegal: {}", codePoint);

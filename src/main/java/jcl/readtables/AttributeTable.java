@@ -1,15 +1,22 @@
 package jcl.readtables;
 
-import jcl.syntax.AttributeType;
 import jcl.numbers.ReadBaseVariable;
+import jcl.syntax.AttributeType;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * The {@code AttributeTable} class represents a lookup table for attribute types matching code points.
+ */
+@SuppressWarnings("all")
 class AttributeTable {
 
 	private final Map<Integer, AttributeType> attributeTypeMap;
 
+	/**
+	 * Package constructor.
+	 */
 	AttributeTable() {
 		attributeTypeMap = new ConcurrentHashMap<>(128);
 
@@ -143,6 +150,12 @@ class AttributeTable {
 		attributeTypeMap.put(127, AttributeType.INVALID);                   // DEL
 	}
 
+	/**
+	 * This method gets the matching attribute type for the provided {@code codePoint} value.
+	 *
+	 * @param codePoint the {@code codePoint} used to find the matching attribute type
+	 * @return the matching attribute type for the provided {@code codePoint}
+	 */
 	AttributeType getAttribute(final int codePoint) {
 		if (attributeTypeMap.containsKey(codePoint)) {
 			AttributeType attributeType = attributeTypeMap.get(codePoint);
@@ -155,8 +168,8 @@ class AttributeTable {
 		} else {
 			if (Character.isLetterOrDigit(codePoint)) {
 				return AttributeType.ALPHADIGIT;
-			} else if (Character.isUnicodeIdentifierPart(codePoint) &&
-					!Character.isIdentifierIgnorable(codePoint)) {
+			} else if (Character.isUnicodeIdentifierPart(codePoint)
+					&& !Character.isIdentifierIgnorable(codePoint)) {
 				return AttributeType.ALPHABETIC;
 			} else {
 				return AttributeType.INVALID;

@@ -32,7 +32,7 @@ public interface NIL extends T { // TODO: this needs to extend ALL types...
 
 			@Override
 			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof NIL) || (obj instanceof Null); //NOSONAR
+				return (this == obj) || (obj instanceof NIL) || (obj instanceof Null);
 			}
 
 			@Override

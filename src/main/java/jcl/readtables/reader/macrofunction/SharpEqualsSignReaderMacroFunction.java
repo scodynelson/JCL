@@ -1,14 +1,12 @@
 package jcl.readtables.reader.macrofunction;
 
 import jcl.LispStruct;
-import jcl.readtables.reader.impl.macrofunctions.MacroFunctionReader;
 import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.readtables.reader.impl.macrofunctions.MacroFunctionReader;
 import jcl.syntax.CharacterConstants;
 import jcl.variables.ReadSuppressVariable;
 
-import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.UUID;
 
 /**
  * Implements the '#=' Lisp reader macro.
@@ -27,23 +25,18 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunction {
 			throw new ReaderErrorException("Missing label for #=.");
 		}
 
-		if (reader.SHARP_EQUAL_FINAL_TABLE.containsKey(numArg) || reader.SHARP_EQUAL_TEMP_TABLE.containsKey(numArg)) {
+		if (MacroFunctionReader.SHARP_EQUAL_FINAL_TABLE.containsKey(numArg)
+				|| MacroFunctionReader.SHARP_EQUAL_TEMP_TABLE.containsKey(numArg)) {
 			throw new ReaderErrorException("Label already defined: #" + numArg + '=');
 		}
 
-		final Random random = new Random();
-		final int tag = random.nextInt();
+		final UUID tag = UUID.randomUUID();
 
-		reader.SHARP_EQUAL_TEMP_TABLE.put(numArg, tag);
-
+		MacroFunctionReader.SHARP_EQUAL_TEMP_TABLE.put(numArg, tag);
 		final LispStruct token = reader.read();
+		MacroFunctionReader.SHARP_EQUAL_REPL_TABLE.put(tag, token);
 
-		reader.SHARP_EQUAL_REPL_TABLE.put(tag, token);
-
-		final Map<Long, LispStruct> sharpEqualReplTable = new ConcurrentHashMap<>();
-		reader.circleSubst(sharpEqualReplTable, token);
-
-		reader.SHARP_EQUAL_FINAL_TABLE.put(numArg, token);
+		MacroFunctionReader.SHARP_EQUAL_FINAL_TABLE.put(numArg, token);
 
 		return null;
 	}

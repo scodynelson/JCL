@@ -29,7 +29,7 @@ public interface Null extends Symbol, List {
 
 			@Override
 			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof Null) || (obj instanceof NIL); //NOSONAR
+				return (this == obj) || (obj instanceof Null) || (obj instanceof NIL);
 			}
 
 			@Override

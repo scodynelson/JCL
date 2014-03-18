@@ -3,6 +3,7 @@ package jcl.system;
 import jcl.LispStruct;
 import jcl.packages.PackageStruct;
 import jcl.readtables.reader.LispReader;
+import jcl.readtables.reader.impl.macrofunctions.MacroFunctionReader;
 import jcl.readtables.reader.impl.states.impl.StateReaderImpl;
 import jcl.streams.CharacterStreamStruct;
 import jcl.streams.FileStreamStruct;
@@ -93,6 +94,10 @@ public final class ReadEvalPrint {
 					LOGGER.info("\n{}: {}> ", pkg.getName(), ++lineCounter);
 
 					// READ --------------
+					MacroFunctionReader.SHARP_EQUAL_TEMP_TABLE.clear();
+					MacroFunctionReader.SHARP_EQUAL_REPL_TABLE.clear();
+					MacroFunctionReader.SHARP_EQUAL_FINAL_TABLE.clear();
+
 					try {
 						final LispStruct whatRead;
 						if (isFile) {
@@ -110,6 +115,10 @@ public final class ReadEvalPrint {
 					} catch (final Exception ex) {
 						LOGGER.warn("; WARNING: Exception condition during Read -> {}", ex.getMessage(), ex);
 						break;
+					} finally {
+						MacroFunctionReader.SHARP_EQUAL_TEMP_TABLE.clear();
+						MacroFunctionReader.SHARP_EQUAL_REPL_TABLE.clear();
+						MacroFunctionReader.SHARP_EQUAL_FINAL_TABLE.clear();
 					}
 
 					// bind '-' to the form just read

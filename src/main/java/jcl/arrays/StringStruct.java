@@ -98,8 +98,9 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 	public java.lang.String toString() {
 		return "StringStruct{"
 				+ "contents=" + contents
-				+ ", rank=" + rank
 				+ ", dimensions=" + dimensions
+				+ ", totalSize=" + totalSize
+				+ ", rank=" + rank
 				+ ", elementType=" + elementType
 				+ ", isAdjustable=" + isAdjustable
 				+ "fillPointer=" + fillPointer

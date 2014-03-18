@@ -1,10 +1,12 @@
 package jcl.readtables.reader.macrofunction;
 
 import jcl.LispStruct;
-import jcl.readtables.reader.impl.macrofunctions.MacroFunctionReader;
 import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.readtables.reader.impl.macrofunctions.MacroFunctionReader;
 import jcl.syntax.CharacterConstants;
 import jcl.variables.ReadSuppressVariable;
+
+import java.util.UUID;
 
 /**
  * Implements the '##' Lisp reader macro.
@@ -23,14 +25,15 @@ public class SharpSharpReaderMacroFunction extends ReaderMacroFunction {
 			throw new ReaderErrorException("Missing label for ##.");
 		}
 
-		final LispStruct labelObject = reader.SHARP_EQUAL_FINAL_TABLE.get(numArg);
+		final LispStruct labelObject = MacroFunctionReader.SHARP_EQUAL_FINAL_TABLE.get(numArg);
 		if (labelObject != null) {
 			return labelObject;
 		}
 
-		final Object possibleLabelObject = reader.SHARP_EQUAL_TEMP_TABLE.get(numArg);
-		if (possibleLabelObject instanceof LispStruct) {
-			return (LispStruct) possibleLabelObject;
+		final UUID possibleLabelTag = MacroFunctionReader.SHARP_EQUAL_TEMP_TABLE.get(numArg);
+		final LispStruct possibleLabelObject = MacroFunctionReader.SHARP_EQUAL_REPL_TABLE.get(possibleLabelTag);
+		if (possibleLabelObject != null) {
+			return possibleLabelObject;
 		}
 
 		throw new ReaderErrorException("Reference to undefined label #" + numArg + '#');

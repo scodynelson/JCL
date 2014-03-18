@@ -1,25 +1,25 @@
 package jcl.readtables.reader.impl.macrofunctions.impl;
 
 import jcl.LispStruct;
+import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.numbers.IntegerStruct;
+import jcl.numbers.ReadBaseVariable;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariable;
 import jcl.readtables.ReadtableStruct;
 import jcl.readtables.reader.impl.macrofunctions.MacroFunctionReader;
 import jcl.readtables.reader.impl.states.StateReader;
-import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.readtables.reader.syntax.ReadExtendedToken;
 import jcl.symbols.SymbolStruct;
 import jcl.syntax.AttributeType;
 import jcl.syntax.CaseSpec;
 import jcl.syntax.CharacterConstants;
 import jcl.syntax.SyntaxType;
-import jcl.readtables.reader.syntax.ReadExtendedToken;
 import jcl.syntax.reader.ReadResult;
 import jcl.variables.FeaturesVariable;
-import jcl.numbers.ReadBaseVariable;
 import jcl.variables.ReadSuppressVariable;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class MacroFunctionReaderImpl implements MacroFunctionReader {
 
@@ -491,56 +490,6 @@ public class MacroFunctionReaderImpl implements MacroFunctionReader {
 		}
 
 		return returnVal;
-	}
-
-	//***************//
-	//** #= and ## **//
-	//***************//
-
-	@Override
-	public void circleSubst(final Map<Long, LispStruct> replTable, final LispStruct tree) {
-/*
-;; This function is kind of like to NSUBLIS, but checks for circularities and
-;; substitutes in arrays and structures as well as lists.  The first arg is an
-;; alist of the things to be replaced assoc'd with the things to replace them.
-;;
-(defun circle-subst (repl-table tree)
-  (cond ((not (typep tree '(or cons (array t) structure-object standard-object)))
-	     (multiple-value-bind (value presentp)
-	                          (gethash tree repl-table)
-	       (if presentp
-	           value
-	         tree)))
-		((null (gethash tree *sharp-equal-circle-table*))
-	     (setf (gethash tree *sharp-equal-circle-table*) t)
-	     (cond ((typep tree '(or structure-object standard-object))
-				(do ((i 1 (1+ i))
-		             (end (%instance-length tree)))
-		            ((= i end))
-		         (let* ((old (%instance-ref tree i))
-			            (new (circle-subst repl-table old)))
-		           (unless (eq old new)
-		             (setf (%instance-ref tree i) new)))))
-	           ((arrayp tree)
-				(with-array-data ((data tree) (start) (end))
-		          (declare (fixnum start end))
-		          (do ((i start (1+ i)))
-		              ((>= i end))
-		            (let* ((old (aref data i))
-			               (new (circle-subst repl-table old)))
-		              (unless (eq old new)
-						(setf (aref data i) new))))))
-	           (t
-				(let ((a (circle-subst repl-table (car tree)))
-		              (d (circle-subst repl-table (cdr tree))))
-		          (unless (eq a (car tree))
-		            (rplaca tree a))
-		          (unless (eq d (cdr tree))
-		            (rplacd tree d)))))
-	     tree)
-		(t
-		 tree)))
-*/
 	}
 
 	// UTILITIES

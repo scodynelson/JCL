@@ -7,9 +7,14 @@ import jcl.readtables.reader.LispReader;
 import jcl.readtables.reader.syntax.ReadExtendedToken;
 
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public interface MacroFunctionReader extends LispReader {
+
+	Map<Integer, LispStruct> SHARP_EQUAL_FINAL_TABLE = new ConcurrentHashMap<>();
+	Map<Integer, UUID> SHARP_EQUAL_TEMP_TABLE = new ConcurrentHashMap<>();
+	Map<UUID, LispStruct> SHARP_EQUAL_REPL_TABLE = new ConcurrentHashMap<>();
 
 	//*************************//
 	//** READ-EXTENDED-TOKEN **//
@@ -42,15 +47,4 @@ public interface MacroFunctionReader extends LispReader {
 	//***************//
 
 	void readFeatures(boolean shouldHideFeatures);
-
-	//***************//
-	//** #= and ## **//
-	//***************//
-
-	Map<Integer, LispStruct> SHARP_EQUAL_FINAL_TABLE = new ConcurrentHashMap<>();
-	Map<Integer, Object> SHARP_EQUAL_TEMP_TABLE = new ConcurrentHashMap<>();
-	Map<Integer, LispStruct> SHARP_EQUAL_REPL_TABLE = new ConcurrentHashMap<>();
-	Map<Integer, LispStruct> SHARP_EQUAL_CIRCLE_TABLE = new ConcurrentHashMap<>();
-
-	void circleSubst(Map<Long, LispStruct> replTable, LispStruct tree);
 }

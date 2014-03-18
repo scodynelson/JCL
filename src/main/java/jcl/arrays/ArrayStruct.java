@@ -21,6 +21,7 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 
 	protected List<TYPE> contents;
 	protected List<Integer> dimensions;
+	protected int totalSize;
 	protected int rank;
 	protected LispType elementType;
 	protected boolean isAdjustable;
@@ -65,6 +66,7 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 
 		this.contents = new ArrayList<>(contents);
 		this.dimensions = dimensions;
+		updateTotalSize();
 
 		rank = dimensions.size();
 
@@ -144,6 +146,16 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 */
 	public void setDimensions(final List<Integer> dimensions) {
 		this.dimensions = dimensions;
+		updateTotalSize();
+	}
+
+	/**
+	 * Getter for array totalSize property.
+	 *
+	 * @return array totalSize property
+	 */
+	public int getTotalSize() {
+		return totalSize;
 	}
 
 	/**
@@ -223,12 +235,23 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		contents.set(index, newValue);
 	}
 
+	/**
+	 * This private method calculates and updates the totalSize of the array based on the dimensions property.
+	 */
+	private void updateTotalSize() {
+		totalSize = 0;
+		for (final Integer dimension : dimensions) {
+			totalSize += dimension;
+		}
+	}
+
 	@Override
 	public String toString() {
 		return "ArrayStruct{"
 				+ "contents=" + contents
-				+ ", rank=" + rank
 				+ ", dimensions=" + dimensions
+				+ ", totalSize=" + totalSize
+				+ ", rank=" + rank
 				+ ", elementType=" + elementType
 				+ ", isAdjustable=" + isAdjustable
 				+ '}';

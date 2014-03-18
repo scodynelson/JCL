@@ -1,7 +1,7 @@
 package jcl.arrays;
 
-import jcl.numbers.IntegerStruct;
 import jcl.conditions.exceptions.TypeErrorException;
+import jcl.numbers.IntegerStruct;
 import jcl.types.Bit;
 import jcl.types.BitVector;
 import jcl.types.SimpleBitVector;
@@ -79,8 +79,9 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 	public String toString() {
 		return "BitVectorStruct{"
 				+ "contents=" + contents
-				+ ", rank=" + rank
 				+ ", dimensions=" + dimensions
+				+ ", totalSize=" + totalSize
+				+ ", rank=" + rank
 				+ ", elementType=" + elementType
 				+ ", isAdjustable=" + isAdjustable
 				+ "fillPointer=" + fillPointer

@@ -2,10 +2,10 @@ package jcl.arrays;
 
 import jcl.LispStruct;
 import jcl.LispType;
-import jcl.sequences.SequenceStruct;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
+import jcl.sequences.SequenceStruct;
 import jcl.types.SimpleVector;
 import jcl.types.T;
 import jcl.types.Vector;
@@ -155,8 +155,9 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	public String toString() {
 		return "VectorStruct{"
 				+ "contents=" + contents
-				+ ", rank=" + rank
 				+ ", dimensions=" + dimensions
+				+ ", totalSize=" + totalSize
+				+ ", rank=" + rank
 				+ ", elementType=" + elementType
 				+ ", isAdjustable=" + isAdjustable
 				+ "fillPointer=" + fillPointer

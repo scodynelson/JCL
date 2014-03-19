@@ -7,15 +7,15 @@ import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.TypeSpecifier;
 import jcl.typespecifiers.ValuesTypeSpecifier;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.lang.String;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A {@code Function} is an object that represents code to be executed when an appropriate number of arguments is supplied.
- * <p/>
+ * <p>
  * {@code Function} -> {@code T}
  */
 public interface Function extends T {
@@ -133,11 +133,11 @@ public interface Function extends T {
 			 * @return true if the functionImpl object is equivalent to this instance; false otherwise
 			 */
 			private boolean checkFunctionImplEquality(final FunctionImpl functionImpl) {
-				return ObjectUtils.equals(typeSpecifiers, functionImpl.typeSpecifiers)
-						&& ObjectUtils.equals(optional, functionImpl.optional)
-						&& ObjectUtils.equals(rest, functionImpl.rest)
-						&& ObjectUtils.equals(key, functionImpl.key)
-						&& ObjectUtils.equals(valuesTypeSpecifier, functionImpl.valuesTypeSpecifier);
+				return Objects.equals(typeSpecifiers, functionImpl.typeSpecifiers)
+						&& Objects.equals(optional, functionImpl.optional)
+						&& Objects.equals(rest, functionImpl.rest)
+						&& Objects.equals(key, functionImpl.key)
+						&& Objects.equals(valuesTypeSpecifier, functionImpl.valuesTypeSpecifier);
 			}
 
 			@Override

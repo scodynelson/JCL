@@ -392,7 +392,7 @@ public class PackageStruct extends BuiltInClassStruct {
 
 			SymbolStruct<?> nonInheritedSymbol = nonInheritedPackageSymbol.getSymbolStruct();
 			if (nonInheritedSymbol == null) {
-				nonInheritedSymbol = new SymbolStruct(symbolName);
+				nonInheritedSymbol = new SymbolStruct<>(symbolName);
 				internalSymbols.put(symbolName, nonInheritedSymbol);
 				nonInheritedSymbol.setSymbolPackage(this);
 			}
@@ -413,7 +413,7 @@ public class PackageStruct extends BuiltInClassStruct {
 			return foundPackageSymbol;
 		}
 
-		final SymbolStruct<?> symbolStruct = new SymbolStruct(symbolName);
+		final SymbolStruct<?> symbolStruct = new SymbolStruct<>(symbolName);
 		internalSymbols.put(symbolName, symbolStruct);
 		symbolStruct.setSymbolPackage(this);
 		return new PackageSymbolStruct(symbolStruct, PackageSymbolStruct.INTERNAL);

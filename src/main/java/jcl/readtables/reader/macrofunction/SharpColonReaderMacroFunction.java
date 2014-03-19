@@ -27,6 +27,6 @@ public class SharpColonReaderMacroFunction extends ReaderMacroFunction {
 		if (readExtendedToken.hasPackageDelimiter()) {
 			throw new ReaderErrorException("Symbol following #: contains a package marker: " + token);
 		}
-		return new SymbolStruct(token);
+		return new SymbolStruct<>(token);
 	}
 }

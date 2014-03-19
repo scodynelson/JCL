@@ -2,10 +2,10 @@ package jcl.typespecifiers;
 
 import jcl.lambdalist.variable.Optional;
 import jcl.lambdalist.variable.Rest;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A {@code ValuesTypeSpecifier} can be used only as the value-type in a function type specifier or a the special form.
@@ -45,9 +45,9 @@ public class ValuesTypeSpecifier implements CompoundTypeSpecifier {
 		}
 
 		final ValuesTypeSpecifier valuesTypeSpecifier = (ValuesTypeSpecifier) obj;
-		return ObjectUtils.equals(typeSpecifiers, valuesTypeSpecifier.typeSpecifiers)
-				&& ObjectUtils.equals(optional, valuesTypeSpecifier.optional)
-				&& ObjectUtils.equals(rest, valuesTypeSpecifier.rest);
+		return Objects.equals(typeSpecifiers, valuesTypeSpecifier.typeSpecifiers)
+				&& Objects.equals(optional, valuesTypeSpecifier.optional)
+				&& Objects.equals(rest, valuesTypeSpecifier.rest);
 	}
 
 	@Override

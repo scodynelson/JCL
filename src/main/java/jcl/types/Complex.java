@@ -2,10 +2,10 @@ package jcl.types;
 
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.lang.String;
+import java.util.Objects;
 
 /**
  * A {@code Complex} includes all mathematical complex numbers other than those included in the type {@code Rational}.
@@ -13,7 +13,7 @@ import java.lang.String;
  * The real part and imaginary part are either both {@code Rational} or both of the same {@code Float} type. The imaginary
  * part can be a {@code Float} zero, but can never be a {@code Rational} zero, for such a number is always represented
  * by Common Lisp as a {@code Rational} rather than a {@code Complex}.
- * <p/>
+ * <p>
  * {@code Complex} -> {@code Number} -> {@code T}
  */
 public interface Complex extends Number {
@@ -91,7 +91,7 @@ public interface Complex extends Number {
 				if (complex instanceof ComplexImpl) {
 					final ComplexImpl complexImpl = (ComplexImpl) complex;
 
-					return ObjectUtils.equals(realType, complexImpl.realType);
+					return Objects.equals(realType, complexImpl.realType);
 				}
 
 				return false;

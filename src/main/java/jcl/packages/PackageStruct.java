@@ -39,7 +39,7 @@ public class PackageStruct extends BuiltInClassStruct {
 	 * @param name the package name
 	 */
 	public PackageStruct(final String name) {
-		this(name, new ArrayList<String>());
+		this(name, new ArrayList<>());
 	}
 
 	/**

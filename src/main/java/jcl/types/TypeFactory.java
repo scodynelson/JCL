@@ -7,6 +7,7 @@ import jcl.LispType;
  *
  * @param <TYPE> the type to get an instance of
  */
+@FunctionalInterface
 public interface TypeFactory<TYPE extends LispType> {
 
 	/**

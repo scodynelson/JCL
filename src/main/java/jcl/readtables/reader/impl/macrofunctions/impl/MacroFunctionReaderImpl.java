@@ -124,12 +124,7 @@ public class MacroFunctionReaderImpl implements MacroFunctionReader {
 						stringBuilder.appendCodePoint(lowerCaseToken);
 						break;
 					case INVERT:
-						final int invertedCaseToken;
-						if (Character.isUpperCase(currentToken)) {
-							invertedCaseToken = Character.toLowerCase(currentToken);
-						} else {
-							invertedCaseToken = Character.toUpperCase(currentToken);
-						}
+						final int invertedCaseToken = Character.isUpperCase(currentToken) ? Character.toLowerCase(currentToken) : Character.toUpperCase(currentToken);
 						stringBuilder.appendCodePoint(invertedCaseToken);
 						break;
 					case PRESERVE:

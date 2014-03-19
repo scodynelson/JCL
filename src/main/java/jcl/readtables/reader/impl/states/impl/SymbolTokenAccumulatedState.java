@@ -170,11 +170,7 @@ public class SymbolTokenAccumulatedState extends State {
 			}
 		} else {
 			final PackageSymbolStruct pkgSymStruct = GlobalPackageStruct.KEYWORD.findSymbol(symName);
-			if (pkgSymStruct == null) {
-				return new KeywordSymbolStruct(symName);
-			} else {
-				return pkgSymStruct.getSymbolStruct();
-			}
+			return (pkgSymStruct == null) ? new KeywordSymbolStruct(symName) : pkgSymStruct.getSymbolStruct();
 		}
 	}
 }

@@ -114,11 +114,7 @@ public class ConsStruct extends ListStruct {
 
 	@Override
 	public ListStruct getRest() {
-		if (cdr instanceof ListStruct) {
-			return (ListStruct) cdr;
-		} else {
-			return new ConsStruct(car);
-		}
+		return (cdr instanceof ListStruct) ? (ListStruct) cdr : new ConsStruct(car);
 	}
 
 	@Override

@@ -10,6 +10,7 @@ public class ReadEvalVariable implements LispVariable<Boolean> {
 		this.value = value;
 	}
 
+	@Override
 	public Boolean getValue() {
 		return value;
 	}

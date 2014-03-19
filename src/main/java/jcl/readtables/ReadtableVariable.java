@@ -12,6 +12,7 @@ public class ReadtableVariable implements LispVariable<ReadtableStruct> {
 		this.value = value;
 	}
 
+	@Override
 	public ReadtableStruct getValue() {
 		return value;
 	}

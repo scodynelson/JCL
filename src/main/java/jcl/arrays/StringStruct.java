@@ -49,17 +49,9 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 	 */
 	private static String getStringType(final boolean isAdjustable, final Integer fillPointer, final Character elementType) {
 		if (isAdjustable || (fillPointer != null)) {
-			if (elementType instanceof BaseChar) {
-				return BaseString.INSTANCE;
-			} else {
-				return String.INSTANCE;
-			}
+			return (elementType instanceof BaseChar) ? BaseString.INSTANCE : String.INSTANCE;
 		} else {
-			if (elementType instanceof BaseChar) {
-				return SimpleBaseString.INSTANCE;
-			} else {
-				return SimpleString.INSTANCE;
-			}
+			return (elementType instanceof BaseChar) ? SimpleBaseString.INSTANCE : SimpleString.INSTANCE;
 		}
 	}
 

@@ -10,6 +10,7 @@ public class ReadSuppressVariable implements LispVariable<Boolean> {
 		this.value = value;
 	}
 
+	@Override
 	public Boolean getValue() {
 		return value;
 	}

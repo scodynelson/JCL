@@ -41,7 +41,7 @@ public class MacroCharacterState extends State {
 			return;
 		}
 
-		final Integer numArg;
+		Integer numArg = null;
 		if (Character.isDigit(codePoint)) {
 
 			final StringBuilder digitStringBuilder = new StringBuilder();
@@ -71,8 +71,6 @@ public class MacroCharacterState extends State {
 //			}
 
 			codePoint = readChar;
-		} else {
-			numArg = null;
 		}
 
 		final ReaderMacroFunction readerMacroFunction = reader.getReadtable().getMacroCharacter(codePoint);

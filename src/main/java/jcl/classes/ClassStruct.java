@@ -34,16 +34,8 @@ public class ClassStruct extends StandardObjectStruct {
 	public ClassStruct(final LispType type,
 					   final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
 		this.type = type;
-		if (directSuperClasses == null) {
-			this.directSuperClasses = Collections.emptyList();
-		} else {
-			this.directSuperClasses = directSuperClasses;
-		}
-		if (subClasses == null) {
-			this.subClasses = Collections.emptyList();
-		} else {
-			this.subClasses = subClasses;
-		}
+		this.directSuperClasses = (directSuperClasses == null) ? Collections.emptyList() : directSuperClasses;
+		this.subClasses = (subClasses == null) ? Collections.emptyList() : subClasses;
 	}
 
 	@Override

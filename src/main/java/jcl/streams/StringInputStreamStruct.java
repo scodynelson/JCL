@@ -116,11 +116,7 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 			indexToFind++;
 		}
 
-		if (indexToFind == end) {
-			return nextChar;
-		} else {
-			return -1;
-		}
+		return (indexToFind == end) ? nextChar : -1;
 	}
 
 	/**
@@ -138,11 +134,7 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 			indexToFind++;
 		}
 
-		if (indexToFind == end) {
-			return nextChar;
-		} else {
-			return -1;
-		}
+		return (indexToFind == end) ? nextChar : -1;
 	}
 
 	@Override

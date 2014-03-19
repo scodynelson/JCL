@@ -123,7 +123,7 @@ public interface Function extends T {
 					return true;
 				}
 
-				return function instanceof FunctionImpl && checkFunctionImplEquality((FunctionImpl) function);
+				return (function instanceof FunctionImpl) && checkFunctionImplEquality((FunctionImpl) function);
 			}
 
 			/**

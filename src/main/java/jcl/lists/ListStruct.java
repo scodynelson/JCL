@@ -117,11 +117,7 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 	 * @return a proper list with the provided {@code lispStructs} as the elements
 	 */
 	public static ListStruct buildProperList(final LispStruct... lispStructs) {
-		if (lispStructs.length == 0) {
-			return NullStruct.INSTANCE;
-		} else {
-			return getProperList(Arrays.asList(lispStructs));
-		}
+		return (lispStructs.length == 0) ? NullStruct.INSTANCE : getProperList(Arrays.asList(lispStructs));
 	}
 
 	/**
@@ -131,11 +127,7 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 	 * @return a proper list with the provided {@code lispStructs} as the elements
 	 */
 	public static ListStruct buildProperList(final java.util.List<LispStruct> lispStructs) {
-		if (CollectionUtils.isEmpty(lispStructs)) {
-			return NullStruct.INSTANCE;
-		} else {
-			return getProperList(lispStructs);
-		}
+		return CollectionUtils.isEmpty(lispStructs) ? NullStruct.INSTANCE : getProperList(lispStructs);
 	}
 
 	/**
@@ -148,12 +140,7 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 		final LispStruct car = lispStructs.get(0);
 		final java.util.List<LispStruct> rest = lispStructs.subList(1, lispStructs.size());
 
-		final LispStruct cdr;
-		if (CollectionUtils.isEmpty(rest)) {
-			cdr = NullStruct.INSTANCE;
-		} else {
-			cdr = getProperList(rest);
-		}
+		final LispStruct cdr = CollectionUtils.isEmpty(rest) ? NullStruct.INSTANCE : getProperList(rest);
 		return new ConsStruct(car, cdr);
 	}
 
@@ -199,13 +186,7 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 		final LispStruct car = lispStructs.get(0);
 		final java.util.List<LispStruct> rest = lispStructs.subList(1, lispStructs.size());
 
-		final LispStruct cdr;
-		if (rest.size() == 1) {
-			cdr = lispStructs.get(1);
-		} else {
-			cdr = getDottedList(rest);
-		}
-
+		final LispStruct cdr = (rest.size() == 1) ? lispStructs.get(1) : getDottedList(rest);
 		return new ConsStruct(car, cdr);
 	}
 }

@@ -46,11 +46,7 @@ abstract class DualStreamStruct extends StreamStruct implements InputStream, Out
 		final LispType inType = inputStream.getElementType();
 		final LispType outType = outputStream.getElementType();
 
-		if (inType.equals(outType)) {
-			return inType;
-		} else {
-			return new AndTypeSpecifier(inType, outType);
-		}
+		return inType.equals(outType) ? inType : new AndTypeSpecifier(inType, outType);
 	}
 
 	@Override

@@ -14,8 +14,8 @@ sonarRunner {
 }
 
 apply plugin: 'java'
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 repositories {
 	mavenLocal()
@@ -51,26 +51,26 @@ dependencies {
 apply plugin: 'application'
 mainClassName = "jcl.system.JCL"
 
-apply plugin: 'jacoco'
-jacoco {
-	toolVersion = '0.6.4.201312101107'
-}
+//apply plugin: 'jacoco'
+//jacoco {
+//	toolVersion = '0.6.4.201312101107'
+//}
 test {
 	useTestNG()
 
-	jacoco {
-		append = true
-		destinationFile = file("${project.buildDir}/jacoco/jacocoTest.exec")
-		classDumpFile = file("${project.buildDir}/jacoco/classpathdumps")
-	}
+//	jacoco {
+//		append = true
+//		destinationFile = file("${project.buildDir}/jacoco/jacocoTest.exec")
+//		classDumpFile = file("${project.buildDir}/jacoco/classpathdumps")
+//	}
 }
-jacocoTestReport {
-	group = "Reporting"
-	description = "Generate Jacoco coverage reports after running tests."
-	additionalSourceDirs = files(sourceSets.main.allJava.srcDirs)
-	reports {
-		xml.enabled false
-		csv.enabled false
-		html.destination "${project.buildDir}/jacocoHtml"
-	}
-}
+//jacocoTestReport {
+//	group = "Reporting"
+//	description = "Generate Jacoco coverage reports after running tests."
+//	additionalSourceDirs = files(sourceSets.main.allJava.srcDirs)
+//	reports {
+//		xml.enabled false
+//		csv.enabled false
+//		html.destination "${project.buildDir}/jacocoHtml"
+//	}
+//}

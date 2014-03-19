@@ -7,7 +7,7 @@ import java.util.List;
 
 public class FeaturesVariable implements LispVariable<List<SymbolStruct<?>>> {
 
-	public static final FeaturesVariable INSTANCE = new FeaturesVariable(new ArrayList<SymbolStruct<?>>());
+	public static final FeaturesVariable INSTANCE = new FeaturesVariable(new ArrayList<>());
 
 	private List<SymbolStruct<?>> value;
 
@@ -15,6 +15,7 @@ public class FeaturesVariable implements LispVariable<List<SymbolStruct<?>>> {
 		this.value = value;
 	}
 
+	@Override
 	public List<SymbolStruct<?>> getValue() {
 		return value;
 	}

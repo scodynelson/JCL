@@ -127,13 +127,7 @@ public class RandomStateStruct extends BuiltInClassStruct {
 	 * @return a new shifted {@code BigInteger}
 	 */
 	private static BigInteger ash(final BigInteger bits) {
-		final BigInteger shiftedBits;
-		if (SHIFT_AMOUNT_AS_INT <= 0) {
-			shiftedBits = bits.shiftRight(SHIFT_AMOUNT_AS_INT);
-		} else {
-			shiftedBits = bits.shiftLeft(SHIFT_AMOUNT_AS_INT);
-		}
-		return shiftedBits;
+		return (SHIFT_AMOUNT_AS_INT <= 0) ? bits.shiftRight(SHIFT_AMOUNT_AS_INT) : bits.shiftLeft(SHIFT_AMOUNT_AS_INT);
 	}
 
 	@Override

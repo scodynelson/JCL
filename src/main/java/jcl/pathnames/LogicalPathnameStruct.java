@@ -169,14 +169,8 @@ public class LogicalPathnameStruct extends PathnameStruct {
 		String realPathname = removeHost(upperPathname);
 		realPathname = removeDirectory(realPathname);
 
-		final String pathnameName;
-
 		final int typeMarkerIndex = realPathname.indexOf(TYPE_MARKER);
-		if (typeMarkerIndex == -1) {
-			pathnameName = realPathname;
-		} else {
-			pathnameName = realPathname.substring(0, typeMarkerIndex);
-		}
+		final String pathnameName = (typeMarkerIndex == -1) ? realPathname : realPathname.substring(0, typeMarkerIndex);
 
 		if (pathnameName.contains(BAD_WILDCARD_STRING)) {
 			throw new TypeErrorException("** wildcard is not allowed in logical-pathname name: " + pathnameName);
@@ -215,14 +209,8 @@ public class LogicalPathnameStruct extends PathnameStruct {
 		realPathname = removeDirectory(realPathname);
 		realPathname = removeName(realPathname);
 
-		final String pathnameType;
-
 		final int versionMarkerIndex = realPathname.indexOf(VERSION_MARKER);
-		if (versionMarkerIndex == -1) {
-			pathnameType = realPathname;
-		} else {
-			pathnameType = realPathname.substring(0, versionMarkerIndex);
-		}
+		final String pathnameType = (versionMarkerIndex == -1) ? realPathname : realPathname.substring(0, versionMarkerIndex);
 
 		if (pathnameType.contains(BAD_WILDCARD_STRING)) {
 			throw new TypeErrorException("** wildcard is not allowed in logical-pathname type: " + pathnameType);

@@ -22,16 +22,16 @@ repositories {
 	mavenCentral()
 }
 
-String COMMONS_LANG_VERSION = '3.1';
+String COMMONS_LANG_VERSION = '3.3.1';
 String COMMONS_MATH_VERSION = '3.2';
 String COMMONS_COLLECTIONS_VERSION = '4.0';
 String COMMONS_IO_VERSION = '2.4';
-String SLF4J_VERSION = '1.7.5';
-String LOGBACK_VERSION = '1.0.13';
+String SLF4J_VERSION = '1.7.6';
+String LOGBACK_VERSION = '1.1.1';
 
-String TESTNG_VERSION = '6.8.7';
+String TESTNG_VERSION = '6.8.8';
 
-String GROOVY_VERSION = '2.1.9';
+String GROOVY_VERSION = '2.2.2';
 
 dependencies {
 	compile group: 'org.apache.commons', name: 'commons-lang3', version: "$COMMONS_LANG_VERSION"
@@ -51,26 +51,26 @@ dependencies {
 apply plugin: 'application'
 mainClassName = "jcl.system.JCL"
 
-//apply plugin: 'jacoco'
-//jacoco {
-//	toolVersion = '0.6.4.201312101107'
-//}
+apply plugin: 'jacoco'
+jacoco {
+	toolVersion = '0.7.0.201403182114'
+}
 test {
 	useTestNG()
 
-//	jacoco {
-//		append = true
-//		destinationFile = file("${project.buildDir}/jacoco/jacocoTest.exec")
-//		classDumpFile = file("${project.buildDir}/jacoco/classpathdumps")
-//	}
+	jacoco {
+		append = true
+		destinationFile = file("${project.buildDir}/jacoco/jacocoTest.exec")
+		classDumpFile = file("${project.buildDir}/jacoco/classpathdumps")
+	}
 }
-//jacocoTestReport {
-//	group = "Reporting"
-//	description = "Generate Jacoco coverage reports after running tests."
-//	additionalSourceDirs = files(sourceSets.main.allJava.srcDirs)
-//	reports {
-//		xml.enabled false
-//		csv.enabled false
-//		html.destination "${project.buildDir}/jacocoHtml"
-//	}
-//}
+jacocoTestReport {
+	group = "Reporting"
+	description = "Generate Jacoco coverage reports after running tests."
+	additionalSourceDirs = files(sourceSets.main.allJava.srcDirs)
+	reports {
+		xml.enabled false
+		csv.enabled false
+		html.destination "${project.buildDir}/jacocoHtml"
+	}
+}

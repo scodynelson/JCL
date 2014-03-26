@@ -2,10 +2,11 @@ package jcl.readtables.reader.macrofunction;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
-import jcl.readtables.reader.impl.macrofunctions.MacroFunctionReader;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
+import jcl.readtables.reader.impl.macrofunctions.UnicodeCharMacroFunctionReader;
+import jcl.readtables.reader.impl.states.StateReader;
 import jcl.syntax.CharacterConstants;
 import jcl.syntax.reader.ReadResult;
 import jcl.variables.ReadSuppressVariable;
@@ -16,8 +17,10 @@ import jcl.variables.ReadSuppressVariable;
 public class QuotationMarkReaderMacroFunction extends ReaderMacroFunction {
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final MacroFunctionReader reader, final Integer numArg) {
+	public LispStruct readMacro(final int codePoint, final StateReader reader, final Integer numArg) {
 		assert codePoint == CharacterConstants.QUOTATION_MARK;
+
+		final UnicodeCharMacroFunctionReader macroFunctionReader = new UnicodeCharMacroFunctionReader(reader);
 
 		final StringBuilder stringBuilder = new StringBuilder();
 
@@ -37,7 +40,7 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunction {
 					final ReadResult nextTmpReadResult = reader.readChar();
 					final int nextTmpChar = nextTmpReadResult.getResult();
 					if (nextTmpChar == CharacterConstants.PLUS_SIGN) {
-						readChar = reader.readUnicodeChar();
+						readChar = macroFunctionReader.readUnicodeChar();
 						stringBuilder.appendCodePoint(readChar);
 					} else {
 						// NOTE: Order matters here!!

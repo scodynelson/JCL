@@ -2,10 +2,11 @@ package jcl.readtables.reader.macrofunction;
 
 import jcl.LispStruct;
 import jcl.arrays.BitVectorStruct;
-import jcl.readtables.reader.impl.macrofunctions.MacroFunctionReader;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
+import jcl.readtables.reader.impl.macrofunctions.ExtendedTokenMacroFunctionReader;
+import jcl.readtables.reader.impl.states.StateReader;
 import jcl.syntax.CharacterConstants;
 import jcl.readtables.reader.syntax.ReadExtendedToken;
 import jcl.variables.ReadSuppressVariable;
@@ -17,10 +18,11 @@ import org.apache.commons.lang3.StringUtils;
 public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunction {
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final MacroFunctionReader reader, final Integer numArg) {
+	public LispStruct readMacro(final int codePoint, final StateReader reader, final Integer numArg) {
 		assert codePoint == CharacterConstants.ASTERISK;
 
-		final ReadExtendedToken readExtendedToken = reader.readExtendedToken();
+		final ExtendedTokenMacroFunctionReader macroFunctionReader = new ExtendedTokenMacroFunctionReader(reader);
+		final ReadExtendedToken readExtendedToken = macroFunctionReader.readExtendedToken();
 		if (ReadSuppressVariable.INSTANCE.getValue()) {
 			return null;
 		}

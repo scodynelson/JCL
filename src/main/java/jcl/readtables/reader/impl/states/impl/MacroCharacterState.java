@@ -1,9 +1,7 @@
 package jcl.readtables.reader.impl.states.impl;
 
 import jcl.LispStruct;
-import jcl.readtables.reader.impl.macrofunctions.MacroFunctionReader;
 import jcl.readtables.reader.impl.states.StateReader;
-import jcl.readtables.reader.impl.macrofunctions.impl.MacroFunctionReaderImpl;
 import jcl.readtables.reader.impl.states.TokenBuilder;
 import jcl.readtables.reader.macrofunction.ReaderMacroFunction;
 import jcl.syntax.reader.ReadResult;
@@ -12,15 +10,15 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Step 4 of the Reader Algorithm.
- * <p/>
+ * <p>
  * The way a ReaderMacroFunction is called takes the following 3 steps:
- * <p/>
+ * <p>
  * First: The Readtable is called to get the macro function of a specific character:
  * this will return an instance of ReaderMacroFunction
  * Second: We then call the readMacro method from the ReaderMacroFunction instance that is returned from step 1
  * Third: The readMacro will then return a LispStruct.  If it is not null, we return
  * it as a result of the Read function, else, Step 1 is re-entered
- * <p/>
+ * <p>
  */
 public class MacroCharacterState extends State {
 
@@ -82,8 +80,7 @@ public class MacroCharacterState extends State {
 		}
 
 //		try {
-		final MacroFunctionReader macroFunctionReader = new MacroFunctionReaderImpl(reader);
-		final LispStruct lispToken = readerMacroFunction.readMacro(codePoint, macroFunctionReader, numArg);
+		final LispStruct lispToken = readerMacroFunction.readMacro(codePoint, reader, numArg);
 		tokenBuilder.setReturnToken(lispToken);
 
 		if (lispToken == null) {

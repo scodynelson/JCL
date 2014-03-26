@@ -1,7 +1,7 @@
 package jcl.readtables.reader.macrofunction;
 
 import jcl.LispStruct;
-import jcl.readtables.reader.impl.macrofunctions.MacroFunctionReader;
+import jcl.readtables.reader.impl.states.StateReader;
 import jcl.syntax.CharacterConstants;
 import jcl.pathnames.PathnameStruct;
 import jcl.arrays.StringStruct;
@@ -16,7 +16,7 @@ import java.net.URISyntaxException;
 public class SharpPReaderMacroFunction extends ReaderMacroFunction {
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final MacroFunctionReader reader, final Integer numArg) {
+	public LispStruct readMacro(final int codePoint, final StateReader reader, final Integer numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_P) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_P);
 
 		final LispStruct lispStruct = reader.read();

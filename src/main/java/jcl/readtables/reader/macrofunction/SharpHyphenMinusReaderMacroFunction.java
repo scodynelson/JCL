@@ -1,7 +1,8 @@
 package jcl.readtables.reader.macrofunction;
 
 import jcl.LispStruct;
-import jcl.readtables.reader.impl.macrofunctions.MacroFunctionReader;
+import jcl.readtables.reader.impl.macrofunctions.FeaturesMacroFunctionReader;
+import jcl.readtables.reader.impl.states.StateReader;
 import jcl.syntax.CharacterConstants;
 
 /**
@@ -10,10 +11,11 @@ import jcl.syntax.CharacterConstants;
 public class SharpHyphenMinusReaderMacroFunction extends ReaderMacroFunction {
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final MacroFunctionReader reader, final Integer numArg) {
+	public LispStruct readMacro(final int codePoint, final StateReader reader, final Integer numArg) {
 		assert codePoint == CharacterConstants.HYPHEN_MINUS;
 
-		reader.readFeatures(true);
+		final FeaturesMacroFunctionReader macroFunctionReader = new FeaturesMacroFunctionReader(reader);
+		macroFunctionReader.readFeatures(true);
 		return null;
 	}
 }

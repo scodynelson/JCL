@@ -2,11 +2,12 @@ package jcl.readtables.reader.macrofunction;
 
 import jcl.LispStruct;
 import jcl.arrays.VectorStruct;
-import jcl.lists.ListStruct;
-import jcl.readtables.reader.impl.macrofunctions.MacroFunctionReader;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
+import jcl.lists.ListStruct;
+import jcl.readtables.reader.impl.macrofunctions.ListMacroFunctionReader;
+import jcl.readtables.reader.impl.states.StateReader;
 import jcl.syntax.CharacterConstants;
 import jcl.variables.ReadSuppressVariable;
 import org.apache.commons.collections4.CollectionUtils;
@@ -19,10 +20,11 @@ import java.util.List;
 public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction {
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final MacroFunctionReader reader, final Integer numArg) {
+	public LispStruct readMacro(final int codePoint, final StateReader reader, final Integer numArg) {
 		assert codePoint == CharacterConstants.LEFT_PARENTHESIS;
 
-		final ListStruct listToken = reader.readList();
+		final ListMacroFunctionReader macroFunctionReader = new ListMacroFunctionReader(reader);
+		final ListStruct listToken = macroFunctionReader.readList();
 
 		if (ReadSuppressVariable.INSTANCE.getValue()) {
 			return null;
@@ -66,6 +68,5 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 		} catch (final TypeErrorException | SimpleErrorException e) {
 			throw new ReaderErrorException("Error occurred creating vector.", e);
 		}
-
 	}
 }

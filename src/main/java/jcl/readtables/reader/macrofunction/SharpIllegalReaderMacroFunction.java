@@ -1,8 +1,8 @@
 package jcl.readtables.reader.macrofunction;
 
 import jcl.LispStruct;
-import jcl.readtables.reader.impl.macrofunctions.MacroFunctionReader;
 import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.readtables.reader.impl.states.StateReader;
 
 /**
  * Implements the illegal '#??" Lisp reader macros.
@@ -10,7 +10,7 @@ import jcl.conditions.exceptions.ReaderErrorException;
 public class SharpIllegalReaderMacroFunction extends ReaderMacroFunction {
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final MacroFunctionReader reader, final Integer numArg) {
+	public LispStruct readMacro(final int codePoint, final StateReader reader, final Integer numArg) {
 		throw new ReaderErrorException("Illegal sharp character " + codePoint);
 	}
 }

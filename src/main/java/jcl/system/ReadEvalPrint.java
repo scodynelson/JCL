@@ -3,8 +3,8 @@ package jcl.system;
 import jcl.LispStruct;
 import jcl.packages.PackageStruct;
 import jcl.readtables.reader.LispReader;
-import jcl.readtables.reader.impl.macrofunctions.MacroFunctionReader;
 import jcl.readtables.reader.impl.states.impl.StateReaderImpl;
+import jcl.readtables.reader.macrofunction.SharpTagReaderConstants;
 import jcl.streams.CharacterStreamStruct;
 import jcl.streams.FileStreamStruct;
 import jcl.streams.InputStream;
@@ -94,9 +94,9 @@ public final class ReadEvalPrint {
 					LOGGER.info("\n{}: {}> ", pkg.getName(), ++lineCounter);
 
 					// READ --------------
-					MacroFunctionReader.SHARP_EQUAL_TEMP_TABLE.clear();
-					MacroFunctionReader.SHARP_EQUAL_REPL_TABLE.clear();
-					MacroFunctionReader.SHARP_EQUAL_FINAL_TABLE.clear();
+					SharpTagReaderConstants.SHARP_EQUAL_TEMP_TABLE.clear();
+					SharpTagReaderConstants.SHARP_EQUAL_REPL_TABLE.clear();
+					SharpTagReaderConstants.SHARP_EQUAL_FINAL_TABLE.clear();
 
 					try {
 						final LispStruct whatRead;
@@ -116,9 +116,9 @@ public final class ReadEvalPrint {
 						LOGGER.warn("; WARNING: Exception condition during Read -> {}", ex.getMessage(), ex);
 						break;
 					} finally {
-						MacroFunctionReader.SHARP_EQUAL_TEMP_TABLE.clear();
-						MacroFunctionReader.SHARP_EQUAL_REPL_TABLE.clear();
-						MacroFunctionReader.SHARP_EQUAL_FINAL_TABLE.clear();
+						SharpTagReaderConstants.SHARP_EQUAL_TEMP_TABLE.clear();
+						SharpTagReaderConstants.SHARP_EQUAL_REPL_TABLE.clear();
+						SharpTagReaderConstants.SHARP_EQUAL_FINAL_TABLE.clear();
 					}
 
 					// bind '-' to the form just read

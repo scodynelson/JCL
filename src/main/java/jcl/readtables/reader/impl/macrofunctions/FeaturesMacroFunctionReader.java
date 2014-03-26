@@ -7,7 +7,7 @@ import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariable;
-import jcl.readtables.reader.impl.states.StateReader;
+import jcl.readtables.reader.LispReader;
 import jcl.symbols.SymbolStruct;
 import jcl.variables.FeaturesVariable;
 import jcl.variables.ReadSuppressVariable;
@@ -16,12 +16,14 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class FeaturesMacroFunctionReader extends BaseMacroFunctionReader {
+public class FeaturesMacroFunctionReader {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(FeaturesMacroFunctionReader.class);
 
-	public FeaturesMacroFunctionReader(final StateReader stateReader) {
-		super(stateReader);
+	private final LispReader reader;
+
+	public FeaturesMacroFunctionReader(final LispReader reader) {
+		this.reader = reader;
 	}
 
 	public void readFeatures(final boolean shouldHideFeatures) {
@@ -34,7 +36,7 @@ public class FeaturesMacroFunctionReader extends BaseMacroFunctionReader {
 			PackageVariable.INSTANCE.setValue(GlobalPackageStruct.KEYWORD);
 			ReadSuppressVariable.INSTANCE.setValue(false);
 
-			final LispStruct token = stateReader.read();
+			final LispStruct token = reader.read();
 
 			isFeature = isFeature(token);
 		} catch (final ReaderErrorException ree) {
@@ -47,7 +49,7 @@ public class FeaturesMacroFunctionReader extends BaseMacroFunctionReader {
 		if (isFeature && shouldHideFeatures) {
 
 			ReadSuppressVariable.INSTANCE.setValue(true);
-			stateReader.read();
+			reader.read();
 			ReadSuppressVariable.INSTANCE.setValue(previousReadSuppress);
 		}
 	}

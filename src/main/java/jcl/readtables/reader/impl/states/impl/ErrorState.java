@@ -1,6 +1,6 @@
 package jcl.readtables.reader.impl.states.impl;
 
-import jcl.readtables.reader.impl.states.StateReader;
+import jcl.readtables.reader.LispReader;
 import jcl.readtables.reader.impl.states.TokenBuilder;
 import jcl.conditions.exceptions.ReaderErrorException;
 
@@ -32,7 +32,7 @@ public class ErrorState extends State {
 	 * @throws ReaderErrorException thrown if the process method ever gets called. This can only be done explicitly by a programmer.
 	 */
 	@Override
-	public void process(final StateReader reader, final TokenBuilder tokenBuilder) {
+	public void process(final LispReader reader, final TokenBuilder tokenBuilder) {
 		final Integer codePoint = tokenBuilder.getPreviousReadCharacter();
 		if (StateUtils.isEndOfFileCharacter(codePoint) && !tokenBuilder.isEofErrorP()) {
 			return;

@@ -1,7 +1,7 @@
 package jcl.readtables.reader.impl.states.impl;
 
 import jcl.readtables.ReadtableStruct;
-import jcl.readtables.reader.impl.states.StateReader;
+import jcl.readtables.reader.LispReader;
 import jcl.readtables.reader.impl.states.TokenBuilder;
 import jcl.syntax.AttributeType;
 import jcl.syntax.CaseSpec;
@@ -17,7 +17,7 @@ public class ConstituentState extends State {
 	public static final State CONSTITUENT_STATE = new ConstituentState();
 
 	@Override
-	public void process(final StateReader reader, final TokenBuilder tokenBuilder) {
+	public void process(final LispReader reader, final TokenBuilder tokenBuilder) {
 		Integer codePoint = tokenBuilder.getPreviousReadCharacter();
 
 		if (StateUtils.isEndOfFileCharacter(codePoint)) {

@@ -1,7 +1,7 @@
 package jcl.readtables.reader.impl.macrofunctions;
 
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.readtables.reader.impl.states.StateReader;
+import jcl.readtables.reader.LispReader;
 import jcl.readtables.reader.syntax.ReadExtendedToken;
 import jcl.syntax.AttributeType;
 import jcl.syntax.CaseSpec;
@@ -12,10 +12,12 @@ import org.apache.commons.collections4.CollectionUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExtendedTokenMacroFunctionReader extends BaseMacroFunctionReader {
+public class ExtendedTokenMacroFunctionReader {
 
-	public ExtendedTokenMacroFunctionReader(final StateReader stateReader) {
-		super(stateReader);
+	private final LispReader reader;
+
+	public ExtendedTokenMacroFunctionReader(final LispReader reader) {
+		this.reader = reader;
 	}
 
 	public ReadExtendedToken readExtendedToken() {
@@ -31,7 +33,7 @@ public class ExtendedTokenMacroFunctionReader extends BaseMacroFunctionReader {
 			final List<Integer> escapeIndices = readExtendedToken.getEscapeIndices();
 			final Integer colon = readExtendedToken.getFirstPackageDelimiter();
 
-			final String tokenWithProperCase = getTokenWithProperCase(stateReader, stringBuilder, escapeIndices);
+			final String tokenWithProperCase = getTokenWithProperCase(reader, stringBuilder, escapeIndices);
 
 			return new ReadExtendedToken(tokenWithProperCase, CollectionUtils.isNotEmpty(escapeIndices), colon != null);
 		}
@@ -49,12 +51,12 @@ public class ExtendedTokenMacroFunctionReader extends BaseMacroFunctionReader {
 
 			final List<Integer> escapeIndices = readExtendedToken.getEscapeIndices();
 
-			return getTokenWithProperCase(stateReader, stringBuilder, escapeIndices);
+			return getTokenWithProperCase(reader, stringBuilder, escapeIndices);
 		}
 	}
 
-	private static String getTokenWithProperCase(final StateReader stateReader, final StringBuilder token, final List<Integer> escapeIndices) {
-		final CaseSpec readtableCase = stateReader.getReadtableCase();
+	private static String getTokenWithProperCase(final LispReader reader, final StringBuilder token, final List<Integer> escapeIndices) {
+		final CaseSpec readtableCase = reader.getReadtableCase();
 
 		final StringBuilder stringBuilder = new StringBuilder(token.length());
 		for (int i = 0; i < token.length(); i++) {
@@ -104,14 +106,14 @@ public class ExtendedTokenMacroFunctionReader extends BaseMacroFunctionReader {
 		while (!readResult.wasEOF()) {
 
 			final int codePoint = readResult.getResult();
-			if (isSyntaxType(stateReader, codePoint, SyntaxType.WHITESPACE, SyntaxType.TERMINATING)) {
+			if (MacroFunctionReaderUtils.isSyntaxType(reader, codePoint, SyntaxType.WHITESPACE, SyntaxType.TERMINATING)) {
 				// TODO: We want to take "read-preserving-whitespace" into account here before unreading
-				stateReader.unreadChar(codePoint);
+				reader.unreadChar(codePoint);
 				stringBuilder.deleteCharAt(stringBuilder.length() - 1);
 				break;
 			}
 
-			if (isSyntaxType(stateReader, codePoint, SyntaxType.SINGLE_ESCAPE)) {
+			if (MacroFunctionReaderUtils.isSyntaxType(reader, codePoint, SyntaxType.SINGLE_ESCAPE)) {
 				final ReadResult nextReadResult = readInternalToken(stringBuilder);
 
 				if (nextReadResult.wasEOF()) {
@@ -119,7 +121,7 @@ public class ExtendedTokenMacroFunctionReader extends BaseMacroFunctionReader {
 				} else {
 					escapes.add(stringBuilder.length() - 1);
 				}
-			} else if (isSyntaxType(stateReader, codePoint, SyntaxType.MULTIPLE_ESCAPE)) {
+			} else if (MacroFunctionReaderUtils.isSyntaxType(reader, codePoint, SyntaxType.MULTIPLE_ESCAPE)) {
 				while (true) {
 
 					final ReadResult tempReadResult = readInternalToken(stringBuilder);
@@ -129,9 +131,9 @@ public class ExtendedTokenMacroFunctionReader extends BaseMacroFunctionReader {
 					}
 
 					final int tempCodePoint = tempReadResult.getResult();
-					if (isSyntaxType(stateReader, tempCodePoint, SyntaxType.MULTIPLE_ESCAPE)) {
+					if (MacroFunctionReaderUtils.isSyntaxType(reader, tempCodePoint, SyntaxType.MULTIPLE_ESCAPE)) {
 						break;
-					} else if (isSyntaxType(stateReader, tempCodePoint, SyntaxType.SINGLE_ESCAPE)) {
+					} else if (MacroFunctionReaderUtils.isSyntaxType(reader, tempCodePoint, SyntaxType.SINGLE_ESCAPE)) {
 
 						final ReadResult nextReadResult = readInternalToken(stringBuilder);
 
@@ -145,8 +147,8 @@ public class ExtendedTokenMacroFunctionReader extends BaseMacroFunctionReader {
 					}
 				}
 			} else {
-				if (isSyntaxType(stateReader, codePoint, SyntaxType.CONSTITUENT)
-						&& isAttributeType(stateReader, codePoint, AttributeType.PACKAGEMARKER)
+				if (MacroFunctionReaderUtils.isSyntaxType(reader, codePoint, SyntaxType.CONSTITUENT)
+						&& MacroFunctionReaderUtils.isAttributeType(reader, codePoint, AttributeType.PACKAGEMARKER)
 						&& (colon == null)) {
 					colon = stringBuilder.length() - 1;
 				}
@@ -160,7 +162,7 @@ public class ExtendedTokenMacroFunctionReader extends BaseMacroFunctionReader {
 
 	private ReadResult readInternalToken(final StringBuilder stringBuilder) {
 
-		final ReadResult readResult = stateReader.readChar(false, null, true);
+		final ReadResult readResult = reader.readChar(false, null, true);
 		if (!readResult.wasEOF()) {
 			stringBuilder.appendCodePoint(readResult.getResult());
 		}

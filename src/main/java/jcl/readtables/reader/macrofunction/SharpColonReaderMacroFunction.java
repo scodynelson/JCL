@@ -3,7 +3,7 @@ package jcl.readtables.reader.macrofunction;
 import jcl.LispStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.readtables.reader.impl.macrofunctions.ExtendedTokenMacroFunctionReader;
-import jcl.readtables.reader.impl.states.StateReader;
+import jcl.readtables.reader.LispReader;
 import jcl.symbols.SymbolStruct;
 import jcl.syntax.CharacterConstants;
 import jcl.readtables.reader.syntax.ReadExtendedToken;
@@ -15,7 +15,7 @@ import jcl.variables.ReadSuppressVariable;
 public class SharpColonReaderMacroFunction extends ReaderMacroFunction {
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final StateReader reader, final Integer numArg) {
+	public LispStruct readMacro(final int codePoint, final LispReader reader, final Integer numArg) {
 		assert codePoint == CharacterConstants.COLON;
 
 		final ExtendedTokenMacroFunctionReader macroFunctionReader = new ExtendedTokenMacroFunctionReader(reader);

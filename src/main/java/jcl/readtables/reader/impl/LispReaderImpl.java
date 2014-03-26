@@ -1,24 +1,25 @@
-package jcl.readtables.reader.impl.states.impl;
+package jcl.readtables.reader.impl;
 
 import jcl.LispStruct;
 import jcl.readtables.ReadtableStruct;
 import jcl.readtables.ReadtableVariable;
-import jcl.readtables.reader.impl.states.StateReader;
+import jcl.readtables.reader.LispReader;
 import jcl.readtables.reader.impl.states.TokenBuilder;
+import jcl.readtables.reader.impl.states.impl.InitialState;
 import jcl.streams.InputStream;
 import jcl.syntax.CaseSpec;
 import jcl.syntax.reader.ReadResult;
 
-public class StateReaderImpl implements StateReader {
+public class LispReaderImpl implements LispReader {
 
 	private final InputStream inputStream;
 	private final ReadtableStruct readtable;
 
-	public StateReaderImpl(final InputStream inputStream) {
+	public LispReaderImpl(final InputStream inputStream) {
 		this(inputStream, ReadtableVariable.INSTANCE.getValue());
 	}
 
-	public StateReaderImpl(final InputStream inputStream, final ReadtableStruct readtable) {
+	public LispReaderImpl(final InputStream inputStream, final ReadtableStruct readtable) {
 		this.inputStream = inputStream;
 		this.readtable = readtable;
 	}
@@ -30,10 +31,10 @@ public class StateReaderImpl implements StateReader {
 
 	@Override
 	public LispStruct read(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
-		final StateReaderImpl stateReader = new StateReaderImpl(inputStream);
+		final LispReaderImpl reader = new LispReaderImpl(inputStream);
 
 		final TokenBuilder tokenBuilder = new TokenBuilder(eofErrorP, eofValue, recursiveP);
-		InitialState.INITIAL_STATE.process(stateReader, tokenBuilder);
+		InitialState.INITIAL_STATE.process(reader, tokenBuilder);
 
 		return tokenBuilder.getReturnToken();
 	}

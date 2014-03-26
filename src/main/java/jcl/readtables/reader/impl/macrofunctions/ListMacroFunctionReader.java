@@ -3,7 +3,7 @@ package jcl.readtables.reader.impl.macrofunctions;
 import jcl.LispStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ListStruct;
-import jcl.readtables.reader.impl.states.StateReader;
+import jcl.readtables.reader.LispReader;
 import jcl.syntax.CharacterConstants;
 import jcl.syntax.SyntaxType;
 import jcl.syntax.reader.ReadResult;
@@ -12,10 +12,12 @@ import jcl.variables.ReadSuppressVariable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListMacroFunctionReader extends BaseMacroFunctionReader {
+public class ListMacroFunctionReader {
 
-	public ListMacroFunctionReader(final StateReader stateReader) {
-		super(stateReader);
+	private final LispReader reader;
+
+	public ListMacroFunctionReader(final LispReader reader) {
+		this.reader = reader;
 	}
 
 	public ListStruct readList() {
@@ -28,9 +30,9 @@ public class ListMacroFunctionReader extends BaseMacroFunctionReader {
 
 			if (codePoint == CharacterConstants.FULL_STOP) {
 
-				int nextCodePoint = stateReader.readChar().getResult();
+				int nextCodePoint = reader.readChar().getResult();
 
-				if (isSyntaxType(stateReader, nextCodePoint, SyntaxType.WHITESPACE, SyntaxType.TERMINATING)) {
+				if (MacroFunctionReaderUtils.isSyntaxType(reader, nextCodePoint, SyntaxType.WHITESPACE, SyntaxType.TERMINATING)) {
 					if (theList.isEmpty()) {
 						if (ReadSuppressVariable.INSTANCE.getValue()) {
 							return null;
@@ -39,7 +41,7 @@ public class ListMacroFunctionReader extends BaseMacroFunctionReader {
 						}
 					}
 
-					if (isSyntaxType(stateReader, nextCodePoint, SyntaxType.WHITESPACE)) {
+					if (MacroFunctionReaderUtils.isSyntaxType(reader, nextCodePoint, SyntaxType.WHITESPACE)) {
 						nextCodePoint = flushWhitespace();
 					}
 
@@ -47,12 +49,12 @@ public class ListMacroFunctionReader extends BaseMacroFunctionReader {
 					theList.add(lispStruct);
 					return ListStruct.buildDottedList(theList);
 				} else {
-					stateReader.unreadChar(nextCodePoint);
+					reader.unreadChar(nextCodePoint);
 				}
 			}
-			stateReader.unreadChar(codePoint);
+			reader.unreadChar(codePoint);
 
-			final LispStruct lispStruct = stateReader.read();
+			final LispStruct lispStruct = reader.read();
 			if (lispStruct != null) {
 				theList.add(lispStruct);
 			}
@@ -73,9 +75,9 @@ public class ListMacroFunctionReader extends BaseMacroFunctionReader {
 			if (codePoint == CharacterConstants.RIGHT_PARENTHESIS) {
 				throw new ReaderErrorException("Nothing appears after . in list.");
 			}
-			stateReader.unreadChar(codePoint);
+			reader.unreadChar(codePoint);
 
-			lispStruct = stateReader.read();
+			lispStruct = reader.read();
 			if (lispStruct != null) {
 				break;
 			}
@@ -85,9 +87,9 @@ public class ListMacroFunctionReader extends BaseMacroFunctionReader {
 
 		int nextCodePoint = flushWhitespace();
 		while (nextCodePoint != CharacterConstants.RIGHT_PARENTHESIS) {
-			stateReader.unreadChar(nextCodePoint);
+			reader.unreadChar(nextCodePoint);
 
-			lispStruct = stateReader.read();
+			lispStruct = reader.read();
 			if (lispStruct != null) {
 				throw new ReaderErrorException("More than one object follows . in list.");
 			}
@@ -101,11 +103,11 @@ public class ListMacroFunctionReader extends BaseMacroFunctionReader {
 	private int flushWhitespace() {
 
 		// NOTE: This will throw errors when it reaches an EOF
-		ReadResult readResult = stateReader.readChar();
+		ReadResult readResult = reader.readChar();
 		int codePoint = readResult.getResult();
 
-		if (isSyntaxType(stateReader, codePoint, SyntaxType.WHITESPACE)) {
-			readResult = stateReader.readChar();
+		if (MacroFunctionReaderUtils.isSyntaxType(reader, codePoint, SyntaxType.WHITESPACE)) {
+			readResult = reader.readChar();
 			codePoint = readResult.getResult();
 		}
 

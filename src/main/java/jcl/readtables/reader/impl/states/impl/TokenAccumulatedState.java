@@ -1,6 +1,6 @@
 package jcl.readtables.reader.impl.states.impl;
 
-import jcl.readtables.reader.impl.states.StateReader;
+import jcl.readtables.reader.LispReader;
 import jcl.readtables.reader.impl.states.TokenBuilder;
 import jcl.readtables.reader.impl.states.TokenAttribute;
 import jcl.variables.ReadSuppressVariable;
@@ -50,7 +50,7 @@ public class TokenAccumulatedState extends State {
 	 * @return EndState       the final accepting state
 	 */
 	@Override
-	public void process(final StateReader reader, final TokenBuilder tokenBuilder) {
+	public void process(final LispReader reader, final TokenBuilder tokenBuilder) {
 
 		final Integer codePoint = tokenBuilder.getPreviousReadCharacter();
 		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();

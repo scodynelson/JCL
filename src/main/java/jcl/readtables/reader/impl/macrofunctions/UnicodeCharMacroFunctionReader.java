@@ -1,14 +1,16 @@
 package jcl.readtables.reader.impl.macrofunctions;
 
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.readtables.reader.impl.states.StateReader;
+import jcl.readtables.reader.LispReader;
 import jcl.syntax.SyntaxType;
 import jcl.syntax.reader.ReadResult;
 
-public class UnicodeCharMacroFunctionReader extends BaseMacroFunctionReader {
+public class UnicodeCharMacroFunctionReader {
 
-	public UnicodeCharMacroFunctionReader(final StateReader stateReader) {
-		super(stateReader);
+	private final LispReader reader;
+
+	public UnicodeCharMacroFunctionReader(final LispReader reader) {
+		this.reader = reader;
 	}
 
 	public int readUnicodeChar() {
@@ -16,13 +18,13 @@ public class UnicodeCharMacroFunctionReader extends BaseMacroFunctionReader {
 		final StringBuilder unicodeCharBuilder = new StringBuilder();
 
 		// NOTE: This will throw errors when it reaches an EOF
-		ReadResult readResult = stateReader.readChar();
+		ReadResult readResult = reader.readChar();
 		int readChar = readResult.getResult();
 
-		while (!isSyntaxType(stateReader, readChar, SyntaxType.WHITESPACE)) {
+		while (!MacroFunctionReaderUtils.isSyntaxType(reader, readChar, SyntaxType.WHITESPACE)) {
 			unicodeCharBuilder.appendCodePoint(readChar);
 
-			readResult = stateReader.readChar();
+			readResult = reader.readChar();
 			readChar = readResult.getResult();
 		}
 

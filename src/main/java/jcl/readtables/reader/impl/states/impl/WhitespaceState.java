@@ -1,6 +1,6 @@
 package jcl.readtables.reader.impl.states.impl;
 
-import jcl.readtables.reader.impl.states.StateReader;
+import jcl.readtables.reader.LispReader;
 import jcl.readtables.reader.impl.states.TokenBuilder;
 
 /**
@@ -16,7 +16,7 @@ public class WhitespaceState extends State {
 	 * Processes for the reader for the current State.
 	 */
 	@Override
-	public void process(final StateReader reader, final TokenBuilder tokenBuilder) {
+	public void process(final LispReader reader, final TokenBuilder tokenBuilder) {
 		ReadState.READ_STATE.process(reader, tokenBuilder);
 	}
 }

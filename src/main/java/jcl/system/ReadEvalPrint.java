@@ -3,7 +3,7 @@ package jcl.system;
 import jcl.LispStruct;
 import jcl.packages.PackageStruct;
 import jcl.readtables.reader.LispReader;
-import jcl.readtables.reader.impl.states.impl.StateReaderImpl;
+import jcl.readtables.reader.impl.LispReaderImpl;
 import jcl.readtables.reader.macrofunction.SharpTagReaderConstants;
 import jcl.streams.CharacterStreamStruct;
 import jcl.streams.FileStreamStruct;
@@ -67,7 +67,7 @@ public final class ReadEvalPrint {
 		// Lisp EXIT function.
 
 		try {
-			final LispReader reader = new StateReaderImpl(inputStream);
+			final LispReader reader = new LispReaderImpl(inputStream);
 
 			// bind all of the interaction variables to their values
 //			Variable.Star.bind(Variable.Star.getValue());

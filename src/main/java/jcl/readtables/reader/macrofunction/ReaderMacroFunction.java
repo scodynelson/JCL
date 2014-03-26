@@ -3,7 +3,7 @@ package jcl.readtables.reader.macrofunction;
 import jcl.LispStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.functions.FunctionStruct;
-import jcl.readtables.reader.impl.states.StateReader;
+import jcl.readtables.reader.LispReader;
 
 /**
  * Defines a ReaderMacroFunction type.
@@ -19,7 +19,7 @@ public abstract class ReaderMacroFunction extends FunctionStruct {
 	 * @return a LispStruct
 	 * @throws ReaderErrorException if an error is encountered
 	 */
-	public abstract LispStruct readMacro(int codePoint, StateReader reader, Integer numArg);
+	public abstract LispStruct readMacro(int codePoint, LispReader reader, Integer numArg);
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {

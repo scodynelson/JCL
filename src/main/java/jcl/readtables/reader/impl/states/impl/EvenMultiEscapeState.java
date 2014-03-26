@@ -2,7 +2,7 @@ package jcl.readtables.reader.impl.states.impl;
 
 import jcl.LispStruct;
 import jcl.readtables.ReadtableStruct;
-import jcl.readtables.reader.impl.states.StateReader;
+import jcl.readtables.reader.LispReader;
 import jcl.readtables.reader.impl.states.TokenBuilder;
 import jcl.syntax.AttributeType;
 import jcl.syntax.CaseSpec;
@@ -33,7 +33,7 @@ public class EvenMultiEscapeState extends State {
 	 * character, or a single escape character
 	 */
 	@Override
-	public void process(final StateReader reader, final TokenBuilder tokenBuilder) {
+	public void process(final LispReader reader, final TokenBuilder tokenBuilder) {
 
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();

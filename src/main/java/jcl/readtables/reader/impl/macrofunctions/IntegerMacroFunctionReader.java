@@ -4,18 +4,20 @@ import jcl.LispStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.ReadBaseVariable;
-import jcl.readtables.reader.impl.states.StateReader;
+import jcl.readtables.reader.LispReader;
 import jcl.variables.ReadSuppressVariable;
 
-public class IntegerMacroFunctionReader extends BaseMacroFunctionReader {
+public class IntegerMacroFunctionReader {
 
-	public IntegerMacroFunctionReader(final StateReader stateReader) {
-		super(stateReader);
+	private final LispReader reader;
+
+	public IntegerMacroFunctionReader(final LispReader reader) {
+		this.reader = reader;
 	}
 
 	public IntegerStruct readIntegerToken(final Integer radix) {
 		if (ReadSuppressVariable.INSTANCE.getValue()) {
-			final ExtendedTokenMacroFunctionReader macroFunctionReader = new ExtendedTokenMacroFunctionReader(stateReader);
+			final ExtendedTokenMacroFunctionReader macroFunctionReader = new ExtendedTokenMacroFunctionReader(reader);
 			macroFunctionReader.readExtendedToken();
 			return null;
 		} else if (radix == null) {
@@ -29,7 +31,7 @@ public class IntegerMacroFunctionReader extends BaseMacroFunctionReader {
 			ReadBaseVariable.INSTANCE.setValue(radix);
 
 			// read integer
-			final LispStruct lispToken = stateReader.read();
+			final LispStruct lispToken = reader.read();
 			if (lispToken instanceof IntegerStruct) {
 
 				final IntegerStruct integerToken = (IntegerStruct) lispToken;

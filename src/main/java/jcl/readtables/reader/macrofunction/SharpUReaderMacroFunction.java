@@ -2,8 +2,8 @@ package jcl.readtables.reader.macrofunction;
 
 import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
+import jcl.readtables.reader.Reader;
 import jcl.readtables.reader.impl.macrofunctions.UnicodeCharMacroFunctionReader;
-import jcl.readtables.reader.LispReader;
 import jcl.syntax.CharacterConstants;
 import jcl.variables.ReadSuppressVariable;
 
@@ -13,7 +13,7 @@ import jcl.variables.ReadSuppressVariable;
 public class SharpUReaderMacroFunction extends ReaderMacroFunction {
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final LispReader reader, final Integer numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final Integer numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_U) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_U);
 
 		if (ReadSuppressVariable.INSTANCE.getValue()) {

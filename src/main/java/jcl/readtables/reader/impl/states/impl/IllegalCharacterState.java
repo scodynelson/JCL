@@ -1,6 +1,6 @@
 package jcl.readtables.reader.impl.states.impl;
 
-import jcl.readtables.reader.LispReader;
+import jcl.readtables.reader.Reader;
 import jcl.readtables.reader.impl.states.TokenBuilder;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.syntax.CharacterConstants;
@@ -21,7 +21,7 @@ public class IllegalCharacterState extends State {
 	 * @throws ReaderErrorException thrown because we have found a character that is not defined within Unicode
 	 */
 	@Override
-	public void process(final LispReader reader, final TokenBuilder tokenBuilder) {
+	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
 
 		final Integer codePoint = tokenBuilder.getPreviousReadCharacter();
 		if (codePoint == null) {

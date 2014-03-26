@@ -1,6 +1,6 @@
 package jcl.readtables.reader.impl.states.impl;
 
-import jcl.readtables.reader.LispReader;
+import jcl.readtables.reader.Reader;
 import jcl.readtables.reader.impl.states.TokenBuilder;
 
 /**
@@ -35,5 +35,5 @@ import jcl.readtables.reader.impl.states.TokenBuilder;
  */
 public abstract class State {
 
-	public abstract void process(LispReader reader, TokenBuilder tokenBuilder);
+	public abstract void process(Reader reader, TokenBuilder tokenBuilder);
 }

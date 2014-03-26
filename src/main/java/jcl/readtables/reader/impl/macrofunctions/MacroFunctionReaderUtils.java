@@ -1,13 +1,13 @@
 package jcl.readtables.reader.impl.macrofunctions;
 
 import jcl.readtables.ReadtableStruct;
-import jcl.readtables.reader.LispReader;
+import jcl.readtables.reader.Reader;
 import jcl.syntax.AttributeType;
 import jcl.syntax.SyntaxType;
 
 class MacroFunctionReaderUtils {
 
-	static boolean isAttributeType(final LispReader reader, final int codePoint, final AttributeType... attributeTypes) {
+	static boolean isAttributeType(final Reader reader, final int codePoint, final AttributeType... attributeTypes) {
 
 		final ReadtableStruct readtable = reader.getReadtable();
 
@@ -18,7 +18,7 @@ class MacroFunctionReaderUtils {
 		return returnVal;
 	}
 
-	static boolean isSyntaxType(final LispReader reader, final int codePoint, final SyntaxType... syntaxTypes) {
+	static boolean isSyntaxType(final Reader reader, final int codePoint, final SyntaxType... syntaxTypes) {
 
 		final ReadtableStruct readtable = reader.getReadtable();
 

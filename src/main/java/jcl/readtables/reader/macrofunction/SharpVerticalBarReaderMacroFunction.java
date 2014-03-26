@@ -1,7 +1,7 @@
 package jcl.readtables.reader.macrofunction;
 
 import jcl.LispStruct;
-import jcl.readtables.reader.LispReader;
+import jcl.readtables.reader.Reader;
 import jcl.structs.comments.CommentStruct;
 import jcl.syntax.CharacterConstants;
 import jcl.syntax.reader.ReadResult;
@@ -13,7 +13,7 @@ import jcl.variables.ReadSuppressVariable;
 public class SharpVerticalBarReaderMacroFunction extends ReaderMacroFunction {
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final LispReader reader, final Integer numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final Integer numArg) {
 		assert codePoint == CharacterConstants.VERTICAL_LINE;
 
 		int level = 1;

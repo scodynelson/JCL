@@ -3,7 +3,7 @@ package jcl.readtables.reader.impl.macrofunctions;
 import jcl.LispStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ListStruct;
-import jcl.readtables.reader.LispReader;
+import jcl.readtables.reader.Reader;
 import jcl.syntax.CharacterConstants;
 import jcl.syntax.SyntaxType;
 import jcl.syntax.reader.ReadResult;
@@ -14,9 +14,9 @@ import java.util.List;
 
 public class ListMacroFunctionReader {
 
-	private final LispReader reader;
+	private final Reader reader;
 
-	public ListMacroFunctionReader(final LispReader reader) {
+	public ListMacroFunctionReader(final Reader reader) {
 		this.reader = reader;
 	}
 

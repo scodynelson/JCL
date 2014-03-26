@@ -2,7 +2,7 @@ package jcl.readtables.reader.impl.states.impl;
 
 import jcl.LispStruct;
 import jcl.readtables.ReadtableStruct;
-import jcl.readtables.reader.LispReader;
+import jcl.readtables.reader.Reader;
 import jcl.readtables.reader.impl.states.TokenBuilder;
 import jcl.syntax.AttributeType;
 import jcl.syntax.SyntaxType;
@@ -31,7 +31,7 @@ public class OddMultiEscapeState extends State {
 	 * terminating macro character, whitespace character, or a single escape character
 	 */
 	@Override
-	public void process(final LispReader reader, final TokenBuilder tokenBuilder) {
+	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
 
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();

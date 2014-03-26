@@ -7,7 +7,7 @@ import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariable;
-import jcl.readtables.reader.LispReader;
+import jcl.readtables.reader.Reader;
 import jcl.symbols.SymbolStruct;
 import jcl.variables.FeaturesVariable;
 import jcl.variables.ReadSuppressVariable;
@@ -20,9 +20,9 @@ public class FeaturesMacroFunctionReader {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(FeaturesMacroFunctionReader.class);
 
-	private final LispReader reader;
+	private final Reader reader;
 
-	public FeaturesMacroFunctionReader(final LispReader reader) {
+	public FeaturesMacroFunctionReader(final Reader reader) {
 		this.reader = reader;
 	}
 

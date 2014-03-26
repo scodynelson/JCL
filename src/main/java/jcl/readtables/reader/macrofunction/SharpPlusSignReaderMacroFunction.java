@@ -1,8 +1,8 @@
 package jcl.readtables.reader.macrofunction;
 
 import jcl.LispStruct;
+import jcl.readtables.reader.Reader;
 import jcl.readtables.reader.impl.macrofunctions.FeaturesMacroFunctionReader;
-import jcl.readtables.reader.LispReader;
 import jcl.syntax.CharacterConstants;
 
 /**
@@ -11,7 +11,7 @@ import jcl.syntax.CharacterConstants;
 public class SharpPlusSignReaderMacroFunction extends ReaderMacroFunction {
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final LispReader reader, final Integer numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final Integer numArg) {
 		assert codePoint == CharacterConstants.PLUS_SIGN;
 
 		final FeaturesMacroFunctionReader macroFunctionReader = new FeaturesMacroFunctionReader(reader);

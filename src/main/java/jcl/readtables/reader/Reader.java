@@ -1,37 +1,34 @@
-package jcl.readtables.reader.impl;
+package jcl.readtables.reader;
 
 import jcl.LispStruct;
 import jcl.readtables.ReadtableStruct;
 import jcl.readtables.ReadtableVariable;
-import jcl.readtables.reader.LispReader;
 import jcl.readtables.reader.impl.states.TokenBuilder;
 import jcl.readtables.reader.impl.states.impl.InitialState;
 import jcl.streams.InputStream;
 import jcl.syntax.CaseSpec;
 import jcl.syntax.reader.ReadResult;
 
-public class LispReaderImpl implements LispReader {
+public class Reader {
 
 	private final InputStream inputStream;
 	private final ReadtableStruct readtable;
 
-	public LispReaderImpl(final InputStream inputStream) {
+	public Reader(final InputStream inputStream) {
 		this(inputStream, ReadtableVariable.INSTANCE.getValue());
 	}
 
-	public LispReaderImpl(final InputStream inputStream, final ReadtableStruct readtable) {
+	public Reader(final InputStream inputStream, final ReadtableStruct readtable) {
 		this.inputStream = inputStream;
 		this.readtable = readtable;
 	}
 
-	@Override
 	public LispStruct read() {
 		return read(true, null, true);
 	}
 
-	@Override
 	public LispStruct read(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
-		final LispReaderImpl reader = new LispReaderImpl(inputStream);
+		final Reader reader = new Reader(inputStream);
 
 		final TokenBuilder tokenBuilder = new TokenBuilder(eofErrorP, eofValue, recursiveP);
 		InitialState.INITIAL_STATE.process(reader, tokenBuilder);
@@ -39,27 +36,22 @@ public class LispReaderImpl implements LispReader {
 		return tokenBuilder.getReturnToken();
 	}
 
-	@Override
 	public ReadResult readChar() {
 		return readChar(true, null, true);
 	}
 
-	@Override
 	public ReadResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		return inputStream.readChar(eofErrorP, eofValue, recursiveP);
 	}
 
-	@Override
 	public void unreadChar(final int codePoint) {
 		inputStream.unreadChar(codePoint);
 	}
 
-	@Override
 	public ReadtableStruct getReadtable() {
 		return readtable;
 	}
 
-	@Override
 	public CaseSpec getReadtableCase() {
 		return readtable.getReadtableCase();
 	}

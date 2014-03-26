@@ -1,7 +1,7 @@
 package jcl.readtables.reader.impl.states.impl;
 
 import jcl.LispStruct;
-import jcl.readtables.reader.LispReader;
+import jcl.readtables.reader.Reader;
 import jcl.readtables.reader.impl.states.TokenBuilder;
 import jcl.readtables.reader.macrofunction.ReaderMacroFunction;
 import jcl.syntax.reader.ReadResult;
@@ -27,7 +27,7 @@ public class MacroCharacterState extends State {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MacroCharacterState.class);
 
 	@Override
-	public void process(final LispReader reader, final TokenBuilder tokenBuilder) {
+	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
 
 		Integer codePoint = tokenBuilder.getPreviousReadCharacter();
 

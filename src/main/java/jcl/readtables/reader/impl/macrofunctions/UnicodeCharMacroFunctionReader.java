@@ -1,15 +1,15 @@
 package jcl.readtables.reader.impl.macrofunctions;
 
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.readtables.reader.LispReader;
+import jcl.readtables.reader.Reader;
 import jcl.syntax.SyntaxType;
 import jcl.syntax.reader.ReadResult;
 
 public class UnicodeCharMacroFunctionReader {
 
-	private final LispReader reader;
+	private final Reader reader;
 
-	public UnicodeCharMacroFunctionReader(final LispReader reader) {
+	public UnicodeCharMacroFunctionReader(final Reader reader) {
 		this.reader = reader;
 	}
 

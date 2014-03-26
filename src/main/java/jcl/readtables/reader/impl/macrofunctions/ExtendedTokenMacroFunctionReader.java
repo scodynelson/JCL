@@ -1,7 +1,7 @@
 package jcl.readtables.reader.impl.macrofunctions;
 
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.readtables.reader.LispReader;
+import jcl.readtables.reader.Reader;
 import jcl.readtables.reader.syntax.ReadExtendedToken;
 import jcl.syntax.AttributeType;
 import jcl.syntax.CaseSpec;
@@ -14,9 +14,9 @@ import java.util.List;
 
 public class ExtendedTokenMacroFunctionReader {
 
-	private final LispReader reader;
+	private final Reader reader;
 
-	public ExtendedTokenMacroFunctionReader(final LispReader reader) {
+	public ExtendedTokenMacroFunctionReader(final Reader reader) {
 		this.reader = reader;
 	}
 
@@ -55,7 +55,7 @@ public class ExtendedTokenMacroFunctionReader {
 		}
 	}
 
-	private static String getTokenWithProperCase(final LispReader reader, final StringBuilder token, final List<Integer> escapeIndices) {
+	private static String getTokenWithProperCase(final Reader reader, final StringBuilder token, final List<Integer> escapeIndices) {
 		final CaseSpec readtableCase = reader.getReadtableCase();
 
 		final StringBuilder stringBuilder = new StringBuilder(token.length());

@@ -1,16 +1,15 @@
 package jcl.system;
 
 import jcl.LispStruct;
+import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.conditions.exceptions.StreamErrorException;
 import jcl.packages.PackageStruct;
-import jcl.readtables.reader.LispReader;
-import jcl.readtables.reader.impl.LispReaderImpl;
+import jcl.packages.PackageVariable;
+import jcl.readtables.reader.Reader;
 import jcl.readtables.reader.macrofunction.SharpTagReaderConstants;
 import jcl.streams.CharacterStreamStruct;
 import jcl.streams.FileStreamStruct;
 import jcl.streams.InputStream;
-import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.conditions.exceptions.StreamErrorException;
-import jcl.packages.PackageVariable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,7 +66,7 @@ public final class ReadEvalPrint {
 		// Lisp EXIT function.
 
 		try {
-			final LispReader reader = new LispReaderImpl(inputStream);
+			final Reader reader = new Reader(inputStream);
 
 			// bind all of the interaction variables to their values
 //			Variable.Star.bind(Variable.Star.getValue());

@@ -1,6 +1,6 @@
 package jcl.readtables.reader.impl.states.impl;
 
-import jcl.readtables.reader.LispReader;
+import jcl.readtables.reader.Reader;
 import jcl.readtables.reader.impl.states.TokenBuilder;
 
 /**
@@ -13,7 +13,7 @@ public class InitialState extends State {
 	public static final State INITIAL_STATE = new InitialState();
 
 	@Override
-	public void process(final LispReader reader, final TokenBuilder tokenBuilder) {
+	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
 		ReadState.READ_STATE.process(reader, tokenBuilder);
 	}
 }

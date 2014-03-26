@@ -1,7 +1,7 @@
 package jcl.readtables;
 
 import jcl.LispStruct;
-import jcl.readtables.reader.LispReader;
+import jcl.readtables.reader.Reader;
 import jcl.readtables.reader.macrofunction.ReaderMacroFunction;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.syntax.reader.ReadResult;
@@ -14,7 +14,7 @@ public class DispatchTable extends ReaderMacroFunction {
 	private final Map<Integer, ReaderMacroFunction> macroFunctionMap = new ConcurrentHashMap<>();
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final LispReader reader, final Integer numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final Integer numArg) {
 
 		final ReadResult readResult = reader.readChar(false, null, false);
 		if (readResult.wasEOF()) {

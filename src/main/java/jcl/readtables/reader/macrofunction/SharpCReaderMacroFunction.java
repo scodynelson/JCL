@@ -7,7 +7,7 @@ import jcl.numbers.FloatStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.RatioStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.readtables.reader.LispReader;
+import jcl.readtables.reader.Reader;
 import jcl.syntax.CharacterConstants;
 import jcl.variables.ReadSuppressVariable;
 
@@ -19,7 +19,7 @@ import java.util.List;
 public class SharpCReaderMacroFunction extends ReaderMacroFunction {
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final LispReader reader, final Integer numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final Integer numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_C) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_C);
 
 		final LispStruct lispToken = reader.read();

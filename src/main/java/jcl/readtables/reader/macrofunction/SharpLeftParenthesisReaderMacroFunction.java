@@ -6,8 +6,8 @@ import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.lists.ListStruct;
+import jcl.readtables.reader.Reader;
 import jcl.readtables.reader.impl.macrofunctions.ListMacroFunctionReader;
-import jcl.readtables.reader.LispReader;
 import jcl.syntax.CharacterConstants;
 import jcl.variables.ReadSuppressVariable;
 import org.apache.commons.collections4.CollectionUtils;
@@ -20,7 +20,7 @@ import java.util.List;
 public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction {
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final LispReader reader, final Integer numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final Integer numArg) {
 		assert codePoint == CharacterConstants.LEFT_PARENTHESIS;
 
 		final ListMacroFunctionReader macroFunctionReader = new ListMacroFunctionReader(reader);

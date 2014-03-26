@@ -4,14 +4,14 @@ import jcl.LispStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.ReadBaseVariable;
-import jcl.readtables.reader.LispReader;
+import jcl.readtables.reader.Reader;
 import jcl.variables.ReadSuppressVariable;
 
 public class IntegerMacroFunctionReader {
 
-	private final LispReader reader;
+	private final Reader reader;
 
-	public IntegerMacroFunctionReader(final LispReader reader) {
+	public IntegerMacroFunctionReader(final Reader reader) {
 		this.reader = reader;
 	}
 

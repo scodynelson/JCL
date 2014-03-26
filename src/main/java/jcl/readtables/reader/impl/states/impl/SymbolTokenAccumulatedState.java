@@ -4,7 +4,7 @@ import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageSymbolStruct;
 import jcl.packages.PackageVariable;
-import jcl.readtables.reader.LispReader;
+import jcl.readtables.reader.Reader;
 import jcl.readtables.reader.impl.states.TokenBuilder;
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SymbolStruct;
@@ -52,7 +52,7 @@ public class SymbolTokenAccumulatedState extends State {
 	 * @return EndState       the final accepting state
 	 */
 	@Override
-	public void process(final LispReader reader, final TokenBuilder tokenBuilder) {
+	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
 
 		final SymbolStruct<?> symbolToken = getSymbolToken(tokenBuilder);
 //		if (symbolToken == null) {

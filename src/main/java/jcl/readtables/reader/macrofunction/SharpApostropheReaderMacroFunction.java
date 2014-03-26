@@ -3,7 +3,7 @@ package jcl.readtables.reader.macrofunction;
 import jcl.LispStruct;
 import jcl.lists.ListStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.readtables.reader.LispReader;
+import jcl.readtables.reader.Reader;
 import jcl.symbols.SymbolStruct;
 import jcl.syntax.CharacterConstants;
 import jcl.variables.ReadSuppressVariable;
@@ -14,7 +14,7 @@ import jcl.variables.ReadSuppressVariable;
 public class SharpApostropheReaderMacroFunction extends ReaderMacroFunction {
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final LispReader reader, final Integer numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final Integer numArg) {
 		assert codePoint == CharacterConstants.APOSTROPHE;
 
 		final LispStruct expression = reader.read();

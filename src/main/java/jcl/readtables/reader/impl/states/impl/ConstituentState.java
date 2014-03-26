@@ -2,6 +2,7 @@ package jcl.readtables.reader.impl.states.impl;
 
 import jcl.readtables.ReadtableStruct;
 import jcl.readtables.reader.Reader;
+import jcl.readtables.reader.impl.states.State;
 import jcl.readtables.reader.impl.states.TokenBuilder;
 import jcl.syntax.AttributeType;
 import jcl.syntax.CaseSpec;

@@ -5,6 +5,7 @@ import jcl.packages.PackageStruct;
 import jcl.packages.PackageSymbolStruct;
 import jcl.packages.PackageVariable;
 import jcl.readtables.reader.Reader;
+import jcl.readtables.reader.impl.states.State;
 import jcl.readtables.reader.impl.states.TokenBuilder;
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SymbolStruct;

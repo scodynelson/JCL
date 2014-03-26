@@ -1,7 +1,7 @@
-package jcl.readtables.reader.impl.states.impl;
+package jcl.readtables.reader.impl.states;
 
 import jcl.readtables.reader.Reader;
-import jcl.readtables.reader.impl.states.TokenBuilder;
+import jcl.readtables.reader.impl.states.impl.InitialState;
 
 /**
  * This interface defines a set of anonymous classes that comprise the states of the
@@ -36,4 +36,8 @@ import jcl.readtables.reader.impl.states.TokenBuilder;
 public abstract class State {
 
 	public abstract void process(Reader reader, TokenBuilder tokenBuilder);
+
+	public static State getInitialState() {
+		return InitialState.INITIAL_STATE;
+	}
 }

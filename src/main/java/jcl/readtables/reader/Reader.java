@@ -4,7 +4,7 @@ import jcl.LispStruct;
 import jcl.readtables.ReadtableStruct;
 import jcl.readtables.ReadtableVariable;
 import jcl.readtables.reader.impl.states.TokenBuilder;
-import jcl.readtables.reader.impl.states.impl.InitialState;
+import jcl.readtables.reader.impl.states.State;
 import jcl.streams.InputStream;
 import jcl.syntax.CaseSpec;
 import jcl.syntax.reader.ReadResult;
@@ -31,7 +31,7 @@ public class Reader {
 		final Reader reader = new Reader(inputStream);
 
 		final TokenBuilder tokenBuilder = new TokenBuilder(eofErrorP, eofValue, recursiveP);
-		InitialState.INITIAL_STATE.process(reader, tokenBuilder);
+		State.getInitialState().process(reader, tokenBuilder);
 
 		return tokenBuilder.getReturnToken();
 	}

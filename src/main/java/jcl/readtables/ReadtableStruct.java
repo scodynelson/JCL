@@ -1,5 +1,6 @@
 package jcl.readtables;
 
+import jcl.classes.BuiltInClassStruct;
 import jcl.readtables.reader.macrofunction.ApostropheReaderMacroFunction;
 import jcl.readtables.reader.macrofunction.LeftParenthesisReaderMacroFunction;
 import jcl.readtables.reader.macrofunction.QuotationMarkReaderMacroFunction;
@@ -27,7 +28,6 @@ import jcl.readtables.reader.macrofunction.SharpSharpReaderMacroFunction;
 import jcl.readtables.reader.macrofunction.SharpUReaderMacroFunction;
 import jcl.readtables.reader.macrofunction.SharpVerticalBarReaderMacroFunction;
 import jcl.readtables.reader.macrofunction.SharpXReaderMacroFunction;
-import jcl.classes.BuiltInClassStruct;
 import jcl.syntax.AttributeType;
 import jcl.syntax.CaseSpec;
 import jcl.syntax.CharacterConstants;
@@ -205,7 +205,7 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	 * @return the macro character reader function for the provided {@code subCodePoint}
 	 */
 	public ReaderMacroFunction getDispatchMacroCharacter(final int dispatchCodePoint, final int subCodePoint) {
-		return dispatchTableMap.get(dispatchCodePoint).getMacroCharacter(subCodePoint);
+		return dispatchTableMap.get(dispatchCodePoint).getMacroFunction(subCodePoint);
 	}
 
 	/**
@@ -238,5 +238,16 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	 */
 	public SyntaxType getSyntaxType(final int codePoint) {
 		return syntaxTable.getSyntaxType(codePoint);
+	}
+
+	@Override
+	public String toString() {
+		return "ReadtableStruct{"
+				+ "macroTableMap=" + macroTableMap
+				+ ", dispatchTableMap=" + dispatchTableMap
+				+ ", attributeTable=" + attributeTable
+				+ ", syntaxTable=" + syntaxTable
+				+ ", readtableCase=" + readtableCase
+				+ '}';
 	}
 }

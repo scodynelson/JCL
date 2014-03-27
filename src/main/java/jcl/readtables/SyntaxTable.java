@@ -183,4 +183,11 @@ class SyntaxTable {
 	void setSyntaxType(final int codePoint, final SyntaxType syntaxType) {
 		syntaxTypeMap.put(codePoint, syntaxType);
 	}
+
+	@Override
+	public String toString() {
+		return "SyntaxTable{"
+				+ "syntaxTypeMap=" + syntaxTypeMap
+				+ '}';
+	}
 }

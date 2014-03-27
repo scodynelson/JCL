@@ -47,4 +47,12 @@ public enum CharacterName {
 	public char getChar() {
 		return aChar;
 	}
+
+	@Override
+	public String toString() {
+		return "CharacterName{"
+				+ "name='" + name + '\''
+				+ ", aChar=" + aChar
+				+ '}';
+	}
 }

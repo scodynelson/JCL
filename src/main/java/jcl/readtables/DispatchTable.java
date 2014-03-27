@@ -1,14 +1,18 @@
 package jcl.readtables;
 
 import jcl.LispStruct;
+import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.readtables.reader.Reader;
 import jcl.readtables.reader.macrofunction.ReaderMacroFunction;
-import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.syntax.reader.ReadResult;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * The {@code DispatchTable} class holds mappings for code points to macro functions and delegates to the proper function
+ * when used.
+ */
 public class DispatchTable extends ReaderMacroFunction {
 
 	private final Map<Integer, ReaderMacroFunction> macroFunctionMap = new ConcurrentHashMap<>();
@@ -18,23 +22,42 @@ public class DispatchTable extends ReaderMacroFunction {
 
 		final ReadResult readResult = reader.readChar(false, null, false);
 		if (readResult.wasEOF()) {
-			throw new ReaderErrorException("No read macro function for character " + readResult + '.');
+			throw new ReaderErrorException("End of file reached when trying to determine read macro function.");
 		}
 
 		final int readChar = readResult.getResult();
-		final ReaderMacroFunction macroFn = getMacroCharacter(readChar);
-		if (macroFn == null) {
+		final ReaderMacroFunction macroFunction = getMacroFunction(readChar);
+		if (macroFunction == null) {
 			throw new ReaderErrorException("No read macro function for character " + readChar + '.');
 		}
 
-		return macroFn.readMacro(readChar, reader, numArg);
+		return macroFunction.readMacro(readChar, reader, numArg);
 	}
 
-	public ReaderMacroFunction getMacroCharacter(final int codePoint) {
+	/**
+	 * Gets the macro function associated with the provided {@code codePoint}, or null if no such function exists.
+	 *
+	 * @param codePoint the code point associated with the macro function to retrieve
+	 * @return the macro function associated with the provided {@code codePoint}, or null if no such function exists
+	 */
+	public ReaderMacroFunction getMacroFunction(final int codePoint) {
 		return macroFunctionMap.get(codePoint);
 	}
 
-	public void setMacroCharacter(final int codePoint, final ReaderMacroFunction readerMacroFunction) {
-		macroFunctionMap.put(codePoint, readerMacroFunction);
+	/**
+	 * Sets the macro function with the provided {@code codePoint} to the provided {@code macroFunction}.
+	 *
+	 * @param codePoint     the code point associated with the macro function to set
+	 * @param macroFunction the new macro function to be associated
+	 */
+	public void setMacroCharacter(final int codePoint, final ReaderMacroFunction macroFunction) {
+		macroFunctionMap.put(codePoint, macroFunction);
+	}
+
+	@Override
+	public String toString() {
+		return "DispatchTable{"
+				+ "macroFunctionMap=" + macroFunctionMap
+				+ '}';
 	}
 }

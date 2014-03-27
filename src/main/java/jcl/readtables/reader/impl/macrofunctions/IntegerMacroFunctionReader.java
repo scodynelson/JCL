@@ -6,8 +6,11 @@ import jcl.numbers.IntegerStruct;
 import jcl.numbers.ReadBaseVariable;
 import jcl.readtables.reader.Reader;
 import jcl.variables.ReadSuppressVariable;
+import org.apache.commons.lang3.Range;
 
 public class IntegerMacroFunctionReader {
+
+	private static final Range<Integer> RADIX_RANGE = Range.between(2, 36);
 
 	private final Reader reader;
 
@@ -18,34 +21,34 @@ public class IntegerMacroFunctionReader {
 	public IntegerStruct readIntegerToken(final Integer radix) {
 		if (ReadSuppressVariable.INSTANCE.getValue()) {
 			final ExtendedTokenMacroFunctionReader macroFunctionReader = new ExtendedTokenMacroFunctionReader(reader);
-			macroFunctionReader.readExtendedToken();
+			macroFunctionReader.readExtendedToken(false);
 			return null;
-		} else if (radix == null) {
-			throw new ReaderErrorException("Radix missing in #R.");
-		} else if ((radix < 2) && (radix > 36)) {
-			throw new ReaderErrorException("Illegal radix for #R: " + radix + '.');
-		} else {
-			final int previousReadBase = ReadBaseVariable.INSTANCE.getValue();
-
-			// alter the readbase
-			ReadBaseVariable.INSTANCE.setValue(radix);
-
-			// read integer
-			final LispStruct lispToken = reader.read();
-			if (lispToken instanceof IntegerStruct) {
-
-				final IntegerStruct integerToken = (IntegerStruct) lispToken;
-
-				// reset the readbase
-				ReadBaseVariable.INSTANCE.setValue(previousReadBase);
-
-				return integerToken;
-			} else {
-				// reset the readbase
-				ReadBaseVariable.INSTANCE.setValue(previousReadBase);
-
-				throw new ReaderErrorException("#R (base " + radix + ") value is not a rational: " + lispToken + '.');
-			}
 		}
+
+		if (radix == null) {
+			throw new ReaderErrorException("Radix missing in #R.");
+		}
+
+		if (!RADIX_RANGE.contains(radix)) {
+			throw new ReaderErrorException("Illegal radix for #R: " + radix + '.');
+		}
+
+		final int previousReadBase = ReadBaseVariable.INSTANCE.getValue();
+
+		// alter the readbase
+		ReadBaseVariable.INSTANCE.setValue(radix);
+
+		// read integer
+		final LispStruct lispToken = reader.read();
+
+		// reset the readbase
+		ReadBaseVariable.INSTANCE.setValue(previousReadBase);
+
+		if (lispToken instanceof IntegerStruct) {
+			return (IntegerStruct) lispToken;
+		}
+
+		throw new ReaderErrorException("#R (base " + radix + ") value is not a rational: " + lispToken + '.');
+
 	}
 }

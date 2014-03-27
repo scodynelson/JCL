@@ -19,7 +19,7 @@ public class SharpColonReaderMacroFunction extends ReaderMacroFunction {
 		assert codePoint == CharacterConstants.COLON;
 
 		final ExtendedTokenMacroFunctionReader macroFunctionReader = new ExtendedTokenMacroFunctionReader(reader);
-		final ReadExtendedToken readExtendedToken = macroFunctionReader.readExtendedToken();
+		final ReadExtendedToken readExtendedToken = macroFunctionReader.readExtendedToken(false);
 		final String token = readExtendedToken.getToken();
 
 		if (ReadSuppressVariable.INSTANCE.getValue()) {

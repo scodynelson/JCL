@@ -176,4 +176,11 @@ class AttributeTable {
 			}
 		}
 	}
+
+	@Override
+	public String toString() {
+		return "AttributeTable{"
+				+ "attributeTypeMap=" + attributeTypeMap
+				+ '}';
+	}
 }

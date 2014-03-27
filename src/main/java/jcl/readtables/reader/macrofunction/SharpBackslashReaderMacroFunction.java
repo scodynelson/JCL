@@ -5,8 +5,9 @@ import jcl.characters.CharacterStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.readtables.reader.Reader;
 import jcl.readtables.reader.impl.macrofunctions.ExtendedTokenMacroFunctionReader;
-import jcl.syntax.CharacterConstants;
 import jcl.readtables.reader.syntax.CharacterName;
+import jcl.readtables.reader.syntax.ReadExtendedToken;
+import jcl.syntax.CharacterConstants;
 import jcl.variables.ReadSuppressVariable;
 import org.apache.commons.lang3.StringUtils;
 
@@ -20,7 +21,8 @@ public class SharpBackslashReaderMacroFunction extends ReaderMacroFunction {
 		assert codePoint == CharacterConstants.BACKSLASH;
 
 		final ExtendedTokenMacroFunctionReader macroFunctionReader = new ExtendedTokenMacroFunctionReader(reader);
-		final String charString = macroFunctionReader.readExtendedTokenEscaped();
+		final ReadExtendedToken readExtendedToken = macroFunctionReader.readExtendedToken(true);
+		final String charString = readExtendedToken.getToken();
 		if (ReadSuppressVariable.INSTANCE.getValue()) {
 			return null;
 		}

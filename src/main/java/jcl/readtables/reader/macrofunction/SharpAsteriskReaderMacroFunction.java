@@ -22,7 +22,7 @@ public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunction {
 		assert codePoint == CharacterConstants.ASTERISK;
 
 		final ExtendedTokenMacroFunctionReader macroFunctionReader = new ExtendedTokenMacroFunctionReader(reader);
-		final ReadExtendedToken readExtendedToken = macroFunctionReader.readExtendedToken();
+		final ReadExtendedToken readExtendedToken = macroFunctionReader.readExtendedToken(false);
 		if (ReadSuppressVariable.INSTANCE.getValue()) {
 			return null;
 		}

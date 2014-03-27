@@ -21,13 +21,17 @@ public class ExtendedTokenMacroFunctionReader {
 		this.reader = reader;
 	}
 
-	public ReadExtendedToken readExtendedToken() {
+	public ReadExtendedToken readExtendedToken(final boolean eofErrorP) {
 
 		final StringBuilder stringBuilder = new StringBuilder();
 		final ReadResult readResult = readInternalToken(stringBuilder);
 
 		if (readResult.wasEOF()) {
-			return new ReadExtendedToken("", false, false);
+			if (eofErrorP) {
+				throw new ReaderErrorException("EOF after escape character.");
+			} else {
+				return new ReadExtendedToken("", false, false);
+			}
 		} else {
 			final InternalReadExtendedToken readExtendedToken = internalReadExtendedToken(stringBuilder, readResult, false);
 
@@ -37,22 +41,6 @@ public class ExtendedTokenMacroFunctionReader {
 			final String tokenWithProperCase = getTokenWithProperCase(reader, stringBuilder, escapeIndices);
 
 			return new ReadExtendedToken(tokenWithProperCase, CollectionUtils.isNotEmpty(escapeIndices), colon != null);
-		}
-	}
-
-	public String readExtendedTokenEscaped() {
-
-		final StringBuilder stringBuilder = new StringBuilder();
-		final ReadResult readResult = readInternalToken(stringBuilder);
-
-		if (readResult.wasEOF()) {
-			throw new ReaderErrorException("EOF after escape character.");
-		} else {
-			final InternalReadExtendedToken readExtendedToken = internalReadExtendedToken(stringBuilder, readResult, true);
-
-			final List<Integer> escapeIndices = readExtendedToken.getEscapeIndices();
-
-			return getTokenWithProperCase(reader, stringBuilder, escapeIndices);
 		}
 	}
 

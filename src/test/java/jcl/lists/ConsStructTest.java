@@ -263,12 +263,27 @@ public class ConsStructTest {
 	}
 
 	/**
-	 * Test for 'isCircular' method where the ConsStruct is circular.
+	 * Test for 'isCircular' method where the car of the ConsStruct is circular.
 	 *
 	 * @throws Exception if any error occurs
 	 */
 	@Test
-	public void testIsCircular_true() throws Exception {
+	public void testIsCircular_true_car() throws Exception {
+
+		final ConsStruct consStruct = new ConsStruct(TStruct.INSTANCE);
+		final ConsStruct innerConsStruct = new ConsStruct(TStruct.INSTANCE, consStruct);
+		consStruct.setCar(innerConsStruct);
+
+		Assert.assertTrue(consStruct.isCircular(), "ConsStruct expected to be circular.");
+	}
+
+	/**
+	 * Test for 'isCircular' method where the cdr of the ConsStruct is circular.
+	 *
+	 * @throws Exception if any error occurs
+	 */
+	@Test
+	public void testIsCircular_true_cdr() throws Exception {
 
 		final ConsStruct consStruct = new ConsStruct(TStruct.INSTANCE);
 		final ConsStruct innerConsStruct = new ConsStruct(TStruct.INSTANCE, consStruct);

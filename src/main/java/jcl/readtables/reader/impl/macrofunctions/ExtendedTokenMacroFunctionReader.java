@@ -1,6 +1,7 @@
 package jcl.readtables.reader.impl.macrofunctions;
 
 import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.readtables.ReadtableStruct;
 import jcl.readtables.reader.Reader;
 import jcl.readtables.reader.syntax.ReadExtendedToken;
 import jcl.syntax.AttributeType;
@@ -56,7 +57,8 @@ public class ExtendedTokenMacroFunctionReader {
 	}
 
 	private static String getTokenWithProperCase(final Reader reader, final StringBuilder token, final List<Integer> escapeIndices) {
-		final CaseSpec readtableCase = reader.getReadtableCase();
+		final ReadtableStruct readtable = reader.getReadtable();
+		final CaseSpec readtableCase = readtable.getReadtableCase();
 
 		final StringBuilder stringBuilder = new StringBuilder(token.length());
 		for (int i = 0; i < token.length(); i++) {

@@ -136,7 +136,7 @@ public class ConsStruct extends ListStruct {
 			final ListStruct cdrAsList = (ListStruct) cdr;
 			return cdrAsList.isDotted();
 		}
-		return false;
+		return true;
 	}
 
 	@Override

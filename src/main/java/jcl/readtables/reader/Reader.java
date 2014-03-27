@@ -3,10 +3,9 @@ package jcl.readtables.reader;
 import jcl.LispStruct;
 import jcl.readtables.ReadtableStruct;
 import jcl.readtables.ReadtableVariable;
-import jcl.readtables.reader.impl.states.TokenBuilder;
 import jcl.readtables.reader.impl.states.State;
+import jcl.readtables.reader.impl.states.TokenBuilder;
 import jcl.streams.InputStream;
-import jcl.syntax.CaseSpec;
 import jcl.syntax.reader.ReadResult;
 
 public class Reader {
@@ -50,9 +49,5 @@ public class Reader {
 
 	public ReadtableStruct getReadtable() {
 		return readtable;
-	}
-
-	public CaseSpec getReadtableCase() {
-		return readtable.getReadtableCase();
 	}
 }

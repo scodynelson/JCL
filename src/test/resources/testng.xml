@@ -3,6 +3,7 @@
 	<test name="TyeUtilsTest">
 		<classes>
 			<class name="jcl.types.TypeUtilsTest"/>
+			<class name="jcl.lists.ConsStructTest"/>
 		</classes>
 	</test>
 </suite>

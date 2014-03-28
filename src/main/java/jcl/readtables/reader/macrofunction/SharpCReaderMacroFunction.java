@@ -1,12 +1,12 @@
 package jcl.readtables.reader.macrofunction;
 
 import jcl.LispStruct;
+import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ListStruct;
 import jcl.numbers.ComplexStruct;
 import jcl.numbers.FloatStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.RatioStruct;
-import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.readtables.reader.Reader;
 import jcl.syntax.CharacterConstants;
 import jcl.variables.ReadSuppressVariable;

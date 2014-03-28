@@ -1,4 +1,4 @@
-package jcl.readtables.reader.impl.macrofunctions;
+package jcl.readtables.reader.functionreader;
 
 import jcl.LispStruct;
 import jcl.conditions.exceptions.ReaderErrorException;

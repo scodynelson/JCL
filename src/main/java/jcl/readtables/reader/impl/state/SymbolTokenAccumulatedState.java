@@ -1,16 +1,16 @@
-package jcl.readtables.reader.impl.states.impl;
+package jcl.readtables.reader.impl.state;
 
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageSymbolStruct;
 import jcl.packages.PackageVariable;
 import jcl.readtables.reader.Reader;
-import jcl.readtables.reader.impl.states.State;
-import jcl.readtables.reader.impl.states.TokenBuilder;
+import jcl.readtables.reader.impl.State;
+import jcl.readtables.reader.syntax.TokenAttribute;
+import jcl.readtables.reader.syntax.TokenBuilder;
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.syntax.AttributeType;
-import jcl.readtables.reader.impl.states.TokenAttribute;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.LinkedList;

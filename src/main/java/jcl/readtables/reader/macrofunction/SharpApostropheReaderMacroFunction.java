@@ -1,8 +1,8 @@
 package jcl.readtables.reader.macrofunction;
 
 import jcl.LispStruct;
-import jcl.lists.ListStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.lists.ListStruct;
 import jcl.readtables.reader.Reader;
 import jcl.symbols.SymbolStruct;
 import jcl.syntax.CharacterConstants;

@@ -1,22 +1,22 @@
-package jcl.readtables.reader.impl.states.impl;
+package jcl.readtables.reader.impl.state;
 
 import jcl.numbers.FloatStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.NumberStruct;
 import jcl.numbers.RatioStruct;
+import jcl.numbers.ReadBaseVariable;
+import jcl.numbers.ReadDefaultFloatFormatVariable;
 import jcl.readtables.reader.Reader;
-import jcl.readtables.reader.impl.states.State;
-import jcl.readtables.reader.impl.states.TokenBuilder;
+import jcl.readtables.reader.impl.State;
+import jcl.readtables.reader.syntax.TokenAttribute;
+import jcl.readtables.reader.syntax.TokenBuilder;
 import jcl.syntax.AttributeType;
 import jcl.syntax.CharacterConstants;
-import jcl.readtables.reader.impl.states.TokenAttribute;
 import jcl.types.DoubleFloat;
 import jcl.types.Float;
 import jcl.types.LongFloat;
 import jcl.types.ShortFloat;
 import jcl.types.SingleFloat;
-import jcl.numbers.ReadBaseVariable;
-import jcl.numbers.ReadDefaultFloatFormatVariable;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.fraction.BigFraction;
@@ -27,13 +27,13 @@ import java.util.LinkedList;
 
 /**
  * Step 10.1 of the Reader Algorithm.
- * <p/>
+ * <p>
  * This state is reached when we have accumulated a token, and it needs to be processed into a
  * 1) Number/PotentialNumber
- * <p/>
+ * <p>
  * First we check to see if the token is a number, if it is, then we attempt to format it.  If it cannot
  * be formatted, then we progress to the SymbolTokenAccumulatedState.
- * <p/>
+ * <p>
  */
 public class NumberTokenAccumulatedState extends State {
 

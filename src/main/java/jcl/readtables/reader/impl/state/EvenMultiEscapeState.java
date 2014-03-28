@@ -1,10 +1,9 @@
-package jcl.readtables.reader.impl.states.impl;
+package jcl.readtables.reader.impl.state;
 
 import jcl.LispStruct;
-import jcl.readtables.ReadtableStruct;
 import jcl.readtables.reader.Reader;
-import jcl.readtables.reader.impl.states.State;
-import jcl.readtables.reader.impl.states.TokenBuilder;
+import jcl.readtables.reader.impl.State;
+import jcl.readtables.reader.syntax.TokenBuilder;
 import jcl.syntax.AttributeType;
 import jcl.syntax.CaseSpec;
 import jcl.syntax.SyntaxType;
@@ -12,13 +11,13 @@ import jcl.syntax.reader.ReadResult;
 
 /**
  * Step 8 of the Reader Algorithm.
- * <p/>
+ * <p>
  * Character processing is done according to the HyperSpec.
- * <p/>
+ * <p>
  * Thus far we have reached 0,2,4... even Multiple Escape Characters.  The way it works is outlined
  * in the Reader algorithm.  The if statements have comments first so you can figure out what
  * each part of this code does.
- * <p/>
+ * <p>
  */
 public class EvenMultiEscapeState extends State {
 
@@ -48,12 +47,11 @@ public class EvenMultiEscapeState extends State {
 		int codePoint = readResult.getResult();
 		tokenBuilder.setPreviousReadCharacter(codePoint);
 
-		final ReadtableStruct readtable = reader.getReadtable();
-		final SyntaxType syntaxType = readtable.getSyntaxType(codePoint);
+		final SyntaxType syntaxType = reader.getSyntaxType(codePoint);
 
 		if ((syntaxType == SyntaxType.CONSTITUENT) || (syntaxType == SyntaxType.NON_TERMINATING)) {
-			final CaseSpec readtableCase = readtable.getReadtableCase();
-			final AttributeType attributeType = readtable.getAttributeType(codePoint);
+			final CaseSpec readtableCase = reader.getReadtableCase();
+			final AttributeType attributeType = reader.getAttributeType(codePoint);
 
 			codePoint = StateUtils.properCaseCodePoint(codePoint, attributeType, readtableCase);
 			tokenBuilder.addToTokenAttributes(codePoint, attributeType);

@@ -2,10 +2,10 @@ package jcl.readtables.reader.macrofunction;
 
 import jcl.LispStruct;
 import jcl.arrays.ArrayStruct;
-import jcl.lists.ListStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
+import jcl.lists.ListStruct;
 import jcl.readtables.reader.Reader;
 import jcl.syntax.CharacterConstants;
 import jcl.variables.ReadSuppressVariable;

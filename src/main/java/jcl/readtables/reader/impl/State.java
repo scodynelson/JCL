@@ -1,7 +1,8 @@
-package jcl.readtables.reader.impl.states;
+package jcl.readtables.reader.impl;
 
 import jcl.readtables.reader.Reader;
-import jcl.readtables.reader.impl.states.impl.InitialState;
+import jcl.readtables.reader.impl.state.InitialState;
+import jcl.readtables.reader.syntax.TokenBuilder;
 
 /**
  * This interface defines a set of anonymous classes that comprise the states of the

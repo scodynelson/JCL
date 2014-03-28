@@ -1,15 +1,15 @@
-package jcl.readtables.reader.impl.states.impl;
+package jcl.readtables.reader.impl.state;
 
-import jcl.readtables.reader.Reader;
-import jcl.readtables.reader.impl.states.State;
-import jcl.readtables.reader.impl.states.TokenBuilder;
 import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.readtables.reader.Reader;
+import jcl.readtables.reader.impl.State;
+import jcl.readtables.reader.syntax.TokenBuilder;
 
 /**
  * Not Specified in the Reader Algorithm.
- * <p/>
+ * <p>
  * This state should never be processed.  If it does, then a programming error has occurred.
- * <p/>
+ * <p>
  * This is our Accepting state that says we are done with the Reader.
  */
 public class ErrorState extends State {

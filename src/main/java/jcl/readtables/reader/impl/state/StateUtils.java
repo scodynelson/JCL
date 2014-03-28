@@ -1,6 +1,6 @@
-package jcl.readtables.reader.impl.states.impl;
+package jcl.readtables.reader.impl.state;
 
-import jcl.readtables.reader.impl.states.TokenAttribute;
+import jcl.readtables.reader.syntax.TokenAttribute;
 import jcl.syntax.AttributeType;
 import jcl.syntax.CaseSpec;
 import org.apache.commons.collections4.CollectionUtils;
@@ -114,7 +114,7 @@ final class StateUtils {
 	}
 
 	static boolean hasAttributesAndNotFirst(final AttributeType firstAttributeType, final LinkedList<TokenAttribute> tokenAttributes,
-	                                               final AttributeType... attributeTypes) {
+											final AttributeType... attributeTypes) {
 
 		if (CollectionUtils.isEmpty(tokenAttributes)) {
 			return false;
@@ -132,7 +132,7 @@ final class StateUtils {
 	}
 
 	static boolean hasAttributesAndFirstOrLast(final AttributeType firstAttributeType, final AttributeType lastAttributeType,
-	                                                  final LinkedList<TokenAttribute> tokenAttributes, final AttributeType... attributeTypes) {
+											   final LinkedList<TokenAttribute> tokenAttributes, final AttributeType... attributeTypes) {
 
 		if (CollectionUtils.isEmpty(tokenAttributes)) {
 			return false;
@@ -150,7 +150,7 @@ final class StateUtils {
 	}
 
 	static boolean areAnyTokensInvalidRegexAndUnicode(final int currentRadix, final Character.UnicodeBlock block,
-	                                                         final LinkedList<TokenAttribute> tokenAttributes) {
+													  final LinkedList<TokenAttribute> tokenAttributes) {
 
 		if (CollectionUtils.isEmpty(tokenAttributes)) {
 			return false;

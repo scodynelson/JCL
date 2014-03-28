@@ -1,16 +1,15 @@
-package jcl.readtables.reader.impl.states.impl;
+package jcl.readtables.reader.impl.state;
 
 import jcl.LispStruct;
-import jcl.readtables.ReadtableStruct;
 import jcl.readtables.reader.Reader;
-import jcl.readtables.reader.impl.states.State;
-import jcl.readtables.reader.impl.states.TokenBuilder;
+import jcl.readtables.reader.impl.State;
+import jcl.readtables.reader.syntax.TokenBuilder;
 import jcl.syntax.SyntaxType;
 import jcl.syntax.reader.ReadResult;
 
 /**
  * Step 1 of the Reader Algorithm.
- * <p/>
+ * <p>
  * The ReadState will read a character in from the input Stream and then go to the
  * next proper State according to what the SyntaxType of the character that was read
  * from the input stream was.
@@ -52,8 +51,7 @@ public class ReadState extends State {
 		final int codePoint = readResult.getResult();
 		tokenBuilder.setPreviousReadCharacter(codePoint);
 
-		final ReadtableStruct readtable = reader.getReadtable();
-		final SyntaxType syntaxType = readtable.getSyntaxType(codePoint);
+		final SyntaxType syntaxType = reader.getSyntaxType(codePoint);
 
 		if (syntaxType == SyntaxType.WHITESPACE) {
 			WhitespaceState.WHITESPACE_STATE.process(reader, tokenBuilder);

@@ -5,10 +5,10 @@ import jcl.arrays.BitVectorStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
+import jcl.readtables.reader.functionreader.ExtendedTokenMacroFunctionReader;
 import jcl.readtables.reader.Reader;
-import jcl.readtables.reader.impl.macrofunctions.ExtendedTokenMacroFunctionReader;
-import jcl.syntax.CharacterConstants;
 import jcl.readtables.reader.syntax.ReadExtendedToken;
+import jcl.syntax.CharacterConstants;
 import jcl.variables.ReadSuppressVariable;
 import org.apache.commons.lang3.StringUtils;
 

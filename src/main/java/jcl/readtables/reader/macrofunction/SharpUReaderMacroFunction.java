@@ -2,8 +2,8 @@ package jcl.readtables.reader.macrofunction;
 
 import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
+import jcl.readtables.reader.functionreader.UnicodeCharMacroFunctionReader;
 import jcl.readtables.reader.Reader;
-import jcl.readtables.reader.impl.macrofunctions.UnicodeCharMacroFunctionReader;
 import jcl.syntax.CharacterConstants;
 import jcl.variables.ReadSuppressVariable;
 

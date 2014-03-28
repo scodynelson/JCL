@@ -1,9 +1,9 @@
-package jcl.readtables.reader.impl.states.impl;
+package jcl.readtables.reader.impl.state;
 
 import jcl.LispStruct;
 import jcl.readtables.reader.Reader;
-import jcl.readtables.reader.impl.states.State;
-import jcl.readtables.reader.impl.states.TokenBuilder;
+import jcl.readtables.reader.impl.State;
+import jcl.readtables.reader.syntax.TokenBuilder;
 import jcl.readtables.reader.macrofunction.ReaderMacroFunction;
 import jcl.syntax.reader.ReadResult;
 import org.slf4j.Logger;

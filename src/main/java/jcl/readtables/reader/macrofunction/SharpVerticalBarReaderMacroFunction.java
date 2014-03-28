@@ -5,7 +5,7 @@ import jcl.readtables.reader.Reader;
 import jcl.structs.comments.CommentStruct;
 import jcl.syntax.CharacterConstants;
 import jcl.syntax.reader.ReadResult;
-import jcl.variables.ReadSuppressVariable;
+import jcl.readtables.reader.ReadSuppressVariable;
 
 /**
  * Implements the '#|...|#' Lisp reader macro.

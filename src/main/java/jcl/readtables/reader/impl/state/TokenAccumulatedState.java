@@ -4,7 +4,7 @@ import jcl.readtables.reader.Reader;
 import jcl.readtables.reader.impl.State;
 import jcl.readtables.reader.syntax.TokenAttribute;
 import jcl.readtables.reader.syntax.TokenBuilder;
-import jcl.variables.ReadSuppressVariable;
+import jcl.readtables.reader.ReadSuppressVariable;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 

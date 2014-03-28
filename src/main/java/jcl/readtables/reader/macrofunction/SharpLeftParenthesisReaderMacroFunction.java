@@ -9,7 +9,7 @@ import jcl.lists.ListStruct;
 import jcl.readtables.reader.functionreader.ListMacroFunctionReader;
 import jcl.readtables.reader.Reader;
 import jcl.syntax.CharacterConstants;
-import jcl.variables.ReadSuppressVariable;
+import jcl.readtables.reader.ReadSuppressVariable;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.List;

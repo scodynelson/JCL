@@ -8,7 +8,7 @@ import jcl.conditions.exceptions.TypeErrorException;
 import jcl.lists.ListStruct;
 import jcl.readtables.reader.Reader;
 import jcl.syntax.CharacterConstants;
-import jcl.variables.ReadSuppressVariable;
+import jcl.readtables.reader.ReadSuppressVariable;
 
 import java.util.ArrayList;
 import java.util.List;

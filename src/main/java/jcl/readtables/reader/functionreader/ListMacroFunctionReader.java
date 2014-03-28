@@ -7,7 +7,7 @@ import jcl.readtables.reader.Reader;
 import jcl.syntax.CharacterConstants;
 import jcl.syntax.SyntaxType;
 import jcl.syntax.reader.ReadResult;
-import jcl.variables.ReadSuppressVariable;
+import jcl.readtables.reader.ReadSuppressVariable;
 
 import java.util.ArrayList;
 import java.util.List;

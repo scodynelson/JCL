@@ -5,7 +5,7 @@ import jcl.characters.CharacterStruct;
 import jcl.readtables.reader.functionreader.UnicodeCharMacroFunctionReader;
 import jcl.readtables.reader.Reader;
 import jcl.syntax.CharacterConstants;
-import jcl.variables.ReadSuppressVariable;
+import jcl.readtables.reader.ReadSuppressVariable;
 
 /**
  * Implements the '#u' Lisp reader macro.

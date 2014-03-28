@@ -1,4 +1,6 @@
-package jcl.variables;
+package jcl.readtables.reader;
+
+import jcl.variables.LispVariable;
 
 public class ReadEvalVariable implements LispVariable<Boolean> {
 

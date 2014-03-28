@@ -10,7 +10,7 @@ import jcl.packages.PackageVariable;
 import jcl.readtables.reader.Reader;
 import jcl.symbols.SymbolStruct;
 import jcl.variables.FeaturesVariable;
-import jcl.variables.ReadSuppressVariable;
+import jcl.readtables.reader.ReadSuppressVariable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

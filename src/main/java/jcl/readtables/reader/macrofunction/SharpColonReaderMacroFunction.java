@@ -7,7 +7,7 @@ import jcl.readtables.reader.Reader;
 import jcl.readtables.reader.syntax.ReadExtendedToken;
 import jcl.symbols.SymbolStruct;
 import jcl.syntax.CharacterConstants;
-import jcl.variables.ReadSuppressVariable;
+import jcl.readtables.reader.ReadSuppressVariable;
 
 /**
  * Implements the '#:' Lisp reader macro.

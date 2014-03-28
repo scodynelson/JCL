@@ -5,7 +5,7 @@ import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.ReadBaseVariable;
 import jcl.readtables.reader.Reader;
-import jcl.variables.ReadSuppressVariable;
+import jcl.readtables.reader.ReadSuppressVariable;
 import org.apache.commons.lang3.Range;
 
 public class IntegerMacroFunctionReader {

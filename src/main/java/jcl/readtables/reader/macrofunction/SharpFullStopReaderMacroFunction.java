@@ -4,8 +4,8 @@ import jcl.LispStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.readtables.reader.Reader;
 import jcl.syntax.CharacterConstants;
-import jcl.variables.ReadEvalVariable;
-import jcl.variables.ReadSuppressVariable;
+import jcl.readtables.reader.ReadEvalVariable;
+import jcl.readtables.reader.ReadSuppressVariable;
 
 /**
  * Implements the '#.' Lisp reader macro.

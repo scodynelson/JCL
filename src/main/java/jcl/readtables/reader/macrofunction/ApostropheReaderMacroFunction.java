@@ -6,7 +6,7 @@ import jcl.lists.ListStruct;
 import jcl.readtables.reader.Reader;
 import jcl.symbols.SymbolStruct;
 import jcl.syntax.CharacterConstants;
-import jcl.variables.ReadSuppressVariable;
+import jcl.readtables.reader.ReadSuppressVariable;
 
 /**
  * Implements the ''' Lisp reader macro.

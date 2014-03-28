@@ -9,7 +9,7 @@ import jcl.numbers.IntegerStruct;
 import jcl.numbers.RatioStruct;
 import jcl.readtables.reader.Reader;
 import jcl.syntax.CharacterConstants;
-import jcl.variables.ReadSuppressVariable;
+import jcl.readtables.reader.ReadSuppressVariable;
 
 import java.util.List;
 

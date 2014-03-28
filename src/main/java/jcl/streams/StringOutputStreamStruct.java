@@ -9,7 +9,7 @@ import jcl.types.StringStream;
  */
 public class StringOutputStreamStruct extends StreamStruct implements OutputStream {
 
-	private final StringBuffer stringBuffer = new StringBuffer();
+	private final StringBuilder stringBuffer = new StringBuilder();
 	private int index;
 
 	/**

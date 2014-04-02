@@ -5,15 +5,16 @@ import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.math3.util.ArithmeticUtils;
 
+import java.lang.String;
 import java.math.BigInteger;
 
 /**
  * The atomic type specifier {@code UnsignedByte} denotes the same type as is denoted by the type specifier (integer 0 *).
- * <p/>
+ * <p>
  * This denotes the set of non-negative {@code Integer}s that can be represented in a byte of size s (bits). This is
  * equivalent to (mod m) for m=2^s, or to (integer 0 n) for n=2^s-1. The type {@code UnsignedByte} or the type
  * (unsigned-byte *) is the same as the type (integer 0 *), the set of non-negative {@code Integer}s.
- * <p/>
+ * <p>
  * {@code UnsignedByte} -> {@code SignedByte} -> {@code Integer} -> {@code Rational} -> {@code Real} -> {@code Number} -> {@code T}
  */
 public interface UnsignedByte extends SignedByte {
@@ -93,6 +94,11 @@ public interface UnsignedByte extends SignedByte {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "UnsignedByteImpl{}";
 			}
 		}
 	}

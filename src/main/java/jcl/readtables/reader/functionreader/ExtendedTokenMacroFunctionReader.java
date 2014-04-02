@@ -1,16 +1,11 @@
 package jcl.readtables.reader.functionreader;
 
-import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.readtables.reader.Reader;
 import jcl.readtables.reader.syntax.ReadExtendedToken;
 import jcl.syntax.AttributeType;
 import jcl.syntax.CaseSpec;
 import jcl.syntax.SyntaxType;
 import jcl.syntax.reader.ReadResult;
-import org.apache.commons.collections4.CollectionUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ExtendedTokenMacroFunctionReader {
 
@@ -20,159 +15,101 @@ public class ExtendedTokenMacroFunctionReader {
 		this.reader = reader;
 	}
 
-	public ReadExtendedToken readExtendedToken(final boolean eofErrorP) {
+	public ReadExtendedToken readExtendedToken(final boolean isEscaped) {
 
 		final StringBuilder stringBuilder = new StringBuilder();
-		final ReadResult readResult = readInternalToken(stringBuilder);
 
-		if (readResult.wasEOF()) {
-			if (eofErrorP) {
-				throw new ReaderErrorException("EOF after escape character.");
-			} else {
-				return new ReadExtendedToken("", false, false);
-			}
-		} else {
-			final InternalReadExtendedToken readExtendedToken = internalReadExtendedToken(stringBuilder, readResult, false);
+		ReadResult readResult = readToken(false, !isEscaped, stringBuilder, isEscaped);
 
-			final List<Integer> escapeIndices = readExtendedToken.getEscapeIndices();
-			final Integer colon = readExtendedToken.getFirstPackageDelimiter();
-
-			final String tokenWithProperCase = getTokenWithProperCase(reader, stringBuilder, escapeIndices);
-
-			return new ReadExtendedToken(tokenWithProperCase, CollectionUtils.isNotEmpty(escapeIndices), colon != null);
-		}
-	}
-
-	private static String getTokenWithProperCase(final Reader reader, final StringBuilder token, final List<Integer> escapeIndices) {
-		final CaseSpec readtableCase = reader.getReadtableCase();
-
-		final StringBuilder stringBuilder = new StringBuilder(token.length());
-		for (int i = 0; i < token.length(); i++) {
-
-			final int currentToken = token.codePointAt(i);
-			if (escapeIndices.contains(i)) {
-				stringBuilder.appendCodePoint(currentToken);
-			} else {
-				switch (readtableCase) {
-					case UPCASE:
-						final int upperCaseToken = Character.toUpperCase(currentToken);
-						stringBuilder.appendCodePoint(upperCaseToken);
-						break;
-					case DOWNCASE:
-						final int lowerCaseToken = Character.toLowerCase(currentToken);
-						stringBuilder.appendCodePoint(lowerCaseToken);
-						break;
-					case INVERT:
-						final int invertedCaseToken = Character.isUpperCase(currentToken) ? Character.toLowerCase(currentToken) : Character.toUpperCase(currentToken);
-						stringBuilder.appendCodePoint(invertedCaseToken);
-						break;
-					case PRESERVE:
-						stringBuilder.appendCodePoint(currentToken);
-						break;
-				}
-			}
-		}
-		return stringBuilder.toString();
-	}
-
-	private InternalReadExtendedToken internalReadExtendedToken(final StringBuilder stringBuilder, final ReadResult firstChar,
-																final boolean escapeFirstChar) {
-
-		final List<Integer> escapes = new ArrayList<>();
-
-		ReadResult firstResult = firstChar;
-
-		if (escapeFirstChar) {
-			escapes.add(stringBuilder.length() - 1);
-
-			firstResult = readInternalToken(stringBuilder);
+		if (isEscaped) {
+			readResult = readToken(false, false, stringBuilder, false);
 		}
 
-		ReadResult readResult = firstResult;
-		Integer colon = null;
+		boolean hasEscapes = false;
+		boolean hasPackageDelimiter = false;
 
 		while (!readResult.wasEOF()) {
 
 			final int codePoint = readResult.getResult();
-			if (MacroFunctionReaderUtils.isSyntaxType(reader, codePoint, SyntaxType.WHITESPACE, SyntaxType.TERMINATING)) {
-				// TODO: We want to take "read-preserving-whitespace" into account here before unreading
-				reader.unreadChar(codePoint);
-				stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-				break;
+			if (!hasPackageDelimiter) {
+				hasPackageDelimiter = MacroFunctionReaderUtils.isSyntaxType(reader, codePoint, SyntaxType.CONSTITUENT)
+						&& MacroFunctionReaderUtils.isAttributeType(reader, codePoint, AttributeType.PACKAGEMARKER);
 			}
 
 			if (MacroFunctionReaderUtils.isSyntaxType(reader, codePoint, SyntaxType.SINGLE_ESCAPE)) {
-				final ReadResult nextReadResult = readInternalToken(stringBuilder);
-
-				if (nextReadResult.wasEOF()) {
-					throw new ReaderErrorException("EOF after escape character.");
-				} else {
-					escapes.add(stringBuilder.length() - 1);
-				}
+				readSingleEscape(stringBuilder);
+				hasEscapes = true;
 			} else if (MacroFunctionReaderUtils.isSyntaxType(reader, codePoint, SyntaxType.MULTIPLE_ESCAPE)) {
-				while (true) {
-
-					final ReadResult tempReadResult = readInternalToken(stringBuilder);
-
-					if (tempReadResult.wasEOF()) {
-						throw new ReaderErrorException("EOF inside extended token.");
-					}
-
-					final int tempCodePoint = tempReadResult.getResult();
-					if (MacroFunctionReaderUtils.isSyntaxType(reader, tempCodePoint, SyntaxType.MULTIPLE_ESCAPE)) {
-						break;
-					} else if (MacroFunctionReaderUtils.isSyntaxType(reader, tempCodePoint, SyntaxType.SINGLE_ESCAPE)) {
-
-						final ReadResult nextReadResult = readInternalToken(stringBuilder);
-
-						if (nextReadResult.wasEOF()) {
-							throw new ReaderErrorException("EOF after escape character.");
-						} else {
-							escapes.add(stringBuilder.length() - 1);
-						}
-					} else {
-						escapes.add(stringBuilder.length() - 1);
-					}
-				}
-			} else {
-				if (MacroFunctionReaderUtils.isSyntaxType(reader, codePoint, SyntaxType.CONSTITUENT)
-						&& MacroFunctionReaderUtils.isAttributeType(reader, codePoint, AttributeType.PACKAGEMARKER)
-						&& (colon == null)) {
-					colon = stringBuilder.length() - 1;
-				}
+				readMultipleEscape(stringBuilder);
+				hasEscapes = true;
+			} else if (MacroFunctionReaderUtils.isSyntaxType(reader, codePoint, SyntaxType.WHITESPACE, SyntaxType.TERMINATING)) {
+				// TODO: We want to take "read-preserving-whitespace" into account here before unreading
+				reader.unreadChar(codePoint);
+				stringBuilder.deleteCharAt(stringBuilder.length() - 1); // Remove the last character read from the builder
+				break;
 			}
 
-			readResult = readInternalToken(stringBuilder);
+			readResult = readToken(false, false, stringBuilder, false);
 		}
 
-		return new InternalReadExtendedToken(escapes, colon);
+		return new ReadExtendedToken(stringBuilder.toString(), hasEscapes, hasPackageDelimiter);
 	}
 
-	private ReadResult readInternalToken(final StringBuilder stringBuilder) {
+	private void readSingleEscape(final StringBuilder stringBuilder) {
+		readToken(true, false, stringBuilder, true);
+	}
 
-		final ReadResult readResult = reader.readChar(false, null, true);
-		if (!readResult.wasEOF()) {
-			stringBuilder.appendCodePoint(readResult.getResult());
+	private void readMultipleEscape(final StringBuilder stringBuilder) {
+		final CaseSpec readtableCase = reader.getReadtableCase();
+
+		ReadResult tempReadResult = reader.readChar(true, null, false);
+		int tempCodePoint = tempReadResult.getResult();
+
+		while (!MacroFunctionReaderUtils.isSyntaxType(reader, tempCodePoint, SyntaxType.MULTIPLE_ESCAPE)) {
+
+			if (MacroFunctionReaderUtils.isSyntaxType(reader, tempCodePoint, SyntaxType.SINGLE_ESCAPE)) {
+				appendToken(tempReadResult, stringBuilder, false, readtableCase);
+				readSingleEscape(stringBuilder);
+			} else {
+				appendToken(tempReadResult, stringBuilder, true, readtableCase);
+			}
+
+			tempReadResult = reader.readChar(true, null, false);
+			tempCodePoint = tempReadResult.getResult();
 		}
+		appendToken(tempReadResult, stringBuilder, false, readtableCase);
+	}
+
+	private ReadResult readToken(final boolean eofErrorP, final boolean recursiveP, final StringBuilder stringBuilder,
+								 final boolean isEscaped) {
+		final ReadResult readResult = reader.readChar(eofErrorP, null, recursiveP);
+		final CaseSpec readtableCase = reader.getReadtableCase();
+		appendToken(readResult, stringBuilder, isEscaped, readtableCase);
 		return readResult;
 	}
 
-	private static class InternalReadExtendedToken {
-
-		private final List<Integer> escapeIndices;
-		private final Integer firstPackageDelimiter;
-
-		private InternalReadExtendedToken(final List<Integer> escapeIndices, final Integer firstPackageDelimiter) {
-			this.escapeIndices = escapeIndices;
-			this.firstPackageDelimiter = firstPackageDelimiter;
+	private static void appendToken(final ReadResult readResult, final StringBuilder stringBuilder, final boolean isEscaped,
+									final CaseSpec readtableCase) {
+		if (!readResult.wasEOF()) {
+			int token = readResult.getResult();
+			if (!isEscaped) {
+				token = getTokenWithCase(token, readtableCase);
+			}
+			stringBuilder.appendCodePoint(token);
 		}
+	}
 
-		public List<Integer> getEscapeIndices() {
-			return escapeIndices;
+	private static int getTokenWithCase(final int currentToken, final CaseSpec readtableCase) {
+		switch (readtableCase) {
+			case UPCASE:
+				return Character.toUpperCase(currentToken);
+			case DOWNCASE:
+				return Character.toLowerCase(currentToken);
+			case INVERT:
+				return Character.isUpperCase(currentToken) ? Character.toLowerCase(currentToken) : Character.toUpperCase(currentToken);
+			case PRESERVE:
+				return currentToken;
 		}
-
-		public Integer getFirstPackageDelimiter() {
-			return firstPackageDelimiter;
-		}
+		return currentToken;
 	}
 }

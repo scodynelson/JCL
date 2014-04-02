@@ -39,7 +39,7 @@ public class OrTypeSpecifier implements CompoundTypeSpecifier {
 
 		boolean result = false;
 		for (final LispType type : types) {
-			result = result || lispType.equals(type);
+			result = result || lispType.equals(type) || type.equals(lispType);
 		}
 		return result;
 	}

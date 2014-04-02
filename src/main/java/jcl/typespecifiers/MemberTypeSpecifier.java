@@ -36,6 +36,7 @@ public class MemberTypeSpecifier implements CompoundTypeSpecifier {
 			return false;
 		}
 
+		// TODO: does this account for x.equals(y) and y.equals(x)???
 		final LispStruct lispStruct = (LispStruct) obj;
 		for (final LispStruct memberLispStruct : lispStructs) {
 			if (lispStruct.equals(memberLispStruct)) {

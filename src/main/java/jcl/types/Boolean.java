@@ -4,10 +4,12 @@ import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.OrTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
+
 /**
  * The type {@code Boolean} contains the {@code Symbol}s {@code T} and {@code NIL}, which represent true and false,
  * respectively.
- * <p/>
+ * <p>
  * {@code Boolean} -> {@code Symbol} -> {@code T}
  */
 public interface Boolean extends Symbol {
@@ -44,6 +46,11 @@ public interface Boolean extends Symbol {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "BooleanImpl{}";
 			}
 		}
 	}

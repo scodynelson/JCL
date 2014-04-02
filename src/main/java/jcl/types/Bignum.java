@@ -5,9 +5,11 @@ import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.NotTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
+
 /**
  * The type {@code Bignum} is defined to be exactly (and integer (not fixnum)).
- * <p/>
+ * <p>
  * {@code Bignum} -> {@code Integer} -> {@code Rational} -> {@code Real} -> {@code Number} -> {@code T}
  */
 public interface Bignum extends Integer {
@@ -44,6 +46,11 @@ public interface Bignum extends Integer {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "BignumImpl{}";
 			}
 		}
 	}

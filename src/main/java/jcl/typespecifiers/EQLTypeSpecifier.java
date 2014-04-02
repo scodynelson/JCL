@@ -31,6 +31,7 @@ public class EQLTypeSpecifier implements CompoundTypeSpecifier {
 			return false;
 		}
 
+		// TODO: does this account for x.equals(y) and y.equals(x)???
 		final LispType lispType = (LispType) obj;
 		return typeSpecifier.equals(lispType);
 	}

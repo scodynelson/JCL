@@ -39,7 +39,7 @@ public final class ReadEvalPrint {
 				final InputStream fileStream = new FileStreamStruct(file);
 				return doStuff(fileStream, true);
 			} catch (final StreamErrorException ex) {
-				LOGGER.error("; WARNING: Exception condition -> {}", ex.getMessage(), ex);
+				LOGGER.error("; WARNING: Exception condition -> {}\n", ex.getMessage(), ex);
 				return null;
 			}
 		} else {
@@ -47,7 +47,7 @@ public final class ReadEvalPrint {
 				final InputStream characterStream = new CharacterStreamStruct(System.in, loggerOutputStream);
 				return doStuff(characterStream, false);
 			} catch (final IOException ex) {
-				LOGGER.error("; WARNING: Exception condition -> {}", ex.getMessage(), ex);
+				LOGGER.error("; WARNING: Exception condition -> {}\n", ex.getMessage(), ex);
 				return null;
 			}
 //			catch (StreamErrorException ex) {

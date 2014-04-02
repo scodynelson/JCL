@@ -3,8 +3,8 @@ package jcl.readtables.reader.impl.state;
 import jcl.LispStruct;
 import jcl.readtables.reader.Reader;
 import jcl.readtables.reader.impl.State;
-import jcl.readtables.reader.syntax.TokenBuilder;
 import jcl.readtables.reader.macrofunction.ReaderMacroFunction;
+import jcl.readtables.reader.syntax.TokenBuilder;
 import jcl.syntax.reader.ReadResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +30,7 @@ public class MacroCharacterState extends State {
 	@Override
 	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
 
-		Integer codePoint = tokenBuilder.getPreviousReadCharacter();
+		final Integer codePoint = tokenBuilder.getPreviousReadCharacter();
 
 		if (StateUtils.isEndOfFileCharacter(codePoint)) {
 			tokenBuilder.setReturnToken(null);
@@ -40,37 +40,7 @@ public class MacroCharacterState extends State {
 			return;
 		}
 
-		Integer numArg = null;
-		if (Character.isDigit(codePoint)) {
-
-			final StringBuilder digitStringBuilder = new StringBuilder();
-			digitStringBuilder.append(codePoint);
-
-			// NOTE: This will throw errors when it reaches an EOF
-			ReadResult readResult = reader.readChar();
-			int readChar = readResult.getResult();
-			while (Character.isDigit(readChar)) {
-				digitStringBuilder.appendCodePoint(readChar);
-
-				readResult = reader.readChar();
-				readChar = readResult.getResult();
-			}
-
-			final String digitString = digitStringBuilder.toString();
-//			try {
-			numArg = Integer.parseInt(digitString);
-//			} catch (final NumberFormatException nfe) {
-//				final String errorString = '"' + digitString + "\" does not represent an integer.";
-//				LOGGER.error(errorString, nfe);
-//
-//				ErrorState.ERROR_STATE.setPreviousState(this);
-//				ErrorState.ERROR_STATE.setErrorMessage(errorString);
-//				ErrorState.ERROR_STATE.process(reader, tokenBuilder);
-//				return;
-//			}
-
-			codePoint = readChar;
-		}
+		final Integer numArg = getNumberArgument(reader);
 
 		final ReaderMacroFunction readerMacroFunction = reader.getReadtable().getMacroCharacter(codePoint);
 		if (readerMacroFunction == null) {
@@ -95,5 +65,33 @@ public class MacroCharacterState extends State {
 //			ErrorState.ERROR_STATE.setErrorMessage(errorString);
 //			ErrorState.ERROR_STATE.process(reader, tokenBuilder);
 //		}
+	}
+
+	private static Integer getNumberArgument(final Reader reader) {
+
+		// NOTE: This will throw errors when it reaches an EOF
+		ReadResult readResult = reader.readChar();
+		int readChar = readResult.getResult();
+
+		final StringBuilder digitStringBuilder = new StringBuilder();
+
+		while (Character.isDigit(readChar)) {
+			digitStringBuilder.appendCodePoint(readChar);
+
+			readResult = reader.readChar();
+			readChar = readResult.getResult();
+		}
+
+		Integer numArg = null;
+		if (digitStringBuilder.length() != 0) {
+			final String digitString = digitStringBuilder.toString();
+			numArg = Integer.parseInt(digitString);
+
+		}
+
+		// Make sure to unread the last character read after the number arg
+		reader.unreadChar(readChar);
+
+		return numArg;
 	}
 }

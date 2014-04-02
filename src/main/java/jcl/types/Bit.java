@@ -4,11 +4,12 @@ import jcl.typespecifiers.AndTypeSpecifier;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
 import java.math.BigInteger;
 
 /**
  * The type {@code Bit} is equivalent to the type (integer 0 1) and (unsigned-byte 1).
- * <p/>
+ * <p>
  * {@code Bit} -> {@code UnsignedByte} -> {@code SignedByte} -> {@code Integer} -> {@code Rational} -> {@code Real} -> {@code Number} -> {@code T}
  */
 public interface Bit extends UnsignedByte {
@@ -45,6 +46,11 @@ public interface Bit extends UnsignedByte {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "BitImpl{}";
 			}
 		}
 	}

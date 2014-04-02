@@ -5,16 +5,17 @@ import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.math3.util.ArithmeticUtils;
 
+import java.lang.String;
 import java.math.BigInteger;
 
 /**
  * The atomic type specifier {@code SignedByte} denotes the same type as is denoted by the type specifier {@code Integer};
  * however, the list forms of these two type specifiers have different semantics.
- * <p/>
+ * <p>
  * This denotes the set of {@code Integer}s that can be represented in two's-complement form in a byte of s bits. This is
  * equivalent to (integer -2^s-1 2^s-1-1). The type {@code SignedByte} or the type (signed-byte *) is the same as the type
  * {@code Integer}.
- * <p/>
+ * <p>
  * {@code SignedByte} -> {@code Integer} -> {@code Rational} -> {@code Real} -> {@code Number} -> {@code T}
  */
 public interface SignedByte extends Integer {
@@ -95,6 +96,11 @@ public interface SignedByte extends Integer {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "SignedByteImpl{}";
 			}
 		}
 	}

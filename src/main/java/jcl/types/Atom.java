@@ -3,9 +3,11 @@ package jcl.types;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.NotTypeSpecifier;
 
+import java.lang.String;
+
 /**
  * An {@code Atom} is a type equivalent to (not cons).
- * <p/>
+ * <p>
  * {@code Atom} -> {@code T}
  */
 public interface Atom extends T {
@@ -32,6 +34,11 @@ public interface Atom extends T {
 			 */
 			private AtomImpl() {
 				super(Cons.INSTANCE);
+			}
+
+			@Override
+			public String toString() {
+				return "AtomImpl{}";
 			}
 		}
 	}

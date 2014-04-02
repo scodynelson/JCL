@@ -4,12 +4,13 @@ import jcl.typespecifiers.AndTypeSpecifier;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
 import java.math.BigInteger;
 
 /**
  * A {@code Fixnum} is an {@code Integer} whose value is between most-negative-fixnum and most-positive-fixnum inclusive.
  * The type {@code Fixnum} is a supertype of (signed-byte 16).
- * <p/>
+ * <p>
  * {@code Fixnum} -> {@code Integer} -> {@code Rational} -> {@code Real} -> {@code Number} -> {@code T}
  */
 public interface Fixnum extends Integer {
@@ -55,6 +56,11 @@ public interface Fixnum extends Integer {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "FixnumImpl{}";
 			}
 		}
 	}

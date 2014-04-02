@@ -32,7 +32,7 @@ public class NotTypeSpecifier implements CompoundTypeSpecifier {
 
 		final LispType lispType = (LispType) obj;
 
-		return !type.equals(lispType);
+		return !lispType.equals(type) && !type.equals(lispType);
 	}
 
 	@Override

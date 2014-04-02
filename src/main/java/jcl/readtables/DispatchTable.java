@@ -28,7 +28,7 @@ public class DispatchTable extends ReaderMacroFunction {
 		final int readChar = readResult.getResult();
 		final ReaderMacroFunction macroFunction = getMacroFunction(readChar);
 		if (macroFunction == null) {
-			throw new ReaderErrorException("No read macro function for character " + readChar + '.');
+			throw new ReaderErrorException("No reader macro function exists for: " + codePoint + readChar + '.');
 		}
 
 		return macroFunction.readMacro(readChar, reader, numArg);

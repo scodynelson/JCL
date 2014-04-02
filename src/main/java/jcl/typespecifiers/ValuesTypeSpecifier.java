@@ -44,6 +44,7 @@ public class ValuesTypeSpecifier implements CompoundTypeSpecifier {
 			return false;
 		}
 
+		// TODO: does this account for x.equals(y) and y.equals(x)???
 		final ValuesTypeSpecifier valuesTypeSpecifier = (ValuesTypeSpecifier) obj;
 		return Objects.equals(typeSpecifiers, valuesTypeSpecifier.typeSpecifiers)
 				&& Objects.equals(optional, valuesTypeSpecifier.optional)

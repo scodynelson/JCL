@@ -1,7 +1,7 @@
 package jcl.readtables.reader.macrofunction;
 
 import jcl.LispStruct;
-import jcl.readtables.reader.functionreader.IntegerMacroFunctionReader;
+import jcl.readtables.reader.functionreader.RationalMacroFunctionReader;
 import jcl.readtables.reader.Reader;
 import jcl.syntax.CharacterConstants;
 
@@ -14,7 +14,7 @@ public class SharpBReaderMacroFunction extends ReaderMacroFunction {
 	public LispStruct readMacro(final int codePoint, final Reader reader, final Integer numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_B) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_B);
 
-		final IntegerMacroFunctionReader macroFunctionReader = new IntegerMacroFunctionReader(reader);
-		return macroFunctionReader.readIntegerToken(2);
+		final RationalMacroFunctionReader macroFunctionReader = new RationalMacroFunctionReader(reader);
+		return macroFunctionReader.readRationalToken(2);
 	}
 }

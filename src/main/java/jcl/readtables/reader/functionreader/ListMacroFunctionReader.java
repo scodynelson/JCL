@@ -3,11 +3,11 @@ package jcl.readtables.reader.functionreader;
 import jcl.LispStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ListStruct;
+import jcl.readtables.reader.ReadSuppressVariable;
 import jcl.readtables.reader.Reader;
 import jcl.syntax.CharacterConstants;
 import jcl.syntax.SyntaxType;
 import jcl.syntax.reader.ReadResult;
-import jcl.readtables.reader.ReadSuppressVariable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,15 +24,15 @@ public class ListMacroFunctionReader {
 
 		final List<LispStruct> theList = new ArrayList<>();
 
-		int codePoint = flushWhitespace();
+		boolean isDotted = false;
 
+		int codePoint = flushWhitespace();
 		while (codePoint != CharacterConstants.RIGHT_PARENTHESIS) {
 
 			if (codePoint == CharacterConstants.FULL_STOP) {
+				final int nextCodePoint = getNextCodePoint();
 
-				int nextCodePoint = reader.readChar().getResult();
-
-				if (MacroFunctionReaderUtils.isSyntaxType(reader, nextCodePoint, SyntaxType.WHITESPACE, SyntaxType.TERMINATING)) {
+				if (isTerminal(nextCodePoint)) {
 					if (theList.isEmpty()) {
 						if (ReadSuppressVariable.INSTANCE.getValue()) {
 							return null;
@@ -41,13 +41,9 @@ public class ListMacroFunctionReader {
 						}
 					}
 
-					if (MacroFunctionReaderUtils.isSyntaxType(reader, nextCodePoint, SyntaxType.WHITESPACE)) {
-						nextCodePoint = flushWhitespace();
-					}
-
-					final LispStruct lispStruct = readAfterDot(nextCodePoint);
-					theList.add(lispStruct);
-					return ListStruct.buildDottedList(theList);
+					isDotted = true;
+					processAfterDot(theList, nextCodePoint);
+					break;
 				} else {
 					reader.unreadChar(nextCodePoint);
 				}
@@ -62,55 +58,63 @@ public class ListMacroFunctionReader {
 			codePoint = flushWhitespace();
 		}
 
-		return ListStruct.buildProperList(theList);
+		return isDotted ? ListStruct.buildDottedList(theList) : ListStruct.buildProperList(theList);
 	}
 
-	private LispStruct readAfterDot(final int firstCodePoint) {
+	private void processAfterDot(final List<LispStruct> theList, final int codePoint) {
+		int firstCodePoint = codePoint;
+		if (isWhitespace(codePoint)) {
+			firstCodePoint = flushWhitespace();
+		}
 
-		LispStruct lispStruct;
+		LispStruct lispStruct = null;
 
-		int codePoint = firstCodePoint;
-		while (true) {
+		while (lispStruct == null) {
 
-			if (codePoint == CharacterConstants.RIGHT_PARENTHESIS) {
+			if (firstCodePoint == CharacterConstants.RIGHT_PARENTHESIS) {
 				throw new ReaderErrorException("Nothing appears after . in list.");
 			}
 			reader.unreadChar(codePoint);
 
+			// NOTE: This will throw errors when it reaches an EOF
 			lispStruct = reader.read();
-			if (lispStruct != null) {
-				break;
-			}
-
-			codePoint = flushWhitespace();
+			firstCodePoint = flushWhitespace();
 		}
+		theList.add(lispStruct);
 
-		int nextCodePoint = flushWhitespace();
-		while (nextCodePoint != CharacterConstants.RIGHT_PARENTHESIS) {
-			reader.unreadChar(nextCodePoint);
+		while (firstCodePoint != CharacterConstants.RIGHT_PARENTHESIS) {
+			reader.unreadChar(firstCodePoint);
 
+			// NOTE: This will throw errors when it reaches an EOF
 			lispStruct = reader.read();
 			if (lispStruct != null) {
 				throw new ReaderErrorException("More than one object follows . in list.");
 			}
 
-			nextCodePoint = flushWhitespace();
+			firstCodePoint = flushWhitespace();
 		}
+	}
 
-		return lispStruct;
+	private int getNextCodePoint() {
+		// NOTE: This will throw errors when it reaches an EOF
+		final ReadResult readResult = reader.readChar();
+		return readResult.getResult();
 	}
 
 	private int flushWhitespace() {
 
-		// NOTE: This will throw errors when it reaches an EOF
-		ReadResult readResult = reader.readChar();
-		int codePoint = readResult.getResult();
-
-		if (MacroFunctionReaderUtils.isSyntaxType(reader, codePoint, SyntaxType.WHITESPACE)) {
-			readResult = reader.readChar();
-			codePoint = readResult.getResult();
+		int codePoint = getNextCodePoint();
+		while (isWhitespace(codePoint)) {
+			codePoint = getNextCodePoint();
 		}
-
 		return codePoint;
+	}
+
+	private boolean isWhitespace(final int codePoint) {
+		return MacroFunctionReaderUtils.isSyntaxType(reader, codePoint, SyntaxType.WHITESPACE);
+	}
+
+	private boolean isTerminal(final int codePoint) {
+		return MacroFunctionReaderUtils.isSyntaxType(reader, codePoint, SyntaxType.WHITESPACE, SyntaxType.TERMINATING);
 	}
 }

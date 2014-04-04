@@ -77,7 +77,6 @@ public class EvenMultiEscapeState extends State {
 			reader.unreadChar(codePoint);
 			TokenAccumulatedState.TOKEN_ACCUMULATED_STATE.process(reader, tokenBuilder);
 		} else if (syntaxType == SyntaxType.WHITESPACE) {
-			// TODO: We want to take "read-preserving-whitespace" into account here before unreading
 			reader.unreadChar(codePoint);
 			TokenAccumulatedState.TOKEN_ACCUMULATED_STATE.process(reader, tokenBuilder);
 		} else {

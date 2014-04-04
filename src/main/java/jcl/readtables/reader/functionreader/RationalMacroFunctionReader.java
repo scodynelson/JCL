@@ -2,23 +2,23 @@ package jcl.readtables.reader.functionreader;
 
 import jcl.LispStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.numbers.IntegerStruct;
+import jcl.numbers.RationalStruct;
 import jcl.numbers.ReadBaseVariable;
-import jcl.readtables.reader.Reader;
 import jcl.readtables.reader.ReadSuppressVariable;
+import jcl.readtables.reader.Reader;
 import org.apache.commons.lang3.Range;
 
-public class IntegerMacroFunctionReader {
+public class RationalMacroFunctionReader {
 
 	private static final Range<Integer> RADIX_RANGE = Range.between(2, 36);
 
 	private final Reader reader;
 
-	public IntegerMacroFunctionReader(final Reader reader) {
+	public RationalMacroFunctionReader(final Reader reader) {
 		this.reader = reader;
 	}
 
-	public IntegerStruct readIntegerToken(final Integer radix) {
+	public RationalStruct readRationalToken(final Integer radix) {
 		if (ReadSuppressVariable.INSTANCE.getValue()) {
 			final ExtendedTokenMacroFunctionReader macroFunctionReader = new ExtendedTokenMacroFunctionReader(reader);
 			macroFunctionReader.readExtendedToken(false);
@@ -35,17 +35,17 @@ public class IntegerMacroFunctionReader {
 
 		final int previousReadBase = ReadBaseVariable.INSTANCE.getValue();
 
-		// alter the readbase
+		// alter the read-base
 		ReadBaseVariable.INSTANCE.setValue(radix);
 
-		// read integer
+		// read rational
 		final LispStruct lispToken = reader.read();
 
-		// reset the readbase
+		// reset the read-base
 		ReadBaseVariable.INSTANCE.setValue(previousReadBase);
 
-		if (lispToken instanceof IntegerStruct) {
-			return (IntegerStruct) lispToken;
+		if (lispToken instanceof RationalStruct) {
+			return (RationalStruct) lispToken;
 		}
 
 		throw new ReaderErrorException("#R (base " + radix + ") value is not a rational: " + lispToken + '.');

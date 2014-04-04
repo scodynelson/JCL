@@ -1,6 +1,7 @@
 package jcl.readtables.reader.impl.state;
 
 import jcl.LispStruct;
+import jcl.readtables.DispatchTable;
 import jcl.readtables.reader.Reader;
 import jcl.readtables.reader.impl.State;
 import jcl.readtables.reader.macrofunction.ReaderMacroFunction;
@@ -40,14 +41,17 @@ public class MacroCharacterState extends State {
 			return;
 		}
 
-		final Integer numArg = getNumberArgument(reader);
-
 		final ReaderMacroFunction readerMacroFunction = reader.getReadtable().getMacroCharacter(codePoint);
 		if (readerMacroFunction == null) {
 			ErrorState.ERROR_STATE.setPreviousState(this);
 			ErrorState.ERROR_STATE.setErrorMessage("No reader macro function exists for character: " + codePoint + '.');
 			ErrorState.ERROR_STATE.process(reader, tokenBuilder);
 			return;
+		}
+
+		Integer numArg = null;
+		if (readerMacroFunction instanceof DispatchTable) {
+			numArg = getNumberArgument(reader);
 		}
 
 //		try {

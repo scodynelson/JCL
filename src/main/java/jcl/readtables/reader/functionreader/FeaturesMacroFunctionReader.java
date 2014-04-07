@@ -7,10 +7,10 @@ import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariable;
-import jcl.readtables.reader.Reader;
-import jcl.symbols.SymbolStruct;
-import jcl.variables.FeaturesVariable;
 import jcl.readtables.reader.ReadSuppressVariable;
+import jcl.readtables.reader.Reader;
+import jcl.symbols.KeywordSymbolStruct;
+import jcl.variables.FeaturesVariable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +20,10 @@ public class FeaturesMacroFunctionReader {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(FeaturesMacroFunctionReader.class);
 
+	private static final KeywordSymbolStruct NOT = new KeywordSymbolStruct("NOT");
+	private static final KeywordSymbolStruct AND = new KeywordSymbolStruct("AND");
+	private static final KeywordSymbolStruct OR = new KeywordSymbolStruct("OR");
+
 	private final Reader reader;
 
 	public FeaturesMacroFunctionReader(final Reader reader) {
@@ -28,77 +32,66 @@ public class FeaturesMacroFunctionReader {
 
 	public void readFeatures(final boolean shouldHideFeatures) {
 
-		boolean isFeature;
-
-		final PackageStruct previousPackage = PackageVariable.INSTANCE.getValue();
 		final boolean previousReadSuppress = ReadSuppressVariable.INSTANCE.getValue();
+		final PackageStruct previousPackage = PackageVariable.INSTANCE.getValue();
 		try {
-			PackageVariable.INSTANCE.setValue(GlobalPackageStruct.KEYWORD);
 			ReadSuppressVariable.INSTANCE.setValue(false);
 
-			final LispStruct token = reader.read();
+			PackageVariable.INSTANCE.setValue(GlobalPackageStruct.KEYWORD);
+			final LispStruct lispStruct = reader.read();
+			PackageVariable.INSTANCE.setValue(previousPackage);
 
-			isFeature = isFeature(token);
+			final boolean isFeature = isFeature(lispStruct);
+			if (isFeature && shouldHideFeatures) {
+				ReadSuppressVariable.INSTANCE.setValue(true);
+				reader.read();
+			}
 		} catch (final ReaderErrorException ree) {
 			LOGGER.debug(ree.getMessage(), ree);
-			isFeature = false;
 		} finally {
 			PackageVariable.INSTANCE.setValue(previousPackage);
-		}
-
-		if (isFeature && shouldHideFeatures) {
-
-			ReadSuppressVariable.INSTANCE.setValue(true);
-			reader.read();
 			ReadSuppressVariable.INSTANCE.setValue(previousReadSuppress);
 		}
 	}
 
-	// TODO: We REALLY need to do this better at some point...
-	private static boolean isFeature(final LispStruct token) {
-
-		final boolean returnVal;
-
-		if (token instanceof ConsStruct) {
-			final ListStruct listStruct = (ListStruct) token;
-
-			final LispStruct firstToken = listStruct.getFirst();
-			final List<LispStruct> restTokens = listStruct.getRest().getAsJavaList();
-
-			final SymbolStruct<?> symbolToken = (SymbolStruct<?>) firstToken;
-
-			switch (symbolToken.getName().toUpperCase()) {
-				case "NOT":
-					returnVal = !isFeature(restTokens.get(0));
-					break;
-				case "AND":
-
-					boolean tempReturnVal = true;
-					for (final LispStruct lispToken : restTokens) {
-						tempReturnVal = tempReturnVal && isFeature(lispToken);
-					}
-					returnVal = tempReturnVal;
-					break;
-				case "OR":
-
-					boolean tempReturnVal2 = false;
-					for (final LispStruct lispToken2 : restTokens) {
-						tempReturnVal2 = tempReturnVal2 || isFeature(lispToken2);
-					}
-					returnVal = tempReturnVal2;
-					break;
-				default:
-					throw new ReaderErrorException("Unknown operator in feature expression: " + symbolToken.getValue());
-			}
-		} else if (token instanceof SymbolStruct) {
-			final SymbolStruct<?> symbolToken = (SymbolStruct<?>) token;
-
-			final List<SymbolStruct<?>> featuresList = FeaturesVariable.INSTANCE.getValue();
-			returnVal = featuresList.contains(symbolToken);
+	private static boolean isFeature(final LispStruct lispStruct) {
+		if (lispStruct instanceof ListStruct) {
+			return isListFeature((ListStruct) lispStruct);
 		} else {
-			throw new ReaderErrorException("");
+			final List<LispStruct> featuresList = FeaturesVariable.INSTANCE.getValue();
+			return featuresList.contains(lispStruct);
+		}
+	}
+
+	private static boolean isListFeature(final ListStruct listStruct) {
+		return (listStruct instanceof ConsStruct) && isConsFeature((ConsStruct) listStruct);
+	}
+
+	private static boolean isConsFeature(final ConsStruct consStruct) {
+		final LispStruct first = consStruct.getFirst();
+		final List<LispStruct> rest = consStruct.getRest().getAsJavaList();
+
+		if (!(first instanceof KeywordSymbolStruct)) {
+			throw new ReaderErrorException("First element of feature expression must be either: :NOT, :AND, or :OR.");
 		}
 
-		return returnVal;
+		final KeywordSymbolStruct featureOperator = (KeywordSymbolStruct) first;
+		if (featureOperator.equals(NOT)) {
+			return !isFeature(rest.get(0));
+		} else if (featureOperator.equals(AND)) {
+			boolean tempReturnVal = true;
+			for (final LispStruct lispStruct : rest) {
+				tempReturnVal = tempReturnVal && isFeature(lispStruct);
+			}
+			return tempReturnVal;
+		} else if (featureOperator.equals(OR)) {
+			boolean tempReturnVal2 = false;
+			for (final LispStruct lispStruct : rest) {
+				tempReturnVal2 = tempReturnVal2 || isFeature(lispStruct);
+			}
+			return tempReturnVal2;
+		} else {
+			throw new ReaderErrorException("Unknown operator in feature expression: " + featureOperator);
+		}
 	}
 }

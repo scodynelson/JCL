@@ -31,7 +31,7 @@ public class ExtendedTokenMacroFunctionReader {
 		while (!readResult.wasEOF()) {
 
 			final int codePoint = readResult.getResult();
-			if (isTerminal(codePoint)) {
+			if (isWhitespaceOrTerminating(codePoint)) {
 				unreadToken(stringBuilder, codePoint);
 				break;
 			}
@@ -123,7 +123,7 @@ public class ExtendedTokenMacroFunctionReader {
 		return MacroFunctionReaderUtils.isSyntaxType(reader, codePoint, SyntaxType.SINGLE_ESCAPE);
 	}
 
-	private boolean isTerminal(final int codePoint) {
+	private boolean isWhitespaceOrTerminating(final int codePoint) {
 		return MacroFunctionReaderUtils.isSyntaxType(reader, codePoint, SyntaxType.WHITESPACE, SyntaxType.TERMINATING);
 	}
 

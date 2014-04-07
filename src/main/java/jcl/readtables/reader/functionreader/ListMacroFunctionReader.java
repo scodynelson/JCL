@@ -32,7 +32,7 @@ public class ListMacroFunctionReader {
 			if (codePoint == CharacterConstants.FULL_STOP) {
 				final int nextCodePoint = getNextCodePoint();
 
-				if (isTerminal(nextCodePoint)) {
+				if (isWhitespaceOrTerminating(nextCodePoint)) {
 					if (theList.isEmpty()) {
 						if (ReadSuppressVariable.INSTANCE.getValue()) {
 							return null;
@@ -114,7 +114,7 @@ public class ListMacroFunctionReader {
 		return MacroFunctionReaderUtils.isSyntaxType(reader, codePoint, SyntaxType.WHITESPACE);
 	}
 
-	private boolean isTerminal(final int codePoint) {
+	private boolean isWhitespaceOrTerminating(final int codePoint) {
 		return MacroFunctionReaderUtils.isSyntaxType(reader, codePoint, SyntaxType.WHITESPACE, SyntaxType.TERMINATING);
 	}
 }

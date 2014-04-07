@@ -17,26 +17,31 @@ public class UnicodeCharMacroFunctionReader {
 
 		final StringBuilder unicodeCharBuilder = new StringBuilder();
 
-		// NOTE: This will throw errors when it reaches an EOF
-		ReadResult readResult = reader.readChar();
-		int readChar = readResult.getResult();
-
-		while (!MacroFunctionReaderUtils.isSyntaxType(reader, readChar, SyntaxType.WHITESPACE)) {
-			unicodeCharBuilder.appendCodePoint(readChar);
-
-			readResult = reader.readChar();
-			readChar = readResult.getResult();
+		int codePoint = getNextCodePoint();
+		while (!isWhitespace(codePoint)) {
+			unicodeCharBuilder.appendCodePoint(codePoint);
+			codePoint = getNextCodePoint();
 		}
 
 		final String unicodeCharString = unicodeCharBuilder.toString();
 		try {
-			final int codePoint = Integer.parseInt(unicodeCharString, 16);
-			if (!Character.isValidCodePoint(codePoint)) {
+			final int unicodeCodePoint = Integer.parseInt(unicodeCharString, 16);
+			if (!Character.isValidCodePoint(unicodeCodePoint)) {
 				throw new ReaderErrorException("0x" + unicodeCharString + " is not a valid code point.");
 			}
-			return codePoint;
+			return unicodeCodePoint;
 		} catch (final NumberFormatException nfe) {
 			throw new ReaderErrorException('"' + unicodeCharString + "\" does not represent a hexadecimal integer.", nfe);
 		}
+	}
+
+	private int getNextCodePoint() {
+		// NOTE: This will throw errors when it reaches an EOF
+		final ReadResult readResult = reader.readChar();
+		return readResult.getResult();
+	}
+
+	private boolean isWhitespace(final int codePoint) {
+		return MacroFunctionReaderUtils.isSyntaxType(reader, codePoint, SyntaxType.WHITESPACE);
 	}
 }

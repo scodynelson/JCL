@@ -3,7 +3,7 @@ package jcl.readtables.reader.function.macrofunction;
 import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.readtables.reader.function.ExtendedTokenMacroFunctionReader;
+import jcl.readtables.reader.function.ExtendedTokenReader;
 import jcl.readtables.reader.Reader;
 import jcl.readtables.reader.syntax.CharacterName;
 import jcl.readtables.reader.syntax.ReadExtendedToken;
@@ -20,7 +20,7 @@ public class SharpBackslashReaderMacroFunction extends ReaderMacroFunction {
 	public LispStruct readMacro(final int codePoint, final Reader reader, final Integer numArg) {
 		assert codePoint == CharacterConstants.BACKSLASH;
 
-		final ExtendedTokenMacroFunctionReader macroFunctionReader = new ExtendedTokenMacroFunctionReader(reader);
+		final ExtendedTokenReader macroFunctionReader = new ExtendedTokenReader(reader);
 		final ReadExtendedToken readExtendedToken = macroFunctionReader.readExtendedToken(true);
 		final String charString = readExtendedToken.getToken();
 		if (ReadSuppressVariable.INSTANCE.getValue()) {

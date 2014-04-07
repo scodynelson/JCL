@@ -6,11 +6,13 @@ import jcl.lists.ListStruct;
 import jcl.readtables.reader.ReadSuppressVariable;
 import jcl.readtables.reader.Reader;
 import jcl.syntax.CharacterConstants;
-import jcl.syntax.SyntaxType;
-import jcl.syntax.reader.ReadResult;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static jcl.readtables.reader.function.FunctionReaderUtils.getNextCodePoint;
+import static jcl.readtables.reader.function.FunctionReaderUtils.isWhitespace;
+import static jcl.readtables.reader.function.FunctionReaderUtils.isWhitespaceOrTerminating;
 
 public class ListReader {
 
@@ -30,9 +32,9 @@ public class ListReader {
 		while (codePoint != CharacterConstants.RIGHT_PARENTHESIS) {
 
 			if (codePoint == CharacterConstants.FULL_STOP) {
-				final int nextCodePoint = getNextCodePoint();
+				final int nextCodePoint = getNextCodePoint(reader);
 
-				if (isWhitespaceOrTerminating(nextCodePoint)) {
+				if (isWhitespaceOrTerminating(reader, nextCodePoint)) {
 					if (theList.isEmpty()) {
 						if (ReadSuppressVariable.INSTANCE.getValue()) {
 							return null;
@@ -63,7 +65,7 @@ public class ListReader {
 
 	private void processAfterDot(final List<LispStruct> theList, final int codePoint) {
 		int firstCodePoint = codePoint;
-		if (isWhitespace(codePoint)) {
+		if (isWhitespace(reader, codePoint)) {
 			firstCodePoint = flushWhitespace();
 		}
 
@@ -95,26 +97,12 @@ public class ListReader {
 		}
 	}
 
-	private int getNextCodePoint() {
-		// NOTE: This will throw errors when it reaches an EOF
-		final ReadResult readResult = reader.readChar();
-		return readResult.getResult();
-	}
-
 	private int flushWhitespace() {
 
-		int codePoint = getNextCodePoint();
-		while (isWhitespace(codePoint)) {
-			codePoint = getNextCodePoint();
+		int codePoint = getNextCodePoint(reader);
+		while (isWhitespace(reader, codePoint)) {
+			codePoint = getNextCodePoint(reader);
 		}
 		return codePoint;
-	}
-
-	private boolean isWhitespace(final int codePoint) {
-		return MacroFunctionReaderUtils.isSyntaxType(reader, codePoint, SyntaxType.WHITESPACE);
-	}
-
-	private boolean isWhitespaceOrTerminating(final int codePoint) {
-		return MacroFunctionReaderUtils.isSyntaxType(reader, codePoint, SyntaxType.WHITESPACE, SyntaxType.TERMINATING);
 	}
 }

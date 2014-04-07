@@ -8,19 +8,19 @@ import jcl.readtables.reader.ReadSuppressVariable;
 import jcl.readtables.reader.Reader;
 import org.apache.commons.lang3.Range;
 
-public class RationalMacroFunctionReader {
+public class RationalReader {
 
 	private static final Range<Integer> RADIX_RANGE = Range.between(2, 36);
 
 	private final Reader reader;
 
-	public RationalMacroFunctionReader(final Reader reader) {
+	public RationalReader(final Reader reader) {
 		this.reader = reader;
 	}
 
 	public RationalStruct readRationalToken(final Integer radix) {
 		if (ReadSuppressVariable.INSTANCE.getValue()) {
-			final ExtendedTokenMacroFunctionReader macroFunctionReader = new ExtendedTokenMacroFunctionReader(reader);
+			final ExtendedTokenReader macroFunctionReader = new ExtendedTokenReader(reader);
 			macroFunctionReader.readExtendedToken(false);
 			return null;
 		}
@@ -49,6 +49,5 @@ public class RationalMacroFunctionReader {
 		}
 
 		throw new ReaderErrorException("#R (base " + radix + ") value is not a rational: " + lispToken + '.');
-
 	}
 }

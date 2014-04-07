@@ -5,7 +5,7 @@ import jcl.arrays.StringStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
-import jcl.readtables.reader.function.UnicodeCharMacroFunctionReader;
+import jcl.readtables.reader.function.UnicodeCharacterReader;
 import jcl.readtables.reader.Reader;
 import jcl.syntax.CharacterConstants;
 import jcl.syntax.reader.ReadResult;
@@ -20,7 +20,7 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunction {
 	public LispStruct readMacro(final int codePoint, final Reader reader, final Integer numArg) {
 		assert codePoint == CharacterConstants.QUOTATION_MARK;
 
-		final UnicodeCharMacroFunctionReader macroFunctionReader = new UnicodeCharMacroFunctionReader(reader);
+		final UnicodeCharacterReader macroFunctionReader = new UnicodeCharacterReader(reader);
 
 		final StringBuilder stringBuilder = new StringBuilder();
 

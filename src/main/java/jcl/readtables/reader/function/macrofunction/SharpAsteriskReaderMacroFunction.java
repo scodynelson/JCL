@@ -5,7 +5,7 @@ import jcl.arrays.BitVectorStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
-import jcl.readtables.reader.function.ExtendedTokenMacroFunctionReader;
+import jcl.readtables.reader.function.ExtendedTokenReader;
 import jcl.readtables.reader.Reader;
 import jcl.readtables.reader.syntax.ReadExtendedToken;
 import jcl.syntax.CharacterConstants;
@@ -21,7 +21,7 @@ public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunction {
 	public LispStruct readMacro(final int codePoint, final Reader reader, final Integer numArg) {
 		assert codePoint == CharacterConstants.ASTERISK;
 
-		final ExtendedTokenMacroFunctionReader macroFunctionReader = new ExtendedTokenMacroFunctionReader(reader);
+		final ExtendedTokenReader macroFunctionReader = new ExtendedTokenReader(reader);
 		final ReadExtendedToken readExtendedToken = macroFunctionReader.readExtendedToken(false);
 		if (ReadSuppressVariable.INSTANCE.getValue()) {
 			return null;

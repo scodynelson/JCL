@@ -2,14 +2,15 @@ package jcl.readtables.reader.function;
 
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.readtables.reader.Reader;
-import jcl.syntax.SyntaxType;
-import jcl.syntax.reader.ReadResult;
 
-public class UnicodeCharMacroFunctionReader {
+import static jcl.readtables.reader.function.FunctionReaderUtils.getNextCodePoint;
+import static jcl.readtables.reader.function.FunctionReaderUtils.isWhitespace;
+
+public class UnicodeCharacterReader {
 
 	private final Reader reader;
 
-	public UnicodeCharMacroFunctionReader(final Reader reader) {
+	public UnicodeCharacterReader(final Reader reader) {
 		this.reader = reader;
 	}
 
@@ -17,10 +18,10 @@ public class UnicodeCharMacroFunctionReader {
 
 		final StringBuilder unicodeCharBuilder = new StringBuilder();
 
-		int codePoint = getNextCodePoint();
-		while (!isWhitespace(codePoint)) {
+		int codePoint = getNextCodePoint(reader);
+		while (!isWhitespace(reader, codePoint)) {
 			unicodeCharBuilder.appendCodePoint(codePoint);
-			codePoint = getNextCodePoint();
+			codePoint = getNextCodePoint(reader);
 		}
 
 		final String unicodeCharString = unicodeCharBuilder.toString();
@@ -33,15 +34,5 @@ public class UnicodeCharMacroFunctionReader {
 		} catch (final NumberFormatException nfe) {
 			throw new ReaderErrorException('"' + unicodeCharString + "\" does not represent a hexadecimal integer.", nfe);
 		}
-	}
-
-	private int getNextCodePoint() {
-		// NOTE: This will throw errors when it reaches an EOF
-		final ReadResult readResult = reader.readChar();
-		return readResult.getResult();
-	}
-
-	private boolean isWhitespace(final int codePoint) {
-		return MacroFunctionReaderUtils.isSyntaxType(reader, codePoint, SyntaxType.WHITESPACE);
 	}
 }

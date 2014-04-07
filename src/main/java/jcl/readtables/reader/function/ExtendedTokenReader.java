@@ -2,16 +2,19 @@ package jcl.readtables.reader.function;
 
 import jcl.readtables.reader.Reader;
 import jcl.readtables.reader.syntax.ReadExtendedToken;
-import jcl.syntax.AttributeType;
 import jcl.syntax.CaseSpec;
-import jcl.syntax.SyntaxType;
 import jcl.syntax.reader.ReadResult;
 
-public class ExtendedTokenMacroFunctionReader {
+import static jcl.readtables.reader.function.FunctionReaderUtils.isMultipleEscape;
+import static jcl.readtables.reader.function.FunctionReaderUtils.isPackageMarker;
+import static jcl.readtables.reader.function.FunctionReaderUtils.isSingleEscape;
+import static jcl.readtables.reader.function.FunctionReaderUtils.isWhitespaceOrTerminating;
+
+public class ExtendedTokenReader {
 
 	private final Reader reader;
 
-	public ExtendedTokenMacroFunctionReader(final Reader reader) {
+	public ExtendedTokenReader(final Reader reader) {
 		this.reader = reader;
 	}
 
@@ -31,21 +34,21 @@ public class ExtendedTokenMacroFunctionReader {
 		while (!readResult.wasEOF()) {
 
 			final int codePoint = readResult.getResult();
-			if (isWhitespaceOrTerminating(codePoint)) {
+			if (isWhitespaceOrTerminating(reader, codePoint)) {
 				unreadToken(stringBuilder, codePoint);
 				break;
 			}
 
-			if (isSingleEscape(codePoint)) {
+			if (isSingleEscape(reader, codePoint)) {
 				readSingleEscape(stringBuilder);
 				hasEscapes = true;
-			} else if (isMultipleEscape(codePoint)) {
+			} else if (isMultipleEscape(reader, codePoint)) {
 				readMultipleEscape(stringBuilder);
 				hasEscapes = true;
 			}
 
 			if (!hasPackageDelimiter) {
-				hasPackageDelimiter = isPackageMarker(codePoint);
+				hasPackageDelimiter = isPackageMarker(reader, codePoint);
 			}
 
 			readResult = readToken(false, false, stringBuilder, false);
@@ -63,9 +66,9 @@ public class ExtendedTokenMacroFunctionReader {
 		ReadResult tempReadResult = reader.readChar(true, null, false);
 		int tempCodePoint = tempReadResult.getResult();
 
-		while (!isMultipleEscape(tempCodePoint)) {
+		while (!isMultipleEscape(reader, tempCodePoint)) {
 
-			if (isSingleEscape(tempCodePoint)) {
+			if (isSingleEscape(reader, tempCodePoint)) {
 				appendToken(tempReadResult, stringBuilder, false); // NOTE: This comes first so we build the token right
 				readSingleEscape(stringBuilder);
 			} else {
@@ -113,22 +116,5 @@ public class ExtendedTokenMacroFunctionReader {
 	private void unreadToken(final StringBuilder stringBuilder, final int codePoint) {
 		reader.unreadChar(codePoint);
 		stringBuilder.deleteCharAt(stringBuilder.length() - 1); // Remove the last character read from the builder
-	}
-
-	private boolean isSingleEscape(final int codePoint) {
-		return MacroFunctionReaderUtils.isSyntaxType(reader, codePoint, SyntaxType.SINGLE_ESCAPE);
-	}
-
-	private boolean isMultipleEscape(final int codePoint) {
-		return MacroFunctionReaderUtils.isSyntaxType(reader, codePoint, SyntaxType.SINGLE_ESCAPE);
-	}
-
-	private boolean isWhitespaceOrTerminating(final int codePoint) {
-		return MacroFunctionReaderUtils.isSyntaxType(reader, codePoint, SyntaxType.WHITESPACE, SyntaxType.TERMINATING);
-	}
-
-	private boolean isPackageMarker(final int codePoint) {
-		return MacroFunctionReaderUtils.isSyntaxType(reader, codePoint, SyntaxType.CONSTITUENT)
-				&& MacroFunctionReaderUtils.isAttributeType(reader, codePoint, AttributeType.PACKAGEMARKER);
 	}
 }

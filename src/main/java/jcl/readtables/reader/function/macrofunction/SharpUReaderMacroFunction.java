@@ -2,7 +2,7 @@ package jcl.readtables.reader.function.macrofunction;
 
 import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
-import jcl.readtables.reader.function.UnicodeCharMacroFunctionReader;
+import jcl.readtables.reader.function.UnicodeCharacterReader;
 import jcl.readtables.reader.Reader;
 import jcl.syntax.CharacterConstants;
 import jcl.readtables.reader.ReadSuppressVariable;
@@ -20,7 +20,7 @@ public class SharpUReaderMacroFunction extends ReaderMacroFunction {
 			return null;
 		}
 
-		final UnicodeCharMacroFunctionReader macroFunctionReader = new UnicodeCharMacroFunctionReader(reader);
+		final UnicodeCharacterReader macroFunctionReader = new UnicodeCharacterReader(reader);
 		final int unicodeChar = macroFunctionReader.readUnicodeChar();
 		return new CharacterStruct(unicodeChar);
 	}

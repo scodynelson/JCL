@@ -4,7 +4,7 @@ import jcl.LispStruct;
 import jcl.readtables.DispatchTable;
 import jcl.readtables.reader.Reader;
 import jcl.readtables.reader.impl.State;
-import jcl.readtables.reader.macrofunction.ReaderMacroFunction;
+import jcl.readtables.reader.function.macrofunction.ReaderMacroFunction;
 import jcl.readtables.reader.syntax.TokenBuilder;
 import jcl.syntax.reader.ReadResult;
 import org.slf4j.Logger;

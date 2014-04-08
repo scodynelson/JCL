@@ -6,7 +6,7 @@ import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.readtables.reader.function.UnicodeCharacterReader;
-import jcl.readtables.reader.Reader;
+import jcl.readtables.reader.impl.Reader;
 import jcl.syntax.CharacterConstants;
 import jcl.syntax.reader.ReadResult;
 import jcl.readtables.reader.ReadSuppressVariable;

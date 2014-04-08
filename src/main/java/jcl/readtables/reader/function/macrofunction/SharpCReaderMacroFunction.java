@@ -7,7 +7,7 @@ import jcl.numbers.ComplexStruct;
 import jcl.numbers.FloatStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.RatioStruct;
-import jcl.readtables.reader.Reader;
+import jcl.readtables.reader.impl.Reader;
 import jcl.syntax.CharacterConstants;
 import jcl.readtables.reader.ReadSuppressVariable;
 

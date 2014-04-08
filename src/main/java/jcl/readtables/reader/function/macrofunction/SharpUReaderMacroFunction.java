@@ -3,7 +3,7 @@ package jcl.readtables.reader.function.macrofunction;
 import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
 import jcl.readtables.reader.function.UnicodeCharacterReader;
-import jcl.readtables.reader.Reader;
+import jcl.readtables.reader.impl.Reader;
 import jcl.syntax.CharacterConstants;
 import jcl.readtables.reader.ReadSuppressVariable;
 

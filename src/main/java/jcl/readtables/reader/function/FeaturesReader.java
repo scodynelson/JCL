@@ -8,7 +8,7 @@ import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariable;
 import jcl.readtables.reader.ReadSuppressVariable;
-import jcl.readtables.reader.Reader;
+import jcl.readtables.reader.impl.Reader;
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.variables.FeaturesVariable;
 import org.slf4j.Logger;

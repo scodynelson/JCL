@@ -1,6 +1,6 @@
 package jcl.readtables.reader.function;
 
-import jcl.readtables.reader.Reader;
+import jcl.readtables.reader.impl.Reader;
 import jcl.syntax.AttributeType;
 import jcl.syntax.SyntaxType;
 import jcl.syntax.reader.ReadResult;

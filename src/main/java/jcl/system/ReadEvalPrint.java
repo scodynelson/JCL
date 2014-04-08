@@ -5,7 +5,7 @@ import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariable;
-import jcl.readtables.reader.Reader;
+import jcl.readtables.reader.impl.Reader;
 import jcl.readtables.reader.function.macrofunction.SharpTagReaderConstants;
 import jcl.streams.CharacterStreamStruct;
 import jcl.streams.FileStreamStruct;

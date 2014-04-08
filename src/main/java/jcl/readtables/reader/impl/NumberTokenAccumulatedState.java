@@ -1,4 +1,4 @@
-package jcl.readtables.reader.impl.state;
+package jcl.readtables.reader.impl;
 
 import jcl.numbers.FloatStruct;
 import jcl.numbers.IntegerStruct;
@@ -6,8 +6,6 @@ import jcl.numbers.NumberStruct;
 import jcl.numbers.RatioStruct;
 import jcl.numbers.ReadBaseVariable;
 import jcl.numbers.ReadDefaultFloatFormatVariable;
-import jcl.readtables.reader.Reader;
-import jcl.readtables.reader.impl.State;
 import jcl.readtables.reader.syntax.TokenAttribute;
 import jcl.readtables.reader.syntax.TokenBuilder;
 import jcl.syntax.AttributeType;

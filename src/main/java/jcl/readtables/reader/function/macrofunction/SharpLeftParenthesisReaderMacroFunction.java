@@ -7,7 +7,7 @@ import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.lists.ListStruct;
 import jcl.readtables.reader.function.ListReader;
-import jcl.readtables.reader.Reader;
+import jcl.readtables.reader.impl.Reader;
 import jcl.syntax.CharacterConstants;
 import jcl.readtables.reader.ReadSuppressVariable;
 import org.apache.commons.collections4.CollectionUtils;

@@ -1,9 +1,8 @@
-package jcl.readtables.reader;
+package jcl.readtables.reader.impl;
 
 import jcl.LispStruct;
 import jcl.readtables.ReadtableStruct;
 import jcl.readtables.ReadtableVariable;
-import jcl.readtables.reader.impl.State;
 import jcl.readtables.reader.syntax.TokenBuilder;
 import jcl.streams.InputStream;
 import jcl.syntax.AttributeType;

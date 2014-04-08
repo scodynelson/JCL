@@ -2,7 +2,7 @@ package jcl.readtables.reader.function.macrofunction;
 
 import jcl.LispStruct;
 import jcl.readtables.reader.function.FeaturesReader;
-import jcl.readtables.reader.Reader;
+import jcl.readtables.reader.impl.Reader;
 import jcl.syntax.CharacterConstants;
 
 /**

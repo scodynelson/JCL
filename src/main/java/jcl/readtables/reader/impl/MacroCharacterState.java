@@ -1,9 +1,7 @@
-package jcl.readtables.reader.impl.state;
+package jcl.readtables.reader.impl;
 
 import jcl.LispStruct;
 import jcl.readtables.DispatchTable;
-import jcl.readtables.reader.Reader;
-import jcl.readtables.reader.impl.State;
 import jcl.readtables.reader.function.macrofunction.ReaderMacroFunction;
 import jcl.readtables.reader.syntax.TokenBuilder;
 import jcl.syntax.reader.ReadResult;

@@ -1,7 +1,7 @@
 package jcl.readtables.reader.function;
 
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.readtables.reader.Reader;
+import jcl.readtables.reader.impl.Reader;
 
 import static jcl.readtables.reader.function.FunctionReaderUtils.getNextCodePoint;
 import static jcl.readtables.reader.function.FunctionReaderUtils.isWhitespace;

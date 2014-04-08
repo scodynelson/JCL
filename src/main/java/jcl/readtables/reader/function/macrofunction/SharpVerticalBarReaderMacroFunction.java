@@ -1,7 +1,7 @@
 package jcl.readtables.reader.function.macrofunction;
 
 import jcl.LispStruct;
-import jcl.readtables.reader.Reader;
+import jcl.readtables.reader.impl.Reader;
 import jcl.structs.comments.CommentStruct;
 import jcl.syntax.CharacterConstants;
 import jcl.syntax.reader.ReadResult;

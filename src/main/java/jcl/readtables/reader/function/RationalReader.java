@@ -5,7 +5,7 @@ import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.numbers.RationalStruct;
 import jcl.numbers.ReadBaseVariable;
 import jcl.readtables.reader.ReadSuppressVariable;
-import jcl.readtables.reader.Reader;
+import jcl.readtables.reader.impl.Reader;
 import org.apache.commons.lang3.Range;
 
 public class RationalReader {

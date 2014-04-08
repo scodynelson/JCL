@@ -3,7 +3,7 @@ package jcl.readtables.reader.function.macrofunction;
 import jcl.LispStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.functions.FunctionStruct;
-import jcl.readtables.reader.Reader;
+import jcl.readtables.reader.impl.Reader;
 
 /**
  * Defines a ReaderMacroFunction type.

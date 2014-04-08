@@ -4,7 +4,7 @@ import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.pathnames.PathnameStruct;
-import jcl.readtables.reader.Reader;
+import jcl.readtables.reader.impl.Reader;
 import jcl.syntax.CharacterConstants;
 import jcl.readtables.reader.ReadSuppressVariable;
 

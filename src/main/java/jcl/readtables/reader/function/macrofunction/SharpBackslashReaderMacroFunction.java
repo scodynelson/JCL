@@ -4,7 +4,7 @@ import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.readtables.reader.function.ExtendedTokenReader;
-import jcl.readtables.reader.Reader;
+import jcl.readtables.reader.impl.Reader;
 import jcl.readtables.reader.syntax.CharacterName;
 import jcl.readtables.reader.syntax.ReadExtendedToken;
 import jcl.syntax.CharacterConstants;

@@ -10,7 +10,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
- * The {@code PathnameStruct} is the object representation of a Lisp 'pathname' type.
+ * The {@link PathnameStruct} is the object representation of a Lisp 'pathname' type.
  */
 public abstract class PathnameStruct extends BuiltInClassStruct {
 
@@ -34,7 +34,7 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 	 * @param version   the pathname version
 	 */
 	protected PathnameStruct(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
-							 final PathnameName name, final PathnameType type, final PathnameVersion version) {
+	                         final PathnameName name, final PathnameType type, final PathnameVersion version) {
 		this(Pathname.INSTANCE, host, device, directory, name, type, version);
 	}
 
@@ -50,8 +50,8 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 	 * @param version      the pathname version
 	 */
 	protected PathnameStruct(final Pathname pathnameType,
-							 final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
-							 final PathnameName name, final PathnameType type, final PathnameVersion version) {
+	                         final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
+	                         final PathnameName name, final PathnameType type, final PathnameVersion version) {
 		super(pathnameType, null, null);
 		this.host = host;
 		this.device = device;
@@ -175,9 +175,9 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 	 * @return the constructed pathname with the provided elements
 	 */
 	public static PathnameStruct buildPathname(final PathnameHost host, final PathnameDevice device,
-											   final PathnameDirectory directory, final PathnameName name,
-											   final PathnameType type, final PathnameVersion version,
-											   final PathnameStructType structType) {
+	                                           final PathnameDirectory directory, final PathnameName name,
+	                                           final PathnameType type, final PathnameVersion version,
+	                                           final PathnameStructType structType) {
 		switch (structType) {
 			case FILE:
 				return new PathnameFileStruct(host, device, directory, name, type, version);

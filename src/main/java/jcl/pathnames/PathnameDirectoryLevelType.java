@@ -1,11 +1,12 @@
 package jcl.pathnames;
 
 /**
- * The {@code PathnameDirectoryLevelType} is the enumeration of the directory level type of a 'directory' level
+ * The {@link PathnameDirectoryLevelType} is the enumeration of the directory level type of a 'directory' level
  * element of a Lisp 'pathname' type.
  * NOTE: This implementation does NOT support WildInferiors. Period.
  */
 public enum PathnameDirectoryLevelType {
+
 	WILD(":WILD"),
 	BACK(":BACK"),
 	UP(":UP"),
@@ -29,5 +30,12 @@ public enum PathnameDirectoryLevelType {
 	 */
 	public String getValue() {
 		return value;
+	}
+
+	@Override
+	public String toString() {
+		return "PathnameDirectoryLevelType{"
+				+ "value='" + value + '\''
+				+ '}';
 	}
 }

@@ -4,7 +4,7 @@ import jcl.conditions.exceptions.FileErrorException;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * The {@code PathnameDirectoryLevel} is the object representation of a specific directory level of the 'directory'
+ * The {@link PathnameDirectoryLevel} is the object representation of a specific directory level of the 'directory'
  * element of a Lisp 'pathname' type.
  */
 public final class PathnameDirectoryLevel {

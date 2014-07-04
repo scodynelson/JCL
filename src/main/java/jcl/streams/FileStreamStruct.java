@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 
 /**
- * The {@code FileStreamStruct} is the object representation of a Lisp 'file-stream' type.
+ * The {@link FileStreamStruct} is the object representation of a Lisp 'file-stream' type.
  */
 public class FileStreamStruct extends NativeStreamStruct {
 
@@ -306,6 +306,7 @@ public class FileStreamStruct extends NativeStreamStruct {
 
 	@Override
 	public String toString() {
+		// TODO: fix toString warning...
 		return "FileStreamStruct{"
 				+ "fileStream=" + fileStream
 				+ '}';

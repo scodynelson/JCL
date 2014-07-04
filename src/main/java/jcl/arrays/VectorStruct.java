@@ -3,7 +3,6 @@ package jcl.arrays;
 import jcl.LispStruct;
 import jcl.LispType;
 import jcl.conditions.exceptions.ErrorException;
-import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.sequences.SequenceStruct;
 import jcl.types.SimpleVector;
@@ -14,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * The {@code VectorStruct} is the object representation of a Lisp 'vector' type.
+ * The {@link VectorStruct} is the object representation of a Lisp 'vector' type.
  *
  * @param <TYPE> the type of the vector contents
  */
@@ -41,7 +40,7 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	 * @param fillPointer  the vector fillPointer
 	 */
 	public VectorStruct(final int size, final List<TYPE> contents, final LispType elementType,
-						final boolean isAdjustable, final Integer fillPointer) {
+	                    final boolean isAdjustable, final Integer fillPointer) {
 		this(getVectorType(isAdjustable, fillPointer), size, contents, elementType, isAdjustable, fillPointer);
 	}
 
@@ -54,11 +53,10 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	 * @param elementType  the vector elementType
 	 * @param isAdjustable whether or not the vector is adjustable
 	 * @param fillPointer  the vector fillPointer
-	 * @throws SimpleErrorException
 	 */
 	protected VectorStruct(final Vector vectorType,
-						   final int size, final List<TYPE> contents, final LispType elementType,
-						   final boolean isAdjustable, final Integer fillPointer) {
+	                       final int size, final List<TYPE> contents, final LispType elementType,
+	                       final boolean isAdjustable, final Integer fillPointer) {
 		super(vectorType, Collections.singletonList(size), contents, elementType, isAdjustable);
 
 		this.fillPointer = fillPointer;

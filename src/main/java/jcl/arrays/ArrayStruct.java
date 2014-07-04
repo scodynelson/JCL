@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The {@code ArrayStruct} is the object representation of a Lisp 'array' type.
+ * The {@link ArrayStruct} is the object representation of a Lisp 'array' type.
  *
  * @param <TYPE> the type of the array contents
  */
@@ -58,7 +58,7 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 * @param isAdjustable whether or not the array is adjustable
 	 */
 	protected ArrayStruct(final Array arrayType,
-						  final List<Integer> dimensions, final List<TYPE> contents, final LispType elementType, final boolean isAdjustable) {
+	                      final List<Integer> dimensions, final List<TYPE> contents, final LispType elementType, final boolean isAdjustable) {
 		super(arrayType, null, null);
 
 		// Check input data
@@ -93,7 +93,7 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 * @param contentsToCheck    the array contents to check
 	 */
 	private void areContentsValidForDimensionsAndElementType(final List<Integer> dimensionsToCheck, final LispType elementTypeToCheck,
-															 final List<TYPE> contentsToCheck) {
+	                                                         final List<TYPE> contentsToCheck) {
 
 		int totalNumberOfElements = 0;
 		for (final int dimension : dimensionsToCheck) {

@@ -9,7 +9,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import java.util.Arrays;
 
 /**
- * The {@code ListStruct} is the object representation of a Lisp 'list' type.
+ * The {@link ListStruct} is the object representation of a Lisp 'list' type.
  */
 public abstract class ListStruct extends BuiltInClassStruct implements SequenceStruct {
 
@@ -31,7 +31,7 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 	 * @param subClasses         the subclasses
 	 */
 	protected ListStruct(final List type,
-						 final java.util.List<Class<LispStruct>> directSuperClasses, final java.util.List<Class<LispStruct>> subClasses) {
+	                     final java.util.List<Class<LispStruct>> directSuperClasses, final java.util.List<Class<LispStruct>> subClasses) {
 		super(type, directSuperClasses, subClasses);
 	}
 

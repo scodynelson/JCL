@@ -5,7 +5,7 @@ import jcl.types.SingleFloat;
 import jcl.variables.LispVariable;
 
 /**
- * The {@code ReadDefaultFloatFormatVariable} is the object representation of the *read-default-float-format* variable.
+ * The {@link ReadDefaultFloatFormatVariable} is the object representation of the *read-default-float-format* variable.
  */
 public class ReadDefaultFloatFormatVariable implements LispVariable<Float> {
 
@@ -34,5 +34,12 @@ public class ReadDefaultFloatFormatVariable implements LispVariable<Float> {
 	 */
 	public void setValue(final Float value) {
 		this.value = value;
+	}
+
+	@Override
+	public String toString() {
+		return "ReadDefaultFloatFormatVariable{"
+				+ "value=" + value
+				+ '}';
 	}
 }

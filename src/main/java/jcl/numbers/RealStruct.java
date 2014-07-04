@@ -6,7 +6,7 @@ import jcl.types.Real;
 import java.util.List;
 
 /**
- * The {@code RealStruct} is the object representation of a Lisp 'real' type.
+ * The {@link RealStruct} is the object representation of a Lisp 'real' type.
  */
 public class RealStruct extends NumberStruct {
 
@@ -28,7 +28,7 @@ public class RealStruct extends NumberStruct {
 	 * @param subClasses         the subclasses
 	 */
 	protected RealStruct(final Real type,
-						 final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+	                     final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
 		super(type, directSuperClasses, subClasses);
 	}
 

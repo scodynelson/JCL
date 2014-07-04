@@ -13,7 +13,7 @@ import jcl.types.ConcatenatedStream;
 import java.util.LinkedList;
 
 /**
- * The {@code ConcatenatedStreamStruct} is the object representation of a Lisp 'concatenated-stream' type.
+ * The {@link ConcatenatedStreamStruct} is the object representation of a Lisp 'concatenated-stream' type.
  */
 public class ConcatenatedStreamStruct extends StreamStruct implements InputStream {
 
@@ -22,7 +22,7 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 	/**
 	 * Public constructor.
 	 *
-	 * @param inputStreams the {@code InputStream}s to create a {@code ConcatenatedStreamStruct} from
+	 * @param inputStreams the {@link InputStream}s to create a {@code ConcatenatedStreamStruct} from
 	 */
 	public ConcatenatedStreamStruct(final LinkedList<InputStream> inputStreams) {
 		this(false, inputStreams);
@@ -32,7 +32,7 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 	 * Public constructor.
 	 *
 	 * @param isInteractive whether or not the struct created is 'interactive'
-	 * @param inputStreams  the {@code InputStream}s to create a {@code ConcatenatedStreamStruct} from
+	 * @param inputStreams  the {@link InputStream}s to create a {@code ConcatenatedStreamStruct} from
 	 */
 	public ConcatenatedStreamStruct(final boolean isInteractive, final LinkedList<InputStream> inputStreams) {
 		super(ConcatenatedStream.INSTANCE, null, null, isInteractive, getElementType(inputStreams));
@@ -42,7 +42,7 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 	/**
 	 * This private method is used to retrieve the element type for object construction.
 	 *
-	 * @param inputStreams the {@code InputStream}s to create a {@code ConcatenatedStreamStruct} from
+	 * @param inputStreams the {@link InputStream}s to create a {@code ConcatenatedStreamStruct} from
 	 * @return the element type for object construction
 	 */
 	private static LispType getElementType(final LinkedList<InputStream> inputStreams) {
@@ -55,7 +55,7 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 	/**
 	 * This private method is used to retrieve the element type for object construction.
 	 *
-	 * @param inputStreams the {@code InputStream}s to create a {@code ConcatenatedStreamStruct} from
+	 * @param inputStreams the {@link InputStream}s to create a {@code ConcatenatedStreamStruct} from
 	 * @return the element type for object construction
 	 */
 	private static LispType getElementType2(final LinkedList<InputStream> inputStreams) {

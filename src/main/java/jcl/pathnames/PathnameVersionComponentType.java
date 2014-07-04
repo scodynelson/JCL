@@ -1,10 +1,11 @@
 package jcl.pathnames;
 
 /**
- * The {@code PathnameVersionComponentType} is the enumeration of the type of a component element of the version element
+ * The {@link PathnameVersionComponentType} is the enumeration of the type of a component element of the version element
  * of a Lisp 'pathname' type.
  */
 public enum PathnameVersionComponentType {
+
 	UNSPECIFIC(":UNSPECIFIC"),
 	WILD(":WILD"),
 	NIL("NIL"),
@@ -29,5 +30,12 @@ public enum PathnameVersionComponentType {
 	 */
 	public String getValue() {
 		return value;
+	}
+
+	@Override
+	public String toString() {
+		return "PathnameVersionComponentType{"
+				+ "value='" + value + '\''
+				+ '}';
 	}
 }

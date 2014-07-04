@@ -5,7 +5,7 @@ import jcl.types.BaseChar;
 import jcl.types.StringStream;
 
 /**
- * The {@code StringOutputStreamStruct} is the object representation of a Lisp 'string-stream' output type.
+ * The {@link StringOutputStreamStruct} is the object representation of a Lisp 'string-stream' output type.
  */
 public class StringOutputStreamStruct extends StreamStruct implements OutputStream {
 

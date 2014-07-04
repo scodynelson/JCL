@@ -20,7 +20,7 @@ import java.io.PrintWriter;
 import java.nio.charset.Charset;
 
 /**
- * The {@code CharacterStreamStruct} is the object representation of a character reading system level Lisp stream.
+ * The {@link CharacterStreamStruct} is the object representation of a character reading system level Lisp stream.
  */
 public class CharacterStreamStruct extends NativeStreamStruct {
 
@@ -32,8 +32,8 @@ public class CharacterStreamStruct extends NativeStreamStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param inputStream  the {@code java.io.InputStream} to create a {@code CharacterStreamStruct} from
-	 * @param outputStream the {@code java.io.OutputStream} to create a {@code CharacterStreamStruct} from
+	 * @param inputStream  the {@link java.io.InputStream} to create a {@code CharacterStreamStruct} from
+	 * @param outputStream the {@link java.io.OutputStream} to create a {@code CharacterStreamStruct} from
 	 */
 	public CharacterStreamStruct(final InputStream inputStream, final OutputStream outputStream) {
 		this(false, inputStream, outputStream);
@@ -43,8 +43,8 @@ public class CharacterStreamStruct extends NativeStreamStruct {
 	 * Public constructor.
 	 *
 	 * @param isInteractive whether or not the struct created is 'interactive'
-	 * @param inputStream   the {@code java.io.InputStream} to create a {@code CharacterStreamStruct} from
-	 * @param outputStream  the {@code java.io.OutputStream} to create a {@code CharacterStreamStruct} from
+	 * @param inputStream   the {@link java.io.InputStream} to create a {@code CharacterStreamStruct} from
+	 * @param outputStream  the {@link java.io.OutputStream} to create a {@code CharacterStreamStruct} from
 	 */
 	public CharacterStreamStruct(final boolean isInteractive, final InputStream inputStream, final OutputStream outputStream) {
 		super(Stream.INSTANCE, isInteractive, Character.INSTANCE);
@@ -218,6 +218,7 @@ public class CharacterStreamStruct extends NativeStreamStruct {
 
 	@Override
 	public String toString() {
+		// TODO: fix toString warning...
 		return "CharacterStreamStruct{"
 				+ "inputStream=" + inputStream
 				+ ", outputStream=" + outputStream

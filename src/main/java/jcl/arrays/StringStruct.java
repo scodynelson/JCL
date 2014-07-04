@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The {@code StringStruct} is the object representation of a Lisp 'string' type.
+ * The {@link StringStruct} is the object representation of a Lisp 'string' type.
  */
 public class StringStruct extends VectorStruct<CharacterStruct> {
 
@@ -35,7 +35,7 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 	 * @param fillPointer  the string fillPointer
 	 */
 	public StringStruct(final int size, final List<CharacterStruct> contents, final Character elementType,
-						final boolean isAdjustable, final Integer fillPointer) {
+	                    final boolean isAdjustable, final Integer fillPointer) {
 		super(getStringType(isAdjustable, fillPointer, elementType), size, contents, elementType, isAdjustable, fillPointer);
 	}
 
@@ -56,10 +56,10 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 	}
 
 	/**
-	 * This method gets a list of CharacterStructs from the provided Java string value.
+	 * This method gets a list of {@link CharacterStruct}s from the provided Java string value.
 	 *
-	 * @param stringValue the Java string to convert to a list of CharacterStructs
-	 * @return a list of CharacterStructs from the provided Java string value
+	 * @param stringValue the Java string to convert to a list of {@link CharacterStruct}s
+	 * @return a list of {@link CharacterStruct}s from the provided Java string value
 	 */
 	private static List<CharacterStruct> getCharList(final java.lang.String stringValue) {
 		final List<CharacterStruct> charList = new ArrayList<>(stringValue.length());
@@ -71,7 +71,7 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 	}
 
 	/**
-	 * This method returns the Java string representation of the StringStruct.
+	 * This method returns the Java string representation of the {@code StringStruct}.
 	 *
 	 * @return a Java string representation of the StringStruct
 	 */

@@ -11,7 +11,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 /**
- * The {@code LogicalPathnameStruct} is the object representation of a Lisp 'logical-pathname' type.
+ * The {@link LogicalPathnameStruct} is the object representation of a Lisp 'logical-pathname' type.
  */
 public class LogicalPathnameStruct extends PathnameStruct {
 
@@ -40,7 +40,7 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	 * @param version   the logical-pathname version
 	 */
 	private LogicalPathnameStruct(final PathnameHost host, final PathnameDirectory directory, final PathnameName name,
-								  final PathnameType type, final PathnameVersion version) {
+	                              final PathnameType type, final PathnameVersion version) {
 		super(LogicalPathname.INSTANCE, host, new PathnameDevice(PathnameComponentType.UNSPECIFIC), directory, name, type, version);
 	}
 

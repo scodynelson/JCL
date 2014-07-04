@@ -4,7 +4,7 @@ import jcl.LispStruct;
 import jcl.LispType;
 
 /**
- * The {@code LispStream} is the representation for all Lisp 'stream' types.
+ * The {@link LispStream} is the representation for all Lisp 'stream' types.
  */
 public interface LispStream extends LispStruct {
 
@@ -21,14 +21,14 @@ public interface LispStream extends LispStruct {
 	LispType getElementType();
 
 	/**
-	 * This method returns the length of the stream if it is a {@code FileStreamStruct}.
+	 * This method returns the length of the stream if it is a {@link FileStreamStruct}.
 	 *
 	 * @return the length of the stream
 	 */
 	Long fileLength();
 
 	/**
-	 * This method returns the current position in the stream if it is a {@code FileStreamStruct}.
+	 * This method returns the current position in the stream if it is a {@link FileStreamStruct}.
 	 *
 	 * @param filePosition if not null, the current stream position will be set to this value
 	 * @return the current position in the stream

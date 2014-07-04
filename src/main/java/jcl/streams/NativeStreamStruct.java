@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The {@code NativeStreamStruct} is an abstraction for native stream types.
+ * The {@link NativeStreamStruct} is an abstraction for native stream types.
  */
 abstract class NativeStreamStruct extends StreamStruct implements InputStream, OutputStream {
 

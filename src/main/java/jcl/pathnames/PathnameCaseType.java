@@ -1,9 +1,10 @@
 package jcl.pathnames;
 
 /**
- * The {@code PathnameCase} is the enumeration of the case types to parse the elements of a Lisp 'pathname' type.
+ * The {@link PathnameCaseType} is the enumeration of the case types to parse the elements of a Lisp 'pathname' type.
  */
 public enum PathnameCaseType {
+
 	COMMON(":COMMON"),
 	LOCAL(":LOCAL");
 
@@ -25,5 +26,12 @@ public enum PathnameCaseType {
 	 */
 	public String getValue() {
 		return value;
+	}
+
+	@Override
+	public String toString() {
+		return "PathnameCaseType{"
+				+ "value='" + value + '\''
+				+ '}';
 	}
 }

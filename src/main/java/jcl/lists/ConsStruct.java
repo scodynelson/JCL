@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * The {@code ConsStruct} is the object representation of a Lisp 'cons' type.
+ * The {@link ConsStruct} is the object representation of a Lisp 'cons' type.
  */
 public class ConsStruct extends ListStruct {
 

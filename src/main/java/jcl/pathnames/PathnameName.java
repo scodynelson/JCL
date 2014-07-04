@@ -3,7 +3,7 @@ package jcl.pathnames;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * The {@code PathnameName} is the object representation of the 'name' element of a Lisp 'pathname' type.
+ * The {@link PathnameName} is the object representation of the 'name' element of a Lisp 'pathname' type.
  */
 public final class PathnameName {
 

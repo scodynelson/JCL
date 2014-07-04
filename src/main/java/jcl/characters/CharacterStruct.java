@@ -8,7 +8,7 @@ import jcl.types.StandardChar;
 import org.apache.commons.lang3.CharUtils;
 
 /**
- * The {@code CharacterStruct} is the object representation of a Lisp 'character' type.
+ * The {@link CharacterStruct} is the object representation of a Lisp 'character' type.
  */
 public class CharacterStruct extends BuiltInClassStruct {
 

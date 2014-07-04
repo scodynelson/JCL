@@ -13,7 +13,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 /**
- * The {@code PathnameURIStruct} is the uri-type object representation of a Lisp 'pathname' type.
+ * The {@link PathnameURIStruct} is the uri-type object representation of a Lisp 'pathname' type.
  */
 class PathnameURIStruct extends PathnameStruct {
 
@@ -30,7 +30,7 @@ class PathnameURIStruct extends PathnameStruct {
 	 * @param version   the pathname version
 	 */
 	PathnameURIStruct(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
-					  final PathnameName name, final PathnameType type, final PathnameVersion version) {
+	                  final PathnameName name, final PathnameType type, final PathnameVersion version) {
 		super(host, device, directory, name, type, version);
 	}
 

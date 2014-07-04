@@ -1,7 +1,7 @@
 package jcl.pathnames;
 
 /**
- * The {@code PathnameDirectory} is the object representation of the 'directory' element of a Lisp 'pathname' type.
+ * The {@link PathnameDirectory} is the object representation of the 'directory' element of a Lisp 'pathname' type.
  */
 public final class PathnameDirectory {
 

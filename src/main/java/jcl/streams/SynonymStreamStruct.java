@@ -10,7 +10,7 @@ import jcl.LispType;
 import jcl.types.SynonymStream;
 
 /**
- * The {@code SynonymStreamStruct} is the object representation of a Lisp 'synonym-stream' type.
+ * The {@link SynonymStreamStruct} is the object representation of a Lisp 'synonym-stream' type.
  */
 public class SynonymStreamStruct extends StreamStruct implements InputStream, OutputStream {
 

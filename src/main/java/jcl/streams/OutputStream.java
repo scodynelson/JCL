@@ -1,7 +1,7 @@
 package jcl.streams;
 
 /**
- * The {@code OutputStream} is the representation for all Lisp output 'stream' types.
+ * The {@link OutputStream} is the representation for all Lisp output 'stream' types.
  */
 public interface OutputStream extends LispStream {
 

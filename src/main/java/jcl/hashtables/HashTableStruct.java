@@ -15,8 +15,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * The {@code HashTableStruct} is the object representation of a Lisp 'hash-table' type.
- * <p/>
+ * The {@link HashTableStruct} is the object representation of a Lisp 'hash-table' type.
+ * <p>
  * NOTE: This implementation does NOT support size tracking or rehash-size customization. These are handled internally by Java.
  */
 public class HashTableStruct extends BuiltInClassStruct {

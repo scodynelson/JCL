@@ -6,7 +6,7 @@ import jcl.types.Stream;
 import jcl.typespecifiers.AndTypeSpecifier;
 
 /**
- * The {@code DualStreamStruct} is an abstraction for dual stream types.
+ * The {@link DualStreamStruct} is an abstraction for dual stream types.
  */
 abstract class DualStreamStruct extends StreamStruct implements InputStream, OutputStream {
 
@@ -18,11 +18,11 @@ abstract class DualStreamStruct extends StreamStruct implements InputStream, Out
 	 *
 	 * @param type          the type of the stream object
 	 * @param isInteractive whether or not the struct created is 'interactive'
-	 * @param inputStream   the {@code InputStream} to create a {@code DualStreamStruct} from
-	 * @param outputStream  the {@code OutputStream} to create a {@code DualStreamStruct} from
+	 * @param inputStream   the {@link InputStream} to create a {@code DualStreamStruct} from
+	 * @param outputStream  the {@link OutputStream} to create a {@code DualStreamStruct} from
 	 */
 	protected DualStreamStruct(final Stream type,
-							   final boolean isInteractive, final InputStream inputStream, final OutputStream outputStream) {
+	                           final boolean isInteractive, final InputStream inputStream, final OutputStream outputStream) {
 		super(type, null, null, isInteractive, getElementType(inputStream, outputStream));
 		this.inputStream = inputStream;
 		this.outputStream = outputStream;
@@ -31,8 +31,8 @@ abstract class DualStreamStruct extends StreamStruct implements InputStream, Out
 	/**
 	 * This method is used to retrieve the element type for object construction.
 	 *
-	 * @param inputStream  the {@code InputStream} to create a {@code DualStreamStruct} from
-	 * @param outputStream the {@code OutputStream} to create a {@code DualStreamStruct} from
+	 * @param inputStream  the {@link InputStream} to create a {@code DualStreamStruct} from
+	 * @param outputStream the {@link OutputStream} to create a {@code DualStreamStruct} from
 	 * @return the element type for object construction
 	 */
 	private static LispType getElementType(final InputStream inputStream, final OutputStream outputStream) {
@@ -92,5 +92,13 @@ abstract class DualStreamStruct extends StreamStruct implements InputStream, Out
 	@Override
 	public Long fileLength() {
 		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_FILESTREAM);
+	}
+
+	@Override
+	public String toString() {
+		return "DualStreamStruct{" +
+				"inputStream=" + inputStream +
+				", outputStream=" + outputStream +
+				'}';
 	}
 }

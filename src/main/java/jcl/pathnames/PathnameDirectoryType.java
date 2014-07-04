@@ -1,9 +1,10 @@
 package jcl.pathnames;
 
 /**
- * The {@code PathnameDirectoryType} is the enumeration of the type of the 'directory' element of a Lisp 'pathname' type.
+ * The {@link PathnameDirectoryType} is the enumeration of the type of the 'directory' element of a Lisp 'pathname' type.
  */
 public enum PathnameDirectoryType {
+
 	ABSOLUTE(":ABSOLUTE"),
 	RELATIVE(":RELATIVE");
 
@@ -25,5 +26,12 @@ public enum PathnameDirectoryType {
 	 */
 	public String getValue() {
 		return value;
+	}
+
+	@Override
+	public String toString() {
+		return "PathnameDirectoryType{"
+				+ "value='" + value + '\''
+				+ '}';
 	}
 }

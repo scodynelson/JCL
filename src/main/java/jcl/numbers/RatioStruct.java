@@ -6,7 +6,7 @@ import org.apache.commons.math3.fraction.BigFraction;
 import java.math.BigInteger;
 
 /**
- * The {@code RatioStruct} is the object representation of a Lisp 'ratio' type.
+ * The {@link RatioStruct} is the object representation of a Lisp 'ratio' type.
  */
 public class RatioStruct extends RationalStruct {
 
@@ -48,5 +48,4 @@ public class RatioStruct extends RationalStruct {
 				+ "bigFraction=" + bigFraction
 				+ '}';
 	}
-
 }

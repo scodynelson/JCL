@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * The {@code NullStruct} is the object representation of a Lisp 'null' type.
+ * The {@link NullStruct} is the object representation of a Lisp 'null' type.
  */
 public final class NullStruct extends ListStruct {
 

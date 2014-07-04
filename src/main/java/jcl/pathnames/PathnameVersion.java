@@ -3,7 +3,7 @@ package jcl.pathnames;
 import jcl.conditions.exceptions.FileErrorException;
 
 /**
- * The {@code PathnameVersion} is the object representation of the 'version' element of a Lisp 'pathname' type.
+ * The {@link PathnameVersion} is the object representation of the 'version' element of a Lisp 'pathname' type.
  */
 public final class PathnameVersion {
 

@@ -6,7 +6,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import java.util.List;
 
 /**
- * The {@code PathnameDirectoryComponent} is the object representation of a directory component of the 'directory'
+ * The {@link PathnameDirectoryComponent} is the object representation of a directory component of the 'directory'
  * element of a Lisp 'pathname' type.
  */
 public final class PathnameDirectoryComponent {

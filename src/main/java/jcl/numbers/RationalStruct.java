@@ -6,7 +6,7 @@ import jcl.types.Rational;
 import java.util.List;
 
 /**
- * The {@code RationalStruct} is the object representation of a Lisp 'rational' type.
+ * The {@link RationalStruct} is the object representation of a Lisp 'rational' type.
  */
 public class RationalStruct extends RealStruct {
 
@@ -28,7 +28,7 @@ public class RationalStruct extends RealStruct {
 	 * @param subClasses         the subclasses
 	 */
 	protected RationalStruct(final Rational type,
-							 final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+	                         final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
 		super(type, directSuperClasses, subClasses);
 	}
 

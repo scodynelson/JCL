@@ -10,7 +10,7 @@ import jcl.types.EchoStream;
 import java.util.LinkedList;
 
 /**
- * The {@code EchoStreamStruct} is the object representation of a Lisp 'echo-stream' type.
+ * The {@link EchoStreamStruct} is the object representation of a Lisp 'echo-stream' type.
  */
 public class EchoStreamStruct extends DualStreamStruct {
 
@@ -19,8 +19,8 @@ public class EchoStreamStruct extends DualStreamStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param inputStream  the {@code InputStream} to create a {@code EchoStreamStruct} from
-	 * @param outputStream the {@code OutputStream} to create a {@code EchoStreamStruct} from
+	 * @param inputStream  the {@link InputStream} to create a {@code EchoStreamStruct} from
+	 * @param outputStream the {@link OutputStream} to create a {@code EchoStreamStruct} from
 	 */
 	public EchoStreamStruct(final InputStream inputStream, final OutputStream outputStream) {
 		this(false, inputStream, outputStream);
@@ -30,8 +30,8 @@ public class EchoStreamStruct extends DualStreamStruct {
 	 * Public constructor.
 	 *
 	 * @param isInteractive whether or not the struct created is 'interactive'
-	 * @param inputStream   the {@code InputStream} to create a {@code EchoStreamStruct} from
-	 * @param outputStream  the {@code OutputStream} to create a {@code EchoStreamStruct} from
+	 * @param inputStream   the {@link InputStream} to create a {@code EchoStreamStruct} from
+	 * @param outputStream  the {@link OutputStream} to create a {@code EchoStreamStruct} from
 	 */
 	public EchoStreamStruct(final boolean isInteractive, final InputStream inputStream, final OutputStream outputStream) {
 		super(EchoStream.INSTANCE, isInteractive, inputStream, outputStream);

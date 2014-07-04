@@ -8,7 +8,7 @@ import jcl.types.Stream;
 import java.util.List;
 
 /**
- * The {@code StreamStruct} is the object representation of a Lisp 'stream' type.
+ * The {@link StreamStruct} is the object representation of a Lisp 'stream' type.
  */
 public abstract class StreamStruct extends BuiltInClassStruct implements LispStream {
 

@@ -6,7 +6,7 @@ import jcl.syntax.reader.PeekType;
 import jcl.syntax.reader.ReadResult;
 
 /**
- * The {@code InputStream} is the representation for all Lisp input 'stream' types.
+ * The {@link InputStream} is the representation for all Lisp input 'stream' types.
  */
 public interface InputStream extends LispStream {
 

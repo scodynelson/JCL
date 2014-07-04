@@ -1,9 +1,10 @@
 package jcl.pathnames;
 
 /**
- * The {@code PathnameStructType} is the enumeration of the structure type of a Lisp 'pathname' type.
+ * The {@link PathnameStructType} is the enumeration of the structure type of a Lisp 'pathname' type.
  */
 public enum PathnameStructType {
+
 	FILE(":FILE"),
 	URI(":URI");
 
@@ -25,5 +26,12 @@ public enum PathnameStructType {
 	 */
 	public String getValue() {
 		return value;
+	}
+
+	@Override
+	public String toString() {
+		return "PathnameStructType{"
+				+ "value='" + value + '\''
+				+ '}';
 	}
 }

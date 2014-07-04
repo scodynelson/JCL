@@ -3,7 +3,7 @@ package jcl.numbers;
 import jcl.variables.LispVariable;
 
 /**
- * The {@code ReadBaseVariable} is the object representation of the *read-base* variable.
+ * The {@link ReadBaseVariable} is the object representation of the *read-base* variable.
  */
 public class ReadBaseVariable implements LispVariable<Integer> {
 
@@ -32,5 +32,12 @@ public class ReadBaseVariable implements LispVariable<Integer> {
 	 */
 	public void setValue(final int value) {
 		this.value = value;
+	}
+
+	@Override
+	public String toString() {
+		return "ReadBaseVariable{"
+				+ "value=" + value
+				+ '}';
 	}
 }

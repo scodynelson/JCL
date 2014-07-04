@@ -5,7 +5,7 @@ import jcl.types.Integer;
 import java.math.BigInteger;
 
 /**
- * The {@code IntegerStruct} is the object representation of a Lisp 'integer' type.
+ * The {@link IntegerStruct} is the object representation of a Lisp 'integer' type.
  */
 public class IntegerStruct extends RationalStruct {
 
@@ -23,7 +23,7 @@ public class IntegerStruct extends RationalStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param integerFormat a {@code Integer} that represents the type of {@code Integer}
+	 * @param integerFormat a {@link Integer} that represents the type of {@link Integer}
 	 * @param bigInteger    the value of the {@code IntegerStruct}
 	 */
 	public IntegerStruct(final Integer integerFormat, final BigInteger bigInteger) {

@@ -6,7 +6,7 @@ import jcl.types.SingleFloat;
 import java.math.BigDecimal;
 
 /**
- * The {@code FloatStruct} is the object representation of a Lisp 'float' type.
+ * The {@link FloatStruct} is the object representation of a Lisp 'float' type.
  */
 public class FloatStruct extends RealStruct {
 
@@ -24,7 +24,7 @@ public class FloatStruct extends RealStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param floatFormat a {@code Float} that represents the type of {@code Float}
+	 * @param floatFormat a {@link Float} that represents the type of {@link Float}
 	 * @param bigDecimal  the value of the {@code FloatStruct}
 	 */
 	public FloatStruct(final Float floatFormat, final BigDecimal bigDecimal) {

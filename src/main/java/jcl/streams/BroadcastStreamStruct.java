@@ -8,7 +8,7 @@ import jcl.types.BroadcastStream;
 import java.util.LinkedList;
 
 /**
- * The {@code BroadcastStreamStruct} is the object representation of a Lisp 'broadcast-stream' type.
+ * The {@link BroadcastStreamStruct} is the object representation of a Lisp 'broadcast-stream' type.
  */
 public class BroadcastStreamStruct extends StreamStruct implements OutputStream {
 
@@ -17,7 +17,7 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 	/**
 	 * Public constructor.
 	 *
-	 * @param outputStreams the {@code OutputStream}s to create a {@code BroadcastStreamStruct} from
+	 * @param outputStreams the {@link OutputStream}s to create a {@code BroadcastStreamStruct} from
 	 */
 	public BroadcastStreamStruct(final LinkedList<OutputStream> outputStreams) {
 		this(false, outputStreams);
@@ -27,7 +27,7 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 	 * Public constructor.
 	 *
 	 * @param isInteractive whether or not the struct created is 'interactive'
-	 * @param outputStreams the {@code OutputStream}s to create a {@code BroadcastStreamStruct} from
+	 * @param outputStreams the {@link OutputStream}s to create a {@code BroadcastStreamStruct} from
 	 */
 	public BroadcastStreamStruct(final boolean isInteractive, final LinkedList<OutputStream> outputStreams) {
 		super(BroadcastStream.INSTANCE, null, null, isInteractive, getElementType(outputStreams));
@@ -37,7 +37,7 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 	/**
 	 * This private method is used to retrieve the element type for object construction.
 	 *
-	 * @param outputStreams the {@code OutputStream}s to create a {@code BroadcastStreamStruct} from
+	 * @param outputStreams the {@link OutputStream}s to create a {@code BroadcastStreamStruct} from
 	 * @return the element type for object construction
 	 */
 	private static LispType getElementType(final LinkedList<OutputStream> outputStreams) {
@@ -50,7 +50,7 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 	/**
 	 * This private method is used to retrieve the element type for object construction.
 	 *
-	 * @param outputStreams the {@code OutputStream}s to create a {@code BroadcastStreamStruct} from
+	 * @param outputStreams the {@link OutputStream}s to create a {@code BroadcastStreamStruct} from
 	 * @return the element type for object construction
 	 */
 	private static LispType getElementType2(final LinkedList<OutputStream> outputStreams) {

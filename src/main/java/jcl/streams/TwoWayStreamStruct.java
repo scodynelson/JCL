@@ -7,15 +7,15 @@ import jcl.syntax.reader.ReadResult;
 import jcl.types.TwoWayStream;
 
 /**
- * The {@code TwoWayStreamStruct} is the object representation of a Lisp 'two-way-stream' type.
+ * The {@link TwoWayStreamStruct} is the object representation of a Lisp 'two-way-stream' type.
  */
 public class TwoWayStreamStruct extends DualStreamStruct {
 
 	/**
 	 * Public constructor.
 	 *
-	 * @param inputStream  the {@code InputStream} to create a {@code TwoWayStreamStruct} from
-	 * @param outputStream the {@code OutputStream} to create a {@code TwoWayStreamStruct} from
+	 * @param inputStream  the {@link InputStream} to create a {@code TwoWayStreamStruct} from
+	 * @param outputStream the {@link OutputStream} to create a {@code TwoWayStreamStruct} from
 	 */
 	public TwoWayStreamStruct(final InputStream inputStream, final OutputStream outputStream) {
 		this(false, inputStream, outputStream);
@@ -25,8 +25,8 @@ public class TwoWayStreamStruct extends DualStreamStruct {
 	 * Public constructor.
 	 *
 	 * @param isInteractive whether or not the struct created is 'interactive'
-	 * @param inputStream   the {@code InputStream} to create a {@code TwoWayStreamStruct} from
-	 * @param outputStream  the {@code OutputStream} to create a {@code TwoWayStreamStruct} from
+	 * @param inputStream   the {@link InputStream} to create a {@code TwoWayStreamStruct} from
+	 * @param outputStream  the {@link OutputStream} to create a {@code TwoWayStreamStruct} from
 	 */
 	public TwoWayStreamStruct(final boolean isInteractive, final InputStream inputStream, final OutputStream outputStream) {
 		super(TwoWayStream.INSTANCE, isInteractive, inputStream, outputStream);

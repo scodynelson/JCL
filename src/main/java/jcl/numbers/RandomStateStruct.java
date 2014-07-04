@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The {@code RandomStateStruct} is the object representation of a Lisp 'random-state' type.
+ * The {@link RandomStateStruct} is the object representation of a Lisp 'random-state' type.
  */
 public class RandomStateStruct extends BuiltInClassStruct {
 
@@ -51,7 +51,7 @@ public class RandomStateStruct extends BuiltInClassStruct {
 	 * This method retrieves a random integer from the internal random seed.
 	 *
 	 * @param limit the upper limit of the random integer
-	 * @return the random {@code BigInteger}
+	 * @return the random {@link BigInteger}
 	 */
 	public BigInteger randomInteger(final BigInteger limit) {
 
@@ -75,7 +75,7 @@ public class RandomStateStruct extends BuiltInClassStruct {
 	 * This method retrieves a random float from the internal random seed.
 	 *
 	 * @param limit the upper limit of the random float
-	 * @return the random {@code BigDecimal}
+	 * @return the random {@link BigDecimal}
 	 */
 	public BigDecimal randomFloat(final BigDecimal limit) {
 
@@ -91,7 +91,7 @@ public class RandomStateStruct extends BuiltInClassStruct {
 	/**
 	 * This method obtains a random 'chunk', or integer value from the internal random seed.
 	 *
-	 * @return the random {@code BigInteger} 'chunk'
+	 * @return the random {@link BigInteger} 'chunk'
 	 */
 	private BigInteger randomChunk() {
 		final BigInteger tempJ = jValue;
@@ -124,7 +124,7 @@ public class RandomStateStruct extends BuiltInClassStruct {
 	 * This method is a bit shifting method depending on the sign of the shift value.
 	 *
 	 * @param bits the bits to shift
-	 * @return a new shifted {@code BigInteger}
+	 * @return a new shifted {@link BigInteger}
 	 */
 	private static BigInteger ash(final BigInteger bits) {
 		return (SHIFT_AMOUNT_AS_INT <= 0) ? bits.shiftRight(SHIFT_AMOUNT_AS_INT) : bits.shiftLeft(SHIFT_AMOUNT_AS_INT);

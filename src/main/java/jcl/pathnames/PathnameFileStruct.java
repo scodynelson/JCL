@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 /**
- * The {@code PathnameFileStruct} is the file-type object representation of a Lisp 'pathname' type.
+ * The {@link PathnameFileStruct} is the file-type object representation of a Lisp 'pathname' type.
  */
 class PathnameFileStruct extends PathnameStruct {
 
@@ -35,7 +35,7 @@ class PathnameFileStruct extends PathnameStruct {
 	 * @param version   the pathname version
 	 */
 	PathnameFileStruct(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
-					   final PathnameName name, final PathnameType type, final PathnameVersion version) {
+	                   final PathnameName name, final PathnameType type, final PathnameVersion version) {
 		super(host, device, directory, name, type, version);
 	}
 

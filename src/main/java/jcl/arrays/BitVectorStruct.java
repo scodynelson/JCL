@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 /**
- * The {@code BitVectorStruct} is the object representation of a Lisp 'bit-vector' type.
+ * The {@link BitVectorStruct} is the object representation of a Lisp 'bit-vector' type.
  */
 public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 
@@ -54,10 +54,10 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 	}
 
 	/**
-	 * This method gets a list of IntegerStruct from the provided Java string value.
+	 * This method gets a list of {@link IntegerStruct}s from the provided Java string value.
 	 *
-	 * @param bitString the Java string to convert to a list of IntegerStruct
-	 * @return a list of IntegerStruct from the provided Java string value
+	 * @param bitString the Java string to convert to a list of {@link IntegerStruct}s
+	 * @return a list of {@link IntegerStruct}s from the provided Java string value
 	 */
 	private static List<IntegerStruct> getBitList(final String bitString) {
 		if (!BIT_PATTERN.matcher(bitString).matches()) {

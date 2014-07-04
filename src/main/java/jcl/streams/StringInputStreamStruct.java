@@ -10,7 +10,7 @@ import jcl.types.BaseChar;
 import jcl.types.StringStream;
 
 /**
- * The {@code StringInputStreamStruct} is the object representation of a Lisp 'string-stream' input type.
+ * The {@link StringInputStreamStruct} is the object representation of a Lisp 'string-stream' input type.
  */
 public class StringInputStreamStruct extends StreamStruct implements InputStream {
 

@@ -1,26 +1,26 @@
 package jcl.variables;
 
-import jcl.symbols.SymbolStruct;
+import jcl.LispStruct;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FeaturesVariable implements LispVariable<List<SymbolStruct<?>>> {
+public class FeaturesVariable implements LispVariable<List<LispStruct>> {
 
 	public static final FeaturesVariable INSTANCE = new FeaturesVariable(new ArrayList<>());
 
-	private List<SymbolStruct<?>> value;
+	private List<LispStruct> value;
 
-	private FeaturesVariable(final List<SymbolStruct<?>> value) {
+	private FeaturesVariable(final List<LispStruct> value) {
 		this.value = value;
 	}
 
 	@Override
-	public List<SymbolStruct<?>> getValue() {
+	public List<LispStruct> getValue() {
 		return value;
 	}
 
-	public void setValue(final List<SymbolStruct<?>> value) {
+	public void setValue(final List<LispStruct> value) {
 		this.value = value;
 	}
 }

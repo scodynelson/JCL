@@ -1,7 +1,5 @@
 package jcl.readtables.reader.impl;
 
-import jcl.readtables.reader.Reader;
-import jcl.readtables.reader.impl.state.InitialState;
 import jcl.readtables.reader.syntax.TokenBuilder;
 
 /**

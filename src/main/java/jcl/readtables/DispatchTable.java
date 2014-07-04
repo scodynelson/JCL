@@ -2,8 +2,8 @@ package jcl.readtables;
 
 import jcl.LispStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.readtables.reader.Reader;
-import jcl.readtables.reader.macrofunction.ReaderMacroFunction;
+import jcl.readtables.reader.impl.Reader;
+import jcl.readtables.reader.function.macrofunction.ReaderMacroFunction;
 import jcl.syntax.reader.ReadResult;
 
 import java.util.Map;

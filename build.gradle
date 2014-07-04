@@ -2,17 +2,6 @@ description = 'JCL'
 group = 'jcl'
 version = '1.0-SNAPSHOT'
 
-apply plugin: 'sonar-runner'
-sonarRunner {
-	sonarProperties {
-		setProperty 'sonar.host.url', "http://localhost:9000"
-		setProperty 'sonar.jdbc.url', "jdbc:h2:tcp://localhost:9092/sonar"
-		setProperty 'sonar.jdbc.username', "sonar"
-		setProperty 'sonar.jdbc.password', "sonar"
-		setProperty 'sonar.jacoco.reportPath', "${project.buildDir}/jacoco/test.exec"
-	}
-}
-
 apply plugin: 'java'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -22,7 +11,7 @@ repositories {
 	mavenCentral()
 }
 
-tasks.withType(JavaCompile) {
+compileJava {
 	options.compilerArgs << "-Xlint"
 }
 
@@ -64,8 +53,8 @@ test {
 
 	jacoco {
 		append = true
-		destinationFile = file("${project.buildDir}/jacoco/jacocoTest.exec")
-		classDumpFile = file("${project.buildDir}/jacoco/classpathdumps")
+		destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
+		classDumpFile = file("$buildDir/jacoco/classpathdumps")
 	}
 }
 jacocoTestReport {
@@ -75,6 +64,16 @@ jacocoTestReport {
 	reports {
 		xml.enabled false
 		csv.enabled false
-		html.destination "${project.buildDir}/jacocoHtml"
+		html.destination "$buildDir/jacocoHtml"
+	}
+}
+
+apply plugin: 'sonar-runner'
+sonarRunner {
+	sonarProperties {
+		setProperty "sonar.host.url", "http://localhost:9000"
+		setProperty "sonar.jdbc.url", "jdbc:h2:tcp://localhost:9092/sonar"
+		setProperty "sonar.jdbc.username", "sonar"
+		setProperty "sonar.jdbc.password", "sonar"
 	}
 }

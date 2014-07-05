@@ -24,6 +24,9 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 
 	protected final List<LispStruct> properties = new ArrayList<>();
 
+	// TODO: Handle special's correctly...
+	protected boolean isSpecial;
+
 	/**
 	 * Public constructor.
 	 *
@@ -85,7 +88,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 * @param function      the symbol function
 	 */
 	protected SymbolStruct(final Symbol symbolType,
-						   final String name, final PackageStruct symbolPackage, final TYPE value, final FunctionStruct function) {
+	                       final String name, final PackageStruct symbolPackage, final TYPE value, final FunctionStruct function) {
 		super(symbolType, null, null);
 		this.name = name;
 
@@ -167,6 +170,15 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	}
 
 	/**
+	 * Getter for symbol isSpecial property.
+	 *
+	 * @return symbol isSpecial property
+	 */
+	public boolean isSpecial() {
+		return isSpecial;
+	}
+
+	/**
 	 * This method retrieves a property from the symbol internal properties.
 	 *
 	 * @param key the key for the property to retrieve
@@ -221,9 +233,10 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		return "SymbolStruct{"
 				+ "name='" + name + '\''
 				+ ", symbolPackage=" + symbolPackage
-				+ ", properties=" + properties
 				+ ", value=" + value
 				+ ", function=" + function
+				+ ", properties=" + properties
+				+ ", isSpecial=" + isSpecial
 				+ '}';
 	}
 }

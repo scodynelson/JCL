@@ -19,6 +19,9 @@ String COMMONS_LANG_VERSION = '3.3.2';
 String COMMONS_MATH_VERSION = '3.3';
 String COMMONS_COLLECTIONS_VERSION = '4.0';
 String COMMONS_IO_VERSION = '2.4';
+
+String ASM_ALL_VERSION = '5.0.3';
+
 String SLF4J_VERSION = '1.7.7';
 String LOGBACK_VERSION = '1.1.2';
 
@@ -31,6 +34,8 @@ dependencies {
 	compile group: 'org.apache.commons', name: 'commons-math3', version: "$COMMONS_MATH_VERSION"
 	compile group: 'org.apache.commons', name: 'commons-collections4', version: "$COMMONS_COLLECTIONS_VERSION"
 	compile group: 'commons-io', name: 'commons-io', version: "$COMMONS_IO_VERSION"
+
+	compile group: 'org.ow2.asm', name: 'asm-all', version: "$ASM_ALL_VERSION"
 
 	compile group: 'org.slf4j', name: 'slf4j-api', version: "$SLF4J_VERSION"
 	compile group: 'ch.qos.logback', name: 'logback-core', version: "$LOGBACK_VERSION"

@@ -14,6 +14,7 @@ public interface GlobalPackageStruct {
 	// TODO: Eventually, we must make sure we account for lexical constraints for the CL and Keyword packages defined in the specification.
 	PackageStruct COMMON_LISP = new PackageStruct("COMMON-LISP", Collections.singletonList("CL"));
 	PackageStruct SYSTEM = new PackageStruct("SYSTEM");
+	PackageStruct COMPILER = new PackageStruct("COMPILER");
 	PackageStruct COMMON_LISP_USER = new PackageStruct("COMMON-LISP-USER", Collections.singletonList("CL-USER"));
 	PackageStruct KEYWORD = KeywordPackageStruct.INSTANCE;
 }

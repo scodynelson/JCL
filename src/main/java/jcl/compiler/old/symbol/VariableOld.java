@@ -5,6 +5,7 @@ import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
+import jcl.packages.PackageStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 
@@ -21,4 +22,7 @@ public class VariableOld {
 	public static final SymbolStruct<FunctionStruct> MacroexpandHook = new SymbolStruct<>("*MACROEXPAND-HOOK*", GlobalPackageStruct.COMMON_LISP, null, null);
 	public static final SymbolStruct CompileTrace = new SymbolStruct("*COMPILE-TRACE*", GlobalPackageStruct.COMPILER, null, null);
 	public static final SymbolStruct<ListStruct> DocumentationDom = new SymbolStruct<>("*DOCUMENTATION-DOM*", GlobalPackageStruct.SYSTEM, NullStruct.INSTANCE, null);
+	public static final SymbolStruct EvalVerbosity = new SymbolStruct("*EVAL-VERBOSITY*", GlobalPackageStruct.SYSTEM, NILStruct.INSTANCE, null);
+	public static final SymbolStruct<PackageStruct> Package = new SymbolStruct<>("*PACKAGE*", GlobalPackageStruct.COMMON_LISP, GlobalPackageStruct.COMMON_LISP_USER, null);
+	public static final SymbolStruct FileCompiling = new SymbolStruct("*FILE-COMPILING*", GlobalPackageStruct.COMPILER, null, null);
 }

@@ -543,7 +543,7 @@ public class SemanticAnalyzer {
 	}
 	// ********** END OF saSimpleArray() TRANSLATOR ********** //
 
-	private static FunctionStruct LAMBDA_ARGLIST_MUNGER =
+	public static FunctionStruct LAMBDA_ARGLIST_MUNGER =
 			new FunctionStruct() {
 
 				public LispStruct funcall(LispStruct arglist, LispStruct marker) {

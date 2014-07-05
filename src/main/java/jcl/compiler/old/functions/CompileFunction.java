@@ -63,9 +63,9 @@ public class CompileFunction {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Object funcall(LispStruct obj) {
+	public LispStruct funcall(LispStruct obj) {
 
-		Object lambda = null;
+		LispStruct lambda = null;
 		LispStruct formCopy = NullStruct.INSTANCE;
 
 		Constructor constructor;
@@ -116,7 +116,7 @@ public class CompileFunction {
 			classesLoaded = loadClasses(classBytes, oc);
 			Class primaryClass = (Class) classesLoaded.get(0);
 			constructor = primaryClass.getConstructor();
-			lambda = constructor.newInstance(new Object[]{});
+			lambda = (LispStruct) constructor.newInstance(new Object[]{});
 			// need to update function classes to support storing the form
 			// in the lambda class. This is non-trivial. Probably will be
 			// creating a special variable that is bound to the form during the

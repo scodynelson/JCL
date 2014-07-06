@@ -69,7 +69,7 @@ public class DefunExpander implements MacroFunctionExpander {
 		result = new ConsStruct(result, NullStruct.INSTANCE);
 		result = new ConsStruct(nameDeclaration, result);
 		if (declsAndDoc != NullStruct.INSTANCE) {
-			result = (ListStruct) AppendFunction.FUNCTION.funcall(declsAndDoc, result);
+			result = (ListStruct) AppendFunction.funcall(declsAndDoc, result);
 		}
 		result = new ConsStruct(parameterList, result);
 		result = setTypeSymbol(result);

@@ -240,7 +240,7 @@ public class OpenFunction {
 			}
 		}
 
-		LispStruct retObject = null; // TODO: new FileStreamStruct(pathname, direction, elementType, ifExists, ifDoesNotExist, externalFormat);
+		StreamStruct retObject = null; // TODO: new FileStreamStruct(pathname, direction, elementType, ifExists, ifDoesNotExist, externalFormat);
 
 		//handle probe streams
 		if (direction == KeywordOld.Probe) {
@@ -248,7 +248,7 @@ public class OpenFunction {
 //				throw new RuntimeException("Probe direction supports only file pathnames.");
 //			}
 			try {
-				CloseFunction.FUNCTION.funcall(ListStruct.buildProperList(retObject));
+				retObject.close();
 			} catch (RuntimeException e) {
 				throw new RuntimeException("Failed to close created probe stream for pathname " + pathnameSpec.toString());
 			}

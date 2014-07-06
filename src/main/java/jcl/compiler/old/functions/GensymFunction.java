@@ -1,35 +1,41 @@
 package jcl.compiler.old.functions;
 
+import jcl.arrays.StringStruct;
 import jcl.compiler.old.symbol.VariableOld;
 import jcl.numbers.IntegerStruct;
 import jcl.symbols.SymbolStruct;
 
 import java.math.BigInteger;
 
-public class GensymFunction {
-	public static final GensymFunction FUNCTION = new GensymFunction();
+public final class GensymFunction {
 
-	/**
-	 * @return a new gensym with string "G"
-	 */
-	public Object funcall() {
-		SymbolStruct sym = new SymbolStruct("G" + VariableOld.GensymCounter.getValue());
-		VariableOld.GensymCounter.setValue(new IntegerStruct(VariableOld.GensymCounter.getValue().getBigInteger().add(BigInteger.ONE)));
-		return sym;
+	private GensymFunction() {
 	}
 
-	/**
-	 * @param arg1 if integer the gensym int, else toString is gensym string
-	 * @return new gensym
-	 */
-	public Object funcall(Object arg1) {
-		SymbolStruct sym;
-		if (arg1 instanceof Integer) {
-			sym = new SymbolStruct("G" + arg1);
-		} else {
-			sym = new SymbolStruct("" + arg1 + VariableOld.GensymCounter.getValue());
-			VariableOld.GensymCounter.setValue(new IntegerStruct(VariableOld.GensymCounter.getValue().getBigInteger().add(BigInteger.ONE)));
-		}
+	public static SymbolStruct<?> funcall() {
+		return getGensymWithPrefix("G");
+	}
+
+	public static SymbolStruct<?> funcall(final IntegerStruct arg1) {
+		return new SymbolStruct("G" + arg1.getBigInteger());
+	}
+
+	public static SymbolStruct<?> funcall(final StringStruct arg1) {
+		return getGensymWithPrefix(arg1.getAsJavaString());
+	}
+
+	public static SymbolStruct<?> funcall(final String arg1) {
+		return getGensymWithPrefix(arg1);
+	}
+
+	private static SymbolStruct<?> getGensymWithPrefix(final String prefix) {
+
+		final BigInteger currentGensymCounterValue = VariableOld.GensymCounter.getValue().getBigInteger();
+		final SymbolStruct<?> sym = new SymbolStruct(prefix + currentGensymCounterValue);
+
+		final IntegerStruct newGensymCounter = new IntegerStruct(currentGensymCounterValue.add(BigInteger.ONE));
+		VariableOld.GensymCounter.setValue(newGensymCounter);
+
 		return sym;
 	}
 }

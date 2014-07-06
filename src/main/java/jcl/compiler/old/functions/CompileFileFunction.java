@@ -445,7 +445,7 @@ public class CompileFileFunction {
 						}
 						forms = forms.getRest();
 					}
-					theForm = ReverseFunction.FUNCTION.funcall(resultForms);
+					theForm = ReverseFunction.funcall(resultForms);
 				} else if ((car == SpecialOperatorOld.LOCALLY)
 						|| (car == SpecialOperatorOld.MACROLET)
 						|| (car == SpecialOperatorOld.SYMBOL_MACROLET)) {
@@ -506,7 +506,7 @@ public class CompileFileFunction {
 				}
 				formsToEval = formsToEval.getRest();
 			}
-			return ReverseFunction.FUNCTION.funcall(resultForms);
+			return ReverseFunction.funcall(resultForms);
 		} finally {
 			mode = currentMode;
 		}

@@ -196,7 +196,7 @@ public class EvalFunction {
 									newArgList = new ConsStruct(funcall(argList.getFirst()), newArgList);
 									argList = argList.getRest();
 								}
-								newArgList = (ListStruct) NReverseFunction.FUNCTION.funcall(newArgList);
+								newArgList = (ListStruct) NReverseFunction.funcall(newArgList);
 								rtnObj = function.apply(newArgList);
 							} else {
 								// now we have to compile it to handle &optional, &rest, &key args, and then funcall it

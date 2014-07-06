@@ -5,43 +5,30 @@ import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 
-/**
- * Class Append - implements the standard Lisp function APPEND. There is a singleton
- * instance of this class that can be accessed via lisp.common.type.function.Append.FUNCTION. The
- * arguments correspond directly to the Common Lisp arguments.
- */
-public class AppendFunction {
+import java.util.List;
 
-	public static final AppendFunction FUNCTION = new AppendFunction();
+public final class AppendFunction {
 
-	/**
-	 * Lisp Function - (APPEND list1 list2)
-	 * Creates a shallow copy of the first list, sets the cdr of the last element
-	 * of the new list to the second list2 and returns the complete new list.
-	 * <p>
-	 * NOTE: list2 can be any object or an improper list
-	 * NOTE: list1 must be a proper list
-	 *
-	 * @return the new List
-	 */
-	@SuppressWarnings("unchecked")
-	public LispStruct funcall(ListStruct list1, LispStruct appendingObjectOrList) {
-		// is there a first list?
-		if (list1 == NullStruct.INSTANCE) {
-			return appendingObjectOrList;
+	private AppendFunction() {
+	}
+
+	public static LispStruct funcall(final ListStruct arg1, final LispStruct arg2) {
+
+		if (arg1.equals(NullStruct.INSTANCE)) {
+			return arg2;
 		}
 
-		if (appendingObjectOrList == NullStruct.INSTANCE) {
-			return list1;
+		if (arg2.equals(NullStruct.INSTANCE)) {
+			return arg1;
 		}
 
-		java.util.List<LispStruct> copyList = list1.getAsJavaList();
-		copyList.add(appendingObjectOrList);
+		final List<LispStruct> javaList = arg1.getAsJavaList();
+		javaList.add(arg2);
 
-		if (appendingObjectOrList instanceof ConsStruct) {
-			return ListStruct.buildProperList(copyList);
+		if (arg2 instanceof ConsStruct) {
+			return ListStruct.buildProperList(javaList);
 		} else {
-			return ListStruct.buildDottedList(copyList);
+			return ListStruct.buildDottedList(javaList);
 		}
 	}
 }

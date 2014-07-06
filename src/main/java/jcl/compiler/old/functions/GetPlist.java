@@ -1,29 +1,28 @@
 package jcl.compiler.old.functions;
 
+import jcl.LispStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 
-/**
- * Lisp system function <CODE>%LOAD</CODE> for loading Lisp source files.
- * Unlike the Lisp <CODE>LOAD</CODE> function, this function only accepts
- * a filename, without the optional arguments.
- */
-public class GetPlist {
-	public static final GetPlist FUNCTION = new GetPlist();
+public final class GetPlist {
 
-	public Object funcall(Object arg1, Object arg2) {
+	private GetPlist() {
+	}
+
+	public static LispStruct funcall(final ListStruct arg1, final LispStruct arg2) {
 		return funcall(arg1, arg2, NullStruct.INSTANCE);
 	}
 
-	public Object funcall(Object arg1, Object indicator, Object defaultValue) {
-		ListStruct pList = (ListStruct) arg1;
-		if (pList == NullStruct.INSTANCE) {
-			return defaultValue;
-		} else if (indicator == pList.getFirst()) {
-			return pList.getRest().getFirst();
-		} else {
-			return funcall(pList.getRest().getRest(), indicator, defaultValue);
-		}
-	}
+	public static LispStruct funcall(final ListStruct arg1, final LispStruct indicator, final LispStruct defaultValue) {
 
+		if (arg1.equals(NullStruct.INSTANCE)) {
+			return defaultValue;
+		}
+
+		if (indicator.equals(arg1.getFirst())) {
+			return arg1.getRest().getFirst();
+		}
+
+		return funcall(arg1.getRest().getRest(), indicator, defaultValue);
+	}
 }

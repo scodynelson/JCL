@@ -1,33 +1,35 @@
 package jcl.compiler.old.functions;
 
+import jcl.LispStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 
-/**
- * Returns the CAR of a list matching a provided key.  Takes a key as its
- * first argument and a list as its second argument.s
- */
-public class AssocFunction {
+import java.util.List;
 
-	public static final AssocFunction FUNCTION = new AssocFunction();
+public final class AssocFunction {
 
-	/**
-	 * @param arg1 - The item to search for
-	 * @param arg2 - The association list
-	 * @return Object of type CONS
-	 */
-	public Object funcall(Object arg1, Object arg2) {
-		ListStruct aList = (ListStruct) arg2;
-		// now for the code
-		if (aList == NullStruct.INSTANCE) {
-			return NullStruct.INSTANCE;
-		} else {
-			ListStruct element = (ListStruct) aList.getFirst();
-			if (arg1.equals(element.getFirst())) {
-				return element;
-			} else {
-				return funcall(arg1, aList.getRest());
+	private AssocFunction() {
+	}
+
+	public static ListStruct funcall(final LispStruct arg1, final ListStruct arg2) {
+
+		if (arg2.equals(NullStruct.INSTANCE)) {
+			return arg2;
+		}
+
+		ListStruct returnObj = NullStruct.INSTANCE;
+
+		final List<LispStruct> javaList = arg2.getAsJavaList();
+		for (final LispStruct lispStruct : javaList) {
+			final ListStruct element = (ListStruct) lispStruct;
+
+			final LispStruct first = element.getFirst();
+			if (arg1.equals(first)) {
+				returnObj = element;
+				break;
 			}
 		}
+
+		return returnObj;
 	}
 }

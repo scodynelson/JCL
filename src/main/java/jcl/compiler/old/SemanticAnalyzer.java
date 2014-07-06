@@ -6,11 +6,9 @@ import jcl.arrays.BitVectorStruct;
 import jcl.arrays.StringStruct;
 import jcl.arrays.VectorStruct;
 import jcl.characters.CharacterStruct;
-import jcl.compiler.old.functions.AconsFunction;
 import jcl.compiler.old.functions.AppendFunction;
 import jcl.compiler.old.functions.AssocFunction;
 import jcl.compiler.old.functions.CompileFunction;
-import jcl.compiler.old.functions.ConsFunction;
 import jcl.compiler.old.functions.GensymFunction;
 import jcl.compiler.old.functions.GetPlist;
 import jcl.compiler.old.functions.MacroExpandFunction;
@@ -60,13 +58,6 @@ public class SemanticAnalyzer {
 	public static final SymbolStruct LOAD_TOPLEVEL = KeywordOld.LoadToplevel;
 	public static final SymbolStruct EXECUTE = KeywordOld.Execute;
 	public static final SymbolStruct FUNCTION_MARKER = SpecialOperatorOld.FUNCTION_MARKER;
-	private static final AconsFunction acons = AconsFunction.FUNCTION;
-	private static final AppendFunction append = AppendFunction.FUNCTION;
-	private static final AssocFunction assoc = AssocFunction.FUNCTION;
-	private static final ConsFunction cons = ConsFunction.FUNCTION;
-	private static final GetPlist get = GetPlist.FUNCTION;
-	private static final GensymFunction gensym = GensymFunction.FUNCTION;
-	private static final NReverseFunction nReverse = NReverseFunction.FUNCTION;
 	private static final StringStruct LAMBDA_ARGLIST_MUNGER_STRING = new StringStruct("LAMBDA_ARGLIST_MUNGER");
 
 	// eval-when processing modes
@@ -129,7 +120,7 @@ public class SemanticAnalyzer {
 		symbolVector = null;
 //        closureDepth = 0;
 		bindings = NullStruct.INSTANCE;
-		dupSetStack = new Stack<>();
+		dupSetStack = new Stack<java.util.IdentityHashMap<LispStruct, LispStruct>>();
 	}
 
 	public ListStruct currentEnvironment() {
@@ -233,14 +224,14 @@ public class SemanticAnalyzer {
 	@SuppressWarnings("unchecked")
 	private int saResetBindingSlots(ListStruct theEnv, int depth) {
 		// get the binding list from the environment
-		ListStruct bindingList = ((ListStruct) assoc.funcall(KeywordOld.Bindings, theEnv.getRest())).getRest();
+		ListStruct bindingList = ((ListStruct) AssocFunction.funcall(KeywordOld.Bindings, theEnv.getRest())).getRest();
 		// now run through them and incrementing the depth
 		while (bindingList != NullStruct.INSTANCE) {
 			// get the :allocation parameter - (:LOCAL . n)
 			ListStruct bindingElement = (ListStruct) bindingList.getFirst();
 			// (x :scope ... :allocation ...)
 			bindingElement = bindingElement.getRest();
-			ConsStruct lclSlot = (ConsStruct) get.funcall(bindingElement,
+			ConsStruct lclSlot = (ConsStruct) GetPlist.funcall(bindingElement,
 					KeywordOld.Allocation);
 			lclSlot.setCdr(new IntegerStruct(BigInteger.valueOf(depth++)));
 			bindingList = bindingList.getRest();
@@ -251,14 +242,14 @@ public class SemanticAnalyzer {
 	@SuppressWarnings("unchecked")
 	private int saResetFreeSlots(ListStruct theEnv, int depth) {
 		// get the SymbolStruct table list from the environment
-		ListStruct symbolTable = ((ListStruct) assoc.funcall(KeywordOld.SymbolTable, theEnv.getRest())).getRest();
+		ListStruct symbolTable = ((ListStruct) AssocFunction.funcall(KeywordOld.SymbolTable, theEnv.getRest())).getRest();
 		// now run through them and incrementing the depth
 		while (symbolTable != NullStruct.INSTANCE) {
 			// get the :allocation parameter - (:LOCAL . n)
 			ListStruct tableElement = (ListStruct) symbolTable.getFirst();
 			// (x :scope ... :allocation ...)
 			tableElement = tableElement.getRest();
-			ConsStruct lclSlot = (ConsStruct) get.funcall(tableElement,
+			ConsStruct lclSlot = (ConsStruct) GetPlist.funcall(tableElement,
 					KeywordOld.Allocation);
 			// have to make sure it's allocated locally
 			if (lclSlot.getFirst() == KeywordOld.Local) {
@@ -316,12 +307,12 @@ public class SemanticAnalyzer {
 						ListStruct theEnv = (ListStruct) theCar;
 						// it is, so see if there's a closure defined
 						// Get the current closure entry
-						ConsStruct closure = (ConsStruct) assoc.funcall(
+						ConsStruct closure = (ConsStruct) AssocFunction.funcall(
 								KeywordOld.Closure, theEnv.getRest());
 						// add the depth indicator
 						// (rplacd closure (cons (cons :depth depth) (cdr closure)))
 						// there may be a depth gauge...
-						ListStruct depthGauge = (ListStruct) assoc.funcall(KeywordOld.Depth, closure.getRest());
+						ListStruct depthGauge = (ListStruct) AssocFunction.funcall(KeywordOld.Depth, closure.getRest());
 						if (depthGauge == NullStruct.INSTANCE) { // it may have been handled as a labels
 							if (closure.getRest() != NullStruct.INSTANCE) {
 								depth++;
@@ -411,7 +402,7 @@ public class SemanticAnalyzer {
 		for (int i = 0; i < formVector.getTotalSize(); i++) {
 			formList = new ConsStruct(formVector.getElementAt(i), formList);
 		}
-		formList = (ListStruct) nReverse.FUNCTION.funcall(formList);
+		formList = (ListStruct) NReverseFunction.funcall(formList);
 
 		LispStruct adjustableBoolean;
 		if (formVector.isAdjustable()) {
@@ -488,7 +479,7 @@ public class SemanticAnalyzer {
 		for (int i = 0; i < formArray.getTotalSize(); i++) {
 			formList = new ConsStruct(formArray.getElementAt(i), formList);
 		}
-		formList = (ListStruct) nReverse.FUNCTION.funcall(formList);
+		formList = (ListStruct) NReverseFunction.funcall(formList);
 		if (formArray.getRank() > 1 && formList != NullStruct.INSTANCE) {
 			formList = initialContentsBuilder(formList, ListStruct.buildProperList(formArray.getDimensions()));
 		}
@@ -504,7 +495,7 @@ public class SemanticAnalyzer {
 				newList = new ConsStruct(initialContentsBuilder(subListFinder(formList, dimensionsList.getRest()), dimensionsList.getRest()), newList);
 				formList = reduceListSize(formList, dimensionsList.getRest());
 			}
-			newList = (ListStruct) nReverse.FUNCTION.funcall(newList);
+			newList = (ListStruct) NReverseFunction.funcall(newList);
 		} else {
 			newList = formList;
 		}
@@ -525,7 +516,7 @@ public class SemanticAnalyzer {
 			formList = formList.getRest();
 		}
 
-		return (ListStruct) nReverse.FUNCTION.funcall(newList);
+		return (ListStruct) NReverseFunction.funcall(newList);
 	}
 
 	private ListStruct reduceListSize(ListStruct formList, ListStruct dimensionsList) {
@@ -547,8 +538,8 @@ public class SemanticAnalyzer {
 			new FunctionStruct() {
 
 				public LispStruct funcall(LispStruct arglist, LispStruct marker) {
-					return cons.FUNCTION.funcall(SpecialOperatorOld.FUNCTION_MARKER,
-							cons.FUNCTION.funcall(marker, arglist));
+					return new ConsStruct(SpecialOperatorOld.FUNCTION_MARKER,
+							new ConsStruct(marker, arglist));
 				}
 
 				@Override
@@ -576,10 +567,10 @@ public class SemanticAnalyzer {
 				if (fnBinding != NullStruct.INSTANCE) {
 					ListStruct aList = fnBinding.getRest(); // ((parent ...) (bindings ...)
 					// use assoc to get bindings
-					ListStruct aBindings = (ListStruct) assoc.funcall(KeywordOld.Bindings, aList); // (bindings (foo ...) (bar  ...) ...)
-					ListStruct fooBinding = (ListStruct) assoc.funcall(fnName, aBindings.getRest()); // (foo ...)
+					ListStruct aBindings = (ListStruct) AssocFunction.funcall(KeywordOld.Bindings, aList); // (bindings (foo ...) (bar  ...) ...)
+					ListStruct fooBinding = (ListStruct) AssocFunction.funcall(fnName, aBindings.getRest()); // (foo ...)
 					// see if this is a LABELS or FLET. That changes fnName
-					fnName = (SymbolStruct) GetPlist.FUNCTION.funcall(
+					fnName = (SymbolStruct) GetPlist.funcall(
 							fooBinding.getRest(), KeywordOld.Name);
 					list.setElement(1, fnName);
 					currentLispName.push(fnName);
@@ -601,7 +592,7 @@ public class SemanticAnalyzer {
 					if ((fnApplying == null) && (currentLispName.peek() == fnName)) {
 						// the function is not known at this point but
 						// this is a recursive call and there will be a munger already created
-						ListStruct inProcessMunger = ((ListStruct) assoc.funcall(fnName, currentArgMunger));
+						ListStruct inProcessMunger = ((ListStruct) AssocFunction.funcall(fnName, currentArgMunger));
 						if (inProcessMunger != NullStruct.INSTANCE) {
 							munger = (FunctionStruct) ((ConsStruct) inProcessMunger).getCdr();
 						}
@@ -769,7 +760,7 @@ public class SemanticAnalyzer {
 				if (list.getRest() != NullStruct.INSTANCE) {
 					// there's stuff after the doc string so it is doc
 					theDecl = ListStruct.buildProperList(ListStruct.buildProperList(DeclarationOld.DOCUMENTATION, theCar));
-					newDecls = (ListStruct) append.funcall(newDecls, theDecl);
+					newDecls = (ListStruct) AppendFunction.funcall(newDecls, theDecl);
 					list = list.getRest();
 
 					// add code to look for more declarations - without any strings
@@ -777,7 +768,7 @@ public class SemanticAnalyzer {
 					while ((theCar instanceof ListStruct)
 							&& (((ListStruct) theCar).getFirst() == SpecialOperatorOld.DECLARE)) {
 						theDecl = ((ListStruct) theCar).getRest();
-						newDecls = (ListStruct) (append.funcall(newDecls, theDecl));
+						newDecls = (ListStruct) (AppendFunction.funcall(newDecls, theDecl));
 						list = list.getRest();
 						theCar = list.getFirst();
 					}
@@ -788,7 +779,7 @@ public class SemanticAnalyzer {
 				}
 			} else if ((theCar instanceof ListStruct) && (((ListStruct) theCar).getFirst() == SpecialOperatorOld.DECLARE)) {
 				theDecl = ((ListStruct) theCar).getRest();
-				newDecls = (ListStruct) (append.funcall(newDecls, theDecl));
+				newDecls = (ListStruct) (AppendFunction.funcall(newDecls, theDecl));
 			} else {
 				break;
 			}
@@ -796,23 +787,23 @@ public class SemanticAnalyzer {
 		}
 
 		// if there isn't a DeclarationOld.JAVA_CLASS_NAME, add one
-		ListStruct classNameDecl = (ListStruct) assoc.funcall(DeclarationOld.JAVA_CLASS_NAME, newDecls);
+		ListStruct classNameDecl = (ListStruct) AssocFunction.funcall(DeclarationOld.JAVA_CLASS_NAME, newDecls);
 		if (classNameDecl == NullStruct.INSTANCE) {
 			SymbolStruct classname;
 			// if there's a Lisp Name, then Javafy it
-			ListStruct lispNameDecl = (ListStruct) assoc.funcall(DeclarationOld.LISP_NAME, newDecls);
+			ListStruct lispNameDecl = (ListStruct) AssocFunction.funcall(DeclarationOld.LISP_NAME, newDecls);
 			if (lispNameDecl != NullStruct.INSTANCE) {
 				SymbolStruct lispName = (SymbolStruct) lispNameDecl.getRest().getFirst();
-				classname = (SymbolStruct) gensym.funcall(javafy(lispName) + System.currentTimeMillis());
+				classname = (SymbolStruct) GensymFunction.funcall(javafy(lispName) + System.currentTimeMillis());
 				// this code allows saFunctionCall to recognize a recursive call
 				// the pop happens at the end of saLambda
 				currentLispName.push(lispName);
 			} else {
 				currentLispName.push(null);
 				String name = "AnonymousLambda_" + System.currentTimeMillis() + '_';
-				classname = (SymbolStruct) gensym.funcall(name);
+				classname = (SymbolStruct) GensymFunction.funcall(name);
 			}
-			newDecls = (ListStruct) acons.funcall(DeclarationOld.JAVA_CLASS_NAME, ListStruct.buildProperList(classname), newDecls);
+			newDecls = (ListStruct) new ConsStruct(new ConsStruct(DeclarationOld.JAVA_CLASS_NAME, ListStruct.buildProperList(classname)), newDecls);
 		}
 		currentLispName.push(null);
 		// if the value is a String, make it into a SymbolStruct
@@ -846,7 +837,7 @@ public class SemanticAnalyzer {
 	}
 
 	private ListStruct findDeclaration(SymbolStruct item, ListStruct list) {
-		return (ListStruct) assoc.funcall(item, list);
+		return (ListStruct) AssocFunction.funcall(item, list);
 	}
 
 	private ListStruct saDeclare(ListStruct list) {
@@ -1074,10 +1065,10 @@ public class SemanticAnalyzer {
 			if (fnBinding != NullStruct.INSTANCE) {
 				ListStruct aList = fnBinding.getRest(); // ((parent ...) (bindings ...)
 				// use assoc to get bindings
-				ListStruct aBindings = (ListStruct) assoc.funcall(KeywordOld.Bindings, aList); // (bindings (foo ...) (bar  ...) ...)
-				ListStruct fooBinding = (ListStruct) assoc.funcall(fnSpec, aBindings.getRest()); // (foo ...)
+				ListStruct aBindings = (ListStruct) AssocFunction.funcall(KeywordOld.Bindings, aList); // (bindings (foo ...) (bar  ...) ...)
+				ListStruct fooBinding = (ListStruct) AssocFunction.funcall(fnSpec, aBindings.getRest()); // (foo ...)
 				// see if this is a LABELS or FLET. That changes fnName
-				fnSpec = (SymbolStruct) GetPlist.FUNCTION.funcall(fooBinding.getRest(), KeywordOld.Name);
+				fnSpec = (SymbolStruct) GetPlist.funcall(fooBinding.getRest(), KeywordOld.Name);
 				// change the cadr
 				ListStruct theCdr = list.getRest();
 				theCdr.setElement(1, fnSpec);
@@ -1219,7 +1210,7 @@ public class SemanticAnalyzer {
 			// change (let () mumble) to (progn mumble) -- later make it a LOCALLY
 //            ListStruct foo = (ListStruct)cons.funcall(SpecialOperatorOld.PROGN, list.getRest().getRest());
 //            return saProgn(foo);
-			return saProgn((ListStruct) cons.funcall(SpecialOperatorOld.PROGN, list.getRest().getRest()));
+			return saProgn((ListStruct) new ConsStruct(SpecialOperatorOld.PROGN, list.getRest().getRest()));
 		}
 		// Create the list to hold the new lambda expression.
 		// --------------------------
@@ -1295,13 +1286,13 @@ public class SemanticAnalyzer {
 			// Now we have to reverse the list of bindings sinec they are pushed on
 			ListStruct envList = environmentStack.peek().getRest();
 			// ((:parent ...) (:bindings ...) ...)
-			ListStruct bindingsToReverse = (ListStruct) (assoc.funcall(KeywordOld.Bindings, envList));
+			ListStruct bindingsToReverse = (ListStruct) (AssocFunction.funcall(KeywordOld.Bindings, envList));
 			// (:bindings (x ...) (y ...) ...)
-			ListStruct reversedBindings = (ListStruct) nReverse.funcall(bindingsToReverse.getRest());
+			ListStruct reversedBindings = (ListStruct) NReverseFunction.funcall(bindingsToReverse.getRest());
 			((ConsStruct) bindingsToReverse).setCdr(reversedBindings);
 
 			bindingsPosition = tempPosition;
-			ListStruct newForm = (ListStruct) cons.funcall(environmentStack.peek(), copyList);
+			ListStruct newForm = (ListStruct) new ConsStruct(environmentStack.peek(), copyList);
 			return newForm;
 		} finally {
 			environmentStack.pop();
@@ -1327,7 +1318,7 @@ public class SemanticAnalyzer {
 	private ListStruct letStarHelper(ListStruct bindingLists, ListStruct allTheRest) {
 		if (bindingLists.getRest() == NullStruct.INSTANCE) {
 			// (cons 'let (cons bindinglist allTheRest))
-			return (ListStruct) cons.funcall(SpecialOperatorOld.LET, cons.funcall(bindingLists, allTheRest));
+			return (ListStruct) new ConsStruct(SpecialOperatorOld.LET, new ConsStruct(bindingLists, allTheRest));
 		} else {
 			// (cons 'let (list (list (first bindingLists)) (letStarHelper (rest bindingLists) allTheRest)))
 			ListStruct bindingListsCar = NullStruct.INSTANCE;
@@ -1337,7 +1328,7 @@ public class SemanticAnalyzer {
 				bindingListsCar = new ConsStruct(bindingLists.getFirst(), bindingListsCar);
 			}
 			ListStruct bindingList = ListStruct.buildProperList(bindingListsCar);
-			return cons.funcall(SpecialOperatorOld.LET, cons.funcall(bindingList,
+			return new ConsStruct(SpecialOperatorOld.LET, new ConsStruct(bindingList,
 					ListStruct.buildProperList(letStarHelper(bindingLists.getRest(), allTheRest))));
 		}
 	}
@@ -1351,7 +1342,7 @@ public class SemanticAnalyzer {
 	// 7. return the LTV marker and the field name
 	//    (load-time-value 'this is the field name')
 	private ListStruct saLoadTimeValue(ListStruct list) {
-		return saLoadTimeValue(list, "LOAD_TIME_VALUE_", gensym.funcall("" + System.currentTimeMillis() + '_').toString());
+		return saLoadTimeValue(list, "LOAD_TIME_VALUE_", GensymFunction.funcall("" + System.currentTimeMillis() + '_').toString());
 	}
 
 	private ListStruct saLoadTimeValue(ListStruct list, String ltvFieldName) {
@@ -1363,7 +1354,7 @@ public class SemanticAnalyzer {
 		ListStruct lambdaEnv = EnvironmentAccessor.getEnclosingLambda(environmentStack.peek());
 		ListStruct ltv = list.getRest();
 		// better name this sucker
-		SymbolStruct name = (SymbolStruct) gensym.funcall(ltvFieldName + "_FN_" + tag);
+		SymbolStruct name = (SymbolStruct) GensymFunction.funcall(ltvFieldName + "_FN_" + tag);
 		ListStruct decl = ListStruct.buildProperList(DeclarationOld.JAVA_CLASS_NAME, name);
 		decl = ListStruct.buildProperList(SpecialOperatorOld.DECLARE, decl);
 		// now it's (declare (%java-class-name "blah"))
@@ -1383,7 +1374,7 @@ public class SemanticAnalyzer {
 		SymbolStruct ltvName = new SymbolStruct(ltvFieldName + tag);
 
 		// now it has to be put into the lambda environmment
-		ListStruct ltvAssoc = (ListStruct) assoc.funcall(KeywordOld.LoadTimeValue, lambdaEnv.getRest());
+		ListStruct ltvAssoc = (ListStruct) AssocFunction.funcall(KeywordOld.LoadTimeValue, lambdaEnv.getRest());
 
 		// CDR = (ltvName ltv CDR)
 //		((ConsStruct) ltvAssoc).setCdr(ltvAssoc.getRest().push(ltv).push(ltvName));
@@ -1439,7 +1430,7 @@ public class SemanticAnalyzer {
 				body.setElement(1, mainStuff);
 				body = body.getRest();
 			}
-			ListStruct newForm = (ListStruct) cons.funcall(environmentStack.peek(), copyBody);
+			ListStruct newForm = (ListStruct) new ConsStruct(environmentStack.peek(), copyBody);
 			return newForm;
 		} finally {
 			environmentStack.pop();
@@ -1479,12 +1470,12 @@ public class SemanticAnalyzer {
 			throw new RuntimeException(
 					"MULTIPLE-VALUE-PROG-1: incorrect number of arguments: " + (list.size() - 1));
 		}
-		SymbolStruct vals = (SymbolStruct) gensym.FUNCTION.funcall();
+		SymbolStruct vals = (SymbolStruct) GensymFunction.funcall();
 		// make the progn part
 		ListStruct valsList = ListStruct.buildProperList(vals);
 		valsList = new ConsStruct(GlobalPackageStruct.COMMON_LISP.findSymbol("VALUES-LIST").getSymbolStruct(), valsList);
 		//(values-list ,vals)
-		valsList = (ListStruct) append.funcall(list.getRest().getRest(), ListStruct.buildProperList(valsList));
+		valsList = (ListStruct) AppendFunction.funcall(list.getRest().getRest(), ListStruct.buildProperList(valsList));
 		//(,(cddr list) (values-list ,vals))
 		valsList = new ConsStruct(SpecialOperatorOld.PROGN, valsList);
 		// (progn ,(cddr list) (values-list ,vals))
@@ -1505,7 +1496,7 @@ public class SemanticAnalyzer {
 		// ((progn ,(cddr list) (values-list ,vals)))
 		letPiece = ListStruct.buildProperList(letPiece);
 		// ( ((,vals (multiple-value-list ,(second list)))) )
-		letPiece = (ListStruct) append.funcall(letPiece, valsList);
+		letPiece = (ListStruct) AppendFunction.funcall(letPiece, valsList);
 		// ( ((,vals (multiple-value-list ,(second list)))) (progn ,(cddr list) (values-list ,vals))))
 		letPiece = new ConsStruct(SpecialOperatorOld.LET, letPiece);
 		// (let ((,vals (multiple-value-list ,(second list)))) (progn ,(cddr list) (values-list ,vals))))
@@ -1652,7 +1643,7 @@ public class SemanticAnalyzer {
 		for (int i = 0; i < formVector.getTotalSize(); i++) {
 			formList = new ConsStruct(formVector.getElementAt(i), formList);
 		}
-		formList = (ListStruct) nReverse.FUNCTION.funcall(formList);
+		formList = (ListStruct) NReverseFunction.funcall(formList);
 
 		// (system::%make-vector)
 		ListStruct functionMakeVector = ListStruct.buildProperList(new SymbolStruct("%MAKE-VECTOR", GlobalPackageStruct.SYSTEM));
@@ -1778,7 +1769,7 @@ public class SemanticAnalyzer {
 			// change the TAGBODY to PROGN
 			list.setElement(1, SpecialOperatorOld.PROGN);
 			// then append a NIL to the end
-			list = (ListStruct) append.funcall(list, ListStruct.buildProperList(NullStruct.INSTANCE));
+			list = (ListStruct) AppendFunction.funcall(list, ListStruct.buildProperList(NullStruct.INSTANCE));
 			return saMainLoop(list);
 		}
 
@@ -1798,7 +1789,7 @@ public class SemanticAnalyzer {
 		}
 		// Pop the tag stack for this TAGBODY from the global stack.
 		tagbodyStack.pop();
-		final ListStruct result = (ListStruct) nReverse.funcall(listCopy);
+		final ListStruct result = (ListStruct) NReverseFunction.funcall(listCopy);
 		return new ConsStruct(SpecialOperatorOld.TAGBODY, result);
 	}
 
@@ -1938,7 +1929,6 @@ public class SemanticAnalyzer {
 	@SuppressWarnings("unchecked")
 	private ListStruct adjustParameterNbrs(ListStruct paramsToAdjust) {
 		int paramNbr;
-		GetPlist thePlistFn = GetPlist.FUNCTION;
 		SymbolStruct allocKey = GlobalPackageStruct.KEYWORD.findSymbol("ALLOCATION").getSymbolStruct();
 		// Now we have to rework the parameter indices since we just dropped a paramter (the fake rest)
 		ListStruct adjustableList = paramsToAdjust;
@@ -1947,7 +1937,7 @@ public class SemanticAnalyzer {
 			ListStruct params = ((ListStruct) adjustableList.getFirst()).getRest(); // now we have a plist
 			// get the parameter cons entry and decr the cdr number
 			// now let's print it
-			ConsStruct theParamAlloc = (ConsStruct) thePlistFn.funcall(params,
+			ConsStruct theParamAlloc = (ConsStruct) GetPlist.funcall(params,
 					allocKey);
 			// now adjust the number found in the cdr
 			paramNbr = ((IntegerStruct) theParamAlloc.getCdr()).getBigInteger().intValue();
@@ -2048,8 +2038,8 @@ public class SemanticAnalyzer {
 			SymbolStruct classname = saGetClassName(decls);
 
 			// now reconstitute the full lambda form
-			list = (ListStruct) cons.funcall(params, list);
-			list = (ListStruct) cons.funcall(lambdaSym, list);
+			list = (ListStruct) new ConsStruct(params, list);
+			list = (ListStruct) new ConsStruct(lambdaSym, list);
 			// list => (%lambda (lambda-list) (declare ...) body...)
 			ListStruct cpy = list;
 
@@ -2080,7 +2070,7 @@ public class SemanticAnalyzer {
 							ListStruct copyFn = (ListStruct) XCopyTreeFunction.FUNCTION.funcall(analyzerFn);
 							FunctionStruct innerFn = (FunctionStruct) CompileFunction.FUNCTION.funcall(copyFn);
 							FunctionStruct munger = (FunctionStruct) innerFn.apply();
-							currentArgMunger = acons.funcall(currentLispName.peek(), munger, currentArgMunger);
+							currentArgMunger = new ConsStruct(new ConsStruct(currentLispName.peek(), munger), currentArgMunger);
 						}
 
 						// This has created an unevaluated lambda form. We now
@@ -2118,7 +2108,7 @@ public class SemanticAnalyzer {
 						ListStruct insert = (ListStruct) provideInitFormUsageFn.apply(theParsedLambdaList);
 						// splice the code into the afterDecl
 						if (insert != NullStruct.INSTANCE) {
-							afterDecls = (ListStruct) append.funcall(insert, afterDecls);
+							afterDecls = (ListStruct) AppendFunction.funcall(insert, afterDecls);
 //                            ((ConsStruct)funLast.funcall(insert)).setCdr(blockCdr);
 //                            ((ConsStruct)((ListStruct)afterDecls.getFirst()).getRest()).setCdr(insert);
 						}
@@ -2127,8 +2117,8 @@ public class SemanticAnalyzer {
 					// there may be &aux VariableOlds that get turned into a let* that starts before the
 					// block construct.
 					if ((auxValues != null) && (auxValues != NullStruct.INSTANCE)) {
-						afterDecls = (ListStruct) cons.funcall(SpecialOperatorOld.LET_STAR, cons.funcall(auxValues, afterDecls));
-						afterDecls = (ListStruct) cons.funcall(afterDecls, NullStruct.INSTANCE);
+						afterDecls = (ListStruct) new ConsStruct(SpecialOperatorOld.LET_STAR, new ConsStruct(auxValues, afterDecls));
+						afterDecls = (ListStruct) new ConsStruct(afterDecls, NullStruct.INSTANCE);
 					}
 
 					// now splice the static-field for as the first line of the body
@@ -2145,7 +2135,7 @@ public class SemanticAnalyzer {
 			//************** Now we work on the body of the LAMBDA ***********
 			// if there's an empty body, make it just a NIL
 			if (list.getRest() == NullStruct.INSTANCE) {
-				((ConsStruct) list).setCdr(cons.funcall(NullStruct.INSTANCE, NullStruct.INSTANCE));
+				((ConsStruct) list).setCdr(new ConsStruct(NullStruct.INSTANCE, NullStruct.INSTANCE));
 			}
 
 			// list
@@ -2161,14 +2151,14 @@ public class SemanticAnalyzer {
 			if (theParsedLambdaList == NullStruct.INSTANCE) {
 				ListStruct envList = environmentStack.peek().getRest();
 				// ((:parent ...) (:bindings ...) ...)
-				ListStruct bindingsToReverse = (ListStruct) (assoc.funcall(KeywordOld.Bindings, envList));
+				ListStruct bindingsToReverse = (ListStruct) (AssocFunction.funcall(KeywordOld.Bindings, envList));
 				// (:bindings (x ...) (y ...) ...)
-				ListStruct reversedBindings = (ListStruct) nReverse.funcall(bindingsToReverse.getRest());
+				ListStruct reversedBindings = (ListStruct) NReverseFunction.funcall(bindingsToReverse.getRest());
 				((ConsStruct) bindingsToReverse).setCdr(reversedBindings);
 			}
 
 			//set the current environment back to what it was before we hit this method
-			return (ListStruct) cons.funcall(environmentStack.peek(), listCopy);
+			return (ListStruct) new ConsStruct(environmentStack.peek(), listCopy);
 		} finally {
 			bindingsPosition = tempPosition;  //???
 			environmentStack.pop();
@@ -2184,14 +2174,14 @@ public class SemanticAnalyzer {
 		if (list.getFirst() == SpecialOperatorOld.DECLARE) {
 			// strip out DECLARATION keyword
 			list = list.getRest();
-			return (SymbolStruct) getCadr((ListStruct) assoc.funcall(DeclarationOld.JAVA_CLASS_NAME, list));
+			return (SymbolStruct) getCadr((ListStruct) AssocFunction.funcall(DeclarationOld.JAVA_CLASS_NAME, list));
 		}
 		return null;
 	}
 
 	private void addBinding_FBinding(SymbolStruct sym, Object initForm) {
 		EnvironmentAccessor.createNewFBinding(environmentStack.peek(), sym,
-				(SymbolStruct) gensym.funcall(javafy(sym) + System.currentTimeMillis()));
+				(SymbolStruct) GensymFunction.funcall(javafy(sym) + System.currentTimeMillis()));
 	}
 
 	private void addBinding_Let(SymbolStruct sym, int position, LispStruct initForm) {

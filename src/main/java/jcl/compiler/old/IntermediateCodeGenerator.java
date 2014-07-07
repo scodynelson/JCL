@@ -200,10 +200,10 @@ public class IntermediateCodeGenerator {
 			// now get the object out of the current closure
 			// get this
 			emitter.emitAload(0);
-			emitter.emitInvokespecial("lisp/common/function/FunctionBaseClass", "getClosure", "()Llisp/extensions/type/Closure;");
+			emitter.emitInvokespecial("lisp/common/function/FunctionBaseClass", "getClosure", "()Llisp/extensions/type/Closure;", false);
 			emitter.emitLdc(position.getBigInteger().intValue());
 			emitter.emitLdc(0);
-			emitter.emitInvokeinterface("lisp/extensions/type/Closure", "getBindingAt", "(II)Ljava/lang/Object;");
+			emitter.emitInvokeinterface("lisp/extensions/type/Closure", "getBindingAt", "(II)Ljava/lang/Object;", true);
 		} else {
 			// set up for 2 or 3
 			entry = EnvironmentAccessor.getSymbolInTable(bindingEnvironment, sym);
@@ -247,17 +247,17 @@ public class IntermediateCodeGenerator {
 						// get this
 						emitter.emitAload(0);
 						// get the current closure
-						emitter.emitInvokespecial("lisp/common/function/FunctionBaseClass", "getClosure", "()Llisp/extensions/type/Closure;");
+						emitter.emitInvokespecial("lisp/common/function/FunctionBaseClass", "getClosure", "()Llisp/extensions/type/Closure;", false);
 						// set up the constants for seeking
 						emitter.emitLdc(position.getBigInteger().intValue());
 						emitter.emitLdc(nesting);
 						// now give chase up the chain
-						emitter.emitInvokeinterface("lisp/extensions/type/Closure", "getBindingAt", "(II)Ljava/lang/Object;");
+						emitter.emitInvokeinterface("lisp/extensions/type/Closure", "getBindingAt", "(II)Ljava/lang/Object;", true);
 					}
 				} else {
 					// it's number 3
 					genCodeSpecialSymbol(sym);
-					emitter.emitInvokeinterface("lisp/common/type/Symbol", "getValue", "()Ljava/lang/Object;");
+					emitter.emitInvokeinterface("lisp/common/type/Symbol", "getValue", "()Ljava/lang/Object;", true);
 				}
 			} else {
 				// it's 4
@@ -272,7 +272,7 @@ public class IntermediateCodeGenerator {
 						System.out.println("; Warning: variable " + sym + " is assumed free");
 					}
 					genCodeSpecialSymbol(sym);
-					emitter.emitInvokeinterface("lisp/common/type/Symbol", "getValue", "()Ljava/lang/Object;");
+					emitter.emitInvokeinterface("lisp/common/type/Symbol", "getValue", "()Ljava/lang/Object;", true);
 				}
 			}
 		}
@@ -324,7 +324,6 @@ public class IntermediateCodeGenerator {
 				}
 				Label label = new Label();
 				emitter.emitLabel(label);
-				emitter.emitLine(LineNumber++, label);
 				emitter.emitGetstatic("lisp/extensions/type/CommonLispFunctions", "StdFunctions", "Llisp/extensions/type/CommonLispFunctions;");
 				// +1 -> StdFns
 				if (sym.getFunction() instanceof MacroFunctionExpander) {
@@ -352,7 +351,7 @@ public class IntermediateCodeGenerator {
 			emitter.emitSymbolPackage(sym);
 			emitter.emitLdc(sym.getName().toString());
 			// invoke package.intern() - we may not have seen it before
-			emitter.emitInvokeinterface("lisp/common/type/Package", "intern", "(Ljava/lang/String;)[Llisp/common/type/Symbol;");
+			emitter.emitInvokeinterface("lisp/common/type/Package", "intern", "(Ljava/lang/String;)[Llisp/common/type/Symbol;", true);
 			emitter.emitLdc(0);
 			emitter.emitAaload();
 		}
@@ -362,10 +361,9 @@ public class IntermediateCodeGenerator {
 	private void genGeneralSymbolFn(SymbolStruct sym) {
 		Label label = new Label();
 		emitter.emitLabel(label);
-		emitter.emitLine(LineNumber++, label);
 		genCodeSpecialVariable(sym);
 		// invoke symbol.getFunction()
-		emitter.emitInvokeinterface("lisp/common/type/Symbol", "getFunction", "()Llisp/common/type/Function;");
+		emitter.emitInvokeinterface("lisp/common/type/Symbol", "getFunction", "()Llisp/common/type/Function;", true);
 		// if the symbol has defined less than 12 params, we can say that it takes that number of args
 
 	}
@@ -460,23 +458,23 @@ public class IntermediateCodeGenerator {
 		if (num instanceof IntegerStruct) {
 			IntegerStruct lcl = (IntegerStruct) num;
 			emitter.emitLdc(num.toString()); // has to make a bignum
-			emitter.emitInvokestatic("lisp/common/type/Integer$Factory", "newInstance", "(Ljava/lang/String;)Llisp/common/type/Integer;");
+			emitter.emitInvokestatic("lisp/common/type/Integer$Factory", "newInstance", "(Ljava/lang/String;)Llisp/common/type/Integer;", false);
 
 		} else if (num instanceof FloatStruct) {
 			emitter.emitLdc(((FloatStruct) num).getBigDecimal().doubleValue());
-			emitter.emitInvokestatic("lisp/common/type/ShortFloat$Factory", "newInstance", "(F)Llisp/common/type/ShortFloat;");
+			emitter.emitInvokestatic("lisp/common/type/ShortFloat$Factory", "newInstance", "(F)Llisp/common/type/ShortFloat;", false);
 
 		} else if (num instanceof RatioStruct) {
 			RatioStruct ratio = (RatioStruct) num;
 			emitter.emitLdc(ratio.getBigFraction().getNumerator().toString());
 			emitter.emitLdc(ratio.getBigFraction().getDenominator().toString());
 			emitter.emitInvokestatic("lisp/common/type/Ratio$Factory", "newInstance",
-					"(Ljava/lang/String;Ljava/lang/String;)Llisp/common/type/Rational;");
+					"(Ljava/lang/String;Ljava/lang/String;)Llisp/common/type/Rational;", false);
 		} else if (num instanceof ComplexStruct) {
 			ComplexStruct complexNum = (ComplexStruct) num;
 //            genCodeNumber(complexNum.getReal());
 //            genCodeNumber(complexNum.getImaginary());
-			emitter.emitInvokestatic("lisp/common/type/Complex$Factory", "newInstance", "(Llisp/common/type/Real;Llisp/common/type/Real;)Llisp/common/type/Number;");
+			emitter.emitInvokestatic("lisp/common/type/Complex$Factory", "newInstance", "(Llisp/common/type/Real;Llisp/common/type/Real;)Llisp/common/type/Number;", false);
 		} else {
 			System.out.println("Unrecognized type of number, " + num);
 		}
@@ -484,7 +482,7 @@ public class IntermediateCodeGenerator {
 
 	private void genCodeString(CharSequence str) {
 		emitter.emitLdc(str.toString());
-		emitter.emitInvokestatic("lisp/common/type/SimpleString$Factory", "newInstance", "(Ljava/lang/CharSequence;)Llisp/common/type/SimpleString;");
+		emitter.emitInvokestatic("lisp/common/type/SimpleString$Factory", "newInstance", "(Ljava/lang/CharSequence;)Llisp/common/type/SimpleString;", false);
 	}
 
 	private void genCodeBitVector(BitVectorStruct theVector) {
@@ -493,7 +491,7 @@ public class IntermediateCodeGenerator {
 			theVectorAsString += theVector.getElementAt(i);
 		}
 		emitter.emitLdc(theVectorAsString.toString());
-		emitter.emitInvokestatic("lisp/common/type/SimpleBitVector$Factory", "newInstance", "(Ljava/lang/CharSequence;)Llisp/common/type/SimpleBitVector;");
+		emitter.emitInvokestatic("lisp/common/type/SimpleBitVector$Factory", "newInstance", "(Ljava/lang/CharSequence;)Llisp/common/type/SimpleBitVector;", false);
 	}
 
 	/**
@@ -547,7 +545,7 @@ public class IntermediateCodeGenerator {
 			emitter.emitCheckcast("lisp/common/type/ListStruct");
 			//
 			emitter.emitInvokeinterface("lisp/common/type/Function", "checkArguments",
-					"(Llisp/common/type/ListStruct;)Llisp/common/type/Boolean;");
+					"(Llisp/common/type/ListStruct;)Llisp/common/type/Boolean;", true);
 			// throw away the result (it will throw an exception if something is wrong)
 			emitter.emitPop();
 			// now the stack is where it was a little while ago
@@ -590,7 +588,7 @@ public class IntermediateCodeGenerator {
 			}
 			methodsig += ")Ljava/lang/Object;";
 //*******
-			emitter.emitInvokeinterface("lisp/extensions/type/Function" + numParams, "funcall", methodsig);
+			emitter.emitInvokeinterface("lisp/extensions/type/Function" + numParams, "funcall", methodsig, true);
 
 			// +1 -> result
 		} else {
@@ -637,7 +635,7 @@ public class IntermediateCodeGenerator {
 				count++;
 			}
 			// +2 -> fn, array
-			emitter.emitInvokestatic("lisp/common/type/List$Factory", "newInstance", "([Ljava/lang/Object;)Llisp/common/type/ListStruct;");
+			emitter.emitInvokestatic("lisp/common/type/List$Factory", "newInstance", "([Ljava/lang/Object;)Llisp/common/type/ListStruct;", false);
 			// +2 -> fn, the list
 			// Now if we have the list, if the compiler is set to safety > 0 - call checkArguments
 			// Dup the list and the object on the stack
@@ -646,14 +644,14 @@ public class IntermediateCodeGenerator {
 				// Dup the list and the object on the stack
 				emitter.emitDup2(); // we need the arg list to still be there to be there
 				// +4 -> fn, list, fn, list
-				emitter.emitInvokeinterface("lisp/common/type/Function", "checkArguments", "(Llisp/common/type/ListStruct;)Llisp/common/type/Boolean;");
+				emitter.emitInvokeinterface("lisp/common/type/Function", "checkArguments", "(Llisp/common/type/ListStruct;)Llisp/common/type/Boolean;", true);
 				// +3 -> fn, list, T
 				// throw away the result (it will throw an exception if something is wrong)
 				emitter.emitPop();
 				// +2 -> fn, list
 				// now the stack is where it was a little while ago
 			}
-			emitter.emitInvokeinterface("lisp/common/type/Function", "apply", "(Llisp/common/type/ListStruct;)Ljava/lang/Object;");
+			emitter.emitInvokeinterface("lisp/common/type/Function", "apply", "(Llisp/common/type/ListStruct;)Ljava/lang/Object;", true);
 			// maybe this returned multiple values
 			// +1 -> result
 		}
@@ -759,7 +757,7 @@ public class IntermediateCodeGenerator {
 		emitter.emitSwap();
 		// ... , BLOCK, sym
 		emitter.emitInvokestatic("lisp/system/TransferOfControl", "addTOCRecord",
-				"(Ljava/lang/String;Ljava/lang/Object;)V");
+				"(Ljava/lang/String;Ljava/lang/Object;)V", false);
 
 
         /* Call icgMainLoop() for each expression in the PROGN call,
@@ -783,7 +781,7 @@ public class IntermediateCodeGenerator {
 		// ..., throw_excep, throw_excep
 		emitter.emitInvokestatic("lisp/system/TransferOfControl",
 				"isMine",
-				"(Ljava/lang/Throwable;)Ljava/lang/Object;");
+				"(Ljava/lang/Throwable;)Ljava/lang/Object;", false);
 		// ..., throw_excep, result
 		emitter.emitDup();
 		// ..., throw_excep, result, result
@@ -804,7 +802,7 @@ public class IntermediateCodeGenerator {
 		// ..., result, throw_excep
 		emitter.emitInvokestatic("lisp/system/TransferOfControl",
 				"setReturnException",
-				"(Ljava/lang/Throwable;)V");
+				"(Ljava/lang/Throwable;)V", false);
 		// ..., result
 		//If block end
 
@@ -819,11 +817,11 @@ public class IntermediateCodeGenerator {
 		//Here is the finally code
 		emitter.emitInvokestatic("lisp/system/TransferOfControl",
 				"popTOCRecord",
-				"()V");
+				"()V", false);
 
 		emitter.emitInvokestatic("lisp/system/TransferOfControl",
 				"processReturnException",
-				"()V");
+				"()V", false);
 	}
 
 	/**
@@ -855,7 +853,7 @@ public class IntermediateCodeGenerator {
 		emitter.emitSwap();
 		// ... , CATCH, catchTag
 		emitter.emitInvokestatic("lisp/system/TransferOfControl", "addTOCRecord",
-				"(Ljava/lang/String;Ljava/lang/Object;)V");
+				"(Ljava/lang/String;Ljava/lang/Object;)V", false);
 
 		//Create the exception table
 		startTryBlock = new Label();
@@ -884,7 +882,7 @@ public class IntermediateCodeGenerator {
 		// ..., throw_excep, throw_excep
 		emitter.emitInvokestatic("lisp/system/TransferOfControl",
 				"isMine",
-				"(Ljava/lang/Throwable;)Ljava/lang/Object;");
+				"(Ljava/lang/Throwable;)Ljava/lang/Object;", false);
 		// ..., throw_excep, result
 		emitter.emitDup();
 		// ..., throw_excep, result, result
@@ -905,7 +903,7 @@ public class IntermediateCodeGenerator {
 		// ..., result, throw_excep
 		emitter.emitInvokestatic("lisp/system/TransferOfControl",
 				"setReturnException",
-				"(Ljava/lang/Throwable;)V");
+				"(Ljava/lang/Throwable;)V", false);
 		// ..., result
 		//If block end
 
@@ -922,11 +920,11 @@ public class IntermediateCodeGenerator {
 		//Here is the finally code
 		emitter.emitInvokestatic("lisp/system/TransferOfControl",
 				"popTOCRecord",
-				"()V");
+				"()V", false);
 
 		emitter.emitInvokestatic("lisp/system/TransferOfControl",
 				"processReturnException",
-				"()V");
+				"()V", false);
 	}
 
 	/**
@@ -1024,8 +1022,8 @@ public class IntermediateCodeGenerator {
 		genCodeSpecialSymbol(javaName);
 		emitter.emitGetstatic("lisp/common/type/StructureClass", "DEFSTRUCT_INDICATOR", "Llisp/common/type/Symbol;");
 		emitter.emitLdc(javaName + "$Factory");
-		emitter.emitInvokestatic("java/lang/Class", "forName", "(Ljava/lang/String;)Ljava/lang/Class;");
-		emitter.emitInvokeinterface("lisp/common/type/Symbol", "setprop", "(Ljava/lang/Object;Ljava/lang/Object;)V");
+		emitter.emitInvokestatic("java/lang/Class", "forName", "(Ljava/lang/String;)Ljava/lang/Class;", false);
+		emitter.emitInvokeinterface("lisp/common/type/Symbol", "setprop", "(Ljava/lang/Object;Ljava/lang/Object;)V", true);
 
 		// it balances something that's popping...
 		emitter.emitNIL();
@@ -1033,7 +1031,7 @@ public class IntermediateCodeGenerator {
 
 	private void genCodeCharacter(CharacterStruct ch) {
 		emitter.emitLdc(ch.getCodePoint());
-		emitter.emitInvokestatic("lisp/common/type/Character$Factory", "newInstance", "(I)Llisp/common/type/Character;");
+		emitter.emitInvokestatic("lisp/common/type/Character$Factory", "newInstance", "(I)Llisp/common/type/Character;", false);
 	}
 
 	private void genCodeEvalWhen(ListStruct list) {
@@ -1075,11 +1073,10 @@ public class IntermediateCodeGenerator {
 			// number the invoke
 			Label label = new Label();
 			emitter.emitLabel(label);
-			emitter.emitLine(LineNumber++, label);
 			// extract the setf function if there is one
 			emitter.emitCheckcast("lisp/system/SymbolImpl");
 			emitter.emitInvokevirtual("lisp/system/SymbolImpl", "getSetfFunction",
-					"()Llisp/common/type/Function;");
+					"()Llisp/common/type/Function;", false);
 			emitter.emitDup();      // need to test to see it's there
 			Label yesSetfFunction = new Label();
 			emitter.emitIfnonnull(yesSetfFunction); // there is no setf function, return NIL
@@ -1110,7 +1107,7 @@ public class IntermediateCodeGenerator {
 		//genCodeSpecialSymbol(sym);
 		emitter.emitLdc("" + (findTagbodyInStack(tagbodyStack, sym)).index);   // me
 		//emitter.emitInvokespecial("lisp/system/compiler/exceptions/GoException", "<init>", "(Llisp/common/type/Symbol;)V"); //me
-		emitter.emitInvokespecial("lisp/system/compiler/exceptions/GoException", "<init>", "(Ljava/lang/Object;)V");
+		emitter.emitInvokespecial("lisp/system/compiler/exceptions/GoException", "<init>", "(Ljava/lang/Object;)V", false);
 		emitter.emitAthrow();
 		//}
 	}
@@ -1169,9 +1166,9 @@ public class IntermediateCodeGenerator {
 			//make the symbol
 			emitter.emitLdc(lispName.toString());
 			// make it into a Lisp string
-			emitter.emitInvokestatic("lisp/common/type/String$Factory", "newInstance", "(Ljava/lang/CharSequence;)Llisp/common/type/String;");
+			emitter.emitInvokestatic("lisp/common/type/String$Factory", "newInstance", "(Ljava/lang/CharSequence;)Llisp/common/type/String;", false);
 			// now create the symbol
-			emitter.emitInvokestatic("lisp/common/type/Symbol$Factory", "newInstance", "(Llisp/common/type/String;)Llisp/common/type/Symbol;");
+			emitter.emitInvokestatic("lisp/common/type/Symbol$Factory", "newInstance", "(Llisp/common/type/String;)Llisp/common/type/Symbol;", false);
 		}
 		emitter.emitPutstatic(className, "SYMBOL", "Llisp/common/type/Symbol;");
 
@@ -1192,7 +1189,7 @@ public class IntermediateCodeGenerator {
 
 			genCodeLambdaInContext((ListStruct) ltvList.getFirst(), true);
 			// now there's an instance of the function on the stack, call it
-			emitter.emitInvokeinterface("lisp/extensions/type/Function0", "funcall", "()Ljava/lang/Object;");
+			emitter.emitInvokeinterface("lisp/extensions/type/Function0", "funcall", "()Ljava/lang/Object;", true);
 			// now put the value into the static field
 			emitter.emitPutstatic(className, fldName, "Ljava/lang/Object;");
 			// next...
@@ -1209,14 +1206,14 @@ public class IntermediateCodeGenerator {
 		emitter.emitAload(0);
 		emitter.emitDup();
 		emitter.emitAconst_null();
-		emitter.emitInvokespecial(className, "<init>", "(Llisp/extensions/type/Closure;)V");  // this(null);
+		emitter.emitInvokespecial(className, "<init>", "(Llisp/extensions/type/Closure;)V", false);  // this(null);
 		emitter.emitReturn();
 		emitter.endMethod();
 
 		// This method is called when the compiler thinks there's a closure around
 		emitter.newMethod("<init>", Opcodes.ACC_PUBLIC, "(Llisp/extensions/type/Closure;)", "V");
 		emitter.emitAload(0);
-		emitter.emitInvokespecial("lisp/common/function/FunctionBaseClass", "<init>", "()V");  // super();
+		emitter.emitInvokespecial("lisp/common/function/FunctionBaseClass", "<init>", "()V", false);  // super();
 		//store the closure if one is passed in
 		Label isNull = new Label();
 		emitter.emitAload(1);
@@ -1224,7 +1221,7 @@ public class IntermediateCodeGenerator {
 		emitter.emitAload(0);
 		emitter.emitAload(1);
 //        emitter.emitInvokevirtual("lisp/common/function/FunctionBaseClass", "addClosure", "(Llisp/extensions/type/Closure;)Llisp/extensions/type/Closure;");
-		emitter.emitInvokevirtual(className, "addClosure", "(Llisp/extensions/type/Closure;)Llisp/extensions/type/Closure;");
+		emitter.emitInvokevirtual(className, "addClosure", "(Llisp/extensions/type/Closure;)Llisp/extensions/type/Closure;", false);
 		emitter.emitPop();
 		emitter.emitLabel(isNull);
 		emitter.emitReturn();
@@ -1238,7 +1235,7 @@ public class IntermediateCodeGenerator {
 			// keep a copy of the 'this' reference
 			emitter.emitAload(0);
 			// blow up the current closure
-			emitter.emitInvokespecial("lisp/common/function/FunctionBaseClass", "popClosure", "()Llisp/extensions/type/Closure;");
+			emitter.emitInvokespecial("lisp/common/function/FunctionBaseClass", "popClosure", "()Llisp/extensions/type/Closure;", false);
 			emitter.emitPop();
 		}
 	}
@@ -1252,12 +1249,12 @@ public class IntermediateCodeGenerator {
 			// keep a copy of the 'this' reference
 			emitter.emitAload(0);
 			emitter.emitDup();
-			emitter.emitInvokespecial("lisp/common/function/FunctionBaseClass", "getClosure", "()Llisp/extensions/type/Closure;");
+			emitter.emitInvokespecial("lisp/common/function/FunctionBaseClass", "getClosure", "()Llisp/extensions/type/Closure;", false);
 			emitter.emitLdc(numParams);
-			emitter.emitInvokestatic("lisp/extensions/type/Closure$Factory", "newInstance", "(Llisp/extensions/type/Closure;I)Llisp/extensions/type/Closure;");
+			emitter.emitInvokestatic("lisp/extensions/type/Closure$Factory", "newInstance", "(Llisp/extensions/type/Closure;I)Llisp/extensions/type/Closure;", false);
 			// have a closure object on the stack
 			//push it onto the closure stack
-			emitter.emitInvokespecial("lisp/common/function/FunctionBaseClass", "addClosure", "(Llisp/extensions/type/Closure;)Llisp/extensions/type/Closure;");
+			emitter.emitInvokespecial("lisp/common/function/FunctionBaseClass", "addClosure", "(Llisp/extensions/type/Closure;)Llisp/extensions/type/Closure;", false);
 			emitter.emitPop();
 		}
 		// get the :closure information
@@ -1269,7 +1266,7 @@ public class IntermediateCodeGenerator {
 		if ((bindings != NullStruct.INSTANCE) && (closureStuff != NullStruct.INSTANCE)) {
 			// get the top closure object
 			emitter.emitAload(0);
-			emitter.emitInvokespecial("lisp/common/function/FunctionBaseClass", "getClosure", "()Llisp/extensions/type/Closure;");
+			emitter.emitInvokespecial("lisp/common/function/FunctionBaseClass", "getClosure", "()Llisp/extensions/type/Closure;", false);
 			emitter.emitDup();
 			// run the list of variables
 			//TODO handle parameters that are special variables
@@ -1287,7 +1284,7 @@ public class IntermediateCodeGenerator {
 					emitter.emitLdc(position.getBigInteger().intValue()); // index
 					emitter.emitLdc(0);                   // nesting (current one)
 					emitter.emitAload(param.getBigInteger().intValue());      // value from the arg list
-					emitter.emitInvokeinterface("lisp/extensions/type/Closure", "setBindingAt", "(IILjava/lang/Object;)V");
+					emitter.emitInvokeinterface("lisp/extensions/type/Closure", "setBindingAt", "(IILjava/lang/Object;)V", true);
 					// the closure is left on the stack
 					// dup it for the rest loop, except the last time around
 					emitter.emitDup();
@@ -1333,7 +1330,7 @@ public class IntermediateCodeGenerator {
 						String name = symbol.getName().toString();
 						// have to gen a make-symbol
 						emitter.emitLdc(name);
-						emitter.emitInvokestatic("lisp/common/type/Symbol$Factory", "newInstance", "(Ljava/lang/String;)Llisp/common/type/Symbol;");
+						emitter.emitInvokestatic("lisp/common/type/Symbol$Factory", "newInstance", "(Ljava/lang/String;)Llisp/common/type/Symbol;", false);
 					} else {
 						genCodeSpecialVariable(symbol);
 					}
@@ -1353,7 +1350,7 @@ public class IntermediateCodeGenerator {
 		emitter.newMethod("checkArguments", Opcodes.ACC_PUBLIC, "(Llisp/common/type/ListStruct;)", "Llisp/common/type/Boolean;");
 		// the most basic check is the number of arguments
 		emitter.emitAload(1); // get the list argument
-		emitter.emitInvokeinterface("java/util/Collection", "size", "()I");
+		emitter.emitInvokeinterface("java/util/Collection", "size", "()I", true);
 		emitter.emitLdc(numParams);
 		Label label = new Label();
 		emitter.emitIf_icmpeq(label);
@@ -1365,8 +1362,8 @@ public class IntermediateCodeGenerator {
 		// 2nd arg to fn Excp
 		emitter.emitNew("lisp/common/exceptions/WrongNumberOfArgsException");
 		emitter.emitDup();
-		emitter.emitInvokespecial("lisp/common/exceptions/WrongNumberOfArgsException", "<init>", "()V");
-		emitter.emitInvokespecial("lisp/common/exceptions/FunctionException", "<init>", "(Ljava/lang/String;Ljava/lang/Throwable;)V");
+		emitter.emitInvokespecial("lisp/common/exceptions/WrongNumberOfArgsException", "<init>", "()V", false);
+		emitter.emitInvokespecial("lisp/common/exceptions/FunctionException", "<init>", "(Ljava/lang/String;Ljava/lang/Throwable;)V", false);
 		emitter.emitAthrow();
 		//done with that test
 		emitter.emitLabel(label);
@@ -1548,14 +1545,14 @@ public class IntermediateCodeGenerator {
 			for (int i = 0; i < numParams; i++) {
 				emitter.emitAload(1); // get the current value of arg list
 				// get the car of the list
-				emitter.emitInvokeinterface("lisp/common/type/ListStruct", "getCar", "()Ljava/lang/Object;");
+				emitter.emitInvokeinterface("lisp/common/type/ListStruct", "getCar", "()Ljava/lang/Object;", true);
 				// get the cdr
 				emitter.emitAload(1); // get the current value of arg list
-				emitter.emitInvokeinterface("lisp/common/type/ListStruct", "rest", "()Llisp/common/type/ListStruct;");
+				emitter.emitInvokeinterface("lisp/common/type/ListStruct", "rest", "()Llisp/common/type/ListStruct;", true);
 				emitter.emitAstore(1);
 			}
 //*****
-			emitter.emitInvokevirtual(className, "funcall", "(" + funcallParams + ")Ljava/lang/Object;");
+			emitter.emitInvokevirtual(className, "funcall", "(" + funcallParams + ")Ljava/lang/Object;", false);
 			emitter.emitAreturn();
 			emitter.endMethod();
 
@@ -1592,9 +1589,9 @@ public class IntermediateCodeGenerator {
 				// get this
 				emitter.emitAload(0);
 				// get the closure stack
-				emitter.emitInvokespecial("lisp/common/function/FunctionBaseClass", "getClosure", "()Llisp/extensions/type/Closure;");
+				emitter.emitInvokespecial("lisp/common/function/FunctionBaseClass", "getClosure", "()Llisp/extensions/type/Closure;", false);
 			}
-			emitter.emitInvokespecial(className, "<init>", "(Llisp/extensions/type/Closure;)V");
+			emitter.emitInvokespecial(className, "<init>", "(Llisp/extensions/type/Closure;)V", false);
 		}
 
 		// pop off the current class name, we're done with it
@@ -1687,7 +1684,7 @@ public class IntermediateCodeGenerator {
 					// hand the init form to icgMainLoop...
 					// the generated code leaves its value on the stack
 					icgMainLoop(initForm);
-					emitter.emitInvokevirtual("lisp/system/SymbolImpl", "bind", "(Ljava/lang/Object;)V");
+					emitter.emitInvokevirtual("lisp/system/SymbolImpl", "bind", "(Ljava/lang/Object;)V", false);
 					// 4. set handler start label
 					emitter.emitLabel(startLabel);
 					// 5. push end/handler label and the symbol on a stack
@@ -1730,7 +1727,7 @@ public class IntermediateCodeGenerator {
 				// now call the finally block
 				genCodeSpecialVariable(labelSym.dynamicSymbol);
 				emitter.emitCheckcast("lisp/system/SymbolImpl");
-				emitter.emitInvokevirtual("lisp/system/SymbolImpl", "unbind", "()Ljava/lang/Object;");
+				emitter.emitInvokevirtual("lisp/system/SymbolImpl", "unbind", "()Ljava/lang/Object;", false);
 				emitter.emitPop(); // would mask the real return
 				// now jump to the end of this block
 				emitter.emitGoto(outLabel);
@@ -1742,7 +1739,7 @@ public class IntermediateCodeGenerator {
 				emitter.emitAstore(1); // save the exception
 				genCodeSpecialVariable(labelSym.dynamicSymbol);
 				emitter.emitCheckcast("lisp/system/SymbolImpl");
-				emitter.emitInvokevirtual("lisp/system/SymbolImpl", "unbind", "()Ljava/lang/Object;");
+				emitter.emitInvokevirtual("lisp/system/SymbolImpl", "unbind", "()Ljava/lang/Object;", false);
 				emitter.emitPop(); // would mask the real return
 				emitter.emitAload(1); // reload the exception
 				emitter.emitAthrow(); // re-throw it
@@ -1820,14 +1817,14 @@ public class IntermediateCodeGenerator {
 			// so, make the array into a lisp list
 			emitter.emitCheckcast("[Ljava/lang/Object;");
 			emitter.emitInvokestatic("lisp/common/type/List$Factory", "newInstance",
-					"([Ljava/lang/Object;)Llisp/common/type/ListStruct;");
+					"([Ljava/lang/Object;)Llisp/common/type/ListStruct;", false);
 			emitter.emitGoto(allDone);
 			// ....
 			emitter.emitLabel(isntArray);
 			// so, make the object into a lisp list
 			emitter.emitCheckcast("java/lang/Object");
 			emitter.emitInvokestatic("lisp/common/type/List$Factory", "newInstance",
-					"(Ljava/lang/Object;)Llisp/common/type/ListStruct;");
+					"(Ljava/lang/Object;)Llisp/common/type/ListStruct;", false);
 			// now we have to splice it to the previous
 			emitter.emitLabel(allDone);
 
@@ -1856,7 +1853,7 @@ public class IntermediateCodeGenerator {
 			// now looks like ...fn, first, second
 			// now call nconc
 			emitter.emitInvokeinterface("lisp/extensions/type/Function2", "funcall",
-					"(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
+					"(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", true);
 			// now we have the two list spliced, now stow away
 			emitter.emitCheckcast("lisp/common/type/ListStruct");
 			emitter.emitAload(0);
@@ -1877,7 +1874,7 @@ public class IntermediateCodeGenerator {
 		emitter.emitPutfield(classNames.peek(), mvcFieldName.toString(), "Llisp/common/type/ListStruct;");
 
 		// now apply the function to the evaluated args
-		emitter.emitInvokeinterface("lisp/common/type/Function", "apply", "(Llisp/common/type/ListStruct;)Ljava/lang/Object;");
+		emitter.emitInvokeinterface("lisp/common/type/Function", "apply", "(Llisp/common/type/ListStruct;)Ljava/lang/Object;", true);
 	}
 
 	private void genCodeMultipleValueProg1(ListStruct list) {
@@ -1914,7 +1911,7 @@ public class IntermediateCodeGenerator {
 			if (sym.getSymbolPackage() == null) {
 				emitter.emitLdc(sym.getName().toString());
 				emitter.emitInvokestatic("lisp/common/type/Symbol$Factory", "newInstance",
-						"(Ljava/lang/String;)Llisp/common/type/Symbol;");
+						"(Ljava/lang/String;)Llisp/common/type/Symbol;", false);
 			} else {
 				genCodeSpecialVariable(sym);
 			}
@@ -1940,7 +1937,7 @@ public class IntermediateCodeGenerator {
 		genCodeSpecialVariable(sym);
 		// +3 -> exception, exception, name
 		icgMainLoop(list.getFirst());
-		emitter.emitInvokespecial("lisp/system/compiler/exceptions/ReturnFromException", "<init>", "(Llisp/common/type/Symbol;Ljava/lang/Object;)V");
+		emitter.emitInvokespecial("lisp/system/compiler/exceptions/ReturnFromException", "<init>", "(Llisp/common/type/Symbol;Ljava/lang/Object;)V", false);
 		emitter.emitAthrow();
 	}
 
@@ -1969,7 +1966,7 @@ public class IntermediateCodeGenerator {
 				// now the value is on the stack, is the variable local or special?
 				genCodeSpecialSymbol(symbol);
 				emitter.emitSwap();
-				emitter.emitInvokeinterface("lisp/common/type/Symbol", "setValue", "(Ljava/lang/Object;)Ljava/lang/Object;");
+				emitter.emitInvokeinterface("lisp/common/type/Symbol", "setValue", "(Ljava/lang/Object;)Ljava/lang/Object;", true);
 				if (list.getRest() != NullStruct.INSTANCE) {
 					emitter.emitPop(); // pop the value on the stack execpt for the last one
 				}
@@ -2028,7 +2025,7 @@ public class IntermediateCodeGenerator {
 		// ... , TAGBODY, tagBodyLabels
 		emitter.emitInvokestatic("lisp/system/TransferOfControl",
 				"addTOCRecord",
-				"(Ljava/lang/String;Ljava/lang/Object;)V");
+				"(Ljava/lang/String;Ljava/lang/Object;)V", false);
 
         /* Invoke the ICG for each non-tag statement within the TAGBODY form. */
 		emitter.emitLabel(startTryBlock);
@@ -2063,7 +2060,7 @@ public class IntermediateCodeGenerator {
 
 		emitter.emitInvokestatic("lisp/system/TransferOfControl",
 				"isMine",
-				"(Ljava/lang/Throwable;)Ljava/lang/Object;");
+				"(Ljava/lang/Throwable;)Ljava/lang/Object;", false);
 
 		// ..., excep, result
 		emitter.emitDup();
@@ -2077,7 +2074,7 @@ public class IntermediateCodeGenerator {
 		// ..., excep
 		emitter.emitInvokestatic("lisp/system/TransferOfControl",
 				"setReturnException",
-				"(Ljava/lang/Throwable;)V");
+				"(Ljava/lang/Throwable;)V", false);
 		// ...,
 		emitter.emitGoto(continueBlock);
 		//If block end
@@ -2090,12 +2087,12 @@ public class IntermediateCodeGenerator {
 		emitter.emitPop();
 		// ..., result
 
-		emitter.emitInvokevirtual("java/lang/Object", "toString", "()Ljava/lang/String;");
+		emitter.emitInvokevirtual("java/lang/Object", "toString", "()Ljava/lang/String;", false);
 		// ..., resultString
 
 		emitter.emitInvokestatic("java/lang/Integer",
 				"parseInt",
-				"(Ljava/lang/String;)I");
+				"(Ljava/lang/String;)I", false);
 
 		// +1 - int
 		// create a lookup switch for the labels
@@ -2129,8 +2126,8 @@ public class IntermediateCodeGenerator {
 		emitter.addCatch(startTryBlock, catchBlock, catchBlock, "java/lang/Throwable");
 
 		//Here is the finally code
-		emitter.emitInvokestatic("lisp/system/TransferOfControl", "popTOCRecord", "()V");
-		emitter.emitInvokestatic("lisp/system/TransferOfControl", "processReturnException", "()V");
+		emitter.emitInvokestatic("lisp/system/TransferOfControl", "popTOCRecord", "()V", false);
+		emitter.emitInvokestatic("lisp/system/TransferOfControl", "processReturnException", "()V", false);
 	}
 
 	/**
@@ -2218,7 +2215,7 @@ public class IntermediateCodeGenerator {
 		icgMainLoop(catchTag);
 		// +3 -> exception, exception, name
 		icgMainLoop(list.getFirst());
-		emitter.emitInvokespecial("lisp/system/compiler/exceptions/ThrowException", "<init>", "(Ljava/lang/Object;Ljava/lang/Object;)V");
+		emitter.emitInvokespecial("lisp/system/compiler/exceptions/ThrowException", "<init>", "(Ljava/lang/Object;Ljava/lang/Object;)V", false);
 		emitter.emitAthrow();
 	}
 
@@ -2278,13 +2275,13 @@ public class IntermediateCodeGenerator {
 		// ..., throw_excep, throw_excep
 		emitter.emitInvokestatic("lisp/system/TransferOfControl",
 				"setReturnException",
-				"(Ljava/lang/Throwable;)V");
+				"(Ljava/lang/Throwable;)V", false);
 		// ..., throw_excep
 
 		//6. In the finally block, disable invalid TOC Exit Points
 		emitter.emitInvokestatic("lisp/system/TransferOfControl",
 				"disableExitPoints",
-				"(Ljava/lang/Throwable;)V");
+				"(Ljava/lang/Throwable;)V", false);
 		// ...
 		emitter.emitNIL();
 		//7. Setup a finally block
@@ -2304,7 +2301,7 @@ public class IntermediateCodeGenerator {
 		//Throw the stored exception if an exception was thrown in the protected form
 		emitter.emitInvokestatic("lisp/system/TransferOfControl",
 				"processReturnException",
-				"()V");
+				"()V", false);
 
 		//10. Register an exception handler for type Throwable
 		emitter.addCatch(
@@ -2355,7 +2352,7 @@ public class IntermediateCodeGenerator {
 		// <init>
 		emitter.newMethod("<init>", Opcodes.ACC_PUBLIC, "()", "V");
 		emitter.emitAload(0);
-		emitter.emitInvokespecial("java/lang/Object", "<init>", "()V");
+		emitter.emitInvokespecial("java/lang/Object", "<init>", "()V", false);
 		emitter.emitReturn();
 		emitter.endMethod();
 
@@ -2364,7 +2361,7 @@ public class IntermediateCodeGenerator {
 		emitter.emitGetstatic(name, "factory", "L" + name + "$AbstractFactory;");
 		emitter.emitGetfield(name + "$AbstractFactory", "trueFactory", "Llisp/extensions/type/StructureClassFactory;");
 		emitter.emitAload(0);
-		emitter.emitInvokeinterface("lisp/extensions/type/StructureClassFactory", "newInstance", "([Ljava/lang/Object;)Llisp/common/type/StructureClass;");
+		emitter.emitInvokeinterface("lisp/extensions/type/StructureClassFactory", "newInstance", "([Ljava/lang/Object;)Llisp/common/type/StructureClass;", true);
 		emitter.emitAreturn();
 		emitter.endMethod();
 		emitter.endClass();
@@ -2387,7 +2384,7 @@ public class IntermediateCodeGenerator {
 		// <init>
 		emitter.newMethod("<init>", Opcodes.ACC_PUBLIC, "()", "V");
 		emitter.emitAload(0);
-		emitter.emitInvokespecial("java/lang/Object", "<init>", "()V");
+		emitter.emitInvokespecial("java/lang/Object", "<init>", "()V", false);
 		emitter.emitAload(0);
 		emitter.emitAconst_null();
 		emitter.emitPutfield(name + "$AbstractFactory", "trueFactory", "Llisp/extensions/type/StructureClassFactory;");
@@ -2411,7 +2408,7 @@ public class IntermediateCodeGenerator {
 		emitter.emitPutstatic(name, "typeName", "Llisp/common/type/Symbol;");
 		emitter.emitNew(name + "$AbstractFactory");
 		emitter.emitDup();
-		emitter.emitInvokespecial(name + "$AbstractFactory", "<init>", "()V");
+		emitter.emitInvokespecial(name + "$AbstractFactory", "<init>", "()V", false);
 		emitter.emitPutstatic(name, "factory", "L" + name + "$AbstractFactory;");
 		emitter.emitReturn();
 		emitter.endMethod();
@@ -2436,7 +2433,7 @@ public class IntermediateCodeGenerator {
 		// <init>
 		emitter.newMethod("<init>", Opcodes.ACC_PUBLIC, "()", "V");
 		emitter.emitAload(0);
-		emitter.emitInvokespecial("java/lang/Object", "<init>", "()V");
+		emitter.emitInvokespecial("java/lang/Object", "<init>", "()V", false);
 		emitter.emitReturn();
 		emitter.endMethod();
 
@@ -2445,7 +2442,7 @@ public class IntermediateCodeGenerator {
 		emitter.emitNew(implName);
 		emitter.emitDup();
 		emitter.emitAload(1);
-		emitter.emitInvokespecial(implName, "<init>", "([Ljava/lang/Object;)V");
+		emitter.emitInvokespecial(implName, "<init>", "([Ljava/lang/Object;)V", false);
 		emitter.emitAreturn();
 		emitter.endMethod();
 		emitter.endClass();
@@ -2514,7 +2511,7 @@ public class IntermediateCodeGenerator {
 		} else if (printer instanceof FunctionStruct || printer instanceof FunctionStruct) { // TODO: Function2 || Function3
 			emitter.emitNew(printer.getClass().getName().toString());
 			emitter.emitDup();
-			emitter.emitInvokespecial(printer.getClass().getName().toString(), "<init>", "()V");
+			emitter.emitInvokespecial(printer.getClass().getName().toString(), "<init>", "()V", false);
 			if (printer instanceof FunctionStruct) { // TODO: Function2
 				emitter.emitPutstatic(implName, "printDefstructFunction", "Llisp/extensions/type/Function2;");
 			} else if (printer instanceof FunctionStruct) { // TODO: Function3
@@ -2529,7 +2526,7 @@ public class IntermediateCodeGenerator {
 		// make an instance of the nested Factory class
 		emitter.emitNew(implFactoryName);
 		emitter.emitDup();
-		emitter.emitInvokespecial(implFactoryName, "<init>", "()V");
+		emitter.emitInvokespecial(implFactoryName, "<init>", "()V", false);
 		// now stow the Factory instance into the trueFactory static final slot
 		emitter.emitPutstatic(implName, "trueFactory", "L" + implFactoryName + ";");
 
@@ -2554,7 +2551,7 @@ public class IntermediateCodeGenerator {
 		genCodeSpecialSymbol(lispName);
 		emitter.emitCheckcast("lisp/system/SymbolImpl");
 		emitter.emitSwap();
-		emitter.emitInvokevirtual("lisp/system/SymbolImpl", "setDefstructSlotNames", "([Llisp/common/type/Symbol;)V");
+		emitter.emitInvokevirtual("lisp/system/SymbolImpl", "setDefstructSlotNames", "([Llisp/common/type/Symbol;)V", false);
 		emitter.emitReturn();
 		emitter.endMethod();
 		// struct impl class initialized
@@ -2565,7 +2562,7 @@ public class IntermediateCodeGenerator {
 			emitter.newMethod("<init>", Opcodes.ACC_PUBLIC, "([Ljava/lang/Object;)", "V");
 			emitter.emitAload(0);
 			emitter.emitAconst_null();      // not a Java parent reference
-			emitter.emitInvokespecial("lisp/system/StructureClassImpl", "<init>", "(Llisp/system/StructureClassImpl;)V");
+			emitter.emitInvokespecial("lisp/system/StructureClassImpl", "<init>", "(Llisp/system/StructureClassImpl;)V", false);
 			for (int i = 0; i < fields.length; i++) {
 				emitter.emitAload(0);
 				emitter.emitAload(1);
@@ -2583,10 +2580,10 @@ public class IntermediateCodeGenerator {
 			emitter.emitAload(0);     // this
 			emitter.emitAload(1);     // args array
 			// make the parent impl
-			emitter.emitInvokestatic(includedStructFactory, "newInstance", "([Ljava/lang/Object;)Llisp/common/type/StructureClass;");
+			emitter.emitInvokestatic(includedStructFactory, "newInstance", "([Ljava/lang/Object;)Llisp/common/type/StructureClass;", false);
 			// parent struct, this
 			emitter.emitCheckcast("lisp/system/StructureClassImpl"); // the parent is ok
-			emitter.emitInvokespecial("lisp/system/StructureClassImpl", "<init>", "(Llisp/system/StructureClassImpl;)V");
+			emitter.emitInvokespecial("lisp/system/StructureClassImpl", "<init>", "(Llisp/system/StructureClassImpl;)V", false);
 			// the impl has created a parent included impl and stashed it into the instance
 
 			// Now it gets interesting...
@@ -2613,7 +2610,7 @@ public class IntermediateCodeGenerator {
 		emitter.emitAload(0);
 		emitter.emitAload(1);
 		emitter.emitGetstatic(implName, "slotNames", "[Llisp/common/type/Symbol;");
-		emitter.emitInvokevirtual(implName, "getSlotIndex", "(Llisp/common/type/Symbol;[Llisp/common/type/Symbol;)I");
+		emitter.emitInvokevirtual(implName, "getSlotIndex", "(Llisp/common/type/Symbol;[Llisp/common/type/Symbol;)I", false);
 
 		// now implement the switch code that gets to the right field
 		Label getDefLabel = new Label();
@@ -2650,12 +2647,12 @@ public class IntermediateCodeGenerator {
 
 		// Here is the delegation code
 		emitter.emitAload(0);  // this
-		emitter.emitInvokevirtual(implName, "getParent", "()Llisp/system/StructureClassImpl;");
+		emitter.emitInvokevirtual(implName, "getParent", "()Llisp/system/StructureClassImpl;", false);
 		emitter.emitDup();
 		emitter.emitIfnull(excpLabel);
 		// call the superclass
 		emitter.emitAload(1);  // the symbol
-		emitter.emitInvokevirtual("lisp/system/StructureClassImpl", "getSlot", "(Llisp/common/type/Symbol;)Ljava/lang/Object;");
+		emitter.emitInvokevirtual("lisp/system/StructureClassImpl", "getSlot", "(Llisp/common/type/Symbol;)Ljava/lang/Object;", false);
 		emitter.emitAreturn();
 
 		// Here is the exception code
@@ -2665,15 +2662,15 @@ public class IntermediateCodeGenerator {
 		emitter.emitDup();
 		emitter.emitNew("java/lang/StringBuilder");
 		emitter.emitDup();
-		emitter.emitInvokespecial("java/lang/StringBuilder", "<init>", "()V");
+		emitter.emitInvokespecial("java/lang/StringBuilder", "<init>", "()V", false);
 		emitter.emitLdc("Slot  ");
-		emitter.emitInvokevirtual("java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;");
+		emitter.emitInvokevirtual("java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
 		emitter.emitAload(1);
-		emitter.emitInvokevirtual("java/lang/StringBuilder", "append", "(Ljava/lang/Object;)Ljava/lang/StringBuilder;");
+		emitter.emitInvokevirtual("java/lang/StringBuilder", "append", "(Ljava/lang/Object;)Ljava/lang/StringBuilder;", false);
 		emitter.emitLdc(" not Found");
-		emitter.emitInvokevirtual("java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;");
-		emitter.emitInvokevirtual("java/lang/StringBuilder", "toString", "()Ljava/lang/String;");
-		emitter.emitInvokespecial("lisp/common/exceptions/FunctionException", "<init>", "(Ljava/lang/String;)V");
+		emitter.emitInvokevirtual("java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
+		emitter.emitInvokevirtual("java/lang/StringBuilder", "toString", "()Ljava/lang/String;", false);
+		emitter.emitInvokespecial("lisp/common/exceptions/FunctionException", "<init>", "(Ljava/lang/String;)V", false);
 		emitter.emitAthrow();
 
 		emitter.endMethod();
@@ -2687,7 +2684,7 @@ public class IntermediateCodeGenerator {
 		emitter.emitAload(0);
 		emitter.emitAload(1);
 		emitter.emitGetstatic(implName, "slotNames", "[Llisp/common/type/Symbol;");
-		emitter.emitInvokevirtual(implName, "getSlotIndex", "(Llisp/common/type/Symbol;[Llisp/common/type/Symbol;)I");
+		emitter.emitInvokevirtual(implName, "getSlotIndex", "(Llisp/common/type/Symbol;[Llisp/common/type/Symbol;)I", false);
 
 		Label setDefLabel = new Label();
 		Label[] setHandlerBlocks = new Label[fields.length];
@@ -2722,13 +2719,13 @@ public class IntermediateCodeGenerator {
 
 		// Here is the delegation code
 		emitter.emitAload(0);  // this
-		emitter.emitInvokevirtual(implName, "getParent", "()Llisp/system/StructureClassImpl;");
+		emitter.emitInvokevirtual(implName, "getParent", "()Llisp/system/StructureClassImpl;", false);
 		emitter.emitDup();
 		emitter.emitIfnull(exDefLabel);
 		// call the superclass
 		emitter.emitAload(1);  // the symbol
 		emitter.emitAload(2); // the new value
-		emitter.emitInvokevirtual("lisp/system/StructureClassImpl", "setSlot", "(Llisp/common/type/Symbol;Ljava/lang/Object;)V");
+		emitter.emitInvokevirtual("lisp/system/StructureClassImpl", "setSlot", "(Llisp/common/type/Symbol;Ljava/lang/Object;)V", false);
 		emitter.emitReturn();
 
 		// The exception if it can't find the slot
@@ -2738,15 +2735,15 @@ public class IntermediateCodeGenerator {
 		emitter.emitDup();
 		emitter.emitNew("java/lang/StringBuilder");
 		emitter.emitDup();
-		emitter.emitInvokespecial("java/lang/StringBuilder", "<init>", "()V");
+		emitter.emitInvokespecial("java/lang/StringBuilder", "<init>", "()V", false);
 		emitter.emitLdc("Slot  ");
-		emitter.emitInvokevirtual("java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;");
+		emitter.emitInvokevirtual("java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
 		emitter.emitAload(1);
-		emitter.emitInvokevirtual("java/lang/StringBuilder", "append", "(Ljava/lang/Object;)Ljava/lang/StringBuilder;");
+		emitter.emitInvokevirtual("java/lang/StringBuilder", "append", "(Ljava/lang/Object;)Ljava/lang/StringBuilder;", false);
 		emitter.emitLdc(" not Found");
-		emitter.emitInvokevirtual("java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;");
-		emitter.emitInvokevirtual("java/lang/StringBuilder", "toString", "()Ljava/lang/String;");
-		emitter.emitInvokespecial("lisp/common/exceptions/FunctionException", "<init>", "(Ljava/lang/String;)V");
+		emitter.emitInvokevirtual("java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
+		emitter.emitInvokevirtual("java/lang/StringBuilder", "toString", "()Ljava/lang/String;", false);
+		emitter.emitInvokespecial("lisp/common/exceptions/FunctionException", "<init>", "(Ljava/lang/String;)V", false);
 		emitter.emitAthrow();
 
 		// End of the method

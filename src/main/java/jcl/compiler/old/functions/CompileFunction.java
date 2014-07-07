@@ -108,7 +108,7 @@ public class CompileFunction {
 					System.out.println("Done  with class " + classDef.name + '\n');
 				}
 				classBytes.add(byteArray);
-				oc.add(classDef.getName());
+				oc.add(classDef.name);
 			}
 			// now load them
 			Vector classesLoaded = new Vector(v.size());

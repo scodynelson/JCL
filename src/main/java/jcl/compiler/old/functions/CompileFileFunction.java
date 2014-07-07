@@ -168,7 +168,7 @@ public class CompileFileFunction {
 
 			// change all of the ClassWriters into byte arrays
 			for (Emitter.ClassDef classDef : v) {
-				byte[] byteArray = classDef.getClassWriter().toByteArray();
+				byte[] byteArray = classDef.cw.toByteArray();
 				ClassReader cr = new ClassReader(byteArray);
 
 				String key = "";
@@ -200,17 +200,17 @@ public class CompileFileFunction {
 				}
 
 				if (bDebug) {
-					System.out.println("Printing the class " + classDef.getName() + '\n');
+					System.out.println("Printing the class " + classDef.name + '\n');
 					CheckClassAdapter.verify(new ClassReader(byteArray), true, new java.io.PrintWriter(System.out));
 //                    TraceClassVisitor tcv = new TraceClassVisitor(new java.io.PrintWriter(System.out));
 //                    cr.accept(tcv, false);
-					System.out.println("Done  with class " + classDef.getName() + '\n');
+					System.out.println("Done  with class " + classDef.name + '\n');
 				} else {
 					CheckClassAdapter cca = new CheckClassAdapter(new EmptyVisitor());
 					cr.accept(cca, 0); //ClassReader.EXPAND_FRAMES);
 				}
 				classBytes.add(byteArray);
-				oc.add(classDef.getName());
+				oc.add(classDef.name);
 			}
 			// now load them
 			Vector classesLoaded = new Vector(v.size());

@@ -1,7 +1,5 @@
 package jcl.compiler.old;
 
-import jcl.arrays.BitVectorStruct;
-import jcl.arrays.StringStruct;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Attribute;
 import org.objectweb.asm.ClassReader;
@@ -278,11 +276,87 @@ public class Emitter {
 	 * @param access     Java integer accessFlags
 	 * @param paramDesc  String paramType
 	 * @param returnDesc String returnType
+	 * @param signature  String signature
+	 * @param exceptions String[] exceptions
 	 */
 	public void newMethod(final int access, final String name, final String paramDesc, final String returnDesc, final String signature, final String[] exceptions) {
 		final MethodVisitor mv = currentClass.cw.visitMethod(access, name, paramDesc + returnDesc, signature, exceptions);
 		mv.visitCode();
 		currentClass.mv = mv;
+	}
+
+	public void visitMethodParameter(final String name, final int access) {
+		currentClass.mv.visitParameter(name, access);
+	}
+
+	public void visitMethodAnnotationDefault() {
+		currentClass.mv.visitAnnotationDefault();
+	}
+
+	public void visitMethodAnnotation(final String desc, final boolean visible) {
+		currentClass.mv.visitAnnotation(desc, visible);
+	}
+
+	public void visitMethodTypeAnnotation(final int typeRef, final TypePath typePath, final String desc, final boolean visible) {
+		currentClass.mv.visitTypeAnnotation(typeRef, typePath, desc, visible);
+	}
+
+	public void visitMethodParameterAnnotation(final int parameter, final String desc, final boolean visible) {
+		currentClass.mv.visitParameterAnnotation(parameter, desc, visible);
+	}
+
+	public void visitMethodAttribute(final Attribute attr) {
+		currentClass.mv.visitAttribute(attr);
+	}
+
+	public void visitMethodFrame(final int type, final int nLocal, final Object[] local, final int nStack, final Object[] stack) {
+		currentClass.mv.visitFrame(type, nLocal, local, nStack, stack);
+	}
+
+	/**
+	 * Emitter method for Java function EMIT-LABEL and class for Lisp
+	 * function for new Lisp compiler.
+	 *
+	 * @param label Label arg1
+	 */
+	public void visitMethodLabel(final Label label) {
+		currentClass.mv.visitLabel(label);
+	}
+
+	public void visitMethodInsnAnnotation(final int typeRef, final TypePath typePath, final String desc, final boolean visible) {
+		currentClass.mv.visitInsnAnnotation(typeRef, typePath, desc, visible);
+	}
+
+	/**
+	 * Emitter method for Java function ADD-CATCH and class for Lisp
+	 * function for new Lisp compiler.
+	 *
+	 * @param start   Label start
+	 * @param end     Label end
+	 * @param handler Label handler
+	 * @param type    String type
+	 * @return visitTryCatchBlock Object visitTryCatchBlock
+	 */
+	public void visitTryCatchBlock(final Label start, final Label end, final Label handler, final String type) {
+		currentClass.mv.visitTryCatchBlock(start, end, handler, type);
+	}
+
+	public void visitTryCatchAnnotation(final int typeRef, final TypePath typePath, final String desc, final boolean visible) {
+		currentClass.mv.visitTryCatchAnnotation(typeRef, typePath, desc, visible);
+	}
+
+	public void visitLocalVariable(final String name, final String desc, final String signature, final Label start,
+	                               final Label end, final int index) {
+		currentClass.mv.visitLocalVariable(name, desc, signature, start, end, index);
+	}
+
+	public void visitLocalVariableAnnotation(final int typeRef, final TypePath typePath, final Label[] start, final Label[] end,
+	                                         final int[] index, final String desc, final boolean visible) {
+		currentClass.mv.visitLocalVariableAnnotation(typeRef, typePath, start, end, index, desc, visible);
+	}
+
+	public void visitLineNumber(final int line, final Label start) {
+		currentClass.mv.visitLineNumber(line, start);
 	}
 
 	/**
@@ -306,84 +380,6 @@ public class Emitter {
 	// -------------------------------------------------------------------------
 	// Parameters, annotations and non standard attributes
 	// -------------------------------------------------------------------------
-
-	public Object emitParameter(final String name, final int access) {
-		currentClass.mv.visitParameter(name, access);
-		return currentClass;
-	}
-
-	public Object emitAnnotationDefault() {
-		currentClass.mv.visitAnnotationDefault();
-		return currentClass;
-	}
-
-	public Object emitMethodAnnotation(final String desc, final boolean visible) {
-		currentClass.mv.visitAnnotation(desc, visible);
-		return currentClass;
-	}
-
-	public Object emitMethodTypeAnnotation(final int typeRef, final TypePath typePath, final String desc, final boolean visible) {
-		currentClass.mv.visitTypeAnnotation(typeRef, typePath, desc, visible);
-		return currentClass;
-	}
-
-	public Object emitParameterAnnotation(final int parameter, final String desc, final boolean visible) {
-		currentClass.mv.visitParameterAnnotation(parameter, desc, visible);
-		return currentClass;
-	}
-
-	public Object emitAttribute(final Attribute attr) {
-		currentClass.mv.visitAttribute(attr);
-		return currentClass;
-	}
-
-	/**
-	 * Emitter method for Java function EMIT-LABEL and class for Lisp
-	 * function for new Lisp compiler.
-	 *
-	 * @param label Label arg1
-	 */
-	public void emitLabel(final Label label) {
-		currentClass.mv.visitLabel(label);
-	}
-
-	public Object emitInsnAnnotation(final int typeRef, final TypePath typePath, final String desc, final boolean visible) {
-		currentClass.mv.visitInsnAnnotation(typeRef, typePath, desc, visible);
-		return currentClass;
-	}
-
-	/**
-	 * Emitter method for Java function ADD-CATCH and class for Lisp
-	 * function for new Lisp compiler.
-	 *
-	 * @param start   Label start
-	 * @param end     Label end
-	 * @param handler Label handler
-	 * @param type    String type
-	 * @return emitTryCatchBlock Object emitTryCatchBlock
-	 */
-	public Object emitTryCatchBlock(final Label start, final Label end, final Label handler, final String type) {
-		currentClass.mv.visitTryCatchBlock(start, end, handler, type);
-		return currentClass;
-	}
-
-	public void emitTryCatchAnnotation(final int typeRef, final TypePath typePath, final String desc, final boolean visible) {
-		currentClass.mv.visitTryCatchAnnotation(typeRef, typePath, desc, visible);
-	}
-
-	public void emitLocalVariable(final String name, final String desc, final String signature, final Label start,
-								  final Label end, final int index) {
-		currentClass.mv.visitLocalVariable(name, desc, signature, start, end, index);
-	}
-
-	public void emitLocalVariableAnnotation(final int typeRef, final TypePath typePath, final Label[] start, final Label[] end,
-											final int[] index, final String desc, final boolean visible) {
-		currentClass.mv.visitLocalVariableAnnotation(typeRef, typePath, start, end, index, desc, visible);
-	}
-
-	public void emitLineNumber(final int line, final Label start) {
-		currentClass.mv.visitLineNumber(line, start);
-	}
 
 /*******************************************************************************
  * The following methods are the emit statments for the individual bytecodes.
@@ -1531,10 +1527,6 @@ public class Emitter {
 				(cst instanceof Long) ||
 				(cst instanceof Type)) {
 			currentClass.mv.visitLdcInsn(cst);
-		} else if (cst instanceof BitVectorStruct) {
-			currentClass.mv.visitLdcInsn(cst.toString());
-		} else if (cst instanceof StringStruct) {
-			currentClass.mv.visitLdcInsn(cst.toString());
 		} else {
 			throw new RuntimeException("Ldc called with argument " + cst + ", illegal type");
 		}

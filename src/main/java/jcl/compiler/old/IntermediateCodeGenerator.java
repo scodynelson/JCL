@@ -159,6 +159,7 @@ public class IntermediateCodeGenerator {
 	}
 
 	private void genCodeComplex(final ComplexStruct complexStruct) {
+		// TODO: we NEED to do Complex numbers better!!
 		final RealStruct real = complexStruct.getReal();
 		final RealStruct imaginary = complexStruct.getImaginary();
 

@@ -140,18 +140,22 @@ public class IntermediateCodeGenerator {
 
 	private void genCodeInteger(final IntegerStruct integerStruct) {
 		emitter.emitLdc(integerStruct.getBigInteger().toString());
-		emitter.emitInvokestatic("jcl/numbers/IntegerStruct", "<init>", "(Ljava/lang/String;)", "V", false);
+		emitter.emitInvokestatic("java/math/BigInteger", "<init>", "(Ljava/lang/String;)", "V", false);
+		emitter.emitInvokestatic("jcl/numbers/IntegerStruct", "<init>", "(Ljava/math/BigInteger;)", "V", false);
 	}
 
 	private void genCodeFloat(final FloatStruct floatStruct) {
 		emitter.emitLdc(floatStruct.getBigDecimal().toString());
-		emitter.emitInvokestatic("jcl/numbers/FloatStruct", "<init>", "(Ljava/lang/String;)", "V", false);
+		emitter.emitInvokestatic("java/math/BigDecimal", "<init>", "(Ljava/lang/String;)", "V", false);
+		emitter.emitInvokestatic("jcl/numbers/FloatStruct", "<init>", "(Ljava/math/BigDecimal;)", "V", false);
 	}
 
 	private void genCodeRatio(final RatioStruct ratioStruct) {
 		emitter.emitLdc(ratioStruct.getBigFraction().getNumerator().toString());
+		emitter.emitInvokestatic("java/math/BigInteger", "<init>", "(Ljava/lang/String;)", "V", false);
 		emitter.emitLdc(ratioStruct.getBigFraction().getDenominator().toString());
-		emitter.emitInvokestatic("jcl/numbers/RatioStruct", "<init>", "(Ljava/lang/String;Ljava/lang/String;)", "V", false);
+		emitter.emitInvokestatic("java/math/BigInteger", "<init>", "(Ljava/lang/String;)", "V", false);
+		emitter.emitInvokestatic("jcl/numbers/RatioStruct", "<init>", "(Ljava/math/BigInteger;Ljava/math/BigInteger;)", "V", false);
 	}
 
 	private void genCodeComplex(final ComplexStruct complexStruct) {

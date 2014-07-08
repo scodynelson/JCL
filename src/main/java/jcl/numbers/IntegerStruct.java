@@ -14,15 +14,6 @@ public class IntegerStruct extends RationalStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param integerString the string value of the {@code IntegerStruct}
-	 */
-	public IntegerStruct(final String integerString) {
-		this(Integer.INSTANCE, new BigInteger(integerString));
-	}
-
-	/**
-	 * Public constructor.
-	 *
 	 * @param bigInteger the value of the {@code IntegerStruct}
 	 */
 	public IntegerStruct(final BigInteger bigInteger) {

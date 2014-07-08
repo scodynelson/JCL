@@ -25,19 +25,6 @@ public class RatioStruct extends RationalStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param numerator   the numerator string value of the {@code RatioStruct}
-	 * @param denominator the denominator string value of the {@code RatioStruct}
-	 */
-	public RatioStruct(final String numerator, final String denominator) {
-		super(Ratio.INSTANCE, null, null);
-		final BigInteger numeratorBI = new BigInteger(numerator);
-		final BigInteger denominatorBI = new BigInteger(denominator);
-		bigFraction = new BigFraction(numeratorBI, denominatorBI);
-	}
-
-	/**
-	 * Public constructor.
-	 *
 	 * @param numerator   the numerator value of the {@code RatioStruct}
 	 * @param denominator the denominator value of the {@code RatioStruct}
 	 */

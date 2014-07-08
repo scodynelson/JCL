@@ -15,15 +15,6 @@ public class FloatStruct extends RealStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param floatString the string value of the {@code FloatStruct}
-	 */
-	public FloatStruct(final String floatString) {
-		this(SingleFloat.INSTANCE, new BigDecimal(floatString));
-	}
-
-	/**
-	 * Public constructor.
-	 *
 	 * @param bigDecimal the value of the {@code FloatStruct}
 	 */
 	public FloatStruct(final BigDecimal bigDecimal) {

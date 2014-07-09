@@ -562,8 +562,7 @@ public class SemanticAnalyzer {
 				list = list.getRest();
 				cpy = list;
 			} else { // not already munged
-				ListStruct fnBinding = EnvironmentAccessor.getBindingEnvironment(environmentStack.peek(),
-						fnName, false);
+				ListStruct fnBinding = EnvironmentAccessor.getBindingEnvironment(environmentStack.peek(), fnName, false);
 				if (fnBinding != NullStruct.INSTANCE) {
 					ListStruct aList = fnBinding.getRest(); // ((parent ...) (bindings ...)
 					// use assoc to get bindings

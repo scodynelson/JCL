@@ -11,6 +11,20 @@ public final class AssocFunction {
 	private AssocFunction() {
 	}
 
+	/*
+
+	EXAMPLES:
+
+	(assoc :parent '((:parent 1 2) (:closure 3 4)))
+	=> (:parent 1 2)
+
+	(assoc :parent nil)
+	=> NIL
+
+	(assoc :other-key '((:parent 1 2) (:closure 3 4)))
+	=> NIL
+
+	 */
 	public static ListStruct funcall(final LispStruct arg1, final ListStruct arg2) {
 
 		if (arg2.equals(NullStruct.INSTANCE)) {

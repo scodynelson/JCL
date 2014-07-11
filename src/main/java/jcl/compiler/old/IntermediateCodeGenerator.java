@@ -1698,16 +1698,7 @@ public class IntermediateCodeGenerator {
 				//** this is the place where the ICG has to choose to allocate a variable
 				//** in a local or it's a binding of a special variable
 				// now, which is it: :local or :dynamic
-				if (scope != KeywordOld.Dynamic) {
-					// Now get the allocation value
-					ConsStruct alloc = (ConsStruct) GetPlist.funcall(binding, KeywordOld.Allocation);
-					int slot = ((IntegerStruct) alloc.getCdr()).getBigInteger().intValue();
-					// hand the init form to icgMainLoop...
-					// the generated code leaves its value on the stack
-					icgMainLoop(initForm);
-					// store the value in the proper local slot
-					emitter.emitAstore(slot);
-				} else {
+				if (scope == KeywordOld.Dynamic) {
 					// handle binding a dynamic variable
 					// 0. create an end and a handler Label, add them to a stack, create a start Label
 					Label startLabel = new Label();
@@ -1729,6 +1720,15 @@ public class IntermediateCodeGenerator {
 					emitter.visitMethodLabel(startLabel);
 					// 5. push end/handler label and the symbol on a stack
 					bindingLabels.push(labelSym);
+				} else {
+					// Now get the allocation value
+					ConsStruct alloc = (ConsStruct) GetPlist.funcall(binding, KeywordOld.Allocation);
+					int slot = ((IntegerStruct) alloc.getCdr()).getBigInteger().intValue();
+					// hand the init form to icgMainLoop...
+					// the generated code leaves its value on the stack
+					icgMainLoop(initForm);
+					// store the value in the proper local slot
+					emitter.emitAstore(slot);
 				}
 				// do it again, Sam
 				bindingList = bindingList.getRest();

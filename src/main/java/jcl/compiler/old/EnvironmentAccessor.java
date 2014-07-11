@@ -209,7 +209,7 @@ public final class EnvironmentAccessor {
      */
 
 	public static ListStruct createNewFBinding(final ListStruct currentEnvironment, final SymbolStruct newVariable,
-	                                           final SymbolStruct newFieldName) {
+											   final IntegerStruct position, final SymbolStruct newFieldName, final boolean isSpecial) {
 
 		final ListStruct pList = new ConsStruct(KeywordOld.Name, ListStruct.buildProperList(newFieldName));
 		final ListStruct element = ListStruct.buildProperList(newVariable, pList);
@@ -308,9 +308,6 @@ public final class EnvironmentAccessor {
 		}
 
 		if (!getBinding(currentEnvironment, variable).equals(NullStruct.INSTANCE)) {
-			if (!(currentEnvironment.getFirst() instanceof SymbolStruct)) {
-				System.out.println("currEnv: " + currentEnvironment.getFirst());
-			}
 
 			final SymbolStruct envType = (SymbolStruct) currentEnvironment.getFirst();
 			if ((envType.equals(LAMBDA) || envType.equals(MACRO) || envType.equals(LET)) && valueBinding) {
@@ -444,6 +441,12 @@ public final class EnvironmentAccessor {
 				final ListStruct element = ListStruct.buildProperList(newSymbol, enclosingSymTbl);
 				final ListStruct enclosingBindList = AssocFunction.funcall(KeywordOld.SymbolTable, enclosingLambda.getRest());
 				((ConsStruct) enclosingBindList).setCdr(new ConsStruct(element, enclosingBindList.getRest()));
+
+				// Now we have the outer symbol table set up correctly
+				// set the Allocation KeywordOld to what is should be for the current environment
+				pList = SetPlist.funcall(pList, KeywordOld.Allocation, enclosingLambda);
+
+				// ...(:ALLOCATION #enclosing-lambda# :BINDING :FREE :SCOPE :DYNAMIC :TYPE T)
 			} else {
 				// it is, so we have to add a reference to that environment in the current env
 				pList = SetPlist.funcall(pList, KeywordOld.Allocation, enclosingLambda);
@@ -452,12 +455,6 @@ public final class EnvironmentAccessor {
 				((ConsStruct) bindList).setCdr(new ConsStruct(element, bindList.getRest()));
 				return currentEnvironmentInner;
 			}
-
-			// Now we have the outer symbol table set up correctly
-			// set the Allocation KeywordOld to what is should be for the current environment
-			pList = SetPlist.funcall(pList, KeywordOld.Allocation, enclosingLambda);
-
-			// ...(:ALLOCATION #enclosing-lambda# :BINDING :FREE :SCOPE :DYNAMIC :TYPE T)
 		}
 
 		// now we add the new symbol to the local table
@@ -590,7 +587,7 @@ public final class EnvironmentAccessor {
 			final Object type = allocation.getFirst();
 			if (type.equals(KeywordOld.Local) || type.equals(KeywordOld.Parameter)) {
 
-				final int tempParameter = ((IntegerStruct) ((ConsStruct) allocation).getCdr()).getBigInteger().intValue();
+				final int tempParameter = ((IntegerStruct) allocation.getRest().getFirst()).getBigInteger().intValue();
 				if (tempParameter > currentMaxInner) {
 					currentMaxInner = tempParameter;
 				}

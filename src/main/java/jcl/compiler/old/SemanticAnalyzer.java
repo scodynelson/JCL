@@ -1404,7 +1404,8 @@ public class SemanticAnalyzer {
 				ListStruct fn = (ListStruct) fnListNext;
 				SymbolStruct newName = GlobalPackageStruct.SYSTEM.intern(javafy(fn.getFirst()) + System.currentTimeMillis()).getSymbolStruct();
 				// augment the environment
-				EnvironmentAccessor.createNewFBinding(newEnvironment, (SymbolStruct) fn.getFirst(), newName);
+				IntegerStruct position = new IntegerStruct(BigInteger.ONE); // bindings++ ???
+				EnvironmentAccessor.createNewFBinding(newEnvironment, (SymbolStruct) fn.getFirst(), position, newName, false);
 				// Now make a new macro form
 				// ... (defmacro newName (...) ...body...)
 				// hold the rest (lambda list and body)
@@ -2178,9 +2179,10 @@ public class SemanticAnalyzer {
 		return null;
 	}
 
-	private void addBinding_FBinding(SymbolStruct sym, Object initForm) {
-		EnvironmentAccessor.createNewFBinding(environmentStack.peek(), sym,
-				(SymbolStruct) GensymFunction.funcall(javafy(sym) + System.currentTimeMillis()));
+	private void addBinding_FBinding(SymbolStruct sym, Object initForm, int position, boolean isSpecial) {
+		IntegerStruct newPosition = new IntegerStruct(BigInteger.valueOf(position));
+		EnvironmentAccessor.createNewFBinding(environmentStack.peek(), sym, newPosition,
+				(SymbolStruct) GensymFunction.funcall(javafy(sym) + System.currentTimeMillis()), isSpecial);
 	}
 
 	private void addBinding_Let(SymbolStruct sym, int position, LispStruct initForm) {

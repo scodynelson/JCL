@@ -9,8 +9,8 @@ public class LetBinding extends Binding {
 	private LispStruct initForm;
 
 	public LetBinding(final SymbolStruct symbolStruct, final int allocationPosition, final Scope scope,
-					  final LispType type, final LispStruct initForm) {
-		super(symbolStruct, new LocalAllocation(allocationPosition), scope, type);
+					  final LispType type, final LispStruct initForm, final boolean isRequired) {
+		super(symbolStruct, new LocalAllocation(allocationPosition), scope, type, isRequired);
 		this.initForm = initForm;
 	}
 

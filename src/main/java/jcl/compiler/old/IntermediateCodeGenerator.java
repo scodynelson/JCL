@@ -6,12 +6,23 @@ import jcl.compiler.old.expander.MacroFunctionExpander;
 import jcl.compiler.old.functions.AssocFunction;
 import jcl.compiler.old.functions.CompileFunction;
 import jcl.compiler.old.functions.GensymFunction;
-import jcl.compiler.old.functions.GetPlist;
 import jcl.compiler.old.symbol.DeclarationOld;
 import jcl.compiler.old.symbol.KeywordOld;
 import jcl.compiler.old.symbol.SpecialOperatorOld;
+import jcl.compiler.real.environment.Allocation;
+import jcl.compiler.real.environment.Binding;
+import jcl.compiler.real.environment.Closure;
+import jcl.compiler.real.environment.ClosureAllocation;
+import jcl.compiler.real.environment.ClosureBinding;
+import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.LetBinding;
+import jcl.compiler.real.environment.LoadTimeValue;
+import jcl.compiler.real.environment.LocalAllocation;
+import jcl.compiler.real.environment.PositionAllocation;
+import jcl.compiler.real.environment.Scope;
+import jcl.compiler.real.environment.SymbolBinding;
+import jcl.compiler.real.environment.SymbolTable;
 import jcl.functions.FunctionStruct;
-import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.numbers.ComplexStruct;
@@ -25,9 +36,12 @@ import jcl.packages.PackageStruct;
 import jcl.symbols.DefstructSymbolStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
+import org.apache.commons.collections4.CollectionUtils;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 public class IntermediateCodeGenerator {
@@ -41,12 +55,12 @@ public class IntermediateCodeGenerator {
 	public static final SymbolStruct DEFSTRUCT = SpecialOperatorOld.DEFSTRUCT;
 	// this is the current binding environment. It always matches the value
 	// on top of the binding stack
-	private ListStruct bindingEnvironment;
+	private Environment bindingEnvironment;
 	// Whenever a binding environment is encountered, it is pushed on the stack and
 	// bindingEnvironment is set to the new environment. When that binding is no
 	// longer in force, the stack is popped and the value of bindingEnvironment is
 	// set to the new top of stack
-	private Stack<ListStruct> bindingStack;
+	private Stack<Environment> bindingStack;
 	// make a stack of current class names
 	private Stack<String> classNames;
 	private Emitter emitter;
@@ -70,9 +84,9 @@ public class IntermediateCodeGenerator {
 	public void initialize() {
 		MacroLambda = false;
 		emitter = new Emitter();
-		bindingEnvironment = NullStruct.INSTANCE;
+		bindingEnvironment = Environment.NULL;
 		bindingStack = new Stack<>();
-		bindingStack.push(NullStruct.INSTANCE);
+		bindingStack.push(Environment.NULL);
 		classNames = new Stack<>();
 		tagCounter = 0;
 		allowMultipleValues = false;
@@ -197,16 +211,16 @@ public class IntermediateCodeGenerator {
 		// ==> free and dynamic
 		// 4. the binding is completely local and allocated to a JVM local
 		//    If there is no binding and this is special, it's really free!
-		final ListStruct closure = AssocFunction.funcall(KeywordOld.Closure, bindingEnvironment.getRest());
-		ListStruct entry = AssocFunction.funcall(symbolStruct, closure.getRest());
-		if (entry.equals(NullStruct.INSTANCE)) {
+		final Closure closure = bindingEnvironment.getEnvironmentClosure();
+		final ClosureBinding closureBinding = closure.getBinding(symbolStruct);
+		if (closureBinding == null) {
 			// set up for 2 or 3
-			entry = EnvironmentAccessor.getSymbolInTable(bindingEnvironment, symbolStruct);
+			final SymbolBinding entry = EnvironmentAccessor.getSymbolInTable(bindingEnvironment, symbolStruct);
 			// (:allocation ... :
-			if (entry.equals(NullStruct.INSTANCE)) {
+			if (entry == null) {
 				// it's 4
-				final ListStruct binding = EnvironmentAccessor.getBindingEnvironment(bindingEnvironment, symbolStruct, true);
-				if (binding.equals(NullStruct.INSTANCE)) {
+				final Environment binding = EnvironmentAccessor.getBindingEnvironment(bindingEnvironment, symbolStruct, true);
+				if (binding.equals(Environment.NULL)) {
 					// This is a truly free variable, check to make sure it's special
 					// if not, issue a warning, then treat it as special
 					if (!symbolStruct.isSpecial()) {
@@ -215,57 +229,57 @@ public class IntermediateCodeGenerator {
 					genCodeSpecialSymbol(symbolStruct);
 					emitter.emitInvokeinterface("lisp/common/type/Symbol", "getValue", "()", "Ljava/lang/Object;", true);
 				} else {
-					final int slot = genLocalSlot(symbolStruct, binding.getRest());
+					final int slot = genLocalSlot(symbolStruct, binding);
 					emitter.emitAload(slot);
 				}
 			} else {
 				// it's 2 or 3
 				// check the scope, if :dynamic it's 3
-				if (GetPlist.funcall(entry, KeywordOld.Scope).equals(KeywordOld.Dynamic)) {
+				if (entry.getScope() == Scope.DYNAMIC) {
 					// it's number 3
 					genCodeSpecialSymbol(symbolStruct);
 					emitter.emitInvokeinterface("lisp/common/type/Symbol", "getValue", "()", "Ljava/lang/Object;", true);
 				} else {
 					// it's door number 2
 					// get the allocation parameter
-					final ConsStruct allocation = (ConsStruct) GetPlist.funcall(entry, KeywordOld.Allocation);
+					final Allocation allocation = entry.getAllocation();
 					// may be a lexical binding up a few levels
-					if (allocation.getCar().equals(KeywordOld.Closure)) {
+					if (allocation instanceof ClosureAllocation) {
+						ClosureAllocation ClosureAllocation = (ClosureAllocation) allocation;
 						// (:closure . #n#)
-						final ListStruct parentScope = (ListStruct) allocation.getCdr();
+						final Closure parentScope = ClosureAllocation.getClosure();
 						// now we have the environment where the closure is defined
 						// so pick it up, get the nesting depth and the position
-						final ListStruct parentClosure = AssocFunction.funcall(KeywordOld.Closure, parentScope.getRest());
+						final Closure parentClosure = ClosureAllocation.getClosure();
 						// (:closure (:depth . n) (x ...)...)
-						final IntegerStruct parentDepth = (IntegerStruct) ((ConsStruct) AssocFunction.funcall(KeywordOld.Depth, parentClosure.getRest())).getCdr();
+						final int parentDepth = parentClosure.getDepth();
 						// (:depth . n) => n
-						final ListStruct parentEntry = AssocFunction.funcall(symbolStruct, parentClosure.getRest());
+						final ClosureBinding parentEntry = parentClosure.getBinding(symbolStruct);
 						// (x :position m :references n)
-						final IntegerStruct position = (IntegerStruct) GetPlist.funcall(parentEntry.getRest(), KeywordOld.Position);
+						final int position = parentEntry.getPosition();
 						// get the current closure depth if any
 						int nesting = 0;
 
 						// have to find the first closure with a :depth in it. That's
 						// the one that will be on the stack of the current lambda. The difference of
 						// the 2 depths is the nesting level.
-						if (!closure.getRest().equals(NullStruct.INSTANCE)) {
-							final IntegerStruct closureDepth = (IntegerStruct) ((ConsStruct) AssocFunction.funcall(KeywordOld.Depth, closure.getRest())).getCdr();
-							nesting = closureDepth.getBigInteger().intValue() - parentDepth.getBigInteger().intValue();
-						}
+						final int closureDepth = closure.getDepth();
+						nesting = closureDepth - parentDepth;
+
 						// Whew!! Now we can gen some code
 						// get this
 						emitter.emitAload(0);
 						// get the current closure
 						emitter.emitInvokespecial("lisp/common/function/FunctionBaseClass", "getClosure", "()", "Llisp/extensions/type/Closure;", false);
 						// set up the constants for seeking
-						emitter.emitLdc(position.getBigInteger().intValue());
+						emitter.emitLdc(position);
 						emitter.emitLdc(nesting);
 						// now give chase up the chain
 						emitter.emitInvokeinterface("lisp/extensions/type/Closure", "getBindingAt", "(II)", "Ljava/lang/Object;", true);
 					} else {
 						// go find it
-						final ListStruct binding = EnvironmentAccessor.getBindingEnvironment(bindingEnvironment, symbolStruct, true);
-						final int slot = genLocalSlot(symbolStruct, binding.getRest());
+						final Environment binding = EnvironmentAccessor.getBindingEnvironment(bindingEnvironment, symbolStruct, true);
+						final int slot = genLocalSlot(symbolStruct, binding);
 						emitter.emitAload(slot);
 					}
 				}
@@ -273,12 +287,12 @@ public class IntermediateCodeGenerator {
 		} else {
 			// #1. it's in a local closure
 			// get the position in the closure
-			final IntegerStruct position = (IntegerStruct) GetPlist.funcall(entry.getRest(), KeywordOld.Position);
+			final int position = closureBinding.getPosition();
 			// now get the object out of the current closure
 			// get this
 			emitter.emitAload(0);
 			emitter.emitInvokespecial("lisp/common/function/FunctionBaseClass", "getClosure", "()", "Llisp/extensions/type/Closure;", false);
-			emitter.emitLdc(position.getBigInteger().intValue());
+			emitter.emitLdc(position);
 			emitter.emitLdc(0);
 			emitter.emitInvokeinterface("lisp/extensions/type/Closure", "getBindingAt", "(II)", "Ljava/lang/Object;", true);
 		}
@@ -290,7 +304,7 @@ public class IntermediateCodeGenerator {
 	 * the stack.
 	 */
 	private void genCodeSpecialSymbol(SymbolStruct sym) {
-		IntegerStruct theInt = EnvironmentAccessor.getSymbolAllocation(bindingEnvironment, sym);
+		int theInt = EnvironmentAccessor.getSymbolAllocation(bindingEnvironment, sym);
 		int slot;
 		//****** this is a premature optimization. Good idea, but should wait for a new version of the compiler ****
 		slot = 0; // forces it to do it the long way.
@@ -305,7 +319,7 @@ public class IntermediateCodeGenerator {
 	}
 
 	private boolean bindingsContain(SymbolStruct sym) {
-		return (getSymbolPList(bindingEnvironment, sym) != NullStruct.INSTANCE);
+		return (getSymbolPList(bindingEnvironment, sym) != null);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -328,16 +342,14 @@ public class IntermediateCodeGenerator {
 	}
 
 	@SuppressWarnings("unchecked")
-	private int genLocalSlot(SymbolStruct sym, ListStruct binding) {
+	private int genLocalSlot(SymbolStruct sym, Environment binding) {
 		// get the :bindings list
-		ListStruct binds = ((ListStruct) AssocFunction.funcall(KeywordOld.Bindings, binding)).getRest();
+		List<Binding> binds = binding.getBindings();
 		// ((x :allocation ...) (y :allocation ...) ...)
-		binds = ((ListStruct) AssocFunction.funcall(sym, binds)).getRest();
+		Binding symBinding = binding.getBinding(sym);
 		// (:allocation ... :scope ... )
 		// get the allocated slot for the symbol and put it on the stack
-		ConsStruct alloc = (ConsStruct) GetPlist.funcall(binds, KeywordOld.Allocation);
-		int slot = ((IntegerStruct) alloc.getCdr()).getBigInteger().intValue();
-		return slot;
+		return ((PositionAllocation) symBinding.getAllocation()).getPosition();
 	}
 
 	/**
@@ -1141,7 +1153,7 @@ public class IntermediateCodeGenerator {
         emitter.emitGoto(tbl.label);
         } else {
          */
-        /* Throw a GoException. */
+		/* Throw a GoException. */
 		emitter.emitNew("lisp/system/compiler/exceptions/GoException");
 		emitter.emitDup();
 		//genCodeSpecialSymbol(sym);
@@ -1213,27 +1225,24 @@ public class IntermediateCodeGenerator {
 		emitter.emitPutstatic(className, "SYMBOL", "Llisp/common/type/Symbol;");
 
 		// Creating and initializing any necessary load-time-values
-		ListStruct env = bindingEnvironment;
+		Environment env = bindingEnvironment;
 
 		// see if we have to add any static fields for load-time-value
-		ListStruct ltvList = ((ListStruct) AssocFunction.funcall(KeywordOld.LoadTimeValue, env.getRest())).getRest();
+		LoadTimeValue ltvList = env.getLoadTimeValue();
 		// ltvList is a plist of the field names and lambda forms
-		while (ltvList != NullStruct.INSTANCE) {
-			String fldName = ltvList.getFirst().toString();
+		for (final Map.Entry<SymbolStruct, ListStruct> entry : ltvList.getValues().entrySet()) {
+			String fldName = entry.getKey().getName();
 			// add the field
 			emitter.newField(Opcodes.ACC_PUBLIC + Opcodes.ACC_STATIC + Opcodes.ACC_FINAL,
 					fldName, "Ljava/lang/Object;", null, null);
 			// now get down to the function
-			ltvList = ltvList.getRest();
 			// gen code for the function
 
-			genCodeLambdaInContext((ListStruct) ltvList.getFirst(), true);
+			genCodeLambdaInContext(entry.getValue(), true);
 			// now there's an instance of the function on the stack, call it
 			emitter.emitInvokeinterface("lisp/extensions/type/Function0", "funcall", "()", "Ljava/lang/Object;", true);
 			// now put the value into the static field
 			emitter.emitPutstatic(className, fldName, "Ljava/lang/Object;");
-			// next...
-			ltvList = ltvList.getRest();
 		}
 		// all done
 		emitter.emitReturn();
@@ -1268,9 +1277,9 @@ public class IntermediateCodeGenerator {
 		emitter.endMethod();
 	}
 
-	private void undoClosureSetup(ListStruct environment) {
-		ListStruct closureSetBody = EnvironmentAccessor.getClosureSet(environment).getRest();
-		int numParams = closureSetBody.size() - 1; // remove :closure and (:depth . n) from contention
+	private void undoClosureSetup(Environment environment) {
+		Closure closureSetBody = EnvironmentAccessor.getClosureSet(environment);
+		int numParams = closureSetBody.getBindings().size() - 1; // remove :closure and (:depth . n) from contention
 		if (numParams > 0) {
 			// keep a copy of the 'this' reference
 			emitter.emitAload(0);
@@ -1281,9 +1290,9 @@ public class IntermediateCodeGenerator {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void doClosureSetup(ListStruct environment) {
-		ListStruct closureSetBody = EnvironmentAccessor.getClosureSet(environment).getRest();
-		int numParams = closureSetBody.size() - 1; // remove :closure and (:depth . n) from contention
+	private void doClosureSetup(Environment environment) {
+		Closure closureSetBody = EnvironmentAccessor.getClosureSet(environment);
+		int numParams = closureSetBody.getBindings().size(); // remove :closure and (:depth . n) from contention
 
 		if (numParams > 0) {
 			// keep a copy of the 'this' reference
@@ -1298,38 +1307,35 @@ public class IntermediateCodeGenerator {
 			emitter.emitPop();
 		}
 		// get the :closure information
-		environment = environment.getRest();
-		ListStruct closureStuff = ((ListStruct) AssocFunction.funcall(KeywordOld.Closure, environment)).getRest().getRest();
-		ListStruct bindings = ((ListStruct) AssocFunction.funcall(KeywordOld.Bindings, environment)).getRest();
+		Closure closureStuff = environment.getEnvironmentClosure();
+		List<Binding> bindings = environment.getBindings();
 		// (:closure (:depth . n) (x ....) (y ....) ...)
 		// if there is one, allocate the object
-		if ((bindings != NullStruct.INSTANCE) && (closureStuff != NullStruct.INSTANCE)) {
+		if ((CollectionUtils.isNotEmpty(bindings)) && (closureStuff != null)) {
 			// get the top closure object
 			emitter.emitAload(0);
 			emitter.emitInvokespecial("lisp/common/function/FunctionBaseClass", "getClosure", "()", "Llisp/extensions/type/Closure;", false);
 			emitter.emitDup();
 			// run the list of variables
 			//TODO handle parameters that are special variables
-			while (bindings != NullStruct.INSTANCE) {
-				ListStruct binding = (ListStruct) bindings.getFirst();
-				SymbolStruct variable = (SymbolStruct) binding.getFirst();
-				ListStruct closureEntry = ((ListStruct) AssocFunction.funcall(variable, closureStuff)).getRest();
-				if (closureEntry != NullStruct.INSTANCE) {
+			for (final Binding binding : bindings) {
+				SymbolStruct variable = binding.getSymbolStruct();
+				ClosureBinding closureEntry = closureStuff.getBinding(variable);
+				if (closureEntry != null) {
 					// this entry is a closure
 					// Since this is a lambda, it's a parameter. So put the value into the closure
-					ConsStruct allocation = (ConsStruct) GetPlist.funcall(binding.getRest(), KeywordOld.Allocation);
-					IntegerStruct param = (IntegerStruct) allocation.getCdr();
+					PositionAllocation allocation = (PositionAllocation) binding.getAllocation();
+					int param = allocation.getPosition();
 					// now where does it go
-					IntegerStruct position = (IntegerStruct) GetPlist.funcall(closureEntry, KeywordOld.Position);
-					emitter.emitLdc(position.getBigInteger().intValue()); // index
+					int position = closureEntry.getPosition();
+					emitter.emitLdc(position); // index
 					emitter.emitLdc(0);                   // nesting (current one)
-					emitter.emitAload(param.getBigInteger().intValue());      // value from the arg list
+					emitter.emitAload(param);      // value from the arg list
 					emitter.emitInvokeinterface("lisp/extensions/type/Closure", "setBindingAt", "(IILjava/lang/Object;)", "V", true);
 					// the closure is left on the stack
 					// dup it for the rest loop, except the last time around
 					emitter.emitDup();
 				}
-				bindings = bindings.getRest();
 			}
 			emitter.emitPop2();  // drop the remaining closure reference from the stack
 			// for each variable, gen code to get the value and store in the closure
@@ -1348,24 +1354,24 @@ public class IntermediateCodeGenerator {
 	@SuppressWarnings("unchecked")
 	private void doFreeVariableSetup() {
 		//-- get the symbol-table
-		ListStruct symbolTable = EnvironmentAccessor.getSymbolTable(bindingEnvironment).getRest();
+		SymbolTable symbolTable = EnvironmentAccessor.getSymbolTable(bindingEnvironment);
 		// Now iterate over the entries, looking for ones to allocate
-		while (symbolTable != NullStruct.INSTANCE) {
-			ListStruct entry = (ListStruct) symbolTable.getFirst();
+		for (final Binding binding : symbolTable.getBindings()) {
 			// (symbol :allocation ... :binding ... :scope ... :type ...)
-			ListStruct pList = entry.getRest();
 			// (:allocation ... :binding ... :scope ... :type ...)
 			// for free and dynamic
-			if ((GetPlist.funcall(pList, KeywordOld.Binding) == KeywordOld.Free)
-					&& (GetPlist.funcall(pList, KeywordOld.Scope) == KeywordOld.Dynamic)) {
+			SymbolBinding symbolBinding = (SymbolBinding) binding;
+			if ((symbolBinding.getBinding() == Environment.FREE)
+					&& (symbolBinding.getScope() == Scope.DYNAMIC)) {
 				// get the local variable slot
-				ConsStruct alloc = (ConsStruct) GetPlist.funcall(pList, KeywordOld.Allocation);
+				Allocation alloc = symbolBinding.getAllocation();
 				// (:local . n)
-				if (alloc.getCar() == KeywordOld.Local) {
-					IntegerStruct slot = (IntegerStruct) alloc.getCdr();
+				if (alloc instanceof LocalAllocation) {
+					LocalAllocation localAllocation = (LocalAllocation) alloc;
+					int slot = localAllocation.getPosition();
 					// now gen some code (whew)
 					// gen code to either intern a symbol or call make-symbol if uninterned
-					SymbolStruct symbol = (SymbolStruct) entry.getFirst();
+					SymbolStruct symbol = (SymbolStruct) symbolBinding.getSymbolStruct();
 					if (symbol.getSymbolPackage() == null) {
 						String name = symbol.getName().toString();
 						// have to gen a make-symbol
@@ -1375,10 +1381,9 @@ public class IntermediateCodeGenerator {
 						genCodeSpecialVariable(symbol);
 					}
 					// store the symbol in the indicated local variable
-					emitter.emitAstore(slot.getBigInteger().intValue());
+					emitter.emitAstore(slot);
 				}
 			}
-			symbolTable = symbolTable.getRest();
 		}
 	}
 
@@ -1413,12 +1418,11 @@ public class IntermediateCodeGenerator {
 		emitter.endMethod();
 	}
 
-	private int countRequiredParams(ListStruct bindingSetBody) {
+	private int countRequiredParams(List<Binding> bindingSetBody) {
 		int countRequired = 0;
 		// go through the list counting the usage :required entries
-		for (LispStruct nextEntry : bindingSetBody.getAsJavaList()) {
-			ListStruct binding = (ListStruct) nextEntry;
-			if (GetPlist.funcall(binding.getRest(), KeywordOld.Required) != NullStruct.INSTANCE) {
+		for (Binding binding : bindingSetBody) {
+			if (binding.isRequired()) {
 				countRequired++;
 			} else {
 				break;
@@ -1464,7 +1468,7 @@ public class IntermediateCodeGenerator {
 
 		// compile the new function class
 		@SuppressWarnings("UseOfObsoleteCollectionType")
-		java.util.Vector<java.lang.String> interfaces = new java.util.Vector<>();
+		java.util.Vector<String> interfaces = new java.util.Vector<>();
 		interfaces.add("lisp/common/type/CompiledFunction");
 		if (MacroLambda) {
 			interfaces.add("lisp/common/type/MacroFunction");
@@ -1476,7 +1480,7 @@ public class IntermediateCodeGenerator {
 			System.out.println("++ 1502 -> " + list.getRest());
 			System.out.println("-- 1502 -> " + list);
 		}
-		ListStruct bindingSetBody = EnvironmentAccessor.getBindingSet((ListStruct) list.getFirst()).getRest();
+		List<Binding> bindingSetBody = EnvironmentAccessor.getBindingSet((Environment) list.getFirst());
 
 		numParams = bindingSetBody.size();
 		if (numParams <= 11) {
@@ -1533,7 +1537,7 @@ public class IntermediateCodeGenerator {
 
 		// Handle all of the binding information
 		try {
-			bindingEnvironment = bindingStack.push((ListStruct) list.getFirst());
+			bindingEnvironment = bindingStack.push((Environment) list.getFirst());
 
 			// now create the check arguments method that's used when safety > 1
 			//-----------> checkArguments <--------------------
@@ -1666,39 +1670,37 @@ public class IntermediateCodeGenerator {
 
 		// are we building a closure here?
 		//----->
-		bindingEnvironment = bindingStack.push((ListStruct) list.getFirst());
-		ListStruct closureSetBody = EnvironmentAccessor.getClosureSet(bindingEnvironment).getRest();
+		bindingEnvironment = bindingStack.push((Environment) list.getFirst());
+		Closure closureSetBody = EnvironmentAccessor.getClosureSet(bindingEnvironment);
 //        int numParams = closureSetBody.size() - 1;
 
 		try {
 			// (%let... (:parent ...) (:bindings ...) (:symbol-table ...) (:closure ...))
 			// Handle all of the binding information
 			//----->
-			ListStruct bindings = bindingEnvironment.getRest();
+			Environment bindings = bindingEnvironment;
 			// ((:parent ...) (:bindings ...) (:symbol-table ...) (:closure ...)))
 			// Now get just the bindings list and drop the :bindings
-			ListStruct bindingList = ((ListStruct) AssocFunction.funcall(KeywordOld.Bindings, bindings)).getRest();
+			List<Binding> bindingList = bindingEnvironment.getBindings();
 			// ((sym1 :allocation ... :binding ... :scope ... :type ... :init-form ...)
 			//  (sym2 :allocation ... :binding ... :scope ... :type ... :init-form ...)...)
 			// Now to loop thru the bindings, gen code for the init forms and store them in the
 			// proper slots. Note that init forms are evaluated in the enclosing environment
-			ListStruct tmpEnv = bindingEnvironment;
+			Environment tmpEnv = bindingEnvironment;
 			// any init forms get evaluated in the parent binding
 			bindingEnvironment = EnvironmentAccessor.getParent(bindingEnvironment);
 			// now, run the bindings
-			while (bindingList != NullStruct.INSTANCE) {
-				ListStruct binding = (ListStruct) bindingList.getFirst();
-				SymbolStruct sym = (SymbolStruct) binding.getFirst();
-				binding = binding.getRest();
+			for (final Binding binding : bindingList) {
+				SymbolStruct sym = binding.getSymbolStruct();
 				// (:allocation ... :binding ... :scope ... :type ... :init-form ...)
 				// get the variable's init form
-				LispStruct initForm = GetPlist.funcall(binding, KeywordOld.InitForm);
+				LispStruct initForm = ((LetBinding) binding).getInitForm();
 				// is this a local or dynamic variable?
-				SymbolStruct scope = (SymbolStruct) GetPlist.funcall(binding, KeywordOld.Scope);
+				Scope scope = binding.getScope();
 				//** this is the place where the ICG has to choose to allocate a variable
 				//** in a local or it's a binding of a special variable
 				// now, which is it: :local or :dynamic
-				if (scope == KeywordOld.Dynamic) {
+				if (scope == Scope.DYNAMIC) {
 					// handle binding a dynamic variable
 					// 0. create an end and a handler Label, add them to a stack, create a start Label
 					Label startLabel = new Label();
@@ -1722,16 +1724,14 @@ public class IntermediateCodeGenerator {
 					bindingLabels.push(labelSym);
 				} else {
 					// Now get the allocation value
-					ConsStruct alloc = (ConsStruct) GetPlist.funcall(binding, KeywordOld.Allocation);
-					int slot = ((IntegerStruct) alloc.getCdr()).getBigInteger().intValue();
+					PositionAllocation alloc = (PositionAllocation) binding.getAllocation();
+					int slot = alloc.getPosition();
 					// hand the init form to icgMainLoop...
 					// the generated code leaves its value on the stack
 					icgMainLoop(initForm);
 					// store the value in the proper local slot
 					emitter.emitAstore(slot);
 				}
-				// do it again, Sam
-				bindingList = bindingList.getRest();
 			}
 			bindingEnvironment = tmpEnv;
 
@@ -1811,7 +1811,7 @@ public class IntermediateCodeGenerator {
 		list = list.getRest();
 
         /* Call icgMainLoop() for each expression in the PROGN call,
-         * and remove all but the last expression's value from the stack  */
+		 * and remove all but the last expression's value from the stack  */
 		while (list != NullStruct.INSTANCE) {
 			icgMainLoop(list.getFirst());
 			list = list.getRest();
@@ -1993,11 +1993,11 @@ public class IntermediateCodeGenerator {
 			icgMainLoop(list.getFirst());
 			// value is now on the stack, we have to determine where to put it
 			// determine if this is a local variable or a special variable
-			ListStruct binding = EnvironmentAccessor.getBindingEnvironment(bindingEnvironment, symbol, true);
-			if ((binding != NullStruct.INSTANCE)
-					&& (EnvironmentAccessor.getSymbolScope(bindingEnvironment, symbol) != KeywordOld.Dynamic)) {
+			Environment binding = EnvironmentAccessor.getBindingEnvironment(bindingEnvironment, symbol, true);
+			if ((binding != Environment.NULL)
+					&& (EnvironmentAccessor.getSymbolScope(bindingEnvironment, symbol) != Scope.DYNAMIC)) {
 				// so find what local slot it is
-				int slot = genLocalSlot(symbol, binding.getRest()); // drop the %let
+				int slot = genLocalSlot(symbol, binding); // drop the %let
 				// if this is the last set, dup the value so it's returned
 				if (list.getRest() == NullStruct.INSTANCE) {
 					emitter.emitDup(); // leaves the value on the stack
@@ -2338,25 +2338,8 @@ public class IntermediateCodeGenerator {
 				"java/lang/Throwable");
 	}
 
-	public Object getSymbolProperty(ListStruct bindings, SymbolStruct sym, Object propName) {
-		Object retval = null;
-		bindings = getSymbolPList(bindings, sym);
-		if (bindings != NullStruct.INSTANCE) {
-			while (bindings.getFirst() != NullStruct.INSTANCE && bindings.getFirst() != propName) {
-				bindings = bindings.getRest();
-			}
-		}
-		if (bindings != NullStruct.INSTANCE) {
-			retval = bindings.getRest().getFirst();
-		}
-		return retval;
-	}
-
-	private ListStruct getSymbolPList(ListStruct bindings, SymbolStruct sym) {
-		while ((bindings != NullStruct.INSTANCE) && sym != ((ListStruct) bindings.getFirst()).getFirst()) {
-			bindings = bindings.getRest();
-		}
-		return (ListStruct) bindings.getFirst();
+	private Binding getSymbolPList(Environment bindings, SymbolStruct sym) {
+		return bindings.getBinding(sym);
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////

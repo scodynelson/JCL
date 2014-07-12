@@ -1,21 +1,25 @@
 package jcl.compiler.real.environment;
 
+import jcl.LispStruct;
+import jcl.LispType;
+import jcl.symbols.SymbolStruct;
+
 import java.util.List;
 
-public class Environment {
+public class Environment implements LispStruct {
 
 	public static final Environment FREE = null;
 	public static final Environment NULL = null;
 
 	private Marker marker;
-	private Object loadTimeValue;
+	private LoadTimeValue loadTimeValue;
 	private Environment parent;
 	private List<Binding> bindings;
 	private SymbolTable symbolTable;
 	private Closure environmentClosure;
 
 	// TODO: load-time-value ???
-	public Environment(final Marker marker, final Object loadTimeValue, final Environment parent, final List<Binding> bindings,
+	public Environment(final Marker marker, final LoadTimeValue loadTimeValue, final Environment parent, final List<Binding> bindings,
 					   final SymbolTable symbolTable, final Closure environmentClosure) {
 		this.marker = marker;
 		this.parent = parent;
@@ -29,7 +33,7 @@ public class Environment {
 		return marker;
 	}
 
-	public Object getLoadTimeValue() {
+	public LoadTimeValue getLoadTimeValue() {
 		return loadTimeValue;
 	}
 
@@ -39,6 +43,15 @@ public class Environment {
 
 	public List<Binding> getBindings() {
 		return bindings;
+	}
+
+	public Binding getBinding(final SymbolStruct symbolStruct) {
+		for (final Binding binding : bindings) {
+			if (binding.getSymbolStruct().equals(symbolStruct)) {
+				return binding;
+			}
+		}
+		return null;
 	}
 
 	public SymbolTable getSymbolTable() {
@@ -53,7 +66,7 @@ public class Environment {
 		this.marker = marker;
 	}
 
-	public void setLoadTimeValue(final Object loadTimeValue) {
+	public void setLoadTimeValue(final LoadTimeValue loadTimeValue) {
 		this.loadTimeValue = loadTimeValue;
 	}
 
@@ -71,5 +84,10 @@ public class Environment {
 
 	public void setEnvironmentClosure(final Closure environmentClosure) {
 		this.environmentClosure = environmentClosure;
+	}
+
+	@Override
+	public LispType getType() {
+		return null;
 	}
 }

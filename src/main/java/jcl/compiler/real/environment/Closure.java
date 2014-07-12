@@ -1,5 +1,7 @@
 package jcl.compiler.real.environment;
 
+import jcl.symbols.SymbolStruct;
+
 import java.util.List;
 
 public class Closure {
@@ -24,6 +26,15 @@ public class Closure {
 
 	public List<ClosureBinding> getBindings() {
 		return bindings;
+	}
+
+	public ClosureBinding getBinding(final SymbolStruct symbolStruct) {
+		for (final ClosureBinding closureBinding : bindings) {
+			if (closureBinding.getSymbolStruct().equals(symbolStruct)) {
+				return closureBinding;
+			}
+		}
+		return null;
 	}
 
 	public void setDepth(final int depth) {

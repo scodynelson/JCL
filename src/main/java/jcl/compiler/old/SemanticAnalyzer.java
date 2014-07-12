@@ -18,6 +18,10 @@ import jcl.compiler.old.symbol.DeclarationOld;
 import jcl.compiler.old.symbol.KeywordOld;
 import jcl.compiler.old.symbol.SpecialOperatorOld;
 import jcl.compiler.old.symbol.VariableOld;
+import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.FunctionBinding;
+import jcl.compiler.real.environment.LoadTimeValue;
+import jcl.compiler.real.environment.Marker;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
@@ -83,7 +87,7 @@ public class SemanticAnalyzer {
 	@SuppressWarnings({"StaticNonFinalUsedInInitialization", "PackageVisibleField"})
 	static Pattern nameBreakingPattern = Pattern.compile(nameBreakingRegex);
 	private ListStruct bindings;
-	private Stack<ListStruct> environmentStack;
+	private Stack<Environment> environmentStack;
 	private Stack<SymbolStruct> blockStack;
 	private int blockCounter;
 	private Stack<Stack> tagbodyStack;
@@ -106,7 +110,7 @@ public class SemanticAnalyzer {
 		environmentStack.push(EnvironmentAccessor.createGlobalEnvironment());
 		currentParsedLambdaList = new Stack<>();
 		currentParsedLambdaList.push(NullStruct.INSTANCE);
-		currentLispName = new Stack<>();
+		currentLispName = new Stack<SymbolStruct>();
 		currentLispName.push(null);
 
 		topLevelMode = true;
@@ -123,7 +127,7 @@ public class SemanticAnalyzer {
 		dupSetStack = new Stack<java.util.IdentityHashMap<LispStruct, LispStruct>>();
 	}
 
-	public ListStruct currentEnvironment() {
+	public Environment currentEnvironment() {
 		return environmentStack.peek();
 	}
 
@@ -562,15 +566,12 @@ public class SemanticAnalyzer {
 				list = list.getRest();
 				cpy = list;
 			} else { // not already munged
-				ListStruct fnBinding = EnvironmentAccessor.getBindingEnvironment(environmentStack.peek(), fnName, false);
-				if (fnBinding != NullStruct.INSTANCE) {
-					ListStruct aList = fnBinding.getRest(); // ((parent ...) (bindings ...)
+				Environment fnBinding = EnvironmentAccessor.getBindingEnvironment(environmentStack.peek(), fnName, false);
+				if (!fnBinding.equals(Environment.NULL)) {
 					// use assoc to get bindings
-					ListStruct aBindings = (ListStruct) AssocFunction.funcall(KeywordOld.Bindings, aList); // (bindings (foo ...) (bar  ...) ...)
-					ListStruct fooBinding = (ListStruct) AssocFunction.funcall(fnName, aBindings.getRest()); // (foo ...)
+					FunctionBinding fooBinding = (FunctionBinding) fnBinding.getBinding(fnName);
 					// see if this is a LABELS or FLET. That changes fnName
-					fnName = (SymbolStruct) GetPlist.funcall(
-							fooBinding.getRest(), KeywordOld.Name);
+					fnName = fooBinding.getName();
 					list.setElement(1, fnName);
 					currentLispName.push(fnName);
 					ListStruct ret = saFunctionCall(list);
@@ -1060,19 +1061,18 @@ public class SemanticAnalyzer {
 		LispStruct fnSpec = getCadr(list);
 
 		if (fnSpec instanceof SymbolStruct) {
-			ListStruct fnBinding = EnvironmentAccessor.getBindingEnvironment(environmentStack.peek(), (SymbolStruct) fnSpec, false);
-			if (fnBinding != NullStruct.INSTANCE) {
-				ListStruct aList = fnBinding.getRest(); // ((parent ...) (bindings ...)
+			SymbolStruct fnSpecAsSymbol = (SymbolStruct) fnSpec;
+			Environment fnBinding = EnvironmentAccessor.getBindingEnvironment(environmentStack.peek(), fnSpecAsSymbol, false);
+			if (!fnBinding.equals(Environment.NULL)) {
 				// use assoc to get bindings
-				ListStruct aBindings = (ListStruct) AssocFunction.funcall(KeywordOld.Bindings, aList); // (bindings (foo ...) (bar  ...) ...)
-				ListStruct fooBinding = (ListStruct) AssocFunction.funcall(fnSpec, aBindings.getRest()); // (foo ...)
+				FunctionBinding fooBinding = (FunctionBinding) fnBinding.getBinding(fnSpecAsSymbol);
 				// see if this is a LABELS or FLET. That changes fnName
-				fnSpec = (SymbolStruct) GetPlist.funcall(fooBinding.getRest(), KeywordOld.Name);
+				fnSpecAsSymbol = fooBinding.getName();
 				// change the cadr
 				ListStruct theCdr = list.getRest();
-				theCdr.setElement(1, fnSpec);
+				theCdr.setElement(1, fnSpecAsSymbol);
 			} else {
-				saSymbolStruct((SymbolStruct) fnSpec);
+				saSymbolStruct(fnSpecAsSymbol);
 			}
 		} else if (fnSpec instanceof ListStruct) {
 			ListStruct fn = (ListStruct) fnSpec;
@@ -1216,9 +1216,9 @@ public class SemanticAnalyzer {
 		// Semantic Analysis
 
 		// keep track of the current environment as it is "now"
-		ListStruct prevEnvironment = environmentStack.peek();
+		Environment prevEnvironment = environmentStack.peek();
 		// make a new environment and set it to "current"
-		ListStruct newLetEnvironment = EnvironmentAccessor.createNewEnvironment(LET);
+		Environment newLetEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.LET);
 		// set the current environment's parent to what was the environment
 		environmentStack.push(EnvironmentAccessor.createParent(newLetEnvironment, prevEnvironment));
 		try {
@@ -1246,7 +1246,7 @@ public class SemanticAnalyzer {
 					if (symList.getFirst() instanceof ListStruct) {
 						param = (ListStruct) symList.getFirst();
 						// this must be done in the context of the outer environment
-						ListStruct tmpCurrent = environmentStack.pop();
+						Environment tmpCurrent = environmentStack.pop();
 						initForm = saMainLoop(param.getRest().getFirst());
 						environmentStack.push(tmpCurrent);
 						bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(tmpCurrent);
@@ -1283,12 +1283,7 @@ public class SemanticAnalyzer {
 			}
 
 			// Now we have to reverse the list of bindings sinec they are pushed on
-			ListStruct envList = environmentStack.peek().getRest();
-			// ((:parent ...) (:bindings ...) ...)
-			ListStruct bindingsToReverse = (ListStruct) (AssocFunction.funcall(KeywordOld.Bindings, envList));
-			// (:bindings (x ...) (y ...) ...)
-			ListStruct reversedBindings = (ListStruct) NReverseFunction.funcall(bindingsToReverse.getRest());
-			((ConsStruct) bindingsToReverse).setCdr(reversedBindings);
+			Environment envList = environmentStack.peek();
 
 			bindingsPosition = tempPosition;
 			ListStruct newForm = (ListStruct) new ConsStruct(environmentStack.peek(), copyList);
@@ -1350,7 +1345,7 @@ public class SemanticAnalyzer {
 
 	@SuppressWarnings("unchecked")
 	private ListStruct saLoadTimeValue(ListStruct list, String ltvFieldName, String tag) {
-		ListStruct lambdaEnv = EnvironmentAccessor.getEnclosingLambda(environmentStack.peek());
+		Environment lambdaEnv = EnvironmentAccessor.getEnclosingLambda(environmentStack.peek());
 		ListStruct ltv = list.getRest();
 		// better name this sucker
 		SymbolStruct name = (SymbolStruct) GensymFunction.funcall(ltvFieldName + "_FN_" + tag);
@@ -1373,10 +1368,10 @@ public class SemanticAnalyzer {
 		SymbolStruct ltvName = new SymbolStruct(ltvFieldName + tag);
 
 		// now it has to be put into the lambda environmment
-		ListStruct ltvAssoc = (ListStruct) AssocFunction.funcall(KeywordOld.LoadTimeValue, lambdaEnv.getRest());
+		LoadTimeValue ltvAssoc = lambdaEnv.getLoadTimeValue();
 
 		// CDR = (ltvName ltv CDR)
-//		((ConsStruct) ltvAssoc).setCdr(ltvAssoc.getRest().push(ltv).push(ltvName));
+		ltvAssoc.getValues().put(ltvName, ltv);
 
 		ListStruct ret = ListStruct.buildProperList(list.getFirst(), ltvName);
 		return ret;
@@ -1393,9 +1388,9 @@ public class SemanticAnalyzer {
 		// renaming the local macro names. The environment is like FLET where the pairing of  the
 		// original names and new names reside. The body just expands in this environment.
 		try {
-			ListStruct parentEnvironment = environmentStack.peek();
+			Environment parentEnvironment = environmentStack.peek();
 			// make a new environment and set it to "current"
-			ListStruct newEnvironment = EnvironmentAccessor.createNewEnvironment(MACROLET);
+			Environment newEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.MACROLET);
 			ListStruct fnList = (ListStruct) list.getRest().getFirst();
 			// Now has ((foo ...) (bar ...) ...)
 			java.util.List<LispStruct> fnListJavaList = fnList.getAsJavaList();
@@ -1404,7 +1399,7 @@ public class SemanticAnalyzer {
 				ListStruct fn = (ListStruct) fnListNext;
 				SymbolStruct newName = GlobalPackageStruct.SYSTEM.intern(javafy(fn.getFirst()) + System.currentTimeMillis()).getSymbolStruct();
 				// augment the environment
-				IntegerStruct position = new IntegerStruct(BigInteger.ONE); // bindings++ ???
+				int position = 1; // bindings++ ???
 				EnvironmentAccessor.createNewFBinding(newEnvironment, (SymbolStruct) fn.getFirst(), position, newName, false);
 				// Now make a new macro form
 				// ... (defmacro newName (...) ...body...)
@@ -1459,8 +1454,8 @@ public class SemanticAnalyzer {
 
 	@SuppressWarnings("unchecked")
 	private ListStruct saMultipleValueProg1(ListStruct list) {
-	    /* This is a bit ugly and conses too much, but someday we'll
-	     * have a REAL compiler...
+		/* This is a bit ugly and conses too much, but someday we'll
+		 * have a REAL compiler...
          * It gets turned into...
          * (let ((vals (gensym)))
          *    `(let ((,vals (multiple-value-list ,(second list))))
@@ -1968,16 +1963,16 @@ public class SemanticAnalyzer {
 
 		//might also need here prev. bindings position num, or even a stack?
 		int tempPosition = bindingsPosition;
-		ListStruct parentEnvironment = environmentStack.peek();
+		Environment parentEnvironment = environmentStack.peek();
 
 		// keep track of the current environment as it is "now"
-		ListStruct newEnvironment;
+		Environment newEnvironment;
 		// make a new environment and set it to "current"
 		SymbolStruct operator = (SymbolStruct) list.getFirst();
 		if (operator == SpecialOperatorOld.MACRO_LAMBDA) {
-			newEnvironment = EnvironmentAccessor.createNewEnvironment(MACRO);
+			newEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.MACRO);
 		} else {
-			newEnvironment = EnvironmentAccessor.createNewEnvironment(LAMBDA);
+			newEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.LAMBDA);
 		}
 		// set the current environment's parent to what was the environment
 		environmentStack.push(EnvironmentAccessor.createParent(newEnvironment, parentEnvironment));
@@ -2146,19 +2141,8 @@ public class SemanticAnalyzer {
 				list = list.getRest();
 			}
 
-			// This is ONLY needed with the Java-created environment. The Lisp-created
-			// environment is in the proper order
-			if (theParsedLambdaList == NullStruct.INSTANCE) {
-				ListStruct envList = environmentStack.peek().getRest();
-				// ((:parent ...) (:bindings ...) ...)
-				ListStruct bindingsToReverse = (ListStruct) (AssocFunction.funcall(KeywordOld.Bindings, envList));
-				// (:bindings (x ...) (y ...) ...)
-				ListStruct reversedBindings = (ListStruct) NReverseFunction.funcall(bindingsToReverse.getRest());
-				((ConsStruct) bindingsToReverse).setCdr(reversedBindings);
-			}
-
 			//set the current environment back to what it was before we hit this method
-			return (ListStruct) new ConsStruct(environmentStack.peek(), listCopy);
+			return new ConsStruct(environmentStack.peek(), listCopy);
 		} finally {
 			bindingsPosition = tempPosition;  //???
 			environmentStack.pop();
@@ -2180,8 +2164,7 @@ public class SemanticAnalyzer {
 	}
 
 	private void addBinding_FBinding(SymbolStruct sym, Object initForm, int position, boolean isSpecial) {
-		IntegerStruct newPosition = new IntegerStruct(BigInteger.valueOf(position));
-		EnvironmentAccessor.createNewFBinding(environmentStack.peek(), sym, newPosition,
+		EnvironmentAccessor.createNewFBinding(environmentStack.peek(), sym, position,
 				(SymbolStruct) GensymFunction.funcall(javafy(sym) + System.currentTimeMillis()), isSpecial);
 	}
 
@@ -2190,8 +2173,7 @@ public class SemanticAnalyzer {
 	}
 
 	private void addBinding_Let(SymbolStruct sym, int position, LispStruct initForm, boolean isSpecial) {
-		IntegerStruct newPosition = new IntegerStruct(BigInteger.valueOf(position));
-		EnvironmentAccessor.createNewLetBinding(environmentStack.peek(), sym, newPosition, initForm, isSpecial);
+		EnvironmentAccessor.createNewLetBinding(environmentStack.peek(), sym, position, initForm, isSpecial);
 	}
 
 	private void addBinding_LambdaFletLabels(SymbolStruct sym, int position) {
@@ -2199,8 +2181,7 @@ public class SemanticAnalyzer {
 	}
 
 	private void addBinding_LambdaFletLabels(SymbolStruct sym, int position, boolean isSpecial) {
-		IntegerStruct newPosition = new IntegerStruct(BigInteger.valueOf(position));
-		EnvironmentAccessor.createNewLambdaBinding(environmentStack.peek(), sym, newPosition, isSpecial);
+		EnvironmentAccessor.createNewLambdaBinding(environmentStack.peek(), sym, position, isSpecial);
 	}
 
 	// a utility to replace the use of Cadr

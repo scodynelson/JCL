@@ -1,360 +1,193 @@
 package jcl.compiler.old;
 
 import jcl.LispStruct;
-import jcl.compiler.old.functions.AssocFunction;
-import jcl.compiler.old.functions.GetPlist;
-import jcl.compiler.old.functions.SetPlist;
 import jcl.compiler.old.symbol.KeywordOld;
-import jcl.compiler.old.symbol.SpecialOperatorOld;
+import jcl.compiler.real.environment.Allocation;
+import jcl.compiler.real.environment.Binding;
+import jcl.compiler.real.environment.Closure;
+import jcl.compiler.real.environment.ClosureBinding;
+import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.FunctionBinding;
+import jcl.compiler.real.environment.LambdaBinding;
+import jcl.compiler.real.environment.LetBinding;
+import jcl.compiler.real.environment.LocalAllocation;
+import jcl.compiler.real.environment.Marker;
+import jcl.compiler.real.environment.PositionAllocation;
+import jcl.compiler.real.environment.Scope;
+import jcl.compiler.real.environment.SymbolBinding;
+import jcl.compiler.real.environment.SymbolTable;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
-import jcl.numbers.IntegerStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
+import jcl.types.T;
 
-import java.math.BigInteger;
+import java.util.List;
 
-public final class EnvironmentAccessor {
+public class EnvironmentAccessor {
 
-	public static final SymbolStruct LAMBDA = SpecialOperatorOld.LAMBDA_MARKER;
-	public static final SymbolStruct MACRO = SpecialOperatorOld.MACRO_MARKER;
-	public static final SymbolStruct MACROLET = SpecialOperatorOld.MACROLET;
-	public static final SymbolStruct LET = SpecialOperatorOld.LET_MARKER;
-	public static final SymbolStruct FLET = SpecialOperatorOld.FLET_MARKER;
-	public static final SymbolStruct LABELS = SpecialOperatorOld.LABELS_MARKER;
+	public static Environment createNewEnvironment(final Marker marker) {
+		Environment environment = new Environment(marker, null, null, null, null, null);
 
-	private EnvironmentAccessor() {
-	}
-
-	/**
-	 * Creates a new reference environment for storing binding information.
-	 *
-	 * @param marker either LAMBDA or LET depending on type of environment
-	 * @return the new reference environment
-	 */
-	public static ListStruct createNewEnvironment(final SymbolStruct marker) {
-		final ListStruct[] assocArray;
-//        if (lambdaLet.equals(FLET) || lambdaLet.equals(LABELS)) {
-//            assocArray = new ListStruct[]{
-//                        ListStruct.buildProperList(KeywordOld.Parent),
-//                        ListStruct.buildProperList(KeywordOld.Bindings)};
-//        } else {
-		assocArray = new ListStruct[]{
-				ListStruct.buildProperList(KeywordOld.Parent),
-				ListStruct.buildProperList(KeywordOld.Bindings),
-				ListStruct.buildProperList(KeywordOld.SymbolTable),
-				ListStruct.buildProperList(KeywordOld.Closure)};
-//        }
-		// ((:parent)(:bindings)(:symbol-table)(:closure))
-
-		ListStruct newList = ListStruct.buildProperList(assocArray);
-		// now we have place for static initializers for LOAD-TIME-VALUE
-		if (marker.equals(LAMBDA) || marker.equals(MACRO) || marker.equals(FLET) || marker.equals(LABELS)) {
-			newList = new ConsStruct(ListStruct.buildProperList(KeywordOld.LoadTimeValue), newList);
-			// ((load-time-value) (:parent)(:bindings)(:symbol-table)(:closure))
+		if ((marker == Marker.LAMBDA) || (marker == Marker.MACRO) || (marker == Marker.FLET) || (marker == Marker.LABELS)) {
+			environment.setLoadTimeValue(null);
 		}
-		newList = new ConsStruct(marker, newList);
-		// ('lambdaLet' (:load-time-value) (:parent)(:bindings)(:symbol-table)(:closure))
 
-		// set parent to NIL as the default value
-		newList = createParent(newList, NullStruct.INSTANCE); // NULL/NIL parent
-		// ('lambdaLet' (:load-time-value) (:parent)(:bindings)(:symbol-table)(:closure))
-		return newList;
+		environment = createParent(environment, Environment.NULL);
+		return environment;
 	}
 
-	/*
-	 * (defun create-new-environment (marker)
-     *   (let ((new-list '((:parent nil) (:bindings) (:symbol-table) (:closure))))
-     *     (cons marker
-     *           (case marker
-     *             ((lambda macro flet labels)
-     *              (cons '(:load-time-value) new-list)
-     *             (t new-list)))))
-     */
-
-	/**
-	 * Creates a parent reference for the current reference environment.
-	 *
-	 * @param currentEnvironment the reference environment to which the parent is to be added
-	 * @param parent             the lambda reference that is the parent of the current reference environment
-	 * @return the new reference environment
-	 */
-	public static ListStruct createParent(final ListStruct currentEnvironment, final ListStruct parent) {
-		// ('lambdaLet' (:parent ...) ...)
-		final ListStruct assocList = AssocFunction.funcall(KeywordOld.Parent, currentEnvironment.getRest());
-		// (:parent ...)
-
-		((ConsStruct) assocList).setCdr(parent);
-		// (:parent 'parent')
+	public static Environment createParent(final Environment currentEnvironment, final Environment parent) {
+		currentEnvironment.setParent(parent);
 		return currentEnvironment;
 	}
 
-	/*
-	 * (defun create-parent (curr-env parent)
-	 *   (setf (rest (assoc :parent (rest curr-env))) parent)
-	 *   curr-env)
-	 */
-
-	/**
-	 * Creates an environment with a NIL parent. This is equivalent to the global
-	 * environment. This is used at the beginning of semantic analysis and anywhere a
-	 * global environment is needed, for example, load-time-value.
-	 *
-	 * @return global environment ListStruct
-	 */
-	public static ListStruct createGlobalEnvironment() {
-		final ListStruct newEnvironment = createNewEnvironment(LAMBDA);
-		return createParent(newEnvironment, NullStruct.INSTANCE); // NULL/NIL parent
+	public static Environment createGlobalEnvironment() {
+		final Environment newEnvironment = createNewEnvironment(Marker.LAMBDA);
+		return createParent(newEnvironment, Environment.NULL);
 	}
 
-    /*
-     * (defun create-global-environment ()
-     *   (create-new-environment 'lambda)
-     *   (create-parent))
-     */
-
-	/**
-	 * Returns the current reference environment's parent environment.
-	 *
-	 * @param currentEnvironment the reference environment from which the parent is to be acquired
-	 * @return the parent reference environment
-	 */
-	public static ListStruct getParent(final ListStruct currentEnvironment) {
-		final ListStruct assocList = AssocFunction.funcall(KeywordOld.Parent, currentEnvironment.getRest());
-		// (:parent ...)
-		return (ListStruct) assocList.getRest().getFirst(); // AKA. (second assocList)
+	public static Environment getParent(final Environment currentEnvironment) {
+		return currentEnvironment.getParent();
 	}
 
-	/*
-	 * (defun get-parent (curr-env)
-	 *   (second (assoc :parent (rest curr-env)))
-	 */
+	public static Environment createNewLambdaBinding(final Environment currentEnvironment, final SymbolStruct newVariable,
+													 final int position, final boolean isSpecial) {
 
-	public static ListStruct createNewLambdaBinding(final ListStruct currentEnvironment, final SymbolStruct newVariable,
-	                                                final IntegerStruct position, final boolean isSpecial) {
+		final Scope scope = (newVariable.isSpecial() || isSpecial) ? Scope.DYNAMIC : Scope.LEXICAL;
+		final Binding binding = new LambdaBinding(newVariable, position, scope, T.INSTANCE, false);
 
-		ListStruct pList = new ConsStruct(KeywordOld.Type, ListStruct.buildProperList(TStruct.INSTANCE));
-		pList = SetPlist.funcall(pList, KeywordOld.Allocation, new ConsStruct(KeywordOld.Parameter, position));
-		final SymbolStruct scope = (newVariable.isSpecial() || isSpecial) ? KeywordOld.Dynamic : KeywordOld.Lexical;
-		pList = SetPlist.funcall(pList, KeywordOld.Scope, scope);
-		final ListStruct element = ListStruct.buildProperList(newVariable, pList);
-		final ListStruct bindList = getBindingSet(currentEnvironment);
-		((ConsStruct) bindList).setCdr(new ConsStruct(element, bindList.getRest()));
+		final List<Binding> currentBindings = currentEnvironment.getBindings();
+		currentBindings.add(binding);
+
 		return currentEnvironment;
 	}
 
-	/*
-	EXAMPLE:
+	public static Environment createNewLetBinding(final Environment currentEnvironment, final SymbolStruct newVariable,
+												  final int position, final LispStruct initForm, final boolean isSpecial) {
 
-	curr-env == '(marker ((:bindings ((x (:type (t) :allocation (:parameter 0) :scope :dynamic))))))
-	new-var == a
-	position == 1
-	special-p == nil
+		final Scope scope = (newVariable.isSpecial() || isSpecial) ? Scope.DYNAMIC : Scope.LEXICAL;
+		final Binding binding = new LetBinding(newVariable, position, scope, T.INSTANCE, initForm, false);
 
-	result =>
-	curr-env == '(marker ((:bindings ((a (:type (t) :allocation (:parameter 1) :scope :lexical))
-									  (x (:type (t) :allocation (:parameter 0) :scope :dynamic))))))
-	 */
+		final List<Binding> currentBindings = currentEnvironment.getBindings();
+		currentBindings.add(binding);
 
-	/*
-	 * (defun create-new-lambda-binding (curr-env new-var position special-p)
-	 *   (setf plist (list :type '(t)
-	 *   				   :allocation '(:parameter position)
-	 *   				   :scope (if special-p :dynamic :lexical)))
-	 *   (setf (rest (assoc :bindings (rest curr-env)))
-	 *   	   (cons (cons new-var plist)
-	 *         		 (rest (assoc :bindings (rest curr-env)))))
-	 *   curr-env)
-     */
-
-	public static ListStruct createNewLetBinding(final ListStruct currentEnvironment, final SymbolStruct newVariable,
-	                                             final IntegerStruct position, final LispStruct initForm, final boolean isSpecial) {
-
-		ListStruct pList = new ConsStruct(KeywordOld.Type, ListStruct.buildProperList(TStruct.INSTANCE));
-		pList = SetPlist.funcall(pList, KeywordOld.Allocation, new ConsStruct(KeywordOld.Local, position));
-		final SymbolStruct scope = (newVariable.isSpecial() || isSpecial) ? KeywordOld.Dynamic : KeywordOld.Lexical;
-		pList = SetPlist.funcall(pList, KeywordOld.Scope, scope);
-		pList = SetPlist.funcall(pList, KeywordOld.InitForm, initForm);
-		final ListStruct element = ListStruct.buildProperList(newVariable, pList);
-		final ListStruct bindList = getBindingSet(currentEnvironment);
-		((ConsStruct) bindList).setCdr(new ConsStruct(element, bindList.getRest()));
 		return currentEnvironment;
 	}
 
-	/*
-	EXAMPLE:
+	public static Environment createNewFBinding(final Environment currentEnvironment, final SymbolStruct newVariable,
+												final int position, final SymbolStruct newFieldName, final boolean isSpecial) {
 
-	curr-env == '(marker ((:bindings ((x (:type (t) :allocation (:parameter 0) :scope :dynamic :init-form "Hello"))))))
-	new-var == a
-	position == 1
-	init-form == "World"
-	special-p == nil
+		final Scope scope = (newVariable.isSpecial() || isSpecial) ? Scope.DYNAMIC : Scope.LEXICAL;
+		final Binding binding = new FunctionBinding(newVariable, position, scope, T.INSTANCE, newFieldName, false);
 
-	result =>
-	curr-env == '(marker ((:bindings ((a (:type (t) :allocation (:parameter 1) :scope :lexical :init-form "World"))
-									  (x (:type (t) :allocation (:parameter 0) :scope :dynamic :init-form "Hello"))))))
-	 */
+		final List<Binding> currentBindings = currentEnvironment.getBindings();
+		currentBindings.add(binding);
 
-	/*
-	 * (defun create-new-let-binding (curr-env new-var position init-form special-p)
-	 *   (setf plist (list :type '(t)
-	 *   				   :allocation '(:local position)
-	 *   				   :scope (if special-p :dynamic :lexical)
-	 *   				   :init-form init-form))
-	 *   (setf (rest (assoc :bindings (rest curr-env)))
-	 *   	   (cons (cons new-var plist)
-	 *         		 (rest (assoc :bindings (rest curr-env)))))
-	 *   curr-env)
-     */
-
-	public static ListStruct createNewFBinding(final ListStruct currentEnvironment, final SymbolStruct newVariable,
-											   final IntegerStruct position, final SymbolStruct newFieldName, final boolean isSpecial) {
-
-		final ListStruct pList = new ConsStruct(KeywordOld.Name, ListStruct.buildProperList(newFieldName));
-		final ListStruct element = ListStruct.buildProperList(newVariable, pList);
-		final ListStruct bindList = getBindingSet(currentEnvironment);
-		((ConsStruct) bindList).setCdr(new ConsStruct(element, bindList.getRest()));
 		return currentEnvironment;
 	}
 
-	/*
-	EXAMPLE:
-
-	curr-env == '(marker ((:bindings ((x (:name ("HELLO")))))))
-	new-var == a
-	new-field-name == "WORLD"
-
-	result =>
-	curr-env == '(marker ((:bindings ((z (:name ("WORLD")))
-									  (x (:name ("HELLO")))))))
-	 */
-
-	/*
-	 * (defun create-new-f-binding (curr-env new-var new-field-name)
-	 *   (setf plist (list :name '(new-field-name)))
-	 *   (setf (rest (assoc :bindings (rest curr-env)))
-	 *   	   (cons (cons new-var plist)
-	 *         		 (rest (assoc :bindings (rest curr-env)))))
-	 *   curr-env)
-     */
-
-	/**
-	 * Accesses the binding set in the specified environment. This method works for
-	 * all environments: lambda, let, flet, and labels
-	 *
-	 * @param currentEnvironment the enviroment to inquire
-	 * @return the binding set
-	 */
-	public static ListStruct getBindingSet(final ListStruct currentEnvironment) {
-		return AssocFunction.funcall(KeywordOld.Bindings, currentEnvironment.getRest());
+	public static List<Binding> getBindingSet(final Environment currentEnvironment) {
+		return currentEnvironment.getBindings();
 	}
 
-	/**
-	 * Accesses the binding set in the specified environment. This method works for
-	 * all environments: lambda, let, flet, and labels
-	 *
-	 * @param currentEnvironment the enviroment to inquire
-	 * @return the binding set
-	 */
-	public static ListStruct getClosureSet(final ListStruct currentEnvironment) {
-		return AssocFunction.funcall(KeywordOld.Closure, currentEnvironment.getRest());
+	public static Closure getClosureSet(final Environment currentEnvironment) {
+		return currentEnvironment.getEnvironmentClosure();
 	}
 
-	/**
-	 * Access the current value and returns the binding for the specified symbol
-	 * in the specified environment. This method works for
-	 * all environments: lambda, let, flet, and labels
-	 *
-	 * @param currentEnvironment the enviroment to inquire
-	 * @param variable           the symbol bound in the specified environment
-	 * @return returns the binding for the specified symbol in the specified environment.
-	 */
-	public static ListStruct getBinding(final ListStruct currentEnvironment, final SymbolStruct variable) {
-		final ListStruct bindList = AssocFunction.funcall(variable, getBindingSet(currentEnvironment).getRest());
-		return bindList.getRest();
+	public static Binding getBinding(final Environment currentEnvironment, final SymbolStruct variable) {
+		final List<Binding> bindings = currentEnvironment.getBindings();
+
+		Binding returnBinding = null;
+		for (final Binding binding : bindings) {
+			if (binding.getSymbolStruct().equals(variable)) {
+				returnBinding = binding;
+				break;
+			}
+		}
+		return returnBinding;
 	}
 
-	public static SymbolStruct extractBoundName(final ListStruct env, final SymbolStruct fnName, final boolean valueBinding) {
+	public static SymbolStruct extractBoundName(final Environment env, final SymbolStruct fnName, final boolean valueBinding) {
 
 		// get the current environment - used for macroexpansion
-		final ListStruct fnBinding = getBindingEnvironment(env, fnName, valueBinding);
-		if (fnBinding.equals(NullStruct.INSTANCE)) {
+		final Environment fnBinding = getBindingEnvironment(env, fnName, valueBinding);
+		if (fnBinding.equals(Environment.NULL)) {
 			return fnName;
 		}
 
-		final ListStruct aList = fnBinding.getRest(); // ((parent ...) (bindings ...)
 		// use assoc to get bindings
-		final ListStruct aBindings = AssocFunction.funcall(KeywordOld.Bindings, aList); // (bindings (foo ...) (bar  ...) ...)
-		final ListStruct fooBinding = AssocFunction.funcall(fnName, aBindings.getRest()); // (foo ...)
-		// see if this is a LABELS or FLET. That changes fnName
-		return (SymbolStruct) GetPlist.funcall(fooBinding.getRest(), KeywordOld.Name);
+		final List<Binding> aBindings = fnBinding.getBindings();
+
+		Binding foundBinding = null;
+		for (final Binding binding : aBindings) {
+			if (binding.getSymbolStruct().equals(fnName)) {
+				foundBinding = binding;
+				break;
+			}
+		}
+
+		if (foundBinding != null) {
+			return ((FunctionBinding) foundBinding).getName();
+		}
+		return null;
 	}
 
-	/**
-	 * Looks recursively at the environment that it is passed and all of it's ancestors until
-	 * it finds one that contains the variable specified.
-	 *
-	 * @param currentEnvironment The environment to start looking for the symbol in.
-	 * @param variable           The symbol being looked for
-	 * @param valueBinding       if the value is binding
-	 * @return The list containing the binding for the given variable, or NIL if not found.
-	 */
-	public static ListStruct getBindingEnvironment(final ListStruct currentEnvironment, final SymbolStruct variable,
-	                                               final boolean valueBinding) {
+	public static boolean hasBinding(final Environment currentEnvironment, final SymbolStruct variable) {
+		final List<Binding> bindings = currentEnvironment.getBindings();
 
-		if (currentEnvironment.equals(NullStruct.INSTANCE)) {
+		boolean hasBinding = false;
+		for (final Binding binding : bindings) {
+			if (binding.getSymbolStruct().equals(variable)) {
+				hasBinding = true;
+				break;
+			}
+		}
+		return hasBinding;
+	}
+
+	public static Environment getBindingEnvironment(final Environment currentEnvironment, final SymbolStruct variable,
+													final boolean valueBinding) {
+
+		if (currentEnvironment.equals(Environment.NULL)) {
 			return currentEnvironment;
 		}
 
-		if (!getBinding(currentEnvironment, variable).equals(NullStruct.INSTANCE)) {
+		if (hasBinding(currentEnvironment, variable)) {
 
-			final SymbolStruct envType = (SymbolStruct) currentEnvironment.getFirst();
-			if ((envType.equals(LAMBDA) || envType.equals(MACRO) || envType.equals(LET)) && valueBinding) {
+			final Marker envType = currentEnvironment.getMarker();
+			if (((envType == Marker.LAMBDA) || (envType == Marker.MACRO) || (envType == Marker.LET)) && valueBinding) {
 				return currentEnvironment;
 			}
 
-			if ((envType.equals(FLET) || envType.equals(LABELS)) && !valueBinding) {
+			if (((envType == Marker.FLET) || (envType == Marker.LABELS)) && !valueBinding) {
 				return currentEnvironment;
 			}
 
-			if (envType.equals(MACROLET) && valueBinding) {
+			if ((envType == Marker.MACROLET) && valueBinding) {
 				return currentEnvironment;
 			}
 		}
 
-		return getBindingEnvironment(getParent(currentEnvironment), variable, valueBinding);
+		return getBindingEnvironment(currentEnvironment.getParent(), variable, valueBinding);
 	}
 
-	public static ListStruct findClosestLambdaOrLetEnv(final ListStruct currentEnvironment) {
+	public static Environment findClosestLambdaOrLetEnv(final Environment currentEnvironment) {
 
-		//TODO find out why (load-time-value) is coming here
-		if (!(currentEnvironment.getFirst() instanceof SymbolStruct)) {
+		if (currentEnvironment.equals(Environment.NULL)) {
 			return currentEnvironment;
 		}
 
-		if (currentEnvironment.equals(NullStruct.INSTANCE)) {
-			return NullStruct.INSTANCE;
-		}
-
-		final SymbolStruct envType = (SymbolStruct) currentEnvironment.getFirst();
-		if (envType.equals(LAMBDA) || envType.equals(MACRO) || envType.equals(LET) || envType.equals(LABELS) || envType.equals(FLET)) {
+		final Marker envType = currentEnvironment.getMarker();
+		if ((envType == Marker.LAMBDA) || (envType == Marker.MACRO) || (envType == Marker.LET) || (envType == Marker.LABELS) || (envType == Marker.FLET)) {
 			return currentEnvironment;
 		}
 
 		return findClosestLambdaOrLetEnv(getParent(currentEnvironment));
 	}
 
-	/**
-	 * This method adds a given symbol to the given environment.  It automatically detects correct
-	 * values for scope and binding.
-	 *
-	 * @param currentEnvironment The environment containing the symbol table to add the symbol to.
-	 * @param newSymbol          The symbol to add.
-	 * @return The environment containing the change
-	 */
-	public static ListStruct addSymbolToTable(final ListStruct currentEnvironment, final SymbolStruct newSymbol) {
-		final ListStruct currentEnvironmentInner = findClosestLambdaOrLetEnv(currentEnvironment);
+	public static Environment addSymbolToTable(final Environment currentEnvironment, final SymbolStruct newSymbol) {
+		final Environment currentEnvironmentInner = findClosestLambdaOrLetEnv(currentEnvironment);
 
 		/* default - may change later */
 		ListStruct pList = new ConsStruct(KeywordOld.Type, ListStruct.buildProperList(TStruct.INSTANCE));
@@ -364,25 +197,21 @@ public final class EnvironmentAccessor {
 		if (!newSymbol.isSpecial()) {
 
 			// This section deals with the lexical binding of symbols that are bound above the current env
-			ListStruct bindingEnvironment = getBindingEnvironment(currentEnvironmentInner, newSymbol, true);
-			if (!bindingEnvironment.equals(NullStruct.INSTANCE)) {
+			Environment bindingEnvironment = getBindingEnvironment(currentEnvironmentInner, newSymbol, true);
+			if (!bindingEnvironment.equals(Environment.NULL)) {
 
 				// so it has a lexical binding somewhere
-				if (getBinding(currentEnvironmentInner, newSymbol).equals(NullStruct.INSTANCE)) {
-
-					// but not here. Have to create a reference to the existing binding env
-					pList = SetPlist.funcall(pList, KeywordOld.Scope, KeywordOld.Lexical);
-					pList = SetPlist.funcall(pList, KeywordOld.Binding, bindingEnvironment);
+				if (getBinding(currentEnvironmentInner, newSymbol) == null) {
 
 					// ...(:BINDING #the-binding-env# :SCOPE :LEXICAL :TYPE T)
 					// so we just have to point the allocation at the binding environment
 					//*** here is where we know that there is a closure involved ***
 					// See if it is bound in the current lambda env. If so, just carry on
-					final ListStruct currentLambda = getEnclosingLambda(currentEnvironmentInner);
+					final Environment currentLambda = getEnclosingLambda(currentEnvironmentInner);
 
 					// is the binding location above the current lambda? If so, there has
 					// to be a closure allocation in the bindingEnvironment
-					final ListStruct bindingLambda = getEnclosingLambda(bindingEnvironment);
+					final Environment bindingLambda = getEnclosingLambda(bindingEnvironment);
 					if (!currentLambda.equals(bindingLambda)) {
 
 						// here the binding lambda is outside the enclosing lambda
@@ -390,13 +219,12 @@ public final class EnvironmentAccessor {
 						addClosureToBindingEnvironment(bindingEnvironment, newSymbol);
 
 						// the (:allocation (:closure . bindingEnv)) to the table
-						bindingEnvironment = new ConsStruct(KeywordOld.Closure, bindingEnvironment);
+//						bindingEnvironment = new ConsStruct(KeywordOld.Closure, bindingEnvironment);
+						// TODO: Closure allocation???
 					}
-					//***
-					pList = SetPlist.funcall(pList, KeywordOld.Allocation, bindingEnvironment);
-					final ListStruct element = ListStruct.buildProperList(newSymbol, pList);
-					final ListStruct bindList = AssocFunction.funcall(KeywordOld.SymbolTable, currentEnvironmentInner.getRest());
-					((ConsStruct) bindList).setCdr(new ConsStruct(element, bindList.getRest()));
+
+					final SymbolBinding symbolBinding = new SymbolBinding(newSymbol, null, Scope.LEXICAL, T.INSTANCE, bindingEnvironment, false);
+					currentEnvironmentInner.getSymbolTable().getBindings().add(symbolBinding);
 				}
 
 				// we may also be here because there is a binding right here. Nothing to do
@@ -407,68 +235,65 @@ public final class EnvironmentAccessor {
 
 		// if not bound anywhere in the binding tree (free and dynamic)...
 		// we know we're dealing with dynamic variables - so, is it already tagged in this environment?
-		if (!getSymbolInTable(currentEnvironmentInner, newSymbol).equals(NullStruct.INSTANCE)) {
+		if (getSymbolInTable(currentEnvironmentInner, newSymbol) != null) {
 			// yes, nothing to do
 			return currentEnvironmentInner;
 		}
 
 		// so, we at least have to add an entry in this environment
 		// and possibly in an outer one
-		pList = SetPlist.funcall(pList, KeywordOld.Scope, KeywordOld.Dynamic);
-		pList = SetPlist.funcall(pList, KeywordOld.Binding, KeywordOld.Free);
 
 		// ...(:BINDING :FREE :SCOPE :DYNAMIC :TYPE T)
 
+		final Allocation finalAllocation;
+		final Environment finalBindingEnvironment;
 		// if the current environment is not a lambda, we may need to add an entry to the enclosing lambda
 		if (isLambda(currentEnvironmentInner)) {
 
 			// symbol was found in the immediate scope of the Lambda
-			pList = addLocalAlloc(currentEnvironmentInner, pList);
+			finalAllocation = addLocalAlloc(currentEnvironmentInner);
+			finalBindingEnvironment = Environment.FREE;
 
 			// ...(:ALLOCATION (:LOCAL . n) :BINDING :FREE :SCOPE :DYNAMIC :TYPE T)
 		} else {
 
 			// if the current environment is not a lambda, find the enclosing lambda
-			final ListStruct enclosingLambda = getEnclosingLambda(currentEnvironmentInner);
+			final Environment enclosingLambda = getEnclosingLambda(currentEnvironmentInner);
 
 			// see if the symbol is already in the enclosing environment
-			if (getSymbolInTable(enclosingLambda, newSymbol).equals(NullStruct.INSTANCE)) {
+			if (getSymbolInTable(enclosingLambda, newSymbol) == null) {
 
 				// it's not in the enclosing lambda, so put in an entry
-				final ListStruct enclosingSymTbl = addLocalAlloc(currentEnvironmentInner, pList);
+				final Allocation enclosingSymTbl = addLocalAlloc(currentEnvironmentInner);
 
 				// add to the enclosing lambda's symbol table
-				final ListStruct element = ListStruct.buildProperList(newSymbol, enclosingSymTbl);
-				final ListStruct enclosingBindList = AssocFunction.funcall(KeywordOld.SymbolTable, enclosingLambda.getRest());
-				((ConsStruct) enclosingBindList).setCdr(new ConsStruct(element, enclosingBindList.getRest()));
+				final SymbolBinding symbolBinding = new SymbolBinding(newSymbol, enclosingSymTbl, Scope.DYNAMIC, T.INSTANCE, Environment.FREE, false);
+				enclosingLambda.getSymbolTable().getBindings().add(symbolBinding);
 
 				// Now we have the outer symbol table set up correctly
 				// set the Allocation KeywordOld to what is should be for the current environment
-				pList = SetPlist.funcall(pList, KeywordOld.Allocation, enclosingLambda);
+				finalAllocation = null;
+				finalBindingEnvironment = enclosingLambda;
 
 				// ...(:ALLOCATION #enclosing-lambda# :BINDING :FREE :SCOPE :DYNAMIC :TYPE T)
 			} else {
 				// it is, so we have to add a reference to that environment in the current env
-				pList = SetPlist.funcall(pList, KeywordOld.Allocation, enclosingLambda);
-				final ListStruct element = ListStruct.buildProperList(newSymbol, pList);
-				final ListStruct bindList = AssocFunction.funcall(KeywordOld.SymbolTable, currentEnvironmentInner.getRest());
-				((ConsStruct) bindList).setCdr(new ConsStruct(element, bindList.getRest()));
+
+				final SymbolBinding symbolBinding = new SymbolBinding(newSymbol, null, Scope.DYNAMIC, T.INSTANCE, enclosingLambda, false);
+				currentEnvironmentInner.getSymbolTable().getBindings().add(symbolBinding);
 				return currentEnvironmentInner;
 			}
 		}
 
 		// now we add the new symbol to the local table
-		final ListStruct element = ListStruct.buildProperList(newSymbol, pList);
-		final ListStruct bindList = AssocFunction.funcall(KeywordOld.SymbolTable, currentEnvironmentInner.getRest());
-		((ConsStruct) bindList).setCdr(new ConsStruct(element, bindList.getRest()));
-
+		final SymbolBinding symbolBinding = new SymbolBinding(newSymbol, finalAllocation, Scope.DYNAMIC, T.INSTANCE, finalBindingEnvironment, false);
+		currentEnvironmentInner.getSymbolTable().getBindings().add(symbolBinding);
 		return currentEnvironmentInner;
 	}
 
-	public static ListStruct addLocalAlloc(final ListStruct currentEnvironment, final ListStruct pList) {
-		final IntegerStruct localNumber = new IntegerStruct(BigInteger.valueOf(getNextAvailableParameterNumber(currentEnvironment)));
-		final ListStruct localAllocation = new ConsStruct(KeywordOld.Local, localNumber);
-		return SetPlist.funcall(pList, KeywordOld.Allocation, localAllocation);
+	public static Allocation addLocalAlloc(final Environment currentEnvironment) {
+		final int localNumber = getNextAvailableParameterNumber(currentEnvironment);
+		return new LocalAllocation(localNumber);
 	}
 
 	/**
@@ -477,130 +302,117 @@ public final class EnvironmentAccessor {
 	 * @param environment The environment that is enclosed by a lambda
 	 * @return The lambda enclosing the given environment.
 	 */
-	public static ListStruct getEnclosingLambda(final ListStruct environment) {
+	public static Environment getEnclosingLambda(final Environment environment) {
 		// if we are looking at a lambda, return it
 		if (isLambda(environment)) {
 			return environment;
 		}
 
-		final ListStruct parent = getParent(environment);
+		final Environment parent = getParent(environment);
 
 		// if the parent is null and there is no enclosing lambda, return NIL
-		if (parent.equals(NullStruct.INSTANCE)) {
-			return NullStruct.INSTANCE;
+		if (parent.equals(Environment.NULL)) {
+			return Environment.NULL;
 		}
 
 		// keep looking
 		return getEnclosingLambda(parent);
 	}
 
-	public static ListStruct getSymbolTable(final ListStruct currentEnvironment) {
-		final ListStruct currentEnvironmentInner = findClosestLambdaOrLetEnv(currentEnvironment);
-		return AssocFunction.funcall(KeywordOld.SymbolTable, currentEnvironmentInner.getRest());
+	public static SymbolTable getSymbolTable(final Environment currentEnvironment) {
+		final Environment currentEnvironmentInner = findClosestLambdaOrLetEnv(currentEnvironment);
+		return currentEnvironmentInner.getSymbolTable();
 	}
 
-	public static ListStruct getSymbolInTable(final ListStruct currentEnvironment, final SymbolStruct variable) {
-		final ListStruct currentEnvironmentInner = findClosestLambdaOrLetEnv(currentEnvironment);
+	public static SymbolBinding getSymbolInTable(final Environment currentEnvironment, final SymbolStruct variable) {
+		final Environment currentEnvironmentInner = findClosestLambdaOrLetEnv(currentEnvironment);
 
-		final ListStruct symTable = getSymbolTable(currentEnvironmentInner);
-		final ListStruct symTable2 = AssocFunction.funcall(variable, symTable.getRest());
-		return symTable2.getRest();
+		final SymbolTable symTable = getSymbolTable(currentEnvironmentInner);
+		final List<Binding> symbolBindings = symTable.getBindings();
+
+		SymbolBinding returnSymbolBinding = null;
+		for (final Binding symbolBinding : symbolBindings) {
+			if (symbolBinding.getSymbolStruct().equals(variable)) {
+				returnSymbolBinding = (SymbolBinding) symbolBinding;
+				break;
+			}
+		}
+		return returnSymbolBinding;
 	}
 
-	public static ListStruct getSymbolTableEntry(final ListStruct currentEnvironment, final SymbolStruct variable) {
-		final ListStruct currentEnvironmentInner = findClosestLambdaOrLetEnv(currentEnvironment);
+	public static SymbolBinding getSymbolTableEntry(final Environment currentEnvironment, final SymbolStruct variable) {
+		final Environment currentEnvironmentInner = findClosestLambdaOrLetEnv(currentEnvironment);
 
 		// look up the symbol in the symbol table
-		ListStruct symPList = getSymbolInTable(currentEnvironmentInner, variable);
+		SymbolBinding symPList = getSymbolInTable(currentEnvironmentInner, variable);
 
 		// (:ALLOCATION (:LOCAL . n) :BINDING :FREE :SCOPE :DYNAMIC :TYPE T)
 		// we need the local slot in the allocation, get the CDR of the GET of :ALLOCATION
-		final ListStruct alloc = (ListStruct) GetPlist.funcall(symPList, KeywordOld.Allocation);
+		final Allocation alloc = symPList.getAllocation();
 
 		// if the cons starts with LOCAL, we're there
 		// otherwise, we have to go to the actual env of allocation
-		if (!alloc.getFirst().equals(KeywordOld.Local)) {
-			symPList = getSymbolInTable(alloc.getRest(), variable);
+		if (!(alloc instanceof LocalAllocation)) {
+			symPList = getSymbolInTable(symPList.getBinding(), variable);
 		}
 
 		return symPList;
 	}
 
-	public static IntegerStruct getSymbolAllocation(final ListStruct currentEnvironment, final SymbolStruct variable) {
-		final ListStruct currentEnvironmentInner = findClosestLambdaOrLetEnv(currentEnvironment);
+	public static int getSymbolAllocation(final Environment currentEnvironment, final SymbolStruct variable) {
+		final Environment currentEnvironmentInner = findClosestLambdaOrLetEnv(currentEnvironment);
 
 		// look up the symbol in the symbol table
-		final ListStruct symPList = getSymbolTableEntry(currentEnvironmentInner, variable);
+		final SymbolBinding symPList = getSymbolTableEntry(currentEnvironmentInner, variable);
 //        List symPList = getSymbolInTable(currentEnvironmentInner, variable);
 
 //        // (:ALLOCATION (:LOCAL . n) :BINDING :FREE :SCOPE :DYNAMIC :TYPE T)
 //        // we need the local slot in the allocation, get the CDR of the GET of :ALLOCATION
 
-		final ListStruct alloc = (ListStruct) GetPlist.funcall(symPList, KeywordOld.Allocation);
+		final Allocation alloc = symPList.getAllocation();
 
 //        // if the cons starts with LOCAL, we're there
 //        // otherwise, we have to go to the actual env of allocation
 //        if (alloc.getFirst() != KeywordOld.Local) {
 //            symPList = getSymbolInTable(alloc, variable);
-		if (alloc.equals(NullStruct.INSTANCE)) {
-			return new IntegerStruct(BigInteger.valueOf(-1));
+		if (alloc == null) {
+			return -1;
 		} else {
-			return (IntegerStruct) ((ConsStruct) alloc).getCdr();
+			return ((PositionAllocation) alloc).getPosition();
 		}
 	}
 
-	public static SymbolStruct getSymbolScope(final ListStruct currentEnvironment, final SymbolStruct variable) {
-		final ListStruct currentEnvironmentInner = findClosestLambdaOrLetEnv(currentEnvironment);
+	public static Scope getSymbolScope(final Environment currentEnvironment, final SymbolStruct variable) {
+		final Environment currentEnvironmentInner = findClosestLambdaOrLetEnv(currentEnvironment);
 
 		// look up the symbol in the symbol table
-		final ListStruct symPList = getSymbolTableEntry(currentEnvironmentInner, variable);
-		return (SymbolStruct) GetPlist.funcall(symPList, KeywordOld.Scope);
+		final SymbolBinding symPList = getSymbolTableEntry(currentEnvironmentInner, variable);
+		return symPList.getScope();
 	}
 
-	/**
-	 * This method returns the number of the rest available parameter number. It finds the maximum
-	 * value of :parameter or :local specifications in the current environment and any enclosing
-	 * environment up to the enclosing lambda. This check has to be made since an allocation
-	 * may happen in any environment in the stack, generating local parameter numbers that may
-	 * be higher in an outer environment. This is a side-effect of the depth-first allocation
-	 * algorithm.
-	 * NOTE: allocation checks are made for both lexical and free variables (:bindings and :symbol-table)
-	 *
-	 * @param bindings   {@link ListStruct}
-	 * @param currentMax int
-	 * @return The int value of the rest available parameter number.
-	 */
-	public static int getLocalMax(final ListStruct bindings, int currentMax) {
-
-		// drop the :bindings at the beginning
-		ListStruct bindingsInner = bindings.getRest();
-		// list of bindings -> ( (..binding spec...) (...binding spec...)...)
+	public static int getLocalMax(final List<Binding> bindings, int currentMax) {
 
 		int currentMaxInner = currentMax;
 
-		while (!bindingsInner.equals(NullStruct.INSTANCE)) {
-			final ListStruct bindingEntry = (ListStruct) bindingsInner.getFirst();
-			final ListStruct propList = bindingEntry.getRest();
-			final ListStruct allocation = (ListStruct) GetPlist.funcall(propList, KeywordOld.Allocation);
+		for (final Binding binding : bindings) {
+			final Allocation allocation = binding.getAllocation();
 
 			// an allocation is a ref to an outer env, (:local . n) or (:parameter . n)
-			final Object type = allocation.getFirst();
-			if (type.equals(KeywordOld.Local) || type.equals(KeywordOld.Parameter)) {
+			if (allocation instanceof PositionAllocation) {
 
-				final int tempParameter = ((IntegerStruct) allocation.getRest().getFirst()).getBigInteger().intValue();
+				PositionAllocation positionAllocation = (PositionAllocation) allocation;
+				final int tempParameter = positionAllocation.getPosition();
 				if (tempParameter > currentMaxInner) {
 					currentMaxInner = tempParameter;
 				}
 			}
-
-			bindingsInner = bindingsInner.getRest();
 		}
 
 		return currentMaxInner;
 	}
 
-	public static int getNextAvailableParameterNumber(final ListStruct environment) {
-		ListStruct environmentInner = environment;
+	public static int getNextAvailableParameterNumber(final Environment environment) {
+		Environment environmentInner = environment;
 
 		// starts with the current environment
 		int max = 0;
@@ -610,10 +422,10 @@ public final class EnvironmentAccessor {
 		while (true) {
 
 			// loop up through the local env we'return looking through
-			max = getLocalMax(AssocFunction.funcall(KeywordOld.Bindings, environmentInner.getRest()), max);
+			max = getLocalMax(environmentInner.getBindings(), max);
 
 			// now look through thru the symbol table (free variables)
-			max = getLocalMax(AssocFunction.funcall(KeywordOld.SymbolTable, environmentInner.getRest()), max);
+			max = getLocalMax(environmentInner.getSymbolTable().getBindings(), max);
 
 			// see if we just handled a lambda environment
 			if (isLambda(environmentInner)) {
@@ -622,89 +434,79 @@ public final class EnvironmentAccessor {
 			}
 
 			environmentInner = getParent(environmentInner);
-			assert !environmentInner.equals(NullStruct.INSTANCE);
+			assert !environmentInner.equals(Environment.NULL);
 		}
 
 		// return one more than the max
 		return max + 1;
 	}
 
-	public static boolean isLambda(final ListStruct environment) {
-		return environment.getFirst().equals(LAMBDA) || environment.getFirst().equals(MACRO) || environment.getFirst().equals(FLET) || environment.getFirst().equals(LABELS);
+	public static boolean isLambda(final Environment environment) {
+		return (environment.getMarker() == Marker.LAMBDA) || (environment.getMarker() == Marker.MACRO)
+				|| (environment.getMarker() == Marker.FLET) || (environment.getMarker() == Marker.LABELS);
 	}
 
-	/**
-	 * This method will find the parent environment in which the given symbol is bound.
-	 * If the symbol has not been added to the closure there yet, it will be added now.
-	 * If it has already been added, then the number of references is incremented.  If the
-	 * symbol is not bound in a parent (i.e., it is free) then nothing is done.
-	 *
-	 * @param currentEnvironment The environment whose parent may contain the binding for
-	 *                           the given symbol.
-	 * @param symbol             The symbol to add/modify the closure entry for
-	 * @return The current environment with changes to the parent
-	 */
-	public static ListStruct addClosureToBindingEnvironment(final ListStruct currentEnvironment, final SymbolStruct symbol) {
-		final ListStruct currentEnvironmentInner = findClosestLambdaOrLetEnv(currentEnvironment);
-		ListStruct bindingEnvironment = getBindingEnvironment(currentEnvironmentInner, symbol, true);
+	public static Environment addClosureToBindingEnvironment(final Environment currentEnvironment, final SymbolStruct symbol) {
+		final Environment currentEnvironmentInner = findClosestLambdaOrLetEnv(currentEnvironment);
+		Environment bindingEnvironment = getBindingEnvironment(currentEnvironmentInner, symbol, true);
 
 		// if there is a parent binding environment
-		if (!bindingEnvironment.equals(NullStruct.INSTANCE)) {
-			ListStruct closure = getClosure(bindingEnvironment, symbol);
+		if (!bindingEnvironment.equals(Environment.NULL)) {
+			ClosureBinding closureBinding = getClosureBinding(bindingEnvironment, symbol);
 
 			// if there is not yet a closure for this variable, add it
-			IntegerStruct references;
-			if (closure.equals(NullStruct.INSTANCE)) {
+			int references;
+			if (closureBinding == null) {
 
 				// there is now one reference
-				references = new IntegerStruct(BigInteger.ONE);
+				references = 1;
 
 				// get closure from the association list
-				closure = AssocFunction.funcall(KeywordOld.Closure, bindingEnvironment.getRest());
+				final Closure closure = bindingEnvironment.getEnvironmentClosure();
 
 				// position will be the current size of the closure association list
-				final IntegerStruct position = new IntegerStruct(BigInteger.valueOf(closure.size() - 1));
+				final int position = closure.getBindings().size() - 1;
 				bindingEnvironment = createNewClosure(bindingEnvironment, symbol, references, position);
 			} // if the binding environment has already had a closure added to it
 
 			// for this variable, just increment it's number of references
 			else {
 				// get the current number of references
-				references = (IntegerStruct) GetPlist.funcall(closure, KeywordOld.References);
+				references = closureBinding.getReferences();
 
 				// increment the number of references
-				references = new IntegerStruct(references.getBigInteger().add(BigInteger.ONE));
+				references += 1;
 
 				// set the number of references
-				closure = SetPlist.funcall(closure, KeywordOld.References, references);
+				closureBinding.setReferences(references);
 			}
 		}
 		return currentEnvironmentInner;
 	}
 
-	public static ListStruct createNewClosure(final ListStruct currentEnvironment, final SymbolStruct newSymbol,
-	                                          final IntegerStruct references, final IntegerStruct position) {
+	public static Environment createNewClosure(final Environment currentEnvironment, final SymbolStruct newSymbol,
+											   final int references, final int position) {
 
-		final ListStruct currentEnvironmentInner = findClosestLambdaOrLetEnv(currentEnvironment);
+		final Environment currentEnvironmentInner = findClosestLambdaOrLetEnv(currentEnvironment);
 
-		ListStruct pList = SetPlist.funcall(NullStruct.INSTANCE, KeywordOld.References, references);
-		pList = SetPlist.funcall(pList, KeywordOld.Position, position);
-		final ListStruct element = ListStruct.buildProperList(newSymbol, pList);
-		final ListStruct bindList = AssocFunction.funcall(KeywordOld.Closure, currentEnvironmentInner.getRest());
-		((ConsStruct) bindList).setCdr(new ConsStruct(element, bindList.getRest()));
+		final ClosureBinding closureBinding = new ClosureBinding(newSymbol, position, references);
+
+		currentEnvironmentInner.getEnvironmentClosure().getBindings().add(closureBinding);
 		return currentEnvironmentInner;
 	}
 
-//    public static ListStruct getClosureSet(final ListStruct currentEnvironment) {
-//        final ListStruct currentEnvironmentInner = findClosestLambdaOrLetEnv(currentEnvironment);
-//        return AssocFunction.funcall(KeywordOld.Closure, currentEnvironmentInner.rest());
-//    }
+	public static ClosureBinding getClosureBinding(final Environment currentEnvironment, final SymbolStruct variable) {
+		final Environment currentEnvironmentInner = findClosestLambdaOrLetEnv(currentEnvironment);
 
-	public static ListStruct getClosure(final ListStruct currentEnvironment, final SymbolStruct variable) {
-		final ListStruct currentEnvironmentInner = findClosestLambdaOrLetEnv(currentEnvironment);
+		final Closure closure = currentEnvironmentInner.getEnvironmentClosure();
 
-		final ListStruct closure = AssocFunction.funcall(KeywordOld.Closure, currentEnvironmentInner.getRest());
-		final ListStruct closure2 = AssocFunction.funcall(variable, closure.getRest());
-		return closure2.getRest();
+		ClosureBinding returnClosureBinding = null;
+		for (final ClosureBinding closureBinding : closure.getBindings()) {
+			if (closureBinding.getSymbolStruct().equals(variable)) {
+				returnClosureBinding = closureBinding;
+				break;
+			}
+		}
+		return returnClosureBinding;
 	}
 }

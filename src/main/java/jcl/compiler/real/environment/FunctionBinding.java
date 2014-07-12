@@ -8,8 +8,8 @@ public class FunctionBinding extends LambdaBinding {
 	private SymbolStruct name;
 
 	public FunctionBinding(final SymbolStruct symbolStruct, final int allocationPosition, final Scope scope,
-						   final LispType type, final SymbolStruct name) {
-		super(symbolStruct, allocationPosition, scope, type);
+						   final LispType type, final SymbolStruct name, final boolean isRequired) {
+		super(symbolStruct, allocationPosition, scope, type, isRequired);
 		this.name = name;
 	}
 

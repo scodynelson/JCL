@@ -1,12 +1,9 @@
 package jcl.symbols;
 
-import jcl.classes.BuiltInClassStruct;
-import jcl.types.T;
-
 /**
  * The {@code TStruct} is the object representation of a Lisp 't' type.
  */
-public final class TStruct extends BuiltInClassStruct {
+public final class TStruct extends SymbolStruct<TStruct> {
 
 	public static final TStruct INSTANCE = new TStruct();
 
@@ -14,6 +11,6 @@ public final class TStruct extends BuiltInClassStruct {
 	 * Private constructor.
 	 */
 	private TStruct() {
-		super(T.INSTANCE, null, null);
+		super("T");
 	}
 }

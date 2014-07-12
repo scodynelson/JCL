@@ -13,6 +13,8 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.TypePath;
 import org.objectweb.asm.util.CheckClassAdapter;
 import org.objectweb.asm.util.TraceClassVisitor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -27,6 +29,8 @@ import java.util.Stack;
  * and a section for methods.
  */
 public class Emitter {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(Emitter.class);
 
 	//TODO - fix this to be an external property
 	private static int classVersion = 52; //TODO: 52 == Java 8, 51 == Java 7, 50 == Java 6

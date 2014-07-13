@@ -15,7 +15,6 @@ import jcl.numbers.NumberStruct;
 import jcl.streams.StreamStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
-import jcl.symbols.TStruct;
 
 /**
  * Class Eval has two methods, apply() and funcall() and a private constructor.
@@ -56,17 +55,18 @@ public class EvalFunction {
 	@SuppressWarnings("unchecked")
 	public LispStruct funcall(LispStruct arg1) {
 		LispStruct rtnObj = null;
-		LispStruct[] evalValues = {null, TStruct.INSTANCE};
 
 		// Increment the recusrion depth.
 		recursionDepth++;
 
 		try {
-
 			// try out Macroexpand before we do anything else
-			while (evalValues[1] == TStruct.INSTANCE) {
-				evalValues = (LispStruct[]) MacroExpandFunction.FUNCTION.funcall(arg1);
-				arg1 = evalValues[0];
+			MacroExpandReturn macroExpandReturn = MacroExpandFunction.FUNCTION.funcall(arg1);
+			arg1 = macroExpandReturn.getExpandedForm();
+
+			while (macroExpandReturn.wasExpanded()) {
+				macroExpandReturn = MacroExpandFunction.FUNCTION.funcall(arg1);
+				arg1 = macroExpandReturn.getExpandedForm();
 			}
 
 			if (arg1 instanceof StringStruct) {

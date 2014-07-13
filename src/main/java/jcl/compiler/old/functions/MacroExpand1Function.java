@@ -27,7 +27,7 @@ public class MacroExpand1Function {
 	 * If the argument form is expanded returns true} else returns
 	 * false.
 	 */
-	public Object funcall(Object form) {
+	public MacroExpandReturn funcall(LispStruct form) {
 		return funcall(form, NullStruct.INSTANCE);
 	}
 
@@ -40,9 +40,8 @@ public class MacroExpand1Function {
 	 * If the argument form is expanded returns true} else returns
 	 * false.
 	 */
-	@SuppressWarnings("unchecked")
-	public Object funcall(Object arg1, LispStruct env) {
-		Object[] rtnValues = new Object[2];
+	public MacroExpandReturn funcall(LispStruct arg1, LispStruct env) {
+		MacroExpandReturn macroExpandReturn;
 
 		if (arg1 instanceof ListStruct) {
 			ListStruct form = (ListStruct) arg1;
@@ -58,17 +57,13 @@ public class MacroExpand1Function {
 					//found a macro function, now casting it to a macro function
 					// get the macroexpand-hook
 					FunctionStruct theHookFn = Variable.MACROEXPAND_HOOK.getValue();
-					rtnValues[0] = theHookFn.apply(expander, form, env);
-					rtnValues[1] = true;
-					return rtnValues;
+					LispStruct hookResult = theHookFn.apply(expander, form, env);
+					return new MacroExpandReturn(hookResult, true);
 				}
 			}
 		} else if (arg1 instanceof SymbolStruct) {
 			// this is where we will check for SYMBOL-MACRO symbol expansion
 		}
-		rtnValues[0] = arg1;
-		rtnValues[1] = false;
-		return rtnValues;
+		return new MacroExpandReturn(arg1, true);
 	}
-
 }

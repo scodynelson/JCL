@@ -431,7 +431,7 @@ public class CompileFileFunction {
 				if (((SymbolStruct) car).getFunction() instanceof MacroFunctionExpander) {
 					if (((SymbolStruct) car).getFunction() == null) {
 					}
-					theForm = processTopLevelForm((LispStruct) ((Object[]) MacroExpandFunction.FUNCTION.funcall(form))[0]);
+					theForm = processTopLevelForm(MacroExpandFunction.FUNCTION.funcall(form).getExpandedForm());
 				} else if (car == SpecialOperator.PROGN) {
 					ListStruct resultForms = NullStruct.INSTANCE;
 					ListStruct forms = form.getRest();

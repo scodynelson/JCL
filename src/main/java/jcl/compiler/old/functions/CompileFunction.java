@@ -9,7 +9,6 @@ import jcl.compiler.old.IntermediateCodeGenerator;
 import jcl.compiler.old.SemanticAnalyzer;
 import jcl.compiler.old.documentation.AnnotationCollector;
 import jcl.compiler.old.documentation.DocumentFactory;
-import jcl.compiler.old.symbol.VariableOld;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
@@ -100,13 +99,6 @@ public class CompileFunction {
 				//** Create the generated documentation
 				insertDocumentation(cr, xmlDoc, root);
 
-				if (VariableOld.CompileTrace.getValue() != null) {
-					System.out.println("Printing the class " + classDef.name + '\n');
-					CheckClassAdapter.verify(new ClassReader(byteArray), true, new java.io.PrintWriter(System.out));
-//		    TraceClassVisitor tcv = new TraceClassVisitor(new PrintWriter(System.out));
-//		    cr.accept(tcv, false);
-					System.out.println("Done  with class " + classDef.name + '\n');
-				}
 				classBytes.add(byteArray);
 				oc.add(classDef.name);
 			}
@@ -205,8 +197,10 @@ public class CompileFunction {
 			}
 		}
 
+		final SymbolStruct<ListStruct> DocumentationDom = new SymbolStruct<>("*DOCUMENTATION-DOM*", GlobalPackageStruct.SYSTEM, NullStruct.INSTANCE);
+
 		NodeList docInstances = xmlDoc.getElementsByTagName("docInstance");
-		ListStruct mainList = VariableOld.DocumentationDom.getValue();
+		ListStruct mainList = DocumentationDom.getValue();
 
 		for (int i = 0; i < docInstances.getLength(); i++) {
 			Node instance = docInstances.item(i);
@@ -222,7 +216,7 @@ public class CompileFunction {
 		}
 
 		if (mainList != NullStruct.INSTANCE) {
-			VariableOld.DocumentationDom.setValue(mainList);
+			DocumentationDom.setValue(mainList);
 		}
 	}
 

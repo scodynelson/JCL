@@ -2,11 +2,11 @@ package jcl.compiler.old;
 
 import jcl.LispStruct;
 import jcl.compiler.old.symbol.Closure;
-import jcl.compiler.old.symbol.SpecialOperatorOld;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
+import jcl.symbols.SpecialOperator;
 
 import java.util.Stack;
 
@@ -35,7 +35,7 @@ public abstract class FunctionBaseClass {
 					LispStruct arglist = lispStructs[0];
 					LispStruct marker = lispStructs[1];
 
-					return new ConsStruct(SpecialOperatorOld.FUNCTION_MARKER,
+					return new ConsStruct(SpecialOperator.FUNCTION_MARKER,
 							new ConsStruct(marker, arglist));
 				}
 

@@ -2,11 +2,11 @@ package jcl.compiler.old.functions;
 
 import jcl.LispStruct;
 import jcl.compiler.old.expander.MacroFunctionExpander;
-import jcl.compiler.old.symbol.VariableOld;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.SymbolStruct;
+import jcl.symbols.Variable;
 
 /**
  * Implements the Common Lisp function Macroex[and-1.
@@ -18,11 +18,6 @@ public class MacroExpand1Function {
 	 * Holds an instance of MacroExpand1
 	 */
 	public static final MacroExpand1Function FUNCTION = new MacroExpand1Function();
-
-	/** Holds the basic function for *MACROEXPAND-HOOK* */
-	static {
-		VariableOld.MacroexpandHook.setValue(BaseMacroExpandFn.FUNCTION);
-	}
 
 	/**
 	 * The funcall method expands the macro form call once. The environment is NIL.
@@ -62,7 +57,7 @@ public class MacroExpand1Function {
 				if (expander instanceof MacroFunctionExpander) {
 					//found a macro function, now casting it to a macro function
 					// get the macroexpand-hook
-					FunctionStruct theHookFn = (FunctionStruct) VariableOld.MacroexpandHook.getValue();
+					FunctionStruct theHookFn = Variable.MACROEXPAND_HOOK.getValue();
 					rtnValues[0] = theHookFn.apply(expander, form, env);
 					rtnValues[1] = true;
 					return rtnValues;
@@ -76,22 +71,4 @@ public class MacroExpand1Function {
 		return rtnValues;
 	}
 
-	// Now we make the base function for *macroexpand-hook*
-	public static class BaseMacroExpandFn extends FunctionStruct {
-
-		public static final BaseMacroExpandFn FUNCTION = new BaseMacroExpandFn();
-
-		static {
-			VariableOld.MacroexpandHook.setValue(FUNCTION);
-		}
-
-		@Override
-		public LispStruct apply(LispStruct... lispStructs) {
-			return funcall((MacroFunctionExpander) lispStructs[0], (ListStruct) lispStructs[1], lispStructs[2]);
-		}
-
-		public LispStruct funcall(MacroFunctionExpander expander, ListStruct form, LispStruct env) {
-			return expander.expand(form, env);
-		}
-	}
 }

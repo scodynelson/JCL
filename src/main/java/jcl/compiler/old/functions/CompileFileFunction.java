@@ -10,10 +10,7 @@ import jcl.compiler.old.SemanticAnalyzer;
 import jcl.compiler.old.documentation.AnnotationCollector;
 import jcl.compiler.old.documentation.DocumentFactory;
 import jcl.compiler.old.expander.MacroFunctionExpander;
-import jcl.compiler.old.symbol.DeclarationOld;
 import jcl.compiler.old.symbol.KeywordOld;
-import jcl.compiler.old.symbol.SpecialOperatorOld;
-import jcl.compiler.old.symbol.VariableOld;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
@@ -22,8 +19,10 @@ import jcl.packages.PackageStruct;
 import jcl.pathnames.PathnameStruct;
 import jcl.readtables.reader.impl.Reader;
 import jcl.streams.CharacterStreamStruct;
+import jcl.symbols.Declaration;
+import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
-import jcl.symbols.TStruct;
+import jcl.symbols.Variable;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.util.CheckClassAdapter;
 import org.w3c.dom.Document;
@@ -88,11 +87,9 @@ public class CompileFileFunction {
 		} else if (!correctInputType) {
 			throw new RuntimeException("file to compile must be of type .lsp or .lisp");
 		}
-		final PackageStruct oldPackageVarValue = VariableOld.Package.getValue();
-		((SymbolStruct) VariableOld.Package).setValue(VariableOld.Package.getValue());
+		final PackageStruct oldPackageVarValue = Variable.PACKAGE.getValue();
+		((SymbolStruct) Variable.PACKAGE).setValue(Variable.PACKAGE.getValue());
 
-		final LispStruct oldFileCompilingValValue = VariableOld.FileCompiling.getValue();
-		((SymbolStruct) VariableOld.FileCompiling).setValue(TStruct.INSTANCE);
 		try {
 			// bind *package* to itself
 			String outputFile = null;
@@ -132,12 +129,12 @@ public class CompileFileFunction {
 			// Create the wrap-around lambda expression that encloses all of the forms in the file.
 			// We have to give it a specific name so it can be loaded by name
 			ListStruct formList = ListStruct.buildProperList(formsToCompile);
-			ListStruct nameDeclSpec = ListStruct.buildProperList(DeclarationOld.JAVA_CLASS_NAME, newJavaClassName);
-			ListStruct fileDeclSpec = ListStruct.buildProperList(DeclarationOld.SOURCE_FILE, new StringStruct(f.getAbsoluteFile().getName()));
-			ListStruct nameDecl = ListStruct.buildProperList(SpecialOperatorOld.DECLARE, nameDeclSpec, fileDeclSpec);
+			ListStruct nameDeclSpec = ListStruct.buildProperList(Declaration.JAVA_CLASS_NAME, newJavaClassName);
+			ListStruct fileDeclSpec = ListStruct.buildProperList(Declaration.SOURCE_FILE, new StringStruct(f.getAbsoluteFile().getName()));
+			ListStruct nameDecl = ListStruct.buildProperList(SpecialOperator.DECLARE, nameDeclSpec, fileDeclSpec);
 			formList = new ConsStruct(nameDecl, formList);
 			formList = new ConsStruct(NullStruct.INSTANCE, formList);
-			formList = new ConsStruct(SpecialOperatorOld.LAMBDA, formList);
+			formList = new ConsStruct(SpecialOperator.LAMBDA, formList);
 
 			SymbolStruct newSA = GlobalPackageStruct.COMMON_LISP.findSymbol("SEMANTIC-ANALYZER").getSymbolStruct();
 			sa = new SemanticAnalyzer();
@@ -335,8 +332,7 @@ public class CompileFileFunction {
 			e.printStackTrace();
 			throw new RuntimeException("Exception caught in COMPILE-FILE:");
 		} finally {
-			((SymbolStruct) VariableOld.Package).setValue(oldPackageVarValue);
-			((SymbolStruct) VariableOld.FileCompiling).setValue(oldFileCompilingValValue);
+			((SymbolStruct) Variable.PACKAGE).setValue(oldPackageVarValue);
 		}
 	}
 
@@ -436,7 +432,7 @@ public class CompileFileFunction {
 					if (((SymbolStruct) car).getFunction() == null) {
 					}
 					theForm = processTopLevelForm((LispStruct) ((Object[]) MacroExpandFunction.FUNCTION.funcall(form))[0]);
-				} else if (car == SpecialOperatorOld.PROGN) {
+				} else if (car == SpecialOperator.PROGN) {
 					ListStruct resultForms = NullStruct.INSTANCE;
 					ListStruct forms = form.getRest();
 					while (forms != NullStruct.INSTANCE) {
@@ -446,13 +442,13 @@ public class CompileFileFunction {
 						forms = forms.getRest();
 					}
 					theForm = ReverseFunction.funcall(resultForms);
-				} else if ((car == SpecialOperatorOld.LOCALLY)
-						|| (car == SpecialOperatorOld.MACROLET)
-						|| (car == SpecialOperatorOld.SYMBOL_MACROLET)) {
+				} else if ((car == SpecialOperator.LOCALLY)
+						|| (car == SpecialOperator.MACROLET)
+						|| (car == SpecialOperator.SYMBOL_MACROLET)) {
 					// these get handled as top-level forms but with the
 					// current lexical bindings
 					theForm = ListStruct.buildProperList(form);
-				} else if (car == SpecialOperatorOld.EVAL_WHEN) {
+				} else if (car == SpecialOperator.EVAL_WHEN) {
 					// processEvalWhen...
 					LispStruct evalForm = handleEvalWhen(form);
 					theForm = processTopLevelForm(evalForm);

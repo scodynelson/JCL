@@ -1,8 +1,8 @@
 package jcl.compiler.old.expander;
 
-import jcl.compiler.old.symbol.SpecialOperatorOld;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
+import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 
 /**
@@ -20,7 +20,7 @@ public class DefMacroExpander extends DefunExpander {
 
 	public static final DefMacroExpander FUNCTION = new DefMacroExpander();
 
-	protected SymbolStruct macroLambdaSymbol = SpecialOperatorOld.MACRO_LAMBDA;
+	protected SymbolStruct macroLambdaSymbol = SpecialOperator.MACRO_LAMBDA;
 
 	@Override
 	protected ListStruct setTypeSymbol(ListStruct mostlyLambda) {

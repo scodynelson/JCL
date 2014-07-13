@@ -7,14 +7,13 @@ import jcl.characters.CharacterStruct;
 import jcl.classes.StructureClassStruct;
 import jcl.classes.StructureObjectStruct;
 import jcl.compiler.old.SemanticAnalyzer;
-import jcl.compiler.old.symbol.SpecialOperatorOld;
-import jcl.compiler.old.symbol.VariableOld;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.numbers.NumberStruct;
 import jcl.streams.StreamStruct;
+import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
 
@@ -57,16 +56,12 @@ public class EvalFunction {
 	@SuppressWarnings("unchecked")
 	public LispStruct funcall(LispStruct arg1) {
 		LispStruct rtnObj = null;
-		Object verbose = VariableOld.EvalVerbosity.getValue();
 		LispStruct[] evalValues = {null, TStruct.INSTANCE};
 
 		// Increment the recusrion depth.
 		recursionDepth++;
 
 		try {
-			if (verbose != NullStruct.INSTANCE) {
-				System.out.println("***>Entering recursion depth " + recursionDepth);
-			}
 
 			// try out Macroexpand before we do anything else
 			while (evalValues[1] == TStruct.INSTANCE) {
@@ -104,12 +99,6 @@ public class EvalFunction {
 				if (containsSpecialOperator(list)) {
 					// NOTE: this should be recoded when the real COMPILE works
 
-					if (verbose != NullStruct.INSTANCE) {
-						System.out.println(
-								"***** Argument to EVAL contains a special symbol!");
-						System.out.println("*** Calling the Compiler\n");
-					}
-
 					// If the first thing in the list is a `lambda' then we want
 					// to return the function that the compiler returns. If the
 					// first thing in the list is not a `lambda' then the
@@ -120,7 +109,7 @@ public class EvalFunction {
 					// Invoke the compiler.
 
 					rtnObj = CompileFunction.FUNCTION.funcall(arg1);
-					if (first != SpecialOperatorOld.LAMBDA) {
+					if (first != SpecialOperator.LAMBDA) {
 						//System.out.println("No Lambda, funcalling");
 						// The list passed in originally didn't have a lambda as
 						// the first element, so the compiler wrapped it in one.
@@ -147,7 +136,7 @@ public class EvalFunction {
 					// to evaluate the rest of the list.  We simply want to
 					// return the car of the cdr, or simply the rest of the
 					// unevaluated list.
-					if (operator == SpecialOperatorOld.QUOTE) {
+					if (operator == SpecialOperator.QUOTE) {
 						if (numArgs == 1) {
 							rtnObj = argList.getFirst();
 						} else {
@@ -158,7 +147,7 @@ public class EvalFunction {
 					// evaluate the rest of the list and set the value of the
 					// symbol to the result of the evaluation.  Else, throw an
 					// exception.
-					else if (operator == SpecialOperatorOld.SETQ) {
+					else if (operator == SpecialOperator.SETQ) {
 						if (numArgs % 2 == 0) {
 							while (argList != NullStruct.INSTANCE) {
 								if (argList.getFirst() instanceof SymbolStruct) {
@@ -202,7 +191,7 @@ public class EvalFunction {
 								// now we have to compile it to handle &optional, &rest, &key args, and then funcall it
 								// But first, a little foo-foo...
 								ListStruct listifiedList = ListStruct.buildProperList(list);
-								ListStruct formToCompile = new ConsStruct(SpecialOperatorOld.LAMBDA, new ConsStruct(NullStruct.INSTANCE, listifiedList));
+								ListStruct formToCompile = new ConsStruct(SpecialOperator.LAMBDA, new ConsStruct(NullStruct.INSTANCE, listifiedList));
 								// TODO: when the new compile works
 								FunctionStruct compiledFn = (FunctionStruct) CompileFunction.FUNCTION.funcall(formToCompile);
 								rtnObj = compiledFn.apply();
@@ -215,18 +204,8 @@ public class EvalFunction {
 				rtnObj = arg1;
 			}
 
-			// More verbose output.
-			if (verbose != NullStruct.INSTANCE) {
-				System.out.print("Returning eval result => ");
-				System.out.print(rtnObj);
-			}
-
 			return rtnObj;
 		} finally {
-			if (verbose != NullStruct.INSTANCE) {
-				System.out.println("***>Leaving recursion depth "
-						+ recursionDepth);
-			}
 			--recursionDepth;
 		}
 	}
@@ -240,14 +219,14 @@ public class EvalFunction {
 		Object theCar = list.getFirst();
 
 		// check the first element of the list
-		if (theCar instanceof SpecialOperatorOld) {
+		if (theCar instanceof SpecialOperator) {
 			// its any one of the special operators, but if it's QUOTE or SETQ
 			// they get handled specially
-			if (theCar == SpecialOperatorOld.QUOTE) {
+			if (theCar == SpecialOperator.QUOTE) {
 				// the rest thing is completely quoted, so cadr doesn't need
 				// to be examined
 				return false;
-			} else if (theCar == SpecialOperatorOld.SETQ) {
+			} else if (theCar == SpecialOperator.SETQ) {
 				// ******** this is not correct!!!, fix later
 
 				// if SETQ, then skip the rest element and check the 2nd arg

@@ -14,10 +14,7 @@ import jcl.compiler.old.functions.GetPlist;
 import jcl.compiler.old.functions.MacroExpandFunction;
 import jcl.compiler.old.functions.NReverseFunction;
 import jcl.compiler.old.functions.XCopyTreeFunction;
-import jcl.compiler.old.symbol.DeclarationOld;
 import jcl.compiler.old.symbol.KeywordOld;
-import jcl.compiler.old.symbol.SpecialOperatorOld;
-import jcl.compiler.old.symbol.VariableOld;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.FunctionBinding;
 import jcl.compiler.real.environment.LoadTimeValue;
@@ -33,6 +30,7 @@ import jcl.numbers.NumberStruct;
 import jcl.numbers.RatioStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageSymbolStruct;
+import jcl.symbols.Declaration;
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SpecialOperator;
@@ -54,16 +52,13 @@ public class SemanticAnalyzer {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SemanticAnalyzer.class);
 
-	public static final SymbolStruct LAMBDA = SpecialOperatorOld.LAMBDA_MARKER;
-	public static final SymbolStruct MACRO = SpecialOperatorOld.MACRO_MARKER;
-	public static final SymbolStruct COMPILE = VariableOld.Compile;
-	public static final SymbolStruct LOAD = VariableOld.Load;
-	public static final SymbolStruct EVAL = VariableOld.Eval;
+	public static final SymbolStruct LAMBDA = SpecialOperator.LAMBDA_MARKER;
+	public static final SymbolStruct MACRO = SpecialOperator.MACRO_MARKER;
 	public static final SymbolStruct Defmacro = GlobalPackageStruct.COMMON_LISP.intern("DEFMACRO").getSymbolStruct();
 	public static final SymbolStruct COMPILE_TOPLEVEL = KeywordOld.CompileToplevel;
 	public static final SymbolStruct LOAD_TOPLEVEL = KeywordOld.LoadToplevel;
 	public static final SymbolStruct EXECUTE = KeywordOld.Execute;
-	public static final SymbolStruct FUNCTION_MARKER = SpecialOperatorOld.FUNCTION_MARKER;
+	public static final SymbolStruct FUNCTION_MARKER = SpecialOperator.FUNCTION_MARKER;
 	private static final StringStruct LAMBDA_ARGLIST_MUNGER_STRING = new StringStruct("LAMBDA_ARGLIST_MUNGER");
 
 	// eval-when processing modes
@@ -129,8 +124,8 @@ public class SemanticAnalyzer {
 		initialize();
 		if (!(form instanceof ListStruct)
 				|| !(((ListStruct) form).getFirst() instanceof SymbolStruct)
-				|| !(((ListStruct) form).getFirst().equals(SpecialOperatorOld.LAMBDA)
-				|| ((ListStruct) form).getFirst().equals(SpecialOperatorOld.MACRO_LAMBDA))) {
+				|| !(((ListStruct) form).getFirst().equals(SpecialOperator.LAMBDA)
+				|| ((ListStruct) form).getFirst().equals(SpecialOperator.MACRO_LAMBDA))) {
 			form = new WrapInLambda().funcall(form);
 		}
 		// make a copy so we can trash it in SA
@@ -309,7 +304,7 @@ public class SemanticAnalyzer {
 						saSetClosureDepth(workingList.getRest(), depth);
 					}
 				} else {
-					if (!theCar.equals(SpecialOperatorOld.DECLARE)) {
+					if (!theCar.equals(SpecialOperator.DECLARE)) {
 						saSetClosureDepth(workingList.getRest(), depth);
 					}
 				}
@@ -339,10 +334,10 @@ public class SemanticAnalyzer {
 			if (retVal instanceof ListStruct) {
 				list = (ListStruct) retVal;
 				final SymbolStruct sym = (SymbolStruct) list.getFirst();
-				if (list.getFirst() instanceof SpecialOperatorOld) {
-//                    if (list.getFirst() == SpecialOperatorOld.LABELS) {
+				if (list.getFirst() instanceof SpecialOperator) {
+//                    if (list.getFirst() == SpecialOperator.LABELS) {
 //                        list = saFletLabels(list);
-//                    } else if (list.getFirst() == SpecialOperatorOld.FLET) {
+//                    } else if (list.getFirst() == SpecialOperator.FLET) {
 ////                        list = saFlet(list);
 //                    }
 					retVal = saSpecialOp(list);
@@ -356,7 +351,7 @@ public class SemanticAnalyzer {
 		} else if (list.getFirst() instanceof ListStruct) {
 			// ex ((lambda (x) (+ x 1)) 3)
 			final ListStruct first = (ListStruct) list.getFirst();
-			if (first.getFirst().equals(SpecialOperatorOld.LAMBDA)) {
+			if (first.getFirst().equals(SpecialOperator.LAMBDA)) {
 				list.setElement(1, saLambda(first));
 				retVal = saFunctionCall(list);
 			} else {
@@ -391,7 +386,7 @@ public class SemanticAnalyzer {
 		// (system::%make-array)
 		ListStruct functionMakeArray = ListStruct.buildProperList(new SymbolStruct("%MAKE-ARRAY", GlobalPackageStruct.SYSTEM));
 		// (function system::%make-array)
-		functionMakeArray = new ConsStruct(SpecialOperatorOld.FUNCTION, functionMakeArray);
+		functionMakeArray = new ConsStruct(SpecialOperator.FUNCTION, functionMakeArray);
 
 		// ()
 		ListStruct finalList = NullStruct.INSTANCE;
@@ -410,12 +405,12 @@ public class SemanticAnalyzer {
 		// (((dimensions) t nil (formList)))
 		finalList = ListStruct.buildProperList(new ConsStruct(ListStruct.buildProperList(formVector.getDimensions()), finalList));
 		// ((quote ((dimensions) t nil (formList))))
-		finalList = ListStruct.buildProperList(new ConsStruct(SpecialOperatorOld.QUOTE, finalList));
+		finalList = ListStruct.buildProperList(new ConsStruct(SpecialOperator.QUOTE, finalList));
 		// ((function system::%make-array) (quote ((dimensions) t nil (formList))))
 		finalList = new ConsStruct(functionMakeArray, finalList);
 		// ((apply (function system::%make-array) (quote ((dimensions) t nil (formList)))))
 		finalList = ListStruct.buildProperList(new ConsStruct(GlobalPackageStruct.COMMON_LISP.intern("APPLY").getSymbolStruct(), finalList));
-		return new ConsStruct(SpecialOperatorOld.LOAD_TIME_VALUE, finalList);
+		return new ConsStruct(SpecialOperator.LOAD_TIME_VALUE, finalList);
 	}
 
 	// ********** START OF saSimpleArray() TRANSLATOR ********** //
@@ -425,7 +420,7 @@ public class SemanticAnalyzer {
 		// (system::%make-array)
 		ListStruct functionMakeArray = ListStruct.buildProperList(new SymbolStruct("%MAKE-ARRAY", GlobalPackageStruct.SYSTEM));
 		// (function system::%make-array)
-		functionMakeArray = new ConsStruct(SpecialOperatorOld.FUNCTION, functionMakeArray);
+		functionMakeArray = new ConsStruct(SpecialOperator.FUNCTION, functionMakeArray);
 
 		// ((formList))
 		ListStruct finalList = ListStruct.buildProperList(formList);
@@ -440,12 +435,12 @@ public class SemanticAnalyzer {
 			finalList = ListStruct.buildProperList(new ConsStruct(ListStruct.buildProperList(formArray.getDimensions()), finalList));
 		}
 		// ((quote ((dimensions) t nil (formList))))
-		finalList = ListStruct.buildProperList(new ConsStruct(SpecialOperatorOld.QUOTE, finalList));
+		finalList = ListStruct.buildProperList(new ConsStruct(SpecialOperator.QUOTE, finalList));
 		// ((function system::%make-array) (quote ((dimensions) t nil (formList))))
 		finalList = new ConsStruct(functionMakeArray, finalList);
 		// ((apply (function system::%make-array) (quote ((dimensions) t nil (formList)))))
 		finalList = ListStruct.buildProperList(new ConsStruct(GlobalPackageStruct.COMMON_LISP.intern("APPLY").getSymbolStruct(), finalList));
-		return new ConsStruct(SpecialOperatorOld.LOAD_TIME_VALUE, finalList);
+		return new ConsStruct(SpecialOperator.LOAD_TIME_VALUE, finalList);
 	}
 
 	private ListStruct createSimpleArrayInitialContentsList(final ArrayStruct formArray) {
@@ -511,7 +506,7 @@ public class SemanticAnalyzer {
 			new FunctionStruct() {
 
 				public LispStruct funcall(final LispStruct arglist, final LispStruct marker) {
-					return new ConsStruct(SpecialOperatorOld.FUNCTION_MARKER,
+					return new ConsStruct(SpecialOperator.FUNCTION_MARKER,
 							new ConsStruct(marker, arglist));
 				}
 
@@ -586,7 +581,7 @@ public class SemanticAnalyzer {
 		// if so, it has to tagged as such to the icg
 
 		if (cpy.getFirst().equals(currentLispName.peek())) {
-			cpy = new ConsStruct(SpecialOperatorOld.TAIL_RECURSION, cpy);
+			cpy = new ConsStruct(SpecialOperator.TAIL_RECURSION, cpy);
 		}
 		return cpy;
 	}
@@ -596,69 +591,69 @@ public class SemanticAnalyzer {
 		LispStruct result = null;
 
 		// Determine the special form and generate its code.
-		if (symName.equals(SpecialOperatorOld.BLOCK)) {
+		if (symName.equals(SpecialOperator.BLOCK)) {
 			result = saBlock(list);
-		} else if (symName.equals(SpecialOperatorOld.CATCH)) {
+		} else if (symName.equals(SpecialOperator.CATCH)) {
 			result = saCatch(list);
-		} else if (symName.equals(SpecialOperatorOld.DECLARE)) {
+		} else if (symName.equals(SpecialOperator.DECLARE)) {
 			result = saDeclare(list);
-		} else if (symName.equals(SpecialOperatorOld.DEFSTRUCT)) {
+		} else if (symName.equals(SpecialOperator.DEFSTRUCT)) {
 			result = saDefstruct(list);
-		} else if (symName.equals(SpecialOperatorOld.EVAL_WHEN)) {
+		} else if (symName.equals(SpecialOperator.EVAL_WHEN)) {
 			result = saEvalWhen(list);
-		} else if (symName.equals(SpecialOperatorOld.FLET)) {
+		} else if (symName.equals(SpecialOperator.FLET)) {
 			result = saFlet(list);
 			result = saProgn((ListStruct) result);
-		} else if (symName.equals(SpecialOperatorOld.FUNCTION)) {
+		} else if (symName.equals(SpecialOperator.FUNCTION)) {
 			result = saFunction(list);
-		} else if (symName.equals(SpecialOperatorOld.FUNCTION_MARKER)) {
+		} else if (symName.equals(SpecialOperator.FUNCTION_MARKER)) {
 			result = saFunctionCall(list);
-		} else if (symName.equals(SpecialOperatorOld.GO)) {
+		} else if (symName.equals(SpecialOperator.GO)) {
 			result = saGo(list);
-		} else if (symName.equals(SpecialOperatorOld.IF)) {
+		} else if (symName.equals(SpecialOperator.IF)) {
 			result = saIf(list);
-		} else if (symName.equals(SpecialOperatorOld.LAMBDA)) {
+		} else if (symName.equals(SpecialOperator.LAMBDA)) {
 			result = saLambda(list);
-		} else if (symName.equals(SpecialOperatorOld.MACRO_LAMBDA)) {
+		} else if (symName.equals(SpecialOperator.MACRO_LAMBDA)) {
 			result = saMacroLambda(list);
-		} else if (symName.equals(SpecialOperatorOld.LABELS)) {
+		} else if (symName.equals(SpecialOperator.LABELS)) {
 			result = saLabels(list);
 			result = saProgn((ListStruct) result);
-		} else if (symName.equals(SpecialOperatorOld.LET)) {
+		} else if (symName.equals(SpecialOperator.LET)) {
 			result = saLet(list);
-		} else if (symName.equals(SpecialOperatorOld.LET_STAR)) {
+		} else if (symName.equals(SpecialOperator.LET_STAR)) {
 			result = saLetStar(list);
-		} else if (symName.equals(SpecialOperatorOld.LOAD_TIME_VALUE)) {
+		} else if (symName.equals(SpecialOperator.LOAD_TIME_VALUE)) {
 			result = saLoadTimeValue(list);
-		} else if (symName.equals(SpecialOperatorOld.LOCALLY)) {
+		} else if (symName.equals(SpecialOperator.LOCALLY)) {
 			result = saLocally(list);
-		} else if (symName.equals(SpecialOperatorOld.MACROLET)) {
+		} else if (symName.equals(SpecialOperator.MACROLET)) {
 			result = saMacrolet(list);
-		} else if (symName.equals(SpecialOperatorOld.MULTIPLE_VALUE_CALL)) {
+		} else if (symName.equals(SpecialOperator.MULTIPLE_VALUE_CALL)) {
 			result = saMultipleValueCall(list);
-		} else if (symName.equals(SpecialOperatorOld.MULTIPLE_VALUE_PROG1)) {
+		} else if (symName.equals(SpecialOperator.MULTIPLE_VALUE_PROG1)) {
 			result = saMultipleValueProg1(list);
-		} else if (symName.equals(SpecialOperatorOld.PROGN)) {
+		} else if (symName.equals(SpecialOperator.PROGN)) {
 			result = saProgn(list);
-		} else if (symName.equals(SpecialOperatorOld.PROGV)) {
+		} else if (symName.equals(SpecialOperator.PROGV)) {
 			result = saProgv(list);
-		} else if (symName.equals(SpecialOperatorOld.QUOTE)) {
+		} else if (symName.equals(SpecialOperator.QUOTE)) {
 			result = saQuote(list);
-		} else if (symName.equals(SpecialOperatorOld.RETURN_FROM)) {
+		} else if (symName.equals(SpecialOperator.RETURN_FROM)) {
 			result = saReturnFrom(list);
-		} else if (symName.equals(SpecialOperatorOld.SETQ)) {
+		} else if (symName.equals(SpecialOperator.SETQ)) {
 			result = saSetq(list);
-		} else if (symName.equals(SpecialOperatorOld.STATIC_FIELD)) {
+		} else if (symName.equals(SpecialOperator.STATIC_FIELD)) {
 			result = saStaticField(list);
-		} else if (symName.equals(SpecialOperatorOld.SYMBOL_MACROLET)) {
+		} else if (symName.equals(SpecialOperator.SYMBOL_MACROLET)) {
 			result = saSymbolMacrolet(list);
-		} else if (symName.equals(SpecialOperatorOld.TAGBODY)) {
+		} else if (symName.equals(SpecialOperator.TAGBODY)) {
 			result = saTagbody(list);
-		} else if (symName.equals(SpecialOperatorOld.THE)) {
+		} else if (symName.equals(SpecialOperator.THE)) {
 			result = saThe(list);
-		} else if (symName.equals(SpecialOperatorOld.THROW)) {
+		} else if (symName.equals(SpecialOperator.THROW)) {
 			result = saThrow(list);
-		} else if (symName.equals(SpecialOperatorOld.UNWIND_PROTECT)) {
+		} else if (symName.equals(SpecialOperator.UNWIND_PROTECT)) {
 			result = saUnwindProtect(list);
 		}
 		return result;
@@ -715,21 +710,21 @@ public class SemanticAnalyzer {
 
 		while (!list.equals(NullStruct.INSTANCE)) {
 			LispStruct theCar = list.getFirst();
-			ListStruct theDecl;    //the current new DeclarationOld
+			ListStruct theDecl;    //the current new Declaration
 			if (theCar instanceof CharSequence) {
 				// This may be a doc string, unless it's the last thing
 				if (list.getRest().equals(NullStruct.INSTANCE)) {
 					break;
 				} else {
 					// there's stuff after the doc string so it is doc
-					theDecl = ListStruct.buildProperList(ListStruct.buildProperList(DeclarationOld.DOCUMENTATION, theCar));
+					theDecl = ListStruct.buildProperList(ListStruct.buildProperList(Declaration.DOCUMENTATION, theCar));
 					newDecls = (ListStruct) AppendFunction.funcall(newDecls, theDecl);
 					list = list.getRest();
 
 					// add code to look for more declarations - without any strings
 					theCar = list.getFirst();
 					while ((theCar instanceof ListStruct)
-							&& ((ListStruct) theCar).getFirst().equals(SpecialOperatorOld.DECLARE)) {
+							&& ((ListStruct) theCar).getFirst().equals(SpecialOperator.DECLARE)) {
 						theDecl = ((ListStruct) theCar).getRest();
 						newDecls = (ListStruct) AppendFunction.funcall(newDecls, theDecl);
 						list = list.getRest();
@@ -739,7 +734,7 @@ public class SemanticAnalyzer {
 					break;
 				}
 			}
-			if ((theCar instanceof ListStruct) && ((ListStruct) theCar).getFirst().equals(SpecialOperatorOld.DECLARE)) {
+			if ((theCar instanceof ListStruct) && ((ListStruct) theCar).getFirst().equals(SpecialOperator.DECLARE)) {
 				theDecl = ((ListStruct) theCar).getRest();
 				newDecls = (ListStruct) AppendFunction.funcall(newDecls, theDecl);
 			} else {
@@ -748,12 +743,12 @@ public class SemanticAnalyzer {
 			list = list.getRest();
 		}
 
-		// if there isn't a DeclarationOld.JAVA_CLASS_NAME, add one
-		final ListStruct classNameDecl = AssocFunction.funcall(DeclarationOld.JAVA_CLASS_NAME, newDecls);
+		// if there isn't a Declaration.JAVA_CLASS_NAME, add one
+		final ListStruct classNameDecl = AssocFunction.funcall(Declaration.JAVA_CLASS_NAME, newDecls);
 		if (classNameDecl.equals(NullStruct.INSTANCE)) {
 			final SymbolStruct classname;
 			// if there's a Lisp Name, then Javafy it
-			final ListStruct lispNameDecl = AssocFunction.funcall(DeclarationOld.LISP_NAME, newDecls);
+			final ListStruct lispNameDecl = AssocFunction.funcall(Declaration.LISP_NAME, newDecls);
 			if (lispNameDecl.equals(NullStruct.INSTANCE)) {
 				currentLispName.push(null);
 				final String name = "AnonymousLambda_" + System.currentTimeMillis() + '_';
@@ -765,7 +760,7 @@ public class SemanticAnalyzer {
 				// the pop happens at the end of saLambda
 				currentLispName.push(lispName);
 			}
-			newDecls = new ConsStruct(new ConsStruct(DeclarationOld.JAVA_CLASS_NAME, ListStruct.buildProperList(classname)), newDecls);
+			newDecls = new ConsStruct(new ConsStruct(Declaration.JAVA_CLASS_NAME, ListStruct.buildProperList(classname)), newDecls);
 		}
 		currentLispName.push(null);
 		// if the value is a String, make it into a SymbolStruct
@@ -775,7 +770,7 @@ public class SemanticAnalyzer {
 			rest.setElement(1, new SymbolStruct(name.toString()));
 		}
 		// now we conjure a new declaration
-		return new ConsStruct(new ConsStruct(SpecialOperatorOld.DECLARE, newDecls), list);
+		return new ConsStruct(new ConsStruct(SpecialOperator.DECLARE, newDecls), list);
 	}
 
 	// routine to javafy a Lisp SymbolStruct or string to a Java identifier
@@ -817,37 +812,37 @@ public class SemanticAnalyzer {
 			final ListStruct declList = declarationSpec.getRest();
 
 			// now come the various cases
-			if (declIdentifier.equals(DeclarationOld.LISP_NAME)) {
+			if (declIdentifier.equals(Declaration.LISP_NAME)) {
 				saLispNameDeclaration(declList);
-			} else if (declIdentifier.equals(DeclarationOld.JAVA_CLASS_NAME)) {
+			} else if (declIdentifier.equals(Declaration.JAVA_CLASS_NAME)) {
 				saJavaNameDeclaration(declList);
-			} else if (declIdentifier.equals(DeclarationOld.NO_GENERATE_ANALYZER)) {
+			} else if (declIdentifier.equals(Declaration.NO_GENERATE_ANALYZER)) {
 				saNoGenerateAnalyzerDeclaration(declList);
-			} else if (declIdentifier.equals(DeclarationOld.PARSED_LAMBDA_LIST)) {
+			} else if (declIdentifier.equals(Declaration.PARSED_LAMBDA_LIST)) {
 				saParsedLambdaListDeclaration(declList);
-			} else if (declIdentifier.equals(DeclarationOld.DOCUMENTATION)) {
+			} else if (declIdentifier.equals(Declaration.DOCUMENTATION)) {
 				saDocumentationDeclaration(declList);
-			} else if (declIdentifier.equals(DeclarationOld.SOURCE_FILE)) {
+			} else if (declIdentifier.equals(Declaration.SOURCE_FILE)) {
 				saSourceFileDeclaration(declList);
-			} else if (declIdentifier.equals(DeclarationOld.DECLARATION)) {
+			} else if (declIdentifier.equals(Declaration.DECLARATION)) {
 				//we don't do anything here yet
-			} else if (declIdentifier.equals(DeclarationOld.DYNAMIC_EXTENT)) {
+			} else if (declIdentifier.equals(Declaration.DYNAMIC_EXTENT)) {
 				//we don't do anything here yet
-			} else if (declIdentifier.equals(DeclarationOld.FTYPE)) {
+			} else if (declIdentifier.equals(Declaration.FTYPE)) {
 				//we don't do anything here yet
-			} else if (declIdentifier.equals(DeclarationOld.IGNORABLE)) {
+			} else if (declIdentifier.equals(Declaration.IGNORABLE)) {
 				//we don't do anything here yet
-			} else if (declIdentifier.equals(DeclarationOld.IGNORE)) {
+			} else if (declIdentifier.equals(Declaration.IGNORE)) {
 				//we don't do anything here yet
-			} else if (declIdentifier.equals(DeclarationOld.INLINE)) {
+			} else if (declIdentifier.equals(Declaration.INLINE)) {
 				//we don't do anything here yet
-			} else if (declIdentifier.equals(DeclarationOld.NOTINLINE)) {
+			} else if (declIdentifier.equals(Declaration.NOTINLINE)) {
 				//we don't do anything here yet
-			} else if (declIdentifier.equals(DeclarationOld.OPTIMIZE)) {
+			} else if (declIdentifier.equals(Declaration.OPTIMIZE)) {
 				//we don't do anything here yet
-			} else if (declIdentifier.equals(DeclarationOld.SPECIAL)) {
+			} else if (declIdentifier.equals(Declaration.SPECIAL)) {
 				saSpecialDeclaration(declList);
-			} else if (declIdentifier.equals(DeclarationOld.TYPE)) {
+			} else if (declIdentifier.equals(Declaration.TYPE)) {
 				//we don't do anything here yet
 			} else if (declIdentifier.equals(NullStruct.INSTANCE)) {
 				//drop it on the floor
@@ -923,7 +918,7 @@ public class SemanticAnalyzer {
 			final LispStruct secondElement = firstRest.getFirst();
 			final ListStruct secondRest = firstRest.getRest();
 
-			final LispStruct foo = ListStruct.buildProperList(firstElement, secondElement, SpecialOperatorOld.PROGN, secondRest);
+			final LispStruct foo = ListStruct.buildProperList(firstElement, secondElement, SpecialOperator.PROGN, secondRest);
 			return saMainLoop(foo);
 		} else {
 			return NullStruct.INSTANCE;
@@ -965,14 +960,14 @@ public class SemanticAnalyzer {
 		}
 
 		final ListStruct theMungedForm;
-		if (labelsSymbolStruct.equals(SpecialOperatorOld.LABELS)) {
+		if (labelsSymbolStruct.equals(SpecialOperator.LABELS)) {
 			theMungedForm = (ListStruct) findLabelsFn.apply(list);
 		} else {
 			return NullStruct.INSTANCE;
 		}
 		// this creates '(progn ...mumble). So the list needs to be melded into the
 		// the form like the other forms
-		list.setElement(1, SpecialOperatorOld.PROGN);
+		list.setElement(1, SpecialOperator.PROGN);
 		((ConsStruct) list).setCdr(theMungedForm);
 		return list;
 	}
@@ -1028,14 +1023,14 @@ public class SemanticAnalyzer {
 		}
 
 		final ListStruct theMungedForm;
-		if (fletSymbolStruct.equals(SpecialOperatorOld.FLET)) {
+		if (fletSymbolStruct.equals(SpecialOperator.FLET)) {
 			theMungedForm = (ListStruct) findFletFn.apply(list);
 		} else {
 			return NullStruct.INSTANCE;
 		}
 		// this creates '(progn ...mumble). So the list needs to be melded into the
 		// the form like the other forms
-		list.setElement(1, SpecialOperatorOld.PROGN);
+		list.setElement(1, SpecialOperator.PROGN);
 		((ConsStruct) list).setCdr(theMungedForm);
 		return list;
 	}
@@ -1086,7 +1081,7 @@ public class SemanticAnalyzer {
 			throw new RuntimeException("Wrong number of arguments to special operator Function, " + list.size());
 		}
 
-		if (!list.getFirst().equals(SpecialOperatorOld.FUNCTION)) {
+		if (!list.getFirst().equals(SpecialOperator.FUNCTION)) {
 			throw new RuntimeException("Wrong type of FUNCTION, found " + list.getFirst());
 		}
 
@@ -1109,11 +1104,11 @@ public class SemanticAnalyzer {
 		} else if (fnSpec instanceof ListStruct) {
 			final ListStruct fn = (ListStruct) fnSpec;
 			final Object theCar = fn.getFirst();
-			if (theCar.equals(SpecialOperatorOld.LAMBDA) || theCar.equals(SpecialOperatorOld.MACRO_LAMBDA)) {
+			if (theCar.equals(SpecialOperator.LAMBDA) || theCar.equals(SpecialOperator.MACRO_LAMBDA)) {
 				list = saLambdaAux(fn);
-//            } else if ((theCar == SpecialOperatorOld.FUNCTION) &&
-//                       ((((ListStruct)fn.getRest().getFirst()).getFirst() == SpecialOperatorOld.LAMBDA) ||
-//                        (((ListStruct)fn.getRest().getFirst()).getFirst() == SpecialOperatorOld.MACRO_LAMBDA))) {
+//            } else if ((theCar == SpecialOperator.FUNCTION) &&
+//                       ((((ListStruct)fn.getRest().getFirst()).getFirst() == SpecialOperator.LAMBDA) ||
+//                        (((ListStruct)fn.getRest().getFirst()).getFirst() == SpecialOperator.MACRO_LAMBDA))) {
 //                list = saLambdaAux((ListStruct)fn.getRest().getFirst());
 			} else if (theCar.equals(GlobalPackageStruct.COMMON_LISP.intern("SETF").getSymbolStruct())) {
 				return list; // no changes at this level
@@ -1220,9 +1215,9 @@ public class SemanticAnalyzer {
 		// Second see if there's a null binding spec
 		if (list.getRest().getFirst().equals(NullStruct.INSTANCE)) {
 			// change (let () mumble) to (progn mumble) -- later make it a LOCALLY
-//            ListStruct foo = (ListStruct)cons.funcall(SpecialOperatorOld.PROGN, list.getRest().getRest());
+//            ListStruct foo = (ListStruct)cons.funcall(SpecialOperator.PROGN, list.getRest().getRest());
 //            return saProgn(foo);
-			return saProgn(new ConsStruct(SpecialOperatorOld.PROGN, list.getRest().getRest()));
+			return saProgn(new ConsStruct(SpecialOperator.PROGN, list.getRest().getRest()));
 		}
 		// Create the list to hold the new lambda expression.
 		// --------------------------
@@ -1313,7 +1308,7 @@ public class SemanticAnalyzer {
 		final ListStruct bindingLists = (ListStruct) getCadr(list);
 		final ListStruct allTheRest = list.getRest().getRest();
 		if (bindingLists.equals(NullStruct.INSTANCE)) {
-			list.setElement(1, SpecialOperatorOld.LET);
+			list.setElement(1, SpecialOperator.LET);
 			return saLet(list);
 		}
 		final ListStruct theXformedList = letStarHelper(bindingLists, allTheRest);
@@ -1323,7 +1318,7 @@ public class SemanticAnalyzer {
 	private ListStruct letStarHelper(final ListStruct bindingLists, final ListStruct allTheRest) {
 		if (bindingLists.getRest().equals(NullStruct.INSTANCE)) {
 			// (cons 'let (cons bindinglist allTheRest))
-			return new ConsStruct(SpecialOperatorOld.LET, new ConsStruct(bindingLists, allTheRest));
+			return new ConsStruct(SpecialOperator.LET, new ConsStruct(bindingLists, allTheRest));
 		} else {
 			// (cons 'let (list (list (first bindingLists)) (letStarHelper (rest bindingLists) allTheRest)))
 			ListStruct bindingListsCar = NullStruct.INSTANCE;
@@ -1333,7 +1328,7 @@ public class SemanticAnalyzer {
 				bindingListsCar = new ConsStruct(bindingLists.getFirst(), bindingListsCar);
 			}
 			final ListStruct bindingList = ListStruct.buildProperList(bindingListsCar);
-			return new ConsStruct(SpecialOperatorOld.LET, new ConsStruct(bindingList,
+			return new ConsStruct(SpecialOperator.LET, new ConsStruct(bindingList,
 					ListStruct.buildProperList(letStarHelper(bindingLists.getRest(), allTheRest))));
 		}
 	}
@@ -1359,12 +1354,12 @@ public class SemanticAnalyzer {
 		ListStruct ltv = list.getRest();
 		// better name this sucker
 		final SymbolStruct name = (SymbolStruct) GensymFunction.funcall(ltvFieldName + "_FN_" + tag);
-		ListStruct decl = ListStruct.buildProperList(DeclarationOld.JAVA_CLASS_NAME, name);
-		decl = ListStruct.buildProperList(SpecialOperatorOld.DECLARE, decl);
+		ListStruct decl = ListStruct.buildProperList(Declaration.JAVA_CLASS_NAME, name);
+		decl = ListStruct.buildProperList(SpecialOperator.DECLARE, decl);
 		// now it's (declare (%java-class-name "blah"))
 		ltv = new ConsStruct(decl, ltv);
 		ltv = new ConsStruct(NullStruct.INSTANCE, ltv);
-		ltv = new ConsStruct(SpecialOperatorOld.LAMBDA, ltv);
+		ltv = new ConsStruct(SpecialOperator.LAMBDA, ltv);
 		// now it's (lambda () (declare (%java-class-name "blah")) ..body..)
 
 		// Now we have to recursively munge the lambda, but in the global environment
@@ -1477,7 +1472,7 @@ public class SemanticAnalyzer {
 		//(values-list ,vals)
 		valsList = (ListStruct) AppendFunction.funcall(list.getRest().getRest(), ListStruct.buildProperList(valsList));
 		//(,(cddr list) (values-list ,vals))
-		valsList = new ConsStruct(SpecialOperatorOld.PROGN, valsList);
+		valsList = new ConsStruct(SpecialOperator.PROGN, valsList);
 		// (progn ,(cddr list) (values-list ,vals))
 
 		// build the LET part...
@@ -1498,7 +1493,7 @@ public class SemanticAnalyzer {
 		// ( ((,vals (multiple-value-list ,(second list)))) )
 		letPiece = (ListStruct) AppendFunction.funcall(letPiece, valsList);
 		// ( ((,vals (multiple-value-list ,(second list)))) (progn ,(cddr list) (values-list ,vals))))
-		letPiece = new ConsStruct(SpecialOperatorOld.LET, letPiece);
+		letPiece = new ConsStruct(SpecialOperator.LET, letPiece);
 		// (let ((,vals (multiple-value-list ,(second list)))) (progn ,(cddr list) (values-list ,vals))))
 		return (ListStruct) saMainLoop(letPiece);
 	}
@@ -1539,7 +1534,7 @@ public class SemanticAnalyzer {
 		}
 		// special case. (quote (function foo)) => (function foo)
 //        Object maybeFunction = list.getRest().getFirst();
-//        if ((maybeFunction instanceof ListStruct) && (((ListStruct)maybeFunction).getFirst() == SpecialOperatorOld.FUNCTION)) {
+//        if ((maybeFunction instanceof ListStruct) && (((ListStruct)maybeFunction).getFirst() == SpecialOperator.FUNCTION)) {
 //            return saMainLoop(maybeFunction);
 //        }
 
@@ -1562,7 +1557,7 @@ public class SemanticAnalyzer {
 		final LispStruct previousElt = dupSet.get(quotedElt);
 		if (previousElt instanceof SymbolStruct) {
 			// the SymbolStruct is really the name of an LTV value
-			return ListStruct.buildProperList(SpecialOperatorOld.LOAD_TIME_VALUE, previousElt);
+			return ListStruct.buildProperList(SpecialOperator.LOAD_TIME_VALUE, previousElt);
 			// the icg will turn it into a field access instruction
 		}
 
@@ -1579,7 +1574,7 @@ public class SemanticAnalyzer {
 		final ListStruct initForm = (ListStruct) transformQuoteToLTV(quotedElt);
 		ListStruct newList = NullStruct.INSTANCE;
 		newList = new ConsStruct(initForm, newList);
-		newList = new ConsStruct(SpecialOperatorOld.LOAD_TIME_VALUE, newList);
+		newList = new ConsStruct(SpecialOperator.LOAD_TIME_VALUE, newList);
 		return (fldName == null) ? saLoadTimeValue(newList) : saLoadTimeValue(newList, fldName);
 	}
 
@@ -1651,17 +1646,17 @@ public class SemanticAnalyzer {
 		// (system::%make-vector)
 		ListStruct functionMakeVector = ListStruct.buildProperList(new SymbolStruct("%MAKE-VECTOR", GlobalPackageStruct.SYSTEM));
 		// (function system::%make-vector)
-		functionMakeVector = new ConsStruct(SpecialOperatorOld.FUNCTION, functionMakeVector);
+		functionMakeVector = new ConsStruct(SpecialOperator.FUNCTION, functionMakeVector);
 
 		// (((formList)))
 		ListStruct finalList = ListStruct.buildProperList(ListStruct.buildProperList(formList));
 		// ((quote ((formList))))
-		finalList = ListStruct.buildProperList(new ConsStruct(SpecialOperatorOld.QUOTE, finalList));
+		finalList = ListStruct.buildProperList(new ConsStruct(SpecialOperator.QUOTE, finalList));
 		// ((function system::%make-vector) (quote ((formList))))
 		finalList = new ConsStruct(functionMakeVector, finalList);
 		// ((apply (function system::%make-vector) (quote ((formList)))))
 		finalList = ListStruct.buildProperList(new ConsStruct(GlobalPackageStruct.COMMON_LISP.intern("APPLY").getSymbolStruct(), finalList));
-		return new ConsStruct(SpecialOperatorOld.LOAD_TIME_VALUE, finalList);
+		return new ConsStruct(SpecialOperator.LOAD_TIME_VALUE, finalList);
 	}
 
 	private ListStruct transformListToLTV(ListStruct formList) {
@@ -1733,16 +1728,16 @@ public class SemanticAnalyzer {
 		final LispStruct form = list.getFirst();
 		if (form instanceof ListStruct) {
 			ListStruct listForm = (ListStruct) form;
-			if (listForm.getFirst().equals(SpecialOperatorOld.QUOTE)) {
+			if (listForm.getFirst().equals(SpecialOperator.QUOTE)) {
 				((ConsStruct) list).setCdr(saQuote(listForm, fldName));
-			} else if (!listForm.getFirst().equals(SpecialOperatorOld.LOAD_TIME_VALUE)) {
-				listForm = ListStruct.buildProperList(SpecialOperatorOld.LOAD_TIME_VALUE, form);
+			} else if (!listForm.getFirst().equals(SpecialOperator.LOAD_TIME_VALUE)) {
+				listForm = ListStruct.buildProperList(SpecialOperator.LOAD_TIME_VALUE, form);
 				((ConsStruct) list).setCdr(saLoadTimeValue(listForm, fldName));
 			} else {
 				((ConsStruct) list).setCdr(saLoadTimeValue(listForm, fldName));
 			}
 		} else {
-			final ListStruct listForm = ListStruct.buildProperList(SpecialOperatorOld.LOAD_TIME_VALUE, form);
+			final ListStruct listForm = ListStruct.buildProperList(SpecialOperator.LOAD_TIME_VALUE, form);
 			((ConsStruct) list).setCdr(saLoadTimeValue(listForm, fldName));
 		}
 		return NullStruct.INSTANCE; // we've done what we need to do, the form needs to be dropped
@@ -1763,7 +1758,7 @@ public class SemanticAnalyzer {
 		// tagbody is defined to return NIL
 		if (tagStack.empty()) {
 			// change the TAGBODY to PROGN
-			list.setElement(1, SpecialOperatorOld.PROGN);
+			list.setElement(1, SpecialOperator.PROGN);
 			// then append a NIL to the end
 			list = (ListStruct) AppendFunction.funcall(list, ListStruct.buildProperList(NullStruct.INSTANCE));
 			return saMainLoop(list);
@@ -1786,7 +1781,7 @@ public class SemanticAnalyzer {
 		// Pop the tag stack for this TAGBODY from the global stack.
 		tagbodyStack.pop();
 		final ListStruct result = NReverseFunction.funcall(listCopy);
-		return new ConsStruct(SpecialOperatorOld.TAGBODY, result);
+		return new ConsStruct(SpecialOperator.TAGBODY, result);
 	}
 
 	/* Reads all the tags in the TAGBODY form and inserts them into a stack
@@ -1939,7 +1934,7 @@ public class SemanticAnalyzer {
 		// now it has the right form, now handle it to saFunction
 		if (newList[1].equals(NullStruct.INSTANCE)) {
 			final ListStruct inter = ListStruct.buildProperList((LispStruct) newList[0]);
-			newList[0] = new ConsStruct(SpecialOperatorOld.FUNCTION, inter);
+			newList[0] = new ConsStruct(SpecialOperator.FUNCTION, inter);
 		}
 		return saFunction((ListStruct) newList[0]);
 	}
@@ -1957,7 +1952,7 @@ public class SemanticAnalyzer {
 		final Environment newEnvironment;
 		// make a new environment and set it to "current"
 		final SymbolStruct operator = (SymbolStruct) list.getFirst();
-		if (operator.equals(SpecialOperatorOld.MACRO_LAMBDA)) {
+		if (operator.equals(SpecialOperator.MACRO_LAMBDA)) {
 			newEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.MACRO);
 		} else {
 			newEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.LAMBDA);
@@ -1998,7 +1993,7 @@ public class SemanticAnalyzer {
 						parseOrdinaryLambdaListFn = pOLL.getSymbolStruct().getFunction();
 					}
 					if ((parseOrdinaryLambdaListFn != null) && // the Lisp code is loaded
-							lambdaSym.equals(SpecialOperatorOld.LAMBDA)) { // it's a lambda not a macro
+							lambdaSym.equals(SpecialOperator.LAMBDA)) { // it's a lambda not a macro
 						final ListStruct parsedLambdaListParts = (ListStruct) parseOrdinaryLambdaListFn.apply(params);
 						theParsedLambdaList = (ListStruct) parsedLambdaListParts.getFirst();
 						auxValues = (ListStruct) parsedLambdaListParts.getElement(1);
@@ -2034,14 +2029,14 @@ public class SemanticAnalyzer {
 			bindingsPosition = 0;
 			// handled setting up the bindings differently between using the old way and the
 			if (!params.equals(NullStruct.INSTANCE)) {
-				if (!theParsedLambdaList.equals(NullStruct.INSTANCE) && lambdaSym.equals(SpecialOperatorOld.LAMBDA)) {
+				if (!theParsedLambdaList.equals(NullStruct.INSTANCE) && lambdaSym.equals(SpecialOperator.LAMBDA)) {
 					// NOW - the first thing to do is make the arglist analyzer function for this lambda
 					// NOTE: this is all skipped when the lambda has a declaration of %NO-GENERATE-ANALYZER
 					final PackageSymbolStruct genAnalyzerSym = GlobalPackageStruct.COMPILER.findSymbol("GENERATE-ARGLIST-ANALYZER");
 					final FunctionStruct genAnalyzerFn = genAnalyzerSym.getSymbolStruct().getFunction();
 					// don't an analyzer for the analyzer!
 					if ((genAnalyzerFn != null)
-							&& findDeclaration(DeclarationOld.NO_GENERATE_ANALYZER, decls.getRest()).equals(NullStruct.INSTANCE)) {
+							&& findDeclaration(Declaration.NO_GENERATE_ANALYZER, decls.getRest()).equals(NullStruct.INSTANCE)) {
 						final ListStruct analyzerFn = (ListStruct) genAnalyzerFn.apply(theParsedLambdaList);
 						//*** Under some certain circumstances, the function has to be compiled for use in the rest
 						//*** of the function definition. The most common reason is the function is recursive
@@ -2070,14 +2065,14 @@ public class SemanticAnalyzer {
 					// now I have to splice in any init form code before the (block foo...
 					ListStruct blockCdr = NullStruct.INSTANCE;
 					if ((afterDecls.getFirst() instanceof ListStruct)
-							&& ((ListStruct) afterDecls.getFirst()).getFirst().equals(SpecialOperatorOld.BLOCK)) {
+							&& ((ListStruct) afterDecls.getFirst()).getFirst().equals(SpecialOperator.BLOCK)) {
 						// this section used when fn was created by DEFUN
 						blockCdr = ((ListStruct) afterDecls.getFirst()).getRest().getRest();
 					} else {
 						// push NIL
 						afterDecls = new ConsStruct(NullStruct.INSTANCE, afterDecls);
 //                        // push BLOCK
-						afterDecls = new ConsStruct(SpecialOperatorOld.BLOCK, afterDecls);
+						afterDecls = new ConsStruct(SpecialOperator.BLOCK, afterDecls);
 						afterDecls = ListStruct.buildProperList(afterDecls);
 						blockCdr = ((ListStruct) afterDecls.getFirst()).getRest().getRest();
 						;
@@ -2099,7 +2094,7 @@ public class SemanticAnalyzer {
 					// there may be &aux VariableOlds that get turned into a let* that starts before the
 					// block construct.
 					if ((auxValues != null) && !auxValues.equals(NullStruct.INSTANCE)) {
-						afterDecls = new ConsStruct(SpecialOperatorOld.LET_STAR, new ConsStruct(auxValues, afterDecls));
+						afterDecls = new ConsStruct(SpecialOperator.LET_STAR, new ConsStruct(auxValues, afterDecls));
 						afterDecls = new ConsStruct(afterDecls, NullStruct.INSTANCE);
 					}
 
@@ -2142,10 +2137,10 @@ public class SemanticAnalyzer {
 
 	private SymbolStruct saGetClassName(ListStruct list) {
 		// check to see if any declarations exist
-		if (list.getFirst().equals(SpecialOperatorOld.DECLARE)) {
+		if (list.getFirst().equals(SpecialOperator.DECLARE)) {
 			// strip out DECLARATION keyword
 			list = list.getRest();
-			return (SymbolStruct) getCadr(AssocFunction.funcall(DeclarationOld.JAVA_CLASS_NAME, list));
+			return (SymbolStruct) getCadr(AssocFunction.funcall(Declaration.JAVA_CLASS_NAME, list));
 		}
 		return null;
 	}

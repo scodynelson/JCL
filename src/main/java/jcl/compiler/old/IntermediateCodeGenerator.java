@@ -6,8 +6,6 @@ import jcl.compiler.old.expander.MacroFunctionExpander;
 import jcl.compiler.old.functions.AssocFunction;
 import jcl.compiler.old.functions.CompileFunction;
 import jcl.compiler.old.functions.GensymFunction;
-import jcl.compiler.old.symbol.DeclarationOld;
-import jcl.compiler.old.symbol.SpecialOperatorOld;
 import jcl.compiler.real.environment.Allocation;
 import jcl.compiler.real.environment.Binding;
 import jcl.compiler.real.environment.Closure;
@@ -32,6 +30,7 @@ import jcl.numbers.RatioStruct;
 import jcl.numbers.RealStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
+import jcl.symbols.Declaration;
 import jcl.symbols.DefstructSymbolStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SpecialOperator;
@@ -53,8 +52,8 @@ public class IntermediateCodeGenerator {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(IntermediateCodeGenerator.class);
 
-	public static final SymbolStruct LAMBDA = SpecialOperatorOld.LAMBDA_MARKER;
-	public static final SymbolStruct MACRO = SpecialOperatorOld.MACRO_MARKER;
+	public static final SymbolStruct LAMBDA = SpecialOperator.LAMBDA_MARKER;
+	public static final SymbolStruct MACRO = SpecialOperator.MACRO_MARKER;
 
 	// this is the current binding environment. It always matches the value
 	// on top of the binding stack
@@ -484,9 +483,9 @@ public class IntermediateCodeGenerator {
 		final LispStruct firstElement = list.getFirst();
 		if (firstElement instanceof SymbolStruct) {
 			// generally an application (foobar ...)
-			if (firstElement instanceof SpecialOperatorOld) {
+			if (firstElement instanceof SpecialOperator) {
 				genCodeSpecialForm(list);
-			} else if (firstElement instanceof DeclarationOld) {
+			} else if (firstElement instanceof Declaration) {
 //                genCodeDeclare(list);
 			} else if (formOptimizable(list)) {
 				genOptimizedForm(list);
@@ -717,61 +716,61 @@ public class IntermediateCodeGenerator {
 			final SymbolStruct symName = (SymbolStruct) list.getFirst();
 
 			// Determine the special form ) generate its code.
-			if (symName.equals(SpecialOperatorOld.BLOCK)) {
+			if (symName.equals(SpecialOperator.BLOCK)) {
 				genCodeBlock(list);
-			} else if (symName.equals(SpecialOperatorOld.CATCH)) {
+			} else if (symName.equals(SpecialOperator.CATCH)) {
 				genCodeCatch(list);
-//            } else if (symName == SpecialOperatorOld.DECLARE) {
+			} else if (symName.equals(SpecialOperator.DECLARE)) {
 //                genCodeDeclare(list);
-			} else if (symName.equals(SpecialOperatorOld.DEFSTRUCT)) {
+			} else if (symName.equals(SpecialOperator.DEFSTRUCT)) {
 				genCodeDefstruct(list);
-			} else if (symName.equals(SpecialOperatorOld.EVAL_WHEN)) {
+			} else if (symName.equals(SpecialOperator.EVAL_WHEN)) {
 				genCodeEvalWhen(list);
-			} else if (symName.equals(SpecialOperatorOld.FLET)) {
+			} else if (symName.equals(SpecialOperator.FLET)) {
 				genCodeFlet(list);
-			} else if (symName.equals(SpecialOperatorOld.FUNCTION)) {
+			} else if (symName.equals(SpecialOperator.FUNCTION)) {
 				genCodeFunction(list);
-			} else if (symName.equals(SpecialOperatorOld.GO)) {
+			} else if (symName.equals(SpecialOperator.GO)) {
 				genCodeGo(list);
-			} else if (symName.equals(SpecialOperatorOld.IF)) {
+			} else if (symName.equals(SpecialOperator.IF)) {
 				genCodeIf(list);
-			} else if (symName.equals(SpecialOperatorOld.LAMBDA)) {
+			} else if (symName.equals(SpecialOperator.LAMBDA)) {
 				genCodeLambda(list);
-			} else if (symName.equals(SpecialOperatorOld.MACRO_LAMBDA)) {
+			} else if (symName.equals(SpecialOperator.MACRO_LAMBDA)) {
 				genCodeMacroLambda(list);
-			} else if (symName.equals(SpecialOperatorOld.LABELS)) {
+			} else if (symName.equals(SpecialOperator.LABELS)) {
 				genCodeLabels(list);
-			} else if (symName.equals(SpecialOperatorOld.LOAD_TIME_VALUE)) {
+			} else if (symName.equals(SpecialOperator.LOAD_TIME_VALUE)) {
 				genCodeLoadTimeValue(list);
-			} else if (symName.equals(SpecialOperatorOld.LOCALLY)) {
+			} else if (symName.equals(SpecialOperator.LOCALLY)) {
 				genCodeLocally(list);
-			} else if (symName.equals(SpecialOperatorOld.MACROLET)) {
+			} else if (symName.equals(SpecialOperator.MACROLET)) {
 				genCodeMacrolet(list);
-			} else if (symName.equals(SpecialOperatorOld.MULTIPLE_VALUE_CALL)) {
+			} else if (symName.equals(SpecialOperator.MULTIPLE_VALUE_CALL)) {
 				genCodeMultipleValueCall(list);
-			} else if (symName.equals(SpecialOperatorOld.MULTIPLE_VALUE_PROG1)) {
+			} else if (symName.equals(SpecialOperator.MULTIPLE_VALUE_PROG1)) {
 				genCodeMultipleValueProg1(list);
-			} else if (symName.equals(SpecialOperatorOld.PROGN)) {
+			} else if (symName.equals(SpecialOperator.PROGN)) {
 				genCodeProgn(list);
-			} else if (symName.equals(SpecialOperatorOld.PROGV)) {
+			} else if (symName.equals(SpecialOperator.PROGV)) {
 				genCodeProgv(list);
-			} else if (symName.equals(SpecialOperatorOld.QUOTE)) {
+			} else if (symName.equals(SpecialOperator.QUOTE)) {
 				genCodeQuote(list);
-			} else if (symName.equals(SpecialOperatorOld.RETURN_FROM)) {
+			} else if (symName.equals(SpecialOperator.RETURN_FROM)) {
 				genCodeReturnFrom(list);
-			} else if (symName.equals(SpecialOperatorOld.SETQ)) {
+			} else if (symName.equals(SpecialOperator.SETQ)) {
 				genCodeSetq(list);
-			} else if (symName.equals(SpecialOperatorOld.SYMBOL_MACROLET)) {
+			} else if (symName.equals(SpecialOperator.SYMBOL_MACROLET)) {
 				genCodeSymbolMacrolet(list);
-			} else if (symName.equals(SpecialOperatorOld.TAGBODY)) {
+			} else if (symName.equals(SpecialOperator.TAGBODY)) {
 				genCodeTagbody(list);
-			} else if (symName.equals(SpecialOperatorOld.TAIL_RECURSION)) {
+			} else if (symName.equals(SpecialOperator.TAIL_RECURSION)) {
 				genCodeTailRecursion(list);
-			} else if (symName.equals(SpecialOperatorOld.THE)) {
+			} else if (symName.equals(SpecialOperator.THE)) {
 				genCodeThe(list);
-			} else if (symName.equals(SpecialOperatorOld.THROW)) {
+			} else if (symName.equals(SpecialOperator.THROW)) {
 				genCodeThrow(list);
-			} else if (symName.equals(SpecialOperatorOld.UNWIND_PROTECT)) {
+			} else if (symName.equals(SpecialOperator.UNWIND_PROTECT)) {
 				genCodeUnwindProtect(list);
 			}
 		} else {
@@ -1071,7 +1070,7 @@ public class IntermediateCodeGenerator {
 			genCodeSymbolFunction((SymbolStruct) fn);
 		} else if (fn instanceof ListStruct) {
 			final ListStruct fnList = (ListStruct) fn;
-//            if (fnList.getCar() == SpecialOperatorOld.LAMBDA) {
+//            if (fnList.getCar() == SpecialOperator.LAMBDA) {
 //                genCodeLambda(fnList);
 //            } else {
 			// this is a setf function (setf foo)
@@ -1399,20 +1398,20 @@ public class IntermediateCodeGenerator {
 		// (declare (mumble...) (more-mumble...))
 		decl = decl.getRest();
 		// ((mumble...) (more-mumble...))
-		final ListStruct javaSymbolName = AssocFunction.funcall(DeclarationOld.JAVA_CLASS_NAME, decl);
+		final ListStruct javaSymbolName = AssocFunction.funcall(Declaration.JAVA_CLASS_NAME, decl);
 		final String className = getCadr(javaSymbolName).toString().replace('.', '/');
 		classNames.push(className);
 
 		// now lispify it
-		ListStruct lispSymbolName = AssocFunction.funcall(DeclarationOld.LISP_NAME, decl);
+		ListStruct lispSymbolName = AssocFunction.funcall(Declaration.LISP_NAME, decl);
 		if (lispSymbolName.equals(NullStruct.INSTANCE)) {
 			lispSymbolName = javaSymbolName;
 		}
 		final SymbolStruct lispName = (SymbolStruct) getCadr(lispSymbolName);
 		//
-		final ListStruct documentation = AssocFunction.funcall(DeclarationOld.DOCUMENTATION, decl);
+		final ListStruct documentation = AssocFunction.funcall(Declaration.DOCUMENTATION, decl);
 		if ((sourceFile == null) || sourceFile.equals(NullStruct.INSTANCE)) {
-			sourceFile = AssocFunction.funcall(DeclarationOld.SOURCE_FILE, decl);
+			sourceFile = AssocFunction.funcall(Declaration.SOURCE_FILE, decl);
 		}
 
 		// compile the new function class
@@ -1682,7 +1681,7 @@ public class IntermediateCodeGenerator {
 
 			while (!NullStruct.INSTANCE.equals(funcallList)) {
 				final Object firstElt = funcallList.getFirst();
-				if ((firstElt instanceof ListStruct) && ((ListStruct) firstElt).getFirst().equals(SpecialOperatorOld.DECLARE)) {
+				if ((firstElt instanceof ListStruct) && ((ListStruct) firstElt).getFirst().equals(SpecialOperator.DECLARE)) {
 					funcallList = funcallList.getRest();
 				} else {
 					icgMainLoop(funcallList.getFirst());

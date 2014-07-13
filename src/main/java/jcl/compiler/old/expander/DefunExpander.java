@@ -2,12 +2,12 @@ package jcl.compiler.old.expander;
 
 import jcl.LispStruct;
 import jcl.compiler.old.functions.AppendFunction;
-import jcl.compiler.old.symbol.DeclarationOld;
-import jcl.compiler.old.symbol.SpecialOperatorOld;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
+import jcl.symbols.Declaration;
+import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 
 /**
@@ -25,16 +25,16 @@ public class DefunExpander implements MacroFunctionExpander {
 	public static final DefunExpander FUNCTION = new DefunExpander();
 
 	//build necessary symbols for defun : SET-SYMBOL-FUNCTION, QUOTE, LAMBDA.
-	protected SymbolStruct quoteSymbol = SpecialOperatorOld.QUOTE;
+	protected SymbolStruct quoteSymbol = SpecialOperator.QUOTE;
 	protected SymbolStruct setSymbolFunction = GlobalPackageStruct.COMMON_LISP.intern("SET-SYMBOL-FUNCTION").getSymbolStruct();
-	protected SymbolStruct lambdaSymbol = SpecialOperatorOld.LAMBDA;
-	protected SymbolStruct prognSymbol = SpecialOperatorOld.PROGN;
-	protected SymbolStruct blockSymbol = SpecialOperatorOld.BLOCK;
-	protected SymbolStruct lispName = DeclarationOld.LISP_NAME;
+	protected SymbolStruct lambdaSymbol = SpecialOperator.LAMBDA;
+	protected SymbolStruct prognSymbol = SpecialOperator.PROGN;
+	protected SymbolStruct blockSymbol = SpecialOperator.BLOCK;
+	protected SymbolStruct lispName = Declaration.LISP_NAME;
 	protected SymbolStruct setFunctionField = GlobalPackageStruct.SYSTEM.intern("SET-FUNCTION-FIELD").getSymbolStruct();
 	// place to hang onto declarations and a doc string
 	private ListStruct declsAndDoc = NullStruct.INSTANCE;
-	private SymbolStruct declareSymbol = SpecialOperatorOld.DECLARE;
+	private SymbolStruct declareSymbol = SpecialOperator.DECLARE;
 
 	// expands the defun macro
 	@SuppressWarnings("unchecked")

@@ -72,6 +72,17 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 * @param name          the symbol name
 	 * @param symbolPackage the symbol package
 	 * @param value         the symbol value
+	 */
+	public SymbolStruct(final String name, final PackageStruct symbolPackage, final TYPE value) {
+		this(Symbol.INSTANCE, name, symbolPackage, value, null);
+	}
+
+	/**
+	 * Public constructor.
+	 *
+	 * @param name          the symbol name
+	 * @param symbolPackage the symbol package
+	 * @param value         the symbol value
 	 * @param function      the symbol function
 	 */
 	public SymbolStruct(final String name, final PackageStruct symbolPackage, final TYPE value, final FunctionStruct function) {

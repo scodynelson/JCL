@@ -1,9 +1,9 @@
 package jcl.compiler.old.functions;
 
 import jcl.arrays.StringStruct;
-import jcl.compiler.old.symbol.VariableOld;
 import jcl.numbers.IntegerStruct;
 import jcl.symbols.SymbolStruct;
+import jcl.symbols.Variable;
 
 import java.math.BigInteger;
 
@@ -30,11 +30,12 @@ public final class GensymFunction {
 
 	private static SymbolStruct<?> getGensymWithPrefix(final String prefix) {
 
-		final BigInteger currentGensymCounterValue = VariableOld.GensymCounter.getValue().getBigInteger();
+		final IntegerStruct currentGensymCounter = Variable.GENSYM_COUNTER.getValue();
+		final BigInteger currentGensymCounterValue = currentGensymCounter.getBigInteger();
 		final SymbolStruct<?> sym = new SymbolStruct(prefix + currentGensymCounterValue);
 
 		final IntegerStruct newGensymCounter = new IntegerStruct(currentGensymCounterValue.add(BigInteger.ONE));
-		VariableOld.GensymCounter.setValue(newGensymCounter);
+		Variable.GENSYM_COUNTER.setValue(newGensymCounter);
 
 		return sym;
 	}

@@ -6,7 +6,7 @@ import jcl.compiler.old.CompilerClassLoader;
 import jcl.compiler.old.Emitter;
 import jcl.compiler.old.EmptyVisitor;
 import jcl.compiler.old.IntermediateCodeGenerator;
-import jcl.compiler.old.SemanticAnalyzer;
+import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.old.documentation.AnnotationCollector;
 import jcl.compiler.old.documentation.DocumentFactory;
 import jcl.compiler.old.expander.MacroFunctionExpander;

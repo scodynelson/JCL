@@ -1,10 +1,12 @@
-package jcl.compiler.old;
+package jcl.compiler.real.sa;
 
 import jcl.LispStruct;
 import jcl.arrays.ArrayStruct;
 import jcl.arrays.StringStruct;
 import jcl.arrays.VectorStruct;
 import jcl.characters.CharacterStruct;
+import jcl.compiler.old.EnvironmentAccessor;
+import jcl.compiler.old.WrapInLambda;
 import jcl.compiler.old.functions.AppendFunction;
 import jcl.compiler.old.functions.AssocFunction;
 import jcl.compiler.old.functions.CompileFunction;
@@ -67,20 +69,20 @@ public class SemanticAnalyzer {
 
 	static String nameBreakingRegex = "[^\\p{Alnum}]";
 	static Pattern nameBreakingPattern = Pattern.compile(nameBreakingRegex);
-	private ListStruct bindings;
-	private Stack<Environment> environmentStack;
-	private Stack<SymbolStruct> blockStack;
-	private Stack<Map<LispStruct, SymbolStruct<?>>> tagbodyStack;
-	private int iTagbodyCounter;
-	private Vector<SymbolStruct> undefinedFunctions;
-	private Stack<ListStruct> currentParsedLambdaList;
-	private Stack<SymbolStruct> currentLispName;
-	private Stack<IdentityHashMap<LispStruct, LispStruct>> dupSetStack;
-	private IdentityHashMap<LispStruct, LispStruct> dupSet = null;
-	private int bindingsPosition;
+	private static ListStruct bindings;
+	public static Stack<Environment> environmentStack;
+	private static Stack<SymbolStruct> blockStack;
+	private static Stack<Map<LispStruct, SymbolStruct<?>>> tagbodyStack;
+	private static int iTagbodyCounter;
+	private static Vector<SymbolStruct> undefinedFunctions;
+	private static Stack<ListStruct> currentParsedLambdaList;
+	private static Stack<SymbolStruct> currentLispName;
+	private static Stack<IdentityHashMap<LispStruct, LispStruct>> dupSetStack;
+	private static IdentityHashMap<LispStruct, LispStruct> dupSet = null;
+	private static int bindingsPosition;
 	// and association of function names seen and their arglist munging
 	// used to handle recursive functions
-	private ListStruct currentArgMunger = NullStruct.INSTANCE;
+	private static ListStruct currentArgMunger = NullStruct.INSTANCE;
 
 	private void initialize() {
 		//create the global environment
@@ -138,7 +140,7 @@ public class SemanticAnalyzer {
 		return form;
 	}
 
-	private LispStruct saMainLoop(LispStruct form) {
+	public static LispStruct saMainLoop(LispStruct form) {
 		if (form.equals(NullStruct.INSTANCE)) {
 			// do nothing
 		} else if (form instanceof KeywordSymbolStruct) {
@@ -148,9 +150,9 @@ public class SemanticAnalyzer {
 		} else if (form instanceof NumberStruct) {
 			//do nothing
 		} else if (form instanceof SymbolStruct) {
-			form = saSymbolStruct((SymbolStruct) form);
+			form = SymbolStructAnalyzer.INSTANCE.analyze((SymbolStruct<?>) form);
 		} else if (form instanceof ListStruct) {
-			form = saList((ListStruct) form);
+			form = ListStructAnalyzer.INSTANCE.analyze((ListStruct) form);
 		} else if (form instanceof VectorStruct) {
 			form = saVectorImpl((VectorStruct) form);
 		} else if (form instanceof ArrayStruct) {
@@ -167,47 +169,7 @@ public class SemanticAnalyzer {
 	 *********************************************************
 	 */
 
-	private SymbolStruct<?> saSymbolStruct(final SymbolStruct<?> sym) {
-		EnvironmentAccessor.addSymbolToTable(environmentStack.peek(), sym);
-		return sym;
-	}
-
-	private LispStruct saList(final ListStruct listStruct) {
-
-		final LispStruct firstElement = listStruct.getFirst();
-		if (firstElement instanceof SymbolStruct) {
-			final MacroExpandReturn macroExpandReturn = MacroExpandFunction.FUNCTION.funcall(listStruct, environmentStack.peek());
-			final LispStruct expandedForm = macroExpandReturn.getExpandedForm();
-
-			if (expandedForm.equals(NullStruct.INSTANCE)) {
-				return NullStruct.INSTANCE;
-			}
-
-			if (expandedForm instanceof ListStruct) {
-				final ListStruct expandedFormList = (ListStruct) expandedForm;
-				if (expandedFormList.getFirst() instanceof SpecialOperator) {
-					return saSpecialOp(expandedFormList);
-				} else {
-					return saFunctionCall(expandedFormList);
-				}
-			} else {
-				return saMainLoop(expandedForm);
-			}
-		} else if (firstElement instanceof ListStruct) {
-			// ex ((lambda (x) (+ x 1)) 3)
-			final ListStruct firstElementList = (ListStruct) firstElement;
-			if (firstElementList.getFirst().equals(SpecialOperator.LAMBDA)) {
-				listStruct.setElement(1, saLambda(firstElementList));
-				return saFunctionCall(listStruct);
-			} else {
-				throw new RuntimeException("Improperly Formed ListStruct: " + listStruct);
-			}
-		} else {
-			throw new RuntimeException("Improperly Formed ListStruct: " + listStruct);
-		}
-	}
-
-	private LispStruct saVectorImpl(final VectorStruct formVector) {
+	private static LispStruct saVectorImpl(final VectorStruct formVector) {
 
 		ListStruct formList = NullStruct.INSTANCE;
 		for (int i = 0; i < formVector.getTotalSize(); i++) {
@@ -254,7 +216,7 @@ public class SemanticAnalyzer {
 	}
 
 	// ********** START OF saSimpleArray() TRANSLATOR ********** //
-	private ListStruct saSimpleArray(final ArrayStruct formArray) {
+	private static ListStruct saSimpleArray(final ArrayStruct formArray) {
 		final ListStruct formList = createSimpleArrayInitialContentsList(formArray);
 
 		// (system::%make-array)
@@ -284,7 +246,7 @@ public class SemanticAnalyzer {
 		return (ListStruct) saMainLoop(ltvList);
 	}
 
-	private ListStruct createSimpleArrayInitialContentsList(final ArrayStruct formArray) {
+	private static ListStruct createSimpleArrayInitialContentsList(final ArrayStruct formArray) {
 		ListStruct formList = NullStruct.INSTANCE;
 
 		for (int i = 0; i < formArray.getTotalSize(); i++) {
@@ -297,7 +259,7 @@ public class SemanticAnalyzer {
 		return formList;
 	}
 
-	private ListStruct initialContentsBuilder(ListStruct formList, final ListStruct dimensionsList) {
+	private static ListStruct initialContentsBuilder(ListStruct formList, final ListStruct dimensionsList) {
 		ListStruct newList = NullStruct.INSTANCE;
 
 		if (dimensionsList.size() > 1) {
@@ -312,7 +274,7 @@ public class SemanticAnalyzer {
 		return newList;
 	}
 
-	private ListStruct subListFinder(ListStruct formList, final ListStruct dimensionsList) {
+	private static ListStruct subListFinder(ListStruct formList, final ListStruct dimensionsList) {
 		ListStruct newList = NullStruct.INSTANCE;
 
 		int sizeOfSubList = 1;
@@ -328,7 +290,7 @@ public class SemanticAnalyzer {
 		return NReverseFunction.funcall(newList);
 	}
 
-	private ListStruct reduceListSize(ListStruct formList, final ListStruct dimensionsList) {
+	private static ListStruct reduceListSize(ListStruct formList, final ListStruct dimensionsList) {
 
 		int amountToReduce = 1;
 		final Object[] dimensionsAsArray = dimensionsList.getAsJavaList().toArray();
@@ -349,83 +311,7 @@ public class SemanticAnalyzer {
 	 *********************************************************
 	 */
 
-	private LispStruct saSpecialOp(final ListStruct list) {
-
-		final SpecialOperator specialOperator = (SpecialOperator) list.getFirst();
-		LispStruct result = null;
-
-		// Determine the special form and generate its code.
-		if (specialOperator.equals(SpecialOperator.BLOCK)) {
-			result = saBlock(list);
-		} else if (specialOperator.equals(SpecialOperator.CATCH)) {
-			result = saCatch(list);
-		} else if (specialOperator.equals(SpecialOperator.EVAL_WHEN)) {
-			result = saEvalWhen(list);
-		} else if (specialOperator.equals(SpecialOperator.FLET)) {
-			result = saFlet(list);
-		} else if (specialOperator.equals(SpecialOperator.FUNCTION)) {
-			result = saFunction(list);
-		} else if (specialOperator.equals(SpecialOperator.GO)) {
-			result = saGo(list);
-		} else if (specialOperator.equals(SpecialOperator.IF)) {
-			result = saIf(list);
-		} else if (specialOperator.equals(SpecialOperator.LABELS)) {
-			result = saLabels(list);
-		} else if (specialOperator.equals(SpecialOperator.LET)) {
-			result = saLet(list);
-		} else if (specialOperator.equals(SpecialOperator.LET_STAR)) {
-			result = saLetStar(list);
-		} else if (specialOperator.equals(SpecialOperator.LOAD_TIME_VALUE)) {
-			result = saLoadTimeValue(list, "LOAD_TIME_VALUE_", GensymFunction.funcall(String.valueOf(System.currentTimeMillis()) + '_').toString());
-		} else if (specialOperator.equals(SpecialOperator.LOCALLY)) {
-			result = saLocally(list);
-		} else if (specialOperator.equals(SpecialOperator.MACROLET)) {
-			result = saMacrolet(list);
-		} else if (specialOperator.equals(SpecialOperator.MULTIPLE_VALUE_CALL)) {
-			result = saMultipleValueCall(list);
-		} else if (specialOperator.equals(SpecialOperator.MULTIPLE_VALUE_PROG1)) {
-			result = saMultipleValueProg1(list);
-		} else if (specialOperator.equals(SpecialOperator.PROGN)) {
-			result = saProgn(list);
-		} else if (specialOperator.equals(SpecialOperator.PROGV)) {
-			result = saProgv(list);
-		} else if (specialOperator.equals(SpecialOperator.QUOTE)) {
-			result = saQuote(list, null);
-		} else if (specialOperator.equals(SpecialOperator.RETURN_FROM)) {
-			result = saReturnFrom(list);
-		} else if (specialOperator.equals(SpecialOperator.SETQ)) {
-			result = saSetq(list);
-		} else if (specialOperator.equals(SpecialOperator.SYMBOL_MACROLET)) {
-			result = saSymbolMacrolet(list);
-		} else if (specialOperator.equals(SpecialOperator.TAGBODY)) {
-			result = saTagbody(list);
-		} else if (specialOperator.equals(SpecialOperator.THE)) {
-			result = saThe(list);
-		} else if (specialOperator.equals(SpecialOperator.THROW)) {
-			result = saThrow(list);
-		} else if (specialOperator.equals(SpecialOperator.UNWIND_PROTECT)) {
-			result = saUnwindProtect(list);
-
-			// Special, Special Operators
-		} else if (specialOperator.equals(SpecialOperator.DECLARE)) {
-			result = saDeclare(list);
-		} else if (specialOperator.equals(SpecialOperator.LAMBDA)) {
-			result = saLambda(list);
-		} else if (specialOperator.equals(SpecialOperator.MACRO_LAMBDA)) {
-			result = saMacroLambda(list);
-
-			// Compiler, Special Operators
-		} else if (specialOperator.equals(SpecialOperator.DEFSTRUCT)) {
-			result = saDefstruct(list);
-		} else if (specialOperator.equals(SpecialOperator.FUNCTION_MARKER)) {
-			result = saFunctionCall(list);
-		} else if (specialOperator.equals(SpecialOperator.STATIC_FIELD)) {
-			result = saStaticField(list);
-		}
-		return result;
-	}
-
-	private ListStruct saBlock(final ListStruct listStruct) {
+	public static ListStruct saBlock(final ListStruct listStruct) {
 
 		final LispStruct second = listStruct.getRest().getFirst();
 		if (!(second instanceof SymbolStruct)) {
@@ -450,11 +336,11 @@ public class SemanticAnalyzer {
 		return ListStruct.buildProperList(blockAnalysisList);
 	}
 
-	private ListStruct saCatch(final ListStruct listStruct) {
+	public static ListStruct saCatch(final ListStruct listStruct) {
 		return handlePrognLogic(listStruct);
 	}
 
-	private LispStruct saEvalWhen(final ListStruct listStruct) {
+	public static LispStruct saEvalWhen(final ListStruct listStruct) {
 		// this only has effect when the :execute situation is found
 		// :compile-toplevel and :load-toplevel situations are ignored.
 		// for any of the nested code to be compiled, the :execute
@@ -475,7 +361,7 @@ public class SemanticAnalyzer {
 		throw new RuntimeException("Improperly formed EVAL-WHEN: " + listStruct);
 	}
 
-	private ListStruct saFlet(final ListStruct listStruct) {
+	public static ListStruct saFlet(final ListStruct listStruct) {
 		final List<LispStruct> mungedFunctions = new ArrayList<>();
 		mungedFunctions.add(SpecialOperator.PROGN);
 
@@ -556,7 +442,7 @@ public class SemanticAnalyzer {
 		return functionNameMap;
 	}
 
-	private ListStruct saFunction(final ListStruct listStruct) {
+	public static ListStruct saFunction(final ListStruct listStruct) {
 
 		if (listStruct.size() != 2) {
 			throw new RuntimeException("Wrong number of arguments to special operator Function: " + listStruct.size());
@@ -568,7 +454,7 @@ public class SemanticAnalyzer {
 			final Environment fnBinding = EnvironmentAccessor.getBindingEnvironment(environmentStack.peek(), functionSymbol, false);
 
 			if (fnBinding.equals(Environment.NULL)) {
-				saSymbolStruct(functionSymbol);
+				SymbolStructAnalyzer.INSTANCE.analyze(functionSymbol);
 				return listStruct;
 			} else {
 				final FunctionBinding functionBinding = (FunctionBinding) fnBinding.getBinding(functionSymbol);
@@ -595,7 +481,7 @@ public class SemanticAnalyzer {
 		throw new RuntimeException("Improperly Formed Function: the arguments must be either a ListStruct or SymbolStruct");
 	}
 
-	private ListStruct saGo(final ListStruct listStruct) {
+	public static ListStruct saGo(final ListStruct listStruct) {
 
 		if (listStruct.size() != 2) {
 			throw new RuntimeException("Wrong number of arguments to special operator Go: " + listStruct.size());
@@ -626,7 +512,7 @@ public class SemanticAnalyzer {
 		return new ConsStruct(first, goTagSymbol);
 	}
 
-	private ListStruct saIf(final ListStruct listStruct) {
+	public static ListStruct saIf(final ListStruct listStruct) {
 
 		if ((listStruct.size() > 4) || (listStruct.size() < 3)) {
 			throw new RuntimeException("Wrong number of arguments to special operator If: " + listStruct.size());
@@ -634,7 +520,7 @@ public class SemanticAnalyzer {
 		return handlePrognLogic(listStruct);
 	}
 
-	private ListStruct saLabels(final ListStruct listStruct) {
+	public static ListStruct saLabels(final ListStruct listStruct) {
 		final List<LispStruct> mungedFunctions = new ArrayList<>();
 		mungedFunctions.add(SpecialOperator.PROGN);
 
@@ -694,7 +580,7 @@ public class SemanticAnalyzer {
 		return saProgn(mungedFunctionsListStruct);
 	}
 
-	private ListStruct getLabelsFunctionBody(final ListStruct body, final Map<SymbolStruct<?>, SymbolStruct<?>> functionNameMap) {
+	private static ListStruct getLabelsFunctionBody(final ListStruct body, final Map<SymbolStruct<?>, SymbolStruct<?>> functionNameMap) {
 
 		final List<LispStruct> newBody = new ArrayList<>();
 
@@ -719,7 +605,7 @@ public class SemanticAnalyzer {
 		return ListStruct.buildProperList(newBody);
 	}
 
-	private ListStruct saLet(final ListStruct listStruct) {
+	public static ListStruct saLet(final ListStruct listStruct) {
 
 		if (listStruct.size() == 1) {
 			throw new RuntimeException("Wrong number of arguments to special operator LET: " + listStruct.size());
@@ -806,7 +692,7 @@ public class SemanticAnalyzer {
 		throw new RuntimeException("Improperly Formed Let: the parameter list must be a ListStruct");
 	}
 
-	private ListStruct saLetStar(final ListStruct listStruct) {
+	public static ListStruct saLetStar(final ListStruct listStruct) {
 
 		if (listStruct.size() == 1) {
 			throw new RuntimeException("Wrong number of arguments to special operator LET*: " + listStruct.size());
@@ -841,12 +727,12 @@ public class SemanticAnalyzer {
 		throw new RuntimeException("Improperly Formed Let*: the parameter list must be a ListStruct");
 	}
 
-	private ListStruct saLocally(final ListStruct listStruct) {
+	public static ListStruct saLocally(final ListStruct listStruct) {
 		LOGGER.warn("; Warning: LOCALLY not supported at this time.");
 		return listStruct;
 	}
 
-	private ListStruct saMacrolet(final ListStruct listStruct) {
+	public static ListStruct saMacrolet(final ListStruct listStruct) {
 		// TODO: right now this acts just like FLET. Need to fix this once we can macroexpand correctly...
 
 		final List<LispStruct> mungedMacros = new ArrayList<>();
@@ -906,14 +792,14 @@ public class SemanticAnalyzer {
 		return saProgn(mungedMacrosListStruct);
 	}
 
-	private ListStruct saMultipleValueCall(final ListStruct listStruct) {
+	public static ListStruct saMultipleValueCall(final ListStruct listStruct) {
 		if (listStruct.size() < 2) {
 			throw new RuntimeException("Wrong number of arguments to special operator MULTIPLE-VALUE-CALL: " + listStruct.size());
 		}
 		return handlePrognLogic(listStruct);
 	}
 
-	private ListStruct saMultipleValueProg1(final ListStruct listStruct) {
+	public static ListStruct saMultipleValueProg1(final ListStruct listStruct) {
 		if (listStruct.size() < 2) {
 			throw new RuntimeException("Wrong number of arguments to special operator MULTIPLE-VALUE-PROG1: " + listStruct.size());
 		}
@@ -966,11 +852,11 @@ public class SemanticAnalyzer {
 	}
 
 
-	private ListStruct saProgn(final ListStruct listStruct) {
+	public static ListStruct saProgn(final ListStruct listStruct) {
 		return handlePrognLogic(listStruct);
 	}
 
-	private ListStruct handlePrognLogic(final ListStruct listStruct) {
+	private static ListStruct handlePrognLogic(final ListStruct listStruct) {
 
 		final ListStruct listAfterProgn = listStruct.getRest();
 		final List<LispStruct> javaListAfterProgn = listAfterProgn.getAsJavaList();
@@ -985,12 +871,12 @@ public class SemanticAnalyzer {
 		return ListStruct.buildProperList(resultAnalysisList);
 	}
 
-	private ListStruct saProgv(final ListStruct listStruct) {
+	public static ListStruct saProgv(final ListStruct listStruct) {
 		LOGGER.warn("; Warning: PROGV not supported at this time.");
 		return listStruct;
 	}
 
-	private LispStruct saQuote(final ListStruct listStruct, final String fldName) {
+	public static LispStruct saQuote(final ListStruct listStruct, final String fldName) {
 		if (listStruct.size() != 2) {
 			throw new RuntimeException("Wrong number of arguments to special operatorQUOTE: " + listStruct.size());
 		}
@@ -1031,7 +917,7 @@ public class SemanticAnalyzer {
 		return saLoadTimeValue(newList, realFldName, GensymFunction.funcall(String.valueOf(System.currentTimeMillis()) + '_').toString());
 	}
 
-	private ListStruct transformQuoteToLTV(final LispStruct form) {
+	private static ListStruct transformQuoteToLTV(final LispStruct form) {
 		final ListStruct newForm;
 		// dispatch on type
 		if (form instanceof ListStruct) {
@@ -1052,7 +938,7 @@ public class SemanticAnalyzer {
 		return newForm;
 	}
 
-	private ListStruct transformListToLTV(final ListStruct formList) {
+	private static ListStruct transformListToLTV(final ListStruct formList) {
 		final SymbolStruct<?> listFnSym;
 		if (formList.isDotted()) {
 			// gen (list* <forms>)
@@ -1077,7 +963,7 @@ public class SemanticAnalyzer {
 		return ListStruct.buildProperList(transformedListForms);
 	}
 
-	private ListStruct transformSymbolToLTV(final SymbolStruct<?> SymbolStruct) {
+	private static ListStruct transformSymbolToLTV(final SymbolStruct<?> SymbolStruct) {
 		if (SymbolStruct.getSymbolPackage() != null) {
 			// gen (intern "sym name" (find-package "pkg name"))
 			final List<LispStruct> symbolFindSymbolPattern = new ArrayList<>();
@@ -1101,17 +987,17 @@ public class SemanticAnalyzer {
 		}
 	}
 
-	private ListStruct transformRatioToLTV(final RatioStruct ratio) {
+	private static ListStruct transformRatioToLTV(final RatioStruct ratio) {
 		// gen (/ numerator denominator)
 		return ListStruct.buildProperList(GlobalPackageStruct.COMMON_LISP.findSymbol("/").getSymbolStruct(), new IntegerStruct(ratio.getBigFraction().getNumerator()), new IntegerStruct(ratio.getBigFraction().getDenominator()));
 	}
 
-	private ListStruct transformComplexToLTV(final ComplexStruct complex) {
+	private static ListStruct transformComplexToLTV(final ComplexStruct complex) {
 		// gen (complex real imaginary)
 		return ListStruct.buildProperList(GlobalPackageStruct.COMMON_LISP.findSymbol("COMPLEX").getSymbolStruct(), complex.getReal(), complex.getImaginary());
 	}
 
-	private ListStruct transformSimpleVectorToLTV(final VectorStruct<LispStruct> formVector) {
+	private static ListStruct transformSimpleVectorToLTV(final VectorStruct<LispStruct> formVector) {
 		final SymbolStruct<?> vectorFnSym = GlobalPackageStruct.COMMON_LISP.findSymbol("VECTOR").getSymbolStruct();
 
 		final List<LispStruct> transformedForms = new ArrayList<>();
@@ -1129,7 +1015,7 @@ public class SemanticAnalyzer {
 		return ListStruct.buildProperList(transformedVectorForms);
 	}
 
-	private ListStruct saReturnFrom(final ListStruct listStruct) {
+	public static ListStruct saReturnFrom(final ListStruct listStruct) {
 
 		final LispStruct second = listStruct.getRest().getFirst();
 		if (!(second instanceof SymbolStruct)) {
@@ -1153,7 +1039,7 @@ public class SemanticAnalyzer {
 		return ListStruct.buildProperList(returnFromAnalysisList);
 	}
 
-	private ListStruct saSetq(final ListStruct listStruct) {
+	public static ListStruct saSetq(final ListStruct listStruct) {
 
 		final ListStruct setqForms = listStruct.getRest();
 
@@ -1176,7 +1062,7 @@ public class SemanticAnalyzer {
 				throw new RuntimeException("SETQ: " + firstElement + " is not a SymbolStruct.");
 			}
 
-			final SymbolStruct<?> symbolStruct = saSymbolStruct((SymbolStruct) firstElement);
+			final SymbolStruct<?> symbolStruct = SymbolStructAnalyzer.INSTANCE.analyze((SymbolStruct) firstElement);
 			setqAnalysisList.add(symbolStruct);
 
 			final LispStruct secondElement = javaSetqForms.get(i + 1);
@@ -1188,12 +1074,12 @@ public class SemanticAnalyzer {
 		return ListStruct.buildProperList(setqAnalysisList);
 	}
 
-	private ListStruct saSymbolMacrolet(final ListStruct list) {
+	public static ListStruct saSymbolMacrolet(final ListStruct list) {
 		LOGGER.error("; Warning: SYMBOL-MACROLET not supported at this time.");
 		return list;
 	}
 
-	private LispStruct saTagbody(final ListStruct list) {
+	public static LispStruct saTagbody(final ListStruct list) {
 
 		// Read all the tags within the TAGBODY.
 		final ListStruct body = list.getRest();
@@ -1227,7 +1113,7 @@ public class SemanticAnalyzer {
 	// Reads all the tags in the TAGBODY form and inserts them into a stack
 	// which is returned. Its necessary to do this first since a GO can be
 	// executed for a tag declared later in the form.
-	private Map<LispStruct, SymbolStruct<?>> readTagbodyLabels(final List<LispStruct> list) {
+	private static Map<LispStruct, SymbolStruct<?>> readTagbodyLabels(final List<LispStruct> list) {
 		final Map<LispStruct, SymbolStruct<?>> currentTagMap = new HashMap<>();
 
 		for (final LispStruct current : list) {
@@ -1241,16 +1127,16 @@ public class SemanticAnalyzer {
 		return currentTagMap;
 	}
 
-	private LispStruct saThe(final ListStruct list) {
+	public static LispStruct saThe(final ListStruct list) {
 		// For now just ignores the type specialization
 		return list.getRest().getRest().getFirst();
 	}
 
-	private ListStruct saThrow(final ListStruct listStruct) {
+	public static ListStruct saThrow(final ListStruct listStruct) {
 		return handlePrognLogic(listStruct);
 	}
 
-	private ListStruct saUnwindProtect(final ListStruct listStruct) {
+	public static ListStruct saUnwindProtect(final ListStruct listStruct) {
 		return handlePrognLogic(listStruct);
 	}
 
@@ -1390,7 +1276,7 @@ public class SemanticAnalyzer {
 				}
 			};
 
-	private ListStruct saFunctionCall(ListStruct list) {
+	public static ListStruct saFunctionCall(ListStruct list) {
 		ListStruct cpy = list;
 		// check to see if there's a function binding in existence
 		if (list.getFirst() instanceof SymbolStruct) {
@@ -1474,7 +1360,7 @@ public class SemanticAnalyzer {
 	 * If there is nothing after the string, then the string is the form
 	 * Not the doc string
 	 */
-	private ListStruct saDeclarations(ListStruct list) {
+	private static ListStruct saDeclarations(ListStruct list) {
 		// list is the rest of the forms after the arg list
 		ListStruct newDecls = NullStruct.INSTANCE;   //the list of all new Declarations
 		final ListStruct returnList = list;
@@ -1545,7 +1431,7 @@ public class SemanticAnalyzer {
 	}
 
 	// routine to javafy a Lisp SymbolStruct or string to a Java identifier
-	private String javafy(final Object lispName) {
+	private static String javafy(final Object lispName) {
 		final StringBuilder result = new StringBuilder();
 		final Scanner scanner = new Scanner(lispName.toString()).useDelimiter(nameBreakingPattern);
 
@@ -1564,11 +1450,11 @@ public class SemanticAnalyzer {
 		return result.toString();
 	}
 
-	private ListStruct findDeclaration(final SymbolStruct item, final ListStruct list) {
+	private static ListStruct findDeclaration(final SymbolStruct item, final ListStruct list) {
 		return AssocFunction.funcall(item, list);
 	}
 
-	private ListStruct saDeclare(final ListStruct list) {
+	public static ListStruct saDeclare(final ListStruct list) {
 		SymbolStruct sym;
 
 		// there may not be any declarations
@@ -1627,53 +1513,54 @@ public class SemanticAnalyzer {
 	/**
 	 * Handles the declaration of the Lisp name (SymbolStruct) of the function
 	 */
-	private void saLispNameDeclaration(final ListStruct declarationList) {
+	private static void saLispNameDeclaration(final ListStruct declarationList) {
 	}
 
 	/**
 	 * Handles the declaration of the name of the Java class (SymbolStruct) of the function
 	 */
-	private void saJavaNameDeclaration(final ListStruct declarationList) {
+	private static void saJavaNameDeclaration(final ListStruct declarationList) {
 	}
 
 	/**
 	 * Handles the declaration of the name of the Java class (SymbolStruct) of the function
 	 */
-	private void saNoGenerateAnalyzerDeclaration(final ListStruct declarationList) {
+	private static void saNoGenerateAnalyzerDeclaration(final ListStruct declarationList) {
 	}
 
 	/**
 	 * Handles the declaration of the parsed lambda list of the function
 	 */
-	private void saParsedLambdaListDeclaration(final ListStruct declarationList) {
+	private static void saParsedLambdaListDeclaration(final ListStruct declarationList) {
 	}
 
 	/**
 	 * Handles the declaration of the name of the Java class (SymbolStruct) of the function
 	 */
-	private void saDocumentationDeclaration(final ListStruct declarationList) {
+	private static void saDocumentationDeclaration(final ListStruct declarationList) {
 	}
 
-	private void saSourceFileDeclaration(final ListStruct declarationList) {
+	private static void saSourceFileDeclaration(final ListStruct declarationList) {
 	}
 
 	/**
 	 * handle the components of a Special declaration
 	 */
-	private void saSpecialDeclaration(final ListStruct declarations) {
+	private static void saSpecialDeclaration(final ListStruct declarations) {
 		final List<LispStruct> declaractionsJavaList = declarations.getAsJavaList();
 		SymbolStruct sym = null;
 		// Special declaration can apply to multiple SymbolStructs
 		for (final LispStruct nextDecl : declaractionsJavaList) {
 			try {
-				saSymbolStruct(sym = (SymbolStruct) nextDecl);
+				sym = (SymbolStruct) nextDecl;
+				SymbolStructAnalyzer.INSTANCE.analyze(sym);
 			} catch (final ClassCastException ccExcption) {
 				LOGGER.error("DECLARE: a non-SymbolStruct entity cannot be made SPECIAL: {}", sym);
 			}
 		}
 	}
 
-	private ListStruct saDefstruct(final ListStruct list) {
+	public static ListStruct saDefstruct(final ListStruct list) {
 		return list;
 	}
 
@@ -1687,11 +1574,11 @@ public class SemanticAnalyzer {
 	// 7. return the LTV marker and the field name
 	//    (load-time-value 'this is the field name')
 
-	private ListStruct saLoadTimeValue(final ListStruct list, final String ltvFieldName) {
+	private static ListStruct saLoadTimeValue(final ListStruct list, final String ltvFieldName) {
 		return saLoadTimeValue(list, ltvFieldName, "");
 	}
 
-	private ListStruct saLoadTimeValue(final ListStruct list, final String ltvFieldName, final String tag) {
+	public static ListStruct saLoadTimeValue(final ListStruct list, final String ltvFieldName, final String tag) {
 		final Environment lambdaEnv = EnvironmentAccessor.getEnclosingLambda(environmentStack.peek());
 		ListStruct ltv = list.getRest();
 		// better name this sucker
@@ -1723,7 +1610,7 @@ public class SemanticAnalyzer {
 		return ListStruct.buildProperList(list.getFirst(), ltvName);
 	}
 
-	private ListStruct saStaticField(ListStruct list) {
+	public static ListStruct saStaticField(ListStruct list) {
 		// 2 args -  the form to eval at class initialization and the name of the field
 		list = list.getRest();
 		final String fldName = list.getRest().getFirst().toString();
@@ -1745,7 +1632,7 @@ public class SemanticAnalyzer {
 		return NullStruct.INSTANCE; // we've done what we need to do, the form needs to be dropped
 	}
 
-	private ListStruct saMacroLambda(final ListStruct list) {
+	public static ListStruct saMacroLambda(final ListStruct list) {
 		// if there is the new macro parser, use it
 		// if not, do the original bootstrap
 		if (false) {
@@ -1758,7 +1645,7 @@ public class SemanticAnalyzer {
 
 	// New helper function. It takes a parsedLambdaList and removes a FakeRest used for setting up the lambda
 	// list for function application
-	private ListStruct removeFakeRestEntry(final ListStruct parsedLambdaList) {
+	private static ListStruct removeFakeRestEntry(final ListStruct parsedLambdaList) {
 		// Only do nothing unless the parsedLambdaList has a FakeRest
 		ListStruct thePLL = parsedLambdaList;
 		final SymbolStruct fakeRestSymbolStruct = GlobalPackageStruct.COMPILER.findSymbol(
@@ -1775,7 +1662,7 @@ public class SemanticAnalyzer {
 		return parsedLambdaList;
 	}
 
-	private ListStruct removeFakeRestEntryAux(final ListStruct parsedLambdaList) {
+	private static ListStruct removeFakeRestEntryAux(final ListStruct parsedLambdaList) {
 		// doesn't use the Collection framework remove because the check has to be inside the cons
 		// So, we do it the hard way
 		final List<LispStruct> copyJavaList = parsedLambdaList.getAsJavaList();
@@ -1819,7 +1706,7 @@ public class SemanticAnalyzer {
 		return parsedLambdaList;
 	}
 
-	private ListStruct adjustParameterNbrs(final ListStruct paramsToAdjust) {
+	private static ListStruct adjustParameterNbrs(final ListStruct paramsToAdjust) {
 		final SymbolStruct allocKey = GlobalPackageStruct.KEYWORD.findSymbol("ALLOCATION").getSymbolStruct();
 		// Now we have to rework the parameter indices since we just dropped a paramter (the fake rest)
 		ListStruct adjustableList = paramsToAdjust;
@@ -1839,7 +1726,7 @@ public class SemanticAnalyzer {
 		return paramsToAdjust;
 	}
 
-	private ListStruct saLambda(final ListStruct list) {
+	public static ListStruct saLambda(final ListStruct list) {
 		// macroexpand the LAMBDA form, by default makes it (FUNCTION (LAMBDA... ))
 		final MacroExpandReturn macroExpandReturn = MacroExpandFunction.FUNCTION.funcall(list);
 		// now it has the right form, now handle it to saFunction
@@ -1852,7 +1739,7 @@ public class SemanticAnalyzer {
 		return saFunction(functionToAnalyze);
 	}
 
-	private ListStruct saLambdaAux(ListStruct list) {
+	private static ListStruct saLambdaAux(ListStruct list) {
 		if (list.size() < 2) {
 			throw new RuntimeException("Incorrectly formed lambda expression, size: " + list.size());
 		}
@@ -2048,7 +1935,7 @@ public class SemanticAnalyzer {
 		}
 	}
 
-	private SymbolStruct saGetClassName(ListStruct list) {
+	private static SymbolStruct saGetClassName(ListStruct list) {
 		// check to see if any declarations exist
 		if (list.getFirst().equals(SpecialOperator.DECLARE)) {
 			// strip out DECLARATION keyword
@@ -2063,11 +1950,11 @@ public class SemanticAnalyzer {
 				(SymbolStruct) GensymFunction.funcall(javafy(sym) + System.currentTimeMillis()), isSpecial);
 	}
 
-	private void addBinding_LambdaFletLabels(final SymbolStruct sym, final int position) {
+	private static void addBinding_LambdaFletLabels(final SymbolStruct sym, final int position) {
 		addBinding_LambdaFletLabels(sym, position, false);
 	}
 
-	private void addBinding_LambdaFletLabels(final SymbolStruct sym, final int position, final boolean isSpecial) {
+	private static void addBinding_LambdaFletLabels(final SymbolStruct sym, final int position, final boolean isSpecial) {
 		EnvironmentAccessor.createNewLambdaBinding(environmentStack.peek(), sym, position, isSpecial);
 	}
 }

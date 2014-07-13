@@ -6,7 +6,7 @@ import jcl.arrays.StringStruct;
 import jcl.characters.CharacterStruct;
 import jcl.classes.StructureClassStruct;
 import jcl.classes.StructureObjectStruct;
-import jcl.compiler.old.SemanticAnalyzer;
+import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;

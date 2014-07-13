@@ -24,7 +24,6 @@ import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.numbers.ComplexStruct;
-import jcl.numbers.FloatStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.NumberStruct;
 import jcl.numbers.RatioStruct;
@@ -36,16 +35,17 @@ import jcl.symbols.NILStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
-import jcl.types.SimpleVector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.Stack;
 import java.util.Vector;
@@ -65,26 +65,12 @@ public class SemanticAnalyzer {
 	// eval-when processing modes
 	private boolean topLevelMode;
 
-	public enum ProcessingMode {
-
-		COMPILE_TOO, NOT_COMPILE_TOO
-	}
-
-	private ProcessingMode mode;
-
-	public enum ProcessingAction {
-
-		PROCESS, EVALUATE, DISCARD
-	}
-
-	private ProcessingAction action;
 	static String nameBreakingRegex = "[^\\p{Alnum}]";
 	static Pattern nameBreakingPattern = Pattern.compile(nameBreakingRegex);
 	private ListStruct bindings;
 	private Stack<Environment> environmentStack;
 	private Stack<SymbolStruct> blockStack;
-	private int blockCounter;
-	private Stack<Stack<ListStruct>> tagbodyStack;
+	private Stack<Map<LispStruct, SymbolStruct<?>>> tagbodyStack;
 	private int iTagbodyCounter;
 	private Vector<SymbolStruct> undefinedFunctions;
 	private Stack<ListStruct> currentParsedLambdaList;
@@ -92,8 +78,6 @@ public class SemanticAnalyzer {
 	private Stack<IdentityHashMap<LispStruct, LispStruct>> dupSetStack;
 	private IdentityHashMap<LispStruct, LispStruct> dupSet = null;
 	private int bindingsPosition;
-	private Vector symbolVector;
-	//    private int closureDepth;
 	// and association of function names seen and their arglist munging
 	// used to handle recursive functions
 	private ListStruct currentArgMunger = NullStruct.INSTANCE;
@@ -108,15 +92,12 @@ public class SemanticAnalyzer {
 		currentLispName.push(null);
 
 		topLevelMode = true;
-		mode = ProcessingMode.NOT_COMPILE_TOO;
 
 		blockStack = new Stack<>();
 		tagbodyStack = new Stack<>();
 		iTagbodyCounter = 0;
 		undefinedFunctions = new Vector<>();
 		bindingsPosition = 0;
-		symbolVector = null;
-//        closureDepth = 0;
 		bindings = NullStruct.INSTANCE;
 		dupSetStack = new Stack<>();
 	}
@@ -186,7 +167,7 @@ public class SemanticAnalyzer {
 	 *********************************************************
 	 */
 
-	private SymbolStruct saSymbolStruct(final SymbolStruct sym) {
+	private SymbolStruct<?> saSymbolStruct(final SymbolStruct<?> sym) {
 		EnvironmentAccessor.addSymbolToTable(environmentStack.peek(), sym);
 		return sym;
 	}
@@ -226,6 +207,142 @@ public class SemanticAnalyzer {
 		}
 	}
 
+	private LispStruct saVectorImpl(final VectorStruct formVector) {
+
+		ListStruct formList = NullStruct.INSTANCE;
+		for (int i = 0; i < formVector.getTotalSize(); i++) {
+			formList = new ConsStruct(formVector.getElementAt(i), formList);
+		}
+		formList = NReverseFunction.funcall(formList);
+
+		final LispStruct adjustableBoolean;
+		if (formVector.isAdjustable()) {
+			adjustableBoolean = TStruct.INSTANCE;
+		} else {
+			adjustableBoolean = NILStruct.INSTANCE;
+		}
+
+		// (system::%make-array)
+		ListStruct functionMakeArray = ListStruct.buildProperList(new SymbolStruct("%MAKE-ARRAY", GlobalPackageStruct.SYSTEM));
+		// (function system::%make-array)
+		functionMakeArray = new ConsStruct(SpecialOperator.FUNCTION, functionMakeArray);
+
+		// ()
+		ListStruct finalList = NullStruct.INSTANCE;
+		// (fillPointerIndex)
+		if (formVector.getFillPointer() != null) {
+			finalList = new ConsStruct(new IntegerStruct(BigInteger.valueOf(formVector.getFillPointer())), finalList);
+		}
+		// ((formList) fillPointerIndex)
+		finalList = new ConsStruct(adjustableBoolean, finalList);
+		// ((formList))
+		finalList = new ConsStruct(formList, finalList);
+		// (nil (formList))
+		finalList = new ConsStruct(NILStruct.INSTANCE, finalList);
+		// (t nil (formList))
+		finalList = new ConsStruct(TStruct.INSTANCE, finalList);
+		// (((dimensions) t nil (formList)))
+		finalList = ListStruct.buildProperList(new ConsStruct(ListStruct.buildProperList(formVector.getDimensions()), finalList));
+		// ((quote ((dimensions) t nil (formList))))
+		finalList = ListStruct.buildProperList(new ConsStruct(SpecialOperator.QUOTE, finalList));
+		// ((function system::%make-array) (quote ((dimensions) t nil (formList))))
+		finalList = new ConsStruct(functionMakeArray, finalList);
+		// ((apply (function system::%make-array) (quote ((dimensions) t nil (formList)))))
+		finalList = ListStruct.buildProperList(new ConsStruct(GlobalPackageStruct.COMMON_LISP.findSymbol("APPLY").getSymbolStruct(), finalList));
+		final ListStruct ltvList = new ConsStruct(SpecialOperator.LOAD_TIME_VALUE, finalList);
+		return saMainLoop(ltvList);
+	}
+
+	// ********** START OF saSimpleArray() TRANSLATOR ********** //
+	private ListStruct saSimpleArray(final ArrayStruct formArray) {
+		final ListStruct formList = createSimpleArrayInitialContentsList(formArray);
+
+		// (system::%make-array)
+		ListStruct functionMakeArray = ListStruct.buildProperList(new SymbolStruct("%MAKE-ARRAY", GlobalPackageStruct.SYSTEM));
+		// (function system::%make-array)
+		functionMakeArray = new ConsStruct(SpecialOperator.FUNCTION, functionMakeArray);
+
+		// ((formList))
+		ListStruct finalList = ListStruct.buildProperList(formList);
+		// (nil (formList))
+		finalList = new ConsStruct(NILStruct.INSTANCE, finalList);
+		// (t nil (formList))
+		finalList = new ConsStruct(TStruct.INSTANCE, finalList);
+		// (((dimensions) t nil (formList)))
+		if (formArray.getRank() == 0) {
+			finalList = ListStruct.buildProperList(new ConsStruct(NullStruct.INSTANCE, finalList));
+		} else {
+			finalList = ListStruct.buildProperList(new ConsStruct(ListStruct.buildProperList(formArray.getDimensions()), finalList));
+		}
+		// ((quote ((dimensions) t nil (formList))))
+		finalList = ListStruct.buildProperList(new ConsStruct(SpecialOperator.QUOTE, finalList));
+		// ((function system::%make-array) (quote ((dimensions) t nil (formList))))
+		finalList = new ConsStruct(functionMakeArray, finalList);
+		// ((apply (function system::%make-array) (quote ((dimensions) t nil (formList)))))
+		finalList = ListStruct.buildProperList(new ConsStruct(GlobalPackageStruct.COMMON_LISP.findSymbol("APPLY").getSymbolStruct(), finalList));
+		final ListStruct ltvList = new ConsStruct(SpecialOperator.LOAD_TIME_VALUE, finalList);
+		return (ListStruct) saMainLoop(ltvList);
+	}
+
+	private ListStruct createSimpleArrayInitialContentsList(final ArrayStruct formArray) {
+		ListStruct formList = NullStruct.INSTANCE;
+
+		for (int i = 0; i < formArray.getTotalSize(); i++) {
+			formList = new ConsStruct(formArray.getElementAt(i), formList);
+		}
+		formList = NReverseFunction.funcall(formList);
+		if ((formArray.getRank() > 1) && !formList.equals(NullStruct.INSTANCE)) {
+			formList = initialContentsBuilder(formList, ListStruct.buildProperList(formArray.getDimensions()));
+		}
+		return formList;
+	}
+
+	private ListStruct initialContentsBuilder(ListStruct formList, final ListStruct dimensionsList) {
+		ListStruct newList = NullStruct.INSTANCE;
+
+		if (dimensionsList.size() > 1) {
+			for (int i = 0; i < ((IntegerStruct) dimensionsList.getFirst()).getBigInteger().intValue(); i++) {
+				newList = new ConsStruct(initialContentsBuilder(subListFinder(formList, dimensionsList.getRest()), dimensionsList.getRest()), newList);
+				formList = reduceListSize(formList, dimensionsList.getRest());
+			}
+			newList = NReverseFunction.funcall(newList);
+		} else {
+			newList = formList;
+		}
+		return newList;
+	}
+
+	private ListStruct subListFinder(ListStruct formList, final ListStruct dimensionsList) {
+		ListStruct newList = NullStruct.INSTANCE;
+
+		int sizeOfSubList = 1;
+		final Object[] dimensionsAsArray = dimensionsList.getAsJavaList().toArray();
+		for (int i = 0; i < dimensionsList.size(); i++) {
+			sizeOfSubList = sizeOfSubList * ((IntegerStruct) dimensionsAsArray[i]).getBigInteger().intValue();
+		}
+		for (int j = 0; j < sizeOfSubList; j++) {
+			newList = new ConsStruct(formList.getFirst(), newList);
+			formList = formList.getRest();
+		}
+
+		return NReverseFunction.funcall(newList);
+	}
+
+	private ListStruct reduceListSize(ListStruct formList, final ListStruct dimensionsList) {
+
+		int amountToReduce = 1;
+		final Object[] dimensionsAsArray = dimensionsList.getAsJavaList().toArray();
+		for (int i = 0; i < dimensionsList.size(); i++) {
+			amountToReduce *= ((IntegerStruct) dimensionsAsArray[i]).getBigInteger().intValue();
+		}
+		for (int j = 0; j < amountToReduce; j++) {
+			formList = formList.getRest();
+		}
+
+		return formList;
+	}
+	// ********** END OF saSimpleArray() TRANSLATOR ********** //
+
 	/*
 	 *********************************************************
 	 * Special Operator Analyzers
@@ -259,7 +376,7 @@ public class SemanticAnalyzer {
 		} else if (specialOperator.equals(SpecialOperator.LET_STAR)) {
 			result = saLetStar(list);
 		} else if (specialOperator.equals(SpecialOperator.LOAD_TIME_VALUE)) {
-			result = saLoadTimeValue(list);
+			result = saLoadTimeValue(list, "LOAD_TIME_VALUE_", GensymFunction.funcall(String.valueOf(System.currentTimeMillis()) + '_').toString());
 		} else if (specialOperator.equals(SpecialOperator.LOCALLY)) {
 			result = saLocally(list);
 		} else if (specialOperator.equals(SpecialOperator.MACROLET)) {
@@ -355,71 +472,89 @@ public class SemanticAnalyzer {
 			}
 		}
 
-		throw new RuntimeException("Improperly Formed EVAL-WHEN: " + listStruct);
+		throw new RuntimeException("Improperly formed EVAL-WHEN: " + listStruct);
 	}
 
-	private ListStruct saFlet(final ListStruct list) {  // return NullStruct.INSTANCE; }
-		final SymbolStruct fletSymbolStruct = (SymbolStruct) list.getFirst();
-		final FunctionStruct findFletFn;
+	private ListStruct saFlet(final ListStruct listStruct) {
+		final List<LispStruct> mungedFunctions = new ArrayList<>();
+		mungedFunctions.add(SpecialOperator.PROGN);
 
-		final PackageSymbolStruct pOLL = GlobalPackageStruct.COMPILER.findSymbol("FIND-FLET");
-		if (pOLL.getPackageSymbolType() != null) {
-			findFletFn = pOLL.getSymbolStruct().getFunction();
-		} else {
-			LOGGER.warn("Unable to obtain the FIND-FLET Function, FLET cannot work in this configuration.");
-			return NullStruct.INSTANCE;
+		final ListStruct fletFunctionList = listStruct.getRest();
+		final List<LispStruct> fletFunctionJavaList = fletFunctionList.getAsJavaList();
+
+		getFunctionNames("FLET", listStruct, fletFunctionJavaList);
+
+		for (final LispStruct currentFunction : fletFunctionJavaList) {
+			final ListStruct functionListStruct = (ListStruct) currentFunction;
+
+			final LispStruct functionFirst = functionListStruct.getFirst();
+			final SymbolStruct<?> functionName = (SymbolStruct) functionFirst;
+			final SymbolStruct<?> gensymFunctionName = GensymFunction.funcall(functionName.getName());
+
+			final LispStruct functionSecond = functionListStruct.getRest().getFirst();
+			final ListStruct lambdaList = (ListStruct) functionSecond;
+			final ListStruct body = functionListStruct.getRest().getRest();
+
+			final List<LispStruct> mungedFunction = new ArrayList<>();
+
+			final List<LispStruct> setSymbolFunction = new ArrayList<>();
+			setSymbolFunction.add(GlobalPackageStruct.COMMON_LISP.findSymbol("SET-SYMBOL-FUNCTION").getSymbolStruct());
+			setSymbolFunction.add(gensymFunctionName);
+
+			final List<LispStruct> innerFunction = new ArrayList<>();
+			innerFunction.add(SpecialOperator.FUNCTION);
+
+			final List<LispStruct> innerLambda = new ArrayList<>();
+			innerLambda.add(SpecialOperator.LAMBDA);
+			innerLambda.add(lambdaList);
+
+			final List<LispStruct> innerBlock = new ArrayList<>();
+			innerBlock.add(SpecialOperator.BLOCK);
+			innerBlock.add(gensymFunctionName);
+			innerBlock.add(body);
+
+			final ListStruct innerBlockListStruct = ListStruct.buildProperList(innerBlock);
+			innerLambda.add(innerBlockListStruct);
+
+			final ListStruct innerLambdaListStruct = ListStruct.buildProperList(innerLambda);
+			innerFunction.add(innerLambdaListStruct);
+
+			final ListStruct innerFunctionListStruct = ListStruct.buildProperList(innerFunction);
+			setSymbolFunction.add(innerFunctionListStruct);
+
+			final ListStruct setSymbolFunctionListStruct = ListStruct.buildProperList(setSymbolFunction);
+			mungedFunction.add(setSymbolFunctionListStruct);
+
+			final ListStruct mungedFunctionListStruct = ListStruct.buildProperList(mungedFunction);
+			mungedFunctions.add(mungedFunctionListStruct);
 		}
 
-		final ListStruct theMungedForm;
-		if (fletSymbolStruct.equals(SpecialOperator.FLET)) {
-			theMungedForm = (ListStruct) findFletFn.apply(list);
-		} else {
-			return NullStruct.INSTANCE;
-		}
-		// this creates '(progn ...mumble). So the list needs to be melded into the
-		// the form like the other forms
-		list.setElement(1, SpecialOperator.PROGN);
-		((ConsStruct) list).setCdr(theMungedForm);
-		return saProgn(list);
+		final ListStruct mungedFunctionsListStruct = ListStruct.buildProperList(mungedFunctions);
+		return saProgn(mungedFunctionsListStruct);
 	}
-/*
-(defun find-flet (list)
-  (if (and list
-          (listp list)
-          (eq (car list) 'flet)
-          (rest list)
-          (cadr list))
-    (let* ((the-fns (cadr list))   ; ((foo ()...) (bar ()...))
-           (renaming-list
-             (system::%mapcan
-               #'(lambda (def)
-                   (list (car def) (intern (string (gensym (car def))) (symbol-package (car def)))))
-               the-fns))           ; (foo foo.. bar bar...)
-           (munged-fns nil))
 
-      ;; this gives the local fns
-      (setq munged-fns
-        (system::%mapcar           ; name, params, body
-          #'(lambda (n-p-and-b)    ; swap names
-              (cons (system::%get-plist renaming-list (car n-p-and-b) nil)
-                (cons (cadr n-p-and-b) (cddr n-p-and-b))))
-          the-fns))
+	private static Map<SymbolStruct<?>, SymbolStruct<?>> getFunctionNames(final String functionBinding, final ListStruct listStruct,
+	                                                                      final List<LispStruct> functionJavaList) {
+		final Map<SymbolStruct<?>, SymbolStruct<?>> functionNameMap = new HashMap<>();
 
-      (setq munged-fns
-        (system::%mapcar
-          #'(lambda (form)
-              (let ((the-name (car form))
-                    (the-lambda-list (cadr form))
-                    (the-body (cddr form)))
-                (setq the-body `(block ,the-name ,@the-body))
-                `(if (not (fboundp ',the-name))
-                   (cl::set-symbol-function ',the-name #'(lambda ,the-lambda-list ,the-body)))))
-          munged-fns))
+		for (final LispStruct currentFunction : functionJavaList) {
+			if (!(currentFunction instanceof ListStruct)) {
+				throw new RuntimeException("Improperly formed " + functionBinding + ": " + listStruct);
+			}
 
-      ;; this gives the munged body
-      (let ((the-body (cddr list)))
-        (nconc munged-fns  (rename-function the-body renaming-list))))))
- */
+			final ListStruct functionListStruct = (ListStruct) currentFunction;
+			final LispStruct functionFirst = functionListStruct.getFirst();
+			if (!(functionFirst instanceof SymbolStruct)) {
+				throw new RuntimeException("Improperly formed " + functionBinding + ": " + listStruct);
+			}
+
+			final SymbolStruct<?> functionName = (SymbolStruct) functionFirst;
+			final SymbolStruct<?> gensymFunctionName = GensymFunction.funcall(functionName.getName());
+			functionNameMap.put(functionName, gensymFunctionName);
+		}
+
+		return functionNameMap;
+	}
 
 	private ListStruct saFunction(final ListStruct listStruct) {
 
@@ -473,25 +608,15 @@ public class SemanticAnalyzer {
 
 		SymbolStruct<?> goTagSymbol = null;
 
-		final ListIterator<Stack<ListStruct>> li1 = tagbodyStack.listIterator(tagbodyStack.size());
+		final ListIterator<Map<LispStruct, SymbolStruct<?>>> li1 = tagbodyStack.listIterator(tagbodyStack.size());
 
-		search:
 		while (li1.hasPrevious()) {
-			final Stack<ListStruct> previousStack = li1.previous();
-
-			final ListIterator<ListStruct> li2 = previousStack.listIterator(previousStack.size());
-			while (li2.hasPrevious()) {
-				final ListStruct previousForm = li2.previous();
-				final LispStruct previousFormFirst = previousForm.getFirst();
-
-				if (second.equals(previousFormFirst)) {
-					// TODO: lean how this is formed in saTagbody
-					goTagSymbol = (SymbolStruct) ((ConsStruct) previousForm).getCdr();
-					break search;
-				}
+			final Map<LispStruct, SymbolStruct<?>> previousStack = li1.previous();
+			if (previousStack.containsKey(second)) {
+				goTagSymbol = previousStack.get(second);
+				break;
 			}
 		}
-
 
 		if (goTagSymbol == null) {
 			throw new RuntimeException("No go tag named " + second + " is currently visible.");
@@ -509,224 +634,211 @@ public class SemanticAnalyzer {
 		return handlePrognLogic(listStruct);
 	}
 
-	/**
-	 * LABELS and FLET<p>
-	 * This is the general algorithm for binding a named function. The issue is binding the name
-	 * (a SymbolStruct) by changing the function slot. The process is similar to binding the value (dynamic)
-	 * slot of a SymbolStruct - , for example, (let ((a 15)) (declare (special a)) ...a..). Inside the LET
-	 * form, the 'a' SymbolStruct's value is 15, but reverts to its value at the end of the LET form.
-	 * The LABELS form will be treated as lexical VariableOld forms. If you treat them as special, you
-	 * might change a function in a completely function. Not wha you want to have.,p.
-	 * <p>
-	 * Creating this situation requires coordinated work from the SA and the ICG.<p>
-	 * The LABELS form looks like this:
-	 * <p>
-	 * (labels ((named-fn-1 (...lambda-list-1...) body-1) ...) ...forms to evaluate in this env ...)
-	 * <p>
-	 * In LABELS, the function binding is visible to the body of all of the named functions as well as
-	 * the body of the forms in the LABEL body. This differs from FLET where the named functions
-	 * are visible to the FLET body but not the other named functions. In fact, the bodies of the named
-	 * FLET functions are not aware of the named function bindings.
-	 *
-	 * @param list blah
-	 * @return the result of evaluating the forms
-	 */
-	private ListStruct saLabels(final ListStruct list) {  // return NullStruct.INSTANCE; }
+	private ListStruct saLabels(final ListStruct listStruct) {
+		final List<LispStruct> mungedFunctions = new ArrayList<>();
+		mungedFunctions.add(SpecialOperator.PROGN);
 
-		final SymbolStruct labelsSymbolStruct = (SymbolStruct) list.getFirst();
-		final FunctionStruct findLabelsFn;
+		final ListStruct labelsFunctionList = listStruct.getRest();
+		final List<LispStruct> labelsFunctionJavaList = labelsFunctionList.getAsJavaList();
 
-		final PackageSymbolStruct pOLL = GlobalPackageStruct.COMPILER.findSymbol("FIND-LABELS");
-		if (pOLL.getPackageSymbolType() != null) {
-			findLabelsFn = pOLL.getSymbolStruct().getFunction();
-		} else {
-			LOGGER.warn("Unable to obtain the FIND-LABELS Function, LABELS cannot work in this configuration.");
-			return NullStruct.INSTANCE;
+		final Map<SymbolStruct<?>, SymbolStruct<?>> functionNameMap = getFunctionNames("LABELS", listStruct, labelsFunctionJavaList);
+
+		for (final LispStruct currentFunction : labelsFunctionJavaList) {
+			final ListStruct functionListStruct = (ListStruct) currentFunction;
+
+			final LispStruct functionFirst = functionListStruct.getFirst();
+			final SymbolStruct<?> functionName = (SymbolStruct) functionFirst;
+			final SymbolStruct<?> gensymFunctionName = GensymFunction.funcall(functionName.getName());
+
+			final LispStruct functionSecond = functionListStruct.getRest().getFirst();
+			final ListStruct lambdaList = (ListStruct) functionSecond;
+			final ListStruct body = functionListStruct.getRest().getRest();
+
+			final List<LispStruct> mungedFunction = new ArrayList<>();
+
+			final List<LispStruct> setSymbolFunction = new ArrayList<>();
+			setSymbolFunction.add(GlobalPackageStruct.COMMON_LISP.findSymbol("SET-SYMBOL-FUNCTION").getSymbolStruct());
+			setSymbolFunction.add(gensymFunctionName);
+
+			final List<LispStruct> innerFunction = new ArrayList<>();
+			innerFunction.add(SpecialOperator.FUNCTION);
+
+			final List<LispStruct> innerLambda = new ArrayList<>();
+			innerLambda.add(SpecialOperator.LAMBDA);
+			innerLambda.add(lambdaList);
+
+			final List<LispStruct> innerBlock = new ArrayList<>();
+			innerBlock.add(SpecialOperator.BLOCK);
+			innerBlock.add(gensymFunctionName);
+
+			final ListStruct labelsFunctionBody = getLabelsFunctionBody(body, functionNameMap);
+			innerBlock.add(labelsFunctionBody);
+
+			final ListStruct innerBlockListStruct = ListStruct.buildProperList(innerBlock);
+			innerLambda.add(innerBlockListStruct);
+
+			final ListStruct innerLambdaListStruct = ListStruct.buildProperList(innerLambda);
+			innerFunction.add(innerLambdaListStruct);
+
+			final ListStruct innerFunctionListStruct = ListStruct.buildProperList(innerFunction);
+			setSymbolFunction.add(innerFunctionListStruct);
+
+			final ListStruct setSymbolFunctionListStruct = ListStruct.buildProperList(setSymbolFunction);
+			mungedFunction.add(setSymbolFunctionListStruct);
+
+			final ListStruct mungedFunctionListStruct = ListStruct.buildProperList(mungedFunction);
+			mungedFunctions.add(mungedFunctionListStruct);
 		}
 
-		final ListStruct theMungedForm;
-		if (labelsSymbolStruct.equals(SpecialOperator.LABELS)) {
-			theMungedForm = (ListStruct) findLabelsFn.apply(list);
-		} else {
-			return NullStruct.INSTANCE;
-		}
-		// this creates '(progn ...mumble). So the list needs to be melded into the
-		// the form like the other forms
-		list.setElement(1, SpecialOperator.PROGN);
-		((ConsStruct) list).setCdr(theMungedForm);
-		return saProgn(list);
+		final ListStruct mungedFunctionsListStruct = ListStruct.buildProperList(mungedFunctions);
+		return saProgn(mungedFunctionsListStruct);
 	}
-/*
-(defun find-labels (list)
-  (if (and list
-          (listp list)
-          (eq (car list) 'labels)
-          (rest list)
-          (cadr list))
-    (let* ((the-fns (cadr list))   ; ((foo ()...) (bar ()...))
-           (renaming-list
-             (system::%mapcan
-               #'(lambda (def)
-                   (list (car def) (intern (string (gensym (car def))) (symbol-package (car def)))))
-               the-fns))           ; (foo foo.. bar bar...)
-           (munged-fns nil))
 
-      ;; this gives the local fns
-      (setq munged-fns
-        (system::%mapcar           ; name, params, body
-          #'(lambda (n-p-and-b)    ; swap names
-              (cons (system::%get-plist renaming-list (car n-p-and-b) nil)
-                (cons (cadr n-p-and-b) (rename-function (cddr n-p-and-b) renaming-list))))
-          the-fns))
+	private ListStruct getLabelsFunctionBody(final ListStruct body, final Map<SymbolStruct<?>, SymbolStruct<?>> functionNameMap) {
 
-      (setq munged-fns
-        (system::%mapcar
-          #'(lambda (form)
-              (let ((the-name (car form))
-                    (the-lambda-list (cadr form))
-                    (the-body (cddr form)))
-                (setq the-body `(block ,the-name ,@the-body))
-                `(if (not (fboundp ',the-name))
-                   (cl::set-symbol-function ',the-name #'(lambda ,the-lambda-list ,the-body)))))
-          munged-fns))
+		final List<LispStruct> newBody = new ArrayList<>();
 
-      ;; this gives the munged body
-      (let ((the-body (cddr list)))
-        (nconc munged-fns  (rename-function the-body renaming-list))))))
- */
-
-	private ListStruct saLet(final ListStruct list) {
-		SymbolStruct sym;
-		ListStruct listValues;
-		ListStruct expList;
-		ListStruct SymbolStructList;
-		ListStruct formList;
-		final int i = 0;
-		boolean bPastDeclareForms;
-
-		//First see if there are any parameters
-		if (list.size() == 1) {
-			return NullStruct.INSTANCE;
-		}
-		// Second see if there's a null binding spec
-		if (list.getRest().getFirst().equals(NullStruct.INSTANCE)) {
-			// change (let () mumble) to (progn mumble) -- later make it a LOCALLY
-//            ListStruct foo = (ListStruct)cons.funcall(SpecialOperator.PROGN, list.getRest().getRest());
-//            return saProgn(foo);
-			return saProgn(new ConsStruct(SpecialOperator.PROGN, list.getRest().getRest()));
-		}
-		// Create the list to hold the new lambda expression.
-		// --------------------------
-		// Semantic Analysis
-
-		// keep track of the current environment as it is "now"
-		final Environment prevEnvironment = environmentStack.peek();
-		// make a new environment and set it to "current"
-		final Environment newLetEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.LET);
-		// set the current environment's parent to what was the environment
-		environmentStack.push(EnvironmentAccessor.createParent(newLetEnvironment, prevEnvironment));
-		try {
-			// Create the vectors for the SymbolStructs and their values.
-			final int tempPosition = bindingsPosition;
-
-			// LET must have at least one parameter.
-			ListStruct tmpList = list.getRest();
-			// ((...bindings...) ...)
-			if (tmpList.size() < 1) {
-				throw new RuntimeException("LET: too few parameters for special" + "operator LET: " + list.toString());
+		final List<LispStruct> bodyJavaList = body.getAsJavaList();
+		for (final LispStruct bodyElement : bodyJavaList) {
+			if (bodyElement instanceof ListStruct) {
+				final ListStruct bodyElementList = (ListStruct) bodyElement;
+				final ListStruct updatedElement = getLabelsFunctionBody(bodyElementList, functionNameMap);
+				newBody.add(updatedElement);
+			} else if (bodyElement instanceof SymbolStruct) {
+				final SymbolStruct<?> bodyElementSymbol = (SymbolStruct) bodyElement;
+				if (functionNameMap.containsKey(bodyElementSymbol)) {
+					newBody.add(functionNameMap.get(bodyElementSymbol));
+				} else {
+					newBody.add(bodyElementSymbol);
+				}
+			} else {
+				newBody.add(bodyElement);
 			}
+		}
 
-			// Now build a list containing all the local VariableOlds for the LET,
-			// and a list containing the initial values for the local VariableOlds.
-			final ListStruct listSymbolStructs = NullStruct.INSTANCE;
+		return ListStruct.buildProperList(newBody);
+	}
 
-			if (tmpList.getFirst() instanceof ListStruct) {
-				ListStruct symList = (ListStruct) tmpList.getFirst();
+	private ListStruct saLet(final ListStruct listStruct) {
+
+		if (listStruct.size() == 1) {
+			throw new RuntimeException("Wrong number of arguments to special operator LET: " + listStruct.size());
+		}
+
+		final LispStruct second = listStruct.getRest().getFirst();
+		if (second instanceof ListStruct) {
+
+			// Create the list to hold the new lambda expression.
+			// --------------------------
+			// Semantic Analysis
+
+			// keep track of the current environment as it is "now"
+			final Environment prevEnvironment = environmentStack.peek();
+			// make a new environment and set it to "current"
+			final Environment newLetEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.LET);
+			newLetEnvironment.setParent(prevEnvironment);
+			// set the current environment's parent to what was the environment
+			environmentStack.push(newLetEnvironment);
+
+			final int tempPosition = bindingsPosition;
+			try {
+				// Create the vectors for the SymbolStructs and their values.
+
+				// LET must have at least one parameter.
+				final ListStruct parameters = (ListStruct) second;
+				final List<LispStruct> parametersJavaList = parameters.getAsJavaList();
+
+				// Now build a list containing all the local VariableOlds for the LET,
+				// and a list containing the initial values for the local VariableOlds.
+
 				// (...bindings...)
 
 				// Loop through the SymbolStructs and store them.
 				//first we have to find out the first available open local slot number
-				int iNumParams = 0;
-				while (symList.size() > 0) {
-					if (symList.getFirst() instanceof ListStruct) {
-						final ListStruct param = (ListStruct) symList.getFirst();
+				for (final LispStruct currentParameter : parametersJavaList) {
+					if (currentParameter instanceof ListStruct) {
+						final ListStruct listParameter = (ListStruct) currentParameter;
+						if ((listParameter.size() < 1) || (listParameter.size() > 2)) {
+							throw new RuntimeException("Improperly Formed Let: the list parameters must only have 1 or 2 parameters");
+						}
+
+						final LispStruct listParamFirst = listParameter.getFirst();
+						if (!(listParamFirst instanceof SymbolStruct)) {
+							throw new RuntimeException("Improperly Formed Let: the first list parameters must be a SymbolStruct");
+						}
+
+						final SymbolStruct<?> symbolParam = (SymbolStruct) listParamFirst;
+						final LispStruct symbolParamValue = listParameter.getRest().getFirst();
+
 						// this must be done in the context of the outer environment
 						final Environment tmpCurrent = environmentStack.pop();
-						final LispStruct initForm = saMainLoop(param.getRest().getFirst());
+						final LispStruct symbolParamInitForm = saMainLoop(symbolParamValue);
 						environmentStack.push(tmpCurrent);
+
 						bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(tmpCurrent);
-						try {
-							addBinding_Let((SymbolStruct) param.getFirst(), bindingsPosition, initForm);
-						} catch (final Exception ex) {
-							LOGGER.error("Exception in SA in addBinding: ");
-							LOGGER.error("param: {}", param.getFirst());
-							LOGGER.error("bindingsPosition: {}", bindingsPosition);
-							LOGGER.error("initForm: {}", initForm);
-							LOGGER.error(ex.getMessage(), ex);
-						}
-					} else {
+
+						EnvironmentAccessor.createNewLetBinding(environmentStack.peek(), symbolParam, bindingsPosition, symbolParamInitForm, false);
+					} else if (currentParameter instanceof SymbolStruct) {
+						final SymbolStruct<?> symbolParameter = (SymbolStruct) currentParameter;
+
 						bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(environmentStack.peek());
-						addBinding_Let((SymbolStruct) symList.getFirst(), bindingsPosition, NullStruct.INSTANCE); //default
+						EnvironmentAccessor.createNewLetBinding(environmentStack.peek(), symbolParameter, bindingsPosition, NullStruct.INSTANCE, false);
+					} else {
+						throw new RuntimeException("Improperly Formed Let: the parameters must be either a ListStruct or SymbolStruct");
 					}
-					iNumParams++;
-					symList = symList.getRest();
 				}
-				tmpList = tmpList.getRest();
 
-			} else {
-				throw new RuntimeException("LET: illegal VariableOld specification");
+				final ListStruct body = listStruct.getRest().getRest();
+
+				final ListStruct prognList = new ConsStruct(SpecialOperator.PROGN, body);
+				final LispStruct bodyResult = saProgn(prognList);
+
+				// Now we have to reverse the list of bindings since they are pushed on
+				final Environment envList = environmentStack.peek();
+
+				return new ConsStruct(envList, bodyResult);
+			} finally {
+				bindingsPosition = tempPosition;
+				environmentStack.pop();
 			}
-
-			ListStruct copyList = tmpList;
-			if (tmpList.equals(NullStruct.INSTANCE)) {
-				copyList = ListStruct.buildProperList(NullStruct.INSTANCE);
-			} else {
-				while (!tmpList.equals(NullStruct.INSTANCE)) {
-					tmpList.setElement(1, saMainLoop(tmpList.getFirst()));
-					tmpList = tmpList.getRest();
-				}
-			}
-
-			// Now we have to reverse the list of bindings sinec they are pushed on
-			final Environment envList = environmentStack.peek();
-
-			bindingsPosition = tempPosition;
-			return new ConsStruct(environmentStack.peek(), copyList);
-		} finally {
-			environmentStack.pop();
 		}
+
+		throw new RuntimeException("Improperly Formed Let: the parameter list must be a ListStruct");
 	}
 
-	private ListStruct saLetStar(final ListStruct list) {
-		// turn a let* into a set of nested LET forms...
-		// let* looks like (let* (binding0, binding1, binding2...) all-the-rest)
-		// it gets turned into (let (binding0) (let (binding1) (let (binding2) ... all-the-rest)))
-		final ListStruct bindingLists = (ListStruct) list.getRest().getFirst();
-		final ListStruct allTheRest = list.getRest().getRest();
-		if (bindingLists.equals(NullStruct.INSTANCE)) {
-			list.setElement(1, SpecialOperator.LET);
-			return saLet(list);
-		}
-		final ListStruct theXformedList = letStarHelper(bindingLists, allTheRest);
-		return saLet(theXformedList);
-	}
+	private ListStruct saLetStar(final ListStruct listStruct) {
 
-	private ListStruct letStarHelper(final ListStruct bindingLists, final ListStruct allTheRest) {
-		if (bindingLists.getRest().equals(NullStruct.INSTANCE)) {
-			// (cons 'let (cons bindinglist allTheRest))
-			return new ConsStruct(SpecialOperator.LET, new ConsStruct(bindingLists, allTheRest));
-		} else {
-			// (cons 'let (list (list (first bindingLists)) (letStarHelper (rest bindingLists) allTheRest)))
-			ListStruct bindingListsCar = NullStruct.INSTANCE;
-			if (bindingLists.getFirst() instanceof ListStruct) {
-				bindingListsCar = (ListStruct) bindingLists.getFirst();
-			} else {
-				bindingListsCar = new ConsStruct(bindingLists.getFirst(), bindingListsCar);
-			}
-			final ListStruct bindingList = ListStruct.buildProperList(bindingListsCar);
-			return new ConsStruct(SpecialOperator.LET, new ConsStruct(bindingList,
-					ListStruct.buildProperList(letStarHelper(bindingLists.getRest(), allTheRest))));
+		if (listStruct.size() == 1) {
+			throw new RuntimeException("Wrong number of arguments to special operator LET*: " + listStruct.size());
 		}
+
+		final LispStruct second = listStruct.getRest().getFirst();
+		if (second instanceof ListStruct) {
+			final ListStruct parameters = (ListStruct) second;
+			final List<LispStruct> parametersAsJavaList = parameters.getAsJavaList();
+
+			final ListIterator<LispStruct> li = parametersAsJavaList.listIterator(parametersAsJavaList.size());
+
+			ListStruct body = listStruct.getRest().getRest();
+
+			while (li.hasPrevious()) {
+				final LispStruct previousParams = li.previous();
+
+				final List<LispStruct> previousBodyJavaList = body.getAsJavaList();
+
+				final List<LispStruct> innerLet = new ArrayList<>();
+				innerLet.add(SpecialOperator.LET);
+				innerLet.add(previousParams);
+				innerLet.addAll(previousBodyJavaList);
+
+				body = ListStruct.buildProperList(innerLet);
+			}
+
+			return saLet(body);
+		}
+
+
+		throw new RuntimeException("Improperly Formed Let*: the parameter list must be a ListStruct");
 	}
 
 	private ListStruct saLocally(final ListStruct listStruct) {
@@ -734,121 +846,125 @@ public class SemanticAnalyzer {
 		return listStruct;
 	}
 
-	private ListStruct saMacrolet(final ListStruct list) {
-		// This is a bit simplistic. We turn the local macro definitions into defmacro forms after
-		// renaming the local macro names. The environment is like FLET where the pairing of  the
-		// original names and new names reside. The body just expands in this environment.
-		try {
-			final Environment parentEnvironment = environmentStack.peek();
-			// make a new environment and set it to "current"
-			final Environment newEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.MACROLET);
-			final ListStruct fnList = (ListStruct) list.getRest().getFirst();
-			// Now has ((foo ...) (bar ...) ...)
-			final List<LispStruct> fnListJavaList = fnList.getAsJavaList();
-			final ListStruct setForms = NullStruct.INSTANCE;
-			for (final LispStruct fnListNext : fnListJavaList) {
-				final ListStruct fn = (ListStruct) fnListNext;
-				final SymbolStruct newName = GlobalPackageStruct.SYSTEM.intern(javafy(fn.getFirst()) + System.currentTimeMillis()).getSymbolStruct();
-				// augment the environment
-				final int position = 1; // bindings++ ???
-				EnvironmentAccessor.createNewFBinding(newEnvironment, (SymbolStruct) fn.getFirst(), position, newName, false);
-				// Now make a new macro form
-				// ... (defmacro newName (...) ...body...)
-				// hold the rest (lambda list and body)
-				ListStruct theRest = fn.getRest();
-				// give it a new name
-				theRest = new ConsStruct(newName, theRest);
-				// call it DEFMACRO
-				theRest = new ConsStruct(Defmacro, theRest);
-				// since they are eval'ed in a null environment, time to do it
-			}
-			// now the body is compiled in the FLET environment
-			// set the current environment's parent to what was the environment
-			environmentStack.push(
-					EnvironmentAccessor.createParent(newEnvironment, parentEnvironment));
+	private ListStruct saMacrolet(final ListStruct listStruct) {
+		// TODO: right now this acts just like FLET. Need to fix this once we can macroexpand correctly...
 
-			ListStruct body = list.getRest().getRest();
-			// now we have to handle the body - including declarations
-			// sa the body
-			final ListStruct copyBody = body;
-			while (!body.equals(NullStruct.INSTANCE)) {
-				final LispStruct mainStuff = saMainLoop(body.getFirst());
-				body.setElement(1, mainStuff);
-				body = body.getRest();
-			}
-			return new ConsStruct(environmentStack.peek(), copyBody);
-		} finally {
-			environmentStack.pop();
+		final List<LispStruct> mungedMacros = new ArrayList<>();
+		mungedMacros.add(SpecialOperator.PROGN);
+
+		final ListStruct macroletMacroList = listStruct.getRest();
+		final List<LispStruct> macroletMacroJavaList = macroletMacroList.getAsJavaList();
+
+		getFunctionNames("MACROLET", listStruct, macroletMacroJavaList);
+
+		for (final LispStruct currentMacro : macroletMacroJavaList) {
+			final ListStruct macroListStruct = (ListStruct) currentMacro;
+
+			final LispStruct macroFirst = macroListStruct.getFirst();
+			final SymbolStruct<?> macroName = (SymbolStruct) macroFirst;
+			final SymbolStruct<?> gensymMacroName = GensymFunction.funcall(macroName.getName());
+
+			final LispStruct macroSecond = macroListStruct.getRest().getFirst();
+			final ListStruct lambdaList = (ListStruct) macroSecond;
+			final ListStruct body = macroListStruct.getRest().getRest();
+
+			final List<LispStruct> mungedMacro = new ArrayList<>();
+
+			final List<LispStruct> setSymbolFunction = new ArrayList<>();
+			setSymbolFunction.add(GlobalPackageStruct.COMMON_LISP.findSymbol("SET-SYMBOL-FUNCTION").getSymbolStruct());
+			setSymbolFunction.add(gensymMacroName);
+
+			final List<LispStruct> innerFunction = new ArrayList<>();
+			innerFunction.add(SpecialOperator.FUNCTION);
+
+			final List<LispStruct> innerLambda = new ArrayList<>();
+			innerLambda.add(SpecialOperator.LAMBDA);
+			innerLambda.add(lambdaList);
+
+			final List<LispStruct> innerBlock = new ArrayList<>();
+			innerBlock.add(SpecialOperator.BLOCK);
+			innerBlock.add(gensymMacroName);
+			innerBlock.add(body);
+
+			final ListStruct innerBlockListStruct = ListStruct.buildProperList(innerBlock);
+			innerLambda.add(innerBlockListStruct);
+
+			final ListStruct innerLambdaListStruct = ListStruct.buildProperList(innerLambda);
+			innerFunction.add(innerLambdaListStruct);
+
+			final ListStruct innerFunctionListStruct = ListStruct.buildProperList(innerFunction);
+			setSymbolFunction.add(innerFunctionListStruct);
+
+			final ListStruct setSymbolFunctionListStruct = ListStruct.buildProperList(setSymbolFunction);
+			mungedMacro.add(setSymbolFunctionListStruct);
+
+			final ListStruct mungedFunctionListStruct = ListStruct.buildProperList(mungedMacro);
+			mungedMacros.add(mungedFunctionListStruct);
 		}
+
+		final ListStruct mungedMacrosListStruct = ListStruct.buildProperList(mungedMacros);
+		return saProgn(mungedMacrosListStruct);
 	}
 
-	private ListStruct saMultipleValueCall(ListStruct list) {
-		final ListStruct cpy = list;
-		final int size = list.size();
-
-		if (size < 2) {
-			throw new RuntimeException("MULTIPLE-VALUE-CALL: incorrect number of arguments: " + (size - 1));
+	private ListStruct saMultipleValueCall(final ListStruct listStruct) {
+		if (listStruct.size() < 2) {
+			throw new RuntimeException("Wrong number of arguments to special operator MULTIPLE-VALUE-CALL: " + listStruct.size());
 		}
-		// deal with the function form
-		list = list.getRest();
-		list.setElement(1, saMainLoop(list.getFirst()));
-
-		// now handle each of the value forms
-		while (!(list = list.getRest()).equals(NullStruct.INSTANCE)) {
-			list.setElement(1, saMainLoop(list.getFirst()));
-		}
-		return cpy;
+		return handlePrognLogic(listStruct);
 	}
 
-	private ListStruct saMultipleValueProg1(final ListStruct list) {
-		/* This is a bit ugly and conses too much, but someday we'll
-		 * have a REAL compiler...
-         * It gets turned into...
-         * (let ((vals (gensym)))
-         *    `(let ((,vals (multiple-value-list ,(second list))))
-         *      (progn ,(cddr list) (values-list ,vals)))
-         */
-		if (list.size() < 2) {
-			throw new RuntimeException("MULTIPLE-VALUE-PROG-1: incorrect number of arguments: " + (list.size() - 1));
+	private ListStruct saMultipleValueProg1(final ListStruct listStruct) {
+		if (listStruct.size() < 2) {
+			throw new RuntimeException("Wrong number of arguments to special operator MULTIPLE-VALUE-PROG1: " + listStruct.size());
 		}
-		final SymbolStruct vals = (SymbolStruct) GensymFunction.funcall();
-		// make the progn part
-		ListStruct valsList = ListStruct.buildProperList(vals);
-		valsList = new ConsStruct(GlobalPackageStruct.COMMON_LISP.findSymbol("VALUES-LIST").getSymbolStruct(), valsList);
-		//(values-list ,vals)
-		valsList = (ListStruct) AppendFunction.funcall(list.getRest().getRest(), ListStruct.buildProperList(valsList));
-		//(,(cddr list) (values-list ,vals))
-		valsList = new ConsStruct(SpecialOperator.PROGN, valsList);
-		// (progn ,(cddr list) (values-list ,vals))
 
-		// build the LET part...
-		ListStruct letPiece = ListStruct.buildProperList(list.getRest().getFirst());
-		letPiece = new ConsStruct(GlobalPackageStruct.COMMON_LISP.findSymbol("MULTIPLE-VALUE-LIST").getSymbolStruct(), letPiece);
-		// (multiple-value-list ,(second list))
-		letPiece = ListStruct.buildProperList(letPiece);
-		// ((multiple-value-list ,(second list)))
-		letPiece = new ConsStruct(vals, letPiece);
-		// (,vals (multiple-value-list ,(second list)))
-		letPiece = ListStruct.buildProperList(letPiece);
-		// ((,vals (multiple-value-list ,(second list))))
+		final List<LispStruct> letBlock = new ArrayList<>();
+		letBlock.add(SpecialOperator.LET);
 
-		// put things together
-		valsList = ListStruct.buildProperList(valsList);
-		// ((progn ,(cddr list) (values-list ,vals)))
-		letPiece = ListStruct.buildProperList(letPiece);
-		// ( ((,vals (multiple-value-list ,(second list)))) )
-		letPiece = (ListStruct) AppendFunction.funcall(letPiece, valsList);
-		// ( ((,vals (multiple-value-list ,(second list)))) (progn ,(cddr list) (values-list ,vals))))
-		letPiece = new ConsStruct(SpecialOperator.LET, letPiece);
-		// (let ((,vals (multiple-value-list ,(second list)))) (progn ,(cddr list) (values-list ,vals))))
-		return (ListStruct) saMainLoop(letPiece);
-	}
+		final List<LispStruct> allParameters = new ArrayList<>();
+
+		final List<LispStruct> parameter = new ArrayList<>();
+		final SymbolStruct<?> tempParamName = GensymFunction.funcall();
+		parameter.add(tempParamName);
+
+		final List<LispStruct> multipleValueListPart = new ArrayList<>();
+		multipleValueListPart.add(GlobalPackageStruct.COMMON_LISP.findSymbol("MULTIPLE-VALUE-LIST").getSymbolStruct());
+		final LispStruct firstForm = listStruct.getRest().getFirst();
+		multipleValueListPart.add(firstForm);
+		final ListStruct multipleValueListPartList = ListStruct.buildProperList(multipleValueListPart);
 
 /*
 (defmacro multiple-value-list (&rest forms)
   (declare (system::%java-class-name "lisp.common.function.MultipleValueList"))
-  `(multiple-value-call #'list ,@forms)) ;M-V-C is a SpecialOperator...
+  `(multiple-value-call (function list) ,@forms))
  */
+
+		parameter.add(multipleValueListPartList);
+		final ListStruct parameterList = ListStruct.buildProperList(parameter);
+
+		allParameters.add(parameterList);
+		final ListStruct allParametersList = ListStruct.buildProperList(allParameters);
+
+		letBlock.add(allParametersList);
+
+		final List<LispStruct> prognPart = new ArrayList<>();
+		prognPart.add(SpecialOperator.PROGN);
+		prognPart.add(listStruct.getRest().getRest());
+
+		final List<LispStruct> valuesListPart = new ArrayList<>();
+		valuesListPart.add(GlobalPackageStruct.COMMON_LISP.findSymbol("VALUES-LIST").getSymbolStruct());
+		valuesListPart.add(ListStruct.buildProperList(tempParamName));
+		final ListStruct valuesListPartList = ListStruct.buildProperList(valuesListPart);
+
+		prognPart.add(valuesListPartList);
+		final ListStruct prognPartList = ListStruct.buildProperList(prognPart);
+
+		letBlock.add(prognPartList);
+		final ListStruct letBlockList = ListStruct.buildProperList(letBlock);
+
+		return saLet(letBlockList);
+	}
+
 
 	private ListStruct saProgn(final ListStruct listStruct) {
 		return handlePrognLogic(listStruct);
@@ -874,36 +990,28 @@ public class SemanticAnalyzer {
 		return listStruct;
 	}
 
-	private LispStruct saQuote(final ListStruct list, final String fldName) {
-		if (list.size() != 2) {
-			throw new RuntimeException("QUOTE: incorrect number of arguments");
+	private LispStruct saQuote(final ListStruct listStruct, final String fldName) {
+		if (listStruct.size() != 2) {
+			throw new RuntimeException("Wrong number of arguments to special operatorQUOTE: " + listStruct.size());
 		}
-		// special case. (quote (function foo)) => (function foo)
-//        Object maybeFunction = list.getRest().getFirst();
-//        if ((maybeFunction instanceof ListStruct) && (((ListStruct)maybeFunction).getFirst() == SpecialOperator.FUNCTION)) {
-//            return saMainLoop(maybeFunction);
-//        }
 
 		// don't make up a lot of load-time-value stuff for constants
-		final LispStruct quotedElt = list.getRest().getFirst();
-		if ((quotedElt instanceof NumberStruct)
-				|| (quotedElt instanceof CharacterStruct)
-				|| (quotedElt instanceof StringStruct)
-				|| (quotedElt instanceof CharSequence)) {
-			return quotedElt;
+		final LispStruct element = listStruct.getRest().getFirst();
+		if ((element instanceof NumberStruct) || (element instanceof CharacterStruct)) {
+			return element;
 		}
 
-		if ((quotedElt instanceof SymbolStruct) && (((SymbolStruct) quotedElt).getSymbolPackage() != null)) {
-			return list; // handled in icg
+		if ((element instanceof SymbolStruct) && (((SymbolStruct) element).getSymbolPackage() != null)) {
+			return listStruct; // handled in icg
 		}
 
 		// Now, it's possible that we've seen this element before
 		// If so, we've already made up a LOAD-TIME-VALUE form. No
 		// need to make another...
-		final LispStruct previousElt = dupSet.get(quotedElt);
-		if (previousElt instanceof SymbolStruct) {
+		final LispStruct previousElement = dupSet.get(element);
+		if (previousElement instanceof SymbolStruct) {
 			// the SymbolStruct is really the name of an LTV value
-			return ListStruct.buildProperList(SpecialOperator.LOAD_TIME_VALUE, previousElt);
+			return ListStruct.buildProperList(SpecialOperator.LOAD_TIME_VALUE, previousElement);
 			// the icg will turn it into a field access instruction
 		}
 
@@ -914,36 +1022,26 @@ public class SemanticAnalyzer {
 
 		//*** NOTE ***
 		// For now, the code does NOT handle multiple instances of uninterned
-		// SymbolStructs and does not handle circular lists. This awaits the new
-		// Lisp compiler (easier to handle this stuff)
+		// SymbolStructs and does not handle circular lists.
 
-		final ListStruct initForm = (ListStruct) transformQuoteToLTV(quotedElt);
-		ListStruct newList = NullStruct.INSTANCE;
-		newList = new ConsStruct(initForm, newList);
-		newList = new ConsStruct(SpecialOperator.LOAD_TIME_VALUE, newList);
-		return (fldName == null) ? saLoadTimeValue(newList) : saLoadTimeValue(newList, fldName);
+		final ListStruct initForm = transformQuoteToLTV(element);
+		final ListStruct newList = new ConsStruct(SpecialOperator.LOAD_TIME_VALUE, initForm);
+
+		final String realFldName = (fldName == null) ? "LOAD_TIME_VALUE_" : fldName;
+		return saLoadTimeValue(newList, realFldName, GensymFunction.funcall(String.valueOf(System.currentTimeMillis()) + '_').toString());
 	}
 
-	private LispStruct transformQuoteToLTV(final LispStruct form) {
-		// first let's see if we know about this already
-		final LispStruct newForm;
+	private ListStruct transformQuoteToLTV(final LispStruct form) {
+		final ListStruct newForm;
 		// dispatch on type
 		if (form instanceof ListStruct) {
 			newForm = transformListToLTV((ListStruct) form);
 		} else if (form instanceof SymbolStruct) {
 			newForm = transformSymbolToLTV((SymbolStruct) form);
-		} else if (form instanceof StringStruct) {
-			newForm = form;
 		} else if (form instanceof RatioStruct) {
 			newForm = transformRatioToLTV((RatioStruct) form);
 		} else if (form instanceof ComplexStruct) {
 			newForm = transformComplexToLTV((ComplexStruct) form);
-		} else if (form instanceof IntegerStruct) {
-			newForm = form;
-		} else if (form instanceof FloatStruct) {
-			newForm = form;
-		} else if (form instanceof CharacterStruct) {
-			newForm = form;
 		} else if (form instanceof VectorStruct) {
 			newForm = transformSimpleVectorToLTV((VectorStruct) form);
 		} else if (form instanceof ArrayStruct) {
@@ -951,57 +1049,85 @@ public class SemanticAnalyzer {
 		} else {
 			throw new RuntimeException("Can't create a load-time-value form for " + form);
 		}
-		//TODO - must generalize this into becoming make-load-form in the full compiler
-
 		return newForm;
 	}
 
-	private ListStruct transformComplexToLTV(final ComplexStruct complex) {
-		// gen (/ numerator denomerator)
-		return ListStruct.buildProperList(GlobalPackageStruct.COMMON_LISP.findSymbol("COMPLEX").getSymbolStruct(), complex.getReal(), complex.getImaginary());
+	private ListStruct transformListToLTV(final ListStruct formList) {
+		final SymbolStruct<?> listFnSym;
+		if (formList.isDotted()) {
+			// gen (list* <forms>)
+			listFnSym = GlobalPackageStruct.COMMON_LISP.findSymbol("LIST*").getSymbolStruct();
+		} else {
+			// gen (list <forms>)
+			listFnSym = GlobalPackageStruct.COMMON_LISP.findSymbol("LIST").getSymbolStruct();
+		}
+
+		final List<LispStruct> transformedForms = new ArrayList<>();
+
+		final List<LispStruct> formJavaList = formList.getAsJavaList();
+		for (final LispStruct currentForm : formJavaList) {
+			final LispStruct transformedForm = saMainLoop(currentForm);
+			transformedForms.add(transformedForm);
+		}
+
+		final List<LispStruct> transformedListForms = new ArrayList<>();
+		transformedListForms.add(listFnSym);
+		transformedListForms.addAll(transformedForms);
+
+		return ListStruct.buildProperList(transformedListForms);
+	}
+
+	private ListStruct transformSymbolToLTV(final SymbolStruct<?> SymbolStruct) {
+		if (SymbolStruct.getSymbolPackage() != null) {
+			// gen (intern "sym name" (find-package "pkg name"))
+			final List<LispStruct> symbolFindSymbolPattern = new ArrayList<>();
+			symbolFindSymbolPattern.add(GlobalPackageStruct.COMMON_LISP.findSymbol("FIND-PACKAGE").getSymbolStruct());
+			symbolFindSymbolPattern.add(new StringStruct(SymbolStruct.getSymbolPackage().getName()));
+			final ListStruct symbolFindSymbolPatternList = ListStruct.buildProperList(symbolFindSymbolPattern);
+
+			final List<LispStruct> symbolInternPattern = new ArrayList<>();
+			symbolInternPattern.add(GlobalPackageStruct.COMMON_LISP.findSymbol("INTERN").getSymbolStruct());
+			symbolInternPattern.add(new StringStruct(SymbolStruct.getName()));
+			symbolInternPattern.add(symbolFindSymbolPatternList);
+
+			return ListStruct.buildProperList(symbolInternPattern);
+		} else {
+			// gen (make-symbol "sym name")
+			final List<LispStruct> symbolMakeSymbolPattern = new ArrayList<>();
+			symbolMakeSymbolPattern.add(GlobalPackageStruct.COMMON_LISP.findSymbol("MAKE-SYMBOL").getSymbolStruct());
+			symbolMakeSymbolPattern.add(new StringStruct(SymbolStruct.getName()));
+			final ListStruct symbolMakeSymbolPatternList = ListStruct.buildProperList(symbolMakeSymbolPattern);
+			return ListStruct.buildProperList(symbolMakeSymbolPatternList);
+		}
 	}
 
 	private ListStruct transformRatioToLTV(final RatioStruct ratio) {
-		// gen (/ numerator denomerator)
+		// gen (/ numerator denominator)
 		return ListStruct.buildProperList(GlobalPackageStruct.COMMON_LISP.findSymbol("/").getSymbolStruct(), new IntegerStruct(ratio.getBigFraction().getNumerator()), new IntegerStruct(ratio.getBigFraction().getDenominator()));
 	}
 
-	private ListStruct transformSymbolToLTV(final SymbolStruct SymbolStruct) {
-		if (SymbolStruct.getSymbolPackage() != null) {
-			// gen an (intern "sym name" "(find-package "pkg name"))
-			final LispStruct[] symbolFindSymbolPatternArray = {GlobalPackageStruct.COMMON_LISP.findSymbol("FIND-PACKAGE").getSymbolStruct(), new StringStruct(SymbolStruct.getSymbolPackage().getName())};
-			final LispStruct[] symbolInternPatternArray = {GlobalPackageStruct.COMMON_LISP.findSymbol("INTERN").getSymbolStruct(), new StringStruct(SymbolStruct.getName()), ListStruct.buildProperList(symbolFindSymbolPatternArray)};
-
-			return ListStruct.buildProperList(symbolInternPatternArray);
-		} else {
-			// has to be a make-symbol unless it's been seen before
-			final LispStruct[] symbolMakeSymbolPatternArray = {GlobalPackageStruct.COMMON_LISP.findSymbol("MAKE-SYMBOL").getSymbolStruct(), new StringStruct(SymbolStruct.getName())};
-			return ListStruct.buildProperList(symbolMakeSymbolPatternArray);
-		}
+	private ListStruct transformComplexToLTV(final ComplexStruct complex) {
+		// gen (complex real imaginary)
+		return ListStruct.buildProperList(GlobalPackageStruct.COMMON_LISP.findSymbol("COMPLEX").getSymbolStruct(), complex.getReal(), complex.getImaginary());
 	}
 
-	private ListStruct transformListToLTV(ListStruct formList) {
-		final List<LispStruct> forms = new Vector<>();
-		SymbolStruct listFnSym = GlobalPackageStruct.COMMON_LISP.findSymbol("LIST").getSymbolStruct();
-		while (!formList.equals(NullStruct.INSTANCE)) {
-			final LispStruct form = formList.getFirst();
-			if (((ConsStruct) formList).getCdr() instanceof ListStruct) {
-				forms.add(transformQuoteToLTV(form));
-				formList = formList.getRest();
-			} else {
-				forms.add(transformQuoteToLTV(form));
-				// it's a dotted list
-				forms.add(transformQuoteToLTV(((ConsStruct) formList).getCdr()));
-				// now we have to use LIST*
-				listFnSym = GlobalPackageStruct.COMMON_LISP.findSymbol("LIST*").getSymbolStruct();
-				break;
-			}
+	private ListStruct transformSimpleVectorToLTV(final VectorStruct<LispStruct> formVector) {
+		final SymbolStruct<?> vectorFnSym = GlobalPackageStruct.COMMON_LISP.findSymbol("VECTOR").getSymbolStruct();
+
+		final List<LispStruct> transformedForms = new ArrayList<>();
+
+		final List<LispStruct> formJavaList = formVector.getContents();
+		for (final LispStruct currentForm : formJavaList) {
+			final LispStruct transformedForm = saMainLoop(currentForm);
+			transformedForms.add(transformedForm);
 		}
 
-		final ListStruct list = ListStruct.buildProperList(forms);
-		return new ConsStruct(listFnSym, list);
+		final List<LispStruct> transformedVectorForms = new ArrayList<>();
+		transformedVectorForms.add(vectorFnSym);
+		transformedVectorForms.addAll(transformedForms);
+
+		return ListStruct.buildProperList(transformedVectorForms);
 	}
-	//*** end of Quote handling
 
 	private ListStruct saReturnFrom(final ListStruct listStruct) {
 
@@ -1067,61 +1193,52 @@ public class SemanticAnalyzer {
 		return list;
 	}
 
-	private LispStruct saTagbody(ListStruct list) {
-		ListStruct listCopy = NullStruct.INSTANCE;
+	private LispStruct saTagbody(final ListStruct list) {
 
 		// Read all the tags within the TAGBODY.
-		final Stack<ListStruct> tagStack = tagbodyReadLabels(list.getRest());
-		// it's possible that there are no tags in the tagbody.
-		// If so, we just turn it into a PROGN and go on our merry way...EXCEPT
-		// tagbody is defined to return NIL
-		if (tagStack.empty()) {
-			// change the TAGBODY to PROGN
-			list.setElement(1, SpecialOperator.PROGN);
-			// then append a NIL to the end
-			list = (ListStruct) AppendFunction.funcall(list, ListStruct.buildProperList(NullStruct.INSTANCE));
-			return saMainLoop(list);
-		}
+		final ListStruct body = list.getRest();
+		final List<LispStruct> bodyJavaList = body.getAsJavaList();
+		final Map<LispStruct, SymbolStruct<?>> currentTagMap = readTagbodyLabels(bodyJavaList);
 
-		list = list.getRest();
-		tagbodyStack.push(tagStack);
+		tagbodyStack.push(currentTagMap);
 
-        /* Walk through the list and invoke the semantic analyzer on each
-         * non-tag element. */
-		while (!list.equals(NullStruct.INSTANCE)) {
-			final LispStruct obj = list.getFirst();
-			if (obj instanceof SymbolStruct) {
-				listCopy = new ConsStruct(obj, listCopy);
+		final List<LispStruct> newBodyJavaList = new ArrayList<>();
+
+		for (final LispStruct currentBodyElement : bodyJavaList) {
+			if ((currentBodyElement instanceof SymbolStruct) || (currentBodyElement instanceof IntegerStruct)) {
+				final SymbolStruct<?> realTagSymbol = currentTagMap.get(currentBodyElement);
+				newBodyJavaList.add(realTagSymbol);
 			} else {
-				listCopy = new ConsStruct(saMainLoop(obj), listCopy);
+				final LispStruct analyzedElement = saMainLoop(currentBodyElement);
+				newBodyJavaList.add(analyzedElement);
 			}
-			list = list.getRest();
 		}
+
 		// Pop the tag stack for this TAGBODY from the global stack.
 		tagbodyStack.pop();
-		final ListStruct result = NReverseFunction.funcall(listCopy);
-		return new ConsStruct(SpecialOperator.TAGBODY, result);
+
+		final List<LispStruct> tagbodyResult = new ArrayList<>();
+		tagbodyResult.add(SpecialOperator.TAGBODY);
+		tagbodyResult.addAll(newBodyJavaList);
+
+		return ListStruct.buildProperList(tagbodyResult);
 	}
 
-	/* Reads all the tags in the TAGBODY form and inserts them into a stack
-	 * which is returned. Its necessary to do this first since a GO can be
-	 * executed for a tag declared later in the form. */
-	private Stack<ListStruct> tagbodyReadLabels(ListStruct list) {
-		final Stack<ListStruct> tagStack = new Stack<>();
+	// Reads all the tags in the TAGBODY form and inserts them into a stack
+	// which is returned. Its necessary to do this first since a GO can be
+	// executed for a tag declared later in the form.
+	private Map<LispStruct, SymbolStruct<?>> readTagbodyLabels(final List<LispStruct> list) {
+		final Map<LispStruct, SymbolStruct<?>> currentTagMap = new HashMap<>();
 
-		while (!list.equals(NullStruct.INSTANCE)) {
-			final LispStruct obj = list.getFirst();
-			if ((obj instanceof SymbolStruct)
-					|| (obj instanceof Number)) {
+		for (final LispStruct current : list) {
+			if ((current instanceof SymbolStruct) || (current instanceof NumberStruct)) {
 				// Insert the tag and its new SymbolStruct into the stack.
-				final SymbolStruct newSym = new SymbolStruct("Tagbody" + iTagbodyCounter);
+				final SymbolStruct<?> newSym = new SymbolStruct("Tagbody" + iTagbodyCounter);
 				iTagbodyCounter++;
-				tagStack.push(new ConsStruct(obj, newSym));
-				list.setElement(1, newSym);
+				currentTagMap.put(current, newSym);
 			}
-			list = list.getRest();
 		}
-		return tagStack;
+		return currentTagMap;
 	}
 
 	private LispStruct saThe(final ListStruct list) {
@@ -1258,170 +1375,6 @@ public class SemanticAnalyzer {
 		}
 		return form;
 	}
-
-	private LispStruct saVectorImpl(final VectorStruct formVector) {
-
-		if (formVector.getType() instanceof SimpleVector) {
-			return transformSimpleVectorToLTV(formVector);
-		}
-
-		ListStruct formList = NullStruct.INSTANCE;
-		for (int i = 0; i < formVector.getTotalSize(); i++) {
-			formList = new ConsStruct(formVector.getElementAt(i), formList);
-		}
-		formList = NReverseFunction.funcall(formList);
-
-		final LispStruct adjustableBoolean;
-		if (formVector.isAdjustable()) {
-			adjustableBoolean = TStruct.INSTANCE;
-		} else {
-			adjustableBoolean = NILStruct.INSTANCE;
-		}
-
-		// (system::%make-array)
-		ListStruct functionMakeArray = ListStruct.buildProperList(new SymbolStruct("%MAKE-ARRAY", GlobalPackageStruct.SYSTEM));
-		// (function system::%make-array)
-		functionMakeArray = new ConsStruct(SpecialOperator.FUNCTION, functionMakeArray);
-
-		// ()
-		ListStruct finalList = NullStruct.INSTANCE;
-		// (fillPointerIndex)
-		if (formVector.getFillPointer() != null) {
-			finalList = new ConsStruct(new IntegerStruct(BigInteger.valueOf(formVector.getFillPointer())), finalList);
-		}
-		// ((formList) fillPointerIndex)
-		finalList = new ConsStruct(adjustableBoolean, finalList);
-		// ((formList))
-		finalList = new ConsStruct(formList, finalList);
-		// (nil (formList))
-		finalList = new ConsStruct(NILStruct.INSTANCE, finalList);
-		// (t nil (formList))
-		finalList = new ConsStruct(TStruct.INSTANCE, finalList);
-		// (((dimensions) t nil (formList)))
-		finalList = ListStruct.buildProperList(new ConsStruct(ListStruct.buildProperList(formVector.getDimensions()), finalList));
-		// ((quote ((dimensions) t nil (formList))))
-		finalList = ListStruct.buildProperList(new ConsStruct(SpecialOperator.QUOTE, finalList));
-		// ((function system::%make-array) (quote ((dimensions) t nil (formList))))
-		finalList = new ConsStruct(functionMakeArray, finalList);
-		// ((apply (function system::%make-array) (quote ((dimensions) t nil (formList)))))
-		finalList = ListStruct.buildProperList(new ConsStruct(GlobalPackageStruct.COMMON_LISP.findSymbol("APPLY").getSymbolStruct(), finalList));
-		final ListStruct ltvList = new ConsStruct(SpecialOperator.LOAD_TIME_VALUE, finalList);
-		return saMainLoop(ltvList);
-	}
-
-	private LispStruct transformSimpleVectorToLTV(final VectorStruct formVector) {
-		ListStruct formList = NullStruct.INSTANCE;
-		for (int i = 0; i < formVector.getTotalSize(); i++) {
-			formList = new ConsStruct(formVector.getElementAt(i), formList);
-		}
-		formList = NReverseFunction.funcall(formList);
-
-		// (system::%make-vector)
-		ListStruct functionMakeVector = ListStruct.buildProperList(new SymbolStruct("%MAKE-VECTOR", GlobalPackageStruct.SYSTEM));
-		// (function system::%make-vector)
-		functionMakeVector = new ConsStruct(SpecialOperator.FUNCTION, functionMakeVector);
-
-		// (((formList)))
-		ListStruct finalList = ListStruct.buildProperList(ListStruct.buildProperList(formList));
-		// ((quote ((formList))))
-		finalList = ListStruct.buildProperList(new ConsStruct(SpecialOperator.QUOTE, finalList));
-		// ((function system::%make-vector) (quote ((formList))))
-		finalList = new ConsStruct(functionMakeVector, finalList);
-		// ((apply (function system::%make-vector) (quote ((formList)))))
-		finalList = ListStruct.buildProperList(new ConsStruct(GlobalPackageStruct.COMMON_LISP.findSymbol("APPLY").getSymbolStruct(), finalList));
-		final ListStruct ltvList = new ConsStruct(SpecialOperator.LOAD_TIME_VALUE, finalList);
-		return saMainLoop(ltvList);
-	}
-
-	// ********** START OF saSimpleArray() TRANSLATOR ********** //
-	private LispStruct saSimpleArray(final ArrayStruct formArray) {
-		final ListStruct formList = createSimpleArrayInitialContentsList(formArray);
-
-		// (system::%make-array)
-		ListStruct functionMakeArray = ListStruct.buildProperList(new SymbolStruct("%MAKE-ARRAY", GlobalPackageStruct.SYSTEM));
-		// (function system::%make-array)
-		functionMakeArray = new ConsStruct(SpecialOperator.FUNCTION, functionMakeArray);
-
-		// ((formList))
-		ListStruct finalList = ListStruct.buildProperList(formList);
-		// (nil (formList))
-		finalList = new ConsStruct(NILStruct.INSTANCE, finalList);
-		// (t nil (formList))
-		finalList = new ConsStruct(TStruct.INSTANCE, finalList);
-		// (((dimensions) t nil (formList)))
-		if (formArray.getRank() == 0) {
-			finalList = ListStruct.buildProperList(new ConsStruct(NullStruct.INSTANCE, finalList));
-		} else {
-			finalList = ListStruct.buildProperList(new ConsStruct(ListStruct.buildProperList(formArray.getDimensions()), finalList));
-		}
-		// ((quote ((dimensions) t nil (formList))))
-		finalList = ListStruct.buildProperList(new ConsStruct(SpecialOperator.QUOTE, finalList));
-		// ((function system::%make-array) (quote ((dimensions) t nil (formList))))
-		finalList = new ConsStruct(functionMakeArray, finalList);
-		// ((apply (function system::%make-array) (quote ((dimensions) t nil (formList)))))
-		finalList = ListStruct.buildProperList(new ConsStruct(GlobalPackageStruct.COMMON_LISP.findSymbol("APPLY").getSymbolStruct(), finalList));
-		final ListStruct ltvList = new ConsStruct(SpecialOperator.LOAD_TIME_VALUE, finalList);
-		return saMainLoop(ltvList);
-	}
-
-	private ListStruct createSimpleArrayInitialContentsList(final ArrayStruct formArray) {
-		ListStruct formList = NullStruct.INSTANCE;
-
-		for (int i = 0; i < formArray.getTotalSize(); i++) {
-			formList = new ConsStruct(formArray.getElementAt(i), formList);
-		}
-		formList = NReverseFunction.funcall(formList);
-		if ((formArray.getRank() > 1) && !formList.equals(NullStruct.INSTANCE)) {
-			formList = initialContentsBuilder(formList, ListStruct.buildProperList(formArray.getDimensions()));
-		}
-		return formList;
-	}
-
-	private ListStruct initialContentsBuilder(ListStruct formList, final ListStruct dimensionsList) {
-		ListStruct newList = NullStruct.INSTANCE;
-
-		if (dimensionsList.size() > 1) {
-			for (int i = 0; i < ((IntegerStruct) dimensionsList.getFirst()).getBigInteger().intValue(); i++) {
-				newList = new ConsStruct(initialContentsBuilder(subListFinder(formList, dimensionsList.getRest()), dimensionsList.getRest()), newList);
-				formList = reduceListSize(formList, dimensionsList.getRest());
-			}
-			newList = NReverseFunction.funcall(newList);
-		} else {
-			newList = formList;
-		}
-		return newList;
-	}
-
-	private ListStruct subListFinder(ListStruct formList, final ListStruct dimensionsList) {
-		ListStruct newList = NullStruct.INSTANCE;
-
-		int sizeOfSubList = 1;
-		final Object[] dimensionsAsArray = dimensionsList.getAsJavaList().toArray();
-		for (int i = 0; i < dimensionsList.size(); i++) {
-			sizeOfSubList = sizeOfSubList * ((IntegerStruct) dimensionsAsArray[i]).getBigInteger().intValue();
-		}
-		for (int j = 0; j < sizeOfSubList; j++) {
-			newList = new ConsStruct(formList.getFirst(), newList);
-			formList = formList.getRest();
-		}
-
-		return NReverseFunction.funcall(newList);
-	}
-
-	private ListStruct reduceListSize(ListStruct formList, final ListStruct dimensionsList) {
-
-		int amountToReduce = 1;
-		final Object[] dimensionsAsArray = dimensionsList.getAsJavaList().toArray();
-		for (int i = 0; i < dimensionsList.size(); i++) {
-			amountToReduce *= ((IntegerStruct) dimensionsAsArray[i]).getBigInteger().intValue();
-		}
-		for (int j = 0; j < amountToReduce; j++) {
-			formList = formList.getRest();
-		}
-
-		return formList;
-	}
-	// ********** END OF saSimpleArray() TRANSLATOR ********** //
 
 	public static FunctionStruct LAMBDA_ARGLIST_MUNGER =
 			new FunctionStruct() {
@@ -1733,9 +1686,6 @@ public class SemanticAnalyzer {
 	// 6. add the cons to the LTV list
 	// 7. return the LTV marker and the field name
 	//    (load-time-value 'this is the field name')
-	private ListStruct saLoadTimeValue(final ListStruct list) {
-		return saLoadTimeValue(list, "LOAD_TIME_VALUE_", GensymFunction.funcall("" + System.currentTimeMillis() + '_').toString());
-	}
 
 	private ListStruct saLoadTimeValue(final ListStruct list, final String ltvFieldName) {
 		return saLoadTimeValue(list, ltvFieldName, "");
@@ -2111,14 +2061,6 @@ public class SemanticAnalyzer {
 	private void addBinding_FBinding(final SymbolStruct sym, final Object initForm, final int position, final boolean isSpecial) {
 		EnvironmentAccessor.createNewFBinding(environmentStack.peek(), sym, position,
 				(SymbolStruct) GensymFunction.funcall(javafy(sym) + System.currentTimeMillis()), isSpecial);
-	}
-
-	private void addBinding_Let(final SymbolStruct sym, final int position, final LispStruct initForm) {
-		addBinding_Let(sym, position, initForm, false);
-	}
-
-	private void addBinding_Let(final SymbolStruct sym, final int position, final LispStruct initForm, final boolean isSpecial) {
-		EnvironmentAccessor.createNewLetBinding(environmentStack.peek(), sym, position, initForm, isSpecial);
 	}
 
 	private void addBinding_LambdaFletLabels(final SymbolStruct sym, final int position) {

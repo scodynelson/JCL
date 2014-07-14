@@ -82,7 +82,7 @@ public class ArrayStructAnalyzer implements Analyzer<LispStruct, ArrayStruct<?>>
 		int sizeOfSubList = 1;
 		final Object[] dimensionsAsArray = dimensionsList.getAsJavaList().toArray();
 		for (int i = 0; i < dimensionsList.size(); i++) {
-			sizeOfSubList = sizeOfSubList * ((IntegerStruct) dimensionsAsArray[i]).getBigInteger().intValue();
+			sizeOfSubList *= ((IntegerStruct) dimensionsAsArray[i]).getBigInteger().intValue();
 		}
 		for (int j = 0; j < sizeOfSubList; j++) {
 			newList = new ConsStruct(formList.getFirst(), newList);

@@ -9,6 +9,7 @@ import jcl.compiler.old.functions.CompileFunction;
 import jcl.compiler.old.functions.GensymFunction;
 import jcl.compiler.old.functions.GetPlist;
 import jcl.compiler.old.functions.XCopyTreeFunction;
+import jcl.compiler.real.environment.Binding;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.FunctionBinding;
 import jcl.compiler.real.environment.Marker;
@@ -28,6 +29,7 @@ import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Scanner;
@@ -72,8 +74,20 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			final ListStruct functionList = (ListStruct) second;
 
 			final LispStruct functionListFirst = functionList.getFirst();
-			if (functionListFirst.equals(SpecialOperator.LAMBDA) || functionListFirst.equals(SpecialOperator.MACRO_LAMBDA)) {
-				return saLambdaAux(functionList);
+			if (functionListFirst.equals(SpecialOperator.LAMBDA)) {
+				final Environment newEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.LAMBDA);
+				final Environment parentEnvironment = SemanticAnalyzer.environmentStack.peek();
+				EnvironmentAccessor.createParent(newEnvironment, parentEnvironment);
+				SemanticAnalyzer.environmentStack.push(newEnvironment);
+
+				return saLambdaAux(functionList, newEnvironment);
+			} else if (functionListFirst.equals(SpecialOperator.MACRO_LAMBDA)) {
+				final Environment newEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.MACRO);
+				final Environment parentEnvironment = SemanticAnalyzer.environmentStack.peek();
+				EnvironmentAccessor.createParent(newEnvironment, parentEnvironment);
+				SemanticAnalyzer.environmentStack.push(newEnvironment);
+
+				return saLambdaAux(functionList, newEnvironment);
 			}
 
 			if (functionListFirst.equals(GlobalPackageStruct.COMMON_LISP.findSymbol("SETF").getSymbolStruct())) {
@@ -86,26 +100,99 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		throw new RuntimeException("Improperly Formed Function: the arguments must be either a ListStruct or SymbolStruct");
 	}
 
-	private static ListStruct saLambdaAux(ListStruct list) {
-		if (list.size() < 2) {
-			throw new RuntimeException("Incorrectly formed lambda expression, size: " + list.size());
-		}
-
+	private static ListStruct saLambdaAux1(final ListStruct listStruct, final Environment environment, final boolean isLambda) {
 		//might also need here prev. bindings position num, or even a stack?
 		final int tempPosition = SemanticAnalyzer.bindingsPosition;
-		final Environment parentEnvironment = SemanticAnalyzer.environmentStack.peek();
 
 		// keep track of the current environment as it is "now"
-		final Environment newEnvironment;
-		// make a new environment and set it to "current"
-		final SymbolStruct operator = (SymbolStruct) list.getFirst();
-		if (operator.equals(SpecialOperator.MACRO_LAMBDA)) {
-			newEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.MACRO);
-		} else {
-			newEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.LAMBDA);
-		}
 		// set the current environment's parent to what was the environment
-		SemanticAnalyzer.environmentStack.push(EnvironmentAccessor.createParent(newEnvironment, parentEnvironment));
+		try {
+			dupSetStack.push(SemanticAnalyzer.dupSet);
+			SemanticAnalyzer.dupSet = new IdentityHashMap<>();
+
+			final LispStruct firstElement = listStruct.getFirst();
+			if (!(firstElement instanceof SymbolStruct)) {
+				// TODO: This can really go away, as we build this list above anyways...
+				throw new RuntimeException("First argument to Lambda must be the SymbolStruct 'Lambda'");
+			}
+
+			final LispStruct secondElement = listStruct.getRest().getFirst();
+			if (!(secondElement instanceof ListStruct)) {
+				throw new RuntimeException("Second argument to Lambda must be a ListStruct of parameters");
+			}
+
+			final ListStruct parameters = (ListStruct) secondElement;
+			final ParseLambdaListResult parseLambdaListResult = parseLambdaList(parameters, environment, isLambda);
+			final ListStruct parsedLambdaList = parseLambdaListResult.getParsedLambdaList();
+
+			// temporary hack to handle tail-called functions here
+			currentParsedLambdaList.push(parsedLambdaList);
+
+			final ListStruct declaresDocStringBody = listStruct.getRest().getRest();
+			final ListStruct orderedDeclaresDocStringBody = saDeclarations(declaresDocStringBody);
+
+
+			return null;
+		} finally {
+			SemanticAnalyzer.bindingsPosition = tempPosition;  //???
+			SemanticAnalyzer.environmentStack.pop();
+			// done with the current hack for tail-called functions
+			currentParsedLambdaList.pop();
+			SemanticAnalyzer.currentLispName.pop();
+			SemanticAnalyzer.dupSet = dupSetStack.pop();
+		}
+	}
+
+	private static class ParseLambdaListResult {
+
+		private final ListStruct parsedLambdaList;
+		private final ListStruct auxValues;
+
+		private ParseLambdaListResult(final ListStruct parsedLambdaList, final ListStruct auxValues) {
+			this.parsedLambdaList = parsedLambdaList;
+			this.auxValues = auxValues;
+		}
+
+		public ListStruct getParsedLambdaList() {
+			return parsedLambdaList;
+		}
+
+		public ListStruct getAuxValues() {
+			return auxValues;
+		}
+	}
+
+	private static ParseLambdaListResult parseLambdaList(final ListStruct lambdaList, final Environment environment, final boolean isLambda) {
+		ListStruct theParsedLambdaList = NullStruct.INSTANCE;
+		ListStruct auxValues = NullStruct.INSTANCE;
+		if (!lambdaList.equals(NullStruct.INSTANCE)) {
+			final PackageSymbolStruct parseOrdinaryLambdaList = GlobalPackageStruct.COMPILER.findSymbol("PARSE-ORDINARY-LAMBDA-LIST");
+
+			final FunctionStruct parseOrdinaryLambdaListFn = parseOrdinaryLambdaList.getSymbolStruct().getFunction();
+			if ((parseOrdinaryLambdaListFn != null) && isLambda) {
+				final ListStruct parsedLambdaListParts = (ListStruct) parseOrdinaryLambdaListFn.apply(lambdaList);
+				theParsedLambdaList = (ListStruct) parsedLambdaListParts.getFirst();
+				auxValues = (ListStruct) parsedLambdaListParts.getElement(1);
+				// Now, use the Compiler function provide-init-form-usage to create code
+				// that follows the declaration section. It is a (possibly nil) set of conditional
+				// assignments that fill in the default forms for missing arguments
+
+				// Add the lambda bindings to the current environment
+				final List<Binding> bindingList = EnvironmentAccessor.getBindingSet(environment);
+				// Now I have to remove any FAKE rest forms. They can't be in the binding set
+//				bindingList.addAll(removeFakeRestEntry(theParsedLambdaList));
+			}
+		}
+
+		return new ParseLambdaListResult(theParsedLambdaList, auxValues);
+	}
+
+	private static ListStruct saLambdaAux(final ListStruct list, final Environment newEnvironment) {
+		//might also need here prev. bindings position num, or even a stack?
+		final int tempPosition = SemanticAnalyzer.bindingsPosition;
+
+		// keep track of the current environment as it is "now"
+		// set the current environment's parent to what was the environment
 		try {
 			dupSetStack.push(SemanticAnalyzer.dupSet);
 			SemanticAnalyzer.dupSet = new IdentityHashMap<>();
@@ -113,20 +200,10 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			// list => (%lambda (lambda-list) (declare ...) ?"...doc..." body...)
 			final SymbolStruct lambdaSym = (SymbolStruct) list.getFirst(); // hang on to %lambda or %macro
 
-			list = list.getRest(); // step over lambda
 			// list -> ((lambda-list) ?(declare ...) ?"...doc..." body...)
 			// get the parameter list
-			ListStruct params = (ListStruct) list.getFirst();
+			ListStruct params = (ListStruct) list.getRest().getFirst();
 			// params -> (lambda-list)
-			list = list.getRest(); // step over the parameter list
-			// list -> (?(declare ...)  ?"...doc..."body...)
-			// handle any declarations and doc string that might be present
-			// returns an updated list with at least one DECLARATION
-			// doc string, if present, is now in a declaration
-			list = saDeclarations(list);
-			// list -> ((declare ...) body...)
-			final ListStruct decls = (ListStruct) list.getFirst();
-			// decls -> (declare ...)
 
 			// Now, see if there is already a parsed lambda list
 			// this would happen when the lambda was generated from a defun
@@ -160,16 +237,21 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 			// classname is a declaration in the declare form
 			// if there isn't one, it makes one up
+
+			// list -> (?(declare ...)  ?"...doc..."body...)
+			// handle any declarations and doc string that might be present
+			// returns an updated list with at least one DECLARATION
+			// doc string, if present, is now in a declaration
+			final ListStruct listWithOrderedDeclarationsAndDocString = saDeclarations(list.getRest().getRest());
+			// list -> ((declare ...) body...)
+			final ListStruct decls = (ListStruct) listWithOrderedDeclarationsAndDocString.getFirst();
+			// decls -> (declare ...)
 			final SymbolStruct classname = saGetClassName(decls);
 
 			// now reconstitute the full lambda form
-			list = new ConsStruct(params, list);
-			list = new ConsStruct(lambdaSym, list);
 			// list => (%lambda (lambda-list) (declare ...) body...)
-			final ListStruct cpy = list;
 
 			// step over the lambda SymbolStruct to work on the params etc
-			list = list.getRest();
 
 			//TODO This section will be replaced with the Lisp parser
 			// the current min for binding is 1 since it's a lambda
@@ -204,7 +286,7 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 						// are evaluated in the right environment. The lambdas are values in a property
 						// list that is keyed by the name of the parameter.
 					}
-					final ListStruct declsOnward = list.getRest();
+					final ListStruct declsOnward = listWithOrderedDeclarationsAndDocString;
 					// ((declare ...) body...)
 					ListStruct afterDecls = declsOnward.getRest();
 					// ((body...))
@@ -263,15 +345,17 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			}
 
 			// list
-			list = list.getRest();
-			final ListStruct listCopy = list;
-			while (!list.equals(NullStruct.INSTANCE)) {
-				list.setElement(1, SemanticAnalyzer.saMainLoop(list.getFirst()));
-				list = list.getRest();
+
+			List<LispStruct> bodyElements = list.getRest().getAsJavaList();
+			List<LispStruct> newBodyElements = new ArrayList<>();
+			for (final LispStruct element : bodyElements) {
+				newBodyElements.add(SemanticAnalyzer.saMainLoop(element));
 			}
 
+			// TODO: now rebuild the list again....
+
 			//set the current environment back to what it was before we hit this method
-			return new ConsStruct(SemanticAnalyzer.environmentStack.peek(), listCopy);
+			return new ConsStruct(SemanticAnalyzer.environmentStack.peek(), list);
 		} finally {
 			SemanticAnalyzer.bindingsPosition = tempPosition;  //???
 			SemanticAnalyzer.environmentStack.pop();

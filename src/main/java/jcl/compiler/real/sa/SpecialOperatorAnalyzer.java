@@ -2,6 +2,31 @@ package jcl.compiler.real.sa;
 
 import jcl.LispStruct;
 import jcl.compiler.old.functions.GensymFunction;
+import jcl.compiler.real.sa.specialoperator.BlockAnalyzer;
+import jcl.compiler.real.sa.specialoperator.CatchAnalyzer;
+import jcl.compiler.real.sa.specialoperator.EvalWhenAnalyzer;
+import jcl.compiler.real.sa.specialoperator.FletAnalyzer;
+import jcl.compiler.real.sa.specialoperator.FunctionAnalyzer;
+import jcl.compiler.real.sa.specialoperator.GoAnalyzer;
+import jcl.compiler.real.sa.specialoperator.IfAnalyzer;
+import jcl.compiler.real.sa.specialoperator.LabelsAnalyzer;
+import jcl.compiler.real.sa.specialoperator.LetAnalyzer;
+import jcl.compiler.real.sa.specialoperator.LetStarAnalyzer;
+import jcl.compiler.real.sa.specialoperator.LoadTimeValueAnalyzer;
+import jcl.compiler.real.sa.specialoperator.LocallyAnalyzer;
+import jcl.compiler.real.sa.specialoperator.MacroletAnalyzer;
+import jcl.compiler.real.sa.specialoperator.MultipleValueCallAnalyzer;
+import jcl.compiler.real.sa.specialoperator.MultipleValueProg1Analyzer;
+import jcl.compiler.real.sa.specialoperator.PrognAnalyzer;
+import jcl.compiler.real.sa.specialoperator.ProgvAnalyzer;
+import jcl.compiler.real.sa.specialoperator.QuoteAnalyzer;
+import jcl.compiler.real.sa.specialoperator.ReturnFromAnalyzer;
+import jcl.compiler.real.sa.specialoperator.SetqAnalyzer;
+import jcl.compiler.real.sa.specialoperator.SymbolMacroletAnalyzer;
+import jcl.compiler.real.sa.specialoperator.TagbodyAnalyzer;
+import jcl.compiler.real.sa.specialoperator.TheAnalyzer;
+import jcl.compiler.real.sa.specialoperator.ThrowAnalyzer;
+import jcl.compiler.real.sa.specialoperator.UnwindProtectAnalyzer;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
 
@@ -17,55 +42,55 @@ public class SpecialOperatorAnalyzer implements Analyzer<LispStruct, ListStruct>
 
 		// Determine the special form and generate its code.
 		if (specialOperator.equals(SpecialOperator.BLOCK)) {
-			result = SemanticAnalyzer.saBlock(input);
+			result = BlockAnalyzer.INSTANCE.analyze(input);
 		} else if (specialOperator.equals(SpecialOperator.CATCH)) {
-			result = SemanticAnalyzer.saCatch(input);
+			result = CatchAnalyzer.INSTANCE.analyze(input);
 		} else if (specialOperator.equals(SpecialOperator.EVAL_WHEN)) {
-			result = SemanticAnalyzer.saEvalWhen(input);
+			result = EvalWhenAnalyzer.INSTANCE.analyze(input);
 		} else if (specialOperator.equals(SpecialOperator.FLET)) {
-			result = SemanticAnalyzer.saFlet(input);
+			result = FletAnalyzer.INSTANCE.analyze(input);
 		} else if (specialOperator.equals(SpecialOperator.FUNCTION)) {
-			result = SemanticAnalyzer.saFunction(input);
+			result = FunctionAnalyzer.INSTANCE.analyze(input);
 		} else if (specialOperator.equals(SpecialOperator.GO)) {
-			result = SemanticAnalyzer.saGo(input);
+			result = GoAnalyzer.INSTANCE.analyze(input);
 		} else if (specialOperator.equals(SpecialOperator.IF)) {
-			result = SemanticAnalyzer.saIf(input);
+			result = IfAnalyzer.INSTANCE.analyze(input);
 		} else if (specialOperator.equals(SpecialOperator.LABELS)) {
-			result = SemanticAnalyzer.saLabels(input);
+			result = LabelsAnalyzer.INSTANCE.analyze(input);
 		} else if (specialOperator.equals(SpecialOperator.LET)) {
-			result = SemanticAnalyzer.saLet(input);
+			result = LetAnalyzer.INSTANCE.analyze(input);
 		} else if (specialOperator.equals(SpecialOperator.LET_STAR)) {
-			result = SemanticAnalyzer.saLetStar(input);
+			result = LetStarAnalyzer.INSTANCE.analyze(input);
 		} else if (specialOperator.equals(SpecialOperator.LOAD_TIME_VALUE)) {
-			result = SemanticAnalyzer.saLoadTimeValue(input, "LOAD_TIME_VALUE_", GensymFunction.funcall(String.valueOf(System.currentTimeMillis()) + '_').toString());
+			result = LoadTimeValueAnalyzer.INSTANCE.analyze(input);
 		} else if (specialOperator.equals(SpecialOperator.LOCALLY)) {
-			result = SemanticAnalyzer.saLocally(input);
+			result = LocallyAnalyzer.INSTANCE.analyze(input);
 		} else if (specialOperator.equals(SpecialOperator.MACROLET)) {
-			result = SemanticAnalyzer.saMacrolet(input);
+			result = MacroletAnalyzer.INSTANCE.analyze(input);
 		} else if (specialOperator.equals(SpecialOperator.MULTIPLE_VALUE_CALL)) {
-			result = SemanticAnalyzer.saMultipleValueCall(input);
+			result = MultipleValueCallAnalyzer.INSTANCE.analyze(input);
 		} else if (specialOperator.equals(SpecialOperator.MULTIPLE_VALUE_PROG1)) {
-			result = SemanticAnalyzer.saMultipleValueProg1(input);
+			result = MultipleValueProg1Analyzer.INSTANCE.analyze(input);
 		} else if (specialOperator.equals(SpecialOperator.PROGN)) {
-			result = SemanticAnalyzer.saProgn(input);
+			result = PrognAnalyzer.INSTANCE.analyze(input);
 		} else if (specialOperator.equals(SpecialOperator.PROGV)) {
-			result = SemanticAnalyzer.saProgv(input);
+			result = ProgvAnalyzer.INSTANCE.analyze(input);
 		} else if (specialOperator.equals(SpecialOperator.QUOTE)) {
-			result = SemanticAnalyzer.saQuote(input, null);
+			result = QuoteAnalyzer.INSTANCE.analyze(input);
 		} else if (specialOperator.equals(SpecialOperator.RETURN_FROM)) {
-			result = SemanticAnalyzer.saReturnFrom(input);
+			result = ReturnFromAnalyzer.INSTANCE.analyze(input);
 		} else if (specialOperator.equals(SpecialOperator.SETQ)) {
-			result = SemanticAnalyzer.saSetq(input);
+			result = SetqAnalyzer.INSTANCE.analyze(input);
 		} else if (specialOperator.equals(SpecialOperator.SYMBOL_MACROLET)) {
-			result = SemanticAnalyzer.saSymbolMacrolet(input);
+			result = SymbolMacroletAnalyzer.INSTANCE.analyze(input);
 		} else if (specialOperator.equals(SpecialOperator.TAGBODY)) {
-			result = SemanticAnalyzer.saTagbody(input);
+			result = TagbodyAnalyzer.INSTANCE.analyze(input);
 		} else if (specialOperator.equals(SpecialOperator.THE)) {
-			result = SemanticAnalyzer.saThe(input);
+			result = TheAnalyzer.INSTANCE.analyze(input);
 		} else if (specialOperator.equals(SpecialOperator.THROW)) {
-			result = SemanticAnalyzer.saThrow(input);
+			result = ThrowAnalyzer.INSTANCE.analyze(input);
 		} else if (specialOperator.equals(SpecialOperator.UNWIND_PROTECT)) {
-			result = SemanticAnalyzer.saUnwindProtect(input);
+			result = UnwindProtectAnalyzer.INSTANCE.analyze(input);
 
 			// Special, Special Operators
 		} else if (specialOperator.equals(SpecialOperator.DECLARE)) {

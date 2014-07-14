@@ -7,6 +7,7 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.FunctionBinding;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.specialoperator.FunctionAnalyzer;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
@@ -64,7 +65,7 @@ public class FunctionMarkerAnalyzer implements Analyzer<LispStruct, ListStruct> 
 						SemanticAnalyzer.currentLispName.pop();
 					} else if (fnApplying != null) {
 						// here we know that the function was compiled and has a munger
-						munger = (FunctionStruct) fnApplying.getClass().getField(SemanticAnalyzer.LAMBDA_ARGLIST_MUNGER_STRING.getAsJavaString()).get(null);
+						munger = (FunctionStruct) fnApplying.getClass().getField(FunctionAnalyzer.LAMBDA_ARGLIST_MUNGER_STRING.getAsJavaString()).get(null);
 					} // else gets the default munger
 					assert munger != null;
 				} catch (final Exception ex) {

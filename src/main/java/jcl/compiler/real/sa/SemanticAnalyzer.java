@@ -2,7 +2,6 @@ package jcl.compiler.real.sa;
 
 import jcl.LispStruct;
 import jcl.arrays.ArrayStruct;
-import jcl.arrays.StringStruct;
 import jcl.arrays.VectorStruct;
 import jcl.characters.CharacterStruct;
 import jcl.compiler.old.EnvironmentAccessor;
@@ -20,7 +19,6 @@ import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.NumberStruct;
-import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
@@ -39,11 +37,6 @@ import java.util.Vector;
 public class SemanticAnalyzer {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SemanticAnalyzer.class);
-
-	public static final SymbolStruct Defmacro = GlobalPackageStruct.COMMON_LISP.findSymbol("DEFMACRO").getSymbolStruct();
-	public static final SymbolStruct COMPILE_TOPLEVEL = KeywordOld.CompileToplevel;
-	public static final SymbolStruct LOAD_TOPLEVEL = KeywordOld.LoadToplevel;
-	public static final StringStruct LAMBDA_ARGLIST_MUNGER_STRING = new StringStruct("LAMBDA_ARGLIST_MUNGER");
 
 	// eval-when processing modes
 	private boolean topLevelMode;

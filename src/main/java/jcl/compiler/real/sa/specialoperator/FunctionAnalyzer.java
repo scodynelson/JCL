@@ -1,6 +1,7 @@
 package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
+import jcl.arrays.StringStruct;
 import jcl.compiler.old.EnvironmentAccessor;
 import jcl.compiler.old.functions.AppendFunction;
 import jcl.compiler.old.functions.AssocFunction;
@@ -43,6 +44,8 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 	private static String nameBreakingRegex = "[^\\p{Alnum}]";
 	private static Pattern nameBreakingPattern = Pattern.compile(nameBreakingRegex);
+
+	public static final StringStruct LAMBDA_ARGLIST_MUNGER_STRING = new StringStruct("LAMBDA_ARGLIST_MUNGER");
 
 	@Override
 	public LispStruct analyze(final ListStruct input) {
@@ -196,7 +199,7 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 						// This has created an unevaluated lambda form. We now
 						// have to stick it into a static field in the current lambda
-						StaticFieldAnalyzer.INSTANCE.analyze(ListStruct.buildProperList(NullStruct.INSTANCE, analyzerFn, SemanticAnalyzer.LAMBDA_ARGLIST_MUNGER_STRING));
+						StaticFieldAnalyzer.INSTANCE.analyze(ListStruct.buildProperList(NullStruct.INSTANCE, analyzerFn, LAMBDA_ARGLIST_MUNGER_STRING));
 						// this static field holds lambdas that provide init values. The lambdas
 						// are evaluated in the right environment. The lambdas are values in a property
 						// list that is keyed by the name of the parameter.

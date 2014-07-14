@@ -60,7 +60,7 @@ public class SemanticAnalyzer {
 	public static Stack<SymbolStruct> blockStack;
 	public static Stack<Map<LispStruct, SymbolStruct<?>>> tagbodyStack;
 	public static int iTagbodyCounter;
-	private static Vector<SymbolStruct> undefinedFunctions;
+	public static Vector<SymbolStruct> undefinedFunctions;
 	public static Stack<ListStruct> currentParsedLambdaList;
 	public static Stack<SymbolStruct> currentLispName;
 	public static Stack<IdentityHashMap<LispStruct, LispStruct>> dupSetStack;
@@ -320,76 +320,6 @@ public class SemanticAnalyzer {
 				}
 			};
 
-	public static ListStruct saFunctionCall(ListStruct list) {
-		ListStruct cpy = list;
-		// check to see if there's a function binding in existence
-		if (list.getFirst() instanceof SymbolStruct) {
-			SymbolStruct fnName = (SymbolStruct) list.getFirst();
-			//TODO make this active only during compiling, not during eval during compile-file
-			// handle messaging the argument list according to the lambda list
-			// if the car of the function is a special marker, drop the marker
-			if (fnName.equals(SpecialOperator.FUNCTION_MARKER)) {
-				// drop the marker
-				list = list.getRest();
-				cpy = list;
-			} else { // not already munged
-				final Environment fnBinding = EnvironmentAccessor.getBindingEnvironment(environmentStack.peek(), fnName, false);
-				if (!fnBinding.equals(Environment.NULL)) {
-					// use assoc to get bindings
-					final FunctionBinding fooBinding = (FunctionBinding) fnBinding.getBinding(fnName);
-					// see if this is a LABELS or FLET. That changes fnName
-					fnName = fooBinding.getName();
-					list.setElement(1, fnName);
-					currentLispName.push(fnName);
-					return saFunctionCall(list);
-				}
-				final ListStruct args = list.getRest();
-				final FunctionStruct fnApplying = fnName.getFunction(); // (fnApplying ....)
-				if ((fnApplying == null) && undefinedFunctions.contains(fnName)) {
-					// add this as a possible undefined function
-					undefinedFunctions.add(fnName);
-				}
-				// NOW - whew...
-				// Get the application munger for this function
-				// If there is a function, get the munger from the function.
-				// If not, use the default one that comes with the FunctionBaseClass
-				FunctionStruct munger = LAMBDA_ARGLIST_MUNGER;
-				try {
-					if ((fnApplying == null) && currentLispName.peek().equals(fnName)) {
-						// the function is not known at this point but
-						// this is a recursive call and there will be a munger already created
-						final ListStruct inProcessMunger = AssocFunction.funcall(fnName, currentArgMunger);
-						if (!inProcessMunger.equals(NullStruct.INSTANCE)) {
-							munger = (FunctionStruct) ((ConsStruct) inProcessMunger).getCdr();
-						}
-						currentLispName.pop();
-					} else if (fnApplying != null) {
-						// here we know that the function was compiled and has a munger
-						munger = (FunctionStruct) fnApplying.getClass().getField(LAMBDA_ARGLIST_MUNGER_STRING.getAsJavaString()).get(null);
-					} // else gets the default munger
-					assert munger != null;
-				} catch (final Exception ex) {
-					throw new RuntimeException(
-							"Unable to get munging function from fn " + fnApplying, ex);
-				}
-				list = (ListStruct) munger.apply(list.getRest(), list.getFirst());
-				return (ListStruct) saMainLoop(list);
-			}
-		}
-		list = list.getRest();
-		while (!list.equals(NullStruct.INSTANCE)) {
-			list.setElement(1, saMainLoop(list.getFirst()));
-			list = list.getRest();
-		}
-		// Now it's possible that this is a recursive call to the current function
-		// if so, it has to tagged as such to the icg
-
-		if (cpy.getFirst().equals(currentLispName.peek())) {
-			cpy = new ConsStruct(SpecialOperator.TAIL_RECURSION, cpy);
-		}
-		return cpy;
-	}
-
 	// insert from LinL?
 
 	/**
@@ -496,33 +426,6 @@ public class SemanticAnalyzer {
 
 	public static ListStruct findDeclaration(final SymbolStruct item, final ListStruct list) {
 		return AssocFunction.funcall(item, list);
-	}
-
-	public static ListStruct saDefstruct(final ListStruct list) {
-		return list;
-	}
-
-
-	public static ListStruct saStaticField(ListStruct list) {
-		// 2 args -  the form to eval at class initialization and the name of the field
-		list = list.getRest();
-		final String fldName = list.getRest().getFirst().toString();
-		final LispStruct form = list.getFirst();
-		if (form instanceof ListStruct) {
-			ListStruct listForm = (ListStruct) form;
-			if (listForm.getFirst().equals(SpecialOperator.QUOTE)) {
-				((ConsStruct) list).setCdr(QuoteAnalyzer.INSTANCE.analyze(listForm, fldName));
-			} else if (!listForm.getFirst().equals(SpecialOperator.LOAD_TIME_VALUE)) {
-				listForm = ListStruct.buildProperList(SpecialOperator.LOAD_TIME_VALUE, form);
-				((ConsStruct) list).setCdr(LoadTimeValueAnalyzer.INSTANCE.analyze(listForm, fldName));
-			} else {
-				((ConsStruct) list).setCdr(LoadTimeValueAnalyzer.INSTANCE.analyze(listForm, fldName));
-			}
-		} else {
-			final ListStruct listForm = ListStruct.buildProperList(SpecialOperator.LOAD_TIME_VALUE, form);
-			((ConsStruct) list).setCdr(LoadTimeValueAnalyzer.INSTANCE.analyze(listForm, fldName));
-		}
-		return NullStruct.INSTANCE; // we've done what we need to do, the form needs to be dropped
 	}
 
 	// New helper function. It takes a parsedLambdaList and removes a FakeRest used for setting up the lambda

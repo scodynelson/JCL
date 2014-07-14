@@ -26,6 +26,9 @@ import jcl.compiler.real.sa.specialoperator.TagbodyAnalyzer;
 import jcl.compiler.real.sa.specialoperator.TheAnalyzer;
 import jcl.compiler.real.sa.specialoperator.ThrowAnalyzer;
 import jcl.compiler.real.sa.specialoperator.UnwindProtectAnalyzer;
+import jcl.compiler.real.sa.specialoperator.compiler.DefstructAnalyzer;
+import jcl.compiler.real.sa.specialoperator.compiler.FunctionMarkerAnalyzer;
+import jcl.compiler.real.sa.specialoperator.compiler.StaticFieldAnalyzer;
 import jcl.compiler.real.sa.specialoperator.special.DeclareAnalyzer;
 import jcl.compiler.real.sa.specialoperator.special.LambdaAnalyzer;
 import jcl.compiler.real.sa.specialoperator.special.MacroLambdaAnalyzer;
@@ -71,26 +74,21 @@ public class SpecialOperatorAnalyzer implements Analyzer<LispStruct, ListStruct>
 		STRATEGIES.put(SpecialOperator.DECLARE, DeclareAnalyzer.INSTANCE);
 		STRATEGIES.put(SpecialOperator.LAMBDA, LambdaAnalyzer.INSTANCE);
 		STRATEGIES.put(SpecialOperator.MACRO_LAMBDA, MacroLambdaAnalyzer.INSTANCE);
+
+		STRATEGIES.put(SpecialOperator.DEFSTRUCT, DefstructAnalyzer.INSTANCE);
+		STRATEGIES.put(SpecialOperator.FUNCTION_MARKER, FunctionMarkerAnalyzer.INSTANCE);
+		STRATEGIES.put(SpecialOperator.STATIC_FIELD, StaticFieldAnalyzer.INSTANCE);
 	}
 
 	@Override
 	public LispStruct analyze(final ListStruct input) {
 
 		final SpecialOperator specialOperator = (SpecialOperator) input.getFirst();
-		LispStruct result = null;
 
 		final Analyzer<LispStruct, ListStruct> strategy = STRATEGIES.get(specialOperator);
-		if (strategy != null) {
-			result = strategy.analyze(input);
-
-			// Compiler, Special Operators
-		} else if (specialOperator.equals(SpecialOperator.DEFSTRUCT)) {
-			result = SemanticAnalyzer.saDefstruct(input);
-		} else if (specialOperator.equals(SpecialOperator.FUNCTION_MARKER)) {
-			result = SemanticAnalyzer.saFunctionCall(input);
-		} else if (specialOperator.equals(SpecialOperator.STATIC_FIELD)) {
-			result = SemanticAnalyzer.saStaticField(input);
+		if (strategy == null) {
+			throw new RuntimeException("SpecialOperator symbol supplied is not supported.");
 		}
-		return result;
+		return strategy.analyze(input);
 	}
 }

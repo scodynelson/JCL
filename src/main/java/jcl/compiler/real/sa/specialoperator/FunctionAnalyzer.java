@@ -11,6 +11,7 @@ import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.SymbolStructAnalyzer;
+import jcl.compiler.real.sa.specialoperator.compiler.StaticFieldAnalyzer;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
@@ -179,7 +180,7 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 						// This has created an unevaluated lambda form. We now
 						// have to stick it into a static field in the current lambda
-						SemanticAnalyzer.saStaticField(ListStruct.buildProperList(NullStruct.INSTANCE, analyzerFn, SemanticAnalyzer.LAMBDA_ARGLIST_MUNGER_STRING));
+						StaticFieldAnalyzer.INSTANCE.analyze(ListStruct.buildProperList(NullStruct.INSTANCE, analyzerFn, SemanticAnalyzer.LAMBDA_ARGLIST_MUNGER_STRING));
 						// this static field holds lambdas that provide init values. The lambdas
 						// are evaluated in the right environment. The lambdas are values in a property
 						// list that is keyed by the name of the parameter.

@@ -22,7 +22,7 @@ public class ReturnFromAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			throw new RuntimeException("ReturnFrom with invalid label: " + input);
 		}
 
-		if (SemanticAnalyzer.blockStack.search(second) == -1) {
+		if (BlockAnalyzer.blockStack.search(second) == -1) {
 			throw new RuntimeException("No block labeled " + second + " is currently visible.");
 		}
 

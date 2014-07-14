@@ -8,10 +8,13 @@ import jcl.symbols.SymbolStruct;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class BlockAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 	public static final BlockAnalyzer INSTANCE = new BlockAnalyzer();
+
+	public static Stack<SymbolStruct> blockStack;
 
 	@Override
 	public LispStruct analyze(final ListStruct input) {
@@ -22,7 +25,7 @@ public class BlockAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		}
 
 		final SymbolStruct<?> label = (SymbolStruct) second;
-		SemanticAnalyzer.blockStack.push(label);
+		blockStack.push(label);
 
 		final ListStruct listAfterBlock = input.getRest();
 		final ListStruct prognResults = (ListStruct) PrognAnalyzer.INSTANCE.analyze(listAfterBlock);
@@ -35,7 +38,7 @@ public class BlockAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		blockAnalysisList.add(second);
 		blockAnalysisList.addAll(javaPrognResults);
 
-		SemanticAnalyzer.blockStack.pop();
+		blockStack.pop();
 		return ListStruct.buildProperList(blockAnalysisList);
 	}
 }

@@ -13,10 +13,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 public class TagbodyAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 	public static final TagbodyAnalyzer INSTANCE = new TagbodyAnalyzer();
+
+	public static Stack<Map<LispStruct, SymbolStruct<?>>> tagbodyStack;
+	public static int iTagbodyCounter;
 
 	@Override
 	public LispStruct analyze(final ListStruct input) {
@@ -25,7 +29,7 @@ public class TagbodyAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		final List<LispStruct> bodyJavaList = body.getAsJavaList();
 		final Map<LispStruct, SymbolStruct<?>> currentTagMap = readTagbodyLabels(bodyJavaList);
 
-		SemanticAnalyzer.tagbodyStack.push(currentTagMap);
+		tagbodyStack.push(currentTagMap);
 
 		final List<LispStruct> newBodyJavaList = new ArrayList<>();
 
@@ -40,7 +44,7 @@ public class TagbodyAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		}
 
 		// Pop the tag stack for this TAGBODY from the global stack.
-		SemanticAnalyzer.tagbodyStack.pop();
+		tagbodyStack.pop();
 
 		final List<LispStruct> tagbodyResult = new ArrayList<>();
 		tagbodyResult.add(SpecialOperator.TAGBODY);
@@ -58,8 +62,8 @@ public class TagbodyAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		for (final LispStruct current : list) {
 			if ((current instanceof SymbolStruct) || (current instanceof NumberStruct)) {
 				// Insert the tag and its new SymbolStruct into the stack.
-				final SymbolStruct<?> newSym = new SymbolStruct("Tagbody" + SemanticAnalyzer.iTagbodyCounter);
-				SemanticAnalyzer.iTagbodyCounter++;
+				final SymbolStruct<?> newSym = new SymbolStruct("Tagbody" + iTagbodyCounter);
+				iTagbodyCounter++;
 				currentTagMap.put(current, newSym);
 			}
 		}

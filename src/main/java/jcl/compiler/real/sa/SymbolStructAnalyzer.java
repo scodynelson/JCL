@@ -5,7 +5,7 @@ import jcl.symbols.SymbolStruct;
 
 public class SymbolStructAnalyzer implements Analyzer<SymbolStruct<?>, SymbolStruct<?>> {
 
-	public static final Analyzer<SymbolStruct<?>, SymbolStruct<?>> INSTANCE = new SymbolStructAnalyzer();
+	public static final SymbolStructAnalyzer INSTANCE = new SymbolStructAnalyzer();
 
 	@Override
 	public SymbolStruct<?> analyze(final SymbolStruct input) {

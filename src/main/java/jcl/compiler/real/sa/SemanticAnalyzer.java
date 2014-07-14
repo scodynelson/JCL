@@ -9,18 +9,11 @@ import jcl.compiler.old.EnvironmentAccessor;
 import jcl.compiler.old.WrapInLambda;
 import jcl.compiler.old.functions.AppendFunction;
 import jcl.compiler.old.functions.AssocFunction;
-import jcl.compiler.old.functions.CompileFunction;
 import jcl.compiler.old.functions.GensymFunction;
 import jcl.compiler.old.functions.GetPlist;
-import jcl.compiler.old.functions.MacroExpandFunction;
-import jcl.compiler.old.functions.MacroExpandReturn;
-import jcl.compiler.old.functions.NReverseFunction;
-import jcl.compiler.old.functions.XCopyTreeFunction;
 import jcl.compiler.old.symbol.KeywordOld;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.FunctionBinding;
-import jcl.compiler.real.environment.Marker;
-import jcl.compiler.real.sa.specialoperator.FunctionAnalyzer;
 import jcl.compiler.real.sa.specialoperator.LoadTimeValueAnalyzer;
 import jcl.compiler.real.sa.specialoperator.QuoteAnalyzer;
 import jcl.functions.FunctionStruct;
@@ -30,13 +23,10 @@ import jcl.lists.NullStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.NumberStruct;
 import jcl.packages.GlobalPackageStruct;
-import jcl.packages.PackageSymbolStruct;
 import jcl.symbols.Declaration;
 import jcl.symbols.KeywordSymbolStruct;
-import jcl.symbols.NILStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
-import jcl.symbols.TStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,27 +48,27 @@ public class SemanticAnalyzer {
 	public static final SymbolStruct Defmacro = GlobalPackageStruct.COMMON_LISP.findSymbol("DEFMACRO").getSymbolStruct();
 	public static final SymbolStruct COMPILE_TOPLEVEL = KeywordOld.CompileToplevel;
 	public static final SymbolStruct LOAD_TOPLEVEL = KeywordOld.LoadToplevel;
-	private static final StringStruct LAMBDA_ARGLIST_MUNGER_STRING = new StringStruct("LAMBDA_ARGLIST_MUNGER");
+	public static final StringStruct LAMBDA_ARGLIST_MUNGER_STRING = new StringStruct("LAMBDA_ARGLIST_MUNGER");
 
 	// eval-when processing modes
 	private boolean topLevelMode;
 
 	static String nameBreakingRegex = "[^\\p{Alnum}]";
 	static Pattern nameBreakingPattern = Pattern.compile(nameBreakingRegex);
-	private static ListStruct bindings;
+	public static ListStruct bindings;
 	public static Stack<Environment> environmentStack;
 	public static Stack<SymbolStruct> blockStack;
 	public static Stack<Map<LispStruct, SymbolStruct<?>>> tagbodyStack;
 	public static int iTagbodyCounter;
 	private static Vector<SymbolStruct> undefinedFunctions;
-	private static Stack<ListStruct> currentParsedLambdaList;
-	private static Stack<SymbolStruct> currentLispName;
-	private static Stack<IdentityHashMap<LispStruct, LispStruct>> dupSetStack;
+	public static Stack<ListStruct> currentParsedLambdaList;
+	public static Stack<SymbolStruct> currentLispName;
+	public static Stack<IdentityHashMap<LispStruct, LispStruct>> dupSetStack;
 	public static IdentityHashMap<LispStruct, LispStruct> dupSet = null;
 	public static int bindingsPosition;
 	// and association of function names seen and their arglist munging
 	// used to handle recursive functions
-	private static ListStruct currentArgMunger = NullStruct.INSTANCE;
+	public static ListStruct currentArgMunger = NullStruct.INSTANCE;
 
 	private void initialize() {
 		//create the global environment
@@ -150,9 +140,9 @@ public class SemanticAnalyzer {
 		} else if (form instanceof ListStruct) {
 			form = ListStructAnalyzer.INSTANCE.analyze((ListStruct) form);
 		} else if (form instanceof VectorStruct) {
-			form = saVectorImpl((VectorStruct) form);
+			form = VectorStructAnalyzer.INSTANCE.analyze((VectorStruct) form);
 		} else if (form instanceof ArrayStruct) {
-			form = saSimpleArray((ArrayStruct) form);
+			form = ArrayStructAnalyzer.INSTANCE.analyze((ArrayStruct) form);
 		} else {
 			LOGGER.warn("SA: Found thing I can't semantically analyze: {}, class: {}", form, form.getClass().getName());
 		}
@@ -164,142 +154,6 @@ public class SemanticAnalyzer {
 	 * Analyzers
 	 *********************************************************
 	 */
-
-	private static LispStruct saVectorImpl(final VectorStruct formVector) {
-
-		ListStruct formList = NullStruct.INSTANCE;
-		for (int i = 0; i < formVector.getTotalSize(); i++) {
-			formList = new ConsStruct(formVector.getElementAt(i), formList);
-		}
-		formList = NReverseFunction.funcall(formList);
-
-		final LispStruct adjustableBoolean;
-		if (formVector.isAdjustable()) {
-			adjustableBoolean = TStruct.INSTANCE;
-		} else {
-			adjustableBoolean = NILStruct.INSTANCE;
-		}
-
-		// (system::%make-array)
-		ListStruct functionMakeArray = ListStruct.buildProperList(new SymbolStruct("%MAKE-ARRAY", GlobalPackageStruct.SYSTEM));
-		// (function system::%make-array)
-		functionMakeArray = new ConsStruct(SpecialOperator.FUNCTION, functionMakeArray);
-
-		// ()
-		ListStruct finalList = NullStruct.INSTANCE;
-		// (fillPointerIndex)
-		if (formVector.getFillPointer() != null) {
-			finalList = new ConsStruct(new IntegerStruct(BigInteger.valueOf(formVector.getFillPointer())), finalList);
-		}
-		// ((formList) fillPointerIndex)
-		finalList = new ConsStruct(adjustableBoolean, finalList);
-		// ((formList))
-		finalList = new ConsStruct(formList, finalList);
-		// (nil (formList))
-		finalList = new ConsStruct(NILStruct.INSTANCE, finalList);
-		// (t nil (formList))
-		finalList = new ConsStruct(TStruct.INSTANCE, finalList);
-		// (((dimensions) t nil (formList)))
-		finalList = ListStruct.buildProperList(new ConsStruct(ListStruct.buildProperList(formVector.getDimensions()), finalList));
-		// ((quote ((dimensions) t nil (formList))))
-		finalList = ListStruct.buildProperList(new ConsStruct(SpecialOperator.QUOTE, finalList));
-		// ((function system::%make-array) (quote ((dimensions) t nil (formList))))
-		finalList = new ConsStruct(functionMakeArray, finalList);
-		// ((apply (function system::%make-array) (quote ((dimensions) t nil (formList)))))
-		finalList = ListStruct.buildProperList(new ConsStruct(GlobalPackageStruct.COMMON_LISP.findSymbol("APPLY").getSymbolStruct(), finalList));
-		final ListStruct ltvList = new ConsStruct(SpecialOperator.LOAD_TIME_VALUE, finalList);
-		return saMainLoop(ltvList);
-	}
-
-	// ********** START OF saSimpleArray() TRANSLATOR ********** //
-	public static ListStruct saSimpleArray(final ArrayStruct formArray) {
-		final ListStruct formList = createSimpleArrayInitialContentsList(formArray);
-
-		// (system::%make-array)
-		ListStruct functionMakeArray = ListStruct.buildProperList(new SymbolStruct("%MAKE-ARRAY", GlobalPackageStruct.SYSTEM));
-		// (function system::%make-array)
-		functionMakeArray = new ConsStruct(SpecialOperator.FUNCTION, functionMakeArray);
-
-		// ((formList))
-		ListStruct finalList = ListStruct.buildProperList(formList);
-		// (nil (formList))
-		finalList = new ConsStruct(NILStruct.INSTANCE, finalList);
-		// (t nil (formList))
-		finalList = new ConsStruct(TStruct.INSTANCE, finalList);
-		// (((dimensions) t nil (formList)))
-		if (formArray.getRank() == 0) {
-			finalList = ListStruct.buildProperList(new ConsStruct(NullStruct.INSTANCE, finalList));
-		} else {
-			finalList = ListStruct.buildProperList(new ConsStruct(ListStruct.buildProperList(formArray.getDimensions()), finalList));
-		}
-		// ((quote ((dimensions) t nil (formList))))
-		finalList = ListStruct.buildProperList(new ConsStruct(SpecialOperator.QUOTE, finalList));
-		// ((function system::%make-array) (quote ((dimensions) t nil (formList))))
-		finalList = new ConsStruct(functionMakeArray, finalList);
-		// ((apply (function system::%make-array) (quote ((dimensions) t nil (formList)))))
-		finalList = ListStruct.buildProperList(new ConsStruct(GlobalPackageStruct.COMMON_LISP.findSymbol("APPLY").getSymbolStruct(), finalList));
-		final ListStruct ltvList = new ConsStruct(SpecialOperator.LOAD_TIME_VALUE, finalList);
-		return (ListStruct) saMainLoop(ltvList);
-	}
-
-	private static ListStruct createSimpleArrayInitialContentsList(final ArrayStruct formArray) {
-		ListStruct formList = NullStruct.INSTANCE;
-
-		for (int i = 0; i < formArray.getTotalSize(); i++) {
-			formList = new ConsStruct(formArray.getElementAt(i), formList);
-		}
-		formList = NReverseFunction.funcall(formList);
-		if ((formArray.getRank() > 1) && !formList.equals(NullStruct.INSTANCE)) {
-			formList = initialContentsBuilder(formList, ListStruct.buildProperList(formArray.getDimensions()));
-		}
-		return formList;
-	}
-
-	private static ListStruct initialContentsBuilder(ListStruct formList, final ListStruct dimensionsList) {
-		ListStruct newList = NullStruct.INSTANCE;
-
-		if (dimensionsList.size() > 1) {
-			for (int i = 0; i < ((IntegerStruct) dimensionsList.getFirst()).getBigInteger().intValue(); i++) {
-				newList = new ConsStruct(initialContentsBuilder(subListFinder(formList, dimensionsList.getRest()), dimensionsList.getRest()), newList);
-				formList = reduceListSize(formList, dimensionsList.getRest());
-			}
-			newList = NReverseFunction.funcall(newList);
-		} else {
-			newList = formList;
-		}
-		return newList;
-	}
-
-	private static ListStruct subListFinder(ListStruct formList, final ListStruct dimensionsList) {
-		ListStruct newList = NullStruct.INSTANCE;
-
-		int sizeOfSubList = 1;
-		final Object[] dimensionsAsArray = dimensionsList.getAsJavaList().toArray();
-		for (int i = 0; i < dimensionsList.size(); i++) {
-			sizeOfSubList = sizeOfSubList * ((IntegerStruct) dimensionsAsArray[i]).getBigInteger().intValue();
-		}
-		for (int j = 0; j < sizeOfSubList; j++) {
-			newList = new ConsStruct(formList.getFirst(), newList);
-			formList = formList.getRest();
-		}
-
-		return NReverseFunction.funcall(newList);
-	}
-
-	private static ListStruct reduceListSize(ListStruct formList, final ListStruct dimensionsList) {
-
-		int amountToReduce = 1;
-		final Object[] dimensionsAsArray = dimensionsList.getAsJavaList().toArray();
-		for (int i = 0; i < dimensionsList.size(); i++) {
-			amountToReduce *= ((IntegerStruct) dimensionsAsArray[i]).getBigInteger().intValue();
-		}
-		for (int j = 0; j < amountToReduce; j++) {
-			formList = formList.getRest();
-		}
-
-		return formList;
-	}
-	// ********** END OF saSimpleArray() TRANSLATOR ********** //
 
 	/*
 	 *********************************************************
@@ -550,7 +404,7 @@ public class SemanticAnalyzer {
 	 * If there is nothing after the string, then the string is the form
 	 * Not the doc string
 	 */
-	private static ListStruct saDeclarations(ListStruct list) {
+	public static ListStruct saDeclarations(ListStruct list) {
 		// list is the rest of the forms after the arg list
 		ListStruct newDecls = NullStruct.INSTANCE;   //the list of all new Declarations
 		final ListStruct returnList = list;
@@ -640,114 +494,8 @@ public class SemanticAnalyzer {
 		return result.toString();
 	}
 
-	private static ListStruct findDeclaration(final SymbolStruct item, final ListStruct list) {
+	public static ListStruct findDeclaration(final SymbolStruct item, final ListStruct list) {
 		return AssocFunction.funcall(item, list);
-	}
-
-	public static ListStruct saDeclare(final ListStruct list) {
-		SymbolStruct sym;
-
-		// there may not be any declarations
-		if (list.getRest().equals(NullStruct.INSTANCE)) {
-			return NullStruct.INSTANCE;
-		}
-
-		final List<LispStruct> javaRestList = list.getRest().getAsJavaList();
-		for (final LispStruct nextDecl : javaRestList) {
-			final ListStruct declarationSpec = (ListStruct) nextDecl;
-			final Object declIdentifier = declarationSpec.getFirst();
-			final ListStruct declList = declarationSpec.getRest();
-
-			// now come the various cases
-			if (declIdentifier.equals(Declaration.LISP_NAME)) {
-				saLispNameDeclaration(declList);
-			} else if (declIdentifier.equals(Declaration.JAVA_CLASS_NAME)) {
-				saJavaNameDeclaration(declList);
-			} else if (declIdentifier.equals(Declaration.NO_GENERATE_ANALYZER)) {
-				saNoGenerateAnalyzerDeclaration(declList);
-			} else if (declIdentifier.equals(Declaration.PARSED_LAMBDA_LIST)) {
-				saParsedLambdaListDeclaration(declList);
-			} else if (declIdentifier.equals(Declaration.DOCUMENTATION)) {
-				saDocumentationDeclaration(declList);
-			} else if (declIdentifier.equals(Declaration.SOURCE_FILE)) {
-				saSourceFileDeclaration(declList);
-			} else if (declIdentifier.equals(Declaration.DECLARATION)) {
-				//we don't do anything here yet
-			} else if (declIdentifier.equals(Declaration.DYNAMIC_EXTENT)) {
-				//we don't do anything here yet
-			} else if (declIdentifier.equals(Declaration.FTYPE)) {
-				//we don't do anything here yet
-			} else if (declIdentifier.equals(Declaration.IGNORABLE)) {
-				//we don't do anything here yet
-			} else if (declIdentifier.equals(Declaration.IGNORE)) {
-				//we don't do anything here yet
-			} else if (declIdentifier.equals(Declaration.INLINE)) {
-				//we don't do anything here yet
-			} else if (declIdentifier.equals(Declaration.NOTINLINE)) {
-				//we don't do anything here yet
-			} else if (declIdentifier.equals(Declaration.OPTIMIZE)) {
-				//we don't do anything here yet
-			} else if (declIdentifier.equals(Declaration.SPECIAL)) {
-				saSpecialDeclaration(declList);
-			} else if (declIdentifier.equals(Declaration.TYPE)) {
-				//we don't do anything here yet
-			} else if (declIdentifier.equals(NullStruct.INSTANCE)) {
-				//drop it on the floor
-			} else {
-				LOGGER.warn("DECLARE: unknown specifier: {}", declIdentifier);
-			}
-		}
-		return list;
-	}
-
-	/**
-	 * Handles the declaration of the Lisp name (SymbolStruct) of the function
-	 */
-	private static void saLispNameDeclaration(final ListStruct declarationList) {
-	}
-
-	/**
-	 * Handles the declaration of the name of the Java class (SymbolStruct) of the function
-	 */
-	private static void saJavaNameDeclaration(final ListStruct declarationList) {
-	}
-
-	/**
-	 * Handles the declaration of the name of the Java class (SymbolStruct) of the function
-	 */
-	private static void saNoGenerateAnalyzerDeclaration(final ListStruct declarationList) {
-	}
-
-	/**
-	 * Handles the declaration of the parsed lambda list of the function
-	 */
-	private static void saParsedLambdaListDeclaration(final ListStruct declarationList) {
-	}
-
-	/**
-	 * Handles the declaration of the name of the Java class (SymbolStruct) of the function
-	 */
-	private static void saDocumentationDeclaration(final ListStruct declarationList) {
-	}
-
-	private static void saSourceFileDeclaration(final ListStruct declarationList) {
-	}
-
-	/**
-	 * handle the components of a Special declaration
-	 */
-	private static void saSpecialDeclaration(final ListStruct declarations) {
-		final List<LispStruct> declaractionsJavaList = declarations.getAsJavaList();
-		SymbolStruct sym = null;
-		// Special declaration can apply to multiple SymbolStructs
-		for (final LispStruct nextDecl : declaractionsJavaList) {
-			try {
-				sym = (SymbolStruct) nextDecl;
-				SymbolStructAnalyzer.INSTANCE.analyze(sym);
-			} catch (final ClassCastException ccExcption) {
-				LOGGER.error("DECLARE: a non-SymbolStruct entity cannot be made SPECIAL: {}", sym);
-			}
-		}
 	}
 
 	public static ListStruct saDefstruct(final ListStruct list) {
@@ -777,20 +525,9 @@ public class SemanticAnalyzer {
 		return NullStruct.INSTANCE; // we've done what we need to do, the form needs to be dropped
 	}
 
-	public static ListStruct saMacroLambda(final ListStruct list) {
-		// if there is the new macro parser, use it
-		// if not, do the original bootstrap
-		if (false) {
-			// call the macro parser and set up the updated list
-			return (ListStruct) saMainLoop(list);
-		} else {
-			return saLambda(list);
-		}
-	}
-
 	// New helper function. It takes a parsedLambdaList and removes a FakeRest used for setting up the lambda
 	// list for function application
-	private static ListStruct removeFakeRestEntry(final ListStruct parsedLambdaList) {
+	public static ListStruct removeFakeRestEntry(final ListStruct parsedLambdaList) {
 		// Only do nothing unless the parsedLambdaList has a FakeRest
 		ListStruct thePLL = parsedLambdaList;
 		final SymbolStruct fakeRestSymbolStruct = GlobalPackageStruct.COMPILER.findSymbol(
@@ -871,216 +608,7 @@ public class SemanticAnalyzer {
 		return paramsToAdjust;
 	}
 
-	public static ListStruct saLambda(final ListStruct list) {
-		// macroexpand the LAMBDA form, by default makes it (FUNCTION (LAMBDA... ))
-		final MacroExpandReturn macroExpandReturn = MacroExpandFunction.FUNCTION.funcall(list);
-		// now it has the right form, now handle it to saFunction
-
-		ListStruct functionToAnalyze = (ListStruct) macroExpandReturn.getExpandedForm();
-		if (!macroExpandReturn.wasExpanded()) {
-			final ListStruct inter = ListStruct.buildProperList(functionToAnalyze);
-			functionToAnalyze = new ConsStruct(SpecialOperator.FUNCTION, inter);
-		}
-		return (ListStruct) FunctionAnalyzer.INSTANCE.analyze(functionToAnalyze);
-	}
-
-	public static ListStruct saLambdaAux(ListStruct list) {
-		if (list.size() < 2) {
-			throw new RuntimeException("Incorrectly formed lambda expression, size: " + list.size());
-		}
-
-		//might also need here prev. bindings position num, or even a stack?
-		final int tempPosition = bindingsPosition;
-		final Environment parentEnvironment = environmentStack.peek();
-
-		// keep track of the current environment as it is "now"
-		final Environment newEnvironment;
-		// make a new environment and set it to "current"
-		final SymbolStruct operator = (SymbolStruct) list.getFirst();
-		if (operator.equals(SpecialOperator.MACRO_LAMBDA)) {
-			newEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.MACRO);
-		} else {
-			newEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.LAMBDA);
-		}
-		// set the current environment's parent to what was the environment
-		environmentStack.push(EnvironmentAccessor.createParent(newEnvironment, parentEnvironment));
-		try {
-			dupSetStack.push(dupSet);
-			dupSet = new IdentityHashMap<>();
-
-			// list => (%lambda (lambda-list) (declare ...) ?"...doc..." body...)
-			final SymbolStruct lambdaSym = (SymbolStruct) list.getFirst(); // hang on to %lambda or %macro
-
-			list = list.getRest(); // step over lambda
-			// list -> ((lambda-list) ?(declare ...) ?"...doc..." body...)
-			// get the parameter list
-			ListStruct params = (ListStruct) list.getFirst();
-			// params -> (lambda-list)
-			list = list.getRest(); // step over the parameter list
-			// list -> (?(declare ...)  ?"...doc..."body...)
-			// handle any declarations and doc string that might be present
-			// returns an updated list with at least one DECLARATION
-			// doc string, if present, is now in a declaration
-			list = saDeclarations(list);
-			// list -> ((declare ...) body...)
-			final ListStruct decls = (ListStruct) list.getFirst();
-			// decls -> (declare ...)
-
-			// Now, see if there is already a parsed lambda list
-			// this would happen when the lambda was generated from a defun
-			ListStruct theParsedLambdaList = NullStruct.INSTANCE;
-			ListStruct auxValues = null;
-			if (!params.equals(NullStruct.INSTANCE)) {
-				if (theParsedLambdaList.equals(NullStruct.INSTANCE)) {
-					final PackageSymbolStruct pOLL = GlobalPackageStruct.COMPILER.findSymbol("PARSE-ORDINARY-LAMBDA-LIST");
-					FunctionStruct parseOrdinaryLambdaListFn = null;
-					if (pOLL.getPackageSymbolType() != null) {
-						parseOrdinaryLambdaListFn = pOLL.getSymbolStruct().getFunction();
-					}
-					if ((parseOrdinaryLambdaListFn != null) && // the Lisp code is loaded
-							lambdaSym.equals(SpecialOperator.LAMBDA)) { // it's a lambda not a macro
-						final ListStruct parsedLambdaListParts = (ListStruct) parseOrdinaryLambdaListFn.apply(params);
-						theParsedLambdaList = (ListStruct) parsedLambdaListParts.getFirst();
-						auxValues = (ListStruct) parsedLambdaListParts.getElement(1);
-						// Now, use the Compiler function provide-init-form-usage to create code
-						// that follows the declaration section. It is a (possibly nil) set of conditional
-						// assignments that fill in the default forms for missing arguments
-
-						// Add the lambda bindings to the current environment
-						final ConsStruct bindingList = (ConsStruct) EnvironmentAccessor.getBindingSet(newEnvironment);
-						// Now I have to remove any FAKE rest forms. They can't be in the binding set
-						bindingList.setCdr(removeFakeRestEntry(theParsedLambdaList));
-					}
-				}
-			}
-			// temporary hack to handle tail-called functions here
-			currentParsedLambdaList.push(theParsedLambdaList);
-
-			// classname is a declaration in the declare form
-			// if there isn't one, it makes one up
-			final SymbolStruct classname = saGetClassName(decls);
-
-			// now reconstitute the full lambda form
-			list = new ConsStruct(params, list);
-			list = new ConsStruct(lambdaSym, list);
-			// list => (%lambda (lambda-list) (declare ...) body...)
-			final ListStruct cpy = list;
-
-			// step over the lambda SymbolStruct to work on the params etc
-			list = list.getRest();
-
-			//TODO This section will be replaced with the Lisp parser
-			// the current min for binding is 1 since it's a lambda
-			bindingsPosition = 0;
-			// handled setting up the bindings differently between using the old way and the
-			if (!params.equals(NullStruct.INSTANCE)) {
-				if (!theParsedLambdaList.equals(NullStruct.INSTANCE) && lambdaSym.equals(SpecialOperator.LAMBDA)) {
-					// NOW - the first thing to do is make the arglist analyzer function for this lambda
-					// NOTE: this is all skipped when the lambda has a declaration of %NO-GENERATE-ANALYZER
-					final PackageSymbolStruct genAnalyzerSym = GlobalPackageStruct.COMPILER.findSymbol("GENERATE-ARGLIST-ANALYZER");
-					final FunctionStruct genAnalyzerFn = genAnalyzerSym.getSymbolStruct().getFunction();
-					// don't an analyzer for the analyzer!
-					if ((genAnalyzerFn != null)
-							&& findDeclaration(Declaration.NO_GENERATE_ANALYZER, decls.getRest()).equals(NullStruct.INSTANCE)) {
-						final ListStruct analyzerFn = (ListStruct) genAnalyzerFn.apply(theParsedLambdaList);
-						//*** Under some certain circumstances, the function has to be compiled for use in the rest
-						//*** of the function definition. The most common reason is the function is recursive
-						//*** and the arglist must be munged before the function is compiled
-						// If the function that's being compiled is explicitly named,
-						// then we compile the munger and put it into an association list keyed by function name
-						if (currentLispName.peek() != null) {
-							final ListStruct copyFn = (ListStruct) XCopyTreeFunction.FUNCTION.funcall(analyzerFn);
-							final FunctionStruct innerFn = (FunctionStruct) CompileFunction.FUNCTION.funcall(copyFn);
-							final FunctionStruct munger = (FunctionStruct) innerFn.apply();
-							currentArgMunger = new ConsStruct(new ConsStruct(currentLispName.peek(), munger), currentArgMunger);
-						}
-
-						// This has created an unevaluated lambda form. We now
-						// have to stick it into a static field in the current lambda
-						saStaticField(ListStruct.buildProperList(NullStruct.INSTANCE, analyzerFn, LAMBDA_ARGLIST_MUNGER_STRING));
-						// this static field holds lambdas that provide init values. The lambdas
-						// are evaluated in the right environment. The lambdas are values in a property
-						// list that is keyed by the name of the parameter.
-					}
-					final ListStruct declsOnward = list.getRest();
-					// ((declare ...) body...)
-					ListStruct afterDecls = declsOnward.getRest();
-					// ((body...))
-
-					// now I have to splice in any init form code before the (block foo...
-					ListStruct blockCdr = NullStruct.INSTANCE;
-					if ((afterDecls.getFirst() instanceof ListStruct)
-							&& ((ListStruct) afterDecls.getFirst()).getFirst().equals(SpecialOperator.BLOCK)) {
-						// this section used when fn was created by DEFUN
-						blockCdr = ((ListStruct) afterDecls.getFirst()).getRest().getRest();
-					} else {
-						// push NIL
-						afterDecls = new ConsStruct(NullStruct.INSTANCE, afterDecls);
-//                        // push BLOCK
-						afterDecls = new ConsStruct(SpecialOperator.BLOCK, afterDecls);
-						afterDecls = ListStruct.buildProperList(afterDecls);
-						blockCdr = ((ListStruct) afterDecls.getFirst()).getRest().getRest();
-						;
-					}
-
-					final PackageSymbolStruct provideInitFormUsage = GlobalPackageStruct.COMPILER.findSymbol("PROVIDE-INIT-FORM-USAGE");
-					final FunctionStruct provideInitFormUsageFn = provideInitFormUsage.getSymbolStruct().getFunction();
-
-					if (provideInitFormUsageFn != null) {
-						final ListStruct insert = (ListStruct) provideInitFormUsageFn.apply(theParsedLambdaList);
-						// splice the code into the afterDecl
-						if (!insert.equals(NullStruct.INSTANCE)) {
-							afterDecls = (ListStruct) AppendFunction.funcall(insert, afterDecls);
-//                            ((ConsStruct)funLast.funcall(insert)).setCdr(blockCdr);
-//                            ((ConsStruct)((ListStruct)afterDecls.getFirst()).getRest()).setCdr(insert);
-						}
-						// let's see what's going with
-					}
-					// there may be &aux VariableOlds that get turned into a let* that starts before the
-					// block construct.
-					if ((auxValues != null) && !auxValues.equals(NullStruct.INSTANCE)) {
-						afterDecls = new ConsStruct(SpecialOperator.LET_STAR, new ConsStruct(auxValues, afterDecls));
-						afterDecls = new ConsStruct(afterDecls, NullStruct.INSTANCE);
-					}
-
-					// now splice the static-field for as the first line of the body
-					((ConsStruct) declsOnward).setCdr(afterDecls);
-				} else {
-					while (!params.equals(NullStruct.INSTANCE)) {
-						addBinding_LambdaFletLabels((SymbolStruct) params.getFirst(), ++bindingsPosition);
-						params.setElement(1, ((ListStruct) bindings.getFirst()).getFirst());
-						params = params.getRest();
-					}
-				}
-			}
-
-			//************** Now we work on the body of the LAMBDA ***********
-			// if there's an empty body, make it just a NIL
-			if (list.getRest().equals(NullStruct.INSTANCE)) {
-				((ConsStruct) list).setCdr(new ConsStruct(NullStruct.INSTANCE, NullStruct.INSTANCE));
-			}
-
-			// list
-			list = list.getRest();
-			final ListStruct listCopy = list;
-			while (!list.equals(NullStruct.INSTANCE)) {
-				list.setElement(1, saMainLoop(list.getFirst()));
-				list = list.getRest();
-			}
-
-			//set the current environment back to what it was before we hit this method
-			return new ConsStruct(environmentStack.peek(), listCopy);
-		} finally {
-			bindingsPosition = tempPosition;  //???
-			environmentStack.pop();
-			// done with the current hack for tail-called functions
-			currentParsedLambdaList.pop();
-			currentLispName.pop();
-			dupSet = dupSetStack.pop();
-		}
-	}
-
-	private static SymbolStruct saGetClassName(ListStruct list) {
+	public static SymbolStruct saGetClassName(ListStruct list) {
 		// check to see if any declarations exist
 		if (list.getFirst().equals(SpecialOperator.DECLARE)) {
 			// strip out DECLARATION keyword
@@ -1095,7 +623,7 @@ public class SemanticAnalyzer {
 				(SymbolStruct) GensymFunction.funcall(javafy(sym) + System.currentTimeMillis()), isSpecial);
 	}
 
-	private static void addBinding_LambdaFletLabels(final SymbolStruct sym, final int position) {
+	public static void addBinding_LambdaFletLabels(final SymbolStruct sym, final int position) {
 		addBinding_LambdaFletLabels(sym, position, false);
 	}
 

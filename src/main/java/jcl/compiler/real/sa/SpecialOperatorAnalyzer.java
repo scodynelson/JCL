@@ -1,7 +1,6 @@
 package jcl.compiler.real.sa;
 
 import jcl.LispStruct;
-import jcl.compiler.old.functions.GensymFunction;
 import jcl.compiler.real.sa.specialoperator.BlockAnalyzer;
 import jcl.compiler.real.sa.specialoperator.CatchAnalyzer;
 import jcl.compiler.real.sa.specialoperator.EvalWhenAnalyzer;
@@ -27,12 +26,52 @@ import jcl.compiler.real.sa.specialoperator.TagbodyAnalyzer;
 import jcl.compiler.real.sa.specialoperator.TheAnalyzer;
 import jcl.compiler.real.sa.specialoperator.ThrowAnalyzer;
 import jcl.compiler.real.sa.specialoperator.UnwindProtectAnalyzer;
+import jcl.compiler.real.sa.specialoperator.special.DeclareAnalyzer;
+import jcl.compiler.real.sa.specialoperator.special.LambdaAnalyzer;
+import jcl.compiler.real.sa.specialoperator.special.MacroLambdaAnalyzer;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SpecialOperatorAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 	public static final Analyzer<LispStruct, ListStruct> INSTANCE = new SpecialOperatorAnalyzer();
+
+	private static final Map<SpecialOperator, Analyzer<LispStruct, ListStruct>> STRATEGIES = new HashMap<>();
+
+	static {
+		STRATEGIES.put(SpecialOperator.BLOCK, BlockAnalyzer.INSTANCE);
+		STRATEGIES.put(SpecialOperator.CATCH, CatchAnalyzer.INSTANCE);
+		STRATEGIES.put(SpecialOperator.EVAL_WHEN, EvalWhenAnalyzer.INSTANCE);
+		STRATEGIES.put(SpecialOperator.FLET, FletAnalyzer.INSTANCE);
+		STRATEGIES.put(SpecialOperator.FUNCTION, FunctionAnalyzer.INSTANCE);
+		STRATEGIES.put(SpecialOperator.GO, GoAnalyzer.INSTANCE);
+		STRATEGIES.put(SpecialOperator.IF, IfAnalyzer.INSTANCE);
+		STRATEGIES.put(SpecialOperator.LABELS, LabelsAnalyzer.INSTANCE);
+		STRATEGIES.put(SpecialOperator.LET, LetAnalyzer.INSTANCE);
+		STRATEGIES.put(SpecialOperator.LET_STAR, LetStarAnalyzer.INSTANCE);
+		STRATEGIES.put(SpecialOperator.LOAD_TIME_VALUE, LoadTimeValueAnalyzer.INSTANCE);
+		STRATEGIES.put(SpecialOperator.LOCALLY, LocallyAnalyzer.INSTANCE);
+		STRATEGIES.put(SpecialOperator.MACROLET, MacroletAnalyzer.INSTANCE);
+		STRATEGIES.put(SpecialOperator.MULTIPLE_VALUE_CALL, MultipleValueCallAnalyzer.INSTANCE);
+		STRATEGIES.put(SpecialOperator.MULTIPLE_VALUE_PROG1, MultipleValueProg1Analyzer.INSTANCE);
+		STRATEGIES.put(SpecialOperator.PROGN, PrognAnalyzer.INSTANCE);
+		STRATEGIES.put(SpecialOperator.PROGV, ProgvAnalyzer.INSTANCE);
+		STRATEGIES.put(SpecialOperator.QUOTE, QuoteAnalyzer.INSTANCE);
+		STRATEGIES.put(SpecialOperator.RETURN_FROM, ReturnFromAnalyzer.INSTANCE);
+		STRATEGIES.put(SpecialOperator.SETQ, SetqAnalyzer.INSTANCE);
+		STRATEGIES.put(SpecialOperator.SYMBOL_MACROLET, SymbolMacroletAnalyzer.INSTANCE);
+		STRATEGIES.put(SpecialOperator.TAGBODY, TagbodyAnalyzer.INSTANCE);
+		STRATEGIES.put(SpecialOperator.THE, TheAnalyzer.INSTANCE);
+		STRATEGIES.put(SpecialOperator.THROW, ThrowAnalyzer.INSTANCE);
+		STRATEGIES.put(SpecialOperator.UNWIND_PROTECT, UnwindProtectAnalyzer.INSTANCE);
+
+		STRATEGIES.put(SpecialOperator.DECLARE, DeclareAnalyzer.INSTANCE);
+		STRATEGIES.put(SpecialOperator.LAMBDA, LambdaAnalyzer.INSTANCE);
+		STRATEGIES.put(SpecialOperator.MACRO_LAMBDA, MacroLambdaAnalyzer.INSTANCE);
+	}
 
 	@Override
 	public LispStruct analyze(final ListStruct input) {
@@ -40,65 +79,9 @@ public class SpecialOperatorAnalyzer implements Analyzer<LispStruct, ListStruct>
 		final SpecialOperator specialOperator = (SpecialOperator) input.getFirst();
 		LispStruct result = null;
 
-		// Determine the special form and generate its code.
-		if (specialOperator.equals(SpecialOperator.BLOCK)) {
-			result = BlockAnalyzer.INSTANCE.analyze(input);
-		} else if (specialOperator.equals(SpecialOperator.CATCH)) {
-			result = CatchAnalyzer.INSTANCE.analyze(input);
-		} else if (specialOperator.equals(SpecialOperator.EVAL_WHEN)) {
-			result = EvalWhenAnalyzer.INSTANCE.analyze(input);
-		} else if (specialOperator.equals(SpecialOperator.FLET)) {
-			result = FletAnalyzer.INSTANCE.analyze(input);
-		} else if (specialOperator.equals(SpecialOperator.FUNCTION)) {
-			result = FunctionAnalyzer.INSTANCE.analyze(input);
-		} else if (specialOperator.equals(SpecialOperator.GO)) {
-			result = GoAnalyzer.INSTANCE.analyze(input);
-		} else if (specialOperator.equals(SpecialOperator.IF)) {
-			result = IfAnalyzer.INSTANCE.analyze(input);
-		} else if (specialOperator.equals(SpecialOperator.LABELS)) {
-			result = LabelsAnalyzer.INSTANCE.analyze(input);
-		} else if (specialOperator.equals(SpecialOperator.LET)) {
-			result = LetAnalyzer.INSTANCE.analyze(input);
-		} else if (specialOperator.equals(SpecialOperator.LET_STAR)) {
-			result = LetStarAnalyzer.INSTANCE.analyze(input);
-		} else if (specialOperator.equals(SpecialOperator.LOAD_TIME_VALUE)) {
-			result = LoadTimeValueAnalyzer.INSTANCE.analyze(input);
-		} else if (specialOperator.equals(SpecialOperator.LOCALLY)) {
-			result = LocallyAnalyzer.INSTANCE.analyze(input);
-		} else if (specialOperator.equals(SpecialOperator.MACROLET)) {
-			result = MacroletAnalyzer.INSTANCE.analyze(input);
-		} else if (specialOperator.equals(SpecialOperator.MULTIPLE_VALUE_CALL)) {
-			result = MultipleValueCallAnalyzer.INSTANCE.analyze(input);
-		} else if (specialOperator.equals(SpecialOperator.MULTIPLE_VALUE_PROG1)) {
-			result = MultipleValueProg1Analyzer.INSTANCE.analyze(input);
-		} else if (specialOperator.equals(SpecialOperator.PROGN)) {
-			result = PrognAnalyzer.INSTANCE.analyze(input);
-		} else if (specialOperator.equals(SpecialOperator.PROGV)) {
-			result = ProgvAnalyzer.INSTANCE.analyze(input);
-		} else if (specialOperator.equals(SpecialOperator.QUOTE)) {
-			result = QuoteAnalyzer.INSTANCE.analyze(input);
-		} else if (specialOperator.equals(SpecialOperator.RETURN_FROM)) {
-			result = ReturnFromAnalyzer.INSTANCE.analyze(input);
-		} else if (specialOperator.equals(SpecialOperator.SETQ)) {
-			result = SetqAnalyzer.INSTANCE.analyze(input);
-		} else if (specialOperator.equals(SpecialOperator.SYMBOL_MACROLET)) {
-			result = SymbolMacroletAnalyzer.INSTANCE.analyze(input);
-		} else if (specialOperator.equals(SpecialOperator.TAGBODY)) {
-			result = TagbodyAnalyzer.INSTANCE.analyze(input);
-		} else if (specialOperator.equals(SpecialOperator.THE)) {
-			result = TheAnalyzer.INSTANCE.analyze(input);
-		} else if (specialOperator.equals(SpecialOperator.THROW)) {
-			result = ThrowAnalyzer.INSTANCE.analyze(input);
-		} else if (specialOperator.equals(SpecialOperator.UNWIND_PROTECT)) {
-			result = UnwindProtectAnalyzer.INSTANCE.analyze(input);
-
-			// Special, Special Operators
-		} else if (specialOperator.equals(SpecialOperator.DECLARE)) {
-			result = SemanticAnalyzer.saDeclare(input);
-		} else if (specialOperator.equals(SpecialOperator.LAMBDA)) {
-			result = SemanticAnalyzer.saLambda(input);
-		} else if (specialOperator.equals(SpecialOperator.MACRO_LAMBDA)) {
-			result = SemanticAnalyzer.saMacroLambda(input);
+		final Analyzer<LispStruct, ListStruct> strategy = STRATEGIES.get(specialOperator);
+		if (strategy != null) {
+			result = strategy.analyze(input);
 
 			// Compiler, Special Operators
 		} else if (specialOperator.equals(SpecialOperator.DEFSTRUCT)) {

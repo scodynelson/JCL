@@ -7,6 +7,7 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.LoadTimeValue;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.specialoperator.special.LambdaAnalyzer;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
@@ -52,7 +53,7 @@ public class LoadTimeValueAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		try {
 			SemanticAnalyzer.environmentStack.push(SemanticAnalyzer.environmentStack.elementAt(0));
 			// make a form ... ( ((%lambda ...)...) ) - gives room to add the name at front
-			ltv = SemanticAnalyzer.saLambda(ltv);
+			ltv = (ListStruct) LambdaAnalyzer.INSTANCE.analyze(ltv);
 		} finally {
 			SemanticAnalyzer.environmentStack.pop();
 		}

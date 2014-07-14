@@ -3,6 +3,7 @@ package jcl.compiler.real.sa;
 import jcl.LispStruct;
 import jcl.compiler.old.functions.MacroExpandFunction;
 import jcl.compiler.old.functions.MacroExpandReturn;
+import jcl.compiler.real.sa.specialoperator.special.LambdaAnalyzer;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.SpecialOperator;
@@ -10,7 +11,7 @@ import jcl.symbols.SymbolStruct;
 
 public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
-	public static final Analyzer<LispStruct, ListStruct> INSTANCE = new ListStructAnalyzer();
+	public static final ListStructAnalyzer INSTANCE = new ListStructAnalyzer();
 
 	@Override
 	public LispStruct analyze(final ListStruct input) {
@@ -38,7 +39,7 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			// ex ((lambda (x) (+ x 1)) 3)
 			final ListStruct firstElementList = (ListStruct) firstElement;
 			if (firstElementList.getFirst().equals(SpecialOperator.LAMBDA)) {
-				input.setElement(1, SemanticAnalyzer.saLambda(firstElementList));
+				input.setElement(1, LambdaAnalyzer.INSTANCE.analyze(firstElementList));
 				return SemanticAnalyzer.saFunctionCall(input);
 			} else {
 				throw new RuntimeException("Improperly Formed ListStruct: " + input);

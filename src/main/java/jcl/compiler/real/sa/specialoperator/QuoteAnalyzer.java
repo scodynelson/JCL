@@ -7,6 +7,7 @@ import jcl.arrays.VectorStruct;
 import jcl.characters.CharacterStruct;
 import jcl.compiler.old.functions.GensymFunction;
 import jcl.compiler.real.sa.Analyzer;
+import jcl.compiler.real.sa.ArrayStructAnalyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
@@ -85,7 +86,7 @@ public class QuoteAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		} else if (form instanceof VectorStruct) {
 			newForm = transformSimpleVectorToLTV((VectorStruct) form);
 		} else if (form instanceof ArrayStruct) {
-			newForm = SemanticAnalyzer.saSimpleArray((ArrayStruct) form);
+			newForm = (ListStruct) ArrayStructAnalyzer.INSTANCE.analyze((ArrayStruct) form);
 		} else {
 			throw new RuntimeException("Can't create a load-time-value form for " + form);
 		}

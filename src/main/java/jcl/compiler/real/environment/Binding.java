@@ -10,16 +10,11 @@ public abstract class Binding {
 	private Scope scope;
 	private LispType type;
 
-	private boolean isRequired;
-
-	protected Binding(final SymbolStruct symbolStruct, final Allocation allocation, final Scope scope,
-					  final LispType type, final boolean isRequired) {
+	protected Binding(final SymbolStruct symbolStruct, final Allocation allocation, final Scope scope, final LispType type) {
 		this.symbolStruct = symbolStruct;
-
 		this.allocation = allocation;
 		this.scope = scope;
 		this.type = type;
-		this.isRequired = isRequired;
 	}
 
 	public SymbolStruct getSymbolStruct() {
@@ -38,10 +33,6 @@ public abstract class Binding {
 		return type;
 	}
 
-	public boolean isRequired() {
-		return isRequired;
-	}
-
 	public void setSymbolStruct(final SymbolStruct symbolStruct) {
 		this.symbolStruct = symbolStruct;
 	}
@@ -56,9 +47,5 @@ public abstract class Binding {
 
 	public void setType(final LispType type) {
 		this.type = type;
-	}
-
-	public void setRequired(final boolean isRequired) {
-		this.isRequired = isRequired;
 	}
 }

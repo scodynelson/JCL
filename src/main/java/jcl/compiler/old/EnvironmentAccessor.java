@@ -7,10 +7,10 @@ import jcl.compiler.real.environment.Binding;
 import jcl.compiler.real.environment.Closure;
 import jcl.compiler.real.environment.ClosureBinding;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.FunctionBinding;
 import jcl.compiler.real.environment.LambdaBinding;
 import jcl.compiler.real.environment.LetBinding;
 import jcl.compiler.real.environment.LocalAllocation;
+import jcl.compiler.real.environment.MacroFunctionBinding;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.environment.PositionAllocation;
 import jcl.compiler.real.environment.Scope;
@@ -55,7 +55,7 @@ public class EnvironmentAccessor {
 													 final int position, final boolean isSpecial) {
 
 		final Scope scope = (newVariable.isSpecial() || isSpecial) ? Scope.DYNAMIC : Scope.LEXICAL;
-		final Binding binding = new LambdaBinding(newVariable, position, scope, T.INSTANCE, false);
+		final Binding binding = new LambdaBinding(newVariable, position, scope, T.INSTANCE);
 
 		final List<Binding> currentBindings = currentEnvironment.getBindings();
 		currentBindings.add(binding);
@@ -67,7 +67,7 @@ public class EnvironmentAccessor {
 												  final int position, final LispStruct initForm, final boolean isSpecial) {
 
 		final Scope scope = (newVariable.isSpecial() || isSpecial) ? Scope.DYNAMIC : Scope.LEXICAL;
-		final Binding binding = new LetBinding(newVariable, position, scope, T.INSTANCE, initForm, false);
+		final Binding binding = new LetBinding(newVariable, position, scope, T.INSTANCE, initForm);
 
 		final List<Binding> currentBindings = currentEnvironment.getBindings();
 		currentBindings.add(binding);
@@ -79,7 +79,7 @@ public class EnvironmentAccessor {
 												final int position, final SymbolStruct newFieldName, final boolean isSpecial) {
 
 		final Scope scope = (newVariable.isSpecial() || isSpecial) ? Scope.DYNAMIC : Scope.LEXICAL;
-		final Binding binding = new FunctionBinding(newVariable, position, scope, T.INSTANCE, newFieldName, false);
+		final Binding binding = new MacroFunctionBinding(newVariable, position, scope, T.INSTANCE, newFieldName);
 
 		final List<Binding> currentBindings = currentEnvironment.getBindings();
 		currentBindings.add(binding);
@@ -128,7 +128,7 @@ public class EnvironmentAccessor {
 		}
 
 		if (foundBinding != null) {
-			return ((FunctionBinding) foundBinding).getName();
+			return ((MacroFunctionBinding) foundBinding).getName();
 		}
 		return null;
 	}
@@ -223,7 +223,7 @@ public class EnvironmentAccessor {
 						// TODO: Closure allocation???
 					}
 
-					final SymbolBinding symbolBinding = new SymbolBinding(newSymbol, null, Scope.LEXICAL, T.INSTANCE, bindingEnvironment, false);
+					final SymbolBinding symbolBinding = new SymbolBinding(newSymbol, null, Scope.LEXICAL, T.INSTANCE, bindingEnvironment);
 					currentEnvironmentInner.getSymbolTable().getBindings().add(symbolBinding);
 				}
 
@@ -267,7 +267,7 @@ public class EnvironmentAccessor {
 				final Allocation enclosingSymTbl = addLocalAlloc(currentEnvironmentInner);
 
 				// add to the enclosing lambda's symbol table
-				final SymbolBinding symbolBinding = new SymbolBinding(newSymbol, enclosingSymTbl, Scope.DYNAMIC, T.INSTANCE, Environment.FREE, false);
+				final SymbolBinding symbolBinding = new SymbolBinding(newSymbol, enclosingSymTbl, Scope.DYNAMIC, T.INSTANCE, Environment.FREE);
 				enclosingLambda.getSymbolTable().getBindings().add(symbolBinding);
 
 				// Now we have the outer symbol table set up correctly
@@ -279,14 +279,14 @@ public class EnvironmentAccessor {
 			} else {
 				// it is, so we have to add a reference to that environment in the current env
 
-				final SymbolBinding symbolBinding = new SymbolBinding(newSymbol, null, Scope.DYNAMIC, T.INSTANCE, enclosingLambda, false);
+				final SymbolBinding symbolBinding = new SymbolBinding(newSymbol, null, Scope.DYNAMIC, T.INSTANCE, enclosingLambda);
 				currentEnvironmentInner.getSymbolTable().getBindings().add(symbolBinding);
 				return currentEnvironmentInner;
 			}
 		}
 
 		// now we add the new symbol to the local table
-		final SymbolBinding symbolBinding = new SymbolBinding(newSymbol, finalAllocation, Scope.DYNAMIC, T.INSTANCE, finalBindingEnvironment, false);
+		final SymbolBinding symbolBinding = new SymbolBinding(newSymbol, finalAllocation, Scope.DYNAMIC, T.INSTANCE, finalBindingEnvironment);
 		currentEnvironmentInner.getSymbolTable().getBindings().add(symbolBinding);
 		return currentEnvironmentInner;
 	}

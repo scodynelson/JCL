@@ -1,23 +1,24 @@
 package jcl.compiler.real.environment;
 
+import jcl.LispStruct;
 import jcl.LispType;
 import jcl.symbols.SymbolStruct;
 
 public class FunctionBinding extends LambdaBinding {
 
-	private SymbolStruct name;
+	private LispStruct initForm;
 
-	public FunctionBinding(final SymbolStruct symbolStruct, final int allocationPosition, final Scope scope,
-						   final LispType type, final SymbolStruct name, final boolean isRequired) {
-		super(symbolStruct, allocationPosition, scope, type, isRequired);
-		this.name = name;
+	public FunctionBinding(final SymbolStruct symbolStruct, final int allocationPosition, final Scope scope, final LispType type,
+						   final LispStruct initForm) {
+		super(symbolStruct, allocationPosition, scope, type);
+		this.initForm = initForm;
 	}
 
-	public SymbolStruct getName() {
-		return name;
+	public LispStruct getInitForm() {
+		return initForm;
 	}
 
-	public void setName(final SymbolStruct name) {
-		this.name = name;
+	public void setInitForm(final LispStruct initForm) {
+		this.initForm = initForm;
 	}
 }

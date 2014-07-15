@@ -11,7 +11,7 @@ import jcl.compiler.old.functions.GetPlist;
 import jcl.compiler.old.functions.XCopyTreeFunction;
 import jcl.compiler.real.environment.Binding;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.FunctionBinding;
+import jcl.compiler.real.environment.MacroFunctionBinding;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
@@ -64,8 +64,8 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 				SymbolStructAnalyzer.INSTANCE.analyze(functionSymbol);
 				return input;
 			} else {
-				final FunctionBinding functionBinding = (FunctionBinding) fnBinding.getBinding(functionSymbol);
-				final SymbolStruct<?> functionBindingName = functionBinding.getName();
+				final MacroFunctionBinding macroFunctionBinding = (MacroFunctionBinding) fnBinding.getBinding(functionSymbol);
+				final SymbolStruct<?> functionBindingName = macroFunctionBinding.getName();
 
 				final LispStruct first = input.getFirst();
 				return new ConsStruct(first, functionBindingName);
@@ -376,7 +376,7 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		// Only do nothing unless the parsedLambdaList has a FakeRest
 		ListStruct thePLL = parsedLambdaList;
 		final SymbolStruct fakeRestSymbolStruct = GlobalPackageStruct.COMPILER.findSymbol(
-				"FakeRestSymbolStructForHandlingKeysWithout&Rest").getSymbolStruct();
+				"FakeRestSymbolForHandlingKeysWithout&Rest").getSymbolStruct();
 		while (!thePLL.equals(NullStruct.INSTANCE)) {
 			// if we find a fakeRestSymbolStruct at the beginning of a lambda list, remove it
 			if (((ListStruct) thePLL.getFirst()).getFirst().equals(fakeRestSymbolStruct)) {
@@ -403,7 +403,7 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		}
 
 		final SymbolStruct fakeRestSymbolStruct = GlobalPackageStruct.COMPILER.findSymbol(
-				"FakeRestSymbolStructForHandlingKeysWithout&Rest").getSymbolStruct();
+				"FakeRestSymbolForHandlingKeysWithout&Rest").getSymbolStruct();
 		// Check to see if the first element is the fake. This happens in the case of
 		// of the param list starts with &key
 		final ListStruct parsedLambdaElt = (ListStruct) copyParsedLambdaList.getFirst();

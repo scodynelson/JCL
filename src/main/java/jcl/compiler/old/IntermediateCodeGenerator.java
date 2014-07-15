@@ -19,6 +19,7 @@ import jcl.compiler.real.environment.PositionAllocation;
 import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.environment.SymbolBinding;
 import jcl.compiler.real.environment.SymbolTable;
+import jcl.compiler.real.environment.lambdalist.RequiredBinding;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
@@ -1375,7 +1376,7 @@ public class IntermediateCodeGenerator {
 		int countRequired = 0;
 		// go through the list counting the usage :required entries
 		for (final Binding binding : bindingSetBody) {
-			if (binding.isRequired()) {
+			if (binding instanceof RequiredBinding) {
 				countRequired++;
 			} else {
 				break;
@@ -1857,7 +1858,7 @@ public class IntermediateCodeGenerator {
 		list = list.getRest();
 
         /* Call icgMainLoop() for each expression in the PROGN call,
-         * and remove all but the last expression's value from the stack  */
+		 * and remove all but the last expression's value from the stack  */
 		while (!list.equals(NullStruct.INSTANCE)) {
 			icgMainLoop(list.getFirst());
 			list = list.getRest();

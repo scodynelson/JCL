@@ -4,7 +4,7 @@ import jcl.LispStruct;
 import jcl.compiler.old.EnvironmentAccessor;
 import jcl.compiler.old.functions.AssocFunction;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.FunctionBinding;
+import jcl.compiler.real.environment.MacroFunctionBinding;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.specialoperator.FunctionAnalyzer;
@@ -36,7 +36,7 @@ public class FunctionMarkerAnalyzer implements Analyzer<LispStruct, ListStruct> 
 				final Environment fnBinding = EnvironmentAccessor.getBindingEnvironment(SemanticAnalyzer.environmentStack.peek(), fnName, false);
 				if (!fnBinding.equals(Environment.NULL)) {
 					// use assoc to get bindings
-					final FunctionBinding fooBinding = (FunctionBinding) fnBinding.getBinding(fnName);
+					final MacroFunctionBinding fooBinding = (MacroFunctionBinding) fnBinding.getBinding(fnName);
 					// see if this is a LABELS or FLET. That changes fnName
 					fnName = fooBinding.getName();
 					input.setElement(1, fnName);

@@ -67,7 +67,6 @@ public class FunctionMarkerAnalyzer implements Analyzer<LispStruct, ListStruct> 
 						// here we know that the function was compiled and has a munger
 						munger = (FunctionStruct) fnApplying.getClass().getField(FunctionAnalyzer.LAMBDA_ARGLIST_MUNGER_STRING.getAsJavaString()).get(null);
 					} // else gets the default munger
-					assert munger != null;
 				} catch (final Exception ex) {
 					throw new RuntimeException(
 							"Unable to get munging function from fn " + fnApplying, ex);

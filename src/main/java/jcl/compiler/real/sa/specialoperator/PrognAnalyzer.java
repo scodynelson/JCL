@@ -13,7 +13,7 @@ public class PrognAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final PrognAnalyzer INSTANCE = new PrognAnalyzer();
 
 	@Override
-	public LispStruct analyze(final ListStruct input) {
+	public ListStruct analyze(final ListStruct input) {
 		final ListStruct listAfterProgn = input.getRest();
 		final List<LispStruct> javaListAfterProgn = listAfterProgn.getAsJavaList();
 

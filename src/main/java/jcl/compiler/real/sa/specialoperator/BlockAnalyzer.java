@@ -2,8 +2,8 @@ package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.Analyzer;
-import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.lists.ListStruct;
+import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 
 import java.util.ArrayList;
@@ -14,31 +14,36 @@ public class BlockAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 	public static final BlockAnalyzer INSTANCE = new BlockAnalyzer();
 
-	public static Stack<SymbolStruct> blockStack;
+	public static final Stack<SymbolStruct<?>> BLOCK_STACK = new Stack<>();
 
 	@Override
-	public LispStruct analyze(final ListStruct input) {
+	public ListStruct analyze(final ListStruct input) {
+
+		if (input.size() < 2) {
+			throw new RuntimeException("BLOCK: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
+		}
 
 		final LispStruct second = input.getRest().getFirst();
 		if (!(second instanceof SymbolStruct)) {
-			throw new RuntimeException("Block with invalid label: " + input);
+			throw new RuntimeException("BLOCK: Label must be of type SymbolStruct. Got: " + second);
 		}
 
 		final SymbolStruct<?> label = (SymbolStruct) second;
-		blockStack.push(label);
+		BLOCK_STACK.push(label);
 
-		final ListStruct listAfterBlock = input.getRest();
-		final ListStruct prognResults = (ListStruct) PrognAnalyzer.INSTANCE.analyze(listAfterBlock);
-		final List<LispStruct> javaPrognResults = prognResults.getAsJavaList();
+		try {
+			final ListStruct blockBody = input.getRest().getRest();
+			final ListStruct prognResults = PrognAnalyzer.INSTANCE.analyze(blockBody);
+			final List<LispStruct> javaPrognResults = prognResults.getAsJavaList();
 
-		final List<LispStruct> blockAnalysisList = new ArrayList<>();
+			final List<LispStruct> blockResultList = new ArrayList<>();
+			blockResultList.add(SpecialOperator.BLOCK);
+			blockResultList.add(second);
+			blockResultList.addAll(javaPrognResults);
 
-		// Rebuilding the parameter 'listStruct'
-		blockAnalysisList.add(input.getFirst());
-		blockAnalysisList.add(second);
-		blockAnalysisList.addAll(javaPrognResults);
-
-		blockStack.pop();
-		return ListStruct.buildProperList(blockAnalysisList);
+			return ListStruct.buildProperList(blockResultList);
+		} finally {
+			BLOCK_STACK.pop();
+		}
 	}
 }

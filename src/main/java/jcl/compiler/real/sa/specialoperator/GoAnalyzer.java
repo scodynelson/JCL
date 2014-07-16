@@ -2,12 +2,13 @@ package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.Analyzer;
-import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
-import jcl.numbers.IntegerStruct;
+import jcl.numbers.NumberStruct;
+import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
@@ -16,20 +17,20 @@ public class GoAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final GoAnalyzer INSTANCE = new GoAnalyzer();
 
 	@Override
-	public LispStruct analyze(final ListStruct input) {
+	public ListStruct analyze(final ListStruct input) {
 
 		if (input.size() != 2) {
-			throw new RuntimeException("Wrong number of arguments to special operator Go: " + input.size());
+			throw new RuntimeException("GO: Incorrect number of arguments: " + input.size());
 		}
 
 		final LispStruct second = input.getRest().getFirst();
-		if (!(second instanceof SymbolStruct) && !(second instanceof IntegerStruct)) {
-			throw new RuntimeException("Go with invalid tag: " + input);
+		if (!isGoTag(second)) {
+			throw new RuntimeException("GO: Tag must be of type SymbolStruct or IntegerStruct. Got: " + second);
 		}
 
 		SymbolStruct<?> goTagSymbol = null;
 
-		final ListIterator<Map<LispStruct, SymbolStruct<?>>> li1 = TagbodyAnalyzer.tagbodyStack.listIterator(TagbodyAnalyzer.tagbodyStack.size());
+		final ListIterator<Map<LispStruct, SymbolStruct<?>>> li1 = TagbodyAnalyzer.TAGBODY_STACK.listIterator(TagbodyAnalyzer.TAGBODY_STACK.size());
 
 		while (li1.hasPrevious()) {
 			final Map<LispStruct, SymbolStruct<?>> previousStack = li1.previous();
@@ -40,10 +41,17 @@ public class GoAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		}
 
 		if (goTagSymbol == null) {
-			throw new RuntimeException("No go tag named " + second + " is currently visible.");
+			throw new RuntimeException("GO: No TAGBODY with Tag " + second + " is visible.");
 		}
 
-		final LispStruct first = input.getFirst();
-		return new ConsStruct(first, goTagSymbol);
+		final List<LispStruct> goResultList = new ArrayList<>();
+		goResultList.add(SpecialOperator.GO);
+		goResultList.add(goTagSymbol);
+
+		return ListStruct.buildProperList(goResultList);
+	}
+
+	private static boolean isGoTag(final LispStruct current) {
+		return (current instanceof SymbolStruct) || (current instanceof NumberStruct);
 	}
 }

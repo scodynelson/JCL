@@ -7,8 +7,6 @@ import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.Declaration;
 import jcl.symbols.SymbolStruct;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -16,34 +14,29 @@ public class DeclareAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 	public static final DeclareAnalyzer INSTANCE = new DeclareAnalyzer();
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(DeclareAnalyzer.class);
-
 	@Override
 	public LispStruct analyze(final ListStruct input) {
-		// there may not be any declarations
-		if (input.getRest().equals(NullStruct.INSTANCE)) {
-			return NullStruct.INSTANCE;
-		}
 
 		final List<LispStruct> javaRestList = input.getRest().getAsJavaList();
 		for (final LispStruct nextDecl : javaRestList) {
+
 			final ListStruct declarationSpec = (ListStruct) nextDecl;
 			final Object declIdentifier = declarationSpec.getFirst();
 			final ListStruct declList = declarationSpec.getRest();
 
 			// now come the various cases
 			if (declIdentifier.equals(Declaration.LISP_NAME)) {
-				saLispNameDeclaration(declList);
+				//we don't do anything here yet
 			} else if (declIdentifier.equals(Declaration.JAVA_CLASS_NAME)) {
-				saJavaNameDeclaration(declList);
+				//we don't do anything here yet
 			} else if (declIdentifier.equals(Declaration.NO_GENERATE_ANALYZER)) {
-				saNoGenerateAnalyzerDeclaration(declList);
+				//we don't do anything here yet
 			} else if (declIdentifier.equals(Declaration.PARSED_LAMBDA_LIST)) {
-				saParsedLambdaListDeclaration(declList);
+				//we don't do anything here yet
 			} else if (declIdentifier.equals(Declaration.DOCUMENTATION)) {
-				saDocumentationDeclaration(declList);
+				//we don't do anything here yet
 			} else if (declIdentifier.equals(Declaration.SOURCE_FILE)) {
-				saSourceFileDeclaration(declList);
+				//we don't do anything here yet
 			} else if (declIdentifier.equals(Declaration.DECLARATION)) {
 				//we don't do anything here yet
 			} else if (declIdentifier.equals(Declaration.DYNAMIC_EXTENT)) {
@@ -67,59 +60,23 @@ public class DeclareAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			} else if (declIdentifier.equals(NullStruct.INSTANCE)) {
 				//drop it on the floor
 			} else {
-				LOGGER.warn("DECLARE: unknown specifier: {}", declIdentifier);
+				throw new RuntimeException("DECLARE: unknown specifier: " + declIdentifier);
 			}
 		}
 		return input;
 	}
 
-	/**
-	 * Handles the declaration of the Lisp name (SymbolStruct) of the function
-	 */
-	private static void saLispNameDeclaration(final ListStruct declarationList) {
-	}
-
-	/**
-	 * Handles the declaration of the name of the Java class (SymbolStruct) of the function
-	 */
-	private static void saJavaNameDeclaration(final ListStruct declarationList) {
-	}
-
-	/**
-	 * Handles the declaration of the name of the Java class (SymbolStruct) of the function
-	 */
-	private static void saNoGenerateAnalyzerDeclaration(final ListStruct declarationList) {
-	}
-
-	/**
-	 * Handles the declaration of the parsed lambda list of the function
-	 */
-	private static void saParsedLambdaListDeclaration(final ListStruct declarationList) {
-	}
-
-	/**
-	 * Handles the declaration of the name of the Java class (SymbolStruct) of the function
-	 */
-	private static void saDocumentationDeclaration(final ListStruct declarationList) {
-	}
-
-	private static void saSourceFileDeclaration(final ListStruct declarationList) {
-	}
-
-	/**
-	 * handle the components of a Special declaration
-	 */
 	private static void saSpecialDeclaration(final ListStruct declarations) {
-		final List<LispStruct> declaractionsJavaList = declarations.getAsJavaList();
-		SymbolStruct sym = null;
+		final List<LispStruct> declarationsAsJavaList = declarations.getAsJavaList();
+
 		// Special declaration can apply to multiple SymbolStructs
-		for (final LispStruct nextDecl : declaractionsJavaList) {
-			try {
-				sym = (SymbolStruct) nextDecl;
-				SymbolStructAnalyzer.INSTANCE.analyze(sym);
-			} catch (final ClassCastException ccExcption) {
-				LOGGER.error("DECLARE: a non-SymbolStruct entity cannot be made SPECIAL: {}", sym);
+		for (final LispStruct nextDecl : declarationsAsJavaList) {
+			if (!(nextDecl instanceof SymbolStruct)) {
+				throw new RuntimeException("DECLARE: a non-SymbolStruct entity cannot be made SPECIAL: " + nextDecl);
 			}
+
+			final SymbolStruct<?> sym = (SymbolStruct) nextDecl;
+			SymbolStructAnalyzer.INSTANCE.analyze(sym);
 		}
 	}
 }

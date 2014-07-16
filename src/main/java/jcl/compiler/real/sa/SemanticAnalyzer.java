@@ -73,9 +73,8 @@ public class SemanticAnalyzer {
 
 		topLevelMode = true;
 
-		BlockAnalyzer.blockStack = new Stack<>();
-		TagbodyAnalyzer.tagbodyStack = new Stack<>();
-		TagbodyAnalyzer.iTagbodyCounter = 0;
+		BlockAnalyzer.BLOCK_STACK.clear();
+		TagbodyAnalyzer.TAGBODY_STACK.clear();
 		undefinedFunctions = new Vector<>();
 		bindingsPosition = 0;
 		FunctionAnalyzer.bindings = NullStruct.INSTANCE;

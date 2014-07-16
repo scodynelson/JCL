@@ -5,6 +5,7 @@ import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
+import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 
 import java.util.ArrayList;
@@ -15,27 +16,31 @@ public class ReturnFromAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final ReturnFromAnalyzer INSTANCE = new ReturnFromAnalyzer();
 
 	@Override
-	public LispStruct analyze(final ListStruct input) {
+	public ListStruct analyze(final ListStruct input) {
+
+		if ((input.size() < 2) || (input.size() > 3)) {
+			throw new RuntimeException("RETURN-FROM: Incorrect number of arguments: " + input.size() + ". Expected either 2 or 3 arguments.");
+		}
 
 		final LispStruct second = input.getRest().getFirst();
 		if (!(second instanceof SymbolStruct)) {
-			throw new RuntimeException("ReturnFrom with invalid label: " + input);
+			throw new RuntimeException("RETURN-FROM: Label must be of type SymbolStruct. Got: " + second);
 		}
 
-		if (BlockAnalyzer.blockStack.search(second) == -1) {
-			throw new RuntimeException("No block labeled " + second + " is currently visible.");
+		if (BlockAnalyzer.BLOCK_STACK.search(second) == -1) {
+			throw new RuntimeException("RETURN-FROM: No BLOCK with Label " + second + " is visible.");
 		}
 
-		final List<LispStruct> returnFromAnalysisList = new ArrayList<>();
-		returnFromAnalysisList.add(input.getFirst());
-		returnFromAnalysisList.add(second);
+		final List<LispStruct> returnFromResultList = new ArrayList<>();
+		returnFromResultList.add(SpecialOperator.RETURN_FROM);
+		returnFromResultList.add(second);
 
 		final LispStruct third = input.getRest().getRest().getFirst();
 		if (!third.equals(NullStruct.INSTANCE)) {
-			final LispStruct saResult = SemanticAnalyzer.saMainLoop(third);
-			returnFromAnalysisList.add(saResult);
+			final LispStruct returnFromResult = SemanticAnalyzer.saMainLoop(third);
+			returnFromResultList.add(returnFromResult);
 		}
 
-		return ListStruct.buildProperList(returnFromAnalysisList);
+		return ListStruct.buildProperList(returnFromResultList);
 	}
 }

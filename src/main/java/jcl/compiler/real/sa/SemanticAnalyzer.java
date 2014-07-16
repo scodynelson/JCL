@@ -68,8 +68,6 @@ public class SemanticAnalyzer {
 		//create the global environment
 		environmentStack = new Stack<>();
 		environmentStack.push(EnvironmentAccessor.createGlobalEnvironment());
-		FunctionAnalyzer.currentParsedLambdaList = new Stack<>();
-		FunctionAnalyzer.currentParsedLambdaList.push(NullStruct.INSTANCE);
 		currentLispName = new Stack<>();
 		currentLispName.push(null);
 

@@ -4,7 +4,7 @@ import jcl.LispStruct;
 import jcl.compiler.real.environment.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.lambdalist.OptionalBinding;
-import jcl.compiler.real.environment.lambdalist.OriginalLambdaListBindings;
+import jcl.compiler.real.environment.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.lambdalist.RestBinding;
 import jcl.compiler.real.environment.lambdalist.SuppliedPBinding;
@@ -30,7 +30,7 @@ public class LambdaListParser {
 	private static final SymbolStruct<?> AND_BODY = GlobalPackageStruct.KEYWORD.intern("&BODY").getSymbolStruct();
 	private static final SymbolStruct<?> AND_ENVIRONMENT = GlobalPackageStruct.KEYWORD.intern("&ENVIRONMENT").getSymbolStruct();
 
-	public static OriginalLambdaListBindings parseOrdinaryLambdaList(final ListStruct lambdaList) {
+	public static OrdinaryLambdaListBindings parseOrdinaryLambdaList(final ListStruct lambdaList) {
 
 		final List<LispStruct> lambdaListJava = lambdaList.getAsJavaList();
 		final Iterator<LispStruct> iterator = lambdaListJava.iterator();
@@ -83,7 +83,7 @@ public class LambdaListParser {
 			throw new RuntimeException("Unexpected element at the end of Ordinary Lambda List: " + iterator.next());
 		}
 
-		return new OriginalLambdaListBindings(requiredBindings, optionalBindings, restBinding, keyBindings, auxBindings, allowOtherKeys);
+		return new OrdinaryLambdaListBindings(requiredBindings, optionalBindings, restBinding, keyBindings, auxBindings, allowOtherKeys);
 	}
 
 	/*

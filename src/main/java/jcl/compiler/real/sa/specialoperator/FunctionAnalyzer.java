@@ -9,11 +9,12 @@ import jcl.compiler.old.functions.CompileFunction;
 import jcl.compiler.old.functions.GensymFunction;
 import jcl.compiler.old.functions.GetPlist;
 import jcl.compiler.old.functions.XCopyTreeFunction;
-import jcl.compiler.real.environment.Binding;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.MacroFunctionBinding;
 import jcl.compiler.real.environment.Marker;
+import jcl.compiler.real.environment.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.sa.Analyzer;
+import jcl.compiler.real.sa.LambdaListParser;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.SymbolStructAnalyzer;
 import jcl.compiler.real.sa.specialoperator.compiler.StaticFieldAnalyzer;
@@ -41,7 +42,6 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final FunctionAnalyzer INSTANCE = new FunctionAnalyzer();
 
 	public static ListStruct bindings;
-	public static Stack<ListStruct> currentParsedLambdaList;
 	public static Stack<IdentityHashMap<LispStruct, LispStruct>> dupSetStack;
 
 	private static String nameBreakingRegex = "[^\\p{Alnum}]";
@@ -122,69 +122,27 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			}
 
 			final ListStruct parameters = (ListStruct) secondElement;
-			final ParseLambdaListResult parseLambdaListResult = parseLambdaList(parameters, environment, isLambda);
-			final ListStruct parsedLambdaList = parseLambdaListResult.getParsedLambdaList();
+			final OrdinaryLambdaListBindings parsedLambdaList = LambdaListParser.parseOrdinaryLambdaList(parameters);
 
-			// temporary hack to handle tail-called functions here
-			currentParsedLambdaList.push(parsedLambdaList);
+			// TODO: the old code did this whole "ArgListMunging" crap. Basically, it adds a function dynamically
+			// TODO: to the function being created that analyzes the arguments at runtime. so that when it gets called,
+			// TODO: the required arguments get checked to validate that they were in fact supplied. Now, how do we do
+			// TODO: this in the new version???
 
 			final ListStruct declaresDocStringBody = listStruct.getRest().getRest();
 			final ListStruct orderedDeclaresDocStringBody = saDeclarations(declaresDocStringBody);
 
+			// TODO: the old code did this whole "ArgInitFormUsage" stuff. It basically does the work that determines
+			// TODO: if the 'supplied-p' parameter has a values of T or NIL. What it will do is 'inline' an "if" block that
+			// TODO: will dynamically check the input of the variable and then "SETQ" the value of the 'supplied-p' parameter.
 
 			return null;
 		} finally {
 			SemanticAnalyzer.bindingsPosition = tempPosition;  //???
 			SemanticAnalyzer.environmentStack.pop();
-			// done with the current hack for tail-called functions
-			currentParsedLambdaList.pop();
 			SemanticAnalyzer.currentLispName.pop();
 			SemanticAnalyzer.dupSet = dupSetStack.pop();
 		}
-	}
-
-	private static class ParseLambdaListResult {
-
-		private final ListStruct parsedLambdaList;
-		private final ListStruct auxValues;
-
-		private ParseLambdaListResult(final ListStruct parsedLambdaList, final ListStruct auxValues) {
-			this.parsedLambdaList = parsedLambdaList;
-			this.auxValues = auxValues;
-		}
-
-		public ListStruct getParsedLambdaList() {
-			return parsedLambdaList;
-		}
-
-		public ListStruct getAuxValues() {
-			return auxValues;
-		}
-	}
-
-	private static ParseLambdaListResult parseLambdaList(final ListStruct lambdaList, final Environment environment, final boolean isLambda) {
-		ListStruct theParsedLambdaList = NullStruct.INSTANCE;
-		ListStruct auxValues = NullStruct.INSTANCE;
-		if (!lambdaList.equals(NullStruct.INSTANCE)) {
-			final PackageSymbolStruct parseOrdinaryLambdaList = GlobalPackageStruct.COMPILER.findSymbol("PARSE-ORDINARY-LAMBDA-LIST");
-
-			final FunctionStruct parseOrdinaryLambdaListFn = parseOrdinaryLambdaList.getSymbolStruct().getFunction();
-			if ((parseOrdinaryLambdaListFn != null) && isLambda) {
-				final ListStruct parsedLambdaListParts = (ListStruct) parseOrdinaryLambdaListFn.apply(lambdaList);
-				theParsedLambdaList = (ListStruct) parsedLambdaListParts.getFirst();
-				auxValues = (ListStruct) parsedLambdaListParts.getElement(1);
-				// Now, use the Compiler function provide-init-form-usage to create code
-				// that follows the declaration section. It is a (possibly nil) set of conditional
-				// assignments that fill in the default forms for missing arguments
-
-				// Add the lambda bindings to the current environment
-				final List<Binding> bindingList = EnvironmentAccessor.getBindingSet(environment);
-				// Now I have to remove any FAKE rest forms. They can't be in the binding set
-//				bindingList.addAll(removeFakeRestEntry(theParsedLambdaList));
-			}
-		}
-
-		return new ParseLambdaListResult(theParsedLambdaList, auxValues);
 	}
 
 	private static ListStruct saLambdaAux(final ListStruct list, final Environment newEnvironment) {
@@ -233,7 +191,7 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 				}
 			}
 			// temporary hack to handle tail-called functions here
-			currentParsedLambdaList.push(theParsedLambdaList);
+//			currentParsedLambdaList.push(theParsedLambdaList);
 
 			// classname is a declaration in the declare form
 			// if there isn't one, it makes one up
@@ -359,8 +317,6 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		} finally {
 			SemanticAnalyzer.bindingsPosition = tempPosition;  //???
 			SemanticAnalyzer.environmentStack.pop();
-			// done with the current hack for tail-called functions
-			currentParsedLambdaList.pop();
 			SemanticAnalyzer.currentLispName.pop();
 			SemanticAnalyzer.dupSet = dupSetStack.pop();
 		}

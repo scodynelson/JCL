@@ -2,7 +2,7 @@ package jcl.compiler.real.environment.lambdalist;
 
 import java.util.List;
 
-public class OriginalLambdaListBindings {
+public class OrdinaryLambdaListBindings {
 
 	private final List<RequiredBinding> requiredBindings;
 	private final List<OptionalBinding> optionalBindings;
@@ -12,7 +12,7 @@ public class OriginalLambdaListBindings {
 
 	private final boolean allowOtherKeys;
 
-	public OriginalLambdaListBindings(final List<RequiredBinding> requiredBindings, final List<OptionalBinding> optionalBindings,
+	public OrdinaryLambdaListBindings(final List<RequiredBinding> requiredBindings, final List<OptionalBinding> optionalBindings,
 									  final RestBinding restBinding, final List<KeyBinding> keyBindings, final List<AuxBinding> auxBindings,
 									  final boolean allowOtherKeys) {
 		this.requiredBindings = requiredBindings;

@@ -10,14 +10,14 @@ import jcl.symbols.SymbolStruct;
 
 import java.util.List;
 
-public class DeclareAnalyzer implements Analyzer<LispStruct, ListStruct> {
+public class DeclareAnalyzer implements Analyzer<LispStruct, LispStruct> {
 
 	public static final DeclareAnalyzer INSTANCE = new DeclareAnalyzer();
 
 	@Override
-	public LispStruct analyze(final ListStruct input) {
+	public LispStruct analyze(final LispStruct input) {
 
-		final List<LispStruct> javaRestList = input.getRest().getAsJavaList();
+		final List<LispStruct> javaRestList = ((ListStruct) input).getRest().getAsJavaList();
 		for (final LispStruct nextDecl : javaRestList) {
 
 			final ListStruct declarationSpec = (ListStruct) nextDecl;

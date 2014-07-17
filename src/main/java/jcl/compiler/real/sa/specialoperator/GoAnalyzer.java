@@ -20,7 +20,7 @@ public class GoAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public ListStruct analyze(final ListStruct input) {
 
 		if (input.size() != 2) {
-			throw new RuntimeException("GO: Incorrect number of arguments: " + input.size());
+			throw new RuntimeException("GO: Incorrect number of arguments: " + input.size() + ". Expected 2 arguments.");
 		}
 
 		final LispStruct second = input.getRest().getFirst();

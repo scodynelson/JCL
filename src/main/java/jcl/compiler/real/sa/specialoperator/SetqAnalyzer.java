@@ -3,9 +3,8 @@ package jcl.compiler.real.sa.specialoperator;
 import jcl.LispStruct;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.SymbolStructAnalyzer;
 import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
+import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 
 import java.util.ArrayList;
@@ -17,36 +16,31 @@ public class SetqAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 	@Override
 	public LispStruct analyze(final ListStruct input) {
-		final ListStruct setqForms = input.getRest();
 
-		if (setqForms.equals(NullStruct.INSTANCE)) {
-			return NullStruct.INSTANCE;
+		final ListStruct forms = input.getRest();
+
+		if ((forms.size() % 2) != 0) {
+			throw new RuntimeException("SETQ: Odd number of arguments received: " + input + ". Expected an even number of arguments.");
 		}
 
-		if ((setqForms.size() % 2) != 0) {
-			throw new RuntimeException("SETQ called with odd number of arguments: " + input);
-		}
+		final List<LispStruct> setqResultList = new ArrayList<>();
+		setqResultList.add(SpecialOperator.SETQ);
 
-		final List<LispStruct> setqAnalysisList = new ArrayList<>();
-		setqAnalysisList.add(input.getFirst());
+		final List<LispStruct> formsJavaList = forms.getAsJavaList();
+		for (int i = 0; i < formsJavaList.size(); i += 2) {
 
-		final List<LispStruct> javaSetqForms = setqForms.getAsJavaList();
-		for (int i = 0; i < javaSetqForms.size(); i += 2) {
-
-			final LispStruct firstElement = javaSetqForms.get(i);
-			if (!(firstElement instanceof SymbolStruct)) {
-				throw new RuntimeException("SETQ: " + firstElement + " is not a SymbolStruct.");
+			final LispStruct varName = formsJavaList.get(i);
+			if (!(varName instanceof SymbolStruct)) {
+				throw new RuntimeException("SETQ: Variable name must be of type SymbolStruct. Got: " + varName);
 			}
+			final LispStruct varNameAnalyzed = SemanticAnalyzer.saMainLoop(varName);
+			setqResultList.add(varNameAnalyzed);
 
-			final SymbolStruct<?> symbolStruct = SymbolStructAnalyzer.INSTANCE.analyze((SymbolStruct) firstElement);
-			setqAnalysisList.add(symbolStruct);
-
-			final LispStruct secondElement = javaSetqForms.get(i + 1);
-
-			final LispStruct formResult = SemanticAnalyzer.saMainLoop(secondElement);
-			setqAnalysisList.add(formResult);
+			final LispStruct varValue = formsJavaList.get(i + 1);
+			final LispStruct varValueAnalyzed = SemanticAnalyzer.saMainLoop(varValue);
+			setqResultList.add(varValueAnalyzed);
 		}
 
-		return ListStruct.buildProperList(setqAnalysisList);
+		return ListStruct.buildProperList(setqResultList);
 	}
 }

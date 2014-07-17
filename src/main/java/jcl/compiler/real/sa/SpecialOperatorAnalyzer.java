@@ -71,7 +71,7 @@ public class SpecialOperatorAnalyzer implements Analyzer<LispStruct, ListStruct>
 		STRATEGIES.put(SpecialOperator.THROW, ThrowAnalyzer.INSTANCE);
 		STRATEGIES.put(SpecialOperator.UNWIND_PROTECT, UnwindProtectAnalyzer.INSTANCE);
 
-		STRATEGIES.put(SpecialOperator.DECLARE, DeclareAnalyzer.INSTANCE);
+//		STRATEGIES.put(SpecialOperator.DECLARE, DeclareAnalyzer.INSTANCE);
 		STRATEGIES.put(SpecialOperator.LAMBDA, LambdaAnalyzer.INSTANCE);
 		STRATEGIES.put(SpecialOperator.MACRO_LAMBDA, MacroLambdaAnalyzer.INSTANCE);
 

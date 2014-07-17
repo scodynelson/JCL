@@ -11,7 +11,7 @@ import jcl.symbols.SpecialOperator;
 
 public class LambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
-	public static final DeclareAnalyzer INSTANCE = new DeclareAnalyzer();
+	public static final LambdaAnalyzer INSTANCE = new LambdaAnalyzer();
 
 	@Override
 	public LispStruct analyze(final ListStruct input) {

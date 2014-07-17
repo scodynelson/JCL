@@ -16,7 +16,7 @@ public class LocallyAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final LocallyAnalyzer INSTANCE = new LocallyAnalyzer();
 
 	@Override
-	public LispStruct analyze(final ListStruct input) {
+	public ListStruct analyze(final ListStruct input) {
 
 		final ListStruct body = input.getRest();
 		final List<LispStruct> bodyJavaList = body.getAsJavaList();

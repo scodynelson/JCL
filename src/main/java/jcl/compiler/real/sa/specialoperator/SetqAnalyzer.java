@@ -15,7 +15,7 @@ public class SetqAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final SetqAnalyzer INSTANCE = new SetqAnalyzer();
 
 	@Override
-	public LispStruct analyze(final ListStruct input) {
+	public ListStruct analyze(final ListStruct input) {
 
 		final ListStruct forms = input.getRest();
 

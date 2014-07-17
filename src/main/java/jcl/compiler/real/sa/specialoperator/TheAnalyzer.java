@@ -15,7 +15,7 @@ public class TheAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final TheAnalyzer INSTANCE = new TheAnalyzer();
 
 	@Override
-	public LispStruct analyze(final ListStruct input) {
+	public ListStruct analyze(final ListStruct input) {
 
 		if (input.size() != 3) {
 			throw new RuntimeException("THE: Incorrect number of arguments: " + input.size() + ". Expected 3 arguments.");

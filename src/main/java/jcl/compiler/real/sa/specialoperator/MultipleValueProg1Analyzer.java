@@ -1,12 +1,10 @@
 package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
-import jcl.compiler.old.functions.GensymFunction;
 import jcl.compiler.real.sa.Analyzer;
+import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.lists.ListStruct;
-import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.SpecialOperator;
-import jcl.symbols.SymbolStruct;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,54 +15,25 @@ public class MultipleValueProg1Analyzer implements Analyzer<LispStruct, ListStru
 
 	@Override
 	public LispStruct analyze(final ListStruct input) {
+
 		if (input.size() < 2) {
-			throw new RuntimeException("Wrong number of arguments to special operator MULTIPLE-VALUE-PROG1: " + input.size());
+			throw new RuntimeException("MULTIPLE-VALUE-PROG1: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
 		}
 
-		final List<LispStruct> letBlock = new ArrayList<>();
-		letBlock.add(SpecialOperator.LET);
+		// TODO: This will evaluate the first form first and keep it to return last. However, this will occur in the IGC, not the SA!!!
 
-		final List<LispStruct> allParameters = new ArrayList<>();
+		final LispStruct second = input.getRest().getFirst();
+		final LispStruct secondAnalyzed = SemanticAnalyzer.saMainLoop(second);
 
-		final List<LispStruct> parameter = new ArrayList<>();
-		final SymbolStruct<?> tempParamName = GensymFunction.funcall();
-		parameter.add(tempParamName);
+		final ListStruct multipleValueProg1Body = input.getRest().getRest();
+		final ListStruct prognResults = PrognAnalyzer.INSTANCE.analyze(multipleValueProg1Body);
+		final List<LispStruct> javaPrognResults = prognResults.getAsJavaList();
 
-		final List<LispStruct> multipleValueListPart = new ArrayList<>();
-		multipleValueListPart.add(GlobalPackageStruct.COMMON_LISP.findSymbol("MULTIPLE-VALUE-LIST").getSymbolStruct());
-		final LispStruct firstForm = input.getRest().getFirst();
-		multipleValueListPart.add(firstForm);
-		final ListStruct multipleValueListPartList = ListStruct.buildProperList(multipleValueListPart);
+		final List<LispStruct> multipleValueProg1ResultList = new ArrayList<>();
+		multipleValueProg1ResultList.add(SpecialOperator.MULTIPLE_VALUE_PROG1);
+		multipleValueProg1ResultList.add(secondAnalyzed);
+		multipleValueProg1ResultList.addAll(javaPrognResults);
 
-/*
-(defmacro multiple-value-list (&rest forms)
-  (declare (system::%java-class-name "lisp.common.function.MultipleValueList"))
-  `(multiple-value-call (function list) ,@forms))
- */
-
-		parameter.add(multipleValueListPartList);
-		final ListStruct parameterList = ListStruct.buildProperList(parameter);
-
-		allParameters.add(parameterList);
-		final ListStruct allParametersList = ListStruct.buildProperList(allParameters);
-
-		letBlock.add(allParametersList);
-
-		final List<LispStruct> prognPart = new ArrayList<>();
-		prognPart.add(SpecialOperator.PROGN);
-		prognPart.add(input.getRest().getRest());
-
-		final List<LispStruct> valuesListPart = new ArrayList<>();
-		valuesListPart.add(GlobalPackageStruct.COMMON_LISP.findSymbol("VALUES-LIST").getSymbolStruct());
-		valuesListPart.add(ListStruct.buildProperList(tempParamName));
-		final ListStruct valuesListPartList = ListStruct.buildProperList(valuesListPart);
-
-		prognPart.add(valuesListPartList);
-		final ListStruct prognPartList = ListStruct.buildProperList(prognPart);
-
-		letBlock.add(prognPartList);
-		final ListStruct letBlockList = ListStruct.buildProperList(letBlock);
-
-		return LetAnalyzer.INSTANCE.analyze(letBlockList);
+		return ListStruct.buildProperList(multipleValueProg1ResultList);
 	}
 }

@@ -14,7 +14,7 @@ public class ProgvAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final ProgvAnalyzer INSTANCE = new ProgvAnalyzer();
 
 	@Override
-	public LispStruct analyze(final ListStruct input) {
+	public ListStruct analyze(final ListStruct input) {
 		// TODO: This is kind of like a 'let' for DYNAMIC bindings. The code below is temporary, but does not take care of the environment pieces...
 
 		if (input.size() < 3) {

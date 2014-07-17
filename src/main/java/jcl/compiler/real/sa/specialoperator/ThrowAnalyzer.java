@@ -20,20 +20,16 @@ public class ThrowAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			throw new RuntimeException("THROW: Incorrect number of arguments: " + input.size() + ". Expected 3 arguments.");
 		}
 
-		final LispStruct second = input.getRest().getFirst();
-		final LispStruct evaluatedSecond = SemanticAnalyzer.saMainLoop(second);
-
-		if (CatchAnalyzer.CATCH_STACK.search(evaluatedSecond) == -1) {
-			throw new RuntimeException("THROW: No CATCH with Tag " + evaluatedSecond + " is visible.");
-		}
-
 		final List<LispStruct> throwResultList = new ArrayList<>();
 		throwResultList.add(SpecialOperator.THROW);
-		throwResultList.add(second);
+
+		final LispStruct second = input.getRest().getFirst();
+		final LispStruct secondAnalyzed = SemanticAnalyzer.saMainLoop(second);
+		throwResultList.add(secondAnalyzed);
 
 		final LispStruct third = input.getRest().getRest().getFirst();
-		final LispStruct throwResult = SemanticAnalyzer.saMainLoop(third);
-		throwResultList.add(throwResult);
+		final LispStruct thirdAnalyzed = SemanticAnalyzer.saMainLoop(third);
+		throwResultList.add(thirdAnalyzed);
 
 		return ListStruct.buildProperList(throwResultList);
 	}

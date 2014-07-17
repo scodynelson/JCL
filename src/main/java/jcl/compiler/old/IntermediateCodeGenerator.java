@@ -45,7 +45,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Stack;
 import java.util.Vector;
 
@@ -1184,17 +1183,17 @@ public class IntermediateCodeGenerator {
 		final Environment env = bindingEnvironment;
 
 		// see if we have to add any static fields for load-time-value
-		final LoadTimeValue ltvList = env.getLoadTimeValue();
+		final List<LoadTimeValue> ltvList = env.getLoadTimeValues();
 		// ltvList is a plist of the field names and lambda forms
-		for (final Map.Entry<SymbolStruct, ListStruct> entry : ltvList.getValues().entrySet()) {
-			final String fldName = entry.getKey().getName();
+		for (final LoadTimeValue loadTimeValue : ltvList) {
+			final String fldName = loadTimeValue.getName().getName();
 			// add the field
 			emitter.newField(Opcodes.ACC_PUBLIC + Opcodes.ACC_STATIC + Opcodes.ACC_FINAL,
 					fldName, "Ljava/lang/Object;", null, null);
 			// now get down to the function
 			// gen code for the function
 
-			genCodeLambdaInContext(entry.getValue(), true);
+			genCodeLambdaInContext((ListStruct) loadTimeValue.getValue(), true);
 			// now there's an instance of the function on the stack, call it
 			emitter.emitInvokeinterface("lisp/extensions/type/Function0", "funcall", "()", "Ljava/lang/Object;", true);
 			// now put the value into the static field

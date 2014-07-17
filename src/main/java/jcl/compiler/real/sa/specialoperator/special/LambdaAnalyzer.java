@@ -14,7 +14,7 @@ public class LambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final LambdaAnalyzer INSTANCE = new LambdaAnalyzer();
 
 	@Override
-	public LispStruct analyze(final ListStruct input) {
+	public ListStruct analyze(final ListStruct input) {
 		// macroexpand the LAMBDA form, by default makes it (FUNCTION (LAMBDA... ))
 		final MacroExpandReturn macroExpandReturn = MacroExpandFunction.FUNCTION.funcall(input);
 		// now it has the right form, now handle it to saFunction

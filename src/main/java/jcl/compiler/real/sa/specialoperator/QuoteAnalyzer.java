@@ -5,7 +5,6 @@ import jcl.arrays.ArrayStruct;
 import jcl.arrays.StringStruct;
 import jcl.arrays.VectorStruct;
 import jcl.characters.CharacterStruct;
-import jcl.compiler.old.functions.GensymFunction;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.ArrayStructAnalyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
@@ -69,7 +68,7 @@ public class QuoteAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		final ListStruct newList = new ConsStruct(SpecialOperator.LOAD_TIME_VALUE, initForm);
 
 		final String realFldName = (fieldName == null) ? "LOAD_TIME_VALUE_" : fieldName;
-		return LoadTimeValueAnalyzer.INSTANCE.analyze(newList, realFldName, GensymFunction.funcall(String.valueOf(System.currentTimeMillis()) + '_').toString());
+		return LoadTimeValueAnalyzer.INSTANCE.analyze(newList, realFldName);
 	}
 
 	private static ListStruct transformQuoteToLTV(final LispStruct form) {

@@ -50,7 +50,7 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final StringStruct LAMBDA_ARGLIST_MUNGER_STRING = new StringStruct("LAMBDA_ARGLIST_MUNGER");
 
 	@Override
-	public LispStruct analyze(final ListStruct input) {
+	public ListStruct analyze(final ListStruct input) {
 		if (input.size() != 2) {
 			throw new RuntimeException("Wrong number of arguments to special operator Function: " + input.size());
 		}

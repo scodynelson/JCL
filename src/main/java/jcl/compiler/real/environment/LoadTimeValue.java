@@ -1,23 +1,31 @@
 package jcl.compiler.real.environment;
 
-import jcl.lists.ListStruct;
+import jcl.LispStruct;
 import jcl.symbols.SymbolStruct;
-
-import java.util.Map;
 
 public class LoadTimeValue {
 
-	private Map<SymbolStruct, ListStruct> values;
+	private SymbolStruct name;
+	private LispStruct value;
 
-	public LoadTimeValue(final Map<SymbolStruct, ListStruct> values) {
-		this.values = values;
+	public LoadTimeValue(final SymbolStruct name, final LispStruct value) {
+		this.name = name;
+		this.value = value;
 	}
 
-	public Map<SymbolStruct, ListStruct> getValues() {
-		return values;
+	public SymbolStruct getName() {
+		return name;
 	}
 
-	public void setValues(final Map<SymbolStruct, ListStruct> values) {
-		this.values = values;
+	public void setName(final SymbolStruct name) {
+		this.name = name;
+	}
+
+	public LispStruct getValue() {
+		return value;
+	}
+
+	public void setValue(final LispStruct value) {
+		this.value = value;
 	}
 }

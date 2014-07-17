@@ -12,18 +12,18 @@ public class Environment implements LispStruct {
 	public static final Environment NULL = null;
 
 	private Marker marker;
-	private LoadTimeValue loadTimeValue;
+	private List<LoadTimeValue> loadTimeValues;
 	private Environment parent;
 	private List<Binding> bindings;
 	private SymbolTable symbolTable;
 	private Closure environmentClosure;
 
 	// TODO: load-time-value ???
-	public Environment(final Marker marker, final LoadTimeValue loadTimeValue, final Environment parent, final List<Binding> bindings,
-					   final SymbolTable symbolTable, final Closure environmentClosure) {
+	public Environment(final Marker marker, final List<LoadTimeValue> loadTimeValues, final Environment parent, final List<Binding> bindings,
+	                   final SymbolTable symbolTable, final Closure environmentClosure) {
 		this.marker = marker;
 		this.parent = parent;
-		this.loadTimeValue = loadTimeValue;
+		this.loadTimeValues = loadTimeValues;
 		this.bindings = bindings;
 		this.symbolTable = symbolTable;
 		this.environmentClosure = environmentClosure;
@@ -33,8 +33,8 @@ public class Environment implements LispStruct {
 		return marker;
 	}
 
-	public LoadTimeValue getLoadTimeValue() {
-		return loadTimeValue;
+	public List<LoadTimeValue> getLoadTimeValues() {
+		return loadTimeValues;
 	}
 
 	public Environment getParent() {
@@ -66,8 +66,8 @@ public class Environment implements LispStruct {
 		this.marker = marker;
 	}
 
-	public void setLoadTimeValue(final LoadTimeValue loadTimeValue) {
-		this.loadTimeValue = loadTimeValue;
+	public void setLoadTimeValues(final List<LoadTimeValue> loadTimeValues) {
+		this.loadTimeValues = loadTimeValues;
 	}
 
 	public void setParent(final Environment parent) {

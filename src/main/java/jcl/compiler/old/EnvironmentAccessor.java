@@ -22,15 +22,16 @@ import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
 import jcl.types.T;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EnvironmentAccessor {
 
 	public static Environment createNewEnvironment(final Marker marker) {
-		Environment environment = new Environment(marker, null, null, null, null, null);
+		Environment environment = new Environment(marker, new ArrayList<>(), null, new ArrayList<>(), null, null);
 
 		if ((marker == Marker.LAMBDA) || (marker == Marker.MACRO) || (marker == Marker.FLET) || (marker == Marker.LABELS)) {
-			environment.setLoadTimeValue(null);
+			environment.getLoadTimeValues().clear();
 		}
 
 		environment = createParent(environment, Environment.NULL);

@@ -44,7 +44,7 @@ public class EvalWhenAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		if (!difference.isEmpty()) {
 			throw new RuntimeException("EVAL-WHEN: Situations must be one of ':COMPILE-TOP-LEVEL', ':LOAD-TIME-LEVEL', or ':EXECUTE'. Got: " + situationList);
 		}
-ork
+
 		final ListStruct forms = input.getRest().getRest();
 		if (isTopLevel) {
 			if (isCompileTopLevel(situationJavaList)) {

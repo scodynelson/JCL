@@ -5,16 +5,16 @@ import jcl.packages.PackageStruct;
 
 public final class Declaration extends SymbolStruct<Declaration> {
 
-	public static final Declaration IGNORE = new Declaration("", GlobalPackageStruct.COMMON_LISP);
-	public static final Declaration IGNORABLE = new Declaration("", GlobalPackageStruct.COMMON_LISP);
-	public static final Declaration DYNAMIC_EXTENT = new Declaration("", GlobalPackageStruct.COMMON_LISP);
-	public static final Declaration TYPE = new Declaration("", GlobalPackageStruct.COMMON_LISP);
-	public static final Declaration INLINE = new Declaration("", GlobalPackageStruct.COMMON_LISP);
-	public static final Declaration NOTINLINE = new Declaration("", GlobalPackageStruct.COMMON_LISP);
-	public static final Declaration FTYPE = new Declaration("", GlobalPackageStruct.COMMON_LISP);
-	public static final Declaration DECLARATION = new Declaration("", GlobalPackageStruct.COMMON_LISP);
-	public static final Declaration OPTIMIZE = new Declaration("", GlobalPackageStruct.COMMON_LISP);
-	public static final Declaration SPECIAL = new Declaration("", GlobalPackageStruct.COMMON_LISP);
+	public static final Declaration IGNORE = new Declaration("IGNORE", GlobalPackageStruct.COMMON_LISP);
+	public static final Declaration IGNORABLE = new Declaration("IGNORABLE", GlobalPackageStruct.COMMON_LISP);
+	public static final Declaration DYNAMIC_EXTENT = new Declaration("DYNAMIC-EXTENT", GlobalPackageStruct.COMMON_LISP);
+	public static final Declaration TYPE = new Declaration("TYPE", GlobalPackageStruct.COMMON_LISP);
+	public static final Declaration INLINE = new Declaration("INLINE", GlobalPackageStruct.COMMON_LISP);
+	public static final Declaration NOTINLINE = new Declaration("NOTINLINE", GlobalPackageStruct.COMMON_LISP);
+	public static final Declaration FTYPE = new Declaration("FTYPE", GlobalPackageStruct.COMMON_LISP);
+	public static final Declaration DECLARATION = new Declaration("DECLARATION", GlobalPackageStruct.COMMON_LISP);
+	public static final Declaration OPTIMIZE = new Declaration("OPTIMIZE", GlobalPackageStruct.COMMON_LISP);
+	public static final Declaration SPECIAL = new Declaration("SPECIAL", GlobalPackageStruct.COMMON_LISP);
 
 	public static final Declaration COMPILATION_SPEED = new Declaration("COMPILATION-SPEED", GlobalPackageStruct.COMMON_LISP);
 	public static final Declaration DEBUG = new Declaration("DEBUG", GlobalPackageStruct.COMMON_LISP);

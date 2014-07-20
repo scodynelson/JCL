@@ -5,30 +5,76 @@ import jcl.compiler.old.symbol.KeywordOld;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
+import jcl.symbols.KeywordSymbolStruct;
+import org.apache.commons.collections4.CollectionUtils;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class EvalWhenAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 	public static final EvalWhenAnalyzer INSTANCE = new EvalWhenAnalyzer();
 
+	private static final Set<KeywordSymbolStruct> SITUATION_KEYWORDS = new HashSet<>(3);
+
+	static {
+		SITUATION_KEYWORDS.add(KeywordOld.CompileToplevel);
+		SITUATION_KEYWORDS.add(KeywordOld.LoadToplevel);
+		SITUATION_KEYWORDS.add(KeywordOld.Execute);
+	}
+
 	@Override
 	public LispStruct analyze(final ListStruct input) {
-		// this only has effect when the :execute situation is found
-		// :compile-toplevel and :load-toplevel situations are ignored.
-		// for any of the nested code to be compiled, the :execute
-		// situation is in effect.
+		return analyze(input, false);
+	}
+
+	public ListStruct analyze(final ListStruct input, final boolean isTopLevel) {
 
 		final LispStruct second = input.getRest().getFirst();
-		if (second instanceof ListStruct) {
-			final ListStruct situationList = (ListStruct) second;
+		if (!(second instanceof ListStruct)) {
+			throw new RuntimeException("EVAL-WHEN: Situation list must be of type ListStruct. Got: " + second);
+		}
 
-			if (situationList.getAsJavaList().contains(KeywordOld.Execute)) {
-				final ListStruct formsList = input.getRest();
-				return PrognAnalyzer.INSTANCE.analyze(formsList);
+		final ListStruct situationList = (ListStruct) second;
+		final List<LispStruct> situationJavaList = situationList.getAsJavaList();
+
+		final Collection<LispStruct> difference = CollectionUtils.removeAll(situationJavaList, SITUATION_KEYWORDS);
+		if (!difference.isEmpty()) {
+			throw new RuntimeException("EVAL-WHEN: Situations must be one of ':COMPILE-TOP-LEVEL', ':LOAD-TIME-LEVEL', or ':EXECUTE'. Got: " + situationList);
+		}
+ork
+		final ListStruct forms = input.getRest().getRest();
+		if (isTopLevel) {
+			if (isCompileTopLevel(situationJavaList)) {
+				return PrognAnalyzer.INSTANCE.analyze(forms);
+			} else if (isLoadTopLevel(situationJavaList)) {
+				// TODO: take care of processing later at load time...
+				return PrognAnalyzer.INSTANCE.analyze(forms);
+			} else if (isExecute(situationJavaList)) {
+				// TODO: take care of processing later at execution time...
+				return PrognAnalyzer.INSTANCE.analyze(forms);
 			} else {
 				return NullStruct.INSTANCE;
 			}
+		} else if (isExecute(situationJavaList)) {
+			// TODO: take care of processing later at execution time...
+			return PrognAnalyzer.INSTANCE.analyze(forms);
+		} else {
+			return NullStruct.INSTANCE;
 		}
+	}
 
-		throw new RuntimeException("Improperly formed EVAL-WHEN: " + input);
+	private boolean isCompileTopLevel(final List<LispStruct> situationList) {
+		return situationList.contains(KeywordOld.CompileToplevel);
+	}
+
+	private boolean isLoadTopLevel(final List<LispStruct> situationList) {
+		return situationList.contains(KeywordOld.LoadToplevel);
+	}
+
+	private boolean isExecute(final List<LispStruct> situationList) {
+		return situationList.contains(KeywordOld.Execute);
 	}
 }

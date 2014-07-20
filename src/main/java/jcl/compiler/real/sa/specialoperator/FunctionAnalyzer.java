@@ -1,6 +1,7 @@
 package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
+import jcl.LispType;
 import jcl.arrays.StringStruct;
 import jcl.compiler.old.EnvironmentAccessor;
 import jcl.compiler.old.functions.AppendFunction;
@@ -47,6 +48,37 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	private static Pattern nameBreakingPattern = Pattern.compile(nameBreakingRegex);
 
 	public static final StringStruct LAMBDA_ARGLIST_MUNGER_STRING = new StringStruct("LAMBDA_ARGLIST_MUNGER");
+
+	public static class FunctionAnalyzerResult implements LispStruct {
+
+		private final OrdinaryLambdaListBindings ordinaryLambdaListBindings;
+		private final Environment environment;
+		private final ListStruct listStruct;
+
+		public FunctionAnalyzerResult(final OrdinaryLambdaListBindings ordinaryLambdaListBindings, final Environment environment,
+									  final ListStruct listStruct) {
+			this.ordinaryLambdaListBindings = ordinaryLambdaListBindings;
+			this.environment = environment;
+			this.listStruct = listStruct;
+		}
+
+		public OrdinaryLambdaListBindings getOrdinaryLambdaListBindings() {
+			return ordinaryLambdaListBindings;
+		}
+
+		public Environment getEnvironment() {
+			return environment;
+		}
+
+		public ListStruct getListStruct() {
+			return listStruct;
+		}
+
+		@Override
+		public LispType getType() {
+			return null;
+		}
+	}
 
 	@Override
 	public ListStruct analyze(final ListStruct input) {
@@ -99,7 +131,7 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		throw new RuntimeException("Improperly Formed Function: the arguments must be either a ListStruct or SymbolStruct");
 	}
 
-	private static ListStruct saLambdaAux1(final ListStruct listStruct, final Environment environment, final boolean isLambda) {
+	private static FunctionAnalyzerResult saLambdaAux1(final ListStruct listStruct, final Environment environment, final boolean isLambda) {
 		//might also need here prev. bindings position num, or even a stack?
 		final int tempPosition = SemanticAnalyzer.bindingsPosition;
 
@@ -132,7 +164,9 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			// TODO: if the 'supplied-p' parameter has a values of T or NIL. What it will do is 'inline' an "if" block that
 			// TODO: will dynamically check the input of the variable and then "SETQ" the value of the 'supplied-p' parameter.
 
-			return null;
+
+
+			return new FunctionAnalyzerResult(parsedLambdaList, environment, null);
 		} finally {
 			SemanticAnalyzer.bindingsPosition = tempPosition;  //???
 			SemanticAnalyzer.environmentStack.pop();
@@ -178,7 +212,7 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 						// Add the lambda bindings to the current environment
 						final ConsStruct bindingList = (ConsStruct) EnvironmentAccessor.getBindingSet(newEnvironment);
 						// Now I have to remove any FAKE rest forms. They can't be in the binding set
-						bindingList.setCdr(removeFakeRestEntry(theParsedLambdaList));
+						bindingList.setCdr(theParsedLambdaList);
 					}
 				}
 			}
@@ -315,89 +349,6 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 	public static ListStruct findDeclaration(final SymbolStruct item, final ListStruct list) {
 		return AssocFunction.funcall(item, list);
-	}
-
-	// New helper function. It takes a parsedLambdaList and removes a FakeRest used for setting up the lambda
-	// list for function application
-	public static ListStruct removeFakeRestEntry(final ListStruct parsedLambdaList) {
-		// Only do nothing unless the parsedLambdaList has a FakeRest
-		ListStruct thePLL = parsedLambdaList;
-		final SymbolStruct fakeRestSymbolStruct = GlobalPackageStruct.COMPILER.findSymbol(
-				"FakeRestSymbolForHandlingKeysWithout&Rest").getSymbolStruct();
-		while (!thePLL.equals(NullStruct.INSTANCE)) {
-			// if we find a fakeRestSymbolStruct at the beginning of a lambda list, remove it
-			if (((ListStruct) thePLL.getFirst()).getFirst().equals(fakeRestSymbolStruct)) {
-				// found one!
-				return removeFakeRestEntryAux(parsedLambdaList);
-			} else {
-				thePLL = thePLL.getRest();
-			}
-		}
-		return parsedLambdaList;
-	}
-
-	private static ListStruct removeFakeRestEntryAux(final ListStruct parsedLambdaList) {
-		// doesn't use the Collection framework remove because the check has to be inside the cons
-		// So, we do it the hard way
-		final List<LispStruct> copyJavaList = parsedLambdaList.getAsJavaList();
-		final boolean isPLLDotted = parsedLambdaList.isDotted();
-
-		final ListStruct copyParsedLambdaList;
-		if (isPLLDotted) {
-			copyParsedLambdaList = ListStruct.buildDottedList(copyJavaList);
-		} else {
-			copyParsedLambdaList = ListStruct.buildProperList(copyJavaList);
-		}
-
-		final SymbolStruct fakeRestSymbolStruct = GlobalPackageStruct.COMPILER.findSymbol(
-				"FakeRestSymbolForHandlingKeysWithout&Rest").getSymbolStruct();
-		// Check to see if the first element is the fake. This happens in the case of
-		// of the param list starts with &key
-		final ListStruct parsedLambdaElt = (ListStruct) copyParsedLambdaList.getFirst();
-		if (parsedLambdaElt.getFirst().equals(fakeRestSymbolStruct)) {
-			// just return the rest of the parsed lambda elements
-			return adjustParameterNbrs(copyParsedLambdaList.getRest()); // NOTE: decr the parameter
-		}
-		// here the fake rest is embedded
-		ListStruct prior = copyParsedLambdaList;
-		ListStruct current = copyParsedLambdaList.getRest();
-		// see if we have any
-		while (!current.equals(NullStruct.INSTANCE)) {
-			if (((ListStruct) current.getFirst()).getFirst().equals(fakeRestSymbolStruct)) {
-				// now splice it out
-				// now we spice out the fake rest entry
-				((ConsStruct) prior).setCdr(current.getRest());
-				// now adjust the parameters that are post- fake element
-				adjustParameterNbrs(current.getRest());
-				// now drop the first element to the garbage
-				((ConsStruct) current).setCdr(NullStruct.INSTANCE);
-				break;
-				// now we have to decr the parameter parameter (really) to account for no param slot for the fake
-			}
-			prior = prior.getRest();
-			current = current.getRest();
-		}
-		return parsedLambdaList;
-	}
-
-	private static ListStruct adjustParameterNbrs(final ListStruct paramsToAdjust) {
-		final SymbolStruct allocKey = GlobalPackageStruct.KEYWORD.findSymbol("ALLOCATION").getSymbolStruct();
-		// Now we have to rework the parameter indices since we just dropped a paramter (the fake rest)
-		ListStruct adjustableList = paramsToAdjust;
-		while (!adjustableList.equals(NullStruct.INSTANCE)) {
-			// for each &key params, get the parameter number, decr it, and put it back
-			final ListStruct params = ((ListStruct) adjustableList.getFirst()).getRest(); // now we have a plist
-			// get the parameter cons entry and decr the cdr number
-			// now let's print it
-			final ConsStruct theParamAlloc = (ConsStruct) GetPlist.funcall(params,
-					allocKey);
-			// now adjust the number found in the cdr
-			final int paramNbr = ((IntegerStruct) theParamAlloc.getCdr()).getBigInteger().intValue();
-			// decr the number by 1
-			theParamAlloc.setCdr(new IntegerStruct(BigInteger.valueOf(paramNbr - 1)));
-			adjustableList = adjustableList.getRest();
-		}
-		return paramsToAdjust;
 	}
 
 	private static SymbolStruct saGetClassName(ListStruct list) {

@@ -42,7 +42,6 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final FunctionAnalyzer INSTANCE = new FunctionAnalyzer();
 
 	public static ListStruct bindings;
-	public static Stack<IdentityHashMap<LispStruct, LispStruct>> dupSetStack;
 
 	private static String nameBreakingRegex = "[^\\p{Alnum}]";
 	private static Pattern nameBreakingPattern = Pattern.compile(nameBreakingRegex);
@@ -107,9 +106,6 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		// keep track of the current environment as it is "now"
 		// set the current environment's parent to what was the environment
 		try {
-			dupSetStack.push(SemanticAnalyzer.dupSet);
-			SemanticAnalyzer.dupSet = new IdentityHashMap<>();
-
 			final LispStruct firstElement = listStruct.getFirst();
 			if (!(firstElement instanceof SymbolStruct)) {
 				// TODO: This can really go away, as we build this list above anyways...
@@ -141,7 +137,6 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			SemanticAnalyzer.bindingsPosition = tempPosition;  //???
 			SemanticAnalyzer.environmentStack.pop();
 			SemanticAnalyzer.currentLispName.pop();
-			SemanticAnalyzer.dupSet = dupSetStack.pop();
 		}
 	}
 
@@ -152,9 +147,6 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		// keep track of the current environment as it is "now"
 		// set the current environment's parent to what was the environment
 		try {
-			dupSetStack.push(SemanticAnalyzer.dupSet);
-			SemanticAnalyzer.dupSet = new IdentityHashMap<>();
-
 			// list => (%lambda (lambda-list) (declare ...) ?"...doc..." body...)
 			final SymbolStruct lambdaSym = (SymbolStruct) list.getFirst(); // hang on to %lambda or %macro
 
@@ -318,7 +310,6 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			SemanticAnalyzer.bindingsPosition = tempPosition;  //???
 			SemanticAnalyzer.environmentStack.pop();
 			SemanticAnalyzer.currentLispName.pop();
-			SemanticAnalyzer.dupSet = dupSetStack.pop();
 		}
 	}
 

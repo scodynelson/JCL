@@ -44,7 +44,6 @@ public class SemanticAnalyzer {
 	public static Stack<Environment> environmentStack;
 	public static Vector<SymbolStruct> undefinedFunctions;
 	public static Stack<SymbolStruct> currentLispName;
-	public static IdentityHashMap<LispStruct, LispStruct> dupSet = null;
 	public static int bindingsPosition;
 	// and association of function names seen and their arglist munging
 	// used to handle recursive functions
@@ -78,7 +77,6 @@ public class SemanticAnalyzer {
 		undefinedFunctions = new Vector<>();
 		bindingsPosition = 0;
 		FunctionAnalyzer.bindings = NullStruct.INSTANCE;
-		FunctionAnalyzer.dupSetStack = new Stack<>();
 	}
 
 	public LispStruct funcall(LispStruct form) {

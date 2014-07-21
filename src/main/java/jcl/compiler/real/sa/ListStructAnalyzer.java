@@ -5,6 +5,7 @@ import jcl.compiler.old.functions.MacroExpandFunction;
 import jcl.compiler.old.functions.MacroExpandReturn;
 import jcl.compiler.real.sa.specialoperator.compiler.FunctionMarkerAnalyzer;
 import jcl.compiler.real.sa.specialoperator.special.LambdaAnalyzer;
+import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.SpecialOperator;
@@ -17,8 +18,12 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	@Override
 	public LispStruct analyze(final ListStruct input) {
 
-		final LispStruct firstElement = input.getFirst();
-		if (firstElement instanceof SymbolStruct) {
+		if (input.equals(NullStruct.INSTANCE)) {
+			return input;
+		}
+
+		final LispStruct first = input.getFirst();
+		if (first instanceof SymbolStruct) {
 			final MacroExpandReturn macroExpandReturn = MacroExpandFunction.FUNCTION.funcall(input, SemanticAnalyzer.environmentStack.peek());
 			final LispStruct expandedForm = macroExpandReturn.getExpandedForm();
 
@@ -28,7 +33,9 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 			if (expandedForm instanceof ListStruct) {
 				final ListStruct expandedFormList = (ListStruct) expandedForm;
-				if (expandedFormList.getFirst() instanceof SpecialOperator) {
+
+				final LispStruct expandedFormListFirst = expandedFormList.getFirst();
+				if (expandedFormListFirst instanceof SpecialOperator) {
 					return SpecialOperatorAnalyzer.INSTANCE.analyze(expandedFormList);
 				} else {
 					return FunctionMarkerAnalyzer.INSTANCE.analyze(expandedFormList);
@@ -36,17 +43,21 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			} else {
 				return SemanticAnalyzer.saMainLoop(expandedForm);
 			}
-		} else if (firstElement instanceof ListStruct) {
+		} else if (first instanceof ListStruct) {
 			// ex ((lambda (x) (+ x 1)) 3)
-			final ListStruct firstElementList = (ListStruct) firstElement;
-			if (firstElementList.getFirst().equals(SpecialOperator.LAMBDA)) {
-				input.setElement(1, LambdaAnalyzer.INSTANCE.analyze(firstElementList));
-				return FunctionMarkerAnalyzer.INSTANCE.analyze(input);
+			final ListStruct firstAsList = (ListStruct) first;
+
+			final LispStruct firstOfFirstList = firstAsList.getFirst();
+			if (firstOfFirstList.equals(SpecialOperator.LAMBDA)) {
+				final ListStruct lambdaAnalyzed = LambdaAnalyzer.INSTANCE.analyze(firstAsList);
+				final ListStruct lambdaList = new ConsStruct(lambdaAnalyzed, input.getRest());
+
+				return FunctionMarkerAnalyzer.INSTANCE.analyze(lambdaList);
 			} else {
-				throw new RuntimeException("Improperly Formed ListStruct: " + input);
+				throw new RuntimeException("SA LIST: First element of a first element ListStruct must be the SpecialOperator 'LAMBDA'. Got: " + firstOfFirstList);
 			}
 		} else {
-			throw new RuntimeException("Improperly Formed ListStruct: " + input);
+			throw new RuntimeException("SA LIST: First element must be of type SymbolStruct or ListStruct. Got: " + first);
 		}
 	}
 }

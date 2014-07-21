@@ -1,9 +1,6 @@
 package jcl.compiler.real.sa;
 
 import jcl.LispStruct;
-import jcl.arrays.ArrayStruct;
-import jcl.arrays.VectorStruct;
-import jcl.characters.CharacterStruct;
 import jcl.compiler.old.EnvironmentAccessor;
 import jcl.compiler.old.WrapInLambda;
 import jcl.compiler.old.functions.AssocFunction;
@@ -18,8 +15,7 @@ import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.numbers.IntegerStruct;
-import jcl.numbers.NumberStruct;
-import jcl.symbols.KeywordSymbolStruct;
+import jcl.symbols.NILStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 import org.slf4j.Logger;
@@ -27,7 +23,6 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
 import java.util.HashMap;
-import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -115,27 +110,15 @@ public class SemanticAnalyzer {
 		return form;
 	}
 
-	public static LispStruct saMainLoop(LispStruct form) {
-		if (form.equals(NullStruct.INSTANCE)) {
-			// do nothing
-		} else if (form instanceof KeywordSymbolStruct) {
-			//do nothing
-		} else if (form instanceof CharacterStruct) {
-			//do nothing
-		} else if (form instanceof NumberStruct) {
-			//do nothing
-		} else if (form instanceof SymbolStruct) {
-			form = SymbolStructAnalyzer.INSTANCE.analyze((SymbolStruct<?>) form);
+	public static LispStruct saMainLoop(final LispStruct form) {
+
+		LispStruct analyzedForm = form;
+		if ((form instanceof SymbolStruct) && !form.equals(NILStruct.INSTANCE)) {
+			analyzedForm = SymbolStructAnalyzer.INSTANCE.analyze((SymbolStruct<?>) form);
 		} else if (form instanceof ListStruct) {
-			form = ListStructAnalyzer.INSTANCE.analyze((ListStruct) form);
-		} else if (form instanceof VectorStruct) {
-			form = VectorStructAnalyzer.INSTANCE.analyze((VectorStruct) form);
-		} else if (form instanceof ArrayStruct) {
-			form = ArrayStructAnalyzer.INSTANCE.analyze((ArrayStruct) form);
-		} else {
-			LOGGER.warn("SA: Found thing I can't semantically analyze: {}, class: {}", form, form.getClass().getName());
+			analyzedForm = ListStructAnalyzer.INSTANCE.analyze((ListStruct) form);
 		}
-		return form;
+		return analyzedForm;
 	}
 
 	/*

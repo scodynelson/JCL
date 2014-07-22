@@ -16,36 +16,35 @@ public class LetStarAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	@Override
 	public LispStruct analyze(final ListStruct input) {
 
-		if (input.size() == 1) {
-			throw new RuntimeException("Wrong number of arguments to special operator LET*: " + input.size());
+		if (input.size() < 2) {
+			throw new RuntimeException("LET*: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
 		}
 
 		final LispStruct second = input.getRest().getFirst();
-		if (second instanceof ListStruct) {
-			final ListStruct parameters = (ListStruct) second;
-			final List<LispStruct> parametersAsJavaList = parameters.getAsJavaList();
-
-			final ListIterator<LispStruct> li = parametersAsJavaList.listIterator(parametersAsJavaList.size());
-
-			ListStruct body = input.getRest().getRest();
-
-			while (li.hasPrevious()) {
-				final LispStruct previousParams = li.previous();
-
-				final List<LispStruct> previousBodyJavaList = body.getAsJavaList();
-
-				final List<LispStruct> innerLet = new ArrayList<>();
-				innerLet.add(SpecialOperator.LET);
-				innerLet.add(previousParams);
-				innerLet.addAll(previousBodyJavaList);
-
-				body = ListStruct.buildProperList(innerLet);
-			}
-
-			return LetAnalyzer.INSTANCE.analyze(body);
+		if (!(second instanceof ListStruct)) {
+			throw new RuntimeException("LET*: Parameter list must be of type ListStruct. Got: " + second);
 		}
 
+		final ListStruct parameters = (ListStruct) second;
+		final List<LispStruct> parametersAsJavaList = parameters.getAsJavaList();
 
-		throw new RuntimeException("Improperly Formed Let*: the parameter list must be a ListStruct");
+		final ListIterator<LispStruct> iterator = parametersAsJavaList.listIterator(parametersAsJavaList.size());
+
+		ListStruct body = input.getRest().getRest();
+
+		while (iterator.hasPrevious()) {
+			final LispStruct previousParams = iterator.previous();
+
+			final List<LispStruct> previousBodyJavaList = body.getAsJavaList();
+
+			final List<LispStruct> innerLet = new ArrayList<>();
+			innerLet.add(SpecialOperator.LET);
+			innerLet.add(previousParams);
+			innerLet.addAll(previousBodyJavaList);
+
+			body = ListStruct.buildProperList(innerLet);
+		}
+
+		return LetAnalyzer.INSTANCE.analyze(body);
 	}
 }

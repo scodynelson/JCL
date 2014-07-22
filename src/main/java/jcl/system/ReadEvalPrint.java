@@ -5,6 +5,7 @@ import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariable;
+import jcl.printer.Printer;
 import jcl.readtables.reader.impl.Reader;
 import jcl.readtables.reader.function.macrofunction.SharpTagReaderConstants;
 import jcl.streams.CharacterStreamStruct;
@@ -97,15 +98,15 @@ public final class ReadEvalPrint {
 					SharpTagReaderConstants.SHARP_EQUAL_REPL_TABLE.clear();
 					SharpTagReaderConstants.SHARP_EQUAL_FINAL_TABLE.clear();
 
+					LispStruct whatRead = null;
 					try {
-						final LispStruct whatRead;
 						if (isFile) {
 							whatRead = reader.read(false, null, true);
 						} else {
 							whatRead = reader.read();
 						}
 						if (whatRead != null) {
-							LOGGER.debug(whatRead.toString());
+//							LOGGER.debug(whatRead.toString());
 						} else {
 							LOGGER.warn("; WARNING: Null response from reader");
 						}
@@ -156,8 +157,8 @@ public final class ReadEvalPrint {
 //					}
 
 					// PRINT -------------
-//					if (value == null) {
-//						LOGGER.info(";-- No Value --");
+					if (whatRead == null) {
+						LOGGER.info(";-- No Value --");
 //					} else if (value instanceof Object[]) {
 //						final Object[] mv = (Object[]) value;
 //						int count = mv.length;
@@ -172,9 +173,10 @@ public final class ReadEvalPrint {
 //							}
 //							LOGGER.info(mv[count].toString());
 //						}
-//					} else {
-//						LOGGER.info(value.toString());
-//					}
+					} else {
+						final String printedValue = Printer.print(whatRead);
+						LOGGER.info(printedValue);
+					}
 				} catch (final Exception ex) {
 					LOGGER.error("; WARNING: Exception condition -> {}", ex.getMessage(), ex);
 //				} catch (StackOverflowError err) {

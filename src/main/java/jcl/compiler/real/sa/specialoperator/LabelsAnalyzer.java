@@ -33,17 +33,17 @@ public class LabelsAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		final Environment parentEnvironment = SemanticAnalyzer.environmentStack.peek();
 
-		final Environment letEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.LABELS);
-		letEnvironment.setParent(parentEnvironment);
+		final Environment labelsEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.LABELS);
+		labelsEnvironment.setParent(parentEnvironment);
 
-		SemanticAnalyzer.environmentStack.push(letEnvironment);
+		SemanticAnalyzer.environmentStack.push(labelsEnvironment);
 
 		final int tempPosition = SemanticAnalyzer.bindingsPosition;
 		try {
-			final ListStruct fletFunctions = input.getRest();
-			final List<LispStruct> fletFunctionsJavaList = fletFunctions.getAsJavaList();
+			final ListStruct labelsFunctions = input.getRest();
+			final List<LispStruct> labelsFunctionsJavaList = labelsFunctions.getAsJavaList();
 
-			for (final LispStruct currentFunction : fletFunctionsJavaList) {
+			for (final LispStruct currentFunction : labelsFunctionsJavaList) {
 				if (!(currentFunction instanceof ListStruct)) {
 					throw new RuntimeException("LABELS: Function parameter must be of type ListStruct. Got: " + currentFunction);
 				}

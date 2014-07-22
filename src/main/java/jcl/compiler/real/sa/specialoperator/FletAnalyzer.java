@@ -33,10 +33,10 @@ public class FletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		final Environment parentEnvironment = SemanticAnalyzer.environmentStack.peek();
 
-		final Environment letEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.FLET);
-		letEnvironment.setParent(parentEnvironment);
+		final Environment fletEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.FLET);
+		fletEnvironment.setParent(parentEnvironment);
 
-		SemanticAnalyzer.environmentStack.push(letEnvironment);
+		SemanticAnalyzer.environmentStack.push(fletEnvironment);
 
 		final int tempPosition = SemanticAnalyzer.bindingsPosition;
 		try {

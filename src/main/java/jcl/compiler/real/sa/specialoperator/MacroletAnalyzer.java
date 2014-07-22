@@ -1,11 +1,14 @@
 package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
-import jcl.compiler.old.functions.GensymFunction;
+import jcl.compiler.old.EnvironmentAccessor;
+import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.Analyzer;
+import jcl.compiler.real.sa.MacroletEnvironmentListStruct;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
-import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 
@@ -18,62 +21,89 @@ public class MacroletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 	@Override
 	public LispStruct analyze(final ListStruct input) {
-		// TODO: right now this acts just like FLET. Need to fix this once we can macroexpand correctly...
 
-		final List<LispStruct> mungedMacros = new ArrayList<>();
-		mungedMacros.add(SpecialOperator.PROGN);
-
-		final ListStruct macroletMacroList = input.getRest();
-		final List<LispStruct> macroletMacroJavaList = macroletMacroList.getAsJavaList();
-
-		SemanticAnalyzer.getFunctionNames("MACROLET", input, macroletMacroJavaList);
-
-		for (final LispStruct currentMacro : macroletMacroJavaList) {
-			final ListStruct macroListStruct = (ListStruct) currentMacro;
-
-			final LispStruct macroFirst = macroListStruct.getFirst();
-			final SymbolStruct<?> macroName = (SymbolStruct) macroFirst;
-			final SymbolStruct<?> gensymMacroName = GensymFunction.funcall(macroName.getName());
-
-			final LispStruct macroSecond = macroListStruct.getRest().getFirst();
-			final ListStruct lambdaList = (ListStruct) macroSecond;
-			final ListStruct body = macroListStruct.getRest().getRest();
-
-			final List<LispStruct> mungedMacro = new ArrayList<>();
-
-			final List<LispStruct> setSymbolFunction = new ArrayList<>();
-			setSymbolFunction.add(GlobalPackageStruct.COMMON_LISP.findSymbol("SET-SYMBOL-FUNCTION").getSymbolStruct());
-			setSymbolFunction.add(gensymMacroName);
-
-			final List<LispStruct> innerFunction = new ArrayList<>();
-			innerFunction.add(SpecialOperator.FUNCTION);
-
-			final List<LispStruct> innerLambda = new ArrayList<>();
-			innerLambda.add(SpecialOperator.LAMBDA);
-			innerLambda.add(lambdaList);
-
-			final List<LispStruct> innerBlock = new ArrayList<>();
-			innerBlock.add(SpecialOperator.BLOCK);
-			innerBlock.add(gensymMacroName);
-			innerBlock.add(body);
-
-			final ListStruct innerBlockListStruct = ListStruct.buildProperList(innerBlock);
-			innerLambda.add(innerBlockListStruct);
-
-			final ListStruct innerLambdaListStruct = ListStruct.buildProperList(innerLambda);
-			innerFunction.add(innerLambdaListStruct);
-
-			final ListStruct innerFunctionListStruct = ListStruct.buildProperList(innerFunction);
-			setSymbolFunction.add(innerFunctionListStruct);
-
-			final ListStruct setSymbolFunctionListStruct = ListStruct.buildProperList(setSymbolFunction);
-			mungedMacro.add(setSymbolFunctionListStruct);
-
-			final ListStruct mungedFunctionListStruct = ListStruct.buildProperList(mungedMacro);
-			mungedMacros.add(mungedFunctionListStruct);
+		if (input.size() < 2) {
+			throw new RuntimeException("MACROLET: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
 		}
 
-		final ListStruct mungedMacrosListStruct = ListStruct.buildProperList(mungedMacros);
-		return PrognAnalyzer.INSTANCE.analyze(mungedMacrosListStruct);
+		final LispStruct second = input.getRest().getFirst();
+		if (!(second instanceof ListStruct)) {
+			throw new RuntimeException("MACROLET: Parameter list must be of type ListStruct. Got: " + second);
+		}
+
+		final Environment parentEnvironment = SemanticAnalyzer.environmentStack.peek();
+
+		final Environment macroletEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.MACROLET);
+		macroletEnvironment.setParent(parentEnvironment);
+
+		SemanticAnalyzer.environmentStack.push(macroletEnvironment);
+
+		final int tempPosition = SemanticAnalyzer.bindingsPosition;
+		try {
+			final ListStruct macroletMacros = input.getRest();
+			final List<LispStruct> macroletMacrosJavaList = macroletMacros.getAsJavaList();
+
+			for (final LispStruct currentMacro : macroletMacrosJavaList) {
+				if (!(currentMacro instanceof ListStruct)) {
+					throw new RuntimeException("MACROLET: Macro parameter must be of type ListStruct. Got: " + currentMacro);
+				}
+				final ListStruct macroList = (ListStruct) currentMacro;
+
+				final LispStruct macroListFirst = macroList.getFirst();
+				if (!(macroListFirst instanceof SymbolStruct)) {
+					throw new RuntimeException("MACROLET: Macro parameter first element value must be of type SymbolStruct. Got: " + macroListFirst);
+				}
+				final SymbolStruct<?> macroName = (SymbolStruct) macroListFirst;
+
+				final LispStruct macroListSecond = macroList.getRest().getFirst();
+				if (!(macroListSecond instanceof ListStruct)) {
+					throw new RuntimeException("MACROLET: Macro parameter second element value must be of type ListStruct. Got: " + macroListSecond);
+				}
+
+				final ListStruct lambdaList = (ListStruct) macroListSecond;
+				final ListStruct body = macroList.getRest().getRest();
+
+				final List<LispStruct> innerBlock = new ArrayList<>();
+				innerBlock.add(SpecialOperator.BLOCK);
+				innerBlock.add(macroName);
+				innerBlock.add(body);
+
+				final ListStruct innerBlockListStruct = ListStruct.buildProperList(innerBlock);
+
+				final List<LispStruct> innerLambda = new ArrayList<>();
+				innerLambda.add(SpecialOperator.LAMBDA);
+				innerLambda.add(lambdaList);
+				innerLambda.add(innerBlockListStruct);
+
+				final ListStruct innerLambdaListStruct = ListStruct.buildProperList(innerLambda);
+
+				final List<LispStruct> innerFunction = new ArrayList<>();
+				innerFunction.add(SpecialOperator.FUNCTION);
+				innerFunction.add(innerLambdaListStruct);
+
+				final ListStruct innerFunctionListStruct = ListStruct.buildProperList(innerFunction);
+
+				// TODO: Why are we evaluating this in the outer environment??? I think i know, but not sure if it's actually needed
+				final Environment currentEnvironment = SemanticAnalyzer.environmentStack.pop();
+				final LispStruct paramValueInitForm = SemanticAnalyzer.saMainLoop(innerFunctionListStruct);
+				SemanticAnalyzer.environmentStack.push(currentEnvironment);
+
+				SemanticAnalyzer.bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+
+				EnvironmentAccessor.createNewLetBinding(SemanticAnalyzer.environmentStack.peek(), macroName, SemanticAnalyzer.bindingsPosition, paramValueInitForm, false);
+			}
+
+			final ListStruct body = input.getRest().getRest();
+
+			final ListStruct prognList = new ConsStruct(SpecialOperator.PROGN, body);
+			final ListStruct bodyResult = PrognAnalyzer.INSTANCE.analyze(prognList);
+
+			final Environment envList = SemanticAnalyzer.environmentStack.peek();
+
+			return new MacroletEnvironmentListStruct(envList, bodyResult);
+		} finally {
+			SemanticAnalyzer.bindingsPosition = tempPosition;
+			SemanticAnalyzer.environmentStack.pop();
+		}
 	}
 }

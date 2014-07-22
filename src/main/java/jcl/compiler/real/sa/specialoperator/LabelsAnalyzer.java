@@ -1,17 +1,19 @@
 package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
-import jcl.compiler.old.functions.GensymFunction;
+import jcl.compiler.old.EnvironmentAccessor;
+import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.Analyzer;
+import jcl.compiler.real.sa.LabelsEnvironmentListStruct;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
-import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class LabelsAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
@@ -19,88 +21,89 @@ public class LabelsAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 	@Override
 	public LispStruct analyze(final ListStruct input) {
-		final List<LispStruct> mungedFunctions = new ArrayList<>();
-		mungedFunctions.add(SpecialOperator.PROGN);
 
-		final ListStruct labelsFunctionList = input.getRest();
-		final List<LispStruct> labelsFunctionJavaList = labelsFunctionList.getAsJavaList();
-
-		final Map<SymbolStruct<?>, SymbolStruct<?>> functionNameMap = SemanticAnalyzer.getFunctionNames("LABELS", input, labelsFunctionJavaList);
-
-		for (final LispStruct currentFunction : labelsFunctionJavaList) {
-			final ListStruct functionListStruct = (ListStruct) currentFunction;
-
-			final LispStruct functionFirst = functionListStruct.getFirst();
-			final SymbolStruct<?> functionName = (SymbolStruct) functionFirst;
-			final SymbolStruct<?> gensymFunctionName = GensymFunction.funcall(functionName.getName());
-
-			final LispStruct functionSecond = functionListStruct.getRest().getFirst();
-			final ListStruct lambdaList = (ListStruct) functionSecond;
-			final ListStruct body = functionListStruct.getRest().getRest();
-
-			final List<LispStruct> mungedFunction = new ArrayList<>();
-
-			final List<LispStruct> setSymbolFunction = new ArrayList<>();
-			setSymbolFunction.add(GlobalPackageStruct.COMMON_LISP.findSymbol("SET-SYMBOL-FUNCTION").getSymbolStruct());
-			setSymbolFunction.add(gensymFunctionName);
-
-			final List<LispStruct> innerFunction = new ArrayList<>();
-			innerFunction.add(SpecialOperator.FUNCTION);
-
-			final List<LispStruct> innerLambda = new ArrayList<>();
-			innerLambda.add(SpecialOperator.LAMBDA);
-			innerLambda.add(lambdaList);
-
-			final List<LispStruct> innerBlock = new ArrayList<>();
-			innerBlock.add(SpecialOperator.BLOCK);
-			innerBlock.add(gensymFunctionName);
-
-			final ListStruct labelsFunctionBody = getLabelsFunctionBody(body, functionNameMap);
-			innerBlock.add(labelsFunctionBody);
-
-			final ListStruct innerBlockListStruct = ListStruct.buildProperList(innerBlock);
-			innerLambda.add(innerBlockListStruct);
-
-			final ListStruct innerLambdaListStruct = ListStruct.buildProperList(innerLambda);
-			innerFunction.add(innerLambdaListStruct);
-
-			final ListStruct innerFunctionListStruct = ListStruct.buildProperList(innerFunction);
-			setSymbolFunction.add(innerFunctionListStruct);
-
-			final ListStruct setSymbolFunctionListStruct = ListStruct.buildProperList(setSymbolFunction);
-			mungedFunction.add(setSymbolFunctionListStruct);
-
-			final ListStruct mungedFunctionListStruct = ListStruct.buildProperList(mungedFunction);
-			mungedFunctions.add(mungedFunctionListStruct);
+		if (input.size() < 2) {
+			throw new RuntimeException("LABELS: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
 		}
 
-		final ListStruct mungedFunctionsListStruct = ListStruct.buildProperList(mungedFunctions);
-		return PrognAnalyzer.INSTANCE.analyze(mungedFunctionsListStruct);
-	}
+		final LispStruct second = input.getRest().getFirst();
+		if (!(second instanceof ListStruct)) {
+			throw new RuntimeException("LABELS: Parameter list must be of type ListStruct. Got: " + second);
+		}
 
-	private static ListStruct getLabelsFunctionBody(final ListStruct body, final Map<SymbolStruct<?>, SymbolStruct<?>> functionNameMap) {
+		final Environment parentEnvironment = SemanticAnalyzer.environmentStack.peek();
 
-		final List<LispStruct> newBody = new ArrayList<>();
+		final Environment letEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.LABELS);
+		letEnvironment.setParent(parentEnvironment);
 
-		final List<LispStruct> bodyJavaList = body.getAsJavaList();
-		for (final LispStruct bodyElement : bodyJavaList) {
-			if (bodyElement instanceof ListStruct) {
-				final ListStruct bodyElementList = (ListStruct) bodyElement;
-				final ListStruct updatedElement = getLabelsFunctionBody(bodyElementList, functionNameMap);
-				newBody.add(updatedElement);
-			} else if (bodyElement instanceof SymbolStruct) {
-				final SymbolStruct<?> bodyElementSymbol = (SymbolStruct) bodyElement;
-				if (functionNameMap.containsKey(bodyElementSymbol)) {
-					newBody.add(functionNameMap.get(bodyElementSymbol));
-				} else {
-					newBody.add(bodyElementSymbol);
+		SemanticAnalyzer.environmentStack.push(letEnvironment);
+
+		final int tempPosition = SemanticAnalyzer.bindingsPosition;
+		try {
+			final ListStruct fletFunctions = input.getRest();
+			final List<LispStruct> fletFunctionsJavaList = fletFunctions.getAsJavaList();
+
+			for (final LispStruct currentFunction : fletFunctionsJavaList) {
+				if (!(currentFunction instanceof ListStruct)) {
+					throw new RuntimeException("LABELS: Function parameter must be of type ListStruct. Got: " + currentFunction);
 				}
-			} else {
-				newBody.add(bodyElement);
+				final ListStruct functionList = (ListStruct) currentFunction;
+
+				final LispStruct functionListFirst = functionList.getFirst();
+				if (!(functionListFirst instanceof SymbolStruct)) {
+					throw new RuntimeException("LABELS: Function parameter first element value must be of type SymbolStruct. Got: " + functionListFirst);
+				}
+				final SymbolStruct<?> functionName = (SymbolStruct) functionListFirst;
+
+				final LispStruct functionListSecond = functionList.getRest().getFirst();
+				if (!(functionListSecond instanceof ListStruct)) {
+					throw new RuntimeException("LABELS: Function parameter second element value must be of type ListStruct. Got: " + functionListSecond);
+				}
+
+				final ListStruct lambdaList = (ListStruct) functionListSecond;
+				final ListStruct body = functionList.getRest().getRest();
+
+				final List<LispStruct> innerBlock = new ArrayList<>();
+				innerBlock.add(SpecialOperator.BLOCK);
+				innerBlock.add(functionName);
+				innerBlock.add(body);
+
+				final ListStruct innerBlockListStruct = ListStruct.buildProperList(innerBlock);
+
+				final List<LispStruct> innerLambda = new ArrayList<>();
+				innerLambda.add(SpecialOperator.LAMBDA);
+				innerLambda.add(lambdaList);
+				innerLambda.add(innerBlockListStruct);
+
+				final ListStruct innerLambdaListStruct = ListStruct.buildProperList(innerLambda);
+
+				final List<LispStruct> innerFunction = new ArrayList<>();
+				innerFunction.add(SpecialOperator.FUNCTION);
+				innerFunction.add(innerLambdaListStruct);
+
+				final ListStruct innerFunctionListStruct = ListStruct.buildProperList(innerFunction);
+
+				// TODO: Why are we evaluating this in the outer environment??? I think i know, but not sure if it's actually needed
+				final Environment currentEnvironment = SemanticAnalyzer.environmentStack.pop();
+				final LispStruct paramValueInitForm = SemanticAnalyzer.saMainLoop(innerFunctionListStruct);
+				SemanticAnalyzer.environmentStack.push(currentEnvironment);
+
+				SemanticAnalyzer.bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+
+				EnvironmentAccessor.createNewLetBinding(SemanticAnalyzer.environmentStack.peek(), functionName, SemanticAnalyzer.bindingsPosition, paramValueInitForm, false);
 			}
+
+			final ListStruct body = input.getRest().getRest();
+
+			final ListStruct prognList = new ConsStruct(SpecialOperator.PROGN, body);
+			final ListStruct bodyResult = PrognAnalyzer.INSTANCE.analyze(prognList);
+
+			final Environment envList = SemanticAnalyzer.environmentStack.peek();
+
+			return new LabelsEnvironmentListStruct(envList, bodyResult);
+		} finally {
+			SemanticAnalyzer.bindingsPosition = tempPosition;
+			SemanticAnalyzer.environmentStack.pop();
 		}
-
-		return ListStruct.buildProperList(newBody);
 	}
-
 }

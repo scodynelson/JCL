@@ -41,6 +41,12 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 		super(type, directSuperClasses, subClasses);
 	}
 
+	@Override
+	public String printStruct() {
+		final String typeClassName = getType().getClass().getName().toUpperCase();
+		return "#<" + typeClassName + '>';
+	}
+
 	/**
 	 * This is the application method for any function structure.
 	 *

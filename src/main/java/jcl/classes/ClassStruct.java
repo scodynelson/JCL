@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * The {@code ClassStruct} is the object representation of a Lisp 'class' type.
  */
-public class ClassStruct extends StandardObjectStruct {
+public abstract class ClassStruct extends StandardObjectStruct {
 
 	private final LispType type;
 	private final List<Class<LispStruct>> directSuperClasses;
@@ -18,7 +18,7 @@ public class ClassStruct extends StandardObjectStruct {
 	/**
 	 * Public constructor.
 	 */
-	public ClassStruct() {
+	protected ClassStruct() {
 		type = jcl.types.Class.INSTANCE;
 		directSuperClasses = null;
 		subClasses = null;
@@ -31,8 +31,8 @@ public class ClassStruct extends StandardObjectStruct {
 	 * @param directSuperClasses the direct super classes
 	 * @param subClasses         the subclasses
 	 */
-	public ClassStruct(final LispType type,
-					   final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+	protected ClassStruct(final LispType type,
+	                      final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
 		this.type = type;
 		this.directSuperClasses = (directSuperClasses == null) ? Collections.emptyList() : directSuperClasses;
 		this.subClasses = (subClasses == null) ? Collections.emptyList() : subClasses;

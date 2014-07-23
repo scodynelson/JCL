@@ -63,6 +63,12 @@ class PathnameURIStruct extends PathnameStruct {
 	}
 
 	@Override
+	public String printStruct() {
+		// TODO: do this!!!
+		return toString();
+	}
+
+	@Override
 	public String toString() {
 		return "PathnameURIStruct{"
 				+ "host=" + host

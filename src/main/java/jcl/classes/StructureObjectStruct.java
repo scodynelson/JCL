@@ -13,4 +13,10 @@ public class StructureObjectStruct implements LispStruct {
 	public LispType getType() {
 		return StructureObject.INSTANCE;
 	}
+
+	@Override
+	public String printStruct() {
+		final String typeClassName = getType().getClass().getName().toUpperCase();
+		return "#<" + typeClassName + '>';
+	}
 }

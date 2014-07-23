@@ -1,6 +1,11 @@
 package jcl.arrays;
 
 import jcl.characters.CharacterStruct;
+import jcl.readtables.ReadtableStruct;
+import jcl.symbols.NILStruct;
+import jcl.symbols.SymbolStruct;
+import jcl.symbols.Variable;
+import jcl.syntax.SyntaxType;
 import jcl.types.BaseChar;
 import jcl.types.BaseString;
 import jcl.types.Character;
@@ -81,6 +86,37 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 		for (final CharacterStruct characterStruct : contents) {
 			final int codePoint = characterStruct.getCodePoint();
 			stringBuilder.appendCodePoint(codePoint);
+		}
+
+		return stringBuilder.toString();
+	}
+
+	@Override
+	public java.lang.String printStruct() {
+		// TODO: Fix *PRINT-ESCAPE* typing
+		final SymbolStruct<?> printEscape = (SymbolStruct<?>) Variable.PRINT_ESCAPE.getValue();
+
+		// TODO: Fix *READTABLE* typing
+		final ReadtableStruct readtable = (ReadtableStruct) Variable.READTABLE.getValue();
+
+		final StringBuilder stringBuilder = new StringBuilder();
+		if (!printEscape.equals(NILStruct.INSTANCE)) {
+			stringBuilder.append('"');
+		}
+
+		for (int i = 0; i < fillPointer; i++) {
+			final CharacterStruct characterStruct = contents.get(i);
+			final int codePoint = characterStruct.getCodePoint();
+
+			final SyntaxType syntaxType = readtable.getSyntaxType(codePoint);
+			if ((codePoint == '"') || (syntaxType == SyntaxType.SINGLE_ESCAPE)) {
+				stringBuilder.append('\\');
+			}
+			stringBuilder.append(codePoint);
+		}
+
+		if (!printEscape.equals(NILStruct.INSTANCE)) {
+			stringBuilder.append('"');
 		}
 
 		return stringBuilder.toString();

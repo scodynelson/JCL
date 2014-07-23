@@ -1,9 +1,9 @@
 package jcl.streams;
 
-import jcl.conditions.exceptions.StreamErrorException;
 import jcl.LispType;
-import jcl.types.T;
+import jcl.conditions.exceptions.StreamErrorException;
 import jcl.types.BroadcastStream;
+import jcl.types.T;
 
 import java.util.LinkedList;
 
@@ -132,6 +132,12 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 
 		final OutputStream last = outputStreams.getLast();
 		return last.filePosition(filePosition);
+	}
+
+	@Override
+	public String printStruct() {
+		final String typeClassName = getType().getClass().getName().toUpperCase();
+		return "#<" + typeClassName + '>';
 	}
 
 	@Override

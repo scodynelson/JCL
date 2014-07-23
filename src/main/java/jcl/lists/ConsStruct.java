@@ -185,6 +185,44 @@ public class ConsStruct extends ListStruct {
 	}
 
 	@Override
+	public String printStruct() {
+		// TODO: Ignoring *PRINT-PRETTY* and the pretty printer in general right now...
+
+		if (isCircular()) {
+			return "CIRCULAR LIST PRINTING NOT YET SUPPORTED!!!";
+		}
+
+		final StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append('(');
+
+		final String innerConsPrinted = printInnerCons(this);
+		stringBuilder.append(innerConsPrinted);
+
+		stringBuilder.append(')');
+
+		return stringBuilder.toString();
+	}
+
+	private static String printInnerCons(final ConsStruct consStruct) {
+
+		final StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append(consStruct.car.printStruct());
+
+		if (consStruct.cdr instanceof ConsStruct) {
+			final ConsStruct cdrAsCons = (ConsStruct) consStruct.cdr;
+			final String innerConsPrinted = printInnerCons(cdrAsCons);
+
+			stringBuilder.append(' ');
+			stringBuilder.append(innerConsPrinted);
+		} else if (!(consStruct.cdr instanceof NullStruct)){
+			stringBuilder.append(" . ");
+			stringBuilder.append(consStruct.cdr.printStruct());
+		}
+
+		return stringBuilder.toString();
+	}
+
+	@Override
 	public String toString() {
 		if (isCircular()) {
 			return "ConsStruct{'circular'}";

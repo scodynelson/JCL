@@ -120,6 +120,12 @@ public class HashTableStruct extends BuiltInClassStruct {
 	}
 
 	@Override
+	public String printStruct() {
+		final String typeClassName = getType().getClass().getName().toUpperCase();
+		return "#<" + typeClassName + " :TEST " + test.printStruct() + " size " + map.size() + '>';
+	}
+
+	@Override
 	public String toString() {
 		return "HashTableStruct{"
 				+ "test=" + test
@@ -150,6 +156,12 @@ public class HashTableStruct extends BuiltInClassStruct {
 		@Override
 		public LispType getType() {
 			return key.getType();
+		}
+
+		@Override
+		public String printStruct() {
+			//TODO
+			return null;
 		}
 
 		/**

@@ -1,5 +1,6 @@
 package jcl.numbers;
 
+import jcl.symbols.Variable;
 import jcl.types.Integer;
 
 import java.math.BigInteger;
@@ -38,6 +39,13 @@ public class IntegerStruct extends RationalStruct {
 	 */
 	public BigInteger getBigInteger() {
 		return bigInteger;
+	}
+
+	@Override
+	public String printStruct() {
+		// TODO: Fix *PRINT-RADIX* typing
+		final int printRadix = ((IntegerStruct) Variable.PRINT_RADIX.getValue()).bigInteger.intValue();
+		return bigInteger.toString(printRadix);
 	}
 
 	@Override

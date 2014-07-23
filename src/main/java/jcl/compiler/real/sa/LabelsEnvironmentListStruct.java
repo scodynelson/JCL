@@ -64,4 +64,9 @@ public class LabelsEnvironmentListStruct extends ListStruct {
 	public boolean isCircular() {
 		return listStruct.isCircular();
 	}
+
+	@Override
+	public String printStruct() {
+		return toString();
+	}
 }

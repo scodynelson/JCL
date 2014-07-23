@@ -275,4 +275,22 @@ public class LogicalPathnameStruct extends PathnameStruct {
 
 		throw new TypeErrorException("Version did not match either '*', ':NEWEST', or a positive integer: " + pathnameVersion);
 	}
+
+	@Override
+	public String printStruct() {
+		// TODO: do this!!!
+		return toString();
+	}
+
+	@Override
+	public String toString() {
+		return "LogicalPathnameStruct{"
+				+ "host=" + host
+				+ ", device=" + device
+				+ ", directory=" + directory
+				+ ", name=" + name
+				+ ", type=" + type
+				+ ", version=" + version
+				+ '}';
+	}
 }

@@ -78,6 +78,11 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		public LispType getType() {
 			return null;
 		}
+
+		@Override
+		public String printStruct() {
+			return toString();
+		}
 	}
 
 	@Override

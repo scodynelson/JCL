@@ -1,12 +1,12 @@
 package jcl.streams;
 
 import jcl.LispStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.LispType;
 import jcl.conditions.exceptions.StreamErrorException;
+import jcl.symbols.SymbolStruct;
 import jcl.syntax.reader.PeekResult;
 import jcl.syntax.reader.PeekType;
 import jcl.syntax.reader.ReadResult;
-import jcl.LispType;
 import jcl.types.SynonymStream;
 
 /**
@@ -170,6 +170,12 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	@Override
 	public Long filePosition(final Long filePosition) {
 		return stream.filePosition(filePosition);
+	}
+
+	@Override
+	public String printStruct() {
+		final String typeClassName = getType().getClass().getName().toUpperCase();
+		return "#<" + typeClassName + " to " + symbol.printStruct() + '>';
 	}
 
 	@Override

@@ -1,6 +1,10 @@
 package jcl.numbers;
 
+import jcl.symbols.Variable;
+import jcl.types.DoubleFloat;
 import jcl.types.Float;
+import jcl.types.LongFloat;
+import jcl.types.ShortFloat;
 import jcl.types.SingleFloat;
 
 import java.math.BigDecimal;
@@ -39,6 +43,30 @@ public class FloatStruct extends RealStruct {
 	 */
 	public BigDecimal getBigDecimal() {
 		return bigDecimal;
+	}
+
+	@Override
+	public String printStruct() {
+		// TODO: do this better???
+		final Float floatFormat = (Float) getType();
+
+		// TODO: Fix *READ-DEFAULT-FLOAT-FORMAT* typing
+		final Float defaultFloatFormat = (Float) Variable.READ_DEFAULT_FLOAT_FORMAT.getValue();
+
+		String bigDecimalString = bigDecimal.toString();
+		if (!floatFormat.equals(defaultFloatFormat)) {
+			if (floatFormat.equals(ShortFloat.INSTANCE)) {
+				bigDecimalString = bigDecimalString.replace('E', 'S');
+			} else if (floatFormat.equals(SingleFloat.INSTANCE)) {
+				bigDecimalString = bigDecimalString.replace('E', 'F');
+			} else if (floatFormat.equals(DoubleFloat.INSTANCE)) {
+				bigDecimalString = bigDecimalString.replace('E', 'D');
+			} else if (floatFormat.equals(LongFloat.INSTANCE)) {
+				bigDecimalString = bigDecimalString.replace('E', 'L');
+			}
+		}
+
+		return bigDecimalString;
 	}
 
 	@Override

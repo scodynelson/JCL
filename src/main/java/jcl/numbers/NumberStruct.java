@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * The {@link NumberStruct} is the object representation of a Lisp 'number' type.
  */
-public class NumberStruct extends BuiltInClassStruct {
+public abstract class NumberStruct extends BuiltInClassStruct {
 
 	/**
 	 * Protected constructor.

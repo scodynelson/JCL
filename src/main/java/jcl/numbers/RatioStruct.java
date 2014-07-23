@@ -1,5 +1,6 @@
 package jcl.numbers;
 
+import jcl.symbols.Variable;
 import jcl.types.Ratio;
 import org.apache.commons.math3.fraction.BigFraction;
 
@@ -40,6 +41,13 @@ public class RatioStruct extends RationalStruct {
 	 */
 	public BigFraction getBigFraction() {
 		return bigFraction;
+	}
+
+	@Override
+	public String printStruct() {
+		// TODO: Fix *PRINT-RADIX* typing
+		final int printRadix = ((IntegerStruct) Variable.PRINT_RADIX.getValue()).getBigInteger().intValue();
+		return bigFraction.getNumerator().toString(printRadix) + '/' + bigFraction.getDenominator().toString(printRadix);
 	}
 
 	@Override

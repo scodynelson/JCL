@@ -3,11 +3,15 @@ package jcl.symbols;
 import jcl.LispStruct;
 import jcl.compiler.old.functions.BaseMacroExpandFn;
 import jcl.functions.FunctionStruct;
+import jcl.numbers.FloatStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.RandomStateStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
+import jcl.readtables.ReadtableStruct;
+import jcl.types.SingleFloat;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 public final class Variable<T extends LispStruct> extends SymbolStruct<T> {
@@ -33,12 +37,12 @@ public final class Variable<T extends LispStruct> extends SymbolStruct<T> {
 	public static final Variable TRACE_OUTPUT = new Variable("*TRACE_OUTPUT*", GlobalPackageStruct.COMMON_LISP);
 	public static final Variable TERMINAL_IO = new Variable("*TERMINAL_IO*", GlobalPackageStruct.COMMON_LISP);
 
-	public static final Variable PRINT_ARRAY = new Variable("*PRINT_ARRAY*", GlobalPackageStruct.COMMON_LISP);
+	public static final Variable PRINT_ARRAY = new Variable("*PRINT_ARRAY*", GlobalPackageStruct.COMMON_LISP, TStruct.INSTANCE);
 	public static final Variable PRINT_BASE = new Variable("*PRINT_BASE*", GlobalPackageStruct.COMMON_LISP);
-	public static final Variable PRINT_RADIX = new Variable("*PRINT_RADIX*", GlobalPackageStruct.COMMON_LISP);
+	public static final Variable PRINT_RADIX = new Variable("*PRINT_RADIX*", GlobalPackageStruct.COMMON_LISP, new IntegerStruct(BigInteger.TEN));
 	public static final Variable PRINT_CASE = new Variable("*PRINT_CASE*", GlobalPackageStruct.COMMON_LISP);
 	public static final Variable PRINT_CIRCLE = new Variable("*PRINT_CIRCLE*", GlobalPackageStruct.COMMON_LISP);
-	public static final Variable PRINT_ESCAPE = new Variable("*PRINT_ESCAPE*", GlobalPackageStruct.COMMON_LISP);
+	public static final Variable PRINT_ESCAPE = new Variable("*PRINT_ESCAPE*", GlobalPackageStruct.COMMON_LISP, TStruct.INSTANCE);
 	public static final Variable PRINT_GENSYM = new Variable("*PRINT_GENSYM*", GlobalPackageStruct.COMMON_LISP);
 	public static final Variable PRINT_LEVEL = new Variable("*PRINT_LEVEL*", GlobalPackageStruct.COMMON_LISP);
 	public static final Variable PRINT_LENGTH = new Variable("*PRINT_LENGTH*", GlobalPackageStruct.COMMON_LISP);
@@ -46,14 +50,14 @@ public final class Variable<T extends LispStruct> extends SymbolStruct<T> {
 	public static final Variable PRINT_MISER_WIDTH = new Variable("*PRINT_MISER_WIDTH*", GlobalPackageStruct.COMMON_LISP);
 	public static final Variable PRINT_PPRINT_DISPATCH = new Variable("*PRINT_PPRINT_DISPATCH*", GlobalPackageStruct.COMMON_LISP);
 	public static final Variable PRINT_PRETTY = new Variable("*PRINT_PRETTY*", GlobalPackageStruct.COMMON_LISP);
-	public static final Variable PRINT_READABLY = new Variable("*PRINT_READABLY*", GlobalPackageStruct.COMMON_LISP);
+	public static final Variable PRINT_READABLY = new Variable("*PRINT_READABLY*", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);
 	public static final Variable PRINT_RIGHT_MARGIN = new Variable("*PRINT_RIGHT_MARGIN*", GlobalPackageStruct.COMMON_LISP);
 
 	public static final Variable READ_BASE = new Variable("*READ_BASE*", GlobalPackageStruct.COMMON_LISP);
-	public static final Variable READ_DEFAULT_FLOAT_FORMAT = new Variable("*READ_DEFAULT_FLOAT_FORMAT*", GlobalPackageStruct.COMMON_LISP);
+	public static final Variable READ_DEFAULT_FLOAT_FORMAT = new Variable("*READ_DEFAULT_FLOAT_FORMAT*", GlobalPackageStruct.COMMON_LISP, new FloatStruct(BigDecimal.ZERO)); // TODO: fix this!!!
 	public static final Variable READ_EVAL = new Variable("*READ_EVAL*", GlobalPackageStruct.COMMON_LISP);
 	public static final Variable READ_SUPPRESS = new Variable("*READ_SUPPRESS*", GlobalPackageStruct.COMMON_LISP);
-	public static final Variable READTABLE = new Variable("*READTABLE*", GlobalPackageStruct.COMMON_LISP);
+	public static final Variable READTABLE = new Variable("*READTABLE*", GlobalPackageStruct.COMMON_LISP, new ReadtableStruct());
 
 	public static final Variable FEATURES = new Variable("*FEATURES*", GlobalPackageStruct.COMMON_LISP);
 	public static final Variable COMPILE_FILE_PATHNAME = new Variable("*COMPILE_FILE_PATHNAME*", GlobalPackageStruct.COMMON_LISP);

@@ -217,6 +217,12 @@ public class CharacterStreamStruct extends NativeStreamStruct {
 	}
 
 	@Override
+	public String printStruct() {
+		final String typeClassName = getType().getClass().getName().toUpperCase();
+		return "#<" + typeClassName + '>';
+	}
+
+	@Override
 	public String toString() {
 		// TODO: fix toString warning...
 		return "CharacterStreamStruct{"

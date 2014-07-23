@@ -5,9 +5,8 @@ import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariable;
-import jcl.printer.Printer;
-import jcl.readtables.reader.impl.Reader;
 import jcl.readtables.reader.function.macrofunction.SharpTagReaderConstants;
+import jcl.readtables.reader.impl.Reader;
 import jcl.streams.CharacterStreamStruct;
 import jcl.streams.FileStreamStruct;
 import jcl.streams.InputStream;
@@ -174,7 +173,7 @@ public final class ReadEvalPrint {
 //							LOGGER.info(mv[count].toString());
 //						}
 					} else {
-						final String printedValue = Printer.print(whatRead);
+						final String printedValue = whatRead.printStruct();
 						LOGGER.info(printedValue);
 					}
 				} catch (final Exception ex) {

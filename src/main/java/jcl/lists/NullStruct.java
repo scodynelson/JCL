@@ -62,6 +62,11 @@ public final class NullStruct extends ListStruct {
 	}
 
 	@Override
+	public String printStruct() {
+		return "NIL";
+	}
+
+	@Override
 	public String toString() {
 		return "NullStruct{}";
 	}

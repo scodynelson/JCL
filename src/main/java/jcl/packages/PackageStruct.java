@@ -1,8 +1,8 @@
 package jcl.packages;
 
 import jcl.classes.BuiltInClassStruct;
-import jcl.symbols.SymbolStruct;
 import jcl.conditions.exceptions.PackageErrorException;
+import jcl.symbols.SymbolStruct;
 import jcl.types.Package;
 
 import java.util.ArrayList;
@@ -534,6 +534,12 @@ public class PackageStruct extends BuiltInClassStruct {
 		}
 
 		return null;
+	}
+
+	@Override
+	public String printStruct() {
+		final String typeClassName = getType().getClass().getName().toUpperCase();
+		return "#<" + typeClassName + ' ' + name + '>';
 	}
 
 	@Override

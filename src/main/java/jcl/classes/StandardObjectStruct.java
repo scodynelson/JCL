@@ -7,14 +7,14 @@ import jcl.types.StandardObject;
 /**
  * The {@code StandardObjectStruct} is the object representation of a Lisp 'standard-object' type.
  */
-public class StandardObjectStruct implements LispStruct {
+public abstract class StandardObjectStruct implements LispStruct {
 
 	private String documentation;
 
 	/**
 	 * Public constructor.
 	 */
-	public StandardObjectStruct() {
+	protected StandardObjectStruct() {
 		documentation = null;
 	}
 

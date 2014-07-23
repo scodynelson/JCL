@@ -4,7 +4,7 @@ import jcl.LispStruct;
 import jcl.LispType;
 import jcl.types.Restart;
 
-public class RestartStruct implements LispStruct {
+public abstract class RestartStruct implements LispStruct {
 
 	/*
 (defstruct (restart (:print-function restart-print))
@@ -18,5 +18,11 @@ public class RestartStruct implements LispStruct {
 	@Override
 	public LispType getType() {
 		return Restart.INSTANCE;
+	}
+
+	@Override
+	public String printStruct() {
+		final String typeClassName = getType().getClass().getName().toUpperCase();
+		return "#<" + typeClassName + '>';
 	}
 }

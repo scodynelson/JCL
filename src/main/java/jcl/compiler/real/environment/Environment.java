@@ -90,4 +90,9 @@ public class Environment implements LispStruct {
 	public LispType getType() {
 		return null;
 	}
+
+	@Override
+	public String printStruct() {
+		return toString();
+	}
 }

@@ -5,6 +5,9 @@ import jcl.LispType;
 import jcl.classes.BuiltInClassStruct;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
+import jcl.symbols.NILStruct;
+import jcl.symbols.SymbolStruct;
+import jcl.symbols.Variable;
 import jcl.types.Array;
 import jcl.types.SimpleArray;
 import jcl.types.T;
@@ -243,6 +246,73 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		for (final Integer dimension : dimensions) {
 			totalSize += dimension;
 		}
+	}
+
+	@Override
+	public String printStruct() {
+		// TODO: Ignoring *PRINT-LEVEL* and *PRINT-LENGTH*; also, somewhat *PRINT-READABLY*
+
+		// TODO: Fix *PRINT-ARRAY* and *PRINT-READABLY* typing
+		final SymbolStruct<?> printArray = (SymbolStruct<?>) Variable.PRINT_ARRAY.getValue();
+		final SymbolStruct<?> printReadably = (SymbolStruct<?>) Variable.PRINT_READABLY.getValue();
+
+		if (printArray.equals(NILStruct.INSTANCE) && printReadably.equals(NILStruct.INSTANCE)) {
+			final String typeClassName = getType().getClass().getName().toUpperCase();
+
+			final StringBuilder stringBuilder = new StringBuilder();
+			stringBuilder.append("#<");
+			stringBuilder.append(typeClassName);
+			stringBuilder.append(' ');
+
+			for (int i = 0; i < dimensions.size(); i++) {
+				stringBuilder.append(dimensions.get(i));
+
+				if ((i + 1) != dimensions.size()) {
+					stringBuilder.append('x');
+				}
+			}
+
+			stringBuilder.append(" type ");
+			final String elementTypeClassName = elementType.getClass().getName().toUpperCase();
+			stringBuilder.append(elementTypeClassName);
+
+			if (isAdjustable) {
+				stringBuilder.append(" adjustable");
+			}
+
+			stringBuilder.append('>');
+
+			return stringBuilder.toString();
+		} else if (!printArray.equals(NILStruct.INSTANCE) && printReadably.equals(NILStruct.INSTANCE)) {
+			final StringBuilder stringBuilder = new StringBuilder();
+			stringBuilder.append('#');
+			stringBuilder.append(rank);
+			stringBuilder.append("#(");
+
+			for (int i = 0; i < totalSize; i++) {
+				final LispStruct lispStruct = contents.get(i);
+				stringBuilder.append(lispStruct.printStruct());
+			}
+
+			stringBuilder.append(')');
+
+			return stringBuilder.toString();
+		}
+
+		// TODO: this is the condition if *PRINT-READABLY* is not 'NIL'
+		final StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append('#');
+		stringBuilder.append(rank);
+		stringBuilder.append("#(");
+
+		for (int i = 0; i < totalSize; i++) {
+			final LispStruct lispStruct = contents.get(i);
+			stringBuilder.append(lispStruct.printStruct());
+		}
+
+		stringBuilder.append(')');
+
+		return stringBuilder.toString();
 	}
 
 	@Override

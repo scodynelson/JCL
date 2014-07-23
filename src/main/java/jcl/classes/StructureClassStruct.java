@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * The {@code StructureClassStruct} is the object representation of a Lisp 'structure-class' type.
  */
-public class StructureClassStruct extends ClassStruct {
+public abstract class StructureClassStruct extends ClassStruct {
 
 	/**
 	 * Public constructor.
@@ -17,7 +17,7 @@ public class StructureClassStruct extends ClassStruct {
 	 * @param directSuperClasses the direct super classes
 	 * @param subClasses         the subclasses
 	 */
-	public StructureClassStruct(final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+	protected StructureClassStruct(final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
 		this(StructureClass.INSTANCE, directSuperClasses, subClasses);
 	}
 
@@ -29,7 +29,7 @@ public class StructureClassStruct extends ClassStruct {
 	 * @param subClasses         the subclasses
 	 */
 	protected StructureClassStruct(final LispType type,
-								   final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+	                               final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
 		super(type, directSuperClasses, subClasses);
 	}
 }

@@ -3,7 +3,7 @@ package jcl.conditions;
 import jcl.LispStruct;
 import jcl.LispType;
 
-public class ConditionStruct implements LispStruct {
+public abstract class ConditionStruct implements LispStruct {
 
 	/*
 (defstruct (condition-class (:include slot-class))
@@ -47,5 +47,11 @@ public class ConditionStruct implements LispStruct {
 	@Override
 	public LispType getType() {
 		return null;
+	}
+
+	@Override
+	public String printStruct() {
+		final String typeClassName = getType().getClass().getName().toUpperCase();
+		return "#<" + typeClassName + '>';
 	}
 }

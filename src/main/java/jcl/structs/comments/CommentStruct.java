@@ -17,6 +17,11 @@ public class CommentStruct implements LispStruct {
 	}
 
 	@Override
+	public String printStruct() {
+		return toString();
+	}
+
+	@Override
 	public String toString() {
 		return "CommentStruct{"
 				+ "commentString='" + commentString + '\''

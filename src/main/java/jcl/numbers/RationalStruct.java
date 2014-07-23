@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * The {@link RationalStruct} is the object representation of a Lisp 'rational' type.
  */
-public class RationalStruct extends RealStruct {
+public abstract class RationalStruct extends RealStruct {
 
 	/**
 	 * Protected constructor.

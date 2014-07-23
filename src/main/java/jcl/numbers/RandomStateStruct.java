@@ -131,6 +131,18 @@ public class RandomStateStruct extends BuiltInClassStruct {
 	}
 
 	@Override
+	public String printStruct() {
+		final StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append("#RS(");
+		for (final BigInteger seedElement : seed) {
+			stringBuilder.append(seedElement);
+		}
+		stringBuilder.append(')');
+
+		return stringBuilder.toString();
+	}
+
+	@Override
 	public String toString() {
 		return "RandomStateStruct{"
 				+ "j=" + jValue

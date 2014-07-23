@@ -2,6 +2,9 @@ package jcl.arrays;
 
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.numbers.IntegerStruct;
+import jcl.symbols.NILStruct;
+import jcl.symbols.SymbolStruct;
+import jcl.symbols.Variable;
 import jcl.types.Bit;
 import jcl.types.BitVector;
 import jcl.types.SimpleBitVector;
@@ -73,6 +76,45 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 			}
 		}
 		return bitList;
+	}
+
+	@Override
+	public String printStruct() {
+		// TODO: Fix *PRINT-ARRAY* typing
+		final SymbolStruct<?> printArray = (SymbolStruct<?>) Variable.PRINT_ARRAY.getValue();
+
+		if (printArray.equals(NILStruct.INSTANCE)) {
+			final String typeClassName = getType().getClass().getName().toUpperCase();
+
+			final StringBuilder stringBuilder = new StringBuilder();
+			stringBuilder.append("#<");
+			stringBuilder.append(typeClassName);
+			stringBuilder.append(' ');
+			stringBuilder.append(totalSize);
+
+			if (fillPointer != null) {
+				stringBuilder.append(" fill-pointer ");
+				stringBuilder.append(fillPointer);
+			}
+
+			if (isAdjustable) {
+				stringBuilder.append(" adjustable");
+			}
+
+			stringBuilder.append('>');
+
+			return stringBuilder.toString();
+		}
+
+		final StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append("#*");
+
+		for (int i = 0; i < fillPointer; i++) {
+			final IntegerStruct integerStruct = contents.get(i);
+			stringBuilder.append(integerStruct.printStruct());
+		}
+
+		return stringBuilder.toString();
 	}
 
 	@Override

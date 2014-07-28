@@ -45,8 +45,8 @@ public class RatioStruct extends RationalStruct {
 
 	@Override
 	public String printStruct() {
-		// TODO: Fix *PRINT-RADIX* typing
-		final int printRadix = ((IntegerStruct) Variable.PRINT_RADIX.getValue()).getBigInteger().intValue();
+		// TODO: Account for *PRINT-RADIX*
+		final int printRadix = Variable.PRINT_BASE.getValue().getBigInteger().intValue();
 		return bigFraction.getNumerator().toString(printRadix) + '/' + bigFraction.getDenominator().toString(printRadix);
 	}
 

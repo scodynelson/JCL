@@ -3,7 +3,7 @@ package jcl.symbols;
 /**
  * The {@code TStruct} is the object representation of a Lisp 't' type.
  */
-public final class TStruct extends SymbolStruct<TStruct> {
+public final class TStruct extends BooleanStruct<TStruct> {
 
 	public static final TStruct INSTANCE = new TStruct();
 
@@ -11,6 +11,6 @@ public final class TStruct extends SymbolStruct<TStruct> {
 	 * Private constructor.
 	 */
 	private TStruct() {
-		super("T");
+		super("T", true);
 	}
 }

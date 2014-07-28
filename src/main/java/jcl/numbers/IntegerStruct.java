@@ -43,8 +43,8 @@ public class IntegerStruct extends RationalStruct {
 
 	@Override
 	public String printStruct() {
-		// TODO: Fix *PRINT-RADIX* typing
-		final int printRadix = ((IntegerStruct) Variable.PRINT_RADIX.getValue()).bigInteger.intValue();
+		// TODO: Account for *PRINT-RADIX*
+		final int printRadix = Variable.PRINT_BASE.getValue().bigInteger.intValue();
 		return bigInteger.toString(printRadix);
 	}
 

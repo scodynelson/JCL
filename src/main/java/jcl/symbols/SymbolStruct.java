@@ -241,11 +241,9 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 
 	@Override
 	public String printStruct() {
-		// TODO: Fix *PRINT-ESCAPE* typing
-		final SymbolStruct<?> printEscape = (SymbolStruct<?>) Variable.PRINT_ESCAPE.getValue();
+		final BooleanStruct<?> printEscape = Variable.PRINT_ESCAPE.getValue();
 
-
-		if (!printEscape.equals(NILStruct.INSTANCE)) {
+		if (printEscape.booleanValue()) {
 			return name; // TODO: deal with *PRINT-CASE*
 		} else {
 			return toString();

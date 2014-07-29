@@ -3,13 +3,14 @@ package jcl.compiler.old.exception;
 import jcl.symbols.SymbolStruct;
 
 public class ReturnFromException extends TRFException {
+	private static final long serialVersionUID = -4154198139779543951L;
 	//Symbol blockName;
 	//Object value;
 
 	/**
 	 * Creates a new instance of ReturnFromException
 	 */
-	public ReturnFromException(SymbolStruct blockName, Object value) {
+	public ReturnFromException(SymbolStruct<?> blockName, Object value) {
 		this.tag = blockName;
 		this.value = value;
 	}

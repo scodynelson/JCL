@@ -8,7 +8,7 @@ public class SymbolStructAnalyzer implements Analyzer<SymbolStruct<?>, SymbolStr
 	public static final SymbolStructAnalyzer INSTANCE = new SymbolStructAnalyzer();
 
 	@Override
-	public SymbolStruct<?> analyze(final SymbolStruct input) {
+	public SymbolStruct<?> analyze(final SymbolStruct<?> input) {
 		EnvironmentAccessor.addSymbolToTable(SemanticAnalyzer.environmentStack.peek(), input);
 		return input;
 	}

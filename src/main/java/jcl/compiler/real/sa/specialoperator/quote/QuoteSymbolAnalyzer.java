@@ -15,7 +15,7 @@ public class QuoteSymbolAnalyzer implements Analyzer<ListStruct, SymbolStruct<?>
 	public static final QuoteSymbolAnalyzer INSTANCE = new QuoteSymbolAnalyzer();
 
 	@Override
-	public ListStruct analyze(final SymbolStruct input) {
+	public ListStruct analyze(final SymbolStruct<?> input) {
 		if (input.getSymbolPackage() != null) {
 			final List<LispStruct> findSymbolList = new ArrayList<>();
 			findSymbolList.add(GlobalPackageStruct.COMMON_LISP.findSymbol("FIND-SYMBOL").getSymbolStruct());

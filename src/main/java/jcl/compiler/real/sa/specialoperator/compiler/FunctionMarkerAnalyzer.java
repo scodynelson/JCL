@@ -24,7 +24,7 @@ public class FunctionMarkerAnalyzer implements Analyzer<LispStruct, ListStruct> 
 		ListStruct cpy = input;
 		// check to see if there's a function binding in existence
 		if (input.getFirst() instanceof SymbolStruct) {
-			SymbolStruct fnName = (SymbolStruct) input.getFirst();
+			SymbolStruct<?> fnName = (SymbolStruct) input.getFirst();
 			//TODO make this active only during compiling, not during eval during compile-file
 			// handle messaging the argument list according to the lambda list
 			// if the car of the function is a special marker, drop the marker

@@ -8,7 +8,7 @@ import jcl.types.T;
 
 public class AuxBinding extends FunctionBinding {
 
-	public AuxBinding(final SymbolStruct symbolStruct, final int allocationPosition, final LispStruct initForm) {
+	public AuxBinding(final SymbolStruct<?> symbolStruct, final int allocationPosition, final LispStruct initForm) {
 		super(symbolStruct, allocationPosition, Scope.LEXICAL, T.INSTANCE, initForm);
 	}
 }

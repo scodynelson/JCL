@@ -1,6 +1,7 @@
 package jcl.compiler.old.exception;
 
 public class ThrowException extends TRFException {
+	private static final long serialVersionUID = 6082108013523254347L;
 
     /*
 	static Stack<Object> catchTags = new Stack<Object>();

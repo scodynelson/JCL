@@ -130,7 +130,7 @@ public class EvalFunction {
 						//System.out.println("Lambda, just returning");
 					}
 				} else if (first instanceof SymbolStruct) {
-					SymbolStruct operator = (SymbolStruct) first;
+					SymbolStruct<?> operator = (SymbolStruct) first;
 
 					// If the element being evaluated is Quote, we do not want
 					// to evaluate the rest of the list.  We simply want to
@@ -151,7 +151,7 @@ public class EvalFunction {
 						if (numArgs % 2 == 0) {
 							while (argList != NullStruct.INSTANCE) {
 								if (argList.getFirst() instanceof SymbolStruct) {
-									SymbolStruct operand1 = (SymbolStruct) argList.getFirst();
+									SymbolStruct<LispStruct> operand1 = (SymbolStruct) argList.getFirst();
 									operand1.setValue(funcall(argList.getRest().getFirst()));
 									rtnObj = operand1.getValue();
 								} else {
@@ -185,7 +185,7 @@ public class EvalFunction {
 									newArgList = new ConsStruct(funcall(argList.getFirst()), newArgList);
 									argList = argList.getRest();
 								}
-								newArgList = (ListStruct) NReverseFunction.funcall(newArgList);
+								newArgList = NReverseFunction.funcall(newArgList);
 								rtnObj = function.apply(newArgList);
 							} else {
 								// now we have to compile it to handle &optional, &rest, &key args, and then funcall it

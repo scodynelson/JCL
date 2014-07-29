@@ -49,7 +49,7 @@ public class MacroExpand1Function {
 			//whether or not it is of type MacroFunction
 			if (form.getFirst() instanceof SymbolStruct) {
 				// there may be a macroLet in here
-				SymbolStruct theMacroName = (SymbolStruct) form.getFirst();
+				SymbolStruct<?> theMacroName = (SymbolStruct) form.getFirst();
 				//
 				FunctionStruct expander = theMacroName.getFunction();
 

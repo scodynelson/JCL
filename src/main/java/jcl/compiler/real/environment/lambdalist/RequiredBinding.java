@@ -7,7 +7,7 @@ import jcl.types.T;
 
 public class RequiredBinding extends FunctionBinding {
 
-	public RequiredBinding(final SymbolStruct symbolStruct, final int allocationPosition) {
+	public RequiredBinding(final SymbolStruct<?> symbolStruct, final int allocationPosition) {
 		super(symbolStruct, allocationPosition, Scope.LEXICAL, T.INSTANCE, null);
 	}
 }

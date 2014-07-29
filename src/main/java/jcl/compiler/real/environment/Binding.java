@@ -5,19 +5,19 @@ import jcl.symbols.SymbolStruct;
 
 public abstract class Binding {
 
-	private SymbolStruct symbolStruct;
+	private SymbolStruct<?> symbolStruct;
 	private Allocation allocation;
 	private Scope scope;
 	private LispType type;
 
-	protected Binding(final SymbolStruct symbolStruct, final Allocation allocation, final Scope scope, final LispType type) {
+	protected Binding(final SymbolStruct<?> symbolStruct, final Allocation allocation, final Scope scope, final LispType type) {
 		this.symbolStruct = symbolStruct;
 		this.allocation = allocation;
 		this.scope = scope;
 		this.type = type;
 	}
 
-	public SymbolStruct getSymbolStruct() {
+	public SymbolStruct<?> getSymbolStruct() {
 		return symbolStruct;
 	}
 
@@ -33,7 +33,7 @@ public abstract class Binding {
 		return type;
 	}
 
-	public void setSymbolStruct(final SymbolStruct symbolStruct) {
+	public void setSymbolStruct(final SymbolStruct<?> symbolStruct) {
 		this.symbolStruct = symbolStruct;
 	}
 

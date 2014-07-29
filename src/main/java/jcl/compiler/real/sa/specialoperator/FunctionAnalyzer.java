@@ -187,7 +187,7 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		// set the current environment's parent to what was the environment
 		try {
 			// list => (%lambda (lambda-list) (declare ...) ?"...doc..." body...)
-			final SymbolStruct lambdaSym = (SymbolStruct) list.getFirst(); // hang on to %lambda or %macro
+			final SymbolStruct<?> lambdaSym = (SymbolStruct) list.getFirst(); // hang on to %lambda or %macro
 
 			// list -> ((lambda-list) ?(declare ...) ?"...doc..." body...)
 			// get the parameter list
@@ -235,7 +235,7 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			// list -> ((declare ...) body...)
 			final ListStruct decls = (ListStruct) listWithOrderedDeclarationsAndDocString.getFirst();
 			// decls -> (declare ...)
-			final SymbolStruct classname = saGetClassName(decls);
+			final SymbolStruct<?> classname = saGetClassName(decls);
 
 			// now reconstitute the full lambda form
 			// list => (%lambda (lambda-list) (declare ...) body...)
@@ -352,11 +352,11 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		}
 	}
 
-	public static ListStruct findDeclaration(final SymbolStruct item, final ListStruct list) {
+	public static ListStruct findDeclaration(final SymbolStruct<?> item, final ListStruct list) {
 		return AssocFunction.funcall(item, list);
 	}
 
-	private static SymbolStruct saGetClassName(ListStruct list) {
+	private static SymbolStruct<?> saGetClassName(ListStruct list) {
 		// check to see if any declarations exist
 		if (list.getFirst().equals(SpecialOperator.DECLARE)) {
 			// strip out DECLARATION keyword
@@ -421,7 +421,7 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		// if there isn't a Declaration.JAVA_CLASS_NAME, add one
 		final ListStruct classNameDecl = AssocFunction.funcall(Declaration.JAVA_CLASS_NAME, newDecls);
 		if (classNameDecl.equals(NullStruct.INSTANCE)) {
-			final SymbolStruct classname;
+			final SymbolStruct<?> classname;
 			// if there's a Lisp Name, then Javafy it
 			final ListStruct lispNameDecl = AssocFunction.funcall(Declaration.LISP_NAME, newDecls);
 			if (lispNameDecl.equals(NullStruct.INSTANCE)) {
@@ -429,7 +429,7 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 				final String name = "AnonymousLambda_" + System.currentTimeMillis() + '_';
 				classname = (SymbolStruct) GensymFunction.funcall(name);
 			} else {
-				final SymbolStruct lispName = (SymbolStruct) lispNameDecl.getRest().getFirst();
+				final SymbolStruct<?> lispName = (SymbolStruct) lispNameDecl.getRest().getFirst();
 				classname = (SymbolStruct) GensymFunction.funcall(javafy(lispName) + System.currentTimeMillis());
 				// this code allows saFunctionCall to recognize a recursive call
 				// the pop happens at the end of saLambda
@@ -442,7 +442,7 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		final Object name = classNameDecl.getRest().getFirst();
 		if (name instanceof CharSequence) {
 			final ListStruct rest = classNameDecl.getRest();
-			rest.setElement(1, new SymbolStruct(name.toString()));
+			rest.setElement(1, new SymbolStruct<>(name.toString()));
 		}
 		// now we conjure a new declaration
 		return new ConsStruct(new ConsStruct(SpecialOperator.DECLARE, newDecls), list);

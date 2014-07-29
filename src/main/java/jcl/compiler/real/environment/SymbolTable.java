@@ -16,7 +16,7 @@ public class SymbolTable {
 		return bindings;
 	}
 
-	public Binding getBinding(final SymbolStruct symbolStruct) {
+	public Binding getBinding(final SymbolStruct<?> symbolStruct) {
 		for (final Binding binding : bindings) {
 			if (binding.getSymbolStruct().equals(symbolStruct)) {
 				return binding;

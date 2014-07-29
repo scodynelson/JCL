@@ -12,7 +12,7 @@ public class KeyBinding extends FunctionBinding {
 	private final KeywordSymbolStruct keyName;
 	private final SuppliedPBinding suppliedPBinding;
 
-	public KeyBinding(final SymbolStruct symbolStruct, final int allocationPosition, final LispStruct initForm,
+	public KeyBinding(final SymbolStruct<?> symbolStruct, final int allocationPosition, final LispStruct initForm,
 					  final KeywordSymbolStruct keyName, final SuppliedPBinding suppliedPBinding) {
 		super(symbolStruct, allocationPosition, Scope.LEXICAL, T.INSTANCE, initForm);
 		this.keyName = keyName;

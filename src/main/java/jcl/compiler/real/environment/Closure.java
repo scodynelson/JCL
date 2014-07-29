@@ -28,7 +28,7 @@ public class Closure {
 		return bindings;
 	}
 
-	public ClosureBinding getBinding(final SymbolStruct symbolStruct) {
+	public ClosureBinding getBinding(final SymbolStruct<?> symbolStruct) {
 		for (final ClosureBinding closureBinding : bindings) {
 			if (closureBinding.getSymbolStruct().equals(symbolStruct)) {
 				return closureBinding;

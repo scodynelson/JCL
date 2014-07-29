@@ -25,16 +25,16 @@ public class DefunExpander implements MacroFunctionExpander {
 	public static final DefunExpander FUNCTION = new DefunExpander();
 
 	//build necessary symbols for defun : SET-SYMBOL-FUNCTION, QUOTE, LAMBDA.
-	protected SymbolStruct quoteSymbol = SpecialOperator.QUOTE;
-	protected SymbolStruct setSymbolFunction = GlobalPackageStruct.COMMON_LISP.intern("SET-SYMBOL-FUNCTION").getSymbolStruct();
-	protected SymbolStruct lambdaSymbol = SpecialOperator.LAMBDA;
-	protected SymbolStruct prognSymbol = SpecialOperator.PROGN;
-	protected SymbolStruct blockSymbol = SpecialOperator.BLOCK;
-	protected SymbolStruct lispName = Declaration.LISP_NAME;
-	protected SymbolStruct setFunctionField = GlobalPackageStruct.SYSTEM.intern("SET-FUNCTION-FIELD").getSymbolStruct();
+	protected SymbolStruct<?> quoteSymbol = SpecialOperator.QUOTE;
+	protected SymbolStruct<?> setSymbolFunction = GlobalPackageStruct.COMMON_LISP.intern("SET-SYMBOL-FUNCTION").getSymbolStruct();
+	protected SymbolStruct<?> lambdaSymbol = SpecialOperator.LAMBDA;
+	protected SymbolStruct<?> prognSymbol = SpecialOperator.PROGN;
+	protected SymbolStruct<?> blockSymbol = SpecialOperator.BLOCK;
+	protected SymbolStruct<?> lispName = Declaration.LISP_NAME;
+	protected SymbolStruct<?> setFunctionField = GlobalPackageStruct.SYSTEM.intern("SET-FUNCTION-FIELD").getSymbolStruct();
 	// place to hang onto declarations and a doc string
 	private ListStruct declsAndDoc = NullStruct.INSTANCE;
-	private SymbolStruct declareSymbol = SpecialOperator.DECLARE;
+	private SymbolStruct<?> declareSymbol = SpecialOperator.DECLARE;
 
 	// expands the defun macro
 	@SuppressWarnings("unchecked")
@@ -46,7 +46,7 @@ public class DefunExpander implements MacroFunctionExpander {
 		//sets functionName to the name of the function passed in the list.
 		ListStruct listCdr = listToExpand.getRest();
 		// (foo (args) (decls or doc...) theBody))
-		SymbolStruct functionName = (SymbolStruct) listCdr.getFirst();
+		SymbolStruct<?> functionName = (SymbolStruct) listCdr.getFirst();
 
 		// create the function name declaration
 		ListStruct nameDeclareClause = ListStruct.buildProperList(lispName, functionName);

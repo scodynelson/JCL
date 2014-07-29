@@ -2,6 +2,7 @@ package jcl.compiler.old.exception;
 
 public abstract class TOCException extends RuntimeException {
 
+	private static final long serialVersionUID = -7231220457982555562L;
 	Object tag;
 
 	//static Stack<Object> catchTags = new Stack<Object>();

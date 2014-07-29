@@ -52,8 +52,8 @@ public class IntermediateCodeGenerator {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(IntermediateCodeGenerator.class);
 
-	public static final SymbolStruct LAMBDA = SpecialOperator.LAMBDA_MARKER;
-	public static final SymbolStruct MACRO = SpecialOperator.MACRO_MARKER;
+	public static final SymbolStruct<?> LAMBDA = SpecialOperator.LAMBDA_MARKER;
+	public static final SymbolStruct<?> MACRO = SpecialOperator.MACRO_MARKER;
 
 	// this is the current binding environment. It always matches the value
 	// on top of the binding stack
@@ -301,7 +301,7 @@ public class IntermediateCodeGenerator {
 	 * variable number. It generates code to fetch that symbol and put it on
 	 * the stack.
 	 */
-	private void genCodeSpecialSymbol(final SymbolStruct sym) {
+	private void genCodeSpecialSymbol(final SymbolStruct<?> sym) {
 		final int theInt = EnvironmentAccessor.getSymbolAllocation(bindingEnvironment, sym);
 		//****** this is a premature optimization. Good idea, but should wait for a new version of the compiler ****
 		final int slot = 0;
@@ -315,7 +315,7 @@ public class IntermediateCodeGenerator {
 		}
 	}
 
-	private boolean bindingsContain(final SymbolStruct sym) {
+	private boolean bindingsContain(final SymbolStruct<?> sym) {
 		return getSymbolPList(bindingEnvironment, sym) != null;
 	}
 
@@ -337,7 +337,7 @@ public class IntermediateCodeGenerator {
 		}
 	}
 
-	private int genLocalSlot(final SymbolStruct sym, final Environment binding) {
+	private int genLocalSlot(final SymbolStruct<?> sym, final Environment binding) {
 		// get the :bindings list
 		// ((x :allocation ...) (y :allocation ...) ...)
 		final Binding symBinding = binding.getBinding(sym);
@@ -353,7 +353,7 @@ public class IntermediateCodeGenerator {
 	 * enclosing function is the current object, the method only generates an ALOAD 0 -
 	 * the reference to 'this'.
 	 */
-	private void genCodeTailRecursionSetup(final SymbolStruct sym) {
+	private void genCodeTailRecursionSetup(final SymbolStruct<?> sym) {
 		emitter.emitAload(0);
 	}
 
@@ -367,7 +367,7 @@ public class IntermediateCodeGenerator {
 		genCodeFunctionCall(list, false);
 	}
 
-	private void genCodeSymbolFunction(final SymbolStruct sym) {
+	private void genCodeSymbolFunction(final SymbolStruct<?> sym) {
 		// there are multiple ways to handle this
 		// we add an optimization for calling a CL function
 		// it becomes a static field reference instead of a runtime symbol lookup
@@ -429,7 +429,7 @@ public class IntermediateCodeGenerator {
 	 *
 	 * @param sym lisp.common.type.Sybmbol sym
 	 */
-	private Object emitSymbolPackage(final SymbolStruct sym) {
+	private Object emitSymbolPackage(final SymbolStruct<?> sym) {
 		// There are optimizations for the standard packages
 		if (sym.getSymbolPackage() != null) {
 			final PackageStruct homePkgName = sym.getSymbolPackage();
@@ -466,7 +466,7 @@ public class IntermediateCodeGenerator {
 		return NILStruct.INSTANCE;
 	}
 
-	private void genGeneralSymbolFn(final SymbolStruct sym) {
+	private void genGeneralSymbolFn(final SymbolStruct<?> sym) {
 		final Label label = new Label();
 		emitter.visitMethodLabel(label);
 		genCodeSpecialVariable(sym);
@@ -530,7 +530,7 @@ public class IntermediateCodeGenerator {
 	}
 
 	private void genOptimizedForm(final ListStruct list) {
-		final SymbolStruct sym = (SymbolStruct) list.getFirst();
+		final SymbolStruct<?> sym = (SymbolStruct) list.getFirst();
 		if (sym.equals(GlobalPackageStruct.COMMON_LISP.intern("EQ").getSymbolStruct())) {
 			final ListStruct args = list.getRest();
 			// gen the 2 arguments and leave their values on the stack
@@ -564,7 +564,7 @@ public class IntermediateCodeGenerator {
 	private void genCodeFunctionCall(ListStruct list, final boolean acceptsMultipleValues) {
 		// +1 -> fn
 		final int argsExistCt = 0;
-		SymbolStruct theFnName = null;
+		SymbolStruct<?> theFnName = null;
 		if (list.getFirst() instanceof SymbolStruct) {
 			theFnName = (SymbolStruct) list.getFirst();
 		}
@@ -583,8 +583,8 @@ public class IntermediateCodeGenerator {
 			final FunctionStruct theFn = theFnName.getFunction();
 			if (theFn != null) {
 				final String ifName = "lisp.extensions.type.Function" + numParams;
-				final Class[] interfaces = theFn.getClass().getInterfaces();
-				for (final Class anInterface : interfaces) {
+				final Class<?>[] interfaces = theFn.getClass().getInterfaces();
+				for (final Class<?> anInterface : interfaces) {
 					if (ifName.equals(anInterface.getName())) {
 						fnOk = true;
 						break;
@@ -713,7 +713,7 @@ public class IntermediateCodeGenerator {
 
 	private void genCodeSpecialForm(final ListStruct list) {
 		if (list.getFirst() instanceof SymbolStruct) {
-			final SymbolStruct symName = (SymbolStruct) list.getFirst();
+			final SymbolStruct<?> symName = (SymbolStruct) list.getFirst();
 
 			// Determine the special form ) generate its code.
 			if (symName.equals(SpecialOperator.BLOCK)) {
@@ -794,7 +794,7 @@ public class IntermediateCodeGenerator {
 
 		// Get rid of the BLOCK symbol
 		list = list.getRest();
-		final SymbolStruct sym = (SymbolStruct) list.getFirst();
+		final SymbolStruct<?> sym = (SymbolStruct) list.getFirst();
 		list = list.getRest();
 
 		// ... ,
@@ -972,7 +972,7 @@ public class IntermediateCodeGenerator {
 		ListStruct classStuff = (ListStruct) arguments.getFirst();
 		//now classStuff ~= (Defstruct12071907613439006 BAR FOO)
 
-		final SymbolStruct javaName = (SymbolStruct) classStuff.getFirst();
+		final SymbolStruct<?> javaName = (SymbolStruct) classStuff.getFirst();
 		classStuff = classStuff.getRest();
 		//now classStuff ~= (BAR FOO) or just (BAR) if no include struct
 
@@ -1016,12 +1016,12 @@ public class IntermediateCodeGenerator {
 
 		//Process the fields (i.e. slots)
 		final int fieldListSize = fieldList.size();
-		final SymbolStruct[] fields = new SymbolStruct[fieldListSize];
+		final SymbolStruct<?>[] fields = new SymbolStruct<?>[fieldListSize];
 
 		//values = new Object[fieldListSize];
 		for (int i = 0; i < fieldListSize; i++) {
 			//get first set of field info
-			final SymbolStruct tempName = (SymbolStruct) fieldList.getFirst();
+			final SymbolStruct<?> tempName = (SymbolStruct) fieldList.getFirst();
 			//if there are more fields, get the rest of them
 			fieldList = fieldList.getRest();
 			//parse out the field name, type, and init value info
@@ -1080,7 +1080,7 @@ public class IntermediateCodeGenerator {
 			// Step 1: get the symbol
 			// Step 2: return the function stashed in the symbol or NIL if not there
 			// The SETF expander will ensure that there will be a FUNCALL #'(setf foo) with args
-			final SymbolStruct setfSymbol = (SymbolStruct) ((ListStruct) fn).getRest().getFirst();
+			final SymbolStruct<?> setfSymbol = (SymbolStruct) ((ListStruct) fn).getRest().getFirst();
 			genCodeSpecialVariable(setfSymbol); // now we have the symbol on the stack
 			// number the invoke
 			final Label label = new Label();
@@ -1103,7 +1103,7 @@ public class IntermediateCodeGenerator {
 	private void genCodeGo(ListStruct list) {
 		/* Get the symbol out of the list. */
 		list = list.getRest();
-		final SymbolStruct sym = (SymbolStruct) list.getFirst();
+		final SymbolStruct<?> sym = (SymbolStruct) list.getFirst();
 
         /*
 		// first, try to see if this is a go in the same tagbody (the most common)
@@ -1163,7 +1163,7 @@ public class IntermediateCodeGenerator {
 		genCodeLambda(list);
 	}
 
-	private void doStaticInit(final String className, final SymbolStruct lispName) {
+	private void doStaticInit(final String className, final SymbolStruct<?> lispName) {
 		// static init
 		emitter.newMethod(Opcodes.ACC_STATIC + Opcodes.ACC_PUBLIC, "<clinit>", "()", "V", null, null);
 		// init the SYMBOL field with the LISP name symbol
@@ -1273,7 +1273,7 @@ public class IntermediateCodeGenerator {
 			// run the list of variables
 			//TODO handle parameters that are special variables
 			for (final Binding binding : bindings) {
-				final SymbolStruct variable = binding.getSymbolStruct();
+				final SymbolStruct<?> variable = binding.getSymbolStruct();
 				final ClosureBinding closureEntry = closureStuff.getBinding(variable);
 				if (closureEntry != null) {
 					// this entry is a closure
@@ -1324,7 +1324,7 @@ public class IntermediateCodeGenerator {
 					final int slot = localAllocation.getPosition();
 					// now gen some code (whew)
 					// gen code to either intern a symbol or call make-symbol if uninterned
-					final SymbolStruct symbol = symbolBinding.getSymbolStruct();
+					final SymbolStruct<?> symbol = symbolBinding.getSymbolStruct();
 					if (symbol.getSymbolPackage() == null) {
 						final String name = symbol.getName();
 						// have to gen a make-symbol
@@ -1407,7 +1407,7 @@ public class IntermediateCodeGenerator {
 		if (lispSymbolName.equals(NullStruct.INSTANCE)) {
 			lispSymbolName = javaSymbolName;
 		}
-		final SymbolStruct lispName = (SymbolStruct) getCadr(lispSymbolName);
+		final SymbolStruct<?> lispName = (SymbolStruct) getCadr(lispSymbolName);
 		//
 		final ListStruct documentation = AssocFunction.funcall(Declaration.DOCUMENTATION, decl);
 		if ((sourceFile == null) || sourceFile.equals(NullStruct.INSTANCE)) {
@@ -1435,7 +1435,7 @@ public class IntermediateCodeGenerator {
 				"lisp/common/function/FunctionBaseClass",
 				interfaces.toArray(new String[1]));
 
-		final SymbolStruct docUID = (SymbolStruct) GensymFunction.funcall("docUID_" + System.currentTimeMillis());
+		final SymbolStruct<?> docUID = (SymbolStruct) GensymFunction.funcall("docUID_" + System.currentTimeMillis());
 
 		// if this is from a compile-file, add the source file name
 		final String fileName = getCadr(sourceFile).toString();
@@ -1589,9 +1589,9 @@ public class IntermediateCodeGenerator {
 		Label endLabel = null;
 		Label finallyLabel = null;
 		Label handlerLabel = null;
-		SymbolStruct dynamicSymbol = null;
+		SymbolStruct<?> dynamicSymbol = null;
 
-		SymbolBindingLabel(final Label endLabel, final Label finallyLabel, final Label handlerLabel, final SymbolStruct dynamicSymbol) {
+		SymbolBindingLabel(final Label endLabel, final Label finallyLabel, final Label handlerLabel, final SymbolStruct<?> dynamicSymbol) {
 			this.endLabel = endLabel;
 			this.finallyLabel = finallyLabel;
 			this.handlerLabel = handlerLabel;
@@ -1626,7 +1626,7 @@ public class IntermediateCodeGenerator {
 			bindingEnvironment = EnvironmentAccessor.getParent(bindingEnvironment);
 			// now, run the bindings
 			for (final Binding binding : bindingList) {
-				final SymbolStruct sym = binding.getSymbolStruct();
+				final SymbolStruct<?> sym = binding.getSymbolStruct();
 				// (:allocation ... :binding ... :scope ... :type ... :init-form ...)
 				// get the variable's init form
 				final LispStruct initForm = ((LetBinding) binding).getInitForm();
@@ -1770,7 +1770,7 @@ public class IntermediateCodeGenerator {
 		// objects or arrays of objects. Have to check at runtime
 		final boolean firstPass = true;
 		// make a private field to hold the resulting list
-		final SymbolStruct mvcFieldName = (SymbolStruct) GensymFunction.funcall("MVC_Field_" + System.currentTimeMillis());
+		final SymbolStruct<?> mvcFieldName = (SymbolStruct) GensymFunction.funcall("MVC_Field_" + System.currentTimeMillis());
 		emitter.newField(Opcodes.ACC_PRIVATE, mvcFieldName.toString(), "Llisp/common/type/ListStruct;", null, null);
 		// initialize it to NIL
 		emitter.emitAload(0);
@@ -1876,7 +1876,7 @@ public class IntermediateCodeGenerator {
 	private void genCodeQuote(final ListStruct list) {
 		final Object quotedObj = list.getRest().getFirst();
 		if (quotedObj instanceof SymbolStruct) {
-			final SymbolStruct sym = (SymbolStruct) quotedObj;
+			final SymbolStruct<?> sym = (SymbolStruct) quotedObj;
 			//TODO work out a way to handle uninterned symbols that have been encountered already
 			// need symbol package lookup here!
 			if (sym.getSymbolPackage() == null) {
@@ -1901,7 +1901,7 @@ public class IntermediateCodeGenerator {
 	private void genCodeReturnFrom(ListStruct list) {
 		// Get rid of the RETURN-FROM symbol
 		list = list.getRest();
-		final SymbolStruct sym = (SymbolStruct) list.getFirst();
+		final SymbolStruct<?> sym = (SymbolStruct) list.getFirst();
 		list = list.getRest();
 
 		emitter.emitNew("lisp/system/compiler/exceptions/ReturnFromException");
@@ -1919,7 +1919,7 @@ public class IntermediateCodeGenerator {
 		list = list.getRest();
 		while (!NullStruct.INSTANCE.equals(list)) {
 			// get the first symbol
-			final SymbolStruct symbol = (SymbolStruct) list.getFirst();
+			final SymbolStruct<?> symbol = (SymbolStruct) list.getFirst();
 			// step over the variable
 			list = list.getRest();
 			// get the form to evaluate
@@ -2000,7 +2000,7 @@ public class IntermediateCodeGenerator {
              * a label needs to be emitted. Otherwise call the ICG on the car of
              * the list. */
 			if (obj instanceof SymbolStruct) {
-				final SymbolStruct sym = (SymbolStruct) obj;
+				final SymbolStruct<?> sym = (SymbolStruct) obj;
 				// find the symbol in the tagbody stack
 				final TagbodyLabel tbl = findTagbodyInStack(tagbodyStack, (SymbolStruct) obj);
 				emitter.visitMethodLabel(tbl.label);
@@ -2094,11 +2094,11 @@ public class IntermediateCodeGenerator {
 	 */
 	class TagbodyLabel {
 
-		final SymbolStruct symbol;
+		final SymbolStruct<?> symbol;
 		final Label label;
 		final int index = tagCounter++;
 
-		TagbodyLabel(final SymbolStruct symbol, final Label label) {
+		TagbodyLabel(final SymbolStruct<?> symbol, final Label label) {
 			this.symbol = symbol;
 			this.label = label;
 		}
@@ -2119,7 +2119,7 @@ public class IntermediateCodeGenerator {
 		return tagStack;
 	}
 
-	private TagbodyLabel findTagbodyBySymbol(final Stack<TagbodyLabel> stack, final SymbolStruct symbol) {
+	private TagbodyLabel findTagbodyBySymbol(final Stack<TagbodyLabel> stack, final SymbolStruct<?> symbol) {
 		int size = stack.size();
 		while (size-- > 0) {
 			final TagbodyLabel tbl = stack.get(size);
@@ -2130,7 +2130,7 @@ public class IntermediateCodeGenerator {
 		return null;
 	}
 
-	private TagbodyLabel findTagbodyInStack(final Stack<Stack<TagbodyLabel>> stack, final SymbolStruct symbol) {
+	private TagbodyLabel findTagbodyInStack(final Stack<Stack<TagbodyLabel>> stack, final SymbolStruct<?> symbol) {
 		int size = stack.size();
 		while (size-- > 0) {
 			final Stack<TagbodyLabel> tbs = stack.get(size);
@@ -2251,7 +2251,7 @@ public class IntermediateCodeGenerator {
 				"java/lang/Throwable");
 	}
 
-	private Binding getSymbolPList(final Environment bindings, final SymbolStruct sym) {
+	private Binding getSymbolPList(final Environment bindings, final SymbolStruct<?> sym) {
 		return bindings.getBinding(sym);
 	}
 
@@ -2317,7 +2317,7 @@ public class IntermediateCodeGenerator {
 	}
 
 	// Making FooStruct
-	private void icgCreateDefstruct(final String name, final String[] implementing, final SymbolStruct lispName) {
+	private void icgCreateDefstruct(final String name, final String[] implementing, final SymbolStruct<?> lispName) {
 		emitter.newClass(Opcodes.ACC_PUBLIC + Opcodes.ACC_ABSTRACT + Opcodes.ACC_INTERFACE, name, null, "java/lang/Object", implementing);
 		emitter.newField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "factory", "L" + name + "$AbstractFactory;", null, null);
 		emitter.newField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "typeName", "Llisp/common/type/Symbol;", null, null);
@@ -2372,7 +2372,7 @@ public class IntermediateCodeGenerator {
 	}
 
 	// Making FooStructImpl$Class.
-	public void icgCreateDefstructImplClass(final String name, final String[] interfaces, final SymbolStruct lispName, final SymbolStruct[] fields, final Object printer, final DefstructSymbolStruct includedStruct, final int includedSlotNumber) {
+	public void icgCreateDefstructImplClass(final String name, final String[] interfaces, final SymbolStruct<?> lispName, final SymbolStruct<?>[] fields, final Object printer, final DefstructSymbolStruct includedStruct, final int includedSlotNumber) {
 
 		final String implName = name + "Impl";
 		final String implFactoryName = name + "Impl$Factory";
@@ -2429,7 +2429,7 @@ public class IntermediateCodeGenerator {
 
 		// if a print option was passed in, make an instance and store it
 		if (printer instanceof SymbolStruct) {
-			genCodeSpecialVariable((SymbolStruct) printer);
+			genCodeSpecialVariable((SymbolStruct<?>) printer);
 			emitter.emitPutstatic(implName, "printDefstructFunction", "Llisp/common/type/Symbol;");
 		} else if ((printer instanceof FunctionStruct) || (printer instanceof FunctionStruct)) { // TODO: Function2 || Function3
 			emitter.emitNew(printer.getClass().getName());

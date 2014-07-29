@@ -20,7 +20,7 @@ public class DefMacroExpander extends DefunExpander {
 
 	public static final DefMacroExpander FUNCTION = new DefMacroExpander();
 
-	protected SymbolStruct macroLambdaSymbol = SpecialOperator.MACRO_LAMBDA;
+	protected SymbolStruct<?> macroLambdaSymbol = SpecialOperator.MACRO_LAMBDA;
 
 	@Override
 	protected ListStruct setTypeSymbol(ListStruct mostlyLambda) {

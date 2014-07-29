@@ -17,7 +17,7 @@ public final class GensymFunction {
 	}
 
 	public static SymbolStruct<?> funcall(final IntegerStruct arg1) {
-		return new SymbolStruct("G" + arg1.getBigInteger());
+		return new SymbolStruct<>("G" + arg1.getBigInteger());
 	}
 
 	public static SymbolStruct<?> funcall(final StringStruct arg1) {
@@ -32,7 +32,7 @@ public final class GensymFunction {
 
 		final IntegerStruct currentGensymCounter = Variable.GENSYM_COUNTER.getValue();
 		final BigInteger currentGensymCounterValue = currentGensymCounter.getBigInteger();
-		final SymbolStruct<?> sym = new SymbolStruct(prefix + currentGensymCounterValue);
+		final SymbolStruct<?> sym = new SymbolStruct<>(prefix + currentGensymCounterValue);
 
 		final IntegerStruct newGensymCounter = new IntegerStruct(currentGensymCounterValue.add(BigInteger.ONE));
 		Variable.GENSYM_COUNTER.setValue(newGensymCounter);

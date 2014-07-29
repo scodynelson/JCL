@@ -4,17 +4,17 @@ import jcl.symbols.SymbolStruct;
 
 public class ClosureBinding {
 
-	private SymbolStruct symbolStruct;
+	private SymbolStruct<?> symbolStruct;
 	private int position;
 	private int references;
 
-	public ClosureBinding(final SymbolStruct symbolStruct, final int position, final int references) {
+	public ClosureBinding(final SymbolStruct<?> symbolStruct, final int position, final int references) {
 		this.symbolStruct = symbolStruct;
 		this.position = position;
 		this.references = references;
 	}
 
-	public SymbolStruct getSymbolStruct() {
+	public SymbolStruct<?> getSymbolStruct() {
 		return symbolStruct;
 	}
 
@@ -26,7 +26,7 @@ public class ClosureBinding {
 		return references;
 	}
 
-	public void setSymbolStruct(final SymbolStruct symbolStruct) {
+	public void setSymbolStruct(final SymbolStruct<?> symbolStruct) {
 		this.symbolStruct = symbolStruct;
 	}
 

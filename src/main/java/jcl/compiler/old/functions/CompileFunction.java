@@ -67,7 +67,6 @@ public class CompileFunction {
 		LispStruct lambda = null;
 		LispStruct formCopy = NullStruct.INSTANCE;
 
-		Constructor constructor;
 		sa = new SemanticAnalyzer();
 		icg = new IntermediateCodeGenerator();
 
@@ -80,7 +79,7 @@ public class CompileFunction {
 
 			Vector<Emitter.ClassDef> v = (Vector<Emitter.ClassDef>) icg.funcall(obj);
 			Vector<String> oc = new Vector<String>(v.size());
-			Vector classBytes = new Vector(v.size());
+			Vector<byte[]> classBytes = new Vector<>(v.size());
 
 			// *** setup documentation
 			DocumentFactory docFactory = new DocumentFactory();
@@ -103,11 +102,11 @@ public class CompileFunction {
 				oc.add(classDef.name);
 			}
 			// now load them
-			Vector classesLoaded = new Vector(v.size());
+			Vector<?> classesLoaded = new Vector<>(v.size());
 
 			classesLoaded = loadClasses(classBytes, oc);
-			Class primaryClass = (Class) classesLoaded.get(0);
-			constructor = primaryClass.getConstructor();
+			Class<?> primaryClass = (Class) classesLoaded.get(0);
+			Constructor<?> constructor = primaryClass.getConstructor();
 			lambda = (LispStruct) constructor.newInstance(new Object[]{});
 			// need to update function classes to support storing the form
 			// in the lambda class. This is non-trivial. Probably will be
@@ -130,10 +129,10 @@ public class CompileFunction {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Vector loadClasses(Vector classBytes,
+	public Vector<Class<?>> loadClasses(Vector<byte[]> classBytes,
 	                          Vector<String> oc) {
 		cl = new CompilerClassLoader();
-		Vector classesLoaded = new Vector();
+		Vector<Class<?>> classesLoaded = new Vector<>();
 
 		// Set to true to cache loader which loaded 1st struct iface and
 		//do other debug output, etc.
@@ -154,7 +153,7 @@ public class CompileFunction {
 			}
 			// END DEBUG SECTION
 
-			classesLoaded.add(cl.loadClass((byte[]) classBytes.get(x),
+			classesLoaded.add(cl.loadClass(classBytes.get(x),
 					oc.get(x).replace('.', '/')));
 		}
 
@@ -172,18 +171,18 @@ public class CompileFunction {
 		AnnotationCollector annCollect = new AnnotationCollector();
 		cr.accept(annCollect, 0); //ClassReader.EXPAND_FRAMES);
 
-		Hashtable docInfo = annCollect.getTable();
-		Set keys = docInfo.keySet();
+		Hashtable<String, Object> docInfo = annCollect.getTable();
+		Set<String> keys = docInfo.keySet();
 		String key = "";
 		String value = "";
-		Iterator iterator = keys.iterator();
+		Iterator<String> iterator = keys.iterator();
 
 		if (iterator.hasNext()) {
 			Element newDocNode = xmlDoc.createElement("docInstance");
 			root.appendChild(newDocNode);
 
 			while (iterator.hasNext()) {
-				key = (String) iterator.next();
+				key = iterator.next();
 				value = docInfo.get(key).toString();
 
 				if (!"docUID".equals(key)) {
@@ -208,7 +207,7 @@ public class CompileFunction {
 				NamedNodeMap attributes = instance.getAttributes();
 				if (attributes.getLength() > 0) {
 					String uidValue = attributes.getNamedItem("docUID").getNodeValue();
-					SymbolStruct uid = GlobalPackageStruct.COMPILER.intern(uidValue).getSymbolStruct();
+					SymbolStruct<?> uid = GlobalPackageStruct.COMPILER.intern(uidValue).getSymbolStruct();
 					mainList = new ConsStruct(new StringStruct(instance.toString()), mainList);
 					mainList = new ConsStruct(uid, mainList);
 				}
@@ -263,14 +262,14 @@ public class CompileFunction {
 	}
 
 	// Remove this method when :include issue with defstruct is fixed
-	private void cacheStructLoader(Vector classesLoaded) {
+	private void cacheStructLoader(Vector<Class<?>> classesLoaded) {
 	    /* This is some more debug stuff related to defstruct. Remove the
 	     * whole for loop when we solve the :include issue.
          * This caches the loader that loads the first defstruct interface.
          */
 		for (int i = 0; i < classesLoaded.size(); i++) {
 			Object temp = classesLoaded.get(i);
-			Class cls = (Class) temp;
+			Class<?> cls = (Class) temp;
 			if (cls.isInterface() && temp.toString().contains("StructureClass")) {
 				// now the current value of cl is what I want to hang on to
 				structLoader = cl;

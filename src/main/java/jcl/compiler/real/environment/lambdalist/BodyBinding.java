@@ -8,7 +8,7 @@ import jcl.types.List;
 
 public class BodyBinding extends FunctionBinding {
 
-	public BodyBinding(final SymbolStruct symbolStruct, final int allocationPosition, final LispStruct initForm) {
+	public BodyBinding(final SymbolStruct<?> symbolStruct, final int allocationPosition, final LispStruct initForm) {
 		super(symbolStruct, allocationPosition, Scope.LEXICAL, List.INSTANCE, initForm);
 	}
 }

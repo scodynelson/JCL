@@ -22,8 +22,8 @@ public class CompilerClassLoader extends ClassLoader {
 		JCL.CURRENT_CLASSLOADER = this;
 	}
 
-	public Class loadClass(byte[] bos, String name) {
-		Class c;
+	public Class<?> loadClass(byte[] bos, String name) {
+		Class<?> c;
 		c = defineClass(name.replace('/', '.'), bos, 0, bos.length);
 		resolveClass(c);
 		return c;

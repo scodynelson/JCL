@@ -53,12 +53,12 @@ public class CompileFileFunction {
 	public static final CompileFileFunction FUNCTION = new CompileFileFunction();
 
 	// compilation modes
-	public static final SymbolStruct COMPILE = GlobalPackageStruct.SYSTEM.intern("%COMPILE").getSymbolStruct();
-	public static final SymbolStruct LOAD = GlobalPackageStruct.COMMON_LISP.intern("LOAD").getSymbolStruct();
-	public static final SymbolStruct EVAL = GlobalPackageStruct.COMMON_LISP.intern("EVAL").getSymbolStruct();
-	public static final SymbolStruct COMPILE_TOPLEVEL = GlobalPackageStruct.KEYWORD.intern("COMPILE-TOPLEVEL").getSymbolStruct();
-	public static final SymbolStruct LOAD_TOPLEVEL = GlobalPackageStruct.KEYWORD.intern("LOAD-TOPLEVEL").getSymbolStruct();
-	public static final SymbolStruct EXECUTE = GlobalPackageStruct.KEYWORD.intern("EXECUTE").getSymbolStruct();
+	public static final SymbolStruct<?> COMPILE = GlobalPackageStruct.SYSTEM.intern("%COMPILE").getSymbolStruct();
+	public static final SymbolStruct<?> LOAD = GlobalPackageStruct.COMMON_LISP.intern("LOAD").getSymbolStruct();
+	public static final SymbolStruct<?> EVAL = GlobalPackageStruct.COMMON_LISP.intern("EVAL").getSymbolStruct();
+	public static final SymbolStruct<?> COMPILE_TOPLEVEL = GlobalPackageStruct.KEYWORD.intern("COMPILE-TOPLEVEL").getSymbolStruct();
+	public static final SymbolStruct<?> LOAD_TOPLEVEL = GlobalPackageStruct.KEYWORD.intern("LOAD-TOPLEVEL").getSymbolStruct();
+	public static final SymbolStruct<?> EXECUTE = GlobalPackageStruct.KEYWORD.intern("EXECUTE").getSymbolStruct();
 	private SemanticAnalyzer sa;
 	private IntermediateCodeGenerator icg;
 	private CompilerClassLoader cl;
@@ -118,13 +118,13 @@ public class CompileFileFunction {
 				String str = scanner.next();
 				sb.append("").append(Character.toUpperCase(str.charAt(0))).append(str.substring(1));
 			}
-			SymbolStruct newJavaClassName = new SymbolStruct(sb.toString());
+			SymbolStruct<?> newJavaClassName = new SymbolStruct<>(sb.toString());
 
 			PathnameStruct fact = PathnameStruct.buildPathname(f.getPath());
 			CharacterStreamStruct stream = (CharacterStreamStruct) OpenFunction.FUNCTION.funcall(ListStruct.buildProperList(new StringStruct(f.toString()), null, null, KeywordOld.NewVersion));
-			Vector formsInfo = readForms(stream);
-			java.util.List formsToCompile = (Vector) formsInfo.get(0);
-			Vector<Integer> formLneNumbers = (Vector<Integer>) formsInfo.get(1);
+			Vector<Vector<LispStruct>> formsInfo = readForms(stream);
+			java.util.List<LispStruct> formsToCompile = (Vector) formsInfo.get(0);
+			Vector<LispStruct> formLneNumbers = formsInfo.get(1);
 
 			// Create the wrap-around lambda expression that encloses all of the forms in the file.
 			// We have to give it a specific name so it can be loaded by name
@@ -136,7 +136,7 @@ public class CompileFileFunction {
 			formList = new ConsStruct(NullStruct.INSTANCE, formList);
 			formList = new ConsStruct(SpecialOperator.LAMBDA, formList);
 
-			SymbolStruct newSA = GlobalPackageStruct.COMMON_LISP.findSymbol("SEMANTIC-ANALYZER").getSymbolStruct();
+			SymbolStruct<?> newSA = GlobalPackageStruct.COMMON_LISP.findSymbol("SEMANTIC-ANALYZER").getSymbolStruct();
 			sa = new SemanticAnalyzer();
 //            sa = (newSA == NullStruct.INSTANCE) ? new SemanticAnalyzer() : (Function1)newSA.getFunction();
 			icg = new IntermediateCodeGenerator();
@@ -155,7 +155,7 @@ public class CompileFileFunction {
 
 			Vector<Emitter.ClassDef> v = (Vector<Emitter.ClassDef>) icg.funcall(formList);
 			Vector<String> oc = new Vector<String>(v.size());
-			Vector classBytes = new Vector(v.size());
+			Vector<byte[]> classBytes = new Vector<>(v.size());
 
 			DocumentFactory docFactory = new DocumentFactory();
 			Document xmlDoc = docFactory.newInstance();
@@ -172,17 +172,17 @@ public class CompileFileFunction {
 				String value = "";
 				AnnotationCollector annCollect = new AnnotationCollector();
 				cr.accept(annCollect, 0); //ClassReader.EXPAND_FRAMES);
-				Hashtable docInfo = annCollect.getTable();
+				Hashtable<String, Object> docInfo = annCollect.getTable();
 
-				Set keys = docInfo.keySet();
-				Iterator iterator = keys.iterator();
+				Set<String> keys = docInfo.keySet();
+				Iterator<String> iterator = keys.iterator();
 
 				if (iterator.hasNext()) {
 					Element newDocNode = xmlDoc.createElement("docInstance");
 					xmlDoc.getDocumentElement().appendChild(newDocNode);
 
 					while (iterator.hasNext()) {
-						key = (String) iterator.next();
+						key = iterator.next();
 						value = docInfo.get(key).toString();
 
 						if (!"docUID".equals(key)) {
@@ -210,7 +210,7 @@ public class CompileFileFunction {
 				oc.add(classDef.name);
 			}
 			// now load them
-			Vector classesLoaded = new Vector(v.size());
+			Vector<?> classesLoaded = new Vector<>(v.size());
 
 			Transformer transformer = TransformerFactory.newInstance().newTransformer();
 
@@ -232,7 +232,7 @@ public class CompileFileFunction {
 
 			baseTime = System.currentTimeMillis();
 
-			Enumeration classes = classBytes.elements();
+			Iterator<byte[]> iterator = classBytes.iterator();
 			int nameCounter = 0;
 			int xmlCounter = 0;
 
@@ -252,7 +252,7 @@ public class CompileFileFunction {
 
 			File tmpFile = File.createTempFile("TMP_JAR_" + System.currentTimeMillis(), ".jar");
 			//Get first class to make Main-Class Attribute
-			if (classes.hasMoreElements()) {
+			if (iterator.hasNext()) {
 				Manifest mani = new Manifest();
 				mani.getMainAttributes().put(java.util.jar.Attributes.Name.MANIFEST_VERSION, "1.0");
 				mani.getMainAttributes().put(java.util.jar.Attributes.Name.MAIN_CLASS, oc.get(0));
@@ -261,11 +261,11 @@ public class CompileFileFunction {
 				fileStream = new FileOutputStream(tmpFile, false);
 				jar = new JarOutputStream(fileStream, mani);
 			}
-			while (classes.hasMoreElements()) {
+			while (iterator.hasNext()) {
 				name = oc.get(nameCounter) + ".class";
 				entry = new JarEntry(name);
 				jar.putNextEntry(entry);
-				jar.write((byte[]) classes.nextElement());
+				jar.write(iterator.next());
 				jar.closeEntry();
 				nameCounter++;
 			}
@@ -357,7 +357,7 @@ public class CompileFileFunction {
 			return NullStruct.INSTANCE;
 		}
 		// perhaps the program used the deprecated names
-		SymbolStruct car = (SymbolStruct) situation.getFirst();
+		SymbolStruct<?> car = (SymbolStruct) situation.getFirst();
 		if (car == COMPILE) {
 			car = COMPILE_TOPLEVEL;
 		} else if (car == LOAD) {
@@ -509,9 +509,9 @@ public class CompileFileFunction {
 	}
 
 	@SuppressWarnings("unchecked")
-	private Vector readForms(CharacterStreamStruct file) {
+	private Vector<Vector<LispStruct>> readForms(CharacterStreamStruct file) {
 		assert (file != null);
-		Vector forms = new Vector();
+		Vector<LispStruct> forms = new Vector<>();
 //		Vector<IntegerStruct> lineNumber = new Vector<IntegerStruct>();
 
 		final Reader reader = new Reader(file);
@@ -557,7 +557,7 @@ public class CompileFileFunction {
 //				}
 			}
 		}
-		Vector value = new Vector();
+		Vector<Vector<LispStruct>> value = new Vector<>();
 		value.add(forms);
 //		value.add(lineNumber);
 		return value;

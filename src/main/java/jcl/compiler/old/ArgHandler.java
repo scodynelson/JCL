@@ -16,7 +16,7 @@ public class ArgHandler {
 	/**
 	 * Creates a new instance of ArgHandler
 	 */
-	public ArgHandler(List args) {
+	public ArgHandler(List<?> args) {
 		this.args = args.toArray();
 		checkArgs();
 		countArgs();

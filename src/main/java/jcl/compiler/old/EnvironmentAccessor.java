@@ -52,7 +52,7 @@ public class EnvironmentAccessor {
 		return currentEnvironment.getParent();
 	}
 
-	public static Environment createNewLambdaBinding(final Environment currentEnvironment, final SymbolStruct newVariable,
+	public static Environment createNewLambdaBinding(final Environment currentEnvironment, final SymbolStruct<?> newVariable,
 													 final int position, final boolean isSpecial) {
 
 		final Scope scope = (newVariable.isSpecial() || isSpecial) ? Scope.DYNAMIC : Scope.LEXICAL;
@@ -64,7 +64,7 @@ public class EnvironmentAccessor {
 		return currentEnvironment;
 	}
 
-	public static Environment createNewLetBinding(final Environment currentEnvironment, final SymbolStruct newVariable,
+	public static Environment createNewLetBinding(final Environment currentEnvironment, final SymbolStruct<?> newVariable,
 												  final int position, final LispStruct initForm, final boolean isSpecial) {
 
 		final Scope scope = (newVariable.isSpecial() || isSpecial) ? Scope.DYNAMIC : Scope.LEXICAL;
@@ -76,8 +76,8 @@ public class EnvironmentAccessor {
 		return currentEnvironment;
 	}
 
-	public static Environment createNewFBinding(final Environment currentEnvironment, final SymbolStruct newVariable,
-												final int position, final SymbolStruct newFieldName, final boolean isSpecial) {
+	public static Environment createNewFBinding(final Environment currentEnvironment, final SymbolStruct<?> newVariable,
+												final int position, final SymbolStruct<?> newFieldName, final boolean isSpecial) {
 
 		final Scope scope = (newVariable.isSpecial() || isSpecial) ? Scope.DYNAMIC : Scope.LEXICAL;
 		final Binding binding = new MacroFunctionBinding(newVariable, position, scope, T.INSTANCE, newFieldName);
@@ -96,7 +96,7 @@ public class EnvironmentAccessor {
 		return currentEnvironment.getEnvironmentClosure();
 	}
 
-	public static Binding getBinding(final Environment currentEnvironment, final SymbolStruct variable) {
+	public static Binding getBinding(final Environment currentEnvironment, final SymbolStruct<?> variable) {
 		final List<Binding> bindings = currentEnvironment.getBindings();
 
 		Binding returnBinding = null;
@@ -109,7 +109,7 @@ public class EnvironmentAccessor {
 		return returnBinding;
 	}
 
-	public static SymbolStruct extractBoundName(final Environment env, final SymbolStruct fnName, final boolean valueBinding) {
+	public static SymbolStruct<?> extractBoundName(final Environment env, final SymbolStruct<?> fnName, final boolean valueBinding) {
 
 		// get the current environment - used for macroexpansion
 		final Environment fnBinding = getBindingEnvironment(env, fnName, valueBinding);
@@ -134,7 +134,7 @@ public class EnvironmentAccessor {
 		return null;
 	}
 
-	public static boolean hasBinding(final Environment currentEnvironment, final SymbolStruct variable) {
+	public static boolean hasBinding(final Environment currentEnvironment, final SymbolStruct<?> variable) {
 		final List<Binding> bindings = currentEnvironment.getBindings();
 
 		boolean hasBinding = false;
@@ -147,7 +147,7 @@ public class EnvironmentAccessor {
 		return hasBinding;
 	}
 
-	public static Environment getBindingEnvironment(final Environment currentEnvironment, final SymbolStruct variable,
+	public static Environment getBindingEnvironment(final Environment currentEnvironment, final SymbolStruct<?> variable,
 													final boolean valueBinding) {
 
 		if (currentEnvironment.equals(Environment.NULL)) {
@@ -187,7 +187,7 @@ public class EnvironmentAccessor {
 		return findClosestLambdaOrLetEnv(getParent(currentEnvironment));
 	}
 
-	public static Environment addSymbolToTable(final Environment currentEnvironment, final SymbolStruct newSymbol) {
+	public static Environment addSymbolToTable(final Environment currentEnvironment, final SymbolStruct<?> newSymbol) {
 		final Environment currentEnvironmentInner = findClosestLambdaOrLetEnv(currentEnvironment);
 
 		/* default - may change later */
@@ -325,7 +325,7 @@ public class EnvironmentAccessor {
 		return currentEnvironmentInner.getSymbolTable();
 	}
 
-	public static SymbolBinding getSymbolInTable(final Environment currentEnvironment, final SymbolStruct variable) {
+	public static SymbolBinding getSymbolInTable(final Environment currentEnvironment, final SymbolStruct<?> variable) {
 		final Environment currentEnvironmentInner = findClosestLambdaOrLetEnv(currentEnvironment);
 
 		final SymbolTable symTable = getSymbolTable(currentEnvironmentInner);
@@ -341,7 +341,7 @@ public class EnvironmentAccessor {
 		return returnSymbolBinding;
 	}
 
-	public static SymbolBinding getSymbolTableEntry(final Environment currentEnvironment, final SymbolStruct variable) {
+	public static SymbolBinding getSymbolTableEntry(final Environment currentEnvironment, final SymbolStruct<?> variable) {
 		final Environment currentEnvironmentInner = findClosestLambdaOrLetEnv(currentEnvironment);
 
 		// look up the symbol in the symbol table
@@ -360,7 +360,7 @@ public class EnvironmentAccessor {
 		return symPList;
 	}
 
-	public static int getSymbolAllocation(final Environment currentEnvironment, final SymbolStruct variable) {
+	public static int getSymbolAllocation(final Environment currentEnvironment, final SymbolStruct<?> variable) {
 		final Environment currentEnvironmentInner = findClosestLambdaOrLetEnv(currentEnvironment);
 
 		// look up the symbol in the symbol table
@@ -383,7 +383,7 @@ public class EnvironmentAccessor {
 		}
 	}
 
-	public static Scope getSymbolScope(final Environment currentEnvironment, final SymbolStruct variable) {
+	public static Scope getSymbolScope(final Environment currentEnvironment, final SymbolStruct<?> variable) {
 		final Environment currentEnvironmentInner = findClosestLambdaOrLetEnv(currentEnvironment);
 
 		// look up the symbol in the symbol table
@@ -391,7 +391,7 @@ public class EnvironmentAccessor {
 		return symPList.getScope();
 	}
 
-	public static int getLocalMax(final List<Binding> bindings, int currentMax) {
+	public static int getLocalMax(final List<Binding> bindings, final int currentMax) {
 
 		int currentMaxInner = currentMax;
 
@@ -401,7 +401,7 @@ public class EnvironmentAccessor {
 			// an allocation is a ref to an outer env, (:local . n) or (:parameter . n)
 			if (allocation instanceof PositionAllocation) {
 
-				PositionAllocation positionAllocation = (PositionAllocation) allocation;
+				final PositionAllocation positionAllocation = (PositionAllocation) allocation;
 				final int tempParameter = positionAllocation.getPosition();
 				if (tempParameter > currentMaxInner) {
 					currentMaxInner = tempParameter;
@@ -447,7 +447,7 @@ public class EnvironmentAccessor {
 				|| (environment.getMarker() == Marker.FLET) || (environment.getMarker() == Marker.LABELS);
 	}
 
-	public static Environment addClosureToBindingEnvironment(final Environment currentEnvironment, final SymbolStruct symbol) {
+	public static Environment addClosureToBindingEnvironment(final Environment currentEnvironment, final SymbolStruct<?> symbol) {
 		final Environment currentEnvironmentInner = findClosestLambdaOrLetEnv(currentEnvironment);
 		Environment bindingEnvironment = getBindingEnvironment(currentEnvironmentInner, symbol, true);
 
@@ -485,7 +485,7 @@ public class EnvironmentAccessor {
 		return currentEnvironmentInner;
 	}
 
-	public static Environment createNewClosure(final Environment currentEnvironment, final SymbolStruct newSymbol,
+	public static Environment createNewClosure(final Environment currentEnvironment, final SymbolStruct<?> newSymbol,
 											   final int references, final int position) {
 
 		final Environment currentEnvironmentInner = findClosestLambdaOrLetEnv(currentEnvironment);
@@ -496,7 +496,7 @@ public class EnvironmentAccessor {
 		return currentEnvironmentInner;
 	}
 
-	public static ClosureBinding getClosureBinding(final Environment currentEnvironment, final SymbolStruct variable) {
+	public static ClosureBinding getClosureBinding(final Environment currentEnvironment, final SymbolStruct<?> variable) {
 		final Environment currentEnvironmentInner = findClosestLambdaOrLetEnv(currentEnvironment);
 
 		final Closure closure = currentEnvironmentInner.getEnvironmentClosure();

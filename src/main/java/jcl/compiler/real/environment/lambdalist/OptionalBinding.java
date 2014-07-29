@@ -10,7 +10,7 @@ public class OptionalBinding extends FunctionBinding {
 
 	private final SuppliedPBinding suppliedPBinding;
 
-	public OptionalBinding(final SymbolStruct symbolStruct, final int allocationPosition, final LispStruct initForm,
+	public OptionalBinding(final SymbolStruct<?> symbolStruct, final int allocationPosition, final LispStruct initForm,
 						   final SuppliedPBinding suppliedPBinding) {
 		super(symbolStruct, allocationPosition, Scope.LEXICAL, T.INSTANCE, initForm);
 		this.suppliedPBinding = suppliedPBinding;

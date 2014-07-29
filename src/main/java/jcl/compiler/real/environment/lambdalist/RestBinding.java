@@ -7,7 +7,7 @@ import jcl.types.List;
 
 public class RestBinding extends FunctionBinding {
 
-	public RestBinding(final SymbolStruct symbolStruct, final int allocationPosition) {
+	public RestBinding(final SymbolStruct<?> symbolStruct, final int allocationPosition) {
 		super(symbolStruct, allocationPosition, Scope.LEXICAL, List.INSTANCE, null);
 	}
 }

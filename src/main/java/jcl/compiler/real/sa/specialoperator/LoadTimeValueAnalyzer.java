@@ -68,7 +68,7 @@ public class LoadTimeValueAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		final Environment currentEnvironment = SemanticAnalyzer.environmentStack.peek();
 		final Environment enclosingLambda = EnvironmentAccessor.getEnclosingLambda(currentEnvironment);
 
-		final SymbolStruct<?> ltvName = new SymbolStruct(ltvFieldName + tag);
+		final SymbolStruct<?> ltvName = new SymbolStruct<>(ltvFieldName + tag);
 
 		final LoadTimeValue newLoadTimeValue = new LoadTimeValue(ltvName, lambdaAnalyzed);
 		enclosingLambda.getLoadTimeValues().add(newLoadTimeValue);

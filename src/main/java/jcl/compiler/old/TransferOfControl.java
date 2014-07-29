@@ -105,7 +105,7 @@ public class TransferOfControl {
 	public static Object isMine(Throwable ex) {
 		TOCRecord current;          //The first record on the stack
 		Object tempValue;           //Return value of exception
-		Class tempCatch, tempThrow; //Classes for Catchtag and Thrown exception
+		Class<?> tempCatch, tempThrow; //Classes for Catchtag and Thrown exception
 
 		TransferOfControl.setReturnException(null);
 

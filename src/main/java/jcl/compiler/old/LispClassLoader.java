@@ -10,7 +10,7 @@ import java.util.jar.JarFile;
 
 public class LispClassLoader extends ClassLoader {
 
-	private Hashtable classes = new Hashtable();
+	private Hashtable<String, Class<?>> classes = new Hashtable<>();
 	private JarFile jarFile;
 
 	public LispClassLoader(JarFile jarFile) {
@@ -34,14 +34,14 @@ public class LispClassLoader extends ClassLoader {
 //    }
 //
 	@Override
-	public Class loadClass(String className) throws ClassNotFoundException {
+	public Class<?> loadClass(String className) throws ClassNotFoundException {
 //        System.out.println("loadClass name: " + className);
 		return (loadClass(className, true));
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public synchronized Class loadClass(String className, boolean resolve) throws ClassNotFoundException {
+	public synchronized Class<?> loadClass(String className, boolean resolve) throws ClassNotFoundException {
 		if (classes.containsKey(className)) {
 			return (Class) classes.get(className);
 		}
@@ -49,7 +49,7 @@ public class LispClassLoader extends ClassLoader {
 		byte[] res = null;
 
 		JarEntry jarEntry = jarFile.getJarEntry(className.replace('.', '/') + ".class");
-		Class nextClass = null;
+		Class<?> nextClass = null;
 		// look for the next class in the class tree
 		if (jarEntry == null) {
 			try {
@@ -79,7 +79,7 @@ public class LispClassLoader extends ClassLoader {
 				}
 			}
 		}
-		Class clazz = defineClass(className, res, 0, res.length);
+		Class<?> clazz = defineClass(className, res, 0, res.length);
 		if (clazz == null) {
 			throw new ClassFormatError();
 		}

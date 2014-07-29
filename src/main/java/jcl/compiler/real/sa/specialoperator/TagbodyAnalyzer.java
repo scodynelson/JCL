@@ -57,7 +57,7 @@ public class TagbodyAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		final Map<LispStruct, SymbolStruct<?>> currentTagMap = new HashMap<>();
 
 		bodyJavaList.stream().filter(TagbodyAnalyzer::isTagbodyTag).forEach(current -> {
-			final SymbolStruct<?> newSym = new SymbolStruct("Tagbody_Tag_" + UUID.randomUUID());
+			final SymbolStruct<?> newSym = new SymbolStruct<>("Tagbody_Tag_" + UUID.randomUUID());
 			currentTagMap.put(current, newSym);
 		});
 

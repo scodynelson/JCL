@@ -45,7 +45,7 @@ public class Environment implements LispStruct {
 		return bindings;
 	}
 
-	public Binding getBinding(final SymbolStruct symbolStruct) {
+	public Binding getBinding(final SymbolStruct<?> symbolStruct) {
 		for (final Binding binding : bindings) {
 			if (binding.getSymbolStruct().equals(symbolStruct)) {
 				return binding;

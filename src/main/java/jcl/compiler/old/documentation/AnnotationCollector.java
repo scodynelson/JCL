@@ -7,10 +7,10 @@ import java.util.Hashtable;
 
 public class AnnotationCollector extends EmptyVisitor {
 
-	private Hashtable fields = new Hashtable();
+	private Hashtable<String, Object> fields = new Hashtable<>();
 	private boolean include = false;
 
-	public Hashtable getTable() {
+	public Hashtable<String, Object> getTable() {
 		return fields;
 	}
 

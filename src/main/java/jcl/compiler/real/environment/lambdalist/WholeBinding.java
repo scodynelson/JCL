@@ -8,7 +8,7 @@ import jcl.types.List;
 
 public class WholeBinding extends FunctionBinding {
 
-	public WholeBinding(final SymbolStruct symbolStruct, final int allocationPosition, final LispStruct initForm) {
+	public WholeBinding(final SymbolStruct<?> symbolStruct, final int allocationPosition, final LispStruct initForm) {
 		super(symbolStruct, allocationPosition, Scope.LEXICAL, List.INSTANCE, initForm);
 	}
 }

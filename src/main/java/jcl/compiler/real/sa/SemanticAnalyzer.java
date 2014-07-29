@@ -37,8 +37,8 @@ public class SemanticAnalyzer {
 	private boolean topLevelMode;
 
 	public static Stack<Environment> environmentStack;
-	public static Vector<SymbolStruct> undefinedFunctions;
-	public static Stack<SymbolStruct> currentLispName;
+	public static Vector<SymbolStruct<?>> undefinedFunctions;
+	public static Stack<SymbolStruct<?>> currentLispName;
 	public static int bindingsPosition;
 	// and association of function names seen and their arglist munging
 	// used to handle recursive functions
@@ -89,7 +89,7 @@ public class SemanticAnalyzer {
 		// clear the dup hash map
 
 		// now see if we have any functions still undefined
-		Iterator<SymbolStruct> iterator = undefinedFunctions.iterator();
+		Iterator<SymbolStruct<?>> iterator = undefinedFunctions.iterator();
 		while (iterator.hasNext()) {
 			if (iterator.next().getFunction() != null) {
 				// one with a fn, drop it
@@ -99,7 +99,7 @@ public class SemanticAnalyzer {
 		// now print out the ones outstanding
 		iterator = undefinedFunctions.iterator();
 		while (iterator.hasNext()) {
-			final SymbolStruct fnName = iterator.next();
+			final SymbolStruct<?> fnName = iterator.next();
 			LOGGER.warn("; Warning: no function or macro function defined for ");
 			if (fnName.getSymbolPackage() != null) {
 				LOGGER.warn("{}::{}", fnName.getSymbolPackage().getName(), fnName.getName());

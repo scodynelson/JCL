@@ -18,10 +18,20 @@ public abstract class StandardObjectStruct implements LispStruct {
 		documentation = null;
 	}
 
+	/**
+	 * Getter for standard object documentation property.
+	 *
+	 * @return standard object documentation property
+	 */
 	public String getDocumentation() {
 		return documentation;
 	}
 
+	/**
+	 * Setter for standard object documentation property.
+	 *
+	 * @param documentation new standard object documentation property value
+	 */
 	public void setDocumentation(final String documentation) {
 		this.documentation = documentation;
 	}

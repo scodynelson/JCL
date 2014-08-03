@@ -5,7 +5,6 @@ import jcl.LispType;
 import jcl.classes.BuiltInClassStruct;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
-import jcl.symbols.BooleanStruct;
 import jcl.symbols.Variable;
 import jcl.types.Array;
 import jcl.types.SimpleArray;
@@ -251,10 +250,10 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	public String printStruct() {
 		// TODO: Ignoring *PRINT-LEVEL* and *PRINT-LENGTH*; also, somewhat *PRINT-READABLY*
 
-		final BooleanStruct<?> printArray = Variable.PRINT_ARRAY.getValue();
-		final BooleanStruct<?> printReadably = Variable.PRINT_READABLY.getValue();
+		final boolean printArray = Variable.PRINT_ARRAY.getValue().booleanValue();
+		final boolean printReadably = Variable.PRINT_READABLY.getValue().booleanValue();
 
-		if (!printArray.booleanValue() && !printReadably.booleanValue()) {
+		if (!printArray && !printReadably) {
 			final String typeClassName = getType().getClass().getName().toUpperCase();
 
 			final StringBuilder stringBuilder = new StringBuilder();
@@ -281,7 +280,9 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 			stringBuilder.append('>');
 
 			return stringBuilder.toString();
-		} else if (printArray.booleanValue() && !printReadably.booleanValue()) {
+		}
+
+		if (printArray && !printReadably) {
 			final StringBuilder stringBuilder = new StringBuilder();
 			stringBuilder.append('#');
 			stringBuilder.append(rank);

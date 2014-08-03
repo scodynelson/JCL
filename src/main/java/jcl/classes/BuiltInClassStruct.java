@@ -32,4 +32,9 @@ public abstract class BuiltInClassStruct extends ClassStruct {
 	                             final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
 		super(type, directSuperClasses, subClasses);
 	}
+
+	@Override
+	public String toString() {
+		return "BuiltInClassStruct{}";
+	}
 }

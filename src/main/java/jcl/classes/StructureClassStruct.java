@@ -32,4 +32,9 @@ public abstract class StructureClassStruct extends ClassStruct {
 	                               final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
 		super(type, directSuperClasses, subClasses);
 	}
+
+	@Override
+	public String toString() {
+		return "StructureClassStruct{}";
+	}
 }

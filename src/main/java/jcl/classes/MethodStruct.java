@@ -13,4 +13,9 @@ public abstract class MethodStruct implements LispStruct {
 	public LispType getType() {
 		return Method.INSTANCE;
 	}
+
+	@Override
+	public String toString() {
+		return "MethodStruct{}";
+	}
 }

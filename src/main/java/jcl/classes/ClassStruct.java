@@ -43,10 +43,20 @@ public abstract class ClassStruct extends StandardObjectStruct {
 		return type;
 	}
 
+	/**
+	 * The List of direct superclasses for this Class object.
+	 *
+	 * @return the list of direct superclasses for this class object
+	 */
 	public List<Class<LispStruct>> getDirectSuperClasses() {
 		return directSuperClasses;
 	}
 
+	/**
+	 * The List of subclasses for this Class object.
+	 *
+	 * @return the list of subclasses for this class object
+	 */
 	public List<Class<LispStruct>> getSubClasses() {
 		return subClasses;
 	}

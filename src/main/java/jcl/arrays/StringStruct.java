@@ -2,8 +2,6 @@ package jcl.arrays;
 
 import jcl.characters.CharacterStruct;
 import jcl.readtables.ReadtableStruct;
-import jcl.symbols.BooleanStruct;
-import jcl.symbols.NILStruct;
 import jcl.symbols.Variable;
 import jcl.syntax.SyntaxType;
 import jcl.types.BaseChar;
@@ -93,12 +91,12 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 
 	@Override
 	public java.lang.String printStruct() {
-		final BooleanStruct<?> printEscape = Variable.PRINT_ESCAPE.getValue();
+		final boolean printEscape = Variable.PRINT_ESCAPE.getValue().booleanValue();
 
 		final ReadtableStruct readtable = Variable.READTABLE.getValue();
 
 		final StringBuilder stringBuilder = new StringBuilder();
-		if (printEscape.booleanValue()) {
+		if (printEscape) {
 			stringBuilder.append('"');
 		}
 
@@ -113,7 +111,7 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 			stringBuilder.append(codePoint);
 		}
 
-		if (!printEscape.equals(NILStruct.INSTANCE)) {
+		if (printEscape) {
 			stringBuilder.append('"');
 		}
 

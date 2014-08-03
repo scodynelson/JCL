@@ -134,9 +134,9 @@ public class RandomStateStruct extends BuiltInClassStruct {
 	public String printStruct() {
 		final StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("#RS(");
-		for (final BigInteger seedElement : seed) {
-			stringBuilder.append(seedElement);
-		}
+
+		seed.forEach(stringBuilder::append);
+
 		stringBuilder.append(')');
 
 		return stringBuilder.toString();

@@ -13,4 +13,9 @@ public abstract class MethodCombinationStruct implements LispStruct {
 	public LispType getType() {
 		return MethodCombination.INSTANCE;
 	}
+
+	@Override
+	public String toString() {
+		return "MethodCombinationStruct{}";
+	}
 }

@@ -2,7 +2,6 @@ package jcl.arrays;
 
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.numbers.IntegerStruct;
-import jcl.symbols.BooleanStruct;
 import jcl.symbols.Variable;
 import jcl.types.Bit;
 import jcl.types.BitVector;
@@ -79,9 +78,9 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 
 	@Override
 	public String printStruct() {
-		final BooleanStruct<?> printArray = Variable.PRINT_ARRAY.getValue();
+		final boolean printArray = Variable.PRINT_ARRAY.getValue().booleanValue();
 
-		if (!printArray.booleanValue()) {
+		if (!printArray) {
 			final String typeClassName = getType().getClass().getName().toUpperCase();
 
 			final StringBuilder stringBuilder = new StringBuilder();

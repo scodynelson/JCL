@@ -13,4 +13,9 @@ public abstract class StandardMethodStruct extends MethodStruct {
 	public LispType getType() {
 		return StandardMethod.INSTANCE;
 	}
+
+	@Override
+	public String toString() {
+		return "StandardMethodStruct{}";
+	}
 }

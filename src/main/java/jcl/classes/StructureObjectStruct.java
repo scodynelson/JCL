@@ -19,4 +19,9 @@ public class StructureObjectStruct implements LispStruct {
 		final String typeClassName = getType().getClass().getName().toUpperCase();
 		return "#<" + typeClassName + '>';
 	}
+
+	@Override
+	public String toString() {
+		return "StructureObjectStruct{}";
+	}
 }

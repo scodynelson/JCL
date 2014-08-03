@@ -1,7 +1,6 @@
 package jcl.characters;
 
 import jcl.classes.BuiltInClassStruct;
-import jcl.symbols.BooleanStruct;
 import jcl.symbols.Variable;
 import jcl.types.BaseChar;
 import jcl.types.Character;
@@ -64,10 +63,10 @@ public class CharacterStruct extends BuiltInClassStruct {
 
 	@Override
 	public String printStruct() {
-		final BooleanStruct<?> printEscape = Variable.PRINT_ESCAPE.getValue();
+		final boolean printEscape = Variable.PRINT_ESCAPE.getValue().booleanValue();
 
 		final StringBuilder stringBuilder = new StringBuilder();
-		if (printEscape.booleanValue()) {
+		if (printEscape) {
 			stringBuilder.append("#\\");
 		}
 

@@ -5,7 +5,6 @@ import jcl.LispType;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.sequences.SequenceStruct;
-import jcl.symbols.BooleanStruct;
 import jcl.symbols.Variable;
 import jcl.types.SimpleVector;
 import jcl.types.T;
@@ -155,10 +154,10 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	public String printStruct() {
 		// TODO: Ignoring *PRINT-LEVEL* and *PRINT-LENGTH*; also, somewhat *PRINT-READABLY*
 
-		final BooleanStruct<?> printArray = Variable.PRINT_ARRAY.getValue();
-		final BooleanStruct<?> printReadably = Variable.PRINT_READABLY.getValue();
+		final boolean printArray = Variable.PRINT_ARRAY.getValue().booleanValue();
+		final boolean printReadably = Variable.PRINT_READABLY.getValue().booleanValue();
 
-		if (!printArray.booleanValue() && !printReadably.booleanValue()) {
+		if (!printArray && !printReadably) {
 			final String typeClassName = getType().getClass().getName().toUpperCase();
 
 			final StringBuilder stringBuilder = new StringBuilder();
@@ -183,7 +182,9 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 			stringBuilder.append('>');
 
 			return stringBuilder.toString();
-		} else if (printArray.booleanValue() && !printReadably.booleanValue()) {
+		}
+
+		if (printArray && !printReadably) {
 			final StringBuilder stringBuilder = new StringBuilder();
 			stringBuilder.append("#(");
 

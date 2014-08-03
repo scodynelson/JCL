@@ -160,8 +160,7 @@ public class HashTableStruct extends BuiltInClassStruct {
 
 		@Override
 		public String printStruct() {
-			//TODO
-			return null;
+			return key.printStruct();
 		}
 
 		/**

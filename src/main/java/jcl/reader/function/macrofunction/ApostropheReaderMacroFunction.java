@@ -3,7 +3,7 @@ package jcl.reader.function.macrofunction;
 import jcl.LispStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.lists.ListStruct;
-import jcl.reader.ReadSuppressVariable;
+import jcl.variables.ReadSuppressVariable;
 import jcl.reader.impl.Reader;
 import jcl.structs.symbols.SpecialOperator;
 import jcl.syntax.CharacterConstants;

@@ -1,8 +1,7 @@
-package jcl.structs.numbers;
+package jcl.variables;
 
 import jcl.types.Float;
 import jcl.types.SingleFloat;
-import jcl.variables.LispVariable;
 
 /**
  * The {@link ReadDefaultFloatFormatVariable} is the object representation of the *read-default-float-format* variable.

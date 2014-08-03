@@ -1,6 +1,7 @@
-package jcl.structs.functions;
+package jcl.typespecifiers;
 
 import jcl.LispStruct;
+import jcl.structs.functions.PredicateFunctionStruct;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 

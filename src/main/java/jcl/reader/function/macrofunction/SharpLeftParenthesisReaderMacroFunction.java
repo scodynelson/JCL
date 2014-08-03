@@ -9,7 +9,7 @@ import jcl.structs.lists.ListStruct;
 import jcl.reader.function.ListReader;
 import jcl.reader.impl.Reader;
 import jcl.syntax.CharacterConstants;
-import jcl.reader.ReadSuppressVariable;
+import jcl.variables.ReadSuppressVariable;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.List;

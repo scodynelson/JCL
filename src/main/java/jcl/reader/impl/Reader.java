@@ -2,7 +2,7 @@ package jcl.reader.impl;
 
 import jcl.LispStruct;
 import jcl.structs.readtables.ReadtableStruct;
-import jcl.structs.readtables.ReadtableVariable;
+import jcl.variables.ReadtableVariable;
 import jcl.reader.syntax.TokenBuilder;
 import jcl.structs.streams.InputStream;
 import jcl.syntax.AttributeType;

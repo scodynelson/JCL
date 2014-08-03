@@ -7,7 +7,7 @@ import jcl.structs.numbers.ComplexStruct;
 import jcl.structs.numbers.FloatStruct;
 import jcl.structs.numbers.IntegerStruct;
 import jcl.structs.numbers.RatioStruct;
-import jcl.reader.ReadSuppressVariable;
+import jcl.variables.ReadSuppressVariable;
 import jcl.reader.impl.Reader;
 import jcl.syntax.CharacterConstants;
 

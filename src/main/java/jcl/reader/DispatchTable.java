@@ -1,4 +1,4 @@
-package jcl.structs.readtables;
+package jcl.reader;
 
 import jcl.LispStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;

@@ -1,5 +1,8 @@
 package jcl.structs.readtables;
 
+import jcl.reader.AttributeTable;
+import jcl.reader.DispatchTable;
+import jcl.reader.SyntaxTable;
 import jcl.structs.classes.BuiltInClassStruct;
 import jcl.reader.function.macrofunction.ApostropheReaderMacroFunction;
 import jcl.reader.function.macrofunction.LeftParenthesisReaderMacroFunction;

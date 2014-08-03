@@ -4,7 +4,7 @@ import jcl.LispStruct;
 import jcl.structs.classes.StructureObjectStruct;
 import jcl.reader.impl.Reader;
 import jcl.syntax.CharacterConstants;
-import jcl.reader.ReadSuppressVariable;
+import jcl.variables.ReadSuppressVariable;
 
 /**
  * Implements the '#s' Lisp reader macro.

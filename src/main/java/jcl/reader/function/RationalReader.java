@@ -3,8 +3,8 @@ package jcl.reader.function;
 import jcl.LispStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.numbers.RationalStruct;
-import jcl.structs.numbers.ReadBaseVariable;
-import jcl.reader.ReadSuppressVariable;
+import jcl.variables.ReadBaseVariable;
+import jcl.variables.ReadSuppressVariable;
 import jcl.reader.impl.Reader;
 import org.apache.commons.lang3.Range;
 

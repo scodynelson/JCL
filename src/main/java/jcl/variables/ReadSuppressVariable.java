@@ -1,6 +1,4 @@
-package jcl.reader;
-
-import jcl.variables.LispVariable;
+package jcl.variables;
 
 public class ReadSuppressVariable implements LispVariable<Boolean> {
 

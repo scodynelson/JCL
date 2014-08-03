@@ -1,4 +1,4 @@
-package jcl.structs.readtables;
+package jcl.reader;
 
 import jcl.syntax.SyntaxType;
 import org.slf4j.Logger;
@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * The {@code SyntaxTable} class represents a lookup table for syntax types matching code points.
  */
 @SuppressWarnings("all")
-class SyntaxTable {
+public class SyntaxTable {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SyntaxTable.class);
 
@@ -20,7 +20,7 @@ class SyntaxTable {
 	/**
 	 * Package constructor.
 	 */
-	SyntaxTable() {
+	public SyntaxTable() {
 		syntaxTypeMap = new ConcurrentHashMap<>(128);
 
 		syntaxTypeMap.put(0, SyntaxType.INVALID);                     // NUL
@@ -159,7 +159,7 @@ class SyntaxTable {
 	 * @param codePoint the {@code codePoint} used to find the matching syntax type
 	 * @return the matching syntax type for the provided {@code codePoint}
 	 */
-	SyntaxType getSyntaxType(final int codePoint) {
+	public SyntaxType getSyntaxType(final int codePoint) {
 		if (syntaxTypeMap.containsKey(codePoint)) {
 			return syntaxTypeMap.get(codePoint);
 		} else if (Character.isDefined(codePoint)) {
@@ -180,7 +180,7 @@ class SyntaxTable {
 		}
 	}
 
-	void setSyntaxType(final int codePoint, final SyntaxType syntaxType) {
+	public void setSyntaxType(final int codePoint, final SyntaxType syntaxType) {
 		syntaxTypeMap.put(codePoint, syntaxType);
 	}
 

@@ -4,7 +4,7 @@ import jcl.LispStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.StreamErrorException;
 import jcl.structs.packages.PackageStruct;
-import jcl.structs.packages.PackageVariable;
+import jcl.variables.PackageVariable;
 import jcl.reader.function.macrofunction.SharpTagReaderConstants;
 import jcl.reader.impl.Reader;
 import jcl.structs.streams.CharacterStreamStruct;

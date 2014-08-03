@@ -3,7 +3,7 @@ package jcl.reader.impl;
 import jcl.structs.packages.GlobalPackageStruct;
 import jcl.structs.packages.PackageStruct;
 import jcl.structs.packages.PackageSymbolStruct;
-import jcl.structs.packages.PackageVariable;
+import jcl.variables.PackageVariable;
 import jcl.reader.syntax.TokenAttribute;
 import jcl.reader.syntax.TokenBuilder;
 import jcl.structs.symbols.KeywordSymbolStruct;

@@ -8,7 +8,7 @@ import jcl.reader.impl.Reader;
 import jcl.reader.syntax.CharacterName;
 import jcl.reader.syntax.ReadExtendedToken;
 import jcl.syntax.CharacterConstants;
-import jcl.reader.ReadSuppressVariable;
+import jcl.variables.ReadSuppressVariable;
 import org.apache.commons.lang3.StringUtils;
 
 /**

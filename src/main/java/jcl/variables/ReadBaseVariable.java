@@ -1,6 +1,4 @@
-package jcl.structs.numbers;
-
-import jcl.variables.LispVariable;
+package jcl.variables;
 
 /**
  * The {@link ReadBaseVariable} is the object representation of the *read-base* variable.

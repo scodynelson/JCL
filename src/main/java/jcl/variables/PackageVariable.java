@@ -1,6 +1,7 @@
-package jcl.structs.packages;
+package jcl.variables;
 
-import jcl.variables.LispVariable;
+import jcl.structs.packages.GlobalPackageStruct;
+import jcl.structs.packages.PackageStruct;
 
 public class PackageVariable implements LispVariable<PackageStruct> {
 

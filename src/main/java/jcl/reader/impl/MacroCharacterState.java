@@ -1,7 +1,7 @@
 package jcl.reader.impl;
 
 import jcl.LispStruct;
-import jcl.structs.readtables.DispatchTable;
+import jcl.reader.DispatchTable;
 import jcl.reader.function.macrofunction.ReaderMacroFunction;
 import jcl.reader.syntax.TokenBuilder;
 import jcl.syntax.reader.ReadResult;

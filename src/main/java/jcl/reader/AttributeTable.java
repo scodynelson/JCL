@@ -1,6 +1,6 @@
-package jcl.structs.readtables;
+package jcl.reader;
 
-import jcl.structs.numbers.ReadBaseVariable;
+import jcl.variables.ReadBaseVariable;
 import jcl.syntax.AttributeType;
 
 import java.util.Map;
@@ -10,14 +10,14 @@ import java.util.concurrent.ConcurrentHashMap;
  * The {@code AttributeTable} class represents a lookup table for attribute types matching code points.
  */
 @SuppressWarnings("all")
-class AttributeTable {
+public class AttributeTable {
 
 	private final Map<Integer, AttributeType> attributeTypeMap;
 
 	/**
 	 * Package constructor.
 	 */
-	AttributeTable() {
+	public AttributeTable() {
 		attributeTypeMap = new ConcurrentHashMap<>(128);
 
 		attributeTypeMap.put(0, AttributeType.INVALID);                     // NUL
@@ -156,7 +156,7 @@ class AttributeTable {
 	 * @param codePoint the {@code codePoint} used to find the matching attribute type
 	 * @return the matching attribute type for the provided {@code codePoint}
 	 */
-	AttributeType getAttribute(final int codePoint) {
+	public AttributeType getAttribute(final int codePoint) {
 		if (attributeTypeMap.containsKey(codePoint)) {
 			AttributeType attributeType = attributeTypeMap.get(codePoint);
 

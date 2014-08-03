@@ -1,6 +1,6 @@
-package jcl.structs.readtables;
+package jcl.variables;
 
-import jcl.variables.LispVariable;
+import jcl.structs.readtables.ReadtableStruct;
 
 public class ReadtableVariable implements LispVariable<ReadtableStruct> {
 

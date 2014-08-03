@@ -2,8 +2,8 @@ package jcl.compiler.old.functions;
 
 import jcl.LispStruct;
 import jcl.compiler.old.expander.MacroFunctionExpander;
-import jcl.functions.FunctionStruct;
-import jcl.lists.ListStruct;
+import jcl.structs.functions.FunctionStruct;
+import jcl.structs.lists.ListStruct;
 
 // Now we make the base function for *macroexpand-hook*
 public class BaseMacroExpandFn extends FunctionStruct {

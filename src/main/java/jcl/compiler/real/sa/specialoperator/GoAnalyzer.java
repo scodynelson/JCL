@@ -2,10 +2,10 @@ package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.Analyzer;
-import jcl.lists.ListStruct;
-import jcl.numbers.NumberStruct;
-import jcl.symbols.SpecialOperator;
-import jcl.symbols.SymbolStruct;
+import jcl.structs.lists.ListStruct;
+import jcl.structs.numbers.NumberStruct;
+import jcl.structs.symbols.SpecialOperator;
+import jcl.structs.symbols.SymbolStruct;
 
 import java.util.ArrayList;
 import java.util.List;

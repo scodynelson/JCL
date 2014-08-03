@@ -1,7 +1,7 @@
 package jcl.compiler.old.functions;
 
 import jcl.LispStruct;
-import jcl.arrays.StringStruct;
+import jcl.structs.arrays.StringStruct;
 import jcl.compiler.old.CompilerClassLoader;
 import jcl.compiler.old.Emitter;
 import jcl.compiler.old.EmptyVisitor;
@@ -9,11 +9,11 @@ import jcl.compiler.old.IntermediateCodeGenerator;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.old.documentation.AnnotationCollector;
 import jcl.compiler.old.documentation.DocumentFactory;
-import jcl.lists.ConsStruct;
-import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.structs.lists.ConsStruct;
+import jcl.structs.lists.ListStruct;
+import jcl.structs.lists.NullStruct;
+import jcl.structs.packages.GlobalPackageStruct;
+import jcl.structs.symbols.SymbolStruct;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.util.CheckClassAdapter;

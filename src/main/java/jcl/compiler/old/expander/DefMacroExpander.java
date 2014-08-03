@@ -1,9 +1,9 @@
 package jcl.compiler.old.expander;
 
-import jcl.lists.ConsStruct;
-import jcl.lists.ListStruct;
-import jcl.symbols.SpecialOperator;
-import jcl.symbols.SymbolStruct;
+import jcl.structs.lists.ConsStruct;
+import jcl.structs.lists.ListStruct;
+import jcl.structs.symbols.SpecialOperator;
+import jcl.structs.symbols.SymbolStruct;
 
 /**
  * DefMacroExpander takes two arguments.  The first is the list containing the Defmacro symbol,

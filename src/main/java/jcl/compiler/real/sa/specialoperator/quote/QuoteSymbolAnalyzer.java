@@ -1,11 +1,11 @@
 package jcl.compiler.real.sa.specialoperator.quote;
 
 import jcl.LispStruct;
-import jcl.arrays.StringStruct;
+import jcl.structs.arrays.StringStruct;
 import jcl.compiler.real.sa.Analyzer;
-import jcl.lists.ListStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.structs.lists.ListStruct;
+import jcl.structs.packages.GlobalPackageStruct;
+import jcl.structs.symbols.SymbolStruct;
 
 import java.util.ArrayList;
 import java.util.List;

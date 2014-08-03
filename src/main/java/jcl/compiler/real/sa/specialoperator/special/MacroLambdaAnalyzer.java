@@ -2,7 +2,7 @@ package jcl.compiler.real.sa.specialoperator.special;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.Analyzer;
-import jcl.lists.ListStruct;
+import jcl.structs.lists.ListStruct;
 
 public class MacroLambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
 

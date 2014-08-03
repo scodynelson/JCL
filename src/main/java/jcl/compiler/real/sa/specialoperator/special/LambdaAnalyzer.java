@@ -5,9 +5,9 @@ import jcl.compiler.old.functions.MacroExpandFunction;
 import jcl.compiler.old.functions.MacroExpandReturn;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.specialoperator.FunctionAnalyzer;
-import jcl.lists.ConsStruct;
-import jcl.lists.ListStruct;
-import jcl.symbols.SpecialOperator;
+import jcl.structs.lists.ConsStruct;
+import jcl.structs.lists.ListStruct;
+import jcl.structs.symbols.SpecialOperator;
 
 public class LambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
 

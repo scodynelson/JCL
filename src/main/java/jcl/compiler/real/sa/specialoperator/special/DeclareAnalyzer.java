@@ -3,10 +3,10 @@ package jcl.compiler.real.sa.specialoperator.special;
 import jcl.LispStruct;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SymbolStructAnalyzer;
-import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
-import jcl.symbols.Declaration;
-import jcl.symbols.SymbolStruct;
+import jcl.structs.lists.ListStruct;
+import jcl.structs.lists.NullStruct;
+import jcl.structs.symbols.Declaration;
+import jcl.structs.symbols.SymbolStruct;
 
 import java.util.List;
 

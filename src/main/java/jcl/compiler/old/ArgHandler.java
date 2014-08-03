@@ -1,6 +1,6 @@
 package jcl.compiler.old;
 
-import jcl.symbols.SymbolStruct;
+import jcl.structs.symbols.SymbolStruct;
 import jcl.types.Null;
 
 import java.util.Collections;

@@ -5,11 +5,11 @@ import jcl.compiler.old.functions.MacroExpandFunction;
 import jcl.compiler.old.functions.MacroExpandReturn;
 import jcl.compiler.real.sa.specialoperator.compiler.FunctionMarkerAnalyzer;
 import jcl.compiler.real.sa.specialoperator.special.LambdaAnalyzer;
-import jcl.lists.ConsStruct;
-import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
-import jcl.symbols.SpecialOperator;
-import jcl.symbols.SymbolStruct;
+import jcl.structs.lists.ConsStruct;
+import jcl.structs.lists.ListStruct;
+import jcl.structs.lists.NullStruct;
+import jcl.structs.symbols.SpecialOperator;
+import jcl.structs.symbols.SymbolStruct;
 
 public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 

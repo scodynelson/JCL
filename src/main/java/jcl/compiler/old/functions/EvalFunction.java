@@ -1,20 +1,20 @@
 package jcl.compiler.old.functions;
 
 import jcl.LispStruct;
-import jcl.arrays.ArrayStruct;
-import jcl.arrays.StringStruct;
-import jcl.characters.CharacterStruct;
-import jcl.classes.StructureClassStruct;
-import jcl.classes.StructureObjectStruct;
+import jcl.structs.arrays.ArrayStruct;
+import jcl.structs.arrays.StringStruct;
+import jcl.structs.characters.CharacterStruct;
+import jcl.structs.classes.StructureClassStruct;
+import jcl.structs.classes.StructureObjectStruct;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.functions.FunctionStruct;
-import jcl.lists.ConsStruct;
-import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
-import jcl.numbers.NumberStruct;
-import jcl.streams.StreamStruct;
-import jcl.symbols.SpecialOperator;
-import jcl.symbols.SymbolStruct;
+import jcl.structs.functions.FunctionStruct;
+import jcl.structs.lists.ConsStruct;
+import jcl.structs.lists.ListStruct;
+import jcl.structs.lists.NullStruct;
+import jcl.structs.numbers.NumberStruct;
+import jcl.structs.streams.StreamStruct;
+import jcl.structs.symbols.SpecialOperator;
+import jcl.structs.symbols.SymbolStruct;
 
 /**
  * Class Eval has two methods, apply() and funcall() and a private constructor.

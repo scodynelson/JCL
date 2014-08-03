@@ -2,11 +2,11 @@ package jcl.compiler.old;
 
 import jcl.LispStruct;
 import jcl.compiler.old.symbol.Closure;
-import jcl.functions.FunctionStruct;
-import jcl.lists.ConsStruct;
-import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
-import jcl.symbols.SpecialOperator;
+import jcl.structs.functions.FunctionStruct;
+import jcl.structs.lists.ConsStruct;
+import jcl.structs.lists.ListStruct;
+import jcl.structs.lists.NullStruct;
+import jcl.structs.symbols.SpecialOperator;
 
 import java.util.Stack;
 

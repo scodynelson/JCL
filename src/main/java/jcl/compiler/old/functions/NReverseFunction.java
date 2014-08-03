@@ -1,8 +1,8 @@
 package jcl.compiler.old.functions;
 
-import jcl.lists.ConsStruct;
-import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
+import jcl.structs.lists.ConsStruct;
+import jcl.structs.lists.ListStruct;
+import jcl.structs.lists.NullStruct;
 
 public final class NReverseFunction {
 

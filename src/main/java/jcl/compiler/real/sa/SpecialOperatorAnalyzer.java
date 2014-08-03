@@ -29,11 +29,10 @@ import jcl.compiler.real.sa.specialoperator.UnwindProtectAnalyzer;
 import jcl.compiler.real.sa.specialoperator.compiler.DefstructAnalyzer;
 import jcl.compiler.real.sa.specialoperator.compiler.FunctionMarkerAnalyzer;
 import jcl.compiler.real.sa.specialoperator.compiler.StaticFieldAnalyzer;
-import jcl.compiler.real.sa.specialoperator.special.DeclareAnalyzer;
 import jcl.compiler.real.sa.specialoperator.special.LambdaAnalyzer;
 import jcl.compiler.real.sa.specialoperator.special.MacroLambdaAnalyzer;
-import jcl.lists.ListStruct;
-import jcl.symbols.SpecialOperator;
+import jcl.structs.lists.ListStruct;
+import jcl.structs.symbols.SpecialOperator;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -2,13 +2,12 @@ package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
 import jcl.LispType;
-import jcl.arrays.StringStruct;
+import jcl.structs.arrays.StringStruct;
 import jcl.compiler.old.EnvironmentAccessor;
 import jcl.compiler.old.functions.AppendFunction;
 import jcl.compiler.old.functions.AssocFunction;
 import jcl.compiler.old.functions.CompileFunction;
 import jcl.compiler.old.functions.GensymFunction;
-import jcl.compiler.old.functions.GetPlist;
 import jcl.compiler.old.functions.XCopyTreeFunction;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.MacroFunctionBinding;
@@ -19,23 +18,19 @@ import jcl.compiler.real.sa.LambdaListParser;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.SymbolStructAnalyzer;
 import jcl.compiler.real.sa.specialoperator.compiler.StaticFieldAnalyzer;
-import jcl.functions.FunctionStruct;
-import jcl.lists.ConsStruct;
-import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
-import jcl.numbers.IntegerStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.packages.PackageSymbolStruct;
-import jcl.symbols.Declaration;
-import jcl.symbols.SpecialOperator;
-import jcl.symbols.SymbolStruct;
+import jcl.structs.functions.FunctionStruct;
+import jcl.structs.lists.ConsStruct;
+import jcl.structs.lists.ListStruct;
+import jcl.structs.lists.NullStruct;
+import jcl.structs.packages.GlobalPackageStruct;
+import jcl.structs.packages.PackageSymbolStruct;
+import jcl.structs.symbols.Declaration;
+import jcl.structs.symbols.SpecialOperator;
+import jcl.structs.symbols.SymbolStruct;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Scanner;
-import java.util.Stack;
 import java.util.regex.Pattern;
 
 public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {

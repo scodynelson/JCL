@@ -2,7 +2,7 @@ package jcl.compiler.real.environment;
 
 import jcl.LispStruct;
 import jcl.LispType;
-import jcl.symbols.SymbolStruct;
+import jcl.structs.symbols.SymbolStruct;
 
 public class FunctionBinding extends LambdaBinding {
 

@@ -1,6 +1,6 @@
 package jcl.compiler.old.functions;
 
-import jcl.lists.ListStruct;
+import jcl.structs.lists.ListStruct;
 
 public class ValuesList {
 

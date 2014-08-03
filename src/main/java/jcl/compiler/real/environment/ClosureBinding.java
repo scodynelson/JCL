@@ -1,6 +1,6 @@
 package jcl.compiler.real.environment;
 
-import jcl.symbols.SymbolStruct;
+import jcl.structs.symbols.SymbolStruct;
 
 public class ClosureBinding {
 

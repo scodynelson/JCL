@@ -1,6 +1,6 @@
 package jcl.compiler.old.exception;
 
-import jcl.symbols.SymbolStruct;
+import jcl.structs.symbols.SymbolStruct;
 
 public class ReturnFromException extends TRFException {
 	private static final long serialVersionUID = -4154198139779543951L;

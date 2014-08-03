@@ -3,9 +3,9 @@ package jcl.compiler.real.sa.specialoperator;
 import jcl.LispStruct;
 import jcl.compiler.old.symbol.KeywordOld;
 import jcl.compiler.real.sa.Analyzer;
-import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
-import jcl.symbols.KeywordSymbolStruct;
+import jcl.structs.lists.ListStruct;
+import jcl.structs.lists.NullStruct;
+import jcl.structs.symbols.KeywordSymbolStruct;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Collection;

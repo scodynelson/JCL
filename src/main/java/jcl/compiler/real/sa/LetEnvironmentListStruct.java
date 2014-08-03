@@ -2,7 +2,7 @@ package jcl.compiler.real.sa;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.lists.ListStruct;
+import jcl.structs.lists.ListStruct;
 
 import java.util.List;
 

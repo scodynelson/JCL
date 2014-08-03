@@ -16,10 +16,10 @@ import jcl.compiler.real.environment.PositionAllocation;
 import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.environment.SymbolBinding;
 import jcl.compiler.real.environment.SymbolTable;
-import jcl.lists.ConsStruct;
-import jcl.lists.ListStruct;
-import jcl.symbols.SymbolStruct;
-import jcl.symbols.TStruct;
+import jcl.structs.lists.ConsStruct;
+import jcl.structs.lists.ListStruct;
+import jcl.structs.symbols.SymbolStruct;
+import jcl.structs.symbols.TStruct;
 import jcl.types.T;
 
 import java.util.ArrayList;

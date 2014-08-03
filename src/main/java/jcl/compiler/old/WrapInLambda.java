@@ -1,9 +1,9 @@
 package jcl.compiler.old;
 
 import jcl.LispStruct;
-import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
-import jcl.packages.GlobalPackageStruct;
+import jcl.structs.lists.ListStruct;
+import jcl.structs.lists.NullStruct;
+import jcl.structs.packages.GlobalPackageStruct;
 
 public class WrapInLambda {
 

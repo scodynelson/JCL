@@ -3,8 +3,8 @@ package jcl.compiler.real.environment.lambdalist;
 import jcl.LispStruct;
 import jcl.compiler.real.environment.FunctionBinding;
 import jcl.compiler.real.environment.Scope;
-import jcl.symbols.KeywordSymbolStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.structs.symbols.KeywordSymbolStruct;
+import jcl.structs.symbols.SymbolStruct;
 import jcl.types.T;
 
 public class KeyBinding extends FunctionBinding {

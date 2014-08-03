@@ -2,11 +2,11 @@ package jcl.compiler.old.functions;
 
 import jcl.LispStruct;
 import jcl.compiler.old.expander.MacroFunctionExpander;
-import jcl.functions.FunctionStruct;
-import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
-import jcl.symbols.SymbolStruct;
-import jcl.symbols.Variable;
+import jcl.structs.functions.FunctionStruct;
+import jcl.structs.lists.ListStruct;
+import jcl.structs.lists.NullStruct;
+import jcl.structs.symbols.SymbolStruct;
+import jcl.structs.symbols.Variable;
 
 /**
  * Implements the Common Lisp function Macroex[and-1.

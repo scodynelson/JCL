@@ -1,9 +1,9 @@
 package jcl.compiler.old.functions;
 
-import jcl.arrays.StringStruct;
-import jcl.numbers.IntegerStruct;
-import jcl.symbols.SymbolStruct;
-import jcl.symbols.Variable;
+import jcl.structs.arrays.StringStruct;
+import jcl.structs.numbers.IntegerStruct;
+import jcl.structs.symbols.SymbolStruct;
+import jcl.structs.symbols.Variable;
 
 import java.math.BigInteger;
 

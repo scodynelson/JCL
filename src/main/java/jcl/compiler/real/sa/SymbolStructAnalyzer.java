@@ -1,7 +1,7 @@
 package jcl.compiler.real.sa;
 
 import jcl.compiler.old.EnvironmentAccessor;
-import jcl.symbols.SymbolStruct;
+import jcl.structs.symbols.SymbolStruct;
 
 public class SymbolStructAnalyzer implements Analyzer<SymbolStruct<?>, SymbolStruct<?>> {
 

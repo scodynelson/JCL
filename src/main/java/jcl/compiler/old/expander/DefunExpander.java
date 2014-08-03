@@ -2,13 +2,13 @@ package jcl.compiler.old.expander;
 
 import jcl.LispStruct;
 import jcl.compiler.old.functions.AppendFunction;
-import jcl.lists.ConsStruct;
-import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.Declaration;
-import jcl.symbols.SpecialOperator;
-import jcl.symbols.SymbolStruct;
+import jcl.structs.lists.ConsStruct;
+import jcl.structs.lists.ListStruct;
+import jcl.structs.lists.NullStruct;
+import jcl.structs.packages.GlobalPackageStruct;
+import jcl.structs.symbols.Declaration;
+import jcl.structs.symbols.SpecialOperator;
+import jcl.structs.symbols.SymbolStruct;
 
 /**
  * DefunExpander takes two arguments.  The first is the list containing the Defun symbol,

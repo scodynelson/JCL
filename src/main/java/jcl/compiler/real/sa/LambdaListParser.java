@@ -8,11 +8,11 @@ import jcl.compiler.real.environment.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.lambdalist.RestBinding;
 import jcl.compiler.real.environment.lambdalist.SuppliedPBinding;
-import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.KeywordSymbolStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.structs.lists.ListStruct;
+import jcl.structs.lists.NullStruct;
+import jcl.structs.packages.GlobalPackageStruct;
+import jcl.structs.symbols.KeywordSymbolStruct;
+import jcl.structs.symbols.SymbolStruct;
 
 import java.util.ArrayList;
 import java.util.Iterator;

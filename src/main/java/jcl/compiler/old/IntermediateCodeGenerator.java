@@ -1,7 +1,7 @@
 package jcl.compiler.old;
 
 import jcl.LispStruct;
-import jcl.characters.CharacterStruct;
+import jcl.structs.characters.CharacterStruct;
 import jcl.compiler.old.expander.MacroFunctionExpander;
 import jcl.compiler.old.functions.AssocFunction;
 import jcl.compiler.old.functions.CompileFunction;
@@ -20,23 +20,23 @@ import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.environment.SymbolBinding;
 import jcl.compiler.real.environment.SymbolTable;
 import jcl.compiler.real.environment.lambdalist.RequiredBinding;
-import jcl.functions.FunctionStruct;
-import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
-import jcl.numbers.ComplexStruct;
-import jcl.numbers.FloatStruct;
-import jcl.numbers.IntegerStruct;
-import jcl.numbers.NumberStruct;
-import jcl.numbers.RatioStruct;
-import jcl.numbers.RealStruct;
-import jcl.packages.GlobalPackageStruct;
-import jcl.packages.PackageStruct;
-import jcl.symbols.Declaration;
-import jcl.symbols.DefstructSymbolStruct;
-import jcl.symbols.NILStruct;
-import jcl.symbols.SpecialOperator;
-import jcl.symbols.SymbolStruct;
-import jcl.symbols.TStruct;
+import jcl.structs.functions.FunctionStruct;
+import jcl.structs.lists.ListStruct;
+import jcl.structs.lists.NullStruct;
+import jcl.structs.numbers.ComplexStruct;
+import jcl.structs.numbers.FloatStruct;
+import jcl.structs.numbers.IntegerStruct;
+import jcl.structs.numbers.NumberStruct;
+import jcl.structs.numbers.RatioStruct;
+import jcl.structs.numbers.RealStruct;
+import jcl.structs.packages.GlobalPackageStruct;
+import jcl.structs.packages.PackageStruct;
+import jcl.structs.symbols.Declaration;
+import jcl.structs.symbols.DefstructSymbolStruct;
+import jcl.structs.symbols.NILStruct;
+import jcl.structs.symbols.SpecialOperator;
+import jcl.structs.symbols.SymbolStruct;
+import jcl.structs.symbols.TStruct;
 import org.apache.commons.collections4.CollectionUtils;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
@@ -144,24 +144,24 @@ public class IntermediateCodeGenerator {
 	 */
 
 	private void genNIL() {
-		emitter.emitGetstatic("jcl/symbols/NILStruct", "INSTANCE", "Ljcl/symbols/NILStruct;");
+		emitter.emitGetstatic("jcl/structs/symbols/NILStruct", "INSTANCE", "Ljcl/symbols/NILStruct;");
 	}
 
 	private void genCharacterStructCode(final CharacterStruct characterStruct) {
 		emitter.emitIconst(characterStruct.getCodePoint());
-		emitter.emitInvokestatic("jcl/characters/CharacterStruct", "<init>", "(I)", "V", false);
+		emitter.emitInvokestatic("jcl/structs/characters/CharacterStruct", "<init>", "(I)", "V", false);
 	}
 
 	private void genCodeInteger(final IntegerStruct integerStruct) {
 		emitter.emitLdc(integerStruct.getBigInteger().toString());
 		emitter.emitInvokestatic("java/math/BigInteger", "<init>", "(Ljava/lang/String;)", "V", false);
-		emitter.emitInvokestatic("jcl/numbers/IntegerStruct", "<init>", "(Ljava/math/BigInteger;)", "V", false);
+		emitter.emitInvokestatic("jcl/structs/numbers/IntegerStruct", "<init>", "(Ljava/math/BigInteger;)", "V", false);
 	}
 
 	private void genCodeFloat(final FloatStruct floatStruct) {
 		emitter.emitLdc(floatStruct.getBigDecimal().toString());
 		emitter.emitInvokestatic("java/math/BigDecimal", "<init>", "(Ljava/lang/String;)", "V", false);
-		emitter.emitInvokestatic("jcl/numbers/FloatStruct", "<init>", "(Ljava/math/BigDecimal;)", "V", false);
+		emitter.emitInvokestatic("jcl/structs/numbers/FloatStruct", "<init>", "(Ljava/math/BigDecimal;)", "V", false);
 	}
 
 	private void genCodeRatio(final RatioStruct ratioStruct) {
@@ -169,7 +169,7 @@ public class IntermediateCodeGenerator {
 		emitter.emitInvokestatic("java/math/BigInteger", "<init>", "(Ljava/lang/String;)", "V", false);
 		emitter.emitLdc(ratioStruct.getBigFraction().getDenominator().toString());
 		emitter.emitInvokestatic("java/math/BigInteger", "<init>", "(Ljava/lang/String;)", "V", false);
-		emitter.emitInvokestatic("jcl/numbers/RatioStruct", "<init>", "(Ljava/math/BigInteger;Ljava/math/BigInteger;)", "V", false);
+		emitter.emitInvokestatic("jcl/structs/numbers/RatioStruct", "<init>", "(Ljava/math/BigInteger;Ljava/math/BigInteger;)", "V", false);
 	}
 
 	private void genCodeComplex(final ComplexStruct complexStruct) {
@@ -197,7 +197,7 @@ public class IntermediateCodeGenerator {
 			throw new RuntimeException("Only reals are valid for the Complex 'real' part.");
 		}
 
-		emitter.emitInvokestatic("jcl/numbers/ComplexStruct", "getInstance", "(Ljcl/numbers/RealStruct;Ljcl/numbers/RealStruct;)", "Ljcl/numbers/ComplexStruc;", false);
+		emitter.emitInvokestatic("jcl/structs/numbers/ComplexStruct", "getInstance", "(Ljcl/numbers/RealStruct;Ljcl/numbers/RealStruct;)", "Ljcl/numbers/ComplexStruc;", false);
 	}
 
 	private void genCodeSymbolValue(final SymbolStruct<?> symbolStruct) {
@@ -227,7 +227,7 @@ public class IntermediateCodeGenerator {
 						LOGGER.warn("; Warning: variable {} is assumed free", symbolStruct);
 					}
 					genCodeSpecialSymbol(symbolStruct);
-					emitter.emitInvokestatic("jcl/symbols/SymbolStruct", "getValue", "()", "Ljava/lang/Object;", true);
+					emitter.emitInvokestatic("jcl/structs/symbols/SymbolStruct", "getValue", "()", "Ljava/lang/Object;", true);
 				} else {
 					final int slot = genLocalSlot(symbolStruct, binding);
 					emitter.emitAload(slot);
@@ -238,7 +238,7 @@ public class IntermediateCodeGenerator {
 				if (entry.getScope() == Scope.DYNAMIC) {
 					// it's number 3
 					genCodeSpecialSymbol(symbolStruct);
-					emitter.emitInvokestatic("jcl/symbols/SymbolStruct", "getValue", "()", "Ljava/lang/Object;", true);
+					emitter.emitInvokestatic("jcl/structs/symbols/SymbolStruct", "getValue", "()", "Ljava/lang/Object;", true);
 				} else {
 					// it's door number 2
 					// get the allocation parameter
@@ -409,9 +409,9 @@ public class IntermediateCodeGenerator {
 
 	private <X extends LispStruct> void genCodeSpecialVariable(final SymbolStruct<X> sym) {
 		if (sym.equals(NILStruct.INSTANCE)) {
-			emitter.emitGetstatic("jcl/symbols/NILStruct", "INSTANCE", "Ljcl/symbols/NILStruct;");
+			emitter.emitGetstatic("jcl/structs/symbols/NILStruct", "INSTANCE", "Ljcl/symbols/NILStruct;");
 		} else if (sym.equals(TStruct.INSTANCE)) {
-			emitter.emitGetstatic("jcl/symbols/TStruct", "INSTANCE", "Ljcl/symbols/TStruct;");
+			emitter.emitGetstatic("jcl/structs/symbols/TStruct", "INSTANCE", "Ljcl/symbols/TStruct;");
 		} else {
 			// push current package
 			emitSymbolPackage(sym);

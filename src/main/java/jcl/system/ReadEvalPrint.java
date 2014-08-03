@@ -1,15 +1,15 @@
 package jcl.system;
 
 import jcl.LispStruct;
-import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.conditions.exceptions.StreamErrorException;
-import jcl.packages.PackageStruct;
-import jcl.packages.PackageVariable;
-import jcl.readtables.reader.function.macrofunction.SharpTagReaderConstants;
-import jcl.readtables.reader.impl.Reader;
-import jcl.streams.CharacterStreamStruct;
-import jcl.streams.FileStreamStruct;
-import jcl.streams.InputStream;
+import jcl.structs.conditions.exceptions.ReaderErrorException;
+import jcl.structs.conditions.exceptions.StreamErrorException;
+import jcl.structs.packages.PackageStruct;
+import jcl.structs.packages.PackageVariable;
+import jcl.reader.function.macrofunction.SharpTagReaderConstants;
+import jcl.reader.impl.Reader;
+import jcl.structs.streams.CharacterStreamStruct;
+import jcl.structs.streams.FileStreamStruct;
+import jcl.structs.streams.InputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

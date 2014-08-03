@@ -5,6 +5,8 @@ import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.functions.FunctionStruct;
 import jcl.reader.impl.Reader;
 
+import java.math.BigInteger;
+
 /**
  * Defines a ReaderMacroFunction type.
  */
@@ -19,7 +21,7 @@ public abstract class ReaderMacroFunction extends FunctionStruct {
 	 * @return a LispStruct
 	 * @throws ReaderErrorException if an error is encountered
 	 */
-	public abstract LispStruct readMacro(int codePoint, Reader reader, Integer numArg);
+	public abstract LispStruct readMacro(int codePoint, Reader reader, BigInteger numArg);
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {

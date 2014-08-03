@@ -1,10 +1,12 @@
 package jcl.reader.function.macrofunction;
 
 import jcl.LispStruct;
-import jcl.structs.classes.StructureObjectStruct;
 import jcl.reader.impl.Reader;
+import jcl.structs.classes.StructureObjectStruct;
+import jcl.structs.symbols.Variable;
 import jcl.syntax.CharacterConstants;
-import jcl.variables.ReadSuppressVariable;
+
+import java.math.BigInteger;
 
 /**
  * Implements the '#s' Lisp reader macro.
@@ -12,10 +14,10 @@ import jcl.variables.ReadSuppressVariable;
 public class SharpSReaderMacroFunction extends ReaderMacroFunction {
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final Integer numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_S) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_S);
 
-		if (ReadSuppressVariable.INSTANCE.getValue()) {
+		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
 			reader.read();
 			return null;
 		}

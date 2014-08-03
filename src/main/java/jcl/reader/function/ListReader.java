@@ -1,10 +1,10 @@
 package jcl.reader.function;
 
 import jcl.LispStruct;
+import jcl.reader.impl.Reader;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.lists.ListStruct;
-import jcl.variables.ReadSuppressVariable;
-import jcl.reader.impl.Reader;
+import jcl.structs.symbols.Variable;
 import jcl.syntax.CharacterConstants;
 
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ public class ListReader {
 
 				if (isWhitespaceOrTerminating(reader, nextCodePoint)) {
 					if (theList.isEmpty()) {
-						if (ReadSuppressVariable.INSTANCE.getValue()) {
+						if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
 							return null;
 						} else {
 							throw new ReaderErrorException("Nothing appears before . in list.");

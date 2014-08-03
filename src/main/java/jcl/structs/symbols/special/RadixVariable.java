@@ -1,7 +1,7 @@
 package jcl.structs.symbols.special;
 
 import jcl.structs.numbers.IntegerStruct;
-import jcl.structs.packages.GlobalPackageStruct;
+import jcl.structs.packages.PackageStruct;
 import jcl.structs.symbols.Variable;
 import org.apache.commons.lang3.Range;
 import org.slf4j.Logger;
@@ -9,9 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
 
-public class PrintBaseVariable extends Variable<IntegerStruct> {
-
-	public static final PrintBaseVariable INSTANCE = new PrintBaseVariable();
+public class RadixVariable extends Variable<IntegerStruct> {
 
 	private static final IntegerStruct TEN = new IntegerStruct(BigInteger.TEN);
 
@@ -19,10 +17,10 @@ public class PrintBaseVariable extends Variable<IntegerStruct> {
 	private static final int upperBound = 32;
 	private static final Range<BigInteger> RADIX_RANGE = Range.between(BigInteger.valueOf(lowerBound), BigInteger.valueOf(upperBound));
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(PrintBaseVariable.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(RadixVariable.class);
 
-	private PrintBaseVariable() {
-		super("*PRINT-BASE*", GlobalPackageStruct.COMMON_LISP, TEN);
+	public RadixVariable(final String name, final PackageStruct symbolPackage) {
+		super(name, symbolPackage, TEN);
 	}
 
 	@Override
@@ -32,7 +30,7 @@ public class PrintBaseVariable extends Variable<IntegerStruct> {
 		if (RADIX_RANGE.contains(bigIntegerValue)) {
 			this.value = value;
 		} else {
-			LOGGER.warn("Error: *PRINT-BASE* had illegal value {}.  Reset to 10", value);
+			LOGGER.warn("Error: {} had illegal value {}.  Reset to 10", name, value);
 
 			this.value = TEN;
 		}

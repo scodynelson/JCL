@@ -1,13 +1,13 @@
 package jcl.reader.impl;
 
+import jcl.reader.syntax.TokenAttribute;
+import jcl.reader.syntax.TokenBuilder;
 import jcl.structs.packages.GlobalPackageStruct;
 import jcl.structs.packages.PackageStruct;
 import jcl.structs.packages.PackageSymbolStruct;
-import jcl.variables.PackageVariable;
-import jcl.reader.syntax.TokenAttribute;
-import jcl.reader.syntax.TokenBuilder;
 import jcl.structs.symbols.KeywordSymbolStruct;
 import jcl.structs.symbols.SymbolStruct;
+import jcl.structs.symbols.Variable;
 import jcl.syntax.AttributeType;
 import org.apache.commons.lang3.StringUtils;
 
@@ -16,30 +16,30 @@ import java.util.Map;
 
 /**
  * Step 10.2 of the Reader Algorithm.
- * <p/>
+ * <p>
  * This state is reached when we have accumulated a token, and it needs to be processed into either
  * 1) Symbol
  * 2) Package with a Symbol
- * <p/>
+ * <p>
  * First we attempt to see if it contains any Package Markers, if it does, then
  * we attempt to get the package for it based on 3 formats.  The formats are as follows:
- * <p/>
+ * <p>
  * 1) ":SYMBOL_NAME" - This format should find the symbol in the Keyword Package.
- * <p/>
+ * <p>
  * 2) "PACKAGE_NAME:SYMBOL_NAME" - This format will have to find the package and then find the
  * symbol that is external to that package.
- * <p/>
+ * <p>
  * 3) "PACKAGE_NAME::SYMBOL_NAME" - This format will have to find the package and then intern the
  * symbol that is internal to that package.
- * <p/>
+ * <p>
  * 4) Any other combinations of Package Markers will result in an error.
- * <p/>
+ * <p>
  * After the token has been made into an object, that object is set as the return object for the read
  * function.  We then return the EndState.
- * <p/>
+ * <p>
  * This will have to be fixed because it only handles Symbols using the Common Lisp Package
  * and Symbols that are in the Keyword Package!!!
- * <p/>
+ * <p>
  */
 public class SymbolTokenAccumulatedState extends State {
 
@@ -77,7 +77,7 @@ public class SymbolTokenAccumulatedState extends State {
 		if (hasNoPackageMarkers) {
 			final String symName = StateUtils.convertTokensToString(tokenAttributes);
 
-			final PackageStruct pkg = PackageVariable.INSTANCE.getValue();
+			final PackageStruct pkg = Variable.PACKAGE.getValue();
 			final PackageSymbolStruct packageSymbol = pkg.findSymbol(symName);
 			if (packageSymbol == null) {
 //				tokenBuilder.setErrorMessage("Unbound variable: " + symName); // TODO: This check will happen in the compiler...

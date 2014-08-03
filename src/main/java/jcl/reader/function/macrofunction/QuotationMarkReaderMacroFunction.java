@@ -1,15 +1,17 @@
 package jcl.reader.function.macrofunction;
 
 import jcl.LispStruct;
+import jcl.reader.function.UnicodeCharacterReader;
+import jcl.reader.impl.Reader;
 import jcl.structs.arrays.StringStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.structs.conditions.exceptions.TypeErrorException;
-import jcl.reader.function.UnicodeCharacterReader;
-import jcl.reader.impl.Reader;
+import jcl.structs.symbols.Variable;
 import jcl.syntax.CharacterConstants;
 import jcl.syntax.reader.ReadResult;
-import jcl.variables.ReadSuppressVariable;
+
+import java.math.BigInteger;
 
 /**
  * Implements the '"..."' Lisp reader macro.
@@ -17,7 +19,7 @@ import jcl.variables.ReadSuppressVariable;
 public class QuotationMarkReaderMacroFunction extends ReaderMacroFunction {
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final Integer numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.QUOTATION_MARK;
 
 		final UnicodeCharacterReader macroFunctionReader = new UnicodeCharacterReader(reader);
@@ -62,7 +64,7 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunction {
 			readChar = readResult.getResult();
 		}
 
-		if (ReadSuppressVariable.INSTANCE.getValue()) {
+		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
 			return null;
 		}
 

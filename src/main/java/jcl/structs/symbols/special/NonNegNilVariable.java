@@ -1,7 +1,7 @@
 package jcl.structs.symbols.special;
 
 import jcl.structs.numbers.IntegerStruct;
-import jcl.structs.packages.GlobalPackageStruct;
+import jcl.structs.packages.PackageStruct;
 import jcl.structs.symbols.Variable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,8 +12,8 @@ public class NonNegNilVariable extends Variable<IntegerStruct> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(NonNegNilVariable.class);
 
-	public NonNegNilVariable(final String name) {
-		super(name, GlobalPackageStruct.COMMON_LISP, null);
+	public NonNegNilVariable(final String name, final PackageStruct symbolPackage) {
+		super(name, symbolPackage, null);
 	}
 
 	@Override

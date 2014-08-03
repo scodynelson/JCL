@@ -1,15 +1,15 @@
 package jcl.system;
 
 import jcl.LispStruct;
+import jcl.reader.function.macrofunction.SharpTagReaderConstants;
+import jcl.reader.impl.Reader;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.StreamErrorException;
 import jcl.structs.packages.PackageStruct;
-import jcl.variables.PackageVariable;
-import jcl.reader.function.macrofunction.SharpTagReaderConstants;
-import jcl.reader.impl.Reader;
 import jcl.structs.streams.CharacterStreamStruct;
 import jcl.structs.streams.FileStreamStruct;
 import jcl.structs.streams.InputStream;
+import jcl.structs.symbols.Variable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,7 +89,7 @@ public final class ReadEvalPrint {
 //				Object value = null;
 				try {
 					// THE PROMPT
-					final PackageStruct pkg = PackageVariable.INSTANCE.getValue();
+					final PackageStruct pkg = Variable.PACKAGE.getValue();
 					LOGGER.info("\n{}: {}> ", pkg.getName(), ++lineCounter);
 
 					// READ --------------

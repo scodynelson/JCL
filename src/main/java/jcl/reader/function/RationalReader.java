@@ -1,16 +1,18 @@
 package jcl.reader.function;
 
 import jcl.LispStruct;
-import jcl.structs.conditions.exceptions.ReaderErrorException;
-import jcl.structs.numbers.RationalStruct;
-import jcl.variables.ReadBaseVariable;
-import jcl.variables.ReadSuppressVariable;
 import jcl.reader.impl.Reader;
+import jcl.structs.conditions.exceptions.ReaderErrorException;
+import jcl.structs.numbers.IntegerStruct;
+import jcl.structs.numbers.RationalStruct;
+import jcl.structs.symbols.Variable;
 import org.apache.commons.lang3.Range;
+
+import java.math.BigInteger;
 
 public class RationalReader {
 
-	private static final Range<Integer> RADIX_RANGE = Range.between(2, 36);
+	private static final Range<BigInteger> RADIX_RANGE = Range.between(BigInteger.valueOf(2), BigInteger.valueOf(36));
 
 	private final Reader reader;
 
@@ -18,8 +20,8 @@ public class RationalReader {
 		this.reader = reader;
 	}
 
-	public RationalStruct readRationalToken(final Integer radix) {
-		if (ReadSuppressVariable.INSTANCE.getValue()) {
+	public RationalStruct readRationalToken(final BigInteger radix) {
+		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
 			final ExtendedTokenReader macroFunctionReader = new ExtendedTokenReader(reader);
 			macroFunctionReader.readExtendedToken(false);
 			return null;
@@ -33,16 +35,16 @@ public class RationalReader {
 			throw new ReaderErrorException("Illegal radix for #R: " + radix + '.');
 		}
 
-		final int previousReadBase = ReadBaseVariable.INSTANCE.getValue();
+		final IntegerStruct previousReadBase = Variable.READ_BASE.getValue();
 
 		// alter the read-base
-		ReadBaseVariable.INSTANCE.setValue(radix);
+		Variable.READ_BASE.setValue(new IntegerStruct(radix));
 
 		// read rational
 		final LispStruct lispToken = reader.read();
 
 		// reset the read-base
-		ReadBaseVariable.INSTANCE.setValue(previousReadBase);
+		Variable.READ_BASE.setValue(previousReadBase);
 
 		if (lispToken instanceof RationalStruct) {
 			return (RationalStruct) lispToken;

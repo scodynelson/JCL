@@ -1,16 +1,17 @@
 package jcl.reader.function;
 
 import jcl.LispStruct;
+import jcl.reader.impl.Reader;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.lists.ConsStruct;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.packages.GlobalPackageStruct;
 import jcl.structs.packages.PackageStruct;
-import jcl.variables.PackageVariable;
-import jcl.variables.ReadSuppressVariable;
-import jcl.reader.impl.Reader;
+import jcl.structs.symbols.BooleanStruct;
 import jcl.structs.symbols.KeywordSymbolStruct;
-import jcl.variables.FeaturesVariable;
+import jcl.structs.symbols.NILStruct;
+import jcl.structs.symbols.TStruct;
+import jcl.structs.symbols.Variable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,25 +33,25 @@ public class FeaturesReader {
 
 	public void readFeatures(final boolean shouldHideFeatures) {
 
-		final boolean previousReadSuppress = ReadSuppressVariable.INSTANCE.getValue();
-		final PackageStruct previousPackage = PackageVariable.INSTANCE.getValue();
+		final BooleanStruct<?> previousReadSuppress = Variable.READ_SUPPRESS.getValue();
+		final PackageStruct previousPackage = Variable.PACKAGE.getValue();
 		try {
-			ReadSuppressVariable.INSTANCE.setValue(false);
+			Variable.READ_SUPPRESS.setValue(NILStruct.INSTANCE);
 
-			PackageVariable.INSTANCE.setValue(GlobalPackageStruct.KEYWORD);
+			Variable.PACKAGE.setValue(GlobalPackageStruct.KEYWORD);
 			final LispStruct lispStruct = reader.read();
-			PackageVariable.INSTANCE.setValue(previousPackage);
+			Variable.PACKAGE.setValue(previousPackage);
 
 			final boolean isFeature = isFeature(lispStruct);
 			if (isFeature && shouldHideFeatures) {
-				ReadSuppressVariable.INSTANCE.setValue(true);
+				Variable.READ_SUPPRESS.setValue(TStruct.INSTANCE);
 				reader.read();
 			}
 		} catch (final ReaderErrorException ree) {
 			LOGGER.debug(ree.getMessage(), ree);
 		} finally {
-			PackageVariable.INSTANCE.setValue(previousPackage);
-			ReadSuppressVariable.INSTANCE.setValue(previousReadSuppress);
+			Variable.PACKAGE.setValue(previousPackage);
+			Variable.READ_SUPPRESS.setValue(previousReadSuppress);
 		}
 	}
 
@@ -58,7 +59,7 @@ public class FeaturesReader {
 		if (lispStruct instanceof ListStruct) {
 			return isListFeature((ListStruct) lispStruct);
 		} else {
-			final List<LispStruct> featuresList = FeaturesVariable.INSTANCE.getValue();
+			final List<LispStruct> featuresList = Variable.FEATURES.getValue().getAsJavaList();
 			return featuresList.contains(lispStruct);
 		}
 	}

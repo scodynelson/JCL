@@ -1,13 +1,12 @@
 package jcl.reader.impl;
 
+import jcl.reader.syntax.TokenAttribute;
+import jcl.reader.syntax.TokenBuilder;
 import jcl.structs.numbers.FloatStruct;
 import jcl.structs.numbers.IntegerStruct;
 import jcl.structs.numbers.NumberStruct;
 import jcl.structs.numbers.RatioStruct;
-import jcl.variables.ReadBaseVariable;
-import jcl.variables.ReadDefaultFloatFormatVariable;
-import jcl.reader.syntax.TokenAttribute;
-import jcl.reader.syntax.TokenBuilder;
+import jcl.structs.symbols.Variable;
 import jcl.syntax.AttributeType;
 import jcl.syntax.CharacterConstants;
 import jcl.types.DoubleFloat;
@@ -15,6 +14,7 @@ import jcl.types.Float;
 import jcl.types.LongFloat;
 import jcl.types.ShortFloat;
 import jcl.types.SingleFloat;
+import jcl.variables.ReadDefaultFloatFormatVariable;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.fraction.BigFraction;
@@ -94,7 +94,7 @@ public class NumberTokenAccumulatedState extends State {
 		// Check all 'ALPHADIGIT' tokens to make sure they are digits within the current radix
 		// Unicode (not in original spec)
 		//  Check to make sure all digits are from the same Unicode block
-		final int currentRadix = ReadBaseVariable.INSTANCE.getValue();
+		final int currentRadix = Variable.READ_BASE.getValue().getBigInteger().intValueExact();
 		final TokenAttribute firstTokenAttribute = tokenAttributes.getFirst();
 		final int firstToken = firstTokenAttribute.getToken();
 		final Character.UnicodeBlock block = Character.UnicodeBlock.of(firstToken);

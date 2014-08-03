@@ -1,13 +1,14 @@
 package jcl.reader.function.macrofunction;
 
 import jcl.LispStruct;
+import jcl.reader.impl.Reader;
 import jcl.structs.arrays.StringStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.pathnames.PathnameStruct;
-import jcl.reader.impl.Reader;
+import jcl.structs.symbols.Variable;
 import jcl.syntax.CharacterConstants;
-import jcl.variables.ReadSuppressVariable;
 
+import java.math.BigInteger;
 import java.net.URISyntaxException;
 
 /**
@@ -16,11 +17,11 @@ import java.net.URISyntaxException;
 public class SharpPReaderMacroFunction extends ReaderMacroFunction {
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final Integer numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_P) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_P);
 
 		final LispStruct lispStruct = reader.read();
-		if (ReadSuppressVariable.INSTANCE.getValue()) {
+		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
 			return null;
 		}
 

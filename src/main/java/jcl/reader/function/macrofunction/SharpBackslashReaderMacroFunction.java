@@ -1,15 +1,17 @@
 package jcl.reader.function.macrofunction;
 
 import jcl.LispStruct;
-import jcl.structs.characters.CharacterStruct;
-import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.reader.function.ExtendedTokenReader;
 import jcl.reader.impl.Reader;
 import jcl.reader.syntax.CharacterName;
 import jcl.reader.syntax.ReadExtendedToken;
+import jcl.structs.characters.CharacterStruct;
+import jcl.structs.conditions.exceptions.ReaderErrorException;
+import jcl.structs.symbols.Variable;
 import jcl.syntax.CharacterConstants;
-import jcl.variables.ReadSuppressVariable;
 import org.apache.commons.lang3.StringUtils;
+
+import java.math.BigInteger;
 
 /**
  * Implements the '#\' Lisp reader macro.
@@ -17,13 +19,13 @@ import org.apache.commons.lang3.StringUtils;
 public class SharpBackslashReaderMacroFunction extends ReaderMacroFunction {
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final Integer numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.BACKSLASH;
 
 		final ExtendedTokenReader macroFunctionReader = new ExtendedTokenReader(reader);
 		final ReadExtendedToken readExtendedToken = macroFunctionReader.readExtendedToken(true);
 		final String charString = readExtendedToken.getToken();
-		if (ReadSuppressVariable.INSTANCE.getValue()) {
+		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
 			return null;
 		}
 

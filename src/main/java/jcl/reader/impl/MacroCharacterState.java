@@ -8,6 +8,8 @@ import jcl.syntax.reader.ReadResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigInteger;
+
 /**
  * Step 4 of the Reader Algorithm.
  * <p>
@@ -47,7 +49,7 @@ public class MacroCharacterState extends State {
 			return;
 		}
 
-		Integer numArg = null;
+		BigInteger numArg = null;
 		if (readerMacroFunction instanceof DispatchTable) {
 			numArg = getNumberArgument(reader);
 		}
@@ -69,7 +71,7 @@ public class MacroCharacterState extends State {
 //		}
 	}
 
-	private static Integer getNumberArgument(final Reader reader) {
+	private static BigInteger getNumberArgument(final Reader reader) {
 
 		// NOTE: This will throw errors when it reaches an EOF
 		ReadResult readResult = reader.readChar();
@@ -84,10 +86,10 @@ public class MacroCharacterState extends State {
 			readChar = readResult.getResult();
 		}
 
-		Integer numArg = null;
+		BigInteger numArg = null;
 		if (digitStringBuilder.length() != 0) {
 			final String digitString = digitStringBuilder.toString();
-			numArg = Integer.parseInt(digitString);
+			numArg = new BigInteger(digitString);
 
 		}
 

@@ -1,12 +1,14 @@
 package jcl.reader.function.macrofunction;
 
 import jcl.LispStruct;
+import jcl.reader.impl.Reader;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.lists.ListStruct;
-import jcl.variables.ReadSuppressVariable;
-import jcl.reader.impl.Reader;
 import jcl.structs.symbols.SpecialOperator;
+import jcl.structs.symbols.Variable;
 import jcl.syntax.CharacterConstants;
+
+import java.math.BigInteger;
 
 /**
  * Implements the ''' Lisp reader macro.
@@ -14,11 +16,11 @@ import jcl.syntax.CharacterConstants;
 public class ApostropheReaderMacroFunction extends ReaderMacroFunction {
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final Integer numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.APOSTROPHE;
 
 		final LispStruct expression = reader.read();
-		if (ReadSuppressVariable.INSTANCE.getValue()) {
+		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
 			return null;
 		}
 

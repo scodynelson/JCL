@@ -1,11 +1,12 @@
 package jcl.reader.function.macrofunction;
 
 import jcl.LispStruct;
-import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.reader.impl.Reader;
+import jcl.structs.conditions.exceptions.ReaderErrorException;
+import jcl.structs.symbols.Variable;
 import jcl.syntax.CharacterConstants;
-import jcl.variables.ReadSuppressVariable;
 
+import java.math.BigInteger;
 import java.util.UUID;
 
 /**
@@ -14,10 +15,10 @@ import java.util.UUID;
 public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunction {
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final Integer numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.EQUALS_SIGN;
 
-		if (ReadSuppressVariable.INSTANCE.getValue()) {
+		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
 			return null;
 		}
 

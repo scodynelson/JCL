@@ -1,10 +1,10 @@
 package jcl.reader.impl;
 
 import jcl.LispStruct;
-import jcl.structs.readtables.ReadtableStruct;
-import jcl.variables.ReadtableVariable;
 import jcl.reader.syntax.TokenBuilder;
+import jcl.structs.readtables.ReadtableStruct;
 import jcl.structs.streams.InputStream;
+import jcl.structs.symbols.Variable;
 import jcl.syntax.AttributeType;
 import jcl.syntax.CaseSpec;
 import jcl.syntax.SyntaxType;
@@ -16,7 +16,7 @@ public class Reader {
 	private final ReadtableStruct readtable;
 
 	public Reader(final InputStream inputStream) {
-		this(inputStream, ReadtableVariable.INSTANCE.getValue());
+		this(inputStream, Variable.READTABLE.getValue());
 	}
 
 	public Reader(final InputStream inputStream, final ReadtableStruct readtable) {

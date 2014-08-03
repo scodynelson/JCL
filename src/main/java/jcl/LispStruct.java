@@ -12,5 +12,10 @@ public interface LispStruct {
 	 */
 	LispType getType();
 
+	/**
+	 * This method returns the printed representation of the struct.
+	 *
+	 * @return the printed representation of the struct
+	 */
 	String printStruct();
 }

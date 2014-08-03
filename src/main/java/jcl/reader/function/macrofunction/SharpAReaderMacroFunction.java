@@ -1,15 +1,16 @@
 package jcl.reader.function.macrofunction;
 
 import jcl.LispStruct;
+import jcl.reader.impl.Reader;
 import jcl.structs.arrays.ArrayStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.structs.conditions.exceptions.TypeErrorException;
 import jcl.structs.lists.ListStruct;
-import jcl.reader.impl.Reader;
+import jcl.structs.symbols.Variable;
 import jcl.syntax.CharacterConstants;
-import jcl.variables.ReadSuppressVariable;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,11 +20,11 @@ import java.util.List;
 public class SharpAReaderMacroFunction extends ReaderMacroFunction {
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final Integer numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_A) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_A);
 
 		final LispStruct contents = reader.read();
-		if (ReadSuppressVariable.INSTANCE.getValue()) {
+		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
 			return null;
 		}
 
@@ -55,14 +56,16 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunction {
 	 * @return a List of Integers that make up the expected dimensions of the simple array
 	 * @throws ReaderErrorException if dimensions do not match the provided contents list
 	 */
-	private static List<Integer> getDimensions(final int dimensions, final LispStruct contents) {
+	private static List<Integer> getDimensions(final BigInteger dimensions, final LispStruct contents) {
 
 		LispStruct seq = contents;
-		Integer zeroAxis = null;
+		BigInteger zeroAxis = null;
 
 		final List<Integer> dims = new ArrayList<>();
 
-		for (int axis = 0; axis < dimensions; axis++) {
+		for (BigInteger axis = BigInteger.ZERO;
+		     axis.compareTo(dimensions) < 0;
+		     axis = axis.add(BigInteger.ONE)) {
 
 			final ListStruct seqList;
 			if (seq instanceof ListStruct) {
@@ -76,7 +79,7 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunction {
 			final int seqLength = lispTokens.size();
 			dims.add(seqLength);
 
-			if (axis != (dimensions - 1)) {
+			if (!axis.equals(dimensions.subtract(BigInteger.ONE))) {
 				if (seqLength == 0) {
 					zeroAxis = axis;
 				} else if (zeroAxis != null) {

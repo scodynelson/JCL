@@ -1,11 +1,12 @@
 package jcl.reader;
 
 import jcl.LispStruct;
-import jcl.structs.conditions.exceptions.ReaderErrorException;
-import jcl.reader.impl.Reader;
 import jcl.reader.function.macrofunction.ReaderMacroFunction;
+import jcl.reader.impl.Reader;
+import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.syntax.reader.ReadResult;
 
+import java.math.BigInteger;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -18,7 +19,7 @@ public class DispatchTable extends ReaderMacroFunction {
 	private final Map<Integer, ReaderMacroFunction> macroFunctionMap = new ConcurrentHashMap<>();
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final Integer numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 
 		final ReadResult readResult = reader.readChar(false, null, false);
 		if (readResult.wasEOF()) {

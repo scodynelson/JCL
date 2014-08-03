@@ -1,17 +1,18 @@
 package jcl.reader.function.macrofunction;
 
 import jcl.LispStruct;
+import jcl.reader.function.ListReader;
+import jcl.reader.impl.Reader;
 import jcl.structs.arrays.VectorStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.structs.conditions.exceptions.TypeErrorException;
 import jcl.structs.lists.ListStruct;
-import jcl.reader.function.ListReader;
-import jcl.reader.impl.Reader;
+import jcl.structs.symbols.Variable;
 import jcl.syntax.CharacterConstants;
-import jcl.variables.ReadSuppressVariable;
 import org.apache.commons.collections4.CollectionUtils;
 
+import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -20,13 +21,13 @@ import java.util.List;
 public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction {
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final Integer numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.LEFT_PARENTHESIS;
 
 		final ListReader macroFunctionReader = new ListReader(reader);
 		final ListStruct listToken = macroFunctionReader.readList();
 
-		if (ReadSuppressVariable.INSTANCE.getValue()) {
+		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
 			return null;
 		}
 
@@ -49,7 +50,8 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 		}
 
 		final int numberOfTokens = lispTokens.size();
-		if (numberOfTokens > numArg) {
+		final int numArgInt = numArg.intValueExact();
+		if (numberOfTokens > numArgInt) {
 			throw new ReaderErrorException("Vector is longer than specified length: #" + numArg + listToken);
 		}
 
@@ -58,7 +60,7 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 			lastToken = lispTokens.get(numberOfTokens - 1);
 		}
 
-		final int fillAmount = numArg - numberOfTokens;
+		final int fillAmount = numArgInt - numberOfTokens;
 		for (int i = 0; i < fillAmount; i++) {
 			lispTokens.add(lastToken);
 		}

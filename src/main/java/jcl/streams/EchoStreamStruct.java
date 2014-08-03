@@ -111,9 +111,8 @@ public class EchoStreamStruct extends DualStreamStruct {
 	}
 
 	@Override
-	public String printStruct() {
-		final String typeClassName = getType().getClass().getName().toUpperCase();
-		return "#<" + typeClassName + " input " + inputStream.printStruct() + ", output " + outputStream.printStruct() + '>';
+	protected String getPrintableObjectProperties() {
+		return " input " + inputStream.printStruct() + ", output " + outputStream.printStruct();
 	}
 
 	@Override

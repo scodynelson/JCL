@@ -189,12 +189,6 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 	}
 
 	@Override
-	public String printStruct() {
-		final String typeClassName = getType().getClass().getName().toUpperCase();
-		return "#<" + typeClassName + '>';
-	}
-
-	@Override
 	public String toString() {
 		return "ConcatenatedStreamStruct{"
 				+ "inputStreams=" + inputStreams

@@ -75,12 +75,6 @@ public class StringOutputStreamStruct extends StreamStruct implements OutputStre
 	}
 
 	@Override
-	public String printStruct() {
-		final String typeClassName = getType().getClass().getName().toUpperCase();
-		return "#<" + typeClassName + '>';
-	}
-
-	@Override
 	public String toString() {
 		return "StringOutputStreamStruct{"
 				+ "stringBuffer=" + stringBuffer

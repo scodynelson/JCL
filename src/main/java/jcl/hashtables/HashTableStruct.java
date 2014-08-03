@@ -120,9 +120,8 @@ public class HashTableStruct extends BuiltInClassStruct {
 	}
 
 	@Override
-	public String printStruct() {
-		final String typeClassName = getType().getClass().getName().toUpperCase();
-		return "#<" + typeClassName + " :TEST " + test.printStruct() + " size " + map.size() + '>';
+	protected String getPrintableObjectProperties() {
+		return " :TEST " + test.printStruct() + " size " + map.size();
 	}
 
 	@Override

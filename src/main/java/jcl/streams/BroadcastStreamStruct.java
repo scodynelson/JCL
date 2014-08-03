@@ -135,12 +135,6 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 	}
 
 	@Override
-	public String printStruct() {
-		final String typeClassName = getType().getClass().getName().toUpperCase();
-		return "#<" + typeClassName + '>';
-	}
-
-	@Override
 	public String toString() {
 		return "BroadcastStreamStruct{"
 				+ "outputStreams=" + outputStreams

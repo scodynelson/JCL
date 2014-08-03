@@ -42,6 +42,21 @@ public abstract class StandardObjectStruct implements LispStruct {
 	}
 
 	@Override
+	public String printStruct() {
+		final String typeClassName = getType().getClass().getName().toUpperCase();
+		return "#<" + typeClassName + getPrintableObjectProperties() + '>';
+	}
+
+	/**
+	 * Protected, overridable method to get printable object properties to use in the printStruct method.
+	 *
+	 * @return a string with printable object properties
+	 */
+	protected String getPrintableObjectProperties() {
+		return "";
+	}
+
+	@Override
 	public String toString() {
 		return "StandardObjectStruct{"
 				+ "documentation='" + documentation + '\''

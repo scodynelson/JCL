@@ -19,10 +19,4 @@ public abstract class RestartStruct implements LispStruct {
 	public LispType getType() {
 		return Restart.INSTANCE;
 	}
-
-	@Override
-	public String printStruct() {
-		final String typeClassName = getType().getClass().getName().toUpperCase();
-		return "#<" + typeClassName + '>';
-	}
 }

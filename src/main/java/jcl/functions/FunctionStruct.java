@@ -1,9 +1,9 @@
 package jcl.functions;
 
 import jcl.LispStruct;
+import jcl.LispType;
 import jcl.classes.BuiltInClassStruct;
 import jcl.types.Function;
-import jcl.LispType;
 
 import java.util.List;
 
@@ -37,14 +37,8 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 	 * @param subClasses         the subclasses
 	 */
 	protected FunctionStruct(final LispType type,
-							 final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+	                         final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
 		super(type, directSuperClasses, subClasses);
-	}
-
-	@Override
-	public String printStruct() {
-		final String typeClassName = getType().getClass().getName().toUpperCase();
-		return "#<" + typeClassName + '>';
 	}
 
 	/**

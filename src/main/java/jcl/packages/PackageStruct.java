@@ -537,9 +537,8 @@ public class PackageStruct extends BuiltInClassStruct {
 	}
 
 	@Override
-	public String printStruct() {
-		final String typeClassName = getType().getClass().getName().toUpperCase();
-		return "#<" + typeClassName + ' ' + name + '>';
+	protected String getPrintableObjectProperties() {
+		return ' ' + name;
 	}
 
 	@Override

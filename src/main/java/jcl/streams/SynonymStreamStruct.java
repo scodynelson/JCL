@@ -173,9 +173,8 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	}
 
 	@Override
-	public String printStruct() {
-		final String typeClassName = getType().getClass().getName().toUpperCase();
-		return "#<" + typeClassName + " to " + symbol.printStruct() + '>';
+	protected String getPrintableObjectProperties() {
+		return " to " + symbol.printStruct();
 	}
 
 	@Override

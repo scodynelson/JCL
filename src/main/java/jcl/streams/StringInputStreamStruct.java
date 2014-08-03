@@ -167,12 +167,6 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 	}
 
 	@Override
-	public String printStruct() {
-		final String typeClassName = getType().getClass().getName().toUpperCase();
-		return "#<" + typeClassName + '>';
-	}
-
-	@Override
 	public String toString() {
 		return "StringInputStreamStruct{"
 				+ "inputString='" + inputString + '\''

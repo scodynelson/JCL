@@ -1,5 +1,6 @@
 package jcl.types;
 
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -8,13 +9,13 @@ import java.lang.String;
 import java.util.Objects;
 
 /**
- * A {@code Complex} includes all mathematical complex numbers other than those included in the type {@code Rational}.
- * Complexes are expressed in Cartesian form with a real part and an imaginary part, each of which is a {@code Real}.
- * The real part and imaginary part are either both {@code Rational} or both of the same {@code Float} type. The imaginary
- * part can be a {@code Float} zero, but can never be a {@code Rational} zero, for such a number is always represented
- * by Common Lisp as a {@code Rational} rather than a {@code Complex}.
+ * A {@link Complex} includes all mathematical complex numbers other than those included in the type {@link Rational}.
+ * Complexes are expressed in Cartesian form with a real part and an imaginary part, each of which is a {@link Real}.
+ * The real part and imaginary part are either both {@link Rational} or both of the same {@link Float} type. The imaginary
+ * part can be a {@link Float} zero, but can never be a {@link Rational} zero, for such a number is always represented
+ * by Common Lisp as a {@link Rational} rather than a {@link Complex}.
  * <p>
- * {@code Complex} -> {@code Number} -> {@code T}
+ * {@link Complex} -> {@link Number} -> {@link T}
  */
 public interface Complex extends Number {
 
@@ -31,19 +32,19 @@ public interface Complex extends Number {
 		}
 
 		/**
-		 * Gets instance of compound {@code Complex} type.
+		 * Gets instance of compound {@link Complex} type.
 		 *
-		 * @param realType the type of {@code Real} that comprises the {@code Complex}
-		 * @return the newly created compound {@code Complex} type
+		 * @param realType the type of {@link Real} that comprises the {@link Complex}
+		 * @return the newly created compound {@link Complex} type
 		 */
 		public static Complex getInstance(final Real realType) {
 			return ComplexImpl.getInstance(realType);
 		}
 
 		/**
-		 * Inner {@code Complex} type implementation.
+		 * Inner {@link Complex} type implementation.
 		 */
-		private static class ComplexImpl implements Complex, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static class ComplexImpl extends TypeBaseClass implements Complex, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final Real realType;
 
@@ -51,23 +52,24 @@ public interface Complex extends Number {
 			 * Private constructor.
 			 */
 			private ComplexImpl() {
-				realType = Real.INSTANCE;
+				this(Real.INSTANCE);
 			}
 
 			/**
-			 * Private constructor for compound {@code Complex} type.
+			 * Private constructor for compound {@link Complex} type.
 			 *
-			 * @param realType the type of {@code Real} that comprises the {@code Complex}
+			 * @param realType the type of {@link Real} that comprises the {@link Complex}
 			 */
 			private ComplexImpl(final Real realType) {
+				super("COMPLEX", GlobalPackageStruct.COMMON_LISP);
 				this.realType = realType;
 			}
 
 			/**
-			 * Gets instance of compound {@code Complex} type.
+			 * Gets instance of compound {@link Complex} type.
 			 *
-			 * @param realType the type of {@code Real} that comprises the {@code Complex}
-			 * @return the newly created compound {@code Complex} type
+			 * @param realType the type of {@link Real} that comprises the {@link Complex}
+			 * @return the newly created compound {@link Complex} type
 			 */
 			public static Complex getInstance(final Real realType) {
 				return new ComplexImpl(realType);

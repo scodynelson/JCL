@@ -1,13 +1,16 @@
 package jcl.types;
 
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
+
 /**
- * A {@code Stream} is an object that can be used with an input or output function to identify an appropriate source or
+ * A {@link Stream} is an object that can be used with an input or output function to identify an appropriate source or
  * sink of characters or bytes for that operation.
- * <p/>
- * {@code Stream} -> {@code T}
+ * <p>
+ * {@link Stream} -> {@link T}
  */
 public interface Stream extends T {
 
@@ -24,9 +27,16 @@ public interface Stream extends T {
 		}
 
 		/**
-		 * Inner {@code Stream} type implementation.
+		 * Inner {@link Stream} type implementation.
 		 */
-		private static class StreamImpl implements Stream, AtomicTypeSpecifier {
+		private static class StreamImpl extends TypeBaseClass implements Stream, AtomicTypeSpecifier {
+
+			/**
+			 * Private constructor.
+			 */
+			private StreamImpl() {
+				super("STREAM", GlobalPackageStruct.COMMON_LISP);
+			}
 
 			@Override
 			public boolean equals(final Object obj) {
@@ -36,6 +46,11 @@ public interface Stream extends T {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "StreamImpl{}";
 			}
 		}
 	}

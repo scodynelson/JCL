@@ -5,7 +5,7 @@ import jcl.LispType;
 import jcl.types.MethodCombination;
 
 /**
- * The {@code MethodCombinationStruct} is the object representation of a Lisp 'method-combination' type.
+ * The {@link MethodCombinationStruct} is the object representation of a Lisp 'method-combination' type.
  */
 public abstract class MethodCombinationStruct implements LispStruct {
 

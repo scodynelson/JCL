@@ -7,7 +7,7 @@ import jcl.types.BuiltInClass;
 import java.util.List;
 
 /**
- * The {@code BuiltInClassStruct} is the object representation of a Lisp 'built-in-class' type.
+ * The {@link BuiltInClassStruct} is the object representation of a Lisp 'built-in-class' type.
  */
 public abstract class BuiltInClassStruct extends ClassStruct {
 

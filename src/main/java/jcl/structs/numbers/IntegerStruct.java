@@ -17,7 +17,7 @@ public class IntegerStruct extends RationalStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param bigInteger the value of the {@code IntegerStruct}
+	 * @param bigInteger the value of the IntegerStruct
 	 */
 	public IntegerStruct(final BigInteger bigInteger) {
 		this(Integer.INSTANCE, bigInteger);
@@ -27,7 +27,7 @@ public class IntegerStruct extends RationalStruct {
 	 * Public constructor.
 	 *
 	 * @param integerFormat a {@link Integer} that represents the type of {@link Integer}
-	 * @param bigInteger    the value of the {@code IntegerStruct}
+	 * @param bigInteger    the value of the IntegerStruct
 	 */
 	public IntegerStruct(final Integer integerFormat, final BigInteger bigInteger) {
 		super(integerFormat, null, null);
@@ -35,9 +35,9 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * This method returns the value of the {@code IntegerStruct}.
+	 * This method returns the value of the IntegerStruct.
 	 *
-	 * @return value of the {@code IntegerStruct}
+	 * @return value of the IntegerStruct
 	 */
 	public BigInteger getBigInteger() {
 		return bigInteger;

@@ -1,6 +1,5 @@
 package jcl.typespecifiers.designator;
 
-import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.TypeSpecifierUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -9,7 +8,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  *
  * @param <N> the number type used for the interval boundaries
  */
-public class IntervalDesignator<N extends Number> implements CompoundTypeSpecifier {
+public class IntervalDesignator<N extends Number> {
 
 	// NOTE: Both of these are inclusive; inclusive/exclusive is to be taken care of before create of this
 	private final N lowerBound;

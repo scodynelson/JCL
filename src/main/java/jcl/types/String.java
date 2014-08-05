@@ -1,6 +1,7 @@
 package jcl.types;
 
 import jcl.LispType;
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.DimensionsDesignator;
@@ -9,10 +10,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.lang.Integer;
 
 /**
- * A {@code String} is a specialized {@code Vector} whose elements are of type {@code Character} or a subtype of type
- * {@code Character}. When used as a type specifier for object creation, {@code String} means (vector character).
- * <p/>
- * {@code String} -> {@code Vector} -> {@code Array} -> {@code Sequence} -> {@code T}
+ * A {@link String} is a specialized {@link Vector} whose elements are of type {@link Character} or a subtype of type
+ * {@link Character}. When used as a type specifier for object creation, {@link String} means (vector character).
+ * <p>
+ * {@link String} -> {@link Vector} -> {@link Array} -> {@link Sequence} -> {@link T}
  */
 public interface String extends Vector {
 
@@ -29,19 +30,19 @@ public interface String extends Vector {
 		}
 
 		/**
-		 * Gets instance of compound {@code String} type.
+		 * Gets instance of compound {@link String} type.
 		 *
-		 * @param size the size of the {@code String}
-		 * @return the newly created compound {@code String} type
+		 * @param size the size of the {@link String}
+		 * @return the newly created compound {@link String} type
 		 */
 		public static String getInstance(final Integer size) {
 			return StringImpl.getInstance(size);
 		}
 
 		/**
-		 * Inner {@code String} type implementation.
+		 * Inner {@link String} type implementation.
 		 */
-		private static class StringImpl implements String, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static class StringImpl extends TypeBaseClass implements String, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final DimensionsDesignator size;
 			private static final LispType ELEMENT_TYPE = Character.INSTANCE;
@@ -50,15 +51,16 @@ public interface String extends Vector {
 			 * Private constructor.
 			 */
 			private StringImpl() {
-				size = null;
+				this(null);
 			}
 
 			/**
-			 * Private constructor for compound {@code String} type.
+			 * Private constructor for compound {@link String} type.
 			 *
-			 * @param size the size of the {@code String}
+			 * @param size the size of the {@link String}
 			 */
 			private StringImpl(final Integer size) {
+				super("STRING", GlobalPackageStruct.COMMON_LISP);
 				this.size = new DimensionsDesignator(size);
 			}
 
@@ -73,10 +75,10 @@ public interface String extends Vector {
 			}
 
 			/**
-			 * Gets instance of compound {@code String} type.
+			 * Gets instance of compound {@link String} type.
 			 *
-			 * @param size the size of the {@code String}
-			 * @return the newly created compound {@code String} type
+			 * @param size the size of the {@link String}
+			 * @return the newly created compound {@link String} type
 			 */
 			public static String getInstance(final Integer size) {
 				return new StringImpl(size);

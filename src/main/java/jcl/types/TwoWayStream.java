@@ -1,13 +1,16 @@
 package jcl.types;
 
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
+
 /**
- * A {@code TwoWayStream} is a bidirectional composite stream that receives its input from an associated input stream and
+ * A {@link TwoWayStream} is a bidirectional composite stream that receives its input from an associated input stream and
  * sends its output to an associated output stream.
- * <p/>
- * {@code TwoWayStream} -> {@code Stream} -> {@code T}
+ * <p>
+ * {@link TwoWayStream} -> {@link Stream} -> {@link T}
  */
 public interface TwoWayStream extends Stream {
 
@@ -24,9 +27,16 @@ public interface TwoWayStream extends Stream {
 		}
 
 		/**
-		 * Inner {@code TwoWayStream} type implementation.
+		 * Inner {@link TwoWayStream} type implementation.
 		 */
-		private static class TwoWayStreamImpl implements TwoWayStream, AtomicTypeSpecifier {
+		private static class TwoWayStreamImpl extends TypeBaseClass implements TwoWayStream, AtomicTypeSpecifier {
+
+			/**
+			 * Private constructor.
+			 */
+			private TwoWayStreamImpl() {
+				super("TWO-WAY-STREAM", GlobalPackageStruct.COMMON_LISP);
+			}
 
 			@Override
 			public boolean equals(final Object obj) {
@@ -36,6 +46,11 @@ public interface TwoWayStream extends Stream {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "TwoWayStream{}";
 			}
 		}
 	}

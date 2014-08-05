@@ -1,6 +1,7 @@
 package jcl.types;
 
 import jcl.LispType;
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.DimensionsDesignator;
@@ -11,14 +12,14 @@ import java.lang.String;
 import java.util.List;
 
 /**
- * A {@code SimpleArray} is the type of an {@code Array} that is not displaced to another {@code Array}, has no fill pointer,
+ * A {@link SimpleArray} is the type of an {@link Array} that is not displaced to another {@link Array}, has no fill pointer,
  * and is not expressly adjustable.
- * <p/>
- * The types {@code SimpleVector}, {@code SimpleString}, and {@code SimpleBitVector} are disjoint subtypes of type
- * {@code SimpleArray}, for they respectively mean (simple-array t (*)), the union of all (simple-array c (*)) for any
- * c being a subtype of type {@code Character}, and (simple-array bit (*)).
- * <p/>
- * {@code SimpleArray} -> {@code Array} -> {@code T}
+ * <p>
+ * The types {@link SimpleVector}, {@link SimpleString}, and {@link SimpleBitVector} are disjoint subtypes of type
+ * {@link SimpleArray}, for they respectively mean (simple-array t (*)), the union of all (simple-array c (*)) for any
+ * c being a subtype of type {@link Character}, and (simple-array bit (*)).
+ * <p>
+ * {@link SimpleArray} -> {@link Array} -> {@link T}
  */
 public interface SimpleArray extends Array {
 
@@ -35,20 +36,20 @@ public interface SimpleArray extends Array {
 		}
 
 		/**
-		 * Gets instance of compound {@code SimpleArray} type.
+		 * Gets instance of compound {@link SimpleArray} type.
 		 *
-		 * @param dimensions  the dimensions of the {@code SimpleArray}
-		 * @param elementType the types of elements within the {@code SimpleArray}
-		 * @return the newly created compound {@code SimpleArray} type
+		 * @param dimensions  the dimensions of the {@link SimpleArray}
+		 * @param elementType the types of elements within the {@link SimpleArray}
+		 * @return the newly created compound {@link SimpleArray} type
 		 */
 		public static SimpleArray getInstance(final List<Integer> dimensions, final LispType elementType) {
 			return SimpleArrayImpl.getInstance(dimensions, elementType);
 		}
 
 		/**
-		 * Inner {@code SimpleArray} type implementation.
+		 * Inner {@link SimpleArray} type implementation.
 		 */
-		private static class SimpleArrayImpl implements SimpleArray, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static class SimpleArrayImpl extends TypeBaseClass implements SimpleArray, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final DimensionsDesignator dimensions;
 			private final LispType elementType;
@@ -57,17 +58,17 @@ public interface SimpleArray extends Array {
 			 * Private constructor.
 			 */
 			private SimpleArrayImpl() {
-				dimensions = null;
-				elementType = null;
+				this(null, null);
 			}
 
 			/**
-			 * Private constructor for compound {@code SimpleArray} type.
+			 * Private constructor for compound {@link SimpleArray} type.
 			 *
-			 * @param dimensions  the dimensions of the {@code SimpleArray}
-			 * @param elementType the types of elements within the {@code SimpleArray}
+			 * @param dimensions  the dimensions of the {@link SimpleArray}
+			 * @param elementType the types of elements within the {@link SimpleArray}
 			 */
 			private SimpleArrayImpl(final List<Integer> dimensions, final LispType elementType) {
+				super("SIMPLE-ARRAY", GlobalPackageStruct.COMMON_LISP);
 				this.dimensions = new DimensionsDesignator(dimensions);
 				this.elementType = elementType;
 			}
@@ -83,11 +84,11 @@ public interface SimpleArray extends Array {
 			}
 
 			/**
-			 * Gets instance of compound {@code SimpleArray} type.
+			 * Gets instance of compound {@link SimpleArray} type.
 			 *
-			 * @param dimensions  the dimensions of the {@code SimpleArray}
-			 * @param elementType the types of elements within the {@code SimpleArray}
-			 * @return the newly created compound {@code SimpleArray} type
+			 * @param dimensions  the dimensions of the {@link SimpleArray}
+			 * @param elementType the types of elements within the {@link SimpleArray}
+			 * @return the newly created compound {@link SimpleArray} type
 			 */
 			public static SimpleArray getInstance(final List<Integer> dimensions, final LispType elementType) {
 				return new SimpleArrayImpl(dimensions, elementType);

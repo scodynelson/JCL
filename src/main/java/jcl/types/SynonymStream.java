@@ -1,17 +1,20 @@
 package jcl.types;
 
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
+
 /**
- * A {@code SynonymStream} stream is a stream that is an alias for another stream, which is the value of a dynamic variable
- * whose name is the synonym stream symbol of the {@code SynonymStream}.
- * <p/>
- * Any operations on a {@code SynonymStream} will be performed on the stream that is then the value of the dynamic variable
+ * A {@link SynonymStream} stream is a stream that is an alias for another stream, which is the value of a dynamic variable
+ * whose name is the synonym stream symbol of the {@link SynonymStream}.
+ * <p>
+ * Any operations on a {@link SynonymStream} will be performed on the stream that is then the value of the dynamic variable
  * named by the synonym stream symbol. If the value of the variable should change, or if the variable should be bound,
  * then the stream will operate on the new value of the variable.
- * <p/>
- * {@code SynonymStream} -> {@code Stream} -> {@code T}
+ * <p>
+ * {@link SynonymStream} -> {@link Stream} -> {@link T}
  */
 public interface SynonymStream extends Stream {
 
@@ -28,9 +31,16 @@ public interface SynonymStream extends Stream {
 		}
 
 		/**
-		 * Inner {@code SynonymStream} type implementation.
+		 * Inner {@link SynonymStream} type implementation.
 		 */
-		private static class SynonymStreamImpl implements SynonymStream, AtomicTypeSpecifier {
+		private static class SynonymStreamImpl extends TypeBaseClass implements SynonymStream, AtomicTypeSpecifier {
+
+			/**
+			 * Private constructor.
+			 */
+			private SynonymStreamImpl() {
+				super("SYNONYM-STREAM", GlobalPackageStruct.COMMON_LISP);
+			}
 
 			@Override
 			public boolean equals(final Object obj) {
@@ -40,6 +50,11 @@ public interface SynonymStream extends Stream {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "SynonymStreamImpl{}";
 			}
 		}
 	}

@@ -1,6 +1,7 @@
 package jcl.types;
 
 import jcl.LispType;
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.DimensionsDesignator;
@@ -9,10 +10,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.lang.Integer;
 
 /**
- * The type {@code BaseString} is equivalent to (vector base-char). The {@code BaseString} representation is the most
- * efficient {@code String} representation that can hold an arbitrary sequence of {@code StandardCharacter}s.
- * <p/>
- * {@code BaseString} -> {@code String} -> {@code Vector} -> {@code Array} -> {@code Sequence} -> {@code T}
+ * The type {@link BaseString} is equivalent to (vector base-char). The {@link BaseString} representation is the most
+ * efficient {@link String} representation that can hold an arbitrary sequence of {@link StandardChar}s.
+ * <p>
+ * {@link BaseString} -> {@link String} -> {@link Vector} -> {@link Array} -> {@link Sequence} -> {@link T}
  */
 public interface BaseString extends String {
 
@@ -29,19 +30,19 @@ public interface BaseString extends String {
 		}
 
 		/**
-		 * Gets instance of compound {@code BaseString} type.
+		 * Gets instance of compound {@link BaseString} type.
 		 *
-		 * @param size the size of the {@code BaseString}
-		 * @return the newly created compound {@code BaseString} type
+		 * @param size the size of the {@link BaseString}
+		 * @return the newly created compound {@link BaseString} type
 		 */
 		public static BaseString getInstance(final Integer size) {
 			return BaseStringImpl.getInstance(size);
 		}
 
 		/**
-		 * Inner {@code BaseString} type implementation.
+		 * Inner {@link BaseString} type implementation.
 		 */
-		private static class BaseStringImpl implements BaseString, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static class BaseStringImpl extends TypeBaseClass implements BaseString, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final DimensionsDesignator size;
 			private static final LispType ELEMENT_TYPE = BaseChar.INSTANCE;
@@ -50,15 +51,16 @@ public interface BaseString extends String {
 			 * Private constructor.
 			 */
 			private BaseStringImpl() {
-				size = null;
+				this(null);
 			}
 
 			/**
-			 * Private constructor for compound {@code BaseString} type.
+			 * Private constructor for compound {@link BaseString} type.
 			 *
-			 * @param size the size of the {@code BaseString}
+			 * @param size the size of the {@link BaseString}
 			 */
 			private BaseStringImpl(final Integer size) {
+				super("BASE-STRING", GlobalPackageStruct.COMMON_LISP);
 				this.size = new DimensionsDesignator(size);
 			}
 
@@ -73,10 +75,10 @@ public interface BaseString extends String {
 			}
 
 			/**
-			 * Gets instance of compound {@code BaseString} type.
+			 * Gets instance of compound {@link BaseString} type.
 			 *
-			 * @param size the size of the {@code BaseString}
-			 * @return the newly created compound {@code BaseString} type
+			 * @param size the size of the {@link BaseString}
+			 * @return the newly created compound {@link BaseString} type
 			 */
 			public static BaseString getInstance(final Integer size) {
 				return new BaseStringImpl(size);

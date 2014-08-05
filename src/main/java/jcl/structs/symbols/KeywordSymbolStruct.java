@@ -4,7 +4,7 @@ import jcl.structs.packages.GlobalPackageStruct;
 import jcl.types.Keyword;
 
 /**
- * The {@code KeywordSymbolStruct} is the object representation of a Lisp 'keyword' type.
+ * The {@link KeywordSymbolStruct} is the object representation of a Lisp 'keyword' type.
  */
 // TODO: should this be public?? Can we make it package visible??
 public class KeywordSymbolStruct extends SymbolStruct<KeywordSymbolStruct> {

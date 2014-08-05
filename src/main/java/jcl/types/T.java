@@ -1,14 +1,17 @@
 package jcl.types;
 
 import jcl.LispType;
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
+
 /**
- * The type {@code T} is the set of all objects. It is a supertype of every type, including itself. Every object is of
- * type {@code T}.
- * <p/>
- * {@code T}
+ * The type {@link T} is the set of all objects. It is a supertype of every type, including itself. Every object is of
+ * type {@link T}.
+ * <p>
+ * {@link T}
  */
 public interface T extends LispType {
 
@@ -25,9 +28,16 @@ public interface T extends LispType {
 		}
 
 		/**
-		 * Inner {@code T} type implementation.
+		 * Inner {@link T} type implementation.
 		 */
-		private static class TImpl implements T, AtomicTypeSpecifier {
+		private static class TImpl extends TypeBaseClass implements T, AtomicTypeSpecifier {
+
+			/**
+			 * Private constructor.
+			 */
+			private TImpl() {
+				super("T", GlobalPackageStruct.COMMON_LISP);
+			}
 
 			@Override
 			public boolean equals(final Object obj) {
@@ -37,6 +47,11 @@ public interface T extends LispType {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "TImpl{}";
 			}
 		}
 	}

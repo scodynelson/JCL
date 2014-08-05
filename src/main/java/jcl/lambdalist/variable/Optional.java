@@ -39,7 +39,7 @@ public class Optional<VAR> {
 	}
 
 	/**
-	 * An {@code Optional} variable type.
+	 * An {@link Optional} variable type.
 	 *
 	 * @param <TYPE> the type of the initial form
 	 */

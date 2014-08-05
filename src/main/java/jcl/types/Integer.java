@@ -1,5 +1,6 @@
 package jcl.types;
 
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.IntervalDesignator;
@@ -9,11 +10,11 @@ import java.lang.String;
 import java.math.BigInteger;
 
 /**
- * An {@code Integer} is a mathematical integer. There is no limit on the magnitude of an {@code Integer}.
- * <p/>
- * The types {@code Fixnum} and {@code Bignum} form an exhaustive partition of type {@code Integer}.
- * <p/>
- * {@code Integer} -> {@code Rational} -> {@code Real} -> {@code Number} -> {@code T}
+ * An {@link Integer} is a mathematical integer. There is no limit on the magnitude of an {@link Integer}.
+ * <p>
+ * The types {@link Fixnum} and {@link Bignum} form an exhaustive partition of type {@link Integer}.
+ * <p>
+ * {@link Integer} -> {@link Rational} -> {@link Real} -> {@link Number} -> {@link T}
  */
 public interface Integer extends Rational {
 
@@ -30,34 +31,34 @@ public interface Integer extends Rational {
 		}
 
 		/**
-		 * Gets instance of compound {@code Integer} type.
+		 * Gets instance of compound {@link Integer} type.
 		 *
-		 * @param lowerBound the lower bound that this {@code Integer} type includes
-		 * @param upperBound the upper bound that this {@code Integer} type includes
-		 * @return the newly created compound {@code Integer} type
+		 * @param lowerBound the lower bound that this {@link Integer} type includes
+		 * @param upperBound the upper bound that this {@link Integer} type includes
+		 * @return the newly created compound {@link Integer} type
 		 */
 		public static Integer getInstance(final BigInteger lowerBound, final BigInteger upperBound) {
 			return IntegerImpl.getInstance(lowerBound, true, upperBound, true);
 		}
 
 		/**
-		 * Gets instance of compound {@code Integer} type.
+		 * Gets instance of compound {@link Integer} type.
 		 *
-		 * @param lowerBound     the lower bound that this {@code Integer} type includes
+		 * @param lowerBound     the lower bound that this {@link Integer} type includes
 		 * @param lowerInclusive whether to include the lower bound in the interval
-		 * @param upperBound     the upper bound that this {@code Integer} type includes
+		 * @param upperBound     the upper bound that this {@link Integer} type includes
 		 * @param upperInclusive whether to include the upper bound in the interval
-		 * @return the newly created compound {@code Integer} type
+		 * @return the newly created compound {@link Integer} type
 		 */
 		public static Integer getInstance(final BigInteger lowerBound, final boolean lowerInclusive,
-										  final BigInteger upperBound, final boolean upperInclusive) {
+		                                  final BigInteger upperBound, final boolean upperInclusive) {
 			return IntegerImpl.getInstance(lowerBound, lowerInclusive, upperBound, upperInclusive);
 		}
 
 		/**
-		 * Inner {@code Integer} type implementation.
+		 * Inner {@link Integer} type implementation.
 		 */
-		private static class IntegerImpl implements Integer, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static class IntegerImpl extends TypeBaseClass implements Integer, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final IntervalDesignator<BigInteger> intervalDesignator;
 
@@ -65,19 +66,21 @@ public interface Integer extends Rational {
 			 * Private constructor.
 			 */
 			private IntegerImpl() {
+				super("INTEGER", GlobalPackageStruct.COMMON_LISP);
 				intervalDesignator = null;
 			}
 
 			/**
-			 * Private constructor for compound {@code Integer} type.
+			 * Private constructor for compound {@link Integer} type.
 			 *
-			 * @param lowerBound     the lower bound that this {@code Integer} type includes
+			 * @param lowerBound     the lower bound that this {@link Integer} type includes
 			 * @param lowerInclusive whether to include the lower bound in the interval
-			 * @param upperBound     the upper bound that this {@code Integer} type includes
+			 * @param upperBound     the upper bound that this {@link Integer} type includes
 			 * @param upperInclusive whether to include the upper bound in the interval
 			 */
 			private IntegerImpl(final BigInteger lowerBound, final boolean lowerInclusive,
-								final BigInteger upperBound, final boolean upperInclusive) {
+			                    final BigInteger upperBound, final boolean upperInclusive) {
+				super("INTEGER", GlobalPackageStruct.COMMON_LISP);
 
 				BigInteger realLower = null;
 				if (lowerBound != null) {
@@ -93,16 +96,16 @@ public interface Integer extends Rational {
 			}
 
 			/**
-			 * Gets instance of compound {@code Integer} type.
+			 * Gets instance of compound {@link Integer} type.
 			 *
-			 * @param lowerBound     the lower bound that this {@code Integer} type includes
+			 * @param lowerBound     the lower bound that this {@link Integer} type includes
 			 * @param lowerInclusive whether to include the lower bound in the interval
-			 * @param upperBound     the upper bound that this {@code Integer} type includes
+			 * @param upperBound     the upper bound that this {@link Integer} type includes
 			 * @param upperInclusive whether to include the upper bound in the interval
-			 * @return the newly created compound {@code Integer} type
+			 * @return the newly created compound {@link Integer} type
 			 */
 			public static Integer getInstance(final BigInteger lowerBound, final boolean lowerInclusive,
-											  final BigInteger upperBound, final boolean upperInclusive) {
+			                                  final BigInteger upperBound, final boolean upperInclusive) {
 				return new IntegerImpl(lowerBound, lowerInclusive, upperBound, upperInclusive);
 			}
 

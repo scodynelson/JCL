@@ -29,7 +29,7 @@ public class FileStreamStruct extends NativeStreamStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param file the file to create a {@code FileStreamStruct} from
+	 * @param file the file to create a FileStreamStruct from
 	 */
 	public FileStreamStruct(final File file) {
 		this(false, file);
@@ -39,7 +39,7 @@ public class FileStreamStruct extends NativeStreamStruct {
 	 * Public constructor.
 	 *
 	 * @param isInteractive whether or not the struct created is 'interactive'
-	 * @param file          the file to create a {@code FileStreamStruct} from
+	 * @param file          the file to create a FileStreamStruct from
 	 */
 	public FileStreamStruct(final boolean isInteractive, final File file) {
 		super(FileStream.INSTANCE, isInteractive, null);

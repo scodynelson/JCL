@@ -3,6 +3,7 @@ package jcl.types;
 import jcl.lambdalist.variable.Key;
 import jcl.lambdalist.variable.Optional;
 import jcl.lambdalist.variable.Rest;
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.TypeSpecifier;
@@ -14,9 +15,9 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * A {@code Function} is an object that represents code to be executed when an appropriate number of arguments is supplied.
+ * A {@link Function} is an object that represents code to be executed when an appropriate number of arguments is supplied.
  * <p>
- * {@code Function} -> {@code T}
+ * {@link Function} -> {@link T}
  */
 public interface Function extends T {
 
@@ -33,25 +34,25 @@ public interface Function extends T {
 		}
 
 		/**
-		 * Gets instance of compound {@code Function} type.
+		 * Gets instance of compound {@link Function} type.
 		 *
 		 * @param typeSpecifiers      the required arguments
 		 * @param optional            the optional arguments
 		 * @param rest                the rest arguments
 		 * @param key                 the key arguments
 		 * @param valuesTypeSpecifier the values arguments
-		 * @return the newly created compound {@code Function} type
+		 * @return the newly created compound {@link Function} type
 		 */
 		public static Function getInstance(final List<TypeSpecifier> typeSpecifiers, final Optional<TypeSpecifier> optional,
-										   final Rest<TypeSpecifier> rest, final Key<TypeSpecifier> key,
-										   final ValuesTypeSpecifier valuesTypeSpecifier) {
+		                                   final Rest<TypeSpecifier> rest, final Key<TypeSpecifier> key,
+		                                   final ValuesTypeSpecifier valuesTypeSpecifier) {
 			return FunctionImpl.getInstance(typeSpecifiers, optional, rest, key, valuesTypeSpecifier);
 		}
 
 		/**
-		 * Inner {@code Function} type implementation.
+		 * Inner {@link Function} type implementation.
 		 */
-		private static class FunctionImpl implements Function, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static class FunctionImpl extends TypeBaseClass implements Function, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final List<TypeSpecifier> typeSpecifiers;
 			private final Optional<TypeSpecifier> optional;
@@ -64,16 +65,11 @@ public interface Function extends T {
 			 * Private constructor.
 			 */
 			private FunctionImpl() {
-				typeSpecifiers = null;
-				optional = null;
-				rest = null;
-				key = null;
-
-				valuesTypeSpecifier = null;
+				this(null, null, null, null, null);
 			}
 
 			/**
-			 * Private constructor for compound {@code Cons} type.
+			 * Private constructor for compound {@link Function} type.
 			 *
 			 * @param typeSpecifiers      the required arguments
 			 * @param optional            the optional arguments
@@ -82,8 +78,9 @@ public interface Function extends T {
 			 * @param valuesTypeSpecifier the values arguments
 			 */
 			private FunctionImpl(final List<TypeSpecifier> typeSpecifiers, final Optional<TypeSpecifier> optional,
-								 final Rest<TypeSpecifier> rest, final Key<TypeSpecifier> key,
-								 final ValuesTypeSpecifier valuesTypeSpecifier) {
+			                     final Rest<TypeSpecifier> rest, final Key<TypeSpecifier> key,
+			                     final ValuesTypeSpecifier valuesTypeSpecifier) {
+				super("FUNCTION", GlobalPackageStruct.COMMON_LISP);
 				this.typeSpecifiers = typeSpecifiers;
 				this.optional = optional;
 				this.rest = rest;
@@ -93,18 +90,18 @@ public interface Function extends T {
 			}
 
 			/**
-			 * Gets instance of compound {@code Function} type.
+			 * Gets instance of compound {@link Function} type.
 			 *
 			 * @param typeSpecifiers      the required arguments
 			 * @param optional            the optional arguments
 			 * @param rest                the rest arguments
 			 * @param key                 the key arguments
 			 * @param valuesTypeSpecifier the values arguments
-			 * @return the newly created compound {@code Function} type
+			 * @return the newly created compound {@link Function} type
 			 */
 			public static Function getInstance(final List<TypeSpecifier> typeSpecifiers, final Optional<TypeSpecifier> optional,
-											   final Rest<TypeSpecifier> rest, final Key<TypeSpecifier> key,
-											   final ValuesTypeSpecifier valuesTypeSpecifier) {
+			                                   final Rest<TypeSpecifier> rest, final Key<TypeSpecifier> key,
+			                                   final ValuesTypeSpecifier valuesTypeSpecifier) {
 				return new FunctionImpl(typeSpecifiers, optional, rest, key, valuesTypeSpecifier);
 			}
 
@@ -118,12 +115,8 @@ public interface Function extends T {
 					return false;
 				}
 
-				final Function function = (Function) obj;
-				if (function == INSTANCE) {
-					return true;
-				}
-
-				return (function instanceof FunctionImpl) && checkFunctionImplEquality((FunctionImpl) function);
+				final Function functionType = (Function) obj;
+				return (functionType == INSTANCE) || ((functionType instanceof FunctionImpl) && checkFunctionImplEquality((FunctionImpl) functionType));
 			}
 
 			/**

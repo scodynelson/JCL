@@ -1,12 +1,15 @@
 package jcl.types;
 
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
+
 /**
- * The only object of type {@code Null} is {@code NIL}, which represents the empty {@code List} and can also be notated ().
- * <p/>
- * {@code Null} -> {@code Symbol} -> {@code List} -> {@code Sequence} -> {@code T}
+ * The only object of type {@link Null} is {@link NIL}, which represents the empty {@link List} and can also be notated ().
+ * <p>
+ * {@link Null} -> {@link Symbol} -> {@link List} -> {@link Sequence} -> {@link T}
  */
 public interface Null extends Symbol, List {
 
@@ -23,9 +26,16 @@ public interface Null extends Symbol, List {
 		}
 
 		/**
-		 * Inner {@code Null} type implementation.
+		 * Inner {@link Null} type implementation.
 		 */
-		private static class NullImpl implements Null, AtomicTypeSpecifier {
+		private static class NullImpl extends TypeBaseClass implements Null, AtomicTypeSpecifier {
+
+			/**
+			 * Private constructor.
+			 */
+			private NullImpl() {
+				super("NULL", GlobalPackageStruct.COMMON_LISP);
+			}
 
 			@Override
 			public boolean equals(final Object obj) {
@@ -35,6 +45,11 @@ public interface Null extends Symbol, List {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "NullImpl{}";
 			}
 		}
 	}

@@ -41,7 +41,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * The {@code ReadtableStruct} is the object representation of a Lisp 'readtable' type.
+ * The {@link ReadtableStruct} is the object representation of a Lisp 'readtable' type.
  */
 public class ReadtableStruct extends BuiltInClassStruct {
 

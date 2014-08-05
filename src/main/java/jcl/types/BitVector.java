@@ -1,6 +1,7 @@
 package jcl.types;
 
 import jcl.LispType;
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.DimensionsDesignator;
@@ -10,11 +11,11 @@ import java.lang.Integer;
 import java.lang.String;
 
 /**
- * A {@code BitVector} is a {@code Vector} the element type of which is {@code Bit}.
- * <p/>
- * The type {@code Vector} is a subtype of type {@code Vector}, for {@code BitVector} means (vector bit).
- * <p/>
- * {@code BitVector} -> {@code Vector} -> {@code Array} -> {@code Sequence} -> {@code T}
+ * A {@link BitVector} is a {@link Vector} the element type of which is {@link Bit}.
+ * <p>
+ * The type {@link Vector} is a subtype of type {@link Vector}, for {@link BitVector} means (vector bit).
+ * <p>
+ * {@link BitVector} -> {@link Vector} -> {@link Array} -> {@link Sequence} -> {@link T}
  */
 public interface BitVector extends Vector {
 
@@ -31,19 +32,19 @@ public interface BitVector extends Vector {
 		}
 
 		/**
-		 * Gets instance of compound {@code BitVector} type.
+		 * Gets instance of compound {@link BitVector} type.
 		 *
-		 * @param size the size of the {@code BitVector}
-		 * @return the newly created compound {@code BitVector} type
+		 * @param size the size of the {@link BitVector}
+		 * @return the newly created compound {@link BitVector} type
 		 */
 		public static BitVector getInstance(final Integer size) {
 			return BitVectorImpl.getInstance(size);
 		}
 
 		/**
-		 * Inner {@code BitVector} type implementation.
+		 * Inner {@link BitVector} type implementation.
 		 */
-		private static class BitVectorImpl implements BitVector, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static class BitVectorImpl extends TypeBaseClass implements BitVector, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final DimensionsDesignator size;
 			private static final LispType ELEMENT_TYPE = Bit.INSTANCE;
@@ -52,15 +53,16 @@ public interface BitVector extends Vector {
 			 * Private constructor.
 			 */
 			private BitVectorImpl() {
-				size = null;
+				this(null);
 			}
 
 			/**
-			 * Private constructor for compound {@code BitVector} type.
+			 * Private constructor for compound {@link BitVector} type.
 			 *
-			 * @param size the size of the {@code BitVector}
+			 * @param size the size of the {@link BitVector}
 			 */
 			private BitVectorImpl(final Integer size) {
+				super("BIT-VECTOR", GlobalPackageStruct.COMMON_LISP);
 				this.size = new DimensionsDesignator(size);
 			}
 
@@ -75,10 +77,10 @@ public interface BitVector extends Vector {
 			}
 
 			/**
-			 * Gets instance of compound {@code BitVector} type.
+			 * Gets instance of compound {@link BitVector} type.
 			 *
-			 * @param size the size of the {@code BitVector}
-			 * @return the newly created compound {@code BitVector} type
+			 * @param size the size of the {@link BitVector}
+			 * @return the newly created compound {@link BitVector} type
 			 */
 			public static BitVector getInstance(final Integer size) {
 				return new BitVectorImpl(size);

@@ -1,17 +1,20 @@
 package jcl.types;
 
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
+
 /**
- * The type {@code Keyword} includes all {@code Symbol}s interned the KEYWORD {@code Package}.
- * <p/>
- * Interning a {@code Symbol} in the KEYWORD {@code Package} has three automatic effects:
- * 1. It causes the {@code Symbol} to become bound to itself.
- * 2. It causes the {@code Symbol} to become an external symbol of the KEYWORD package.
- * 3. It causes the {@code Symbol} to become a constant variable.
- * <p/>
- * {@code Keyword} -> {@code Symbol} -> {@code T}
+ * The type {@link Keyword} includes all {@link Symbol}s interned the KEYWORD {@link Package}.
+ * <p>
+ * Interning a {@link Symbol} in the KEYWORD {@link Package} has three automatic effects:
+ * 1. It causes the {@link Symbol} to become bound to itself.
+ * 2. It causes the {@link Symbol} to become an external symbol of the KEYWORD package.
+ * 3. It causes the {@link Symbol} to become a constant variable.
+ * <p>
+ * {@link Keyword} -> {@link Symbol} -> {@link T}
  */
 public interface Keyword extends Symbol {
 
@@ -28,9 +31,16 @@ public interface Keyword extends Symbol {
 		}
 
 		/**
-		 * Inner {@code Keyword} type implementation.
+		 * Inner {@link Keyword} type implementation.
 		 */
-		private static class KeywordImpl implements Keyword, AtomicTypeSpecifier {
+		private static class KeywordImpl extends TypeBaseClass implements Keyword, AtomicTypeSpecifier {
+
+			/**
+			 * Private constructor.
+			 */
+			private KeywordImpl() {
+				super("KEYWORD", GlobalPackageStruct.COMMON_LISP);
+			}
 
 			@Override
 			public boolean equals(final Object obj) {
@@ -40,6 +50,11 @@ public interface Keyword extends Symbol {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "KeywordImpl{}";
 			}
 		}
 	}

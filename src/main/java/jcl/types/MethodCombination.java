@@ -1,14 +1,17 @@
 package jcl.types;
 
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
+
 /**
- * A {@code MethodCombination} object represents the information about the {@code MethodCombination} being used by a
- * {@code GenericFunction}. A {@code MethodCombination} object contains information about both the type of {@code MethodCombination}
+ * A {@link MethodCombination} object represents the information about the {@link MethodCombination} being used by a
+ * {@link GenericFunction}. A {@link MethodCombination} object contains information about both the type of {@link MethodCombination}
  * and the arguments being used with that type.
- * <p/>
- * {@code MethodCombination} -> {@code T}
+ * <p>
+ * {@link MethodCombination} -> {@link T}
  */
 public interface MethodCombination extends T {
 
@@ -25,9 +28,16 @@ public interface MethodCombination extends T {
 		}
 
 		/**
-		 * Inner {@code MethodCombination} type implementation.
+		 * Inner {@link MethodCombination} type implementation.
 		 */
-		private static class MethodCombinationImpl implements MethodCombination, AtomicTypeSpecifier {
+		private static class MethodCombinationImpl extends TypeBaseClass implements MethodCombination, AtomicTypeSpecifier {
+
+			/**
+			 * Private constructor.
+			 */
+			private MethodCombinationImpl() {
+				super("METHOD-COMBINATION", GlobalPackageStruct.COMMON_LISP);
+			}
 
 			@Override
 			public boolean equals(final Object obj) {
@@ -37,6 +47,11 @@ public interface MethodCombination extends T {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "MethodCombinationImpl{}";
 			}
 		}
 	}

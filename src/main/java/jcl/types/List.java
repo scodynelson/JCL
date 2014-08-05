@@ -1,27 +1,30 @@
 package jcl.types;
 
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
+
 /**
- * A {@code List} is a chain of {@code Cons}es in which the car of each {@code Cons} is an element of the {@code List},
- * and the cdr of each {@code Cons} is either the next link in the chain or a terminating {@code Atom}.
- * <p/>
- * A proper {@code List} is a chain of {@code Cons}es terminated by the empty {@code List}, (), which is itself a proper
- * {@code List}. A dotted {@code List} is a {@code List} which has a terminating {@code Atom} that is not the empty
- * {@code List}. A circular {@code List} is a chain of {@code Cons}es that has no termination because some {@code Cons}
- * in the chain is the cdr of a later {@code Cons}.
- * <p/>
- * Dotted {@code List}s and circular {@code List}s are also {@code List}s, but usually the unqualified term ''list''
- * within this specification means proper {@code List}. Nevertheless, the type {@code List} unambiguously includes
- * dotted {@code List}s and circular {@code List}s.
- * <p/>
- * For each element of a {@code List} there is a {@code Cons}. The empty {@code List} has no elements and is not a
- * {@code Cons}.
- * <p/>
- * The types {@code Cons} and {@code Null} form an exhaustive partition of the type {@code List}.
- * <p/>
- * {@code List} -> {@code Sequence} -> {@code T}
+ * A {@link List} is a chain of {@link Cons}es in which the car of each {@link Cons} is an element of the {@link List},
+ * and the cdr of each {@link Cons} is either the next link in the chain or a terminating {@link Atom}.
+ * <p>
+ * A proper {@link List} is a chain of {@link Cons}es terminated by the empty {@link List}, (), which is itself a proper
+ * {@link List}. A dotted {@link List} is a {@link List} which has a terminating {@link Atom} that is not the empty
+ * {@link List}. A circular {@link List} is a chain of {@link Cons}es that has no termination because some {@link Cons}
+ * in the chain is the cdr of a later {@link Cons}.
+ * <p>
+ * Dotted {@link List}s and circular {@link List}s are also {@link List}s, but usually the unqualified term ''list''
+ * within this specification means proper {@link List}. Nevertheless, the type {@link List} unambiguously includes
+ * dotted {@link List}s and circular {@link List}s.
+ * <p>
+ * For each element of a {@link List} there is a {@link Cons}. The empty {@link List} has no elements and is not a
+ * {@link Cons}.
+ * <p>
+ * The types {@link Cons} and {@link Null} form an exhaustive partition of the type {@link List}.
+ * <p>
+ * {@link List} -> {@link Sequence} -> {@link T}
  */
 public interface List extends Sequence {
 
@@ -38,9 +41,16 @@ public interface List extends Sequence {
 		}
 
 		/**
-		 * Inner {@code List} type implementation.
+		 * Inner {@link List} type implementation.
 		 */
-		private static class ListImpl implements List, AtomicTypeSpecifier {
+		private static class ListImpl extends TypeBaseClass implements List, AtomicTypeSpecifier {
+
+			/**
+			 * Private constructor.
+			 */
+			private ListImpl() {
+				super("LIST", GlobalPackageStruct.COMMON_LISP);
+			}
 
 			@Override
 			public boolean equals(final Object obj) {
@@ -50,6 +60,11 @@ public interface List extends Sequence {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "ListImpl{}";
 			}
 		}
 	}

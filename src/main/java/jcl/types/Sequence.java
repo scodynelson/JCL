@@ -1,16 +1,19 @@
 package jcl.types;
 
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
+
 /**
- * A {@code Sequence} is an ordered collection of objects, called the elements of the sequence. The type {@code Vector}
- * and the type {@code List} are disjoint subtypes of type {@code Sequence}, but are not necessarily an exhaustive partition
- * of the {@code Sequence}. When viewing a {@code Vector} as a {@code Sequence}, only the active elements of that {@code Vector}
- * are considered elements of the {@code Sequence}; that is, {@code Sequence} operations respect the fill pointer when
- * the given {@code Sequence} represents a {@code Vector}.
- * <p/>
- * {@code Sequence} -> {@code T}
+ * A {@link Sequence} is an ordered collection of objects, called the elements of the sequence. The type {@link Vector}
+ * and the type {@link List} are disjoint subtypes of type {@link Sequence}, but are not necessarily an exhaustive partition
+ * of the {@link Sequence}. When viewing a {@link Vector} as a {@link Sequence}, only the active elements of that {@link Vector}
+ * are considered elements of the {@link Sequence}; that is, {@link Sequence} operations respect the fill pointer when
+ * the given {@link Sequence} represents a {@link Vector}.
+ * <p>
+ * {@link Sequence} -> {@link T}
  */
 public interface Sequence extends T {
 
@@ -27,9 +30,16 @@ public interface Sequence extends T {
 		}
 
 		/**
-		 * Inner {@code Sequence} type implementation.
+		 * Inner {@link Sequence} type implementation.
 		 */
-		private static class SequenceImpl implements Sequence, AtomicTypeSpecifier {
+		private static class SequenceImpl extends TypeBaseClass implements Sequence, AtomicTypeSpecifier {
+
+			/**
+			 * Private constructor.
+			 */
+			private SequenceImpl() {
+				super("SEQUENCE", GlobalPackageStruct.COMMON_LISP);
+			}
 
 			@Override
 			public boolean equals(final Object obj) {
@@ -39,6 +49,11 @@ public interface Sequence extends T {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "SequenceImpl{}";
 			}
 		}
 	}

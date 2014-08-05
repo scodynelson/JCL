@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * The {@code DispatchTable} class holds mappings for code points to macro functions and delegates to the proper function
+ * The {@link DispatchTable} class holds mappings for code points to macro functions and delegates to the proper function
  * when used.
  */
 public class DispatchTable extends ReaderMacroFunction {

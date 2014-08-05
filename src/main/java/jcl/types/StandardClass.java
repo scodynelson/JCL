@@ -1,12 +1,15 @@
 package jcl.types;
 
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
+
 /**
- * A {@code StandardClass} is the default class type {@code Class}.
- * <p/>
- * {@code StandardClass} -> {@code Class} -> {@code StandardObject} -> {@code T}
+ * A {@link StandardClass} is the default class type {@link Class}.
+ * <p>
+ * {@link StandardClass} -> {@link Class} -> {@link StandardObject} -> {@link T}
  */
 public interface StandardClass extends Class {
 
@@ -23,9 +26,16 @@ public interface StandardClass extends Class {
 		}
 
 		/**
-		 * Inner {@code StandardClass} type implementation.
+		 * Inner {@link StandardClass} type implementation.
 		 */
-		private static class StandardClassImpl implements StandardClass, AtomicTypeSpecifier {
+		private static class StandardClassImpl extends TypeBaseClass implements StandardClass, AtomicTypeSpecifier {
+
+			/**
+			 * Private constructor.
+			 */
+			private StandardClassImpl() {
+				super("STANDARD-CLASS", GlobalPackageStruct.COMMON_LISP);
+			}
 
 			@Override
 			public boolean equals(final Object obj) {
@@ -35,6 +45,11 @@ public interface StandardClass extends Class {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "StandardClassImpl{}";
 			}
 		}
 	}

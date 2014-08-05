@@ -7,7 +7,7 @@ import jcl.types.StandardClass;
 import java.util.List;
 
 /**
- * The {@code StandardClassStruct} is the object representation of a Lisp 'standard-class' type.
+ * The {@link StandardClassStruct} is the object representation of a Lisp 'standard-class' type.
  */
 public abstract class StandardClassStruct extends ClassStruct {
 

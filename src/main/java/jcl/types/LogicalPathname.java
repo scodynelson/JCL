@@ -1,13 +1,16 @@
 package jcl.types;
 
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
+
 /**
- * A {@code LogicalPathname} is a {@code Pathname} that uses a namestring syntax and has component values.
- * {@code LogicalPathname}s do not refer directly to file names.
- * <p/>
- * {@code LogicalPathname} -> {@code Pathname} -> {@code T}
+ * A {@link LogicalPathname} is a {@link Pathname} that uses a namestring syntax and has component values.
+ * {@link LogicalPathname}s do not refer directly to file names.
+ * <p>
+ * {@link LogicalPathname} -> {@link Pathname} -> {@link T}
  */
 public interface LogicalPathname extends Pathname {
 
@@ -24,9 +27,16 @@ public interface LogicalPathname extends Pathname {
 		}
 
 		/**
-		 * Inner {@code LogicalPathname} type implementation.
+		 * Inner {@link LogicalPathname} type implementation.
 		 */
-		private static class LogicalPathnameImpl implements LogicalPathname, AtomicTypeSpecifier {
+		private static class LogicalPathnameImpl extends TypeBaseClass implements LogicalPathname, AtomicTypeSpecifier {
+
+			/**
+			 * Private constructor.
+			 */
+			private LogicalPathnameImpl() {
+				super("LOGICAL-PATHNAME", GlobalPackageStruct.COMMON_LISP);
+			}
 
 			@Override
 			public boolean equals(final Object obj) {
@@ -36,6 +46,11 @@ public interface LogicalPathname extends Pathname {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "LogicalPathnameImpl{}";
 			}
 		}
 	}

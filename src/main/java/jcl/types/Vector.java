@@ -1,6 +1,7 @@
 package jcl.types;
 
 import jcl.LispType;
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.DimensionsDesignator;
@@ -10,13 +11,13 @@ import java.lang.Integer;
 import java.lang.String;
 
 /**
- * A {@code Vector} is any one-dimensional {@code Array}.
- * <p/>
- * The type {@code Vector} is a subtype of type {@code Array}; for all types x, (vector x) is the same as (array x (*)).
- * <p/>
- * The type (vector t), the type {@code String}, and the type {@code BitVector} are disjoint subtypes of type {@code Vector}.
- * <p/>
- * {@code Vector} -> {@code Array} -> {@code Sequence} -> {@code T}
+ * A {@link Vector} is any one-dimensional {@link Array}.
+ * <p>
+ * The type {@link Vector} is a subtype of type {@link Array}; for all types x, (vector x) is the same as (array x (*)).
+ * <p>
+ * The type (vector t), the type {@link String}, and the type {@link BitVector} are disjoint subtypes of type {@link Vector}.
+ * <p>
+ * {@link Vector} -> {@link Array} -> {@link Sequence} -> {@link T}
  */
 public interface Vector extends Array, Sequence {
 
@@ -33,20 +34,20 @@ public interface Vector extends Array, Sequence {
 		}
 
 		/**
-		 * Gets instance of compound {@code Vector} type.
+		 * Gets instance of compound {@link Vector} type.
 		 *
-		 * @param size        the size of the {@code Vector}
-		 * @param elementType the types of elements within the {@code Vector}
-		 * @return the newly created compound {@code Vector} type
+		 * @param size        the size of the {@link Vector}
+		 * @param elementType the types of elements within the {@link Vector}
+		 * @return the newly created compound {@link Vector} type
 		 */
 		public static Vector getInstance(final Integer size, final LispType elementType) {
 			return VectorImpl.getInstance(size, elementType);
 		}
 
 		/**
-		 * Inner {@code Vector} type implementation.
+		 * Inner {@link Vector} type implementation.
 		 */
-		private static class VectorImpl implements Vector, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static class VectorImpl extends TypeBaseClass implements Vector, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final DimensionsDesignator size;
 			private final LispType elementType;
@@ -55,17 +56,17 @@ public interface Vector extends Array, Sequence {
 			 * Private constructor.
 			 */
 			private VectorImpl() {
-				size = null;
-				elementType = null;
+				this(null, null);
 			}
 
 			/**
-			 * Private constructor for compound {@code Vector} type.
+			 * Private constructor for compound {@link Vector} type.
 			 *
-			 * @param size        the size of the {@code Vector}
-			 * @param elementType the types of elements within the {@code Vector}
+			 * @param size        the size of the {@link Vector}
+			 * @param elementType the types of elements within the {@link Vector}
 			 */
 			private VectorImpl(final Integer size, final LispType elementType) {
+				super("VECTOR", GlobalPackageStruct.COMMON_LISP);
 				this.size = new DimensionsDesignator(size);
 				this.elementType = elementType;
 			}
@@ -81,11 +82,11 @@ public interface Vector extends Array, Sequence {
 			}
 
 			/**
-			 * Gets instance of compound {@code Vector} type.
+			 * Gets instance of compound {@link Vector} type.
 			 *
-			 * @param size        the size of the {@code Vector}
-			 * @param elementType the types of elements within the {@code Vector}
-			 * @return the newly created compound {@code Vector} type
+			 * @param size        the size of the {@link Vector}
+			 * @param elementType the types of elements within the {@link Vector}
+			 * @return the newly created compound {@link Vector} type
 			 */
 			public static Vector getInstance(final Integer size, final LispType elementType) {
 				return new VectorImpl(size, elementType);

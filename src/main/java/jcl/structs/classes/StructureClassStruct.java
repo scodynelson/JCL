@@ -7,7 +7,7 @@ import jcl.types.StructureClass;
 import java.util.List;
 
 /**
- * The {@code StructureClassStruct} is the object representation of a Lisp 'structure-class' type.
+ * The {@link StructureClassStruct} is the object representation of a Lisp 'structure-class' type.
  */
 public abstract class StructureClassStruct extends ClassStruct {
 

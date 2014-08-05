@@ -5,7 +5,7 @@ import jcl.LispType;
 import jcl.types.StructureObject;
 
 /**
- * The {@code StructureObjectStruct} is the object representation of a Lisp 'structure-object' type.
+ * The {@link StructureObjectStruct} is the object representation of a Lisp 'structure-object' type.
  */
 public class StructureObjectStruct implements LispStruct {
 

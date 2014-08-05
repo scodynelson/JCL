@@ -1,6 +1,6 @@
 package jcl.typespecifiers.designator;
 
-import jcl.typespecifiers.CompoundTypeSpecifier;
+import jcl.types.Array;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -9,9 +9,9 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * This class represents a dimensions designator, found within compound {@code Array}s.
+ * This class represents a dimensions designator, found within compound {@link Array}s.
  */
-public class DimensionsDesignator implements CompoundTypeSpecifier {
+public class DimensionsDesignator {
 
 	private final List<Integer> dimensions;
 

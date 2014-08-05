@@ -8,9 +8,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.lang.String;
 
 /**
- * The type {@code Bignum} is defined to be exactly (and integer (not fixnum)).
+ * The type {@link Bignum} is defined to be exactly (and integer (not fixnum)).
  * <p>
- * {@code Bignum} -> {@code Integer} -> {@code Rational} -> {@code Real} -> {@code Number} -> {@code T}
+ * {@link Bignum} -> {@link Integer} -> {@link Rational} -> {@link Real} -> {@link Number} -> {@link T}
  */
 public interface Bignum extends Integer {
 
@@ -27,7 +27,7 @@ public interface Bignum extends Integer {
 		}
 
 		/**
-		 * Inner {@code Bignum} type implementation.
+		 * Inner {@link Bignum} type implementation.
 		 */
 		private static class BignumImpl extends AndTypeSpecifier implements Bignum, AtomicTypeSpecifier {
 
@@ -35,7 +35,7 @@ public interface Bignum extends Integer {
 			 * Private constructor.
 			 */
 			private BignumImpl() {
-				super(Integer.INSTANCE, new NotTypeSpecifier(Fixnum.INSTANCE));
+				super("BIGNUM", Integer.INSTANCE, new NotTypeSpecifier(Fixnum.INSTANCE));
 			}
 
 			@Override

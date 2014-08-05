@@ -8,9 +8,9 @@ import java.lang.String;
 import java.math.BigInteger;
 
 /**
- * The type {@code Bit} is equivalent to the type (integer 0 1) and (unsigned-byte 1).
+ * The type {@link Bit} is equivalent to the type (integer 0 1) and (unsigned-byte 1).
  * <p>
- * {@code Bit} -> {@code UnsignedByte} -> {@code SignedByte} -> {@code Integer} -> {@code Rational} -> {@code Real} -> {@code Number} -> {@code T}
+ * {@link Bit} -> {@link UnsignedByte} -> {@link SignedByte} -> {@link Integer} -> {@link Rational} -> {@link Real} -> {@link Number} -> {@link T}
  */
 public interface Bit extends UnsignedByte {
 
@@ -27,7 +27,7 @@ public interface Bit extends UnsignedByte {
 		}
 
 		/**
-		 * Inner {@code Bit} type implementation.
+		 * Inner {@link Bit} type implementation.
 		 */
 		private static class BitImpl extends AndTypeSpecifier implements Bit, AtomicTypeSpecifier {
 
@@ -35,7 +35,7 @@ public interface Bit extends UnsignedByte {
 			 * Private constructor.
 			 */
 			private BitImpl() {
-				super(UnsignedByte.Factory.getInstance(BigInteger.ONE));
+				super("BIT", UnsignedByte.Factory.getInstance(BigInteger.ONE));
 			}
 
 			@Override

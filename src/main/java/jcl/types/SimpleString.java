@@ -1,6 +1,7 @@
 package jcl.types;
 
 import jcl.LispType;
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.DimensionsDesignator;
@@ -9,11 +10,11 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.lang.Integer;
 
 /**
- * A {@code SimpleString} is a specialized one-dimensional {@code SimpleArray} whose elements are of type {@code Character}
- * or a subtype of type {@code Character}. When used as a type specifier for object creation, {@code SimpleString} means
+ * A {@link SimpleString} is a specialized one-dimensional {@link SimpleArray} whose elements are of type {@link Character}
+ * or a subtype of type {@link Character}. When used as a type specifier for object creation, {@link SimpleString} means
  * (simple-array character (size)).
- * <p/>
- * {@code SimpleString} -> {@code String} -> {@code Vector} -> {@code SimpleArray} -> {@code Array} -> {@code Sequence} -> {@code T}
+ * <p>
+ * {@link SimpleString} -> {@link String} -> {@link Vector} -> {@link SimpleArray} -> {@link Array} -> {@link Sequence} -> {@link T}
  */
 public interface SimpleString extends String, SimpleArray {
 
@@ -30,19 +31,19 @@ public interface SimpleString extends String, SimpleArray {
 		}
 
 		/**
-		 * Gets instance of compound {@code SimpleString} type.
+		 * Gets instance of compound {@link SimpleString} type.
 		 *
-		 * @param size the size of the {@code SimpleString}
-		 * @return the newly created compound {@code SimpleString} type
+		 * @param size the size of the {@link SimpleString}
+		 * @return the newly created compound {@link SimpleString} type
 		 */
 		public static SimpleString getInstance(final Integer size) {
 			return SimpleStringImpl.getInstance(size);
 		}
 
 		/**
-		 * Inner {@code SimpleString} type implementation.
+		 * Inner {@link SimpleString} type implementation.
 		 */
-		private static class SimpleStringImpl implements SimpleString, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static class SimpleStringImpl extends TypeBaseClass implements SimpleString, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final DimensionsDesignator size;
 			private static final LispType ELEMENT_TYPE = Character.INSTANCE;
@@ -51,15 +52,16 @@ public interface SimpleString extends String, SimpleArray {
 			 * Private constructor.
 			 */
 			private SimpleStringImpl() {
-				size = null;
+				this(null);
 			}
 
 			/**
-			 * Private constructor for compound {@code SimpleString} type.
+			 * Private constructor for compound {@link SimpleString} type.
 			 *
-			 * @param size the size of the {@code SimpleString}
+			 * @param size the size of the {@link SimpleString}
 			 */
 			private SimpleStringImpl(final Integer size) {
+				super("SIMPLE-STRING", GlobalPackageStruct.COMMON_LISP);
 				this.size = new DimensionsDesignator(size);
 			}
 
@@ -74,10 +76,10 @@ public interface SimpleString extends String, SimpleArray {
 			}
 
 			/**
-			 * Gets instance of compound {@code SimpleString} type.
+			 * Gets instance of compound {@link SimpleString} type.
 			 *
-			 * @param size the size of the {@code SimpleString}
-			 * @return the newly created compound {@code SimpleString} type
+			 * @param size the size of the {@link SimpleString}
+			 * @return the newly created compound {@link SimpleString} type
 			 */
 			public static SimpleString getInstance(final Integer size) {
 				return new SimpleStringImpl(size);

@@ -1,6 +1,7 @@
 package jcl.types;
 
 import jcl.LispType;
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.DimensionsDesignator;
@@ -10,10 +11,10 @@ import java.lang.Integer;
 import java.lang.String;
 
 /**
- * A {@code SimpleBitVector} is a type of a {@code BitVector} that is not displaced to another {@code Array}, has no fill
- * pointer, and is not expressly adjustable is a subtype of type {@code SimpleBitVector}.
- * <p/>
- * {@code SimpleBitVector} -> {@code BitVector} -> {@code Vector} -> {@code SimpleArray} -> {@code Array} -> {@code Sequence} -> {@code T}
+ * A {@link SimpleBitVector} is a type of a {@link BitVector} that is not displaced to another {@link Array}, has no fill
+ * pointer, and is not expressly adjustable is a subtype of type {@link SimpleBitVector}.
+ * <p>
+ * {@link SimpleBitVector} -> {@link BitVector} -> {@link Vector} -> {@link SimpleArray} -> {@link Array} -> {@link Sequence} -> {@link T}
  */
 public interface SimpleBitVector extends BitVector, SimpleArray {
 
@@ -30,19 +31,19 @@ public interface SimpleBitVector extends BitVector, SimpleArray {
 		}
 
 		/**
-		 * Gets instance of compound {@code SimpleBitVector} type.
+		 * Gets instance of compound {@link SimpleBitVector} type.
 		 *
-		 * @param size the size of the {@code SimpleBitVector}
-		 * @return the newly created compound {@code SimpleBitVector} type
+		 * @param size the size of the {@link SimpleBitVector}
+		 * @return the newly created compound {@link SimpleBitVector} type
 		 */
 		public static SimpleBitVector getInstance(final Integer size) {
 			return SimpleBitVectorImpl.getInstance(size);
 		}
 
 		/**
-		 * Inner {@code SimpleBitVector} type implementation.
+		 * Inner {@link SimpleBitVector} type implementation.
 		 */
-		private static class SimpleBitVectorImpl implements SimpleBitVector, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static class SimpleBitVectorImpl extends TypeBaseClass implements SimpleBitVector, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final DimensionsDesignator size;
 			private static final LispType ELEMENT_TYPE = Bit.INSTANCE;
@@ -51,15 +52,16 @@ public interface SimpleBitVector extends BitVector, SimpleArray {
 			 * Private constructor.
 			 */
 			private SimpleBitVectorImpl() {
-				size = null;
+				this(null);
 			}
 
 			/**
-			 * Private constructor for compound {@code SimpleBitVector} type.
+			 * Private constructor for compound {@link SimpleBitVector} type.
 			 *
-			 * @param size the size of the {@code SimpleBitVector}
+			 * @param size the size of the {@link SimpleBitVector}
 			 */
 			private SimpleBitVectorImpl(final Integer size) {
+				super("SIMPLE-BIT-VECTOR", GlobalPackageStruct.COMMON_LISP);
 				this.size = new DimensionsDesignator(size);
 			}
 
@@ -74,10 +76,10 @@ public interface SimpleBitVector extends BitVector, SimpleArray {
 			}
 
 			/**
-			 * Gets instance of compound {@code SimpleBitVector} type.
+			 * Gets instance of compound {@link SimpleBitVector} type.
 			 *
-			 * @param size the size of the {@code SimpleBitVector}
-			 * @return the newly created compound {@code SimpleBitVector} type
+			 * @param size the size of the {@link SimpleBitVector}
+			 * @return the newly created compound {@link SimpleBitVector} type
 			 */
 			public static SimpleBitVector getInstance(final Integer size) {
 				return new SimpleBitVectorImpl(size);

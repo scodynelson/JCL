@@ -1,12 +1,15 @@
 package jcl.types;
 
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
+
 /**
- * A {@code HashTable} provide a way of mapping any object (a key) to an associated object (a value).
- * <p/>
- * {@code HashTable} -> {@code T}
+ * A {@link HashTable} provide a way of mapping any object (a key) to an associated object (a value).
+ * <p>
+ * {@link HashTable} -> {@link T}
  */
 public interface HashTable extends T {
 
@@ -23,9 +26,16 @@ public interface HashTable extends T {
 		}
 
 		/**
-		 * Inner {@code HashTable} type implementation.
+		 * Inner {@link HashTable} type implementation.
 		 */
-		private static class HashTableImpl implements HashTable, AtomicTypeSpecifier {
+		private static class HashTableImpl extends TypeBaseClass implements HashTable, AtomicTypeSpecifier {
+
+			/**
+			 * Private constructor.
+			 */
+			private HashTableImpl() {
+				super("HASH-TABLE", GlobalPackageStruct.COMMON_LISP);
+			}
 
 			@Override
 			public boolean equals(final Object obj) {
@@ -35,6 +45,11 @@ public interface HashTable extends T {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "HashTableImpl{}";
 			}
 		}
 	}

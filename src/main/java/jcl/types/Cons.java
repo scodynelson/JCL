@@ -1,6 +1,7 @@
 package jcl.types;
 
 import jcl.LispType;
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -8,10 +9,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.lang.String;
 
 /**
- * A {@code Cons} is a compound object having two components, called the car and cdr. These form a dotted pair. Each
+ * A {@link Cons} is a compound object having two components, called the car and cdr. These form a dotted pair. Each
  * component can be any object.
- * <p/>
- * {@code Cons} -> {@code List} -> {@code Sequence} -> {@code T}
+ * <p>
+ * {@link Cons} -> {@link List} -> {@link Sequence} -> {@link T}
  */
 public interface Cons extends List {
 
@@ -28,20 +29,20 @@ public interface Cons extends List {
 		}
 
 		/**
-		 * Gets instance of compound {@code Cons} type.
+		 * Gets instance of compound {@link Cons} type.
 		 *
 		 * @param carSpec the type of the car element
 		 * @param cdrSpec the type of the cdr element
-		 * @return the newly created compound {@code Cons} type
+		 * @return the newly created compound {@link Cons} type
 		 */
 		public static Cons getInstance(final LispType carSpec, final LispType cdrSpec) {
 			return ConsImpl.getInstance(carSpec, cdrSpec);
 		}
 
 		/**
-		 * Inner {@code Cons} type implementation.
+		 * Inner {@link Cons} type implementation.
 		 */
-		private static class ConsImpl implements Cons, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static class ConsImpl extends TypeBaseClass implements Cons, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final LispType carSpec;
 			private final LispType cdrSpec;
@@ -50,27 +51,27 @@ public interface Cons extends List {
 			 * Private constructor.
 			 */
 			private ConsImpl() {
-				carSpec = null;
-				cdrSpec = null;
+				this(null, null);
 			}
 
 			/**
-			 * Private constructor for compound {@code Cons} type.
+			 * Private constructor for compound {@link Cons} type.
 			 *
 			 * @param carSpec the type of the car element
 			 * @param cdrSpec the type of the cdr element
 			 */
 			private ConsImpl(final LispType carSpec, final LispType cdrSpec) {
+				super("CONS", GlobalPackageStruct.COMMON_LISP);
 				this.carSpec = carSpec;
 				this.cdrSpec = cdrSpec;
 			}
 
 			/**
-			 * Gets instance of compound {@code Cons} type.
+			 * Gets instance of compound {@link Cons} type.
 			 *
 			 * @param carSpec the type of the car element
 			 * @param cdrSpec the type of the cdr element
-			 * @return the newly created compound {@code Cons} type
+			 * @return the newly created compound {@link Cons} type
 			 */
 			public static Cons getInstance(final LispType carSpec, final LispType cdrSpec) {
 				return new ConsImpl(carSpec, cdrSpec);
@@ -87,11 +88,7 @@ public interface Cons extends List {
 				}
 
 				final Cons cons = (Cons) obj;
-				if (cons == INSTANCE) {
-					return true;
-				}
-
-				return (cons instanceof ConsImpl) && checkConsImplEquality((ConsImpl) cons);
+				return (cons == INSTANCE) || ((cons instanceof ConsImpl) && checkConsImplEquality((ConsImpl) cons));
 			}
 
 			/**

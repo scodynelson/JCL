@@ -15,7 +15,7 @@ public final class TypeUtils {
 	}
 
 	/**
-	 * This method tests to see if two {@code Array}s are equivalent.
+	 * This method tests to see if two {@link Array}s are equivalent.
 	 *
 	 * @param array1 the first type to test
 	 * @param array2 the second type to test

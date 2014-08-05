@@ -1,15 +1,18 @@
 package jcl.types;
 
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
+
 /**
- * A {@code Restart} represents a {@code Function} that can be called to perform some form of recovery action, usually a
+ * A {@link Restart} represents a {@link Function} that can be called to perform some form of recovery action, usually a
  * transfer of control to an outer point in the running program.
- * <p/>
- * A {@code Restart} has only dynamic extent relative to the scope of the binding form which establishes it.
- * <p/>
- * {@code Restart} -> {@code T}
+ * <p>
+ * A {@link Restart} has only dynamic extent relative to the scope of the binding form which establishes it.
+ * <p>
+ * {@link Restart} -> {@link T}
  */
 public interface Restart extends T {
 
@@ -26,9 +29,16 @@ public interface Restart extends T {
 		}
 
 		/**
-		 * Inner {@code Restart} type implementation.
+		 * Inner {@link Restart} type implementation.
 		 */
-		private static class RestartImpl implements Restart, AtomicTypeSpecifier {
+		private static class RestartImpl extends TypeBaseClass implements Restart, AtomicTypeSpecifier {
+
+			/**
+			 * Private constructor.
+			 */
+			private RestartImpl() {
+				super("RESTART", GlobalPackageStruct.COMMON_LISP);
+			}
 
 			@Override
 			public boolean equals(final Object obj) {
@@ -38,6 +48,11 @@ public interface Restart extends T {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "RestartImpl{}";
 			}
 		}
 	}

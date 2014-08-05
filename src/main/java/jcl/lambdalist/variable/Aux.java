@@ -37,7 +37,7 @@ public class Aux<VAR> {
 	}
 
 	/**
-	 * An {@code Aux} variable type.
+	 * An {@link Aux} variable type.
 	 *
 	 * @param <TYPE> the type of the initial form
 	 */

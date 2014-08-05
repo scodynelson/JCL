@@ -20,7 +20,7 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	/**
 	 * Public constructor.
 	 *
-	 * @param symbol the symbol to create a {@code SynonymStreamStruct} from
+	 * @param symbol the symbol to create a SynonymStreamStruct from
 	 */
 	public SynonymStreamStruct(final SymbolStruct<StreamStruct> symbol) {
 		this(false, symbol);
@@ -30,7 +30,7 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	 * Public constructor.
 	 *
 	 * @param isInteractive whether or not the struct created is 'interactive'
-	 * @param symbol        the symbol to create a {@code SynonymStreamStruct} from
+	 * @param symbol        the symbol to create a SynonymStreamStruct from
 	 */
 	public SynonymStreamStruct(final boolean isInteractive, final SymbolStruct<StreamStruct> symbol) {
 		super(SynonymStream.INSTANCE, null, null, isInteractive, getElementType(symbol));
@@ -41,7 +41,7 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	/**
 	 * This private method is used to retrieve the element type for object construction.
 	 *
-	 * @param symbol the symbol to create a {@code SynonymStreamStruct} from
+	 * @param symbol the symbol to create a SynonymStreamStruct from
 	 * @return the element type for object construction
 	 */
 	private static LispType getElementType(final SymbolStruct<StreamStruct> symbol) {

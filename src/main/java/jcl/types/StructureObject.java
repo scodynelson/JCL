@@ -1,13 +1,16 @@
 package jcl.types;
 
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
+
 /**
- * The {@code StructureObject} is an instance of {@code StructureClass} and is a superclass of every {@code Class} that
- * is an instance of {@code StructureClass} except itself.
- * <p/>
- * {@code StructureObject} -> {@code T}
+ * The {@link StructureObject} is an instance of {@link StructureClass} and is a superclass of every {@link Class} that
+ * is an instance of {@link StructureClass} except itself.
+ * <p>
+ * {@link StructureObject} -> {@link T}
  */
 public interface StructureObject extends T {
 
@@ -24,9 +27,16 @@ public interface StructureObject extends T {
 		}
 
 		/**
-		 * Inner {@code StructureObject} type implementation.
+		 * Inner {@link StructureObject} type implementation.
 		 */
-		private static class StructureObjectImpl implements StructureObject, AtomicTypeSpecifier {
+		private static class StructureObjectImpl extends TypeBaseClass implements StructureObject, AtomicTypeSpecifier {
+
+			/**
+			 * Private constructor.
+			 */
+			private StructureObjectImpl() {
+				super("STRUCTURE-OBJECT", GlobalPackageStruct.COMMON_LISP);
+			}
 
 			@Override
 			public boolean equals(final Object obj) {
@@ -36,6 +46,11 @@ public interface StructureObject extends T {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "StructureObjectImpl{}";
 			}
 		}
 	}

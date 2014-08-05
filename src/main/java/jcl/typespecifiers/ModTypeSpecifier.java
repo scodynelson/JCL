@@ -1,6 +1,8 @@
 package jcl.typespecifiers;
 
 import jcl.structs.numbers.IntegerStruct;
+import jcl.structs.packages.GlobalPackageStruct;
+import jcl.types.TypeBaseClass;
 
 import java.math.BigInteger;
 
@@ -8,7 +10,7 @@ import java.math.BigInteger;
  * A {@link ModTypeSpecifier} denotes the set of non-negative integers less than n. This is equivalent to (integer 0 (n))
  * or to (integer 0 m), where m=n-1. The argument is required, and cannot be *. The symbol mod is not valid as a type specifier.
  */
-public class ModTypeSpecifier implements CompoundTypeSpecifier {
+public class ModTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecifier {
 
 	private final IntegerStruct integerStruct;
 
@@ -18,6 +20,17 @@ public class ModTypeSpecifier implements CompoundTypeSpecifier {
 	 * @param integerStruct the integer structure
 	 */
 	public ModTypeSpecifier(final IntegerStruct integerStruct) {
+		this("T", integerStruct); // TODO: Should this be 'T'???
+	}
+
+	/**
+	 * Protected constructor.
+	 *
+	 * @param name          the name of the symbol type
+	 * @param integerStruct the integer structure
+	 */
+	protected ModTypeSpecifier(final String name, final IntegerStruct integerStruct) {
+		super(name, GlobalPackageStruct.COMMON_LISP);
 		this.integerStruct = integerStruct;
 	}
 

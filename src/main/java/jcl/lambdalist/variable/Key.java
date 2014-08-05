@@ -99,7 +99,7 @@ public class Key<VAR> {
 	}
 
 	/**
-	 * An {@code Key} variable type.
+	 * An {@link Key} variable type.
 	 *
 	 * @param <TYPE> the type of the initial form
 	 */

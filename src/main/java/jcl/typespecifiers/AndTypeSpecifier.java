@@ -1,6 +1,8 @@
 package jcl.typespecifiers;
 
 import jcl.LispType;
+import jcl.structs.packages.GlobalPackageStruct;
+import jcl.types.TypeBaseClass;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.ArrayList;
@@ -8,20 +10,32 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * An {@code AndTypeSpecifier} denotes the set of all objects of the type determined by the intersection of the typespecs.
+ * An {@link AndTypeSpecifier} denotes the set of all objects of the type determined by the intersection of the typespecs.
  * The type specifiers (and) and t are equivalent. The symbol and is not valid as a type specifier, and, specifically,
  * it is not an abbreviation for (and).
  */
-public class AndTypeSpecifier implements CompoundTypeSpecifier {
+public class AndTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecifier {
 
 	private final List<LispType> types;
 
 	/**
-	 * Constructs a new {@code AndTypeSpecifier} that matches the provided types by 'and' logic.
+	 * Constructs a new AndTypeSpecifier that matches the provided types by 'and' logic.
 	 *
-	 * @param types an array of {@code LispType}s
+	 * @param types an array of {@link LispType}s
 	 */
 	public AndTypeSpecifier(final LispType... types) {
+		this("T", types); // TODO: Should this be 'T'???
+	}
+
+	/**
+	 * Constructs a new AndTypeSpecifier that matches the provided types by 'and' logic with the symbol-name
+	 * {@code typeName}.
+	 *
+	 * @param name  the name of the symbol type
+	 * @param types an array of {@link LispType}s
+	 */
+	protected AndTypeSpecifier(final String name, final LispType... types) {
+		super(name, GlobalPackageStruct.COMMON_LISP);
 		this.types = new ArrayList<>(Arrays.asList(types));
 	}
 

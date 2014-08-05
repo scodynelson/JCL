@@ -8,10 +8,10 @@ import java.lang.String;
 import java.math.BigInteger;
 
 /**
- * A {@code Fixnum} is an {@code Integer} whose value is between most-negative-fixnum and most-positive-fixnum inclusive.
- * The type {@code Fixnum} is a supertype of (signed-byte 16).
+ * A {@link Fixnum} is an {@link Integer} whose value is between most-negative-fixnum and most-positive-fixnum inclusive.
+ * The type {@link Fixnum} is a supertype of (signed-byte 16).
  * <p>
- * {@code Fixnum} -> {@code Integer} -> {@code Rational} -> {@code Real} -> {@code Number} -> {@code T}
+ * {@link Fixnum} -> {@link Integer} -> {@link Rational} -> {@link Real} -> {@link Number} -> {@link T}
  */
 public interface Fixnum extends Integer {
 
@@ -28,7 +28,7 @@ public interface Fixnum extends Integer {
 		}
 
 		/**
-		 * Inner {@code Fixnum} type implementation.
+		 * Inner {@link Fixnum} type implementation.
 		 */
 		private static class FixnumImpl extends AndTypeSpecifier implements Fixnum, AtomicTypeSpecifier {
 
@@ -36,13 +36,13 @@ public interface Fixnum extends Integer {
 			 * Private constructor.
 			 */
 			private FixnumImpl() {
-				super(getSuper());
+				super("FIXNUM", getSuper());
 			}
 
 			/**
-			 * This method gets the {@code Integer} supertype for creating a {@code Fixnum}.
+			 * This method gets the {@link Integer} supertype for creating a {@link Fixnum}.
 			 *
-			 * @return the {@code Integer} supertype
+			 * @return the {@link Integer} supertype
 			 */
 			private static Integer getSuper() {
 				return Integer.Factory.getInstance(BigInteger.valueOf(java.lang.Integer.MIN_VALUE), BigInteger.valueOf(java.lang.Integer.MAX_VALUE));

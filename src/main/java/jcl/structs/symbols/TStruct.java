@@ -1,7 +1,7 @@
 package jcl.structs.symbols;
 
 /**
- * The {@code TStruct} is the object representation of a Lisp 't' type.
+ * The {@link TStruct} is the object representation of a Lisp 't' type.
  */
 public final class TStruct extends BooleanStruct<TStruct> {
 

@@ -1,12 +1,15 @@
 package jcl.types;
 
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
+
 /**
- * A {@code StandardMethod} is the default method type {@code Class}.
- * <p/>
- * {@code StandardMethod} -> {@code Method} -> {@code StandardObject} -> {@code T}
+ * A {@link StandardMethod} is the default method type {@link Class}.
+ * <p>
+ * {@link StandardMethod} -> {@link Method} -> {@link StandardObject} -> {@link T}
  */
 public interface StandardMethod extends Method, StandardObject {
 
@@ -23,9 +26,16 @@ public interface StandardMethod extends Method, StandardObject {
 		}
 
 		/**
-		 * Inner {@code StandardMethod} type implementation.
+		 * Inner {@link StandardMethod} type implementation.
 		 */
-		private static class StandardMethodImpl implements StandardMethod, AtomicTypeSpecifier {
+		private static class StandardMethodImpl extends TypeBaseClass implements StandardMethod, AtomicTypeSpecifier {
+
+			/**
+			 * Private constructor.
+			 */
+			private StandardMethodImpl() {
+				super("STANDARD-METHOD", GlobalPackageStruct.COMMON_LISP);
+			}
 
 			@Override
 			public boolean equals(final Object obj) {
@@ -35,6 +45,11 @@ public interface StandardMethod extends Method, StandardObject {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "StandardMethodImpl{}";
 			}
 		}
 	}

@@ -8,7 +8,7 @@ import jcl.types.Function;
 import java.util.List;
 
 /**
- * The {@code FunctionStruct} is the object representation of a Lisp 'function' type.
+ * The {@link FunctionStruct} is the object representation of a Lisp 'function' type.
  */
 public abstract class FunctionStruct extends BuiltInClassStruct {
 

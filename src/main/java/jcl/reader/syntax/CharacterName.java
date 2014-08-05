@@ -1,7 +1,7 @@
 package jcl.reader.syntax;
 
 /**
- * The {@code CharacterName} enumeration defines the standard graphic characters that have names for the system.
+ * The {@link CharacterName} enumeration defines the standard graphic characters that have names for the system.
  */
 public enum CharacterName {
 

@@ -1,19 +1,22 @@
 package jcl.types;
 
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
+
 /**
- * A {@code GenericFunction} is a {@code Function} whose behavior depends on the {@code Class}es or identities of the
- * arguments supplied to it. A {@code GenericFunction} object contains a set of {@code Method}s, a lambda list, a
- * {@code MethodCombination} type, and other information. The {@code Method}s define the class-specific behavior and
- * operations of the {@code GenericFunction}; a {@code Method} is said to specialize a {@code GenericFunction}. When
- * invoked, a {@code GenericFunction} executes a subset of its {@code Method}s based on the {@code Class}es or identities
+ * A {@link GenericFunction} is a {@link Function} whose behavior depends on the {@link Class}es or identities of the
+ * arguments supplied to it. A {@link GenericFunction} object contains a set of {@link Method}s, a lambda list, a
+ * {@link MethodCombination} type, and other information. The {@link Method}s define the class-specific behavior and
+ * operations of the {@link GenericFunction}; a {@link Method} is said to specialize a {@link GenericFunction}. When
+ * invoked, a {@link GenericFunction} executes a subset of its {@link Method}s based on the {@link Class}es or identities
  * of its arguments.
- * <p/>
- * A {@code GenericFunction} can be used in the same ways that an ordinary {@code Function} can be used.
- * <p/>
- * {@code GenericFunction} -> {@code Function} -> {@code T}
+ * <p>
+ * A {@link GenericFunction} can be used in the same ways that an ordinary {@link Function} can be used.
+ * <p>
+ * {@link GenericFunction} -> {@link Function} -> {@link T}
  */
 public interface GenericFunction extends Function {
 
@@ -30,9 +33,16 @@ public interface GenericFunction extends Function {
 		}
 
 		/**
-		 * Inner {@code GenericFunction} type implementation.
+		 * Inner {@link GenericFunction} type implementation.
 		 */
-		private static class GenericFunctionImpl implements GenericFunction, AtomicTypeSpecifier {
+		private static class GenericFunctionImpl extends TypeBaseClass implements GenericFunction, AtomicTypeSpecifier {
+
+			/**
+			 * Private constructor.
+			 */
+			private GenericFunctionImpl() {
+				super("GENERIC-FUNCTION", GlobalPackageStruct.COMMON_LISP);
+			}
 
 			@Override
 			public boolean equals(final Object obj) {
@@ -42,6 +52,11 @@ public interface GenericFunction extends Function {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "GenericFunctionImpl{}";
 			}
 		}
 	}

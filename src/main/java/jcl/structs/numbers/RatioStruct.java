@@ -18,7 +18,7 @@ public class RatioStruct extends RationalStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param bigFraction the value of the {@code RatioStruct}
+	 * @param bigFraction the value of the RatioStruct
 	 */
 	public RatioStruct(final BigFraction bigFraction) {
 		super(Ratio.INSTANCE, null, null);
@@ -28,8 +28,8 @@ public class RatioStruct extends RationalStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param numerator   the numerator value of the {@code RatioStruct}
-	 * @param denominator the denominator value of the {@code RatioStruct}
+	 * @param numerator   the numerator value of the RatioStruct
+	 * @param denominator the denominator value of the RatioStruct
 	 */
 	public RatioStruct(final BigInteger numerator, final BigInteger denominator) {
 		super(Ratio.INSTANCE, null, null);
@@ -37,9 +37,9 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	/**
-	 * This method returns the value of the {@code RatioStruct}.
+	 * This method returns the value of the RatioStruct.
 	 *
-	 * @return value of the {@code RatioStruct}
+	 * @return value of the RatioStruct
 	 */
 	public BigFraction getBigFraction() {
 		return bigFraction;

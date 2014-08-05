@@ -1,14 +1,17 @@
 package jcl.types;
 
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
+
 /**
- * The type {@code StandardChar} is fixed set of 96 characters.
- * <p/>
+ * The type {@link StandardChar} is fixed set of 96 characters.
+ * <p>
  * Any character that is not simple is not a standard character.
- * <p/>
- * {@code StandardChar} -> {@code BaseChar} -> {@code Character} -> {@code T}
+ * <p>
+ * {@link StandardChar} -> {@link BaseChar} -> {@link Character} -> {@link T}
  */
 public interface StandardChar extends BaseChar {
 
@@ -25,9 +28,16 @@ public interface StandardChar extends BaseChar {
 		}
 
 		/**
-		 * Inner {@code StandardChar} type implementation.
+		 * Inner {@link StandardChar} type implementation.
 		 */
-		private static class StandardCharImpl implements StandardChar, AtomicTypeSpecifier {
+		private static class StandardCharImpl extends TypeBaseClass implements StandardChar, AtomicTypeSpecifier {
+
+			/**
+			 * Private constructor.
+			 */
+			private StandardCharImpl() {
+				super("STANDARD-CHAR", GlobalPackageStruct.COMMON_LISP);
+			}
 
 			@Override
 			public boolean equals(final Object obj) {
@@ -37,6 +47,11 @@ public interface StandardChar extends BaseChar {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "StandardCharImpl{}";
 			}
 		}
 	}

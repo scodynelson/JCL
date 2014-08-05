@@ -1,14 +1,16 @@
 package jcl.typespecifiers;
 
 import jcl.LispType;
+import jcl.structs.packages.GlobalPackageStruct;
+import jcl.types.TypeBaseClass;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * An {@code EQLTypeSpecifier} represents the type of all x for which (eql object x) is true. The argument object is required.
+ * An {@link EQLTypeSpecifier} represents the type of all x for which (eql object x) is true. The argument object is required.
  * The object can be *, but if so it denotes itself (the symbol *) and does not represent an unspecified value. The symbol
  * eql is not valid as an atomic type specifier.
  */
-public class EQLTypeSpecifier implements CompoundTypeSpecifier {
+public class EQLTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecifier {
 
 	private final TypeSpecifier typeSpecifier;
 
@@ -18,6 +20,17 @@ public class EQLTypeSpecifier implements CompoundTypeSpecifier {
 	 * @param typeSpecifier the type specifier to test equality
 	 */
 	public EQLTypeSpecifier(final TypeSpecifier typeSpecifier) {
+		this("T", typeSpecifier); // TODO: Should this be 'T'???
+	}
+
+	/**
+	 * Protected constructor.
+	 *
+	 * @param name          the name of the symbol type
+	 * @param typeSpecifier the type specifier to test equality
+	 */
+	protected EQLTypeSpecifier(final String name, final TypeSpecifier typeSpecifier) {
+		super(name, GlobalPackageStruct.COMMON_LISP);
 		this.typeSpecifier = typeSpecifier;
 	}
 
@@ -41,5 +54,12 @@ public class EQLTypeSpecifier implements CompoundTypeSpecifier {
 		return new HashCodeBuilder()
 				.append(typeSpecifier)
 				.toHashCode();
+	}
+
+	@Override
+	public String toString() {
+		return "EQLTypeSpecifier{"
+				+ "typeSpecifier=" + typeSpecifier
+				+ '}';
 	}
 }

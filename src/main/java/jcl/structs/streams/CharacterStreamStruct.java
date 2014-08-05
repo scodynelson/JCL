@@ -32,8 +32,8 @@ public class CharacterStreamStruct extends NativeStreamStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param inputStream  the {@link java.io.InputStream} to create a {@code CharacterStreamStruct} from
-	 * @param outputStream the {@link java.io.OutputStream} to create a {@code CharacterStreamStruct} from
+	 * @param inputStream  the {@link java.io.InputStream} to create a CharacterStreamStruct from
+	 * @param outputStream the {@link java.io.OutputStream} to create a CharacterStreamStruct from
 	 */
 	public CharacterStreamStruct(final InputStream inputStream, final OutputStream outputStream) {
 		this(false, inputStream, outputStream);
@@ -43,8 +43,8 @@ public class CharacterStreamStruct extends NativeStreamStruct {
 	 * Public constructor.
 	 *
 	 * @param isInteractive whether or not the struct created is 'interactive'
-	 * @param inputStream   the {@link java.io.InputStream} to create a {@code CharacterStreamStruct} from
-	 * @param outputStream  the {@link java.io.OutputStream} to create a {@code CharacterStreamStruct} from
+	 * @param inputStream   the {@link java.io.InputStream} to create a CharacterStreamStruct from
+	 * @param outputStream  the {@link java.io.OutputStream} to create a CharacterStreamStruct from
 	 */
 	public CharacterStreamStruct(final boolean isInteractive, final InputStream inputStream, final OutputStream outputStream) {
 		super(Stream.INSTANCE, isInteractive, Character.INSTANCE);

@@ -1,7 +1,7 @@
 package jcl.structs.conditions.exceptions;
 
 /**
- * The class {@code ReaderErrorException} is a form of {@code Throwable} that
+ * The class {@link ReaderErrorException} is a form of {@link Throwable} that
  * indicates exception conditions within the reader functionality.
  */
 public class ReaderErrorException extends ParseErrorException {

@@ -1,7 +1,7 @@
 package jcl.structs.symbols;
 
 /**
- * The {@code NILStruct} is the object representation of a Lisp 'nil' type.
+ * The {@link NILStruct} is the object representation of a Lisp 'nil' type.
  */
 public final class NILStruct extends BooleanStruct<NILStruct> {
 

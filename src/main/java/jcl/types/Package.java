@@ -1,12 +1,15 @@
 package jcl.types;
 
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
+
 /**
- * A {@code Package} is a namespace that maps symbol names to {@code Symbol}s.
- * <p/>
- * {@code Package} -> {@code T}
+ * A {@link Package} is a namespace that maps symbol names to {@link Symbol}s.
+ * <p>
+ * {@link Package} -> {@link T}
  */
 public interface Package extends T {
 
@@ -23,9 +26,16 @@ public interface Package extends T {
 		}
 
 		/**
-		 * Inner {@code Package} type implementation.
+		 * Inner {@link Package} type implementation.
 		 */
-		private static class PackageImpl implements Package, AtomicTypeSpecifier {
+		private static class PackageImpl extends TypeBaseClass implements Package, AtomicTypeSpecifier {
+
+			/**
+			 * Private constructor.
+			 */
+			private PackageImpl() {
+				super("PACKAGE", GlobalPackageStruct.COMMON_LISP);
+			}
 
 			@Override
 			public boolean equals(final Object obj) {
@@ -35,6 +45,11 @@ public interface Package extends T {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "PackageImpl{}";
 			}
 		}
 	}

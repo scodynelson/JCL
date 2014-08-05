@@ -1,13 +1,16 @@
 package jcl.types;
 
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
+
 /**
- * A {@code BuiltInClass} is a {@code Class} whose instances have restricted capabilities or special representations.
- * {@code BuiltInClass}es can be used as parameter specializers in {@code Methods}.
- * <p/>
- * {@code BuiltInClass} -> {@code Class} -> {@code StandardObject} -> {@code T}
+ * A {@link BuiltInClass} is a {@link Class} whose instances have restricted capabilities or special representations.
+ * {@link BuiltInClass}es can be used as parameter specializers in {@link Method}s.
+ * <p>
+ * {@link BuiltInClass} -> {@link Class} -> {@link StandardObject} -> {@link T}
  */
 public interface BuiltInClass extends Class {
 
@@ -24,9 +27,16 @@ public interface BuiltInClass extends Class {
 		}
 
 		/**
-		 * Inner {@code BuiltInClass} type implementation.
+		 * Inner {@link BuiltInClass} type implementation.
 		 */
-		private static class BuiltInClassImpl implements BuiltInClass, AtomicTypeSpecifier {
+		private static class BuiltInClassImpl extends TypeBaseClass implements BuiltInClass, AtomicTypeSpecifier {
+
+			/**
+			 * Private constructor.
+			 */
+			private BuiltInClassImpl() {
+				super("BUILT-IN-CLASS", GlobalPackageStruct.COMMON_LISP);
+			}
 
 			@Override
 			public boolean equals(final Object obj) {
@@ -36,6 +46,11 @@ public interface BuiltInClass extends Class {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "BuiltInClassImpl{}";
 			}
 		}
 	}

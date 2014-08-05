@@ -1,16 +1,19 @@
 package jcl.types;
 
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
+
 /**
- * A {@code Readtable} maps characters into syntax types for the Lisp reader. A {@code Readtable} also contains associations
+ * A {@link Readtable} maps characters into syntax types for the Lisp reader. A {@link Readtable} also contains associations
  * between macro characters and their reader macro functions, and records information about the case conversion rules to
- * be used by the Lisp reader when parsing {@code Symbol}s.
- * <p/>
- * Each simple {@code Character} must be representable in the {@code Readtable}.
- * <p/>
- * {@code Readtable} -> {@code T}
+ * be used by the Lisp reader when parsing {@link Symbol}s.
+ * <p>
+ * Each simple {@link Character} must be representable in the {@link Readtable}.
+ * <p>
+ * {@link Readtable} -> {@link T}
  */
 public interface Readtable extends T {
 
@@ -27,9 +30,16 @@ public interface Readtable extends T {
 		}
 
 		/**
-		 * Inner {@code Readtable} type implementation.
+		 * Inner {@link Readtable} type implementation.
 		 */
-		private static class ReadtableImpl implements Readtable, AtomicTypeSpecifier {
+		private static class ReadtableImpl extends TypeBaseClass implements Readtable, AtomicTypeSpecifier {
+
+			/**
+			 * Private constructor.
+			 */
+			private ReadtableImpl() {
+				super("READTABLE", GlobalPackageStruct.COMMON_LISP);
+			}
 
 			@Override
 			public boolean equals(final Object obj) {
@@ -39,6 +49,11 @@ public interface Readtable extends T {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "ReadtableImpl{}";
 			}
 		}
 	}

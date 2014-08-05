@@ -1,20 +1,23 @@
 package jcl.types;
 
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
+
 /**
- * A {@code Number} contains objects which represent mathematical numbers. The types {@code Real} and {@code Complex}
- * are disjoint subtypes of {@code Number}.
- * <p/>
+ * A {@link Number} contains objects which represent mathematical numbers. The types {@link Real} and {@link Complex}
+ * are disjoint subtypes of {@link Number}.
+ * <p>
  * Notes:
  * Common Lisp differs from mathematics on some naming issues. In mathematics, the set of real numbers is traditionally
- * described as a subset of the complex numbers, but in Common Lisp, the type {@code Real} and the type {@code Complex}
+ * described as a subset of the complex numbers, but in Common Lisp, the type {@link Real} and the type {@link Complex}
  * are disjoint. The Common Lisp type which includes all mathematical complex numbers is called number. The reasons for
  * these differences include historical precedent, compatibility with most other popular computer languages, and various
  * issues of time and space efficiency.
- * <p/>
- * {@code Number} -> {@code T}
+ * <p>
+ * {@link Number} -> {@link T}
  */
 public interface Number extends T {
 
@@ -31,9 +34,16 @@ public interface Number extends T {
 		}
 
 		/**
-		 * Inner {@code Number} type implementation.
+		 * Inner {@link Number} type implementation.
 		 */
-		private static class NumberImpl implements Number, AtomicTypeSpecifier {
+		private static class NumberImpl extends TypeBaseClass implements Number, AtomicTypeSpecifier {
+
+			/**
+			 * Private constructor.
+			 */
+			private NumberImpl() {
+				super("NUMBER", GlobalPackageStruct.COMMON_LISP);
+			}
 
 			@Override
 			public boolean equals(final Object obj) {
@@ -43,6 +53,11 @@ public interface Number extends T {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "NumberImpl{}";
 			}
 		}
 	}

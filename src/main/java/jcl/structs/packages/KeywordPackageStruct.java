@@ -3,7 +3,7 @@ package jcl.structs.packages;
 import jcl.structs.symbols.KeywordSymbolStruct;
 
 /**
- * The {@code KeywordPackageStruct} is the object representation of a Lisp 'package' type specific for 'keyword' symbols.
+ * The {@link KeywordPackageStruct} is the object representation of a Lisp 'package' type specific for 'keyword' symbols.
  */
 final class KeywordPackageStruct extends PackageStruct {
 

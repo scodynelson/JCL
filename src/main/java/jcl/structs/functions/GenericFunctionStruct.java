@@ -7,7 +7,7 @@ import jcl.LispType;
 import java.util.List;
 
 /**
- * The {@code GenericFunctionStruct} is the object representation of a Lisp 'generic-function' type.
+ * The {@link GenericFunctionStruct} is the object representation of a Lisp 'generic-function' type.
  */
 public abstract class GenericFunctionStruct extends FunctionStruct {
 

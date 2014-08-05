@@ -1,15 +1,18 @@
 package jcl.types;
 
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
+
 /**
- * The type {@code NIL} contains no objects and so is also called the empty type. The type {@code NIL} is a subtype of
- * every type. No object is of type {@code NIL}.
- * <p/>
- * The type containing the object {@code NIL} is the type {@code Null}, not the type {@code NIL}.
- * <p/>
- * {@code NIL}
+ * The type {@link NIL} contains no objects and so is also called the empty type. The type {@link NIL} is a subtype of
+ * every type. No object is of type {@link NIL}.
+ * <p>
+ * The type containing the object {@link NIL} is the type {@link Null}, not the type {@link NIL}.
+ * <p>
+ * {@link NIL}
  */
 public interface NIL extends T { // TODO: this needs to extend ALL types...
 
@@ -26,9 +29,16 @@ public interface NIL extends T { // TODO: this needs to extend ALL types...
 		}
 
 		/**
-		 * Inner {@code NIL} type implementation.
+		 * Inner {@link NIL} type implementation.
 		 */
-		private static class NILImpl implements NIL, AtomicTypeSpecifier {
+		private static class NILImpl extends TypeBaseClass implements NIL, AtomicTypeSpecifier {
+
+			/**
+			 * Private constructor.
+			 */
+			private NILImpl() {
+				super("NIL", GlobalPackageStruct.COMMON_LISP);
+			}
 
 			@Override
 			public boolean equals(final Object obj) {
@@ -38,6 +48,11 @@ public interface NIL extends T { // TODO: this needs to extend ALL types...
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "NILImpl{}";
 			}
 		}
 	}

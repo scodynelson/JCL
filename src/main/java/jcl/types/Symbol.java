@@ -1,57 +1,60 @@
 package jcl.types;
 
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
+
 /**
- * {@code Symbol}s are used for their object identity to name various entities in Common Lisp, including (but not limited to)
- * linguistic entities such as variables and {@code Function}s.
- * <p/>
- * {@code Symbol}s can be collected together into {@code Package}s. A {@code Symbol} is said to be interned in a
- * {@code Package} if it is accessible in that {@code Package}; the same {@code Symbol} can be interned in more than
- * one {@code Package}. If a {@code Symbol} is not interned in any {@code Package}, it is called uninterned.
- * <p/>
- * An interned {@code Symbol} is uniquely identifiable by its name from any {@code Package} in which it is accessible.
- * <p/>
- * {@code Symbol}s have the following attributes:
- * <p/>
+ * {@link Symbol}s are used for their object identity to name various entities in Common Lisp, including (but not limited to)
+ * linguistic entities such as variables and {@link Function}s.
+ * <p>
+ * {@link Symbol}s can be collected together into {@link Package}s. A {@link Symbol} is said to be interned in a
+ * {@link Package} if it is accessible in that {@link Package}; the same {@link Symbol} can be interned in more than
+ * one {@link Package}. If a {@link Symbol} is not interned in any {@link Package}, it is called uninterned.
+ * <p>
+ * An interned {@link Symbol} is uniquely identifiable by its name from any {@link Package} in which it is accessible.
+ * <p>
+ * {@link Symbol}s have the following attributes:
+ * <p>
  * <b>Name</b>
- * <tab>The name of a {@code Symbol} is a {@code String} used to identify the {@code Symbol}.The name is used as part of
- * <tab>the external, printed representation of the {@code Symbol}. A {@code Symbol} may have any {@code Character} in its name.
- * <p/>
+ * <tab>The name of a {@link Symbol} is a {@link String} used to identify the {@link Symbol}.The name is used as part of
+ * <tab>the external, printed representation of the {@link Symbol}. A {@link Symbol} may have any {@link Character} in its name.
+ * <p>
  * <b>Package</b>
- * <tab>The object in this cell is called the home {@code Package} of the {@code Symbol}. If the home {@code Package} is
- * <tab>{@code NIL}, the {@code Symbol} is said to have no home {@code Package}.
- * <p/>
- * <tab>When a {@code Symbol} is first created, it has no home {@code Package}. When it is first interned, the {@code Package}
- * <tab>in which it is initially interned becomes its home {@code Package}.
- * <p/>
- * <tab>If a {@code Symbol} is uninterned from the {@code Package} which is its home {@code Package}, its home {@code Package}
- * <tab>is set to {@code NIL}. Depending on whether there is another {@code Package} in which the {@code Symbol} is interned,
- * <tab>the {@code Symbol} might or might not really be an uninterned {@code Symbol}. A {@code Symbol} with no home {@code Package}
+ * <tab>The object in this cell is called the home {@link Package} of the {@link Symbol}. If the home {@link Package} is
+ * <tab>{@link NIL}, the {@link Symbol} is said to have no home {@link Package}.
+ * <p>
+ * <tab>When a {@link Symbol} is first created, it has no home {@link Package}. When it is first interned, the {@link Package}
+ * <tab>in which it is initially interned becomes its home {@link Package}.
+ * <p>
+ * <tab>If a {@link Symbol} is uninterned from the {@link Package} which is its home {@link Package}, its home {@link Package}
+ * <tab>is set to {@link NIL}. Depending on whether there is another {@link Package} in which the {@link Symbol} is interned,
+ * <tab>the {@link Symbol} might or might not really be an uninterned {@link Symbol}. A {@link Symbol} with no home {@link Package}
  * <tab>is therefore called apparently uninterned.
- * <p/>
+ * <p>
  * <b>Property List</b>
- * <tab>The property {@code List} of a {@code Symbol} provides a mechanism for associating named attributes with that
- * <tab>{@code Symbol}. The operations for adding and removing entries are destructive to the property {@code List}. The
- * <tab>property {@code List} associated with a fresh {@code Symbol} is initially {@code Null}.
- * <p/>
+ * <tab>The property {@link List} of a {@link Symbol} provides a mechanism for associating named attributes with that
+ * <tab>{@link Symbol}. The operations for adding and removing entries are destructive to the property {@link List}. The
+ * <tab>property {@link List} associated with a fresh {@link Symbol} is initially {@link Null}.
+ * <p>
  * <b>Value</b>
- * <tab>If a {@code Symbol} has a value attribute, it is said to be bound. The object contained in the value cell of a
- * <tab>bound {@code Symbol} is the value of the global variable named by that {@code Symbol}.
- * <p/>
+ * <tab>If a {@link Symbol} has a value attribute, it is said to be bound. The object contained in the value cell of a
+ * <tab>bound {@link Symbol} is the value of the global variable named by that {@link Symbol}.
+ * <p>
  * <b>Function</b>
- * <tab>If a {@code Symbol} has a {@code Function} attribute, it is said to be fbound. If the {@code Symbol} is the name
- * <tab>of a {@code Function} in the global environment, the function cell contains the {@code Function}. If the {@code Symbol}
- * <tab>is the name of either a macro in the global environment or a special operator, the {@code Symbol} is fbound.
- * <p/>
- * Operations on a {@code Symbol}'s value cell and function cell are sometimes described in terms of their effect on the
- * {@code Symbol} itself.
- * <p/>
- * {@code Symbol}s are used as identifiers for lexical variables and lexical {@code Function} definitions, but in that role,
+ * <tab>If a {@link Symbol} has a {@link Function} attribute, it is said to be fbound. If the {@link Symbol} is the name
+ * <tab>of a {@link Function} in the global environment, the function cell contains the {@link Function}. If the {@link Symbol}
+ * <tab>is the name of either a macro in the global environment or a special operator, the {@link Symbol} is fbound.
+ * <p>
+ * Operations on a {@link Symbol}'s value cell and function cell are sometimes described in terms of their effect on the
+ * {@link Symbol} itself.
+ * <p>
+ * {@link Symbol}s are used as identifiers for lexical variables and lexical {@link Function} definitions, but in that role,
  * only their object identity is significant.
- * <p/>
- * {@code Symbol} -> {@code T}
+ * <p>
+ * {@link Symbol} -> {@link T}
  */
 public interface Symbol extends T {
 
@@ -68,9 +71,16 @@ public interface Symbol extends T {
 		}
 
 		/**
-		 * Inner {@code Symbol} type implementation.
+		 * Inner {@link Symbol} type implementation.
 		 */
-		private static class SymbolImpl implements Symbol, AtomicTypeSpecifier {
+		private static class SymbolImpl extends TypeBaseClass implements Symbol, AtomicTypeSpecifier {
+
+			/**
+			 * Private constructor.
+			 */
+			private SymbolImpl() {
+				super("SYMBOL", GlobalPackageStruct.COMMON_LISP);
+			}
 
 			@Override
 			public boolean equals(final Object obj) {
@@ -80,6 +90,11 @@ public interface Symbol extends T {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "SymbolImpl{}";
 			}
 		}
 	}

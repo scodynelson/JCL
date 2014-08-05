@@ -8,7 +8,7 @@ import org.testng.annotations.Test;
 import java.util.List;
 
 /**
- * The test class for the {@code ConsStruct} object.
+ * The test class for the {@link ConsStruct} object.
  */
 public class ConsStructTest {
 

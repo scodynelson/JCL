@@ -7,10 +7,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.lang.String;
 
 /**
- * The type {@code Boolean} contains the {@code Symbol}s {@code T} and {@code NIL}, which represent true and false,
+ * The type {@link Boolean} contains the {@link Symbol}s {@link T} and {@link NIL}, which represent true and false,
  * respectively.
  * <p>
- * {@code Boolean} -> {@code Symbol} -> {@code T}
+ * {@link Boolean} -> {@link Symbol} -> {@link T}
  */
 public interface Boolean extends Symbol {
 
@@ -27,7 +27,7 @@ public interface Boolean extends Symbol {
 		}
 
 		/**
-		 * Inner {@code Boolean} type implementation.
+		 * Inner {@link Boolean} type implementation.
 		 */
 		private static class BooleanImpl extends OrTypeSpecifier implements Boolean, AtomicTypeSpecifier {
 
@@ -35,7 +35,7 @@ public interface Boolean extends Symbol {
 			 * Private constructor.
 			 */
 			private BooleanImpl() {
-				super(T.INSTANCE, NIL.INSTANCE);
+				super("BOOLEAN", T.INSTANCE, NIL.INSTANCE);
 			}
 
 			@Override

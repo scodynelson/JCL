@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * The {@code AttributeTable} class represents a lookup table for attribute types matching code points.
+ * The {@link AttributeTable} class represents a lookup table for attribute types matching code points.
  */
 @SuppressWarnings("all")
 public class AttributeTable {

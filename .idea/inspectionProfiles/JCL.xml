@@ -481,7 +481,6 @@
       <option name="ACCESS_JAVADOC_REQUIRED_FOR" value="public" />
       <option name="REQUIRED_TAGS" value="" />
     </inspection_tool>
-    <inspection_tool class="JavaLangImport" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="JavaLangReflect" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="JavaStylePropertiesInvocation" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="JspUnescapedEl" enabled="true" level="WARNING" enabled_by_default="true" />

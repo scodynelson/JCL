@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The {@code SymbolStruct} is the object representation of a Lisp 'symbol' type.
+ * The {@link SymbolStruct} is the object representation of a Lisp 'symbol' type.
  *
  * @param <TYPE> the type of the symbol value
  */

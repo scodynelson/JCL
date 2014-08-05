@@ -19,7 +19,7 @@ public class FloatStruct extends RealStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param bigDecimal the value of the {@code FloatStruct}
+	 * @param bigDecimal the value of the FloatStruct
 	 */
 	public FloatStruct(final BigDecimal bigDecimal) {
 		this(SingleFloat.INSTANCE, bigDecimal);
@@ -29,7 +29,7 @@ public class FloatStruct extends RealStruct {
 	 * Public constructor.
 	 *
 	 * @param floatFormat a {@link Float} that represents the type of {@link Float}
-	 * @param bigDecimal  the value of the {@code FloatStruct}
+	 * @param bigDecimal  the value of the FloatStruct
 	 */
 	public FloatStruct(final Float floatFormat, final BigDecimal bigDecimal) {
 		super(floatFormat, null, null);
@@ -37,9 +37,9 @@ public class FloatStruct extends RealStruct {
 	}
 
 	/**
-	 * This method returns the value of the {@code FloatStruct}.
+	 * This method returns the value of the FloatStruct.
 	 *
-	 * @return value of the {@code FloatStruct}
+	 * @return value of the FloatStruct
 	 */
 	public BigDecimal getBigDecimal() {
 		return bigDecimal;

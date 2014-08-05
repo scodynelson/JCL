@@ -5,7 +5,7 @@ import jcl.LispType;
 import jcl.types.Method;
 
 /**
- * The {@code MethodStruct} is the object representation of a Lisp 'method' type.
+ * The {@link MethodStruct} is the object representation of a Lisp 'method' type.
  */
 public abstract class MethodStruct implements LispStruct {
 

@@ -1,7 +1,7 @@
 package jcl.syntax;
 
 /**
- * The {@code CharacterConstants} interface defines the standard character constants for the system.
+ * The {@link CharacterConstants} interface defines the standard character constants for the system.
  */
 public interface CharacterConstants {
 

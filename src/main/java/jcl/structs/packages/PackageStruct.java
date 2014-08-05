@@ -15,7 +15,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * The {@code PackageStruct} is the object representation of a Lisp 'package' type.
+ * The {@link PackageStruct} is the object representation of a Lisp 'package' type.
  */
 public class PackageStruct extends BuiltInClassStruct {
 
@@ -301,7 +301,7 @@ public class PackageStruct extends BuiltInClassStruct {
 
 	/**
 	 * This method exports the provided symbols and puts them into the externalSymbols map. All found symbols are exported
-	 * and those not found are stored for throwing in a {@code PackageErrorException}.
+	 * and those not found are stored for throwing in a {@link PackageErrorException}.
 	 *
 	 * @param symbols the symbols to export
 	 */
@@ -345,7 +345,7 @@ public class PackageStruct extends BuiltInClassStruct {
 
 	/**
 	 * This method un-exports the provided symbols and removes them from the externalSymbols map. All found symbols are
-	 * un-exported and those not found are stored for throwing in a {@code PackageErrorException}.
+	 * un-exported and those not found are stored for throwing in a {@link PackageErrorException}.
 	 *
 	 * @param symbols the symbols to un-export
 	 */

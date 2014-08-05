@@ -6,7 +6,7 @@ import jcl.types.StandardGenericFunction;
 import java.util.List;
 
 /**
- * The {@code StandardGenericFunctionStruct} is the object representation of a Lisp 'standard-generic-function' type.
+ * The {@link StandardGenericFunctionStruct} is the object representation of a Lisp 'standard-generic-function' type.
  */
 public abstract class StandardGenericFunctionStruct extends GenericFunctionStruct {
 

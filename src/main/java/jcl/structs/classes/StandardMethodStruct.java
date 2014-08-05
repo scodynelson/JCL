@@ -4,7 +4,7 @@ import jcl.LispType;
 import jcl.types.StandardMethod;
 
 /**
- * The {@code StandardMethodStruct} is the object representation of a Lisp 'standard-method' type.
+ * The {@link StandardMethodStruct} is the object representation of a Lisp 'standard-method' type.
  */
 public abstract class StandardMethodStruct extends MethodStruct {
 	// TODO: Also extends StandardObjectStruct...

@@ -17,7 +17,7 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 	/**
 	 * Public constructor.
 	 *
-	 * @param outputStreams the {@link OutputStream}s to create a {@code BroadcastStreamStruct} from
+	 * @param outputStreams the {@link OutputStream}s to create a BroadcastStreamStruct from
 	 */
 	public BroadcastStreamStruct(final LinkedList<OutputStream> outputStreams) {
 		this(false, outputStreams);
@@ -27,7 +27,7 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 	 * Public constructor.
 	 *
 	 * @param isInteractive whether or not the struct created is 'interactive'
-	 * @param outputStreams the {@link OutputStream}s to create a {@code BroadcastStreamStruct} from
+	 * @param outputStreams the {@link OutputStream}s to create a BroadcastStreamStruct from
 	 */
 	public BroadcastStreamStruct(final boolean isInteractive, final LinkedList<OutputStream> outputStreams) {
 		super(BroadcastStream.INSTANCE, null, null, isInteractive, getElementType(outputStreams));
@@ -37,7 +37,7 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 	/**
 	 * This private method is used to retrieve the element type for object construction.
 	 *
-	 * @param outputStreams the {@link OutputStream}s to create a {@code BroadcastStreamStruct} from
+	 * @param outputStreams the {@link OutputStream}s to create a BroadcastStreamStruct from
 	 * @return the element type for object construction
 	 */
 	private static LispType getElementType(final LinkedList<OutputStream> outputStreams) {
@@ -50,7 +50,7 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 	/**
 	 * This private method is used to retrieve the element type for object construction.
 	 *
-	 * @param outputStreams the {@link OutputStream}s to create a {@code BroadcastStreamStruct} from
+	 * @param outputStreams the {@link OutputStream}s to create a BroadcastStreamStruct from
 	 * @return the element type for object construction
 	 */
 	private static LispType getElementType2(final LinkedList<OutputStream> outputStreams) {

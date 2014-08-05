@@ -18,8 +18,8 @@ abstract class DualStreamStruct extends StreamStruct implements InputStream, Out
 	 *
 	 * @param type          the type of the stream object
 	 * @param isInteractive whether or not the struct created is 'interactive'
-	 * @param inputStream   the {@link InputStream} to create a {@code DualStreamStruct} from
-	 * @param outputStream  the {@link OutputStream} to create a {@code DualStreamStruct} from
+	 * @param inputStream   the {@link InputStream} to create a DualStreamStruct from
+	 * @param outputStream  the {@link OutputStream} to create a DualStreamStruct from
 	 */
 	protected DualStreamStruct(final Stream type,
 	                           final boolean isInteractive, final InputStream inputStream, final OutputStream outputStream) {
@@ -31,8 +31,8 @@ abstract class DualStreamStruct extends StreamStruct implements InputStream, Out
 	/**
 	 * This method is used to retrieve the element type for object construction.
 	 *
-	 * @param inputStream  the {@link InputStream} to create a {@code DualStreamStruct} from
-	 * @param outputStream the {@link OutputStream} to create a {@code DualStreamStruct} from
+	 * @param inputStream  the {@link InputStream} to create a DualStreamStruct from
+	 * @param outputStream the {@link OutputStream} to create a DualStreamStruct from
 	 * @return the element type for object construction
 	 */
 	private static LispType getElementType(final InputStream inputStream, final OutputStream outputStream) {

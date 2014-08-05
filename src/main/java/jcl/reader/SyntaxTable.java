@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * The {@code SyntaxTable} class represents a lookup table for syntax types matching code points.
+ * The {@link SyntaxTable} class represents a lookup table for syntax types matching code points.
  */
 @SuppressWarnings("all")
 public class SyntaxTable {

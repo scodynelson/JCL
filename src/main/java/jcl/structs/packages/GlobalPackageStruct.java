@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * The {@code GlobalPackageStruct} is the global location for system defined packages.
+ * The {@link GlobalPackageStruct} is the global location for system defined packages.
  */
 public interface GlobalPackageStruct {
 

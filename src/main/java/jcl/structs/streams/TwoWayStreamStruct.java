@@ -14,8 +14,8 @@ public class TwoWayStreamStruct extends DualStreamStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param inputStream  the {@link InputStream} to create a {@code TwoWayStreamStruct} from
-	 * @param outputStream the {@link OutputStream} to create a {@code TwoWayStreamStruct} from
+	 * @param inputStream  the {@link InputStream} to create a TwoWayStreamStruct from
+	 * @param outputStream the {@link OutputStream} to create a TwoWayStreamStruct from
 	 */
 	public TwoWayStreamStruct(final InputStream inputStream, final OutputStream outputStream) {
 		this(false, inputStream, outputStream);
@@ -25,8 +25,8 @@ public class TwoWayStreamStruct extends DualStreamStruct {
 	 * Public constructor.
 	 *
 	 * @param isInteractive whether or not the struct created is 'interactive'
-	 * @param inputStream   the {@link InputStream} to create a {@code TwoWayStreamStruct} from
-	 * @param outputStream  the {@link OutputStream} to create a {@code TwoWayStreamStruct} from
+	 * @param inputStream   the {@link InputStream} to create a TwoWayStreamStruct from
+	 * @param outputStream  the {@link OutputStream} to create a TwoWayStreamStruct from
 	 */
 	public TwoWayStreamStruct(final boolean isInteractive, final InputStream inputStream, final OutputStream outputStream) {
 		super(TwoWayStream.INSTANCE, isInteractive, inputStream, outputStream);

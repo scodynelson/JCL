@@ -1,12 +1,15 @@
 package jcl.types;
 
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
+
 /**
- * The class {@code StandardGenericFunction} is the default {@code Class} of {@code GenericFunction}s.
- * <p/>
- * {@code StandardGenericFunction} -> {@code GenericFunction} -> {@code Function} -> {@code T}
+ * The class {@link StandardGenericFunction} is the default {@link Class} of {@link GenericFunction}s.
+ * <p>
+ * {@link StandardGenericFunction} -> {@link GenericFunction} -> {@link Function} -> {@link T}
  */
 public interface StandardGenericFunction extends GenericFunction {
 
@@ -23,9 +26,16 @@ public interface StandardGenericFunction extends GenericFunction {
 		}
 
 		/**
-		 * Inner {@code StandardGenericFunction} type implementation.
+		 * Inner {@link StandardGenericFunction} type implementation.
 		 */
-		private static class StandardGenericFunctionImpl implements StandardGenericFunction, AtomicTypeSpecifier {
+		private static class StandardGenericFunctionImpl extends TypeBaseClass implements StandardGenericFunction, AtomicTypeSpecifier {
+
+			/**
+			 * Private constructor.
+			 */
+			private StandardGenericFunctionImpl() {
+				super("STANDARD-GENERIC-FUNCTION", GlobalPackageStruct.COMMON_LISP);
+			}
 
 			@Override
 			public boolean equals(final Object obj) {
@@ -35,6 +45,11 @@ public interface StandardGenericFunction extends GenericFunction {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "StandardGenericFunctionImpl{}";
 			}
 		}
 	}

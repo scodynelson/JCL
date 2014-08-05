@@ -21,7 +21,7 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 	/**
 	 * Public constructor.
 	 *
-	 * @param inputString the input to create a {@code StringInputStreamStruct} from
+	 * @param inputString the input to create a StringInputStreamStruct from
 	 */
 	public StringInputStreamStruct(final String inputString) {
 		this(false, inputString);
@@ -31,7 +31,7 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 	 * Public constructor.
 	 *
 	 * @param isInteractive whether or not the struct created is 'interactive'
-	 * @param inputString   the input to create a {@code StringInputStreamStruct} from
+	 * @param inputString   the input to create a StringInputStreamStruct from
 	 */
 	public StringInputStreamStruct(final boolean isInteractive, final String inputString) {
 		super(StringStream.INSTANCE, null, null, isInteractive, BaseChar.INSTANCE);

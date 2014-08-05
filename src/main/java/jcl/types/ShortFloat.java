@@ -1,5 +1,6 @@
 package jcl.types;
 
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.IntervalDesignator;
@@ -9,9 +10,9 @@ import java.lang.String;
 import java.math.BigDecimal;
 
 /**
- * A {@code ShortFloat} is a {@code Float} type with a minimum of 13 precision bits and 5 exponent bits.
- * <p/>
- * {@code ShortFloat} -> {@code Float} -> {@code Real} -> {@code Number} -> {@code T}
+ * A {@link ShortFloat} is a {@link Float} type with a minimum of 13 precision bits and 5 exponent bits.
+ * <p>
+ * {@link ShortFloat} -> {@link Float} -> {@link Real} -> {@link Number} -> {@link T}
  */
 public interface ShortFloat extends Float {
 
@@ -28,34 +29,34 @@ public interface ShortFloat extends Float {
 		}
 
 		/**
-		 * Gets instance of compound {@code ShortFloat} type.
+		 * Gets instance of compound {@link ShortFloat} type.
 		 *
-		 * @param lowerBound the lower bound that this {@code ShortFloat} type includes
-		 * @param upperBound the upper bound that this {@code ShortFloat} type includes
-		 * @return the newly created compound {@code ShortFloat} type
+		 * @param lowerBound the lower bound that this {@link ShortFloat} type includes
+		 * @param upperBound the upper bound that this {@link ShortFloat} type includes
+		 * @return the newly created compound {@link ShortFloat} type
 		 */
 		public static ShortFloat getInstance(final BigDecimal lowerBound, final BigDecimal upperBound) {
 			return ShortFloatImpl.getInstance(lowerBound, true, upperBound, true);
 		}
 
 		/**
-		 * Gets instance of compound {@code ShortFloat} type.
+		 * Gets instance of compound {@link ShortFloat} type.
 		 *
-		 * @param lowerBound     the lower bound that this {@code ShortFloat} type includes
+		 * @param lowerBound     the lower bound that this {@link ShortFloat} type includes
 		 * @param lowerInclusive whether to include the lower bound in the interval
-		 * @param upperBound     the upper bound that this {@code ShortFloat} type includes
+		 * @param upperBound     the upper bound that this {@link ShortFloat} type includes
 		 * @param upperInclusive whether to include the upper bound in the interval
-		 * @return the newly created compound {@code ShortFloat} type
+		 * @return the newly created compound {@link ShortFloat} type
 		 */
 		public static ShortFloat getInstance(final BigDecimal lowerBound, final boolean lowerInclusive,
-											 final BigDecimal upperBound, final boolean upperInclusive) {
+		                                     final BigDecimal upperBound, final boolean upperInclusive) {
 			return ShortFloatImpl.getInstance(lowerBound, lowerInclusive, upperBound, upperInclusive);
 		}
 
 		/**
-		 * Inner {@code ShortFloat} type implementation.
+		 * Inner {@link ShortFloat} type implementation.
 		 */
-		private static class ShortFloatImpl implements ShortFloat, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static class ShortFloatImpl extends TypeBaseClass implements ShortFloat, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final IntervalDesignator<BigDecimal> intervalDesignator;
 
@@ -63,19 +64,21 @@ public interface ShortFloat extends Float {
 			 * Private constructor.
 			 */
 			private ShortFloatImpl() {
+				super("SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP);
 				intervalDesignator = null;
 			}
 
 			/**
-			 * Private constructor for compound {@code ShortFloat} type.
+			 * Private constructor for compound {@link ShortFloat} type.
 			 *
-			 * @param lowerBound     the lower bound that this {@code ShortFloat} type includes
+			 * @param lowerBound     the lower bound that this {@link ShortFloat} type includes
 			 * @param lowerInclusive whether to include the lower bound in the interval
-			 * @param upperBound     the upper bound that this {@code ShortFloat} type includes
+			 * @param upperBound     the upper bound that this {@link ShortFloat} type includes
 			 * @param upperInclusive whether to include the upper bound in the interval
 			 */
 			private ShortFloatImpl(final BigDecimal lowerBound, final boolean lowerInclusive,
-								   final BigDecimal upperBound, final boolean upperInclusive) {
+			                       final BigDecimal upperBound, final boolean upperInclusive) {
+				super("SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP);
 
 				final BigDecimal realLower = lowerInclusive ? lowerBound : lowerBound.add(BigDecimal.ONE);
 				final BigDecimal realUpper = upperInclusive ? upperBound : upperBound.subtract(BigDecimal.ONE);
@@ -83,16 +86,16 @@ public interface ShortFloat extends Float {
 			}
 
 			/**
-			 * Gets instance of compound {@code ShortFloat} type.
+			 * Gets instance of compound {@link ShortFloat} type.
 			 *
-			 * @param lowerBound     the lower bound that this {@code ShortFloat} type includes
+			 * @param lowerBound     the lower bound that this {@link ShortFloat} type includes
 			 * @param lowerInclusive whether to include the lower bound in the interval
-			 * @param upperBound     the upper bound that this {@code ShortFloat} type includes
+			 * @param upperBound     the upper bound that this {@link ShortFloat} type includes
 			 * @param upperInclusive whether to include the upper bound in the interval
-			 * @return the newly created compound {@code ShortFloat} type
+			 * @return the newly created compound {@link ShortFloat} type
 			 */
 			public static ShortFloat getInstance(final BigDecimal lowerBound, final boolean lowerInclusive,
-												 final BigDecimal upperBound, final boolean upperInclusive) {
+			                                     final BigDecimal upperBound, final boolean upperInclusive) {
 				return new ShortFloatImpl(lowerBound, lowerInclusive, upperBound, upperInclusive);
 			}
 

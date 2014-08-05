@@ -1,6 +1,8 @@
 package jcl.typespecifiers;
 
 import jcl.LispType;
+import jcl.structs.packages.GlobalPackageStruct;
+import jcl.types.TypeBaseClass;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.ArrayList;
@@ -8,20 +10,31 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * An {@code OrTypeSpecifier} denotes the set of all objects of the type determined by the union of the typespecs.
+ * An {@link OrTypeSpecifier} denotes the set of all objects of the type determined by the union of the typespecs.
  * The type specifiers (or) and nil are equivalent. The symbol or is not valid as a type specifier; and, specifically,
  * it is not an abbreviation for (or).
  */
-public class OrTypeSpecifier implements CompoundTypeSpecifier {
+public class OrTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecifier {
 
 	private final List<LispType> types;
 
 	/**
-	 * Constructs a new {@code OrTypeSpecifier} that matches the provided types by 'or' logic.
+	 * Constructs a new OrTypeSpecifier that matches the provided types by 'or' logic.
 	 *
-	 * @param types an array of {@code LispType}s
+	 * @param types an array of {@link LispType}s
 	 */
 	public OrTypeSpecifier(final LispType... types) {
+		this("T", types); // TODO: Should this be 'T'???
+	}
+
+	/**
+	 * Constructs a new OrTypeSpecifier that matches the provided types by 'or' logic.
+	 *
+	 * @param name  the name of the symbol type
+	 * @param types an array of {@link LispType}s
+	 */
+	protected OrTypeSpecifier(final String name, final LispType... types) {
+		super(name, GlobalPackageStruct.COMMON_LISP);
 		this.types = new ArrayList<>(Arrays.asList(types));
 	}
 

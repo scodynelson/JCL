@@ -1,21 +1,24 @@
 package jcl.types;
 
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
+
 /**
- * The type {@code BaseChar} is defined as the upgraded array element type of {@code StandardChar}.
- * <p/>
+ * The type {@link BaseChar} is defined as the upgraded array element type of {@link StandardChar}.
+ * <p>
  * Base characters are distinguished in the following respects:
- * 1. The type {@code StandardChar} is a subrepertoire of the type {@code BaseChar}.
+ * 1. The type {@link StandardChar} is a subrepertoire of the type {@link BaseChar}.
  * 2. The selection of base characters that are not standard characters is implementation defined.
- * 3. Only objects of the type {@code BaseChar} can be elements of a base string.
- * 4. No upper bound is specified for the number of characters in the {@code BaseChar} repertoire. The lower bound
+ * 3. Only objects of the type {@link BaseChar} can be elements of a base string.
+ * 4. No upper bound is specified for the number of characters in the {@link BaseChar} repertoire. The lower bound
  * is 96, the number of standard characters.
- * <p/>
- * The type {@code StandardChar} is a subtype of type {@code BaseChar}.
- * <p/>
- * {@code BaseChar} -> {@code Character} -> {@code T}
+ * <p>
+ * The type {@link StandardChar} is a subtype of type {@link BaseChar}.
+ * <p>
+ * {@link BaseChar} -> {@link Character} -> {@link T}
  */
 public interface BaseChar extends Character {
 
@@ -32,9 +35,16 @@ public interface BaseChar extends Character {
 		}
 
 		/**
-		 * Inner {@code BaseChar} type implementation.
+		 * Inner {@link BaseChar} type implementation.
 		 */
-		private static class BaseCharImpl implements BaseChar, AtomicTypeSpecifier {
+		private static class BaseCharImpl extends TypeBaseClass implements BaseChar, AtomicTypeSpecifier {
+
+			/**
+			 * Private constructor.
+			 */
+			private BaseCharImpl() {
+				super("BASE-CHAR", GlobalPackageStruct.COMMON_LISP);
+			}
 
 			@Override
 			public boolean equals(final Object obj) {
@@ -44,6 +54,11 @@ public interface BaseChar extends Character {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "BaseCharImpl{}";
 			}
 		}
 	}

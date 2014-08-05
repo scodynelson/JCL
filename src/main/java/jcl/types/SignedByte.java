@@ -9,14 +9,14 @@ import java.lang.String;
 import java.math.BigInteger;
 
 /**
- * The atomic type specifier {@code SignedByte} denotes the same type as is denoted by the type specifier {@code Integer};
+ * The atomic type specifier {@link SignedByte} denotes the same type as is denoted by the type specifier {@link Integer};
  * however, the list forms of these two type specifiers have different semantics.
  * <p>
- * This denotes the set of {@code Integer}s that can be represented in two's-complement form in a byte of s bits. This is
- * equivalent to (integer -2^s-1 2^s-1-1). The type {@code SignedByte} or the type (signed-byte *) is the same as the type
- * {@code Integer}.
+ * This denotes the set of {@link Integer}s that can be represented in two's-complement form in a byte of s bits. This is
+ * equivalent to (integer -2^s-1 2^s-1-1). The type {@link SignedByte} or the type (signed-byte *) is the same as the type
+ * {@link Integer}.
  * <p>
- * {@code SignedByte} -> {@code Integer} -> {@code Rational} -> {@code Real} -> {@code Number} -> {@code T}
+ * {@link SignedByte} -> {@link Integer} -> {@link Rational} -> {@link Real} -> {@link Number} -> {@link T}
  */
 public interface SignedByte extends Integer {
 
@@ -33,17 +33,17 @@ public interface SignedByte extends Integer {
 		}
 
 		/**
-		 * Gets instance of compound {@code SignedByte} type.
+		 * Gets instance of compound {@link SignedByte} type.
 		 *
 		 * @param bits the bits that comprise the byte value
-		 * @return the newly created compound {@code SignedByte} type
+		 * @return the newly created compound {@link SignedByte} type
 		 */
 		public static SignedByte getInstance(final BigInteger bits) {
 			return SignedByteImpl.getInstance(bits);
 		}
 
 		/**
-		 * Inner {@code SignedByte} type implementation.
+		 * Inner {@link SignedByte} type implementation.
 		 */
 		private static class SignedByteImpl extends AndTypeSpecifier implements SignedByte, AtomicTypeSpecifier {
 
@@ -55,19 +55,19 @@ public interface SignedByte extends Integer {
 			}
 
 			/**
-			 * Private constructor for compound {@code SignedByte} type.
+			 * Private constructor for compound {@link SignedByte} type.
 			 *
 			 * @param bits the bits that comprise the byte value
 			 */
 			private SignedByteImpl(final BigInteger bits) {
-				super(getSuper(bits));
+				super("SIGNED-BYTE", getSuper(bits));
 			}
 
 			/**
-			 * This method gets the {@code Integer} supertype for creating a {@code SignedByte}.
+			 * This method gets the {@link Integer} supertype for creating a {@link SignedByte}.
 			 *
 			 * @param bits the bits that comprise the byte value
-			 * @return the {@code Integer} supertype
+			 * @return the {@link Integer} supertype
 			 */
 			private static Integer getSuper(final BigInteger bits) {
 				if (bits != null) {
@@ -79,10 +79,10 @@ public interface SignedByte extends Integer {
 			}
 
 			/**
-			 * Gets instance of compound {@code SignedByte} type.
+			 * Gets instance of compound {@link SignedByte} type.
 			 *
 			 * @param bits the bits that comprise the byte value
-			 * @return the newly created compound {@code SignedByte} type
+			 * @return the newly created compound {@link SignedByte} type
 			 */
 			public static SignedByte getInstance(final BigInteger bits) {
 				return new SignedByteImpl(bits);

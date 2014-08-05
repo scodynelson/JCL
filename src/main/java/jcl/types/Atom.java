@@ -6,9 +6,9 @@ import jcl.typespecifiers.NotTypeSpecifier;
 import java.lang.String;
 
 /**
- * An {@code Atom} is a type equivalent to (not cons).
+ * An {@link Atom} is a type equivalent to (not cons).
  * <p>
- * {@code Atom} -> {@code T}
+ * {@link Atom} -> {@link T}
  */
 public interface Atom extends T {
 
@@ -25,7 +25,7 @@ public interface Atom extends T {
 		}
 
 		/**
-		 * Inner {@code Atom} type implementation.
+		 * Inner {@link Atom} type implementation.
 		 */
 		private static class AtomImpl extends NotTypeSpecifier implements Atom, AtomicTypeSpecifier {
 
@@ -33,7 +33,7 @@ public interface Atom extends T {
 			 * Private constructor.
 			 */
 			private AtomImpl() {
-				super(Cons.INSTANCE);
+				super("ATOM", Cons.INSTANCE);
 			}
 
 			@Override

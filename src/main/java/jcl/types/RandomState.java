@@ -1,12 +1,15 @@
 package jcl.types;
 
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
+
 /**
- * A {@code RandomState} object contains state information used by the pseudo-random number generator.
- * <p/>
- * {@code RandomState} -> {@code T}
+ * A {@link RandomState} object contains state information used by the pseudo-random number generator.
+ * <p>
+ * {@link RandomState} -> {@link T}
  */
 public interface RandomState extends T {
 
@@ -23,9 +26,16 @@ public interface RandomState extends T {
 		}
 
 		/**
-		 * Inner {@code RandomState} type implementation.
+		 * Inner {@link RandomState} type implementation.
 		 */
-		private static class RandomStateImpl implements RandomState, AtomicTypeSpecifier {
+		private static class RandomStateImpl extends TypeBaseClass implements RandomState, AtomicTypeSpecifier {
+
+			/**
+			 * Private constructor.
+			 */
+			private RandomStateImpl() {
+				super("RANDOM-STATE", GlobalPackageStruct.COMMON_LISP);
+			}
 
 			@Override
 			public boolean equals(final Object obj) {
@@ -35,6 +45,11 @@ public interface RandomState extends T {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "RandomStateImpl{}";
 			}
 		}
 	}

@@ -163,11 +163,11 @@ public class HashTableStruct extends BuiltInClassStruct {
 		}
 
 		/**
-		 * Gets instance of {@code KeyWrapper} object.
+		 * Gets instance of KeyWrapper object.
 		 *
 		 * @param key     the key to wrap
 		 * @param equator the equator function used to test equality of keys
-		 * @return the newly created {@code KeyWrapper} object
+		 * @return the newly created KeyWrapper object
 		 */
 		public static KeyWrapper getInstance(final LispStruct key, final Equator<LispStruct> equator) {
 			return new KeyWrapper(key, equator);

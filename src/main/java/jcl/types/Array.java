@@ -1,6 +1,7 @@
 package jcl.types;
 
 import jcl.LispType;
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.DimensionsDesignator;
@@ -11,14 +12,14 @@ import java.lang.String;
 import java.util.List;
 
 /**
- * An {@code Array} contains objects arranged according to a Cartesian coordinate system. An {@code Array} provides mappings
- * from a set of fixnums {i0,i1,...,ir-1} to corresponding elements of the {@code Array}, where 0 <=ij < dj, r is the rank
- * of the {@code Array}, and dj is the size of dimension j of the {@code Array}.
- * <p/>
- * When an {@code Array} is created, the program requesting its creation may declare that all elements are of a particular
+ * An {@link Array} contains objects arranged according to a Cartesian coordinate system. An {@link Array} provides mappings
+ * from a set of fixnums {i0,i1,...,ir-1} to corresponding elements of the {@link Array}, where 0 <=ij < dj, r is the rank
+ * of the {@link Array}, and dj is the size of dimension j of the {@link Array}.
+ * <p>
+ * When an {@link Array} is created, the program requesting its creation may declare that all elements are of a particular
  * type, called the expressed array element type.
- * <p/>
- * {@code Array} -> {@code T}
+ * <p>
+ * {@link Array} -> {@link T}
  */
 public interface Array extends T {
 
@@ -49,20 +50,20 @@ public interface Array extends T {
 		}
 
 		/**
-		 * Gets instance of compound {@code Array} type.
+		 * Gets instance of compound {@link Array} type.
 		 *
-		 * @param dimensions  the dimensions of the {@code Array}
-		 * @param elementType the types of elements within the {@code Array}
-		 * @return the newly created compound {@code Array} type
+		 * @param dimensions  the dimensions of the {@link Array}
+		 * @param elementType the types of elements within the {@link Array}
+		 * @return the newly created compound {@link Array} type
 		 */
 		public static Array getInstance(final List<Integer> dimensions, final LispType elementType) {
 			return ArrayImpl.getInstance(dimensions, elementType);
 		}
 
 		/**
-		 * Inner {@code Array} type implementation.
+		 * Inner {@link Array} type implementation.
 		 */
-		private static class ArrayImpl implements Array, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static class ArrayImpl extends TypeBaseClass implements Array, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final DimensionsDesignator dimensions;
 			private final LispType elementType;
@@ -71,17 +72,17 @@ public interface Array extends T {
 			 * Private constructor.
 			 */
 			private ArrayImpl() {
-				dimensions = null;
-				elementType = null;
+				this(null, null);
 			}
 
 			/**
-			 * Private constructor for compound {@code Array} type.
+			 * Private constructor for compound {@link Array} type.
 			 *
-			 * @param dimensions  the dimensions of the {@code Array}
-			 * @param elementType the types of elements within the {@code Array}
+			 * @param dimensions  the dimensions of the {@link Array}
+			 * @param elementType the types of elements within the {@link Array}
 			 */
 			private ArrayImpl(final List<Integer> dimensions, final LispType elementType) {
+				super("ARRAY", GlobalPackageStruct.COMMON_LISP);
 				this.dimensions = new DimensionsDesignator(dimensions);
 				this.elementType = elementType;
 			}
@@ -97,11 +98,11 @@ public interface Array extends T {
 			}
 
 			/**
-			 * Gets instance of compound {@code Array} type.
+			 * Gets instance of compound {@link Array} type.
 			 *
-			 * @param dimensions  the dimensions of the {@code Array}
-			 * @param elementType the types of elements within the {@code Array}
-			 * @return the newly created compound {@code Array} type
+			 * @param dimensions  the dimensions of the {@link Array}
+			 * @param elementType the types of elements within the {@link Array}
+			 * @return the newly created compound {@link Array} type
 			 */
 			public static Array getInstance(final List<Integer> dimensions, final LispType elementType) {
 				return new ArrayImpl(dimensions, elementType);

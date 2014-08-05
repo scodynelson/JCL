@@ -5,7 +5,7 @@ import jcl.LispType;
 import jcl.types.StandardObject;
 
 /**
- * The {@code StandardObjectStruct} is the object representation of a Lisp 'standard-object' type.
+ * The {@link StandardObjectStruct} is the object representation of a Lisp 'standard-object' type.
  */
 public abstract class StandardObjectStruct implements LispStruct {
 

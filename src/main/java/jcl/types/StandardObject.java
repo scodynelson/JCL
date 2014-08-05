@@ -1,13 +1,16 @@
 package jcl.types;
 
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
+
 /**
- * The {@code StandardObject} is an instance of {@code StandardClass} and is a superclass of every {@code Class} that
- * is an instance of {@code StandardClass} except itself.
- * <p/>
- * {@code StandardObject} -> {@code T}
+ * The {@link StandardObject} is an instance of {@link StandardClass} and is a superclass of every {@link Class} that
+ * is an instance of {@link StandardClass} except itself.
+ * <p>
+ * {@link StandardObject} -> {@link T}
  */
 public interface StandardObject extends T {
 
@@ -24,9 +27,16 @@ public interface StandardObject extends T {
 		}
 
 		/**
-		 * Inner {@code StandardObject} type implementation.
+		 * Inner {@link StandardObject} type implementation.
 		 */
-		private static class StandardObjectImpl implements StandardObject, AtomicTypeSpecifier {
+		private static class StandardObjectImpl extends TypeBaseClass implements StandardObject, AtomicTypeSpecifier {
+
+			/**
+			 * Private constructor.
+			 */
+			private StandardObjectImpl() {
+				super("STANDARD-OBJECT", GlobalPackageStruct.COMMON_LISP);
+			}
 
 			@Override
 			public boolean equals(final Object obj) {
@@ -36,6 +46,11 @@ public interface StandardObject extends T {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "StandardObjectImpl{}";
 			}
 		}
 	}

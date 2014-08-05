@@ -1,14 +1,17 @@
 package jcl.types;
 
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
+
 /**
- * A {@code StringStream} is a stream which reads input from or writes output to an associated {@code String}.
- * <p/>
- * The stream element type of a {@code StringStream} is always a subtype of type {@code Character}.
- * <p/>
- * {@code StringStream} -> {@code Stream} -> {@code T}
+ * A {@link StringStream} is a stream which reads input from or writes output to an associated {@link String}.
+ * <p>
+ * The stream element type of a {@link StringStream} is always a subtype of type {@link Character}.
+ * <p>
+ * {@link StringStream} -> {@link Stream} -> {@link T}
  */
 public interface StringStream extends Stream {
 
@@ -25,9 +28,16 @@ public interface StringStream extends Stream {
 		}
 
 		/**
-		 * Inner {@code StringStream} type implementation.
+		 * Inner {@link StringStream} type implementation.
 		 */
-		private static class StringStreamImpl implements StringStream, AtomicTypeSpecifier {
+		private static class StringStreamImpl extends TypeBaseClass implements StringStream, AtomicTypeSpecifier {
+
+			/**
+			 * Private constructor.
+			 */
+			private StringStreamImpl() {
+				super("STRING-STREAM", GlobalPackageStruct.COMMON_LISP);
+			}
 
 			@Override
 			public boolean equals(final Object obj) {
@@ -37,6 +47,11 @@ public interface StringStream extends Stream {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "StringStreamImpl{}";
 			}
 		}
 	}

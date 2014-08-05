@@ -17,8 +17,8 @@ public class ComplexStruct extends NumberStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param real      a {@link BigInteger} that represents the value of real part of the {@code ComplexStruct}
-	 * @param imaginary a {@link BigInteger} that represents the value of imaginary part {@code ComplexStruct}
+	 * @param real      a {@link BigInteger} that represents the value of real part of the ComplexStruct
+	 * @param imaginary a {@link BigInteger} that represents the value of imaginary part ComplexStruct
 	 */
 	public ComplexStruct(final IntegerStruct real, final IntegerStruct imaginary) {
 		super(Complex.INSTANCE, null, null);
@@ -29,8 +29,8 @@ public class ComplexStruct extends NumberStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param real      a {@link BigInteger} that represents the value of real part of the {@code ComplexStruct}
-	 * @param imaginary a {@link BigDecimal} that represents the value of imaginary part {@code ComplexStruct}
+	 * @param real      a {@link BigInteger} that represents the value of real part of the ComplexStruct
+	 * @param imaginary a {@link BigDecimal} that represents the value of imaginary part ComplexStruct
 	 */
 	public ComplexStruct(final IntegerStruct real, final FloatStruct imaginary) {
 		super(Complex.INSTANCE, null, null);
@@ -43,8 +43,8 @@ public class ComplexStruct extends NumberStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param real      a {@link BigInteger} that represents the value of real part of the {@code ComplexStruct}
-	 * @param imaginary a {@link BigFraction} that represents the value of imaginary part {@code ComplexStruct}
+	 * @param real      a {@link BigInteger} that represents the value of real part of the ComplexStruct
+	 * @param imaginary a {@link BigFraction} that represents the value of imaginary part ComplexStruct
 	 */
 	public ComplexStruct(final IntegerStruct real, final RatioStruct imaginary) {
 		super(Complex.INSTANCE, null, null);
@@ -55,8 +55,8 @@ public class ComplexStruct extends NumberStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param real      a {@link BigDecimal} that represents the value of real part of the {@code ComplexStruct}
-	 * @param imaginary a {@link BigInteger} that represents the value of imaginary part {@code ComplexStruct}
+	 * @param real      a {@link BigDecimal} that represents the value of real part of the ComplexStruct
+	 * @param imaginary a {@link BigInteger} that represents the value of imaginary part ComplexStruct
 	 */
 	public ComplexStruct(final FloatStruct real, final IntegerStruct imaginary) {
 		super(Complex.INSTANCE, null, null);
@@ -69,8 +69,8 @@ public class ComplexStruct extends NumberStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param real      a {@link BigDecimal} that represents the value of real part of the {@code ComplexStruct}
-	 * @param imaginary a {@link BigDecimal} that represents the value of imaginary part {@code ComplexStruct}
+	 * @param real      a {@link BigDecimal} that represents the value of real part of the ComplexStruct
+	 * @param imaginary a {@link BigDecimal} that represents the value of imaginary part ComplexStruct
 	 */
 	public ComplexStruct(final FloatStruct real, final FloatStruct imaginary) {
 		super(Complex.INSTANCE, null, null);
@@ -81,8 +81,8 @@ public class ComplexStruct extends NumberStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param real      a {@link BigDecimal} that represents the value of real part of the {@code ComplexStruct}
-	 * @param imaginary a {@link BigFraction} that represents the value of imaginary part {@code ComplexStruct}
+	 * @param real      a {@link BigDecimal} that represents the value of real part of the ComplexStruct
+	 * @param imaginary a {@link BigFraction} that represents the value of imaginary part ComplexStruct
 	 */
 	public ComplexStruct(final FloatStruct real, final RatioStruct imaginary) {
 		super(Complex.INSTANCE, null, null);
@@ -93,8 +93,8 @@ public class ComplexStruct extends NumberStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param real      a {@link BigFraction} that represents the value of real part of the {@code ComplexStruct}
-	 * @param imaginary a {@link BigInteger} that represents the value of imaginary part {@code ComplexStruct}
+	 * @param real      a {@link BigFraction} that represents the value of real part of the ComplexStruct
+	 * @param imaginary a {@link BigInteger} that represents the value of imaginary part ComplexStruct
 	 */
 	public ComplexStruct(final RatioStruct real, final IntegerStruct imaginary) {
 		super(Complex.INSTANCE, null, null);
@@ -105,8 +105,8 @@ public class ComplexStruct extends NumberStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param real      a {@link BigFraction} that represents the value of real part of the {@code ComplexStruct}
-	 * @param imaginary a {@link BigDecimal} that represents the value of imaginary part {@code ComplexStruct}
+	 * @param real      a {@link BigFraction} that represents the value of real part of the ComplexStruct
+	 * @param imaginary a {@link BigDecimal} that represents the value of imaginary part ComplexStruct
 	 */
 	public ComplexStruct(final RatioStruct real, final FloatStruct imaginary) {
 		super(Complex.INSTANCE, null, null);
@@ -117,8 +117,8 @@ public class ComplexStruct extends NumberStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param real      a {@link BigFraction} that represents the value of real part of the {@code ComplexStruct}
-	 * @param imaginary a {@link BigFraction} that represents the value of imaginary part {@code ComplexStruct}
+	 * @param real      a {@link BigFraction} that represents the value of real part of the ComplexStruct
+	 * @param imaginary a {@link BigFraction} that represents the value of imaginary part ComplexStruct
 	 */
 	public ComplexStruct(final RatioStruct real, final RatioStruct imaginary) {
 		super(Complex.INSTANCE, null, null);

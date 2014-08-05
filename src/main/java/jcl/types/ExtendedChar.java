@@ -1,12 +1,15 @@
 package jcl.types;
 
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
+
 /**
- * The type {@code ExtendedChar} is equivalent to the type (and character (not base-char)).
- * <p/>
- * {@code ExtendedChar} -> {@code Character} -> {@code T}
+ * The type {@link ExtendedChar} is equivalent to the type (and character (not base-char)).
+ * <p>
+ * {@link ExtendedChar} -> {@link Character} -> {@link T}
  */
 public interface ExtendedChar extends Character {
 
@@ -23,9 +26,16 @@ public interface ExtendedChar extends Character {
 		}
 
 		/**
-		 * Inner {@code ExtendedChar} type implementation.
+		 * Inner {@link ExtendedChar} type implementation.
 		 */
-		private static class ExtendedCharImpl implements ExtendedChar, AtomicTypeSpecifier {
+		private static class ExtendedCharImpl extends TypeBaseClass implements ExtendedChar, AtomicTypeSpecifier {
+
+			/**
+			 * Private constructor.
+			 */
+			private ExtendedCharImpl() {
+				super("EXTENDED-CHAR", GlobalPackageStruct.COMMON_LISP);
+			}
 
 			@Override
 			public boolean equals(final Object obj) {
@@ -35,6 +45,11 @@ public interface ExtendedChar extends Character {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "ExtendedCharImpl{}";
 			}
 		}
 	}

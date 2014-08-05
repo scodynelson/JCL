@@ -1,13 +1,16 @@
 package jcl.types;
 
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
+
 /**
- * A {@code Ratio} is a {@code Number} representing the mathematical ratio of two non-zero integers, the numerator and
+ * A {@link Ratio} is a {@link Number} representing the mathematical ratio of two non-zero integers, the numerator and
  * denominator, whose greatest common divisor is one, and of which the denominator is positive and greater than one.
- * <p/>
- * {@code Ratio} -> {@code Rational} -> {@code Real} -> {@code Number} -> {@code T}
+ * <p>
+ * {@link Ratio} -> {@link Rational} -> {@link Real} -> {@link Number} -> {@link T}
  */
 public interface Ratio extends Rational {
 
@@ -24,9 +27,16 @@ public interface Ratio extends Rational {
 		}
 
 		/**
-		 * Inner {@code Ratio} type implementation.
+		 * Inner {@link Ratio} type implementation.
 		 */
-		private static class RatioImpl implements Ratio, AtomicTypeSpecifier {
+		private static class RatioImpl extends TypeBaseClass implements Ratio, AtomicTypeSpecifier {
+
+			/**
+			 * Private constructor.
+			 */
+			private RatioImpl() {
+				super("RATIO", GlobalPackageStruct.COMMON_LISP);
+			}
 
 			@Override
 			public boolean equals(final Object obj) {
@@ -36,6 +46,11 @@ public interface Ratio extends Rational {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "RatioImpl{}";
 			}
 		}
 	}

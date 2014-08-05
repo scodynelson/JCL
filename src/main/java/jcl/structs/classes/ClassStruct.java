@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * The {@code ClassStruct} is the object representation of a Lisp 'class' type.
+ * The {@link ClassStruct} is the object representation of a Lisp 'class' type.
  */
 public abstract class ClassStruct extends StandardObjectStruct {
 

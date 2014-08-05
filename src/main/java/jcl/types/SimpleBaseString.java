@@ -1,6 +1,7 @@
 package jcl.types;
 
 import jcl.LispType;
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.DimensionsDesignator;
@@ -10,9 +11,9 @@ import java.lang.Integer;
 import java.lang.String;
 
 /**
- * The type {@code SimpleBaseString} is equivalent to (simple-array base-char (*)).
- * <p/>
- * {@code SimpleBaseString} -> {@code BaseString} -> {@code SimpleString} -> {@code String} -> {@code Vector} -> {@code SimpleArray} -> {@code Array} -> {@code Sequence} -> {@code T}
+ * The type {@link SimpleBaseString} is equivalent to (simple-array base-char (*)).
+ * <p>
+ * {@link SimpleBaseString} -> {@link BaseString} -> {@link SimpleString} -> {@link String} -> {@link Vector} -> {@link SimpleArray} -> {@link Array} -> {@link Sequence} -> {@link T}
  */
 public interface SimpleBaseString extends BaseString, SimpleString {
 
@@ -29,19 +30,19 @@ public interface SimpleBaseString extends BaseString, SimpleString {
 		}
 
 		/**
-		 * Gets instance of compound {@code SimpleBaseString} type.
+		 * Gets instance of compound {@link SimpleBaseString} type.
 		 *
-		 * @param size the size of the {@code SimpleBaseString}
-		 * @return the newly created compound {@code SimpleBaseString} type
+		 * @param size the size of the {@link SimpleBaseString}
+		 * @return the newly created compound {@link SimpleBaseString} type
 		 */
 		public static SimpleBaseString getInstance(final Integer size) {
 			return SimpleBaseStringImpl.getInstance(size);
 		}
 
 		/**
-		 * Inner {@code SimpleBaseString} type implementation.
+		 * Inner {@link SimpleBaseString} type implementation.
 		 */
-		private static class SimpleBaseStringImpl implements SimpleBaseString, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static class SimpleBaseStringImpl extends TypeBaseClass implements SimpleBaseString, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final DimensionsDesignator size;
 			private static final LispType ELEMENT_TYPE = BaseChar.INSTANCE;
@@ -50,15 +51,16 @@ public interface SimpleBaseString extends BaseString, SimpleString {
 			 * Private constructor.
 			 */
 			private SimpleBaseStringImpl() {
-				size = null;
+				this(null);
 			}
 
 			/**
-			 * Private constructor for compound {@code SimpleBaseString} type.
+			 * Private constructor for compound {@link SimpleBaseString} type.
 			 *
-			 * @param size the size of the {@code SimpleBaseString}
+			 * @param size the size of the {@link SimpleBaseString}
 			 */
 			private SimpleBaseStringImpl(final Integer size) {
+				super("SIMPLE-BASE-STRING", GlobalPackageStruct.COMMON_LISP);
 				this.size = new DimensionsDesignator(size);
 			}
 
@@ -73,10 +75,10 @@ public interface SimpleBaseString extends BaseString, SimpleString {
 			}
 
 			/**
-			 * Gets instance of compound {@code SimpleBaseString} type.
+			 * Gets instance of compound {@link SimpleBaseString} type.
 			 *
-			 * @param size the size of the {@code SimpleBaseString}
-			 * @return the newly created compound {@code SimpleBaseString} type
+			 * @param size the size of the {@link SimpleBaseString}
+			 * @return the newly created compound {@link SimpleBaseString} type
 			 */
 			public static SimpleBaseString getInstance(final Integer size) {
 				return new SimpleBaseStringImpl(size);

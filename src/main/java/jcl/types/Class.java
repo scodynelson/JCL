@@ -1,14 +1,17 @@
 package jcl.types;
 
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.String;
+
 /**
- * The type {@code Class} represents objects that determine the structure and behavior of their instances. Associated
- * with an object of type {@code Class} is information describing its place in the directed acyclic graph of classes,
+ * The type {@link Class} represents objects that determine the structure and behavior of their instances. Associated
+ * with an object of type {@link Class} is information describing its place in the directed acyclic graph of classes,
  * its slots, and its options.
- * <p/>
- * {@code Class} -> {@code StandardObject} -> {@code T}
+ * <p>
+ * {@link Class} -> {@link StandardObject} -> {@link T}
  */
 public interface Class extends StandardObject {
 
@@ -25,9 +28,16 @@ public interface Class extends StandardObject {
 		}
 
 		/**
-		 * Inner {@code Class} type implementation.
+		 * Inner {@link Class} type implementation.
 		 */
-		private static class ClassImpl implements Class, AtomicTypeSpecifier {
+		private static class ClassImpl extends TypeBaseClass implements Class, AtomicTypeSpecifier {
+
+			/**
+			 * Private constructor.
+			 */
+			private ClassImpl() {
+				super("CLASS", GlobalPackageStruct.COMMON_LISP);
+			}
 
 			@Override
 			public boolean equals(final Object obj) {
@@ -37,6 +47,11 @@ public interface Class extends StandardObject {
 			@Override
 			public int hashCode() {
 				return new HashCodeBuilder().toHashCode();
+			}
+
+			@Override
+			public String toString() {
+				return "ClassImpl{}";
 			}
 		}
 	}

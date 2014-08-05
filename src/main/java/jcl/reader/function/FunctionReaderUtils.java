@@ -1,9 +1,9 @@
 package jcl.reader.function;
 
 import jcl.reader.impl.Reader;
-import jcl.syntax.AttributeType;
-import jcl.syntax.SyntaxType;
-import jcl.syntax.reader.ReadResult;
+import jcl.reader.syntax.AttributeType;
+import jcl.reader.syntax.SyntaxType;
+import jcl.reader.syntax.reader.ReadResult;
 
 class FunctionReaderUtils {
 

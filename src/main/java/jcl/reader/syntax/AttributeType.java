@@ -1,4 +1,4 @@
-package jcl.syntax;
+package jcl.reader.syntax;
 
 /**
  * The {@link AttributeType} enumeration defines the different attributes types that will determine how the reader parses

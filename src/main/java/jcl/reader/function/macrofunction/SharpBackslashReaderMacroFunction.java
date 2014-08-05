@@ -3,12 +3,12 @@ package jcl.reader.function.macrofunction;
 import jcl.LispStruct;
 import jcl.reader.function.ExtendedTokenReader;
 import jcl.reader.impl.Reader;
+import jcl.reader.syntax.CharacterConstants;
 import jcl.reader.syntax.CharacterName;
 import jcl.reader.syntax.ReadExtendedToken;
 import jcl.structs.characters.CharacterStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.symbols.Variable;
-import jcl.syntax.CharacterConstants;
 import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigInteger;

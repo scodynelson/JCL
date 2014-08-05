@@ -1,10 +1,10 @@
 package jcl.reader.impl;
 
 import jcl.LispStruct;
+import jcl.reader.syntax.AttributeType;
+import jcl.reader.syntax.SyntaxType;
 import jcl.reader.syntax.TokenBuilder;
-import jcl.syntax.AttributeType;
-import jcl.syntax.SyntaxType;
-import jcl.syntax.reader.ReadResult;
+import jcl.reader.syntax.reader.ReadResult;
 
 /**
  * Step 9 of the Reader Algorithm.

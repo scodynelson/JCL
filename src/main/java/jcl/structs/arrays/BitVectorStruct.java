@@ -80,10 +80,18 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 	public String printStruct() {
 		final boolean printArray = Variable.PRINT_ARRAY.getValue().booleanValue();
 
-		if (!printArray) {
+		final StringBuilder stringBuilder = new StringBuilder();
+
+		if (printArray) {
+			stringBuilder.append("#*");
+
+			for (int i = 0; i < fillPointer; i++) {
+				final IntegerStruct integerStruct = contents.get(i);
+				stringBuilder.append(integerStruct.printStruct());
+			}
+		} else {
 			final String typeClassName = getType().getClass().getName().toUpperCase();
 
-			final StringBuilder stringBuilder = new StringBuilder();
 			stringBuilder.append("#<");
 			stringBuilder.append(typeClassName);
 			stringBuilder.append(' ');
@@ -99,16 +107,6 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 			}
 
 			stringBuilder.append('>');
-
-			return stringBuilder.toString();
-		}
-
-		final StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("#*");
-
-		for (int i = 0; i < fillPointer; i++) {
-			final IntegerStruct integerStruct = contents.get(i);
-			stringBuilder.append(integerStruct.printStruct());
 		}
 
 		return stringBuilder.toString();

@@ -1,5 +1,6 @@
 package jcl.reader.impl;
 
+import jcl.reader.syntax.AttributeType;
 import jcl.reader.syntax.TokenAttribute;
 import jcl.reader.syntax.TokenBuilder;
 import jcl.structs.packages.GlobalPackageStruct;
@@ -8,7 +9,6 @@ import jcl.structs.packages.PackageSymbolStruct;
 import jcl.structs.symbols.KeywordSymbolStruct;
 import jcl.structs.symbols.SymbolStruct;
 import jcl.structs.symbols.Variable;
-import jcl.syntax.AttributeType;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.LinkedList;

@@ -1,14 +1,14 @@
 package jcl.reader.impl;
 
 import jcl.LispStruct;
+import jcl.reader.syntax.AttributeType;
+import jcl.reader.syntax.CaseSpec;
+import jcl.reader.syntax.SyntaxType;
 import jcl.reader.syntax.TokenBuilder;
+import jcl.reader.syntax.reader.ReadResult;
 import jcl.structs.readtables.ReadtableStruct;
 import jcl.structs.streams.InputStream;
 import jcl.structs.symbols.Variable;
-import jcl.syntax.AttributeType;
-import jcl.syntax.CaseSpec;
-import jcl.syntax.SyntaxType;
-import jcl.syntax.reader.ReadResult;
 
 public class Reader {
 

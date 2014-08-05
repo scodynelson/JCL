@@ -2,13 +2,13 @@ package jcl.reader.function.macrofunction;
 
 import jcl.LispStruct;
 import jcl.reader.impl.Reader;
+import jcl.reader.syntax.CharacterConstants;
 import jcl.structs.arrays.ArrayStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.structs.conditions.exceptions.TypeErrorException;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.Variable;
-import jcl.syntax.CharacterConstants;
 
 import java.math.BigInteger;
 import java.util.ArrayList;

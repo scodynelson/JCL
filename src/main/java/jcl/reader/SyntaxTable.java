@@ -1,6 +1,6 @@
 package jcl.reader;
 
-import jcl.syntax.SyntaxType;
+import jcl.reader.syntax.SyntaxType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

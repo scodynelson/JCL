@@ -1,9 +1,9 @@
 package jcl.structs.streams;
 
 import jcl.LispStruct;
+import jcl.reader.syntax.reader.PeekResult;
+import jcl.reader.syntax.reader.ReadResult;
 import jcl.structs.conditions.exceptions.EndOfFileException;
-import jcl.syntax.reader.PeekResult;
-import jcl.syntax.reader.ReadResult;
 
 /**
  * A Utility class for stream structures.

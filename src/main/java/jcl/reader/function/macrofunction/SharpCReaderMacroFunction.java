@@ -2,6 +2,7 @@ package jcl.reader.function.macrofunction;
 
 import jcl.LispStruct;
 import jcl.reader.impl.Reader;
+import jcl.reader.syntax.CharacterConstants;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.numbers.ComplexStruct;
@@ -9,7 +10,6 @@ import jcl.structs.numbers.FloatStruct;
 import jcl.structs.numbers.IntegerStruct;
 import jcl.structs.numbers.RatioStruct;
 import jcl.structs.symbols.Variable;
-import jcl.syntax.CharacterConstants;
 
 import java.math.BigInteger;
 import java.util.List;

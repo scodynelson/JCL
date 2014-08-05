@@ -1,8 +1,8 @@
 package jcl.reader.impl;
 
+import jcl.reader.syntax.AttributeType;
+import jcl.reader.syntax.CaseSpec;
 import jcl.reader.syntax.TokenBuilder;
-import jcl.syntax.AttributeType;
-import jcl.syntax.CaseSpec;
 
 /**
  * Step 7 of the Reader Algorithm.

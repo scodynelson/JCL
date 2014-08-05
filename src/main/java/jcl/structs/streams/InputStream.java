@@ -1,9 +1,9 @@
 package jcl.structs.streams;
 
 import jcl.LispStruct;
-import jcl.syntax.reader.PeekResult;
-import jcl.syntax.reader.PeekType;
-import jcl.syntax.reader.ReadResult;
+import jcl.reader.syntax.reader.PeekResult;
+import jcl.reader.syntax.reader.PeekType;
+import jcl.reader.syntax.reader.ReadResult;
 
 /**
  * The {@link InputStream} is the representation for all Lisp input 'stream' types.

@@ -2,11 +2,11 @@ package jcl.reader.function.macrofunction;
 
 import jcl.LispStruct;
 import jcl.reader.impl.Reader;
+import jcl.reader.syntax.CharacterConstants;
 import jcl.structs.arrays.StringStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.pathnames.PathnameStruct;
 import jcl.structs.symbols.Variable;
-import jcl.syntax.CharacterConstants;
 
 import java.math.BigInteger;
 import java.net.URISyntaxException;

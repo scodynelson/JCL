@@ -1,10 +1,10 @@
 package jcl.structs.streams;
 
 import jcl.LispType;
+import jcl.reader.syntax.reader.PeekResult;
+import jcl.reader.syntax.reader.PeekType;
 import jcl.structs.conditions.exceptions.EndOfFileException;
 import jcl.structs.conditions.exceptions.StreamErrorException;
-import jcl.syntax.reader.PeekResult;
-import jcl.syntax.reader.PeekType;
 import jcl.types.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

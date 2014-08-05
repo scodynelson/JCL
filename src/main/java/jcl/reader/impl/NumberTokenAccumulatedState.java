@@ -1,5 +1,7 @@
 package jcl.reader.impl;
 
+import jcl.reader.syntax.AttributeType;
+import jcl.reader.syntax.CharacterConstants;
 import jcl.reader.syntax.TokenAttribute;
 import jcl.reader.syntax.TokenBuilder;
 import jcl.structs.numbers.FloatStruct;
@@ -7,14 +9,11 @@ import jcl.structs.numbers.IntegerStruct;
 import jcl.structs.numbers.NumberStruct;
 import jcl.structs.numbers.RatioStruct;
 import jcl.structs.symbols.Variable;
-import jcl.syntax.AttributeType;
-import jcl.syntax.CharacterConstants;
 import jcl.types.DoubleFloat;
 import jcl.types.Float;
 import jcl.types.LongFloat;
 import jcl.types.ShortFloat;
 import jcl.types.SingleFloat;
-import jcl.variables.ReadDefaultFloatFormatVariable;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.fraction.BigFraction;
@@ -165,7 +164,7 @@ public class NumberTokenAccumulatedState extends State {
 //				return ReadDefaultFloatFormatVariable.INSTANCE.getValue();
 //			}
 		}
-		return ReadDefaultFloatFormatVariable.INSTANCE.getValue();
+		return Variable.READ_DEFAULT_FLOAT_FORMAT.getValue();
 	}
 
 	/**

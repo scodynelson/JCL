@@ -47,11 +47,8 @@ public class FloatStruct extends RealStruct {
 
 	@Override
 	public String printStruct() {
-		// TODO: do this better???
 		final Float floatFormat = (Float) getType();
-
-		// TODO: Fix *READ-DEFAULT-FLOAT-FORMAT* typing
-		final Float defaultFloatFormat = (Float) Variable.READ_DEFAULT_FLOAT_FORMAT.getValue();
+		final Float defaultFloatFormat = Variable.READ_DEFAULT_FLOAT_FORMAT.getValue();
 
 		String bigDecimalString = bigDecimal.toString();
 		if (!floatFormat.equals(defaultFloatFormat)) {

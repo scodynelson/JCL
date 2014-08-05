@@ -1,10 +1,10 @@
 package jcl.structs.streams;
 
 import jcl.LispStruct;
+import jcl.reader.syntax.reader.PeekResult;
+import jcl.reader.syntax.reader.PeekType;
+import jcl.reader.syntax.reader.ReadResult;
 import jcl.structs.conditions.exceptions.StreamErrorException;
-import jcl.syntax.reader.PeekResult;
-import jcl.syntax.reader.PeekType;
-import jcl.syntax.reader.ReadResult;
 import jcl.types.Character;
 import jcl.types.Stream;
 import org.slf4j.Logger;

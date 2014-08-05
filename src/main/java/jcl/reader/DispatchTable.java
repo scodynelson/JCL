@@ -3,8 +3,8 @@ package jcl.reader;
 import jcl.LispStruct;
 import jcl.reader.function.macrofunction.ReaderMacroFunction;
 import jcl.reader.impl.Reader;
+import jcl.reader.syntax.reader.ReadResult;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
-import jcl.syntax.reader.ReadResult;
 
 import java.math.BigInteger;
 import java.util.Map;

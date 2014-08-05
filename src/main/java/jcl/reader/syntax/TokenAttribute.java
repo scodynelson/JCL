@@ -1,7 +1,5 @@
 package jcl.reader.syntax;
 
-import jcl.syntax.AttributeType;
-
 public class TokenAttribute {
 
 	private final int token;

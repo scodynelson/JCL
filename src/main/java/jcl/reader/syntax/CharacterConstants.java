@@ -1,4 +1,4 @@
-package jcl.syntax;
+package jcl.reader.syntax;
 
 /**
  * The {@link CharacterConstants} interface defines the standard character constants for the system.

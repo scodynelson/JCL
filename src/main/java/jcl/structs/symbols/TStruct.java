@@ -1,9 +1,11 @@
 package jcl.structs.symbols;
 
+import jcl.types.T;
+
 /**
  * The {@link TStruct} is the object representation of a Lisp 't' type.
  */
-public final class TStruct extends BooleanStruct<TStruct> {
+public final class TStruct extends BooleanStruct<T> {
 
 	public static final TStruct INSTANCE = new TStruct();
 
@@ -11,6 +13,6 @@ public final class TStruct extends BooleanStruct<TStruct> {
 	 * Private constructor.
 	 */
 	private TStruct() {
-		super("T", true);
+		super("T", T.INSTANCE, true);
 	}
 }

@@ -248,15 +248,27 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 
 	@Override
 	public String printStruct() {
-		// TODO: Ignoring *PRINT-LEVEL* and *PRINT-LENGTH*; also, somewhat *PRINT-READABLY*
+		// TODO: Ignoring *PRINT-LEVEL* and *PRINT-LENGTH*
 
 		final boolean printArray = Variable.PRINT_ARRAY.getValue().booleanValue();
 		final boolean printReadably = Variable.PRINT_READABLY.getValue().booleanValue();
 
-		if (!printArray && !printReadably) {
+		final StringBuilder stringBuilder = new StringBuilder();
+
+		if (printArray || printReadably) {
+			stringBuilder.append('#');
+			stringBuilder.append(rank);
+			stringBuilder.append("#(");
+
+			for (int i = 0; i < totalSize; i++) {
+				final LispStruct lispStruct = contents.get(i);
+				stringBuilder.append(lispStruct.printStruct());
+			}
+
+			stringBuilder.append(')');
+		} else {
 			final String typeClassName = getType().getClass().getName().toUpperCase();
 
-			final StringBuilder stringBuilder = new StringBuilder();
 			stringBuilder.append("#<");
 			stringBuilder.append(typeClassName);
 			stringBuilder.append(' ');
@@ -278,38 +290,7 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 			}
 
 			stringBuilder.append('>');
-
-			return stringBuilder.toString();
 		}
-
-		if (printArray && !printReadably) {
-			final StringBuilder stringBuilder = new StringBuilder();
-			stringBuilder.append('#');
-			stringBuilder.append(rank);
-			stringBuilder.append("#(");
-
-			for (int i = 0; i < totalSize; i++) {
-				final LispStruct lispStruct = contents.get(i);
-				stringBuilder.append(lispStruct.printStruct());
-			}
-
-			stringBuilder.append(')');
-
-			return stringBuilder.toString();
-		}
-
-		// TODO: this is the condition if *PRINT-READABLY* is not 'NIL'
-		final StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append('#');
-		stringBuilder.append(rank);
-		stringBuilder.append("#(");
-
-		for (int i = 0; i < totalSize; i++) {
-			final LispStruct lispStruct = contents.get(i);
-			stringBuilder.append(lispStruct.printStruct());
-		}
-
-		stringBuilder.append(')');
 
 		return stringBuilder.toString();
 	}

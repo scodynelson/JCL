@@ -1,8 +1,8 @@
 package jcl.reader.impl;
 
+import jcl.reader.syntax.CharacterConstants;
 import jcl.reader.syntax.TokenBuilder;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
-import jcl.syntax.CharacterConstants;
 
 /**
  * Step 2 of the Reader Algorithm.

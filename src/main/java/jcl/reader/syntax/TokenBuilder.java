@@ -1,7 +1,6 @@
 package jcl.reader.syntax;
 
 import jcl.LispStruct;
-import jcl.syntax.AttributeType;
 
 import java.util.LinkedList;
 

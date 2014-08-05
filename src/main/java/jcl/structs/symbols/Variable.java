@@ -4,7 +4,6 @@ import jcl.LispStruct;
 import jcl.compiler.old.functions.BaseMacroExpandFn;
 import jcl.structs.functions.FunctionStruct;
 import jcl.structs.lists.ListStruct;
-import jcl.structs.numbers.FloatStruct;
 import jcl.structs.numbers.IntegerStruct;
 import jcl.structs.numbers.RandomStateStruct;
 import jcl.structs.packages.GlobalPackageStruct;
@@ -14,8 +13,9 @@ import jcl.structs.symbols.special.NonNegNilVariable;
 import jcl.structs.symbols.special.PrintCaseVariable;
 import jcl.structs.symbols.special.ProperListVariable;
 import jcl.structs.symbols.special.RadixVariable;
+import jcl.types.Float;
+import jcl.types.SingleFloat;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 
 public class Variable<T extends LispStruct> extends SymbolStruct<T> {
@@ -58,7 +58,7 @@ public class Variable<T extends LispStruct> extends SymbolStruct<T> {
 	public static final Variable<IntegerStruct> PRINT_RIGHT_MARGIN = new NonNegNilVariable("*PRINT-RIGHT-MARGIN*", GlobalPackageStruct.COMMON_LISP);
 
 	public static final Variable<IntegerStruct> READ_BASE = new RadixVariable("*READ-BASE*", GlobalPackageStruct.COMMON_LISP);
-	public static final Variable<?> READ_DEFAULT_FLOAT_FORMAT = new Variable<>("*READ-DEFAULT-FLOAT-FORMAT*", GlobalPackageStruct.COMMON_LISP, new FloatStruct(BigDecimal.ZERO)); // TODO: fix this!!!
+	public static final Variable<Float> READ_DEFAULT_FLOAT_FORMAT = new Variable<>("*READ-DEFAULT-FLOAT-FORMAT*", GlobalPackageStruct.COMMON_LISP, SingleFloat.INSTANCE);
 	public static final Variable<BooleanStruct<?>> READ_EVAL = new Variable<>("*READ-EVAL*", GlobalPackageStruct.COMMON_LISP, TStruct.INSTANCE);
 	public static final Variable<BooleanStruct<?>> READ_SUPPRESS = new Variable<>("*READ-SUPPRESS*", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);
 	public static final Variable<ReadtableStruct> READTABLE = new Variable<>("*READTABLE*", GlobalPackageStruct.COMMON_LISP, new ReadtableStruct());

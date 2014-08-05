@@ -3,7 +3,7 @@ package jcl.reader.function.macrofunction;
 import jcl.LispStruct;
 import jcl.reader.function.ListReader;
 import jcl.reader.impl.Reader;
-import jcl.syntax.CharacterConstants;
+import jcl.reader.syntax.CharacterConstants;
 
 import java.math.BigInteger;
 

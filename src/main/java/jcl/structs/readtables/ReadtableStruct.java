@@ -30,11 +30,11 @@ import jcl.reader.function.macrofunction.SharpSharpReaderMacroFunction;
 import jcl.reader.function.macrofunction.SharpUReaderMacroFunction;
 import jcl.reader.function.macrofunction.SharpVerticalBarReaderMacroFunction;
 import jcl.reader.function.macrofunction.SharpXReaderMacroFunction;
+import jcl.reader.syntax.AttributeType;
+import jcl.reader.syntax.CaseSpec;
+import jcl.reader.syntax.CharacterConstants;
+import jcl.reader.syntax.SyntaxType;
 import jcl.structs.classes.BuiltInClassStruct;
-import jcl.syntax.AttributeType;
-import jcl.syntax.CaseSpec;
-import jcl.syntax.CharacterConstants;
-import jcl.syntax.SyntaxType;
 import jcl.types.Readtable;
 
 import java.util.Map;

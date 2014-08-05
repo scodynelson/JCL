@@ -1,4 +1,4 @@
-package jcl.syntax.reader;
+package jcl.reader.syntax.reader;
 
 public class PeekType {
 

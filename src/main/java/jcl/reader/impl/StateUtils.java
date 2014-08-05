@@ -1,8 +1,8 @@
 package jcl.reader.impl;
 
+import jcl.reader.syntax.AttributeType;
+import jcl.reader.syntax.CaseSpec;
 import jcl.reader.syntax.TokenAttribute;
-import jcl.syntax.AttributeType;
-import jcl.syntax.CaseSpec;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 

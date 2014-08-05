@@ -1,7 +1,7 @@
 package jcl.reader.impl;
 
-import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.reader.syntax.TokenBuilder;
+import jcl.structs.conditions.exceptions.ReaderErrorException;
 
 /**
  * Not Specified in the Reader Algorithm.

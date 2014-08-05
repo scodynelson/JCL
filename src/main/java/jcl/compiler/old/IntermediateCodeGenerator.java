@@ -1,7 +1,6 @@
 package jcl.compiler.old;
 
 import jcl.LispStruct;
-import jcl.structs.characters.CharacterStruct;
 import jcl.compiler.old.expander.MacroFunctionExpander;
 import jcl.compiler.old.functions.AssocFunction;
 import jcl.compiler.old.functions.CompileFunction;
@@ -20,6 +19,7 @@ import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.environment.SymbolBinding;
 import jcl.compiler.real.environment.SymbolTable;
 import jcl.compiler.real.environment.lambdalist.RequiredBinding;
+import jcl.structs.characters.CharacterStruct;
 import jcl.structs.functions.FunctionStruct;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.lists.NullStruct;

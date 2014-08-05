@@ -2,7 +2,6 @@ package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
 import jcl.LispType;
-import jcl.structs.arrays.StringStruct;
 import jcl.compiler.old.EnvironmentAccessor;
 import jcl.compiler.old.functions.AppendFunction;
 import jcl.compiler.old.functions.AssocFunction;
@@ -18,6 +17,7 @@ import jcl.compiler.real.sa.LambdaListParser;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.SymbolStructAnalyzer;
 import jcl.compiler.real.sa.specialoperator.compiler.StaticFieldAnalyzer;
+import jcl.structs.arrays.StringStruct;
 import jcl.structs.functions.FunctionStruct;
 import jcl.structs.lists.ConsStruct;
 import jcl.structs.lists.ListStruct;

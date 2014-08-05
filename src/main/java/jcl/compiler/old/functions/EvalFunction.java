@@ -1,12 +1,12 @@
 package jcl.compiler.old.functions;
 
 import jcl.LispStruct;
+import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.structs.arrays.ArrayStruct;
 import jcl.structs.arrays.StringStruct;
 import jcl.structs.characters.CharacterStruct;
 import jcl.structs.classes.StructureClassStruct;
 import jcl.structs.classes.StructureObjectStruct;
-import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.structs.functions.FunctionStruct;
 import jcl.structs.lists.ConsStruct;
 import jcl.structs.lists.ListStruct;

@@ -1,7 +1,7 @@
 package jcl.compiler.old.functions;
 
-import jcl.structs.arrays.StringStruct;
 import jcl.compiler.old.symbol.KeywordOld;
+import jcl.structs.arrays.StringStruct;
 import jcl.structs.lists.NullStruct;
 import jcl.structs.pathnames.PathnameStruct;
 import jcl.structs.streams.StreamStruct;

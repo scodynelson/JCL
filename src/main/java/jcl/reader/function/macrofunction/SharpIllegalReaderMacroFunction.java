@@ -1,8 +1,8 @@
 package jcl.reader.function.macrofunction;
 
 import jcl.LispStruct;
-import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.reader.impl.Reader;
+import jcl.structs.conditions.exceptions.ReaderErrorException;
 
 import java.math.BigInteger;
 

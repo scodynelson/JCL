@@ -1,7 +1,7 @@
 package jcl.reader.function;
 
-import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.reader.impl.Reader;
+import jcl.structs.conditions.exceptions.ReaderErrorException;
 
 import static jcl.reader.function.FunctionReaderUtils.getNextCodePoint;
 import static jcl.reader.function.FunctionReaderUtils.isWhitespace;

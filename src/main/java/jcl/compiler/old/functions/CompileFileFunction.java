@@ -1,23 +1,23 @@
 package jcl.compiler.old.functions;
 
 import jcl.LispStruct;
-import jcl.structs.arrays.StringStruct;
 import jcl.compiler.old.CompilerClassLoader;
 import jcl.compiler.old.Emitter;
 import jcl.compiler.old.EmptyVisitor;
 import jcl.compiler.old.IntermediateCodeGenerator;
-import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.old.documentation.AnnotationCollector;
 import jcl.compiler.old.documentation.DocumentFactory;
 import jcl.compiler.old.expander.MacroFunctionExpander;
 import jcl.compiler.old.symbol.KeywordOld;
+import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.reader.impl.Reader;
+import jcl.structs.arrays.StringStruct;
 import jcl.structs.lists.ConsStruct;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.lists.NullStruct;
 import jcl.structs.packages.GlobalPackageStruct;
 import jcl.structs.packages.PackageStruct;
 import jcl.structs.pathnames.PathnameStruct;
-import jcl.reader.impl.Reader;
 import jcl.structs.streams.CharacterStreamStruct;
 import jcl.structs.symbols.Declaration;
 import jcl.structs.symbols.SpecialOperator;

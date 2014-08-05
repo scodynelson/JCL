@@ -9,7 +9,7 @@ import jcl.structs.packages.PackageStruct;
 import jcl.structs.streams.CharacterStreamStruct;
 import jcl.structs.streams.FileStreamStruct;
 import jcl.structs.streams.InputStream;
-import jcl.structs.symbols.Variable;
+import jcl.structs.symbols.variables.Variable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

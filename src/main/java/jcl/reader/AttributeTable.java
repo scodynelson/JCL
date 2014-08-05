@@ -1,7 +1,7 @@
 package jcl.reader;
 
 import jcl.reader.syntax.AttributeType;
-import jcl.structs.symbols.Variable;
+import jcl.structs.symbols.variables.Variable;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

@@ -5,7 +5,7 @@ import jcl.LispType;
 import jcl.structs.conditions.exceptions.ErrorException;
 import jcl.structs.conditions.exceptions.TypeErrorException;
 import jcl.structs.sequences.SequenceStruct;
-import jcl.structs.symbols.Variable;
+import jcl.structs.symbols.variables.Variable;
 import jcl.types.SimpleVector;
 import jcl.types.T;
 import jcl.types.Vector;

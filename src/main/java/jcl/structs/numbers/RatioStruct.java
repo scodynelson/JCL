@@ -1,6 +1,6 @@
 package jcl.structs.numbers;
 
-import jcl.structs.symbols.Variable;
+import jcl.structs.symbols.variables.Variable;
 import jcl.types.Ratio;
 import org.apache.commons.math3.fraction.BigFraction;
 

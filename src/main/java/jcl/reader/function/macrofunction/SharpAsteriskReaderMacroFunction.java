@@ -9,7 +9,7 @@ import jcl.structs.arrays.BitVectorStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.structs.conditions.exceptions.TypeErrorException;
-import jcl.structs.symbols.Variable;
+import jcl.structs.symbols.variables.Variable;
 import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigInteger;

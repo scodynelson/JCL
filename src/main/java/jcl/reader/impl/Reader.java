@@ -8,7 +8,7 @@ import jcl.reader.syntax.TokenBuilder;
 import jcl.reader.syntax.reader.ReadResult;
 import jcl.structs.readtables.ReadtableStruct;
 import jcl.structs.streams.InputStream;
-import jcl.structs.symbols.Variable;
+import jcl.structs.symbols.variables.Variable;
 
 public class Reader {
 

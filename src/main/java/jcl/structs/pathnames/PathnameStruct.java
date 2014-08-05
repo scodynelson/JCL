@@ -3,7 +3,7 @@ package jcl.structs.pathnames;
 import jcl.structs.classes.BuiltInClassStruct;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.structs.symbols.BooleanStruct;
-import jcl.structs.symbols.Variable;
+import jcl.structs.symbols.variables.Variable;
 import jcl.types.Pathname;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

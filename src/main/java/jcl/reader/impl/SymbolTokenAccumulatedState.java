@@ -8,7 +8,7 @@ import jcl.structs.packages.PackageStruct;
 import jcl.structs.packages.PackageSymbolStruct;
 import jcl.structs.symbols.KeywordSymbolStruct;
 import jcl.structs.symbols.SymbolStruct;
-import jcl.structs.symbols.Variable;
+import jcl.structs.symbols.variables.Variable;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.LinkedList;

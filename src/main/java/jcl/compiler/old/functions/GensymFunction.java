@@ -3,7 +3,7 @@ package jcl.compiler.old.functions;
 import jcl.structs.arrays.StringStruct;
 import jcl.structs.numbers.IntegerStruct;
 import jcl.structs.symbols.SymbolStruct;
-import jcl.structs.symbols.Variable;
+import jcl.structs.symbols.variables.Variable;
 
 import java.math.BigInteger;
 

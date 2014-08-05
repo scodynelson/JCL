@@ -5,7 +5,7 @@ import jcl.reader.impl.Reader;
 import jcl.reader.syntax.CharacterConstants;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.lists.ListStruct;
-import jcl.structs.symbols.Variable;
+import jcl.structs.symbols.variables.Variable;
 
 import java.util.ArrayList;
 import java.util.List;

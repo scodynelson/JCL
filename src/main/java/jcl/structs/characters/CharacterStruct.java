@@ -1,7 +1,7 @@
 package jcl.structs.characters;
 
 import jcl.structs.classes.BuiltInClassStruct;
-import jcl.structs.symbols.Variable;
+import jcl.structs.symbols.variables.Variable;
 import jcl.types.BaseChar;
 import jcl.types.Character;
 import jcl.types.ExtendedChar;

@@ -1,15 +1,14 @@
-package jcl.structs.symbols.special;
+package jcl.structs.symbols.variables;
 
 import jcl.structs.numbers.IntegerStruct;
 import jcl.structs.packages.PackageStruct;
-import jcl.structs.symbols.Variable;
 import org.apache.commons.lang3.Range;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
 
-public class RadixVariable extends Variable<IntegerStruct> {
+class RadixVariable extends Variable<IntegerStruct> {
 
 	private static final IntegerStruct TEN = new IntegerStruct(BigInteger.TEN);
 
@@ -19,7 +18,7 @@ public class RadixVariable extends Variable<IntegerStruct> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RadixVariable.class);
 
-	public RadixVariable(final String name, final PackageStruct symbolPackage) {
+	RadixVariable(final String name, final PackageStruct symbolPackage) {
 		super(name, symbolPackage, TEN);
 	}
 
@@ -30,7 +29,7 @@ public class RadixVariable extends Variable<IntegerStruct> {
 		if (RADIX_RANGE.contains(bigIntegerValue)) {
 			this.value = value;
 		} else {
-			LOGGER.warn("Error: {} had illegal value {}.  Reset to 10", name, value);
+			LOGGER.warn("Error: {} had illegal value {}. Reset to 10", name, value);
 
 			this.value = TEN;
 		}

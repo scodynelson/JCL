@@ -5,7 +5,7 @@ import jcl.LispType;
 import jcl.structs.classes.BuiltInClassStruct;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.structs.conditions.exceptions.TypeErrorException;
-import jcl.structs.symbols.Variable;
+import jcl.structs.symbols.variables.Variable;
 import jcl.types.Array;
 import jcl.types.SimpleArray;
 import jcl.types.T;

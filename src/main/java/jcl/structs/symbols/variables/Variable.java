@@ -1,4 +1,4 @@
-package jcl.structs.symbols;
+package jcl.structs.symbols.variables;
 
 import jcl.LispStruct;
 import jcl.compiler.old.functions.BaseMacroExpandFn;
@@ -9,10 +9,11 @@ import jcl.structs.numbers.RandomStateStruct;
 import jcl.structs.packages.GlobalPackageStruct;
 import jcl.structs.packages.PackageStruct;
 import jcl.structs.readtables.ReadtableStruct;
-import jcl.structs.symbols.special.NonNegNilVariable;
-import jcl.structs.symbols.special.PrintCaseVariable;
-import jcl.structs.symbols.special.ProperListVariable;
-import jcl.structs.symbols.special.RadixVariable;
+import jcl.structs.symbols.BooleanStruct;
+import jcl.structs.symbols.KeywordSymbolStruct;
+import jcl.structs.symbols.NILStruct;
+import jcl.structs.symbols.SymbolStruct;
+import jcl.structs.symbols.TStruct;
 import jcl.types.Float;
 import jcl.types.SingleFloat;
 

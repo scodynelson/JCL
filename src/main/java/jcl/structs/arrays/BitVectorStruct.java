@@ -2,7 +2,7 @@ package jcl.structs.arrays;
 
 import jcl.structs.conditions.exceptions.TypeErrorException;
 import jcl.structs.numbers.IntegerStruct;
-import jcl.structs.symbols.Variable;
+import jcl.structs.symbols.variables.Variable;
 import jcl.types.Bit;
 import jcl.types.BitVector;
 import jcl.types.SimpleBitVector;

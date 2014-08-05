@@ -1,16 +1,15 @@
-package jcl.structs.symbols.special;
+package jcl.structs.symbols.variables;
 
 import jcl.compiler.old.symbol.KeywordOld;
 import jcl.structs.packages.GlobalPackageStruct;
 import jcl.structs.symbols.KeywordSymbolStruct;
-import jcl.structs.symbols.Variable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class PrintCaseVariable extends Variable<KeywordSymbolStruct> {
+class PrintCaseVariable extends Variable<KeywordSymbolStruct> {
 
 	public static final PrintCaseVariable INSTANCE = new PrintCaseVariable();
 
@@ -33,7 +32,7 @@ public class PrintCaseVariable extends Variable<KeywordSymbolStruct> {
 		if (CASE_KEYWORDS.contains(value)) {
 			this.value = value;
 		} else {
-			LOGGER.warn("Error: *PRINT-CASE* had illegal value {}.  Reset to :UPCASE", value);
+			LOGGER.warn("Error: *PRINT-CASE* had illegal value {}. Reset to :UPCASE", value);
 
 			this.value = KeywordOld.Upcase;
 		}

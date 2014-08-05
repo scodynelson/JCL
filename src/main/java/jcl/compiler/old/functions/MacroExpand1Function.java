@@ -6,7 +6,7 @@ import jcl.structs.functions.FunctionStruct;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.lists.NullStruct;
 import jcl.structs.symbols.SymbolStruct;
-import jcl.structs.symbols.Variable;
+import jcl.structs.symbols.variables.Variable;
 
 /**
  * Implements the Common Lisp function Macroex[and-1.

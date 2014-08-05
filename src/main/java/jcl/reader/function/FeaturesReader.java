@@ -11,7 +11,7 @@ import jcl.structs.symbols.BooleanStruct;
 import jcl.structs.symbols.KeywordSymbolStruct;
 import jcl.structs.symbols.NILStruct;
 import jcl.structs.symbols.TStruct;
-import jcl.structs.symbols.Variable;
+import jcl.structs.symbols.variables.Variable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

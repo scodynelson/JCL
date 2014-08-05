@@ -9,7 +9,7 @@ import jcl.structs.numbers.ComplexStruct;
 import jcl.structs.numbers.FloatStruct;
 import jcl.structs.numbers.IntegerStruct;
 import jcl.structs.numbers.RatioStruct;
-import jcl.structs.symbols.Variable;
+import jcl.structs.symbols.variables.Variable;
 
 import java.math.BigInteger;
 import java.util.List;

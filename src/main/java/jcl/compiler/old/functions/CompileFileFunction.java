@@ -22,7 +22,7 @@ import jcl.structs.streams.CharacterStreamStruct;
 import jcl.structs.symbols.Declaration;
 import jcl.structs.symbols.SpecialOperator;
 import jcl.structs.symbols.SymbolStruct;
-import jcl.structs.symbols.Variable;
+import jcl.structs.symbols.variables.Variable;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.util.CheckClassAdapter;
 import org.w3c.dom.Document;

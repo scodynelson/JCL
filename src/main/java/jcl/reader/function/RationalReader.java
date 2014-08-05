@@ -5,7 +5,7 @@ import jcl.reader.impl.Reader;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.numbers.IntegerStruct;
 import jcl.structs.numbers.RationalStruct;
-import jcl.structs.symbols.Variable;
+import jcl.structs.symbols.variables.Variable;
 import org.apache.commons.lang3.Range;
 
 import java.math.BigInteger;

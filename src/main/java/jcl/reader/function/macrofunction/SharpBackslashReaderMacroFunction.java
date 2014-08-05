@@ -8,7 +8,7 @@ import jcl.reader.syntax.CharacterName;
 import jcl.reader.syntax.ReadExtendedToken;
 import jcl.structs.characters.CharacterStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
-import jcl.structs.symbols.Variable;
+import jcl.structs.symbols.variables.Variable;
 import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigInteger;

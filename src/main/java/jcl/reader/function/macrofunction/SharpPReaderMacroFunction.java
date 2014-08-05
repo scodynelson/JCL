@@ -6,7 +6,7 @@ import jcl.reader.syntax.CharacterConstants;
 import jcl.structs.arrays.StringStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.pathnames.PathnameStruct;
-import jcl.structs.symbols.Variable;
+import jcl.structs.symbols.variables.Variable;
 
 import java.math.BigInteger;
 import java.net.URISyntaxException;

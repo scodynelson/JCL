@@ -5,6 +5,7 @@ import jcl.structs.packages.PackageStruct;
 
 public final class Declaration extends SymbolStruct<Declaration> {
 
+	// TODO: These are NOT declared in the "COMMON_LISP" package. They probably exist in the "SYSTEM" package instead. Have to work this in...
 	public static final Declaration IGNORE = new Declaration("IGNORE", GlobalPackageStruct.COMMON_LISP);
 	public static final Declaration IGNORABLE = new Declaration("IGNORABLE", GlobalPackageStruct.COMMON_LISP);
 	public static final Declaration DYNAMIC_EXTENT = new Declaration("DYNAMIC-EXTENT", GlobalPackageStruct.COMMON_LISP);
@@ -32,5 +33,13 @@ public final class Declaration extends SymbolStruct<Declaration> {
 
 	private Declaration(final String name, final PackageStruct symbolPackage) {
 		super(name, symbolPackage);
+		init();
+	}
+
+	/**
+	 * Post construction method.
+	 */
+	private void init() {
+		setValue(this);
 	}
 }

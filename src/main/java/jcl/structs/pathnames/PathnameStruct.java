@@ -2,12 +2,17 @@ package jcl.structs.pathnames;
 
 import jcl.structs.classes.BuiltInClassStruct;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
+import jcl.structs.symbols.BooleanStruct;
+import jcl.structs.symbols.Variable;
 import jcl.types.Pathname;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 /**
  * The {@link PathnameStruct} is the object representation of a Lisp 'pathname' type.
@@ -129,6 +134,51 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 			LOGGER.trace("Provided path cannot be parsed as a URI: {}", path, use);
 			return false;
 		}
+	}
+
+	@Override
+	public String printStruct() {
+		final BooleanStruct<?> printEscape = Variable.PRINT_ESCAPE.getValue();
+
+		final StringBuilder stringBuilder = new StringBuilder();
+
+		if (printEscape.booleanValue()) {
+			stringBuilder.append("#P");
+		}
+		stringBuilder.append('"');
+
+		final String deviceString = device.getDevice();
+		if (StringUtils.isNoneEmpty(deviceString)) {
+			stringBuilder.append(deviceString);
+			stringBuilder.append(':');
+		}
+
+		final List<PathnameDirectoryLevel> directoryLevels = directory.getDirectoryComponent().getDirectoryLevels();
+		for (final PathnameDirectoryLevel directoryLevel : directoryLevels) {
+			stringBuilder.append(File.separatorChar);
+			stringBuilder.append(directoryLevel.getDirectoryLevel());
+		}
+
+		final String nameString = name.getName();
+		if (StringUtils.isNoneEmpty(deviceString)) {
+			stringBuilder.append(nameString);
+		}
+
+		final String typeString = type.getType();
+		if (StringUtils.isNoneEmpty(deviceString)) {
+			stringBuilder.append('.');
+			stringBuilder.append(typeString);
+		}
+
+		final String versionString = version.getVersion().toString();
+		if (StringUtils.isNoneEmpty(deviceString)) {
+			stringBuilder.append('.');
+			stringBuilder.append(versionString);
+		}
+
+		stringBuilder.append('"');
+
+		return stringBuilder.toString();
 	}
 
 	@Override

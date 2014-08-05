@@ -13,6 +13,8 @@ public class RatioStruct extends RationalStruct {
 
 	private final BigFraction bigFraction;
 
+	private static final int SIXTEEN = 16;
+
 	/**
 	 * Public constructor.
 	 *
@@ -66,7 +68,7 @@ public class RatioStruct extends RationalStruct {
 				stringBuilder.append("#b");
 			} else if (printBase == 8) {
 				stringBuilder.append("#o");
-			} else if (printBase == 16) {
+			} else if (printBase == SIXTEEN) {
 				stringBuilder.append("#x");
 			} else {
 				stringBuilder.append('#');

@@ -15,11 +15,14 @@ import java.util.List;
 public class RandomStateStruct extends BuiltInClassStruct {
 
 	private static final int THREE = 3;
+	private static final int FIFTY_FOUR = 54;
+	private static final int CONST_A = 8378;
+	private static final int CONST_B = 101010101;
 
-	private static final BigInteger RANDOM_MAX = BigInteger.valueOf(54);
+	private static final BigInteger RANDOM_MAX = BigInteger.valueOf(FIFTY_FOUR);
 	private static final BigInteger RANDOM_UPPER_BOUND = BigInteger.valueOf(Integer.MAX_VALUE - THREE);
-	private static final BigInteger RANDOM_CONST_A = BigInteger.valueOf(8373);
-	private static final BigInteger RANDOM_CONST_C = BigInteger.valueOf(101010101);
+	private static final BigInteger RANDOM_CONST_A = BigInteger.valueOf(CONST_A);
+	private static final BigInteger RANDOM_CONST_B = BigInteger.valueOf(CONST_B);
 
 	private static final BigInteger RANDOM_INTEGER_OVERLAP = BigInteger.valueOf(THREE);
 	private static final BigInteger RANDOM_CHUNCK_LENGTH = BigInteger.valueOf(RANDOM_UPPER_BOUND.bitLength());
@@ -42,7 +45,7 @@ public class RandomStateStruct extends BuiltInClassStruct {
 
 		BigInteger randSeed = BigInteger.ONE;
 		for (int i = 0; i < RANDOM_MAX.intValue(); i++) {
-			randSeed = randSeed.multiply(RANDOM_CONST_A).add(RANDOM_CONST_C).mod(RANDOM_UPPER_BOUND.add(BigInteger.ONE));
+			randSeed = randSeed.multiply(RANDOM_CONST_A).add(RANDOM_CONST_B).mod(RANDOM_UPPER_BOUND.add(BigInteger.ONE));
 			seed.add(randSeed);
 		}
 	}
@@ -54,7 +57,6 @@ public class RandomStateStruct extends BuiltInClassStruct {
 	 * @return the random {@link BigInteger}
 	 */
 	public BigInteger randomInteger(final BigInteger limit) {
-
 
 		final BigInteger limitLength = BigInteger.valueOf(limit.bitLength());
 
@@ -128,18 +130,6 @@ public class RandomStateStruct extends BuiltInClassStruct {
 	 */
 	private static BigInteger ash(final BigInteger bits) {
 		return (SHIFT_AMOUNT_AS_INT <= 0) ? bits.shiftRight(SHIFT_AMOUNT_AS_INT) : bits.shiftLeft(SHIFT_AMOUNT_AS_INT);
-	}
-
-	@Override
-	public String printStruct() {
-		final StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("#RS(");
-
-		seed.forEach(stringBuilder::append);
-
-		stringBuilder.append(')');
-
-		return stringBuilder.toString();
 	}
 
 	@Override

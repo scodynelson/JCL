@@ -277,12 +277,6 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	}
 
 	@Override
-	public String printStruct() {
-		// TODO: do this!!!
-		return toString();
-	}
-
-	@Override
 	public String toString() {
 		return "LogicalPathnameStruct{"
 				+ "host=" + host

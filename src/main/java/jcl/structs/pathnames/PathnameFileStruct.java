@@ -1,7 +1,5 @@
 package jcl.structs.pathnames;
 
-import jcl.structs.symbols.BooleanStruct;
-import jcl.structs.symbols.Variable;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -66,51 +64,6 @@ class PathnameFileStruct extends PathnameStruct {
 	 */
 	PathnameFileStruct(final File file) {
 		this(file.getPath());
-	}
-
-	@Override
-	public String printStruct() {
-		final BooleanStruct<?> printEscape = Variable.PRINT_ESCAPE.getValue();
-
-		final StringBuilder stringBuilder = new StringBuilder();
-
-		if (printEscape.booleanValue()) {
-			stringBuilder.append("#P");
-		}
-		stringBuilder.append('"');
-
-		final String deviceString = device.getDevice();
-		if (StringUtils.isNoneEmpty(deviceString)) {
-			stringBuilder.append(deviceString);
-			stringBuilder.append(':');
-		}
-
-		final List<PathnameDirectoryLevel> directoryLevels = directory.getDirectoryComponent().getDirectoryLevels();
-		for (final PathnameDirectoryLevel directoryLevel : directoryLevels) {
-			stringBuilder.append(File.separatorChar);
-			stringBuilder.append(directoryLevel.getDirectoryLevel());
-		}
-
-		final String nameString = name.getName();
-		if (StringUtils.isNoneEmpty(deviceString)) {
-			stringBuilder.append(nameString);
-		}
-
-		final String typeString = type.getType();
-		if (StringUtils.isNoneEmpty(deviceString)) {
-			stringBuilder.append('.');
-			stringBuilder.append(typeString);
-		}
-
-		final String versionString = version.getVersion().toString();
-		if (StringUtils.isNoneEmpty(deviceString)) {
-			stringBuilder.append('.');
-			stringBuilder.append(versionString);
-		}
-
-		stringBuilder.append('"');
-
-		return stringBuilder.toString();
 	}
 
 	@Override

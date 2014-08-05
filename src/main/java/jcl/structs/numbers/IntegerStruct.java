@@ -12,6 +12,8 @@ public class IntegerStruct extends RationalStruct {
 
 	private final BigInteger bigInteger;
 
+	private	static final int SIXTEEN = 16;
+
 	/**
 	 * Public constructor.
 	 *
@@ -53,7 +55,7 @@ public class IntegerStruct extends RationalStruct {
 				stringBuilder.append("#b");
 			} else if (printBase == 8) {
 				stringBuilder.append("#o");
-			} else if (printBase == 16) {
+			} else if (printBase == SIXTEEN) {
 				stringBuilder.append("#x");
 			} else if (printBase != 10) {
 				stringBuilder.append('#');

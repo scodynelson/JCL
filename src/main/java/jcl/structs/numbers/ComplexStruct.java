@@ -15,37 +15,6 @@ public class ComplexStruct extends NumberStruct {
 	private final RealStruct imaginary;
 
 	/**
-	 * Static 'getInstance' method.
-	 *
-	 * @param real      a {@link RealStruct} that represents the value of real part of the {@code ComplexStruct}
-	 * @param imaginary a {@link RealStruct} that represents the value of imaginary part {@code ComplexStruct}
-	 * @return a new ComplexStruct
-	 */
-	public static ComplexStruct getInstance(final RealStruct real, final RealStruct imaginary) {
-		if ((real instanceof IntegerStruct) && (imaginary instanceof IntegerStruct)) {
-			return new ComplexStruct((IntegerStruct) real, (IntegerStruct) imaginary);
-		} else if ((real instanceof IntegerStruct) && (imaginary instanceof FloatStruct)) {
-			return new ComplexStruct((IntegerStruct) real, (FloatStruct) imaginary);
-		} else if ((real instanceof IntegerStruct) && (imaginary instanceof RatioStruct)) {
-			return new ComplexStruct((IntegerStruct) real, (RatioStruct) imaginary);
-		} else if ((real instanceof FloatStruct) && (imaginary instanceof IntegerStruct)) {
-			return new ComplexStruct((FloatStruct) real, (IntegerStruct) imaginary);
-		} else if ((real instanceof FloatStruct) && (imaginary instanceof FloatStruct)) {
-			return new ComplexStruct((FloatStruct) real, (FloatStruct) imaginary);
-		} else if ((real instanceof FloatStruct) && (imaginary instanceof RatioStruct)) {
-			return new ComplexStruct((FloatStruct) real, (RatioStruct) imaginary);
-		} else if ((real instanceof RatioStruct) && (imaginary instanceof IntegerStruct)) {
-			return new ComplexStruct((RatioStruct) real, (IntegerStruct) imaginary);
-		} else if ((real instanceof RatioStruct) && (imaginary instanceof FloatStruct)) {
-			return new ComplexStruct((RatioStruct) real, (FloatStruct) imaginary);
-		} else if ((real instanceof RatioStruct) && (imaginary instanceof RatioStruct)) {
-			return new ComplexStruct((RatioStruct) real, (RatioStruct) imaginary);
-		} else {
-			throw new RuntimeException("Only reals are valid tokens for #c.");
-		}
-	}
-
-	/**
 	 * Public constructor.
 	 *
 	 * @param real      a {@link BigInteger} that represents the value of real part of the {@code ComplexStruct}

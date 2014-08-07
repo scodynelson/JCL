@@ -86,7 +86,7 @@ public class Variable<T extends LispStruct> extends SymbolStruct<T> {
 	public static final Variable<?> SLASH_SLASH = new Variable<>("//", GlobalPackageStruct.COMMON_LISP, null);
 	public static final Variable<?> SLASH_SLASH_SLASH = new Variable<>("///", GlobalPackageStruct.COMMON_LISP, null);
 
-	protected Variable(final String name, final PackageStruct symbolPackage, final T value) {
+	public Variable(final String name, final PackageStruct symbolPackage, final T value) {
 		super(name, symbolPackage, value);
 	}
 }

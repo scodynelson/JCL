@@ -27,7 +27,7 @@ String LOGBACK_VERSION = '1.1.2';
 
 String TESTNG_VERSION = '6.8.8';
 
-String GROOVY_VERSION = '2.3.3';
+String GROOVY_VERSION = '2.3.7';
 
 dependencies {
 	compile group: 'org.apache.commons', name: 'commons-lang3', version: "$COMMONS_LANG_VERSION"
@@ -51,7 +51,7 @@ mainClassName = "jcl.system.JCL"
 
 apply plugin: 'jacoco'
 jacoco {
-	toolVersion = '0.7.1.201405082137'
+	toolVersion = '0.7.2.201409121644'
 }
 test {
 	useTestNG()
@@ -76,9 +76,9 @@ jacocoTestReport {
 apply plugin: 'sonar-runner'
 sonarRunner {
 	sonarProperties {
-		setProperty "sonar.host.url", "http://localhost:9000"
-		setProperty "sonar.jdbc.url", "jdbc:h2:tcp://localhost:9092/sonar"
-		setProperty "sonar.jdbc.username", "sonar"
-		setProperty "sonar.jdbc.password", "sonar"
+		property "sonar.host.url", "http://localhost:9000"
+		property "sonar.jdbc.url", "jdbc:h2:tcp://localhost:9092/sonar"
+		property "sonar.jdbc.username", "sonar"
+		property "sonar.jdbc.password", "sonar"
 	}
 }

@@ -38,6 +38,8 @@ public class MacroletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		SemanticAnalyzer.environmentStack.push(macroletEnvironment);
 
+		// TODO: not sure if this account for prior macros being able to resolve later macros...
+
 		final int tempPosition = SemanticAnalyzer.bindingsPosition;
 		try {
 			final ListStruct macroletMacros = input.getRest();
@@ -83,14 +85,13 @@ public class MacroletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 				final ListStruct innerFunctionListStruct = ListStruct.buildProperList(innerFunction);
 
-				// TODO: Why are we evaluating this in the outer environment??? I think i know, but not sure if it's actually needed
-				final Environment currentEnvironment = SemanticAnalyzer.environmentStack.pop();
+				// Evaluate in the current environment. This is the difference between Flet and Labels.
+				final Environment currentEnvironment = SemanticAnalyzer.environmentStack.peek();
 				final LispStruct paramValueInitForm = SemanticAnalyzer.saMainLoop(innerFunctionListStruct);
-				SemanticAnalyzer.environmentStack.push(currentEnvironment);
 
 				SemanticAnalyzer.bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
 
-				EnvironmentAccessor.createNewLetBinding(SemanticAnalyzer.environmentStack.peek(), macroName, SemanticAnalyzer.bindingsPosition, paramValueInitForm, false);
+				EnvironmentAccessor.createNewLetBinding(currentEnvironment, macroName, SemanticAnalyzer.bindingsPosition, paramValueInitForm, false);
 			}
 
 			final ListStruct body = input.getRest().getRest();

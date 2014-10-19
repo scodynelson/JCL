@@ -56,6 +56,8 @@ public class EvalWhenAnalyzer implements Analyzer<LispStruct, ListStruct> {
 				// TODO: take care of processing later at execution time...
 				return PrognAnalyzer.INSTANCE.analyze(forms);
 			} else {
+				// NOTE: should never get here since we did the check earlier
+				// TODO: add warning logger here at some point
 				return NullStruct.INSTANCE;
 			}
 		} else if (isExecute(situationJavaList)) {

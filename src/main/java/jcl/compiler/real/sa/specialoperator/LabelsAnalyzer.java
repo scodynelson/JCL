@@ -38,6 +38,8 @@ public class LabelsAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		SemanticAnalyzer.environmentStack.push(labelsEnvironment);
 
+		// TODO: not sure if this account for prior functions being able to resolve later functions...
+
 		final int tempPosition = SemanticAnalyzer.bindingsPosition;
 		try {
 			final ListStruct labelsFunctions = input.getRest();
@@ -83,14 +85,13 @@ public class LabelsAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 				final ListStruct innerFunctionListStruct = ListStruct.buildProperList(innerFunction);
 
-				// TODO: Why are we evaluating this in the outer environment??? I think i know, but not sure if it's actually needed
-				final Environment currentEnvironment = SemanticAnalyzer.environmentStack.pop();
+				// Evaluate in the current environment. This is the difference between Flet and Labels.
+				final Environment currentEnvironment = SemanticAnalyzer.environmentStack.peek();
 				final LispStruct paramValueInitForm = SemanticAnalyzer.saMainLoop(innerFunctionListStruct);
-				SemanticAnalyzer.environmentStack.push(currentEnvironment);
 
 				SemanticAnalyzer.bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
 
-				EnvironmentAccessor.createNewLetBinding(SemanticAnalyzer.environmentStack.peek(), functionName, SemanticAnalyzer.bindingsPosition, paramValueInitForm, false);
+				EnvironmentAccessor.createNewLetBinding(currentEnvironment, functionName, SemanticAnalyzer.bindingsPosition, paramValueInitForm, false);
 			}
 
 			final ListStruct body = input.getRest().getRest();

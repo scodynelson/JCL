@@ -2,9 +2,7 @@ package jcl.compiler.real.sa;
 
 import jcl.LispStruct;
 import jcl.compiler.old.EnvironmentAccessor;
-import jcl.compiler.old.WrapInLambda;
 import jcl.compiler.old.functions.AssocFunction;
-import jcl.compiler.old.functions.GensymFunction;
 import jcl.compiler.old.symbol.KeywordOld;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.specialoperator.BlockAnalyzer;
@@ -15,6 +13,7 @@ import jcl.structs.lists.ConsStruct;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.lists.NullStruct;
 import jcl.structs.numbers.IntegerStruct;
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.structs.symbols.NILStruct;
 import jcl.structs.symbols.SpecialOperator;
 import jcl.structs.symbols.SymbolStruct;
@@ -22,12 +21,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Stack;
-import java.util.Vector;
 
 public class SemanticAnalyzer {
 
@@ -37,7 +34,7 @@ public class SemanticAnalyzer {
 	private boolean topLevelMode;
 
 	public static Stack<Environment> environmentStack;
-	public static Vector<SymbolStruct<?>> undefinedFunctions;
+	public static List<SymbolStruct<?>> undefinedFunctions;
 	public static Stack<SymbolStruct<?>> currentLispName;
 	public static int bindingsPosition;
 	// and association of function names seen and their arglist munging
@@ -69,19 +66,26 @@ public class SemanticAnalyzer {
 
 		BlockAnalyzer.BLOCK_STACK.clear();
 		TagbodyAnalyzer.TAGBODY_STACK.clear();
-		undefinedFunctions = new Vector<>();
+		undefinedFunctions = Collections.synchronizedList(new ArrayList<>());
 		bindingsPosition = 0;
 		FunctionAnalyzer.bindings = NullStruct.INSTANCE;
 	}
 
 	public LispStruct funcall(LispStruct form) {
 		initialize();
-		if (!(form instanceof ListStruct)
-				|| !(((ListStruct) form).getFirst() instanceof SymbolStruct)
-				|| !(((ListStruct) form).getFirst().equals(SpecialOperator.LAMBDA)
-				|| ((ListStruct) form).getFirst().equals(SpecialOperator.MACRO_LAMBDA))) {
-			form = new WrapInLambda().funcall(form);
+
+		if (!(form instanceof ListStruct)) {
+			form = ListStruct.buildProperList(GlobalPackageStruct.COMMON_LISP.findSymbol("LAMBDA").getSymbolStruct(), NullStruct.INSTANCE, form);
+		} else {
+			final ListStruct formList = (ListStruct) form;
+			final LispStruct firstOfFormList = formList.getFirst();
+			if (!(firstOfFormList instanceof SymbolStruct)
+					|| !(firstOfFormList.equals(SpecialOperator.LAMBDA) || firstOfFormList.equals(SpecialOperator.MACRO_LAMBDA))) {
+				form = ListStruct.buildProperList(GlobalPackageStruct.COMMON_LISP.findSymbol("LAMBDA").getSymbolStruct(), NullStruct.INSTANCE, form);
+			}
 		}
+
+
 		// make a copy so we can trash it in SA
 		form = saMainLoop(form);
 		// now setup the closure depths
@@ -89,24 +93,17 @@ public class SemanticAnalyzer {
 		// clear the dup hash map
 
 		// now see if we have any functions still undefined
-		Iterator<SymbolStruct<?>> iterator = undefinedFunctions.iterator();
-		while (iterator.hasNext()) {
-			if (iterator.next().getFunction() != null) {
-				// one with a fn, drop it
-				iterator.remove();
+		for (final SymbolStruct<?> undefinedFunction : undefinedFunctions) {
+			if (undefinedFunction.getFunction() == null) {
+				LOGGER.warn("; Warning: no function or macro function defined for ");
+				if (undefinedFunction.getSymbolPackage() != null) {
+					LOGGER.warn("{}::{}", undefinedFunction.getSymbolPackage().getName(), undefinedFunction.getName());
+				} else {
+					LOGGER.warn("#:{}", undefinedFunction.getName());
+				}
 			}
 		}
-		// now print out the ones outstanding
-		iterator = undefinedFunctions.iterator();
-		while (iterator.hasNext()) {
-			final SymbolStruct<?> fnName = iterator.next();
-			LOGGER.warn("; Warning: no function or macro function defined for ");
-			if (fnName.getSymbolPackage() != null) {
-				LOGGER.warn("{}::{}", fnName.getSymbolPackage().getName(), fnName.getName());
-			} else {
-				LOGGER.warn("#:{}", fnName.getName());
-			}
-		}
+
 		return form;
 	}
 
@@ -132,7 +129,7 @@ public class SemanticAnalyzer {
 	 * Special Operator Analyzers
 	 *********************************************************
 	 */
-
+/*
 	public static Map<SymbolStruct<?>, SymbolStruct<?>> getFunctionNames(final String functionBinding, final ListStruct listStruct,
 																		 final List<LispStruct> functionJavaList) {
 		final Map<SymbolStruct<?>, SymbolStruct<?>> functionNameMap = new HashMap<>();
@@ -155,7 +152,7 @@ public class SemanticAnalyzer {
 
 		return functionNameMap;
 	}
-
+*/
 	/*
 	 *********************************************************
 	 * OTHER STUFF
@@ -235,43 +232,40 @@ public class SemanticAnalyzer {
 */
 
 	private LispStruct saSetClosureDepth(final LispStruct form, int depth) {
-		if (!form.equals(NullStruct.INSTANCE)) {
-			if (form instanceof ListStruct) {
-				final ListStruct workingList = (ListStruct) form;
-				// this may be the start of a lambda or let expr
-				final LispStruct theCar = workingList.getFirst();
-				if (theCar instanceof ListStruct) {
-					final Object test = ((ListStruct) theCar).getFirst();
-					if (test.equals(SpecialOperator.LAMBDA_MARKER) || test.equals(SpecialOperator.LET) || test.equals(SpecialOperator.LABELS) || test.equals(SpecialOperator.FLET) || test.equals(SpecialOperator.MACRO_MARKER)) {
-						final ListStruct theEnv = (ListStruct) theCar;
-						// it is, so see if there's a closure defined
-						// Get the current closure entry
-						final ConsStruct closure = (ConsStruct) AssocFunction.funcall(
-								KeywordOld.Closure, theEnv.getRest());
-						// add the depth indicator
-						// (rplacd closure (cons (cons :depth depth) (cdr closure)))
-						// there may be a depth gauge...
-						final ListStruct depthGauge = AssocFunction.funcall(KeywordOld.Depth, closure.getRest());
-						if (depthGauge.equals(NullStruct.INSTANCE)) { // it may have been handled as a labels
-							if (!closure.getRest().equals(NullStruct.INSTANCE)) {
-								depth++;
-							}
-							closure.setCdr(
-									new ConsStruct(
-											new ConsStruct(
-													KeywordOld.Depth, new IntegerStruct(BigInteger.valueOf(depth))),
-											closure.getCdr()));
+		if (!form.equals(NullStruct.INSTANCE) && (form instanceof ListStruct)) {
+
+			final ListStruct workingList = (ListStruct) form;
+			// this may be the start of a lambda or let expr
+			final LispStruct theCar = workingList.getFirst();
+			if (theCar instanceof ListStruct) {
+				final LispStruct test = ((ListStruct) theCar).getFirst();
+				if (test.equals(SpecialOperator.LAMBDA_MARKER) || test.equals(SpecialOperator.LET) || test.equals(SpecialOperator.LABELS) || test.equals(SpecialOperator.FLET) || test.equals(SpecialOperator.MACRO_MARKER)) {
+					final ListStruct theEnv = (ListStruct) theCar;
+					// it is, so see if there's a closure defined
+					// Get the current closure entry
+					final ConsStruct closure = (ConsStruct) AssocFunction.funcall(KeywordOld.Closure, theEnv.getRest());
+					// add the depth indicator
+					// (rplacd closure (cons (cons :depth depth) (cdr closure)))
+					// there may be a depth gauge...
+					final ListStruct depthGauge = AssocFunction.funcall(KeywordOld.Depth, closure.getRest());
+					if (depthGauge.equals(NullStruct.INSTANCE)) { // it may have been handled as a labels
+						if (!closure.getRest().equals(NullStruct.INSTANCE)) {
+							depth++;
 						}
-						// walk the body of the lambda or let
-						saSetClosureDepth(workingList.getRest(), depth);
-					} else {
-						saSetClosureDepth(theCar, depth);
-						saSetClosureDepth(workingList.getRest(), depth);
+						closure.setCdr(
+								new ConsStruct(
+										new ConsStruct(KeywordOld.Depth, new IntegerStruct(BigInteger.valueOf(depth))),
+										closure.getCdr()));
 					}
+					// walk the body of the lambda or let
+					saSetClosureDepth(workingList.getRest(), depth);
 				} else {
-					if (!theCar.equals(SpecialOperator.DECLARE)) {
-						saSetClosureDepth(workingList.getRest(), depth);
-					}
+					saSetClosureDepth(theCar, depth);
+					saSetClosureDepth(workingList.getRest(), depth);
+				}
+			} else {
+				if (!theCar.equals(SpecialOperator.DECLARE)) {
+					saSetClosureDepth(workingList.getRest(), depth);
 				}
 			}
 		}

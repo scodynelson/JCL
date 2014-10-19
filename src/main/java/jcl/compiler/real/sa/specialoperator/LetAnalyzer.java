@@ -58,7 +58,7 @@ public class LetAnalyzer implements Analyzer<LispStruct, ListStruct> {
 					final SymbolStruct<?> parameterName = (SymbolStruct) listParameterFirst;
 					final LispStruct parameterValue = listParameter.getRest().getFirst();
 
-					// TODO: Why are we evaluating this in the outer environment??? I think i know, but not sure if it's actually needed
+					// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
 					final Environment currentEnvironment = SemanticAnalyzer.environmentStack.pop();
 					final LispStruct parameterValueInitForm = SemanticAnalyzer.saMainLoop(parameterValue);
 					SemanticAnalyzer.environmentStack.push(currentEnvironment);

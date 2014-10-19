@@ -35,7 +35,6 @@ public class QuoteAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			return element;
 		}
 
-		// TODO: do we REALLY need to make this a LTV form???
 		final ListStruct initForm = new ConsStruct(SpecialOperator.LOAD_TIME_VALUE, newForm);
 
 		if (fieldName == null) {

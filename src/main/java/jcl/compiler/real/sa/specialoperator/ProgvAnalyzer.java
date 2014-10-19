@@ -16,6 +16,8 @@ public class ProgvAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	@Override
 	public ListStruct analyze(final ListStruct input) {
 		// TODO: This is kind of like a 'let' for DYNAMIC bindings. The code below is temporary, but does not take care of the environment pieces...
+		// NOTE: When I say a 'let' environment, the DYNAMIC bindings are only within the scope of the (progv) environment.
+		// I envision this making a let environment somehow and setting all the symbol variables to be 'special'
 
 		if (input.size() < 3) {
 			throw new RuntimeException("PROGV: Incorrect number of arguments: " + input.size() + ". Expected at least 3 arguments.");

@@ -20,7 +20,7 @@ public class MultipleValueProg1Analyzer implements Analyzer<LispStruct, ListStru
 			throw new RuntimeException("MULTIPLE-VALUE-PROG1: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
 		}
 
-		// TODO: This will evaluate the first form first and keep it to return last. However, this will occur in the IGC, not the SA!!!
+		// NOTE: This will evaluate the first form first and keep it to return last. This does not happen in the Analyzer, but later in the Generator.
 
 		final LispStruct second = input.getRest().getFirst();
 		final LispStruct secondAnalyzed = SemanticAnalyzer.saMainLoop(second);

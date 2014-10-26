@@ -3,10 +3,8 @@ package jcl.compiler.old;
 import jcl.LispStruct;
 import jcl.compiler.old.symbol.Closure;
 import jcl.structs.functions.FunctionStruct;
-import jcl.structs.lists.ConsStruct;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.lists.NullStruct;
-import jcl.structs.symbols.SpecialOperator;
 
 import java.util.Stack;
 
@@ -19,38 +17,6 @@ public abstract class FunctionBaseClass {
 
 	public static ListStruct PARSED_LAMBDA_LIST = NullStruct.INSTANCE;
 	public ListStruct parsedLambdaList = NullStruct.INSTANCE;
-
-	/**
-	 * This is the default argument list munger. It takes an application
-	 * (eg (foo 1 2) and
-	 * conses the %compiler-funcall symbol onto the application. This makes
-	 * it ready for the ICG. This works for function applications that only
-	 * take required arguments. It does not check that the number of args
-	 * are correct.
-	 */
-	public static FunctionStruct LAMBDA_ARGLIST_MUNGER =
-			new FunctionStruct() {
-
-				public LispStruct apply(LispStruct... lispStructs) {
-					LispStruct arglist = lispStructs[0];
-					LispStruct marker = lispStructs[1];
-
-					return new ConsStruct(SpecialOperator.FUNCTION_MARKER,
-							new ConsStruct(marker, arglist));
-				}
-
-				public int numberOfValues() {
-					return -1;
-				}
-
-				public LispStruct getDefinitionForm() {
-					return NullStruct.INSTANCE;
-				}
-
-				public String getSourceFile() {
-					return null;
-				}
-			};
 
 	protected Stack<Closure> closures;
 	private static LispStruct DEFINITION_FORM = NullStruct.INSTANCE;

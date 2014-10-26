@@ -2,6 +2,7 @@ package jcl.structs.functions;
 
 import jcl.LispStruct;
 import jcl.LispType;
+import jcl.compiler.real.environment.lambdalist.OrdinaryLambdaListBindings;
 import jcl.structs.classes.BuiltInClassStruct;
 import jcl.types.Function;
 
@@ -11,6 +12,8 @@ import java.util.List;
  * The {@link FunctionStruct} is the object representation of a Lisp 'function' type.
  */
 public abstract class FunctionStruct extends BuiltInClassStruct {
+
+	private OrdinaryLambdaListBindings ordinaryLambdaListBindings;
 
 	/**
 	 * Protected constructor.
@@ -48,4 +51,8 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 	 * @return the result object
 	 */
 	public abstract LispStruct apply(LispStruct... lispStructs);
+
+	public OrdinaryLambdaListBindings getOrdinaryLambdaListBindings() {
+		return ordinaryLambdaListBindings;
+	}
 }

@@ -13,7 +13,8 @@ import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.LambdaEnvironmentListStruct;
 import jcl.compiler.real.sa.LambdaListParser;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.specialoperator.compiler.StaticFieldAnalyzer;
+import jcl.compiler.real.sa.specialoperator.LoadTimeValueAnalyzer;
+import jcl.compiler.real.sa.specialoperator.QuoteAnalyzer;
 import jcl.structs.arrays.StringStruct;
 import jcl.structs.functions.FunctionStruct;
 import jcl.structs.lists.ConsStruct;
@@ -71,19 +72,6 @@ public class LambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 
 		return new LambdaEnvironmentListStruct(environment, null);
-	}
-
-	private ListStruct createArgumentListAnalyzer(final OrdinaryLambdaListBindings parsedLambdaList) {
-
-		final List<LispStruct> argumentListAnalyzer = new ArrayList<>();
-		argumentListAnalyzer.add(SpecialOperator.LAMBDA);
-
-		final int requiredParamsCount = parsedLambdaList.getRequiredBindings().size();
-
-
-
-
-		return null;
 	}
 
 	private static ListStruct saLambdaAux(final ListStruct list) {
@@ -175,7 +163,7 @@ public class LambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
 					// This has created an unevaluated lambda form. We now
 					// have to stick it into a static field in the current lambda
 					final StringStruct LAMBDA_ARGLIST_MUNGER_STRING = new StringStruct("LAMBDA_ARGLIST_MUNGER");
-					StaticFieldAnalyzer.INSTANCE.analyze(ListStruct.buildProperList(NullStruct.INSTANCE, analyzerFn, LAMBDA_ARGLIST_MUNGER_STRING));
+					analyzeStaticField(ListStruct.buildProperList(NullStruct.INSTANCE, analyzerFn, LAMBDA_ARGLIST_MUNGER_STRING));
 					// this static field holds lambdas that provide init values. The lambdas
 					// are evaluated in the right environment. The lambdas are values in a property
 					// list that is keyed by the name of the parameter.
@@ -366,5 +354,27 @@ public class LambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			result.append("UnknownLispName");
 		}
 		return result.toString();
+	}
+
+	private static LispStruct analyzeStaticField(ListStruct input) {
+		// 2 args -  the form to eval at class initialization and the name of the field
+		input = input.getRest();
+		final String fldName = input.getRest().getFirst().toString();
+		final LispStruct form = input.getFirst();
+		if (form instanceof ListStruct) {
+			ListStruct listForm = (ListStruct) form;
+			if (listForm.getFirst().equals(SpecialOperator.QUOTE)) {
+				((ConsStruct) input).setCdr(QuoteAnalyzer.INSTANCE.analyze(listForm, fldName));
+			} else if (listForm.getFirst().equals(SpecialOperator.LOAD_TIME_VALUE)) {
+				((ConsStruct) input).setCdr(LoadTimeValueAnalyzer.INSTANCE.analyze(listForm, fldName));
+			} else {
+				listForm = ListStruct.buildProperList(SpecialOperator.LOAD_TIME_VALUE, form);
+				((ConsStruct) input).setCdr(LoadTimeValueAnalyzer.INSTANCE.analyze(listForm, fldName));
+			}
+		} else {
+			final ListStruct listForm = ListStruct.buildProperList(SpecialOperator.LOAD_TIME_VALUE, form);
+			((ConsStruct) input).setCdr(LoadTimeValueAnalyzer.INSTANCE.analyze(listForm, fldName));
+		}
+		return NullStruct.INSTANCE; // we've done what we need to do, the form needs to be dropped
 	}
 }

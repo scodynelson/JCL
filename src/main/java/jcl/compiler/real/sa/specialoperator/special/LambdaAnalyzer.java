@@ -39,8 +39,6 @@ public class LambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	private static String nameBreakingRegex = "[^\\p{Alnum}]";
 	private static Pattern nameBreakingPattern = Pattern.compile(nameBreakingRegex);
 
-	public static final StringStruct LAMBDA_ARGLIST_MUNGER_STRING = new StringStruct("LAMBDA_ARGLIST_MUNGER");
-
 	@Override
 	public ListStruct analyze(final ListStruct input) {
 
@@ -73,6 +71,19 @@ public class LambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 
 		return new LambdaEnvironmentListStruct(environment, null);
+	}
+
+	private ListStruct createArgumentListAnalyzer(final OrdinaryLambdaListBindings parsedLambdaList) {
+
+		final List<LispStruct> argumentListAnalyzer = new ArrayList<>();
+		argumentListAnalyzer.add(SpecialOperator.LAMBDA);
+
+		final int requiredParamsCount = parsedLambdaList.getRequiredBindings().size();
+
+
+
+
+		return null;
 	}
 
 	private static ListStruct saLambdaAux(final ListStruct list) {
@@ -163,6 +174,7 @@ public class LambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 					// This has created an unevaluated lambda form. We now
 					// have to stick it into a static field in the current lambda
+					final StringStruct LAMBDA_ARGLIST_MUNGER_STRING = new StringStruct("LAMBDA_ARGLIST_MUNGER");
 					StaticFieldAnalyzer.INSTANCE.analyze(ListStruct.buildProperList(NullStruct.INSTANCE, analyzerFn, LAMBDA_ARGLIST_MUNGER_STRING));
 					// this static field holds lambdas that provide init values. The lambdas
 					// are evaluated in the right environment. The lambdas are values in a property

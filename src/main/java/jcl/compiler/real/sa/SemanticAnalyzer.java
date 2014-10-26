@@ -8,6 +8,7 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.specialoperator.BlockAnalyzer;
 import jcl.compiler.real.sa.specialoperator.FunctionAnalyzer;
 import jcl.compiler.real.sa.specialoperator.TagbodyAnalyzer;
+import jcl.compiler.real.sa.specialoperator.special.LambdaAnalyzer;
 import jcl.structs.functions.FunctionStruct;
 import jcl.structs.lists.ConsStruct;
 import jcl.structs.lists.ListStruct;
@@ -68,7 +69,7 @@ public class SemanticAnalyzer {
 		TagbodyAnalyzer.TAGBODY_STACK.clear();
 		undefinedFunctions = Collections.synchronizedList(new ArrayList<>());
 		bindingsPosition = 0;
-		FunctionAnalyzer.bindings = NullStruct.INSTANCE;
+		LambdaAnalyzer.bindings = NullStruct.INSTANCE;
 	}
 
 	public LispStruct funcall(LispStruct form) {

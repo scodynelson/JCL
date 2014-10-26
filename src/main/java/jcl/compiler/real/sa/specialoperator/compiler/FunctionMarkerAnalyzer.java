@@ -7,7 +7,7 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.MacroFunctionBinding;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.specialoperator.FunctionAnalyzer;
+import jcl.structs.arrays.StringStruct;
 import jcl.structs.functions.FunctionStruct;
 import jcl.structs.lists.ConsStruct;
 import jcl.structs.lists.ListStruct;
@@ -20,18 +20,19 @@ public class FunctionMarkerAnalyzer implements Analyzer<LispStruct, ListStruct> 
 	public static final FunctionMarkerAnalyzer INSTANCE = new FunctionMarkerAnalyzer();
 
 	@Override
-	public LispStruct analyze(ListStruct input) {
-		ListStruct cpy = input;
+	public LispStruct analyze(final ListStruct input) {
+		ListStruct internalInput = input;
+		ListStruct cpy = internalInput;
 		// check to see if there's a function binding in existence
-		if (input.getFirst() instanceof SymbolStruct) {
-			SymbolStruct<?> fnName = (SymbolStruct) input.getFirst();
+		if (internalInput.getFirst() instanceof SymbolStruct) {
+			SymbolStruct<?> fnName = (SymbolStruct) internalInput.getFirst();
 			//TODO make this active only during compiling, not during eval during compile-file
 			// handle messaging the argument list according to the lambda list
 			// if the car of the function is a special marker, drop the marker
 			if (fnName.equals(SpecialOperator.FUNCTION_MARKER)) {
 				// drop the marker
-				input = input.getRest();
-				cpy = input;
+				internalInput = internalInput.getRest();
+				cpy = internalInput;
 			} else { // not already munged
 				final Environment fnBinding = EnvironmentAccessor.getBindingEnvironment(SemanticAnalyzer.environmentStack.peek(), fnName, false);
 				if (!fnBinding.equals(Environment.NULL)) {
@@ -39,11 +40,11 @@ public class FunctionMarkerAnalyzer implements Analyzer<LispStruct, ListStruct> 
 					final MacroFunctionBinding fooBinding = (MacroFunctionBinding) fnBinding.getBinding(fnName);
 					// see if this is a LABELS or FLET. That changes fnName
 					fnName = fooBinding.getName();
-					input.setElement(1, fnName);
+					internalInput.setElement(1, fnName);
 					SemanticAnalyzer.currentLispName.push(fnName);
-					return analyze(input);
+					return analyze(internalInput);
 				}
-				final ListStruct args = input.getRest();
+				final ListStruct args = internalInput.getRest();
 				final FunctionStruct fnApplying = fnName.getFunction(); // (fnApplying ....)
 				if ((fnApplying == null) && SemanticAnalyzer.undefinedFunctions.contains(fnName)) {
 					// add this as a possible undefined function
@@ -52,7 +53,7 @@ public class FunctionMarkerAnalyzer implements Analyzer<LispStruct, ListStruct> 
 				// NOW - whew...
 				// Get the application munger for this function
 				// If there is a function, get the munger from the function.
-				// If not, use the default one that comes with the FunctionBaseClass
+				// If not, use the default one that comes with SemanticAnalyzer.LAMBDA_ARGLIST_MUNGER
 				FunctionStruct munger = SemanticAnalyzer.LAMBDA_ARGLIST_MUNGER;
 				try {
 					if ((fnApplying == null) && SemanticAnalyzer.currentLispName.peek().equals(fnName)) {
@@ -65,20 +66,21 @@ public class FunctionMarkerAnalyzer implements Analyzer<LispStruct, ListStruct> 
 						SemanticAnalyzer.currentLispName.pop();
 					} else if (fnApplying != null) {
 						// here we know that the function was compiled and has a munger
-						munger = (FunctionStruct) fnApplying.getClass().getField(FunctionAnalyzer.LAMBDA_ARGLIST_MUNGER_STRING.getAsJavaString()).get(null);
+						final StringStruct LAMBDA_ARGLIST_MUNGER_STRING = new StringStruct("LAMBDA_ARGLIST_MUNGER");
+						munger = (FunctionStruct) fnApplying.getClass().getField(LAMBDA_ARGLIST_MUNGER_STRING.getAsJavaString()).get(null);
 					} // else gets the default munger
 				} catch (final Exception ex) {
 					throw new RuntimeException(
 							"Unable to get munging function from fn " + fnApplying, ex);
 				}
-				input = (ListStruct) munger.apply(input.getRest(), input.getFirst());
-				return (ListStruct) SemanticAnalyzer.saMainLoop(input);
+				final ListStruct inputToAnalyze = (ListStruct) munger.apply(internalInput.getRest(), internalInput.getFirst());
+				return SemanticAnalyzer.saMainLoop(inputToAnalyze);
 			}
 		}
-		input = input.getRest();
-		while (!input.equals(NullStruct.INSTANCE)) {
-			input.setElement(1, SemanticAnalyzer.saMainLoop(input.getFirst()));
-			input = input.getRest();
+		internalInput = internalInput.getRest();
+		while (!internalInput.equals(NullStruct.INSTANCE)) {
+			internalInput.setElement(1, SemanticAnalyzer.saMainLoop(internalInput.getFirst()));
+			internalInput = internalInput.getRest();
 		}
 		// Now it's possible that this is a recursive call to the current function
 		// if so, it has to tagged as such to the icg

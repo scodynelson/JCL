@@ -23,10 +23,10 @@ public class StaticFieldAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			ListStruct listForm = (ListStruct) form;
 			if (listForm.getFirst().equals(SpecialOperator.QUOTE)) {
 				((ConsStruct) input).setCdr(QuoteAnalyzer.INSTANCE.analyze(listForm, fldName));
-			} else if (!listForm.getFirst().equals(SpecialOperator.LOAD_TIME_VALUE)) {
-				listForm = ListStruct.buildProperList(SpecialOperator.LOAD_TIME_VALUE, form);
+			} else if (listForm.getFirst().equals(SpecialOperator.LOAD_TIME_VALUE)) {
 				((ConsStruct) input).setCdr(LoadTimeValueAnalyzer.INSTANCE.analyze(listForm, fldName));
 			} else {
+				listForm = ListStruct.buildProperList(SpecialOperator.LOAD_TIME_VALUE, form);
 				((ConsStruct) input).setCdr(LoadTimeValueAnalyzer.INSTANCE.analyze(listForm, fldName));
 			}
 		} else {

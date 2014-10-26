@@ -6,9 +6,7 @@ import jcl.compiler.old.functions.AssocFunction;
 import jcl.compiler.old.symbol.KeywordOld;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.specialoperator.BlockAnalyzer;
-import jcl.compiler.real.sa.specialoperator.FunctionAnalyzer;
 import jcl.compiler.real.sa.specialoperator.TagbodyAnalyzer;
-import jcl.compiler.real.sa.specialoperator.special.LambdaAnalyzer;
 import jcl.structs.functions.FunctionStruct;
 import jcl.structs.lists.ConsStruct;
 import jcl.structs.lists.ListStruct;
@@ -69,7 +67,6 @@ public class SemanticAnalyzer {
 		TagbodyAnalyzer.TAGBODY_STACK.clear();
 		undefinedFunctions = Collections.synchronizedList(new ArrayList<>());
 		bindingsPosition = 0;
-		LambdaAnalyzer.bindings = NullStruct.INSTANCE;
 	}
 
 	public LispStruct funcall(LispStruct form) {
@@ -96,6 +93,7 @@ public class SemanticAnalyzer {
 		// now see if we have any functions still undefined
 		for (final SymbolStruct<?> undefinedFunction : undefinedFunctions) {
 			if (undefinedFunction.getFunction() == null) {
+				// TODO: Remove defined functions at some other point so we don't have to do the check here???
 				LOGGER.warn("; Warning: no function or macro function defined for ");
 				if (undefinedFunction.getSymbolPackage() != null) {
 					LOGGER.warn("{}::{}", undefinedFunction.getSymbolPackage().getName(), undefinedFunction.getName());

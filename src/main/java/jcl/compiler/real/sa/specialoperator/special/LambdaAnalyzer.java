@@ -1,41 +1,28 @@
 package jcl.compiler.real.sa.specialoperator.special;
 
 import jcl.LispStruct;
-import jcl.compiler.old.EnvironmentAccessor;
 import jcl.compiler.old.functions.AppendFunction;
 import jcl.compiler.old.functions.AssocFunction;
-import jcl.compiler.old.functions.CompileFunction;
 import jcl.compiler.old.functions.GensymFunction;
-import jcl.compiler.old.functions.XCopyTreeFunction;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.LambdaEnvironmentListStruct;
 import jcl.compiler.real.sa.LambdaListParser;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.specialoperator.LoadTimeValueAnalyzer;
-import jcl.compiler.real.sa.specialoperator.QuoteAnalyzer;
-import jcl.structs.arrays.StringStruct;
-import jcl.structs.functions.FunctionStruct;
 import jcl.structs.lists.ConsStruct;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.lists.NullStruct;
-import jcl.structs.packages.GlobalPackageStruct;
-import jcl.structs.packages.PackageSymbolStruct;
 import jcl.structs.symbols.Declaration;
 import jcl.structs.symbols.SpecialOperator;
 import jcl.structs.symbols.SymbolStruct;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
 public class LambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 	public static final LambdaAnalyzer INSTANCE = new LambdaAnalyzer();
-
-	public static ListStruct bindings;
 
 	private static String nameBreakingRegex = "[^\\p{Alnum}]";
 	private static Pattern nameBreakingPattern = Pattern.compile(nameBreakingRegex);
@@ -56,12 +43,12 @@ public class LambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		final ListStruct parameters = (ListStruct) secondElement;
 		final OrdinaryLambdaListBindings parsedLambdaList = LambdaListParser.parseOrdinaryLambdaList(parameters);
-
-		// TODO: the old code did this whole "ArgListMunging" crap. Basically, it adds a function dynamically
-		// TODO: to the function being created that analyzes the arguments at runtime. so that when it gets called,
-		// TODO: the required arguments get checked to validate that they were in fact supplied. Now, how do we do
-		// TODO: this in the new version??? This should also account for declarations. hmmmm.....
-
+/* TODO
+		// Add the lambda bindings to the current environment
+		final ConsStruct bindingList = (ConsStruct) EnvironmentAccessor.getBindingSet(environment);
+		// Now I have to remove any FAKE rest forms. They can't be in the binding set
+		bindingList.setCdr(parsedLambdaList); // NOT AUX FORMS?!?!
+*/
 		final ListStruct declaresDocStringBody = input.getRest().getRest();
 		final ListStruct orderedDeclaresDocStringBody = saDeclarations(declaresDocStringBody);
 
@@ -70,188 +57,34 @@ public class LambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		// TODO: will dynamically check the input of the variable and then "SETQ" the value of the 'supplied-p' parameter
 		// TODO: to the 'init-form' if not supplied.
 
+		// TODO: Next section is basically creating a bunch of (lambda (setq ,var ,var-init-val)) if the var is a :optional or :key
+		// BLAH BLAH, SETQ STUFF GOES HERE
 
-		return new LambdaEnvironmentListStruct(environment, null);
-	}
-
-	private static ListStruct saLambdaAux(final ListStruct list) {
-
-		final Environment newEnvironment = SemanticAnalyzer.environmentStack.peek();
-
-		// list => (%lambda (lambda-list) (declare ...) ?"...doc..." body...)
-		final SymbolStruct<?> lambdaSym = (SymbolStruct) list.getFirst(); // hang on to %lambda or %macro
-
-		// list -> ((lambda-list) ?(declare ...) ?"...doc..." body...)
-		// get the parameter list
-		ListStruct params = (ListStruct) list.getRest().getFirst();
-		// params -> (lambda-list)
-
-		// Now, see if there is already a parsed lambda list
-		// this would happen when the lambda was generated from a defun
-		ListStruct theParsedLambdaList = NullStruct.INSTANCE;
-		ListStruct auxValues = null;
-		if (!params.equals(NullStruct.INSTANCE)) {
-			if (theParsedLambdaList.equals(NullStruct.INSTANCE)) {
-				final PackageSymbolStruct pOLL = GlobalPackageStruct.COMPILER.findSymbol("PARSE-ORDINARY-LAMBDA-LIST");
-				FunctionStruct parseOrdinaryLambdaListFn = null;
-				if (pOLL.getPackageSymbolType() != null) {
-					parseOrdinaryLambdaListFn = pOLL.getSymbolStruct().getFunction();
-				}
-				if ((parseOrdinaryLambdaListFn != null) && // the Lisp code is loaded
-						lambdaSym.equals(SpecialOperator.LAMBDA)) { // it's a lambda not a macro
-					final ListStruct parsedLambdaListParts = (ListStruct) parseOrdinaryLambdaListFn.apply(params);
-					theParsedLambdaList = (ListStruct) parsedLambdaListParts.getFirst();
-					auxValues = (ListStruct) parsedLambdaListParts.getElement(1);
-					// Now, use the Compiler function provide-init-form-usage to create code
-					// that follows the declaration section. It is a (possibly nil) set of conditional
-					// assignments that fill in the default forms for missing arguments
-
-					// Add the lambda bindings to the current environment
-					final ConsStruct bindingList = (ConsStruct) EnvironmentAccessor.getBindingSet(newEnvironment);
-					// Now I have to remove any FAKE rest forms. They can't be in the binding set
-					bindingList.setCdr(theParsedLambdaList);
-				}
-			}
-		}
-		// temporary hack to handle tail-called functions here
-//			currentParsedLambdaList.push(theParsedLambdaList);
-
-		// classname is a declaration in the declare form
-		// if there isn't one, it makes one up
-
-		// list -> (?(declare ...)  ?"...doc..."body...)
-		// handle any declarations and doc string that might be present
-		// returns an updated list with at least one DECLARATION
-		// doc string, if present, is now in a declaration
-		final ListStruct listWithOrderedDeclarationsAndDocString = saDeclarations(list.getRest().getRest());
-		// list -> ((declare ...) body...)
-		final ListStruct decls = (ListStruct) listWithOrderedDeclarationsAndDocString.getFirst();
-		// decls -> (declare ...)
-		final SymbolStruct<?> classname = saGetClassName(decls);
-
-		// now reconstitute the full lambda form
-		// list => (%lambda (lambda-list) (declare ...) body...)
-
-		// step over the lambda SymbolStruct to work on the params etc
-
-		//TODO This section will be replaced with the Lisp parser
+/* TODO
 		// the current min for binding is 1 since it's a lambda
 		SemanticAnalyzer.bindingsPosition = 0;
-		// handled setting up the bindings differently between using the old way and the
-		if (!params.equals(NullStruct.INSTANCE)) {
-			if (!theParsedLambdaList.equals(NullStruct.INSTANCE) && lambdaSym.equals(SpecialOperator.LAMBDA)) {
-				// NOW - the first thing to do is make the arglist analyzer function for this lambda
-				// NOTE: this is all skipped when the lambda has a declaration of %NO-GENERATE-ANALYZER
-				final PackageSymbolStruct genAnalyzerSym = GlobalPackageStruct.COMPILER.findSymbol("GENERATE-ARGLIST-ANALYZER");
-				final FunctionStruct genAnalyzerFn = genAnalyzerSym.getSymbolStruct().getFunction();
-				// don't an analyzer for the analyzer!
-				if ((genAnalyzerFn != null)
-						&& findDeclaration(Declaration.NO_GENERATE_ANALYZER, decls.getRest()).equals(NullStruct.INSTANCE)) {
-					final ListStruct analyzerFn = (ListStruct) genAnalyzerFn.apply(theParsedLambdaList);
-					//*** Under some certain circumstances, the function has to be compiled for use in the rest
-					//*** of the function definition. The most common reason is the function is recursive
-					//*** and the arglist must be munged before the function is compiled
-					// If the function that's being compiled is explicitly named,
-					// then we compile the munger and put it into an association list keyed by function name
-					if (SemanticAnalyzer.currentLispName.peek() != null) {
-						final ListStruct copyFn = (ListStruct) XCopyTreeFunction.FUNCTION.funcall(analyzerFn);
-						final FunctionStruct innerFn = (FunctionStruct) CompileFunction.FUNCTION.funcall(copyFn);
-						final FunctionStruct munger = (FunctionStruct) innerFn.apply();
-						SemanticAnalyzer.currentArgMunger = new ConsStruct(new ConsStruct(SemanticAnalyzer.currentLispName.peek(), munger), SemanticAnalyzer.currentArgMunger);
-					}
 
-					// This has created an unevaluated lambda form. We now
-					// have to stick it into a static field in the current lambda
-					final StringStruct LAMBDA_ARGLIST_MUNGER_STRING = new StringStruct("LAMBDA_ARGLIST_MUNGER");
-					analyzeStaticField(ListStruct.buildProperList(NullStruct.INSTANCE, analyzerFn, LAMBDA_ARGLIST_MUNGER_STRING));
-					// this static field holds lambdas that provide init values. The lambdas
-					// are evaluated in the right environment. The lambdas are values in a property
-					// list that is keyed by the name of the parameter.
-				}
-				final ListStruct declsOnward = listWithOrderedDeclarationsAndDocString;
-				// ((declare ...) body...)
-				ListStruct afterDecls = declsOnward.getRest();
-				// ((body...))
-
-				// now I have to splice in any init form code before the (block foo...
-				ListStruct blockCdr = NullStruct.INSTANCE;
-				if ((afterDecls.getFirst() instanceof ListStruct)
-						&& ((ListStruct) afterDecls.getFirst()).getFirst().equals(SpecialOperator.BLOCK)) {
-					// this section used when fn was created by DEFUN
-					blockCdr = ((ListStruct) afterDecls.getFirst()).getRest().getRest();
-				} else {
-					// push NIL
-					afterDecls = new ConsStruct(NullStruct.INSTANCE, afterDecls);
-//                        // push BLOCK
-					afterDecls = new ConsStruct(SpecialOperator.BLOCK, afterDecls);
-					afterDecls = ListStruct.buildProperList(afterDecls);
-					blockCdr = ((ListStruct) afterDecls.getFirst()).getRest().getRest();
-				}
-
-				// NOTE: This next section is basically creating a bunch of (lambda (setq ,var ,var-init-val)) if the var is a :optional or :key
-				final PackageSymbolStruct provideInitFormUsage = GlobalPackageStruct.COMPILER.findSymbol("PROVIDE-INIT-FORM-USAGE");
-				final FunctionStruct provideInitFormUsageFn = provideInitFormUsage.getSymbolStruct().getFunction();
-
-				if (provideInitFormUsageFn != null) {
-					final ListStruct insert = (ListStruct) provideInitFormUsageFn.apply(theParsedLambdaList);
-					// splice the code into the afterDecl
-					if (!insert.equals(NullStruct.INSTANCE)) {
-						afterDecls = (ListStruct) AppendFunction.funcall(insert, afterDecls);
-//                            ((ConsStruct)funLast.funcall(insert)).setCdr(blockCdr);
-//                            ((ConsStruct)((ListStruct)afterDecls.getFirst()).getRest()).setCdr(insert);
-					}
-					// let's see what's going with
-				}
-				// there may be &aux VariableOlds that get turned into a let* that starts before the
-				// block construct.
-				if ((auxValues != null) && !auxValues.equals(NullStruct.INSTANCE)) {
-					afterDecls = new ConsStruct(SpecialOperator.LET_STAR, new ConsStruct(auxValues, afterDecls));
-					afterDecls = new ConsStruct(afterDecls, NullStruct.INSTANCE);
-				}
-
-				// now splice the static-field for as the first line of the body
-				((ConsStruct) declsOnward).setCdr(afterDecls);
-			} else {
-				while (!params.equals(NullStruct.INSTANCE)) {
-					EnvironmentAccessor.createNewLambdaBinding(SemanticAnalyzer.environmentStack.peek(), (SymbolStruct) params.getFirst(), ++SemanticAnalyzer.bindingsPosition, false);
-					params.setElement(1, ((ListStruct) bindings.getFirst()).getFirst());
-					params = params.getRest();
-				}
-			}
+		// there may be &aux Variables that get turned into a let* that starts before the
+		// block construct.
+		if ((auxValues != null) && !auxValues.equals(NullStruct.INSTANCE)) {
+			afterDecls = new ConsStruct(SpecialOperator.LET_STAR, new ConsStruct(auxValues, afterDecls));
+			afterDecls = new ConsStruct(afterDecls, NullStruct.INSTANCE);
 		}
 
-		//************** Now we work on the body of the LAMBDA ***********
-		// if there's an empty body, make it just a NIL
-		if (list.getRest().equals(NullStruct.INSTANCE)) {
-			((ConsStruct) list).setCdr(new ConsStruct(NullStruct.INSTANCE, NullStruct.INSTANCE));
-		}
-
-		// list
+		// now splice the static-field for as the first line of the body
+		((ConsStruct) declsOnward).setCdr(afterDecls);
+*/
+/*
+		// Now deal with analyzing the BODY
 
 		List<LispStruct> bodyElements = list.getRest().getAsJavaList();
 		List<LispStruct> newBodyElements = new ArrayList<>();
 		for (final LispStruct element : bodyElements) {
 			newBodyElements.add(SemanticAnalyzer.saMainLoop(element));
 		}
-
-		// TODO: now rebuild the list again....
-
-		//set the current environment back to what it was before we hit this method
-		return new ConsStruct(SemanticAnalyzer.environmentStack.peek(), list);
-	}
-
-	public static ListStruct findDeclaration(final SymbolStruct<?> item, final ListStruct list) {
-		return AssocFunction.funcall(item, list);
-	}
-
-	private static SymbolStruct<?> saGetClassName(ListStruct list) {
-		// check to see if any declarations exist
-		if (list.getFirst().equals(SpecialOperator.DECLARE)) {
-			// strip out DECLARATION keyword
-			list = list.getRest();
-			return (SymbolStruct) AssocFunction.funcall(Declaration.JAVA_CLASS_NAME, list).getRest().getFirst();
-		}
-		return null;
+*/
+		// TODO: set the current environment back to what it was before we hit this method
+		return new LambdaEnvironmentListStruct(environment, parsedLambdaList, null);
 	}
 
 	/**
@@ -354,27 +187,5 @@ public class LambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			result.append("UnknownLispName");
 		}
 		return result.toString();
-	}
-
-	private static LispStruct analyzeStaticField(ListStruct input) {
-		// 2 args -  the form to eval at class initialization and the name of the field
-		input = input.getRest();
-		final String fldName = input.getRest().getFirst().toString();
-		final LispStruct form = input.getFirst();
-		if (form instanceof ListStruct) {
-			ListStruct listForm = (ListStruct) form;
-			if (listForm.getFirst().equals(SpecialOperator.QUOTE)) {
-				((ConsStruct) input).setCdr(QuoteAnalyzer.INSTANCE.analyze(listForm, fldName));
-			} else if (listForm.getFirst().equals(SpecialOperator.LOAD_TIME_VALUE)) {
-				((ConsStruct) input).setCdr(LoadTimeValueAnalyzer.INSTANCE.analyze(listForm, fldName));
-			} else {
-				listForm = ListStruct.buildProperList(SpecialOperator.LOAD_TIME_VALUE, form);
-				((ConsStruct) input).setCdr(LoadTimeValueAnalyzer.INSTANCE.analyze(listForm, fldName));
-			}
-		} else {
-			final ListStruct listForm = ListStruct.buildProperList(SpecialOperator.LOAD_TIME_VALUE, form);
-			((ConsStruct) input).setCdr(LoadTimeValueAnalyzer.INSTANCE.analyze(listForm, fldName));
-		}
-		return NullStruct.INSTANCE; // we've done what we need to do, the form needs to be dropped
 	}
 }

@@ -15,6 +15,7 @@ import jcl.structs.symbols.KeywordSymbolStruct;
 import jcl.structs.symbols.SymbolStruct;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -43,7 +44,7 @@ public class LambdaListParser {
 		LispStruct currentElement = requiredParseResult.getCurrentElement();
 		position = requiredParseResult.getCurrentPosition();
 
-		List<OptionalBinding> optionalBindings = null;
+		List<OptionalBinding> optionalBindings = Collections.emptyList();
 		if (currentElement.equals(AND_OPTIONAL)) {
 			final OptionalParseResult optionalParseResult = parseOptionalBindings(iterator, position);
 
@@ -61,7 +62,7 @@ public class LambdaListParser {
 			position = restParseResult.getCurrentPosition();
 		}
 
-		List<KeyBinding> keyBindings = null;
+		List<KeyBinding> keyBindings = Collections.emptyList();
 		boolean allowOtherKeys = false;
 		if (currentElement.equals(AND_KEY)) {
 			final KeyParseResult keyParseResult = parseKeyBindings(iterator, position);
@@ -72,7 +73,7 @@ public class LambdaListParser {
 			position = keyParseResult.getCurrentPosition();
 		}
 
-		List<AuxBinding> auxBindings = null;
+		List<AuxBinding> auxBindings = Collections.emptyList();
 		if (currentElement.equals(AND_AUX)) {
 			final AuxParseResult auxParseResult = parseAuxBindings(iterator, position);
 

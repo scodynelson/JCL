@@ -3,6 +3,7 @@ package jcl.compiler.real.sa;
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.lambdalist.OrdinaryLambdaListBindings;
+import jcl.structs.arrays.StringStruct;
 import jcl.structs.lists.ListStruct;
 
 import java.util.List;
@@ -11,14 +12,19 @@ public class LambdaEnvironmentListStruct extends ListStruct {
 
 	private final Environment environment;
 	private final OrdinaryLambdaListBindings lambdaListBindings;
-	private final ListStruct listStruct;
+	private final List<LispStruct> declarations;
+	private final StringStruct docString;
+	private final ListStruct bodyForms;
 
 	public LambdaEnvironmentListStruct(final Environment environment, final OrdinaryLambdaListBindings lambdaListBindings,
-	                                   final ListStruct listStruct) {
+	                                   final List<LispStruct> declarations, final StringStruct docString,
+	                                   final ListStruct bodyForms) {
 		super(null, null);
 		this.environment = environment;
 		this.lambdaListBindings = lambdaListBindings;
-		this.listStruct = listStruct;
+		this.declarations = declarations;
+		this.docString = docString;
+		this.bodyForms = bodyForms;
 	}
 
 	public Environment getEnvironment() {
@@ -29,48 +35,56 @@ public class LambdaEnvironmentListStruct extends ListStruct {
 		return lambdaListBindings;
 	}
 
-	public ListStruct getListStruct() {
-		return listStruct;
+	public StringStruct getDocString() {
+		return docString;
+	}
+
+	public List<LispStruct> getDeclarations() {
+		return declarations;
+	}
+
+	public ListStruct getBodyForms() {
+		return bodyForms;
 	}
 
 	@Override
 	public int size() {
-		return listStruct.size();
+		return bodyForms.size();
 	}
 
 	@Override
 	public LispStruct getFirst() {
-		return listStruct.getFirst();
+		return bodyForms.getFirst();
 	}
 
 	@Override
 	public ListStruct getRest() {
-		return listStruct.getRest();
+		return bodyForms.getRest();
 	}
 
 	@Override
 	public LispStruct getElement(final int index) {
-		return listStruct.getElement(index);
+		return bodyForms.getElement(index);
 	}
 
 	@Override
 	public void setElement(final int index, final LispStruct newValue) {
-		listStruct.setElement(index, newValue);
+		bodyForms.setElement(index, newValue);
 	}
 
 	@Override
 	public List<LispStruct> getAsJavaList() {
-		return listStruct.getAsJavaList();
+		return bodyForms.getAsJavaList();
 	}
 
 	@Override
 	public boolean isDotted() {
-		return listStruct.isDotted();
+		return bodyForms.isDotted();
 	}
 
 	@Override
 	public boolean isCircular() {
-		return listStruct.isCircular();
+		return bodyForms.isCircular();
 	}
 
 	@Override

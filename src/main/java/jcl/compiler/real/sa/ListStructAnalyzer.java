@@ -8,6 +8,7 @@ import jcl.compiler.real.environment.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.lambdalist.RequiredBinding;
+import jcl.compiler.real.environment.lambdalist.RestBinding;
 import jcl.compiler.real.sa.specialoperator.special.LambdaAnalyzer;
 import jcl.structs.functions.FunctionStruct;
 import jcl.structs.lists.ListStruct;
@@ -155,22 +156,27 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			keys.add(key);
 		}
 
+		final RestBinding restBinding = lambdaListBindings.getRestBinding();
+
 		while (functionArgumentsIterator.hasNext()) {
-			if (!keys.isEmpty()) {
+			if (!keyBindings.isEmpty()) {
 				if (nextArgument instanceof KeywordSymbolStruct) {
 					final KeywordSymbolStruct argumentKey = (KeywordSymbolStruct) nextArgument;
 					if (keys.contains(argumentKey)) {
 						// Consume the next argument
 						functionArgumentsIterator.next();
+						nextArgument = functionArgumentsIterator.next();
 					} else {
 						throw new RuntimeException("SA LIST: Keyword argument not found in '" + functionName + "' function definition: " + argumentKey);
 					}
 				} else {
 					throw new RuntimeException("SA LIST: Expected Keyword argument for call to '" + functionName + " was: " + nextArgument);
 				}
+			} else if (restBinding != null) {
+				functionArgumentsIterator.next();
+			} else {
+				throw new RuntimeException("SA LIST: Too many arguments in call to '" + functionName + "'. " + functionArguments.size() + " arguments provided, at most " + requiredBindings.size() + " accepted.");
 			}
-
-			nextArgument = functionArgumentsIterator.next();
 		}
 	}
 }

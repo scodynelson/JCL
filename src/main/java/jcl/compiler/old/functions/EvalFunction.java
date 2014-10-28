@@ -1,7 +1,6 @@
 package jcl.compiler.old.functions;
 
 import jcl.LispStruct;
-import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.structs.arrays.ArrayStruct;
 import jcl.structs.arrays.StringStruct;
 import jcl.structs.characters.CharacterStruct;
@@ -174,7 +173,7 @@ public class EvalFunction {
 							// evaluate the arguments left to right
 							boolean isBaseMunger = false;
 							try {
-								isBaseMunger = SemanticAnalyzer.LAMBDA_ARGLIST_MUNGER == function.getClass().getField("LAMBDA_ARGLIST_MUNGER").get(null);
+								isBaseMunger = true; //SemanticAnalyzer.LAMBDA_ARGLIST_MUNGER == function.getClass().getField("LAMBDA_ARGLIST_MUNGER").get(null);
 							} catch (Exception ex) {
 								isBaseMunger = true;
 							}

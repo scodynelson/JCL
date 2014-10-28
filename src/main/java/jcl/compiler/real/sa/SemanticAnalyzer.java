@@ -7,7 +7,6 @@ import jcl.compiler.old.symbol.KeywordOld;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.specialoperator.BlockAnalyzer;
 import jcl.compiler.real.sa.specialoperator.TagbodyAnalyzer;
-import jcl.structs.functions.FunctionStruct;
 import jcl.structs.lists.ConsStruct;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.lists.NullStruct;
@@ -20,10 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
@@ -36,32 +33,14 @@ public class SemanticAnalyzer {
 
 	public static Stack<Environment> environmentStack;
 	public static Set<SymbolStruct<?>> undefinedFunctions;
-	public static Stack<SymbolStruct<?>> currentLispName;
 	public static int bindingsPosition;
 	// and association of function names seen and their arglist munging
 	// used to handle recursive functions
-	public static ListStruct currentArgMunger = NullStruct.INSTANCE;
-
-	public static FunctionStruct LAMBDA_ARGLIST_MUNGER =
-			new FunctionStruct() {
-
-				public LispStruct funcall(final LispStruct arglist, final LispStruct marker) {
-					return new ConsStruct(SpecialOperator.FUNCTION_MARKER,
-							new ConsStruct(marker, arglist));
-				}
-
-				@Override
-				public LispStruct apply(final LispStruct... lispStructs) {
-					return funcall(lispStructs[0], lispStructs[1]);
-				}
-			};
 
 	private void initialize() {
 		//create the global environment
 		environmentStack = new Stack<>();
 		environmentStack.push(EnvironmentAccessor.createGlobalEnvironment());
-		currentLispName = new Stack<>();
-		currentLispName.push(null);
 
 		topLevelMode = true;
 

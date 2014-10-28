@@ -57,7 +57,6 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 				} finally {
 					SemanticAnalyzer.bindingsPosition = tempPosition;
 					SemanticAnalyzer.environmentStack.pop();
-					SemanticAnalyzer.currentLispName.pop();
 				}
 			} else if (functionListFirst.equals(SpecialOperator.MACRO_LAMBDA)) {
 				final Environment newEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.MACRO);
@@ -71,7 +70,6 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 				} finally {
 					SemanticAnalyzer.bindingsPosition = tempPosition;
 					SemanticAnalyzer.environmentStack.pop();
-					SemanticAnalyzer.currentLispName.pop();
 				}
 			}
 

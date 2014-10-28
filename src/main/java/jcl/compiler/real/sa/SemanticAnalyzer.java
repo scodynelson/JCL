@@ -22,7 +22,9 @@ import org.slf4j.LoggerFactory;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 
 public class SemanticAnalyzer {
@@ -33,7 +35,7 @@ public class SemanticAnalyzer {
 	private boolean topLevelMode;
 
 	public static Stack<Environment> environmentStack;
-	public static List<SymbolStruct<?>> undefinedFunctions;
+	public static Set<SymbolStruct<?>> undefinedFunctions;
 	public static Stack<SymbolStruct<?>> currentLispName;
 	public static int bindingsPosition;
 	// and association of function names seen and their arglist munging
@@ -65,7 +67,7 @@ public class SemanticAnalyzer {
 
 		BlockAnalyzer.BLOCK_STACK.clear();
 		TagbodyAnalyzer.TAGBODY_STACK.clear();
-		undefinedFunctions = Collections.synchronizedList(new ArrayList<>());
+		undefinedFunctions = Collections.synchronizedSet(new HashSet<>());
 		bindingsPosition = 0;
 	}
 

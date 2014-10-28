@@ -82,6 +82,8 @@ public class LambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
 				}
 			}
 
+			// TODO: go through declarations and set lambda list types if a declaration "type" restriction was used
+
 			final List<LispStruct> newLambdaBody = getNewStartingLambdaBody(parsedLambdaList);
 			newLambdaBody.addAll(bodyForms);
 

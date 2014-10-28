@@ -53,7 +53,7 @@ public class EnvironmentAccessor {
 	}
 
 	public static Environment createNewLambdaBinding(final Environment currentEnvironment, final SymbolStruct<?> newVariable,
-													 final int position, final LispStruct initForm, final boolean isSpecial) {
+	                                                 final int position, final LispStruct initForm, final boolean isSpecial) {
 
 		final Scope scope = (newVariable.isSpecial() || isSpecial) ? Scope.DYNAMIC : Scope.LEXICAL;
 		final Binding binding = new LambdaBinding(newVariable, position, scope, T.INSTANCE, initForm);
@@ -65,7 +65,7 @@ public class EnvironmentAccessor {
 	}
 
 	public static Environment createNewLetBinding(final Environment currentEnvironment, final SymbolStruct<?> newVariable,
-												  final int position, final LispStruct initForm, final boolean isSpecial) {
+	                                              final int position, final LispStruct initForm, final boolean isSpecial) {
 
 		final Scope scope = (newVariable.isSpecial() || isSpecial) ? Scope.DYNAMIC : Scope.LEXICAL;
 		final Binding binding = new LetBinding(newVariable, position, scope, T.INSTANCE, initForm);
@@ -77,8 +77,8 @@ public class EnvironmentAccessor {
 	}
 
 	public static Environment createNewFBinding(final Environment currentEnvironment, final SymbolStruct<?> newVariable,
-												final int position, final LispStruct initForm, final boolean isSpecial,
-												final SymbolStruct<?> newFieldName) {
+	                                            final int position, final LispStruct initForm, final boolean isSpecial,
+	                                            final SymbolStruct<?> newFieldName) {
 
 		final Scope scope = (newVariable.isSpecial() || isSpecial) ? Scope.DYNAMIC : Scope.LEXICAL;
 		final Binding binding = new MacroFunctionBinding(newVariable, position, scope, T.INSTANCE, initForm, newFieldName);
@@ -148,8 +148,20 @@ public class EnvironmentAccessor {
 		return hasBinding;
 	}
 
+	public static boolean hasFunctionBinding(final Environment currentEnvironment, final SymbolStruct<?> variable) {
+		if (currentEnvironment.equals(Environment.NULL)) {
+			return false;
+		}
+
+		if (hasBinding(currentEnvironment, variable)) {
+			return true;
+		}
+
+		return hasFunctionBinding(currentEnvironment.getParent(), variable);
+	}
+
 	public static Environment getBindingEnvironment(final Environment currentEnvironment, final SymbolStruct<?> variable,
-													final boolean valueBinding) {
+	                                                final boolean valueBinding) {
 
 		if (currentEnvironment.equals(Environment.NULL)) {
 			return currentEnvironment;
@@ -487,7 +499,7 @@ public class EnvironmentAccessor {
 	}
 
 	public static Environment createNewClosure(final Environment currentEnvironment, final SymbolStruct<?> newSymbol,
-											   final int references, final int position) {
+	                                           final int references, final int position) {
 
 		final Environment currentEnvironmentInner = findClosestLambdaOrLetEnv(currentEnvironment);
 

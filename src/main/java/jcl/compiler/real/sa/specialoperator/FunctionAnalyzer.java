@@ -22,11 +22,16 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 	@Override
 	public ListStruct analyze(final ListStruct input) {
+
 		if (input.size() != 2) {
-			throw new ProgramErrorException("Wrong number of arguments to special operator Function: " + input.size());
+			throw new ProgramErrorException("FUNCTION: Incorrect number of arguments: " + input.size() + ". Expected 2 arguments.");
 		}
 
 		final LispStruct second = input.getRest().getFirst();
+		if (!(second instanceof SymbolStruct) && !(second instanceof ListStruct)) {
+			throw new ProgramErrorException("FUNCTION: Function argument must be of type SymbolStruct or ListStruct. Got: " + second);
+		}
+
 		if (second instanceof SymbolStruct) {
 			final SymbolStruct<?> functionSymbol = (SymbolStruct) second;
 			final Environment fnBinding = EnvironmentAccessor.getBindingEnvironment(SemanticAnalyzer.environmentStack.peek(), functionSymbol, false);
@@ -41,7 +46,7 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 				final LispStruct first = input.getFirst();
 				return new ConsStruct(first, functionBindingName);
 			}
-		} else if (second instanceof ListStruct) {
+		} else {
 			final ListStruct functionList = (ListStruct) second;
 
 			final LispStruct functionListFirst = functionList.getFirst();
@@ -59,7 +64,9 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 					SemanticAnalyzer.bindingsPosition = tempPosition;
 					SemanticAnalyzer.environmentStack.pop();
 				}
-			} else if (functionListFirst.equals(SpecialOperator.MACRO_LAMBDA)) {
+			}
+
+			if (functionListFirst.equals(SpecialOperator.MACRO_LAMBDA)) {
 				final Environment newEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.MACRO);
 				final Environment parentEnvironment = SemanticAnalyzer.environmentStack.peek();
 				EnvironmentAccessor.createParent(newEnvironment, parentEnvironment);
@@ -74,13 +81,12 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 				}
 			}
 
+			// TODO: is this right???
 			if (functionListFirst.equals(GlobalPackageStruct.COMMON_LISP.findSymbol("SETF").getSymbolStruct())) {
 				return input; // no changes at this level
 			}
 
-			throw new ProgramErrorException("Improperly Formed Function: if the first argument is a ListStruct, it must be a LAMBDA");
+			throw new ProgramErrorException("FUNCTION: First element of List argument must be the Symbol LAMBDA. Got: " + functionListFirst);
 		}
-
-		throw new ProgramErrorException("Improperly Formed Function: the arguments must be either a ListStruct or SymbolStruct");
 	}
 }

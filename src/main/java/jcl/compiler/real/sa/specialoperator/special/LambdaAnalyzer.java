@@ -31,12 +31,12 @@ public class LambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public ListStruct analyze(final ListStruct input) {
 
 		if (input.size() < 2) {
-			throw new ProgramErrorException("Wrong number of arguments to special operator Lambda: " + input.size());
+			throw new ProgramErrorException("LAMBDA: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
 		}
 
-		final LispStruct secondElement = input.getRest().getFirst();
-		if (!(secondElement instanceof ListStruct)) {
-			throw new ProgramErrorException("Second argument to Lambda must be a ListStruct of parameters");
+		final LispStruct second = input.getRest().getFirst();
+		if (!(second instanceof ListStruct)) {
+			throw new ProgramErrorException("LAMBDA: Parameter list must be of type ListStruct. Got: " + second);
 		}
 
 		final Environment parentEnvironment = SemanticAnalyzer.environmentStack.peek();
@@ -48,7 +48,7 @@ public class LambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		final int tempPosition = SemanticAnalyzer.bindingsPosition;
 		try {
-			final ListStruct parameters = (ListStruct) secondElement;
+			final ListStruct parameters = (ListStruct) second;
 			final OrdinaryLambdaListBindings parsedLambdaList = LambdaListParser.parseOrdinaryLambdaList(parameters);
 
 			final List<LispStruct> declarations = new ArrayList<>();

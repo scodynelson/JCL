@@ -77,6 +77,8 @@ public class LetAnalyzer implements Analyzer<LispStruct, ListStruct> {
 				}
 			}
 
+			// TODO: handle declarations...
+
 			final ListStruct body = input.getRest().getRest();
 
 			final ListStruct prognList = new ConsStruct(SpecialOperator.PROGN, body);

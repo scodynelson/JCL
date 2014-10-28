@@ -42,6 +42,8 @@ public class SymbolMacroletAnalyzer implements Analyzer<LispStruct, ListStruct> 
 		}
 
 		// TODO: Handle declarations that happen before the body!!!
+		// TODO: don't allow :special declares...
+
 		final ListStruct symbolMacroletBody = input.getRest().getRest();
 		final ListStruct prognResults = PrognAnalyzer.INSTANCE.analyze(symbolMacroletBody);
 		final List<LispStruct> javaPrognResults = prognResults.getAsJavaList();

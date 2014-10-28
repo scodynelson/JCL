@@ -8,6 +8,8 @@ import jcl.structs.lists.ListStruct;
 import jcl.structs.lists.NullStruct;
 import jcl.structs.symbols.KeywordSymbolStruct;
 import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -15,6 +17,8 @@ import java.util.List;
 import java.util.Set;
 
 public class EvalWhenAnalyzer implements Analyzer<LispStruct, ListStruct> {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(EvalWhenAnalyzer.class);
 
 	public static final EvalWhenAnalyzer INSTANCE = new EvalWhenAnalyzer();
 
@@ -58,7 +62,7 @@ public class EvalWhenAnalyzer implements Analyzer<LispStruct, ListStruct> {
 				return PrognAnalyzer.INSTANCE.analyze(forms);
 			} else {
 				// NOTE: should never get here since we did the check earlier
-				// TODO: add warning logger here at some point
+				LOGGER.warn("EVAL-WHEN: Unsupported situation keyword encountered: {}", situationJavaList);
 				return NullStruct.INSTANCE;
 			}
 		} else if (isExecute(situationJavaList)) {

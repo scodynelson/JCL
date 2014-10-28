@@ -36,6 +36,16 @@ public class ProgvAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		}
 		final LispStruct thirdAnalyzed = SemanticAnalyzer.saMainLoop(third);
 
+		/*
+progv allows binding one or more dynamic variables whose names may be determined at run time. Each form is evaluated in order
+with the dynamic variables whose names are in symbols bound to corresponding values.
+
+If too few values are supplied, the remaining symbols are bound and then made to have no value.
+If too many values are supplied, the excess values are ignored.
+
+The bindings of the dynamic variables are undone on exit from progv.
+		 */
+
 		final ListStruct provBody = input.getRest().getRest().getRest();
 		final ListStruct prognResults = PrognAnalyzer.INSTANCE.analyze(provBody);
 		final List<LispStruct> javaPrognResults = prognResults.getAsJavaList();

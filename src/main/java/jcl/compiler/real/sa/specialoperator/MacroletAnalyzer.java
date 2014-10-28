@@ -39,7 +39,8 @@ public class MacroletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		SemanticAnalyzer.environmentStack.push(macroletEnvironment);
 
-		// TODO: not sure if this account for prior macros being able to resolve later macros...
+		// NOTE: Prior functions that resolve later functions will be handled automatically. Unknown function calls will
+		//       still be stored in the SemanticAnalyzer.undefinedFunctions field.
 
 		final int tempPosition = SemanticAnalyzer.bindingsPosition;
 		try {
@@ -86,9 +87,17 @@ public class MacroletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 				final ListStruct innerFunctionListStruct = ListStruct.buildProperList(innerFunction);
 
-				// Evaluate in the current environment. This is the difference between Flet and Labels.
+				// Evaluate in the current environment. This is one of the differences between Flet and Macrolet.
 				final Environment currentEnvironment = SemanticAnalyzer.environmentStack.peek();
-				final LispStruct paramValueInitForm = SemanticAnalyzer.saMainLoop(innerFunctionListStruct);
+
+				// Push the current functionName onto the Stack. This is another one of the differences between Flet and Macrolet.
+				final LispStruct paramValueInitForm;
+				try {
+					SemanticAnalyzer.functionNameStack.push(macroName);
+					paramValueInitForm = SemanticAnalyzer.saMainLoop(innerFunctionListStruct);
+				} finally {
+					SemanticAnalyzer.functionNameStack.pop();
+				}
 
 				SemanticAnalyzer.bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
 

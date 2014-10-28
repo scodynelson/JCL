@@ -84,10 +84,15 @@ public class FletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 				final ListStruct innerFunctionListStruct = ListStruct.buildProperList(innerFunction);
 
-				// Evaluate in the outer environment. This is the difference between Flet and Labels.
+				// Evaluate in the outer environment. This is one of the differences between Flet and Labels.
 				final Environment currentEnvironment = SemanticAnalyzer.environmentStack.pop();
-				final LispStruct paramValueInitForm = SemanticAnalyzer.saMainLoop(innerFunctionListStruct);
-				SemanticAnalyzer.environmentStack.push(currentEnvironment);
+
+				final LispStruct paramValueInitForm;
+				try {
+					paramValueInitForm = SemanticAnalyzer.saMainLoop(innerFunctionListStruct);
+				} finally {
+					SemanticAnalyzer.environmentStack.push(currentEnvironment);
+				}
 
 				SemanticAnalyzer.bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
 

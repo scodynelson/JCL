@@ -33,6 +33,7 @@ public class SemanticAnalyzer {
 
 	public static Stack<Environment> environmentStack;
 	public static Set<SymbolStruct<?>> undefinedFunctions;
+	public static Stack<SymbolStruct<?>> functionNameStack;
 	public static int bindingsPosition;
 	// and association of function names seen and their arglist munging
 	// used to handle recursive functions
@@ -41,6 +42,8 @@ public class SemanticAnalyzer {
 		//create the global environment
 		environmentStack = new Stack<>();
 		environmentStack.push(EnvironmentAccessor.createGlobalEnvironment());
+		functionNameStack = new Stack<>();
+		functionNameStack.push(null);
 
 		topLevelMode = true;
 

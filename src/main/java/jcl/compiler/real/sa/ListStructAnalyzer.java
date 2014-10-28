@@ -108,9 +108,15 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		final FunctionStruct function = functionSymbol.getFunction();
 		if (function == null) {
-			// add this as a possible undefined function
-			SemanticAnalyzer.undefinedFunctions.add(functionSymbol);
+			if (SemanticAnalyzer.functionNameStack.contains(functionSymbol)) {
+				// Function is undefined, but name exists on the stack to be created
+				SemanticAnalyzer.undefinedFunctions.remove(functionSymbol);
+			} else {
+				// Add this as a possible undefined function
+				SemanticAnalyzer.undefinedFunctions.add(functionSymbol);
+			}
 		} else {
+			// Function is defined.
 			SemanticAnalyzer.undefinedFunctions.remove(functionSymbol);
 
 			final String functionName = functionSymbol.getName();

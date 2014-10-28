@@ -41,7 +41,7 @@ public class QuoteAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		if (fieldName == null) {
 			return LoadTimeValueAnalyzer.INSTANCE.analyze(initForm);
 		} else {
-			return LoadTimeValueAnalyzer.INSTANCE.analyze(initForm, fieldName);
+			return LoadTimeValueAnalyzer.analyze(initForm, fieldName);
 		}
 	}
 }

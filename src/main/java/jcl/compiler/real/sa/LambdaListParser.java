@@ -1,6 +1,8 @@
 package jcl.compiler.real.sa;
 
 import jcl.LispStruct;
+import jcl.compiler.old.EnvironmentAccessor;
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.lambdalist.OptionalBinding;
@@ -12,6 +14,7 @@ import jcl.structs.lists.ListStruct;
 import jcl.structs.lists.NullStruct;
 import jcl.structs.packages.GlobalPackageStruct;
 import jcl.structs.symbols.KeywordSymbolStruct;
+import jcl.structs.symbols.NILStruct;
 import jcl.structs.symbols.SymbolStruct;
 
 import java.util.ArrayList;
@@ -106,6 +109,9 @@ public class LambdaListParser {
 			requiredBindings.add(requiredBinding);
 
 			currentElement = iterator.next();
+
+			SemanticAnalyzer.bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(SemanticAnalyzer.environmentStack.peek());
+			EnvironmentAccessor.createNewLambdaBinding(SemanticAnalyzer.environmentStack.peek(), currentParam, SemanticAnalyzer.bindingsPosition, NILStruct.INSTANCE, false);
 		}
 
 		return new RequiredParseResult(currentElement, currentPosition, requiredBindings);
@@ -122,6 +128,9 @@ public class LambdaListParser {
 				final SymbolStruct<?> currentParam = (SymbolStruct<?>) currentElement;
 				final OptionalBinding optionalBinding = new OptionalBinding(currentParam, currentPosition++, null, null);
 				optionalBindings.add(optionalBinding);
+
+				SemanticAnalyzer.bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(SemanticAnalyzer.environmentStack.peek());
+				EnvironmentAccessor.createNewLambdaBinding(SemanticAnalyzer.environmentStack.peek(), currentParam, SemanticAnalyzer.bindingsPosition, NILStruct.INSTANCE, false);
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
 				if ((currentParam.size() < 1) || (currentParam.size() > 3)) {
@@ -142,6 +151,15 @@ public class LambdaListParser {
 					initForm = secondInCurrent;
 				}
 
+				// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
+				final Environment currentEnvironment = SemanticAnalyzer.environmentStack.pop();
+				final LispStruct parameterValueInitForm = SemanticAnalyzer.saMainLoop(initForm);
+				SemanticAnalyzer.environmentStack.push(currentEnvironment);
+
+				SemanticAnalyzer.bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+
+				EnvironmentAccessor.createNewLambdaBinding(SemanticAnalyzer.environmentStack.peek(), varNameCurrent, SemanticAnalyzer.bindingsPosition, parameterValueInitForm, false);
+
 				SuppliedPBinding suppliedPBinding = null;
 				if (!thirdInCurrent.equals(NullStruct.INSTANCE)) {
 					if (!(thirdInCurrent instanceof SymbolStruct)) {
@@ -150,6 +168,9 @@ public class LambdaListParser {
 
 					final SymbolStruct<?> suppliedPCurrent = (SymbolStruct<?>) thirdInCurrent;
 					suppliedPBinding = new SuppliedPBinding(suppliedPCurrent, currentPosition++);
+
+					SemanticAnalyzer.bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(SemanticAnalyzer.environmentStack.peek());
+					EnvironmentAccessor.createNewLambdaBinding(SemanticAnalyzer.environmentStack.peek(), suppliedPCurrent, SemanticAnalyzer.bindingsPosition, NILStruct.INSTANCE, false);
 				}
 
 				final OptionalBinding optionalBinding = new OptionalBinding(varNameCurrent, currentPosition++, initForm, suppliedPBinding);
@@ -178,6 +199,9 @@ public class LambdaListParser {
 		}
 		final SymbolStruct<?> currentParam = (SymbolStruct<?>) currentElement;
 
+		SemanticAnalyzer.bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(SemanticAnalyzer.environmentStack.peek());
+		EnvironmentAccessor.createNewLambdaBinding(SemanticAnalyzer.environmentStack.peek(), currentParam, SemanticAnalyzer.bindingsPosition, NILStruct.INSTANCE, false);
+
 		final RestBinding restBinding = new RestBinding(currentParam, currentPosition++);
 		return new RestParseResult(currentElement, currentPosition, restBinding);
 	}
@@ -194,6 +218,9 @@ public class LambdaListParser {
 				final KeywordSymbolStruct keyName = GlobalPackageStruct.KEYWORD.intern(currentParam.getName()).getPackageSymbolType();
 				final KeyBinding keyBinding = new KeyBinding(currentParam, currentPosition++, null, keyName, null);
 				keyBindings.add(keyBinding);
+
+				SemanticAnalyzer.bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(SemanticAnalyzer.environmentStack.peek());
+				EnvironmentAccessor.createNewLambdaBinding(SemanticAnalyzer.environmentStack.peek(), currentParam, SemanticAnalyzer.bindingsPosition, NILStruct.INSTANCE, false);
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
 				if ((currentParam.size() < 1) || (currentParam.size() > 3)) {
@@ -235,6 +262,15 @@ public class LambdaListParser {
 					initForm = secondInCurrent;
 				}
 
+				// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
+				final Environment currentEnvironment = SemanticAnalyzer.environmentStack.pop();
+				final LispStruct parameterValueInitForm = SemanticAnalyzer.saMainLoop(initForm);
+				SemanticAnalyzer.environmentStack.push(currentEnvironment);
+
+				SemanticAnalyzer.bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+
+				EnvironmentAccessor.createNewLambdaBinding(SemanticAnalyzer.environmentStack.peek(), varNameCurrent, SemanticAnalyzer.bindingsPosition, parameterValueInitForm, false);
+
 				SuppliedPBinding suppliedPBinding = null;
 				if (!thirdInCurrent.equals(NullStruct.INSTANCE)) {
 					if (!(thirdInCurrent instanceof SymbolStruct)) {
@@ -243,6 +279,9 @@ public class LambdaListParser {
 
 					final SymbolStruct<?> suppliedPCurrent = (SymbolStruct<?>) thirdInCurrent;
 					suppliedPBinding = new SuppliedPBinding(suppliedPCurrent, currentPosition++);
+
+					SemanticAnalyzer.bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(SemanticAnalyzer.environmentStack.peek());
+					EnvironmentAccessor.createNewLambdaBinding(SemanticAnalyzer.environmentStack.peek(), suppliedPCurrent, SemanticAnalyzer.bindingsPosition, NILStruct.INSTANCE, false);
 				}
 
 				final KeyBinding keyBinding = new KeyBinding(varNameCurrent, currentPosition++, initForm, varKeyNameCurrent, suppliedPBinding);
@@ -274,6 +313,9 @@ public class LambdaListParser {
 				final SymbolStruct<?> currentParam = (SymbolStruct<?>) currentElement;
 				final AuxBinding auxBinding = new AuxBinding(currentParam, currentPosition++, null);
 				auxBindings.add(auxBinding);
+
+				SemanticAnalyzer.bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(SemanticAnalyzer.environmentStack.peek());
+				EnvironmentAccessor.createNewLambdaBinding(SemanticAnalyzer.environmentStack.peek(), currentParam, SemanticAnalyzer.bindingsPosition, NILStruct.INSTANCE, false);
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
 				if ((currentParam.size() < 1) || (currentParam.size() > 2)) {
@@ -295,6 +337,15 @@ public class LambdaListParser {
 
 				final AuxBinding auxBinding = new AuxBinding(varNameCurrent, currentPosition++, initForm);
 				auxBindings.add(auxBinding);
+
+				// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
+				final Environment currentEnvironment = SemanticAnalyzer.environmentStack.pop();
+				final LispStruct parameterValueInitForm = SemanticAnalyzer.saMainLoop(initForm);
+				SemanticAnalyzer.environmentStack.push(currentEnvironment);
+
+				SemanticAnalyzer.bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+
+				EnvironmentAccessor.createNewLambdaBinding(SemanticAnalyzer.environmentStack.peek(), varNameCurrent, SemanticAnalyzer.bindingsPosition, parameterValueInitForm, false);
 			} else {
 				throw new RuntimeException("LambdaList aux parameters must be of type SymbolStruct or ListStruct: " + currentElement);
 			}
@@ -376,7 +427,7 @@ public class LambdaListParser {
 		private final boolean allowOtherKeys;
 
 		private KeyParseResult(final LispStruct currentElement, final int currentPosition, final List<KeyBinding> keyBindings,
-							   final boolean allowOtherKeys) {
+		                       final boolean allowOtherKeys) {
 			super(currentElement, currentPosition);
 			this.keyBindings = keyBindings;
 			this.allowOtherKeys = allowOtherKeys;

@@ -53,10 +53,10 @@ public class EnvironmentAccessor {
 	}
 
 	public static Environment createNewLambdaBinding(final Environment currentEnvironment, final SymbolStruct<?> newVariable,
-													 final int position, final boolean isSpecial) {
+													 final int position, final LispStruct initForm, final boolean isSpecial) {
 
 		final Scope scope = (newVariable.isSpecial() || isSpecial) ? Scope.DYNAMIC : Scope.LEXICAL;
-		final Binding binding = new LambdaBinding(newVariable, position, scope, T.INSTANCE);
+		final Binding binding = new LambdaBinding(newVariable, position, scope, T.INSTANCE, initForm);
 
 		final List<Binding> currentBindings = currentEnvironment.getBindings();
 		currentBindings.add(binding);
@@ -77,10 +77,11 @@ public class EnvironmentAccessor {
 	}
 
 	public static Environment createNewFBinding(final Environment currentEnvironment, final SymbolStruct<?> newVariable,
-												final int position, final SymbolStruct<?> newFieldName, final boolean isSpecial) {
+												final int position, final LispStruct initForm, final boolean isSpecial,
+												final SymbolStruct<?> newFieldName) {
 
 		final Scope scope = (newVariable.isSpecial() || isSpecial) ? Scope.DYNAMIC : Scope.LEXICAL;
-		final Binding binding = new MacroFunctionBinding(newVariable, position, scope, T.INSTANCE, newFieldName);
+		final Binding binding = new MacroFunctionBinding(newVariable, position, scope, T.INSTANCE, initForm, newFieldName);
 
 		final List<Binding> currentBindings = currentEnvironment.getBindings();
 		currentBindings.add(binding);

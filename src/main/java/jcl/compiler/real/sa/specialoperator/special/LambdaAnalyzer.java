@@ -1,7 +1,9 @@
 package jcl.compiler.real.sa.specialoperator.special;
 
 import jcl.LispStruct;
+import jcl.compiler.old.EnvironmentAccessor;
 import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.environment.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.lambdalist.OptionalBinding;
@@ -31,66 +33,73 @@ public class LambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			throw new RuntimeException("Wrong number of arguments to special operator Lambda: " + input.size());
 		}
 
-		final Environment environment = SemanticAnalyzer.environmentStack.peek();
-
 		final LispStruct secondElement = input.getRest().getFirst();
 		if (!(secondElement instanceof ListStruct)) {
 			throw new RuntimeException("Second argument to Lambda must be a ListStruct of parameters");
 		}
 
-		final ListStruct parameters = (ListStruct) secondElement;
-		final OrdinaryLambdaListBindings parsedLambdaList = LambdaListParser.parseOrdinaryLambdaList(parameters);
-/* TODO
-		// Add the lambda bindings to the current environment
-		final ConsStruct bindingList = (ConsStruct) EnvironmentAccessor.getBindingSet(environment);
-		// Now I have to remove any FAKE rest forms. They can't be in the binding set
-		bindingList.setCdr(parsedLambdaList); // NOT AUX FORMS?!?!
-*/
+		final Environment parentEnvironment = SemanticAnalyzer.environmentStack.peek();
 
-		final List<LispStruct> declarations = new ArrayList<>();
-		StringStruct docString = null;
+		final Environment letEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.LET);
+		letEnvironment.setParent(parentEnvironment);
 
-		final List<LispStruct> inputRestAsJavaList = input.getRest().getAsJavaList();
-		final Iterator<LispStruct> inputRestIterator = inputRestAsJavaList.iterator();
+		SemanticAnalyzer.environmentStack.push(letEnvironment);
 
-		final List<LispStruct> bodyForms = new ArrayList<>();
+		final int tempPosition = SemanticAnalyzer.bindingsPosition;
+		try {
+			final ListStruct parameters = (ListStruct) secondElement;
+			final OrdinaryLambdaListBindings parsedLambdaList = LambdaListParser.parseOrdinaryLambdaList(parameters);
 
-		while (inputRestIterator.hasNext()) {
-			final LispStruct currentForm = inputRestIterator.next();
+			final List<LispStruct> declarations = new ArrayList<>();
+			StringStruct docString = null;
 
-			if (!bodyForms.isEmpty()) {
-				bodyForms.add(currentForm);
-				continue;
-			}
+			final List<LispStruct> inputRestAsJavaList = input.getRest().getAsJavaList();
+			final Iterator<LispStruct> inputRestIterator = inputRestAsJavaList.iterator();
 
-			if (currentForm instanceof ListStruct) {
-				final ListStruct currentFormAsList = (ListStruct) currentForm;
+			final List<LispStruct> bodyForms = new ArrayList<>();
 
-				final LispStruct firstOfCurrentForm = currentFormAsList.getFirst();
-				if (firstOfCurrentForm.equals(SpecialOperator.DECLARE)) {
-					declarations.add(currentForm);
+			while (inputRestIterator.hasNext()) {
+				final LispStruct currentForm = inputRestIterator.next();
+
+				if (!bodyForms.isEmpty()) {
+					bodyForms.add(currentForm);
+					continue;
+				}
+
+				if (currentForm instanceof ListStruct) {
+					final ListStruct currentFormAsList = (ListStruct) currentForm;
+
+					final LispStruct firstOfCurrentForm = currentFormAsList.getFirst();
+					if (firstOfCurrentForm.equals(SpecialOperator.DECLARE)) {
+						declarations.add(currentForm);
+					} else {
+						bodyForms.add(currentForm);
+					}
+				} else if ((currentForm instanceof StringStruct) && (docString == null) && inputRestIterator.hasNext()) {
+					docString = (StringStruct) currentForm;
 				} else {
 					bodyForms.add(currentForm);
 				}
-			} else if ((currentForm instanceof StringStruct) && (docString == null) && inputRestIterator.hasNext()) {
-				docString = (StringStruct) currentForm;
-			} else {
-				bodyForms.add(currentForm);
 			}
+
+			final List<LispStruct> newLambdaBody = getNewStartingLambdaBody(parsedLambdaList);
+			newLambdaBody.addAll(bodyForms);
+
+			final List<LispStruct> newAnalyzedLambdaBody = new ArrayList<>();
+			for (final LispStruct newLambdaBodyElement : newLambdaBody) {
+				final LispStruct newAnalyzedLambdaBodyElement = SemanticAnalyzer.saMainLoop(newLambdaBodyElement);
+				newAnalyzedLambdaBody.add(newAnalyzedLambdaBodyElement);
+			}
+
+			final ListStruct newAnalyzedLambdaBodyLL = ListStruct.buildProperList(newAnalyzedLambdaBody);
+
+			final Environment envList = SemanticAnalyzer.environmentStack.peek();
+
+			return new LambdaEnvironmentListStruct(envList, parsedLambdaList, declarations, docString, newAnalyzedLambdaBodyLL);
+		} finally {
+			SemanticAnalyzer.bindingsPosition = tempPosition;
+			SemanticAnalyzer.environmentStack.pop();
 		}
-
-		final List<LispStruct> newLambdaBody = getNewStartingLambdaBody(parsedLambdaList);
-		newLambdaBody.addAll(bodyForms);
-
-		final List<LispStruct> newAnalyzedLambdaBody = new ArrayList<>();
-		for (final LispStruct newLambdaBodyElement : newLambdaBody) {
-			final LispStruct newAnalyzedLambdaBodyElement = SemanticAnalyzer.saMainLoop(newLambdaBodyElement);
-			newAnalyzedLambdaBody.add(newAnalyzedLambdaBodyElement);
-		}
-
-		// TODO: set the current environment back to what it was before we hit this method
-		final ListStruct newAnalyzedLambdaBodyLL = ListStruct.buildProperList(newAnalyzedLambdaBody);
-		return new LambdaEnvironmentListStruct(environment, parsedLambdaList, declarations, docString, newAnalyzedLambdaBodyLL);
 	}
 
 	private static List<LispStruct> getNewStartingLambdaBody(final OrdinaryLambdaListBindings parsedLambdaList) {

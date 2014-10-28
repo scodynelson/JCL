@@ -2,6 +2,7 @@ package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.Analyzer;
+import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.SpecialOperator;
 import jcl.structs.symbols.SymbolStruct;
@@ -20,12 +21,12 @@ public class BlockAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public ListStruct analyze(final ListStruct input) {
 
 		if (input.size() < 2) {
-			throw new RuntimeException("BLOCK: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
+			throw new ProgramErrorException("BLOCK: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
 		}
 
 		final LispStruct second = input.getRest().getFirst();
 		if (!(second instanceof SymbolStruct)) {
-			throw new RuntimeException("BLOCK: Label must be of type SymbolStruct. Got: " + second);
+			throw new ProgramErrorException("BLOCK: Label must be of type SymbolStruct. Got: " + second);
 		}
 
 		final SymbolStruct<?> label = (SymbolStruct) second;

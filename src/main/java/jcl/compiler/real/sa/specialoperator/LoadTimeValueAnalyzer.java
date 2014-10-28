@@ -26,11 +26,11 @@ public class LoadTimeValueAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		return analyze(input, "LOAD_TIME_VALUE");
 	}
 
-	public LispStruct analyze(final ListStruct input, final String ltvFieldName) {
+	public static LispStruct analyze(final ListStruct input, final String ltvFieldName) {
 		return analyze(input, ltvFieldName, UUID.randomUUID().toString());
 	}
 
-	private LispStruct analyze(final ListStruct input, final String ltvFieldName, final String tag) {
+	private static LispStruct analyze(final ListStruct input, final String ltvFieldName, final String tag) {
 
 		final List<LispStruct> javaClassDeclaration = new ArrayList<>();
 		javaClassDeclaration.add(Declaration.JAVA_CLASS_NAME);

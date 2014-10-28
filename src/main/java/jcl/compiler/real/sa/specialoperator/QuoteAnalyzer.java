@@ -4,6 +4,7 @@ import jcl.LispStruct;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.specialoperator.quote.QuoteListAnalyzer;
 import jcl.compiler.real.sa.specialoperator.quote.QuoteSymbolAnalyzer;
+import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ConsStruct;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.SpecialOperator;
@@ -18,10 +19,10 @@ public class QuoteAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		return analyze(input, null);
 	}
 
-	public LispStruct analyze(final ListStruct input, final String fieldName) {
+	public static LispStruct analyze(final ListStruct input, final String fieldName) {
 
 		if (input.size() != 2) {
-			throw new RuntimeException("QUOTE: Incorrect number of arguments: " + input.size() + ". Expected 2 arguments.");
+			throw new ProgramErrorException("QUOTE: Incorrect number of arguments: " + input.size() + ". Expected 2 arguments.");
 		}
 
 		final LispStruct element = input.getRest().getFirst();

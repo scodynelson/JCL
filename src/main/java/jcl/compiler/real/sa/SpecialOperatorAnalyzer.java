@@ -29,6 +29,7 @@ import jcl.compiler.real.sa.specialoperator.UnwindProtectAnalyzer;
 import jcl.compiler.real.sa.specialoperator.compiler.DefstructAnalyzer;
 import jcl.compiler.real.sa.specialoperator.special.LambdaAnalyzer;
 import jcl.compiler.real.sa.specialoperator.special.MacroLambdaAnalyzer;
+import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.SpecialOperator;
 
@@ -82,7 +83,7 @@ public class SpecialOperatorAnalyzer implements Analyzer<LispStruct, ListStruct>
 
 		final Analyzer<LispStruct, ListStruct> strategy = STRATEGIES.get(specialOperator);
 		if (strategy == null) {
-			throw new RuntimeException("SpecialOperator symbol supplied is not supported.");
+			throw new ProgramErrorException("SpecialOperator symbol supplied is not supported.");
 		}
 		return strategy.analyze(input);
 	}

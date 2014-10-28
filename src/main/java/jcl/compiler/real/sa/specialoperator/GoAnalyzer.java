@@ -2,6 +2,7 @@ package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.Analyzer;
+import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.numbers.NumberStruct;
 import jcl.structs.symbols.SpecialOperator;
@@ -20,12 +21,12 @@ public class GoAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public ListStruct analyze(final ListStruct input) {
 
 		if (input.size() != 2) {
-			throw new RuntimeException("GO: Incorrect number of arguments: " + input.size() + ". Expected 2 arguments.");
+			throw new ProgramErrorException("GO: Incorrect number of arguments: " + input.size() + ". Expected 2 arguments.");
 		}
 
 		final LispStruct second = input.getRest().getFirst();
 		if (!isGoTag(second)) {
-			throw new RuntimeException("GO: Tag must be of type SymbolStruct or IntegerStruct. Got: " + second);
+			throw new ProgramErrorException("GO: Tag must be of type SymbolStruct or IntegerStruct. Got: " + second);
 		}
 
 		SymbolStruct<?> goTagSymbol = null;
@@ -41,7 +42,7 @@ public class GoAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		}
 
 		if (goTagSymbol == null) {
-			throw new RuntimeException("GO: No TAGBODY with Tag " + second + " is visible.");
+			throw new ProgramErrorException("GO: No TAGBODY with Tag " + second + " is visible.");
 		}
 
 		final List<LispStruct> goResultList = new ArrayList<>();

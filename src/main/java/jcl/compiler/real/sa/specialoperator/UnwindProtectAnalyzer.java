@@ -3,6 +3,7 @@ package jcl.compiler.real.sa.specialoperator;
 import jcl.LispStruct;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.SpecialOperator;
 
@@ -17,7 +18,7 @@ public class UnwindProtectAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public LispStruct analyze(final ListStruct input) {
 
 		if (input.size() < 2) {
-			throw new RuntimeException("UNWIND-PROTECT: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
+			throw new ProgramErrorException("UNWIND-PROTECT: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
 		}
 
 		final LispStruct protectedForm = input.getRest().getFirst();

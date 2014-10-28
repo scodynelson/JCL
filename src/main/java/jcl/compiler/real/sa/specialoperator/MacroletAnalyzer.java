@@ -7,6 +7,7 @@ import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.MacroletEnvironmentListStruct;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ConsStruct;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.SpecialOperator;
@@ -23,12 +24,12 @@ public class MacroletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public LispStruct analyze(final ListStruct input) {
 
 		if (input.size() < 2) {
-			throw new RuntimeException("MACROLET: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
+			throw new ProgramErrorException("MACROLET: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
 		}
 
 		final LispStruct second = input.getRest().getFirst();
 		if (!(second instanceof ListStruct)) {
-			throw new RuntimeException("MACROLET: Parameter list must be of type ListStruct. Got: " + second);
+			throw new ProgramErrorException("MACROLET: Parameter list must be of type ListStruct. Got: " + second);
 		}
 
 		final Environment parentEnvironment = SemanticAnalyzer.environmentStack.peek();
@@ -47,19 +48,19 @@ public class MacroletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 			for (final LispStruct currentMacro : macroletMacrosJavaList) {
 				if (!(currentMacro instanceof ListStruct)) {
-					throw new RuntimeException("MACROLET: Macro parameter must be of type ListStruct. Got: " + currentMacro);
+					throw new ProgramErrorException("MACROLET: Macro parameter must be of type ListStruct. Got: " + currentMacro);
 				}
 				final ListStruct macroList = (ListStruct) currentMacro;
 
 				final LispStruct macroListFirst = macroList.getFirst();
 				if (!(macroListFirst instanceof SymbolStruct)) {
-					throw new RuntimeException("MACROLET: Macro parameter first element value must be of type SymbolStruct. Got: " + macroListFirst);
+					throw new ProgramErrorException("MACROLET: Macro parameter first element value must be of type SymbolStruct. Got: " + macroListFirst);
 				}
 				final SymbolStruct<?> macroName = (SymbolStruct) macroListFirst;
 
 				final LispStruct macroListSecond = macroList.getRest().getFirst();
 				if (!(macroListSecond instanceof ListStruct)) {
-					throw new RuntimeException("MACROLET: Macro parameter second element value must be of type ListStruct. Got: " + macroListSecond);
+					throw new ProgramErrorException("MACROLET: Macro parameter second element value must be of type ListStruct. Got: " + macroListSecond);
 				}
 
 				final ListStruct lambdaList = (ListStruct) macroListSecond;

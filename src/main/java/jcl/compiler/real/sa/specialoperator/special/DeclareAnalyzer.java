@@ -3,6 +3,7 @@ package jcl.compiler.real.sa.specialoperator.special;
 import jcl.LispStruct;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SymbolStructAnalyzer;
+import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.lists.NullStruct;
 import jcl.structs.symbols.Declaration;
@@ -60,7 +61,7 @@ public class DeclareAnalyzer implements Analyzer<LispStruct, LispStruct> {
 			} else if (declIdentifier.equals(NullStruct.INSTANCE)) {
 				//drop it on the floor
 			} else {
-				throw new RuntimeException("DECLARE: unknown specifier: " + declIdentifier);
+				throw new ProgramErrorException("DECLARE: unknown specifier: " + declIdentifier);
 			}
 		}
 		return input;
@@ -72,7 +73,7 @@ public class DeclareAnalyzer implements Analyzer<LispStruct, LispStruct> {
 		// Special declaration can apply to multiple SymbolStructs
 		for (final LispStruct nextDecl : declarationsAsJavaList) {
 			if (!(nextDecl instanceof SymbolStruct)) {
-				throw new RuntimeException("DECLARE: a non-SymbolStruct entity cannot be made SPECIAL: " + nextDecl);
+				throw new ProgramErrorException("DECLARE: a non-SymbolStruct entity cannot be made SPECIAL: " + nextDecl);
 			}
 
 			final SymbolStruct<?> sym = (SymbolStruct) nextDecl;

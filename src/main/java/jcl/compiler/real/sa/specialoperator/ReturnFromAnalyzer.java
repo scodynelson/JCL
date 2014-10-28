@@ -3,6 +3,7 @@ package jcl.compiler.real.sa.specialoperator;
 import jcl.LispStruct;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.lists.NullStruct;
 import jcl.structs.symbols.SpecialOperator;
@@ -19,16 +20,16 @@ public class ReturnFromAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public ListStruct analyze(final ListStruct input) {
 
 		if ((input.size() < 2) || (input.size() > 3)) {
-			throw new RuntimeException("RETURN-FROM: Incorrect number of arguments: " + input.size() + ". Expected either 2 or 3 arguments.");
+			throw new ProgramErrorException("RETURN-FROM: Incorrect number of arguments: " + input.size() + ". Expected either 2 or 3 arguments.");
 		}
 
 		final LispStruct second = input.getRest().getFirst();
 		if (!(second instanceof SymbolStruct)) {
-			throw new RuntimeException("RETURN-FROM: Label must be of type SymbolStruct. Got: " + second);
+			throw new ProgramErrorException("RETURN-FROM: Label must be of type SymbolStruct. Got: " + second);
 		}
 
 		if (BlockAnalyzer.BLOCK_STACK.search(second) == -1) {
-			throw new RuntimeException("RETURN-FROM: No BLOCK with Label " + second + " is visible.");
+			throw new ProgramErrorException("RETURN-FROM: No BLOCK with Label " + second + " is visible.");
 		}
 
 		final List<LispStruct> returnFromResultList = new ArrayList<>();

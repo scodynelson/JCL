@@ -14,6 +14,7 @@ import jcl.compiler.real.sa.LambdaEnvironmentListStruct;
 import jcl.compiler.real.sa.LambdaListParser;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.structs.arrays.StringStruct;
+import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ConsStruct;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.SpecialOperator;
@@ -30,12 +31,12 @@ public class LambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public ListStruct analyze(final ListStruct input) {
 
 		if (input.size() < 2) {
-			throw new RuntimeException("Wrong number of arguments to special operator Lambda: " + input.size());
+			throw new ProgramErrorException("Wrong number of arguments to special operator Lambda: " + input.size());
 		}
 
 		final LispStruct secondElement = input.getRest().getFirst();
 		if (!(secondElement instanceof ListStruct)) {
-			throw new RuntimeException("Second argument to Lambda must be a ListStruct of parameters");
+			throw new ProgramErrorException("Second argument to Lambda must be a ListStruct of parameters");
 		}
 
 		final Environment parentEnvironment = SemanticAnalyzer.environmentStack.peek();

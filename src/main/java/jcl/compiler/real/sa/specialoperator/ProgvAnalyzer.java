@@ -3,6 +3,7 @@ package jcl.compiler.real.sa.specialoperator;
 import jcl.LispStruct;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.SpecialOperator;
 
@@ -20,18 +21,18 @@ public class ProgvAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		// I envision this making a let environment somehow and setting all the symbol variables to be 'special'
 
 		if (input.size() < 3) {
-			throw new RuntimeException("PROGV: Incorrect number of arguments: " + input.size() + ". Expected at least 3 arguments.");
+			throw new ProgramErrorException("PROGV: Incorrect number of arguments: " + input.size() + ". Expected at least 3 arguments.");
 		}
 
 		final LispStruct second = input.getRest().getFirst();
 		if (!(second instanceof ListStruct)) {
-			throw new RuntimeException("PROGV: Symbols list must be of type ListStruct. Got: " + second);
+			throw new ProgramErrorException("PROGV: Symbols list must be of type ListStruct. Got: " + second);
 		}
 		final LispStruct secondAnalyzed = SemanticAnalyzer.saMainLoop(second);
 
 		final LispStruct third = input.getRest().getRest().getFirst();
 		if (!(third instanceof ListStruct)) {
-			throw new RuntimeException("PROGV: Values list must be of type ListStruct. Got: " + third);
+			throw new ProgramErrorException("PROGV: Values list must be of type ListStruct. Got: " + third);
 		}
 		final LispStruct thirdAnalyzed = SemanticAnalyzer.saMainLoop(third);
 

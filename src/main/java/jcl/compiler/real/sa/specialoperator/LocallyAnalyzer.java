@@ -49,7 +49,7 @@ public class LocallyAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		}
 	}
 
-	private LocallyBodyResult separateAndAnalyzeLocallyBody(final List<LispStruct> locallyBody) {
+	private static LocallyBodyResult separateAndAnalyzeLocallyBody(final List<LispStruct> locallyBody) {
 
 		final List<LispStruct> declarations = new ArrayList<>();
 		final List<LispStruct> forms = new ArrayList<>();

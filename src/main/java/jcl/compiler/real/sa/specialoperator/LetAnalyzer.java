@@ -7,6 +7,7 @@ import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.LetEnvironmentListStruct;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ConsStruct;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.NILStruct;
@@ -23,12 +24,12 @@ public class LetAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public ListStruct analyze(final ListStruct input) {
 
 		if (input.size() < 2) {
-			throw new RuntimeException("LET: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
+			throw new ProgramErrorException("LET: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
 		}
 
 		final LispStruct second = input.getRest().getFirst();
 		if (!(second instanceof ListStruct)) {
-			throw new RuntimeException("LET: Parameter list must be of type ListStruct. Got: " + second);
+			throw new ProgramErrorException("LET: Parameter list must be of type ListStruct. Got: " + second);
 		}
 
 		final Environment parentEnvironment = SemanticAnalyzer.environmentStack.peek();
@@ -47,12 +48,12 @@ public class LetAnalyzer implements Analyzer<LispStruct, ListStruct> {
 				if (currentParameter instanceof ListStruct) {
 					final ListStruct listParameter = (ListStruct) currentParameter;
 					if ((listParameter.size() < 1) || (listParameter.size() > 2)) {
-						throw new RuntimeException("LET: ListStruct parameter must have only 1 or 2 elements. Got: " + currentParameter);
+						throw new ProgramErrorException("LET: ListStruct parameter must have only 1 or 2 elements. Got: " + currentParameter);
 					}
 
 					final LispStruct listParameterFirst = listParameter.getFirst();
 					if (!(listParameterFirst instanceof SymbolStruct)) {
-						throw new RuntimeException("LET: ListStruct parameter first element value must be of type SymbolStruct. Got: " + listParameterFirst);
+						throw new ProgramErrorException("LET: ListStruct parameter first element value must be of type SymbolStruct. Got: " + listParameterFirst);
 					}
 
 					final SymbolStruct<?> parameterName = (SymbolStruct) listParameterFirst;
@@ -72,7 +73,7 @@ public class LetAnalyzer implements Analyzer<LispStruct, ListStruct> {
 					SemanticAnalyzer.bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(SemanticAnalyzer.environmentStack.peek());
 					EnvironmentAccessor.createNewLetBinding(SemanticAnalyzer.environmentStack.peek(), symbolParameter, SemanticAnalyzer.bindingsPosition, NILStruct.INSTANCE, false);
 				} else {
-					throw new RuntimeException("LET: Parameter must be of type SymbolStruct or ListStruct. Got: " + currentParameter);
+					throw new ProgramErrorException("LET: Parameter must be of type SymbolStruct or ListStruct. Got: " + currentParameter);
 				}
 			}
 

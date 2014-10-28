@@ -7,6 +7,7 @@ import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.FletEnvironmentListStruct;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ConsStruct;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.SpecialOperator;
@@ -23,12 +24,12 @@ public class FletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public LispStruct analyze(final ListStruct input) {
 
 		if (input.size() < 2) {
-			throw new RuntimeException("FLET: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
+			throw new ProgramErrorException("FLET: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
 		}
 
 		final LispStruct second = input.getRest().getFirst();
 		if (!(second instanceof ListStruct)) {
-			throw new RuntimeException("FLET: Parameter list must be of type ListStruct. Got: " + second);
+			throw new ProgramErrorException("FLET: Parameter list must be of type ListStruct. Got: " + second);
 		}
 
 		final Environment parentEnvironment = SemanticAnalyzer.environmentStack.peek();
@@ -45,19 +46,19 @@ public class FletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 			for (final LispStruct currentFunction : fletFunctionsJavaList) {
 				if (!(currentFunction instanceof ListStruct)) {
-					throw new RuntimeException("FLET: Function parameter must be of type ListStruct. Got: " + currentFunction);
+					throw new ProgramErrorException("FLET: Function parameter must be of type ListStruct. Got: " + currentFunction);
 				}
 				final ListStruct functionList = (ListStruct) currentFunction;
 
 				final LispStruct functionListFirst = functionList.getFirst();
 				if (!(functionListFirst instanceof SymbolStruct)) {
-					throw new RuntimeException("FLET: Function parameter first element value must be of type SymbolStruct. Got: " + functionListFirst);
+					throw new ProgramErrorException("FLET: Function parameter first element value must be of type SymbolStruct. Got: " + functionListFirst);
 				}
 				final SymbolStruct<?> functionName = (SymbolStruct) functionListFirst;
 
 				final LispStruct functionListSecond = functionList.getRest().getFirst();
 				if (!(functionListSecond instanceof ListStruct)) {
-					throw new RuntimeException("FLET: Function parameter second element value must be of type ListStruct. Got: " + functionListSecond);
+					throw new ProgramErrorException("FLET: Function parameter second element value must be of type ListStruct. Got: " + functionListSecond);
 				}
 
 				final ListStruct lambdaList = (ListStruct) functionListSecond;

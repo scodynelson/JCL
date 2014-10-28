@@ -10,6 +10,7 @@ import jcl.compiler.real.environment.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.lambdalist.RestBinding;
 import jcl.compiler.real.environment.lambdalist.SuppliedPBinding;
+import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.lists.NullStruct;
 import jcl.structs.packages.GlobalPackageStruct;
@@ -84,7 +85,7 @@ public class LambdaListParser {
 		}
 
 		if (iterator.hasNext()) {
-			throw new RuntimeException("Unexpected element at the end of Ordinary Lambda List: " + iterator.next());
+			throw new ProgramErrorException("Unexpected element at the end of Ordinary Lambda List: " + iterator.next());
 		}
 
 		return new OrdinaryLambdaListBindings(requiredBindings, optionalBindings, restBinding, keyBindings, auxBindings, allowOtherKeys);
@@ -102,7 +103,7 @@ public class LambdaListParser {
 		LispStruct currentElement = iterator.next();
 		while (iterator.hasNext() && !isLambdaListKeyword(currentElement)) {
 			if (!(currentElement instanceof SymbolStruct)) {
-				throw new RuntimeException("LambdaList required parameters must be of type SymbolStruct: " + currentElement);
+				throw new ProgramErrorException("LambdaList required parameters must be of type SymbolStruct: " + currentElement);
 			}
 			final SymbolStruct<?> currentParam = (SymbolStruct<?>) currentElement;
 			final RequiredBinding requiredBinding = new RequiredBinding(currentParam, currentPosition++);
@@ -134,7 +135,7 @@ public class LambdaListParser {
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
 				if ((currentParam.size() < 1) || (currentParam.size() > 3)) {
-					throw new RuntimeException("LambdaList optional parameters must have between 1 and 3 parameters: " + currentParam);
+					throw new ProgramErrorException("LambdaList optional parameters must have between 1 and 3 parameters: " + currentParam);
 				}
 
 				final LispStruct firstInCurrent = currentParam.getFirst();
@@ -142,7 +143,7 @@ public class LambdaListParser {
 				final LispStruct thirdInCurrent = currentParam.getRest().getRest().getFirst();
 
 				if (!(firstInCurrent instanceof SymbolStruct)) {
-					throw new RuntimeException("LambdaList optional var name parameters must be of type SymbolStruct: " + firstInCurrent);
+					throw new ProgramErrorException("LambdaList optional var name parameters must be of type SymbolStruct: " + firstInCurrent);
 				}
 				final SymbolStruct<?> varNameCurrent = (SymbolStruct<?>) firstInCurrent;
 
@@ -163,7 +164,7 @@ public class LambdaListParser {
 				SuppliedPBinding suppliedPBinding = null;
 				if (!thirdInCurrent.equals(NullStruct.INSTANCE)) {
 					if (!(thirdInCurrent instanceof SymbolStruct)) {
-						throw new RuntimeException("LambdaList optional supplied-p parameters must be of type SymbolStruct: " + thirdInCurrent);
+						throw new ProgramErrorException("LambdaList optional supplied-p parameters must be of type SymbolStruct: " + thirdInCurrent);
 					}
 
 					final SymbolStruct<?> suppliedPCurrent = (SymbolStruct<?>) thirdInCurrent;
@@ -176,7 +177,7 @@ public class LambdaListParser {
 				final OptionalBinding optionalBinding = new OptionalBinding(varNameCurrent, currentPosition++, initForm, suppliedPBinding);
 				optionalBindings.add(optionalBinding);
 			} else {
-				throw new RuntimeException("LambdaList optional parameters must be of type SymbolStruct or ListStruct: " + currentElement);
+				throw new ProgramErrorException("LambdaList optional parameters must be of type SymbolStruct or ListStruct: " + currentElement);
 			}
 
 			currentElement = iterator.next();
@@ -191,11 +192,11 @@ public class LambdaListParser {
 
 		final LispStruct currentElement = iterator.next();
 		if (iterator.hasNext() && !isLambdaListKeyword(currentElement)) {
-			throw new RuntimeException("LambdaList rest parameter must only have 1 parameter: " + iterator.next());
+			throw new ProgramErrorException("LambdaList rest parameter must only have 1 parameter: " + iterator.next());
 		}
 
 		if (!(currentElement instanceof SymbolStruct)) {
-			throw new RuntimeException("LambdaList rest parameters must be of type SymbolStruct: " + currentElement);
+			throw new ProgramErrorException("LambdaList rest parameters must be of type SymbolStruct: " + currentElement);
 		}
 		final SymbolStruct<?> currentParam = (SymbolStruct<?>) currentElement;
 
@@ -224,7 +225,7 @@ public class LambdaListParser {
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
 				if ((currentParam.size() < 1) || (currentParam.size() > 3)) {
-					throw new RuntimeException("LambdaList key parameters must have between 1 and 3 parameters: " + currentParam);
+					throw new ProgramErrorException("LambdaList key parameters must have between 1 and 3 parameters: " + currentParam);
 				}
 
 				final LispStruct firstInCurrent = currentParam.getFirst();
@@ -239,22 +240,22 @@ public class LambdaListParser {
 				} else if (firstInCurrent instanceof ListStruct) {
 					final ListStruct currentVar = (ListStruct) firstInCurrent;
 					if (currentVar.size() != 2) {
-						throw new RuntimeException("LambdaList key var name list parameters must have 2 parameters: " + currentVar);
+						throw new ProgramErrorException("LambdaList key var name list parameters must have 2 parameters: " + currentVar);
 					}
 
 					final LispStruct firstInCurrentVar = currentVar.getFirst();
 					if (!(firstInCurrentVar instanceof KeywordSymbolStruct)) {
-						throw new RuntimeException("LambdaList key var name list key-name parameters must be of type KeywordStruct: " + firstInCurrentVar);
+						throw new ProgramErrorException("LambdaList key var name list key-name parameters must be of type KeywordStruct: " + firstInCurrentVar);
 					}
 					varKeyNameCurrent = (KeywordSymbolStruct) firstInCurrentVar;
 
 					final LispStruct secondInCurrentVar = currentVar.getRest().getFirst();
 					if (!(secondInCurrentVar instanceof SymbolStruct)) {
-						throw new RuntimeException("LambdaList key var name list name parameters must be of type SymbolStruct: " + secondInCurrentVar);
+						throw new ProgramErrorException("LambdaList key var name list name parameters must be of type SymbolStruct: " + secondInCurrentVar);
 					}
 					varNameCurrent = (SymbolStruct<?>) secondInCurrentVar;
 				} else {
-					throw new RuntimeException("LambdaList key var name parameters must be of type SymbolStruct or ListStruct: " + firstInCurrent);
+					throw new ProgramErrorException("LambdaList key var name parameters must be of type SymbolStruct or ListStruct: " + firstInCurrent);
 				}
 
 				LispStruct initForm = null;
@@ -274,7 +275,7 @@ public class LambdaListParser {
 				SuppliedPBinding suppliedPBinding = null;
 				if (!thirdInCurrent.equals(NullStruct.INSTANCE)) {
 					if (!(thirdInCurrent instanceof SymbolStruct)) {
-						throw new RuntimeException("LambdaList key supplied-p parameters must be of type SymbolStruct: " + thirdInCurrent);
+						throw new ProgramErrorException("LambdaList key supplied-p parameters must be of type SymbolStruct: " + thirdInCurrent);
 					}
 
 					final SymbolStruct<?> suppliedPCurrent = (SymbolStruct<?>) thirdInCurrent;
@@ -287,7 +288,7 @@ public class LambdaListParser {
 				final KeyBinding keyBinding = new KeyBinding(varNameCurrent, currentPosition++, initForm, varKeyNameCurrent, suppliedPBinding);
 				keyBindings.add(keyBinding);
 			} else {
-				throw new RuntimeException("LambdaList key parameters must be of type SymbolStruct or ListStruct: " + currentElement);
+				throw new ProgramErrorException("LambdaList key parameters must be of type SymbolStruct or ListStruct: " + currentElement);
 			}
 
 			currentElement = iterator.next();
@@ -319,14 +320,14 @@ public class LambdaListParser {
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
 				if ((currentParam.size() < 1) || (currentParam.size() > 2)) {
-					throw new RuntimeException("LambdaList aux parameters must have between 1 and 3 parameters: " + currentParam);
+					throw new ProgramErrorException("LambdaList aux parameters must have between 1 and 3 parameters: " + currentParam);
 				}
 
 				final LispStruct firstInCurrent = currentParam.getFirst();
 				final LispStruct secondInCurrent = currentParam.getRest().getFirst();
 
 				if (!(firstInCurrent instanceof SymbolStruct)) {
-					throw new RuntimeException("LambdaList aux var name parameters must be of type SymbolStruct: " + firstInCurrent);
+					throw new ProgramErrorException("LambdaList aux var name parameters must be of type SymbolStruct: " + firstInCurrent);
 				}
 				final SymbolStruct<?> varNameCurrent = (SymbolStruct<?>) firstInCurrent;
 
@@ -347,7 +348,7 @@ public class LambdaListParser {
 
 				EnvironmentAccessor.createNewLambdaBinding(SemanticAnalyzer.environmentStack.peek(), varNameCurrent, SemanticAnalyzer.bindingsPosition, parameterValueInitForm, false);
 			} else {
-				throw new RuntimeException("LambdaList aux parameters must be of type SymbolStruct or ListStruct: " + currentElement);
+				throw new ProgramErrorException("LambdaList aux parameters must be of type SymbolStruct or ListStruct: " + currentElement);
 			}
 
 			currentElement = iterator.next();

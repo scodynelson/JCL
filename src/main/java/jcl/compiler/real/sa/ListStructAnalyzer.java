@@ -10,6 +10,7 @@ import jcl.compiler.real.environment.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.lambdalist.RestBinding;
 import jcl.compiler.real.sa.specialoperator.special.LambdaAnalyzer;
+import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.functions.FunctionStruct;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.lists.NullStruct;
@@ -52,7 +53,7 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 					final ListStruct functionArguments = expandedFormList.getRest();
 					return analyzeFunctionCall(functionSymbol, functionArguments);
 				} else {
-					throw new RuntimeException("SA LIST: First element of expanded form must be of type SymbolStruct or ListStruct. Got: " + expandedFormListFirst);
+					throw new ProgramErrorException("SA LIST: First element of expanded form must be of type SymbolStruct or ListStruct. Got: " + expandedFormListFirst);
 				}
 			} else {
 				return SemanticAnalyzer.saMainLoop(expandedForm);
@@ -67,14 +68,14 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 				final ListStruct functionArguments = input.getRest();
 				return analyzedLambdaFunctionCall(lambdaAnalyzed, functionArguments);
 			} else {
-				throw new RuntimeException("SA LIST: First element of a first element ListStruct must be the SpecialOperator 'LAMBDA'. Got: " + firstOfFirstList);
+				throw new ProgramErrorException("SA LIST: First element of a first element ListStruct must be the SpecialOperator 'LAMBDA'. Got: " + firstOfFirstList);
 			}
 		} else {
-			throw new RuntimeException("SA LIST: First element must be of type SymbolStruct or ListStruct. Got: " + first);
+			throw new ProgramErrorException("SA LIST: First element must be of type SymbolStruct or ListStruct. Got: " + first);
 		}
 	}
 
-	private ListStruct analyzedLambdaFunctionCall(final LambdaEnvironmentListStruct lambdaAnalyzed, final ListStruct functionArguments) {
+	private static ListStruct analyzedLambdaFunctionCall(final LambdaEnvironmentListStruct lambdaAnalyzed, final ListStruct functionArguments) {
 
 		final List<LispStruct> analyzedFunctionList = new ArrayList<>();
 		analyzedFunctionList.add(lambdaAnalyzed);
@@ -92,7 +93,7 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		return ListStruct.buildProperList(analyzedFunctionList);
 	}
 
-	private ListStruct analyzeFunctionCall(final SymbolStruct<?> functionSymbol, final ListStruct functionArguments) {
+	private static ListStruct analyzeFunctionCall(final SymbolStruct<?> functionSymbol, final ListStruct functionArguments) {
 
 		final List<LispStruct> analyzedFunctionList = new ArrayList<>();
 
@@ -136,7 +137,7 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		final List<RequiredBinding> requiredBindings = lambdaListBindings.getRequiredBindings();
 		for (final RequiredBinding ignored : requiredBindings) {
 			if (!functionArgumentsIterator.hasNext()) {
-				throw new RuntimeException("SA LIST: Too few arguments in call to '" + functionName + "'. " + functionArguments.size() + " arguments provided, at least " + requiredBindings.size() + " required.");
+				throw new ProgramErrorException("SA LIST: Too few arguments in call to '" + functionName + "'. " + functionArguments.size() + " arguments provided, at least " + requiredBindings.size() + " required.");
 			}
 			nextArgument = functionArgumentsIterator.next();
 		}
@@ -167,15 +168,15 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 						functionArgumentsIterator.next();
 						nextArgument = functionArgumentsIterator.next();
 					} else {
-						throw new RuntimeException("SA LIST: Keyword argument not found in '" + functionName + "' function definition: " + argumentKey);
+						throw new ProgramErrorException("SA LIST: Keyword argument not found in '" + functionName + "' function definition: " + argumentKey);
 					}
 				} else {
-					throw new RuntimeException("SA LIST: Expected Keyword argument for call to '" + functionName + " was: " + nextArgument);
+					throw new ProgramErrorException("SA LIST: Expected Keyword argument for call to '" + functionName + " was: " + nextArgument);
 				}
 			} else if (restBinding != null) {
 				functionArgumentsIterator.next();
 			} else {
-				throw new RuntimeException("SA LIST: Too many arguments in call to '" + functionName + "'. " + functionArguments.size() + " arguments provided, at most " + requiredBindings.size() + " accepted.");
+				throw new ProgramErrorException("SA LIST: Too many arguments in call to '" + functionName + "'. " + functionArguments.size() + " arguments provided, at most " + requiredBindings.size() + " accepted.");
 			}
 		}
 	}

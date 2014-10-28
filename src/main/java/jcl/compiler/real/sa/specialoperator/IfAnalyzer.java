@@ -3,6 +3,7 @@ package jcl.compiler.real.sa.specialoperator;
 import jcl.LispStruct;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.SpecialOperator;
 
@@ -17,7 +18,7 @@ public class IfAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public ListStruct analyze(final ListStruct input) {
 
 		if ((input.size() < 3) || (input.size() > 4)) {
-			throw new RuntimeException("IF: Incorrect number of arguments: " + input.size() + ". Expected either 3 or 4 arguments.");
+			throw new ProgramErrorException("IF: Incorrect number of arguments: " + input.size() + ". Expected either 3 or 4 arguments.");
 		}
 
 		final List<LispStruct> ifResultList = new ArrayList<>();

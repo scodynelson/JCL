@@ -9,6 +9,7 @@ import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.SymbolStructAnalyzer;
 import jcl.compiler.real.sa.specialoperator.special.LambdaAnalyzer;
+import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ConsStruct;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.packages.GlobalPackageStruct;
@@ -22,7 +23,7 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	@Override
 	public ListStruct analyze(final ListStruct input) {
 		if (input.size() != 2) {
-			throw new RuntimeException("Wrong number of arguments to special operator Function: " + input.size());
+			throw new ProgramErrorException("Wrong number of arguments to special operator Function: " + input.size());
 		}
 
 		final LispStruct second = input.getRest().getFirst();
@@ -77,9 +78,9 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 				return input; // no changes at this level
 			}
 
-			throw new RuntimeException("Improperly Formed Function: if the first argument is a ListStruct, it must be a LAMBDA");
+			throw new ProgramErrorException("Improperly Formed Function: if the first argument is a ListStruct, it must be a LAMBDA");
 		}
 
-		throw new RuntimeException("Improperly Formed Function: the arguments must be either a ListStruct or SymbolStruct");
+		throw new ProgramErrorException("Improperly Formed Function: the arguments must be either a ListStruct or SymbolStruct");
 	}
 }

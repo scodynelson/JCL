@@ -3,6 +3,7 @@ package jcl.compiler.real.sa.specialoperator;
 import jcl.LispStruct;
 import jcl.compiler.old.symbol.KeywordOld;
 import jcl.compiler.real.sa.Analyzer;
+import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.lists.NullStruct;
 import jcl.structs.symbols.KeywordSymbolStruct;
@@ -30,11 +31,11 @@ public class EvalWhenAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		return analyze(input, false);
 	}
 
-	public ListStruct analyze(final ListStruct input, final boolean isTopLevel) {
+	public static ListStruct analyze(final ListStruct input, final boolean isTopLevel) {
 
 		final LispStruct second = input.getRest().getFirst();
 		if (!(second instanceof ListStruct)) {
-			throw new RuntimeException("EVAL-WHEN: Situation list must be of type ListStruct. Got: " + second);
+			throw new ProgramErrorException("EVAL-WHEN: Situation list must be of type ListStruct. Got: " + second);
 		}
 
 		final ListStruct situationList = (ListStruct) second;
@@ -42,7 +43,7 @@ public class EvalWhenAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		final Collection<LispStruct> difference = CollectionUtils.removeAll(situationJavaList, SITUATION_KEYWORDS);
 		if (!difference.isEmpty()) {
-			throw new RuntimeException("EVAL-WHEN: Situations must be one of ':COMPILE-TOP-LEVEL', ':LOAD-TIME-LEVEL', or ':EXECUTE'. Got: " + situationList);
+			throw new ProgramErrorException("EVAL-WHEN: Situations must be one of ':COMPILE-TOP-LEVEL', ':LOAD-TIME-LEVEL', or ':EXECUTE'. Got: " + situationList);
 		}
 
 		final ListStruct forms = input.getRest().getRest();
@@ -68,15 +69,15 @@ public class EvalWhenAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		}
 	}
 
-	private boolean isCompileTopLevel(final List<LispStruct> situationList) {
+	private static boolean isCompileTopLevel(final List<LispStruct> situationList) {
 		return situationList.contains(KeywordOld.CompileToplevel);
 	}
 
-	private boolean isLoadTopLevel(final List<LispStruct> situationList) {
+	private static boolean isLoadTopLevel(final List<LispStruct> situationList) {
 		return situationList.contains(KeywordOld.LoadToplevel);
 	}
 
-	private boolean isExecute(final List<LispStruct> situationList) {
+	private static boolean isExecute(final List<LispStruct> situationList) {
 		return situationList.contains(KeywordOld.Execute);
 	}
 }

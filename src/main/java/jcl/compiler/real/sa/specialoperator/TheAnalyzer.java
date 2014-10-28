@@ -23,11 +23,9 @@ public class TheAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		}
 
 		final LispStruct second = input.getRest().getFirst();
-		if (!isTheValueType(second)) {
+		if (!(second instanceof SymbolStruct) && !(second instanceof ListStruct)) {
 			throw new ProgramErrorException("THE: Tag must be of type SymbolStruct or ListStruct. Got: " + second);
 		}
-		// TODO: actually do the type comparison to verify the result of the third analyzed is an instance of the type.
-		// TODO: NOTE: this probably will end up happening in the ICG as something like a 'instanceOf' check or something...
 
 		final LispStruct third = input.getRest().getRest().getFirst();
 		final LispStruct thirdAnalyzed = SemanticAnalyzer.saMainLoop(third);
@@ -38,9 +36,5 @@ public class TheAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		theResultList.add(thirdAnalyzed);
 
 		return ListStruct.buildProperList(theResultList);
-	}
-
-	private static boolean isTheValueType(final LispStruct current) {
-		return (current instanceof SymbolStruct) || (current instanceof ListStruct);
 	}
 }

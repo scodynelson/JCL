@@ -133,9 +133,6 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	}
 
 	private static void validateFunctionArguments(final String functionName, final OrdinaryLambdaListBindings lambdaListBindings, final List<LispStruct> functionArguments) {
-		// TODO: analyze by type. But how do we do this when the result to be checked for type can be dynamically
-		// TODO: determined by a function call as a function argument... hmm....
-
 		final Iterator<LispStruct> functionArgumentsIterator = functionArguments.iterator();
 
 		LispStruct nextArgument = null;

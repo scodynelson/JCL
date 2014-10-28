@@ -13,7 +13,7 @@ import java.util.List;
  */
 public abstract class FunctionStruct extends BuiltInClassStruct {
 
-	private OrdinaryLambdaListBindings ordinaryLambdaListBindings;
+	private OrdinaryLambdaListBindings lambdaListBindings;
 
 	/**
 	 * Protected constructor.
@@ -52,7 +52,7 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 	 */
 	public abstract LispStruct apply(LispStruct... lispStructs);
 
-	public OrdinaryLambdaListBindings getOrdinaryLambdaListBindings() {
-		return ordinaryLambdaListBindings;
+	public OrdinaryLambdaListBindings getLambdaListBindings() {
+		return lambdaListBindings;
 	}
 }

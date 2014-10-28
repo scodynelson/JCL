@@ -10,7 +10,6 @@ import jcl.compiler.real.environment.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.lambdalist.RequiredBinding;
 import jcl.compiler.real.sa.specialoperator.special.LambdaAnalyzer;
 import jcl.structs.functions.FunctionStruct;
-import jcl.structs.lists.ConsStruct;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.lists.NullStruct;
 import jcl.structs.symbols.KeywordSymbolStruct;
@@ -50,7 +49,7 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 				} else if (expandedFormListFirst instanceof SymbolStruct) {
 					final SymbolStruct<?> functionSymbol = (SymbolStruct<?>) expandedFormListFirst;
 					final ListStruct functionArguments = expandedFormList.getRest();
-					return analyzeFunctionMarker(functionSymbol, functionArguments);
+					return analyzeFunctionCall(functionSymbol, functionArguments);
 				} else {
 					throw new RuntimeException("SA LIST: First element of expanded form must be of type SymbolStruct or ListStruct. Got: " + expandedFormListFirst);
 				}
@@ -63,10 +62,9 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 			final LispStruct firstOfFirstList = firstAsList.getFirst();
 			if (firstOfFirstList.equals(SpecialOperator.LAMBDA)) {
-				final ListStruct lambdaAnalyzed = LambdaAnalyzer.INSTANCE.analyze(firstAsList);
-				final ListStruct lambdaList = new ConsStruct(lambdaAnalyzed, input.getRest());
-
-				return null; //analyzeFunctionMarker(lambdaList); TODO: lambda list to product function... hmm....
+				final LambdaEnvironmentListStruct lambdaAnalyzed = (LambdaEnvironmentListStruct) LambdaAnalyzer.INSTANCE.analyze(firstAsList);
+				final ListStruct functionArguments = input.getRest();
+				return analyzedLambdaFunctionCall(lambdaAnalyzed, functionArguments);
 			} else {
 				throw new RuntimeException("SA LIST: First element of a first element ListStruct must be the SpecialOperator 'LAMBDA'. Got: " + firstOfFirstList);
 			}
@@ -75,7 +73,25 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		}
 	}
 
-	private ListStruct analyzeFunctionMarker(final SymbolStruct<?> functionSymbol, final ListStruct functionArguments) {
+	private ListStruct analyzedLambdaFunctionCall(final LambdaEnvironmentListStruct lambdaAnalyzed, final ListStruct functionArguments) {
+
+		final List<LispStruct> analyzedFunctionList = new ArrayList<>();
+		analyzedFunctionList.add(lambdaAnalyzed);
+
+		final List<LispStruct> functionArgumentsList = functionArguments.getAsJavaList();
+
+		final OrdinaryLambdaListBindings lambdaListBindings = lambdaAnalyzed.getLambdaListBindings();
+		validateFunctionArguments("Anonymous Lambda", lambdaListBindings, functionArgumentsList);
+
+		for (final LispStruct currentArgument : functionArgumentsList) {
+			final LispStruct analyzedArgument = SemanticAnalyzer.saMainLoop(currentArgument);
+			analyzedFunctionList.add(analyzedArgument);
+		}
+
+		return ListStruct.buildProperList(analyzedFunctionList);
+	}
+
+	private ListStruct analyzeFunctionCall(final SymbolStruct<?> functionSymbol, final ListStruct functionArguments) {
 
 		final List<LispStruct> analyzedFunctionList = new ArrayList<>();
 
@@ -94,7 +110,10 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			SemanticAnalyzer.undefinedFunctions.add(functionSymbol);
 		} else {
 			SemanticAnalyzer.undefinedFunctions.remove(functionSymbol);
-			validateFunctionArguments(functionSymbol, function, functionArgumentsList);
+
+			final String functionName = functionSymbol.getName();
+			final OrdinaryLambdaListBindings lambdaListBindings = function.getLambdaListBindings();
+			validateFunctionArguments(functionName, lambdaListBindings, functionArgumentsList);
 		}
 
 		for (final LispStruct currentArgument : functionArgumentsList) {
@@ -105,25 +124,23 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		return ListStruct.buildProperList(analyzedFunctionList);
 	}
 
-	private static void validateFunctionArguments(final SymbolStruct<?> functionSymbol, final FunctionStruct function, final List<LispStruct> functionArguments) {
+	private static void validateFunctionArguments(final String functionName, final OrdinaryLambdaListBindings lambdaListBindings, final List<LispStruct> functionArguments) {
 		// TODO: analyze by type. But how do we do this when the result to be checked for type can be dynamically
 		// TODO: determined by a function call as a function argument... hmm....
-
-		final OrdinaryLambdaListBindings ordinaryLambdaListBindings = function.getOrdinaryLambdaListBindings();
 
 		final Iterator<LispStruct> functionArgumentsIterator = functionArguments.iterator();
 
 		LispStruct nextArgument = null;
 
-		final List<RequiredBinding> requiredBindings = ordinaryLambdaListBindings.getRequiredBindings();
+		final List<RequiredBinding> requiredBindings = lambdaListBindings.getRequiredBindings();
 		for (final RequiredBinding ignored : requiredBindings) {
 			if (!functionArgumentsIterator.hasNext()) {
-				throw new RuntimeException("SA LIST: Too few arguments in call to '" + functionSymbol.getName() + "'. " + functionArguments.size() + " arguments provided, at least " + requiredBindings.size() + " required.");
+				throw new RuntimeException("SA LIST: Too few arguments in call to '" + functionName + "'. " + functionArguments.size() + " arguments provided, at least " + requiredBindings.size() + " required.");
 			}
 			nextArgument = functionArgumentsIterator.next();
 		}
 
-		final List<OptionalBinding> optionalBindings = ordinaryLambdaListBindings.getOptionalBindings();
+		final List<OptionalBinding> optionalBindings = lambdaListBindings.getOptionalBindings();
 		for (final OptionalBinding ignored : optionalBindings) {
 			if (!functionArgumentsIterator.hasNext()) {
 				break;
@@ -131,7 +148,7 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			nextArgument = functionArgumentsIterator.next();
 		}
 
-		final List<KeyBinding> keyBindings = ordinaryLambdaListBindings.getKeyBindings();
+		final List<KeyBinding> keyBindings = lambdaListBindings.getKeyBindings();
 		final List<KeywordSymbolStruct> keys = new ArrayList<>(keyBindings.size());
 		for (final KeyBinding keyBinding : keyBindings) {
 			final KeywordSymbolStruct key = keyBinding.getKeyName();
@@ -146,10 +163,10 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 						// Consume the next argument
 						functionArgumentsIterator.next();
 					} else {
-						throw new RuntimeException("SA LIST: Keyword argument not found in '" + functionSymbol.getName() + "' function definition: " + argumentKey);
+						throw new RuntimeException("SA LIST: Keyword argument not found in '" + functionName + "' function definition: " + argumentKey);
 					}
 				} else {
-					throw new RuntimeException("SA LIST: Expected Keyword argument for call to '" + functionSymbol.getName() + " was: " + nextArgument);
+					throw new RuntimeException("SA LIST: Expected Keyword argument for call to '" + functionName + " was: " + nextArgument);
 				}
 			}
 

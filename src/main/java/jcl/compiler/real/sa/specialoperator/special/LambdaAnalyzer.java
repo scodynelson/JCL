@@ -98,7 +98,7 @@ public class LambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 			final Environment envList = SemanticAnalyzer.environmentStack.peek();
 
-			return new LambdaEnvironmentListStruct(envList, declarations, docString, newAnalyzedLambdaBodyLL, parsedLambdaList);
+			return new LambdaEnvironmentListStruct(envList, declarations, newAnalyzedLambdaBodyLL, parsedLambdaList, docString);
 		} finally {
 			SemanticAnalyzer.bindingsPosition = tempPosition;
 			SemanticAnalyzer.environmentStack.pop();

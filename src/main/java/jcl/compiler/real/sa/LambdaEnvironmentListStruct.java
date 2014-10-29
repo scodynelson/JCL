@@ -11,15 +11,20 @@ import java.util.List;
 public class LambdaEnvironmentListStruct extends EnvironmentListStruct {
 
 	private final OrdinaryLambdaListBindings lambdaListBindings;
+	private final StringStruct docString;
 
-	public LambdaEnvironmentListStruct(final Environment environment, final List<LispStruct> declarations,
-	                                   final StringStruct docString, final ListStruct bodyForms,
-	                                   final OrdinaryLambdaListBindings lambdaListBindings) {
-		super(environment, declarations, docString, bodyForms);
+	public LambdaEnvironmentListStruct(final Environment environment, final List<LispStruct> declarations, final ListStruct bodyForms,
+	                                   final OrdinaryLambdaListBindings lambdaListBindings, final StringStruct docString) {
+		super(environment, declarations, bodyForms);
 		this.lambdaListBindings = lambdaListBindings;
+		this.docString = docString;
 	}
 
 	public OrdinaryLambdaListBindings getLambdaListBindings() {
 		return lambdaListBindings;
+	}
+
+	public StringStruct getDocString() {
+		return docString;
 	}
 }

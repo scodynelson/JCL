@@ -14,6 +14,8 @@ import jcl.structs.symbols.NILStruct;
 import jcl.structs.symbols.SpecialOperator;
 import jcl.structs.symbols.SymbolStruct;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class LetAnalyzer implements Analyzer<LispStruct, ListStruct> {
@@ -61,8 +63,13 @@ public class LetAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 					// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
 					final Environment currentEnvironment = SemanticAnalyzer.environmentStack.pop();
-					final LispStruct parameterValueInitForm = SemanticAnalyzer.saMainLoop(parameterValue);
-					SemanticAnalyzer.environmentStack.push(currentEnvironment);
+
+					final LispStruct parameterValueInitForm;
+					try {
+						parameterValueInitForm = SemanticAnalyzer.saMainLoop(parameterValue);
+					} finally {
+						SemanticAnalyzer.environmentStack.push(currentEnvironment);
+					}
 
 					SemanticAnalyzer.bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
 
@@ -77,17 +84,42 @@ public class LetAnalyzer implements Analyzer<LispStruct, ListStruct> {
 				}
 			}
 
-			// TODO: handle declarations...
+			final ListStruct currentBodyForms = input.getRest().getRest();
 
-			final ListStruct body = input.getRest().getRest();
+			final List<LispStruct> currentBodyFormsAsJavaList = currentBodyForms.getAsJavaList();
+			final Iterator<LispStruct> currentBodyFormsIterator = currentBodyFormsAsJavaList.iterator();
 
-			final ListStruct prognList = new ConsStruct(SpecialOperator.PROGN, body);
-			final ListStruct bodyResult = PrognAnalyzer.INSTANCE.analyze(prognList);
+			final List<LispStruct> declarations = new ArrayList<>();
+			final List<LispStruct> newBodyForms = new ArrayList<>();
+
+			while (currentBodyFormsIterator.hasNext()) {
+				final LispStruct currentForm = currentBodyFormsIterator.next();
+
+				if (!newBodyForms.isEmpty()) {
+					newBodyForms.add(currentForm);
+					continue;
+				}
+
+				if (currentForm instanceof ListStruct) {
+					final ListStruct currentFormAsList = (ListStruct) currentForm;
+
+					final LispStruct firstOfCurrentForm = currentFormAsList.getFirst();
+					if (firstOfCurrentForm.equals(SpecialOperator.DECLARE)) {
+						declarations.add(currentForm);
+					} else {
+						newBodyForms.add(currentForm);
+					}
+				} else {
+					newBodyForms.add(currentForm);
+				}
+			}
+
+			final ListStruct newBodyFormsLL = ListStruct.buildProperList(newBodyForms);
+			final ListStruct bodyResult = new ConsStruct(SpecialOperator.PROGN, newBodyFormsLL);
 
 			final Environment envList = SemanticAnalyzer.environmentStack.peek();
 
-			// TODO: docstring, declarations
-			return new EnvironmentListStruct(envList, null, null, bodyResult);
+			return new EnvironmentListStruct(envList, declarations, bodyResult);
 		} finally {
 			SemanticAnalyzer.bindingsPosition = tempPosition;
 			SemanticAnalyzer.environmentStack.pop();

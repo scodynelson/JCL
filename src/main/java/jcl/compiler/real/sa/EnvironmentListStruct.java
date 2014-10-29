@@ -2,7 +2,6 @@ package jcl.compiler.real.sa;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.structs.arrays.StringStruct;
 import jcl.structs.lists.ListStruct;
 
 import java.util.List;
@@ -11,15 +10,12 @@ public class EnvironmentListStruct extends ListStruct {
 
 	private final Environment environment;
 	private final List<LispStruct> declarations;
-	private final StringStruct docString;
 	private final ListStruct bodyForms;
 
-	public EnvironmentListStruct(final Environment environment, final List<LispStruct> declarations,
-	                             final StringStruct docString, final ListStruct bodyForms) {
+	public EnvironmentListStruct(final Environment environment, final List<LispStruct> declarations, final ListStruct bodyForms) {
 		super(null, null);
 		this.environment = environment;
 		this.declarations = declarations;
-		this.docString = docString;
 		this.bodyForms = bodyForms;
 	}
 
@@ -29,10 +25,6 @@ public class EnvironmentListStruct extends ListStruct {
 
 	public List<LispStruct> getDeclarations() {
 		return declarations;
-	}
-
-	public StringStruct getDocString() {
-		return docString;
 	}
 
 	public ListStruct getBodyForms() {

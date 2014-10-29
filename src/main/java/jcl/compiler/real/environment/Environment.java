@@ -3,6 +3,7 @@ package jcl.compiler.real.environment;
 import jcl.LispStruct;
 import jcl.LispType;
 import jcl.structs.symbols.SymbolStruct;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import java.util.List;
 
@@ -94,5 +95,10 @@ public class Environment implements LispStruct {
 	@Override
 	public String printStruct() {
 		return toString();
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this);
 	}
 }

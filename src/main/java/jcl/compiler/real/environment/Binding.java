@@ -2,6 +2,7 @@ package jcl.compiler.real.environment;
 
 import jcl.LispType;
 import jcl.structs.symbols.SymbolStruct;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 public abstract class Binding {
 
@@ -47,5 +48,10 @@ public abstract class Binding {
 
 	public void setType(final LispType type) {
 		this.type = type;
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this);
 	}
 }

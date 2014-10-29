@@ -41,16 +41,21 @@ public class LambdaListParser {
 		final List<LispStruct> lambdaListJava = lambdaList.getAsJavaList();
 		final Iterator<LispStruct> iterator = lambdaListJava.iterator();
 
+		LispStruct currentElement = null;
 		int position = 0;
 
-		final RequiredParseResult requiredParseResult = parseRequiredBindings(semanticAnalyzer, iterator, position);
+		List<RequiredBinding> requiredBindings = Collections.emptyList();
+		if (iterator.hasNext()) {
+			final RequiredParseResult requiredParseResult = parseRequiredBindings(semanticAnalyzer, iterator, position);
 
-		final List<RequiredBinding> requiredBindings = requiredParseResult.getRequiredBindings();
-		LispStruct currentElement = requiredParseResult.getCurrentElement();
-		position = requiredParseResult.getCurrentPosition();
+			requiredBindings = requiredParseResult.getRequiredBindings();
+			currentElement = requiredParseResult.getCurrentElement();
+			position = requiredParseResult.getCurrentPosition();
+		}
+
 
 		List<OptionalBinding> optionalBindings = Collections.emptyList();
-		if (currentElement.equals(AND_OPTIONAL)) {
+		if (AND_OPTIONAL.equals(currentElement)) {
 			final OptionalParseResult optionalParseResult = parseOptionalBindings(semanticAnalyzer, iterator, position);
 
 			optionalBindings = optionalParseResult.getOptionalBindings();
@@ -59,7 +64,7 @@ public class LambdaListParser {
 		}
 
 		RestBinding restBinding = null;
-		if (currentElement.equals(AND_REST)) {
+		if (AND_REST.equals(currentElement)) {
 			final RestParseResult restParseResult = parseRestBinding(semanticAnalyzer, iterator, position);
 
 			restBinding = restParseResult.getRestBinding();
@@ -69,7 +74,7 @@ public class LambdaListParser {
 
 		List<KeyBinding> keyBindings = Collections.emptyList();
 		boolean allowOtherKeys = false;
-		if (currentElement.equals(AND_KEY)) {
+		if (AND_KEY.equals(currentElement)) {
 			final KeyParseResult keyParseResult = parseKeyBindings(semanticAnalyzer, iterator, position);
 
 			keyBindings = keyParseResult.getKeyBindings();
@@ -79,7 +84,7 @@ public class LambdaListParser {
 		}
 
 		List<AuxBinding> auxBindings = Collections.emptyList();
-		if (currentElement.equals(AND_AUX)) {
+		if (AND_AUX.equals(currentElement)) {
 			final AuxParseResult auxParseResult = parseAuxBindings(semanticAnalyzer, iterator, position);
 
 			auxBindings = auxParseResult.getAuxBindings();

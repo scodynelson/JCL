@@ -1,6 +1,7 @@
 package jcl.compiler.real.environment;
 
 import jcl.structs.symbols.SymbolStruct;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import java.util.List;
 
@@ -47,5 +48,10 @@ public class Closure {
 
 	public void setBindings(final List<ClosureBinding> bindings) {
 		this.bindings = bindings;
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this);
 	}
 }

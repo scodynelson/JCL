@@ -1,6 +1,7 @@
 package jcl.compiler.real.environment;
 
 import jcl.structs.symbols.SymbolStruct;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 public class ClosureBinding {
 
@@ -36,5 +37,10 @@ public class ClosureBinding {
 
 	public void setReferences(final int references) {
 		this.references = references;
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this);
 	}
 }

@@ -10,8 +10,8 @@ import java.util.List;
 
 public class LambdaEnvironmentListStruct extends EnvironmentListStruct {
 
-	private final OrdinaryLambdaListBindings lambdaListBindings;
-	private final StringStruct docString;
+	protected final OrdinaryLambdaListBindings lambdaListBindings;
+	protected final StringStruct docString;
 
 	public LambdaEnvironmentListStruct(final Environment environment, final List<LispStruct> declarations, final ListStruct bodyForms,
 	                                   final OrdinaryLambdaListBindings lambdaListBindings, final StringStruct docString) {
@@ -26,5 +26,17 @@ public class LambdaEnvironmentListStruct extends EnvironmentListStruct {
 
 	public StringStruct getDocString() {
 		return docString;
+	}
+
+	@Override
+	public String printStruct() {
+		return "LambdaEnvironmentListStruct{"
+				+ "environment=" + environment
+				+ ", declarations=" + declarations
+				+ ", bodyForms=" + bodyForms
+				+ ", bodyForms=" + lambdaListBindings
+				+ ", bodyForms=" + docString
+				+ '}'
+				+ "\nBody Printed: " + bodyForms.printStruct();
 	}
 }

@@ -104,6 +104,10 @@ public final class BodyProcessingUtil {
 				bodyForms.add(analyzedForm);
 				next = iterator.next();
 			}
+
+			// Make sure to analyze and add the last form!!
+			final LispStruct analyzedForm = semanticAnalyzer.saMainLoop(next);
+			bodyForms.add(analyzedForm);
 		}
 
 		return new BodyProcessingResult(declarations, docString, bodyForms);

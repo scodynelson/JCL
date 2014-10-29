@@ -1,6 +1,7 @@
 package jcl.system;
 
 import jcl.LispStruct;
+import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.reader.function.macrofunction.SharpTagReaderConstants;
 import jcl.reader.impl.Reader;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
@@ -105,7 +106,8 @@ public final class ReadEvalPrint {
 							whatRead = reader.read();
 						}
 						if (whatRead != null) {
-//							LOGGER.debug(whatRead.toString());
+							LOGGER.debug("READ:\n");
+							LOGGER.debug("{}\n", whatRead.printStruct());
 						} else {
 							LOGGER.warn("; WARNING: Null response from reader");
 						}
@@ -125,6 +127,28 @@ public final class ReadEvalPrint {
 
 					// EVAL --------------
 //					value = eval.funcall(whatRead);
+
+					// TEMPORARY: ANALYZER
+
+					if (whatRead != null) {
+						LispStruct whatAnalyzed = null;
+						try {
+							final SemanticAnalyzer sa = new SemanticAnalyzer();
+							whatAnalyzed = sa.funcall(whatRead);
+
+							if (whatAnalyzed != null) {
+								LOGGER.debug("ANALYZED:\n");
+								LOGGER.debug("{}\n", whatAnalyzed.printStruct());
+							} else {
+								LOGGER.warn("; WARNING: Null response from analyzer");
+							}
+						} catch (final ReaderErrorException ex) {
+							LOGGER.warn("; WARNING: Analysis Exception condition during Analyzer operation -> {}", ex.getMessage(), ex);
+						} catch (final Exception ex) {
+							LOGGER.warn("; WARNING: Analysis condition during Analyzer operation -> {}", ex.getMessage(), ex);
+							break;
+						}
+					}
 
 					// save the form evaluated and its predecessors
 //					Variable.PlusPlusPlus.setValue(Variable.PlusPlus.getValue());

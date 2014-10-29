@@ -8,9 +8,9 @@ import java.util.List;
 
 public class EnvironmentListStruct extends ListStruct {
 
-	private final Environment environment;
-	private final List<LispStruct> declarations;
-	private final ListStruct bodyForms;
+	protected final Environment environment;
+	protected final List<LispStruct> declarations;
+	protected final ListStruct bodyForms;
 
 	public EnvironmentListStruct(final Environment environment, final List<LispStruct> declarations, final ListStruct bodyForms) {
 		super(null, null);
@@ -73,6 +73,11 @@ public class EnvironmentListStruct extends ListStruct {
 
 	@Override
 	public String printStruct() {
-		return toString();
+		return "EnvironmentListStruct{"
+				+ "environment=" + environment
+				+ ", declarations=" + declarations
+				+ ", bodyForms=" + bodyForms
+				+ '}'
+				+ "\n Body Printed: " + bodyForms.printStruct();
 	}
 }

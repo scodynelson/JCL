@@ -2,6 +2,7 @@ package jcl.compiler.real.environment;
 
 import jcl.LispStruct;
 import jcl.structs.symbols.SymbolStruct;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 public class LoadTimeValue {
 
@@ -27,5 +28,10 @@ public class LoadTimeValue {
 
 	public void setValue(final LispStruct value) {
 		this.value = value;
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this);
 	}
 }

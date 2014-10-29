@@ -39,8 +39,8 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		final LispStruct first = input.getFirst();
 		if (first instanceof SymbolStruct) {
 			final Stack<Environment> environmentStack = semanticAnalyzer.getEnvironmentStack();
-			final MacroExpandReturn macroExpandReturn = MacroExpandFunction.FUNCTION.funcall(input, environmentStack.peek());
-			final LispStruct expandedForm = macroExpandReturn.getExpandedForm();
+//			final MacroExpandReturn macroExpandReturn = MacroExpandFunction.FUNCTION.funcall(input, environmentStack.peek());
+			final LispStruct expandedForm = input; //macroExpandReturn.getExpandedForm(); // TODO: need to put something in place so this will work
 
 			if (expandedForm.equals(NullStruct.INSTANCE)) {
 				return NullStruct.INSTANCE;

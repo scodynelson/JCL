@@ -1,5 +1,7 @@
 package jcl.compiler.real.environment.lambdalist;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+
 import java.util.List;
 
 public class OrdinaryLambdaListBindings {
@@ -13,8 +15,8 @@ public class OrdinaryLambdaListBindings {
 	private final boolean allowOtherKeys;
 
 	public OrdinaryLambdaListBindings(final List<RequiredBinding> requiredBindings, final List<OptionalBinding> optionalBindings,
-									  final RestBinding restBinding, final List<KeyBinding> keyBindings, final List<AuxBinding> auxBindings,
-									  final boolean allowOtherKeys) {
+	                                  final RestBinding restBinding, final List<KeyBinding> keyBindings, final List<AuxBinding> auxBindings,
+	                                  final boolean allowOtherKeys) {
 		this.requiredBindings = requiredBindings;
 		this.optionalBindings = optionalBindings;
 		this.restBinding = restBinding;
@@ -45,5 +47,10 @@ public class OrdinaryLambdaListBindings {
 
 	public boolean isAllowOtherKeys() {
 		return allowOtherKeys;
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this);
 	}
 }

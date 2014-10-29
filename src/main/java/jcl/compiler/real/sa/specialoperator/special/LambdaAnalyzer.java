@@ -41,10 +41,10 @@ public class LambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		final Environment parentEnvironment = SemanticAnalyzer.environmentStack.peek();
 
-		final Environment letEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.LET);
-		letEnvironment.setParent(parentEnvironment);
+		final Environment lambdaEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.LAMBDA);
+		lambdaEnvironment.setParent(parentEnvironment);
 
-		SemanticAnalyzer.environmentStack.push(letEnvironment);
+		SemanticAnalyzer.environmentStack.push(lambdaEnvironment);
 
 		final int tempPosition = SemanticAnalyzer.bindingsPosition;
 		try {
@@ -98,7 +98,7 @@ public class LambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 			final Environment envList = SemanticAnalyzer.environmentStack.peek();
 
-			return new LambdaEnvironmentListStruct(envList, parsedLambdaList, declarations, docString, newAnalyzedLambdaBodyLL);
+			return new LambdaEnvironmentListStruct(envList, declarations, docString, newAnalyzedLambdaBodyLL, parsedLambdaList);
 		} finally {
 			SemanticAnalyzer.bindingsPosition = tempPosition;
 			SemanticAnalyzer.environmentStack.pop();

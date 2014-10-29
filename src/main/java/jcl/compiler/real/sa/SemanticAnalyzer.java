@@ -12,7 +12,6 @@ import jcl.structs.lists.ConsStruct;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.lists.NullStruct;
 import jcl.structs.numbers.IntegerStruct;
-import jcl.structs.packages.GlobalPackageStruct;
 import jcl.structs.symbols.SpecialOperator;
 import jcl.structs.symbols.SymbolStruct;
 import org.slf4j.Logger;
@@ -66,15 +65,13 @@ public class SemanticAnalyzer {
 				innerForm = ListStruct.buildProperList(SpecialOperator.LAMBDA, NullStruct.INSTANCE, innerForm);
 			}
 		} else {
-			innerForm = ListStruct.buildProperList(GlobalPackageStruct.COMMON_LISP.findSymbol("LAMBDA").getSymbolStruct(), NullStruct.INSTANCE, innerForm);
+			innerForm = ListStruct.buildProperList(SpecialOperator.LAMBDA, NullStruct.INSTANCE, innerForm);
 		}
 
-
-		// make a copy so we can trash it in SA
 		innerForm = saMainLoop(innerForm);
+
 		// now setup the closure depths
 		innerForm = saSetClosureDepth(innerForm, 0);
-		// clear the dup hash map
 
 		// now see if we have any functions still undefined
 		for (final SymbolStruct<?> undefinedFunction : undefinedFunctions) {
@@ -219,18 +216,19 @@ public class SemanticAnalyzer {
 */
 
 	private static LispStruct saSetClosureDepth(final LispStruct form, int depth) {
-		if (!form.equals(NullStruct.INSTANCE) && (form instanceof ListStruct)) {
+		if (form instanceof ConsStruct) {
 
-			final ListStruct workingList = (ListStruct) form;
+			final ListStruct workingList = (ConsStruct) form;
 			// this may be the start of a lambda or let expr
 			final LispStruct theCar = workingList.getFirst();
 			if (theCar instanceof ListStruct) {
-				final LispStruct test = ((ListStruct) theCar).getFirst();
+				final ListStruct env = (ListStruct) theCar;
+				final LispStruct test = env.getFirst();
 				if (test.equals(SpecialOperator.LAMBDA_MARKER) || test.equals(SpecialOperator.LET) || test.equals(SpecialOperator.LABELS) || test.equals(SpecialOperator.FLET) || test.equals(SpecialOperator.MACRO_MARKER)) {
-					final ListStruct theEnv = (ListStruct) theCar;
+
 					// it is, so see if there's a closure defined
 					// Get the current closure entry
-					final ConsStruct closure = (ConsStruct) AssocFunction.funcall(KeywordOld.Closure, theEnv.getRest());
+					final ConsStruct closure = (ConsStruct) AssocFunction.funcall(KeywordOld.Closure, env.getRest());
 					// add the depth indicator
 					// (rplacd closure (cons (cons :depth depth) (cdr closure)))
 					// there may be a depth gauge...

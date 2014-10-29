@@ -5,7 +5,7 @@ import jcl.compiler.old.EnvironmentAccessor;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.Analyzer;
-import jcl.compiler.real.sa.MacroletEnvironmentListStruct;
+import jcl.compiler.real.sa.EnvironmentListStruct;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ConsStruct;
@@ -111,7 +111,8 @@ public class MacroletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 			final Environment envList = SemanticAnalyzer.environmentStack.peek();
 
-			return new MacroletEnvironmentListStruct(envList, bodyResult);
+			// TODO: docstring, declarations
+			return new EnvironmentListStruct(envList, null, null, bodyResult);
 		} finally {
 			SemanticAnalyzer.bindingsPosition = tempPosition;
 			SemanticAnalyzer.environmentStack.pop();

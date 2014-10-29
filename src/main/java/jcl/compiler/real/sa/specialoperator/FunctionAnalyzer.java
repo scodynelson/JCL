@@ -12,7 +12,6 @@ import jcl.compiler.real.sa.specialoperator.special.LambdaAnalyzer;
 import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ConsStruct;
 import jcl.structs.lists.ListStruct;
-import jcl.structs.packages.GlobalPackageStruct;
 import jcl.structs.symbols.SpecialOperator;
 import jcl.structs.symbols.SymbolStruct;
 
@@ -64,26 +63,6 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 					SemanticAnalyzer.bindingsPosition = tempPosition;
 					SemanticAnalyzer.environmentStack.pop();
 				}
-			}
-
-			if (functionListFirst.equals(SpecialOperator.MACRO_LAMBDA)) {
-				final Environment newEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.MACRO);
-				final Environment parentEnvironment = SemanticAnalyzer.environmentStack.peek();
-				EnvironmentAccessor.createParent(newEnvironment, parentEnvironment);
-				SemanticAnalyzer.environmentStack.push(newEnvironment);
-
-				final int tempPosition = SemanticAnalyzer.bindingsPosition;
-				try {
-					return LambdaAnalyzer.INSTANCE.analyze(functionList);
-				} finally {
-					SemanticAnalyzer.bindingsPosition = tempPosition;
-					SemanticAnalyzer.environmentStack.pop();
-				}
-			}
-
-			// TODO: is this right???
-			if (functionListFirst.equals(GlobalPackageStruct.COMMON_LISP.findSymbol("SETF").getSymbolStruct())) {
-				return input; // no changes at this level
 			}
 
 			throw new ProgramErrorException("FUNCTION: First element of List argument must be the Symbol LAMBDA. Got: " + functionListFirst);

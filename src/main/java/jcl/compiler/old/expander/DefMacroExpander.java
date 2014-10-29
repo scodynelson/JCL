@@ -3,7 +3,6 @@ package jcl.compiler.old.expander;
 import jcl.structs.lists.ConsStruct;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.SpecialOperator;
-import jcl.structs.symbols.SymbolStruct;
 
 /**
  * DefMacroExpander takes two arguments.  The first is the list containing the Defmacro symbol,
@@ -20,10 +19,8 @@ public class DefMacroExpander extends DefunExpander {
 
 	public static final DefMacroExpander FUNCTION = new DefMacroExpander();
 
-	protected SymbolStruct<?> macroLambdaSymbol = SpecialOperator.MACRO_LAMBDA;
-
 	@Override
 	protected ListStruct setTypeSymbol(ListStruct mostlyLambda) {
-		return new ConsStruct(macroLambdaSymbol, mostlyLambda);
+		return new ConsStruct(SpecialOperator.LAMBDA, mostlyLambda);
 	}
 }

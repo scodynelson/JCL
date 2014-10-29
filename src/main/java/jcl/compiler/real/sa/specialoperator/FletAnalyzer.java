@@ -131,7 +131,7 @@ public class FletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			}
 
 			final ListStruct newBodyFormsLL = ListStruct.buildProperList(newBodyForms);
-			final ListStruct bodyResult = new ConsStruct(SpecialOperator.PROGN, newBodyFormsLL);
+			final ListStruct bodyResult = PrognAnalyzer.INSTANCE.analyze(newBodyFormsLL);
 
 			final Environment envList = SemanticAnalyzer.environmentStack.peek();
 

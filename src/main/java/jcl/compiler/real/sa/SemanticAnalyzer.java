@@ -60,8 +60,7 @@ public class SemanticAnalyzer {
 		if (innerForm instanceof ListStruct) {
 			final ListStruct formList = (ListStruct) innerForm;
 			final LispStruct firstOfFormList = formList.getFirst();
-			if (!(firstOfFormList instanceof SymbolStruct)
-					|| !(firstOfFormList.equals(SpecialOperator.LAMBDA) || firstOfFormList.equals(SpecialOperator.MACRO_LAMBDA))) {
+			if (!(firstOfFormList instanceof SymbolStruct) || !firstOfFormList.equals(SpecialOperator.LAMBDA)) {
 				innerForm = ListStruct.buildProperList(SpecialOperator.LAMBDA, NullStruct.INSTANCE, innerForm);
 			}
 		} else {

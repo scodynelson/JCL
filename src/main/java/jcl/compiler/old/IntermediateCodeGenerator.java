@@ -736,8 +736,6 @@ public class IntermediateCodeGenerator {
 				genCodeIf(list);
 			} else if (symName.equals(SpecialOperator.LAMBDA)) {
 				genCodeLambda(list);
-			} else if (symName.equals(SpecialOperator.MACRO_LAMBDA)) {
-				genCodeMacroLambda(list);
 			} else if (symName.equals(SpecialOperator.LABELS)) {
 				genCodeLabels(list);
 			} else if (symName.equals(SpecialOperator.LOAD_TIME_VALUE)) {

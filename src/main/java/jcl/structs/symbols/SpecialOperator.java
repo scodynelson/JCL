@@ -33,7 +33,6 @@ public final class SpecialOperator extends SymbolStruct<SpecialOperator> {
 
 	public static final SpecialOperator DECLARE = new SpecialOperator("DECLARE", GlobalPackageStruct.COMMON_LISP);
 	public static final SpecialOperator LAMBDA = new SpecialOperator("LAMBDA", GlobalPackageStruct.COMMON_LISP);
-	public static final SpecialOperator MACRO_LAMBDA = new SpecialOperator("MACRO-LAMBDA", GlobalPackageStruct.COMMON_LISP);
 
 	public static final SpecialOperator DEFSTRUCT = new SpecialOperator("%DEFSTRUCT", GlobalPackageStruct.COMPILER);
 	public static final SpecialOperator FUNCTION_MARKER = new SpecialOperator("%FUNCTION-MARKER", GlobalPackageStruct.COMPILER);

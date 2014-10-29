@@ -28,7 +28,6 @@ import jcl.compiler.real.sa.specialoperator.ThrowAnalyzer;
 import jcl.compiler.real.sa.specialoperator.UnwindProtectAnalyzer;
 import jcl.compiler.real.sa.specialoperator.compiler.DefstructAnalyzer;
 import jcl.compiler.real.sa.specialoperator.special.LambdaAnalyzer;
-import jcl.compiler.real.sa.specialoperator.special.MacroLambdaAnalyzer;
 import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.SpecialOperator;
@@ -71,7 +70,6 @@ public class SpecialOperatorAnalyzer implements Analyzer<LispStruct, ListStruct>
 
 //		STRATEGIES.put(SpecialOperator.DECLARE, DeclareAnalyzer.INSTANCE);
 		STRATEGIES.put(SpecialOperator.LAMBDA, LambdaAnalyzer.INSTANCE);
-		STRATEGIES.put(SpecialOperator.MACRO_LAMBDA, MacroLambdaAnalyzer.INSTANCE);
 
 		STRATEGIES.put(SpecialOperator.DEFSTRUCT, DefstructAnalyzer.INSTANCE);
 	}

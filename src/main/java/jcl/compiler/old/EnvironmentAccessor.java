@@ -30,7 +30,7 @@ public class EnvironmentAccessor {
 	public static Environment createNewEnvironment(final Marker marker) {
 		Environment environment = new Environment(marker, new ArrayList<>(), null, new ArrayList<>(), null, null);
 
-		if ((marker == Marker.LAMBDA) || (marker == Marker.MACRO) || (marker == Marker.FLET) || (marker == Marker.LABELS)) {
+		if ((marker == Marker.LAMBDA) || (marker == Marker.FLET) || (marker == Marker.LABELS)) {
 			environment.getLoadTimeValues().clear();
 		}
 
@@ -170,7 +170,7 @@ public class EnvironmentAccessor {
 		if (hasBinding(currentEnvironment, variable)) {
 
 			final Marker envType = currentEnvironment.getMarker();
-			if (((envType == Marker.LAMBDA) || (envType == Marker.MACRO) || (envType == Marker.LET)) && valueBinding) {
+			if (((envType == Marker.LAMBDA) || (envType == Marker.LET)) && valueBinding) {
 				return currentEnvironment;
 			}
 
@@ -193,7 +193,7 @@ public class EnvironmentAccessor {
 		}
 
 		final Marker envType = currentEnvironment.getMarker();
-		if ((envType == Marker.LAMBDA) || (envType == Marker.MACRO) || (envType == Marker.LET) || (envType == Marker.LABELS) || (envType == Marker.FLET)) {
+		if ((envType == Marker.LAMBDA) || (envType == Marker.LET) || (envType == Marker.LABELS) || (envType == Marker.FLET)) {
 			return currentEnvironment;
 		}
 
@@ -456,8 +456,7 @@ public class EnvironmentAccessor {
 	}
 
 	public static boolean isLambda(final Environment environment) {
-		return (environment.getMarker() == Marker.LAMBDA) || (environment.getMarker() == Marker.MACRO)
-				|| (environment.getMarker() == Marker.FLET) || (environment.getMarker() == Marker.LABELS);
+		return (environment.getMarker() == Marker.LAMBDA) || (environment.getMarker() == Marker.FLET) || (environment.getMarker() == Marker.LABELS);
 	}
 
 	public static Environment addClosureToBindingEnvironment(final Environment currentEnvironment, final SymbolStruct<?> symbol) {

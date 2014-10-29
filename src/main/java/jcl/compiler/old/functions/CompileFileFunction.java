@@ -147,7 +147,7 @@ public class CompileFileFunction {
 			long jarTime;
 
 			baseTime = System.currentTimeMillis();
-			formList = (ListStruct) sa.funcall(formList);
+			formList = (ListStruct) SemanticAnalyzer.funcall(formList);
 			saTime = System.currentTimeMillis() - baseTime;
 
 			baseTime = System.currentTimeMillis();

@@ -7,12 +7,12 @@ import jcl.compiler.old.symbol.KeywordOld;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.specialoperator.BlockAnalyzer;
 import jcl.compiler.real.sa.specialoperator.TagbodyAnalyzer;
+import jcl.structs.arrays.ArrayStruct;
 import jcl.structs.lists.ConsStruct;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.lists.NullStruct;
 import jcl.structs.numbers.IntegerStruct;
 import jcl.structs.packages.GlobalPackageStruct;
-import jcl.structs.symbols.NILStruct;
 import jcl.structs.symbols.SpecialOperator;
 import jcl.structs.symbols.SymbolStruct;
 import org.slf4j.Logger;
@@ -28,50 +28,52 @@ public class SemanticAnalyzer {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SemanticAnalyzer.class);
 
-	// eval-when processing modes
-	private boolean topLevelMode;
-
 	public static Stack<Environment> environmentStack;
 	public static Set<SymbolStruct<?>> undefinedFunctions;
 	public static Stack<SymbolStruct<?>> functionNameStack;
 	public static int bindingsPosition;
-	// and association of function names seen and their arglist munging
-	// used to handle recursive functions
 
-	private void initialize() {
+	// eval-when processing modes
+	private static boolean topLevelMode;
+
+	private static void initialize() {
 		//create the global environment
 		environmentStack = new Stack<>();
 		environmentStack.push(EnvironmentAccessor.createGlobalEnvironment());
+
 		functionNameStack = new Stack<>();
 		functionNameStack.push(null);
+
+		undefinedFunctions = Collections.synchronizedSet(new HashSet<>());
+		bindingsPosition = 0;
 
 		topLevelMode = true;
 
 		BlockAnalyzer.BLOCK_STACK.clear();
 		TagbodyAnalyzer.TAGBODY_STACK.clear();
-		undefinedFunctions = Collections.synchronizedSet(new HashSet<>());
-		bindingsPosition = 0;
 	}
 
-	public LispStruct funcall(LispStruct form) {
+	public static LispStruct funcall(final LispStruct form) {
 		initialize();
 
-		if (!(form instanceof ListStruct)) {
-			form = ListStruct.buildProperList(GlobalPackageStruct.COMMON_LISP.findSymbol("LAMBDA").getSymbolStruct(), NullStruct.INSTANCE, form);
-		} else {
-			final ListStruct formList = (ListStruct) form;
+		LispStruct innerForm = form;
+
+		if (innerForm instanceof ListStruct) {
+			final ListStruct formList = (ListStruct) innerForm;
 			final LispStruct firstOfFormList = formList.getFirst();
 			if (!(firstOfFormList instanceof SymbolStruct)
 					|| !(firstOfFormList.equals(SpecialOperator.LAMBDA) || firstOfFormList.equals(SpecialOperator.MACRO_LAMBDA))) {
-				form = ListStruct.buildProperList(GlobalPackageStruct.COMMON_LISP.findSymbol("LAMBDA").getSymbolStruct(), NullStruct.INSTANCE, form);
+				innerForm = ListStruct.buildProperList(SpecialOperator.LAMBDA, NullStruct.INSTANCE, innerForm);
 			}
+		} else {
+			innerForm = ListStruct.buildProperList(GlobalPackageStruct.COMMON_LISP.findSymbol("LAMBDA").getSymbolStruct(), NullStruct.INSTANCE, innerForm);
 		}
 
 
 		// make a copy so we can trash it in SA
-		form = saMainLoop(form);
+		innerForm = saMainLoop(innerForm);
 		// now setup the closure depths
-		form = saSetClosureDepth(form, 0);
+		innerForm = saSetClosureDepth(innerForm, 0);
 		// clear the dup hash map
 
 		// now see if we have any functions still undefined
@@ -87,16 +89,18 @@ public class SemanticAnalyzer {
 			}
 		}
 
-		return form;
+		return innerForm;
 	}
 
 	public static LispStruct saMainLoop(final LispStruct form) {
 
 		LispStruct analyzedForm = form;
-		if ((form instanceof SymbolStruct) && !form.equals(NILStruct.INSTANCE)) {
-			analyzedForm = SymbolStructAnalyzer.INSTANCE.analyze((SymbolStruct<?>) form);
-		} else if (form instanceof ListStruct) {
+		if (form instanceof ListStruct) {
 			analyzedForm = ListStructAnalyzer.INSTANCE.analyze((ListStruct) form);
+		} else if (form instanceof SymbolStruct) {
+			analyzedForm = SymbolStructAnalyzer.INSTANCE.analyze((SymbolStruct<?>) form);
+		} else if (form instanceof ArrayStruct) {
+			analyzedForm = ArrayStructAnalyzer.INSTANCE.analyze((ArrayStruct<?>) form);
 		}
 		return analyzedForm;
 	}
@@ -214,7 +218,7 @@ public class SemanticAnalyzer {
 	}
 */
 
-	private LispStruct saSetClosureDepth(final LispStruct form, int depth) {
+	private static LispStruct saSetClosureDepth(final LispStruct form, int depth) {
 		if (!form.equals(NullStruct.INSTANCE) && (form instanceof ListStruct)) {
 
 			final ListStruct workingList = (ListStruct) form;

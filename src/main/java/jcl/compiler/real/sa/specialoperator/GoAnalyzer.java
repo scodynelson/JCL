@@ -25,7 +25,7 @@ public class GoAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		}
 
 		final LispStruct second = input.getRest().getFirst();
-		if (!isGoTag(second)) {
+		if (!(second instanceof SymbolStruct) && !(second instanceof NumberStruct)) {
 			throw new ProgramErrorException("GO: Tag must be of type SymbolStruct or IntegerStruct. Got: " + second);
 		}
 
@@ -50,9 +50,5 @@ public class GoAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		goResultList.add(goTagSymbol);
 
 		return ListStruct.buildProperList(goResultList);
-	}
-
-	private static boolean isGoTag(final LispStruct current) {
-		return (current instanceof SymbolStruct) || (current instanceof NumberStruct);
 	}
 }

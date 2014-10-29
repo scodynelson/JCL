@@ -2,6 +2,7 @@ package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.Analyzer;
+import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.SpecialOperator;
@@ -33,14 +34,16 @@ public class BlockAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		BLOCK_STACK.push(label);
 
 		try {
-			final ListStruct blockBody = input.getRest().getRest();
-			final ListStruct prognResults = PrognAnalyzer.INSTANCE.analyze(blockBody);
-			final List<LispStruct> javaPrognResults = prognResults.getAsJavaList();
-
 			final List<LispStruct> blockResultList = new ArrayList<>();
 			blockResultList.add(SpecialOperator.BLOCK);
 			blockResultList.add(second);
-			blockResultList.addAll(javaPrognResults);
+
+			final ListStruct blockBody = input.getRest().getRest();
+			final List<LispStruct> blockBodyJavaList = blockBody.getAsJavaList();
+			for (final LispStruct bodyForm : blockBodyJavaList) {
+				final LispStruct saResult = SemanticAnalyzer.saMainLoop(bodyForm);
+				blockResultList.add(saResult);
+			}
 
 			return ListStruct.buildProperList(blockResultList);
 		} finally {

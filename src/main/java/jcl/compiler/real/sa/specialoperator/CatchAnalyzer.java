@@ -2,6 +2,7 @@ package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.Analyzer;
+import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.SpecialOperator;
@@ -20,13 +21,15 @@ public class CatchAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			throw new ProgramErrorException("CATCH: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
 		}
 
-		final ListStruct catchBody = input.getRest();
-		final ListStruct prognResults = PrognAnalyzer.INSTANCE.analyze(catchBody);
-		final List<LispStruct> javaPrognResults = prognResults.getAsJavaList();
-
 		final List<LispStruct> catchResultList = new ArrayList<>();
 		catchResultList.add(SpecialOperator.CATCH);
-		catchResultList.addAll(javaPrognResults);
+
+		final ListStruct catchBody = input.getRest().getRest();
+		final List<LispStruct> catchBodyJavaList = catchBody.getAsJavaList();
+		for (final LispStruct bodyForm : catchBodyJavaList) {
+			final LispStruct saResult = SemanticAnalyzer.saMainLoop(bodyForm);
+			catchResultList.add(saResult);
+		}
 
 		return ListStruct.buildProperList(catchResultList);
 	}

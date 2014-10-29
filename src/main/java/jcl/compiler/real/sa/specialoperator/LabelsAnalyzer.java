@@ -8,13 +8,11 @@ import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.EnvironmentListStruct;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.structs.conditions.exceptions.ProgramErrorException;
-import jcl.structs.lists.ConsStruct;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.SpecialOperator;
 import jcl.structs.symbols.SymbolStruct;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class LabelsAnalyzer implements Analyzer<LispStruct, ListStruct> {
@@ -106,41 +104,12 @@ public class LabelsAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			}
 
 			final ListStruct currentBodyForms = input.getRest().getRest();
-
-			final List<LispStruct> currentBodyFormsAsJavaList = currentBodyForms.getAsJavaList();
-			final Iterator<LispStruct> currentBodyFormsIterator = currentBodyFormsAsJavaList.iterator();
-
-			final List<LispStruct> declarations = new ArrayList<>();
-			final List<LispStruct> newBodyForms = new ArrayList<>();
-
-			while (currentBodyFormsIterator.hasNext()) {
-				final LispStruct currentForm = currentBodyFormsIterator.next();
-
-				if (!newBodyForms.isEmpty()) {
-					newBodyForms.add(currentForm);
-					continue;
-				}
-
-				if (currentForm instanceof ListStruct) {
-					final ListStruct currentFormAsList = (ListStruct) currentForm;
-
-					final LispStruct firstOfCurrentForm = currentFormAsList.getFirst();
-					if (firstOfCurrentForm.equals(SpecialOperator.DECLARE)) {
-						declarations.add(currentForm);
-					} else {
-						newBodyForms.add(currentForm);
-					}
-				} else {
-					newBodyForms.add(currentForm);
-				}
-			}
-
-			final ListStruct newBodyFormsLL = ListStruct.buildProperList(newBodyForms);
-			final ListStruct bodyResult = PrognAnalyzer.INSTANCE.analyze(newBodyFormsLL);
+			final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBody(currentBodyForms);
 
 			final Environment envList = SemanticAnalyzer.environmentStack.peek();
 
-			return new EnvironmentListStruct(envList, declarations, bodyResult);
+			final ListStruct newBodyForms = ListStruct.buildProperList(bodyProcessingResult.getBodyForms());
+			return new EnvironmentListStruct(envList, bodyProcessingResult.getDeclarations(), newBodyForms);
 		} finally {
 			SemanticAnalyzer.bindingsPosition = tempPosition;
 			SemanticAnalyzer.environmentStack.pop();

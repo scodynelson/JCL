@@ -24,14 +24,16 @@ public class UnwindProtectAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		final LispStruct protectedForm = input.getRest().getFirst();
 		final LispStruct protectedFormAnalyzed = SemanticAnalyzer.saMainLoop(protectedForm);
 
-		final ListStruct cleanupForms = input.getRest().getRest();
-		final ListStruct prognResults = PrognAnalyzer.INSTANCE.analyze(cleanupForms);
-		final List<LispStruct> javaPrognResults = prognResults.getAsJavaList();
-
 		final List<LispStruct> unwindProtectResultList = new ArrayList<>();
 		unwindProtectResultList.add(SpecialOperator.UNWIND_PROTECT);
 		unwindProtectResultList.add(protectedFormAnalyzed);
-		unwindProtectResultList.addAll(javaPrognResults);
+
+		final ListStruct cleanupForms = input.getRest().getRest();
+		final List<LispStruct> cleanupFormsJavaList = cleanupForms.getAsJavaList();
+		for (final LispStruct cleanupForm : cleanupFormsJavaList) {
+			final LispStruct saResult = SemanticAnalyzer.saMainLoop(cleanupForm);
+			unwindProtectResultList.add(saResult);
+		}
 
 		return ListStruct.buildProperList(unwindProtectResultList);
 	}

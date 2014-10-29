@@ -26,14 +26,16 @@ public class MultipleValueProg1Analyzer implements Analyzer<LispStruct, ListStru
 		final LispStruct second = input.getRest().getFirst();
 		final LispStruct secondAnalyzed = SemanticAnalyzer.saMainLoop(second);
 
-		final ListStruct multipleValueProg1Body = input.getRest().getRest();
-		final ListStruct prognResults = PrognAnalyzer.INSTANCE.analyze(multipleValueProg1Body);
-		final List<LispStruct> javaPrognResults = prognResults.getAsJavaList();
-
 		final List<LispStruct> multipleValueProg1ResultList = new ArrayList<>();
 		multipleValueProg1ResultList.add(SpecialOperator.MULTIPLE_VALUE_PROG1);
 		multipleValueProg1ResultList.add(secondAnalyzed);
-		multipleValueProg1ResultList.addAll(javaPrognResults);
+
+		final ListStruct multipleValueProg1Body = input.getRest().getRest();
+		final List<LispStruct> multipleValueProg1BodyJavaList = multipleValueProg1Body.getAsJavaList();
+		for (final LispStruct bodyForm : multipleValueProg1BodyJavaList) {
+			final LispStruct saResult = SemanticAnalyzer.saMainLoop(bodyForm);
+			multipleValueProg1ResultList.add(saResult);
+		}
 
 		return ListStruct.buildProperList(multipleValueProg1ResultList);
 	}

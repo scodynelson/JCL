@@ -24,14 +24,16 @@ public class MultipleValueCallAnalyzer implements Analyzer<LispStruct, ListStruc
 		final LispStruct second = input.getRest().getFirst();
 		final LispStruct secondAnalyzed = SemanticAnalyzer.saMainLoop(second);
 
-		final ListStruct multipleValueCallBody = input.getRest().getRest();
-		final ListStruct prognResults = PrognAnalyzer.INSTANCE.analyze(multipleValueCallBody);
-		final List<LispStruct> javaPrognResults = prognResults.getAsJavaList();
-
 		final List<LispStruct> multipleValueCallResultList = new ArrayList<>();
 		multipleValueCallResultList.add(SpecialOperator.MULTIPLE_VALUE_CALL);
 		multipleValueCallResultList.add(secondAnalyzed);
-		multipleValueCallResultList.addAll(javaPrognResults);
+
+		final ListStruct multipleValueCallBody = input.getRest().getRest();
+		final List<LispStruct> multipleValueCallBodyJavaList = multipleValueCallBody.getAsJavaList();
+		for (final LispStruct bodyForm : multipleValueCallBodyJavaList) {
+			final LispStruct saResult = SemanticAnalyzer.saMainLoop(bodyForm);
+			multipleValueCallResultList.add(saResult);
+		}
 
 		return ListStruct.buildProperList(multipleValueCallResultList);
 	}

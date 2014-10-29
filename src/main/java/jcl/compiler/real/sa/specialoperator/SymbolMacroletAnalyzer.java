@@ -2,6 +2,7 @@ package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.Analyzer;
+import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.SpecialOperator;
@@ -44,14 +45,16 @@ public class SymbolMacroletAnalyzer implements Analyzer<LispStruct, ListStruct> 
 		// TODO: Handle declarations that happen before the body!!!
 		// TODO: don't allow :special declares...
 
-		final ListStruct symbolMacroletBody = input.getRest().getRest();
-		final ListStruct prognResults = PrognAnalyzer.INSTANCE.analyze(symbolMacroletBody);
-		final List<LispStruct> javaPrognResults = prognResults.getAsJavaList();
-
 		final List<LispStruct> symbolMacroletResultList = new ArrayList<>();
 		symbolMacroletResultList.add(SpecialOperator.SYMBOL_MACROLET);
 		symbolMacroletResultList.add(second);
-		symbolMacroletResultList.addAll(javaPrognResults);
+
+		final ListStruct symbolMacroletBody = input.getRest().getRest();
+		final List<LispStruct> symbolMacroletBodyJavaList = symbolMacroletBody.getAsJavaList();
+		for (final LispStruct bodyForm : symbolMacroletBodyJavaList) {
+			final LispStruct saResult = SemanticAnalyzer.saMainLoop(bodyForm);
+			symbolMacroletResultList.add(saResult);
+		}
 
 		return ListStruct.buildProperList(symbolMacroletResultList);
 	}

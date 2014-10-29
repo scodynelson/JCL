@@ -3,14 +3,17 @@ package jcl.compiler.real.sa.specialoperator;
 import jcl.LispStruct;
 import jcl.compiler.old.symbol.KeywordOld;
 import jcl.compiler.real.sa.Analyzer;
+import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ListStruct;
-import jcl.structs.lists.NullStruct;
 import jcl.structs.symbols.KeywordSymbolStruct;
+import jcl.structs.symbols.NILStruct;
+import jcl.structs.symbols.SpecialOperator;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -35,7 +38,7 @@ public class EvalWhenAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		return analyze(input, false);
 	}
 
-	public static ListStruct analyze(final ListStruct input, final boolean isTopLevel) {
+	public static LispStruct analyze(final ListStruct input, final boolean isTopLevel) {
 
 		final LispStruct second = input.getRest().getFirst();
 		if (!(second instanceof ListStruct)) {
@@ -50,26 +53,29 @@ public class EvalWhenAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			throw new ProgramErrorException("EVAL-WHEN: Situations must be one of ':COMPILE-TOP-LEVEL', ':LOAD-TIME-LEVEL', or ':EXECUTE'. Got: " + situationList);
 		}
 
-		final ListStruct forms = input.getRest().getRest();
+		final List<LispStruct> evalWhenResultList = new ArrayList<>();
+		evalWhenResultList.add(SpecialOperator.EVAL_WHEN);
+
+		final ListStruct evalWhenBody = input.getRest().getRest();
 		if (isTopLevel) {
 			if (isCompileTopLevel(situationJavaList)) {
-				return PrognAnalyzer.INSTANCE.analyze(forms);
+				return analyzeEvalWhenBody(evalWhenResultList, evalWhenBody);
 			} else if (isLoadTopLevel(situationJavaList)) {
 				// TODO: take care of processing later at load time...
-				return PrognAnalyzer.INSTANCE.analyze(forms);
+				return analyzeEvalWhenBody(evalWhenResultList, evalWhenBody);
 			} else if (isExecute(situationJavaList)) {
 				// TODO: take care of processing later at execution time...
-				return PrognAnalyzer.INSTANCE.analyze(forms);
+				return analyzeEvalWhenBody(evalWhenResultList, evalWhenBody);
 			} else {
 				// NOTE: should never get here since we did the check earlier
 				LOGGER.warn("EVAL-WHEN: Unsupported situation keyword encountered: {}", situationJavaList);
-				return NullStruct.INSTANCE;
+				return NILStruct.INSTANCE;
 			}
 		} else if (isExecute(situationJavaList)) {
 			// TODO: take care of processing later at execution time...
-			return PrognAnalyzer.INSTANCE.analyze(forms);
+			return analyzeEvalWhenBody(evalWhenResultList, evalWhenBody);
 		} else {
-			return NullStruct.INSTANCE;
+			return NILStruct.INSTANCE;
 		}
 	}
 
@@ -83,5 +89,16 @@ public class EvalWhenAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 	private static boolean isExecute(final List<LispStruct> situationList) {
 		return situationList.contains(KeywordOld.Execute);
+	}
+
+	private static LispStruct analyzeEvalWhenBody(final List<LispStruct> evalWhenResultList, final ListStruct evalWhenBody) {
+
+		final List<LispStruct> evalWhenBodyJavaList = evalWhenBody.getAsJavaList();
+		for (final LispStruct bodyForm : evalWhenBodyJavaList) {
+			final LispStruct saResult = SemanticAnalyzer.saMainLoop(bodyForm);
+			evalWhenResultList.add(saResult);
+		}
+
+		return ListStruct.buildProperList(evalWhenResultList);
 	}
 }

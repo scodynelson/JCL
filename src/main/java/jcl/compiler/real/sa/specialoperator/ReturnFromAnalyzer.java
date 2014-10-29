@@ -17,7 +17,7 @@ public class ReturnFromAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final ReturnFromAnalyzer INSTANCE = new ReturnFromAnalyzer();
 
 	@Override
-	public ListStruct analyze(final ListStruct input) {
+	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
 
 		if ((input.size() < 2) || (input.size() > 3)) {
 			throw new ProgramErrorException("RETURN-FROM: Incorrect number of arguments: " + input.size() + ". Expected either 2 or 3 arguments.");
@@ -38,7 +38,7 @@ public class ReturnFromAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		final LispStruct third = input.getRest().getRest().getFirst();
 		if (!third.equals(NullStruct.INSTANCE)) {
-			final LispStruct returnFromResult = SemanticAnalyzer.saMainLoop(third);
+			final LispStruct returnFromResult = semanticAnalyzer.saMainLoop(third);
 			returnFromResultList.add(returnFromResult);
 		}
 

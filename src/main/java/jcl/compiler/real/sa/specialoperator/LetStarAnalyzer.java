@@ -2,6 +2,7 @@ package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.Analyzer;
+import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.SpecialOperator;
@@ -15,7 +16,7 @@ public class LetStarAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final LetStarAnalyzer INSTANCE = new LetStarAnalyzer();
 
 	@Override
-	public LispStruct analyze(final ListStruct input) {
+	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
 
 		if (input.size() < 2) {
 			throw new ProgramErrorException("LET*: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
@@ -46,6 +47,6 @@ public class LetStarAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			body = ListStruct.buildProperList(innerLet);
 		}
 
-		return LetAnalyzer.INSTANCE.analyze(body);
+		return LetAnalyzer.INSTANCE.analyze(body, semanticAnalyzer);
 	}
 }

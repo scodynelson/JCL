@@ -19,8 +19,7 @@ public final class BodyProcessingUtil {
 		private final StringStruct docString;
 		private final List<LispStruct> bodyForms;
 
-		private BodyProcessingResult(final List<LispStruct> declarations, final StringStruct docString,
-		                             final List<LispStruct> bodyForms) {
+		private BodyProcessingResult(final List<LispStruct> declarations, final StringStruct docString, final List<LispStruct> bodyForms) {
 			this.declarations = declarations;
 			this.docString = docString;
 			this.bodyForms = bodyForms;
@@ -39,20 +38,20 @@ public final class BodyProcessingUtil {
 		}
 	}
 
-	public static BodyProcessingResult processBody(final ListStruct body) {
+	public static BodyProcessingResult processBody(final SemanticAnalyzer semanticAnalyzer, final ListStruct body) {
 		final List<LispStruct> bodyJavaList = body.getAsJavaList();
 
 		final List<LispStruct> bodyForms = new ArrayList<>(bodyJavaList.size());
 
 		for (final LispStruct next : bodyJavaList) {
-			final LispStruct analyzedForm = SemanticAnalyzer.saMainLoop(next);
+			final LispStruct analyzedForm = semanticAnalyzer.saMainLoop(next);
 			bodyForms.add(analyzedForm);
 		}
 
 		return new BodyProcessingResult(null, null, bodyForms);
 	}
 
-	public static BodyProcessingResult processBodyWithDecls(final ListStruct body) {
+	public static BodyProcessingResult processBodyWithDecls(final SemanticAnalyzer semanticAnalyzer, final ListStruct body) {
 		final List<LispStruct> bodyJavaList = body.getAsJavaList();
 
 		final List<LispStruct> declarations = new ArrayList<>();
@@ -63,13 +62,13 @@ public final class BodyProcessingUtil {
 
 			LispStruct next = iterator.next();
 			while (iterator.hasNext() && (next instanceof ListStruct) && ((ListStruct) next).getFirst().equals(SpecialOperator.DECLARE)) {
-				final LispStruct analyzedDeclaration = DeclareAnalyzer.INSTANCE.analyze(next);
+				final LispStruct analyzedDeclaration = DeclareAnalyzer.INSTANCE.analyze(next, semanticAnalyzer);
 				declarations.add(analyzedDeclaration);
 				next = iterator.next();
 			}
 
 			while (iterator.hasNext()) {
-				final LispStruct analyzedForm = SemanticAnalyzer.saMainLoop(next);
+				final LispStruct analyzedForm = semanticAnalyzer.saMainLoop(next);
 				bodyForms.add(analyzedForm);
 				next = iterator.next();
 			}
@@ -78,7 +77,7 @@ public final class BodyProcessingUtil {
 		return new BodyProcessingResult(declarations, null, bodyForms);
 	}
 
-	public static BodyProcessingResult processBodyWithDeclsAndDoc(final ListStruct body) {
+	public static BodyProcessingResult processBodyWithDeclsAndDoc(final SemanticAnalyzer semanticAnalyzer, final ListStruct body) {
 		final List<LispStruct> bodyJavaList = body.getAsJavaList();
 
 		final List<LispStruct> declarations = new ArrayList<>();
@@ -90,7 +89,7 @@ public final class BodyProcessingUtil {
 
 			LispStruct next = iterator.next();
 			while (iterator.hasNext() && (next instanceof ListStruct) && ((ListStruct) next).getFirst().equals(SpecialOperator.DECLARE)) {
-				final LispStruct analyzedDeclaration = DeclareAnalyzer.INSTANCE.analyze(next); // TODO: really analyze these???
+				final LispStruct analyzedDeclaration = DeclareAnalyzer.INSTANCE.analyze(next, semanticAnalyzer); // TODO: really analyze these???
 				declarations.add(analyzedDeclaration);
 				next = iterator.next();
 			}
@@ -101,7 +100,7 @@ public final class BodyProcessingUtil {
 			}
 
 			while (iterator.hasNext()) {
-				final LispStruct analyzedForm = SemanticAnalyzer.saMainLoop(next);
+				final LispStruct analyzedForm = semanticAnalyzer.saMainLoop(next);
 				bodyForms.add(analyzedForm);
 				next = iterator.next();
 			}

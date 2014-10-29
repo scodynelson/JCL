@@ -75,7 +75,7 @@ public class CompileFunction {
 			if (formCopy instanceof List) {
 				formCopy = copyTree.funcall(formCopy);
 			}
-			obj = SemanticAnalyzer.funcall(obj);
+			obj = sa.funcall(obj);
 
 			Vector<Emitter.ClassDef> v = (Vector<Emitter.ClassDef>) icg.funcall(obj);
 			Vector<String> oc = new Vector<String>(v.size());

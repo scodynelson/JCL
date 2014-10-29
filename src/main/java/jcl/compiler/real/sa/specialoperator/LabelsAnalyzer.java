@@ -14,13 +14,14 @@ import jcl.structs.symbols.SymbolStruct;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class LabelsAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 	public static final LabelsAnalyzer INSTANCE = new LabelsAnalyzer();
 
 	@Override
-	public LispStruct analyze(final ListStruct input) {
+	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
 
 		if (input.size() < 2) {
 			throw new ProgramErrorException("LABELS: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
@@ -31,17 +32,18 @@ public class LabelsAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			throw new ProgramErrorException("LABELS: Parameter list must be of type ListStruct. Got: " + second);
 		}
 
-		final Environment parentEnvironment = SemanticAnalyzer.environmentStack.peek();
+		final Stack<Environment> environmentStack = semanticAnalyzer.getEnvironmentStack();
+		final Environment parentEnvironment = environmentStack.peek();
 
 		final Environment labelsEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.LABELS);
 		labelsEnvironment.setParent(parentEnvironment);
 
-		SemanticAnalyzer.environmentStack.push(labelsEnvironment);
+		environmentStack.push(labelsEnvironment);
 
 		// NOTE: Prior functions that resolve later functions will be handled automatically. Unknown function calls will
 		//       still be stored in the SemanticAnalyzer.undefinedFunctions field.
 
-		final int tempPosition = SemanticAnalyzer.bindingsPosition;
+		final int tempPosition = semanticAnalyzer.getBindingsPosition();
 		try {
 			final ListStruct labelsFunctions = input.getRest();
 			final List<LispStruct> labelsFunctionsJavaList = labelsFunctions.getAsJavaList();
@@ -87,32 +89,35 @@ public class LabelsAnalyzer implements Analyzer<LispStruct, ListStruct> {
 				final ListStruct innerFunctionListStruct = ListStruct.buildProperList(innerFunction);
 
 				// Evaluate in the current environment. This is one of the differences between Flet and Labels.
-				final Environment currentEnvironment = SemanticAnalyzer.environmentStack.peek();
+				final Environment currentEnvironment = environmentStack.peek();
+
+				final Stack<SymbolStruct<?>> functionNameStack = semanticAnalyzer.getFunctionNameStack();
 
 				// Push the current functionName onto the Stack. This is another one of the differences between Flet and Labels.
 				final LispStruct paramValueInitForm;
 				try {
-					SemanticAnalyzer.functionNameStack.push(functionName);
-					paramValueInitForm = SemanticAnalyzer.saMainLoop(innerFunctionListStruct);
+					functionNameStack.push(functionName);
+					paramValueInitForm = semanticAnalyzer.saMainLoop(innerFunctionListStruct);
 				} finally {
-					SemanticAnalyzer.functionNameStack.pop();
+					functionNameStack.pop();
 				}
 
-				SemanticAnalyzer.bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+				semanticAnalyzer.setBindingsPosition(newBindingsPosition);
 
-				EnvironmentAccessor.createNewLetBinding(currentEnvironment, functionName, SemanticAnalyzer.bindingsPosition, paramValueInitForm, false);
+				EnvironmentAccessor.createNewLetBinding(currentEnvironment, functionName, newBindingsPosition, paramValueInitForm, false);
 			}
 
 			final ListStruct currentBodyForms = input.getRest().getRest();
-			final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBodyWithDecls(currentBodyForms);
+			final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBodyWithDecls(semanticAnalyzer, currentBodyForms);
 
-			final Environment envList = SemanticAnalyzer.environmentStack.peek();
+			final Environment envList = environmentStack.peek();
 
 			final ListStruct newBodyForms = ListStruct.buildProperList(bodyProcessingResult.getBodyForms());
 			return new EnvironmentListStruct(envList, bodyProcessingResult.getDeclarations(), newBodyForms);
 		} finally {
-			SemanticAnalyzer.bindingsPosition = tempPosition;
-			SemanticAnalyzer.environmentStack.pop();
+			semanticAnalyzer.setBindingsPosition(tempPosition);
+			environmentStack.pop();
 		}
 	}
 }

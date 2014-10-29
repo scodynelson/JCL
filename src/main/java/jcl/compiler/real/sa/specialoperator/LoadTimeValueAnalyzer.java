@@ -15,6 +15,7 @@ import jcl.structs.symbols.SymbolStruct;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 import java.util.UUID;
 
 public class LoadTimeValueAnalyzer implements Analyzer<LispStruct, ListStruct> {
@@ -22,15 +23,15 @@ public class LoadTimeValueAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final LoadTimeValueAnalyzer INSTANCE = new LoadTimeValueAnalyzer();
 
 	@Override
-	public LispStruct analyze(final ListStruct input) {
-		return analyze(input, "LOAD_TIME_VALUE");
+	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
+		return analyze(input, semanticAnalyzer, "LOAD_TIME_VALUE");
 	}
 
-	public static LispStruct analyze(final ListStruct input, final String ltvFieldName) {
-		return analyze(input, ltvFieldName, UUID.randomUUID().toString());
+	public static LispStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer, final String ltvFieldName) {
+		return analyze(input, semanticAnalyzer, ltvFieldName, UUID.randomUUID().toString());
 	}
 
-	private static LispStruct analyze(final ListStruct input, final String ltvFieldName, final String tag) {
+	private static LispStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer, final String ltvFieldName, final String tag) {
 
 		final List<LispStruct> javaClassDeclaration = new ArrayList<>();
 		javaClassDeclaration.add(Declaration.JAVA_CLASS_NAME);
@@ -56,16 +57,18 @@ public class LoadTimeValueAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		final ListStruct lambdaBlockList = ListStruct.buildProperList(lambdaBlock);
 
+		final Stack<Environment> environmentStack = semanticAnalyzer.getEnvironmentStack();
+
 		final ListStruct lambdaAnalyzed;
 		try {
-			final Environment globalEnvironment = SemanticAnalyzer.environmentStack.elementAt(0);
-			SemanticAnalyzer.environmentStack.push(globalEnvironment);
-			lambdaAnalyzed = LambdaAnalyzer.INSTANCE.analyze(lambdaBlockList);
+			final Environment globalEnvironment = environmentStack.elementAt(0);
+			environmentStack.push(globalEnvironment);
+			lambdaAnalyzed = LambdaAnalyzer.INSTANCE.analyze(lambdaBlockList, semanticAnalyzer);
 		} finally {
-			SemanticAnalyzer.environmentStack.pop();
+			environmentStack.pop();
 		}
 
-		final Environment currentEnvironment = SemanticAnalyzer.environmentStack.peek();
+		final Environment currentEnvironment = environmentStack.peek();
 		final Environment enclosingLambda = EnvironmentAccessor.getEnclosingLambda(currentEnvironment);
 
 		final SymbolStruct<?> ltvName = new SymbolStruct<>(ltvFieldName + tag);

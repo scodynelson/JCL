@@ -22,7 +22,7 @@ public class TagbodyAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final Stack<Map<LispStruct, SymbolStruct<?>>> TAGBODY_STACK = new Stack<>();
 
 	@Override
-	public ListStruct analyze(final ListStruct input) {
+	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
 
 		final ListStruct body = input.getRest();
 		final List<LispStruct> bodyJavaList = body.getAsJavaList();
@@ -38,7 +38,7 @@ public class TagbodyAnalyzer implements Analyzer<LispStruct, ListStruct> {
 					final SymbolStruct<?> realTagSymbol = currentTagMap.get(currentBodyElement);
 					newBodyJavaList.add(realTagSymbol);
 				} else {
-					final LispStruct analyzedElement = SemanticAnalyzer.saMainLoop(currentBodyElement);
+					final LispStruct analyzedElement = semanticAnalyzer.saMainLoop(currentBodyElement);
 					newBodyJavaList.add(analyzedElement);
 				}
 			}

@@ -13,13 +13,14 @@ import jcl.structs.symbols.NILStruct;
 import jcl.structs.symbols.SymbolStruct;
 
 import java.util.List;
+import java.util.Stack;
 
 public class LetAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 	public static final LetAnalyzer INSTANCE = new LetAnalyzer();
 
 	@Override
-	public ListStruct analyze(final ListStruct input) {
+	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
 
 		if (input.size() < 2) {
 			throw new ProgramErrorException("LET: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
@@ -30,14 +31,15 @@ public class LetAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			throw new ProgramErrorException("LET: Parameter list must be of type ListStruct. Got: " + second);
 		}
 
-		final Environment parentEnvironment = SemanticAnalyzer.environmentStack.peek();
+		final Stack<Environment> environmentStack = semanticAnalyzer.getEnvironmentStack();
+		final Environment parentEnvironment = environmentStack.peek();
 
 		final Environment letEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.LET);
 		letEnvironment.setParent(parentEnvironment);
 
-		SemanticAnalyzer.environmentStack.push(letEnvironment);
+		environmentStack.push(letEnvironment);
 
-		final int tempPosition = SemanticAnalyzer.bindingsPosition;
+		final int tempPosition = semanticAnalyzer.getBindingsPosition();
 		try {
 			final ListStruct parameters = (ListStruct) second;
 			final List<LispStruct> parametersJavaList = parameters.getAsJavaList();
@@ -58,38 +60,41 @@ public class LetAnalyzer implements Analyzer<LispStruct, ListStruct> {
 					final LispStruct parameterValue = listParameter.getRest().getFirst();
 
 					// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
-					final Environment currentEnvironment = SemanticAnalyzer.environmentStack.pop();
+					final Environment currentEnvironment = environmentStack.pop();
 
 					final LispStruct parameterValueInitForm;
 					try {
-						parameterValueInitForm = SemanticAnalyzer.saMainLoop(parameterValue);
+						parameterValueInitForm = semanticAnalyzer.saMainLoop(parameterValue);
 					} finally {
-						SemanticAnalyzer.environmentStack.push(currentEnvironment);
+						environmentStack.push(currentEnvironment);
 					}
 
-					SemanticAnalyzer.bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+					final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+					semanticAnalyzer.setBindingsPosition(newBindingsPosition);
 
-					EnvironmentAccessor.createNewLetBinding(SemanticAnalyzer.environmentStack.peek(), parameterName, SemanticAnalyzer.bindingsPosition, parameterValueInitForm, false);
+					EnvironmentAccessor.createNewLetBinding(environmentStack.peek(), parameterName, newBindingsPosition, parameterValueInitForm, false);
 				} else if (currentParameter instanceof SymbolStruct) {
 					final SymbolStruct<?> symbolParameter = (SymbolStruct) currentParameter;
 
-					SemanticAnalyzer.bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(SemanticAnalyzer.environmentStack.peek());
-					EnvironmentAccessor.createNewLetBinding(SemanticAnalyzer.environmentStack.peek(), symbolParameter, SemanticAnalyzer.bindingsPosition, NILStruct.INSTANCE, false);
+					final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(environmentStack.peek());
+					semanticAnalyzer.setBindingsPosition(newBindingsPosition);
+
+					EnvironmentAccessor.createNewLetBinding(environmentStack.peek(), symbolParameter, newBindingsPosition, NILStruct.INSTANCE, false);
 				} else {
 					throw new ProgramErrorException("LET: Parameter must be of type SymbolStruct or ListStruct. Got: " + currentParameter);
 				}
 			}
 
 			final ListStruct currentBodyForms = input.getRest().getRest();
-			final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBodyWithDecls(currentBodyForms);
+			final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBodyWithDecls(semanticAnalyzer, currentBodyForms);
 
-			final Environment envList = SemanticAnalyzer.environmentStack.peek();
+			final Environment envList = environmentStack.peek();
 
 			final ListStruct newBodyForms = ListStruct.buildProperList(bodyProcessingResult.getBodyForms());
 			return new EnvironmentListStruct(envList, bodyProcessingResult.getDeclarations(), newBodyForms);
 		} finally {
-			SemanticAnalyzer.bindingsPosition = tempPosition;
-			SemanticAnalyzer.environmentStack.pop();
+			semanticAnalyzer.setBindingsPosition(tempPosition);
+			environmentStack.pop();
 		}
 	}
 }

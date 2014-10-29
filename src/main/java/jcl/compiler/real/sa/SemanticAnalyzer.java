@@ -27,15 +27,19 @@ public class SemanticAnalyzer {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SemanticAnalyzer.class);
 
-	public static Stack<Environment> environmentStack;
-	public static Set<SymbolStruct<?>> undefinedFunctions;
-	public static Stack<SymbolStruct<?>> functionNameStack;
-	public static int bindingsPosition;
+	private Stack<Environment> environmentStack;
+	private Set<SymbolStruct<?>> undefinedFunctions;
+	private Stack<SymbolStruct<?>> functionNameStack;
+	private int bindingsPosition;
 
 	// eval-when processing modes
-	private static boolean topLevelMode;
+	private boolean topLevelMode;
 
-	private static void initialize() {
+	public SemanticAnalyzer() {
+		initialize();
+	}
+
+	private void initialize() {
 		//create the global environment
 		environmentStack = new Stack<>();
 		environmentStack.push(EnvironmentAccessor.createGlobalEnvironment());
@@ -52,7 +56,7 @@ public class SemanticAnalyzer {
 		TagbodyAnalyzer.TAGBODY_STACK.clear();
 	}
 
-	public static LispStruct funcall(final LispStruct form) {
+	public LispStruct funcall(final LispStruct form) {
 		initialize();
 
 		LispStruct innerForm = form;
@@ -88,20 +92,59 @@ public class SemanticAnalyzer {
 		return innerForm;
 	}
 
-	public static LispStruct saMainLoop(final LispStruct form) {
+	public LispStruct saMainLoop(final LispStruct form) {
 
 		LispStruct analyzedForm = form;
 		if (form instanceof ListStruct) {
-			analyzedForm = ListStructAnalyzer.INSTANCE.analyze((ListStruct) form);
+			analyzedForm = ListStructAnalyzer.INSTANCE.analyze((ListStruct) form, this);
 		} else if (form instanceof SymbolStruct) {
-			analyzedForm = SymbolStructAnalyzer.INSTANCE.analyze((SymbolStruct<?>) form);
+			analyzedForm = SymbolStructAnalyzer.INSTANCE.analyze((SymbolStruct<?>) form, this);
 		} else if (form instanceof ArrayStruct) {
-			analyzedForm = ArrayStructAnalyzer.INSTANCE.analyze((ArrayStruct<?>) form);
+			analyzedForm = ArrayStructAnalyzer.INSTANCE.analyze((ArrayStruct<?>) form, this);
 		}
 		return analyzedForm;
 	}
 
-	/*
+	public Stack<Environment> getEnvironmentStack() {
+		return environmentStack;
+	}
+
+	public void setEnvironmentStack(final Stack<Environment> environmentStack) {
+		this.environmentStack = environmentStack;
+	}
+
+	public Set<SymbolStruct<?>> getUndefinedFunctions() {
+		return undefinedFunctions;
+	}
+
+	public void setUndefinedFunctions(final Set<SymbolStruct<?>> undefinedFunctions) {
+		this.undefinedFunctions = undefinedFunctions;
+	}
+
+	public Stack<SymbolStruct<?>> getFunctionNameStack() {
+		return functionNameStack;
+	}
+
+	public void setFunctionNameStack(final Stack<SymbolStruct<?>> functionNameStack) {
+		this.functionNameStack = functionNameStack;
+	}
+
+	public int getBindingsPosition() {
+		return bindingsPosition;
+	}
+
+	public void setBindingsPosition(final int bindingsPosition) {
+		this.bindingsPosition = bindingsPosition;
+	}
+
+	public boolean isTopLevelMode() {
+		return topLevelMode;
+	}
+
+	public void setTopLevelMode(final boolean topLevelMode) {
+		this.topLevelMode = topLevelMode;
+	}
+/*
 	 *********************************************************
 	 * Analyzers
 	 *********************************************************

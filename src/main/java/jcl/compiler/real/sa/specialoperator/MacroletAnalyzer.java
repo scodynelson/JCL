@@ -14,13 +14,14 @@ import jcl.structs.symbols.SymbolStruct;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class MacroletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 	public static final MacroletAnalyzer INSTANCE = new MacroletAnalyzer();
 
 	@Override
-	public LispStruct analyze(final ListStruct input) {
+	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
 
 		if (input.size() < 2) {
 			throw new ProgramErrorException("MACROLET: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
@@ -31,17 +32,18 @@ public class MacroletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			throw new ProgramErrorException("MACROLET: Parameter list must be of type ListStruct. Got: " + second);
 		}
 
-		final Environment parentEnvironment = SemanticAnalyzer.environmentStack.peek();
+		final Stack<Environment> environmentStack = semanticAnalyzer.getEnvironmentStack();
+		final Environment parentEnvironment = environmentStack.peek();
 
 		final Environment macroletEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.MACROLET);
 		macroletEnvironment.setParent(parentEnvironment);
 
-		SemanticAnalyzer.environmentStack.push(macroletEnvironment);
+		environmentStack.push(macroletEnvironment);
 
 		// NOTE: Prior functions that resolve later functions will be handled automatically. Unknown function calls will
 		//       still be stored in the SemanticAnalyzer.undefinedFunctions field.
 
-		final int tempPosition = SemanticAnalyzer.bindingsPosition;
+		final int tempPosition = semanticAnalyzer.getBindingsPosition();
 		try {
 			final ListStruct macroletMacros = input.getRest();
 			final List<LispStruct> macroletMacrosJavaList = macroletMacros.getAsJavaList();
@@ -87,32 +89,35 @@ public class MacroletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 				final ListStruct innerFunctionListStruct = ListStruct.buildProperList(innerFunction);
 
 				// Evaluate in the current environment. This is one of the differences between Flet and Macrolet.
-				final Environment currentEnvironment = SemanticAnalyzer.environmentStack.peek();
+				final Environment currentEnvironment = environmentStack.peek();
+
+				final Stack<SymbolStruct<?>> functionNameStack = semanticAnalyzer.getFunctionNameStack();
 
 				// Push the current functionName onto the Stack. This is another one of the differences between Flet and Macrolet.
 				final LispStruct paramValueInitForm;
 				try {
-					SemanticAnalyzer.functionNameStack.push(macroName);
-					paramValueInitForm = SemanticAnalyzer.saMainLoop(innerFunctionListStruct);
+					functionNameStack.push(macroName);
+					paramValueInitForm = semanticAnalyzer.saMainLoop(innerFunctionListStruct);
 				} finally {
-					SemanticAnalyzer.functionNameStack.pop();
+					functionNameStack.pop();
 				}
 
-				SemanticAnalyzer.bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+				semanticAnalyzer.setBindingsPosition(newBindingsPosition);
 
-				EnvironmentAccessor.createNewLetBinding(currentEnvironment, macroName, SemanticAnalyzer.bindingsPosition, paramValueInitForm, false);
+				EnvironmentAccessor.createNewLetBinding(currentEnvironment, macroName, newBindingsPosition, paramValueInitForm, false);
 			}
 
 			final ListStruct currentBodyForms = input.getRest().getRest();
-			final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBodyWithDecls(currentBodyForms);
+			final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBodyWithDecls(semanticAnalyzer, currentBodyForms);
 
-			final Environment envList = SemanticAnalyzer.environmentStack.peek();
+			final Environment envList = environmentStack.peek();
 
 			final ListStruct newBodyForms = ListStruct.buildProperList(bodyProcessingResult.getBodyForms());
 			return new EnvironmentListStruct(envList, bodyProcessingResult.getDeclarations(), newBodyForms);
 		} finally {
-			SemanticAnalyzer.bindingsPosition = tempPosition;
-			SemanticAnalyzer.environmentStack.pop();
+			semanticAnalyzer.setBindingsPosition(tempPosition);
+			environmentStack.pop();
 		}
 	}
 }

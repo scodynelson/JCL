@@ -2,6 +2,7 @@ package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.Analyzer;
+import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.specialoperator.quote.QuoteListAnalyzer;
 import jcl.compiler.real.sa.specialoperator.quote.QuoteSymbolAnalyzer;
 import jcl.structs.conditions.exceptions.ProgramErrorException;
@@ -15,11 +16,11 @@ public class QuoteAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final QuoteAnalyzer INSTANCE = new QuoteAnalyzer();
 
 	@Override
-	public LispStruct analyze(final ListStruct input) {
-		return analyze(input, null);
+	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
+		return analyze(input, semanticAnalyzer, null);
 	}
 
-	public static LispStruct analyze(final ListStruct input, final String fieldName) {
+	public static LispStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer, final String fieldName) {
 
 		if (input.size() != 2) {
 			throw new ProgramErrorException("QUOTE: Incorrect number of arguments: " + input.size() + ". Expected 2 arguments.");
@@ -29,9 +30,9 @@ public class QuoteAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		final ListStruct newForm;
 		if (element instanceof ListStruct) {
-			newForm = QuoteListAnalyzer.INSTANCE.analyze((ListStruct) element);
+			newForm = QuoteListAnalyzer.INSTANCE.analyze((ListStruct) element, semanticAnalyzer);
 		} else if (element instanceof SymbolStruct) {
-			newForm = QuoteSymbolAnalyzer.INSTANCE.analyze((SymbolStruct) element);
+			newForm = QuoteSymbolAnalyzer.INSTANCE.analyze((SymbolStruct) element, semanticAnalyzer);
 		} else {
 			return element;
 		}
@@ -39,9 +40,9 @@ public class QuoteAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		final ListStruct initForm = new ConsStruct(SpecialOperator.LOAD_TIME_VALUE, newForm);
 
 		if (fieldName == null) {
-			return LoadTimeValueAnalyzer.INSTANCE.analyze(initForm);
+			return LoadTimeValueAnalyzer.INSTANCE.analyze(initForm, semanticAnalyzer);
 		} else {
-			return LoadTimeValueAnalyzer.analyze(initForm, fieldName);
+			return LoadTimeValueAnalyzer.analyze(initForm, semanticAnalyzer, fieldName);
 		}
 	}
 }

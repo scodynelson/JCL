@@ -2,6 +2,7 @@ package jcl.compiler.real.sa.specialoperator.quote;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.Analyzer;
+import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.structs.arrays.StringStruct;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.packages.GlobalPackageStruct;
@@ -15,7 +16,7 @@ public class QuoteSymbolAnalyzer implements Analyzer<ListStruct, SymbolStruct<?>
 	public static final QuoteSymbolAnalyzer INSTANCE = new QuoteSymbolAnalyzer();
 
 	@Override
-	public ListStruct analyze(final SymbolStruct<?> input) {
+	public ListStruct analyze(final SymbolStruct<?> input, final SemanticAnalyzer semanticAnalyzer) {
 		if (input.getSymbolPackage() != null) {
 			final List<LispStruct> findSymbolList = new ArrayList<>();
 			findSymbolList.add(GlobalPackageStruct.COMMON_LISP.findSymbol("FIND-SYMBOL").getSymbolStruct());

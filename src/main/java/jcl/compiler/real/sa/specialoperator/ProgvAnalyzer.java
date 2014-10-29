@@ -16,7 +16,7 @@ public class ProgvAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final ProgvAnalyzer INSTANCE = new ProgvAnalyzer();
 
 	@Override
-	public ListStruct analyze(final ListStruct input) {
+	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
 
 		if (input.size() < 3) {
 			throw new ProgramErrorException("PROGV: Incorrect number of arguments: " + input.size() + ". Expected at least 3 arguments.");
@@ -33,13 +33,13 @@ public class ProgvAnalyzer implements Analyzer<LispStruct, ListStruct> {
 				throw new ProgramErrorException("PROGV: Element in symbols list must be of type SymbolStruct. Got: " + currentSecondElement);
 			}
 		}
-		final LispStruct secondAnalyzed = SemanticAnalyzer.saMainLoop(second);
+		final LispStruct secondAnalyzed = semanticAnalyzer.saMainLoop(second);
 
 		final LispStruct third = input.getRest().getRest().getFirst();
 		if (!(third instanceof ListStruct)) {
 			throw new ProgramErrorException("PROGV: Values list must be of type ListStruct. Got: " + third);
 		}
-		final LispStruct thirdAnalyzed = SemanticAnalyzer.saMainLoop(third);
+		final LispStruct thirdAnalyzed = semanticAnalyzer.saMainLoop(third);
 
 		final List<LispStruct> progvResultList = new ArrayList<>();
 		progvResultList.add(SpecialOperator.PROGV);
@@ -47,7 +47,7 @@ public class ProgvAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		progvResultList.add(thirdAnalyzed);
 
 		final ListStruct body = input.getRest().getRest().getRest();
-		final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBody(body);
+		final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBody(semanticAnalyzer, body);
 		progvResultList.addAll(bodyProcessingResult.getBodyForms());
 
 		return ListStruct.buildProperList(progvResultList);

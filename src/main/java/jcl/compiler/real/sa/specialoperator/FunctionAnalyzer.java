@@ -15,12 +15,14 @@ import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.SpecialOperator;
 import jcl.structs.symbols.SymbolStruct;
 
+import java.util.Stack;
+
 public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 	public static final FunctionAnalyzer INSTANCE = new FunctionAnalyzer();
 
 	@Override
-	public ListStruct analyze(final ListStruct input) {
+	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
 
 		if (input.size() != 2) {
 			throw new ProgramErrorException("FUNCTION: Incorrect number of arguments: " + input.size() + ". Expected 2 arguments.");
@@ -31,12 +33,14 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			throw new ProgramErrorException("FUNCTION: Function argument must be of type SymbolStruct or ListStruct. Got: " + second);
 		}
 
+		final Stack<Environment> environmentStack = semanticAnalyzer.getEnvironmentStack();
+
 		if (second instanceof SymbolStruct) {
 			final SymbolStruct<?> functionSymbol = (SymbolStruct) second;
-			final Environment fnBinding = EnvironmentAccessor.getBindingEnvironment(SemanticAnalyzer.environmentStack.peek(), functionSymbol, false);
+			final Environment fnBinding = EnvironmentAccessor.getBindingEnvironment(environmentStack.peek(), functionSymbol, false);
 
 			if (fnBinding.equals(Environment.NULL)) {
-				SymbolStructAnalyzer.INSTANCE.analyze(functionSymbol);
+				SymbolStructAnalyzer.INSTANCE.analyze(functionSymbol, semanticAnalyzer);
 				return input;
 			} else {
 				final MacroFunctionBinding macroFunctionBinding = (MacroFunctionBinding) fnBinding.getBinding(functionSymbol);
@@ -52,16 +56,16 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 			if (functionListFirst.equals(SpecialOperator.LAMBDA)) {
 				final Environment newEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.LAMBDA);
-				final Environment parentEnvironment = SemanticAnalyzer.environmentStack.peek();
+				final Environment parentEnvironment = environmentStack.peek();
 				EnvironmentAccessor.createParent(newEnvironment, parentEnvironment);
-				SemanticAnalyzer.environmentStack.push(newEnvironment);
+				environmentStack.push(newEnvironment);
 
-				final int tempPosition = SemanticAnalyzer.bindingsPosition;
+				final int tempPosition = semanticAnalyzer.getBindingsPosition();
 				try {
-					return LambdaAnalyzer.INSTANCE.analyze(functionList);
+					return LambdaAnalyzer.INSTANCE.analyze(functionList, semanticAnalyzer);
 				} finally {
-					SemanticAnalyzer.bindingsPosition = tempPosition;
-					SemanticAnalyzer.environmentStack.pop();
+					semanticAnalyzer.setBindingsPosition(tempPosition);
+					environmentStack.pop();
 				}
 			}
 

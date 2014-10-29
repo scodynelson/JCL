@@ -2,6 +2,7 @@ package jcl.compiler.real.sa.specialoperator.special;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.Analyzer;
+import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.SymbolStructAnalyzer;
 import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ListStruct;
@@ -16,7 +17,7 @@ public class DeclareAnalyzer implements Analyzer<LispStruct, LispStruct> {
 	public static final DeclareAnalyzer INSTANCE = new DeclareAnalyzer();
 
 	@Override
-	public LispStruct analyze(final LispStruct input) {
+	public LispStruct analyze(final LispStruct input, final SemanticAnalyzer semanticAnalyzer) {
 
 		final List<LispStruct> javaRestList = ((ListStruct) input).getRest().getAsJavaList();
 		for (final LispStruct nextDecl : javaRestList) {
@@ -55,7 +56,7 @@ public class DeclareAnalyzer implements Analyzer<LispStruct, LispStruct> {
 			} else if (declIdentifier.equals(Declaration.OPTIMIZE)) {
 				//we don't do anything here yet
 			} else if (declIdentifier.equals(Declaration.SPECIAL)) {
-				saSpecialDeclaration(declList);
+				saSpecialDeclaration(semanticAnalyzer, declList);
 			} else if (declIdentifier.equals(Declaration.TYPE)) {
 				//we don't do anything here yet
 			} else if (declIdentifier.equals(NullStruct.INSTANCE)) {
@@ -67,7 +68,7 @@ public class DeclareAnalyzer implements Analyzer<LispStruct, LispStruct> {
 		return input;
 	}
 
-	private static void saSpecialDeclaration(final ListStruct declarations) {
+	private static void saSpecialDeclaration(final SemanticAnalyzer semanticAnalyzer, final ListStruct declarations) {
 		final List<LispStruct> declarationsAsJavaList = declarations.getAsJavaList();
 
 		// Special declaration can apply to multiple SymbolStructs
@@ -77,7 +78,7 @@ public class DeclareAnalyzer implements Analyzer<LispStruct, LispStruct> {
 			}
 
 			final SymbolStruct<?> sym = (SymbolStruct) nextDecl;
-			SymbolStructAnalyzer.INSTANCE.analyze(sym);
+			SymbolStructAnalyzer.INSTANCE.analyze(sym, semanticAnalyzer);
 		}
 	}
 }

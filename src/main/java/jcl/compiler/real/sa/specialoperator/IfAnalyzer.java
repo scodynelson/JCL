@@ -15,7 +15,7 @@ public class IfAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final IfAnalyzer INSTANCE = new IfAnalyzer();
 
 	@Override
-	public ListStruct analyze(final ListStruct input) {
+	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
 
 		if ((input.size() < 3) || (input.size() > 4)) {
 			throw new ProgramErrorException("IF: Incorrect number of arguments: " + input.size() + ". Expected either 3 or 4 arguments.");
@@ -25,15 +25,15 @@ public class IfAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		ifResultList.add(SpecialOperator.IF);
 
 		final LispStruct second = input.getRest().getFirst();
-		final LispStruct secondAnalyzed = SemanticAnalyzer.saMainLoop(second);
+		final LispStruct secondAnalyzed = semanticAnalyzer.saMainLoop(second);
 		ifResultList.add(secondAnalyzed);
 
 		final LispStruct third = input.getRest().getRest().getFirst();
-		final LispStruct thirdAnalyzed = SemanticAnalyzer.saMainLoop(third);
+		final LispStruct thirdAnalyzed = semanticAnalyzer.saMainLoop(third);
 		ifResultList.add(thirdAnalyzed);
 
 		final LispStruct fourth = input.getRest().getRest().getRest().getFirst();
-		final LispStruct fourthAnalyzed = SemanticAnalyzer.saMainLoop(fourth);
+		final LispStruct fourthAnalyzed = semanticAnalyzer.saMainLoop(fourth);
 		ifResultList.add(fourthAnalyzed);
 
 		return ListStruct.buildProperList(ifResultList);

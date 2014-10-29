@@ -14,13 +14,14 @@ import jcl.structs.symbols.SymbolStruct;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class FletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 	public static final FletAnalyzer INSTANCE = new FletAnalyzer();
 
 	@Override
-	public LispStruct analyze(final ListStruct input) {
+	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
 
 		if (input.size() < 2) {
 			throw new ProgramErrorException("FLET: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
@@ -31,14 +32,15 @@ public class FletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			throw new ProgramErrorException("FLET: Parameter list must be of type ListStruct. Got: " + second);
 		}
 
-		final Environment parentEnvironment = SemanticAnalyzer.environmentStack.peek();
+		final Stack<Environment> environmentStack = semanticAnalyzer.getEnvironmentStack();
+		final Environment parentEnvironment = environmentStack.peek();
 
 		final Environment fletEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.FLET);
 		fletEnvironment.setParent(parentEnvironment);
 
-		SemanticAnalyzer.environmentStack.push(fletEnvironment);
+		environmentStack.push(fletEnvironment);
 
-		final int tempPosition = SemanticAnalyzer.bindingsPosition;
+		final int tempPosition = semanticAnalyzer.getBindingsPosition();
 		try {
 			final ListStruct fletFunctions = input.getRest();
 			final List<LispStruct> fletFunctionsJavaList = fletFunctions.getAsJavaList();
@@ -84,30 +86,31 @@ public class FletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 				final ListStruct innerFunctionListStruct = ListStruct.buildProperList(innerFunction);
 
 				// Evaluate in the outer environment. This is one of the differences between Flet and Labels.
-				final Environment currentEnvironment = SemanticAnalyzer.environmentStack.pop();
+				final Environment currentEnvironment = environmentStack.pop();
 
 				final LispStruct paramValueInitForm;
 				try {
-					paramValueInitForm = SemanticAnalyzer.saMainLoop(innerFunctionListStruct);
+					paramValueInitForm = semanticAnalyzer.saMainLoop(innerFunctionListStruct);
 				} finally {
-					SemanticAnalyzer.environmentStack.push(currentEnvironment);
+					environmentStack.push(currentEnvironment);
 				}
 
-				SemanticAnalyzer.bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+				semanticAnalyzer.setBindingsPosition(newBindingsPosition);
 
-				EnvironmentAccessor.createNewLetBinding(currentEnvironment, functionName, SemanticAnalyzer.bindingsPosition, paramValueInitForm, false);
+				EnvironmentAccessor.createNewLetBinding(currentEnvironment, functionName, newBindingsPosition, paramValueInitForm, false);
 			}
 
 			final ListStruct currentBodyForms = input.getRest().getRest();
-			final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBodyWithDecls(currentBodyForms);
+			final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBodyWithDecls(semanticAnalyzer, currentBodyForms);
 
-			final Environment envList = SemanticAnalyzer.environmentStack.peek();
+			final Environment envList = environmentStack.peek();
 
 			final ListStruct newBodyForms = ListStruct.buildProperList(bodyProcessingResult.getBodyForms());
 			return new EnvironmentListStruct(envList, bodyProcessingResult.getDeclarations(), newBodyForms);
 		} finally {
-			SemanticAnalyzer.bindingsPosition = tempPosition;
-			SemanticAnalyzer.environmentStack.pop();
+			semanticAnalyzer.setBindingsPosition(tempPosition);
+			environmentStack.pop();
 		}
 	}
 }

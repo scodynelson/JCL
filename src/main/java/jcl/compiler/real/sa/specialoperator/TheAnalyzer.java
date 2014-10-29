@@ -16,7 +16,7 @@ public class TheAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final TheAnalyzer INSTANCE = new TheAnalyzer();
 
 	@Override
-	public ListStruct analyze(final ListStruct input) {
+	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
 
 		if (input.size() != 3) {
 			throw new ProgramErrorException("THE: Incorrect number of arguments: " + input.size() + ". Expected 3 arguments.");
@@ -28,7 +28,7 @@ public class TheAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		}
 
 		final LispStruct third = input.getRest().getRest().getFirst();
-		final LispStruct thirdAnalyzed = SemanticAnalyzer.saMainLoop(third);
+		final LispStruct thirdAnalyzed = semanticAnalyzer.saMainLoop(third);
 
 		final List<LispStruct> theResultList = new ArrayList<>();
 		theResultList.add(SpecialOperator.THE);

@@ -4,6 +4,7 @@ import jcl.LispStruct;
 import jcl.compiler.old.EnvironmentAccessor;
 import jcl.compiler.old.functions.MacroExpandFunction;
 import jcl.compiler.old.functions.MacroExpandReturn;
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.lambdalist.OrdinaryLambdaListBindings;
@@ -21,13 +22,15 @@ import jcl.structs.symbols.SymbolStruct;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.Stack;
 
 public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 	public static final ListStructAnalyzer INSTANCE = new ListStructAnalyzer();
 
 	@Override
-	public LispStruct analyze(final ListStruct input) {
+	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
 
 		if (input.equals(NullStruct.INSTANCE)) {
 			return input;
@@ -35,7 +38,8 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		final LispStruct first = input.getFirst();
 		if (first instanceof SymbolStruct) {
-			final MacroExpandReturn macroExpandReturn = MacroExpandFunction.FUNCTION.funcall(input, SemanticAnalyzer.environmentStack.peek());
+			final Stack<Environment> environmentStack = semanticAnalyzer.getEnvironmentStack();
+			final MacroExpandReturn macroExpandReturn = MacroExpandFunction.FUNCTION.funcall(input, environmentStack.peek());
 			final LispStruct expandedForm = macroExpandReturn.getExpandedForm();
 
 			if (expandedForm.equals(NullStruct.INSTANCE)) {
@@ -47,16 +51,16 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 				final LispStruct expandedFormListFirst = expandedFormList.getFirst();
 				if (expandedFormListFirst instanceof SpecialOperator) {
-					return SpecialOperatorAnalyzer.INSTANCE.analyze(expandedFormList);
+					return SpecialOperatorAnalyzer.INSTANCE.analyze(expandedFormList, semanticAnalyzer);
 				} else if (expandedFormListFirst instanceof SymbolStruct) {
 					final SymbolStruct<?> functionSymbol = (SymbolStruct<?>) expandedFormListFirst;
 					final ListStruct functionArguments = expandedFormList.getRest();
-					return analyzeFunctionCall(functionSymbol, functionArguments);
+					return analyzeFunctionCall(semanticAnalyzer, functionSymbol, functionArguments);
 				} else {
 					throw new ProgramErrorException("SA LIST: First element of expanded form must be of type SymbolStruct or ListStruct. Got: " + expandedFormListFirst);
 				}
 			} else {
-				return SemanticAnalyzer.saMainLoop(expandedForm);
+				return semanticAnalyzer.saMainLoop(expandedForm);
 			}
 		} else if (first instanceof ListStruct) {
 			// ex ((lambda (x) (+ x 1)) 3)
@@ -64,9 +68,9 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 			final LispStruct firstOfFirstList = firstAsList.getFirst();
 			if (firstOfFirstList.equals(SpecialOperator.LAMBDA)) {
-				final LambdaEnvironmentListStruct lambdaAnalyzed = (LambdaEnvironmentListStruct) LambdaAnalyzer.INSTANCE.analyze(firstAsList);
+				final LambdaEnvironmentListStruct lambdaAnalyzed = (LambdaEnvironmentListStruct) LambdaAnalyzer.INSTANCE.analyze(firstAsList, semanticAnalyzer);
 				final ListStruct functionArguments = input.getRest();
-				return analyzedLambdaFunctionCall(lambdaAnalyzed, functionArguments);
+				return analyzedLambdaFunctionCall(semanticAnalyzer, lambdaAnalyzed, functionArguments);
 			} else {
 				throw new ProgramErrorException("SA LIST: First element of a first element ListStruct must be the SpecialOperator 'LAMBDA'. Got: " + firstOfFirstList);
 			}
@@ -75,7 +79,8 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		}
 	}
 
-	private static ListStruct analyzedLambdaFunctionCall(final LambdaEnvironmentListStruct lambdaAnalyzed, final ListStruct functionArguments) {
+	private static ListStruct analyzedLambdaFunctionCall(final SemanticAnalyzer semanticAnalyzer, final LambdaEnvironmentListStruct lambdaAnalyzed,
+	                                                     final ListStruct functionArguments) {
 
 		final List<LispStruct> analyzedFunctionList = new ArrayList<>();
 		analyzedFunctionList.add(lambdaAnalyzed);
@@ -86,18 +91,20 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		validateFunctionArguments("Anonymous Lambda", lambdaListBindings, functionArgumentsList);
 
 		for (final LispStruct currentArgument : functionArgumentsList) {
-			final LispStruct analyzedArgument = SemanticAnalyzer.saMainLoop(currentArgument);
+			final LispStruct analyzedArgument = semanticAnalyzer.saMainLoop(currentArgument);
 			analyzedFunctionList.add(analyzedArgument);
 		}
 
 		return ListStruct.buildProperList(analyzedFunctionList);
 	}
 
-	private static ListStruct analyzeFunctionCall(final SymbolStruct<?> functionSymbol, final ListStruct functionArguments) {
+	private static ListStruct analyzeFunctionCall(final SemanticAnalyzer semanticAnalyzer, final SymbolStruct<?> functionSymbol,
+	                                              final ListStruct functionArguments) {
 
 		final List<LispStruct> analyzedFunctionList = new ArrayList<>();
 
-		final boolean hasFunctionBinding = EnvironmentAccessor.hasFunctionBinding(SemanticAnalyzer.environmentStack.peek(), functionSymbol);
+		final Stack<Environment> environmentStack = semanticAnalyzer.getEnvironmentStack();
+		final boolean hasFunctionBinding = EnvironmentAccessor.hasFunctionBinding(environmentStack.peek(), functionSymbol);
 		if (hasFunctionBinding) {
 			// Recursive call
 			analyzedFunctionList.add(SpecialOperator.TAIL_RECURSION);
@@ -106,18 +113,22 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		final List<LispStruct> functionArgumentsList = functionArguments.getAsJavaList();
 
+		final Set<SymbolStruct<?>> undefinedFunctions = semanticAnalyzer.getUndefinedFunctions();
+
 		final FunctionStruct function = functionSymbol.getFunction();
 		if (function == null) {
-			if (SemanticAnalyzer.functionNameStack.contains(functionSymbol)) {
+			final Stack<SymbolStruct<?>> functionNameStack = semanticAnalyzer.getFunctionNameStack();
+
+			if (functionNameStack.contains(functionSymbol)) {
 				// Function is undefined, but name exists on the stack to be created
-				SemanticAnalyzer.undefinedFunctions.remove(functionSymbol);
+				undefinedFunctions.remove(functionSymbol);
 			} else {
 				// Add this as a possible undefined function
-				SemanticAnalyzer.undefinedFunctions.add(functionSymbol);
+				undefinedFunctions.add(functionSymbol);
 			}
 		} else {
 			// Function is defined.
-			SemanticAnalyzer.undefinedFunctions.remove(functionSymbol);
+			undefinedFunctions.remove(functionSymbol);
 
 			final String functionName = functionSymbol.getName();
 			final OrdinaryLambdaListBindings lambdaListBindings = function.getLambdaListBindings();
@@ -125,7 +136,7 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		}
 
 		for (final LispStruct currentArgument : functionArgumentsList) {
-			final LispStruct analyzedArgument = SemanticAnalyzer.saMainLoop(currentArgument);
+			final LispStruct analyzedArgument = semanticAnalyzer.saMainLoop(currentArgument);
 			analyzedFunctionList.add(analyzedArgument);
 		}
 

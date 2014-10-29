@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Stack;
 
 public class LambdaListParser {
 
@@ -35,14 +36,14 @@ public class LambdaListParser {
 	private static final SymbolStruct<?> AND_BODY = GlobalPackageStruct.KEYWORD.intern("&BODY").getSymbolStruct();
 	private static final SymbolStruct<?> AND_ENVIRONMENT = GlobalPackageStruct.KEYWORD.intern("&ENVIRONMENT").getSymbolStruct();
 
-	public static OrdinaryLambdaListBindings parseOrdinaryLambdaList(final ListStruct lambdaList) {
+	public static OrdinaryLambdaListBindings parseOrdinaryLambdaList(final SemanticAnalyzer semanticAnalyzer, final ListStruct lambdaList) {
 
 		final List<LispStruct> lambdaListJava = lambdaList.getAsJavaList();
 		final Iterator<LispStruct> iterator = lambdaListJava.iterator();
 
 		int position = 0;
 
-		final RequiredParseResult requiredParseResult = parseRequiredBindings(iterator, position);
+		final RequiredParseResult requiredParseResult = parseRequiredBindings(semanticAnalyzer, iterator, position);
 
 		final List<RequiredBinding> requiredBindings = requiredParseResult.getRequiredBindings();
 		LispStruct currentElement = requiredParseResult.getCurrentElement();
@@ -50,7 +51,7 @@ public class LambdaListParser {
 
 		List<OptionalBinding> optionalBindings = Collections.emptyList();
 		if (currentElement.equals(AND_OPTIONAL)) {
-			final OptionalParseResult optionalParseResult = parseOptionalBindings(iterator, position);
+			final OptionalParseResult optionalParseResult = parseOptionalBindings(semanticAnalyzer, iterator, position);
 
 			optionalBindings = optionalParseResult.getOptionalBindings();
 			currentElement = optionalParseResult.getCurrentElement();
@@ -59,7 +60,7 @@ public class LambdaListParser {
 
 		RestBinding restBinding = null;
 		if (currentElement.equals(AND_REST)) {
-			final RestParseResult restParseResult = parseRestBinding(iterator, position);
+			final RestParseResult restParseResult = parseRestBinding(semanticAnalyzer, iterator, position);
 
 			restBinding = restParseResult.getRestBinding();
 			currentElement = restParseResult.getCurrentElement();
@@ -69,7 +70,7 @@ public class LambdaListParser {
 		List<KeyBinding> keyBindings = Collections.emptyList();
 		boolean allowOtherKeys = false;
 		if (currentElement.equals(AND_KEY)) {
-			final KeyParseResult keyParseResult = parseKeyBindings(iterator, position);
+			final KeyParseResult keyParseResult = parseKeyBindings(semanticAnalyzer, iterator, position);
 
 			keyBindings = keyParseResult.getKeyBindings();
 			allowOtherKeys = keyParseResult.isAllowOtherKeys();
@@ -79,7 +80,7 @@ public class LambdaListParser {
 
 		List<AuxBinding> auxBindings = Collections.emptyList();
 		if (currentElement.equals(AND_AUX)) {
-			final AuxParseResult auxParseResult = parseAuxBindings(iterator, position);
+			final AuxParseResult auxParseResult = parseAuxBindings(semanticAnalyzer, iterator, position);
 
 			auxBindings = auxParseResult.getAuxBindings();
 		}
@@ -95,7 +96,9 @@ public class LambdaListParser {
 	 * BINDING PARSE METHODS
 	 */
 
-	private static RequiredParseResult parseRequiredBindings(final Iterator<LispStruct> iterator, final int position) {
+	private static RequiredParseResult parseRequiredBindings(final SemanticAnalyzer semanticAnalyzer, final Iterator<LispStruct> iterator, final int position) {
+
+		final Stack<Environment> environmentStack = semanticAnalyzer.getEnvironmentStack();
 
 		final List<RequiredBinding> requiredBindings = new ArrayList<>();
 		int currentPosition = position;
@@ -111,14 +114,18 @@ public class LambdaListParser {
 
 			currentElement = iterator.next();
 
-			SemanticAnalyzer.bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(SemanticAnalyzer.environmentStack.peek());
-			EnvironmentAccessor.createNewLambdaBinding(SemanticAnalyzer.environmentStack.peek(), currentParam, SemanticAnalyzer.bindingsPosition, NILStruct.INSTANCE, false);
+			final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(environmentStack.peek());
+			semanticAnalyzer.setBindingsPosition(newBindingsPosition);
+
+			EnvironmentAccessor.createNewLambdaBinding(environmentStack.peek(), currentParam, newBindingsPosition, NILStruct.INSTANCE, false);
 		}
 
 		return new RequiredParseResult(currentElement, currentPosition, requiredBindings);
 	}
 
-	private static OptionalParseResult parseOptionalBindings(final Iterator<LispStruct> iterator, final int position) {
+	private static OptionalParseResult parseOptionalBindings(final SemanticAnalyzer semanticAnalyzer, final Iterator<LispStruct> iterator, final int position) {
+
+		final Stack<Environment> environmentStack = semanticAnalyzer.getEnvironmentStack();
 
 		final List<OptionalBinding> optionalBindings = new ArrayList<>();
 		int currentPosition = position;
@@ -130,8 +137,10 @@ public class LambdaListParser {
 				final OptionalBinding optionalBinding = new OptionalBinding(currentParam, currentPosition++, null, null);
 				optionalBindings.add(optionalBinding);
 
-				SemanticAnalyzer.bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(SemanticAnalyzer.environmentStack.peek());
-				EnvironmentAccessor.createNewLambdaBinding(SemanticAnalyzer.environmentStack.peek(), currentParam, SemanticAnalyzer.bindingsPosition, NILStruct.INSTANCE, false);
+				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(environmentStack.peek());
+				semanticAnalyzer.setBindingsPosition(newBindingsPosition);
+
+				EnvironmentAccessor.createNewLambdaBinding(environmentStack.peek(), currentParam, newBindingsPosition, NILStruct.INSTANCE, false);
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
 				if ((currentParam.size() < 1) || (currentParam.size() > 3)) {
@@ -153,13 +162,14 @@ public class LambdaListParser {
 				}
 
 				// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
-				final Environment currentEnvironment = SemanticAnalyzer.environmentStack.pop();
-				final LispStruct parameterValueInitForm = SemanticAnalyzer.saMainLoop(initForm);
-				SemanticAnalyzer.environmentStack.push(currentEnvironment);
+				final Environment currentEnvironment = environmentStack.pop();
+				final LispStruct parameterValueInitForm = semanticAnalyzer.saMainLoop(initForm);
+				environmentStack.push(currentEnvironment);
 
-				SemanticAnalyzer.bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+				int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+				semanticAnalyzer.setBindingsPosition(newBindingsPosition);
 
-				EnvironmentAccessor.createNewLambdaBinding(SemanticAnalyzer.environmentStack.peek(), varNameCurrent, SemanticAnalyzer.bindingsPosition, parameterValueInitForm, false);
+				EnvironmentAccessor.createNewLambdaBinding(environmentStack.peek(), varNameCurrent, newBindingsPosition, parameterValueInitForm, false);
 
 				SuppliedPBinding suppliedPBinding = null;
 				if (!thirdInCurrent.equals(NullStruct.INSTANCE)) {
@@ -170,8 +180,10 @@ public class LambdaListParser {
 					final SymbolStruct<?> suppliedPCurrent = (SymbolStruct<?>) thirdInCurrent;
 					suppliedPBinding = new SuppliedPBinding(suppliedPCurrent, currentPosition++);
 
-					SemanticAnalyzer.bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(SemanticAnalyzer.environmentStack.peek());
-					EnvironmentAccessor.createNewLambdaBinding(SemanticAnalyzer.environmentStack.peek(), suppliedPCurrent, SemanticAnalyzer.bindingsPosition, NILStruct.INSTANCE, false);
+					newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(environmentStack.peek());
+					semanticAnalyzer.setBindingsPosition(newBindingsPosition);
+
+					EnvironmentAccessor.createNewLambdaBinding(environmentStack.peek(), suppliedPCurrent, newBindingsPosition, NILStruct.INSTANCE, false);
 				}
 
 				final OptionalBinding optionalBinding = new OptionalBinding(varNameCurrent, currentPosition++, initForm, suppliedPBinding);
@@ -186,7 +198,7 @@ public class LambdaListParser {
 		return new OptionalParseResult(currentElement, currentPosition, optionalBindings);
 	}
 
-	private static RestParseResult parseRestBinding(final Iterator<LispStruct> iterator, final int position) {
+	private static RestParseResult parseRestBinding(final SemanticAnalyzer semanticAnalyzer, final Iterator<LispStruct> iterator, final int position) {
 
 		int currentPosition = position;
 
@@ -200,14 +212,20 @@ public class LambdaListParser {
 		}
 		final SymbolStruct<?> currentParam = (SymbolStruct<?>) currentElement;
 
-		SemanticAnalyzer.bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(SemanticAnalyzer.environmentStack.peek());
-		EnvironmentAccessor.createNewLambdaBinding(SemanticAnalyzer.environmentStack.peek(), currentParam, SemanticAnalyzer.bindingsPosition, NILStruct.INSTANCE, false);
+		final Stack<Environment> environmentStack = semanticAnalyzer.getEnvironmentStack();
+
+		final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(environmentStack.peek());
+		semanticAnalyzer.setBindingsPosition(newBindingsPosition);
+
+		EnvironmentAccessor.createNewLambdaBinding(environmentStack.peek(), currentParam, newBindingsPosition, NILStruct.INSTANCE, false);
 
 		final RestBinding restBinding = new RestBinding(currentParam, currentPosition++);
 		return new RestParseResult(currentElement, currentPosition, restBinding);
 	}
 
-	private static KeyParseResult parseKeyBindings(final Iterator<LispStruct> iterator, final int position) {
+	private static KeyParseResult parseKeyBindings(final SemanticAnalyzer semanticAnalyzer, final Iterator<LispStruct> iterator, final int position) {
+
+		final Stack<Environment> environmentStack = semanticAnalyzer.getEnvironmentStack();
 
 		final List<KeyBinding> keyBindings = new ArrayList<>();
 		int currentPosition = position;
@@ -220,8 +238,10 @@ public class LambdaListParser {
 				final KeyBinding keyBinding = new KeyBinding(currentParam, currentPosition++, null, keyName, null);
 				keyBindings.add(keyBinding);
 
-				SemanticAnalyzer.bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(SemanticAnalyzer.environmentStack.peek());
-				EnvironmentAccessor.createNewLambdaBinding(SemanticAnalyzer.environmentStack.peek(), currentParam, SemanticAnalyzer.bindingsPosition, NILStruct.INSTANCE, false);
+				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(environmentStack.peek());
+				semanticAnalyzer.setBindingsPosition(newBindingsPosition);
+
+				EnvironmentAccessor.createNewLambdaBinding(environmentStack.peek(), currentParam, newBindingsPosition, NILStruct.INSTANCE, false);
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
 				if ((currentParam.size() < 1) || (currentParam.size() > 3)) {
@@ -264,13 +284,14 @@ public class LambdaListParser {
 				}
 
 				// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
-				final Environment currentEnvironment = SemanticAnalyzer.environmentStack.pop();
-				final LispStruct parameterValueInitForm = SemanticAnalyzer.saMainLoop(initForm);
-				SemanticAnalyzer.environmentStack.push(currentEnvironment);
+				final Environment currentEnvironment = environmentStack.pop();
+				final LispStruct parameterValueInitForm = semanticAnalyzer.saMainLoop(initForm);
+				environmentStack.push(currentEnvironment);
 
-				SemanticAnalyzer.bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+				int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+				semanticAnalyzer.setBindingsPosition(newBindingsPosition);
 
-				EnvironmentAccessor.createNewLambdaBinding(SemanticAnalyzer.environmentStack.peek(), varNameCurrent, SemanticAnalyzer.bindingsPosition, parameterValueInitForm, false);
+				EnvironmentAccessor.createNewLambdaBinding(environmentStack.peek(), varNameCurrent, newBindingsPosition, parameterValueInitForm, false);
 
 				SuppliedPBinding suppliedPBinding = null;
 				if (!thirdInCurrent.equals(NullStruct.INSTANCE)) {
@@ -281,8 +302,10 @@ public class LambdaListParser {
 					final SymbolStruct<?> suppliedPCurrent = (SymbolStruct<?>) thirdInCurrent;
 					suppliedPBinding = new SuppliedPBinding(suppliedPCurrent, currentPosition++);
 
-					SemanticAnalyzer.bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(SemanticAnalyzer.environmentStack.peek());
-					EnvironmentAccessor.createNewLambdaBinding(SemanticAnalyzer.environmentStack.peek(), suppliedPCurrent, SemanticAnalyzer.bindingsPosition, NILStruct.INSTANCE, false);
+					newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(environmentStack.peek());
+					semanticAnalyzer.setBindingsPosition(newBindingsPosition);
+
+					EnvironmentAccessor.createNewLambdaBinding(environmentStack.peek(), suppliedPCurrent, newBindingsPosition, NILStruct.INSTANCE, false);
 				}
 
 				final KeyBinding keyBinding = new KeyBinding(varNameCurrent, currentPosition++, initForm, varKeyNameCurrent, suppliedPBinding);
@@ -303,7 +326,9 @@ public class LambdaListParser {
 		return new KeyParseResult(currentElement, currentPosition, keyBindings, allowOtherKeys);
 	}
 
-	private static AuxParseResult parseAuxBindings(final Iterator<LispStruct> iterator, final int position) {
+	private static AuxParseResult parseAuxBindings(final SemanticAnalyzer semanticAnalyzer, final Iterator<LispStruct> iterator, final int position) {
+
+		final Stack<Environment> environmentStack = semanticAnalyzer.getEnvironmentStack();
 
 		final List<AuxBinding> auxBindings = new ArrayList<>();
 		int currentPosition = position;
@@ -315,8 +340,10 @@ public class LambdaListParser {
 				final AuxBinding auxBinding = new AuxBinding(currentParam, currentPosition++, null);
 				auxBindings.add(auxBinding);
 
-				SemanticAnalyzer.bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(SemanticAnalyzer.environmentStack.peek());
-				EnvironmentAccessor.createNewLambdaBinding(SemanticAnalyzer.environmentStack.peek(), currentParam, SemanticAnalyzer.bindingsPosition, NILStruct.INSTANCE, false);
+				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(environmentStack.peek());
+				semanticAnalyzer.setBindingsPosition(newBindingsPosition);
+
+				EnvironmentAccessor.createNewLambdaBinding(environmentStack.peek(), currentParam, newBindingsPosition, NILStruct.INSTANCE, false);
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
 				if ((currentParam.size() < 1) || (currentParam.size() > 2)) {
@@ -340,13 +367,14 @@ public class LambdaListParser {
 				auxBindings.add(auxBinding);
 
 				// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
-				final Environment currentEnvironment = SemanticAnalyzer.environmentStack.pop();
-				final LispStruct parameterValueInitForm = SemanticAnalyzer.saMainLoop(initForm);
-				SemanticAnalyzer.environmentStack.push(currentEnvironment);
+				final Environment currentEnvironment = environmentStack.pop();
+				final LispStruct parameterValueInitForm = semanticAnalyzer.saMainLoop(initForm);
+				environmentStack.push(currentEnvironment);
 
-				SemanticAnalyzer.bindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+				semanticAnalyzer.setBindingsPosition(newBindingsPosition);
 
-				EnvironmentAccessor.createNewLambdaBinding(SemanticAnalyzer.environmentStack.peek(), varNameCurrent, SemanticAnalyzer.bindingsPosition, parameterValueInitForm, false);
+				EnvironmentAccessor.createNewLambdaBinding(environmentStack.peek(), varNameCurrent, newBindingsPosition, parameterValueInitForm, false);
 			} else {
 				throw new ProgramErrorException("LambdaList aux parameters must be of type SymbolStruct or ListStruct: " + currentElement);
 			}

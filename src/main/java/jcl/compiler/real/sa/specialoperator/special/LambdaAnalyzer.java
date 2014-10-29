@@ -21,13 +21,14 @@ import jcl.structs.symbols.SpecialOperator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class LambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 	public static final LambdaAnalyzer INSTANCE = new LambdaAnalyzer();
 
 	@Override
-	public ListStruct analyze(final ListStruct input) {
+	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
 
 		if (input.size() < 2) {
 			throw new ProgramErrorException("LAMBDA: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
@@ -38,22 +39,23 @@ public class LambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			throw new ProgramErrorException("LAMBDA: Parameter list must be of type ListStruct. Got: " + second);
 		}
 
-		final Environment parentEnvironment = SemanticAnalyzer.environmentStack.peek();
+		final Stack<Environment> environmentStack = semanticAnalyzer.getEnvironmentStack();
+		final Environment parentEnvironment = environmentStack.peek();
 
 		final Environment lambdaEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.LAMBDA);
 		lambdaEnvironment.setParent(parentEnvironment);
 
-		SemanticAnalyzer.environmentStack.push(lambdaEnvironment);
+		environmentStack.push(lambdaEnvironment);
 
-		final int tempPosition = SemanticAnalyzer.bindingsPosition;
+		final int tempPosition = semanticAnalyzer.getBindingsPosition();
 		try {
 			final ListStruct parameters = (ListStruct) second;
-			final OrdinaryLambdaListBindings parsedLambdaList = LambdaListParser.parseOrdinaryLambdaList(parameters);
+			final OrdinaryLambdaListBindings parsedLambdaList = LambdaListParser.parseOrdinaryLambdaList(semanticAnalyzer, parameters);
 
 			final ListStruct currentBodyForms = input.getRest().getRest();
-			final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBodyWithDeclsAndDoc(currentBodyForms);
+			final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBodyWithDeclsAndDoc(semanticAnalyzer, currentBodyForms);
 
-			final Environment envList = SemanticAnalyzer.environmentStack.peek();
+			final Environment envList = environmentStack.peek();
 
 			final List<LispStruct> newStartingLambdaBody = getNewStartingLambdaBody(parsedLambdaList);
 			newStartingLambdaBody.addAll(bodyProcessingResult.getBodyForms());
@@ -61,8 +63,8 @@ public class LambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			final ListStruct newBodyForms = ListStruct.buildProperList(newStartingLambdaBody);
 			return new LambdaEnvironmentListStruct(envList, bodyProcessingResult.getDeclarations(), newBodyForms, parsedLambdaList, bodyProcessingResult.getDocString());
 		} finally {
-			SemanticAnalyzer.bindingsPosition = tempPosition;
-			SemanticAnalyzer.environmentStack.pop();
+			semanticAnalyzer.setBindingsPosition(tempPosition);
+			environmentStack.pop();
 		}
 	}
 

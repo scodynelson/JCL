@@ -3,7 +3,6 @@ package jcl.compiler.real.sa.specialoperator;
 import jcl.LispStruct;
 import jcl.compiler.old.symbol.KeywordOld;
 import jcl.compiler.real.sa.Analyzer;
-import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.KeywordSymbolStruct;
@@ -56,16 +55,23 @@ public class EvalWhenAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		final List<LispStruct> evalWhenResultList = new ArrayList<>();
 		evalWhenResultList.add(SpecialOperator.EVAL_WHEN);
 
-		final ListStruct evalWhenBody = input.getRest().getRest();
+		final ListStruct body = input.getRest().getRest();
+
 		if (isTopLevel) {
 			if (isCompileTopLevel(situationJavaList)) {
-				return analyzeEvalWhenBody(evalWhenResultList, evalWhenBody);
+				final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBody(body);
+				evalWhenResultList.addAll(bodyProcessingResult.getBodyForms());
+				return ListStruct.buildProperList(evalWhenResultList);
 			} else if (isLoadTopLevel(situationJavaList)) {
 				// TODO: take care of processing later at load time...
-				return analyzeEvalWhenBody(evalWhenResultList, evalWhenBody);
+				final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBody(body);
+				evalWhenResultList.addAll(bodyProcessingResult.getBodyForms());
+				return ListStruct.buildProperList(evalWhenResultList);
 			} else if (isExecute(situationJavaList)) {
 				// TODO: take care of processing later at execution time...
-				return analyzeEvalWhenBody(evalWhenResultList, evalWhenBody);
+				final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBody(body);
+				evalWhenResultList.addAll(bodyProcessingResult.getBodyForms());
+				return ListStruct.buildProperList(evalWhenResultList);
 			} else {
 				// NOTE: should never get here since we did the check earlier
 				LOGGER.warn("EVAL-WHEN: Unsupported situation keyword encountered: {}", situationJavaList);
@@ -73,7 +79,9 @@ public class EvalWhenAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			}
 		} else if (isExecute(situationJavaList)) {
 			// TODO: take care of processing later at execution time...
-			return analyzeEvalWhenBody(evalWhenResultList, evalWhenBody);
+			final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBody(body);
+			evalWhenResultList.addAll(bodyProcessingResult.getBodyForms());
+			return ListStruct.buildProperList(evalWhenResultList);
 		} else {
 			return NILStruct.INSTANCE;
 		}
@@ -89,16 +97,5 @@ public class EvalWhenAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 	private static boolean isExecute(final List<LispStruct> situationList) {
 		return situationList.contains(KeywordOld.Execute);
-	}
-
-	private static LispStruct analyzeEvalWhenBody(final List<LispStruct> evalWhenResultList, final ListStruct evalWhenBody) {
-
-		final List<LispStruct> evalWhenBodyJavaList = evalWhenBody.getAsJavaList();
-		for (final LispStruct bodyForm : evalWhenBodyJavaList) {
-			final LispStruct saResult = SemanticAnalyzer.saMainLoop(bodyForm);
-			evalWhenResultList.add(saResult);
-		}
-
-		return ListStruct.buildProperList(evalWhenResultList);
 	}
 }

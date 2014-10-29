@@ -13,14 +13,13 @@ import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.LambdaEnvironmentListStruct;
 import jcl.compiler.real.sa.LambdaListParser;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.structs.arrays.StringStruct;
+import jcl.compiler.real.sa.specialoperator.BodyProcessingUtil;
 import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ConsStruct;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.SpecialOperator;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class LambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
@@ -51,54 +50,16 @@ public class LambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			final ListStruct parameters = (ListStruct) second;
 			final OrdinaryLambdaListBindings parsedLambdaList = LambdaListParser.parseOrdinaryLambdaList(parameters);
 
-			final List<LispStruct> declarations = new ArrayList<>();
-			StringStruct docString = null;
-
-			final List<LispStruct> inputRestAsJavaList = input.getRest().getAsJavaList();
-			final Iterator<LispStruct> inputRestIterator = inputRestAsJavaList.iterator();
-
-			final List<LispStruct> bodyForms = new ArrayList<>();
-
-			while (inputRestIterator.hasNext()) {
-				final LispStruct currentForm = inputRestIterator.next();
-
-				if (!bodyForms.isEmpty()) {
-					bodyForms.add(currentForm);
-					continue;
-				}
-
-				if (currentForm instanceof ListStruct) {
-					final ListStruct currentFormAsList = (ListStruct) currentForm;
-
-					final LispStruct firstOfCurrentForm = currentFormAsList.getFirst();
-					if (firstOfCurrentForm.equals(SpecialOperator.DECLARE)) {
-						declarations.add(currentForm);
-					} else {
-						bodyForms.add(currentForm);
-					}
-				} else if ((currentForm instanceof StringStruct) && (docString == null) && inputRestIterator.hasNext()) {
-					docString = (StringStruct) currentForm;
-				} else {
-					bodyForms.add(currentForm);
-				}
-			}
-
-			// TODO: go through declarations and set lambda list types if a declaration "type" restriction was used
-
-			final List<LispStruct> newLambdaBody = getNewStartingLambdaBody(parsedLambdaList);
-			newLambdaBody.addAll(bodyForms);
-
-			final List<LispStruct> newAnalyzedLambdaBody = new ArrayList<>();
-			for (final LispStruct newLambdaBodyElement : newLambdaBody) {
-				final LispStruct newAnalyzedLambdaBodyElement = SemanticAnalyzer.saMainLoop(newLambdaBodyElement);
-				newAnalyzedLambdaBody.add(newAnalyzedLambdaBodyElement);
-			}
-
-			final ListStruct newAnalyzedLambdaBodyLL = ListStruct.buildProperList(newAnalyzedLambdaBody);
+			final ListStruct currentBodyForms = input.getRest().getRest();
+			final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBodyWithDeclsAndDoc(currentBodyForms);
 
 			final Environment envList = SemanticAnalyzer.environmentStack.peek();
 
-			return new LambdaEnvironmentListStruct(envList, declarations, newAnalyzedLambdaBodyLL, parsedLambdaList, docString);
+			final List<LispStruct> newStartingLambdaBody = getNewStartingLambdaBody(parsedLambdaList);
+			newStartingLambdaBody.addAll(bodyProcessingResult.getBodyForms());
+
+			final ListStruct newBodyForms = ListStruct.buildProperList(newStartingLambdaBody);
+			return new LambdaEnvironmentListStruct(envList, bodyProcessingResult.getDeclarations(), newBodyForms, parsedLambdaList, bodyProcessingResult.getDocString());
 		} finally {
 			SemanticAnalyzer.bindingsPosition = tempPosition;
 			SemanticAnalyzer.environmentStack.pop();

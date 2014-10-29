@@ -16,7 +16,7 @@ public class LocallyAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public ListStruct analyze(final ListStruct input) {
 
 		final ListStruct body = input.getRest();
-		final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBody(body);
+		final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBodyWithDecls(body);
 
 		final List<LispStruct> locallyResultList = new ArrayList<>();
 		locallyResultList.add(SpecialOperator.LOCALLY);

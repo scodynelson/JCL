@@ -42,6 +42,19 @@ public final class BodyProcessingUtil {
 	public static BodyProcessingResult processBody(final ListStruct body) {
 		final List<LispStruct> bodyJavaList = body.getAsJavaList();
 
+		final List<LispStruct> bodyForms = new ArrayList<>(bodyJavaList.size());
+
+		for (final LispStruct next : bodyJavaList) {
+			final LispStruct analyzedForm = SemanticAnalyzer.saMainLoop(next);
+			bodyForms.add(analyzedForm);
+		}
+
+		return new BodyProcessingResult(null, null, bodyForms);
+	}
+
+	public static BodyProcessingResult processBodyWithDecls(final ListStruct body) {
+		final List<LispStruct> bodyJavaList = body.getAsJavaList();
+
 		final List<LispStruct> declarations = new ArrayList<>();
 		final List<LispStruct> bodyForms = new ArrayList<>();
 
@@ -65,7 +78,7 @@ public final class BodyProcessingUtil {
 		return new BodyProcessingResult(declarations, null, bodyForms);
 	}
 
-	public static BodyProcessingResult processBodyWithDoc(final ListStruct body) {
+	public static BodyProcessingResult processBodyWithDeclsAndDoc(final ListStruct body) {
 		final List<LispStruct> bodyJavaList = body.getAsJavaList();
 
 		final List<LispStruct> declarations = new ArrayList<>();

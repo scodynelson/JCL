@@ -2,7 +2,6 @@ package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.Analyzer;
-import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.SpecialOperator;
 
@@ -16,16 +15,12 @@ public class PrognAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	@Override
 	public ListStruct analyze(final ListStruct input) {
 
-		final ListStruct body = input.getRest();
-		final List<LispStruct> bodyJavaList = body.getAsJavaList();
-
 		final List<LispStruct> prognResultList = new ArrayList<>();
 		prognResultList.add(SpecialOperator.PROGN);
 
-		for (final LispStruct bodyForm : bodyJavaList) {
-			final LispStruct saResult = SemanticAnalyzer.saMainLoop(bodyForm);
-			prognResultList.add(saResult);
-		}
+		final ListStruct body = input.getRest();
+		final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBody(body);
+		prognResultList.addAll(bodyProcessingResult.getBodyForms());
 
 		return ListStruct.buildProperList(prognResultList);
 	}

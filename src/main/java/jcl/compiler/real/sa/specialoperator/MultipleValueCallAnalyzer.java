@@ -2,7 +2,6 @@ package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.Analyzer;
-import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.SpecialOperator;
@@ -21,19 +20,13 @@ public class MultipleValueCallAnalyzer implements Analyzer<LispStruct, ListStruc
 			throw new ProgramErrorException("MULTIPLE-VALUE-CALL: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
 		}
 
-		final LispStruct second = input.getRest().getFirst();
-		final LispStruct secondAnalyzed = SemanticAnalyzer.saMainLoop(second);
-
 		final List<LispStruct> multipleValueCallResultList = new ArrayList<>();
 		multipleValueCallResultList.add(SpecialOperator.MULTIPLE_VALUE_CALL);
-		multipleValueCallResultList.add(secondAnalyzed);
 
-		final ListStruct multipleValueCallBody = input.getRest().getRest();
-		final List<LispStruct> multipleValueCallBodyJavaList = multipleValueCallBody.getAsJavaList();
-		for (final LispStruct bodyForm : multipleValueCallBodyJavaList) {
-			final LispStruct saResult = SemanticAnalyzer.saMainLoop(bodyForm);
-			multipleValueCallResultList.add(saResult);
-		}
+		// Body includes the 'Function Form'
+		final ListStruct body = input.getRest();
+		final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBody(body);
+		multipleValueCallResultList.addAll(bodyProcessingResult.getBodyForms());
 
 		return ListStruct.buildProperList(multipleValueCallResultList);
 	}

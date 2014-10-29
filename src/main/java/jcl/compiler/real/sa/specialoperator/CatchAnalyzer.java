@@ -2,7 +2,6 @@ package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.Analyzer;
-import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.SpecialOperator;
@@ -24,12 +23,10 @@ public class CatchAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		final List<LispStruct> catchResultList = new ArrayList<>();
 		catchResultList.add(SpecialOperator.CATCH);
 
-		final ListStruct catchBody = input.getRest().getRest();
-		final List<LispStruct> catchBodyJavaList = catchBody.getAsJavaList();
-		for (final LispStruct bodyForm : catchBodyJavaList) {
-			final LispStruct saResult = SemanticAnalyzer.saMainLoop(bodyForm);
-			catchResultList.add(saResult);
-		}
+		// Body includes the 'Catch Tag'
+		final ListStruct body = input.getRest();
+		final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBody(body);
+		catchResultList.addAll(bodyProcessingResult.getBodyForms());
 
 		return ListStruct.buildProperList(catchResultList);
 	}

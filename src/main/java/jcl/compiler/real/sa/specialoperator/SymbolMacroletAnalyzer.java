@@ -41,6 +41,7 @@ public class SymbolMacroletAnalyzer implements Analyzer<LispStruct, ListStruct> 
 				throw new ProgramErrorException("SYMBOL-MACROLET: ListStruct parameter first element value must be of type SymbolStruct. Got: " + currentParameter);
 			}
 		}
+		// TODO: Analyze second parameter
 
 		// TODO: Handle declarations that happen before the body!!!
 		// TODO: don't allow :special declares...
@@ -49,12 +50,9 @@ public class SymbolMacroletAnalyzer implements Analyzer<LispStruct, ListStruct> 
 		symbolMacroletResultList.add(SpecialOperator.SYMBOL_MACROLET);
 		symbolMacroletResultList.add(second);
 
-		final ListStruct symbolMacroletBody = input.getRest().getRest();
-		final List<LispStruct> symbolMacroletBodyJavaList = symbolMacroletBody.getAsJavaList();
-		for (final LispStruct bodyForm : symbolMacroletBodyJavaList) {
-			final LispStruct saResult = SemanticAnalyzer.saMainLoop(bodyForm);
-			symbolMacroletResultList.add(saResult);
-		}
+		final ListStruct body = input.getRest().getRest();
+		final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBodyWithDecls(body);
+		symbolMacroletResultList.addAll(bodyProcessingResult.getBodyForms());
 
 		return ListStruct.buildProperList(symbolMacroletResultList);
 	}

@@ -46,12 +46,9 @@ public class ProgvAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		progvResultList.add(secondAnalyzed);
 		progvResultList.add(thirdAnalyzed);
 
-		final ListStruct provBody = input.getRest().getRest();
-		final List<LispStruct> provBodyJavaList = provBody.getAsJavaList();
-		for (final LispStruct bodyForm : provBodyJavaList) {
-			final LispStruct saResult = SemanticAnalyzer.saMainLoop(bodyForm);
-			progvResultList.add(saResult);
-		}
+		final ListStruct body = input.getRest().getRest().getRest();
+		final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBody(body);
+		progvResultList.addAll(bodyProcessingResult.getBodyForms());
 
 		return ListStruct.buildProperList(progvResultList);
 	}

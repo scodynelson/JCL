@@ -104,7 +104,7 @@ public class LabelsAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			}
 
 			final ListStruct currentBodyForms = input.getRest().getRest();
-			final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBody(currentBodyForms);
+			final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBodyWithDecls(currentBodyForms);
 
 			final Environment envList = SemanticAnalyzer.environmentStack.peek();
 

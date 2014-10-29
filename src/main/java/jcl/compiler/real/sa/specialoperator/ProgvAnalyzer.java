@@ -6,6 +6,7 @@ import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.SpecialOperator;
+import jcl.structs.symbols.SymbolStruct;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,9 +17,6 @@ public class ProgvAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 	@Override
 	public ListStruct analyze(final ListStruct input) {
-		// TODO: This is kind of like a 'let' for DYNAMIC bindings. The code below is temporary, but does not take care of the environment pieces...
-		// NOTE: When I say a 'let' environment, the DYNAMIC bindings are only within the scope of the (progv) environment.
-		// I envision this making a let environment somehow and setting all the symbol variables to be 'special'
 
 		if (input.size() < 3) {
 			throw new ProgramErrorException("PROGV: Incorrect number of arguments: " + input.size() + ". Expected at least 3 arguments.");
@@ -28,6 +26,13 @@ public class ProgvAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		if (!(second instanceof ListStruct)) {
 			throw new ProgramErrorException("PROGV: Symbols list must be of type ListStruct. Got: " + second);
 		}
+		final ListStruct secondListStruct = (ListStruct) second;
+		final List<LispStruct> secondJavaList = secondListStruct.getAsJavaList();
+		for (final LispStruct currentSecondElement : secondJavaList) {
+			if (!(currentSecondElement instanceof SymbolStruct)) {
+				throw new ProgramErrorException("PROGV: Element in symbols list must be of type SymbolStruct. Got: " + currentSecondElement);
+			}
+		}
 		final LispStruct secondAnalyzed = SemanticAnalyzer.saMainLoop(second);
 
 		final LispStruct third = input.getRest().getRest().getFirst();
@@ -35,16 +40,6 @@ public class ProgvAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			throw new ProgramErrorException("PROGV: Values list must be of type ListStruct. Got: " + third);
 		}
 		final LispStruct thirdAnalyzed = SemanticAnalyzer.saMainLoop(third);
-
-		/*
-progv allows binding one or more dynamic variables whose names may be determined at run time. Each form is evaluated in order
-with the dynamic variables whose names are in symbols bound to corresponding values.
-
-If too few values are supplied, the remaining symbols are bound and then made to have no value.
-If too many values are supplied, the excess values are ignored.
-
-The bindings of the dynamic variables are undone on exit from progv.
-		 */
 
 		final ListStruct provBody = input.getRest().getRest().getRest();
 		final ListStruct prognResults = PrognAnalyzer.INSTANCE.analyze(provBody);

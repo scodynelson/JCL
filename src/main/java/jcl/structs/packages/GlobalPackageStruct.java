@@ -15,6 +15,6 @@ public interface GlobalPackageStruct {
 	PackageStruct COMMON_LISP = new PackageStruct("COMMON-LISP", Collections.singletonList("CL"));
 	PackageStruct SYSTEM = new PackageStruct("SYSTEM");
 	PackageStruct COMPILER = new PackageStruct("COMPILER");
-	PackageStruct COMMON_LISP_USER = new PackageStruct("COMMON-LISP-USER", Collections.singletonList("CL-USER"));
+	PackageStruct COMMON_LISP_USER = new PackageStruct("COMMON-LISP-USER", Collections.singletonList("CL-USER"), Collections.singleton(COMMON_LISP));
 	PackageStruct KEYWORD = KeywordPackageStruct.INSTANCE;
 }

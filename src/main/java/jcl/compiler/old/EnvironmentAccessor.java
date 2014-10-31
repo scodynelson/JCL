@@ -28,13 +28,12 @@ import java.util.List;
 public class EnvironmentAccessor {
 
 	public static Environment createNewEnvironment(final Marker marker) {
-		Environment environment = new Environment(marker, new ArrayList<>(), null, new ArrayList<>(), null, null);
+		final Environment environment = new Environment(marker, new ArrayList<>(), Environment.NULL, new ArrayList<>(), new SymbolTable(new ArrayList<>()), null);
 
 		if ((marker == Marker.LAMBDA) || (marker == Marker.FLET) || (marker == Marker.LABELS)) {
 			environment.getLoadTimeValues().clear();
 		}
 
-		environment = createParent(environment, Environment.NULL);
 		return environment;
 	}
 

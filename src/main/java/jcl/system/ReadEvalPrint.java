@@ -10,6 +10,7 @@ import jcl.structs.packages.PackageStruct;
 import jcl.structs.streams.CharacterStreamStruct;
 import jcl.structs.streams.FileStreamStruct;
 import jcl.structs.streams.InputStream;
+import jcl.structs.symbols.SpecialOperator;
 import jcl.structs.symbols.variables.Variable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,7 @@ public final class ReadEvalPrint {
 	}
 
 	public static Object funcall(final String... args) {
+		Object temp = SpecialOperator.BLOCK;
 
 		// get local references to the basic functions
 //		Function1 eval = (Function1) CommonLispFunctions.StdFunctions.Eval;

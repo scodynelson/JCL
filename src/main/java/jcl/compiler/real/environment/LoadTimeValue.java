@@ -3,6 +3,7 @@ package jcl.compiler.real.environment;
 import jcl.LispStruct;
 import jcl.structs.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class LoadTimeValue {
 
@@ -32,6 +33,6 @@ public class LoadTimeValue {
 
 	@Override
 	public String toString() {
-		return ReflectionToStringBuilder.toString(this);
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

@@ -5,6 +5,8 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.lambdalist.OrdinaryLambdaListBindings;
 import jcl.structs.arrays.StringStruct;
 import jcl.structs.lists.ListStruct;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.List;
 
@@ -14,7 +16,7 @@ public class LambdaEnvironmentListStruct extends EnvironmentListStruct {
 	protected final StringStruct docString;
 
 	public LambdaEnvironmentListStruct(final Environment environment, final List<LispStruct> declarations, final ListStruct bodyForms,
-	                                   final OrdinaryLambdaListBindings lambdaListBindings, final StringStruct docString) {
+									   final OrdinaryLambdaListBindings lambdaListBindings, final StringStruct docString) {
 		super(environment, declarations, bodyForms);
 		this.lambdaListBindings = lambdaListBindings;
 		this.docString = docString;
@@ -30,13 +32,7 @@ public class LambdaEnvironmentListStruct extends EnvironmentListStruct {
 
 	@Override
 	public String printStruct() {
-		return "LambdaEnvironmentListStruct{"
-				+ "environment=" + environment
-				+ ", declarations=" + declarations
-				+ ", bodyForms=" + bodyForms
-				+ ", bodyForms=" + lambdaListBindings
-				+ ", bodyForms=" + docString
-				+ '}'
+		return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
 				+ "\nBody Printed: " + bodyForms.printStruct();
 	}
 }

@@ -13,7 +13,8 @@ import java.util.List;
 /**
  * The {@link SymbolStruct} is the object representation of a Lisp 'symbol' type.
  *
- * @param <TYPE> the type of the symbol value
+ * @param <TYPE>
+ * 		the type of the symbol value
  */
 public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 
@@ -31,7 +32,8 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param name the symbol name
+	 * @param name
+	 * 		the symbol name
 	 */
 	public SymbolStruct(final String name) {
 		this(name, null, null, null);
@@ -40,8 +42,10 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param name          the symbol name
-	 * @param symbolPackage the symbol package
+	 * @param name
+	 * 		the symbol name
+	 * @param symbolPackage
+	 * 		the symbol package
 	 */
 	public SymbolStruct(final String name, final PackageStruct symbolPackage) {
 		this(name, symbolPackage, null, null);
@@ -50,8 +54,10 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param name  the symbol name
-	 * @param value the symbol value
+	 * @param name
+	 * 		the symbol name
+	 * @param value
+	 * 		the symbol value
 	 */
 	public SymbolStruct(final String name, final TYPE value) {
 		this(name, null, value, null);
@@ -60,8 +66,10 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param name     the symbol name
-	 * @param function the symbol function
+	 * @param name
+	 * 		the symbol name
+	 * @param function
+	 * 		the symbol function
 	 */
 	public SymbolStruct(final String name, final FunctionStruct function) {
 		this(name, null, null, function);
@@ -70,9 +78,12 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param name          the symbol name
-	 * @param symbolPackage the symbol package
-	 * @param value         the symbol value
+	 * @param name
+	 * 		the symbol name
+	 * @param symbolPackage
+	 * 		the symbol package
+	 * @param value
+	 * 		the symbol value
 	 */
 	public SymbolStruct(final String name, final PackageStruct symbolPackage, final TYPE value) {
 		this(Symbol.INSTANCE, name, symbolPackage, value, null);
@@ -81,10 +92,14 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param name          the symbol name
-	 * @param symbolPackage the symbol package
-	 * @param value         the symbol value
-	 * @param function      the symbol function
+	 * @param name
+	 * 		the symbol name
+	 * @param symbolPackage
+	 * 		the symbol package
+	 * @param value
+	 * 		the symbol value
+	 * @param function
+	 * 		the symbol function
 	 */
 	public SymbolStruct(final String name, final PackageStruct symbolPackage, final TYPE value, final FunctionStruct function) {
 		this(Symbol.INSTANCE, name, symbolPackage, value, function);
@@ -93,20 +108,37 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	/**
 	 * Protected constructor.
 	 *
-	 * @param symbolType    the symbol type
-	 * @param name          the symbol name
-	 * @param symbolPackage the symbol package
-	 * @param value         the symbol value
-	 * @param function      the symbol function
+	 * @param symbolType
+	 * 		the symbol type
+	 * @param name
+	 * 		the symbol name
+	 * @param symbolPackage
+	 * 		the symbol package
+	 * @param value
+	 * 		the symbol value
+	 * @param function
+	 * 		the symbol function
 	 */
 	protected SymbolStruct(final Symbol symbolType,
-	                       final String name, final PackageStruct symbolPackage, final TYPE value, final FunctionStruct function) {
+						   final String name, final PackageStruct symbolPackage, final TYPE value, final FunctionStruct function) {
 		super(symbolType, null, null);
 		this.name = name;
 
 		this.symbolPackage = symbolPackage;
 		this.value = value;
 		this.function = function;
+
+		init();
+	}
+
+	/**
+	 * Post construction method.
+	 */
+	private void init() {
+		if (symbolPackage != null) {
+			symbolPackage.importSymbols(this);
+			symbolPackage.export(this);
+		}
 	}
 
 	/**
@@ -130,7 +162,8 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	/**
 	 * Setter for symbol package property.
 	 *
-	 * @param symbolPackage new symbol package property value
+	 * @param symbolPackage
+	 * 		new symbol package property value
 	 */
 	public void setSymbolPackage(final PackageStruct symbolPackage) {
 		this.symbolPackage = symbolPackage;
@@ -148,7 +181,8 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	/**
 	 * Setter for symbol value property.
 	 *
-	 * @param value new symbol value property value
+	 * @param value
+	 * 		new symbol value property value
 	 */
 	public void setValue(final TYPE value) {
 		this.value = value;
@@ -166,7 +200,8 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	/**
 	 * Setter for symbol function property.
 	 *
-	 * @param function new symbol function property value
+	 * @param function
+	 * 		new symbol function property value
 	 */
 	public void setFunction(final FunctionStruct function) {
 		this.function = function;
@@ -193,7 +228,9 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	/**
 	 * This method retrieves a property from the symbol internal properties.
 	 *
-	 * @param key the key for the property to retrieve
+	 * @param key
+	 * 		the key for the property to retrieve
+	 *
 	 * @return the property from the symbol internal properties.
 	 */
 	public LispStruct getProperty(final LispStruct key) {
@@ -210,8 +247,10 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	/**
 	 * This method set a property in the symbol internal properties to the provided value.
 	 *
-	 * @param key   the key for the property to set
-	 * @param value the value of the property
+	 * @param key
+	 * 		the key for the property to set
+	 * @param value
+	 * 		the value of the property
 	 */
 	public void setProperty(final LispStruct key, final LispStruct value) {
 		for (int i = 0; i < properties.size(); i += 2) {
@@ -227,7 +266,9 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	/**
 	 * This method copies the symbol and possibly it's properties.
 	 *
-	 * @param copyProperties whether or not to copy the symbol's internal properties
+	 * @param copyProperties
+	 * 		whether or not to copy the symbol's internal properties
+	 *
 	 * @return the newly copied symbol
 	 */
 	public SymbolStruct<TYPE> copySymbol(final boolean copyProperties) {

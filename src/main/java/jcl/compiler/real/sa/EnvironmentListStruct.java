@@ -3,6 +3,8 @@ package jcl.compiler.real.sa;
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.structs.lists.ListStruct;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.List;
 
@@ -73,11 +75,7 @@ public class EnvironmentListStruct extends ListStruct {
 
 	@Override
 	public String printStruct() {
-		return "EnvironmentListStruct{"
-				+ "environment=" + environment
-				+ ", declarations=" + declarations
-				+ ", bodyForms=" + bodyForms
-				+ '}'
-				+ "\n Body Printed: " + bodyForms.printStruct();
+		return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+				+ "\nBody Printed: " + bodyForms.printStruct();
 	}
 }

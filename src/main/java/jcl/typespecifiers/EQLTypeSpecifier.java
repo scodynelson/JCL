@@ -4,11 +4,13 @@ import jcl.LispType;
 import jcl.structs.packages.GlobalPackageStruct;
 import jcl.types.TypeBaseClass;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * An {@link EQLTypeSpecifier} represents the type of all x for which (eql object x) is true. The argument object is required.
- * The object can be *, but if so it denotes itself (the symbol *) and does not represent an unspecified value. The symbol
- * eql is not valid as an atomic type specifier.
+ * An {@link EQLTypeSpecifier} represents the type of all x for which (eql object x) is true. The argument object is
+ * required. The object can be *, but if so it denotes itself (the symbol *) and does not represent an unspecified
+ * value. The symbol eql is not valid as an atomic type specifier.
  */
 public class EQLTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecifier {
 
@@ -17,7 +19,8 @@ public class EQLTypeSpecifier extends TypeBaseClass implements CompoundTypeSpeci
 	/**
 	 * Public constructor.
 	 *
-	 * @param typeSpecifier the type specifier to test equality
+	 * @param typeSpecifier
+	 * 		the type specifier to test equality
 	 */
 	public EQLTypeSpecifier(final TypeSpecifier typeSpecifier) {
 		this("T", typeSpecifier); // TODO: Should this be 'T'???
@@ -26,8 +29,10 @@ public class EQLTypeSpecifier extends TypeBaseClass implements CompoundTypeSpeci
 	/**
 	 * Protected constructor.
 	 *
-	 * @param name          the name of the symbol type
-	 * @param typeSpecifier the type specifier to test equality
+	 * @param name
+	 * 		the name of the symbol type
+	 * @param typeSpecifier
+	 * 		the type specifier to test equality
 	 */
 	protected EQLTypeSpecifier(final String name, final TypeSpecifier typeSpecifier) {
 		super(name, GlobalPackageStruct.COMMON_LISP);
@@ -51,15 +56,11 @@ public class EQLTypeSpecifier extends TypeBaseClass implements CompoundTypeSpeci
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder()
-				.append(typeSpecifier)
-				.toHashCode();
+		return HashCodeBuilder.reflectionHashCode(this);
 	}
 
 	@Override
 	public String toString() {
-		return "EQLTypeSpecifier{"
-				+ "typeSpecifier=" + typeSpecifier
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

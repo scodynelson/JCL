@@ -5,6 +5,8 @@ import jcl.lambdalist.variable.Rest;
 import jcl.structs.packages.GlobalPackageStruct;
 import jcl.types.TypeBaseClass;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.List;
 import java.util.Objects;
@@ -13,8 +15,8 @@ import java.util.Objects;
  * A {@link ValuesTypeSpecifier} can be used only as the value-type in a function type specifier or a the special form.
  * It is used to specify individual types when multiple values are involved. The &optional and &rest markers can appear
  * in the value-type list; they indicate the parameter list of a function that, when given to multiple-value-call along
- * with the values, would correctly receive those values. The symbol values is not valid as a type specifier; and, specifically,
- * it is not an abbreviation for (values).
+ * with the values, would correctly receive those values. The symbol values is not valid as a type specifier; and,
+ * specifically, it is not an abbreviation for (values).
  */
 public class ValuesTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecifier {
 
@@ -25,9 +27,12 @@ public class ValuesTypeSpecifier extends TypeBaseClass implements CompoundTypeSp
 	/**
 	 * Constructs a new ValuesTypeSpecifier that matches the provided typeSpecifiers, optional, and rest arguments.
 	 *
-	 * @param typeSpecifiers the required arguments
-	 * @param optional       the optional arguments
-	 * @param rest           the rest arguments
+	 * @param typeSpecifiers
+	 * 		the required arguments
+	 * @param optional
+	 * 		the optional arguments
+	 * @param rest
+	 * 		the rest arguments
 	 */
 	public ValuesTypeSpecifier(final List<TypeSpecifier> typeSpecifiers, final Optional<TypeSpecifier> optional,
 	                           final Rest<TypeSpecifier> rest) {
@@ -37,10 +42,14 @@ public class ValuesTypeSpecifier extends TypeBaseClass implements CompoundTypeSp
 	/**
 	 * Constructs a new ValuesTypeSpecifier that matches the provided typeSpecifiers, optional, and rest arguments.
 	 *
-	 * @param name           the name of the symbol type
-	 * @param typeSpecifiers the required arguments
-	 * @param optional       the optional arguments
-	 * @param rest           the rest arguments
+	 * @param name
+	 * 		the name of the symbol type
+	 * @param typeSpecifiers
+	 * 		the required arguments
+	 * @param optional
+	 * 		the optional arguments
+	 * @param rest
+	 * 		the rest arguments
 	 */
 	protected ValuesTypeSpecifier(final String name, final List<TypeSpecifier> typeSpecifiers, final Optional<TypeSpecifier> optional,
 	                              final Rest<TypeSpecifier> rest) {
@@ -69,19 +78,11 @@ public class ValuesTypeSpecifier extends TypeBaseClass implements CompoundTypeSp
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder()
-				.append(typeSpecifiers)
-				.append(optional)
-				.append(rest)
-				.toHashCode();
+		return HashCodeBuilder.reflectionHashCode(this);
 	}
 
 	@Override
 	public String toString() {
-		return "ValuesTypeSpecifier{"
-				+ "typeSpecifiers=" + typeSpecifiers
-				+ ", optional=" + optional
-				+ ", rest=" + rest
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

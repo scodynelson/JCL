@@ -3,6 +3,8 @@ package jcl.typespecifiers.designator;
 import jcl.types.Array;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +20,8 @@ public class DimensionsDesignator {
 	/**
 	 * Constructor for creating a dimensions wrapper for the provided dimensions.
 	 *
-	 * @param dimensions an array of dimensions
+	 * @param dimensions
+	 * 		an array of dimensions
 	 */
 	public DimensionsDesignator(final Integer... dimensions) {
 		this.dimensions = new ArrayList<>(Arrays.asList(dimensions));
@@ -27,7 +30,8 @@ public class DimensionsDesignator {
 	/**
 	 * Constructor for creating a dimensions wrapper for the provided dimensions list.
 	 *
-	 * @param dimensions a list of dimensions
+	 * @param dimensions
+	 * 		a list of dimensions
 	 */
 	public DimensionsDesignator(final List<Integer> dimensions) {
 		this.dimensions = dimensions;
@@ -58,19 +62,15 @@ public class DimensionsDesignator {
 
 	}
 
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder()
-				.append(dimensions)
-				.toHashCode();
-	}
-
 	/**
 	 * This method test the two provided dimensions to ensure that the they are equivalent to one another, null being
 	 * equivalent to everything.
 	 *
-	 * @param dimensions1 the primary dimensions list
-	 * @param dimensions2 the secondary dimensions list
+	 * @param dimensions1
+	 * 		the primary dimensions list
+	 * @param dimensions2
+	 * 		the secondary dimensions list
+	 *
 	 * @return true if the dimensions are equivalent; false otherwise
 	 */
 	private static boolean checkDimensions(final List<Integer> dimensions1, final List<Integer> dimensions2) {
@@ -94,9 +94,12 @@ public class DimensionsDesignator {
 	}
 
 	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
 	public String toString() {
-		return "DimensionsDesignator{"
-				+ "dimensions=" + dimensions
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

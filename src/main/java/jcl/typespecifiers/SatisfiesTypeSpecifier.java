@@ -5,12 +5,15 @@ import jcl.structs.functions.PredicateFunctionStruct;
 import jcl.structs.packages.GlobalPackageStruct;
 import jcl.types.TypeBaseClass;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * A {@link SatisfiesTypeSpecifier} denotes the set of all objects that satisfy the predicate predicate-name, which must
- * be a symbol whose global function definition is a one-argument predicate. A name is required for predicate-name; lambda
- * expressions are not allowed. The argument is required. The symbol * can be the argument, but it denotes itself (the symbol *),
- * and does not represent an unspecified value. The symbol satisfies is not valid as a type specifier.
+ * A {@link SatisfiesTypeSpecifier} denotes the set of all objects that satisfy the predicate predicate-name, which
+ * must be a symbol whose global function definition is a one-argument predicate. A name is required for
+ * predicate-name; lambda expressions are not allowed. The argument is required. The symbol * can be the argument, but
+ * it denotes itself (the symbol *), and does not represent an unspecified value. The symbol satisfies is not valid as a
+ * type specifier.
  */
 public class SatisfiesTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecifier {
 
@@ -19,7 +22,8 @@ public class SatisfiesTypeSpecifier extends TypeBaseClass implements CompoundTyp
 	/**
 	 * Public constructor.
 	 *
-	 * @param predicate the predicate function to test satisfaction
+	 * @param predicate
+	 * 		the predicate function to test satisfaction
 	 */
 	public SatisfiesTypeSpecifier(final PredicateFunctionStruct<LispStruct> predicate) {
 		this("T", predicate); // TODO: Should this be 'T'???
@@ -28,8 +32,10 @@ public class SatisfiesTypeSpecifier extends TypeBaseClass implements CompoundTyp
 	/**
 	 * Protected constructor.
 	 *
-	 * @param name      the name of the symbol type
-	 * @param predicate the predicate function to test satisfaction
+	 * @param name
+	 * 		the name of the symbol type
+	 * @param predicate
+	 * 		the predicate function to test satisfaction
 	 */
 	protected SatisfiesTypeSpecifier(final String name, final PredicateFunctionStruct<LispStruct> predicate) {
 		super(name, GlobalPackageStruct.COMMON_LISP);
@@ -53,15 +59,11 @@ public class SatisfiesTypeSpecifier extends TypeBaseClass implements CompoundTyp
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder()
-				.append(predicate)
-				.toHashCode();
+		return HashCodeBuilder.reflectionHashCode(this);
 	}
 
 	@Override
 	public String toString() {
-		return "SatisfiesTypeSpecifier{"
-				+ "predicate=" + predicate
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

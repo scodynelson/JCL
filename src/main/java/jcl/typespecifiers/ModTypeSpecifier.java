@@ -3,12 +3,16 @@ package jcl.typespecifiers;
 import jcl.structs.numbers.IntegerStruct;
 import jcl.structs.packages.GlobalPackageStruct;
 import jcl.types.TypeBaseClass;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.math.BigInteger;
 
 /**
- * A {@link ModTypeSpecifier} denotes the set of non-negative integers less than n. This is equivalent to (integer 0 (n))
- * or to (integer 0 m), where m=n-1. The argument is required, and cannot be *. The symbol mod is not valid as a type specifier.
+ * A {@link ModTypeSpecifier} denotes the set of non-negative integers less than n. This is equivalent to (integer 0
+ * (n)) or to (integer 0 m), where m=n-1. The argument is required, and cannot be *. The symbol mod is not valid as a
+ * type specifier.
  */
 public class ModTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecifier {
 
@@ -17,7 +21,8 @@ public class ModTypeSpecifier extends TypeBaseClass implements CompoundTypeSpeci
 	/**
 	 * Public constructor.
 	 *
-	 * @param integerStruct the integer structure
+	 * @param integerStruct
+	 * 		the integer structure
 	 */
 	public ModTypeSpecifier(final IntegerStruct integerStruct) {
 		this("T", integerStruct); // TODO: Should this be 'T'???
@@ -26,8 +31,10 @@ public class ModTypeSpecifier extends TypeBaseClass implements CompoundTypeSpeci
 	/**
 	 * Protected constructor.
 	 *
-	 * @param name          the name of the symbol type
-	 * @param integerStruct the integer structure
+	 * @param name
+	 * 		the name of the symbol type
+	 * @param integerStruct
+	 * 		the integer structure
 	 */
 	protected ModTypeSpecifier(final String name, final IntegerStruct integerStruct) {
 		super(name, GlobalPackageStruct.COMMON_LISP);
@@ -58,13 +65,11 @@ public class ModTypeSpecifier extends TypeBaseClass implements CompoundTypeSpeci
 
 	@Override
 	public int hashCode() {
-		return integerStruct.hashCode();
+		return HashCodeBuilder.reflectionHashCode(this);
 	}
 
 	@Override
 	public String toString() {
-		return "ModTypeSpecifier{"
-				+ "integerStruct=" + integerStruct
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

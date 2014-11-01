@@ -2,11 +2,14 @@ package jcl.typespecifiers.designator;
 
 import jcl.typespecifiers.TypeSpecifierUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * This class represents an interval designator, found within compound type specifiers.
  *
- * @param <N> the number type used for the interval boundaries
+ * @param <N>
+ * 		the number type used for the interval boundaries
  */
 public class IntervalDesignator<N extends Number> {
 
@@ -17,8 +20,10 @@ public class IntervalDesignator<N extends Number> {
 	/**
 	 * Constructor for creating an interval for the provided lower and upper boundaries.
 	 *
-	 * @param lowerBound the lower boundary
-	 * @param upperBound the upper boundary
+	 * @param lowerBound
+	 * 		the lower boundary
+	 * @param upperBound
+	 * 		the upper boundary
 	 */
 	public IntervalDesignator(final N lowerBound, final N upperBound) {
 		if ((lowerBound != null) && (upperBound != null) && (lowerBound.getClass() != upperBound.getClass())) {
@@ -62,18 +67,12 @@ public class IntervalDesignator<N extends Number> {
 		return isWithinBounds(intervalDesignator.lowerBound) && isWithinBounds(intervalDesignator.upperBound);
 	}
 
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder()
-				.append(lowerBound)
-				.append(upperBound)
-				.toHashCode();
-	}
-
 	/**
 	 * This method checks to see whether the number provided is within the bound of this interval.
 	 *
-	 * @param number the number to verify is within bounds
+	 * @param number
+	 * 		the number to verify is within bounds
+	 *
 	 * @return true if the number is within the interval; false otherwise
 	 */
 	private boolean isWithinBounds(final Number number) {
@@ -84,10 +83,12 @@ public class IntervalDesignator<N extends Number> {
 	}
 
 	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
 	public String toString() {
-		return "IntervalDesignator{"
-				+ "lowerBound=" + lowerBound
-				+ ", upperBound=" + upperBound
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

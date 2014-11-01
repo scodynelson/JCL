@@ -4,6 +4,8 @@ import jcl.LispType;
 import jcl.structs.packages.GlobalPackageStruct;
 import jcl.types.TypeBaseClass;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,7 +23,8 @@ public class OrTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecif
 	/**
 	 * Constructs a new OrTypeSpecifier that matches the provided types by 'or' logic.
 	 *
-	 * @param types an array of {@link LispType}s
+	 * @param types
+	 * 		an array of {@link LispType}s
 	 */
 	public OrTypeSpecifier(final LispType... types) {
 		this("T", types); // TODO: Should this be 'T'???
@@ -30,8 +33,10 @@ public class OrTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecif
 	/**
 	 * Constructs a new OrTypeSpecifier that matches the provided types by 'or' logic.
 	 *
-	 * @param name  the name of the symbol type
-	 * @param types an array of {@link LispType}s
+	 * @param name
+	 * 		the name of the symbol type
+	 * @param types
+	 * 		an array of {@link LispType}s
 	 */
 	protected OrTypeSpecifier(final String name, final LispType... types) {
 		super(name, GlobalPackageStruct.COMMON_LISP);
@@ -59,15 +64,11 @@ public class OrTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecif
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder()
-				.append(types)
-				.toHashCode();
+		return HashCodeBuilder.reflectionHashCode(this);
 	}
 
 	@Override
 	public String toString() {
-		return "OrTypeSpecifier{"
-				+ "types=" + types
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

@@ -5,6 +5,8 @@ import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.IntervalDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 import java.math.BigInteger;
@@ -33,8 +35,11 @@ public interface Integer extends Rational {
 		/**
 		 * Gets instance of compound {@link Integer} type.
 		 *
-		 * @param lowerBound the lower bound that this {@link Integer} type includes
-		 * @param upperBound the upper bound that this {@link Integer} type includes
+		 * @param lowerBound
+		 * 		the lower bound that this {@link Integer} type includes
+		 * @param upperBound
+		 * 		the upper bound that this {@link Integer} type includes
+		 *
 		 * @return the newly created compound {@link Integer} type
 		 */
 		public static Integer getInstance(final BigInteger lowerBound, final BigInteger upperBound) {
@@ -44,10 +49,15 @@ public interface Integer extends Rational {
 		/**
 		 * Gets instance of compound {@link Integer} type.
 		 *
-		 * @param lowerBound     the lower bound that this {@link Integer} type includes
-		 * @param lowerInclusive whether to include the lower bound in the interval
-		 * @param upperBound     the upper bound that this {@link Integer} type includes
-		 * @param upperInclusive whether to include the upper bound in the interval
+		 * @param lowerBound
+		 * 		the lower bound that this {@link Integer} type includes
+		 * @param lowerInclusive
+		 * 		whether to include the lower bound in the interval
+		 * @param upperBound
+		 * 		the upper bound that this {@link Integer} type includes
+		 * @param upperInclusive
+		 * 		whether to include the upper bound in the interval
+		 *
 		 * @return the newly created compound {@link Integer} type
 		 */
 		public static Integer getInstance(final BigInteger lowerBound, final boolean lowerInclusive,
@@ -73,10 +83,14 @@ public interface Integer extends Rational {
 			/**
 			 * Private constructor for compound {@link Integer} type.
 			 *
-			 * @param lowerBound     the lower bound that this {@link Integer} type includes
-			 * @param lowerInclusive whether to include the lower bound in the interval
-			 * @param upperBound     the upper bound that this {@link Integer} type includes
-			 * @param upperInclusive whether to include the upper bound in the interval
+			 * @param lowerBound
+			 * 		the lower bound that this {@link Integer} type includes
+			 * @param lowerInclusive
+			 * 		whether to include the lower bound in the interval
+			 * @param upperBound
+			 * 		the upper bound that this {@link Integer} type includes
+			 * @param upperInclusive
+			 * 		whether to include the upper bound in the interval
 			 */
 			private IntegerImpl(final BigInteger lowerBound, final boolean lowerInclusive,
 			                    final BigInteger upperBound, final boolean upperInclusive) {
@@ -98,10 +112,15 @@ public interface Integer extends Rational {
 			/**
 			 * Gets instance of compound {@link Integer} type.
 			 *
-			 * @param lowerBound     the lower bound that this {@link Integer} type includes
-			 * @param lowerInclusive whether to include the lower bound in the interval
-			 * @param upperBound     the upper bound that this {@link Integer} type includes
-			 * @param upperInclusive whether to include the upper bound in the interval
+			 * @param lowerBound
+			 * 		the lower bound that this {@link Integer} type includes
+			 * @param lowerInclusive
+			 * 		whether to include the lower bound in the interval
+			 * @param upperBound
+			 * 		the upper bound that this {@link Integer} type includes
+			 * @param upperInclusive
+			 * 		whether to include the upper bound in the interval
+			 *
 			 * @return the newly created compound {@link Integer} type
 			 */
 			public static Integer getInstance(final BigInteger lowerBound, final boolean lowerInclusive,
@@ -142,9 +161,7 @@ public interface Integer extends Rational {
 
 			@Override
 			public String toString() {
-				return "IntegerImpl{"
-						+ "intervalDesignator=" + intervalDesignator
-						+ '}';
+				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 			}
 		}
 	}

@@ -6,13 +6,16 @@ import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.DimensionsDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.Integer;
 import java.lang.String;
 
 /**
- * A {@link SimpleVector} is a type of a {@link Vector} that is not displaced to another {@link Array}, has no fill pointer,
- * is not expressly adjustable, and is able to hold elements of any type is a subtype of type {@link SimpleVector}.
+ * A {@link SimpleVector} is a type of a {@link Vector} that is not displaced to another {@link Array}, has no fill
+ * pointer, is not expressly adjustable, and is able to hold elements of any type is a subtype of type {@link
+ * SimpleVector}.
  * <p>
  * The type {@link SimpleVector} is a subtype of type {@link Vector}, and is a subtype of type (vector t).
  * <p>
@@ -35,7 +38,9 @@ public interface SimpleVector extends Vector, SimpleArray {
 		/**
 		 * Gets instance of compound {@link SimpleVector} type.
 		 *
-		 * @param size the size of the {@link SimpleVector}
+		 * @param size
+		 * 		the size of the {@link SimpleVector}
+		 *
 		 * @return the newly created compound {@link SimpleVector} type
 		 */
 		public static SimpleVector getInstance(final Integer size) {
@@ -45,8 +50,11 @@ public interface SimpleVector extends Vector, SimpleArray {
 		/**
 		 * Gets instance of compound {@link SimpleVector} type.
 		 *
-		 * @param size        the size of the {@link SimpleVector}
-		 * @param elementType the types of elements within the {@link SimpleVector}
+		 * @param size
+		 * 		the size of the {@link SimpleVector}
+		 * @param elementType
+		 * 		the types of elements within the {@link SimpleVector}
+		 *
 		 * @return the newly created compound {@link SimpleVector} type
 		 */
 		public static SimpleVector getInstance(final Integer size, final LispType elementType) {
@@ -71,8 +79,10 @@ public interface SimpleVector extends Vector, SimpleArray {
 			/**
 			 * Private constructor for compound {@link SimpleVector} type.
 			 *
-			 * @param size        the size of the {@link SimpleVector}
-			 * @param elementType the types of elements within the {@link SimpleVector}
+			 * @param size
+			 * 		the size of the {@link SimpleVector}
+			 * @param elementType
+			 * 		the types of elements within the {@link SimpleVector}
 			 */
 			private SimpleVectorImpl(final Integer size, final LispType elementType) {
 				super("SIMPLE-VECTOR", GlobalPackageStruct.COMMON_LISP);
@@ -93,8 +103,11 @@ public interface SimpleVector extends Vector, SimpleArray {
 			/**
 			 * Gets instance of compound {@link SimpleVector} type.
 			 *
-			 * @param size        the size of the {@link SimpleVector}
-			 * @param elementType the types of elements within the {@link SimpleVector}
+			 * @param size
+			 * 		the size of the {@link SimpleVector}
+			 * @param elementType
+			 * 		the types of elements within the {@link SimpleVector}
+			 *
 			 * @return the newly created compound {@link SimpleVector} type
 			 */
 			public static SimpleVector getInstance(final Integer size, final LispType elementType) {
@@ -126,7 +139,9 @@ public interface SimpleVector extends Vector, SimpleArray {
 			/**
 			 * This method checks the equality of the provide simpleVectorImpl object to this instance.
 			 *
-			 * @param simpleVectorImpl the simpleVectorImpl object to test for equality
+			 * @param simpleVectorImpl
+			 * 		the simpleVectorImpl object to test for equality
+			 *
 			 * @return true if the simpleVectorImpl object is equivalent to this instance; false otherwise
 			 */
 			private boolean checkSimpleVectorImplEquality(final SimpleVectorImpl simpleVectorImpl) {
@@ -147,10 +162,7 @@ public interface SimpleVector extends Vector, SimpleArray {
 
 			@Override
 			public String toString() {
-				return "SimpleVectorImpl{"
-						+ "size=" + size
-						+ ", elementType=" + elementType
-						+ '}';
+				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 			}
 		}
 	}

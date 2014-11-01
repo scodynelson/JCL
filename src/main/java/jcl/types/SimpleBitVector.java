@@ -6,15 +6,18 @@ import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.DimensionsDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.Integer;
 import java.lang.String;
 
 /**
- * A {@link SimpleBitVector} is a type of a {@link BitVector} that is not displaced to another {@link Array}, has no fill
- * pointer, and is not expressly adjustable is a subtype of type {@link SimpleBitVector}.
+ * A {@link SimpleBitVector} is a type of a {@link BitVector} that is not displaced to another {@link Array}, has no
+ * fill pointer, and is not expressly adjustable is a subtype of type {@link SimpleBitVector}.
  * <p>
- * {@link SimpleBitVector} -> {@link BitVector} -> {@link Vector} -> {@link SimpleArray} -> {@link Array} -> {@link Sequence} -> {@link T}
+ * {@link SimpleBitVector} -> {@link BitVector} -> {@link Vector} -> {@link SimpleArray} -> {@link Array} -> {@link
+ * Sequence} -> {@link T}
  */
 public interface SimpleBitVector extends BitVector, SimpleArray {
 
@@ -33,7 +36,9 @@ public interface SimpleBitVector extends BitVector, SimpleArray {
 		/**
 		 * Gets instance of compound {@link SimpleBitVector} type.
 		 *
-		 * @param size the size of the {@link SimpleBitVector}
+		 * @param size
+		 * 		the size of the {@link SimpleBitVector}
+		 *
 		 * @return the newly created compound {@link SimpleBitVector} type
 		 */
 		public static SimpleBitVector getInstance(final Integer size) {
@@ -58,7 +63,8 @@ public interface SimpleBitVector extends BitVector, SimpleArray {
 			/**
 			 * Private constructor for compound {@link SimpleBitVector} type.
 			 *
-			 * @param size the size of the {@link SimpleBitVector}
+			 * @param size
+			 * 		the size of the {@link SimpleBitVector}
 			 */
 			private SimpleBitVectorImpl(final Integer size) {
 				super("SIMPLE-BIT-VECTOR", GlobalPackageStruct.COMMON_LISP);
@@ -78,7 +84,9 @@ public interface SimpleBitVector extends BitVector, SimpleArray {
 			/**
 			 * Gets instance of compound {@link SimpleBitVector} type.
 			 *
-			 * @param size the size of the {@link SimpleBitVector}
+			 * @param size
+			 * 		the size of the {@link SimpleBitVector}
+			 *
 			 * @return the newly created compound {@link SimpleBitVector} type
 			 */
 			public static SimpleBitVector getInstance(final Integer size) {
@@ -119,10 +127,7 @@ public interface SimpleBitVector extends BitVector, SimpleArray {
 
 			@Override
 			public String toString() {
-				return "SimpleBitVectorImpl{"
-						+ "size=" + size
-						+ ", elementType=" + ELEMENT_TYPE
-						+ '}';
+				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 			}
 		}
 	}

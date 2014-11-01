@@ -5,15 +5,17 @@ import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.IntervalDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 import java.math.BigDecimal;
 
 /**
- * A {@link Float} is a mathematical rational (but not a Common Lisp {@link Rational}) of the form s*f*b^e-p, where s is
- * +1 or -1, the sign; b is an {@link Integer} greater than 1, the base or radix of the representation; p is a positive
- * {@link Integer}, the precision (in base-b digits) of the {@link Float}; f is a positive {@link Integer} between b^p-1
- * and b^p-1 (inclusive), the significand; and e is an {@link Integer}, the exponent.
+ * A {@link Float} is a mathematical rational (but not a Common Lisp {@link Rational}) of the form s*f*b^e-p, where s
+ * is +1 or -1, the sign; b is an {@link Integer} greater than 1, the base or radix of the representation; p is a
+ * positive {@link Integer}, the precision (in base-b digits) of the {@link Float}; f is a positive {@link Integer}
+ * between b^p-1 and b^p-1 (inclusive), the significand; and e is an {@link Integer}, the exponent.
  * <p>
  * The types {@link ShortFloat}, {@link SingleFloat}, {@link DoubleFloat}, and {@link LongFloat} are subtypes of type
  * {@link Float}.
@@ -37,8 +39,11 @@ public interface Float extends Real {
 		/**
 		 * Gets instance of compound {@link Float} type.
 		 *
-		 * @param lowerBound the lower bound that this {@link Float} type includes
-		 * @param upperBound the upper bound that this {@link Float} type includes
+		 * @param lowerBound
+		 * 		the lower bound that this {@link Float} type includes
+		 * @param upperBound
+		 * 		the upper bound that this {@link Float} type includes
+		 *
 		 * @return the newly created compound {@link Float} type
 		 */
 		public static Float getInstance(final BigDecimal lowerBound, final BigDecimal upperBound) {
@@ -48,10 +53,15 @@ public interface Float extends Real {
 		/**
 		 * Gets instance of compound {@link Float} type.
 		 *
-		 * @param lowerBound     the lower bound that this {@link Float} type includes
-		 * @param lowerInclusive whether to include the lower bound in the interval
-		 * @param upperBound     the upper bound that this {@link Float} type includes
-		 * @param upperInclusive whether to include the upper bound in the interval
+		 * @param lowerBound
+		 * 		the lower bound that this {@link Float} type includes
+		 * @param lowerInclusive
+		 * 		whether to include the lower bound in the interval
+		 * @param upperBound
+		 * 		the upper bound that this {@link Float} type includes
+		 * @param upperInclusive
+		 * 		whether to include the upper bound in the interval
+		 *
 		 * @return the newly created compound {@link Float} type
 		 */
 		public static Float getInstance(final BigDecimal lowerBound, final boolean lowerInclusive,
@@ -77,10 +87,14 @@ public interface Float extends Real {
 			/**
 			 * Private constructor for compound {@link Float} type.
 			 *
-			 * @param lowerBound     the lower bound that this {@link Float} type includes
-			 * @param lowerInclusive whether to include the lower bound in the interval
-			 * @param upperBound     the upper bound that this {@link Float} type includes
-			 * @param upperInclusive whether to include the upper bound in the interval
+			 * @param lowerBound
+			 * 		the lower bound that this {@link Float} type includes
+			 * @param lowerInclusive
+			 * 		whether to include the lower bound in the interval
+			 * @param upperBound
+			 * 		the upper bound that this {@link Float} type includes
+			 * @param upperInclusive
+			 * 		whether to include the upper bound in the interval
 			 */
 			private FloatImpl(final BigDecimal lowerBound, final boolean lowerInclusive,
 			                  final BigDecimal upperBound, final boolean upperInclusive) {
@@ -94,10 +108,15 @@ public interface Float extends Real {
 			/**
 			 * Gets instance of compound {@link Float} type.
 			 *
-			 * @param lowerBound     the lower bound that this {@link Float} type includes
-			 * @param lowerInclusive whether to include the lower bound in the interval
-			 * @param upperBound     the upper bound that this {@link Float} type includes
-			 * @param upperInclusive whether to include the upper bound in the interval
+			 * @param lowerBound
+			 * 		the lower bound that this {@link Float} type includes
+			 * @param lowerInclusive
+			 * 		whether to include the lower bound in the interval
+			 * @param upperBound
+			 * 		the upper bound that this {@link Float} type includes
+			 * @param upperInclusive
+			 * 		whether to include the upper bound in the interval
+			 *
 			 * @return the newly created compound {@link Float} type
 			 */
 			public static Float getInstance(final BigDecimal lowerBound, final boolean lowerInclusive,
@@ -138,9 +157,7 @@ public interface Float extends Real {
 
 			@Override
 			public String toString() {
-				return "FloatImpl{"
-						+ "intervalDesignator=" + intervalDesignator
-						+ '}';
+				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 			}
 		}
 	}

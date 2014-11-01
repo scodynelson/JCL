@@ -5,6 +5,8 @@ import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.IntervalDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 import java.math.BigDecimal;
@@ -31,8 +33,11 @@ public interface SingleFloat extends Float {
 		/**
 		 * Gets instance of compound {@link SingleFloat} type.
 		 *
-		 * @param lowerBound the lower bound that this {@link SingleFloat} type includes
-		 * @param upperBound the upper bound that this {@link SingleFloat} type includes
+		 * @param lowerBound
+		 * 		the lower bound that this {@link SingleFloat} type includes
+		 * @param upperBound
+		 * 		the upper bound that this {@link SingleFloat} type includes
+		 *
 		 * @return the newly created compound {@link SingleFloat} type
 		 */
 		public static SingleFloat getInstance(final BigDecimal lowerBound, final BigDecimal upperBound) {
@@ -42,10 +47,15 @@ public interface SingleFloat extends Float {
 		/**
 		 * Gets instance of compound {@link SingleFloat} type.
 		 *
-		 * @param lowerBound     the lower bound that this {@link SingleFloat} type includes
-		 * @param lowerInclusive whether to include the lower bound in the interval
-		 * @param upperBound     the upper bound that this {@link SingleFloat} type includes
-		 * @param upperInclusive whether to include the upper bound in the interval
+		 * @param lowerBound
+		 * 		the lower bound that this {@link SingleFloat} type includes
+		 * @param lowerInclusive
+		 * 		whether to include the lower bound in the interval
+		 * @param upperBound
+		 * 		the upper bound that this {@link SingleFloat} type includes
+		 * @param upperInclusive
+		 * 		whether to include the upper bound in the interval
+		 *
 		 * @return the newly created compound {@link SingleFloat} type
 		 */
 		public static SingleFloat getInstance(final BigDecimal lowerBound, final boolean lowerInclusive,
@@ -71,10 +81,14 @@ public interface SingleFloat extends Float {
 			/**
 			 * Private constructor for compound {@link SingleFloat} type.
 			 *
-			 * @param lowerBound     the lower bound that this {@link SingleFloat} type includes
-			 * @param lowerInclusive whether to include the lower bound in the interval
-			 * @param upperBound     the upper bound that this {@link SingleFloat} type includes
-			 * @param upperInclusive whether to include the upper bound in the interval
+			 * @param lowerBound
+			 * 		the lower bound that this {@link SingleFloat} type includes
+			 * @param lowerInclusive
+			 * 		whether to include the lower bound in the interval
+			 * @param upperBound
+			 * 		the upper bound that this {@link SingleFloat} type includes
+			 * @param upperInclusive
+			 * 		whether to include the upper bound in the interval
 			 */
 			private SingleFloatImpl(final BigDecimal lowerBound, final boolean lowerInclusive,
 			                        final BigDecimal upperBound, final boolean upperInclusive) {
@@ -88,10 +102,15 @@ public interface SingleFloat extends Float {
 			/**
 			 * Gets instance of compound {@link SingleFloat} type.
 			 *
-			 * @param lowerBound     the lower bound that this {@link SingleFloat} type includes
-			 * @param lowerInclusive whether to include the lower bound in the interval
-			 * @param upperBound     the upper bound that this {@link SingleFloat} type includes
-			 * @param upperInclusive whether to include the upper bound in the interval
+			 * @param lowerBound
+			 * 		the lower bound that this {@link SingleFloat} type includes
+			 * @param lowerInclusive
+			 * 		whether to include the lower bound in the interval
+			 * @param upperBound
+			 * 		the upper bound that this {@link SingleFloat} type includes
+			 * @param upperInclusive
+			 * 		whether to include the upper bound in the interval
+			 *
 			 * @return the newly created compound {@link SingleFloat} type
 			 */
 			public static SingleFloat getInstance(final BigDecimal lowerBound, final boolean lowerInclusive,
@@ -132,9 +151,7 @@ public interface SingleFloat extends Float {
 
 			@Override
 			public String toString() {
-				return "SingleFloatImpl{"
-						+ "intervalDesignator=" + intervalDesignator
-						+ '}';
+				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 			}
 		}
 	}

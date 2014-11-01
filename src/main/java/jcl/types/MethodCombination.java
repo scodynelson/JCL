@@ -3,13 +3,15 @@ package jcl.types;
 import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
 /**
  * A {@link MethodCombination} object represents the information about the {@link MethodCombination} being used by a
- * {@link GenericFunction}. A {@link MethodCombination} object contains information about both the type of {@link MethodCombination}
- * and the arguments being used with that type.
+ * {@link GenericFunction}. A {@link MethodCombination} object contains information about both the type of {@link
+ * MethodCombination} and the arguments being used with that type.
  * <p>
  * {@link MethodCombination} -> {@link T}
  */
@@ -51,7 +53,7 @@ public interface MethodCombination extends T {
 
 			@Override
 			public String toString() {
-				return "MethodCombinationImpl{}";
+				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 			}
 		}
 	}

@@ -3,19 +3,23 @@ package jcl.types;
 import jcl.typespecifiers.AndTypeSpecifier;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.math3.util.ArithmeticUtils;
 
 import java.lang.String;
 import java.math.BigInteger;
 
 /**
- * The atomic type specifier {@link UnsignedByte} denotes the same type as is denoted by the type specifier (integer 0 *).
+ * The atomic type specifier {@link UnsignedByte} denotes the same type as is denoted by the type specifier (integer 0
+ * *).
  * <p>
  * This denotes the set of non-negative {@link Integer}s that can be represented in a byte of size s (bits). This is
  * equivalent to (mod m) for m=2^s, or to (integer 0 n) for n=2^s-1. The type {@link UnsignedByte} or the type
  * (unsigned-byte *) is the same as the type (integer 0 *), the set of non-negative {@link Integer}s.
  * <p>
- * {@link UnsignedByte} -> {@link SignedByte} -> {@link Integer} -> {@link Rational} -> {@link Real} -> {@link Number} -> {@link T}
+ * {@link UnsignedByte} -> {@link SignedByte} -> {@link Integer} -> {@link Rational} -> {@link Real} -> {@link Number}
+ * -> {@link T}
  */
 public interface UnsignedByte extends SignedByte {
 
@@ -34,7 +38,9 @@ public interface UnsignedByte extends SignedByte {
 		/**
 		 * Gets instance of compound {@link UnsignedByte} type.
 		 *
-		 * @param bits the bits that comprise the byte value
+		 * @param bits
+		 * 		the bits that comprise the byte value
+		 *
 		 * @return the newly created compound {@link UnsignedByte} type
 		 */
 		public static UnsignedByte getInstance(final BigInteger bits) {
@@ -56,7 +62,8 @@ public interface UnsignedByte extends SignedByte {
 			/**
 			 * Private constructor for compound {@link UnsignedByte} type.
 			 *
-			 * @param bits the bits that comprise the byte value
+			 * @param bits
+			 * 		the bits that comprise the byte value
 			 */
 			private UnsignedByteImpl(final BigInteger bits) {
 				super("UNSIGNED-BYTE", getSuper(bits));
@@ -65,7 +72,9 @@ public interface UnsignedByte extends SignedByte {
 			/**
 			 * This method gets the {@link Integer} supertype for creating an {@link UnsignedByte}.
 			 *
-			 * @param bits the bits that comprise the byte value
+			 * @param bits
+			 * 		the bits that comprise the byte value
+			 *
 			 * @return the {@link Integer} supertype
 			 */
 			private static Integer getSuper(final BigInteger bits) {
@@ -79,7 +88,9 @@ public interface UnsignedByte extends SignedByte {
 			/**
 			 * Gets instance of compound {@link UnsignedByte} type.
 			 *
-			 * @param bits the bits that comprise the byte value
+			 * @param bits
+			 * 		the bits that comprise the byte value
+			 *
 			 * @return the newly created compound {@link UnsignedByte} type
 			 */
 			public static UnsignedByte getInstance(final BigInteger bits) {
@@ -98,7 +109,7 @@ public interface UnsignedByte extends SignedByte {
 
 			@Override
 			public String toString() {
-				return "UnsignedByteImpl{}";
+				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 			}
 		}
 	}

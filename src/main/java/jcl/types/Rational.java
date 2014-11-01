@@ -5,13 +5,15 @@ import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.IntervalDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 import java.math.BigInteger;
 
 /**
- * A {@link Rational} is a {@link Number} with a canonical representation of an {@link Integer} if its value is integral, and
- * otherwise as a {@link Ratio}.
+ * A {@link Rational} is a {@link Number} with a canonical representation of an {@link Integer} if its value is
+ * integral, and otherwise as a {@link Ratio}.
  * <p>
  * The types {@link Integer} and {@link Ratio} are disjoint subtypes of type {@link Rational}.
  * <p>
@@ -34,8 +36,11 @@ public interface Rational extends Real {
 		/**
 		 * Gets instance of compound {@link Rational} type.
 		 *
-		 * @param lowerBound the lower bound that this {@link Rational} type includes
-		 * @param upperBound the upper bound that this {@link Rational} type includes
+		 * @param lowerBound
+		 * 		the lower bound that this {@link Rational} type includes
+		 * @param upperBound
+		 * 		the upper bound that this {@link Rational} type includes
+		 *
 		 * @return the newly created compound {@link Rational} type
 		 */
 		public static Rational getInstance(final BigInteger lowerBound, final BigInteger upperBound) {
@@ -45,10 +50,15 @@ public interface Rational extends Real {
 		/**
 		 * Gets instance of compound {@link Rational} type.
 		 *
-		 * @param lowerBound     the lower bound that this {@link Rational} type includes
-		 * @param lowerInclusive whether to include the lower bound in the interval
-		 * @param upperBound     the upper bound that this {@link Rational} type includes
-		 * @param upperInclusive whether to include the upper bound in the interval
+		 * @param lowerBound
+		 * 		the lower bound that this {@link Rational} type includes
+		 * @param lowerInclusive
+		 * 		whether to include the lower bound in the interval
+		 * @param upperBound
+		 * 		the upper bound that this {@link Rational} type includes
+		 * @param upperInclusive
+		 * 		whether to include the upper bound in the interval
+		 *
 		 * @return the newly created compound {@link Rational} type
 		 */
 		public static Rational getInstance(final BigInteger lowerBound, final boolean lowerInclusive,
@@ -74,10 +84,14 @@ public interface Rational extends Real {
 			/**
 			 * Private constructor for compound {@link Rational} type.
 			 *
-			 * @param lowerBound     the lower bound that this {@link Rational} type includes
-			 * @param lowerInclusive whether to include the lower bound in the interval
-			 * @param upperBound     the upper bound that this {@link Rational} type includes
-			 * @param upperInclusive whether to include the upper bound in the interval
+			 * @param lowerBound
+			 * 		the lower bound that this {@link Rational} type includes
+			 * @param lowerInclusive
+			 * 		whether to include the lower bound in the interval
+			 * @param upperBound
+			 * 		the upper bound that this {@link Rational} type includes
+			 * @param upperInclusive
+			 * 		whether to include the upper bound in the interval
 			 */
 			private RationalImpl(final BigInteger lowerBound, final boolean lowerInclusive,
 			                     final BigInteger upperBound, final boolean upperInclusive) {
@@ -91,10 +105,15 @@ public interface Rational extends Real {
 			/**
 			 * Gets instance of compound {@link Rational} type.
 			 *
-			 * @param lowerBound     the lower bound that this {@link Rational} type includes
-			 * @param lowerInclusive whether to include the lower bound in the interval
-			 * @param upperBound     the upper bound that this {@link Rational} type includes
-			 * @param upperInclusive whether to include the upper bound in the interval
+			 * @param lowerBound
+			 * 		the lower bound that this {@link Rational} type includes
+			 * @param lowerInclusive
+			 * 		whether to include the lower bound in the interval
+			 * @param upperBound
+			 * 		the upper bound that this {@link Rational} type includes
+			 * @param upperInclusive
+			 * 		whether to include the upper bound in the interval
+			 *
 			 * @return the newly created compound {@link Rational} type
 			 */
 			public static Rational getInstance(final BigInteger lowerBound, final boolean lowerInclusive,
@@ -135,9 +154,7 @@ public interface Rational extends Real {
 
 			@Override
 			public String toString() {
-				return "RationalImpl{"
-						+ "intervalDesignator=" + intervalDesignator
-						+ '}';
+				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 			}
 		}
 	}

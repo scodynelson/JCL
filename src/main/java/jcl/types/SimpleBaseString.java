@@ -6,6 +6,8 @@ import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.DimensionsDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.Integer;
 import java.lang.String;
@@ -13,7 +15,8 @@ import java.lang.String;
 /**
  * The type {@link SimpleBaseString} is equivalent to (simple-array base-char (*)).
  * <p>
- * {@link SimpleBaseString} -> {@link BaseString} -> {@link SimpleString} -> {@link String} -> {@link Vector} -> {@link SimpleArray} -> {@link Array} -> {@link Sequence} -> {@link T}
+ * {@link SimpleBaseString} -> {@link BaseString} -> {@link SimpleString} -> {@link String} -> {@link Vector} -> {@link
+ * SimpleArray} -> {@link Array} -> {@link Sequence} -> {@link T}
  */
 public interface SimpleBaseString extends BaseString, SimpleString {
 
@@ -32,7 +35,9 @@ public interface SimpleBaseString extends BaseString, SimpleString {
 		/**
 		 * Gets instance of compound {@link SimpleBaseString} type.
 		 *
-		 * @param size the size of the {@link SimpleBaseString}
+		 * @param size
+		 * 		the size of the {@link SimpleBaseString}
+		 *
 		 * @return the newly created compound {@link SimpleBaseString} type
 		 */
 		public static SimpleBaseString getInstance(final Integer size) {
@@ -57,7 +62,8 @@ public interface SimpleBaseString extends BaseString, SimpleString {
 			/**
 			 * Private constructor for compound {@link SimpleBaseString} type.
 			 *
-			 * @param size the size of the {@link SimpleBaseString}
+			 * @param size
+			 * 		the size of the {@link SimpleBaseString}
 			 */
 			private SimpleBaseStringImpl(final Integer size) {
 				super("SIMPLE-BASE-STRING", GlobalPackageStruct.COMMON_LISP);
@@ -77,7 +83,9 @@ public interface SimpleBaseString extends BaseString, SimpleString {
 			/**
 			 * Gets instance of compound {@link SimpleBaseString} type.
 			 *
-			 * @param size the size of the {@link SimpleBaseString}
+			 * @param size
+			 * 		the size of the {@link SimpleBaseString}
+			 *
 			 * @return the newly created compound {@link SimpleBaseString} type
 			 */
 			public static SimpleBaseString getInstance(final Integer size) {
@@ -118,10 +126,7 @@ public interface SimpleBaseString extends BaseString, SimpleString {
 
 			@Override
 			public String toString() {
-				return "SimpleBaseStringImpl{"
-						+ "size=" + size
-						+ ", elementType=" + ELEMENT_TYPE
-						+ '}';
+				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 			}
 		}
 	}

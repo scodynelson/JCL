@@ -5,14 +5,16 @@ import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.IntervalDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
- * A {@link Real} includes all numbers that represent mathematical real numbers, though there are mathematical real numbers
- * (e.g., irrational numbers) that do not have an exact representation in Common Lisp.
+ * A {@link Real} includes all numbers that represent mathematical real numbers, though there are mathematical real
+ * numbers (e.g., irrational numbers) that do not have an exact representation in Common Lisp.
  * <p>
  * The types {@link Rational} and {@link Float} are disjoint subtypes of type {@link Real}.
  * <p>
@@ -35,8 +37,11 @@ public interface Real extends Number {
 		/**
 		 * Gets instance of compound {@link Real} type.
 		 *
-		 * @param lowerBound the lower bound that this {@link Real} type includes
-		 * @param upperBound the upper bound that this {@link Real} type includes
+		 * @param lowerBound
+		 * 		the lower bound that this {@link Real} type includes
+		 * @param upperBound
+		 * 		the upper bound that this {@link Real} type includes
+		 *
 		 * @return the newly created compound {@link Real} type
 		 */
 		public static Real getInstance(final BigInteger lowerBound, final BigInteger upperBound) {
@@ -46,10 +51,15 @@ public interface Real extends Number {
 		/**
 		 * Gets instance of compound {@link Real} type.
 		 *
-		 * @param lowerBound     the lower bound that this {@link Real} type includes
-		 * @param lowerInclusive whether to include the lower bound in the interval
-		 * @param upperBound     the upper bound that this {@link Real} type includes
-		 * @param upperInclusive whether to include the upper bound in the interval
+		 * @param lowerBound
+		 * 		the lower bound that this {@link Real} type includes
+		 * @param lowerInclusive
+		 * 		whether to include the lower bound in the interval
+		 * @param upperBound
+		 * 		the upper bound that this {@link Real} type includes
+		 * @param upperInclusive
+		 * 		whether to include the upper bound in the interval
+		 *
 		 * @return the newly created compound {@link Real} type
 		 */
 		public static Real getInstance(final BigInteger lowerBound, final boolean lowerInclusive,
@@ -60,8 +70,11 @@ public interface Real extends Number {
 		/**
 		 * Gets instance of compound {@link Real} type.
 		 *
-		 * @param lowerBound the lower bound that this {@link Real} type includes
-		 * @param upperBound the upper bound that this {@link Real} type includes
+		 * @param lowerBound
+		 * 		the lower bound that this {@link Real} type includes
+		 * @param upperBound
+		 * 		the upper bound that this {@link Real} type includes
+		 *
 		 * @return the newly created compound {@link Real} type
 		 */
 		public static Real getInstance(final BigDecimal lowerBound, final BigDecimal upperBound) {
@@ -71,10 +84,15 @@ public interface Real extends Number {
 		/**
 		 * Gets instance of compound {@link Real} type.
 		 *
-		 * @param lowerBound     the lower bound that this {@link Real} type includes
-		 * @param lowerInclusive whether to include the lower bound in the interval
-		 * @param upperBound     the upper bound that this {@link Real} type includes
-		 * @param upperInclusive whether to include the upper bound in the interval
+		 * @param lowerBound
+		 * 		the lower bound that this {@link Real} type includes
+		 * @param lowerInclusive
+		 * 		whether to include the lower bound in the interval
+		 * @param upperBound
+		 * 		the upper bound that this {@link Real} type includes
+		 * @param upperInclusive
+		 * 		whether to include the upper bound in the interval
+		 *
 		 * @return the newly created compound {@link Real} type
 		 */
 		public static Real getInstance(final BigDecimal lowerBound, final boolean lowerInclusive,
@@ -102,10 +120,14 @@ public interface Real extends Number {
 			/**
 			 * Private constructor for compound {@link Real} type.
 			 *
-			 * @param lowerBound     the lower bound that this {@link Real} type includes
-			 * @param lowerInclusive whether to include the lower bound in the interval
-			 * @param upperBound     the upper bound that this {@link Real} type includes
-			 * @param upperInclusive whether to include the upper bound in the interval
+			 * @param lowerBound
+			 * 		the lower bound that this {@link Real} type includes
+			 * @param lowerInclusive
+			 * 		whether to include the lower bound in the interval
+			 * @param upperBound
+			 * 		the upper bound that this {@link Real} type includes
+			 * @param upperInclusive
+			 * 		whether to include the upper bound in the interval
 			 */
 			private RealImpl(final BigInteger lowerBound, final boolean lowerInclusive,
 			                 final BigInteger upperBound, final boolean upperInclusive) {
@@ -121,10 +143,14 @@ public interface Real extends Number {
 			/**
 			 * Private constructor for compound {@link Real} type.
 			 *
-			 * @param lowerBound     the lower bound that this {@link Real} type includes
-			 * @param lowerInclusive whether to include the lower bound in the interval
-			 * @param upperBound     the upper bound that this {@link Real} type includes
-			 * @param upperInclusive whether to include the upper bound in the interval
+			 * @param lowerBound
+			 * 		the lower bound that this {@link Real} type includes
+			 * @param lowerInclusive
+			 * 		whether to include the lower bound in the interval
+			 * @param upperBound
+			 * 		the upper bound that this {@link Real} type includes
+			 * @param upperInclusive
+			 * 		whether to include the upper bound in the interval
 			 */
 			private RealImpl(final BigDecimal lowerBound, final boolean lowerInclusive,
 			                 final BigDecimal upperBound, final boolean upperInclusive) {
@@ -140,10 +166,15 @@ public interface Real extends Number {
 			/**
 			 * Gets instance of compound {@link Real} type.
 			 *
-			 * @param lowerBound     the lower bound that this {@link Real} type includes
-			 * @param lowerInclusive whether to include the lower bound in the interval
-			 * @param upperBound     the upper bound that this {@link Real} type includes
-			 * @param upperInclusive whether to include the upper bound in the interval
+			 * @param lowerBound
+			 * 		the lower bound that this {@link Real} type includes
+			 * @param lowerInclusive
+			 * 		whether to include the lower bound in the interval
+			 * @param upperBound
+			 * 		the upper bound that this {@link Real} type includes
+			 * @param upperInclusive
+			 * 		whether to include the upper bound in the interval
+			 *
 			 * @return the newly created compound {@link Real} type
 			 */
 			public static Real getInstance(final BigInteger lowerBound, final boolean lowerInclusive,
@@ -154,10 +185,15 @@ public interface Real extends Number {
 			/**
 			 * Gets instance of compound {@link Real} type.
 			 *
-			 * @param lowerBound     the lower bound that this {@link Real} type includes
-			 * @param lowerInclusive whether to include the lower bound in the interval
-			 * @param upperBound     the upper bound that this {@link Real} type includes
-			 * @param upperInclusive whether to include the upper bound in the interval
+			 * @param lowerBound
+			 * 		the lower bound that this {@link Real} type includes
+			 * @param lowerInclusive
+			 * 		whether to include the lower bound in the interval
+			 * @param upperBound
+			 * 		the upper bound that this {@link Real} type includes
+			 * @param upperInclusive
+			 * 		whether to include the upper bound in the interval
+			 *
 			 * @return the newly created compound {@link Real} type
 			 */
 			public static Real getInstance(final BigDecimal lowerBound, final boolean lowerInclusive,
@@ -182,7 +218,9 @@ public interface Real extends Number {
 			/**
 			 * This method checks the equality of the provide realImpl object to this instance.
 			 *
-			 * @param realImpl the realImpl object to test for equality
+			 * @param realImpl
+			 * 		the realImpl object to test for equality
+			 *
 			 * @return true if the realImpl object is equivalent to this instance; false otherwise
 			 */
 			private boolean checkRealImplEquality(final RealImpl realImpl) {
@@ -203,10 +241,7 @@ public interface Real extends Number {
 
 			@Override
 			public String toString() {
-				return "RealImpl{"
-						+ "integerIntervalDesignator=" + integerIntervalDesignator
-						+ ", decimalIntervalDesignator=" + decimalIntervalDesignator
-						+ '}';
+				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 			}
 		}
 	}

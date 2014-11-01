@@ -6,6 +6,8 @@ import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.DimensionsDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.Integer;
 import java.lang.String;
@@ -13,9 +15,11 @@ import java.lang.String;
 /**
  * A {@link Vector} is any one-dimensional {@link Array}.
  * <p>
- * The type {@link Vector} is a subtype of type {@link Array}; for all types x, (vector x) is the same as (array x (*)).
+ * The type {@link Vector} is a subtype of type {@link Array}; for all types x, (vector x) is the same as (array x
+ * (*)).
  * <p>
- * The type (vector t), the type {@link String}, and the type {@link BitVector} are disjoint subtypes of type {@link Vector}.
+ * The type (vector t), the type {@link String}, and the type {@link BitVector} are disjoint subtypes of type {@link
+ * Vector}.
  * <p>
  * {@link Vector} -> {@link Array} -> {@link Sequence} -> {@link T}
  */
@@ -36,8 +40,11 @@ public interface Vector extends Array, Sequence {
 		/**
 		 * Gets instance of compound {@link Vector} type.
 		 *
-		 * @param size        the size of the {@link Vector}
-		 * @param elementType the types of elements within the {@link Vector}
+		 * @param size
+		 * 		the size of the {@link Vector}
+		 * @param elementType
+		 * 		the types of elements within the {@link Vector}
+		 *
 		 * @return the newly created compound {@link Vector} type
 		 */
 		public static Vector getInstance(final Integer size, final LispType elementType) {
@@ -62,8 +69,10 @@ public interface Vector extends Array, Sequence {
 			/**
 			 * Private constructor for compound {@link Vector} type.
 			 *
-			 * @param size        the size of the {@link Vector}
-			 * @param elementType the types of elements within the {@link Vector}
+			 * @param size
+			 * 		the size of the {@link Vector}
+			 * @param elementType
+			 * 		the types of elements within the {@link Vector}
 			 */
 			private VectorImpl(final Integer size, final LispType elementType) {
 				super("VECTOR", GlobalPackageStruct.COMMON_LISP);
@@ -84,8 +93,11 @@ public interface Vector extends Array, Sequence {
 			/**
 			 * Gets instance of compound {@link Vector} type.
 			 *
-			 * @param size        the size of the {@link Vector}
-			 * @param elementType the types of elements within the {@link Vector}
+			 * @param size
+			 * 		the size of the {@link Vector}
+			 * @param elementType
+			 * 		the types of elements within the {@link Vector}
+			 *
 			 * @return the newly created compound {@link Vector} type
 			 */
 			public static Vector getInstance(final Integer size, final LispType elementType) {
@@ -117,7 +129,9 @@ public interface Vector extends Array, Sequence {
 			/**
 			 * This method checks the equality of the provide vectorImpl object to this instance.
 			 *
-			 * @param vectorImpl the vectorImpl object to test for equality
+			 * @param vectorImpl
+			 * 		the vectorImpl object to test for equality
+			 *
 			 * @return true if the vectorImpl object is equivalent to this instance; false otherwise
 			 */
 			private boolean checkVectorImplEquality(final VectorImpl vectorImpl) {
@@ -138,10 +152,7 @@ public interface Vector extends Array, Sequence {
 
 			@Override
 			public String toString() {
-				return "VectorImpl{"
-						+ "size=" + size
-						+ ", elementType=" + elementType
-						+ '}';
+				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 			}
 		}
 	}

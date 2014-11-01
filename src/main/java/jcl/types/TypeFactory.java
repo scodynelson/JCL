@@ -5,7 +5,8 @@ import jcl.LispType;
 /**
  * This interface is the common parent for all lisp type factories.
  *
- * @param <TYPE> the type to get an instance of
+ * @param <TYPE>
+ * 		the type to get an instance of
  */
 @FunctionalInterface
 public interface TypeFactory<TYPE extends LispType> {

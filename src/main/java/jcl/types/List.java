@@ -3,6 +3,8 @@ package jcl.types;
 import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
@@ -10,10 +12,10 @@ import java.lang.String;
  * A {@link List} is a chain of {@link Cons}es in which the car of each {@link Cons} is an element of the {@link List},
  * and the cdr of each {@link Cons} is either the next link in the chain or a terminating {@link Atom}.
  * <p>
- * A proper {@link List} is a chain of {@link Cons}es terminated by the empty {@link List}, (), which is itself a proper
- * {@link List}. A dotted {@link List} is a {@link List} which has a terminating {@link Atom} that is not the empty
- * {@link List}. A circular {@link List} is a chain of {@link Cons}es that has no termination because some {@link Cons}
- * in the chain is the cdr of a later {@link Cons}.
+ * A proper {@link List} is a chain of {@link Cons}es terminated by the empty {@link List}, (), which is itself a
+ * proper {@link List}. A dotted {@link List} is a {@link List} which has a terminating {@link Atom} that is not the
+ * empty {@link List}. A circular {@link List} is a chain of {@link Cons}es that has no termination because some {@link
+ * Cons} in the chain is the cdr of a later {@link Cons}.
  * <p>
  * Dotted {@link List}s and circular {@link List}s are also {@link List}s, but usually the unqualified term ''list''
  * within this specification means proper {@link List}. Nevertheless, the type {@link List} unambiguously includes
@@ -64,7 +66,7 @@ public interface List extends Sequence {
 
 			@Override
 			public String toString() {
-				return "ListImpl{}";
+				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 			}
 		}
 	}

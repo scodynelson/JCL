@@ -3,12 +3,14 @@ package jcl.types;
 import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
 /**
- * {@link Symbol}s are used for their object identity to name various entities in Common Lisp, including (but not limited to)
- * linguistic entities such as variables and {@link Function}s.
+ * {@link Symbol}s are used for their object identity to name various entities in Common Lisp, including (but not
+ * limited to) linguistic entities such as variables and {@link Function}s.
  * <p>
  * {@link Symbol}s can be collected together into {@link Package}s. A {@link Symbol} is said to be interned in a
  * {@link Package} if it is accessible in that {@link Package}; the same {@link Symbol} can be interned in more than
@@ -19,24 +21,32 @@ import java.lang.String;
  * {@link Symbol}s have the following attributes:
  * <p>
  * <b>Name</b>
- * <tab>The name of a {@link Symbol} is a {@link String} used to identify the {@link Symbol}.The name is used as part of
- * <tab>the external, printed representation of the {@link Symbol}. A {@link Symbol} may have any {@link Character} in its name.
+ * <tab>The name of a {@link Symbol} is a {@link String} used to identify the {@link Symbol}.The name is used as part
+ * of
+ * <tab>the external, printed representation of the {@link Symbol}. A {@link Symbol} may have any {@link Character} in
+ * its name.
  * <p>
  * <b>Package</b>
- * <tab>The object in this cell is called the home {@link Package} of the {@link Symbol}. If the home {@link Package} is
+ * <tab>The object in this cell is called the home {@link Package} of the {@link Symbol}. If the home {@link Package}
+ * is
  * <tab>{@link NIL}, the {@link Symbol} is said to have no home {@link Package}.
  * <p>
- * <tab>When a {@link Symbol} is first created, it has no home {@link Package}. When it is first interned, the {@link Package}
+ * <tab>When a {@link Symbol} is first created, it has no home {@link Package}. When it is first interned, the {@link
+ * Package}
  * <tab>in which it is initially interned becomes its home {@link Package}.
  * <p>
- * <tab>If a {@link Symbol} is uninterned from the {@link Package} which is its home {@link Package}, its home {@link Package}
- * <tab>is set to {@link NIL}. Depending on whether there is another {@link Package} in which the {@link Symbol} is interned,
- * <tab>the {@link Symbol} might or might not really be an uninterned {@link Symbol}. A {@link Symbol} with no home {@link Package}
+ * <tab>If a {@link Symbol} is uninterned from the {@link Package} which is its home {@link Package}, its home {@link
+ * Package}
+ * <tab>is set to {@link NIL}. Depending on whether there is another {@link Package} in which the {@link Symbol} is
+ * interned,
+ * <tab>the {@link Symbol} might or might not really be an uninterned {@link Symbol}. A {@link Symbol} with no home
+ * {@link Package}
  * <tab>is therefore called apparently uninterned.
  * <p>
  * <b>Property List</b>
  * <tab>The property {@link List} of a {@link Symbol} provides a mechanism for associating named attributes with that
- * <tab>{@link Symbol}. The operations for adding and removing entries are destructive to the property {@link List}. The
+ * <tab>{@link Symbol}. The operations for adding and removing entries are destructive to the property {@link List}.
+ * The
  * <tab>property {@link List} associated with a fresh {@link Symbol} is initially {@link Null}.
  * <p>
  * <b>Value</b>
@@ -44,15 +54,17 @@ import java.lang.String;
  * <tab>bound {@link Symbol} is the value of the global variable named by that {@link Symbol}.
  * <p>
  * <b>Function</b>
- * <tab>If a {@link Symbol} has a {@link Function} attribute, it is said to be fbound. If the {@link Symbol} is the name
- * <tab>of a {@link Function} in the global environment, the function cell contains the {@link Function}. If the {@link Symbol}
+ * <tab>If a {@link Symbol} has a {@link Function} attribute, it is said to be fbound. If the {@link Symbol} is the
+ * name
+ * <tab>of a {@link Function} in the global environment, the function cell contains the {@link Function}. If the {@link
+ * Symbol}
  * <tab>is the name of either a macro in the global environment or a special operator, the {@link Symbol} is fbound.
  * <p>
- * Operations on a {@link Symbol}'s value cell and function cell are sometimes described in terms of their effect on the
- * {@link Symbol} itself.
+ * Operations on a {@link Symbol}'s value cell and function cell are sometimes described in terms of their effect on
+ * the {@link Symbol} itself.
  * <p>
- * {@link Symbol}s are used as identifiers for lexical variables and lexical {@link Function} definitions, but in that role,
- * only their object identity is significant.
+ * {@link Symbol}s are used as identifiers for lexical variables and lexical {@link Function} definitions, but in that
+ * role, only their object identity is significant.
  * <p>
  * {@link Symbol} -> {@link T}
  */
@@ -94,7 +106,7 @@ public interface Symbol extends T {
 
 			@Override
 			public String toString() {
-				return "SymbolImpl{}";
+				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 			}
 		}
 	}

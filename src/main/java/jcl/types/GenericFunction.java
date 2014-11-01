@@ -3,6 +3,8 @@ package jcl.types;
 import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
@@ -11,8 +13,8 @@ import java.lang.String;
  * arguments supplied to it. A {@link GenericFunction} object contains a set of {@link Method}s, a lambda list, a
  * {@link MethodCombination} type, and other information. The {@link Method}s define the class-specific behavior and
  * operations of the {@link GenericFunction}; a {@link Method} is said to specialize a {@link GenericFunction}. When
- * invoked, a {@link GenericFunction} executes a subset of its {@link Method}s based on the {@link Class}es or identities
- * of its arguments.
+ * invoked, a {@link GenericFunction} executes a subset of its {@link Method}s based on the {@link Class}es or
+ * identities of its arguments.
  * <p>
  * A {@link GenericFunction} can be used in the same ways that an ordinary {@link Function} can be used.
  * <p>
@@ -56,7 +58,7 @@ public interface GenericFunction extends Function {
 
 			@Override
 			public String toString() {
-				return "GenericFunctionImpl{}";
+				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 			}
 		}
 	}

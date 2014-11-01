@@ -3,11 +3,14 @@ package jcl.types;
 import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
 /**
- * The only object of type {@link Null} is {@link NIL}, which represents the empty {@link List} and can also be notated ().
+ * The only object of type {@link Null} is {@link NIL}, which represents the empty {@link List} and can also be notated
+ * ().
  * <p>
  * {@link Null} -> {@link Symbol} -> {@link List} -> {@link Sequence} -> {@link T}
  */
@@ -49,7 +52,7 @@ public interface Null extends Symbol, List {
 
 			@Override
 			public String toString() {
-				return "NullImpl{}";
+				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 			}
 		}
 	}

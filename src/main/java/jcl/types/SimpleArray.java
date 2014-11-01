@@ -6,14 +6,16 @@ import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.DimensionsDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.Integer;
 import java.lang.String;
 import java.util.List;
 
 /**
- * A {@link SimpleArray} is the type of an {@link Array} that is not displaced to another {@link Array}, has no fill pointer,
- * and is not expressly adjustable.
+ * A {@link SimpleArray} is the type of an {@link Array} that is not displaced to another {@link Array}, has no fill
+ * pointer, and is not expressly adjustable.
  * <p>
  * The types {@link SimpleVector}, {@link SimpleString}, and {@link SimpleBitVector} are disjoint subtypes of type
  * {@link SimpleArray}, for they respectively mean (simple-array t (*)), the union of all (simple-array c (*)) for any
@@ -38,8 +40,11 @@ public interface SimpleArray extends Array {
 		/**
 		 * Gets instance of compound {@link SimpleArray} type.
 		 *
-		 * @param dimensions  the dimensions of the {@link SimpleArray}
-		 * @param elementType the types of elements within the {@link SimpleArray}
+		 * @param dimensions
+		 * 		the dimensions of the {@link SimpleArray}
+		 * @param elementType
+		 * 		the types of elements within the {@link SimpleArray}
+		 *
 		 * @return the newly created compound {@link SimpleArray} type
 		 */
 		public static SimpleArray getInstance(final List<Integer> dimensions, final LispType elementType) {
@@ -64,8 +69,10 @@ public interface SimpleArray extends Array {
 			/**
 			 * Private constructor for compound {@link SimpleArray} type.
 			 *
-			 * @param dimensions  the dimensions of the {@link SimpleArray}
-			 * @param elementType the types of elements within the {@link SimpleArray}
+			 * @param dimensions
+			 * 		the dimensions of the {@link SimpleArray}
+			 * @param elementType
+			 * 		the types of elements within the {@link SimpleArray}
 			 */
 			private SimpleArrayImpl(final List<Integer> dimensions, final LispType elementType) {
 				super("SIMPLE-ARRAY", GlobalPackageStruct.COMMON_LISP);
@@ -86,8 +93,11 @@ public interface SimpleArray extends Array {
 			/**
 			 * Gets instance of compound {@link SimpleArray} type.
 			 *
-			 * @param dimensions  the dimensions of the {@link SimpleArray}
-			 * @param elementType the types of elements within the {@link SimpleArray}
+			 * @param dimensions
+			 * 		the dimensions of the {@link SimpleArray}
+			 * @param elementType
+			 * 		the types of elements within the {@link SimpleArray}
+			 *
 			 * @return the newly created compound {@link SimpleArray} type
 			 */
 			public static SimpleArray getInstance(final List<Integer> dimensions, final LispType elementType) {
@@ -119,7 +129,9 @@ public interface SimpleArray extends Array {
 			/**
 			 * This method checks the equality of the provide simpleArrayImpl object to this instance.
 			 *
-			 * @param simpleArrayImpl the simpleArrayImpl object to test for equality
+			 * @param simpleArrayImpl
+			 * 		the simpleArrayImpl object to test for equality
+			 *
 			 * @return true if the simpleArrayImpl object is equivalent to this instance; false otherwise
 			 */
 			private boolean checkSimpleArrayImplEquality(final SimpleArrayImpl simpleArrayImpl) {
@@ -140,10 +152,7 @@ public interface SimpleArray extends Array {
 
 			@Override
 			public String toString() {
-				return "SimpleArrayImpl{"
-						+ "dimensions=" + dimensions
-						+ ", elementType=" + elementType
-						+ '}';
+				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 			}
 		}
 	}

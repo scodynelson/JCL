@@ -3,6 +3,8 @@ package jcl.types;
 import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
@@ -14,8 +16,8 @@ import java.lang.String;
  * Common Lisp differs from mathematics on some naming issues. In mathematics, the set of real numbers is traditionally
  * described as a subset of the complex numbers, but in Common Lisp, the type {@link Real} and the type {@link Complex}
  * are disjoint. The Common Lisp type which includes all mathematical complex numbers is called number. The reasons for
- * these differences include historical precedent, compatibility with most other popular computer languages, and various
- * issues of time and space efficiency.
+ * these differences include historical precedent, compatibility with most other popular computer languages, and
+ * various issues of time and space efficiency.
  * <p>
  * {@link Number} -> {@link T}
  */
@@ -57,7 +59,7 @@ public interface Number extends T {
 
 			@Override
 			public String toString() {
-				return "NumberImpl{}";
+				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 			}
 		}
 	}

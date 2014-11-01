@@ -3,13 +3,15 @@ package jcl.types;
 import jcl.typespecifiers.AndTypeSpecifier;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 import java.math.BigInteger;
 
 /**
- * A {@link Fixnum} is an {@link Integer} whose value is between most-negative-fixnum and most-positive-fixnum inclusive.
- * The type {@link Fixnum} is a supertype of (signed-byte 16).
+ * A {@link Fixnum} is an {@link Integer} whose value is between most-negative-fixnum and most-positive-fixnum
+ * inclusive. The type {@link Fixnum} is a supertype of (signed-byte 16).
  * <p>
  * {@link Fixnum} -> {@link Integer} -> {@link Rational} -> {@link Real} -> {@link Number} -> {@link T}
  */
@@ -60,7 +62,7 @@ public interface Fixnum extends Integer {
 
 			@Override
 			public String toString() {
-				return "FixnumImpl{}";
+				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 			}
 		}
 	}

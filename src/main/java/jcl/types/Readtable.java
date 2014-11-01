@@ -3,13 +3,15 @@ package jcl.types;
 import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
 /**
- * A {@link Readtable} maps characters into syntax types for the Lisp reader. A {@link Readtable} also contains associations
- * between macro characters and their reader macro functions, and records information about the case conversion rules to
- * be used by the Lisp reader when parsing {@link Symbol}s.
+ * A {@link Readtable} maps characters into syntax types for the Lisp reader. A {@link Readtable} also contains
+ * associations between macro characters and their reader macro functions, and records information about the case
+ * conversion rules to be used by the Lisp reader when parsing {@link Symbol}s.
  * <p>
  * Each simple {@link Character} must be representable in the {@link Readtable}.
  * <p>
@@ -53,7 +55,7 @@ public interface Readtable extends T {
 
 			@Override
 			public String toString() {
-				return "ReadtableImpl{}";
+				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 			}
 		}
 	}

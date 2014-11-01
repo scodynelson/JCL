@@ -6,15 +6,18 @@ import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.DimensionsDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.Integer;
 
 /**
- * A {@link SimpleString} is a specialized one-dimensional {@link SimpleArray} whose elements are of type {@link Character}
- * or a subtype of type {@link Character}. When used as a type specifier for object creation, {@link SimpleString} means
- * (simple-array character (size)).
+ * A {@link SimpleString} is a specialized one-dimensional {@link SimpleArray} whose elements are of type {@link
+ * Character} or a subtype of type {@link Character}. When used as a type specifier for object creation, {@link
+ * SimpleString} means (simple-array character (size)).
  * <p>
- * {@link SimpleString} -> {@link String} -> {@link Vector} -> {@link SimpleArray} -> {@link Array} -> {@link Sequence} -> {@link T}
+ * {@link SimpleString} -> {@link String} -> {@link Vector} -> {@link SimpleArray} -> {@link Array} -> {@link Sequence}
+ * -> {@link T}
  */
 public interface SimpleString extends String, SimpleArray {
 
@@ -33,7 +36,9 @@ public interface SimpleString extends String, SimpleArray {
 		/**
 		 * Gets instance of compound {@link SimpleString} type.
 		 *
-		 * @param size the size of the {@link SimpleString}
+		 * @param size
+		 * 		the size of the {@link SimpleString}
+		 *
 		 * @return the newly created compound {@link SimpleString} type
 		 */
 		public static SimpleString getInstance(final Integer size) {
@@ -58,7 +63,8 @@ public interface SimpleString extends String, SimpleArray {
 			/**
 			 * Private constructor for compound {@link SimpleString} type.
 			 *
-			 * @param size the size of the {@link SimpleString}
+			 * @param size
+			 * 		the size of the {@link SimpleString}
 			 */
 			private SimpleStringImpl(final Integer size) {
 				super("SIMPLE-STRING", GlobalPackageStruct.COMMON_LISP);
@@ -78,7 +84,9 @@ public interface SimpleString extends String, SimpleArray {
 			/**
 			 * Gets instance of compound {@link SimpleString} type.
 			 *
-			 * @param size the size of the {@link SimpleString}
+			 * @param size
+			 * 		the size of the {@link SimpleString}
+			 *
 			 * @return the newly created compound {@link SimpleString} type
 			 */
 			public static SimpleString getInstance(final Integer size) {
@@ -119,10 +127,7 @@ public interface SimpleString extends String, SimpleArray {
 
 			@Override
 			public java.lang.String toString() {
-				return "SimpleStringImpl{"
-						+ "size=" + size
-						+ ", elementType=" + ELEMENT_TYPE
-						+ '}';
+				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 			}
 		}
 	}

@@ -14,8 +14,10 @@ public abstract class TypeBaseClass extends SymbolStruct<LispType> implements Li
 	/**
 	 * Protected constructor.
 	 *
-	 * @param name          the name of the symbol type
-	 * @param packageStruct the package to intern the symbol type
+	 * @param name
+	 * 		the name of the symbol type
+	 * @param packageStruct
+	 * 		the package to intern the symbol type
 	 */
 	protected TypeBaseClass(final String name, final PackageStruct packageStruct) {
 		super(name, packageStruct);

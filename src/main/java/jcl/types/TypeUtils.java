@@ -17,8 +17,11 @@ public final class TypeUtils {
 	/**
 	 * This method tests to see if two {@link Array}s are equivalent.
 	 *
-	 * @param array1 the first type to test
-	 * @param array2 the second type to test
+	 * @param array1
+	 * 		the first type to test
+	 * @param array2
+	 * 		the second type to test
+	 *
 	 * @return true if the types are equivalent; false otherwise
 	 */
 	static boolean isArrayLispTypeEqual(final Array array1, final Array array2) {

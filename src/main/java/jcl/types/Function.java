@@ -9,13 +9,16 @@ import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.TypeSpecifier;
 import jcl.typespecifiers.ValuesTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 import java.util.List;
 import java.util.Objects;
 
 /**
- * A {@link Function} is an object that represents code to be executed when an appropriate number of arguments is supplied.
+ * A {@link Function} is an object that represents code to be executed when an appropriate number of arguments is
+ * supplied.
  * <p>
  * {@link Function} -> {@link T}
  */
@@ -36,11 +39,17 @@ public interface Function extends T {
 		/**
 		 * Gets instance of compound {@link Function} type.
 		 *
-		 * @param typeSpecifiers      the required arguments
-		 * @param optional            the optional arguments
-		 * @param rest                the rest arguments
-		 * @param key                 the key arguments
-		 * @param valuesTypeSpecifier the values arguments
+		 * @param typeSpecifiers
+		 * 		the required arguments
+		 * @param optional
+		 * 		the optional arguments
+		 * @param rest
+		 * 		the rest arguments
+		 * @param key
+		 * 		the key arguments
+		 * @param valuesTypeSpecifier
+		 * 		the values arguments
+		 *
 		 * @return the newly created compound {@link Function} type
 		 */
 		public static Function getInstance(final List<TypeSpecifier> typeSpecifiers, final Optional<TypeSpecifier> optional,
@@ -71,11 +80,16 @@ public interface Function extends T {
 			/**
 			 * Private constructor for compound {@link Function} type.
 			 *
-			 * @param typeSpecifiers      the required arguments
-			 * @param optional            the optional arguments
-			 * @param rest                the rest arguments
-			 * @param key                 the key arguments
-			 * @param valuesTypeSpecifier the values arguments
+			 * @param typeSpecifiers
+			 * 		the required arguments
+			 * @param optional
+			 * 		the optional arguments
+			 * @param rest
+			 * 		the rest arguments
+			 * @param key
+			 * 		the key arguments
+			 * @param valuesTypeSpecifier
+			 * 		the values arguments
 			 */
 			private FunctionImpl(final List<TypeSpecifier> typeSpecifiers, final Optional<TypeSpecifier> optional,
 			                     final Rest<TypeSpecifier> rest, final Key<TypeSpecifier> key,
@@ -92,11 +106,17 @@ public interface Function extends T {
 			/**
 			 * Gets instance of compound {@link Function} type.
 			 *
-			 * @param typeSpecifiers      the required arguments
-			 * @param optional            the optional arguments
-			 * @param rest                the rest arguments
-			 * @param key                 the key arguments
-			 * @param valuesTypeSpecifier the values arguments
+			 * @param typeSpecifiers
+			 * 		the required arguments
+			 * @param optional
+			 * 		the optional arguments
+			 * @param rest
+			 * 		the rest arguments
+			 * @param key
+			 * 		the key arguments
+			 * @param valuesTypeSpecifier
+			 * 		the values arguments
+			 *
 			 * @return the newly created compound {@link Function} type
 			 */
 			public static Function getInstance(final List<TypeSpecifier> typeSpecifiers, final Optional<TypeSpecifier> optional,
@@ -122,7 +142,9 @@ public interface Function extends T {
 			/**
 			 * This method checks the equality of the provide functionImpl object to this instance.
 			 *
-			 * @param functionImpl the functionImpl object to test for equality
+			 * @param functionImpl
+			 * 		the functionImpl object to test for equality
+			 *
 			 * @return true if the functionImpl object is equivalent to this instance; false otherwise
 			 */
 			private boolean checkFunctionImplEquality(final FunctionImpl functionImpl) {
@@ -146,13 +168,7 @@ public interface Function extends T {
 
 			@Override
 			public String toString() {
-				return "FunctionImpl{"
-						+ "typeSpecifiers=" + typeSpecifiers
-						+ ", optional=" + optional
-						+ ", rest=" + rest
-						+ ", key=" + key
-						+ ", valuesTypeSpecifier=" + valuesTypeSpecifier
-						+ '}';
+				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 			}
 		}
 	}

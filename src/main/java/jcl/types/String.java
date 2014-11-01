@@ -6,6 +6,8 @@ import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.DimensionsDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.Integer;
 
@@ -32,7 +34,9 @@ public interface String extends Vector {
 		/**
 		 * Gets instance of compound {@link String} type.
 		 *
-		 * @param size the size of the {@link String}
+		 * @param size
+		 * 		the size of the {@link String}
+		 *
 		 * @return the newly created compound {@link String} type
 		 */
 		public static String getInstance(final Integer size) {
@@ -57,7 +61,8 @@ public interface String extends Vector {
 			/**
 			 * Private constructor for compound {@link String} type.
 			 *
-			 * @param size the size of the {@link String}
+			 * @param size
+			 * 		the size of the {@link String}
 			 */
 			private StringImpl(final Integer size) {
 				super("STRING", GlobalPackageStruct.COMMON_LISP);
@@ -77,7 +82,9 @@ public interface String extends Vector {
 			/**
 			 * Gets instance of compound {@link String} type.
 			 *
-			 * @param size the size of the {@link String}
+			 * @param size
+			 * 		the size of the {@link String}
+			 *
 			 * @return the newly created compound {@link String} type
 			 */
 			public static String getInstance(final Integer size) {
@@ -118,10 +125,7 @@ public interface String extends Vector {
 
 			@Override
 			public java.lang.String toString() {
-				return "StringImpl{"
-						+ "size=" + size
-						+ ", elementType=" + ELEMENT_TYPE
-						+ '}';
+				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 			}
 		}
 	}

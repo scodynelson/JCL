@@ -6,18 +6,20 @@ import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.DimensionsDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.Integer;
 import java.lang.String;
 import java.util.List;
 
 /**
- * An {@link Array} contains objects arranged according to a Cartesian coordinate system. An {@link Array} provides mappings
- * from a set of fixnums {i0,i1,...,ir-1} to corresponding elements of the {@link Array}, where 0 <=ij < dj, r is the rank
- * of the {@link Array}, and dj is the size of dimension j of the {@link Array}.
+ * An {@link Array} contains objects arranged according to a Cartesian coordinate system. An {@link Array} provides
+ * mappings from a set of fixnums {i0,i1,...,ir-1} to corresponding elements of the {@link Array}, where 0 <=ij < dj, r
+ * is the rank of the {@link Array}, and dj is the size of dimension j of the {@link Array}.
  * <p>
- * When an {@link Array} is created, the program requesting its creation may declare that all elements are of a particular
- * type, called the expressed array element type.
+ * When an {@link Array} is created, the program requesting its creation may declare that all elements are of a
+ * particular type, called the expressed array element type.
  * <p>
  * {@link Array} -> {@link T}
  */
@@ -52,8 +54,11 @@ public interface Array extends T {
 		/**
 		 * Gets instance of compound {@link Array} type.
 		 *
-		 * @param dimensions  the dimensions of the {@link Array}
-		 * @param elementType the types of elements within the {@link Array}
+		 * @param dimensions
+		 * 		the dimensions of the {@link Array}
+		 * @param elementType
+		 * 		the types of elements within the {@link Array}
+		 *
 		 * @return the newly created compound {@link Array} type
 		 */
 		public static Array getInstance(final List<Integer> dimensions, final LispType elementType) {
@@ -78,8 +83,10 @@ public interface Array extends T {
 			/**
 			 * Private constructor for compound {@link Array} type.
 			 *
-			 * @param dimensions  the dimensions of the {@link Array}
-			 * @param elementType the types of elements within the {@link Array}
+			 * @param dimensions
+			 * 		the dimensions of the {@link Array}
+			 * @param elementType
+			 * 		the types of elements within the {@link Array}
 			 */
 			private ArrayImpl(final List<Integer> dimensions, final LispType elementType) {
 				super("ARRAY", GlobalPackageStruct.COMMON_LISP);
@@ -100,8 +107,11 @@ public interface Array extends T {
 			/**
 			 * Gets instance of compound {@link Array} type.
 			 *
-			 * @param dimensions  the dimensions of the {@link Array}
-			 * @param elementType the types of elements within the {@link Array}
+			 * @param dimensions
+			 * 		the dimensions of the {@link Array}
+			 * @param elementType
+			 * 		the types of elements within the {@link Array}
+			 *
 			 * @return the newly created compound {@link Array} type
 			 */
 			public static Array getInstance(final List<Integer> dimensions, final LispType elementType) {
@@ -133,7 +143,9 @@ public interface Array extends T {
 			/**
 			 * This method checks the equality of the provide arrayImpl object to this instance.
 			 *
-			 * @param arrayImpl the arrayImpl object to test for equality
+			 * @param arrayImpl
+			 * 		the arrayImpl object to test for equality
+			 *
 			 * @return true if the arrayImpl object is equivalent to this instance; false otherwise
 			 */
 			private boolean checkArrayImplEquality(final ArrayImpl arrayImpl) {
@@ -154,10 +166,7 @@ public interface Array extends T {
 
 			@Override
 			public String toString() {
-				return "ArrayImpl{"
-						+ "dimensions=" + dimensions
-						+ ", elementType=" + elementType
-						+ '}';
+				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 			}
 		}
 	}

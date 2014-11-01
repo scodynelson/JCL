@@ -3,6 +3,8 @@ package jcl.types;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.OrTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
@@ -50,7 +52,7 @@ public interface Boolean extends Symbol {
 
 			@Override
 			public String toString() {
-				return "BooleanImpl{}";
+				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 			}
 		}
 	}

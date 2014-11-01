@@ -6,6 +6,8 @@ import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.DimensionsDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.Integer;
 import java.lang.String;
@@ -34,7 +36,9 @@ public interface BitVector extends Vector {
 		/**
 		 * Gets instance of compound {@link BitVector} type.
 		 *
-		 * @param size the size of the {@link BitVector}
+		 * @param size
+		 * 		the size of the {@link BitVector}
+		 *
 		 * @return the newly created compound {@link BitVector} type
 		 */
 		public static BitVector getInstance(final Integer size) {
@@ -59,7 +63,8 @@ public interface BitVector extends Vector {
 			/**
 			 * Private constructor for compound {@link BitVector} type.
 			 *
-			 * @param size the size of the {@link BitVector}
+			 * @param size
+			 * 		the size of the {@link BitVector}
 			 */
 			private BitVectorImpl(final Integer size) {
 				super("BIT-VECTOR", GlobalPackageStruct.COMMON_LISP);
@@ -79,7 +84,9 @@ public interface BitVector extends Vector {
 			/**
 			 * Gets instance of compound {@link BitVector} type.
 			 *
-			 * @param size the size of the {@link BitVector}
+			 * @param size
+			 * 		the size of the {@link BitVector}
+			 *
 			 * @return the newly created compound {@link BitVector} type
 			 */
 			public static BitVector getInstance(final Integer size) {
@@ -120,10 +127,7 @@ public interface BitVector extends Vector {
 
 			@Override
 			public String toString() {
-				return "BitVectorImpl{"
-						+ "size=" + size
-						+ ", elementType=" + ELEMENT_TYPE
-						+ '}';
+				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 			}
 		}
 	}

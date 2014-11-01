@@ -3,6 +3,8 @@ package jcl.types;
 import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
@@ -51,7 +53,7 @@ public interface Class extends StandardObject {
 
 			@Override
 			public String toString() {
-				return "ClassImpl{}";
+				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 			}
 		}
 	}

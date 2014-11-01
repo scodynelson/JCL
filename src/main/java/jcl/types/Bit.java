@@ -3,6 +3,8 @@ package jcl.types;
 import jcl.typespecifiers.AndTypeSpecifier;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 import java.math.BigInteger;
@@ -10,7 +12,8 @@ import java.math.BigInteger;
 /**
  * The type {@link Bit} is equivalent to the type (integer 0 1) and (unsigned-byte 1).
  * <p>
- * {@link Bit} -> {@link UnsignedByte} -> {@link SignedByte} -> {@link Integer} -> {@link Rational} -> {@link Real} -> {@link Number} -> {@link T}
+ * {@link Bit} -> {@link UnsignedByte} -> {@link SignedByte} -> {@link Integer} -> {@link Rational} -> {@link Real} ->
+ * {@link Number} -> {@link T}
  */
 public interface Bit extends UnsignedByte {
 
@@ -50,7 +53,7 @@ public interface Bit extends UnsignedByte {
 
 			@Override
 			public String toString() {
-				return "BitImpl{}";
+				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 			}
 		}
 	}

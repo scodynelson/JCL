@@ -3,6 +3,8 @@ package jcl.types;
 import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
@@ -10,8 +12,8 @@ import java.lang.String;
  * A {@link CompiledFunction} is any function that contains no references to macros that must be expanded at run time,
  * and contains no unresolved references to load time values.
  * <p>
- * {@link Function}s whose definitions appear lexically within a file that has been compiled and then loaded are of type
- * {@link CompiledFunction}.
+ * {@link Function}s whose definitions appear lexically within a file that has been compiled and then loaded are of
+ * type {@link CompiledFunction}.
  * <p>
  * {@link CompiledFunction} -> {@link Function} -> {@link T}
  */
@@ -53,7 +55,7 @@ public interface CompiledFunction extends Function {
 
 			@Override
 			public String toString() {
-				return "CompiledFunctionImpl{}";
+				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 			}
 		}
 	}

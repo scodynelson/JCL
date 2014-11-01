@@ -5,6 +5,8 @@ import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.IntervalDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 import java.math.BigDecimal;
@@ -31,8 +33,11 @@ public interface DoubleFloat extends Float {
 		/**
 		 * Gets instance of compound {@link DoubleFloat} type.
 		 *
-		 * @param lowerBound the lower bound that this {@link DoubleFloat} type includes
-		 * @param upperBound the upper bound that this {@link DoubleFloat} type includes
+		 * @param lowerBound
+		 * 		the lower bound that this {@link DoubleFloat} type includes
+		 * @param upperBound
+		 * 		the upper bound that this {@link DoubleFloat} type includes
+		 *
 		 * @return the newly created compound {@link DoubleFloat} type
 		 */
 		public static DoubleFloat getInstance(final BigDecimal lowerBound, final BigDecimal upperBound) {
@@ -42,14 +47,19 @@ public interface DoubleFloat extends Float {
 		/**
 		 * Gets instance of compound {@link DoubleFloat} type.
 		 *
-		 * @param lowerBound     the lower bound that this {@link DoubleFloat} type includes
-		 * @param lowerInclusive whether to include the lower bound in the interval
-		 * @param upperBound     the upper bound that this {@link DoubleFloat} type includes
-		 * @param upperInclusive whether to include the upper bound in the interval
+		 * @param lowerBound
+		 * 		the lower bound that this {@link DoubleFloat} type includes
+		 * @param lowerInclusive
+		 * 		whether to include the lower bound in the interval
+		 * @param upperBound
+		 * 		the upper bound that this {@link DoubleFloat} type includes
+		 * @param upperInclusive
+		 * 		whether to include the upper bound in the interval
+		 *
 		 * @return the newly created compound {@link DoubleFloat} type
 		 */
 		public static DoubleFloat getInstance(final BigDecimal lowerBound, final boolean lowerInclusive,
-		                                      final BigDecimal upperBound, final boolean upperInclusive) {
+											  final BigDecimal upperBound, final boolean upperInclusive) {
 			return DoubleFloatImpl.getInstance(lowerBound, lowerInclusive, upperBound, upperInclusive);
 		}
 
@@ -71,13 +81,17 @@ public interface DoubleFloat extends Float {
 			/**
 			 * Private constructor for compound {@link DoubleFloat} type.
 			 *
-			 * @param lowerBound     the lower bound that this {@link DoubleFloat} type includes
-			 * @param lowerInclusive whether to include the lower bound in the interval
-			 * @param upperBound     the upper bound that this {@link DoubleFloat} type includes
-			 * @param upperInclusive whether to include the upper bound in the interval
+			 * @param lowerBound
+			 * 		the lower bound that this {@link DoubleFloat} type includes
+			 * @param lowerInclusive
+			 * 		whether to include the lower bound in the interval
+			 * @param upperBound
+			 * 		the upper bound that this {@link DoubleFloat} type includes
+			 * @param upperInclusive
+			 * 		whether to include the upper bound in the interval
 			 */
 			private DoubleFloatImpl(final BigDecimal lowerBound, final boolean lowerInclusive,
-			                        final BigDecimal upperBound, final boolean upperInclusive) {
+									final BigDecimal upperBound, final boolean upperInclusive) {
 				super("DOUBLE-FLOAT", GlobalPackageStruct.COMMON_LISP);
 
 				final BigDecimal realLower = lowerInclusive ? lowerBound : lowerBound.add(BigDecimal.ONE);
@@ -88,14 +102,19 @@ public interface DoubleFloat extends Float {
 			/**
 			 * Gets instance of compound {@link DoubleFloat} type.
 			 *
-			 * @param lowerBound     the lower bound that this {@link DoubleFloat} type includes
-			 * @param lowerInclusive whether to include the lower bound in the interval
-			 * @param upperBound     the upper bound that this {@link DoubleFloat} type includes
-			 * @param upperInclusive whether to include the upper bound in the interval
+			 * @param lowerBound
+			 * 		the lower bound that this {@link DoubleFloat} type includes
+			 * @param lowerInclusive
+			 * 		whether to include the lower bound in the interval
+			 * @param upperBound
+			 * 		the upper bound that this {@link DoubleFloat} type includes
+			 * @param upperInclusive
+			 * 		whether to include the upper bound in the interval
+			 *
 			 * @return the newly created compound {@link DoubleFloat} type
 			 */
 			public static DoubleFloat getInstance(final BigDecimal lowerBound, final boolean lowerInclusive,
-			                                      final BigDecimal upperBound, final boolean upperInclusive) {
+												  final BigDecimal upperBound, final boolean upperInclusive) {
 				return new DoubleFloatImpl(lowerBound, lowerInclusive, upperBound, upperInclusive);
 			}
 
@@ -132,9 +151,7 @@ public interface DoubleFloat extends Float {
 
 			@Override
 			public String toString() {
-				return "DoubleFloatImpl{"
-						+ "intervalDesignator=" + intervalDesignator
-						+ '}';
+				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 			}
 		}
 	}

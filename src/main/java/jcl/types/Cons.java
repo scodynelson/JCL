@@ -5,6 +5,8 @@ import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
@@ -31,8 +33,11 @@ public interface Cons extends List {
 		/**
 		 * Gets instance of compound {@link Cons} type.
 		 *
-		 * @param carSpec the type of the car element
-		 * @param cdrSpec the type of the cdr element
+		 * @param carSpec
+		 * 		the type of the car element
+		 * @param cdrSpec
+		 * 		the type of the cdr element
+		 *
 		 * @return the newly created compound {@link Cons} type
 		 */
 		public static Cons getInstance(final LispType carSpec, final LispType cdrSpec) {
@@ -57,8 +62,10 @@ public interface Cons extends List {
 			/**
 			 * Private constructor for compound {@link Cons} type.
 			 *
-			 * @param carSpec the type of the car element
-			 * @param cdrSpec the type of the cdr element
+			 * @param carSpec
+			 * 		the type of the car element
+			 * @param cdrSpec
+			 * 		the type of the cdr element
 			 */
 			private ConsImpl(final LispType carSpec, final LispType cdrSpec) {
 				super("CONS", GlobalPackageStruct.COMMON_LISP);
@@ -69,8 +76,11 @@ public interface Cons extends List {
 			/**
 			 * Gets instance of compound {@link Cons} type.
 			 *
-			 * @param carSpec the type of the car element
-			 * @param cdrSpec the type of the cdr element
+			 * @param carSpec
+			 * 		the type of the car element
+			 * @param cdrSpec
+			 * 		the type of the cdr element
+			 *
 			 * @return the newly created compound {@link Cons} type
 			 */
 			public static Cons getInstance(final LispType carSpec, final LispType cdrSpec) {
@@ -94,7 +104,9 @@ public interface Cons extends List {
 			/**
 			 * This method checks the equality of the provide consImpl object to this instance.
 			 *
-			 * @param consImpl the consImpl object to test for equality
+			 * @param consImpl
+			 * 		the consImpl object to test for equality
+			 *
 			 * @return true if the consImpl object is equivalent to this instance; false otherwise
 			 */
 			private boolean checkConsImplEquality(final ConsImpl consImpl) {
@@ -115,10 +127,7 @@ public interface Cons extends List {
 
 			@Override
 			public String toString() {
-				return "ConsImpl{"
-						+ "carSpec=" + carSpec
-						+ ", cdrSpec=" + cdrSpec
-						+ '}';
+				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 			}
 		}
 	}

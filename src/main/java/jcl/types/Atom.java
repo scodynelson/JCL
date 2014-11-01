@@ -2,6 +2,8 @@ package jcl.types;
 
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.NotTypeSpecifier;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
@@ -38,7 +40,7 @@ public interface Atom extends T {
 
 			@Override
 			public String toString() {
-				return "AtomImpl{}";
+				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 			}
 		}
 	}

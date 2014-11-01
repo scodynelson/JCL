@@ -6,6 +6,8 @@ import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.DimensionsDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.Integer;
 
@@ -32,7 +34,9 @@ public interface BaseString extends String {
 		/**
 		 * Gets instance of compound {@link BaseString} type.
 		 *
-		 * @param size the size of the {@link BaseString}
+		 * @param size
+		 * 		the size of the {@link BaseString}
+		 *
 		 * @return the newly created compound {@link BaseString} type
 		 */
 		public static BaseString getInstance(final Integer size) {
@@ -57,7 +61,8 @@ public interface BaseString extends String {
 			/**
 			 * Private constructor for compound {@link BaseString} type.
 			 *
-			 * @param size the size of the {@link BaseString}
+			 * @param size
+			 * 		the size of the {@link BaseString}
 			 */
 			private BaseStringImpl(final Integer size) {
 				super("BASE-STRING", GlobalPackageStruct.COMMON_LISP);
@@ -77,7 +82,9 @@ public interface BaseString extends String {
 			/**
 			 * Gets instance of compound {@link BaseString} type.
 			 *
-			 * @param size the size of the {@link BaseString}
+			 * @param size
+			 * 		the size of the {@link BaseString}
+			 *
 			 * @return the newly created compound {@link BaseString} type
 			 */
 			public static BaseString getInstance(final Integer size) {
@@ -118,10 +125,7 @@ public interface BaseString extends String {
 
 			@Override
 			public java.lang.String toString() {
-				return "BaseStringImpl{"
-						+ "size=" + size
-						+ ", elementType=" + ELEMENT_TYPE
-						+ '}';
+				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 			}
 		}
 	}

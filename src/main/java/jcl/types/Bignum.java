@@ -4,6 +4,8 @@ import jcl.typespecifiers.AndTypeSpecifier;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.NotTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
@@ -50,7 +52,7 @@ public interface Bignum extends Integer {
 
 			@Override
 			public String toString() {
-				return "BignumImpl{}";
+				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 			}
 		}
 	}

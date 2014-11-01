@@ -158,10 +158,7 @@ public interface Array extends T {
 
 			@Override
 			public int hashCode() {
-				return new HashCodeBuilder()
-						.append(dimensions)
-						.append(elementType)
-						.toHashCode();
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

@@ -147,9 +147,7 @@ public interface Rational extends Real {
 
 			@Override
 			public int hashCode() {
-				return new HashCodeBuilder()
-						.append(intervalDesignator)
-						.toHashCode();
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

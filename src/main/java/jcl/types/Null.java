@@ -47,7 +47,7 @@ public interface Null extends Symbol, List {
 
 			@Override
 			public int hashCode() {
-				return new HashCodeBuilder().toHashCode();
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

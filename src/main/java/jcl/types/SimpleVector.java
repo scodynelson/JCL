@@ -154,10 +154,7 @@ public interface SimpleVector extends Vector, SimpleArray {
 
 			@Override
 			public int hashCode() {
-				return new HashCodeBuilder()
-						.append(size)
-						.append(elementType)
-						.toHashCode();
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

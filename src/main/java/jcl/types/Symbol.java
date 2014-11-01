@@ -101,7 +101,7 @@ public interface Symbol extends T {
 
 			@Override
 			public int hashCode() {
-				return new HashCodeBuilder().toHashCode();
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

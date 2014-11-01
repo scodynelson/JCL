@@ -2,6 +2,7 @@ package jcl.types;
 
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.NotTypeSpecifier;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -36,6 +37,16 @@ public interface Atom extends T {
 			 */
 			private AtomImpl() {
 				super("ATOM", Cons.INSTANCE);
+			}
+
+			@Override
+			public boolean equals(final Object obj) {
+				return super.equals(obj) || (obj == INSTANCE);
+			}
+
+			@Override
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

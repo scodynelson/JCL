@@ -108,9 +108,7 @@ public interface Complex extends Number {
 
 			@Override
 			public int hashCode() {
-				return new HashCodeBuilder()
-						.append(realType)
-						.toHashCode();
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

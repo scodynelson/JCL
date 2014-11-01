@@ -144,10 +144,7 @@ public interface Vector extends Array, Sequence {
 
 			@Override
 			public int hashCode() {
-				return new HashCodeBuilder()
-						.append(size)
-						.append(elementType)
-						.toHashCode();
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

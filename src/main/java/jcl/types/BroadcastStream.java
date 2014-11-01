@@ -53,7 +53,7 @@ public interface BroadcastStream extends Stream {
 
 			@Override
 			public int hashCode() {
-				return new HashCodeBuilder().toHashCode();
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

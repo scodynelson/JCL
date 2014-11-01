@@ -144,9 +144,7 @@ public interface LongFloat extends Float {
 
 			@Override
 			public int hashCode() {
-				return new HashCodeBuilder()
-						.append(intervalDesignator)
-						.toHashCode();
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

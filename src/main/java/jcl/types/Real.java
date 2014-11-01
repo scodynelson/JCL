@@ -233,10 +233,7 @@ public interface Real extends Number {
 
 			@Override
 			public int hashCode() {
-				return new HashCodeBuilder()
-						.append(integerIntervalDesignator)
-						.append(decimalIntervalDesignator)
-						.toHashCode();
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

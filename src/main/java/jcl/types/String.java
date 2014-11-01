@@ -117,10 +117,7 @@ public interface String extends Vector {
 
 			@Override
 			public int hashCode() {
-				return new HashCodeBuilder()
-						.append(size)
-						.append(ELEMENT_TYPE)
-						.toHashCode();
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

@@ -50,7 +50,7 @@ public interface CompiledFunction extends Function {
 
 			@Override
 			public int hashCode() {
-				return new HashCodeBuilder().toHashCode();
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

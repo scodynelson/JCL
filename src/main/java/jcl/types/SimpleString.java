@@ -119,10 +119,7 @@ public interface SimpleString extends String, SimpleArray {
 
 			@Override
 			public int hashCode() {
-				return new HashCodeBuilder()
-						.append(size)
-						.append(ELEMENT_TYPE)
-						.toHashCode();
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

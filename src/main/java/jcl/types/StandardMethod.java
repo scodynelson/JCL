@@ -46,7 +46,7 @@ public interface StandardMethod extends Method, StandardObject {
 
 			@Override
 			public int hashCode() {
-				return new HashCodeBuilder().toHashCode();
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

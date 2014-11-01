@@ -49,7 +49,7 @@ public interface NIL extends T { // TODO: this needs to extend ALL types...
 
 			@Override
 			public int hashCode() {
-				return new HashCodeBuilder().toHashCode();
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

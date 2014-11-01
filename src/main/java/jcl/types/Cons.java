@@ -119,10 +119,7 @@ public interface Cons extends List {
 
 			@Override
 			public int hashCode() {
-				return new HashCodeBuilder()
-						.append(carSpec)
-						.append(cdrSpec)
-						.toHashCode();
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

@@ -144,10 +144,7 @@ public interface SimpleArray extends Array {
 
 			@Override
 			public int hashCode() {
-				return new HashCodeBuilder()
-						.append(dimensions)
-						.append(elementType)
-						.toHashCode();
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

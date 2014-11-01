@@ -157,13 +157,7 @@ public interface Function extends T {
 
 			@Override
 			public int hashCode() {
-				return new HashCodeBuilder()
-						.append(typeSpecifiers)
-						.append(optional)
-						.append(rest)
-						.append(key)
-						.append(valuesTypeSpecifier)
-						.toHashCode();
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

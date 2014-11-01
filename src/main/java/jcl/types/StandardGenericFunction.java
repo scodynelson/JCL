@@ -46,7 +46,7 @@ public interface StandardGenericFunction extends GenericFunction {
 
 			@Override
 			public int hashCode() {
-				return new HashCodeBuilder().toHashCode();
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

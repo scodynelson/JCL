@@ -4,6 +4,8 @@ import jcl.LispType;
 import jcl.structs.conditions.exceptions.StreamErrorException;
 import jcl.types.Stream;
 import jcl.typespecifiers.AndTypeSpecifier;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link DualStreamStruct} is an abstraction for dual stream types.
@@ -16,10 +18,14 @@ abstract class DualStreamStruct extends StreamStruct implements InputStream, Out
 	/**
 	 * Protected constructor.
 	 *
-	 * @param type          the type of the stream object
-	 * @param isInteractive whether or not the struct created is 'interactive'
-	 * @param inputStream   the {@link InputStream} to create a DualStreamStruct from
-	 * @param outputStream  the {@link OutputStream} to create a DualStreamStruct from
+	 * @param type
+	 * 		the type of the stream object
+	 * @param isInteractive
+	 * 		whether or not the struct created is 'interactive'
+	 * @param inputStream
+	 * 		the {@link InputStream} to create a DualStreamStruct from
+	 * @param outputStream
+	 * 		the {@link OutputStream} to create a DualStreamStruct from
 	 */
 	protected DualStreamStruct(final Stream type,
 	                           final boolean isInteractive, final InputStream inputStream, final OutputStream outputStream) {
@@ -31,8 +37,11 @@ abstract class DualStreamStruct extends StreamStruct implements InputStream, Out
 	/**
 	 * This method is used to retrieve the element type for object construction.
 	 *
-	 * @param inputStream  the {@link InputStream} to create a DualStreamStruct from
-	 * @param outputStream the {@link OutputStream} to create a DualStreamStruct from
+	 * @param inputStream
+	 * 		the {@link InputStream} to create a DualStreamStruct from
+	 * @param outputStream
+	 * 		the {@link OutputStream} to create a DualStreamStruct from
+	 *
 	 * @return the element type for object construction
 	 */
 	private static LispType getElementType(final InputStream inputStream, final OutputStream outputStream) {
@@ -96,9 +105,6 @@ abstract class DualStreamStruct extends StreamStruct implements InputStream, Out
 
 	@Override
 	public String toString() {
-		return "DualStreamStruct{" +
-				"inputStream=" + inputStream +
-				", outputStream=" + outputStream +
-				'}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

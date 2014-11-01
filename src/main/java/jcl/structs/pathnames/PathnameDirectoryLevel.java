@@ -2,6 +2,8 @@ package jcl.structs.pathnames;
 
 import jcl.structs.conditions.exceptions.FileErrorException;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link PathnameDirectoryLevel} is the object representation of a specific directory level of the 'directory'
@@ -15,7 +17,8 @@ public final class PathnameDirectoryLevel {
 	/**
 	 * Public constructor.
 	 *
-	 * @param directoryLevel the directory level value
+	 * @param directoryLevel
+	 * 		the directory level value
 	 */
 	public PathnameDirectoryLevel(final String directoryLevel) {
 		if (StringUtils.isEmpty(directoryLevel)) {
@@ -29,7 +32,8 @@ public final class PathnameDirectoryLevel {
 	/**
 	 * Public constructor.
 	 *
-	 * @param directoryLevelType the directory level type (WILD, BACK, or UP)
+	 * @param directoryLevelType
+	 * 		the directory level type (WILD, BACK, or UP)
 	 */
 	public PathnameDirectoryLevel(final PathnameDirectoryLevelType directoryLevelType) {
 		directoryLevel = null;
@@ -57,7 +61,8 @@ public final class PathnameDirectoryLevel {
 	/**
 	 * Setter for pathname directory level type.
 	 *
-	 * @param directoryLevelType new directoryLevelType value
+	 * @param directoryLevelType
+	 * 		new directoryLevelType value
 	 */
 	public void setDirectoryLevelType(final PathnameDirectoryLevelType directoryLevelType) {
 		this.directoryLevelType = directoryLevelType;
@@ -65,9 +70,6 @@ public final class PathnameDirectoryLevel {
 
 	@Override
 	public String toString() {
-		return "PathnameDirectoryLevel{"
-				+ "directoryLevel='" + directoryLevel + '\''
-				+ ", directoryLevelType=" + directoryLevelType
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

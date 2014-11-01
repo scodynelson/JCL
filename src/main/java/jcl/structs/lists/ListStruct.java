@@ -5,6 +5,8 @@ import jcl.structs.classes.BuiltInClassStruct;
 import jcl.structs.sequences.SequenceStruct;
 import jcl.types.List;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.Arrays;
 
@@ -105,7 +107,7 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 
 	@Override
 	public String toString() {
-		return "ListStruct{}";
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 
 	// BUILDERS

@@ -1,5 +1,8 @@
 package jcl.structs.pathnames;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 /**
  * The {@link PathnameComponentType} is the enumeration of the type of a component element of a Lisp 'pathname' type.
  * TODO: support both "wild" singular and plural. right now we only support plural: '*' vs '?'
@@ -18,7 +21,8 @@ public enum PathnameComponentType {
 	/**
 	 * Constructor.
 	 *
-	 * @param value value of the component type
+	 * @param value
+	 * 		value of the component type
 	 */
 	PathnameComponentType(final String value) {
 		this.value = value;
@@ -35,8 +39,6 @@ public enum PathnameComponentType {
 
 	@Override
 	public String toString() {
-		return "PathnameComponentType{"
-				+ "value='" + value + '\''
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

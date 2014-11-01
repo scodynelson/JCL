@@ -9,6 +9,8 @@ import jcl.structs.symbols.variables.Variable;
 import jcl.types.SimpleVector;
 import jcl.types.T;
 import jcl.types.Vector;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.Collections;
 import java.util.List;
@@ -16,7 +18,8 @@ import java.util.List;
 /**
  * The {@link VectorStruct} is the object representation of a Lisp 'vector' type.
  *
- * @param <TYPE> the type of the vector contents
+ * @param <TYPE>
+ * 		the type of the vector contents
  */
 public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> implements SequenceStruct {
 
@@ -25,7 +28,8 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	/**
 	 * Public constructor.
 	 *
-	 * @param contents the vector contents
+	 * @param contents
+	 * 		the vector contents
 	 */
 	public VectorStruct(final List<TYPE> contents) {
 		this(contents.size(), contents, T.INSTANCE, false, null);
@@ -34,11 +38,16 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	/**
 	 * Public constructor.
 	 *
-	 * @param size         the vector size
-	 * @param contents     the vector contents
-	 * @param elementType  the vector elementType
-	 * @param isAdjustable whether or not the vector is adjustable
-	 * @param fillPointer  the vector fillPointer
+	 * @param size
+	 * 		the vector size
+	 * @param contents
+	 * 		the vector contents
+	 * @param elementType
+	 * 		the vector elementType
+	 * @param isAdjustable
+	 * 		whether or not the vector is adjustable
+	 * @param fillPointer
+	 * 		the vector fillPointer
 	 */
 	public VectorStruct(final int size, final List<TYPE> contents, final LispType elementType,
 	                    final boolean isAdjustable, final Integer fillPointer) {
@@ -48,12 +57,18 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	/**
 	 * Protected constructor.
 	 *
-	 * @param vectorType   the vector type
-	 * @param size         the vector size
-	 * @param contents     the vector contents
-	 * @param elementType  the vector elementType
-	 * @param isAdjustable whether or not the vector is adjustable
-	 * @param fillPointer  the vector fillPointer
+	 * @param vectorType
+	 * 		the vector type
+	 * @param size
+	 * 		the vector size
+	 * @param contents
+	 * 		the vector contents
+	 * @param elementType
+	 * 		the vector elementType
+	 * @param isAdjustable
+	 * 		whether or not the vector is adjustable
+	 * @param fillPointer
+	 * 		the vector fillPointer
 	 */
 	protected VectorStruct(final Vector vectorType,
 	                       final int size, final List<TYPE> contents, final LispType elementType,
@@ -66,8 +81,11 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	/**
 	 * This method gets the vector type from the provided isAdjustable and fillPointer values.
 	 *
-	 * @param isAdjustable whether or not the vector is adjustable
-	 * @param fillPointer  the vector fillPointer
+	 * @param isAdjustable
+	 * 		whether or not the vector is adjustable
+	 * @param fillPointer
+	 * 		the vector fillPointer
+	 *
 	 * @return the matching vector type for the provided isAdjustable and fillPointer values
 	 */
 	private static Vector getVectorType(final boolean isAdjustable, final Integer fillPointer) {
@@ -86,7 +104,8 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	/**
 	 * Setter for vector fillPointer property.
 	 *
-	 * @param fillPointer new vector fillPointer property value
+	 * @param fillPointer
+	 * 		new vector fillPointer property value
 	 */
 	public void setFillPointer(final Integer fillPointer) {
 		this.fillPointer = fillPointer;
@@ -96,7 +115,9 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	 * This method pops the element at the fillPointer index and decreases the fillPointer by 1.
 	 *
 	 * @return the element popped from the fillPointer index
-	 * @throws ErrorException if the vector has no fill-pointer or the fill-pointer is 0
+	 *
+	 * @throws ErrorException
+	 * 		if the vector has no fill-pointer or the fill-pointer is 0
 	 */
 	public TYPE pop() {
 		if (fillPointer == null) {
@@ -116,9 +137,13 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	/**
 	 * This method pushes the provided {@code element} into the current fillPointer index.
 	 *
-	 * @param element the element to push into the vector
+	 * @param element
+	 * 		the element to push into the vector
+	 *
 	 * @return the location of the newly added element
-	 * @throws TypeErrorException if the vector has no fill-pointer
+	 *
+	 * @throws TypeErrorException
+	 * 		if the vector has no fill-pointer
 	 */
 	public int push(final TYPE element) {
 		if (fillPointer == null) {
@@ -138,10 +163,15 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	 * This method pushes the provided {@code element} into the current fillPointer index and extends the vector to the
 	 * current size of the contents plus the provided {@code extensionAmount}.
 	 *
-	 * @param element         the element to push into the vector
-	 * @param extensionAmount the amount to extend the vector when pushing
+	 * @param element
+	 * 		the element to push into the vector
+	 * @param extensionAmount
+	 * 		the amount to extend the vector when pushing
+	 *
 	 * @return the location of the newly added element
-	 * @throws TypeErrorException if the vector has no fill-pointer or the vector is not adjustable
+	 *
+	 * @throws TypeErrorException
+	 * 		if the vector has no fill-pointer or the vector is not adjustable
 	 */
 	public int pushExtend(final TYPE element, final int extensionAmount) {
 		if (!isAdjustable) {
@@ -197,14 +227,6 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 
 	@Override
 	public String toString() {
-		return "VectorStruct{"
-				+ "contents=" + contents
-				+ ", dimensions=" + dimensions
-				+ ", totalSize=" + totalSize
-				+ ", rank=" + rank
-				+ ", elementType=" + elementType
-				+ ", isAdjustable=" + isAdjustable
-				+ "fillPointer=" + fillPointer
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

@@ -9,6 +9,8 @@ import jcl.structs.symbols.variables.Variable;
 import jcl.types.Array;
 import jcl.types.SimpleArray;
 import jcl.types.T;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +18,8 @@ import java.util.List;
 /**
  * The {@link ArrayStruct} is the object representation of a Lisp 'array' type.
  *
- * @param <TYPE> the type of the array contents
+ * @param <TYPE>
+ * 		the type of the array contents
  */
 public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 
@@ -30,8 +33,10 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param dimensions the array dimensions
-	 * @param contents   the array contents
+	 * @param dimensions
+	 * 		the array dimensions
+	 * @param contents
+	 * 		the array contents
 	 */
 	public ArrayStruct(final List<Integer> dimensions, final List<TYPE> contents) {
 		this(SimpleArray.INSTANCE, dimensions, contents, T.INSTANCE, false);
@@ -40,10 +45,14 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param dimensions   the array dimensions
-	 * @param contents     the array contents
-	 * @param elementType  the array elementType
-	 * @param isAdjustable whether or not the array is adjustable
+	 * @param dimensions
+	 * 		the array dimensions
+	 * @param contents
+	 * 		the array contents
+	 * @param elementType
+	 * 		the array elementType
+	 * @param isAdjustable
+	 * 		whether or not the array is adjustable
 	 */
 	public ArrayStruct(final List<Integer> dimensions, final List<TYPE> contents, final LispType elementType, final boolean isAdjustable) {
 		this(getArrayType(isAdjustable), dimensions, contents, elementType, isAdjustable);
@@ -52,11 +61,16 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	/**
 	 * Protected constructor.
 	 *
-	 * @param arrayType    the array type
-	 * @param dimensions   the array dimensions
-	 * @param contents     the array contents
-	 * @param elementType  the array elementType
-	 * @param isAdjustable whether or not the array is adjustable
+	 * @param arrayType
+	 * 		the array type
+	 * @param dimensions
+	 * 		the array dimensions
+	 * @param contents
+	 * 		the array contents
+	 * @param elementType
+	 * 		the array elementType
+	 * @param isAdjustable
+	 * 		whether or not the array is adjustable
 	 */
 	protected ArrayStruct(final Array arrayType,
 	                      final List<Integer> dimensions, final List<TYPE> contents, final LispType elementType, final boolean isAdjustable) {
@@ -78,7 +92,9 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	/**
 	 * This method gets the array type from the provided isAdjustable value.
 	 *
-	 * @param isAdjustable whether or not the array is adjustable
+	 * @param isAdjustable
+	 * 		whether or not the array is adjustable
+	 *
 	 * @return the matching array type for the provided isAdjustable value
 	 */
 	private static Array getArrayType(final boolean isAdjustable) {
@@ -86,12 +102,16 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method determines if the provided {@code dimensionsToCheck} and {@code elementTypeToCheck} are valid for the
+	 * This method determines if the provided {@code dimensionsToCheck} and {@code elementTypeToCheck} are valid for
+	 * the
 	 * provided {@code contentsToCheck}.
 	 *
-	 * @param dimensionsToCheck  the array dimensions to check
-	 * @param elementTypeToCheck the array elementType to check
-	 * @param contentsToCheck    the array contents to check
+	 * @param dimensionsToCheck
+	 * 		the array dimensions to check
+	 * @param elementTypeToCheck
+	 * 		the array elementType to check
+	 * @param contentsToCheck
+	 * 		the array contents to check
 	 */
 	private void areContentsValidForDimensionsAndElementType(final List<Integer> dimensionsToCheck, final LispType elementTypeToCheck,
 	                                                         final List<TYPE> contentsToCheck) {
@@ -125,7 +145,8 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	/**
 	 * Setter for array contents property.
 	 *
-	 * @param contents new array contents property value
+	 * @param contents
+	 * 		new array contents property value
 	 */
 	public void setContents(final List<TYPE> contents) {
 		this.contents = new ArrayList<>(contents);
@@ -143,7 +164,8 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	/**
 	 * Setter for array dimensions property.
 	 *
-	 * @param dimensions new array dimensions property value
+	 * @param dimensions
+	 * 		new array dimensions property value
 	 */
 	public void setDimensions(final List<Integer> dimensions) {
 		this.dimensions = dimensions;
@@ -171,7 +193,8 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	/**
 	 * Setter for array rank property.
 	 *
-	 * @param rank new array rank property value
+	 * @param rank
+	 * 		new array rank property value
 	 */
 	public void setRank(final int rank) {
 		this.rank = rank;
@@ -189,7 +212,8 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	/**
 	 * Setter for array elementType property.
 	 *
-	 * @param elementType new array elementType property value
+	 * @param elementType
+	 * 		new array elementType property value
 	 */
 	public void setElementType(final LispType elementType) {
 		this.elementType = elementType;
@@ -207,7 +231,8 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	/**
 	 * Setter for array isAdjustable property.
 	 *
-	 * @param isAdjustable new array isAdjustable property value
+	 * @param isAdjustable
+	 * 		new array isAdjustable property value
 	 */
 	public void setAdjustable(final boolean isAdjustable) {
 		this.isAdjustable = isAdjustable;
@@ -216,7 +241,9 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	/**
 	 * This method retrieves the element at the provided {@code index} location.
 	 *
-	 * @param index the index location of the element to retrieve
+	 * @param index
+	 * 		the index location of the element to retrieve
+	 *
 	 * @return the retrieve element at the provided {@code index} location
 	 */
 	public TYPE getElementAt(final int index) {
@@ -226,8 +253,10 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	/**
 	 * This method sets the element at the provide {@code index} location to the provided {@code newValue} element.
 	 *
-	 * @param index    the index location of the element to set
-	 * @param newValue the element to set at the index location
+	 * @param index
+	 * 		the index location of the element to set
+	 * @param newValue
+	 * 		the element to set at the index location
 	 */
 	public void setElementAt(final int index, final TYPE newValue) {
 		for (int i = contents.size(); i <= index; i++) {
@@ -297,13 +326,6 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 
 	@Override
 	public String toString() {
-		return "ArrayStruct{"
-				+ "contents=" + contents
-				+ ", dimensions=" + dimensions
-				+ ", totalSize=" + totalSize
-				+ ", rank=" + rank
-				+ ", elementType=" + elementType
-				+ ", isAdjustable=" + isAdjustable
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

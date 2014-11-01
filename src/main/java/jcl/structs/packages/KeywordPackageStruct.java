@@ -1,9 +1,12 @@
 package jcl.structs.packages;
 
 import jcl.structs.symbols.KeywordSymbolStruct;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * The {@link KeywordPackageStruct} is the object representation of a Lisp 'package' type specific for 'keyword' symbols.
+ * The {@link KeywordPackageStruct} is the object representation of a Lisp 'package' type specific for 'keyword'
+ * symbols.
  */
 final class KeywordPackageStruct extends PackageStruct {
 
@@ -27,5 +30,10 @@ final class KeywordPackageStruct extends PackageStruct {
 		externalSymbols.put(symbolName, symbolStruct);
 		symbolStruct.setSymbolPackage(this);
 		return new PackageSymbolStruct(symbolStruct, PackageSymbolStruct.INTERNAL);
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

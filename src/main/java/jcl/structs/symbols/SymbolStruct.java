@@ -6,6 +6,8 @@ import jcl.structs.functions.FunctionStruct;
 import jcl.structs.packages.PackageStruct;
 import jcl.structs.symbols.variables.Variable;
 import jcl.types.Symbol;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,7 +122,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 * 		the symbol function
 	 */
 	protected SymbolStruct(final Symbol symbolType,
-						   final String name, final PackageStruct symbolPackage, final TYPE value, final FunctionStruct function) {
+	                       final String name, final PackageStruct symbolPackage, final TYPE value, final FunctionStruct function) {
 		super(symbolType, null, null);
 		this.name = name;
 
@@ -294,13 +296,6 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 
 	@Override
 	public String toString() {
-		return "SymbolStruct{"
-				+ "name='" + name + '\''
-				+ ", symbolPackage=" + symbolPackage
-				+ ", value=" + value
-				+ ", function=" + function
-				+ ", properties=" + properties
-				+ ", isSpecial=" + isSpecial
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

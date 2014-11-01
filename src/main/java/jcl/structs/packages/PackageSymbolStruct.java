@@ -2,6 +2,8 @@ package jcl.structs.packages;
 
 import jcl.structs.symbols.KeywordSymbolStruct;
 import jcl.structs.symbols.SymbolStruct;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * Internal class for returning a SymbolStruct and it's current package symbol type as a KeywordSymbolStruct.
@@ -18,8 +20,10 @@ public class PackageSymbolStruct {
 	/**
 	 * Protected constructor.
 	 *
-	 * @param symbolStruct      the symbol result
-	 * @param packageSymbolType the symbol package location
+	 * @param symbolStruct
+	 * 		the symbol result
+	 * @param packageSymbolType
+	 * 		the symbol package location
 	 */
 	public PackageSymbolStruct(final SymbolStruct<?> symbolStruct, final KeywordSymbolStruct packageSymbolType) {
 		this.symbolStruct = symbolStruct;
@@ -46,9 +50,6 @@ public class PackageSymbolStruct {
 
 	@Override
 	public String toString() {
-		return "PackageSymbolStruct{"
-				+ "symbolStruct=" + symbolStruct
-				+ ", packageSymbolType=" + packageSymbolType
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

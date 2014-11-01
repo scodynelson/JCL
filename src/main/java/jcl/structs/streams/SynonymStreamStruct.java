@@ -8,6 +8,8 @@ import jcl.reader.syntax.reader.ReadResult;
 import jcl.structs.conditions.exceptions.StreamErrorException;
 import jcl.structs.symbols.SymbolStruct;
 import jcl.types.SynonymStream;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link SynonymStreamStruct} is the object representation of a Lisp 'synonym-stream' type.
@@ -20,7 +22,8 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	/**
 	 * Public constructor.
 	 *
-	 * @param symbol the symbol to create a SynonymStreamStruct from
+	 * @param symbol
+	 * 		the symbol to create a SynonymStreamStruct from
 	 */
 	public SynonymStreamStruct(final SymbolStruct<StreamStruct> symbol) {
 		this(false, symbol);
@@ -29,8 +32,10 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	/**
 	 * Public constructor.
 	 *
-	 * @param isInteractive whether or not the struct created is 'interactive'
-	 * @param symbol        the symbol to create a SynonymStreamStruct from
+	 * @param isInteractive
+	 * 		whether or not the struct created is 'interactive'
+	 * @param symbol
+	 * 		the symbol to create a SynonymStreamStruct from
 	 */
 	public SynonymStreamStruct(final boolean isInteractive, final SymbolStruct<StreamStruct> symbol) {
 		super(SynonymStream.INSTANCE, null, null, isInteractive, getElementType(symbol));
@@ -41,7 +46,9 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	/**
 	 * This private method is used to retrieve the element type for object construction.
 	 *
-	 * @param symbol the symbol to create a SynonymStreamStruct from
+	 * @param symbol
+	 * 		the symbol to create a SynonymStreamStruct from
+	 *
 	 * @return the element type for object construction
 	 */
 	private static LispType getElementType(final SymbolStruct<StreamStruct> symbol) {
@@ -179,9 +186,6 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 
 	@Override
 	public String toString() {
-		return "SynonymStreamStruct{"
-				+ "symbol=" + symbol
-				+ ", stream=" + stream
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

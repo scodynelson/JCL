@@ -1,5 +1,8 @@
 package jcl.structs.pathnames;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 /**
  * The {@link PathnameStructType} is the enumeration of the structure type of a Lisp 'pathname' type.
  */
@@ -13,7 +16,8 @@ public enum PathnameStructType {
 	/**
 	 * Constructor.
 	 *
-	 * @param value value of the pathname structure type
+	 * @param value
+	 * 		value of the pathname structure type
 	 */
 	PathnameStructType(final String value) {
 		this.value = value;
@@ -30,8 +34,6 @@ public enum PathnameStructType {
 
 	@Override
 	public String toString() {
-		return "PathnameStructType{"
-				+ "value='" + value + '\''
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

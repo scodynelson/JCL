@@ -8,6 +8,8 @@ import jcl.structs.conditions.exceptions.EndOfFileException;
 import jcl.structs.conditions.exceptions.StreamErrorException;
 import jcl.types.BaseChar;
 import jcl.types.StringStream;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link StringInputStreamStruct} is the object representation of a Lisp 'string-stream' input type.
@@ -21,7 +23,8 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 	/**
 	 * Public constructor.
 	 *
-	 * @param inputString the input to create a StringInputStreamStruct from
+	 * @param inputString
+	 * 		the input to create a StringInputStreamStruct from
 	 */
 	public StringInputStreamStruct(final String inputString) {
 		this(false, inputString);
@@ -30,8 +33,10 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 	/**
 	 * Public constructor.
 	 *
-	 * @param isInteractive whether or not the struct created is 'interactive'
-	 * @param inputString   the input to create a StringInputStreamStruct from
+	 * @param isInteractive
+	 * 		whether or not the struct created is 'interactive'
+	 * @param inputString
+	 * 		the input to create a StringInputStreamStruct from
 	 */
 	public StringInputStreamStruct(final boolean isInteractive, final String inputString) {
 		super(StringStream.INSTANCE, null, null, isInteractive, BaseChar.INSTANCE);
@@ -122,7 +127,9 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 	/**
 	 * This method attempts to peek ahead to the provided codePoint in the stream.
 	 *
-	 * @param codePoint the codePoint to peek up to in the stream
+	 * @param codePoint
+	 * 		the codePoint to peek up to in the stream
+	 *
 	 * @return the character peeked from the stream
 	 */
 	private int characterPeekCharSIS(final Integer codePoint) {
@@ -168,10 +175,6 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 
 	@Override
 	public String toString() {
-		return "StringInputStreamStruct{"
-				+ "inputString='" + inputString + '\''
-				+ ", end=" + end
-				+ ", current=" + current
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

@@ -2,6 +2,8 @@ package jcl.structs.numbers;
 
 import jcl.structs.symbols.variables.Variable;
 import jcl.types.Ratio;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.math3.fraction.BigFraction;
 
 import java.math.BigInteger;
@@ -18,7 +20,8 @@ public class RatioStruct extends RationalStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param bigFraction the value of the RatioStruct
+	 * @param bigFraction
+	 * 		the value of the RatioStruct
 	 */
 	public RatioStruct(final BigFraction bigFraction) {
 		super(Ratio.INSTANCE, null, null);
@@ -28,8 +31,10 @@ public class RatioStruct extends RationalStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param numerator   the numerator value of the RatioStruct
-	 * @param denominator the denominator value of the RatioStruct
+	 * @param numerator
+	 * 		the numerator value of the RatioStruct
+	 * @param denominator
+	 * 		the denominator value of the RatioStruct
 	 */
 	public RatioStruct(final BigInteger numerator, final BigInteger denominator) {
 		super(Ratio.INSTANCE, null, null);
@@ -51,10 +56,13 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	/**
-	 * Private method for getting a String representation of the BigInteger parts of the RatioStruct's internal bigFraction
+	 * Private method for getting a String representation of the BigInteger parts of the RatioStruct's internal
+	 * bigFraction
 	 * value.
 	 *
-	 * @param bigInteger a bigInteger part of the RatioStruct's internal bigFraction value
+	 * @param bigInteger
+	 * 		a bigInteger part of the RatioStruct's internal bigFraction value
+	 *
 	 * @return a String representation of the BigInteger parts of the RatioStruct's internal bigFraction value
 	 */
 	private static String printBigInteger(final BigInteger bigInteger) {
@@ -84,8 +92,6 @@ public class RatioStruct extends RationalStruct {
 
 	@Override
 	public String toString() {
-		return "RatioStruct{"
-				+ "bigFraction=" + bigFraction
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

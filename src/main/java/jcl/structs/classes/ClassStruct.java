@@ -2,6 +2,8 @@ package jcl.structs.classes;
 
 import jcl.LispStruct;
 import jcl.LispType;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,9 +29,12 @@ public abstract class ClassStruct extends StandardObjectStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param type               the type of the class object
-	 * @param directSuperClasses the direct super classes
-	 * @param subClasses         the subclasses
+	 * @param type
+	 * 		the type of the class object
+	 * @param directSuperClasses
+	 * 		the direct super classes
+	 * @param subClasses
+	 * 		the subclasses
 	 */
 	protected ClassStruct(final LispType type,
 	                      final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
@@ -63,10 +68,6 @@ public abstract class ClassStruct extends StandardObjectStruct {
 
 	@Override
 	public String toString() {
-		return "ClassStruct{"
-				+ "type=" + type
-				+ ", directSuperClasses=" + directSuperClasses
-				+ ", subClasses=" + subClasses
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

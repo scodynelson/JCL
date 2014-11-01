@@ -6,6 +6,8 @@ import jcl.reader.syntax.reader.PeekType;
 import jcl.reader.syntax.reader.ReadResult;
 import jcl.structs.conditions.exceptions.StreamErrorException;
 import jcl.types.FileStream;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +31,8 @@ public class FileStreamStruct extends NativeStreamStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param file the file to create a FileStreamStruct from
+	 * @param file
+	 * 		the file to create a FileStreamStruct from
 	 */
 	public FileStreamStruct(final File file) {
 		this(false, file);
@@ -38,8 +41,10 @@ public class FileStreamStruct extends NativeStreamStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param isInteractive whether or not the struct created is 'interactive'
-	 * @param file          the file to create a FileStreamStruct from
+	 * @param isInteractive
+	 * 		whether or not the struct created is 'interactive'
+	 * @param file
+	 * 		the file to create a FileStreamStruct from
 	 */
 	public FileStreamStruct(final boolean isInteractive, final File file) {
 		super(FileStream.INSTANCE, isInteractive, null);
@@ -180,7 +185,9 @@ public class FileStreamStruct extends NativeStreamStruct {
 	/**
 	 * This method attempts to peek ahead to the provided codePoint in the stream.
 	 *
-	 * @param codePoint the codePoint to peek up to in the stream
+	 * @param codePoint
+	 * 		the codePoint to peek up to in the stream
+	 *
 	 * @return the character peeked from the stream
 	 */
 	private int characterPeekCharFSS(final Integer codePoint) {
@@ -306,9 +313,6 @@ public class FileStreamStruct extends NativeStreamStruct {
 
 	@Override
 	public String toString() {
-		// TODO: fix toString warning...
-		return "FileStreamStruct{"
-				+ "fileStream=" + fileStream
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

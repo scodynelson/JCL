@@ -2,6 +2,8 @@ package jcl.structs.comments;
 
 import jcl.LispStruct;
 import jcl.LispType;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class CommentStruct implements LispStruct {
 
@@ -23,9 +25,7 @@ public class CommentStruct implements LispStruct {
 
 	@Override
 	public String toString() {
-		return "CommentStruct{"
-				+ "commentString='" + commentString + '\''
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 
 	// BUILDERS

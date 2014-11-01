@@ -4,6 +4,8 @@ import jcl.LispStruct;
 import jcl.LispType;
 import jcl.structs.classes.BuiltInClassStruct;
 import jcl.types.Stream;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.List;
 
@@ -19,13 +21,17 @@ public abstract class StreamStruct extends BuiltInClassStruct implements LispStr
 	/**
 	 * Protected constructor.
 	 *
-	 * @param directSuperClasses the direct super classes
-	 * @param subClasses         the subclasses
-	 * @param isInteractive      whether or not the struct created is 'interactive'
-	 * @param elementType        the stream elementType
+	 * @param directSuperClasses
+	 * 		the direct super classes
+	 * @param subClasses
+	 * 		the subclasses
+	 * @param isInteractive
+	 * 		whether or not the struct created is 'interactive'
+	 * @param elementType
+	 * 		the stream elementType
 	 */
 	protected StreamStruct(final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses,
-						   final boolean isInteractive, final LispType elementType) {
+	                       final boolean isInteractive, final LispType elementType) {
 		super(Stream.INSTANCE, directSuperClasses, subClasses);
 		this.isInteractive = isInteractive;
 		this.elementType = elementType;
@@ -34,15 +40,20 @@ public abstract class StreamStruct extends BuiltInClassStruct implements LispStr
 	/**
 	 * Protected constructor.
 	 *
-	 * @param type               the type of the stream object
-	 * @param directSuperClasses the direct super classes
-	 * @param subClasses         the subclasses
-	 * @param isInteractive      whether or not the struct created is 'interactive'
-	 * @param elementType        the stream elementType
+	 * @param type
+	 * 		the type of the stream object
+	 * @param directSuperClasses
+	 * 		the direct super classes
+	 * @param subClasses
+	 * 		the subclasses
+	 * @param isInteractive
+	 * 		whether or not the struct created is 'interactive'
+	 * @param elementType
+	 * 		the stream elementType
 	 */
 	protected StreamStruct(final Stream type,
-						   final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses,
-						   final boolean isInteractive, final LispType elementType) {
+	                       final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses,
+	                       final boolean isInteractive, final LispType elementType) {
 		super(type, directSuperClasses, subClasses);
 		this.isInteractive = isInteractive;
 		this.elementType = elementType;
@@ -70,10 +81,6 @@ public abstract class StreamStruct extends BuiltInClassStruct implements LispStr
 
 	@Override
 	public String toString() {
-		return "StreamStruct{"
-				+ "isInteractive=" + isInteractive
-				+ ", elementType=" + elementType
-				+ ", isClosed=" + isClosed
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

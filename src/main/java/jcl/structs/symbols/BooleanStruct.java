@@ -2,6 +2,8 @@ package jcl.structs.symbols;
 
 import jcl.LispStruct;
 import jcl.structs.packages.GlobalPackageStruct;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 public abstract class BooleanStruct<T extends LispStruct> extends SymbolStruct<T> {
 
@@ -14,5 +16,10 @@ public abstract class BooleanStruct<T extends LispStruct> extends SymbolStruct<T
 
 	public boolean booleanValue() {
 		return booleanValue;
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

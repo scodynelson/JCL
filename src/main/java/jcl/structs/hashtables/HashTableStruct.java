@@ -8,6 +8,8 @@ import jcl.structs.functions.FunctionStruct;
 import jcl.types.HashTable;
 import org.apache.commons.collections4.Equator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -17,7 +19,8 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * The {@link HashTableStruct} is the object representation of a Lisp 'hash-table' type.
  * <p>
- * NOTE: This implementation does NOT support size tracking or rehash-size customization. These are handled internally by Java.
+ * NOTE: This implementation does NOT support size tracking or rehash-size customization. These are handled internally
+ * by Java.
  */
 public class HashTableStruct extends BuiltInClassStruct {
 
@@ -29,9 +32,12 @@ public class HashTableStruct extends BuiltInClassStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param test            the test function for determining key matching
-	 * @param size            the initial size of the table
-	 * @param rehashThreshold the threshold amount when resizing the table
+	 * @param test
+	 * 		the test function for determining key matching
+	 * @param size
+	 * 		the initial size of the table
+	 * @param rehashThreshold
+	 * 		the threshold amount when resizing the table
 	 */
 	public HashTableStruct(final EquatorFunctionStruct<LispStruct> test, final BigInteger size, final BigDecimal rehashThreshold) {
 		super(HashTable.INSTANCE, null, null);
@@ -71,7 +77,9 @@ public class HashTableStruct extends BuiltInClassStruct {
 	/**
 	 * This method returns the value stored in the map matching the provided key.
 	 *
-	 * @param key the key to find the matching stored value
+	 * @param key
+	 * 		the key to find the matching stored value
+	 *
 	 * @return the matching stored value for the provided key
 	 */
 	public LispStruct getHash(final LispStruct key) {
@@ -82,8 +90,10 @@ public class HashTableStruct extends BuiltInClassStruct {
 	/**
 	 * This method sets or inserts the value stored in the map matching the provided key.
 	 *
-	 * @param key   the key to set or insert the provided value
-	 * @param value the value to be stored in the table
+	 * @param key
+	 * 		the key to set or insert the provided value
+	 * @param value
+	 * 		the value to be stored in the table
 	 */
 	public void setHash(final LispStruct key, final LispStruct value) {
 		final LispStruct keyWrapper = KeyWrapper.getInstance(key, test);
@@ -93,7 +103,8 @@ public class HashTableStruct extends BuiltInClassStruct {
 	/**
 	 * This method removes the value stored in the map matching the provided key.
 	 *
-	 * @param key the key to remove the matching stored value
+	 * @param key
+	 * 		the key to remove the matching stored value
 	 */
 	public void remHash(final LispStruct key) {
 		final LispStruct keyWrapper = KeyWrapper.getInstance(key, test);
@@ -110,7 +121,8 @@ public class HashTableStruct extends BuiltInClassStruct {
 	/**
 	 * This method runs a mapping function over the internal map.
 	 *
-	 * @param function the mapping function
+	 * @param function
+	 * 		the mapping function
 	 */
 	public void mapHash(final FunctionStruct function) {
 		for (final Map.Entry<LispStruct, LispStruct> entry : map.entrySet()) {
@@ -126,11 +138,7 @@ public class HashTableStruct extends BuiltInClassStruct {
 
 	@Override
 	public String toString() {
-		return "HashTableStruct{"
-				+ "test=" + test
-				+ ", rehashThreshold=" + rehashThreshold
-				+ ", map=" + map
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 
 	/**
@@ -144,8 +152,10 @@ public class HashTableStruct extends BuiltInClassStruct {
 		/**
 		 * Private constructor.
 		 *
-		 * @param key     the key to wrap
-		 * @param equator the equator function used to test equality of keys
+		 * @param key
+		 * 		the key to wrap
+		 * @param equator
+		 * 		the equator function used to test equality of keys
 		 */
 		private KeyWrapper(final LispStruct key, final Equator<LispStruct> equator) {
 			this.key = key;
@@ -165,8 +175,11 @@ public class HashTableStruct extends BuiltInClassStruct {
 		/**
 		 * Gets instance of KeyWrapper object.
 		 *
-		 * @param key     the key to wrap
-		 * @param equator the equator function used to test equality of keys
+		 * @param key
+		 * 		the key to wrap
+		 * @param equator
+		 * 		the equator function used to test equality of keys
+		 *
 		 * @return the newly created KeyWrapper object
 		 */
 		public static KeyWrapper getInstance(final LispStruct key, final Equator<LispStruct> equator) {
@@ -193,10 +206,7 @@ public class HashTableStruct extends BuiltInClassStruct {
 
 		@Override
 		public String toString() {
-			return "KeyWrapper{"
-					+ "key=" + key
-					+ "equator=" + equator
-					+ '}';
+			return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 		}
 	}
 }

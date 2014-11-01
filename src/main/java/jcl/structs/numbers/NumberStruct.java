@@ -3,6 +3,8 @@ package jcl.structs.numbers;
 import jcl.LispStruct;
 import jcl.structs.classes.BuiltInClassStruct;
 import jcl.types.Number;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.List;
 
@@ -14,8 +16,10 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 	/**
 	 * Protected constructor.
 	 *
-	 * @param directSuperClasses the direct super classes
-	 * @param subClasses         the subclasses
+	 * @param directSuperClasses
+	 * 		the direct super classes
+	 * @param subClasses
+	 * 		the subclasses
 	 */
 	protected NumberStruct(final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
 		super(Number.INSTANCE, directSuperClasses, subClasses);
@@ -24,9 +28,12 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 	/**
 	 * Protected constructor.
 	 *
-	 * @param type               the type of the number object
-	 * @param directSuperClasses the direct super classes
-	 * @param subClasses         the subclasses
+	 * @param type
+	 * 		the type of the number object
+	 * @param directSuperClasses
+	 * 		the direct super classes
+	 * @param subClasses
+	 * 		the subclasses
 	 */
 	protected NumberStruct(final Number type,
 	                       final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
@@ -35,6 +42,6 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 
 	@Override
 	public String toString() {
-		return "NumberStruct{}";
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

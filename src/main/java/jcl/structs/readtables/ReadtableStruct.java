@@ -36,6 +36,8 @@ import jcl.reader.syntax.CharacterConstants;
 import jcl.reader.syntax.SyntaxType;
 import jcl.structs.classes.BuiltInClassStruct;
 import jcl.types.Readtable;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -63,7 +65,8 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param readtableCase the readtable case
+	 * @param readtableCase
+	 * 		the readtable case
 	 */
 	public ReadtableStruct(final CaseSpec readtableCase) {
 		super(Readtable.INSTANCE, null, null);
@@ -143,7 +146,8 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	/**
 	 * Setter for readtable case property.
 	 *
-	 * @param readtableCase new readtable case property
+	 * @param readtableCase
+	 * 		new readtable case property
 	 */
 	public void setReadtableCase(final CaseSpec readtableCase) {
 		this.readtableCase = readtableCase;
@@ -152,7 +156,9 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	/**
 	 * This method retrieves the macro character reader function for the provided {@code codePoint}.
 	 *
-	 * @param codePoint the key for the macro character reader function
+	 * @param codePoint
+	 * 		the key for the macro character reader function
+	 *
 	 * @return the macro character reader function for the provided {@code codePoint}
 	 */
 	public ReaderMacroFunction getMacroCharacter(final int codePoint) {
@@ -160,12 +166,16 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method sets the macro character reader function for the provided {@code codePoint} to the provided {@code readerMacroFunction},
+	 * This method sets the macro character reader function for the provided {@code codePoint} to the provided {@code
+	 * readerMacroFunction},
 	 * designating the syntax type as terminating if the provided {@code nonTerminatingP} is false.
 	 *
-	 * @param codePoint           the key for the macro character reader function to set
-	 * @param readerMacroFunction the new macro character reader function
-	 * @param nonTerminatingP     true if the character should be non-terminating; false otherwise
+	 * @param codePoint
+	 * 		the key for the macro character reader function to set
+	 * @param readerMacroFunction
+	 * 		the new macro character reader function
+	 * @param nonTerminatingP
+	 * 		true if the character should be non-terminating; false otherwise
 	 */
 	public void setMacroCharacter(final int codePoint, final ReaderMacroFunction readerMacroFunction, final boolean nonTerminatingP) {
 		if (!nonTerminatingP) {
@@ -177,7 +187,9 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	/**
 	 * This method gets the dispatching table for the provided {@code codePoint}.
 	 *
-	 * @param codePoint the key for the dispatch table
+	 * @param codePoint
+	 * 		the key for the dispatch table
+	 *
 	 * @return the dispatching table for the provided {@code codePoint}
 	 */
 	public DispatchTable getDispatchTable(final int codePoint) {
@@ -185,11 +197,15 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method creates a dispatching table for the provided {@code codePoint}, designating the syntax type as terminating
+	 * This method creates a dispatching table for the provided {@code codePoint}, designating the syntax type as
+	 * terminating
 	 * if the provided {@code nonTerminatingP} is false.
 	 *
-	 * @param codePoint       the key for the new dispatch table
-	 * @param nonTerminatingP true if the character should be non-terminating; false otherwise
+	 * @param codePoint
+	 * 		the key for the new dispatch table
+	 * @param nonTerminatingP
+	 * 		true if the character should be non-terminating; false otherwise
+	 *
 	 * @return the value of {@code nonTerminatingP}
 	 */
 	public boolean makeDispatchMacroCharacter(final int codePoint, final boolean nonTerminatingP) {
@@ -203,8 +219,11 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	 * This method gets the macro character reader function for the provided {@code subCodePoint} within the provided
 	 * {@code dispatchCodePoint} dispatch table.
 	 *
-	 * @param dispatchCodePoint the key for the dispatch table to search for the macro character reader function
-	 * @param subCodePoint      the key for the macro character reader function
+	 * @param dispatchCodePoint
+	 * 		the key for the dispatch table to search for the macro character reader function
+	 * @param subCodePoint
+	 * 		the key for the macro character reader function
+	 *
 	 * @return the macro character reader function for the provided {@code subCodePoint}
 	 */
 	public ReaderMacroFunction getDispatchMacroCharacter(final int dispatchCodePoint, final int subCodePoint) {
@@ -212,12 +231,16 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method sets the macro character reader function for the provided {@code subCodePoint} to the provided {@code readerMacroFunction}
+	 * This method sets the macro character reader function for the provided {@code subCodePoint} to the provided {@code
+	 * readerMacroFunction}
 	 * within the provided {@code dispatchCodePoint} dispatch table.
 	 *
-	 * @param dispatchCodePoint   the key for the dispatch table to set the macro character reader function
-	 * @param subCodePoint        the key for the macro character reader function to set
-	 * @param readerMacroFunction the new macro character reader function
+	 * @param dispatchCodePoint
+	 * 		the key for the dispatch table to set the macro character reader function
+	 * @param subCodePoint
+	 * 		the key for the macro character reader function to set
+	 * @param readerMacroFunction
+	 * 		the new macro character reader function
 	 */
 	public void setDispatchMacroCharacter(final int dispatchCodePoint, final int subCodePoint, final ReaderMacroFunction readerMacroFunction) {
 		dispatchTableMap.get(dispatchCodePoint).setMacroCharacter(subCodePoint, readerMacroFunction);
@@ -226,7 +249,9 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	/**
 	 * This method gets the attribute type for the provided {@code codePoint} value.
 	 *
-	 * @param codePoint the codePoint for the attribute type to retrieve
+	 * @param codePoint
+	 * 		the codePoint for the attribute type to retrieve
+	 *
 	 * @return the attribute type for the provided {@code codePoint} value
 	 */
 	public AttributeType getAttributeType(final int codePoint) {
@@ -236,7 +261,9 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	/**
 	 * This method gets the syntax type for the provided {@code codePoint} value.
 	 *
-	 * @param codePoint the codePoint for the syntax type to retrieve
+	 * @param codePoint
+	 * 		the codePoint for the syntax type to retrieve
+	 *
 	 * @return the syntax type for the provided {@code codePoint} value
 	 */
 	public SyntaxType getSyntaxType(final int codePoint) {
@@ -245,12 +272,6 @@ public class ReadtableStruct extends BuiltInClassStruct {
 
 	@Override
 	public String toString() {
-		return "ReadtableStruct{"
-				+ "macroTableMap=" + macroTableMap
-				+ ", dispatchTableMap=" + dispatchTableMap
-				+ ", attributeTable=" + attributeTable
-				+ ", syntaxTable=" + syntaxTable
-				+ ", readtableCase=" + readtableCase
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

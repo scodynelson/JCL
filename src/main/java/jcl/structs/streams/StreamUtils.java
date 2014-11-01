@@ -28,12 +28,17 @@ final class StreamUtils {
 	}
 
 	/**
-	 * This method is used to get a resulting read object from the provided {@code readVal}, throw an error if {@code eofErrorP}
-	 * is true and the value is the EOF value, or a result with the {@code eofValue} if {@code eofErrorP} is false.
+	 * This method is used to get a resulting read object from the provided {@code readVal}, throw an error if {@code
+	 * eofErrorP} is true and the value is the EOF value, or a result with the {@code eofValue} if {@code eofErrorP} is
+	 * false.
 	 *
-	 * @param readVal   the character or byte read
-	 * @param eofErrorP where or not throw an error if the {@code readVal} is the EOF value
-	 * @param eofValue  the value to return if the {@code readVal} is the EOF value
+	 * @param readVal
+	 * 		the character or byte read
+	 * @param eofErrorP
+	 * 		where or not throw an error if the {@code readVal} is the EOF value
+	 * @param eofValue
+	 * 		the value to return if the {@code readVal} is the EOF value
+	 *
 	 * @return the resulting read object
 	 */
 	static ReadResult getReadResult(final int readVal, final boolean eofErrorP, final LispStruct eofValue) {
@@ -50,12 +55,17 @@ final class StreamUtils {
 	}
 
 	/**
-	 * This method is used to get a resulting peek object from the provided {@code nextChar}, throw an error if {@code eofErrorP}
-	 * is true and the value is the EOF value, or a result with the {@code eofValue} if {@code eofErrorP} is false.
+	 * This method is used to get a resulting peek object from the provided {@code nextChar}, throw an error if {@code
+	 * eofErrorP} is true and the value is the EOF value, or a result with the {@code eofValue} if {@code eofErrorP} is
+	 * false.
 	 *
-	 * @param nextChar  the next character peeked
-	 * @param eofErrorP where or not throw an error if the {@code nextChar} is the EOF value
-	 * @param eofValue  the value to return if the {@code nextChar} is the EOF value
+	 * @param nextChar
+	 * 		the next character peeked
+	 * @param eofErrorP
+	 * 		where or not throw an error if the {@code nextChar} is the EOF value
+	 * @param eofValue
+	 * 		the value to return if the {@code nextChar} is the EOF value
+	 *
 	 * @return the resulting peek object
 	 */
 	static PeekResult getPeekResult(final int nextChar, final boolean eofErrorP, final LispStruct eofValue) {

@@ -2,6 +2,8 @@ package jcl.structs.pathnames;
 
 import jcl.structs.conditions.exceptions.TypeErrorException;
 import jcl.types.LogicalPathname;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,11 +35,16 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param host      the logical-pathname host
-	 * @param directory the logical-pathname directory
-	 * @param name      the logical-pathname name
-	 * @param type      the logical-pathname type
-	 * @param version   the logical-pathname version
+	 * @param host
+	 * 		the logical-pathname host
+	 * @param directory
+	 * 		the logical-pathname directory
+	 * @param name
+	 * 		the logical-pathname name
+	 * @param type
+	 * 		the logical-pathname type
+	 * @param version
+	 * 		the logical-pathname version
 	 */
 	private LogicalPathnameStruct(final PathnameHost host, final PathnameDirectory directory, final PathnameName name,
 	                              final PathnameType type, final PathnameVersion version) {
@@ -47,7 +54,8 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param pathname the pathname string to parse into the logical-pathname object elements
+	 * @param pathname
+	 * 		the pathname string to parse into the logical-pathname object elements
 	 */
 	public LogicalPathnameStruct(final String pathname) {
 		this(getHost(pathname), getDirectory(pathname), getName(pathname), getType(pathname), getVersion(pathname));
@@ -56,7 +64,9 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	/**
 	 * This method gets the logical-pathname host.
 	 *
-	 * @param pathname the pathname string to parse into the logical-pathname host
+	 * @param pathname
+	 * 		the pathname string to parse into the logical-pathname host
+	 *
 	 * @return the logical-pathname host
 	 */
 	private static PathnameHost getHost(final String pathname) {
@@ -78,7 +88,9 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	/**
 	 * This method removed the host substring from the provided pathname string.
 	 *
-	 * @param pathname the pathname string to remove the host substring from
+	 * @param pathname
+	 * 		the pathname string to remove the host substring from
+	 *
 	 * @return the substring of the provided pathname string with the host removed
 	 */
 	private static String removeHost(final String pathname) {
@@ -92,7 +104,9 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	/**
 	 * This method gets the logical-pathname directory.
 	 *
-	 * @param pathname the pathname string to parse into the logical-pathname directory
+	 * @param pathname
+	 * 		the pathname string to parse into the logical-pathname directory
+	 *
 	 * @return the logical-pathname directory
 	 */
 	private static PathnameDirectory getDirectory(final String pathname) {
@@ -146,7 +160,9 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	/**
 	 * This method removed the directory substring from the provided pathname string.
 	 *
-	 * @param pathname the pathname string to remove the directory substring from
+	 * @param pathname
+	 * 		the pathname string to remove the directory substring from
+	 *
 	 * @return the substring of the provided pathname string with the directory removed
 	 */
 	private static String removeDirectory(final String pathname) {
@@ -160,7 +176,9 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	/**
 	 * This method gets the logical-pathname name.
 	 *
-	 * @param pathname the pathname string to parse into the logical-pathname name
+	 * @param pathname
+	 * 		the pathname string to parse into the logical-pathname name
+	 *
 	 * @return the logical-pathname name
 	 */
 	private static PathnameName getName(final String pathname) {
@@ -185,7 +203,9 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	/**
 	 * This method removed the name substring from the provided pathname string.
 	 *
-	 * @param pathname the pathname string to remove the name substring from
+	 * @param pathname
+	 * 		the pathname string to remove the name substring from
+	 *
 	 * @return the substring of the provided pathname string with the name removed
 	 */
 	private static String removeName(final String pathname) {
@@ -199,7 +219,9 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	/**
 	 * This method gets the logical-pathname type.
 	 *
-	 * @param pathname the pathname string to parse into the logical-pathname type
+	 * @param pathname
+	 * 		the pathname string to parse into the logical-pathname type
+	 *
 	 * @return the logical-pathname type
 	 */
 	private static PathnameType getType(final String pathname) {
@@ -225,7 +247,9 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	/**
 	 * This method removed the type substring from the provided pathname string.
 	 *
-	 * @param pathname the pathname string to remove the type substring from
+	 * @param pathname
+	 * 		the pathname string to remove the type substring from
+	 *
 	 * @return the substring of the provided pathname string with the type removed
 	 */
 	private static String removeType(final String pathname) {
@@ -239,7 +263,9 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	/**
 	 * This method gets the logical-pathname version.
 	 *
-	 * @param pathname the pathname string to parse into the logical-pathname version
+	 * @param pathname
+	 * 		the pathname string to parse into the logical-pathname version
+	 *
 	 * @return the logical-pathname version
 	 */
 	private static PathnameVersion getVersion(final String pathname) {
@@ -278,13 +304,6 @@ public class LogicalPathnameStruct extends PathnameStruct {
 
 	@Override
 	public String toString() {
-		return "LogicalPathnameStruct{"
-				+ "host=" + host
-				+ ", device=" + device
-				+ ", directory=" + directory
-				+ ", name=" + name
-				+ ", type=" + type
-				+ ", version=" + version
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

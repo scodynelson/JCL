@@ -6,6 +6,8 @@ import jcl.types.Float;
 import jcl.types.LongFloat;
 import jcl.types.ShortFloat;
 import jcl.types.SingleFloat;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.math.BigDecimal;
 
@@ -19,7 +21,8 @@ public class FloatStruct extends RealStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param bigDecimal the value of the FloatStruct
+	 * @param bigDecimal
+	 * 		the value of the FloatStruct
 	 */
 	public FloatStruct(final BigDecimal bigDecimal) {
 		this(SingleFloat.INSTANCE, bigDecimal);
@@ -28,8 +31,10 @@ public class FloatStruct extends RealStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param floatFormat a {@link Float} that represents the type of {@link Float}
-	 * @param bigDecimal  the value of the FloatStruct
+	 * @param floatFormat
+	 * 		a {@link Float} that represents the type of {@link Float}
+	 * @param bigDecimal
+	 * 		the value of the FloatStruct
 	 */
 	public FloatStruct(final Float floatFormat, final BigDecimal bigDecimal) {
 		super(floatFormat, null, null);
@@ -68,8 +73,6 @@ public class FloatStruct extends RealStruct {
 
 	@Override
 	public String toString() {
-		return "FloatStruct{"
-				+ ", bigDecimal=" + bigDecimal
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

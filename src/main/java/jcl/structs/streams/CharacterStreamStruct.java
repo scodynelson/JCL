@@ -7,6 +7,8 @@ import jcl.reader.syntax.reader.ReadResult;
 import jcl.structs.conditions.exceptions.StreamErrorException;
 import jcl.types.Character;
 import jcl.types.Stream;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,8 +34,10 @@ public class CharacterStreamStruct extends NativeStreamStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param inputStream  the {@link java.io.InputStream} to create a CharacterStreamStruct from
-	 * @param outputStream the {@link java.io.OutputStream} to create a CharacterStreamStruct from
+	 * @param inputStream
+	 * 		the {@link java.io.InputStream} to create a CharacterStreamStruct from
+	 * @param outputStream
+	 * 		the {@link java.io.OutputStream} to create a CharacterStreamStruct from
 	 */
 	public CharacterStreamStruct(final InputStream inputStream, final OutputStream outputStream) {
 		this(false, inputStream, outputStream);
@@ -42,9 +46,12 @@ public class CharacterStreamStruct extends NativeStreamStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param isInteractive whether or not the struct created is 'interactive'
-	 * @param inputStream   the {@link java.io.InputStream} to create a CharacterStreamStruct from
-	 * @param outputStream  the {@link java.io.OutputStream} to create a CharacterStreamStruct from
+	 * @param isInteractive
+	 * 		whether or not the struct created is 'interactive'
+	 * @param inputStream
+	 * 		the {@link java.io.InputStream} to create a CharacterStreamStruct from
+	 * @param outputStream
+	 * 		the {@link java.io.OutputStream} to create a CharacterStreamStruct from
 	 */
 	public CharacterStreamStruct(final boolean isInteractive, final InputStream inputStream, final OutputStream outputStream) {
 		super(Stream.INSTANCE, isInteractive, Character.INSTANCE);
@@ -128,7 +135,9 @@ public class CharacterStreamStruct extends NativeStreamStruct {
 	/**
 	 * This method attempts to peek ahead to the provided codePoint in the stream.
 	 *
-	 * @param codePoint the codePoint to peek up to in the stream
+	 * @param codePoint
+	 * 		the codePoint to peek up to in the stream
+	 *
 	 * @return the character peeked from the stream
 	 */
 	private int characterPeekCharCSS(final Integer codePoint) {
@@ -218,10 +227,6 @@ public class CharacterStreamStruct extends NativeStreamStruct {
 
 	@Override
 	public String toString() {
-		// TODO: fix toString warning...
-		return "CharacterStreamStruct{"
-				+ "inputStream=" + inputStream
-				+ ", outputStream=" + outputStream
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

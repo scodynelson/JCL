@@ -5,6 +5,8 @@ import jcl.LispType;
 import jcl.compiler.real.environment.lambdalist.OrdinaryLambdaListBindings;
 import jcl.structs.classes.BuiltInClassStruct;
 import jcl.types.Function;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.List;
 
@@ -25,8 +27,10 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 	/**
 	 * Protected constructor.
 	 *
-	 * @param directSuperClasses the direct super classes
-	 * @param subClasses         the subclasses
+	 * @param directSuperClasses
+	 * 		the direct super classes
+	 * @param subClasses
+	 * 		the subclasses
 	 */
 	protected FunctionStruct(final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
 		this(Function.INSTANCE, directSuperClasses, subClasses);
@@ -35,9 +39,12 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 	/**
 	 * Protected constructor.
 	 *
-	 * @param type               the type of the function object
-	 * @param directSuperClasses the direct super classes
-	 * @param subClasses         the subclasses
+	 * @param type
+	 * 		the type of the function object
+	 * @param directSuperClasses
+	 * 		the direct super classes
+	 * @param subClasses
+	 * 		the subclasses
 	 */
 	protected FunctionStruct(final LispType type,
 	                         final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
@@ -47,12 +54,19 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 	/**
 	 * This is the application method for any function structure.
 	 *
-	 * @param lispStructs the function arguments
+	 * @param lispStructs
+	 * 		the function arguments
+	 *
 	 * @return the result object
 	 */
 	public abstract LispStruct apply(LispStruct... lispStructs);
 
 	public OrdinaryLambdaListBindings getLambdaListBindings() {
 		return lambdaListBindings;
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

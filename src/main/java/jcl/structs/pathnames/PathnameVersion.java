@@ -1,6 +1,8 @@
 package jcl.structs.pathnames;
 
 import jcl.structs.conditions.exceptions.FileErrorException;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link PathnameVersion} is the object representation of the 'version' element of a Lisp 'pathname' type.
@@ -21,7 +23,8 @@ public final class PathnameVersion {
 	/**
 	 * Public constructor.
 	 *
-	 * @param version the pathname version
+	 * @param version
+	 * 		the pathname version
 	 */
 	public PathnameVersion(final Integer version) {
 		if ((version == null) || (version < 1)) {
@@ -35,7 +38,8 @@ public final class PathnameVersion {
 	/**
 	 * Public constructor.
 	 *
-	 * @param componentType pathname version component type
+	 * @param componentType
+	 * 		pathname version component type
 	 */
 	public PathnameVersion(final PathnameVersionComponentType componentType) {
 		version = null;
@@ -62,9 +66,6 @@ public final class PathnameVersion {
 
 	@Override
 	public String toString() {
-		return "PathnameVersion{"
-				+ "version=" + version
-				+ ", componentType=" + componentType
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

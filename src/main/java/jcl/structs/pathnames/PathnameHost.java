@@ -1,6 +1,8 @@
 package jcl.structs.pathnames;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link PathnameHost} is the object representation of the 'host' element of a Lisp 'pathname' type.
@@ -21,7 +23,8 @@ public final class PathnameHost {
 	/**
 	 * Public constructor.
 	 *
-	 * @param host the pathname host
+	 * @param host
+	 * 		the pathname host
 	 */
 	public PathnameHost(final String host) {
 		this.host = host;
@@ -36,7 +39,8 @@ public final class PathnameHost {
 	/**
 	 * Public constructor.
 	 *
-	 * @param componentType pathname host component type
+	 * @param componentType
+	 * 		pathname host component type
 	 */
 	public PathnameHost(final PathnameComponentType componentType) {
 		host = null;
@@ -63,9 +67,6 @@ public final class PathnameHost {
 
 	@Override
 	public String toString() {
-		return "PathnameHost{"
-				+ "host=" + host
-				+ ", componentType=" + componentType
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

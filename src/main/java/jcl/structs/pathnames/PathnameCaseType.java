@@ -1,5 +1,8 @@
 package jcl.structs.pathnames;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 /**
  * The {@link PathnameCaseType} is the enumeration of the case types to parse the elements of a Lisp 'pathname' type.
  */
@@ -13,7 +16,8 @@ public enum PathnameCaseType {
 	/**
 	 * Constructor.
 	 *
-	 * @param value value of the case type
+	 * @param value
+	 * 		value of the case type
 	 */
 	PathnameCaseType(final String value) {
 		this.value = value;
@@ -30,8 +34,6 @@ public enum PathnameCaseType {
 
 	@Override
 	public String toString() {
-		return "PathnameCaseType{"
-				+ "value='" + value + '\''
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

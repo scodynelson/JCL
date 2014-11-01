@@ -1,6 +1,8 @@
 package jcl.structs.pathnames;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link PathnameName} is the object representation of the 'name' element of a Lisp 'pathname' type.
@@ -21,7 +23,8 @@ public final class PathnameName {
 	/**
 	 * Public constructor.
 	 *
-	 * @param name the pathname name
+	 * @param name
+	 * 		the pathname name
 	 */
 	public PathnameName(final String name) {
 		this.name = name;
@@ -38,7 +41,8 @@ public final class PathnameName {
 	/**
 	 * Public constructor.
 	 *
-	 * @param componentType pathname name component type
+	 * @param componentType
+	 * 		pathname name component type
 	 */
 	public PathnameName(final PathnameComponentType componentType) {
 		name = null;
@@ -65,9 +69,6 @@ public final class PathnameName {
 
 	@Override
 	public String toString() {
-		return "PathnameName{"
-				+ "name=" + name
-				+ ", componentType=" + componentType
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

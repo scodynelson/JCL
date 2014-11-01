@@ -1,8 +1,11 @@
 package jcl.structs.pathnames;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 /**
- * The {@link PathnameVersionComponentType} is the enumeration of the type of a component element of the version element
- * of a Lisp 'pathname' type.
+ * The {@link PathnameVersionComponentType} is the enumeration of the type of a component element of the version
+ * element of a Lisp 'pathname' type.
  */
 public enum PathnameVersionComponentType {
 
@@ -17,7 +20,8 @@ public enum PathnameVersionComponentType {
 	/**
 	 * Constructor.
 	 *
-	 * @param value value of the version component type
+	 * @param value
+	 * 		value of the version component type
 	 */
 	PathnameVersionComponentType(final String value) {
 		this.value = value;
@@ -34,8 +38,6 @@ public enum PathnameVersionComponentType {
 
 	@Override
 	public String toString() {
-		return "PathnameVersionComponentType{"
-				+ "value='" + value + '\''
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

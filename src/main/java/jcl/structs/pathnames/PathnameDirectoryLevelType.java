@@ -1,5 +1,8 @@
 package jcl.structs.pathnames;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 /**
  * The {@link PathnameDirectoryLevelType} is the enumeration of the directory level type of a 'directory' level
  * element of a Lisp 'pathname' type.
@@ -17,7 +20,8 @@ public enum PathnameDirectoryLevelType {
 	/**
 	 * Constructor.
 	 *
-	 * @param value value of the directory level type
+	 * @param value
+	 * 		value of the directory level type
 	 */
 	PathnameDirectoryLevelType(final String value) {
 		this.value = value;
@@ -34,8 +38,6 @@ public enum PathnameDirectoryLevelType {
 
 	@Override
 	public String toString() {
-		return "PathnameDirectoryLevelType{"
-				+ "value='" + value + '\''
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

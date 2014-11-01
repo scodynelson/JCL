@@ -2,6 +2,8 @@ package jcl.structs.pathnames;
 
 import jcl.structs.conditions.exceptions.FileErrorException;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.List;
 
@@ -17,8 +19,10 @@ public final class PathnameDirectoryComponent {
 	/**
 	 * Public constructor.
 	 *
-	 * @param directoryLevels       the pathname directory levels
-	 * @param pathnameDirectoryType the pathname directory type (ABSOLUTE or RELATIVE)
+	 * @param directoryLevels
+	 * 		the pathname directory levels
+	 * @param pathnameDirectoryType
+	 * 		the pathname directory type (ABSOLUTE or RELATIVE)
 	 */
 	public PathnameDirectoryComponent(final PathnameDirectoryType pathnameDirectoryType, final List<PathnameDirectoryLevel> directoryLevels) {
 		if (CollectionUtils.isNotEmpty(directoryLevels) && (pathnameDirectoryType == PathnameDirectoryType.ABSOLUTE)) {
@@ -53,9 +57,6 @@ public final class PathnameDirectoryComponent {
 
 	@Override
 	public String toString() {
-		return "PathnameDirectory{"
-				+ "directoryLevels=" + directoryLevels
-				+ ", pathnameDirectoryType=" + pathnameDirectoryType
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

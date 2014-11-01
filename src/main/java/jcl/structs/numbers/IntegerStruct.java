@@ -2,6 +2,8 @@ package jcl.structs.numbers;
 
 import jcl.structs.symbols.variables.Variable;
 import jcl.types.Integer;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.math.BigInteger;
 
@@ -12,12 +14,13 @@ public class IntegerStruct extends RationalStruct {
 
 	private final BigInteger bigInteger;
 
-	private	static final int SIXTEEN = 16;
+	private static final int SIXTEEN = 16;
 
 	/**
 	 * Public constructor.
 	 *
-	 * @param bigInteger the value of the IntegerStruct
+	 * @param bigInteger
+	 * 		the value of the IntegerStruct
 	 */
 	public IntegerStruct(final BigInteger bigInteger) {
 		this(Integer.INSTANCE, bigInteger);
@@ -26,8 +29,10 @@ public class IntegerStruct extends RationalStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param integerFormat a {@link Integer} that represents the type of {@link Integer}
-	 * @param bigInteger    the value of the IntegerStruct
+	 * @param integerFormat
+	 * 		a {@link Integer} that represents the type of {@link Integer}
+	 * @param bigInteger
+	 * 		the value of the IntegerStruct
 	 */
 	public IntegerStruct(final Integer integerFormat, final BigInteger bigInteger) {
 		super(integerFormat, null, null);
@@ -75,8 +80,6 @@ public class IntegerStruct extends RationalStruct {
 
 	@Override
 	public String toString() {
-		return "IntegerStruct{"
-				+ "bigInteger=" + bigInteger
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

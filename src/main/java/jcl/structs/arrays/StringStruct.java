@@ -10,6 +10,8 @@ import jcl.types.Character;
 import jcl.types.SimpleBaseString;
 import jcl.types.SimpleString;
 import jcl.types.String;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +24,8 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 	/**
 	 * Public constructor.
 	 *
-	 * @param stringValue a Java string used for the string contents
+	 * @param stringValue
+	 * 		a Java string used for the string contents
 	 */
 	public StringStruct(final java.lang.String stringValue) {
 		this(stringValue.length(), getCharList(stringValue), Character.INSTANCE, false, null);
@@ -31,11 +34,16 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 	/**
 	 * Public constructor.
 	 *
-	 * @param size         the string size
-	 * @param contents     the string contents
-	 * @param elementType  the string elementType
-	 * @param isAdjustable whether or not the string is adjustable
-	 * @param fillPointer  the string fillPointer
+	 * @param size
+	 * 		the string size
+	 * @param contents
+	 * 		the string contents
+	 * @param elementType
+	 * 		the string elementType
+	 * @param isAdjustable
+	 * 		whether or not the string is adjustable
+	 * @param fillPointer
+	 * 		the string fillPointer
 	 */
 	public StringStruct(final int size, final List<CharacterStruct> contents, final Character elementType,
 	                    final boolean isAdjustable, final Integer fillPointer) {
@@ -45,9 +53,13 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 	/**
 	 * This method gets the string type from the provided isAdjustable, fillPointer, and elementType values.
 	 *
-	 * @param isAdjustable whether or not the string is adjustable
-	 * @param fillPointer  the string fillPointer
-	 * @param elementType  the string elementType
+	 * @param isAdjustable
+	 * 		whether or not the string is adjustable
+	 * @param fillPointer
+	 * 		the string fillPointer
+	 * @param elementType
+	 * 		the string elementType
+	 *
 	 * @return the matching string type for the provided isAdjustable, fillPointer, and elementType values
 	 */
 	private static String getStringType(final boolean isAdjustable, final Integer fillPointer, final Character elementType) {
@@ -61,7 +73,9 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 	/**
 	 * This method gets a list of {@link CharacterStruct}s from the provided Java string value.
 	 *
-	 * @param stringValue the Java string to convert to a list of {@link CharacterStruct}s
+	 * @param stringValue
+	 * 		the Java string to convert to a list of {@link CharacterStruct}s
+	 *
 	 * @return a list of {@link CharacterStruct}s from the provided Java string value
 	 */
 	private static List<CharacterStruct> getCharList(final java.lang.String stringValue) {
@@ -120,14 +134,6 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 
 	@Override
 	public java.lang.String toString() {
-		return "StringStruct{"
-				+ "contents=" + contents
-				+ ", dimensions=" + dimensions
-				+ ", totalSize=" + totalSize
-				+ ", rank=" + rank
-				+ ", elementType=" + elementType
-				+ ", isAdjustable=" + isAdjustable
-				+ "fillPointer=" + fillPointer
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

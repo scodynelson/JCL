@@ -2,6 +2,8 @@ package jcl.structs.numbers;
 
 import jcl.structs.classes.BuiltInClassStruct;
 import jcl.types.RandomState;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -53,7 +55,9 @@ public class RandomStateStruct extends BuiltInClassStruct {
 	/**
 	 * This method retrieves a random integer from the internal random seed.
 	 *
-	 * @param limit the upper limit of the random integer
+	 * @param limit
+	 * 		the upper limit of the random integer
+	 *
 	 * @return the random {@link BigInteger}
 	 */
 	public BigInteger randomInteger(final BigInteger limit) {
@@ -76,7 +80,9 @@ public class RandomStateStruct extends BuiltInClassStruct {
 	/**
 	 * This method retrieves a random float from the internal random seed.
 	 *
-	 * @param limit the upper limit of the random float
+	 * @param limit
+	 * 		the upper limit of the random float
+	 *
 	 * @return the random {@link BigDecimal}
 	 */
 	public BigDecimal randomFloat(final BigDecimal limit) {
@@ -125,7 +131,9 @@ public class RandomStateStruct extends BuiltInClassStruct {
 	/**
 	 * This method is a bit shifting method depending on the sign of the shift value.
 	 *
-	 * @param bits the bits to shift
+	 * @param bits
+	 * 		the bits to shift
+	 *
 	 * @return a new shifted {@link BigInteger}
 	 */
 	private static BigInteger ash(final BigInteger bits) {
@@ -134,10 +142,6 @@ public class RandomStateStruct extends BuiltInClassStruct {
 
 	@Override
 	public String toString() {
-		return "RandomStateStruct{"
-				+ "j=" + jValue
-				+ ", k=" + kValue
-				+ ", seed=" + seed
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

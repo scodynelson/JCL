@@ -6,6 +6,8 @@ import jcl.reader.syntax.reader.PeekType;
 import jcl.reader.syntax.reader.ReadResult;
 import jcl.structs.conditions.exceptions.EndOfFileException;
 import jcl.types.EchoStream;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.LinkedList;
 
@@ -19,8 +21,10 @@ public class EchoStreamStruct extends DualStreamStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param inputStream  the {@link InputStream} to create a EchoStreamStruct from
-	 * @param outputStream the {@link OutputStream} to create a EchoStreamStruct from
+	 * @param inputStream
+	 * 		the {@link InputStream} to create a EchoStreamStruct from
+	 * @param outputStream
+	 * 		the {@link OutputStream} to create a EchoStreamStruct from
 	 */
 	public EchoStreamStruct(final InputStream inputStream, final OutputStream outputStream) {
 		this(false, inputStream, outputStream);
@@ -29,9 +33,12 @@ public class EchoStreamStruct extends DualStreamStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param isInteractive whether or not the struct created is 'interactive'
-	 * @param inputStream   the {@link InputStream} to create a EchoStreamStruct from
-	 * @param outputStream  the {@link OutputStream} to create a EchoStreamStruct from
+	 * @param isInteractive
+	 * 		whether or not the struct created is 'interactive'
+	 * @param inputStream
+	 * 		the {@link InputStream} to create a EchoStreamStruct from
+	 * @param outputStream
+	 * 		the {@link OutputStream} to create a EchoStreamStruct from
 	 */
 	public EchoStreamStruct(final boolean isInteractive, final InputStream inputStream, final OutputStream outputStream) {
 		super(EchoStream.INSTANCE, isInteractive, inputStream, outputStream);
@@ -117,10 +124,6 @@ public class EchoStreamStruct extends DualStreamStruct {
 
 	@Override
 	public String toString() {
-		return "EchoStreamStruct{"
-				+ "inputStream=" + inputStream
-				+ ", outputStream=" + outputStream
-				+ ", unreadStuff=" + unreadStuff
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

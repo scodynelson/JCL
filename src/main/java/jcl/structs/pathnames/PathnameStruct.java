@@ -6,6 +6,8 @@ import jcl.structs.symbols.BooleanStruct;
 import jcl.structs.symbols.variables.Variable;
 import jcl.types.Pathname;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,12 +33,18 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 	/**
 	 * Protected constructor.
 	 *
-	 * @param host      the pathname host
-	 * @param device    the pathname device
-	 * @param directory the pathname directory
-	 * @param name      the pathname name
-	 * @param type      the pathname type
-	 * @param version   the pathname version
+	 * @param host
+	 * 		the pathname host
+	 * @param device
+	 * 		the pathname device
+	 * @param directory
+	 * 		the pathname directory
+	 * @param name
+	 * 		the pathname name
+	 * @param type
+	 * 		the pathname type
+	 * @param version
+	 * 		the pathname version
 	 */
 	protected PathnameStruct(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
 	                         final PathnameName name, final PathnameType type, final PathnameVersion version) {
@@ -46,13 +54,20 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 	/**
 	 * Protected constructor.
 	 *
-	 * @param pathnameType the pathname structure type
-	 * @param host         the pathname host
-	 * @param device       the pathname device
-	 * @param directory    the pathname directory
-	 * @param name         the pathname name
-	 * @param type         the pathname type
-	 * @param version      the pathname version
+	 * @param pathnameType
+	 * 		the pathname structure type
+	 * @param host
+	 * 		the pathname host
+	 * @param device
+	 * 		the pathname device
+	 * @param directory
+	 * 		the pathname directory
+	 * @param name
+	 * 		the pathname name
+	 * @param type
+	 * 		the pathname type
+	 * @param version
+	 * 		the pathname version
 	 */
 	protected PathnameStruct(final Pathname pathnameType,
 	                         final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
@@ -123,7 +138,9 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 	/**
 	 * This method determines if the provided path is a URI.
 	 *
-	 * @param path the path to test
+	 * @param path
+	 * 		the path to test
+	 *
 	 * @return whether or not the provide path is a URI
 	 */
 	private static boolean isURI(final String path) {
@@ -183,14 +200,7 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 
 	@Override
 	public String toString() {
-		return "PathnameStruct{"
-				+ "host=" + host
-				+ ", device=" + device
-				+ ", directory=" + directory
-				+ ", name=" + name
-				+ ", type=" + type
-				+ ", version=" + version
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 
 	// BUILDERS
@@ -198,10 +208,14 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 	/**
 	 * This factory method builds and returns a pathname with the provided {@code pathname} parsed as its elements.
 	 *
-	 * @param pathname the pathname string to parse into the pathname object elements
+	 * @param pathname
+	 * 		the pathname string to parse into the pathname object elements
+	 *
 	 * @return the constructed pathname with constructed elements
-	 * @throws URISyntaxException if the provided pathname is determined to be a URI, but cannot be parsed as one
-	 *                            NOTE: THIS SHOULD NEVER HAPPEN BUT WE THROW THIS FOR SAFETY CASES
+	 *
+	 * @throws URISyntaxException
+	 * 		if the provided pathname is determined to be a URI, but cannot be parsed as one
+	 * 		NOTE: THIS SHOULD NEVER HAPPEN BUT WE THROW THIS FOR SAFETY CASES
 	 */
 	public static PathnameStruct buildPathname(final String pathname) throws URISyntaxException {
 		if (isURI(pathname)) {
@@ -215,13 +229,21 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 	 * This factory method builds and returns a pathname of the {@code structType} with the provided {@code host},
 	 * {@code device},{@code directory}, {@code name},{@code type},{@code version} as its elements.
 	 *
-	 * @param host       the pathname host
-	 * @param device     the pathname device
-	 * @param directory  the pathname directory
-	 * @param name       the pathname name
-	 * @param type       the pathname type
-	 * @param version    the pathname version
-	 * @param structType the type of pathname to build
+	 * @param host
+	 * 		the pathname host
+	 * @param device
+	 * 		the pathname device
+	 * @param directory
+	 * 		the pathname directory
+	 * @param name
+	 * 		the pathname name
+	 * @param type
+	 * 		the pathname type
+	 * @param version
+	 * 		the pathname version
+	 * @param structType
+	 * 		the type of pathname to build
+	 *
 	 * @return the constructed pathname with the provided elements
 	 */
 	public static PathnameStruct buildPathname(final PathnameHost host, final PathnameDevice device,

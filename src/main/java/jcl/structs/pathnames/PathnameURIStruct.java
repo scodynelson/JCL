@@ -2,6 +2,8 @@ package jcl.structs.pathnames;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -22,12 +24,18 @@ class PathnameURIStruct extends PathnameStruct {
 	/**
 	 * Package constructor.
 	 *
-	 * @param host      the pathname host
-	 * @param device    the pathname device
-	 * @param directory the pathname directory
-	 * @param name      the pathname name
-	 * @param type      the pathname type
-	 * @param version   the pathname version
+	 * @param host
+	 * 		the pathname host
+	 * @param device
+	 * 		the pathname device
+	 * @param directory
+	 * 		the pathname directory
+	 * @param name
+	 * 		the pathname name
+	 * @param type
+	 * 		the pathname type
+	 * @param version
+	 * 		the pathname version
 	 */
 	PathnameURIStruct(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
 	                  final PathnameName name, final PathnameType type, final PathnameVersion version) {
@@ -37,8 +45,11 @@ class PathnameURIStruct extends PathnameStruct {
 	/**
 	 * Package constructor.
 	 *
-	 * @param pathname the pathname string to parse into the pathname object elements
-	 * @throws URISyntaxException if the provided {@code pathname} cannot be parsed as a URI
+	 * @param pathname
+	 * 		the pathname string to parse into the pathname object elements
+	 *
+	 * @throws URISyntaxException
+	 * 		if the provided {@code pathname} cannot be parsed as a URI
 	 */
 	PathnameURIStruct(final String pathname) throws URISyntaxException {
 		this(getURI(pathname));
@@ -47,7 +58,8 @@ class PathnameURIStruct extends PathnameStruct {
 	/**
 	 * Package constructor.
 	 *
-	 * @param path the path to parse into the pathname object elements
+	 * @param path
+	 * 		the path to parse into the pathname object elements
 	 */
 	PathnameURIStruct(final Path path) {
 		this(path.toUri());
@@ -56,7 +68,8 @@ class PathnameURIStruct extends PathnameStruct {
 	/**
 	 * Package constructor.
 	 *
-	 * @param uri the uri to parse into the pathname object elements
+	 * @param uri
+	 * 		the uri to parse into the pathname object elements
 	 */
 	PathnameURIStruct(final URI uri) {
 		this(getHost(uri), getDevice(uri), getDirectory(uri), getName(uri), getType(uri), getVersion());
@@ -64,20 +77,15 @@ class PathnameURIStruct extends PathnameStruct {
 
 	@Override
 	public String toString() {
-		return "PathnameURIStruct{"
-				+ "host=" + host
-				+ ", device=" + device
-				+ ", directory=" + directory
-				+ ", name=" + name
-				+ ", type=" + type
-				+ ", version=" + version
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 
 	/**
 	 * This method gets the pathname host.
 	 *
-	 * @param uri the uri to parse into the pathname host
+	 * @param uri
+	 * 		the uri to parse into the pathname host
+	 *
 	 * @return the pathname host
 	 */
 	private static PathnameHost getHost(final URI uri) {
@@ -93,7 +101,9 @@ class PathnameURIStruct extends PathnameStruct {
 	/**
 	 * This method gets the pathname device.
 	 *
-	 * @param uri the uri to parse into the pathname device
+	 * @param uri
+	 * 		the uri to parse into the pathname device
+	 *
 	 * @return the pathname device
 	 */
 	private static PathnameDevice getDevice(final URI uri) {
@@ -104,7 +114,9 @@ class PathnameURIStruct extends PathnameStruct {
 	/**
 	 * This method gets the pathname directory.
 	 *
-	 * @param uri the uri to parse into the pathname directory
+	 * @param uri
+	 * 		the uri to parse into the pathname directory
+	 *
 	 * @return the pathname directory
 	 */
 	private static PathnameDirectory getDirectory(final URI uri) {
@@ -153,7 +165,9 @@ class PathnameURIStruct extends PathnameStruct {
 	/**
 	 * This method gets the pathname name.
 	 *
-	 * @param uri the uri to parse into the pathname name
+	 * @param uri
+	 * 		the uri to parse into the pathname name
+	 *
 	 * @return the pathname name
 	 */
 	private static PathnameName getName(final URI uri) {
@@ -165,7 +179,9 @@ class PathnameURIStruct extends PathnameStruct {
 	/**
 	 * This method gets the pathname type.
 	 *
-	 * @param uri the uri to parse into the pathname type
+	 * @param uri
+	 * 		the uri to parse into the pathname type
+	 *
 	 * @return the pathname type
 	 */
 	private static PathnameType getType(final URI uri) {
@@ -186,9 +202,13 @@ class PathnameURIStruct extends PathnameStruct {
 	/**
 	 * This method gets a URI from the provided {@code pathname}.
 	 *
-	 * @param pathname the pathname string to convert to a URI
+	 * @param pathname
+	 * 		the pathname string to convert to a URI
+	 *
 	 * @return the URI value of the provided {@code pathname}
-	 * @throws URISyntaxException if the provided {@code pathname} cannot be parsed as a URI
+	 *
+	 * @throws URISyntaxException
+	 * 		if the provided {@code pathname} cannot be parsed as a URI
 	 */
 	private static URI getURI(final String pathname) throws URISyntaxException {
 		final String realPathname = pathname.toLowerCase(Locale.getDefault());

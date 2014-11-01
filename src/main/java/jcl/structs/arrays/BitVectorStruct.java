@@ -6,6 +6,8 @@ import jcl.structs.symbols.variables.Variable;
 import jcl.types.Bit;
 import jcl.types.BitVector;
 import jcl.types.SimpleBitVector;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -25,7 +27,8 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 	/**
 	 * Public constructor.
 	 *
-	 * @param bitString a Java string used for the bit-vector contents
+	 * @param bitString
+	 * 		a Java string used for the bit-vector contents
 	 */
 	public BitVectorStruct(final String bitString) {
 		this(bitString.length(), getBitList(bitString), false, null);
@@ -34,10 +37,14 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 	/**
 	 * Public constructor.
 	 *
-	 * @param size         the bit-vector size
-	 * @param contents     the bit-vector contents
-	 * @param isAdjustable whether or not the bit-vector is adjustable
-	 * @param fillPointer  the bit-vector fillPointer
+	 * @param size
+	 * 		the bit-vector size
+	 * @param contents
+	 * 		the bit-vector contents
+	 * @param isAdjustable
+	 * 		whether or not the bit-vector is adjustable
+	 * @param fillPointer
+	 * 		the bit-vector fillPointer
 	 */
 	public BitVectorStruct(final int size, final List<IntegerStruct> contents, final boolean isAdjustable, final Integer fillPointer) {
 		super(getBitVectorType(isAdjustable, fillPointer), size, contents, Bit.INSTANCE, isAdjustable, fillPointer);
@@ -46,8 +53,11 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 	/**
 	 * This method gets the bit-vector type from the provided isAdjustable and fillPointer values.
 	 *
-	 * @param isAdjustable whether or not the bit-vector is adjustable
-	 * @param fillPointer  the bit-vector fillPointer
+	 * @param isAdjustable
+	 * 		whether or not the bit-vector is adjustable
+	 * @param fillPointer
+	 * 		the bit-vector fillPointer
+	 *
 	 * @return the matching bit-vector type for the provided isAdjustable and fillPointer values
 	 */
 	private static BitVector getBitVectorType(final boolean isAdjustable, final Integer fillPointer) {
@@ -57,7 +67,9 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 	/**
 	 * This method gets a list of {@link IntegerStruct}s from the provided Java string value.
 	 *
-	 * @param bitString the Java string to convert to a list of {@link IntegerStruct}s
+	 * @param bitString
+	 * 		the Java string to convert to a list of {@link IntegerStruct}s
+	 *
 	 * @return a list of {@link IntegerStruct}s from the provided Java string value
 	 */
 	private static List<IntegerStruct> getBitList(final String bitString) {
@@ -114,14 +126,6 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 
 	@Override
 	public String toString() {
-		return "BitVectorStruct{"
-				+ "contents=" + contents
-				+ ", dimensions=" + dimensions
-				+ ", totalSize=" + totalSize
-				+ ", rank=" + rank
-				+ ", elementType=" + elementType
-				+ ", isAdjustable=" + isAdjustable
-				+ "fillPointer=" + fillPointer
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

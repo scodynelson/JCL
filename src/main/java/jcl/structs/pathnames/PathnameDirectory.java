@@ -1,5 +1,8 @@
 package jcl.structs.pathnames;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 /**
  * The {@link PathnameDirectory} is the object representation of the 'directory' element of a Lisp 'pathname' type.
  */
@@ -19,7 +22,8 @@ public final class PathnameDirectory {
 	/**
 	 * Public constructor.
 	 *
-	 * @param directoryComponent the pathname directory component
+	 * @param directoryComponent
+	 * 		the pathname directory component
 	 */
 	public PathnameDirectory(final PathnameDirectoryComponent directoryComponent) {
 		this.directoryComponent = directoryComponent;
@@ -34,7 +38,8 @@ public final class PathnameDirectory {
 	/**
 	 * Public constructor.
 	 *
-	 * @param componentType pathname directory component type
+	 * @param componentType
+	 * 		pathname directory component type
 	 */
 	public PathnameDirectory(final PathnameComponentType componentType) {
 		directoryComponent = null;
@@ -61,9 +66,6 @@ public final class PathnameDirectory {
 
 	@Override
 	public String toString() {
-		return "PathnameDirectory{"
-				+ "directoryComponent=" + directoryComponent
-				+ ", componentType=" + componentType
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

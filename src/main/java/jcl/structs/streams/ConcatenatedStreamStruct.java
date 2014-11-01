@@ -9,6 +9,8 @@ import jcl.structs.conditions.exceptions.EndOfFileException;
 import jcl.structs.conditions.exceptions.StreamErrorException;
 import jcl.types.ConcatenatedStream;
 import jcl.types.T;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.LinkedList;
 
@@ -22,7 +24,8 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 	/**
 	 * Public constructor.
 	 *
-	 * @param inputStreams the {@link InputStream}s to create a ConcatenatedStreamStruct from
+	 * @param inputStreams
+	 * 		the {@link InputStream}s to create a ConcatenatedStreamStruct from
 	 */
 	public ConcatenatedStreamStruct(final LinkedList<InputStream> inputStreams) {
 		this(false, inputStreams);
@@ -31,8 +34,10 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 	/**
 	 * Public constructor.
 	 *
-	 * @param isInteractive whether or not the struct created is 'interactive'
-	 * @param inputStreams  the {@link InputStream}s to create a ConcatenatedStreamStruct from
+	 * @param isInteractive
+	 * 		whether or not the struct created is 'interactive'
+	 * @param inputStreams
+	 * 		the {@link InputStream}s to create a ConcatenatedStreamStruct from
 	 */
 	public ConcatenatedStreamStruct(final boolean isInteractive, final LinkedList<InputStream> inputStreams) {
 		super(ConcatenatedStream.INSTANCE, null, null, isInteractive, getElementType(inputStreams));
@@ -42,7 +47,9 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 	/**
 	 * This private method is used to retrieve the element type for object construction.
 	 *
-	 * @param inputStreams the {@link InputStream}s to create a ConcatenatedStreamStruct from
+	 * @param inputStreams
+	 * 		the {@link InputStream}s to create a ConcatenatedStreamStruct from
+	 *
 	 * @return the element type for object construction
 	 */
 	private static LispType getElementType(final LinkedList<InputStream> inputStreams) {
@@ -55,7 +62,9 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 	/**
 	 * This private method is used to retrieve the element type for object construction.
 	 *
-	 * @param inputStreams the {@link InputStream}s to create a ConcatenatedStreamStruct from
+	 * @param inputStreams
+	 * 		the {@link InputStream}s to create a ConcatenatedStreamStruct from
+	 *
 	 * @return the element type for object construction
 	 */
 	private static LispType getElementType2(final LinkedList<InputStream> inputStreams) {
@@ -190,8 +199,6 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 
 	@Override
 	public String toString() {
-		return "ConcatenatedStreamStruct{"
-				+ "inputStreams=" + inputStreams
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

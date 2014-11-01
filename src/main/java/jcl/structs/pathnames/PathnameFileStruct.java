@@ -2,6 +2,8 @@ package jcl.structs.pathnames;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -27,12 +29,18 @@ class PathnameFileStruct extends PathnameStruct {
 	/**
 	 * Package constructor.
 	 *
-	 * @param host      the pathname host
-	 * @param device    the pathname device
-	 * @param directory the pathname directory
-	 * @param name      the pathname name
-	 * @param type      the pathname type
-	 * @param version   the pathname version
+	 * @param host
+	 * 		the pathname host
+	 * @param device
+	 * 		the pathname device
+	 * @param directory
+	 * 		the pathname directory
+	 * @param name
+	 * 		the pathname name
+	 * @param type
+	 * 		the pathname type
+	 * @param version
+	 * 		the pathname version
 	 */
 	PathnameFileStruct(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
 	                   final PathnameName name, final PathnameType type, final PathnameVersion version) {
@@ -42,7 +50,8 @@ class PathnameFileStruct extends PathnameStruct {
 	/**
 	 * Package constructor.
 	 *
-	 * @param pathname the pathname string to parse into the pathname object elements
+	 * @param pathname
+	 * 		the pathname string to parse into the pathname object elements
 	 */
 	PathnameFileStruct(final String pathname) {
 		this(getHost(), getDevice(pathname), getDirectory(pathname), getName(pathname), getType(pathname), getVersion());
@@ -51,7 +60,8 @@ class PathnameFileStruct extends PathnameStruct {
 	/**
 	 * Package constructor.
 	 *
-	 * @param path the path to parse into the pathname object elements
+	 * @param path
+	 * 		the path to parse into the pathname object elements
 	 */
 	PathnameFileStruct(final Path path) {
 		this(path.toFile().getPath());
@@ -60,7 +70,8 @@ class PathnameFileStruct extends PathnameStruct {
 	/**
 	 * Package constructor.
 	 *
-	 * @param file the file to parse into the pathname object elements
+	 * @param file
+	 * 		the file to parse into the pathname object elements
 	 */
 	PathnameFileStruct(final File file) {
 		this(file.getPath());
@@ -68,14 +79,7 @@ class PathnameFileStruct extends PathnameStruct {
 
 	@Override
 	public String toString() {
-		return "PathnameFileStruct{"
-				+ "host=" + host
-				+ ", device=" + device
-				+ ", directory=" + directory
-				+ ", name=" + name
-				+ ", type=" + type
-				+ ", version=" + version
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 
 	/**
@@ -90,7 +94,9 @@ class PathnameFileStruct extends PathnameStruct {
 	/**
 	 * This method gets the pathname device.
 	 *
-	 * @param pathname the pathname string to parse into the pathname device
+	 * @param pathname
+	 * 		the pathname string to parse into the pathname device
+	 *
 	 * @return the pathname device
 	 */
 	private static PathnameDevice getDevice(final String pathname) {
@@ -113,7 +119,9 @@ class PathnameFileStruct extends PathnameStruct {
 	/**
 	 * This method gets the pathname directory.
 	 *
-	 * @param pathname the pathname string to parse into the pathname directory
+	 * @param pathname
+	 * 		the pathname string to parse into the pathname directory
+	 *
 	 * @return the pathname directory
 	 */
 	private static PathnameDirectory getDirectory(final String pathname) {
@@ -181,7 +189,9 @@ class PathnameFileStruct extends PathnameStruct {
 	/**
 	 * This method gets the pathname name.
 	 *
-	 * @param pathname the pathname string to parse into the pathname name
+	 * @param pathname
+	 * 		the pathname string to parse into the pathname name
+	 *
 	 * @return the pathname name
 	 */
 	private static PathnameName getName(final String pathname) {
@@ -199,7 +209,9 @@ class PathnameFileStruct extends PathnameStruct {
 	/**
 	 * This method gets the pathname type.
 	 *
-	 * @param pathname the pathname string to parse into the pathname type
+	 * @param pathname
+	 * 		the pathname string to parse into the pathname type
+	 *
 	 * @return the pathname type
 	 */
 	private static PathnameType getType(final String pathname) {
@@ -224,9 +236,12 @@ class PathnameFileStruct extends PathnameStruct {
 	}
 
 	/**
-	 * This method resolves special UserHome system properties when '~' values are encountered and should be parsed as such.
+	 * This method resolves special UserHome system properties when '~' values are encountered and should be parsed as
+	 * such.
 	 *
-	 * @param pathname the pathname string to resolve special UserHome system properties
+	 * @param pathname
+	 * 		the pathname string to resolve special UserHome system properties
+	 *
 	 * @return a new pathname string with resolved special UserHome system properties
 	 */
 	private static String resolveUserHome(final String pathname) {

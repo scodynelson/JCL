@@ -3,6 +3,8 @@ package jcl.structs.classes;
 import jcl.LispStruct;
 import jcl.LispType;
 import jcl.types.StandardObject;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link StandardObjectStruct} is the object representation of a Lisp 'standard-object' type.
@@ -30,7 +32,8 @@ public abstract class StandardObjectStruct implements LispStruct {
 	/**
 	 * Setter for standard object documentation property.
 	 *
-	 * @param documentation new standard object documentation property value
+	 * @param documentation
+	 * 		new standard object documentation property value
 	 */
 	public void setDocumentation(final String documentation) {
 		this.documentation = documentation;
@@ -58,8 +61,6 @@ public abstract class StandardObjectStruct implements LispStruct {
 
 	@Override
 	public String toString() {
-		return "StandardObjectStruct{"
-				+ "documentation='" + documentation + '\''
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

@@ -7,6 +7,8 @@ import jcl.types.Character;
 import jcl.types.ExtendedChar;
 import jcl.types.StandardChar;
 import org.apache.commons.lang3.CharUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link CharacterStruct} is the object representation of a Lisp 'character' type.
@@ -18,7 +20,8 @@ public class CharacterStruct extends BuiltInClassStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param codePoint the character code point value
+	 * @param codePoint
+	 * 		the character code point value
 	 */
 	public CharacterStruct(final int codePoint) {
 		super(getCharacterType(codePoint), null, null);
@@ -28,7 +31,9 @@ public class CharacterStruct extends BuiltInClassStruct {
 	/**
 	 * This method gets the character type from the provide character code point.
 	 *
-	 * @param codePoint the character code point value
+	 * @param codePoint
+	 * 		the character code point value
+	 *
 	 * @return the matching character type for the provided character code point
 	 */
 	private static Character getCharacterType(final int codePoint) {
@@ -81,8 +86,6 @@ public class CharacterStruct extends BuiltInClassStruct {
 
 	@Override
 	public String toString() {
-		return "CharacterStruct{"
-				+ "codePoint=" + codePoint
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

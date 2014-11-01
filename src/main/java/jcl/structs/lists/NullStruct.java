@@ -3,6 +3,8 @@ package jcl.structs.lists;
 import jcl.LispStruct;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.types.Null;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.Collections;
 import java.util.List;
@@ -68,6 +70,6 @@ public final class NullStruct extends ListStruct {
 
 	@Override
 	public String toString() {
-		return "NullStruct{}";
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

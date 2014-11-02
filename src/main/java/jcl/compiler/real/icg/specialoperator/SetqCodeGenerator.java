@@ -1,6 +1,6 @@
 package jcl.compiler.real.icg.specialoperator;
 
-import jcl.compiler.old.EnvironmentAccessor;
+import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;

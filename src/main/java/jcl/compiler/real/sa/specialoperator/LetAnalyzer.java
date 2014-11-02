@@ -1,7 +1,7 @@
 package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
-import jcl.compiler.old.EnvironmentAccessor;
+import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.Analyzer;

@@ -1,7 +1,7 @@
 package jcl.compiler.real.sa;
 
 import jcl.LispStruct;
-import jcl.compiler.old.EnvironmentAccessor;
+import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.lambdalist.OptionalBinding;

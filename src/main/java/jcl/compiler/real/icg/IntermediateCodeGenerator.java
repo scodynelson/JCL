@@ -2,7 +2,7 @@ package jcl.compiler.real.icg;
 
 import jcl.LispStruct;
 import jcl.compiler.old.Emitter;
-import jcl.compiler.old.EnvironmentAccessor;
+import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.Allocation;
 import jcl.compiler.real.environment.Binding;
 import jcl.compiler.real.environment.Closure;

@@ -6,6 +6,7 @@ import jcl.structs.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Environment implements LispStruct {
@@ -13,22 +14,23 @@ public class Environment implements LispStruct {
 	public static final Environment FREE = null;
 	public static final Environment NULL = null;
 
-	private Marker marker;
-	private List<LoadTimeValue> loadTimeValues;
-	private Environment parent;
-	private List<Binding> bindings;
-	private SymbolTable symbolTable;
-	private Closure environmentClosure;
+	private final Environment parent;
+	private final Marker marker;
+
+	private final List<LoadTimeValue> loadTimeValues = new ArrayList<>();
+	private final List<Binding> bindings = new ArrayList<>();
+	private final SymbolTable symbolTable = new SymbolTable();
+	private final Closure environmentClosure;
 
 	// TODO: load-time-value ???
-	public Environment(final Marker marker, final List<LoadTimeValue> loadTimeValues, final Environment parent, final List<Binding> bindings,
-	                   final SymbolTable symbolTable, final Closure environmentClosure) {
-		this.marker = marker;
+	public Environment(final Environment parent, final Marker marker, final int closureDepth) {
 		this.parent = parent;
-		this.loadTimeValues = loadTimeValues;
-		this.bindings = bindings;
-		this.symbolTable = symbolTable;
-		this.environmentClosure = environmentClosure;
+		this.marker = marker;
+		environmentClosure = new Closure(closureDepth);
+	}
+
+	public Environment getParent() {
+		return parent;
 	}
 
 	public Marker getMarker() {
@@ -37,10 +39,6 @@ public class Environment implements LispStruct {
 
 	public List<LoadTimeValue> getLoadTimeValues() {
 		return loadTimeValues;
-	}
-
-	public Environment getParent() {
-		return parent;
 	}
 
 	public List<Binding> getBindings() {
@@ -62,30 +60,6 @@ public class Environment implements LispStruct {
 
 	public Closure getEnvironmentClosure() {
 		return environmentClosure;
-	}
-
-	public void setMarker(final Marker marker) {
-		this.marker = marker;
-	}
-
-	public void setLoadTimeValues(final List<LoadTimeValue> loadTimeValues) {
-		this.loadTimeValues = loadTimeValues;
-	}
-
-	public void setParent(final Environment parent) {
-		this.parent = parent;
-	}
-
-	public void setBindings(final List<Binding> bindings) {
-		this.bindings = bindings;
-	}
-
-	public void setSymbolTable(final SymbolTable symbolTable) {
-		this.symbolTable = symbolTable;
-	}
-
-	public void setEnvironmentClosure(final Closure environmentClosure) {
-		this.environmentClosure = environmentClosure;
 	}
 
 	@Override

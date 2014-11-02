@@ -2,8 +2,8 @@ package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
 import jcl.compiler.old.EnvironmentAccessor;
+import jcl.compiler.real.environment.Binding;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.MacroFunctionBinding;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
@@ -44,8 +44,8 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 				SymbolStructAnalyzer.INSTANCE.analyze(functionSymbol, semanticAnalyzer);
 				return input;
 			} else {
-				final MacroFunctionBinding macroFunctionBinding = (MacroFunctionBinding) fnBinding.getBinding(functionSymbol);
-				final SymbolStruct<?> functionBindingName = macroFunctionBinding.getName();
+				final Binding binding = fnBinding.getBinding(functionSymbol);
+				final SymbolStruct<?> functionBindingName = binding.getSymbolStruct();
 
 				final LispStruct first = input.getFirst();
 				return new ConsStruct(first, functionBindingName);

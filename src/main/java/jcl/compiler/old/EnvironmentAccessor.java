@@ -10,7 +10,6 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.LambdaBinding;
 import jcl.compiler.real.environment.LetBinding;
 import jcl.compiler.real.environment.LocalAllocation;
-import jcl.compiler.real.environment.MacroFunctionBinding;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.environment.PositionAllocation;
 import jcl.compiler.real.environment.Scope;
@@ -22,13 +21,12 @@ import jcl.structs.symbols.SymbolStruct;
 import jcl.structs.symbols.TStruct;
 import jcl.types.T;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class EnvironmentAccessor {
 
 	public static Environment createNewEnvironment(final Environment parent, final Marker marker, final int closureDepth) {
-		final Environment environment = new Environment(marker, new ArrayList<>(), parent, new ArrayList<>(), new SymbolTable(new ArrayList<>()), new Closure(closureDepth, new ArrayList<>()));
+		final Environment environment = new Environment(parent, marker, closureDepth);
 
 		if ((marker == Marker.LAMBDA) || (marker == Marker.FLET) || (marker == Marker.LABELS)) {
 			environment.getLoadTimeValues().clear();
@@ -65,19 +63,6 @@ public class EnvironmentAccessor {
 		return currentEnvironment;
 	}
 
-	public static Environment createNewFBinding(final Environment currentEnvironment, final SymbolStruct<?> newVariable,
-	                                            final int position, final LispStruct initForm, final boolean isSpecial,
-	                                            final SymbolStruct<?> newFieldName) {
-
-		final Scope scope = (newVariable.isSpecial() || isSpecial) ? Scope.DYNAMIC : Scope.LEXICAL;
-		final Binding binding = new MacroFunctionBinding(newVariable, position, scope, T.INSTANCE, initForm, newFieldName);
-
-		final List<Binding> currentBindings = currentEnvironment.getBindings();
-		currentBindings.add(binding);
-
-		return currentEnvironment;
-	}
-
 	public static List<Binding> getBindingSet(final Environment currentEnvironment) {
 		return currentEnvironment.getBindings();
 	}
@@ -97,31 +82,6 @@ public class EnvironmentAccessor {
 			}
 		}
 		return returnBinding;
-	}
-
-	public static SymbolStruct<?> extractBoundName(final Environment env, final SymbolStruct<?> fnName, final boolean valueBinding) {
-
-		// get the current environment - used for macroexpansion
-		final Environment fnBinding = getBindingEnvironment(env, fnName, valueBinding);
-		if (fnBinding.equals(Environment.NULL)) {
-			return fnName;
-		}
-
-		// use assoc to get bindings
-		final List<Binding> aBindings = fnBinding.getBindings();
-
-		Binding foundBinding = null;
-		for (final Binding binding : aBindings) {
-			if (binding.getSymbolStruct().equals(fnName)) {
-				foundBinding = binding;
-				break;
-			}
-		}
-
-		if (foundBinding != null) {
-			return ((MacroFunctionBinding) foundBinding).getName();
-		}
-		return null;
 	}
 
 	public static boolean hasBinding(final Environment currentEnvironment, final SymbolStruct<?> variable) {

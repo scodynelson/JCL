@@ -4,15 +4,12 @@ import jcl.structs.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SymbolTable {
 
-	private List<Binding> bindings;
-
-	public SymbolTable(final List<Binding> bindings) {
-		this.bindings = bindings;
-	}
+	private final List<Binding> bindings = new ArrayList<>();
 
 	public List<Binding> getBindings() {
 		return bindings;
@@ -25,10 +22,6 @@ public class SymbolTable {
 			}
 		}
 		return null;
-	}
-
-	public void setBindings(final List<Binding> bindings) {
-		this.bindings = bindings;
 	}
 
 	@Override

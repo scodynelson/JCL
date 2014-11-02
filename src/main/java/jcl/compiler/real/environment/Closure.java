@@ -4,20 +4,16 @@ import jcl.structs.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Closure {
 
-	private int depth;
-	private List<ClosureBinding> bindings;
+	private final List<ClosureBinding> bindings = new ArrayList<>();
+	private final int depth;
 
-	public Closure(final int depth, final List<ClosureBinding> bindings) {
+	public Closure(final int depth) {
 		this.depth = depth;
-		this.bindings = bindings;
-	}
-
-	public int getDepth() {
-		return depth;
 	}
 
 	public List<ClosureBinding> getBindings() {
@@ -33,12 +29,8 @@ public class Closure {
 		return null;
 	}
 
-	public void setDepth(final int depth) {
-		this.depth = depth;
-	}
-
-	public void setBindings(final List<ClosureBinding> bindings) {
-		this.bindings = bindings;
+	public int getDepth() {
+		return depth;
 	}
 
 	@Override

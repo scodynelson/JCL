@@ -3,6 +3,8 @@ package jcl.compiler.real.sa.specialoperator;
 import jcl.LispStruct;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.specialoperator.body.BodyProcessingResult;
+import jcl.compiler.real.sa.specialoperator.body.BodyWithDeclaresAnalyzer;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.SpecialOperator;
 
@@ -17,7 +19,7 @@ public class LocallyAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
 
 		final ListStruct body = input.getRest();
-		final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBodyWithDecls(semanticAnalyzer, body);
+		final BodyProcessingResult bodyProcessingResult = BodyWithDeclaresAnalyzer.INSTANCE.analyze(body, semanticAnalyzer);
 
 		final List<LispStruct> locallyResultList = new ArrayList<>();
 		locallyResultList.add(SpecialOperator.LOCALLY);

@@ -3,6 +3,8 @@ package jcl.compiler.real.sa.specialoperator;
 import jcl.LispStruct;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.specialoperator.body.BodyAnalyzer;
+import jcl.compiler.real.sa.specialoperator.body.BodyProcessingResult;
 import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.SpecialOperator;
@@ -10,7 +12,6 @@ import jcl.structs.symbols.SymbolStruct;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 public class BlockAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
@@ -37,7 +38,7 @@ public class BlockAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			blockResultList.add(second);
 
 			final ListStruct body = input.getRest().getRest();
-			final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBody(semanticAnalyzer, body);
+			final BodyProcessingResult bodyProcessingResult = BodyAnalyzer.INSTANCE.analyze(body, semanticAnalyzer);
 			blockResultList.addAll(bodyProcessingResult.getBodyForms());
 
 			return ListStruct.buildProperList(blockResultList);

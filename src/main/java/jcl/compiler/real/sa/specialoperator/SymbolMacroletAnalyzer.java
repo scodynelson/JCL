@@ -3,6 +3,8 @@ package jcl.compiler.real.sa.specialoperator;
 import jcl.LispStruct;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.specialoperator.body.BodyProcessingResult;
+import jcl.compiler.real.sa.specialoperator.body.BodyWithDeclaresAnalyzer;
 import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.SpecialOperator;
@@ -51,7 +53,7 @@ public class SymbolMacroletAnalyzer implements Analyzer<LispStruct, ListStruct> 
 		symbolMacroletResultList.add(second);
 
 		final ListStruct body = input.getRest().getRest();
-		final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBodyWithDecls(semanticAnalyzer, body);
+		final BodyProcessingResult bodyProcessingResult = BodyWithDeclaresAnalyzer.INSTANCE.analyze(body, semanticAnalyzer);
 		symbolMacroletResultList.addAll(bodyProcessingResult.getBodyForms());
 
 		return ListStruct.buildProperList(symbolMacroletResultList);

@@ -3,6 +3,8 @@ package jcl.compiler.real.sa.specialoperator;
 import jcl.LispStruct;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.specialoperator.body.BodyAnalyzer;
+import jcl.compiler.real.sa.specialoperator.body.BodyProcessingResult;
 import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.SpecialOperator;
@@ -26,7 +28,7 @@ public class MultipleValueProg1Analyzer implements Analyzer<LispStruct, ListStru
 
 		// Body includes the 'First Form'
 		final ListStruct body = input.getRest();
-		final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBody(semanticAnalyzer, body);
+		final BodyProcessingResult bodyProcessingResult = BodyAnalyzer.INSTANCE.analyze(body, semanticAnalyzer);
 		multipleValueProg1ResultList.addAll(bodyProcessingResult.getBodyForms());
 
 		return ListStruct.buildProperList(multipleValueProg1ResultList);

@@ -4,6 +4,8 @@ import jcl.LispStruct;
 import jcl.compiler.old.symbol.KeywordOld;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.specialoperator.body.BodyAnalyzer;
+import jcl.compiler.real.sa.specialoperator.body.BodyProcessingResult;
 import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.KeywordSymbolStruct;
@@ -60,17 +62,17 @@ public class EvalWhenAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		if (isTopLevel) {
 			if (isCompileTopLevel(situationJavaList)) {
-				final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBody(semanticAnalyzer, body);
+				final BodyProcessingResult bodyProcessingResult = BodyAnalyzer.INSTANCE.analyze(body, semanticAnalyzer);
 				evalWhenResultList.addAll(bodyProcessingResult.getBodyForms());
 				return ListStruct.buildProperList(evalWhenResultList);
 			} else if (isLoadTopLevel(situationJavaList)) {
 				// TODO: take care of processing later at load time...
-				final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBody(semanticAnalyzer, body);
+				final BodyProcessingResult bodyProcessingResult = BodyAnalyzer.INSTANCE.analyze(body, semanticAnalyzer);
 				evalWhenResultList.addAll(bodyProcessingResult.getBodyForms());
 				return ListStruct.buildProperList(evalWhenResultList);
 			} else if (isExecute(situationJavaList)) {
 				// TODO: take care of processing later at execution time...
-				final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBody(semanticAnalyzer, body);
+				final BodyProcessingResult bodyProcessingResult = BodyAnalyzer.INSTANCE.analyze(body, semanticAnalyzer);
 				evalWhenResultList.addAll(bodyProcessingResult.getBodyForms());
 				return ListStruct.buildProperList(evalWhenResultList);
 			} else {
@@ -80,7 +82,7 @@ public class EvalWhenAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			}
 		} else if (isExecute(situationJavaList)) {
 			// TODO: take care of processing later at execution time...
-			final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBody(semanticAnalyzer, body);
+			final BodyProcessingResult bodyProcessingResult = BodyAnalyzer.INSTANCE.analyze(body, semanticAnalyzer);
 			evalWhenResultList.addAll(bodyProcessingResult.getBodyForms());
 			return ListStruct.buildProperList(evalWhenResultList);
 		} else {

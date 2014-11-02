@@ -13,7 +13,8 @@ import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.LambdaEnvironmentListStruct;
 import jcl.compiler.real.sa.LambdaListParser;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.specialoperator.BodyProcessingUtil;
+import jcl.compiler.real.sa.specialoperator.body.BodyProcessingResult;
+import jcl.compiler.real.sa.specialoperator.body.BodyWithDeclaresAndDocStringAnalyzer;
 import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ConsStruct;
 import jcl.structs.lists.ListStruct;
@@ -53,7 +54,7 @@ public class LambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			final OrdinaryLambdaListBindings parsedLambdaList = LambdaListParser.parseOrdinaryLambdaList(semanticAnalyzer, parameters);
 
 			final ListStruct currentBodyForms = input.getRest().getRest();
-			final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBodyWithDeclsAndDoc(semanticAnalyzer, currentBodyForms);
+			final BodyProcessingResult bodyProcessingResult = BodyWithDeclaresAndDocStringAnalyzer.INSTANCE.analyze(currentBodyForms, semanticAnalyzer);
 
 			final Environment envList = environmentStack.peek();
 

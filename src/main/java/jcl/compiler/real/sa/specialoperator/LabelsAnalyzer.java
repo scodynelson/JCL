@@ -7,6 +7,8 @@ import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.EnvironmentListStruct;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.specialoperator.body.BodyProcessingResult;
+import jcl.compiler.real.sa.specialoperator.body.BodyWithDeclaresAnalyzer;
 import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.SpecialOperator;
@@ -109,7 +111,7 @@ public class LabelsAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			}
 
 			final ListStruct currentBodyForms = input.getRest().getRest();
-			final BodyProcessingUtil.BodyProcessingResult bodyProcessingResult = BodyProcessingUtil.processBodyWithDecls(semanticAnalyzer, currentBodyForms);
+			final BodyProcessingResult bodyProcessingResult = BodyWithDeclaresAnalyzer.INSTANCE.analyze(currentBodyForms, semanticAnalyzer);
 
 			final Environment envList = environmentStack.peek();
 

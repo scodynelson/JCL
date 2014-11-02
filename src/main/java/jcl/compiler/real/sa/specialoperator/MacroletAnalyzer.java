@@ -37,15 +37,16 @@ public class MacroletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		final Stack<Environment> environmentStack = semanticAnalyzer.getEnvironmentStack();
 		final Environment parentEnvironment = environmentStack.peek();
 
-		final Environment macroletEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.MACROLET);
-		macroletEnvironment.setParent(parentEnvironment);
+		final int tempClosureDepth = semanticAnalyzer.getClosureDepth();
+		final int newClosureDepth = tempClosureDepth + 1;
 
+		final Environment macroletEnvironment = EnvironmentAccessor.createNewEnvironment(parentEnvironment, Marker.MACROLET, newClosureDepth);
 		environmentStack.push(macroletEnvironment);
 
 		// NOTE: Prior functions that resolve later functions will be handled automatically. Unknown function calls will
 		//       still be stored in the SemanticAnalyzer.undefinedFunctions field.
 
-		final int tempPosition = semanticAnalyzer.getBindingsPosition();
+		final int tempBindingsPosition = semanticAnalyzer.getBindingsPosition();
 		try {
 			final ListStruct macroletMacros = input.getRest();
 			final List<LispStruct> macroletMacrosJavaList = macroletMacros.getAsJavaList();
@@ -118,7 +119,8 @@ public class MacroletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			final ListStruct newBodyForms = ListStruct.buildProperList(bodyProcessingResult.getBodyForms());
 			return new EnvironmentListStruct(envList, bodyProcessingResult.getDeclarations(), newBodyForms);
 		} finally {
-			semanticAnalyzer.setBindingsPosition(tempPosition);
+			semanticAnalyzer.setClosureDepth(tempClosureDepth);
+			semanticAnalyzer.setBindingsPosition(tempBindingsPosition);
 			environmentStack.pop();
 		}
 	}

@@ -37,15 +37,16 @@ public class LabelsAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		final Stack<Environment> environmentStack = semanticAnalyzer.getEnvironmentStack();
 		final Environment parentEnvironment = environmentStack.peek();
 
-		final Environment labelsEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.LABELS);
-		labelsEnvironment.setParent(parentEnvironment);
+		final int tempClosureDepth = semanticAnalyzer.getClosureDepth();
+		final int newClosureDepth = tempClosureDepth + 1;
 
+		final Environment labelsEnvironment = EnvironmentAccessor.createNewEnvironment(parentEnvironment, Marker.LABELS, newClosureDepth);
 		environmentStack.push(labelsEnvironment);
 
 		// NOTE: Prior functions that resolve later functions will be handled automatically. Unknown function calls will
 		//       still be stored in the SemanticAnalyzer.undefinedFunctions field.
 
-		final int tempPosition = semanticAnalyzer.getBindingsPosition();
+		final int tempBindingsPosition = semanticAnalyzer.getBindingsPosition();
 		try {
 			final ListStruct labelsFunctions = input.getRest();
 			final List<LispStruct> labelsFunctionsJavaList = labelsFunctions.getAsJavaList();
@@ -118,7 +119,8 @@ public class LabelsAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			final ListStruct newBodyForms = ListStruct.buildProperList(bodyProcessingResult.getBodyForms());
 			return new EnvironmentListStruct(envList, bodyProcessingResult.getDeclarations(), newBodyForms);
 		} finally {
-			semanticAnalyzer.setBindingsPosition(tempPosition);
+			semanticAnalyzer.setClosureDepth(tempClosureDepth);
+			semanticAnalyzer.setBindingsPosition(tempBindingsPosition);
 			environmentStack.pop();
 		}
 	}

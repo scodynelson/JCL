@@ -34,10 +34,11 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		}
 
 		final Stack<Environment> environmentStack = semanticAnalyzer.getEnvironmentStack();
+		final Environment parentEnvironment = environmentStack.peek();
 
 		if (second instanceof SymbolStruct) {
 			final SymbolStruct<?> functionSymbol = (SymbolStruct) second;
-			final Environment fnBinding = EnvironmentAccessor.getBindingEnvironment(environmentStack.peek(), functionSymbol, false);
+			final Environment fnBinding = EnvironmentAccessor.getBindingEnvironment(parentEnvironment, functionSymbol, false);
 
 			if (fnBinding.equals(Environment.NULL)) {
 				SymbolStructAnalyzer.INSTANCE.analyze(functionSymbol, semanticAnalyzer);
@@ -51,20 +52,21 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			}
 		} else {
 			final ListStruct functionList = (ListStruct) second;
-
 			final LispStruct functionListFirst = functionList.getFirst();
 
 			if (functionListFirst.equals(SpecialOperator.LAMBDA)) {
-				final Environment newEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.LAMBDA);
-				final Environment parentEnvironment = environmentStack.peek();
-				EnvironmentAccessor.createParent(newEnvironment, parentEnvironment);
-				environmentStack.push(newEnvironment);
+				final int tempClosureDepth = semanticAnalyzer.getClosureDepth();
+				final int newClosureDepth = tempClosureDepth + 1;
 
-				final int tempPosition = semanticAnalyzer.getBindingsPosition();
+				final Environment lambdaEnvironment = EnvironmentAccessor.createNewEnvironment(parentEnvironment, Marker.LAMBDA, newClosureDepth);
+				environmentStack.push(lambdaEnvironment);
+
+				final int tempBindingsPosition = semanticAnalyzer.getBindingsPosition();
 				try {
 					return LambdaAnalyzer.INSTANCE.analyze(functionList, semanticAnalyzer);
 				} finally {
-					semanticAnalyzer.setBindingsPosition(tempPosition);
+					semanticAnalyzer.setClosureDepth(tempClosureDepth);
+					semanticAnalyzer.setBindingsPosition(tempBindingsPosition);
 					environmentStack.pop();
 				}
 			}

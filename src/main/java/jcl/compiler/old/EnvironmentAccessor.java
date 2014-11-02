@@ -27,8 +27,8 @@ import java.util.List;
 
 public class EnvironmentAccessor {
 
-	public static Environment createNewEnvironment(final Marker marker) {
-		final Environment environment = new Environment(marker, new ArrayList<>(), Environment.NULL, new ArrayList<>(), new SymbolTable(new ArrayList<>()), null);
+	public static Environment createNewEnvironment(final Environment parent, final Marker marker, final int closureDepth) {
+		final Environment environment = new Environment(marker, new ArrayList<>(), Environment.NULL, new ArrayList<>(), new SymbolTable(new ArrayList<>()), new Closure(closureDepth, new ArrayList<>()));
 
 		if ((marker == Marker.LAMBDA) || (marker == Marker.FLET) || (marker == Marker.LABELS)) {
 			environment.getLoadTimeValues().clear();
@@ -37,18 +37,8 @@ public class EnvironmentAccessor {
 		return environment;
 	}
 
-	public static Environment createParent(final Environment currentEnvironment, final Environment parent) {
-		currentEnvironment.setParent(parent);
-		return currentEnvironment;
-	}
-
 	public static Environment createGlobalEnvironment() {
-		final Environment newEnvironment = createNewEnvironment(Marker.LAMBDA);
-		return createParent(newEnvironment, Environment.NULL);
-	}
-
-	public static Environment getParent(final Environment currentEnvironment) {
-		return currentEnvironment.getParent();
+		return createNewEnvironment(Environment.NULL, Marker.LAMBDA, 0);
 	}
 
 	public static Environment createNewLambdaBinding(final Environment currentEnvironment, final SymbolStruct<?> newVariable,
@@ -196,7 +186,7 @@ public class EnvironmentAccessor {
 			return currentEnvironment;
 		}
 
-		return findClosestLambdaOrLetEnv(getParent(currentEnvironment));
+		return findClosestLambdaOrLetEnv(currentEnvironment.getParent());
 	}
 
 	public static Environment addSymbolToTable(final Environment currentEnvironment, final SymbolStruct<?> newSymbol) {
@@ -312,7 +302,9 @@ public class EnvironmentAccessor {
 	/**
 	 * This method takes an environment and looks for the nearest enclosing lambda.
 	 *
-	 * @param environment The environment that is enclosed by a lambda
+	 * @param environment
+	 * 		The environment that is enclosed by a lambda
+	 *
 	 * @return The lambda enclosing the given environment.
 	 */
 	public static Environment getEnclosingLambda(final Environment environment) {
@@ -321,7 +313,7 @@ public class EnvironmentAccessor {
 			return environment;
 		}
 
-		final Environment parent = getParent(environment);
+		final Environment parent = environment.getParent();
 
 		// if the parent is null and there is no enclosing lambda, return NIL
 		if (parent.equals(Environment.NULL)) {
@@ -446,7 +438,7 @@ public class EnvironmentAccessor {
 				break;
 			}
 
-			environmentInner = getParent(environmentInner);
+			environmentInner = environmentInner.getParent();
 			assert !environmentInner.equals(Environment.NULL);
 		}
 

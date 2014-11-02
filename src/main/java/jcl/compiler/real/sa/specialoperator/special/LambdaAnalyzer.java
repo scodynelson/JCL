@@ -43,13 +43,16 @@ public class LambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		final Stack<Environment> environmentStack = semanticAnalyzer.getEnvironmentStack();
 		final Environment parentEnvironment = environmentStack.peek();
 
-		final Environment lambdaEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.LAMBDA);
-		lambdaEnvironment.setParent(parentEnvironment);
+		final int tempClosureDepth = semanticAnalyzer.getClosureDepth();
+		final int newClosureDepth = tempClosureDepth + 1;
 
+		final Environment lambdaEnvironment = EnvironmentAccessor.createNewEnvironment(parentEnvironment, Marker.LAMBDA, newClosureDepth);
 		environmentStack.push(lambdaEnvironment);
 
-		final int tempPosition = semanticAnalyzer.getBindingsPosition();
+		final int tempBindingsPosition = semanticAnalyzer.getBindingsPosition();
 		try {
+			semanticAnalyzer.setClosureDepth(newClosureDepth);
+
 			final ListStruct parameters = (ListStruct) second;
 			final OrdinaryLambdaListBindings parsedLambdaList = LambdaListParser.parseOrdinaryLambdaList(semanticAnalyzer, parameters);
 
@@ -64,7 +67,8 @@ public class LambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			final ListStruct newBodyForms = ListStruct.buildProperList(newStartingLambdaBody);
 			return new LambdaEnvironmentListStruct(envList, bodyProcessingResult.getDeclarations(), newBodyForms, parsedLambdaList, bodyProcessingResult.getDocString());
 		} finally {
-			semanticAnalyzer.setBindingsPosition(tempPosition);
+			semanticAnalyzer.setClosureDepth(tempClosureDepth);
+			semanticAnalyzer.setBindingsPosition(tempBindingsPosition);
 			environmentStack.pop();
 		}
 	}

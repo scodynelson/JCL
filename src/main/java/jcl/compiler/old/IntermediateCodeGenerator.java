@@ -1618,7 +1618,7 @@ public class IntermediateCodeGenerator {
 			// proper slots. Note that init forms are evaluated in the enclosing environment
 			final Environment tmpEnv = bindingEnvironment;
 			// any init forms get evaluated in the parent binding
-			bindingEnvironment = EnvironmentAccessor.getParent(bindingEnvironment);
+			bindingEnvironment = bindingEnvironment.getParent();
 			// now, run the bindings
 			for (final Binding binding : bindingList) {
 				final SymbolStruct<?> sym = binding.getSymbolStruct();

@@ -37,12 +37,13 @@ public class FletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		final Stack<Environment> environmentStack = semanticAnalyzer.getEnvironmentStack();
 		final Environment parentEnvironment = environmentStack.peek();
 
-		final Environment fletEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.FLET);
-		fletEnvironment.setParent(parentEnvironment);
+		final int tempClosureDepth = semanticAnalyzer.getClosureDepth();
+		final int newClosureDepth = tempClosureDepth + 1;
 
+		final Environment fletEnvironment = EnvironmentAccessor.createNewEnvironment(parentEnvironment, Marker.FLET, newClosureDepth);
 		environmentStack.push(fletEnvironment);
 
-		final int tempPosition = semanticAnalyzer.getBindingsPosition();
+		final int tempBindingsPosition = semanticAnalyzer.getBindingsPosition();
 		try {
 			final ListStruct fletFunctions = input.getRest();
 			final List<LispStruct> fletFunctionsJavaList = fletFunctions.getAsJavaList();
@@ -111,7 +112,8 @@ public class FletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			final ListStruct newBodyForms = ListStruct.buildProperList(bodyProcessingResult.getBodyForms());
 			return new EnvironmentListStruct(envList, bodyProcessingResult.getDeclarations(), newBodyForms);
 		} finally {
-			semanticAnalyzer.setBindingsPosition(tempPosition);
+			semanticAnalyzer.setClosureDepth(tempClosureDepth);
+			semanticAnalyzer.setBindingsPosition(tempBindingsPosition);
 			environmentStack.pop();
 		}
 	}

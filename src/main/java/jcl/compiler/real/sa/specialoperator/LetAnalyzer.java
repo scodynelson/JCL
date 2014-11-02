@@ -36,12 +36,13 @@ public class LetAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		final Stack<Environment> environmentStack = semanticAnalyzer.getEnvironmentStack();
 		final Environment parentEnvironment = environmentStack.peek();
 
-		final Environment letEnvironment = EnvironmentAccessor.createNewEnvironment(Marker.LET);
-		letEnvironment.setParent(parentEnvironment);
+		final int tempClosureDepth = semanticAnalyzer.getClosureDepth();
+		final int newClosureDepth = tempClosureDepth + 1;
 
+		final Environment letEnvironment = EnvironmentAccessor.createNewEnvironment(parentEnvironment, Marker.LET, newClosureDepth);
 		environmentStack.push(letEnvironment);
 
-		final int tempPosition = semanticAnalyzer.getBindingsPosition();
+		final int tempBindingsPosition = semanticAnalyzer.getBindingsPosition();
 		try {
 			final ListStruct parameters = (ListStruct) second;
 			final List<LispStruct> parametersJavaList = parameters.getAsJavaList();
@@ -95,7 +96,8 @@ public class LetAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			final ListStruct newBodyForms = ListStruct.buildProperList(bodyProcessingResult.getBodyForms());
 			return new EnvironmentListStruct(envList, bodyProcessingResult.getDeclarations(), newBodyForms);
 		} finally {
-			semanticAnalyzer.setBindingsPosition(tempPosition);
+			semanticAnalyzer.setClosureDepth(tempClosureDepth);
+			semanticAnalyzer.setBindingsPosition(tempBindingsPosition);
 			environmentStack.pop();
 		}
 	}

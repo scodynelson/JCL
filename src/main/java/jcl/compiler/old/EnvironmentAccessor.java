@@ -63,14 +63,6 @@ public class EnvironmentAccessor {
 		return currentEnvironment;
 	}
 
-	public static List<Binding> getBindingSet(final Environment currentEnvironment) {
-		return currentEnvironment.getBindings();
-	}
-
-	public static Closure getClosureSet(final Environment currentEnvironment) {
-		return currentEnvironment.getEnvironmentClosure();
-	}
-
 	public static Binding getBinding(final Environment currentEnvironment, final SymbolStruct<?> variable) {
 		final List<Binding> bindings = currentEnvironment.getBindings();
 

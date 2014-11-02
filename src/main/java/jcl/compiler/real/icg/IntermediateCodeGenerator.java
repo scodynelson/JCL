@@ -1233,7 +1233,7 @@ public class IntermediateCodeGenerator {
 	}
 
 	private void undoClosureSetup(final Environment environment) {
-		final Closure closureSetBody = EnvironmentAccessor.getClosureSet(environment);
+		final Closure closureSetBody = environment.getEnvironmentClosure();
 		final int numParams = closureSetBody.getBindings().size() - 1; // remove :closure and (:depth . n) from contention
 		if (numParams > 0) {
 			// keep a copy of the 'this' reference
@@ -1245,7 +1245,7 @@ public class IntermediateCodeGenerator {
 	}
 
 	private void doClosureSetup(final Environment environment) {
-		final Closure closureSetBody = EnvironmentAccessor.getClosureSet(environment);
+		final Closure closureSetBody = environment.getEnvironmentClosure();
 		final int numParams = closureSetBody.getBindings().size(); // remove :closure and (:depth . n) from contention
 
 		if (numParams > 0) {
@@ -1418,7 +1418,7 @@ public class IntermediateCodeGenerator {
 			interfaces.add("lisp/common/type/MacroFunction");
 			MacroLambda = false;
 		}
-		final List<Binding> bindingSetBody = EnvironmentAccessor.getBindingSet((Environment) list.getFirst());
+		final List<Binding> bindingSetBody = ((Environment) list.getFirst()).getBindings();
 
 		final int numParams = bindingSetBody.size();
 		if (numParams <= 11) {
@@ -1603,7 +1603,7 @@ public class IntermediateCodeGenerator {
 		// are we building a closure here?
 		//----->
 		bindingEnvironment = bindingStack.push((Environment) list.getFirst());
-		final Closure closureSetBody = EnvironmentAccessor.getClosureSet(bindingEnvironment);
+		final Closure closureSetBody = bindingEnvironment.getEnvironmentClosure();
 //        int numParams = closureSetBody.size() - 1;
 
 		try {

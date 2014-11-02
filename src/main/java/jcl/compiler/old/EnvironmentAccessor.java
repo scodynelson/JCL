@@ -28,7 +28,7 @@ import java.util.List;
 public class EnvironmentAccessor {
 
 	public static Environment createNewEnvironment(final Environment parent, final Marker marker, final int closureDepth) {
-		final Environment environment = new Environment(marker, new ArrayList<>(), Environment.NULL, new ArrayList<>(), new SymbolTable(new ArrayList<>()), new Closure(closureDepth, new ArrayList<>()));
+		final Environment environment = new Environment(marker, new ArrayList<>(), parent, new ArrayList<>(), new SymbolTable(new ArrayList<>()), new Closure(closureDepth, new ArrayList<>()));
 
 		if ((marker == Marker.LAMBDA) || (marker == Marker.FLET) || (marker == Marker.LABELS)) {
 			environment.getLoadTimeValues().clear();

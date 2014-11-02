@@ -129,8 +129,8 @@ public class CompileFileFunction {
 			// We have to give it a specific name so it can be loaded by name
 			ListStruct formList = ListStruct.buildProperList(formsToCompile);
 			ListStruct nameDeclSpec = ListStruct.buildProperList(Declaration.JAVA_CLASS_NAME, newJavaClassName);
-			ListStruct fileDeclSpec = ListStruct.buildProperList(Declaration.SOURCE_FILE, new StringStruct(f.getAbsoluteFile().getName()));
-			ListStruct nameDecl = ListStruct.buildProperList(SpecialOperator.DECLARE, nameDeclSpec, fileDeclSpec);
+//			ListStruct fileDeclSpec = ListStruct.buildProperList(Declaration.SOURCE_FILE, new StringStruct(f.getAbsoluteFile().getName()));
+			ListStruct nameDecl = ListStruct.buildProperList(SpecialOperator.DECLARE, nameDeclSpec);
 			formList = new ConsStruct(nameDecl, formList);
 			formList = new ConsStruct(NullStruct.INSTANCE, formList);
 			formList = new ConsStruct(SpecialOperator.LAMBDA, formList);

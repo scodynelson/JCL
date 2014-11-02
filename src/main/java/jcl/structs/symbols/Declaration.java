@@ -27,10 +27,6 @@ public final class Declaration extends SymbolStruct<Declaration> {
 	public static final Declaration JAVA_CLASS_NAME = new Declaration("%JAVA-CLASS-NAME", GlobalPackageStruct.SYSTEM);
 	public static final Declaration LISP_NAME = new Declaration("%LISP-NAME", GlobalPackageStruct.SYSTEM);
 
-	public static final Declaration NO_GENERATE_ANALYZER = new Declaration("%NO-GENERATE-ANALYZER", GlobalPackageStruct.COMPILER);
-	public static final Declaration PARSED_LAMBDA_LIST = new Declaration("%PARSED-LAMBDA-LIST", GlobalPackageStruct.COMPILER);
-	public static final Declaration SOURCE_FILE = new Declaration("%SOURCE_FILE", GlobalPackageStruct.COMPILER);
-
 	private Declaration(final String name, final PackageStruct symbolPackage) {
 		super(name, symbolPackage);
 		init();

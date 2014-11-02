@@ -12,14 +12,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 import java.util.UUID;
 
 public class TagbodyAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 	public static final TagbodyAnalyzer INSTANCE = new TagbodyAnalyzer();
-
-	public static final Stack<Map<LispStruct, SymbolStruct<?>>> TAGBODY_STACK = new Stack<>();
 
 	@Override
 	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
@@ -28,7 +25,7 @@ public class TagbodyAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		final List<LispStruct> bodyJavaList = body.getAsJavaList();
 		final Map<LispStruct, SymbolStruct<?>> currentTagMap = readAllTagbodyTags(bodyJavaList);
 
-		TAGBODY_STACK.push(currentTagMap);
+		semanticAnalyzer.getTagbodyStack().push(currentTagMap);
 
 		try {
 			final List<LispStruct> newBodyJavaList = new ArrayList<>();
@@ -49,7 +46,7 @@ public class TagbodyAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 			return ListStruct.buildProperList(tagbodyResultList);
 		} finally {
-			TAGBODY_STACK.pop();
+			semanticAnalyzer.getTagbodyStack().pop();
 		}
 	}
 

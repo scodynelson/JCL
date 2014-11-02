@@ -28,7 +28,7 @@ public class ReturnFromAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			throw new ProgramErrorException("RETURN-FROM: Label must be of type SymbolStruct. Got: " + second);
 		}
 
-		if (BlockAnalyzer.BLOCK_STACK.search(second) == -1) {
+		if (semanticAnalyzer.getBlockStack().search(second) == -1) {
 			throw new ProgramErrorException("RETURN-FROM: No BLOCK with Label " + second + " is visible.");
 		}
 

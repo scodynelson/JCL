@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import java.math.BigInteger;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
@@ -31,6 +32,9 @@ public class SemanticAnalyzer {
 	private Set<SymbolStruct<?>> undefinedFunctions;
 	private Stack<SymbolStruct<?>> functionNameStack;
 	private int bindingsPosition;
+
+	private final Stack<SymbolStruct<?>> blockStack = new Stack<>();
+	private final Stack<Map<LispStruct, SymbolStruct<?>>> tagbodyStack = new Stack<>();
 
 	// eval-when processing modes
 	private boolean topLevelMode;
@@ -52,29 +56,18 @@ public class SemanticAnalyzer {
 
 		topLevelMode = true;
 
-		BlockAnalyzer.BLOCK_STACK.clear();
-		TagbodyAnalyzer.TAGBODY_STACK.clear();
+		blockStack.clear();
+		tagbodyStack.clear();
 	}
 
 	public LispStruct funcall(final LispStruct form) {
 		initialize();
 
-		LispStruct innerForm = form;
-
-		if (innerForm instanceof ListStruct) {
-			final ListStruct formList = (ListStruct) innerForm;
-			final LispStruct firstOfFormList = formList.getFirst();
-			if (!(firstOfFormList instanceof SymbolStruct) || !firstOfFormList.equals(SpecialOperator.LAMBDA)) {
-				innerForm = ListStruct.buildProperList(SpecialOperator.LAMBDA, NullStruct.INSTANCE, innerForm);
-			}
-		} else {
-			innerForm = ListStruct.buildProperList(SpecialOperator.LAMBDA, NullStruct.INSTANCE, innerForm);
-		}
-
-		innerForm = saMainLoop(innerForm);
+		final LispStruct lambdaForm = wrapFormInLambda(form);
+		final LispStruct analyzedForm = saMainLoop(lambdaForm);
 
 		// now setup the closure depths
-		innerForm = saSetClosureDepth(innerForm, 0);
+		final LispStruct closureFilledForm = saSetClosureDepth(analyzedForm, 0);
 
 		// now see if we have any functions still undefined
 		for (final SymbolStruct<?> undefinedFunction : undefinedFunctions) {
@@ -89,7 +82,7 @@ public class SemanticAnalyzer {
 			}
 		}
 
-		return innerForm;
+		return closureFilledForm;
 	}
 
 	public LispStruct saMainLoop(final LispStruct form) {
@@ -103,6 +96,22 @@ public class SemanticAnalyzer {
 			analyzedForm = ArrayStructAnalyzer.INSTANCE.analyze((ArrayStruct<?>) form, this);
 		}
 		return analyzedForm;
+	}
+
+	private static LispStruct wrapFormInLambda(final LispStruct form) {
+
+		LispStruct lambdaForm = form;
+		if (form instanceof ListStruct) {
+			final ListStruct formList = (ListStruct) form;
+			final LispStruct firstOfFormList = formList.getFirst();
+			if (!(firstOfFormList instanceof SymbolStruct) || !firstOfFormList.equals(SpecialOperator.LAMBDA)) {
+				lambdaForm = ListStruct.buildProperList(SpecialOperator.LAMBDA, NullStruct.INSTANCE, form);
+			}
+		} else {
+			lambdaForm = ListStruct.buildProperList(SpecialOperator.LAMBDA, NullStruct.INSTANCE, form);
+		}
+
+		return lambdaForm;
 	}
 
 	public Stack<Environment> getEnvironmentStack() {
@@ -135,6 +144,14 @@ public class SemanticAnalyzer {
 
 	public void setBindingsPosition(final int bindingsPosition) {
 		this.bindingsPosition = bindingsPosition;
+	}
+
+	public Stack<SymbolStruct<?>> getBlockStack() {
+		return blockStack;
+	}
+
+	public Stack<Map<LispStruct, SymbolStruct<?>>> getTagbodyStack() {
+		return tagbodyStack;
 	}
 
 	public boolean isTopLevelMode() {

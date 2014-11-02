@@ -32,7 +32,7 @@ public class GoAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		SymbolStruct<?> goTagSymbol = null;
 
-		final ListIterator<Map<LispStruct, SymbolStruct<?>>> li1 = TagbodyAnalyzer.TAGBODY_STACK.listIterator(TagbodyAnalyzer.TAGBODY_STACK.size());
+		final ListIterator<Map<LispStruct, SymbolStruct<?>>> li1 = semanticAnalyzer.getTagbodyStack().listIterator(semanticAnalyzer.getTagbodyStack().size());
 
 		while (li1.hasPrevious()) {
 			final Map<LispStruct, SymbolStruct<?>> previousStack = li1.previous();

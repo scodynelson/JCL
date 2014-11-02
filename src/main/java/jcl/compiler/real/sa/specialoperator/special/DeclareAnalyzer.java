@@ -31,13 +31,7 @@ public class DeclareAnalyzer implements Analyzer<LispStruct, LispStruct> {
 				//we don't do anything here yet
 			} else if (declIdentifier.equals(Declaration.JAVA_CLASS_NAME)) {
 				//we don't do anything here yet
-			} else if (declIdentifier.equals(Declaration.NO_GENERATE_ANALYZER)) {
-				//we don't do anything here yet
-			} else if (declIdentifier.equals(Declaration.PARSED_LAMBDA_LIST)) {
-				//we don't do anything here yet
 			} else if (declIdentifier.equals(Declaration.DOCUMENTATION)) {
-				//we don't do anything here yet
-			} else if (declIdentifier.equals(Declaration.SOURCE_FILE)) {
 				//we don't do anything here yet
 			} else if (declIdentifier.equals(Declaration.DECLARATION)) {
 				//we don't do anything here yet

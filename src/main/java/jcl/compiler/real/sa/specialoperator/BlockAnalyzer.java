@@ -16,8 +16,6 @@ public class BlockAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 	public static final BlockAnalyzer INSTANCE = new BlockAnalyzer();
 
-	public static final Stack<SymbolStruct<?>> BLOCK_STACK = new Stack<>();
-
 	@Override
 	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
 
@@ -31,7 +29,7 @@ public class BlockAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		}
 
 		final SymbolStruct<?> label = (SymbolStruct) second;
-		BLOCK_STACK.push(label);
+		semanticAnalyzer.getBlockStack().push(label);
 
 		try {
 			final List<LispStruct> blockResultList = new ArrayList<>();
@@ -44,7 +42,7 @@ public class BlockAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 			return ListStruct.buildProperList(blockResultList);
 		} finally {
-			BLOCK_STACK.pop();
+			semanticAnalyzer.getBlockStack().pop();
 		}
 	}
 }

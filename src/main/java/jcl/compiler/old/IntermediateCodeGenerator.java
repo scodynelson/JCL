@@ -1408,9 +1408,6 @@ public class IntermediateCodeGenerator {
 		final SymbolStruct<?> lispName = (SymbolStruct) getCadr(lispSymbolName);
 		//
 		final ListStruct documentation = AssocFunction.funcall(Declaration.DOCUMENTATION, decl);
-		if ((sourceFile == null) || sourceFile.equals(NullStruct.INSTANCE)) {
-			sourceFile = AssocFunction.funcall(Declaration.SOURCE_FILE, decl);
-		}
 
 		// compile the new function class
 		final Vector<String> interfaces = new Vector<>();

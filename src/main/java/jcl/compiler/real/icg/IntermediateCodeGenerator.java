@@ -15,6 +15,7 @@ import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.environment.SymbolBinding;
 import jcl.compiler.real.environment.SymbolTable;
 import jcl.compiler.real.environment.lambdalist.RequiredBinding;
+import jcl.compiler.real.icg.specialoperator.special.LambdaCodeGenerator;
 import jcl.compiler.real.icg.specialoperator.TagbodyCodeGenerator;
 import jcl.structs.characters.CharacterStruct;
 import jcl.structs.lists.ListStruct;
@@ -52,7 +53,7 @@ public class IntermediateCodeGenerator {
 	// bindingEnvironment is set to the new environment. When that binding is no
 	// longer in force, the stack is popped and the value of bindingEnvironment is
 	// set to the new top of stack
-	Stack<Environment> bindingStack;
+	public Stack<Environment> bindingStack;
 	// make a stack of current class names
 	public Stack<String> classNames;
 	public Emitter emitter;

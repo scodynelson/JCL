@@ -1,4 +1,4 @@
-package jcl.compiler.real.icg.specialoperator;
+package jcl.compiler.real.icg.specialoperator.compiler;
 
 import jcl.compiler.real.icg.FunctionCallCodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;

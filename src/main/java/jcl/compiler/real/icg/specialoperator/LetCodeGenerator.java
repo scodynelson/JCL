@@ -1,4 +1,4 @@
-package jcl.compiler.real.icg;
+package jcl.compiler.real.icg.specialoperator;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Binding;
@@ -7,6 +7,7 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.LetBinding;
 import jcl.compiler.real.environment.PositionAllocation;
 import jcl.compiler.real.environment.Scope;
+import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.lists.NullStruct;
 import jcl.structs.symbols.SpecialOperator;

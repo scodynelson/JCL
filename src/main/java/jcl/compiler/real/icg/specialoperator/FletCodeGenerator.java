@@ -1,5 +1,6 @@
-package jcl.compiler.real.icg;
+package jcl.compiler.real.icg.specialoperator;
 
+import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.specialoperator.PrognCodeGenerator;
 import jcl.structs.lists.ListStruct;
 

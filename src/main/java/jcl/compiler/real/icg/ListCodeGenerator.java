@@ -1,7 +1,12 @@
 package jcl.compiler.real.icg;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.specialoperator.SpecialFormCodeGenerator;
+import jcl.compiler.real.icg.specialoperator.FletCodeGenerator;
+import jcl.compiler.real.icg.specialoperator.LabelsCodeGenerator;
+import jcl.compiler.real.icg.specialoperator.special.LambdaCodeGenerator;
+import jcl.compiler.real.icg.specialoperator.LetCodeGenerator;
+import jcl.compiler.real.icg.specialoperator.special.MacroLambdaCodeGenerator;
+import jcl.compiler.real.icg.specialoperator.MacroletCodeGenerator;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.packages.GlobalPackageStruct;
 import jcl.structs.symbols.Declaration;

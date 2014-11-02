@@ -1,4 +1,4 @@
-package jcl.compiler.real.icg.specialoperator;
+package jcl.compiler.real.icg.specialoperator.compiler;
 
 import jcl.LispStruct;
 import jcl.compiler.old.functions.CompileFunction;

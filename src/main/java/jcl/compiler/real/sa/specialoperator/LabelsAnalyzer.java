@@ -97,7 +97,7 @@ public class LabelsAnalyzer implements Analyzer<LispStruct, ListStruct> {
 				final LispStruct paramValueInitForm;
 				try {
 					functionNameStack.push(functionName);
-					paramValueInitForm = semanticAnalyzer.saMainLoop(innerFunctionListStruct);
+					paramValueInitForm = semanticAnalyzer.analyzeForm(innerFunctionListStruct);
 				} finally {
 					functionNameStack.pop();
 				}

@@ -5,8 +5,6 @@ import jcl.compiler.old.EnvironmentAccessor;
 import jcl.compiler.old.functions.AssocFunction;
 import jcl.compiler.old.symbol.KeywordOld;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.sa.specialoperator.BlockAnalyzer;
-import jcl.compiler.real.sa.specialoperator.TagbodyAnalyzer;
 import jcl.structs.arrays.ArrayStruct;
 import jcl.structs.lists.ConsStruct;
 import jcl.structs.lists.ListStruct;
@@ -29,12 +27,13 @@ public class SemanticAnalyzer {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SemanticAnalyzer.class);
 
 	private Stack<Environment> environmentStack;
-	private Set<SymbolStruct<?>> undefinedFunctions;
 	private Stack<SymbolStruct<?>> functionNameStack;
+
+	private Set<SymbolStruct<?>> undefinedFunctions;
 	private int bindingsPosition;
 
-	private final Stack<SymbolStruct<?>> blockStack = new Stack<>();
-	private final Stack<Map<LispStruct, SymbolStruct<?>>> tagbodyStack = new Stack<>();
+	private Stack<SymbolStruct<?>> blockStack;
+	private Stack<Map<LispStruct, SymbolStruct<?>>> tagbodyStack;
 
 	// eval-when processing modes
 	private boolean topLevelMode;
@@ -54,17 +53,17 @@ public class SemanticAnalyzer {
 		undefinedFunctions = Collections.synchronizedSet(new HashSet<>());
 		bindingsPosition = 0;
 
-		topLevelMode = true;
+		blockStack = new Stack<>();
+		tagbodyStack = new Stack<>();
 
-		blockStack.clear();
-		tagbodyStack.clear();
+		topLevelMode = true;
 	}
 
-	public LispStruct funcall(final LispStruct form) {
+	public LispStruct analyze(final LispStruct form) {
 		initialize();
 
 		final LispStruct lambdaForm = wrapFormInLambda(form);
-		final LispStruct analyzedForm = saMainLoop(lambdaForm);
+		final LispStruct analyzedForm = analyzeForm(lambdaForm);
 
 		// now setup the closure depths
 		final LispStruct closureFilledForm = saSetClosureDepth(analyzedForm, 0);
@@ -84,8 +83,8 @@ public class SemanticAnalyzer {
 
 		return closureFilledForm;
 	}
-
-	public LispStruct saMainLoop(final LispStruct form) {
+Upda
+	public LispStruct analyzeForm(final LispStruct form) {
 
 		LispStruct analyzedForm = form;
 		if (form instanceof ListStruct) {

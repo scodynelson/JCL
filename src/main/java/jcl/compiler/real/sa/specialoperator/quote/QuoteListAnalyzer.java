@@ -27,7 +27,7 @@ public class QuoteListAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
 		final List<LispStruct> formJavaList = input.getAsJavaList();
 		for (final LispStruct currentForm : formJavaList) {
-			final LispStruct transformedForm = semanticAnalyzer.saMainLoop(currentForm);
+			final LispStruct transformedForm = semanticAnalyzer.analyzeForm(currentForm);
 			transformedForms.add(transformedForm);
 		}
 

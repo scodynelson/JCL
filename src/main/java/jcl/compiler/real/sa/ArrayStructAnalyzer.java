@@ -18,7 +18,7 @@ public class ArrayStructAnalyzer implements Analyzer<LispStruct, ArrayStruct<? e
 
 		for (int i = 0; i < inputContents.size(); i++) {
 			final LispStruct currentElement = inputContents.get(i);
-			final LispStruct analyzedElement = semanticAnalyzer.saMainLoop(currentElement);
+			final LispStruct analyzedElement = semanticAnalyzer.analyzeForm(currentElement);
 			inputContents.set(i, analyzedElement);
 		}
 

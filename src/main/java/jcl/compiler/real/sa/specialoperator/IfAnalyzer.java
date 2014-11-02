@@ -25,15 +25,15 @@ public class IfAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		ifResultList.add(SpecialOperator.IF);
 
 		final LispStruct second = input.getRest().getFirst();
-		final LispStruct secondAnalyzed = semanticAnalyzer.saMainLoop(second);
+		final LispStruct secondAnalyzed = semanticAnalyzer.analyzeForm(second);
 		ifResultList.add(secondAnalyzed);
 
 		final LispStruct third = input.getRest().getRest().getFirst();
-		final LispStruct thirdAnalyzed = semanticAnalyzer.saMainLoop(third);
+		final LispStruct thirdAnalyzed = semanticAnalyzer.analyzeForm(third);
 		ifResultList.add(thirdAnalyzed);
 
 		final LispStruct fourth = input.getRest().getRest().getRest().getFirst();
-		final LispStruct fourthAnalyzed = semanticAnalyzer.saMainLoop(fourth);
+		final LispStruct fourthAnalyzed = semanticAnalyzer.analyzeForm(fourth);
 		ifResultList.add(fourthAnalyzed);
 
 		return ListStruct.buildProperList(ifResultList);

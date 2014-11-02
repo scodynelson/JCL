@@ -33,13 +33,13 @@ public class ProgvAnalyzer implements Analyzer<LispStruct, ListStruct> {
 				throw new ProgramErrorException("PROGV: Element in symbols list must be of type SymbolStruct. Got: " + currentSecondElement);
 			}
 		}
-		final LispStruct secondAnalyzed = semanticAnalyzer.saMainLoop(second);
+		final LispStruct secondAnalyzed = semanticAnalyzer.analyzeForm(second);
 
 		final LispStruct third = input.getRest().getRest().getFirst();
 		if (!(third instanceof ListStruct)) {
 			throw new ProgramErrorException("PROGV: Values list must be of type ListStruct. Got: " + third);
 		}
-		final LispStruct thirdAnalyzed = semanticAnalyzer.saMainLoop(third);
+		final LispStruct thirdAnalyzed = semanticAnalyzer.analyzeForm(third);
 
 		final List<LispStruct> progvResultList = new ArrayList<>();
 		progvResultList.add(SpecialOperator.PROGV);

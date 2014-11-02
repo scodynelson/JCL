@@ -136,7 +136,7 @@ public final class ReadEvalPrint {
 						LispStruct whatAnalyzed = null;
 						try {
 							final SemanticAnalyzer sa = new SemanticAnalyzer();
-							whatAnalyzed = sa.funcall(whatRead);
+							whatAnalyzed = sa.analyze(whatRead);
 
 							if (whatAnalyzed != null) {
 								LOGGER.debug("ANALYZED:\n");

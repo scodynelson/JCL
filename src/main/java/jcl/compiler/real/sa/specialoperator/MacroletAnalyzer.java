@@ -97,7 +97,7 @@ public class MacroletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 				final LispStruct paramValueInitForm;
 				try {
 					functionNameStack.push(macroName);
-					paramValueInitForm = semanticAnalyzer.saMainLoop(innerFunctionListStruct);
+					paramValueInitForm = semanticAnalyzer.analyzeForm(innerFunctionListStruct);
 				} finally {
 					functionNameStack.pop();
 				}

@@ -168,7 +168,7 @@ public class LambdaListParser {
 
 				// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
 				final Environment currentEnvironment = environmentStack.pop();
-				final LispStruct parameterValueInitForm = semanticAnalyzer.saMainLoop(initForm);
+				final LispStruct parameterValueInitForm = semanticAnalyzer.analyzeForm(initForm);
 				environmentStack.push(currentEnvironment);
 
 				int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
@@ -290,7 +290,7 @@ public class LambdaListParser {
 
 				// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
 				final Environment currentEnvironment = environmentStack.pop();
-				final LispStruct parameterValueInitForm = semanticAnalyzer.saMainLoop(initForm);
+				final LispStruct parameterValueInitForm = semanticAnalyzer.analyzeForm(initForm);
 				environmentStack.push(currentEnvironment);
 
 				int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
@@ -373,7 +373,7 @@ public class LambdaListParser {
 
 				// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
 				final Environment currentEnvironment = environmentStack.pop();
-				final LispStruct parameterValueInitForm = semanticAnalyzer.saMainLoop(initForm);
+				final LispStruct parameterValueInitForm = semanticAnalyzer.analyzeForm(initForm);
 				environmentStack.push(currentEnvironment);
 
 				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);

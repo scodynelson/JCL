@@ -90,7 +90,7 @@ public class FletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 				final LispStruct paramValueInitForm;
 				try {
-					paramValueInitForm = semanticAnalyzer.saMainLoop(innerFunctionListStruct);
+					paramValueInitForm = semanticAnalyzer.analyzeForm(innerFunctionListStruct);
 				} finally {
 					environmentStack.push(currentEnvironment);
 				}

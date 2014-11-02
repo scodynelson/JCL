@@ -35,7 +35,7 @@ public class TagbodyAnalyzer implements Analyzer<LispStruct, ListStruct> {
 					final SymbolStruct<?> realTagSymbol = currentTagMap.get(currentBodyElement);
 					newBodyJavaList.add(realTagSymbol);
 				} else {
-					final LispStruct analyzedElement = semanticAnalyzer.saMainLoop(currentBodyElement);
+					final LispStruct analyzedElement = semanticAnalyzer.analyzeForm(currentBodyElement);
 					newBodyJavaList.add(analyzedElement);
 				}
 			}

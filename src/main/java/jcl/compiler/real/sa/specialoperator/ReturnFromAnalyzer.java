@@ -38,7 +38,7 @@ public class ReturnFromAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		final LispStruct third = input.getRest().getRest().getFirst();
 		if (!third.equals(NullStruct.INSTANCE)) {
-			final LispStruct returnFromResult = semanticAnalyzer.saMainLoop(third);
+			final LispStruct returnFromResult = semanticAnalyzer.analyzeForm(third);
 			returnFromResultList.add(returnFromResult);
 		}
 

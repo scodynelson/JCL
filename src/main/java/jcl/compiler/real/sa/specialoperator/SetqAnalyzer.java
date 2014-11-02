@@ -34,11 +34,11 @@ public class SetqAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			if (!(varName instanceof SymbolStruct)) {
 				throw new ProgramErrorException("SETQ: Variable name must be of type SymbolStruct. Got: " + varName);
 			}
-			final LispStruct varNameAnalyzed = semanticAnalyzer.saMainLoop(varName);
+			final LispStruct varNameAnalyzed = semanticAnalyzer.analyzeForm(varName);
 			setqResultList.add(varNameAnalyzed);
 
 			final LispStruct varValue = formsJavaList.get(i + 1);
-			final LispStruct varValueAnalyzed = semanticAnalyzer.saMainLoop(varValue);
+			final LispStruct varValueAnalyzed = semanticAnalyzer.analyzeForm(varValue);
 			setqResultList.add(varValueAnalyzed);
 		}
 

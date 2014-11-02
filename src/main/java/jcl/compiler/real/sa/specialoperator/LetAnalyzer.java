@@ -64,7 +64,7 @@ public class LetAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 					final LispStruct parameterValueInitForm;
 					try {
-						parameterValueInitForm = semanticAnalyzer.saMainLoop(parameterValue);
+						parameterValueInitForm = semanticAnalyzer.analyzeForm(parameterValue);
 					} finally {
 						environmentStack.push(currentEnvironment);
 					}

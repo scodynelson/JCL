@@ -44,7 +44,7 @@ public final class BodyProcessingUtil {
 		final List<LispStruct> bodyForms = new ArrayList<>(bodyJavaList.size());
 
 		for (final LispStruct next : bodyJavaList) {
-			final LispStruct analyzedForm = semanticAnalyzer.saMainLoop(next);
+			final LispStruct analyzedForm = semanticAnalyzer.analyzeForm(next);
 			bodyForms.add(analyzedForm);
 		}
 
@@ -68,7 +68,7 @@ public final class BodyProcessingUtil {
 			}
 
 			while (iterator.hasNext()) {
-				final LispStruct analyzedForm = semanticAnalyzer.saMainLoop(next);
+				final LispStruct analyzedForm = semanticAnalyzer.analyzeForm(next);
 				bodyForms.add(analyzedForm);
 				next = iterator.next();
 			}
@@ -100,13 +100,13 @@ public final class BodyProcessingUtil {
 			}
 
 			while (iterator.hasNext()) {
-				final LispStruct analyzedForm = semanticAnalyzer.saMainLoop(next);
+				final LispStruct analyzedForm = semanticAnalyzer.analyzeForm(next);
 				bodyForms.add(analyzedForm);
 				next = iterator.next();
 			}
 
 			// Make sure to analyze and add the last form!!
-			final LispStruct analyzedForm = semanticAnalyzer.saMainLoop(next);
+			final LispStruct analyzedForm = semanticAnalyzer.analyzeForm(next);
 			bodyForms.add(analyzedForm);
 		}
 

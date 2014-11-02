@@ -2,8 +2,6 @@ package jcl.compiler.real.sa;
 
 import jcl.LispStruct;
 import jcl.compiler.old.EnvironmentAccessor;
-import jcl.compiler.old.functions.MacroExpandFunction;
-import jcl.compiler.old.functions.MacroExpandReturn;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.lambdalist.OptionalBinding;
@@ -60,7 +58,7 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 					throw new ProgramErrorException("SA LIST: First element of expanded form must be of type SymbolStruct or ListStruct. Got: " + expandedFormListFirst);
 				}
 			} else {
-				return semanticAnalyzer.saMainLoop(expandedForm);
+				return semanticAnalyzer.analyzeForm(expandedForm);
 			}
 		} else if (first instanceof ListStruct) {
 			// ex ((lambda (x) (+ x 1)) 3)
@@ -91,7 +89,7 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		validateFunctionArguments("Anonymous Lambda", lambdaListBindings, functionArgumentsList);
 
 		for (final LispStruct currentArgument : functionArgumentsList) {
-			final LispStruct analyzedArgument = semanticAnalyzer.saMainLoop(currentArgument);
+			final LispStruct analyzedArgument = semanticAnalyzer.analyzeForm(currentArgument);
 			analyzedFunctionList.add(analyzedArgument);
 		}
 
@@ -136,7 +134,7 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		}
 
 		for (final LispStruct currentArgument : functionArgumentsList) {
-			final LispStruct analyzedArgument = semanticAnalyzer.saMainLoop(currentArgument);
+			final LispStruct analyzedArgument = semanticAnalyzer.analyzeForm(currentArgument);
 			analyzedFunctionList.add(analyzedArgument);
 		}
 

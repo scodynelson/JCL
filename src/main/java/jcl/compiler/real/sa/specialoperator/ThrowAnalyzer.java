@@ -25,11 +25,11 @@ public class ThrowAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		throwResultList.add(SpecialOperator.THROW);
 
 		final LispStruct second = input.getRest().getFirst();
-		final LispStruct secondAnalyzed = semanticAnalyzer.saMainLoop(second);
+		final LispStruct secondAnalyzed = semanticAnalyzer.analyzeForm(second);
 		throwResultList.add(secondAnalyzed);
 
 		final LispStruct third = input.getRest().getRest().getFirst();
-		final LispStruct thirdAnalyzed = semanticAnalyzer.saMainLoop(third);
+		final LispStruct thirdAnalyzed = semanticAnalyzer.analyzeForm(third);
 		throwResultList.add(thirdAnalyzed);
 
 		return ListStruct.buildProperList(throwResultList);

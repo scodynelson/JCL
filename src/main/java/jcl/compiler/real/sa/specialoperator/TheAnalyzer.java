@@ -28,7 +28,7 @@ public class TheAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		}
 
 		final LispStruct third = input.getRest().getRest().getFirst();
-		final LispStruct thirdAnalyzed = semanticAnalyzer.saMainLoop(third);
+		final LispStruct thirdAnalyzed = semanticAnalyzer.analyzeForm(third);
 
 		final List<LispStruct> theResultList = new ArrayList<>();
 		theResultList.add(SpecialOperator.THE);

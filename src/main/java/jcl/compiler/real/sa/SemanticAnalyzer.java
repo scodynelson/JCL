@@ -26,14 +26,14 @@ public class SemanticAnalyzer {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SemanticAnalyzer.class);
 
-	private Stack<Environment> environmentStack;
-	private Stack<SymbolStruct<?>> functionNameStack;
+	private final Stack<Environment> environmentStack = new Stack<>();
+	private final Stack<SymbolStruct<?>> functionNameStack = new Stack<>();
 
-	private Set<SymbolStruct<?>> undefinedFunctions;
+	private final Set<SymbolStruct<?>> undefinedFunctions = Collections.synchronizedSet(new HashSet<>());
 	private int bindingsPosition;
 
-	private Stack<SymbolStruct<?>> blockStack;
-	private Stack<Map<LispStruct, SymbolStruct<?>>> tagbodyStack;
+	private final Stack<SymbolStruct<?>> blockStack = new Stack<>();
+	private final Stack<Map<LispStruct, SymbolStruct<?>>> tagbodyStack = new Stack<>();
 
 	// eval-when processing modes
 	private boolean topLevelMode;
@@ -44,17 +44,17 @@ public class SemanticAnalyzer {
 
 	private void initialize() {
 		//create the global environment
-		environmentStack = new Stack<>();
+		environmentStack.clear();
 		environmentStack.push(EnvironmentAccessor.createGlobalEnvironment());
 
-		functionNameStack = new Stack<>();
+		functionNameStack.clear();
 		functionNameStack.push(null);
 
-		undefinedFunctions = Collections.synchronizedSet(new HashSet<>());
+		undefinedFunctions.clear();
 		bindingsPosition = 0;
 
-		blockStack = new Stack<>();
-		tagbodyStack = new Stack<>();
+		blockStack.clear();
+		tagbodyStack.clear();
 
 		topLevelMode = true;
 	}
@@ -117,24 +117,12 @@ public class SemanticAnalyzer {
 		return environmentStack;
 	}
 
-	public void setEnvironmentStack(final Stack<Environment> environmentStack) {
-		this.environmentStack = environmentStack;
-	}
-
 	public Set<SymbolStruct<?>> getUndefinedFunctions() {
 		return undefinedFunctions;
 	}
 
-	public void setUndefinedFunctions(final Set<SymbolStruct<?>> undefinedFunctions) {
-		this.undefinedFunctions = undefinedFunctions;
-	}
-
 	public Stack<SymbolStruct<?>> getFunctionNameStack() {
 		return functionNameStack;
-	}
-
-	public void setFunctionNameStack(final Stack<SymbolStruct<?>> functionNameStack) {
-		this.functionNameStack = functionNameStack;
 	}
 
 	public int getBindingsPosition() {

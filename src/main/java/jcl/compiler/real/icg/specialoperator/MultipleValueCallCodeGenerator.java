@@ -1,12 +1,13 @@
 package jcl.compiler.real.icg.specialoperator;
 
-import jcl.compiler.old.functions.GensymFunction;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.lists.NullStruct;
 import jcl.structs.symbols.SymbolStruct;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
+
+import java.util.UUID;
 
 public class MultipleValueCallCodeGenerator {
 
@@ -24,7 +25,7 @@ public class MultipleValueCallCodeGenerator {
 		// objects or arrays of objects. Have to check at runtime
 		final boolean firstPass = true;
 		// make a private field to hold the resulting list
-		final SymbolStruct<?> mvcFieldName = (SymbolStruct) GensymFunction.funcall("MVC_Field_" + System.currentTimeMillis());
+		final SymbolStruct<?> mvcFieldName = new SymbolStruct<>("MVC_Field_" + UUID.randomUUID());
 		icg.emitter.newField(Opcodes.ACC_PRIVATE, mvcFieldName.toString(), "Llisp/common/type/ListStruct;", null, null);
 		// initialize it to NIL
 		icg.emitter.emitAload(0);

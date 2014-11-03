@@ -1,7 +1,6 @@
 package jcl.compiler.old.expander;
 
 import jcl.LispStruct;
-import jcl.compiler.old.functions.AppendFunction;
 import jcl.structs.lists.ConsStruct;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.lists.NullStruct;
@@ -9,6 +8,8 @@ import jcl.structs.packages.GlobalPackageStruct;
 import jcl.structs.symbols.Declaration;
 import jcl.structs.symbols.SpecialOperator;
 import jcl.structs.symbols.SymbolStruct;
+
+import java.util.List;
 
 /**
  * DefunExpander takes two arguments.  The first is the list containing the Defun symbol,
@@ -69,7 +70,9 @@ public class DefunExpander implements MacroFunctionExpander {
 		result = new ConsStruct(result, NullStruct.INSTANCE);
 		result = new ConsStruct(nameDeclaration, result);
 		if (declsAndDoc != NullStruct.INSTANCE) {
-			result = (ListStruct) AppendFunction.funcall(declsAndDoc, result);
+			final List<LispStruct> declsAndDocJavaList = declsAndDoc.getAsJavaList();
+			declsAndDocJavaList.add(result);
+			result = ListStruct.buildProperList(declsAndDocJavaList);
 		}
 		result = new ConsStruct(parameterList, result);
 		result = setTypeSymbol(result);

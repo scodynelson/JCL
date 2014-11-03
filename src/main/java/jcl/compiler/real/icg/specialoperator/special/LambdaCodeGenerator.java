@@ -1,8 +1,6 @@
 package jcl.compiler.real.icg.specialoperator.special;
 
 import jcl.LispStruct;
-import jcl.compiler.old.functions.AssocFunction;
-import jcl.compiler.old.functions.GensymFunction;
 import jcl.compiler.real.environment.Binding;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
@@ -14,6 +12,7 @@ import org.objectweb.asm.Opcodes;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.Vector;
 
 public class LambdaCodeGenerator {
@@ -32,18 +31,36 @@ public class LambdaCodeGenerator {
 		// (declare (mumble...) (more-mumble...))
 		decl = decl.getRest();
 		// ((mumble...) (more-mumble...))
-		final ListStruct javaSymbolName = AssocFunction.funcall(Declaration.JAVA_CLASS_NAME, decl);
+
+		ListStruct javaSymbolName = NullStruct.INSTANCE;
+		ListStruct lispSymbolName = NullStruct.INSTANCE;
+		ListStruct documentation = NullStruct.INSTANCE;
+
+		final List<LispStruct> declJavaList = decl.getAsJavaList();
+		for (final LispStruct lispStruct : declJavaList) {
+			final ListStruct element = (ListStruct) lispStruct;
+
+			final LispStruct first = element.getFirst();
+			if (Declaration.JAVA_CLASS_NAME.equals(first)) {
+				javaSymbolName = element;
+			}
+			if (Declaration.LISP_NAME.equals(first)) {
+				lispSymbolName = element;
+			}
+			if (Declaration.DOCUMENTATION.equals(first)) {
+				documentation = element;
+			}
+		}
+
 		final String className = javaSymbolName.getRest().getFirst().toString().replace('.', '/');
 		icg.classNames.push(className);
 
 		// now lispify it
-		ListStruct lispSymbolName = AssocFunction.funcall(Declaration.LISP_NAME, decl);
 		if (lispSymbolName.equals(NullStruct.INSTANCE)) {
 			lispSymbolName = javaSymbolName;
 		}
 		final SymbolStruct<?> lispName = (SymbolStruct) lispSymbolName.getRest().getFirst();
 		//
-		final ListStruct documentation = AssocFunction.funcall(Declaration.DOCUMENTATION, decl);
 
 		// compile the new function class
 		final Vector<String> interfaces = new Vector<>();
@@ -66,7 +83,7 @@ public class LambdaCodeGenerator {
 				"lisp/common/function/FunctionBaseClass",
 				interfaces.toArray(new String[1]));
 
-		final SymbolStruct<?> docUID = (SymbolStruct) GensymFunction.funcall("docUID_" + System.currentTimeMillis());
+		final SymbolStruct<?> docUID = new SymbolStruct<>("docUID_" + UUID.randomUUID());
 
 		// if this is from a compile-file, add the source file name
 		final String fileName = icg.sourceFile.getRest().getFirst().toString();

@@ -6,7 +6,6 @@ import jcl.structs.lists.ListStruct;
 
 public class ThrowCodeGenerator implements CodeGenerator<ListStruct> {
 
-
 	public static final ThrowCodeGenerator INSTANCE = new ThrowCodeGenerator();
 
 	@Override

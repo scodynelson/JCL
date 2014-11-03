@@ -206,7 +206,7 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 	}
 
 	// Making FooStructImpl$Factory
-	public static void icgCreateDefstructImplFactory(final IntermediateCodeGenerator icg, final String name, final int length) {
+	private static void icgCreateDefstructImplFactory(final IntermediateCodeGenerator icg, final String name, final int length) {
 		final String implName = name + "Impl";
 		final String implFactoryName = name + "Impl$Factory";
 		icg.emitter.newClass(Opcodes.ACC_PUBLIC, implFactoryName, null, "java/lang/Object", new String[]{"lisp/extensions/type/StructureClassFactory"});

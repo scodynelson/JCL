@@ -1,11 +1,15 @@
 package jcl.compiler.real.icg.specialoperator;
 
+import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.structs.lists.ListStruct;
 
-public class EvalWhenCodeGenerator {
+public class EvalWhenCodeGenerator implements CodeGenerator<ListStruct> {
 
-	public static void genCodeEvalWhen(final IntermediateCodeGenerator icg, final ListStruct list) {
+	public static final EvalWhenCodeGenerator INSTANCE = new EvalWhenCodeGenerator();
+
+	@Override
+	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator) {
 		//TODO unimplemented 'eval-when'
 	}
 }

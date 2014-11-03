@@ -1,31 +1,36 @@
 package jcl.compiler.real.icg.specialoperator;
 
+import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.structs.lists.ListStruct;
 
-public class ThrowCodeGenerator {
+public class ThrowCodeGenerator implements CodeGenerator<ListStruct> {
 
-	public static void genCodeThrow(final IntermediateCodeGenerator icg, ListStruct list) {
+
+	public static final ThrowCodeGenerator INSTANCE = new ThrowCodeGenerator();
+
+	@Override
+	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator) {
 
 		// Remove the special symbol (THROW) from the list
-		list = list.getRest();
+		ListStruct restOfList = input.getRest();
 
 		//Get the catch tag and store for later evaluation
-		final Object catchTag = list.getFirst();         //The catch tag value that must be evaluated
-		list = list.getRest();
+		final Object catchTag = restOfList.getFirst();         //The catch tag value that must be evaluated
+		restOfList = restOfList.getRest();
 
 
-		icg.emitter.emitNew("lisp/system/compiler/exceptions/ThrowException");
+		codeGenerator.emitter.emitNew("lisp/system/compiler/exceptions/ThrowException");
 		// +1 -> exception
-		icg.emitter.emitDup();
+		codeGenerator.emitter.emitDup();
 		// +2 -> exception, exception
 
 		//Run the catch tag through the compiler for eval with the intent that the result
 		//will be on the stack ready to be a parameter to the following method invokation
-		icg.icgMainLoop(catchTag);
+		codeGenerator.icgMainLoop(catchTag);
 		// +3 -> exception, exception, name
-		icg.icgMainLoop(list.getFirst());
-		icg.emitter.emitInvokespecial("lisp/system/compiler/exceptions/ThrowException", "<init>", "(Ljava/lang/Object;Ljava/lang/Object;)", "V", false);
-		icg.emitter.emitAthrow();
+		codeGenerator.icgMainLoop(restOfList.getFirst());
+		codeGenerator.emitter.emitInvokespecial("lisp/system/compiler/exceptions/ThrowException", "<init>", "(Ljava/lang/Object;Ljava/lang/Object;)", "V", false);
+		codeGenerator.emitter.emitAthrow();
 	}
 }

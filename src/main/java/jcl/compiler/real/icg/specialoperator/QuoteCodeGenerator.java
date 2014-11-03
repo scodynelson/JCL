@@ -1,5 +1,6 @@
 package jcl.compiler.real.icg.specialoperator;
 
+import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.ComplexCodeGenerator;
 import jcl.compiler.real.icg.FloatCodeGenerator;
 import jcl.compiler.real.icg.IntegerCodeGenerator;
@@ -12,30 +13,34 @@ import jcl.structs.numbers.IntegerStruct;
 import jcl.structs.numbers.RatioStruct;
 import jcl.structs.symbols.SymbolStruct;
 
-public class QuoteCodeGenerator {
+public class QuoteCodeGenerator implements CodeGenerator<ListStruct> {
 
 	// this method can ONLY handle simple constants such as numbers, strings,
 	// and literal symbols
-	public static void genCodeQuote(final IntermediateCodeGenerator icg, final ListStruct list) {
-		final Object quotedObj = list.getRest().getFirst();
+
+	public static final QuoteCodeGenerator INSTANCE = new QuoteCodeGenerator();
+
+	@Override
+	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator) {
+		final Object quotedObj = input.getRest().getFirst();
 		if (quotedObj instanceof SymbolStruct) {
 			final SymbolStruct<?> sym = (SymbolStruct) quotedObj;
 			//TODO work out a way to handle uninterned symbols that have been encountered already
 			// need symbol package lookup here!
 			if (sym.getSymbolPackage() == null) {
-				icg.emitter.emitLdc(sym.getName());
-				icg.emitter.emitInvokestatic("lisp/common/type/Symbol$Factory", "newInstance", "(Ljava/lang/String;)", "Llisp/common/type/Symbol;", false);
+				codeGenerator.emitter.emitLdc(sym.getName());
+				codeGenerator.emitter.emitInvokestatic("lisp/common/type/Symbol$Factory", "newInstance", "(Ljava/lang/String;)", "Llisp/common/type/Symbol;", false);
 			} else {
-				icg.genCodeSpecialVariable(sym);
+				codeGenerator.genCodeSpecialVariable(sym);
 			}
 		} else if (quotedObj instanceof IntegerStruct) {
-			IntegerCodeGenerator.genCodeInteger(icg, (IntegerStruct) quotedObj);
+			IntegerCodeGenerator.INSTANCE.generate((IntegerStruct) quotedObj, codeGenerator);
 		} else if (quotedObj instanceof FloatStruct) {
-			FloatCodeGenerator.genCodeFloat(icg, (FloatStruct) quotedObj);
+			FloatCodeGenerator.INSTANCE.generate((FloatStruct) quotedObj, codeGenerator);
 		} else if (quotedObj instanceof RatioStruct) {
-			RatioCodeGenerator.genCodeRatio(icg, (RatioStruct) quotedObj);
+			RatioCodeGenerator.INSTANCE.generate((RatioStruct) quotedObj, codeGenerator);
 		} else if (quotedObj instanceof ComplexStruct) {
-			ComplexCodeGenerator.genCodeComplex(icg, (ComplexStruct) quotedObj);
+			ComplexCodeGenerator.INSTANCE.generate((ComplexStruct) quotedObj, codeGenerator);
 		} else {
 			throw new RuntimeException("Unable to quote: " + quotedObj);
 		}

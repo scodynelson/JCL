@@ -1,15 +1,19 @@
 package jcl.compiler.real.icg.specialoperator;
 
+import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.SymbolStruct;
 
-public class GoCodeGenerator {
+public class GoCodeGenerator implements CodeGenerator<ListStruct> {
 
-	public static void genCodeGo(final IntermediateCodeGenerator icg, ListStruct list) {
+	public static final GoCodeGenerator INSTANCE = new GoCodeGenerator();
+
+	@Override
+	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator) {
 		/* Get the symbol out of the list. */
-		list = list.getRest();
-		final SymbolStruct<?> sym = (SymbolStruct) list.getFirst();
+		ListStruct restOfList = input.getRest();
+		final SymbolStruct<?> sym = (SymbolStruct) restOfList.getFirst();
 
         /*
 		// first, try to see if this is a go in the same tagbody (the most common)
@@ -19,13 +23,13 @@ public class GoCodeGenerator {
         } else {
          */
 		/* Throw a GoException. */
-		icg.emitter.emitNew("lisp/system/compiler/exceptions/GoException");
-		icg.emitter.emitDup();
+		codeGenerator.emitter.emitNew("lisp/system/compiler/exceptions/GoException");
+		codeGenerator.emitter.emitDup();
 		//genCodeSpecialSymbol(sym);
-		icg.emitter.emitLdc("" + TagbodyCodeGenerator.findTagbodyInStack(icg.tagbodyStack, sym).index);   // me
+		codeGenerator.emitter.emitLdc("" + TagbodyCodeGenerator.findTagbodyInStack(codeGenerator.tagbodyStack, sym).index);   // me
 		//emitter.emitInvokespecial("lisp/system/compiler/exceptions/GoException", "<init>", "(Llisp/common/type/Symbol;)V"); //me
-		icg.emitter.emitInvokespecial("lisp/system/compiler/exceptions/GoException", "<init>", "(Ljava/lang/Object;)", "V", false);
-		icg.emitter.emitAthrow();
+		codeGenerator.emitter.emitInvokespecial("lisp/system/compiler/exceptions/GoException", "<init>", "(Ljava/lang/Object;)", "V", false);
+		codeGenerator.emitter.emitAthrow();
 		//}
 	}
 }

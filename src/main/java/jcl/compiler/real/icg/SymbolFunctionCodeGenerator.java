@@ -7,16 +7,19 @@ import org.objectweb.asm.Label;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SymbolFunctionCodeGenerator {
+public class SymbolFunctionCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SymbolFunctionCodeGenerator.class);
 
-	public static void genCodeSymbolFunction(final IntermediateCodeGenerator icg, final SymbolStruct<?> sym) {
+	public static final SymbolFunctionCodeGenerator INSTANCE = new SymbolFunctionCodeGenerator();
+
+	@Override
+	public void generate(final SymbolStruct<?> input, final IntermediateCodeGenerator codeGenerator) {
 		// there are multiple ways to handle this
 		// we add an optimization for calling a CL function
 		// it becomes a static field reference instead of a runtime symbol lookup
 		// +0 ->
-		if (sym.getSymbolPackage().equals(GlobalPackageStruct.COMMON_LISP)) {
+		if (input.getSymbolPackage().equals(GlobalPackageStruct.COMMON_LISP)) {
 			String fnFieldName = "FUNCTION NAME"; // TODO: CommonLispFunctions.getFieldName(sym.getName().toString());
 			// get the type of the field as well...
 			if (fnFieldName != null) {
@@ -34,30 +37,30 @@ public class SymbolFunctionCodeGenerator {
 					fnFieldName = strs[strs.length - 1];
 				}
 				final Label label = new Label();
-				icg.emitter.visitMethodLabel(label);
-				icg.emitter.emitGetstatic("lisp/extensions/type/CommonLispFunctions", "StdFunctions", "Llisp/extensions/type/CommonLispFunctions;");
+				codeGenerator.emitter.visitMethodLabel(label);
+				codeGenerator.emitter.emitGetstatic("lisp/extensions/type/CommonLispFunctions", "StdFunctions", "Llisp/extensions/type/CommonLispFunctions;");
 				// +1 -> StdFns
-				if (sym.getFunction() instanceof MacroFunctionExpander) {
-					icg.emitter.emitGetfield("lisp/extensions/type/CommonLispFunctions", fnFieldName, "Llisp/common/type/MacroFunction;");
+				if (input.getFunction() instanceof MacroFunctionExpander) {
+					codeGenerator.emitter.emitGetfield("lisp/extensions/type/CommonLispFunctions", fnFieldName, "Llisp/common/type/MacroFunction;");
 				} else {
-					icg.emitter.emitGetfield("lisp/extensions/type/CommonLispFunctions", fnFieldName, canonicalName);//"Llisp/common/type/Function;");
+					codeGenerator.emitter.emitGetfield("lisp/extensions/type/CommonLispFunctions", fnFieldName, canonicalName);//"Llisp/common/type/Function;");
 				}
 				// +1 -> fn
 			} else {
-				genGeneralSymbolFn(icg, sym);
+				final Label label = new Label();
+				codeGenerator.emitter.visitMethodLabel(label);
+				codeGenerator.genCodeSpecialVariable(input);
+				// invoke symbol.getFunction()
+				codeGenerator.emitter.emitInvokeinterface("lisp/common/type/Symbol", "getFunction", "()", "Llisp/common/type/Function;", true);
+				// if the symbol has defined less than 12 params, we can say that it takes that number of args
 			}
 		} else {
-			genGeneralSymbolFn(icg, sym);
+			final Label label = new Label();
+			codeGenerator.emitter.visitMethodLabel(label);
+			codeGenerator.genCodeSpecialVariable(input);
+			// invoke symbol.getFunction()
+			codeGenerator.emitter.emitInvokeinterface("lisp/common/type/Symbol", "getFunction", "()", "Llisp/common/type/Function;", true);
+			// if the symbol has defined less than 12 params, we can say that it takes that number of args
 		}
-	}
-
-	private static void genGeneralSymbolFn(final IntermediateCodeGenerator icg, final SymbolStruct<?> sym) {
-		final Label label = new Label();
-		icg.emitter.visitMethodLabel(label);
-		icg.genCodeSpecialVariable(sym);
-		// invoke symbol.getFunction()
-		icg.emitter.emitInvokeinterface("lisp/common/type/Symbol", "getFunction", "()", "Llisp/common/type/Function;", true);
-		// if the symbol has defined less than 12 params, we can say that it takes that number of args
-
 	}
 }

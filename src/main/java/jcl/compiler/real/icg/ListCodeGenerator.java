@@ -3,10 +3,10 @@ package jcl.compiler.real.icg;
 import jcl.LispStruct;
 import jcl.compiler.real.icg.specialoperator.FletCodeGenerator;
 import jcl.compiler.real.icg.specialoperator.LabelsCodeGenerator;
-import jcl.compiler.real.icg.specialoperator.special.LambdaCodeGenerator;
 import jcl.compiler.real.icg.specialoperator.LetCodeGenerator;
-import jcl.compiler.real.icg.specialoperator.special.MacroLambdaCodeGenerator;
 import jcl.compiler.real.icg.specialoperator.MacroletCodeGenerator;
+import jcl.compiler.real.icg.specialoperator.special.LambdaCodeGenerator;
+import jcl.compiler.real.icg.specialoperator.special.MacroLambdaCodeGenerator;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.packages.GlobalPackageStruct;
 import jcl.structs.symbols.Declaration;
@@ -16,53 +16,70 @@ import org.objectweb.asm.Label;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ListCodeGenerator {
+public class ListCodeGenerator implements CodeGenerator<ListStruct> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ListCodeGenerator.class);
 
-	public static void genCodeList(final IntermediateCodeGenerator icg, final ListStruct list) {
+	public static final ListCodeGenerator INSTANCE = new ListCodeGenerator();
 
-		final LispStruct firstElement = list.getFirst();
+	@Override
+	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator) {
+
+		final LispStruct firstElement = input.getFirst();
 		if (firstElement instanceof SymbolStruct) {
 			// generally an application (foobar ...)
 			if (firstElement instanceof SpecialOperator) {
-				SpecialFormCodeGenerator.genCodeSpecialForm(icg, list);
+				SpecialFormCodeGenerator.INSTANCE.generate(input, codeGenerator);
 			} else if (firstElement instanceof Declaration) {
 //                genCodeDeclare(list);
-			} else if (formOptimizable(list)) {
-				genOptimizedForm(icg, list);
+			} else if (formOptimizable(input)) {
+				genOptimizedForm(input, codeGenerator);
 			} else {
-				SymbolFunctionCodeGenerator.genCodeSymbolFunction(icg, (SymbolStruct) firstElement);
-				FunctionCallCodeGenerator.genCodeFunctionCall(icg, list,
-						firstElement.equals(GlobalPackageStruct.COMMON_LISP.intern("FUNCALL").getSymbolStruct())
-								|| firstElement.equals(GlobalPackageStruct.COMMON_LISP.intern("APPLY").getSymbolStruct()));
+				SymbolFunctionCodeGenerator.INSTANCE.generate((SymbolStruct) firstElement, codeGenerator);
+
+				final boolean acceptsMultipleValues = FunctionCallCodeGenerator.INSTANCE.isAcceptsMultipleValues();
+				try {
+					FunctionCallCodeGenerator.INSTANCE.setAcceptsMultipleValues(
+							firstElement.equals(GlobalPackageStruct.COMMON_LISP.intern("FUNCALL").getSymbolStruct())
+									|| firstElement.equals(GlobalPackageStruct.COMMON_LISP.intern("APPLY").getSymbolStruct()));
+					FunctionCallCodeGenerator.INSTANCE.generate(input, codeGenerator);
+				} finally {
+					FunctionCallCodeGenerator.INSTANCE.setAcceptsMultipleValues(acceptsMultipleValues);
+				}
 			}
 		} else if (firstElement instanceof ListStruct) {
 			final ListStruct first = (ListStruct) firstElement;
-			final ListStruct maybeLast = list.getRest();
+			final ListStruct maybeLast = input.getRest();
 			// could be ((%lambda bindings...) body) or
 			// could be (((%lambda bindings...) body) ...args...)
 			if (first.getFirst() instanceof SymbolStruct) {
 				// it's ((%lambda bindings...) body)
 				if (first.getFirst().equals(SpecialOperator.LAMBDA_MARKER)) {
-					LambdaCodeGenerator.genCodeLambda(icg, list);
+					LambdaCodeGenerator.INSTANCE.generate(input, codeGenerator);
 				} else if (first.getFirst().equals(SpecialOperator.MACRO_MARKER)) {
-					MacroLambdaCodeGenerator.genCodeMacroLambda(icg, list);
+					MacroLambdaCodeGenerator.INSTANCE.generate(input, codeGenerator);
 				} else if (first.getFirst().equals(SpecialOperator.LET)) {
-					LetCodeGenerator.genCodeLet(icg, list);
+					LetCodeGenerator.INSTANCE.generate(input, codeGenerator);
 				} else if (first.getFirst().equals(SpecialOperator.FLET)) {
-					FletCodeGenerator.genCodeFlet(icg, list);
+					FletCodeGenerator.INSTANCE.generate(input, codeGenerator);
 				} else if (first.getFirst().equals(SpecialOperator.LABELS)) {
-					LabelsCodeGenerator.genCodeLabels(icg, list);
+					LabelsCodeGenerator.INSTANCE.generate(input, codeGenerator);
 				} else if (first.getFirst().equals(SpecialOperator.MACROLET)) {
-					MacroletCodeGenerator.genCodeMacrolet(icg, list);
+					MacroletCodeGenerator.INSTANCE.generate(input, codeGenerator);
 				} else {
 					LOGGER.info("It's something else, {}", first);
 				}
 			} else {
 				// assume it's (((%lambda bindings...) body) ...args...)
-				genCodeList(icg, first);
-				FunctionCallCodeGenerator.genCodeFunctionCall(icg, list, false);
+				generate(first, codeGenerator);
+
+				final boolean acceptsMultipleValues = FunctionCallCodeGenerator.INSTANCE.isAcceptsMultipleValues();
+				try {
+					FunctionCallCodeGenerator.INSTANCE.setAcceptsMultipleValues(false);
+					FunctionCallCodeGenerator.INSTANCE.generate(input, codeGenerator);
+				} finally {
+					FunctionCallCodeGenerator.INSTANCE.setAcceptsMultipleValues(acceptsMultipleValues);
+				}
 			}
 		}
 	}
@@ -71,25 +88,25 @@ public class ListCodeGenerator {
 		return list.getFirst().equals(GlobalPackageStruct.COMMON_LISP.intern("EQ").getSymbolStruct());
 	}
 
-	private static void genOptimizedForm(final IntermediateCodeGenerator icg, final ListStruct list) {
+	private static void genOptimizedForm(final ListStruct list, final IntermediateCodeGenerator codeGenerator) {
 		final SymbolStruct<?> sym = (SymbolStruct) list.getFirst();
 		if (sym.equals(GlobalPackageStruct.COMMON_LISP.intern("EQ").getSymbolStruct())) {
 			final ListStruct args = list.getRest();
 			// gen the 2 arguments and leave their values on the stack
-			icg.icgMainLoop(args.getFirst());
-			icg.icgMainLoop(args.getRest().getFirst());
+			codeGenerator.icgMainLoop(args.getFirst());
+			codeGenerator.icgMainLoop(args.getRest().getFirst());
 			// now gen the VM if test
 			// just generate direct VM instructions for eq refs
 			// get a uniquifier value
 			final Label trueLabel = new Label();
 			final Label endLabel = new Label();
-			icg.emitter.emitIf_acmpeq(trueLabel);
+			codeGenerator.emitter.emitIf_acmpeq(trueLabel);
 			// if not eq, then the value is NIL
-			icg.emitter.emitGetstatic("lisp/common/type/Boolean", "NIL", "Llisp/common/type/Symbol;");
-			icg.emitter.emitGoto(endLabel);
-			icg.emitter.visitMethodLabel(trueLabel);
-			icg.emitter.emitGetstatic("lisp/common/type/Boolean", "T", "Llisp/common/type/Symbol;");
-			icg.emitter.visitMethodLabel(endLabel);
+			codeGenerator.emitter.emitGetstatic("lisp/common/type/Boolean", "NIL", "Llisp/common/type/Symbol;");
+			codeGenerator.emitter.emitGoto(endLabel);
+			codeGenerator.emitter.visitMethodLabel(trueLabel);
+			codeGenerator.emitter.emitGetstatic("lisp/common/type/Boolean", "T", "Llisp/common/type/Symbol;");
+			codeGenerator.emitter.visitMethodLabel(endLabel);
 		}
 	}
 }

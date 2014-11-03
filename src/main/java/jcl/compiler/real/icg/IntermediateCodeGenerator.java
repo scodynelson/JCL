@@ -2,20 +2,18 @@ package jcl.compiler.real.icg;
 
 import jcl.LispStruct;
 import jcl.compiler.old.Emitter;
-import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.Allocation;
 import jcl.compiler.real.environment.Binding;
 import jcl.compiler.real.environment.Closure;
 import jcl.compiler.real.environment.ClosureBinding;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.LoadTimeValue;
+import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.LocalAllocation;
 import jcl.compiler.real.environment.PositionAllocation;
 import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.environment.SymbolBinding;
 import jcl.compiler.real.environment.SymbolTable;
 import jcl.compiler.real.environment.lambdalist.RequiredBinding;
-import jcl.compiler.real.icg.specialoperator.special.LambdaCodeGenerator;
 import jcl.compiler.real.icg.specialoperator.TagbodyCodeGenerator;
 import jcl.structs.characters.CharacterStruct;
 import jcl.structs.lists.ListStruct;
@@ -107,21 +105,21 @@ public class IntermediateCodeGenerator {
 	public void icgMainLoop(final Object obj) {
 
 		if (obj.equals(NullStruct.INSTANCE)) {
-			NILCodeGenerator.genNIL(this);
+			NILCodeGenerator.INSTANCE.generate((NILStruct) obj, this);
 		} else if (obj instanceof CharacterStruct) {
-			CharacterCodeGenerator.genCharacterStructCode(this, (CharacterStruct) obj);
+			CharacterCodeGenerator.INSTANCE.generate((CharacterStruct) obj, this);
 		} else if (obj instanceof IntegerStruct) {
-			IntegerCodeGenerator.genCodeInteger(this, (IntegerStruct) obj);
+			IntegerCodeGenerator.INSTANCE.generate((IntegerStruct) obj, this);
 		} else if (obj instanceof FloatStruct) {
-			FloatCodeGenerator.genCodeFloat(this, (FloatStruct) obj);
+			FloatCodeGenerator.INSTANCE.generate((FloatStruct) obj, this);
 		} else if (obj instanceof RatioStruct) {
-			RatioCodeGenerator.genCodeRatio(this, (RatioStruct) obj);
+			RatioCodeGenerator.INSTANCE.generate((RatioStruct) obj, this);
 		} else if (obj instanceof ComplexStruct) {
-			ComplexCodeGenerator.genCodeComplex(this, (ComplexStruct) obj);
+			ComplexCodeGenerator.INSTANCE.generate((ComplexStruct) obj, this);
 		} else if (obj instanceof SymbolStruct) {
-			SymbolCodeGenerator.genCodeSymbolValue(this, (SymbolStruct) obj);
+			SymbolCodeGenerator.INSTANCE.generate((SymbolStruct) obj, this);
 		} else if (obj instanceof ListStruct) {
-			ListCodeGenerator.genCodeList(this, (ListStruct) obj);
+			ListCodeGenerator.INSTANCE.generate((ListStruct) obj, this);
 		} else {
 			LOGGER.error("ICG: Found thing I can't generate code for: {}, class: {}", obj, obj.getClass().getName());
 		}
@@ -219,47 +217,6 @@ public class IntermediateCodeGenerator {
 		//String owner, String name, String descr
 		emitter.emitInvokestatic("lisp/system/PackageImpl", "findPackage", "(Ljava/lang/String;)", "Llisp/common/type/Package;", false);
 		return NILStruct.INSTANCE;
-	}
-
-	public void doStaticInit(final String className, final SymbolStruct<?> lispName) {
-		// static init
-		emitter.newMethod(Opcodes.ACC_STATIC + Opcodes.ACC_PUBLIC, "<clinit>", "()", "V", null, null);
-		// init the SYMBOL field with the LISP name symbol
-		if (lispName.getSymbolPackage() != null) {
-			genCodeSpecialVariable(lispName);
-		} else {
-			//make the symbol
-			emitter.emitLdc(lispName.toString());
-			// make it into a Lisp string
-			emitter.emitInvokestatic("lisp/common/type/String$Factory", "newInstance", "(Ljava/lang/CharSequence;)", "Llisp/common/type/String;", false);
-			// now create the symbol
-			emitter.emitInvokestatic("lisp/common/type/Symbol$Factory", "newInstance", "(Llisp/common/type/String;)", "Llisp/common/type/Symbol;", false);
-		}
-		emitter.emitPutstatic(className, "SYMBOL", "Llisp/common/type/Symbol;");
-
-		// Creating and initializing any necessary load-time-values
-		final Environment env = bindingEnvironment;
-
-		// see if we have to add any static fields for load-time-value
-		final List<LoadTimeValue> ltvList = env.getLoadTimeValues();
-		// ltvList is a plist of the field names and lambda forms
-		for (final LoadTimeValue loadTimeValue : ltvList) {
-			final String fldName = loadTimeValue.getName().getName();
-			// add the field
-			emitter.newField(Opcodes.ACC_PUBLIC + Opcodes.ACC_STATIC + Opcodes.ACC_FINAL,
-					fldName, "Ljava/lang/Object;", null, null);
-			// now get down to the function
-			// gen code for the function
-
-			LambdaCodeGenerator.genCodeLambdaInContext(this, (ListStruct) loadTimeValue.getValue(), true);
-			// now there's an instance of the function on the stack, call it
-			emitter.emitInvokeinterface("lisp/extensions/type/Function0", "funcall", "()", "Ljava/lang/Object;", true);
-			// now put the value into the static field
-			emitter.emitPutstatic(className, fldName, "Ljava/lang/Object;");
-		}
-		// all done
-		emitter.emitReturn();
-		emitter.endMethod();
 	}
 
 	public void doConstructor(final ListStruct list, final String className) {

@@ -1,11 +1,15 @@
 package jcl.compiler.real.icg.specialoperator;
 
+import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.structs.lists.ListStruct;
 
-public class ProgvCodeGenerator {
+public class ProgvCodeGenerator implements CodeGenerator<ListStruct> {
 
-	public static void genCodeProgv(final IntermediateCodeGenerator icg, final ListStruct list) {
+	public static final ProgvCodeGenerator INSTANCE = new ProgvCodeGenerator();
+
+	@Override
+	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator) {
 		//TODO unimplemented 'progv'
 	}
 }

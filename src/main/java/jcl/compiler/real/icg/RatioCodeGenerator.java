@@ -2,13 +2,16 @@ package jcl.compiler.real.icg;
 
 import jcl.structs.numbers.RatioStruct;
 
-public class RatioCodeGenerator {
+public class RatioCodeGenerator implements CodeGenerator<RatioStruct> {
 
-	public static void genCodeRatio(final IntermediateCodeGenerator icg, final RatioStruct ratioStruct) {
-		icg.emitter.emitLdc(ratioStruct.getBigFraction().getNumerator().toString());
-		icg.emitter.emitInvokestatic("java/math/BigInteger", "<init>", "(Ljava/lang/String;)", "V", false);
-		icg.emitter.emitLdc(ratioStruct.getBigFraction().getDenominator().toString());
-		icg.emitter.emitInvokestatic("java/math/BigInteger", "<init>", "(Ljava/lang/String;)", "V", false);
-		icg.emitter.emitInvokestatic("jcl/structs/numbers/RatioStruct", "<init>", "(Ljava/math/BigInteger;Ljava/math/BigInteger;)", "V", false);
+	public static final RatioCodeGenerator INSTANCE = new RatioCodeGenerator();
+
+	@Override
+	public void generate(final RatioStruct input, final IntermediateCodeGenerator codeGenerator) {
+		codeGenerator.emitter.emitLdc(input.getBigFraction().getNumerator().toString());
+		codeGenerator.emitter.emitInvokestatic("java/math/BigInteger", "<init>", "(Ljava/lang/String;)", "V", false);
+		codeGenerator.emitter.emitLdc(input.getBigFraction().getDenominator().toString());
+		codeGenerator.emitter.emitInvokestatic("java/math/BigInteger", "<init>", "(Ljava/lang/String;)", "V", false);
+		codeGenerator.emitter.emitInvokestatic("jcl/structs/numbers/RatioStruct", "<init>", "(Ljava/math/BigInteger;Ljava/math/BigInteger;)", "V", false);
 	}
 }

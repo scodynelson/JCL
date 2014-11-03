@@ -1,5 +1,6 @@
 package jcl.compiler.real.icg.specialoperator;
 
+import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.lists.NullStruct;
@@ -8,11 +9,14 @@ import org.objectweb.asm.Label;
 
 import java.util.Stack;
 
-public class TagbodyCodeGenerator {
+public class TagbodyCodeGenerator implements CodeGenerator<ListStruct> {
 
 	public static int tagCounter;
 
-	public static void genCodeTagbody(final IntermediateCodeGenerator icg, ListStruct list) {
+	public static final TagbodyCodeGenerator INSTANCE = new TagbodyCodeGenerator();
+
+	@Override
+	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator) {
 		String tagbodyName;
 
 		final Label startTryBlock = new Label();                //The start of the try block
@@ -22,11 +26,11 @@ public class TagbodyCodeGenerator {
 		final Label elseBlock = new Label();                    //If the exception is caught block
 
         /* Skip past the TAGBODY symbol. */
-		list = list.getRest();
+		ListStruct restOfList = input.getRest();
 
         /* Read all the tags within the TAGBODY form. */
-		final Stack<TagbodyLabel> tagStack = tagbodyReadLabels(list);
-		icg.tagbodyStack.push(tagStack);
+		final Stack<TagbodyLabel> tagStack = tagbodyReadLabels(restOfList);
+		codeGenerator.tagbodyStack.push(tagStack);
 
         /* Create a string with all of the int index values from all of the labels in this tagbody
          * This will be used to setup the TOCMgmt stack record
@@ -40,19 +44,19 @@ public class TagbodyCodeGenerator {
 
 		//Set up the TOC management record
 		// ... ,
-		icg.emitter.emitLdc(allTagbodyLabels);
+		codeGenerator.emitter.emitLdc(allTagbodyLabels);
 		// ..., tagBodyLabels
-		icg.emitter.emitGetstatic("lisp/system/TransferOfControl", "TAGBODY", "Ljava/lang/String;");
+		codeGenerator.emitter.emitGetstatic("lisp/system/TransferOfControl", "TAGBODY", "Ljava/lang/String;");
 		// ..., tagBodyLabels, TAGBODY
-		icg.emitter.emitSwap();
+		codeGenerator.emitter.emitSwap();
 		// ... , TAGBODY, tagBodyLabels
-		icg.emitter.emitInvokestatic("lisp/system/TransferOfControl", "addTOCRecord", "(Ljava/lang/String;Ljava/lang/Object;)", "V", false);
+		codeGenerator.emitter.emitInvokestatic("lisp/system/TransferOfControl", "addTOCRecord", "(Ljava/lang/String;Ljava/lang/Object;)", "V", false);
 
         /* Invoke the ICG for each non-tag statement within the TAGBODY form. */
-		icg.emitter.visitMethodLabel(startTryBlock);
+		codeGenerator.emitter.visitMethodLabel(startTryBlock);
 		// +0
-		while (!list.equals(NullStruct.INSTANCE)) {
-			final Object obj = list.getFirst();
+		while (!restOfList.equals(NullStruct.INSTANCE)) {
+			final Object obj = restOfList.getFirst();
 
             /* If the car of the list is a Symbol, then its a tag, which means
              * a label needs to be emitted. Otherwise call the ICG on the car of
@@ -60,54 +64,54 @@ public class TagbodyCodeGenerator {
 			if (obj instanceof SymbolStruct) {
 				final SymbolStruct<?> sym = (SymbolStruct) obj;
 				// find the symbol in the tagbody stack
-				final TagbodyLabel tbl = findTagbodyInStack(icg.tagbodyStack, (SymbolStruct) obj);
-				icg.emitter.visitMethodLabel(tbl.label);
+				final TagbodyLabel tbl = findTagbodyInStack(codeGenerator.tagbodyStack, (SymbolStruct) obj);
+				codeGenerator.emitter.visitMethodLabel(tbl.label);
 			} else {
-				icg.icgMainLoop(obj);
-				icg.emitter.emitPop(); // Throws away the results of any forms in the tag body
+				codeGenerator.icgMainLoop(obj);
+				codeGenerator.emitter.emitPop(); // Throws away the results of any forms in the tag body
 			}
-			list = list.getRest();
+			restOfList = restOfList.getRest();
 		}
 
         /* If execution makes it all the way through with no exception then skip
          * over the exception handler. */
 		// +0
-		icg.emitter.emitGoto(continueBlock);
+		codeGenerator.emitter.emitGoto(continueBlock);
 
-		icg.emitter.visitMethodLabel(catchBlock);
+		codeGenerator.emitter.visitMethodLabel(catchBlock);
 		// ..., excep
-		icg.emitter.emitDup();
+		codeGenerator.emitter.emitDup();
 		// ..., excep, excep
 
-		icg.emitter.emitInvokestatic("lisp/system/TransferOfControl", "isMine", "(Ljava/lang/Throwable;)", "Ljava/lang/Object;", false);
+		codeGenerator.emitter.emitInvokestatic("lisp/system/TransferOfControl", "isMine", "(Ljava/lang/Throwable;)", "Ljava/lang/Object;", false);
 
 		// ..., excep, result
-		icg.emitter.emitDup();
+		codeGenerator.emitter.emitDup();
 		// ..., excep, result, result
-		icg.emitter.emitIfnull(ifBlock);
-		icg.emitter.emitGoto(elseBlock);
+		codeGenerator.emitter.emitIfnull(ifBlock);
+		codeGenerator.emitter.emitGoto(elseBlock);
 		//If block start
-		icg.emitter.visitMethodLabel(ifBlock);
+		codeGenerator.emitter.visitMethodLabel(ifBlock);
 		// ..., excep, result
-		icg.emitter.emitPop();
+		codeGenerator.emitter.emitPop();
 		// ..., excep
-		icg.emitter.emitInvokestatic("lisp/system/TransferOfControl", "setReturnException", "(Ljava/lang/Throwable;)", "V", false);
+		codeGenerator.emitter.emitInvokestatic("lisp/system/TransferOfControl", "setReturnException", "(Ljava/lang/Throwable;)", "V", false);
 		// ...,
-		icg.emitter.emitGoto(continueBlock);
+		codeGenerator.emitter.emitGoto(continueBlock);
 		//If block end
 
 		//Else block start
-		icg.emitter.visitMethodLabel(elseBlock);
+		codeGenerator.emitter.visitMethodLabel(elseBlock);
 		// ..., excep, result
-		icg.emitter.emitSwap();
+		codeGenerator.emitter.emitSwap();
 		// ..., result, excep
-		icg.emitter.emitPop();
+		codeGenerator.emitter.emitPop();
 		// ..., result
 
-		icg.emitter.emitInvokevirtual("java/lang/Object", "toString", "()", "Ljava/lang/String;", false);
+		codeGenerator.emitter.emitInvokevirtual("java/lang/Object", "toString", "()", "Ljava/lang/String;", false);
 		// ..., resultString
 
-		icg.emitter.emitInvokestatic("java/lang/Integer", "parseInt", "(Ljava/lang/String;)", "I", false);
+		codeGenerator.emitter.emitInvokestatic("java/lang/Integer", "parseInt", "(Ljava/lang/String;)", "I", false);
 
 		// +1 - int
 		// create a lookup switch for the labels
@@ -121,28 +125,28 @@ public class TagbodyCodeGenerator {
 		final Label defaultLabel = new Label();
 		// now create the tableswitch
 		// +1 - int
-		icg.emitter.emitTableswitch(tagNumbers[0], tagNumbers[tagsSize - 1], defaultLabel, tagLabels);
+		codeGenerator.emitter.emitTableswitch(tagNumbers[0], tagNumbers[tagsSize - 1], defaultLabel, tagLabels);
 		// +0
 		/* Throw another exception to the most enclosing TAGBODY. */
-		icg.emitter.visitMethodLabel(defaultLabel);
-		icg.emitter.emitGoto(continueBlock);
+		codeGenerator.emitter.visitMethodLabel(defaultLabel);
+		codeGenerator.emitter.emitGoto(continueBlock);
 		//Else block end
 
         /* Emit the post-exception handler label, and pop the tag stack from
          * 'tagbodyStack'. */
-		icg.emitter.visitMethodLabel(continueBlock);
+		codeGenerator.emitter.visitMethodLabel(continueBlock);
 
         /* TAGBODY always returns NIL, so put a NIL on the stack to be
          * returned. */
-		icg.emitter.emitGetstatic("lisp/common/type/Null", "NIL", "Llisp/common/type/Null;");
+		codeGenerator.emitter.emitGetstatic("lisp/common/type/Null", "NIL", "Llisp/common/type/Null;");
 
 		//This is compilation only code
-		icg.tagbodyStack.pop();
-		icg.emitter.visitTryCatchBlock(startTryBlock, catchBlock, catchBlock, "java/lang/Throwable");
+		codeGenerator.tagbodyStack.pop();
+		codeGenerator.emitter.visitTryCatchBlock(startTryBlock, catchBlock, catchBlock, "java/lang/Throwable");
 
 		//Here is the finally code
-		icg.emitter.emitInvokestatic("lisp/system/TransferOfControl", "popTOCRecord", "()", "V", false);
-		icg.emitter.emitInvokestatic("lisp/system/TransferOfControl", "processReturnException", "()", "V", false);
+		codeGenerator.emitter.emitInvokestatic("lisp/system/TransferOfControl", "popTOCRecord", "()", "V", false);
+		codeGenerator.emitter.emitInvokestatic("lisp/system/TransferOfControl", "processReturnException", "()", "V", false);
 	}
 
 	/**

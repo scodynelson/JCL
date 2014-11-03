@@ -2,10 +2,13 @@ package jcl.compiler.real.icg;
 
 import jcl.structs.characters.CharacterStruct;
 
-public class CharacterCodeGenerator {
+public class CharacterCodeGenerator implements CodeGenerator<CharacterStruct> {
 
-	public static void genCharacterStructCode(final IntermediateCodeGenerator icg, final CharacterStruct characterStruct) {
-		icg.emitter.emitIconst(characterStruct.getCodePoint());
-		icg.emitter.emitInvokestatic("jcl/structs/characters/CharacterStruct", "<init>", "(I)", "V", false);
+	public static final CharacterCodeGenerator INSTANCE = new CharacterCodeGenerator();
+
+	@Override
+	public void generate(final CharacterStruct input, final IntermediateCodeGenerator codeGenerator) {
+		codeGenerator.emitter.emitIconst(input.getCodePoint());
+		codeGenerator.emitter.emitInvokestatic("jcl/structs/characters/CharacterStruct", "<init>", "(I)", "V", false);
 	}
 }

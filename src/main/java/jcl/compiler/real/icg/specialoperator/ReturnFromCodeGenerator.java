@@ -1,25 +1,29 @@
 package jcl.compiler.real.icg.specialoperator;
 
+import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.SymbolStruct;
 
-public class ReturnFromCodeGenerator {
+public class ReturnFromCodeGenerator implements CodeGenerator<ListStruct> {
 
-	public static void genCodeReturnFrom(final IntermediateCodeGenerator icg, ListStruct list) {
+	public static final ReturnFromCodeGenerator INSTANCE = new ReturnFromCodeGenerator();
+
+	@Override
+	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator) {
 		// Get rid of the RETURN-FROM symbol
-		list = list.getRest();
-		final SymbolStruct<?> sym = (SymbolStruct) list.getFirst();
-		list = list.getRest();
+		ListStruct restOfList = input.getRest();
+		final SymbolStruct<?> sym = (SymbolStruct) restOfList.getFirst();
+		restOfList = restOfList.getRest();
 
-		icg.emitter.emitNew("lisp/system/compiler/exceptions/ReturnFromException");
+		codeGenerator.emitter.emitNew("lisp/system/compiler/exceptions/ReturnFromException");
 		// +1 -> exception
-		icg.emitter.emitDup();
+		codeGenerator.emitter.emitDup();
 		// +2 -> exception, exception
-		icg.genCodeSpecialVariable(sym);
+		codeGenerator.genCodeSpecialVariable(sym);
 		// +3 -> exception, exception, name
-		icg.icgMainLoop(list.getFirst());
-		icg.emitter.emitInvokespecial("lisp/system/compiler/exceptions/ReturnFromException", "<init>", "(Llisp/common/type/Symbol;Ljava/lang/Object;)", "V", false);
-		icg.emitter.emitAthrow();
+		codeGenerator.icgMainLoop(restOfList.getFirst());
+		codeGenerator.emitter.emitInvokespecial("lisp/system/compiler/exceptions/ReturnFromException", "<init>", "(Llisp/common/type/Symbol;Ljava/lang/Object;)", "V", false);
+		codeGenerator.emitter.emitAthrow();
 	}
 }

@@ -3,6 +3,8 @@ package jcl.compiler.real.icg.specialoperator.special;
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Binding;
 import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.LoadTimeValue;
+import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.lists.NullStruct;
@@ -15,15 +17,19 @@ import java.util.List;
 import java.util.UUID;
 import java.util.Vector;
 
-public class LambdaCodeGenerator {
+public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 
 	//TODO when checking bindings, in handling the init-forms, start with the just previous
 	// bindings in the lambda list. Differs from how LET handles it
-	public static void genCodeLambda(final IntermediateCodeGenerator icg, final ListStruct list) {
-		genCodeLambdaInContext(icg, list, false);
+
+	public static final LambdaCodeGenerator INSTANCE = new LambdaCodeGenerator();
+
+	@Override
+	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator) {
+		genCodeLambdaInContext(codeGenerator, input, false);
 	}
 
-	public static void genCodeLambdaInContext(final IntermediateCodeGenerator icg, final ListStruct list, final boolean inStaticContext) {
+	private static void genCodeLambdaInContext(final IntermediateCodeGenerator icg, final ListStruct list, final boolean inStaticContext) {
 
 		//--------
 		// get the class name out of the list
@@ -198,7 +204,7 @@ public class LambdaCodeGenerator {
 			// 2a. for each field name, add field, gen code for lambda,
 			//     add code to init the field
 			// 2b. again
-			icg.doStaticInit(className, lispName);
+			doStaticInit(icg, className, lispName);
 
 			icg.emitter.endClass();
 		} finally {
@@ -230,5 +236,46 @@ public class LambdaCodeGenerator {
 
 		// pop off the current class name, we're done with it
 		icg.classNames.pop();
+	}
+
+	private static void doStaticInit(final IntermediateCodeGenerator codeGenerator, final String className, final SymbolStruct<?> lispName) {
+		// static init
+		codeGenerator.emitter.newMethod(Opcodes.ACC_STATIC + Opcodes.ACC_PUBLIC, "<clinit>", "()", "V", null, null);
+		// init the SYMBOL field with the LISP name symbol
+		if (lispName.getSymbolPackage() != null) {
+			codeGenerator.genCodeSpecialVariable(lispName);
+		} else {
+			//make the symbol
+			codeGenerator.emitter.emitLdc(lispName.toString());
+			// make it into a Lisp string
+			codeGenerator.emitter.emitInvokestatic("lisp/common/type/String$Factory", "newInstance", "(Ljava/lang/CharSequence;)", "Llisp/common/type/String;", false);
+			// now create the symbol
+			codeGenerator.emitter.emitInvokestatic("lisp/common/type/Symbol$Factory", "newInstance", "(Llisp/common/type/String;)", "Llisp/common/type/Symbol;", false);
+		}
+		codeGenerator.emitter.emitPutstatic(className, "SYMBOL", "Llisp/common/type/Symbol;");
+
+		// Creating and initializing any necessary load-time-values
+		final Environment env = codeGenerator.bindingEnvironment;
+
+		// see if we have to add any static fields for load-time-value
+		final List<LoadTimeValue> ltvList = env.getLoadTimeValues();
+		// ltvList is a plist of the field names and lambda forms
+		for (final LoadTimeValue loadTimeValue : ltvList) {
+			final String fldName = loadTimeValue.getName().getName();
+			// add the field
+			codeGenerator.emitter.newField(Opcodes.ACC_PUBLIC + Opcodes.ACC_STATIC + Opcodes.ACC_FINAL,
+					fldName, "Ljava/lang/Object;", null, null);
+			// now get down to the function
+			// gen code for the function
+
+			genCodeLambdaInContext(codeGenerator, (ListStruct) loadTimeValue.getValue(), true);
+			// now there's an instance of the function on the stack, call it
+			codeGenerator.emitter.emitInvokeinterface("lisp/extensions/type/Function0", "funcall", "()", "Ljava/lang/Object;", true);
+			// now put the value into the static field
+			codeGenerator.emitter.emitPutstatic(className, fldName, "Ljava/lang/Object;");
+		}
+		// all done
+		codeGenerator.emitter.emitReturn();
+		codeGenerator.emitter.endMethod();
 	}
 }

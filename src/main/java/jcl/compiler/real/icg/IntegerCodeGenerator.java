@@ -2,11 +2,14 @@ package jcl.compiler.real.icg;
 
 import jcl.structs.numbers.IntegerStruct;
 
-public class IntegerCodeGenerator {
+public class IntegerCodeGenerator implements CodeGenerator<IntegerStruct> {
 
-	public static void genCodeInteger(final IntermediateCodeGenerator icg, final IntegerStruct integerStruct) {
-		icg.emitter.emitLdc(integerStruct.getBigInteger().toString());
-		icg.emitter.emitInvokestatic("java/math/BigInteger", "<init>", "(Ljava/lang/String;)", "V", false);
-		icg.emitter.emitInvokestatic("jcl/structs/numbers/IntegerStruct", "<init>", "(Ljava/math/BigInteger;)", "V", false);
+	public static final IntegerCodeGenerator INSTANCE = new IntegerCodeGenerator();
+
+	@Override
+	public void generate(final IntegerStruct input, final IntermediateCodeGenerator codeGenerator) {
+		codeGenerator.emitter.emitLdc(input.getBigInteger().toString());
+		codeGenerator.emitter.emitInvokestatic("java/math/BigInteger", "<init>", "(Ljava/lang/String;)", "V", false);
+		codeGenerator.emitter.emitInvokestatic("jcl/structs/numbers/IntegerStruct", "<init>", "(Ljava/math/BigInteger;)", "V", false);
 	}
 }

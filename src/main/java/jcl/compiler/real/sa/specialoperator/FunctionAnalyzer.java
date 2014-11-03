@@ -22,7 +22,7 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final FunctionAnalyzer INSTANCE = new FunctionAnalyzer();
 
 	@Override
-	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
+	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 
 		if (input.size() != 2) {
 			throw new ProgramErrorException("FUNCTION: Incorrect number of arguments: " + input.size() + ". Expected 2 arguments.");
@@ -33,7 +33,7 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			throw new ProgramErrorException("FUNCTION: Function argument must be of type SymbolStruct or ListStruct. Got: " + second);
 		}
 
-		final Stack<Environment> environmentStack = semanticAnalyzer.getEnvironmentStack();
+		final Stack<Environment> environmentStack = analyzer.getEnvironmentStack();
 		final Environment parentEnvironment = environmentStack.peek();
 
 		if (second instanceof SymbolStruct) {
@@ -41,7 +41,7 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			final Environment fnBinding = EnvironmentAccessor.getBindingEnvironment(parentEnvironment, functionSymbol, false);
 
 			if (fnBinding.equals(Environment.NULL)) {
-				SymbolStructAnalyzer.INSTANCE.analyze(functionSymbol, semanticAnalyzer);
+				SymbolStructAnalyzer.INSTANCE.analyze(functionSymbol, analyzer);
 				return input;
 			} else {
 				final Binding binding = fnBinding.getBinding(functionSymbol);
@@ -55,18 +55,18 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			final LispStruct functionListFirst = functionList.getFirst();
 
 			if (functionListFirst.equals(SpecialOperator.LAMBDA)) {
-				final int tempClosureDepth = semanticAnalyzer.getClosureDepth();
+				final int tempClosureDepth = analyzer.getClosureDepth();
 				final int newClosureDepth = tempClosureDepth + 1;
 
 				final Environment lambdaEnvironment = EnvironmentAccessor.createNewEnvironment(parentEnvironment, Marker.LAMBDA, newClosureDepth);
 				environmentStack.push(lambdaEnvironment);
 
-				final int tempBindingsPosition = semanticAnalyzer.getBindingsPosition();
+				final int tempBindingsPosition = analyzer.getBindingsPosition();
 				try {
-					return LambdaAnalyzer.INSTANCE.analyze(functionList, semanticAnalyzer);
+					return LambdaAnalyzer.INSTANCE.analyze(functionList, analyzer);
 				} finally {
-					semanticAnalyzer.setClosureDepth(tempClosureDepth);
-					semanticAnalyzer.setBindingsPosition(tempBindingsPosition);
+					analyzer.setClosureDepth(tempClosureDepth);
+					analyzer.setBindingsPosition(tempBindingsPosition);
 					environmentStack.pop();
 				}
 			}

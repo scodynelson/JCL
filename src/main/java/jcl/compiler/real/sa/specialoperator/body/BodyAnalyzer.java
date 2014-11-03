@@ -13,13 +13,13 @@ public class BodyAnalyzer implements Analyzer<BodyProcessingResult, ListStruct> 
 	public static final BodyAnalyzer INSTANCE = new BodyAnalyzer();
 
 	@Override
-	public BodyProcessingResult analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
+	public BodyProcessingResult analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 		final List<LispStruct> bodyJavaList = input.getAsJavaList();
 
 		final List<LispStruct> bodyForms = new ArrayList<>(bodyJavaList.size());
 
 		for (final LispStruct next : bodyJavaList) {
-			final LispStruct analyzedForm = semanticAnalyzer.analyzeForm(next);
+			final LispStruct analyzedForm = analyzer.analyzeForm(next);
 			bodyForms.add(analyzedForm);
 		}
 

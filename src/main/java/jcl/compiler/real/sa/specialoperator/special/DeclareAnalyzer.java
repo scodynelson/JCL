@@ -17,7 +17,7 @@ public class DeclareAnalyzer implements Analyzer<LispStruct, LispStruct> {
 	public static final DeclareAnalyzer INSTANCE = new DeclareAnalyzer();
 
 	@Override
-	public LispStruct analyze(final LispStruct input, final SemanticAnalyzer semanticAnalyzer) {
+	public LispStruct analyze(final LispStruct input, final SemanticAnalyzer analyzer) {
 
 		final List<LispStruct> javaRestList = ((ListStruct) input).getRest().getAsJavaList();
 		for (final LispStruct nextDecl : javaRestList) {
@@ -50,7 +50,7 @@ public class DeclareAnalyzer implements Analyzer<LispStruct, LispStruct> {
 			} else if (declIdentifier.equals(Declaration.OPTIMIZE)) {
 				//we don't do anything here yet
 			} else if (declIdentifier.equals(Declaration.SPECIAL)) {
-				saSpecialDeclaration(semanticAnalyzer, declList);
+				saSpecialDeclaration(analyzer, declList);
 			} else if (declIdentifier.equals(Declaration.TYPE)) {
 				//we don't do anything here yet
 			} else if (declIdentifier.equals(NullStruct.INSTANCE)) {

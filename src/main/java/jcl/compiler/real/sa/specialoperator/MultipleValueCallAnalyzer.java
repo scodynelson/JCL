@@ -17,7 +17,7 @@ public class MultipleValueCallAnalyzer implements Analyzer<LispStruct, ListStruc
 	public static final MultipleValueCallAnalyzer INSTANCE = new MultipleValueCallAnalyzer();
 
 	@Override
-	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
+	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 
 		if (input.size() < 2) {
 			throw new ProgramErrorException("MULTIPLE-VALUE-CALL: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
@@ -28,7 +28,7 @@ public class MultipleValueCallAnalyzer implements Analyzer<LispStruct, ListStruc
 
 		// Body includes the 'Function Form'
 		final ListStruct body = input.getRest();
-		final BodyProcessingResult bodyProcessingResult = BodyAnalyzer.INSTANCE.analyze(body, semanticAnalyzer);
+		final BodyProcessingResult bodyProcessingResult = BodyAnalyzer.INSTANCE.analyze(body, analyzer);
 		multipleValueCallResultList.addAll(bodyProcessingResult.getBodyForms());
 
 		return ListStruct.buildProperList(multipleValueCallResultList);

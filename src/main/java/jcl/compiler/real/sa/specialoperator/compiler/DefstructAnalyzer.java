@@ -10,7 +10,7 @@ public class DefstructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final DefstructAnalyzer INSTANCE = new DefstructAnalyzer();
 
 	@Override
-	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
+	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 		return input;
 	}
 }

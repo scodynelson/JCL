@@ -23,8 +23,8 @@ public class LoadTimeValueAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final LoadTimeValueAnalyzer INSTANCE = new LoadTimeValueAnalyzer();
 
 	@Override
-	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
-		return analyze(input, semanticAnalyzer, "LOAD_TIME_VALUE");
+	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
+		return analyze(input, analyzer, "LOAD_TIME_VALUE");
 	}
 
 	public static LispStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer, final String ltvFieldName) {

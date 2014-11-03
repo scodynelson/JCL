@@ -16,7 +16,7 @@ public class LetStarAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final LetStarAnalyzer INSTANCE = new LetStarAnalyzer();
 
 	@Override
-	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
+	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 
 		if (input.size() < 2) {
 			throw new ProgramErrorException("LET*: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
@@ -47,6 +47,6 @@ public class LetStarAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			body = ListStruct.buildProperList(innerLet);
 		}
 
-		return LetAnalyzer.INSTANCE.analyze(body, semanticAnalyzer);
+		return LetAnalyzer.INSTANCE.analyze(body, analyzer);
 	}
 }

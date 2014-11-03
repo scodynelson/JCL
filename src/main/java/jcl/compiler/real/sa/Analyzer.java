@@ -4,5 +4,5 @@ import jcl.LispStruct;
 
 public interface Analyzer<O extends LispStruct, I extends LispStruct> {
 
-	O analyze(I input, SemanticAnalyzer semanticAnalyzer);
+	O analyze(I input, SemanticAnalyzer analyzer);
 }

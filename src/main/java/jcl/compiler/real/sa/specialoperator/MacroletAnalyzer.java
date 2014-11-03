@@ -23,7 +23,7 @@ public class MacroletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final MacroletAnalyzer INSTANCE = new MacroletAnalyzer();
 
 	@Override
-	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
+	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 
 		if (input.size() < 2) {
 			throw new ProgramErrorException("MACROLET: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
@@ -34,10 +34,10 @@ public class MacroletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			throw new ProgramErrorException("MACROLET: Parameter list must be of type ListStruct. Got: " + second);
 		}
 
-		final Stack<Environment> environmentStack = semanticAnalyzer.getEnvironmentStack();
+		final Stack<Environment> environmentStack = analyzer.getEnvironmentStack();
 		final Environment parentEnvironment = environmentStack.peek();
 
-		final int tempClosureDepth = semanticAnalyzer.getClosureDepth();
+		final int tempClosureDepth = analyzer.getClosureDepth();
 		final int newClosureDepth = tempClosureDepth + 1;
 
 		final Environment macroletEnvironment = EnvironmentAccessor.createNewEnvironment(parentEnvironment, Marker.MACROLET, newClosureDepth);
@@ -46,7 +46,7 @@ public class MacroletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		// NOTE: Prior functions that resolve later functions will be handled automatically. Unknown function calls will
 		//       still be stored in the SemanticAnalyzer.undefinedFunctions field.
 
-		final int tempBindingsPosition = semanticAnalyzer.getBindingsPosition();
+		final int tempBindingsPosition = analyzer.getBindingsPosition();
 		try {
 			final ListStruct macroletMacros = input.getRest();
 			final List<LispStruct> macroletMacrosJavaList = macroletMacros.getAsJavaList();
@@ -94,33 +94,33 @@ public class MacroletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 				// Evaluate in the current environment. This is one of the differences between Flet and Macrolet.
 				final Environment currentEnvironment = environmentStack.peek();
 
-				final Stack<SymbolStruct<?>> functionNameStack = semanticAnalyzer.getFunctionNameStack();
+				final Stack<SymbolStruct<?>> functionNameStack = analyzer.getFunctionNameStack();
 
 				// Push the current functionName onto the Stack. This is another one of the differences between Flet and Macrolet.
 				final LispStruct paramValueInitForm;
 				try {
 					functionNameStack.push(macroName);
-					paramValueInitForm = semanticAnalyzer.analyzeForm(innerFunctionListStruct);
+					paramValueInitForm = analyzer.analyzeForm(innerFunctionListStruct);
 				} finally {
 					functionNameStack.pop();
 				}
 
 				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
-				semanticAnalyzer.setBindingsPosition(newBindingsPosition);
+				analyzer.setBindingsPosition(newBindingsPosition);
 
 				EnvironmentAccessor.createNewLetBinding(currentEnvironment, macroName, newBindingsPosition, paramValueInitForm, false);
 			}
 
 			final ListStruct currentBodyForms = input.getRest().getRest();
-			final BodyProcessingResult bodyProcessingResult = BodyWithDeclaresAnalyzer.INSTANCE.analyze(currentBodyForms, semanticAnalyzer);
+			final BodyProcessingResult bodyProcessingResult = BodyWithDeclaresAnalyzer.INSTANCE.analyze(currentBodyForms, analyzer);
 
 			final Environment envList = environmentStack.peek();
 
 			final ListStruct newBodyForms = ListStruct.buildProperList(bodyProcessingResult.getBodyForms());
 			return new EnvironmentListStruct(envList, bodyProcessingResult.getDeclarations(), newBodyForms);
 		} finally {
-			semanticAnalyzer.setClosureDepth(tempClosureDepth);
-			semanticAnalyzer.setBindingsPosition(tempBindingsPosition);
+			analyzer.setClosureDepth(tempClosureDepth);
+			analyzer.setBindingsPosition(tempBindingsPosition);
 			environmentStack.pop();
 		}
 	}

@@ -36,8 +36,8 @@ public class EvalWhenAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	}
 
 	@Override
-	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
-		return analyze(input, semanticAnalyzer, false);
+	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
+		return analyze(input, analyzer, false);
 	}
 
 	public static LispStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer, final boolean isTopLevel) {

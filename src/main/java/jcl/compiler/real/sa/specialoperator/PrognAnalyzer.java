@@ -16,13 +16,13 @@ public class PrognAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final PrognAnalyzer INSTANCE = new PrognAnalyzer();
 
 	@Override
-	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
+	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 
 		final List<LispStruct> prognResultList = new ArrayList<>();
 		prognResultList.add(SpecialOperator.PROGN);
 
 		final ListStruct body = input.getRest();
-		final BodyProcessingResult bodyProcessingResult = BodyAnalyzer.INSTANCE.analyze(body, semanticAnalyzer);
+		final BodyProcessingResult bodyProcessingResult = BodyAnalyzer.INSTANCE.analyze(body, analyzer);
 		prognResultList.addAll(bodyProcessingResult.getBodyForms());
 
 		return ListStruct.buildProperList(prognResultList);

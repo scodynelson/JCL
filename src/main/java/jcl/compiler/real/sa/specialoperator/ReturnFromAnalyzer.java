@@ -17,7 +17,7 @@ public class ReturnFromAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final ReturnFromAnalyzer INSTANCE = new ReturnFromAnalyzer();
 
 	@Override
-	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
+	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 
 		if ((input.size() < 2) || (input.size() > 3)) {
 			throw new ProgramErrorException("RETURN-FROM: Incorrect number of arguments: " + input.size() + ". Expected either 2 or 3 arguments.");
@@ -28,7 +28,7 @@ public class ReturnFromAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			throw new ProgramErrorException("RETURN-FROM: Label must be of type SymbolStruct. Got: " + second);
 		}
 
-		if (semanticAnalyzer.getBlockStack().search(second) == -1) {
+		if (analyzer.getBlockStack().search(second) == -1) {
 			throw new ProgramErrorException("RETURN-FROM: No BLOCK with Label " + second + " is visible.");
 		}
 
@@ -38,7 +38,7 @@ public class ReturnFromAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		final LispStruct third = input.getRest().getRest().getFirst();
 		if (!third.equals(NullStruct.INSTANCE)) {
-			final LispStruct returnFromResult = semanticAnalyzer.analyzeForm(third);
+			final LispStruct returnFromResult = analyzer.analyzeForm(third);
 			returnFromResultList.add(returnFromResult);
 		}
 

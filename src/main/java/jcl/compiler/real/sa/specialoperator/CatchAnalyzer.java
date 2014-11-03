@@ -17,7 +17,7 @@ public class CatchAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final CatchAnalyzer INSTANCE = new CatchAnalyzer();
 
 	@Override
-	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
+	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 
 		if (input.size() < 2) {
 			throw new ProgramErrorException("CATCH: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
@@ -28,7 +28,7 @@ public class CatchAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		// Body includes the 'Catch Tag'
 		final ListStruct body = input.getRest();
-		final BodyProcessingResult bodyProcessingResult = BodyAnalyzer.INSTANCE.analyze(body, semanticAnalyzer);
+		final BodyProcessingResult bodyProcessingResult = BodyAnalyzer.INSTANCE.analyze(body, analyzer);
 		catchResultList.addAll(bodyProcessingResult.getBodyForms());
 
 		return ListStruct.buildProperList(catchResultList);

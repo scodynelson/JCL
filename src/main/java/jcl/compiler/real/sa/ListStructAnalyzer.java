@@ -28,7 +28,7 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final ListStructAnalyzer INSTANCE = new ListStructAnalyzer();
 
 	@Override
-	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
+	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 
 		if (input.equals(NullStruct.INSTANCE)) {
 			return input;
@@ -36,7 +36,7 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		final LispStruct first = input.getFirst();
 		if (first instanceof SymbolStruct) {
-			final Stack<Environment> environmentStack = semanticAnalyzer.getEnvironmentStack();
+			final Stack<Environment> environmentStack = analyzer.getEnvironmentStack();
 //			final MacroExpandReturn macroExpandReturn = MacroExpandFunction.FUNCTION.funcall(input, environmentStack.peek());
 			final LispStruct expandedForm = input; //macroExpandReturn.getExpandedForm(); // TODO: need to put something in place so this will work
 
@@ -49,16 +49,16 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 				final LispStruct expandedFormListFirst = expandedFormList.getFirst();
 				if (expandedFormListFirst instanceof SpecialOperator) {
-					return SpecialOperatorAnalyzer.INSTANCE.analyze(expandedFormList, semanticAnalyzer);
+					return SpecialOperatorAnalyzer.INSTANCE.analyze(expandedFormList, analyzer);
 				} else if (expandedFormListFirst instanceof SymbolStruct) {
 					final SymbolStruct<?> functionSymbol = (SymbolStruct<?>) expandedFormListFirst;
 					final ListStruct functionArguments = expandedFormList.getRest();
-					return analyzeFunctionCall(semanticAnalyzer, functionSymbol, functionArguments);
+					return analyzeFunctionCall(analyzer, functionSymbol, functionArguments);
 				} else {
 					throw new ProgramErrorException("SA LIST: First element of expanded form must be of type SymbolStruct or ListStruct. Got: " + expandedFormListFirst);
 				}
 			} else {
-				return semanticAnalyzer.analyzeForm(expandedForm);
+				return analyzer.analyzeForm(expandedForm);
 			}
 		} else if (first instanceof ListStruct) {
 			// ex ((lambda (x) (+ x 1)) 3)
@@ -66,9 +66,9 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 			final LispStruct firstOfFirstList = firstAsList.getFirst();
 			if (firstOfFirstList.equals(SpecialOperator.LAMBDA)) {
-				final LambdaEnvironmentListStruct lambdaAnalyzed = (LambdaEnvironmentListStruct) LambdaAnalyzer.INSTANCE.analyze(firstAsList, semanticAnalyzer);
+				final LambdaEnvironmentListStruct lambdaAnalyzed = (LambdaEnvironmentListStruct) LambdaAnalyzer.INSTANCE.analyze(firstAsList, analyzer);
 				final ListStruct functionArguments = input.getRest();
-				return analyzedLambdaFunctionCall(semanticAnalyzer, lambdaAnalyzed, functionArguments);
+				return analyzedLambdaFunctionCall(analyzer, lambdaAnalyzed, functionArguments);
 			} else {
 				throw new ProgramErrorException("SA LIST: First element of a first element ListStruct must be the SpecialOperator 'LAMBDA'. Got: " + firstOfFirstList);
 			}

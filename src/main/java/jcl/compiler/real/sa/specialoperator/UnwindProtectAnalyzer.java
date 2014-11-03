@@ -17,7 +17,7 @@ public class UnwindProtectAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final UnwindProtectAnalyzer INSTANCE = new UnwindProtectAnalyzer();
 
 	@Override
-	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
+	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 
 		if (input.size() < 2) {
 			throw new ProgramErrorException("UNWIND-PROTECT: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
@@ -28,7 +28,7 @@ public class UnwindProtectAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		// Body includes the 'Protected Form'
 		final ListStruct body = input.getRest();
-		final BodyProcessingResult bodyProcessingResult = BodyAnalyzer.INSTANCE.analyze(body, semanticAnalyzer);
+		final BodyProcessingResult bodyProcessingResult = BodyAnalyzer.INSTANCE.analyze(body, analyzer);
 		unwindProtectResultList.addAll(bodyProcessingResult.getBodyForms());
 
 		return ListStruct.buildProperList(unwindProtectResultList);

@@ -75,7 +75,7 @@ public class SpecialOperatorAnalyzer implements Analyzer<LispStruct, ListStruct>
 	}
 
 	@Override
-	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
+	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 
 		final SpecialOperator specialOperator = (SpecialOperator) input.getFirst();
 
@@ -83,6 +83,6 @@ public class SpecialOperatorAnalyzer implements Analyzer<LispStruct, ListStruct>
 		if (strategy == null) {
 			throw new ProgramErrorException("SpecialOperator symbol supplied is not supported.");
 		}
-		return strategy.analyze(input, semanticAnalyzer);
+		return strategy.analyze(input, analyzer);
 	}
 }

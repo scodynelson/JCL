@@ -16,8 +16,8 @@ public class QuoteAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final QuoteAnalyzer INSTANCE = new QuoteAnalyzer();
 
 	@Override
-	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
-		return analyze(input, semanticAnalyzer, null);
+	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
+		return analyze(input, analyzer, null);
 	}
 
 	public static LispStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer, final String fieldName) {

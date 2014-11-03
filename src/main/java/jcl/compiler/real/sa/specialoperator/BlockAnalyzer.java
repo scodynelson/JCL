@@ -18,7 +18,7 @@ public class BlockAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final BlockAnalyzer INSTANCE = new BlockAnalyzer();
 
 	@Override
-	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
+	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 
 		if (input.size() < 2) {
 			throw new ProgramErrorException("BLOCK: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
@@ -30,7 +30,7 @@ public class BlockAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		}
 
 		final SymbolStruct<?> label = (SymbolStruct) second;
-		semanticAnalyzer.getBlockStack().push(label);
+		analyzer.getBlockStack().push(label);
 
 		try {
 			final List<LispStruct> blockResultList = new ArrayList<>();
@@ -38,12 +38,12 @@ public class BlockAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			blockResultList.add(second);
 
 			final ListStruct body = input.getRest().getRest();
-			final BodyProcessingResult bodyProcessingResult = BodyAnalyzer.INSTANCE.analyze(body, semanticAnalyzer);
+			final BodyProcessingResult bodyProcessingResult = BodyAnalyzer.INSTANCE.analyze(body, analyzer);
 			blockResultList.addAll(bodyProcessingResult.getBodyForms());
 
 			return ListStruct.buildProperList(blockResultList);
 		} finally {
-			semanticAnalyzer.getBlockStack().pop();
+			analyzer.getBlockStack().pop();
 		}
 	}
 }

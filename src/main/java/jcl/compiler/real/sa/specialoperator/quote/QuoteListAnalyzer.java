@@ -15,7 +15,7 @@ public class QuoteListAnalyzer implements Analyzer<ListStruct, ListStruct> {
 	public static final QuoteListAnalyzer INSTANCE = new QuoteListAnalyzer();
 
 	@Override
-	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
+	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 		final SymbolStruct<?> listFnSym;
 		if (input.isDotted()) {
 			listFnSym = GlobalPackageStruct.COMMON_LISP.findSymbol("LIST*").getSymbolStruct();
@@ -27,7 +27,7 @@ public class QuoteListAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
 		final List<LispStruct> formJavaList = input.getAsJavaList();
 		for (final LispStruct currentForm : formJavaList) {
-			final LispStruct transformedForm = semanticAnalyzer.analyzeForm(currentForm);
+			final LispStruct transformedForm = analyzer.analyzeForm(currentForm);
 			transformedForms.add(transformedForm);
 		}
 

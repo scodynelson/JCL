@@ -16,10 +16,10 @@ public class LocallyAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final LocallyAnalyzer INSTANCE = new LocallyAnalyzer();
 
 	@Override
-	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
+	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 
 		final ListStruct body = input.getRest();
-		final BodyProcessingResult bodyProcessingResult = BodyWithDeclaresAnalyzer.INSTANCE.analyze(body, semanticAnalyzer);
+		final BodyProcessingResult bodyProcessingResult = BodyWithDeclaresAnalyzer.INSTANCE.analyze(body, analyzer);
 
 		final List<LispStruct> locallyResultList = new ArrayList<>();
 		locallyResultList.add(SpecialOperator.LOCALLY);

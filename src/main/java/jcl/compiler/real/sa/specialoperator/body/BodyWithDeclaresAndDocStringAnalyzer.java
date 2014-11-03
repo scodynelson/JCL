@@ -17,7 +17,7 @@ public class BodyWithDeclaresAndDocStringAnalyzer implements Analyzer<BodyProces
 	public static final BodyWithDeclaresAndDocStringAnalyzer INSTANCE = new BodyWithDeclaresAndDocStringAnalyzer();
 
 	@Override
-	public BodyProcessingResult analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
+	public BodyProcessingResult analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 		final List<LispStruct> bodyJavaList = input.getAsJavaList();
 
 		final List<LispStruct> declarations = new ArrayList<>();
@@ -29,7 +29,7 @@ public class BodyWithDeclaresAndDocStringAnalyzer implements Analyzer<BodyProces
 
 			LispStruct next = iterator.next();
 			while (iterator.hasNext() && (next instanceof ListStruct) && ((ListStruct) next).getFirst().equals(SpecialOperator.DECLARE)) {
-				final LispStruct analyzedDeclaration = DeclareAnalyzer.INSTANCE.analyze(next, semanticAnalyzer); // TODO: really analyze these???
+				final LispStruct analyzedDeclaration = DeclareAnalyzer.INSTANCE.analyze(next, analyzer); // TODO: really analyze these???
 				declarations.add(analyzedDeclaration);
 				next = iterator.next();
 			}
@@ -40,13 +40,13 @@ public class BodyWithDeclaresAndDocStringAnalyzer implements Analyzer<BodyProces
 			}
 
 			while (iterator.hasNext()) {
-				final LispStruct analyzedForm = semanticAnalyzer.analyzeForm(next);
+				final LispStruct analyzedForm = analyzer.analyzeForm(next);
 				bodyForms.add(analyzedForm);
 				next = iterator.next();
 			}
 
 			// Make sure to analyze and add the last form!!
-			final LispStruct analyzedForm = semanticAnalyzer.analyzeForm(next);
+			final LispStruct analyzedForm = analyzer.analyzeForm(next);
 			bodyForms.add(analyzedForm);
 		}
 

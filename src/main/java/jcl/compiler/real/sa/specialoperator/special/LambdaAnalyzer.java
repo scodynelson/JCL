@@ -29,7 +29,7 @@ public class LambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final LambdaAnalyzer INSTANCE = new LambdaAnalyzer();
 
 	@Override
-	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
+	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 
 		if (input.size() < 2) {
 			throw new ProgramErrorException("LAMBDA: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
@@ -40,24 +40,24 @@ public class LambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			throw new ProgramErrorException("LAMBDA: Parameter list must be of type ListStruct. Got: " + second);
 		}
 
-		final Stack<Environment> environmentStack = semanticAnalyzer.getEnvironmentStack();
+		final Stack<Environment> environmentStack = analyzer.getEnvironmentStack();
 		final Environment parentEnvironment = environmentStack.peek();
 
-		final int tempClosureDepth = semanticAnalyzer.getClosureDepth();
+		final int tempClosureDepth = analyzer.getClosureDepth();
 		final int newClosureDepth = tempClosureDepth + 1;
 
 		final Environment lambdaEnvironment = EnvironmentAccessor.createNewEnvironment(parentEnvironment, Marker.LAMBDA, newClosureDepth);
 		environmentStack.push(lambdaEnvironment);
 
-		final int tempBindingsPosition = semanticAnalyzer.getBindingsPosition();
+		final int tempBindingsPosition = analyzer.getBindingsPosition();
 		try {
-			semanticAnalyzer.setClosureDepth(newClosureDepth);
+			analyzer.setClosureDepth(newClosureDepth);
 
 			final ListStruct parameters = (ListStruct) second;
-			final OrdinaryLambdaListBindings parsedLambdaList = LambdaListParser.parseOrdinaryLambdaList(semanticAnalyzer, parameters);
+			final OrdinaryLambdaListBindings parsedLambdaList = LambdaListParser.parseOrdinaryLambdaList(analyzer, parameters);
 
 			final ListStruct currentBodyForms = input.getRest().getRest();
-			final BodyProcessingResult bodyProcessingResult = BodyWithDeclaresAndDocStringAnalyzer.INSTANCE.analyze(currentBodyForms, semanticAnalyzer);
+			final BodyProcessingResult bodyProcessingResult = BodyWithDeclaresAndDocStringAnalyzer.INSTANCE.analyze(currentBodyForms, analyzer);
 
 			final Environment envList = environmentStack.peek();
 
@@ -67,8 +67,8 @@ public class LambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			final ListStruct newBodyForms = ListStruct.buildProperList(newStartingLambdaBody);
 			return new LambdaEnvironmentListStruct(envList, bodyProcessingResult.getDeclarations(), newBodyForms, parsedLambdaList, bodyProcessingResult.getDocString());
 		} finally {
-			semanticAnalyzer.setClosureDepth(tempClosureDepth);
-			semanticAnalyzer.setBindingsPosition(tempBindingsPosition);
+			analyzer.setClosureDepth(tempClosureDepth);
+			analyzer.setBindingsPosition(tempBindingsPosition);
 			environmentStack.pop();
 		}
 	}

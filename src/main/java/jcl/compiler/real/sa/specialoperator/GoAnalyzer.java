@@ -19,7 +19,7 @@ public class GoAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final GoAnalyzer INSTANCE = new GoAnalyzer();
 
 	@Override
-	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
+	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 
 		if (input.size() != 2) {
 			throw new ProgramErrorException("GO: Incorrect number of arguments: " + input.size() + ". Expected 2 arguments.");
@@ -32,7 +32,7 @@ public class GoAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		SymbolStruct<?> goTagSymbol = null;
 
-		final ListIterator<Map<LispStruct, SymbolStruct<?>>> li1 = semanticAnalyzer.getTagbodyStack().listIterator(semanticAnalyzer.getTagbodyStack().size());
+		final ListIterator<Map<LispStruct, SymbolStruct<?>>> li1 = analyzer.getTagbodyStack().listIterator(analyzer.getTagbodyStack().size());
 
 		while (li1.hasPrevious()) {
 			final Map<LispStruct, SymbolStruct<?>> previousStack = li1.previous();

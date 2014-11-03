@@ -18,7 +18,7 @@ public class SymbolMacroletAnalyzer implements Analyzer<LispStruct, ListStruct> 
 	public static final SymbolMacroletAnalyzer INSTANCE = new SymbolMacroletAnalyzer();
 
 	@Override
-	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
+	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 
 		final LispStruct second = input.getRest().getFirst();
 		if (!(second instanceof ListStruct)) {
@@ -53,7 +53,7 @@ public class SymbolMacroletAnalyzer implements Analyzer<LispStruct, ListStruct> 
 		symbolMacroletResultList.add(second);
 
 		final ListStruct body = input.getRest().getRest();
-		final BodyProcessingResult bodyProcessingResult = BodyWithDeclaresAnalyzer.INSTANCE.analyze(body, semanticAnalyzer);
+		final BodyProcessingResult bodyProcessingResult = BodyWithDeclaresAnalyzer.INSTANCE.analyze(body, analyzer);
 		symbolMacroletResultList.addAll(bodyProcessingResult.getBodyForms());
 
 		return ListStruct.buildProperList(symbolMacroletResultList);

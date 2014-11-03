@@ -19,13 +19,13 @@ public class TagbodyAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final TagbodyAnalyzer INSTANCE = new TagbodyAnalyzer();
 
 	@Override
-	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
+	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 
 		final ListStruct body = input.getRest();
 		final List<LispStruct> bodyJavaList = body.getAsJavaList();
 		final Map<LispStruct, SymbolStruct<?>> currentTagMap = readAllTagbodyTags(bodyJavaList);
 
-		semanticAnalyzer.getTagbodyStack().push(currentTagMap);
+		analyzer.getTagbodyStack().push(currentTagMap);
 
 		try {
 			final List<LispStruct> newBodyJavaList = new ArrayList<>();
@@ -35,7 +35,7 @@ public class TagbodyAnalyzer implements Analyzer<LispStruct, ListStruct> {
 					final SymbolStruct<?> realTagSymbol = currentTagMap.get(currentBodyElement);
 					newBodyJavaList.add(realTagSymbol);
 				} else {
-					final LispStruct analyzedElement = semanticAnalyzer.analyzeForm(currentBodyElement);
+					final LispStruct analyzedElement = analyzer.analyzeForm(currentBodyElement);
 					newBodyJavaList.add(analyzedElement);
 				}
 			}
@@ -46,7 +46,7 @@ public class TagbodyAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 			return ListStruct.buildProperList(tagbodyResultList);
 		} finally {
-			semanticAnalyzer.getTagbodyStack().pop();
+			analyzer.getTagbodyStack().pop();
 		}
 	}
 

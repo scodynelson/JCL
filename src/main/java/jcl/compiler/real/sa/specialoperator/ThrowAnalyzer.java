@@ -15,7 +15,7 @@ public class ThrowAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final ThrowAnalyzer INSTANCE = new ThrowAnalyzer();
 
 	@Override
-	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
+	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 
 		if (input.size() != 3) {
 			throw new ProgramErrorException("THROW: Incorrect number of arguments: " + input.size() + ". Expected 3 arguments.");
@@ -25,11 +25,11 @@ public class ThrowAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		throwResultList.add(SpecialOperator.THROW);
 
 		final LispStruct second = input.getRest().getFirst();
-		final LispStruct secondAnalyzed = semanticAnalyzer.analyzeForm(second);
+		final LispStruct secondAnalyzed = analyzer.analyzeForm(second);
 		throwResultList.add(secondAnalyzed);
 
 		final LispStruct third = input.getRest().getRest().getFirst();
-		final LispStruct thirdAnalyzed = semanticAnalyzer.analyzeForm(third);
+		final LispStruct thirdAnalyzed = analyzer.analyzeForm(third);
 		throwResultList.add(thirdAnalyzed);
 
 		return ListStruct.buildProperList(throwResultList);

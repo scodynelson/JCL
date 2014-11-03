@@ -17,7 +17,7 @@ public class MultipleValueProg1Analyzer implements Analyzer<LispStruct, ListStru
 	public static final MultipleValueProg1Analyzer INSTANCE = new MultipleValueProg1Analyzer();
 
 	@Override
-	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer) {
+	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 
 		if (input.size() < 2) {
 			throw new ProgramErrorException("MULTIPLE-VALUE-PROG1: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
@@ -28,7 +28,7 @@ public class MultipleValueProg1Analyzer implements Analyzer<LispStruct, ListStru
 
 		// Body includes the 'First Form'
 		final ListStruct body = input.getRest();
-		final BodyProcessingResult bodyProcessingResult = BodyAnalyzer.INSTANCE.analyze(body, semanticAnalyzer);
+		final BodyProcessingResult bodyProcessingResult = BodyAnalyzer.INSTANCE.analyze(body, analyzer);
 		multipleValueProg1ResultList.addAll(bodyProcessingResult.getBodyForms());
 
 		return ListStruct.buildProperList(multipleValueProg1ResultList);

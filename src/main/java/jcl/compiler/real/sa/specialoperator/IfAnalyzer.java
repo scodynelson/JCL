@@ -21,7 +21,7 @@ public class IfAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			throw new ProgramErrorException("IF: Incorrect number of arguments: " + input.size() + ". Expected either 3 or 4 arguments.");
 		}
 
-		final List<LispStruct> ifResultList = new ArrayList<>();
+		final List<LispStruct> ifResultList = new ArrayList<>(input.size());
 		ifResultList.add(SpecialOperator.IF);
 
 		final LispStruct second = input.getRest().getFirst();

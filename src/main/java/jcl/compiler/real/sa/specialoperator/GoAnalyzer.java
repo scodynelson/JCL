@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Stack;
 
 public class GoAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
@@ -32,7 +33,8 @@ public class GoAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		SymbolStruct<?> goTagSymbol = null;
 
-		final ListIterator<Map<LispStruct, SymbolStruct<?>>> li1 = analyzer.getTagbodyStack().listIterator(analyzer.getTagbodyStack().size());
+		final Stack<Map<LispStruct, SymbolStruct<?>>> tagbodyStack = analyzer.getTagbodyStack();
+		final ListIterator<Map<LispStruct, SymbolStruct<?>>> li1 = tagbodyStack.listIterator(tagbodyStack.size());
 
 		while (li1.hasPrevious()) {
 			final Map<LispStruct, SymbolStruct<?>> previousStack = li1.previous();
@@ -46,7 +48,7 @@ public class GoAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			throw new ProgramErrorException("GO: No TAGBODY with Tag " + second + " is visible.");
 		}
 
-		final List<LispStruct> goResultList = new ArrayList<>();
+		final List<LispStruct> goResultList = new ArrayList<>(2);
 		goResultList.add(SpecialOperator.GO);
 		goResultList.add(goTagSymbol);
 

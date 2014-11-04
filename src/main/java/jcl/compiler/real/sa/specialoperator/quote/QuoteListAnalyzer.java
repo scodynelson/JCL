@@ -23,9 +23,9 @@ public class QuoteListAnalyzer implements Analyzer<ListStruct, ListStruct> {
 			listFnSym = GlobalPackageStruct.COMMON_LISP.findSymbol("LIST").getSymbolStruct();
 		}
 
-		final List<LispStruct> transformedForms = new ArrayList<>();
-
 		final List<LispStruct> formJavaList = input.getAsJavaList();
+
+		final List<LispStruct> transformedForms = new ArrayList<>(formJavaList.size());
 		for (final LispStruct currentForm : formJavaList) {
 			final LispStruct transformedForm = analyzer.analyzeForm(currentForm);
 			transformedForms.add(transformedForm);

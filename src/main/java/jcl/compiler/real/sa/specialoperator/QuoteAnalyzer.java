@@ -6,7 +6,6 @@ import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.specialoperator.quote.QuoteListAnalyzer;
 import jcl.compiler.real.sa.specialoperator.quote.QuoteSymbolAnalyzer;
 import jcl.structs.conditions.exceptions.ProgramErrorException;
-import jcl.structs.lists.ConsStruct;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.SpecialOperator;
 import jcl.structs.symbols.SymbolStruct;
@@ -17,10 +16,6 @@ public class QuoteAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 	@Override
 	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
-		return analyze(input, analyzer, null);
-	}
-
-	public static LispStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer, final String fieldName) {
 
 		if (input.size() != 2) {
 			throw new ProgramErrorException("QUOTE: Incorrect number of arguments: " + input.size() + ". Expected 2 arguments.");
@@ -30,19 +25,15 @@ public class QuoteAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		final ListStruct newForm;
 		if (element instanceof ListStruct) {
-			newForm = QuoteListAnalyzer.INSTANCE.analyze((ListStruct) element, semanticAnalyzer);
+			newForm = QuoteListAnalyzer.INSTANCE.analyze((ListStruct) element, analyzer);
 		} else if (element instanceof SymbolStruct) {
-			newForm = QuoteSymbolAnalyzer.INSTANCE.analyze((SymbolStruct) element, semanticAnalyzer);
+			newForm = QuoteSymbolAnalyzer.INSTANCE.analyze((SymbolStruct) element, analyzer);
 		} else {
 			return element;
 		}
 
-		final ListStruct initForm = new ConsStruct(SpecialOperator.LOAD_TIME_VALUE, newForm);
-
-		if (fieldName == null) {
-			return LoadTimeValueAnalyzer.INSTANCE.analyze(initForm, semanticAnalyzer);
-		} else {
-			return LoadTimeValueAnalyzer.analyze(initForm, semanticAnalyzer, fieldName);
-		}
+		// If was ListStruct or SymbolStruct, wrap resulting form in Load-Time-Value.
+		final ListStruct initForm = ListStruct.buildProperList(SpecialOperator.LOAD_TIME_VALUE, newForm);
+		return LoadTimeValueAnalyzer.INSTANCE.analyze(initForm, analyzer);
 	}
 }

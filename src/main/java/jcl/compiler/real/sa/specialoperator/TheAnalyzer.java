@@ -30,7 +30,7 @@ public class TheAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		final LispStruct third = input.getRest().getRest().getFirst();
 		final LispStruct thirdAnalyzed = analyzer.analyzeForm(third);
 
-		final List<LispStruct> theResultList = new ArrayList<>();
+		final List<LispStruct> theResultList = new ArrayList<>(3);
 		theResultList.add(SpecialOperator.THE);
 		theResultList.add(second);
 		theResultList.add(thirdAnalyzed);

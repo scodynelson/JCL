@@ -32,7 +32,7 @@ public class ReturnFromAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			throw new ProgramErrorException("RETURN-FROM: No BLOCK with Label " + second + " is visible.");
 		}
 
-		final List<LispStruct> returnFromResultList = new ArrayList<>();
+		final List<LispStruct> returnFromResultList = new ArrayList<>(input.size());
 		returnFromResultList.add(SpecialOperator.RETURN_FROM);
 		returnFromResultList.add(second);
 

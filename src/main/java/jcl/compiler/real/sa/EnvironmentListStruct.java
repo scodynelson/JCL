@@ -8,13 +8,14 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.List;
 
+// TODO: does this have to be a ListStruct?
 public class EnvironmentListStruct extends ListStruct {
 
 	protected final Environment environment;
-	protected final List<LispStruct> declarations;
+	protected final List<ListStruct> declarations;
 	protected final ListStruct bodyForms;
 
-	public EnvironmentListStruct(final Environment environment, final List<LispStruct> declarations, final ListStruct bodyForms) {
+	public EnvironmentListStruct(final Environment environment, final List<ListStruct> declarations, final ListStruct bodyForms) {
 		super(null, null);
 		this.environment = environment;
 		this.declarations = declarations;
@@ -25,7 +26,7 @@ public class EnvironmentListStruct extends ListStruct {
 		return environment;
 	}
 
-	public List<LispStruct> getDeclarations() {
+	public List<ListStruct> getDeclarations() {
 		return declarations;
 	}
 

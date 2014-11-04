@@ -12,12 +12,12 @@ import jcl.structs.symbols.SymbolStruct;
 
 import java.util.List;
 
-public class DeclareAnalyzer implements Analyzer<LispStruct, LispStruct> {
+public class DeclareAnalyzer implements Analyzer<ListStruct, LispStruct> {
 
 	public static final DeclareAnalyzer INSTANCE = new DeclareAnalyzer();
 
 	@Override
-	public LispStruct analyze(final LispStruct input, final SemanticAnalyzer analyzer) {
+	public ListStruct analyze(final LispStruct input, final SemanticAnalyzer analyzer) {
 
 		final List<LispStruct> javaRestList = ((ListStruct) input).getRest().getAsJavaList();
 		for (final LispStruct nextDecl : javaRestList) {
@@ -59,7 +59,7 @@ public class DeclareAnalyzer implements Analyzer<LispStruct, LispStruct> {
 				throw new ProgramErrorException("DECLARE: unknown specifier: " + declIdentifier);
 			}
 		}
-		return input;
+		return NullStruct.INSTANCE;
 	}
 
 	private static void saSpecialDeclaration(final SemanticAnalyzer semanticAnalyzer, final ListStruct declarations) {

@@ -21,7 +21,7 @@ public class ThrowAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			throw new ProgramErrorException("THROW: Incorrect number of arguments: " + input.size() + ". Expected 3 arguments.");
 		}
 
-		final List<LispStruct> throwResultList = new ArrayList<>();
+		final List<LispStruct> throwResultList = new ArrayList<>(3);
 		throwResultList.add(SpecialOperator.THROW);
 
 		final LispStruct second = input.getRest().getFirst();

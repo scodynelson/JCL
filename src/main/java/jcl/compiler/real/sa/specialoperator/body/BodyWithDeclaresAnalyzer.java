@@ -19,7 +19,7 @@ public class BodyWithDeclaresAnalyzer implements Analyzer<BodyProcessingResult, 
 	public BodyProcessingResult analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 		final List<LispStruct> bodyJavaList = input.getAsJavaList();
 
-		final List<LispStruct> declarations = new ArrayList<>();
+		final List<ListStruct> declarations = new ArrayList<>();
 		final List<LispStruct> bodyForms = new ArrayList<>();
 
 		final Iterator<LispStruct> iterator = bodyJavaList.iterator();
@@ -27,7 +27,7 @@ public class BodyWithDeclaresAnalyzer implements Analyzer<BodyProcessingResult, 
 
 			LispStruct next = iterator.next();
 			while (iterator.hasNext() && (next instanceof ListStruct) && ((ListStruct) next).getFirst().equals(SpecialOperator.DECLARE)) {
-				final LispStruct analyzedDeclaration = DeclareAnalyzer.INSTANCE.analyze(next, analyzer);
+				final ListStruct analyzedDeclaration = DeclareAnalyzer.INSTANCE.analyze(next, analyzer);
 				declarations.add(analyzedDeclaration);
 				next = iterator.next();
 			}

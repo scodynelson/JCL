@@ -20,7 +20,7 @@ public class BodyWithDeclaresAndDocStringAnalyzer implements Analyzer<BodyProces
 	public BodyProcessingResult analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 		final List<LispStruct> bodyJavaList = input.getAsJavaList();
 
-		final List<LispStruct> declarations = new ArrayList<>();
+		final List<ListStruct> declarations = new ArrayList<>();
 		StringStruct docString = null;
 		final List<LispStruct> bodyForms = new ArrayList<>();
 
@@ -29,7 +29,7 @@ public class BodyWithDeclaresAndDocStringAnalyzer implements Analyzer<BodyProces
 
 			LispStruct next = iterator.next();
 			while (iterator.hasNext() && (next instanceof ListStruct) && ((ListStruct) next).getFirst().equals(SpecialOperator.DECLARE)) {
-				final LispStruct analyzedDeclaration = DeclareAnalyzer.INSTANCE.analyze(next, analyzer); // TODO: really analyze these???
+				final ListStruct analyzedDeclaration = DeclareAnalyzer.INSTANCE.analyze(next, analyzer);
 				declarations.add(analyzedDeclaration);
 				next = iterator.next();
 			}

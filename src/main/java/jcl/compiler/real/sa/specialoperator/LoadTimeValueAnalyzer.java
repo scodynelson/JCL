@@ -1,15 +1,16 @@
 package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.LoadTimeValue;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.specialoperator.special.LambdaAnalyzer;
+import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.lists.NullStruct;
-import jcl.structs.symbols.Declaration;
+import jcl.structs.symbols.BooleanStruct;
 import jcl.structs.symbols.SpecialOperator;
 import jcl.structs.symbols.SymbolStruct;
 
@@ -24,46 +25,32 @@ public class LoadTimeValueAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 	@Override
 	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
-		return analyze(input, analyzer, "LOAD_TIME_VALUE");
-	}
 
-	public static LispStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer, final String ltvFieldName) {
-		return analyze(input, semanticAnalyzer, ltvFieldName, UUID.randomUUID().toString());
-	}
+		if ((input.size() < 2) || (input.size() > 3)) {
+			throw new ProgramErrorException("LOAD-TIME-VALUE: Incorrect number of arguments: " + input.size() + ". Expected either 2 or 3 arguments.");
+		}
 
-	private static LispStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer, final String ltvFieldName, final String tag) {
-
-		final List<LispStruct> javaClassDeclaration = new ArrayList<>();
-		javaClassDeclaration.add(Declaration.JAVA_CLASS_NAME);
-
-		final SymbolStruct<?> name = new SymbolStruct<>(ltvFieldName + "_FN_" + tag);
-		javaClassDeclaration.add(name);
-
-		final ListStruct javaClassDeclarationList = ListStruct.buildProperList(javaClassDeclaration);
-
-		final List<LispStruct> declarations = new ArrayList<>();
-		declarations.add(SpecialOperator.DECLARE);
-		declarations.add(javaClassDeclarationList);
-
-		final ListStruct declarationsList = ListStruct.buildProperList(declarations);
+		final LispStruct third = input.getRest().getRest().getFirst();
+		if (!(third instanceof BooleanStruct)) {
+			throw new ProgramErrorException("LOAD-TIME-VALUE: Read-Only-P value must be of type BooleanStruct. Got: " + third);
+		}
 
 		final List<LispStruct> lambdaBlock = new ArrayList<>();
 		lambdaBlock.add(SpecialOperator.LAMBDA);
 		lambdaBlock.add(NullStruct.INSTANCE);
-		lambdaBlock.add(declarationsList);
 
-		final ListStruct loadTimeValueBody = input.getRest();
-		lambdaBlock.add(loadTimeValueBody);
+		final LispStruct loadTimeValueForm = input.getRest().getFirst();
+		lambdaBlock.add(loadTimeValueForm);
 
 		final ListStruct lambdaBlockList = ListStruct.buildProperList(lambdaBlock);
 
-		final Stack<Environment> environmentStack = semanticAnalyzer.getEnvironmentStack();
+		final Stack<Environment> environmentStack = analyzer.getEnvironmentStack();
+		final Environment nullEnvironment = Environment.NULL;
+		environmentStack.push(nullEnvironment);
 
 		final ListStruct lambdaAnalyzed;
 		try {
-			final Environment globalEnvironment = environmentStack.elementAt(0);
-			environmentStack.push(globalEnvironment);
-			lambdaAnalyzed = LambdaAnalyzer.INSTANCE.analyze(lambdaBlockList, semanticAnalyzer);
+			lambdaAnalyzed = LambdaAnalyzer.INSTANCE.analyze(lambdaBlockList, analyzer);
 		} finally {
 			environmentStack.pop();
 		}
@@ -71,8 +58,10 @@ public class LoadTimeValueAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		final Environment currentEnvironment = environmentStack.peek();
 		final Environment enclosingLambda = EnvironmentAccessor.getEnclosingLambda(currentEnvironment);
 
-		final SymbolStruct<?> ltvName = new SymbolStruct<>(ltvFieldName + tag);
+		final String ltvNameString = "LOAD_TIME_VALUE" + UUID.randomUUID();
+		final SymbolStruct<?> ltvName = new SymbolStruct<>(ltvNameString);
 
+		// TODO: load-time-value read-only-p
 		final LoadTimeValue newLoadTimeValue = new LoadTimeValue(ltvName, lambdaAnalyzed);
 		enclosingLambda.getLoadTimeValues().add(newLoadTimeValue);
 

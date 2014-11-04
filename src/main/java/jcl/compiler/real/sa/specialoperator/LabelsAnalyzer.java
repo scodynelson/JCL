@@ -108,7 +108,7 @@ public class LabelsAnalyzer implements Analyzer<LispStruct, ListStruct> {
 				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
 				analyzer.setBindingsPosition(newBindingsPosition);
 
-				EnvironmentAccessor.createNewLetBinding(currentEnvironment, functionName, newBindingsPosition, paramValueInitForm, false);
+				EnvironmentAccessor.createNewEnvironmentBinding(currentEnvironment, functionName, newBindingsPosition, paramValueInitForm, false);
 			}
 
 			final ListStruct currentBodyForms = input.getRest().getRest();

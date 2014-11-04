@@ -2,19 +2,6 @@ package jcl.compiler.real.environment;
 
 import jcl.LispStruct;
 import jcl.compiler.old.symbol.KeywordOld;
-import jcl.compiler.real.environment.Allocation;
-import jcl.compiler.real.environment.Binding;
-import jcl.compiler.real.environment.Closure;
-import jcl.compiler.real.environment.ClosureBinding;
-import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.LambdaBinding;
-import jcl.compiler.real.environment.LetBinding;
-import jcl.compiler.real.environment.LocalAllocation;
-import jcl.compiler.real.environment.Marker;
-import jcl.compiler.real.environment.PositionAllocation;
-import jcl.compiler.real.environment.Scope;
-import jcl.compiler.real.environment.SymbolBinding;
-import jcl.compiler.real.environment.SymbolTable;
 import jcl.structs.lists.ConsStruct;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.SymbolStruct;
@@ -39,23 +26,11 @@ public class EnvironmentAccessor {
 		return createNewEnvironment(Environment.NULL, Marker.LAMBDA, 0);
 	}
 
-	public static Environment createNewLambdaBinding(final Environment currentEnvironment, final SymbolStruct<?> newVariable,
-	                                                 final int position, final LispStruct initForm, final boolean isSpecial) {
+	public static Environment createNewEnvironmentBinding(final Environment currentEnvironment, final SymbolStruct<?> newVariable,
+	                                                      final int position, final LispStruct initForm, final boolean isSpecial) {
 
 		final Scope scope = (newVariable.isSpecial() || isSpecial) ? Scope.DYNAMIC : Scope.LEXICAL;
-		final Binding binding = new LambdaBinding(newVariable, position, scope, T.INSTANCE, initForm);
-
-		final List<Binding> currentBindings = currentEnvironment.getBindings();
-		currentBindings.add(binding);
-
-		return currentEnvironment;
-	}
-
-	public static Environment createNewLetBinding(final Environment currentEnvironment, final SymbolStruct<?> newVariable,
-	                                              final int position, final LispStruct initForm, final boolean isSpecial) {
-
-		final Scope scope = (newVariable.isSpecial() || isSpecial) ? Scope.DYNAMIC : Scope.LEXICAL;
-		final Binding binding = new LetBinding(newVariable, position, scope, T.INSTANCE, initForm);
+		final Binding binding = new EnvironmentBinding(newVariable, position, scope, T.INSTANCE, initForm);
 
 		final List<Binding> currentBindings = currentEnvironment.getBindings();
 		currentBindings.add(binding);

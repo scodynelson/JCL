@@ -108,7 +108,7 @@ public class MacroletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
 				analyzer.setBindingsPosition(newBindingsPosition);
 
-				EnvironmentAccessor.createNewLetBinding(currentEnvironment, macroName, newBindingsPosition, paramValueInitForm, false);
+				EnvironmentAccessor.createNewEnvironmentBinding(currentEnvironment, macroName, newBindingsPosition, paramValueInitForm, false);
 			}
 
 			final ListStruct currentBodyForms = input.getRest().getRest();

@@ -1,12 +1,12 @@
 package jcl.compiler.real.environment.lambdalist;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.FunctionBinding;
+import jcl.compiler.real.environment.EnvironmentBinding;
 import jcl.compiler.real.environment.Scope;
 import jcl.structs.symbols.SymbolStruct;
 import jcl.types.T;
 
-public class OptionalBinding extends FunctionBinding {
+public class OptionalBinding extends EnvironmentBinding {
 
 	private final SuppliedPBinding suppliedPBinding;
 

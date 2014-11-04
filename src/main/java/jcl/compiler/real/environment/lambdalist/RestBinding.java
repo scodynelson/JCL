@@ -1,11 +1,11 @@
 package jcl.compiler.real.environment.lambdalist;
 
-import jcl.compiler.real.environment.FunctionBinding;
+import jcl.compiler.real.environment.EnvironmentBinding;
 import jcl.compiler.real.environment.Scope;
 import jcl.structs.symbols.SymbolStruct;
 import jcl.types.List;
 
-public class RestBinding extends FunctionBinding {
+public class RestBinding extends EnvironmentBinding {
 
 	public RestBinding(final SymbolStruct<?> symbolStruct, final int allocationPosition) {
 		super(symbolStruct, allocationPosition, Scope.LEXICAL, List.INSTANCE, null);

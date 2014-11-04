@@ -12,67 +12,66 @@ import jcl.structs.symbols.SymbolStruct;
 
 import java.util.List;
 
-public class DeclareAnalyzer implements Analyzer<ListStruct, LispStruct> {
+public class DeclareAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
 	public static final DeclareAnalyzer INSTANCE = new DeclareAnalyzer();
 
 	@Override
-	public ListStruct analyze(final LispStruct input, final SemanticAnalyzer analyzer) {
+	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 
-		final List<LispStruct> javaRestList = ((ListStruct) input).getRest().getAsJavaList();
-		for (final LispStruct nextDecl : javaRestList) {
+		final ListStruct declSpecs = input.getRest();
 
-			final ListStruct declarationSpec = (ListStruct) nextDecl;
-			final Object declIdentifier = declarationSpec.getFirst();
-			final ListStruct declList = declarationSpec.getRest();
+		final List<LispStruct> declSpecsJavaList = declSpecs.getAsJavaList();
+		for (final LispStruct declSpec : declSpecsJavaList) {
+
+			if (!(declSpec instanceof ListStruct)) {
+				throw new ProgramErrorException("DECLARE: Declaration specifier must be of type ListStruct. Got: " + declSpec);
+			}
+
+			final ListStruct declSpecList = (ListStruct) declSpec;
+			final Object declIdentifier = declSpecList.getFirst();
+			final ListStruct declSpecBody = declSpecList.getRest();
 
 			// now come the various cases
-			if (declIdentifier.equals(Declaration.LISP_NAME)) {
-				//we don't do anything here yet
-			} else if (declIdentifier.equals(Declaration.JAVA_CLASS_NAME)) {
-				//we don't do anything here yet
-			} else if (declIdentifier.equals(Declaration.DOCUMENTATION)) {
-				//we don't do anything here yet
-			} else if (declIdentifier.equals(Declaration.DECLARATION)) {
-				//we don't do anything here yet
+			if (declIdentifier.equals(Declaration.DECLARATION)) {
+				//TODO: we don't do anything here yet
 			} else if (declIdentifier.equals(Declaration.DYNAMIC_EXTENT)) {
-				//we don't do anything here yet
+				//TODO: we don't do anything here yet
 			} else if (declIdentifier.equals(Declaration.FTYPE)) {
-				//we don't do anything here yet
+				//TODO: we don't do anything here yet
 			} else if (declIdentifier.equals(Declaration.IGNORABLE)) {
-				//we don't do anything here yet
+				//TODO: we don't do anything here yet
 			} else if (declIdentifier.equals(Declaration.IGNORE)) {
-				//we don't do anything here yet
+				//TODO: we don't do anything here yet
 			} else if (declIdentifier.equals(Declaration.INLINE)) {
-				//we don't do anything here yet
+				//TODO: we don't do anything here yet
 			} else if (declIdentifier.equals(Declaration.NOTINLINE)) {
-				//we don't do anything here yet
+				//TODO: we don't do anything here yet
 			} else if (declIdentifier.equals(Declaration.OPTIMIZE)) {
-				//we don't do anything here yet
+				//TODO: we don't do anything here yet
 			} else if (declIdentifier.equals(Declaration.SPECIAL)) {
-				saSpecialDeclaration(analyzer, declList);
+				saSpecialDeclaration(declSpecBody, analyzer);
 			} else if (declIdentifier.equals(Declaration.TYPE)) {
 				//we don't do anything here yet
-			} else if (declIdentifier.equals(NullStruct.INSTANCE)) {
-				//drop it on the floor
 			} else {
-				throw new ProgramErrorException("DECLARE: unknown specifier: " + declIdentifier);
+				throw new ProgramErrorException("DECLARE: Declaration specifier not supported: " + declIdentifier);
 			}
 		}
+
 		return NullStruct.INSTANCE;
 	}
 
-	private static void saSpecialDeclaration(final SemanticAnalyzer semanticAnalyzer, final ListStruct declarations) {
-		final List<LispStruct> declarationsAsJavaList = declarations.getAsJavaList();
+	private static void saSpecialDeclaration(final ListStruct declSpecBody, final SemanticAnalyzer analyzer) {
+		final List<LispStruct> declSpecBodyJavaList = declSpecBody.getAsJavaList();
 
 		// Special declaration can apply to multiple SymbolStructs
-		for (final LispStruct nextDecl : declarationsAsJavaList) {
-			if (!(nextDecl instanceof SymbolStruct)) {
-				throw new ProgramErrorException("DECLARE: a non-SymbolStruct entity cannot be made SPECIAL: " + nextDecl);
+		for (final LispStruct declSpecBodyElement : declSpecBodyJavaList) {
+			if (!(declSpecBodyElement instanceof SymbolStruct)) {
+				throw new ProgramErrorException("DECLARE: a non-SymbolStruct entity cannot be made SPECIAL: " + declSpecBodyElement);
 			}
 
-			final SymbolStruct<?> sym = (SymbolStruct) nextDecl;
-			SymbolStructAnalyzer.INSTANCE.analyze(sym, semanticAnalyzer);
+			final SymbolStruct<?> sym = (SymbolStruct) declSpecBodyElement;
+			SymbolStructAnalyzer.INSTANCE.analyze(sym, analyzer);
 		}
 	}
 }

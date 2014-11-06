@@ -45,7 +45,7 @@ public class FletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		final int tempBindingsPosition = analyzer.getBindingsPosition();
 		try {
-			final ListStruct fletFunctions = input.getRest();
+			final ListStruct fletFunctions = (ListStruct) second;
 			final List<LispStruct> fletFunctionsJavaList = fletFunctions.getAsJavaList();
 
 			for (final LispStruct currentFunction : fletFunctionsJavaList) {
@@ -71,7 +71,7 @@ public class FletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 				final List<LispStruct> innerBlock = new ArrayList<>();
 				innerBlock.add(SpecialOperator.BLOCK);
 				innerBlock.add(functionName);
-				innerBlock.add(body);
+				innerBlock.addAll(body.getAsJavaList());
 
 				final ListStruct innerBlockListStruct = ListStruct.buildProperList(innerBlock);
 

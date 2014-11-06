@@ -27,7 +27,7 @@ public class BodyWithDeclaresAnalyzer implements Analyzer<BodyProcessingResult, 
 
 			LispStruct next = iterator.next();
 			while (iterator.hasNext() && (next instanceof ListStruct) && ((ListStruct) next).getFirst().equals(SpecialOperator.DECLARE)) {
-				final ListStruct analyzedDeclaration = DeclareAnalyzer.INSTANCE.analyze(next, analyzer);
+				final ListStruct analyzedDeclaration = DeclareAnalyzer.INSTANCE.analyze((ListStruct) next, analyzer);
 				declarations.add(analyzedDeclaration);
 				next = iterator.next();
 			}

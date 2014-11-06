@@ -81,7 +81,7 @@ public class SymbolTokenAccumulatedState extends State {
 			final PackageSymbolStruct packageSymbol = pkg.findSymbol(symName);
 			if (packageSymbol == null) {
 //				tokenBuilder.setErrorMessage("Unbound variable: " + symName); // TODO: This check will happen in the compiler...
-				return new SymbolStruct<>(symName);
+				return new SymbolStruct<>(symName, pkg);
 			}
 			return packageSymbol.getSymbolStruct();
 		}

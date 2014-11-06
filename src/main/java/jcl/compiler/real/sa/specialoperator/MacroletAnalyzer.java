@@ -48,7 +48,7 @@ public class MacroletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		final int tempBindingsPosition = analyzer.getBindingsPosition();
 		try {
-			final ListStruct macroletMacros = input.getRest();
+			final ListStruct macroletMacros = (ListStruct) second;
 			final List<LispStruct> macroletMacrosJavaList = macroletMacros.getAsJavaList();
 
 			for (final LispStruct currentMacro : macroletMacrosJavaList) {
@@ -74,7 +74,7 @@ public class MacroletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 				final List<LispStruct> innerBlock = new ArrayList<>();
 				innerBlock.add(SpecialOperator.BLOCK);
 				innerBlock.add(macroName);
-				innerBlock.add(body);
+				innerBlock.addAll(body.getAsJavaList());
 
 				final ListStruct innerBlockListStruct = ListStruct.buildProperList(innerBlock);
 

@@ -11,8 +11,8 @@ import java.util.List;
 
 public class Environment implements LispStruct {
 
-	public static final Environment FREE = null;
-	public static final Environment NULL = null;
+	public static final Environment FREE = new Environment(null, Marker.LAMBDA, 0);
+	public static final Environment NULL = new Environment(null, Marker.LAMBDA, 0);
 
 	private final Environment parent;
 	private final Marker marker;

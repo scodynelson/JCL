@@ -48,7 +48,7 @@ public class LabelsAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		final int tempBindingsPosition = analyzer.getBindingsPosition();
 		try {
-			final ListStruct labelsFunctions = input.getRest();
+			final ListStruct labelsFunctions = (ListStruct) second;
 			final List<LispStruct> labelsFunctionsJavaList = labelsFunctions.getAsJavaList();
 
 			for (final LispStruct currentFunction : labelsFunctionsJavaList) {
@@ -74,7 +74,7 @@ public class LabelsAnalyzer implements Analyzer<LispStruct, ListStruct> {
 				final List<LispStruct> innerBlock = new ArrayList<>();
 				innerBlock.add(SpecialOperator.BLOCK);
 				innerBlock.add(functionName);
-				innerBlock.add(body);
+				innerBlock.addAll(body.getAsJavaList());
 
 				final ListStruct innerBlockListStruct = ListStruct.buildProperList(innerBlock);
 

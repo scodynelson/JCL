@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.linked.project.path="$MODULE_DIR$" external.root.project.path="$MODULE_DIR$" external.system.id="GRADLE" external.system.module.group="jcl" external.system.module.version="1.0-SNAPSHOT" type="JAVA_MODULE" version="4">
+<module external.linked.project.id="JCL" external.linked.project.path="$MODULE_DIR$" external.root.project.path="$MODULE_DIR$" external.system.id="GRADLE" external.system.module.group="jcl" external.system.module.version="1.0-SNAPSHOT" type="JAVA_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="Osmorc" name="OSGi">
+      <configuration manifestGenerationMode="Manually" manifestLocation="build/tmp/expandedArchives/org.jacoco.agent-0.7.2.201409121644.jar_6a4b6uhbxbszm1iaf7zpkhkvu/META-INF/MANIFEST.MF" jarfileLocation="JCL.jar" outputPathType="CompilerOutputPath" bndFileLocation="" bundlorFileLocation="" bundleActivator="" bundleSymbolicName="" bundleVersion="1.0.0" ignoreFilePattern="" useProjectDefaultManifestFileLocation="false" alwaysRebuildBundleJAR="false" doNotSynchronizeWithMaven="false">
+        <additionalProperties />
+        <additionalJARContents />
+      </configuration>
+    </facet>
+  </component>
   <component name="NewModuleRootManager" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/build/classes/main" />
     <output-test url="file://$MODULE_DIR$/build/classes/test" />
@@ -10,21 +18,21 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
       <excludeFolder url="file://$MODULE_DIR$/.gradle" />
+      <excludeFolder url="file://$MODULE_DIR$/build" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="Gradle: commons-lang3-3.3.2" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: commons-math3-3.3" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: slf4j-api-1.7.7" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: logback-core-1.1.2" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: logback-classic-1.1.2" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: commons-collections4-4.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: commons-io-2.4" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: testng-6.8.8" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: bsh-2.0b4" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: jcommander-1.27" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: asm-all-5.0.3" level="project" />
-    <orderEntry type="library" exported="" scope="RUNTIME" name="Gradle: groovy-2.3.7" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: org.apache.commons:commons-lang3:3.3.2" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: org.apache.commons:commons-math3:3.3" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: org.apache.commons:commons-collections4:4.0" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: commons-io:commons-io:2.4" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: org.ow2.asm:asm-all:5.0.3" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: org.slf4j:slf4j-api:1.7.7" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: ch.qos.logback:logback-core:1.1.2" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: ch.qos.logback:logback-classic:1.1.2" level="project" />
+    <orderEntry type="library" exported="" scope="RUNTIME" name="Gradle: org.codehaus.groovy:groovy:2.3.7" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: org.testng:testng:6.8.8" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: org.beanshell:bsh:2.0b4" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: com.beust:jcommander:1.27" level="project" />
   </component>
 </module>
-

@@ -49,6 +49,12 @@ dependencies {
 apply plugin: 'application'
 mainClassName = "jcl.system.JCL"
 
+task copyToLib(type: Copy) {
+	into "$buildDir/libs"
+	from configurations.runtime
+}
+build.dependsOn(copyToLib)
+
 apply plugin: 'jacoco'
 jacoco {
 	toolVersion = '0.7.2.201409121644'

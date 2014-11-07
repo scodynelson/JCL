@@ -1,8 +1,8 @@
 package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.EnvironmentListStruct;
@@ -13,6 +13,7 @@ import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.SpecialOperator;
 import jcl.structs.symbols.SymbolStruct;
+import jcl.system.StackUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,13 +44,17 @@ public class LabelsAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		final Environment labelsEnvironment = EnvironmentAccessor.createNewEnvironment(parentEnvironment, Marker.LABELS, newClosureDepth);
 		environmentStack.push(labelsEnvironment);
 
-		// NOTE: Prior functions that resolve later functions will be handled automatically. Unknown function calls will
-		//       still be stored in the SemanticAnalyzer.undefinedFunctions field.
+		final Stack<SymbolStruct<?>> functionNameStack = analyzer.getFunctionNameStack();
+		List<SymbolStruct<?>> functionNames = null;
 
 		final int tempBindingsPosition = analyzer.getBindingsPosition();
 		try {
 			final ListStruct labelsFunctions = (ListStruct) second;
 			final List<LispStruct> labelsFunctionsJavaList = labelsFunctions.getAsJavaList();
+			functionNames = getFunctionNames(labelsFunctionsJavaList);
+
+			// Add function names BEFORE analyzing the functions
+			StackUtils.pushAll(functionNameStack, functionNames);
 
 			for (final LispStruct currentFunction : labelsFunctionsJavaList) {
 				if (!(currentFunction instanceof ListStruct)) {
@@ -93,17 +98,7 @@ public class LabelsAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 				// Evaluate in the current environment. This is one of the differences between Flet and Labels.
 				final Environment currentEnvironment = environmentStack.peek();
-
-				final Stack<SymbolStruct<?>> functionNameStack = analyzer.getFunctionNameStack();
-
-				// Push the current functionName onto the Stack. This is another one of the differences between Flet and Labels.
-				final LispStruct paramValueInitForm;
-				try {
-					functionNameStack.push(functionName);
-					paramValueInitForm = analyzer.analyzeForm(innerFunctionListStruct);
-				} finally {
-					functionNameStack.pop();
-				}
+				final LispStruct paramValueInitForm = analyzer.analyzeForm(innerFunctionListStruct);
 
 				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
 				analyzer.setBindingsPosition(newBindingsPosition);
@@ -119,9 +114,35 @@ public class LabelsAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			final ListStruct newBodyForms = ListStruct.buildProperList(bodyProcessingResult.getBodyForms());
 			return new EnvironmentListStruct(envList, bodyProcessingResult.getDeclarations(), newBodyForms);
 		} finally {
+			if (functionNames != null) {
+				StackUtils.popX(functionNameStack, functionNames.size());
+			}
+
 			analyzer.setClosureDepth(tempClosureDepth);
 			analyzer.setBindingsPosition(tempBindingsPosition);
 			environmentStack.pop();
 		}
+	}
+
+	private List<SymbolStruct<?>> getFunctionNames(final List<LispStruct> functionDefList) {
+
+		final List<SymbolStruct<?>> functionNames = new ArrayList<>(functionDefList.size());
+
+		for (final LispStruct currentFunctionDef : functionDefList) {
+			if (!(currentFunctionDef instanceof ListStruct)) {
+				throw new ProgramErrorException("LABELS: Function parameter must be of type ListStruct. Got: " + currentFunctionDef);
+			}
+			final ListStruct functionList = (ListStruct) currentFunctionDef;
+
+			final LispStruct functionListFirst = functionList.getFirst();
+			if (!(functionListFirst instanceof SymbolStruct)) {
+				throw new ProgramErrorException("LABELS: Function parameter first element value must be of type SymbolStruct. Got: " + functionListFirst);
+			}
+
+			final SymbolStruct<?> functionName = (SymbolStruct) functionListFirst;
+			functionNames.add(functionName);
+		}
+
+		return functionNames;
 	}
 }

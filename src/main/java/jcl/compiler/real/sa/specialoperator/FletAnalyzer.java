@@ -1,8 +1,8 @@
 package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.EnvironmentListStruct;
@@ -13,6 +13,7 @@ import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.SpecialOperator;
 import jcl.structs.symbols.SymbolStruct;
+import jcl.system.StackUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,10 +44,14 @@ public class FletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		final Environment fletEnvironment = EnvironmentAccessor.createNewEnvironment(parentEnvironment, Marker.FLET, newClosureDepth);
 		environmentStack.push(fletEnvironment);
 
+		final Stack<SymbolStruct<?>> functionNameStack = analyzer.getFunctionNameStack();
+		List<SymbolStruct<?>> functionNames = null;
+
 		final int tempBindingsPosition = analyzer.getBindingsPosition();
 		try {
 			final ListStruct fletFunctions = (ListStruct) second;
 			final List<LispStruct> fletFunctionsJavaList = fletFunctions.getAsJavaList();
+			functionNames = getFunctionNames(fletFunctionsJavaList);
 
 			for (final LispStruct currentFunction : fletFunctionsJavaList) {
 				if (!(currentFunction instanceof ListStruct)) {
@@ -104,6 +109,9 @@ public class FletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 				EnvironmentAccessor.createNewEnvironmentBinding(currentEnvironment, functionName, newBindingsPosition, paramValueInitForm, false);
 			}
 
+			// Add function names AFTER analyzing the functions
+			StackUtils.pushAll(functionNameStack, functionNames);
+
 			final ListStruct currentBodyForms = input.getRest().getRest();
 			final BodyProcessingResult bodyProcessingResult = BodyWithDeclaresAnalyzer.INSTANCE.analyze(currentBodyForms, analyzer);
 
@@ -112,9 +120,35 @@ public class FletAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			final ListStruct newBodyForms = ListStruct.buildProperList(bodyProcessingResult.getBodyForms());
 			return new EnvironmentListStruct(envList, bodyProcessingResult.getDeclarations(), newBodyForms);
 		} finally {
+			if (functionNames != null) {
+				StackUtils.popX(functionNameStack, functionNames.size());
+			}
+
 			analyzer.setClosureDepth(tempClosureDepth);
 			analyzer.setBindingsPosition(tempBindingsPosition);
 			environmentStack.pop();
 		}
+	}
+
+	private List<SymbolStruct<?>> getFunctionNames(final List<LispStruct> functionDefList) {
+
+		final List<SymbolStruct<?>> functionNames = new ArrayList<>(functionDefList.size());
+
+		for (final LispStruct currentFunctionDef : functionDefList) {
+			if (!(currentFunctionDef instanceof ListStruct)) {
+				throw new ProgramErrorException("FLET: Function parameter must be of type ListStruct. Got: " + currentFunctionDef);
+			}
+			final ListStruct functionList = (ListStruct) currentFunctionDef;
+
+			final LispStruct functionListFirst = functionList.getFirst();
+			if (!(functionListFirst instanceof SymbolStruct)) {
+				throw new ProgramErrorException("FLET: Function parameter first element value must be of type SymbolStruct. Got: " + functionListFirst);
+			}
+
+			final SymbolStruct<?> functionName = (SymbolStruct) functionListFirst;
+			functionNames.add(functionName);
+		}
+
+		return functionNames;
 	}
 }

@@ -51,7 +51,7 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 	}
 
 	/**
-	 * This method gets the string type from the provided isAdjustable, fillPointer, and elementType values.
+	 * Gets the string type from the provided isAdjustable, fillPointer, and elementType values.
 	 *
 	 * @param isAdjustable
 	 * 		whether or not the string is adjustable
@@ -71,12 +71,12 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 	}
 
 	/**
-	 * This method gets a list of {@link CharacterStruct}s from the provided Java string value.
+	 * Gets a list of {@link CharacterStruct}s from the provided {@link java.lang.String} value.
 	 *
 	 * @param stringValue
 	 * 		the Java string to convert to a list of {@link CharacterStruct}s
 	 *
-	 * @return a list of {@link CharacterStruct}s from the provided Java string value
+	 * @return a list of {@link CharacterStruct}s from the provided {@link java.lang.String} value
 	 */
 	private static List<CharacterStruct> getCharList(final java.lang.String stringValue) {
 		final List<CharacterStruct> charList = new ArrayList<>(stringValue.length());
@@ -88,9 +88,9 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 	}
 
 	/**
-	 * This method returns the Java string representation of the {@link StringStruct}.
+	 * Returns the {@link java.lang.String} representation of the StringStruct.
 	 *
-	 * @return a Java string representation of the StringStruct
+	 * @return a {@link java.lang.String} representation of the StringStruct
 	 */
 	public java.lang.String getAsJavaString() {
 		final StringBuilder stringBuilder = new StringBuilder(contents.size());

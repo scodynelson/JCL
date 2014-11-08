@@ -28,9 +28,8 @@ final class StreamUtils {
 	}
 
 	/**
-	 * This method is used to get a resulting read object from the provided {@code readVal}, throw an error if {@code
-	 * eofErrorP} is true and the value is the EOF value, or a result with the {@code eofValue} if {@code eofErrorP} is
-	 * false.
+	 * Used to get a resulting read object from the provided {@code readVal}, throw an error if {@code eofErrorP} is
+	 * true and the value is the EOF value, or a result with the {@code eofValue} if {@code eofErrorP} is false.
 	 *
 	 * @param readVal
 	 * 		the character or byte read
@@ -55,9 +54,8 @@ final class StreamUtils {
 	}
 
 	/**
-	 * This method is used to get a resulting peek object from the provided {@code nextChar}, throw an error if {@code
-	 * eofErrorP} is true and the value is the EOF value, or a result with the {@code eofValue} if {@code eofErrorP} is
-	 * false.
+	 * Used to get a resulting peek object from the provided {@code nextChar}, throw an error if {@code eofErrorP} is
+	 * true and the value is the EOF value, or a result with the {@code eofValue} if {@code eofErrorP} is false.
 	 *
 	 * @param nextChar
 	 * 		the next character peeked

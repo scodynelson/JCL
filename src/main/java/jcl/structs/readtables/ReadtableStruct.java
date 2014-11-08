@@ -76,7 +76,7 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method initializes and fills all standard readtable structures.
+	 * Initializes and fills all standard readtable structures.
 	 */
 	private void init() {
 		//initialize the Standard-Readtable Reader Macro Functions
@@ -135,26 +135,26 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * Getter for readtable case property.
+	 * Getter for readtable {@link #readtableCase} property.
 	 *
-	 * @return readtable case property
+	 * @return readtable {@link #readtableCase} property
 	 */
 	public CaseSpec getReadtableCase() {
 		return readtableCase;
 	}
 
 	/**
-	 * Setter for readtable case property.
+	 * Setter for readtable {@link #readtableCase} property.
 	 *
 	 * @param readtableCase
-	 * 		new readtable case property
+	 * 		new readtable {@link #readtableCase} property
 	 */
 	public void setReadtableCase(final CaseSpec readtableCase) {
 		this.readtableCase = readtableCase;
 	}
 
 	/**
-	 * This method retrieves the macro character reader function for the provided {@code codePoint}.
+	 * Retrieves the macro character reader function for the provided {@code codePoint}.
 	 *
 	 * @param codePoint
 	 * 		the key for the macro character reader function
@@ -166,9 +166,9 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method sets the macro character reader function for the provided {@code codePoint} to the provided {@code
-	 * readerMacroFunction},
-	 * designating the syntax type as terminating if the provided {@code nonTerminatingP} is false.
+	 * Sets the macro character reader function for the provided {@code codePoint} to the provided {@code
+	 * readerMacroFunction}, designating the syntax type as terminating if the provided {@code nonTerminatingP} is
+	 * false.
 	 *
 	 * @param codePoint
 	 * 		the key for the macro character reader function to set
@@ -185,7 +185,7 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method gets the dispatching table for the provided {@code codePoint}.
+	 * Gets the dispatching table for the provided {@code codePoint}.
 	 *
 	 * @param codePoint
 	 * 		the key for the dispatch table
@@ -197,9 +197,8 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method creates a dispatching table for the provided {@code codePoint}, designating the syntax type as
-	 * terminating
-	 * if the provided {@code nonTerminatingP} is false.
+	 * Creates a dispatching table for the provided {@code codePoint}, designating the syntax type as terminating if
+	 * the provided {@code nonTerminatingP} is false.
 	 *
 	 * @param codePoint
 	 * 		the key for the new dispatch table
@@ -216,8 +215,8 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method gets the macro character reader function for the provided {@code subCodePoint} within the provided
-	 * {@code dispatchCodePoint} dispatch table.
+	 * Gets the macro character reader function for the provided {@code subCodePoint} within the provided {@code
+	 * dispatchCodePoint} dispatch table.
 	 *
 	 * @param dispatchCodePoint
 	 * 		the key for the dispatch table to search for the macro character reader function
@@ -231,9 +230,8 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method sets the macro character reader function for the provided {@code subCodePoint} to the provided {@code
-	 * readerMacroFunction}
-	 * within the provided {@code dispatchCodePoint} dispatch table.
+	 * Sets the macro character reader function for the provided {@code subCodePoint} to the provided {@code
+	 * readerMacroFunction} within the provided {@code dispatchCodePoint} dispatch table.
 	 *
 	 * @param dispatchCodePoint
 	 * 		the key for the dispatch table to set the macro character reader function
@@ -247,7 +245,7 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method gets the attribute type for the provided {@code codePoint} value.
+	 * Gets the attribute type for the provided {@code codePoint} value.
 	 *
 	 * @param codePoint
 	 * 		the codePoint for the attribute type to retrieve
@@ -259,7 +257,7 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method gets the syntax type for the provided {@code codePoint} value.
+	 * Gets the syntax type for the provided {@code codePoint} value.
 	 *
 	 * @param codePoint
 	 * 		the codePoint for the syntax type to retrieve

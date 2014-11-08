@@ -38,18 +38,18 @@ public final class PathnameDirectoryComponent {
 	}
 
 	/**
-	 * Getter for pathname directory type.
+	 * Getter for pathname directory component {@link #pathnameDirectoryType} property.
 	 *
-	 * @return pathname directory type
+	 * @return pathname directory component {@link #pathnameDirectoryType} property
 	 */
 	public PathnameDirectoryType getPathnameDirectoryType() {
 		return pathnameDirectoryType;
 	}
 
 	/**
-	 * Getter for pathname directory levels.
+	 * Getter for pathname directory component {@link #directoryLevels} property.
 	 *
-	 * @return pathname directory levels
+	 * @return pathname directory component {@link #directoryLevels} property
 	 */
 	public List<PathnameDirectoryLevel> getDirectoryLevels() {
 		return directoryLevels;

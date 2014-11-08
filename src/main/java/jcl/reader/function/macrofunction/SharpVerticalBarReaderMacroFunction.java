@@ -4,7 +4,7 @@ import jcl.LispStruct;
 import jcl.reader.impl.Reader;
 import jcl.reader.syntax.CharacterConstants;
 import jcl.reader.syntax.reader.ReadResult;
-import jcl.structs.comments.CommentStruct;
+import jcl.reader.CommentStruct;
 import jcl.structs.symbols.variables.Variable;
 
 import java.math.BigInteger;
@@ -57,6 +57,6 @@ public class SharpVerticalBarReaderMacroFunction extends ReaderMacroFunction {
 		}
 
 		final String stringValue = stringBuilder.toString();
-		return CommentStruct.getStruct(stringValue);
+		return new CommentStruct(stringValue);
 	}
 }

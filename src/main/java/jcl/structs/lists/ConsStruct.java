@@ -43,38 +43,38 @@ public class ConsStruct extends ListStruct {
 	}
 
 	/**
-	 * Getter for cons car property.
+	 * Getter for cons {@link #car} property.
 	 *
-	 * @return cons car property
+	 * @return cons {@link #car} property
 	 */
 	public LispStruct getCar() {
 		return car;
 	}
 
 	/**
-	 * Setter for cons car property.
+	 * Setter for cons {@link #car} property.
 	 *
 	 * @param car
-	 * 		new cons car property value
+	 * 		new cons {@link #car} property value
 	 */
 	public void setCar(final LispStruct car) {
 		this.car = car;
 	}
 
 	/**
-	 * Getter for cons cdr property.
+	 * Getter for cons {@link #cdr} property.
 	 *
-	 * @return cons cdr property
+	 * @return cons {@link #cdr} property
 	 */
 	public LispStruct getCdr() {
 		return cdr;
 	}
 
 	/**
-	 * Setter for cons cdr property.
+	 * Setter for cons {@link #cdr} property.
 	 *
 	 * @param cdr
-	 * 		new cons cdr property value
+	 * 		new cons {@link #cdr} property value
 	 */
 	public void setCdr(final LispStruct cdr) {
 		this.cdr = cdr;
@@ -155,9 +155,9 @@ public class ConsStruct extends ListStruct {
 	}
 
 	/**
-	 * This private method tests the provided {@code consStruct} for circularity. If the consStruct itself, or any of
-	 * its cons nodes are located in the provided conses list, the cons is circular. This method is recursive and will
-	 * constantly populate the {@code conses} set with node values for testing.
+	 * Tests the provided {@code consStruct} for circularity. If the consStruct itself, or any of its cons nodes are
+	 * located in the provided conses list, the cons is circular. This method is recursive and will constantly populate
+	 * the {@code conses} set with node values for testing.
 	 *
 	 * @param consStruct
 	 * 		the cons structure to test for circularity
@@ -171,8 +171,8 @@ public class ConsStruct extends ListStruct {
 	}
 
 	/**
-	 * This private method tests the provided {@code element} for circularity. If the element is a consStruct, it tests
-	 * it for circularity appropriately.
+	 * Tests the provided {@code element} for circularity. If the element is a consStruct, it tests it for circularity
+	 * appropriately.
 	 *
 	 * @param element
 	 * 		the element structure to test for circularity
@@ -216,6 +216,16 @@ public class ConsStruct extends ListStruct {
 		return stringBuilder.toString();
 	}
 
+	/**
+	 * Prints the inner cons value of the provided {@code consStruct}, handling the recursive nature of printing each
+	 * internal layer repeatedly until the last cdr has been identified as either being a {@link NullStruct} or not a
+	 * ConsStruct.
+	 *
+	 * @param consStruct
+	 * 		the ConsStruct to print each inner cons
+	 *
+	 * @return the {@link java.lang.String} representation of the provided {@code consStruct}.
+	 */
 	private static String printInnerCons(final ConsStruct consStruct) {
 
 		final StringBuilder stringBuilder = new StringBuilder();

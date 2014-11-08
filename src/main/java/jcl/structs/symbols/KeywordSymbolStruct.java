@@ -2,6 +2,8 @@ package jcl.structs.symbols;
 
 import jcl.structs.packages.GlobalPackageStruct;
 import jcl.types.Keyword;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link KeywordSymbolStruct} is the object representation of a Lisp 'keyword' type.
@@ -12,7 +14,8 @@ public class KeywordSymbolStruct extends SymbolStruct<KeywordSymbolStruct> {
 	/**
 	 * Public constructor.
 	 *
-	 * @param name the symbol name
+	 * @param name
+	 * 		the symbol name
 	 */
 	public KeywordSymbolStruct(final String name) {
 		super(Keyword.INSTANCE, name, GlobalPackageStruct.KEYWORD, null, null);
@@ -28,12 +31,6 @@ public class KeywordSymbolStruct extends SymbolStruct<KeywordSymbolStruct> {
 
 	@Override
 	public String toString() {
-		return "KeywordSymbolStruct{"
-				+ "name='" + name + '\''
-				+ ", symbolPackage=" + symbolPackage
-				+ ", properties=" + properties
-//				+ ", value=" + value // NOTE: we are NOT enabling this because right now the printer for default toString() will be an infinite loop
-				+ ", function=" + function
-				+ '}';
+		return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).setExcludeFieldNames("value").toString();
 	}
 }

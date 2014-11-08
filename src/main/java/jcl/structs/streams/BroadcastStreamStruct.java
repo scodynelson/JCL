@@ -40,7 +40,7 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 	}
 
 	/**
-	 * This private method is used to retrieve the element type for object construction.
+	 * Used to retrieve the element type for object construction.
 	 *
 	 * @param outputStreams
 	 * 		the {@link OutputStream}s to create a BroadcastStreamStruct from
@@ -55,7 +55,7 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 	}
 
 	/**
-	 * This private method is used to retrieve the element type for object construction.
+	 * Used to retrieve the element type for object construction.
 	 *
 	 * @param outputStreams
 	 * 		the {@link OutputStream}s to create a BroadcastStreamStruct from

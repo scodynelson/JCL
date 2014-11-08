@@ -12,7 +12,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public final class PathnameDirectoryLevel {
 
 	private final String directoryLevel;
-	private PathnameDirectoryLevelType directoryLevelType;
+	private final PathnameDirectoryLevelType directoryLevelType;
 
 	/**
 	 * Public constructor.
@@ -41,31 +41,34 @@ public final class PathnameDirectoryLevel {
 	}
 
 	/**
-	 * Getter for pathname directory level value.
+	 * Public constructor.
 	 *
-	 * @return pathname directory level value
+	 * @param directoryLevel
+	 * 		the directory level value
+	 * @param directoryLevelType
+	 * 		the directory level type (WILD, BACK, or UP)
+	 */
+	public PathnameDirectoryLevel(final String directoryLevel, final PathnameDirectoryLevelType directoryLevelType) {
+		this.directoryLevel = directoryLevel;
+		this.directoryLevelType = directoryLevelType;
+	}
+
+	/**
+	 * Getter for pathname directory level {@link #directoryLevel} property.
+	 *
+	 * @return pathname directory level {@link #directoryLevel} property
 	 */
 	public String getDirectoryLevel() {
 		return directoryLevel;
 	}
 
 	/**
-	 * Getter for pathname directory level type.
+	 * Getter for pathname directory level {@link #directoryLevelType} property.
 	 *
-	 * @return pathname directory level type
+	 * @return pathname directory level {@link #directoryLevelType} property
 	 */
 	public PathnameDirectoryLevelType getDirectoryLevelType() {
 		return directoryLevelType;
-	}
-
-	/**
-	 * Setter for pathname directory level type.
-	 *
-	 * @param directoryLevelType
-	 * 		new directoryLevelType value
-	 */
-	public void setDirectoryLevelType(final PathnameDirectoryLevelType directoryLevelType) {
-		this.directoryLevelType = directoryLevelType;
 	}
 
 	@Override

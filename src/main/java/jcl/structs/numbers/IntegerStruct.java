@@ -40,9 +40,9 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * This method returns the value of the IntegerStruct.
+	 * Getter for integer {@link #bigInteger} property.
 	 *
-	 * @return value of the IntegerStruct
+	 * @return integer {@link #bigInteger} property
 	 */
 	public BigInteger getBigInteger() {
 		return bigInteger;

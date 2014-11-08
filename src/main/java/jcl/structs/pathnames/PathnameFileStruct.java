@@ -159,10 +159,11 @@ class PathnameFileStruct extends PathnameStruct {
 		final List<PathnameDirectoryLevel> directoryLevels = new ArrayList<>(directoryStrings.size());
 
 		for (final String directoryString : directoryStrings) {
-			final PathnameDirectoryLevel directoryLevel = new PathnameDirectoryLevel(directoryString);
 
 			currentPathBuilder.append(File.separatorChar);
 			currentPathBuilder.append(directoryString);
+
+			PathnameDirectoryLevelType directoryLevelType = PathnameDirectoryLevelType.NULL;
 
 			// Leave ".." in the directory list and convert any :BACK encountered
 			// to a ".." in directory list to maintain functionality with other functions
@@ -171,14 +172,15 @@ class PathnameFileStruct extends PathnameStruct {
 
 				// Back is for absolutes / up is for symbolic links
 				if (Files.isSymbolicLink(currentPath)) {
-					directoryLevel.setDirectoryLevelType(PathnameDirectoryLevelType.UP);
+					directoryLevelType = PathnameDirectoryLevelType.UP;
 				} else {
-					directoryLevel.setDirectoryLevelType(PathnameDirectoryLevelType.BACK);
+					directoryLevelType = PathnameDirectoryLevelType.BACK;
 				}
 			} else if (WILDCARD_STRING.equals(directoryString)) {
-				directoryLevel.setDirectoryLevelType(PathnameDirectoryLevelType.WILD);
+				directoryLevelType = PathnameDirectoryLevelType.WILD;
 			}
 
+			final PathnameDirectoryLevel directoryLevel = new PathnameDirectoryLevel(directoryString, directoryLevelType);
 			directoryLevels.add(directoryLevel);
 		}
 

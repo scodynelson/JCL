@@ -21,23 +21,7 @@ public final class PathnameDirectoryLevel {
 	 * 		the directory level value
 	 */
 	public PathnameDirectoryLevel(final String directoryLevel) {
-		if (StringUtils.isEmpty(directoryLevel)) {
-			throw new FileErrorException("Directory level value cannot be null or empty.");
-		}
-
-		this.directoryLevel = directoryLevel;
-		directoryLevelType = PathnameDirectoryLevelType.NULL;
-	}
-
-	/**
-	 * Public constructor.
-	 *
-	 * @param directoryLevelType
-	 * 		the directory level type (WILD, BACK, or UP)
-	 */
-	public PathnameDirectoryLevel(final PathnameDirectoryLevelType directoryLevelType) {
-		directoryLevel = null;
-		this.directoryLevelType = directoryLevelType;
+		this(directoryLevel, PathnameDirectoryLevelType.NULL);
 	}
 
 	/**
@@ -49,6 +33,10 @@ public final class PathnameDirectoryLevel {
 	 * 		the directory level type (WILD, BACK, or UP)
 	 */
 	public PathnameDirectoryLevel(final String directoryLevel, final PathnameDirectoryLevelType directoryLevelType) {
+		if (StringUtils.isEmpty(directoryLevel)) {
+			throw new FileErrorException("Directory level value cannot be null or empty.");
+		}
+
 		this.directoryLevel = directoryLevel;
 		this.directoryLevelType = directoryLevelType;
 	}

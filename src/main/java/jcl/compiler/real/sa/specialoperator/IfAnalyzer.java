@@ -10,7 +10,7 @@ import jcl.structs.symbols.SpecialOperator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IfAnalyzer implements Analyzer<LispStruct, ListStruct> {
+public class IfAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
 	public static final IfAnalyzer INSTANCE = new IfAnalyzer();
 

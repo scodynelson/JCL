@@ -11,7 +11,7 @@ import jcl.structs.symbols.SymbolStruct;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SetqAnalyzer implements Analyzer<LispStruct, ListStruct> {
+public class SetqAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
 	public static final SetqAnalyzer INSTANCE = new SetqAnalyzer();
 

@@ -1,8 +1,8 @@
 package jcl.compiler.real.sa.specialoperator.special;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.environment.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.lambdalist.KeyBinding;
@@ -10,7 +10,7 @@ import jcl.compiler.real.environment.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.lambdalist.SuppliedPBinding;
 import jcl.compiler.real.sa.Analyzer;
-import jcl.compiler.real.sa.LambdaEnvironmentListStruct;
+import jcl.compiler.real.sa.LambdaEnvironmentLispStruct;
 import jcl.compiler.real.sa.LambdaListParser;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.specialoperator.body.BodyProcessingResult;
@@ -24,12 +24,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-public class LambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
+public class LambdaAnalyzer implements Analyzer<LambdaEnvironmentLispStruct, ListStruct> {
 
 	public static final LambdaAnalyzer INSTANCE = new LambdaAnalyzer();
 
 	@Override
-	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
+	public LambdaEnvironmentLispStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 
 		if (input.size() < 2) {
 			throw new ProgramErrorException("LAMBDA: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
@@ -65,7 +65,7 @@ public class LambdaAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			newStartingLambdaBody.addAll(bodyProcessingResult.getBodyForms());
 
 			final ListStruct newBodyForms = ListStruct.buildProperList(newStartingLambdaBody);
-			return new LambdaEnvironmentListStruct(envList, bodyProcessingResult.getDeclarations(), newBodyForms, parsedLambdaList, bodyProcessingResult.getDocString());
+			return new LambdaEnvironmentLispStruct(envList, bodyProcessingResult.getDeclarations(), newBodyForms, parsedLambdaList, bodyProcessingResult.getDocString());
 		} finally {
 			analyzer.setClosureDepth(tempClosureDepth);
 			analyzer.setBindingsPosition(tempBindingsPosition);

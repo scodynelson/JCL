@@ -19,12 +19,12 @@ import java.util.List;
 import java.util.Stack;
 import java.util.UUID;
 
-public class LoadTimeValueAnalyzer implements Analyzer<LispStruct, ListStruct> {
+public class LoadTimeValueAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
 	public static final LoadTimeValueAnalyzer INSTANCE = new LoadTimeValueAnalyzer();
 
 	@Override
-	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
+	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 
 		if ((input.size() < 2) || (input.size() > 3)) {
 			throw new ProgramErrorException("LOAD-TIME-VALUE: Incorrect number of arguments: " + input.size() + ". Expected either 2 or 3 arguments.");
@@ -48,7 +48,7 @@ public class LoadTimeValueAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		final Environment nullEnvironment = Environment.NULL;
 		environmentStack.push(nullEnvironment);
 
-		final ListStruct lambdaAnalyzed;
+		final LispStruct lambdaAnalyzed;
 		try {
 			lambdaAnalyzed = LambdaAnalyzer.INSTANCE.analyze(lambdaBlockList, analyzer);
 		} finally {

@@ -12,12 +12,12 @@ import jcl.structs.symbols.SpecialOperator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MultipleValueProg1Analyzer implements Analyzer<LispStruct, ListStruct> {
+public class MultipleValueProg1Analyzer implements Analyzer<ListStruct, ListStruct> {
 
 	public static final MultipleValueProg1Analyzer INSTANCE = new MultipleValueProg1Analyzer();
 
 	@Override
-	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
+	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 
 		if (input.size() < 2) {
 			throw new ProgramErrorException("MULTIPLE-VALUE-PROG1: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");

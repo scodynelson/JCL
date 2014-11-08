@@ -14,12 +14,12 @@ import jcl.structs.symbols.SymbolStruct;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SymbolMacroletAnalyzer implements Analyzer<LispStruct, ListStruct> {
+public class SymbolMacroletAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
 	public static final SymbolMacroletAnalyzer INSTANCE = new SymbolMacroletAnalyzer();
 
 	@Override
-	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
+	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 
 		if (input.size() < 2) {
 			throw new ProgramErrorException("SYMBOL-MACROLET: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");

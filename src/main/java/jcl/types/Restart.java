@@ -33,7 +33,7 @@ public interface Restart extends T {
 		/**
 		 * Inner {@link Restart} type implementation.
 		 */
-		private static class RestartImpl extends TypeBaseClass implements Restart, AtomicTypeSpecifier {
+		private static final class RestartImpl extends TypeBaseClass implements Restart, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.
@@ -43,13 +43,13 @@ public interface Restart extends T {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof Restart);
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof Restart);
 			}
 
 			@Override

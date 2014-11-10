@@ -30,7 +30,7 @@ public interface StandardMethod extends Method, StandardObject {
 		/**
 		 * Inner {@link StandardMethod} type implementation.
 		 */
-		private static class StandardMethodImpl extends TypeBaseClass implements StandardMethod, AtomicTypeSpecifier {
+		private static final class StandardMethodImpl extends TypeBaseClass implements StandardMethod, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.
@@ -40,13 +40,13 @@ public interface StandardMethod extends Method, StandardObject {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof StandardMethod);
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof StandardMethod);
 			}
 
 			@Override

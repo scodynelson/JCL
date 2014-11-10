@@ -35,7 +35,7 @@ public interface SynonymStream extends Stream {
 		/**
 		 * Inner {@link SynonymStream} type implementation.
 		 */
-		private static class SynonymStreamImpl extends TypeBaseClass implements SynonymStream, AtomicTypeSpecifier {
+		private static final class SynonymStreamImpl extends TypeBaseClass implements SynonymStream, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.
@@ -45,13 +45,13 @@ public interface SynonymStream extends Stream {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof SynonymStream);
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof SynonymStream);
 			}
 
 			@Override

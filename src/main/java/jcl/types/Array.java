@@ -46,11 +46,6 @@ public interface Array extends T {
 	 */
 	class Factory implements TypeFactory<Array> {
 
-		@Override
-		public Array getInstance() {
-			return INSTANCE;
-		}
-
 		/**
 		 * Gets instance of compound {@link Array} type.
 		 *
@@ -65,10 +60,15 @@ public interface Array extends T {
 			return ArrayImpl.getInstance(dimensions, elementType);
 		}
 
+		@Override
+		public Array getInstance() {
+			return INSTANCE;
+		}
+
 		/**
 		 * Inner {@link Array} type implementation.
 		 */
-		private static class ArrayImpl extends TypeBaseClass implements Array, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static final class ArrayImpl extends TypeBaseClass implements Array, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final DimensionsDesignator dimensions;
 			private final LispType elementType;
@@ -94,16 +94,6 @@ public interface Array extends T {
 				this.elementType = elementType;
 			}
 
-			@Override
-			public DimensionsDesignator getDimensions() {
-				return dimensions;
-			}
-
-			@Override
-			public LispType getElementType() {
-				return elementType;
-			}
-
 			/**
 			 * Gets instance of compound {@link Array} type.
 			 *
@@ -116,6 +106,21 @@ public interface Array extends T {
 			 */
 			public static Array getInstance(final List<Integer> dimensions, final LispType elementType) {
 				return new ArrayImpl(dimensions, elementType);
+			}
+
+			@Override
+			public DimensionsDesignator getDimensions() {
+				return dimensions;
+			}
+
+			@Override
+			public LispType getElementType() {
+				return elementType;
+			}
+
+			@Override
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
@@ -141,12 +146,12 @@ public interface Array extends T {
 			}
 
 			/**
-			 * This method checks the equality of the provide arrayImpl object to this instance.
+			 * This method checks the equality of the provide {@code arrayImpl} object to this instance.
 			 *
 			 * @param arrayImpl
-			 * 		the arrayImpl object to test for equality
+			 * 		the ArrayImpl object to test for equality
 			 *
-			 * @return true if the arrayImpl object is equivalent to this instance; false otherwise
+			 * @return true if the {@code arrayImpl} object is equivalent to this instance; false otherwise
 			 */
 			private boolean checkArrayImplEquality(final ArrayImpl arrayImpl) {
 				if (dimensions == null) {
@@ -154,11 +159,6 @@ public interface Array extends T {
 				}
 
 				return dimensions.equals(arrayImpl.dimensions) && elementType.equals(arrayImpl.elementType);
-			}
-
-			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

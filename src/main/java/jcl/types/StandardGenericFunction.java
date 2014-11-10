@@ -30,7 +30,7 @@ public interface StandardGenericFunction extends GenericFunction {
 		/**
 		 * Inner {@link StandardGenericFunction} type implementation.
 		 */
-		private static class StandardGenericFunctionImpl extends TypeBaseClass implements StandardGenericFunction, AtomicTypeSpecifier {
+		private static final class StandardGenericFunctionImpl extends TypeBaseClass implements StandardGenericFunction, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.
@@ -40,13 +40,13 @@ public interface StandardGenericFunction extends GenericFunction {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof StandardGenericFunction);
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof StandardGenericFunction);
 			}
 
 			@Override

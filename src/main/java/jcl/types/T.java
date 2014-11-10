@@ -32,7 +32,7 @@ public interface T extends LispType {
 		/**
 		 * Inner {@link T} type implementation.
 		 */
-		private static class TImpl extends TypeBaseClass implements T, AtomicTypeSpecifier {
+		private static final class TImpl extends TypeBaseClass implements T, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.
@@ -42,13 +42,13 @@ public interface T extends LispType {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof T);
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof T);
 			}
 
 			@Override

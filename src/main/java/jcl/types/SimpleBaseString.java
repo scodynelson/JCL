@@ -27,11 +27,6 @@ public interface SimpleBaseString extends BaseString, SimpleString {
 	 */
 	class Factory implements TypeFactory<SimpleBaseString> {
 
-		@Override
-		public SimpleBaseString getInstance() {
-			return INSTANCE;
-		}
-
 		/**
 		 * Gets instance of compound {@link SimpleBaseString} type.
 		 *
@@ -44,13 +39,18 @@ public interface SimpleBaseString extends BaseString, SimpleString {
 			return SimpleBaseStringImpl.getInstance(size);
 		}
 
+		@Override
+		public SimpleBaseString getInstance() {
+			return INSTANCE;
+		}
+
 		/**
 		 * Inner {@link SimpleBaseString} type implementation.
 		 */
-		private static class SimpleBaseStringImpl extends TypeBaseClass implements SimpleBaseString, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static final class SimpleBaseStringImpl extends TypeBaseClass implements SimpleBaseString, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
-			private final DimensionsDesignator size;
 			private static final LispType ELEMENT_TYPE = BaseChar.INSTANCE;
+			private final DimensionsDesignator size;
 
 			/**
 			 * Private constructor.
@@ -70,16 +70,6 @@ public interface SimpleBaseString extends BaseString, SimpleString {
 				this.size = new DimensionsDesignator(size);
 			}
 
-			@Override
-			public DimensionsDesignator getDimensions() {
-				return size;
-			}
-
-			@Override
-			public LispType getElementType() {
-				return ELEMENT_TYPE;
-			}
-
 			/**
 			 * Gets instance of compound {@link SimpleBaseString} type.
 			 *
@@ -90,6 +80,21 @@ public interface SimpleBaseString extends BaseString, SimpleString {
 			 */
 			public static SimpleBaseString getInstance(final Integer size) {
 				return new SimpleBaseStringImpl(size);
+			}
+
+			@Override
+			public DimensionsDesignator getDimensions() {
+				return size;
+			}
+
+			@Override
+			public LispType getElementType() {
+				return ELEMENT_TYPE;
+			}
+
+			@Override
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
@@ -114,11 +119,6 @@ public interface SimpleBaseString extends BaseString, SimpleString {
 				}
 
 				return TypeUtils.isArrayLispTypeEqual(this, simpleBaseString);
-			}
-
-			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

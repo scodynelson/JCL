@@ -31,11 +31,6 @@ public interface Function extends T {
 	 */
 	class Factory implements TypeFactory<Function> {
 
-		@Override
-		public Function getInstance() {
-			return INSTANCE;
-		}
-
 		/**
 		 * Gets instance of compound {@link Function} type.
 		 *
@@ -58,10 +53,15 @@ public interface Function extends T {
 			return FunctionImpl.getInstance(typeSpecifiers, optional, rest, key, valuesTypeSpecifier);
 		}
 
+		@Override
+		public Function getInstance() {
+			return INSTANCE;
+		}
+
 		/**
 		 * Inner {@link Function} type implementation.
 		 */
-		private static class FunctionImpl extends TypeBaseClass implements Function, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static final class FunctionImpl extends TypeBaseClass implements Function, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final List<TypeSpecifier> typeSpecifiers;
 			private final Optional<TypeSpecifier> optional;
@@ -126,6 +126,11 @@ public interface Function extends T {
 			}
 
 			@Override
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
+			}
+
+			@Override
 			public boolean equals(final Object obj) {
 				if (this == obj) {
 					return true;
@@ -153,11 +158,6 @@ public interface Function extends T {
 						&& Objects.equals(rest, functionImpl.rest)
 						&& Objects.equals(key, functionImpl.key)
 						&& Objects.equals(valuesTypeSpecifier, functionImpl.valuesTypeSpecifier);
-			}
-
-			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

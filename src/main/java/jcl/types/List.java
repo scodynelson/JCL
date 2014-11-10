@@ -45,7 +45,7 @@ public interface List extends Sequence {
 		/**
 		 * Inner {@link List} type implementation.
 		 */
-		private static class ListImpl extends TypeBaseClass implements List, AtomicTypeSpecifier {
+		private static final class ListImpl extends TypeBaseClass implements List, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.
@@ -55,13 +55,13 @@ public interface List extends Sequence {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof List);
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof List);
 			}
 
 			@Override

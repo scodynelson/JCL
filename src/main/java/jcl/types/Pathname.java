@@ -32,7 +32,7 @@ public interface Pathname extends T {
 		/**
 		 * Inner {@link Pathname} type implementation.
 		 */
-		private static class PathnameImpl extends TypeBaseClass implements Pathname, AtomicTypeSpecifier {
+		private static final class PathnameImpl extends TypeBaseClass implements Pathname, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.
@@ -42,13 +42,13 @@ public interface Pathname extends T {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof Pathname);
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof Pathname);
 			}
 
 			@Override

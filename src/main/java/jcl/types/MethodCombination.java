@@ -10,8 +10,8 @@ import java.lang.String;
 
 /**
  * A {@link MethodCombination} object represents the information about the {@link MethodCombination} being used by a
- * {@link GenericFunction}. A {@link MethodCombination} object contains information about both the type of {@link
- * MethodCombination} and the arguments being used with that type.
+ * {@link GenericFunction}. A {@link MethodCombination} object contains information about both the type of
+ * {@link MethodCombination} and the arguments being used with that type.
  * <p>
  * {@link MethodCombination} -> {@link T}
  */
@@ -32,7 +32,7 @@ public interface MethodCombination extends T {
 		/**
 		 * Inner {@link MethodCombination} type implementation.
 		 */
-		private static class MethodCombinationImpl extends TypeBaseClass implements MethodCombination, AtomicTypeSpecifier {
+		private static final class MethodCombinationImpl extends TypeBaseClass implements MethodCombination, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.
@@ -42,13 +42,13 @@ public interface MethodCombination extends T {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof MethodCombination);
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof MethodCombination);
 			}
 
 			@Override

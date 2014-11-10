@@ -30,7 +30,7 @@ public interface RandomState extends T {
 		/**
 		 * Inner {@link RandomState} type implementation.
 		 */
-		private static class RandomStateImpl extends TypeBaseClass implements RandomState, AtomicTypeSpecifier {
+		private static final class RandomStateImpl extends TypeBaseClass implements RandomState, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.
@@ -40,13 +40,13 @@ public interface RandomState extends T {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof RandomState);
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof RandomState);
 			}
 
 			@Override

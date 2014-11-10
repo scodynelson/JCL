@@ -30,7 +30,7 @@ public interface StandardClass extends Class {
 		/**
 		 * Inner {@link StandardClass} type implementation.
 		 */
-		private static class StandardClassImpl extends TypeBaseClass implements StandardClass, AtomicTypeSpecifier {
+		private static final class StandardClassImpl extends TypeBaseClass implements StandardClass, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.
@@ -40,13 +40,13 @@ public interface StandardClass extends Class {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof StandardClass);
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof StandardClass);
 			}
 
 			@Override

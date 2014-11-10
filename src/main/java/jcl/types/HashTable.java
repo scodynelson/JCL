@@ -30,7 +30,7 @@ public interface HashTable extends T {
 		/**
 		 * Inner {@link HashTable} type implementation.
 		 */
-		private static class HashTableImpl extends TypeBaseClass implements HashTable, AtomicTypeSpecifier {
+		private static final class HashTableImpl extends TypeBaseClass implements HashTable, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.
@@ -40,13 +40,13 @@ public interface HashTable extends T {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof HashTable);
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof HashTable);
 			}
 
 			@Override

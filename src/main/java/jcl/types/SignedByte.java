@@ -29,11 +29,6 @@ public interface SignedByte extends Integer {
 	 */
 	class Factory implements TypeFactory<SignedByte> {
 
-		@Override
-		public SignedByte getInstance() {
-			return INSTANCE;
-		}
-
 		/**
 		 * Gets instance of compound {@link SignedByte} type.
 		 *
@@ -46,10 +41,15 @@ public interface SignedByte extends Integer {
 			return SignedByteImpl.getInstance(bits);
 		}
 
+		@Override
+		public SignedByte getInstance() {
+			return INSTANCE;
+		}
+
 		/**
 		 * Inner {@link SignedByte} type implementation.
 		 */
-		private static class SignedByteImpl extends AndTypeSpecifier implements SignedByte, AtomicTypeSpecifier {
+		private static final class SignedByteImpl extends AndTypeSpecifier implements SignedByte, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.

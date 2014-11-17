@@ -47,18 +47,18 @@ public final class PathnameVersion {
 	}
 
 	/**
-	 * Getter for pathname version value.
+	 * Getter for pathname version {@link #version} property.
 	 *
-	 * @return pathname version value
+	 * @return pathname version {@link #version} property
 	 */
 	public Integer getVersion() {
 		return version;
 	}
 
 	/**
-	 * Getter for pathname version component type.
+	 * Getter for pathname version {@link #componentType} property.
 	 *
-	 * @return pathname version component type
+	 * @return pathname version {@link #componentType} property
 	 */
 	public PathnameVersionComponentType getComponentType() {
 		return componentType;

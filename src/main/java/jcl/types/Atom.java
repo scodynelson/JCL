@@ -30,7 +30,7 @@ public interface Atom extends T {
 		/**
 		 * Inner {@link Atom} type implementation.
 		 */
-		private static class AtomImpl extends NotTypeSpecifier implements Atom, AtomicTypeSpecifier {
+		private static final class AtomImpl extends NotTypeSpecifier implements Atom, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.

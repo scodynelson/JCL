@@ -53,10 +53,10 @@ public class RandomStateStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method retrieves a random integer from the internal random seed.
+	 * Retrieves a random {@link BigInteger} from the internal random seed.
 	 *
 	 * @param limit
-	 * 		the upper limit of the random integer
+	 * 		the upper limit of the random {@link BigInteger}
 	 *
 	 * @return the random {@link BigInteger}
 	 */
@@ -78,10 +78,10 @@ public class RandomStateStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method retrieves a random float from the internal random seed.
+	 * Retrieves a random {@link BigDecimal} from the internal random seed.
 	 *
 	 * @param limit
-	 * 		the upper limit of the random float
+	 * 		the upper limit of the random {@link BigDecimal}
 	 *
 	 * @return the random {@link BigDecimal}
 	 */
@@ -97,7 +97,7 @@ public class RandomStateStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method obtains a random 'chunk', or integer value from the internal random seed.
+	 * Obtains a random 'chunk', or integer value from the internal random seed.
 	 *
 	 * @return the random {@link BigInteger} 'chunk'
 	 */
@@ -129,7 +129,7 @@ public class RandomStateStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method is a bit shifting method depending on the sign of the shift value.
+	 * Performs bit shifting depending on the sign of the shift value.
 	 *
 	 * @param bits
 	 * 		the bits to shift

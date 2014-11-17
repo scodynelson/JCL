@@ -6,7 +6,8 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * Internal class for returning a SymbolStruct and it's current package symbol type as a KeywordSymbolStruct.
+ * Internal class for returning a {@link SymbolStruct} and it's current package symbol type as a {@link
+ * KeywordSymbolStruct}.
  */
 public class PackageSymbolStruct {
 
@@ -31,18 +32,18 @@ public class PackageSymbolStruct {
 	}
 
 	/**
-	 * Getter for package-symbol symbolStruct property.
+	 * Getter for package-symbol {@link #symbolStruct} property.
 	 *
-	 * @return package-symbol symbolStruct property
+	 * @return package-symbol {@link #symbolStruct} property
 	 */
 	public SymbolStruct<?> getSymbolStruct() {
 		return symbolStruct;
 	}
 
 	/**
-	 * Getter for package-symbol packageSymbolType property.
+	 * Getter for package-symbol {@link #packageSymbolType} property.
 	 *
-	 * @return package-symbol packageSymbolType property
+	 * @return package-symbol {@link #packageSymbolType} property
 	 */
 	public KeywordSymbolStruct getPackageSymbolType() {
 		return packageSymbolType;

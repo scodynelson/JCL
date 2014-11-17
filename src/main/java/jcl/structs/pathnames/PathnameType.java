@@ -50,18 +50,18 @@ public final class PathnameType {
 	}
 
 	/**
-	 * Getter for pathname type value.
+	 * Getter for pathname type {@link #type} property.
 	 *
-	 * @return pathname type value
+	 * @return pathname type {@link #type} property
 	 */
 	public String getType() {
 		return type;
 	}
 
 	/**
-	 * Getter for pathname type component type.
+	 * Getter for pathname type {@link #componentType} property.
 	 *
-	 * @return pathname type component type
+	 * @return pathname type {@link #componentType} property
 	 */
 	public PathnameComponentType getComponentType() {
 		return componentType;

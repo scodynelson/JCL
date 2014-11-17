@@ -81,7 +81,7 @@ class PathnameURIStruct extends PathnameStruct {
 	}
 
 	/**
-	 * This method gets the pathname host.
+	 * Gets the pathname host.
 	 *
 	 * @param uri
 	 * 		the uri to parse into the pathname host
@@ -99,7 +99,7 @@ class PathnameURIStruct extends PathnameStruct {
 	}
 
 	/**
-	 * This method gets the pathname device.
+	 * Gets the pathname device.
 	 *
 	 * @param uri
 	 * 		the uri to parse into the pathname device
@@ -112,7 +112,7 @@ class PathnameURIStruct extends PathnameStruct {
 	}
 
 	/**
-	 * This method gets the pathname directory.
+	 * Gets the pathname directory.
 	 *
 	 * @param uri
 	 * 		the uri to parse into the pathname directory
@@ -163,7 +163,7 @@ class PathnameURIStruct extends PathnameStruct {
 	}
 
 	/**
-	 * This method gets the pathname name.
+	 * Gets the pathname name.
 	 *
 	 * @param uri
 	 * 		the uri to parse into the pathname name
@@ -177,7 +177,7 @@ class PathnameURIStruct extends PathnameStruct {
 	}
 
 	/**
-	 * This method gets the pathname type.
+	 * Gets the pathname type.
 	 *
 	 * @param uri
 	 * 		the uri to parse into the pathname type
@@ -191,7 +191,7 @@ class PathnameURIStruct extends PathnameStruct {
 	}
 
 	/**
-	 * This method gets the pathname version.
+	 * Gets the pathname version.
 	 *
 	 * @return the pathname version
 	 */
@@ -200,7 +200,7 @@ class PathnameURIStruct extends PathnameStruct {
 	}
 
 	/**
-	 * This method gets a URI from the provided {@code pathname}.
+	 * Gets a URI from the provided {@code pathname}.
 	 *
 	 * @param pathname
 	 * 		the pathname string to convert to a URI

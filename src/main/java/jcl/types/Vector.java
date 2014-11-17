@@ -15,11 +15,11 @@ import java.lang.String;
 /**
  * A {@link Vector} is any one-dimensional {@link Array}.
  * <p>
- * The type {@link Vector} is a subtype of type {@link Array}; for all types x, (vector x) is the same as (array x
- * (*)).
+ * The type {@link Vector} is a subtype of type {@link Array}; for all types x, (vector x) is the same as
+ * (array x (*)).
  * <p>
- * The type (vector t), the type {@link String}, and the type {@link BitVector} are disjoint subtypes of type {@link
- * Vector}.
+ * The type (vector t), the type {@link String}, and the type {@link BitVector} are disjoint subtypes of type
+ * {@link Vector}.
  * <p>
  * {@link Vector} -> {@link Array} -> {@link Sequence} -> {@link T}
  */
@@ -31,11 +31,6 @@ public interface Vector extends Array, Sequence {
 	 * Factory.
 	 */
 	class Factory implements TypeFactory<Vector> {
-
-		@Override
-		public Vector getInstance() {
-			return INSTANCE;
-		}
 
 		/**
 		 * Gets instance of compound {@link Vector} type.
@@ -51,10 +46,15 @@ public interface Vector extends Array, Sequence {
 			return VectorImpl.getInstance(size, elementType);
 		}
 
+		@Override
+		public Vector getInstance() {
+			return INSTANCE;
+		}
+
 		/**
 		 * Inner {@link Vector} type implementation.
 		 */
-		private static class VectorImpl extends TypeBaseClass implements Vector, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static final class VectorImpl extends TypeBaseClass implements Vector, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final DimensionsDesignator size;
 			private final LispType elementType;
@@ -80,16 +80,6 @@ public interface Vector extends Array, Sequence {
 				this.elementType = elementType;
 			}
 
-			@Override
-			public DimensionsDesignator getDimensions() {
-				return size;
-			}
-
-			@Override
-			public LispType getElementType() {
-				return elementType;
-			}
-
 			/**
 			 * Gets instance of compound {@link Vector} type.
 			 *
@@ -102,6 +92,21 @@ public interface Vector extends Array, Sequence {
 			 */
 			public static Vector getInstance(final Integer size, final LispType elementType) {
 				return new VectorImpl(size, elementType);
+			}
+
+			@Override
+			public DimensionsDesignator getDimensions() {
+				return size;
+			}
+
+			@Override
+			public LispType getElementType() {
+				return elementType;
+			}
+
+			@Override
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
@@ -127,12 +132,12 @@ public interface Vector extends Array, Sequence {
 			}
 
 			/**
-			 * This method checks the equality of the provide vectorImpl object to this instance.
+			 * This method checks the equality of the provide {@code vectorImpl} object to this instance.
 			 *
 			 * @param vectorImpl
-			 * 		the vectorImpl object to test for equality
+			 * 		the VectorImpl object to test for equality
 			 *
-			 * @return true if the vectorImpl object is equivalent to this instance; false otherwise
+			 * @return true if the {@code vectorImpl} object is equivalent to this instance; false otherwise
 			 */
 			private boolean checkVectorImplEquality(final VectorImpl vectorImpl) {
 				if (size == null) {
@@ -140,11 +145,6 @@ public interface Vector extends Array, Sequence {
 				}
 
 				return size.equals(vectorImpl.size) && elementType.equals(vectorImpl.elementType);
-			}
-
-			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

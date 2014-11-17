@@ -79,7 +79,7 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	}
 
 	/**
-	 * This method gets the vector type from the provided isAdjustable and fillPointer values.
+	 * Gets the vector type from the provided isAdjustable and fillPointer values.
 	 *
 	 * @param isAdjustable
 	 * 		whether or not the vector is adjustable
@@ -93,31 +93,31 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	}
 
 	/**
-	 * Getter for vector fillPointer property.
+	 * Getter for vector {@link #fillPointer} property.
 	 *
-	 * @return vector fillPointer property
+	 * @return vector {@link #fillPointer} property
 	 */
 	public Integer getFillPointer() {
 		return fillPointer;
 	}
 
 	/**
-	 * Setter for vector fillPointer property.
+	 * Setter for vector {@link #fillPointer} property.
 	 *
 	 * @param fillPointer
-	 * 		new vector fillPointer property value
+	 * 		new vector {@link #fillPointer} property value
 	 */
 	public void setFillPointer(final Integer fillPointer) {
 		this.fillPointer = fillPointer;
 	}
 
 	/**
-	 * This method pops the element at the fillPointer index and decreases the fillPointer by 1.
+	 * Pops the element at the {@link #fillPointer} index and decreases the {@link #fillPointer} by 1.
 	 *
-	 * @return the element popped from the fillPointer index
+	 * @return the element popped from the {@link #fillPointer} index
 	 *
 	 * @throws ErrorException
-	 * 		if the vector has no fill-pointer or the fill-pointer is 0
+	 * 		if the vector has no {@link #fillPointer} or the {@link #fillPointer} is 0
 	 */
 	public TYPE pop() {
 		if (fillPointer == null) {
@@ -135,7 +135,7 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	}
 
 	/**
-	 * This method pushes the provided {@code element} into the current fillPointer index.
+	 * Pushes the provided {@code element} into the current {@link #fillPointer} index.
 	 *
 	 * @param element
 	 * 		the element to push into the vector
@@ -143,7 +143,7 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	 * @return the location of the newly added element
 	 *
 	 * @throws TypeErrorException
-	 * 		if the vector has no fill-pointer
+	 * 		if the vector has no {@link #fillPointer}
 	 */
 	public int push(final TYPE element) {
 		if (fillPointer == null) {
@@ -160,7 +160,7 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	}
 
 	/**
-	 * This method pushes the provided {@code element} into the current fillPointer index and extends the vector to the
+	 * Pushes the provided {@code element} into the current {@link #fillPointer} index and extends the vector to the
 	 * current size of the contents plus the provided {@code extensionAmount}.
 	 *
 	 * @param element
@@ -171,7 +171,7 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	 * @return the location of the newly added element
 	 *
 	 * @throws TypeErrorException
-	 * 		if the vector has no fill-pointer or the vector is not adjustable
+	 * 		if the vector has no {@link #fillPointer} or the vector is not adjustable
 	 */
 	public int pushExtend(final TYPE element, final int extensionAmount) {
 		if (!isAdjustable) {

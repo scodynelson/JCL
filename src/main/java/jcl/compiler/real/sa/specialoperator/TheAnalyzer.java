@@ -11,7 +11,7 @@ import jcl.structs.symbols.SymbolStruct;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TheAnalyzer implements Analyzer<LispStruct, ListStruct> {
+public class TheAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
 	public static final TheAnalyzer INSTANCE = new TheAnalyzer();
 

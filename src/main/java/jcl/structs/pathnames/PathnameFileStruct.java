@@ -83,7 +83,7 @@ class PathnameFileStruct extends PathnameStruct {
 	}
 
 	/**
-	 * This method gets the pathname host.
+	 * Gets the pathname host.
 	 *
 	 * @return the pathname host
 	 */
@@ -92,7 +92,7 @@ class PathnameFileStruct extends PathnameStruct {
 	}
 
 	/**
-	 * This method gets the pathname device.
+	 * Gets the pathname device.
 	 *
 	 * @param pathname
 	 * 		the pathname string to parse into the pathname device
@@ -117,7 +117,7 @@ class PathnameFileStruct extends PathnameStruct {
 	}
 
 	/**
-	 * This method gets the pathname directory.
+	 * Gets the pathname directory.
 	 *
 	 * @param pathname
 	 * 		the pathname string to parse into the pathname directory
@@ -159,10 +159,11 @@ class PathnameFileStruct extends PathnameStruct {
 		final List<PathnameDirectoryLevel> directoryLevels = new ArrayList<>(directoryStrings.size());
 
 		for (final String directoryString : directoryStrings) {
-			final PathnameDirectoryLevel directoryLevel = new PathnameDirectoryLevel(directoryString);
 
 			currentPathBuilder.append(File.separatorChar);
 			currentPathBuilder.append(directoryString);
+
+			PathnameDirectoryLevelType directoryLevelType = PathnameDirectoryLevelType.NULL;
 
 			// Leave ".." in the directory list and convert any :BACK encountered
 			// to a ".." in directory list to maintain functionality with other functions
@@ -171,14 +172,15 @@ class PathnameFileStruct extends PathnameStruct {
 
 				// Back is for absolutes / up is for symbolic links
 				if (Files.isSymbolicLink(currentPath)) {
-					directoryLevel.setDirectoryLevelType(PathnameDirectoryLevelType.UP);
+					directoryLevelType = PathnameDirectoryLevelType.UP;
 				} else {
-					directoryLevel.setDirectoryLevelType(PathnameDirectoryLevelType.BACK);
+					directoryLevelType = PathnameDirectoryLevelType.BACK;
 				}
 			} else if (WILDCARD_STRING.equals(directoryString)) {
-				directoryLevel.setDirectoryLevelType(PathnameDirectoryLevelType.WILD);
+				directoryLevelType = PathnameDirectoryLevelType.WILD;
 			}
 
+			final PathnameDirectoryLevel directoryLevel = new PathnameDirectoryLevel(directoryString, directoryLevelType);
 			directoryLevels.add(directoryLevel);
 		}
 
@@ -187,7 +189,7 @@ class PathnameFileStruct extends PathnameStruct {
 	}
 
 	/**
-	 * This method gets the pathname name.
+	 * Gets the pathname name.
 	 *
 	 * @param pathname
 	 * 		the pathname string to parse into the pathname name
@@ -207,7 +209,7 @@ class PathnameFileStruct extends PathnameStruct {
 	}
 
 	/**
-	 * This method gets the pathname type.
+	 * Gets the pathname type.
 	 *
 	 * @param pathname
 	 * 		the pathname string to parse into the pathname type
@@ -227,7 +229,7 @@ class PathnameFileStruct extends PathnameStruct {
 	}
 
 	/**
-	 * This method gets the pathname version.
+	 * Gets the pathname version.
 	 *
 	 * @return the pathname version
 	 */
@@ -236,8 +238,7 @@ class PathnameFileStruct extends PathnameStruct {
 	}
 
 	/**
-	 * This method resolves special UserHome system properties when '~' values are encountered and should be parsed as
-	 * such.
+	 * Resolves special UserHome system properties when '~' values are encountered and should be parsed as such.
 	 *
 	 * @param pathname
 	 * 		the pathname string to resolve special UserHome system properties

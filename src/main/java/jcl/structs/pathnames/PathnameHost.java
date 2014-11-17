@@ -48,18 +48,18 @@ public final class PathnameHost {
 	}
 
 	/**
-	 * Getter for pathname host value.
+	 * Getter for pathname host {@link #host} property.
 	 *
-	 * @return pathname host value
+	 * @return pathname host {@link #host} property
 	 */
 	public String getHost() {
 		return host;
 	}
 
 	/**
-	 * Getter for pathname host component type.
+	 * Getter for pathname host {@link #componentType} property.
 	 *
-	 * @return pathname host component type
+	 * @return pathname host {@link #componentType} property
 	 */
 	public PathnameComponentType getComponentType() {
 		return componentType;

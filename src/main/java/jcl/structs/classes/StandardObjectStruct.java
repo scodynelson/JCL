@@ -21,19 +21,19 @@ public abstract class StandardObjectStruct implements LispStruct {
 	}
 
 	/**
-	 * Getter for standard object documentation property.
+	 * Getter for standard object {@link #documentation} property.
 	 *
-	 * @return standard object documentation property
+	 * @return standard object {@link #documentation} property
 	 */
 	public String getDocumentation() {
 		return documentation;
 	}
 
 	/**
-	 * Setter for standard object documentation property.
+	 * Setter for standard object {@link #documentation} property.
 	 *
 	 * @param documentation
-	 * 		new standard object documentation property value
+	 * 		new standard object {@link #documentation} property value
 	 */
 	public void setDocumentation(final String documentation) {
 		this.documentation = documentation;
@@ -51,7 +51,7 @@ public abstract class StandardObjectStruct implements LispStruct {
 	}
 
 	/**
-	 * Protected, overridable method to get printable object properties to use in the printStruct method.
+	 * Protected method that can be overridden to get printable object properties to use in the printStruct method.
 	 *
 	 * @return a string with printable object properties
 	 */

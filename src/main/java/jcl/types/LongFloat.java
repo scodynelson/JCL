@@ -25,11 +25,6 @@ public interface LongFloat extends Float {
 	 */
 	class Factory implements TypeFactory<LongFloat> {
 
-		@Override
-		public LongFloat getInstance() {
-			return INSTANCE;
-		}
-
 		/**
 		 * Gets instance of compound {@link LongFloat} type.
 		 *
@@ -63,10 +58,15 @@ public interface LongFloat extends Float {
 			return LongFloatImpl.getInstance(lowerBound, lowerInclusive, upperBound, upperInclusive);
 		}
 
+		@Override
+		public LongFloat getInstance() {
+			return INSTANCE;
+		}
+
 		/**
 		 * Inner {@link LongFloat} type implementation.
 		 */
-		private static class LongFloatImpl extends TypeBaseClass implements LongFloat, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static final class LongFloatImpl extends TypeBaseClass implements LongFloat, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final IntervalDesignator<BigDecimal> intervalDesignator;
 
@@ -119,6 +119,11 @@ public interface LongFloat extends Float {
 			}
 
 			@Override
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
+			}
+
+			@Override
 			public boolean equals(final Object obj) {
 				if (this == obj) {
 					return true;
@@ -140,11 +145,6 @@ public interface LongFloat extends Float {
 				}
 
 				return false;
-			}
-
-			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

@@ -30,11 +30,6 @@ public interface SimpleVector extends Vector, SimpleArray {
 	 */
 	class Factory implements TypeFactory<SimpleVector> {
 
-		@Override
-		public SimpleVector getInstance() {
-			return INSTANCE;
-		}
-
 		/**
 		 * Gets instance of compound {@link SimpleVector} type.
 		 *
@@ -61,10 +56,15 @@ public interface SimpleVector extends Vector, SimpleArray {
 			return SimpleVectorImpl.getInstance(size, elementType);
 		}
 
+		@Override
+		public SimpleVector getInstance() {
+			return INSTANCE;
+		}
+
 		/**
 		 * Inner {@link SimpleVector} type implementation.
 		 */
-		private static class SimpleVectorImpl extends TypeBaseClass implements SimpleVector, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static final class SimpleVectorImpl extends TypeBaseClass implements SimpleVector, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final DimensionsDesignator size;
 			private final LispType elementType;
@@ -90,16 +90,6 @@ public interface SimpleVector extends Vector, SimpleArray {
 				this.elementType = elementType;
 			}
 
-			@Override
-			public DimensionsDesignator getDimensions() {
-				return size;
-			}
-
-			@Override
-			public LispType getElementType() {
-				return elementType;
-			}
-
 			/**
 			 * Gets instance of compound {@link SimpleVector} type.
 			 *
@@ -112,6 +102,21 @@ public interface SimpleVector extends Vector, SimpleArray {
 			 */
 			public static SimpleVector getInstance(final Integer size, final LispType elementType) {
 				return new SimpleVectorImpl(size, elementType);
+			}
+
+			@Override
+			public DimensionsDesignator getDimensions() {
+				return size;
+			}
+
+			@Override
+			public LispType getElementType() {
+				return elementType;
+			}
+
+			@Override
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
@@ -137,12 +142,12 @@ public interface SimpleVector extends Vector, SimpleArray {
 			}
 
 			/**
-			 * This method checks the equality of the provide simpleVectorImpl object to this instance.
+			 * This method checks the equality of the provide {@code simpleVectorImpl} object to this instance.
 			 *
 			 * @param simpleVectorImpl
-			 * 		the simpleVectorImpl object to test for equality
+			 * 		the SimpleVectorImpl object to test for equality
 			 *
-			 * @return true if the simpleVectorImpl object is equivalent to this instance; false otherwise
+			 * @return true if the {@code simpleVectorImpl} object is equivalent to this instance; false otherwise
 			 */
 			private boolean checkSimpleVectorImplEquality(final SimpleVectorImpl simpleVectorImpl) {
 				if (size == null) {
@@ -150,11 +155,6 @@ public interface SimpleVector extends Vector, SimpleArray {
 				}
 
 				return size.equals(simpleVectorImpl.size) && elementType.equals(simpleVectorImpl.elementType);
-			}
-
-			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

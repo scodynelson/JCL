@@ -42,9 +42,9 @@ public class FloatStruct extends RealStruct {
 	}
 
 	/**
-	 * This method returns the value of the FloatStruct.
+	 * Getter for float {@link #bigDecimal} property.
 	 *
-	 * @return value of the FloatStruct
+	 * @return float {@link #bigDecimal} property
 	 */
 	public BigDecimal getBigDecimal() {
 		return bigDecimal;

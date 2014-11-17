@@ -90,21 +90,20 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method gets the array type from the provided isAdjustable value.
+	 * Gets the array type from the provided {@link #isAdjustable} value.
 	 *
 	 * @param isAdjustable
 	 * 		whether or not the array is adjustable
 	 *
-	 * @return the matching array type for the provided isAdjustable value
+	 * @return the matching array type for the provided {@link #isAdjustable} value
 	 */
 	private static Array getArrayType(final boolean isAdjustable) {
 		return isAdjustable ? Array.INSTANCE : SimpleArray.INSTANCE;
 	}
 
 	/**
-	 * This method determines if the provided {@code dimensionsToCheck} and {@code elementTypeToCheck} are valid for
-	 * the
-	 * provided {@code contentsToCheck}.
+	 * Determines if the provided {@code dimensionsToCheck} and {@code elementTypeToCheck} are valid for the provided
+	 * {@code contentsToCheck}.
 	 *
 	 * @param dimensionsToCheck
 	 * 		the array dimensions to check
@@ -134,38 +133,38 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	}
 
 	/**
-	 * Getter for array contents property.
+	 * Getter for array {@link #contents} property.
 	 *
-	 * @return array contents property
+	 * @return array {@link #contents} property
 	 */
 	public List<TYPE> getContents() {
 		return contents;
 	}
 
 	/**
-	 * Setter for array contents property.
+	 * Setter for array {@link #contents} property.
 	 *
 	 * @param contents
-	 * 		new array contents property value
+	 * 		new array {@link #contents} property value
 	 */
 	public void setContents(final List<TYPE> contents) {
 		this.contents = new ArrayList<>(contents);
 	}
 
 	/**
-	 * Getter for array dimensions property.
+	 * Getter for array {@link #dimensions} property.
 	 *
-	 * @return array dimensions property
+	 * @return array {@link #dimensions} property
 	 */
 	public List<Integer> getDimensions() {
 		return dimensions;
 	}
 
 	/**
-	 * Setter for array dimensions property.
+	 * Setter for array {@link #dimensions} property.
 	 *
 	 * @param dimensions
-	 * 		new array dimensions property value
+	 * 		new array {@link #dimensions} property value
 	 */
 	public void setDimensions(final List<Integer> dimensions) {
 		this.dimensions = dimensions;
@@ -173,73 +172,73 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	}
 
 	/**
-	 * Getter for array totalSize property.
+	 * Getter for array {@link #totalSize} property.
 	 *
-	 * @return array totalSize property
+	 * @return array {@link #totalSize} property
 	 */
 	public int getTotalSize() {
 		return totalSize;
 	}
 
 	/**
-	 * Getter for array rank property.
+	 * Getter for array {@link #rank} property.
 	 *
-	 * @return array rank property
+	 * @return array {@link #rank} property
 	 */
 	public int getRank() {
 		return rank;
 	}
 
 	/**
-	 * Setter for array rank property.
+	 * Setter for array {@link #rank} property.
 	 *
 	 * @param rank
-	 * 		new array rank property value
+	 * 		new array {@link #rank} property value
 	 */
 	public void setRank(final int rank) {
 		this.rank = rank;
 	}
 
 	/**
-	 * Getter for array elementType property.
+	 * Getter for array {@link #elementType} property.
 	 *
-	 * @return array elementType property
+	 * @return array {@link #elementType} property
 	 */
 	public LispType getElementType() {
 		return elementType;
 	}
 
 	/**
-	 * Setter for array elementType property.
+	 * Setter for array {@link #elementType} property.
 	 *
 	 * @param elementType
-	 * 		new array elementType property value
+	 * 		new array {@link #elementType} property value
 	 */
 	public void setElementType(final LispType elementType) {
 		this.elementType = elementType;
 	}
 
 	/**
-	 * Getter for array isAdjustable property.
+	 * Getter for array {@link #isAdjustable} property.
 	 *
-	 * @return array isAdjustable property
+	 * @return array {@link #isAdjustable} property
 	 */
 	public boolean isAdjustable() {
 		return isAdjustable;
 	}
 
 	/**
-	 * Setter for array isAdjustable property.
+	 * Setter for array {@link #isAdjustable} property.
 	 *
 	 * @param isAdjustable
-	 * 		new array isAdjustable property value
+	 * 		new array {@link #isAdjustable} property value
 	 */
 	public void setAdjustable(final boolean isAdjustable) {
 		this.isAdjustable = isAdjustable;
 	}
 
 	/**
-	 * This method retrieves the element at the provided {@code index} location.
+	 * Retrieves the element at the provided {@code index} location.
 	 *
 	 * @param index
 	 * 		the index location of the element to retrieve
@@ -251,7 +250,7 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method sets the element at the provide {@code index} location to the provided {@code newValue} element.
+	 * Sets the element at the provide {@code index} location to the provided {@code newValue} element.
 	 *
 	 * @param index
 	 * 		the index location of the element to set
@@ -266,7 +265,8 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This private method calculates and updates the totalSize of the array based on the dimensions property.
+	 * Calculates and updates the {@link #totalSize} of the array based on the {@link
+	 * #dimensions} property.
 	 */
 	private void updateTotalSize() {
 		totalSize = 0;

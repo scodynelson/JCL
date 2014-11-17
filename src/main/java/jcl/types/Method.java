@@ -40,7 +40,7 @@ public interface Method extends T {
 		/**
 		 * Inner {@link Method} type implementation.
 		 */
-		private static class MethodImpl extends TypeBaseClass implements Method, AtomicTypeSpecifier {
+		private static final class MethodImpl extends TypeBaseClass implements Method, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.
@@ -50,13 +50,13 @@ public interface Method extends T {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof Method);
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof Method);
 			}
 
 			@Override

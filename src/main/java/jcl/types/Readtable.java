@@ -34,7 +34,7 @@ public interface Readtable extends T {
 		/**
 		 * Inner {@link Readtable} type implementation.
 		 */
-		private static class ReadtableImpl extends TypeBaseClass implements Readtable, AtomicTypeSpecifier {
+		private static final class ReadtableImpl extends TypeBaseClass implements Readtable, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.
@@ -44,13 +44,13 @@ public interface Readtable extends T {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof Readtable);
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof Readtable);
 			}
 
 			@Override

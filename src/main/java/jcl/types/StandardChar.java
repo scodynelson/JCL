@@ -32,7 +32,7 @@ public interface StandardChar extends BaseChar {
 		/**
 		 * Inner {@link StandardChar} type implementation.
 		 */
-		private static class StandardCharImpl extends TypeBaseClass implements StandardChar, AtomicTypeSpecifier {
+		private static final class StandardCharImpl extends TypeBaseClass implements StandardChar, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.
@@ -42,13 +42,13 @@ public interface StandardChar extends BaseChar {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof StandardChar);
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof StandardChar);
 			}
 
 			@Override

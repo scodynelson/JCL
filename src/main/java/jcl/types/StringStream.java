@@ -32,7 +32,7 @@ public interface StringStream extends Stream {
 		/**
 		 * Inner {@link StringStream} type implementation.
 		 */
-		private static class StringStreamImpl extends TypeBaseClass implements StringStream, AtomicTypeSpecifier {
+		private static final class StringStreamImpl extends TypeBaseClass implements StringStream, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.
@@ -42,13 +42,13 @@ public interface StringStream extends Stream {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof StringStream);
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof StringStream);
 			}
 
 			@Override

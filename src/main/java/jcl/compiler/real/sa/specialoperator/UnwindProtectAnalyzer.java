@@ -12,12 +12,12 @@ import jcl.structs.symbols.SpecialOperator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UnwindProtectAnalyzer implements Analyzer<LispStruct, ListStruct> {
+public class UnwindProtectAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
 	public static final UnwindProtectAnalyzer INSTANCE = new UnwindProtectAnalyzer();
 
 	@Override
-	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
+	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 
 		if (input.size() < 2) {
 			throw new ProgramErrorException("UNWIND-PROTECT: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");

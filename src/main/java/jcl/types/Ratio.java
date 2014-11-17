@@ -31,7 +31,7 @@ public interface Ratio extends Rational {
 		/**
 		 * Inner {@link Ratio} type implementation.
 		 */
-		private static class RatioImpl extends TypeBaseClass implements Ratio, AtomicTypeSpecifier {
+		private static final class RatioImpl extends TypeBaseClass implements Ratio, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.
@@ -41,13 +41,13 @@ public interface Ratio extends Rational {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof Ratio);
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof Ratio);
 			}
 
 			@Override

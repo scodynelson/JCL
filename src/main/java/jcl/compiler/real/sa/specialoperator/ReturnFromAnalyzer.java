@@ -12,7 +12,7 @@ import jcl.structs.symbols.SymbolStruct;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReturnFromAnalyzer implements Analyzer<LispStruct, ListStruct> {
+public class ReturnFromAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
 	public static final ReturnFromAnalyzer INSTANCE = new ReturnFromAnalyzer();
 

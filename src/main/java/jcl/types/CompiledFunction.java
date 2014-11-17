@@ -34,7 +34,7 @@ public interface CompiledFunction extends Function {
 		/**
 		 * Inner {@link CompiledFunction} type implementation.
 		 */
-		private static class CompiledFunctionImpl extends TypeBaseClass implements CompiledFunction, AtomicTypeSpecifier {
+		private static final class CompiledFunctionImpl extends TypeBaseClass implements CompiledFunction, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.
@@ -44,13 +44,13 @@ public interface CompiledFunction extends Function {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof CompiledFunction);
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof CompiledFunction);
 			}
 
 			@Override

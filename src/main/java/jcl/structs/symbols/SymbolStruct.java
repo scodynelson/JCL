@@ -5,6 +5,7 @@ import jcl.structs.classes.BuiltInClassStruct;
 import jcl.structs.functions.FunctionStruct;
 import jcl.structs.packages.PackageStruct;
 import jcl.structs.symbols.variables.Variable;
+import jcl.types.NIL;
 import jcl.types.Symbol;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -144,96 +145,97 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	}
 
 	/**
-	 * Getter for symbol name property.
+	 * Getter for symbol {@link #name} property.
 	 *
-	 * @return symbol name property
+	 * @return symbol {@link #name} property
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * Getter for symbol package property.
+	 * Getter for symbol {@link #symbolPackage} property.
 	 *
-	 * @return symbol package property
+	 * @return symbol {@link #symbolPackage} property
 	 */
 	public PackageStruct getSymbolPackage() {
 		return symbolPackage;
 	}
 
 	/**
-	 * Setter for symbol package property.
+	 * Setter for symbol {@link #symbolPackage} property.
 	 *
 	 * @param symbolPackage
-	 * 		new symbol package property value
+	 * 		new symbol {@link #symbolPackage} property value
 	 */
 	public void setSymbolPackage(final PackageStruct symbolPackage) {
 		this.symbolPackage = symbolPackage;
 	}
 
 	/**
-	 * Getter for symbol value property.
+	 * Getter for symbol {@link #value} property.
 	 *
-	 * @return symbol value property
+	 * @return symbol {@link #value} property
 	 */
 	public TYPE getValue() {
 		return value;
 	}
 
 	/**
-	 * Setter for symbol value property.
+	 * Setter for symbol {@link #value} property.
 	 *
 	 * @param value
-	 * 		new symbol value property value
+	 * 		new symbol {@link #value} property value
 	 */
 	public void setValue(final TYPE value) {
 		this.value = value;
 	}
 
 	/**
-	 * Getter for symbol function property.
+	 * Getter for symbol {@link #function} property.
 	 *
-	 * @return symbol function property
+	 * @return symbol {@link #function} property
 	 */
 	public FunctionStruct getFunction() {
 		return function;
 	}
 
 	/**
-	 * Setter for symbol function property.
+	 * Setter for symbol {@link #function} property.
 	 *
 	 * @param function
-	 * 		new symbol function property value
+	 * 		new symbol {@link #function} property value
 	 */
 	public void setFunction(final FunctionStruct function) {
 		this.function = function;
 	}
 
 	/**
-	 * Getter for symbol properties property.
+	 * Getter for symbol {@link #properties} property.
 	 *
-	 * @return symbol properties property
+	 * @return symbol {@link #properties} property
 	 */
 	public List<LispStruct> getProperties() {
 		return properties;
 	}
 
 	/**
-	 * Getter for symbol isSpecial property.
+	 * Getter for symbol {@link #properties} property.
 	 *
-	 * @return symbol isSpecial property
+	 * @return symbol {@link #properties} property
 	 */
 	public boolean isSpecial() {
 		return isSpecial;
 	}
 
 	/**
-	 * This method retrieves a property from the symbol internal properties.
+	 * Retrieves the property from the symbol {@link #properties} associated with the provided {@code key}. If the
+	 * property is not found, {@link NIL#INSTANCE} is returned.
 	 *
 	 * @param key
 	 * 		the key for the property to retrieve
 	 *
-	 * @return the property from the symbol internal properties.
+	 * @return the property from the symbol {@link #properties} or {@link NIL#INSTANCE} if the property cannot be found.
 	 */
 	public LispStruct getProperty(final LispStruct key) {
 		for (int i = 0; i < properties.size(); i += 2) {
@@ -243,11 +245,12 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 				return properties.get(valueIndex);
 			}
 		}
-		return null;
+		return NIL.INSTANCE;
 	}
 
 	/**
-	 * This method set a property in the symbol internal properties to the provided value.
+	 * Sets the property in the symbol {@link #properties} associated with the provided {@code key} to the provided
+	 * {@code value}.
 	 *
 	 * @param key
 	 * 		the key for the property to set
@@ -266,10 +269,10 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method copies the symbol and possibly it's properties.
+	 * Copies the symbol and possibly its {@link #properties}.
 	 *
 	 * @param copyProperties
-	 * 		whether or not to copy the symbol's internal properties
+	 * 		whether or not to copy the symbol's {@link #properties}
 	 *
 	 * @return the newly copied symbol
 	 */

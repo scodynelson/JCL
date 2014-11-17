@@ -8,8 +8,8 @@ import jcl.compiler.real.sa.specialoperator.body.BodyAnalyzer;
 import jcl.compiler.real.sa.specialoperator.body.BodyProcessingResult;
 import jcl.structs.conditions.exceptions.ProgramErrorException;
 import jcl.structs.lists.ListStruct;
+import jcl.structs.lists.NullStruct;
 import jcl.structs.symbols.KeywordSymbolStruct;
-import jcl.structs.symbols.NILStruct;
 import jcl.structs.symbols.SpecialOperator;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -21,7 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class EvalWhenAnalyzer implements Analyzer<LispStruct, ListStruct> {
+public class EvalWhenAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(EvalWhenAnalyzer.class);
 
@@ -36,11 +36,11 @@ public class EvalWhenAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	}
 
 	@Override
-	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
+	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 		return analyze(input, analyzer, false);
 	}
 
-	public static LispStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer, final boolean isTopLevel) {
+	public static ListStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer, final boolean isTopLevel) {
 
 		final LispStruct second = input.getRest().getFirst();
 		if (!(second instanceof ListStruct)) {
@@ -78,7 +78,7 @@ public class EvalWhenAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			} else {
 				// NOTE: should never get here since we did the check earlier
 				LOGGER.warn("EVAL-WHEN: Unsupported situation keyword encountered: {}", situationJavaList);
-				return NILStruct.INSTANCE;
+				return NullStruct.INSTANCE;
 			}
 		} else if (isExecute(situationJavaList)) {
 			// TODO: take care of processing later at execution time...
@@ -86,7 +86,7 @@ public class EvalWhenAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			evalWhenResultList.addAll(bodyProcessingResult.getBodyForms());
 			return ListStruct.buildProperList(evalWhenResultList);
 		} else {
-			return NILStruct.INSTANCE;
+			return NullStruct.INSTANCE;
 		}
 	}
 

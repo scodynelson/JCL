@@ -31,7 +31,7 @@ public interface StructureObject extends T {
 		/**
 		 * Inner {@link StructureObject} type implementation.
 		 */
-		private static class StructureObjectImpl extends TypeBaseClass implements StructureObject, AtomicTypeSpecifier {
+		private static final class StructureObjectImpl extends TypeBaseClass implements StructureObject, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.
@@ -41,13 +41,13 @@ public interface StructureObject extends T {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof StructureObject);
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof StructureObject);
 			}
 
 			@Override

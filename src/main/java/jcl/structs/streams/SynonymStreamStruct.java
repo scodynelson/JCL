@@ -44,7 +44,7 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	}
 
 	/**
-	 * This private method is used to retrieve the element type for object construction.
+	 * Retrieves the element type for object construction.
 	 *
 	 * @param symbol
 	 * 		the symbol to create a SynonymStreamStruct from
@@ -59,9 +59,9 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	}
 
 	/**
-	 * Getter for synonym-stream symbol property.
+	 * Getter for synonym-stream {@link #symbol} property.
 	 *
-	 * @return synonym-stream symbol property
+	 * @return synonym-stream {@link #symbol} property
 	 */
 	public SymbolStruct<StreamStruct> getSymbol() {
 		return symbol;

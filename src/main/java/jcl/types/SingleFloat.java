@@ -25,11 +25,6 @@ public interface SingleFloat extends Float {
 	 */
 	class Factory implements TypeFactory<SingleFloat> {
 
-		@Override
-		public SingleFloat getInstance() {
-			return INSTANCE;
-		}
-
 		/**
 		 * Gets instance of compound {@link SingleFloat} type.
 		 *
@@ -63,10 +58,15 @@ public interface SingleFloat extends Float {
 			return SingleFloatImpl.getInstance(lowerBound, lowerInclusive, upperBound, upperInclusive);
 		}
 
+		@Override
+		public SingleFloat getInstance() {
+			return INSTANCE;
+		}
+
 		/**
 		 * Inner {@link SingleFloat} type implementation.
 		 */
-		private static class SingleFloatImpl extends TypeBaseClass implements SingleFloat, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static final class SingleFloatImpl extends TypeBaseClass implements SingleFloat, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final IntervalDesignator<BigDecimal> intervalDesignator;
 
@@ -119,6 +119,11 @@ public interface SingleFloat extends Float {
 			}
 
 			@Override
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
+			}
+
+			@Override
 			public boolean equals(final Object obj) {
 				if (this == obj) {
 					return true;
@@ -140,11 +145,6 @@ public interface SingleFloat extends Float {
 				}
 
 				return false;
-			}
-
-			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

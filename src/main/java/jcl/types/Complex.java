@@ -28,11 +28,6 @@ public interface Complex extends Number {
 	 */
 	class Factory implements TypeFactory<Complex> {
 
-		@Override
-		public Complex getInstance() {
-			return INSTANCE;
-		}
-
 		/**
 		 * Gets instance of compound {@link Complex} type.
 		 *
@@ -45,10 +40,15 @@ public interface Complex extends Number {
 			return ComplexImpl.getInstance(realType);
 		}
 
+		@Override
+		public Complex getInstance() {
+			return INSTANCE;
+		}
+
 		/**
 		 * Inner {@link Complex} type implementation.
 		 */
-		private static class ComplexImpl extends TypeBaseClass implements Complex, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static final class ComplexImpl extends TypeBaseClass implements Complex, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final Real realType;
 
@@ -83,6 +83,11 @@ public interface Complex extends Number {
 			}
 
 			@Override
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
+			}
+
+			@Override
 			public boolean equals(final Object obj) {
 				if (this == obj) {
 					return true;
@@ -104,11 +109,6 @@ public interface Complex extends Number {
 				}
 
 				return false;
-			}
-
-			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

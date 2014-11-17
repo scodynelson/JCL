@@ -62,7 +62,7 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	}
 
 	/**
-	 * This method gets the logical-pathname host.
+	 * Gets the logical-pathname host.
 	 *
 	 * @param pathname
 	 * 		the pathname string to parse into the logical-pathname host
@@ -86,7 +86,7 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	}
 
 	/**
-	 * This method removed the host substring from the provided pathname string.
+	 * Removes the host substring from the provided pathname string.
 	 *
 	 * @param pathname
 	 * 		the pathname string to remove the host substring from
@@ -102,7 +102,7 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	}
 
 	/**
-	 * This method gets the logical-pathname directory.
+	 * Gets the logical-pathname directory.
 	 *
 	 * @param pathname
 	 * 		the pathname string to parse into the logical-pathname directory
@@ -141,10 +141,10 @@ public class LogicalPathnameStruct extends PathnameStruct {
 			if (WORD_PATTERN.matcher(directoryString).matches()) {
 				directoryLevel = new PathnameDirectoryLevel(directoryString);
 			} else if (WILDCARD_WORD_PATTERN.matcher(directoryString).matches()) {
-				directoryLevel = new PathnameDirectoryLevel(directoryString);
-
 				if (WILDCARD_STRING.equals(directoryString)) {
-					directoryLevel.setDirectoryLevelType(PathnameDirectoryLevelType.WILD);
+					directoryLevel = new PathnameDirectoryLevel(directoryString, PathnameDirectoryLevelType.WILD);
+				} else {
+					directoryLevel = new PathnameDirectoryLevel(directoryString);
 				}
 			} else {
 				throw new TypeErrorException("Directory did not match logical-pathname patterns: " + directoryString);
@@ -158,7 +158,7 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	}
 
 	/**
-	 * This method removed the directory substring from the provided pathname string.
+	 * Removes the directory substring from the provided pathname string.
 	 *
 	 * @param pathname
 	 * 		the pathname string to remove the directory substring from
@@ -174,7 +174,7 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	}
 
 	/**
-	 * This method gets the logical-pathname name.
+	 * Gets the logical-pathname name.
 	 *
 	 * @param pathname
 	 * 		the pathname string to parse into the logical-pathname name
@@ -201,7 +201,7 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	}
 
 	/**
-	 * This method removed the name substring from the provided pathname string.
+	 * Removes the name substring from the provided pathname string.
 	 *
 	 * @param pathname
 	 * 		the pathname string to remove the name substring from
@@ -217,7 +217,7 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	}
 
 	/**
-	 * This method gets the logical-pathname type.
+	 * Gets the logical-pathname type.
 	 *
 	 * @param pathname
 	 * 		the pathname string to parse into the logical-pathname type
@@ -245,7 +245,7 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	}
 
 	/**
-	 * This method removed the type substring from the provided pathname string.
+	 * Removes the type substring from the provided pathname string.
 	 *
 	 * @param pathname
 	 * 		the pathname string to remove the type substring from
@@ -261,7 +261,7 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	}
 
 	/**
-	 * This method gets the logical-pathname version.
+	 * Gets the logical-pathname version.
 	 *
 	 * @param pathname
 	 * 		the pathname string to parse into the logical-pathname version

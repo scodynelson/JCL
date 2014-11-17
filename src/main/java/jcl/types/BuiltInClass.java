@@ -31,7 +31,7 @@ public interface BuiltInClass extends Class {
 		/**
 		 * Inner {@link BuiltInClass} type implementation.
 		 */
-		private static class BuiltInClassImpl extends TypeBaseClass implements BuiltInClass, AtomicTypeSpecifier {
+		private static final class BuiltInClassImpl extends TypeBaseClass implements BuiltInClass, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.
@@ -41,13 +41,13 @@ public interface BuiltInClass extends Class {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof BuiltInClass);
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof BuiltInClass);
 			}
 
 			@Override

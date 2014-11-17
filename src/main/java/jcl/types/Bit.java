@@ -32,7 +32,7 @@ public interface Bit extends UnsignedByte {
 		/**
 		 * Inner {@link Bit} type implementation.
 		 */
-		private static class BitImpl extends AndTypeSpecifier implements Bit, AtomicTypeSpecifier {
+		private static final class BitImpl extends AndTypeSpecifier implements Bit, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.

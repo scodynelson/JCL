@@ -1,8 +1,8 @@
 package jcl.compiler.real.sa;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.structs.symbols.SymbolStruct;
 
 import java.util.Stack;

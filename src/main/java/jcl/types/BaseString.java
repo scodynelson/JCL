@@ -26,11 +26,6 @@ public interface BaseString extends String {
 	 */
 	class Factory implements TypeFactory<BaseString> {
 
-		@Override
-		public BaseString getInstance() {
-			return INSTANCE;
-		}
-
 		/**
 		 * Gets instance of compound {@link BaseString} type.
 		 *
@@ -43,13 +38,18 @@ public interface BaseString extends String {
 			return BaseStringImpl.getInstance(size);
 		}
 
+		@Override
+		public BaseString getInstance() {
+			return INSTANCE;
+		}
+
 		/**
 		 * Inner {@link BaseString} type implementation.
 		 */
-		private static class BaseStringImpl extends TypeBaseClass implements BaseString, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static final class BaseStringImpl extends TypeBaseClass implements BaseString, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
-			private final DimensionsDesignator size;
 			private static final LispType ELEMENT_TYPE = BaseChar.INSTANCE;
+			private final DimensionsDesignator size;
 
 			/**
 			 * Private constructor.
@@ -69,16 +69,6 @@ public interface BaseString extends String {
 				this.size = new DimensionsDesignator(size);
 			}
 
-			@Override
-			public DimensionsDesignator getDimensions() {
-				return size;
-			}
-
-			@Override
-			public LispType getElementType() {
-				return ELEMENT_TYPE;
-			}
-
 			/**
 			 * Gets instance of compound {@link BaseString} type.
 			 *
@@ -89,6 +79,21 @@ public interface BaseString extends String {
 			 */
 			public static BaseString getInstance(final Integer size) {
 				return new BaseStringImpl(size);
+			}
+
+			@Override
+			public DimensionsDesignator getDimensions() {
+				return size;
+			}
+
+			@Override
+			public LispType getElementType() {
+				return ELEMENT_TYPE;
+			}
+
+			@Override
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
@@ -113,11 +118,6 @@ public interface BaseString extends String {
 				}
 
 				return TypeUtils.isArrayLispTypeEqual(this, baseString);
-			}
-
-			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

@@ -82,61 +82,61 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * Getter for pathname host property.
+	 * Getter for pathname {@link #host} property.
 	 *
-	 * @return pathname host property
+	 * @return pathname {@link #host} property
 	 */
 	public PathnameHost getPathnameHost() {
 		return host;
 	}
 
 	/**
-	 * Getter for pathname device property.
+	 * Getter for pathname {@link #device} property.
 	 *
-	 * @return pathname device property
+	 * @return pathname {@link #device} property
 	 */
 	public PathnameDevice getPathnameDevice() {
 		return device;
 	}
 
 	/**
-	 * Getter for pathname directory property.
+	 * Getter for pathname {@link #directory} property.
 	 *
-	 * @return pathname directory property
+	 * @return pathname {@link #directory} property
 	 */
 	public PathnameDirectory getPathnameDirectory() {
 		return directory;
 	}
 
 	/**
-	 * Getter for pathname name property.
+	 * Getter for pathname {@link #name} property.
 	 *
-	 * @return pathname name property
+	 * @return pathname {@link #name} property
 	 */
 	public PathnameName getPathnameName() {
 		return name;
 	}
 
 	/**
-	 * Getter for pathname type property.
+	 * Getter for pathname {@link #type} property.
 	 *
-	 * @return pathname type property
+	 * @return pathname {@link #type} property
 	 */
 	public PathnameType getPathnameType() {
 		return type;
 	}
 
 	/**
-	 * Getter for pathname version property.
+	 * Getter for pathname {@link #version} property.
 	 *
-	 * @return pathname version property
+	 * @return pathname {@link #version} property
 	 */
 	public PathnameVersion getPathnameVersion() {
 		return version;
 	}
 
 	/**
-	 * This method determines if the provided path is a URI.
+	 * Determines if the provided path is a URI.
 	 *
 	 * @param path
 	 * 		the path to test
@@ -206,7 +206,7 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 	// BUILDERS
 
 	/**
-	 * This factory method builds and returns a pathname with the provided {@code pathname} parsed as its elements.
+	 * Builds and returns a pathname with the provided {@code pathname} parsed as its elements.
 	 *
 	 * @param pathname
 	 * 		the pathname string to parse into the pathname object elements
@@ -226,8 +226,8 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This factory method builds and returns a pathname of the {@code structType} with the provided {@code host},
-	 * {@code device},{@code directory}, {@code name},{@code type},{@code version} as its elements.
+	 * Builds and returns a pathname of the {@code structType} with the provided {@code host}, {@code device}, {@code
+	 * directory}, {@code name}, {@code type}, {@code version} as its elements.
 	 *
 	 * @param host
 	 * 		the pathname host

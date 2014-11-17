@@ -47,18 +47,18 @@ public final class PathnameDirectory {
 	}
 
 	/**
-	 * Getter for pathname directory component value.
+	 * Getter for pathname directory {@link #directoryComponent} property.
 	 *
-	 * @return pathname directory component value
+	 * @return pathname directory {@link #directoryComponent} property
 	 */
 	public PathnameDirectoryComponent getDirectoryComponent() {
 		return directoryComponent;
 	}
 
 	/**
-	 * Getter for pathname directory component type.
+	 * Getter for pathname directory {@link #componentType} property.
 	 *
-	 * @return pathname directory component type
+	 * @return pathname directory {@link #componentType} property
 	 */
 	public PathnameComponentType getComponentType() {
 		return componentType;

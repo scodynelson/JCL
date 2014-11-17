@@ -14,6 +14,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -48,25 +49,25 @@ public class HashTableStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * Getter for hash-table test property.
+	 * Getter for hash-table {@link #test} property.
 	 *
-	 * @return hash-table test property
+	 * @return hash-table {@link #test} property
 	 */
 	public FunctionStruct getTest() {
 		return test;
 	}
 
 	/**
-	 * Getter for hash-table rehashThreshold property.
+	 * Getter for hash-table {@link #rehashThreshold} property.
 	 *
-	 * @return hash-table rehashThreshold property
+	 * @return hash-table {@link #rehashThreshold} property
 	 */
 	public BigDecimal getRehashThreshold() {
 		return rehashThreshold;
 	}
 
 	/**
-	 * This method gets the current number of items in the internal map.
+	 * Gets the current number of items in the internal map.
 	 *
 	 * @return the current number of items in the internal map
 	 */
@@ -75,7 +76,7 @@ public class HashTableStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method returns the value stored in the map matching the provided key.
+	 * Returns the value stored in the map matching the provided key.
 	 *
 	 * @param key
 	 * 		the key to find the matching stored value
@@ -88,7 +89,7 @@ public class HashTableStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method sets or inserts the value stored in the map matching the provided key.
+	 * Sets or inserts the value stored in the map matching the provided key.
 	 *
 	 * @param key
 	 * 		the key to set or insert the provided value
@@ -101,7 +102,7 @@ public class HashTableStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method removes the value stored in the map matching the provided key.
+	 * Removes the value stored in the map matching the provided key.
 	 *
 	 * @param key
 	 * 		the key to remove the matching stored value
@@ -112,20 +113,20 @@ public class HashTableStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method clears the internal map.
+	 * Clears the internal map.
 	 */
 	public void clrHash() {
 		map.clear();
 	}
 
 	/**
-	 * This method runs a mapping function over the internal map.
+	 * Runs a mapping function over the internal map.
 	 *
 	 * @param function
 	 * 		the mapping function
 	 */
 	public void mapHash(final FunctionStruct function) {
-		for (final Map.Entry<LispStruct, LispStruct> entry : map.entrySet()) {
+		for (final Entry<LispStruct, LispStruct> entry : map.entrySet()) {
 			final LispStruct keyWrapper = KeyWrapper.getInstance(entry.getKey(), test);
 			function.apply(keyWrapper, entry.getValue());
 		}
@@ -144,7 +145,7 @@ public class HashTableStruct extends BuiltInClassStruct {
 	/**
 	 * Private inner class that acts as a wrapper around hash keys for proper equality testing.
 	 */
-	private static class KeyWrapper implements LispStruct {
+	private static final class KeyWrapper implements LispStruct {
 
 		private final LispStruct key;
 		private final Equator<LispStruct> equator;
@@ -182,7 +183,7 @@ public class HashTableStruct extends BuiltInClassStruct {
 		 *
 		 * @return the newly created KeyWrapper object
 		 */
-		public static KeyWrapper getInstance(final LispStruct key, final Equator<LispStruct> equator) {
+		private static KeyWrapper getInstance(final LispStruct key, final Equator<LispStruct> equator) {
 			return new KeyWrapper(key, equator);
 		}
 
@@ -198,10 +199,7 @@ public class HashTableStruct extends BuiltInClassStruct {
 
 		@Override
 		public int hashCode() {
-			return new HashCodeBuilder()
-					.append(key)
-					.append(equator)
-					.toHashCode();
+			return HashCodeBuilder.reflectionHashCode(this);
 		}
 
 		@Override

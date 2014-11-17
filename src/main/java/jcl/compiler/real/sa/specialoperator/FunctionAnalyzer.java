@@ -22,7 +22,7 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	public static final FunctionAnalyzer INSTANCE = new FunctionAnalyzer();
 
 	@Override
-	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
+	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 
 		if (input.size() != 2) {
 			throw new ProgramErrorException("FUNCTION: Incorrect number of arguments: " + input.size() + ". Expected 2 arguments.");

@@ -51,7 +51,7 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 	}
 
 	/**
-	 * This method gets the bit-vector type from the provided isAdjustable and fillPointer values.
+	 * Gets the bit-vector type from the provided isAdjustable and fillPointer values.
 	 *
 	 * @param isAdjustable
 	 * 		whether or not the bit-vector is adjustable
@@ -65,12 +65,12 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 	}
 
 	/**
-	 * This method gets a list of {@link IntegerStruct}s from the provided Java string value.
+	 * Gets a list of {@link IntegerStruct}s from the provided {@link java.lang.String} value.
 	 *
 	 * @param bitString
 	 * 		the Java string to convert to a list of {@link IntegerStruct}s
 	 *
-	 * @return a list of {@link IntegerStruct}s from the provided Java string value
+	 * @return a list of {@link IntegerStruct}s from the provided {@link java.lang.String} value
 	 */
 	private static List<IntegerStruct> getBitList(final String bitString) {
 		if (!BIT_PATTERN.matcher(bitString).matches()) {

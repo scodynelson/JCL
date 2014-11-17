@@ -26,11 +26,6 @@ public interface String extends Vector {
 	 */
 	class Factory implements TypeFactory<String> {
 
-		@Override
-		public String getInstance() {
-			return INSTANCE;
-		}
-
 		/**
 		 * Gets instance of compound {@link String} type.
 		 *
@@ -43,13 +38,18 @@ public interface String extends Vector {
 			return StringImpl.getInstance(size);
 		}
 
+		@Override
+		public String getInstance() {
+			return INSTANCE;
+		}
+
 		/**
 		 * Inner {@link String} type implementation.
 		 */
-		private static class StringImpl extends TypeBaseClass implements String, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static final class StringImpl extends TypeBaseClass implements String, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
-			private final DimensionsDesignator size;
 			private static final LispType ELEMENT_TYPE = Character.INSTANCE;
+			private final DimensionsDesignator size;
 
 			/**
 			 * Private constructor.
@@ -69,16 +69,6 @@ public interface String extends Vector {
 				this.size = new DimensionsDesignator(size);
 			}
 
-			@Override
-			public DimensionsDesignator getDimensions() {
-				return size;
-			}
-
-			@Override
-			public LispType getElementType() {
-				return ELEMENT_TYPE;
-			}
-
 			/**
 			 * Gets instance of compound {@link String} type.
 			 *
@@ -89,6 +79,21 @@ public interface String extends Vector {
 			 */
 			public static String getInstance(final Integer size) {
 				return new StringImpl(size);
+			}
+
+			@Override
+			public DimensionsDesignator getDimensions() {
+				return size;
+			}
+
+			@Override
+			public LispType getElementType() {
+				return ELEMENT_TYPE;
+			}
+
+			@Override
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
@@ -113,11 +118,6 @@ public interface String extends Vector {
 				}
 
 				return TypeUtils.isArrayLispTypeEqual(this, aString);
-			}
-
-			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

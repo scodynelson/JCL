@@ -13,7 +13,7 @@ import jcl.structs.symbols.SymbolStruct;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BlockAnalyzer implements Analyzer<LispStruct, ListStruct> {
+public class BlockAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
 	public static final BlockAnalyzer INSTANCE = new BlockAnalyzer();
 

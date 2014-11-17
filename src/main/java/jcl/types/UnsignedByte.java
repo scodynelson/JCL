@@ -11,8 +11,8 @@ import java.lang.String;
 import java.math.BigInteger;
 
 /**
- * The atomic type specifier {@link UnsignedByte} denotes the same type as is denoted by the type specifier (integer 0
- * *).
+ * The atomic type specifier {@link UnsignedByte} denotes the same type as is denoted by the type specifier
+ * (integer 0 *).
  * <p>
  * This denotes the set of non-negative {@link Integer}s that can be represented in a byte of size s (bits). This is
  * equivalent to (mod m) for m=2^s, or to (integer 0 n) for n=2^s-1. The type {@link UnsignedByte} or the type
@@ -30,11 +30,6 @@ public interface UnsignedByte extends SignedByte {
 	 */
 	class Factory implements TypeFactory<UnsignedByte> {
 
-		@Override
-		public UnsignedByte getInstance() {
-			return INSTANCE;
-		}
-
 		/**
 		 * Gets instance of compound {@link UnsignedByte} type.
 		 *
@@ -47,10 +42,15 @@ public interface UnsignedByte extends SignedByte {
 			return UnsignedByteImpl.getInstance(bits);
 		}
 
+		@Override
+		public UnsignedByte getInstance() {
+			return INSTANCE;
+		}
+
 		/**
 		 * Inner {@link UnsignedByte} type implementation.
 		 */
-		private static class UnsignedByteImpl extends AndTypeSpecifier implements UnsignedByte, AtomicTypeSpecifier {
+		private static final class UnsignedByteImpl extends AndTypeSpecifier implements UnsignedByte, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.

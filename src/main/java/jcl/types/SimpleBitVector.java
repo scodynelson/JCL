@@ -28,11 +28,6 @@ public interface SimpleBitVector extends BitVector, SimpleArray {
 	 */
 	class Factory implements TypeFactory<SimpleBitVector> {
 
-		@Override
-		public SimpleBitVector getInstance() {
-			return INSTANCE;
-		}
-
 		/**
 		 * Gets instance of compound {@link SimpleBitVector} type.
 		 *
@@ -45,13 +40,18 @@ public interface SimpleBitVector extends BitVector, SimpleArray {
 			return SimpleBitVectorImpl.getInstance(size);
 		}
 
+		@Override
+		public SimpleBitVector getInstance() {
+			return INSTANCE;
+		}
+
 		/**
 		 * Inner {@link SimpleBitVector} type implementation.
 		 */
-		private static class SimpleBitVectorImpl extends TypeBaseClass implements SimpleBitVector, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static final class SimpleBitVectorImpl extends TypeBaseClass implements SimpleBitVector, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
-			private final DimensionsDesignator size;
 			private static final LispType ELEMENT_TYPE = Bit.INSTANCE;
+			private final DimensionsDesignator size;
 
 			/**
 			 * Private constructor.
@@ -71,16 +71,6 @@ public interface SimpleBitVector extends BitVector, SimpleArray {
 				this.size = new DimensionsDesignator(size);
 			}
 
-			@Override
-			public DimensionsDesignator getDimensions() {
-				return size;
-			}
-
-			@Override
-			public LispType getElementType() {
-				return ELEMENT_TYPE;
-			}
-
 			/**
 			 * Gets instance of compound {@link SimpleBitVector} type.
 			 *
@@ -91,6 +81,21 @@ public interface SimpleBitVector extends BitVector, SimpleArray {
 			 */
 			public static SimpleBitVector getInstance(final Integer size) {
 				return new SimpleBitVectorImpl(size);
+			}
+
+			@Override
+			public DimensionsDesignator getDimensions() {
+				return size;
+			}
+
+			@Override
+			public LispType getElementType() {
+				return ELEMENT_TYPE;
+			}
+
+			@Override
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
@@ -115,11 +120,6 @@ public interface SimpleBitVector extends BitVector, SimpleArray {
 				}
 
 				return TypeUtils.isArrayLispTypeEqual(this, simpleBitVector);
-			}
-
-			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

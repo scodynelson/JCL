@@ -29,11 +29,6 @@ public interface Real extends Number {
 	 */
 	class Factory implements TypeFactory<Real> {
 
-		@Override
-		public Real getInstance() {
-			return INSTANCE;
-		}
-
 		/**
 		 * Gets instance of compound {@link Real} type.
 		 *
@@ -100,10 +95,15 @@ public interface Real extends Number {
 			return RealImpl.getInstance(lowerBound, lowerInclusive, upperBound, upperInclusive);
 		}
 
+		@Override
+		public Real getInstance() {
+			return INSTANCE;
+		}
+
 		/**
 		 * Inner {@link Real} type implementation.
 		 */
-		private static class RealImpl extends TypeBaseClass implements Real, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static final class RealImpl extends TypeBaseClass implements Real, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final IntervalDesignator<BigInteger> integerIntervalDesignator;
 			private final IntervalDesignator<BigDecimal> decimalIntervalDesignator;
@@ -202,6 +202,11 @@ public interface Real extends Number {
 			}
 
 			@Override
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
+			}
+
+			@Override
 			public boolean equals(final Object obj) {
 				if (this == obj) {
 					return true;
@@ -229,11 +234,6 @@ public interface Real extends Number {
 				}
 
 				return (decimalIntervalDesignator == null) || decimalIntervalDesignator.equals(realImpl.decimalIntervalDesignator);
-			}
-
-			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

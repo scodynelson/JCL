@@ -27,11 +27,6 @@ public interface Integer extends Rational {
 	 */
 	class Factory implements TypeFactory<Integer> {
 
-		@Override
-		public Integer getInstance() {
-			return INSTANCE;
-		}
-
 		/**
 		 * Gets instance of compound {@link Integer} type.
 		 *
@@ -65,10 +60,15 @@ public interface Integer extends Rational {
 			return IntegerImpl.getInstance(lowerBound, lowerInclusive, upperBound, upperInclusive);
 		}
 
+		@Override
+		public Integer getInstance() {
+			return INSTANCE;
+		}
+
 		/**
 		 * Inner {@link Integer} type implementation.
 		 */
-		private static class IntegerImpl extends TypeBaseClass implements Integer, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static final class IntegerImpl extends TypeBaseClass implements Integer, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final IntervalDesignator<BigInteger> intervalDesignator;
 
@@ -129,6 +129,11 @@ public interface Integer extends Rational {
 			}
 
 			@Override
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
+			}
+
+			@Override
 			public boolean equals(final Object obj) {
 				if (this == obj) {
 					return true;
@@ -150,11 +155,6 @@ public interface Integer extends Rational {
 				}
 
 				return false;
-			}
-
-			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

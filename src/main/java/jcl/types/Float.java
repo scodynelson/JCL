@@ -31,11 +31,6 @@ public interface Float extends Real {
 	 */
 	class Factory implements TypeFactory<Float> {
 
-		@Override
-		public Float getInstance() {
-			return INSTANCE;
-		}
-
 		/**
 		 * Gets instance of compound {@link Float} type.
 		 *
@@ -69,10 +64,15 @@ public interface Float extends Real {
 			return FloatImpl.getInstance(lowerBound, lowerInclusive, upperBound, upperInclusive);
 		}
 
+		@Override
+		public Float getInstance() {
+			return INSTANCE;
+		}
+
 		/**
 		 * Inner {@link Float} type implementation.
 		 */
-		private static class FloatImpl extends TypeBaseClass implements Float, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static final class FloatImpl extends TypeBaseClass implements Float, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final IntervalDesignator<BigDecimal> intervalDesignator;
 
@@ -125,6 +125,11 @@ public interface Float extends Real {
 			}
 
 			@Override
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
+			}
+
+			@Override
 			public boolean equals(final Object obj) {
 				if (this == obj) {
 					return true;
@@ -146,11 +151,6 @@ public interface Float extends Real {
 				}
 
 				return false;
-			}
-
-			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

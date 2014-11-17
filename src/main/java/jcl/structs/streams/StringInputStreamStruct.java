@@ -99,7 +99,7 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 	}
 
 	/**
-	 * This method attempts to peek ahead to the next available character in the stream.
+	 * Attempts to peek ahead to the next available character in the stream.
 	 *
 	 * @return the character peeked from the stream
 	 */
@@ -108,7 +108,7 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 	}
 
 	/**
-	 * This method attempts to peek ahead to the next available non-whitespace character in the stream.
+	 * Attempts to peek ahead to the next available non-whitespace character in the stream.
 	 *
 	 * @return the character peeked from the stream
 	 */
@@ -125,7 +125,7 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 	}
 
 	/**
-	 * This method attempts to peek ahead to the provided codePoint in the stream.
+	 * Attempts to peek ahead to the provided {@code codePoint} in the stream.
 	 *
 	 * @param codePoint
 	 * 		the codePoint to peek up to in the stream

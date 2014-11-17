@@ -45,7 +45,7 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 	}
 
 	/**
-	 * This private method is used to retrieve the element type for object construction.
+	 * Used to retrieve the element type for object construction.
 	 *
 	 * @param inputStreams
 	 * 		the {@link InputStream}s to create a ConcatenatedStreamStruct from
@@ -60,7 +60,7 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 	}
 
 	/**
-	 * This private method is used to retrieve the element type for object construction.
+	 * Used to retrieve the element type for object construction.
 	 *
 	 * @param inputStreams
 	 * 		the {@link InputStream}s to create a ConcatenatedStreamStruct from

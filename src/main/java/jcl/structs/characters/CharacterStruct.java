@@ -21,7 +21,7 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 * Public constructor.
 	 *
 	 * @param codePoint
-	 * 		the character code point value
+	 * 		the character {@link #codePoint} value
 	 */
 	public CharacterStruct(final int codePoint) {
 		super(getCharacterType(codePoint), null, null);
@@ -29,12 +29,12 @@ public class CharacterStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method gets the character type from the provide character code point.
+	 * This method gets the character type from the provide character {@code codePoint}.
 	 *
 	 * @param codePoint
-	 * 		the character code point value
+	 * 		the character {@link #codePoint} value
 	 *
-	 * @return the matching character type for the provided character code point
+	 * @return the matching character type for the provided character {@code codePoint}
 	 */
 	private static Character getCharacterType(final int codePoint) {
 		if (CharUtils.isAsciiControl((char) codePoint) && (codePoint != CharUtils.LF)) {
@@ -49,18 +49,18 @@ public class CharacterStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * Method to retrieve the character code point.
+	 * Getter for character {@link #codePoint} property.
 	 *
-	 * @return the character code point
+	 * @return character {@link #codePoint} property
 	 */
 	public int getCodePoint() {
 		return codePoint;
 	}
 
 	/**
-	 * Method to retrieve the character code point as a {@code char}.
+	 * Returns the character {@link #codePoint} property as a {@code char}.
 	 *
-	 * @return the character code point as a {@code char}
+	 * @return the character {@link #codePoint} property as a {@code char}
 	 */
 	public char getCharacter() {
 		return (char) codePoint;

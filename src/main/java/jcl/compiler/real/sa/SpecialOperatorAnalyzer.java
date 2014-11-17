@@ -39,7 +39,7 @@ public class SpecialOperatorAnalyzer implements Analyzer<LispStruct, ListStruct>
 
 	public static final Analyzer<LispStruct, ListStruct> INSTANCE = new SpecialOperatorAnalyzer();
 
-	private static final Map<SpecialOperator, Analyzer<LispStruct, ListStruct>> STRATEGIES = new HashMap<>();
+	private static final Map<SpecialOperator, Analyzer<? extends LispStruct, ListStruct>> STRATEGIES = new HashMap<>();
 
 	static {
 		STRATEGIES.put(SpecialOperator.BLOCK, BlockAnalyzer.INSTANCE);
@@ -79,7 +79,7 @@ public class SpecialOperatorAnalyzer implements Analyzer<LispStruct, ListStruct>
 
 		final SpecialOperator specialOperator = (SpecialOperator) input.getFirst();
 
-		final Analyzer<LispStruct, ListStruct> strategy = STRATEGIES.get(specialOperator);
+		final Analyzer<? extends LispStruct, ListStruct> strategy = STRATEGIES.get(specialOperator);
 		if (strategy == null) {
 			throw new ProgramErrorException("SpecialOperator symbol supplied is not supported.");
 		}

@@ -10,7 +10,7 @@ import jcl.structs.symbols.SpecialOperator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ThrowAnalyzer implements Analyzer<LispStruct, ListStruct> {
+public class ThrowAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
 	public static final ThrowAnalyzer INSTANCE = new ThrowAnalyzer();
 

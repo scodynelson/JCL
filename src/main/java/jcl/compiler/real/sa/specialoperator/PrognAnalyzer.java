@@ -11,7 +11,7 @@ import jcl.structs.symbols.SpecialOperator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PrognAnalyzer implements Analyzer<LispStruct, ListStruct> {
+public class PrognAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
 	public static final PrognAnalyzer INSTANCE = new PrognAnalyzer();
 

@@ -12,7 +12,7 @@ import jcl.structs.symbols.SpecialOperator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CatchAnalyzer implements Analyzer<LispStruct, ListStruct> {
+public class CatchAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
 	public static final CatchAnalyzer INSTANCE = new CatchAnalyzer();
 

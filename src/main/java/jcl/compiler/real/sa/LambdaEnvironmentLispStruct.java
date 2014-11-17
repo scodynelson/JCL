@@ -9,12 +9,12 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.List;
 
-public class LambdaEnvironmentListStruct extends EnvironmentListStruct {
+public class LambdaEnvironmentLispStruct extends EnvironmentLispStruct {
 
 	protected final OrdinaryLambdaListBindings lambdaListBindings;
 	protected final StringStruct docString;
 
-	public LambdaEnvironmentListStruct(final Environment environment, final List<ListStruct> declarations, final ListStruct bodyForms,
+	public LambdaEnvironmentLispStruct(final Environment environment, final List<ListStruct> declarations, final ListStruct bodyForms,
 	                                   final OrdinaryLambdaListBindings lambdaListBindings, final StringStruct docString) {
 		super(environment, declarations, bodyForms);
 		this.lambdaListBindings = lambdaListBindings;

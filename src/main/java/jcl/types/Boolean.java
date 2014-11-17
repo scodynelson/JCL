@@ -31,7 +31,7 @@ public interface Boolean extends Symbol {
 		/**
 		 * Inner {@link Boolean} type implementation.
 		 */
-		private static class BooleanImpl extends OrTypeSpecifier implements Boolean, AtomicTypeSpecifier {
+		private static final class BooleanImpl extends OrTypeSpecifier implements Boolean, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.

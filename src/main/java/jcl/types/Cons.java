@@ -25,11 +25,6 @@ public interface Cons extends List {
 	 */
 	class Factory implements TypeFactory<Cons> {
 
-		@Override
-		public Cons getInstance() {
-			return INSTANCE;
-		}
-
 		/**
 		 * Gets instance of compound {@link Cons} type.
 		 *
@@ -44,10 +39,15 @@ public interface Cons extends List {
 			return ConsImpl.getInstance(carSpec, cdrSpec);
 		}
 
+		@Override
+		public Cons getInstance() {
+			return INSTANCE;
+		}
+
 		/**
 		 * Inner {@link Cons} type implementation.
 		 */
-		private static class ConsImpl extends TypeBaseClass implements Cons, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static final class ConsImpl extends TypeBaseClass implements Cons, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final LispType carSpec;
 			private final LispType cdrSpec;
@@ -88,6 +88,11 @@ public interface Cons extends List {
 			}
 
 			@Override
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
+			}
+
+			@Override
 			public boolean equals(final Object obj) {
 				if (this == obj) {
 					return true;
@@ -115,11 +120,6 @@ public interface Cons extends List {
 				}
 
 				return (cdrSpec == null) || cdrSpec.equals(consImpl.cdrSpec);
-			}
-
-			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

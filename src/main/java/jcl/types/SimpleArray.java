@@ -32,11 +32,6 @@ public interface SimpleArray extends Array {
 	 */
 	class Factory implements TypeFactory<SimpleArray> {
 
-		@Override
-		public SimpleArray getInstance() {
-			return INSTANCE;
-		}
-
 		/**
 		 * Gets instance of compound {@link SimpleArray} type.
 		 *
@@ -51,10 +46,15 @@ public interface SimpleArray extends Array {
 			return SimpleArrayImpl.getInstance(dimensions, elementType);
 		}
 
+		@Override
+		public SimpleArray getInstance() {
+			return INSTANCE;
+		}
+
 		/**
 		 * Inner {@link SimpleArray} type implementation.
 		 */
-		private static class SimpleArrayImpl extends TypeBaseClass implements SimpleArray, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static final class SimpleArrayImpl extends TypeBaseClass implements SimpleArray, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final DimensionsDesignator dimensions;
 			private final LispType elementType;
@@ -80,16 +80,6 @@ public interface SimpleArray extends Array {
 				this.elementType = elementType;
 			}
 
-			@Override
-			public DimensionsDesignator getDimensions() {
-				return dimensions;
-			}
-
-			@Override
-			public LispType getElementType() {
-				return elementType;
-			}
-
 			/**
 			 * Gets instance of compound {@link SimpleArray} type.
 			 *
@@ -102,6 +92,21 @@ public interface SimpleArray extends Array {
 			 */
 			public static SimpleArray getInstance(final List<Integer> dimensions, final LispType elementType) {
 				return new SimpleArrayImpl(dimensions, elementType);
+			}
+
+			@Override
+			public DimensionsDesignator getDimensions() {
+				return dimensions;
+			}
+
+			@Override
+			public LispType getElementType() {
+				return elementType;
+			}
+
+			@Override
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
@@ -127,12 +132,12 @@ public interface SimpleArray extends Array {
 			}
 
 			/**
-			 * This method checks the equality of the provide simpleArrayImpl object to this instance.
+			 * This method checks the equality of the provide {@code simpleArrayImpl} object to this instance.
 			 *
 			 * @param simpleArrayImpl
-			 * 		the simpleArrayImpl object to test for equality
+			 * 		the SimpleArrayImpl object to test for equality
 			 *
-			 * @return true if the simpleArrayImpl object is equivalent to this instance; false otherwise
+			 * @return true if the {@code simpleArrayImpl} object is equivalent to this instance; false otherwise
 			 */
 			private boolean checkSimpleArrayImplEquality(final SimpleArrayImpl simpleArrayImpl) {
 				if (dimensions == null) {
@@ -140,11 +145,6 @@ public interface SimpleArray extends Array {
 				}
 
 				return dimensions.equals(simpleArrayImpl.dimensions) && elementType.equals(simpleArrayImpl.elementType);
-			}
-
-			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

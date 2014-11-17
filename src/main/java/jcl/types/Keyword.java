@@ -35,7 +35,7 @@ public interface Keyword extends Symbol {
 		/**
 		 * Inner {@link Keyword} type implementation.
 		 */
-		private static class KeywordImpl extends TypeBaseClass implements Keyword, AtomicTypeSpecifier {
+		private static final class KeywordImpl extends TypeBaseClass implements Keyword, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.
@@ -45,13 +45,13 @@ public interface Keyword extends Symbol {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof Keyword);
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof Keyword);
 			}
 
 			@Override

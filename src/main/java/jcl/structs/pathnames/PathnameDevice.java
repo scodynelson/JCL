@@ -50,18 +50,18 @@ public final class PathnameDevice {
 	}
 
 	/**
-	 * Getter for pathname device value.
+	 * Getter for pathname device {@link #device} property.
 	 *
-	 * @return pathname device value
+	 * @return pathname device {@link #device} property
 	 */
 	public String getDevice() {
 		return device;
 	}
 
 	/**
-	 * Getter for pathname device component type.
+	 * Getter for pathname device {@link #componentType} property.
 	 *
-	 * @return pathname device component type
+	 * @return pathname device {@link #componentType} property
 	 */
 	public PathnameComponentType getComponentType() {
 		return componentType;

@@ -15,7 +15,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Stack;
 
-public class GoAnalyzer implements Analyzer<LispStruct, ListStruct> {
+public class GoAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
 	public static final GoAnalyzer INSTANCE = new GoAnalyzer();
 

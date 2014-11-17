@@ -42,9 +42,9 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	/**
-	 * This method returns the value of the RatioStruct.
+	 * Getter for ratio {@link #bigFraction} property.
 	 *
-	 * @return value of the RatioStruct
+	 * @return ratio {@link #bigFraction} property
 	 */
 	public BigFraction getBigFraction() {
 		return bigFraction;
@@ -56,14 +56,14 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	/**
-	 * Private method for getting a String representation of the BigInteger parts of the RatioStruct's internal
-	 * bigFraction
-	 * value.
+	 * Gets a {@link java.lang.String} representation of the {@link BigInteger} parts of the RatioStruct's {@link
+	 * #bigFraction} value.
 	 *
 	 * @param bigInteger
-	 * 		a bigInteger part of the RatioStruct's internal bigFraction value
+	 * 		a bigInteger part of the RatioStruct's {@link #bigFraction} value
 	 *
-	 * @return a String representation of the BigInteger parts of the RatioStruct's internal bigFraction value
+	 * @return a {@link java.lang.String} representation of the {@link BigInteger} parts of the RatioStruct's {@link
+	 * #bigFraction} value
 	 */
 	private static String printBigInteger(final BigInteger bigInteger) {
 		final boolean printRadix = Variable.PRINT_RADIX.getValue().booleanValue();

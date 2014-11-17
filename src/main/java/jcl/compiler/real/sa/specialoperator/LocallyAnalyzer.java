@@ -11,7 +11,7 @@ import jcl.structs.symbols.SpecialOperator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LocallyAnalyzer implements Analyzer<LispStruct, ListStruct> {
+public class LocallyAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
 	public static final LocallyAnalyzer INSTANCE = new LocallyAnalyzer();
 

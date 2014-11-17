@@ -12,9 +12,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import java.lang.Integer;
 
 /**
- * A {@link SimpleString} is a specialized one-dimensional {@link SimpleArray} whose elements are of type {@link
- * Character} or a subtype of type {@link Character}. When used as a type specifier for object creation, {@link
- * SimpleString} means (simple-array character (size)).
+ * A {@link SimpleString} is a specialized one-dimensional {@link SimpleArray} whose elements are of type
+ * {@link Character} or a subtype of type {@link Character}. When used as a type specifier for object creation,
+ * {@link SimpleString} means (simple-array character (size)).
  * <p>
  * {@link SimpleString} -> {@link String} -> {@link Vector} -> {@link SimpleArray} -> {@link Array} -> {@link Sequence}
  * -> {@link T}
@@ -28,11 +28,6 @@ public interface SimpleString extends String, SimpleArray {
 	 */
 	class Factory implements TypeFactory<SimpleString> {
 
-		@Override
-		public SimpleString getInstance() {
-			return INSTANCE;
-		}
-
 		/**
 		 * Gets instance of compound {@link SimpleString} type.
 		 *
@@ -45,13 +40,18 @@ public interface SimpleString extends String, SimpleArray {
 			return SimpleStringImpl.getInstance(size);
 		}
 
+		@Override
+		public SimpleString getInstance() {
+			return INSTANCE;
+		}
+
 		/**
 		 * Inner {@link SimpleString} type implementation.
 		 */
-		private static class SimpleStringImpl extends TypeBaseClass implements SimpleString, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static final class SimpleStringImpl extends TypeBaseClass implements SimpleString, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
-			private final DimensionsDesignator size;
 			private static final LispType ELEMENT_TYPE = Character.INSTANCE;
+			private final DimensionsDesignator size;
 
 			/**
 			 * Private constructor.
@@ -71,16 +71,6 @@ public interface SimpleString extends String, SimpleArray {
 				this.size = new DimensionsDesignator(size);
 			}
 
-			@Override
-			public DimensionsDesignator getDimensions() {
-				return size;
-			}
-
-			@Override
-			public LispType getElementType() {
-				return ELEMENT_TYPE;
-			}
-
 			/**
 			 * Gets instance of compound {@link SimpleString} type.
 			 *
@@ -91,6 +81,21 @@ public interface SimpleString extends String, SimpleArray {
 			 */
 			public static SimpleString getInstance(final Integer size) {
 				return new SimpleStringImpl(size);
+			}
+
+			@Override
+			public DimensionsDesignator getDimensions() {
+				return size;
+			}
+
+			@Override
+			public LispType getElementType() {
+				return ELEMENT_TYPE;
+			}
+
+			@Override
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
@@ -115,11 +120,6 @@ public interface SimpleString extends String, SimpleArray {
 				}
 
 				return TypeUtils.isArrayLispTypeEqual(this, simpleString);
-			}
-
-			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

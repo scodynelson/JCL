@@ -1,8 +1,8 @@
 package jcl.compiler.real.sa;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.lambdalist.OrdinaryLambdaListBindings;
@@ -66,7 +66,7 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 			final LispStruct firstOfFirstList = firstAsList.getFirst();
 			if (firstOfFirstList.equals(SpecialOperator.LAMBDA)) {
-				final LambdaEnvironmentListStruct lambdaAnalyzed = (LambdaEnvironmentListStruct) LambdaAnalyzer.INSTANCE.analyze(firstAsList, analyzer);
+				final LambdaEnvironmentLispStruct lambdaAnalyzed = LambdaAnalyzer.INSTANCE.analyze(firstAsList, analyzer);
 				final ListStruct functionArguments = input.getRest();
 				return analyzedLambdaFunctionCall(analyzer, lambdaAnalyzed, functionArguments);
 			} else {
@@ -77,7 +77,7 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		}
 	}
 
-	private static ListStruct analyzedLambdaFunctionCall(final SemanticAnalyzer semanticAnalyzer, final LambdaEnvironmentListStruct lambdaAnalyzed,
+	private static ListStruct analyzedLambdaFunctionCall(final SemanticAnalyzer semanticAnalyzer, final LambdaEnvironmentLispStruct lambdaAnalyzed,
 	                                                     final ListStruct functionArguments) {
 
 		final List<LispStruct> analyzedFunctionList = new ArrayList<>();

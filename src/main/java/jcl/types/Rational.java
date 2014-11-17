@@ -28,11 +28,6 @@ public interface Rational extends Real {
 	 */
 	class Factory implements TypeFactory<Rational> {
 
-		@Override
-		public Rational getInstance() {
-			return INSTANCE;
-		}
-
 		/**
 		 * Gets instance of compound {@link Rational} type.
 		 *
@@ -66,10 +61,15 @@ public interface Rational extends Real {
 			return RationalImpl.getInstance(lowerBound, lowerInclusive, upperBound, upperInclusive);
 		}
 
+		@Override
+		public Rational getInstance() {
+			return INSTANCE;
+		}
+
 		/**
 		 * Inner {@link Rational} type implementation.
 		 */
-		private static class RationalImpl extends TypeBaseClass implements Rational, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static final class RationalImpl extends TypeBaseClass implements Rational, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final IntervalDesignator<BigInteger> intervalDesignator;
 
@@ -122,6 +122,11 @@ public interface Rational extends Real {
 			}
 
 			@Override
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
+			}
+
+			@Override
 			public boolean equals(final Object obj) {
 				if (this == obj) {
 					return true;
@@ -143,11 +148,6 @@ public interface Rational extends Real {
 				}
 
 				return false;
-			}
-
-			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

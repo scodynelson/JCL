@@ -13,7 +13,7 @@ import jcl.structs.symbols.SymbolStruct;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProgvAnalyzer implements Analyzer<LispStruct, ListStruct> {
+public class ProgvAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
 	public static final ProgvAnalyzer INSTANCE = new ProgvAnalyzer();
 

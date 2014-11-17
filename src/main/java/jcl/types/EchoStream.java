@@ -32,7 +32,7 @@ public interface EchoStream extends Stream {
 		/**
 		 * Inner {@link EchoStream} type implementation.
 		 */
-		private static class EchoStreamImpl extends TypeBaseClass implements EchoStream, AtomicTypeSpecifier {
+		private static final class EchoStreamImpl extends TypeBaseClass implements EchoStream, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.
@@ -42,13 +42,13 @@ public interface EchoStream extends Stream {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof EchoStream);
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof EchoStream);
 			}
 
 			@Override

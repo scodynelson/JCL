@@ -147,18 +147,18 @@ public class ComplexStruct extends NumberStruct {
 	}
 
 	/**
-	 * This method returns the {@link Number} value representative of the real part.
+	 * Getter for complex {@link #imaginary} property.
 	 *
-	 * @return the {@link Number} value representative of the real part
+	 * @return complex {@link #imaginary} property
 	 */
 	public RealStruct getReal() {
 		return real;
 	}
 
 	/**
-	 * This method returns the {@link Number} value representative of the imaginary part.
+	 * Getter for complex {@link #imaginary} property.
 	 *
-	 * @return the {@link Number} value representative of the imaginary part
+	 * @return complex {@link #imaginary} property
 	 */
 	public RealStruct getImaginary() {
 		return imaginary;

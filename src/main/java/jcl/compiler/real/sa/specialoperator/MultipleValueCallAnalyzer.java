@@ -12,7 +12,7 @@ import jcl.structs.symbols.SpecialOperator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MultipleValueCallAnalyzer implements Analyzer<LispStruct, ListStruct> {
+public class MultipleValueCallAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
 	public static final MultipleValueCallAnalyzer INSTANCE = new MultipleValueCallAnalyzer();
 

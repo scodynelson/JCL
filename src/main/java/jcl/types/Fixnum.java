@@ -32,7 +32,7 @@ public interface Fixnum extends Integer {
 		/**
 		 * Inner {@link Fixnum} type implementation.
 		 */
-		private static class FixnumImpl extends AndTypeSpecifier implements Fixnum, AtomicTypeSpecifier {
+		private static final class FixnumImpl extends AndTypeSpecifier implements Fixnum, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.

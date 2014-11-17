@@ -25,11 +25,6 @@ public interface DoubleFloat extends Float {
 	 */
 	class Factory implements TypeFactory<DoubleFloat> {
 
-		@Override
-		public DoubleFloat getInstance() {
-			return INSTANCE;
-		}
-
 		/**
 		 * Gets instance of compound {@link DoubleFloat} type.
 		 *
@@ -63,10 +58,15 @@ public interface DoubleFloat extends Float {
 			return DoubleFloatImpl.getInstance(lowerBound, lowerInclusive, upperBound, upperInclusive);
 		}
 
+		@Override
+		public DoubleFloat getInstance() {
+			return INSTANCE;
+		}
+
 		/**
 		 * Inner {@link DoubleFloat} type implementation.
 		 */
-		private static class DoubleFloatImpl extends TypeBaseClass implements DoubleFloat, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static final class DoubleFloatImpl extends TypeBaseClass implements DoubleFloat, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final IntervalDesignator<BigDecimal> intervalDesignator;
 
@@ -119,6 +119,11 @@ public interface DoubleFloat extends Float {
 			}
 
 			@Override
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
+			}
+
+			@Override
 			public boolean equals(final Object obj) {
 				if (this == obj) {
 					return true;
@@ -140,11 +145,6 @@ public interface DoubleFloat extends Float {
 				}
 
 				return false;
-			}
-
-			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

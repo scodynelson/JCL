@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class TagbodyAnalyzer implements Analyzer<LispStruct, ListStruct> {
+public class TagbodyAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
 	public static final TagbodyAnalyzer INSTANCE = new TagbodyAnalyzer();
 

@@ -12,7 +12,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public final class PathnameDirectoryLevel {
 
 	private final String directoryLevel;
-	private PathnameDirectoryLevelType directoryLevelType;
+	private final PathnameDirectoryLevelType directoryLevelType;
 
 	/**
 	 * Public constructor.
@@ -21,51 +21,42 @@ public final class PathnameDirectoryLevel {
 	 * 		the directory level value
 	 */
 	public PathnameDirectoryLevel(final String directoryLevel) {
-		if (StringUtils.isEmpty(directoryLevel)) {
-			throw new FileErrorException("Directory level value cannot be null or empty.");
-		}
-
-		this.directoryLevel = directoryLevel;
-		directoryLevelType = PathnameDirectoryLevelType.NULL;
+		this(directoryLevel, PathnameDirectoryLevelType.NULL);
 	}
 
 	/**
 	 * Public constructor.
 	 *
+	 * @param directoryLevel
+	 * 		the directory level value
 	 * @param directoryLevelType
 	 * 		the directory level type (WILD, BACK, or UP)
 	 */
-	public PathnameDirectoryLevel(final PathnameDirectoryLevelType directoryLevelType) {
-		directoryLevel = null;
+	public PathnameDirectoryLevel(final String directoryLevel, final PathnameDirectoryLevelType directoryLevelType) {
+		if (StringUtils.isEmpty(directoryLevel)) {
+			throw new FileErrorException("Directory level value cannot be null or empty.");
+		}
+
+		this.directoryLevel = directoryLevel;
 		this.directoryLevelType = directoryLevelType;
 	}
 
 	/**
-	 * Getter for pathname directory level value.
+	 * Getter for pathname directory level {@link #directoryLevel} property.
 	 *
-	 * @return pathname directory level value
+	 * @return pathname directory level {@link #directoryLevel} property
 	 */
 	public String getDirectoryLevel() {
 		return directoryLevel;
 	}
 
 	/**
-	 * Getter for pathname directory level type.
+	 * Getter for pathname directory level {@link #directoryLevelType} property.
 	 *
-	 * @return pathname directory level type
+	 * @return pathname directory level {@link #directoryLevelType} property
 	 */
 	public PathnameDirectoryLevelType getDirectoryLevelType() {
 		return directoryLevelType;
-	}
-
-	/**
-	 * Setter for pathname directory level type.
-	 *
-	 * @param directoryLevelType
-	 * 		new directoryLevelType value
-	 */
-	public void setDirectoryLevelType(final PathnameDirectoryLevelType directoryLevelType) {
-		this.directoryLevelType = directoryLevelType;
 	}
 
 	@Override

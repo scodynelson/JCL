@@ -5,7 +5,7 @@ import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.Analyzer;
-import jcl.compiler.real.sa.EnvironmentListStruct;
+import jcl.compiler.real.sa.EnvironmentLispStruct;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.specialoperator.body.BodyWithDeclaresAnalyzer;
@@ -17,12 +17,12 @@ import jcl.structs.symbols.SymbolStruct;
 import java.util.List;
 import java.util.Stack;
 
-public class LetAnalyzer implements Analyzer<LispStruct, ListStruct> {
+public class LetAnalyzer implements Analyzer<EnvironmentLispStruct, ListStruct> {
 
 	public static final LetAnalyzer INSTANCE = new LetAnalyzer();
 
 	@Override
-	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
+	public EnvironmentLispStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 
 		if (input.size() < 2) {
 			throw new ProgramErrorException("LET: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
@@ -94,7 +94,7 @@ public class LetAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			final Environment envList = environmentStack.peek();
 
 			final ListStruct newBodyForms = ListStruct.buildProperList(bodyProcessingResult.getBodyForms());
-			return new EnvironmentListStruct(envList, bodyProcessingResult.getDeclarations(), newBodyForms);
+			return new EnvironmentLispStruct(envList, bodyProcessingResult.getDeclarations(), newBodyForms);
 		} finally {
 			analyzer.setClosureDepth(tempClosureDepth);
 			analyzer.setBindingsPosition(tempBindingsPosition);

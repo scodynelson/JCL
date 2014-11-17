@@ -31,7 +31,7 @@ public interface LogicalPathname extends Pathname {
 		/**
 		 * Inner {@link LogicalPathname} type implementation.
 		 */
-		private static class LogicalPathnameImpl extends TypeBaseClass implements LogicalPathname, AtomicTypeSpecifier {
+		private static final class LogicalPathnameImpl extends TypeBaseClass implements LogicalPathname, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.
@@ -41,13 +41,13 @@ public interface LogicalPathname extends Pathname {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof LogicalPathname);
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof LogicalPathname);
 			}
 
 			@Override

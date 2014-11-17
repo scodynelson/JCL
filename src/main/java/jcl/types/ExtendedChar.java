@@ -30,7 +30,7 @@ public interface ExtendedChar extends Character {
 		/**
 		 * Inner {@link ExtendedChar} type implementation.
 		 */
-		private static class ExtendedCharImpl extends TypeBaseClass implements ExtendedChar, AtomicTypeSpecifier {
+		private static final class ExtendedCharImpl extends TypeBaseClass implements ExtendedChar, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.
@@ -40,13 +40,13 @@ public interface ExtendedChar extends Character {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof ExtendedChar);
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof ExtendedChar);
 			}
 
 			@Override

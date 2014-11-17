@@ -30,7 +30,7 @@ public interface FileStream extends Stream {
 		/**
 		 * Inner {@link FileStream} type implementation.
 		 */
-		private static class FileStreamImpl extends TypeBaseClass implements FileStream, AtomicTypeSpecifier {
+		private static final class FileStreamImpl extends TypeBaseClass implements FileStream, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.
@@ -40,13 +40,13 @@ public interface FileStream extends Stream {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof FileStream);
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof FileStream);
 			}
 
 			@Override

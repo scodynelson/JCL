@@ -30,7 +30,7 @@ public interface StructureClass extends Class {
 		/**
 		 * Inner {@link StructureClass} type implementation.
 		 */
-		private static class StructureClassImpl extends TypeBaseClass implements StructureClass, AtomicTypeSpecifier {
+		private static final class StructureClassImpl extends TypeBaseClass implements StructureClass, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.
@@ -40,13 +40,13 @@ public interface StructureClass extends Class {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof StructureClass);
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof StructureClass);
 			}
 
 			@Override

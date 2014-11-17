@@ -31,7 +31,7 @@ public interface Bignum extends Integer {
 		/**
 		 * Inner {@link Bignum} type implementation.
 		 */
-		private static class BignumImpl extends AndTypeSpecifier implements Bignum, AtomicTypeSpecifier {
+		private static final class BignumImpl extends AndTypeSpecifier implements Bignum, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.

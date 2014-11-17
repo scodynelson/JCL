@@ -90,61 +90,61 @@ public class PackageStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * Getter for package name property.
+	 * Getter for package {@link #name} property.
 	 *
-	 * @return package name property
+	 * @return package {@link #name} property
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * Getter for package nicknames property.
+	 * Getter for package {@link #nicknames} property.
 	 *
-	 * @return package nicknames property
+	 * @return package {@link #nicknames} property
 	 */
 	public List<String> getNicknames() {
 		return nicknames;
 	}
 
 	/**
-	 * Getter for package externalSymbols property.
+	 * Getter for package {@link #externalSymbols} property.
 	 *
-	 * @return package externalSymbols property
+	 * @return package {@link #externalSymbols} property
 	 */
 	public Map<String, SymbolStruct<?>> getExternalSymbols() {
 		return externalSymbols;
 	}
 
 	/**
-	 * Getter for package shadowingSymbols property.
+	 * Getter for package {@link #shadowingSymbols} property.
 	 *
-	 * @return package shadowingSymbols property
+	 * @return package {@link #shadowingSymbols} property
 	 */
 	public Map<String, SymbolStruct<?>> getShadowingSymbols() {
 		return shadowingSymbols;
 	}
 
 	/**
-	 * Getter for package useList property.
+	 * Getter for package {@link #useList} property.
 	 *
-	 * @return package useList property
+	 * @return package {@link #useList} property
 	 */
 	public List<PackageStruct> getUseList() {
 		return new ArrayList<>(useList);
 	}
 
 	/**
-	 * Getter for package usedByList property.
+	 * Getter for package {@link #usedByList} property.
 	 *
-	 * @return package usedByList property
+	 * @return package {@link #usedByList} property
 	 */
 	public List<PackageStruct> getUsedByList() {
 		return new ArrayList<>(usedByList);
 	}
 
 	/**
-	 * This method renames the package and updates it in the global ALL_PACKAGES map.
+	 * Renames the package and updates it in the {@link GlobalPackageStruct#ALL_PACKAGES} map.
 	 *
 	 * @param newName
 	 * 		the new package name
@@ -156,7 +156,7 @@ public class PackageStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method renames the package and updates it in the global ALL_PACKAGES map.
+	 * Renames the package and updates it in the global ALL_PACKAGES map.
 	 *
 	 * @param newName
 	 * 		the new package name
@@ -171,8 +171,8 @@ public class PackageStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method deletes the package and removes it from the global ALL_PACKAGES map. The deletion method does not
-	 * destroy the object, but clears its global usages and changes the name to 'null'.
+	 * Deletes the package and removes it from the {@link GlobalPackageStruct#ALL_PACKAGES} map. The deletion method
+	 * does not destroy the object, but clears its global usages and changes the name to 'null'.
 	 */
 	public void deletePackage() {
 		GlobalPackageStruct.ALL_PACKAGES.remove(name);
@@ -185,7 +185,7 @@ public class PackageStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method updates the package to use the provided {@code packagesToUse}.
+	 * Updates the package to use the provided {@code packagesToUse}.
 	 *
 	 * @param packagesToUse
 	 * 		the packages that will be used
@@ -196,8 +196,7 @@ public class PackageStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This private method is the internal implementation of 'use-package' for updating the package to use the provided
-	 * {@code packagesToUse}.
+	 * Internal implementation of 'use-package' for updating the package to use the provided {@code packagesToUse}.
 	 *
 	 * @param packagesToUse
 	 * 		the packages that will be used
@@ -222,7 +221,7 @@ public class PackageStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method updates the package to un-use the provided {@code packagesToUnUse}.
+	 * Updates the package to un-use the provided {@code packagesToUnUse}.
 	 *
 	 * @param packagesToUnUse
 	 * 		the packages that will be un-used
@@ -238,7 +237,7 @@ public class PackageStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method locates the symbol matching the provided {@code symbolName}.
+	 * Locates the symbol matching the provided {@code symbolName}.
 	 *
 	 * @param symbolName
 	 * 		the name of the symbol to find
@@ -262,7 +261,7 @@ public class PackageStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method imports the provided {@code symbols} into the package.
+	 * Imports the provided {@code symbols} into the package.
 	 *
 	 * @param symbols
 	 * 		the symbols to import into the package
@@ -290,8 +289,7 @@ public class PackageStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method does a shadowing import of the provided {@code symbols} into the package, shadowing each one and
-	 * uninterning
+	 * Performs a shadowing import of the provided {@code symbols} into the package, shadowing each one and uninterning
 	 * current symbols with matching symbol names that already exist in the internal symbols of the package.
 	 *
 	 * @param symbols
@@ -317,9 +315,9 @@ public class PackageStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method exports the provided symbols and puts them into the externalSymbols map. All found symbols are
-	 * exported
-	 * and those not found are stored for throwing in a {@link PackageErrorException}.
+	 * Exports the provided symbols and puts them into the externalSymbols map. All found symbols are exported and
+	 * those
+	 * not found are stored for throwing in a {@link PackageErrorException}.
 	 *
 	 * @param symbols
 	 * 		the symbols to export
@@ -362,8 +360,8 @@ public class PackageStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method un-exports the provided symbols and removes them from the externalSymbols map. All found symbols are
-	 * un-exported and those not found are stored for throwing in a {@link PackageErrorException}.
+	 * Un-exports the provided symbols and removes them from the externalSymbols map. All found symbols are un-exported
+	 * and those not found are stored for throwing in a {@link PackageErrorException}.
 	 *
 	 * @param symbols
 	 * 		the symbols to un-export
@@ -396,8 +394,7 @@ public class PackageStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method shadows the provided {@code symbolNames}, either by finding the current non-inherited matching
-	 * symbol, or by
+	 * Shadows the provided {@code symbolNames}, either by finding the current non-inherited matching symbol, or by
 	 * creating a new symbol with the non-existent symbolName.
 	 *
 	 * @param symbolNames
@@ -418,9 +415,8 @@ public class PackageStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method locates the symbol matching the provided {@code symbolName} or creates a new internal symbol with
-	 * it,
-	 * interns it into the package, and returns it with it's package location type.
+	 * Locates the symbol matching the provided {@code symbolName} or creates a new internal symbol with it, interns it
+	 * into the package, and returns it with it's package location type.
 	 *
 	 * @param symbolName
 	 * 		the name of the symbol to intern
@@ -440,7 +436,7 @@ public class PackageStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This method un-interns the provided {@code symbol} from the package.
+	 * Un-interns the provided {@code symbol} from the package.
 	 *
 	 * @param symbol
 	 * 		the symbol to un-intern from the package
@@ -473,11 +469,11 @@ public class PackageStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This static method finds the matching package in the ALL_PACKAGES global package map by the provided {@code
+	 * Finds the matching package in the {@link GlobalPackageStruct#ALL_PACKAGES} map by the provided {@code
 	 * packageName}.
 	 *
 	 * @param packageName
-	 * 		the name of the package to location within the ALL_PACKAGES global package map
+	 * 		the name of the package to location within the {@link GlobalPackageStruct#ALL_PACKAGES} map
 	 *
 	 * @return the located package for the provided {@code packageName}
 	 */
@@ -486,12 +482,11 @@ public class PackageStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This static method finds all symbols in the ALL_PACKAGES global package map by traversing all the existing
-	 * packages to find
-	 * all the symbols with the provided {@code symbolName}.
+	 * This static method finds all symbols in the {@link GlobalPackageStruct#ALL_PACKAGES} map by traversing all the
+	 * existing packages to find all the symbols with the provided {@code symbolName}.
 	 *
 	 * @param symbolName
-	 * 		the name of the symbol(s) to locate within the ALL_PACKAGES global package map
+	 * 		the name of the symbol(s) to locate within the {@link GlobalPackageStruct#ALL_PACKAGES} map
 	 *
 	 * @return the located symbol(s) within the ALL_PACKAGES global package map
 	 */
@@ -506,17 +501,17 @@ public class PackageStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This static method lists all current packages existent in the ALL_PACKAGES global package map.
+	 * Lists all current packages existent in the {@link GlobalPackageStruct#ALL_PACKAGES} map.
 	 *
-	 * @return a list of all current packages existent in the ALL_PACKAGES global package map
+	 * @return a list of all current packages existent in the {@link GlobalPackageStruct#ALL_PACKAGES} map
 	 */
 	public static List<PackageStruct> listAllPackages() {
 		return new ArrayList<>(GlobalPackageStruct.ALL_PACKAGES.values());
 	}
 
 	/**
-	 * This private method determines if a name conflict exists with the symbolName and that it is currently resolved
-	 * due to a shadowing symbol existence.
+	 * Determines if a name conflict exists with the symbolName and that it is currently resolved due to a shadowing
+	 * symbol existence.
 	 *
 	 * @param symbolName
 	 * 		the name of the symbol to check for shadowing conflicts
@@ -540,7 +535,7 @@ public class PackageStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This private method locates the non-inherited symbol matching the provided {@code symbolName}.
+	 * Locates the non-inherited symbol matching the provided {@code symbolName}.
 	 *
 	 * @param symbolName
 	 * 		the name of the symbol to find
@@ -569,7 +564,7 @@ public class PackageStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * This private method locates the inherited symbol matching the provided {@code symbolName}.
+	 * Locates the inherited symbol matching the provided {@code symbolName}.
 	 *
 	 * @param symbolName
 	 * 		the name of the symbol to find

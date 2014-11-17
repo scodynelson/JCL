@@ -25,11 +25,6 @@ public interface ShortFloat extends Float {
 	 */
 	class Factory implements TypeFactory<ShortFloat> {
 
-		@Override
-		public ShortFloat getInstance() {
-			return INSTANCE;
-		}
-
 		/**
 		 * Gets instance of compound {@link ShortFloat} type.
 		 *
@@ -63,10 +58,15 @@ public interface ShortFloat extends Float {
 			return ShortFloatImpl.getInstance(lowerBound, lowerInclusive, upperBound, upperInclusive);
 		}
 
+		@Override
+		public ShortFloat getInstance() {
+			return INSTANCE;
+		}
+
 		/**
 		 * Inner {@link ShortFloat} type implementation.
 		 */
-		private static class ShortFloatImpl extends TypeBaseClass implements ShortFloat, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static final class ShortFloatImpl extends TypeBaseClass implements ShortFloat, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
 			private final IntervalDesignator<BigDecimal> intervalDesignator;
 
@@ -119,6 +119,11 @@ public interface ShortFloat extends Float {
 			}
 
 			@Override
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
+			}
+
+			@Override
 			public boolean equals(final Object obj) {
 				if (this == obj) {
 					return true;
@@ -140,11 +145,6 @@ public interface ShortFloat extends Float {
 				}
 
 				return false;
-			}
-
-			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

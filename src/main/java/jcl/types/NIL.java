@@ -33,7 +33,7 @@ public interface NIL extends T { // TODO: this needs to extend ALL types...
 		/**
 		 * Inner {@link NIL} type implementation.
 		 */
-		private static class NILImpl extends TypeBaseClass implements NIL, AtomicTypeSpecifier {
+		private static final class NILImpl extends TypeBaseClass implements NIL, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.
@@ -43,13 +43,13 @@ public interface NIL extends T { // TODO: this needs to extend ALL types...
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof NIL) || (obj instanceof Null);
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof NIL) || (obj instanceof Null);
 			}
 
 			@Override

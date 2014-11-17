@@ -34,7 +34,7 @@ public interface Sequence extends T {
 		/**
 		 * Inner {@link Sequence} type implementation.
 		 */
-		private static class SequenceImpl extends TypeBaseClass implements Sequence, AtomicTypeSpecifier {
+		private static final class SequenceImpl extends TypeBaseClass implements Sequence, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.
@@ -44,13 +44,13 @@ public interface Sequence extends T {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof Sequence);
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof Sequence);
 			}
 
 			@Override

@@ -1,21 +1,40 @@
-package jcl.structs.comments;
+package jcl.reader;
 
 import jcl.LispStruct;
 import jcl.LispType;
+import jcl.types.T;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+/**
+ * The {@link CommentStruct} is the object representation of a Lisp 'comment' type.
+ */
 public class CommentStruct implements LispStruct {
 
 	private final String commentString;
 
-	private CommentStruct(final String commentString) {
+	/**
+	 * Public constructor.
+	 *
+	 * @param commentString
+	 * 		the {@link java.lang.String} comment value
+	 */
+	public CommentStruct(final String commentString) {
 		this.commentString = commentString;
+	}
+
+	/**
+	 * Getter for character {@link #commentString} property.
+	 *
+	 * @return character {@link #commentString} property
+	 */
+	public String getCommentString() {
+		return commentString;
 	}
 
 	@Override
 	public LispType getType() {
-		return null;
+		return T.INSTANCE;
 	}
 
 	@Override
@@ -26,11 +45,5 @@ public class CommentStruct implements LispStruct {
 	@Override
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
-	}
-
-	// BUILDERS
-
-	public static CommentStruct getStruct(final String commentString) {
-		return new CommentStruct(commentString);
 	}
 }

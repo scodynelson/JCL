@@ -28,11 +28,6 @@ public interface BitVector extends Vector {
 	 */
 	class Factory implements TypeFactory<BitVector> {
 
-		@Override
-		public BitVector getInstance() {
-			return INSTANCE;
-		}
-
 		/**
 		 * Gets instance of compound {@link BitVector} type.
 		 *
@@ -45,13 +40,18 @@ public interface BitVector extends Vector {
 			return BitVectorImpl.getInstance(size);
 		}
 
+		@Override
+		public BitVector getInstance() {
+			return INSTANCE;
+		}
+
 		/**
 		 * Inner {@link BitVector} type implementation.
 		 */
-		private static class BitVectorImpl extends TypeBaseClass implements BitVector, AtomicTypeSpecifier, CompoundTypeSpecifier {
+		private static final class BitVectorImpl extends TypeBaseClass implements BitVector, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
-			private final DimensionsDesignator size;
 			private static final LispType ELEMENT_TYPE = Bit.INSTANCE;
+			private final DimensionsDesignator size;
 
 			/**
 			 * Private constructor.
@@ -71,16 +71,6 @@ public interface BitVector extends Vector {
 				this.size = new DimensionsDesignator(size);
 			}
 
-			@Override
-			public DimensionsDesignator getDimensions() {
-				return size;
-			}
-
-			@Override
-			public LispType getElementType() {
-				return ELEMENT_TYPE;
-			}
-
 			/**
 			 * Gets instance of compound {@link BitVector} type.
 			 *
@@ -91,6 +81,21 @@ public interface BitVector extends Vector {
 			 */
 			public static BitVector getInstance(final Integer size) {
 				return new BitVectorImpl(size);
+			}
+
+			@Override
+			public DimensionsDesignator getDimensions() {
+				return size;
+			}
+
+			@Override
+			public LispType getElementType() {
+				return ELEMENT_TYPE;
+			}
+
+			@Override
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
@@ -115,11 +120,6 @@ public interface BitVector extends Vector {
 				}
 
 				return TypeUtils.isArrayLispTypeEqual(this, bitVector);
-			}
-
-			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override

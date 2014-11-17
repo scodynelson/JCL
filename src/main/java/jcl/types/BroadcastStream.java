@@ -37,7 +37,7 @@ public interface BroadcastStream extends Stream {
 		/**
 		 * Inner {@link BroadcastStream} type implementation.
 		 */
-		private static class BroadcastStreamImpl extends TypeBaseClass implements BroadcastStream, AtomicTypeSpecifier {
+		private static final class BroadcastStreamImpl extends TypeBaseClass implements BroadcastStream, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.
@@ -47,13 +47,13 @@ public interface BroadcastStream extends Stream {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof BroadcastStream);
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof BroadcastStream);
 			}
 
 			@Override

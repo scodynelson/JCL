@@ -32,7 +32,7 @@ public interface Character extends T {
 		/**
 		 * Inner {@link Character} type implementation.
 		 */
-		private static class CharacterImpl extends TypeBaseClass implements Character, AtomicTypeSpecifier {
+		private static final class CharacterImpl extends TypeBaseClass implements Character, AtomicTypeSpecifier {
 
 			/**
 			 * Private constructor.
@@ -42,14 +42,13 @@ public interface Character extends T {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof Character);
-
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof Character);
 			}
 
 			@Override

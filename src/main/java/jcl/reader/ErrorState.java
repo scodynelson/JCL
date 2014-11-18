@@ -1,4 +1,4 @@
-package jcl.reader.impl;
+package jcl.reader;
 
 import jcl.reader.syntax.TokenBuilder;
 import jcl.structs.conditions.exceptions.ReaderErrorException;

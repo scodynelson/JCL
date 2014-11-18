@@ -1,7 +1,7 @@
 package jcl.reader.function;
 
 import jcl.LispStruct;
-import jcl.reader.impl.Reader;
+import jcl.reader.Reader;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.lists.ConsStruct;
 import jcl.structs.lists.ListStruct;

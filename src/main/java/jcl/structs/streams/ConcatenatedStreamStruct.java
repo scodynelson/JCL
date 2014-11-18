@@ -2,9 +2,6 @@ package jcl.structs.streams;
 
 import jcl.LispStruct;
 import jcl.LispType;
-import jcl.reader.syntax.reader.PeekResult;
-import jcl.reader.syntax.reader.PeekType;
-import jcl.reader.syntax.reader.ReadResult;
 import jcl.structs.conditions.exceptions.EndOfFileException;
 import jcl.structs.conditions.exceptions.StreamErrorException;
 import jcl.types.ConcatenatedStream;

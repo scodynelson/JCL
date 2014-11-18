@@ -2,8 +2,7 @@ package jcl.reader;
 
 import jcl.LispStruct;
 import jcl.reader.function.macrofunction.ReaderMacroFunction;
-import jcl.reader.impl.Reader;
-import jcl.reader.syntax.reader.ReadResult;
+import jcl.structs.streams.ReadResult;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 
 import java.math.BigInteger;

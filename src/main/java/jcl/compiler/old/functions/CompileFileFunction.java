@@ -10,7 +10,7 @@ import jcl.compiler.old.expander.MacroFunctionExpander;
 import jcl.compiler.old.symbol.KeywordOld;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.reader.impl.Reader;
+import jcl.reader.Reader;
 import jcl.structs.arrays.StringStruct;
 import jcl.structs.lists.ConsStruct;
 import jcl.structs.lists.ListStruct;

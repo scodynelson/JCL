@@ -1,9 +1,9 @@
 package jcl.reader.function.macrofunction;
 
 import jcl.LispStruct;
-import jcl.reader.impl.Reader;
+import jcl.reader.Reader;
 import jcl.reader.syntax.CharacterConstants;
-import jcl.reader.syntax.reader.ReadResult;
+import jcl.structs.streams.ReadResult;
 import jcl.reader.CommentStruct;
 import jcl.structs.symbols.variables.Variable;
 

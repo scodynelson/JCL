@@ -1,4 +1,4 @@
-package jcl.reader.impl;
+package jcl.reader;
 
 import jcl.reader.syntax.TokenAttribute;
 import jcl.reader.syntax.TokenBuilder;

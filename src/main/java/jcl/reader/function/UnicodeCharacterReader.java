@@ -1,6 +1,6 @@
 package jcl.reader.function;
 
-import jcl.reader.impl.Reader;
+import jcl.reader.Reader;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 
 import static jcl.reader.function.FunctionReaderUtils.getNextCodePoint;

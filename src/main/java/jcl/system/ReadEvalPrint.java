@@ -3,7 +3,7 @@ package jcl.system;
 import jcl.LispStruct;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.reader.function.macrofunction.SharpTagReaderConstants;
-import jcl.reader.impl.Reader;
+import jcl.reader.Reader;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.StreamErrorException;
 import jcl.structs.packages.PackageStruct;

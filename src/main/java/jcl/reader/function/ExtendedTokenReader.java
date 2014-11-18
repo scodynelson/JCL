@@ -1,9 +1,9 @@
 package jcl.reader.function;
 
-import jcl.reader.impl.Reader;
+import jcl.reader.Reader;
 import jcl.reader.syntax.CaseSpec;
 import jcl.reader.syntax.ReadExtendedToken;
-import jcl.reader.syntax.reader.ReadResult;
+import jcl.structs.streams.ReadResult;
 
 import static jcl.reader.function.FunctionReaderUtils.isMultipleEscape;
 import static jcl.reader.function.FunctionReaderUtils.isPackageMarker;

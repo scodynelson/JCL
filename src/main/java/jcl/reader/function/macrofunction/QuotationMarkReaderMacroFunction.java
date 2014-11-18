@@ -2,9 +2,9 @@ package jcl.reader.function.macrofunction;
 
 import jcl.LispStruct;
 import jcl.reader.function.UnicodeCharacterReader;
-import jcl.reader.impl.Reader;
+import jcl.reader.Reader;
 import jcl.reader.syntax.CharacterConstants;
-import jcl.reader.syntax.reader.ReadResult;
+import jcl.structs.streams.ReadResult;
 import jcl.structs.arrays.StringStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.SimpleErrorException;

@@ -1,11 +1,11 @@
-package jcl.reader.impl;
+package jcl.reader;
 
 import jcl.LispStruct;
 import jcl.reader.syntax.AttributeType;
 import jcl.reader.syntax.CaseSpec;
 import jcl.reader.syntax.SyntaxType;
 import jcl.reader.syntax.TokenBuilder;
-import jcl.reader.syntax.reader.ReadResult;
+import jcl.structs.streams.ReadResult;
 import jcl.structs.readtables.ReadtableStruct;
 import jcl.structs.streams.InputStream;
 import jcl.structs.symbols.variables.Variable;

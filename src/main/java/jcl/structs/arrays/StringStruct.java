@@ -114,7 +114,9 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 			stringBuilder.append('"');
 		}
 
-		for (int i = 0; i < fillPointer; i++) {
+		final int amountToPrint = (fillPointer == null) ? contents.size() : fillPointer;
+
+		for (int i = 0; i < amountToPrint; i++) {
 			final CharacterStruct characterStruct = contents.get(i);
 			final int codePoint = characterStruct.getCodePoint();
 
@@ -122,7 +124,7 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 			if ((codePoint == '"') || (syntaxType == SyntaxType.SINGLE_ESCAPE)) {
 				stringBuilder.append('\\');
 			}
-			stringBuilder.append(codePoint);
+			stringBuilder.appendCodePoint(codePoint);
 		}
 
 		if (printEscape) {

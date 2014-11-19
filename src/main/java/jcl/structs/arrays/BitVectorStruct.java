@@ -97,7 +97,9 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 		if (printArray) {
 			stringBuilder.append("#*");
 
-			for (int i = 0; i < fillPointer; i++) {
+			final int amountToPrint = (fillPointer == null) ? contents.size() : fillPointer;
+
+			for (int i = 0; i < amountToPrint; i++) {
 				final IntegerStruct integerStruct = contents.get(i);
 				stringBuilder.append(integerStruct.printStruct());
 			}

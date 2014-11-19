@@ -15,7 +15,6 @@ import jcl.types.LongFloat;
 import jcl.types.ShortFloat;
 import jcl.types.SingleFloat;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.fraction.BigFraction;
 
 import java.math.BigDecimal;
@@ -39,6 +38,7 @@ import java.util.function.Function;
 public class NumberTokenAccumulatedState extends State {
 
 	public static final State NUMBER_TOKEN_ACCUMULATED_STATE = new NumberTokenAccumulatedState();
+
 	private static final List<AttributeType> NOT_MORE_THAN_ONE_ATTRS = Arrays.asList(AttributeType.PLUS, AttributeType.MINUS, AttributeType.DECIMAL, AttributeType.RATIOMARKER);
 	private static final List<AttributeType> FIRST_ONLY_ATTRS = Arrays.asList(AttributeType.PLUS, AttributeType.MINUS);
 	private static final List<AttributeType> NOT_FIRST_OR_LAST_ATTRS = Arrays.asList(AttributeType.DECIMAL, AttributeType.RATIOMARKER);
@@ -109,13 +109,13 @@ public class NumberTokenAccumulatedState extends State {
 		String tokenString = convertTokensToString(tokenAttributes);
 
 		// Java does not support numbers in the format +12345, so we need to get rid of the plus sign if it exists
-		if (StringUtils.startsWith(tokenString, "+")) {
-			tokenString = StringUtils.substring(tokenString, 1);
+		if (tokenString.startsWith("+")) {
+			tokenString = tokenString.substring(1);
 		}
 
 		// Strip off the ending '.' if it exists
-		if (StringUtils.endsWith(tokenString, ".")) {
-			tokenString = StringUtils.substring(tokenString, 0, tokenString.length() - 1);
+		if (tokenString.endsWith(".")) {
+			tokenString = tokenString.substring(0, tokenString.length() - 1);
 		}
 
 		final boolean hasDecimal = hasAnyAttribute(tokenAttributes, AttributeType.DECIMAL);
@@ -125,7 +125,7 @@ public class NumberTokenAccumulatedState extends State {
 		if (hasExponentMarker && !hasDecimal) {
 			return null;
 		} else if (hasRatioMarker) {
-			final String[] rationalParts = StringUtils.split(tokenString, "/", 2);
+			final String[] rationalParts = tokenString.split("/", 2);
 			final BigInteger numerator = new BigInteger(rationalParts[0], currentRadix);
 			final BigInteger denominator = new BigInteger(rationalParts[1], currentRadix);
 
@@ -143,23 +143,6 @@ public class NumberTokenAccumulatedState extends State {
 			final BigInteger basicInteger = new BigInteger(tokenString, currentRadix);
 			return new IntegerStruct(basicInteger);
 		}
-	}
-
-	private static boolean isValidNumericToken(final int currentRadix, final int firstToken,
-											   final int currentToken) {
-		final boolean isDigitWithRadix = Character.digit(currentToken, currentRadix) >= 0;
-
-		final Character.UnicodeBlock tokenBlock = Character.UnicodeBlock.of(firstToken);
-		final boolean isDigitInSameBlock = Character.UnicodeBlock.of(currentToken).equals(tokenBlock);
-		return !(isDigitWithRadix && isDigitInSameBlock);
-	}
-
-	private static boolean areValidNumericTokens(final int currentRadix, final int token,
-												 final List<TokenAttribute> tokenAttributes) {
-		return tokenAttributes
-				.stream()
-				.map(e -> (e.getAttributeType() != AttributeType.ALPHADIGIT) || isValidNumericToken(currentRadix, token, e.getToken()))
-				.reduce(false, (result, e) -> result || e);
 	}
 
 	/**
@@ -218,6 +201,65 @@ public class NumberTokenAccumulatedState extends State {
 	}
 
 	/**
+	 * Determines if any of the provided {@code attributeTypes} are present according to the results of the application
+	 * of the provided {@code function}.
+	 *
+	 * @param function
+	 * 		the function to apply to determine the presence of the provided {@code attributeTypes}
+	 * @param attributeTypes
+	 * 		the AttributeType values to test for presence
+	 *
+	 * @return true if any of the provided {@code attributeTypes} are present; false otherwise
+	 */
+	private static boolean hasAttributes(final Function<AttributeType, Boolean> function, final List<AttributeType> attributeTypes) {
+		return attributeTypes
+				.stream()
+				.map(function)
+				.reduce(false, (result, e) -> result || e);
+	}
+
+	/**
+	 * Determines if the provided {@code tokenAttributes} are valid parts of a numeric token, using the provided {@code
+	 * currentRadix} and ensuring they are in the same Unicode block as the provided {@code firstToken}.
+	 *
+	 * @param currentRadix
+	 * 		the current radix to parse the numeric value in
+	 * @param firstToken
+	 * 		the first token in the item to process
+	 * @param tokenAttributes
+	 * 		the current token attributes to verify are valid parts of a numeric token
+	 *
+	 * @return true if the provided {@code tokenAttributes} are valid parts of a numeric token; false otherwise
+	 */
+	private static boolean areValidNumericTokens(final int currentRadix, final int firstToken, final List<TokenAttribute> tokenAttributes) {
+		return tokenAttributes
+				.stream()
+				.map(e -> (e.getAttributeType() != AttributeType.ALPHADIGIT) || isValidNumericToken(currentRadix, firstToken, e.getToken()))
+				.reduce(false, (result, e) -> result || e);
+	}
+
+	/**
+	 * Determines if provided {@code currentToken} is a valid part of a numeric token, using the provided {@code
+	 * currentRadix} and ensuring it is in the same Unicode block as the provided {@code firstToken}.
+	 *
+	 * @param currentRadix
+	 * 		the current radix to parse the numeric value in
+	 * @param firstToken
+	 * 		the first token in the item to process
+	 * @param currentToken
+	 * 		the current token to verify is a valid part of a numeric token
+	 *
+	 * @return true if the provided {@code currentToken} is a valid part of a numeric token; false otherwise
+	 */
+	private static boolean isValidNumericToken(final int currentRadix, final int firstToken, final int currentToken) {
+		final boolean isDigitWithRadix = Character.digit(currentToken, currentRadix) >= 0;
+
+		final Character.UnicodeBlock tokenBlock = Character.UnicodeBlock.of(firstToken);
+		final boolean isDigitInSameBlock = Character.UnicodeBlock.of(currentToken).equals(tokenBlock);
+		return !(isDigitWithRadix && isDigitInSameBlock);
+	}
+
+	/**
 	 * This method gets the float token string from the provided tokenString and exponentToken. The exponentToken
 	 * determines
 	 * how the tokenString exponent should be replaced to look like a valid exponent string in Java.
@@ -233,7 +275,7 @@ public class NumberTokenAccumulatedState extends State {
 		if (exponentToken != null) {
 			final String exponentTokenString = String.valueOf(exponentToken);
 			final String eCapitalLetterString = CharacterConstants.LATIN_CAPITAL_LETTER_E.toString();
-			return StringUtils.replace(tokenString, exponentTokenString, eCapitalLetterString);
+			return tokenString.replace(exponentTokenString, eCapitalLetterString);
 		}
 		return tokenString;
 	}
@@ -259,16 +301,9 @@ public class NumberTokenAccumulatedState extends State {
 				return LongFloat.INSTANCE;
 			}
 //			else if ((exponentTokenInt == CharacterConstants.LATIN_SMALL_LETTER_E) || (exponentTokenInt == CharacterConstants.LATIN_CAPITAL_LETTER_E)) {
-//				return ReadDefaultFloatFormatVariable.INSTANCE.getValue();
+//				return Variable.READ_DEFAULT_FLOAT_FORMAT.getValue();
 //			}
 		}
 		return Variable.READ_DEFAULT_FLOAT_FORMAT.getValue();
-	}
-
-	private static boolean hasAttributes(final Function<AttributeType, Boolean> function, final List<AttributeType> attributeTypes) {
-		return attributeTypes
-				.stream()
-				.map(function)
-				.reduce(false, (result, e) -> result || e);
 	}
 }

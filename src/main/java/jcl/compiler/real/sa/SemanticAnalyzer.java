@@ -67,9 +67,9 @@ public class SemanticAnalyzer {
 				// TODO: Remove defined functions at some other point so we don't have to do the check here???
 				LOGGER.warn("; Warning: no function or macro function defined for ");
 				if (undefinedFunction.getSymbolPackage() != null) {
-					LOGGER.warn("{}::{}", undefinedFunction.getSymbolPackage().getName(), undefinedFunction.getName());
+					LOGGER.warn("{}::{}\n", undefinedFunction.getSymbolPackage().getName(), undefinedFunction.getName());
 				} else {
-					LOGGER.warn("#:{}", undefinedFunction.getName());
+					LOGGER.warn("#:{}\n", undefinedFunction.getName());
 				}
 			}
 		}

@@ -4,8 +4,6 @@ import jcl.LispStruct;
 import jcl.reader.function.macrofunction.ReaderMacroFunction;
 import jcl.reader.syntax.TokenBuilder;
 import jcl.structs.streams.ReadResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
 
@@ -36,8 +34,6 @@ public class MacroCharacterState extends State {
 
 	public static final State MACRO_CHARACTER_STATE = new MacroCharacterState();
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(MacroCharacterState.class);
-
 	@Override
 	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
 
@@ -64,23 +60,22 @@ public class MacroCharacterState extends State {
 			numArg = getNumberArgument(reader);
 		}
 
-//		try {
 		final LispStruct lispToken = readerMacroFunction.readMacro(codePoint, reader, numArg);
 		tokenBuilder.setReturnToken(lispToken);
 
 		if (lispToken == null) {
 			ReadState.READ_STATE.process(reader, tokenBuilder);
 		}
-//		} catch (final ReaderErrorException re) {
-//			final String errorString = re.getMessage();
-//			LOGGER.error(errorString, re);
-//
-//			ErrorState.ERROR_STATE.setPreviousState(this);
-//			ErrorState.ERROR_STATE.setErrorMessage(errorString);
-//			ErrorState.ERROR_STATE.process(reader, tokenBuilder);
-//		}
 	}
 
+	/**
+	 * Reads in the number argument for the macro reader to use when processing the macro function character.
+	 *
+	 * @param reader
+	 * 		the reader to use for reading the number argument
+	 *
+	 * @return the number argument if it exists; null if no number argument was read in
+	 */
 	private static BigInteger getNumberArgument(final Reader reader) {
 
 		// NOTE: This will throw errors when it reaches an EOF
@@ -100,7 +95,6 @@ public class MacroCharacterState extends State {
 		if (digitStringBuilder.length() != 0) {
 			final String digitString = digitStringBuilder.toString();
 			numArg = new BigInteger(digitString);
-
 		}
 
 		// Make sure to unread the last character read after the number arg

@@ -140,7 +140,7 @@ public final class ReadEvalPrint {
 
 							if (whatAnalyzed != null) {
 								LOGGER.debug("ANALYZED:\n");
-								LOGGER.debug("{}\n", whatAnalyzed.printStruct());
+//								LOGGER.debug("{}\n", whatAnalyzed.printStruct());
 							} else {
 								LOGGER.warn("; WARNING: Null response from analyzer");
 							}

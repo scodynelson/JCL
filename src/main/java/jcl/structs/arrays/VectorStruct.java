@@ -192,7 +192,9 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 		if (printArray || printReadably) {
 			stringBuilder.append("#(");
 
-			for (int i = 0; i < fillPointer; i++) {
+			final int amountToPrint = (fillPointer == null) ? contents.size() : fillPointer;
+
+			for (int i = 0; i < amountToPrint; i++) {
 				final LispStruct lispStruct = contents.get(i);
 				stringBuilder.append(lispStruct.printStruct());
 			}

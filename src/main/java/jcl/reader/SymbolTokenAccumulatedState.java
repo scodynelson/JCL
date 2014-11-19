@@ -60,36 +60,12 @@ public class SymbolTokenAccumulatedState extends State {
 
 		final SymbolTokenProcessingResult symbolTokenProcessingResult = getSymbolToken(tokenBuilder);
 		final SymbolStruct<?> symbolToken = symbolTokenProcessingResult.getSymbolStruct();
-//		if (symbolToken == null) {
-//			final String errorMessage = symbolTokenProcessingResult.getErrorMessage();
-//			final ErrorState errorState = new ErrorState(this, errorMessage);
-//			errorState.process(reader, tokenBuilder);
-//		} else {
-		tokenBuilder.setReturnToken(symbolToken);
-//		}
-	}
-
-	private static class SymbolTokenProcessingResult {
-
-		private final SymbolStruct<?> symbolStruct;
-		private final String errorMessage;
-
-		private SymbolTokenProcessingResult(final SymbolStruct<?> symbolStruct) {
-			this.symbolStruct = symbolStruct;
-			errorMessage = null;
-		}
-
-		private SymbolTokenProcessingResult(final String errorMessage) {
-			symbolStruct = null;
-			this.errorMessage = errorMessage;
-		}
-
-		public SymbolStruct<?> getSymbolStruct() {
-			return symbolStruct;
-		}
-
-		public String getErrorMessage() {
-			return errorMessage;
+		if (symbolToken == null) {
+			final String errorMessage = symbolTokenProcessingResult.getErrorMessage();
+			final ErrorState errorState = new ErrorState(this, errorMessage);
+			errorState.process(reader, tokenBuilder);
+		} else {
+			tokenBuilder.setReturnToken(symbolToken);
 		}
 	}
 
@@ -202,6 +178,30 @@ public class SymbolTokenAccumulatedState extends State {
 			final PackageSymbolStruct pkgSymStruct = GlobalPackageStruct.KEYWORD.findSymbol(symName);
 			final SymbolStruct<?> symbolStruct = (pkgSymStruct == null) ? new KeywordSymbolStruct(symName) : pkgSymStruct.getSymbolStruct();
 			return new SymbolTokenProcessingResult(symbolStruct);
+		}
+	}
+
+	private static class SymbolTokenProcessingResult {
+
+		private final SymbolStruct<?> symbolStruct;
+		private final String errorMessage;
+
+		private SymbolTokenProcessingResult(final SymbolStruct<?> symbolStruct) {
+			this.symbolStruct = symbolStruct;
+			errorMessage = null;
+		}
+
+		private SymbolTokenProcessingResult(final String errorMessage) {
+			symbolStruct = null;
+			this.errorMessage = errorMessage;
+		}
+
+		public SymbolStruct<?> getSymbolStruct() {
+			return symbolStruct;
+		}
+
+		public String getErrorMessage() {
+			return errorMessage;
 		}
 	}
 }

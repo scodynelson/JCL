@@ -1,7 +1,7 @@
 package jcl.reader.syntax;
 
 /**
- * The {@link CaseSpec} enumeration defines the case types that will be used when reading tokens.
+ * Defines the case types that will be used when reading tokens.
  */
 public enum CaseSpec {
 

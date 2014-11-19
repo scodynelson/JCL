@@ -1,7 +1,7 @@
 package jcl.reader.syntax;
 
 /**
- * The {@link SyntaxType} enumeration defines the different syntax types that will determine how the reader parses tokens.
+ * Defines the different syntax types that will determine how the reader parses tokens.
  */
 public enum SyntaxType {
 

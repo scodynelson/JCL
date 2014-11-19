@@ -1,8 +1,7 @@
 package jcl.reader.syntax;
 
 /**
- * The {@link AttributeType} enumeration defines the different attributes types that will determine how the reader parses
- * tokens.
+ * Defines the different attributes types that will determine how the reader parses tokens.
  */
 public enum AttributeType {
 

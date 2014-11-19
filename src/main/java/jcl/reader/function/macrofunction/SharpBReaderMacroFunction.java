@@ -1,8 +1,8 @@
 package jcl.reader.function.macrofunction;
 
 import jcl.LispStruct;
-import jcl.reader.function.RationalReader;
 import jcl.reader.Reader;
+import jcl.reader.function.RationalReader;
 import jcl.reader.syntax.CharacterConstants;
 
 import java.math.BigInteger;

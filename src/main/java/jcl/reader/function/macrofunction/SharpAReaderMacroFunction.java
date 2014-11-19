@@ -48,13 +48,18 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunction {
 	}
 
 	/**
-	 * This method will build the dimensions list from the contents of the provided ListStruct. The dimensions will be based
-	 * off of the first element in each axis layer of the supplied dimensions parameter.
+	 * Build the dimensions list from the contents of the provided {@link LispStruct}. The dimensions will be based off
+	 * of the first element in each axis layer of the supplied {@code dimensions} parameter.
 	 *
-	 * @param dimensions the number of expected dimensions
-	 * @param contents   the contents to build and analyze against the dimensions parameter
-	 * @return a List of Integers that make up the expected dimensions of the simple array
-	 * @throws ReaderErrorException if dimensions do not match the provided contents list
+	 * @param dimensions
+	 * 		the number of expected dimensions
+	 * @param contents
+	 * 		the contents to build and analyze against the {@code dimensions} parameter
+	 *
+	 * @return a List of {@link Integer} that make up the expected dimensions of the simple array
+	 *
+	 * @throws ReaderErrorException
+	 * 		if dimensions do not match the provided contents list
 	 */
 	private static List<Integer> getDimensions(final BigInteger dimensions, final LispStruct contents) {
 
@@ -64,8 +69,8 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunction {
 		final List<Integer> dims = new ArrayList<>();
 
 		for (BigInteger axis = BigInteger.ZERO;
-		     axis.compareTo(dimensions) < 0;
-		     axis = axis.add(BigInteger.ONE)) {
+			 axis.compareTo(dimensions) < 0;
+			 axis = axis.add(BigInteger.ONE)) {
 
 			final ListStruct seqList;
 			if (seq instanceof ListStruct) {

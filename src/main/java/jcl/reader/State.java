@@ -39,14 +39,26 @@ public abstract class State {
 
 	private static final int EOF = -1;
 
-	public static State getInitialState() {
-		return InitialState.INITIAL_STATE;
+	/**
+	 * Determines if the provided {@code codePoint} is either null or equal to the {@link #EOF} character constant.
+	 *
+	 * @param codePoint
+	 * 		the value to determine is either null or equal to the {@link #EOF} character constant
+	 *
+	 * @return true if the provided {@code codePoint} is an End-Of-File character
+	 */
+	protected static boolean isEndOfFileCharacter(final Integer codePoint) {
+		return (codePoint == null) || (codePoint == EOF);
 	}
 
-	protected static boolean isEndOfFileCharacter(final Integer character) {
-		return (character == null) || (character == EOF);
-	}
-
+	/**
+	 * Converts the provided list of {@link TokenAttribute}s to a {@link String}.
+	 *
+	 * @param tokenAttributes
+	 * 		the list of {@link TokenAttribute}s to convert to a {@link String}
+	 *
+	 * @return the {@link String} produced from the list of {@link TokenAttribute}s
+	 */
 	protected static String convertTokensToString(final List<TokenAttribute> tokenAttributes) {
 		final StringBuilder stringBuilder = new StringBuilder();
 		tokenAttributes
@@ -55,6 +67,19 @@ public abstract class State {
 		return stringBuilder.toString();
 	}
 
+	/**
+	 * Determines and returns the proper code point value based from the provided {@code codePoint} and using the
+	 * provided {@code attributeType} and {@code caseSpec} properties.
+	 *
+	 * @param codePoint
+	 * 		the code point value to properly case
+	 * @param attributeType
+	 * 		the {@link AttributeType} of the code point value used in determining the proper case value
+	 * @param caseSpec
+	 * 		the current readtable case used in determines the proper case value
+	 *
+	 * @return the proper code point value based from the provided {@code codePoint}
+	 */
 	protected static int properCaseCodePoint(final int codePoint, final AttributeType attributeType, final CaseSpec caseSpec) {
 
 		int properCaseCodePoint = codePoint;
@@ -74,18 +99,55 @@ public abstract class State {
 		return properCaseCodePoint;
 	}
 
+	/**
+	 * Determines if the provided list of {@link TokenAttribute}s contains at least one token with an {@link
+	 * AttributeType} equal to the provided {@code attributeType} value.
+	 *
+	 * @param tokenAttributes
+	 * 		the list of {@link TokenAttribute}s containing the current tokens
+	 * @param attributeType
+	 * 		the {@link AttributeType} value to check for existence in the {@code tokenAttributes} list
+	 *
+	 * @return if the provided list of {@link TokenAttribute}s contains at least one token with an {@link AttributeType}
+	 * equal to the provided {@code attributeType} value.
+	 */
 	protected static boolean hasAnyAttribute(final List<TokenAttribute> tokenAttributes, final AttributeType attributeType) {
 		return tokenAttributes
 				.stream()
 				.anyMatch(e -> e.getAttributeType() == attributeType);
 	}
 
+	/**
+	 * Determines if the provided list of {@link TokenAttribute}s contains no tokens with an {@link AttributeType}
+	 * equal to the provided {@code attributeType} value.
+	 *
+	 * @param tokenAttributes
+	 * 		the list of {@link TokenAttribute}s containing the current tokens
+	 * @param attributeType
+	 * 		the {@link AttributeType} value to check for existence in the {@code tokenAttributes} list
+	 *
+	 * @return if the provided list of {@link TokenAttribute}s contains no tokens with an {@link AttributeType} equal to
+	 * the provided {@code attributeType} value.
+	 */
 	protected static boolean hasNoAttributes(final List<TokenAttribute> tokenAttributes, final AttributeType attributeType) {
 		return tokenAttributes
 				.stream()
 				.noneMatch(e -> e.getAttributeType() == attributeType);
 	}
 
+	/**
+	 * Gets the first occurrence of a token with an {@link AttributeType} equal to the provided {@code attributeType}
+	 * value in the provided list of {@link TokenAttribute}s. If no tokens have an {@link AttributeType} that matches
+	 * the provided {@code attributeType} value, null will be returned.
+	 *
+	 * @param tokenAttributes
+	 * 		the list of {@link TokenAttribute}s containing the current tokens
+	 * @param attributeType
+	 * 		the {@link AttributeType} value used to locate the first matching token in the {@code tokenAttributes} list
+	 *
+	 * @return the first occurrence of a token with an {@link AttributeType} equal to the provided {@code attributeType}
+	 * value in the provided list of {@link TokenAttribute}s or null if no such token can be found
+	 */
 	protected static Integer getTokenByAttribute(final List<TokenAttribute> tokenAttributes, final AttributeType attributeType) {
 		return tokenAttributes
 				.stream()
@@ -95,6 +157,16 @@ public abstract class State {
 				.orElse(null);
 	}
 
+	/**
+	 * Abstract method to be implemented by all child State objects to handle their respective reader processing
+	 * portion.
+	 *
+	 * @param reader
+	 * 		the JCL {@link Reader} instance to use for reading lisp tokens.
+	 * @param tokenBuilder
+	 * 		the {@link TokenBuilder} used to build the resulting lisp token and house token parsing information throughout
+	 * 		the read process
+	 */
 	public abstract void process(Reader reader, TokenBuilder tokenBuilder);
 
 	@Override

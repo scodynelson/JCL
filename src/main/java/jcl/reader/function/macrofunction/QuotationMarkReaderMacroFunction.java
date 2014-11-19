@@ -1,14 +1,14 @@
 package jcl.reader.function.macrofunction;
 
 import jcl.LispStruct;
-import jcl.reader.function.UnicodeCharacterReader;
 import jcl.reader.Reader;
+import jcl.reader.function.UnicodeCharacterReader;
 import jcl.reader.syntax.CharacterConstants;
-import jcl.structs.streams.ReadResult;
 import jcl.structs.arrays.StringStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.structs.conditions.exceptions.TypeErrorException;
+import jcl.structs.streams.ReadResult;
 import jcl.structs.symbols.variables.Variable;
 
 import java.math.BigInteger;

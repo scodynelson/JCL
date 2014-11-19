@@ -1,8 +1,12 @@
 package jcl.reader.syntax;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 /**
- * The {@link CharacterName} enumeration defines the standard graphic characters that have names for the system.
+ * Defines the standard graphic characters that have names for the system.
  */
+@SuppressWarnings("MagicNumber")
 public enum CharacterName {
 
 	NULL("NULL", (char) 0x0000),
@@ -22,8 +26,10 @@ public enum CharacterName {
 	/**
 	 * Public constructor.
 	 *
-	 * @param name  the graphic character name
-	 * @param aChar the character value
+	 * @param name
+	 * 		the graphic character name
+	 * @param aChar
+	 * 		the character value
 	 */
 	CharacterName(final String name, final char aChar) {
 		this.name = name;
@@ -31,7 +37,7 @@ public enum CharacterName {
 	}
 
 	/**
-	 * Getter for the graphic character name for the enumeration.
+	 * Gets the graphic character name for the enumeration.
 	 *
 	 * @return the graphic character name
 	 */
@@ -40,7 +46,7 @@ public enum CharacterName {
 	}
 
 	/**
-	 * Getter for the character value for the enumeration.
+	 * Gets the character value for the enumeration.
 	 *
 	 * @return the character value
 	 */
@@ -50,9 +56,6 @@ public enum CharacterName {
 
 	@Override
 	public String toString() {
-		return "CharacterName{"
-				+ "name='" + name + '\''
-				+ ", aChar=" + aChar
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

@@ -1,8 +1,8 @@
 package jcl.reader.function.macrofunction;
 
 import jcl.LispStruct;
-import jcl.reader.function.ExtendedTokenReader;
 import jcl.reader.Reader;
+import jcl.reader.function.ExtendedTokenReader;
 import jcl.reader.syntax.CharacterConstants;
 import jcl.reader.syntax.ReadExtendedToken;
 import jcl.structs.conditions.exceptions.ReaderErrorException;

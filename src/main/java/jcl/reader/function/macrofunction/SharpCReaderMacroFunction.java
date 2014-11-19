@@ -41,6 +41,7 @@ public class SharpCReaderMacroFunction extends ReaderMacroFunction {
 		final LispStruct real = lispTokens.get(0);
 		final LispStruct imaginary = lispTokens.get(1);
 
+		// TODO: we REALLY need to do this better!!
 		if ((real instanceof IntegerStruct) && (imaginary instanceof IntegerStruct)) {
 			return new ComplexStruct((IntegerStruct) real, (IntegerStruct) imaginary);
 		} else if ((real instanceof IntegerStruct) && (imaginary instanceof FloatStruct)) {

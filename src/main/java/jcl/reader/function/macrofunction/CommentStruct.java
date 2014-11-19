@@ -17,7 +17,7 @@ public class CommentStruct implements LispStruct {
 	 * Public constructor.
 	 *
 	 * @param commentString
-	 * 		the {@link java.lang.String} comment value
+	 * 		the {@link String} comment value
 	 */
 	CommentStruct(final String commentString) {
 		this.commentString = commentString;

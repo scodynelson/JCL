@@ -9,25 +9,32 @@ import jcl.structs.streams.ReadResult;
 /**
  * Step 9 of the Reader Algorithm.
  * <p>
- * Character processing is done according to the HyperSpec.
+ * At this point a token is being accumulated, and an odd number of multiple escape characters have been encountered.
+ * If at end of file, an error of type end-of-file is signaled. Otherwise, a character, y, is read, and one of the
+ * following actions is performed according to its syntax type:
+ * <tab>
  * <p>
- * Thus far we have reached 0,2,4... even Multiple Escape Characters.  The way it works is outlined
- * in the Reader Algorithm.  The if statements are commented first so you can figure out what
- * each part of this code does.
+ * If y is a constituent, macro, or whitespace character, y is treated as a constituent whose only constituent trait is
+ * alphabetic. Y is appended to the token being built, and step 9 is repeated.
+ * </p>
  * <p>
+ * If y is a single escape character, then the next character, z, is read, or an error of type end-of-file is signaled
+ * if at end of file. Z is treated as a constituent whose only constituent trait is alphabetic. Z is appended to the
+ * token being built, and step 9 is repeated.
+ * </p>
+ * <p>
+ * If y is a multiple escape character, then step 8 is entered.
+ * </p>
+ * <p>
+ * If y is an invalid character, an error of type reader-error is signaled.
+ * </p>
+ * </tab>
+ * </p>
  */
 public class OddMultiEscapeState extends State {
 
 	public static final State ODD_MULTI_ESCAPE_STATE = new OddMultiEscapeState();
 
-	/**
-	 * Processes for the reader for the current State.
-	 *
-	 * @return TokenAccumulatedState    if we have reached the End Of File marker
-	 * EvenMultiEscapeState     if we have found another Multiple Escape Character, toggle to OddMultiEscapeState
-	 * OddMultiEscapeState      if we have found either a constituent character, non-terminating macro character,
-	 * terminating macro character, whitespace character, or a single escape character
-	 */
 	@Override
 	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
 

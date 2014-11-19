@@ -8,28 +8,14 @@ import jcl.structs.streams.ReadResult;
 /**
  * Step 1 of the Reader Algorithm.
  * <p>
- * The ReadState will read a character in from the input Stream and then go to the
- * next proper State according to what the SyntaxType of the character that was read
- * from the input stream was.
+ * If at end of file, end-of-file processing is performed as specified in read. Otherwise, one character, x, is read
+ * from the input stream, and dispatched according to the syntax type of x to one of steps 2 to 7.
+ * </p>
  */
 public class ReadState extends State {
 
 	public static final State READ_STATE = new ReadState();
 
-	/**
-	 * Processes for the reader for the current State.
-	 *
-	 * @return value within the corresponding list:
-	 * <StartIf>
-	 * <If_Constituent>         ConstituentState
-	 * <If_WhiteSpace>          WhitespaceState
-	 * <If_Terminating>         MacroCharacterState
-	 * <If_Non_Terminating>     MacroCharacterState
-	 * <If_Single_Escape>       SingleEscapeState
-	 * <If_Multiple_Escape>     MultiEscapeState
-	 * <Else>                   IllegalCharacterState
-	 * <EndIf>
-	 */
 	@Override
 	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
 

@@ -7,8 +7,12 @@ import jcl.reader.syntax.TokenBuilder;
 /**
  * Step 7 of the Reader Algorithm.
  * <p>
- * The character that was read in the ReadState is now added to the token accumulator vector and the state attributes
- * value of that character is then appended to the attributeVector.
+ * If x is a constituent character, then it begins a token. After the token is read in, it will be interpreted either
+ * as a Lisp object or as being of invalid syntax. If the token represents an object, that object is returned as the
+ * result of the read operation. If the token is of invalid syntax, an error is signaled. If x is a character with
+ * case, it might be replaced with the corresponding character of the opposite case, depending on the readtable case of
+ * the current readtable. X is used to begin a token, and step 8 is entered.
+ * </p>
  */
 public class ConstituentState extends State {
 

@@ -7,11 +7,11 @@ import jcl.structs.streams.ReadResult;
 
 /**
  * Step 5 of the Reader Algorithm.
- * <p/>
- * SingleEscapeState will have already read in the single escape character prior to being executed.
- * This will read the character following the single escape character and put that value into the
- * tokenAccumulator, and that character will be treated as an ALPHABETIC character.
- * <p/>
+ * <p>
+ * If x is a single escape character then the next character, y, is read, or an error of type end-of-file is signaled
+ * if at the end of file. y is treated as if it is a constituent whose only constituent trait is alphabetic[2]. y is
+ * used to begin a token, and step 8 is entered.
+ * </p>
  */
 public class SingleEscapeState extends State {
 

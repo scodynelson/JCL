@@ -12,14 +12,25 @@ import java.math.BigInteger;
 /**
  * Step 4 of the Reader Algorithm.
  * <p>
- * The way a ReaderMacroFunction is called takes the following 3 steps:
+ * If x is a terminating or non-terminating macro character then its associated reader macro function is called with
+ * two arguments, the input stream and x.
+ * <tab>
  * <p>
- * First: The Readtable is called to get the macro function of a specific character:
- * this will return an instance of ReaderMacroFunction
- * Second: We then call the readMacro method from the ReaderMacroFunction instance that is returned from step 1
- * Third: The readMacro will then return a LispStruct.  If it is not null, we return
- * it as a result of the Read function, else, Step 1 is re-entered
+ * The reader macro function may read characters from the input stream; if it does, it will see those characters
+ * following the macro character. The Lisp reader may be invoked recursively from the reader macro function.
+ * </p>
  * <p>
+ * The reader macro function must not have any side effects other than on the input stream; because of backtracking and
+ * restarting of the read operation, front ends to the Lisp reader (e.g., ``editors'' and ``rubout handlers'') may
+ * cause the reader macro function to be called repeatedly during the reading of a single expression in which x only
+ * appears once.
+ * </p>
+ * <p>
+ * The reader macro function may return zero values or one value. If one value is returned, then that value is returned
+ * as the result of the read operation; the algorithm is done. If zero values are returned, then step 1 is re-entered.
+ * </p>
+ * </tab>
+ * </p>
  */
 public class MacroCharacterState extends State {
 

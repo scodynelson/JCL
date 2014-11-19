@@ -10,26 +10,51 @@ import jcl.structs.streams.ReadResult;
 /**
  * Step 8 of the Reader Algorithm.
  * <p>
- * Character processing is done according to the HyperSpec.
+ * At this point a token is being accumulated, and an even number of multiple escape characters have been encountered.
+ * If at end of file, step 10 is entered. Otherwise, a character, y, is read, and one of the following actions is
+ * performed according to its syntax type:
+ * <tab>
  * <p>
- * Thus far we have reached 0,2,4... even Multiple Escape Characters.  The way it works is outlined
- * in the Reader algorithm.  The if statements have comments first so you can figure out what
- * each part of this code does.
+ * If y is a constituent or non-terminating macro character:
+ * <tab>
  * <p>
+ * -- If y is a character with case, it might be replaced with the corresponding character of the opposite case,
+ * depending on the readtable case of the current readtable.
+ * </p>
+ * <p>
+ * -- Y is appended to the token being built.
+ * </p>
+ * <p>
+ * -- Step 8 is repeated.
+ * </p>
+ * </tab>
+ * </p>
+ * <p>
+ * If y is a single escape character, then the next character, z, is read, or an error of type end-of-file is signaled
+ * if at end of file. Z is treated as if it is a constituent whose only constituent trait is alphabetic. Z is appended
+ * to the token being built, and step 8 is repeated.
+ * </p>
+ * <p>
+ * If y is a multiple escape character, then step 9 is entered.
+ * </p>
+ * <p>
+ * If y is an invalid character, an error of type reader-error is signaled.
+ * </p>
+ * <p>
+ * If y is a terminating macro character, then it terminates the token. First the character y is unread, and then step
+ * 10 is entered.
+ * </p>
+ * <p>
+ * If y is a whitespace character, then it terminates the token. First the character y is unread if appropriate, and
+ * then step 10 is entered.
+ * </p>
+ * </tab>
+ * </p>
  */
 public class EvenMultiEscapeState extends State {
 
 	public static final State EVEN_MULTI_ESCAPE_STATE = new EvenMultiEscapeState();
 
-	/**
-	 * Processes for the reader for the current State.
-	 *
-	 * @return TokenAccumulatedState    if we have reached the End Of File marker or a whitespace character
-	 * or a terminating macro character
-	 * OddMultiEscapeState      if we have found another Multiple Escape Character, toggle to OddMultiEscapeState
-	 * EvenMultiEscapeState     if we have found either a constituent character, non-terminating macro
-	 * character, or a single escape character
-	 */
 	@Override
 	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
 

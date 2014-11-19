@@ -6,9 +6,11 @@ import jcl.structs.conditions.exceptions.ReaderErrorException;
 /**
  * Not Specified in the Reader Algorithm.
  * <p>
- * This state should never be processed.  If it does, then a programming error has occurred.
+ * This state should never be processed. If it does, then a programming error has occurred.
+ * </p>
  * <p>
  * This is our Accepting state that says we are done with the Reader.
+ * </p>
  */
 public class ErrorState extends State {
 
@@ -28,7 +30,8 @@ public class ErrorState extends State {
 	/**
 	 * Processes for the reader for the current State.
 	 *
-	 * @throws ReaderErrorException thrown if the process method ever gets called. This can only be done explicitly by a programmer.
+	 * @throws ReaderErrorException
+	 * 		thrown if the process method ever gets called. This can only be done explicitly by a programmer.
 	 */
 	@Override
 	public void process(final Reader reader, final TokenBuilder tokenBuilder) {

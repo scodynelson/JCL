@@ -30,10 +30,11 @@ import java.util.function.Function;
  * <p>
  * This state is reached when we have accumulated a token, and it needs to be processed into a
  * 1) Number/PotentialNumber
+ * </p>
  * <p>
  * First we check to see if the token is a number, if it is, then we attempt to format it.  If it cannot
  * be formatted, then we progress to the SymbolTokenAccumulatedState.
- * <p>
+ * </p>
  */
 public class NumberTokenAccumulatedState extends State {
 
@@ -43,12 +44,6 @@ public class NumberTokenAccumulatedState extends State {
 	private static final List<AttributeType> NOT_FIRST_OR_LAST_ATTRS = Arrays.asList(AttributeType.DECIMAL, AttributeType.RATIOMARKER);
 	private static final List<AttributeType> NO_SIMULTANEOUS_ATTRS = Arrays.asList(AttributeType.DECIMAL, AttributeType.RATIOMARKER);
 
-	/**
-	 * Processes for the reader for the current State.
-	 *
-	 * @return SymbolTokenAccumulatedState    if a number token could not be created
-	 * EndState                       the final accepting state
-	 */
 	@Override
 	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
 

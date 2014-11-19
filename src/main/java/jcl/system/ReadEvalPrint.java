@@ -10,6 +10,7 @@ import jcl.structs.packages.PackageStruct;
 import jcl.structs.streams.CharacterStreamStruct;
 import jcl.structs.streams.FileStreamStruct;
 import jcl.structs.streams.InputStream;
+import jcl.structs.streams.ReadResult;
 import jcl.structs.symbols.SpecialOperator;
 import jcl.structs.symbols.variables.Variable;
 import org.slf4j.Logger;
@@ -114,9 +115,18 @@ public final class ReadEvalPrint {
 							LOGGER.warn("; WARNING: Null response from reader");
 						}
 					} catch (final ReaderErrorException ex) {
-						LOGGER.warn("; WARNING: Reader Exception condition during Read -> {}", ex.getMessage(), ex);
+
+						// Consume the rest of the input so we don't attempt to parse the rest of the input when an error occurs.
+						ReadResult readResult = reader.readChar(false, null, true);
+						Integer readChar = readResult.getResult();
+						while ((readChar != null) && (readChar != -1) && (readChar != 10)) {
+							readResult = reader.readChar(false, null, true);
+							readChar = readResult.getResult();
+						}
+
+						LOGGER.warn("; WARNING: Reader Exception condition during Read -> {}\n", ex.getMessage(), ex);
 					} catch (final Exception ex) {
-						LOGGER.warn("; WARNING: Exception condition during Read -> {}", ex.getMessage(), ex);
+						LOGGER.warn("; WARNING: Exception condition during Read -> {}\n", ex.getMessage(), ex);
 						break;
 					} finally {
 						SharpTagReaderConstants.SHARP_EQUAL_TEMP_TABLE.clear();

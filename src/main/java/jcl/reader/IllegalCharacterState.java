@@ -2,6 +2,7 @@ package jcl.reader;
 
 import jcl.reader.syntax.CharacterConstants;
 import jcl.reader.syntax.TokenBuilder;
+import jcl.structs.conditions.exceptions.ReaderErrorException;
 
 /**
  * Step 2 of the Reader Algorithm.
@@ -18,13 +19,10 @@ public class IllegalCharacterState extends State {
 
 		final Integer codePoint = tokenBuilder.getPreviousReadCharacter();
 		if (codePoint == null) {
-			final String errorMessage = "End Of File Character was encountered.";
-			final ErrorState errorState = new ErrorState(this, errorMessage);
+			final ErrorState errorState = new ErrorState(this);
 			errorState.process(reader, tokenBuilder);
 		} else if (codePoint != CharacterConstants.EXIT_CHAR) {
-			final String errorMessage = "Illegal Character was encountered: " + codePoint;
-			final ErrorState errorState = new ErrorState(this, errorMessage);
-			errorState.process(reader, tokenBuilder);
+			throw new ReaderErrorException("Illegal Character was encountered: " + codePoint);
 		}
 	}
 }

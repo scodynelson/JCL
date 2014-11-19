@@ -25,7 +25,7 @@ public class ConstituentState extends State {
 		if (isEndOfFileCharacter(codePoint)) {
 			tokenBuilder.setReturnToken(null);
 
-			final ErrorState errorState = new ErrorState(this, null);
+			final ErrorState errorState = new ErrorState(this);
 			errorState.process(reader, tokenBuilder);
 			return;
 		}

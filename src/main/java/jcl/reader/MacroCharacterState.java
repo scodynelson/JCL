@@ -3,6 +3,7 @@ package jcl.reader;
 import jcl.LispStruct;
 import jcl.reader.function.macrofunction.ReaderMacroFunction;
 import jcl.reader.syntax.TokenBuilder;
+import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.streams.ReadResult;
 
 import java.math.BigInteger;
@@ -42,17 +43,14 @@ public class MacroCharacterState extends State {
 		if (isEndOfFileCharacter(codePoint)) {
 			tokenBuilder.setReturnToken(null);
 
-			final ErrorState errorState = new ErrorState(this, null);
+			final ErrorState errorState = new ErrorState(this);
 			errorState.process(reader, tokenBuilder);
 			return;
 		}
 
 		final ReaderMacroFunction readerMacroFunction = reader.getReadtable().getMacroCharacter(codePoint);
 		if (readerMacroFunction == null) {
-			final String errorMessage = "No reader macro function exists for character: " + codePoint + '.';
-			final ErrorState errorState = new ErrorState(this, errorMessage);
-			errorState.process(reader, tokenBuilder);
-			return;
+			throw new ReaderErrorException("No reader macro function exists for character: " + codePoint + '.');
 		}
 
 		BigInteger numArg = null;
@@ -78,7 +76,7 @@ public class MacroCharacterState extends State {
 	 */
 	private static BigInteger getNumberArgument(final Reader reader) {
 
-		// NOTE: This will throw errors when it reaches an EOF
+		// NOTE: This will throw errors when it reaches an EOF. That's why we can un-box the 'readChar' variable below.
 		ReadResult readResult = reader.readChar();
 		int readChar = readResult.getResult();
 

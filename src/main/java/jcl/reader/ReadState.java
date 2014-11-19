@@ -27,7 +27,7 @@ public class ReadState extends State {
 		if (readResult.wasEOF()) {
 			tokenBuilder.setReturnToken(null);
 
-			final ErrorState errorState = new ErrorState(this, null);
+			final ErrorState errorState = new ErrorState(this);
 			errorState.process(reader, tokenBuilder);
 			return;
 		}

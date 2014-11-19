@@ -17,19 +17,15 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class ErrorState extends State {
 
 	private final State previousState;
-	private final String errorMessage;
 
 	/**
 	 * Public constructor noting an error state during reader processing.
 	 *
 	 * @param previousState
 	 * 		the previous state that failed
-	 * @param errorMessage
-	 * 		the message to throw
 	 */
-	public ErrorState(final State previousState, final String errorMessage) {
+	public ErrorState(final State previousState) {
 		this.previousState = previousState;
-		this.errorMessage = errorMessage;
 	}
 
 	/**
@@ -44,7 +40,7 @@ public class ErrorState extends State {
 		if (isEndOfFileCharacter(codePoint) && !tokenBuilder.isEofErrorP()) {
 			return;
 		}
-		throw new ReaderErrorException("Reader Error " + errorMessage + " in State " + previousState);
+		throw new ReaderErrorException("Reader Error in State " + previousState);
 	}
 
 	@Override

@@ -2,12 +2,14 @@ package jcl.reader;
 
 import jcl.reader.syntax.AttributeType;
 import jcl.structs.symbols.variables.Variable;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * The {@link AttributeTable} class represents a lookup table for attribute types matching code points.
+ * Represents a lookup table for attribute types matching code points.
  */
 @SuppressWarnings("all")
 public class AttributeTable {
@@ -15,7 +17,7 @@ public class AttributeTable {
 	private final Map<Integer, AttributeType> attributeTypeMap;
 
 	/**
-	 * Package constructor.
+	 * Public constructor.
 	 */
 	public AttributeTable() {
 		attributeTypeMap = new ConcurrentHashMap<>(128);
@@ -151,9 +153,11 @@ public class AttributeTable {
 	}
 
 	/**
-	 * This method gets the matching attribute type for the provided {@code codePoint} value.
+	 * Gets the matching attribute type for the provided {@code codePoint} value.
 	 *
-	 * @param codePoint the {@code codePoint} used to find the matching attribute type
+	 * @param codePoint
+	 * 		the {@code codePoint} used to find the matching attribute type
+	 *
 	 * @return the matching attribute type for the provided {@code codePoint}
 	 */
 	public AttributeType getAttribute(final int codePoint) {
@@ -179,8 +183,6 @@ public class AttributeTable {
 
 	@Override
 	public String toString() {
-		return "AttributeTable{"
-				+ "attributeTypeMap=" + attributeTypeMap
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

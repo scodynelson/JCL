@@ -32,7 +32,7 @@ public class MacroCharacterState extends State {
 
 		final Integer codePoint = tokenBuilder.getPreviousReadCharacter();
 
-		if (StateUtils.isEndOfFileCharacter(codePoint)) {
+		if (isEndOfFileCharacter(codePoint)) {
 			tokenBuilder.setReturnToken(null);
 
 			ErrorState.ERROR_STATE.setPreviousState(this);

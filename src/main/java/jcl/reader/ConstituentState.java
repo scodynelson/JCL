@@ -18,7 +18,7 @@ public class ConstituentState extends State {
 	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
 		Integer codePoint = tokenBuilder.getPreviousReadCharacter();
 
-		if (StateUtils.isEndOfFileCharacter(codePoint)) {
+		if (isEndOfFileCharacter(codePoint)) {
 			tokenBuilder.setReturnToken(null);
 
 			ErrorState.ERROR_STATE.setPreviousState(this);
@@ -29,7 +29,7 @@ public class ConstituentState extends State {
 		final CaseSpec readtableCase = reader.getReadtableCase();
 		final AttributeType attributeType = reader.getAttributeType(codePoint);
 
-		codePoint = StateUtils.properCaseCodePoint(codePoint, attributeType, readtableCase);
+		codePoint = properCaseCodePoint(codePoint, attributeType, readtableCase);
 		tokenBuilder.addToTokenAttributes(codePoint, attributeType);
 
 		EvenMultiEscapeState.EVEN_MULTI_ESCAPE_STATE.process(reader, tokenBuilder);

@@ -51,7 +51,7 @@ public class EvenMultiEscapeState extends State {
 			final CaseSpec readtableCase = reader.getReadtableCase();
 			final AttributeType attributeType = reader.getAttributeType(codePoint);
 
-			codePoint = StateUtils.properCaseCodePoint(codePoint, attributeType, readtableCase);
+			codePoint = properCaseCodePoint(codePoint, attributeType, readtableCase);
 			tokenBuilder.addToTokenAttributes(codePoint, attributeType);
 
 			EVEN_MULTI_ESCAPE_STATE.process(reader, tokenBuilder);

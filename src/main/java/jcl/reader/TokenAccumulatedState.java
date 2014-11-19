@@ -53,7 +53,7 @@ public class TokenAccumulatedState extends State {
 
 		final Integer codePoint = tokenBuilder.getPreviousReadCharacter();
 		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
-		if (StateUtils.isEndOfFileCharacter(codePoint) && CollectionUtils.isEmpty(tokenAttributes)) {
+		if (isEndOfFileCharacter(codePoint) && CollectionUtils.isEmpty(tokenAttributes)) {
 			ErrorState.ERROR_STATE.setPreviousState(this);
 			ErrorState.ERROR_STATE.process(reader, tokenBuilder);
 			return;
@@ -64,7 +64,7 @@ public class TokenAccumulatedState extends State {
 			return;
 		}
 
-		final String tokenString = StateUtils.convertTokensToString(tokenAttributes);
+		final String tokenString = convertTokensToString(tokenAttributes);
 		if (StringUtils.equals(tokenString, ".")) {
 			ErrorState.ERROR_STATE.setPreviousState(this);
 			ErrorState.ERROR_STATE.setErrorMessage("Dot context error in '.'");

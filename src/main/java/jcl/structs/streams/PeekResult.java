@@ -2,6 +2,7 @@ package jcl.structs.streams;
 
 import jcl.LispStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * Result object from a 'peek' operation performed via 'peek-char' from an {@link InputStream}.
@@ -69,6 +70,6 @@ public class PeekResult {
 
 	@Override
 	public String toString() {
-		return ReflectionToStringBuilder.toString(this);
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

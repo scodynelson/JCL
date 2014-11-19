@@ -2,16 +2,18 @@ package jcl.reader;
 
 import jcl.LispStruct;
 import jcl.reader.function.macrofunction.ReaderMacroFunction;
-import jcl.structs.streams.ReadResult;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
+import jcl.structs.streams.ReadResult;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.math.BigInteger;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * The {@link DispatchTable} class holds mappings for code points to macro functions and delegates to the proper function
- * when used.
+ * This holds mappings for code points to macro functions and delegates to the proper {@link ReaderMacroFunction}  when
+ * used.
  */
 public class DispatchTable extends ReaderMacroFunction {
 
@@ -37,7 +39,9 @@ public class DispatchTable extends ReaderMacroFunction {
 	/**
 	 * Gets the macro function associated with the provided {@code codePoint}, or null if no such function exists.
 	 *
-	 * @param codePoint the code point associated with the macro function to retrieve
+	 * @param codePoint
+	 * 		the code point associated with the macro function to retrieve
+	 *
 	 * @return the macro function associated with the provided {@code codePoint}, or null if no such function exists
 	 */
 	public ReaderMacroFunction getMacroFunction(final int codePoint) {
@@ -45,10 +49,12 @@ public class DispatchTable extends ReaderMacroFunction {
 	}
 
 	/**
-	 * Sets the macro function with the provided {@code codePoint} to the provided {@code macroFunction}.
+	 * Sets the macro function with the provided {@code codePoint} to the provided {@link ReaderMacroFunction}.
 	 *
-	 * @param codePoint     the code point associated with the macro function to set
-	 * @param macroFunction the new macro function to be associated
+	 * @param codePoint
+	 * 		the code point associated with the macro function to set
+	 * @param macroFunction
+	 * 		the new macro function to be associated
 	 */
 	public void setMacroCharacter(final int codePoint, final ReaderMacroFunction macroFunction) {
 		macroFunctionMap.put(codePoint, macroFunction);
@@ -56,8 +62,6 @@ public class DispatchTable extends ReaderMacroFunction {
 
 	@Override
 	public String toString() {
-		return "DispatchTable{"
-				+ "macroFunctionMap=" + macroFunctionMap
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

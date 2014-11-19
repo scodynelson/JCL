@@ -33,7 +33,7 @@ public class ErrorState extends State {
 	@Override
 	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
 		final Integer codePoint = tokenBuilder.getPreviousReadCharacter();
-		if (StateUtils.isEndOfFileCharacter(codePoint) && !tokenBuilder.isEofErrorP()) {
+		if (isEndOfFileCharacter(codePoint) && !tokenBuilder.isEofErrorP()) {
 			return;
 		}
 		throw new ReaderErrorException("Reader Error " + errorMessage + " in State " + previousState);

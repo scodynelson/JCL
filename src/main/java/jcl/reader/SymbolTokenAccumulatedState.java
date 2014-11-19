@@ -73,9 +73,9 @@ public class SymbolTokenAccumulatedState extends State {
 		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
 
 		// Check that there is at least 1 'ALPHADIGIT'
-		final boolean hasNoPackageMarkers = StateUtils.hasNoAttribute(tokenAttributes, AttributeType.PACKAGEMARKER);
+		final boolean hasNoPackageMarkers = hasNoAttributes(tokenAttributes, AttributeType.PACKAGEMARKER);
 		if (hasNoPackageMarkers) {
-			final String symName = StateUtils.convertTokensToString(tokenAttributes);
+			final String symName = convertTokensToString(tokenAttributes);
 
 			final PackageStruct pkg = Variable.PACKAGE.getValue();
 			final PackageSymbolStruct packageSymbol = pkg.findSymbol(symName);
@@ -137,8 +137,8 @@ public class SymbolTokenAccumulatedState extends State {
 			symbolTokenAttributes.add(tokenAttribute);
 		}
 
-		final String pkgName = StateUtils.convertTokensToString(packageTokenAttributes);
-		final String symName = StateUtils.convertTokensToString(symbolTokenAttributes);
+		final String pkgName = convertTokensToString(packageTokenAttributes);
+		final String symName = convertTokensToString(symbolTokenAttributes);
 
 		if (StringUtils.isNotEmpty(pkgName)) {
 			final PackageStruct pkg = PackageStruct.findPackage(pkgName);

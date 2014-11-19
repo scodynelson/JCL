@@ -20,7 +20,10 @@ import org.apache.commons.math3.fraction.BigFraction;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.function.Function;
 
 /**
  * Step 10.1 of the Reader Algorithm.
@@ -35,6 +38,10 @@ import java.util.LinkedList;
 public class NumberTokenAccumulatedState extends State {
 
 	public static final State NUMBER_TOKEN_ACCUMULATED_STATE = new NumberTokenAccumulatedState();
+	private static final List<AttributeType> NOT_MORE_THAN_ONE_ATTRS = Arrays.asList(AttributeType.PLUS, AttributeType.MINUS, AttributeType.DECIMAL, AttributeType.RATIOMARKER);
+	private static final List<AttributeType> FIRST_ONLY_ATTRS = Arrays.asList(AttributeType.PLUS, AttributeType.MINUS);
+	private static final List<AttributeType> NOT_FIRST_OR_LAST_ATTRS = Arrays.asList(AttributeType.DECIMAL, AttributeType.RATIOMARKER);
+	private static final List<AttributeType> NO_SIMULTANEOUS_ATTRS = Arrays.asList(AttributeType.DECIMAL, AttributeType.RATIOMARKER);
 
 	/**
 	 * Processes for the reader for the current State.
@@ -56,7 +63,9 @@ public class NumberTokenAccumulatedState extends State {
 	/**
 	 * This method gets a numberToken from the provided tokenBuilder and it's tokenAttributes.
 	 *
-	 * @param tokenBuilder the reader state containing the tokenAttributes to derive the numberToken
+	 * @param tokenBuilder
+	 * 		the reader state containing the tokenAttributes to derive the numberToken
+	 *
 	 * @return the built numberToken value
 	 */
 	private static NumberStruct getNumberToken(final TokenBuilder tokenBuilder) {
@@ -69,7 +78,7 @@ public class NumberTokenAccumulatedState extends State {
 		}
 
 		// Check that there is at least 1 'ALPHADIGIT'
-		final boolean hasNoAlphaDigits = StateUtils.hasNoAttribute(tokenAttributes, AttributeType.ALPHADIGIT);
+		final boolean hasNoAlphaDigits = hasNoAttributes(tokenAttributes, AttributeType.ALPHADIGIT);
 		if (hasNoAlphaDigits) {
 			return null;
 		}
@@ -96,14 +105,13 @@ public class NumberTokenAccumulatedState extends State {
 		final int currentRadix = Variable.READ_BASE.getValue().getBigInteger().intValueExact();
 		final TokenAttribute firstTokenAttribute = tokenAttributes.getFirst();
 		final int firstToken = firstTokenAttribute.getToken();
-		final Character.UnicodeBlock block = Character.UnicodeBlock.of(firstToken);
 
-		final boolean areAnyTokensInvalidRegexAndUnicode = StateUtils.areAnyTokensInvalidRegexAndUnicode(currentRadix, block, tokenAttributes);
+		final boolean areAnyTokensInvalidRegexAndUnicode = areValidNumericTokens(currentRadix, firstToken, tokenAttributes);
 		if (areAnyTokensInvalidRegexAndUnicode) {
 			return null;
 		}
 
-		String tokenString = StateUtils.convertTokensToString(tokenAttributes);
+		String tokenString = convertTokensToString(tokenAttributes);
 
 		// Java does not support numbers in the format +12345, so we need to get rid of the plus sign if it exists
 		if (StringUtils.startsWith(tokenString, "+")) {
@@ -115,9 +123,9 @@ public class NumberTokenAccumulatedState extends State {
 			tokenString = StringUtils.substring(tokenString, 0, tokenString.length() - 1);
 		}
 
-		final boolean hasDecimal = StateUtils.hasAttribute(tokenAttributes, AttributeType.DECIMAL);
-		final boolean hasRatioMarker = StateUtils.hasAttribute(tokenAttributes, AttributeType.RATIOMARKER);
-		final boolean hasExponentMarker = StateUtils.hasAttribute(tokenAttributes, AttributeType.EXPONENTMARKER);
+		final boolean hasDecimal = hasAnyAttribute(tokenAttributes, AttributeType.DECIMAL);
+		final boolean hasRatioMarker = hasAnyAttribute(tokenAttributes, AttributeType.RATIOMARKER);
+		final boolean hasExponentMarker = hasAnyAttribute(tokenAttributes, AttributeType.EXPONENTMARKER);
 
 		if (hasExponentMarker && !hasDecimal) {
 			return null;
@@ -129,7 +137,7 @@ public class NumberTokenAccumulatedState extends State {
 			final BigFraction rational = new BigFraction(numerator, denominator);
 			return new RatioStruct(rational);
 		} else if (hasDecimal) {
-			final Integer exponentToken = StateUtils.getTokenByAttribute(tokenAttributes, AttributeType.EXPONENTMARKER);
+			final Integer exponentToken = getTokenByAttribute(tokenAttributes, AttributeType.EXPONENTMARKER);
 
 			tokenString = getFloatTokenString(tokenString, exponentToken);
 
@@ -142,10 +150,105 @@ public class NumberTokenAccumulatedState extends State {
 		}
 	}
 
+	private static boolean isValidNumericToken(final int currentRadix, final int firstToken,
+											   final int currentToken) {
+		final boolean isDigitWithRadix = Character.digit(currentToken, currentRadix) >= 0;
+
+		final Character.UnicodeBlock tokenBlock = Character.UnicodeBlock.of(firstToken);
+		final boolean isDigitInSameBlock = Character.UnicodeBlock.of(currentToken).equals(tokenBlock);
+		return !(isDigitWithRadix && isDigitInSameBlock);
+	}
+
+	private static boolean areValidNumericTokens(final int currentRadix, final int token,
+												 final List<TokenAttribute> tokenAttributes) {
+		return tokenAttributes
+				.stream()
+				.map(e -> (e.getAttributeType() != AttributeType.ALPHADIGIT) || isValidNumericToken(currentRadix, token, e.getToken()))
+				.reduce(false, (result, e) -> result || e);
+	}
+
+	/**
+	 * This method checks to see if any of the number specific attributes are invalidly placed in the token, which
+	 * would
+	 * make the token non-numeric.
+	 *
+	 * @param tokenAttributes
+	 * 		the token attributes to check
+	 *
+	 * @return true if any of the tokens are invalidly placed
+	 * false if all the tokens are validly placed
+	 */
+	private static boolean areNumberAttributesInvalid(final LinkedList<TokenAttribute> tokenAttributes) {
+
+		final TokenAttribute firstTokenAttribute = tokenAttributes.getFirst();
+		final AttributeType firstAttributeType = firstTokenAttribute.getAttributeType();
+
+		final TokenAttribute lastTokenAttribute = tokenAttributes.getLast();
+		final AttributeType lastAttributeType = lastTokenAttribute.getAttributeType();
+
+		// Checks to make sure there are not more than one of: 'PLUS', 'MINUS', 'DECIMAL', 'RATIOMARKER'
+		Function<AttributeType, Boolean> function =
+				e -> {
+					final long numberOfMatchingAttributes =
+							tokenAttributes
+									.stream()
+									.filter(tokenAttribute -> tokenAttribute.getAttributeType() == e)
+									.count();
+					return numberOfMatchingAttributes > 1;
+				};
+		final boolean hasMoreThanOneOfAttributes
+				= hasAttributes(function, NOT_MORE_THAN_ONE_ATTRS);
+
+		// Checks to make sure if either 'PLUS' or 'MINUS' is supplied, that it is first
+		function =
+				e -> hasAnyAttribute(tokenAttributes, e) && (firstAttributeType != e);
+		final boolean hasAttributesAndNotFirst
+				= hasAttributes(function, FIRST_ONLY_ATTRS);
+
+		// Checks to make sure if either 'DECIMAL' or 'RATIOMARKER' is supplied, that it is neither first nor last
+		function =
+				e -> hasAnyAttribute(tokenAttributes, e) && ((firstAttributeType == e) || (lastAttributeType == e));
+		final boolean hasAttributesAndFirstOrLast
+				= hasAttributes(function, NOT_FIRST_OR_LAST_ATTRS);
+
+		// Checks to make sure that both 'DECIMAL' and 'RATIOMARKER' are not supplied at the same time
+
+		final boolean hasAttributes =
+				NO_SIMULTANEOUS_ATTRS
+						.stream()
+						.map(e -> hasAnyAttribute(tokenAttributes, e))
+						.reduce(true, (result, e) -> result && e);
+
+		return hasMoreThanOneOfAttributes || hasAttributesAndNotFirst || hasAttributesAndFirstOrLast || hasAttributes;
+	}
+
+	/**
+	 * This method gets the float token string from the provided tokenString and exponentToken. The exponentToken
+	 * determines
+	 * how the tokenString exponent should be replaced to look like a valid exponent string in Java.
+	 *
+	 * @param tokenString
+	 * 		the tokenString
+	 * @param exponentToken
+	 * 		the exponentToken
+	 *
+	 * @return the proper float token string
+	 */
+	private static String getFloatTokenString(final String tokenString, final Integer exponentToken) {
+		if (exponentToken != null) {
+			final String exponentTokenString = String.valueOf(exponentToken);
+			final String eCapitalLetterString = CharacterConstants.LATIN_CAPITAL_LETTER_E.toString();
+			return StringUtils.replace(tokenString, exponentTokenString, eCapitalLetterString);
+		}
+		return tokenString;
+	}
+
 	/**
 	 * This method gets the float type from the based off of the exponentToken parameter.
 	 *
-	 * @param exponentToken the exponentToken used to determine the float type
+	 * @param exponentToken
+	 * 		the exponentToken used to determine the float type
+	 *
 	 * @return the proper float type
 	 */
 	private static Float getFloatType(final Integer exponentToken) {
@@ -167,54 +270,10 @@ public class NumberTokenAccumulatedState extends State {
 		return Variable.READ_DEFAULT_FLOAT_FORMAT.getValue();
 	}
 
-	/**
-	 * This method gets the float token string from the provided tokenString and exponentToken. The exponentToken determines
-	 * how the tokenString exponent should be replaced to look like a valid exponent string in Java.
-	 *
-	 * @param tokenString   the tokenString
-	 * @param exponentToken the exponentToken
-	 * @return the proper float token string
-	 */
-	private static String getFloatTokenString(final String tokenString, final Integer exponentToken) {
-		if (exponentToken != null) {
-			final String exponentTokenString = String.valueOf(exponentToken);
-			final String eCapitalLetterString = CharacterConstants.LATIN_CAPITAL_LETTER_E.toString();
-			return StringUtils.replace(tokenString, exponentTokenString, eCapitalLetterString);
-		}
-		return tokenString;
-	}
-
-	/**
-	 * This method checks to see if any of the number specific attributes are invalidly placed in the token, which would
-	 * make the token non-numeric.
-	 *
-	 * @param tokenAttributes the token attributes to check
-	 * @return true if any of the tokens are invalidly placed
-	 * false if all the tokens are validly placed
-	 */
-	private static boolean areNumberAttributesInvalid(final LinkedList<TokenAttribute> tokenAttributes) {
-
-		final TokenAttribute firstTokenAttribute = tokenAttributes.getFirst();
-		final AttributeType firstAttributeType = firstTokenAttribute.getAttributeType();
-
-		final TokenAttribute lastTokenAttribute = tokenAttributes.getLast();
-		final AttributeType lastAttributeType = lastTokenAttribute.getAttributeType();
-
-		// Checks to make sure there are not more than one of: 'PLUS', 'MINUS', 'DECIMAL', 'RATIOMARKER'
-		final boolean hasMoreThanOneOfAttributes = StateUtils.hasMoreThanOneOfAttributes(tokenAttributes,
-				AttributeType.PLUS, AttributeType.MINUS, AttributeType.DECIMAL, AttributeType.RATIOMARKER);
-
-		// Checks to make sure if either 'PLUS' or 'MINUS' is supplied, that it is first
-		final boolean hasAttributesAndNotFirst = StateUtils.hasAttributesAndNotFirst(firstAttributeType, tokenAttributes,
-				AttributeType.PLUS, AttributeType.MINUS);
-
-		// Checks to make sure if either 'DECIMAL' or 'RATIOMARKER' is supplied, that it is neither first nor last
-		final boolean hasAttributesAndFirstOrLast = StateUtils.hasAttributesAndFirstOrLast(firstAttributeType, lastAttributeType, tokenAttributes,
-				AttributeType.DECIMAL, AttributeType.RATIOMARKER);
-
-		// Checks to make sure that both 'DECIMAL' and 'RATIOMARKER' are not supplied at the same time
-		final boolean hasAttributes = StateUtils.hasAttributes(tokenAttributes, AttributeType.DECIMAL, AttributeType.RATIOMARKER);
-
-		return hasMoreThanOneOfAttributes || hasAttributesAndNotFirst || hasAttributesAndFirstOrLast || hasAttributes;
+	private static boolean hasAttributes(final Function<AttributeType, Boolean> function, final List<AttributeType> attributeTypes) {
+		return attributeTypes
+				.stream()
+				.map(function)
+				.reduce(false, (result, e) -> result || e);
 	}
 }

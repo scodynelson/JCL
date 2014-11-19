@@ -1,4 +1,4 @@
-package jcl.reader;
+package jcl.reader.function.macrofunction;
 
 import jcl.LispStruct;
 import jcl.LispType;
@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * The {@link CommentStruct} is the object representation of a Lisp 'comment' type.
+ * The object representation of a Lisp 'comment' type.
  */
 public class CommentStruct implements LispStruct {
 
@@ -19,7 +19,7 @@ public class CommentStruct implements LispStruct {
 	 * @param commentString
 	 * 		the {@link java.lang.String} comment value
 	 */
-	public CommentStruct(final String commentString) {
+	CommentStruct(final String commentString) {
 		this.commentString = commentString;
 	}
 
@@ -28,7 +28,7 @@ public class CommentStruct implements LispStruct {
 	 *
 	 * @return character {@link #commentString} property
 	 */
-	public String getCommentString() {
+	String getCommentString() {
 		return commentString;
 	}
 

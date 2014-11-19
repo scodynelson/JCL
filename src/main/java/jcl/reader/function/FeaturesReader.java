@@ -31,30 +31,6 @@ public class FeaturesReader {
 		this.reader = reader;
 	}
 
-	public void readFeatures(final boolean shouldHideFeatures) {
-
-		final BooleanStruct<?> previousReadSuppress = Variable.READ_SUPPRESS.getValue();
-		final PackageStruct previousPackage = Variable.PACKAGE.getValue();
-		try {
-			Variable.READ_SUPPRESS.setValue(NILStruct.INSTANCE);
-
-			Variable.PACKAGE.setValue(GlobalPackageStruct.KEYWORD);
-			final LispStruct lispStruct = reader.read();
-			Variable.PACKAGE.setValue(previousPackage);
-
-			final boolean isFeature = isFeature(lispStruct);
-			if (isFeature && shouldHideFeatures) {
-				Variable.READ_SUPPRESS.setValue(TStruct.INSTANCE);
-				reader.read();
-			}
-		} catch (final ReaderErrorException ree) {
-			LOGGER.debug(ree.getMessage(), ree);
-		} finally {
-			Variable.PACKAGE.setValue(previousPackage);
-			Variable.READ_SUPPRESS.setValue(previousReadSuppress);
-		}
-	}
-
 	private static boolean isFeature(final LispStruct lispStruct) {
 		if (lispStruct instanceof ListStruct) {
 			return isListFeature((ListStruct) lispStruct);
@@ -93,6 +69,30 @@ public class FeaturesReader {
 			return tempReturnVal2;
 		} else {
 			throw new ReaderErrorException("Unknown operator in feature expression: " + featureOperator);
+		}
+	}
+
+	public void readFeatures(final boolean shouldHideFeatures) {
+
+		final BooleanStruct<?> previousReadSuppress = Variable.READ_SUPPRESS.getValue();
+		final PackageStruct previousPackage = Variable.PACKAGE.getValue();
+		try {
+			Variable.READ_SUPPRESS.setValue(NILStruct.INSTANCE);
+
+			Variable.PACKAGE.setValue(GlobalPackageStruct.KEYWORD);
+			final LispStruct lispStruct = reader.read();
+			Variable.PACKAGE.setValue(previousPackage);
+
+			final boolean isFeature = isFeature(lispStruct);
+			if (isFeature && shouldHideFeatures) {
+				Variable.READ_SUPPRESS.setValue(TStruct.INSTANCE);
+				reader.read();
+			}
+		} catch (final ReaderErrorException ree) {
+			LOGGER.debug(ree.getMessage(), ree);
+		} finally {
+			Variable.PACKAGE.setValue(previousPackage);
+			Variable.READ_SUPPRESS.setValue(previousReadSuppress);
 		}
 	}
 }

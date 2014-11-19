@@ -9,11 +9,9 @@ public class TokenBuilder {
 	private final LispStruct eofValue;
 	private final boolean eofErrorP;
 	private final boolean recursiveP;
-
+	private final LinkedList<TokenAttribute> tokenAttributes;
 	private LispStruct returnToken;
 	private Integer previousReadCharacter;
-
-	private final LinkedList<TokenAttribute> tokenAttributes;
 
 	public TokenBuilder() {
 		this(true, null, true);

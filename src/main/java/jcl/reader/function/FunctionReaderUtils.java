@@ -13,13 +13,8 @@ class FunctionReaderUtils {
 		return readResult.getResult();
 	}
 
-	static boolean isAttributeType(final Reader reader, final int codePoint, final AttributeType... attributeTypes) {
-
-		boolean returnVal = false;
-		for (final AttributeType attributeType : attributeTypes) {
-			returnVal = returnVal || (reader.getAttributeType(codePoint) == attributeType);
-		}
-		return returnVal;
+	static boolean isSingleEscape(final Reader reader, final int codePoint) {
+		return isSyntaxType(reader, codePoint, SyntaxType.SINGLE_ESCAPE);
 	}
 
 	static boolean isSyntaxType(final Reader reader, final int codePoint, final SyntaxType... syntaxTypes) {
@@ -29,10 +24,6 @@ class FunctionReaderUtils {
 			returnVal = returnVal || (reader.getSyntaxType(codePoint) == syntaxType);
 		}
 		return returnVal;
-	}
-
-	static boolean isSingleEscape(final Reader reader, final int codePoint) {
-		return isSyntaxType(reader, codePoint, SyntaxType.SINGLE_ESCAPE);
 	}
 
 	static boolean isMultipleEscape(final Reader reader, final int codePoint) {
@@ -50,5 +41,14 @@ class FunctionReaderUtils {
 	static boolean isPackageMarker(final Reader reader, final int codePoint) {
 		return isSyntaxType(reader, codePoint, SyntaxType.CONSTITUENT)
 				&& isAttributeType(reader, codePoint, AttributeType.PACKAGEMARKER);
+	}
+
+	static boolean isAttributeType(final Reader reader, final int codePoint, final AttributeType... attributeTypes) {
+
+		boolean returnVal = false;
+		for (final AttributeType attributeType : attributeTypes) {
+			returnVal = returnVal || (reader.getAttributeType(codePoint) == attributeType);
+		}
+		return returnVal;
 	}
 }

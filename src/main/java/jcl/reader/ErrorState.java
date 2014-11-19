@@ -2,6 +2,8 @@ package jcl.reader;
 
 import jcl.reader.syntax.TokenBuilder;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * Not Specified in the Reader Algorithm.
@@ -14,16 +16,19 @@ import jcl.structs.conditions.exceptions.ReaderErrorException;
  */
 public class ErrorState extends State {
 
-	public static final ErrorState ERROR_STATE = new ErrorState();
+	private final State previousState;
+	private final String errorMessage;
 
-	private State previousState;
-	private String errorMessage;
-
-	public void setPreviousState(final State previousState) {
+	/**
+	 * Public constructor noting an error state during reader processing.
+	 *
+	 * @param previousState
+	 * 		the previous state that failed
+	 * @param errorMessage
+	 * 		the message to throw
+	 */
+	public ErrorState(final State previousState, final String errorMessage) {
 		this.previousState = previousState;
-	}
-
-	public void setErrorMessage(final String errorMessage) {
 		this.errorMessage = errorMessage;
 	}
 
@@ -40,5 +45,10 @@ public class ErrorState extends State {
 			return;
 		}
 		throw new ReaderErrorException("Reader Error " + errorMessage + " in State " + previousState);
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

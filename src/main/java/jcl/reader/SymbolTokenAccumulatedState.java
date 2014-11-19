@@ -42,7 +42,8 @@ import java.util.Map;
  * </p>
  * </tab>
  * <p>
- * After the token has been made into an object, that object is set as the return object for the read function.  We then
+ * After the token has been made into an object, that object is set as the return object for the read function.  We
+ * then
  * return the EndState.
  * </p>
  * <p>
@@ -57,13 +58,39 @@ public class SymbolTokenAccumulatedState extends State {
 	@Override
 	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
 
-		final SymbolStruct<?> symbolToken = getSymbolToken(tokenBuilder);
+		final SymbolTokenProcessingResult symbolTokenProcessingResult = getSymbolToken(tokenBuilder);
+		final SymbolStruct<?> symbolToken = symbolTokenProcessingResult.getSymbolStruct();
 //		if (symbolToken == null) {
-//			ErrorState.ERROR_STATE.setPreviousState(this);
-//			ErrorState.ERROR_STATE.process(reader, tokenBuilder);
+//			final String errorMessage = symbolTokenProcessingResult.getErrorMessage();
+//			final ErrorState errorState = new ErrorState(this, errorMessage);
+//			errorState.process(reader, tokenBuilder);
 //		} else {
 		tokenBuilder.setReturnToken(symbolToken);
 //		}
+	}
+
+	private static class SymbolTokenProcessingResult {
+
+		private final SymbolStruct<?> symbolStruct;
+		private final String errorMessage;
+
+		private SymbolTokenProcessingResult(final SymbolStruct<?> symbolStruct) {
+			this.symbolStruct = symbolStruct;
+			errorMessage = null;
+		}
+
+		private SymbolTokenProcessingResult(final String errorMessage) {
+			symbolStruct = null;
+			this.errorMessage = errorMessage;
+		}
+
+		public SymbolStruct<?> getSymbolStruct() {
+			return symbolStruct;
+		}
+
+		public String getErrorMessage() {
+			return errorMessage;
+		}
 	}
 
 	/**
@@ -74,7 +101,7 @@ public class SymbolTokenAccumulatedState extends State {
 	 *
 	 * @return the built symbolToken value
 	 */
-	private static SymbolStruct<?> getSymbolToken(final TokenBuilder tokenBuilder) {
+	private static SymbolTokenProcessingResult getSymbolToken(final TokenBuilder tokenBuilder) {
 
 		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
 
@@ -87,16 +114,17 @@ public class SymbolTokenAccumulatedState extends State {
 			final PackageSymbolStruct packageSymbol = pkg.findSymbol(symName);
 			if (packageSymbol == null) {
 //				tokenBuilder.setErrorMessage("Unbound variable: " + symName); // TODO: This check will happen in the compiler...
-				return new SymbolStruct<>(symName, pkg);
+				final SymbolStruct<?> symbolStruct = new SymbolStruct<>(symName, pkg);
+				return new SymbolTokenProcessingResult(symbolStruct);
 			}
-			return packageSymbol.getSymbolStruct();
+			final SymbolStruct<?> symbolStruct = packageSymbol.getSymbolStruct();
+			return new SymbolTokenProcessingResult(symbolStruct);
 		}
 
 		// Check if last element is a 'PACKAGEMARKER'
 		final TokenAttribute lastToken = tokenAttributes.getLast();
 		if (lastToken.getAttributeType() == AttributeType.PACKAGEMARKER) {
-			ErrorState.ERROR_STATE.setErrorMessage("Illegal symbol syntax.");
-			return null;
+			return new SymbolTokenProcessingResult("Illegal symbol syntax.");
 		}
 
 		// Grab tokens up to the first 'PACKAGEMARKER' (this is the package name)
@@ -150,8 +178,7 @@ public class SymbolTokenAccumulatedState extends State {
 			final PackageStruct pkg = PackageStruct.findPackage(pkgName);
 
 			if (pkg == null) {
-				ErrorState.ERROR_STATE.setErrorMessage("There is no package named " + pkgName);
-				return null;
+				return new SymbolTokenProcessingResult("There is no package named " + pkgName);
 			}
 
 			if (packageMarkerCount == 1) {
@@ -159,23 +186,22 @@ public class SymbolTokenAccumulatedState extends State {
 
 				final SymbolStruct<?> externalSymbol = pkgExternalSymbols.get(symName);
 				if (externalSymbol == null) {
-					ErrorState.ERROR_STATE.setErrorMessage("No external symbol named \"" + symName + "\" in package " + pkgName);
-					return null;
+					return new SymbolTokenProcessingResult("No external symbol named \"" + symName + "\" in package " + pkgName);
 				}
-				return externalSymbol;
+				return new SymbolTokenProcessingResult(externalSymbol);
 			} else {
 				final PackageSymbolStruct packageSymbol = pkg.findSymbol(symName);
 
 				final SymbolStruct<?> symbol = packageSymbol.getSymbolStruct();
 				if (symbol == null) {
-					ErrorState.ERROR_STATE.setErrorMessage("Unbound variable: " + pkgName + "::" + symName);
-					return null;
+					return new SymbolTokenProcessingResult("Unbound variable: " + pkgName + "::" + symName);
 				}
-				return symbol;
+				return new SymbolTokenProcessingResult(symbol);
 			}
 		} else {
 			final PackageSymbolStruct pkgSymStruct = GlobalPackageStruct.KEYWORD.findSymbol(symName);
-			return (pkgSymStruct == null) ? new KeywordSymbolStruct(symName) : pkgSymStruct.getSymbolStruct();
+			final SymbolStruct<?> symbolStruct = (pkgSymStruct == null) ? new KeywordSymbolStruct(symName) : pkgSymStruct.getSymbolStruct();
+			return new SymbolTokenProcessingResult(symbolStruct);
 		}
 	}
 }

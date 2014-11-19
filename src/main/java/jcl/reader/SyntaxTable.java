@@ -1,6 +1,8 @@
 package jcl.reader;
 
 import jcl.reader.syntax.SyntaxType;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,7 +10,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * The {@link SyntaxTable} class represents a lookup table for syntax types matching code points.
+ * Represents a lookup table for syntax types matching code points.
  */
 @SuppressWarnings("all")
 public class SyntaxTable {
@@ -154,9 +156,11 @@ public class SyntaxTable {
 	}
 
 	/**
-	 * This method gets the matching syntax type for the provided {@code codePoint} value.
+	 * Gets the matching syntax type for the provided {@code codePoint} value.
 	 *
-	 * @param codePoint the {@code codePoint} used to find the matching syntax type
+	 * @param codePoint
+	 * 		the {@code codePoint} used to find the matching syntax type
+	 *
 	 * @return the matching syntax type for the provided {@code codePoint}
 	 */
 	public SyntaxType getSyntaxType(final int codePoint) {
@@ -186,8 +190,6 @@ public class SyntaxTable {
 
 	@Override
 	public String toString() {
-		return "SyntaxTable{"
-				+ "syntaxTypeMap=" + syntaxTypeMap
-				+ '}';
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

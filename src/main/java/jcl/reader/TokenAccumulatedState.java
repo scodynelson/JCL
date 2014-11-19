@@ -3,8 +3,6 @@ package jcl.reader;
 import jcl.reader.syntax.TokenAttribute;
 import jcl.reader.syntax.TokenBuilder;
 import jcl.structs.symbols.variables.Variable;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.LinkedList;
 
@@ -30,9 +28,9 @@ public class TokenAccumulatedState extends State {
 
 		final Integer codePoint = tokenBuilder.getPreviousReadCharacter();
 		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
-		if (isEndOfFileCharacter(codePoint) && CollectionUtils.isEmpty(tokenAttributes)) {
-			ErrorState.ERROR_STATE.setPreviousState(this);
-			ErrorState.ERROR_STATE.process(reader, tokenBuilder);
+		if (isEndOfFileCharacter(codePoint) && tokenAttributes.isEmpty()) {
+			final ErrorState errorState = new ErrorState(this, null);
+			errorState.process(reader, tokenBuilder);
 			return;
 		}
 
@@ -42,10 +40,10 @@ public class TokenAccumulatedState extends State {
 		}
 
 		final String tokenString = convertTokensToString(tokenAttributes);
-		if (StringUtils.equals(tokenString, ".")) {
-			ErrorState.ERROR_STATE.setPreviousState(this);
-			ErrorState.ERROR_STATE.setErrorMessage("Dot context error in '.'");
-			ErrorState.ERROR_STATE.process(reader, tokenBuilder);
+		if (".".equals(tokenString)) {
+			final String errorMessage = "Dot context error in '.'";
+			final ErrorState errorState = new ErrorState(this, errorMessage);
+			errorState.process(reader, tokenBuilder);
 		} else {
 			NumberTokenAccumulatedState.NUMBER_TOKEN_ACCUMULATED_STATE.process(reader, tokenBuilder);
 		}

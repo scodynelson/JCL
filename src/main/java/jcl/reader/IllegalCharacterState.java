@@ -18,13 +18,13 @@ public class IllegalCharacterState extends State {
 
 		final Integer codePoint = tokenBuilder.getPreviousReadCharacter();
 		if (codePoint == null) {
-			ErrorState.ERROR_STATE.setPreviousState(this);
-			ErrorState.ERROR_STATE.setErrorMessage("End Of File Character was encountered.");
-			ErrorState.ERROR_STATE.process(reader, tokenBuilder);
+			final String errorMessage = "End Of File Character was encountered.";
+			final ErrorState errorState = new ErrorState(this, errorMessage);
+			errorState.process(reader, tokenBuilder);
 		} else if (codePoint != CharacterConstants.EXIT_CHAR) {
-			ErrorState.ERROR_STATE.setPreviousState(this);
-			ErrorState.ERROR_STATE.setErrorMessage("Illegal Character was encountered: " + codePoint);
-			ErrorState.ERROR_STATE.process(reader, tokenBuilder);
+			final String errorMessage = "Illegal Character was encountered: " + codePoint;
+			final ErrorState errorState = new ErrorState(this, errorMessage);
+			errorState.process(reader, tokenBuilder);
 		}
 	}
 }

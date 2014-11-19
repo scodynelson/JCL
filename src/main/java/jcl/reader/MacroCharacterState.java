@@ -46,16 +46,16 @@ public class MacroCharacterState extends State {
 		if (isEndOfFileCharacter(codePoint)) {
 			tokenBuilder.setReturnToken(null);
 
-			ErrorState.ERROR_STATE.setPreviousState(this);
-			ErrorState.ERROR_STATE.process(reader, tokenBuilder);
+			final ErrorState errorState = new ErrorState(this, null);
+			errorState.process(reader, tokenBuilder);
 			return;
 		}
 
 		final ReaderMacroFunction readerMacroFunction = reader.getReadtable().getMacroCharacter(codePoint);
 		if (readerMacroFunction == null) {
-			ErrorState.ERROR_STATE.setPreviousState(this);
-			ErrorState.ERROR_STATE.setErrorMessage("No reader macro function exists for character: " + codePoint + '.');
-			ErrorState.ERROR_STATE.process(reader, tokenBuilder);
+			final String errorMessage = "No reader macro function exists for character: " + codePoint + '.';
+			final ErrorState errorState = new ErrorState(this, errorMessage);
+			errorState.process(reader, tokenBuilder);
 			return;
 		}
 

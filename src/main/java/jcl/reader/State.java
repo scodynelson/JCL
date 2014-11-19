@@ -4,6 +4,8 @@ import jcl.reader.syntax.AttributeType;
 import jcl.reader.syntax.CaseSpec;
 import jcl.reader.syntax.TokenAttribute;
 import jcl.reader.syntax.TokenBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.List;
 
@@ -94,4 +96,9 @@ public abstract class State {
 	}
 
 	public abstract void process(Reader reader, TokenBuilder tokenBuilder);
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+	}
 }

@@ -97,6 +97,7 @@ public class EvenMultiEscapeState extends State {
 		} else if (syntaxType == SyntaxType.MULTIPLE_ESCAPE) {
 			OddMultiEscapeState.ODD_MULTI_ESCAPE_STATE.process(reader, tokenBuilder);
 		} else if (syntaxType == SyntaxType.TERMINATING) {
+			// TODO: preserve whitespace?
 			reader.unreadChar(codePoint);
 			TokenAccumulatedState.TOKEN_ACCUMULATED_STATE.process(reader, tokenBuilder);
 		} else if (syntaxType == SyntaxType.WHITESPACE) {

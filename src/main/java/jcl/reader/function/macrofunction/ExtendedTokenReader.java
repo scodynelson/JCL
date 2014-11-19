@@ -1,24 +1,17 @@
-package jcl.reader.function;
+package jcl.reader.function.macrofunction;
 
 import jcl.reader.Reader;
 import jcl.reader.syntax.CaseSpec;
 import jcl.reader.syntax.ReadExtendedToken;
 import jcl.structs.streams.ReadResult;
 
-import static jcl.reader.function.FunctionReaderUtils.isMultipleEscape;
-import static jcl.reader.function.FunctionReaderUtils.isPackageMarker;
-import static jcl.reader.function.FunctionReaderUtils.isSingleEscape;
-import static jcl.reader.function.FunctionReaderUtils.isWhitespaceOrTerminating;
+public class ExtendedTokenReader extends MacroFunctionReader {
 
-public class ExtendedTokenReader {
-
-	private final Reader reader;
-
-	public ExtendedTokenReader(final Reader reader) {
-		this.reader = reader;
+	ExtendedTokenReader(final Reader reader) {
+		super(reader);
 	}
 
-	public ReadExtendedToken readExtendedToken(final boolean isEscaped) {
+	ReadExtendedToken readExtendedToken(final boolean isEscaped) {
 
 		final StringBuilder stringBuilder = new StringBuilder();
 

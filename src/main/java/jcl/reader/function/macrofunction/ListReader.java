@@ -1,4 +1,4 @@
-package jcl.reader.function;
+package jcl.reader.function.macrofunction;
 
 import jcl.LispStruct;
 import jcl.reader.Reader;
@@ -10,19 +10,13 @@ import jcl.structs.symbols.variables.Variable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static jcl.reader.function.FunctionReaderUtils.getNextCodePoint;
-import static jcl.reader.function.FunctionReaderUtils.isWhitespace;
-import static jcl.reader.function.FunctionReaderUtils.isWhitespaceOrTerminating;
+class ListReader extends MacroFunctionReader {
 
-public class ListReader {
-
-	private final Reader reader;
-
-	public ListReader(final Reader reader) {
-		this.reader = reader;
+	ListReader(final Reader reader) {
+		super(reader);
 	}
 
-	public ListStruct readList() {
+	ListStruct readList() {
 
 		final List<LispStruct> theList = new ArrayList<>();
 

@@ -1,4 +1,4 @@
-package jcl.reader.function;
+package jcl.reader.function.macrofunction;
 
 import jcl.LispStruct;
 import jcl.reader.Reader;
@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class FeaturesReader {
+class FeaturesReader extends MacroFunctionReader {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(FeaturesReader.class);
 
@@ -25,10 +25,8 @@ public class FeaturesReader {
 	private static final KeywordSymbolStruct AND = new KeywordSymbolStruct("AND");
 	private static final KeywordSymbolStruct OR = new KeywordSymbolStruct("OR");
 
-	private final Reader reader;
-
-	public FeaturesReader(final Reader reader) {
-		this.reader = reader;
+	FeaturesReader(final Reader reader) {
+		super(reader);
 	}
 
 	private static boolean isFeature(final LispStruct lispStruct) {
@@ -72,7 +70,7 @@ public class FeaturesReader {
 		}
 	}
 
-	public void readFeatures(final boolean shouldHideFeatures) {
+	void readFeatures(final boolean shouldHideFeatures) {
 
 		final BooleanStruct<?> previousReadSuppress = Variable.READ_SUPPRESS.getValue();
 		final PackageStruct previousPackage = Variable.PACKAGE.getValue();

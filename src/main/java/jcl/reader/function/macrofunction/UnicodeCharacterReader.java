@@ -1,20 +1,15 @@
-package jcl.reader.function;
+package jcl.reader.function.macrofunction;
 
 import jcl.reader.Reader;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 
-import static jcl.reader.function.FunctionReaderUtils.getNextCodePoint;
-import static jcl.reader.function.FunctionReaderUtils.isWhitespace;
+class UnicodeCharacterReader extends MacroFunctionReader {
 
-public class UnicodeCharacterReader {
-
-	private final Reader reader;
-
-	public UnicodeCharacterReader(final Reader reader) {
-		this.reader = reader;
+	UnicodeCharacterReader(final Reader reader) {
+		super(reader);
 	}
 
-	public int readUnicodeChar() {
+	int readUnicodeChar() {
 
 		final StringBuilder unicodeCharBuilder = new StringBuilder();
 

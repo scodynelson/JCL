@@ -1,4 +1,4 @@
-package jcl.reader.function;
+package jcl.reader.function.macrofunction;
 
 import jcl.LispStruct;
 import jcl.reader.Reader;
@@ -10,17 +10,17 @@ import org.apache.commons.lang3.Range;
 
 import java.math.BigInteger;
 
-public class RationalReader {
+class RationalReader {
 
 	private static final Range<BigInteger> RADIX_RANGE = Range.between(BigInteger.valueOf(2), BigInteger.valueOf(36));
 
 	private final Reader reader;
 
-	public RationalReader(final Reader reader) {
+	RationalReader(final Reader reader) {
 		this.reader = reader;
 	}
 
-	public RationalStruct readRationalToken(final BigInteger radix) {
+	RationalStruct readRationalToken(final BigInteger radix) {
 		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
 			final ExtendedTokenReader macroFunctionReader = new ExtendedTokenReader(reader);
 			macroFunctionReader.readExtendedToken(false);

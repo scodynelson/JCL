@@ -22,7 +22,7 @@ public class SharpUReaderMacroFunction extends ReaderMacroFunction {
 		}
 
 		final UnicodeCharacterReader macroFunctionReader = new UnicodeCharacterReader(reader);
-		final int unicodeChar = macroFunctionReader.readUnicodeChar();
+		final int unicodeChar = macroFunctionReader.process();
 		return new CharacterStruct(unicodeChar);
 	}
 }

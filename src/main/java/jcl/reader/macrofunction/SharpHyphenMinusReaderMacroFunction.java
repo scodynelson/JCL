@@ -15,8 +15,8 @@ public class SharpHyphenMinusReaderMacroFunction extends ReaderMacroFunction {
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.HYPHEN_MINUS;
 
-		final FeaturesReader macroFunctionReader = new FeaturesReader(reader);
-		macroFunctionReader.readFeatures(true);
+		final FeaturesReader macroFunctionReader = new FeaturesReader(reader, true);
+		macroFunctionReader.process();
 		return null;
 	}
 }

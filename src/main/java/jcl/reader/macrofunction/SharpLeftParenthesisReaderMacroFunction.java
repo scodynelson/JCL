@@ -24,7 +24,7 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 		assert codePoint == CharacterConstants.LEFT_PARENTHESIS;
 
 		final ListReader macroFunctionReader = new ListReader(reader);
-		final ListStruct listToken = macroFunctionReader.readList();
+		final ListStruct listToken = macroFunctionReader.process();
 
 		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
 			return null;

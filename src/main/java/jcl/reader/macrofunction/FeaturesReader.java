@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-class FeaturesReader extends MacroFunctionReader {
+class FeaturesReader extends MacroFunctionReader<Object> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(FeaturesReader.class);
 
@@ -25,8 +25,11 @@ class FeaturesReader extends MacroFunctionReader {
 	private static final KeywordSymbolStruct AND = new KeywordSymbolStruct("AND");
 	private static final KeywordSymbolStruct OR = new KeywordSymbolStruct("OR");
 
-	FeaturesReader(final Reader reader) {
+	private final boolean shouldHideFeatures;
+
+	FeaturesReader(final Reader reader, final boolean shouldHideFeatures) {
 		super(reader);
+		this.shouldHideFeatures = shouldHideFeatures;
 	}
 
 	private static boolean isFeature(final LispStruct lispStruct) {
@@ -70,8 +73,8 @@ class FeaturesReader extends MacroFunctionReader {
 		}
 	}
 
-	void readFeatures(final boolean shouldHideFeatures) {
-
+	@Override
+	Object process() {
 		final BooleanStruct<?> previousReadSuppress = Variable.READ_SUPPRESS.getValue();
 		final PackageStruct previousPackage = Variable.PACKAGE.getValue();
 		try {
@@ -92,5 +95,6 @@ class FeaturesReader extends MacroFunctionReader {
 			Variable.PACKAGE.setValue(previousPackage);
 			Variable.READ_SUPPRESS.setValue(previousReadSuppress);
 		}
+		return null;
 	}
 }

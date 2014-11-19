@@ -15,7 +15,7 @@ public class SharpOReaderMacroFunction extends ReaderMacroFunction {
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_O) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_O);
 
-		final RationalReader macroFunctionReader = new RationalReader(reader);
-		return macroFunctionReader.readRationalToken(BigInteger.valueOf(8));
+		final RationalReader macroFunctionReader = new RationalReader(reader, BigInteger.valueOf(8));
+		return macroFunctionReader.process();
 	}
 }

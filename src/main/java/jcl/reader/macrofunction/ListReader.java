@@ -10,14 +10,14 @@ import jcl.structs.symbols.variables.Variable;
 import java.util.ArrayList;
 import java.util.List;
 
-class ListReader extends MacroFunctionReader {
+class ListReader extends MacroFunctionReader<ListStruct> {
 
 	ListReader(final Reader reader) {
 		super(reader);
 	}
 
-	ListStruct readList() {
-
+	@Override
+	ListStruct process() {
 		final List<LispStruct> theList = new ArrayList<>();
 
 		boolean isDotted = false;

@@ -41,7 +41,7 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunction {
 					final ReadResult nextTmpReadResult = reader.readChar();
 					final int nextTmpChar = nextTmpReadResult.getResult();
 					if (nextTmpChar == CharacterConstants.PLUS_SIGN) {
-						readChar = macroFunctionReader.readUnicodeChar();
+						readChar = macroFunctionReader.process();
 						stringBuilder.appendCodePoint(readChar);
 					} else {
 						// NOTE: Order matters here!!

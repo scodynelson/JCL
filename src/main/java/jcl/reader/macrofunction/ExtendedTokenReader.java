@@ -5,13 +5,17 @@ import jcl.reader.syntax.CaseSpec;
 import jcl.reader.syntax.ReadExtendedToken;
 import jcl.structs.streams.ReadResult;
 
-public class ExtendedTokenReader extends MacroFunctionReader {
+public class ExtendedTokenReader extends MacroFunctionReader<ReadExtendedToken> {
 
-	ExtendedTokenReader(final Reader reader) {
+	private final boolean isEscaped;
+
+	ExtendedTokenReader(final Reader reader, final boolean isEscaped) {
 		super(reader);
+		this.isEscaped = isEscaped;
 	}
 
-	ReadExtendedToken readExtendedToken(final boolean isEscaped) {
+	@Override
+	ReadExtendedToken process() {
 
 		final StringBuilder stringBuilder = new StringBuilder();
 

@@ -57,4 +57,6 @@ abstract class MacroFunctionReader<R> {
 		}
 		return returnVal;
 	}
+
+	abstract R process();
 }

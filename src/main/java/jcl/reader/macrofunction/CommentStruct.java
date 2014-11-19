@@ -1,8 +1,6 @@
 package jcl.reader.macrofunction;
 
 import jcl.LispStruct;
-import jcl.LispType;
-import jcl.types.T;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -30,16 +28,6 @@ public class CommentStruct implements LispStruct {
 	 */
 	String getCommentString() {
 		return commentString;
-	}
-
-	@Override
-	public LispType getType() {
-		return T.INSTANCE;
-	}
-
-	@Override
-	public String printStruct() {
-		return toString();
 	}
 
 	@Override

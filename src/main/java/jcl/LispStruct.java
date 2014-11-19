@@ -1,5 +1,7 @@
 package jcl;
 
+import jcl.types.T;
+
 /**
  * The {@link LispStruct} is the representation for all Lisp types.
  */
@@ -10,12 +12,16 @@ public interface LispStruct {
 	 *
 	 * @return the type of the struct
 	 */
-	LispType getType();
+	default LispType getType() {
+		return T.INSTANCE;
+	}
 
 	/**
 	 * This method returns the printed representation of the struct.
 	 *
 	 * @return the printed representation of the struct
 	 */
-	String printStruct();
+	default String printStruct() {
+		return toString();
+	}
 }

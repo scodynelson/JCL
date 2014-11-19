@@ -19,8 +19,8 @@ public class SharpColonReaderMacroFunction extends ReaderMacroFunction {
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.COLON;
 
-		final ExtendedTokenReader macroFunctionReader = new ExtendedTokenReader(reader);
-		final ReadExtendedToken readExtendedToken = macroFunctionReader.readExtendedToken(false);
+		final ExtendedTokenReader macroFunctionReader = new ExtendedTokenReader(reader, false);
+		final ReadExtendedToken readExtendedToken = macroFunctionReader.process();
 		final String token = readExtendedToken.getToken();
 
 		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {

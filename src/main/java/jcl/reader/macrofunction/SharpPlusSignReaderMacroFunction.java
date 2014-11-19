@@ -15,8 +15,8 @@ public class SharpPlusSignReaderMacroFunction extends ReaderMacroFunction {
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.PLUS_SIGN;
 
-		final FeaturesReader macroFunctionReader = new FeaturesReader(reader);
-		macroFunctionReader.readFeatures(false);
+		final FeaturesReader macroFunctionReader = new FeaturesReader(reader, false);
+		macroFunctionReader.process();
 		return null;
 	}
 }

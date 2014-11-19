@@ -16,6 +16,6 @@ public class LeftParenthesisReaderMacroFunction extends ReaderMacroFunction {
 		assert codePoint == CharacterConstants.LEFT_PARENTHESIS;
 
 		final ListReader macroFunctionReader = new ListReader(reader);
-		return macroFunctionReader.readList();
+		return macroFunctionReader.process();
 	}
 }

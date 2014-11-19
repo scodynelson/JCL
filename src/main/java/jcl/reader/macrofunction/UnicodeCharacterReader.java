@@ -3,14 +3,13 @@ package jcl.reader.macrofunction;
 import jcl.reader.Reader;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 
-class UnicodeCharacterReader extends MacroFunctionReader {
+class UnicodeCharacterReader extends MacroFunctionReader<Integer> {
 
 	UnicodeCharacterReader(final Reader reader) {
 		super(reader);
 	}
 
-	int readUnicodeChar() {
-
+	Integer process() {
 		final StringBuilder unicodeCharBuilder = new StringBuilder();
 
 		int codePoint = getNextCodePoint(reader);

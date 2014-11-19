@@ -22,8 +22,8 @@ public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunction {
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.ASTERISK;
 
-		final ExtendedTokenReader macroFunctionReader = new ExtendedTokenReader(reader);
-		final ReadExtendedToken readExtendedToken = macroFunctionReader.readExtendedToken(false);
+		final ExtendedTokenReader macroFunctionReader = new ExtendedTokenReader(reader, false);
+		final ReadExtendedToken readExtendedToken = macroFunctionReader.process();
 		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
 			return null;
 		}

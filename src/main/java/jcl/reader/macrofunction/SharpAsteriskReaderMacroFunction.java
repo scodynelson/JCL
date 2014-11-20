@@ -3,7 +3,6 @@ package jcl.reader.macrofunction;
 import jcl.LispStruct;
 import jcl.reader.Reader;
 import jcl.reader.syntax.CharacterConstants;
-import jcl.reader.syntax.ReadExtendedToken;
 import jcl.structs.arrays.BitVectorStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.SimpleErrorException;

@@ -11,10 +11,13 @@ import java.math.BigInteger;
 /**
  * Implements the '#u' Lisp reader macro.
  */
-public class SharpUReaderMacroFunction extends UnicodeCharacterReaderMacroFunction {
+public final class SharpUReaderMacroFunction extends UnicodeCharacterReaderMacroFunction {
 
 	public static final SharpUReaderMacroFunction INSTANCE = new SharpUReaderMacroFunction();
 
+	/**
+	 * Private constructor.
+	 */
 	private SharpUReaderMacroFunction() {
 	}
 

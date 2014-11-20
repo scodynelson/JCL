@@ -9,13 +9,12 @@ import java.math.BigInteger;
 /**
  * Implements the '#o' Lisp reader macro.
  */
-public class SharpOReaderMacroFunction extends ReaderMacroFunction {
+public class SharpOReaderMacroFunction extends RationalReaderMacroFunction {
 
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_O) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_O);
 
-		final RationalReader macroFunctionReader = new RationalReader(reader, BigInteger.valueOf(8));
-		return macroFunctionReader.process();
+		return process(reader, BigInteger.valueOf(8));
 	}
 }

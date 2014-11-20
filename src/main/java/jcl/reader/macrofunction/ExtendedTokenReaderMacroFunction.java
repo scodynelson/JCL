@@ -5,24 +5,16 @@ import jcl.reader.syntax.CaseSpec;
 import jcl.reader.syntax.ReadExtendedToken;
 import jcl.structs.streams.ReadResult;
 
-public class ExtendedTokenReader extends MacroFunctionReader<ReadExtendedToken> {
+abstract class ExtendedTokenReaderMacroFunction extends ReaderMacroFunction {
 
-	private final boolean isEscaped;
-
-	ExtendedTokenReader(final Reader reader, final boolean isEscaped) {
-		super(reader);
-		this.isEscaped = isEscaped;
-	}
-
-	@Override
-	ReadExtendedToken process() {
+	protected static ReadExtendedToken process(final Reader reader, final boolean isEscaped) {
 
 		final StringBuilder stringBuilder = new StringBuilder();
 
-		ReadResult readResult = readToken(false, !isEscaped, stringBuilder, isEscaped);
+		ReadResult readResult = readToken(reader, false, !isEscaped, stringBuilder, isEscaped);
 
 		if (isEscaped) {
-			readResult = readToken(false, false, stringBuilder, false);
+			readResult = readToken(reader, false, false, stringBuilder, false);
 		}
 
 		boolean hasEscapes = false;
@@ -32,15 +24,15 @@ public class ExtendedTokenReader extends MacroFunctionReader<ReadExtendedToken> 
 
 			final int codePoint = readResult.getResult();
 			if (isWhitespaceOrTerminating(reader, codePoint)) {
-				unreadToken(stringBuilder, codePoint);
+				unreadToken(reader, stringBuilder, codePoint);
 				break;
 			}
 
 			if (isSingleEscape(reader, codePoint)) {
-				readSingleEscape(stringBuilder);
+				readSingleEscape(reader, stringBuilder);
 				hasEscapes = true;
 			} else if (isMultipleEscape(reader, codePoint)) {
-				readMultipleEscape(stringBuilder);
+				readMultipleEscape(reader, stringBuilder);
 				hasEscapes = true;
 			}
 
@@ -48,17 +40,17 @@ public class ExtendedTokenReader extends MacroFunctionReader<ReadExtendedToken> 
 				hasPackageDelimiter = isPackageMarker(reader, codePoint);
 			}
 
-			readResult = readToken(false, false, stringBuilder, false);
+			readResult = readToken(reader, false, false, stringBuilder, false);
 		}
 
 		return new ReadExtendedToken(stringBuilder.toString(), hasEscapes, hasPackageDelimiter);
 	}
 
-	private void readSingleEscape(final StringBuilder stringBuilder) {
-		readToken(true, false, stringBuilder, true);
+	private static void readSingleEscape(final Reader reader, final StringBuilder stringBuilder) {
+		readToken(reader, true, false, stringBuilder, true);
 	}
 
-	private void readMultipleEscape(final StringBuilder stringBuilder) {
+	private static void readMultipleEscape(final Reader reader, final StringBuilder stringBuilder) {
 
 		ReadResult tempReadResult = reader.readChar(true, null, false);
 		int tempCodePoint = tempReadResult.getResult();
@@ -66,36 +58,37 @@ public class ExtendedTokenReader extends MacroFunctionReader<ReadExtendedToken> 
 		while (!isMultipleEscape(reader, tempCodePoint)) {
 
 			if (isSingleEscape(reader, tempCodePoint)) {
-				appendToken(tempReadResult, stringBuilder, false); // NOTE: This comes first so we build the token right
-				readSingleEscape(stringBuilder);
+				appendToken(reader, tempReadResult, stringBuilder, false); // NOTE: This comes first so we build the token right
+				readSingleEscape(reader, stringBuilder);
 			} else {
-				appendToken(tempReadResult, stringBuilder, true);
+				appendToken(reader, tempReadResult, stringBuilder, true);
 			}
 
 			tempReadResult = reader.readChar(true, null, false);
 			tempCodePoint = tempReadResult.getResult();
 		}
-		appendToken(tempReadResult, stringBuilder, false);
+		appendToken(reader, tempReadResult, stringBuilder, false);
 	}
 
-	private ReadResult readToken(final boolean eofErrorP, final boolean recursiveP, final StringBuilder stringBuilder,
-								 final boolean isEscaped) {
+	private static ReadResult readToken(final Reader reader, final boolean eofErrorP, final boolean recursiveP,
+										final StringBuilder stringBuilder, final boolean isEscaped) {
 		final ReadResult readResult = reader.readChar(eofErrorP, null, recursiveP);
-		appendToken(readResult, stringBuilder, isEscaped);
+		appendToken(reader, readResult, stringBuilder, isEscaped);
 		return readResult;
 	}
 
-	private void appendToken(final ReadResult readResult, final StringBuilder stringBuilder, final boolean isEscaped) {
+	private static void appendToken(final Reader reader, final ReadResult readResult,
+									final StringBuilder stringBuilder, final boolean isEscaped) {
 		if (!readResult.wasEOF()) {
 			int token = readResult.getResult();
 			if (!isEscaped) {
-				token = getTokenWithCase(token);
+				token = getTokenWithCase(reader, token);
 			}
 			stringBuilder.appendCodePoint(token);
 		}
 	}
 
-	private int getTokenWithCase(final int currentToken) {
+	private static int getTokenWithCase(final Reader reader, final int currentToken) {
 		final CaseSpec readtableCase = reader.getReadtableCase();
 		switch (readtableCase) {
 			case UPCASE:
@@ -110,7 +103,7 @@ public class ExtendedTokenReader extends MacroFunctionReader<ReadExtendedToken> 
 		return currentToken;
 	}
 
-	private void unreadToken(final StringBuilder stringBuilder, final int codePoint) {
+	private static void unreadToken(final Reader reader, final StringBuilder stringBuilder, final int codePoint) {
 		reader.unreadChar(codePoint);
 		stringBuilder.deleteCharAt(stringBuilder.length() - 1); // Remove the last character read from the builder
 	}

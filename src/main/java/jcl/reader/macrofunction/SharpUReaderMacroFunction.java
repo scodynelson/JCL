@@ -11,7 +11,7 @@ import java.math.BigInteger;
 /**
  * Implements the '#u' Lisp reader macro.
  */
-public class SharpUReaderMacroFunction extends ReaderMacroFunction {
+public class SharpUReaderMacroFunction extends UnicodeCharacterReaderMacroFunction {
 
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
@@ -21,8 +21,7 @@ public class SharpUReaderMacroFunction extends ReaderMacroFunction {
 			return null;
 		}
 
-		final UnicodeCharacterReader macroFunctionReader = new UnicodeCharacterReader(reader);
-		final int unicodeChar = macroFunctionReader.process();
+		final int unicodeChar = process(reader);
 		return new CharacterStruct(unicodeChar);
 	}
 }

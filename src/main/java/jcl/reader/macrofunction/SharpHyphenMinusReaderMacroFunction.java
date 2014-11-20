@@ -9,14 +9,13 @@ import java.math.BigInteger;
 /**
  * Implements the '#-' Lisp reader macro.
  */
-public class SharpHyphenMinusReaderMacroFunction extends ReaderMacroFunction {
+public class SharpHyphenMinusReaderMacroFunction extends FeaturesReaderMacroFunction {
 
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.HYPHEN_MINUS;
 
-		final FeaturesReader macroFunctionReader = new FeaturesReader(reader, true);
-		macroFunctionReader.process();
+		process(reader, true);
 		return null;
 	}
 }

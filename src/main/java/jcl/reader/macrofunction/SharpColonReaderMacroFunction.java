@@ -13,14 +13,13 @@ import java.math.BigInteger;
 /**
  * Implements the '#:' Lisp reader macro.
  */
-public class SharpColonReaderMacroFunction extends ReaderMacroFunction {
+public class SharpColonReaderMacroFunction extends ExtendedTokenReaderMacroFunction {
 
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.COLON;
 
-		final ExtendedTokenReader macroFunctionReader = new ExtendedTokenReader(reader, false);
-		final ReadExtendedToken readExtendedToken = macroFunctionReader.process();
+		final ReadExtendedToken readExtendedToken = process(reader, false);
 		final String token = readExtendedToken.getToken();
 
 		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {

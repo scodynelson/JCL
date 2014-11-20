@@ -15,13 +15,11 @@ import java.math.BigInteger;
 /**
  * Implements the '"..."' Lisp reader macro.
  */
-public class QuotationMarkReaderMacroFunction extends ReaderMacroFunction {
+public class QuotationMarkReaderMacroFunction extends UnicodeCharacterReaderMacroFunction {
 
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.QUOTATION_MARK;
-
-		final UnicodeCharacterReader macroFunctionReader = new UnicodeCharacterReader(reader);
 
 		final StringBuilder stringBuilder = new StringBuilder();
 
@@ -41,7 +39,7 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunction {
 					final ReadResult nextTmpReadResult = reader.readChar();
 					final int nextTmpChar = nextTmpReadResult.getResult();
 					if (nextTmpChar == CharacterConstants.PLUS_SIGN) {
-						readChar = macroFunctionReader.process();
+						readChar = process(reader);
 						stringBuilder.appendCodePoint(readChar);
 					} else {
 						// NOTE: Order matters here!!

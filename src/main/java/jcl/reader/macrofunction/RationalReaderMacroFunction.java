@@ -10,22 +10,13 @@ import org.apache.commons.lang3.Range;
 
 import java.math.BigInteger;
 
-class RationalReader extends MacroFunctionReader<RationalStruct> {
+abstract class RationalReaderMacroFunction extends ExtendedTokenReaderMacroFunction {
 
 	private static final Range<BigInteger> RADIX_RANGE = Range.between(BigInteger.valueOf(2), BigInteger.valueOf(36));
 
-	private final BigInteger radix;
-
-	RationalReader(final Reader reader, final BigInteger radix) {
-		super(reader);
-		this.radix = radix;
-	}
-
-	@Override
-	RationalStruct process() {
+	protected static RationalStruct process(final Reader reader, final BigInteger radix) {
 		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
-			final ExtendedTokenReader macroFunctionReader = new ExtendedTokenReader(reader, false);
-			macroFunctionReader.process();
+			ExtendedTokenReaderMacroFunction.process(reader, false);
 			return null;
 		}
 

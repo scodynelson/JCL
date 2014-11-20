@@ -17,14 +17,13 @@ import java.util.List;
 /**
  * Implements the '#(...)' Lisp reader macro.
  */
-public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction {
+public class SharpLeftParenthesisReaderMacroFunction extends ListReaderMacroFunction {
 
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.LEFT_PARENTHESIS;
 
-		final ListReader macroFunctionReader = new ListReader(reader);
-		final ListStruct listToken = macroFunctionReader.process();
+		final ListStruct listToken = process(reader);
 
 		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
 			return null;

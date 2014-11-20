@@ -9,13 +9,12 @@ import java.math.BigInteger;
 /**
  * Implements the '#b' Lisp reader macro.
  */
-public class SharpBReaderMacroFunction extends ReaderMacroFunction {
+public class SharpBReaderMacroFunction extends RationalReaderMacroFunction {
 
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_B) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_B);
 
-		final RationalReader macroFunctionReader = new RationalReader(reader, BigInteger.valueOf(2));
-		return macroFunctionReader.process();
+		return process(reader, BigInteger.valueOf(2));
 	}
 }

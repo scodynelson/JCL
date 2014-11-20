@@ -17,20 +17,13 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-class FeaturesReader extends MacroFunctionReader<Object> {
+abstract class FeaturesReaderMacroFunction extends ReaderMacroFunction {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(FeaturesReader.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(FeaturesReaderMacroFunction.class);
 
 	private static final KeywordSymbolStruct NOT = new KeywordSymbolStruct("NOT");
 	private static final KeywordSymbolStruct AND = new KeywordSymbolStruct("AND");
 	private static final KeywordSymbolStruct OR = new KeywordSymbolStruct("OR");
-
-	private final boolean shouldHideFeatures;
-
-	FeaturesReader(final Reader reader, final boolean shouldHideFeatures) {
-		super(reader);
-		this.shouldHideFeatures = shouldHideFeatures;
-	}
 
 	private static boolean isFeature(final LispStruct lispStruct) {
 		if (lispStruct instanceof ListStruct) {
@@ -73,8 +66,7 @@ class FeaturesReader extends MacroFunctionReader<Object> {
 		}
 	}
 
-	@Override
-	Object process() {
+	protected static Object process(final Reader reader, final boolean shouldHideFeatures) {
 		final BooleanStruct<?> previousReadSuppress = Variable.READ_SUPPRESS.getValue();
 		final PackageStruct previousPackage = Variable.PACKAGE.getValue();
 		try {

@@ -15,14 +15,13 @@ import java.math.BigInteger;
 /**
  * Implements the '#\' Lisp reader macro.
  */
-public class SharpBackslashReaderMacroFunction extends ReaderMacroFunction {
+public class SharpBackslashReaderMacroFunction extends ExtendedTokenReaderMacroFunction {
 
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.BACKSLASH;
 
-		final ExtendedTokenReader macroFunctionReader = new ExtendedTokenReader(reader, true);
-		final ReadExtendedToken readExtendedToken = macroFunctionReader.process();
+		final ReadExtendedToken readExtendedToken = process(reader, true);
 		final String charString = readExtendedToken.getToken();
 		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
 			return null;

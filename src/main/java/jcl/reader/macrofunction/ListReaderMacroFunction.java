@@ -10,40 +10,23 @@ import jcl.structs.symbols.variables.Variable;
 import java.util.ArrayList;
 import java.util.List;
 
-class ListReader extends MacroFunctionReader<ListStruct> {
+abstract class ListReaderMacroFunction extends ReaderMacroFunction {
 
-	ListReader(final Reader reader) {
-		super(reader);
-	}
-
-	@Override
-	ListStruct process() {
+	protected static ListStruct process(final Reader reader) {
 		final List<LispStruct> theList = new ArrayList<>();
 
-		boolean isDotted = false;
+		boolean isDottedList = false;
 
-		int codePoint = flushWhitespace();
+		int codePoint = flushWhitespace(reader);
 		while (codePoint != CharacterConstants.RIGHT_PARENTHESIS) {
 
 			if (codePoint == CharacterConstants.FULL_STOP) {
-				final int nextCodePoint = getNextCodePoint(reader);
-
-				if (isWhitespaceOrTerminating(reader, nextCodePoint)) {
-					if (theList.isEmpty()) {
-						if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
-							return null;
-						} else {
-							throw new ReaderErrorException("Nothing appears before . in list.");
-						}
-					}
-
-					isDotted = true;
-					processAfterDot(theList, nextCodePoint);
+				isDottedList = processDot(reader, theList);
+				if (isDottedList) {
 					break;
-				} else {
-					reader.unreadChar(nextCodePoint);
 				}
 			}
+
 			reader.unreadChar(codePoint);
 
 			final LispStruct lispStruct = reader.read();
@@ -51,16 +34,39 @@ class ListReader extends MacroFunctionReader<ListStruct> {
 				theList.add(lispStruct);
 			}
 
-			codePoint = flushWhitespace();
+			codePoint = flushWhitespace(reader);
 		}
 
-		return isDotted ? ListStruct.buildDottedList(theList) : ListStruct.buildProperList(theList);
+		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
+			return null;
+		}
+
+		return isDottedList ? ListStruct.buildDottedList(theList) : ListStruct.buildProperList(theList);
 	}
 
-	private void processAfterDot(final List<LispStruct> theList, final int codePoint) {
+	private static boolean processDot(final Reader reader, final List<LispStruct> theList) {
+
+		boolean isDotted = false;
+
+		final int nextCodePoint = getNextCodePoint(reader);
+
+		if (isWhitespaceOrTerminating(reader, nextCodePoint)) {
+			if (theList.isEmpty()) {
+				throw new ReaderErrorException("Nothing appears before . in list.");
+			}
+
+			isDotted = true;
+			processAfterDot(reader, theList, nextCodePoint);
+		} else {
+			reader.unreadChar(nextCodePoint);
+		}
+		return isDotted;
+	}
+
+	private static void processAfterDot(final Reader reader, final List<LispStruct> theList, final int codePoint) {
 		int firstCodePoint = codePoint;
 		if (isWhitespace(reader, codePoint)) {
-			firstCodePoint = flushWhitespace();
+			firstCodePoint = flushWhitespace(reader);
 		}
 
 		LispStruct lispStruct = null;
@@ -74,7 +80,7 @@ class ListReader extends MacroFunctionReader<ListStruct> {
 
 			// NOTE: This will throw errors when it reaches an EOF
 			lispStruct = reader.read();
-			firstCodePoint = flushWhitespace();
+			firstCodePoint = flushWhitespace(reader);
 		}
 		theList.add(lispStruct);
 
@@ -87,11 +93,11 @@ class ListReader extends MacroFunctionReader<ListStruct> {
 				throw new ReaderErrorException("More than one object follows . in list.");
 			}
 
-			firstCodePoint = flushWhitespace();
+			firstCodePoint = flushWhitespace(reader);
 		}
 	}
 
-	private int flushWhitespace() {
+	private static int flushWhitespace(final Reader reader) {
 
 		int codePoint = getNextCodePoint(reader);
 		while (isWhitespace(reader, codePoint)) {

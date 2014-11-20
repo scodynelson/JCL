@@ -19,11 +19,16 @@ import java.util.List;
  */
 public class SharpLeftParenthesisReaderMacroFunction extends ListReaderMacroFunction {
 
+	public static final SharpLeftParenthesisReaderMacroFunction INSTANCE = new SharpLeftParenthesisReaderMacroFunction();
+
+	private SharpLeftParenthesisReaderMacroFunction() {
+	}
+
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.LEFT_PARENTHESIS;
 
-		final ListStruct listToken = process(reader);
+		final ListStruct listToken = readList(reader);
 
 		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
 			return null;

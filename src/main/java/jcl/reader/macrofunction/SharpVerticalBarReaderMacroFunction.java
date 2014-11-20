@@ -13,6 +13,11 @@ import java.math.BigInteger;
  */
 public class SharpVerticalBarReaderMacroFunction extends ReaderMacroFunction {
 
+	public static final SharpVerticalBarReaderMacroFunction INSTANCE = new SharpVerticalBarReaderMacroFunction();
+
+	private SharpVerticalBarReaderMacroFunction() {
+	}
+
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.VERTICAL_LINE;

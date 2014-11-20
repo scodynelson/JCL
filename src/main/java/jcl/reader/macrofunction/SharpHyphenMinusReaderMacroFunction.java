@@ -11,11 +11,17 @@ import java.math.BigInteger;
  */
 public class SharpHyphenMinusReaderMacroFunction extends FeaturesReaderMacroFunction {
 
+	public static final SharpHyphenMinusReaderMacroFunction INSTANCE = new SharpHyphenMinusReaderMacroFunction();
+
+	private SharpHyphenMinusReaderMacroFunction() {
+		super(true);
+	}
+
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.HYPHEN_MINUS;
 
-		process(reader, true);
+		readFeatures(reader);
 		return null;
 	}
 }

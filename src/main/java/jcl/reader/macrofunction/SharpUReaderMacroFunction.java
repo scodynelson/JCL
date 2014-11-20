@@ -13,6 +13,11 @@ import java.math.BigInteger;
  */
 public class SharpUReaderMacroFunction extends UnicodeCharacterReaderMacroFunction {
 
+	public static final SharpUReaderMacroFunction INSTANCE = new SharpUReaderMacroFunction();
+
+	private SharpUReaderMacroFunction() {
+	}
+
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_U) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_U);
@@ -21,7 +26,7 @@ public class SharpUReaderMacroFunction extends UnicodeCharacterReaderMacroFuncti
 			return null;
 		}
 
-		final int unicodeChar = process(reader);
+		final int unicodeChar = readUnicodeCharacter(reader);
 		return new CharacterStruct(unicodeChar);
 	}
 }

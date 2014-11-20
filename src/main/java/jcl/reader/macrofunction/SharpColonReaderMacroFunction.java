@@ -15,11 +15,17 @@ import java.math.BigInteger;
  */
 public class SharpColonReaderMacroFunction extends ExtendedTokenReaderMacroFunction {
 
+	public static final SharpColonReaderMacroFunction INSTANCE = new SharpColonReaderMacroFunction();
+
+	private SharpColonReaderMacroFunction() {
+		super(false);
+	}
+
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.COLON;
 
-		final ReadExtendedToken readExtendedToken = process(reader, false);
+		final ReadExtendedToken readExtendedToken = readExtendedToken(reader);
 		final String token = readExtendedToken.getToken();
 
 		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {

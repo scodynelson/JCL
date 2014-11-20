@@ -11,10 +11,15 @@ import java.math.BigInteger;
  */
 public class LeftParenthesisReaderMacroFunction extends ListReaderMacroFunction {
 
+	public static final LeftParenthesisReaderMacroFunction INSTANCE = new LeftParenthesisReaderMacroFunction();
+
+	private LeftParenthesisReaderMacroFunction() {
+	}
+
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.LEFT_PARENTHESIS;
 
-		return process(reader);
+		return readList(reader);
 	}
 }

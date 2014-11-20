@@ -12,7 +12,7 @@ import java.util.List;
 
 abstract class ListReaderMacroFunction extends ReaderMacroFunction {
 
-	protected static ListStruct process(final Reader reader) {
+	protected static ListStruct readList(final Reader reader) {
 		final List<LispStruct> theList = new ArrayList<>();
 
 		boolean isDottedList = false;

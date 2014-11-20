@@ -15,6 +15,11 @@ import java.math.BigInteger;
  */
 public class ApostropheReaderMacroFunction extends ReaderMacroFunction {
 
+	public static final ApostropheReaderMacroFunction INSTANCE = new ApostropheReaderMacroFunction();
+
+	private ApostropheReaderMacroFunction() {
+	}
+
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.APOSTROPHE;

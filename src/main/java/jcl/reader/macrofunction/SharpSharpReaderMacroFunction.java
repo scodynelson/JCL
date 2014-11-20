@@ -14,6 +14,11 @@ import java.util.UUID;
  */
 public class SharpSharpReaderMacroFunction extends ReaderMacroFunction {
 
+	public static final SharpSharpReaderMacroFunction INSTANCE = new SharpSharpReaderMacroFunction();
+
+	private SharpSharpReaderMacroFunction() {
+	}
+
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.NUMBER_SIGN;

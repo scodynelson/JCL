@@ -18,11 +18,17 @@ import java.math.BigInteger;
  */
 public class SharpAsteriskReaderMacroFunction extends ExtendedTokenReaderMacroFunction {
 
+	public static final SharpAsteriskReaderMacroFunction INSTANCE = new SharpAsteriskReaderMacroFunction();
+
+	private SharpAsteriskReaderMacroFunction() {
+		super(false);
+	}
+
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.ASTERISK;
 
-		final ReadExtendedToken readExtendedToken = process(reader, false);
+		final ReadExtendedToken readExtendedToken = readExtendedToken(reader);
 		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
 			return null;
 		}

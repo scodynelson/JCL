@@ -13,6 +13,11 @@ import java.math.BigInteger;
  */
 public class SemicolonReaderMacroFunction extends ReaderMacroFunction {
 
+	public static final SemicolonReaderMacroFunction INSTANCE = new SemicolonReaderMacroFunction();
+
+	private SemicolonReaderMacroFunction() {
+	}
+
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.SEMICOLON;

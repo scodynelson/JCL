@@ -7,43 +7,10 @@ import jcl.structs.streams.ReadResult;
 
 abstract class ExtendedTokenReaderMacroFunction extends ReaderMacroFunction {
 
-	protected static ReadExtendedToken process(final Reader reader, final boolean isEscaped) {
+	private final boolean isEscaped;
 
-		final StringBuilder stringBuilder = new StringBuilder();
-
-		ReadResult readResult = readToken(reader, false, !isEscaped, stringBuilder, isEscaped);
-
-		if (isEscaped) {
-			readResult = readToken(reader, false, false, stringBuilder, false);
-		}
-
-		boolean hasEscapes = false;
-		boolean hasPackageDelimiter = false;
-
-		while (!readResult.wasEOF()) {
-
-			final int codePoint = readResult.getResult();
-			if (isWhitespaceOrTerminating(reader, codePoint)) {
-				unreadToken(reader, stringBuilder, codePoint);
-				break;
-			}
-
-			if (isSingleEscape(reader, codePoint)) {
-				readSingleEscape(reader, stringBuilder);
-				hasEscapes = true;
-			} else if (isMultipleEscape(reader, codePoint)) {
-				readMultipleEscape(reader, stringBuilder);
-				hasEscapes = true;
-			}
-
-			if (!hasPackageDelimiter) {
-				hasPackageDelimiter = isPackageMarker(reader, codePoint);
-			}
-
-			readResult = readToken(reader, false, false, stringBuilder, false);
-		}
-
-		return new ReadExtendedToken(stringBuilder.toString(), hasEscapes, hasPackageDelimiter);
+	protected ExtendedTokenReaderMacroFunction(final boolean isEscaped) {
+		this.isEscaped = isEscaped;
 	}
 
 	private static void readSingleEscape(final Reader reader, final StringBuilder stringBuilder) {
@@ -106,5 +73,44 @@ abstract class ExtendedTokenReaderMacroFunction extends ReaderMacroFunction {
 	private static void unreadToken(final Reader reader, final StringBuilder stringBuilder, final int codePoint) {
 		reader.unreadChar(codePoint);
 		stringBuilder.deleteCharAt(stringBuilder.length() - 1); // Remove the last character read from the builder
+	}
+
+	protected ReadExtendedToken readExtendedToken(final Reader reader) {
+
+		final StringBuilder stringBuilder = new StringBuilder();
+
+		ReadResult readResult = readToken(reader, false, !isEscaped, stringBuilder, isEscaped);
+
+		if (isEscaped) {
+			readResult = readToken(reader, false, false, stringBuilder, false);
+		}
+
+		boolean hasEscapes = false;
+		boolean hasPackageDelimiter = false;
+
+		while (!readResult.wasEOF()) {
+
+			final int codePoint = readResult.getResult();
+			if (isWhitespaceOrTerminating(reader, codePoint)) {
+				unreadToken(reader, stringBuilder, codePoint);
+				break;
+			}
+
+			if (isSingleEscape(reader, codePoint)) {
+				readSingleEscape(reader, stringBuilder);
+				hasEscapes = true;
+			} else if (isMultipleEscape(reader, codePoint)) {
+				readMultipleEscape(reader, stringBuilder);
+				hasEscapes = true;
+			}
+
+			if (!hasPackageDelimiter) {
+				hasPackageDelimiter = isPackageMarker(reader, codePoint);
+			}
+
+			readResult = readToken(reader, false, false, stringBuilder, false);
+		}
+
+		return new ReadExtendedToken(stringBuilder.toString(), hasEscapes, hasPackageDelimiter);
 	}
 }

@@ -25,6 +25,12 @@ abstract class FeaturesReaderMacroFunction extends ReaderMacroFunction {
 	private static final KeywordSymbolStruct AND = new KeywordSymbolStruct("AND");
 	private static final KeywordSymbolStruct OR = new KeywordSymbolStruct("OR");
 
+	private final boolean shouldHideFeatures;
+
+	protected FeaturesReaderMacroFunction(final boolean shouldHideFeatures) {
+		this.shouldHideFeatures = shouldHideFeatures;
+	}
+
 	private static boolean isFeature(final LispStruct lispStruct) {
 		if (lispStruct instanceof ListStruct) {
 			return isListFeature((ListStruct) lispStruct);
@@ -66,7 +72,7 @@ abstract class FeaturesReaderMacroFunction extends ReaderMacroFunction {
 		}
 	}
 
-	protected static Object process(final Reader reader, final boolean shouldHideFeatures) {
+	protected void readFeatures(final Reader reader) {
 		final BooleanStruct<?> previousReadSuppress = Variable.READ_SUPPRESS.getValue();
 		final PackageStruct previousPackage = Variable.PACKAGE.getValue();
 		try {
@@ -87,6 +93,5 @@ abstract class FeaturesReaderMacroFunction extends ReaderMacroFunction {
 			Variable.PACKAGE.setValue(previousPackage);
 			Variable.READ_SUPPRESS.setValue(previousReadSuppress);
 		}
-		return null;
 	}
 }

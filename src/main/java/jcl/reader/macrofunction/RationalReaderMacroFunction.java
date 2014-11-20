@@ -14,9 +14,13 @@ abstract class RationalReaderMacroFunction extends ExtendedTokenReaderMacroFunct
 
 	private static final Range<BigInteger> RADIX_RANGE = Range.between(BigInteger.valueOf(2), BigInteger.valueOf(36));
 
-	protected static RationalStruct process(final Reader reader, final BigInteger radix) {
+	protected RationalReaderMacroFunction() {
+		super(false);
+	}
+
+	protected RationalStruct readRational(final Reader reader, final BigInteger radix) {
 		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
-			ExtendedTokenReaderMacroFunction.process(reader, false);
+			readExtendedToken(reader);
 			return null;
 		}
 

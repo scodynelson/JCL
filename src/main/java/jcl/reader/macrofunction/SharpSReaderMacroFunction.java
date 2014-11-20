@@ -13,6 +13,11 @@ import java.math.BigInteger;
  */
 public class SharpSReaderMacroFunction extends ReaderMacroFunction {
 
+	public static final SharpSReaderMacroFunction INSTANCE = new SharpSReaderMacroFunction();
+
+	private SharpSReaderMacroFunction() {
+	}
+
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_S) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_S);

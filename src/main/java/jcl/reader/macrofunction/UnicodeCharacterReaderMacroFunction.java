@@ -5,7 +5,7 @@ import jcl.structs.conditions.exceptions.ReaderErrorException;
 
 abstract class UnicodeCharacterReaderMacroFunction extends ReaderMacroFunction {
 
-	protected static Integer process(final Reader reader) {
+	protected static Integer readUnicodeCharacter(final Reader reader) {
 		final StringBuilder unicodeCharBuilder = new StringBuilder();
 
 		int codePoint = getNextCodePoint(reader);

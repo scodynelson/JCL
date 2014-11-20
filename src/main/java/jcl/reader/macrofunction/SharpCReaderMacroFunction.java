@@ -19,6 +19,11 @@ import java.util.List;
  */
 public class SharpCReaderMacroFunction extends ReaderMacroFunction {
 
+	public static final SharpCReaderMacroFunction INSTANCE = new SharpCReaderMacroFunction();
+
+	private SharpCReaderMacroFunction() {
+	}
+
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_C) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_C);

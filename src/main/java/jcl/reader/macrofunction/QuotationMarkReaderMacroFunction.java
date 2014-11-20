@@ -17,6 +17,11 @@ import java.math.BigInteger;
  */
 public class QuotationMarkReaderMacroFunction extends UnicodeCharacterReaderMacroFunction {
 
+	public static final QuotationMarkReaderMacroFunction INSTANCE = new QuotationMarkReaderMacroFunction();
+
+	private QuotationMarkReaderMacroFunction() {
+	}
+
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.QUOTATION_MARK;
@@ -39,7 +44,7 @@ public class QuotationMarkReaderMacroFunction extends UnicodeCharacterReaderMacr
 					final ReadResult nextTmpReadResult = reader.readChar();
 					final int nextTmpChar = nextTmpReadResult.getResult();
 					if (nextTmpChar == CharacterConstants.PLUS_SIGN) {
-						readChar = process(reader);
+						readChar = readUnicodeCharacter(reader);
 						stringBuilder.appendCodePoint(readChar);
 					} else {
 						// NOTE: Order matters here!!

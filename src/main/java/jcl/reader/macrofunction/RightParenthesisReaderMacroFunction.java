@@ -12,6 +12,11 @@ import java.math.BigInteger;
  */
 public class RightParenthesisReaderMacroFunction extends ReaderMacroFunction {
 
+	public static final RightParenthesisReaderMacroFunction INSTANCE = new RightParenthesisReaderMacroFunction();
+
+	private RightParenthesisReaderMacroFunction() {
+	}
+
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.RIGHT_PARENTHESIS;

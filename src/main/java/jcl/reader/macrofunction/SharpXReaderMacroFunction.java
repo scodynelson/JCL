@@ -11,12 +11,17 @@ import java.math.BigInteger;
  */
 public class SharpXReaderMacroFunction extends RationalReaderMacroFunction {
 
+	public static final SharpXReaderMacroFunction INSTANCE = new SharpXReaderMacroFunction();
+
 	private static final int SIXTEEN = 16;
+
+	private SharpXReaderMacroFunction() {
+	}
 
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_X) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_X);
 
-		return process(reader, BigInteger.valueOf(SIXTEEN));
+		return readRational(reader, BigInteger.valueOf(SIXTEEN));
 	}
 }

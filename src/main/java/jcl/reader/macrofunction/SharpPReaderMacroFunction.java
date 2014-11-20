@@ -16,6 +16,11 @@ import java.net.URISyntaxException;
  */
 public class SharpPReaderMacroFunction extends ReaderMacroFunction {
 
+	public static final SharpPReaderMacroFunction INSTANCE = new SharpPReaderMacroFunction();
+
+	private SharpPReaderMacroFunction() {
+	}
+
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_P) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_P);

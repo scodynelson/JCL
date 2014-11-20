@@ -17,11 +17,17 @@ import java.math.BigInteger;
  */
 public class SharpBackslashReaderMacroFunction extends ExtendedTokenReaderMacroFunction {
 
+	public static final SharpBackslashReaderMacroFunction INSTANCE = new SharpBackslashReaderMacroFunction();
+
+	private SharpBackslashReaderMacroFunction() {
+		super(true);
+	}
+
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.BACKSLASH;
 
-		final ReadExtendedToken readExtendedToken = process(reader, true);
+		final ReadExtendedToken readExtendedToken = readExtendedToken(reader);
 		final String charString = readExtendedToken.getToken();
 		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
 			return null;

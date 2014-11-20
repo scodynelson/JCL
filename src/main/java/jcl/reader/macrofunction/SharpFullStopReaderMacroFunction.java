@@ -13,6 +13,11 @@ import java.math.BigInteger;
  */
 public class SharpFullStopReaderMacroFunction extends ReaderMacroFunction {
 
+	public static final SharpFullStopReaderMacroFunction INSTANCE = new SharpFullStopReaderMacroFunction();
+
+	private SharpFullStopReaderMacroFunction() {
+	}
+
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.FULL_STOP;

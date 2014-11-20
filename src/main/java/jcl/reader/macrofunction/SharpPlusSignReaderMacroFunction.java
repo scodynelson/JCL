@@ -11,11 +11,17 @@ import java.math.BigInteger;
  */
 public class SharpPlusSignReaderMacroFunction extends FeaturesReaderMacroFunction {
 
+	public static final SharpPlusSignReaderMacroFunction INSTANCE = new SharpPlusSignReaderMacroFunction();
+
+	private SharpPlusSignReaderMacroFunction() {
+		super(false);
+	}
+
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.PLUS_SIGN;
 
-		process(reader, false);
+		readFeatures(reader);
 		return null;
 	}
 }

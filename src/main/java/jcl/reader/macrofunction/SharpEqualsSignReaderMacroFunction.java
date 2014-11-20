@@ -14,6 +14,11 @@ import java.util.UUID;
  */
 public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunction {
 
+	public static final SharpEqualsSignReaderMacroFunction INSTANCE = new SharpEqualsSignReaderMacroFunction();
+
+	private SharpEqualsSignReaderMacroFunction() {
+	}
+
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.EQUALS_SIGN;

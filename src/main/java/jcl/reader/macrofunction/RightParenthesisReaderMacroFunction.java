@@ -10,10 +10,13 @@ import java.math.BigInteger;
 /**
  * Implements the ')' Lisp reader macro.
  */
-public class RightParenthesisReaderMacroFunction extends ReaderMacroFunction {
+public final class RightParenthesisReaderMacroFunction extends ReaderMacroFunction {
 
 	public static final RightParenthesisReaderMacroFunction INSTANCE = new RightParenthesisReaderMacroFunction();
 
+	/**
+	 * Private constructor.
+	 */
 	private RightParenthesisReaderMacroFunction() {
 	}
 

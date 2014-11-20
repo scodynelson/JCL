@@ -12,10 +12,13 @@ import java.util.UUID;
 /**
  * Implements the '#=' Lisp reader macro.
  */
-public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunction {
+public final class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunction {
 
 	public static final SharpEqualsSignReaderMacroFunction INSTANCE = new SharpEqualsSignReaderMacroFunction();
 
+	/**
+	 * Private constructor.
+	 */
 	private SharpEqualsSignReaderMacroFunction() {
 	}
 

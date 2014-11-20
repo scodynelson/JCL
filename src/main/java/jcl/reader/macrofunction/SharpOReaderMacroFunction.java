@@ -9,10 +9,13 @@ import java.math.BigInteger;
 /**
  * Implements the '#o' Lisp reader macro.
  */
-public class SharpOReaderMacroFunction extends RationalReaderMacroFunction {
+public final class SharpOReaderMacroFunction extends RationalReaderMacroFunction {
 
 	public static final SharpOReaderMacroFunction INSTANCE = new SharpOReaderMacroFunction();
 
+	/**
+	 * Private constructor.
+	 */
 	private SharpOReaderMacroFunction() {
 	}
 

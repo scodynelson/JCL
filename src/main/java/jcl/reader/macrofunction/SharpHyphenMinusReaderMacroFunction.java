@@ -9,10 +9,13 @@ import java.math.BigInteger;
 /**
  * Implements the '#-' Lisp reader macro.
  */
-public class SharpHyphenMinusReaderMacroFunction extends FeaturesReaderMacroFunction {
+public final class SharpHyphenMinusReaderMacroFunction extends FeaturesReaderMacroFunction {
 
 	public static final SharpHyphenMinusReaderMacroFunction INSTANCE = new SharpHyphenMinusReaderMacroFunction();
 
+	/**
+	 * Private constructor.
+	 */
 	private SharpHyphenMinusReaderMacroFunction() {
 		super(true);
 	}

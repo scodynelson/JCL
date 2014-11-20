@@ -13,10 +13,13 @@ import java.math.BigInteger;
 /**
  * Implements the '#'' Lisp reader macro.
  */
-public class SharpApostropheReaderMacroFunction extends ReaderMacroFunction {
+public final class SharpApostropheReaderMacroFunction extends ReaderMacroFunction {
 
 	public static final SharpApostropheReaderMacroFunction INSTANCE = new SharpApostropheReaderMacroFunction();
 
+	/**
+	 * Private constructor.
+	 */
 	private SharpApostropheReaderMacroFunction() {
 	}
 

@@ -11,10 +11,13 @@ import java.math.BigInteger;
 /**
  * Implements the '#|...|#' Lisp reader macro.
  */
-public class SharpVerticalBarReaderMacroFunction extends ReaderMacroFunction {
+public final class SharpVerticalBarReaderMacroFunction extends ReaderMacroFunction {
 
 	public static final SharpVerticalBarReaderMacroFunction INSTANCE = new SharpVerticalBarReaderMacroFunction();
 
+	/**
+	 * Private constructor.
+	 */
 	private SharpVerticalBarReaderMacroFunction() {
 	}
 

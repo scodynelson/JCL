@@ -17,10 +17,13 @@ import java.util.List;
 /**
  * Implements the '#a' Lisp reader macro.
  */
-public class SharpAReaderMacroFunction extends ReaderMacroFunction {
+public final class SharpAReaderMacroFunction extends ReaderMacroFunction {
 
 	public static final SharpAReaderMacroFunction INSTANCE = new SharpAReaderMacroFunction();
 
+	/**
+	 * Private constructor.
+	 */
 	private SharpAReaderMacroFunction() {
 	}
 

@@ -9,10 +9,13 @@ import java.math.BigInteger;
 /**
  * Implements the illegal '#??" Lisp reader macros.
  */
-public class SharpIllegalReaderMacroFunction extends ReaderMacroFunction {
+public final class SharpIllegalReaderMacroFunction extends ReaderMacroFunction {
 
 	public static final SharpIllegalReaderMacroFunction INSTANCE = new SharpIllegalReaderMacroFunction();
 
+	/**
+	 * Private constructor.
+	 */
 	private SharpIllegalReaderMacroFunction() {
 	}
 

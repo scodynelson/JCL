@@ -9,12 +9,15 @@ import java.math.BigInteger;
 /**
  * Implements the '#x' Lisp reader macro.
  */
-public class SharpXReaderMacroFunction extends RationalReaderMacroFunction {
+public final class SharpXReaderMacroFunction extends RationalReaderMacroFunction {
 
 	public static final SharpXReaderMacroFunction INSTANCE = new SharpXReaderMacroFunction();
 
 	private static final int SIXTEEN = 16;
 
+	/**
+	 * Private constructor.
+	 */
 	private SharpXReaderMacroFunction() {
 	}
 

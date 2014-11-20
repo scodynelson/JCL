@@ -11,10 +11,13 @@ import java.math.BigInteger;
 /**
  * Implements the '#s' Lisp reader macro.
  */
-public class SharpSReaderMacroFunction extends ReaderMacroFunction {
+public final class SharpSReaderMacroFunction extends ReaderMacroFunction {
 
 	public static final SharpSReaderMacroFunction INSTANCE = new SharpSReaderMacroFunction();
 
+	/**
+	 * Private constructor.
+	 */
 	private SharpSReaderMacroFunction() {
 	}
 

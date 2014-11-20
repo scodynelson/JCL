@@ -17,10 +17,13 @@ import java.util.List;
 /**
  * Implements the '#(...)' Lisp reader macro.
  */
-public class SharpLeftParenthesisReaderMacroFunction extends ListReaderMacroFunction {
+public final class SharpLeftParenthesisReaderMacroFunction extends ListReaderMacroFunction {
 
 	public static final SharpLeftParenthesisReaderMacroFunction INSTANCE = new SharpLeftParenthesisReaderMacroFunction();
 
+	/**
+	 * Private constructor.
+	 */
 	private SharpLeftParenthesisReaderMacroFunction() {
 	}
 

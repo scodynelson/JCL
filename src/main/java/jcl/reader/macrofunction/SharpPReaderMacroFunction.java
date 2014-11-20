@@ -14,10 +14,13 @@ import java.net.URISyntaxException;
 /**
  * Implements the '#p' Lisp reader macro.
  */
-public class SharpPReaderMacroFunction extends ReaderMacroFunction {
+public final class SharpPReaderMacroFunction extends ReaderMacroFunction {
 
 	public static final SharpPReaderMacroFunction INSTANCE = new SharpPReaderMacroFunction();
 
+	/**
+	 * Private constructor.
+	 */
 	private SharpPReaderMacroFunction() {
 	}
 

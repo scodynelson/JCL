@@ -16,10 +16,13 @@ import java.math.BigInteger;
 /**
  * Implements the '#*' Lisp reader macro.
  */
-public class SharpAsteriskReaderMacroFunction extends ExtendedTokenReaderMacroFunction {
+public final class SharpAsteriskReaderMacroFunction extends ExtendedTokenReaderMacroFunction {
 
 	public static final SharpAsteriskReaderMacroFunction INSTANCE = new SharpAsteriskReaderMacroFunction();
 
+	/**
+	 * Private constructor.
+	 */
 	private SharpAsteriskReaderMacroFunction() {
 		super(false);
 	}

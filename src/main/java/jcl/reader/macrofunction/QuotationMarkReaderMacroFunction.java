@@ -15,10 +15,13 @@ import java.math.BigInteger;
 /**
  * Implements the '"..."' Lisp reader macro.
  */
-public class QuotationMarkReaderMacroFunction extends UnicodeCharacterReaderMacroFunction {
+public final class QuotationMarkReaderMacroFunction extends UnicodeCharacterReaderMacroFunction {
 
 	public static final QuotationMarkReaderMacroFunction INSTANCE = new QuotationMarkReaderMacroFunction();
 
+	/**
+	 * Private constructor.
+	 */
 	private QuotationMarkReaderMacroFunction() {
 	}
 

@@ -11,10 +11,13 @@ import java.math.BigInteger;
 /**
  * Implements the ';' Lisp reader macro.
  */
-public class SemicolonReaderMacroFunction extends ReaderMacroFunction {
+public final class SemicolonReaderMacroFunction extends ReaderMacroFunction {
 
 	public static final SemicolonReaderMacroFunction INSTANCE = new SemicolonReaderMacroFunction();
 
+	/**
+	 * Private constructor.
+	 */
 	private SemicolonReaderMacroFunction() {
 	}
 

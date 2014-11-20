@@ -9,10 +9,13 @@ import java.math.BigInteger;
 /**
  * Implements the '#+' Lisp reader macro.
  */
-public class SharpPlusSignReaderMacroFunction extends FeaturesReaderMacroFunction {
+public final class SharpPlusSignReaderMacroFunction extends FeaturesReaderMacroFunction {
 
 	public static final SharpPlusSignReaderMacroFunction INSTANCE = new SharpPlusSignReaderMacroFunction();
 
+	/**
+	 * Private constructor.
+	 */
 	private SharpPlusSignReaderMacroFunction() {
 		super(false);
 	}

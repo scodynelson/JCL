@@ -1,9 +1,9 @@
 package jcl.reader.macrofunction;
 
 import jcl.reader.Reader;
-import jcl.reader.syntax.AttributeType;
-import jcl.reader.syntax.CaseSpec;
-import jcl.reader.syntax.SyntaxType;
+import jcl.reader.AttributeType;
+import jcl.reader.CaseSpec;
+import jcl.reader.SyntaxType;
 import jcl.structs.streams.ReadResult;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

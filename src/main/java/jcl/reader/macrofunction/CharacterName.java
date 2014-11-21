@@ -1,4 +1,4 @@
-package jcl.reader.syntax;
+package jcl.reader.macrofunction;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * Defines the standard graphic characters that have names for the system.
  */
 @SuppressWarnings("MagicNumber")
-public enum CharacterName {
+enum CharacterName {
 
 	NULL("NULL", (char) 0x0000),
 	NULL_CHAR("^@", (char) 0x0000),
@@ -41,7 +41,7 @@ public enum CharacterName {
 	 *
 	 * @return the graphic character name
 	 */
-	public String getName() {
+	String getName() {
 		return name;
 	}
 
@@ -50,7 +50,7 @@ public enum CharacterName {
 	 *
 	 * @return the character value
 	 */
-	public char getChar() {
+	char getChar() {
 		return aChar;
 	}
 

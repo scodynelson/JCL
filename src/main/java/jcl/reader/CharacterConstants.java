@@ -1,4 +1,4 @@
-package jcl.reader.syntax;
+package jcl.reader;
 
 /**
  * Defines the standard character constants for the system.

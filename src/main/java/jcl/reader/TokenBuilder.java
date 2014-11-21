@@ -1,7 +1,6 @@
 package jcl.reader;
 
 import jcl.LispStruct;
-import jcl.reader.syntax.AttributeType;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 

@@ -2,7 +2,7 @@ package jcl.reader.macrofunction;
 
 import jcl.LispStruct;
 import jcl.reader.Reader;
-import jcl.reader.syntax.CharacterConstants;
+import jcl.reader.CharacterConstants;
 import jcl.structs.arrays.VectorStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.SimpleErrorException;

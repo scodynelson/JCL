@@ -1,4 +1,4 @@
-package jcl.reader.syntax;
+package jcl.reader;
 
 /**
  * Defines the different syntax types that will determine how the reader parses tokens.

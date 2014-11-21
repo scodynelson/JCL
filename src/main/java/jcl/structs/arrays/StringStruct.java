@@ -1,6 +1,6 @@
 package jcl.structs.arrays;
 
-import jcl.reader.syntax.SyntaxType;
+import jcl.reader.SyntaxType;
 import jcl.structs.characters.CharacterStruct;
 import jcl.structs.readtables.ReadtableStruct;
 import jcl.structs.symbols.variables.Variable;

@@ -2,8 +2,8 @@ package jcl.reader.macrofunction;
 
 import jcl.LispStruct;
 import jcl.reader.Reader;
-import jcl.reader.syntax.AttributeType;
-import jcl.reader.syntax.SyntaxType;
+import jcl.reader.AttributeType;
+import jcl.reader.SyntaxType;
 import jcl.structs.functions.FunctionStruct;
 
 import java.math.BigInteger;

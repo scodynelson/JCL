@@ -2,7 +2,7 @@ package jcl.reader.macrofunction;
 
 import jcl.LispStruct;
 import jcl.reader.Reader;
-import jcl.reader.syntax.CharacterConstants;
+import jcl.reader.CharacterConstants;
 import jcl.structs.characters.CharacterStruct;
 import jcl.structs.symbols.variables.Variable;
 

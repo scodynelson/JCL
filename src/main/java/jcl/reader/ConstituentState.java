@@ -1,7 +1,5 @@
 package jcl.reader;
 
-import jcl.reader.syntax.AttributeType;
-import jcl.reader.syntax.CaseSpec;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 
 /**

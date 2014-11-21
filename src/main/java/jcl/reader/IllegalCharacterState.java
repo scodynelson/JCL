@@ -1,6 +1,5 @@
 package jcl.reader;
 
-import jcl.reader.syntax.CharacterConstants;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 
 /**

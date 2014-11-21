@@ -1,6 +1,5 @@
 package jcl.reader;
 
-import jcl.reader.syntax.AttributeType;
 import jcl.structs.symbols.variables.Variable;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

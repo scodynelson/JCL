@@ -1,8 +1,6 @@
 package jcl.reader;
 
 import jcl.LispStruct;
-import jcl.reader.syntax.AttributeType;
-import jcl.reader.syntax.SyntaxType;
 import jcl.structs.streams.ReadResult;
 
 /**

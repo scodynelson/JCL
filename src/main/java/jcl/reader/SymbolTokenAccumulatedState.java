@@ -1,6 +1,5 @@
 package jcl.reader;
 
-import jcl.reader.syntax.AttributeType;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.packages.GlobalPackageStruct;
 import jcl.structs.packages.PackageStruct;

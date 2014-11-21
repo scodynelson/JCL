@@ -2,6 +2,10 @@ package jcl.reader;
 
 import jcl.LispStruct;
 import jcl.structs.streams.ReadResult;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Step 5 of the Reader Algorithm.
@@ -11,15 +15,14 @@ import jcl.structs.streams.ReadResult;
  * used to begin a token, and step 8 is entered.
  * </p>
  */
-final class SingleEscapeState extends State {
+@Component
+class SingleEscapeState extends State {
 
-	static final State SINGLE_ESCAPE_STATE = new SingleEscapeState();
+	@Autowired
+	private IllegalCharacterState illegalCharacterState;
 
-	/**
-	 * Private constructor.
-	 */
-	private SingleEscapeState() {
-	}
+	@Autowired
+	private EvenMultiEscapeState evenMultiEscapeState;
 
 	@Override
 	void process(final Reader reader, final TokenBuilder tokenBuilder) {
@@ -29,14 +32,19 @@ final class SingleEscapeState extends State {
 
 		final ReadResult readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
 		if (readResult.wasEOF()) {
-			IllegalCharacterState.ILLEGAL_CHARACTER_STATE.process(reader, tokenBuilder);
+			illegalCharacterState.process(reader, tokenBuilder);
 		} else {
 			final int codePoint = readResult.getResult();
 			tokenBuilder.setPreviousReadCharacter(codePoint);
 
 			tokenBuilder.addToTokenAttributes(codePoint, AttributeType.ALPHABETIC);
 
-			EvenMultiEscapeState.EVEN_MULTI_ESCAPE_STATE.process(reader, tokenBuilder);
+			evenMultiEscapeState.process(reader, tokenBuilder);
 		}
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

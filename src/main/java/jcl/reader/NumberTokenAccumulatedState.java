@@ -11,7 +11,11 @@ import jcl.types.LongFloat;
 import jcl.types.ShortFloat;
 import jcl.types.SingleFloat;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.math3.fraction.BigFraction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -31,30 +35,31 @@ import java.util.function.Function;
  * be formatted, then we progress to the SymbolTokenAccumulatedState.
  * </p>
  */
-final class NumberTokenAccumulatedState extends State {
-
-	static final State NUMBER_TOKEN_ACCUMULATED_STATE = new NumberTokenAccumulatedState();
+@Component
+class NumberTokenAccumulatedState extends State {
 
 	private static final List<AttributeType> NOT_MORE_THAN_ONE_ATTRS = Arrays.asList(AttributeType.PLUS, AttributeType.MINUS, AttributeType.DECIMAL, AttributeType.RATIOMARKER);
 	private static final List<AttributeType> FIRST_ONLY_ATTRS = Arrays.asList(AttributeType.PLUS, AttributeType.MINUS);
 	private static final List<AttributeType> NOT_FIRST_OR_LAST_ATTRS = Arrays.asList(AttributeType.DECIMAL, AttributeType.RATIOMARKER);
 	private static final List<AttributeType> NO_SIMULTANEOUS_ATTRS = Arrays.asList(AttributeType.DECIMAL, AttributeType.RATIOMARKER);
 
-	/**
-	 * Private constructor.
-	 */
-	private NumberTokenAccumulatedState() {
-	}
+	@Autowired
+	private SymbolTokenAccumulatedState symbolTokenAccumulatedState;
 
 	@Override
 	void process(final Reader reader, final TokenBuilder tokenBuilder) {
 
 		final NumberStruct numberToken = getNumberToken(tokenBuilder);
 		if (numberToken == null) {
-			SymbolTokenAccumulatedState.SYMBOL_TOKEN_ACCUMULATED_STATE.process(reader, tokenBuilder);
+			symbolTokenAccumulatedState.process(reader, tokenBuilder);
 		} else {
 			tokenBuilder.setReturnToken(numberToken);
 		}
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 
 	/**

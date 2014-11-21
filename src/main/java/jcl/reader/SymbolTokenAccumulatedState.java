@@ -8,6 +8,7 @@ import jcl.structs.symbols.KeywordSymbolStruct;
 import jcl.structs.symbols.SymbolStruct;
 import jcl.structs.symbols.variables.Variable;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
 import java.util.Map;
@@ -49,15 +50,8 @@ import java.util.Map;
  * Keyword Package!!!
  * </p>
  */
-final class SymbolTokenAccumulatedState extends State {
-
-	static final State SYMBOL_TOKEN_ACCUMULATED_STATE = new SymbolTokenAccumulatedState();
-
-	/**
-	 * Private constructor.
-	 */
-	private SymbolTokenAccumulatedState() {
-	}
+@Component
+class SymbolTokenAccumulatedState extends State {
 
 	@Override
 	void process(final Reader reader, final TokenBuilder tokenBuilder) {

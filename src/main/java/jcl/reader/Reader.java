@@ -4,7 +4,6 @@ import jcl.LispStruct;
 import jcl.reader.syntax.AttributeType;
 import jcl.reader.syntax.CaseSpec;
 import jcl.reader.syntax.SyntaxType;
-import jcl.reader.syntax.TokenBuilder;
 import jcl.structs.readtables.ReadtableStruct;
 import jcl.structs.streams.InputStream;
 import jcl.structs.streams.ReadResult;

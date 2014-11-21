@@ -1,8 +1,6 @@
 package jcl.reader;
 
 import jcl.reader.syntax.AttributeType;
-import jcl.reader.syntax.TokenAttribute;
-import jcl.reader.syntax.TokenBuilder;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.packages.GlobalPackageStruct;
 import jcl.structs.packages.PackageStruct;
@@ -61,8 +59,10 @@ public class SymbolTokenAccumulatedState extends State {
 
 		final SymbolStruct<?> symbolToken = getSymbolToken(tokenBuilder);
 		if (symbolToken == null) {
-			final ErrorState errorState = new ErrorState(this);
-			errorState.process(reader, tokenBuilder);
+			final Integer codePoint = tokenBuilder.getPreviousReadCharacter();
+			if (isEndOfFileCharacter(codePoint) && tokenBuilder.isEofErrorP()) {
+				throw new ReaderErrorException("End-of-File encountered in State: " + this);
+			}
 		} else {
 			tokenBuilder.setReturnToken(symbolToken);
 		}

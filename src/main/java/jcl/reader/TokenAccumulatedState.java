@@ -1,7 +1,5 @@
 package jcl.reader;
 
-import jcl.reader.syntax.TokenAttribute;
-import jcl.reader.syntax.TokenBuilder;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.symbols.variables.Variable;
 
@@ -26,13 +24,16 @@ public class TokenAccumulatedState extends State {
 
 	@Override
 	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
-
 		final Integer codePoint = tokenBuilder.getPreviousReadCharacter();
+
 		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
 		if (isEndOfFileCharacter(codePoint) && tokenAttributes.isEmpty()) {
-			final ErrorState errorState = new ErrorState(this);
-			errorState.process(reader, tokenBuilder);
-			return;
+			if (tokenBuilder.isEofErrorP()) {
+				throw new ReaderErrorException("End-of-File encountered in State: " + this);
+			} else {
+				tokenBuilder.setReturnToken(null);
+				return;
+			}
 		}
 
 		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {

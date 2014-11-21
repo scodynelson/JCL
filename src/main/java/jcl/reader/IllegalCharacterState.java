@@ -1,7 +1,6 @@
 package jcl.reader;
 
 import jcl.reader.syntax.CharacterConstants;
-import jcl.reader.syntax.TokenBuilder;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 
 /**
@@ -16,11 +15,10 @@ public class IllegalCharacterState extends State {
 
 	@Override
 	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
-
 		final Integer codePoint = tokenBuilder.getPreviousReadCharacter();
-		if (codePoint == null) {
-			final ErrorState errorState = new ErrorState(this);
-			errorState.process(reader, tokenBuilder);
+
+		if (isEndOfFileCharacter(codePoint) && tokenBuilder.isEofErrorP()) {
+			throw new ReaderErrorException("End-of-File encountered in State: " + this);
 		} else if (codePoint != CharacterConstants.EXIT_CHAR) {
 			throw new ReaderErrorException("Illegal Character was encountered: " + codePoint);
 		}

@@ -1,7 +1,5 @@
 package jcl.reader;
 
-import jcl.reader.syntax.TokenBuilder;
-
 /**
  * Step 3 of the Reader Algorithm.
  * <p>

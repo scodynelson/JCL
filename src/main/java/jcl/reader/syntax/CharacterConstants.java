@@ -1,7 +1,7 @@
 package jcl.reader.syntax;
 
 /**
- * The {@link CharacterConstants} interface defines the standard character constants for the system.
+ * Defines the standard character constants for the system.
  */
 @SuppressWarnings("all")
 public interface CharacterConstants {

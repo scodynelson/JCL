@@ -2,8 +2,6 @@ package jcl.reader;
 
 import jcl.reader.syntax.AttributeType;
 import jcl.reader.syntax.CharacterConstants;
-import jcl.reader.syntax.TokenAttribute;
-import jcl.reader.syntax.TokenBuilder;
 import jcl.structs.numbers.FloatStruct;
 import jcl.structs.numbers.IntegerStruct;
 import jcl.structs.numbers.NumberStruct;

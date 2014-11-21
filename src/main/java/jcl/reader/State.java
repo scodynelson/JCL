@@ -2,8 +2,6 @@ package jcl.reader;
 
 import jcl.reader.syntax.AttributeType;
 import jcl.reader.syntax.CaseSpec;
-import jcl.reader.syntax.TokenAttribute;
-import jcl.reader.syntax.TokenBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 

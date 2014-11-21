@@ -64,7 +64,7 @@ public abstract class State {
 	 *
 	 * @return true if the provided {@code codePoint} is an End-Of-File character
 	 */
-	protected static boolean isEndOfFileCharacter(final Integer codePoint) {
+	static boolean isEndOfFileCharacter(final Integer codePoint) {
 		return (codePoint == null) || (codePoint == EOF);
 	}
 
@@ -76,7 +76,7 @@ public abstract class State {
 	 *
 	 * @return the {@link String} produced from the list of {@link TokenAttribute}s
 	 */
-	protected static String convertTokensToString(final List<TokenAttribute> tokenAttributes) {
+	static String convertTokensToString(final List<TokenAttribute> tokenAttributes) {
 		final StringBuilder stringBuilder = new StringBuilder();
 		tokenAttributes
 				.stream()
@@ -97,7 +97,7 @@ public abstract class State {
 	 *
 	 * @return the proper code point value based from the provided {@code codePoint}
 	 */
-	protected static int properCaseCodePoint(final int codePoint, final AttributeType attributeType, final CaseSpec caseSpec) {
+	static int properCaseCodePoint(final int codePoint, final AttributeType attributeType, final CaseSpec caseSpec) {
 
 		int properCaseCodePoint = codePoint;
 		if (Character.isBmpCodePoint(codePoint)) {
@@ -128,7 +128,7 @@ public abstract class State {
 	 * @return if the provided list of {@link TokenAttribute}s contains at least one token with an {@link AttributeType}
 	 * equal to the provided {@code attributeType} value.
 	 */
-	protected static boolean hasAnyAttribute(final List<TokenAttribute> tokenAttributes, final AttributeType attributeType) {
+	static boolean hasAnyAttribute(final List<TokenAttribute> tokenAttributes, final AttributeType attributeType) {
 		return tokenAttributes
 				.stream()
 				.anyMatch(e -> e.getAttributeType() == attributeType);
@@ -146,7 +146,7 @@ public abstract class State {
 	 * @return if the provided list of {@link TokenAttribute}s contains no tokens with an {@link AttributeType} equal to
 	 * the provided {@code attributeType} value.
 	 */
-	protected static boolean hasNoAttributes(final List<TokenAttribute> tokenAttributes, final AttributeType attributeType) {
+	static boolean hasNoAttributes(final List<TokenAttribute> tokenAttributes, final AttributeType attributeType) {
 		return tokenAttributes
 				.stream()
 				.noneMatch(e -> e.getAttributeType() == attributeType);
@@ -165,7 +165,7 @@ public abstract class State {
 	 * @return the first occurrence of a token with an {@link AttributeType} equal to the provided {@code attributeType}
 	 * value in the provided list of {@link TokenAttribute}s or null if no such token can be found
 	 */
-	protected static Integer getTokenByAttribute(final List<TokenAttribute> tokenAttributes, final AttributeType attributeType) {
+	static Integer getTokenByAttribute(final List<TokenAttribute> tokenAttributes, final AttributeType attributeType) {
 		return tokenAttributes
 				.stream()
 				.filter(e -> e.getAttributeType() == attributeType)

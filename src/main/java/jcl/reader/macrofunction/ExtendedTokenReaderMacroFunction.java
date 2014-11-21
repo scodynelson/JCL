@@ -22,7 +22,7 @@ abstract class ExtendedTokenReaderMacroFunction extends ReaderMacroFunction {
 	 * @param isEscaped
 	 * 		whether or not characters read in by the JCL Reader should be considered escaped or not.
 	 */
-	protected ExtendedTokenReaderMacroFunction(final boolean isEscaped) {
+	ExtendedTokenReaderMacroFunction(final boolean isEscaped) {
 		this.isEscaped = isEscaped;
 	}
 
@@ -35,7 +35,7 @@ abstract class ExtendedTokenReaderMacroFunction extends ReaderMacroFunction {
 	 *
 	 * @return a {@link ReadExtendedToken} object containing the extended token information as read
 	 */
-	protected ReadExtendedToken readExtendedToken(final Reader reader) {
+	ReadExtendedToken readExtendedToken(final Reader reader) {
 
 		final StringBuilder stringBuilder = new StringBuilder();
 
@@ -248,7 +248,7 @@ abstract class ExtendedTokenReaderMacroFunction extends ReaderMacroFunction {
 	 * Holds the results of an extended token read operation with the token string, whether or not the token has escape
 	 * characters, and whether or not the token contains a package delimiter.
 	 */
-	protected static final class ReadExtendedToken {
+	static final class ReadExtendedToken {
 
 		private final String token;
 		private final boolean hasEscapes;

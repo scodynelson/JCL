@@ -1,11 +1,30 @@
 <component name="ProjectDictionaryState">
   <dictionary name="codynelson">
     <words>
+      <w>alphadigit</w>
+      <w>bignum</w>
+      <w>downcase</w>
       <w>eofe</w>
+      <w>exponentmarker</w>
+      <w>fbound</w>
+      <w>fixnum</w>
+      <w>fixnums</w>
+      <w>namestring</w>
+      <w>packagemarker</w>
+      <w>pathnames</w>
+      <w>ratiomarker</w>
       <w>readtable</w>
+      <w>repl</w>
+      <w>rubout</w>
+      <w>specializer</w>
+      <w>specializers</w>
       <w>struct</w>
+      <w>subrepertoire</w>
+      <w>supertype</w>
       <w>testng</w>
       <w>unexport</w>
+      <w>uninterned</w>
+      <w>upcase</w>
     </words>
   </dictionary>
 </component>

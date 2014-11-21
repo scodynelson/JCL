@@ -69,7 +69,7 @@ public final class SharpCReaderMacroFunction extends ReaderMacroFunction {
 		} else if ((real instanceof RatioStruct) && (imaginary instanceof RatioStruct)) {
 			return new ComplexStruct((RatioStruct) real, (RatioStruct) imaginary);
 		} else {
-			throw new ReaderErrorException("Only reals are valid tokens for #c.");
+			throw new ReaderErrorException("Only real numbers are valid tokens for #c.");
 		}
 	}
 }

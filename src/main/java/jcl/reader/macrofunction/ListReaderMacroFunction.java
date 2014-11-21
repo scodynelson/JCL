@@ -27,7 +27,7 @@ abstract class ListReaderMacroFunction extends ReaderMacroFunction {
 	 *
 	 * @return the properly parsed {@link ListStruct}
 	 */
-	protected static ListStruct readList(final Reader reader) {
+	static ListStruct readList(final Reader reader) {
 		final List<LispStruct> currentTokenList = new ArrayList<>();
 
 		boolean isDottedList = false;

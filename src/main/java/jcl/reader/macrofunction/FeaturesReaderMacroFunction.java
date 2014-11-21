@@ -39,7 +39,7 @@ abstract class FeaturesReaderMacroFunction extends ReaderMacroFunction {
 	 * @param shouldHideFeatures
 	 * 		whether or not the *features* read should be hidden or not (aka. the token is read in but ignored)
 	 */
-	protected FeaturesReaderMacroFunction(final boolean shouldHideFeatures) {
+	FeaturesReaderMacroFunction(final boolean shouldHideFeatures) {
 		this.shouldHideFeatures = shouldHideFeatures;
 	}
 
@@ -50,7 +50,7 @@ abstract class FeaturesReaderMacroFunction extends ReaderMacroFunction {
 	 * @param reader
 	 * 		the {@link Reader} used to read in the next token
 	 */
-	protected void readFeatures(final Reader reader) {
+	void readFeatures(final Reader reader) {
 		final BooleanStruct<?> previousReadSuppress = Variable.READ_SUPPRESS.getValue();
 		final PackageStruct previousPackage = Variable.PACKAGE.getValue();
 		try {

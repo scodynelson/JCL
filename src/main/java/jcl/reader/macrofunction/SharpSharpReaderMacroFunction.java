@@ -12,10 +12,13 @@ import java.util.UUID;
 /**
  * Implements the '##' Lisp reader macro.
  */
-public class SharpSharpReaderMacroFunction extends ReaderMacroFunction {
+public final class SharpSharpReaderMacroFunction extends ReaderMacroFunction {
 
 	public static final SharpSharpReaderMacroFunction INSTANCE = new SharpSharpReaderMacroFunction();
 
+	/**
+	 * Private constructor.
+	 */
 	private SharpSharpReaderMacroFunction() {
 	}
 

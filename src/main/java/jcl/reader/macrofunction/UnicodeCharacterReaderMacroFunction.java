@@ -20,7 +20,7 @@ abstract class UnicodeCharacterReaderMacroFunction extends ReaderMacroFunction {
 	 *
 	 * @return a Unicode character code point
 	 */
-	protected static int readUnicodeCharacter(final Reader reader) {
+	static int readUnicodeCharacter(final Reader reader) {
 		final StringBuilder unicodeCharBuilder = new StringBuilder();
 
 		// NOTE: This will throw errors when it reaches an EOF

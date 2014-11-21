@@ -44,7 +44,7 @@ public abstract class ReaderMacroFunction extends FunctionStruct {
 	 *
 	 * @return true if the provided {@code codePoint} is a {@link SyntaxType#WHITESPACE}; false otherwise
 	 */
-	protected static boolean isWhitespace(final Reader reader, final int codePoint) {
+	static boolean isWhitespace(final Reader reader, final int codePoint) {
 		return isSyntaxType(reader, codePoint, SyntaxType.WHITESPACE);
 	}
 
@@ -61,7 +61,7 @@ public abstract class ReaderMacroFunction extends FunctionStruct {
 	 *
 	 * @return true if the provided {@code codePoint} matches one of the provided {@link SyntaxType}s; false otherwise
 	 */
-	protected static boolean isSyntaxType(final Reader reader, final int codePoint, final SyntaxType... syntaxTypes) {
+	static boolean isSyntaxType(final Reader reader, final int codePoint, final SyntaxType... syntaxTypes) {
 
 		boolean returnVal = false;
 		for (final SyntaxType syntaxType : syntaxTypes) {
@@ -83,7 +83,7 @@ public abstract class ReaderMacroFunction extends FunctionStruct {
 	 * @return true if the provided {@code codePoint} is a {@link SyntaxType#WHITESPACE} or {@link
 	 * SyntaxType#TERMINATING}; false otherwise
 	 */
-	protected static boolean isWhitespaceOrTerminating(final Reader reader, final int codePoint) {
+	static boolean isWhitespaceOrTerminating(final Reader reader, final int codePoint) {
 		return isSyntaxType(reader, codePoint, SyntaxType.WHITESPACE, SyntaxType.TERMINATING);
 	}
 
@@ -101,7 +101,7 @@ public abstract class ReaderMacroFunction extends FunctionStruct {
 	 * @return true if the provided {@code codePoint} matches one of the provided {@link AttributeType}s; false
 	 * otherwise
 	 */
-	protected static boolean isAttributeType(final Reader reader, final int codePoint, final AttributeType... attributeTypes) {
+	static boolean isAttributeType(final Reader reader, final int codePoint, final AttributeType... attributeTypes) {
 
 		boolean returnVal = false;
 		for (final AttributeType attributeType : attributeTypes) {

@@ -102,7 +102,7 @@ public interface Integer extends Rational {
 				}
 
 				BigInteger realUpper = null;
-				if (lowerBound != null) {
+				if (upperBound != null) {
 					realUpper = upperInclusive ? upperBound : upperBound.subtract(BigInteger.ONE);
 				}
 

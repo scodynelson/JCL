@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 /**
  * The object representation of a Lisp 'comment' type.
  */
-public class CommentStruct implements LispStruct {
+class CommentStruct implements LispStruct {
 
 	private final String commentString;
 

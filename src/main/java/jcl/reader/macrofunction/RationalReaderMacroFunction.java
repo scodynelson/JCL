@@ -16,14 +16,14 @@ import java.math.BigInteger;
  */
 abstract class RationalReaderMacroFunction extends ExtendedTokenReaderMacroFunction {
 
-	@SuppressWarnings("all")
+	@SuppressWarnings("MagicNumber")
 	private static final Range<BigInteger> RADIX_RANGE = Range.between(BigInteger.valueOf(2), BigInteger.valueOf(36));
 
 	/**
 	 * Protected constructor that calls the {@link ExtendedTokenReaderMacroFunction} constructor, passing {@code false}
 	 * for token escaping processing.
 	 */
-	protected RationalReaderMacroFunction() {
+	RationalReaderMacroFunction() {
 		super(false);
 	}
 
@@ -38,7 +38,7 @@ abstract class RationalReaderMacroFunction extends ExtendedTokenReaderMacroFunct
 	 *
 	 * @return the properly parsed {@link RationalStruct}
 	 */
-	protected RationalStruct readRational(final Reader reader, final BigInteger radix) {
+	RationalStruct readRational(final Reader reader, final BigInteger radix) {
 		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
 			readExtendedToken(reader);
 			return null;

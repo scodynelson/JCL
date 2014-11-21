@@ -5,6 +5,7 @@ import jcl.reader.Reader;
 import jcl.reader.syntax.CharacterConstants;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.lists.ListStruct;
+import jcl.structs.streams.ReadResult;
 import jcl.structs.symbols.variables.Variable;
 
 import java.util.ArrayList;
@@ -75,7 +76,9 @@ abstract class ListReaderMacroFunction extends ReaderMacroFunction {
 
 		boolean isDotted = false;
 
-		final int nextCodePoint = getNextCodePoint(reader);
+		// NOTE: This will throw errors when it reaches an EOF
+		final ReadResult readResult = reader.readChar();
+		final int nextCodePoint = readResult.getResult();
 
 		if (isWhitespaceOrTerminating(reader, nextCodePoint)) {
 			if (currentTokenList.isEmpty()) {
@@ -145,9 +148,12 @@ abstract class ListReaderMacroFunction extends ReaderMacroFunction {
 	 */
 	private static int flushWhitespace(final Reader reader) {
 
-		int codePoint = getNextCodePoint(reader);
+		// NOTE: This will throw errors when it reaches an EOF
+		ReadResult readResult = reader.readChar();
+		int codePoint = readResult.getResult();
 		while (isWhitespace(reader, codePoint)) {
-			codePoint = getNextCodePoint(reader);
+			readResult = reader.readChar();
+			codePoint = readResult.getResult();
 		}
 		return codePoint;
 	}

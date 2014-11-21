@@ -2,6 +2,7 @@ package jcl.reader.macrofunction;
 
 import jcl.reader.Reader;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
+import jcl.structs.streams.ReadResult;
 
 /**
  * Reader Macro Function for handling the reading unicode character.
@@ -22,10 +23,14 @@ abstract class UnicodeCharacterReaderMacroFunction extends ReaderMacroFunction {
 	protected static int readUnicodeCharacter(final Reader reader) {
 		final StringBuilder unicodeCharBuilder = new StringBuilder();
 
-		int codePoint = getNextCodePoint(reader);
+		// NOTE: This will throw errors when it reaches an EOF
+		ReadResult readResult = reader.readChar();
+		int codePoint = readResult.getResult();
 		while (!isWhitespace(reader, codePoint)) {
 			unicodeCharBuilder.appendCodePoint(codePoint);
-			codePoint = getNextCodePoint(reader);
+
+			readResult = reader.readChar();
+			codePoint = readResult.getResult();
 		}
 
 		final String unicodeCharString = unicodeCharBuilder.toString();

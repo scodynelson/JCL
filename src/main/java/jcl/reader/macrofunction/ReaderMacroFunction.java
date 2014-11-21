@@ -4,9 +4,7 @@ import jcl.LispStruct;
 import jcl.reader.Reader;
 import jcl.reader.syntax.AttributeType;
 import jcl.reader.syntax.SyntaxType;
-import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.functions.FunctionStruct;
-import jcl.structs.streams.ReadResult;
 
 import java.math.BigInteger;
 
@@ -16,19 +14,17 @@ import java.math.BigInteger;
 public abstract class ReaderMacroFunction extends FunctionStruct {
 
 	/**
-	 * Interpret the character stream (up to EOF or new line) as a token of the T type supplied.
+	 * Interpret the character stream from the provided {@link Reader} (up to End-of-File or new line) based on the
+	 * provided {@code codePoint}.
 	 *
 	 * @param codePoint
-	 * 		the character that determines the macro function
+	 * 		the character code point that determines the macro function
 	 * @param reader
-	 * 		the reader used to read characters
+	 * 		the {@link Reader} used to read tokens
 	 * @param numArg
 	 * 		the optional number argument
 	 *
-	 * @return a LispStruct
-	 *
-	 * @throws ReaderErrorException
-	 * 		if an error is encountered
+	 * @return the parsed {@link LispStruct} token
 	 */
 	public abstract LispStruct readMacro(int codePoint, Reader reader, BigInteger numArg);
 
@@ -37,16 +33,34 @@ public abstract class ReaderMacroFunction extends FunctionStruct {
 		return null; // TODO: do this
 	}
 
-	protected static int getNextCodePoint(final Reader reader) {
-		// NOTE: This will throw errors when it reaches an EOF
-		final ReadResult readResult = reader.readChar();
-		return readResult.getResult();
+	/**
+	 * Determines if the provided {@code codePoint} is a {@link SyntaxType#WHITESPACE} based on the current readtable
+	 * available in the provided {@link Reader}.
+	 *
+	 * @param reader
+	 * 		the {@link Reader} used to verify the provided {@code codePoint}'s {@link SyntaxType}
+	 * @param codePoint
+	 * 		the character code point to verify {@link SyntaxType} for
+	 *
+	 * @return true if the provided {@code codePoint} is a {@link SyntaxType#WHITESPACE}; false otherwise
+	 */
+	protected static boolean isWhitespace(final Reader reader, final int codePoint) {
+		return isSyntaxType(reader, codePoint, SyntaxType.WHITESPACE);
 	}
 
-	protected static boolean isSingleEscape(final Reader reader, final int codePoint) {
-		return isSyntaxType(reader, codePoint, SyntaxType.SINGLE_ESCAPE);
-	}
-
+	/**
+	 * Determines if the provided {@code codePoint} matches one of the provided {@link SyntaxType}s based on the
+	 * current readtable available in the provided {@link Reader}.
+	 *
+	 * @param reader
+	 * 		the {@link Reader} used to verify the provided {@code codePoint}'s {@link SyntaxType}
+	 * @param codePoint
+	 * 		the character code point to verify {@link SyntaxType} for
+	 * @param syntaxTypes
+	 * 		the list of {@link SyntaxType}s to check against the provided {@code codePoint}
+	 *
+	 * @return true if the provided {@code codePoint} matches one of the provided {@link SyntaxType}s; false otherwise
+	 */
 	protected static boolean isSyntaxType(final Reader reader, final int codePoint, final SyntaxType... syntaxTypes) {
 
 		boolean returnVal = false;
@@ -56,23 +70,37 @@ public abstract class ReaderMacroFunction extends FunctionStruct {
 		return returnVal;
 	}
 
-	protected static boolean isMultipleEscape(final Reader reader, final int codePoint) {
-		return isSyntaxType(reader, codePoint, SyntaxType.SINGLE_ESCAPE);
-	}
-
-	protected static boolean isWhitespace(final Reader reader, final int codePoint) {
-		return isSyntaxType(reader, codePoint, SyntaxType.WHITESPACE);
-	}
-
+	/**
+	 * Determines if the provided {@code codePoint} is a {@link SyntaxType#WHITESPACE} or {@link
+	 * SyntaxType#TERMINATING}
+	 * based on the current readtable available in the provided {@link Reader}.
+	 *
+	 * @param reader
+	 * 		the {@link Reader} used to verify the provided {@code codePoint}'s {@link SyntaxType}
+	 * @param codePoint
+	 * 		the character code point to verify {@link SyntaxType} for
+	 *
+	 * @return true if the provided {@code codePoint} is a {@link SyntaxType#WHITESPACE} or {@link
+	 * SyntaxType#TERMINATING}; false otherwise
+	 */
 	protected static boolean isWhitespaceOrTerminating(final Reader reader, final int codePoint) {
 		return isSyntaxType(reader, codePoint, SyntaxType.WHITESPACE, SyntaxType.TERMINATING);
 	}
 
-	protected static boolean isPackageMarker(final Reader reader, final int codePoint) {
-		return isSyntaxType(reader, codePoint, SyntaxType.CONSTITUENT)
-				&& isAttributeType(reader, codePoint, AttributeType.PACKAGEMARKER);
-	}
-
+	/**
+	 * Determines if the provided {@code codePoint} matches one of the provided {@link AttributeType}s based on the
+	 * current readtable available in the provided {@link Reader}.
+	 *
+	 * @param reader
+	 * 		the {@link Reader} used to verify the provided {@code codePoint}'s {@link AttributeType}
+	 * @param codePoint
+	 * 		the character code point to verify {@link AttributeType} for
+	 * @param attributeTypes
+	 * 		the list of {@link AttributeType}s to check against the provided {@code codePoint}
+	 *
+	 * @return true if the provided {@code codePoint} matches one of the provided {@link AttributeType}s; false
+	 * otherwise
+	 */
 	protected static boolean isAttributeType(final Reader reader, final int codePoint, final AttributeType... attributeTypes) {
 
 		boolean returnVal = false;

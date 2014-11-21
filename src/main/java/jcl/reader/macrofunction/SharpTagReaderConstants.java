@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Interface for defining global constants for the #= and ## tag readers.
+ */
 public interface SharpTagReaderConstants {
 
 	Map<BigInteger, LispStruct> SHARP_EQUAL_FINAL_TABLE = new ConcurrentHashMap<>();

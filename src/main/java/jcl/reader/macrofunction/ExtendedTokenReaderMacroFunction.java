@@ -1,7 +1,9 @@
 package jcl.reader.macrofunction;
 
 import jcl.reader.Reader;
+import jcl.reader.syntax.AttributeType;
 import jcl.reader.syntax.CaseSpec;
+import jcl.reader.syntax.SyntaxType;
 import jcl.structs.streams.ReadResult;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -76,37 +78,6 @@ abstract class ExtendedTokenReaderMacroFunction extends ReaderMacroFunction {
 	@Override
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
-	}
-
-	protected static final class ReadExtendedToken {
-
-		private final String token;
-		private final boolean hasEscapes;
-		private final boolean hasPackageDelimiter;
-
-		private ReadExtendedToken(final String token, final boolean hasEscapes, final boolean hasPackageDelimiter) {
-			this.token = token;
-			this.hasEscapes = hasEscapes;
-			this.hasPackageDelimiter = hasPackageDelimiter;
-		}
-
-		String getToken() {
-			return token;
-		}
-
-		boolean hasEscapes() {
-			return hasEscapes;
-		}
-
-		boolean hasPackageDelimiter() {
-			return hasPackageDelimiter;
-		}
-
-		@Override
-		public String toString() {
-			return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
-		}
-
 	}
 
 	/**
@@ -201,6 +172,53 @@ abstract class ExtendedTokenReaderMacroFunction extends ReaderMacroFunction {
 	}
 
 	/**
+	 * Determines if the provided {@code codePoint} is a {@link SyntaxType#SINGLE_ESCAPE} based on the current
+	 * readtable available in the provided {@link Reader}.
+	 *
+	 * @param reader
+	 * 		the {@link Reader} used to verify the provided {@code codePoint}'s {@link SyntaxType}
+	 * @param codePoint
+	 * 		the character code point to verify {@link SyntaxType} for
+	 *
+	 * @return true if the provided {@code codePoint} is a {@link SyntaxType#SINGLE_ESCAPE}; false otherwise
+	 */
+	private static boolean isSingleEscape(final Reader reader, final int codePoint) {
+		return isSyntaxType(reader, codePoint, SyntaxType.SINGLE_ESCAPE);
+	}
+
+	/**
+	 * Determines if the provided {@code codePoint} is a {@link SyntaxType#SINGLE_ESCAPE} based on the current
+	 * readtable available in the provided {@link Reader}.
+	 *
+	 * @param reader
+	 * 		the {@link Reader} used to verify the provided {@code codePoint}'s {@link SyntaxType}
+	 * @param codePoint
+	 * 		the character code point to verify {@link SyntaxType} for
+	 *
+	 * @return true if the provided {@code codePoint} is a {@link SyntaxType#SINGLE_ESCAPE}; false otherwise
+	 */
+	private static boolean isMultipleEscape(final Reader reader, final int codePoint) {
+		return isSyntaxType(reader, codePoint, SyntaxType.MULTIPLE_ESCAPE);
+	}
+
+	/**
+	 * Determines if the provided {@code codePoint} is a {@link SyntaxType#CONSTITUENT} and a {@link
+	 * AttributeType#PACKAGEMARKER} based on the current readtable available in the provided {@link Reader}.
+	 *
+	 * @param reader
+	 * 		the {@link Reader} used to verify the provided {@code codePoint}'s {@link SyntaxType}
+	 * @param codePoint
+	 * 		the character code point to verify {@link SyntaxType} for
+	 *
+	 * @return true if the provided {@code codePoint} is a {@link SyntaxType#CONSTITUENT} and a {@link
+	 * AttributeType#PACKAGEMARKER}; false otherwise
+	 */
+	private static boolean isPackageMarker(final Reader reader, final int codePoint) {
+		return isSyntaxType(reader, codePoint, SyntaxType.CONSTITUENT)
+				&& isAttributeType(reader, codePoint, AttributeType.PACKAGEMARKER);
+	}
+
+	/**
 	 * Transforms the provided {@code currentToken} value into it's correct case based on properties of the current
 	 * readtable for the provided {@link Reader}.
 	 *
@@ -224,5 +242,64 @@ abstract class ExtendedTokenReaderMacroFunction extends ReaderMacroFunction {
 				return currentToken;
 		}
 		return currentToken;
+	}
+
+	/**
+	 * Holds the results of an extended token read operation with the token string, whether or not the token has escape
+	 * characters, and whether or not the token contains a package delimiter.
+	 */
+	protected static final class ReadExtendedToken {
+
+		private final String token;
+		private final boolean hasEscapes;
+		private final boolean hasPackageDelimiter;
+
+		/**
+		 * Private constructor.
+		 *
+		 * @param token
+		 * 		the token string
+		 * @param hasEscapes
+		 * 		whether or not the token has escape characters
+		 * @param hasPackageDelimiter
+		 * 		whether or not the token contains a package delimiter
+		 */
+		private ReadExtendedToken(final String token, final boolean hasEscapes, final boolean hasPackageDelimiter) {
+			this.token = token;
+			this.hasEscapes = hasEscapes;
+			this.hasPackageDelimiter = hasPackageDelimiter;
+		}
+
+		/**
+		 * Getter for {@link #token} property.
+		 *
+		 * @return {@link #token} property
+		 */
+		String getToken() {
+			return token;
+		}
+
+		/**
+		 * Getter for {@link #hasEscapes} property.
+		 *
+		 * @return {@link #hasEscapes} property
+		 */
+		boolean hasEscapes() {
+			return hasEscapes;
+		}
+
+		/**
+		 * Getter for {@link #hasPackageDelimiter} property.
+		 *
+		 * @return {@link #hasPackageDelimiter} property
+		 */
+		boolean hasPackageDelimiter() {
+			return hasPackageDelimiter;
+		}
+
+		@Override
+		public String toString() {
+			return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+		}
 	}
 }

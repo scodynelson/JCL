@@ -1,10 +1,6 @@
 package jcl.reader;
 
 import jcl.structs.conditions.exceptions.ReaderErrorException;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * Step 7 of the Reader Algorithm.
@@ -16,11 +12,9 @@ import org.springframework.stereotype.Component;
  * the current readtable. X is used to begin a token, and step 8 is entered.
  * </p>
  */
-@Component
 class ConstituentState extends State {
 
-	@Autowired
-	private EvenMultiEscapeState evenMultiEscapeState;
+	static final State INSTANCE = new ConstituentState();
 
 	@Override
 	void process(final Reader reader, final TokenBuilder tokenBuilder) {
@@ -41,11 +35,6 @@ class ConstituentState extends State {
 		codePoint = properCaseCodePoint(codePoint, attributeType, readtableCase);
 		tokenBuilder.addToTokenAttributes(codePoint, attributeType);
 
-		evenMultiEscapeState.process(reader, tokenBuilder);
-	}
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+		EvenMultiEscapeState.INSTANCE.process(reader, tokenBuilder);
 	}
 }

@@ -3,10 +3,6 @@ package jcl.reader;
 import jcl.LispStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.streams.ReadResult;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * Step 1 of the Reader Algorithm.
@@ -15,26 +11,15 @@ import org.springframework.stereotype.Component;
  * from the input stream, and dispatched according to the syntax type of x to one of steps 2 to 7.
  * </p>
  */
-@Component
-class ReadState extends State {
+final class ReadState extends State {
 
-	@Autowired
-	private IllegalCharacterState illegalCharacterState;
+	static final State INSTANCE = new ReadState();
 
-	@Autowired
-	private WhitespaceState whitespaceState;
-
-	@Autowired
-	private MacroCharacterState macroCharacterState;
-
-	@Autowired
-	private SingleEscapeState singleEscapeState;
-
-	@Autowired
-	private MultipleEscapeState multipleEscapeState;
-
-	@Autowired
-	private ConstituentState constituentState;
+	/**
+	 * Private constructor.
+	 */
+	private ReadState() {
+	}
 
 	@Override
 	void process(final Reader reader, final TokenBuilder tokenBuilder) {
@@ -59,22 +44,17 @@ class ReadState extends State {
 		final SyntaxType syntaxType = reader.getSyntaxType(codePoint);
 
 		if (syntaxType == SyntaxType.WHITESPACE) {
-			whitespaceState.process(reader, tokenBuilder);
+			WhitespaceState.INSTANCE.process(reader, tokenBuilder);
 		} else if ((syntaxType == SyntaxType.TERMINATING) || (syntaxType == SyntaxType.NON_TERMINATING)) {
-			macroCharacterState.process(reader, tokenBuilder);
+			MacroCharacterState.INSTANCE.process(reader, tokenBuilder);
 		} else if (syntaxType == SyntaxType.SINGLE_ESCAPE) {
-			singleEscapeState.process(reader, tokenBuilder);
+			SingleEscapeState.INSTANCE.process(reader, tokenBuilder);
 		} else if (syntaxType == SyntaxType.MULTIPLE_ESCAPE) {
-			multipleEscapeState.process(reader, tokenBuilder);
+			MultipleEscapeState.INSTANCE.process(reader, tokenBuilder);
 		} else if (syntaxType == SyntaxType.CONSTITUENT) {
-			constituentState.process(reader, tokenBuilder);
+			ConstituentState.INSTANCE.process(reader, tokenBuilder);
 		} else {
-			illegalCharacterState.process(reader, tokenBuilder);
+			IllegalCharacterState.INSTANCE.process(reader, tokenBuilder);
 		}
-	}
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

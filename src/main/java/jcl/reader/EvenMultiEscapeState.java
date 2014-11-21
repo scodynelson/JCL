@@ -2,10 +2,6 @@ package jcl.reader;
 
 import jcl.LispStruct;
 import jcl.structs.streams.ReadResult;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * Step 8 of the Reader Algorithm.
@@ -51,17 +47,15 @@ import org.springframework.stereotype.Component;
  * </tab>
  * </p>
  */
-@Component
-class EvenMultiEscapeState extends State {
+final class EvenMultiEscapeState extends State {
 
-	@Autowired
-	private IllegalCharacterState illegalCharacterState;
+	static final State INSTANCE = new EvenMultiEscapeState();
 
-	@Autowired
-	private OddMultiEscapeState oddMultiEscapeState;
-
-	@Autowired
-	private TokenAccumulatedState tokenAccumulatedState;
+	/**
+	 * Private constructor.
+	 */
+	private EvenMultiEscapeState() {
+	}
 
 	@Override
 	void process(final Reader reader, final TokenBuilder tokenBuilder) {
@@ -72,7 +66,7 @@ class EvenMultiEscapeState extends State {
 
 		ReadResult readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
 		if (readResult.wasEOF()) {
-			tokenAccumulatedState.process(reader, tokenBuilder);
+			TokenAccumulatedState.INSTANCE.process(reader, tokenBuilder);
 		}
 
 		int codePoint = readResult.getResult();
@@ -94,7 +88,7 @@ class EvenMultiEscapeState extends State {
 
 			readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
 			if (readResult.wasEOF()) {
-				illegalCharacterState.process(reader, tokenBuilder);
+				IllegalCharacterState.INSTANCE.process(reader, tokenBuilder);
 			} else {
 				codePoint = readResult.getResult();
 				tokenBuilder.setPreviousReadCharacter(codePoint);
@@ -103,21 +97,16 @@ class EvenMultiEscapeState extends State {
 				process(reader, tokenBuilder);
 			}
 		} else if (syntaxType == SyntaxType.MULTIPLE_ESCAPE) {
-			oddMultiEscapeState.process(reader, tokenBuilder);
+			OddMultiEscapeState.INSTANCE.process(reader, tokenBuilder);
 		} else if (syntaxType == SyntaxType.TERMINATING) {
 			// TODO: preserve whitespace?
 			reader.unreadChar(codePoint);
-			tokenAccumulatedState.process(reader, tokenBuilder);
+			TokenAccumulatedState.INSTANCE.process(reader, tokenBuilder);
 		} else if (syntaxType == SyntaxType.WHITESPACE) {
 			reader.unreadChar(codePoint);
-			tokenAccumulatedState.process(reader, tokenBuilder);
+			TokenAccumulatedState.INSTANCE.process(reader, tokenBuilder);
 		} else {
-			illegalCharacterState.process(reader, tokenBuilder);
+			IllegalCharacterState.INSTANCE.process(reader, tokenBuilder);
 		}
-	}
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

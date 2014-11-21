@@ -1,10 +1,5 @@
 package jcl.reader;
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 /**
  * Step 6 of the Reader Algorithm.
  * <p>
@@ -12,19 +7,18 @@ import org.springframework.stereotype.Component;
  * entered.
  * </p>
  */
-@Component
-class MultipleEscapeState extends State {
+final class MultipleEscapeState extends State {
 
-	@Autowired
-	private OddMultiEscapeState oddMultiEscapeState;
+	static final State INSTANCE = new MultipleEscapeState();
 
-	@Override
-	void process(final Reader reader, final TokenBuilder tokenBuilder) {
-		oddMultiEscapeState.process(reader, tokenBuilder);
+	/**
+	 * Private constructor.
+	 */
+	private MultipleEscapeState() {
 	}
 
 	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+	void process(final Reader reader, final TokenBuilder tokenBuilder) {
+		OddMultiEscapeState.INSTANCE.process(reader, tokenBuilder);
 	}
 }

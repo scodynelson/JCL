@@ -7,23 +7,14 @@ import jcl.structs.streams.ReadResult;
 import jcl.structs.symbols.variables.Variable;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 /**
  * JCL Reader that handles reading in lisp tokens and parsing them as {@link LispStruct}s.
  */
-@Component
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class Reader {
 
 	private final InputStream inputStream;
 	private final ReadtableStruct readtable;
-
-	@Autowired
-	private ReadState readState;
 
 	/**
 	 * Public constructor for creating a new JCL Reader.
@@ -73,7 +64,7 @@ public class Reader {
 	 */
 	public LispStruct read(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		final TokenBuilder tokenBuilder = new TokenBuilder(eofErrorP, eofValue, recursiveP);
-		readState.process(this, tokenBuilder);
+		ReadState.INSTANCE.process(this, tokenBuilder);
 
 		return tokenBuilder.getReturnToken();
 	}

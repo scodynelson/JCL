@@ -54,7 +54,7 @@ public interface DoubleFloat extends Float {
 		 * @return the newly created compound {@link DoubleFloat} type
 		 */
 		public static DoubleFloat getInstance(final BigDecimal lowerBound, final boolean lowerInclusive,
-		                                      final BigDecimal upperBound, final boolean upperInclusive) {
+											  final BigDecimal upperBound, final boolean upperInclusive) {
 			return DoubleFloatImpl.getInstance(lowerBound, lowerInclusive, upperBound, upperInclusive);
 		}
 
@@ -91,7 +91,7 @@ public interface DoubleFloat extends Float {
 			 * 		whether to include the upper bound in the interval
 			 */
 			private DoubleFloatImpl(final BigDecimal lowerBound, final boolean lowerInclusive,
-			                        final BigDecimal upperBound, final boolean upperInclusive) {
+									final BigDecimal upperBound, final boolean upperInclusive) {
 				super("DOUBLE-FLOAT", GlobalPackageStruct.COMMON_LISP);
 
 				final BigDecimal realLower = lowerInclusive ? lowerBound : lowerBound.add(BigDecimal.ONE);
@@ -114,7 +114,7 @@ public interface DoubleFloat extends Float {
 			 * @return the newly created compound {@link DoubleFloat} type
 			 */
 			public static DoubleFloat getInstance(final BigDecimal lowerBound, final boolean lowerInclusive,
-			                                      final BigDecimal upperBound, final boolean upperInclusive) {
+												  final BigDecimal upperBound, final boolean upperInclusive) {
 				return new DoubleFloatImpl(lowerBound, lowerInclusive, upperBound, upperInclusive);
 			}
 

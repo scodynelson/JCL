@@ -57,7 +57,7 @@ public interface Rational extends Real {
 		 * @return the newly created compound {@link Rational} type
 		 */
 		public static Rational getInstance(final BigInteger lowerBound, final boolean lowerInclusive,
-		                                   final BigInteger upperBound, final boolean upperInclusive) {
+										   final BigInteger upperBound, final boolean upperInclusive) {
 			return RationalImpl.getInstance(lowerBound, lowerInclusive, upperBound, upperInclusive);
 		}
 
@@ -94,7 +94,7 @@ public interface Rational extends Real {
 			 * 		whether to include the upper bound in the interval
 			 */
 			private RationalImpl(final BigInteger lowerBound, final boolean lowerInclusive,
-			                     final BigInteger upperBound, final boolean upperInclusive) {
+								 final BigInteger upperBound, final boolean upperInclusive) {
 				super("RATIONAL", GlobalPackageStruct.COMMON_LISP);
 
 				final BigInteger realLower = lowerInclusive ? lowerBound : lowerBound.add(BigInteger.ONE);
@@ -117,7 +117,7 @@ public interface Rational extends Real {
 			 * @return the newly created compound {@link Rational} type
 			 */
 			public static Rational getInstance(final BigInteger lowerBound, final boolean lowerInclusive,
-			                                   final BigInteger upperBound, final boolean upperInclusive) {
+											   final BigInteger upperBound, final boolean upperInclusive) {
 				return new RationalImpl(lowerBound, lowerInclusive, upperBound, upperInclusive);
 			}
 

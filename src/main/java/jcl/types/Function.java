@@ -48,8 +48,8 @@ public interface Function extends T {
 		 * @return the newly created compound {@link Function} type
 		 */
 		public static Function getInstance(final List<TypeSpecifier> typeSpecifiers, final Optional<TypeSpecifier> optional,
-		                                   final Rest<TypeSpecifier> rest, final Key<TypeSpecifier> key,
-		                                   final ValuesTypeSpecifier valuesTypeSpecifier) {
+										   final Rest<TypeSpecifier> rest, final Key<TypeSpecifier> key,
+										   final ValuesTypeSpecifier valuesTypeSpecifier) {
 			return FunctionImpl.getInstance(typeSpecifiers, optional, rest, key, valuesTypeSpecifier);
 		}
 
@@ -92,8 +92,8 @@ public interface Function extends T {
 			 * 		the values arguments
 			 */
 			private FunctionImpl(final List<TypeSpecifier> typeSpecifiers, final Optional<TypeSpecifier> optional,
-			                     final Rest<TypeSpecifier> rest, final Key<TypeSpecifier> key,
-			                     final ValuesTypeSpecifier valuesTypeSpecifier) {
+								 final Rest<TypeSpecifier> rest, final Key<TypeSpecifier> key,
+								 final ValuesTypeSpecifier valuesTypeSpecifier) {
 				super("FUNCTION", GlobalPackageStruct.COMMON_LISP);
 				this.typeSpecifiers = typeSpecifiers;
 				this.optional = optional;
@@ -120,8 +120,8 @@ public interface Function extends T {
 			 * @return the newly created compound {@link Function} type
 			 */
 			public static Function getInstance(final List<TypeSpecifier> typeSpecifiers, final Optional<TypeSpecifier> optional,
-			                                   final Rest<TypeSpecifier> rest, final Key<TypeSpecifier> key,
-			                                   final ValuesTypeSpecifier valuesTypeSpecifier) {
+											   final Rest<TypeSpecifier> rest, final Key<TypeSpecifier> key,
+											   final ValuesTypeSpecifier valuesTypeSpecifier) {
 				return new FunctionImpl(typeSpecifiers, optional, rest, key, valuesTypeSpecifier);
 			}
 

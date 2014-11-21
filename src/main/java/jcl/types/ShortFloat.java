@@ -54,7 +54,7 @@ public interface ShortFloat extends Float {
 		 * @return the newly created compound {@link ShortFloat} type
 		 */
 		public static ShortFloat getInstance(final BigDecimal lowerBound, final boolean lowerInclusive,
-		                                     final BigDecimal upperBound, final boolean upperInclusive) {
+											 final BigDecimal upperBound, final boolean upperInclusive) {
 			return ShortFloatImpl.getInstance(lowerBound, lowerInclusive, upperBound, upperInclusive);
 		}
 
@@ -91,7 +91,7 @@ public interface ShortFloat extends Float {
 			 * 		whether to include the upper bound in the interval
 			 */
 			private ShortFloatImpl(final BigDecimal lowerBound, final boolean lowerInclusive,
-			                       final BigDecimal upperBound, final boolean upperInclusive) {
+								   final BigDecimal upperBound, final boolean upperInclusive) {
 				super("SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP);
 
 				final BigDecimal realLower = lowerInclusive ? lowerBound : lowerBound.add(BigDecimal.ONE);
@@ -114,7 +114,7 @@ public interface ShortFloat extends Float {
 			 * @return the newly created compound {@link ShortFloat} type
 			 */
 			public static ShortFloat getInstance(final BigDecimal lowerBound, final boolean lowerInclusive,
-			                                     final BigDecimal upperBound, final boolean upperInclusive) {
+												 final BigDecimal upperBound, final boolean upperInclusive) {
 				return new ShortFloatImpl(lowerBound, lowerInclusive, upperBound, upperInclusive);
 			}
 

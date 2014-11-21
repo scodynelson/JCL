@@ -60,7 +60,7 @@ public interface Float extends Real {
 		 * @return the newly created compound {@link Float} type
 		 */
 		public static Float getInstance(final BigDecimal lowerBound, final boolean lowerInclusive,
-		                                final BigDecimal upperBound, final boolean upperInclusive) {
+										final BigDecimal upperBound, final boolean upperInclusive) {
 			return FloatImpl.getInstance(lowerBound, lowerInclusive, upperBound, upperInclusive);
 		}
 
@@ -97,7 +97,7 @@ public interface Float extends Real {
 			 * 		whether to include the upper bound in the interval
 			 */
 			private FloatImpl(final BigDecimal lowerBound, final boolean lowerInclusive,
-			                  final BigDecimal upperBound, final boolean upperInclusive) {
+							  final BigDecimal upperBound, final boolean upperInclusive) {
 				super("FLOAT", GlobalPackageStruct.COMMON_LISP);
 
 				final BigDecimal realLower = lowerInclusive ? lowerBound : lowerBound.add(BigDecimal.ONE);
@@ -120,7 +120,7 @@ public interface Float extends Real {
 			 * @return the newly created compound {@link Float} type
 			 */
 			public static Float getInstance(final BigDecimal lowerBound, final boolean lowerInclusive,
-			                                final BigDecimal upperBound, final boolean upperInclusive) {
+											final BigDecimal upperBound, final boolean upperInclusive) {
 				return new FloatImpl(lowerBound, lowerInclusive, upperBound, upperInclusive);
 			}
 

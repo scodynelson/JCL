@@ -1,8 +1,8 @@
 package jcl.reader.macrofunction;
 
 import jcl.LispStruct;
-import jcl.reader.Reader;
 import jcl.reader.AttributeType;
+import jcl.reader.Reader;
 import jcl.reader.SyntaxType;
 import jcl.structs.functions.FunctionStruct;
 

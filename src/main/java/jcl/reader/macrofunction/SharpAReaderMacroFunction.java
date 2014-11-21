@@ -1,8 +1,8 @@
 package jcl.reader.macrofunction;
 
 import jcl.LispStruct;
-import jcl.reader.Reader;
 import jcl.reader.CharacterConstants;
+import jcl.reader.Reader;
 import jcl.structs.arrays.ArrayStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
@@ -77,8 +77,8 @@ public final class SharpAReaderMacroFunction extends ReaderMacroFunction {
 		final List<Integer> dims = new ArrayList<>();
 
 		for (BigInteger axis = BigInteger.ZERO;
-			 axis.compareTo(dimensions) < 0;
-			 axis = axis.add(BigInteger.ONE)) {
+		     axis.compareTo(dimensions) < 0;
+		     axis = axis.add(BigInteger.ONE)) {
 
 			final ListStruct seqList;
 			if (seq instanceof ListStruct) {

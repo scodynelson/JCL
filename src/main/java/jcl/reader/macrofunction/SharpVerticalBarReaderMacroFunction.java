@@ -1,8 +1,8 @@
 package jcl.reader.macrofunction;
 
 import jcl.LispStruct;
-import jcl.reader.Reader;
 import jcl.reader.CharacterConstants;
+import jcl.reader.Reader;
 import jcl.structs.streams.ReadResult;
 import jcl.structs.symbols.variables.Variable;
 

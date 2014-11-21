@@ -1,8 +1,8 @@
 package jcl.reader.macrofunction;
 
-import jcl.reader.Reader;
 import jcl.reader.AttributeType;
 import jcl.reader.CaseSpec;
+import jcl.reader.Reader;
 import jcl.reader.SyntaxType;
 import jcl.structs.streams.ReadResult;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -141,7 +141,7 @@ abstract class ExtendedTokenReaderMacroFunction extends ReaderMacroFunction {
 	 * @return the resulting {@link ReadResult} of the read operation performed by the {@link Reader}
 	 */
 	private static ReadResult readToken(final Reader reader, final boolean eofErrorP, final boolean recursiveP,
-										final StringBuilder stringBuilder, final boolean isEscaped) {
+	                                    final StringBuilder stringBuilder, final boolean isEscaped) {
 		final ReadResult readResult = reader.readChar(eofErrorP, null, recursiveP);
 		appendToken(reader, readResult, stringBuilder, isEscaped);
 		return readResult;
@@ -161,7 +161,7 @@ abstract class ExtendedTokenReaderMacroFunction extends ReaderMacroFunction {
 	 * 		whether or not to attempt to modify the case of the read token
 	 */
 	private static void appendToken(final Reader reader, final ReadResult readResult, final StringBuilder stringBuilder,
-									final boolean isEscaped) {
+	                                final boolean isEscaped) {
 		if (!readResult.wasEOF()) {
 			int token = readResult.getResult();
 			if (!isEscaped) {

@@ -2,6 +2,10 @@ package jcl.reader;
 
 import jcl.LispStruct;
 import jcl.structs.streams.ReadResult;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Step 9 of the Reader Algorithm.
@@ -28,15 +32,14 @@ import jcl.structs.streams.ReadResult;
  * </tab>
  * </p>
  */
-final class OddMultiEscapeState extends State {
+@Component
+class OddMultiEscapeState extends State {
 
-	static final State ODD_MULTI_ESCAPE_STATE = new OddMultiEscapeState();
+	@Autowired
+	private IllegalCharacterState illegalCharacterState;
 
-	/**
-	 * Private constructor.
-	 */
-	private OddMultiEscapeState() {
-	}
+	@Autowired
+	private EvenMultiEscapeState evenMultiEscapeState;
 
 	@Override
 	void process(final Reader reader, final TokenBuilder tokenBuilder) {
@@ -47,7 +50,7 @@ final class OddMultiEscapeState extends State {
 
 		ReadResult readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
 		if (readResult.wasEOF()) {
-			IllegalCharacterState.ILLEGAL_CHARACTER_STATE.process(reader, tokenBuilder);
+			illegalCharacterState.process(reader, tokenBuilder);
 		}
 
 		int codePoint = readResult.getResult();
@@ -62,23 +65,28 @@ final class OddMultiEscapeState extends State {
 
 			tokenBuilder.addToTokenAttributes(codePoint, AttributeType.ALPHABETIC);
 
-			ODD_MULTI_ESCAPE_STATE.process(reader, tokenBuilder);
+			process(reader, tokenBuilder);
 		} else if (syntaxType == SyntaxType.SINGLE_ESCAPE) {
 
 			readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
 			if (readResult.wasEOF()) {
-				IllegalCharacterState.ILLEGAL_CHARACTER_STATE.process(reader, tokenBuilder);
+				illegalCharacterState.process(reader, tokenBuilder);
 			} else {
 				codePoint = readResult.getResult();
 				tokenBuilder.setPreviousReadCharacter(codePoint);
 				tokenBuilder.addToTokenAttributes(codePoint, AttributeType.ALPHABETIC);
 
-				ODD_MULTI_ESCAPE_STATE.process(reader, tokenBuilder);
+				process(reader, tokenBuilder);
 			}
 		} else if (syntaxType == SyntaxType.MULTIPLE_ESCAPE) {
-			EvenMultiEscapeState.EVEN_MULTI_ESCAPE_STATE.process(reader, tokenBuilder);
+			evenMultiEscapeState.process(reader, tokenBuilder);
 		} else {
-			IllegalCharacterState.ILLEGAL_CHARACTER_STATE.process(reader, tokenBuilder);
+			illegalCharacterState.process(reader, tokenBuilder);
 		}
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

@@ -2,6 +2,10 @@ package jcl.reader;
 
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.symbols.variables.Variable;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
 
@@ -18,15 +22,11 @@ import java.util.LinkedList;
  * 3) Package with a Symbol
  * </p>
  */
-final class TokenAccumulatedState extends State {
+@Component
+class TokenAccumulatedState extends State {
 
-	static final State TOKEN_ACCUMULATED_STATE = new TokenAccumulatedState();
-
-	/**
-	 * Private constructor.
-	 */
-	private TokenAccumulatedState() {
-	}
+	@Autowired
+	private NumberTokenAccumulatedState numberTokenAccumulatedState;
 
 	@Override
 	void process(final Reader reader, final TokenBuilder tokenBuilder) {
@@ -51,7 +51,12 @@ final class TokenAccumulatedState extends State {
 		if (".".equals(tokenString)) {
 			throw new ReaderErrorException("Dot context error in '.'");
 		} else {
-			NumberTokenAccumulatedState.NUMBER_TOKEN_ACCUMULATED_STATE.process(reader, tokenBuilder);
+			numberTokenAccumulatedState.process(reader, tokenBuilder);
 		}
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

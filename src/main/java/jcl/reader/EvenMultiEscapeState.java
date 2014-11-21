@@ -2,6 +2,10 @@ package jcl.reader;
 
 import jcl.LispStruct;
 import jcl.structs.streams.ReadResult;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Step 8 of the Reader Algorithm.
@@ -47,15 +51,17 @@ import jcl.structs.streams.ReadResult;
  * </tab>
  * </p>
  */
-final class EvenMultiEscapeState extends State {
+@Component
+class EvenMultiEscapeState extends State {
 
-	static final State EVEN_MULTI_ESCAPE_STATE = new EvenMultiEscapeState();
+	@Autowired
+	private IllegalCharacterState illegalCharacterState;
 
-	/**
-	 * Private constructor.
-	 */
-	private EvenMultiEscapeState() {
-	}
+	@Autowired
+	private OddMultiEscapeState oddMultiEscapeState;
+
+	@Autowired
+	private TokenAccumulatedState tokenAccumulatedState;
 
 	@Override
 	void process(final Reader reader, final TokenBuilder tokenBuilder) {
@@ -66,7 +72,7 @@ final class EvenMultiEscapeState extends State {
 
 		ReadResult readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
 		if (readResult.wasEOF()) {
-			TokenAccumulatedState.TOKEN_ACCUMULATED_STATE.process(reader, tokenBuilder);
+			tokenAccumulatedState.process(reader, tokenBuilder);
 		}
 
 		int codePoint = readResult.getResult();
@@ -81,32 +87,37 @@ final class EvenMultiEscapeState extends State {
 			codePoint = properCaseCodePoint(codePoint, attributeType, readtableCase);
 			tokenBuilder.addToTokenAttributes(codePoint, attributeType);
 
-			EVEN_MULTI_ESCAPE_STATE.process(reader, tokenBuilder);
+			process(reader, tokenBuilder);
 		} else if (syntaxType == SyntaxType.SINGLE_ESCAPE) {
 			// NOTE: The only difference in the following logic and the actual SINGLE_ESCAPE_STATE is that
 			//          this one builds on the current token, where as the SES begins a token.
 
 			readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
 			if (readResult.wasEOF()) {
-				IllegalCharacterState.ILLEGAL_CHARACTER_STATE.process(reader, tokenBuilder);
+				illegalCharacterState.process(reader, tokenBuilder);
 			} else {
 				codePoint = readResult.getResult();
 				tokenBuilder.setPreviousReadCharacter(codePoint);
 				tokenBuilder.addToTokenAttributes(codePoint, AttributeType.ALPHABETIC);
 
-				EVEN_MULTI_ESCAPE_STATE.process(reader, tokenBuilder);
+				process(reader, tokenBuilder);
 			}
 		} else if (syntaxType == SyntaxType.MULTIPLE_ESCAPE) {
-			OddMultiEscapeState.ODD_MULTI_ESCAPE_STATE.process(reader, tokenBuilder);
+			oddMultiEscapeState.process(reader, tokenBuilder);
 		} else if (syntaxType == SyntaxType.TERMINATING) {
 			// TODO: preserve whitespace?
 			reader.unreadChar(codePoint);
-			TokenAccumulatedState.TOKEN_ACCUMULATED_STATE.process(reader, tokenBuilder);
+			tokenAccumulatedState.process(reader, tokenBuilder);
 		} else if (syntaxType == SyntaxType.WHITESPACE) {
 			reader.unreadChar(codePoint);
-			TokenAccumulatedState.TOKEN_ACCUMULATED_STATE.process(reader, tokenBuilder);
+			tokenAccumulatedState.process(reader, tokenBuilder);
 		} else {
-			IllegalCharacterState.ILLEGAL_CHARACTER_STATE.process(reader, tokenBuilder);
+			illegalCharacterState.process(reader, tokenBuilder);
 		}
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

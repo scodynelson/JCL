@@ -3,6 +3,10 @@ package jcl.reader;
 import jcl.LispStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.streams.ReadResult;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Step 1 of the Reader Algorithm.
@@ -11,15 +15,26 @@ import jcl.structs.streams.ReadResult;
  * from the input stream, and dispatched according to the syntax type of x to one of steps 2 to 7.
  * </p>
  */
-final class ReadState extends State {
+@Component
+class ReadState extends State {
 
-	static final State READ_STATE = new ReadState();
+	@Autowired
+	private IllegalCharacterState illegalCharacterState;
 
-	/**
-	 * Private constructor.
-	 */
-	private ReadState() {
-	}
+	@Autowired
+	private WhitespaceState whitespaceState;
+
+	@Autowired
+	private MacroCharacterState macroCharacterState;
+
+	@Autowired
+	private SingleEscapeState singleEscapeState;
+
+	@Autowired
+	private MultipleEscapeState multipleEscapeState;
+
+	@Autowired
+	private ConstituentState constituentState;
 
 	@Override
 	void process(final Reader reader, final TokenBuilder tokenBuilder) {
@@ -44,17 +59,22 @@ final class ReadState extends State {
 		final SyntaxType syntaxType = reader.getSyntaxType(codePoint);
 
 		if (syntaxType == SyntaxType.WHITESPACE) {
-			WhitespaceState.WHITESPACE_STATE.process(reader, tokenBuilder);
+			whitespaceState.process(reader, tokenBuilder);
 		} else if ((syntaxType == SyntaxType.TERMINATING) || (syntaxType == SyntaxType.NON_TERMINATING)) {
-			MacroCharacterState.MACRO_CHARACTER_STATE.process(reader, tokenBuilder);
+			macroCharacterState.process(reader, tokenBuilder);
 		} else if (syntaxType == SyntaxType.SINGLE_ESCAPE) {
-			SingleEscapeState.SINGLE_ESCAPE_STATE.process(reader, tokenBuilder);
+			singleEscapeState.process(reader, tokenBuilder);
 		} else if (syntaxType == SyntaxType.MULTIPLE_ESCAPE) {
-			MultipleEscapeState.MULTIPLE_ESCAPE_STATE.process(reader, tokenBuilder);
+			multipleEscapeState.process(reader, tokenBuilder);
 		} else if (syntaxType == SyntaxType.CONSTITUENT) {
-			ConstituentState.CONSTITUENT_STATE.process(reader, tokenBuilder);
+			constituentState.process(reader, tokenBuilder);
 		} else {
-			IllegalCharacterState.ILLEGAL_CHARACTER_STATE.process(reader, tokenBuilder);
+			illegalCharacterState.process(reader, tokenBuilder);
 		}
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

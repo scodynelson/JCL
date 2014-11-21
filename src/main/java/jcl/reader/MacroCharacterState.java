@@ -4,6 +4,10 @@ import jcl.LispStruct;
 import jcl.reader.macrofunction.ReaderMacroFunction;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.streams.ReadResult;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
 
@@ -30,15 +34,11 @@ import java.math.BigInteger;
  * </tab>
  * </p>
  */
-final class MacroCharacterState extends State {
+@Component
+class MacroCharacterState extends State {
 
-	static final State MACRO_CHARACTER_STATE = new MacroCharacterState();
-
-	/**
-	 * Private constructor.
-	 */
-	private MacroCharacterState() {
-	}
+	@Autowired
+	private ReadState readState;
 
 	@Override
 	void process(final Reader reader, final TokenBuilder tokenBuilder) {
@@ -67,8 +67,13 @@ final class MacroCharacterState extends State {
 		tokenBuilder.setReturnToken(lispToken);
 
 		if (lispToken == null) {
-			ReadState.READ_STATE.process(reader, tokenBuilder);
+			readState.process(reader, tokenBuilder);
 		}
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 
 	/**

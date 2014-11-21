@@ -49,12 +49,18 @@ import java.util.Map;
  * Keyword Package!!!
  * </p>
  */
-public class SymbolTokenAccumulatedState extends State {
+final class SymbolTokenAccumulatedState extends State {
 
-	public static final State SYMBOL_TOKEN_ACCUMULATED_STATE = new SymbolTokenAccumulatedState();
+	static final State SYMBOL_TOKEN_ACCUMULATED_STATE = new SymbolTokenAccumulatedState();
+
+	/**
+	 * Private constructor.
+	 */
+	private SymbolTokenAccumulatedState() {
+	}
 
 	@Override
-	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
+	void process(final Reader reader, final TokenBuilder tokenBuilder) {
 
 		final SymbolStruct<?> symbolToken = getSymbolToken(tokenBuilder);
 		if (symbolToken == null) {

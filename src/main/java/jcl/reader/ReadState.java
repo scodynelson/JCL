@@ -11,12 +11,18 @@ import jcl.structs.streams.ReadResult;
  * from the input stream, and dispatched according to the syntax type of x to one of steps 2 to 7.
  * </p>
  */
-public class ReadState extends State {
+final class ReadState extends State {
 
-	public static final State READ_STATE = new ReadState();
+	static final State READ_STATE = new ReadState();
+
+	/**
+	 * Private constructor.
+	 */
+	private ReadState() {
+	}
 
 	@Override
-	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
+	void process(final Reader reader, final TokenBuilder tokenBuilder) {
 
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();

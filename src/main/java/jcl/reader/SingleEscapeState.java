@@ -11,12 +11,18 @@ import jcl.structs.streams.ReadResult;
  * used to begin a token, and step 8 is entered.
  * </p>
  */
-public class SingleEscapeState extends State {
+final class SingleEscapeState extends State {
 
-	public static final State SINGLE_ESCAPE_STATE = new SingleEscapeState();
+	static final State SINGLE_ESCAPE_STATE = new SingleEscapeState();
+
+	/**
+	 * Private constructor.
+	 */
+	private SingleEscapeState() {
+	}
 
 	@Override
-	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
+	void process(final Reader reader, final TokenBuilder tokenBuilder) {
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();
 		final boolean isRecursiveP = tokenBuilder.isRecursiveP();

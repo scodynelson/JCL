@@ -31,7 +31,7 @@ import java.util.List;
  * For online specifications of these states, goto http://www.lispworks.com/documentation/HyperSpec/Body/02_b.htm
  * This site is the Reader Algorithm that is outlined within the CommonLisp HyperSpec (TM).
  */
-public abstract class State {
+abstract class State {
 
 	private static final int EOF = -1;
 
@@ -45,7 +45,7 @@ public abstract class State {
 	 * 		the {@link TokenBuilder} used to build the resulting lisp token and house token parsing information throughout
 	 * 		the read process
 	 */
-	public abstract void process(Reader reader, TokenBuilder tokenBuilder);
+	abstract void process(Reader reader, TokenBuilder tokenBuilder);
 
 	@Override
 	public String toString() {

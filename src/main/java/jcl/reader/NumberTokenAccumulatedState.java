@@ -31,17 +31,23 @@ import java.util.function.Function;
  * be formatted, then we progress to the SymbolTokenAccumulatedState.
  * </p>
  */
-public class NumberTokenAccumulatedState extends State {
+final class NumberTokenAccumulatedState extends State {
 
-	public static final State NUMBER_TOKEN_ACCUMULATED_STATE = new NumberTokenAccumulatedState();
+	static final State NUMBER_TOKEN_ACCUMULATED_STATE = new NumberTokenAccumulatedState();
 
 	private static final List<AttributeType> NOT_MORE_THAN_ONE_ATTRS = Arrays.asList(AttributeType.PLUS, AttributeType.MINUS, AttributeType.DECIMAL, AttributeType.RATIOMARKER);
 	private static final List<AttributeType> FIRST_ONLY_ATTRS = Arrays.asList(AttributeType.PLUS, AttributeType.MINUS);
 	private static final List<AttributeType> NOT_FIRST_OR_LAST_ATTRS = Arrays.asList(AttributeType.DECIMAL, AttributeType.RATIOMARKER);
 	private static final List<AttributeType> NO_SIMULTANEOUS_ATTRS = Arrays.asList(AttributeType.DECIMAL, AttributeType.RATIOMARKER);
 
+	/**
+	 * Private constructor.
+	 */
+	private NumberTokenAccumulatedState() {
+	}
+
 	@Override
-	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
+	void process(final Reader reader, final TokenBuilder tokenBuilder) {
 
 		final NumberStruct numberToken = getNumberToken(tokenBuilder);
 		if (numberToken == null) {

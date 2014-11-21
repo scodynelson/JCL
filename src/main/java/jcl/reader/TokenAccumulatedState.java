@@ -18,12 +18,18 @@ import java.util.LinkedList;
  * 3) Package with a Symbol
  * </p>
  */
-public class TokenAccumulatedState extends State {
+final class TokenAccumulatedState extends State {
 
-	public static final State TOKEN_ACCUMULATED_STATE = new TokenAccumulatedState();
+	static final State TOKEN_ACCUMULATED_STATE = new TokenAccumulatedState();
+
+	/**
+	 * Private constructor.
+	 */
+	private TokenAccumulatedState() {
+	}
 
 	@Override
-	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
+	void process(final Reader reader, final TokenBuilder tokenBuilder) {
 		final Integer codePoint = tokenBuilder.getPreviousReadCharacter();
 
 		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();

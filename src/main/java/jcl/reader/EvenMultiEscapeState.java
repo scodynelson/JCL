@@ -47,12 +47,18 @@ import jcl.structs.streams.ReadResult;
  * </tab>
  * </p>
  */
-public class EvenMultiEscapeState extends State {
+final class EvenMultiEscapeState extends State {
 
-	public static final State EVEN_MULTI_ESCAPE_STATE = new EvenMultiEscapeState();
+	static final State EVEN_MULTI_ESCAPE_STATE = new EvenMultiEscapeState();
+
+	/**
+	 * Private constructor.
+	 */
+	private EvenMultiEscapeState() {
+	}
 
 	@Override
-	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
+	void process(final Reader reader, final TokenBuilder tokenBuilder) {
 
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();

@@ -5,12 +5,18 @@ package jcl.reader;
  * <p>
  * If x is a whitespace[2] character, then it is discarded and step 1 is re-entered.
  */
-public class WhitespaceState extends State {
+final class WhitespaceState extends State {
 
-	public static final State WHITESPACE_STATE = new WhitespaceState();
+	static final State WHITESPACE_STATE = new WhitespaceState();
+
+	/**
+	 * Private constructor.
+	 */
+	private WhitespaceState() {
+	}
 
 	@Override
-	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
+	void process(final Reader reader, final TokenBuilder tokenBuilder) {
 		ReadState.READ_STATE.process(reader, tokenBuilder);
 	}
 }

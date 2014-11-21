@@ -8,12 +8,18 @@ import jcl.structs.conditions.exceptions.ReaderErrorException;
  * If x is an invalid character, an error of type reader-error is signaled.
  * </p>
  */
-public class IllegalCharacterState extends State {
+final class IllegalCharacterState extends State {
 
-	public static final State ILLEGAL_CHARACTER_STATE = new IllegalCharacterState();
+	static final State ILLEGAL_CHARACTER_STATE = new IllegalCharacterState();
+
+	/**
+	 * Private constructor.
+	 */
+	private IllegalCharacterState() {
+	}
 
 	@Override
-	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
+	void process(final Reader reader, final TokenBuilder tokenBuilder) {
 		final Integer codePoint = tokenBuilder.getPreviousReadCharacter();
 
 		if (isEndOfFileCharacter(codePoint) && tokenBuilder.isEofErrorP()) {

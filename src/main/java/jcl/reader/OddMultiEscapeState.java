@@ -28,12 +28,18 @@ import jcl.structs.streams.ReadResult;
  * </tab>
  * </p>
  */
-public class OddMultiEscapeState extends State {
+final class OddMultiEscapeState extends State {
 
-	public static final State ODD_MULTI_ESCAPE_STATE = new OddMultiEscapeState();
+	static final State ODD_MULTI_ESCAPE_STATE = new OddMultiEscapeState();
+
+	/**
+	 * Private constructor.
+	 */
+	private OddMultiEscapeState() {
+	}
 
 	@Override
-	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
+	void process(final Reader reader, final TokenBuilder tokenBuilder) {
 
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();

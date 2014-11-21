@@ -12,12 +12,12 @@ import jcl.structs.conditions.exceptions.ReaderErrorException;
  * the current readtable. X is used to begin a token, and step 8 is entered.
  * </p>
  */
-public class ConstituentState extends State {
+class ConstituentState extends State {
 
-	public static final State CONSTITUENT_STATE = new ConstituentState();
+	static final State CONSTITUENT_STATE = new ConstituentState();
 
 	@Override
-	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
+	void process(final Reader reader, final TokenBuilder tokenBuilder) {
 		Integer codePoint = tokenBuilder.getPreviousReadCharacter();
 
 		if (isEndOfFileCharacter(codePoint)) {

@@ -30,12 +30,18 @@ import java.math.BigInteger;
  * </tab>
  * </p>
  */
-public class MacroCharacterState extends State {
+final class MacroCharacterState extends State {
 
-	public static final State MACRO_CHARACTER_STATE = new MacroCharacterState();
+	static final State MACRO_CHARACTER_STATE = new MacroCharacterState();
+
+	/**
+	 * Private constructor.
+	 */
+	private MacroCharacterState() {
+	}
 
 	@Override
-	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
+	void process(final Reader reader, final TokenBuilder tokenBuilder) {
 		final Integer codePoint = tokenBuilder.getPreviousReadCharacter();
 
 		if (isEndOfFileCharacter(codePoint)) {

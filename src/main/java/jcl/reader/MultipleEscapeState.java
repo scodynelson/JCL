@@ -7,12 +7,18 @@ package jcl.reader;
  * entered.
  * </p>
  */
-public class MultipleEscapeState extends State {
+final class MultipleEscapeState extends State {
 
-	public static final State MULTIPLE_ESCAPE_STATE = new MultipleEscapeState();
+	static final State MULTIPLE_ESCAPE_STATE = new MultipleEscapeState();
+
+	/**
+	 * Private constructor.
+	 */
+	private MultipleEscapeState() {
+	}
 
 	@Override
-	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
+	void process(final Reader reader, final TokenBuilder tokenBuilder) {
 		OddMultiEscapeState.ODD_MULTI_ESCAPE_STATE.process(reader, tokenBuilder);
 	}
 }

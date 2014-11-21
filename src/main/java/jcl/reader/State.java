@@ -40,6 +40,23 @@ public abstract class State {
 	private static final int EOF = -1;
 
 	/**
+	 * Abstract method to be implemented by all child State objects to handle their respective reader processing
+	 * portion.
+	 *
+	 * @param reader
+	 * 		the JCL {@link Reader} instance to use for reading lisp tokens.
+	 * @param tokenBuilder
+	 * 		the {@link TokenBuilder} used to build the resulting lisp token and house token parsing information throughout
+	 * 		the read process
+	 */
+	public abstract void process(Reader reader, TokenBuilder tokenBuilder);
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+	}
+
+	/**
 	 * Determines if the provided {@code codePoint} is either null or equal to the {@link #EOF} character constant.
 	 *
 	 * @param codePoint
@@ -155,22 +172,5 @@ public abstract class State {
 				.map(TokenAttribute::getToken)
 				.findFirst()
 				.orElse(null);
-	}
-
-	/**
-	 * Abstract method to be implemented by all child State objects to handle their respective reader processing
-	 * portion.
-	 *
-	 * @param reader
-	 * 		the JCL {@link Reader} instance to use for reading lisp tokens.
-	 * @param tokenBuilder
-	 * 		the {@link TokenBuilder} used to build the resulting lisp token and house token parsing information throughout
-	 * 		the read process
-	 */
-	public abstract void process(Reader reader, TokenBuilder tokenBuilder);
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

@@ -1,30 +1,225 @@
 <component name="ProjectDictionaryState">
   <dictionary name="codynelson">
     <words>
+      <w>accessors</w>
+      <w>acons</w>
+      <w>acos</w>
+      <w>acosh</w>
+      <w>alist</w>
       <w>alphadigit</w>
+      <w>alphanumericp</w>
+      <w>andc</w>
+      <w>aref</w>
+      <w>arrayp</w>
+      <w>asin</w>
+      <w>asinh</w>
+      <w>atan</w>
+      <w>atanh</w>
       <w>bignum</w>
+      <w>boundp</w>
+      <w>butlast</w>
+      <w>caaaar</w>
+      <w>caaadr</w>
+      <w>caaar</w>
+      <w>caadar</w>
+      <w>caaddr</w>
+      <w>caadr</w>
+      <w>caar</w>
+      <w>cadaar</w>
+      <w>cadadr</w>
+      <w>cadar</w>
+      <w>caddar</w>
+      <w>cadddr</w>
+      <w>caddr</w>
+      <w>cadr</w>
+      <w>ccase</w>
+      <w>cdaaar</w>
+      <w>cdaadr</w>
+      <w>cdaar</w>
+      <w>cdadar</w>
+      <w>cdaddr</w>
+      <w>cdadr</w>
+      <w>cdar</w>
+      <w>cddaar</w>
+      <w>cddadr</w>
+      <w>cddar</w>
+      <w>cdddar</w>
+      <w>cddddr</w>
+      <w>cdddr</w>
+      <w>cddr</w>
+      <w>cerror</w>
+      <w>characterp</w>
+      <w>clrhash</w>
+      <w>complexp</w>
+      <w>consp</w>
+      <w>constantp</w>
+      <w>ctypecase</w>
+      <w>decf</w>
+      <w>defclass</w>
+      <w>defconstant</w>
+      <w>defgeneric</w>
+      <w>defmacro</w>
+      <w>defmethod</w>
+      <w>defpackage</w>
+      <w>defparameter</w>
+      <w>defsetf</w>
+      <w>defstruct</w>
+      <w>deftype</w>
+      <w>defun</w>
+      <w>defvar</w>
+      <w>destructuring</w>
+      <w>dolist</w>
+      <w>dotimes</w>
       <w>downcase</w>
+      <w>ecase</w>
+      <w>endp</w>
       <w>eofe</w>
+      <w>equalp</w>
+      <w>etypecase</w>
+      <w>evenp</w>
       <w>exponentmarker</w>
+      <w>expt</w>
       <w>fbound</w>
+      <w>fboundp</w>
+      <w>fceiling</w>
+      <w>fdefinition</w>
+      <w>ffloor</w>
       <w>fixnum</w>
       <w>fixnums</w>
+      <w>flet</w>
+      <w>floatp</w>
+      <w>fmakunbound</w>
+      <w>fround</w>
+      <w>ftruncate</w>
+      <w>ftype</w>
+      <w>funcall</w>
+      <w>functionp</w>
+      <w>gensym</w>
+      <w>gentemp</w>
+      <w>getf</w>
+      <w>gethash</w>
+      <w>greaterp</w>
+      <w>homedir</w>
+      <w>imagpart</w>
+      <w>incf</w>
+      <w>integerp</w>
+      <w>isqrt</w>
+      <w>keywordp</w>
+      <w>ldiff</w>
+      <w>lessp</w>
+      <w>listp</w>
+      <w>logand</w>
+      <w>logandc</w>
+      <w>logbitp</w>
+      <w>logcount</w>
+      <w>logeqv</w>
+      <w>logior</w>
+      <w>lognand</w>
+      <w>lognor</w>
+      <w>lognot</w>
+      <w>logorc</w>
+      <w>logtest</w>
+      <w>logxor</w>
+      <w>macroexpand</w>
+      <w>macrolet</w>
+      <w>makunbound</w>
+      <w>mapc</w>
+      <w>mapcan</w>
+      <w>mapcar</w>
+      <w>mapcon</w>
+      <w>maphash</w>
+      <w>mapl</w>
+      <w>maplist</w>
+      <w>minusp</w>
       <w>namestring</w>
+      <w>nand</w>
+      <w>nbutlast</w>
+      <w>nconc</w>
+      <w>nintersection</w>
+      <w>notany</w>
+      <w>notevery</w>
+      <w>notinline</w>
+      <w>nreconc</w>
+      <w>nreverse</w>
+      <w>nset</w>
+      <w>nstring</w>
+      <w>nsublis</w>
+      <w>nsubst</w>
+      <w>nsubstitute</w>
+      <w>nthcdr</w>
+      <w>numberp</w>
+      <w>nunion</w>
+      <w>oddp</w>
       <w>packagemarker</w>
+      <w>packagep</w>
+      <w>pairlis</w>
+      <w>pathnamep</w>
       <w>pathnames</w>
+      <w>plusp</w>
+      <w>pprint</w>
+      <w>prin</w>
+      <w>princ</w>
+      <w>prog</w>
+      <w>progn</w>
+      <w>progv</w>
+      <w>psetf</w>
+      <w>psetq</w>
+      <w>pushnew</w>
+      <w>rassoc</w>
       <w>ratiomarker</w>
+      <w>rationalp</w>
+      <w>readably</w>
       <w>readtable</w>
+      <w>readtablep</w>
+      <w>realp</w>
+      <w>realpart</w>
+      <w>remf</w>
+      <w>remhash</w>
+      <w>remprop</w>
       <w>repl</w>
+      <w>revappend</w>
+      <w>rotatef</w>
+      <w>rplaca</w>
+      <w>rplacd</w>
       <w>rubout</w>
+      <w>sbit</w>
+      <w>schar</w>
+      <w>setf</w>
+      <w>setq</w>
+      <w>shiftf</w>
+      <w>signum</w>
+      <w>sinh</w>
       <w>specializer</w>
       <w>specializers</w>
+      <w>sqrt</w>
+      <w>streamp</w>
+      <w>stringp</w>
       <w>struct</w>
+      <w>sublis</w>
       <w>subrepertoire</w>
+      <w>subseq</w>
+      <w>subsetp</w>
+      <w>subtypep</w>
       <w>supertype</w>
+      <w>svref</w>
+      <w>sxhash</w>
+      <w>symbolp</w>
+      <w>tagbody</w>
+      <w>tailp</w>
+      <w>tanh</w>
+      <w>terpri</w>
       <w>testng</w>
+      <w>truename</w>
+      <w>typecase</w>
+      <w>typep</w>
       <w>unexport</w>
+      <w>unintern</w>
       <w>uninterned</w>
+      <w>untrace</w>
+      <w>unuse</w>
       <w>upcase</w>
+      <w>vectorp</w>
+      <w>zerop</w>
     </words>
   </dictionary>
 </component>

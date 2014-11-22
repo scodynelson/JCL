@@ -15,6 +15,7 @@ public final class Constant<T extends LispStruct> extends SymbolStruct<T> {
 
 	public static final Constant<IntegerStruct> CALL_ARGUMENTS_LIMIT = new Constant<>("CALL-ARGUMENTS-LIMIT", GlobalPackageStruct.COMMON_LISP, new IntegerStruct(BigInteger.valueOf(Short.MAX_VALUE)));
 
+	// TODO: what is the value for this symbol??
 	public static final Constant<?> ALLOW_OTHER_KEYS = new Constant<>("&ALLOW-OTHER-KEYS", GlobalPackageStruct.COMMON_LISP, null);
 	public static final Constant<?> AUX = new Constant<>("&AUX", GlobalPackageStruct.COMMON_LISP, null);
 	public static final Constant<?> BODY = new Constant<>("&BODY", GlobalPackageStruct.COMMON_LISP, null);

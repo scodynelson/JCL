@@ -1,7 +1,6 @@
 package jcl.types;
 
 import jcl.LispType;
-import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -38,7 +37,7 @@ public interface T extends LispType {
 			 * Private constructor.
 			 */
 			private TImpl() {
-				super("T", GlobalPackageStruct.COMMON_LISP);
+				super("T");
 			}
 
 			@Override

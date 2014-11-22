@@ -1,6 +1,5 @@
 package jcl.types;
 
-import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -39,7 +38,7 @@ public interface Restart extends T {
 			 * Private constructor.
 			 */
 			private RestartImpl() {
-				super("RESTART", GlobalPackageStruct.COMMON_LISP);
+				super("RESTART");
 			}
 
 			@Override

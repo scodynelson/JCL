@@ -1,6 +1,5 @@
 package jcl.types;
 
-import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.IntervalDesignator;
@@ -112,7 +111,7 @@ public interface Real extends Number {
 			 * Private constructor.
 			 */
 			private RealImpl() {
-				super("REAL", GlobalPackageStruct.COMMON_LISP);
+				super("REAL");
 				integerIntervalDesignator = null;
 				decimalIntervalDesignator = null;
 			}
@@ -131,7 +130,7 @@ public interface Real extends Number {
 			 */
 			private RealImpl(final BigInteger lowerBound, final boolean lowerInclusive,
 							 final BigInteger upperBound, final boolean upperInclusive) {
-				super("REAL", GlobalPackageStruct.COMMON_LISP);
+				super("REAL");
 
 				final BigInteger realLower = lowerInclusive ? lowerBound : lowerBound.add(BigInteger.ONE);
 				final BigInteger realUpper = upperInclusive ? upperBound : upperBound.subtract(BigInteger.ONE);
@@ -154,7 +153,7 @@ public interface Real extends Number {
 			 */
 			private RealImpl(final BigDecimal lowerBound, final boolean lowerInclusive,
 							 final BigDecimal upperBound, final boolean upperInclusive) {
-				super("REAL", GlobalPackageStruct.COMMON_LISP);
+				super("REAL");
 
 				final BigDecimal realLower = lowerInclusive ? lowerBound : lowerBound.add(BigDecimal.ONE);
 				final BigDecimal realUpper = upperInclusive ? upperBound : upperBound.subtract(BigDecimal.ONE);

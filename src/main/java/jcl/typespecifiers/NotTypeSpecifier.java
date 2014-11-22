@@ -1,7 +1,6 @@
 package jcl.typespecifiers;
 
 import jcl.LispType;
-import jcl.structs.packages.GlobalPackageStruct;
 import jcl.types.TypeBaseClass;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -34,7 +33,7 @@ public class NotTypeSpecifier extends TypeBaseClass implements CompoundTypeSpeci
 	 * 		a {@link LispType}
 	 */
 	protected NotTypeSpecifier(final String name, final LispType type) {
-		super(name, GlobalPackageStruct.COMMON_LISP);
+		super(name);
 		this.type = type;
 	}
 

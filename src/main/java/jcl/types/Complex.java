@@ -1,6 +1,5 @@
 package jcl.types;
 
-import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -66,7 +65,7 @@ public interface Complex extends Number {
 			 * 		the type of {@link Real} that comprises the {@link Complex}
 			 */
 			private ComplexImpl(final Real realType) {
-				super("COMPLEX", GlobalPackageStruct.COMMON_LISP);
+				super("COMPLEX");
 				this.realType = realType;
 			}
 

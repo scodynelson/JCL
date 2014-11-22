@@ -2,7 +2,6 @@ package jcl.typespecifiers;
 
 import jcl.lambdalist.variable.Optional;
 import jcl.lambdalist.variable.Rest;
-import jcl.structs.packages.GlobalPackageStruct;
 import jcl.types.TypeBaseClass;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -53,7 +52,7 @@ public class ValuesTypeSpecifier extends TypeBaseClass implements CompoundTypeSp
 	 */
 	protected ValuesTypeSpecifier(final String name, final List<TypeSpecifier> typeSpecifiers, final Optional<TypeSpecifier> optional,
 	                              final Rest<TypeSpecifier> rest) {
-		super(name, GlobalPackageStruct.COMMON_LISP);
+		super(name);
 		this.typeSpecifiers = typeSpecifiers;
 		this.optional = optional;
 		this.rest = rest;

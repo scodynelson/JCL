@@ -1,6 +1,5 @@
 package jcl.types;
 
-import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -44,7 +43,7 @@ public interface Number extends T {
 			 * Private constructor.
 			 */
 			private NumberImpl() {
-				super("NUMBER", GlobalPackageStruct.COMMON_LISP);
+				super("NUMBER");
 			}
 
 			@Override

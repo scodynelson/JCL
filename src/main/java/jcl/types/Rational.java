@@ -1,6 +1,5 @@
 package jcl.types;
 
-import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.IntervalDesignator;
@@ -77,7 +76,7 @@ public interface Rational extends Real {
 			 * Private constructor.
 			 */
 			private RationalImpl() {
-				super("RATIONAL", GlobalPackageStruct.COMMON_LISP);
+				super("RATIONAL");
 				intervalDesignator = null;
 			}
 
@@ -95,7 +94,7 @@ public interface Rational extends Real {
 			 */
 			private RationalImpl(final BigInteger lowerBound, final boolean lowerInclusive,
 								 final BigInteger upperBound, final boolean upperInclusive) {
-				super("RATIONAL", GlobalPackageStruct.COMMON_LISP);
+				super("RATIONAL");
 
 				final BigInteger realLower = lowerInclusive ? lowerBound : lowerBound.add(BigInteger.ONE);
 				final BigInteger realUpper = upperInclusive ? upperBound : upperBound.subtract(BigInteger.ONE);

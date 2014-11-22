@@ -2,7 +2,6 @@ package jcl.typespecifiers;
 
 import jcl.LispStruct;
 import jcl.structs.functions.PredicateFunctionStruct;
-import jcl.structs.packages.GlobalPackageStruct;
 import jcl.types.TypeBaseClass;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -38,7 +37,7 @@ public class SatisfiesTypeSpecifier extends TypeBaseClass implements CompoundTyp
 	 * 		the predicate function to test satisfaction
 	 */
 	protected SatisfiesTypeSpecifier(final String name, final PredicateFunctionStruct<LispStruct> predicate) {
-		super(name, GlobalPackageStruct.COMMON_LISP);
+		super(name);
 		this.predicate = predicate;
 	}
 

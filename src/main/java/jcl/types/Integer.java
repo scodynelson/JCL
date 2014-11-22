@@ -1,6 +1,5 @@
 package jcl.types;
 
-import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.IntervalDesignator;
@@ -76,7 +75,7 @@ public interface Integer extends Rational {
 			 * Private constructor.
 			 */
 			private IntegerImpl() {
-				super("INTEGER", GlobalPackageStruct.COMMON_LISP);
+				super("INTEGER");
 				intervalDesignator = null;
 			}
 
@@ -94,7 +93,7 @@ public interface Integer extends Rational {
 			 */
 			private IntegerImpl(final BigInteger lowerBound, final boolean lowerInclusive,
 								final BigInteger upperBound, final boolean upperInclusive) {
-				super("INTEGER", GlobalPackageStruct.COMMON_LISP);
+				super("INTEGER");
 
 				BigInteger realLower = null;
 				if (lowerBound != null) {

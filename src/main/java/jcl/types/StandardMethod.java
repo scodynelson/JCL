@@ -1,6 +1,5 @@
 package jcl.types;
 
-import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -36,7 +35,7 @@ public interface StandardMethod extends Method, StandardObject {
 			 * Private constructor.
 			 */
 			private StandardMethodImpl() {
-				super("STANDARD-METHOD", GlobalPackageStruct.COMMON_LISP);
+				super("STANDARD-METHOD");
 			}
 
 			@Override

@@ -1,7 +1,6 @@
 package jcl.typespecifiers;
 
 import jcl.LispType;
-import jcl.structs.packages.GlobalPackageStruct;
 import jcl.types.TypeBaseClass;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -35,7 +34,7 @@ public class EQLTypeSpecifier extends TypeBaseClass implements CompoundTypeSpeci
 	 * 		the type specifier to test equality
 	 */
 	protected EQLTypeSpecifier(final String name, final TypeSpecifier typeSpecifier) {
-		super(name, GlobalPackageStruct.COMMON_LISP);
+		super(name);
 		this.typeSpecifier = typeSpecifier;
 	}
 

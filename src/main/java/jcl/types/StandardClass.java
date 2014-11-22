@@ -1,6 +1,5 @@
 package jcl.types;
 
-import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -36,7 +35,7 @@ public interface StandardClass extends Class {
 			 * Private constructor.
 			 */
 			private StandardClassImpl() {
-				super("STANDARD-CLASS", GlobalPackageStruct.COMMON_LISP);
+				super("STANDARD-CLASS");
 			}
 
 			@Override

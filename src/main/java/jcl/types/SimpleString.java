@@ -1,7 +1,6 @@
 package jcl.types;
 
 import jcl.LispType;
-import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.DimensionsDesignator;
@@ -67,7 +66,7 @@ public interface SimpleString extends String, SimpleArray {
 			 * 		the size of the {@link SimpleString}
 			 */
 			private SimpleStringImpl(final Integer size) {
-				super("SIMPLE-STRING", GlobalPackageStruct.COMMON_LISP);
+				super("SIMPLE-STRING");
 				this.size = new DimensionsDesignator(size);
 			}
 

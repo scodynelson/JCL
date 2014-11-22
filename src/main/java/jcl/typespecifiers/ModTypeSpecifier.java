@@ -1,7 +1,6 @@
 package jcl.typespecifiers;
 
 import jcl.structs.numbers.IntegerStruct;
-import jcl.structs.packages.GlobalPackageStruct;
 import jcl.types.TypeBaseClass;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -37,7 +36,7 @@ public class ModTypeSpecifier extends TypeBaseClass implements CompoundTypeSpeci
 	 * 		the integer structure
 	 */
 	protected ModTypeSpecifier(final String name, final IntegerStruct integerStruct) {
-		super(name, GlobalPackageStruct.COMMON_LISP);
+		super(name);
 		this.integerStruct = integerStruct;
 	}
 

@@ -1,6 +1,5 @@
 package jcl.types;
 
-import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -37,7 +36,7 @@ public interface LogicalPathname extends Pathname {
 			 * Private constructor.
 			 */
 			private LogicalPathnameImpl() {
-				super("LOGICAL-PATHNAME", GlobalPackageStruct.COMMON_LISP);
+				super("LOGICAL-PATHNAME");
 			}
 
 			@Override

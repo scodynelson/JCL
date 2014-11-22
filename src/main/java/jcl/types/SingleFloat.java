@@ -1,6 +1,5 @@
 package jcl.types;
 
-import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.IntervalDesignator;
@@ -74,7 +73,7 @@ public interface SingleFloat extends Float {
 			 * Private constructor.
 			 */
 			private SingleFloatImpl() {
-				super("SINGLE-FLOAT", GlobalPackageStruct.COMMON_LISP);
+				super("SINGLE-FLOAT");
 				intervalDesignator = null;
 			}
 
@@ -92,7 +91,7 @@ public interface SingleFloat extends Float {
 			 */
 			private SingleFloatImpl(final BigDecimal lowerBound, final boolean lowerInclusive,
 									final BigDecimal upperBound, final boolean upperInclusive) {
-				super("SINGLE-FLOAT", GlobalPackageStruct.COMMON_LISP);
+				super("SINGLE-FLOAT");
 
 				final BigDecimal realLower = lowerInclusive ? lowerBound : lowerBound.add(BigDecimal.ONE);
 				final BigDecimal realUpper = upperInclusive ? upperBound : upperBound.subtract(BigDecimal.ONE);

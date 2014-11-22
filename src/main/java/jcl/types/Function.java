@@ -3,7 +3,6 @@ package jcl.types;
 import jcl.lambdalist.variable.Key;
 import jcl.lambdalist.variable.Optional;
 import jcl.lambdalist.variable.Rest;
-import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.TypeSpecifier;
@@ -94,7 +93,7 @@ public interface Function extends T {
 			private FunctionImpl(final List<TypeSpecifier> typeSpecifiers, final Optional<TypeSpecifier> optional,
 								 final Rest<TypeSpecifier> rest, final Key<TypeSpecifier> key,
 								 final ValuesTypeSpecifier valuesTypeSpecifier) {
-				super("FUNCTION", GlobalPackageStruct.COMMON_LISP);
+				super("FUNCTION");
 				this.typeSpecifiers = typeSpecifiers;
 				this.optional = optional;
 				this.rest = rest;

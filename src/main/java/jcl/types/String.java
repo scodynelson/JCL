@@ -1,7 +1,6 @@
 package jcl.types;
 
 import jcl.LispType;
-import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.DimensionsDesignator;
@@ -65,7 +64,7 @@ public interface String extends Vector {
 			 * 		the size of the {@link String}
 			 */
 			private StringImpl(final Integer size) {
-				super("STRING", GlobalPackageStruct.COMMON_LISP);
+				super("STRING");
 				this.size = new DimensionsDesignator(size);
 			}
 

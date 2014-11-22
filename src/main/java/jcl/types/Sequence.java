@@ -1,6 +1,5 @@
 package jcl.types;
 
-import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -40,7 +39,7 @@ public interface Sequence extends T {
 			 * Private constructor.
 			 */
 			private SequenceImpl() {
-				super("SEQUENCE", GlobalPackageStruct.COMMON_LISP);
+				super("SEQUENCE");
 			}
 
 			@Override

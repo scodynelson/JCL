@@ -1,6 +1,5 @@
 package jcl.types;
 
-import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -37,7 +36,7 @@ public interface BuiltInClass extends Class {
 			 * Private constructor.
 			 */
 			private BuiltInClassImpl() {
-				super("BUILT-IN-CLASS", GlobalPackageStruct.COMMON_LISP);
+				super("BUILT-IN-CLASS");
 			}
 
 			@Override

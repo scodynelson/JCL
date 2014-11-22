@@ -1,6 +1,5 @@
 package jcl.types;
 
-import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -45,7 +44,7 @@ public interface BaseChar extends Character {
 			 * Private constructor.
 			 */
 			private BaseCharImpl() {
-				super("BASE-CHAR", GlobalPackageStruct.COMMON_LISP);
+				super("BASE-CHAR");
 			}
 
 			@Override

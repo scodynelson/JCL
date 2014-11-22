@@ -1,7 +1,6 @@
 package jcl.types;
 
 import jcl.LispType;
-import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.DimensionsDesignator;
@@ -75,7 +74,7 @@ public interface SimpleArray extends Array {
 			 * 		the types of elements within the {@link SimpleArray}
 			 */
 			private SimpleArrayImpl(final List<Integer> dimensions, final LispType elementType) {
-				super("SIMPLE-ARRAY", GlobalPackageStruct.COMMON_LISP);
+				super("SIMPLE-ARRAY");
 				this.dimensions = new DimensionsDesignator(dimensions);
 				this.elementType = elementType;
 			}

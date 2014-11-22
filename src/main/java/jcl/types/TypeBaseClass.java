@@ -1,6 +1,7 @@
 package jcl.types;
 
 import jcl.LispType;
+import jcl.structs.packages.GlobalPackageStruct;
 import jcl.structs.packages.PackageStruct;
 import jcl.structs.symbols.SymbolStruct;
 
@@ -16,11 +17,9 @@ public abstract class TypeBaseClass extends SymbolStruct<LispType> implements Li
 	 *
 	 * @param name
 	 * 		the name of the symbol type
-	 * @param packageStruct
-	 * 		the package to intern the symbol type
 	 */
-	protected TypeBaseClass(final String name, final PackageStruct packageStruct) {
-		super(name, packageStruct);
+	protected TypeBaseClass(final String name) {
+		super(name, GlobalPackageStruct.JCL_TYPE);
 		init();
 	}
 

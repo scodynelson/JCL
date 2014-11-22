@@ -1,7 +1,6 @@
 package jcl.typespecifiers;
 
 import jcl.LispType;
-import jcl.structs.packages.GlobalPackageStruct;
 import jcl.types.TypeBaseClass;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -40,7 +39,7 @@ public class AndTypeSpecifier extends TypeBaseClass implements CompoundTypeSpeci
 	 * 		an array of {@link LispType}s
 	 */
 	protected AndTypeSpecifier(final String name, final LispType... types) {
-		super(name, GlobalPackageStruct.COMMON_LISP);
+		super(name);
 		this.types = new ArrayList<>(Arrays.asList(types));
 	}
 

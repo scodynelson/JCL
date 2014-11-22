@@ -1,7 +1,6 @@
 package jcl.types;
 
 import jcl.LispType;
-import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.DimensionsDesignator;
@@ -85,7 +84,7 @@ public interface SimpleVector extends Vector, SimpleArray {
 			 * 		the types of elements within the {@link SimpleVector}
 			 */
 			private SimpleVectorImpl(final Integer size, final LispType elementType) {
-				super("SIMPLE-VECTOR", GlobalPackageStruct.COMMON_LISP);
+				super("SIMPLE-VECTOR");
 				this.size = new DimensionsDesignator(size);
 				this.elementType = elementType;
 			}

@@ -1,7 +1,6 @@
 package jcl.types;
 
 import jcl.LispType;
-import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.DimensionsDesignator;
@@ -89,7 +88,7 @@ public interface Array extends T {
 			 * 		the types of elements within the {@link Array}
 			 */
 			private ArrayImpl(final List<Integer> dimensions, final LispType elementType) {
-				super("ARRAY", GlobalPackageStruct.COMMON_LISP);
+				super("ARRAY");
 				this.dimensions = new DimensionsDesignator(dimensions);
 				this.elementType = elementType;
 			}

@@ -1,7 +1,6 @@
 package jcl.typespecifiers;
 
 import jcl.LispStruct;
-import jcl.structs.packages.GlobalPackageStruct;
 import jcl.types.TypeBaseClass;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -40,7 +39,7 @@ public class MemberTypeSpecifier extends TypeBaseClass implements CompoundTypeSp
 	 * 		the lisp structures that define membership equality
 	 */
 	protected MemberTypeSpecifier(final String name, final LispStruct... lispStructs) {
-		super(name, GlobalPackageStruct.COMMON_LISP);
+		super(name);
 		this.lispStructs = new ArrayList<>(Arrays.asList(lispStructs));
 	}
 

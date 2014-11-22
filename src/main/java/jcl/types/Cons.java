@@ -1,7 +1,6 @@
 package jcl.types;
 
 import jcl.LispType;
-import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -68,7 +67,7 @@ public interface Cons extends List {
 			 * 		the type of the cdr element
 			 */
 			private ConsImpl(final LispType carSpec, final LispType cdrSpec) {
-				super("CONS", GlobalPackageStruct.COMMON_LISP);
+				super("CONS");
 				this.carSpec = carSpec;
 				this.cdrSpec = cdrSpec;
 			}

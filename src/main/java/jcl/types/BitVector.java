@@ -1,7 +1,6 @@
 package jcl.types;
 
 import jcl.LispType;
-import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.DimensionsDesignator;
@@ -67,7 +66,7 @@ public interface BitVector extends Vector {
 			 * 		the size of the {@link BitVector}
 			 */
 			private BitVectorImpl(final Integer size) {
-				super("BIT-VECTOR", GlobalPackageStruct.COMMON_LISP);
+				super("BIT-VECTOR");
 				this.size = new DimensionsDesignator(size);
 			}
 

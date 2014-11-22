@@ -1,7 +1,6 @@
 package jcl.types;
 
 import jcl.LispType;
-import jcl.structs.packages.GlobalPackageStruct;
 import jcl.typespecifiers.AtomicTypeSpecifier;
 import jcl.typespecifiers.CompoundTypeSpecifier;
 import jcl.typespecifiers.designator.DimensionsDesignator;
@@ -66,7 +65,7 @@ public interface SimpleBaseString extends BaseString, SimpleString {
 			 * 		the size of the {@link SimpleBaseString}
 			 */
 			private SimpleBaseStringImpl(final Integer size) {
-				super("SIMPLE-BASE-STRING", GlobalPackageStruct.COMMON_LISP);
+				super("SIMPLE-BASE-STRING");
 				this.size = new DimensionsDesignator(size);
 			}
 

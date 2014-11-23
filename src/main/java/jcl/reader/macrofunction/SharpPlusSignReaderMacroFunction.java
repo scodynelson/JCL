@@ -11,6 +11,9 @@ import java.math.BigInteger;
  */
 public final class SharpPlusSignReaderMacroFunction extends FeaturesReaderMacroFunction {
 
+	/**
+	 * Singleton instance variable.
+	 */
 	public static final SharpPlusSignReaderMacroFunction INSTANCE = new SharpPlusSignReaderMacroFunction();
 
 	/**

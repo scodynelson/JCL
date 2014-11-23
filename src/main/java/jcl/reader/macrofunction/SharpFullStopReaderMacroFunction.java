@@ -13,6 +13,9 @@ import java.math.BigInteger;
  */
 public final class SharpFullStopReaderMacroFunction extends ReaderMacroFunction {
 
+	/**
+	 * Singleton instance variable.
+	 */
 	public static final SharpFullStopReaderMacroFunction INSTANCE = new SharpFullStopReaderMacroFunction();
 
 	/**

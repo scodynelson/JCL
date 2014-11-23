@@ -14,6 +14,9 @@ import java.math.BigInteger;
  */
 public final class SharpColonReaderMacroFunction extends ExtendedTokenReaderMacroFunction {
 
+	/**
+	 * Singleton instance variable.
+	 */
 	public static final SharpColonReaderMacroFunction INSTANCE = new SharpColonReaderMacroFunction();
 
 	/**

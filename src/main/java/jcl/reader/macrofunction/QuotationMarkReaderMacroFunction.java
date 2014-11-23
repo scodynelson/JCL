@@ -17,6 +17,9 @@ import java.math.BigInteger;
  */
 public final class QuotationMarkReaderMacroFunction extends UnicodeCharacterReaderMacroFunction {
 
+	/**
+	 * Singleton instance variable.
+	 */
 	public static final QuotationMarkReaderMacroFunction INSTANCE = new QuotationMarkReaderMacroFunction();
 
 	/**

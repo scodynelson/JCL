@@ -9,7 +9,10 @@ import jcl.structs.streams.ReadResult;
  */
 abstract class UnicodeCharacterReaderMacroFunction extends ReaderMacroFunction {
 
-	private static final int SIXTEEN = 16;
+	/**
+	 * The Unicode radix value used to parse unicode characters into proper character code points.
+	 */
+	private static final int UNICODE_RADIX = 16;
 
 	/**
 	 * Reads in and returns the properly read in Unicode character token. A {@link ReaderErrorException} is thrown if
@@ -35,7 +38,7 @@ abstract class UnicodeCharacterReaderMacroFunction extends ReaderMacroFunction {
 
 		final String unicodeCharString = unicodeCharBuilder.toString();
 		try {
-			final int unicodeCodePoint = Integer.parseInt(unicodeCharString, SIXTEEN);
+			final int unicodeCodePoint = Integer.parseInt(unicodeCharString, UNICODE_RADIX);
 			if (!Character.isValidCodePoint(unicodeCodePoint)) {
 				throw new ReaderErrorException("0x" + unicodeCharString + " is not a valid code point.");
 			}

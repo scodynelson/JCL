@@ -15,6 +15,9 @@ import java.math.BigInteger;
  */
 public final class SharpBackslashReaderMacroFunction extends ExtendedTokenReaderMacroFunction {
 
+	/**
+	 * Singleton instance variable.
+	 */
 	public static final SharpBackslashReaderMacroFunction INSTANCE = new SharpBackslashReaderMacroFunction();
 
 	/**
@@ -39,19 +42,19 @@ public final class SharpBackslashReaderMacroFunction extends ExtendedTokenReader
 			return new CharacterStruct(theChar);
 		}
 
-		Character charName = null;
+		Integer nameCodePoint = null;
 		for (final CharacterName characterName : CharacterName.values()) {
 			final String name = characterName.getName();
 			if (StringUtils.equalsIgnoreCase(charString, name)) {
-				charName = characterName.getChar();
+				nameCodePoint = characterName.getCodePoint();
 				break;
 			}
 		}
 
-		if (charName == null) {
+		if (nameCodePoint == null) {
 			throw new ReaderErrorException("Unrecognized character name: " + charString);
 		}
 
-		return new CharacterStruct(charName);
+		return new CharacterStruct(nameCodePoint);
 	}
 }

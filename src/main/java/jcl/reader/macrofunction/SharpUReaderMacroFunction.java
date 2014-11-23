@@ -13,6 +13,9 @@ import java.math.BigInteger;
  */
 public final class SharpUReaderMacroFunction extends UnicodeCharacterReaderMacroFunction {
 
+	/**
+	 * Singleton instance variable.
+	 */
 	public static final SharpUReaderMacroFunction INSTANCE = new SharpUReaderMacroFunction();
 
 	/**

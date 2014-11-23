@@ -14,6 +14,9 @@ import java.util.UUID;
  */
 public final class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunction {
 
+	/**
+	 * Singleton instance variable.
+	 */
 	public static final SharpEqualsSignReaderMacroFunction INSTANCE = new SharpEqualsSignReaderMacroFunction();
 
 	/**

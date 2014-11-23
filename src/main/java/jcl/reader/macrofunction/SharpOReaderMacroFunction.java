@@ -11,6 +11,9 @@ import java.math.BigInteger;
  */
 public final class SharpOReaderMacroFunction extends RationalReaderMacroFunction {
 
+	/**
+	 * Singleton instance variable.
+	 */
 	public static final SharpOReaderMacroFunction INSTANCE = new SharpOReaderMacroFunction();
 
 	/**

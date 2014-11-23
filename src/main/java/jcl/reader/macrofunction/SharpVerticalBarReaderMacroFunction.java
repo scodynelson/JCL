@@ -13,6 +13,9 @@ import java.math.BigInteger;
  */
 public final class SharpVerticalBarReaderMacroFunction extends ReaderMacroFunction {
 
+	/**
+	 * Singleton instance variable.
+	 */
 	public static final SharpVerticalBarReaderMacroFunction INSTANCE = new SharpVerticalBarReaderMacroFunction();
 
 	/**

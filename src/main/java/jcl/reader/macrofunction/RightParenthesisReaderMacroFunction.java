@@ -12,6 +12,9 @@ import java.math.BigInteger;
  */
 public final class RightParenthesisReaderMacroFunction extends ReaderMacroFunction {
 
+	/**
+	 * Singleton instance variable.
+	 */
 	public static final RightParenthesisReaderMacroFunction INSTANCE = new RightParenthesisReaderMacroFunction();
 
 	/**

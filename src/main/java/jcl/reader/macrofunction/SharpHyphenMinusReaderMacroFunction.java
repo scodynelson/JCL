@@ -11,6 +11,9 @@ import java.math.BigInteger;
  */
 public final class SharpHyphenMinusReaderMacroFunction extends FeaturesReaderMacroFunction {
 
+	/**
+	 * Singleton instance variable.
+	 */
 	public static final SharpHyphenMinusReaderMacroFunction INSTANCE = new SharpHyphenMinusReaderMacroFunction();
 
 	/**

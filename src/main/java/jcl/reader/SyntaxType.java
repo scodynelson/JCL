@@ -5,11 +5,38 @@ package jcl.reader;
  */
 public enum SyntaxType {
 
+	/**
+	 * Invalid syntax.
+	 */
 	INVALID,
+
+	/**
+	 * Whitespace syntax.
+	 */
 	WHITESPACE,
+
+	/**
+	 * Non terminating syntax.
+	 */
 	NON_TERMINATING,
+
+	/**
+	 * Constituent syntax.
+	 */
 	CONSTITUENT,
+
+	/**
+	 * Terminating syntax.
+	 */
 	TERMINATING,
+
+	/**
+	 * Single escape syntax.
+	 */
 	SINGLE_ESCAPE,
+
+	/**
+	 * Multiple escape syntax.
+	 */
 	MULTIPLE_ESCAPE
 }

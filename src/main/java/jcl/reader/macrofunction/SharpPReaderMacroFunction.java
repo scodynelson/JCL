@@ -16,6 +16,9 @@ import java.net.URISyntaxException;
  */
 public final class SharpPReaderMacroFunction extends ReaderMacroFunction {
 
+	/**
+	 * Singleton instance variable.
+	 */
 	public static final SharpPReaderMacroFunction INSTANCE = new SharpPReaderMacroFunction();
 
 	/**

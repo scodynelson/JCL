@@ -5,8 +5,23 @@ package jcl.reader;
  */
 public enum CaseSpec {
 
+	/**
+	 * Uppercase spec.
+	 */
 	UPCASE,
+
+	/**
+	 * Lowercase spec.
+	 */
 	DOWNCASE,
+
+	/**
+	 * Invert case spec.
+	 */
 	INVERT,
+
+	/**
+	 * Preserve case spec.
+	 */
 	PRESERVE
 }

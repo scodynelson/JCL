@@ -13,6 +13,9 @@ import java.math.BigInteger;
  */
 public final class SemicolonReaderMacroFunction extends ReaderMacroFunction {
 
+	/**
+	 * Singleton instance variable.
+	 */
 	public static final SemicolonReaderMacroFunction INSTANCE = new SemicolonReaderMacroFunction();
 
 	/**

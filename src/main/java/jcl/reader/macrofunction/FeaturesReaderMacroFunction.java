@@ -25,12 +25,30 @@ import java.util.List;
  */
 abstract class FeaturesReaderMacroFunction extends ReaderMacroFunction {
 
+	/**
+	 * The logger for this class.
+	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(FeaturesReaderMacroFunction.class);
 
+	// TODO: is this where we keep these next 3???
+	/**
+	 * Not {@link KeywordSymbolStruct} for processing features that should 'not' be included.
+	 */
 	private static final KeywordSymbolStruct NOT = new KeywordSymbolStruct("NOT");
+
+	/**
+	 * And {@link KeywordSymbolStruct} for processing features that should be included via 'and' operation.
+	 */
 	private static final KeywordSymbolStruct AND = new KeywordSymbolStruct("AND");
+
+	/**
+	 * Or {@link KeywordSymbolStruct} for processing features that should be included via 'or' operation.
+	 */
 	private static final KeywordSymbolStruct OR = new KeywordSymbolStruct("OR");
 
+	/**
+	 * Determines if the features processed should be suppressed by the read operation or not.
+	 */
 	private final boolean shouldHideFeatures;
 
 	/**

@@ -17,6 +17,9 @@ import java.math.BigInteger;
  */
 public final class SharpAsteriskReaderMacroFunction extends ExtendedTokenReaderMacroFunction {
 
+	/**
+	 * Singleton instance variable.
+	 */
 	public static final SharpAsteriskReaderMacroFunction INSTANCE = new SharpAsteriskReaderMacroFunction();
 
 	/**

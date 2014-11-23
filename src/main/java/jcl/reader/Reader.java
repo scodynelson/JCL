@@ -13,7 +13,14 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public class Reader {
 
+	/**
+	 * The {@link InputStream} the reader reads lisp tokens from.
+	 */
 	private final InputStream inputStream;
+
+	/**
+	 * The {@link ReadtableStruct} the reader uses when reading lisp tokens from the {@link #inputStream}.
+	 */
 	private final ReadtableStruct readtable;
 
 	/**

@@ -17,6 +17,9 @@ import java.util.List;
  */
 public final class SharpCReaderMacroFunction extends ReaderMacroFunction {
 
+	/**
+	 * Singleton instance variable.
+	 */
 	public static final SharpCReaderMacroFunction INSTANCE = new SharpCReaderMacroFunction();
 
 	/**

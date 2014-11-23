@@ -15,6 +15,9 @@ import java.math.BigInteger;
  */
 public final class SharpApostropheReaderMacroFunction extends ReaderMacroFunction {
 
+	/**
+	 * Singleton instance variable.
+	 */
 	public static final SharpApostropheReaderMacroFunction INSTANCE = new SharpApostropheReaderMacroFunction();
 
 	/**

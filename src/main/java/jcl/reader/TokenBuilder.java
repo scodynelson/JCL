@@ -11,12 +11,35 @@ import java.util.LinkedList;
  */
 class TokenBuilder {
 
+	/**
+	 * Determines if an error should be thrown when an End-of-File character is encountered.
+	 */
 	private final boolean eofErrorP;
+
+	/**
+	 * The value to return if an End-of-File character is encountered and {@link #eofErrorP} is false.
+	 */
 	private final LispStruct eofValue;
+
+	/**
+	 * Determines if the read operation should operate recursively for lisp tokens.
+	 */
 	private final boolean recursiveP;
+
+	/**
+	 * The current list of {@link TokenAttribute}s accumulated through the read operation.
+	 */
 	private final LinkedList<TokenAttribute> tokenAttributes;
 
+	/**
+	 * The resulting {@link LispStruct} token after a successful read.
+	 */
 	private LispStruct returnToken;
+
+	/**
+	 * The previously read character token. This value is null if no tokens have been read. This is primarily used for
+	 * handling {@link Reader#unreadChar} operations.
+	 */
 	private Integer previousReadCharacter;
 
 	/**

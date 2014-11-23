@@ -9,6 +9,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 class CommentStruct implements LispStruct {
 
+	/**
+	 * The read in comment string.
+	 */
 	private final String commentString;
 
 	/**

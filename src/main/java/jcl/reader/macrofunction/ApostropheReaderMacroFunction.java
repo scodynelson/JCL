@@ -15,6 +15,9 @@ import java.math.BigInteger;
  */
 public final class ApostropheReaderMacroFunction extends ReaderMacroFunction {
 
+	/**
+	 * Singleton instance variable.
+	 */
 	public static final ApostropheReaderMacroFunction INSTANCE = new ApostropheReaderMacroFunction();
 
 	/**

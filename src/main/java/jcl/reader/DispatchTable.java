@@ -12,11 +12,14 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * This holds mappings for code points to macro functions and delegates to the proper {@link ReaderMacroFunction}  when
+ * This holds mappings for code points to macro functions and delegates to the proper {@link ReaderMacroFunction} when
  * used.
  */
 public class DispatchTable extends ReaderMacroFunction {
 
+	/**
+	 * The internal mapping of character code points to {@link ReaderMacroFunction}s to dispatch on when reading.
+	 */
 	private final Map<Integer, ReaderMacroFunction> macroFunctionMap = new ConcurrentHashMap<>();
 
 	@Override

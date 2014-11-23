@@ -11,9 +11,10 @@ import java.math.BigInteger;
  */
 public final class SharpXReaderMacroFunction extends RationalReaderMacroFunction {
 
+	/**
+	 * Singleton instance variable.
+	 */
 	public static final SharpXReaderMacroFunction INSTANCE = new SharpXReaderMacroFunction();
-
-	private static final int SIXTEEN = 16;
 
 	/**
 	 * Private constructor.
@@ -21,10 +22,11 @@ public final class SharpXReaderMacroFunction extends RationalReaderMacroFunction
 	private SharpXReaderMacroFunction() {
 	}
 
+	@SuppressWarnings("MagicNumber")
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_X) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_X);
 
-		return readRational(reader, BigInteger.valueOf(SIXTEEN));
+		return readRational(reader, BigInteger.valueOf(16));
 	}
 }

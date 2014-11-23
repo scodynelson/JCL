@@ -9,49 +9,95 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 @SuppressWarnings("MagicNumber")
 enum CharacterName {
 
-	NULL("NULL", (char) 0x0000),
-	NULL_CHAR("^@", (char) 0x0000),
-	BACKSPACE("BACKSPACE", (char) 0x0008),
-	TAB("TAB", (char) 0x0009),
-	NEWLINE("NEWLINE", (char) 0x000A),
-	LINEFEED("LINEFEED", (char) 0x000A),
-	RETURN("RETURN", (char) 0x000D),
-	PAGE("PAGE", (char) 0x000C),
-	SPACE("SPACE", (char) 0x0020),
-	RUBOUT("RUBOUT", (char) 0x007F);
+	/**
+	 * Null character name.
+	 */
+	NULL("NULL", 0x0000),
 
+	/**
+	 * Null sign character name.
+	 */
+	NULL_CHAR("^@", 0x0000),
+
+	/**
+	 * Backspace character name.
+	 */
+	BACKSPACE("BACKSPACE", 0x0008),
+
+	/**
+	 * Tab character name.
+	 */
+	TAB("TAB", 0x0009),
+
+	/**
+	 * Newline character name.
+	 */
+	NEWLINE("NEWLINE", 0x000A),
+
+	/**
+	 * Linefeed character name.
+	 */
+	LINEFEED("LINEFEED", 0x000A),
+
+	/**
+	 * Return character name.
+	 */
+	RETURN("RETURN", 0x000D),
+
+	/**
+	 * Page character name.
+	 */
+	PAGE("PAGE", 0x000C),
+
+	/**
+	 * Space character name.
+	 */
+	SPACE("SPACE", 0x0020),
+
+	/**
+	 * Rubout character name.
+	 */
+	RUBOUT("RUBOUT", 0x007F);
+
+	/**
+	 * String name of the character.
+	 */
 	private final String name;
-	private final char aChar;
+
+	/**
+	 * Character value.
+	 */
+	private final int codePoint;
 
 	/**
 	 * Public constructor.
 	 *
 	 * @param name
 	 * 		the graphic character name
-	 * @param aChar
-	 * 		the character value
+	 * @param codePoint
+	 * 		the character code point value
 	 */
-	CharacterName(final String name, final char aChar) {
+	CharacterName(final String name, final int codePoint) {
 		this.name = name;
-		this.aChar = aChar;
+		this.codePoint = codePoint;
 	}
 
 	/**
-	 * Gets the graphic character name for the enumeration.
+	 * Getter for {@link #name} property.
 	 *
-	 * @return the graphic character name
+	 * @return {@link #name} property
 	 */
 	String getName() {
 		return name;
 	}
 
 	/**
-	 * Gets the character value for the enumeration.
+	 * Getter for {@link #codePoint} property.
 	 *
-	 * @return the character value
+	 * @return {@link #codePoint} property
 	 */
-	char getChar() {
-		return aChar;
+	int getCodePoint() {
+		return codePoint;
 	}
 
 	@Override

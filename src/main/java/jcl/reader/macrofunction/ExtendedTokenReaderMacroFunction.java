@@ -14,6 +14,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 abstract class ExtendedTokenReaderMacroFunction extends ReaderMacroFunction {
 
+	/**
+	 * Determines whether or not to process characters as 'escaped' or not.
+	 */
 	private final boolean isEscaped;
 
 	/**
@@ -250,8 +253,19 @@ abstract class ExtendedTokenReaderMacroFunction extends ReaderMacroFunction {
 	 */
 	static final class ReadExtendedToken {
 
+		/**
+		 * The tokenized string value.
+		 */
 		private final String token;
+
+		/**
+		 * Whether or not the {@link #token} contains escape characters.
+		 */
 		private final boolean hasEscapes;
+
+		/**
+		 * Whether or not the {@link #token} contains a package delimiter.
+		 */
 		private final boolean hasPackageDelimiter;
 
 		/**

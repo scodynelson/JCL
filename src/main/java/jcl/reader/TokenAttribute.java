@@ -8,7 +8,14 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 class TokenAttribute {
 
+	/**
+	 * The character token code point.
+	 */
 	private final int token;
+
+	/**
+	 * The {@link AttributeType} of the {@link #token}.
+	 */
 	private final AttributeType attributeType;
 
 	/**

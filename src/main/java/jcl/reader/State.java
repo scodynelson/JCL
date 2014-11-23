@@ -33,6 +33,9 @@ import java.util.List;
 @FunctionalInterface
 interface State {
 
+	/**
+	 * The End-of-File character.
+	 */
 	int EOF = -1;
 
 	/**

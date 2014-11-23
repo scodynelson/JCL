@@ -16,6 +16,9 @@ import java.math.BigInteger;
  */
 abstract class RationalReaderMacroFunction extends ExtendedTokenReaderMacroFunction {
 
+	/**
+	 * The valid range of radix values.
+	 */
 	@SuppressWarnings("MagicNumber")
 	private static final Range<BigInteger> RADIX_RANGE = Range.between(BigInteger.valueOf(2), BigInteger.valueOf(36));
 

@@ -7,7 +7,7 @@ package jcl.reader;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.symbols.variables.Variable;
 
-import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Step 10 of the Reader Algorithm.
@@ -39,7 +39,7 @@ final class TokenAccumulatedState implements State {
 	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
 		final Integer codePoint = tokenBuilder.getPreviousReadCharacter();
 
-		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
+		final List<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
 		if (State.isEndOfFileCharacter(codePoint) && tokenAttributes.isEmpty()) {
 			State.handleEndOfFile(tokenBuilder, "TokenAccumulatedState");
 			return;

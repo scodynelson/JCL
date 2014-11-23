@@ -88,7 +88,7 @@ abstract class FeaturesReaderMacroFunction extends ReaderMacroFunction {
 				reader.read();
 			}
 		} catch (final ReaderErrorException ree) {
-			LOGGER.debug(ree.getMessage(), ree);
+			LOGGER.debug("Error occurred when reading feature.", ree);
 		} finally {
 			Variable.PACKAGE.setValue(previousPackage);
 			Variable.READ_SUPPRESS.setValue(previousReadSuppress);
@@ -140,29 +140,54 @@ abstract class FeaturesReaderMacroFunction extends ReaderMacroFunction {
 	 */
 	private static boolean isConsFeature(final ConsStruct consStruct) {
 		final LispStruct first = consStruct.getFirst();
-		final List<LispStruct> rest = consStruct.getRest().getAsJavaList();
 
 		if (!(first instanceof KeywordSymbolStruct)) {
 			throw new ReaderErrorException("First element of feature expression must be either: :NOT, :AND, or :OR.");
 		}
 
+		final List<LispStruct> rest = consStruct.getRest().getAsJavaList();
+
 		final KeywordSymbolStruct featureOperator = (KeywordSymbolStruct) first;
 		if (featureOperator.equals(NOT)) {
 			return !isFeature(rest.get(0));
 		} else if (featureOperator.equals(AND)) {
-			boolean tempReturnVal = true;
-			for (final LispStruct lispStruct : rest) {
-				tempReturnVal = tempReturnVal && isFeature(lispStruct);
-			}
-			return tempReturnVal;
+			return isAndConsFeature(rest);
 		} else if (featureOperator.equals(OR)) {
-			boolean tempReturnVal2 = false;
-			for (final LispStruct lispStruct : rest) {
-				tempReturnVal2 = tempReturnVal2 || isFeature(lispStruct);
-			}
-			return tempReturnVal2;
+			return isOrConsFeature(rest);
 		} else {
 			throw new ReaderErrorException("Unknown operator in feature expression: " + featureOperator);
 		}
+	}
+
+	/**
+	 * Determines if all of the elements are features.
+	 *
+	 * @param elements
+	 * 		the elements to check are features
+	 *
+	 * @return true if all of the elements are features; false otherwise
+	 */
+	private static boolean isAndConsFeature(final List<LispStruct> elements) {
+		boolean tempReturnVal = true;
+		for (final LispStruct lispStruct : elements) {
+			tempReturnVal = tempReturnVal && isFeature(lispStruct);
+		}
+		return tempReturnVal;
+	}
+
+	/**
+	 * Determines if any of the elements are features.
+	 *
+	 * @param elements
+	 * 		the elements to check are features
+	 *
+	 * @return true if any of the elements are features; false otherwise
+	 */
+	private static boolean isOrConsFeature(final List<LispStruct> elements) {
+		boolean tempReturnVal = false;
+		for (final LispStruct lispStruct : elements) {
+			tempReturnVal = tempReturnVal || isFeature(lispStruct);
+		}
+		return tempReturnVal;
 	}
 }

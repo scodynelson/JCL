@@ -14,6 +14,8 @@ import jcl.structs.conditions.exceptions.TypeErrorException;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.variables.Variable;
 import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -29,6 +31,11 @@ public final class SharpLeftParenthesisReaderMacroFunction extends ListReaderMac
 	public static final SharpLeftParenthesisReaderMacroFunction INSTANCE = new SharpLeftParenthesisReaderMacroFunction();
 
 	/**
+	 * The logger for this class.
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(SharpLeftParenthesisReaderMacroFunction.class);
+
+	/**
 	 * Private constructor.
 	 */
 	private SharpLeftParenthesisReaderMacroFunction() {
@@ -41,6 +48,7 @@ public final class SharpLeftParenthesisReaderMacroFunction extends ListReaderMac
 		final ListStruct listToken = readList(reader);
 
 		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
+			LOGGER.debug("{} suppressed.", listToken);
 			return null;
 		}
 
@@ -61,6 +69,24 @@ public final class SharpLeftParenthesisReaderMacroFunction extends ListReaderMac
 				throw new ReaderErrorException("Error occurred creating vector.", e);
 			}
 		}
+
+		return handleNumArg(lispTokens, numArg, listToken.printStruct());
+	}
+
+	/**
+	 * Handles the processing of the number argument when parsing the provided list of {@link LispStruct}s into a
+	 * {@link VectorStruct}.
+	 *
+	 * @param lispTokens
+	 * 		the vector contents
+	 * @param numArg
+	 * 		the number argument passed to be used as the vector length
+	 * @param listToken
+	 * 		the printed representation of the vector contents
+	 *
+	 * @return the properly created {@link VectorStruct} taking care of the proper vector length
+	 */
+	private static LispStruct handleNumArg(final List<LispStruct> lispTokens, final BigInteger numArg, final String listToken) {
 
 		final int numberOfTokens = lispTokens.size();
 		final int numArgInt = numArg.intValueExact();

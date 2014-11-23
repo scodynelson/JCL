@@ -11,6 +11,8 @@ import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.SpecialOperator;
 import jcl.structs.symbols.variables.Variable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
 
@@ -25,6 +27,11 @@ public final class SharpApostropheReaderMacroFunction extends ReaderMacroFunctio
 	public static final SharpApostropheReaderMacroFunction INSTANCE = new SharpApostropheReaderMacroFunction();
 
 	/**
+	 * The logger for this class.
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(SharpApostropheReaderMacroFunction.class);
+
+	/**
 	 * Private constructor.
 	 */
 	private SharpApostropheReaderMacroFunction() {
@@ -34,15 +41,16 @@ public final class SharpApostropheReaderMacroFunction extends ReaderMacroFunctio
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.APOSTROPHE;
 
-		final LispStruct expression = reader.read();
+		final LispStruct lispToken = reader.read();
 		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
+			LOGGER.debug("{} suppressed.", lispToken.printStruct());
 			return null;
 		}
 
-		if (expression == null) {
+		if (lispToken == null) {
 			throw new ReaderErrorException("Missing expression.");
 		}
 
-		return ListStruct.buildProperList(SpecialOperator.FUNCTION, expression);
+		return ListStruct.buildProperList(SpecialOperator.FUNCTION, lispToken);
 	}
 }

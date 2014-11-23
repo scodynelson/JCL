@@ -34,7 +34,8 @@ public abstract class ReaderMacroFunction extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		return null; // TODO: do this
+		// TODO: do this
+		return null;
 	}
 
 	/**

@@ -11,6 +11,8 @@ import jcl.structs.characters.CharacterStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.symbols.variables.Variable;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
 
@@ -25,6 +27,11 @@ public final class SharpBackslashReaderMacroFunction extends ExtendedTokenReader
 	public static final SharpBackslashReaderMacroFunction INSTANCE = new SharpBackslashReaderMacroFunction();
 
 	/**
+	 * The logger for this class.
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(SharpBackslashReaderMacroFunction.class);
+
+	/**
 	 * Private constructor.
 	 */
 	private SharpBackslashReaderMacroFunction() {
@@ -36,27 +43,30 @@ public final class SharpBackslashReaderMacroFunction extends ExtendedTokenReader
 		assert codePoint == CharacterConstants.BACKSLASH;
 
 		final ReadExtendedToken readExtendedToken = readExtendedToken(reader);
-		final String charString = readExtendedToken.getToken();
+		final String token = readExtendedToken.getToken();
+
 		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
+			LOGGER.debug("{} suppressed.", token);
 			return null;
 		}
 
-		if (StringUtils.length(charString) == 1) {
-			final char theChar = charString.charAt(0);
+		final int maxCharTokenLength = 1;
+		if (StringUtils.length(token) == maxCharTokenLength) {
+			final char theChar = token.charAt(0);
 			return new CharacterStruct(theChar);
 		}
 
 		Integer nameCodePoint = null;
 		for (final CharacterName characterName : CharacterName.values()) {
 			final String name = characterName.getName();
-			if (StringUtils.equalsIgnoreCase(charString, name)) {
+			if (StringUtils.equalsIgnoreCase(token, name)) {
 				nameCodePoint = characterName.getCodePoint();
 				break;
 			}
 		}
 
 		if (nameCodePoint == null) {
-			throw new ReaderErrorException("Unrecognized character name: " + charString);
+			throw new ReaderErrorException("Unrecognized character name: " + token);
 		}
 
 		return new CharacterStruct(nameCodePoint);

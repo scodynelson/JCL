@@ -152,7 +152,8 @@ final class NumberTokenAccumulatedState implements State {
 		if (hasExponentMarker && !hasDecimal) {
 			return null;
 		} else if (hasRatioMarker) {
-			final String[] rationalParts = tokenString.split("/", 2);
+			final int numberOfRationalParts = 2;
+			final String[] rationalParts = tokenString.split("/", numberOfRationalParts);
 			final BigInteger numerator = new BigInteger(rationalParts[0], currentRadix);
 			final BigInteger denominator = new BigInteger(rationalParts[1], currentRadix);
 
@@ -185,12 +186,6 @@ final class NumberTokenAccumulatedState implements State {
 	 */
 	private static boolean areNumberAttributesInvalid(final LinkedList<TokenAttribute> tokenAttributes) {
 
-		final TokenAttribute firstTokenAttribute = tokenAttributes.getFirst();
-		final AttributeType firstAttributeType = firstTokenAttribute.getAttributeType();
-
-		final TokenAttribute lastTokenAttribute = tokenAttributes.getLast();
-		final AttributeType lastAttributeType = lastTokenAttribute.getAttributeType();
-
 		// Checks to make sure there are not more than one of: 'PLUS', 'MINUS', 'DECIMAL', 'RATIOMARKER'
 		Function<AttributeType, Boolean> function =
 				e -> {
@@ -204,11 +199,17 @@ final class NumberTokenAccumulatedState implements State {
 		final boolean hasMoreThanOneOfAttributes
 				= hasAttributes(function, NOT_MORE_THAN_ONE_ATTRS);
 
+		final TokenAttribute firstTokenAttribute = tokenAttributes.getFirst();
+		final AttributeType firstAttributeType = firstTokenAttribute.getAttributeType();
+
 		// Checks to make sure if either 'PLUS' or 'MINUS' is supplied, that it is first
 		function =
 				e -> State.hasAnyAttribute(tokenAttributes, e) && (firstAttributeType != e);
 		final boolean hasAttributesAndNotFirst
 				= hasAttributes(function, FIRST_ONLY_ATTRS);
+
+		final TokenAttribute lastTokenAttribute = tokenAttributes.getLast();
+		final AttributeType lastAttributeType = lastTokenAttribute.getAttributeType();
 
 		// Checks to make sure if either 'DECIMAL' or 'RATIOMARKER' is supplied, that it is neither first nor last
 		function =

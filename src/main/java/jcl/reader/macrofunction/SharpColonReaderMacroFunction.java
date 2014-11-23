@@ -10,6 +10,8 @@ import jcl.reader.Reader;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.symbols.SymbolStruct;
 import jcl.structs.symbols.variables.Variable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
 
@@ -22,6 +24,11 @@ public final class SharpColonReaderMacroFunction extends ExtendedTokenReaderMacr
 	 * Singleton instance variable.
 	 */
 	public static final SharpColonReaderMacroFunction INSTANCE = new SharpColonReaderMacroFunction();
+
+	/**
+	 * The logger for this class.
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(SharpColonReaderMacroFunction.class);
 
 	/**
 	 * Private constructor.
@@ -38,10 +45,11 @@ public final class SharpColonReaderMacroFunction extends ExtendedTokenReaderMacr
 		final String token = readExtendedToken.getToken();
 
 		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
+			LOGGER.debug("{} suppressed.", token);
 			return null;
 		}
 
-		if (readExtendedToken.hasPackageDelimiter()) {
+		if (readExtendedToken.isHasPackageDelimiter()) {
 			throw new ReaderErrorException("Symbol following #: contains a package marker: " + token);
 		}
 		return new SymbolStruct<>(token);

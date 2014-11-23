@@ -21,16 +21,20 @@ public final class SharpXReaderMacroFunction extends RationalReaderMacroFunction
 	public static final SharpXReaderMacroFunction INSTANCE = new SharpXReaderMacroFunction();
 
 	/**
+	 * Radix value to use.
+	 */
+	private static final int RADIX = 16;
+
+	/**
 	 * Private constructor.
 	 */
 	private SharpXReaderMacroFunction() {
 	}
 
-	@SuppressWarnings("MagicNumber")
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_X) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_X);
 
-		return readRational(reader, BigInteger.valueOf(16));
+		return readRational(reader, BigInteger.valueOf(RADIX));
 	}
 }

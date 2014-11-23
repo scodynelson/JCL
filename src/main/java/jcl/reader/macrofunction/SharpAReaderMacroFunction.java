@@ -13,6 +13,8 @@ import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.structs.conditions.exceptions.TypeErrorException;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.symbols.variables.Variable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -29,6 +31,11 @@ public final class SharpAReaderMacroFunction extends ReaderMacroFunction {
 	public static final SharpAReaderMacroFunction INSTANCE = new SharpAReaderMacroFunction();
 
 	/**
+	 * The logger for this class.
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(SharpAReaderMacroFunction.class);
+
+	/**
 	 * Private constructor.
 	 */
 	private SharpAReaderMacroFunction() {
@@ -38,8 +45,9 @@ public final class SharpAReaderMacroFunction extends ReaderMacroFunction {
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_A) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_A);
 
-		final LispStruct contents = reader.read();
+		final LispStruct lispToken = reader.read();
 		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
+			LOGGER.debug("{} suppressed.", lispToken.printStruct());
 			return null;
 		}
 
@@ -47,14 +55,14 @@ public final class SharpAReaderMacroFunction extends ReaderMacroFunction {
 			throw new ReaderErrorException("#A used without a rank argument.");
 		}
 
-		if (!(contents instanceof ListStruct)) {
-			throw new ReaderErrorException("#" + numArg + "A axis " + 0 + " is not a sequence: " + contents);
+		if (!(lispToken instanceof ListStruct)) {
+			throw new ReaderErrorException("#" + numArg + "A axis " + 0 + " is not a sequence: " + lispToken);
 		}
 
-		final ListStruct contentsList = (ListStruct) contents;
-		final List<LispStruct> contentsAsJavaList = contentsList.getAsJavaList();
+		final ListStruct contents = (ListStruct) lispToken;
+		final List<LispStruct> contentsAsJavaList = contents.getAsJavaList();
 
-		final List<Integer> dims = getDimensions(numArg, contentsList);
+		final List<Integer> dims = getDimensions(numArg, contents);
 		try {
 			return new ArrayStruct<>(dims, contentsAsJavaList);
 		} catch (final TypeErrorException | SimpleErrorException e) {
@@ -84,7 +92,7 @@ public final class SharpAReaderMacroFunction extends ReaderMacroFunction {
 		final List<Integer> dims = new ArrayList<>();
 
 		for (BigInteger axis = BigInteger.ZERO;
-		     axis.compareTo(dimensions) < 0;
+		     dimensions.compareTo(axis) >= 0;
 		     axis = axis.add(BigInteger.ONE)) {
 
 			final ListStruct seqList;
@@ -100,12 +108,12 @@ public final class SharpAReaderMacroFunction extends ReaderMacroFunction {
 			dims.add(seqLength);
 
 			if (!axis.equals(dimensions.subtract(BigInteger.ONE))) {
-				if (seqLength == 0) {
+				if (lispTokens.isEmpty()) {
 					zeroAxis = axis;
-				} else if (zeroAxis != null) {
-					throw new ReaderErrorException("#" + dimensions + "A axis " + zeroAxis + " is empty, but axis " + axis + " is non-empty.");
-				} else {
+				} else if (zeroAxis == null) {
 					seq = lispTokens.get(0);
+				} else {
+					throw new ReaderErrorException("#" + dimensions + "A axis " + zeroAxis + " is empty, but axis " + axis + " is non-empty.");
 				}
 			}
 		}

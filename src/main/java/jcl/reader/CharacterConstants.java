@@ -10,6 +10,8 @@ package jcl.reader;
 @SuppressWarnings("all")
 public interface CharacterConstants {
 
+	int EOF = -1;
+
 	Character NULL = 0;
 	Character START_OF_HEADER = 1;
 	Character START_OF_TEXT = 2;

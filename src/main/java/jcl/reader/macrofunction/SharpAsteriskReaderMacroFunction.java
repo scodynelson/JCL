@@ -13,6 +13,8 @@ import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.structs.conditions.exceptions.TypeErrorException;
 import jcl.structs.symbols.variables.Variable;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
 
@@ -27,6 +29,11 @@ public final class SharpAsteriskReaderMacroFunction extends ExtendedTokenReaderM
 	public static final SharpAsteriskReaderMacroFunction INSTANCE = new SharpAsteriskReaderMacroFunction();
 
 	/**
+	 * The logger for this class.
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(SharpAsteriskReaderMacroFunction.class);
+
+	/**
 	 * Private constructor.
 	 */
 	private SharpAsteriskReaderMacroFunction() {
@@ -38,38 +45,55 @@ public final class SharpAsteriskReaderMacroFunction extends ExtendedTokenReaderM
 		assert codePoint == CharacterConstants.ASTERISK;
 
 		final ReadExtendedToken readExtendedToken = readExtendedToken(reader);
+		final String token = readExtendedToken.getToken();
+
 		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
+			LOGGER.debug("{} suppressed.", token);
 			return null;
 		}
 
-		if (readExtendedToken.hasEscapes()) {
+		if (readExtendedToken.isHasEscapes()) {
 			throw new ReaderErrorException("Escape character appeared after #*");
 		}
 
-		final String bitString = readExtendedToken.getToken();
-
 		if (numArg == null) {
 			try {
-				return new BitVectorStruct(bitString);
+				return new BitVectorStruct(token);
 			} catch (final TypeErrorException | SimpleErrorException e) {
 				throw new ReaderErrorException("Error occurred creating bit-vector.", e);
 			}
 		}
 
-		final int bitStringLength = bitString.length();
+		return handleNumArg(token, numArg);
+	}
 
-		if (StringUtils.isEmpty(bitString)) {
+	/**
+	 * Handles the processing of the number argument when parsing the provided {@code token} string into a {@link
+	 * BitVectorStruct}.
+	 *
+	 * @param token
+	 * 		the bit-vector contents
+	 * @param numArg
+	 * 		the number argument passed to be used as the bit-vector length
+	 *
+	 * @return the properly created {@link BitVectorStruct} taking care of the proper bit-vector length
+	 */
+	private static LispStruct handleNumArg(final String token, final BigInteger numArg) {
+
+		if (StringUtils.isEmpty(token)) {
 			throw new ReaderErrorException("At least one bit must be supplied for non-zero #* bit-vectors.");
 		}
 
+		final int bitStringLength = token.length();
+
 		final int numArgInt = numArg.intValueExact();
 		if (bitStringLength > numArgInt) {
-			throw new ReaderErrorException("Bit vector is longer than specified length: #" + numArg + '*' + bitString);
+			throw new ReaderErrorException("Bit vector is longer than specified length: #" + numArg + '*' + token);
 		}
 
-		final char lastChar = bitString.charAt(bitStringLength - 1);
+		final char lastChar = token.charAt(bitStringLength - 1);
 
-		final StringBuilder bitStringBuilder = new StringBuilder(bitString);
+		final StringBuilder bitStringBuilder = new StringBuilder(token);
 
 		final int fillAmount = numArgInt - bitStringLength;
 		for (int i = 0; i < fillAmount; i++) {

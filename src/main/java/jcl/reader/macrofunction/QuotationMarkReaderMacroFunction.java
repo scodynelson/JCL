@@ -44,29 +44,7 @@ public final class QuotationMarkReaderMacroFunction extends UnicodeCharacterRead
 
 		while (readChar != CharacterConstants.QUOTATION_MARK) {
 			if (readChar == CharacterConstants.BACKSLASH) {
-
-				// NOTE: This will throw errors when it reaches an EOF
-				final ReadResult tmpReadResult = reader.readChar();
-				final int tmpChar = tmpReadResult.getResult();
-				if ((tmpChar == CharacterConstants.LATIN_SMALL_LETTER_U)
-						|| (tmpChar == CharacterConstants.LATIN_CAPITAL_LETTER_U)) {
-
-					final ReadResult nextTmpReadResult = reader.readChar();
-					final int nextTmpChar = nextTmpReadResult.getResult();
-					if (nextTmpChar == CharacterConstants.PLUS_SIGN) {
-						readChar = readUnicodeCharacter(reader);
-						stringBuilder.appendCodePoint(readChar);
-					} else {
-						// NOTE: Order matters here!!
-						stringBuilder.appendCodePoint(readChar);
-						stringBuilder.appendCodePoint(tmpChar);
-						stringBuilder.appendCodePoint(nextTmpChar);
-					}
-				} else {
-					// NOTE: Order matters here!!
-					stringBuilder.appendCodePoint(readChar);
-					stringBuilder.appendCodePoint(tmpChar);
-				}
+				handleEscapedCharacter(reader, stringBuilder);
 			} else {
 				stringBuilder.appendCodePoint(readChar);
 			}
@@ -85,6 +63,41 @@ public final class QuotationMarkReaderMacroFunction extends UnicodeCharacterRead
 			return new StringStruct(stringValue);
 		} catch (final TypeErrorException | SimpleErrorException e) {
 			throw new ReaderErrorException("Error occurred creating string.", e);
+		}
+	}
+
+	/**
+	 * Handles escaped characters during a read operation for '"..."'.
+	 *
+	 * @param reader
+	 * 		the {@link Reader} used to read tokens
+	 * @param stringBuilder
+	 * 		the {@link StringBuilder} used to build the final token
+	 */
+	private static void handleEscapedCharacter(final Reader reader, final StringBuilder stringBuilder) {
+		int readChar = CharacterConstants.BACKSLASH;
+
+		// NOTE: This will throw errors when it reaches an EOF
+		final ReadResult tmpReadResult = reader.readChar();
+		final int tmpChar = tmpReadResult.getResult();
+		if ((tmpChar == CharacterConstants.LATIN_SMALL_LETTER_U)
+				|| (tmpChar == CharacterConstants.LATIN_CAPITAL_LETTER_U)) {
+
+			final ReadResult nextTmpReadResult = reader.readChar();
+			final int nextTmpChar = nextTmpReadResult.getResult();
+			if (nextTmpChar == CharacterConstants.PLUS_SIGN) {
+				readChar = readUnicodeCharacter(reader);
+				stringBuilder.appendCodePoint(readChar);
+			} else {
+				// NOTE: Order matters here!!
+				stringBuilder.appendCodePoint(readChar);
+				stringBuilder.appendCodePoint(tmpChar);
+				stringBuilder.appendCodePoint(nextTmpChar);
+			}
+		} else {
+			// NOTE: Order matters here!!
+			stringBuilder.appendCodePoint(readChar);
+			stringBuilder.appendCodePoint(tmpChar);
 		}
 	}
 }

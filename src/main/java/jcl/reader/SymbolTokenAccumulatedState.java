@@ -4,6 +4,7 @@
 
 package jcl.reader;
 
+import jcl.LispStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.packages.GlobalPackageStruct;
 import jcl.structs.packages.PackageStruct;
@@ -13,7 +14,9 @@ import jcl.structs.symbols.SymbolStruct;
 import jcl.structs.symbols.variables.Variable;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -69,7 +72,7 @@ final class SymbolTokenAccumulatedState implements State {
 	@Override
 	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
 
-		final SymbolStruct<?> symbolToken = getSymbolToken(tokenBuilder);
+		final SymbolStruct<? extends LispStruct> symbolToken = getSymbolToken(tokenBuilder);
 		if (symbolToken == null) {
 			final Integer codePoint = tokenBuilder.getPreviousReadCharacter();
 			if (State.isEndOfFileCharacter(codePoint) && tokenBuilder.isEofErrorP()) {
@@ -88,7 +91,7 @@ final class SymbolTokenAccumulatedState implements State {
 	 *
 	 * @return the built symbolToken value
 	 */
-	private static SymbolStruct<?> getSymbolToken(final TokenBuilder tokenBuilder) {
+	private static SymbolStruct<? extends LispStruct> getSymbolToken(final TokenBuilder tokenBuilder) {
 
 		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
 
@@ -113,7 +116,7 @@ final class SymbolTokenAccumulatedState implements State {
 		}
 
 		// Grab tokens up to the first 'PACKAGEMARKER' (this is the package name)
-		final LinkedList<TokenAttribute> packageTokenAttributes = new LinkedList<>();
+		final List<TokenAttribute> packageTokenAttributes = new ArrayList<>();
 
 		int packageMarkerStartIndex = 0;
 		for (int i = 0; i < tokenAttributes.size(); i++) {
@@ -138,18 +141,22 @@ final class SymbolTokenAccumulatedState implements State {
 			if (attributeType == AttributeType.PACKAGEMARKER) {
 				packageMarkerCount++;
 			} else {
+				// Non package marker found; break
 				symbolStartIndex = i;
 				break;
 			}
 
-			if (packageMarkerCount > 2) {
+			// NOTE: we have this here and not somehow in the above 'if' because we need to use the results of packageMarkerCount++
+			final int maxNumberOfPackageMarkers = 2;
+			if (packageMarkerCount > maxNumberOfPackageMarkers) {
+				// Max number of package markers hit. All the rest are part of the symbol.
 				symbolStartIndex = i;
 				break;
 			}
 		}
 
 		// Grab the rest of the tokens (this is the symbol name)
-		final LinkedList<TokenAttribute> symbolTokenAttributes = new LinkedList<>();
+		final List<TokenAttribute> symbolTokenAttributes = new ArrayList<>();
 
 		for (int i = symbolStartIndex; i < tokenAttributes.size(); i++) {
 			final TokenAttribute tokenAttribute = tokenAttributes.get(i);
@@ -166,7 +173,8 @@ final class SymbolTokenAccumulatedState implements State {
 				throw new ReaderErrorException("There is no package named " + pkgName);
 			}
 
-			if (packageMarkerCount == 1) {
+			final int singlePackageMarker = 1;
+			if (packageMarkerCount == singlePackageMarker) {
 				final Map<String, SymbolStruct<?>> pkgExternalSymbols = pkg.getExternalSymbols();
 
 				final SymbolStruct<?> externalSymbol = pkgExternalSymbols.get(symName);

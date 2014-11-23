@@ -60,7 +60,9 @@ abstract class ExtendedTokenReaderMacroFunction extends ReaderMacroFunction {
 			final int codePoint = readResult.getResult();
 			if (isWhitespaceOrTerminating(reader, codePoint)) {
 				reader.unreadChar(codePoint);
-				stringBuilder.deleteCharAt(stringBuilder.length() - 1); // Remove the last character read from the builder
+
+				// Makes sure to remove the last character read from the builder
+				stringBuilder.deleteCharAt(stringBuilder.length() - 1);
 				break;
 			}
 
@@ -116,7 +118,8 @@ abstract class ExtendedTokenReaderMacroFunction extends ReaderMacroFunction {
 		while (!isMultipleEscape(reader, tempCodePoint)) {
 
 			if (isSingleEscape(reader, tempCodePoint)) {
-				appendToken(reader, tempReadResult, stringBuilder, false); // NOTE: This comes first so we build the token right
+				// NOTE: The following comes first so we build the token right
+				appendToken(reader, tempReadResult, stringBuilder, false);
 				readSingleEscape(reader, stringBuilder);
 			} else {
 				appendToken(reader, tempReadResult, stringBuilder, true);
@@ -302,7 +305,7 @@ abstract class ExtendedTokenReaderMacroFunction extends ReaderMacroFunction {
 		 *
 		 * @return {@link #hasEscapes} property
 		 */
-		boolean hasEscapes() {
+		boolean isHasEscapes() {
 			return hasEscapes;
 		}
 
@@ -311,7 +314,7 @@ abstract class ExtendedTokenReaderMacroFunction extends ReaderMacroFunction {
 		 *
 		 * @return {@link #hasPackageDelimiter} property
 		 */
-		boolean hasPackageDelimiter() {
+		boolean isHasPackageDelimiter() {
 			return hasPackageDelimiter;
 		}
 

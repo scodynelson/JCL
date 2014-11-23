@@ -118,6 +118,15 @@ public class Reader {
 	}
 
 	/**
+	 * Gets the {@link #inputStream} for the JCL Reader instance.
+	 *
+	 * @return the {@link #inputStream} for the JCL Reader instance.
+	 */
+	public InputStream getInputStream() {
+		return inputStream;
+	}
+
+	/**
 	 * Gets the {@link #readtable} for the JCL Reader instance.
 	 *
 	 * @return the {@link #readtable} for the JCL Reader instance.

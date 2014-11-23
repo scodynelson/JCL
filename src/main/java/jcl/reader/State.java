@@ -38,11 +38,6 @@ import java.util.List;
 interface State {
 
 	/**
-	 * The End-of-File character.
-	 */
-	int EOF = -1;
-
-	/**
 	 * Abstract method to be implemented by all child State objects to handle their respective reader processing
 	 * portion.
 	 *
@@ -55,15 +50,15 @@ interface State {
 	void process(Reader reader, TokenBuilder tokenBuilder);
 
 	/**
-	 * Determines if the provided {@code codePoint} is either null or equal to the {@link #EOF} character constant.
+	 * Determines if the provided {@code codePoint} is either null or equal to {@link CharacterConstants#EOF}.
 	 *
 	 * @param codePoint
-	 * 		the value to determine is either null or equal to the {@link #EOF} character constant
+	 * 		the value to determine is either null or equal to {@link CharacterConstants#EOF}
 	 *
 	 * @return true if the provided {@code codePoint} is an End-Of-File character
 	 */
 	static boolean isEndOfFileCharacter(final Integer codePoint) {
-		return (codePoint == null) || (codePoint == EOF);
+		return (codePoint == null) || (codePoint == CharacterConstants.EOF);
 	}
 
 	/**
@@ -95,7 +90,8 @@ interface State {
 		final StringBuilder stringBuilder = new StringBuilder();
 		tokenAttributes
 				.stream()
-				.forEachOrdered(e -> stringBuilder.appendCodePoint(e.getToken()));
+				.mapToInt(TokenAttribute::getToken)
+				.forEachOrdered(stringBuilder::appendCodePoint);
 		return stringBuilder.toString();
 	}
 

@@ -32,6 +32,7 @@ public final class SharpVerticalBarReaderMacroFunction extends ReaderMacroFuncti
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.VERTICAL_LINE;
 
+		final int baseLevel = 0;
 		int level = 1;
 
 		// NOTE: This will throw errors when it reaches an EOF
@@ -45,7 +46,7 @@ public final class SharpVerticalBarReaderMacroFunction extends ReaderMacroFuncti
 			final int nextChar = nextReadResult.getResult();
 			if ((prevChar == CharacterConstants.VERTICAL_LINE) && (nextChar == CharacterConstants.NUMBER_SIGN)) {
 				level -= 1;
-				if (level == 0) {
+				if (level == baseLevel) {
 					break;
 				} else {
 					stringBuilder.appendCodePoint(prevChar);

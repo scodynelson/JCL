@@ -14,7 +14,7 @@ package jcl.reader;
  * the current readtable. X is used to begin a token, and step 8 is entered.
  * </p>
  */
-class ConstituentState implements State {
+final class ConstituentState implements State {
 
 	/**
 	 * Singleton instance variable.

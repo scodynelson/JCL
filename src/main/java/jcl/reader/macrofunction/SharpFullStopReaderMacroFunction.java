@@ -9,6 +9,8 @@ import jcl.reader.CharacterConstants;
 import jcl.reader.Reader;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.symbols.variables.Variable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
 
@@ -23,6 +25,11 @@ public final class SharpFullStopReaderMacroFunction extends ReaderMacroFunction 
 	public static final SharpFullStopReaderMacroFunction INSTANCE = new SharpFullStopReaderMacroFunction();
 
 	/**
+	 * The logger for this class.
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(SharpFullStopReaderMacroFunction.class);
+
+	/**
 	 * Private constructor.
 	 */
 	private SharpFullStopReaderMacroFunction() {
@@ -34,6 +41,7 @@ public final class SharpFullStopReaderMacroFunction extends ReaderMacroFunction 
 
 		final LispStruct lispToken = reader.read();
 		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
+			LOGGER.debug("{} suppressed.", lispToken.printStruct());
 			return null;
 		}
 

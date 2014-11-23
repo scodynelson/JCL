@@ -21,6 +21,11 @@ public final class SharpOReaderMacroFunction extends RationalReaderMacroFunction
 	public static final SharpOReaderMacroFunction INSTANCE = new SharpOReaderMacroFunction();
 
 	/**
+	 * Radix value to use.
+	 */
+	private static final int RADIX = 8;
+
+	/**
 	 * Private constructor.
 	 */
 	private SharpOReaderMacroFunction() {
@@ -30,6 +35,6 @@ public final class SharpOReaderMacroFunction extends RationalReaderMacroFunction
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_O) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_O);
 
-		return readRational(reader, BigInteger.valueOf(8));
+		return readRational(reader, BigInteger.valueOf(RADIX));
 	}
 }

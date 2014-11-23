@@ -18,8 +18,14 @@ import java.util.concurrent.ConcurrentHashMap;
 @SuppressWarnings("all")
 public class SyntaxTable {
 
+	/**
+	 * The logger for this class.
+	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(SyntaxTable.class);
 
+	/**
+	 * The internal mapping of character code points to {@link SyntaxType}s.
+	 */
 	private final Map<Integer, SyntaxType> syntaxTypeMap;
 
 	/**
@@ -159,12 +165,12 @@ public class SyntaxTable {
 	}
 
 	/**
-	 * Gets the matching syntax type for the provided {@code codePoint} value.
+	 * Gets the matching {@link SyntaxType} for the provided {@code codePoint} value.
 	 *
 	 * @param codePoint
-	 * 		the {@code codePoint} used to find the matching syntax type
+	 * 		the {@code codePoint} used to find the matching {@link SyntaxType}
 	 *
-	 * @return the matching syntax type for the provided {@code codePoint}
+	 * @return the matching {@link SyntaxType} for the provided {@code codePoint}
 	 */
 	public SyntaxType getSyntaxType(final int codePoint) {
 		if (syntaxTypeMap.containsKey(codePoint)) {
@@ -180,13 +186,21 @@ public class SyntaxTable {
 				return SyntaxType.INVALID;
 			}
 		} else {
-			if (codePoint != 0xFFFF) {
+			if (codePoint != CharacterConstants.EXIT_CHAR) {
 				LOGGER.error("Not defined and illegal: {}", codePoint);
 			}
 			return SyntaxType.INVALID;
 		}
 	}
 
+	/**
+	 * Sets the {@link SyntaxType} for the provided {@code codePoint} to the provided {@code syntaxType}.
+	 *
+	 * @param codePoint
+	 * 		the {@code codePoint} to set the {@link SyntaxType}
+	 * @param syntaxType
+	 * 		the new {@link SyntaxType} value
+	 */
 	public void setSyntaxType(final int codePoint, final SyntaxType syntaxType) {
 		syntaxTypeMap.put(codePoint, syntaxType);
 	}

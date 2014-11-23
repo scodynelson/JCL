@@ -11,6 +11,8 @@ import jcl.structs.arrays.StringStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.pathnames.PathnameStruct;
 import jcl.structs.symbols.variables.Variable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
 import java.net.URISyntaxException;
@@ -26,6 +28,11 @@ public final class SharpPReaderMacroFunction extends ReaderMacroFunction {
 	public static final SharpPReaderMacroFunction INSTANCE = new SharpPReaderMacroFunction();
 
 	/**
+	 * The logger for this class.
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(SharpPReaderMacroFunction.class);
+
+	/**
 	 * Private constructor.
 	 */
 	private SharpPReaderMacroFunction() {
@@ -35,20 +42,21 @@ public final class SharpPReaderMacroFunction extends ReaderMacroFunction {
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_P) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_P);
 
-		final LispStruct lispStruct = reader.read();
+		final LispStruct lispToken = reader.read();
 		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
+			LOGGER.debug("{} suppressed.", lispToken.printStruct());
 			return null;
 		}
 
-		if (lispStruct instanceof StringStruct) {
-			final String javaString = ((StringStruct) lispStruct).getAsJavaString();
+		if (lispToken instanceof StringStruct) {
+			final String javaString = ((StringStruct) lispToken).getAsJavaString();
 			try {
 				return PathnameStruct.buildPathname(javaString);
 			} catch (final URISyntaxException use) {
-				throw new ReaderErrorException("Improper namestring provided to #P: " + lispStruct, use);
+				throw new ReaderErrorException("Improper namestring provided to #P: " + lispToken, use);
 			}
 		} else {
-			throw new ReaderErrorException("Improper namestring provided to #P: " + lispStruct);
+			throw new ReaderErrorException("Improper namestring provided to #P: " + lispToken);
 		}
 	}
 }

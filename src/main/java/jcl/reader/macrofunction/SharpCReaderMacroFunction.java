@@ -12,6 +12,8 @@ import jcl.structs.lists.ListStruct;
 import jcl.structs.numbers.ComplexStruct;
 import jcl.structs.numbers.RealStruct;
 import jcl.structs.symbols.variables.Variable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -27,6 +29,11 @@ public final class SharpCReaderMacroFunction extends ReaderMacroFunction {
 	public static final SharpCReaderMacroFunction INSTANCE = new SharpCReaderMacroFunction();
 
 	/**
+	 * The logger for this class.
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(SharpCReaderMacroFunction.class);
+
+	/**
 	 * Private constructor.
 	 */
 	private SharpCReaderMacroFunction() {
@@ -38,6 +45,7 @@ public final class SharpCReaderMacroFunction extends ReaderMacroFunction {
 
 		final LispStruct lispToken = reader.read();
 		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
+			LOGGER.debug("{} suppressed.", lispToken.printStruct());
 			return null;
 		}
 
@@ -47,7 +55,9 @@ public final class SharpCReaderMacroFunction extends ReaderMacroFunction {
 
 		final ListStruct listToken = (ListStruct) lispToken;
 		final List<LispStruct> lispTokens = listToken.getAsJavaList();
-		if (lispTokens.size() != 2) {
+
+		final int maxNumberOfTokensForComplex = 2;
+		if (lispTokens.size() != maxNumberOfTokensForComplex) {
 			throw new ReaderErrorException("Illegal complex number format: #C" + lispToken);
 		}
 

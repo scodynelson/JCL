@@ -17,6 +17,9 @@ import java.util.concurrent.ConcurrentHashMap;
 @SuppressWarnings("all")
 public class AttributeTable {
 
+	/**
+	 * The internal mapping of character code points to {@link AttributeType}s.
+	 */
 	private final Map<Integer, AttributeType> attributeTypeMap;
 
 	/**

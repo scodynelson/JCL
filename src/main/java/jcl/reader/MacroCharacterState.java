@@ -97,8 +97,10 @@ final class MacroCharacterState implements State {
 			readChar = readResult.getResult();
 		}
 
+		final int minimumDigitLength = 1;
+
 		BigInteger numArg = null;
-		if (digitStringBuilder.length() != 0) {
+		if (digitStringBuilder.length() >= minimumDigitLength) {
 			final String digitString = digitStringBuilder.toString();
 			numArg = new BigInteger(digitString);
 		}

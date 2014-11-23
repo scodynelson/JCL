@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.structs.pathnames;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -12,10 +16,24 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public enum PathnameComponentType {
 
+	/**
+	 * Unspecific pathname component type.
+	 */
 	UNSPECIFIC(":UNSPECIFIC"),
+
+	/**
+	 * Wild pathname component type.
+	 */
 	WILD(":WILD"),
+
+	/**
+	 * Nil pathname component type.
+	 */
 	NIL("NIL");
 
+	/**
+	 * String value of the pathname component type.
+	 */
 	private final String value;
 
 	/**
@@ -29,9 +47,9 @@ public enum PathnameComponentType {
 	}
 
 	/**
-	 * Getter for component type value.
+	 * Getter for {@link #value} property.
 	 *
-	 * @return component type value
+	 * @return {@link #value} property
 	 */
 	public String getValue() {
 		return value;

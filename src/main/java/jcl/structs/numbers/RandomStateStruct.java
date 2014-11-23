@@ -86,6 +86,11 @@ public class RandomStateStruct extends BuiltInClassStruct {
 	private static final int J_INITIAL_VALUE = 24;
 
 	/**
+	 * Holds the 'Seed' values to be used in the random algorithm.
+	 */
+	private final List<BigInteger> seed;
+
+	/**
 	 * Holds the 'J' value to be used in the random algorithm.
 	 */
 	private BigInteger jValue = BigInteger.valueOf(J_INITIAL_VALUE);
@@ -94,11 +99,6 @@ public class RandomStateStruct extends BuiltInClassStruct {
 	 * Holds the 'K' value to be used in the random algorithm.
 	 */
 	private BigInteger kValue = BigInteger.ZERO;
-
-	/**
-	 * Holds the 'Seed' values to be used in the random algorithm.
-	 */
-	private final List<BigInteger> seed;
 
 	/**
 	 * Public constructor.
@@ -190,6 +190,11 @@ public class RandomStateStruct extends BuiltInClassStruct {
 		return ifAPart;
 	}
 
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+	}
+
 	/**
 	 * Performs bit shifting depending on the sign of the shift value.
 	 *
@@ -200,10 +205,5 @@ public class RandomStateStruct extends BuiltInClassStruct {
 	 */
 	private static BigInteger ash(final BigInteger bits) {
 		return (BIT_SHIFT_AMOUNT_AS_INT <= 0) ? bits.shiftRight(BIT_SHIFT_AMOUNT_AS_INT) : bits.shiftLeft(BIT_SHIFT_AMOUNT_AS_INT);
-	}
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

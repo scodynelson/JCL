@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.structs.pathnames;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -9,9 +13,19 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public enum PathnameDirectoryType {
 
+	/**
+	 * Absolute pathname directory type.
+	 */
 	ABSOLUTE(":ABSOLUTE"),
+
+	/**
+	 * Relative pathname directory type.
+	 */
 	RELATIVE(":RELATIVE");
 
+	/**
+	 * String value of the pathname directory type.
+	 */
 	private final String value;
 
 	/**
@@ -25,9 +39,9 @@ public enum PathnameDirectoryType {
 	}
 
 	/**
-	 * Getter for directory type value.
+	 * Getter for {@link #value} property.
 	 *
-	 * @return directory type value
+	 * @return {@link #value} property
 	 */
 	public String getValue() {
 		return value;

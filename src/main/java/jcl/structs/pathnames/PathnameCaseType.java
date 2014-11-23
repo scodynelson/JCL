@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.structs.pathnames;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -8,9 +12,19 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public enum PathnameCaseType {
 
+	/**
+	 * Unspecific pathname case type.
+	 */
 	COMMON(":COMMON"),
+
+	/**
+	 * Unspecific pathname case type.
+	 */
 	LOCAL(":LOCAL");
 
+	/**
+	 * String value of the pathname case type.
+	 */
 	private final String value;
 
 	/**
@@ -24,9 +38,9 @@ public enum PathnameCaseType {
 	}
 
 	/**
-	 * Getter for case type value.
+	 * Getter for {@link #value} property.
 	 *
-	 * @return case type value
+	 * @return {@link #value} property
 	 */
 	public String getValue() {
 		return value;

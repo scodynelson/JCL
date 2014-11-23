@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.structs.pathnames;
 
 import org.apache.commons.io.FilenameUtils;
@@ -19,12 +23,67 @@ import java.util.regex.Pattern;
  */
 class PathnameFileStruct extends PathnameStruct {
 
-	// NOTE: The following pattern complexity is due to Windows platforms and their usage of backslashes
+	/**
+	 * {@link Pattern} used to parse pathname directories.
+	 * <p>
+	 * NOTE: This patterns complexity is due to Windows platforms and their usage of backslashes
+	 */
 	private static final Pattern PATHNAME_PATTERN = Pattern.compile((File.separatorChar == '\\') ? "\\\\" : File.separator);
+
+	/**
+	 * {@link Pattern} used to parse Drive letters for Windows platforms.
+	 */
 	private static final Pattern DRIVE_LETTER_PATTERN = Pattern.compile("([A-Z]|[a-z]):.");
+
+	/**
+	 * Back/Up string for pathname parsing.
+	 */
 	private static final String BACK_UP_STRING = "..";
+
+	/**
+	 * Wildcard string for pathname parsing.
+	 */
 	private static final String WILDCARD_STRING = "*";
+
+	/**
+	 * Tilde string for Unix home directories.
+	 */
 	private static final String TILDE = "~";
+
+	/**
+	 * Int constant to note the length of a Drive letter (with backslash) for Windows platforms.
+	 */
+	private static final int DRIVE_LETTER_LENGTH = 2;
+
+	/**
+	 * Package constructor.
+	 *
+	 * @param path
+	 * 		the path to parse into the pathname object elements
+	 */
+	PathnameFileStruct(final Path path) {
+		this(path.toFile());
+	}
+
+	/**
+	 * Package constructor.
+	 *
+	 * @param file
+	 * 		the file to parse into the pathname object elements
+	 */
+	PathnameFileStruct(final File file) {
+		this(file.getPath());
+	}
+
+	/**
+	 * Package constructor.
+	 *
+	 * @param pathname
+	 * 		the pathname string to parse into the pathname object elements
+	 */
+	PathnameFileStruct(final String pathname) {
+		this(getHost(), getDevice(pathname), getDirectory(pathname), getName(pathname), getType(pathname), getVersion());
+	}
 
 	/**
 	 * Package constructor.
@@ -45,41 +104,6 @@ class PathnameFileStruct extends PathnameStruct {
 	PathnameFileStruct(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
 	                   final PathnameName name, final PathnameType type, final PathnameVersion version) {
 		super(host, device, directory, name, type, version);
-	}
-
-	/**
-	 * Package constructor.
-	 *
-	 * @param pathname
-	 * 		the pathname string to parse into the pathname object elements
-	 */
-	PathnameFileStruct(final String pathname) {
-		this(getHost(), getDevice(pathname), getDirectory(pathname), getName(pathname), getType(pathname), getVersion());
-	}
-
-	/**
-	 * Package constructor.
-	 *
-	 * @param path
-	 * 		the path to parse into the pathname object elements
-	 */
-	PathnameFileStruct(final Path path) {
-		this(path.toFile().getPath());
-	}
-
-	/**
-	 * Package constructor.
-	 *
-	 * @param file
-	 * 		the file to parse into the pathname object elements
-	 */
-	PathnameFileStruct(final File file) {
-		this(file.getPath());
-	}
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 
 	/**
@@ -117,6 +141,42 @@ class PathnameFileStruct extends PathnameStruct {
 	}
 
 	/**
+	 * Resolves special UserHome system properties when '~' values are encountered and should be parsed as such.
+	 *
+	 * @param pathname
+	 * 		the pathname string to resolve special UserHome system properties
+	 *
+	 * @return a new pathname string with resolved special UserHome system properties
+	 */
+	private static String resolveUserHome(final String pathname) {
+		//there are special situations involving tildes in pathname
+		//handle a tilde at start of pathname; expand it to the user's directory
+
+		final String userHome = System.getProperty("user.home");
+
+		String realPathname = pathname;
+		if (TILDE.equals(pathname)) {
+			realPathname = userHome;
+		} else if (pathname.startsWith("~/") || pathname.startsWith("~\\")) {
+			realPathname = pathname.replace(TILDE, userHome);
+		} else if (pathname.startsWith(TILDE)) {
+			final int lastPathSeparatorIndex = userHome.lastIndexOf(File.separatorChar);
+			final String usersDir = userHome.substring(0, lastPathSeparatorIndex);
+
+			final boolean containsSeparator = pathname.contains(File.separator);
+			if (containsSeparator) {
+				final String username = pathname.substring(1, pathname.indexOf(File.separatorChar));
+				final String restOfPath = pathname.substring(pathname.indexOf(File.separatorChar));
+				realPathname = usersDir + File.separatorChar + username + restOfPath;
+			} else {
+				final String username = pathname.substring(1);
+				realPathname = usersDir + File.separatorChar + username;
+			}
+		}
+		return FilenameUtils.separatorsToSystem(realPathname);
+	}
+
+	/**
 	 * Gets the pathname directory.
 	 *
 	 * @param pathname
@@ -133,11 +193,11 @@ class PathnameFileStruct extends PathnameStruct {
 
 		// Remove drive letter from the front if it exists
 		if (DRIVE_LETTER_PATTERN.matcher(directoryPath).matches()) {
-			directoryPath = StringUtils.substring(directoryPath, 2);
+			directoryPath = StringUtils.substring(directoryPath, DRIVE_LETTER_LENGTH);
 
 			final String pathPrefix = FilenameUtils.getPrefix(realPathname);
 			currentPathBuilder.append(pathPrefix);
-		} else if ((realPathname.length() == 2) && (realPathname.charAt(1) == ':')) {
+		} else if ((realPathname.length() == DRIVE_LETTER_LENGTH) && (realPathname.charAt(1) == ':')) {
 			directoryPath = "";
 		}
 		currentPathBuilder.append(File.separatorChar);
@@ -200,7 +260,7 @@ class PathnameFileStruct extends PathnameStruct {
 		final String realPathname = resolveUserHome(pathname);
 
 		// This tests the case when the pathname is just a drive letter, in which case it should NOT be the name
-		if ((realPathname.length() == 2) && (realPathname.charAt(1) == ':')) {
+		if ((realPathname.length() == DRIVE_LETTER_LENGTH) && (realPathname.charAt(1) == ':')) {
 			return new PathnameName("");
 		}
 
@@ -237,39 +297,8 @@ class PathnameFileStruct extends PathnameStruct {
 		return new PathnameVersion();
 	}
 
-	/**
-	 * Resolves special UserHome system properties when '~' values are encountered and should be parsed as such.
-	 *
-	 * @param pathname
-	 * 		the pathname string to resolve special UserHome system properties
-	 *
-	 * @return a new pathname string with resolved special UserHome system properties
-	 */
-	private static String resolveUserHome(final String pathname) {
-		//there are special situations involving tildes in pathname
-		//handle a tilde at start of pathname; expand it to the user's directory
-
-		final String userHome = System.getProperty("user.home");
-
-		String realPathname = pathname;
-		if (TILDE.equals(pathname)) {
-			realPathname = userHome;
-		} else if (pathname.startsWith("~/") || pathname.startsWith("~\\")) {
-			realPathname = pathname.replace(TILDE, userHome);
-		} else if (pathname.startsWith(TILDE)) {
-			final int lastPathSeparatorIndex = userHome.lastIndexOf(File.separatorChar);
-			final String usersDir = userHome.substring(0, lastPathSeparatorIndex);
-
-			final boolean containsSeparator = pathname.contains(File.separator);
-			if (containsSeparator) {
-				final String username = pathname.substring(1, pathname.indexOf(File.separatorChar));
-				final String restOfPath = pathname.substring(pathname.indexOf(File.separatorChar));
-				realPathname = usersDir + File.separatorChar + username + restOfPath;
-			} else {
-				final String username = pathname.substring(1);
-				realPathname = usersDir + File.separatorChar + username;
-			}
-		}
-		return FilenameUtils.separatorsToSystem(realPathname);
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

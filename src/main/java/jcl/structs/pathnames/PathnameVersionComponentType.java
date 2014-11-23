@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.structs.pathnames;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -9,12 +13,34 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public enum PathnameVersionComponentType {
 
+	/**
+	 * Unspecific pathname version component type.
+	 */
 	UNSPECIFIC(":UNSPECIFIC"),
+
+	/**
+	 * Wild pathname version component type.
+	 */
 	WILD(":WILD"),
+
+	/**
+	 * Nil pathname version component type.
+	 */
 	NIL("NIL"),
+
+	/**
+	 * Newest pathname version component type.
+	 */
 	NEWEST(":NEWEST"),
+
+	/**
+	 * Oldest pathname version component type.
+	 */
 	OLDEST(":OLDEST");
 
+	/**
+	 * String value of the pathname version component type.
+	 */
 	private final String value;
 
 	/**
@@ -28,9 +54,9 @@ public enum PathnameVersionComponentType {
 	}
 
 	/**
-	 * Getter for version component type value.
+	 * Getter for {@link #value} property.
 	 *
-	 * @return version component type value
+	 * @return {@link #value} property
 	 */
 	public String getValue() {
 		return value;

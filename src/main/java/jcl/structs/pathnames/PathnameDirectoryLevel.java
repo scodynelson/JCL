@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.structs.pathnames;
 
 import jcl.structs.conditions.exceptions.FileErrorException;
@@ -11,7 +15,14 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public final class PathnameDirectoryLevel {
 
+	/**
+	 * The pathname directory level value.
+	 */
 	private final String directoryLevel;
+
+	/**
+	 * The pathname directory level type.
+	 */
 	private final PathnameDirectoryLevelType directoryLevelType;
 
 	/**

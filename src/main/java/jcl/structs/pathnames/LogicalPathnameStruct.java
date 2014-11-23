@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.structs.pathnames;
 
 import jcl.structs.conditions.exceptions.TypeErrorException;
@@ -17,20 +21,65 @@ import java.util.regex.Pattern;
  */
 public class LogicalPathnameStruct extends PathnameStruct {
 
+	/**
+	 * {@link Pattern} used to parse pathname words.
+	 */
 	private static final Pattern WORD_PATTERN = Pattern.compile("[A-Z0-9\\-]+");
+
+	/**
+	 * {@link Pattern} used to parse pathname words with wildcards.
+	 */
 	private static final Pattern WILDCARD_WORD_PATTERN = Pattern.compile("[A-Z0-9\\-\\*]+");
 
-	private static final String HOST_MARKER = ":";
-	private static final String DIRECTORY_MARKER = ";";
-	private static final String TYPE_MARKER = ".";
-	private static final String VERSION_MARKER = ".";
+	/**
+	 * Host marker character.
+	 */
+	private static final char HOST_MARKER = ':';
 
+	/**
+	 * Directory marker character.
+	 */
+	private static final char DIRECTORY_MARKER = ';';
+
+	/**
+	 * Type marker character.
+	 */
+	private static final char TYPE_MARKER = '.';
+
+	/**
+	 * Version marker character.
+	 */
+	private static final char VERSION_MARKER = '.';
+
+	/**
+	 * Valid wildcard string.
+	 */
 	private static final String WILDCARD_STRING = "*";
+
+	/**
+	 * Invalid wildcard string.
+	 */
 	private static final String BAD_WILDCARD_STRING = "**";
 
-	private static final Pattern DIRECTORY_PATTERN = Pattern.compile(DIRECTORY_MARKER);
+	/**
+	 * {@link Pattern} used to parse pathname directories.
+	 */
+	private static final Pattern DIRECTORY_PATTERN = Pattern.compile(String.valueOf(DIRECTORY_MARKER));
 
+	/**
+	 * The logger for this class.
+	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(LogicalPathnameStruct.class);
+
+	/**
+	 * Public constructor.
+	 *
+	 * @param pathname
+	 * 		the pathname string to parse into the logical-pathname object elements
+	 */
+	public LogicalPathnameStruct(final String pathname) {
+		this(getHost(pathname), getDirectory(pathname), getName(pathname), getType(pathname), getVersion(pathname));
+	}
 
 	/**
 	 * Public constructor.
@@ -49,16 +98,6 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	private LogicalPathnameStruct(final PathnameHost host, final PathnameDirectory directory, final PathnameName name,
 	                              final PathnameType type, final PathnameVersion version) {
 		super(LogicalPathname.INSTANCE, host, new PathnameDevice(PathnameComponentType.UNSPECIFIC), directory, name, type, version);
-	}
-
-	/**
-	 * Public constructor.
-	 *
-	 * @param pathname
-	 * 		the pathname string to parse into the logical-pathname object elements
-	 */
-	public LogicalPathnameStruct(final String pathname) {
-		this(getHost(pathname), getDirectory(pathname), getName(pathname), getType(pathname), getVersion(pathname));
 	}
 
 	/**
@@ -86,22 +125,6 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	}
 
 	/**
-	 * Removes the host substring from the provided pathname string.
-	 *
-	 * @param pathname
-	 * 		the pathname string to remove the host substring from
-	 *
-	 * @return the substring of the provided pathname string with the host removed
-	 */
-	private static String removeHost(final String pathname) {
-		final int hostMarkerIndex = pathname.indexOf(HOST_MARKER);
-		if (hostMarkerIndex == -1) {
-			return pathname;
-		}
-		return pathname.substring(hostMarkerIndex + 1);
-	}
-
-	/**
 	 * Gets the logical-pathname directory.
 	 *
 	 * @param pathname
@@ -110,12 +133,12 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	 * @return the logical-pathname directory
 	 */
 	private static PathnameDirectory getDirectory(final String pathname) {
-		final String upperPathname = pathname.toUpperCase();
+		final String upperPathname = pathname.toUpperCase(Locale.getDefault());
 
 		String realPathname = removeHost(upperPathname);
 
 		final PathnameDirectoryType directoryType;
-		if (realPathname.startsWith(DIRECTORY_MARKER)) {
+		if (realPathname.charAt(0) == DIRECTORY_MARKER) {
 			directoryType = PathnameDirectoryType.RELATIVE;
 			realPathname = realPathname.substring(1);
 		} else {
@@ -158,19 +181,19 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	}
 
 	/**
-	 * Removes the directory substring from the provided pathname string.
+	 * Removes the host substring from the provided pathname string.
 	 *
 	 * @param pathname
-	 * 		the pathname string to remove the directory substring from
+	 * 		the pathname string to remove the host substring from
 	 *
-	 * @return the substring of the provided pathname string with the directory removed
+	 * @return the substring of the provided pathname string with the host removed
 	 */
-	private static String removeDirectory(final String pathname) {
-		final int lastDirectoryMarkerIndex = pathname.lastIndexOf(DIRECTORY_MARKER);
-		if (lastDirectoryMarkerIndex == -1) {
+	private static String removeHost(final String pathname) {
+		final int hostMarkerIndex = pathname.indexOf(HOST_MARKER);
+		if (hostMarkerIndex == -1) {
 			return pathname;
 		}
-		return pathname.substring(lastDirectoryMarkerIndex + 1);
+		return pathname.substring(hostMarkerIndex + 1);
 	}
 
 	/**
@@ -201,19 +224,19 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	}
 
 	/**
-	 * Removes the name substring from the provided pathname string.
+	 * Removes the directory substring from the provided pathname string.
 	 *
 	 * @param pathname
-	 * 		the pathname string to remove the name substring from
+	 * 		the pathname string to remove the directory substring from
 	 *
-	 * @return the substring of the provided pathname string with the name removed
+	 * @return the substring of the provided pathname string with the directory removed
 	 */
-	private static String removeName(final String pathname) {
-		final int typeMarkerIndex = pathname.indexOf(TYPE_MARKER);
-		if (typeMarkerIndex == -1) {
+	private static String removeDirectory(final String pathname) {
+		final int lastDirectoryMarkerIndex = pathname.lastIndexOf(DIRECTORY_MARKER);
+		if (lastDirectoryMarkerIndex == -1) {
 			return pathname;
 		}
-		return pathname.substring(typeMarkerIndex + 1);
+		return pathname.substring(lastDirectoryMarkerIndex + 1);
 	}
 
 	/**
@@ -225,7 +248,7 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	 * @return the logical-pathname type
 	 */
 	private static PathnameType getType(final String pathname) {
-		final String upperPathname = pathname.toUpperCase();
+		final String upperPathname = pathname.toUpperCase(Locale.getDefault());
 
 		String realPathname = removeHost(upperPathname);
 		realPathname = removeDirectory(realPathname);
@@ -245,19 +268,19 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	}
 
 	/**
-	 * Removes the type substring from the provided pathname string.
+	 * Removes the name substring from the provided pathname string.
 	 *
 	 * @param pathname
-	 * 		the pathname string to remove the type substring from
+	 * 		the pathname string to remove the name substring from
 	 *
-	 * @return the substring of the provided pathname string with the type removed
+	 * @return the substring of the provided pathname string with the name removed
 	 */
-	private static String removeType(final String pathname) {
-		final int versionMarkerIndex = pathname.indexOf(VERSION_MARKER);
-		if (versionMarkerIndex == -1) {
+	private static String removeName(final String pathname) {
+		final int typeMarkerIndex = pathname.indexOf(TYPE_MARKER);
+		if (typeMarkerIndex == -1) {
 			return pathname;
 		}
-		return pathname.substring(versionMarkerIndex + 1);
+		return pathname.substring(typeMarkerIndex + 1);
 	}
 
 	/**
@@ -269,7 +292,7 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	 * @return the logical-pathname version
 	 */
 	private static PathnameVersion getVersion(final String pathname) {
-		final String upperPathname = pathname.toUpperCase();
+		final String upperPathname = pathname.toUpperCase(Locale.getDefault());
 
 		String realPathname = removeHost(upperPathname);
 		realPathname = removeDirectory(realPathname);
@@ -289,17 +312,37 @@ public class LogicalPathnameStruct extends PathnameStruct {
 		}
 
 		try {
-			final Integer versionNumber = Integer.parseInt(pathnameVersion);
-			if (versionNumber > 0) {
+			final int versionNumber = Integer.parseInt(pathnameVersion);
+
+			final int minimumVersionNumber = 1;
+			if (versionNumber >= minimumVersionNumber) {
 				return new PathnameVersion(versionNumber);
 			} else {
 				throw new TypeErrorException("Version number must be a positive integer: " + pathnameVersion);
 			}
 		} catch (final NumberFormatException nfe) {
-			LOGGER.trace("Provided version cannot be parsed as an integer: {}", pathnameVersion, nfe);
+			if (LOGGER.isWarnEnabled()) {
+				LOGGER.warn("Provided version cannot be parsed as an integer: {}", pathnameVersion, nfe);
+			}
 		}
 
 		throw new TypeErrorException("Version did not match either '*', ':NEWEST', or a positive integer: " + pathnameVersion);
+	}
+
+	/**
+	 * Removes the type substring from the provided pathname string.
+	 *
+	 * @param pathname
+	 * 		the pathname string to remove the type substring from
+	 *
+	 * @return the substring of the provided pathname string with the type removed
+	 */
+	private static String removeType(final String pathname) {
+		final int versionMarkerIndex = pathname.indexOf(VERSION_MARKER);
+		if (versionMarkerIndex == -1) {
+			return pathname;
+		}
+		return pathname.substring(versionMarkerIndex + 1);
 	}
 
 	@Override

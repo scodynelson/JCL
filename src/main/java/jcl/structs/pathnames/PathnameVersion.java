@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.structs.pathnames;
 
 import jcl.structs.conditions.exceptions.FileErrorException;
@@ -9,7 +13,14 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public final class PathnameVersion {
 
+	/**
+	 * The pathname version value.
+	 */
 	private final Integer version;
+
+	/**
+	 * The pathname version component type.
+	 */
 	private final PathnameVersionComponentType componentType;
 
 	/**

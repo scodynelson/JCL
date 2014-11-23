@@ -194,18 +194,9 @@ public class HashTableStruct extends BuiltInClassStruct {
 			return key.printStruct();
 		}
 
-		/**
-		 * Gets instance of KeyWrapper object.
-		 *
-		 * @param key
-		 * 		the key to wrap
-		 * @param equator
-		 * 		the equator function used to test equality of keys
-		 *
-		 * @return the newly created KeyWrapper object
-		 */
-		private static KeyWrapper getInstance(final LispStruct key, final Equator<LispStruct> equator) {
-			return new KeyWrapper(key, equator);
+		@Override
+		public int hashCode() {
+			return HashCodeBuilder.reflectionHashCode(this);
 		}
 
 		@Override
@@ -219,13 +210,22 @@ public class HashTableStruct extends BuiltInClassStruct {
 		}
 
 		@Override
-		public int hashCode() {
-			return HashCodeBuilder.reflectionHashCode(this);
-		}
-
-		@Override
 		public String toString() {
 			return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+		}
+
+		/**
+		 * Gets instance of KeyWrapper object.
+		 *
+		 * @param key
+		 * 		the key to wrap
+		 * @param equator
+		 * 		the equator function used to test equality of keys
+		 *
+		 * @return the newly created KeyWrapper object
+		 */
+		private static KeyWrapper getInstance(final LispStruct key, final Equator<LispStruct> equator) {
+			return new KeyWrapper(key, equator);
 		}
 	}
 }

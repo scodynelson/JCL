@@ -17,29 +17,25 @@ import java.math.BigInteger;
 public class IntegerStruct extends RationalStruct {
 
 	/**
-	 * The internal {@link BigInteger} containing the float contents.
-	 */
-	private final BigInteger bigInteger;
-
-	/**
 	 * Int constant for the value '2'.
 	 */
 	private static final int TWO = 2;
-
 	/**
 	 * Int constant for the value '8'.
 	 */
 	private static final int EIGHT = 8;
-
 	/**
 	 * Int constant for the value '10'.
 	 */
 	private static final int TEN = 10;
-
 	/**
 	 * Int constant for the value '16'.
 	 */
 	private static final int SIXTEEN = 16;
+	/**
+	 * The internal {@link BigInteger} containing the float contents.
+	 */
+	private final BigInteger bigInteger;
 
 	/**
 	 * Public constructor.

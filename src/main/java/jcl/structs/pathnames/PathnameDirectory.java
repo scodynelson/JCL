@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.structs.pathnames;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -8,7 +12,14 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public final class PathnameDirectory {
 
+	/**
+	 * The pathname directory value.
+	 */
 	private final PathnameDirectoryComponent directoryComponent;
+
+	/**
+	 * The pathname directory component type.
+	 */
 	private final PathnameComponentType componentType;
 
 	/**

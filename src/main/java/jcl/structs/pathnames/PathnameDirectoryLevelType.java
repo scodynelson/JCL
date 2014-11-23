@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.structs.pathnames;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -10,11 +14,29 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public enum PathnameDirectoryLevelType {
 
+	/**
+	 * Wild pathname directory level type.
+	 */
 	WILD(":WILD"),
+
+	/**
+	 * Back pathname directory level type.
+	 */
 	BACK(":BACK"),
+
+	/**
+	 * Up pathname directory level type.
+	 */
 	UP(":UP"),
+
+	/**
+	 * Null pathname directory level type.
+	 */
 	NULL(null);
 
+	/**
+	 * String value of the pathname directory level type.
+	 */
 	private final String value;
 
 	/**
@@ -28,9 +50,9 @@ public enum PathnameDirectoryLevelType {
 	}
 
 	/**
-	 * Getter for directory level type value.
+	 * Getter for {@link #value} property.
 	 *
-	 * @return directory level type value
+	 * @return {@link #value} property
 	 */
 	public String getValue() {
 		return value;

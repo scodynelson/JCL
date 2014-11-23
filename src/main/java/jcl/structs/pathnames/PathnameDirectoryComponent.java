@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.structs.pathnames;
 
 import jcl.structs.conditions.exceptions.FileErrorException;
@@ -13,8 +17,15 @@ import java.util.List;
  */
 public final class PathnameDirectoryComponent {
 
-	private final PathnameDirectoryType pathnameDirectoryType;
+	/**
+	 * The pathname list of directory level values.
+	 */
 	private final List<PathnameDirectoryLevel> directoryLevels;
+
+	/**
+	 * The pathname directory type.
+	 */
+	private final PathnameDirectoryType pathnameDirectoryType;
 
 	/**
 	 * Public constructor.
@@ -25,7 +36,9 @@ public final class PathnameDirectoryComponent {
 	 * 		the pathname directory type (ABSOLUTE or RELATIVE)
 	 */
 	public PathnameDirectoryComponent(final PathnameDirectoryType pathnameDirectoryType, final List<PathnameDirectoryLevel> directoryLevels) {
-		if (CollectionUtils.isNotEmpty(directoryLevels) && (pathnameDirectoryType == PathnameDirectoryType.ABSOLUTE)) {
+		if (CollectionUtils.isNotEmpty(directoryLevels)
+				&& (pathnameDirectoryType == PathnameDirectoryType.ABSOLUTE)) {
+
 			final PathnameDirectoryLevel firstElement = directoryLevels.get(0);
 			if ((firstElement.getDirectoryLevelType() == PathnameDirectoryLevelType.BACK)
 					|| (firstElement.getDirectoryLevelType() == PathnameDirectoryLevelType.UP)) {
@@ -33,17 +46,8 @@ public final class PathnameDirectoryComponent {
 			}
 		}
 
-		this.pathnameDirectoryType = pathnameDirectoryType;
 		this.directoryLevels = directoryLevels;
-	}
-
-	/**
-	 * Getter for pathname directory component {@link #pathnameDirectoryType} property.
-	 *
-	 * @return pathname directory component {@link #pathnameDirectoryType} property
-	 */
-	public PathnameDirectoryType getPathnameDirectoryType() {
-		return pathnameDirectoryType;
+		this.pathnameDirectoryType = pathnameDirectoryType;
 	}
 
 	/**
@@ -53,6 +57,15 @@ public final class PathnameDirectoryComponent {
 	 */
 	public List<PathnameDirectoryLevel> getDirectoryLevels() {
 		return directoryLevels;
+	}
+
+	/**
+	 * Getter for pathname directory component {@link #pathnameDirectoryType} property.
+	 *
+	 * @return pathname directory component {@link #pathnameDirectoryType} property
+	 */
+	public PathnameDirectoryType getPathnameDirectoryType() {
+		return pathnameDirectoryType;
 	}
 
 	@Override

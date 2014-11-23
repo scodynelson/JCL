@@ -428,7 +428,7 @@
       </option>
       <option name="FIELD_OPTIONS">
         <value>
-          <option name="ACCESS_JAVADOC_REQUIRED_FOR" value="none" />
+          <option name="ACCESS_JAVADOC_REQUIRED_FOR" value="private" />
           <option name="REQUIRED_TAGS" value="" />
         </value>
       </option>
@@ -845,7 +845,7 @@
     <inspection_tool class="UnnecessaryDefault" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UnnecessaryEnumModifier" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="UnnecessaryExplicitNumericCast" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="UnnecessaryFinalOnLocalVariableOrParameter" enabled="true" level="WARNING" enabled_by_default="true">
+    <inspection_tool class="UnnecessaryFinalOnLocalVariableOrParameter" enabled="false" level="WARNING" enabled_by_default="false">
       <option name="onlyWarnOnAbstractMethods" value="true" />
       <option name="reportLocalVariables" value="false" />
     </inspection_tool>

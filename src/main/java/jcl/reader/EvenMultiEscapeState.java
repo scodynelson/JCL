@@ -47,8 +47,11 @@ import jcl.structs.streams.ReadResult;
  * </tab>
  * </p>
  */
-final class EvenMultiEscapeState extends State {
+final class EvenMultiEscapeState implements State {
 
+	/**
+	 * Singleton instance variable.
+	 */
 	static final State INSTANCE = new EvenMultiEscapeState();
 
 	/**
@@ -58,7 +61,7 @@ final class EvenMultiEscapeState extends State {
 	}
 
 	@Override
-	void process(final Reader reader, final TokenBuilder tokenBuilder) {
+	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
 
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();
@@ -78,7 +81,7 @@ final class EvenMultiEscapeState extends State {
 			final CaseSpec readtableCase = reader.getReadtableCase();
 			final AttributeType attributeType = reader.getAttributeType(codePoint);
 
-			codePoint = properCaseCodePoint(codePoint, attributeType, readtableCase);
+			codePoint = State.properCaseCodePoint(codePoint, attributeType, readtableCase);
 			tokenBuilder.addToTokenAttributes(codePoint, attributeType);
 
 			process(reader, tokenBuilder);
@@ -98,11 +101,11 @@ final class EvenMultiEscapeState extends State {
 			}
 		} else if (syntaxType == SyntaxType.MULTIPLE_ESCAPE) {
 			OddMultiEscapeState.INSTANCE.process(reader, tokenBuilder);
-		} else if (syntaxType == SyntaxType.TERMINATING) {
-			// TODO: preserve whitespace?
-			reader.unreadChar(codePoint);
-			TokenAccumulatedState.INSTANCE.process(reader, tokenBuilder);
-		} else if (syntaxType == SyntaxType.WHITESPACE) {
+		} else if ((syntaxType == SyntaxType.TERMINATING) || (syntaxType == SyntaxType.WHITESPACE)) {
+			// NOTE from CLHS in regarding 'SyntaxType.WHITESPACE' characters:
+			//      If a command interpreter takes single-character commands, but occasionally reads an object then if
+			//      the whitespace[2] after a symbol is not discarded it might be interpreted as a command some time
+			//      later after the symbol had been read.
 			reader.unreadChar(codePoint);
 			TokenAccumulatedState.INSTANCE.process(reader, tokenBuilder);
 		} else {

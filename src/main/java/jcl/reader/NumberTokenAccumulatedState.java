@@ -31,13 +31,36 @@ import java.util.function.Function;
  * be formatted, then we progress to the SymbolTokenAccumulatedState.
  * </p>
  */
-final class NumberTokenAccumulatedState extends State {
+final class NumberTokenAccumulatedState implements State {
 
+	/**
+	 * Singleton instance variable.
+	 */
 	static final State INSTANCE = new NumberTokenAccumulatedState();
 
+	/**
+	 * The list of {@link AttributeType}s that should not be present in a numeric token.
+	 */
+	private static final List<AttributeType> NOT_NUMBER_ATTRS = Arrays.asList(AttributeType.INVALID, AttributeType.ALPHABETIC, AttributeType.PACKAGEMARKER);
+
+	/**
+	 * The list of {@link AttributeType}s that there should not be more than one of if present in a numeric token.
+	 */
 	private static final List<AttributeType> NOT_MORE_THAN_ONE_ATTRS = Arrays.asList(AttributeType.PLUS, AttributeType.MINUS, AttributeType.DECIMAL, AttributeType.RATIOMARKER);
+
+	/**
+	 * The list of {@link AttributeType}s that should only be first if present in a numeric token.
+	 */
 	private static final List<AttributeType> FIRST_ONLY_ATTRS = Arrays.asList(AttributeType.PLUS, AttributeType.MINUS);
+
+	/**
+	 * The list of {@link AttributeType}s that should not be first nor last if present in a numeric token.
+	 */
 	private static final List<AttributeType> NOT_FIRST_OR_LAST_ATTRS = Arrays.asList(AttributeType.DECIMAL, AttributeType.RATIOMARKER);
+
+	/**
+	 * The list of {@link AttributeType}s that there should only be one of if present in a numeric token.
+	 */
 	private static final List<AttributeType> NO_SIMULTANEOUS_ATTRS = Arrays.asList(AttributeType.DECIMAL, AttributeType.RATIOMARKER);
 
 	/**
@@ -47,7 +70,7 @@ final class NumberTokenAccumulatedState extends State {
 	}
 
 	@Override
-	void process(final Reader reader, final TokenBuilder tokenBuilder) {
+	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
 
 		final NumberStruct numberToken = getNumberToken(tokenBuilder);
 		if (numberToken == null) {
@@ -75,19 +98,17 @@ final class NumberTokenAccumulatedState extends State {
 		}
 
 		// Check that there is at least 1 'ALPHADIGIT'
-		final boolean hasNoAlphaDigits = hasNoAttributes(tokenAttributes, AttributeType.ALPHADIGIT);
+		final boolean hasNoAlphaDigits = State.hasNoAttributes(tokenAttributes, AttributeType.ALPHADIGIT);
 		if (hasNoAlphaDigits) {
 			return null;
 		}
 
 		// If there are any 'INVALID', 'ALPHABETIC', or 'PACKAGEMARKER' tokens, not a number
-		for (final TokenAttribute tokenAttribute : tokenAttributes) {
-			final AttributeType attributeType = tokenAttribute.getAttributeType();
-			if ((attributeType == AttributeType.INVALID)
-					|| (attributeType == AttributeType.ALPHABETIC)
-					|| (attributeType == AttributeType.PACKAGEMARKER)) {
-				return null;
-			}
+		final boolean containsNonNumberAttrs =
+				tokenAttributes.stream()
+				               .anyMatch(NOT_NUMBER_ATTRS::contains);
+		if (containsNonNumberAttrs) {
+			return null;
 		}
 
 		// Check number attributes
@@ -108,7 +129,7 @@ final class NumberTokenAccumulatedState extends State {
 			return null;
 		}
 
-		String tokenString = convertTokensToString(tokenAttributes);
+		String tokenString = State.convertTokensToString(tokenAttributes);
 
 		// Java does not support numbers in the format +12345, so we need to get rid of the plus sign if it exists
 		if (tokenString.startsWith("+")) {
@@ -120,9 +141,9 @@ final class NumberTokenAccumulatedState extends State {
 			tokenString = tokenString.substring(0, tokenString.length() - 1);
 		}
 
-		final boolean hasDecimal = hasAnyAttribute(tokenAttributes, AttributeType.DECIMAL);
-		final boolean hasRatioMarker = hasAnyAttribute(tokenAttributes, AttributeType.RATIOMARKER);
-		final boolean hasExponentMarker = hasAnyAttribute(tokenAttributes, AttributeType.EXPONENTMARKER);
+		final boolean hasDecimal = State.hasAnyAttribute(tokenAttributes, AttributeType.DECIMAL);
+		final boolean hasRatioMarker = State.hasAnyAttribute(tokenAttributes, AttributeType.RATIOMARKER);
+		final boolean hasExponentMarker = State.hasAnyAttribute(tokenAttributes, AttributeType.EXPONENTMARKER);
 
 		if (hasExponentMarker && !hasDecimal) {
 			return null;
@@ -134,7 +155,7 @@ final class NumberTokenAccumulatedState extends State {
 			final BigFraction rational = new BigFraction(numerator, denominator);
 			return new RatioStruct(rational);
 		} else if (hasDecimal) {
-			final Integer exponentToken = getTokenByAttribute(tokenAttributes, AttributeType.EXPONENTMARKER);
+			final Integer exponentToken = State.getTokenByAttribute(tokenAttributes, AttributeType.EXPONENTMARKER);
 
 			tokenString = getFloatTokenString(tokenString, exponentToken);
 
@@ -181,22 +202,21 @@ final class NumberTokenAccumulatedState extends State {
 
 		// Checks to make sure if either 'PLUS' or 'MINUS' is supplied, that it is first
 		function =
-				e -> hasAnyAttribute(tokenAttributes, e) && (firstAttributeType != e);
+				e -> State.hasAnyAttribute(tokenAttributes, e) && (firstAttributeType != e);
 		final boolean hasAttributesAndNotFirst
 				= hasAttributes(function, FIRST_ONLY_ATTRS);
 
 		// Checks to make sure if either 'DECIMAL' or 'RATIOMARKER' is supplied, that it is neither first nor last
 		function =
-				e -> hasAnyAttribute(tokenAttributes, e) && ((firstAttributeType == e) || (lastAttributeType == e));
+				e -> State.hasAnyAttribute(tokenAttributes, e) && ((firstAttributeType == e) || (lastAttributeType == e));
 		final boolean hasAttributesAndFirstOrLast
 				= hasAttributes(function, NOT_FIRST_OR_LAST_ATTRS);
 
 		// Checks to make sure that both 'DECIMAL' and 'RATIOMARKER' are not supplied at the same time
-
 		final boolean hasAttributes =
 				NO_SIMULTANEOUS_ATTRS
 						.stream()
-						.map(e -> hasAnyAttribute(tokenAttributes, e))
+						.map(e -> State.hasAnyAttribute(tokenAttributes, e))
 						.reduce(true, (result, e) -> result && e);
 
 		return hasMoreThanOneOfAttributes || hasAttributesAndNotFirst || hasAttributesAndFirstOrLast || hasAttributes;

@@ -20,6 +20,20 @@ public class ComplexStruct extends NumberStruct {
 	 * Public constructor.
 	 *
 	 * @param real
+	 * 		a {@link RealStruct} that represents the value of real part of the ComplexStruct
+	 * @param imaginary
+	 * 		a {@link RealStruct} that represents the value of imaginary part ComplexStruct
+	 */
+	public ComplexStruct(final RealStruct real, final RealStruct imaginary) {
+		super(Complex.INSTANCE, null, null);
+		this.real = real;
+		this.imaginary = imaginary;
+	}
+
+	/**
+	 * Public constructor.
+	 *
+	 * @param real
 	 * 		a {@link BigInteger} that represents the value of real part of the ComplexStruct
 	 * @param imaginary
 	 * 		a {@link BigInteger} that represents the value of imaginary part ComplexStruct

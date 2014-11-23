@@ -7,8 +7,11 @@ package jcl.reader;
  * entered.
  * </p>
  */
-final class MultipleEscapeState extends State {
+final class MultipleEscapeState implements State {
 
+	/**
+	 * Singleton instance variable.
+	 */
 	static final State INSTANCE = new MultipleEscapeState();
 
 	/**
@@ -18,7 +21,7 @@ final class MultipleEscapeState extends State {
 	}
 
 	@Override
-	void process(final Reader reader, final TokenBuilder tokenBuilder) {
+	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
 		OddMultiEscapeState.INSTANCE.process(reader, tokenBuilder);
 	}
 }

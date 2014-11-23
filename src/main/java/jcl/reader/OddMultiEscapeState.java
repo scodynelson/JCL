@@ -28,8 +28,11 @@ import jcl.structs.streams.ReadResult;
  * </tab>
  * </p>
  */
-final class OddMultiEscapeState extends State {
+final class OddMultiEscapeState implements State {
 
+	/**
+	 * Singleton instance variable.
+	 */
 	static final State INSTANCE = new OddMultiEscapeState();
 
 	/**
@@ -39,7 +42,7 @@ final class OddMultiEscapeState extends State {
 	}
 
 	@Override
-	void process(final Reader reader, final TokenBuilder tokenBuilder) {
+	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
 
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();

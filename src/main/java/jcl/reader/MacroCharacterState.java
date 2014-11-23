@@ -30,8 +30,11 @@ import java.math.BigInteger;
  * </tab>
  * </p>
  */
-final class MacroCharacterState extends State {
+final class MacroCharacterState implements State {
 
+	/**
+	 * Singleton instance variable.
+	 */
 	static final State INSTANCE = new MacroCharacterState();
 
 	/**
@@ -41,16 +44,12 @@ final class MacroCharacterState extends State {
 	}
 
 	@Override
-	void process(final Reader reader, final TokenBuilder tokenBuilder) {
+	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
 		final Integer codePoint = tokenBuilder.getPreviousReadCharacter();
 
-		if (isEndOfFileCharacter(codePoint)) {
-			if (tokenBuilder.isEofErrorP()) {
-				throw new ReaderErrorException("End-of-File encountered in State: " + this);
-			} else {
-				tokenBuilder.setReturnToken(null);
-				return;
-			}
+		if (State.isEndOfFileCharacter(codePoint)) {
+			State.handleEndOfFile(tokenBuilder, "MacroCharacterState");
+			return;
 		}
 
 		final ReaderMacroFunction readerMacroFunction = reader.getReadtable().getMacroCharacter(codePoint);

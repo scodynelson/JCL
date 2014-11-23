@@ -1,7 +1,6 @@
 package jcl.reader;
 
 import jcl.LispStruct;
-import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.streams.ReadResult;
 
 /**
@@ -11,8 +10,11 @@ import jcl.structs.streams.ReadResult;
  * from the input stream, and dispatched according to the syntax type of x to one of steps 2 to 7.
  * </p>
  */
-final class ReadState extends State {
+final class ReadState implements State {
 
+	/**
+	 * Singleton instance variable.
+	 */
 	static final State INSTANCE = new ReadState();
 
 	/**
@@ -22,7 +24,7 @@ final class ReadState extends State {
 	}
 
 	@Override
-	void process(final Reader reader, final TokenBuilder tokenBuilder) {
+	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
 
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();
@@ -30,12 +32,8 @@ final class ReadState extends State {
 
 		final ReadResult readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
 		if (readResult.wasEOF()) {
-			if (tokenBuilder.isEofErrorP()) {
-				throw new ReaderErrorException("End-of-File encountered in State: " + this);
-			} else {
-				tokenBuilder.setReturnToken(null);
-				return;
-			}
+			State.handleEndOfFile(tokenBuilder, "ReadState");
+			return;
 		}
 
 		final int codePoint = readResult.getResult();

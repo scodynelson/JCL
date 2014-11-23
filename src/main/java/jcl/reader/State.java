@@ -1,7 +1,6 @@
 package jcl.reader;
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import jcl.structs.conditions.exceptions.ReaderErrorException;
 
 import java.util.List;
 
@@ -31,9 +30,10 @@ import java.util.List;
  * For online specifications of these states, goto http://www.lispworks.com/documentation/HyperSpec/Body/02_b.htm
  * This site is the Reader Algorithm that is outlined within the CommonLisp HyperSpec (TM).
  */
-abstract class State {
+@FunctionalInterface
+interface State {
 
-	private static final int EOF = -1;
+	int EOF = -1;
 
 	/**
 	 * Abstract method to be implemented by all child State objects to handle their respective reader processing
@@ -45,12 +45,7 @@ abstract class State {
 	 * 		the {@link TokenBuilder} used to build the resulting lisp token and house token parsing information throughout
 	 * 		the read process
 	 */
-	abstract void process(Reader reader, TokenBuilder tokenBuilder);
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
-	}
+	void process(Reader reader, TokenBuilder tokenBuilder);
 
 	/**
 	 * Determines if the provided {@code codePoint} is either null or equal to the {@link #EOF} character constant.
@@ -62,6 +57,23 @@ abstract class State {
 	 */
 	static boolean isEndOfFileCharacter(final Integer codePoint) {
 		return (codePoint == null) || (codePoint == EOF);
+	}
+
+	/**
+	 * Handles End-of-File characters based on the {@link TokenBuilder#isEofErrorP} value inside the provided {@link
+	 * TokenBuilder}.
+	 *
+	 * @param tokenBuilder
+	 * 		the {@link TokenBuilder} used to determine the handling of End-of-File characters
+	 * @param stateEofOccurred
+	 * 		the State the End-of-File character occurred
+	 */
+	static void handleEndOfFile(final TokenBuilder tokenBuilder, final String stateEofOccurred) {
+		if (tokenBuilder.isEofErrorP()) {
+			throw new ReaderErrorException("End-of-File encountered in " + stateEofOccurred + '.');
+		} else {
+			tokenBuilder.setReturnToken(null);
+		}
 	}
 
 	/**

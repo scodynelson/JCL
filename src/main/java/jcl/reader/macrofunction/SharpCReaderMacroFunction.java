@@ -6,9 +6,7 @@ import jcl.reader.Reader;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.lists.ListStruct;
 import jcl.structs.numbers.ComplexStruct;
-import jcl.structs.numbers.FloatStruct;
-import jcl.structs.numbers.IntegerStruct;
-import jcl.structs.numbers.RatioStruct;
+import jcl.structs.numbers.RealStruct;
 import jcl.structs.symbols.variables.Variable;
 
 import java.math.BigInteger;
@@ -47,29 +45,14 @@ public final class SharpCReaderMacroFunction extends ReaderMacroFunction {
 		}
 
 		final LispStruct real = lispTokens.get(0);
-		final LispStruct imaginary = lispTokens.get(1);
-
-		// TODO: we REALLY need to do this better!!
-		if ((real instanceof IntegerStruct) && (imaginary instanceof IntegerStruct)) {
-			return new ComplexStruct((IntegerStruct) real, (IntegerStruct) imaginary);
-		} else if ((real instanceof IntegerStruct) && (imaginary instanceof FloatStruct)) {
-			return new ComplexStruct((IntegerStruct) real, (FloatStruct) imaginary);
-		} else if ((real instanceof IntegerStruct) && (imaginary instanceof RatioStruct)) {
-			return new ComplexStruct((IntegerStruct) real, (RatioStruct) imaginary);
-		} else if ((real instanceof FloatStruct) && (imaginary instanceof IntegerStruct)) {
-			return new ComplexStruct((FloatStruct) real, (IntegerStruct) imaginary);
-		} else if ((real instanceof FloatStruct) && (imaginary instanceof FloatStruct)) {
-			return new ComplexStruct((FloatStruct) real, (FloatStruct) imaginary);
-		} else if ((real instanceof FloatStruct) && (imaginary instanceof RatioStruct)) {
-			return new ComplexStruct((FloatStruct) real, (RatioStruct) imaginary);
-		} else if ((real instanceof RatioStruct) && (imaginary instanceof IntegerStruct)) {
-			return new ComplexStruct((RatioStruct) real, (IntegerStruct) imaginary);
-		} else if ((real instanceof RatioStruct) && (imaginary instanceof FloatStruct)) {
-			return new ComplexStruct((RatioStruct) real, (FloatStruct) imaginary);
-		} else if ((real instanceof RatioStruct) && (imaginary instanceof RatioStruct)) {
-			return new ComplexStruct((RatioStruct) real, (RatioStruct) imaginary);
-		} else {
-			throw new ReaderErrorException("Only real numbers are valid tokens for #c.");
+		if (!(real instanceof RealStruct)) {
+			throw new ReaderErrorException("Only real numbers are valid tokens for #c. Got: " + real);
 		}
+
+		final LispStruct imaginary = lispTokens.get(1);
+		if (!(imaginary instanceof RealStruct)) {
+			throw new ReaderErrorException("Only real numbers are valid tokens for #c. Got: " + imaginary);
+		}
+		return new ComplexStruct((RealStruct) real, (RealStruct) imaginary);
 	}
 }

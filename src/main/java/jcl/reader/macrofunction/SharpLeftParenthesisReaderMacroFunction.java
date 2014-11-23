@@ -48,7 +48,9 @@ public final class SharpLeftParenthesisReaderMacroFunction extends ListReaderMac
 		final ListStruct listToken = readList(reader);
 
 		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
-			LOGGER.debug("{} suppressed.", listToken);
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("{} suppressed.", listToken);
+			}
 			return null;
 		}
 
@@ -63,11 +65,7 @@ public final class SharpLeftParenthesisReaderMacroFunction extends ListReaderMac
 		final List<LispStruct> lispTokens = listToken.getAsJavaList();
 
 		if (numArg == null) {
-			try {
-				return new VectorStruct<>(lispTokens);
-			} catch (final TypeErrorException | SimpleErrorException e) {
-				throw new ReaderErrorException("Error occurred creating vector.", e);
-			}
+			return createVector(lispTokens);
 		}
 
 		return handleNumArg(lispTokens, numArg, listToken.printStruct());
@@ -104,6 +102,18 @@ public final class SharpLeftParenthesisReaderMacroFunction extends ListReaderMac
 			lispTokens.add(lastToken);
 		}
 
+		return createVector(lispTokens);
+	}
+
+	/**
+	 * Creates a new {@link VectorStruct} from the provided {@code lispTokens}.
+	 *
+	 * @param lispTokens
+	 * 		the {@link LispStruct} tokens used to create the {@link VectorStruct}
+	 *
+	 * @return the newly created {@link VectorStruct}
+	 */
+	private static VectorStruct<?> createVector(final List<LispStruct> lispTokens) {
 		try {
 			return new VectorStruct<>(lispTokens);
 		} catch (final TypeErrorException | SimpleErrorException e) {

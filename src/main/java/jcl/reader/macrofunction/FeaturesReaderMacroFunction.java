@@ -88,7 +88,9 @@ abstract class FeaturesReaderMacroFunction extends ReaderMacroFunction {
 				reader.read();
 			}
 		} catch (final ReaderErrorException ree) {
-			LOGGER.debug("Error occurred when reading feature.", ree);
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Error occurred when reading feature.", ree);
+			}
 		} finally {
 			Variable.PACKAGE.setValue(previousPackage);
 			Variable.READ_SUPPRESS.setValue(previousReadSuppress);

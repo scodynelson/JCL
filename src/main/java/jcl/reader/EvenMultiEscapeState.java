@@ -90,8 +90,6 @@ final class EvenMultiEscapeState implements State {
 
 			process(reader, tokenBuilder);
 		} else if (syntaxType == SyntaxType.SINGLE_ESCAPE) {
-			// NOTE: The only difference in the following logic and the actual SINGLE_ESCAPE_STATE is that
-			//          this one builds on the current token, where as the SES begins a token.
 
 			readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
 			if (readResult.wasEOF()) {

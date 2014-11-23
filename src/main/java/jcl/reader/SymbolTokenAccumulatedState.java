@@ -4,7 +4,6 @@
 
 package jcl.reader;
 
-import jcl.LispStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.packages.GlobalPackageStruct;
 import jcl.structs.packages.PackageStruct;
@@ -72,7 +71,7 @@ final class SymbolTokenAccumulatedState implements State {
 	@Override
 	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
 
-		final SymbolStruct<? extends LispStruct> symbolToken = getSymbolToken(tokenBuilder);
+		final SymbolStruct<?> symbolToken = getSymbolToken(tokenBuilder);
 		if (symbolToken == null) {
 			final Integer codePoint = tokenBuilder.getPreviousReadCharacter();
 			if (State.isEndOfFileCharacter(codePoint) && tokenBuilder.isEofErrorP()) {
@@ -91,7 +90,7 @@ final class SymbolTokenAccumulatedState implements State {
 	 *
 	 * @return the built symbolToken value
 	 */
-	private static SymbolStruct<? extends LispStruct> getSymbolToken(final TokenBuilder tokenBuilder) {
+	private static SymbolStruct<?> getSymbolToken(final TokenBuilder tokenBuilder) {
 
 		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
 
@@ -146,7 +145,7 @@ final class SymbolTokenAccumulatedState implements State {
 				break;
 			}
 
-			// NOTE: we have this here and not somehow in the above 'if' because we need to use the results of packageMarkerCount++
+			// NOTE: we have this here and not somehow in the above 'if' because we need to use the results of packageMarkerCount
 			final int maxNumberOfPackageMarkers = 2;
 			if (packageMarkerCount > maxNumberOfPackageMarkers) {
 				// Max number of package markers hit. All the rest are part of the symbol.

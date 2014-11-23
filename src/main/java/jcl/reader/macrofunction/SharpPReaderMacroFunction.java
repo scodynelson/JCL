@@ -44,7 +44,9 @@ public final class SharpPReaderMacroFunction extends ReaderMacroFunction {
 
 		final LispStruct lispToken = reader.read();
 		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
-			LOGGER.debug("{} suppressed.", lispToken.printStruct());
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("{} suppressed.", lispToken.printStruct());
+			}
 			return null;
 		}
 

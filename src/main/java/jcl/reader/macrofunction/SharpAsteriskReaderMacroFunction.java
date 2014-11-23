@@ -48,7 +48,9 @@ public final class SharpAsteriskReaderMacroFunction extends ExtendedTokenReaderM
 		final String token = readExtendedToken.getToken();
 
 		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
-			LOGGER.debug("{} suppressed.", token);
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("{} suppressed.", token);
+			}
 			return null;
 		}
 
@@ -57,11 +59,7 @@ public final class SharpAsteriskReaderMacroFunction extends ExtendedTokenReaderM
 		}
 
 		if (numArg == null) {
-			try {
-				return new BitVectorStruct(token);
-			} catch (final TypeErrorException | SimpleErrorException e) {
-				throw new ReaderErrorException("Error occurred creating bit-vector.", e);
-			}
+			return createBitVector(token);
 		}
 
 		return handleNumArg(token, numArg);
@@ -101,8 +99,20 @@ public final class SharpAsteriskReaderMacroFunction extends ExtendedTokenReaderM
 		}
 
 		final String newBitString = bitStringBuilder.toString();
+		return createBitVector(newBitString);
+	}
+
+	/**
+	 * Creates a new {@link BitVectorStruct} from the provided {@code token}.
+	 *
+	 * @param token
+	 * 		the token used to create the {@link BitVectorStruct}
+	 *
+	 * @return the newly created {@link BitVectorStruct}
+	 */
+	private static BitVectorStruct createBitVector(final String token) {
 		try {
-			return new BitVectorStruct(newBitString);
+			return new BitVectorStruct(token);
 		} catch (final TypeErrorException | SimpleErrorException e) {
 			throw new ReaderErrorException("Error occurred creating bit-vector.", e);
 		}

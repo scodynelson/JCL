@@ -45,7 +45,9 @@ public final class SharpColonReaderMacroFunction extends ExtendedTokenReaderMacr
 		final String token = readExtendedToken.getToken();
 
 		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
-			LOGGER.debug("{} suppressed.", token);
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("{} suppressed.", token);
+			}
 			return null;
 		}
 

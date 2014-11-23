@@ -187,44 +187,60 @@ final class NumberTokenAccumulatedState implements State {
 	private static boolean areNumberAttributesInvalid(final LinkedList<TokenAttribute> tokenAttributes) {
 
 		// Checks to make sure there are not more than one of: 'PLUS', 'MINUS', 'DECIMAL', 'RATIOMARKER'
-		Function<AttributeType, Boolean> function =
-				e -> {
-					final long numberOfMatchingAttributes =
-							tokenAttributes
-									.stream()
-									.filter(tokenAttribute -> tokenAttribute.getAttributeType() == e)
-									.count();
-					return numberOfMatchingAttributes > 1;
-				};
 		final boolean hasMoreThanOneOfAttributes
-				= hasAttributes(function, NOT_MORE_THAN_ONE_ATTRS);
+				= hasAnyAttributes(NOT_MORE_THAN_ONE_ATTRS, e ->
+		{
+			final long numberOfMatchingAttributes =
+					tokenAttributes
+							.stream()
+							.filter(tokenAttribute -> tokenAttribute.getAttributeType() == e)
+							.count();
+			return numberOfMatchingAttributes > 1;
+		});
 
 		final TokenAttribute firstTokenAttribute = tokenAttributes.getFirst();
 		final AttributeType firstAttributeType = firstTokenAttribute.getAttributeType();
 
 		// Checks to make sure if either 'PLUS' or 'MINUS' is supplied, that it is first
-		function =
-				e -> State.hasAnyAttribute(tokenAttributes, e) && (firstAttributeType != e);
 		final boolean hasAttributesAndNotFirst
-				= hasAttributes(function, FIRST_ONLY_ATTRS);
+				= hasAnyAttributes(FIRST_ONLY_ATTRS, e ->
+						State.hasAnyAttribute(tokenAttributes, e) && (firstAttributeType != e)
+		);
 
 		final TokenAttribute lastTokenAttribute = tokenAttributes.getLast();
 		final AttributeType lastAttributeType = lastTokenAttribute.getAttributeType();
 
 		// Checks to make sure if either 'DECIMAL' or 'RATIOMARKER' is supplied, that it is neither first nor last
-		function =
-				e -> State.hasAnyAttribute(tokenAttributes, e) && ((firstAttributeType == e) || (lastAttributeType == e));
 		final boolean hasAttributesAndFirstOrLast
-				= hasAttributes(function, NOT_FIRST_OR_LAST_ATTRS);
+				= hasAnyAttributes(NOT_FIRST_OR_LAST_ATTRS, e ->
+						State.hasAnyAttribute(tokenAttributes, e) && ((firstAttributeType == e) || (lastAttributeType == e))
+		);
 
 		// Checks to make sure that both 'DECIMAL' and 'RATIOMARKER' are not supplied at the same time
-		final boolean hasAttributes =
-				NO_SIMULTANEOUS_ATTRS
-						.stream()
-						.map(e -> State.hasAnyAttribute(tokenAttributes, e))
-						.reduce(true, (result, e) -> result && e);
+		final boolean hasSimultaneousAttributes
+				= hasAllAttributes(NO_SIMULTANEOUS_ATTRS, e ->
+						State.hasAnyAttribute(tokenAttributes, e)
+		);
 
-		return hasMoreThanOneOfAttributes || hasAttributesAndNotFirst || hasAttributesAndFirstOrLast || hasAttributes;
+		return hasMoreThanOneOfAttributes || hasAttributesAndNotFirst || hasAttributesAndFirstOrLast || hasSimultaneousAttributes;
+	}
+
+	/**
+	 * Determines if all of the provided {@code attributeTypes} are present according to the results of the application
+	 * of the provided {@code function}.
+	 *
+	 * @param function
+	 * 		the function to apply to determine the presence of the provided {@code attributeTypes}
+	 * @param attributeTypes
+	 * 		the AttributeType values to test for presence
+	 *
+	 * @return true if all of the provided {@code attributeTypes} are present; false otherwise
+	 */
+	private static boolean hasAllAttributes(final List<AttributeType> attributeTypes, final Function<AttributeType, Boolean> function) {
+		return attributeTypes
+				.stream()
+				.map(function)
+				.reduce(true, (result, e) -> result && e);
 	}
 
 	/**
@@ -238,7 +254,7 @@ final class NumberTokenAccumulatedState implements State {
 	 *
 	 * @return true if any of the provided {@code attributeTypes} are present; false otherwise
 	 */
-	private static boolean hasAttributes(final Function<AttributeType, Boolean> function, final List<AttributeType> attributeTypes) {
+	private static boolean hasAnyAttributes(final List<AttributeType> attributeTypes, final Function<AttributeType, Boolean> function) {
 		return attributeTypes
 				.stream()
 				.map(function)
@@ -316,21 +332,22 @@ final class NumberTokenAccumulatedState implements State {
 	 * @return the proper float type
 	 */
 	private static Float getFloatType(final Integer exponentToken) {
+		Float floatType = Variable.READ_DEFAULT_FLOAT_FORMAT.getValue();
+
 		if (exponentToken != null) {
 			final int exponentTokenInt = exponentToken;
 			if ((exponentTokenInt == CharacterConstants.LATIN_SMALL_LETTER_S) || (exponentTokenInt == CharacterConstants.LATIN_CAPITAL_LETTER_S)) {
-				return ShortFloat.INSTANCE;
+				floatType = ShortFloat.INSTANCE;
 			} else if ((exponentTokenInt == CharacterConstants.LATIN_SMALL_LETTER_F) || (exponentTokenInt == CharacterConstants.LATIN_CAPITAL_LETTER_F)) {
-				return SingleFloat.INSTANCE;
+				floatType = SingleFloat.INSTANCE;
 			} else if ((exponentTokenInt == CharacterConstants.LATIN_SMALL_LETTER_D) || (exponentTokenInt == CharacterConstants.LATIN_CAPITAL_LETTER_D)) {
-				return DoubleFloat.INSTANCE;
+				floatType = DoubleFloat.INSTANCE;
 			} else if ((exponentTokenInt == CharacterConstants.LATIN_SMALL_LETTER_L) || (exponentTokenInt == CharacterConstants.LATIN_CAPITAL_LETTER_L)) {
-				return LongFloat.INSTANCE;
+				floatType = LongFloat.INSTANCE;
+			} else if ((exponentTokenInt == CharacterConstants.LATIN_SMALL_LETTER_E) || (exponentTokenInt == CharacterConstants.LATIN_CAPITAL_LETTER_E)) {
+				floatType = Variable.READ_DEFAULT_FLOAT_FORMAT.getValue();
 			}
-//			else if ((exponentTokenInt == CharacterConstants.LATIN_SMALL_LETTER_E) || (exponentTokenInt == CharacterConstants.LATIN_CAPITAL_LETTER_E)) {
-//				return Variable.READ_DEFAULT_FLOAT_FORMAT.getValue();
-//			}
 		}
-		return Variable.READ_DEFAULT_FLOAT_FORMAT.getValue();
+		return floatType;
 	}
 }

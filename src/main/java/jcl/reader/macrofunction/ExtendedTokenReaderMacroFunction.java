@@ -241,17 +241,23 @@ abstract class ExtendedTokenReaderMacroFunction extends ReaderMacroFunction {
 	 */
 	private static int getTokenWithCase(final Reader reader, final int currentToken) {
 		final CaseSpec readtableCase = reader.getReadtableCase();
+
+		int properCaseToken = currentToken;
 		switch (readtableCase) {
 			case UPCASE:
-				return Character.toUpperCase(currentToken);
+				properCaseToken = Character.toUpperCase(currentToken);
+				break;
 			case DOWNCASE:
-				return Character.toLowerCase(currentToken);
+				properCaseToken = Character.toLowerCase(currentToken);
+				break;
 			case INVERT:
-				return Character.isUpperCase(currentToken) ? Character.toLowerCase(currentToken) : Character.toUpperCase(currentToken);
+				properCaseToken = Character.isUpperCase(currentToken) ? Character.toLowerCase(currentToken) : Character.toUpperCase(currentToken);
+				break;
 			case PRESERVE:
-				return currentToken;
+				properCaseToken = currentToken;
+				break;
 		}
-		return currentToken;
+		return properCaseToken;
 	}
 
 	/**

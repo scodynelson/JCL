@@ -49,6 +49,7 @@
       <w>cddr</w>
       <w>cerror</w>
       <w>characterp</w>
+      <w>clhs</w>
       <w>clrhash</w>
       <w>complexp</w>
       <w>consp</w>
@@ -209,6 +210,7 @@
       <w>tanh</w>
       <w>terpri</w>
       <w>testng</w>
+      <w>tokenized</w>
       <w>truename</w>
       <w>typecase</w>
       <w>typep</w>

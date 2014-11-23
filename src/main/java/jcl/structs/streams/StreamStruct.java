@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.structs.streams;
 
 import jcl.LispStruct;
@@ -14,8 +18,19 @@ import java.util.List;
  */
 public abstract class StreamStruct extends BuiltInClassStruct implements LispStream {
 
+	/**
+	 * Whether or not the StreamStruct is interactive.
+	 */
 	private final boolean isInteractive;
+
+	/**
+	 * The {@link LispType} of the elements in the StreamStruct.
+	 */
 	private final LispType elementType;
+
+	/**
+	 * Whether or not the StreamStruct is closed.
+	 */
 	private boolean isClosed;
 
 	/**

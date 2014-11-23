@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.structs.streams;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -12,12 +16,26 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * to create a specific character-based PeekType based off of a provided {@link Integer} codePoint value
  * </tab>
  */
-public final class PeekType {
+final class PeekType {
 
-	public static final PeekType NIL_PEEK_TYPE = new PeekType(PeekTypeType.NIL, null);
-	public static final PeekType T_PEEK_TYPE = new PeekType(PeekTypeType.T, null);
+	/**
+	 * Constant for 'T' PeekTypes.
+	 */
+	static final PeekType T_PEEK_TYPE = new PeekType(PeekTypeType.T, null);
 
+	/**
+	 * Constant for 'NIL' PeekTypes.
+	 */
+	static final PeekType NIL_PEEK_TYPE = new PeekType(PeekTypeType.NIL, null);
+
+	/**
+	 * The {@link PeekTypeType} of the peek type.
+	 */
 	private final PeekTypeType type;
+
+	/**
+	 * The {@link Integer} code point of the peek type when the peek type is a {@link PeekTypeType#CHARACTER}.
+	 */
 	private final Integer codePoint;
 
 	/**
@@ -32,18 +50,6 @@ public final class PeekType {
 	private PeekType(final PeekTypeType type, final Integer codePoint) {
 		this.type = type;
 		this.codePoint = codePoint;
-	}
-
-	/**
-	 * Gets a new {@link PeekTypeType#CHARACTER} based PeekType instance.
-	 *
-	 * @param codePoint
-	 * 		the codePoint value of the character for the peek
-	 *
-	 * @return a new {@link PeekTypeType#CHARACTER} with the provided codePoint value
-	 */
-	public static PeekType getCharacterPeekType(final int codePoint) {
-		return new PeekType(PeekTypeType.CHARACTER, codePoint);
 	}
 
 	/**
@@ -70,11 +76,35 @@ public final class PeekType {
 	}
 
 	/**
+	 * Gets a new {@link PeekTypeType#CHARACTER} based PeekType instance.
+	 *
+	 * @param codePoint
+	 * 		the codePoint value of the character for the peek
+	 *
+	 * @return a new {@link PeekTypeType#CHARACTER} with the provided codePoint value
+	 */
+	static PeekType getCharacterPeekType(final int codePoint) {
+		return new PeekType(PeekTypeType.CHARACTER, codePoint);
+	}
+
+	/**
 	 * Package private enumeration to encapsulate the specific 'peek' type.
 	 */
 	enum PeekTypeType {
+
+		/**
+		 * T peek type.
+		 */
 		T,
+
+		/**
+		 * NIL peek type.
+		 */
 		NIL,
+
+		/**
+		 * Character peek type.
+		 */
 		CHARACTER
 	}
 }

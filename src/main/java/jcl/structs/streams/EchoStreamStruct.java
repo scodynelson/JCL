@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.structs.streams;
 
 import jcl.LispStruct;
@@ -13,7 +17,10 @@ import java.util.LinkedList;
  */
 public class EchoStreamStruct extends DualStreamStruct {
 
-	private final LinkedList<Integer> unreadStuff = new LinkedList<>();
+	/**
+	 * The {@link Integer} tokens that have been unread so far.
+	 */
+	private final LinkedList<Integer> unreadTokens = new LinkedList<>();
 
 	/**
 	 * Public constructor.
@@ -43,8 +50,8 @@ public class EchoStreamStruct extends DualStreamStruct {
 
 	@Override
 	public ReadResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
-		if (!unreadStuff.isEmpty()) {
-			final Integer lastUnread = unreadStuff.getFirst();
+		if (!unreadTokens.isEmpty()) {
+			final Integer lastUnread = unreadTokens.getFirst();
 			return new ReadResult(lastUnread);
 		}
 
@@ -65,8 +72,8 @@ public class EchoStreamStruct extends DualStreamStruct {
 
 	@Override
 	public ReadResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
-		if (!unreadStuff.isEmpty()) {
-			final Integer lastUnread = unreadStuff.getFirst();
+		if (!unreadTokens.isEmpty()) {
+			final Integer lastUnread = unreadTokens.getFirst();
 			return new ReadResult(lastUnread);
 		}
 
@@ -87,7 +94,7 @@ public class EchoStreamStruct extends DualStreamStruct {
 
 	@Override
 	public PeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
-		if (unreadStuff.isEmpty()) {
+		if (unreadTokens.isEmpty()) {
 			final ReadResult readResult = inputStream.readChar(eofErrorP, eofValue, recursiveP);
 
 			if (readResult.wasEOF()) {
@@ -98,14 +105,14 @@ public class EchoStreamStruct extends DualStreamStruct {
 				return new PeekResult(peekedChar);
 			}
 		} else {
-			final Integer peekedChar = unreadStuff.removeFirst();
+			final Integer peekedChar = unreadTokens.removeFirst();
 			return new PeekResult(peekedChar);
 		}
 	}
 
 	@Override
 	public Integer unreadChar(final Integer codePoint) {
-		unreadStuff.addFirst(codePoint);
+		unreadTokens.addFirst(codePoint);
 		return codePoint;
 	}
 

@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.structs.streams;
 
 import jcl.LispStruct;
@@ -8,6 +12,7 @@ import jcl.structs.conditions.exceptions.EndOfFileException;
  */
 final class StreamUtils {
 
+	// TODO: The following should probably go into a properties file...
 	static final String END_OF_FILE_REACHED = "End of file reached.";
 	static final String FAILED_TO_READ_BYTE = "Failed to read next byte.";
 	static final String FAILED_TO_READ_CHAR = "Failed to read next character.";

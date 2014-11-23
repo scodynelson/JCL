@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.structs.streams;
 
 import jcl.LispStruct;
@@ -13,8 +17,19 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public class StringInputStreamStruct extends StreamStruct implements InputStream {
 
+	/**
+	 * The {@link java.lang.String} input value to read characters from.
+	 */
 	private final String inputString;
+
+	/**
+	 * The length of the {@link #inputString}.
+	 */
 	private final int end;
+
+	/**
+	 * The current location of reads on the {@link #inputString}.
+	 */
 	private int current;
 
 	/**

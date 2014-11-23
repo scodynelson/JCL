@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.structs.streams;
 
 import jcl.LispType;
@@ -12,7 +16,14 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 abstract class DualStreamStruct extends StreamStruct implements InputStream, OutputStream {
 
+	/**
+	 * This {@link InputStream} in the DualStreamStruct.
+	 */
 	protected final InputStream inputStream;
+
+	/**
+	 * This {@link OutputStream} in the DualStreamStruct.
+	 */
 	protected final OutputStream outputStream;
 
 	/**
@@ -74,16 +85,6 @@ abstract class DualStreamStruct extends StreamStruct implements InputStream, Out
 	}
 
 	@Override
-	public void clearInput() {
-		inputStream.clearInput();
-	}
-
-	@Override
-	public boolean listen() {
-		return inputStream.listen();
-	}
-
-	@Override
 	public void clearOutput() {
 		outputStream.clearOutput();
 	}
@@ -96,6 +97,16 @@ abstract class DualStreamStruct extends StreamStruct implements InputStream, Out
 	@Override
 	public void forceOutput() {
 		outputStream.forceOutput();
+	}
+
+	@Override
+	public void clearInput() {
+		inputStream.clearInput();
+	}
+
+	@Override
+	public boolean listen() {
+		return inputStream.listen();
 	}
 
 	@Override

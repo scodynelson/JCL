@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 public final class ReadEvalPrint {
 
@@ -37,10 +38,10 @@ public final class ReadEvalPrint {
 
 		if (args.length == 1) {
 			final String fileName = args[0];
-			final File file = new File(fileName);
+			final Path path = new File(fileName).toPath();
 
 			try {
-				final InputStream fileStream = new FileStreamStruct(file);
+				final InputStream fileStream = new FileStreamStruct(path);
 				return doStuff(fileStream, true);
 			} catch (final StreamErrorException ex) {
 				LOGGER.error("; WARNING: Exception condition -> {}\n", ex.getMessage(), ex);

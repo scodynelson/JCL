@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.structs.streams;
 
 import jcl.LispStruct;
@@ -16,6 +20,9 @@ import java.util.LinkedList;
  */
 public class ConcatenatedStreamStruct extends StreamStruct implements InputStream {
 
+	/**
+	 * This {@link InputStream}s in the ConcatenatedStreamStruct.
+	 */
 	private final LinkedList<InputStream> inputStreams;
 
 	/**
@@ -175,6 +182,11 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 	}
 
 	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+	}
+
+	@Override
 	public Long fileLength() {
 		if (inputStreams.isEmpty()) {
 			return 0L;
@@ -192,10 +204,5 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 
 		final InputStream last = inputStreams.getLast();
 		return last.filePosition(filePosition);
-	}
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

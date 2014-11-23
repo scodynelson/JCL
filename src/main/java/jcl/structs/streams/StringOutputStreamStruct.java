@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.structs.streams;
 
 import jcl.structs.conditions.exceptions.StreamErrorException;
@@ -11,8 +15,10 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public class StringOutputStreamStruct extends StreamStruct implements OutputStream {
 
+	/**
+	 * The {@link StringBuffer} to use for this stream to accept characters and bytes.
+	 */
 	private final StringBuilder stringBuffer = new StringBuilder();
-	private int index;
 
 	/**
 	 * Public constructor.
@@ -34,7 +40,6 @@ public class StringOutputStreamStruct extends StreamStruct implements OutputStre
 	@Override
 	public void writeChar(final int aChar) {
 		stringBuffer.appendCodePoint(aChar);
-		index++;
 	}
 
 	@Override
@@ -46,7 +51,6 @@ public class StringOutputStreamStruct extends StreamStruct implements OutputStre
 	public void writeString(final String outputString, final int start, final int end) {
 		final String subString = outputString.substring(start, end);
 		stringBuffer.append(subString);
-		index = stringBuffer.length();
 	}
 
 	@Override
@@ -72,7 +76,7 @@ public class StringOutputStreamStruct extends StreamStruct implements OutputStre
 	@Override
 	public Long filePosition(final Long filePosition) {
 		if (filePosition == null) {
-			return (long) index;
+			return (long) stringBuffer.length();
 		}
 		return null;
 	}

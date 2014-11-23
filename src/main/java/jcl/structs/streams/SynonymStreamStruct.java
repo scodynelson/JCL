@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.structs.streams;
 
 import jcl.LispStruct;
@@ -13,8 +17,10 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public class SynonymStreamStruct extends StreamStruct implements InputStream, OutputStream {
 
+	/**
+	 * The {@link SymbolStruct} that contains the value for the {@link StreamStruct} to use.
+	 */
 	private final SymbolStruct<StreamStruct> symbol;
-	private final StreamStruct stream;
 
 	/**
 	 * Public constructor.
@@ -37,7 +43,6 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	public SynonymStreamStruct(final boolean isInteractive, final SymbolStruct<StreamStruct> symbol) {
 		super(SynonymStream.INSTANCE, null, null, isInteractive, getElementType(symbol));
 		this.symbol = symbol;
-		stream = symbol.getValue();
 	}
 
 	/**
@@ -66,6 +71,7 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 
 	@Override
 	public ReadResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
+		final StreamStruct stream = symbol.getValue();
 		if (stream instanceof InputStream) {
 			return ((InputStream) stream).readChar(eofErrorP, eofValue, recursiveP);
 		} else {
@@ -75,6 +81,7 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 
 	@Override
 	public ReadResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
+		final StreamStruct stream = symbol.getValue();
 		if (stream instanceof InputStream) {
 			return ((InputStream) stream).readByte(eofErrorP, eofValue);
 		} else {
@@ -84,6 +91,7 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 
 	@Override
 	public PeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
+		final StreamStruct stream = symbol.getValue();
 		if (stream instanceof InputStream) {
 			return ((InputStream) stream).peekChar(peekType, eofErrorP, eofValue, recursiveP);
 		} else {
@@ -93,6 +101,7 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 
 	@Override
 	public Integer unreadChar(final Integer codePoint) {
+		final StreamStruct stream = symbol.getValue();
 		if (stream instanceof InputStream) {
 			return ((InputStream) stream).unreadChar(codePoint);
 		} else {
@@ -101,7 +110,22 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	}
 
 	@Override
+	public void clearInput() {
+		final StreamStruct stream = symbol.getValue();
+		if (stream instanceof InputStream) {
+			((InputStream) stream).clearInput();
+		}
+	}
+
+	@Override
+	public boolean listen() {
+		final StreamStruct stream = symbol.getValue();
+		return (stream instanceof InputStream) && ((InputStream) stream).listen();
+	}
+
+	@Override
 	public void writeChar(final int aChar) {
+		final StreamStruct stream = symbol.getValue();
 		if (stream instanceof OutputStream) {
 			((OutputStream) stream).writeChar(aChar);
 		} else {
@@ -111,6 +135,7 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 
 	@Override
 	public void writeByte(final int aByte) {
+		final StreamStruct stream = symbol.getValue();
 		if (stream instanceof OutputStream) {
 			((OutputStream) stream).writeByte(aByte);
 		} else {
@@ -120,6 +145,7 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 
 	@Override
 	public void writeString(final String outputString, final int start, final int end) {
+		final StreamStruct stream = symbol.getValue();
 		if (stream instanceof OutputStream) {
 			((OutputStream) stream).writeString(outputString, start, end);
 		} else {
@@ -128,19 +154,8 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	}
 
 	@Override
-	public void clearInput() {
-		if (stream instanceof InputStream) {
-			((InputStream) stream).clearInput();
-		}
-	}
-
-	@Override
-	public boolean listen() {
-		return (stream instanceof InputStream) && ((InputStream) stream).listen();
-	}
-
-	@Override
 	public void clearOutput() {
+		final StreamStruct stream = symbol.getValue();
 		if (stream instanceof OutputStream) {
 			((OutputStream) stream).clearOutput();
 		}
@@ -148,6 +163,7 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 
 	@Override
 	public void finishOutput() {
+		final StreamStruct stream = symbol.getValue();
 		if (stream instanceof OutputStream) {
 			((OutputStream) stream).finishOutput();
 		}
@@ -155,6 +171,7 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 
 	@Override
 	public void forceOutput() {
+		final StreamStruct stream = symbol.getValue();
 		if (stream instanceof OutputStream) {
 			((OutputStream) stream).forceOutput();
 		}
@@ -163,26 +180,30 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	@Override
 	public void close() {
 		super.close();
+
+		final StreamStruct stream = symbol.getValue();
 		stream.close();
 	}
 
 	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+	}
+
+	@Override
 	public Long fileLength() {
+		final StreamStruct stream = symbol.getValue();
 		return stream.fileLength();
 	}
 
 	@Override
 	public Long filePosition(final Long filePosition) {
+		final StreamStruct stream = symbol.getValue();
 		return stream.filePosition(filePosition);
 	}
 
 	@Override
 	protected String getPrintableObjectProperties() {
 		return " to " + symbol.printStruct();
-	}
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

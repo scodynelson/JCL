@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.structs.streams;
 
 import jcl.LispStruct;
@@ -9,8 +13,19 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public class PeekResult {
 
+	/**
+	 * The {@link Integer} result of the read operation.
+	 */
 	private final Integer result;
+
+	/**
+	 * The value to return if an End-of-File was hit during the read operation and an error was not to be thrown.
+	 */
 	private final LispStruct eofValue;
+
+	/**
+	 * Whether or not an End-of-File occurred.
+	 */
 	private final boolean wasEOF;
 
 	/**
@@ -28,10 +43,10 @@ public class PeekResult {
 
 	/**
 	 * Package private constructor to create a PeekResult with the provided {@link LispStruct} as the value to return
-	 * if an EOF was hit during the peek operation and an error was not to be thrown.
+	 * if an End-of-File was hit during the peek operation and an error was not to be thrown.
 	 *
 	 * @param eofValue
-	 * 		the value to return if an EOF was hit during the peek operation and an error was not to be thrown
+	 * 		the value to return if an End-of-File was hit during the peek operation and an error was not to be thrown
 	 */
 	PeekResult(final LispStruct eofValue) {
 		result = null;
@@ -58,11 +73,11 @@ public class PeekResult {
 	}
 
 	/**
-	 * Returns true if either an EOF was hit (aka. the PeekResult eofValue constructor was called) or if the result
-	 * object was null. The result object will always be null if the PeekResult eofValue constructor is called but can
-	 * also be null if the value passed to the PeekResult result constructor is null.
+	 * Returns true if either an End-of-File was hit (aka. the PeekResult eofValue constructor was called) or if the
+	 * result object was null. The result object will always be null if the PeekResult eofValue constructor is called
+	 * but can also be null if the value passed to the PeekResult result constructor is null.
 	 *
-	 * @return true if the PeekResult was an EOF peek; false otherwise
+	 * @return true if the PeekResult was an End-of-File peek; false otherwise
 	 */
 	public boolean wasEOF() {
 		return wasEOF || (result == null);

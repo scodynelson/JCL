@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.structs.streams;
 
 import jcl.LispStruct;
@@ -23,10 +27,18 @@ import java.nio.charset.Charset;
  */
 public class CharacterStreamStruct extends NativeStreamStruct {
 
-	private final LineNumberReader inputStream;
-	private final PrintWriter outputStream;
-
+	/**
+	 * The logger for this class.
+	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(CharacterStreamStruct.class);
+	/**
+	 * The {@link LineNumberReader} for reading input.
+	 */
+	private final LineNumberReader inputStream;
+	/**
+	 * The {@link PrintWriter} for writing output.
+	 */
+	private final PrintWriter outputStream;
 
 	/**
 	 * Public constructor.
@@ -187,7 +199,7 @@ public class CharacterStreamStruct extends NativeStreamStruct {
 	}
 
 	@Override
-	public void forceOutput() {
+	public void clearOutput() {
 		outputStream.flush();
 	}
 
@@ -197,7 +209,7 @@ public class CharacterStreamStruct extends NativeStreamStruct {
 	}
 
 	@Override
-	public void clearOutput() {
+	public void forceOutput() {
 		outputStream.flush();
 	}
 

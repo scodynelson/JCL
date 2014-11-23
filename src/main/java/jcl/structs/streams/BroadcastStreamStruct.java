@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.structs.streams;
 
 import jcl.LispType;
@@ -14,6 +18,9 @@ import java.util.LinkedList;
  */
 public class BroadcastStreamStruct extends StreamStruct implements OutputStream {
 
+	/**
+	 * This {@link OutputStream}s in the BroadcastStreamStruct.
+	 */
 	private final LinkedList<OutputStream> outputStreams;
 
 	/**
@@ -124,6 +131,11 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 	}
 
 	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+	}
+
+	@Override
 	public Long fileLength() {
 		if (outputStreams.isEmpty()) {
 			return 0L;
@@ -141,10 +153,5 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 
 		final OutputStream last = outputStreams.getLast();
 		return last.filePosition(filePosition);
-	}
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

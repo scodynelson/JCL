@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.structs.streams;
 
 import jcl.LispType;
@@ -14,6 +18,9 @@ import org.slf4j.LoggerFactory;
  */
 abstract class NativeStreamStruct extends StreamStruct implements InputStream, OutputStream {
 
+	/**
+	 * The logger for this class.
+	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(NativeStreamStruct.class);
 
 	/**

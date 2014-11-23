@@ -45,13 +45,13 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 	/**
 	 * Public constructor.
 	 *
-	 * @param isInteractive
+	 * @param interactive
 	 * 		whether or not the struct created is 'interactive'
 	 * @param inputString
 	 * 		the input to create a StringInputStreamStruct from
 	 */
-	public StringInputStreamStruct(final boolean isInteractive, final String inputString) {
-		super(StringStream.INSTANCE, null, null, isInteractive, BaseChar.INSTANCE);
+	public StringInputStreamStruct(final boolean interactive, final String inputString) {
+		super(StringStream.INSTANCE, null, null, interactive, BaseChar.INSTANCE);
 
 		if (inputString == null) {
 			throw new StreamErrorException("Provided Input String must not be null.");
@@ -63,31 +63,32 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 	}
 
 	@Override
-	public ReadResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
+	public ReadPeekResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		if (current == end) {
 			if (eofErrorP) {
 				throw new EndOfFileException(StreamUtils.END_OF_FILE_REACHED);
 			} else {
-				return new ReadResult(eofValue);
+				return new ReadPeekResult(eofValue);
 			}
 		}
 
-		final int readChar = inputString.charAt(current++);
-		return new ReadResult(readChar);
+		current++;
+		final int readChar = inputString.charAt(current);
+		return new ReadPeekResult(readChar);
 	}
 
 	@Override
-	public ReadResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
+	public ReadPeekResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
 		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_BINARYSTREAM);
 	}
 
 	@Override
-	public PeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
+	public ReadPeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		if ((current + 1) == end) {
 			if (eofErrorP) {
 				throw new EndOfFileException(StreamUtils.END_OF_FILE_REACHED);
 			} else {
-				return new PeekResult(eofValue);
+				return new ReadPeekResult(eofValue);
 			}
 		}
 
@@ -107,7 +108,7 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 				break;
 		}
 
-		return StreamUtils.getPeekResult(nextChar, eofErrorP, eofValue);
+		return StreamUtils.getReadPeekResult(nextChar, eofErrorP, eofValue);
 	}
 
 	/**
@@ -125,7 +126,8 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 	 * @return the character peeked from the stream
 	 */
 	private int tPeekCharSIS() {
-		int nextChar = ' '; // Initialize to whitespace, since we are attempting to skip it anyways
+		// Initialize to whitespace, since we are attempting to skip it anyways
+		int nextChar = ' ';
 
 		int indexToFind = current + 1;
 		while (Character.isWhitespace(nextChar) && (indexToFind < end)) {
@@ -145,7 +147,8 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 	 * @return the character peeked from the stream
 	 */
 	private int characterPeekCharSIS(final Integer codePoint) {
-		int nextChar = -1; // Initialize to -1 value, since this is essentially EOF
+		// Initialize to -1 value, since this is essentially EOF
+		int nextChar = -1;
 
 		int indexToFind = current + 1;
 		while ((nextChar != codePoint) && (indexToFind < end)) {

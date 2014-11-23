@@ -27,7 +27,7 @@ import java.nio.file.StandardOpenOption;
 /**
  * The {@link FileStreamStruct} is the object representation of a Lisp 'file-stream' type.
  */
-public class FileStreamStruct extends NativeStreamStruct {
+public class FileStreamStruct extends AbstractNativeStreamStruct {
 
 	/**
 	 * The logger for this class.
@@ -57,17 +57,17 @@ public class FileStreamStruct extends NativeStreamStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param isInteractive
+	 * @param interactive
 	 * 		whether or not the struct created is 'interactive'
 	 * @param path
 	 * 		the {@link Path} to create a FileStreamStruct from
 	 */
-	public FileStreamStruct(final boolean isInteractive, final Path path) {
-		super(FileStream.INSTANCE, isInteractive, getElementType(path));
+	public FileStreamStruct(final boolean interactive, final Path path) {
+		super(FileStream.INSTANCE, interactive, getElementType2(path));
 
 		try {
 			fileChannel = FileChannel.open(path, StandardOpenOption.READ, StandardOpenOption.WRITE);
-			bufferSize = Long.valueOf(fileChannel.size()).intValue();
+			bufferSize = BigInteger.valueOf(fileChannel.size()).intValueExact();
 		} catch (final IOException ioe) {
 			throw new StreamErrorException("Failed to open provided file.", ioe);
 		}
@@ -81,7 +81,7 @@ public class FileStreamStruct extends NativeStreamStruct {
 	 *
 	 * @return the element type for object construction
 	 */
-	private static LispType getElementType(final Path path) {
+	private static LispType getElementType2(final Path path) {
 		try (FileChannel fileChannel = FileChannel.open(path, StandardOpenOption.READ)) {
 			final long bufferSize = fileChannel.size();
 			final BigInteger bits = BigInteger.valueOf(bufferSize);
@@ -92,9 +92,9 @@ public class FileStreamStruct extends NativeStreamStruct {
 	}
 
 	@Override
-	public ReadResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
+	public ReadPeekResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		final int readChar = readChar(StreamUtils.FAILED_TO_READ_CHAR);
-		return StreamUtils.getReadResult(readChar, eofErrorP, eofValue);
+		return StreamUtils.getReadPeekResult(readChar, eofErrorP, eofValue);
 	}
 
 	/**
@@ -113,7 +113,9 @@ public class FileStreamStruct extends NativeStreamStruct {
 			final CharBuffer charBuffer = Charset.defaultCharset().decode(byteBuffer);
 			return charBuffer.get();
 		} catch (final EOFException eofe) {
-			LOGGER.warn(StreamUtils.END_OF_FILE_REACHED, eofe);
+			if (LOGGER.isWarnEnabled()) {
+				LOGGER.warn(StreamUtils.END_OF_FILE_REACHED, eofe);
+			}
 			return -1;
 		} catch (final IOException ioe) {
 			throw new StreamErrorException(streamErrorString, ioe);
@@ -121,9 +123,9 @@ public class FileStreamStruct extends NativeStreamStruct {
 	}
 
 	@Override
-	public ReadResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
+	public ReadPeekResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
 		final int readByte = readByte();
-		return StreamUtils.getReadResult(readByte, eofErrorP, eofValue);
+		return StreamUtils.getReadPeekResult(readByte, eofErrorP, eofValue);
 	}
 
 	/**
@@ -136,7 +138,9 @@ public class FileStreamStruct extends NativeStreamStruct {
 			final ByteBuffer byteBuffer = ByteBuffer.allocate(bufferSize);
 			return fileChannel.read(byteBuffer);
 		} catch (final EOFException eofe) {
-			LOGGER.warn(StreamUtils.END_OF_FILE_REACHED, eofe);
+			if (LOGGER.isWarnEnabled()) {
+				LOGGER.warn(StreamUtils.END_OF_FILE_REACHED, eofe);
+			}
 			return -1;
 		} catch (final IOException ioe) {
 			throw new StreamErrorException(StreamUtils.FAILED_TO_READ_BYTE, ioe);
@@ -144,7 +148,7 @@ public class FileStreamStruct extends NativeStreamStruct {
 	}
 
 	@Override
-	public PeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
+	public ReadPeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 
 		final int nextChar;
 		switch (peekType.getType()) {
@@ -162,7 +166,7 @@ public class FileStreamStruct extends NativeStreamStruct {
 				break;
 		}
 
-		return StreamUtils.getPeekResult(nextChar, eofErrorP, eofValue);
+		return StreamUtils.getReadPeekResult(nextChar, eofErrorP, eofValue);
 	}
 
 	/**
@@ -176,7 +180,9 @@ public class FileStreamStruct extends NativeStreamStruct {
 			fileChannel.position(fileChannel.position() - 1);
 			return nextChar;
 		} catch (final EOFException eofe) {
-			LOGGER.warn(StreamUtils.END_OF_FILE_REACHED, eofe);
+			if (LOGGER.isWarnEnabled()) {
+				LOGGER.warn(StreamUtils.END_OF_FILE_REACHED, eofe);
+			}
 			return -1;
 		} catch (final IOException ioe) {
 			throw new StreamErrorException(StreamUtils.FAILED_TO_PEEK_CHAR, ioe);
@@ -194,15 +200,19 @@ public class FileStreamStruct extends NativeStreamStruct {
 			int nextChar = ' ';
 
 			int i = 0;
-			while (Character.isWhitespace(nextChar)) {
+			while (Character.isWhitespace(nextChar) && (nextChar != -1)) {
 				nextChar = readChar(StreamUtils.FAILED_TO_PEEK_CHAR);
 				i++;
 			}
 
-			fileChannel.position(fileChannel.position() - i);
+			if (nextChar != -1) {
+				fileChannel.position(fileChannel.position() - i);
+			}
 			return nextChar;
 		} catch (final EOFException eofe) {
-			LOGGER.warn(StreamUtils.END_OF_FILE_REACHED, eofe);
+			if (LOGGER.isWarnEnabled()) {
+				LOGGER.warn(StreamUtils.END_OF_FILE_REACHED, eofe);
+			}
 			return -1;
 		} catch (final IOException ioe) {
 			throw new StreamErrorException(StreamUtils.FAILED_TO_PEEK_CHAR, ioe);
@@ -219,19 +229,23 @@ public class FileStreamStruct extends NativeStreamStruct {
 	 */
 	private int characterPeekCharFSS(final Integer codePoint) {
 		try {
-			// Initialize to -1 value, since this is essentially EOF
-			int nextChar = -1;
+			// Initialize to 0 value
+			int nextChar = 0;
 
 			int i = 0;
-			while (nextChar != codePoint) {
+			while ((nextChar != codePoint) && (nextChar != -1)) {
 				nextChar = readChar(StreamUtils.FAILED_TO_PEEK_CHAR);
 				i++;
 			}
 
-			fileChannel.position(fileChannel.position() - i);
+			if (nextChar != -1) {
+				fileChannel.position(fileChannel.position() - i);
+			}
 			return nextChar;
 		} catch (final EOFException eofe) {
-			LOGGER.warn(StreamUtils.END_OF_FILE_REACHED, eofe);
+			if (LOGGER.isWarnEnabled()) {
+				LOGGER.warn(StreamUtils.END_OF_FILE_REACHED, eofe);
+			}
 			return -1;
 		} catch (final IOException ioe) {
 			throw new StreamErrorException(StreamUtils.FAILED_TO_PEEK_CHAR, ioe);
@@ -299,7 +313,9 @@ public class FileStreamStruct extends NativeStreamStruct {
 		try {
 			fileChannel.force(true);
 		} catch (final IOException ioe) {
-			LOGGER.warn("Could not finish stream output.", ioe);
+			if (LOGGER.isWarnEnabled()) {
+				LOGGER.warn("Could not finish stream output.", ioe);
+			}
 		}
 	}
 
@@ -308,7 +324,9 @@ public class FileStreamStruct extends NativeStreamStruct {
 		try {
 			fileChannel.force(false);
 		} catch (final IOException ioe) {
-			LOGGER.warn("Could not force stream output.", ioe);
+			if (LOGGER.isWarnEnabled()) {
+				LOGGER.warn("Could not force stream output.", ioe);
+			}
 		}
 	}
 

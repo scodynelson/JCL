@@ -7,7 +7,7 @@ package jcl.reader;
 import jcl.LispStruct;
 import jcl.reader.macrofunction.ReaderMacroFunction;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
-import jcl.structs.streams.ReadResult;
+import jcl.structs.streams.ReadPeekResult;
 
 import java.math.BigInteger;
 
@@ -85,7 +85,7 @@ final class MacroCharacterState implements State {
 	private static BigInteger getNumberArgument(final Reader reader) {
 
 		// NOTE: This will throw errors when it reaches an EOF. That's why we can un-box the 'readChar' variable below.
-		ReadResult readResult = reader.readChar();
+		ReadPeekResult readResult = reader.readChar();
 		int readChar = readResult.getResult();
 
 		final StringBuilder digitStringBuilder = new StringBuilder();

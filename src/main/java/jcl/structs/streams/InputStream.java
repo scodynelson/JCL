@@ -23,7 +23,7 @@ public interface InputStream extends LispStream {
 	 *
 	 * @return the character read from the stream
 	 */
-	ReadResult readChar(boolean eofErrorP, LispStruct eofValue, boolean recursiveP);
+	ReadPeekResult readChar(boolean eofErrorP, LispStruct eofValue, boolean recursiveP);
 
 	/**
 	 * Reads a byte from the stream.
@@ -35,7 +35,7 @@ public interface InputStream extends LispStream {
 	 *
 	 * @return the byte read from the stream
 	 */
-	ReadResult readByte(boolean eofErrorP, LispStruct eofValue);
+	ReadPeekResult readByte(boolean eofErrorP, LispStruct eofValue);
 
 	/**
 	 * Peeks at the next available character in the stream.
@@ -51,7 +51,7 @@ public interface InputStream extends LispStream {
 	 *
 	 * @return the next character available in the stream
 	 */
-	PeekResult peekChar(PeekType peekType, boolean eofErrorP, LispStruct eofValue, boolean recursiveP);
+	ReadPeekResult peekChar(PeekType peekType, boolean eofErrorP, LispStruct eofValue, boolean recursiveP);
 
 	/**
 	 * Un-reads a character from the stream.

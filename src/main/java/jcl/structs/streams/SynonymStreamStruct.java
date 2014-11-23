@@ -35,13 +35,13 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	/**
 	 * Public constructor.
 	 *
-	 * @param isInteractive
+	 * @param interactive
 	 * 		whether or not the struct created is 'interactive'
 	 * @param symbol
 	 * 		the symbol to create a SynonymStreamStruct from
 	 */
-	public SynonymStreamStruct(final boolean isInteractive, final SymbolStruct<StreamStruct> symbol) {
-		super(SynonymStream.INSTANCE, null, null, isInteractive, getElementType(symbol));
+	public SynonymStreamStruct(final boolean interactive, final SymbolStruct<StreamStruct> symbol) {
+		super(SynonymStream.INSTANCE, null, null, interactive, getElementType(symbol));
 		this.symbol = symbol;
 	}
 
@@ -70,7 +70,7 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	}
 
 	@Override
-	public ReadResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
+	public ReadPeekResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		final StreamStruct stream = symbol.getValue();
 		if (stream instanceof InputStream) {
 			return ((InputStream) stream).readChar(eofErrorP, eofValue, recursiveP);
@@ -80,7 +80,7 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	}
 
 	@Override
-	public ReadResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
+	public ReadPeekResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
 		final StreamStruct stream = symbol.getValue();
 		if (stream instanceof InputStream) {
 			return ((InputStream) stream).readByte(eofErrorP, eofValue);
@@ -90,7 +90,7 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	}
 
 	@Override
-	public PeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
+	public ReadPeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		final StreamStruct stream = symbol.getValue();
 		if (stream instanceof InputStream) {
 			return ((InputStream) stream).peekChar(peekType, eofErrorP, eofValue, recursiveP);

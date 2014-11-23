@@ -11,7 +11,8 @@ import jcl.types.T;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import java.util.LinkedList;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 /**
  * The {@link BroadcastStreamStruct} is the object representation of a Lisp 'broadcast-stream' type.
@@ -21,7 +22,7 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 	/**
 	 * This {@link OutputStream}s in the BroadcastStreamStruct.
 	 */
-	private final LinkedList<OutputStream> outputStreams;
+	private final Deque<OutputStream> outputStreams;
 
 	/**
 	 * Public constructor.
@@ -29,21 +30,21 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 	 * @param outputStreams
 	 * 		the {@link OutputStream}s to create a BroadcastStreamStruct from
 	 */
-	public BroadcastStreamStruct(final LinkedList<OutputStream> outputStreams) {
+	public BroadcastStreamStruct(final Deque<OutputStream> outputStreams) {
 		this(false, outputStreams);
 	}
 
 	/**
 	 * Public constructor.
 	 *
-	 * @param isInteractive
+	 * @param interactive
 	 * 		whether or not the struct created is 'interactive'
 	 * @param outputStreams
 	 * 		the {@link OutputStream}s to create a BroadcastStreamStruct from
 	 */
-	public BroadcastStreamStruct(final boolean isInteractive, final LinkedList<OutputStream> outputStreams) {
-		super(BroadcastStream.INSTANCE, null, null, isInteractive, getElementType(outputStreams));
-		this.outputStreams = new LinkedList<>(outputStreams);
+	public BroadcastStreamStruct(final boolean interactive, final Deque<OutputStream> outputStreams) {
+		super(BroadcastStream.INSTANCE, null, null, interactive, getElementType2(outputStreams));
+		this.outputStreams = new ArrayDeque<>(outputStreams);
 	}
 
 	/**
@@ -54,11 +55,11 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 	 *
 	 * @return the element type for object construction
 	 */
-	private static LispType getElementType(final LinkedList<OutputStream> outputStreams) {
+	private static LispType getElementType2(final Deque<OutputStream> outputStreams) {
 		if (outputStreams == null) {
 			throw new StreamErrorException("Provided Output Stream List must not be null.");
 		}
-		return getElementType2(outputStreams);
+		return getElementType3(outputStreams);
 	}
 
 	/**
@@ -69,7 +70,7 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 	 *
 	 * @return the element type for object construction
 	 */
-	private static LispType getElementType2(final LinkedList<OutputStream> outputStreams) {
+	private static LispType getElementType3(final Deque<OutputStream> outputStreams) {
 		if (outputStreams.isEmpty()) {
 			return T.INSTANCE;
 		}
@@ -127,7 +128,7 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 
 	@Override
 	public LispType getElementType() {
-		return getElementType2(outputStreams);
+		return getElementType3(outputStreams);
 	}
 
 	@Override

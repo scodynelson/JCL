@@ -5,7 +5,7 @@
 package jcl.reader;
 
 import jcl.LispStruct;
-import jcl.structs.streams.ReadResult;
+import jcl.structs.streams.ReadPeekResult;
 
 /**
  * Step 9 of the Reader Algorithm.
@@ -52,8 +52,8 @@ final class OddMultiEscapeState implements State {
 		final LispStruct eofValue = tokenBuilder.getEofValue();
 		final boolean isRecursiveP = tokenBuilder.isRecursiveP();
 
-		ReadResult readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
-		if (readResult.wasEOF()) {
+		ReadPeekResult readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
+		if (readResult.isEof()) {
 			IllegalCharacterState.INSTANCE.process(reader, tokenBuilder);
 		}
 
@@ -73,7 +73,7 @@ final class OddMultiEscapeState implements State {
 		} else if (syntaxType == SyntaxType.SINGLE_ESCAPE) {
 
 			readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
-			if (readResult.wasEOF()) {
+			if (readResult.isEof()) {
 				IllegalCharacterState.INSTANCE.process(reader, tokenBuilder);
 			} else {
 				codePoint = readResult.getResult();

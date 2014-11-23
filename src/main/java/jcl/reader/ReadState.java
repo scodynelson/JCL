@@ -5,7 +5,7 @@
 package jcl.reader;
 
 import jcl.LispStruct;
-import jcl.structs.streams.ReadResult;
+import jcl.structs.streams.ReadPeekResult;
 
 /**
  * Step 1 of the Reader Algorithm.
@@ -34,8 +34,8 @@ final class ReadState implements State {
 		final LispStruct eofValue = tokenBuilder.getEofValue();
 		final boolean isRecursiveP = tokenBuilder.isRecursiveP();
 
-		final ReadResult readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
-		if (readResult.wasEOF()) {
+		final ReadPeekResult readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
+		if (readResult.isEof()) {
 			State.handleEndOfFile(tokenBuilder, "ReadState");
 			return;
 		}

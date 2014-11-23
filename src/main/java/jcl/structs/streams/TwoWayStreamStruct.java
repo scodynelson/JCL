@@ -12,7 +12,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 /**
  * The {@link TwoWayStreamStruct} is the object representation of a Lisp 'two-way-stream' type.
  */
-public class TwoWayStreamStruct extends DualStreamStruct {
+public class TwoWayStreamStruct extends AbstractDualStreamStruct {
 
 	/**
 	 * Public constructor.
@@ -29,29 +29,29 @@ public class TwoWayStreamStruct extends DualStreamStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param isInteractive
+	 * @param interactive
 	 * 		whether or not the struct created is 'interactive'
 	 * @param inputStream
 	 * 		the {@link InputStream} to create a TwoWayStreamStruct from
 	 * @param outputStream
 	 * 		the {@link OutputStream} to create a TwoWayStreamStruct from
 	 */
-	public TwoWayStreamStruct(final boolean isInteractive, final InputStream inputStream, final OutputStream outputStream) {
-		super(TwoWayStream.INSTANCE, isInteractive, inputStream, outputStream);
+	public TwoWayStreamStruct(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
+		super(TwoWayStream.INSTANCE, interactive, inputStream, outputStream);
 	}
 
 	@Override
-	public ReadResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
+	public ReadPeekResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		return inputStream.readChar(eofErrorP, eofValue, recursiveP);
 	}
 
 	@Override
-	public ReadResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
+	public ReadPeekResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
 		return inputStream.readByte(eofErrorP, eofValue);
 	}
 
 	@Override
-	public PeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
+	public ReadPeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		return inputStream.peekChar(peekType, eofErrorP, eofValue, recursiveP);
 	}
 

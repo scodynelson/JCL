@@ -7,7 +7,7 @@ package jcl.reader.macrofunction;
 import jcl.LispStruct;
 import jcl.reader.CharacterConstants;
 import jcl.reader.Reader;
-import jcl.structs.streams.ReadResult;
+import jcl.structs.streams.ReadPeekResult;
 import jcl.structs.symbols.variables.Variable;
 
 import java.math.BigInteger;
@@ -34,9 +34,9 @@ public final class SemicolonReaderMacroFunction extends ReaderMacroFunction {
 
 		final StringBuilder stringBuilder = new StringBuilder();
 
-		ReadResult readResult = reader.readChar(false, null, false);
+		ReadPeekResult readResult = reader.readChar(false, null, false);
 		Integer readChar = readResult.getResult();
-		while (!readResult.wasEOF() && (readChar.intValue() != CharacterConstants.NEWLINE)) {
+		while (!readResult.isEof() && (readChar.intValue() != CharacterConstants.NEWLINE)) {
 			stringBuilder.appendCodePoint(readChar);
 
 			readResult = reader.readChar(false, null, false);

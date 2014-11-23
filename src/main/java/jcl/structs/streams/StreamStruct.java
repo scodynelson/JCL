@@ -21,7 +21,7 @@ public abstract class StreamStruct extends BuiltInClassStruct implements LispStr
 	/**
 	 * Whether or not the StreamStruct is interactive.
 	 */
-	private final boolean isInteractive;
+	private final boolean interactive;
 
 	/**
 	 * The {@link LispType} of the elements in the StreamStruct.
@@ -31,7 +31,7 @@ public abstract class StreamStruct extends BuiltInClassStruct implements LispStr
 	/**
 	 * Whether or not the StreamStruct is closed.
 	 */
-	private boolean isClosed;
+	private boolean closed;
 
 	/**
 	 * Protected constructor.
@@ -40,15 +40,15 @@ public abstract class StreamStruct extends BuiltInClassStruct implements LispStr
 	 * 		the direct super classes
 	 * @param subClasses
 	 * 		the subclasses
-	 * @param isInteractive
+	 * @param interactive
 	 * 		whether or not the struct created is 'interactive'
 	 * @param elementType
 	 * 		the stream elementType
 	 */
 	protected StreamStruct(final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses,
-	                       final boolean isInteractive, final LispType elementType) {
+	                       final boolean interactive, final LispType elementType) {
 		super(Stream.INSTANCE, directSuperClasses, subClasses);
-		this.isInteractive = isInteractive;
+		this.interactive = interactive;
 		this.elementType = elementType;
 	}
 
@@ -61,22 +61,22 @@ public abstract class StreamStruct extends BuiltInClassStruct implements LispStr
 	 * 		the direct super classes
 	 * @param subClasses
 	 * 		the subclasses
-	 * @param isInteractive
+	 * @param interactive
 	 * 		whether or not the struct created is 'interactive'
 	 * @param elementType
 	 * 		the stream elementType
 	 */
 	protected StreamStruct(final Stream type,
 	                       final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses,
-	                       final boolean isInteractive, final LispType elementType) {
+	                       final boolean interactive, final LispType elementType) {
 		super(type, directSuperClasses, subClasses);
-		this.isInteractive = isInteractive;
+		this.interactive = interactive;
 		this.elementType = elementType;
 	}
 
 	@Override
 	public void close() {
-		isClosed = true;
+		closed = true;
 	}
 
 	@Override
@@ -86,12 +86,12 @@ public abstract class StreamStruct extends BuiltInClassStruct implements LispStr
 
 	@Override
 	public boolean isInteractive() {
-		return !isClosed && isInteractive;
+		return !closed && interactive;
 	}
 
 	@Override
 	public boolean isClosed() {
-		return isClosed;
+		return closed;
 	}
 
 	@Override

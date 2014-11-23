@@ -8,7 +8,7 @@ import jcl.reader.AttributeType;
 import jcl.reader.CaseSpec;
 import jcl.reader.Reader;
 import jcl.reader.SyntaxType;
-import jcl.structs.streams.ReadResult;
+import jcl.structs.streams.ReadPeekResult;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -46,7 +46,7 @@ abstract class ExtendedTokenReaderMacroFunction extends ReaderMacroFunction {
 
 		final StringBuilder stringBuilder = new StringBuilder();
 
-		ReadResult readResult = readToken(reader, false, !isEscaped, stringBuilder, isEscaped);
+		ReadPeekResult readResult = readToken(reader, false, !isEscaped, stringBuilder, isEscaped);
 
 		if (isEscaped) {
 			readResult = readToken(reader, false, false, stringBuilder, false);
@@ -55,7 +55,7 @@ abstract class ExtendedTokenReaderMacroFunction extends ReaderMacroFunction {
 		boolean hasEscapes = false;
 		boolean hasPackageDelimiter = false;
 
-		while (!readResult.wasEOF()) {
+		while (!readResult.isEof()) {
 
 			final int codePoint = readResult.getResult();
 			if (isWhitespaceOrTerminating(reader, codePoint)) {
@@ -112,7 +112,7 @@ abstract class ExtendedTokenReaderMacroFunction extends ReaderMacroFunction {
 	 */
 	private static void readMultipleEscape(final Reader reader, final StringBuilder stringBuilder) {
 
-		ReadResult tempReadResult = reader.readChar(true, null, false);
+		ReadPeekResult tempReadResult = reader.readChar(true, null, false);
 		int tempCodePoint = tempReadResult.getResult();
 
 		while (!isMultipleEscape(reader, tempCodePoint)) {
@@ -134,8 +134,8 @@ abstract class ExtendedTokenReaderMacroFunction extends ReaderMacroFunction {
 	/**
 	 * Reads the next token character from the provided {@link Reader}, using the provided {@code eofErrorP} and {@code
 	 * recursiveP} to determine how the token character should be read. Then it appends the resulting {@link
-	 * ReadResult} to the provided {@link StringBuilder} using the provided {@code isEscaped} value in determining the
-	 * appropriate case of the token character to append.
+	 * ReadPeekResult} to the provided {@link StringBuilder} using the provided {@code isEscaped} value in determining
+	 * the appropriate case of the token character to append.
 	 *
 	 * @param reader
 	 * 		the {@link Reader} used to read the next token character
@@ -148,31 +148,31 @@ abstract class ExtendedTokenReaderMacroFunction extends ReaderMacroFunction {
 	 * @param isEscaped
 	 * 		whether or not to attempt to modify the case of the read token
 	 *
-	 * @return the resulting {@link ReadResult} of the read operation performed by the {@link Reader}
+	 * @return the resulting {@link ReadPeekResult} of the read operation performed by the {@link Reader}
 	 */
-	private static ReadResult readToken(final Reader reader, final boolean eofErrorP, final boolean recursiveP,
-	                                    final StringBuilder stringBuilder, final boolean isEscaped) {
-		final ReadResult readResult = reader.readChar(eofErrorP, null, recursiveP);
+	private static ReadPeekResult readToken(final Reader reader, final boolean eofErrorP, final boolean recursiveP,
+	                                        final StringBuilder stringBuilder, final boolean isEscaped) {
+		final ReadPeekResult readResult = reader.readChar(eofErrorP, null, recursiveP);
 		appendToken(reader, readResult, stringBuilder, isEscaped);
 		return readResult;
 	}
 
 	/**
-	 * Appends the token result in the provided {@link ReadResult} to the provided {@link StringBuilder}, making to to
-	 * properly case the token based on the provided {@code isEscaped}.
+	 * Appends the token result in the provided {@link ReadPeekResult} to the provided {@link StringBuilder}, making to
+	 * to properly case the token based on the provided {@code isEscaped}.
 	 *
 	 * @param reader
 	 * 		the {@link Reader} used in correctly casing the token if needed
 	 * @param readResult
-	 * 		the {@link ReadResult} containing the token result to append
+	 * 		the {@link ReadPeekResult} containing the token result to append
 	 * @param stringBuilder
 	 * 		the {@link StringBuilder} to append the next token to
 	 * @param isEscaped
 	 * 		whether or not to attempt to modify the case of the read token
 	 */
-	private static void appendToken(final Reader reader, final ReadResult readResult, final StringBuilder stringBuilder,
+	private static void appendToken(final Reader reader, final ReadPeekResult readResult, final StringBuilder stringBuilder,
 	                                final boolean isEscaped) {
-		if (!readResult.wasEOF()) {
+		if (!readResult.isEof()) {
 			int token = readResult.getResult();
 			if (!isEscaped) {
 				token = getTokenWithCase(reader, token);

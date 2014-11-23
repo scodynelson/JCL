@@ -31,53 +31,28 @@ final class StreamUtils {
 	}
 
 	/**
-	 * Used to get a resulting read object from the provided {@code readVal}, throw an error if {@code eofErrorP} is
-	 * true and the value is the EOF value, or a result with the {@code eofValue} if {@code eofErrorP} is false.
+	 * Used to get a resulting {@link ReadPeekResult} object from the provided {@code readVal}, throw an error if
+	 * {@code eofErrorP} is true and the value is the End-of-File value, or a result with the {@code eofValue} if
+	 * {@code eofErrorP} is false.
 	 *
-	 * @param readVal
-	 * 		the character or byte read
+	 * @param readPeekVal
+	 * 		the character or byte read or peeked
 	 * @param eofErrorP
-	 * 		where or not throw an error if the {@code readVal} is the EOF value
+	 * 		where or not throw an error if the {@code readPeekVal} is the End-of-File value
 	 * @param eofValue
-	 * 		the value to return if the {@code readVal} is the EOF value
+	 * 		the value to return if the {@code readPeekVal} is the End-of-File value
 	 *
-	 * @return the resulting read object
+	 * @return the resulting {@link ReadPeekResult} object
 	 */
-	static ReadResult getReadResult(final int readVal, final boolean eofErrorP, final LispStruct eofValue) {
-
-		if (readVal == -1) {
+	static ReadPeekResult getReadPeekResult(final int readPeekVal, final boolean eofErrorP, final LispStruct eofValue) {
+		if (readPeekVal == -1) {
 			if (eofErrorP) {
 				throw new EndOfFileException(END_OF_FILE_REACHED);
 			} else {
-				return new ReadResult(eofValue);
+				return new ReadPeekResult(eofValue);
 			}
 		} else {
-			return new ReadResult(readVal);
-		}
-	}
-
-	/**
-	 * Used to get a resulting peek object from the provided {@code nextChar}, throw an error if {@code eofErrorP} is
-	 * true and the value is the EOF value, or a result with the {@code eofValue} if {@code eofErrorP} is false.
-	 *
-	 * @param nextChar
-	 * 		the next character peeked
-	 * @param eofErrorP
-	 * 		where or not throw an error if the {@code nextChar} is the EOF value
-	 * @param eofValue
-	 * 		the value to return if the {@code nextChar} is the EOF value
-	 *
-	 * @return the resulting peek object
-	 */
-	static PeekResult getPeekResult(final int nextChar, final boolean eofErrorP, final LispStruct eofValue) {
-		if (nextChar == -1) {
-			if (eofErrorP) {
-				throw new EndOfFileException(END_OF_FILE_REACHED);
-			} else {
-				return new PeekResult(eofValue);
-			}
-		} else {
-			return new PeekResult(nextChar);
+			return new ReadPeekResult(readPeekVal);
 		}
 	}
 }

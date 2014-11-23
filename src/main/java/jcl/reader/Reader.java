@@ -7,7 +7,7 @@ package jcl.reader;
 import jcl.LispStruct;
 import jcl.structs.readtables.ReadtableStruct;
 import jcl.structs.streams.InputStream;
-import jcl.structs.streams.ReadResult;
+import jcl.structs.streams.ReadPeekResult;
 import jcl.structs.symbols.variables.Variable;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -81,18 +81,18 @@ public class Reader {
 	}
 
 	/**
-	 * Reads the next {@link ReadResult} from the {@link #inputStream}. This calls the overloaded {@link
+	 * Reads the next {@link ReadPeekResult} from the {@link #inputStream}. This calls the overloaded {@link
 	 * #readChar(boolean, LispStruct, boolean)} method with {@code eofErrorP} as true, {@code eofValue} as null, and
 	 * {@code recursiveP} as true.
 	 *
-	 * @return the next {@link ReadResult} from the {@link #inputStream}.
+	 * @return the next {@link ReadPeekResult} from the {@link #inputStream}.
 	 */
-	public ReadResult readChar() {
+	public ReadPeekResult readChar() {
 		return readChar(true, null, true);
 	}
 
 	/**
-	 * Reads the next {@link ReadResult} from the {@link #inputStream}.
+	 * Reads the next {@link ReadPeekResult} from the {@link #inputStream}.
 	 *
 	 * @param eofErrorP
 	 * 		whether or not to throw an error when an End-Of-File is reached
@@ -101,9 +101,9 @@ public class Reader {
 	 * @param recursiveP
 	 * 		whether or not to recursively read tokens
 	 *
-	 * @return the next {@link ReadResult} from the {@link #inputStream}.
+	 * @return the next {@link ReadPeekResult} from the {@link #inputStream}.
 	 */
-	public ReadResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
+	public ReadPeekResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		return inputStream.readChar(eofErrorP, eofValue, recursiveP);
 	}
 

@@ -14,40 +14,44 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The {@link NativeStreamStruct} is an abstraction for native stream types.
+ * The {@link AbstractNativeStreamStruct} is an abstraction for native stream types.
  */
-abstract class NativeStreamStruct extends StreamStruct implements InputStream, OutputStream {
+abstract class AbstractNativeStreamStruct extends StreamStruct implements InputStream, OutputStream {
 
 	/**
 	 * The logger for this class.
 	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(NativeStreamStruct.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractNativeStreamStruct.class);
 
 	/**
 	 * Protected constructor.
 	 *
 	 * @param type
 	 * 		the type of the stream object
-	 * @param isInteractive
+	 * @param interactive
 	 * 		whether or not the struct created is 'interactive'
 	 * @param elementType
 	 * 		the stream elementType
 	 */
-	protected NativeStreamStruct(final Stream type,
-	                             final boolean isInteractive, final LispType elementType) {
-		super(type, null, null, isInteractive, elementType);
+	protected AbstractNativeStreamStruct(final Stream type,
+	                                     final boolean interactive, final LispType elementType) {
+		super(type, null, null, interactive, elementType);
 	}
 
 	@Override
 	public boolean listen() {
 		try {
-			final PeekResult peekResult = peekChar(PeekType.NIL_PEEK_TYPE, false, null, false);
-			return !peekResult.wasEOF();
+			final ReadPeekResult peekResult = peekChar(PeekType.NIL_PEEK_TYPE, false, null, false);
+			return !peekResult.isEof();
 		} catch (final EndOfFileException eofe) {
-			LOGGER.warn(StreamUtils.END_OF_FILE_REACHED, eofe);
+			if (LOGGER.isWarnEnabled()) {
+				LOGGER.warn(StreamUtils.END_OF_FILE_REACHED, eofe);
+			}
 			return false;
 		} catch (final StreamErrorException see) {
-			LOGGER.warn("Stream error occurred.", see);
+			if (LOGGER.isWarnEnabled()) {
+				LOGGER.warn("Stream error occurred.", see);
+			}
 			return false;
 		}
 	}

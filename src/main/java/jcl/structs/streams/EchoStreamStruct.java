@@ -10,17 +10,18 @@ import jcl.types.EchoStream;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import java.util.LinkedList;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 /**
  * The {@link EchoStreamStruct} is the object representation of a Lisp 'echo-stream' type.
  */
-public class EchoStreamStruct extends DualStreamStruct {
+public class EchoStreamStruct extends AbstractDualStreamStruct {
 
 	/**
 	 * The {@link Integer} tokens that have been unread so far.
 	 */
-	private final LinkedList<Integer> unreadTokens = new LinkedList<>();
+	private final Deque<Integer> unreadTokens = new ArrayDeque<>();
 
 	/**
 	 * Public constructor.
@@ -37,27 +38,27 @@ public class EchoStreamStruct extends DualStreamStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param isInteractive
+	 * @param interactive
 	 * 		whether or not the struct created is 'interactive'
 	 * @param inputStream
 	 * 		the {@link InputStream} to create a EchoStreamStruct from
 	 * @param outputStream
 	 * 		the {@link OutputStream} to create a EchoStreamStruct from
 	 */
-	public EchoStreamStruct(final boolean isInteractive, final InputStream inputStream, final OutputStream outputStream) {
-		super(EchoStream.INSTANCE, isInteractive, inputStream, outputStream);
+	public EchoStreamStruct(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
+		super(EchoStream.INSTANCE, interactive, inputStream, outputStream);
 	}
 
 	@Override
-	public ReadResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
+	public ReadPeekResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		if (!unreadTokens.isEmpty()) {
 			final Integer lastUnread = unreadTokens.getFirst();
-			return new ReadResult(lastUnread);
+			return new ReadPeekResult(lastUnread);
 		}
 
-		final ReadResult readResult = inputStream.readChar(false, eofValue, false);
+		final ReadPeekResult readResult = inputStream.readChar(false, eofValue, false);
 
-		if (readResult.wasEOF()) {
+		if (readResult.isEof()) {
 			if (eofErrorP) {
 				throw new EndOfFileException(StreamUtils.END_OF_FILE_REACHED);
 			} else {
@@ -71,15 +72,15 @@ public class EchoStreamStruct extends DualStreamStruct {
 	}
 
 	@Override
-	public ReadResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
+	public ReadPeekResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
 		if (!unreadTokens.isEmpty()) {
 			final Integer lastUnread = unreadTokens.getFirst();
-			return new ReadResult(lastUnread);
+			return new ReadPeekResult(lastUnread);
 		}
 
-		final ReadResult readResult = inputStream.readByte(false, eofValue);
+		final ReadPeekResult readResult = inputStream.readByte(false, eofValue);
 
-		if (readResult.wasEOF()) {
+		if (readResult.isEof()) {
 			if (eofErrorP) {
 				throw new EndOfFileException(StreamUtils.END_OF_FILE_REACHED);
 			} else {
@@ -93,20 +94,20 @@ public class EchoStreamStruct extends DualStreamStruct {
 	}
 
 	@Override
-	public PeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
+	public ReadPeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		if (unreadTokens.isEmpty()) {
-			final ReadResult readResult = inputStream.readChar(eofErrorP, eofValue, recursiveP);
+			final ReadPeekResult readResult = inputStream.readChar(eofErrorP, eofValue, recursiveP);
 
-			if (readResult.wasEOF()) {
-				return new PeekResult(readResult.getEofValue());
+			if (readResult.isEof()) {
+				return new ReadPeekResult(readResult.getEofValue());
 			} else {
 				final int peekedChar = readResult.getResult();
 				outputStream.writeChar(peekedChar);
-				return new PeekResult(peekedChar);
+				return new ReadPeekResult(peekedChar);
 			}
 		} else {
 			final Integer peekedChar = unreadTokens.removeFirst();
-			return new PeekResult(peekedChar);
+			return new ReadPeekResult(peekedChar);
 		}
 	}
 

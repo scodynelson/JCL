@@ -30,11 +30,11 @@ public class StringOutputStreamStruct extends StreamStruct implements OutputStre
 	/**
 	 * Public constructor.
 	 *
-	 * @param isInteractive
+	 * @param interactive
 	 * 		whether or not the struct created is 'interactive'
 	 */
-	public StringOutputStreamStruct(final boolean isInteractive) {
-		super(StringStream.INSTANCE, null, null, isInteractive, BaseChar.INSTANCE);
+	public StringOutputStreamStruct(final boolean interactive) {
+		super(StringStream.INSTANCE, null, null, interactive, BaseChar.INSTANCE);
 	}
 
 	@Override

@@ -7,7 +7,7 @@ package jcl.reader;
 import jcl.LispStruct;
 import jcl.reader.macrofunction.ReaderMacroFunction;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
-import jcl.structs.streams.ReadResult;
+import jcl.structs.streams.ReadPeekResult;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -29,8 +29,8 @@ public class DispatchTable extends ReaderMacroFunction {
 	@Override
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 
-		final ReadResult readResult = reader.readChar(false, null, false);
-		if (readResult.wasEOF()) {
+		final ReadPeekResult readResult = reader.readChar(false, null, false);
+		if (readResult.isEof()) {
 			throw new ReaderErrorException("End of file reached when trying to determine read macro function.");
 		}
 

@@ -11,7 +11,7 @@ import jcl.structs.arrays.StringStruct;
 import jcl.structs.conditions.exceptions.ReaderErrorException;
 import jcl.structs.conditions.exceptions.SimpleErrorException;
 import jcl.structs.conditions.exceptions.TypeErrorException;
-import jcl.structs.streams.ReadResult;
+import jcl.structs.streams.ReadPeekResult;
 import jcl.structs.symbols.variables.Variable;
 
 import java.math.BigInteger;
@@ -39,7 +39,7 @@ public final class QuotationMarkReaderMacroFunction extends UnicodeCharacterRead
 		final StringBuilder stringBuilder = new StringBuilder();
 
 		// NOTE: This will throw errors when it reaches an EOF
-		ReadResult readResult = reader.readChar();
+		ReadPeekResult readResult = reader.readChar();
 		int readChar = readResult.getResult();
 
 		while (readChar != CharacterConstants.QUOTATION_MARK) {
@@ -78,12 +78,12 @@ public final class QuotationMarkReaderMacroFunction extends UnicodeCharacterRead
 		int readChar = CharacterConstants.BACKSLASH;
 
 		// NOTE: This will throw errors when it reaches an EOF
-		final ReadResult tmpReadResult = reader.readChar();
+		final ReadPeekResult tmpReadResult = reader.readChar();
 		final int tmpChar = tmpReadResult.getResult();
 		if ((tmpChar == CharacterConstants.LATIN_SMALL_LETTER_U)
 				|| (tmpChar == CharacterConstants.LATIN_CAPITAL_LETTER_U)) {
 
-			final ReadResult nextTmpReadResult = reader.readChar();
+			final ReadPeekResult nextTmpReadResult = reader.readChar();
 			final int nextTmpChar = nextTmpReadResult.getResult();
 			if (nextTmpChar == CharacterConstants.PLUS_SIGN) {
 				readChar = readUnicodeCharacter(reader);

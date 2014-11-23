@@ -12,9 +12,9 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * The {@link DualStreamStruct} is an abstraction for dual stream types.
+ * The {@link AbstractDualStreamStruct} is an abstraction for dual stream types.
  */
-abstract class DualStreamStruct extends StreamStruct implements InputStream, OutputStream {
+abstract class AbstractDualStreamStruct extends StreamStruct implements InputStream, OutputStream {
 
 	/**
 	 * This {@link InputStream} in the DualStreamStruct.
@@ -31,16 +31,16 @@ abstract class DualStreamStruct extends StreamStruct implements InputStream, Out
 	 *
 	 * @param type
 	 * 		the type of the stream object
-	 * @param isInteractive
+	 * @param interactive
 	 * 		whether or not the struct created is 'interactive'
 	 * @param inputStream
 	 * 		the {@link InputStream} to create a DualStreamStruct from
 	 * @param outputStream
 	 * 		the {@link OutputStream} to create a DualStreamStruct from
 	 */
-	protected DualStreamStruct(final Stream type,
-	                           final boolean isInteractive, final InputStream inputStream, final OutputStream outputStream) {
-		super(type, null, null, isInteractive, getElementType(inputStream, outputStream));
+	protected AbstractDualStreamStruct(final Stream type,
+	                                   final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
+		super(type, null, null, interactive, getElementType(inputStream, outputStream));
 		this.inputStream = inputStream;
 		this.outputStream = outputStream;
 	}

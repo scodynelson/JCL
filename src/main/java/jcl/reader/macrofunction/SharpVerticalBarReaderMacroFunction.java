@@ -7,7 +7,7 @@ package jcl.reader.macrofunction;
 import jcl.LispStruct;
 import jcl.reader.CharacterConstants;
 import jcl.reader.Reader;
-import jcl.structs.streams.ReadResult;
+import jcl.structs.streams.ReadPeekResult;
 import jcl.structs.symbols.variables.Variable;
 
 import java.math.BigInteger;
@@ -36,8 +36,8 @@ public final class SharpVerticalBarReaderMacroFunction extends ReaderMacroFuncti
 		int level = 1;
 
 		// NOTE: This will throw errors when it reaches an EOF
-		ReadResult prevReadResult = reader.readChar();
-		ReadResult nextReadResult = reader.readChar();
+		ReadPeekResult prevReadResult = reader.readChar();
+		ReadPeekResult nextReadResult = reader.readChar();
 
 		final StringBuilder stringBuilder = new StringBuilder();
 		while (true) {

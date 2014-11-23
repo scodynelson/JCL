@@ -25,7 +25,7 @@ import java.nio.charset.Charset;
 /**
  * The {@link CharacterStreamStruct} is the object representation of a character reading system level Lisp stream.
  */
-public class CharacterStreamStruct extends NativeStreamStruct {
+public class CharacterStreamStruct extends AbstractNativeStreamStruct {
 
 	/**
 	 * The logger for this class.
@@ -55,37 +55,39 @@ public class CharacterStreamStruct extends NativeStreamStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param isInteractive
+	 * @param interactive
 	 * 		whether or not the struct created is 'interactive'
 	 * @param inputStream
 	 * 		the {@link java.io.InputStream} to create a CharacterStreamStruct from
 	 * @param outputStream
 	 * 		the {@link java.io.OutputStream} to create a CharacterStreamStruct from
 	 */
-	public CharacterStreamStruct(final boolean isInteractive, final InputStream inputStream, final OutputStream outputStream) {
-		super(Stream.INSTANCE, isInteractive, Character.INSTANCE);
-		this.inputStream = new LineNumberReader(new InputStreamReader(inputStream, Charset.defaultCharset()));
-		this.outputStream = new PrintWriter(new OutputStreamWriter(outputStream, Charset.defaultCharset()));
+	public CharacterStreamStruct(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
+		super(Stream.INSTANCE, interactive, Character.INSTANCE);
+
+		final Charset defaultCharset = Charset.defaultCharset();
+		this.inputStream = new LineNumberReader(new InputStreamReader(inputStream, defaultCharset));
+		this.outputStream = new PrintWriter(new OutputStreamWriter(outputStream, defaultCharset));
 	}
 
 	@Override
-	public ReadResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
+	public ReadPeekResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		try {
 			inputStream.mark(1);
 			final int readChar = inputStream.read();
-			return StreamUtils.getReadResult(readChar, eofErrorP, eofValue);
+			return StreamUtils.getReadPeekResult(readChar, eofErrorP, eofValue);
 		} catch (final IOException ioe) {
 			throw new StreamErrorException(StreamUtils.FAILED_TO_READ_CHAR, ioe);
 		}
 	}
 
 	@Override
-	public ReadResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
+	public ReadPeekResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
 		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_BINARYSTREAM);
 	}
 
 	@Override
-	public PeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
+	public ReadPeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 
 		final int nextChar;
 		switch (peekType.getType()) {
@@ -103,7 +105,7 @@ public class CharacterStreamStruct extends NativeStreamStruct {
 				break;
 		}
 
-		return StreamUtils.getPeekResult(nextChar, eofErrorP, eofValue);
+		return StreamUtils.getReadPeekResult(nextChar, eofErrorP, eofValue);
 	}
 
 	/**
@@ -114,6 +116,7 @@ public class CharacterStreamStruct extends NativeStreamStruct {
 	private int nilPeekCharCSS() {
 		try {
 			inputStream.mark(1);
+
 			final int nextChar = inputStream.read();
 			inputStream.reset();
 			return nextChar;
@@ -130,7 +133,9 @@ public class CharacterStreamStruct extends NativeStreamStruct {
 	private int tPeekCharCSS() {
 		try {
 			inputStream.mark(1);
-			int nextChar = ' '; // Initialize to whitespace, since we are attempting to skip it anyways
+
+			// Initialize to whitespace, since we are attempting to skip it anyways
+			int nextChar = ' ';
 			while (java.lang.Character.isWhitespace(nextChar)) {
 				nextChar = inputStream.read();
 			}
@@ -152,7 +157,9 @@ public class CharacterStreamStruct extends NativeStreamStruct {
 	private int characterPeekCharCSS(final Integer codePoint) {
 		try {
 			inputStream.mark(1);
-			int nextChar = -1; // Initialize to -1 value, since this is essentially EOF
+
+			// Initialize to -1 value, since this is essentially EOF
+			int nextChar = -1;
 			while (nextChar != codePoint) {
 				nextChar = inputStream.read();
 			}
@@ -179,7 +186,9 @@ public class CharacterStreamStruct extends NativeStreamStruct {
 			inputStream.mark(0);
 			inputStream.reset();
 		} catch (final IOException ioe) {
-			LOGGER.warn("IO exception occurred.", ioe);
+			if (LOGGER.isWarnEnabled()) {
+				LOGGER.warn("IO exception occurred.", ioe);
+			}
 		}
 	}
 

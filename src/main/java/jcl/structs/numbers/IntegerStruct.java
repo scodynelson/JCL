@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.structs.numbers;
 
 import jcl.structs.symbols.variables.Variable;
@@ -12,8 +16,29 @@ import java.math.BigInteger;
  */
 public class IntegerStruct extends RationalStruct {
 
+	/**
+	 * The internal {@link BigInteger} containing the float contents.
+	 */
 	private final BigInteger bigInteger;
 
+	/**
+	 * Int constant for the value '2'.
+	 */
+	private static final int TWO = 2;
+
+	/**
+	 * Int constant for the value '8'.
+	 */
+	private static final int EIGHT = 8;
+
+	/**
+	 * Int constant for the value '10'.
+	 */
+	private static final int TEN = 10;
+
+	/**
+	 * Int constant for the value '16'.
+	 */
 	private static final int SIXTEEN = 16;
 
 	/**
@@ -56,13 +81,13 @@ public class IntegerStruct extends RationalStruct {
 		final StringBuilder stringBuilder = new StringBuilder();
 
 		if (printRadix) {
-			if (printBase == 2) {
+			if (printBase == TWO) {
 				stringBuilder.append("#b");
-			} else if (printBase == 8) {
+			} else if (printBase == EIGHT) {
 				stringBuilder.append("#o");
 			} else if (printBase == SIXTEEN) {
 				stringBuilder.append("#x");
-			} else if (printBase != 10) {
+			} else {
 				stringBuilder.append('#');
 				stringBuilder.append(printBase);
 				stringBuilder.append('r');
@@ -71,7 +96,7 @@ public class IntegerStruct extends RationalStruct {
 
 		stringBuilder.append(bigInteger.toString(printBase));
 
-		if (printRadix && (printBase == 10)) {
+		if (printRadix && (printBase == TEN)) {
 			stringBuilder.append('.');
 		}
 

@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.structs.hashtables;
 
 import jcl.LispStruct;
@@ -25,9 +29,19 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class HashTableStruct extends BuiltInClassStruct {
 
+	/**
+	 * The test function for verifying equivalence of a key.
+	 */
 	private final EquatorFunctionStruct<LispStruct> test;
+
+	/**
+	 * The threshold used in the rehashing of the {@link #map}.
+	 */
 	private final BigDecimal rehashThreshold;
 
+	/**
+	 * The internal {@link Map} containing the {@link LispStruct} keys and values.
+	 */
 	private final Map<LispStruct, LispStruct> map;
 
 	/**
@@ -147,7 +161,14 @@ public class HashTableStruct extends BuiltInClassStruct {
 	 */
 	private static final class KeyWrapper implements LispStruct {
 
+		/**
+		 * The {@link LispStruct} key to wrap.
+		 */
 		private final LispStruct key;
+
+		/**
+		 * The {@link Equator} used to test equivalence of a key.
+		 */
 		private final Equator<LispStruct> equator;
 
 		/**

@@ -1,6 +1,9 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.structs.numbers;
 
-import jcl.structs.symbols.variables.Variable;
 import jcl.types.Ratio;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -13,9 +16,10 @@ import java.math.BigInteger;
  */
 public class RatioStruct extends RationalStruct {
 
+	/**
+	 * The internal {@link BigFraction} containing the ratio contents.
+	 */
 	private final BigFraction bigFraction;
-
-	private static final int SIXTEEN = 16;
 
 	/**
 	 * Public constructor.
@@ -52,42 +56,10 @@ public class RatioStruct extends RationalStruct {
 
 	@Override
 	public String printStruct() {
-		return printBigInteger(bigFraction.getNumerator()) + '/' + printBigInteger(bigFraction.getDenominator());
-	}
+		final IntegerStruct numerator = new IntegerStruct(bigFraction.getNumerator());
+		final IntegerStruct denominator = new IntegerStruct(bigFraction.getNumerator());
 
-	/**
-	 * Gets a {@link java.lang.String} representation of the {@link BigInteger} parts of the RatioStruct's {@link
-	 * #bigFraction} value.
-	 *
-	 * @param bigInteger
-	 * 		a bigInteger part of the RatioStruct's {@link #bigFraction} value
-	 *
-	 * @return a {@link java.lang.String} representation of the {@link BigInteger} parts of the RatioStruct's {@link
-	 * #bigFraction} value
-	 */
-	private static String printBigInteger(final BigInteger bigInteger) {
-		final boolean printRadix = Variable.PRINT_RADIX.getValue().booleanValue();
-		final int printBase = Variable.PRINT_BASE.getValue().getBigInteger().intValue();
-
-		final StringBuilder stringBuilder = new StringBuilder();
-
-		if (printRadix) {
-			if (printBase == 2) {
-				stringBuilder.append("#b");
-			} else if (printBase == 8) {
-				stringBuilder.append("#o");
-			} else if (printBase == SIXTEEN) {
-				stringBuilder.append("#x");
-			} else {
-				stringBuilder.append('#');
-				stringBuilder.append(printBase);
-				stringBuilder.append('r');
-			}
-		}
-
-		stringBuilder.append(bigInteger.toString(printBase));
-
-		return stringBuilder.toString();
+		return numerator.printStruct() + '/' + denominator.printStruct();
 	}
 
 	@Override

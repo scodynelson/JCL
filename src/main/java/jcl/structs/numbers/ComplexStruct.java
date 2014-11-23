@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.structs.numbers;
 
 import jcl.types.Complex;
@@ -13,7 +17,14 @@ import java.math.BigInteger;
  */
 public class ComplexStruct extends NumberStruct {
 
+	/**
+	 * The {@link RealStruct} that comprises the real value of the complex.
+	 */
 	private final RealStruct real;
+
+	/**
+	 * The {@link RealStruct} that comprises the imaginary value of the complex.
+	 */
 	private final RealStruct imaginary;
 
 	/**

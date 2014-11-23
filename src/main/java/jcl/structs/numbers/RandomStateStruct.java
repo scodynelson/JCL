@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.structs.numbers;
 
 import jcl.structs.classes.BuiltInClassStruct;
@@ -16,26 +20,84 @@ import java.util.List;
  */
 public class RandomStateStruct extends BuiltInClassStruct {
 
-	private static final int THREE = 3;
-	private static final int FIFTY_FOUR = 54;
+	/**
+	 * Int constant for overlap.
+	 */
+	private static final int OVERLAP = 3;
+
+	/**
+	 * Int constant for max.
+	 */
+	private static final int MAX = 54;
+
+	/**
+	 * Int constant for first constant.
+	 */
 	private static final int CONST_A = 8378;
+
+	/**
+	 * Int constant for second constant.
+	 */
 	private static final int CONST_B = 101010101;
 
-	private static final BigInteger RANDOM_MAX = BigInteger.valueOf(FIFTY_FOUR);
-	private static final BigInteger RANDOM_UPPER_BOUND = BigInteger.valueOf(Integer.MAX_VALUE - THREE);
+	/**
+	 * {@link BigInteger} constant for random overlap.
+	 */
+	private static final BigInteger RANDOM_OVERLAP = BigInteger.valueOf(OVERLAP);
+
+	/**
+	 * {@link BigInteger} constant for random max.
+	 */
+	private static final BigInteger RANDOM_MAX = BigInteger.valueOf(MAX);
+
+	/**
+	 * {@link BigInteger} constant for first random.
+	 */
 	private static final BigInteger RANDOM_CONST_A = BigInteger.valueOf(CONST_A);
+
+	/**
+	 * {@link BigInteger} constant for second random.
+	 */
 	private static final BigInteger RANDOM_CONST_B = BigInteger.valueOf(CONST_B);
 
-	private static final BigInteger RANDOM_INTEGER_OVERLAP = BigInteger.valueOf(THREE);
-	private static final BigInteger RANDOM_CHUNCK_LENGTH = BigInteger.valueOf(RANDOM_UPPER_BOUND.bitLength());
+	/**
+	 * {@link BigInteger} constant for random upper bound.
+	 */
+	private static final BigInteger RANDOM_UPPER_BOUND = BigInteger.valueOf(Integer.MAX_VALUE - OVERLAP);
 
-	private static final BigInteger SHIFT_AMOUNT = RANDOM_CHUNCK_LENGTH.subtract(RANDOM_INTEGER_OVERLAP);
-	private static final int SHIFT_AMOUNT_AS_INT = SHIFT_AMOUNT.intValue();
+	/**
+	 * {@link BigInteger} constant for random chunk length.
+	 */
+	private static final BigInteger RANDOM_CHUNK_LENGTH = BigInteger.valueOf(RANDOM_UPPER_BOUND.bitLength());
 
+	/**
+	 * {@link BigInteger} constant for shift amount.
+	 */
+	private static final BigInteger BIT_SHIFT_AMOUNT = RANDOM_CHUNK_LENGTH.subtract(RANDOM_OVERLAP);
+
+	/**
+	 * Int constant shift amount.
+	 */
+	private static final int BIT_SHIFT_AMOUNT_AS_INT = BIT_SHIFT_AMOUNT.intValueExact();
+
+	/**
+	 * Int constant for the 'J' initial value.
+	 */
 	private static final int J_INITIAL_VALUE = 24;
+
+	/**
+	 * Holds the 'J' value to be used in the random algorithm.
+	 */
 	private BigInteger jValue = BigInteger.valueOf(J_INITIAL_VALUE);
+
+	/**
+	 * Holds the 'K' value to be used in the random algorithm.
+	 */
 	private BigInteger kValue = BigInteger.ZERO;
 
+	/**
+	 * Holds the 'Seed' values to be used in the random algorithm.
+	 */
 	private final List<BigInteger> seed;
 
 	/**
@@ -65,13 +127,13 @@ public class RandomStateStruct extends BuiltInClassStruct {
 		final BigInteger limitLength = BigInteger.valueOf(limit.bitLength());
 
 		BigInteger bits = randomChunk();
-		BigInteger count = limitLength.subtract(RANDOM_INTEGER_OVERLAP);
+		BigInteger count = limitLength.subtract(RANDOM_OVERLAP);
 		while (BigInteger.ZERO.compareTo(count) <= 0) {
 			final BigInteger shiftedBits = ash(bits);
 			final BigInteger nextChunk = randomChunk();
 
 			bits = shiftedBits.xor(nextChunk);
-			count = count.subtract(SHIFT_AMOUNT);
+			count = count.subtract(BIT_SHIFT_AMOUNT);
 		}
 
 		return bits.remainder(limit);
@@ -137,7 +199,7 @@ public class RandomStateStruct extends BuiltInClassStruct {
 	 * @return a new shifted {@link BigInteger}
 	 */
 	private static BigInteger ash(final BigInteger bits) {
-		return (SHIFT_AMOUNT_AS_INT <= 0) ? bits.shiftRight(SHIFT_AMOUNT_AS_INT) : bits.shiftLeft(SHIFT_AMOUNT_AS_INT);
+		return (BIT_SHIFT_AMOUNT_AS_INT <= 0) ? bits.shiftRight(BIT_SHIFT_AMOUNT_AS_INT) : bits.shiftLeft(BIT_SHIFT_AMOUNT_AS_INT);
 	}
 
 	@Override

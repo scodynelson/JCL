@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.structs.characters;
 
 import jcl.structs.classes.BuiltInClassStruct;
@@ -15,6 +19,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public class CharacterStruct extends BuiltInClassStruct {
 
+	/**
+	 * The code point of the character.
+	 */
 	private final int codePoint;
 
 	/**
@@ -37,15 +44,19 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 * @return the matching character type for the provided character {@code codePoint}
 	 */
 	private static Character getCharacterType(final int codePoint) {
+		final Character characterType;
+
 		if (CharUtils.isAsciiControl((char) codePoint) && (codePoint != CharUtils.LF)) {
-			return BaseChar.INSTANCE;
+			characterType = BaseChar.INSTANCE;
 		} else if (CharUtils.isAscii((char) codePoint)) {
-			return StandardChar.INSTANCE;
+			characterType = StandardChar.INSTANCE;
 		} else if (java.lang.Character.isDefined(codePoint)) {
-			return ExtendedChar.INSTANCE;
+			characterType = ExtendedChar.INSTANCE;
 		} else {
-			return Character.INSTANCE;
+			characterType = Character.INSTANCE;
 		}
+
+		return characterType;
 	}
 
 	/**

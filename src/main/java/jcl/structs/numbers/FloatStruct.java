@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.structs.numbers;
 
 import jcl.structs.symbols.variables.Variable;
@@ -16,6 +20,9 @@ import java.math.BigDecimal;
  */
 public class FloatStruct extends RealStruct {
 
+	/**
+	 * The internal {@link BigDecimal} containing the float contents.
+	 */
 	private final BigDecimal bigDecimal;
 
 	/**

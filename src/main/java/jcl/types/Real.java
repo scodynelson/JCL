@@ -1,8 +1,8 @@
 package jcl.types;
 
-import jcl.typespecifiers.AtomicTypeSpecifier;
-import jcl.typespecifiers.CompoundTypeSpecifier;
-import jcl.typespecifiers.designator.IntervalDesignator;
+import jcl.types.typespecifiers.AtomicTypeSpecifier;
+import jcl.types.typespecifiers.CompoundTypeSpecifier;
+import jcl.types.typespecifiers.designator.IntervalDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

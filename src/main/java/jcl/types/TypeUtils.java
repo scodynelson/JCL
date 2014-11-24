@@ -1,7 +1,7 @@
 package jcl.types;
 
 import jcl.LispType;
-import jcl.typespecifiers.designator.DimensionsDesignator;
+import jcl.types.typespecifiers.designator.DimensionsDesignator;
 
 /**
  * A Utility class for handling common utilities for lisp types.

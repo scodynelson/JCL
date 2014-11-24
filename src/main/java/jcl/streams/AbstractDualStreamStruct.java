@@ -7,7 +7,7 @@ package jcl.streams;
 import jcl.LispType;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.types.Stream;
-import jcl.typespecifiers.AndTypeSpecifier;
+import jcl.types.typespecifiers.AndTypeSpecifier;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 

@@ -1,4 +1,4 @@
-package jcl.typespecifiers;
+package jcl.types.typespecifiers;
 
 import jcl.lambdalist.variable.Optional;
 import jcl.lambdalist.variable.Rest;

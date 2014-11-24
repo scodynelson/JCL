@@ -1,4 +1,4 @@
-package jcl.typespecifiers;
+package jcl.types.typespecifiers;
 
 /**
  * This interface is the common parent for all compound type specifiers.

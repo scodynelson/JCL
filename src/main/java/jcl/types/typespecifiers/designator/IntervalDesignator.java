@@ -1,6 +1,6 @@
-package jcl.typespecifiers.designator;
+package jcl.types.typespecifiers.designator;
 
-import jcl.typespecifiers.TypeSpecifierUtils;
+import jcl.types.typespecifiers.TypeSpecifierUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

@@ -1,8 +1,5 @@
-package jcl.readtables;
+package jcl.reader;
 
-import jcl.reader.AttributeTable;
-import jcl.reader.DispatchTable;
-import jcl.reader.SyntaxTable;
 import jcl.reader.macrofunction.ApostropheReaderMacroFunction;
 import jcl.reader.macrofunction.LeftParenthesisReaderMacroFunction;
 import jcl.reader.macrofunction.QuotationMarkReaderMacroFunction;
@@ -30,10 +27,6 @@ import jcl.reader.macrofunction.SharpSharpReaderMacroFunction;
 import jcl.reader.macrofunction.SharpUReaderMacroFunction;
 import jcl.reader.macrofunction.SharpVerticalBarReaderMacroFunction;
 import jcl.reader.macrofunction.SharpXReaderMacroFunction;
-import jcl.reader.AttributeType;
-import jcl.reader.CaseSpec;
-import jcl.reader.CharacterConstants;
-import jcl.reader.SyntaxType;
 import jcl.classes.BuiltInClassStruct;
 import jcl.types.Readtable;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;

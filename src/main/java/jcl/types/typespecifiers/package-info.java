@@ -1,4 +1,4 @@
 /**
  * The package containing type specifiers.
  */
-package jcl.typespecifiers;
+package jcl.types.typespecifiers;

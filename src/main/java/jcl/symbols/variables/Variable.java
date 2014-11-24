@@ -8,7 +8,7 @@ import jcl.numbers.IntegerStruct;
 import jcl.numbers.RandomStateStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
-import jcl.readtables.ReadtableStruct;
+import jcl.reader.ReadtableStruct;
 import jcl.symbols.BooleanStruct;
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.NILStruct;

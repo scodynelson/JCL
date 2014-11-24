@@ -1,4 +1,4 @@
-package jcl.typespecifiers.designator;
+package jcl.types.typespecifiers.designator;
 
 import jcl.types.Array;
 import org.apache.commons.lang3.ObjectUtils;

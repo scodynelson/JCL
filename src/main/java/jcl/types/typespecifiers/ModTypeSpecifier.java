@@ -1,4 +1,4 @@
-package jcl.typespecifiers;
+package jcl.types.typespecifiers;
 
 import jcl.numbers.IntegerStruct;
 import jcl.types.TypeBaseClass;

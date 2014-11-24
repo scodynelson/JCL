@@ -5,7 +5,6 @@
 package jcl.reader;
 
 import jcl.LispStruct;
-import jcl.readtables.ReadtableStruct;
 import jcl.streams.InputStream;
 import jcl.streams.ReadPeekResult;
 import jcl.symbols.variables.Variable;

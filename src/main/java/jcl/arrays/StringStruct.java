@@ -2,7 +2,7 @@ package jcl.arrays;
 
 import jcl.reader.SyntaxType;
 import jcl.characters.CharacterStruct;
-import jcl.readtables.ReadtableStruct;
+import jcl.reader.ReadtableStruct;
 import jcl.symbols.variables.Variable;
 import jcl.types.BaseChar;
 import jcl.types.BaseString;

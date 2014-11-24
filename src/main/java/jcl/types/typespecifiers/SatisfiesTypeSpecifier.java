@@ -1,4 +1,4 @@
-package jcl.typespecifiers;
+package jcl.types.typespecifiers;
 
 import jcl.LispStruct;
 import jcl.functions.PredicateFunctionStruct;

@@ -1,4 +1,4 @@
 /**
  * The package containing type specifier designators.
  */
-package jcl.typespecifiers.designator;
+package jcl.types.typespecifiers.designator;

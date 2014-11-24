@@ -1,7 +1,7 @@
 package jcl.types;
 
-import jcl.typespecifiers.AtomicTypeSpecifier;
-import jcl.typespecifiers.CompoundTypeSpecifier;
+import jcl.types.typespecifiers.AtomicTypeSpecifier;
+import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

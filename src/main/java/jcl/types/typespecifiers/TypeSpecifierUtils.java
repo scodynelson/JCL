@@ -1,4 +1,4 @@
-package jcl.typespecifiers;
+package jcl.types.typespecifiers;
 
 import org.apache.commons.math3.fraction.BigFraction;
 

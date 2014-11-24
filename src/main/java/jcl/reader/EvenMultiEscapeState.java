@@ -5,7 +5,7 @@
 package jcl.reader;
 
 import jcl.LispStruct;
-import jcl.structs.streams.ReadPeekResult;
+import jcl.streams.ReadPeekResult;
 
 /**
  * Step 8 of the Reader Algorithm.

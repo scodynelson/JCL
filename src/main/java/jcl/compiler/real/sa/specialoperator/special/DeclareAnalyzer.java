@@ -4,11 +4,11 @@ import jcl.LispStruct;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.SymbolStructAnalyzer;
-import jcl.structs.conditions.exceptions.ProgramErrorException;
-import jcl.structs.lists.ListStruct;
-import jcl.structs.lists.NullStruct;
-import jcl.structs.symbols.Declaration;
-import jcl.structs.symbols.SymbolStruct;
+import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.lists.ListStruct;
+import jcl.lists.NullStruct;
+import jcl.symbols.Declaration;
+import jcl.symbols.SymbolStruct;
 
 import java.util.List;
 

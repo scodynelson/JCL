@@ -3,8 +3,8 @@ package jcl.compiler.real.icg.specialoperator.compiler;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.FunctionCallCodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
-import jcl.structs.lists.ListStruct;
-import jcl.structs.symbols.SymbolStruct;
+import jcl.lists.ListStruct;
+import jcl.symbols.SymbolStruct;
 
 public class TailRecursionCodeGenerator implements CodeGenerator<ListStruct> {
 

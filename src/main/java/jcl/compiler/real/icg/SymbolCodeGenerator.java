@@ -8,7 +8,7 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.environment.SymbolBinding;
-import jcl.structs.symbols.SymbolStruct;
+import jcl.symbols.SymbolStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +46,7 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 						LOGGER.warn("; Warning: variable {} is assumed free", input);
 					}
 					SpecialSymbolCodeGenerator.INSTANCE.generate(input, codeGenerator);
-					codeGenerator.emitter.emitInvokestatic("jcl/structs/symbols/SymbolStruct", "getValue", "()", "Ljava/lang/Object;", true);
+					codeGenerator.emitter.emitInvokestatic("jcl/symbols/SymbolStruct", "getValue", "()", "Ljava/lang/Object;", true);
 				} else {
 					final int slot = IntermediateCodeGenerator.genLocalSlot(input, binding);
 					codeGenerator.emitter.emitAload(slot);
@@ -57,7 +57,7 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 				if (entry.getScope() == Scope.DYNAMIC) {
 					// it's number 3
 					SpecialSymbolCodeGenerator.INSTANCE.generate(input, codeGenerator);
-					codeGenerator.emitter.emitInvokestatic("jcl/structs/symbols/SymbolStruct", "getValue", "()", "Ljava/lang/Object;", true);
+					codeGenerator.emitter.emitInvokestatic("jcl/symbols/SymbolStruct", "getValue", "()", "Ljava/lang/Object;", true);
 				} else {
 					// it's door number 2
 					// get the allocation parameter

@@ -6,9 +6,9 @@ import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.SpecialSymbolCodeGenerator;
-import jcl.structs.lists.ListStruct;
-import jcl.structs.lists.NullStruct;
-import jcl.structs.symbols.SymbolStruct;
+import jcl.lists.ListStruct;
+import jcl.lists.NullStruct;
+import jcl.symbols.SymbolStruct;
 
 public class SetqCodeGenerator implements CodeGenerator<ListStruct> {
 

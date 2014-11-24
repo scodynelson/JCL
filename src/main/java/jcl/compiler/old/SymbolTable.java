@@ -1,6 +1,6 @@
 package jcl.compiler.old;
 
-import jcl.structs.symbols.SymbolStruct;
+import jcl.symbols.SymbolStruct;
 
 import java.util.HashMap;
 import java.util.LinkedList;

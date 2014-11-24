@@ -2,8 +2,8 @@ package jcl.compiler.real.sa.specialoperator.body;
 
 import jcl.LispStruct;
 import jcl.LispType;
-import jcl.structs.arrays.StringStruct;
-import jcl.structs.lists.ListStruct;
+import jcl.arrays.StringStruct;
+import jcl.lists.ListStruct;
 
 import java.util.List;
 

@@ -3,7 +3,7 @@ package jcl.compiler.real.sa.specialoperator.compiler;
 import jcl.LispStruct;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.structs.lists.ListStruct;
+import jcl.lists.ListStruct;
 
 public class DefstructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 

@@ -1,7 +1,7 @@
 package jcl.compiler.real.environment;
 
 import jcl.LispType;
-import jcl.structs.symbols.SymbolStruct;
+import jcl.symbols.SymbolStruct;
 
 public class SymbolBinding extends Binding {
 

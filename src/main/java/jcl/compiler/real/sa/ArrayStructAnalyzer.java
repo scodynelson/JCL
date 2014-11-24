@@ -1,7 +1,7 @@
 package jcl.compiler.real.sa;
 
 import jcl.LispStruct;
-import jcl.structs.arrays.ArrayStruct;
+import jcl.arrays.ArrayStruct;
 
 import java.util.List;
 

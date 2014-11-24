@@ -7,12 +7,12 @@ import jcl.compiler.real.environment.LoadTimeValue;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.specialoperator.special.LambdaAnalyzer;
-import jcl.structs.conditions.exceptions.ProgramErrorException;
-import jcl.structs.lists.ListStruct;
-import jcl.structs.lists.NullStruct;
-import jcl.structs.symbols.BooleanStruct;
-import jcl.structs.symbols.SpecialOperator;
-import jcl.structs.symbols.SymbolStruct;
+import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.lists.ListStruct;
+import jcl.lists.NullStruct;
+import jcl.symbols.BooleanStruct;
+import jcl.symbols.SpecialOperator;
+import jcl.symbols.SymbolStruct;
 
 import java.util.ArrayList;
 import java.util.List;

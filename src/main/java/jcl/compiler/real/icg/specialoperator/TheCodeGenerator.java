@@ -2,7 +2,7 @@ package jcl.compiler.real.icg.specialoperator;
 
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
-import jcl.structs.lists.ListStruct;
+import jcl.lists.ListStruct;
 
 public class TheCodeGenerator implements CodeGenerator<ListStruct> {
 

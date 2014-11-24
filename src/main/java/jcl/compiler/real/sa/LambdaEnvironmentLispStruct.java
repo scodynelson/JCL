@@ -2,8 +2,8 @@ package jcl.compiler.real.sa;
 
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.lambdalist.OrdinaryLambdaListBindings;
-import jcl.structs.arrays.StringStruct;
-import jcl.structs.lists.ListStruct;
+import jcl.arrays.StringStruct;
+import jcl.lists.ListStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 

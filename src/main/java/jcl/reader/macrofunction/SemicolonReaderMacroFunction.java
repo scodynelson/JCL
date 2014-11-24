@@ -7,8 +7,8 @@ package jcl.reader.macrofunction;
 import jcl.LispStruct;
 import jcl.reader.CharacterConstants;
 import jcl.reader.Reader;
-import jcl.structs.streams.ReadPeekResult;
-import jcl.structs.symbols.variables.Variable;
+import jcl.streams.ReadPeekResult;
+import jcl.symbols.variables.Variable;
 
 import java.math.BigInteger;
 

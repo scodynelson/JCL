@@ -7,12 +7,12 @@ package jcl.reader.macrofunction;
 import jcl.LispStruct;
 import jcl.reader.CharacterConstants;
 import jcl.reader.Reader;
-import jcl.structs.arrays.StringStruct;
-import jcl.structs.conditions.exceptions.ReaderErrorException;
-import jcl.structs.conditions.exceptions.SimpleErrorException;
-import jcl.structs.conditions.exceptions.TypeErrorException;
-import jcl.structs.streams.ReadPeekResult;
-import jcl.structs.symbols.variables.Variable;
+import jcl.arrays.StringStruct;
+import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.conditions.exceptions.SimpleErrorException;
+import jcl.conditions.exceptions.TypeErrorException;
+import jcl.streams.ReadPeekResult;
+import jcl.symbols.variables.Variable;
 
 import java.math.BigInteger;
 

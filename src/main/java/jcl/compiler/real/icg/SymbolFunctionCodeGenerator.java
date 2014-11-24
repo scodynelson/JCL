@@ -1,8 +1,8 @@
 package jcl.compiler.real.icg;
 
 import jcl.compiler.old.expander.MacroFunctionExpander;
-import jcl.structs.packages.GlobalPackageStruct;
-import jcl.structs.symbols.SymbolStruct;
+import jcl.packages.GlobalPackageStruct;
+import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.Label;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -5,10 +5,10 @@ import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.specialoperator.quote.QuoteListAnalyzer;
 import jcl.compiler.real.sa.specialoperator.quote.QuoteSymbolAnalyzer;
-import jcl.structs.conditions.exceptions.ProgramErrorException;
-import jcl.structs.lists.ListStruct;
-import jcl.structs.symbols.SpecialOperator;
-import jcl.structs.symbols.SymbolStruct;
+import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.lists.ListStruct;
+import jcl.symbols.SpecialOperator;
+import jcl.symbols.SymbolStruct;
 
 public class QuoteAnalyzer implements Analyzer<LispStruct, ListStruct> {
 

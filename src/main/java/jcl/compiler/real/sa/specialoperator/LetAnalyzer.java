@@ -9,10 +9,10 @@ import jcl.compiler.real.sa.EnvironmentLispStruct;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.specialoperator.body.BodyWithDeclaresAnalyzer;
-import jcl.structs.conditions.exceptions.ProgramErrorException;
-import jcl.structs.lists.ListStruct;
-import jcl.structs.symbols.NILStruct;
-import jcl.structs.symbols.SymbolStruct;
+import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.lists.ListStruct;
+import jcl.symbols.NILStruct;
+import jcl.symbols.SymbolStruct;
 
 import java.util.List;
 import java.util.Stack;

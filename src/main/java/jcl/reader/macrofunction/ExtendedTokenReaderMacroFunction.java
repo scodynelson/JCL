@@ -8,7 +8,7 @@ import jcl.reader.AttributeType;
 import jcl.reader.CaseSpec;
 import jcl.reader.Reader;
 import jcl.reader.SyntaxType;
-import jcl.structs.streams.ReadPeekResult;
+import jcl.streams.ReadPeekResult;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 

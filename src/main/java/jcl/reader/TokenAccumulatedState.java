@@ -4,8 +4,8 @@
 
 package jcl.reader;
 
-import jcl.structs.conditions.exceptions.ReaderErrorException;
-import jcl.structs.symbols.variables.Variable;
+import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.symbols.variables.Variable;
 
 import java.util.List;
 

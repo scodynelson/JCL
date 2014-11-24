@@ -2,7 +2,7 @@ package jcl.compiler.real.environment;
 
 import jcl.LispStruct;
 import jcl.LispType;
-import jcl.structs.symbols.SymbolStruct;
+import jcl.symbols.SymbolStruct;
 
 public class EnvironmentBinding extends Binding {
 

@@ -1,7 +1,7 @@
 package jcl.typespecifiers;
 
 import jcl.LispStruct;
-import jcl.structs.functions.PredicateFunctionStruct;
+import jcl.functions.PredicateFunctionStruct;
 import jcl.types.TypeBaseClass;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;

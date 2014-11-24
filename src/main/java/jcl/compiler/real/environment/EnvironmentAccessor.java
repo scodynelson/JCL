@@ -2,10 +2,10 @@ package jcl.compiler.real.environment;
 
 import jcl.LispStruct;
 import jcl.compiler.old.symbol.KeywordOld;
-import jcl.structs.lists.ConsStruct;
-import jcl.structs.lists.ListStruct;
-import jcl.structs.symbols.SymbolStruct;
-import jcl.structs.symbols.TStruct;
+import jcl.lists.ConsStruct;
+import jcl.lists.ListStruct;
+import jcl.symbols.SymbolStruct;
+import jcl.symbols.TStruct;
 import jcl.types.T;
 
 import java.util.List;

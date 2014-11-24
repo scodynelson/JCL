@@ -3,7 +3,7 @@ package jcl.compiler.real.sa;
 import jcl.LispStruct;
 import jcl.LispType;
 import jcl.compiler.real.environment.Environment;
-import jcl.structs.lists.ListStruct;
+import jcl.lists.ListStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 

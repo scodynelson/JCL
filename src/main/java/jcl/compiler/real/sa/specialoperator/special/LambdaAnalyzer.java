@@ -15,10 +15,10 @@ import jcl.compiler.real.sa.LambdaListParser;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.specialoperator.body.BodyWithDeclaresAndDocStringAnalyzer;
-import jcl.structs.conditions.exceptions.ProgramErrorException;
-import jcl.structs.lists.ConsStruct;
-import jcl.structs.lists.ListStruct;
-import jcl.structs.symbols.SpecialOperator;
+import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.lists.ConsStruct;
+import jcl.lists.ListStruct;
+import jcl.symbols.SpecialOperator;
 
 import java.util.ArrayList;
 import java.util.List;

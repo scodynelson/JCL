@@ -2,8 +2,8 @@ package jcl.compiler.real.icg.specialoperator;
 
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
-import jcl.structs.lists.ListStruct;
-import jcl.structs.symbols.SymbolStruct;
+import jcl.lists.ListStruct;
+import jcl.symbols.SymbolStruct;
 
 public class ReturnFromCodeGenerator implements CodeGenerator<ListStruct> {
 

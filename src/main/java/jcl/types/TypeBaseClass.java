@@ -1,9 +1,9 @@
 package jcl.types;
 
 import jcl.LispType;
-import jcl.structs.packages.GlobalPackageStruct;
-import jcl.structs.packages.PackageStruct;
-import jcl.structs.symbols.SymbolStruct;
+import jcl.packages.GlobalPackageStruct;
+import jcl.packages.PackageStruct;
+import jcl.symbols.SymbolStruct;
 
 import java.lang.String;
 

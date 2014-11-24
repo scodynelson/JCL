@@ -1,10 +1,10 @@
 package jcl.compiler.old.functions;
 
 import jcl.compiler.old.symbol.KeywordOld;
-import jcl.structs.arrays.StringStruct;
-import jcl.structs.lists.NullStruct;
-import jcl.structs.pathnames.PathnameStruct;
-import jcl.structs.streams.StreamStruct;
+import jcl.arrays.StringStruct;
+import jcl.lists.NullStruct;
+import jcl.pathnames.PathnameStruct;
+import jcl.streams.StreamStruct;
 
 import java.io.File;
 import java.net.URISyntaxException;

@@ -1,6 +1,6 @@
 package jcl.compiler.real.icg;
 
-import jcl.structs.numbers.RatioStruct;
+import jcl.numbers.RatioStruct;
 
 public class RatioCodeGenerator implements CodeGenerator<RatioStruct> {
 
@@ -12,6 +12,6 @@ public class RatioCodeGenerator implements CodeGenerator<RatioStruct> {
 		codeGenerator.emitter.emitInvokestatic("java/math/BigInteger", "<init>", "(Ljava/lang/String;)", "V", false);
 		codeGenerator.emitter.emitLdc(input.getBigFraction().getDenominator().toString());
 		codeGenerator.emitter.emitInvokestatic("java/math/BigInteger", "<init>", "(Ljava/lang/String;)", "V", false);
-		codeGenerator.emitter.emitInvokestatic("jcl/structs/numbers/RatioStruct", "<init>", "(Ljava/math/BigInteger;Ljava/math/BigInteger;)", "V", false);
+		codeGenerator.emitter.emitInvokestatic("jcl/numbers/RatioStruct", "<init>", "(Ljava/math/BigInteger;Ljava/math/BigInteger;)", "V", false);
 	}
 }

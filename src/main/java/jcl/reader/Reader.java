@@ -5,10 +5,10 @@
 package jcl.reader;
 
 import jcl.LispStruct;
-import jcl.structs.readtables.ReadtableStruct;
-import jcl.structs.streams.InputStream;
-import jcl.structs.streams.ReadPeekResult;
-import jcl.structs.symbols.variables.Variable;
+import jcl.readtables.ReadtableStruct;
+import jcl.streams.InputStream;
+import jcl.streams.ReadPeekResult;
+import jcl.symbols.variables.Variable;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 

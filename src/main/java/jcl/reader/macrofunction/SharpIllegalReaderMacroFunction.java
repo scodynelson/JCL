@@ -6,7 +6,7 @@ package jcl.reader.macrofunction;
 
 import jcl.LispStruct;
 import jcl.reader.Reader;
-import jcl.structs.conditions.exceptions.ReaderErrorException;
+import jcl.conditions.exceptions.ReaderErrorException;
 
 import java.math.BigInteger;
 

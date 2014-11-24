@@ -3,7 +3,7 @@ package jcl.compiler.real.sa.specialoperator.body;
 import jcl.LispStruct;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.structs.lists.ListStruct;
+import jcl.lists.ListStruct;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -4,7 +4,7 @@
 
 package jcl.reader;
 
-import jcl.structs.conditions.exceptions.ReaderErrorException;
+import jcl.conditions.exceptions.ReaderErrorException;
 
 /**
  * Step 2 of the Reader Algorithm.

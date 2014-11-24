@@ -4,13 +4,13 @@
 
 package jcl.reader;
 
-import jcl.structs.conditions.exceptions.ReaderErrorException;
-import jcl.structs.packages.GlobalPackageStruct;
-import jcl.structs.packages.PackageStruct;
-import jcl.structs.packages.PackageSymbolStruct;
-import jcl.structs.symbols.KeywordSymbolStruct;
-import jcl.structs.symbols.SymbolStruct;
-import jcl.structs.symbols.variables.Variable;
+import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.packages.GlobalPackageStruct;
+import jcl.packages.PackageStruct;
+import jcl.packages.PackageSymbolStruct;
+import jcl.symbols.KeywordSymbolStruct;
+import jcl.symbols.SymbolStruct;
+import jcl.symbols.variables.Variable;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;

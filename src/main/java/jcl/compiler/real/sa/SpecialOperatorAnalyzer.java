@@ -28,9 +28,9 @@ import jcl.compiler.real.sa.specialoperator.ThrowAnalyzer;
 import jcl.compiler.real.sa.specialoperator.UnwindProtectAnalyzer;
 import jcl.compiler.real.sa.specialoperator.compiler.DefstructAnalyzer;
 import jcl.compiler.real.sa.specialoperator.special.LambdaAnalyzer;
-import jcl.structs.conditions.exceptions.ProgramErrorException;
-import jcl.structs.lists.ListStruct;
-import jcl.structs.symbols.SpecialOperator;
+import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.lists.ListStruct;
+import jcl.symbols.SpecialOperator;
 
 import java.util.HashMap;
 import java.util.Map;

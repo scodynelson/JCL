@@ -1,6 +1,6 @@
 package jcl.compiler.real.icg;
 
-import jcl.structs.characters.CharacterStruct;
+import jcl.characters.CharacterStruct;
 
 public class CharacterCodeGenerator implements CodeGenerator<CharacterStruct> {
 
@@ -9,6 +9,6 @@ public class CharacterCodeGenerator implements CodeGenerator<CharacterStruct> {
 	@Override
 	public void generate(final CharacterStruct input, final IntermediateCodeGenerator codeGenerator) {
 		codeGenerator.emitter.emitIconst(input.getCodePoint());
-		codeGenerator.emitter.emitInvokestatic("jcl/structs/characters/CharacterStruct", "<init>", "(I)", "V", false);
+		codeGenerator.emitter.emitInvokestatic("jcl/characters/CharacterStruct", "<init>", "(I)", "V", false);
 	}
 }

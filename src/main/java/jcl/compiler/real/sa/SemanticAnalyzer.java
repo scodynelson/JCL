@@ -3,11 +3,11 @@ package jcl.compiler.real.sa;
 import jcl.LispStruct;
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.Environment;
-import jcl.structs.arrays.ArrayStruct;
-import jcl.structs.lists.ListStruct;
-import jcl.structs.lists.NullStruct;
-import jcl.structs.symbols.SpecialOperator;
-import jcl.structs.symbols.SymbolStruct;
+import jcl.arrays.ArrayStruct;
+import jcl.lists.ListStruct;
+import jcl.lists.NullStruct;
+import jcl.symbols.SpecialOperator;
+import jcl.symbols.SymbolStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

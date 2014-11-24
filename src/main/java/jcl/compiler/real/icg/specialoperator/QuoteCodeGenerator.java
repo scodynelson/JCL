@@ -6,12 +6,12 @@ import jcl.compiler.real.icg.FloatCodeGenerator;
 import jcl.compiler.real.icg.IntegerCodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.RatioCodeGenerator;
-import jcl.structs.lists.ListStruct;
-import jcl.structs.numbers.ComplexStruct;
-import jcl.structs.numbers.FloatStruct;
-import jcl.structs.numbers.IntegerStruct;
-import jcl.structs.numbers.RatioStruct;
-import jcl.structs.symbols.SymbolStruct;
+import jcl.lists.ListStruct;
+import jcl.numbers.ComplexStruct;
+import jcl.numbers.FloatStruct;
+import jcl.numbers.IntegerStruct;
+import jcl.numbers.RatioStruct;
+import jcl.symbols.SymbolStruct;
 
 public class QuoteCodeGenerator implements CodeGenerator<ListStruct> {
 

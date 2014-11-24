@@ -9,10 +9,10 @@ import jcl.compiler.real.environment.PositionAllocation;
 import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
-import jcl.structs.lists.ListStruct;
-import jcl.structs.lists.NullStruct;
-import jcl.structs.symbols.SpecialOperator;
-import jcl.structs.symbols.SymbolStruct;
+import jcl.lists.ListStruct;
+import jcl.lists.NullStruct;
+import jcl.symbols.SpecialOperator;
+import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.Label;
 
 import java.util.List;

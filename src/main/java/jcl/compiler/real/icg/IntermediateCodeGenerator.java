@@ -15,19 +15,19 @@ import jcl.compiler.real.environment.SymbolBinding;
 import jcl.compiler.real.environment.SymbolTable;
 import jcl.compiler.real.environment.lambdalist.RequiredBinding;
 import jcl.compiler.real.icg.specialoperator.TagbodyCodeGenerator;
-import jcl.structs.characters.CharacterStruct;
-import jcl.structs.lists.ListStruct;
-import jcl.structs.lists.NullStruct;
-import jcl.structs.numbers.ComplexStruct;
-import jcl.structs.numbers.FloatStruct;
-import jcl.structs.numbers.IntegerStruct;
-import jcl.structs.numbers.RatioStruct;
-import jcl.structs.packages.GlobalPackageStruct;
-import jcl.structs.packages.PackageStruct;
-import jcl.structs.symbols.NILStruct;
-import jcl.structs.symbols.SpecialOperator;
-import jcl.structs.symbols.SymbolStruct;
-import jcl.structs.symbols.TStruct;
+import jcl.characters.CharacterStruct;
+import jcl.lists.ListStruct;
+import jcl.lists.NullStruct;
+import jcl.numbers.ComplexStruct;
+import jcl.numbers.FloatStruct;
+import jcl.numbers.IntegerStruct;
+import jcl.numbers.RatioStruct;
+import jcl.packages.GlobalPackageStruct;
+import jcl.packages.PackageStruct;
+import jcl.symbols.NILStruct;
+import jcl.symbols.SpecialOperator;
+import jcl.symbols.SymbolStruct;
+import jcl.symbols.TStruct;
 import org.apache.commons.collections4.CollectionUtils;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
@@ -160,9 +160,9 @@ public class IntermediateCodeGenerator {
 
 	public <X extends LispStruct> void genCodeSpecialVariable(final SymbolStruct<X> sym) {
 		if (sym.equals(NILStruct.INSTANCE)) {
-			emitter.emitGetstatic("jcl/structs/symbols/NILStruct", "INSTANCE", "Ljcl/symbols/NILStruct;");
+			emitter.emitGetstatic("jcl/symbols/NILStruct", "INSTANCE", "Ljcl/symbols/NILStruct;");
 		} else if (sym.equals(TStruct.INSTANCE)) {
-			emitter.emitGetstatic("jcl/structs/symbols/TStruct", "INSTANCE", "Ljcl/symbols/TStruct;");
+			emitter.emitGetstatic("jcl/symbols/TStruct", "INSTANCE", "Ljcl/symbols/TStruct;");
 		} else {
 			// push current package
 			emitSymbolPackage(sym);

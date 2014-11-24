@@ -2,7 +2,7 @@ package jcl.compiler.real.environment;
 
 import jcl.LispStruct;
 import jcl.LispType;
-import jcl.structs.symbols.SymbolStruct;
+import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 

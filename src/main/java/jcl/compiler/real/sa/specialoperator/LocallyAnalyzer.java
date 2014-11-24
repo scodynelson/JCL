@@ -5,8 +5,8 @@ import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.specialoperator.body.BodyWithDeclaresAnalyzer;
-import jcl.structs.lists.ListStruct;
-import jcl.structs.symbols.SpecialOperator;
+import jcl.lists.ListStruct;
+import jcl.symbols.SpecialOperator;
 
 import java.util.ArrayList;
 import java.util.List;

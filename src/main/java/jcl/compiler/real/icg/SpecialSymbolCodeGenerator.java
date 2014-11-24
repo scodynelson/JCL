@@ -1,7 +1,7 @@
 package jcl.compiler.real.icg;
 
 import jcl.compiler.real.environment.EnvironmentAccessor;
-import jcl.structs.symbols.SymbolStruct;
+import jcl.symbols.SymbolStruct;
 
 public class SpecialSymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 

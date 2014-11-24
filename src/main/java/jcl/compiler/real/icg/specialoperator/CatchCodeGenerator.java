@@ -2,8 +2,8 @@ package jcl.compiler.real.icg.specialoperator;
 
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
-import jcl.structs.lists.ListStruct;
-import jcl.structs.lists.NullStruct;
+import jcl.lists.ListStruct;
+import jcl.lists.NullStruct;
 import org.objectweb.asm.Label;
 
 public class CatchCodeGenerator implements CodeGenerator<ListStruct> {

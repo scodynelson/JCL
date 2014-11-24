@@ -2,9 +2,9 @@ package jcl.compiler.old;
 
 import jcl.LispStruct;
 import jcl.compiler.old.symbol.Closure;
-import jcl.structs.functions.FunctionStruct;
-import jcl.structs.lists.ListStruct;
-import jcl.structs.lists.NullStruct;
+import jcl.functions.FunctionStruct;
+import jcl.lists.ListStruct;
+import jcl.lists.NullStruct;
 
 import java.util.Stack;
 

@@ -1,6 +1,6 @@
 package jcl.compiler.old.symbol;
 
-import jcl.structs.symbols.KeywordSymbolStruct;
+import jcl.symbols.KeywordSymbolStruct;
 
 public class KeywordOld {
 

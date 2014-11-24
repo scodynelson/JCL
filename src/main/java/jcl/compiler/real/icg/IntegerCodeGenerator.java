@@ -1,6 +1,6 @@
 package jcl.compiler.real.icg;
 
-import jcl.structs.numbers.IntegerStruct;
+import jcl.numbers.IntegerStruct;
 
 public class IntegerCodeGenerator implements CodeGenerator<IntegerStruct> {
 
@@ -10,6 +10,6 @@ public class IntegerCodeGenerator implements CodeGenerator<IntegerStruct> {
 	public void generate(final IntegerStruct input, final IntermediateCodeGenerator codeGenerator) {
 		codeGenerator.emitter.emitLdc(input.getBigInteger().toString());
 		codeGenerator.emitter.emitInvokestatic("java/math/BigInteger", "<init>", "(Ljava/lang/String;)", "V", false);
-		codeGenerator.emitter.emitInvokestatic("jcl/structs/numbers/IntegerStruct", "<init>", "(Ljava/math/BigInteger;)", "V", false);
+		codeGenerator.emitter.emitInvokestatic("jcl/numbers/IntegerStruct", "<init>", "(Ljava/math/BigInteger;)", "V", false);
 	}
 }

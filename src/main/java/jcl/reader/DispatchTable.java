@@ -6,8 +6,8 @@ package jcl.reader;
 
 import jcl.LispStruct;
 import jcl.reader.macrofunction.ReaderMacroFunction;
-import jcl.structs.conditions.exceptions.ReaderErrorException;
-import jcl.structs.streams.ReadPeekResult;
+import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.streams.ReadPeekResult;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 

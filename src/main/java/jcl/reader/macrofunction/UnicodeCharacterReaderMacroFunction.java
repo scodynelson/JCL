@@ -5,8 +5,8 @@
 package jcl.reader.macrofunction;
 
 import jcl.reader.Reader;
-import jcl.structs.conditions.exceptions.ReaderErrorException;
-import jcl.structs.streams.ReadPeekResult;
+import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.streams.ReadPeekResult;
 
 /**
  * Reader Macro Function for handling the reading unicode character.

@@ -7,10 +7,10 @@ package jcl.reader.macrofunction;
 import jcl.LispStruct;
 import jcl.reader.CharacterConstants;
 import jcl.reader.Reader;
-import jcl.structs.conditions.exceptions.ReaderErrorException;
-import jcl.structs.lists.ListStruct;
-import jcl.structs.symbols.SpecialOperator;
-import jcl.structs.symbols.variables.Variable;
+import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.lists.ListStruct;
+import jcl.symbols.SpecialOperator;
+import jcl.symbols.variables.Variable;
 
 import java.math.BigInteger;
 

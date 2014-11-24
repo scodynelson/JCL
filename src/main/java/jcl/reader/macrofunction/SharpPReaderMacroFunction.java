@@ -7,10 +7,10 @@ package jcl.reader.macrofunction;
 import jcl.LispStruct;
 import jcl.reader.CharacterConstants;
 import jcl.reader.Reader;
-import jcl.structs.arrays.StringStruct;
-import jcl.structs.conditions.exceptions.ReaderErrorException;
-import jcl.structs.pathnames.PathnameStruct;
-import jcl.structs.symbols.variables.Variable;
+import jcl.arrays.StringStruct;
+import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.pathnames.PathnameStruct;
+import jcl.symbols.variables.Variable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

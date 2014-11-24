@@ -1,9 +1,9 @@
 package jcl.compiler.real.icg;
 
-import jcl.structs.functions.FunctionStruct;
-import jcl.structs.lists.ListStruct;
-import jcl.structs.lists.NullStruct;
-import jcl.structs.symbols.SymbolStruct;
+import jcl.functions.FunctionStruct;
+import jcl.lists.ListStruct;
+import jcl.lists.NullStruct;
+import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.Label;
 
 public class FunctionCallCodeGenerator implements CodeGenerator<ListStruct> {

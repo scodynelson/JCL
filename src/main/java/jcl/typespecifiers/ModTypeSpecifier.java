@@ -1,6 +1,6 @@
 package jcl.typespecifiers;
 
-import jcl.structs.numbers.IntegerStruct;
+import jcl.numbers.IntegerStruct;
 import jcl.types.TypeBaseClass;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;

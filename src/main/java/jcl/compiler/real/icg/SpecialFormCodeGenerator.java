@@ -26,9 +26,9 @@ import jcl.compiler.real.icg.specialoperator.UnwindProtectCodeGenerator;
 import jcl.compiler.real.icg.specialoperator.compiler.DefstructCodeGenerator;
 import jcl.compiler.real.icg.specialoperator.compiler.TailRecursionCodeGenerator;
 import jcl.compiler.real.icg.specialoperator.special.LambdaCodeGenerator;
-import jcl.structs.lists.ListStruct;
-import jcl.structs.symbols.SpecialOperator;
-import jcl.structs.symbols.SymbolStruct;
+import jcl.lists.ListStruct;
+import jcl.symbols.SpecialOperator;
+import jcl.symbols.SymbolStruct;
 
 public class SpecialFormCodeGenerator implements CodeGenerator<ListStruct> {
 

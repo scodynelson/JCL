@@ -1,9 +1,9 @@
 package jcl;
 
-import jcl.structs.symbols.Constant;
-import jcl.structs.symbols.Declaration;
-import jcl.structs.symbols.SymbolStruct;
-import jcl.structs.symbols.variables.Variable;
+import jcl.symbols.Constant;
+import jcl.symbols.Declaration;
+import jcl.symbols.SymbolStruct;
+import jcl.symbols.variables.Variable;
 
 public interface CommonLispSymbols {
 

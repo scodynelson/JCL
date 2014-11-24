@@ -8,7 +8,7 @@ import jcl.LispStruct;
 import jcl.reader.AttributeType;
 import jcl.reader.Reader;
 import jcl.reader.SyntaxType;
-import jcl.structs.functions.FunctionStruct;
+import jcl.functions.FunctionStruct;
 
 import java.math.BigInteger;
 

@@ -1,10 +1,10 @@
 package jcl.compiler.real.icg;
 
-import jcl.structs.numbers.ComplexStruct;
-import jcl.structs.numbers.FloatStruct;
-import jcl.structs.numbers.IntegerStruct;
-import jcl.structs.numbers.RatioStruct;
-import jcl.structs.numbers.RealStruct;
+import jcl.numbers.ComplexStruct;
+import jcl.numbers.FloatStruct;
+import jcl.numbers.IntegerStruct;
+import jcl.numbers.RatioStruct;
+import jcl.numbers.RealStruct;
 
 public class ComplexCodeGenerator implements CodeGenerator<ComplexStruct> {
 
@@ -36,6 +36,6 @@ public class ComplexCodeGenerator implements CodeGenerator<ComplexStruct> {
 			throw new RuntimeException("Only reals are valid for the Complex 'real' part.");
 		}
 
-		codeGenerator.emitter.emitInvokestatic("jcl/structs/numbers/ComplexStruct", "getInstance", "(Ljcl/numbers/RealStruct;Ljcl/numbers/RealStruct;)", "Ljcl/numbers/ComplexStruc;", false);
+		codeGenerator.emitter.emitInvokestatic("jcl/numbers/ComplexStruct", "getInstance", "(Ljcl/numbers/RealStruct;Ljcl/numbers/RealStruct;)", "Ljcl/numbers/ComplexStruc;", false);
 	}
 }

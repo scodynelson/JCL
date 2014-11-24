@@ -1,8 +1,8 @@
 package jcl.compiler.old.functions;
 
 import jcl.LispStruct;
-import jcl.structs.lists.ListStruct;
-import jcl.structs.lists.NullStruct;
+import jcl.lists.ListStruct;
+import jcl.lists.NullStruct;
 
 /**
  * Implementation of the Common Lisp function <CODE>MACROEXPAND</CODE>

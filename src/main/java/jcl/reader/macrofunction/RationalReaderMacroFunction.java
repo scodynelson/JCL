@@ -6,10 +6,10 @@ package jcl.reader.macrofunction;
 
 import jcl.LispStruct;
 import jcl.reader.Reader;
-import jcl.structs.conditions.exceptions.ReaderErrorException;
-import jcl.structs.numbers.IntegerStruct;
-import jcl.structs.numbers.RationalStruct;
-import jcl.structs.symbols.variables.Variable;
+import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.numbers.IntegerStruct;
+import jcl.numbers.RationalStruct;
+import jcl.symbols.variables.Variable;
 import org.apache.commons.lang3.Range;
 
 import java.math.BigInteger;

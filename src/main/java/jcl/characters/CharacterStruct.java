@@ -5,7 +5,7 @@
 package jcl.characters;
 
 import jcl.classes.BuiltInClassStruct;
-import jcl.symbols.variables.Variable;
+import jcl.printer.PrinterVariables;
 import jcl.types.BaseChar;
 import jcl.types.Character;
 import jcl.types.ExtendedChar;
@@ -79,7 +79,7 @@ public class CharacterStruct extends BuiltInClassStruct {
 
 	@Override
 	public String printStruct() {
-		final boolean printEscape = Variable.PRINT_ESCAPE.getValue().booleanValue();
+		final boolean printEscape = PrinterVariables.PRINT_ESCAPE.getValue().booleanValue();
 
 		final StringBuilder stringBuilder = new StringBuilder();
 		if (printEscape) {

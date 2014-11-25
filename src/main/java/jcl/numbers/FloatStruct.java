@@ -4,7 +4,7 @@
 
 package jcl.numbers;
 
-import jcl.symbols.variables.Variable;
+import jcl.reader.ReaderVariables;
 import jcl.types.DoubleFloat;
 import jcl.types.Float;
 import jcl.types.LongFloat;
@@ -60,7 +60,7 @@ public class FloatStruct extends RealStruct {
 	@Override
 	public String printStruct() {
 		final Float floatFormat = (Float) getType();
-		final Float defaultFloatFormat = Variable.READ_DEFAULT_FLOAT_FORMAT.getValue();
+		final Float defaultFloatFormat = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getValue();
 
 		String bigDecimalString = bigDecimal.toString();
 		if (!floatFormat.equals(defaultFloatFormat)) {

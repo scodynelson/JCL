@@ -2,11 +2,11 @@ package jcl.compiler.old.functions;
 
 import jcl.LispStruct;
 import jcl.compiler.old.expander.MacroFunctionExpander;
+import jcl.compiler.real.CompilerVariables;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.SymbolStruct;
-import jcl.symbols.variables.Variable;
 
 /**
  * Implements the Common Lisp function Macroex[and-1.
@@ -56,7 +56,7 @@ public class MacroExpand1Function {
 				if (expander instanceof MacroFunctionExpander) {
 					//found a macro function, now casting it to a macro function
 					// get the macroexpand-hook
-					FunctionStruct theHookFn = Variable.MACROEXPAND_HOOK.getValue();
+					FunctionStruct theHookFn = CompilerVariables.MACROEXPAND_HOOK.getValue();
 					LispStruct hookResult = theHookFn.apply(expander, form, env);
 					return new MacroExpandReturn(hookResult, true);
 				}

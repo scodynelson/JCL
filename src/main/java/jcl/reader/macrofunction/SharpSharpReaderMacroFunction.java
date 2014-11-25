@@ -5,10 +5,10 @@
 package jcl.reader.macrofunction;
 
 import jcl.LispStruct;
-import jcl.reader.CharacterConstants;
-import jcl.reader.Reader;
+import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.symbols.variables.Variable;
+import jcl.reader.Reader;
+import jcl.reader.ReaderVariables;
 
 import java.math.BigInteger;
 import java.util.UUID;
@@ -33,7 +33,7 @@ public final class SharpSharpReaderMacroFunction extends ReaderMacroFunction {
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.NUMBER_SIGN;
 
-		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			return null;
 		}
 

@@ -1,5 +1,6 @@
 package jcl.reader;
 
+import jcl.characters.CharacterConstants;
 import jcl.reader.macrofunction.ApostropheReaderMacroFunction;
 import jcl.reader.macrofunction.LeftParenthesisReaderMacroFunction;
 import jcl.reader.macrofunction.QuotationMarkReaderMacroFunction;

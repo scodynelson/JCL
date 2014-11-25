@@ -4,11 +4,11 @@
 
 package jcl.reader;
 
+import jcl.characters.CharacterConstants;
 import jcl.numbers.FloatStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.NumberStruct;
 import jcl.numbers.RatioStruct;
-import jcl.symbols.variables.Variable;
 import jcl.types.DoubleFloat;
 import jcl.types.Float;
 import jcl.types.LongFloat;
@@ -124,7 +124,7 @@ final class NumberTokenAccumulatedState implements State {
 		// Check all 'ALPHADIGIT' tokens to make sure they are digits within the current radix
 		// Unicode (not in original spec)
 		//  Check to make sure all digits are from the same Unicode block
-		final int currentRadix = Variable.READ_BASE.getValue().getBigInteger().intValueExact();
+		final int currentRadix = ReaderVariables.READ_BASE.getValue().getBigInteger().intValueExact();
 		final TokenAttribute firstTokenAttribute = tokenAttributes.getFirst();
 		final int firstToken = firstTokenAttribute.getToken();
 
@@ -332,7 +332,7 @@ final class NumberTokenAccumulatedState implements State {
 	 * @return the proper float type
 	 */
 	private static Float getFloatType(final Integer exponentToken) {
-		Float floatType = Variable.READ_DEFAULT_FLOAT_FORMAT.getValue();
+		Float floatType = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getValue();
 
 		if (exponentToken != null) {
 			final int exponentTokenInt = exponentToken;
@@ -345,7 +345,7 @@ final class NumberTokenAccumulatedState implements State {
 			} else if ((exponentTokenInt == CharacterConstants.LATIN_SMALL_LETTER_L) || (exponentTokenInt == CharacterConstants.LATIN_CAPITAL_LETTER_L)) {
 				floatType = LongFloat.INSTANCE;
 			} else if ((exponentTokenInt == CharacterConstants.LATIN_SMALL_LETTER_E) || (exponentTokenInt == CharacterConstants.LATIN_CAPITAL_LETTER_E)) {
-				floatType = Variable.READ_DEFAULT_FLOAT_FORMAT.getValue();
+				floatType = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getValue();
 			}
 		}
 		return floatType;

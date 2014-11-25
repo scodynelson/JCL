@@ -4,7 +4,7 @@ import jcl.LispStruct;
 import jcl.classes.BuiltInClassStruct;
 import jcl.functions.FunctionStruct;
 import jcl.packages.PackageStruct;
-import jcl.symbols.variables.Variable;
+import jcl.printer.PrinterVariables;
 import jcl.types.NIL;
 import jcl.types.Symbol;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -288,7 +288,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 
 	@Override
 	public String printStruct() {
-		final BooleanStruct<?> printEscape = Variable.PRINT_ESCAPE.getValue();
+		final BooleanStruct<?> printEscape = PrinterVariables.PRINT_ESCAPE.getValue();
 
 		if (printEscape.booleanValue()) {
 			return name; // TODO: deal with *PRINT-CASE*

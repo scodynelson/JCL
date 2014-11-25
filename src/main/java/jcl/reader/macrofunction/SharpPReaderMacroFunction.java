@@ -5,12 +5,12 @@
 package jcl.reader.macrofunction;
 
 import jcl.LispStruct;
-import jcl.reader.CharacterConstants;
-import jcl.reader.Reader;
 import jcl.arrays.StringStruct;
+import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.pathnames.PathnameStruct;
-import jcl.symbols.variables.Variable;
+import jcl.reader.Reader;
+import jcl.reader.ReaderVariables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +43,7 @@ public final class SharpPReaderMacroFunction extends ReaderMacroFunction {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_P) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_P);
 
 		final LispStruct lispToken = reader.read();
-		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("{} suppressed.", lispToken.printStruct());
 			}

@@ -2,7 +2,7 @@ package jcl.arrays;
 
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.numbers.IntegerStruct;
-import jcl.symbols.variables.Variable;
+import jcl.printer.PrinterVariables;
 import jcl.types.Bit;
 import jcl.types.BitVector;
 import jcl.types.SimpleBitVector;
@@ -90,7 +90,7 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 
 	@Override
 	public String printStruct() {
-		final boolean printArray = Variable.PRINT_ARRAY.getValue().booleanValue();
+		final boolean printArray = PrinterVariables.PRINT_ARRAY.getValue().booleanValue();
 
 		final StringBuilder stringBuilder = new StringBuilder();
 

@@ -5,17 +5,19 @@
 package jcl.reader.macrofunction;
 
 import jcl.LispStruct;
-import jcl.reader.Reader;
+import jcl.compiler.real.CompilerVariables;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
+import jcl.packages.PackageVariables;
+import jcl.reader.Reader;
+import jcl.reader.ReaderVariables;
 import jcl.symbols.BooleanStruct;
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.TStruct;
-import jcl.symbols.variables.Variable;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
@@ -73,18 +75,18 @@ abstract class FeaturesReaderMacroFunction extends ReaderMacroFunction {
 	 * 		the {@link Reader} used to read in the next token
 	 */
 	void readFeatures(final Reader reader) {
-		final BooleanStruct<?> previousReadSuppress = Variable.READ_SUPPRESS.getValue();
-		final PackageStruct previousPackage = Variable.PACKAGE.getValue();
+		final BooleanStruct<?> previousReadSuppress = ReaderVariables.READ_SUPPRESS.getValue();
+		final PackageStruct previousPackage = PackageVariables.PACKAGE.getValue();
 		try {
-			Variable.READ_SUPPRESS.setValue(NILStruct.INSTANCE);
+			ReaderVariables.READ_SUPPRESS.setValue(NILStruct.INSTANCE);
 
-			Variable.PACKAGE.setValue(GlobalPackageStruct.KEYWORD);
+			PackageVariables.PACKAGE.setValue(GlobalPackageStruct.KEYWORD);
 			final LispStruct lispStruct = reader.read();
-			Variable.PACKAGE.setValue(previousPackage);
+			PackageVariables.PACKAGE.setValue(previousPackage);
 
 			final boolean isFeature = isFeature(lispStruct);
 			if (isFeature && shouldHideFeatures) {
-				Variable.READ_SUPPRESS.setValue(TStruct.INSTANCE);
+				ReaderVariables.READ_SUPPRESS.setValue(TStruct.INSTANCE);
 				reader.read();
 			}
 		} catch (final ReaderErrorException ree) {
@@ -92,8 +94,8 @@ abstract class FeaturesReaderMacroFunction extends ReaderMacroFunction {
 				LOGGER.debug("Error occurred when reading feature.", ree);
 			}
 		} finally {
-			Variable.PACKAGE.setValue(previousPackage);
-			Variable.READ_SUPPRESS.setValue(previousReadSuppress);
+			PackageVariables.PACKAGE.setValue(previousPackage);
+			ReaderVariables.READ_SUPPRESS.setValue(previousReadSuppress);
 		}
 	}
 
@@ -114,7 +116,7 @@ abstract class FeaturesReaderMacroFunction extends ReaderMacroFunction {
 		if (lispStruct instanceof ListStruct) {
 			return isListFeature((ListStruct) lispStruct);
 		} else {
-			final List<LispStruct> featuresList = Variable.FEATURES.getValue().getAsJavaList();
+			final List<LispStruct> featuresList = CompilerVariables.FEATURES.getValue().getAsJavaList();
 			return featuresList.contains(lispStruct);
 		}
 	}

@@ -5,7 +5,7 @@
 package jcl.reader.macrofunction;
 
 import jcl.LispStruct;
-import jcl.reader.CharacterConstants;
+import jcl.characters.CharacterConstants;
 import jcl.reader.Reader;
 
 import java.math.BigInteger;

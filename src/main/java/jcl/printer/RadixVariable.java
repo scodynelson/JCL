@@ -1,14 +1,15 @@
-package jcl.symbols.variables;
+package jcl.printer;
 
 import jcl.numbers.IntegerStruct;
 import jcl.packages.PackageStruct;
+import jcl.symbols.Variable;
 import org.apache.commons.lang3.Range;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
 
-class RadixVariable extends Variable<IntegerStruct> {
+public class RadixVariable extends Variable<IntegerStruct> {
 
 	private static final IntegerStruct TEN = new IntegerStruct(BigInteger.TEN);
 
@@ -18,7 +19,7 @@ class RadixVariable extends Variable<IntegerStruct> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RadixVariable.class);
 
-	RadixVariable(final String name, final PackageStruct symbolPackage) {
+	public RadixVariable(final String name, final PackageStruct symbolPackage) {
 		super(name, symbolPackage, TEN);
 	}
 

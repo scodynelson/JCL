@@ -10,6 +10,7 @@ import jcl.compiler.old.expander.MacroFunctionExpander;
 import jcl.compiler.old.symbol.KeywordOld;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.packages.PackageVariables;
 import jcl.reader.Reader;
 import jcl.arrays.StringStruct;
 import jcl.lists.ConsStruct;
@@ -22,7 +23,6 @@ import jcl.streams.CharacterStreamStruct;
 import jcl.symbols.Declaration;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
-import jcl.symbols.variables.Variable;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.util.CheckClassAdapter;
 import org.w3c.dom.Document;
@@ -86,8 +86,8 @@ public class CompileFileFunction {
 		} else if (!correctInputType) {
 			throw new RuntimeException("file to compile must be of type .lsp or .lisp");
 		}
-		final PackageStruct oldPackageVarValue = Variable.PACKAGE.getValue();
-		((SymbolStruct) Variable.PACKAGE).setValue(Variable.PACKAGE.getValue());
+		final PackageStruct oldPackageVarValue = PackageVariables.PACKAGE.getValue();
+		((SymbolStruct) PackageVariables.PACKAGE).setValue(PackageVariables.PACKAGE.getValue());
 
 		try {
 			// bind *package* to itself
@@ -331,7 +331,7 @@ public class CompileFileFunction {
 			e.printStackTrace();
 			throw new RuntimeException("Exception caught in COMPILE-FILE:");
 		} finally {
-			((SymbolStruct) Variable.PACKAGE).setValue(oldPackageVarValue);
+			((SymbolStruct) PackageVariables.PACKAGE).setValue(oldPackageVarValue);
 		}
 	}
 

@@ -5,7 +5,7 @@ import jcl.LispType;
 import jcl.classes.BuiltInClassStruct;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
-import jcl.symbols.variables.Variable;
+import jcl.printer.PrinterVariables;
 import jcl.types.Array;
 import jcl.types.SimpleArray;
 import jcl.types.T;
@@ -279,8 +279,8 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	public String printStruct() {
 		// TODO: Ignoring *PRINT-LEVEL* and *PRINT-LENGTH*
 
-		final boolean printArray = Variable.PRINT_ARRAY.getValue().booleanValue();
-		final boolean printReadably = Variable.PRINT_READABLY.getValue().booleanValue();
+		final boolean printArray = PrinterVariables.PRINT_ARRAY.getValue().booleanValue();
+		final boolean printReadably = PrinterVariables.PRINT_READABLY.getValue().booleanValue();
 
 		final StringBuilder stringBuilder = new StringBuilder();
 

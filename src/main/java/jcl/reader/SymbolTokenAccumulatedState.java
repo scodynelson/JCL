@@ -8,9 +8,9 @@ import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageSymbolStruct;
+import jcl.packages.PackageVariables;
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SymbolStruct;
-import jcl.symbols.variables.Variable;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -99,7 +99,7 @@ final class SymbolTokenAccumulatedState implements State {
 		if (hasNoPackageMarkers) {
 			final String symName = State.convertTokensToString(tokenAttributes);
 
-			final PackageStruct pkg = Variable.PACKAGE.getValue();
+			final PackageStruct pkg = PackageVariables.PACKAGE.getValue();
 			final PackageSymbolStruct packageSymbol = pkg.findSymbol(symName);
 			if (packageSymbol == null) {
 //				tokenBuilder.setErrorMessage("Unbound variable: " + symName); // TODO: This check will happen in the compiler...

@@ -5,11 +5,11 @@
 package jcl.reader.macrofunction;
 
 import jcl.LispStruct;
-import jcl.reader.Reader;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.RationalStruct;
-import jcl.symbols.variables.Variable;
+import jcl.reader.Reader;
+import jcl.reader.ReaderVariables;
 import org.apache.commons.lang3.Range;
 
 import java.math.BigInteger;
@@ -46,7 +46,7 @@ abstract class RationalReaderMacroFunction extends ExtendedTokenReaderMacroFunct
 	 * @return the properly parsed {@link RationalStruct}
 	 */
 	RationalStruct readRational(final Reader reader, final BigInteger radix) {
-		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			readExtendedToken(reader);
 			return null;
 		}
@@ -59,16 +59,16 @@ abstract class RationalReaderMacroFunction extends ExtendedTokenReaderMacroFunct
 			throw new ReaderErrorException("Illegal radix for #R: " + radix + '.');
 		}
 
-		final IntegerStruct previousReadBase = Variable.READ_BASE.getValue();
+		final IntegerStruct previousReadBase = ReaderVariables.READ_BASE.getValue();
 
 		// alter the read-base
-		Variable.READ_BASE.setValue(new IntegerStruct(radix));
+		ReaderVariables.READ_BASE.setValue(new IntegerStruct(radix));
 
 		// read rational
 		final LispStruct lispToken = reader.read();
 
 		// reset the read-base
-		Variable.READ_BASE.setValue(previousReadBase);
+		ReaderVariables.READ_BASE.setValue(previousReadBase);
 
 		if (lispToken instanceof RationalStruct) {
 			return (RationalStruct) lispToken;

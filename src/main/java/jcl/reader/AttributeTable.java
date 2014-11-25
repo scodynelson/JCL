@@ -4,7 +4,6 @@
 
 package jcl.reader;
 
-import jcl.symbols.variables.Variable;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -170,7 +169,7 @@ public class AttributeTable {
 		if (attributeTypeMap.containsKey(codePoint)) {
 			AttributeType attributeType = attributeTypeMap.get(codePoint);
 
-			final boolean hasHighRadix = Variable.READ_BASE.getValue().getBigInteger().intValueExact() > 13;
+			final boolean hasHighRadix = ReaderVariables.READ_BASE.getValue().getBigInteger().intValueExact() > 13;
 			if (hasHighRadix && (attributeType == AttributeType.EXPONENTMARKER)) {
 				attributeType = AttributeType.ALPHADIGIT;
 			}

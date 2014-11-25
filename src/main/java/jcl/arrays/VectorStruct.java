@@ -4,8 +4,8 @@ import jcl.LispStruct;
 import jcl.LispType;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
+import jcl.printer.PrinterVariables;
 import jcl.sequences.SequenceStruct;
-import jcl.symbols.variables.Variable;
 import jcl.types.SimpleVector;
 import jcl.types.T;
 import jcl.types.Vector;
@@ -184,8 +184,8 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	public String printStruct() {
 		// TODO: Ignoring *PRINT-LEVEL* and *PRINT-LENGTH*
 
-		final boolean printArray = Variable.PRINT_ARRAY.getValue().booleanValue();
-		final boolean printReadably = Variable.PRINT_READABLY.getValue().booleanValue();
+		final boolean printArray = PrinterVariables.PRINT_ARRAY.getValue().booleanValue();
+		final boolean printReadably = PrinterVariables.PRINT_READABLY.getValue().booleanValue();
 
 		final StringBuilder stringBuilder = new StringBuilder();
 

@@ -5,7 +5,6 @@
 package jcl.reader;
 
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.symbols.variables.Variable;
 
 import java.util.List;
 
@@ -45,7 +44,7 @@ final class TokenAccumulatedState implements State {
 			return;
 		}
 
-		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			tokenBuilder.setReturnToken(null);
 			return;
 		}

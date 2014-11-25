@@ -6,8 +6,8 @@ package jcl.pathnames;
 
 import jcl.classes.BuiltInClassStruct;
 import jcl.conditions.exceptions.SimpleErrorException;
+import jcl.printer.PrinterVariables;
 import jcl.symbols.BooleanStruct;
-import jcl.symbols.variables.Variable;
 import jcl.types.Pathname;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -238,7 +238,7 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 
 	@Override
 	public String printStruct() {
-		final BooleanStruct<?> printEscape = Variable.PRINT_ESCAPE.getValue();
+		final BooleanStruct<?> printEscape = PrinterVariables.PRINT_ESCAPE.getValue();
 
 		final StringBuilder stringBuilder = new StringBuilder();
 

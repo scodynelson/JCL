@@ -1,7 +1,8 @@
-package jcl.symbols.variables;
+package jcl.printer;
 
 import jcl.numbers.IntegerStruct;
 import jcl.packages.PackageStruct;
+import jcl.symbols.Variable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

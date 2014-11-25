@@ -5,12 +5,12 @@
 package jcl.reader.macrofunction;
 
 import jcl.LispStruct;
-import jcl.reader.CharacterConstants;
-import jcl.reader.Reader;
+import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ListStruct;
+import jcl.reader.Reader;
+import jcl.reader.ReaderVariables;
 import jcl.symbols.SpecialOperator;
-import jcl.symbols.variables.Variable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +42,7 @@ public final class SharpApostropheReaderMacroFunction extends ReaderMacroFunctio
 		assert codePoint == CharacterConstants.APOSTROPHE;
 
 		final LispStruct lispToken = reader.read();
-		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("{} suppressed.", lispToken.printStruct());
 			}

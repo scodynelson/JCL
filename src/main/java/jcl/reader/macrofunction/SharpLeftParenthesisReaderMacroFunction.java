@@ -5,14 +5,14 @@
 package jcl.reader.macrofunction;
 
 import jcl.LispStruct;
-import jcl.reader.CharacterConstants;
-import jcl.reader.Reader;
 import jcl.arrays.VectorStruct;
+import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.lists.ListStruct;
-import jcl.symbols.variables.Variable;
+import jcl.reader.Reader;
+import jcl.reader.ReaderVariables;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +47,7 @@ public final class SharpLeftParenthesisReaderMacroFunction extends ListReaderMac
 
 		final ListStruct listToken = readList(reader);
 
-		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("{} suppressed.", listToken);
 			}

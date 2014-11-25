@@ -2,17 +2,17 @@ package jcl.system;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.reader.macrofunction.SharpTagReaderConstants;
-import jcl.reader.Reader;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.packages.PackageStruct;
+import jcl.packages.PackageVariables;
+import jcl.reader.Reader;
+import jcl.reader.macrofunction.SharpTagReaderConstants;
 import jcl.streams.CharacterStreamStruct;
 import jcl.streams.FileStreamStruct;
 import jcl.streams.InputStream;
 import jcl.streams.ReadPeekResult;
 import jcl.symbols.SpecialOperator;
-import jcl.symbols.variables.Variable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -94,7 +94,7 @@ public final class ReadEvalPrint {
 //				Object value = null;
 				try {
 					// THE PROMPT
-					final PackageStruct pkg = Variable.PACKAGE.getValue();
+					final PackageStruct pkg = PackageVariables.PACKAGE.getValue();
 					LOGGER.info("\n{}: {}> ", pkg.getName(), ++lineCounter);
 
 					// READ --------------

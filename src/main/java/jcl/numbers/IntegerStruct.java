@@ -4,7 +4,7 @@
 
 package jcl.numbers;
 
-import jcl.symbols.variables.Variable;
+import jcl.printer.PrinterVariables;
 import jcl.types.Integer;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -71,8 +71,8 @@ public class IntegerStruct extends RationalStruct {
 
 	@Override
 	public String printStruct() {
-		final boolean printRadix = Variable.PRINT_RADIX.getValue().booleanValue();
-		final int printBase = Variable.PRINT_BASE.getValue().bigInteger.intValue();
+		final boolean printRadix = PrinterVariables.PRINT_RADIX.getValue().booleanValue();
+		final int printBase = PrinterVariables.PRINT_BASE.getValue().bigInteger.intValue();
 
 		final StringBuilder stringBuilder = new StringBuilder();
 

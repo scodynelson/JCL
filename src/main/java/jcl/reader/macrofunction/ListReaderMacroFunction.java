@@ -5,12 +5,12 @@
 package jcl.reader.macrofunction;
 
 import jcl.LispStruct;
-import jcl.reader.CharacterConstants;
-import jcl.reader.Reader;
+import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ListStruct;
+import jcl.reader.Reader;
+import jcl.reader.ReaderVariables;
 import jcl.streams.ReadPeekResult;
-import jcl.symbols.variables.Variable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +56,7 @@ abstract class ListReaderMacroFunction extends ReaderMacroFunction {
 			codePoint = flushWhitespace(reader);
 		}
 
-		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			return null;
 		}
 

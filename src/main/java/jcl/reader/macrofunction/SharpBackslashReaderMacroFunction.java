@@ -5,11 +5,11 @@
 package jcl.reader.macrofunction;
 
 import jcl.LispStruct;
-import jcl.reader.CharacterConstants;
-import jcl.reader.Reader;
+import jcl.characters.CharacterConstants;
 import jcl.characters.CharacterStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.symbols.variables.Variable;
+import jcl.reader.Reader;
+import jcl.reader.ReaderVariables;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +45,7 @@ public final class SharpBackslashReaderMacroFunction extends ExtendedTokenReader
 		final ReadExtendedToken readExtendedToken = readExtendedToken(reader);
 		final String token = readExtendedToken.getToken();
 
-		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("{} suppressed.", token);
 			}

@@ -4,6 +4,7 @@
 
 package jcl.reader;
 
+import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
 
 /**

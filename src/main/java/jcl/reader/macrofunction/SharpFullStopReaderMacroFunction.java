@@ -5,10 +5,10 @@
 package jcl.reader.macrofunction;
 
 import jcl.LispStruct;
-import jcl.reader.CharacterConstants;
-import jcl.reader.Reader;
+import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.symbols.variables.Variable;
+import jcl.reader.Reader;
+import jcl.reader.ReaderVariables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,14 +40,14 @@ public final class SharpFullStopReaderMacroFunction extends ReaderMacroFunction 
 		assert codePoint == CharacterConstants.FULL_STOP;
 
 		final LispStruct lispToken = reader.read();
-		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("{} suppressed.", lispToken.printStruct());
 			}
 			return null;
 		}
 
-		if (!Variable.READ_EVAL.getValue().booleanValue()) {
+		if (!ReaderVariables.READ_EVAL.getValue().booleanValue()) {
 			throw new ReaderErrorException("Attempt to read #. while *READ-EVAL* is bound to NIL.");
 		}
 

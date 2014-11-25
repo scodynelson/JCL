@@ -7,7 +7,6 @@ package jcl.reader;
 import jcl.LispStruct;
 import jcl.streams.InputStream;
 import jcl.streams.ReadPeekResult;
-import jcl.symbols.variables.Variable;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -33,7 +32,7 @@ public class Reader {
 	 * 		the {@link InputStream} used to read lisp tokens
 	 */
 	public Reader(final InputStream inputStream) {
-		this(inputStream, Variable.READTABLE.getValue());
+		this(inputStream, ReaderVariables.READTABLE.getValue());
 	}
 
 	/**

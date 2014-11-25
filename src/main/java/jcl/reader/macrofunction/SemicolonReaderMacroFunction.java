@@ -5,10 +5,10 @@
 package jcl.reader.macrofunction;
 
 import jcl.LispStruct;
-import jcl.reader.CharacterConstants;
+import jcl.characters.CharacterConstants;
 import jcl.reader.Reader;
+import jcl.reader.ReaderVariables;
 import jcl.streams.ReadPeekResult;
-import jcl.symbols.variables.Variable;
 
 import java.math.BigInteger;
 
@@ -43,7 +43,7 @@ public final class SemicolonReaderMacroFunction extends ReaderMacroFunction {
 			readChar = readResult.getResult();
 		}
 
-		if (Variable.READ_SUPPRESS.getValue().booleanValue()) {
+		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			return null;
 		}
 

@@ -1,9 +1,10 @@
 package jcl.arrays;
 
-import jcl.reader.SyntaxType;
 import jcl.characters.CharacterStruct;
+import jcl.printer.PrinterVariables;
+import jcl.reader.ReaderVariables;
 import jcl.reader.ReadtableStruct;
-import jcl.symbols.variables.Variable;
+import jcl.reader.SyntaxType;
 import jcl.types.BaseChar;
 import jcl.types.BaseString;
 import jcl.types.Character;
@@ -105,9 +106,9 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 
 	@Override
 	public java.lang.String printStruct() {
-		final boolean printEscape = Variable.PRINT_ESCAPE.getValue().booleanValue();
+		final boolean printEscape = PrinterVariables.PRINT_ESCAPE.getValue().booleanValue();
 
-		final ReadtableStruct readtable = Variable.READTABLE.getValue();
+		final ReadtableStruct readtable = ReaderVariables.READTABLE.getValue();
 
 		final StringBuilder stringBuilder = new StringBuilder();
 		if (printEscape) {

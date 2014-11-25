@@ -1,8 +1,9 @@
-package jcl.symbols.variables;
+package jcl.printer;
 
 import jcl.compiler.old.symbol.KeywordOld;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.KeywordSymbolStruct;
+import jcl.symbols.Variable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

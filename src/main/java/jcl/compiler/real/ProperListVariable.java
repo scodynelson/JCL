@@ -1,8 +1,9 @@
-package jcl.symbols.variables;
+package jcl.compiler.real;
 
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.PackageStruct;
+import jcl.symbols.Variable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

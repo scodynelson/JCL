@@ -4,6 +4,7 @@
 
 package jcl.reader;
 
+import jcl.characters.CharacterConstants;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;

@@ -5,7 +5,6 @@
 package jcl.reader;
 
 import jcl.LispStruct;
-import jcl.reader.macrofunction.ReaderMacroFunction;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.streams.ReadPeekResult;
 
@@ -56,7 +55,7 @@ final class MacroCharacterState implements State {
 			return;
 		}
 
-		final ReaderMacroFunction readerMacroFunction = reader.getReadtable().getMacroCharacter(codePoint);
+		final ReaderMacroFunction readerMacroFunction = ReaderVariables.READTABLE.getValue().getMacroCharacter(codePoint);
 		if (readerMacroFunction == null) {
 			throw new ReaderErrorException("No reader macro function exists for character: " + codePoint + '.');
 		}

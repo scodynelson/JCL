@@ -12,6 +12,7 @@ import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.packages.PackageVariables;
 import jcl.reader.Reader;
+import jcl.reader.ReaderImpl;
 import jcl.arrays.StringStruct;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
@@ -513,7 +514,7 @@ public class CompileFileFunction {
 		Vector<LispStruct> forms = new Vector<>();
 //		Vector<IntegerStruct> lineNumber = new Vector<IntegerStruct>();
 
-		final Reader reader = new Reader(file);
+		final Reader reader = new ReaderImpl(file);
 
 		LispStruct eofValue = null;
 		LispStruct form = NullStruct.INSTANCE;

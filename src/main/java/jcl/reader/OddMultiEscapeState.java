@@ -60,7 +60,7 @@ final class OddMultiEscapeState implements State {
 		int codePoint = readResult.getResult();
 		tokenBuilder.setPreviousReadCharacter(codePoint);
 
-		final SyntaxType syntaxType = reader.getSyntaxType(codePoint);
+		final SyntaxType syntaxType = ReaderVariables.READTABLE.getValue().getSyntaxType(codePoint);
 
 		if ((syntaxType == SyntaxType.CONSTITUENT)
 				|| (syntaxType == SyntaxType.WHITESPACE)

@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Represents a lookup table for attribute types matching code points.
  */
 @SuppressWarnings("all")
-public class AttributeTable {
+class AttributeTable {
 
 	/**
 	 * The internal mapping of character code points to {@link AttributeType}s.
@@ -24,7 +24,7 @@ public class AttributeTable {
 	/**
 	 * Public constructor.
 	 */
-	public AttributeTable() {
+	AttributeTable() {
 		attributeTypeMap = new ConcurrentHashMap<>(128);
 
 		attributeTypeMap.put(0, AttributeType.INVALID);                     // NUL
@@ -165,7 +165,7 @@ public class AttributeTable {
 	 *
 	 * @return the matching attribute type for the provided {@code codePoint}
 	 */
-	public AttributeType getAttribute(final int codePoint) {
+	AttributeType getAttribute(final int codePoint) {
 		if (attributeTypeMap.containsKey(codePoint)) {
 			AttributeType attributeType = attributeTypeMap.get(codePoint);
 

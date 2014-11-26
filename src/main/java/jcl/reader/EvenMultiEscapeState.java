@@ -79,11 +79,11 @@ final class EvenMultiEscapeState implements State {
 		int codePoint = readResult.getResult();
 		tokenBuilder.setPreviousReadCharacter(codePoint);
 
-		final SyntaxType syntaxType = reader.getSyntaxType(codePoint);
+		final SyntaxType syntaxType = ReaderVariables.READTABLE.getValue().getSyntaxType(codePoint);
 
 		if ((syntaxType == SyntaxType.CONSTITUENT) || (syntaxType == SyntaxType.NON_TERMINATING)) {
-			final CaseSpec readtableCase = reader.getReadtableCase();
-			final AttributeType attributeType = reader.getAttributeType(codePoint);
+			final CaseSpec readtableCase = ReaderVariables.READTABLE.getValue().getReadtableCase();
+			final AttributeType attributeType = ReaderVariables.READTABLE.getValue().getAttributeType(codePoint);
 
 			codePoint = State.properCaseCodePoint(codePoint, attributeType, readtableCase);
 			tokenBuilder.addToTokenAttributes(codePoint, attributeType);

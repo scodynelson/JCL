@@ -36,8 +36,8 @@ final class ConstituentState implements State {
 			return;
 		}
 
-		final CaseSpec readtableCase = reader.getReadtableCase();
-		final AttributeType attributeType = reader.getAttributeType(codePoint);
+		final CaseSpec readtableCase = ReaderVariables.READTABLE.getValue().getReadtableCase();
+		final AttributeType attributeType = ReaderVariables.READTABLE.getValue().getAttributeType(codePoint);
 
 		codePoint = State.properCaseCodePoint(codePoint, attributeType, readtableCase);
 		tokenBuilder.addToTokenAttributes(codePoint, attributeType);

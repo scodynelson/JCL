@@ -5,7 +5,6 @@
 package jcl.reader;
 
 import jcl.LispStruct;
-import jcl.reader.macrofunction.ReaderMacroFunction;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.streams.ReadPeekResult;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -19,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * This holds mappings for code points to macro functions and delegates to the proper {@link ReaderMacroFunction} when
  * used.
  */
-public class DispatchTable extends ReaderMacroFunction {
+public class DispatchTable implements ReaderMacroFunction {
 
 	/**
 	 * The internal mapping of character code points to {@link ReaderMacroFunction}s to dispatch on when reading.

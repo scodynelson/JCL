@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Represents a lookup table for syntax types matching code points.
  */
 @SuppressWarnings("all")
-public class SyntaxTable {
+class SyntaxTable {
 
 	/**
 	 * The logger for this class.
@@ -32,7 +32,7 @@ public class SyntaxTable {
 	/**
 	 * Package constructor.
 	 */
-	public SyntaxTable() {
+	SyntaxTable() {
 		syntaxTypeMap = new ConcurrentHashMap<>(128);
 
 		syntaxTypeMap.put(0, SyntaxType.INVALID);                     // NUL
@@ -173,7 +173,7 @@ public class SyntaxTable {
 	 *
 	 * @return the matching {@link SyntaxType} for the provided {@code codePoint}
 	 */
-	public SyntaxType getSyntaxType(final int codePoint) {
+	SyntaxType getSyntaxType(final int codePoint) {
 		if (syntaxTypeMap.containsKey(codePoint)) {
 			return syntaxTypeMap.get(codePoint);
 		} else if (Character.isDefined(codePoint)) {
@@ -202,7 +202,7 @@ public class SyntaxTable {
 	 * @param syntaxType
 	 * 		the new {@link SyntaxType} value
 	 */
-	public void setSyntaxType(final int codePoint, final SyntaxType syntaxType) {
+	void setSyntaxType(final int codePoint, final SyntaxType syntaxType) {
 		syntaxTypeMap.put(codePoint, syntaxType);
 	}
 

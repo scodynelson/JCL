@@ -28,7 +28,7 @@ final class ConstituentState implements State {
 	}
 
 	@Override
-	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
+	public void process(final ReaderStateMediator readerStateMediator, final Reader reader, final TokenBuilder tokenBuilder) {
 		Integer codePoint = tokenBuilder.getPreviousReadCharacter();
 
 		if (State.isEndOfFileCharacter(codePoint)) {
@@ -36,12 +36,13 @@ final class ConstituentState implements State {
 			return;
 		}
 
-		final CaseSpec readtableCase = ReaderVariables.READTABLE.getValue().getReadtableCase();
-		final AttributeType attributeType = ReaderVariables.READTABLE.getValue().getAttributeType(codePoint);
+		final ReadtableStruct readtable = ReaderVariables.READTABLE.getValue();
+		final CaseSpec readtableCase = readtable.getReadtableCase();
+		final AttributeType attributeType = readtable.getAttributeType(codePoint);
 
 		codePoint = State.properCaseCodePoint(codePoint, attributeType, readtableCase);
 		tokenBuilder.addToTokenAttributes(codePoint, attributeType);
 
-		EvenMultiEscapeState.INSTANCE.process(reader, tokenBuilder);
+		readerStateMediator.readEvenMultipleEscape(reader, tokenBuilder);
 	}
 }

@@ -47,7 +47,7 @@ final class MacroCharacterState implements State {
 	}
 
 	@Override
-	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
+	public void process(final ReaderStateMediator readerStateMediator, final Reader reader, final TokenBuilder tokenBuilder) {
 		final Integer codePoint = tokenBuilder.getPreviousReadCharacter();
 
 		if (State.isEndOfFileCharacter(codePoint)) {
@@ -55,7 +55,8 @@ final class MacroCharacterState implements State {
 			return;
 		}
 
-		final ReaderMacroFunction readerMacroFunction = ReaderVariables.READTABLE.getValue().getMacroCharacter(codePoint);
+		final ReadtableStruct readtable = ReaderVariables.READTABLE.getValue();
+		final ReaderMacroFunction readerMacroFunction = readtable.getMacroCharacter(codePoint);
 		if (readerMacroFunction == null) {
 			throw new ReaderErrorException("No reader macro function exists for character: " + codePoint + '.');
 		}
@@ -69,7 +70,7 @@ final class MacroCharacterState implements State {
 		tokenBuilder.setReturnToken(lispToken);
 
 		if (lispToken == null) {
-			ReadState.INSTANCE.process(reader, tokenBuilder);
+			readerStateMediator.read(reader, tokenBuilder);
 		}
 	}
 

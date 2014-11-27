@@ -35,7 +35,7 @@ final class TokenAccumulatedState implements State {
 	}
 
 	@Override
-	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
+	public void process(final ReaderStateMediator readerStateMediator, final Reader reader, final TokenBuilder tokenBuilder) {
 		final Integer codePoint = tokenBuilder.getPreviousReadCharacter();
 
 		final List<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
@@ -53,7 +53,7 @@ final class TokenAccumulatedState implements State {
 		if (".".equals(tokenString)) {
 			throw new ReaderErrorException("Dot context error in '.'");
 		} else {
-			NumberTokenAccumulatedState.INSTANCE.process(reader, tokenBuilder);
+			NumberTokenAccumulatedState.INSTANCE.process(readerStateMediator, reader, tokenBuilder);
 		}
 	}
 }

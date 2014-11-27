@@ -20,6 +20,8 @@ public class ReaderImpl implements Reader {
 	 */
 	private final InputStream inputStream;
 
+	private static final ReaderStateMediator READER_STATE_MEDIATOR = ReaderStateMediatorImpl.INSTANCE;
+
 	/**
 	 * Public constructor for creating a new JCL Reader.
 	 *
@@ -57,7 +59,7 @@ public class ReaderImpl implements Reader {
 	@Override
 	public LispStruct read(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		final TokenBuilder tokenBuilder = new TokenBuilder(eofErrorP, eofValue, recursiveP);
-		ReadState.INSTANCE.process(this, tokenBuilder);
+		READER_STATE_MEDIATOR.read(this, tokenBuilder);
 
 		return tokenBuilder.getReturnToken();
 	}

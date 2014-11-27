@@ -28,7 +28,7 @@ final class ReadState implements State {
 	}
 
 	@Override
-	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
+	public void process(final ReaderStateMediator readerStateMediator, final Reader reader, final TokenBuilder tokenBuilder) {
 
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();
@@ -43,20 +43,21 @@ final class ReadState implements State {
 		final int codePoint = readResult.getResult();
 		tokenBuilder.setPreviousReadCharacter(codePoint);
 
-		final SyntaxType syntaxType = ReaderVariables.READTABLE.getValue().getSyntaxType(codePoint);
+		final ReadtableStruct readtable = ReaderVariables.READTABLE.getValue();
+		final SyntaxType syntaxType = readtable.getSyntaxType(codePoint);
 
 		if (syntaxType == SyntaxType.WHITESPACE) {
-			WhitespaceState.INSTANCE.process(reader, tokenBuilder);
+			readerStateMediator.readWhitespace(reader, tokenBuilder);
 		} else if ((syntaxType == SyntaxType.TERMINATING) || (syntaxType == SyntaxType.NON_TERMINATING)) {
-			MacroCharacterState.INSTANCE.process(reader, tokenBuilder);
+			readerStateMediator.readMacroCharacter(reader, tokenBuilder);
 		} else if (syntaxType == SyntaxType.SINGLE_ESCAPE) {
-			SingleEscapeState.INSTANCE.process(reader, tokenBuilder);
+			readerStateMediator.readSingleEscape(reader, tokenBuilder);
 		} else if (syntaxType == SyntaxType.MULTIPLE_ESCAPE) {
-			MultipleEscapeState.INSTANCE.process(reader, tokenBuilder);
+			readerStateMediator.readMultipleEscape(reader, tokenBuilder);
 		} else if (syntaxType == SyntaxType.CONSTITUENT) {
-			ConstituentState.INSTANCE.process(reader, tokenBuilder);
+			readerStateMediator.readConstituent(reader, tokenBuilder);
 		} else {
-			IllegalCharacterState.INSTANCE.process(reader, tokenBuilder);
+			readerStateMediator.readIllegalCharacter(reader, tokenBuilder);
 		}
 	}
 }

@@ -25,7 +25,7 @@ final class MultipleEscapeState implements State {
 	}
 
 	@Override
-	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
-		OddMultiEscapeState.INSTANCE.process(reader, tokenBuilder);
+	public void process(final ReaderStateMediator readerStateMediator, final Reader reader, final TokenBuilder tokenBuilder) {
+		readerStateMediator.readOddMultipleEscape(reader, tokenBuilder);
 	}
 }

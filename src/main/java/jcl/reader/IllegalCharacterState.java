@@ -27,7 +27,7 @@ final class IllegalCharacterState implements State {
 	}
 
 	@Override
-	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
+	public void process(final ReaderStateMediator readerStateMediator, final Reader reader, final TokenBuilder tokenBuilder) {
 		final Integer codePoint = tokenBuilder.getPreviousReadCharacter();
 
 		if (State.isEndOfFileCharacter(codePoint) && tokenBuilder.isEofErrorP()) {

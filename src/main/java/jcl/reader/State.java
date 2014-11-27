@@ -18,7 +18,6 @@ import java.util.List;
  * numbered states and the named states in this interface.
  * <p>
  * <ol start=0>
- * <li>InitialState
  * <li>ReadState
  * <li>IllegalCharState
  * <li>WhitespaceState
@@ -29,7 +28,6 @@ import java.util.List;
  * <li>EvenMultiEscapeState
  * <li>OddMultiEscapeState
  * <li>TokenAccumulatedState
- * <li>ErrorState
  * </ol>
  * </p>
  * For online specifications of these states, goto http://www.lispworks.com/documentation/HyperSpec/Body/02_b.htm
@@ -42,13 +40,14 @@ interface State {
 	 * Abstract method to be implemented by all child State objects to handle their respective reader processing
 	 * portion.
 	 *
+	 * @param readerStateMediator
 	 * @param reader
 	 * 		the JCL {@link Reader} instance to use for reading lisp tokens.
 	 * @param tokenBuilder
 	 * 		the {@link TokenBuilder} used to build the resulting lisp token and house token parsing information throughout
 	 * 		the read process
 	 */
-	void process(Reader reader, TokenBuilder tokenBuilder);
+	void process(ReaderStateMediator readerStateMediator, Reader reader, TokenBuilder tokenBuilder);
 
 	/**
 	 * Determines if the provided {@code codePoint} is either null or equal to {@link CharacterConstants#EOF}.

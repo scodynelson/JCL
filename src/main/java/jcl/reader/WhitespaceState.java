@@ -8,6 +8,7 @@ package jcl.reader;
  * Step 3 of the Reader Algorithm.
  * <p>
  * If x is a whitespace[2] character, then it is discarded and step 1 is re-entered.
+ * </p>
  */
 final class WhitespaceState implements State {
 
@@ -23,7 +24,7 @@ final class WhitespaceState implements State {
 	}
 
 	@Override
-	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
-		ReadState.INSTANCE.process(reader, tokenBuilder);
+	public void process(final ReaderStateMediator readerStateMediator, final Reader reader, final TokenBuilder tokenBuilder) {
+		readerStateMediator.read(reader, tokenBuilder);
 	}
 }

@@ -29,21 +29,21 @@ final class SingleEscapeState implements State {
 	}
 
 	@Override
-	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
+	public void process(final ReaderStateMediator readerStateMediator, final Reader reader, final TokenBuilder tokenBuilder) {
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();
 		final boolean isRecursiveP = tokenBuilder.isRecursiveP();
 
 		final ReadPeekResult readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
 		if (readResult.isEof()) {
-			IllegalCharacterState.INSTANCE.process(reader, tokenBuilder);
+			readerStateMediator.readIllegalCharacter(reader, tokenBuilder);
 		} else {
 			final int codePoint = readResult.getResult();
 			tokenBuilder.setPreviousReadCharacter(codePoint);
 
 			tokenBuilder.addToTokenAttributes(codePoint, AttributeType.ALPHABETIC);
 
-			EvenMultiEscapeState.INSTANCE.process(reader, tokenBuilder);
+			readerStateMediator.readEvenMultipleEscape(reader, tokenBuilder);
 		}
 	}
 }

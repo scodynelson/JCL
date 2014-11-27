@@ -6,7 +6,10 @@ package jcl.reader;
 
 import jcl.characters.CharacterConstants;
 
-public class ReadtableFactory {
+public final class ReadtableFactory {
+
+	private ReadtableFactory() {
+	}
 
 	public static ReadtableStruct getInstance() {
 		final ReadtableStruct readtable = new ReadtableStruct();

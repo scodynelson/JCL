@@ -74,11 +74,11 @@ final class NumberTokenAccumulatedState implements State {
 	}
 
 	@Override
-	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
+	public void process(final ReaderStateMediator readerStateMediator, final Reader reader, final TokenBuilder tokenBuilder) {
 
 		final NumberStruct numberToken = getNumberToken(tokenBuilder);
 		if (numberToken == null) {
-			SymbolTokenAccumulatedState.INSTANCE.process(reader, tokenBuilder);
+			SymbolTokenAccumulatedState.INSTANCE.process(readerStateMediator, reader, tokenBuilder);
 		} else {
 			tokenBuilder.setReturnToken(numberToken);
 		}

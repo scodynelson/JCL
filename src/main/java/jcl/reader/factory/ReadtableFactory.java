@@ -6,8 +6,6 @@ package jcl.reader.factory;
 
 import jcl.characters.CharacterConstants;
 import jcl.reader.CaseSpec;
-import jcl.reader.DispatchTable;
-import jcl.reader.ReadtableStruct;
 import jcl.reader.macrofunction.ApostropheReaderMacroFunction;
 import jcl.reader.macrofunction.LeftParenthesisReaderMacroFunction;
 import jcl.reader.macrofunction.QuotationMarkReaderMacroFunction;
@@ -34,6 +32,7 @@ import jcl.reader.macrofunction.SharpSharpReaderMacroFunction;
 import jcl.reader.macrofunction.SharpUReaderMacroFunction;
 import jcl.reader.macrofunction.SharpVerticalBarReaderMacroFunction;
 import jcl.reader.macrofunction.SharpXReaderMacroFunction;
+import jcl.reader.struct.ReadtableStruct;
 
 public final class ReadtableFactory {
 
@@ -61,50 +60,49 @@ public final class ReadtableFactory {
 
 		//initialize the Standard Sharp macro Functions
 		readtable.makeDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, false);
-		final DispatchTable dispatchTable = readtable.getDispatchTable(CharacterConstants.NUMBER_SIGN);
 
-		dispatchTable.setMacroCharacter(CharacterConstants.BACKSLASH, SharpBackslashReaderMacroFunction.INSTANCE);
-		dispatchTable.setMacroCharacter(CharacterConstants.APOSTROPHE, SharpApostropheReaderMacroFunction.INSTANCE);
-		dispatchTable.setMacroCharacter(CharacterConstants.LEFT_PARENTHESIS, SharpLeftParenthesisReaderMacroFunction.INSTANCE);
-		dispatchTable.setMacroCharacter(CharacterConstants.ASTERISK, SharpAsteriskReaderMacroFunction.INSTANCE);
-		dispatchTable.setMacroCharacter(CharacterConstants.COLON, SharpColonReaderMacroFunction.INSTANCE);
-		dispatchTable.setMacroCharacter(CharacterConstants.FULL_STOP, SharpFullStopReaderMacroFunction.INSTANCE);
-		dispatchTable.setMacroCharacter(CharacterConstants.VERTICAL_LINE, SharpVerticalBarReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.BACKSLASH, SharpBackslashReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.APOSTROPHE, SharpApostropheReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LEFT_PARENTHESIS, SharpLeftParenthesisReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.ASTERISK, SharpAsteriskReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.COLON, SharpColonReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.FULL_STOP, SharpFullStopReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.VERTICAL_LINE, SharpVerticalBarReaderMacroFunction.INSTANCE);
 
-		dispatchTable.setMacroCharacter(CharacterConstants.LATIN_CAPITAL_LETTER_R, SharpRReaderMacroFunction.INSTANCE);
-		dispatchTable.setMacroCharacter(CharacterConstants.LATIN_SMALL_LETTER_R, SharpRReaderMacroFunction.INSTANCE);
-		dispatchTable.setMacroCharacter(CharacterConstants.LATIN_CAPITAL_LETTER_B, SharpBReaderMacroFunction.INSTANCE);
-		dispatchTable.setMacroCharacter(CharacterConstants.LATIN_SMALL_LETTER_B, SharpBReaderMacroFunction.INSTANCE);
-		dispatchTable.setMacroCharacter(CharacterConstants.LATIN_CAPITAL_LETTER_O, SharpOReaderMacroFunction.INSTANCE);
-		dispatchTable.setMacroCharacter(CharacterConstants.LATIN_SMALL_LETTER_O, SharpOReaderMacroFunction.INSTANCE);
-		dispatchTable.setMacroCharacter(CharacterConstants.LATIN_CAPITAL_LETTER_X, SharpXReaderMacroFunction.INSTANCE);
-		dispatchTable.setMacroCharacter(CharacterConstants.LATIN_SMALL_LETTER_X, SharpXReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_CAPITAL_LETTER_R, SharpRReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_SMALL_LETTER_R, SharpRReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_CAPITAL_LETTER_B, SharpBReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_SMALL_LETTER_B, SharpBReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_CAPITAL_LETTER_O, SharpOReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_SMALL_LETTER_O, SharpOReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_CAPITAL_LETTER_X, SharpXReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_SMALL_LETTER_X, SharpXReaderMacroFunction.INSTANCE);
 
-		dispatchTable.setMacroCharacter(CharacterConstants.LATIN_CAPITAL_LETTER_A, SharpAReaderMacroFunction.INSTANCE);
-		dispatchTable.setMacroCharacter(CharacterConstants.LATIN_SMALL_LETTER_A, SharpAReaderMacroFunction.INSTANCE);
-		dispatchTable.setMacroCharacter(CharacterConstants.LATIN_CAPITAL_LETTER_S, SharpSReaderMacroFunction.INSTANCE);
-		dispatchTable.setMacroCharacter(CharacterConstants.LATIN_SMALL_LETTER_S, SharpSReaderMacroFunction.INSTANCE);
-		dispatchTable.setMacroCharacter(CharacterConstants.LATIN_CAPITAL_LETTER_C, SharpCReaderMacroFunction.INSTANCE);
-		dispatchTable.setMacroCharacter(CharacterConstants.LATIN_SMALL_LETTER_C, SharpCReaderMacroFunction.INSTANCE);
-		dispatchTable.setMacroCharacter(CharacterConstants.LATIN_CAPITAL_LETTER_P, SharpPReaderMacroFunction.INSTANCE);
-		dispatchTable.setMacroCharacter(CharacterConstants.LATIN_SMALL_LETTER_P, SharpPReaderMacroFunction.INSTANCE);
-		dispatchTable.setMacroCharacter(CharacterConstants.LATIN_CAPITAL_LETTER_U, SharpUReaderMacroFunction.INSTANCE);
-		dispatchTable.setMacroCharacter(CharacterConstants.LATIN_SMALL_LETTER_U, SharpUReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_CAPITAL_LETTER_A, SharpAReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_SMALL_LETTER_A, SharpAReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_CAPITAL_LETTER_S, SharpSReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_SMALL_LETTER_S, SharpSReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_CAPITAL_LETTER_C, SharpCReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_SMALL_LETTER_C, SharpCReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_CAPITAL_LETTER_P, SharpPReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_SMALL_LETTER_P, SharpPReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_CAPITAL_LETTER_U, SharpUReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_SMALL_LETTER_U, SharpUReaderMacroFunction.INSTANCE);
 
-		dispatchTable.setMacroCharacter(CharacterConstants.EQUALS_SIGN, SharpEqualsSignReaderMacroFunction.INSTANCE);
-		dispatchTable.setMacroCharacter(CharacterConstants.NUMBER_SIGN, SharpSharpReaderMacroFunction.INSTANCE);
-		dispatchTable.setMacroCharacter(CharacterConstants.PLUS_SIGN, SharpPlusSignReaderMacroFunction.INSTANCE);
-		dispatchTable.setMacroCharacter(CharacterConstants.HYPHEN_MINUS, SharpHyphenMinusReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.EQUALS_SIGN, SharpEqualsSignReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.NUMBER_SIGN, SharpSharpReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.PLUS_SIGN, SharpPlusSignReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.HYPHEN_MINUS, SharpHyphenMinusReaderMacroFunction.INSTANCE);
 
-		dispatchTable.setMacroCharacter(CharacterConstants.RIGHT_PARENTHESIS, SharpIllegalReaderMacroFunction.INSTANCE);
-		dispatchTable.setMacroCharacter(CharacterConstants.LESS_THAN_SIGN, SharpIllegalReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.RIGHT_PARENTHESIS, SharpIllegalReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LESS_THAN_SIGN, SharpIllegalReaderMacroFunction.INSTANCE);
 
-		dispatchTable.setMacroCharacter(CharacterConstants.TAB, SharpIllegalReaderMacroFunction.INSTANCE);
-		dispatchTable.setMacroCharacter(CharacterConstants.NEWLINE, SharpIllegalReaderMacroFunction.INSTANCE);
-		dispatchTable.setMacroCharacter(CharacterConstants.LINE_FEED, SharpIllegalReaderMacroFunction.INSTANCE);
-		dispatchTable.setMacroCharacter(CharacterConstants.SPACE, SharpIllegalReaderMacroFunction.INSTANCE);
-		dispatchTable.setMacroCharacter(CharacterConstants.PAGE, SharpIllegalReaderMacroFunction.INSTANCE);
-		dispatchTable.setMacroCharacter(CharacterConstants.RETURN, SharpIllegalReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.TAB, SharpIllegalReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.NEWLINE, SharpIllegalReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LINE_FEED, SharpIllegalReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.SPACE, SharpIllegalReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.PAGE, SharpIllegalReaderMacroFunction.INSTANCE);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.RETURN, SharpIllegalReaderMacroFunction.INSTANCE);
 
 		return readtable;
 	}

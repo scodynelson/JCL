@@ -9,7 +9,7 @@ import jcl.reader.AttributeType;
 import jcl.reader.CaseSpec;
 import jcl.reader.Reader;
 import jcl.reader.ReaderVariables;
-import jcl.reader.ReadtableStruct;
+import jcl.reader.struct.ReadtableStruct;
 import jcl.reader.SyntaxType;
 import jcl.streams.ReadPeekResult;
 

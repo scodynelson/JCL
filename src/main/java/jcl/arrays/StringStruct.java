@@ -3,7 +3,7 @@ package jcl.arrays;
 import jcl.characters.CharacterStruct;
 import jcl.printer.PrinterVariables;
 import jcl.reader.ReaderVariables;
-import jcl.reader.ReadtableStruct;
+import jcl.reader.struct.ReadtableStruct;
 import jcl.reader.SyntaxType;
 import jcl.types.BaseChar;
 import jcl.types.BaseString;

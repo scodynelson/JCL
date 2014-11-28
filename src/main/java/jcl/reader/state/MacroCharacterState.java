@@ -6,10 +6,9 @@ package jcl.reader.state;
 
 import jcl.LispStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.reader.DispatchTable;
 import jcl.reader.Reader;
 import jcl.reader.ReaderVariables;
-import jcl.reader.ReadtableStruct;
+import jcl.reader.struct.ReadtableStruct;
 import jcl.reader.ReaderMacroFunction;
 import jcl.streams.ReadPeekResult;
 
@@ -67,7 +66,7 @@ final class MacroCharacterState implements State {
 		}
 
 		BigInteger numArg = null;
-		if (readerMacroFunction instanceof DispatchTable) {
+		if (readerMacroFunction.isDispatch()) {
 			numArg = getNumberArgument(reader);
 		}
 

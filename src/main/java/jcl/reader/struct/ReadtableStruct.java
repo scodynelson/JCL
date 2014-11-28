@@ -1,10 +1,19 @@
-package jcl.reader;
+package jcl.reader.struct;
 
+import jcl.LispStruct;
 import jcl.classes.BuiltInClassStruct;
+import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.reader.AttributeType;
+import jcl.reader.CaseSpec;
+import jcl.reader.Reader;
+import jcl.reader.ReaderMacroFunction;
+import jcl.reader.SyntaxType;
+import jcl.streams.ReadPeekResult;
 import jcl.types.Readtable;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.math.BigInteger;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -99,18 +108,6 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * Gets the dispatching table for the provided {@code codePoint}.
-	 *
-	 * @param codePoint
-	 * 		the key for the dispatch table
-	 *
-	 * @return the dispatching table for the provided {@code codePoint}
-	 */
-	public DispatchTable getDispatchTable(final int codePoint) {
-		return dispatchTableMap.get(codePoint);
-	}
-
-	/**
 	 * Creates a dispatching table for the provided {@code codePoint}, designating the syntax type as terminating if
 	 * the provided {@code nonTerminatingP} is false.
 	 *
@@ -185,5 +182,68 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	@Override
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+	}
+
+	/**
+	 * This holds mappings for code points to macro functions and delegates to the proper {@link ReaderMacroFunction}
+	 * when used.
+	 */
+	private static final class DispatchTable implements ReaderMacroFunction {
+
+		/**
+		 * The internal mapping of character code points to {@link ReaderMacroFunction}s to dispatch on when reading.
+		 */
+		private final Map<Integer, ReaderMacroFunction> macroFunctionMap = new ConcurrentHashMap<>();
+
+		@Override
+		public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+
+			final ReadPeekResult readResult = reader.readChar(false, null, false);
+			if (readResult.isEof()) {
+				throw new ReaderErrorException("End of file reached when trying to determine read macro function.");
+			}
+
+			final int readChar = readResult.getResult();
+			final ReaderMacroFunction macroFunction = getMacroFunction(readChar);
+			if (macroFunction == null) {
+				throw new ReaderErrorException("No reader macro function exists for: " + codePoint + readChar + '.');
+			}
+
+			return macroFunction.readMacro(readChar, reader, numArg);
+		}
+
+		@Override
+		public boolean isDispatch() {
+			return true;
+		}
+
+		/**
+		 * Gets the macro function associated with the provided {@code codePoint}, or null if no such function exists.
+		 *
+		 * @param codePoint
+		 * 		the code point associated with the macro function to retrieve
+		 *
+		 * @return the macro function associated with the provided {@code codePoint}, or null if no such function exists
+		 */
+		private ReaderMacroFunction getMacroFunction(final int codePoint) {
+			return macroFunctionMap.get(codePoint);
+		}
+
+		/**
+		 * Sets the macro function with the provided {@code codePoint} to the provided {@link ReaderMacroFunction}.
+		 *
+		 * @param codePoint
+		 * 		the code point associated with the macro function to set
+		 * @param macroFunction
+		 * 		the new macro function to be associated
+		 */
+		private void setMacroCharacter(final int codePoint, final ReaderMacroFunction macroFunction) {
+			macroFunctionMap.put(codePoint, macroFunction);
+		}
+
+		@Override
+		public String toString() {
+			return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+		}
 	}
 }

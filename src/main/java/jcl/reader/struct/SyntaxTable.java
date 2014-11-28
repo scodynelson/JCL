@@ -2,9 +2,10 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.reader;
+package jcl.reader.struct;
 
 import jcl.characters.CharacterConstants;
+import jcl.reader.SyntaxType;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;

@@ -12,4 +12,8 @@ import java.math.BigInteger;
 public interface ReaderMacroFunction {
 
 	LispStruct readMacro(int codePoint, Reader reader, BigInteger numArg);
+
+	default boolean isDispatch() {
+		return false;
+	}
 }

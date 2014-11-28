@@ -12,7 +12,7 @@ import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.packages.PackageVariables;
 import jcl.reader.Reader;
-import jcl.reader.ReaderImpl;
+import jcl.reader.state.ReaderImpl;
 import jcl.arrays.StringStruct;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;

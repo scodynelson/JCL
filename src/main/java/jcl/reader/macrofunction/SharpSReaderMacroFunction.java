@@ -8,7 +8,7 @@ import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.classes.StructureObjectStruct;
 import jcl.reader.Reader;
-import jcl.reader.ReaderVariables;
+import jcl.reader.struct.ReaderVariables;
 
 import java.math.BigInteger;
 

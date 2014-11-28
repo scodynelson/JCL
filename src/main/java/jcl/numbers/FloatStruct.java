@@ -4,7 +4,7 @@
 
 package jcl.numbers;
 
-import jcl.reader.ReaderVariables;
+import jcl.reader.struct.ReaderVariables;
 import jcl.types.DoubleFloat;
 import jcl.types.Float;
 import jcl.types.LongFloat;

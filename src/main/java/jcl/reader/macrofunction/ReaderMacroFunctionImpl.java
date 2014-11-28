@@ -6,10 +6,11 @@ package jcl.reader.macrofunction;
 
 import jcl.LispStruct;
 import jcl.functions.FunctionStruct;
+import jcl.numbers.IntegerStruct;
 import jcl.reader.AttributeType;
 import jcl.reader.Reader;
 import jcl.reader.ReaderMacroFunction;
-import jcl.reader.ReaderVariables;
+import jcl.reader.struct.ReaderVariables;
 import jcl.reader.SyntaxType;
 
 import java.math.BigInteger;
@@ -64,7 +65,8 @@ public abstract class ReaderMacroFunctionImpl extends FunctionStruct implements 
 	 * @return the {@link AttributeType} for the provided {@code codePoint} from the {@link #readtable}
 	 */
 	private static AttributeType getAttributeType(final int codePoint) {
-		return ReaderVariables.READTABLE.getValue().getAttributeType(codePoint);
+		final IntegerStruct readBase = ReaderVariables.READ_BASE.getValue();
+		return ReaderVariables.READTABLE.getValue().getAttributeType(codePoint, readBase);
 	}
 
 	/**

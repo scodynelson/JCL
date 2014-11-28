@@ -9,7 +9,7 @@ import jcl.numbers.NumberVariables;
 import jcl.packages.PackageVariables;
 import jcl.pathnames.PathnameVariables;
 import jcl.printer.PrinterVariables;
-import jcl.reader.ReaderVariables;
+import jcl.reader.struct.ReaderVariables;
 import jcl.streams.StreamVariables;
 import jcl.symbols.Declaration;
 import jcl.symbols.SymbolConstants;

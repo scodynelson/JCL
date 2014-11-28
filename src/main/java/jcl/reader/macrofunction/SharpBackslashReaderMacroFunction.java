@@ -9,7 +9,7 @@ import jcl.characters.CharacterConstants;
 import jcl.characters.CharacterStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.reader.Reader;
-import jcl.reader.ReaderVariables;
+import jcl.reader.struct.ReaderVariables;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

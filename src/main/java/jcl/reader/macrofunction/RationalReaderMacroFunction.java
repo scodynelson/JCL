@@ -9,7 +9,7 @@ import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.RationalStruct;
 import jcl.reader.Reader;
-import jcl.reader.ReaderVariables;
+import jcl.reader.struct.ReaderVariables;
 import org.apache.commons.lang3.Range;
 
 import java.math.BigInteger;

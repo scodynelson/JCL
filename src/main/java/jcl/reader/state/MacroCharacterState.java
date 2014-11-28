@@ -7,7 +7,7 @@ package jcl.reader.state;
 import jcl.LispStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.reader.Reader;
-import jcl.reader.ReaderVariables;
+import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
 import jcl.reader.ReaderMacroFunction;
 import jcl.streams.ReadPeekResult;

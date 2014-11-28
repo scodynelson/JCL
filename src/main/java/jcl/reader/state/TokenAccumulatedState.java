@@ -6,7 +6,7 @@ package jcl.reader.state;
 
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.reader.Reader;
-import jcl.reader.ReaderVariables;
+import jcl.reader.struct.ReaderVariables;
 
 import java.util.List;
 

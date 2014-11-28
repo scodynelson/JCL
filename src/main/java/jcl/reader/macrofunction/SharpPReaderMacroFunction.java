@@ -10,7 +10,7 @@ import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.pathnames.PathnameStruct;
 import jcl.reader.Reader;
-import jcl.reader.ReaderVariables;
+import jcl.reader.struct.ReaderVariables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

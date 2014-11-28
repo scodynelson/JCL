@@ -7,7 +7,7 @@ package jcl.reader.macrofunction;
 import jcl.reader.AttributeType;
 import jcl.reader.CaseSpec;
 import jcl.reader.Reader;
-import jcl.reader.ReaderVariables;
+import jcl.reader.struct.ReaderVariables;
 import jcl.reader.SyntaxType;
 import jcl.streams.ReadPeekResult;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;

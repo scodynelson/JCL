@@ -11,7 +11,7 @@ import jcl.numbers.NumberStruct;
 import jcl.numbers.RatioStruct;
 import jcl.reader.AttributeType;
 import jcl.reader.Reader;
-import jcl.reader.ReaderVariables;
+import jcl.reader.struct.ReaderVariables;
 import jcl.types.DoubleFloat;
 import jcl.types.Float;
 import jcl.types.LongFloat;

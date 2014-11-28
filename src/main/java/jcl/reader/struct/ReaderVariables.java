@@ -2,12 +2,11 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.reader;
+package jcl.reader.struct;
 
 import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.printer.RadixVariable;
-import jcl.reader.struct.ReadtableStruct;
 import jcl.symbols.BooleanStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.TStruct;

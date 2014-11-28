@@ -3,6 +3,7 @@ package jcl.reader.struct;
 import jcl.LispStruct;
 import jcl.classes.BuiltInClassStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.numbers.IntegerStruct;
 import jcl.reader.AttributeType;
 import jcl.reader.CaseSpec;
 import jcl.reader.Reader;
@@ -163,8 +164,8 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	 *
 	 * @return the attribute type for the provided {@code codePoint} value
 	 */
-	public AttributeType getAttributeType(final int codePoint) {
-		return attributeTable.getAttribute(codePoint);
+	public AttributeType getAttributeType(final int codePoint, final IntegerStruct readBase) {
+		return attributeTable.getAttribute(codePoint, readBase);
 	}
 
 	/**

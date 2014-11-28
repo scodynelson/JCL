@@ -4,8 +4,8 @@
 
 package jcl.reader.struct;
 
+import jcl.numbers.IntegerStruct;
 import jcl.reader.AttributeType;
-import jcl.reader.ReaderVariables;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -167,11 +167,11 @@ class AttributeTable {
 	 *
 	 * @return the matching attribute type for the provided {@code codePoint}
 	 */
-	AttributeType getAttribute(final int codePoint) {
+	AttributeType getAttribute(final int codePoint, final IntegerStruct readBase) {
 		if (attributeTypeMap.containsKey(codePoint)) {
 			AttributeType attributeType = attributeTypeMap.get(codePoint);
 
-			final boolean hasHighRadix = ReaderVariables.READ_BASE.getValue().getBigInteger().intValueExact() > 13;
+			final boolean hasHighRadix = readBase.getBigInteger().intValueExact() > 13;
 			if (hasHighRadix && (attributeType == AttributeType.EXPONENTMARKER)) {
 				attributeType = AttributeType.ALPHADIGIT;
 			}

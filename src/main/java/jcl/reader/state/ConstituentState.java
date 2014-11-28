@@ -4,10 +4,11 @@
 
 package jcl.reader.state;
 
+import jcl.numbers.IntegerStruct;
 import jcl.reader.AttributeType;
 import jcl.reader.CaseSpec;
 import jcl.reader.Reader;
-import jcl.reader.ReaderVariables;
+import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
 
 /**
@@ -44,7 +45,9 @@ final class ConstituentState implements State {
 
 		final ReadtableStruct readtable = ReaderVariables.READTABLE.getValue();
 		final CaseSpec readtableCase = readtable.getReadtableCase();
-		final AttributeType attributeType = readtable.getAttributeType(codePoint);
+
+		final IntegerStruct readBase = ReaderVariables.READ_BASE.getValue();
+		final AttributeType attributeType = readtable.getAttributeType(codePoint, readBase);
 
 		codePoint = State.properCaseCodePoint(codePoint, attributeType, readtableCase);
 		tokenBuilder.addToTokenAttributes(codePoint, attributeType);

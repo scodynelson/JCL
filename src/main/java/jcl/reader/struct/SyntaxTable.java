@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Represents a lookup table for syntax types matching code points.
+ * Represents a lookup table for {@link SyntaxType}s matching {@link Integer} code points.
  */
 @SuppressWarnings("all")
 class SyntaxTable {
@@ -177,7 +177,9 @@ class SyntaxTable {
 	SyntaxType getSyntaxType(final int codePoint) {
 		if (syntaxTypeMap.containsKey(codePoint)) {
 			return syntaxTypeMap.get(codePoint);
-		} else if (Character.isDefined(codePoint)) {
+		}
+
+		if (Character.isDefined(codePoint)) {
 			if (Character.isWhitespace(codePoint)) {
 				return SyntaxType.WHITESPACE;
 			} else if (Character.isUnicodeIdentifierPart(codePoint)
@@ -187,12 +189,12 @@ class SyntaxTable {
 				LOGGER.warn("Defined but illegal: {}", codePoint);
 				return SyntaxType.INVALID;
 			}
-		} else {
-			if (codePoint != CharacterConstants.EXIT_CHAR) {
-				LOGGER.error("Not defined and illegal: {}", codePoint);
-			}
-			return SyntaxType.INVALID;
 		}
+
+		if (codePoint != CharacterConstants.EXIT_CHAR) {
+			LOGGER.error("Not defined and illegal: {}", codePoint);
+		}
+		return SyntaxType.INVALID;
 	}
 
 	/**

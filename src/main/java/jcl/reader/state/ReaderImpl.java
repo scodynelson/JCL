@@ -16,10 +16,13 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public class ReaderImpl implements Reader {
 
+	/**
+	 * {@link ReaderStateMediator} singleton to be used for all ReaderImpl instances.
+	 */
 	private static final ReaderStateMediator READER_STATE_MEDIATOR = ReaderStateMediatorImpl.INSTANCE;
 
 	/**
-	 * The {@link InputStream} the reader reads lisp tokens from.
+	 * The {@link InputStream} the ReaderImpl reads lisp tokens from.
 	 */
 	private final InputStream inputStream;
 
@@ -33,30 +36,11 @@ public class ReaderImpl implements Reader {
 		this.inputStream = inputStream;
 	}
 
-	/**
-	 * Reads the next {@link LispStruct} from the {@link #inputStream}. This calls the overloaded {@link #read(boolean,
-	 * LispStruct, boolean)} method with {@code eofErrorP} as true, {@code eofValue} as null, and {@code recursiveP} as
-	 * true.
-	 *
-	 * @return the next {@link LispStruct} from the {@link #inputStream}.
-	 */
 	@Override
 	public LispStruct read() {
 		return read(true, null, true);
 	}
 
-	/**
-	 * Reads the next {@link LispStruct} from the {@link #inputStream}.
-	 *
-	 * @param eofErrorP
-	 * 		whether or not to throw an error when an End-Of-File is reached
-	 * @param eofValue
-	 * 		the value to return if an End-Of-File is reached and an error is not to be thrown
-	 * @param recursiveP
-	 * 		whether or not to recursively read tokens
-	 *
-	 * @return the next {@link LispStruct} from the {@link #inputStream}.
-	 */
 	@Override
 	public LispStruct read(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		final TokenBuilder tokenBuilder = new TokenBuilder(eofErrorP, eofValue, recursiveP);
@@ -65,51 +49,21 @@ public class ReaderImpl implements Reader {
 		return tokenBuilder.getReturnToken();
 	}
 
-	/**
-	 * Reads the next {@link ReadPeekResult} from the {@link #inputStream}. This calls the overloaded {@link
-	 * #readChar(boolean, LispStruct, boolean)} method with {@code eofErrorP} as true, {@code eofValue} as null, and
-	 * {@code recursiveP} as true.
-	 *
-	 * @return the next {@link ReadPeekResult} from the {@link #inputStream}.
-	 */
 	@Override
 	public ReadPeekResult readChar() {
 		return readChar(true, null, true);
 	}
 
-	/**
-	 * Reads the next {@link ReadPeekResult} from the {@link #inputStream}.
-	 *
-	 * @param eofErrorP
-	 * 		whether or not to throw an error when an End-Of-File is reached
-	 * @param eofValue
-	 * 		the value to return if an End-Of-File is reached and an error is not to be thrown
-	 * @param recursiveP
-	 * 		whether or not to recursively read tokens
-	 *
-	 * @return the next {@link ReadPeekResult} from the {@link #inputStream}.
-	 */
 	@Override
 	public ReadPeekResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		return inputStream.readChar(eofErrorP, eofValue, recursiveP);
 	}
 
-	/**
-	 * Un-reads the provided {@code codePoint} value from (or really back into) the {@link #inputStream}.
-	 *
-	 * @param codePoint
-	 * 		the value to un-read from (or really back into) the {@link #inputStream}
-	 */
 	@Override
 	public void unreadChar(final int codePoint) {
 		inputStream.unreadChar(codePoint);
 	}
 
-	/**
-	 * Gets the {@link #inputStream} for the JCL Reader instance.
-	 *
-	 * @return the {@link #inputStream} for the JCL Reader instance.
-	 */
 	@Override
 	public InputStream getInputStream() {
 		return inputStream;

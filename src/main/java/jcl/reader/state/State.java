@@ -7,8 +7,8 @@ package jcl.reader.state;
 import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.reader.AttributeType;
-import jcl.reader.CaseSpec;
 import jcl.reader.Reader;
+import jcl.reader.ReadtableCase;
 
 import java.util.List;
 
@@ -40,12 +40,12 @@ import java.util.List;
 interface State {
 
 	/**
-	 * Abstract method to be implemented by all child State objects to handle their respective reader processing
-	 * portion.
+	 * Used to handle reader processing in the respective state instance.
 	 *
 	 * @param readerStateMediator
+	 * 		the JCL {@link ReaderStateMediator} instance to use for invoking the different states of the {@link Reader}
 	 * @param reader
-	 * 		the JCL {@link Reader} instance to use for reading lisp tokens.
+	 * 		the JCL {@link Reader} instance to use for reading lisp tokens
 	 * @param tokenBuilder
 	 * 		the {@link TokenBuilder} used to build the resulting lisp token and house token parsing information throughout
 	 * 		the read process
@@ -106,20 +106,20 @@ interface State {
 	 * 		the code point value to properly case
 	 * @param attributeType
 	 * 		the {@link AttributeType} of the code point value used in determining the proper case value
-	 * @param caseSpec
+	 * @param readtableCase
 	 * 		the current readtable case used in determines the proper case value
 	 *
 	 * @return the proper code point value based from the provided {@code codePoint}
 	 */
-	static int properCaseCodePoint(final int codePoint, final AttributeType attributeType, final CaseSpec caseSpec) {
+	static int properCaseCodePoint(final int codePoint, final AttributeType attributeType, final ReadtableCase readtableCase) {
 
 		int properCaseCodePoint = codePoint;
 		if (Character.isBmpCodePoint(codePoint)) {
-			if ((caseSpec == CaseSpec.UPCASE) && ((attributeType == AttributeType.ALPHADIGIT) || (attributeType == AttributeType.EXPONENTMARKER))) {
+			if ((readtableCase == ReadtableCase.UPCASE) && ((attributeType == AttributeType.ALPHADIGIT) || (attributeType == AttributeType.EXPONENTMARKER))) {
 				properCaseCodePoint = Character.toUpperCase(codePoint);
-			} else if (caseSpec == CaseSpec.DOWNCASE) {
+			} else if (readtableCase == ReadtableCase.DOWNCASE) {
 				properCaseCodePoint = Character.toLowerCase(codePoint);
-			} else if (caseSpec == CaseSpec.INVERT) {
+			} else if (readtableCase == ReadtableCase.INVERT) {
 				if (Character.isUpperCase(codePoint)) {
 					properCaseCodePoint = Character.toLowerCase(codePoint);
 				} else {

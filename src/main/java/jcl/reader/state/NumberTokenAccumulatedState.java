@@ -178,8 +178,7 @@ final class NumberTokenAccumulatedState implements State {
 
 	/**
 	 * This method checks to see if any of the number specific attributes are invalidly placed in the token, which
-	 * would
-	 * make the token non-numeric.
+	 * would make the token non-numeric.
 	 *
 	 * @param tokenAttributes
 	 * 		the token attributes to check
@@ -197,6 +196,7 @@ final class NumberTokenAccumulatedState implements State {
 					tokenAttributes
 							.stream()
 							.filter(tokenAttribute -> tokenAttribute.getAttributeType() == e)
+							.limit(2)
 							.count();
 			return numberOfMatchingAttributes > 1;
 		});
@@ -307,8 +307,7 @@ final class NumberTokenAccumulatedState implements State {
 
 	/**
 	 * This method gets the float token string from the provided tokenString and exponentToken. The exponentToken
-	 * determines
-	 * how the tokenString exponent should be replaced to look like a valid exponent string in Java.
+	 * determines how the tokenString exponent should be replaced to look like a valid exponent string in Java.
 	 *
 	 * @param tokenString
 	 * 		the tokenString

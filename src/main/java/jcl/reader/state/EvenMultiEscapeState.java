@@ -7,7 +7,7 @@ package jcl.reader.state;
 import jcl.LispStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.reader.AttributeType;
-import jcl.reader.CaseSpec;
+import jcl.reader.ReadtableCase;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
@@ -90,7 +90,7 @@ final class EvenMultiEscapeState implements State {
 		final SyntaxType syntaxType = readtable.getSyntaxType(codePoint);
 
 		if ((syntaxType == SyntaxType.CONSTITUENT) || (syntaxType == SyntaxType.NON_TERMINATING)) {
-			final CaseSpec readtableCase = readtable.getReadtableCase();
+			final ReadtableCase readtableCase = readtable.getReadtableCase();
 
 			final IntegerStruct readBase = ReaderVariables.READ_BASE.getValue();
 			final AttributeType attributeType = readtable.getAttributeType(codePoint, readBase);

@@ -75,7 +75,7 @@ abstract class FeaturesReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 * 		the {@link Reader} used to read in the next token
 	 */
 	void readFeatures(final Reader reader) {
-		final BooleanStruct<?> previousReadSuppress = ReaderVariables.READ_SUPPRESS.getValue();
+		final BooleanStruct previousReadSuppress = ReaderVariables.READ_SUPPRESS.getValue();
 		final PackageStruct previousPackage = PackageVariables.PACKAGE.getValue();
 		try {
 			ReaderVariables.READ_SUPPRESS.setValue(NILStruct.INSTANCE);

@@ -5,7 +5,7 @@
 package jcl.reader.macrofunction;
 
 import jcl.reader.AttributeType;
-import jcl.reader.CaseSpec;
+import jcl.reader.ReadtableCase;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.SyntaxType;
@@ -230,7 +230,7 @@ abstract class ExtendedTokenReaderMacroFunction extends ReaderMacroFunctionImpl 
 	 * @return the transformed token with the correct case
 	 */
 	private static int getTokenWithCase(final int currentToken) {
-		final CaseSpec readtableCase = ReaderVariables.READTABLE.getValue().getReadtableCase();
+		final ReadtableCase readtableCase = ReaderVariables.READTABLE.getValue().getReadtableCase();
 
 		int properCaseToken = currentToken;
 		switch (readtableCase) {

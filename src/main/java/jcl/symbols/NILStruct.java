@@ -1,13 +1,12 @@
 package jcl.symbols;
 
-import jcl.types.NIL;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link NILStruct} is the object representation of a Lisp 'nil' type.
  */
-public final class NILStruct extends BooleanStruct<NIL> {
+public final class NILStruct extends BooleanStruct {
 
 	public static final NILStruct INSTANCE = new NILStruct();
 
@@ -15,7 +14,7 @@ public final class NILStruct extends BooleanStruct<NIL> {
 	 * Private constructor.
 	 */
 	private NILStruct() {
-		super("NIL", NIL.INSTANCE, false);
+		super("NIL", false);
 	}
 
 	@Override

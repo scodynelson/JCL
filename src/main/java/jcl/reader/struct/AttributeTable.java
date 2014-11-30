@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Represents a lookup table for attribute types matching code points.
+ * Represents a lookup table for {@link AttributeType}s matching {@link Integer} code points.
  */
 @SuppressWarnings("all")
 class AttributeTable {
@@ -176,16 +176,18 @@ class AttributeTable {
 				attributeType = AttributeType.ALPHADIGIT;
 			}
 			return attributeType;
-		} else {
-			if (Character.isLetterOrDigit(codePoint)) {
-				return AttributeType.ALPHADIGIT;
-			} else if (Character.isUnicodeIdentifierPart(codePoint)
-					&& !Character.isIdentifierIgnorable(codePoint)) {
-				return AttributeType.ALPHABETIC;
-			} else {
-				return AttributeType.INVALID;
-			}
 		}
+
+		if (Character.isLetterOrDigit(codePoint)) {
+			return AttributeType.ALPHADIGIT;
+		}
+
+		if (Character.isUnicodeIdentifierPart(codePoint)
+				&& !Character.isIdentifierIgnorable(codePoint)) {
+			return AttributeType.ALPHABETIC;
+		}
+
+		return AttributeType.INVALID;
 	}
 
 	@Override

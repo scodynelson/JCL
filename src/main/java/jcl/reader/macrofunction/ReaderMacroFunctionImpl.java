@@ -8,33 +8,15 @@ import jcl.LispStruct;
 import jcl.functions.FunctionStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.reader.AttributeType;
-import jcl.reader.Reader;
 import jcl.reader.ReaderMacroFunction;
-import jcl.reader.struct.ReaderVariables;
 import jcl.reader.SyntaxType;
-
-import java.math.BigInteger;
+import jcl.reader.struct.ReaderVariables;
 
 /**
- * Defines a ReaderMacroFunction type.
+ * Abstract implementation definition for all Reader defined macro functions that read character macros based off of a
+ * provided {@link Integer} code point.
  */
 public abstract class ReaderMacroFunctionImpl extends FunctionStruct implements ReaderMacroFunction {
-
-	/**
-	 * Interpret the character stream from the provided {@link Reader} (up to End-of-File or new line) based on the
-	 * provided {@code codePoint}.
-	 *
-	 * @param codePoint
-	 * 		the character code point that determines the macro function
-	 * @param reader
-	 * 		the {@link jcl.reader.Reader} used to read tokens
-	 * @param numArg
-	 * 		the optional number argument
-	 *
-	 * @return the parsed {@link LispStruct} token
-	 */
-	@Override
-	public abstract LispStruct readMacro(int codePoint, Reader reader, BigInteger numArg);
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
@@ -43,26 +25,26 @@ public abstract class ReaderMacroFunctionImpl extends FunctionStruct implements 
 	}
 
 	/**
-	 * Gets the {@link SyntaxType} for the provided {@code codePoint} from the {@link #readtable} for the JCL Reader
-	 * instance.
+	 * Gets the {@link SyntaxType} for the provided {@code codePoint} from the {@link ReaderVariables#READTABLE} value.
 	 *
 	 * @param codePoint
-	 * 		the value to get the {@link SyntaxType} for from the {@link #readtable}
+	 * 		the value to get the {@link SyntaxType} for from the {@link ReaderVariables#READTABLE} value
 	 *
-	 * @return the {@link SyntaxType} for the provided {@code codePoint} from the {@link #readtable}
+	 * @return the {@link SyntaxType} for the provided {@code codePoint} from {@link ReaderVariables#READTABLE} value
 	 */
 	private static SyntaxType getSyntaxType(final int codePoint) {
 		return ReaderVariables.READTABLE.getValue().getSyntaxType(codePoint);
 	}
 
 	/**
-	 * Gets the {@link AttributeType} for the provided {@code codePoint} from the {@link #readtable} for the JCL Reader
-	 * instance.
+	 * Gets the {@link AttributeType} for the provided {@code codePoint} from the {@link ReaderVariables#READTABLE}
+	 * value.
 	 *
 	 * @param codePoint
-	 * 		the value to get the {@link AttributeType} for from the {@link #readtable}
+	 * 		the value to get the {@link AttributeType} for from the {@link ReaderVariables#READTABLE} value
 	 *
-	 * @return the {@link AttributeType} for the provided {@code codePoint} from the {@link #readtable}
+	 * @return the {@link AttributeType} for the provided {@code codePoint} from the {@link ReaderVariables#READTABLE}
+	 * value
 	 */
 	private static AttributeType getAttributeType(final int codePoint) {
 		final IntegerStruct readBase = ReaderVariables.READ_BASE.getValue();

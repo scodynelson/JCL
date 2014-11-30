@@ -1,16 +1,16 @@
 package jcl.symbols;
 
-import jcl.LispStruct;
 import jcl.packages.GlobalPackageStruct;
+import jcl.types.Boolean;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public abstract class BooleanStruct<T extends LispStruct> extends SymbolStruct<T> {
+public abstract class BooleanStruct extends SymbolStruct<Boolean> {
 
 	private final boolean booleanValue;
 
-	protected BooleanStruct(final String name, final T value, final boolean booleanValue) {
-		super(name, GlobalPackageStruct.COMMON_LISP, value);
+	protected BooleanStruct(final String name, final boolean booleanValue) {
+		super(name, GlobalPackageStruct.COMMON_LISP, Boolean.INSTANCE);
 		this.booleanValue = booleanValue;
 	}
 

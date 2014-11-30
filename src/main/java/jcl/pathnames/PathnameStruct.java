@@ -238,7 +238,7 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 
 	@Override
 	public String printStruct() {
-		final BooleanStruct<?> printEscape = PrinterVariables.PRINT_ESCAPE.getValue();
+		final BooleanStruct printEscape = PrinterVariables.PRINT_ESCAPE.getValue();
 
 		final StringBuilder stringBuilder = new StringBuilder();
 

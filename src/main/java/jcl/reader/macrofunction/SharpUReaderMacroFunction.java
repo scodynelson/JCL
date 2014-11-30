@@ -26,6 +26,8 @@ public final class SharpUReaderMacroFunction extends UnicodeCharacterReaderMacro
 	 * Private constructor.
 	 */
 	private SharpUReaderMacroFunction() {
+		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_SMALL_LETTER_U, INSTANCE);
+		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_CAPITAL_LETTER_U, INSTANCE);
 	}
 
 	@Override

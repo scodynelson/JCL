@@ -39,6 +39,8 @@ public final class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 * Private constructor.
 	 */
 	private SharpAReaderMacroFunction() {
+		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_SMALL_LETTER_A, INSTANCE);
+		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_CAPITAL_LETTER_A, INSTANCE);
 	}
 
 	@Override

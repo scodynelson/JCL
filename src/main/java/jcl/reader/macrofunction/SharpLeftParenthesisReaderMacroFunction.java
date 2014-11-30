@@ -39,6 +39,7 @@ public final class SharpLeftParenthesisReaderMacroFunction extends ListReaderMac
 	 * Private constructor.
 	 */
 	private SharpLeftParenthesisReaderMacroFunction() {
+		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LEFT_PARENTHESIS, INSTANCE);
 	}
 
 	@Override

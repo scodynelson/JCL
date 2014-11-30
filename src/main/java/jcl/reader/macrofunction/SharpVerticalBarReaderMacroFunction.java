@@ -26,6 +26,7 @@ public final class SharpVerticalBarReaderMacroFunction extends ReaderMacroFuncti
 	 * Private constructor.
 	 */
 	private SharpVerticalBarReaderMacroFunction() {
+		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.VERTICAL_LINE, INSTANCE);
 	}
 
 	@Override

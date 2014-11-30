@@ -33,6 +33,7 @@ public final class SharpFullStopReaderMacroFunction extends ReaderMacroFunctionI
 	 * Private constructor.
 	 */
 	private SharpFullStopReaderMacroFunction() {
+		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.FULL_STOP, INSTANCE);
 	}
 
 	@Override

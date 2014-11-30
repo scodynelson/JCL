@@ -35,6 +35,7 @@ public final class SharpApostropheReaderMacroFunction extends ReaderMacroFunctio
 	 * Private constructor.
 	 */
 	private SharpApostropheReaderMacroFunction() {
+		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.APOSTROPHE, INSTANCE);
 	}
 
 	@Override

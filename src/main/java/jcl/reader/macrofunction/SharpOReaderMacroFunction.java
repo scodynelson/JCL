@@ -7,6 +7,7 @@ package jcl.reader.macrofunction;
 import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.reader.Reader;
+import jcl.reader.struct.ReaderVariables;
 
 import java.math.BigInteger;
 
@@ -29,6 +30,8 @@ public final class SharpOReaderMacroFunction extends RationalReaderMacroFunction
 	 * Private constructor.
 	 */
 	private SharpOReaderMacroFunction() {
+		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_SMALL_LETTER_O, INSTANCE);
+		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_CAPITAL_LETTER_O, INSTANCE);
 	}
 
 	@Override

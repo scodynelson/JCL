@@ -27,6 +27,7 @@ public final class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctio
 	 * Private constructor.
 	 */
 	private SharpEqualsSignReaderMacroFunction() {
+		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.EQUALS_SIGN, INSTANCE);
 	}
 
 	@Override

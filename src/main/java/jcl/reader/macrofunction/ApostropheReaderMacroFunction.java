@@ -35,6 +35,7 @@ public final class ApostropheReaderMacroFunction extends ReaderMacroFunctionImpl
 	 * Private constructor.
 	 */
 	private ApostropheReaderMacroFunction() {
+		ReaderVariables.READTABLE.getValue().setMacroCharacter(CharacterConstants.APOSTROPHE, INSTANCE, false);
 	}
 
 	@Override

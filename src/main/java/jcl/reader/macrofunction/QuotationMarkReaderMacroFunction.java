@@ -30,6 +30,7 @@ public final class QuotationMarkReaderMacroFunction extends UnicodeCharacterRead
 	 * Private constructor.
 	 */
 	private QuotationMarkReaderMacroFunction() {
+		ReaderVariables.READTABLE.getValue().setMacroCharacter(CharacterConstants.QUOTATION_MARK, INSTANCE, false);
 	}
 
 	@Override

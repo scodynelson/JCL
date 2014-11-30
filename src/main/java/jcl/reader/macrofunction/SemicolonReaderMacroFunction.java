@@ -26,6 +26,7 @@ public final class SemicolonReaderMacroFunction extends ReaderMacroFunctionImpl 
 	 * Private constructor.
 	 */
 	private SemicolonReaderMacroFunction() {
+		ReaderVariables.READTABLE.getValue().setMacroCharacter(CharacterConstants.SEMICOLON, INSTANCE, false);
 	}
 
 	@Override

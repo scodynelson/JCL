@@ -7,6 +7,7 @@ package jcl.reader.macrofunction;
 import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.reader.Reader;
+import jcl.reader.struct.ReaderVariables;
 
 import java.math.BigInteger;
 
@@ -24,6 +25,7 @@ public final class LeftParenthesisReaderMacroFunction extends ListReaderMacroFun
 	 * Private constructor.
 	 */
 	private LeftParenthesisReaderMacroFunction() {
+		ReaderVariables.READTABLE.getValue().setMacroCharacter(CharacterConstants.LEFT_PARENTHESIS, INSTANCE, false);
 	}
 
 	@Override

@@ -38,6 +38,7 @@ public final class SharpAsteriskReaderMacroFunction extends ExtendedTokenReaderM
 	 */
 	private SharpAsteriskReaderMacroFunction() {
 		super(false);
+		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.ASTERISK, INSTANCE);
 	}
 
 	@Override

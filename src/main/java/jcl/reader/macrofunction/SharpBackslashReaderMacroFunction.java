@@ -36,6 +36,7 @@ public final class SharpBackslashReaderMacroFunction extends ExtendedTokenReader
 	 */
 	private SharpBackslashReaderMacroFunction() {
 		super(true);
+		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.BACKSLASH, INSTANCE);
 	}
 
 	@Override

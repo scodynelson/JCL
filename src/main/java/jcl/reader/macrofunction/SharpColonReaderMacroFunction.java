@@ -35,6 +35,7 @@ public final class SharpColonReaderMacroFunction extends ExtendedTokenReaderMacr
 	 */
 	private SharpColonReaderMacroFunction() {
 		super(false);
+		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.COLON, INSTANCE);
 	}
 
 	@Override

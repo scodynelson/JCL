@@ -7,6 +7,7 @@ package jcl.reader.macrofunction;
 import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.reader.Reader;
+import jcl.reader.struct.ReaderVariables;
 
 import java.math.BigInteger;
 
@@ -25,6 +26,7 @@ public final class SharpHyphenMinusReaderMacroFunction extends FeaturesReaderMac
 	 */
 	private SharpHyphenMinusReaderMacroFunction() {
 		super(true);
+		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.HYPHEN_MINUS, INSTANCE);
 	}
 
 	@Override

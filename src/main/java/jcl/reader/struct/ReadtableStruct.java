@@ -1,6 +1,7 @@
 package jcl.reader.struct;
 
 import jcl.LispStruct;
+import jcl.characters.CharacterConstants;
 import jcl.classes.BuiltInClassStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.numbers.IntegerStruct;
@@ -70,7 +71,8 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	 * Initializes and fills all standard readtable structures.
 	 */
 	private void init() {
-//		ReaderMacroFunctionImpl.initializeReadtable(this);
+		// Initialize '#' DispatchTable
+		makeDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, false);
 	}
 
 	/**

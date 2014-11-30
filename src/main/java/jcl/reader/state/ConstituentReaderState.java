@@ -21,25 +21,25 @@ import jcl.reader.struct.ReadtableStruct;
  * the current readtable. X is used to begin a token, and step 8 is entered.
  * </p>
  */
-final class ConstituentState implements State {
+final class ConstituentReaderState implements ReaderState {
 
 	/**
 	 * Singleton instance variable.
 	 */
-	static final State INSTANCE = new ConstituentState();
+	static final ReaderState INSTANCE = new ConstituentReaderState();
 
 	/**
 	 * Private constructor.
 	 */
-	private ConstituentState() {
+	private ConstituentReaderState() {
 	}
 
 	@Override
 	public void process(final ReaderStateMediator readerStateMediator, final Reader reader, final TokenBuilder tokenBuilder) {
 		Integer codePoint = tokenBuilder.getPreviousReadCharacter();
 
-		if (State.isEndOfFileCharacter(codePoint)) {
-			State.handleEndOfFile(tokenBuilder, "ConstituentState");
+		if (ReaderState.isEndOfFileCharacter(codePoint)) {
+			ReaderState.handleEndOfFile(tokenBuilder, "ConstituentReaderState");
 			return;
 		}
 
@@ -49,7 +49,7 @@ final class ConstituentState implements State {
 		final IntegerStruct readBase = ReaderVariables.READ_BASE.getValue();
 		final AttributeType attributeType = readtable.getAttributeType(codePoint, readBase);
 
-		codePoint = State.properCaseCodePoint(codePoint, attributeType, readtableCase);
+		codePoint = ReaderState.properCaseCodePoint(codePoint, attributeType, readtableCase);
 		tokenBuilder.addToTokenAttributes(codePoint, attributeType);
 
 		readerStateMediator.readEvenMultipleEscape(reader, tokenBuilder);

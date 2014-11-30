@@ -18,17 +18,17 @@ import jcl.streams.ReadPeekResult;
  * from the input stream, and dispatched according to the syntax type of x to one of steps 2 to 7.
  * </p>
  */
-final class ReadState implements State {
+final class ReadReaderState implements ReaderState {
 
 	/**
 	 * Singleton instance variable.
 	 */
-	static final State INSTANCE = new ReadState();
+	static final ReaderState INSTANCE = new ReadReaderState();
 
 	/**
 	 * Private constructor.
 	 */
-	private ReadState() {
+	private ReadReaderState() {
 	}
 
 	@Override
@@ -40,7 +40,7 @@ final class ReadState implements State {
 
 		final ReadPeekResult readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
 		if (readResult.isEof()) {
-			State.handleEndOfFile(tokenBuilder, "ReadState");
+			ReaderState.handleEndOfFile(tokenBuilder, "ReadReaderState");
 			return;
 		}
 

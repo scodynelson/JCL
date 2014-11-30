@@ -17,17 +17,17 @@ import jcl.streams.ReadPeekResult;
  * used to begin a token, and step 8 is entered.
  * </p>
  */
-final class SingleEscapeState implements State {
+final class SingleEscapeReaderState implements ReaderState {
 
 	/**
 	 * Singleton instance variable.
 	 */
-	static final State INSTANCE = new SingleEscapeState();
+	static final ReaderState INSTANCE = new SingleEscapeReaderState();
 
 	/**
 	 * Private constructor.
 	 */
-	private SingleEscapeState() {
+	private SingleEscapeReaderState() {
 	}
 
 	@Override

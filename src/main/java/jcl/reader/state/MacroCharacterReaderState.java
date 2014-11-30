@@ -37,25 +37,25 @@ import java.math.BigInteger;
  * </tab>
  * </p>
  */
-final class MacroCharacterState implements State {
+final class MacroCharacterReaderState implements ReaderState {
 
 	/**
 	 * Singleton instance variable.
 	 */
-	static final State INSTANCE = new MacroCharacterState();
+	static final ReaderState INSTANCE = new MacroCharacterReaderState();
 
 	/**
 	 * Private constructor.
 	 */
-	private MacroCharacterState() {
+	private MacroCharacterReaderState() {
 	}
 
 	@Override
 	public void process(final ReaderStateMediator readerStateMediator, final Reader reader, final TokenBuilder tokenBuilder) {
 		final Integer codePoint = tokenBuilder.getPreviousReadCharacter();
 
-		if (State.isEndOfFileCharacter(codePoint)) {
-			State.handleEndOfFile(tokenBuilder, "MacroCharacterState");
+		if (ReaderState.isEndOfFileCharacter(codePoint)) {
+			ReaderState.handleEndOfFile(tokenBuilder, "MacroCharacterReaderState");
 			return;
 		}
 

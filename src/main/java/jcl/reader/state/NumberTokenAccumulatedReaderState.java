@@ -38,12 +38,12 @@ import java.util.function.Function;
  * be formatted, then we progress to the SymbolTokenAccumulatedState.
  * </p>
  */
-final class NumberTokenAccumulatedState implements State {
+final class NumberTokenAccumulatedReaderState implements ReaderState {
 
 	/**
 	 * Singleton instance variable.
 	 */
-	static final State INSTANCE = new NumberTokenAccumulatedState();
+	static final ReaderState INSTANCE = new NumberTokenAccumulatedReaderState();
 
 	/**
 	 * The list of {@link AttributeType}s that should not be present in a numeric token.
@@ -73,7 +73,7 @@ final class NumberTokenAccumulatedState implements State {
 	/**
 	 * Private constructor.
 	 */
-	private NumberTokenAccumulatedState() {
+	private NumberTokenAccumulatedReaderState() {
 	}
 
 	@Override
@@ -81,7 +81,7 @@ final class NumberTokenAccumulatedState implements State {
 
 		final NumberStruct numberToken = getNumberToken(tokenBuilder);
 		if (numberToken == null) {
-			SymbolTokenAccumulatedState.INSTANCE.process(readerStateMediator, reader, tokenBuilder);
+			SymbolTokenAccumulatedReaderState.INSTANCE.process(readerStateMediator, reader, tokenBuilder);
 		} else {
 			tokenBuilder.setReturnToken(numberToken);
 		}
@@ -105,7 +105,7 @@ final class NumberTokenAccumulatedState implements State {
 		}
 
 		// Check that there is at least 1 'ALPHADIGIT'
-		final boolean hasNoAlphaDigits = State.hasNoAttributes(tokenAttributes, AttributeType.ALPHADIGIT);
+		final boolean hasNoAlphaDigits = ReaderState.hasNoAttributes(tokenAttributes, AttributeType.ALPHADIGIT);
 		if (hasNoAlphaDigits) {
 			return null;
 		}
@@ -136,7 +136,7 @@ final class NumberTokenAccumulatedState implements State {
 			return null;
 		}
 
-		String tokenString = State.convertTokensToString(tokenAttributes);
+		String tokenString = ReaderState.convertTokensToString(tokenAttributes);
 
 		// Java does not support numbers in the format +12345, so we need to get rid of the plus sign if it exists
 		if (tokenString.startsWith("+")) {
@@ -148,9 +148,9 @@ final class NumberTokenAccumulatedState implements State {
 			tokenString = tokenString.substring(0, tokenString.length() - 1);
 		}
 
-		final boolean hasDecimal = State.hasAnyAttribute(tokenAttributes, AttributeType.DECIMAL);
-		final boolean hasRatioMarker = State.hasAnyAttribute(tokenAttributes, AttributeType.RATIOMARKER);
-		final boolean hasExponentMarker = State.hasAnyAttribute(tokenAttributes, AttributeType.EXPONENTMARKER);
+		final boolean hasDecimal = ReaderState.hasAnyAttribute(tokenAttributes, AttributeType.DECIMAL);
+		final boolean hasRatioMarker = ReaderState.hasAnyAttribute(tokenAttributes, AttributeType.RATIOMARKER);
+		final boolean hasExponentMarker = ReaderState.hasAnyAttribute(tokenAttributes, AttributeType.EXPONENTMARKER);
 
 		if (hasExponentMarker && !hasDecimal) {
 			return null;
@@ -163,7 +163,7 @@ final class NumberTokenAccumulatedState implements State {
 			final BigFraction rational = new BigFraction(numerator, denominator);
 			return new RatioStruct(rational);
 		} else if (hasDecimal) {
-			final Integer exponentToken = State.getTokenByAttribute(tokenAttributes, AttributeType.EXPONENTMARKER);
+			final Integer exponentToken = ReaderState.getTokenByAttribute(tokenAttributes, AttributeType.EXPONENTMARKER);
 
 			tokenString = getFloatTokenString(tokenString, exponentToken);
 
@@ -207,7 +207,7 @@ final class NumberTokenAccumulatedState implements State {
 		// Checks to make sure if either 'PLUS' or 'MINUS' is supplied, that it is first
 		final boolean hasAttributesAndNotFirst
 				= hasAnyAttributes(FIRST_ONLY_ATTRS, e ->
-						State.hasAnyAttribute(tokenAttributes, e) && (firstAttributeType != e)
+						ReaderState.hasAnyAttribute(tokenAttributes, e) && (firstAttributeType != e)
 		);
 
 		final TokenAttribute lastTokenAttribute = tokenAttributes.getLast();
@@ -216,13 +216,13 @@ final class NumberTokenAccumulatedState implements State {
 		// Checks to make sure if either 'DECIMAL' or 'RATIOMARKER' is supplied, that it is neither first nor last
 		final boolean hasAttributesAndFirstOrLast
 				= hasAnyAttributes(NOT_FIRST_OR_LAST_ATTRS, e ->
-						State.hasAnyAttribute(tokenAttributes, e) && ((firstAttributeType == e) || (lastAttributeType == e))
+						ReaderState.hasAnyAttribute(tokenAttributes, e) && ((firstAttributeType == e) || (lastAttributeType == e))
 		);
 
 		// Checks to make sure that both 'DECIMAL' and 'RATIOMARKER' are not supplied at the same time
 		final boolean hasSimultaneousAttributes
 				= hasAllAttributes(NO_SIMULTANEOUS_ATTRS, e ->
-						State.hasAnyAttribute(tokenAttributes, e)
+						ReaderState.hasAnyAttribute(tokenAttributes, e)
 		);
 
 		return hasMoreThanOneOfAttributes || hasAttributesAndNotFirst || hasAttributesAndFirstOrLast || hasSimultaneousAttributes;

@@ -57,17 +57,17 @@ import java.util.Map;
  * Keyword Package!!!
  * </p>
  */
-final class SymbolTokenAccumulatedState implements State {
+final class SymbolTokenAccumulatedReaderState implements ReaderState {
 
 	/**
 	 * Singleton instance variable.
 	 */
-	static final State INSTANCE = new SymbolTokenAccumulatedState();
+	static final ReaderState INSTANCE = new SymbolTokenAccumulatedReaderState();
 
 	/**
 	 * Private constructor.
 	 */
-	private SymbolTokenAccumulatedState() {
+	private SymbolTokenAccumulatedReaderState() {
 	}
 
 	@Override
@@ -76,8 +76,8 @@ final class SymbolTokenAccumulatedState implements State {
 		final SymbolStruct<?> symbolToken = getSymbolToken(tokenBuilder);
 		if (symbolToken == null) {
 			final Integer codePoint = tokenBuilder.getPreviousReadCharacter();
-			if (State.isEndOfFileCharacter(codePoint) && tokenBuilder.isEofErrorP()) {
-				throw new ReaderErrorException("End-of-File encountered in SymbolTokenAccumulatedState.");
+			if (ReaderState.isEndOfFileCharacter(codePoint) && tokenBuilder.isEofErrorP()) {
+				throw new ReaderErrorException("End-of-File encountered in SymbolTokenAccumulatedReaderState.");
 			}
 		} else {
 			tokenBuilder.setReturnToken(symbolToken);
@@ -97,9 +97,9 @@ final class SymbolTokenAccumulatedState implements State {
 		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
 
 		// Check that there is at least 1 'ALPHADIGIT'
-		final boolean hasNoPackageMarkers = State.hasNoAttributes(tokenAttributes, AttributeType.PACKAGEMARKER);
+		final boolean hasNoPackageMarkers = ReaderState.hasNoAttributes(tokenAttributes, AttributeType.PACKAGEMARKER);
 		if (hasNoPackageMarkers) {
-			final String symName = State.convertTokensToString(tokenAttributes);
+			final String symName = ReaderState.convertTokensToString(tokenAttributes);
 
 			final PackageStruct pkg = PackageVariables.PACKAGE.getValue();
 			final PackageSymbolStruct packageSymbol = pkg.findSymbol(symName);
@@ -164,8 +164,8 @@ final class SymbolTokenAccumulatedState implements State {
 			symbolTokenAttributes.add(tokenAttribute);
 		}
 
-		final String pkgName = State.convertTokensToString(packageTokenAttributes);
-		final String symName = State.convertTokensToString(symbolTokenAttributes);
+		final String pkgName = ReaderState.convertTokensToString(packageTokenAttributes);
+		final String symName = ReaderState.convertTokensToString(symbolTokenAttributes);
 
 		if (StringUtils.isNotEmpty(pkgName)) {
 			final PackageStruct pkg = PackageStruct.findPackage(pkgName);

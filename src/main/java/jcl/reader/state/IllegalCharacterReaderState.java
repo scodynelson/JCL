@@ -14,24 +14,24 @@ import jcl.reader.Reader;
  * If x is an invalid character, an error of type reader-error is signaled.
  * </p>
  */
-final class IllegalCharacterState implements State {
+final class IllegalCharacterReaderState implements ReaderState {
 
 	/**
 	 * Singleton instance variable.
 	 */
-	static final State INSTANCE = new IllegalCharacterState();
+	static final ReaderState INSTANCE = new IllegalCharacterReaderState();
 
 	/**
 	 * Private constructor.
 	 */
-	private IllegalCharacterState() {
+	private IllegalCharacterReaderState() {
 	}
 
 	@Override
 	public void process(final ReaderStateMediator readerStateMediator, final Reader reader, final TokenBuilder tokenBuilder) {
 		final Integer codePoint = tokenBuilder.getPreviousReadCharacter();
 
-		if (State.isEndOfFileCharacter(codePoint) && tokenBuilder.isEofErrorP()) {
+		if (ReaderState.isEndOfFileCharacter(codePoint) && tokenBuilder.isEofErrorP()) {
 			throw new ReaderErrorException("End-of-File was encountered.");
 		} else if (codePoint != CharacterConstants.EXIT_CHAR) {
 			throw new ReaderErrorException("Illegal Character was encountered: " + codePoint);

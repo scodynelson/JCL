@@ -23,17 +23,17 @@ import java.util.List;
  * 3) Package with a Symbol
  * </p>
  */
-final class TokenAccumulatedState implements State {
+final class TokenAccumulatedReaderState implements ReaderState {
 
 	/**
 	 * Singleton instance variable.
 	 */
-	static final State INSTANCE = new TokenAccumulatedState();
+	static final ReaderState INSTANCE = new TokenAccumulatedReaderState();
 
 	/**
 	 * Private constructor.
 	 */
-	private TokenAccumulatedState() {
+	private TokenAccumulatedReaderState() {
 	}
 
 	@Override
@@ -41,8 +41,8 @@ final class TokenAccumulatedState implements State {
 		final Integer codePoint = tokenBuilder.getPreviousReadCharacter();
 
 		final List<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
-		if (State.isEndOfFileCharacter(codePoint) && tokenAttributes.isEmpty()) {
-			State.handleEndOfFile(tokenBuilder, "TokenAccumulatedState");
+		if (ReaderState.isEndOfFileCharacter(codePoint) && tokenAttributes.isEmpty()) {
+			ReaderState.handleEndOfFile(tokenBuilder, "TokenAccumulatedReaderState");
 			return;
 		}
 
@@ -51,11 +51,11 @@ final class TokenAccumulatedState implements State {
 			return;
 		}
 
-		final String tokenString = State.convertTokensToString(tokenAttributes);
+		final String tokenString = ReaderState.convertTokensToString(tokenAttributes);
 		if (".".equals(tokenString)) {
 			throw new ReaderErrorException("Dot context error in '.'");
 		} else {
-			NumberTokenAccumulatedState.INSTANCE.process(readerStateMediator, reader, tokenBuilder);
+			NumberTokenAccumulatedReaderState.INSTANCE.process(readerStateMediator, reader, tokenBuilder);
 		}
 	}
 }

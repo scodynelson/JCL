@@ -58,17 +58,17 @@ import jcl.streams.ReadPeekResult;
  * </tab>
  * </p>
  */
-final class EvenMultiEscapeState implements State {
+final class EvenMultiEscapeReaderState implements ReaderState {
 
 	/**
 	 * Singleton instance variable.
 	 */
-	static final State INSTANCE = new EvenMultiEscapeState();
+	static final ReaderState INSTANCE = new EvenMultiEscapeReaderState();
 
 	/**
 	 * Private constructor.
 	 */
-	private EvenMultiEscapeState() {
+	private EvenMultiEscapeReaderState() {
 	}
 
 	@Override
@@ -95,7 +95,7 @@ final class EvenMultiEscapeState implements State {
 			final IntegerStruct readBase = ReaderVariables.READ_BASE.getValue();
 			final AttributeType attributeType = readtable.getAttributeType(codePoint, readBase);
 
-			codePoint = State.properCaseCodePoint(codePoint, attributeType, readtableCase);
+			codePoint = ReaderState.properCaseCodePoint(codePoint, attributeType, readtableCase);
 			tokenBuilder.addToTokenAttributes(codePoint, attributeType);
 
 			readerStateMediator.readEvenMultipleEscape(reader, tokenBuilder);

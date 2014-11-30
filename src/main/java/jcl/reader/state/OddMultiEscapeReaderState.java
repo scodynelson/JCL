@@ -37,17 +37,17 @@ import jcl.streams.ReadPeekResult;
  * </tab>
  * </p>
  */
-final class OddMultiEscapeState implements State {
+final class OddMultiEscapeReaderState implements ReaderState {
 
 	/**
 	 * Singleton instance variable.
 	 */
-	static final State INSTANCE = new OddMultiEscapeState();
+	static final ReaderState INSTANCE = new OddMultiEscapeReaderState();
 
 	/**
 	 * Private constructor.
 	 */
-	private OddMultiEscapeState() {
+	private OddMultiEscapeReaderState() {
 	}
 
 	@Override

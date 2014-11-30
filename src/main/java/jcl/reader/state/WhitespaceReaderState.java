@@ -12,17 +12,17 @@ import jcl.reader.Reader;
  * If x is a whitespace[2] character, then it is discarded and step 1 is re-entered.
  * </p>
  */
-final class WhitespaceState implements State {
+final class WhitespaceReaderState implements ReaderState {
 
 	/**
 	 * Singleton instance variable.
 	 */
-	static final State INSTANCE = new WhitespaceState();
+	static final ReaderState INSTANCE = new WhitespaceReaderState();
 
 	/**
 	 * Private constructor.
 	 */
-	private WhitespaceState() {
+	private WhitespaceReaderState() {
 	}
 
 	@Override

@@ -37,7 +37,7 @@ import java.util.List;
  * This site is the Reader Algorithm that is outlined within the CommonLisp HyperSpec (TM).
  */
 @FunctionalInterface
-interface State {
+interface ReaderState {
 
 	/**
 	 * Used to handle reader processing in the respective state instance.

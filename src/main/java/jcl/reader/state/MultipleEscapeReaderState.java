@@ -13,17 +13,17 @@ import jcl.reader.Reader;
  * entered.
  * </p>
  */
-final class MultipleEscapeState implements State {
+final class MultipleEscapeReaderState implements ReaderState {
 
 	/**
 	 * Singleton instance variable.
 	 */
-	static final State INSTANCE = new MultipleEscapeState();
+	static final ReaderState INSTANCE = new MultipleEscapeReaderState();
 
 	/**
 	 * Private constructor.
 	 */
-	private MultipleEscapeState() {
+	private MultipleEscapeReaderState() {
 	}
 
 	@Override

@@ -8,7 +8,7 @@ import jcl.LispStruct;
 import jcl.reader.Reader;
 
 /**
- * Mediator for {@link Reader} {@link State} invocations throughout the read process.
+ * Mediator for {@link Reader} {@link ReaderState} invocations throughout the read process.
  */
 interface ReaderStateMediator {
 

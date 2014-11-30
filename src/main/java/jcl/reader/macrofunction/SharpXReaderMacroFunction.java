@@ -30,8 +30,15 @@ public final class SharpXReaderMacroFunction extends RationalReaderMacroFunction
 	 * Private constructor.
 	 */
 	private SharpXReaderMacroFunction() {
-		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_SMALL_LETTER_X, INSTANCE);
-		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_CAPITAL_LETTER_X, INSTANCE);
+		init();
+	}
+
+	/**
+	 * Initializes the reader macro function and adds it to the global readtable.
+	 */
+	private void init() {
+		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_SMALL_LETTER_X, this);
+		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_CAPITAL_LETTER_X, this);
 	}
 
 	@Override

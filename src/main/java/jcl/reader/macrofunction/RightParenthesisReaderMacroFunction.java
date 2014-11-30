@@ -26,7 +26,14 @@ public final class RightParenthesisReaderMacroFunction extends ReaderMacroFuncti
 	 * Private constructor.
 	 */
 	private RightParenthesisReaderMacroFunction() {
-		ReaderVariables.READTABLE.getValue().setMacroCharacter(CharacterConstants.RIGHT_PARENTHESIS, INSTANCE, false);
+		init();
+	}
+
+	/**
+	 * Initializes the reader macro function and adds it to the global readtable.
+	 */
+	private void init() {
+		ReaderVariables.READTABLE.getValue().setMacroCharacter(CharacterConstants.RIGHT_PARENTHESIS, this, false);
 	}
 
 	@Override

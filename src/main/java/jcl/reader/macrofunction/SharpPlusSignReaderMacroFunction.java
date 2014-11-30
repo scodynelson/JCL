@@ -26,7 +26,14 @@ public final class SharpPlusSignReaderMacroFunction extends FeaturesReaderMacroF
 	 */
 	private SharpPlusSignReaderMacroFunction() {
 		super(false);
-		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.PLUS_SIGN, INSTANCE);
+		init();
+	}
+
+	/**
+	 * Initializes the reader macro function and adds it to the global readtable.
+	 */
+	private void init() {
+		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.PLUS_SIGN, this);
 	}
 
 	@Override

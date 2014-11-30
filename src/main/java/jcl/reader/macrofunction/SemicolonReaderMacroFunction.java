@@ -26,7 +26,14 @@ public final class SemicolonReaderMacroFunction extends ReaderMacroFunctionImpl 
 	 * Private constructor.
 	 */
 	private SemicolonReaderMacroFunction() {
-		ReaderVariables.READTABLE.getValue().setMacroCharacter(CharacterConstants.SEMICOLON, INSTANCE, false);
+		init();
+	}
+
+	/**
+	 * Initializes the reader macro function and adds it to the global readtable.
+	 */
+	private void init() {
+		ReaderVariables.READTABLE.getValue().setMacroCharacter(CharacterConstants.SEMICOLON, this, false);
 	}
 
 	@Override

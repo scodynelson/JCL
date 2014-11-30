@@ -27,7 +27,14 @@ public final class SharpSharpReaderMacroFunction extends ReaderMacroFunctionImpl
 	 * Private constructor.
 	 */
 	private SharpSharpReaderMacroFunction() {
-		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.NUMBER_SIGN, INSTANCE);
+		init();
+	}
+
+	/**
+	 * Initializes the reader macro function and adds it to the global readtable.
+	 */
+	private void init() {
+		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.NUMBER_SIGN, this);
 	}
 
 	@Override

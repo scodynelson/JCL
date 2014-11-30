@@ -35,7 +35,14 @@ public final class SharpColonReaderMacroFunction extends ExtendedTokenReaderMacr
 	 */
 	private SharpColonReaderMacroFunction() {
 		super(false);
-		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.COLON, INSTANCE);
+		init();
+	}
+
+	/**
+	 * Initializes the reader macro function and adds it to the global readtable.
+	 */
+	private void init() {
+		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.COLON, this);
 	}
 
 	@Override

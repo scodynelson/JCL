@@ -38,7 +38,14 @@ public final class SharpAsteriskReaderMacroFunction extends ExtendedTokenReaderM
 	 */
 	private SharpAsteriskReaderMacroFunction() {
 		super(false);
-		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.ASTERISK, INSTANCE);
+		init();
+	}
+
+	/**
+	 * Initializes the reader macro function and adds it to the global readtable.
+	 */
+	private void init() {
+		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.ASTERISK, this);
 	}
 
 	@Override

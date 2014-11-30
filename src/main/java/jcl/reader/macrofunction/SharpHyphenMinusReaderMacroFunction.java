@@ -26,7 +26,14 @@ public final class SharpHyphenMinusReaderMacroFunction extends FeaturesReaderMac
 	 */
 	private SharpHyphenMinusReaderMacroFunction() {
 		super(true);
-		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.HYPHEN_MINUS, INSTANCE);
+		init();
+	}
+
+	/**
+	 * Initializes the reader macro function and adds it to the global readtable.
+	 */
+	private void init() {
+		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.HYPHEN_MINUS, this);
 	}
 
 	@Override

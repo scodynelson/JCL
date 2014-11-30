@@ -36,7 +36,14 @@ public final class SharpBackslashReaderMacroFunction extends ExtendedTokenReader
 	 */
 	private SharpBackslashReaderMacroFunction() {
 		super(true);
-		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.BACKSLASH, INSTANCE);
+		init();
+	}
+
+	/**
+	 * Initializes the reader macro function and adds it to the global readtable.
+	 */
+	private void init() {
+		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.BACKSLASH, this);
 	}
 
 	@Override

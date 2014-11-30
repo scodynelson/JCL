@@ -25,7 +25,14 @@ public final class LeftParenthesisReaderMacroFunction extends ListReaderMacroFun
 	 * Private constructor.
 	 */
 	private LeftParenthesisReaderMacroFunction() {
-		ReaderVariables.READTABLE.getValue().setMacroCharacter(CharacterConstants.LEFT_PARENTHESIS, INSTANCE, false);
+		init();
+	}
+
+	/**
+	 * Initializes the reader macro function and adds it to the global readtable.
+	 */
+	private void init() {
+		ReaderVariables.READTABLE.getValue().setMacroCharacter(CharacterConstants.LEFT_PARENTHESIS, this, false);
 	}
 
 	@Override

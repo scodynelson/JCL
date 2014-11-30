@@ -4,7 +4,7 @@ import jcl.characters.CharacterStruct;
 import jcl.printer.PrinterVariables;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
-import jcl.reader.SyntaxType;
+import jcl.reader.struct.SyntaxType;
 import jcl.types.BaseChar;
 import jcl.types.BaseString;
 import jcl.types.Character;

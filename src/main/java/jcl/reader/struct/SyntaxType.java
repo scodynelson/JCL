@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.reader;
+package jcl.reader.struct;
 
 /**
  * Defines the different syntax types that will determine how the reader parses tokens.

@@ -5,11 +5,11 @@
 package jcl.reader.state;
 
 import jcl.LispStruct;
-import jcl.reader.AttributeType;
+import jcl.reader.struct.AttributeType;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
-import jcl.reader.SyntaxType;
+import jcl.reader.struct.SyntaxType;
 import jcl.streams.ReadPeekResult;
 
 /**

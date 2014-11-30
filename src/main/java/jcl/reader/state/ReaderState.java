@@ -6,9 +6,9 @@ package jcl.reader.state;
 
 import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.reader.AttributeType;
+import jcl.reader.struct.AttributeType;
 import jcl.reader.Reader;
-import jcl.reader.ReadtableCase;
+import jcl.reader.struct.ReadtableCase;
 
 import java.util.List;
 

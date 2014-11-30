@@ -7,9 +7,9 @@ package jcl.reader.macrofunction;
 import jcl.LispStruct;
 import jcl.functions.FunctionStruct;
 import jcl.numbers.IntegerStruct;
-import jcl.reader.AttributeType;
+import jcl.reader.struct.AttributeType;
 import jcl.reader.ReaderMacroFunction;
-import jcl.reader.SyntaxType;
+import jcl.reader.struct.SyntaxType;
 import jcl.reader.struct.ReaderVariables;
 
 /**
@@ -59,7 +59,7 @@ public abstract class ReaderMacroFunctionImpl extends FunctionStruct implements 
 	 *
 	 * @return true if the provided {@code codePoint} is a {@link SyntaxType#WHITESPACE}; false otherwise
 	 */
-	protected static boolean isWhitespace(final int codePoint) {
+	static boolean isWhitespace(final int codePoint) {
 		return isSyntaxType(codePoint, SyntaxType.WHITESPACE);
 	}
 
@@ -74,7 +74,7 @@ public abstract class ReaderMacroFunctionImpl extends FunctionStruct implements 
 	 *
 	 * @return true if the provided {@code codePoint} matches one of the provided {@link SyntaxType}s; false otherwise
 	 */
-	protected static boolean isSyntaxType(final int codePoint, final SyntaxType... syntaxTypes) {
+	static boolean isSyntaxType(final int codePoint, final SyntaxType... syntaxTypes) {
 
 		boolean returnVal = false;
 		for (final SyntaxType syntaxType : syntaxTypes) {
@@ -93,7 +93,7 @@ public abstract class ReaderMacroFunctionImpl extends FunctionStruct implements 
 	 * @return true if the provided {@code codePoint} is a {@link SyntaxType#WHITESPACE} or {@link
 	 * SyntaxType#TERMINATING}; false otherwise
 	 */
-	protected static boolean isWhitespaceOrTerminating(final int codePoint) {
+	static boolean isWhitespaceOrTerminating(final int codePoint) {
 		return isSyntaxType(codePoint, SyntaxType.WHITESPACE, SyntaxType.TERMINATING);
 	}
 
@@ -109,7 +109,7 @@ public abstract class ReaderMacroFunctionImpl extends FunctionStruct implements 
 	 * @return true if the provided {@code codePoint} matches one of the provided {@link AttributeType}s; false
 	 * otherwise
 	 */
-	protected static boolean isAttributeType(final int codePoint, final AttributeType... attributeTypes) {
+	static boolean isAttributeType(final int codePoint, final AttributeType... attributeTypes) {
 
 		boolean returnVal = false;
 		for (final AttributeType attributeType : attributeTypes) {

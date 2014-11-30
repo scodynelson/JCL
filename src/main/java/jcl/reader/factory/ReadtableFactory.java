@@ -5,7 +5,7 @@
 package jcl.reader.factory;
 
 import jcl.characters.CharacterConstants;
-import jcl.reader.ReadtableCase;
+import jcl.reader.struct.ReadtableCase;
 import jcl.reader.macrofunction.ApostropheReaderMacroFunction;
 import jcl.reader.macrofunction.LeftParenthesisReaderMacroFunction;
 import jcl.reader.macrofunction.QuotationMarkReaderMacroFunction;

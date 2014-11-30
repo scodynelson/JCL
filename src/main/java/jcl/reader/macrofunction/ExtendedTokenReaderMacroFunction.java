@@ -4,11 +4,11 @@
 
 package jcl.reader.macrofunction;
 
-import jcl.reader.AttributeType;
-import jcl.reader.ReadtableCase;
+import jcl.reader.struct.AttributeType;
+import jcl.reader.struct.ReadtableCase;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
-import jcl.reader.SyntaxType;
+import jcl.reader.struct.SyntaxType;
 import jcl.streams.ReadPeekResult;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

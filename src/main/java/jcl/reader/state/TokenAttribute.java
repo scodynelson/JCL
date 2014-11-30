@@ -4,7 +4,7 @@
 
 package jcl.reader.state;
 
-import jcl.reader.AttributeType;
+import jcl.reader.struct.AttributeType;
 import jcl.reader.Reader;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

@@ -8,7 +8,7 @@ import jcl.LispStruct;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
-import jcl.reader.SyntaxType;
+import jcl.reader.struct.SyntaxType;
 import jcl.streams.ReadPeekResult;
 
 /**

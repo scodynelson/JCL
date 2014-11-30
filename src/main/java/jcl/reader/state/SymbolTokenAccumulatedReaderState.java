@@ -9,7 +9,7 @@ import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageSymbolStruct;
 import jcl.packages.PackageVariables;
-import jcl.reader.AttributeType;
+import jcl.reader.struct.AttributeType;
 import jcl.reader.Reader;
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SymbolStruct;

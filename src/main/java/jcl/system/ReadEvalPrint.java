@@ -2,6 +2,7 @@ package jcl.system;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.SemanticAnalyzerImpl;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.packages.PackageStruct;
@@ -150,7 +151,7 @@ public class ReadEvalPrint {
 					if (whatRead != null) {
 						LispStruct whatAnalyzed = null;
 						try {
-							final SemanticAnalyzer sa = new SemanticAnalyzer();
+							final SemanticAnalyzer sa = new SemanticAnalyzerImpl();
 							whatAnalyzed = sa.analyze(whatRead);
 
 							if (whatAnalyzed != null) {

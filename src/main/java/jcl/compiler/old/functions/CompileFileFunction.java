@@ -10,6 +10,7 @@ import jcl.compiler.old.expander.MacroFunctionExpander;
 import jcl.compiler.old.symbol.KeywordOld;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.SemanticAnalyzerImpl;
 import jcl.packages.PackageVariables;
 import jcl.reader.Reader;
 import jcl.arrays.StringStruct;
@@ -141,7 +142,7 @@ public class CompileFileFunction {
 			formList = new ConsStruct(SpecialOperator.LAMBDA, formList);
 
 			SymbolStruct<?> newSA = GlobalPackageStruct.COMMON_LISP.findSymbol("SEMANTIC-ANALYZER").getSymbolStruct();
-			sa = new SemanticAnalyzer();
+			sa = new SemanticAnalyzerImpl();
 //            sa = (newSA == NullStruct.INSTANCE) ? new SemanticAnalyzer() : (Function1)newSA.getFunction();
 			icg = new IntermediateCodeGenerator();
 

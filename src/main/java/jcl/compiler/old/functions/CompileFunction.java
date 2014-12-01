@@ -9,6 +9,7 @@ import jcl.compiler.old.documentation.DocumentFactory;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.arrays.StringStruct;
+import jcl.compiler.real.sa.SemanticAnalyzerImpl;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
@@ -67,7 +68,7 @@ public class CompileFunction {
 		LispStruct lambda = null;
 		LispStruct formCopy = NullStruct.INSTANCE;
 
-		sa = new SemanticAnalyzer();
+		sa = new SemanticAnalyzerImpl();
 		icg = new IntermediateCodeGenerator();
 
 		try {

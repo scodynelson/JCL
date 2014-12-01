@@ -51,12 +51,15 @@ public class TagbodyAnalyzer implements Analyzer<ListStruct, ListStruct> {
 	}
 
 	private static Map<LispStruct, SymbolStruct<?>> readAllTagbodyTags(final List<LispStruct> bodyJavaList) {
-		final Map<LispStruct, SymbolStruct<?>> currentTagMap = new HashMap<>();
+		final HashMap<LispStruct, SymbolStruct<?>> currentTagMap = new HashMap<>();
 
-		bodyJavaList.stream().filter(TagbodyAnalyzer::isTagbodyTag).forEach(current -> {
-			final SymbolStruct<?> newSym = new SymbolStruct<>("Tagbody_Tag_" + UUID.randomUUID());
-			currentTagMap.put(current, newSym);
-		});
+		bodyJavaList
+				.stream()
+				.filter(TagbodyAnalyzer::isTagbodyTag)
+				.forEach(current -> {
+					final SymbolStruct<?> newSym = new SymbolStruct<>("Tagbody_Tag_" + UUID.randomUUID());
+					currentTagMap.put(current, newSym);
+				});
 
 		return currentTagMap;
 	}

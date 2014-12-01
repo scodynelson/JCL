@@ -9,32 +9,15 @@ import jcl.compiler.real.sa.specialoperator.body.BodyProcessingResult;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
-import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SpecialOperator;
-import org.apache.commons.collections4.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Component
 public class EvalWhenAnalyzer implements Analyzer<ListStruct, ListStruct> {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(EvalWhenAnalyzer.class);
-
-	private static final Set<KeywordSymbolStruct> SITUATION_KEYWORDS = new HashSet<>(3);
-
-	static {
-		SITUATION_KEYWORDS.add(KeywordOld.CompileToplevel);
-		SITUATION_KEYWORDS.add(KeywordOld.LoadToplevel);
-		SITUATION_KEYWORDS.add(KeywordOld.Execute);
-	}
 
 	@Autowired
 	private BodyAnalyzer bodyAnalyzer;
@@ -53,11 +36,6 @@ public class EvalWhenAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
 		final ListStruct situationList = (ListStruct) second;
 		final List<LispStruct> situationJavaList = situationList.getAsJavaList();
-
-		final Collection<LispStruct> difference = CollectionUtils.removeAll(situationJavaList, SITUATION_KEYWORDS);
-		if (!difference.isEmpty()) {
-			throw new ProgramErrorException("EVAL-WHEN: Situations must be one of ':COMPILE-TOP-LEVEL', ':LOAD-TIME-LEVEL', or ':EXECUTE'. Got: " + situationList);
-		}
 
 		final List<LispStruct> evalWhenResultList = new ArrayList<>();
 		evalWhenResultList.add(SpecialOperator.EVAL_WHEN);
@@ -80,8 +58,6 @@ public class EvalWhenAnalyzer implements Analyzer<ListStruct, ListStruct> {
 				evalWhenResultList.addAll(bodyProcessingResult.getBodyForms());
 				return ListStruct.buildProperList(evalWhenResultList);
 			} else {
-				// NOTE: should never get here since we did the check earlier
-				LOGGER.warn("EVAL-WHEN: Unsupported situation keyword encountered: {}", situationJavaList);
 				return NullStruct.INSTANCE;
 			}
 		} else if (isExecute(situationJavaList)) {

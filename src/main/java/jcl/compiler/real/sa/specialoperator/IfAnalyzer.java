@@ -32,9 +32,11 @@ public class IfAnalyzer implements Analyzer<ListStruct, ListStruct> {
 		final LispStruct thirdAnalyzed = analyzer.analyzeForm(third);
 		ifResultList.add(thirdAnalyzed);
 
-		final LispStruct fourth = input.getRest().getRest().getRest().getFirst();
-		final LispStruct fourthAnalyzed = analyzer.analyzeForm(fourth);
-		ifResultList.add(fourthAnalyzed);
+		if (input.size() == 4) {
+			final LispStruct fourth = input.getRest().getRest().getRest().getFirst();
+			final LispStruct fourthAnalyzed = analyzer.analyzeForm(fourth);
+			ifResultList.add(fourthAnalyzed);
+		}
 
 		return ListStruct.buildProperList(ifResultList);
 	}

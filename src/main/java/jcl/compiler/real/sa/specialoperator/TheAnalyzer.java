@@ -27,12 +27,12 @@ public class TheAnalyzer implements Analyzer<ListStruct, ListStruct> {
 			throw new ProgramErrorException("THE: Tag must be of type SymbolStruct or ListStruct. Got: " + second);
 		}
 
-		final LispStruct third = input.getRest().getRest().getFirst();
-		final LispStruct thirdAnalyzed = analyzer.analyzeForm(third);
-
 		final List<LispStruct> theResultList = new ArrayList<>(3);
 		theResultList.add(SpecialOperator.THE);
 		theResultList.add(second);
+
+		final LispStruct third = input.getRest().getRest().getFirst();
+		final LispStruct thirdAnalyzed = analyzer.analyzeForm(third);
 		theResultList.add(thirdAnalyzed);
 
 		return ListStruct.buildProperList(theResultList);

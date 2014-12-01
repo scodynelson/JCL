@@ -5,7 +5,6 @@ import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
@@ -36,8 +35,8 @@ public class ReturnFromAnalyzer implements Analyzer<ListStruct, ListStruct> {
 		returnFromResultList.add(SpecialOperator.RETURN_FROM);
 		returnFromResultList.add(second);
 
-		final LispStruct third = input.getRest().getRest().getFirst();
-		if (!third.equals(NullStruct.INSTANCE)) {
+		if (input.size() == 3) {
+			final LispStruct third = input.getRest().getRest().getFirst();
 			final LispStruct returnFromResult = analyzer.analyzeForm(third);
 			returnFromResultList.add(returnFromResult);
 		}

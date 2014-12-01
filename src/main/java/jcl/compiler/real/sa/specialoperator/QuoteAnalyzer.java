@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class QuoteAnalyzer implements Analyzer<LispStruct, ListStruct> {
@@ -55,11 +56,10 @@ public class QuoteAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		final List<LispStruct> formJavaList = input.getAsJavaList();
 
-		final List<LispStruct> transformedForms = new ArrayList<>(formJavaList.size());
-		for (final LispStruct currentForm : formJavaList) {
-			final LispStruct transformedForm = analyzer.analyzeForm(currentForm);
-			transformedForms.add(transformedForm);
-		}
+		final List<LispStruct> transformedForms = formJavaList
+				.stream()
+				.map(analyzer::analyzeForm)
+				.collect(Collectors.toList());
 
 		final List<LispStruct> transformedListForms = new ArrayList<>();
 		transformedListForms.add(listFnSym);

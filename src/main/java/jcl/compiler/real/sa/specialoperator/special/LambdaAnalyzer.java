@@ -25,6 +25,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 @Component
 public class LambdaAnalyzer implements Analyzer<LambdaEnvironmentLispStruct, ListStruct> {
@@ -86,11 +87,10 @@ public class LambdaAnalyzer implements Analyzer<LambdaEnvironmentLispStruct, Lis
 		} else {
 			newLambdaBody.add(SpecialOperator.LET_STAR);
 
-			final List<LispStruct> auxLetStarVars = new ArrayList<>(auxBindings.size());
-			for (final AuxBinding auxBinding : auxBindings) {
-				final ConsStruct auxLetStarVar = new ConsStruct(auxBinding.getSymbolStruct(), auxBinding.getInitForm());
-				auxLetStarVars.add(auxLetStarVar);
-			}
+			final List<LispStruct> auxLetStarVars = auxBindings
+					.stream()
+					.map(e -> new ConsStruct(e.getSymbolStruct(), e.getInitForm()))
+					.collect(Collectors.toList());
 
 			final ListStruct auxLetStarVarsLL = ListStruct.buildProperList(auxLetStarVars);
 			newLambdaBody.add(auxLetStarVarsLL);

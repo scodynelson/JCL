@@ -6,8 +6,8 @@ import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.lists.ListStruct;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class BodyAnalyzer implements Analyzer<BodyProcessingResult, ListStruct> {
@@ -16,12 +16,10 @@ public class BodyAnalyzer implements Analyzer<BodyProcessingResult, ListStruct> 
 	public BodyProcessingResult analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 		final List<LispStruct> bodyJavaList = input.getAsJavaList();
 
-		final List<LispStruct> bodyForms = new ArrayList<>(bodyJavaList.size());
-
-		for (final LispStruct next : bodyJavaList) {
-			final LispStruct analyzedForm = analyzer.analyzeForm(next);
-			bodyForms.add(analyzedForm);
-		}
+		final List<LispStruct> bodyForms = bodyJavaList
+				.stream()
+				.map(analyzer::analyzeForm)
+				.collect(Collectors.toList());
 
 		return new BodyProcessingResult(null, null, bodyForms);
 	}

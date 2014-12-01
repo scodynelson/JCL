@@ -1,9 +1,9 @@
 package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.Binding;
 import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
@@ -57,28 +57,28 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 				final LispStruct first = input.getFirst();
 				return new ConsStruct(first, functionBindingName);
 			}
-		} else {
-			final ListStruct functionList = (ListStruct) second;
-			final LispStruct functionListFirst = functionList.getFirst();
-
-			if (functionListFirst.equals(SpecialOperator.LAMBDA)) {
-				final int tempClosureDepth = analyzer.getClosureDepth();
-				final int newClosureDepth = tempClosureDepth + 1;
-
-				final Environment lambdaEnvironment = EnvironmentAccessor.createNewEnvironment(parentEnvironment, Marker.LAMBDA, newClosureDepth);
-				environmentStack.push(lambdaEnvironment);
-
-				final int tempBindingsPosition = analyzer.getBindingsPosition();
-				try {
-					return lambdaAnalyzer.analyze(functionList, analyzer);
-				} finally {
-					analyzer.setClosureDepth(tempClosureDepth);
-					analyzer.setBindingsPosition(tempBindingsPosition);
-					environmentStack.pop();
-				}
-			}
-
-			throw new ProgramErrorException("FUNCTION: First element of List argument must be the Symbol LAMBDA. Got: " + functionListFirst);
 		}
+
+		final ListStruct functionList = (ListStruct) second;
+		final LispStruct functionListFirst = functionList.getFirst();
+
+		if (functionListFirst.equals(SpecialOperator.LAMBDA)) {
+			final int tempClosureDepth = analyzer.getClosureDepth();
+			final int newClosureDepth = tempClosureDepth + 1;
+
+			final Environment lambdaEnvironment = EnvironmentAccessor.createNewEnvironment(parentEnvironment, Marker.LAMBDA, newClosureDepth);
+			environmentStack.push(lambdaEnvironment);
+
+			final int tempBindingsPosition = analyzer.getBindingsPosition();
+			try {
+				return lambdaAnalyzer.analyze(functionList, analyzer);
+			} finally {
+				analyzer.setClosureDepth(tempClosureDepth);
+				analyzer.setBindingsPosition(tempBindingsPosition);
+				environmentStack.pop();
+			}
+		}
+
+		throw new ProgramErrorException("FUNCTION: First element of List argument must be the Symbol LAMBDA. Got: " + functionListFirst);
 	}
 }

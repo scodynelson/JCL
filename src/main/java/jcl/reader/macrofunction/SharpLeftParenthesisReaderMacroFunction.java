@@ -113,7 +113,7 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 	 *
 	 * @return the newly created {@link VectorStruct}
 	 */
-	private static VectorStruct<?> createVector(final List<LispStruct> lispTokens) {
+	private static VectorStruct<LispStruct> createVector(final List<LispStruct> lispTokens) {
 		try {
 			return new VectorStruct<>(lispTokens);
 		} catch (final TypeErrorException | SimpleErrorException e) {

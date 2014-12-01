@@ -13,6 +13,7 @@ import jcl.conditions.exceptions.TypeErrorException;
 import jcl.lists.ListStruct;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
+import jcl.reader.struct.ReadtableStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -38,8 +39,9 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 */
 	@PostConstruct
 	private void init() {
-		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_SMALL_LETTER_A, this);
-		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_CAPITAL_LETTER_A, this);
+		final ReadtableStruct readtable = ReaderVariables.READTABLE.getValue();
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_SMALL_LETTER_A, this);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_CAPITAL_LETTER_A, this);
 	}
 
 	@Override

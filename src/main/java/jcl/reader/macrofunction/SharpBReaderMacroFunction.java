@@ -8,6 +8,7 @@ import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
+import jcl.reader.struct.ReadtableStruct;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -29,8 +30,9 @@ public class SharpBReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 */
 	@PostConstruct
 	private void init() {
-		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_SMALL_LETTER_B, this);
-		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_CAPITAL_LETTER_B, this);
+		final ReadtableStruct readtable = ReaderVariables.READTABLE.getValue();
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_SMALL_LETTER_B, this);
+		readtable.setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_CAPITAL_LETTER_B, this);
 	}
 
 	@Override

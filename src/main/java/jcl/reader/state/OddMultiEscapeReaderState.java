@@ -6,6 +6,8 @@ package jcl.reader.state;
 
 import jcl.LispStruct;
 import jcl.reader.Reader;
+import jcl.reader.ReaderStateMediator;
+import jcl.reader.TokenBuilder;
 import jcl.reader.struct.AttributeType;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;

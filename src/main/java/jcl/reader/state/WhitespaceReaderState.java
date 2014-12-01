@@ -5,6 +5,8 @@
 package jcl.reader.state;
 
 import jcl.reader.Reader;
+import jcl.reader.ReaderStateMediator;
+import jcl.reader.TokenBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -7,6 +7,7 @@ package jcl.reader.state;
 import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.reader.Reader;
+import jcl.reader.TokenBuilder;
 import org.springframework.stereotype.Component;
 
 /**

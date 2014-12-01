@@ -8,6 +8,8 @@ import jcl.LispStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.reader.Reader;
 import jcl.reader.ReaderMacroFunction;
+import jcl.reader.ReaderStateMediator;
+import jcl.reader.TokenBuilder;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
 import jcl.streams.ReadPeekResult;

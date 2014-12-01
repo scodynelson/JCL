@@ -6,6 +6,8 @@ package jcl.reader.state;
 
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.reader.Reader;
+import jcl.reader.TokenAttribute;
+import jcl.reader.TokenBuilder;
 import jcl.reader.struct.ReaderVariables;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

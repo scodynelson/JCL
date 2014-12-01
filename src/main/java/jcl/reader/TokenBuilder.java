@@ -2,11 +2,10 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.reader.state;
+package jcl.reader;
 
 import jcl.LispStruct;
 import jcl.reader.struct.AttributeType;
-import jcl.reader.Reader;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 

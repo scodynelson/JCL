@@ -7,7 +7,6 @@ import jcl.conditions.exceptions.StreamErrorException;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
 import jcl.reader.Reader;
-import jcl.reader.state.ReaderImpl;
 import jcl.reader.macrofunction.SharpTagReaderConstants;
 import jcl.streams.CharacterStreamStruct;
 import jcl.streams.FileStreamStruct;
@@ -76,7 +75,7 @@ public class ReadEvalPrint {
 		// Lisp EXIT function.
 
 		try {
-			final Reader reader = context.getBean(ReaderImpl.class, inputStream);
+			final Reader reader = context.getBean(Reader.class, inputStream);
 
 			// bind all of the interaction variables to their values
 //			Variable.Star.bind(Variable.Star.getValue());

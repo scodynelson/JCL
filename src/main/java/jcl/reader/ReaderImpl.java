@@ -2,10 +2,9 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.reader.state;
+package jcl.reader;
 
 import jcl.LispStruct;
-import jcl.reader.Reader;
 import jcl.streams.InputStream;
 import jcl.streams.ReadPeekResult;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -20,7 +19,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ReaderImpl implements Reader {
+class ReaderImpl implements Reader {
 
 	/**
 	 * {@link ReaderStateMediator} singleton used by the reader algorithm.
@@ -39,7 +38,7 @@ public class ReaderImpl implements Reader {
 	 * @param inputStream
 	 * 		the {@link InputStream} used to read lisp tokens
 	 */
-	public ReaderImpl(final InputStream inputStream) {
+	ReaderImpl(final InputStream inputStream) {
 		this.inputStream = inputStream;
 	}
 

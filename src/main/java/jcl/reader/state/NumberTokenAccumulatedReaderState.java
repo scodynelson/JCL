@@ -10,6 +10,8 @@ import jcl.numbers.IntegerStruct;
 import jcl.numbers.NumberStruct;
 import jcl.numbers.RatioStruct;
 import jcl.reader.Reader;
+import jcl.reader.TokenAttribute;
+import jcl.reader.TokenBuilder;
 import jcl.reader.struct.AttributeType;
 import jcl.reader.struct.ReaderVariables;
 import jcl.types.DoubleFloat;

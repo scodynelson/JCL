@@ -10,6 +10,8 @@ import jcl.packages.PackageStruct;
 import jcl.packages.PackageSymbolStruct;
 import jcl.packages.PackageVariables;
 import jcl.reader.Reader;
+import jcl.reader.TokenAttribute;
+import jcl.reader.TokenBuilder;
 import jcl.reader.struct.AttributeType;
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SymbolStruct;

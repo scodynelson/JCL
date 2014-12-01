@@ -12,7 +12,6 @@ import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.packages.PackageVariables;
 import jcl.reader.Reader;
-import jcl.reader.state.ReaderImpl;
 import jcl.arrays.StringStruct;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
@@ -26,6 +25,8 @@ import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.util.CheckClassAdapter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -64,6 +65,9 @@ public class CompileFileFunction {
 	private CompilerClassLoader cl;
 	private boolean bDebug = false;
 	private Object lambda = null;
+
+	@Autowired
+	private ApplicationContext context;
 
 	/**
 	 * Creates a new instance of CompileFile
@@ -514,7 +518,7 @@ public class CompileFileFunction {
 		Vector<LispStruct> forms = new Vector<>();
 //		Vector<IntegerStruct> lineNumber = new Vector<IntegerStruct>();
 
-		final Reader reader = new ReaderImpl(file);
+		final Reader reader = context.getBean(Reader.class, file);
 
 		LispStruct eofValue = null;
 		LispStruct form = NullStruct.INSTANCE;

@@ -2,15 +2,14 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.reader.state;
+package jcl.reader;
 
 import jcl.LispStruct;
-import jcl.reader.Reader;
 
 /**
- * Mediator for {@link Reader} {@link ReaderState} invocations throughout the read process.
+ * Mediator for {@link Reader} state algorithm invocations throughout the read process.
  */
-interface ReaderStateMediator {
+public interface ReaderStateMediator {
 
 	/**
 	 * Read the next {@link LispStruct} token into the provided {@link TokenBuilder} using the provided {@link Reader}.

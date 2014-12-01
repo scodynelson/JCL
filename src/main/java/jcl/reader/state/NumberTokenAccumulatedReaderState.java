@@ -12,7 +12,7 @@ import jcl.numbers.RatioStruct;
 import jcl.reader.Reader;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
-import jcl.reader.struct.AttributeType;
+import jcl.reader.AttributeType;
 import jcl.reader.struct.ReaderVariables;
 import jcl.types.DoubleFloat;
 import jcl.types.Float;
@@ -72,6 +72,9 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 	 */
 	private static final List<AttributeType> NO_SIMULTANEOUS_ATTRS = Arrays.asList(AttributeType.DECIMAL, AttributeType.RATIOMARKER);
 
+	/**
+	 * {@link SymbolTokenAccumulatedReaderState} singleton used by the reader algorithm.
+	 */
 	@Autowired
 	private SymbolTokenAccumulatedReaderState symbolTokenAccumulatedReaderState;
 

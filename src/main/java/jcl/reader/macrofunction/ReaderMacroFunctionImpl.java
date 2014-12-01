@@ -7,7 +7,7 @@ package jcl.reader.macrofunction;
 import jcl.LispStruct;
 import jcl.functions.FunctionStruct;
 import jcl.numbers.IntegerStruct;
-import jcl.reader.struct.AttributeType;
+import jcl.reader.AttributeType;
 import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.SyntaxType;
 import jcl.reader.struct.ReaderVariables;

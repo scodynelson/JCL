@@ -18,33 +18,63 @@ import org.springframework.stereotype.Component;
 @Component
 class ReaderStateMediatorImpl implements ReaderStateMediator {
 
+	/**
+	 * {@link ReadReaderState} singleton used by the reader algorithm.
+	 */
 	@Autowired
 	private ReadReaderState readReaderState;
 
+	/**
+	 * {@link IllegalCharacterReaderState} singleton used by the reader algorithm.
+	 */
 	@Autowired
 	private IllegalCharacterReaderState illegalCharacterReaderState;
 
+	/**
+	 * {@link WhitespaceReaderState} singleton used by the reader algorithm.
+	 */
 	@Autowired
 	private WhitespaceReaderState whitespaceReaderState;
 
+	/**
+	 * {@link MacroCharacterReaderState} singleton used by the reader algorithm.
+	 */
 	@Autowired
 	private MacroCharacterReaderState macroCharacterReaderState;
 
+	/**
+	 * {@link SingleEscapeReaderState} singleton used by the reader algorithm.
+	 */
 	@Autowired
 	private SingleEscapeReaderState singleEscapeReaderState;
 
+	/**
+	 * {@link MultipleEscapeReaderState} singleton used by the reader algorithm.
+	 */
 	@Autowired
 	private MultipleEscapeReaderState multipleEscapeReaderState;
 
+	/**
+	 * {@link ConstituentReaderState} singleton used by the reader algorithm.
+	 */
 	@Autowired
 	private ConstituentReaderState constituentReaderState;
 
+	/**
+	 * {@link EvenMultiEscapeReaderState} singleton used by the reader algorithm.
+	 */
 	@Autowired
 	private EvenMultiEscapeReaderState evenMultiEscapeReaderState;
 
+	/**
+	 * {@link OddMultiEscapeReaderState} singleton used by the reader algorithm.
+	 */
 	@Autowired
 	private OddMultiEscapeReaderState oddMultiEscapeReaderState;
 
+	/**
+	 * {@link TokenAccumulatedReaderState} singleton used by the reader algorithm.
+	 */
 	@Autowired
 	private TokenAccumulatedReaderState tokenAccumulatedReaderState;
 

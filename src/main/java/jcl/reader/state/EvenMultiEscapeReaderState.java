@@ -9,7 +9,7 @@ import jcl.numbers.IntegerStruct;
 import jcl.reader.Reader;
 import jcl.reader.ReaderStateMediator;
 import jcl.reader.TokenBuilder;
-import jcl.reader.struct.AttributeType;
+import jcl.reader.AttributeType;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableCase;
 import jcl.reader.struct.ReadtableStruct;

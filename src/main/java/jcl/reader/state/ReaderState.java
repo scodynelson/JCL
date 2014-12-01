@@ -9,7 +9,7 @@ import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.reader.Reader;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
-import jcl.reader.struct.AttributeType;
+import jcl.reader.AttributeType;
 import jcl.reader.struct.ReadtableCase;
 
 import java.util.List;

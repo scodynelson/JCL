@@ -4,7 +4,7 @@
 
 package jcl.reader.macrofunction;
 
-import jcl.reader.struct.AttributeType;
+import jcl.reader.AttributeType;
 import jcl.reader.struct.ReadtableCase;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;

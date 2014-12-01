@@ -4,7 +4,6 @@
 
 package jcl.reader;
 
-import jcl.reader.struct.AttributeType;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 

@@ -8,7 +8,7 @@ import jcl.LispStruct;
 import jcl.reader.Reader;
 import jcl.reader.ReaderStateMediator;
 import jcl.reader.TokenBuilder;
-import jcl.reader.struct.AttributeType;
+import jcl.reader.AttributeType;
 import jcl.streams.ReadPeekResult;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

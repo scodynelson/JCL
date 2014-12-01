@@ -32,6 +32,9 @@ import java.util.List;
 @Component
 class TokenAccumulatedReaderState implements ReaderState {
 
+	/**
+	 * {@link NumberTokenAccumulatedReaderState} singleton used by the reader algorithm.
+	 */
 	@Autowired
 	private NumberTokenAccumulatedReaderState numberTokenAccumulatedReaderState;
 

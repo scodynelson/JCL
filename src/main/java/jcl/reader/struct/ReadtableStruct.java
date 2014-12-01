@@ -5,6 +5,7 @@ import jcl.characters.CharacterConstants;
 import jcl.classes.BuiltInClassStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.numbers.IntegerStruct;
+import jcl.reader.AttributeType;
 import jcl.reader.Reader;
 import jcl.reader.ReaderMacroFunction;
 import jcl.streams.ReadPeekResult;

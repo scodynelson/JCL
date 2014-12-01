@@ -9,10 +9,20 @@ import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class QuoteAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
-	public static final QuoteAnalyzer INSTANCE = new QuoteAnalyzer();
+	@Autowired
+	private QuoteListAnalyzer quoteListAnalyzer;
+
+	@Autowired
+	private QuoteSymbolAnalyzer quoteSymbolAnalyzer;
+
+	@Autowired
+	private LoadTimeValueAnalyzer loadTimeValueAnalyzer;
 
 	@Override
 	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
@@ -25,15 +35,15 @@ public class QuoteAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		final ListStruct newForm;
 		if (element instanceof ListStruct) {
-			newForm = QuoteListAnalyzer.INSTANCE.analyze((ListStruct) element, analyzer);
+			newForm = quoteListAnalyzer.analyze((ListStruct) element, analyzer);
 		} else if (element instanceof SymbolStruct) {
-			newForm = QuoteSymbolAnalyzer.INSTANCE.analyze((SymbolStruct) element, analyzer);
+			newForm = quoteSymbolAnalyzer.analyze((SymbolStruct) element, analyzer);
 		} else {
 			return element;
 		}
 
 		// If was ListStruct or SymbolStruct, wrap resulting form in Load-Time-Value.
 		final ListStruct initForm = ListStruct.buildProperList(SpecialOperator.LOAD_TIME_VALUE, newForm);
-		return LoadTimeValueAnalyzer.INSTANCE.analyze(initForm, analyzer);
+		return loadTimeValueAnalyzer.analyze(initForm, analyzer);
 	}
 }

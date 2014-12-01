@@ -7,14 +7,18 @@ import jcl.compiler.real.sa.specialoperator.special.DeclareAnalyzer;
 import jcl.arrays.StringStruct;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+@Component
 public class BodyWithDeclaresAndDocStringAnalyzer implements Analyzer<BodyProcessingResult, ListStruct> {
 
-	public static final BodyWithDeclaresAndDocStringAnalyzer INSTANCE = new BodyWithDeclaresAndDocStringAnalyzer();
+	@Autowired
+	private DeclareAnalyzer declareAnalyzer;
 
 	@Override
 	public BodyProcessingResult analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
@@ -29,7 +33,7 @@ public class BodyWithDeclaresAndDocStringAnalyzer implements Analyzer<BodyProces
 
 			LispStruct next = iterator.next();
 			while (iterator.hasNext() && (next instanceof ListStruct) && ((ListStruct) next).getFirst().equals(SpecialOperator.DECLARE)) {
-				final ListStruct analyzedDeclaration = DeclareAnalyzer.INSTANCE.analyze((ListStruct) next, analyzer);
+				final ListStruct analyzedDeclaration = declareAnalyzer.analyze((ListStruct) next, analyzer);
 				declarations.add(analyzedDeclaration);
 				next = iterator.next();
 			}

@@ -14,16 +14,22 @@ import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 import jcl.system.StackUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+@Component
 abstract class InnerFunctionAnalyzer implements Analyzer<EnvironmentLispStruct, ListStruct> {
 
 	protected final String analyzerName;
 	protected final Marker marker;
 	protected final boolean getFunctionNamesBeforeInitForms;
+
+	@Autowired
+	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
 
 	protected InnerFunctionAnalyzer(final String analyzerName, final Marker marker, final boolean getFunctionNamesBeforeInitForms) {
 		this.analyzerName = analyzerName;
@@ -128,7 +134,7 @@ abstract class InnerFunctionAnalyzer implements Analyzer<EnvironmentLispStruct, 
 			}
 
 			final ListStruct currentBodyForms = input.getRest().getRest();
-			final BodyProcessingResult bodyProcessingResult = BodyWithDeclaresAnalyzer.INSTANCE.analyze(currentBodyForms, analyzer);
+			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(currentBodyForms, analyzer);
 
 			final Environment envList = environmentStack.peek();
 

@@ -16,6 +16,8 @@ import jcl.lists.NullStruct;
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -23,9 +25,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
+@Component
 public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
-	public static final ListStructAnalyzer INSTANCE = new ListStructAnalyzer();
+	@Autowired
+	private SpecialOperatorAnalyzer specialOperatorAnalyzer;
+
+	@Autowired
+	private LambdaAnalyzer lambdaAnalyzer;
 
 	@Override
 	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
@@ -49,7 +56,7 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 				final LispStruct expandedFormListFirst = expandedFormList.getFirst();
 				if (expandedFormListFirst instanceof SpecialOperator) {
-					return SpecialOperatorAnalyzer.INSTANCE.analyze(expandedFormList, analyzer);
+					return specialOperatorAnalyzer.analyze(expandedFormList, analyzer);
 				} else if (expandedFormListFirst instanceof SymbolStruct) {
 					final SymbolStruct<?> functionSymbol = (SymbolStruct<?>) expandedFormListFirst;
 					final ListStruct functionArguments = expandedFormList.getRest();
@@ -66,7 +73,7 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 			final LispStruct firstOfFirstList = firstAsList.getFirst();
 			if (firstOfFirstList.equals(SpecialOperator.LAMBDA)) {
-				final LambdaEnvironmentLispStruct lambdaAnalyzed = LambdaAnalyzer.INSTANCE.analyze(firstAsList, analyzer);
+				final LambdaEnvironmentLispStruct lambdaAnalyzed = lambdaAnalyzer.analyze(firstAsList, analyzer);
 				final ListStruct functionArguments = input.getRest();
 				return analyzedLambdaFunctionCall(analyzer, lambdaAnalyzed, functionArguments);
 			} else {

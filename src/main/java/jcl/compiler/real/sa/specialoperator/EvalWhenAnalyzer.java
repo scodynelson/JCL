@@ -14,6 +14,8 @@ import jcl.symbols.SpecialOperator;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,11 +23,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Component
 public class EvalWhenAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(EvalWhenAnalyzer.class);
-
-	public static final EvalWhenAnalyzer INSTANCE = new EvalWhenAnalyzer();
 
 	private static final Set<KeywordSymbolStruct> SITUATION_KEYWORDS = new HashSet<>(3);
 
@@ -35,12 +36,15 @@ public class EvalWhenAnalyzer implements Analyzer<ListStruct, ListStruct> {
 		SITUATION_KEYWORDS.add(KeywordOld.Execute);
 	}
 
+	@Autowired
+	private BodyAnalyzer bodyAnalyzer;
+
 	@Override
 	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 		return analyze(input, analyzer, false);
 	}
 
-	public static ListStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer, final boolean isTopLevel) {
+	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer semanticAnalyzer, final boolean isTopLevel) {
 
 		final LispStruct second = input.getRest().getFirst();
 		if (!(second instanceof ListStruct)) {
@@ -62,17 +66,17 @@ public class EvalWhenAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
 		if (isTopLevel) {
 			if (isCompileTopLevel(situationJavaList)) {
-				final BodyProcessingResult bodyProcessingResult = BodyAnalyzer.INSTANCE.analyze(body, semanticAnalyzer);
+				final BodyProcessingResult bodyProcessingResult = bodyAnalyzer.analyze(body, semanticAnalyzer);
 				evalWhenResultList.addAll(bodyProcessingResult.getBodyForms());
 				return ListStruct.buildProperList(evalWhenResultList);
 			} else if (isLoadTopLevel(situationJavaList)) {
 				// TODO: take care of processing later at load time...
-				final BodyProcessingResult bodyProcessingResult = BodyAnalyzer.INSTANCE.analyze(body, semanticAnalyzer);
+				final BodyProcessingResult bodyProcessingResult = bodyAnalyzer.analyze(body, semanticAnalyzer);
 				evalWhenResultList.addAll(bodyProcessingResult.getBodyForms());
 				return ListStruct.buildProperList(evalWhenResultList);
 			} else if (isExecute(situationJavaList)) {
 				// TODO: take care of processing later at execution time...
-				final BodyProcessingResult bodyProcessingResult = BodyAnalyzer.INSTANCE.analyze(body, semanticAnalyzer);
+				final BodyProcessingResult bodyProcessingResult = bodyAnalyzer.analyze(body, semanticAnalyzer);
 				evalWhenResultList.addAll(bodyProcessingResult.getBodyForms());
 				return ListStruct.buildProperList(evalWhenResultList);
 			} else {
@@ -82,7 +86,7 @@ public class EvalWhenAnalyzer implements Analyzer<ListStruct, ListStruct> {
 			}
 		} else if (isExecute(situationJavaList)) {
 			// TODO: take care of processing later at execution time...
-			final BodyProcessingResult bodyProcessingResult = BodyAnalyzer.INSTANCE.analyze(body, semanticAnalyzer);
+			final BodyProcessingResult bodyProcessingResult = bodyAnalyzer.analyze(body, semanticAnalyzer);
 			evalWhenResultList.addAll(bodyProcessingResult.getBodyForms());
 			return ListStruct.buildProperList(evalWhenResultList);
 		} else {

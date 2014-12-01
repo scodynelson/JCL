@@ -8,13 +8,13 @@ import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.symbols.SymbolStruct;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class QuoteSymbolAnalyzer implements Analyzer<ListStruct, SymbolStruct<?>> {
-
-	public static final QuoteSymbolAnalyzer INSTANCE = new QuoteSymbolAnalyzer();
 
 	@Override
 	public ListStruct analyze(final SymbolStruct<?> input, final SemanticAnalyzer analyzer) {

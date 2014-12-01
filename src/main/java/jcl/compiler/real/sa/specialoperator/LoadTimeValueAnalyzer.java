@@ -13,15 +13,19 @@ import jcl.lists.NullStruct;
 import jcl.symbols.BooleanStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 import java.util.UUID;
 
+@Component
 public class LoadTimeValueAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
-	public static final LoadTimeValueAnalyzer INSTANCE = new LoadTimeValueAnalyzer();
+	@Autowired
+	private LambdaAnalyzer lambdaAnalyzer;
 
 	@Override
 	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
@@ -50,7 +54,7 @@ public class LoadTimeValueAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
 		final LispStruct lambdaAnalyzed;
 		try {
-			lambdaAnalyzed = LambdaAnalyzer.INSTANCE.analyze(lambdaBlockList, analyzer);
+			lambdaAnalyzed = lambdaAnalyzer.analyze(lambdaBlockList, analyzer);
 		} finally {
 			environmentStack.pop();
 		}

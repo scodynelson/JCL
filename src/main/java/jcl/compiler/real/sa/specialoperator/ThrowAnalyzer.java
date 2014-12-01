@@ -6,13 +6,13 @@ import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class ThrowAnalyzer implements Analyzer<ListStruct, ListStruct> {
-
-	public static final ThrowAnalyzer INSTANCE = new ThrowAnalyzer();
 
 	@Override
 	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {

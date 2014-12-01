@@ -1,6 +1,7 @@
 package jcl.compiler.old.functions;
 
 import jcl.LispStruct;
+import jcl.arrays.StringStruct;
 import jcl.compiler.old.CompilerClassLoader;
 import jcl.compiler.old.Emitter;
 import jcl.compiler.old.EmptyVisitor;
@@ -8,8 +9,6 @@ import jcl.compiler.old.documentation.AnnotationCollector;
 import jcl.compiler.old.documentation.DocumentFactory;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.arrays.StringStruct;
-import jcl.compiler.real.sa.SemanticAnalyzerImpl;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
@@ -19,6 +18,8 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.util.CheckClassAdapter;
 import org.objectweb.asm.util.CheckMethodAdapter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -45,6 +46,9 @@ public class CompileFunction {
 	private CompilerClassLoader cl;
 	private boolean bDebug = false;
 
+	@Autowired
+	private ApplicationContext context;
+
 	/**
 	 * Creates a new instance of compiler
 	 */
@@ -68,7 +72,7 @@ public class CompileFunction {
 		LispStruct lambda = null;
 		LispStruct formCopy = NullStruct.INSTANCE;
 
-		sa = new SemanticAnalyzerImpl();
+		sa = context.getBean(SemanticAnalyzer.class);
 		icg = new IntermediateCodeGenerator();
 
 		try {

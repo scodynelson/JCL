@@ -6,14 +6,18 @@ import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.specialoperator.special.DeclareAnalyzer;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+@Component
 public class BodyWithDeclaresAnalyzer implements Analyzer<BodyProcessingResult, ListStruct> {
 
-	public static final BodyWithDeclaresAnalyzer INSTANCE = new BodyWithDeclaresAnalyzer();
+	@Autowired
+	private DeclareAnalyzer declareAnalyzer;
 
 	@Override
 	public BodyProcessingResult analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
@@ -27,7 +31,7 @@ public class BodyWithDeclaresAnalyzer implements Analyzer<BodyProcessingResult, 
 
 			LispStruct next = iterator.next();
 			while (iterator.hasNext() && (next instanceof ListStruct) && ((ListStruct) next).getFirst().equals(SpecialOperator.DECLARE)) {
-				final ListStruct analyzedDeclaration = DeclareAnalyzer.INSTANCE.analyze((ListStruct) next, analyzer);
+				final ListStruct analyzedDeclaration = declareAnalyzer.analyze((ListStruct) next, analyzer);
 				declarations.add(analyzedDeclaration);
 				next = iterator.next();
 			}

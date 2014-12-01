@@ -31,58 +31,65 @@ import jcl.compiler.real.sa.specialoperator.special.LambdaAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class SpecialOperatorAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
-	public static final Analyzer<LispStruct, ListStruct> INSTANCE = new SpecialOperatorAnalyzer();
-
-	private static final Map<SpecialOperator, Analyzer<? extends LispStruct, ListStruct>> STRATEGIES = new HashMap<>();
+	private static final Map<SpecialOperator, Class<? extends Analyzer<? extends LispStruct, ListStruct>>> STRATEGIES = new HashMap<>();
 
 	static {
-		STRATEGIES.put(SpecialOperator.BLOCK, BlockAnalyzer.INSTANCE);
-		STRATEGIES.put(SpecialOperator.CATCH, CatchAnalyzer.INSTANCE);
-		STRATEGIES.put(SpecialOperator.EVAL_WHEN, EvalWhenAnalyzer.INSTANCE);
-		STRATEGIES.put(SpecialOperator.FLET, FletAnalyzer.INSTANCE);
-		STRATEGIES.put(SpecialOperator.FUNCTION, FunctionAnalyzer.INSTANCE);
-		STRATEGIES.put(SpecialOperator.GO, GoAnalyzer.INSTANCE);
-		STRATEGIES.put(SpecialOperator.IF, IfAnalyzer.INSTANCE);
-		STRATEGIES.put(SpecialOperator.LABELS, LabelsAnalyzer.INSTANCE);
-		STRATEGIES.put(SpecialOperator.LET, LetAnalyzer.INSTANCE);
-		STRATEGIES.put(SpecialOperator.LET_STAR, LetStarAnalyzer.INSTANCE);
-		STRATEGIES.put(SpecialOperator.LOAD_TIME_VALUE, LoadTimeValueAnalyzer.INSTANCE);
-		STRATEGIES.put(SpecialOperator.LOCALLY, LocallyAnalyzer.INSTANCE);
-		STRATEGIES.put(SpecialOperator.MACROLET, MacroletAnalyzer.INSTANCE);
-		STRATEGIES.put(SpecialOperator.MULTIPLE_VALUE_CALL, MultipleValueCallAnalyzer.INSTANCE);
-		STRATEGIES.put(SpecialOperator.MULTIPLE_VALUE_PROG1, MultipleValueProg1Analyzer.INSTANCE);
-		STRATEGIES.put(SpecialOperator.PROGN, PrognAnalyzer.INSTANCE);
-		STRATEGIES.put(SpecialOperator.PROGV, ProgvAnalyzer.INSTANCE);
-		STRATEGIES.put(SpecialOperator.QUOTE, QuoteAnalyzer.INSTANCE);
-		STRATEGIES.put(SpecialOperator.RETURN_FROM, ReturnFromAnalyzer.INSTANCE);
-		STRATEGIES.put(SpecialOperator.SETQ, SetqAnalyzer.INSTANCE);
-		STRATEGIES.put(SpecialOperator.SYMBOL_MACROLET, SymbolMacroletAnalyzer.INSTANCE);
-		STRATEGIES.put(SpecialOperator.TAGBODY, TagbodyAnalyzer.INSTANCE);
-		STRATEGIES.put(SpecialOperator.THE, TheAnalyzer.INSTANCE);
-		STRATEGIES.put(SpecialOperator.THROW, ThrowAnalyzer.INSTANCE);
-		STRATEGIES.put(SpecialOperator.UNWIND_PROTECT, UnwindProtectAnalyzer.INSTANCE);
+		STRATEGIES.put(SpecialOperator.BLOCK, BlockAnalyzer.class);
+		STRATEGIES.put(SpecialOperator.CATCH, CatchAnalyzer.class);
+		STRATEGIES.put(SpecialOperator.EVAL_WHEN, EvalWhenAnalyzer.class);
+		STRATEGIES.put(SpecialOperator.FLET, FletAnalyzer.class);
+		STRATEGIES.put(SpecialOperator.FUNCTION, FunctionAnalyzer.class);
+		STRATEGIES.put(SpecialOperator.GO, GoAnalyzer.class);
+		STRATEGIES.put(SpecialOperator.IF, IfAnalyzer.class);
+		STRATEGIES.put(SpecialOperator.LABELS, LabelsAnalyzer.class);
+		STRATEGIES.put(SpecialOperator.LET, LetAnalyzer.class);
+		STRATEGIES.put(SpecialOperator.LET_STAR, LetStarAnalyzer.class);
+		STRATEGIES.put(SpecialOperator.LOAD_TIME_VALUE, LoadTimeValueAnalyzer.class);
+		STRATEGIES.put(SpecialOperator.LOCALLY, LocallyAnalyzer.class);
+		STRATEGIES.put(SpecialOperator.MACROLET, MacroletAnalyzer.class);
+		STRATEGIES.put(SpecialOperator.MULTIPLE_VALUE_CALL, MultipleValueCallAnalyzer.class);
+		STRATEGIES.put(SpecialOperator.MULTIPLE_VALUE_PROG1, MultipleValueProg1Analyzer.class);
+		STRATEGIES.put(SpecialOperator.PROGN, PrognAnalyzer.class);
+		STRATEGIES.put(SpecialOperator.PROGV, ProgvAnalyzer.class);
+		STRATEGIES.put(SpecialOperator.QUOTE, QuoteAnalyzer.class);
+		STRATEGIES.put(SpecialOperator.RETURN_FROM, ReturnFromAnalyzer.class);
+		STRATEGIES.put(SpecialOperator.SETQ, SetqAnalyzer.class);
+		STRATEGIES.put(SpecialOperator.SYMBOL_MACROLET, SymbolMacroletAnalyzer.class);
+		STRATEGIES.put(SpecialOperator.TAGBODY, TagbodyAnalyzer.class);
+		STRATEGIES.put(SpecialOperator.THE, TheAnalyzer.class);
+		STRATEGIES.put(SpecialOperator.THROW, ThrowAnalyzer.class);
+		STRATEGIES.put(SpecialOperator.UNWIND_PROTECT, UnwindProtectAnalyzer.class);
 
 //		STRATEGIES.put(SpecialOperator.DECLARE, DeclareAnalyzer.INSTANCE);
-		STRATEGIES.put(SpecialOperator.LAMBDA, LambdaAnalyzer.INSTANCE);
+		STRATEGIES.put(SpecialOperator.LAMBDA, LambdaAnalyzer.class);
 
-		STRATEGIES.put(SpecialOperator.DEFSTRUCT, DefstructAnalyzer.INSTANCE);
+		STRATEGIES.put(SpecialOperator.DEFSTRUCT, DefstructAnalyzer.class);
 	}
+
+	@Autowired
+	private ApplicationContext context;
 
 	@Override
 	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 
 		final SpecialOperator specialOperator = (SpecialOperator) input.getFirst();
 
-		final Analyzer<? extends LispStruct, ListStruct> strategy = STRATEGIES.get(specialOperator);
+		final Class<? extends Analyzer<? extends LispStruct, ListStruct>> strategy = STRATEGIES.get(specialOperator);
+		final Analyzer<? extends LispStruct, ListStruct> strategyBean = context.getBean(strategy);
+
 		if (strategy == null) {
 			throw new ProgramErrorException("SpecialOperator symbol supplied is not supported.");
 		}
-		return strategy.analyze(input, analyzer);
+		return strategyBean.analyze(input, analyzer);
 	}
 }

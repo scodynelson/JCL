@@ -19,14 +19,18 @@ import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+@Component
 public class LambdaAnalyzer implements Analyzer<LambdaEnvironmentLispStruct, ListStruct> {
 
-	public static final LambdaAnalyzer INSTANCE = new LambdaAnalyzer();
+	@Autowired
+	private BodyWithDeclaresAndDocStringAnalyzer bodyWithDeclaresAndDocStringAnalyzer;
 
 	@Override
 	public LambdaEnvironmentLispStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
@@ -57,7 +61,7 @@ public class LambdaAnalyzer implements Analyzer<LambdaEnvironmentLispStruct, Lis
 			final OrdinaryLambdaListBindings parsedLambdaList = LambdaListParser.parseOrdinaryLambdaList(analyzer, parameters);
 
 			final ListStruct currentBodyForms = input.getRest().getRest();
-			final BodyProcessingResult bodyProcessingResult = BodyWithDeclaresAndDocStringAnalyzer.INSTANCE.analyze(currentBodyForms, analyzer);
+			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAndDocStringAnalyzer.analyze(currentBodyForms, analyzer);
 
 			final Environment envList = environmentStack.peek();
 

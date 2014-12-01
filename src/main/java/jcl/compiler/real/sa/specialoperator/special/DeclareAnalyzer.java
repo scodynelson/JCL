@@ -9,12 +9,16 @@ import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.Declaration;
 import jcl.symbols.SymbolStruct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class DeclareAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
-	public static final DeclareAnalyzer INSTANCE = new DeclareAnalyzer();
+	@Autowired
+	private SymbolStructAnalyzer symbolStructAnalyzer;
 
 	@Override
 	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
@@ -61,7 +65,7 @@ public class DeclareAnalyzer implements Analyzer<ListStruct, ListStruct> {
 		return NullStruct.INSTANCE;
 	}
 
-	private static void saSpecialDeclaration(final ListStruct declSpecBody, final SemanticAnalyzer analyzer) {
+	private void saSpecialDeclaration(final ListStruct declSpecBody, final SemanticAnalyzer analyzer) {
 		final List<LispStruct> declSpecBodyJavaList = declSpecBody.getAsJavaList();
 
 		// Special declaration can apply to multiple SymbolStructs
@@ -71,7 +75,7 @@ public class DeclareAnalyzer implements Analyzer<ListStruct, ListStruct> {
 			}
 
 			final SymbolStruct<?> sym = (SymbolStruct) declSpecBodyElement;
-			SymbolStructAnalyzer.INSTANCE.analyze(sym, analyzer);
+			symbolStructAnalyzer.analyze(sym, analyzer);
 		}
 	}
 }

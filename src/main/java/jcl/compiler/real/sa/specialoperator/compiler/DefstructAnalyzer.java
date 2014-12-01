@@ -4,10 +4,10 @@ import jcl.LispStruct;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.lists.ListStruct;
+import org.springframework.stereotype.Component;
 
+@Component
 public class DefstructAnalyzer implements Analyzer<LispStruct, ListStruct> {
-
-	public static final DefstructAnalyzer INSTANCE = new DefstructAnalyzer();
 
 	@Override
 	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {

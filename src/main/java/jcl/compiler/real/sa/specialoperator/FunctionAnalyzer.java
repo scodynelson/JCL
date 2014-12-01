@@ -14,12 +14,19 @@ import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Stack;
 
+@Component
 public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
-	public static final FunctionAnalyzer INSTANCE = new FunctionAnalyzer();
+	@Autowired
+	private SymbolStructAnalyzer symbolStructAnalyzer;
+
+	@Autowired
+	private LambdaAnalyzer lambdaAnalyzer;
 
 	@Override
 	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
@@ -41,7 +48,7 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			final Environment fnBinding = EnvironmentAccessor.getBindingEnvironment(parentEnvironment, functionSymbol, false);
 
 			if (fnBinding.equals(Environment.NULL)) {
-				SymbolStructAnalyzer.INSTANCE.analyze(functionSymbol, analyzer);
+				symbolStructAnalyzer.analyze(functionSymbol, analyzer);
 				return input;
 			} else {
 				final Binding binding = fnBinding.getBinding(functionSymbol);
@@ -63,7 +70,7 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 				final int tempBindingsPosition = analyzer.getBindingsPosition();
 				try {
-					return LambdaAnalyzer.INSTANCE.analyze(functionList, analyzer);
+					return lambdaAnalyzer.analyze(functionList, analyzer);
 				} finally {
 					analyzer.setClosureDepth(tempClosureDepth);
 					analyzer.setBindingsPosition(tempBindingsPosition);

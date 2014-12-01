@@ -1,6 +1,7 @@
 package jcl.compiler.old.functions;
 
 import jcl.LispStruct;
+import jcl.arrays.StringStruct;
 import jcl.compiler.old.CompilerClassLoader;
 import jcl.compiler.old.Emitter;
 import jcl.compiler.old.EmptyVisitor;
@@ -10,16 +11,14 @@ import jcl.compiler.old.expander.MacroFunctionExpander;
 import jcl.compiler.old.symbol.KeywordOld;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.SemanticAnalyzerImpl;
-import jcl.packages.PackageVariables;
-import jcl.reader.Reader;
-import jcl.arrays.StringStruct;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
+import jcl.packages.PackageVariables;
 import jcl.pathnames.PathnameStruct;
+import jcl.reader.Reader;
 import jcl.streams.CharacterStreamStruct;
 import jcl.symbols.Declaration;
 import jcl.symbols.SpecialOperator;
@@ -142,7 +141,7 @@ public class CompileFileFunction {
 			formList = new ConsStruct(SpecialOperator.LAMBDA, formList);
 
 			SymbolStruct<?> newSA = GlobalPackageStruct.COMMON_LISP.findSymbol("SEMANTIC-ANALYZER").getSymbolStruct();
-			sa = new SemanticAnalyzerImpl();
+			sa = context.getBean(SemanticAnalyzer.class);
 //            sa = (newSA == NullStruct.INSTANCE) ? new SemanticAnalyzer() : (Function1)newSA.getFunction();
 			icg = new IntermediateCodeGenerator();
 

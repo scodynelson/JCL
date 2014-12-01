@@ -10,13 +10,17 @@ import jcl.lists.ListStruct;
 import jcl.symbols.Declaration;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class SymbolMacroletAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
-	public static final SymbolMacroletAnalyzer INSTANCE = new SymbolMacroletAnalyzer();
+	@Autowired
+	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
 
 	@Override
 	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
@@ -64,7 +68,7 @@ public class SymbolMacroletAnalyzer implements Analyzer<ListStruct, ListStruct> 
 		symbolMacroletResultList.add(analyzedParameterLL);
 
 		final ListStruct body = input.getRest().getRest();
-		final BodyProcessingResult bodyProcessingResult = BodyWithDeclaresAnalyzer.INSTANCE.analyze(body, analyzer);
+		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(body, analyzer);
 		validateDeclares(bodyProcessingResult);
 
 		symbolMacroletResultList.addAll(bodyProcessingResult.getDeclarations()); // TODO: do we add these here really???

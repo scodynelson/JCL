@@ -8,13 +8,17 @@ import jcl.compiler.real.sa.specialoperator.body.BodyProcessingResult;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class MultipleValueCallAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
-	public static final MultipleValueCallAnalyzer INSTANCE = new MultipleValueCallAnalyzer();
+	@Autowired
+	private BodyAnalyzer bodyAnalyzer;
 
 	@Override
 	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
@@ -28,7 +32,7 @@ public class MultipleValueCallAnalyzer implements Analyzer<ListStruct, ListStruc
 
 		// Body includes the 'Function Form'
 		final ListStruct body = input.getRest();
-		final BodyProcessingResult bodyProcessingResult = BodyAnalyzer.INSTANCE.analyze(body, analyzer);
+		final BodyProcessingResult bodyProcessingResult = bodyAnalyzer.analyze(body, analyzer);
 		multipleValueCallResultList.addAll(bodyProcessingResult.getBodyForms());
 
 		return ListStruct.buildProperList(multipleValueCallResultList);

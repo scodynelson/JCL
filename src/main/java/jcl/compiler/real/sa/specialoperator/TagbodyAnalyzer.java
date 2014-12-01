@@ -7,6 +7,7 @@ import jcl.lists.ListStruct;
 import jcl.numbers.NumberStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,9 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+@Component
 public class TagbodyAnalyzer implements Analyzer<ListStruct, ListStruct> {
-
-	public static final TagbodyAnalyzer INSTANCE = new TagbodyAnalyzer();
 
 	@Override
 	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {

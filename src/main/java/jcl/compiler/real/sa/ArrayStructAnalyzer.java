@@ -2,12 +2,12 @@ package jcl.compiler.real.sa;
 
 import jcl.LispStruct;
 import jcl.arrays.ArrayStruct;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class ArrayStructAnalyzer implements Analyzer<LispStruct, ArrayStruct<? extends LispStruct>> {
-
-	public static final ArrayStructAnalyzer INSTANCE = new ArrayStructAnalyzer();
 
 	@SuppressWarnings("unchecked")
 	@Override

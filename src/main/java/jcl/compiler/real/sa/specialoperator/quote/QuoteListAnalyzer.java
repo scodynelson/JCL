@@ -6,13 +6,13 @@ import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.SymbolStruct;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class QuoteListAnalyzer implements Analyzer<ListStruct, ListStruct> {
-
-	public static final QuoteListAnalyzer INSTANCE = new QuoteListAnalyzer();
 
 	@Override
 	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {

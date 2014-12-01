@@ -8,13 +8,13 @@ import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class ReturnFromAnalyzer implements Analyzer<ListStruct, ListStruct> {
-
-	public static final ReturnFromAnalyzer INSTANCE = new ReturnFromAnalyzer();
 
 	@Override
 	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {

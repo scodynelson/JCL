@@ -4,13 +4,13 @@ import jcl.LispStruct;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.lists.ListStruct;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class BodyAnalyzer implements Analyzer<BodyProcessingResult, ListStruct> {
-
-	public static final BodyAnalyzer INSTANCE = new BodyAnalyzer();
 
 	@Override
 	public BodyProcessingResult analyze(final ListStruct input, final SemanticAnalyzer analyzer) {

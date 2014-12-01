@@ -7,14 +7,18 @@ import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
+@Component
 public class LetStarAnalyzer implements Analyzer<EnvironmentLispStruct, ListStruct> {
 
-	public static final LetStarAnalyzer INSTANCE = new LetStarAnalyzer();
+	@Autowired
+	private LetAnalyzer letAnalyzer;
 
 	@Override
 	public EnvironmentLispStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
@@ -48,6 +52,6 @@ public class LetStarAnalyzer implements Analyzer<EnvironmentLispStruct, ListStru
 			body = ListStruct.buildProperList(innerLet);
 		}
 
-		return LetAnalyzer.INSTANCE.analyze(body, analyzer);
+		return letAnalyzer.analyze(body, analyzer);
 	}
 }

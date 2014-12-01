@@ -10,6 +10,10 @@ import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -17,7 +21,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
-public class SemanticAnalyzerImpl implements SemanticAnalyzer {
+@Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+class SemanticAnalyzerImpl implements SemanticAnalyzer {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SemanticAnalyzerImpl.class);
 
@@ -34,7 +40,16 @@ public class SemanticAnalyzerImpl implements SemanticAnalyzer {
 	// eval-when processing modes
 	private boolean topLevelMode;
 
-	public SemanticAnalyzerImpl() {
+	@Autowired
+	private ListStructAnalyzer listStructAnalyzer;
+
+	@Autowired
+	private SymbolStructAnalyzer symbolStructAnalyzer;
+
+	@Autowired
+	private ArrayStructAnalyzer arrayStructAnalyzer;
+
+	SemanticAnalyzerImpl() {
 		initialize();
 	}
 
@@ -83,11 +98,11 @@ public class SemanticAnalyzerImpl implements SemanticAnalyzer {
 
 		LispStruct analyzedForm = form;
 		if (form instanceof ListStruct) {
-			analyzedForm = ListStructAnalyzer.INSTANCE.analyze((ListStruct) form, this);
+			analyzedForm = listStructAnalyzer.analyze((ListStruct) form, this);
 		} else if (form instanceof SymbolStruct) {
-			analyzedForm = SymbolStructAnalyzer.INSTANCE.analyze((SymbolStruct<?>) form, this);
+			analyzedForm = symbolStructAnalyzer.analyze((SymbolStruct<?>) form, this);
 		} else if (form instanceof ArrayStruct) {
-			analyzedForm = ArrayStructAnalyzer.INSTANCE.analyze((ArrayStruct<?>) form, this);
+			analyzedForm = arrayStructAnalyzer.analyze((ArrayStruct<?>) form, this);
 		}
 		return analyzedForm;
 	}

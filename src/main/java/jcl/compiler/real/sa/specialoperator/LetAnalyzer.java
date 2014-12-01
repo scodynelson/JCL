@@ -13,13 +13,17 @@ import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Stack;
 
+@Component
 public class LetAnalyzer implements Analyzer<EnvironmentLispStruct, ListStruct> {
 
-	public static final LetAnalyzer INSTANCE = new LetAnalyzer();
+	@Autowired
+	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
 
 	@Override
 	public EnvironmentLispStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
@@ -89,7 +93,7 @@ public class LetAnalyzer implements Analyzer<EnvironmentLispStruct, ListStruct> 
 			}
 
 			final ListStruct currentBodyForms = input.getRest().getRest();
-			final BodyProcessingResult bodyProcessingResult = BodyWithDeclaresAnalyzer.INSTANCE.analyze(currentBodyForms, analyzer);
+			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(currentBodyForms, analyzer);
 
 			final Environment envList = environmentStack.peek();
 

@@ -8,6 +8,7 @@ import jcl.lists.ListStruct;
 import jcl.numbers.NumberStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +16,8 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Stack;
 
+@Component
 public class GoAnalyzer implements Analyzer<ListStruct, ListStruct> {
-
-	public static final GoAnalyzer INSTANCE = new GoAnalyzer();
 
 	@Override
 	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {

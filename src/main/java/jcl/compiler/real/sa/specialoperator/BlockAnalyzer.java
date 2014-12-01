@@ -9,13 +9,17 @@ import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class BlockAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
-	public static final BlockAnalyzer INSTANCE = new BlockAnalyzer();
+	@Autowired
+	private BodyAnalyzer bodyAnalyzer;
 
 	@Override
 	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
@@ -38,7 +42,7 @@ public class BlockAnalyzer implements Analyzer<ListStruct, ListStruct> {
 			blockResultList.add(second);
 
 			final ListStruct body = input.getRest().getRest();
-			final BodyProcessingResult bodyProcessingResult = BodyAnalyzer.INSTANCE.analyze(body, analyzer);
+			final BodyProcessingResult bodyProcessingResult = bodyAnalyzer.analyze(body, analyzer);
 			blockResultList.addAll(bodyProcessingResult.getBodyForms());
 
 			return ListStruct.buildProperList(blockResultList);

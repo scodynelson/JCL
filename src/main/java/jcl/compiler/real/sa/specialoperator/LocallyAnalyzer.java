@@ -7,19 +7,23 @@ import jcl.compiler.real.sa.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.specialoperator.body.BodyWithDeclaresAnalyzer;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class LocallyAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
-	public static final LocallyAnalyzer INSTANCE = new LocallyAnalyzer();
+	@Autowired
+	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
 
 	@Override
 	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
 
 		final ListStruct body = input.getRest();
-		final BodyProcessingResult bodyProcessingResult = BodyWithDeclaresAnalyzer.INSTANCE.analyze(body, analyzer);
+		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(body, analyzer);
 
 		final List<LispStruct> locallyResultList = new ArrayList<>();
 		locallyResultList.add(SpecialOperator.LOCALLY);

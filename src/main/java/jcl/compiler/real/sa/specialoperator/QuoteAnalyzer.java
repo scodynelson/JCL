@@ -2,6 +2,7 @@ package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
+import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
@@ -24,7 +25,7 @@ public class QuoteAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	private LoadTimeValueAnalyzer loadTimeValueAnalyzer;
 
 	@Override
-	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
+	public LispStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
 		if (input.size() != 2) {
 			throw new ProgramErrorException("QUOTE: Incorrect number of arguments: " + input.size() + ". Expected 2 arguments.");
@@ -34,7 +35,7 @@ public class QuoteAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		final ListStruct newForm;
 		if (element instanceof ListStruct) {
-			newForm = analyzeQuoteList((ListStruct) element, analyzer);
+			newForm = analyzeQuoteList(analyzer, (ListStruct) element, analysisBuilder);
 		} else if (element instanceof SymbolStruct) {
 			newForm = analyzeQuoteSymbol((SymbolStruct) element);
 		} else {
@@ -43,10 +44,10 @@ public class QuoteAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		// If was ListStruct or SymbolStruct, wrap resulting form in Load-Time-Value.
 		final ListStruct initForm = ListStruct.buildProperList(SpecialOperator.LOAD_TIME_VALUE, newForm);
-		return loadTimeValueAnalyzer.analyze(initForm, analyzer);
+		return loadTimeValueAnalyzer.analyze(analyzer, initForm, analysisBuilder);
 	}
 
-	private static ListStruct analyzeQuoteList(final ListStruct input, final SemanticAnalyzer analyzer) {
+	private static ListStruct analyzeQuoteList(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 		final SymbolStruct<?> listFnSym;
 		if (input.isDotted()) {
 			listFnSym = GlobalPackageStruct.COMMON_LISP.findSymbol("LIST*").getSymbolStruct();
@@ -58,7 +59,7 @@ public class QuoteAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		final List<LispStruct> transformedForms = formJavaList
 				.stream()
-				.map(analyzer::analyzeForm)
+				.map(e -> analyzer.analyzeForm(e, analysisBuilder))
 				.collect(Collectors.toList());
 
 		final List<LispStruct> transformedListForms = new ArrayList<>();

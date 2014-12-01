@@ -4,6 +4,7 @@ import jcl.LispStruct;
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Marker;
+import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.EnvironmentLispStruct;
 import jcl.compiler.real.sa.SemanticAnalyzer;
@@ -26,7 +27,7 @@ public class LetAnalyzer implements Analyzer<EnvironmentLispStruct, ListStruct> 
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
 
 	@Override
-	public EnvironmentLispStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
+	public EnvironmentLispStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
 		if (input.size() < 2) {
 			throw new ProgramErrorException("LET: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
@@ -37,16 +38,16 @@ public class LetAnalyzer implements Analyzer<EnvironmentLispStruct, ListStruct> 
 			throw new ProgramErrorException("LET: Parameter list must be of type ListStruct. Got: " + second);
 		}
 
-		final Stack<Environment> environmentStack = analyzer.getEnvironmentStack();
+		final Stack<Environment> environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment parentEnvironment = environmentStack.peek();
 
-		final int tempClosureDepth = analyzer.getClosureDepth();
+		final int tempClosureDepth = analysisBuilder.getClosureDepth();
 		final int newClosureDepth = tempClosureDepth + 1;
 
 		final Environment letEnvironment = EnvironmentAccessor.createNewEnvironment(parentEnvironment, Marker.LET, newClosureDepth);
 		environmentStack.push(letEnvironment);
 
-		final int tempBindingsPosition = analyzer.getBindingsPosition();
+		final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
 		try {
 			final ListStruct parameters = (ListStruct) second;
 			final List<LispStruct> parametersJavaList = parameters.getAsJavaList();
@@ -71,20 +72,20 @@ public class LetAnalyzer implements Analyzer<EnvironmentLispStruct, ListStruct> 
 
 					final LispStruct parameterValueInitForm;
 					try {
-						parameterValueInitForm = analyzer.analyzeForm(parameterValue);
+						parameterValueInitForm = analyzer.analyzeForm(parameterValue, analysisBuilder);
 					} finally {
 						environmentStack.push(currentEnvironment);
 					}
 
 					final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
-					analyzer.setBindingsPosition(newBindingsPosition);
+					analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 					EnvironmentAccessor.createNewEnvironmentBinding(environmentStack.peek(), parameterName, newBindingsPosition, parameterValueInitForm, false);
 				} else if (currentParameter instanceof SymbolStruct) {
 					final SymbolStruct<?> symbolParameter = (SymbolStruct) currentParameter;
 
 					final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(environmentStack.peek());
-					analyzer.setBindingsPosition(newBindingsPosition);
+					analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 					EnvironmentAccessor.createNewEnvironmentBinding(environmentStack.peek(), symbolParameter, newBindingsPosition, NILStruct.INSTANCE, false);
 				} else {
@@ -93,15 +94,15 @@ public class LetAnalyzer implements Analyzer<EnvironmentLispStruct, ListStruct> 
 			}
 
 			final ListStruct currentBodyForms = input.getRest().getRest();
-			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(currentBodyForms, analyzer);
+			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(analyzer, currentBodyForms, analysisBuilder);
 
 			final Environment envList = environmentStack.peek();
 
 			final ListStruct newBodyForms = ListStruct.buildProperList(bodyProcessingResult.getBodyForms());
 			return new EnvironmentLispStruct(envList, bodyProcessingResult.getDeclarations(), newBodyForms);
 		} finally {
-			analyzer.setClosureDepth(tempClosureDepth);
-			analyzer.setBindingsPosition(tempBindingsPosition);
+			analysisBuilder.setClosureDepth(tempClosureDepth);
+			analysisBuilder.setBindingsPosition(tempBindingsPosition);
 			environmentStack.pop();
 		}
 	}

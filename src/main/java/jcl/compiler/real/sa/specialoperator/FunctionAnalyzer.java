@@ -5,6 +5,7 @@ import jcl.compiler.real.environment.Binding;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.Marker;
+import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.SymbolStructAnalyzer;
@@ -29,7 +30,7 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	private LambdaAnalyzer lambdaAnalyzer;
 
 	@Override
-	public LispStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
+	public LispStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
 		if (input.size() != 2) {
 			throw new ProgramErrorException("FUNCTION: Incorrect number of arguments: " + input.size() + ". Expected 2 arguments.");
@@ -40,7 +41,7 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			throw new ProgramErrorException("FUNCTION: Function argument must be of type SymbolStruct or ListStruct. Got: " + second);
 		}
 
-		final Stack<Environment> environmentStack = analyzer.getEnvironmentStack();
+		final Stack<Environment> environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment parentEnvironment = environmentStack.peek();
 
 		if (second instanceof SymbolStruct) {
@@ -48,7 +49,7 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			final Environment fnBinding = EnvironmentAccessor.getBindingEnvironment(parentEnvironment, functionSymbol, false);
 
 			if (fnBinding.equals(Environment.NULL)) {
-				symbolStructAnalyzer.analyze(functionSymbol, analyzer);
+				symbolStructAnalyzer.analyze(analyzer, functionSymbol, analysisBuilder);
 				return input;
 			} else {
 				final Binding binding = fnBinding.getBinding(functionSymbol);
@@ -63,18 +64,18 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		final LispStruct functionListFirst = functionList.getFirst();
 
 		if (functionListFirst.equals(SpecialOperator.LAMBDA)) {
-			final int tempClosureDepth = analyzer.getClosureDepth();
+			final int tempClosureDepth = analysisBuilder.getClosureDepth();
 			final int newClosureDepth = tempClosureDepth + 1;
 
 			final Environment lambdaEnvironment = EnvironmentAccessor.createNewEnvironment(parentEnvironment, Marker.LAMBDA, newClosureDepth);
 			environmentStack.push(lambdaEnvironment);
 
-			final int tempBindingsPosition = analyzer.getBindingsPosition();
+			final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
 			try {
-				return lambdaAnalyzer.analyze(functionList, analyzer);
+				return lambdaAnalyzer.analyze(analyzer, functionList, analysisBuilder);
 			} finally {
-				analyzer.setClosureDepth(tempClosureDepth);
-				analyzer.setBindingsPosition(tempBindingsPosition);
+				analysisBuilder.setClosureDepth(tempClosureDepth);
+				analysisBuilder.setBindingsPosition(tempBindingsPosition);
 				environmentStack.pop();
 			}
 		}

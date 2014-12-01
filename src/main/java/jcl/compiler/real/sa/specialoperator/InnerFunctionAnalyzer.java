@@ -4,6 +4,7 @@ import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.Marker;
+import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.EnvironmentLispStruct;
 import jcl.compiler.real.sa.SemanticAnalyzer;
@@ -38,7 +39,7 @@ abstract class InnerFunctionAnalyzer implements Analyzer<EnvironmentLispStruct, 
 	}
 
 	@Override
-	public EnvironmentLispStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
+	public EnvironmentLispStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
 		if (input.size() < 2) {
 			throw new ProgramErrorException(analyzerName + ": Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
@@ -49,19 +50,19 @@ abstract class InnerFunctionAnalyzer implements Analyzer<EnvironmentLispStruct, 
 			throw new ProgramErrorException(analyzerName + ": Parameter list must be of type ListStruct. Got: " + second);
 		}
 
-		final Stack<Environment> environmentStack = analyzer.getEnvironmentStack();
+		final Stack<Environment> environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment parentEnvironment = environmentStack.peek();
 
-		final int tempClosureDepth = analyzer.getClosureDepth();
+		final int tempClosureDepth = analysisBuilder.getClosureDepth();
 		final int newClosureDepth = tempClosureDepth + 1;
 
 		final Environment fletEnvironment = EnvironmentAccessor.createNewEnvironment(parentEnvironment, marker, newClosureDepth);
 		environmentStack.push(fletEnvironment);
 
-		final Stack<SymbolStruct<?>> functionNameStack = analyzer.getFunctionNameStack();
+		final Stack<SymbolStruct<?>> functionNameStack = analysisBuilder.getFunctionNameStack();
 		List<SymbolStruct<?>> functionNames = null;
 
-		final int tempBindingsPosition = analyzer.getBindingsPosition();
+		final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
 		try {
 			final ListStruct fletFunctions = (ListStruct) second;
 			final List<LispStruct> fletFunctionsJavaList = fletFunctions.getAsJavaList();
@@ -117,13 +118,13 @@ abstract class InnerFunctionAnalyzer implements Analyzer<EnvironmentLispStruct, 
 
 				final LispStruct paramValueInitForm;
 				try {
-					paramValueInitForm = analyzer.analyzeForm(innerFunctionListStruct);
+					paramValueInitForm = analyzer.analyzeForm(innerFunctionListStruct, analysisBuilder);
 				} finally {
 					environmentStack.push(currentEnvironment);
 				}
 
 				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
-				analyzer.setBindingsPosition(newBindingsPosition);
+				analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 				EnvironmentAccessor.createNewEnvironmentBinding(currentEnvironment, functionName, newBindingsPosition, paramValueInitForm, false);
 			}
@@ -134,7 +135,7 @@ abstract class InnerFunctionAnalyzer implements Analyzer<EnvironmentLispStruct, 
 			}
 
 			final ListStruct currentBodyForms = input.getRest().getRest();
-			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(currentBodyForms, analyzer);
+			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(analyzer, currentBodyForms, analysisBuilder);
 
 			final Environment envList = environmentStack.peek();
 
@@ -145,8 +146,8 @@ abstract class InnerFunctionAnalyzer implements Analyzer<EnvironmentLispStruct, 
 				StackUtils.popX(functionNameStack, functionNames.size());
 			}
 
-			analyzer.setClosureDepth(tempClosureDepth);
-			analyzer.setBindingsPosition(tempBindingsPosition);
+			analysisBuilder.setClosureDepth(tempClosureDepth);
+			analysisBuilder.setBindingsPosition(tempBindingsPosition);
 			environmentStack.pop();
 		}
 	}

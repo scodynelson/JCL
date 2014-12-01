@@ -9,6 +9,7 @@ import jcl.compiler.real.environment.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.lambdalist.SuppliedPBinding;
+import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.LambdaEnvironmentLispStruct;
 import jcl.compiler.real.sa.LambdaListParser;
@@ -34,7 +35,7 @@ public class LambdaAnalyzer implements Analyzer<LambdaEnvironmentLispStruct, Lis
 	private BodyWithDeclaresAndDocStringAnalyzer bodyWithDeclaresAndDocStringAnalyzer;
 
 	@Override
-	public LambdaEnvironmentLispStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
+	public LambdaEnvironmentLispStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
 		if (input.size() < 2) {
 			throw new ProgramErrorException("LAMBDA: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
@@ -45,24 +46,24 @@ public class LambdaAnalyzer implements Analyzer<LambdaEnvironmentLispStruct, Lis
 			throw new ProgramErrorException("LAMBDA: Parameter list must be of type ListStruct. Got: " + second);
 		}
 
-		final Stack<Environment> environmentStack = analyzer.getEnvironmentStack();
+		final Stack<Environment> environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment parentEnvironment = environmentStack.peek();
 
-		final int tempClosureDepth = analyzer.getClosureDepth();
+		final int tempClosureDepth = analysisBuilder.getClosureDepth();
 		final int newClosureDepth = tempClosureDepth + 1;
 
 		final Environment lambdaEnvironment = EnvironmentAccessor.createNewEnvironment(parentEnvironment, Marker.LAMBDA, newClosureDepth);
 		environmentStack.push(lambdaEnvironment);
 
-		final int tempBindingsPosition = analyzer.getBindingsPosition();
+		final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
 		try {
-			analyzer.setClosureDepth(newClosureDepth);
+			analysisBuilder.setClosureDepth(newClosureDepth);
 
 			final ListStruct parameters = (ListStruct) second;
-			final OrdinaryLambdaListBindings parsedLambdaList = LambdaListParser.parseOrdinaryLambdaList(analyzer, parameters);
+			final OrdinaryLambdaListBindings parsedLambdaList = LambdaListParser.parseOrdinaryLambdaList(analyzer, analysisBuilder, parameters);
 
 			final ListStruct currentBodyForms = input.getRest().getRest();
-			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAndDocStringAnalyzer.analyze(currentBodyForms, analyzer);
+			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAndDocStringAnalyzer.analyze(analyzer, currentBodyForms, analysisBuilder);
 
 			final Environment envList = environmentStack.peek();
 
@@ -72,8 +73,8 @@ public class LambdaAnalyzer implements Analyzer<LambdaEnvironmentLispStruct, Lis
 			final ListStruct newBodyForms = ListStruct.buildProperList(newStartingLambdaBody);
 			return new LambdaEnvironmentLispStruct(envList, bodyProcessingResult.getDeclarations(), newBodyForms, parsedLambdaList, bodyProcessingResult.getDocString());
 		} finally {
-			analyzer.setClosureDepth(tempClosureDepth);
-			analyzer.setBindingsPosition(tempBindingsPosition);
+			analysisBuilder.setClosureDepth(tempClosureDepth);
+			analysisBuilder.setBindingsPosition(tempBindingsPosition);
 			environmentStack.pop();
 		}
 	}

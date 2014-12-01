@@ -1,6 +1,7 @@
 package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
+import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.specialoperator.body.BodyProcessingResult;
@@ -23,7 +24,7 @@ public class SymbolMacroletAnalyzer implements Analyzer<ListStruct, ListStruct> 
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
 
 	@Override
-	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
+	public ListStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
 		if (input.size() < 2) {
 			throw new ProgramErrorException("SYMBOL-MACROLET: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
@@ -58,7 +59,7 @@ public class SymbolMacroletAnalyzer implements Analyzer<ListStruct, ListStruct> 
 			}
 
 			final LispStruct parameterForm = parameterListStruct.getRest().getFirst();
-			final LispStruct analyzedParameterForm = analyzer.analyzeForm(parameterForm);
+			final LispStruct analyzedParameterForm = analyzer.analyzeForm(parameterForm, analysisBuilder);
 
 			final ListStruct analyzedParameterListStruct = ListStruct.buildProperList(parameterName, analyzedParameterForm);
 			analyzedParameterList.add(analyzedParameterListStruct);
@@ -68,7 +69,7 @@ public class SymbolMacroletAnalyzer implements Analyzer<ListStruct, ListStruct> 
 		symbolMacroletResultList.add(analyzedParameterLL);
 
 		final ListStruct body = input.getRest().getRest();
-		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(body, analyzer);
+		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(analyzer, body, analysisBuilder);
 		validateDeclares(bodyProcessingResult);
 
 		symbolMacroletResultList.addAll(bodyProcessingResult.getDeclarations()); // TODO: do we add these here really???

@@ -1,6 +1,7 @@
 package jcl.compiler.real.sa.specialoperator.body;
 
 import jcl.LispStruct;
+import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.specialoperator.special.DeclareAnalyzer;
@@ -21,7 +22,7 @@ public class BodyWithDeclaresAndDocStringAnalyzer implements Analyzer<BodyProces
 	private DeclareAnalyzer declareAnalyzer;
 
 	@Override
-	public BodyProcessingResult analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
+	public BodyProcessingResult analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 		final List<LispStruct> bodyJavaList = input.getAsJavaList();
 
 		final List<ListStruct> declarations = new ArrayList<>();
@@ -33,7 +34,7 @@ public class BodyWithDeclaresAndDocStringAnalyzer implements Analyzer<BodyProces
 
 			LispStruct next = iterator.next();
 			while (iterator.hasNext() && (next instanceof ListStruct) && ((ListStruct) next).getFirst().equals(SpecialOperator.DECLARE)) {
-				final ListStruct analyzedDeclaration = declareAnalyzer.analyze((ListStruct) next, analyzer);
+				final ListStruct analyzedDeclaration = declareAnalyzer.analyze(analyzer, (ListStruct) next, analysisBuilder);
 				declarations.add(analyzedDeclaration);
 				next = iterator.next();
 			}
@@ -44,13 +45,13 @@ public class BodyWithDeclaresAndDocStringAnalyzer implements Analyzer<BodyProces
 			}
 
 			while (iterator.hasNext()) {
-				final LispStruct analyzedForm = analyzer.analyzeForm(next);
+				final LispStruct analyzedForm = analyzer.analyzeForm(next, analysisBuilder);
 				bodyForms.add(analyzedForm);
 				next = iterator.next();
 			}
 
 			// Make sure to analyze and add the last form!!
-			final LispStruct analyzedForm = analyzer.analyzeForm(next);
+			final LispStruct analyzedForm = analyzer.analyzeForm(next, analysisBuilder);
 			bodyForms.add(analyzedForm);
 		}
 

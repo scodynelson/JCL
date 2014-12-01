@@ -1,6 +1,7 @@
 package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
+import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.lists.ListStruct;
@@ -19,13 +20,13 @@ import java.util.UUID;
 public class TagbodyAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
 	@Override
-	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
+	public ListStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
 		final ListStruct body = input.getRest();
 		final List<LispStruct> bodyJavaList = body.getAsJavaList();
 		final Map<LispStruct, SymbolStruct<?>> currentTagMap = readAllTagbodyTags(bodyJavaList);
 
-		analyzer.getTagbodyStack().push(currentTagMap);
+		analysisBuilder.getTagbodyStack().push(currentTagMap);
 
 		try {
 			final List<LispStruct> newBodyJavaList = new ArrayList<>();
@@ -35,7 +36,7 @@ public class TagbodyAnalyzer implements Analyzer<ListStruct, ListStruct> {
 					final SymbolStruct<?> realTagSymbol = currentTagMap.get(currentBodyElement);
 					newBodyJavaList.add(realTagSymbol);
 				} else {
-					final LispStruct analyzedElement = analyzer.analyzeForm(currentBodyElement);
+					final LispStruct analyzedElement = analyzer.analyzeForm(currentBodyElement, analysisBuilder);
 					newBodyJavaList.add(analyzedElement);
 				}
 			}
@@ -46,7 +47,7 @@ public class TagbodyAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
 			return ListStruct.buildProperList(tagbodyResultList);
 		} finally {
-			analyzer.getTagbodyStack().pop();
+			analysisBuilder.getTagbodyStack().pop();
 		}
 	}
 

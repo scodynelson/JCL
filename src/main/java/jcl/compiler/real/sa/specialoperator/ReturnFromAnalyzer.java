@@ -1,6 +1,7 @@
 package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
+import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
@@ -16,7 +17,7 @@ import java.util.List;
 public class ReturnFromAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
 	@Override
-	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
+	public ListStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
 		if ((input.size() < 2) || (input.size() > 3)) {
 			throw new ProgramErrorException("RETURN-FROM: Incorrect number of arguments: " + input.size() + ". Expected either 2 or 3 arguments.");
@@ -27,7 +28,7 @@ public class ReturnFromAnalyzer implements Analyzer<ListStruct, ListStruct> {
 			throw new ProgramErrorException("RETURN-FROM: Label must be of type SymbolStruct. Got: " + second);
 		}
 
-		if (analyzer.getBlockStack().search(second) == -1) {
+		if (analysisBuilder.getBlockStack().search(second) == -1) {
 			throw new ProgramErrorException("RETURN-FROM: No BLOCK with Label " + second + " is visible.");
 		}
 
@@ -37,7 +38,7 @@ public class ReturnFromAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
 		if (input.size() == 3) {
 			final LispStruct third = input.getRest().getRest().getFirst();
-			final LispStruct returnFromResult = analyzer.analyzeForm(third);
+			final LispStruct returnFromResult = analyzer.analyzeForm(third, analysisBuilder);
 			returnFromResultList.add(returnFromResult);
 		}
 

@@ -11,14 +11,14 @@ public class ArrayStructAnalyzer implements Analyzer<LispStruct, ArrayStruct<? e
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public LispStruct analyze(final ArrayStruct<? extends LispStruct> input, final SemanticAnalyzer analyzer) {
+	public LispStruct analyze(final SemanticAnalyzer analyzer, final ArrayStruct<? extends LispStruct> input, final AnalysisBuilder analysisBuilder) {
 
 		// TODO: unchecked here. meh
 		final List<LispStruct> inputContents = (List<LispStruct>) input.getContents();
 
 		for (int i = 0; i < inputContents.size(); i++) {
 			final LispStruct currentElement = inputContents.get(i);
-			final LispStruct analyzedElement = analyzer.analyzeForm(currentElement);
+			final LispStruct analyzedElement = analyzer.analyzeForm(currentElement, analysisBuilder);
 			inputContents.set(i, analyzedElement);
 		}
 

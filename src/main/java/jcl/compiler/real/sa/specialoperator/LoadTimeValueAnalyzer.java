@@ -4,6 +4,7 @@ import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.LoadTimeValue;
+import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.specialoperator.special.LambdaAnalyzer;
@@ -28,7 +29,7 @@ public class LoadTimeValueAnalyzer implements Analyzer<ListStruct, ListStruct> {
 	private LambdaAnalyzer lambdaAnalyzer;
 
 	@Override
-	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
+	public ListStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
 		if ((input.size() < 2) || (input.size() > 3)) {
 			throw new ProgramErrorException("LOAD-TIME-VALUE: Incorrect number of arguments: " + input.size() + ". Expected either 2 or 3 arguments.");
@@ -48,13 +49,13 @@ public class LoadTimeValueAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
 		final ListStruct lambdaBlockList = ListStruct.buildProperList(lambdaBlock);
 
-		final Stack<Environment> environmentStack = analyzer.getEnvironmentStack();
+		final Stack<Environment> environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment nullEnvironment = Environment.NULL;
 		environmentStack.push(nullEnvironment);
 
 		final LispStruct lambdaAnalyzed;
 		try {
-			lambdaAnalyzed = lambdaAnalyzer.analyze(lambdaBlockList, analyzer);
+			lambdaAnalyzed = lambdaAnalyzer.analyze(analyzer, lambdaBlockList, analysisBuilder);
 		} finally {
 			environmentStack.pop();
 		}

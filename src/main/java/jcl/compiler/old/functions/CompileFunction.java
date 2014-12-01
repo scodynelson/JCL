@@ -8,7 +8,7 @@ import jcl.compiler.old.EmptyVisitor;
 import jcl.compiler.old.documentation.AnnotationCollector;
 import jcl.compiler.old.documentation.DocumentFactory;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
-import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.SemanticAnalyzerInit;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
@@ -41,7 +41,7 @@ public class CompileFunction {
 	//Remove it when the defstruct :include is solved.
 	private static CompilerClassLoader structLoader = null;
 	private XCopyTreeFunction copyTree = XCopyTreeFunction.FUNCTION;
-	private SemanticAnalyzer sa;
+	private SemanticAnalyzerInit sa;
 	private IntermediateCodeGenerator icg;
 	private CompilerClassLoader cl;
 	private boolean bDebug = false;
@@ -72,7 +72,7 @@ public class CompileFunction {
 		LispStruct lambda = null;
 		LispStruct formCopy = NullStruct.INSTANCE;
 
-		sa = context.getBean(SemanticAnalyzer.class);
+		sa = context.getBean(SemanticAnalyzerInit.class);
 		icg = new IntermediateCodeGenerator();
 
 		try {

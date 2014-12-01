@@ -10,7 +10,7 @@ import jcl.compiler.old.documentation.DocumentFactory;
 import jcl.compiler.old.expander.MacroFunctionExpander;
 import jcl.compiler.old.symbol.KeywordOld;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
-import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.SemanticAnalyzerInit;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
@@ -60,7 +60,7 @@ public class CompileFileFunction {
 	public static final SymbolStruct<?> COMPILE_TOPLEVEL = GlobalPackageStruct.KEYWORD.intern("COMPILE-TOPLEVEL").getSymbolStruct();
 	public static final SymbolStruct<?> LOAD_TOPLEVEL = GlobalPackageStruct.KEYWORD.intern("LOAD-TOPLEVEL").getSymbolStruct();
 	public static final SymbolStruct<?> EXECUTE = GlobalPackageStruct.KEYWORD.intern("EXECUTE").getSymbolStruct();
-	private SemanticAnalyzer sa;
+	private SemanticAnalyzerInit sa;
 	private IntermediateCodeGenerator icg;
 	private CompilerClassLoader cl;
 	private boolean bDebug = false;
@@ -141,7 +141,7 @@ public class CompileFileFunction {
 			formList = new ConsStruct(SpecialOperator.LAMBDA, formList);
 
 			SymbolStruct<?> newSA = GlobalPackageStruct.COMMON_LISP.findSymbol("SEMANTIC-ANALYZER").getSymbolStruct();
-			sa = context.getBean(SemanticAnalyzer.class);
+			sa = context.getBean(SemanticAnalyzerInit.class);
 //            sa = (newSA == NullStruct.INSTANCE) ? new SemanticAnalyzer() : (Function1)newSA.getFunction();
 			icg = new IntermediateCodeGenerator();
 

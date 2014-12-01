@@ -1,6 +1,7 @@
 package jcl.compiler.real.sa.specialoperator.special;
 
 import jcl.LispStruct;
+import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.SymbolStructAnalyzer;
@@ -21,7 +22,7 @@ public class DeclareAnalyzer implements Analyzer<ListStruct, ListStruct> {
 	private SymbolStructAnalyzer symbolStructAnalyzer;
 
 	@Override
-	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
+	public ListStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
 		final ListStruct declSpecs = input.getRest();
 
@@ -54,7 +55,7 @@ public class DeclareAnalyzer implements Analyzer<ListStruct, ListStruct> {
 			} else if (declIdentifier.equals(Declaration.OPTIMIZE)) {
 				//TODO: we don't do anything here yet
 			} else if (declIdentifier.equals(Declaration.SPECIAL)) {
-				saSpecialDeclaration(declSpecBody, analyzer);
+				saSpecialDeclaration(analyzer, declSpecBody, analysisBuilder);
 			} else if (declIdentifier.equals(Declaration.TYPE)) {
 				//we don't do anything here yet
 			} else {
@@ -65,7 +66,7 @@ public class DeclareAnalyzer implements Analyzer<ListStruct, ListStruct> {
 		return NullStruct.INSTANCE;
 	}
 
-	private void saSpecialDeclaration(final ListStruct declSpecBody, final SemanticAnalyzer analyzer) {
+	private void saSpecialDeclaration(final SemanticAnalyzer analyzer, final ListStruct declSpecBody, final AnalysisBuilder analysisBuilder) {
 		final List<LispStruct> declSpecBodyJavaList = declSpecBody.getAsJavaList();
 
 		// Special declaration can apply to multiple SymbolStructs
@@ -75,7 +76,7 @@ public class DeclareAnalyzer implements Analyzer<ListStruct, ListStruct> {
 			}
 
 			final SymbolStruct<?> sym = (SymbolStruct) declSpecBodyElement;
-			symbolStructAnalyzer.analyze(sym, analyzer);
+			symbolStructAnalyzer.analyze(analyzer, sym, analysisBuilder);
 		}
 	}
 }

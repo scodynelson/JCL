@@ -1,6 +1,7 @@
 package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
+import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.specialoperator.body.BodyAnalyzer;
@@ -22,7 +23,7 @@ public class BlockAnalyzer implements Analyzer<ListStruct, ListStruct> {
 	private BodyAnalyzer bodyAnalyzer;
 
 	@Override
-	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
+	public ListStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
 		if (input.size() < 2) {
 			throw new ProgramErrorException("BLOCK: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
@@ -34,7 +35,7 @@ public class BlockAnalyzer implements Analyzer<ListStruct, ListStruct> {
 		}
 
 		final SymbolStruct<?> label = (SymbolStruct) second;
-		analyzer.getBlockStack().push(label);
+		analysisBuilder.getBlockStack().push(label);
 
 		try {
 			final List<LispStruct> blockResultList = new ArrayList<>();
@@ -42,12 +43,12 @@ public class BlockAnalyzer implements Analyzer<ListStruct, ListStruct> {
 			blockResultList.add(second);
 
 			final ListStruct body = input.getRest().getRest();
-			final BodyProcessingResult bodyProcessingResult = bodyAnalyzer.analyze(body, analyzer);
+			final BodyProcessingResult bodyProcessingResult = bodyAnalyzer.analyze(analyzer, body, analysisBuilder);
 			blockResultList.addAll(bodyProcessingResult.getBodyForms());
 
 			return ListStruct.buildProperList(blockResultList);
 		} finally {
-			analyzer.getBlockStack().pop();
+			analysisBuilder.getBlockStack().pop();
 		}
 	}
 }

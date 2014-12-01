@@ -1,6 +1,7 @@
 package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
+import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
@@ -15,7 +16,7 @@ import java.util.List;
 public class ThrowAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
 	@Override
-	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
+	public ListStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
 		if (input.size() != 3) {
 			throw new ProgramErrorException("THROW: Incorrect number of arguments: " + input.size() + ". Expected 3 arguments.");
@@ -25,11 +26,11 @@ public class ThrowAnalyzer implements Analyzer<ListStruct, ListStruct> {
 		throwResultList.add(SpecialOperator.THROW);
 
 		final LispStruct second = input.getRest().getFirst();
-		final LispStruct secondAnalyzed = analyzer.analyzeForm(second);
+		final LispStruct secondAnalyzed = analyzer.analyzeForm(second, analysisBuilder);
 		throwResultList.add(secondAnalyzed);
 
 		final LispStruct third = input.getRest().getRest().getFirst();
-		final LispStruct thirdAnalyzed = analyzer.analyzeForm(third);
+		final LispStruct thirdAnalyzed = analyzer.analyzeForm(third, analysisBuilder);
 		throwResultList.add(thirdAnalyzed);
 
 		return ListStruct.buildProperList(throwResultList);

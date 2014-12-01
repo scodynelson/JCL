@@ -1,6 +1,7 @@
 package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
+import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.specialoperator.body.BodyAnalyzer;
@@ -21,7 +22,7 @@ public class MultipleValueCallAnalyzer implements Analyzer<ListStruct, ListStruc
 	private BodyAnalyzer bodyAnalyzer;
 
 	@Override
-	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
+	public ListStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
 		if (input.size() < 2) {
 			throw new ProgramErrorException("MULTIPLE-VALUE-CALL: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
@@ -32,7 +33,7 @@ public class MultipleValueCallAnalyzer implements Analyzer<ListStruct, ListStruc
 
 		// Body includes the 'Function Form'
 		final ListStruct body = input.getRest();
-		final BodyProcessingResult bodyProcessingResult = bodyAnalyzer.analyze(body, analyzer);
+		final BodyProcessingResult bodyProcessingResult = bodyAnalyzer.analyze(analyzer, body, analysisBuilder);
 		multipleValueCallResultList.addAll(bodyProcessingResult.getBodyForms());
 
 		return ListStruct.buildProperList(multipleValueCallResultList);

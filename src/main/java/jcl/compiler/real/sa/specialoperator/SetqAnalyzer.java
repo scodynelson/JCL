@@ -1,6 +1,7 @@
 package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
+import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
@@ -16,7 +17,7 @@ import java.util.List;
 public class SetqAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
 	@Override
-	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
+	public ListStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
 		final ListStruct forms = input.getRest();
 
@@ -34,11 +35,11 @@ public class SetqAnalyzer implements Analyzer<ListStruct, ListStruct> {
 			if (!(varName instanceof SymbolStruct)) {
 				throw new ProgramErrorException("SETQ: Variable name must be of type SymbolStruct. Got: " + varName);
 			}
-			final LispStruct varNameAnalyzed = analyzer.analyzeForm(varName);
+			final LispStruct varNameAnalyzed = analyzer.analyzeForm(varName, analysisBuilder);
 			setqResultList.add(varNameAnalyzed);
 
 			final LispStruct varValue = formsJavaList.get(i + 1);
-			final LispStruct varValueAnalyzed = analyzer.analyzeForm(varValue);
+			final LispStruct varValueAnalyzed = analyzer.analyzeForm(varValue, analysisBuilder);
 			setqResultList.add(varValueAnalyzed);
 		}
 

@@ -1,6 +1,7 @@
 package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
+import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
@@ -20,7 +21,7 @@ import java.util.Stack;
 public class GoAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
 	@Override
-	public ListStruct analyze(final ListStruct input, final SemanticAnalyzer analyzer) {
+	public ListStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
 		if (input.size() != 2) {
 			throw new ProgramErrorException("GO: Incorrect number of arguments: " + input.size() + ". Expected 2 arguments.");
@@ -33,7 +34,7 @@ public class GoAnalyzer implements Analyzer<ListStruct, ListStruct> {
 
 		SymbolStruct<?> goTagSymbol = null;
 
-		final Stack<Map<LispStruct, SymbolStruct<?>>> tagbodyStack = analyzer.getTagbodyStack();
+		final Stack<Map<LispStruct, SymbolStruct<?>>> tagbodyStack = analysisBuilder.getTagbodyStack();
 		final ListIterator<Map<LispStruct, SymbolStruct<?>>> li1 = tagbodyStack.listIterator(tagbodyStack.size());
 
 		while (li1.hasPrevious()) {

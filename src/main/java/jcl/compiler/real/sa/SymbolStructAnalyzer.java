@@ -12,8 +12,8 @@ import java.util.Stack;
 public class SymbolStructAnalyzer implements Analyzer<LispStruct, SymbolStruct<?>> {
 
 	@Override
-	public LispStruct analyze(final SymbolStruct<?> input, final SemanticAnalyzer analyzer) {
-		final Stack<Environment> environmentStack = analyzer.getEnvironmentStack();
+	public LispStruct analyze(final SemanticAnalyzer analyzer, final SymbolStruct<?> input, final AnalysisBuilder analysisBuilder) {
+		final Stack<Environment> environmentStack = analysisBuilder.getEnvironmentStack();
 		EnvironmentAccessor.addSymbolToTable(environmentStack.peek(), input);
 		return input;
 	}

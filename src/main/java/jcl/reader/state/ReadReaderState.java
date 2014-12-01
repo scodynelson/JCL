@@ -10,6 +10,7 @@ import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
 import jcl.reader.struct.SyntaxType;
 import jcl.streams.ReadPeekResult;
+import org.springframework.stereotype.Component;
 
 /**
  * Step 1 of the Reader Algorithm.
@@ -18,18 +19,8 @@ import jcl.streams.ReadPeekResult;
  * from the input stream, and dispatched according to the syntax type of x to one of steps 2 to 7.
  * </p>
  */
-final class ReadReaderState implements ReaderState {
-
-	/**
-	 * Singleton instance variable.
-	 */
-	static final ReaderState INSTANCE = new ReadReaderState();
-
-	/**
-	 * Private constructor.
-	 */
-	private ReadReaderState() {
-	}
+@Component
+class ReadReaderState implements ReaderState {
 
 	@Override
 	public void process(final ReaderStateMediator readerStateMediator, final Reader reader, final TokenBuilder tokenBuilder) {

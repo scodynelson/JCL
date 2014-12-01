@@ -11,18 +11,16 @@ import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.math.BigInteger;
 
 /**
  * Implements the '#.' Lisp reader macro.
  */
-public final class SharpFullStopReaderMacroFunction extends ReaderMacroFunctionImpl {
-
-	/**
-	 * Singleton instance variable.
-	 */
-	public static final SharpFullStopReaderMacroFunction INSTANCE = new SharpFullStopReaderMacroFunction();
+@Component
+public class SharpFullStopReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	/**
 	 * The logger for this class.
@@ -30,15 +28,9 @@ public final class SharpFullStopReaderMacroFunction extends ReaderMacroFunctionI
 	private static final Logger LOGGER = LoggerFactory.getLogger(SharpFullStopReaderMacroFunction.class);
 
 	/**
-	 * Private constructor.
-	 */
-	private SharpFullStopReaderMacroFunction() {
-		init();
-	}
-
-	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
+	@PostConstruct
 	private void init() {
 		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.FULL_STOP, this);
 	}

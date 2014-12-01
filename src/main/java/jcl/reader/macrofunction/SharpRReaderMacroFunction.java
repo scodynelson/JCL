@@ -8,29 +8,21 @@ import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.math.BigInteger;
 
 /**
  * Implements the '#r' Lisp reader macro.
  */
-public final class SharpRReaderMacroFunction extends RationalReaderMacroFunction {
-
-	/**
-	 * Singleton instance variable.
-	 */
-	public static final SharpRReaderMacroFunction INSTANCE = new SharpRReaderMacroFunction();
-
-	/**
-	 * Private constructor.
-	 */
-	private SharpRReaderMacroFunction() {
-		init();
-	}
+@Component
+public class SharpRReaderMacroFunction extends RationalReaderMacroFunction {
 
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
+	@PostConstruct
 	private void init() {
 		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_SMALL_LETTER_R, this);
 		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_CAPITAL_LETTER_R, this);

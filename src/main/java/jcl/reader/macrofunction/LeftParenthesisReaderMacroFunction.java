@@ -8,29 +8,21 @@ import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.math.BigInteger;
 
 /**
  * Implements the '(...)' Lisp reader macro.
  */
-public final class LeftParenthesisReaderMacroFunction extends ListReaderMacroFunction {
-
-	/**
-	 * Singleton instance variable.
-	 */
-	public static final LeftParenthesisReaderMacroFunction INSTANCE = new LeftParenthesisReaderMacroFunction();
-
-	/**
-	 * Private constructor.
-	 */
-	private LeftParenthesisReaderMacroFunction() {
-		init();
-	}
+@Component
+public class LeftParenthesisReaderMacroFunction extends ListReaderMacroFunction {
 
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
+	@PostConstruct
 	private void init() {
 		ReaderVariables.READTABLE.getValue().setMacroCharacter(CharacterConstants.LEFT_PARENTHESIS, this, false);
 	}

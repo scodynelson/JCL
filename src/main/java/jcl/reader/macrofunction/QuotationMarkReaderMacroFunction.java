@@ -13,29 +13,21 @@ import jcl.conditions.exceptions.TypeErrorException;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.streams.ReadPeekResult;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.math.BigInteger;
 
 /**
  * Implements the '"..."' Lisp reader macro.
  */
-public final class QuotationMarkReaderMacroFunction extends UnicodeCharacterReaderMacroFunction {
-
-	/**
-	 * Singleton instance variable.
-	 */
-	public static final QuotationMarkReaderMacroFunction INSTANCE = new QuotationMarkReaderMacroFunction();
-
-	/**
-	 * Private constructor.
-	 */
-	private QuotationMarkReaderMacroFunction() {
-		init();
-	}
+@Component
+public class QuotationMarkReaderMacroFunction extends UnicodeCharacterReaderMacroFunction {
 
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
+	@PostConstruct
 	private void init() {
 		ReaderVariables.READTABLE.getValue().setMacroCharacter(CharacterConstants.QUOTATION_MARK, this, false);
 	}

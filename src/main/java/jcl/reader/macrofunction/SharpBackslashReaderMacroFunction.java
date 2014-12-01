@@ -13,18 +13,16 @@ import jcl.reader.struct.ReaderVariables;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.math.BigInteger;
 
 /**
  * Implements the '#\' Lisp reader macro.
  */
-public final class SharpBackslashReaderMacroFunction extends ExtendedTokenReaderMacroFunction {
-
-	/**
-	 * Singleton instance variable.
-	 */
-	public static final SharpBackslashReaderMacroFunction INSTANCE = new SharpBackslashReaderMacroFunction();
+@Component
+public class SharpBackslashReaderMacroFunction extends ExtendedTokenReaderMacroFunction {
 
 	/**
 	 * The logger for this class.
@@ -34,14 +32,14 @@ public final class SharpBackslashReaderMacroFunction extends ExtendedTokenReader
 	/**
 	 * Private constructor.
 	 */
-	private SharpBackslashReaderMacroFunction() {
+	public SharpBackslashReaderMacroFunction() {
 		super(true);
-		init();
 	}
 
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
+	@PostConstruct
 	private void init() {
 		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.BACKSLASH, this);
 	}

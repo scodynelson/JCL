@@ -8,6 +8,7 @@ import jcl.LispStruct;
 import jcl.reader.struct.AttributeType;
 import jcl.reader.Reader;
 import jcl.streams.ReadPeekResult;
+import org.springframework.stereotype.Component;
 
 /**
  * Step 5 of the Reader Algorithm.
@@ -17,18 +18,8 @@ import jcl.streams.ReadPeekResult;
  * used to begin a token, and step 8 is entered.
  * </p>
  */
-final class SingleEscapeReaderState implements ReaderState {
-
-	/**
-	 * Singleton instance variable.
-	 */
-	static final ReaderState INSTANCE = new SingleEscapeReaderState();
-
-	/**
-	 * Private constructor.
-	 */
-	private SingleEscapeReaderState() {
-	}
+@Component
+class SingleEscapeReaderState implements ReaderState {
 
 	@Override
 	public void process(final ReaderStateMediator readerStateMediator, final Reader reader, final TokenBuilder tokenBuilder) {

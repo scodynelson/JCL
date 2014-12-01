@@ -7,71 +7,93 @@ package jcl.reader.state;
 import jcl.reader.Reader;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Mediator implementation for {@link Reader} {@link ReaderState} invocations throughout the read process.
  */
+@Component
 class ReaderStateMediatorImpl implements ReaderStateMediator {
 
-	/**
-	 * Singleton instance variable.
-	 */
-	static final ReaderStateMediator INSTANCE = new ReaderStateMediatorImpl();
+	@Autowired
+	private ReadReaderState readReaderState;
 
-	/**
-	 * Private constructor.
-	 */
-	private ReaderStateMediatorImpl() {
-	}
+	@Autowired
+	private IllegalCharacterReaderState illegalCharacterReaderState;
+
+	@Autowired
+	private WhitespaceReaderState whitespaceReaderState;
+
+	@Autowired
+	private MacroCharacterReaderState macroCharacterReaderState;
+
+	@Autowired
+	private SingleEscapeReaderState singleEscapeReaderState;
+
+	@Autowired
+	private MultipleEscapeReaderState multipleEscapeReaderState;
+
+	@Autowired
+	private ConstituentReaderState constituentReaderState;
+
+	@Autowired
+	private EvenMultiEscapeReaderState evenMultiEscapeReaderState;
+
+	@Autowired
+	private OddMultiEscapeReaderState oddMultiEscapeReaderState;
+
+	@Autowired
+	private TokenAccumulatedReaderState tokenAccumulatedReaderState;
 
 	@Override
 	public void read(final Reader reader, final TokenBuilder tokenBuilder) {
-		ReadReaderState.INSTANCE.process(this, reader, tokenBuilder);
+		readReaderState.process(this, reader, tokenBuilder);
 	}
 
 	@Override
 	public void readIllegalCharacter(final Reader reader, final TokenBuilder tokenBuilder) {
-		IllegalCharacterReaderState.INSTANCE.process(this, reader, tokenBuilder);
+		illegalCharacterReaderState.process(this, reader, tokenBuilder);
 	}
 
 	@Override
 	public void readWhitespace(final Reader reader, final TokenBuilder tokenBuilder) {
-		WhitespaceReaderState.INSTANCE.process(this, reader, tokenBuilder);
+		whitespaceReaderState.process(this, reader, tokenBuilder);
 	}
 
 	@Override
 	public void readMacroCharacter(final Reader reader, final TokenBuilder tokenBuilder) {
-		MacroCharacterReaderState.INSTANCE.process(this, reader, tokenBuilder);
+		macroCharacterReaderState.process(this, reader, tokenBuilder);
 	}
 
 	@Override
 	public void readSingleEscape(final Reader reader, final TokenBuilder tokenBuilder) {
-		SingleEscapeReaderState.INSTANCE.process(this, reader, tokenBuilder);
+		singleEscapeReaderState.process(this, reader, tokenBuilder);
 	}
 
 	@Override
 	public void readMultipleEscape(final Reader reader, final TokenBuilder tokenBuilder) {
-		MultipleEscapeReaderState.INSTANCE.process(this, reader, tokenBuilder);
+		multipleEscapeReaderState.process(this, reader, tokenBuilder);
 	}
 
 	@Override
 	public void readConstituent(final Reader reader, final TokenBuilder tokenBuilder) {
-		ConstituentReaderState.INSTANCE.process(this, reader, tokenBuilder);
+		constituentReaderState.process(this, reader, tokenBuilder);
 	}
 
 	@Override
 	public void readEvenMultipleEscape(final Reader reader, final TokenBuilder tokenBuilder) {
-		EvenMultiEscapeReaderState.INSTANCE.process(this, reader, tokenBuilder);
+		evenMultiEscapeReaderState.process(this, reader, tokenBuilder);
 	}
 
 	@Override
 	public void readOddMultipleEscape(final Reader reader, final TokenBuilder tokenBuilder) {
-		OddMultiEscapeReaderState.INSTANCE.process(this, reader, tokenBuilder);
+		oddMultiEscapeReaderState.process(this, reader, tokenBuilder);
 	}
 
 	@Override
 	public void readTokenAccumulated(final Reader reader, final TokenBuilder tokenBuilder) {
-		TokenAccumulatedReaderState.INSTANCE.process(this, reader, tokenBuilder);
+		tokenAccumulatedReaderState.process(this, reader, tokenBuilder);
 	}
 
 	@Override

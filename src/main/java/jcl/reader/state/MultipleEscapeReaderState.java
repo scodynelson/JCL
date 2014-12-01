@@ -5,6 +5,7 @@
 package jcl.reader.state;
 
 import jcl.reader.Reader;
+import org.springframework.stereotype.Component;
 
 /**
  * Step 6 of the Reader Algorithm.
@@ -13,18 +14,8 @@ import jcl.reader.Reader;
  * entered.
  * </p>
  */
-final class MultipleEscapeReaderState implements ReaderState {
-
-	/**
-	 * Singleton instance variable.
-	 */
-	static final ReaderState INSTANCE = new MultipleEscapeReaderState();
-
-	/**
-	 * Private constructor.
-	 */
-	private MultipleEscapeReaderState() {
-	}
+@Component
+class MultipleEscapeReaderState implements ReaderState {
 
 	@Override
 	public void process(final ReaderStateMediator readerStateMediator, final Reader reader, final TokenBuilder tokenBuilder) {

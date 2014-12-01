@@ -18,7 +18,11 @@ import jcl.types.LongFloat;
 import jcl.types.ShortFloat;
 import jcl.types.SingleFloat;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.math3.fraction.BigFraction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -38,12 +42,8 @@ import java.util.function.Function;
  * be formatted, then we progress to the SymbolTokenAccumulatedState.
  * </p>
  */
-final class NumberTokenAccumulatedReaderState implements ReaderState {
-
-	/**
-	 * Singleton instance variable.
-	 */
-	static final ReaderState INSTANCE = new NumberTokenAccumulatedReaderState();
+@Component
+class NumberTokenAccumulatedReaderState implements ReaderState {
 
 	/**
 	 * The list of {@link AttributeType}s that should not be present in a numeric token.
@@ -70,18 +70,15 @@ final class NumberTokenAccumulatedReaderState implements ReaderState {
 	 */
 	private static final List<AttributeType> NO_SIMULTANEOUS_ATTRS = Arrays.asList(AttributeType.DECIMAL, AttributeType.RATIOMARKER);
 
-	/**
-	 * Private constructor.
-	 */
-	private NumberTokenAccumulatedReaderState() {
-	}
+	@Autowired
+	private SymbolTokenAccumulatedReaderState symbolTokenAccumulatedReaderState;
 
 	@Override
 	public void process(final ReaderStateMediator readerStateMediator, final Reader reader, final TokenBuilder tokenBuilder) {
 
 		final NumberStruct numberToken = getNumberToken(tokenBuilder);
 		if (numberToken == null) {
-			SymbolTokenAccumulatedReaderState.INSTANCE.process(readerStateMediator, reader, tokenBuilder);
+			symbolTokenAccumulatedReaderState.process(readerStateMediator, reader, tokenBuilder);
 		} else {
 			tokenBuilder.setReturnToken(numberToken);
 		}
@@ -351,5 +348,10 @@ final class NumberTokenAccumulatedReaderState implements ReaderState {
 			}
 		}
 		return floatType;
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

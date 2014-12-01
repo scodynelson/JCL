@@ -10,16 +10,23 @@ import jcl.streams.InputStream;
 import jcl.streams.ReadPeekResult;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 /**
  * JCL Reader that handles reading in lisp tokens and parsing them as {@link LispStruct}s.
  */
+@Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ReaderImpl implements Reader {
 
 	/**
 	 * {@link ReaderStateMediator} singleton to be used for all ReaderImpl instances.
 	 */
-	private static final ReaderStateMediator READER_STATE_MEDIATOR = ReaderStateMediatorImpl.INSTANCE;
+	@Autowired
+	private ReaderStateMediator readerStateMediator;
 
 	/**
 	 * The {@link InputStream} the ReaderImpl reads lisp tokens from.
@@ -44,7 +51,7 @@ public class ReaderImpl implements Reader {
 	@Override
 	public LispStruct read(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		final TokenBuilder tokenBuilder = new TokenBuilder(eofErrorP, eofValue, recursiveP);
-		READER_STATE_MEDIATOR.read(this, tokenBuilder);
+		readerStateMediator.read(this, tokenBuilder);
 
 		return tokenBuilder.getReturnToken();
 	}

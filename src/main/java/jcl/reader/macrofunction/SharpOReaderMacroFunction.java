@@ -8,18 +8,16 @@ import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.math.BigInteger;
 
 /**
  * Implements the '#o' Lisp reader macro.
  */
-public final class SharpOReaderMacroFunction extends RationalReaderMacroFunction {
-
-	/**
-	 * Singleton instance variable.
-	 */
-	public static final SharpOReaderMacroFunction INSTANCE = new SharpOReaderMacroFunction();
+@Component
+public class SharpOReaderMacroFunction extends RationalReaderMacroFunction {
 
 	/**
 	 * Radix value to use.
@@ -27,15 +25,9 @@ public final class SharpOReaderMacroFunction extends RationalReaderMacroFunction
 	private static final int RADIX = 8;
 
 	/**
-	 * Private constructor.
-	 */
-	private SharpOReaderMacroFunction() {
-		init();
-	}
-
-	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
+	@PostConstruct
 	private void init() {
 		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_SMALL_LETTER_O, this);
 		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_CAPITAL_LETTER_O, this);

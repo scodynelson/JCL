@@ -16,19 +16,23 @@ import jcl.streams.ReadPeekResult;
 import jcl.symbols.SpecialOperator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
-public final class ReadEvalPrint {
+@Component
+public class ReadEvalPrint {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ReadEvalPrint.class);
 
-	private ReadEvalPrint() {
-	}
+	@Autowired
+	private ApplicationContext context;
 
-	public static Object funcall(final String... args) {
+	public Object funcall(final String... args) {
 		Object temp = SpecialOperator.BLOCK;
 
 		// get local references to the basic functions
@@ -63,7 +67,7 @@ public final class ReadEvalPrint {
 		}
 	}
 
-	private static Object doStuff(final InputStream inputStream, final boolean isFile) {
+	private Object doStuff(final InputStream inputStream, final boolean isFile) {
 
 		// get local references to the basic functions
 //		Function1 eval = (Function1) CommonLispFunctions.StdFunctions.Eval;
@@ -72,7 +76,7 @@ public final class ReadEvalPrint {
 		// Lisp EXIT function.
 
 		try {
-			final Reader reader = new ReaderImpl(inputStream);
+			final Reader reader = context.getBean(ReaderImpl.class, inputStream);
 
 			// bind all of the interaction variables to their values
 //			Variable.Star.bind(Variable.Star.getValue());

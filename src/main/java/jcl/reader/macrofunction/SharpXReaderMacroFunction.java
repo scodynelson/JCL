@@ -8,18 +8,16 @@ import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.math.BigInteger;
 
 /**
  * Implements the '#x' Lisp reader macro.
  */
-public final class SharpXReaderMacroFunction extends RationalReaderMacroFunction {
-
-	/**
-	 * Singleton instance variable.
-	 */
-	public static final SharpXReaderMacroFunction INSTANCE = new SharpXReaderMacroFunction();
+@Component
+public class SharpXReaderMacroFunction extends RationalReaderMacroFunction {
 
 	/**
 	 * Radix value to use.
@@ -27,15 +25,9 @@ public final class SharpXReaderMacroFunction extends RationalReaderMacroFunction
 	private static final int RADIX = 16;
 
 	/**
-	 * Private constructor.
-	 */
-	private SharpXReaderMacroFunction() {
-		init();
-	}
-
-	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
+	@PostConstruct
 	private void init() {
 		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_SMALL_LETTER_X, this);
 		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_CAPITAL_LETTER_X, this);

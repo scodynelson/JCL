@@ -10,6 +10,7 @@ import jcl.reader.struct.ReadtableCase;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
+import org.springframework.stereotype.Component;
 
 /**
  * Step 7 of the Reader Algorithm.
@@ -21,18 +22,8 @@ import jcl.reader.struct.ReadtableStruct;
  * the current readtable. X is used to begin a token, and step 8 is entered.
  * </p>
  */
-final class ConstituentReaderState implements ReaderState {
-
-	/**
-	 * Singleton instance variable.
-	 */
-	static final ReaderState INSTANCE = new ConstituentReaderState();
-
-	/**
-	 * Private constructor.
-	 */
-	private ConstituentReaderState() {
-	}
+@Component
+class ConstituentReaderState implements ReaderState {
 
 	@Override
 	public void process(final ReaderStateMediator readerStateMediator, final Reader reader, final TokenBuilder tokenBuilder) {

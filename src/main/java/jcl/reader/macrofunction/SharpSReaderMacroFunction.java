@@ -9,29 +9,21 @@ import jcl.characters.CharacterConstants;
 import jcl.classes.StructureObjectStruct;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.math.BigInteger;
 
 /**
  * Implements the '#s' Lisp reader macro.
  */
-public final class SharpSReaderMacroFunction extends ReaderMacroFunctionImpl {
-
-	/**
-	 * Singleton instance variable.
-	 */
-	public static final SharpSReaderMacroFunction INSTANCE = new SharpSReaderMacroFunction();
-
-	/**
-	 * Private constructor.
-	 */
-	private SharpSReaderMacroFunction() {
-		init();
-	}
+@Component
+public class SharpSReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
+	@PostConstruct
 	private void init() {
 		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_SMALL_LETTER_S, this);
 		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_CAPITAL_LETTER_S, this);

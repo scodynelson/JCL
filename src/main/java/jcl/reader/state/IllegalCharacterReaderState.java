@@ -7,6 +7,7 @@ package jcl.reader.state;
 import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.reader.Reader;
+import org.springframework.stereotype.Component;
 
 /**
  * Step 2 of the Reader Algorithm.
@@ -14,18 +15,8 @@ import jcl.reader.Reader;
  * If x is an invalid character, an error of type reader-error is signaled.
  * </p>
  */
-final class IllegalCharacterReaderState implements ReaderState {
-
-	/**
-	 * Singleton instance variable.
-	 */
-	static final ReaderState INSTANCE = new IllegalCharacterReaderState();
-
-	/**
-	 * Private constructor.
-	 */
-	private IllegalCharacterReaderState() {
-	}
+@Component
+class IllegalCharacterReaderState implements ReaderState {
 
 	@Override
 	public void process(final ReaderStateMediator readerStateMediator, final Reader reader, final TokenBuilder tokenBuilder) {

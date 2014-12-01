@@ -9,29 +9,21 @@ import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.math.BigInteger;
 
 /**
  * Implements the ')' Lisp reader macro.
  */
-public final class RightParenthesisReaderMacroFunction extends ReaderMacroFunctionImpl {
-
-	/**
-	 * Singleton instance variable.
-	 */
-	public static final RightParenthesisReaderMacroFunction INSTANCE = new RightParenthesisReaderMacroFunction();
-
-	/**
-	 * Private constructor.
-	 */
-	private RightParenthesisReaderMacroFunction() {
-		init();
-	}
+@Component
+public class RightParenthesisReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
+	@PostConstruct
 	private void init() {
 		ReaderVariables.READTABLE.getValue().setMacroCharacter(CharacterConstants.RIGHT_PARENTHESIS, this, false);
 	}

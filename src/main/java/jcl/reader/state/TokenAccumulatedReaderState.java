@@ -7,6 +7,10 @@ package jcl.reader.state;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -23,18 +27,11 @@ import java.util.List;
  * 3) Package with a Symbol
  * </p>
  */
-final class TokenAccumulatedReaderState implements ReaderState {
+@Component
+class TokenAccumulatedReaderState implements ReaderState {
 
-	/**
-	 * Singleton instance variable.
-	 */
-	static final ReaderState INSTANCE = new TokenAccumulatedReaderState();
-
-	/**
-	 * Private constructor.
-	 */
-	private TokenAccumulatedReaderState() {
-	}
+	@Autowired
+	private NumberTokenAccumulatedReaderState numberTokenAccumulatedReaderState;
 
 	@Override
 	public void process(final ReaderStateMediator readerStateMediator, final Reader reader, final TokenBuilder tokenBuilder) {
@@ -55,7 +52,12 @@ final class TokenAccumulatedReaderState implements ReaderState {
 		if (".".equals(tokenString)) {
 			throw new ReaderErrorException("Dot context error in '.'");
 		} else {
-			NumberTokenAccumulatedReaderState.INSTANCE.process(readerStateMediator, reader, tokenBuilder);
+			numberTokenAccumulatedReaderState.process(readerStateMediator, reader, tokenBuilder);
 		}
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

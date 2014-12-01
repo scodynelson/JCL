@@ -14,6 +14,7 @@ import jcl.reader.Reader;
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -57,18 +58,8 @@ import java.util.Map;
  * Keyword Package!!!
  * </p>
  */
-final class SymbolTokenAccumulatedReaderState implements ReaderState {
-
-	/**
-	 * Singleton instance variable.
-	 */
-	static final ReaderState INSTANCE = new SymbolTokenAccumulatedReaderState();
-
-	/**
-	 * Private constructor.
-	 */
-	private SymbolTokenAccumulatedReaderState() {
-	}
+@Component
+class SymbolTokenAccumulatedReaderState implements ReaderState {
 
 	@Override
 	public void process(final ReaderStateMediator readerStateMediator, final Reader reader, final TokenBuilder tokenBuilder) {

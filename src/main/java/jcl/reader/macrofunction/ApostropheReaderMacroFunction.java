@@ -13,18 +13,16 @@ import jcl.reader.struct.ReaderVariables;
 import jcl.symbols.SpecialOperator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.math.BigInteger;
 
 /**
  * Implements the ''' Lisp reader macro.
  */
-public final class ApostropheReaderMacroFunction extends ReaderMacroFunctionImpl {
-
-	/**
-	 * Singleton instance variable.
-	 */
-	public static final ApostropheReaderMacroFunction INSTANCE = new ApostropheReaderMacroFunction();
+@Component
+public class ApostropheReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	/**
 	 * The logger for this class.
@@ -32,15 +30,9 @@ public final class ApostropheReaderMacroFunction extends ReaderMacroFunctionImpl
 	private static final Logger LOGGER = LoggerFactory.getLogger(ApostropheReaderMacroFunction.class);
 
 	/**
-	 * Private constructor.
-	 */
-	private ApostropheReaderMacroFunction() {
-		init();
-	}
-
-	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
+	@PostConstruct
 	private void init() {
 		ReaderVariables.READTABLE.getValue().setMacroCharacter(CharacterConstants.APOSTROPHE, this, false);
 	}

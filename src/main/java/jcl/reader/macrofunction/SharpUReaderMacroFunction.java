@@ -9,29 +9,21 @@ import jcl.characters.CharacterConstants;
 import jcl.characters.CharacterStruct;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.math.BigInteger;
 
 /**
  * Implements the '#u' Lisp reader macro.
  */
-public final class SharpUReaderMacroFunction extends UnicodeCharacterReaderMacroFunction {
-
-	/**
-	 * Singleton instance variable.
-	 */
-	public static final SharpUReaderMacroFunction INSTANCE = new SharpUReaderMacroFunction();
-
-	/**
-	 * Private constructor.
-	 */
-	private SharpUReaderMacroFunction() {
-		init();
-	}
+@Component
+public class SharpUReaderMacroFunction extends UnicodeCharacterReaderMacroFunction {
 
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
+	@PostConstruct
 	private void init() {
 		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_SMALL_LETTER_U, this);
 		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_CAPITAL_LETTER_U, this);

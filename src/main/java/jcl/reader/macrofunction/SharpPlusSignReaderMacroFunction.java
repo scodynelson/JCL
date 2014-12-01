@@ -8,30 +8,28 @@ import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.math.BigInteger;
 
 /**
  * Implements the '#+' Lisp reader macro.
  */
-public final class SharpPlusSignReaderMacroFunction extends FeaturesReaderMacroFunction {
-
-	/**
-	 * Singleton instance variable.
-	 */
-	public static final SharpPlusSignReaderMacroFunction INSTANCE = new SharpPlusSignReaderMacroFunction();
+@Component
+public class SharpPlusSignReaderMacroFunction extends FeaturesReaderMacroFunction {
 
 	/**
 	 * Private constructor.
 	 */
-	private SharpPlusSignReaderMacroFunction() {
+	public SharpPlusSignReaderMacroFunction() {
 		super(false);
-		init();
 	}
 
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
+	@PostConstruct
 	private void init() {
 		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.PLUS_SIGN, this);
 	}

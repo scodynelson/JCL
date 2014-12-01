@@ -15,18 +15,16 @@ import jcl.reader.struct.ReaderVariables;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.math.BigInteger;
 
 /**
  * Implements the '#*' Lisp reader macro.
  */
-public final class SharpAsteriskReaderMacroFunction extends ExtendedTokenReaderMacroFunction {
-
-	/**
-	 * Singleton instance variable.
-	 */
-	public static final SharpAsteriskReaderMacroFunction INSTANCE = new SharpAsteriskReaderMacroFunction();
+@Component
+public class SharpAsteriskReaderMacroFunction extends ExtendedTokenReaderMacroFunction {
 
 	/**
 	 * The logger for this class.
@@ -36,14 +34,14 @@ public final class SharpAsteriskReaderMacroFunction extends ExtendedTokenReaderM
 	/**
 	 * Private constructor.
 	 */
-	private SharpAsteriskReaderMacroFunction() {
+	public SharpAsteriskReaderMacroFunction() {
 		super(false);
-		init();
 	}
 
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
+	@PostConstruct
 	private void init() {
 		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.ASTERISK, this);
 	}

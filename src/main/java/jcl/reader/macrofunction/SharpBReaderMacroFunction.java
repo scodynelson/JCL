@@ -8,18 +8,16 @@ import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.math.BigInteger;
 
 /**
  * Implements the '#b' Lisp reader macro.
  */
-public final class SharpBReaderMacroFunction extends RationalReaderMacroFunction {
-
-	/**
-	 * Singleton instance variable.
-	 */
-	public static final SharpBReaderMacroFunction INSTANCE = new SharpBReaderMacroFunction();
+@Component
+public class SharpBReaderMacroFunction extends RationalReaderMacroFunction {
 
 	/**
 	 * Radix value to use.
@@ -27,15 +25,9 @@ public final class SharpBReaderMacroFunction extends RationalReaderMacroFunction
 	private static final int RADIX = 2;
 
 	/**
-	 * Private constructor.
-	 */
-	private SharpBReaderMacroFunction() {
-		init();
-	}
-
-	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
+	@PostConstruct
 	private void init() {
 		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_SMALL_LETTER_B, this);
 		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_CAPITAL_LETTER_B, this);

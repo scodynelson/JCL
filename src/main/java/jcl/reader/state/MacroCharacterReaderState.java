@@ -11,6 +11,7 @@ import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
 import jcl.reader.ReaderMacroFunction;
 import jcl.streams.ReadPeekResult;
+import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
 
@@ -37,18 +38,8 @@ import java.math.BigInteger;
  * </tab>
  * </p>
  */
-final class MacroCharacterReaderState implements ReaderState {
-
-	/**
-	 * Singleton instance variable.
-	 */
-	static final ReaderState INSTANCE = new MacroCharacterReaderState();
-
-	/**
-	 * Private constructor.
-	 */
-	private MacroCharacterReaderState() {
-	}
+@Component
+class MacroCharacterReaderState implements ReaderState {
 
 	@Override
 	public void process(final ReaderStateMediator readerStateMediator, final Reader reader, final TokenBuilder tokenBuilder) {

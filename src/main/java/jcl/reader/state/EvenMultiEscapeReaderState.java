@@ -13,6 +13,7 @@ import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
 import jcl.reader.struct.SyntaxType;
 import jcl.streams.ReadPeekResult;
+import org.springframework.stereotype.Component;
 
 /**
  * Step 8 of the Reader Algorithm.
@@ -58,18 +59,8 @@ import jcl.streams.ReadPeekResult;
  * </tab>
  * </p>
  */
-final class EvenMultiEscapeReaderState implements ReaderState {
-
-	/**
-	 * Singleton instance variable.
-	 */
-	static final ReaderState INSTANCE = new EvenMultiEscapeReaderState();
-
-	/**
-	 * Private constructor.
-	 */
-	private EvenMultiEscapeReaderState() {
-	}
+@Component
+class EvenMultiEscapeReaderState implements ReaderState {
 
 	@Override
 	public void process(final ReaderStateMediator readerStateMediator, final Reader reader, final TokenBuilder tokenBuilder) {

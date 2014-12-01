@@ -9,29 +9,21 @@ import jcl.characters.CharacterConstants;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.streams.ReadPeekResult;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.math.BigInteger;
 
 /**
  * Implements the ';' Lisp reader macro.
  */
-public final class SemicolonReaderMacroFunction extends ReaderMacroFunctionImpl {
-
-	/**
-	 * Singleton instance variable.
-	 */
-	public static final SemicolonReaderMacroFunction INSTANCE = new SemicolonReaderMacroFunction();
-
-	/**
-	 * Private constructor.
-	 */
-	private SemicolonReaderMacroFunction() {
-		init();
-	}
+@Component
+public class SemicolonReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
+	@PostConstruct
 	private void init() {
 		ReaderVariables.READTABLE.getValue().setMacroCharacter(CharacterConstants.SEMICOLON, this, false);
 	}

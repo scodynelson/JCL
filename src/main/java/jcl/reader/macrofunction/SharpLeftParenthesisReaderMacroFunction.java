@@ -16,19 +16,17 @@ import jcl.reader.struct.ReaderVariables;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.math.BigInteger;
 import java.util.List;
 
 /**
  * Implements the '#(...)' Lisp reader macro.
  */
-public final class SharpLeftParenthesisReaderMacroFunction extends ListReaderMacroFunction {
-
-	/**
-	 * Singleton instance variable.
-	 */
-	public static final SharpLeftParenthesisReaderMacroFunction INSTANCE = new SharpLeftParenthesisReaderMacroFunction();
+@Component
+public class SharpLeftParenthesisReaderMacroFunction extends ListReaderMacroFunction {
 
 	/**
 	 * The logger for this class.
@@ -36,15 +34,9 @@ public final class SharpLeftParenthesisReaderMacroFunction extends ListReaderMac
 	private static final Logger LOGGER = LoggerFactory.getLogger(SharpLeftParenthesisReaderMacroFunction.class);
 
 	/**
-	 * Private constructor.
-	 */
-	private SharpLeftParenthesisReaderMacroFunction() {
-		init();
-	}
-
-	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
+	@PostConstruct
 	private void init() {
 		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LEFT_PARENTHESIS, this);
 	}

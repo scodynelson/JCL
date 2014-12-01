@@ -12,18 +12,16 @@ import jcl.reader.struct.ReaderVariables;
 import jcl.symbols.SymbolStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.math.BigInteger;
 
 /**
  * Implements the '#:' Lisp reader macro.
  */
-public final class SharpColonReaderMacroFunction extends ExtendedTokenReaderMacroFunction {
-
-	/**
-	 * Singleton instance variable.
-	 */
-	public static final SharpColonReaderMacroFunction INSTANCE = new SharpColonReaderMacroFunction();
+@Component
+public class SharpColonReaderMacroFunction extends ExtendedTokenReaderMacroFunction {
 
 	/**
 	 * The logger for this class.
@@ -33,14 +31,14 @@ public final class SharpColonReaderMacroFunction extends ExtendedTokenReaderMacr
 	/**
 	 * Private constructor.
 	 */
-	private SharpColonReaderMacroFunction() {
+	public SharpColonReaderMacroFunction() {
 		super(false);
-		init();
 	}
 
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
+	@PostConstruct
 	private void init() {
 		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.COLON, this);
 	}

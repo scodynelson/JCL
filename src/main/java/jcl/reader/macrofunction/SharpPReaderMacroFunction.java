@@ -13,19 +13,17 @@ import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.math.BigInteger;
 import java.net.URISyntaxException;
 
 /**
  * Implements the '#p' Lisp reader macro.
  */
-public final class SharpPReaderMacroFunction extends ReaderMacroFunctionImpl {
-
-	/**
-	 * Singleton instance variable.
-	 */
-	public static final SharpPReaderMacroFunction INSTANCE = new SharpPReaderMacroFunction();
+@Component
+public class SharpPReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	/**
 	 * The logger for this class.
@@ -33,15 +31,9 @@ public final class SharpPReaderMacroFunction extends ReaderMacroFunctionImpl {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SharpPReaderMacroFunction.class);
 
 	/**
-	 * Private constructor.
-	 */
-	private SharpPReaderMacroFunction() {
-		init();
-	}
-
-	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
+	@PostConstruct
 	private void init() {
 		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_SMALL_LETTER_P, this);
 		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.LATIN_CAPITAL_LETTER_P, this);

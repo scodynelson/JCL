@@ -9,29 +9,21 @@ import jcl.characters.CharacterConstants;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.streams.ReadPeekResult;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.math.BigInteger;
 
 /**
  * Implements the '#|...|#' Lisp reader macro.
  */
-public final class SharpVerticalBarReaderMacroFunction extends ReaderMacroFunctionImpl {
-
-	/**
-	 * Singleton instance variable.
-	 */
-	public static final SharpVerticalBarReaderMacroFunction INSTANCE = new SharpVerticalBarReaderMacroFunction();
-
-	/**
-	 * Private constructor.
-	 */
-	private SharpVerticalBarReaderMacroFunction() {
-		init();
-	}
+@Component
+public class SharpVerticalBarReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
+	@PostConstruct
 	private void init() {
 		ReaderVariables.READTABLE.getValue().setDispatchMacroCharacter(CharacterConstants.NUMBER_SIGN, CharacterConstants.VERTICAL_LINE, this);
 	}

@@ -9,8 +9,8 @@ import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageSymbolStruct;
 import jcl.packages.PackageVariables;
-import jcl.reader.struct.AttributeType;
 import jcl.reader.Reader;
+import jcl.reader.struct.AttributeType;
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.StringUtils;
@@ -62,7 +62,7 @@ import java.util.Map;
 class SymbolTokenAccumulatedReaderState implements ReaderState {
 
 	@Override
-	public void process(final ReaderStateMediator readerStateMediator, final Reader reader, final TokenBuilder tokenBuilder) {
+	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
 
 		final SymbolStruct<?> symbolToken = getSymbolToken(tokenBuilder);
 		if (symbolToken == null) {

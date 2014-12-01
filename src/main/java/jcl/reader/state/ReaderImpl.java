@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 public class ReaderImpl implements Reader {
 
 	/**
-	 * {@link ReaderStateMediator} singleton to be used for all ReaderImpl instances.
+	 * {@link ReaderStateMediator} singleton used by the reader algorithm.
 	 */
 	@Autowired
 	private ReaderStateMediator readerStateMediator;

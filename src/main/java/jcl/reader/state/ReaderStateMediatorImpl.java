@@ -48,52 +48,52 @@ class ReaderStateMediatorImpl implements ReaderStateMediator {
 
 	@Override
 	public void read(final Reader reader, final TokenBuilder tokenBuilder) {
-		readReaderState.process(this, reader, tokenBuilder);
+		readReaderState.process(reader, tokenBuilder);
 	}
 
 	@Override
 	public void readIllegalCharacter(final Reader reader, final TokenBuilder tokenBuilder) {
-		illegalCharacterReaderState.process(this, reader, tokenBuilder);
+		illegalCharacterReaderState.process(reader, tokenBuilder);
 	}
 
 	@Override
 	public void readWhitespace(final Reader reader, final TokenBuilder tokenBuilder) {
-		whitespaceReaderState.process(this, reader, tokenBuilder);
+		whitespaceReaderState.process(reader, tokenBuilder);
 	}
 
 	@Override
 	public void readMacroCharacter(final Reader reader, final TokenBuilder tokenBuilder) {
-		macroCharacterReaderState.process(this, reader, tokenBuilder);
+		macroCharacterReaderState.process(reader, tokenBuilder);
 	}
 
 	@Override
 	public void readSingleEscape(final Reader reader, final TokenBuilder tokenBuilder) {
-		singleEscapeReaderState.process(this, reader, tokenBuilder);
+		singleEscapeReaderState.process(reader, tokenBuilder);
 	}
 
 	@Override
 	public void readMultipleEscape(final Reader reader, final TokenBuilder tokenBuilder) {
-		multipleEscapeReaderState.process(this, reader, tokenBuilder);
+		multipleEscapeReaderState.process(reader, tokenBuilder);
 	}
 
 	@Override
 	public void readConstituent(final Reader reader, final TokenBuilder tokenBuilder) {
-		constituentReaderState.process(this, reader, tokenBuilder);
+		constituentReaderState.process(reader, tokenBuilder);
 	}
 
 	@Override
 	public void readEvenMultipleEscape(final Reader reader, final TokenBuilder tokenBuilder) {
-		evenMultiEscapeReaderState.process(this, reader, tokenBuilder);
+		evenMultiEscapeReaderState.process(reader, tokenBuilder);
 	}
 
 	@Override
 	public void readOddMultipleEscape(final Reader reader, final TokenBuilder tokenBuilder) {
-		oddMultiEscapeReaderState.process(this, reader, tokenBuilder);
+		oddMultiEscapeReaderState.process(reader, tokenBuilder);
 	}
 
 	@Override
 	public void readTokenAccumulated(final Reader reader, final TokenBuilder tokenBuilder) {
-		tokenAccumulatedReaderState.process(this, reader, tokenBuilder);
+		tokenAccumulatedReaderState.process(reader, tokenBuilder);
 	}
 
 	@Override

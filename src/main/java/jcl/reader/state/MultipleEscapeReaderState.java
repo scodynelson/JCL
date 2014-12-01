@@ -5,6 +5,9 @@
 package jcl.reader.state;
 
 import jcl.reader.Reader;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -17,8 +20,19 @@ import org.springframework.stereotype.Component;
 @Component
 class MultipleEscapeReaderState implements ReaderState {
 
+	/**
+	 * {@link ReaderStateMediator} singleton used by the reader algorithm.
+	 */
+	@Autowired
+	private ReaderStateMediator readerStateMediator;
+
 	@Override
-	public void process(final ReaderStateMediator readerStateMediator, final Reader reader, final TokenBuilder tokenBuilder) {
+	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
 		readerStateMediator.readOddMultipleEscape(reader, tokenBuilder);
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

@@ -7,10 +7,13 @@ package jcl.reader.state;
 import jcl.LispStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.reader.Reader;
+import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
-import jcl.reader.ReaderMacroFunction;
 import jcl.streams.ReadPeekResult;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
@@ -41,8 +44,14 @@ import java.math.BigInteger;
 @Component
 class MacroCharacterReaderState implements ReaderState {
 
+	/**
+	 * {@link ReaderStateMediator} singleton used by the reader algorithm.
+	 */
+	@Autowired
+	private ReaderStateMediator readerStateMediator;
+
 	@Override
-	public void process(final ReaderStateMediator readerStateMediator, final Reader reader, final TokenBuilder tokenBuilder) {
+	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
 		final Integer codePoint = tokenBuilder.getPreviousReadCharacter();
 
 		if (ReaderState.isEndOfFileCharacter(codePoint)) {
@@ -104,5 +113,10 @@ class MacroCharacterReaderState implements ReaderState {
 		reader.unreadChar(readChar);
 
 		return numArg;
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

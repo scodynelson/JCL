@@ -5,12 +5,15 @@
 package jcl.reader.state;
 
 import jcl.LispStruct;
-import jcl.reader.struct.AttributeType;
 import jcl.reader.Reader;
+import jcl.reader.struct.AttributeType;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
 import jcl.reader.struct.SyntaxType;
 import jcl.streams.ReadPeekResult;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -41,8 +44,14 @@ import org.springframework.stereotype.Component;
 @Component
 class OddMultiEscapeReaderState implements ReaderState {
 
+	/**
+	 * {@link ReaderStateMediator} singleton used by the reader algorithm.
+	 */
+	@Autowired
+	private ReaderStateMediator readerStateMediator;
+
 	@Override
-	public void process(final ReaderStateMediator readerStateMediator, final Reader reader, final TokenBuilder tokenBuilder) {
+	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
 
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();
@@ -84,5 +93,10 @@ class OddMultiEscapeReaderState implements ReaderState {
 		} else {
 			readerStateMediator.readIllegalCharacter(reader, tokenBuilder);
 		}
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

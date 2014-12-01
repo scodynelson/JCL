@@ -9,8 +9,8 @@ import jcl.numbers.FloatStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.NumberStruct;
 import jcl.numbers.RatioStruct;
-import jcl.reader.struct.AttributeType;
 import jcl.reader.Reader;
+import jcl.reader.struct.AttributeType;
 import jcl.reader.struct.ReaderVariables;
 import jcl.types.DoubleFloat;
 import jcl.types.Float;
@@ -74,11 +74,11 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 	private SymbolTokenAccumulatedReaderState symbolTokenAccumulatedReaderState;
 
 	@Override
-	public void process(final ReaderStateMediator readerStateMediator, final Reader reader, final TokenBuilder tokenBuilder) {
+	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
 
 		final NumberStruct numberToken = getNumberToken(tokenBuilder);
 		if (numberToken == null) {
-			symbolTokenAccumulatedReaderState.process(readerStateMediator, reader, tokenBuilder);
+			symbolTokenAccumulatedReaderState.process(reader, tokenBuilder);
 		} else {
 			tokenBuilder.setReturnToken(numberToken);
 		}

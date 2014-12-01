@@ -6,8 +6,8 @@ package jcl.reader.state;
 
 import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.reader.struct.AttributeType;
 import jcl.reader.Reader;
+import jcl.reader.struct.AttributeType;
 import jcl.reader.struct.ReadtableCase;
 
 import java.util.List;
@@ -42,15 +42,13 @@ interface ReaderState {
 	/**
 	 * Used to handle reader processing in the respective state instance.
 	 *
-	 * @param readerStateMediator
-	 * 		the JCL {@link ReaderStateMediator} instance to use for invoking the different states of the {@link Reader}
 	 * @param reader
 	 * 		the JCL {@link Reader} instance to use for reading lisp tokens
 	 * @param tokenBuilder
 	 * 		the {@link TokenBuilder} used to build the resulting lisp token and house token parsing information throughout
 	 * 		the read process
 	 */
-	void process(ReaderStateMediator readerStateMediator, Reader reader, TokenBuilder tokenBuilder);
+	void process(Reader reader, TokenBuilder tokenBuilder);
 
 	/**
 	 * Determines if the provided {@code codePoint} is either null or equal to {@link CharacterConstants#EOF}.

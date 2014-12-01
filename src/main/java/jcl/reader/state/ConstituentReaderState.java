@@ -5,11 +5,14 @@
 package jcl.reader.state;
 
 import jcl.numbers.IntegerStruct;
-import jcl.reader.struct.AttributeType;
-import jcl.reader.struct.ReadtableCase;
 import jcl.reader.Reader;
+import jcl.reader.struct.AttributeType;
 import jcl.reader.struct.ReaderVariables;
+import jcl.reader.struct.ReadtableCase;
 import jcl.reader.struct.ReadtableStruct;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -25,8 +28,14 @@ import org.springframework.stereotype.Component;
 @Component
 class ConstituentReaderState implements ReaderState {
 
+	/**
+	 * {@link ReaderStateMediator} singleton used by the reader algorithm.
+	 */
+	@Autowired
+	private ReaderStateMediator readerStateMediator;
+
 	@Override
-	public void process(final ReaderStateMediator readerStateMediator, final Reader reader, final TokenBuilder tokenBuilder) {
+	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
 		Integer codePoint = tokenBuilder.getPreviousReadCharacter();
 
 		if (ReaderState.isEndOfFileCharacter(codePoint)) {
@@ -44,5 +53,10 @@ class ConstituentReaderState implements ReaderState {
 		tokenBuilder.addToTokenAttributes(codePoint, attributeType);
 
 		readerStateMediator.readEvenMultipleEscape(reader, tokenBuilder);
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

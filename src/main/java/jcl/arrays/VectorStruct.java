@@ -197,6 +197,10 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 			for (int i = 0; i < amountToPrint; i++) {
 				final LispStruct lispStruct = contents.get(i);
 				stringBuilder.append(lispStruct.printStruct());
+
+				if (i < (amountToPrint - 1)) {
+					stringBuilder.append(' ');
+				}
 			}
 
 			stringBuilder.append(')');

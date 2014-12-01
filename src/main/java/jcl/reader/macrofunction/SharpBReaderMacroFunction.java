@@ -17,7 +17,7 @@ import java.math.BigInteger;
  * Implements the '#b' Lisp reader macro.
  */
 @Component
-public class SharpBReaderMacroFunction extends RationalReaderMacroFunction {
+public class SharpBReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	/**
 	 * Radix value to use.
@@ -37,6 +37,6 @@ public class SharpBReaderMacroFunction extends RationalReaderMacroFunction {
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_B) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_B);
 
-		return readRational(reader, BigInteger.valueOf(RADIX));
+		return RationalReaderMacroFunction.readRational(reader, BigInteger.valueOf(RADIX));
 	}
 }

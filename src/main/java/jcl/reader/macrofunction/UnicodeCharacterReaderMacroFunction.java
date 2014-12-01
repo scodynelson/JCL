@@ -11,12 +11,18 @@ import jcl.streams.ReadPeekResult;
 /**
  * Reader Macro Function for handling the reading unicode character.
  */
-abstract class UnicodeCharacterReaderMacroFunction extends ReaderMacroFunctionImpl {
+final class UnicodeCharacterReaderMacroFunction {
 
 	/**
 	 * The Unicode radix value used to parse unicode characters into proper character code points.
 	 */
 	private static final int UNICODE_RADIX = 16;
+
+	/**
+	 * Private constructor.
+	 */
+	private UnicodeCharacterReaderMacroFunction() {
+	}
 
 	/**
 	 * Reads in and returns the properly read in Unicode character token. A {@link ReaderErrorException} is thrown if
@@ -33,7 +39,7 @@ abstract class UnicodeCharacterReaderMacroFunction extends ReaderMacroFunctionIm
 		// NOTE: This will throw errors when it reaches an EOF
 		ReadPeekResult readResult = reader.readChar();
 		int codePoint = readResult.getResult();
-		while (!isWhitespace(codePoint)) {
+		while (!ReaderMacroFunctionImpl.isWhitespace(codePoint)) {
 			unicodeCharBuilder.appendCodePoint(codePoint);
 
 			readResult = reader.readChar();

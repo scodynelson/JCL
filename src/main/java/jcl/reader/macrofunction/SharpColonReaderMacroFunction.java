@@ -21,19 +21,12 @@ import java.math.BigInteger;
  * Implements the '#:' Lisp reader macro.
  */
 @Component
-public class SharpColonReaderMacroFunction extends ExtendedTokenReaderMacroFunction {
+public class SharpColonReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	/**
 	 * The logger for this class.
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(SharpColonReaderMacroFunction.class);
-
-	/**
-	 * Private constructor.
-	 */
-	public SharpColonReaderMacroFunction() {
-		super(false);
-	}
 
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
@@ -47,7 +40,7 @@ public class SharpColonReaderMacroFunction extends ExtendedTokenReaderMacroFunct
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.COLON;
 
-		final ReadExtendedToken readExtendedToken = readExtendedToken(reader);
+		final ExtendedTokenReaderMacroFunction.ReadExtendedToken readExtendedToken = ExtendedTokenReaderMacroFunction.readExtendedToken(reader, false);
 		final String token = readExtendedToken.getToken();
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {

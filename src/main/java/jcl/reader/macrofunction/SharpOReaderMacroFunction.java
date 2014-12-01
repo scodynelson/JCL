@@ -17,7 +17,7 @@ import java.math.BigInteger;
  * Implements the '#o' Lisp reader macro.
  */
 @Component
-public class SharpOReaderMacroFunction extends RationalReaderMacroFunction {
+public class SharpOReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	/**
 	 * Radix value to use.
@@ -37,6 +37,6 @@ public class SharpOReaderMacroFunction extends RationalReaderMacroFunction {
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_O) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_O);
 
-		return readRational(reader, BigInteger.valueOf(RADIX));
+		return RationalReaderMacroFunction.readRational(reader, BigInteger.valueOf(RADIX));
 	}
 }

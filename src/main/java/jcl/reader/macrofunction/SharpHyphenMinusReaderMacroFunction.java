@@ -17,14 +17,7 @@ import java.math.BigInteger;
  * Implements the '#-' Lisp reader macro.
  */
 @Component
-public class SharpHyphenMinusReaderMacroFunction extends FeaturesReaderMacroFunction {
-
-	/**
-	 * Private constructor.
-	 */
-	public SharpHyphenMinusReaderMacroFunction() {
-		super(true);
-	}
+public class SharpHyphenMinusReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
@@ -38,7 +31,7 @@ public class SharpHyphenMinusReaderMacroFunction extends FeaturesReaderMacroFunc
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.HYPHEN_MINUS;
 
-		readFeatures(reader);
+		FeaturesReaderMacroFunction.readFeatures(reader, true);
 		return null;
 	}
 }

@@ -292,6 +292,10 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 			for (int i = 0; i < totalSize; i++) {
 				final LispStruct lispStruct = contents.get(i);
 				stringBuilder.append(lispStruct.printStruct());
+
+				if (i < (totalSize - 1)) {
+					stringBuilder.append(' ');
+				}
 			}
 
 			stringBuilder.append(')');

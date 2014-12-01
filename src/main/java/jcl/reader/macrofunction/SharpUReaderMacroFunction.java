@@ -18,7 +18,7 @@ import java.math.BigInteger;
  * Implements the '#u' Lisp reader macro.
  */
 @Component
-public class SharpUReaderMacroFunction extends UnicodeCharacterReaderMacroFunction {
+public class SharpUReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
@@ -37,7 +37,7 @@ public class SharpUReaderMacroFunction extends UnicodeCharacterReaderMacroFuncti
 			return null;
 		}
 
-		final int unicodeChar = readUnicodeCharacter(reader);
+		final int unicodeChar = UnicodeCharacterReaderMacroFunction.readUnicodeCharacter(reader);
 		return new CharacterStruct(unicodeChar);
 	}
 }

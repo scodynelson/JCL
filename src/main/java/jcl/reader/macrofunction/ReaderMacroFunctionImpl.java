@@ -16,7 +16,7 @@ import jcl.reader.struct.ReaderVariables;
  * Abstract implementation definition for all Reader defined macro functions that read character macros based off of a
  * provided {@link Integer} code point.
  */
-public abstract class ReaderMacroFunctionImpl extends FunctionStruct implements ReaderMacroFunction {
+abstract class ReaderMacroFunctionImpl extends FunctionStruct implements ReaderMacroFunction {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {

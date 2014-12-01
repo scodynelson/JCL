@@ -20,7 +20,13 @@ import java.util.List;
  * according to list parsing rules of where in the list the '.' can appear and how many items must both precede and
  * follow it.
  */
-abstract class ListReaderMacroFunction extends ReaderMacroFunctionImpl {
+final class ListReaderMacroFunction {
+
+	/**
+	 * Private constructor.
+	 */
+	private ListReaderMacroFunction() {
+	}
 
 	/**
 	 * Reads in an returns a properly parsed {@link ListStruct}, handling whitespaces and '.' characters. If a '.'
@@ -84,7 +90,7 @@ abstract class ListReaderMacroFunction extends ReaderMacroFunctionImpl {
 		final ReadPeekResult readResult = reader.readChar();
 		final int nextCodePoint = readResult.getResult();
 
-		if (isWhitespaceOrTerminating(nextCodePoint)) {
+		if (ReaderMacroFunctionImpl.isWhitespaceOrTerminating(nextCodePoint)) {
 			if (currentTokenList.isEmpty()) {
 				throw new ReaderErrorException("Nothing appears before . in list.");
 			}
@@ -110,7 +116,7 @@ abstract class ListReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 */
 	private static void processAfterDot(final Reader reader, final List<LispStruct> currentTokenList, final int codePoint) {
 		int firstCodePoint = codePoint;
-		if (isWhitespace(codePoint)) {
+		if (ReaderMacroFunctionImpl.isWhitespace(codePoint)) {
 			firstCodePoint = flushWhitespace(reader);
 		}
 
@@ -155,7 +161,7 @@ abstract class ListReaderMacroFunction extends ReaderMacroFunctionImpl {
 		// NOTE: This will throw errors when it reaches an EOF
 		ReadPeekResult readResult = reader.readChar();
 		int codePoint = readResult.getResult();
-		while (isWhitespace(codePoint)) {
+		while (ReaderMacroFunctionImpl.isWhitespace(codePoint)) {
 			readResult = reader.readChar();
 			codePoint = readResult.getResult();
 		}

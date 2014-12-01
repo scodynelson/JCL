@@ -22,19 +22,12 @@ import java.math.BigInteger;
  * Implements the '#\' Lisp reader macro.
  */
 @Component
-public class SharpBackslashReaderMacroFunction extends ExtendedTokenReaderMacroFunction {
+public class SharpBackslashReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	/**
 	 * The logger for this class.
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(SharpBackslashReaderMacroFunction.class);
-
-	/**
-	 * Private constructor.
-	 */
-	public SharpBackslashReaderMacroFunction() {
-		super(true);
-	}
 
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
@@ -48,7 +41,7 @@ public class SharpBackslashReaderMacroFunction extends ExtendedTokenReaderMacroF
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.BACKSLASH;
 
-		final ReadExtendedToken readExtendedToken = readExtendedToken(reader);
+		final ExtendedTokenReaderMacroFunction.ReadExtendedToken readExtendedToken = ExtendedTokenReaderMacroFunction.readExtendedToken(reader, true);
 		final String token = readExtendedToken.getToken();
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {

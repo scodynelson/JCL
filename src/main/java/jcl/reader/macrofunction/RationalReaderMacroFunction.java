@@ -18,7 +18,7 @@ import java.math.BigInteger;
  * Reader Macro Function for handling the reading of {@link RationalStruct}s, following proper radix rules for a
  * provided radix value.
  */
-abstract class RationalReaderMacroFunction extends ExtendedTokenReaderMacroFunction {
+final class RationalReaderMacroFunction {
 
 	/**
 	 * The valid range of radix values.
@@ -27,11 +27,9 @@ abstract class RationalReaderMacroFunction extends ExtendedTokenReaderMacroFunct
 	private static final Range<BigInteger> RADIX_RANGE = Range.between(BigInteger.valueOf(2), BigInteger.valueOf(36));
 
 	/**
-	 * Protected constructor that calls the {@link ExtendedTokenReaderMacroFunction} constructor, passing {@code false}
-	 * for token escaping processing.
+	 * Private constructor.
 	 */
-	RationalReaderMacroFunction() {
-		super(false);
+	private RationalReaderMacroFunction() {
 	}
 
 	/**
@@ -45,9 +43,9 @@ abstract class RationalReaderMacroFunction extends ExtendedTokenReaderMacroFunct
 	 *
 	 * @return the properly parsed {@link RationalStruct}
 	 */
-	RationalStruct readRational(final Reader reader, final BigInteger radix) {
+	static RationalStruct readRational(final Reader reader, final BigInteger radix) {
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
-			readExtendedToken(reader);
+			ExtendedTokenReaderMacroFunction.readExtendedToken(reader, false);
 			return null;
 		}
 

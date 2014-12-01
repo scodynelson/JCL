@@ -5,9 +5,9 @@
 package jcl.reader.macrofunction;
 
 import jcl.reader.AttributeType;
-import jcl.reader.struct.ReadtableCase;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
+import jcl.reader.struct.ReadtableCase;
 import jcl.reader.struct.SyntaxType;
 import jcl.streams.ReadPeekResult;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -17,21 +17,12 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * Reader Macro Function for handling the reading of extended characters, handling proper character casing and
  * escaping.
  */
-abstract class ExtendedTokenReaderMacroFunction extends ReaderMacroFunctionImpl {
+final class ExtendedTokenReaderMacroFunction {
 
 	/**
-	 * Determines whether or not to process characters as 'escaped' or not.
+	 * Private constructor.
 	 */
-	private final boolean isEscaped;
-
-	/**
-	 * Protected constructor.
-	 *
-	 * @param isEscaped
-	 * 		whether or not characters read in by the JCL Reader should be considered escaped or not.
-	 */
-	ExtendedTokenReaderMacroFunction(final boolean isEscaped) {
-		this.isEscaped = isEscaped;
+	private ExtendedTokenReaderMacroFunction() {
 	}
 
 	/**
@@ -40,10 +31,12 @@ abstract class ExtendedTokenReaderMacroFunction extends ReaderMacroFunctionImpl 
 	 *
 	 * @param reader
 	 * 		the {@link Reader} used to read in the token
+	 * @param isEscaped
+	 * 		whether or not characters read in by the JCL Reader should be considered escaped or not
 	 *
 	 * @return a {@link ReadExtendedToken} object containing the extended token information as read
 	 */
-	ReadExtendedToken readExtendedToken(final Reader reader) {
+	static ReadExtendedToken readExtendedToken(final Reader reader, final boolean isEscaped) {
 
 		final StringBuilder stringBuilder = new StringBuilder();
 
@@ -59,7 +52,7 @@ abstract class ExtendedTokenReaderMacroFunction extends ReaderMacroFunctionImpl 
 		while (!readResult.isEof()) {
 
 			final int codePoint = readResult.getResult();
-			if (isWhitespaceOrTerminating(codePoint)) {
+			if (ReaderMacroFunctionImpl.isWhitespaceOrTerminating(codePoint)) {
 				reader.unreadChar(codePoint);
 
 				// Makes sure to remove the last character read from the builder
@@ -83,11 +76,6 @@ abstract class ExtendedTokenReaderMacroFunction extends ReaderMacroFunctionImpl 
 		}
 
 		return new ReadExtendedToken(stringBuilder.toString(), hasEscapes, hasPackageDelimiter);
-	}
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 
 	/**
@@ -189,7 +177,7 @@ abstract class ExtendedTokenReaderMacroFunction extends ReaderMacroFunctionImpl 
 	 * @return true if the provided {@code codePoint} is a {@link SyntaxType#SINGLE_ESCAPE}; false otherwise
 	 */
 	private static boolean isSingleEscape(final int codePoint) {
-		return isSyntaxType(codePoint, SyntaxType.SINGLE_ESCAPE);
+		return ReaderMacroFunctionImpl.isSyntaxType(codePoint, SyntaxType.SINGLE_ESCAPE);
 	}
 
 	/**
@@ -202,7 +190,7 @@ abstract class ExtendedTokenReaderMacroFunction extends ReaderMacroFunctionImpl 
 	 * @return true if the provided {@code codePoint} is a {@link SyntaxType#SINGLE_ESCAPE}; false otherwise
 	 */
 	private static boolean isMultipleEscape(final int codePoint) {
-		return isSyntaxType(codePoint, SyntaxType.MULTIPLE_ESCAPE);
+		return ReaderMacroFunctionImpl.isSyntaxType(codePoint, SyntaxType.MULTIPLE_ESCAPE);
 	}
 
 	/**
@@ -216,8 +204,8 @@ abstract class ExtendedTokenReaderMacroFunction extends ReaderMacroFunctionImpl 
 	 * AttributeType#PACKAGEMARKER}; false otherwise
 	 */
 	private static boolean isPackageMarker(final int codePoint) {
-		return isSyntaxType(codePoint, SyntaxType.CONSTITUENT)
-				&& isAttributeType(codePoint, AttributeType.PACKAGEMARKER);
+		return ReaderMacroFunctionImpl.isSyntaxType(codePoint, SyntaxType.CONSTITUENT)
+				&& ReaderMacroFunctionImpl.isAttributeType(codePoint, AttributeType.PACKAGEMARKER);
 	}
 
 	/**

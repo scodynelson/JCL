@@ -26,7 +26,7 @@ import java.util.List;
  * Implements the '#(...)' Lisp reader macro.
  */
 @Component
-public class SharpLeftParenthesisReaderMacroFunction extends ListReaderMacroFunction {
+public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	/**
 	 * The logger for this class.
@@ -45,7 +45,7 @@ public class SharpLeftParenthesisReaderMacroFunction extends ListReaderMacroFunc
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.LEFT_PARENTHESIS;
 
-		final ListStruct listToken = readList(reader);
+		final ListStruct listToken = ListReaderMacroFunction.readList(reader);
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			if (LOGGER.isDebugEnabled()) {

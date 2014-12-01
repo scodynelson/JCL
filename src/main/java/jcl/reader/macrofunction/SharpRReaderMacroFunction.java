@@ -17,7 +17,7 @@ import java.math.BigInteger;
  * Implements the '#r' Lisp reader macro.
  */
 @Component
-public class SharpRReaderMacroFunction extends RationalReaderMacroFunction {
+public class SharpRReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
@@ -32,6 +32,6 @@ public class SharpRReaderMacroFunction extends RationalReaderMacroFunction {
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_R) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_R);
 
-		return readRational(reader, numArg);
+		return RationalReaderMacroFunction.readRational(reader, numArg);
 	}
 }

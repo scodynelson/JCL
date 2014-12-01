@@ -18,8 +18,6 @@ import jcl.symbols.BooleanStruct;
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.TStruct;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +27,7 @@ import java.util.List;
  * Reader Macro Function for handling the reading of *features* in the system, handling whether or not those specific
  * features should be hidden or not (aka. the token is read in but ignored).
  */
-abstract class FeaturesReaderMacroFunction extends ReaderMacroFunctionImpl {
+final class FeaturesReaderMacroFunction {
 
 	/**
 	 * The logger for this class.
@@ -53,28 +51,21 @@ abstract class FeaturesReaderMacroFunction extends ReaderMacroFunctionImpl {
 	private static final KeywordSymbolStruct OR = new KeywordSymbolStruct("OR");
 
 	/**
-	 * Determines if the features processed should be suppressed by the read operation or not.
+	 * Private constructor.
 	 */
-	private final boolean shouldHideFeatures;
-
-	/**
-	 * Protected constructor.
-	 *
-	 * @param shouldHideFeatures
-	 * 		whether or not the *features* read should be hidden or not (aka. the token is read in but ignored)
-	 */
-	FeaturesReaderMacroFunction(final boolean shouldHideFeatures) {
-		this.shouldHideFeatures = shouldHideFeatures;
+	private FeaturesReaderMacroFunction() {
 	}
 
 	/**
-	 * Reads in the next set of *features*, following the {@link #shouldHideFeatures} property to properly suppress the
+	 * Reads in the next set of *features*, following the {@code shouldHideFeatures} property to properly suppress the
 	 * read operation or not.
 	 *
 	 * @param reader
 	 * 		the {@link Reader} used to read in the next token
+	 * @param shouldHideFeatures
+	 * 		whether or not the *features* read should be hidden or not (aka. the token is read in but ignored)
 	 */
-	void readFeatures(final Reader reader) {
+	static void readFeatures(final Reader reader, final boolean shouldHideFeatures) {
 		final BooleanStruct previousReadSuppress = ReaderVariables.READ_SUPPRESS.getValue();
 		final PackageStruct previousPackage = PackageVariables.PACKAGE.getValue();
 		try {
@@ -97,11 +88,6 @@ abstract class FeaturesReaderMacroFunction extends ReaderMacroFunctionImpl {
 			PackageVariables.PACKAGE.setValue(previousPackage);
 			ReaderVariables.READ_SUPPRESS.setValue(previousReadSuppress);
 		}
-	}
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 
 	/**

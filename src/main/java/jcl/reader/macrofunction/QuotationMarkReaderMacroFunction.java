@@ -22,7 +22,7 @@ import java.math.BigInteger;
  * Implements the '"..."' Lisp reader macro.
  */
 @Component
-public class QuotationMarkReaderMacroFunction extends UnicodeCharacterReaderMacroFunction {
+public class QuotationMarkReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
@@ -86,7 +86,7 @@ public class QuotationMarkReaderMacroFunction extends UnicodeCharacterReaderMacr
 			final ReadPeekResult nextTmpReadResult = reader.readChar();
 			final int nextTmpChar = nextTmpReadResult.getResult();
 			if (nextTmpChar == CharacterConstants.PLUS_SIGN) {
-				readChar = readUnicodeCharacter(reader);
+				readChar = UnicodeCharacterReaderMacroFunction.readUnicodeCharacter(reader);
 				stringBuilder.appendCodePoint(readChar);
 			} else {
 				// NOTE: Order matters here!!

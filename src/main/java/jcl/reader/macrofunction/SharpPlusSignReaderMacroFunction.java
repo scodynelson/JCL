@@ -17,14 +17,7 @@ import java.math.BigInteger;
  * Implements the '#+' Lisp reader macro.
  */
 @Component
-public class SharpPlusSignReaderMacroFunction extends FeaturesReaderMacroFunction {
-
-	/**
-	 * Private constructor.
-	 */
-	public SharpPlusSignReaderMacroFunction() {
-		super(false);
-	}
+public class SharpPlusSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
@@ -38,7 +31,7 @@ public class SharpPlusSignReaderMacroFunction extends FeaturesReaderMacroFunctio
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.PLUS_SIGN;
 
-		readFeatures(reader);
+		FeaturesReaderMacroFunction.readFeatures(reader, false);
 		return null;
 	}
 }

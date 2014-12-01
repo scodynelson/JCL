@@ -17,7 +17,7 @@ import java.math.BigInteger;
  * Implements the '(...)' Lisp reader macro.
  */
 @Component
-public class LeftParenthesisReaderMacroFunction extends ListReaderMacroFunction {
+public class LeftParenthesisReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
@@ -31,6 +31,6 @@ public class LeftParenthesisReaderMacroFunction extends ListReaderMacroFunction 
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.LEFT_PARENTHESIS;
 
-		return readList(reader);
+		return ListReaderMacroFunction.readList(reader);
 	}
 }

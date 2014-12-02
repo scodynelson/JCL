@@ -2,7 +2,6 @@ package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.specialoperator.body.BodyWithDeclaresAnalyzer;
@@ -18,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class SymbolMacroletAnalyzer implements Analyzer<ListStruct, ListStruct> {
+public class SymbolMacroletAnalyzer implements SpecialOperatorAnalyzer {
 
 	@Autowired
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;

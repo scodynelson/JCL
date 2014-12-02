@@ -2,7 +2,6 @@ package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.lists.ListStruct;
 import jcl.numbers.NumberStruct;
@@ -17,7 +16,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Component
-public class TagbodyAnalyzer implements Analyzer<ListStruct, ListStruct> {
+public class TagbodyAnalyzer implements SpecialOperatorAnalyzer {
 
 	@Override
 	public ListStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {

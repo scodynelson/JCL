@@ -2,7 +2,6 @@ package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.specialoperator.body.BodyAnalyzer;
 import jcl.compiler.real.sa.specialoperator.body.BodyProcessingResult;
@@ -17,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class ProgvAnalyzer implements Analyzer<ListStruct, ListStruct> {
+public class ProgvAnalyzer implements SpecialOperatorAnalyzer {
 
 	@Autowired
 	private BodyAnalyzer bodyAnalyzer;

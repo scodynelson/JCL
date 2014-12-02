@@ -2,7 +2,6 @@ package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
@@ -13,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class IfAnalyzer implements Analyzer<ListStruct, ListStruct> {
+public class IfAnalyzer implements SpecialOperatorAnalyzer {
 
 	@Override
 	public ListStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {

@@ -3,7 +3,6 @@ package jcl.compiler.real.sa.specialoperator;
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
@@ -19,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class QuoteAnalyzer implements Analyzer<LispStruct, ListStruct> {
+public class QuoteAnalyzer implements SpecialOperatorAnalyzer {
 
 	@Autowired
 	private LoadTimeValueAnalyzer loadTimeValueAnalyzer;

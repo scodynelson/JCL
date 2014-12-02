@@ -6,7 +6,6 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.SymbolStructAnalyzer;
 import jcl.compiler.real.sa.specialoperator.special.LambdaAnalyzer;
@@ -22,7 +21,7 @@ import java.util.Optional;
 import java.util.Stack;
 
 @Component
-public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
+public class FunctionAnalyzer implements SpecialOperatorAnalyzer {
 
 	@Autowired
 	private SymbolStructAnalyzer symbolStructAnalyzer;

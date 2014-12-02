@@ -5,7 +5,6 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.EnvironmentLispStruct;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.specialoperator.body.BodyProcessingResult;
@@ -21,7 +20,7 @@ import java.util.List;
 import java.util.Stack;
 
 @Component
-public class LetAnalyzer implements Analyzer<EnvironmentLispStruct, ListStruct> {
+public class LetAnalyzer implements SpecialOperatorAnalyzer {
 
 	@Autowired
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;

@@ -9,10 +9,10 @@ import jcl.compiler.real.environment.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.lambdalist.SuppliedPBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.LambdaEnvironmentLispStruct;
 import jcl.compiler.real.sa.LambdaListParser;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.specialoperator.SpecialOperatorAnalyzer;
 import jcl.compiler.real.sa.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.specialoperator.body.BodyWithDeclaresAndDocStringAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
@@ -28,7 +28,7 @@ import java.util.Stack;
 import java.util.stream.Collectors;
 
 @Component
-public class LambdaAnalyzer implements Analyzer<LambdaEnvironmentLispStruct, ListStruct> {
+public class LambdaAnalyzer implements SpecialOperatorAnalyzer {
 
 	@Autowired
 	private BodyWithDeclaresAndDocStringAnalyzer bodyWithDeclaresAndDocStringAnalyzer;

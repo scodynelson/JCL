@@ -5,7 +5,6 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.LoadTimeValue;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.specialoperator.special.LambdaAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
@@ -23,7 +22,7 @@ import java.util.Stack;
 import java.util.UUID;
 
 @Component
-public class LoadTimeValueAnalyzer implements Analyzer<ListStruct, ListStruct> {
+public class LoadTimeValueAnalyzer implements SpecialOperatorAnalyzer {
 
 	@Autowired
 	private LambdaAnalyzer lambdaAnalyzer;

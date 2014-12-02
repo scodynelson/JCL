@@ -2,7 +2,6 @@ package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.EnvironmentLispStruct;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
@@ -16,7 +15,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 @Component
-public class LetStarAnalyzer implements Analyzer<EnvironmentLispStruct, ListStruct> {
+public class LetStarAnalyzer implements SpecialOperatorAnalyzer {
 
 	@Autowired
 	private LetAnalyzer letAnalyzer;

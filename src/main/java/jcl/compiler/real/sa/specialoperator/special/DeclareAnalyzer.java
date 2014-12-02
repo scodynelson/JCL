@@ -2,9 +2,9 @@ package jcl.compiler.real.sa.specialoperator.special;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.SymbolStructAnalyzer;
+import jcl.compiler.real.sa.specialoperator.SpecialOperatorAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class DeclareAnalyzer implements Analyzer<ListStruct, ListStruct> {
+public class DeclareAnalyzer implements SpecialOperatorAnalyzer {
 
 	@Autowired
 	private SymbolStructAnalyzer symbolStructAnalyzer;

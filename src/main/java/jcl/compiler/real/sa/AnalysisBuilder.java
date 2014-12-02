@@ -6,7 +6,7 @@ package jcl.compiler.real.sa;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.EnvironmentAccessor;
+import jcl.compiler.real.environment.Marker;
 import jcl.symbols.SymbolStruct;
 
 import java.io.Serializable;
@@ -38,7 +38,8 @@ public class AnalysisBuilder implements Serializable {
 		closureDepth = 0;
 		topLevelMode = true;
 
-		environmentStack.push(EnvironmentAccessor.createGlobalEnvironment());
+		final Environment globalEnvironment = new Environment(Environment.NULL, Marker.LAMBDA, 0);
+		environmentStack.push(globalEnvironment);
 		functionNameStack.push(null);
 	}
 

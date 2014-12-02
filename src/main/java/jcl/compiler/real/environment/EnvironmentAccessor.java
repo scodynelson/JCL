@@ -9,22 +9,9 @@ import jcl.symbols.TStruct;
 import jcl.types.T;
 
 import java.util.List;
+import java.util.Optional;
 
 public class EnvironmentAccessor {
-
-	public static Environment createNewEnvironment(final Environment parent, final Marker marker, final int closureDepth) {
-		final Environment environment = new Environment(parent, marker, closureDepth);
-
-		if ((marker == Marker.LAMBDA) || (marker == Marker.FLET) || (marker == Marker.LABELS)) {
-			environment.getLoadTimeValues().clear();
-		}
-
-		return environment;
-	}
-
-	public static Environment createGlobalEnvironment() {
-		return createNewEnvironment(Environment.NULL, Marker.LAMBDA, 0);
-	}
 
 	public static Environment createNewEnvironmentBinding(final Environment currentEnvironment, final SymbolStruct<?> newVariable,
 	                                                      final int position, final LispStruct initForm, final boolean isSpecial) {
@@ -38,30 +25,10 @@ public class EnvironmentAccessor {
 		return currentEnvironment;
 	}
 
-	public static Binding getBinding(final Environment currentEnvironment, final SymbolStruct<?> variable) {
-		final List<Binding> bindings = currentEnvironment.getBindings();
-
-		Binding returnBinding = null;
-		for (final Binding binding : bindings) {
-			if (binding.getSymbolStruct().equals(variable)) {
-				returnBinding = binding;
-				break;
-			}
-		}
-		return returnBinding;
-	}
-
 	public static boolean hasBinding(final Environment currentEnvironment, final SymbolStruct<?> variable) {
-		final List<Binding> bindings = currentEnvironment.getBindings();
-
-		boolean hasBinding = false;
-		for (final Binding binding : bindings) {
-			if (binding.getSymbolStruct().equals(variable)) {
-				hasBinding = true;
-				break;
-			}
-		}
-		return hasBinding;
+		return currentEnvironment.getBindings()
+		                         .stream()
+		                         .anyMatch(e -> e.getSymbolStruct().equals(variable));
 	}
 
 	public static boolean hasFunctionBinding(final Environment currentEnvironment, final SymbolStruct<?> variable) {
@@ -131,7 +98,13 @@ public class EnvironmentAccessor {
 			if (!bindingEnvironment.equals(Environment.NULL)) {
 
 				// so it has a lexical binding somewhere
-				if (getBinding(currentEnvironmentInner, newSymbol) == null) {
+
+				Optional<Binding> optionalSymbolBinding = currentEnvironmentInner.getBindings()
+				                         .stream()
+				                         .filter(e -> e.getSymbolStruct().equals(newSymbol))
+				                         .findFirst();
+
+				if (!optionalSymbolBinding.isPresent()) {
 
 					// ...(:BINDING #the-binding-env# :SCOPE :LEXICAL :TYPE T)
 					// so we just have to point the allocation at the binding environment
@@ -262,14 +235,11 @@ public class EnvironmentAccessor {
 		final SymbolTable symTable = getSymbolTable(currentEnvironmentInner);
 		final List<Binding> symbolBindings = symTable.getBindings();
 
-		SymbolBinding returnSymbolBinding = null;
-		for (final Binding symbolBinding : symbolBindings) {
-			if (symbolBinding.getSymbolStruct().equals(variable)) {
-				returnSymbolBinding = (SymbolBinding) symbolBinding;
-				break;
-			}
-		}
-		return returnSymbolBinding;
+		return (SymbolBinding) symbolBindings
+				.stream()
+				.filter(e -> e.getSymbolStruct().equals(variable))
+				.findFirst()
+				.orElse(null);
 	}
 
 	public static SymbolBinding getSymbolTableEntry(final Environment currentEnvironment, final SymbolStruct<?> variable) {
@@ -341,6 +311,20 @@ public class EnvironmentAccessor {
 		}
 
 		return currentMaxInner;
+	}
+
+	public static int getLocalMax1(final List<Binding> bindings, final int currentMax) {
+
+		final int currentMaxInner = bindings
+				.stream()
+				.map(Binding::getAllocation)
+				.filter(e -> e instanceof PositionAllocation)
+				.map(e -> (PositionAllocation) e)
+				.mapToInt(PositionAllocation::getPosition)
+				.max()
+				.orElse(currentMax);
+
+		return (currentMax > currentMaxInner) ? currentMax : currentMaxInner;
 	}
 
 	public static int getNextAvailableParameterNumber(final Environment environment) {
@@ -431,13 +415,10 @@ public class EnvironmentAccessor {
 
 		final Closure closure = currentEnvironmentInner.getEnvironmentClosure();
 
-		ClosureBinding returnClosureBinding = null;
-		for (final ClosureBinding closureBinding : closure.getBindings()) {
-			if (closureBinding.getSymbolStruct().equals(variable)) {
-				returnClosureBinding = closureBinding;
-				break;
-			}
-		}
-		return returnClosureBinding;
+		return closure.getBindings()
+		              .stream()
+		              .filter(e -> e.getSymbolStruct().equals(variable))
+		              .findFirst()
+		              .orElse(null);
 	}
 }

@@ -56,7 +56,7 @@ abstract class InnerFunctionAnalyzer implements Analyzer<EnvironmentLispStruct, 
 		final int tempClosureDepth = analysisBuilder.getClosureDepth();
 		final int newClosureDepth = tempClosureDepth + 1;
 
-		final Environment fletEnvironment = EnvironmentAccessor.createNewEnvironment(parentEnvironment, marker, newClosureDepth);
+		final Environment fletEnvironment = new Environment(parentEnvironment, marker, newClosureDepth);
 		environmentStack.push(fletEnvironment);
 
 		final Stack<SymbolStruct<?>> functionNameStack = analysisBuilder.getFunctionNameStack();

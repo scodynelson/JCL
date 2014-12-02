@@ -67,7 +67,7 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			final int tempClosureDepth = analysisBuilder.getClosureDepth();
 			final int newClosureDepth = tempClosureDepth + 1;
 
-			final Environment lambdaEnvironment = EnvironmentAccessor.createNewEnvironment(parentEnvironment, Marker.LAMBDA, newClosureDepth);
+			final Environment lambdaEnvironment = new Environment(parentEnvironment, Marker.LAMBDA, newClosureDepth);
 			environmentStack.push(lambdaEnvironment);
 
 			final int tempBindingsPosition = analysisBuilder.getBindingsPosition();

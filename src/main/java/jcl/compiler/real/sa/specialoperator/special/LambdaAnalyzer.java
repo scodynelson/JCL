@@ -2,7 +2,6 @@ package jcl.compiler.real.sa.specialoperator.special;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.environment.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.lambdalist.KeyBinding;
@@ -52,7 +51,7 @@ public class LambdaAnalyzer implements Analyzer<LambdaEnvironmentLispStruct, Lis
 		final int tempClosureDepth = analysisBuilder.getClosureDepth();
 		final int newClosureDepth = tempClosureDepth + 1;
 
-		final Environment lambdaEnvironment = EnvironmentAccessor.createNewEnvironment(parentEnvironment, Marker.LAMBDA, newClosureDepth);
+		final Environment lambdaEnvironment = new Environment(parentEnvironment, Marker.LAMBDA, newClosureDepth);
 		environmentStack.push(lambdaEnvironment);
 
 		final int tempBindingsPosition = analysisBuilder.getBindingsPosition();

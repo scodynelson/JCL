@@ -1,8 +1,8 @@
 package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.Analyzer;
@@ -44,7 +44,7 @@ public class LetAnalyzer implements Analyzer<EnvironmentLispStruct, ListStruct> 
 		final int tempClosureDepth = analysisBuilder.getClosureDepth();
 		final int newClosureDepth = tempClosureDepth + 1;
 
-		final Environment letEnvironment = EnvironmentAccessor.createNewEnvironment(parentEnvironment, Marker.LET, newClosureDepth);
+		final Environment letEnvironment = new Environment(parentEnvironment, Marker.LET, newClosureDepth);
 		environmentStack.push(letEnvironment);
 
 		final int tempBindingsPosition = analysisBuilder.getBindingsPosition();

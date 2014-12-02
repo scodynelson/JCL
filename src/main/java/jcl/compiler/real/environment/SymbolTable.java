@@ -1,6 +1,7 @@
 package jcl.compiler.real.environment;
 
 import jcl.symbols.SymbolStruct;
+import jcl.types.T;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -22,6 +23,11 @@ public class SymbolTable {
 			}
 		}
 		return null;
+	}
+
+	public void addBinding(final SymbolStruct<?> newVariable, final Allocation allocation, final Scope scope, final Environment binding) {
+		final SymbolBinding symbolBinding = new SymbolBinding(newVariable, allocation, scope, T.INSTANCE, binding);
+		bindings.add(symbolBinding);
 	}
 
 	@Override

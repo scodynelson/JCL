@@ -3,6 +3,7 @@ package jcl.compiler.real.icg.specialoperator;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.Scope;
+import jcl.compiler.real.environment.SymbolBinding;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.SpecialSymbolCodeGenerator;
@@ -29,7 +30,7 @@ public class SetqCodeGenerator implements CodeGenerator<ListStruct> {
 			// determine if this is a local variable or a special variable
 			final Environment binding = EnvironmentAccessor.getBindingEnvironment(codeGenerator.bindingEnvironment, symbol, true);
 			if (!binding.equals(Environment.NULL)
-					&& (EnvironmentAccessor.getSymbolScope(codeGenerator.bindingEnvironment, symbol) != Scope.DYNAMIC)) {
+					&& (getSymbolScope(codeGenerator.bindingEnvironment, symbol) != Scope.DYNAMIC)) {
 				// so find what local slot it is
 				final int slot = IntermediateCodeGenerator.genLocalSlot(symbol, binding); // drop the %let
 				// if this is the last set, dup the value so it's returned
@@ -50,4 +51,12 @@ public class SetqCodeGenerator implements CodeGenerator<ListStruct> {
 			restOfList = restOfList.getRest();
 		}
 	}
+
+	private static Scope getSymbolScope(final Environment currentEnvironment, final SymbolStruct<?> variable) {
+
+		// look up the symbol in the symbol table
+		final SymbolBinding symPList = EnvironmentAccessor.getSymbolTableEntry(currentEnvironment, variable);
+		return symPList.getScope();
+	}
+
 }

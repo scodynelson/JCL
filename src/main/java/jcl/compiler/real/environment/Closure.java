@@ -29,6 +29,11 @@ public class Closure {
 		return null;
 	}
 
+	public void addBinding(final SymbolStruct<?> newVariable) {
+		final ClosureBinding closureBinding = new ClosureBinding(newVariable, bindings.size(), 1);
+		bindings.add(closureBinding);
+	}
+
 	public int getDepth() {
 		return depth;
 	}

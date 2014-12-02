@@ -80,14 +80,14 @@ public class LetAnalyzer implements Analyzer<EnvironmentLispStruct, ListStruct> 
 					final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
 					analysisBuilder.setBindingsPosition(newBindingsPosition);
 
-					EnvironmentAccessor.createNewEnvironmentBinding(environmentStack.peek(), parameterName, newBindingsPosition, parameterValueInitForm, false);
+					environmentStack.peek().addBinding(parameterName, newBindingsPosition, parameterValueInitForm);
 				} else if (currentParameter instanceof SymbolStruct) {
 					final SymbolStruct<?> symbolParameter = (SymbolStruct) currentParameter;
 
 					final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(environmentStack.peek());
 					analysisBuilder.setBindingsPosition(newBindingsPosition);
 
-					EnvironmentAccessor.createNewEnvironmentBinding(environmentStack.peek(), symbolParameter, newBindingsPosition, NILStruct.INSTANCE, false);
+					environmentStack.peek().addBinding(symbolParameter, newBindingsPosition, NILStruct.INSTANCE);
 				} else {
 					throw new ProgramErrorException("LET: Parameter must be of type SymbolStruct or ListStruct. Got: " + currentParameter);
 				}

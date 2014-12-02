@@ -126,7 +126,7 @@ abstract class InnerFunctionAnalyzer implements Analyzer<EnvironmentLispStruct, 
 				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
 				analysisBuilder.setBindingsPosition(newBindingsPosition);
 
-				EnvironmentAccessor.createNewEnvironmentBinding(currentEnvironment, functionName, newBindingsPosition, paramValueInitForm, false);
+				currentEnvironment.addBinding(functionName, newBindingsPosition, paramValueInitForm);
 			}
 
 			if (getFunctionNamesBeforeInitForms) {

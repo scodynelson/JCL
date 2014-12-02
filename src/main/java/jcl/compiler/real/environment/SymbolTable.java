@@ -9,14 +9,14 @@ import java.util.List;
 
 public class SymbolTable {
 
-	private final List<Binding> bindings = new ArrayList<>();
+	private final List<SymbolBinding> bindings = new ArrayList<>();
 
-	public List<Binding> getBindings() {
+	public List<SymbolBinding> getBindings() {
 		return bindings;
 	}
 
-	public Binding getBinding(final SymbolStruct<?> symbolStruct) {
-		for (final Binding binding : bindings) {
+	public SymbolBinding getBinding(final SymbolStruct<?> symbolStruct) {
+		for (final SymbolBinding binding : bindings) {
 			if (binding.getSymbolStruct().equals(symbolStruct)) {
 				return binding;
 			}

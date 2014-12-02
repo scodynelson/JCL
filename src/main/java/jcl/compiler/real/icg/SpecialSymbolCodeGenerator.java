@@ -1,6 +1,10 @@
 package jcl.compiler.real.icg;
 
+import jcl.compiler.real.environment.Allocation;
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
+import jcl.compiler.real.environment.PositionAllocation;
+import jcl.compiler.real.environment.SymbolBinding;
 import jcl.symbols.SymbolStruct;
 
 public class SpecialSymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
@@ -15,7 +19,7 @@ public class SpecialSymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>
 
 	@Override
 	public void generate(final SymbolStruct<?> input, final IntermediateCodeGenerator codeGenerator) {
-		final int theInt = EnvironmentAccessor.getSymbolAllocation(codeGenerator.bindingEnvironment, input);
+		final int theInt = getSymbolAllocation(codeGenerator.bindingEnvironment, input);
 		//****** this is a premature optimization. Good idea, but should wait for a new version of the compiler ****
 		final int slot = 0;
 		// it may not be in one of the accessible lambdas, so do it the old fashioned way
@@ -27,4 +31,27 @@ public class SpecialSymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>
 			codeGenerator.genCodeSpecialVariable(input);
 		}
 	}
+
+	private static int getSymbolAllocation(final Environment currentEnvironment, final SymbolStruct<?> variable) {
+
+		// look up the symbol in the symbol table
+		final SymbolBinding symPList = EnvironmentAccessor.getSymbolTableEntry(currentEnvironment, variable);
+//        List symPList = getSymbolInTable(currentEnvironmentInner, variable);
+
+//        // (:ALLOCATION (:LOCAL . n) :BINDING :FREE :SCOPE :DYNAMIC :TYPE T)
+//        // we need the local slot in the allocation, get the CDR of the GET of :ALLOCATION
+
+		final Allocation alloc = symPList.getAllocation();
+
+//        // if the cons starts with LOCAL, we're there
+//        // otherwise, we have to go to the actual env of allocation
+//        if (alloc.getFirst() != KeywordOld.Local) {
+//            symPList = getSymbolInTable(alloc, variable);
+		if (alloc == null) {
+			return -1;
+		} else {
+			return ((PositionAllocation) alloc).getPosition();
+		}
+	}
+
 }

@@ -109,7 +109,7 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		final List<LispStruct> analyzedFunctionList = new ArrayList<>();
 
 		final Stack<Environment> environmentStack = analysisBuilder.getEnvironmentStack();
-		final boolean hasFunctionBinding = EnvironmentAccessor.hasFunctionBinding(environmentStack.peek(), functionSymbol);
+		final boolean hasFunctionBinding = hasFunctionBinding(environmentStack.peek(), functionSymbol);
 		if (hasFunctionBinding) {
 			// Recursive call
 			analyzedFunctionList.add(SpecialOperator.TAIL_RECURSION);
@@ -146,6 +146,18 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		}
 
 		return ListStruct.buildProperList(analyzedFunctionList);
+	}
+
+	private static boolean hasFunctionBinding(final Environment currentEnvironment, final SymbolStruct<?> variable) {
+		if (currentEnvironment.equals(Environment.NULL)) {
+			return false;
+		}
+
+		if (EnvironmentAccessor.hasBinding(currentEnvironment, variable)) {
+			return true;
+		}
+
+		return hasFunctionBinding(currentEnvironment.getParent(), variable);
 	}
 
 	private static void validateFunctionArguments(final String functionName, final OrdinaryLambdaListBindings lambdaListBindings, final List<LispStruct> functionArguments) {

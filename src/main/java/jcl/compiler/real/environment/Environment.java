@@ -3,6 +3,7 @@ package jcl.compiler.real.environment;
 import jcl.LispStruct;
 import jcl.LispType;
 import jcl.symbols.SymbolStruct;
+import jcl.types.T;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -52,6 +53,12 @@ public class Environment implements LispStruct {
 			}
 		}
 		return null;
+	}
+
+	public void addBinding(final SymbolStruct<?> newVariable, final int position, final LispStruct initForm) {
+		final Scope scope = newVariable.isSpecial() ? Scope.DYNAMIC : Scope.LEXICAL;
+		final Binding binding = new EnvironmentBinding(newVariable, position, scope, T.INSTANCE, initForm);
+		bindings.add(binding);
 	}
 
 	public SymbolTable getSymbolTable() {

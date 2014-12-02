@@ -322,7 +322,7 @@ public class IntermediateCodeGenerator {
 	 */
 	public void doFreeVariableSetup() {
 		//-- get the symbol-table
-		final SymbolTable symbolTable = EnvironmentAccessor.getSymbolTable(bindingEnvironment);
+		final SymbolTable symbolTable = bindingEnvironment.getSymbolTable();
 		// Now iterate over the entries, looking for ones to allocate
 		for (final Binding binding : symbolTable.getBindings()) {
 			// (symbol :allocation ... :binding ... :scope ... :type ...)

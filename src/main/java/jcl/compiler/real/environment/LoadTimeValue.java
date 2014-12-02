@@ -7,8 +7,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class LoadTimeValue {
 
-	private SymbolStruct<?> name;
-	private LispStruct value;
+	private final SymbolStruct<?> name;
+	private final LispStruct value;
 
 	public LoadTimeValue(final SymbolStruct<?> name, final LispStruct value) {
 		this.name = name;
@@ -19,16 +19,8 @@ public class LoadTimeValue {
 		return name;
 	}
 
-	public void setName(final SymbolStruct<?> name) {
-		this.name = name;
-	}
-
 	public LispStruct getValue() {
 		return value;
-	}
-
-	public void setValue(final LispStruct value) {
-		this.value = value;
 	}
 
 	@Override

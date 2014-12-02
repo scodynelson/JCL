@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class SymbolTable {
 
@@ -16,13 +17,10 @@ public class SymbolTable {
 		return bindings;
 	}
 
-	public SymbolBinding getBinding(final SymbolStruct<?> symbolStruct) {
-		for (final SymbolBinding binding : bindings) {
-			if (binding.getSymbolStruct().equals(symbolStruct)) {
-				return binding;
-			}
-		}
-		return null;
+	public Optional<SymbolBinding> getBinding(final SymbolStruct<?> symbolStruct) {
+		return bindings.stream()
+		               .filter(e -> e.getSymbolStruct().equals(symbolStruct))
+		               .findFirst();
 	}
 
 	public void addBinding(final SymbolStruct<?> newVariable, final Allocation allocation, final Scope scope, final Environment binding) {

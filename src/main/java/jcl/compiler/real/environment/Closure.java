@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Closure {
 
@@ -20,13 +21,10 @@ public class Closure {
 		return bindings;
 	}
 
-	public ClosureBinding getBinding(final SymbolStruct<?> symbolStruct) {
-		for (final ClosureBinding closureBinding : bindings) {
-			if (closureBinding.getSymbolStruct().equals(symbolStruct)) {
-				return closureBinding;
-			}
-		}
-		return null;
+	public Optional<ClosureBinding> getBinding(final SymbolStruct<?> symbolStruct) {
+		return bindings.stream()
+		               .filter(e -> e.getSymbolStruct().equals(symbolStruct))
+		               .findFirst();
 	}
 
 	public void addBinding(final SymbolStruct<?> newVariable) {

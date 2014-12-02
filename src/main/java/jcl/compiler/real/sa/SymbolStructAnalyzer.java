@@ -151,14 +151,8 @@ public class SymbolStructAnalyzer implements Analyzer<LispStruct, SymbolStruct<?
 			// if the binding environment has already had a closure added to it
 			// for this variable, just increment it's number of references
 
-			// get the current number of references
-			int references = closureBindingValue.getReferences();
-
 			// increment the number of references
-			references += 1;
-
-			// set the number of references
-			closureBindingValue.setReferences(references);
+			closureBindingValue.incrementReferences();
 		} else {
 			closure.addBinding(newSymbol);
 		}

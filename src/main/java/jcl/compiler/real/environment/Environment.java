@@ -1,7 +1,6 @@
 package jcl.compiler.real.environment;
 
 import jcl.LispStruct;
-import jcl.LispType;
 import jcl.symbols.SymbolStruct;
 import jcl.types.T;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -9,6 +8,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Environment implements LispStruct {
 
@@ -46,13 +46,10 @@ public class Environment implements LispStruct {
 		return bindings;
 	}
 
-	public Binding getBinding(final SymbolStruct<?> symbolStruct) {
-		for (final Binding binding : bindings) {
-			if (binding.getSymbolStruct().equals(symbolStruct)) {
-				return binding;
-			}
-		}
-		return null;
+	public Optional<Binding> getBinding(final SymbolStruct<?> symbolStruct) {
+		return bindings.stream()
+		               .filter(e -> e.getSymbolStruct().equals(symbolStruct))
+		               .findFirst();
 	}
 
 	public void addBinding(final SymbolStruct<?> newVariable, final int position, final LispStruct initForm) {
@@ -67,16 +64,6 @@ public class Environment implements LispStruct {
 
 	public Closure getEnvironmentClosure() {
 		return environmentClosure;
-	}
-
-	@Override
-	public LispType getType() {
-		return null;
-	}
-
-	@Override
-	public String printStruct() {
-		return toString();
 	}
 
 	@Override

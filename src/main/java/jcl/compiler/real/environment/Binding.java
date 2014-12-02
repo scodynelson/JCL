@@ -7,12 +7,13 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public abstract class Binding {
 
-	private SymbolStruct<?> symbolStruct;
-	private Allocation allocation;
-	private Scope scope;
-	private LispType type;
+	private final SymbolStruct<?> symbolStruct;
+	private final Allocation allocation;
+	private final Scope scope;
+	private final LispType type;
 
-	protected Binding(final SymbolStruct<?> symbolStruct, final Allocation allocation, final Scope scope, final LispType type) {
+	protected Binding(final SymbolStruct<?> symbolStruct, final Allocation allocation, final Scope scope,
+	                  final LispType type) {
 		this.symbolStruct = symbolStruct;
 		this.allocation = allocation;
 		this.scope = scope;
@@ -33,22 +34,6 @@ public abstract class Binding {
 
 	public LispType getType() {
 		return type;
-	}
-
-	public void setSymbolStruct(final SymbolStruct<?> symbolStruct) {
-		this.symbolStruct = symbolStruct;
-	}
-
-	public void setAllocation(final Allocation allocation) {
-		this.allocation = allocation;
-	}
-
-	public void setScope(final Scope scope) {
-		this.scope = scope;
-	}
-
-	public void setType(final LispType type) {
-		this.type = type;
 	}
 
 	@Override

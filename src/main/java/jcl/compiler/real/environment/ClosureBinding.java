@@ -6,8 +6,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class ClosureBinding {
 
-	private SymbolStruct<?> symbolStruct;
-	private int position;
+	private final SymbolStruct<?> symbolStruct;
+	private final int position;
 	private int references;
 
 	public ClosureBinding(final SymbolStruct<?> symbolStruct, final int position, final int references) {
@@ -28,16 +28,8 @@ public class ClosureBinding {
 		return references;
 	}
 
-	public void setSymbolStruct(final SymbolStruct<?> symbolStruct) {
-		this.symbolStruct = symbolStruct;
-	}
-
-	public void setPosition(final int position) {
-		this.position = position;
-	}
-
-	public void setReferences(final int references) {
-		this.references = references;
+	public void incrementReferences() {
+		references++;
 	}
 
 	@Override

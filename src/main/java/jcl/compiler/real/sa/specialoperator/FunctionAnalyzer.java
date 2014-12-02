@@ -18,6 +18,7 @@ import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
 import java.util.Stack;
 
 @Component
@@ -52,11 +53,17 @@ public class FunctionAnalyzer implements Analyzer<LispStruct, ListStruct> {
 				symbolStructAnalyzer.analyze(analyzer, functionSymbol, analysisBuilder);
 				return input;
 			} else {
-				final Binding binding = fnBinding.getBinding(functionSymbol);
-				final SymbolStruct<?> functionBindingName = binding.getSymbolStruct();
+				final Optional<Binding> binding = fnBinding.getBinding(functionSymbol);
+				if (binding.isPresent()) {
+					final Binding bindingValue = binding.get();
+					final SymbolStruct<?> functionBindingName = bindingValue.getSymbolStruct();
 
-				final LispStruct first = input.getFirst();
-				return new ConsStruct(first, functionBindingName);
+					final LispStruct first = input.getFirst();
+					return new ConsStruct(first, functionBindingName);
+				}
+
+				//TODO: what do we do here???
+				throw new ProgramErrorException("FUNCTION: Failed to find function symbol binding in environment.");
 			}
 		}
 

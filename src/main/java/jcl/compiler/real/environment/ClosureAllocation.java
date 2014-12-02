@@ -1,8 +1,11 @@
 package jcl.compiler.real.environment;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 public class ClosureAllocation implements Allocation {
 
-	private Closure closure;
+	private final Closure closure;
 
 	public ClosureAllocation(final Closure closure) {
 		this.closure = closure;
@@ -12,7 +15,8 @@ public class ClosureAllocation implements Allocation {
 		return closure;
 	}
 
-	public void setClosure(final Closure closure) {
-		this.closure = closure;
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

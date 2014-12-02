@@ -35,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Stack;
 
 public class IntermediateCodeGenerator {
@@ -152,7 +153,7 @@ public class IntermediateCodeGenerator {
 	public static int genLocalSlot(final SymbolStruct<?> sym, final Environment binding) {
 		// get the :bindings list
 		// ((x :allocation ...) (y :allocation ...) ...)
-		final Binding symBinding = binding.getBinding(sym);
+		final Binding symBinding = binding.getBinding(sym).get();
 		// (:allocation ... :scope ... )
 		// get the allocated slot for the symbol and put it on the stack
 		return ((PositionAllocation) symBinding.getAllocation()).getPosition();
@@ -289,14 +290,14 @@ public class IntermediateCodeGenerator {
 			//TODO handle parameters that are special variables
 			for (final Binding binding : bindings) {
 				final SymbolStruct<?> variable = binding.getSymbolStruct();
-				final ClosureBinding closureEntry = closureStuff.getBinding(variable);
-				if (closureEntry != null) {
+				final Optional<ClosureBinding> closureEntry = closureStuff.getBinding(variable);
+				if (closureEntry.isPresent()) {
 					// this entry is a closure
 					// Since this is a lambda, it's a parameter. So put the value into the closure
 					final PositionAllocation allocation = (PositionAllocation) binding.getAllocation();
 					final int param = allocation.getPosition();
 					// now where does it go
-					final int position = closureEntry.getPosition();
+					final int position = closureEntry.get().getPosition();
 					emitter.emitLdc(position); // index
 					emitter.emitLdc(0);                   // nesting (current one)
 					emitter.emitAload(param);      // value from the arg list

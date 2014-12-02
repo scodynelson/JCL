@@ -12,6 +12,8 @@ import jcl.symbols.SymbolStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Optional;
+
 public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SymbolCodeGenerator.class);
@@ -31,8 +33,8 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 		// 4. the binding is completely local and allocated to a JVM local
 		//    If there is no binding and this is special, it's really free!
 		final Closure closure = codeGenerator.bindingEnvironment.getEnvironmentClosure();
-		final ClosureBinding closureBinding = closure.getBinding(input);
-		if (closureBinding == null) {
+		final Optional<ClosureBinding> closureBinding = closure.getBinding(input);
+		if (!closureBinding.isPresent()) {
 			// set up for 2 or 3
 			final SymbolBinding entry = EnvironmentAccessor.getSymbolInTable(codeGenerator.bindingEnvironment, input);
 			// (:allocation ... :
@@ -72,9 +74,9 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 						// (:closure (:depth . n) (x ...)...)
 						final int parentDepth = parentClosure.getDepth();
 						// (:depth . n) => n
-						final ClosureBinding parentEntry = parentClosure.getBinding(input);
+						final Optional<ClosureBinding> parentEntry = parentClosure.getBinding(input);
 						// (x :position m :references n)
-						final int position = parentEntry.getPosition();
+						final int position = parentEntry.get().getPosition();
 						// get the current closure depth if any
 
 						// have to find the first closure with a :depth in it. That's
@@ -104,7 +106,7 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 		} else {
 			// #1. it's in a local closure
 			// get the position in the closure
-			final int position = closureBinding.getPosition();
+			final int position = closureBinding.get().getPosition();
 			// now get the object out of the current closure
 			// get this
 			codeGenerator.emitter.emitAload(0);

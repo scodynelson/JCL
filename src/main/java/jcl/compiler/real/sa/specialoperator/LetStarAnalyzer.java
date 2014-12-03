@@ -2,7 +2,7 @@ package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.EnvironmentLispStruct;
+import jcl.compiler.real.environment.EnvironmentLispStruct;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;

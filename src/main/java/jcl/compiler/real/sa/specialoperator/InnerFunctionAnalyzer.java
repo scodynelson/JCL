@@ -5,7 +5,7 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.EnvironmentLispStruct;
+import jcl.compiler.real.environment.EnvironmentLispStruct;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.specialoperator.body.BodyWithDeclaresAnalyzer;

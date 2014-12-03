@@ -1,4 +1,4 @@
-package jcl.compiler.real.sa;
+package jcl.compiler.real.environment;
 
 import jcl.LispStruct;
 import jcl.LispType;
@@ -31,11 +31,6 @@ public class EnvironmentLispStruct implements LispStruct {
 
 	public ListStruct getBodyForms() {
 		return bodyForms;
-	}
-
-	@Override
-	public LispType getType() {
-		return null;
 	}
 
 	@Override

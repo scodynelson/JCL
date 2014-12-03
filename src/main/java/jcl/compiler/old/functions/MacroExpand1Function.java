@@ -64,6 +64,6 @@ public class MacroExpand1Function {
 		} else if (arg1 instanceof SymbolStruct) {
 			// this is where we will check for SYMBOL-MACRO symbol expansion
 		}
-		return new MacroExpandReturn(arg1, true);
+		return new MacroExpandReturn(arg1, false);
 	}
 }

@@ -1,6 +1,5 @@
-package jcl.compiler.real.sa;
+package jcl.compiler.real.environment;
 
-import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.lambdalist.OrdinaryLambdaListBindings;
 import jcl.arrays.StringStruct;
 import jcl.lists.ListStruct;

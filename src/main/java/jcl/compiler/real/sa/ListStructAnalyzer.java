@@ -1,8 +1,11 @@
 package jcl.compiler.real.sa;
 
 import jcl.LispStruct;
+import jcl.compiler.old.functions.MacroExpandFunction;
+import jcl.compiler.old.functions.MacroExpandReturn;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
+import jcl.compiler.real.environment.LambdaEnvironmentLispStruct;
 import jcl.compiler.real.environment.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.lambdalist.OrdinaryLambdaListBindings;
@@ -107,13 +110,17 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		}
 
 		final LispStruct first = input.getFirst();
+		if (!(first instanceof SymbolStruct) && !(first instanceof ListStruct)) {
+			throw new ProgramErrorException("SA LIST: First element must be of type SymbolStruct or ListStruct. Got: " + first);
+		}
+
 		if (first instanceof SymbolStruct) {
 			final Stack<Environment> environmentStack = analysisBuilder.getEnvironmentStack();
-//			final MacroExpandReturn macroExpandReturn = MacroExpandFunction.FUNCTION.funcall(input, environmentStack.peek());
-			final LispStruct expandedForm = input; //macroExpandReturn.getExpandedForm(); // TODO: need to put something in place so this will work
+			final MacroExpandReturn macroExpandReturn = MacroExpandFunction.FUNCTION.funcall(input, environmentStack.peek());
+			final LispStruct expandedForm = macroExpandReturn.getExpandedForm();
 
 			if (expandedForm.equals(NullStruct.INSTANCE)) {
-				return NullStruct.INSTANCE;
+				return expandedForm;
 			}
 
 			if (expandedForm instanceof ListStruct) {
@@ -127,12 +134,12 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 					final ListStruct functionArguments = expandedFormList.getRest();
 					return analyzeFunctionCall(analyzer, analysisBuilder, functionSymbol, functionArguments);
 				} else {
-					throw new ProgramErrorException("SA LIST: First element of expanded form must be of type SymbolStruct or ListStruct. Got: " + expandedFormListFirst);
+					throw new ProgramErrorException("SA LIST: First element of expanded form must be a SpecialOperator or of type SymbolStruct. Got: " + expandedFormListFirst);
 				}
 			} else {
 				return analyzer.analyzeForm(expandedForm, analysisBuilder);
 			}
-		} else if (first instanceof ListStruct) {
+		} else {
 			// ex ((lambda (x) (+ x 1)) 3)
 			final ListStruct firstAsList = (ListStruct) first;
 
@@ -144,8 +151,6 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			} else {
 				throw new ProgramErrorException("SA LIST: First element of a first element ListStruct must be the SpecialOperator 'LAMBDA'. Got: " + firstOfFirstList);
 			}
-		} else {
-			throw new ProgramErrorException("SA LIST: First element must be of type SymbolStruct or ListStruct. Got: " + first);
 		}
 	}
 
@@ -157,7 +162,7 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		final Analyzer<? extends LispStruct, ListStruct> strategyBean = context.getBean(strategy);
 
 		if (strategy == null) {
-			throw new ProgramErrorException("SpecialOperator symbol supplied is not supported.");
+			throw new ProgramErrorException("SpecialOperator symbol supplied is not supported: " + specialOperator);
 		}
 		return strategyBean.analyze(analyzer, input, analysisBuilder);
 	}
@@ -226,16 +231,21 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		return ListStruct.buildProperList(analyzedFunctionList);
 	}
 
-	private static boolean hasFunctionBinding(final Environment currentEnvironment, final SymbolStruct<?> variable) {
-		if (currentEnvironment.equals(Environment.NULL)) {
-			return false;
+	private static boolean hasFunctionBinding(final Environment environment, final SymbolStruct<?> variable) {
+
+		Environment currentEnvironment = environment;
+
+		boolean hasFunctionBinding = false;
+
+		while (!currentEnvironment.equals(Environment.NULL)) {
+			if (EnvironmentAccessor.hasBinding(currentEnvironment, variable)) {
+				hasFunctionBinding = true;
+				break;
+			}
+			currentEnvironment = currentEnvironment.getParent();
 		}
 
-		if (EnvironmentAccessor.hasBinding(currentEnvironment, variable)) {
-			return true;
-		}
-
-		return hasFunctionBinding(currentEnvironment.getParent(), variable);
+		return hasFunctionBinding;
 	}
 
 	private static void validateFunctionArguments(final String functionName, final OrdinaryLambdaListBindings lambdaListBindings, final List<LispStruct> functionArguments) {

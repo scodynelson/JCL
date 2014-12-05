@@ -32,8 +32,8 @@ public class MultipleValueCallAnalyzer implements SpecialOperatorAnalyzer {
 
 		// Body includes the 'Function Form'
 		final ListStruct body = input.getRest();
-		final BodyProcessingResult bodyProcessingResult = bodyAnalyzer.analyze(analyzer, body, analysisBuilder);
-		multipleValueCallResultList.addAll(bodyProcessingResult.getBodyForms());
+		final List<LispStruct> analyzedBodyForms = bodyAnalyzer.analyze(analyzer, body, analysisBuilder);
+		multipleValueCallResultList.addAll(analyzedBodyForms);
 
 		return ListStruct.buildProperList(multipleValueCallResultList);
 	}

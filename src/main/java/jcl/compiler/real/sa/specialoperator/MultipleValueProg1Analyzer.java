@@ -32,8 +32,8 @@ public class MultipleValueProg1Analyzer implements SpecialOperatorAnalyzer {
 
 		// Body includes the 'First Form'
 		final ListStruct body = input.getRest();
-		final BodyProcessingResult bodyProcessingResult = bodyAnalyzer.analyze(analyzer, body, analysisBuilder);
-		multipleValueProg1ResultList.addAll(bodyProcessingResult.getBodyForms());
+		final List<LispStruct> analyzedBodyForms = bodyAnalyzer.analyze(analyzer, body, analysisBuilder);
+		multipleValueProg1ResultList.addAll(analyzedBodyForms);
 
 		return ListStruct.buildProperList(multipleValueProg1ResultList);
 	}

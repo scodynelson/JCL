@@ -1,13 +1,12 @@
 package jcl.compiler.real.sa.specialoperator.body;
 
 import jcl.LispStruct;
-import jcl.LispType;
 import jcl.arrays.StringStruct;
 import jcl.lists.ListStruct;
 
 import java.util.List;
 
-public class BodyProcessingResult implements LispStruct {
+public class BodyProcessingResult {
 
 	private final List<ListStruct> declarations;
 	private final StringStruct docString;
@@ -29,15 +28,5 @@ public class BodyProcessingResult implements LispStruct {
 
 	public List<LispStruct> getBodyForms() {
 		return bodyForms;
-	}
-
-	@Override
-	public LispType getType() {
-		return null;
-	}
-
-	@Override
-	public String printStruct() {
-		return null;
 	}
 }

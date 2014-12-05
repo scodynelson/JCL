@@ -26,8 +26,8 @@ public class PrognAnalyzer implements SpecialOperatorAnalyzer {
 		prognResultList.add(SpecialOperator.PROGN);
 
 		final ListStruct body = input.getRest();
-		final BodyProcessingResult bodyProcessingResult = bodyAnalyzer.analyze(analyzer, body, analysisBuilder);
-		prognResultList.addAll(bodyProcessingResult.getBodyForms());
+		final List<LispStruct> analyzedBodyForms = bodyAnalyzer.analyze(analyzer, body, analysisBuilder);
+		prognResultList.addAll(analyzedBodyForms);
 
 		return ListStruct.buildProperList(prognResultList);
 	}

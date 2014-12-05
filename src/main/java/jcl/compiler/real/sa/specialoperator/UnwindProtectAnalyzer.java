@@ -32,8 +32,8 @@ public class UnwindProtectAnalyzer implements SpecialOperatorAnalyzer {
 
 		// Body includes the 'Protected Form'
 		final ListStruct body = input.getRest();
-		final BodyProcessingResult bodyProcessingResult = bodyAnalyzer.analyze(analyzer, body, analysisBuilder);
-		unwindProtectResultList.addAll(bodyProcessingResult.getBodyForms());
+		final List<LispStruct> analyzedBodyForms = bodyAnalyzer.analyze(analyzer, body, analysisBuilder);
+		unwindProtectResultList.addAll(analyzedBodyForms);
 
 		return ListStruct.buildProperList(unwindProtectResultList);
 	}

@@ -32,8 +32,8 @@ public class CatchAnalyzer implements SpecialOperatorAnalyzer {
 
 		// Body includes the 'Catch Tag'
 		final ListStruct body = input.getRest();
-		final BodyProcessingResult bodyProcessingResult = bodyAnalyzer.analyze(analyzer, body, analysisBuilder);
-		catchResultList.addAll(bodyProcessingResult.getBodyForms());
+		final List<LispStruct> analyzedBodyForms = bodyAnalyzer.analyze(analyzer, body, analysisBuilder);
+		catchResultList.addAll(analyzedBodyForms);
 
 		return ListStruct.buildProperList(catchResultList);
 	}

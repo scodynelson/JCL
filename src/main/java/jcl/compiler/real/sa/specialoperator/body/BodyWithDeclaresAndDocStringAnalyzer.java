@@ -1,11 +1,10 @@
 package jcl.compiler.real.sa.specialoperator.body;
 
 import jcl.LispStruct;
+import jcl.arrays.StringStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.specialoperator.special.DeclareAnalyzer;
-import jcl.arrays.StringStruct;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +15,11 @@ import java.util.Iterator;
 import java.util.List;
 
 @Component
-public class BodyWithDeclaresAndDocStringAnalyzer implements Analyzer<BodyProcessingResult, ListStruct> {
+public class BodyWithDeclaresAndDocStringAnalyzer {
 
 	@Autowired
 	private DeclareAnalyzer declareAnalyzer;
 
-	@Override
 	public BodyProcessingResult analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 		final List<LispStruct> bodyJavaList = input.getAsJavaList();
 
@@ -45,14 +43,12 @@ public class BodyWithDeclaresAndDocStringAnalyzer implements Analyzer<BodyProces
 			}
 
 			while (iterator.hasNext()) {
-				final LispStruct analyzedForm = analyzer.analyzeForm(next, analysisBuilder);
-				bodyForms.add(analyzedForm);
+				bodyForms.add(next);
 				next = iterator.next();
 			}
 
-			// Make sure to analyze and add the last form!!
-			final LispStruct analyzedForm = analyzer.analyzeForm(next, analysisBuilder);
-			bodyForms.add(analyzedForm);
+			// Make sure to add the last form!!
+			bodyForms.add(next);
 		}
 
 		return new BodyProcessingResult(declarations, docString, bodyForms);

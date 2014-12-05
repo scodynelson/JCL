@@ -2,7 +2,6 @@ package jcl.compiler.real.sa.specialoperator.body;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.specialoperator.special.DeclareAnalyzer;
 import jcl.lists.ListStruct;
@@ -15,12 +14,11 @@ import java.util.Iterator;
 import java.util.List;
 
 @Component
-public class BodyWithDeclaresAnalyzer implements Analyzer<BodyProcessingResult, ListStruct> {
+public class BodyWithDeclaresAnalyzer {
 
 	@Autowired
 	private DeclareAnalyzer declareAnalyzer;
 
-	@Override
 	public BodyProcessingResult analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 		final List<LispStruct> bodyJavaList = input.getAsJavaList();
 
@@ -38,10 +36,12 @@ public class BodyWithDeclaresAnalyzer implements Analyzer<BodyProcessingResult, 
 			}
 
 			while (iterator.hasNext()) {
-				final LispStruct analyzedForm = analyzer.analyzeForm(next, analysisBuilder);
-				bodyForms.add(analyzedForm);
+				bodyForms.add(next);
 				next = iterator.next();
 			}
+
+			// Make sure to add the last form!!
+			bodyForms.add(next);
 		}
 
 		return new BodyProcessingResult(declarations, null, bodyForms);

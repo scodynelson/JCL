@@ -42,8 +42,8 @@ public class BlockAnalyzer implements SpecialOperatorAnalyzer {
 			blockResultList.add(second);
 
 			final ListStruct body = input.getRest().getRest();
-			final BodyProcessingResult bodyProcessingResult = bodyAnalyzer.analyze(analyzer, body, analysisBuilder);
-			blockResultList.addAll(bodyProcessingResult.getBodyForms());
+			final List<LispStruct> analyzedBodyForms = bodyAnalyzer.analyze(analyzer, body, analysisBuilder);
+			blockResultList.addAll(analyzedBodyForms);
 
 			return ListStruct.buildProperList(blockResultList);
 		} finally {

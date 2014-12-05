@@ -27,7 +27,7 @@ public class EvalWhenAnalyzer implements SpecialOperatorAnalyzer {
 		return analyze(analyzer, input, analysisBuilder, false);
 	}
 
-	public ListStruct analyze(final SemanticAnalyzer semanticAnalyzer, final ListStruct input, final AnalysisBuilder analysisBuilder, final boolean isTopLevel) {
+	public ListStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder, final boolean isTopLevel) {
 
 		final LispStruct second = input.getRest().getFirst();
 		if (!(second instanceof ListStruct)) {
@@ -44,26 +44,26 @@ public class EvalWhenAnalyzer implements SpecialOperatorAnalyzer {
 
 		if (isTopLevel) {
 			if (isCompileTopLevel(situationJavaList)) {
-				final BodyProcessingResult bodyProcessingResult = bodyAnalyzer.analyze(semanticAnalyzer, body, analysisBuilder);
-				evalWhenResultList.addAll(bodyProcessingResult.getBodyForms());
+				final List<LispStruct> analyzedBodyForms = bodyAnalyzer.analyze(analyzer, body, analysisBuilder);
+				evalWhenResultList.addAll(analyzedBodyForms);
 				return ListStruct.buildProperList(evalWhenResultList);
 			} else if (isLoadTopLevel(situationJavaList)) {
 				// TODO: take care of processing later at load time...
-				final BodyProcessingResult bodyProcessingResult = bodyAnalyzer.analyze(semanticAnalyzer, body, analysisBuilder);
-				evalWhenResultList.addAll(bodyProcessingResult.getBodyForms());
+				final List<LispStruct> analyzedBodyForms = bodyAnalyzer.analyze(analyzer, body, analysisBuilder);
+				evalWhenResultList.addAll(analyzedBodyForms);
 				return ListStruct.buildProperList(evalWhenResultList);
 			} else if (isExecute(situationJavaList)) {
 				// TODO: take care of processing later at execution time...
-				final BodyProcessingResult bodyProcessingResult = bodyAnalyzer.analyze(semanticAnalyzer, body, analysisBuilder);
-				evalWhenResultList.addAll(bodyProcessingResult.getBodyForms());
+				final List<LispStruct> analyzedBodyForms = bodyAnalyzer.analyze(analyzer, body, analysisBuilder);
+				evalWhenResultList.addAll(analyzedBodyForms);
 				return ListStruct.buildProperList(evalWhenResultList);
 			} else {
 				return NullStruct.INSTANCE;
 			}
 		} else if (isExecute(situationJavaList)) {
 			// TODO: take care of processing later at execution time...
-			final BodyProcessingResult bodyProcessingResult = bodyAnalyzer.analyze(semanticAnalyzer, body, analysisBuilder);
-			evalWhenResultList.addAll(bodyProcessingResult.getBodyForms());
+			final List<LispStruct> analyzedBodyForms = bodyAnalyzer.analyze(analyzer, body, analysisBuilder);
+			evalWhenResultList.addAll(analyzedBodyForms);
 			return ListStruct.buildProperList(evalWhenResultList);
 		} else {
 			return NullStruct.INSTANCE;

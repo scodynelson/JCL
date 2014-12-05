@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 @Component
 class SemanticAnalyzerImpl implements SemanticAnalyzer {
 
+	private static final long serialVersionUID = -1291208288043954547L;
+
 	@Autowired
 	private ListStructAnalyzer listStructAnalyzer;
 

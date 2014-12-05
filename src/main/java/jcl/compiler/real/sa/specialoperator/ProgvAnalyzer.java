@@ -53,8 +53,8 @@ public class ProgvAnalyzer implements SpecialOperatorAnalyzer {
 		progvResultList.add(thirdAnalyzed);
 
 		final ListStruct body = input.getRest().getRest().getRest();
-		final BodyProcessingResult bodyProcessingResult = bodyAnalyzer.analyze(analyzer, body, analysisBuilder);
-		progvResultList.addAll(bodyProcessingResult.getBodyForms());
+		final List<LispStruct> analyzedBodyForms = bodyAnalyzer.analyze(analyzer, body, analysisBuilder);
+		progvResultList.addAll(analyzedBodyForms);
 
 		return ListStruct.buildProperList(progvResultList);
 	}

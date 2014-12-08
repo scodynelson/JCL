@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Component
 public class TagbodyAnalyzer implements SpecialOperatorAnalyzer {
@@ -23,22 +23,15 @@ public class TagbodyAnalyzer implements SpecialOperatorAnalyzer {
 
 		final ListStruct body = input.getRest();
 		final List<LispStruct> bodyJavaList = body.getAsJavaList();
-		final Map<LispStruct, SymbolStruct<?>> currentTagMap = readAllTagbodyTags(bodyJavaList);
+		final HashMap<LispStruct, SymbolStruct<?>> currentTagMap = readAllTagbodyTags(bodyJavaList);
 
 		analysisBuilder.getTagbodyStack().push(currentTagMap);
 
 		try {
-			final List<LispStruct> newBodyJavaList = new ArrayList<>();
-
-			for (final LispStruct currentBodyElement : bodyJavaList) {
-				if (isTagbodyTag(currentBodyElement)) {
-					final SymbolStruct<?> realTagSymbol = currentTagMap.get(currentBodyElement);
-					newBodyJavaList.add(realTagSymbol);
-				} else {
-					final LispStruct analyzedElement = analyzer.analyzeForm(currentBodyElement, analysisBuilder);
-					newBodyJavaList.add(analyzedElement);
-				}
-			}
+			final List<LispStruct> newBodyJavaList =
+					bodyJavaList.stream()
+					            .map(e -> getBodyElement(e, currentTagMap, analyzer, analysisBuilder))
+					            .collect(Collectors.toList());
 
 			final List<LispStruct> tagbodyResultList = new ArrayList<>();
 			tagbodyResultList.add(SpecialOperator.TAGBODY);
@@ -50,9 +43,19 @@ public class TagbodyAnalyzer implements SpecialOperatorAnalyzer {
 		}
 	}
 
-	private static Map<LispStruct, SymbolStruct<?>> readAllTagbodyTags(final List<LispStruct> bodyJavaList) {
+	private static LispStruct getBodyElement(final LispStruct bodyElement, final HashMap<LispStruct, SymbolStruct<?>> currentTagMap,
+	                                         final SemanticAnalyzer analyzer, final AnalysisBuilder analysisBuilder) {
+		if (isTagbodyTag(bodyElement)) {
+			return currentTagMap.get(bodyElement);
+		} else {
+			return analyzer.analyzeForm(bodyElement, analysisBuilder);
+		}
+	}
+
+	private static HashMap<LispStruct, SymbolStruct<?>> readAllTagbodyTags(final List<LispStruct> bodyJavaList) {
 		final HashMap<LispStruct, SymbolStruct<?>> currentTagMap = new HashMap<>();
 
+		// This is bad practice. HOWEVER!!! We CANNOT do a non-destructive version due to Type Inference of the SymbolStruct. Bleh!!!!
 		bodyJavaList
 				.stream()
 				.filter(TagbodyAnalyzer::isTagbodyTag)
@@ -64,7 +67,7 @@ public class TagbodyAnalyzer implements SpecialOperatorAnalyzer {
 		return currentTagMap;
 	}
 
-	private static boolean isTagbodyTag(final LispStruct current) {
-		return (current instanceof SymbolStruct) || (current instanceof NumberStruct);
+	private static boolean isTagbodyTag(final LispStruct element) {
+		return (element instanceof SymbolStruct) || (element instanceof NumberStruct);
 	}
 }

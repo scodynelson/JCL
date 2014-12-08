@@ -3,38 +3,31 @@ package jcl.compiler.real.sa.specialoperator;
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.element.TheElement;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
-import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class TheAnalyzer implements SpecialOperatorAnalyzer {
 
 	@Override
-	public ListStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
+	public LispStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
 		if (input.size() != 3) {
 			throw new ProgramErrorException("THE: Incorrect number of arguments: " + input.size() + ". Expected 3 arguments.");
 		}
 
-		final LispStruct second = input.getRest().getFirst();
-		if (!(second instanceof SymbolStruct) && !(second instanceof ListStruct)) {
-			throw new ProgramErrorException("THE: Tag must be of type SymbolStruct or ListStruct. Got: " + second);
+		final LispStruct valueType = input.getRest().getFirst();
+		if (!(valueType instanceof SymbolStruct) && !(valueType instanceof ListStruct)) {
+			throw new ProgramErrorException("THE: Type specifier must be of type SymbolStruct or ListStruct. Got: " + valueType);
 		}
+		// TODO: do we actually want to somehow factor in the 'TypeSpecifier' produced by the second value?
 
-		final List<LispStruct> theResultList = new ArrayList<>(3);
-		theResultList.add(SpecialOperator.THE);
-		theResultList.add(second);
+		final LispStruct form = input.getRest().getRest().getFirst();
+		final LispStruct formAnalyzed = analyzer.analyzeForm(form, analysisBuilder);
 
-		final LispStruct third = input.getRest().getRest().getFirst();
-		final LispStruct thirdAnalyzed = analyzer.analyzeForm(third, analysisBuilder);
-		theResultList.add(thirdAnalyzed);
-
-		return ListStruct.buildProperList(theResultList);
+		return new TheElement(null, formAnalyzed);
 	}
 }

@@ -3,9 +3,9 @@ package jcl.compiler.real.sa.specialoperator;
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.element.SetqElement;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
-import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +16,7 @@ import java.util.List;
 public class SetqAnalyzer implements SpecialOperatorAnalyzer {
 
 	@Override
-	public ListStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
+	public LispStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
 		final ListStruct forms = input.getRest();
 
@@ -24,24 +24,25 @@ public class SetqAnalyzer implements SpecialOperatorAnalyzer {
 			throw new ProgramErrorException("SETQ: Odd number of arguments received: " + input + ". Expected an even number of arguments.");
 		}
 
-		final List<LispStruct> setqResultList = new ArrayList<>();
-		setqResultList.add(SpecialOperator.SETQ);
-
 		final List<LispStruct> formsJavaList = forms.getAsJavaList();
-		for (int i = 0; i < formsJavaList.size(); i += 2) {
 
-			final LispStruct varName = formsJavaList.get(i);
-			if (!(varName instanceof SymbolStruct)) {
-				throw new ProgramErrorException("SETQ: Variable name must be of type SymbolStruct. Got: " + varName);
+		final List<SetqElement.SetqPair> setqPairs = new ArrayList<>(forms.size() / 2);
+
+		for (int index = 0; index < formsJavaList.size(); index += 2) {
+
+			final LispStruct var = formsJavaList.get(index);
+			if (!(var instanceof SymbolStruct)) {
+				throw new ProgramErrorException("SETQ: Variable must be of type SymbolStruct. Got: " + var);
 			}
-			final LispStruct varNameAnalyzed = analyzer.analyzeForm(varName, analysisBuilder);
-			setqResultList.add(varNameAnalyzed);
+			final SymbolStruct<?> varSymbol = (SymbolStruct) var;
 
-			final LispStruct varValue = formsJavaList.get(i + 1);
-			final LispStruct varValueAnalyzed = analyzer.analyzeForm(varValue, analysisBuilder);
-			setqResultList.add(varValueAnalyzed);
+			final LispStruct form = formsJavaList.get(index + 1);
+			final LispStruct formAnalyzed = analyzer.analyzeForm(form, analysisBuilder);
+
+			final SetqElement.SetqPair setqPair = new SetqElement.SetqPair(varSymbol, formAnalyzed);
+			setqPairs.add(setqPair);
 		}
 
-		return ListStruct.buildProperList(setqResultList);
+		return new SetqElement(setqPairs);
 	}
 }

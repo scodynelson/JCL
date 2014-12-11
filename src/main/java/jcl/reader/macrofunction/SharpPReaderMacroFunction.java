@@ -8,10 +8,13 @@ import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.lists.ListStruct;
+import jcl.packages.GlobalPackageStruct;
 import jcl.pathnames.PathnameStruct;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
+import jcl.symbols.SymbolStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -56,7 +59,10 @@ public class SharpPReaderMacroFunction extends ReaderMacroFunctionImpl {
 		if (lispToken instanceof StringStruct) {
 			final String javaString = ((StringStruct) lispToken).getAsJavaString();
 			try {
-				return PathnameStruct.buildPathname(javaString);
+				final SymbolStruct<?> pathnameFnSymbol = GlobalPackageStruct.COMMON_LISP.findSymbol("PATHNAME").getSymbolStruct();
+				final PathnameStruct pathnameStruct = PathnameStruct.buildPathname(javaString);
+
+				return ListStruct.buildProperList(pathnameFnSymbol, pathnameStruct);
 			} catch (final URISyntaxException use) {
 				throw new ReaderErrorException("Improper namestring provided to #P: " + lispToken, use);
 			}

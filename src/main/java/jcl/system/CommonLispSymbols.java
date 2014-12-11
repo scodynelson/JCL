@@ -1,17 +1,20 @@
 package jcl.system;
 
+import jcl.LispStruct;
 import jcl.arrays.ArrayConstants;
 import jcl.characters.CharacterConstants;
 import jcl.compiler.real.CompilerConstants;
 import jcl.compiler.real.CompilerVariables;
 import jcl.numbers.NumberConstants;
 import jcl.numbers.NumberVariables;
+import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageVariables;
 import jcl.pathnames.PathnameVariables;
 import jcl.printer.PrinterVariables;
 import jcl.reader.struct.ReaderVariables;
 import jcl.streams.StreamVariables;
 import jcl.symbols.Declaration;
+import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SymbolConstants;
 import jcl.symbols.SymbolStruct;
 
@@ -321,7 +324,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> COMPILER_MACRO = null;
 	SymbolStruct<?> COMPILER_MACRO_FUNCTION = null;
 	SymbolStruct<?> COMPLEMENT = null;
-	SymbolStruct<?> COMPLEX = null;
+	SymbolStruct<?> COMPLEX = new SymbolStruct<>("COMPLEX", GlobalPackageStruct.COMMON_LISP);
 	SymbolStruct<?> COMPLEXP = null;
 	SymbolStruct<?> COMPUTE_APPLICABLE_METHODS = null;
 	SymbolStruct<?> COMPUTE_RESTARTS = null;
@@ -585,7 +588,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> MACROEXPAND = null;
 	SymbolStruct<?> MACROEXPAND_1 = null;
 	SymbolStruct<?> MACROLET = null;
-	SymbolStruct<?> MAKE_ARRAY = null;
+	SymbolStruct<?> MAKE_ARRAY = new SymbolStruct<>("MAKE-ARRAY", GlobalPackageStruct.COMMON_LISP);
 	SymbolStruct<?> MAKE_BROADCAST_STREAM = null;
 	SymbolStruct<?> MAKE_CONCATENATED_STREAM = null;
 	SymbolStruct<?> MAKE_CONDITION = null;
@@ -679,7 +682,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> OR = null;
 	SymbolStruct<?> OTHERWISE = null;
 	SymbolStruct<?> OUTPUT_STREAM_P = null;
-	SymbolStruct<?> PACKAGE = null;
+	SymbolStruct<?> PACKAGE = new SymbolStruct<>("PACKAGE", GlobalPackageStruct.COMMON_LISP);
 	SymbolStruct<?> PACKAGE_ERROR = null;
 	SymbolStruct<?> PACKAGE_ERROR_PACKAGE = null;
 	SymbolStruct<?> PACKAGE_NAME = null;
@@ -1001,4 +1004,8 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> Y_OR_N_P = null;
 	SymbolStruct<?> YES_OR_NO_P = null;
 	SymbolStruct<?> ZEROP = null;
+
+	// Other....
+	SymbolStruct<?> ELEMENT_TYPE = new KeywordSymbolStruct("ELEMENT-TYPE");
+	SymbolStruct<?> INITIAL_CONTENTS = new KeywordSymbolStruct("INITIAL-CONTENTS");
 }

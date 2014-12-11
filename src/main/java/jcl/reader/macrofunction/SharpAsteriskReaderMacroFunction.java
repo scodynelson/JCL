@@ -10,8 +10,13 @@ import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
+import jcl.lists.ListStruct;
+import jcl.numbers.IntegerStruct;
+import jcl.packages.GlobalPackageStruct;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
+import jcl.symbols.SymbolStruct;
+import jcl.types.Bit;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +24,8 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.math.BigInteger;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Implements the '#*' Lisp reader macro.
@@ -57,11 +64,30 @@ public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunctionImpl {
 			throw new ReaderErrorException("Escape character appeared after #*");
 		}
 
+		final boolean isInvalidBitString = token.chars()
+		                                        .map(e -> Character.getNumericValue((char) e))
+		                                        .anyMatch(SharpAsteriskReaderMacroFunction::isInvalidBit);
+		if (isInvalidBitString) {
+			throw new ReaderErrorException("Bad Bit for Bit Vector...");
+		}
+
 		if (numArg == null) {
 			return createBitVector(token);
 		}
 
 		return handleNumArg(token, numArg);
+	}
+
+	/**
+	 * Determines whether or not the provided {@code value} is a valid bit (aka. a '0' or a '1').
+	 *
+	 * @param value
+	 * 		the value to check whether or not is a valid bit
+	 *
+	 * @return true if the provided {@code value} is an invalid bit; false otherwise
+	 */
+	private static boolean isInvalidBit(final int value) {
+		return (value != 0) && (value != 1);
 	}
 
 	/**
@@ -102,18 +128,47 @@ public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	/**
-	 * Creates a new {@link BitVectorStruct} from the provided {@code token}.
+	 * Creates creates the {@link ListStruct} calling the appropriate function needed to produce the {@link
+	 * BitVectorStruct} from the provided {@code token}.
 	 *
 	 * @param token
-	 * 		the token used to create the {@link BitVectorStruct}
+	 * 		the bit-vector contents used to create the {@link BitVectorStruct}
 	 *
-	 * @return the newly created {@link BitVectorStruct}
+	 * @return the {@link ListStruct} calling the appropriate function needed to produce the {@link BitVectorStruct}
 	 */
-	private static BitVectorStruct createBitVector(final String token) {
+	private static LispStruct createBitVector(final String token) {
+		final int numberOfTokens = token.length();
+		final BigInteger numberOfTokensBI = BigInteger.valueOf(numberOfTokens);
+
 		try {
-			return new BitVectorStruct(token);
+			final List<LispStruct> bits = convertBitStringToBits(token);
+
+			final SymbolStruct<?> makeArrayFnSymbol = GlobalPackageStruct.COMMON_LISP.findSymbol("MAKE-ARRAY").getSymbolStruct();
+			final IntegerStruct dimensions = new IntegerStruct(numberOfTokensBI);
+			final SymbolStruct<?> elementTypeKeyword = GlobalPackageStruct.KEYWORD.findSymbol("ELEMENT-TYPE").getSymbolStruct();
+			final LispStruct elementType = Bit.INSTANCE;
+			final SymbolStruct<?> initialContentsKeyword = GlobalPackageStruct.KEYWORD.findSymbol("INITIAL-CONTENTS").getSymbolStruct();
+			final ListStruct initialContents = ListStruct.buildProperList(bits);
+
+			return ListStruct.buildProperList(makeArrayFnSymbol, dimensions, elementTypeKeyword, elementType, initialContentsKeyword, initialContents);
 		} catch (final TypeErrorException | SimpleErrorException e) {
 			throw new ReaderErrorException("Error occurred creating bit-vector.", e);
 		}
+	}
+
+	/**
+	 * Converts the provided {@code token} string into a list of {@link IntegerStruct} bits.
+	 *
+	 * @param token
+	 * 		the bit-vector contents to convert into a list of {@link IntegerStruct} bits
+	 *
+	 * @return the list of {@link IntegerStruct} bits comprising the provided {@code token}
+	 */
+	private static List<LispStruct> convertBitStringToBits(final String token) {
+		return token.chars()
+		            .map(e -> Character.getNumericValue((char) e))
+		            .mapToObj(BigInteger::valueOf)
+		            .map(IntegerStruct::new)
+		            .collect(Collectors.toList());
 	}
 }

@@ -11,9 +11,13 @@ import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.lists.ListStruct;
+import jcl.numbers.IntegerStruct;
+import jcl.packages.GlobalPackageStruct;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
+import jcl.symbols.SymbolStruct;
+import jcl.types.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -65,11 +69,34 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 		}
 
 		final ListStruct contents = (ListStruct) lispToken;
+		return createArray(numArg, contents);
+	}
+
+	/**
+	 * Creates creates the {@link ListStruct} calling the appropriate function needed to produce the {@link
+	 * ArrayStruct} from the provided {@code contents}.
+	 *
+	 * @param numArg
+	 * 		the number of expected dimensions
+	 * @param contents
+	 * 		the {@link LispStruct} tokens used to create the {@link ArrayStruct}
+	 *
+	 * @return the {@link ListStruct} calling the appropriate function needed to produce the {@link ArrayStruct}
+	 */
+	private static LispStruct createArray(final BigInteger numArg, final ListStruct contents) {
 		final List<LispStruct> contentsAsJavaList = contents.getAsJavaList();
 
-		final List<Integer> dims = getDimensions(numArg, contents);
 		try {
-			return new ArrayStruct<>(dims, contentsAsJavaList);
+			final List<LispStruct> dimensionsAsJavaList = getDimensions(numArg, contents);
+
+			final SymbolStruct<?> makeArrayFnSymbol = GlobalPackageStruct.COMMON_LISP.findSymbol("MAKE-ARRAY").getSymbolStruct();
+			final ListStruct dimensions = ListStruct.buildProperList(dimensionsAsJavaList);
+			final SymbolStruct<?> elementTypeKeyword = GlobalPackageStruct.KEYWORD.findSymbol("ELEMENT-TYPE").getSymbolStruct();
+			final LispStruct elementType = T.INSTANCE;
+			final SymbolStruct<?> initialContentsKeyword = GlobalPackageStruct.KEYWORD.findSymbol("INITIAL-CONTENTS").getSymbolStruct();
+			final ListStruct initialContents = ListStruct.buildProperList(contentsAsJavaList);
+
+			return ListStruct.buildProperList(makeArrayFnSymbol, dimensions, elementTypeKeyword, elementType, initialContentsKeyword, initialContents);
 		} catch (final TypeErrorException | SimpleErrorException e) {
 			throw new ReaderErrorException("Error occurred creating array.", e);
 		}
@@ -84,17 +111,17 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 * @param contents
 	 * 		the contents to build and analyze against the {@code dimensions} parameter
 	 *
-	 * @return a List of {@link Integer} that make up the expected dimensions of the simple array
+	 * @return a List of {@link IntegerStruct} that make up the expected dimensions of the simple array
 	 *
 	 * @throws ReaderErrorException
 	 * 		if dimensions do not match the provided contents list
 	 */
-	private static List<Integer> getDimensions(final BigInteger dimensions, final LispStruct contents) {
+	private static List<LispStruct> getDimensions(final BigInteger dimensions, final LispStruct contents) {
 
 		LispStruct seq = contents;
 		BigInteger zeroAxis = null;
 
-		final List<Integer> dims = new ArrayList<>();
+		final List<LispStruct> dimensionsAsJavaList = new ArrayList<>();
 
 		for (BigInteger axis = BigInteger.ZERO;
 		     dimensions.compareTo(axis) >= 0;
@@ -110,7 +137,9 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 			final List<LispStruct> lispTokens = seqList.getAsJavaList();
 
 			final int seqLength = lispTokens.size();
-			dims.add(seqLength);
+			final BigInteger seqLengthBI = BigInteger.valueOf(seqLength);
+			final IntegerStruct dimension = new IntegerStruct(seqLengthBI);
+			dimensionsAsJavaList.add(dimension);
 
 			if (!axis.equals(dimensions.subtract(BigInteger.ONE))) {
 				if (lispTokens.isEmpty()) {
@@ -123,6 +152,6 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 			}
 		}
 
-		return dims;
+		return dimensionsAsJavaList;
 	}
 }

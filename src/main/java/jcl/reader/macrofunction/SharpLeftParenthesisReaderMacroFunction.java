@@ -11,8 +11,12 @@ import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.lists.ListStruct;
+import jcl.numbers.IntegerStruct;
+import jcl.packages.GlobalPackageStruct;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
+import jcl.symbols.SymbolStruct;
+import jcl.types.T;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -106,16 +110,27 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 	}
 
 	/**
-	 * Creates a new {@link VectorStruct} from the provided {@code lispTokens}.
+	 * Creates creates the {@link ListStruct} calling the appropriate function needed to produce the {@link
+	 * VectorStruct} from the provided {@code lispTokens}.
 	 *
 	 * @param lispTokens
 	 * 		the {@link LispStruct} tokens used to create the {@link VectorStruct}
 	 *
-	 * @return the newly created {@link VectorStruct}
+	 * @return the {@link ListStruct} calling the appropriate function needed to produce the {@link VectorStruct}
 	 */
-	private static VectorStruct<LispStruct> createVector(final List<LispStruct> lispTokens) {
+	private static LispStruct createVector(final List<LispStruct> lispTokens) {
+		final int numberOfTokens = lispTokens.size();
+		final BigInteger numberOfTokensBI = BigInteger.valueOf(numberOfTokens);
+
 		try {
-			return new VectorStruct<>(lispTokens);
+			final SymbolStruct<?> makeArrayFnSymbol = GlobalPackageStruct.COMMON_LISP.findSymbol("MAKE-ARRAY").getSymbolStruct();
+			final IntegerStruct dimensions = new IntegerStruct(numberOfTokensBI);
+			final SymbolStruct<?> elementTypeKeyword = GlobalPackageStruct.KEYWORD.findSymbol("ELEMENT-TYPE").getSymbolStruct();
+			final LispStruct elementType = T.INSTANCE;
+			final SymbolStruct<?> initialContentsKeyword = GlobalPackageStruct.KEYWORD.findSymbol("INITIAL-CONTENTS").getSymbolStruct();
+			final ListStruct initialContents = ListStruct.buildProperList(lispTokens);
+
+			return ListStruct.buildProperList(makeArrayFnSymbol, dimensions, elementTypeKeyword, elementType, initialContentsKeyword, initialContents);
 		} catch (final TypeErrorException | SimpleErrorException e) {
 			throw new ReaderErrorException("Error occurred creating vector.", e);
 		}

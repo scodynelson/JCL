@@ -8,11 +8,12 @@ import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ListStruct;
-import jcl.numbers.ComplexStruct;
 import jcl.numbers.RealStruct;
+import jcl.packages.GlobalPackageStruct;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
+import jcl.symbols.SymbolStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -75,6 +76,8 @@ public class SharpCReaderMacroFunction extends ReaderMacroFunctionImpl {
 		if (!(imaginary instanceof RealStruct)) {
 			throw new ReaderErrorException("Only real numbers are valid tokens for #c. Got: " + imaginary);
 		}
-		return new ComplexStruct((RealStruct) real, (RealStruct) imaginary);
+
+		final SymbolStruct<?> complexFnSymbol = GlobalPackageStruct.COMMON_LISP.findSymbol("COMPLEX").getSymbolStruct();
+		return ListStruct.buildProperList(complexFnSymbol, real, imaginary);
 	}
 }

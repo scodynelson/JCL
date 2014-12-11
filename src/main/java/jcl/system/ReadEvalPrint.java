@@ -33,6 +33,7 @@ public class ReadEvalPrint {
 
 	public Object funcall(final String... args) {
 		Object temp = SpecialOperator.BLOCK;
+		temp = CommonLispSymbols.ABORT;
 
 		// get local references to the basic functions
 //		Function1 eval = (Function1) CommonLispFunctions.StdFunctions.Eval;

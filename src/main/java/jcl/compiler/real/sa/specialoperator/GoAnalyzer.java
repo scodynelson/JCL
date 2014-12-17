@@ -11,7 +11,7 @@ import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 import java.util.ListIterator;
-import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
 
 @Component
@@ -29,15 +29,15 @@ public class GoAnalyzer implements SpecialOperatorAnalyzer {
 			throw new ProgramErrorException("GO: Tag must be of type SymbolStruct or IntegerStruct. Got: " + second);
 		}
 
-		SymbolStruct<?> tag = null;
+		LispStruct tag = null;
 
-		final Stack<Map<LispStruct, SymbolStruct<?>>> tagbodyStack = analysisBuilder.getTagbodyStack();
-		final ListIterator<Map<LispStruct, SymbolStruct<?>>> li1 = tagbodyStack.listIterator(tagbodyStack.size());
+		final Stack<Set<LispStruct>> tagbodyStack = analysisBuilder.getTagbodyStack();
+		final ListIterator<Set<LispStruct>> tagbodyListIterator = tagbodyStack.listIterator(tagbodyStack.size());
 
-		while (li1.hasPrevious()) {
-			final Map<LispStruct, SymbolStruct<?>> previousStack = li1.previous();
-			if (previousStack.containsKey(second)) {
-				tag = previousStack.get(second);
+		while (tagbodyListIterator.hasPrevious()) {
+			final Set<LispStruct> previousStack = tagbodyListIterator.previous();
+			if (previousStack.contains(second)) {
+				tag = second;
 				break;
 			}
 		}

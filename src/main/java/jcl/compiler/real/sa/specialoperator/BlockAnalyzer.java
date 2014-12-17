@@ -3,26 +3,20 @@ package jcl.compiler.real.sa.specialoperator;
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.specialoperator.body.BodyAnalyzer;
-import jcl.compiler.real.sa.specialoperator.body.BodyProcessingResult;
+import jcl.compiler.real.sa.element.BlockElement;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
-import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class BlockAnalyzer implements SpecialOperatorAnalyzer {
 
-	@Autowired
-	private BodyAnalyzer bodyAnalyzer;
-
 	@Override
-	public ListStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
+	public LispStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
 		if (input.size() < 2) {
 			throw new ProgramErrorException("BLOCK: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
@@ -33,19 +27,19 @@ public class BlockAnalyzer implements SpecialOperatorAnalyzer {
 			throw new ProgramErrorException("BLOCK: Label must be of type SymbolStruct. Got: " + second);
 		}
 
-		final SymbolStruct<?> label = (SymbolStruct) second;
-		analysisBuilder.getBlockStack().push(label);
+		final SymbolStruct<?> name = (SymbolStruct) second;
+		analysisBuilder.getBlockStack().push(name);
 
 		try {
-			final List<LispStruct> blockResultList = new ArrayList<>();
-			blockResultList.add(SpecialOperator.BLOCK);
-			blockResultList.add(second);
+			final ListStruct forms = input.getRest().getRest();
 
-			final ListStruct body = input.getRest().getRest();
-			final List<LispStruct> analyzedBodyForms = bodyAnalyzer.analyze(analyzer, body, analysisBuilder);
-			blockResultList.addAll(analyzedBodyForms);
+			final List<LispStruct> formsJavaList = forms.getAsJavaList();
+			final List<LispStruct> analyzedForms =
+					formsJavaList.stream()
+					             .map(e -> analyzer.analyzeForm(e, analysisBuilder))
+					             .collect(Collectors.toList());
 
-			return ListStruct.buildProperList(blockResultList);
+			return new BlockElement(name, analyzedForms);
 		} finally {
 			analysisBuilder.getBlockStack().pop();
 		}

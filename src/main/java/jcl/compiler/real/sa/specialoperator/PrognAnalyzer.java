@@ -19,10 +19,10 @@ public class PrognAnalyzer implements SpecialOperatorAnalyzer {
 		final ListStruct forms = input.getRest();
 
 		final List<LispStruct> formsJavaList = forms.getAsJavaList();
-		final List<LispStruct> analyzedForms = formsJavaList
-				.stream()
-				.map(e -> analyzer.analyzeForm(e, analysisBuilder))
-				.collect(Collectors.toList());
+		final List<LispStruct> analyzedForms =
+				formsJavaList.stream()
+				             .map(e -> analyzer.analyzeForm(e, analysisBuilder))
+				             .collect(Collectors.toList());
 
 		return new PrognElement(analyzedForms);
 	}

@@ -4,19 +4,15 @@ import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.element.CatchElement;
-import jcl.compiler.real.sa.specialoperator.body.BodyAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class CatchAnalyzer implements SpecialOperatorAnalyzer {
-
-	@Autowired
-	private BodyAnalyzer bodyAnalyzer;
 
 	@Override
 	public LispStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
@@ -29,8 +25,12 @@ public class CatchAnalyzer implements SpecialOperatorAnalyzer {
 		final LispStruct catchTagAnalyzed = analyzer.analyzeForm(catchTag, analysisBuilder);
 
 		final ListStruct forms = input.getRest().getRest();
-		final List<LispStruct> formsAnalyzed = bodyAnalyzer.analyze(analyzer, forms, analysisBuilder);
+		final List<LispStruct> formsJavaList = forms.getAsJavaList();
+		final List<LispStruct> analyzedForms =
+				formsJavaList.stream()
+				             .map(e -> analyzer.analyzeForm(e, analysisBuilder))
+				             .collect(Collectors.toList());
 
-		return new CatchElement(catchTagAnalyzed, formsAnalyzed);
+		return new CatchElement(catchTagAnalyzed, analyzedForms);
 	}
 }

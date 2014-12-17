@@ -4,13 +4,13 @@
 
 package jcl.compiler.real.sa.element;
 
-import jcl.symbols.SymbolStruct;
+import jcl.LispStruct;
 
 public class GoElement implements Element {
 
-	private final SymbolStruct<?> tag;
+	private final LispStruct tag;
 
-	public GoElement(final SymbolStruct<?> tag) {
+	public GoElement(final LispStruct tag) {
 		this.tag = tag;
 	}
 }

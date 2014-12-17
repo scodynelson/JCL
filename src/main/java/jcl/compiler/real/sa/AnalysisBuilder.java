@@ -12,7 +12,6 @@ import jcl.symbols.SymbolStruct;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
@@ -28,7 +27,7 @@ public class AnalysisBuilder implements Serializable {
 	private int closureDepth;
 
 	private final Stack<SymbolStruct<?>> blockStack = new Stack<>();
-	private final Stack<Map<LispStruct, SymbolStruct<?>>> tagbodyStack = new Stack<>();
+	private final Stack<Set<LispStruct>> tagbodyStack = new Stack<>();
 
 	// eval-when processing modes
 	private boolean topLevelMode;
@@ -75,7 +74,7 @@ public class AnalysisBuilder implements Serializable {
 		return blockStack;
 	}
 
-	public Stack<Map<LispStruct, SymbolStruct<?>>> getTagbodyStack() {
+	public Stack<Set<LispStruct>> getTagbodyStack() {
 		return tagbodyStack;
 	}
 

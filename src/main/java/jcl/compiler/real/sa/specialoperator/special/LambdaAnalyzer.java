@@ -70,7 +70,7 @@ public class LambdaAnalyzer implements SpecialOperatorAnalyzer {
 			newStartingLambdaBody.addAll(bodyProcessingResult.getBodyForms());
 
 			final ListStruct newBodyForms = ListStruct.buildProperList(newStartingLambdaBody);
-			return new LambdaEnvironmentLispStruct(envList, bodyProcessingResult.getDeclarations(), newBodyForms, parsedLambdaList, bodyProcessingResult.getDocString());
+			return new LambdaEnvironmentLispStruct(envList, bodyProcessingResult.getDeclareElement(), newBodyForms, parsedLambdaList, bodyProcessingResult.getDocString());
 		} finally {
 			analysisBuilder.setClosureDepth(tempClosureDepth);
 			analysisBuilder.setBindingsPosition(tempBindingsPosition);

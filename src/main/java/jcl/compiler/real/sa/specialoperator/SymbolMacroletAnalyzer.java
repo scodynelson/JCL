@@ -3,11 +3,12 @@ package jcl.compiler.real.sa.specialoperator;
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.element.declaration.DeclareElement;
+import jcl.compiler.real.sa.element.declaration.SpecialDeclarationElement;
 import jcl.compiler.real.sa.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.specialoperator.body.BodyWithDeclaresAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
-import jcl.symbols.Declaration;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,20 +72,18 @@ public class SymbolMacroletAnalyzer implements SpecialOperatorAnalyzer {
 		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(analyzer, body, analysisBuilder);
 		validateDeclares(bodyProcessingResult);
 
-		symbolMacroletResultList.addAll(bodyProcessingResult.getDeclarations()); // TODO: do we add these here really???
+//		symbolMacroletResultList.addAll(bodyProcessingResult.getDeclarations()); // TODO: do we add these here really???
 		symbolMacroletResultList.addAll(bodyProcessingResult.getBodyForms());
 
 		return ListStruct.buildProperList(symbolMacroletResultList);
 	}
 
 	private static void validateDeclares(final BodyProcessingResult bodyProcessingResult) {
-		final List<ListStruct> declarations = bodyProcessingResult.getDeclarations();
-
-		for (final ListStruct declaration : declarations) {
-
-			final LispStruct declarationIdentifier = declaration.getFirst();
-			if (Declaration.SPECIAL.equals(declarationIdentifier)) {
-				throw new ProgramErrorException("SYMBOL-MACROLET: Special declaration not allowed. Got: " + declaration);
+		final DeclareElement declareElement = bodyProcessingResult.getDeclareElement();
+		if (declareElement != null) {
+			final List<SpecialDeclarationElement> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
+			if (!specialDeclarationElements.isEmpty()) {
+				throw new ProgramErrorException("SYMBOL-MACROLET: Special declarations not allowed. Got: " + specialDeclarationElements);
 			}
 		}
 	}

@@ -1,23 +1,20 @@
 package jcl.compiler.real.environment;
 
 import jcl.LispStruct;
-import jcl.LispType;
-import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.sa.element.declaration.DeclareElement;
 import jcl.lists.ListStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import java.util.List;
-
 public class EnvironmentLispStruct implements LispStruct {
 
 	protected final Environment environment;
-	protected final List<ListStruct> declarations;
+	protected final DeclareElement declareElement;
 	protected final ListStruct bodyForms;
 
-	public EnvironmentLispStruct(final Environment environment, final List<ListStruct> declarations, final ListStruct bodyForms) {
+	public EnvironmentLispStruct(final Environment environment, final DeclareElement declareElement, final ListStruct bodyForms) {
 		this.environment = environment;
-		this.declarations = declarations;
+		this.declareElement = declareElement;
 		this.bodyForms = bodyForms;
 	}
 
@@ -25,8 +22,8 @@ public class EnvironmentLispStruct implements LispStruct {
 		return environment;
 	}
 
-	public List<ListStruct> getDeclarations() {
-		return declarations;
+	public DeclareElement getDeclareElement() {
+		return declareElement;
 	}
 
 	public ListStruct getBodyForms() {

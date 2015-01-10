@@ -5,8 +5,10 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.environment.EnvironmentLispStruct;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.element.LetElement;
+import jcl.compiler.real.sa.element.declaration.DeclareElement;
+import jcl.compiler.real.sa.element.declaration.SpecialDeclarationElement;
 import jcl.compiler.real.sa.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.specialoperator.body.BodyWithDeclaresAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 @Component
 public class LetAnalyzer implements SpecialOperatorAnalyzer {
@@ -26,7 +29,7 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
 
 	@Override
-	public EnvironmentLispStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
+	public LispStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
 		if (input.size() < 2) {
 			throw new ProgramErrorException("LET: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
@@ -49,60 +52,111 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 		final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
 		try {
 			final ListStruct parameters = (ListStruct) second;
-			final List<LispStruct> parametersJavaList = parameters.getAsJavaList();
+			final ListStruct bodyForms = input.getRest().getRest();
 
-			for (final LispStruct currentParameter : parametersJavaList) {
-				if (currentParameter instanceof ListStruct) {
-					final ListStruct listParameter = (ListStruct) currentParameter;
-					if ((listParameter.size() < 1) || (listParameter.size() > 2)) {
-						throw new ProgramErrorException("LET: ListStruct parameter must have only 1 or 2 elements. Got: " + currentParameter);
-					}
+			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(analyzer, bodyForms, analysisBuilder);
+			final DeclareElement declareElement = bodyProcessingResult.getDeclareElement();
 
-					final LispStruct listParameterFirst = listParameter.getFirst();
-					if (!(listParameterFirst instanceof SymbolStruct)) {
-						throw new ProgramErrorException("LET: ListStruct parameter first element value must be of type SymbolStruct. Got: " + listParameterFirst);
-					}
+			final List<LispStruct> parametersAsJavaList = parameters.getAsJavaList();
 
-					final SymbolStruct<?> parameterName = (SymbolStruct) listParameterFirst;
-					final LispStruct parameterValue = listParameter.getRest().getFirst();
+			final List<LetElement.LetVar> letVars
+					= parametersAsJavaList.stream()
+					                      .map(e -> getLetVar(e, declareElement, analyzer, analysisBuilder, environmentStack))
+					                      .collect(Collectors.toList());
 
-					// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
-					final Environment currentEnvironment = environmentStack.pop();
+			final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
 
-					final LispStruct parameterValueInitForm;
-					try {
-						parameterValueInitForm = analyzer.analyzeForm(parameterValue, analysisBuilder);
-					} finally {
-						environmentStack.push(currentEnvironment);
-					}
+			final List<LispStruct> analyzedBodyForms
+					= realBodyForms.stream()
+					               .map(e -> analyzer.analyzeForm(e, analysisBuilder))
+					               .collect(Collectors.toList());
 
-					final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
-					analysisBuilder.setBindingsPosition(newBindingsPosition);
+			final Environment environment = environmentStack.peek();
 
-					environmentStack.peek().addBinding(parameterName, newBindingsPosition, parameterValueInitForm);
-				} else if (currentParameter instanceof SymbolStruct) {
-					final SymbolStruct<?> symbolParameter = (SymbolStruct) currentParameter;
-
-					final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(environmentStack.peek());
-					analysisBuilder.setBindingsPosition(newBindingsPosition);
-
-					environmentStack.peek().addBinding(symbolParameter, newBindingsPosition, NILStruct.INSTANCE);
-				} else {
-					throw new ProgramErrorException("LET: Parameter must be of type SymbolStruct or ListStruct. Got: " + currentParameter);
-				}
-			}
-
-			final ListStruct currentBodyForms = input.getRest().getRest();
-			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(analyzer, currentBodyForms, analysisBuilder);
-
-			final Environment envList = environmentStack.peek();
-
-			final ListStruct newBodyForms = ListStruct.buildProperList(bodyProcessingResult.getBodyForms());
-			return new EnvironmentLispStruct(envList, bodyProcessingResult.getDeclarations(), newBodyForms);
+			return new LetElement(letVars, analyzedBodyForms, environment);
 		} finally {
 			analysisBuilder.setClosureDepth(tempClosureDepth);
 			analysisBuilder.setBindingsPosition(tempBindingsPosition);
 			environmentStack.pop();
+		}
+	}
+
+	private static LetElement.LetVar getLetVar(final LispStruct parameter,
+	                                           final DeclareElement declareElement,
+	                                           final SemanticAnalyzer analyzer,
+	                                           final AnalysisBuilder analysisBuilder,
+	                                           final Stack<Environment> environmentStack) {
+
+		if (!(parameter instanceof SymbolStruct) && !(parameter instanceof ListStruct)) {
+			throw new ProgramErrorException("LET: Parameter must be of type SymbolStruct or ListStruct. Got: " + parameter);
+		}
+
+		final SymbolStruct<?> var;
+		final LispStruct initForm;
+
+		if (parameter instanceof ListStruct) {
+			final ListStruct listParameter = (ListStruct) parameter;
+			var = getLetListParameterVar(listParameter);
+			initForm = getLetListParameterInitForm(listParameter, analyzer, analysisBuilder, environmentStack);
+		} else {
+			var = (SymbolStruct) parameter;
+			initForm = NILStruct.INSTANCE;
+		}
+
+		final Environment currentEnvironment = environmentStack.peek();
+
+		final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+		analysisBuilder.setBindingsPosition(newBindingsPosition);
+
+		final boolean isSpecial = isSpecial(declareElement, var);
+
+		currentEnvironment.addBinding(var, newBindingsPosition, initForm, isSpecial);
+
+		return new LetElement.LetVar(var, initForm);
+	}
+
+	private static boolean isSpecial(final DeclareElement declareElement, final SymbolStruct<?> var) {
+		boolean isSpecial = false;
+
+		final List<SpecialDeclarationElement> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
+		for (final SpecialDeclarationElement specialDeclarationElement : specialDeclarationElements) {
+			final SymbolStruct<?> specialVar = specialDeclarationElement.getVar();
+			if (var.equals(specialVar)) {
+				isSpecial = true;
+				break;
+			}
+		}
+
+		return isSpecial;
+	}
+
+	private static SymbolStruct<?> getLetListParameterVar(final ListStruct listParameter) {
+		final int listParameterSize = listParameter.size();
+		if ((listParameterSize < 1) || (listParameterSize > 2)) {
+			throw new ProgramErrorException("LET: ListStruct parameter must have only 1 or 2 elements. Got: " + listParameter);
+		}
+
+		final LispStruct listParameterFirst = listParameter.getFirst();
+		if (!(listParameterFirst instanceof SymbolStruct)) {
+			throw new ProgramErrorException("LET: ListStruct parameter first element value must be of type SymbolStruct. Got: " + listParameterFirst);
+		}
+		return (SymbolStruct) listParameterFirst;
+	}
+
+	private static LispStruct getLetListParameterInitForm(final ListStruct listParameter,
+	                                                      final SemanticAnalyzer analyzer,
+	                                                      final AnalysisBuilder analysisBuilder,
+	                                                      final Stack<Environment> environmentStack) {
+
+		final LispStruct parameterValue = listParameter.getRest().getFirst();
+
+		// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
+		final Environment currentEnvironment = environmentStack.pop();
+
+		try {
+			return analyzer.analyzeForm(parameterValue, analysisBuilder);
+		} finally {
+			environmentStack.push(currentEnvironment);
 		}
 	}
 }

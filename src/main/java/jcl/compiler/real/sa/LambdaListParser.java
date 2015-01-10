@@ -122,7 +122,7 @@ public class LambdaListParser {
 			final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(environmentStack.peek());
 			analysisBuilder.setBindingsPosition(newBindingsPosition);
 
-			environmentStack.peek().addBinding(currentParam, newBindingsPosition, NILStruct.INSTANCE);
+			environmentStack.peek().addBinding(currentParam, newBindingsPosition, NILStruct.INSTANCE, false); // TODO: special??
 		}
 
 		return new RequiredParseResult(currentElement, currentPosition, requiredBindings);
@@ -145,7 +145,7 @@ public class LambdaListParser {
 				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(environmentStack.peek());
 				analysisBuilder.setBindingsPosition(newBindingsPosition);
 
-				environmentStack.peek().addBinding(currentParam, newBindingsPosition, NILStruct.INSTANCE);
+				environmentStack.peek().addBinding(currentParam, newBindingsPosition, NILStruct.INSTANCE, false); // TODO: special??
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
 				if ((currentParam.size() < 1) || (currentParam.size() > 3)) {
@@ -174,7 +174,7 @@ public class LambdaListParser {
 				int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
 				analysisBuilder.setBindingsPosition(newBindingsPosition);
 
-				environmentStack.peek().addBinding(varNameCurrent, newBindingsPosition, parameterValueInitForm);
+				environmentStack.peek().addBinding(varNameCurrent, newBindingsPosition, parameterValueInitForm, false); // TODO: special??
 
 				SuppliedPBinding suppliedPBinding = null;
 				if (!thirdInCurrent.equals(NullStruct.INSTANCE)) {
@@ -188,7 +188,7 @@ public class LambdaListParser {
 					newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(environmentStack.peek());
 					analysisBuilder.setBindingsPosition(newBindingsPosition);
 
-					environmentStack.peek().addBinding(suppliedPCurrent, newBindingsPosition, NILStruct.INSTANCE);
+					environmentStack.peek().addBinding(suppliedPCurrent, newBindingsPosition, NILStruct.INSTANCE, false); // TODO: special??
 				}
 
 				final OptionalBinding optionalBinding = new OptionalBinding(varNameCurrent, currentPosition++, initForm, suppliedPBinding);
@@ -222,7 +222,7 @@ public class LambdaListParser {
 		final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(environmentStack.peek());
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
-		environmentStack.peek().addBinding(currentParam, newBindingsPosition, NILStruct.INSTANCE);
+		environmentStack.peek().addBinding(currentParam, newBindingsPosition, NILStruct.INSTANCE, false); // TODO: special??
 
 		final RestBinding restBinding = new RestBinding(currentParam, currentPosition++);
 		return new RestParseResult(currentElement, currentPosition, restBinding);
@@ -246,7 +246,7 @@ public class LambdaListParser {
 				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(environmentStack.peek());
 				analysisBuilder.setBindingsPosition(newBindingsPosition);
 
-				environmentStack.peek().addBinding(currentParam, newBindingsPosition, NILStruct.INSTANCE);
+				environmentStack.peek().addBinding(currentParam, newBindingsPosition, NILStruct.INSTANCE, false); // TODO: special??
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
 				if ((currentParam.size() < 1) || (currentParam.size() > 3)) {
@@ -296,7 +296,7 @@ public class LambdaListParser {
 				int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
 				analysisBuilder.setBindingsPosition(newBindingsPosition);
 
-				environmentStack.peek().addBinding(varNameCurrent, newBindingsPosition, parameterValueInitForm);
+				environmentStack.peek().addBinding(varNameCurrent, newBindingsPosition, parameterValueInitForm, false); // TODO: special??
 
 				SuppliedPBinding suppliedPBinding = null;
 				if (!thirdInCurrent.equals(NullStruct.INSTANCE)) {
@@ -310,7 +310,7 @@ public class LambdaListParser {
 					newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(environmentStack.peek());
 					analysisBuilder.setBindingsPosition(newBindingsPosition);
 
-					environmentStack.peek().addBinding(suppliedPCurrent, newBindingsPosition, NILStruct.INSTANCE);
+					environmentStack.peek().addBinding(suppliedPCurrent, newBindingsPosition, NILStruct.INSTANCE, false); // TODO: special??
 				}
 
 				final KeyBinding keyBinding = new KeyBinding(varNameCurrent, currentPosition++, initForm, varKeyNameCurrent, suppliedPBinding);
@@ -348,7 +348,7 @@ public class LambdaListParser {
 				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(environmentStack.peek());
 				analysisBuilder.setBindingsPosition(newBindingsPosition);
 
-				environmentStack.peek().addBinding(currentParam, newBindingsPosition, NILStruct.INSTANCE);
+				environmentStack.peek().addBinding(currentParam, newBindingsPosition, NILStruct.INSTANCE, false); // TODO: special??
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
 				if ((currentParam.size() < 1) || (currentParam.size() > 2)) {
@@ -379,7 +379,7 @@ public class LambdaListParser {
 				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
 				analysisBuilder.setBindingsPosition(newBindingsPosition);
 
-				environmentStack.peek().addBinding(varNameCurrent, newBindingsPosition, parameterValueInitForm);
+				environmentStack.peek().addBinding(varNameCurrent, newBindingsPosition, parameterValueInitForm, false); // TODO: special??
 			} else {
 				throw new ProgramErrorException("LambdaList aux parameters must be of type SymbolStruct or ListStruct: " + currentElement);
 			}

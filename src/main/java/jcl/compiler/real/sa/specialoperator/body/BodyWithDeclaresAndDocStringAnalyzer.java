@@ -4,7 +4,9 @@ import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.element.declaration.DeclareElement;
 import jcl.compiler.real.sa.specialoperator.special.DeclareAnalyzer;
+import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,19 +25,27 @@ public class BodyWithDeclaresAndDocStringAnalyzer {
 	public BodyProcessingResult analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 		final List<LispStruct> bodyJavaList = input.getAsJavaList();
 
-		final List<ListStruct> declarations = new ArrayList<>();
+		DeclareElement declareElement = null;
 		StringStruct docString = null;
 		final List<LispStruct> bodyForms = new ArrayList<>();
 
 		final Iterator<LispStruct> iterator = bodyJavaList.iterator();
-		if (iterator.hasNext()) {
 
+		if (iterator.hasNext()) {
 			LispStruct next = iterator.next();
+
+			final List<LispStruct> allDeclarations = new ArrayList<>();
 			while (iterator.hasNext() && (next instanceof ListStruct) && ((ListStruct) next).getFirst().equals(SpecialOperator.DECLARE)) {
-				final ListStruct analyzedDeclaration = declareAnalyzer.analyze(analyzer, (ListStruct) next, analysisBuilder);
-				declarations.add(analyzedDeclaration);
+
+				final ListStruct declareStatement = (ListStruct) next;
+				final ListStruct declarations = declareStatement.getRest();
+
+				allDeclarations.addAll(declarations.getAsJavaList());
 				next = iterator.next();
 			}
+
+			final ListStruct fullDeclaration = new ConsStruct(SpecialOperator.DECLARE, ListStruct.buildProperList(allDeclarations));
+			declareElement = declareAnalyzer.analyze(analyzer, fullDeclaration, analysisBuilder);
 
 			if ((next instanceof StringStruct) && iterator.hasNext()) {
 				docString = (StringStruct) next; // No need to analyze this
@@ -51,6 +61,6 @@ public class BodyWithDeclaresAndDocStringAnalyzer {
 			bodyForms.add(next);
 		}
 
-		return new BodyProcessingResult(declarations, docString, bodyForms);
+		return new BodyProcessingResult(declareElement, docString, bodyForms);
 	}
 }

@@ -4,27 +4,28 @@ import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.SymbolStructAnalyzer;
+import jcl.compiler.real.sa.element.declaration.DeclareElement;
+import jcl.compiler.real.sa.element.declaration.SpecialDeclarationElement;
 import jcl.compiler.real.sa.specialoperator.SpecialOperatorAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
 import jcl.symbols.Declaration;
 import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class DeclareAnalyzer implements SpecialOperatorAnalyzer {
 
-	@Autowired
-	private SymbolStructAnalyzer symbolStructAnalyzer;
-
 	@Override
-	public ListStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
+	public DeclareElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
 		final ListStruct declSpecs = input.getRest();
+
+		final DeclareElement declareElement = new DeclareElement();
 
 		final List<LispStruct> declSpecsJavaList = declSpecs.getAsJavaList();
 		for (final LispStruct declSpec : declSpecsJavaList) {
@@ -55,7 +56,8 @@ public class DeclareAnalyzer implements SpecialOperatorAnalyzer {
 			} else if (declIdentifier.equals(Declaration.OPTIMIZE)) {
 				//TODO: we don't do anything here yet
 			} else if (declIdentifier.equals(Declaration.SPECIAL)) {
-				saSpecialDeclaration(analyzer, declSpecBody, analysisBuilder);
+				final List<SpecialDeclarationElement> sdes = saSpecialDeclaration(declSpecBody);
+				declareElement.getSpecialDeclarationElements().addAll(sdes);
 			} else if (declIdentifier.equals(Declaration.TYPE)) {
 				//we don't do anything here yet
 			} else {
@@ -63,11 +65,13 @@ public class DeclareAnalyzer implements SpecialOperatorAnalyzer {
 			}
 		}
 
-		return NullStruct.INSTANCE;
+		return declareElement;
 	}
 
-	private void saSpecialDeclaration(final SemanticAnalyzer analyzer, final ListStruct declSpecBody, final AnalysisBuilder analysisBuilder) {
+	private List<SpecialDeclarationElement> saSpecialDeclaration(final ListStruct declSpecBody) {
 		final List<LispStruct> declSpecBodyJavaList = declSpecBody.getAsJavaList();
+
+		final List<SpecialDeclarationElement> specialDeclarationElements = new ArrayList<>(declSpecBodyJavaList.size());
 
 		// Special declaration can apply to multiple SymbolStructs
 		for (final LispStruct declSpecBodyElement : declSpecBodyJavaList) {
@@ -76,7 +80,10 @@ public class DeclareAnalyzer implements SpecialOperatorAnalyzer {
 			}
 
 			final SymbolStruct<?> sym = (SymbolStruct) declSpecBodyElement;
-			symbolStructAnalyzer.analyze(analyzer, sym, analysisBuilder);
+			final SpecialDeclarationElement specialDeclarationElement = new SpecialDeclarationElement(sym);
+			specialDeclarationElements.add(specialDeclarationElement);
 		}
+
+		return specialDeclarationElements;
 	}
 }

@@ -2,10 +2,12 @@ package jcl;
 
 import jcl.types.T;
 
+import java.io.Serializable;
+
 /**
  * The {@link LispStruct} is the representation for all Lisp types.
  */
-public interface LispStruct {
+public interface LispStruct extends Serializable {
 
 	/**
 	 * This method returns the type of the struct.

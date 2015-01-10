@@ -125,7 +125,7 @@ abstract class InnerFunctionAnalyzer implements SpecialOperatorAnalyzer {
 				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
 				analysisBuilder.setBindingsPosition(newBindingsPosition);
 
-				currentEnvironment.addBinding(functionName, newBindingsPosition, paramValueInitForm);
+				currentEnvironment.addBinding(functionName, newBindingsPosition, paramValueInitForm, false); // TODO: special??
 			}
 
 			if (getFunctionNamesBeforeInitForms) {
@@ -139,7 +139,7 @@ abstract class InnerFunctionAnalyzer implements SpecialOperatorAnalyzer {
 			final Environment envList = environmentStack.peek();
 
 			final ListStruct newBodyForms = ListStruct.buildProperList(bodyProcessingResult.getBodyForms());
-			return new EnvironmentLispStruct(envList, bodyProcessingResult.getDeclarations(), newBodyForms);
+			return new EnvironmentLispStruct(envList, bodyProcessingResult.getDeclareElement(), newBodyForms);
 		} finally {
 			if (functionNames != null) {
 				StackUtils.popX(functionNameStack, functionNames.size());

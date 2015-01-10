@@ -27,7 +27,7 @@ public class LocallyAnalyzer implements SpecialOperatorAnalyzer {
 
 		final List<LispStruct> locallyResultList = new ArrayList<>();
 		locallyResultList.add(SpecialOperator.LOCALLY);
-		locallyResultList.addAll(bodyProcessingResult.getDeclarations()); // TODO: do we add these here really???
+//		locallyResultList.addAll(bodyProcessingResult.getDeclarations()); // TODO: do we add these here really???
 		locallyResultList.addAll(bodyProcessingResult.getBodyForms());
 
 		return ListStruct.buildProperList(locallyResultList);

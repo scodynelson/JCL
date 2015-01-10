@@ -2,24 +2,24 @@ package jcl.compiler.real.sa.specialoperator.body;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
-import jcl.lists.ListStruct;
+import jcl.compiler.real.sa.element.declaration.DeclareElement;
 
 import java.util.List;
 
 public class BodyProcessingResult {
 
-	private final List<ListStruct> declarations;
+	private final DeclareElement declareElement;
 	private final StringStruct docString;
 	private final List<LispStruct> bodyForms;
 
-	public BodyProcessingResult(final List<ListStruct> declarations, final StringStruct docString, final List<LispStruct> bodyForms) {
-		this.declarations = declarations;
+	public BodyProcessingResult(final DeclareElement declareElement, final StringStruct docString, final List<LispStruct> bodyForms) {
+		this.declareElement = declareElement;
 		this.docString = docString;
 		this.bodyForms = bodyForms;
 	}
 
-	public List<ListStruct> getDeclarations() {
-		return declarations;
+	public DeclareElement getDeclareElement() {
+		return declareElement;
 	}
 
 	public StringStruct getDocString() {

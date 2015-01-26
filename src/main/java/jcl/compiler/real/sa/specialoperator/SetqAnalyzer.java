@@ -16,7 +16,7 @@ import java.util.List;
 public class SetqAnalyzer implements SpecialOperatorAnalyzer {
 
 	@Override
-	public LispStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
+	public SetqElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
 		final ListStruct forms = input.getRest();
 

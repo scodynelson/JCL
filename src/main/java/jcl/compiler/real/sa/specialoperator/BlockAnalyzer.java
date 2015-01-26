@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class BlockAnalyzer implements SpecialOperatorAnalyzer {
 
 	@Override
-	public LispStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
+	public BlockElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
 		if (input.size() < 2) {
 			throw new ProgramErrorException("BLOCK: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");

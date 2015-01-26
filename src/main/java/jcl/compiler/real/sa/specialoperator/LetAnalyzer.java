@@ -29,7 +29,7 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
 
 	@Override
-	public LispStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
+	public LetElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
 		if (input.size() < 2) {
 			throw new ProgramErrorException("LET: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");

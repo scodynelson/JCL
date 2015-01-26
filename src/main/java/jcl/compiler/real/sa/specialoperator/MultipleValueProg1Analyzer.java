@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class MultipleValueProg1Analyzer implements SpecialOperatorAnalyzer {
 
 	@Override
-	public LispStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
+	public MultipleValueProg1Element analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
 		if (input.size() < 2) {
 			throw new ProgramErrorException("MULTIPLE-VALUE-PROG1: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");

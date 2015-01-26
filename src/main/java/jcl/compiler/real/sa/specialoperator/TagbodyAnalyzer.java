@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 public class TagbodyAnalyzer implements SpecialOperatorAnalyzer {
 
 	@Override
-	public LispStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
+	public TagbodyElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
 		ListStruct body = input.getRest();
 

@@ -1,6 +1,5 @@
 package jcl.system;
 
-import jcl.LispStruct;
 import jcl.arrays.ArrayConstants;
 import jcl.characters.CharacterConstants;
 import jcl.compiler.real.CompilerConstants;

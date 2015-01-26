@@ -7,7 +7,6 @@ import jcl.compiler.real.environment.Binding;
 import jcl.compiler.real.environment.Closure;
 import jcl.compiler.real.environment.ClosureBinding;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.LocalAllocation;
 import jcl.compiler.real.environment.PositionAllocation;
 import jcl.compiler.real.environment.Scope;

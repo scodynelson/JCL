@@ -6,14 +6,19 @@ import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.specialoperator.body.BodyAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
+import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SpecialOperator;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class EvalWhenAnalyzer implements SpecialOperatorAnalyzer {
@@ -21,12 +26,21 @@ public class EvalWhenAnalyzer implements SpecialOperatorAnalyzer {
 	@Autowired
 	private BodyAnalyzer bodyAnalyzer;
 
-	@Override
-	public ListStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
-		return analyze(analyzer, input, analysisBuilder, false);
+	private static final Set<KeywordSymbolStruct> SITUATION_KEYWORDS = new HashSet<>(3);
+
+	static {
+		SITUATION_KEYWORDS.add(KeywordOld.CompileToplevel);
+		SITUATION_KEYWORDS.add(KeywordOld.LoadToplevel);
+		SITUATION_KEYWORDS.add(KeywordOld.Execute);
 	}
 
-	public ListStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder, final boolean isTopLevel) {
+	@Override
+	public ListStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
+		return analyze(analyzer, input, analysisBuilder, false, false);
+	}
+
+	public ListStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder, final boolean isTopLevel,
+	                          final boolean isCompileOrCompileFile) {
 
 		final LispStruct second = input.getRest().getFirst();
 		if (!(second instanceof ListStruct)) {
@@ -36,37 +50,48 @@ public class EvalWhenAnalyzer implements SpecialOperatorAnalyzer {
 		final ListStruct situationList = (ListStruct) second;
 		final List<LispStruct> situationJavaList = situationList.getAsJavaList();
 
-		final List<LispStruct> evalWhenResultList = new ArrayList<>();
-		evalWhenResultList.add(SpecialOperator.EVAL_WHEN);
+		final Collection<LispStruct> difference = CollectionUtils.removeAll(situationJavaList, SITUATION_KEYWORDS);
+		if (!difference.isEmpty()) {
+			throw new ProgramErrorException("EVAL-WHEN: Situations must be one of ':COMPILE-TOP-LEVEL', ':LOAD-TIME-LEVEL', or ':EXECUTE'. Got: " + situationList);
+		}
 
 		final ListStruct body = input.getRest().getRest();
 
 		if (isTopLevel) {
 			if (isCompileTopLevel(situationJavaList)) {
-				final List<LispStruct> analyzedBodyForms = bodyAnalyzer.analyze(analyzer, body, analysisBuilder);
-				evalWhenResultList.addAll(analyzedBodyForms);
-				return ListStruct.buildProperList(evalWhenResultList);
-			} else if (isLoadTopLevel(situationJavaList)) {
-				// TODO: take care of processing later at load time...
-				final List<LispStruct> analyzedBodyForms = bodyAnalyzer.analyze(analyzer, body, analysisBuilder);
-				evalWhenResultList.addAll(analyzedBodyForms);
-				return ListStruct.buildProperList(evalWhenResultList);
-			} else if (isExecute(situationJavaList)) {
-				// TODO: take care of processing later at execution time...
-				final List<LispStruct> analyzedBodyForms = bodyAnalyzer.analyze(analyzer, body, analysisBuilder);
-				evalWhenResultList.addAll(analyzedBodyForms);
-				return ListStruct.buildProperList(evalWhenResultList);
-			} else {
-				return NullStruct.INSTANCE;
+				// (eval `(progn ,@body)))
+				final ListStruct prognBody = new ConsStruct(SpecialOperator.PROGN, body);
+
+				// TODO: what we need to do here is:
+				// TODO: 1.) Get global instance of 'EVAL' function
+				// TODO: 2.) Pass the new 'prognBody' to the 'EVAL' function
+				// TODO: 3.) Forcefully evaluate the 'EVAL' function
+
+			}
+
+			if (isLoadTopLevel(situationJavaList) || (!isCompileOrCompileFile && isExecute(situationJavaList))) {
+				// (funcall #'(lambda (forms) (ir1-convert-progn-body start cont forms)) body)
+				bodyAnalyzer.analyze(analyzer, body, analysisBuilder);
+
+				// TODO: what we need to do here is:
+				// TODO: 1.) Create a new 'LAMBDA' function
+				// TODO: 2.) Set the body of the lambda as the 'analyzedBodyForms'
+				// TODO: 3.) Forcefully evaluate the created 'LAMBDA' function
+
 			}
 		} else if (isExecute(situationJavaList)) {
-			// TODO: take care of processing later at execution time...
-			final List<LispStruct> analyzedBodyForms = bodyAnalyzer.analyze(analyzer, body, analysisBuilder);
-			evalWhenResultList.addAll(analyzedBodyForms);
-			return ListStruct.buildProperList(evalWhenResultList);
-		} else {
-			return NullStruct.INSTANCE;
+			// (funcall #'(lambda (forms) (ir1-convert-progn-body start cont forms)) body)
+			bodyAnalyzer.analyze(analyzer, body, analysisBuilder);
+
+			// TODO: what we need to do here is:
+			// TODO: 1.) Create a new 'LAMBDA' function
+			// TODO: 2.) Set the body of the lambda as the 'analyzedBodyForms'
+			// TODO: 3.) Forcefully evaluate the created 'LAMBDA' function
+
 		}
+
+		// TODO: Really, we just do nothing. Should we actually do a 'void' return here???
+		return NullStruct.INSTANCE;
 	}
 
 	private static boolean isCompileTopLevel(final List<LispStruct> situationList) {

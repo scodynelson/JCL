@@ -12,6 +12,8 @@ import java.util.List;
 
 public class FletElement extends InnerFunctionElement {
 
+	private static final long serialVersionUID = 3770382068803341963L;
+
 	public FletElement(final List<FletVar> vars, final List<LispStruct> forms, final Environment environment) {
 		super(vars, forms, environment);
 	}

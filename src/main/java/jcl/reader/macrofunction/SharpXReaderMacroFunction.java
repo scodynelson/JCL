@@ -20,6 +20,8 @@ import java.math.BigInteger;
 @Component
 public class SharpXReaderMacroFunction extends ReaderMacroFunctionImpl {
 
+	private static final long serialVersionUID = 9051760528254491665L;
+
 	/**
 	 * Radix value to use.
 	 */

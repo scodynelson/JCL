@@ -49,6 +49,8 @@ public interface Complex extends Number {
 		 */
 		private static final class ComplexImpl extends TypeBaseClass implements Complex, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			private static final long serialVersionUID = -5225089521365916136L;
+
 			private final Real realType;
 
 			/**

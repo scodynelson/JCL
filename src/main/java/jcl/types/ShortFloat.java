@@ -67,6 +67,8 @@ public interface ShortFloat extends Float {
 		 */
 		private static final class ShortFloatImpl extends TypeBaseClass implements ShortFloat, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			private static final long serialVersionUID = 6688479128158831477L;
+
 			private final IntervalDesignator<BigDecimal> intervalDesignator;
 
 			/**

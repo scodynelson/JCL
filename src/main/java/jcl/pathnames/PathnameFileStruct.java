@@ -23,6 +23,8 @@ import java.util.regex.Pattern;
  */
 class PathnameFileStruct extends PathnameStruct {
 
+	private static final long serialVersionUID = -6116704485090857692L;
+
 	/**
 	 * {@link Pattern} used to parse pathname directories.
 	 * <p>

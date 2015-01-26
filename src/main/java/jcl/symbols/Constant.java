@@ -6,6 +6,8 @@ import jcl.packages.PackageStruct;
 
 public final class Constant<T extends LispStruct> extends SymbolStruct<T> {
 
+	private static final long serialVersionUID = -2257699556001691329L;
+
 	public Constant(final String name, final PackageStruct symbolPackage, final T value) {
 		super(name, symbolPackage, value);
 	}

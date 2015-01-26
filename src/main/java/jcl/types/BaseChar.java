@@ -40,6 +40,8 @@ public interface BaseChar extends Character {
 		 */
 		private static final class BaseCharImpl extends TypeBaseClass implements BaseChar, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = -8696160841949273489L;
+
 			/**
 			 * Private constructor.
 			 */

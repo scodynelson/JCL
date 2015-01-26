@@ -67,6 +67,8 @@ public interface LongFloat extends Float {
 		 */
 		private static final class LongFloatImpl extends TypeBaseClass implements LongFloat, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			private static final long serialVersionUID = 2113007121037284963L;
+
 			private final IntervalDesignator<BigDecimal> intervalDesignator;
 
 			/**

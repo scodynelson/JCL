@@ -67,6 +67,8 @@ public interface SingleFloat extends Float {
 		 */
 		private static final class SingleFloatImpl extends TypeBaseClass implements SingleFloat, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			private static final long serialVersionUID = 4101497705229577694L;
+
 			private final IntervalDesignator<BigDecimal> intervalDesignator;
 
 			/**

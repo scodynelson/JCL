@@ -33,6 +33,8 @@ public interface StringStream extends Stream {
 		 */
 		private static final class StringStreamImpl extends TypeBaseClass implements StringStream, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = -4875583581598270616L;
+
 			/**
 			 * Private constructor.
 			 */

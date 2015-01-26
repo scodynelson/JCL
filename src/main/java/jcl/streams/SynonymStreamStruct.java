@@ -17,6 +17,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public class SynonymStreamStruct extends StreamStruct implements InputStream, OutputStream {
 
+	private static final long serialVersionUID = -3809768442993249585L;
+
 	/**
 	 * The {@link SymbolStruct} that contains the value for the {@link StreamStruct} to use.
 	 */

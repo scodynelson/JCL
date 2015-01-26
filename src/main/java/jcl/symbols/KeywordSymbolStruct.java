@@ -11,6 +11,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 // TODO: should this be public?? Can we make it package visible??
 public class KeywordSymbolStruct extends SymbolStruct<KeywordSymbolStruct> {
 
+	private static final long serialVersionUID = -8081437644901785951L;
+
 	/**
 	 * Public constructor.
 	 *

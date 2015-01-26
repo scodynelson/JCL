@@ -17,6 +17,8 @@ import java.util.List;
  */
 public class AndTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecifier {
 
+	private static final long serialVersionUID = 426612277888344025L;
+
 	private final List<LispType> types;
 
 	/**

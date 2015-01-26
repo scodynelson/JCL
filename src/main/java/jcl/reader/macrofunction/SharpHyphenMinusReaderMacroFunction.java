@@ -19,6 +19,8 @@ import java.math.BigInteger;
 @Component
 public class SharpHyphenMinusReaderMacroFunction extends ReaderMacroFunctionImpl {
 
+	private static final long serialVersionUID = -582954823547720438L;
+
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */

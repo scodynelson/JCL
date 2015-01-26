@@ -15,6 +15,8 @@ import java.math.BigInteger;
  */
 public class ModTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecifier {
 
+	private static final long serialVersionUID = -1987661534825521492L;
+
 	private final IntegerStruct integerStruct;
 
 	/**

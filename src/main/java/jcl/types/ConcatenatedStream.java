@@ -39,6 +39,8 @@ public interface ConcatenatedStream extends Stream {
 		 */
 		private static final class ConcatenatedStreamImpl extends TypeBaseClass implements ConcatenatedStream, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = 5256577308405151876L;
+
 			/**
 			 * Private constructor.
 			 */

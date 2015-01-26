@@ -18,6 +18,8 @@ import java.util.List;
  */
 public class MemberTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecifier {
 
+	private static final long serialVersionUID = 4089986064857457060L;
+
 	private final List<LispStruct> lispStructs;
 
 	/**

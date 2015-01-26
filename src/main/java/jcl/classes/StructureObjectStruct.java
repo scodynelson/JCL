@@ -11,6 +11,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public class StructureObjectStruct implements LispStruct {
 
+	private static final long serialVersionUID = 5766790087319221572L;
+
 	@Override
 	public LispType getType() {
 		return StructureObject.INSTANCE;

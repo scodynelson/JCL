@@ -15,6 +15,8 @@ import java.util.List;
  */
 public abstract class FunctionStruct extends BuiltInClassStruct {
 
+	private static final long serialVersionUID = 7356724806391677112L;
+
 	private OrdinaryLambdaListBindings lambdaListBindings;
 
 	/**

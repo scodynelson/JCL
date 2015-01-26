@@ -46,6 +46,8 @@ public interface List extends Sequence {
 		 */
 		private static final class ListImpl extends TypeBaseClass implements List, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = 8480820578792501223L;
+
 			/**
 			 * Private constructor.
 			 */

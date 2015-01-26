@@ -20,6 +20,8 @@ import java.math.BigInteger;
 @Component
 public class SharpRReaderMacroFunction extends ReaderMacroFunctionImpl {
 
+	private static final long serialVersionUID = -7260114375261055287L;
+
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */

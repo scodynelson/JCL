@@ -52,6 +52,8 @@ public interface UnsignedByte extends SignedByte {
 		 */
 		private static final class UnsignedByteImpl extends AndTypeSpecifier implements UnsignedByte, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = 7776477100685781384L;
+
 			/**
 			 * Private constructor.
 			 */

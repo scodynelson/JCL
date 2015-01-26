@@ -45,6 +45,8 @@ public final class SpecialOperator extends SymbolStruct<SpecialOperator> {
 	public static final SpecialOperator TAIL_CALL = new SpecialOperator("%TAIL-CALL", GlobalPackageStruct.COMPILER);
 	public static final SpecialOperator TAIL_RECURSION = new SpecialOperator("%TAIL-RECURSION", GlobalPackageStruct.COMPILER);
 
+	private static final long serialVersionUID = 6627556964283935128L;
+
 	private SpecialOperator(final String name, final PackageStruct symbolPackage) {
 		super(name, symbolPackage);
 	}

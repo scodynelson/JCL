@@ -12,6 +12,8 @@ import java.util.List;
  */
 public abstract class StandardGenericFunctionStruct extends GenericFunctionStruct {
 
+	private static final long serialVersionUID = -7062120296932518329L;
+
 	/**
 	 * Protected constructor.
 	 */

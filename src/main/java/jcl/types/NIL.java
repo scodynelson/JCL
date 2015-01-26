@@ -34,6 +34,8 @@ public interface NIL extends T { // TODO: this needs to extend ALL types...
 		 */
 		private static final class NILImpl extends TypeBaseClass implements NIL, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = 7666156319177181978L;
+
 			/**
 			 * Private constructor.
 			 */

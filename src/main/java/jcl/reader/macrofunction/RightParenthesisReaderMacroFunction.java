@@ -20,6 +20,8 @@ import java.math.BigInteger;
 @Component
 public class RightParenthesisReaderMacroFunction extends ReaderMacroFunctionImpl {
 
+	private static final long serialVersionUID = 8031891296893301768L;
+
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */

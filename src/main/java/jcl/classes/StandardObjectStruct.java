@@ -11,6 +11,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public abstract class StandardObjectStruct implements LispStruct {
 
+	private static final long serialVersionUID = -6010971799794147777L;
+
 	private String documentation;
 
 	/**

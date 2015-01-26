@@ -91,6 +91,8 @@ public interface Symbol extends T {
 		 */
 		private static final class SymbolImpl extends TypeBaseClass implements Symbol, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = 8451494531682274447L;
+
 			/**
 			 * Private constructor.
 			 */

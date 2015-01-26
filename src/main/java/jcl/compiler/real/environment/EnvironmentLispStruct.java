@@ -8,6 +8,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class EnvironmentLispStruct implements LispStruct {
 
+	private static final long serialVersionUID = -2569718491014694273L;
+
 	protected final Environment environment;
 	protected final DeclareElement declareElement;
 	protected final ListStruct bodyForms;

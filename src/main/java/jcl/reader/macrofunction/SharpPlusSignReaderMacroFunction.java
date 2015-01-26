@@ -19,6 +19,8 @@ import java.math.BigInteger;
 @Component
 public class SharpPlusSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 
+	private static final long serialVersionUID = 1554400291119838206L;
+
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */

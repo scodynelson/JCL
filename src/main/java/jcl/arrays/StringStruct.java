@@ -22,6 +22,8 @@ import java.util.List;
  */
 public class StringStruct extends VectorStruct<CharacterStruct> {
 
+	private static final long serialVersionUID = -7245128288805244021L;
+
 	/**
 	 * Public constructor.
 	 *

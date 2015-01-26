@@ -16,6 +16,8 @@ import java.util.List;
  */
 public abstract class RationalStruct extends RealStruct {
 
+	private static final long serialVersionUID = 3775544213011392520L;
+
 	/**
 	 * Protected constructor.
 	 *

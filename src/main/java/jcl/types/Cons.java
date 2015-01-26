@@ -48,6 +48,8 @@ public interface Cons extends List {
 		 */
 		private static final class ConsImpl extends TypeBaseClass implements Cons, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			private static final long serialVersionUID = -991060349966644883L;
+
 			private final LispType carSpec;
 			private final LispType cdrSpec;
 

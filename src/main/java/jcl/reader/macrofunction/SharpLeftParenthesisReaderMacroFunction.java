@@ -32,6 +32,8 @@ import java.util.List;
 @Component
 public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunctionImpl {
 
+	private static final long serialVersionUID = -1826957244403929085L;
+
 	/**
 	 * The logger for this class.
 	 */

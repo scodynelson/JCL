@@ -11,6 +11,8 @@ import java.util.Map;
 
 public class TagbodyElement implements Element {
 
+	private static final long serialVersionUID = -2970777170741142162L;
+
 	private final Map<LispStruct, List<LispStruct>> tagbodyForms;
 
 	public TagbodyElement(final Map<LispStruct, List<LispStruct>> tagbodyForms) {

@@ -21,6 +21,8 @@ import java.util.UUID;
 @Component
 public class SharpSharpReaderMacroFunction extends ReaderMacroFunctionImpl {
 
+	private static final long serialVersionUID = -3708120653184478792L;
+
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */

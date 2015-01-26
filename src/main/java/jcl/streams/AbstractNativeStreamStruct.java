@@ -18,6 +18,8 @@ import org.slf4j.LoggerFactory;
  */
 abstract class AbstractNativeStreamStruct extends StreamStruct implements InputStream, OutputStream {
 
+	private static final long serialVersionUID = -4334429877946908390L;
+
 	/**
 	 * The logger for this class.
 	 */

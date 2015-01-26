@@ -26,6 +26,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ReadtableStruct extends BuiltInClassStruct {
 
+	private static final long serialVersionUID = 2102020602278207707L;
+
 	/**
 	 * Internal map storing the {@link Integer} code point mappings to appropriate {@link ReaderMacroFunction}s.
 	 */

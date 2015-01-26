@@ -33,6 +33,8 @@ import java.util.stream.Collectors;
 @Component
 public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunctionImpl {
 
+	private static final long serialVersionUID = -1951661697106448531L;
+
 	/**
 	 * The logger for this class.
 	 */

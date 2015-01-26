@@ -27,6 +27,8 @@ public final class Declaration extends SymbolStruct<Declaration> {
 	public static final Declaration JAVA_CLASS_NAME = new Declaration("%JAVA-CLASS-NAME", GlobalPackageStruct.SYSTEM);
 	public static final Declaration LISP_NAME = new Declaration("%LISP-NAME", GlobalPackageStruct.SYSTEM);
 
+	private static final long serialVersionUID = -7171797715492689333L;
+
 	private Declaration(final String name, final PackageStruct symbolPackage) {
 		super(name, symbolPackage);
 		init();

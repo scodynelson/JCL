@@ -19,6 +19,8 @@ import java.util.Objects;
  */
 public class ValuesTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecifier {
 
+	private static final long serialVersionUID = 8149280908073613528L;
+
 	private final List<TypeSpecifier> typeSpecifiers;
 	private final Optional<TypeSpecifier> optional;
 	private final Rest<TypeSpecifier> rest;

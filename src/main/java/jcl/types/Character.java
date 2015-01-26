@@ -33,6 +33,8 @@ public interface Character extends T {
 		 */
 		private static final class CharacterImpl extends TypeBaseClass implements Character, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = 8069574443377375137L;
+
 			/**
 			 * Private constructor.
 			 */

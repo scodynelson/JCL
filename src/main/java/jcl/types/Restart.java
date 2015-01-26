@@ -34,6 +34,8 @@ public interface Restart extends T {
 		 */
 		private static final class RestartImpl extends TypeBaseClass implements Restart, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = -7905323000782513518L;
+
 			/**
 			 * Private constructor.
 			 */

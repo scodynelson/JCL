@@ -65,6 +65,8 @@ public interface SimpleVector extends Vector, SimpleArray {
 		 */
 		private static final class SimpleVectorImpl extends TypeBaseClass implements SimpleVector, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			private static final long serialVersionUID = 1492335612869841944L;
+
 			private final DimensionsDesignator size;
 			private final LispType elementType;
 

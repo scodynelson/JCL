@@ -41,6 +41,8 @@ public interface Method extends T {
 		 */
 		private static final class MethodImpl extends TypeBaseClass implements Method, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = 3888222951043301596L;
+
 			/**
 			 * Private constructor.
 			 */

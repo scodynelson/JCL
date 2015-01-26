@@ -32,6 +32,8 @@ public interface Stream extends T {
 		 */
 		private static final class StreamImpl extends TypeBaseClass implements Stream, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = 2426298092224091805L;
+
 			/**
 			 * Private constructor.
 			 */

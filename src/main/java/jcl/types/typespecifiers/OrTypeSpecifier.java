@@ -17,6 +17,8 @@ import java.util.List;
  */
 public class OrTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecifier {
 
+	private static final long serialVersionUID = 4007082814148597401L;
+
 	private final List<LispType> types;
 
 	/**

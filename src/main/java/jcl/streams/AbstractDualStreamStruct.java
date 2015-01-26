@@ -16,6 +16,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 abstract class AbstractDualStreamStruct extends StreamStruct implements InputStream, OutputStream {
 
+	private static final long serialVersionUID = -3285885552701366356L;
+
 	/**
 	 * This {@link InputStream} in the DualStreamStruct.
 	 */

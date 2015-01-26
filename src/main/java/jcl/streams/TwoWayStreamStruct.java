@@ -14,6 +14,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public class TwoWayStreamStruct extends AbstractDualStreamStruct {
 
+	private static final long serialVersionUID = 7438024800211893512L;
+
 	/**
 	 * Public constructor.
 	 *

@@ -15,6 +15,8 @@ public class Environment implements LispStruct {
 	public static final Environment FREE = new Environment(null, Marker.LAMBDA, 0);
 	public static final Environment NULL = new Environment(null, Marker.LAMBDA, 0);
 
+	private static final long serialVersionUID = 7523547599975901124L;
+
 	private final Environment parent;
 	private final Marker marker;
 

@@ -55,6 +55,8 @@ public interface Vector extends Array, Sequence {
 		 */
 		private static final class VectorImpl extends TypeBaseClass implements Vector, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			private static final long serialVersionUID = 8666531696390635781L;
+
 			private final DimensionsDesignator size;
 			private final LispType elementType;
 

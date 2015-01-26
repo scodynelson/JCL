@@ -12,6 +12,8 @@ final class KeywordPackageStruct extends PackageStruct {
 
 	public static final PackageStruct INSTANCE = new KeywordPackageStruct();
 
+	private static final long serialVersionUID = 5527737254864167846L;
+
 	/**
 	 * Public constructor.
 	 */

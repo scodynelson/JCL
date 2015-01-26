@@ -16,6 +16,8 @@ import java.math.BigInteger;
  */
 public class RatioStruct extends RationalStruct {
 
+	private static final long serialVersionUID = -2468768422160538347L;
+
 	/**
 	 * The internal {@link BigFraction} containing the ratio contents.
 	 */

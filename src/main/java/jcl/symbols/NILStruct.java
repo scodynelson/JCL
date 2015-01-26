@@ -10,6 +10,8 @@ public final class NILStruct extends BooleanStruct {
 
 	public static final NILStruct INSTANCE = new NILStruct();
 
+	private static final long serialVersionUID = 8370329377005791641L;
+
 	/**
 	 * Private constructor.
 	 */

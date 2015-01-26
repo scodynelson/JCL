@@ -23,6 +23,8 @@ import java.util.List;
  */
 public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> implements SequenceStruct {
 
+	private static final long serialVersionUID = -4662977666237180729L;
+
 	protected Integer fillPointer;
 
 	/**

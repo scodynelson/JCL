@@ -11,6 +11,8 @@ import java.util.List;
 
 public class BlockElement implements Element {
 
+	private static final long serialVersionUID = -115779602179582479L;
+
 	private final SymbolStruct<?> name;
 	private final List<LispStruct> forms;
 

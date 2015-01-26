@@ -31,6 +31,8 @@ public interface StructureClass extends Class {
 		 */
 		private static final class StructureClassImpl extends TypeBaseClass implements StructureClass, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = -199682619819533157L;
+
 			/**
 			 * Private constructor.
 			 */

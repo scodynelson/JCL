@@ -32,6 +32,8 @@ public interface Ratio extends Rational {
 		 */
 		private static final class RatioImpl extends TypeBaseClass implements Ratio, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = -7412019342239495711L;
+
 			/**
 			 * Private constructor.
 			 */

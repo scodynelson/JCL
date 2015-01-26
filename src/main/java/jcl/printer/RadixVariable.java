@@ -11,6 +11,8 @@ import java.math.BigInteger;
 
 public class RadixVariable extends Variable<IntegerStruct> {
 
+	private static final long serialVersionUID = -516538919173659084L;
+
 	private static final IntegerStruct TEN = new IntegerStruct(BigInteger.TEN);
 
 	private static final int lowerBound = 2;

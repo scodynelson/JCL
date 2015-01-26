@@ -12,6 +12,8 @@ import java.util.List;
 
 public abstract class InnerFunctionElement implements Element {
 
+	private static final long serialVersionUID = -535794959428263863L;
+
 	private final List<? extends InnerFunctionVar> vars;
 	private final List<LispStruct> forms;
 

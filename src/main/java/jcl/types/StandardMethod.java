@@ -31,6 +31,8 @@ public interface StandardMethod extends Method, StandardObject {
 		 */
 		private static final class StandardMethodImpl extends TypeBaseClass implements StandardMethod, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = 604577373535063426L;
+
 			/**
 			 * Private constructor.
 			 */

@@ -22,6 +22,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class PackageStruct extends BuiltInClassStruct {
 
+	private static final long serialVersionUID = -1802514718401723443L;
+
 	private String name;
 	private List<String> nicknames;
 

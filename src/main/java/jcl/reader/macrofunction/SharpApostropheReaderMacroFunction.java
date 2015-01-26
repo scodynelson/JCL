@@ -24,6 +24,8 @@ import java.math.BigInteger;
 @Component
 public class SharpApostropheReaderMacroFunction extends ReaderMacroFunctionImpl {
 
+	private static final long serialVersionUID = -480798662778934982L;
+
 	/**
 	 * The logger for this class.
 	 */

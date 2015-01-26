@@ -32,6 +32,8 @@ public interface BuiltInClass extends Class {
 		 */
 		private static final class BuiltInClassImpl extends TypeBaseClass implements BuiltInClass, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = -3777422495647309699L;
+
 			/**
 			 * Private constructor.
 			 */

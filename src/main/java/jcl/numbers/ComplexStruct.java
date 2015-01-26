@@ -17,6 +17,8 @@ import java.math.BigInteger;
  */
 public class ComplexStruct extends NumberStruct {
 
+	private static final long serialVersionUID = 7848008215064899579L;
+
 	/**
 	 * The {@link RealStruct} that comprises the real value of the complex.
 	 */

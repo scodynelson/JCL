@@ -29,6 +29,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class HashTableStruct extends BuiltInClassStruct {
 
+	private static final long serialVersionUID = -1366238928844179728L;
+
 	/**
 	 * The test function for verifying equivalence of a key.
 	 */
@@ -161,6 +163,7 @@ public class HashTableStruct extends BuiltInClassStruct {
 	 */
 	private static final class KeyWrapper implements LispStruct {
 
+		private static final long serialVersionUID = -5433164484857026785L;
 		/**
 		 * The {@link LispStruct} key to wrap.
 		 */

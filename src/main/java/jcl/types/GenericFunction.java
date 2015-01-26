@@ -38,6 +38,8 @@ public interface GenericFunction extends Function {
 		 */
 		private static final class GenericFunctionImpl extends TypeBaseClass implements GenericFunction, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = 2621198636561454203L;
+
 			/**
 			 * Private constructor.
 			 */

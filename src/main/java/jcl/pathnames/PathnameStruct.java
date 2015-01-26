@@ -25,6 +25,8 @@ import java.util.List;
  */
 public abstract class PathnameStruct extends BuiltInClassStruct {
 
+	private static final long serialVersionUID = -5845491980801761678L;
+
 	/**
 	 * The logger for this class.
 	 */

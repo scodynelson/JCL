@@ -18,6 +18,8 @@ import java.util.Deque;
  */
 public class EchoStreamStruct extends AbstractDualStreamStruct {
 
+	private static final long serialVersionUID = 5140093388290527648L;
+
 	/**
 	 * The {@link Integer} tokens that have been unread so far.
 	 */

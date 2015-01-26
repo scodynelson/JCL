@@ -10,6 +10,8 @@ public class BaseMacroExpandFn extends FunctionStruct {
 
 	public static final BaseMacroExpandFn FUNCTION = new BaseMacroExpandFn();
 
+	private static final long serialVersionUID = -3388886230587717713L;
+
 	private BaseMacroExpandFn() {
 	}
 

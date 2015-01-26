@@ -104,6 +104,8 @@ public interface Real extends Number {
 		 */
 		private static final class RealImpl extends TypeBaseClass implements Real, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			private static final long serialVersionUID = -1322534214307811494L;
+
 			private final IntervalDesignator<BigInteger> integerIntervalDesignator;
 			private final IntervalDesignator<BigDecimal> decimalIntervalDesignator;
 

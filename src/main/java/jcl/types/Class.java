@@ -33,6 +33,8 @@ public interface Class extends StandardObject {
 		 */
 		private static final class ClassImpl extends TypeBaseClass implements Class, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = 6240185539703787326L;
+
 			/**
 			 * Private constructor.
 			 */

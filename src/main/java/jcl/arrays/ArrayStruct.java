@@ -23,6 +23,8 @@ import java.util.List;
  */
 public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 
+	private static final long serialVersionUID = 743238254447337109L;
+
 	protected List<TYPE> contents;
 	protected List<Integer> dimensions;
 	protected int totalSize;

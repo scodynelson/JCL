@@ -27,6 +27,8 @@ import java.math.BigInteger;
 @Component
 public class QuotationMarkReaderMacroFunction extends ReaderMacroFunctionImpl {
 
+	private static final long serialVersionUID = -1864699043486615339L;
+
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */

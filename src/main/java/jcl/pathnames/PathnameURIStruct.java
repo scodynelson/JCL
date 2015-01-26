@@ -23,6 +23,8 @@ import java.util.regex.Pattern;
  */
 class PathnameURIStruct extends PathnameStruct {
 
+	private static final long serialVersionUID = 6269284949167744555L;
+
 	/**
 	 * {@link Pattern} used to parse pathname URI paths.
 	 */

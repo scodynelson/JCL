@@ -33,6 +33,8 @@ public interface Bignum extends Integer {
 		 */
 		private static final class BignumImpl extends AndTypeSpecifier implements Bignum, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = -2641268480714921916L;
+
 			/**
 			 * Private constructor.
 			 */

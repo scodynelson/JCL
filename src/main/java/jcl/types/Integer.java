@@ -69,6 +69,8 @@ public interface Integer extends Rational {
 		 */
 		private static final class IntegerImpl extends TypeBaseClass implements Integer, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			private static final long serialVersionUID = 7322232418971038179L;
+
 			private final IntervalDesignator<BigInteger> intervalDesignator;
 
 			/**

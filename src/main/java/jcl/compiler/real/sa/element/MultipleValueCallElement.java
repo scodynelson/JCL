@@ -10,6 +10,8 @@ import java.util.List;
 
 public class MultipleValueCallElement implements Element {
 
+	private static final long serialVersionUID = 2789725049143539321L;
+
 	// TODO: do we do evaluation in the SA to product an actual 'FunctionStruct' object here?
 	private final LispStruct functionForm;
 	private final List<LispStruct> forms;

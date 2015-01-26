@@ -22,6 +22,8 @@ import java.math.BigInteger;
 @Component
 public class SharpFullStopReaderMacroFunction extends ReaderMacroFunctionImpl {
 
+	private static final long serialVersionUID = 8806757995826578582L;
+
 	/**
 	 * The logger for this class.
 	 */

@@ -11,6 +11,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public abstract class StandardMethodStruct extends MethodStruct {
 	// TODO: Also extends StandardObjectStruct...
 
+	private static final long serialVersionUID = 6730344897930096724L;
+
 	@Override
 	public LispType getType() {
 		return StandardMethod.INSTANCE;

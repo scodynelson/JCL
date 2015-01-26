@@ -33,6 +33,8 @@ public interface Pathname extends T {
 		 */
 		private static final class PathnameImpl extends TypeBaseClass implements Pathname, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = -7343108902657436359L;
+
 			/**
 			 * Private constructor.
 			 */

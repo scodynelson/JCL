@@ -12,6 +12,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public class NotTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecifier {
 
+	private static final long serialVersionUID = 3614079184143374832L;
+
 	private final LispType type;
 
 	/**

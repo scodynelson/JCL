@@ -38,6 +38,8 @@ public interface BroadcastStream extends Stream {
 		 */
 		private static final class BroadcastStreamImpl extends TypeBaseClass implements BroadcastStream, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = 4069710741454263582L;
+
 			/**
 			 * Private constructor.
 			 */

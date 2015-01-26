@@ -39,6 +39,8 @@ public interface Number extends T {
 		 */
 		private static final class NumberImpl extends TypeBaseClass implements Number, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = -5294062331876830385L;
+
 			/**
 			 * Private constructor.
 			 */

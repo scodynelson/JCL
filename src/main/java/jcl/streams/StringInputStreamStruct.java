@@ -17,6 +17,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public class StringInputStreamStruct extends StreamStruct implements InputStream {
 
+	private static final long serialVersionUID = 4439375845861585598L;
+
 	/**
 	 * The {@link java.lang.String} input value to read characters from.
 	 */

@@ -20,6 +20,8 @@ import java.util.List;
  */
 public class RandomStateStruct extends BuiltInClassStruct {
 
+	private static final long serialVersionUID = 457336984118960936L;
+
 	/**
 	 * Int constant for overlap.
 	 */

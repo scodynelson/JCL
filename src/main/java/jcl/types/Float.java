@@ -73,6 +73,8 @@ public interface Float extends Real {
 		 */
 		private static final class FloatImpl extends TypeBaseClass implements Float, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			private static final long serialVersionUID = -2016076958464841739L;
+
 			private final IntervalDesignator<BigDecimal> intervalDesignator;
 
 			/**

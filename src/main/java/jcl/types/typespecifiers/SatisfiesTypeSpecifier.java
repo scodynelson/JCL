@@ -16,6 +16,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public class SatisfiesTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecifier {
 
+	private static final long serialVersionUID = -7481582322732047642L;
+
 	private final PredicateFunctionStruct<LispStruct> predicate;
 
 	/**

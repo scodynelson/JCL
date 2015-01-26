@@ -21,6 +21,8 @@ import java.util.Deque;
  */
 public class ConcatenatedStreamStruct extends StreamStruct implements InputStream {
 
+	private static final long serialVersionUID = 2526239313385149080L;
+
 	/**
 	 * This {@link InputStream}s in the ConcatenatedStreamStruct.
 	 */

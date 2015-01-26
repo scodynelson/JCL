@@ -5,6 +5,8 @@ import jcl.LispType;
 
 public abstract class ConditionStruct implements LispStruct {
 
+  private static final long serialVersionUID = 3576143355759184425L;
+
 	/*
 (defstruct (condition-class (:include slot-class))
   ;;

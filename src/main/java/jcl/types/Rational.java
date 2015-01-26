@@ -70,6 +70,8 @@ public interface Rational extends Real {
 		 */
 		private static final class RationalImpl extends TypeBaseClass implements Rational, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			private static final long serialVersionUID = 5111174222785842955L;
+
 			private final IntervalDesignator<BigInteger> intervalDesignator;
 
 			/**

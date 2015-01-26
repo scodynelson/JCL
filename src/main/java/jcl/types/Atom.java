@@ -32,6 +32,8 @@ public interface Atom extends T {
 		 */
 		private static final class AtomImpl extends NotTypeSpecifier implements Atom, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = 4480283950568664048L;
+
 			/**
 			 * Private constructor.
 			 */

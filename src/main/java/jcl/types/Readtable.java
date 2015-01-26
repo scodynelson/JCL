@@ -35,6 +35,8 @@ public interface Readtable extends T {
 		 */
 		private static final class ReadtableImpl extends TypeBaseClass implements Readtable, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = -9157541006854981003L;
+
 			/**
 			 * Private constructor.
 			 */

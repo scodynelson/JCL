@@ -24,6 +24,8 @@ import java.math.BigInteger;
 @Component
 public class SharpBackslashReaderMacroFunction extends ReaderMacroFunctionImpl {
 
+	private static final long serialVersionUID = 3860297910163190444L;
+
 	/**
 	 * The logger for this class.
 	 */

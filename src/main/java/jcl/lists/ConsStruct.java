@@ -15,6 +15,8 @@ import java.util.Set;
  */
 public class ConsStruct extends ListStruct {
 
+	private static final long serialVersionUID = 4871665353563364787L;
+
 	private LispStruct car;
 	private LispStruct cdr;
 

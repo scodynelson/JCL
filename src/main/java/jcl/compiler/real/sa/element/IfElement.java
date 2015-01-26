@@ -9,6 +9,8 @@ import jcl.symbols.NILStruct;
 
 public class IfElement implements Element {
 
+	private static final long serialVersionUID = 9172097134073138710L;
+
 	private final LispStruct testForm;
 	private final LispStruct thenForm;
 	private final LispStruct elseForm;

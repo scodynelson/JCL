@@ -8,6 +8,8 @@ import jcl.symbols.SymbolStruct;
 
 public class SpecialDeclarationElement extends DeclarationElement {
 
+	private static final long serialVersionUID = 7353657327204677544L;
+
 	private final SymbolStruct<?> var;
 
 	public SpecialDeclarationElement(final SymbolStruct<?> var) {

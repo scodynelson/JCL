@@ -27,14 +27,18 @@ import java.nio.charset.Charset;
  */
 public class CharacterStreamStruct extends AbstractNativeStreamStruct {
 
+	private static final long serialVersionUID = 3029213066284401689L;
+
 	/**
 	 * The logger for this class.
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(CharacterStreamStruct.class);
+
 	/**
 	 * The {@link LineNumberReader} for reading input.
 	 */
 	private final LineNumberReader inputStream;
+
 	/**
 	 * The {@link PrintWriter} for writing output.
 	 */

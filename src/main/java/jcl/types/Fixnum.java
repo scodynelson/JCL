@@ -34,6 +34,8 @@ public interface Fixnum extends Integer {
 		 */
 		private static final class FixnumImpl extends AndTypeSpecifier implements Fixnum, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = 5001042603403390586L;
+
 			/**
 			 * Private constructor.
 			 */

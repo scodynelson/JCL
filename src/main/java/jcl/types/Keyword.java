@@ -36,6 +36,8 @@ public interface Keyword extends Symbol {
 		 */
 		private static final class KeywordImpl extends TypeBaseClass implements Keyword, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = 5121311310780522485L;
+
 			/**
 			 * Private constructor.
 			 */

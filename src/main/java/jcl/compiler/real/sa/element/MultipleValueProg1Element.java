@@ -10,6 +10,8 @@ import java.util.List;
 
 public class MultipleValueProg1Element implements Element {
 
+	private static final long serialVersionUID = -1036080843176598388L;
+
 	private final LispStruct firstForm;
 	private final List<LispStruct> forms;
 

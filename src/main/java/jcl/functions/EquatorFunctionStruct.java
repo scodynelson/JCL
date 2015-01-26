@@ -7,6 +7,8 @@ import java.util.Objects;
 
 public abstract class EquatorFunctionStruct<T> extends FunctionStruct implements Equator<T> {
 
+	private static final long serialVersionUID = -3577608074276485972L;
+
 	@Override
 	public boolean equate(final T o1, final T o2) {
 		return Objects.equals(o1, o2);

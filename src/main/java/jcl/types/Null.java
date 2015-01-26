@@ -32,6 +32,8 @@ public interface Null extends Symbol, List {
 		 */
 		private static final class NullImpl extends TypeBaseClass implements Null, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = -9181095754133674561L;
+
 			/**
 			 * Private constructor.
 			 */

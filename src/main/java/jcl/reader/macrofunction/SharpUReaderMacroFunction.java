@@ -21,6 +21,8 @@ import java.math.BigInteger;
 @Component
 public class SharpUReaderMacroFunction extends ReaderMacroFunctionImpl {
 
+	private static final long serialVersionUID = 2248363905110623588L;
+
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */

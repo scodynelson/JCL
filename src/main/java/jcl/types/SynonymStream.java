@@ -36,6 +36,8 @@ public interface SynonymStream extends Stream {
 		 */
 		private static final class SynonymStreamImpl extends TypeBaseClass implements SynonymStream, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = -6782441795090632210L;
+
 			/**
 			 * Private constructor.
 			 */

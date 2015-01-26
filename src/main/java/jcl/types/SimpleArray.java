@@ -55,6 +55,8 @@ public interface SimpleArray extends Array {
 		 */
 		private static final class SimpleArrayImpl extends TypeBaseClass implements SimpleArray, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			private static final long serialVersionUID = 7655313490354936454L;
+
 			private final DimensionsDesignator dimensions;
 			private final LispType elementType;
 

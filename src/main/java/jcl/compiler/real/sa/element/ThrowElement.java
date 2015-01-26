@@ -8,6 +8,8 @@ import jcl.LispStruct;
 
 public class ThrowElement implements Element {
 
+	private static final long serialVersionUID = 935019872276115270L;
+
 	private final LispStruct catchTag;
 	private final LispStruct resultForm;
 

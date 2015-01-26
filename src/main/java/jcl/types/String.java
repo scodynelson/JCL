@@ -47,6 +47,8 @@ public interface String extends Vector {
 		 */
 		private static final class StringImpl extends TypeBaseClass implements String, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			private static final long serialVersionUID = -8137934390331662477L;
+
 			private static final LispType ELEMENT_TYPE = Character.INSTANCE;
 			private final DimensionsDesignator size;
 

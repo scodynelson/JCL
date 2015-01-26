@@ -19,6 +19,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public class CharacterStruct extends BuiltInClassStruct {
 
+	private static final long serialVersionUID = -384956123492937850L;
+
 	/**
 	 * The code point of the character.
 	 */

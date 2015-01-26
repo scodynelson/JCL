@@ -18,6 +18,8 @@ import java.util.List;
  */
 public abstract class StreamStruct extends BuiltInClassStruct implements LispStream {
 
+	private static final long serialVersionUID = -5129615077425690834L;
+
 	/**
 	 * Whether or not the StreamStruct is interactive.
 	 */

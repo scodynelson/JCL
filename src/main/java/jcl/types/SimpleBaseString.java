@@ -48,6 +48,8 @@ public interface SimpleBaseString extends BaseString, SimpleString {
 		 */
 		private static final class SimpleBaseStringImpl extends TypeBaseClass implements SimpleBaseString, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			private static final long serialVersionUID = 5384574210137691247L;
+
 			private static final LispType ELEMENT_TYPE = BaseChar.INSTANCE;
 			private final DimensionsDesignator size;
 

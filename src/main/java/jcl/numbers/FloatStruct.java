@@ -20,6 +20,8 @@ import java.math.BigDecimal;
  */
 public class FloatStruct extends RealStruct {
 
+	private static final long serialVersionUID = 4803312076840516559L;
+
 	/**
 	 * The internal {@link BigDecimal} containing the float contents.
 	 */

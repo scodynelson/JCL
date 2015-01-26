@@ -13,6 +13,8 @@ import java.util.List;
  */
 public abstract class ClassStruct extends StandardObjectStruct {
 
+	private static final long serialVersionUID = 8395096559216207722L;
+
 	private final LispType type;
 	private final List<Class<LispStruct>> directSuperClasses;
 	private final List<Class<LispStruct>> subClasses;

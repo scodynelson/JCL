@@ -51,6 +51,8 @@ public interface SignedByte extends Integer {
 		 */
 		private static final class SignedByteImpl extends AndTypeSpecifier implements SignedByte, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = 5435575518396163160L;
+
 			/**
 			 * Private constructor.
 			 */

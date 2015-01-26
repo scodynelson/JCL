@@ -31,6 +31,8 @@ public interface ExtendedChar extends Character {
 		 */
 		private static final class ExtendedCharImpl extends TypeBaseClass implements ExtendedChar, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = -5215210339292683845L;
+
 			/**
 			 * Private constructor.
 			 */

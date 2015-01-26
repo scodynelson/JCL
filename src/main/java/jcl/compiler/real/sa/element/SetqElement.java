@@ -11,6 +11,8 @@ import java.util.List;
 
 public class SetqElement implements Element {
 
+	private static final long serialVersionUID = -5092653942359022766L;
+
 	private final List<SetqPair> setqPairs;
 
 	public SetqElement(final List<SetqPair> setqPairs) {

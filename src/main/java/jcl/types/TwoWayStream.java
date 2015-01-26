@@ -32,6 +32,8 @@ public interface TwoWayStream extends Stream {
 		 */
 		private static final class TwoWayStreamImpl extends TypeBaseClass implements TwoWayStream, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = -6594390772220907590L;
+
 			/**
 			 * Private constructor.
 			 */

@@ -28,6 +28,8 @@ import java.util.List;
 @Component
 public class SharpCReaderMacroFunction extends ReaderMacroFunctionImpl {
 
+	private static final long serialVersionUID = -2703333209830257710L;
+
 	/**
 	 * The logger for this class.
 	 */

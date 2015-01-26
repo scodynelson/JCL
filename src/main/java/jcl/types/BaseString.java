@@ -47,6 +47,8 @@ public interface BaseString extends String {
 		 */
 		private static final class BaseStringImpl extends TypeBaseClass implements BaseString, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			private static final long serialVersionUID = 2958508991471569816L;
+
 			private static final LispType ELEMENT_TYPE = BaseChar.INSTANCE;
 			private final DimensionsDesignator size;
 

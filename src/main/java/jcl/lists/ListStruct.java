@@ -15,6 +15,8 @@ import java.util.Arrays;
  */
 public abstract class ListStruct extends BuiltInClassStruct implements SequenceStruct {
 
+	private static final long serialVersionUID = -5758232853991558L;
+
 	/**
 	 * Protected constructor.
 	 *

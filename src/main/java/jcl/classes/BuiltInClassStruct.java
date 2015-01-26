@@ -13,6 +13,8 @@ import java.util.List;
  */
 public abstract class BuiltInClassStruct extends ClassStruct {
 
+	private static final long serialVersionUID = -4998279729528734323L;
+
 	/**
 	 * Public constructor.
 	 *

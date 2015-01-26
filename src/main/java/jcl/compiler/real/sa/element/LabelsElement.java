@@ -12,6 +12,8 @@ import java.util.List;
 
 public class LabelsElement extends InnerFunctionElement {
 
+	private static final long serialVersionUID = -2347494500321073144L;
+
 	public LabelsElement(final List<LabelsVar> vars, final List<LispStruct> forms, final Environment environment) {
 		super(vars, forms, environment);
 	}

@@ -31,6 +31,8 @@ public interface RandomState extends T {
 		 */
 		private static final class RandomStateImpl extends TypeBaseClass implements RandomState, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = -8325573429698690966L;
+
 			/**
 			 * Private constructor.
 			 */

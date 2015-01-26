@@ -33,6 +33,8 @@ public interface T extends LispType {
 		 */
 		private static final class TImpl extends TypeBaseClass implements T, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = -5539110546772298423L;
+
 			/**
 			 * Private constructor.
 			 */

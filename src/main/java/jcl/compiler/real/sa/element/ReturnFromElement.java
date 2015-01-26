@@ -10,6 +10,8 @@ import jcl.symbols.SymbolStruct;
 
 public class ReturnFromElement implements Element {
 
+	private static final long serialVersionUID = -6095397540807480492L;
+
 	private final SymbolStruct<?> name;
 	private final LispStruct result;
 

@@ -34,6 +34,8 @@ public interface Bit extends UnsignedByte {
 		 */
 		private static final class BitImpl extends AndTypeSpecifier implements Bit, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = 1872465815435985391L;
+
 			/**
 			 * Private constructor.
 			 */

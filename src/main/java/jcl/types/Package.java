@@ -31,6 +31,8 @@ public interface Package extends T {
 		 */
 		private static final class PackageImpl extends TypeBaseClass implements Package, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = -3289071503998628075L;
+
 			/**
 			 * Private constructor.
 			 */

@@ -12,6 +12,8 @@ import java.util.List;
 
 public class MacroletElement extends InnerFunctionElement {
 
+	private static final long serialVersionUID = -6865772116422991356L;
+
 	public MacroletElement(final List<MacroletVar> vars, final List<LispStruct> forms, final Environment environment) {
 		super(vars, forms, environment);
 	}

@@ -31,6 +31,8 @@ public interface HashTable extends T {
 		 */
 		private static final class HashTableImpl extends TypeBaseClass implements HashTable, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = 1398788699336001310L;
+
 			/**
 			 * Private constructor.
 			 */

@@ -49,6 +49,8 @@ public interface SimpleBitVector extends BitVector, SimpleArray {
 		 */
 		private static final class SimpleBitVectorImpl extends TypeBaseClass implements SimpleBitVector, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			private static final long serialVersionUID = 8121576367616102856L;
+
 			private static final LispType ELEMENT_TYPE = Bit.INSTANCE;
 			private final DimensionsDesignator size;
 

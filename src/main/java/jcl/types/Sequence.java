@@ -35,6 +35,8 @@ public interface Sequence extends T {
 		 */
 		private static final class SequenceImpl extends TypeBaseClass implements Sequence, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = -4924814075712876096L;
+
 			/**
 			 * Private constructor.
 			 */

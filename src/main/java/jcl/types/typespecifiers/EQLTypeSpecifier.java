@@ -13,6 +13,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public class EQLTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecifier {
 
+	private static final long serialVersionUID = -7650231234468723756L;
+
 	private final TypeSpecifier typeSpecifier;
 
 	/**

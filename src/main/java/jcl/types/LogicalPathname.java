@@ -32,6 +32,8 @@ public interface LogicalPathname extends Pathname {
 		 */
 		private static final class LogicalPathnameImpl extends TypeBaseClass implements LogicalPathname, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = 8248360316484756067L;
+
 			/**
 			 * Private constructor.
 			 */

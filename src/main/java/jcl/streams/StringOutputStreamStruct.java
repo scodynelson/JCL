@@ -15,6 +15,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public class StringOutputStreamStruct extends StreamStruct implements OutputStream {
 
+	private static final long serialVersionUID = -6102057416932242456L;
+
 	/**
 	 * The {@link StringBuffer} to use for this stream to accept characters and bytes.
 	 */

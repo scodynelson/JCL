@@ -69,6 +69,8 @@ public interface Array extends T {
 		 */
 		private static final class ArrayImpl extends TypeBaseClass implements Array, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			private static final long serialVersionUID = 2325035154860979758L;
+
 			private final DimensionsDesignator dimensions;
 			private final LispType elementType;
 

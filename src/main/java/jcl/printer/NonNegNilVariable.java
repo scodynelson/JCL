@@ -10,6 +10,8 @@ import java.math.BigInteger;
 
 class NonNegNilVariable extends Variable<IntegerStruct> {
 
+	private static final long serialVersionUID = -7673142742585929799L;
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(NonNegNilVariable.class);
 
 	NonNegNilVariable(final String name, final PackageStruct symbolPackage) {

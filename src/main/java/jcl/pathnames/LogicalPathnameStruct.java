@@ -21,6 +21,8 @@ import java.util.regex.Pattern;
  */
 public class LogicalPathnameStruct extends PathnameStruct {
 
+	private static final long serialVersionUID = 7133088468874193624L;
+
 	/**
 	 * {@link Pattern} used to parse pathname words.
 	 */

@@ -49,6 +49,8 @@ public interface BitVector extends Vector {
 		 */
 		private static final class BitVectorImpl extends TypeBaseClass implements BitVector, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			private static final long serialVersionUID = 6131204063063057512L;
+
 			private static final LispType ELEMENT_TYPE = Bit.INSTANCE;
 			private final DimensionsDesignator size;
 

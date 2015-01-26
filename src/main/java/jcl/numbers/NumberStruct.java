@@ -17,6 +17,8 @@ import java.util.List;
  */
 public abstract class NumberStruct extends BuiltInClassStruct {
 
+	private static final long serialVersionUID = -506448097593323391L;
+
 	/**
 	 * Protected constructor.
 	 *

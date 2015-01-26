@@ -67,6 +67,8 @@ public interface DoubleFloat extends Float {
 		 */
 		private static final class DoubleFloatImpl extends TypeBaseClass implements DoubleFloat, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			private static final long serialVersionUID = -5453487463729956878L;
+
 			private final IntervalDesignator<BigDecimal> intervalDesignator;
 
 			/**

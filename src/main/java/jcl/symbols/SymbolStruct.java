@@ -21,6 +21,8 @@ import java.util.List;
  */
 public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 
+	private static final long serialVersionUID = -986185868644037105L;
+
 	protected final String name;
 
 	protected PackageStruct symbolPackage;

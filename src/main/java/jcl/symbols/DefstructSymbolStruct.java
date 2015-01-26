@@ -5,6 +5,8 @@ import jcl.packages.PackageStruct;
 
 public class DefstructSymbolStruct extends SymbolStruct<StructureObjectStruct> {
 
+	private static final long serialVersionUID = 5591752975071847089L;
+
 	private String javaName;
 
 	public DefstructSymbolStruct(final String name, final StructureObjectStruct value) {

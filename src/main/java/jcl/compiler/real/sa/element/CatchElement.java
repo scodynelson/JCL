@@ -10,6 +10,8 @@ import java.util.List;
 
 public class CatchElement implements Element {
 
+	private static final long serialVersionUID = -1022768814372160089L;
+
 	private final LispStruct catchTag;
 	private final List<LispStruct> forms;
 

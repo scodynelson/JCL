@@ -9,6 +9,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class LambdaEnvironmentLispStruct extends EnvironmentLispStruct {
 
+	private static final long serialVersionUID = 9129216230155477838L;
+
 	protected final OrdinaryLambdaListBindings lambdaListBindings;
 	protected final StringStruct docString;
 

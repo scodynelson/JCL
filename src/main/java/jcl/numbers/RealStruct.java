@@ -16,6 +16,8 @@ import java.util.List;
  */
 public abstract class RealStruct extends NumberStruct {
 
+	private static final long serialVersionUID = -7159935653316309907L;
+
 	/**
 	 * Protected constructor.
 	 *

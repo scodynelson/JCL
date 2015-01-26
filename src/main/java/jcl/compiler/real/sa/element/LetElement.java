@@ -12,6 +12,8 @@ import java.util.List;
 
 public class LetElement implements Element {
 
+	private static final long serialVersionUID = -3186671381163635893L;
+
 	private final List<LetVar> vars;
 	private final List<LispStruct> forms;
 

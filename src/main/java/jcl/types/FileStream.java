@@ -31,6 +31,8 @@ public interface FileStream extends Stream {
 		 */
 		private static final class FileStreamImpl extends TypeBaseClass implements FileStream, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = 772081181395170511L;
+
 			/**
 			 * Private constructor.
 			 */

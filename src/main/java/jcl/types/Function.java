@@ -62,6 +62,8 @@ public interface Function extends T {
 		 */
 		private static final class FunctionImpl extends TypeBaseClass implements Function, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			private static final long serialVersionUID = -6069975817174759971L;
+
 			private final List<TypeSpecifier> typeSpecifiers;
 			private final Optional<TypeSpecifier> optional;
 			private final Rest<TypeSpecifier> rest;

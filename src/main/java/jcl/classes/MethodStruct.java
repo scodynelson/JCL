@@ -11,6 +11,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public abstract class MethodStruct implements LispStruct {
 
+	private static final long serialVersionUID = 5505526217809826904L;
+
 	@Override
 	public LispType getType() {
 		return Method.INSTANCE;

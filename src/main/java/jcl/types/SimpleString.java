@@ -49,6 +49,8 @@ public interface SimpleString extends String, SimpleArray {
 		 */
 		private static final class SimpleStringImpl extends TypeBaseClass implements SimpleString, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			private static final long serialVersionUID = -3796698605847581326L;
+
 			private static final LispType ELEMENT_TYPE = Character.INSTANCE;
 			private final DimensionsDesignator size;
 

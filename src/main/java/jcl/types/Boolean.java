@@ -33,6 +33,8 @@ public interface Boolean extends Symbol {
 		 */
 		private static final class BooleanImpl extends OrTypeSpecifier implements Boolean, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = -6424016818134588642L;
+
 			/**
 			 * Private constructor.
 			 */

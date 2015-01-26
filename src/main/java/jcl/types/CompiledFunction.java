@@ -35,6 +35,8 @@ public interface CompiledFunction extends Function {
 		 */
 		private static final class CompiledFunctionImpl extends TypeBaseClass implements CompiledFunction, AtomicTypeSpecifier {
 
+			private static final long serialVersionUID = 7064731489248744673L;
+
 			/**
 			 * Private constructor.
 			 */

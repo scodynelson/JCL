@@ -35,6 +35,19 @@ public class SymbolStructAnalyzer implements Analyzer<LispStruct, SymbolStruct<?
 		return input;
 	}
 
+	public LispStruct analyze(final SymbolStruct<?> input, final AnalysisBuilder analysisBuilder, final boolean isSpecial) {
+		final Stack<Environment> environmentStack = analysisBuilder.getEnvironmentStack();
+
+		final Environment environment = environmentStack.peek();
+		if (isSpecial) {
+			addDynamicSymbolToEnvironment(environment, input);
+		} else {
+			addLexicalSymbolToEnvironment(environment, input);
+		}
+
+		return input;
+	}
+
 	private static void addDynamicSymbolToEnvironment(final Environment environment, final SymbolStruct<?> newSymbol) {
 
 		// if not bound anywhere in the binding tree (free and dynamic)...

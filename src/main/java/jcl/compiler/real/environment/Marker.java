@@ -8,7 +8,8 @@ public enum Marker {
 	MACROLET,
 	LET,
 	FLET,
-	LABELS;
+	LABELS,
+	LOCALLY;
 
 	@Override
 	public String toString() {

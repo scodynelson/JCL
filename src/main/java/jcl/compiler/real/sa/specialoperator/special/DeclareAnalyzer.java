@@ -20,6 +20,9 @@ import java.util.List;
 @Component
 public class DeclareAnalyzer implements SpecialOperatorAnalyzer {
 
+	@Autowired
+	private SymbolStructAnalyzer symbolStructAnalyzer;
+
 	@Override
 	public DeclareElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
@@ -56,7 +59,7 @@ public class DeclareAnalyzer implements SpecialOperatorAnalyzer {
 			} else if (declIdentifier.equals(Declaration.OPTIMIZE)) {
 				//TODO: we don't do anything here yet
 			} else if (declIdentifier.equals(Declaration.SPECIAL)) {
-				final List<SpecialDeclarationElement> sdes = saSpecialDeclaration(declSpecBody);
+				final List<SpecialDeclarationElement> sdes = saSpecialDeclaration(declSpecBody, analysisBuilder);
 				declareElement.getSpecialDeclarationElements().addAll(sdes);
 			} else if (declIdentifier.equals(Declaration.TYPE)) {
 				//we don't do anything here yet
@@ -68,7 +71,7 @@ public class DeclareAnalyzer implements SpecialOperatorAnalyzer {
 		return declareElement;
 	}
 
-	private List<SpecialDeclarationElement> saSpecialDeclaration(final ListStruct declSpecBody) {
+	private List<SpecialDeclarationElement> saSpecialDeclaration(final ListStruct declSpecBody, final AnalysisBuilder analysisBuilder) {
 		final List<LispStruct> declSpecBodyJavaList = declSpecBody.getAsJavaList();
 
 		final List<SpecialDeclarationElement> specialDeclarationElements = new ArrayList<>(declSpecBodyJavaList.size());
@@ -80,6 +83,9 @@ public class DeclareAnalyzer implements SpecialOperatorAnalyzer {
 			}
 
 			final SymbolStruct<?> sym = (SymbolStruct) declSpecBodyElement;
+
+			symbolStructAnalyzer.analyze(sym, analysisBuilder, true);
+
 			final SpecialDeclarationElement specialDeclarationElement = new SpecialDeclarationElement(sym);
 			specialDeclarationElements.add(specialDeclarationElement);
 		}

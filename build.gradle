@@ -16,20 +16,20 @@ compileJava {
 }
 
 String COMMONS_LANG_VERSION = '3.3.2';
-String COMMONS_MATH_VERSION = '3.3';
+String COMMONS_MATH_VERSION = '3.4.1';
 String COMMONS_COLLECTIONS_VERSION = '4.0';
 String COMMONS_IO_VERSION = '2.4';
 
-String SPRING_VERSION = '4.1.2.RELEASE';
+String SPRING_VERSION = '4.1.4.RELEASE';
 
 String ASM_ALL_VERSION = '5.0.3';
 
-String SLF4J_VERSION = '1.7.7';
+String SLF4J_VERSION = '1.7.10';
 String LOGBACK_VERSION = '1.1.2';
 
-String TESTNG_VERSION = '6.8.8';
+String TESTNG_VERSION = '6.8.17';
 
-String GROOVY_VERSION = '2.3.7';
+String GROOVY_VERSION = '2.4.0';
 
 dependencies {
 	compile group: 'org.apache.commons', name: 'commons-lang3', version: "$COMMONS_LANG_VERSION"

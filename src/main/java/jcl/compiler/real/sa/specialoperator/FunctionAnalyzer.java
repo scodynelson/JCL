@@ -7,7 +7,7 @@ import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.SymbolStructAnalyzer;
+import jcl.compiler.real.sa.LexicalSymbolStructAnalyzer;
 import jcl.compiler.real.sa.specialoperator.special.LambdaAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ConsStruct;
@@ -24,7 +24,7 @@ import java.util.Stack;
 public class FunctionAnalyzer implements SpecialOperatorAnalyzer {
 
 	@Autowired
-	private SymbolStructAnalyzer symbolStructAnalyzer;
+	private LexicalSymbolStructAnalyzer lexicalSymbolStructAnalyzer;
 
 	@Autowired
 	private LambdaAnalyzer lambdaAnalyzer;
@@ -49,7 +49,7 @@ public class FunctionAnalyzer implements SpecialOperatorAnalyzer {
 			final Environment fnBinding = EnvironmentAccessor.getBindingEnvironment(parentEnvironment, functionSymbol, false);
 
 			if (fnBinding.equals(Environment.NULL)) {
-				symbolStructAnalyzer.analyzeLexicalSymbol(functionSymbol, analysisBuilder);
+				lexicalSymbolStructAnalyzer.analyzeSymbol(functionSymbol, analysisBuilder);
 				return input;
 			} else {
 				final Optional<Binding> binding = fnBinding.getBinding(functionSymbol);

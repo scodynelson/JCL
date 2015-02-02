@@ -2,8 +2,8 @@ package jcl.compiler.real.sa.specialoperator.special;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
+import jcl.compiler.real.sa.DynamicSymbolStructAnalyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.SymbolStructAnalyzer;
 import jcl.compiler.real.sa.element.declaration.DeclareElement;
 import jcl.compiler.real.sa.element.declaration.SpecialDeclarationElement;
 import jcl.compiler.real.sa.specialoperator.SpecialOperatorAnalyzer;
@@ -21,7 +21,7 @@ import java.util.List;
 public class DeclareAnalyzer implements SpecialOperatorAnalyzer {
 
 	@Autowired
-	private SymbolStructAnalyzer symbolStructAnalyzer;
+	private DynamicSymbolStructAnalyzer dynamicSymbolStructAnalyzer;
 
 	@Override
 	public DeclareElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
@@ -84,7 +84,7 @@ public class DeclareAnalyzer implements SpecialOperatorAnalyzer {
 
 			final SymbolStruct<?> sym = (SymbolStruct) declSpecBodyElement;
 
-			symbolStructAnalyzer.analyzeDynamicSymbol(sym, analysisBuilder);
+			dynamicSymbolStructAnalyzer.analyzeSymbol(sym, analysisBuilder);
 
 			final SpecialDeclarationElement specialDeclarationElement = new SpecialDeclarationElement(sym);
 			specialDeclarationElements.add(specialDeclarationElement);

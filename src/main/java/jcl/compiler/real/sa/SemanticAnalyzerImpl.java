@@ -16,7 +16,7 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 	private ListStructAnalyzer listStructAnalyzer;
 
 	@Autowired
-	private SymbolStructAnalyzer symbolStructAnalyzer;
+	private LexicalSymbolStructAnalyzer lexicalSymbolStructAnalyzer;
 
 	@Autowired
 	private ArrayStructAnalyzer arrayStructAnalyzer;
@@ -29,7 +29,7 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 			analyzedForm = listStructAnalyzer.analyze(this, (ListStruct) form, analysisBuilder);
 		} else if (form instanceof SymbolStruct) {
 			final SymbolStruct<?> symbolForm = (SymbolStruct<?>) form;
-			analyzedForm = symbolStructAnalyzer.analyzeLexicalSymbol(symbolForm, analysisBuilder);
+			analyzedForm = lexicalSymbolStructAnalyzer.analyzeSymbol(symbolForm, analysisBuilder);
 		} else if (form instanceof ArrayStruct) {
 			analyzedForm = arrayStructAnalyzer.analyze(this, (ArrayStruct<?>) form, analysisBuilder);
 		}

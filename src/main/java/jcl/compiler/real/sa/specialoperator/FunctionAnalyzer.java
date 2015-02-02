@@ -78,6 +78,8 @@ public class FunctionAnalyzer implements SpecialOperatorAnalyzer {
 
 			final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
 			try {
+				analysisBuilder.setClosureDepth(newClosureDepth);
+
 				return lambdaAnalyzer.analyze(analyzer, functionList, analysisBuilder);
 			} finally {
 				analysisBuilder.setClosureDepth(tempClosureDepth);

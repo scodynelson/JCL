@@ -36,6 +36,8 @@ public class LocallyAnalyzer implements SpecialOperatorAnalyzer {
 
 		final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
 		try {
+			analysisBuilder.setClosureDepth(newClosureDepth);
+
 			final ListStruct bodyForms = input.getRest();
 			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(analyzer, bodyForms, analysisBuilder);
 

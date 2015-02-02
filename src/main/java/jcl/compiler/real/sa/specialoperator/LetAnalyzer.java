@@ -52,6 +52,8 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 
 		final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
 		try {
+			analysisBuilder.setClosureDepth(newClosureDepth);
+
 			final ListStruct parameters = (ListStruct) second;
 			final ListStruct bodyForms = input.getRest().getRest();
 

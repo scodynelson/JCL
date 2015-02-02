@@ -1,7 +1,7 @@
 package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.element.LabelsElement;
 import jcl.symbols.SymbolStruct;
@@ -17,8 +17,9 @@ public class LabelsAnalyzer extends InnerFunctionAnalyzer<LabelsElement, LabelsE
 	}
 
 	@Override
-	protected LabelsElement getFunctionElement(final List<LabelsElement.LabelsVar> vars, final List<LispStruct> bodyForms, final Environment environment) {
-		return new LabelsElement(vars, bodyForms, environment);
+	protected LabelsElement getFunctionElement(final List<LabelsElement.LabelsVar> vars, final List<LispStruct> bodyForms,
+	                                           final LexicalEnvironment lexicalEnvironment) {
+		return new LabelsElement(vars, bodyForms, lexicalEnvironment);
 	}
 
 	@Override

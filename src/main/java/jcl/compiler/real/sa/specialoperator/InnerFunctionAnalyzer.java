@@ -1,8 +1,8 @@
 package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
+import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.environment.ParameterAllocation;
 import jcl.compiler.real.sa.AnalysisBuilder;
@@ -53,14 +53,14 @@ abstract class InnerFunctionAnalyzer<T extends InnerFunctionElement, S extends I
 			throw new ProgramErrorException(analyzerName + ": Parameter list must be of type ListStruct. Got: " + second);
 		}
 
-		final Stack<Environment> environmentStack = analysisBuilder.getEnvironmentStack();
-		final Environment parentEnvironment = environmentStack.peek();
+		final Stack<LexicalEnvironment> lexicalEnvironmentStack = analysisBuilder.getLexicalEnvironmentStack();
+		final LexicalEnvironment parentLexicalEnvironment = lexicalEnvironmentStack.peek();
 
 		final int tempClosureDepth = analysisBuilder.getClosureDepth();
 		final int newClosureDepth = tempClosureDepth + 1;
 
-		final Environment fletEnvironment = new Environment(parentEnvironment, marker, newClosureDepth);
-		environmentStack.push(fletEnvironment);
+		final LexicalEnvironment fletEnvironment = new LexicalEnvironment(parentLexicalEnvironment, marker, newClosureDepth);
+		lexicalEnvironmentStack.push(fletEnvironment);
 
 		final Stack<SymbolStruct<?>> functionNameStack = analysisBuilder.getFunctionNameStack();
 		List<SymbolStruct<?>> functionNames = null;
@@ -85,7 +85,7 @@ abstract class InnerFunctionAnalyzer<T extends InnerFunctionElement, S extends I
 
 			final List<S> innerFunctionVars
 					= innerFunctionsJavaList.stream()
-					                        .map(e -> getInnerFunctionVar(e, declareElement, analyzer, analysisBuilder, environmentStack))
+					                        .map(e -> getInnerFunctionVar(e, declareElement, analyzer, analysisBuilder, lexicalEnvironmentStack))
 					                        .collect(Collectors.toList());
 
 			if (!getFunctionNamesBeforeInitForms) {
@@ -100,9 +100,9 @@ abstract class InnerFunctionAnalyzer<T extends InnerFunctionElement, S extends I
 					               .map(e -> analyzer.analyzeForm(e, analysisBuilder))
 					               .collect(Collectors.toList());
 
-			final Environment environment = environmentStack.peek();
+			final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.peek();
 
-			return getFunctionElement(innerFunctionVars, analyzedBodyForms, environment);
+			return getFunctionElement(innerFunctionVars, analyzedBodyForms, currentLexicalEnvironment);
 		} finally {
 			if (functionNames != null) {
 				StackUtils.popX(functionNameStack, functionNames.size());
@@ -110,19 +110,19 @@ abstract class InnerFunctionAnalyzer<T extends InnerFunctionElement, S extends I
 
 			analysisBuilder.setClosureDepth(tempClosureDepth);
 			analysisBuilder.setBindingsPosition(tempBindingsPosition);
-			environmentStack.pop();
+			lexicalEnvironmentStack.pop();
 		}
 	}
 
-	protected abstract T getFunctionElement(List<S> vars, List<LispStruct> bodyForms, Environment environment);
+	protected abstract T getFunctionElement(List<S> vars, List<LispStruct> bodyForms, LexicalEnvironment lexicalEnvironment);
 
 	protected abstract S getFunctionElementVar(SymbolStruct<?> var, LispStruct initForm);
 
-	private List<SymbolStruct<?>> getFunctionNames(final List<LispStruct> functionDefList) {
+	private List<SymbolStruct<?>> getFunctionNames(final List<LispStruct> functionDefinitions) {
 
-		final List<SymbolStruct<?>> functionNames = new ArrayList<>(functionDefList.size());
+		final List<SymbolStruct<?>> functionNames = new ArrayList<>(functionDefinitions.size());
 
-		for (final LispStruct currentFunctionDef : functionDefList) {
+		for (final LispStruct currentFunctionDef : functionDefinitions) {
 			if (!(currentFunctionDef instanceof ListStruct)) {
 				throw new ProgramErrorException(analyzerName + ": Function parameter must be of type ListStruct. Got: " + currentFunctionDef);
 			}
@@ -144,7 +144,7 @@ abstract class InnerFunctionAnalyzer<T extends InnerFunctionElement, S extends I
 	                              final DeclareElement declareElement,
 	                              final SemanticAnalyzer analyzer,
 	                              final AnalysisBuilder analysisBuilder,
-	                              final Stack<Environment> environmentStack) {
+	                              final Stack<LexicalEnvironment> lexicalEnvironmentStack) {
 
 		if (!(function instanceof ListStruct)) {
 			throw new ProgramErrorException(analyzerName + ": Function parameter must be of type ListStruct. Got: " + function);
@@ -186,22 +186,22 @@ abstract class InnerFunctionAnalyzer<T extends InnerFunctionElement, S extends I
 		final ListStruct innerFunctionListStruct = ListStruct.buildProperList(innerFunction);
 
 		// Evaluate in the outer environment. This is one of the differences between Flet and Labels.
-		final Environment currentEnvironment = environmentStack.pop();
+		final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.pop();
 
 		final LispStruct functionInitForm;
 		try {
 			functionInitForm = analyzer.analyzeForm(innerFunctionListStruct, analysisBuilder);
 		} finally {
-			environmentStack.push(currentEnvironment);
+			lexicalEnvironmentStack.push(currentLexicalEnvironment);
 		}
 
-		final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+		final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentLexicalEnvironment);
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 		final boolean isSpecial = isSpecial(declareElement, functionName);
 
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
-		currentEnvironment.addBinding(functionName, allocation, functionInitForm, isSpecial);
+		currentLexicalEnvironment.addBinding(functionName, allocation, functionInitForm, isSpecial);
 
 		return getFunctionElementVar(functionName, functionInitForm);
 	}

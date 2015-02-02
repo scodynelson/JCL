@@ -6,7 +6,8 @@ import jcl.compiler.real.environment.Allocation;
 import jcl.compiler.real.environment.Binding;
 import jcl.compiler.real.environment.Closure;
 import jcl.compiler.real.environment.ClosureBinding;
-import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.DynamicEnvironment;
+import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.LocalAllocation;
 import jcl.compiler.real.environment.PositionAllocation;
 import jcl.compiler.real.environment.Scope;
@@ -46,12 +47,12 @@ public class IntermediateCodeGenerator {
 
 	// this is the current binding environment. It always matches the value
 	// on top of the binding stack
-	public Environment bindingEnvironment;
+	public LexicalEnvironment bindingEnvironment;
 	// Whenever a binding environment is encountered, it is pushed on the stack and
 	// bindingEnvironment is set to the new environment. When that binding is no
 	// longer in force, the stack is popped and the value of bindingEnvironment is
 	// set to the new top of stack
-	public Stack<Environment> bindingStack;
+	public Stack<LexicalEnvironment> bindingStack;
 	// make a stack of current class names
 	public Stack<String> classNames;
 	public Emitter emitter;
@@ -72,9 +73,9 @@ public class IntermediateCodeGenerator {
 	public void initialize() {
 		MacroLambda = false;
 		emitter = new Emitter();
-		bindingEnvironment = Environment.NULL;
+		bindingEnvironment = LexicalEnvironment.NULL;
 		bindingStack = new Stack<>();
-		bindingStack.push(Environment.NULL);
+		bindingStack.push(LexicalEnvironment.NULL);
 		classNames = new Stack<>();
 		TagbodyCodeGenerator.tagCounter = 0;
 		allowMultipleValues = false;
@@ -131,16 +132,16 @@ public class IntermediateCodeGenerator {
 	 *********************************************************
 	 */
 
-	private Closure findNearestClosure(final Environment bindingEnv) {
+	private Closure findNearestClosure(final LexicalEnvironment bindingEnv) {
 		// get the current closure
 		final Closure closure = bindingEnv.getEnvironmentClosure();
 		if (closure != null) {
 			// return the closure. It's an error if there's no depth value
 			return closure;
 		} else {
-			final Environment parent = bindingEnv.getParent();
+			final LexicalEnvironment parent = bindingEnv.getParent();
 			// (:Parent ...)
-			if (parent.equals(Environment.NULL)) {
+			if (parent.equals(LexicalEnvironment.NULL)) {
 				return null;
 			} else {
 				// go up to the top if necessary
@@ -149,7 +150,7 @@ public class IntermediateCodeGenerator {
 		}
 	}
 
-	public static int genLocalSlot(final SymbolStruct<?> sym, final Environment binding) {
+	public static int genLocalSlot(final SymbolStruct<?> sym, final LexicalEnvironment binding) {
 		// get the :bindings list
 		// ((x :allocation ...) (y :allocation ...) ...)
 		final Binding symBinding = binding.getBinding(sym).get();
@@ -247,7 +248,7 @@ public class IntermediateCodeGenerator {
 		emitter.endMethod();
 	}
 
-	public void undoClosureSetup(final Environment environment) {
+	public void undoClosureSetup(final LexicalEnvironment environment) {
 		final Closure closureSetBody = environment.getEnvironmentClosure();
 		final int numParams = closureSetBody.getBindings().size() - 1; // remove :closure and (:depth . n) from contention
 		if (numParams > 0) {
@@ -259,7 +260,7 @@ public class IntermediateCodeGenerator {
 		}
 	}
 
-	public void doClosureSetup(final Environment environment) {
+	public void doClosureSetup(final LexicalEnvironment environment) {
 		final Closure closureSetBody = environment.getEnvironmentClosure();
 		final int numParams = closureSetBody.getBindings().size(); // remove :closure and (:depth . n) from contention
 
@@ -329,7 +330,7 @@ public class IntermediateCodeGenerator {
 			// (:allocation ... :binding ... :scope ... :type ...)
 			// for free and dynamic
 			final SymbolBinding symbolBinding = (SymbolBinding) binding;
-			if (symbolBinding.getBinding().equals(Environment.FREE)
+			if (symbolBinding.getBinding().equals(DynamicEnvironment.FREE)
 					&& (symbolBinding.getScope() == Scope.DYNAMIC)) {
 				// get the local variable slot
 				final Allocation alloc = symbolBinding.getAllocation();

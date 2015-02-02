@@ -4,7 +4,7 @@
 
 package jcl.compiler.real.sa;
 
-import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.element.SymbolElement;
 import jcl.symbols.SymbolStruct;
@@ -16,20 +16,20 @@ abstract class SymbolStructAnalyzer {
 	/**
 	 * This method takes an environment and looks for the nearest enclosing lambda.
 	 *
-	 * @param environment
+	 * @param lexicalEnvironment
 	 * 		The environment that is enclosed by a lambda
 	 *
 	 * @return The lambda enclosing the given environment.
 	 */
-	protected static Environment getEnclosingLambda(final Environment environment) {
+	protected static LexicalEnvironment getEnclosingLambda(final LexicalEnvironment lexicalEnvironment) {
 
-		Environment currentEnvironment = environment;
+		LexicalEnvironment currentLexicalEnvironment = lexicalEnvironment;
 
-		final Marker marker = currentEnvironment.getMarker();
+		final Marker marker = currentLexicalEnvironment.getMarker();
 		while (!Marker.LAMBDA_MARKERS.contains(marker)) {
-			currentEnvironment = currentEnvironment.getParent();
+			currentLexicalEnvironment = currentLexicalEnvironment.getParent();
 		}
 
-		return currentEnvironment;
+		return currentLexicalEnvironment;
 	}
 }

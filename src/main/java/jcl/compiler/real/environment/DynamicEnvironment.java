@@ -7,16 +7,15 @@ package jcl.compiler.real.environment;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class EnvironmentAllocation implements Allocation {
+public class DynamicEnvironment extends Environment<DynamicEnvironment> {
 
-	private final LexicalEnvironment environment;
+	public static final DynamicEnvironment FREE = new DynamicEnvironment(null);
 
-	public EnvironmentAllocation(final LexicalEnvironment environment) {
-		this.environment = environment;
-	}
+	private static final long serialVersionUID = 4931675023340550160L;
 
-	public LexicalEnvironment getEnvironment() {
-		return environment;
+	// TODO: load-time-value ???
+	public DynamicEnvironment(final DynamicEnvironment parent) {
+		super(parent);
 	}
 
 	@Override

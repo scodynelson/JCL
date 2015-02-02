@@ -9,6 +9,8 @@ import java.io.Serializable;
  */
 public interface LispStruct extends Serializable {
 
+	long serialVersionUID = -1L;
+
 	/**
 	 * This method returns the type of the struct.
 	 *

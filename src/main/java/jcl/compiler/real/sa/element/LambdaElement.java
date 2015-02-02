@@ -6,7 +6,7 @@ package jcl.compiler.real.sa.element;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
-import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.lambdalist.OrdinaryLambdaListBindings;
 
 import java.util.List;
@@ -21,13 +21,14 @@ public class LambdaElement implements Element {
 
 	private final List<LispStruct> forms;
 
-	private final Environment environment;
+	private final LexicalEnvironment lexicalEnvironment;
 
-	public LambdaElement(final OrdinaryLambdaListBindings lambdaListBindings, final StringStruct docString, final List<LispStruct> forms, final Environment environment) {
+	public LambdaElement(final OrdinaryLambdaListBindings lambdaListBindings, final StringStruct docString, final List<LispStruct> forms,
+	                     final LexicalEnvironment lexicalEnvironment) {
 		this.lambdaListBindings = lambdaListBindings;
 		this.docString = docString;
 		this.forms = forms;
-		this.environment = environment;
+		this.lexicalEnvironment = lexicalEnvironment;
 	}
 
 	public OrdinaryLambdaListBindings getLambdaListBindings() {
@@ -42,7 +43,7 @@ public class LambdaElement implements Element {
 		return forms;
 	}
 
-	public Environment getEnvironment() {
-		return environment;
+	public LexicalEnvironment getLexicalEnvironment() {
+		return lexicalEnvironment;
 	}
 }

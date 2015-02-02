@@ -1,8 +1,8 @@
 package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
+import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.environment.ParameterAllocation;
 import jcl.compiler.real.sa.AnalysisBuilder;
@@ -41,14 +41,14 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 			throw new ProgramErrorException("LET: Parameter list must be of type ListStruct. Got: " + second);
 		}
 
-		final Stack<Environment> environmentStack = analysisBuilder.getEnvironmentStack();
-		final Environment parentEnvironment = environmentStack.peek();
+		final Stack<LexicalEnvironment> lexicalEnvironmentStack = analysisBuilder.getLexicalEnvironmentStack();
+		final LexicalEnvironment parentLexicalEnvironment = lexicalEnvironmentStack.peek();
 
 		final int tempClosureDepth = analysisBuilder.getClosureDepth();
 		final int newClosureDepth = tempClosureDepth + 1;
 
-		final Environment letEnvironment = new Environment(parentEnvironment, Marker.LET, newClosureDepth);
-		environmentStack.push(letEnvironment);
+		final LexicalEnvironment letEnvironment = new LexicalEnvironment(parentLexicalEnvironment, Marker.LET, newClosureDepth);
+		lexicalEnvironmentStack.push(letEnvironment);
 
 		final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
 		try {
@@ -64,7 +64,7 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 
 			final List<LetElement.LetVar> letVars
 					= parametersAsJavaList.stream()
-					                      .map(e -> getLetVar(e, declareElement, analyzer, analysisBuilder, environmentStack))
+					                      .map(e -> getLetVar(e, declareElement, analyzer, analysisBuilder, lexicalEnvironmentStack))
 					                      .collect(Collectors.toList());
 
 			final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
@@ -74,13 +74,13 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 					               .map(e -> analyzer.analyzeForm(e, analysisBuilder))
 					               .collect(Collectors.toList());
 
-			final Environment environment = environmentStack.peek();
+			final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.peek();
 
-			return new LetElement(letVars, analyzedBodyForms, environment);
+			return new LetElement(letVars, analyzedBodyForms, currentLexicalEnvironment);
 		} finally {
 			analysisBuilder.setClosureDepth(tempClosureDepth);
 			analysisBuilder.setBindingsPosition(tempBindingsPosition);
-			environmentStack.pop();
+			lexicalEnvironmentStack.pop();
 		}
 	}
 
@@ -88,7 +88,7 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 	                                           final DeclareElement declareElement,
 	                                           final SemanticAnalyzer analyzer,
 	                                           final AnalysisBuilder analysisBuilder,
-	                                           final Stack<Environment> environmentStack) {
+	                                           final Stack<LexicalEnvironment> lexicalEnvironmentStack) {
 
 		if (!(parameter instanceof SymbolStruct) && !(parameter instanceof ListStruct)) {
 			throw new ProgramErrorException("LET: Parameter must be of type SymbolStruct or ListStruct. Got: " + parameter);
@@ -100,21 +100,21 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 		if (parameter instanceof ListStruct) {
 			final ListStruct listParameter = (ListStruct) parameter;
 			var = getLetListParameterVar(listParameter);
-			initForm = getLetListParameterInitForm(listParameter, analyzer, analysisBuilder, environmentStack);
+			initForm = getLetListParameterInitForm(listParameter, analyzer, analysisBuilder, lexicalEnvironmentStack);
 		} else {
 			var = (SymbolStruct) parameter;
 			initForm = NILStruct.INSTANCE;
 		}
 
-		final Environment currentEnvironment = environmentStack.peek();
+		final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.peek();
 
-		final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+		final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentLexicalEnvironment);
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 		final boolean isSpecial = isSpecial(declareElement, var);
 
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
-		currentEnvironment.addBinding(var, allocation, initForm, isSpecial);
+		currentLexicalEnvironment.addBinding(var, allocation, initForm, isSpecial);
 
 		return new LetElement.LetVar(var, initForm);
 	}
@@ -150,17 +150,17 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 	private static LispStruct getLetListParameterInitForm(final ListStruct listParameter,
 	                                                      final SemanticAnalyzer analyzer,
 	                                                      final AnalysisBuilder analysisBuilder,
-	                                                      final Stack<Environment> environmentStack) {
+	                                                      final Stack<LexicalEnvironment> lexicalEnvironmentStack) {
 
 		final LispStruct parameterValue = listParameter.getRest().getFirst();
 
 		// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
-		final Environment currentEnvironment = environmentStack.pop();
+		final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.pop();
 
 		try {
 			return analyzer.analyzeForm(parameterValue, analysisBuilder);
 		} finally {
-			environmentStack.push(currentEnvironment);
+			lexicalEnvironmentStack.push(currentLexicalEnvironment);
 		}
 	}
 }

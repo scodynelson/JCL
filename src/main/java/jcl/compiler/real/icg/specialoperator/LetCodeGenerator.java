@@ -3,8 +3,8 @@ package jcl.compiler.real.icg.specialoperator;
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Binding;
 import jcl.compiler.real.environment.Closure;
-import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentBinding;
+import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.PositionAllocation;
 import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.icg.CodeGenerator;
@@ -44,7 +44,7 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 
 		// are we building a closure here?
 		//----->
-		codeGenerator.bindingEnvironment = codeGenerator.bindingStack.push((Environment) input.getFirst());
+		codeGenerator.bindingEnvironment = codeGenerator.bindingStack.push((LexicalEnvironment) input.getFirst());
 		final Closure closureSetBody = codeGenerator.bindingEnvironment.getEnvironmentClosure();
 //        int numParams = closureSetBody.size() - 1;
 
@@ -52,7 +52,7 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 			// (%let... (:parent ...) (:bindings ...) (:symbol-table ...) (:closure ...))
 			// Handle all of the binding information
 			//----->
-			final Environment bindings = codeGenerator.bindingEnvironment;
+			final LexicalEnvironment bindings = codeGenerator.bindingEnvironment;
 			// ((:parent ...) (:bindings ...) (:symbol-table ...) (:closure ...)))
 			// Now get just the bindings list and drop the :bindings
 			final List<Binding> bindingList = codeGenerator.bindingEnvironment.getBindings();
@@ -60,7 +60,7 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 			//  (sym2 :allocation ... :binding ... :scope ... :type ... :init-form ...)...)
 			// Now to loop thru the bindings, gen code for the init forms and store them in the
 			// proper slots. Note that init forms are evaluated in the enclosing environment
-			final Environment tmpEnv = codeGenerator.bindingEnvironment;
+			final LexicalEnvironment tmpEnv = codeGenerator.bindingEnvironment;
 			// any init forms get evaluated in the parent binding
 			codeGenerator.bindingEnvironment = codeGenerator.bindingEnvironment.getParent();
 			// now, run the bindings

@@ -1,7 +1,7 @@
 package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.element.FletElement;
 import jcl.symbols.SymbolStruct;
@@ -17,8 +17,9 @@ public class FletAnalyzer extends InnerFunctionAnalyzer<FletElement, FletElement
 	}
 
 	@Override
-	protected FletElement getFunctionElement(final List<FletElement.FletVar> vars, final List<LispStruct> bodyForms, final Environment environment) {
-		return new FletElement(vars, bodyForms, environment);
+	protected FletElement getFunctionElement(final List<FletElement.FletVar> vars, final List<LispStruct> bodyForms,
+	                                         final LexicalEnvironment lexicalEnvironment) {
+		return new FletElement(vars, bodyForms, lexicalEnvironment);
 	}
 
 	@Override

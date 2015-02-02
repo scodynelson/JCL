@@ -5,7 +5,7 @@
 package jcl.compiler.real.sa.element;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.symbols.SymbolStruct;
 
 import java.util.List;
@@ -14,8 +14,8 @@ public class MacroletElement extends InnerFunctionElement {
 
 	private static final long serialVersionUID = -6865772116422991356L;
 
-	public MacroletElement(final List<MacroletVar> vars, final List<LispStruct> forms, final Environment environment) {
-		super(vars, forms, environment);
+	public MacroletElement(final List<MacroletVar> vars, final List<LispStruct> forms, final LexicalEnvironment lexicalEnvironment) {
+		super(vars, forms, lexicalEnvironment);
 	}
 
 	public static class MacroletVar extends InnerFunctionVar {

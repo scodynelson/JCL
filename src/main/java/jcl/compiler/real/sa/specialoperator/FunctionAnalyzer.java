@@ -2,7 +2,7 @@ package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Binding;
-import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
@@ -40,14 +40,14 @@ public class FunctionAnalyzer implements SpecialOperatorAnalyzer {
 			throw new ProgramErrorException("FUNCTION: Function argument must be of type SymbolStruct or ListStruct. Got: " + second);
 		}
 
-		final Stack<Environment> environmentStack = analysisBuilder.getEnvironmentStack();
-		final Environment parentEnvironment = environmentStack.peek();
+		final Stack<LexicalEnvironment> lexicalEnvironmentStack = analysisBuilder.getLexicalEnvironmentStack();
+		final LexicalEnvironment parentLexicalEnvironment = lexicalEnvironmentStack.peek();
 
 		if (second instanceof SymbolStruct) {
 			final SymbolStruct<?> functionSymbol = (SymbolStruct) second;
-			final Environment fnBinding = getBindingEnvironment(parentEnvironment, functionSymbol);
+			final LexicalEnvironment fnBinding = getBindingEnvironment(parentLexicalEnvironment, functionSymbol);
 
-			if (fnBinding.equals(Environment.NULL)) {
+			if (fnBinding.equals(LexicalEnvironment.NULL)) {
 				// TODO: we should think about what's actually happening here...
 				lexicalSymbolStructAnalyzer.analyzeSymbol(functionSymbol, analysisBuilder);
 				return input;
@@ -76,8 +76,8 @@ public class FunctionAnalyzer implements SpecialOperatorAnalyzer {
 			final int tempClosureDepth = analysisBuilder.getClosureDepth();
 			final int newClosureDepth = tempClosureDepth + 1;
 
-			final Environment lambdaEnvironment = new Environment(parentEnvironment, Marker.LAMBDA, newClosureDepth);
-			environmentStack.push(lambdaEnvironment);
+			final LexicalEnvironment lambdaEnvironment = new LexicalEnvironment(parentLexicalEnvironment, Marker.LAMBDA, newClosureDepth);
+			lexicalEnvironmentStack.push(lambdaEnvironment);
 
 			final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
 			try {
@@ -87,32 +87,32 @@ public class FunctionAnalyzer implements SpecialOperatorAnalyzer {
 			} finally {
 				analysisBuilder.setClosureDepth(tempClosureDepth);
 				analysisBuilder.setBindingsPosition(tempBindingsPosition);
-				environmentStack.pop();
+				lexicalEnvironmentStack.pop();
 			}
 		}
 
 		throw new ProgramErrorException("FUNCTION: First element of List argument must be the Symbol LAMBDA. Got: " + functionListFirst);
 	}
 
-	private static Environment getBindingEnvironment(final Environment environment, final SymbolStruct<?> variable) {
+	private static LexicalEnvironment getBindingEnvironment(final LexicalEnvironment lexicalEnvironment, final SymbolStruct<?> variable) {
 
-		Environment currentEnvironment = environment;
+		LexicalEnvironment currentLexicalEnvironment = lexicalEnvironment;
 
-		while (!currentEnvironment.equals(Environment.NULL)) {
+		while (!currentLexicalEnvironment.equals(LexicalEnvironment.NULL)) {
 
-			final Marker marker = currentEnvironment.getMarker();
+			final Marker marker = currentLexicalEnvironment.getMarker();
 			if (Marker.FUNCTION_MARKERS.contains(marker)) {
 
-				final boolean hasBinding = currentEnvironment.hasBinding(variable);
+				final boolean hasBinding = currentLexicalEnvironment.hasBinding(variable);
 				if (hasBinding) {
 					break;
 				}
 			}
 
-			currentEnvironment = currentEnvironment.getParent();
+			currentLexicalEnvironment = currentLexicalEnvironment.getParent();
 		}
 
-		return currentEnvironment;
+		return currentLexicalEnvironment;
 	}
 
 }

@@ -5,7 +5,7 @@
 package jcl.compiler.real.sa.element;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.LexicalEnvironment;
 
 import java.util.List;
 
@@ -15,10 +15,10 @@ public class LocallyElement implements Element {
 
 	private final List<LispStruct> forms;
 
-	private final Environment environment;
+	private final LexicalEnvironment lexicalEnvironment;
 
-	public LocallyElement(final List<LispStruct> forms, final Environment environment) {
+	public LocallyElement(final List<LispStruct> forms, final LexicalEnvironment lexicalEnvironment) {
 		this.forms = forms;
-		this.environment = environment;
+		this.lexicalEnvironment = lexicalEnvironment;
 	}
 }

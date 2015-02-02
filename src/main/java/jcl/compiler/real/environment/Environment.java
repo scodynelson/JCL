@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.compiler.real.environment;
 
 import jcl.LispStruct;
@@ -10,38 +14,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class Environment implements LispStruct {
-
-	public static final Environment FREE = new Environment(null, Marker.LAMBDA, 0);
-	public static final Environment NULL = new Environment(null, Marker.LAMBDA, 0);
+public abstract class Environment<E extends Environment<E>> implements LispStruct {
 
 	private static final long serialVersionUID = 7523547599975901124L;
 
-	private final Environment parent;
-	private final Marker marker;
+	private final E parent;
 
-	private final List<LoadTimeValue> loadTimeValues = new ArrayList<>();
 	private final List<Binding> bindings = new ArrayList<>();
+
 	private final SymbolTable symbolTable = new SymbolTable();
-	private final Closure environmentClosure;
 
-	// TODO: load-time-value ???
-	public Environment(final Environment parent, final Marker marker, final int closureDepth) {
+	protected Environment(final E parent) {
 		this.parent = parent;
-		this.marker = marker;
-		environmentClosure = new Closure(closureDepth);
 	}
 
-	public Environment getParent() {
+	public E getParent() {
 		return parent;
-	}
-
-	public Marker getMarker() {
-		return marker;
-	}
-
-	public List<LoadTimeValue> getLoadTimeValues() {
-		return loadTimeValues;
 	}
 
 	public List<Binding> getBindings() {
@@ -67,10 +55,6 @@ public class Environment implements LispStruct {
 
 	public SymbolTable getSymbolTable() {
 		return symbolTable;
-	}
-
-	public Closure getEnvironmentClosure() {
-		return environmentClosure;
 	}
 
 	@Override

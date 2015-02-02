@@ -7,12 +7,12 @@ import java.util.List;
 
 public class EnvironmentAccessor {
 
-	public static Environment getBindingEnvironment(final Environment environment, final SymbolStruct<?> variable,
+	public static LexicalEnvironment getBindingEnvironment(final LexicalEnvironment environment, final SymbolStruct<?> variable,
 	                                                final boolean valueBinding) {
 
-		Environment currentEnvironment = environment;
+		LexicalEnvironment currentEnvironment = environment;
 
-		while (!currentEnvironment.equals(Environment.NULL)) {
+		while (!currentEnvironment.equals(LexicalEnvironment.NULL)) {
 
 			if (currentEnvironment.hasBinding(variable)) {
 
@@ -36,7 +36,7 @@ public class EnvironmentAccessor {
 		return currentEnvironment;
 	}
 
-	public static SymbolBinding getSymbolTableEntry(final Environment currentEnvironment, final SymbolStruct<?> variable) {
+	public static SymbolBinding getSymbolTableEntry(final LexicalEnvironment currentEnvironment, final SymbolStruct<?> variable) {
 
 		// look up the symbol in the symbol table
 		SymbolBinding symPList = getSymbolInTable(currentEnvironment, variable);
@@ -54,7 +54,7 @@ public class EnvironmentAccessor {
 		return symPList;
 	}
 
-	private static SymbolBinding getSymbolInTable(final Environment currentEnvironment, final SymbolStruct<?> variable) {
+	private static SymbolBinding getSymbolInTable(final Environment<?> currentEnvironment, final SymbolStruct<?> variable) {
 
 		final SymbolTable symTable = currentEnvironment.getSymbolTable();
 		final List<SymbolBinding> symbolBindings = symTable.getBindings();
@@ -66,11 +66,11 @@ public class EnvironmentAccessor {
 				.orElse(null);
 	}
 
-	public static int getNextAvailableParameterNumber(final Environment environment) {
+	public static int getNextAvailableParameterNumber(final LexicalEnvironment environment) {
 		int currentMax = 0;
 
-		Environment currentEnvironment = environment;
-		while (!currentEnvironment.equals(Environment.NULL)) {
+		LexicalEnvironment currentEnvironment = environment;
+		while (!currentEnvironment.equals(LexicalEnvironment.NULL)) {
 
 			final List<Binding> allEnvironmentBindings = new ArrayList<>();
 

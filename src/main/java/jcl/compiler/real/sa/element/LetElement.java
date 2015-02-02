@@ -5,7 +5,7 @@
 package jcl.compiler.real.sa.element;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.symbols.SymbolStruct;
 
 import java.util.List;
@@ -17,12 +17,12 @@ public class LetElement implements Element {
 	private final List<LetVar> vars;
 	private final List<LispStruct> forms;
 
-	private final Environment environment;
+	private final LexicalEnvironment lexicalEnvironment;
 
-	public LetElement(final List<LetVar> vars, final List<LispStruct> forms, final Environment environment) {
+	public LetElement(final List<LetVar> vars, final List<LispStruct> forms, final LexicalEnvironment lexicalEnvironment) {
 		this.vars = vars;
 		this.forms = forms;
-		this.environment = environment;
+		this.lexicalEnvironment = lexicalEnvironment;
 	}
 
 	public static class LetVar {

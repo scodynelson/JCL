@@ -1,8 +1,8 @@
 package jcl.compiler.real.icg;
 
 import jcl.compiler.real.environment.Allocation;
-import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
+import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.PositionAllocation;
 import jcl.compiler.real.environment.SymbolBinding;
 import jcl.symbols.SymbolStruct;
@@ -32,7 +32,7 @@ public class SpecialSymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>
 		}
 	}
 
-	private static int getSymbolAllocation(final Environment currentEnvironment, final SymbolStruct<?> variable) {
+	private static int getSymbolAllocation(final LexicalEnvironment currentEnvironment, final SymbolStruct<?> variable) {
 
 		// look up the symbol in the symbol table
 		final SymbolBinding symPList = EnvironmentAccessor.getSymbolTableEntry(currentEnvironment, variable);

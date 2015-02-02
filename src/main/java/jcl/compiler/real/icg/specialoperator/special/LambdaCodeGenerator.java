@@ -2,7 +2,7 @@ package jcl.compiler.real.icg.specialoperator.special;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Binding;
-import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.LoadTimeValue;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
@@ -75,7 +75,7 @@ public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 			interfaces.add("lisp/common/type/MacroFunction");
 			icg.MacroLambda = false;
 		}
-		final List<Binding> bindingSetBody = ((Environment) list.getFirst()).getBindings();
+		final List<Binding> bindingSetBody = ((LexicalEnvironment) list.getFirst()).getBindings();
 
 		final int numParams = bindingSetBody.size();
 		if (numParams <= 11) {
@@ -132,7 +132,7 @@ public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 
 		// Handle all of the binding information
 		try {
-			icg.bindingEnvironment = icg.bindingStack.push((Environment) list.getFirst());
+			icg.bindingEnvironment = icg.bindingStack.push((LexicalEnvironment) list.getFirst());
 
 			// now create the check arguments method that's used when safety > 1
 			//-----------> checkArguments <--------------------
@@ -255,7 +255,7 @@ public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 		codeGenerator.emitter.emitPutstatic(className, "SYMBOL", "Llisp/common/type/Symbol;");
 
 		// Creating and initializing any necessary load-time-values
-		final Environment env = codeGenerator.bindingEnvironment;
+		final LexicalEnvironment env = codeGenerator.bindingEnvironment;
 
 		// see if we have to add any static fields for load-time-value
 		final List<LoadTimeValue> ltvList = env.getLoadTimeValues();

@@ -1,7 +1,7 @@
 package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
@@ -25,14 +25,14 @@ public class LocallyAnalyzer implements SpecialOperatorAnalyzer {
 	@Override
 	public LocallyElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
-		final Stack<Environment> environmentStack = analysisBuilder.getEnvironmentStack();
-		final Environment parentEnvironment = environmentStack.peek();
+		final Stack<LexicalEnvironment> lexicalEnvironmentStack = analysisBuilder.getLexicalEnvironmentStack();
+		final LexicalEnvironment parentLexicalEnvironment = lexicalEnvironmentStack.peek();
 
 		final int tempClosureDepth = analysisBuilder.getClosureDepth();
 		final int newClosureDepth = tempClosureDepth + 1;
 
-		final Environment locallyEnvironment = new Environment(parentEnvironment, Marker.LOCALLY, newClosureDepth);
-		environmentStack.push(locallyEnvironment);
+		final LexicalEnvironment locallyEnvironment = new LexicalEnvironment(parentLexicalEnvironment, Marker.LOCALLY, newClosureDepth);
+		lexicalEnvironmentStack.push(locallyEnvironment);
 
 		final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
 		try {
@@ -48,13 +48,13 @@ public class LocallyAnalyzer implements SpecialOperatorAnalyzer {
 					               .map(e -> analyzer.analyzeForm(e, analysisBuilder))
 					               .collect(Collectors.toList());
 
-			final Environment environment = environmentStack.peek();
+			final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.peek();
 
-			return new LocallyElement(analyzedBodyForms, environment);
+			return new LocallyElement(analyzedBodyForms, currentLexicalEnvironment);
 		} finally {
 			analysisBuilder.setClosureDepth(tempClosureDepth);
 			analysisBuilder.setBindingsPosition(tempBindingsPosition);
-			environmentStack.pop();
+			lexicalEnvironmentStack.pop();
 		}
 	}
 }

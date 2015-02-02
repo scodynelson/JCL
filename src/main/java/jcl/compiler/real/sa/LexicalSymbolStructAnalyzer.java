@@ -2,8 +2,8 @@ package jcl.compiler.real.sa;
 
 import jcl.compiler.real.environment.Closure;
 import jcl.compiler.real.environment.ClosureBinding;
-import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAllocation;
+import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.environment.SymbolBinding;
@@ -25,57 +25,57 @@ public class LexicalSymbolStructAnalyzer extends SymbolStructAnalyzer {
 
 	@Override
 	public SymbolElement<?> analyzeSymbol(final SymbolStruct<?> input, final AnalysisBuilder analysisBuilder) {
-		final Stack<Environment> environmentStack = analysisBuilder.getEnvironmentStack();
 
-		final Environment environment = environmentStack.peek();
+		final Stack<LexicalEnvironment> lexicalEnvironmentStack = analysisBuilder.getLexicalEnvironmentStack();
+		final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.peek();
 
-		final boolean symbolBoundInCurrentEnvironment = environment.hasBinding(input);
-		if (symbolBoundInCurrentEnvironment) {
-			// Binding already exists in the current environment.
+		final boolean symbolBoundInCurrentLexicalEnvironment = currentLexicalEnvironment.hasBinding(input);
+		if (symbolBoundInCurrentLexicalEnvironment) {
+			// Binding already exists in the current lexical environment.
 			return new SymbolElement<>(input);
 		}
 
-		final Environment bindingEnvironment = getBindingEnvironment(environment, input);
+		final LexicalEnvironment bindingLexicalEnvironment = getBindingEnvironment(currentLexicalEnvironment, input);
 
-		if (bindingEnvironment.equals(Environment.NULL)) {
-			// No inner binding environments. Add it as a DYNAMIC symbol in the current environment before we proceed.
+		if (bindingLexicalEnvironment.equals(LexicalEnvironment.NULL)) {
+			// No inner binding lexical environments. Add it as a DYNAMIC symbol in the current lexical environment before we proceed.
 			dynamicSymbolStructAnalyzer.analyzeSymbol(input, analysisBuilder);
 		}
 
-		final Environment currentEnclosingLambda = getEnclosingLambda(environment);
-		final Environment bindingEnclosingLambda = getEnclosingLambda(bindingEnvironment);
+		final LexicalEnvironment currentEnclosingLambda = getEnclosingLambda(currentLexicalEnvironment);
+		final LexicalEnvironment bindingEnclosingLambda = getEnclosingLambda(bindingLexicalEnvironment);
 
-		final SymbolTable currentEnvironmentSymbolTable = environment.getSymbolTable();
+		final SymbolTable currentLexicalEnvironmentSymbolTable = currentLexicalEnvironment.getSymbolTable();
 
 		if (currentEnclosingLambda.equals(bindingEnclosingLambda)) {
 			// Binding Lambda and Enclosing Lambda are the same. No need for a Closure.
 
-			// Create a new SymbolBinding and reference it to the 'bindingEnvironment'
+			// Create a new SymbolBinding and reference it to the 'bindingLexicalEnvironment'
 			final EnvironmentAllocation allocation = new EnvironmentAllocation(bindingEnclosingLambda);
-			final SymbolBinding symbolBinding = new SymbolBinding(input, allocation, Scope.LEXICAL, T.INSTANCE, bindingEnvironment);
+			final SymbolBinding symbolBinding = new SymbolBinding(input, allocation, Scope.LEXICAL, T.INSTANCE, bindingLexicalEnvironment);
 
-			// Now add that new symbol to the SymbolTable of the 'currentEnvironment'
-			currentEnvironmentSymbolTable.addBinding(symbolBinding);
+			// Now add that new symbol to the SymbolTable of the 'currentLexicalEnvironment'
+			currentLexicalEnvironmentSymbolTable.addBinding(symbolBinding);
 			return new SymbolElement<>(input);
 		}
 
 		// Here the Binding Lambda is outside of the Enclosing Lambda
-		final Environment outerBindingEnvironment = getBindingEnvironment(bindingEnvironment, input);
+		final LexicalEnvironment outerBindingLexicalEnvironment = getBindingEnvironment(bindingLexicalEnvironment, input);
 
-		if (outerBindingEnvironment.equals(Environment.NULL)) {
-			// Outer Binding Environment is the NULL Environment. Therefore, we can't create a Closure.
+		if (outerBindingLexicalEnvironment.equals(LexicalEnvironment.NULL)) {
+			// Outer Binding Lexical Environment is the NULL Environment. Therefore, we can't create a Closure.
 
-			// Create a new SymbolBinding and reference it to the 'bindingEnvironment'
-			final EnvironmentAllocation allocation = new EnvironmentAllocation(Environment.NULL);
-			final SymbolBinding symbolBinding = new SymbolBinding(input, allocation, Scope.LEXICAL, T.INSTANCE, bindingEnvironment);
+			// Create a new SymbolBinding and reference it to the 'bindingLexicalEnvironment'
+			final EnvironmentAllocation allocation = new EnvironmentAllocation(LexicalEnvironment.NULL);
+			final SymbolBinding symbolBinding = new SymbolBinding(input, allocation, Scope.LEXICAL, T.INSTANCE, bindingLexicalEnvironment);
 
-			// Now add that new symbol to the SymbolTable of the 'currentEnvironment'
-			currentEnvironmentSymbolTable.addBinding(symbolBinding);
+			// Now add that new symbol to the SymbolTable of the 'currentLexicalEnvironment'
+			currentLexicalEnvironmentSymbolTable.addBinding(symbolBinding);
 			return new SymbolElement<>(input);
 		}
 
-		// There is an Outer Binding Environment. Therefore, we will create a Closure Binding in that Environment.
-		final Closure closure = outerBindingEnvironment.getEnvironmentClosure();
+		// There is an Outer Binding Lexical Environment. Therefore, we will create a Closure Binding in that Lexical Environment.
+		final Closure closure = outerBindingLexicalEnvironment.getEnvironmentClosure();
 
 		final Optional<ClosureBinding> closureBinding = closure.getBinding(input);
 
@@ -87,7 +87,7 @@ public class LexicalSymbolStructAnalyzer extends SymbolStructAnalyzer {
 			// Increment the number of references to this Closure Binding.
 			closureBindingValue.incrementReferences();
 		} else {
-			// Create a new ClosureBinding in the Outer Binding Environment.
+			// Create a new ClosureBinding in the Outer Binding Lexical Environment.
 			final ClosureBinding newClosureBinding = new ClosureBinding(input, closure.getBindings().size(), 1);
 			closure.addBinding(newClosureBinding);
 		}
@@ -95,24 +95,24 @@ public class LexicalSymbolStructAnalyzer extends SymbolStructAnalyzer {
 		return new SymbolElement<>(input);
 	}
 
-	private static Environment getBindingEnvironment(final Environment environment, final SymbolStruct<?> variable) {
+	private static LexicalEnvironment getBindingEnvironment(final LexicalEnvironment lexicalEnvironment, final SymbolStruct<?> variable) {
 
-		Environment currentEnvironment = environment;
+		LexicalEnvironment currentLexicalEnvironment = lexicalEnvironment;
 
-		while (!currentEnvironment.equals(Environment.NULL)) {
+		while (!currentLexicalEnvironment.equals(LexicalEnvironment.NULL)) {
 
-			final Marker marker = currentEnvironment.getMarker();
+			final Marker marker = currentLexicalEnvironment.getMarker();
 			if (Marker.BINDING_MARKERS.contains(marker)) {
 
-				final boolean hasBinding = currentEnvironment.hasBinding(variable);
+				final boolean hasBinding = currentLexicalEnvironment.hasBinding(variable);
 				if (hasBinding) {
 					break;
 				}
 			}
 
-			currentEnvironment = currentEnvironment.getParent();
+			currentLexicalEnvironment = currentLexicalEnvironment.getParent();
 		}
 
-		return currentEnvironment;
+		return currentLexicalEnvironment;
 	}
 }

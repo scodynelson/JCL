@@ -27,7 +27,7 @@ public class SymbolTable {
 		bindings.add(symbolBinding);
 	}
 
-	public void addBinding(final SymbolStruct<?> newVariable, final Allocation allocation, final Scope scope, final Environment binding) {
+	public void addBinding(final SymbolStruct<?> newVariable, final Allocation allocation, final Scope scope, final LexicalEnvironment binding) {
 		final SymbolBinding symbolBinding = new SymbolBinding(newVariable, allocation, scope, T.INSTANCE, binding);
 		bindings.add(symbolBinding);
 	}

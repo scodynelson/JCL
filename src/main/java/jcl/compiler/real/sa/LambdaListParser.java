@@ -1,8 +1,8 @@
 package jcl.compiler.real.sa;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
+import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.ParameterAllocation;
 import jcl.compiler.real.environment.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.lambdalist.KeyBinding;
@@ -11,6 +11,8 @@ import jcl.compiler.real.environment.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.lambdalist.RestBinding;
 import jcl.compiler.real.environment.lambdalist.SuppliedPBinding;
+import jcl.compiler.real.sa.element.declaration.DeclareElement;
+import jcl.compiler.real.sa.element.declaration.SpecialDeclarationElement;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
@@ -37,7 +39,10 @@ public class LambdaListParser {
 	private static final SymbolStruct<?> AND_BODY = GlobalPackageStruct.KEYWORD.intern("&BODY").getSymbolStruct();
 	private static final SymbolStruct<?> AND_ENVIRONMENT = GlobalPackageStruct.KEYWORD.intern("&ENVIRONMENT").getSymbolStruct();
 
-	public static OrdinaryLambdaListBindings parseOrdinaryLambdaList(final SemanticAnalyzer semanticAnalyzer, final AnalysisBuilder analysisBuilder, final ListStruct lambdaList) {
+	public static OrdinaryLambdaListBindings parseOrdinaryLambdaList(final SemanticAnalyzer semanticAnalyzer,
+	                                                                 final AnalysisBuilder analysisBuilder,
+	                                                                 final ListStruct lambdaList,
+	                                                                 final DeclareElement declareElement) {
 
 		final List<LispStruct> lambdaListJava = lambdaList.getAsJavaList();
 		final Iterator<LispStruct> iterator = lambdaListJava.iterator();
@@ -47,17 +52,18 @@ public class LambdaListParser {
 
 		List<RequiredBinding> requiredBindings = Collections.emptyList();
 		if (iterator.hasNext()) {
-			final RequiredParseResult requiredParseResult = parseRequiredBindings(analysisBuilder, iterator, position);
+			final RequiredParseResult requiredParseResult
+					= parseRequiredBindings(analysisBuilder, iterator, position, declareElement);
 
 			requiredBindings = requiredParseResult.getRequiredBindings();
 			currentElement = requiredParseResult.getCurrentElement();
 			position = requiredParseResult.getCurrentPosition();
 		}
 
-
 		List<OptionalBinding> optionalBindings = Collections.emptyList();
 		if (AND_OPTIONAL.equals(currentElement)) {
-			final OptionalParseResult optionalParseResult = parseOptionalBindings(semanticAnalyzer, analysisBuilder, iterator, position);
+			final OptionalParseResult optionalParseResult
+					= parseOptionalBindings(semanticAnalyzer, analysisBuilder, iterator, position, declareElement);
 
 			optionalBindings = optionalParseResult.getOptionalBindings();
 			currentElement = optionalParseResult.getCurrentElement();
@@ -66,7 +72,8 @@ public class LambdaListParser {
 
 		RestBinding restBinding = null;
 		if (AND_REST.equals(currentElement)) {
-			final RestParseResult restParseResult = parseRestBinding(analysisBuilder, iterator, position);
+			final RestParseResult restParseResult
+					= parseRestBinding(analysisBuilder, iterator, position, declareElement);
 
 			restBinding = restParseResult.getRestBinding();
 			currentElement = restParseResult.getCurrentElement();
@@ -76,7 +83,8 @@ public class LambdaListParser {
 		List<KeyBinding> keyBindings = Collections.emptyList();
 		boolean allowOtherKeys = false;
 		if (AND_KEY.equals(currentElement)) {
-			final KeyParseResult keyParseResult = parseKeyBindings(semanticAnalyzer, analysisBuilder, iterator, position);
+			final KeyParseResult keyParseResult
+					= parseKeyBindings(semanticAnalyzer, analysisBuilder, iterator, position, declareElement);
 
 			keyBindings = keyParseResult.getKeyBindings();
 			allowOtherKeys = keyParseResult.isAllowOtherKeys();
@@ -86,7 +94,8 @@ public class LambdaListParser {
 
 		List<AuxBinding> auxBindings = Collections.emptyList();
 		if (AND_AUX.equals(currentElement)) {
-			final AuxParseResult auxParseResult = parseAuxBindings(semanticAnalyzer, analysisBuilder, iterator, position);
+			final AuxParseResult auxParseResult
+					= parseAuxBindings(semanticAnalyzer, analysisBuilder, iterator, position, declareElement);
 
 			auxBindings = auxParseResult.getAuxBindings();
 		}
@@ -102,9 +111,11 @@ public class LambdaListParser {
 	 * BINDING PARSE METHODS
 	 */
 
-	private static RequiredParseResult parseRequiredBindings(final AnalysisBuilder analysisBuilder, final Iterator<LispStruct> iterator, final int position) {
+	private static RequiredParseResult parseRequiredBindings(final AnalysisBuilder analysisBuilder, final Iterator<LispStruct> iterator,
+	                                                         final int position, final DeclareElement declareElement) {
 
-		final Stack<Environment> environmentStack = analysisBuilder.getEnvironmentStack();
+		final Stack<LexicalEnvironment> lexicalEnvironmentStack = analysisBuilder.getLexicalEnvironmentStack();
+		final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.peek();
 
 		final List<RequiredBinding> requiredBindings = new ArrayList<>();
 		int currentPosition = position;
@@ -121,19 +132,23 @@ public class LambdaListParser {
 
 			currentElement = iterator.next();
 
-			final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(environmentStack.peek());
+			final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentLexicalEnvironment);
 			analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 			final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
-			environmentStack.peek().addBinding(currentParam, allocation, NILStruct.INSTANCE, false); // TODO: special??
+			final boolean isSpecial = isSpecial(declareElement, currentParam);
+			currentLexicalEnvironment.addBinding(currentParam, allocation, NILStruct.INSTANCE, isSpecial);
 		}
 
 		return new RequiredParseResult(currentElement, currentPosition, requiredBindings);
 	}
 
-	private static OptionalParseResult parseOptionalBindings(final SemanticAnalyzer semanticAnalyzer, final AnalysisBuilder analysisBuilder, final Iterator<LispStruct> iterator, final int position) {
+	private static OptionalParseResult parseOptionalBindings(final SemanticAnalyzer semanticAnalyzer, final AnalysisBuilder analysisBuilder,
+	                                                         final Iterator<LispStruct> iterator, final int position,
+	                                                         final DeclareElement declareElement) {
 
-		final Stack<Environment> environmentStack = analysisBuilder.getEnvironmentStack();
+		final Stack<LexicalEnvironment> lexicalEnvironmentStack = analysisBuilder.getLexicalEnvironmentStack();
+		final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.peek();
 
 		final List<OptionalBinding> optionalBindings = new ArrayList<>();
 		int currentPosition = position;
@@ -146,11 +161,12 @@ public class LambdaListParser {
 				final OptionalBinding optionalBinding = new OptionalBinding(currentParam, optionalAllocation, null, null);
 				optionalBindings.add(optionalBinding);
 
-				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(environmentStack.peek());
+				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentLexicalEnvironment);
 				analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
-				environmentStack.peek().addBinding(currentParam, allocation, NILStruct.INSTANCE, false); // TODO: special??
+				final boolean isSpecial = isSpecial(declareElement, currentParam);
+				currentLexicalEnvironment.addBinding(currentParam, allocation, NILStruct.INSTANCE, isSpecial);
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
 				if ((currentParam.size() < 1) || (currentParam.size() > 3)) {
@@ -172,15 +188,16 @@ public class LambdaListParser {
 				}
 
 				// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
-				final Environment currentEnvironment = environmentStack.pop();
+				final LexicalEnvironment currentEnvironment = lexicalEnvironmentStack.pop();
 				final LispStruct parameterValueInitForm = semanticAnalyzer.analyzeForm(initForm, analysisBuilder);
-				environmentStack.push(currentEnvironment);
+				lexicalEnvironmentStack.push(currentEnvironment);
 
 				int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
 				analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 				ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
-				environmentStack.peek().addBinding(varNameCurrent, allocation, parameterValueInitForm, false); // TODO: special??
+				boolean isSpecial = isSpecial(declareElement, varNameCurrent);
+				currentLexicalEnvironment.addBinding(varNameCurrent, allocation, parameterValueInitForm, isSpecial);
 
 				SuppliedPBinding suppliedPBinding = null;
 				if (!thirdInCurrent.equals(NullStruct.INSTANCE)) {
@@ -192,11 +209,12 @@ public class LambdaListParser {
 					final ParameterAllocation suppliedPAllocation = new ParameterAllocation(currentPosition++);
 					suppliedPBinding = new SuppliedPBinding(suppliedPCurrent, suppliedPAllocation);
 
-					newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(environmentStack.peek());
+					newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentLexicalEnvironment);
 					analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 					allocation = new ParameterAllocation(newBindingsPosition);
-					environmentStack.peek().addBinding(suppliedPCurrent, allocation, NILStruct.INSTANCE, false); // TODO: special??
+					isSpecial = isSpecial(declareElement, suppliedPCurrent);
+					currentLexicalEnvironment.addBinding(suppliedPCurrent, allocation, NILStruct.INSTANCE, isSpecial);
 				}
 
 				final ParameterAllocation optionalAllocation = new ParameterAllocation(currentPosition++);
@@ -212,7 +230,8 @@ public class LambdaListParser {
 		return new OptionalParseResult(currentElement, currentPosition, optionalBindings);
 	}
 
-	private static RestParseResult parseRestBinding(final AnalysisBuilder analysisBuilder, final Iterator<LispStruct> iterator, final int position) {
+	private static RestParseResult parseRestBinding(final AnalysisBuilder analysisBuilder, final Iterator<LispStruct> iterator,
+	                                                final int position, final DeclareElement declareElement) {
 
 		int currentPosition = position;
 
@@ -226,22 +245,27 @@ public class LambdaListParser {
 		}
 		final SymbolStruct<?> currentParam = (SymbolStruct<?>) currentElement;
 
-		final Stack<Environment> environmentStack = analysisBuilder.getEnvironmentStack();
+		final Stack<LexicalEnvironment> lexicalEnvironmentStack = analysisBuilder.getLexicalEnvironmentStack();
+		final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.peek();
 
-		final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(environmentStack.peek());
+		final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentLexicalEnvironment);
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
-		environmentStack.peek().addBinding(currentParam, allocation, NILStruct.INSTANCE, false); // TODO: special??
+		final boolean isSpecial = isSpecial(declareElement, currentParam);
+		currentLexicalEnvironment.addBinding(currentParam, allocation, NILStruct.INSTANCE, isSpecial);
 
 		final ParameterAllocation restAllocation = new ParameterAllocation(currentPosition++);
 		final RestBinding restBinding = new RestBinding(currentParam, restAllocation);
 		return new RestParseResult(currentElement, currentPosition, restBinding);
 	}
 
-	private static KeyParseResult parseKeyBindings(final SemanticAnalyzer semanticAnalyzer, final AnalysisBuilder analysisBuilder, final Iterator<LispStruct> iterator, final int position) {
+	private static KeyParseResult parseKeyBindings(final SemanticAnalyzer semanticAnalyzer, final AnalysisBuilder analysisBuilder,
+	                                               final Iterator<LispStruct> iterator, final int position,
+	                                               final DeclareElement declareElement) {
 
-		final Stack<Environment> environmentStack = analysisBuilder.getEnvironmentStack();
+		final Stack<LexicalEnvironment> lexicalEnvironmentStack = analysisBuilder.getLexicalEnvironmentStack();
+		final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.peek();
 
 		final List<KeyBinding> keyBindings = new ArrayList<>();
 		int currentPosition = position;
@@ -255,11 +279,12 @@ public class LambdaListParser {
 				final KeyBinding keyBinding = new KeyBinding(currentParam, keyAllocation, null, keyName, null);
 				keyBindings.add(keyBinding);
 
-				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(environmentStack.peek());
+				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentLexicalEnvironment);
 				analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
-				environmentStack.peek().addBinding(currentParam, allocation, NILStruct.INSTANCE, false); // TODO: special??
+				final boolean isSpecial = isSpecial(declareElement, currentParam);
+				currentLexicalEnvironment.addBinding(currentParam, allocation, NILStruct.INSTANCE, isSpecial);
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
 				if ((currentParam.size() < 1) || (currentParam.size() > 3)) {
@@ -302,15 +327,16 @@ public class LambdaListParser {
 				}
 
 				// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
-				final Environment currentEnvironment = environmentStack.pop();
+				final LexicalEnvironment currentEnvironment = lexicalEnvironmentStack.pop();
 				final LispStruct parameterValueInitForm = semanticAnalyzer.analyzeForm(initForm, analysisBuilder);
-				environmentStack.push(currentEnvironment);
+				lexicalEnvironmentStack.push(currentEnvironment);
 
 				int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
 				analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 				ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
-				environmentStack.peek().addBinding(varNameCurrent, allocation, parameterValueInitForm, false); // TODO: special??
+				boolean isSpecial = isSpecial(declareElement, varNameCurrent);
+				currentLexicalEnvironment.addBinding(varNameCurrent, allocation, parameterValueInitForm, isSpecial);
 
 				SuppliedPBinding suppliedPBinding = null;
 				if (!thirdInCurrent.equals(NullStruct.INSTANCE)) {
@@ -322,11 +348,12 @@ public class LambdaListParser {
 					final ParameterAllocation suppliedPAllocation = new ParameterAllocation(currentPosition++);
 					suppliedPBinding = new SuppliedPBinding(suppliedPCurrent, suppliedPAllocation);
 
-					newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(environmentStack.peek());
+					newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentLexicalEnvironment);
 					analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 					allocation = new ParameterAllocation(newBindingsPosition);
-					environmentStack.peek().addBinding(suppliedPCurrent, allocation, NILStruct.INSTANCE, false); // TODO: special??
+					isSpecial = isSpecial(declareElement, suppliedPCurrent);
+					currentLexicalEnvironment.addBinding(suppliedPCurrent, allocation, NILStruct.INSTANCE, isSpecial);
 				}
 
 				final ParameterAllocation keyAllocation = new ParameterAllocation(currentPosition++);
@@ -348,9 +375,12 @@ public class LambdaListParser {
 		return new KeyParseResult(currentElement, currentPosition, keyBindings, allowOtherKeys);
 	}
 
-	private static AuxParseResult parseAuxBindings(final SemanticAnalyzer semanticAnalyzer, final AnalysisBuilder analysisBuilder, final Iterator<LispStruct> iterator, final int position) {
+	private static AuxParseResult parseAuxBindings(final SemanticAnalyzer semanticAnalyzer, final AnalysisBuilder analysisBuilder,
+	                                               final Iterator<LispStruct> iterator, final int position,
+	                                               final DeclareElement declareElement) {
 
-		final Stack<Environment> environmentStack = analysisBuilder.getEnvironmentStack();
+		final Stack<LexicalEnvironment> lexicalEnvironmentStack = analysisBuilder.getLexicalEnvironmentStack();
+		final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.peek();
 
 		final List<AuxBinding> auxBindings = new ArrayList<>();
 		int currentPosition = position;
@@ -363,11 +393,12 @@ public class LambdaListParser {
 				final AuxBinding auxBinding = new AuxBinding(currentParam, auxAllocation, null);
 				auxBindings.add(auxBinding);
 
-				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(environmentStack.peek());
+				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentLexicalEnvironment);
 				analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
-				environmentStack.peek().addBinding(currentParam, allocation, NILStruct.INSTANCE, false); // TODO: special??
+				final boolean isSpecial = isSpecial(declareElement, currentParam);
+				currentLexicalEnvironment.addBinding(currentParam, allocation, NILStruct.INSTANCE, isSpecial);
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
 				if ((currentParam.size() < 1) || (currentParam.size() > 2)) {
@@ -392,15 +423,16 @@ public class LambdaListParser {
 				auxBindings.add(auxBinding);
 
 				// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
-				final Environment currentEnvironment = environmentStack.pop();
+				final LexicalEnvironment currentEnvironment = lexicalEnvironmentStack.pop();
 				final LispStruct parameterValueInitForm = semanticAnalyzer.analyzeForm(initForm, analysisBuilder);
-				environmentStack.push(currentEnvironment);
+				lexicalEnvironmentStack.push(currentEnvironment);
 
 				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
 				analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
-				environmentStack.peek().addBinding(varNameCurrent, allocation, parameterValueInitForm, false); // TODO: special??
+				final boolean isSpecial = isSpecial(declareElement, varNameCurrent);
+				currentLexicalEnvironment.addBinding(varNameCurrent, allocation, parameterValueInitForm, isSpecial);
 			} else {
 				throw new ProgramErrorException("LambdaList aux parameters must be of type SymbolStruct or ListStruct: " + currentElement);
 			}
@@ -409,6 +441,21 @@ public class LambdaListParser {
 		}
 
 		return new AuxParseResult(currentElement, currentPosition, auxBindings);
+	}
+
+	private static boolean isSpecial(final DeclareElement declareElement, final SymbolStruct<?> var) {
+		boolean isSpecial = false;
+
+		final List<SpecialDeclarationElement> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
+		for (final SpecialDeclarationElement specialDeclarationElement : specialDeclarationElements) {
+			final SymbolStruct<?> specialVar = specialDeclarationElement.getVar();
+			if (var.equals(specialVar)) {
+				isSpecial = true;
+				break;
+			}
+		}
+
+		return isSpecial;
 	}
 
 	/*

@@ -1,7 +1,7 @@
 package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.element.MacroletElement;
 import jcl.symbols.SymbolStruct;
@@ -17,8 +17,9 @@ public class MacroletAnalyzer extends InnerFunctionAnalyzer<MacroletElement, Mac
 	}
 
 	@Override
-	protected MacroletElement getFunctionElement(final List<MacroletElement.MacroletVar> vars, final List<LispStruct> bodyForms, final Environment environment) {
-		return new MacroletElement(vars, bodyForms, environment);
+	protected MacroletElement getFunctionElement(final List<MacroletElement.MacroletVar> vars, final List<LispStruct> bodyForms,
+	                                             final LexicalEnvironment lexicalEnvironment) {
+		return new MacroletElement(vars, bodyForms, lexicalEnvironment);
 	}
 
 	@Override

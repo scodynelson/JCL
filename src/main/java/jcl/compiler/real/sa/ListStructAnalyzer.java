@@ -3,7 +3,7 @@ package jcl.compiler.real.sa;
 import jcl.LispStruct;
 import jcl.compiler.old.functions.MacroExpandFunction;
 import jcl.compiler.old.functions.MacroExpandReturn;
-import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.lambdalist.OrdinaryLambdaListBindings;
@@ -115,8 +115,10 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		}
 
 		if (first instanceof SymbolStruct) {
-			final Stack<Environment> environmentStack = analysisBuilder.getEnvironmentStack();
-			final MacroExpandReturn macroExpandReturn = MacroExpandFunction.FUNCTION.funcall(input, environmentStack.peek());
+			final Stack<LexicalEnvironment> lexicalEnvironmentStack = analysisBuilder.getLexicalEnvironmentStack();
+			final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.peek();
+
+			final MacroExpandReturn macroExpandReturn = MacroExpandFunction.FUNCTION.funcall(input, currentLexicalEnvironment);
 			final LispStruct expandedForm = macroExpandReturn.getExpandedForm();
 
 			if (expandedForm instanceof ConsStruct) {
@@ -189,8 +191,10 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		final List<LispStruct> analyzedFunctionList = new ArrayList<>();
 
-		final Stack<Environment> environmentStack = analysisBuilder.getEnvironmentStack();
-		final boolean hasFunctionBinding = hasFunctionBinding(environmentStack.peek(), functionSymbol);
+		final Stack<LexicalEnvironment> lexicalEnvironmentStack = analysisBuilder.getLexicalEnvironmentStack();
+		final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.peek();
+
+		final boolean hasFunctionBinding = hasFunctionBinding(currentLexicalEnvironment, functionSymbol);
 		if (hasFunctionBinding) {
 			// Recursive call
 			analyzedFunctionList.add(SpecialOperator.TAIL_RECURSION);
@@ -229,18 +233,18 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		return ListStruct.buildProperList(analyzedFunctionList);
 	}
 
-	private static boolean hasFunctionBinding(final Environment environment, final SymbolStruct<?> variable) {
+	private static boolean hasFunctionBinding(final LexicalEnvironment lexicalEnvironment, final SymbolStruct<?> variable) {
 
-		Environment currentEnvironment = environment;
+		LexicalEnvironment currentLexicalEnvironment = lexicalEnvironment;
 
 		boolean hasFunctionBinding = false;
 
-		while (!currentEnvironment.equals(Environment.NULL)) {
-			if (currentEnvironment.hasBinding(variable)) {
+		while (!currentLexicalEnvironment.equals(LexicalEnvironment.NULL)) {
+			if (currentLexicalEnvironment.hasBinding(variable)) {
 				hasFunctionBinding = true;
 				break;
 			}
-			currentEnvironment = currentEnvironment.getParent();
+			currentLexicalEnvironment = currentLexicalEnvironment.getParent();
 		}
 
 		return hasFunctionBinding;

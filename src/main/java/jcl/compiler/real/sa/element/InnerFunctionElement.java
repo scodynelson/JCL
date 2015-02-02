@@ -5,7 +5,7 @@
 package jcl.compiler.real.sa.element;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.symbols.SymbolStruct;
 
 import java.util.List;
@@ -17,12 +17,12 @@ public abstract class InnerFunctionElement implements Element {
 	private final List<? extends InnerFunctionVar> vars;
 	private final List<LispStruct> forms;
 
-	private final Environment environment;
+	private final LexicalEnvironment lexicalEnvironment;
 
-	public InnerFunctionElement(final List<? extends InnerFunctionVar> vars, final List<LispStruct> forms, final Environment environment) {
+	public InnerFunctionElement(final List<? extends InnerFunctionVar> vars, final List<LispStruct> forms, final LexicalEnvironment lexicalEnvironment) {
 		this.vars = vars;
 		this.forms = forms;
-		this.environment = environment;
+		this.lexicalEnvironment = lexicalEnvironment;
 	}
 
 	public abstract static class InnerFunctionVar {

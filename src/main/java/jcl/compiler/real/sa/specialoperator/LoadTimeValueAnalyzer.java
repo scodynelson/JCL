@@ -1,7 +1,7 @@
 package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.LoadTimeValue;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.AnalysisBuilder;
@@ -48,26 +48,26 @@ public class LoadTimeValueAnalyzer implements SpecialOperatorAnalyzer {
 
 		final ListStruct lambdaBlockList = ListStruct.buildProperList(lambdaBlock);
 
-		final Stack<Environment> environmentStack = analysisBuilder.getEnvironmentStack();
-		final Environment nullEnvironment = Environment.NULL;
-		environmentStack.push(nullEnvironment);
+		final Stack<LexicalEnvironment> lexicalEnvironmentStack = analysisBuilder.getLexicalEnvironmentStack();
+		final LexicalEnvironment nullLexicalEnvironment = LexicalEnvironment.NULL;
+		lexicalEnvironmentStack.push(nullLexicalEnvironment);
 
 		final LispStruct lambdaAnalyzed;
 		try {
 			lambdaAnalyzed = lambdaAnalyzer.analyze(analyzer, lambdaBlockList, analysisBuilder);
 		} finally {
-			environmentStack.pop();
+			lexicalEnvironmentStack.pop();
 		}
 
-		final Environment currentEnvironment = environmentStack.peek();
-		final Environment enclosingLambda = getEnclosingLambda(currentEnvironment);
+		final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.peek();
+		final LexicalEnvironment enclosingLambdaEnvironment = getEnclosingLambda(currentLexicalEnvironment);
 
 		final String ltvNameString = "LOAD_TIME_VALUE" + UUID.randomUUID();
 		final SymbolStruct<?> ltvName = new SymbolStruct<>(ltvNameString);
 
 		// TODO: load-time-value read-only-p
 		final LoadTimeValue newLoadTimeValue = new LoadTimeValue(ltvName, lambdaAnalyzed);
-		enclosingLambda.getLoadTimeValues().add(newLoadTimeValue);
+		enclosingLambdaEnvironment.getLoadTimeValues().add(newLoadTimeValue);
 
 		return ListStruct.buildProperList(SpecialOperator.LOAD_TIME_VALUE, ltvName);
 	}
@@ -75,20 +75,20 @@ public class LoadTimeValueAnalyzer implements SpecialOperatorAnalyzer {
 	/**
 	 * This method takes an environment and looks for the nearest enclosing lambda.
 	 *
-	 * @param environment
+	 * @param lexicalEnvironment
 	 * 		The environment that is enclosed by a lambda
 	 *
 	 * @return The lambda enclosing the given environment.
 	 */
-	private static Environment getEnclosingLambda(final Environment environment) {
+	private static LexicalEnvironment getEnclosingLambda(final LexicalEnvironment lexicalEnvironment) {
 
-		Environment currentEnvironment = environment;
+		LexicalEnvironment currentLexicalEnvironment = lexicalEnvironment;
 
-		final Marker marker = currentEnvironment.getMarker();
+		final Marker marker = currentLexicalEnvironment.getMarker();
 		while (!Marker.LAMBDA_MARKERS.contains(marker)) {
-			currentEnvironment = currentEnvironment.getParent();
+			currentLexicalEnvironment = currentLexicalEnvironment.getParent();
 		}
 
-		return currentEnvironment;
+		return currentLexicalEnvironment;
 	}
 }

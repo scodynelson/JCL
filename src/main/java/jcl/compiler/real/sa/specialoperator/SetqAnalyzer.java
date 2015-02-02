@@ -20,13 +20,14 @@ public class SetqAnalyzer implements SpecialOperatorAnalyzer {
 
 		final ListStruct forms = input.getRest();
 
-		if ((forms.size() % 2) != 0) {
+		final int numberOfForms = forms.size();
+		if ((numberOfForms % 2) != 0) {
 			throw new ProgramErrorException("SETQ: Odd number of arguments received: " + input + ". Expected an even number of arguments.");
 		}
 
 		final List<LispStruct> formsJavaList = forms.getAsJavaList();
 
-		final List<SetqElement.SetqPair> setqPairs = new ArrayList<>(forms.size() / 2);
+		final List<SetqElement.SetqPair> setqPairs = new ArrayList<>(numberOfForms / 2);
 
 		for (int index = 0; index < formsJavaList.size(); index += 2) {
 

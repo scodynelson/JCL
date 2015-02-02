@@ -2,8 +2,8 @@ package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.LoadTimeValue;
+import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.specialoperator.special.LambdaAnalyzer;
@@ -60,7 +60,7 @@ public class LoadTimeValueAnalyzer implements SpecialOperatorAnalyzer {
 		}
 
 		final Environment currentEnvironment = environmentStack.peek();
-		final Environment enclosingLambda = EnvironmentAccessor.getEnclosingLambda(currentEnvironment);
+		final Environment enclosingLambda = getEnclosingLambda(currentEnvironment);
 
 		final String ltvNameString = "LOAD_TIME_VALUE" + UUID.randomUUID();
 		final SymbolStruct<?> ltvName = new SymbolStruct<>(ltvNameString);
@@ -70,5 +70,25 @@ public class LoadTimeValueAnalyzer implements SpecialOperatorAnalyzer {
 		enclosingLambda.getLoadTimeValues().add(newLoadTimeValue);
 
 		return ListStruct.buildProperList(SpecialOperator.LOAD_TIME_VALUE, ltvName);
+	}
+
+	/**
+	 * This method takes an environment and looks for the nearest enclosing lambda.
+	 *
+	 * @param environment
+	 * 		The environment that is enclosed by a lambda
+	 *
+	 * @return The lambda enclosing the given environment.
+	 */
+	private static Environment getEnclosingLambda(final Environment environment) {
+
+		Environment currentEnvironment = environment;
+
+		final Marker marker = currentEnvironment.getMarker();
+		while (!Marker.LAMBDA_MARKERS.contains(marker)) {
+			currentEnvironment = currentEnvironment.getParent();
+		}
+
+		return currentEnvironment;
 	}
 }

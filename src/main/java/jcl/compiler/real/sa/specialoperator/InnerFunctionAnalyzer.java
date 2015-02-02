@@ -4,6 +4,7 @@ import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.Marker;
+import jcl.compiler.real.environment.ParameterAllocation;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.element.InnerFunctionElement;
@@ -197,7 +198,8 @@ abstract class InnerFunctionAnalyzer<T extends InnerFunctionElement, S extends I
 
 		final boolean isSpecial = isSpecial(declareElement, functionName);
 
-		currentEnvironment.addBinding(functionName, newBindingsPosition, functionInitForm, isSpecial);
+		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
+		currentEnvironment.addBinding(functionName, allocation, functionInitForm, isSpecial);
 
 		return getFunctionElementVar(functionName, functionInitForm);
 	}

@@ -238,7 +238,7 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		boolean hasFunctionBinding = false;
 
 		while (!currentEnvironment.equals(Environment.NULL)) {
-			if (EnvironmentAccessor.hasBinding(currentEnvironment, variable)) {
+			if (currentEnvironment.hasBinding(variable)) {
 				hasFunctionBinding = true;
 				break;
 			}

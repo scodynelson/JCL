@@ -21,10 +21,19 @@ public class Closure {
 		return bindings;
 	}
 
+	public boolean hasBinding(final SymbolStruct<?> symbolStruct) {
+		return bindings.stream()
+		               .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct));
+	}
+
 	public Optional<ClosureBinding> getBinding(final SymbolStruct<?> symbolStruct) {
 		return bindings.stream()
 		               .filter(e -> e.getSymbolStruct().equals(symbolStruct))
 		               .findFirst();
+	}
+
+	public void addBinding(final ClosureBinding closureBinding) {
+		bindings.add(closureBinding);
 	}
 
 	public void addBinding(final SymbolStruct<?> newVariable) {

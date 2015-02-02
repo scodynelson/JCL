@@ -1,41 +1,28 @@
 package jcl.compiler.real.sa;
 
-import jcl.LispStruct;
 import jcl.compiler.real.environment.Allocation;
-import jcl.compiler.real.environment.Binding;
 import jcl.compiler.real.environment.Closure;
 import jcl.compiler.real.environment.ClosureBinding;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.EnvironmentAllocation;
 import jcl.compiler.real.environment.LocalAllocation;
+import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.environment.SymbolBinding;
+import jcl.compiler.real.environment.SymbolTable;
+import jcl.compiler.real.sa.element.SymbolElement;
 import jcl.symbols.SymbolStruct;
+import jcl.types.T;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Stack;
 
 @Component
-public class SymbolStructAnalyzer implements Analyzer<LispStruct, SymbolStruct<?>> {
+public class SymbolStructAnalyzer {
 
-	@Override
-	public LispStruct analyze(final SemanticAnalyzer analyzer, final SymbolStruct<?> input, final AnalysisBuilder analysisBuilder) {
-		final Stack<Environment> environmentStack = analysisBuilder.getEnvironmentStack();
-
-		final Environment environment = environmentStack.peek();
-		if (input.isSpecial()) {
-			addDynamicSymbolToEnvironment(environmentStack.peek(), input);
-		} else {
-			addLexicalSymbolToEnvironment(environment, input);
-		}
-
-		return input;
-	}
-
-	public LispStruct analyze(final SymbolStruct<?> input, final AnalysisBuilder analysisBuilder, final boolean isSpecial) {
+	public SymbolElement<?> analyze(final SymbolStruct<?> input, final AnalysisBuilder analysisBuilder, final boolean isSpecial) {
 		final Stack<Environment> environmentStack = analysisBuilder.getEnvironmentStack();
 
 		final Environment environment = environmentStack.peek();
@@ -45,130 +32,156 @@ public class SymbolStructAnalyzer implements Analyzer<LispStruct, SymbolStruct<?
 			addLexicalSymbolToEnvironment(environment, input);
 		}
 
-		return input;
+		return new SymbolElement<>(input);
 	}
 
-	private static void addDynamicSymbolToEnvironment(final Environment environment, final SymbolStruct<?> newSymbol) {
+	private static void addDynamicSymbolToEnvironment(final Environment currentEnvironment, final SymbolStruct<?> newSymbol) {
 
-		// if not bound anywhere in the binding tree (free and dynamic)...
-		// we know we're dealing with dynamic variables - so, is it already tagged in this environment?
-		if (EnvironmentAccessor.getSymbolInTable(environment, newSymbol) != null) {
-			// yes, nothing to do
+		final SymbolTable symbolTable = currentEnvironment.getSymbolTable();
+		final Optional<SymbolBinding> bindingInSymbolTable = symbolTable.getBinding(newSymbol);
+
+		if (bindingInSymbolTable.isPresent()) {
+			// Binding already exists in the current environment.
 			return;
 		}
 
-		// so, we at least have to add an entry in this environment
-		// and possibly in an outer one
+		final Environment currentEnclosingLambda = getEnclosingLambda(currentEnvironment);
 
-		// ...(:BINDING :FREE :SCOPE :DYNAMIC :TYPE T)
+		if (currentEnvironment.equals(currentEnclosingLambda)) {
+			final int position = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+			final Allocation allocation = new LocalAllocation(position);
 
-		// if the current environment is not a lambda, we may need to add an entry to the enclosing lambda
-		if (EnvironmentAccessor.isLambda(environment)) {
+			final SymbolBinding symbolBinding = new SymbolBinding(newSymbol, allocation, Scope.DYNAMIC, T.INSTANCE, Environment.FREE);
+			symbolTable.addBinding(symbolBinding);
 
-			// symbol was found in the immediate scope of the Lambda
-			final Allocation finalAllocation = addLocalAlloc(environment);
-
-			// ...(:ALLOCATION (:LOCAL . n) :BINDING :FREE :SCOPE :DYNAMIC :TYPE T)
-
-			// now we add the new symbol to the local table
-			environment.getSymbolTable().addBinding(newSymbol, finalAllocation, Scope.DYNAMIC, Environment.FREE);
 			return;
 		}
 
-		// if the current environment is not a lambda, find the enclosing lambda
-		final Environment enclosingLambda = EnvironmentAccessor.getEnclosingLambda(environment);
+		// Add Binding to SymbolTable in the current environment
+		final EnvironmentAllocation environmentAllocation = new EnvironmentAllocation(currentEnclosingLambda);
+		final SymbolBinding symbolBinding = new SymbolBinding(newSymbol, environmentAllocation, Scope.DYNAMIC, T.INSTANCE, currentEnclosingLambda);
+		symbolTable.addBinding(symbolBinding);
 
-		// see if the symbol is already in the enclosing environment
-		final SymbolBinding enclosingSymbolBinding = EnvironmentAccessor.getSymbolInTable(enclosingLambda, newSymbol);
-		if (enclosingSymbolBinding == null) {
-			// it is, so we have to add a reference to that environment in the current env
+		final SymbolTable enclosingLambdaSymbolTable = currentEnclosingLambda.getSymbolTable();
+		final Optional<SymbolBinding> enclosingSymbolBinding = enclosingLambdaSymbolTable.getBinding(newSymbol);
 
-			// it's not in the enclosing lambda, so put in an entry
-			final Allocation enclosingSymTbl = addLocalAlloc(environment);
-
-			// add to the enclosing lambda's symbol table
-			enclosingLambda.getSymbolTable().addBinding(newSymbol, enclosingSymTbl, Scope.DYNAMIC, Environment.FREE);
+		if (enclosingSymbolBinding.isPresent()) {
+			// Binding already exists in the Enclosing Lambda.
+			return;
 		}
 
-		// Now we have the outer symbol table set up correctly
-		// set the Allocation KeywordOld to what is should be for the current environment
+		// Add Binding to SymbolTable in the Enclosing Lambda.
+		final int position = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+		final Allocation allocation = new LocalAllocation(position);
 
-		// ...(:ALLOCATION #enclosing-lambda# :BINDING :FREE :SCOPE :DYNAMIC :TYPE T)
-		environment.getSymbolTable().addBinding(newSymbol, new EnvironmentAllocation(enclosingLambda), Scope.DYNAMIC, enclosingLambda);
+		final SymbolBinding newSymbolBinding = new SymbolBinding(newSymbol, allocation, Scope.DYNAMIC, T.INSTANCE, Environment.FREE);
+		enclosingLambdaSymbolTable.addBinding(newSymbolBinding);
 	}
 
-	private static Allocation addLocalAlloc(final Environment currentEnvironment) {
-		final int localNumber = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
-		return new LocalAllocation(localNumber);
+	/**
+	 * This method takes an environment and looks for the nearest enclosing lambda.
+	 *
+	 * @param environment
+	 * 		The environment that is enclosed by a lambda
+	 *
+	 * @return The lambda enclosing the given environment.
+	 */
+	private static Environment getEnclosingLambda(final Environment environment) {
+
+		Environment currentEnvironment = environment;
+
+		final Marker marker = currentEnvironment.getMarker();
+		while (!Marker.LAMBDA_MARKERS.contains(marker)) {
+			currentEnvironment = currentEnvironment.getParent();
+		}
+
+		return currentEnvironment;
 	}
 
 	private static void addLexicalSymbolToEnvironment(final Environment currentEnvironment, final SymbolStruct<?> newSymbol) {
-		final Environment bindingEnvironment = EnvironmentAccessor.getBindingEnvironment(currentEnvironment, newSymbol, true);
+
+		final boolean symbolBoundInCurrentEnvironment = currentEnvironment.hasBinding(newSymbol);
+		if (symbolBoundInCurrentEnvironment) {
+			// Binding already exists in the current environment.
+			return;
+		}
+
+		final Environment bindingEnvironment = getBindingEnvironment(currentEnvironment, newSymbol);
 
 		if (bindingEnvironment.equals(Environment.NULL)) {
+			// No inner binding environments. Add it as a DYNAMIC symbol in the current environment before we proceed.
 			addDynamicSymbolToEnvironment(currentEnvironment, newSymbol);
 		}
 
-		final List<Binding> environmentBindings = currentEnvironment.getBindings();
+		final Environment currentEnclosingLambda = getEnclosingLambda(currentEnvironment);
+		final Environment bindingEnclosingLambda = getEnclosingLambda(bindingEnvironment);
 
-		final Optional<Binding> currentSymbolBinding
-				= environmentBindings.stream()
-				                     .filter(e -> e.getSymbolStruct().equals(newSymbol))
-				                     .findFirst();
+		final SymbolTable currentEnvironmentSymbolTable = currentEnvironment.getSymbolTable();
 
-		// Does it have a lexical binding the in current environment?
-		if (currentSymbolBinding.isPresent()) {
-			return;
-		}
+		if (currentEnclosingLambda.equals(bindingEnclosingLambda)) {
+			// Binding Lambda and Enclosing Lambda are the same. No need for a Closure.
 
-		// ...(:BINDING #the-binding-env# :SCOPE :LEXICAL :TYPE T)
-		// so we just have to point the allocation at the binding environment
-		//*** here is where we know that there is a closure involved ***
-		// See if it is bound in the current lambda env. If so, just carry on
-
-		final Environment currentLambda = EnvironmentAccessor.getEnclosingLambda(currentEnvironment);
-		final Environment bindingLambda = EnvironmentAccessor.getEnclosingLambda(bindingEnvironment);
-
-		// is the binding location above the current lambda? If so, there has
-		// to be a closure allocation in the bindingEnvironment
-		if (currentLambda.equals(bindingLambda)) {
 			// Create a new SymbolBinding and reference it to the 'bindingEnvironment'
+			final EnvironmentAllocation allocation = new EnvironmentAllocation(bindingEnclosingLambda);
+			final SymbolBinding symbolBinding = new SymbolBinding(newSymbol, allocation, Scope.LEXICAL, T.INSTANCE, bindingEnvironment);
+
 			// Now add that new symbol to the SymbolTable of the 'currentEnvironment'
-			currentEnvironment.getSymbolTable().addBinding(newSymbol, new EnvironmentAllocation(bindingLambda), Scope.LEXICAL, bindingEnvironment);
+			currentEnvironmentSymbolTable.addBinding(symbolBinding);
 			return;
 		}
 
-		// here the binding lambda is outside the enclosing lambda
-		// this calls for a closure allocation in the outer env (lambda or let)
-		final Environment outerBindingEnvironment = EnvironmentAccessor.getBindingEnvironment(bindingEnvironment, newSymbol, true);
+		// Here the Binding Lambda is outside of the Enclosing Lambda
+		final Environment outerBindingEnvironment = getBindingEnvironment(bindingEnvironment, newSymbol);
 
-		// if there is a parent binding environment
 		if (outerBindingEnvironment.equals(Environment.NULL)) {
+			// Outer Binding Environment is the NULL Environment. Therefore, we can't create a Closure.
+
 			// Create a new SymbolBinding and reference it to the 'bindingEnvironment'
+			final EnvironmentAllocation allocation = new EnvironmentAllocation(Environment.NULL);
+			final SymbolBinding symbolBinding = new SymbolBinding(newSymbol, allocation, Scope.LEXICAL, T.INSTANCE, bindingEnvironment);
+
 			// Now add that new symbol to the SymbolTable of the 'currentEnvironment'
-			currentEnvironment.getSymbolTable().addBinding(newSymbol, new EnvironmentAllocation(Environment.NULL), Scope.LEXICAL, bindingEnvironment);
+			currentEnvironmentSymbolTable.addBinding(symbolBinding);
 			return;
 		}
 
+		// There is an Outer Binding Environment. Therefore, we will create a Closure Binding in that Environment.
 		final Closure closure = outerBindingEnvironment.getEnvironmentClosure();
-		final List<ClosureBinding> closureBindings = closure.getBindings();
 
-		final Optional<ClosureBinding> closureBinding
-				= closureBindings.stream()
-				                 .filter(e -> e.getSymbolStruct().equals(newSymbol))
-				                 .findFirst();
+		final Optional<ClosureBinding> closureBinding = closure.getBinding(newSymbol);
 
-		// if there is not yet a closure for this variable, add it
 		if (closureBinding.isPresent()) {
-			final ClosureBinding closureBindingValue = closureBinding.get();
-			// if the binding environment has already had a closure added to it
-			// for this variable, just increment it's number of references
+			// Closure Binding already exists in the Outer Binding Environment.
 
-			// increment the number of references
+			final ClosureBinding closureBindingValue = closureBinding.get();
+
+			// Increment the number of references to this Closure Binding.
 			closureBindingValue.incrementReferences();
 		} else {
-			closure.addBinding(newSymbol);
+			// Create a new ClosureBinding in the Outer Binding Environment.
+			final ClosureBinding newClosureBinding = new ClosureBinding(newSymbol, closure.getBindings().size(), 1);
+			closure.addBinding(newClosureBinding);
 		}
 	}
 
+	private static Environment getBindingEnvironment(final Environment environment, final SymbolStruct<?> variable) {
+
+		Environment currentEnvironment = environment;
+
+		while (!currentEnvironment.equals(Environment.NULL)) {
+
+			final Marker marker = currentEnvironment.getMarker();
+			if (Marker.BINDING_MARKERS.contains(marker)) {
+
+				final boolean hasBinding = currentEnvironment.hasBinding(variable);
+				if (hasBinding) {
+					break;
+				}
+			}
+
+			currentEnvironment = currentEnvironment.getParent();
+		}
+
+		return currentEnvironment;
+	}
 }

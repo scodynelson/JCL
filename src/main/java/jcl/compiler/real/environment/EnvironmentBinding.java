@@ -8,9 +8,9 @@ public class EnvironmentBinding extends Binding {
 
 	private final LispStruct initForm;
 
-	public EnvironmentBinding(final SymbolStruct<?> symbolStruct, final int allocationPosition, final Scope scope,
+	public EnvironmentBinding(final SymbolStruct<?> symbolStruct, final ParameterAllocation allocation, final Scope scope,
 	                          final LispType type, final LispStruct initForm) {
-		super(symbolStruct, new ParameterAllocation(allocationPosition), scope, type);
+		super(symbolStruct, allocation, scope, type);
 		this.initForm = initForm;
 	}
 

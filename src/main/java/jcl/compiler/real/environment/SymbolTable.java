@@ -23,6 +23,10 @@ public class SymbolTable {
 		               .findFirst();
 	}
 
+	public void addBinding(final SymbolBinding symbolBinding) {
+		bindings.add(symbolBinding);
+	}
+
 	public void addBinding(final SymbolStruct<?> newVariable, final Allocation allocation, final Scope scope, final Environment binding) {
 		final SymbolBinding symbolBinding = new SymbolBinding(newVariable, allocation, scope, T.INSTANCE, binding);
 		bindings.add(symbolBinding);

@@ -48,15 +48,20 @@ public class Environment implements LispStruct {
 		return bindings;
 	}
 
+	public boolean hasBinding(final SymbolStruct<?> symbolStruct) {
+		return bindings.stream()
+		               .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct));
+	}
+
 	public Optional<Binding> getBinding(final SymbolStruct<?> symbolStruct) {
 		return bindings.stream()
 		               .filter(e -> e.getSymbolStruct().equals(symbolStruct))
 		               .findFirst();
 	}
 
-	public void addBinding(final SymbolStruct<?> newVariable, final int position, final LispStruct initForm, final boolean isSpecial) {
+	public void addBinding(final SymbolStruct<?> newVariable, final ParameterAllocation allocation, final LispStruct initForm, final boolean isSpecial) {
 		final Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
-		final Binding binding = new EnvironmentBinding(newVariable, position, scope, T.INSTANCE, initForm);
+		final Binding binding = new EnvironmentBinding(newVariable, allocation, scope, T.INSTANCE, initForm);
 		bindings.add(binding);
 	}
 

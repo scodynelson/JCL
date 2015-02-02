@@ -67,6 +67,8 @@ abstract class InnerFunctionAnalyzer<T extends InnerFunctionElement, S extends I
 
 		final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
 		try {
+			analysisBuilder.setClosureDepth(newClosureDepth);
+
 			final ListStruct innerFunctions = (ListStruct) second;
 			final List<LispStruct> innerFunctionsJavaList = innerFunctions.getAsJavaList();
 			functionNames = getFunctionNames(innerFunctionsJavaList);

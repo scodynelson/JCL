@@ -4,12 +4,12 @@ import jcl.LispStruct;
 import jcl.compiler.old.functions.MacroExpandFunction;
 import jcl.compiler.old.functions.MacroExpandReturn;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.LambdaEnvironmentLispStruct;
 import jcl.compiler.real.environment.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.lambdalist.RestBinding;
+import jcl.compiler.real.sa.element.LambdaElement;
 import jcl.compiler.real.sa.specialoperator.BlockAnalyzer;
 import jcl.compiler.real.sa.specialoperator.CatchAnalyzer;
 import jcl.compiler.real.sa.specialoperator.EvalWhenAnalyzer;
@@ -144,7 +144,7 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		final LispStruct firstOfFirstList = firstAsList.getFirst();
 		if (firstOfFirstList.equals(SpecialOperator.LAMBDA)) {
-			final LambdaEnvironmentLispStruct lambdaAnalyzed = lambdaAnalyzer.analyze(analyzer, firstAsList, analysisBuilder);
+			final LambdaElement lambdaAnalyzed = lambdaAnalyzer.analyze(analyzer, firstAsList, analysisBuilder);
 			final ListStruct functionArguments = input.getRest();
 			return analyzedLambdaFunctionCall(analyzer, analysisBuilder, lambdaAnalyzed, functionArguments);
 		} else {
@@ -166,7 +166,7 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	}
 
 	private static ListStruct analyzedLambdaFunctionCall(final SemanticAnalyzer analyzer, final AnalysisBuilder analysisBuilder,
-	                                                     final LambdaEnvironmentLispStruct lambdaAnalyzed, final ListStruct functionArguments) {
+	                                                     final LambdaElement lambdaAnalyzed, final ListStruct functionArguments) {
 
 		final List<LispStruct> analyzedFunctionList = new ArrayList<>();
 		analyzedFunctionList.add(lambdaAnalyzed);

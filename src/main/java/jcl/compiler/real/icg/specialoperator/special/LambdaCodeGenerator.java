@@ -261,7 +261,7 @@ public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 		final List<LoadTimeValue> ltvList = env.getLoadTimeValues();
 		// ltvList is a plist of the field names and lambda forms
 		for (final LoadTimeValue loadTimeValue : ltvList) {
-			final String fldName = loadTimeValue.getName().getName();
+			final String fldName = loadTimeValue.getName();
 			// add the field
 			codeGenerator.emitter.newField(Opcodes.ACC_PUBLIC + Opcodes.ACC_STATIC + Opcodes.ACC_FINAL,
 					fldName, "Ljava/lang/Object;", null, null);

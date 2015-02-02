@@ -4,7 +4,6 @@ import jcl.LispStruct;
 import jcl.compiler.old.functions.MacroExpandFunction;
 import jcl.compiler.old.functions.MacroExpandReturn;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.LambdaEnvironmentLispStruct;
 import jcl.compiler.real.environment.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.lambdalist.OptionalBinding;
@@ -41,6 +40,7 @@ import jcl.compiler.real.sa.specialoperator.compiler.DefstructAnalyzer;
 import jcl.compiler.real.sa.specialoperator.special.LambdaAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.FunctionStruct;
+import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.KeywordSymbolStruct;
@@ -119,11 +119,7 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			final MacroExpandReturn macroExpandReturn = MacroExpandFunction.FUNCTION.funcall(input, environmentStack.peek());
 			final LispStruct expandedForm = macroExpandReturn.getExpandedForm();
 
-			if (expandedForm.equals(NullStruct.INSTANCE)) {
-				return expandedForm;
-			}
-
-			if (expandedForm instanceof ListStruct) {
+			if (expandedForm instanceof ConsStruct) {
 				final ListStruct expandedFormList = (ListStruct) expandedForm;
 
 				final LispStruct expandedFormListFirst = expandedFormList.getFirst();
@@ -136,21 +132,23 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 				} else {
 					throw new ProgramErrorException("SA LIST: First element of expanded form must be a SpecialOperator or of type SymbolStruct. Got: " + expandedFormListFirst);
 				}
+			} else if (expandedForm instanceof NullStruct) {
+				return expandedForm;
 			} else {
 				return analyzer.analyzeForm(expandedForm, analysisBuilder);
 			}
-		} else {
-			// ex ((lambda (x) (+ x 1)) 3)
-			final ListStruct firstAsList = (ListStruct) first;
+		}
 
-			final LispStruct firstOfFirstList = firstAsList.getFirst();
-			if (firstOfFirstList.equals(SpecialOperator.LAMBDA)) {
-				final LambdaEnvironmentLispStruct lambdaAnalyzed = lambdaAnalyzer.analyze(analyzer, firstAsList, analysisBuilder);
-				final ListStruct functionArguments = input.getRest();
-				return analyzedLambdaFunctionCall(analyzer, analysisBuilder, lambdaAnalyzed, functionArguments);
-			} else {
-				throw new ProgramErrorException("SA LIST: First element of a first element ListStruct must be the SpecialOperator 'LAMBDA'. Got: " + firstOfFirstList);
-			}
+		// ex ((lambda (x) (+ x 1)) 3)
+		final ListStruct firstAsList = (ListStruct) first;
+
+		final LispStruct firstOfFirstList = firstAsList.getFirst();
+		if (firstOfFirstList.equals(SpecialOperator.LAMBDA)) {
+			final LambdaEnvironmentLispStruct lambdaAnalyzed = lambdaAnalyzer.analyze(analyzer, firstAsList, analysisBuilder);
+			final ListStruct functionArguments = input.getRest();
+			return analyzedLambdaFunctionCall(analyzer, analysisBuilder, lambdaAnalyzed, functionArguments);
+		} else {
+			throw new ProgramErrorException("SA LIST: First element of a first element ListStruct must be the SpecialOperator 'LAMBDA'. Got: " + firstOfFirstList);
 		}
 	}
 

@@ -84,7 +84,7 @@ public class DeclareAnalyzer implements SpecialOperatorAnalyzer {
 
 			final SymbolStruct<?> sym = (SymbolStruct) declSpecBodyElement;
 
-			symbolStructAnalyzer.analyze(sym, analysisBuilder, true);
+			symbolStructAnalyzer.analyzeDynamicSymbol(sym, analysisBuilder);
 
 			final SpecialDeclarationElement specialDeclarationElement = new SpecialDeclarationElement(sym);
 			specialDeclarationElements.add(specialDeclarationElement);

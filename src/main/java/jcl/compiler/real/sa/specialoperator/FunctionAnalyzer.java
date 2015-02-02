@@ -49,7 +49,7 @@ public class FunctionAnalyzer implements SpecialOperatorAnalyzer {
 			final Environment fnBinding = EnvironmentAccessor.getBindingEnvironment(parentEnvironment, functionSymbol, false);
 
 			if (fnBinding.equals(Environment.NULL)) {
-				symbolStructAnalyzer.analyze(functionSymbol, analysisBuilder, functionSymbol.isSpecial());
+				symbolStructAnalyzer.analyzeLexicalSymbol(functionSymbol, analysisBuilder);
 				return input;
 			} else {
 				final Optional<Binding> binding = fnBinding.getBinding(functionSymbol);

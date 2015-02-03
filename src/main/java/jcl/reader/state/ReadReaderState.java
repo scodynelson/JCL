@@ -28,6 +28,11 @@ import org.springframework.stereotype.Component;
 class ReadReaderState implements ReaderState {
 
 	/**
+	 * Serializable Version Unique Identifier.
+	 */
+	private static final long serialVersionUID = 5191264706029366940L;
+
+	/**
 	 * {@link ReaderStateMediator} singleton used by the reader algorithm.
 	 */
 	@Autowired

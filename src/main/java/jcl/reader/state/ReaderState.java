@@ -12,6 +12,7 @@ import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
 import jcl.reader.struct.ReadtableCase;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -39,7 +40,12 @@ import java.util.List;
  * This site is the Reader Algorithm that is outlined within the CommonLisp HyperSpec (TM).
  */
 @FunctionalInterface
-interface ReaderState {
+interface ReaderState extends Serializable {
+
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
+	long serialVersionUID = -1;
 
 	/**
 	 * Determines if the provided {@code codePoint} is either null or equal to {@link CharacterConstants#EOF}.

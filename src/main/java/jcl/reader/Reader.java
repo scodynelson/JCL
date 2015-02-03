@@ -8,10 +8,12 @@ import jcl.LispStruct;
 import jcl.streams.InputStream;
 import jcl.streams.ReadPeekResult;
 
+import java.io.Serializable;
+
 /**
  * JCL Reader that handles reading in lisp tokens and parsing them as {@link LispStruct}s.
  */
-public interface Reader {
+public interface Reader extends Serializable {
 
 	/**
 	 * Reads the next {@link LispStruct} from the {@link InputStream}. This calls the overloaded {@link #read(boolean,

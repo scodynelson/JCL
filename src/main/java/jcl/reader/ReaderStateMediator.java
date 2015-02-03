@@ -6,10 +6,12 @@ package jcl.reader;
 
 import jcl.LispStruct;
 
+import java.io.Serializable;
+
 /**
  * Mediator for {@link Reader} state algorithm invocations throughout the read process.
  */
-public interface ReaderStateMediator {
+public interface ReaderStateMediator extends Serializable {
 
 	/**
 	 * Read the next {@link LispStruct} token into the provided {@link TokenBuilder} using the provided {@link Reader}.

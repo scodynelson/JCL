@@ -22,6 +22,11 @@ import org.springframework.stereotype.Component;
 class ReaderImpl implements Reader {
 
 	/**
+	 * Serializable Version Unique Identifier.
+	 */
+	private static final long serialVersionUID = -7380620097058028927L;
+
+	/**
 	 * The {@link InputStream} the ReaderImpl reads lisp tokens from.
 	 */
 	private final InputStream inputStream;

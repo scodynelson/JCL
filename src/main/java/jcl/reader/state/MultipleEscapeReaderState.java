@@ -23,6 +23,11 @@ import org.springframework.stereotype.Component;
 class MultipleEscapeReaderState implements ReaderState {
 
 	/**
+	 * Serializable Version Unique Identifier.
+	 */
+	private static final long serialVersionUID = -1425144085623715574L;
+
+	/**
 	 * {@link ReaderStateMediator} singleton used by the reader algorithm.
 	 */
 	@Autowired

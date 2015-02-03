@@ -19,6 +19,11 @@ import org.springframework.stereotype.Component;
 @Component
 class IllegalCharacterReaderState implements ReaderState {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
+	private static final long serialVersionUID = 6789972435089995401L;
+
 	@Override
 	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
 		final Integer codePoint = tokenBuilder.getPreviousReadCharacter();

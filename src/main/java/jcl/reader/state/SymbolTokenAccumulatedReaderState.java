@@ -63,6 +63,11 @@ import java.util.Map;
 @Component
 class SymbolTokenAccumulatedReaderState implements ReaderState {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
+	private static final long serialVersionUID = 4237075506539486959L;
+
 	@Override
 	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
 

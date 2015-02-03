@@ -12,6 +12,8 @@ import java.util.List;
 @Component
 public class FletAnalyzer extends InnerFunctionAnalyzer<FletElement, FletElement.FletVar> {
 
+	private static final long serialVersionUID = -3183832254183452606L;
+
 	protected FletAnalyzer() {
 		super("FLET", Marker.FLET, false);
 	}

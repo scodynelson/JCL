@@ -8,6 +8,7 @@ import jcl.LispStruct;
 import jcl.compiler.real.environment.DynamicEnvironment;
 import jcl.symbols.SymbolStruct;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class ProgvElement implements Element {
@@ -25,10 +26,12 @@ public class ProgvElement implements Element {
 		this.dynamicEnvironment = dynamicEnvironment;
 	}
 
-	public static class ProgvVar {
+	public static class ProgvVar implements Serializable {
 
-		private SymbolStruct<?> var;
-		private LispStruct val;
+		private static final long serialVersionUID = -5131005121770228469L;
+
+		private final SymbolStruct<?> var;
+		private final LispStruct val;
 
 		public ProgvVar(final SymbolStruct<?> var, final LispStruct val) {
 			this.var = var;

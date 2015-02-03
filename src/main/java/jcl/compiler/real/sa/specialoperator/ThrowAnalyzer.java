@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ThrowAnalyzer implements SpecialOperatorAnalyzer {
 
+	private static final long serialVersionUID = 359191567361134081L;
+
 	@Override
 	public ThrowElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 

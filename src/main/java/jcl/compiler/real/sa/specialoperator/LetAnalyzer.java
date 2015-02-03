@@ -26,6 +26,8 @@ import java.util.stream.Collectors;
 @Component
 public class LetAnalyzer implements SpecialOperatorAnalyzer {
 
+	private static final long serialVersionUID = 2933802423859476026L;
+
 	@Autowired
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
 

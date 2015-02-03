@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class IfAnalyzer implements SpecialOperatorAnalyzer {
 
+	private static final long serialVersionUID = -5414856145190749144L;
+
 	@Override
 	public IfElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 

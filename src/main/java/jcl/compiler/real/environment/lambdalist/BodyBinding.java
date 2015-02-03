@@ -9,6 +9,8 @@ import jcl.types.List;
 
 public class BodyBinding extends EnvironmentBinding {
 
+	private static final long serialVersionUID = 491035484834969841L;
+
 	public BodyBinding(final SymbolStruct<?> symbolStruct, final ParameterAllocation allocation, final LispStruct initForm) {
 		super(symbolStruct, allocation, Scope.LEXICAL, List.INSTANCE, initForm);
 	}

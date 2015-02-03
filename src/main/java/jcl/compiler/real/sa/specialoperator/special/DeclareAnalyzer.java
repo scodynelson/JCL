@@ -20,6 +20,8 @@ import java.util.List;
 @Component
 public class DeclareAnalyzer implements SpecialOperatorAnalyzer {
 
+	private static final long serialVersionUID = -27949883247210201L;
+
 	@Autowired
 	private DynamicSymbolStructAnalyzer dynamicSymbolStructAnalyzer;
 

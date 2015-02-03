@@ -5,6 +5,8 @@ import jcl.symbols.SymbolStruct;
 
 public class SymbolBinding extends Binding {
 
+	private static final long serialVersionUID = -3462756070576114237L;
+
 	private final Environment<?> binding;
 
 	public SymbolBinding(final SymbolStruct<?> symbolStruct, final Allocation allocation, final Scope scope,

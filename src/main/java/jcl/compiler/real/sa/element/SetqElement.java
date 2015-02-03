@@ -7,6 +7,7 @@ package jcl.compiler.real.sa.element;
 import jcl.LispStruct;
 import jcl.symbols.SymbolStruct;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class SetqElement implements Element {
@@ -19,7 +20,9 @@ public class SetqElement implements Element {
 		this.setqPairs = setqPairs;
 	}
 
-	public static class SetqPair {
+	public static class SetqPair implements Serializable {
+
+		private static final long serialVersionUID = -7804939280136663517L;
 
 		private final SymbolStruct<?> var;
 		private final LispStruct form;

@@ -6,7 +6,7 @@ package jcl.compiler.real.sa.element.declaration;
 
 import jcl.symbols.SymbolStruct;
 
-public class SpecialDeclarationElement extends DeclarationElement {
+public class SpecialDeclarationElement implements DeclarationElement {
 
 	private static final long serialVersionUID = 7353657327204677544L;
 

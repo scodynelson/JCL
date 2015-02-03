@@ -3,9 +3,12 @@ package jcl.compiler.real.environment.lambdalist;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class OrdinaryLambdaListBindings {
+public class OrdinaryLambdaListBindings implements Serializable {
+
+	private static final long serialVersionUID = 3980582571605022674L;
 
 	private final List<RequiredBinding> requiredBindings;
 	private final List<OptionalBinding> optionalBindings;

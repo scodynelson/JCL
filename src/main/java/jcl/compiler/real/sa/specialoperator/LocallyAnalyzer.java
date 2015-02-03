@@ -19,6 +19,8 @@ import java.util.stream.Collectors;
 @Component
 public class LocallyAnalyzer implements SpecialOperatorAnalyzer {
 
+	private static final long serialVersionUID = 8925649944409732052L;
+
 	@Autowired
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
 

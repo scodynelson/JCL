@@ -25,6 +25,8 @@ import java.util.stream.Collectors;
 @Component
 public class SymbolMacroletAnalyzer implements SpecialOperatorAnalyzer {
 
+	private static final long serialVersionUID = 3878455475225336840L;
+
 	@Autowired
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
 

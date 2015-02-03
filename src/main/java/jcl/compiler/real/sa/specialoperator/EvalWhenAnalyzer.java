@@ -23,6 +23,8 @@ import java.util.Set;
 @Component
 public class EvalWhenAnalyzer implements SpecialOperatorAnalyzer {
 
+	private static final long serialVersionUID = -7301369273443154417L;
+
 	@Autowired
 	private BodyAnalyzer bodyAnalyzer;
 

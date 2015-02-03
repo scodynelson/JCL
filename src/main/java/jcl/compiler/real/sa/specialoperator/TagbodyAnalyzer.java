@@ -28,6 +28,8 @@ import java.util.stream.Collectors;
 @Component
 public class TagbodyAnalyzer implements SpecialOperatorAnalyzer {
 
+	private static final long serialVersionUID = -1543233114989622747L;
+
 	@Override
 	public TagbodyElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
@@ -61,7 +63,7 @@ public class TagbodyAnalyzer implements SpecialOperatorAnalyzer {
 		return (element instanceof SymbolStruct) || (element instanceof NumberStruct);
 	}
 
-	private static class TagbodyCollector implements Collector<LispStruct, Map<LispStruct, List<LispStruct>>, Map<LispStruct, List<LispStruct>>> {
+	private static final class TagbodyCollector implements Collector<LispStruct, Map<LispStruct, List<LispStruct>>, Map<LispStruct, List<LispStruct>>> {
 
 		private final SemanticAnalyzer analyzer;
 

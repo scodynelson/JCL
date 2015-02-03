@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class DefstructAnalyzer implements SpecialOperatorAnalyzer {
 
+	private static final long serialVersionUID = 5336983779662053736L;
+
 	@Override
 	public ListStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 		return input;

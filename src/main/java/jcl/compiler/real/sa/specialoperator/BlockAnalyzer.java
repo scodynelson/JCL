@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 @Component
 public class BlockAnalyzer implements SpecialOperatorAnalyzer {
 
+	private static final long serialVersionUID = -5185467468586381117L;
+
 	@Override
 	public BlockElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 

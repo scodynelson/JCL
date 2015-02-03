@@ -27,7 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
-public class LambdaListParser {
+public final class LambdaListParser {
 
 	private static final SymbolStruct<?> AND_OPTIONAL = GlobalPackageStruct.KEYWORD.intern("&OPTIONAL").getSymbolStruct();
 	private static final SymbolStruct<?> AND_REST = GlobalPackageStruct.KEYWORD.intern("&REST").getSymbolStruct();
@@ -38,6 +38,9 @@ public class LambdaListParser {
 	private static final SymbolStruct<?> AND_WHOLE = GlobalPackageStruct.KEYWORD.intern("&WHOLE").getSymbolStruct();
 	private static final SymbolStruct<?> AND_BODY = GlobalPackageStruct.KEYWORD.intern("&BODY").getSymbolStruct();
 	private static final SymbolStruct<?> AND_ENVIRONMENT = GlobalPackageStruct.KEYWORD.intern("&ENVIRONMENT").getSymbolStruct();
+
+	private LambdaListParser() {
+	}
 
 	public static OrdinaryLambdaListBindings parseOrdinaryLambdaList(final SemanticAnalyzer semanticAnalyzer,
 	                                                                 final AnalysisBuilder analysisBuilder,
@@ -467,7 +470,7 @@ public class LambdaListParser {
 		private final LispStruct currentElement;
 		private final int currentPosition;
 
-		protected ParseResult(final LispStruct currentElement, final int currentPosition) {
+		ParseResult(final LispStruct currentElement, final int currentPosition) {
 			this.currentElement = currentElement;
 			this.currentPosition = currentPosition;
 		}
@@ -481,7 +484,7 @@ public class LambdaListParser {
 		}
 	}
 
-	private static class RequiredParseResult extends ParseResult {
+	private static final class RequiredParseResult extends ParseResult {
 
 		private final List<RequiredBinding> requiredBindings;
 
@@ -495,7 +498,7 @@ public class LambdaListParser {
 		}
 	}
 
-	private static class OptionalParseResult extends ParseResult {
+	private static final class OptionalParseResult extends ParseResult {
 
 		private final List<OptionalBinding> optionalBindings;
 
@@ -509,7 +512,7 @@ public class LambdaListParser {
 		}
 	}
 
-	private static class RestParseResult extends ParseResult {
+	private static final class RestParseResult extends ParseResult {
 
 		private final RestBinding restBinding;
 
@@ -523,7 +526,7 @@ public class LambdaListParser {
 		}
 	}
 
-	private static class KeyParseResult extends ParseResult {
+	private static final class KeyParseResult extends ParseResult {
 
 		private final List<KeyBinding> keyBindings;
 		private final boolean allowOtherKeys;
@@ -544,7 +547,7 @@ public class LambdaListParser {
 		}
 	}
 
-	private static class AuxParseResult extends ParseResult {
+	private static final class AuxParseResult extends ParseResult {
 
 		private final List<AuxBinding> auxBindings;
 

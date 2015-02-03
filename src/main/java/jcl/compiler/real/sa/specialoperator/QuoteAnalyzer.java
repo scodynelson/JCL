@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
 @Component
 public class QuoteAnalyzer implements SpecialOperatorAnalyzer {
 
+	private static final long serialVersionUID = 2741011595927247743L;
+
 	@Autowired
 	private LoadTimeValueAnalyzer loadTimeValueAnalyzer;
 

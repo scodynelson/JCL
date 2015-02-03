@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 @Component
 public class CatchAnalyzer implements SpecialOperatorAnalyzer {
 
+	private static final long serialVersionUID = -4421664278117234704L;
+
 	@Override
 	public CatchElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 

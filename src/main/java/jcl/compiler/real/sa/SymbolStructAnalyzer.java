@@ -21,7 +21,7 @@ abstract class SymbolStructAnalyzer {
 	 *
 	 * @return The lambda enclosing the given environment.
 	 */
-	protected static LexicalEnvironment getEnclosingLambda(final LexicalEnvironment lexicalEnvironment) {
+	static LexicalEnvironment getEnclosingLambda(final LexicalEnvironment lexicalEnvironment) {
 
 		LexicalEnvironment currentLexicalEnvironment = lexicalEnvironment;
 

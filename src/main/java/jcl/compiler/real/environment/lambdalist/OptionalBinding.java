@@ -9,6 +9,8 @@ import jcl.types.T;
 
 public class OptionalBinding extends EnvironmentBinding {
 
+	private static final long serialVersionUID = 3357381481589151323L;
+
 	private final SuppliedPBinding suppliedPBinding;
 
 	public OptionalBinding(final SymbolStruct<?> symbolStruct, final ParameterAllocation allocation, final LispStruct initForm,

@@ -24,6 +24,8 @@ import java.util.UUID;
 @Component
 public class LoadTimeValueAnalyzer implements SpecialOperatorAnalyzer {
 
+	private static final long serialVersionUID = 2168018740373766746L;
+
 	@Override
 	public LoadTimeValueElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 

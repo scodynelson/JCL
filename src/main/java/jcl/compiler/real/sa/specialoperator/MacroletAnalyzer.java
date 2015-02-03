@@ -12,6 +12,8 @@ import java.util.List;
 @Component
 public class MacroletAnalyzer extends InnerFunctionAnalyzer<MacroletElement, MacroletElement.MacroletVar> {
 
+	private static final long serialVersionUID = 920568167525914860L;
+
 	protected MacroletAnalyzer() {
 		super("MACROLET", Marker.MACROLET, true);
 	}

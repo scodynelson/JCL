@@ -15,6 +15,8 @@ import java.util.List;
 @Component
 public class UnwindProtectAnalyzer implements SpecialOperatorAnalyzer {
 
+	private static final long serialVersionUID = 3379320303375207710L;
+
 	@Autowired
 	private BodyAnalyzer bodyAnalyzer;
 

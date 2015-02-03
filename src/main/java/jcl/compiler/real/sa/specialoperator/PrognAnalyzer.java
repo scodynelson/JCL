@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 @Component
 public class PrognAnalyzer implements SpecialOperatorAnalyzer {
 
+	private static final long serialVersionUID = -2851059577992887882L;
+
 	@Override
 	public PrognElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 

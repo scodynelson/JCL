@@ -8,6 +8,7 @@ import jcl.LispStruct;
 import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.symbols.SymbolStruct;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class LetElement implements Element {
@@ -25,10 +26,12 @@ public class LetElement implements Element {
 		this.lexicalEnvironment = lexicalEnvironment;
 	}
 
-	public static class LetVar {
+	public static class LetVar implements Serializable {
 
-		private SymbolStruct<?> var;
-		private LispStruct initForm;
+		private static final long serialVersionUID = 3246152127057600416L;
+
+		private final SymbolStruct<?> var;
+		private final LispStruct initForm;
 
 		public LetVar(final SymbolStruct<?> var, final LispStruct initForm) {
 			this.var = var;

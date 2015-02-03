@@ -31,6 +31,8 @@ import java.util.stream.Collectors;
 @Component
 public class LambdaAnalyzer implements SpecialOperatorAnalyzer {
 
+	private static final long serialVersionUID = -7592502247452528911L;
+
 	@Autowired
 	private BodyWithDeclaresAndDocStringAnalyzer bodyWithDeclaresAndDocStringAnalyzer;
 

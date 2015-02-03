@@ -22,6 +22,8 @@ import java.util.Stack;
 @Component
 public class ProgvAnalyzer implements SpecialOperatorAnalyzer {
 
+	private static final long serialVersionUID = 2755221428467421207L;
+
 	@Autowired
 	private BodyAnalyzer bodyAnalyzer;
 

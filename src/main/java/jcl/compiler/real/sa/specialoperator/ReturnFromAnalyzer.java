@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ReturnFromAnalyzer implements SpecialOperatorAnalyzer {
 
+	private static final long serialVersionUID = 3328790948675693554L;
+
 	@Override
 	public ReturnFromElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 

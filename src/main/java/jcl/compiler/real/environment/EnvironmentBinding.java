@@ -6,6 +6,8 @@ import jcl.symbols.SymbolStruct;
 
 public class EnvironmentBinding extends Binding {
 
+	private static final long serialVersionUID = 2910922877559341453L;
+
 	private final LispStruct initForm;
 
 	public EnvironmentBinding(final SymbolStruct<?> symbolStruct, final ParameterAllocation allocation, final Scope scope,

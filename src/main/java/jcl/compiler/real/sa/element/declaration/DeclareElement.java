@@ -13,12 +13,9 @@ public class DeclareElement implements Element {
 
 	private static final long serialVersionUID = -7730761501615283012L;
 
-	private List<SpecialDeclarationElement> specialDeclarationElements;
+	private List<SpecialDeclarationElement> specialDeclarationElements = new ArrayList<>();
 
 	public List<SpecialDeclarationElement> getSpecialDeclarationElements() {
-		if (specialDeclarationElements == null) {
-			specialDeclarationElements = new ArrayList<>();
-		}
 		return specialDeclarationElements;
 	}
 }

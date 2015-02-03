@@ -10,6 +10,8 @@ import jcl.types.T;
 
 public class KeyBinding extends EnvironmentBinding {
 
+	private static final long serialVersionUID = -8247621420473541525L;
+
 	private final KeywordSymbolStruct keyName;
 	private final SuppliedPBinding suppliedPBinding;
 

@@ -28,9 +28,11 @@ import java.util.stream.Collectors;
 @Component
 abstract class InnerFunctionAnalyzer<T extends InnerFunctionElement, S extends InnerFunctionElement.InnerFunctionVar> implements SpecialOperatorAnalyzer {
 
-	protected final String analyzerName;
-	protected final Marker marker;
-	protected final boolean getFunctionNamesBeforeInitForms;
+	private static final long serialVersionUID = -142718897684745213L;
+
+	private final String analyzerName;
+	private final Marker marker;
+	private final boolean getFunctionNamesBeforeInitForms;
 
 	@Autowired
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;

@@ -15,6 +15,8 @@ import java.util.List;
 @Component
 public class SetqAnalyzer implements SpecialOperatorAnalyzer {
 
+	private static final long serialVersionUID = 5324580926862048137L;
+
 	@Override
 	public SetqElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 

@@ -98,6 +98,8 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		STRATEGIES.put(SpecialOperator.DEFSTRUCT, DefstructAnalyzer.class);
 	}
 
+	private static final long serialVersionUID = 5454983196467731873L;
+
 	@Autowired
 	private LambdaAnalyzer lambdaAnalyzer;
 
@@ -204,7 +206,7 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		final boolean hasFunctionBinding = hasFunctionBinding(currentLexicalEnvironment, functionSymbol);
 
-		return new FunctionCallElement(hasFunctionBinding, null, analyzedFunctionArguments);
+		return new FunctionCallElement(hasFunctionBinding, functionSymbol, analyzedFunctionArguments);
 	}
 
 	private static boolean hasFunctionBinding(final LexicalEnvironment lexicalEnvironment, final SymbolStruct<?> variable) {

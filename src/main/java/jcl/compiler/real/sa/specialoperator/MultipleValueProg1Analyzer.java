@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 @Component
 public class MultipleValueProg1Analyzer implements SpecialOperatorAnalyzer {
 
+	private static final long serialVersionUID = 1791554561862006171L;
+
 	@Override
 	public MultipleValueProg1Element analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 

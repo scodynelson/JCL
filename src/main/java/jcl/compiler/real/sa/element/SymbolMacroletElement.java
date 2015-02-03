@@ -8,6 +8,7 @@ import jcl.LispStruct;
 import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.symbols.SymbolStruct;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class SymbolMacroletElement implements Element {
@@ -25,10 +26,12 @@ public class SymbolMacroletElement implements Element {
 		this.lexicalEnvironment = lexicalEnvironment;
 	}
 
-	public static class SymbolMacroletElementVar {
+	public static class SymbolMacroletElementVar implements Serializable {
 
-		private SymbolStruct<?> var;
-		private LispStruct expansion;
+		private static final long serialVersionUID = -601687250765470819L;
+
+		private final SymbolStruct<?> var;
+		private final LispStruct expansion;
 
 		public SymbolMacroletElementVar(final SymbolStruct<?> var, final LispStruct expansion) {
 			this.var = var;

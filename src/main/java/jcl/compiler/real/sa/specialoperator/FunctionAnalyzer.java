@@ -23,6 +23,8 @@ import java.util.Stack;
 @Component
 public class FunctionAnalyzer implements SpecialOperatorAnalyzer {
 
+	private static final long serialVersionUID = -8290125563768560922L;
+
 	@Autowired
 	private LexicalSymbolStructAnalyzer lexicalSymbolStructAnalyzer;
 

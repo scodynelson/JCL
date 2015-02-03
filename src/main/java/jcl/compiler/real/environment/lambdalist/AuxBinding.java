@@ -9,6 +9,8 @@ import jcl.types.T;
 
 public class AuxBinding extends EnvironmentBinding {
 
+	private static final long serialVersionUID = 6424631350711831345L;
+
 	public AuxBinding(final SymbolStruct<?> symbolStruct, final ParameterAllocation allocation, final LispStruct initForm) {
 		super(symbolStruct, allocation, Scope.LEXICAL, T.INSTANCE, initForm);
 	}

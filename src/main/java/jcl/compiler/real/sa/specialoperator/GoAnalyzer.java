@@ -17,6 +17,8 @@ import java.util.Stack;
 @Component
 public class GoAnalyzer implements SpecialOperatorAnalyzer {
 
+	private static final long serialVersionUID = -6523523596100793498L;
+
 	@Override
 	public GoElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 

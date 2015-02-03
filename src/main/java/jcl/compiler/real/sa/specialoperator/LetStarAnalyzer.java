@@ -17,6 +17,8 @@ import java.util.ListIterator;
 @Component
 public class LetStarAnalyzer implements SpecialOperatorAnalyzer {
 
+	private static final long serialVersionUID = 6456555635583825339L;
+
 	@Autowired
 	private LetAnalyzer letAnalyzer;
 

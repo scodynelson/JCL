@@ -12,6 +12,8 @@ import java.util.List;
 @Component
 public class LabelsAnalyzer extends InnerFunctionAnalyzer<LabelsElement, LabelsElement.LabelsVar> {
 
+	private static final long serialVersionUID = -3698985413039911540L;
+
 	protected LabelsAnalyzer() {
 		super("LABELS", Marker.LABELS, true);
 	}

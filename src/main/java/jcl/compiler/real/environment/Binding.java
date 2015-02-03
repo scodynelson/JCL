@@ -5,7 +5,11 @@ import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public abstract class Binding {
+import java.io.Serializable;
+
+public abstract class Binding implements Serializable {
+
+	private static final long serialVersionUID = 5776546981120800982L;
 
 	private final SymbolStruct<?> symbolStruct;
 	private final Allocation allocation;

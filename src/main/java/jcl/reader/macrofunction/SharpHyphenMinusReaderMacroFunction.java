@@ -19,6 +19,9 @@ import java.math.BigInteger;
 @Component
 public class SharpHyphenMinusReaderMacroFunction extends ReaderMacroFunctionImpl {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = -582954823547720438L;
 
 	/**

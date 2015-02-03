@@ -33,6 +33,9 @@ import java.util.List;
 @Component
 public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = -3446360583440445990L;
 
 	/**

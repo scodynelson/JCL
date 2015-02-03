@@ -6,6 +6,7 @@ package jcl.reader;
 
 import jcl.LispStruct;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 
 /**
@@ -13,7 +14,12 @@ import java.math.BigInteger;
  * {@link Integer} code point.
  */
 @FunctionalInterface
-public interface ReaderMacroFunction {
+public interface ReaderMacroFunction extends Serializable {
+
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
+	long serialVersionUID = -1L;
 
 	/**
 	 * Interpret the character stream from the provided {@link Reader} (up to End-of-File or new line) based on the

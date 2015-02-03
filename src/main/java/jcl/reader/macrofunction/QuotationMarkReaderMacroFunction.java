@@ -27,6 +27,9 @@ import java.math.BigInteger;
 @Component
 public class QuotationMarkReaderMacroFunction extends ReaderMacroFunctionImpl {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = -1864699043486615339L;
 
 	/**

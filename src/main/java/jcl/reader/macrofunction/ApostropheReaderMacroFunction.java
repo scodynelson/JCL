@@ -24,6 +24,9 @@ import java.math.BigInteger;
 @Component
 public class ApostropheReaderMacroFunction extends ReaderMacroFunctionImpl {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = 1319912697712324737L;
 
 	/**

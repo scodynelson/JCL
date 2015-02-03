@@ -18,6 +18,9 @@ import jcl.reader.struct.ReaderVariables;
  */
 abstract class ReaderMacroFunctionImpl extends FunctionStruct implements ReaderMacroFunction {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = -5244042303586458372L;
 
 	@Override

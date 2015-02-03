@@ -20,6 +20,9 @@ import java.math.BigInteger;
 @Component
 public class SemicolonReaderMacroFunction extends ReaderMacroFunctionImpl {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = -1979907255889244298L;
 
 	/**

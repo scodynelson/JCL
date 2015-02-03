@@ -21,6 +21,9 @@ import java.math.BigInteger;
 @Component
 public class SharpIllegalReaderMacroFunction extends ReaderMacroFunctionImpl {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = -1390417313760372220L;
 
 	/**

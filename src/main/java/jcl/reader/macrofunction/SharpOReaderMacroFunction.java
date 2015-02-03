@@ -20,6 +20,9 @@ import java.math.BigInteger;
 @Component
 public class SharpOReaderMacroFunction extends ReaderMacroFunctionImpl {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = -4542804122362790387L;
 
 	/**

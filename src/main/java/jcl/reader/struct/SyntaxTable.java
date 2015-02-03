@@ -10,6 +10,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -17,7 +18,12 @@ import java.util.concurrent.ConcurrentHashMap;
  * Represents a lookup table for {@link SyntaxType}s matching {@link Integer} code points.
  */
 @SuppressWarnings("all")
-class SyntaxTable {
+class SyntaxTable implements Serializable {
+
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
+	private static final long serialVersionUID = -1601554796943634405L;
 
 	/**
 	 * The logger for this class.

@@ -29,6 +29,9 @@ import java.net.URISyntaxException;
 @Component
 public class SharpPReaderMacroFunction extends ReaderMacroFunctionImpl {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = 3962629854177635283L;
 
 	/**

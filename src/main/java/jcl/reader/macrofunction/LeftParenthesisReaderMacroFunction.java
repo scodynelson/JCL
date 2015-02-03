@@ -19,6 +19,9 @@ import java.math.BigInteger;
 @Component
 public class LeftParenthesisReaderMacroFunction extends ReaderMacroFunctionImpl {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = 8364282884759641778L;
 
 	/**

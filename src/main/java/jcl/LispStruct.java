@@ -9,6 +9,9 @@ import java.io.Serializable;
  */
 public interface LispStruct extends Serializable {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	long serialVersionUID = -1L;
 
 	/**

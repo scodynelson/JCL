@@ -23,6 +23,9 @@ import java.math.BigInteger;
 @Component
 public class SharpColonReaderMacroFunction extends ReaderMacroFunctionImpl {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = -7264077548468382838L;
 
 	/**

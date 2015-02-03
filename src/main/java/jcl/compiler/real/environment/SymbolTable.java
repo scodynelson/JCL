@@ -17,6 +17,11 @@ public class SymbolTable {
 		return bindings;
 	}
 
+	public boolean hasBinding(final SymbolStruct<?> symbolStruct) {
+		return bindings.stream()
+		               .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct));
+	}
+
 	public Optional<SymbolBinding> getBinding(final SymbolStruct<?> symbolStruct) {
 		return bindings.stream()
 		               .filter(e -> e.getSymbolStruct().equals(symbolStruct))

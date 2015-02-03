@@ -13,7 +13,8 @@ public enum Marker {
 	LET,
 	FLET,
 	LABELS,
-	LOCALLY;
+	LOCALLY,
+	SYMBOL_MACROLET;
 
 	public static final Set<Marker> BINDING_MARKERS = EnumSet.of(LAMBDA, LET, MACROLET);
 	public static final Set<Marker> LAMBDA_MARKERS = EnumSet.of(LAMBDA, FLET, LABELS);

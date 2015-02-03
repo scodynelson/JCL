@@ -40,14 +40,15 @@ public class ProgvAnalyzer implements SpecialOperatorAnalyzer {
 
 		final LispStruct second = input.getRest().getFirst();
 		if (!(second instanceof ListStruct)) {
-			throw new ProgramErrorException("PROGV: Symbols list must be of type ListStruct. Got: " + second);
+			throw new ProgramErrorException("PROGV: Symbols list must be a quoted ListStruct. Got: " + second);
 		}
 
 		final ListStruct secondListStruct = (ListStruct) second;
 		if (secondListStruct.size() != 2) {
-			throw new ProgramErrorException("PROGV: TODO: " + second);
-		} else if (!Objects.equals(secondListStruct.getFirst(), SpecialOperator.QUOTE)) {
-			throw new ProgramErrorException("PROGV: TODO: " + second);
+			throw new ProgramErrorException("PROGV: Symbols list must be properly quoted: " + second);
+		}
+		if (!Objects.equals(secondListStruct.getFirst(), SpecialOperator.QUOTE)) {
+			throw new ProgramErrorException("PROGV: Symbols list must be quoted: " + second);
 		}
 
 		final LispStruct actualVarsList = secondListStruct.getRest().getFirst();
@@ -59,7 +60,7 @@ public class ProgvAnalyzer implements SpecialOperatorAnalyzer {
 		final List<LispStruct> actualVarsJavaList = actualVarsListStruct.getAsJavaList();
 		for (final LispStruct currentVar : actualVarsJavaList) {
 			if (!(currentVar instanceof SymbolStruct)) {
-				throw new ProgramErrorException("PROGV: Element in symbols list must be of type SymbolStruct. Got: " + currentVar);
+				throw new ProgramErrorException("PROGV: Elements in symbols list must be of type SymbolStruct. Got: " + currentVar);
 			}
 		}
 
@@ -67,19 +68,20 @@ public class ProgvAnalyzer implements SpecialOperatorAnalyzer {
 
 		final LispStruct third = input.getRest().getRest().getFirst();
 		if (!(third instanceof ListStruct)) {
-			throw new ProgramErrorException("PROGV: Values list must be of type ListStruct. Got: " + third);
+			throw new ProgramErrorException("PROGV: Values list must be a quoted ListStruct. Got: " + third);
 		}
 
 		final ListStruct thirdListStruct = (ListStruct) third;
 		if (thirdListStruct.size() != 2) {
-			throw new ProgramErrorException("PROGV: TODO: " + third);
-		} else if (!Objects.equals(thirdListStruct.getFirst(), SpecialOperator.QUOTE)) {
-			throw new ProgramErrorException("PROGV: TODO: " + third);
+			throw new ProgramErrorException("PROGV: Values list must be properly quoted: " + second);
+		}
+		if (!Objects.equals(thirdListStruct.getFirst(), SpecialOperator.QUOTE)) {
+			throw new ProgramErrorException("PROGV: Values list must be quoted: " + second);
 		}
 
 		final LispStruct actualValsList = thirdListStruct.getRest().getFirst();
 		if (!(actualValsList instanceof ListStruct)) {
-			throw new ProgramErrorException("PROGV: TODO: Values list must be of type ListStruct. Got: " + actualValsList);
+			throw new ProgramErrorException("PROGV: Values list must be of type ListStruct. Got: " + actualValsList);
 		}
 
 		final ListStruct actualValsListStruct = (ListStruct) actualValsList;

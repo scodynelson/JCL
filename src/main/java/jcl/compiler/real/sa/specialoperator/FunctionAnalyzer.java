@@ -1,22 +1,23 @@
 package jcl.compiler.real.sa.specialoperator;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.Binding;
 import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.LexicalSymbolStructAnalyzer;
+import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.element.FunctionElement;
+import jcl.compiler.real.sa.element.LambdaElement;
+import jcl.compiler.real.sa.element.LambdaFunctionElement;
+import jcl.compiler.real.sa.element.SymbolFunctionElement;
 import jcl.compiler.real.sa.specialoperator.special.LambdaAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
-import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
 import java.util.Stack;
 
 @Component
@@ -29,69 +30,37 @@ public class FunctionAnalyzer implements SpecialOperatorAnalyzer {
 	private LambdaAnalyzer lambdaAnalyzer;
 
 	@Override
-	public LispStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
+	public FunctionElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
-		if (input.size() != 2) {
-			throw new ProgramErrorException("FUNCTION: Incorrect number of arguments: " + input.size() + ". Expected 2 arguments.");
+		final int inputSize = input.size();
+		if (inputSize != 2) {
+			throw new ProgramErrorException("FUNCTION: Incorrect number of arguments: " + inputSize + ". Expected 2 arguments.");
 		}
 
 		final LispStruct second = input.getRest().getFirst();
-		if (!(second instanceof SymbolStruct) && !(second instanceof ListStruct)) {
-			throw new ProgramErrorException("FUNCTION: Function argument must be of type SymbolStruct or ListStruct. Got: " + second);
-		}
-
-		final Stack<LexicalEnvironment> lexicalEnvironmentStack = analysisBuilder.getLexicalEnvironmentStack();
-		final LexicalEnvironment parentLexicalEnvironment = lexicalEnvironmentStack.peek();
 
 		if (second instanceof SymbolStruct) {
-			final SymbolStruct<?> functionSymbol = (SymbolStruct) second;
-			final LexicalEnvironment fnBinding = getBindingEnvironment(parentLexicalEnvironment, functionSymbol);
+			return analyzeFunctionSymbol(analysisBuilder, (SymbolStruct) second);
+		} else if (second instanceof ListStruct) {
+			return analyzeFunctionList(analyzer, analysisBuilder, (ListStruct) second);
+		} else {
+			throw new ProgramErrorException("FUNCTION: Function argument must be of type SymbolStruct or ListStruct. Got: " + second);
+		}
+	}
 
-			if (fnBinding.equals(LexicalEnvironment.NULL)) {
-				// TODO: we should think about what's actually happening here...
-				lexicalSymbolStructAnalyzer.analyzeSymbol(functionSymbol, analysisBuilder);
-				return input;
-			} else {
-				final Optional<Binding> binding = fnBinding.getBinding(functionSymbol);
+	private SymbolFunctionElement analyzeFunctionSymbol(final AnalysisBuilder analysisBuilder, final SymbolStruct<?> functionSymbol) {
 
-				// TODO: Refactor this a bit. This should always be true at this point. BUT, we DO want to make sure we're
-				// TODO:    not searching the NULL environment for the binding. Hmm...
-				if (binding.isPresent()) {
-					final Binding bindingValue = binding.get();
-					final SymbolStruct<?> functionBindingName = bindingValue.getSymbolStruct();
+		final Stack<LexicalEnvironment> lexicalEnvironmentStack = analysisBuilder.getLexicalEnvironmentStack();
+		final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.peek();
 
-					final LispStruct first = input.getFirst();
-					return new ConsStruct(first, functionBindingName);
-				}
+		final LexicalEnvironment bindingLexicalEnvironment = getBindingEnvironment(currentLexicalEnvironment, functionSymbol);
 
-				//TODO: what do we do here???
-				throw new ProgramErrorException("FUNCTION: Failed to find function symbol binding in environment.");
-			}
+		final boolean missingFunctionSymbolBinding = !bindingLexicalEnvironment.hasBinding(functionSymbol);
+		if (missingFunctionSymbolBinding) {
+			lexicalSymbolStructAnalyzer.analyzeSymbol(functionSymbol, analysisBuilder);
 		}
 
-		final ListStruct functionList = (ListStruct) second;
-		final LispStruct functionListFirst = functionList.getFirst();
-
-		if (functionListFirst.equals(SpecialOperator.LAMBDA)) {
-			final int tempClosureDepth = analysisBuilder.getClosureDepth();
-			final int newClosureDepth = tempClosureDepth + 1;
-
-			final LexicalEnvironment lambdaEnvironment = new LexicalEnvironment(parentLexicalEnvironment, Marker.LAMBDA, newClosureDepth);
-			lexicalEnvironmentStack.push(lambdaEnvironment);
-
-			final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
-			try {
-				analysisBuilder.setClosureDepth(newClosureDepth);
-
-				return lambdaAnalyzer.analyze(analyzer, functionList, analysisBuilder);
-			} finally {
-				analysisBuilder.setClosureDepth(tempClosureDepth);
-				analysisBuilder.setBindingsPosition(tempBindingsPosition);
-				lexicalEnvironmentStack.pop();
-			}
-		}
-
-		throw new ProgramErrorException("FUNCTION: First element of List argument must be the Symbol LAMBDA. Got: " + functionListFirst);
+		return new SymbolFunctionElement(functionSymbol);
 	}
 
 	private static LexicalEnvironment getBindingEnvironment(final LexicalEnvironment lexicalEnvironment, final SymbolStruct<?> variable) {
@@ -115,4 +84,15 @@ public class FunctionAnalyzer implements SpecialOperatorAnalyzer {
 		return currentLexicalEnvironment;
 	}
 
+	private LambdaFunctionElement analyzeFunctionList(final SemanticAnalyzer analyzer, final AnalysisBuilder analysisBuilder, final ListStruct functionList) {
+
+		final LispStruct functionListFirst = functionList.getFirst();
+
+		if (!functionListFirst.equals(SpecialOperator.LAMBDA)) {
+			throw new ProgramErrorException("FUNCTION: First element of List argument must be the Symbol LAMBDA. Got: " + functionListFirst);
+		}
+
+		final LambdaElement lambdaElement = lambdaAnalyzer.analyze(analyzer, functionList, analysisBuilder);
+		return new LambdaFunctionElement(lambdaElement);
+	}
 }

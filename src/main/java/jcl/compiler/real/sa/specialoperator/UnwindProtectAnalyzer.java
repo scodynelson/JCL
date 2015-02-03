@@ -3,14 +3,13 @@ package jcl.compiler.real.sa.specialoperator;
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.element.UnwindProtectElement;
 import jcl.compiler.real.sa.specialoperator.body.BodyAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
-import jcl.symbols.SpecialOperator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -20,20 +19,19 @@ public class UnwindProtectAnalyzer implements SpecialOperatorAnalyzer {
 	private BodyAnalyzer bodyAnalyzer;
 
 	@Override
-	public ListStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
+	public UnwindProtectElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
-		if (input.size() < 2) {
-			throw new ProgramErrorException("UNWIND-PROTECT: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
+		final int inputSize = input.size();
+		if (inputSize < 2) {
+			throw new ProgramErrorException("UNWIND-PROTECT: Incorrect number of arguments: " + inputSize + ". Expected at least 2 arguments.");
 		}
 
-		final List<LispStruct> unwindProtectResultList = new ArrayList<>();
-		unwindProtectResultList.add(SpecialOperator.UNWIND_PROTECT);
+		final LispStruct protectedForm = input.getRest().getFirst();
+		final LispStruct analyzedProtectedForm = analyzer.analyzeForm(protectedForm, analysisBuilder);
 
-		// Body includes the 'Protected Form'
-		final ListStruct body = input.getRest();
-		final List<LispStruct> analyzedBodyForms = bodyAnalyzer.analyze(analyzer, body, analysisBuilder);
-		unwindProtectResultList.addAll(analyzedBodyForms);
+		final ListStruct cleanupForms = input.getRest().getRest();
+		final List<LispStruct> analyzedCleanupForms = bodyAnalyzer.analyze(analyzer, cleanupForms, analysisBuilder);
 
-		return ListStruct.buildProperList(unwindProtectResultList);
+		return new UnwindProtectElement(analyzedProtectedForm, analyzedCleanupForms);
 	}
 }

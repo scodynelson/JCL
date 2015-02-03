@@ -17,8 +17,9 @@ public class CatchAnalyzer implements SpecialOperatorAnalyzer {
 	@Override
 	public CatchElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
-		if (input.size() < 2) {
-			throw new ProgramErrorException("CATCH: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
+		final int inputSize = input.size();
+		if (inputSize < 2) {
+			throw new ProgramErrorException("CATCH: Incorrect number of arguments: " + inputSize + ". Expected at least 2 arguments.");
 		}
 
 		final LispStruct catchTag = input.getRest().getFirst();

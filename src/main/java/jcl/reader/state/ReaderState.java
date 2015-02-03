@@ -6,10 +6,10 @@ package jcl.reader.state;
 
 import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.reader.AttributeType;
 import jcl.reader.Reader;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
-import jcl.reader.AttributeType;
 import jcl.reader.struct.ReadtableCase;
 
 import java.util.List;
@@ -40,17 +40,6 @@ import java.util.List;
  */
 @FunctionalInterface
 interface ReaderState {
-
-	/**
-	 * Used to handle reader processing in the respective state instance.
-	 *
-	 * @param reader
-	 * 		the JCL {@link Reader} instance to use for reading lisp tokens
-	 * @param tokenBuilder
-	 * 		the {@link TokenBuilder} used to build the resulting lisp token and house token parsing information throughout
-	 * 		the read process
-	 */
-	void process(Reader reader, TokenBuilder tokenBuilder);
 
 	/**
 	 * Determines if the provided {@code codePoint} is either null or equal to {@link CharacterConstants#EOF}.
@@ -187,4 +176,15 @@ interface ReaderState {
 				.findFirst()
 				.orElse(null);
 	}
+
+	/**
+	 * Used to handle reader processing in the respective state instance.
+	 *
+	 * @param reader
+	 * 		the JCL {@link Reader} instance to use for reading lisp tokens
+	 * @param tokenBuilder
+	 * 		the {@link TokenBuilder} used to build the resulting lisp token and house token parsing information throughout
+	 * 		the read process
+	 */
+	void process(Reader reader, TokenBuilder tokenBuilder);
 }

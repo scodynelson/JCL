@@ -22,15 +22,15 @@ import org.springframework.stereotype.Component;
 class ReaderImpl implements Reader {
 
 	/**
+	 * The {@link InputStream} the ReaderImpl reads lisp tokens from.
+	 */
+	private final InputStream inputStream;
+
+	/**
 	 * {@link ReaderStateMediator} singleton used by the reader algorithm.
 	 */
 	@Autowired
 	private ReaderStateMediator readerStateMediator;
-
-	/**
-	 * The {@link InputStream} the ReaderImpl reads lisp tokens from.
-	 */
-	private final InputStream inputStream;
 
 	/**
 	 * Public constructor for creating a new JCL Reader.

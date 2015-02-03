@@ -35,6 +35,7 @@ final class FeaturesReaderMacroFunction {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FeaturesReaderMacroFunction.class);
 
 	// TODO: is this where we keep these next 3???
+
 	/**
 	 * Not {@link KeywordSymbolStruct} for processing features that should 'not' be included.
 	 */

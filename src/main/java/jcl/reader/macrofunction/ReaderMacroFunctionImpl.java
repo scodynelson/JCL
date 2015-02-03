@@ -9,8 +9,8 @@ import jcl.functions.FunctionStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.reader.AttributeType;
 import jcl.reader.ReaderMacroFunction;
-import jcl.reader.struct.SyntaxType;
 import jcl.reader.struct.ReaderVariables;
+import jcl.reader.struct.SyntaxType;
 
 /**
  * Abstract implementation definition for all Reader defined macro functions that read character macros based off of a
@@ -27,33 +27,6 @@ abstract class ReaderMacroFunctionImpl extends FunctionStruct implements ReaderM
 	public LispStruct apply(final LispStruct... lispStructs) {
 		// TODO: do this
 		return null;
-	}
-
-	/**
-	 * Gets the {@link SyntaxType} for the provided {@code codePoint} from the {@link ReaderVariables#READTABLE} value.
-	 *
-	 * @param codePoint
-	 * 		the value to get the {@link SyntaxType} for from the {@link ReaderVariables#READTABLE} value
-	 *
-	 * @return the {@link SyntaxType} for the provided {@code codePoint} from {@link ReaderVariables#READTABLE} value
-	 */
-	private static SyntaxType getSyntaxType(final int codePoint) {
-		return ReaderVariables.READTABLE.getValue().getSyntaxType(codePoint);
-	}
-
-	/**
-	 * Gets the {@link AttributeType} for the provided {@code codePoint} from the {@link ReaderVariables#READTABLE}
-	 * value.
-	 *
-	 * @param codePoint
-	 * 		the value to get the {@link AttributeType} for from the {@link ReaderVariables#READTABLE} value
-	 *
-	 * @return the {@link AttributeType} for the provided {@code codePoint} from the {@link ReaderVariables#READTABLE}
-	 * value
-	 */
-	private static AttributeType getAttributeType(final int codePoint) {
-		final IntegerStruct readBase = ReaderVariables.READ_BASE.getValue();
-		return ReaderVariables.READTABLE.getValue().getAttributeType(codePoint, readBase);
 	}
 
 	/**
@@ -89,6 +62,18 @@ abstract class ReaderMacroFunctionImpl extends FunctionStruct implements ReaderM
 	}
 
 	/**
+	 * Gets the {@link SyntaxType} for the provided {@code codePoint} from the {@link ReaderVariables#READTABLE} value.
+	 *
+	 * @param codePoint
+	 * 		the value to get the {@link SyntaxType} for from the {@link ReaderVariables#READTABLE} value
+	 *
+	 * @return the {@link SyntaxType} for the provided {@code codePoint} from {@link ReaderVariables#READTABLE} value
+	 */
+	private static SyntaxType getSyntaxType(final int codePoint) {
+		return ReaderVariables.READTABLE.getValue().getSyntaxType(codePoint);
+	}
+
+	/**
 	 * Determines if the provided {@code codePoint} is a {@link SyntaxType#WHITESPACE} or {@link
 	 * SyntaxType#TERMINATING} based on the current readtable.
 	 *
@@ -121,5 +106,20 @@ abstract class ReaderMacroFunctionImpl extends FunctionStruct implements ReaderM
 			returnVal = returnVal || (getAttributeType(codePoint) == attributeType);
 		}
 		return returnVal;
+	}
+
+	/**
+	 * Gets the {@link AttributeType} for the provided {@code codePoint} from the {@link ReaderVariables#READTABLE}
+	 * value.
+	 *
+	 * @param codePoint
+	 * 		the value to get the {@link AttributeType} for from the {@link ReaderVariables#READTABLE} value
+	 *
+	 * @return the {@link AttributeType} for the provided {@code codePoint} from the {@link ReaderVariables#READTABLE}
+	 * value
+	 */
+	private static AttributeType getAttributeType(final int codePoint) {
+		final IntegerStruct readBase = ReaderVariables.READ_BASE.getValue();
+		return ReaderVariables.READTABLE.getValue().getAttributeType(codePoint, readBase);
 	}
 }

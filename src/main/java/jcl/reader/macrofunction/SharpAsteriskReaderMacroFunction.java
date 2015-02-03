@@ -84,18 +84,6 @@ public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	/**
-	 * Determines whether or not the provided {@code value} is a valid bit (aka. a '0' or a '1').
-	 *
-	 * @param value
-	 * 		the value to check whether or not is a valid bit
-	 *
-	 * @return true if the provided {@code value} is an invalid bit; false otherwise
-	 */
-	private static boolean isInvalidBit(final int value) {
-		return (value != 0) && (value != 1);
-	}
-
-	/**
 	 * Handles the processing of the number argument when parsing the provided {@code token} string into a {@link
 	 * BitVectorStruct}.
 	 *
@@ -175,5 +163,17 @@ public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunctionImpl {
 		            .mapToObj(BigInteger::valueOf)
 		            .map(IntegerStruct::new)
 		            .collect(Collectors.toList());
+	}
+
+	/**
+	 * Determines whether or not the provided {@code value} is a valid bit (aka. a '0' or a '1').
+	 *
+	 * @param value
+	 * 		the value to check whether or not is a valid bit
+	 *
+	 * @return true if the provided {@code value} is an invalid bit; false otherwise
+	 */
+	private static boolean isInvalidBit(final int value) {
+		return (value != 0) && (value != 1);
 	}
 }

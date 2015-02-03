@@ -86,24 +86,21 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * Getter for readtable {@link #readtableCase} property.
-	 *
-	 * @return readtable {@link #readtableCase} property
-	 */
-	public ReadtableCase getReadtableCase() {
-		return readtableCase;
-	}
-
-	/**
-	 * Retrieves the {@link ReaderMacroFunction} for the provided {@code codePoint}.
+	 * Creates a new {@link DispatchTable} for the provided {@code codePoint}, designating the {@link SyntaxType} as
+	 * terminating if the provided {@code nonTerminatingP} is false.
 	 *
 	 * @param codePoint
-	 * 		the key for the {@link ReaderMacroFunction}
+	 * 		the key for the new {@link DispatchTable}
+	 * @param nonTerminatingP
+	 * 		true if the character should be non-terminating; false otherwise
 	 *
-	 * @return the {@link ReaderMacroFunction} for the provided {@code codePoint}
+	 * @return the value of {@code nonTerminatingP}
 	 */
-	public ReaderMacroFunction getMacroCharacter(final int codePoint) {
-		return macroTableMap.get(codePoint);
+	public boolean makeDispatchMacroCharacter(final int codePoint, final boolean nonTerminatingP) {
+		final DispatchTable dispatchTable = new DispatchTable();
+		setMacroCharacter(codePoint, dispatchTable, nonTerminatingP);
+		dispatchTableMap.put(codePoint, dispatchTable);
+		return nonTerminatingP;
 	}
 
 	/**
@@ -126,21 +123,24 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	}
 
 	/**
-	 * Creates a new {@link DispatchTable} for the provided {@code codePoint}, designating the {@link SyntaxType} as
-	 * terminating if the provided {@code nonTerminatingP} is false.
+	 * Getter for readtable {@link #readtableCase} property.
+	 *
+	 * @return readtable {@link #readtableCase} property
+	 */
+	public ReadtableCase getReadtableCase() {
+		return readtableCase;
+	}
+
+	/**
+	 * Retrieves the {@link ReaderMacroFunction} for the provided {@code codePoint}.
 	 *
 	 * @param codePoint
-	 * 		the key for the new {@link DispatchTable}
-	 * @param nonTerminatingP
-	 * 		true if the character should be non-terminating; false otherwise
+	 * 		the key for the {@link ReaderMacroFunction}
 	 *
-	 * @return the value of {@code nonTerminatingP}
+	 * @return the {@link ReaderMacroFunction} for the provided {@code codePoint}
 	 */
-	public boolean makeDispatchMacroCharacter(final int codePoint, final boolean nonTerminatingP) {
-		final DispatchTable dispatchTable = new DispatchTable();
-		setMacroCharacter(codePoint, dispatchTable, nonTerminatingP);
-		dispatchTableMap.put(codePoint, dispatchTable);
-		return nonTerminatingP;
+	public ReaderMacroFunction getMacroCharacter(final int codePoint) {
+		return macroTableMap.get(codePoint);
 	}
 
 	/**

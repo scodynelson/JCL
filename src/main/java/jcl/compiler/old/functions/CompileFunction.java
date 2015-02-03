@@ -8,11 +8,12 @@ import jcl.compiler.old.EmptyVisitor;
 import jcl.compiler.old.documentation.AnnotationCollector;
 import jcl.compiler.old.documentation.DocumentFactory;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
-import jcl.compiler.real.sa.SemanticAnalyzerInit;
+import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
+import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.MethodVisitor;
@@ -41,7 +42,7 @@ public class CompileFunction {
 	//Remove it when the defstruct :include is solved.
 	private static CompilerClassLoader structLoader = null;
 	private XCopyTreeFunction copyTree = XCopyTreeFunction.FUNCTION;
-	private SemanticAnalyzerInit sa;
+	private SemanticAnalyzer sa;
 	private IntermediateCodeGenerator icg;
 	private CompilerClassLoader cl;
 	private boolean bDebug = false;
@@ -72,7 +73,7 @@ public class CompileFunction {
 		LispStruct lambda = null;
 		LispStruct formCopy = NullStruct.INSTANCE;
 
-		sa = context.getBean(SemanticAnalyzerInit.class);
+		sa = context.getBean(SemanticAnalyzer.class);
 		icg = new IntermediateCodeGenerator();
 
 		try {
@@ -80,7 +81,8 @@ public class CompileFunction {
 			if (formCopy instanceof List) {
 				formCopy = copyTree.funcall(formCopy);
 			}
-			obj = sa.analyze(obj);
+			obj = wrapFormInLambda(obj);
+			obj = sa.analyzeForm(obj);
 
 			Vector<Emitter.ClassDef> v = (Vector<Emitter.ClassDef>) icg.funcall(obj);
 			Vector<String> oc = new Vector<String>(v.size());
@@ -280,5 +282,21 @@ public class CompileFunction {
 				structLoader = cl;
 			}
 		}
+	}
+
+	private static LispStruct wrapFormInLambda(final LispStruct form) {
+
+		LispStruct lambdaForm = form;
+		if (form instanceof ListStruct) {
+			final ListStruct formList = (ListStruct) form;
+			final LispStruct firstOfFormList = formList.getFirst();
+			if (!firstOfFormList.equals(SpecialOperator.LAMBDA)) {
+				lambdaForm = ListStruct.buildProperList(SpecialOperator.LAMBDA, NullStruct.INSTANCE, form);
+			}
+		} else {
+			lambdaForm = ListStruct.buildProperList(SpecialOperator.LAMBDA, NullStruct.INSTANCE, form);
+		}
+
+		return lambdaForm;
 	}
 }

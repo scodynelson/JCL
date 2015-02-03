@@ -10,7 +10,7 @@ import jcl.compiler.old.documentation.DocumentFactory;
 import jcl.compiler.old.expander.MacroFunctionExpander;
 import jcl.compiler.old.symbol.KeywordOld;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
-import jcl.compiler.real.sa.SemanticAnalyzerInit;
+import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
@@ -60,7 +60,7 @@ public class CompileFileFunction {
 	public static final SymbolStruct<?> COMPILE_TOPLEVEL = GlobalPackageStruct.KEYWORD.intern("COMPILE-TOPLEVEL").getSymbolStruct();
 	public static final SymbolStruct<?> LOAD_TOPLEVEL = GlobalPackageStruct.KEYWORD.intern("LOAD-TOPLEVEL").getSymbolStruct();
 	public static final SymbolStruct<?> EXECUTE = GlobalPackageStruct.KEYWORD.intern("EXECUTE").getSymbolStruct();
-	private SemanticAnalyzerInit sa;
+	private SemanticAnalyzer sa;
 	private IntermediateCodeGenerator icg;
 	private CompilerClassLoader cl;
 	private boolean bDebug = false;
@@ -141,7 +141,7 @@ public class CompileFileFunction {
 			formList = new ConsStruct(SpecialOperator.LAMBDA, formList);
 
 			SymbolStruct<?> newSA = GlobalPackageStruct.COMMON_LISP.findSymbol("SEMANTIC-ANALYZER").getSymbolStruct();
-			sa = context.getBean(SemanticAnalyzerInit.class);
+			sa = context.getBean(SemanticAnalyzer.class);
 //            sa = (newSA == NullStruct.INSTANCE) ? new SemanticAnalyzer() : (Function1)newSA.getFunction();
 			icg = new IntermediateCodeGenerator();
 
@@ -152,7 +152,8 @@ public class CompileFileFunction {
 			long jarTime;
 
 			baseTime = System.currentTimeMillis();
-			formList = (ListStruct) sa.analyze(formList);
+			formList = (ListStruct) wrapFormInLambda(formList);
+			formList = (ListStruct) sa.analyzeForm(formList);
 			saTime = System.currentTimeMillis() - baseTime;
 
 			baseTime = System.currentTimeMillis();
@@ -565,5 +566,21 @@ public class CompileFileFunction {
 		value.add(forms);
 //		value.add(lineNumber);
 		return value;
+	}
+
+	private static LispStruct wrapFormInLambda(final LispStruct form) {
+
+		LispStruct lambdaForm = form;
+		if (form instanceof ListStruct) {
+			final ListStruct formList = (ListStruct) form;
+			final LispStruct firstOfFormList = formList.getFirst();
+			if (!firstOfFormList.equals(SpecialOperator.LAMBDA)) {
+				lambdaForm = ListStruct.buildProperList(SpecialOperator.LAMBDA, NullStruct.INSTANCE, form);
+			}
+		} else {
+			lambdaForm = ListStruct.buildProperList(SpecialOperator.LAMBDA, NullStruct.INSTANCE, form);
+		}
+
+		return lambdaForm;
 	}
 }

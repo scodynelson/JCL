@@ -1,9 +1,11 @@
 package jcl.system;
 
 import jcl.LispStruct;
-import jcl.compiler.real.sa.SemanticAnalyzerInit;
+import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.conditions.exceptions.StreamErrorException;
+import jcl.lists.ListStruct;
+import jcl.lists.NullStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
 import jcl.reader.Reader;
@@ -151,8 +153,10 @@ public class ReadEvalPrint {
 					if (whatRead != null) {
 						LispStruct whatAnalyzed = null;
 						try {
-							final SemanticAnalyzerInit sa = context.getBean(SemanticAnalyzerInit.class);
-							whatAnalyzed = sa.analyze(whatRead);
+							final LispStruct lambdaWhatRead = wrapFormInLambda(whatRead);
+
+							final SemanticAnalyzer sa = context.getBean(SemanticAnalyzer.class);
+							whatAnalyzed = sa.analyzeForm(lambdaWhatRead);
 
 							if (whatAnalyzed != null) {
 								LOGGER.debug("ANALYZED:\n");
@@ -246,5 +250,21 @@ public class ReadEvalPrint {
 		}
 
 		return null;
+	}
+
+	private static LispStruct wrapFormInLambda(final LispStruct form) {
+
+		LispStruct lambdaForm = form;
+		if (form instanceof ListStruct) {
+			final ListStruct formList = (ListStruct) form;
+			final LispStruct firstOfFormList = formList.getFirst();
+			if (!firstOfFormList.equals(SpecialOperator.LAMBDA)) {
+				lambdaForm = ListStruct.buildProperList(SpecialOperator.LAMBDA, NullStruct.INSTANCE, form);
+			}
+		} else {
+			lambdaForm = ListStruct.buildProperList(SpecialOperator.LAMBDA, NullStruct.INSTANCE, form);
+		}
+
+		return lambdaForm;
 	}
 }

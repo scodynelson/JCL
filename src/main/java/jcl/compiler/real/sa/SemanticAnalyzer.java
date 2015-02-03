@@ -8,8 +8,9 @@ import jcl.LispStruct;
 
 import java.io.Serializable;
 
-@FunctionalInterface
 public interface SemanticAnalyzer extends Serializable {
+
+	LispStruct analyzeForm(final LispStruct form);
 
 	LispStruct analyzeForm(final LispStruct form, final AnalysisBuilder analysisBuilder);
 }

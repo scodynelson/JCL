@@ -31,8 +31,9 @@ public class ProgvAnalyzer implements SpecialOperatorAnalyzer {
 	@Override
 	public ProgvElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
-		if (input.size() < 3) {
-			throw new ProgramErrorException("PROGV: Incorrect number of arguments: " + input.size() + ". Expected at least 3 arguments.");
+		final int inputSize = input.size();
+		if (inputSize < 3) {
+			throw new ProgramErrorException("PROGV: Incorrect number of arguments: " + inputSize + ". Expected at least 3 arguments.");
 		}
 
 		// Check Vars List

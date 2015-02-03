@@ -12,7 +12,9 @@ import jcl.compiler.real.sa.element.MutableLoadTimeValueElement;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
+import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.BooleanStruct;
+import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -40,8 +42,8 @@ public class LoadTimeValueAnalyzer implements SpecialOperatorAnalyzer {
 
 		final LispStruct form = input.getRest().getFirst();
 
-		// TODO: We need to pass the global symbol for "EVAL" into the CAR of the ConsStruct here.
-		final ListStruct evalForm = new ConsStruct(null, form);
+		final SymbolStruct<?> evalFnSym = GlobalPackageStruct.COMMON_LISP.findSymbol("EVAL").getSymbolStruct();
+		final ListStruct evalForm = new ConsStruct(evalFnSym, form);
 
 		final Stack<LexicalEnvironment> lexicalEnvironmentStack = analysisBuilder.getLexicalEnvironmentStack();
 		final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.peek();

@@ -6,11 +6,14 @@ import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.lists.ListStruct;
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class BodyAnalyzer {
+public class BodyAnalyzer implements Serializable {
+
+	private static final long serialVersionUID = -2597125456041175077L;
 
 	public List<LispStruct> analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 		final List<LispStruct> bodyJavaList = input.getAsJavaList();

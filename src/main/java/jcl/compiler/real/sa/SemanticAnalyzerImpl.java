@@ -8,7 +8,9 @@ import jcl.LispStruct;
 import jcl.compiler.real.sa.analyzer.LexicalSymbolStructAnalyzer;
 import jcl.compiler.real.sa.analyzer.ListStructAnalyzer;
 import jcl.lists.ListStruct;
+import jcl.packages.PackageStruct;
 import jcl.symbols.SymbolStruct;
+import jcl.util.InstanceOf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,10 +47,13 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 		undefinedFunctions.stream()
 		                  .forEach(undefinedFunction -> {
 			                  LOGGER.warn("; Warning: no function or macro function defined for ");
-			                  if (undefinedFunction.getSymbolPackage() != null) {
-				                  LOGGER.warn("{}::{}\n", undefinedFunction.getSymbolPackage().getName(), undefinedFunction.getName());
+
+			                  final String functionName = undefinedFunction.getName();
+			                  final PackageStruct symbolPackage = undefinedFunction.getSymbolPackage();
+			                  if (symbolPackage != null) {
+				                  LOGGER.warn("{}::{}\n", symbolPackage.getName(), functionName);
 			                  } else {
-				                  LOGGER.warn("#:{}\n", undefinedFunction.getName());
+				                  LOGGER.warn("#:{}\n", functionName);
 			                  }
 		                  });
 
@@ -57,15 +62,12 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 
 	@Override
 	public LispStruct analyzeForm(final LispStruct form, final AnalysisBuilder analysisBuilder) {
-
-		LispStruct analyzedForm = form;
-		if (form instanceof ListStruct) {
-			analyzedForm = listStructAnalyzer.analyze(this, (ListStruct) form, analysisBuilder);
-		} else if (form instanceof SymbolStruct) {
-			analyzedForm = lexicalSymbolStructAnalyzer.analyze(this, (SymbolStruct<?>) form, analysisBuilder);
-		} else {
-			LOGGER.warn("Unsupported Object Type sent through Analyzer: {}", form);
-		}
-		return analyzedForm;
+		return InstanceOf.when(form)
+		                 .isInstanceOf(ListStruct.class).thenReturn(e -> listStructAnalyzer.analyze(this, e, analysisBuilder))
+		                 .isInstanceOf(SymbolStruct.class).thenReturn(e -> lexicalSymbolStructAnalyzer.analyze(this, e, analysisBuilder))
+		                 .otherwise(e -> {
+			                 LOGGER.warn("Unsupported Object Type sent through Analyzer: {}", e);
+			                 return e;
+		                 });
 	}
 }

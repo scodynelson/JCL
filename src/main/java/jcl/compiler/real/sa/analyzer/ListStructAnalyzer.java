@@ -12,9 +12,6 @@ import jcl.compiler.real.environment.lambdalist.RestBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.element.FunctionCallElement;
-import jcl.compiler.real.sa.element.LambdaElement;
-import jcl.compiler.real.sa.element.LambdaFunctionCallElement;
 import jcl.compiler.real.sa.analyzer.specialoperator.BlockAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.CatchAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.EvalWhenAnalyzer;
@@ -43,6 +40,9 @@ import jcl.compiler.real.sa.analyzer.specialoperator.ThrowAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.UnwindProtectAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.compiler.DefstructAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.special.LambdaAnalyzer;
+import jcl.compiler.real.sa.element.FunctionCallElement;
+import jcl.compiler.real.sa.element.LambdaElement;
+import jcl.compiler.real.sa.element.LambdaFunctionCallElement;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ConsStruct;
@@ -51,6 +51,7 @@ import jcl.lists.NullStruct;
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
+import jcl.util.InstanceOf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -107,7 +108,7 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	private LambdaAnalyzer lambdaAnalyzer;
 
 	@Autowired
-	private ApplicationContext context;
+	private transient ApplicationContext context;
 
 	@Override
 	public LispStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
@@ -118,13 +119,12 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		final LispStruct first = input.getFirst();
 
-		if (first instanceof SymbolStruct) {
-			return analyzeFunctionCall(analyzer, input, analysisBuilder);
-		} else if (first instanceof ListStruct) {
-			return analyzeLambdaFunctionCall(analyzer, input, analysisBuilder, (ListStruct) first);
-		} else {
-			throw new ProgramErrorException("SA LIST: First element must be of type SymbolStruct or ListStruct. Got: " + first);
-		}
+		return InstanceOf.when(first)
+		                 .isInstanceOf(SymbolStruct.class).thenReturn(analyzeFunctionCall(analyzer, input, analysisBuilder))
+		                 .isInstanceOf(ListStruct.class).thenReturn(e -> analyzeLambdaFunctionCall(analyzer, input, analysisBuilder, e))
+		                 .otherwise(e -> {
+			                 throw new ProgramErrorException("SA LIST: First element must be of type SymbolStruct or ListStruct. Got: " + first);
+		                 });
 	}
 
 	private LispStruct analyzeFunctionCall(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
@@ -135,27 +135,23 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		final MacroExpandReturn macroExpandReturn = MacroExpandFunction.FUNCTION.funcall(input, currentLexicalEnvironment);
 		final LispStruct expandedForm = macroExpandReturn.getExpandedForm();
 
-		if (expandedForm instanceof ConsStruct) {
-			return analyzedExpandedFormListFunctionCall(analyzer, analysisBuilder, (ListStruct) expandedForm);
-		} else if (expandedForm instanceof NullStruct) {
-			return expandedForm;
-		} else {
-			return analyzer.analyzeForm(expandedForm, analysisBuilder);
-		}
+		return InstanceOf.when(expandedForm)
+		                 .isInstanceOf(ConsStruct.class).thenReturn(e -> analyzedExpandedFormListFunctionCall(analyzer, analysisBuilder, e))
+		                 .isInstanceOf(NullStruct.class).thenReturn(NullStruct.INSTANCE)
+		                 .otherwise(analyzer.analyzeForm(expandedForm, analysisBuilder));
 	}
 
 	private LispStruct analyzedExpandedFormListFunctionCall(final SemanticAnalyzer analyzer, final AnalysisBuilder analysisBuilder, final ListStruct expandedForm) {
 
 		final LispStruct expandedFormListFirst = expandedForm.getFirst();
-		if (expandedFormListFirst instanceof SpecialOperator) {
-			return analyzeSpecialOperator(analyzer, analysisBuilder, expandedForm, (SpecialOperator) expandedFormListFirst);
-		} else if (expandedFormListFirst instanceof SymbolStruct) {
-			final SymbolStruct<?> functionSymbol = (SymbolStruct<?>) expandedFormListFirst;
-			final ListStruct functionArguments = expandedForm.getRest();
-			return analyzeFunctionCall(analyzer, analysisBuilder, functionSymbol, functionArguments);
-		} else {
-			throw new ProgramErrorException("LIST ANALYZER: First element of expanded form must be a SpecialOperator or of type SymbolStruct. Got: " + expandedFormListFirst);
-		}
+		final ListStruct functionArguments = expandedForm.getRest();
+
+		return InstanceOf.when(expandedFormListFirst)
+		                 .isInstanceOf(SpecialOperator.class).thenReturn(e -> analyzeSpecialOperator(analyzer, analysisBuilder, expandedForm, e))
+		                 .isInstanceOf(SymbolStruct.class).thenReturn(e -> analyzeFunctionCall(analyzer, analysisBuilder, e, functionArguments))
+		                 .otherwise(e -> {
+			                 throw new ProgramErrorException("LIST ANALYZER: First element of expanded form must be a SpecialOperator or of type SymbolStruct. Got: " + e);
+		                 });
 	}
 
 	private LispStruct analyzeSpecialOperator(final SemanticAnalyzer analyzer, final AnalysisBuilder analysisBuilder,

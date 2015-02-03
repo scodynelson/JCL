@@ -11,12 +11,15 @@ import jcl.symbols.SpecialOperator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 @Component
-public class BodyWithDeclaresAnalyzer {
+public class BodyWithDeclaresAnalyzer implements Serializable {
+
+	private static final long serialVersionUID = -4533785417061599823L;
 
 	@Autowired
 	private DeclareAnalyzer declareAnalyzer;

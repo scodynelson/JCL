@@ -20,7 +20,7 @@ public abstract class InnerFunctionElement implements Element {
 
 	private final LexicalEnvironment lexicalEnvironment;
 
-	protected InnerFunctionElement(final List<? extends InnerFunctionVar> vars, final List<LispStruct> forms, final LexicalEnvironment lexicalEnvironment) {
+	InnerFunctionElement(final List<? extends InnerFunctionVar> vars, final List<LispStruct> forms, final LexicalEnvironment lexicalEnvironment) {
 		this.vars = vars;
 		this.forms = forms;
 		this.lexicalEnvironment = lexicalEnvironment;
@@ -45,7 +45,7 @@ public abstract class InnerFunctionElement implements Element {
 		private final SymbolStruct<?> var;
 		private final LispStruct initForm;
 
-		protected InnerFunctionVar(final SymbolStruct<?> var, final LispStruct initForm) {
+		InnerFunctionVar(final SymbolStruct<?> var, final LispStruct initForm) {
 			this.var = var;
 			this.initForm = initForm;
 		}

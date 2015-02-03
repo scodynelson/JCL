@@ -4,17 +4,18 @@ import jcl.LispStruct;
 import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.analyzer.LexicalSymbolStructAnalyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.analyzer.LexicalSymbolStructAnalyzer;
+import jcl.compiler.real.sa.analyzer.specialoperator.special.LambdaAnalyzer;
 import jcl.compiler.real.sa.element.FunctionElement;
 import jcl.compiler.real.sa.element.LambdaElement;
 import jcl.compiler.real.sa.element.LambdaFunctionElement;
 import jcl.compiler.real.sa.element.SymbolFunctionElement;
-import jcl.compiler.real.sa.analyzer.specialoperator.special.LambdaAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
+import jcl.util.InstanceOf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -41,16 +42,15 @@ public class FunctionAnalyzer implements SpecialOperatorAnalyzer {
 
 		final LispStruct second = input.getRest().getFirst();
 
-		if (second instanceof SymbolStruct) {
-			return analyzeFunctionSymbol(analyzer, (SymbolStruct) second, analysisBuilder);
-		} else if (second instanceof ListStruct) {
-			return analyzeFunctionList(analyzer, analysisBuilder, (ListStruct) second);
-		} else {
-			throw new ProgramErrorException("FUNCTION: Function argument must be of type SymbolStruct or ListStruct. Got: " + second);
-		}
+		return InstanceOf.when(second)
+		                 .isInstanceOf(SymbolStruct.class).thenReturn(e -> analyzeFunctionSymbol(analyzer, e, analysisBuilder))
+		                 .isInstanceOf(ListStruct.class).thenReturn(e -> analyzeFunctionList(analyzer, e, analysisBuilder))
+		                 .otherwise(e -> {
+			                 throw new ProgramErrorException("FUNCTION: Function argument must be of type SymbolStruct or ListStruct. Got: " + e);
+		                 });
 	}
 
-	private SymbolFunctionElement analyzeFunctionSymbol(final SemanticAnalyzer analyzer, final SymbolStruct<?> functionSymbol, final AnalysisBuilder analysisBuilder) {
+	private FunctionElement analyzeFunctionSymbol(final SemanticAnalyzer analyzer, final SymbolStruct<?> functionSymbol, final AnalysisBuilder analysisBuilder) {
 
 		final Stack<LexicalEnvironment> lexicalEnvironmentStack = analysisBuilder.getLexicalEnvironmentStack();
 		final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.peek();
@@ -86,7 +86,7 @@ public class FunctionAnalyzer implements SpecialOperatorAnalyzer {
 		return currentLexicalEnvironment;
 	}
 
-	private LambdaFunctionElement analyzeFunctionList(final SemanticAnalyzer analyzer, final AnalysisBuilder analysisBuilder, final ListStruct functionList) {
+	private FunctionElement analyzeFunctionList(final SemanticAnalyzer analyzer, final ListStruct functionList, final AnalysisBuilder analysisBuilder) {
 
 		final LispStruct functionListFirst = functionList.getFirst();
 

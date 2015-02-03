@@ -6,5 +6,5 @@ package jcl.compiler.real.sa.element.declaration;
 
 import jcl.compiler.real.sa.element.Element;
 
-public interface DeclarationElement extends Element {
+interface DeclarationElement extends Element {
 }

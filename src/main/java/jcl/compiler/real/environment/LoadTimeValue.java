@@ -4,18 +4,20 @@ import jcl.LispStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.util.UUID;
+
 public class LoadTimeValue {
 
-	private final String name;
+	private final UUID uniqueLTVId;
 	private final LispStruct value;
 
-	public LoadTimeValue(final String name, final LispStruct value) {
-		this.name = name;
+	public LoadTimeValue(final UUID uniqueLTVId, final LispStruct value) {
+		this.uniqueLTVId = uniqueLTVId;
 		this.value = value;
 	}
 
-	public String getName() {
-		return name;
+	public UUID getUniqueLTVId() {
+		return uniqueLTVId;
 	}
 
 	public LispStruct getValue() {

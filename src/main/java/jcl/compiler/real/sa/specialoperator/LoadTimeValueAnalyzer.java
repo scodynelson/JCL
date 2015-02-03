@@ -6,12 +6,13 @@ import jcl.compiler.real.environment.LoadTimeValue;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.element.ImmutableLoadTimeValueElement;
 import jcl.compiler.real.sa.element.LoadTimeValueElement;
-import jcl.compiler.real.sa.specialoperator.special.LambdaAnalyzer;
+import jcl.compiler.real.sa.element.MutableLoadTimeValueElement;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.symbols.BooleanStruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -21,14 +22,12 @@ import java.util.UUID;
 @Component
 public class LoadTimeValueAnalyzer implements SpecialOperatorAnalyzer {
 
-	@Autowired
-	private LambdaAnalyzer lambdaAnalyzer;
-
 	@Override
 	public LoadTimeValueElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
-		if ((input.size() < 2) || (input.size() > 3)) {
-			throw new ProgramErrorException("LOAD-TIME-VALUE: Incorrect number of arguments: " + input.size() + ". Expected either 2 or 3 arguments.");
+		final int inputSize = input.size();
+		if ((inputSize < 2) || (inputSize > 3)) {
+			throw new ProgramErrorException("LOAD-TIME-VALUE: Incorrect number of arguments: " + inputSize + ". Expected either 2 or 3 arguments.");
 		}
 
 		final LispStruct third = input.getRest().getRest().getFirst();
@@ -39,32 +38,36 @@ public class LoadTimeValueAnalyzer implements SpecialOperatorAnalyzer {
 		final BooleanStruct readOnlyP = (BooleanStruct) third;
 		final boolean isReadOnly = readOnlyP.booleanValue();
 
-		// (eval form)
-		// if read-only-p
-		// return value
-		// else
-		// if in LTV, retrieve. else, store into lexical environment LTV list
-		// return LTV value
+		final LispStruct form = input.getRest().getFirst();
 
-		// TODO: what we need to do here is:
-		// TODO: 1.) Get global instance of 'EVAL' function
-		// TODO: 2.) Pass the 'form' to the 'EVAL' function
-		// TODO: 3.) Forcefully evaluate the 'EVAL' function
+		// TODO: We need to pass the global symbol for "EVAL" into the CAR of the ConsStruct here.
+		final ListStruct evalForm = new ConsStruct(null, form);
 
 		final Stack<LexicalEnvironment> lexicalEnvironmentStack = analysisBuilder.getLexicalEnvironmentStack();
 		final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.peek();
 		final LexicalEnvironment currentEnclosingLambda = getEnclosingLambda(currentLexicalEnvironment);
 
-		final String name = "LOAD_TIME_VALUE" + UUID.randomUUID();
+		final LexicalEnvironment nullLexicalEnvironment = LexicalEnvironment.NULL;
+		lexicalEnvironmentStack.push(nullLexicalEnvironment);
 
-		final List<LoadTimeValue> currentLoadTimeValues = currentEnclosingLambda.getLoadTimeValues();
-		if (isReadOnly) {
-		} else {
-			final LoadTimeValue newLoadTimeValue = new LoadTimeValue(name, null);
-			currentLoadTimeValues.add(newLoadTimeValue);
+		try {
+			final LispStruct analyzedEvalForm = analyzer.analyzeForm(evalForm, analysisBuilder);
+
+			if (isReadOnly) {
+				final UUID uniqueLTVId = UUID.randomUUID();
+
+				final List<LoadTimeValue> currentLoadTimeValues = currentEnclosingLambda.getLoadTimeValues();
+
+				final LoadTimeValue newLoadTimeValue = new LoadTimeValue(uniqueLTVId, analyzedEvalForm);
+				currentLoadTimeValues.add(newLoadTimeValue);
+
+				return new ImmutableLoadTimeValueElement(uniqueLTVId);
+			} else {
+				return new MutableLoadTimeValueElement(analyzedEvalForm);
+			}
+		} finally {
+			lexicalEnvironmentStack.pop();
 		}
-
-		return new LoadTimeValueElement(name, null);
 	}
 
 	/**
@@ -86,19 +89,4 @@ public class LoadTimeValueAnalyzer implements SpecialOperatorAnalyzer {
 
 		return currentLexicalEnvironment;
 	}
-
-	/*
-(def-ir1-translator load-time-value ((form &optional read-only-p) start cont)
-  "Arrange for FORM to be evaluated at load-time and use the value produced
-   as if it were a constant.  If READ-ONLY-P is non-NIL, then the resultant
-   object is guaranteed to never be modified, so it can be put in read-only
-   storage."
-  (let ((value (handler-case (eval form)
-	                         (error (condition)
-		                            (compiler-error _N"(during EVAL of LOAD-TIME-VALUE)~%~A" condition)))))
-	(ir1-convert start cont
-		         (if read-only-p
-			         `',value
-			       `(value-cell-ref ',(make-value-cell value))))))
-	 */
 }

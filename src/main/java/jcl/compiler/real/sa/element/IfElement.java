@@ -26,4 +26,16 @@ public class IfElement implements Element {
 		this.thenForm = thenForm;
 		this.elseForm = elseForm;
 	}
+
+	public LispStruct getTestForm() {
+		return testForm;
+	}
+
+	public LispStruct getThenForm() {
+		return thenForm;
+	}
+
+	public LispStruct getElseForm() {
+		return elseForm;
+	}
 }

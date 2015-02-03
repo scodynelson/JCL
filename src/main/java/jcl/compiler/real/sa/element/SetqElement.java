@@ -20,6 +20,10 @@ public class SetqElement implements Element {
 		this.setqPairs = setqPairs;
 	}
 
+	public List<SetqPair> getSetqPairs() {
+		return setqPairs;
+	}
+
 	public static class SetqPair implements Serializable {
 
 		private static final long serialVersionUID = -7804939280136663517L;
@@ -30,6 +34,14 @@ public class SetqElement implements Element {
 		public SetqPair(final SymbolStruct<?> var, final LispStruct form) {
 			this.var = var;
 			this.form = form;
+		}
+
+		public SymbolStruct<?> getVar() {
+			return var;
+		}
+
+		public LispStruct getForm() {
+			return form;
 		}
 	}
 }

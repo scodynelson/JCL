@@ -20,4 +20,12 @@ public class BlockElement implements Element {
 		this.name = name;
 		this.forms = forms;
 	}
+
+	public SymbolStruct<?> getName() {
+		return name;
+	}
+
+	public List<LispStruct> getForms() {
+		return forms;
+	}
 }

@@ -21,4 +21,12 @@ public class LocallyElement implements Element {
 		this.forms = forms;
 		this.lexicalEnvironment = lexicalEnvironment;
 	}
+
+	public List<LispStruct> getForms() {
+		return forms;
+	}
+
+	public LexicalEnvironment getLexicalEnvironment() {
+		return lexicalEnvironment;
+	}
 }

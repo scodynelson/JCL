@@ -26,6 +26,18 @@ public class ProgvElement implements Element {
 		this.dynamicEnvironment = dynamicEnvironment;
 	}
 
+	public List<ProgvVar> getVars() {
+		return vars;
+	}
+
+	public List<LispStruct> getForms() {
+		return forms;
+	}
+
+	public DynamicEnvironment getDynamicEnvironment() {
+		return dynamicEnvironment;
+	}
+
 	public static class ProgvVar implements Serializable {
 
 		private static final long serialVersionUID = -5131005121770228469L;
@@ -36,6 +48,14 @@ public class ProgvElement implements Element {
 		public ProgvVar(final SymbolStruct<?> var, final LispStruct val) {
 			this.var = var;
 			this.val = val;
+		}
+
+		public SymbolStruct<?> getVar() {
+			return var;
+		}
+
+		public LispStruct getVal() {
+			return val;
 		}
 	}
 }

@@ -17,4 +17,12 @@ public class ThrowElement implements Element {
 		this.catchTag = catchTag;
 		this.resultForm = resultForm;
 	}
+
+	public LispStruct getCatchTag() {
+		return catchTag;
+	}
+
+	public LispStruct getResultForm() {
+		return resultForm;
+	}
 }

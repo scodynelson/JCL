@@ -15,4 +15,8 @@ public class GoElement implements Element {
 	public GoElement(final LispStruct tag) {
 		this.tag = tag;
 	}
+
+	public LispStruct getTag() {
+		return tag;
+	}
 }

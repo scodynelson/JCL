@@ -18,4 +18,8 @@ public class TagbodyElement implements Element {
 	public TagbodyElement(final Map<LispStruct, List<LispStruct>> tagbodyForms) {
 		this.tagbodyForms = tagbodyForms;
 	}
+
+	public Map<LispStruct, List<LispStruct>> getTagbodyForms() {
+		return tagbodyForms;
+	}
 }

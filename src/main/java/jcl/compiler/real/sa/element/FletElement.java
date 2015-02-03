@@ -20,6 +20,8 @@ public class FletElement extends InnerFunctionElement {
 
 	public static class FletVar extends InnerFunctionVar {
 
+		private static final long serialVersionUID = -794246121764492302L;
+
 		public FletVar(final SymbolStruct<?> var, final LispStruct initForm) {
 			super(var, initForm);
 		}

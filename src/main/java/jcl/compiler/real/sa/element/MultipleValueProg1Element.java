@@ -19,4 +19,12 @@ public class MultipleValueProg1Element implements Element {
 		this.firstForm = firstForm;
 		this.forms = forms;
 	}
+
+	public LispStruct getFirstForm() {
+		return firstForm;
+	}
+
+	public List<LispStruct> getForms() {
+		return forms;
+	}
 }

@@ -20,6 +20,8 @@ public class LabelsElement extends InnerFunctionElement {
 
 	public static class LabelsVar extends InnerFunctionVar {
 
+		private static final long serialVersionUID = 2989214415282349607L;
+
 		public LabelsVar(final SymbolStruct<?> var, final LispStruct initForm) {
 			super(var, initForm);
 		}

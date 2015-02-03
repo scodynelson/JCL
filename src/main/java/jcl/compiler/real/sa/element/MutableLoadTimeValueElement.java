@@ -15,4 +15,8 @@ public class MutableLoadTimeValueElement implements LoadTimeValueElement {
 	public MutableLoadTimeValueElement(final LispStruct form) {
 		this.form = form;
 	}
+
+	public LispStruct getForm() {
+		return form;
+	}
 }

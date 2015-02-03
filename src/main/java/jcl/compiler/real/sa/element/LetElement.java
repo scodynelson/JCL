@@ -26,6 +26,18 @@ public class LetElement implements Element {
 		this.lexicalEnvironment = lexicalEnvironment;
 	}
 
+	public List<LetVar> getVars() {
+		return vars;
+	}
+
+	public List<LispStruct> getForms() {
+		return forms;
+	}
+
+	public LexicalEnvironment getLexicalEnvironment() {
+		return lexicalEnvironment;
+	}
+
 	public static class LetVar implements Serializable {
 
 		private static final long serialVersionUID = 3246152127057600416L;
@@ -36,6 +48,14 @@ public class LetElement implements Element {
 		public LetVar(final SymbolStruct<?> var, final LispStruct initForm) {
 			this.var = var;
 			this.initForm = initForm;
+		}
+
+		public SymbolStruct<?> getVar() {
+			return var;
+		}
+
+		public LispStruct getInitForm() {
+			return initForm;
 		}
 	}
 }

@@ -13,4 +13,8 @@ public class LambdaFunctionElement implements FunctionElement {
 	public LambdaFunctionElement(final LambdaElement lambdaElement) {
 		this.lambdaElement = lambdaElement;
 	}
+
+	public LambdaElement getLambdaElement() {
+		return lambdaElement;
+	}
 }

@@ -16,4 +16,8 @@ public class SymbolElement<T extends LispStruct> implements Element {
 	public SymbolElement(final SymbolStruct<T> symbolStruct) {
 		this.symbolStruct = symbolStruct;
 	}
+
+	public SymbolStruct<T> getSymbolStruct() {
+		return symbolStruct;
+	}
 }

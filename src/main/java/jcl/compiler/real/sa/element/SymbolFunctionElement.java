@@ -15,4 +15,8 @@ public class SymbolFunctionElement implements FunctionElement {
 	public SymbolFunctionElement(final SymbolStruct<?> functionSymbol) {
 		this.functionSymbol = functionSymbol;
 	}
+
+	public SymbolStruct<?> getFunctionSymbol() {
+		return functionSymbol;
+	}
 }

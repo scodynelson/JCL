@@ -15,4 +15,8 @@ public class QuoteElement implements Element {
 	public QuoteElement(final LispStruct object) {
 		this.object = object;
 	}
+
+	public LispStruct getObject() {
+		return object;
+	}
 }

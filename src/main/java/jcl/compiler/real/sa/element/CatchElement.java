@@ -19,4 +19,12 @@ public class CatchElement implements Element {
 		this.catchTag = catchTag;
 		this.forms = forms;
 	}
+
+	public LispStruct getCatchTag() {
+		return catchTag;
+	}
+
+	public List<LispStruct> getForms() {
+		return forms;
+	}
 }

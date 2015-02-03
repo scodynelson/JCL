@@ -17,4 +17,8 @@ public class PrognElement implements Element {
 	public PrognElement(final List<LispStruct> forms) {
 		this.forms = forms;
 	}
+
+	public List<LispStruct> getForms() {
+		return forms;
+	}
 }

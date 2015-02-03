@@ -24,4 +24,12 @@ public class ReturnFromElement implements Element {
 		this.name = name;
 		this.result = result;
 	}
+
+	public SymbolStruct<?> getName() {
+		return name;
+	}
+
+	public LispStruct getResult() {
+		return result;
+	}
 }

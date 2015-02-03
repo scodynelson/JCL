@@ -19,4 +19,12 @@ public class UnwindProtectElement implements Element {
 		this.protectedForm = protectedForm;
 		this.cleanupForms = cleanupForms;
 	}
+
+	public LispStruct getProtectedForm() {
+		return protectedForm;
+	}
+
+	public List<LispStruct> getCleanupForms() {
+		return cleanupForms;
+	}
 }

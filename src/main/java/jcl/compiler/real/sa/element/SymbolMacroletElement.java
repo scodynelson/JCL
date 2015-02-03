@@ -26,6 +26,18 @@ public class SymbolMacroletElement implements Element {
 		this.lexicalEnvironment = lexicalEnvironment;
 	}
 
+	public List<SymbolMacroletElementVar> getVars() {
+		return vars;
+	}
+
+	public List<LispStruct> getForms() {
+		return forms;
+	}
+
+	public LexicalEnvironment getLexicalEnvironment() {
+		return lexicalEnvironment;
+	}
+
 	public static class SymbolMacroletElementVar implements Serializable {
 
 		private static final long serialVersionUID = -601687250765470819L;
@@ -36,6 +48,14 @@ public class SymbolMacroletElement implements Element {
 		public SymbolMacroletElementVar(final SymbolStruct<?> var, final LispStruct expansion) {
 			this.var = var;
 			this.expansion = expansion;
+		}
+
+		public SymbolStruct<?> getVar() {
+			return var;
+		}
+
+		public LispStruct getExpansion() {
+			return expansion;
 		}
 	}
 }

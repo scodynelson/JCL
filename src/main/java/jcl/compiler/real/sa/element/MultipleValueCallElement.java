@@ -20,4 +20,12 @@ public class MultipleValueCallElement implements Element {
 		this.functionForm = functionForm;
 		this.forms = forms;
 	}
+
+	public LispStruct getFunctionForm() {
+		return functionForm;
+	}
+
+	public List<LispStruct> getForms() {
+		return forms;
+	}
 }

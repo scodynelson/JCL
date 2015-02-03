@@ -19,4 +19,12 @@ public class LambdaFunctionCallElement implements Element {
 		this.lambdaElement = lambdaElement;
 		this.arguments = arguments;
 	}
+
+	public LambdaElement getLambdaElement() {
+		return lambdaElement;
+	}
+
+	public List<LispStruct> getArguments() {
+		return arguments;
+	}
 }

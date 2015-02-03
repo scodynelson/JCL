@@ -18,4 +18,12 @@ public class TheElement implements Element {
 		this.valueType = valueType;
 		this.form = form;
 	}
+
+	public TypeSpecifier getValueType() {
+		return valueType;
+	}
+
+	public LispStruct getForm() {
+		return form;
+	}
 }

@@ -15,4 +15,8 @@ public class ImmutableLoadTimeValueElement implements LoadTimeValueElement {
 	public ImmutableLoadTimeValueElement(final UUID uniqueLTVId) {
 		this.uniqueLTVId = uniqueLTVId;
 	}
+
+	public UUID getUniqueLTVId() {
+		return uniqueLTVId;
+	}
 }

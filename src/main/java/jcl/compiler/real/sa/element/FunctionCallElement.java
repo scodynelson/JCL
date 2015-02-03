@@ -23,4 +23,16 @@ public class FunctionCallElement implements Element {
 		this.functionSymbol = functionSymbol;
 		this.arguments = arguments;
 	}
+
+	public boolean isRecursiveCall() {
+		return isRecursiveCall;
+	}
+
+	public SymbolStruct<?> getFunctionSymbol() {
+		return functionSymbol;
+	}
+
+	public List<LispStruct> getArguments() {
+		return arguments;
+	}
 }

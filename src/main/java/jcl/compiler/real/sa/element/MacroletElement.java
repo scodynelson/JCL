@@ -20,6 +20,8 @@ public class MacroletElement extends InnerFunctionElement {
 
 	public static class MacroletVar extends InnerFunctionVar {
 
+		private static final long serialVersionUID = -169311089356148669L;
+
 		public MacroletVar(final SymbolStruct<?> var, final LispStruct initForm) {
 			super(var, initForm);
 		}

@@ -3,7 +3,7 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.element.PrognElement;
+import jcl.compiler.real.sa.element.specialoperator.PrognElement;
 import jcl.lists.ListStruct;
 import org.springframework.stereotype.Component;
 

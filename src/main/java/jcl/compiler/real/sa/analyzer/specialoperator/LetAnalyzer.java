@@ -7,7 +7,7 @@ import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.environment.ParameterAllocation;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.element.LetElement;
+import jcl.compiler.real.sa.element.specialoperator.LetElement;
 import jcl.compiler.real.sa.element.declaration.DeclareElement;
 import jcl.compiler.real.sa.element.declaration.SpecialDeclarationElement;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyProcessingResult;

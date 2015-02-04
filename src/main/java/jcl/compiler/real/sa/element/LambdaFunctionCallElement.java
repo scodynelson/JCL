@@ -5,6 +5,7 @@
 package jcl.compiler.real.sa.element;
 
 import jcl.LispStruct;
+import jcl.compiler.real.sa.element.specialoperator.LambdaElement;
 
 import java.util.List;
 

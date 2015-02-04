@@ -41,7 +41,7 @@ import jcl.compiler.real.sa.analyzer.specialoperator.UnwindProtectAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.compiler.DefstructAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.special.LambdaAnalyzer;
 import jcl.compiler.real.sa.element.FunctionCallElement;
-import jcl.compiler.real.sa.element.LambdaElement;
+import jcl.compiler.real.sa.element.specialoperator.LambdaElement;
 import jcl.compiler.real.sa.element.LambdaFunctionCallElement;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.FunctionStruct;

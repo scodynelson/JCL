@@ -3,7 +3,7 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 import jcl.LispStruct;
 import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.Marker;
-import jcl.compiler.real.sa.element.FletElement;
+import jcl.compiler.real.sa.element.specialoperator.FletElement;
 import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 

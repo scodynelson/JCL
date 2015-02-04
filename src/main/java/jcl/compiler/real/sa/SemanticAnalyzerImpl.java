@@ -5,9 +5,18 @@
 package jcl.compiler.real.sa;
 
 import jcl.LispStruct;
+import jcl.characters.CharacterStruct;
 import jcl.compiler.real.sa.analyzer.LexicalSymbolStructAnalyzer;
 import jcl.compiler.real.sa.analyzer.ListStructAnalyzer;
+import jcl.compiler.real.sa.element.CharacterElement;
+import jcl.compiler.real.sa.element.FloatElement;
+import jcl.compiler.real.sa.element.IntegerElement;
+import jcl.compiler.real.sa.element.RatioElement;
+import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
+import jcl.numbers.FloatStruct;
+import jcl.numbers.IntegerStruct;
+import jcl.numbers.RatioStruct;
 import jcl.packages.PackageStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.util.InstanceOf;
@@ -65,9 +74,12 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 		return InstanceOf.when(form)
 		                 .isInstanceOf(ListStruct.class).thenReturn(e -> listStructAnalyzer.analyze(this, e, analysisBuilder))
 		                 .isInstanceOf(SymbolStruct.class).thenReturn(e -> lexicalSymbolStructAnalyzer.analyze(this, e, analysisBuilder))
+		                 .isInstanceOf(CharacterStruct.class).thenReturn(CharacterElement::new)
+		                 .isInstanceOf(IntegerStruct.class).thenReturn(IntegerElement::new)
+		                 .isInstanceOf(FloatStruct.class).thenReturn(FloatElement::new)
+		                 .isInstanceOf(RatioStruct.class).thenReturn(RatioElement::new)
 		                 .otherwise(e -> {
-			                 LOGGER.warn("Unsupported Object Type sent through Analyzer: {}", e);
-			                 return e;
+			                 throw new ProgramErrorException("Semantic Analyzer: Unsupported object type cannot be analyzed: " + e);
 		                 });
 	}
 }

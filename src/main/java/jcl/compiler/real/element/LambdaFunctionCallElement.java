@@ -4,7 +4,7 @@
 
 package jcl.compiler.real.element;
 
-import jcl.compiler.real.element.specialoperator.LambdaElement;
+import jcl.compiler.real.element.specialoperator.lambda.LambdaElement;
 
 import java.util.List;
 

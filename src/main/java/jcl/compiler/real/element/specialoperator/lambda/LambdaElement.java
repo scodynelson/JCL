@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.compiler.real.element.specialoperator;
+package jcl.compiler.real.element.specialoperator.lambda;
 
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.environment.LexicalEnvironment;

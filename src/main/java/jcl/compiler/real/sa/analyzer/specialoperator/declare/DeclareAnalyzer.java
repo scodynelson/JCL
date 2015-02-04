@@ -1,12 +1,12 @@
-package jcl.compiler.real.sa.analyzer.specialoperator.special;
+package jcl.compiler.real.sa.analyzer.specialoperator.declare;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.analyzer.DynamicSymbolStructAnalyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.element.SymbolElement;
-import jcl.compiler.real.element.declaration.DeclareElement;
-import jcl.compiler.real.element.declaration.SpecialDeclarationElement;
+import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
+import jcl.compiler.real.element.specialoperator.declare.SpecialDeclarationElement;
 import jcl.compiler.real.sa.analyzer.specialoperator.SpecialOperatorAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;

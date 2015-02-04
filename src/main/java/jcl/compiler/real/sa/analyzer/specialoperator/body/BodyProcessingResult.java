@@ -2,7 +2,7 @@ package jcl.compiler.real.sa.analyzer.specialoperator.body;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
-import jcl.compiler.real.element.declaration.DeclareElement;
+import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
 
 import java.util.List;
 

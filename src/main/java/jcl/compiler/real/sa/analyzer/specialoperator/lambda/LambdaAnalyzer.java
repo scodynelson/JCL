@@ -1,4 +1,4 @@
-package jcl.compiler.real.sa.analyzer.specialoperator.special;
+package jcl.compiler.real.sa.analyzer.specialoperator.lambda;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.LexicalEnvironment;
@@ -9,11 +9,10 @@ import jcl.compiler.real.environment.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.lambdalist.SuppliedPBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.LambdaListParser;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.specialoperator.LambdaElement;
-import jcl.compiler.real.element.declaration.DeclareElement;
+import jcl.compiler.real.element.specialoperator.lambda.LambdaElement;
+import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
 import jcl.compiler.real.sa.analyzer.specialoperator.SpecialOperatorAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyWithDeclaresAndDocStringAnalyzer;

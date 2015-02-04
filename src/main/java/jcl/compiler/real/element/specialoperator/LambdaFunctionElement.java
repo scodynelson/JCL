@@ -4,6 +4,8 @@
 
 package jcl.compiler.real.element.specialoperator;
 
+import jcl.compiler.real.element.specialoperator.lambda.LambdaElement;
+
 public class LambdaFunctionElement implements FunctionElement {
 
 	private static final long serialVersionUID = 1418688382783925560L;

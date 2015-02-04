@@ -12,8 +12,8 @@ import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyWithDeclaresAnalyz
 import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.NullElement;
 import jcl.compiler.real.element.SymbolElement;
-import jcl.compiler.real.element.declaration.DeclareElement;
-import jcl.compiler.real.element.declaration.SpecialDeclarationElement;
+import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
+import jcl.compiler.real.element.specialoperator.declare.SpecialDeclarationElement;
 import jcl.compiler.real.element.specialoperator.LetElement;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;

@@ -6,6 +6,8 @@ import jcl.compiler.real.environment.Scope;
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.types.T;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class KeyBinding extends ParameterBinding {
 
@@ -28,5 +30,10 @@ public class KeyBinding extends ParameterBinding {
 
 	public SuppliedPBinding getSuppliedPBinding() {
 		return suppliedPBinding;
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

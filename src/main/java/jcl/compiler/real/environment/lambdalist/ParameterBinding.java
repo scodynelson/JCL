@@ -10,6 +10,8 @@ import jcl.compiler.real.environment.Binding;
 import jcl.compiler.real.environment.ParameterAllocation;
 import jcl.compiler.real.environment.Scope;
 import jcl.symbols.SymbolStruct;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class ParameterBinding extends Binding {
 
@@ -25,5 +27,10 @@ public class ParameterBinding extends Binding {
 
 	public LispStruct getInitForm() {
 		return initForm;
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

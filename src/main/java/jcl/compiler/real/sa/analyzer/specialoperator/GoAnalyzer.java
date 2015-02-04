@@ -48,7 +48,7 @@ public class GoAnalyzer implements SpecialOperatorAnalyzer {
 		}
 	}
 
-	private GoElement getGoTag(final AnalysisBuilder analysisBuilder, final GoElement tagToFind) {
+	private static GoElement getGoTag(final AnalysisBuilder analysisBuilder, final GoElement tagToFind) {
 
 		final Stack<Set<GoElement>> tagbodyStack = analysisBuilder.getTagbodyStack();
 		final ListIterator<Set<GoElement>> tagbodyListIterator = tagbodyStack.listIterator(tagbodyStack.size());

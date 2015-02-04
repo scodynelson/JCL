@@ -77,12 +77,12 @@ public class TagbodyAnalyzer implements SpecialOperatorAnalyzer {
 			return HashSet::new;
 		}
 
-		private GoElement getGoSymbolElementTag(final SymbolStruct<?> symbolStruct) {
+		private static GoElement getGoSymbolElementTag(final SymbolStruct<?> symbolStruct) {
 			final SymbolElement<?> symbolElement = new SymbolElement<>(symbolStruct);
 			return new GoSymbolElement(symbolElement);
 		}
 
-		private GoElement getGoIntegerElementTag(final IntegerStruct integerStruct) {
+		private static GoElement getGoIntegerElementTag(final IntegerStruct integerStruct) {
 			final IntegerElement integerElement = new IntegerElement(integerStruct);
 			return new GoIntegerElement(integerElement);
 		}
@@ -92,8 +92,8 @@ public class TagbodyAnalyzer implements SpecialOperatorAnalyzer {
 			return (goElementSet, lispStruct) -> {
 				final Optional<GoElement> goElement
 						= InstanceOf.when(lispStruct)
-						            .isInstanceOf(SymbolStruct.class).thenReturn(this::getGoSymbolElementTag)
-						            .isInstanceOf(IntegerStruct.class).thenReturn(this::getGoIntegerElementTag)
+						            .isInstanceOf(SymbolStruct.class).thenReturn(TagbodyInitialTagCollector::getGoSymbolElementTag)
+						            .isInstanceOf(IntegerStruct.class).thenReturn(TagbodyInitialTagCollector::getGoIntegerElementTag)
 						            .get();
 				if (goElement.isPresent()) {
 					final GoElement goElementVal = goElement.get();

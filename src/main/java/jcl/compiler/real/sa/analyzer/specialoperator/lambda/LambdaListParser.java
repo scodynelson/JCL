@@ -31,7 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
-public final class LambdaListParser {
+final class LambdaListParser {
 
 	private static final SymbolStruct<?> AND_OPTIONAL = GlobalPackageStruct.KEYWORD.intern("&OPTIONAL").getSymbolStruct();
 	private static final SymbolStruct<?> AND_REST = GlobalPackageStruct.KEYWORD.intern("&REST").getSymbolStruct();
@@ -469,7 +469,7 @@ public final class LambdaListParser {
 	 * BINDING PARSE RESULT OBJECTS
 	 */
 
-	private abstract static class ParseResult {
+	private static class ParseResult {
 
 		private final LispStruct currentElement;
 		private final int currentPosition;

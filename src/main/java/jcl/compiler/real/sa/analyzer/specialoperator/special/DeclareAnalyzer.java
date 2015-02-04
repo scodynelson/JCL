@@ -4,6 +4,7 @@ import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.analyzer.DynamicSymbolStructAnalyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.element.SymbolElement;
 import jcl.compiler.real.sa.element.declaration.DeclareElement;
 import jcl.compiler.real.sa.element.declaration.SpecialDeclarationElement;
 import jcl.compiler.real.sa.analyzer.specialoperator.SpecialOperatorAnalyzer;
@@ -88,7 +89,8 @@ public class DeclareAnalyzer implements SpecialOperatorAnalyzer {
 
 			dynamicSymbolStructAnalyzer.analyze(analyzer, sym, analysisBuilder);
 
-			final SpecialDeclarationElement specialDeclarationElement = new SpecialDeclarationElement(sym);
+			final SymbolElement<?> symSE = new SymbolElement<>(sym);
+			final SpecialDeclarationElement specialDeclarationElement = new SpecialDeclarationElement(symSE);
 			specialDeclarationElements.add(specialDeclarationElement);
 		}
 

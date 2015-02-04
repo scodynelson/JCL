@@ -4,9 +4,6 @@
 
 package jcl.compiler.real.sa.element;
 
-import jcl.LispStruct;
-import jcl.symbols.SymbolStruct;
-
 import java.util.List;
 
 public class FunctionCallElement implements Element {
@@ -15,10 +12,10 @@ public class FunctionCallElement implements Element {
 
 	private final boolean isRecursiveCall;
 
-	private final SymbolStruct<?> functionSymbol;
-	private final List<LispStruct> arguments;
+	private final SymbolElement<?> functionSymbol;
+	private final List<Element> arguments;
 
-	public FunctionCallElement(final boolean isRecursiveCall, final SymbolStruct<?> functionSymbol, final List<LispStruct> arguments) {
+	public FunctionCallElement(final boolean isRecursiveCall, final SymbolElement<?> functionSymbol, final List<Element> arguments) {
 		this.isRecursiveCall = isRecursiveCall;
 		this.functionSymbol = functionSymbol;
 		this.arguments = arguments;
@@ -28,11 +25,11 @@ public class FunctionCallElement implements Element {
 		return isRecursiveCall;
 	}
 
-	public SymbolStruct<?> getFunctionSymbol() {
+	public SymbolElement<?> getFunctionSymbol() {
 		return functionSymbol;
 	}
 
-	public List<LispStruct> getArguments() {
+	public List<Element> getArguments() {
 		return arguments;
 	}
 }

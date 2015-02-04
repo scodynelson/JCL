@@ -40,9 +40,12 @@ import jcl.compiler.real.sa.analyzer.specialoperator.ThrowAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.UnwindProtectAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.compiler.DefstructAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.special.LambdaAnalyzer;
+import jcl.compiler.real.sa.element.Element;
 import jcl.compiler.real.sa.element.FunctionCallElement;
-import jcl.compiler.real.sa.element.specialoperator.LambdaElement;
 import jcl.compiler.real.sa.element.LambdaFunctionCallElement;
+import jcl.compiler.real.sa.element.NullElement;
+import jcl.compiler.real.sa.element.SymbolElement;
+import jcl.compiler.real.sa.element.specialoperator.LambdaElement;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ConsStruct;
@@ -65,7 +68,7 @@ import java.util.Set;
 import java.util.Stack;
 
 @Component
-public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
+public class ListStructAnalyzer implements Analyzer<Element, ListStruct> {
 
 	private static final long serialVersionUID = 5454983196467731873L;
 
@@ -111,10 +114,10 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 	private transient ApplicationContext context;
 
 	@Override
-	public LispStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
+	public Element analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
 		if (input.equals(NullStruct.INSTANCE)) {
-			return input;
+			return NullElement.INSTANCE;
 		}
 
 		final LispStruct first = input.getFirst();
@@ -127,7 +130,7 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		                 });
 	}
 
-	private LispStruct analyzeFunctionCall(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
+	private Element analyzeFunctionCall(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
 		final Stack<LexicalEnvironment> lexicalEnvironmentStack = analysisBuilder.getLexicalEnvironmentStack();
 		final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.peek();
@@ -137,11 +140,11 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		return InstanceOf.when(expandedForm)
 		                 .isInstanceOf(ConsStruct.class).thenReturn(e -> analyzedExpandedFormListFunctionCall(analyzer, analysisBuilder, e))
-		                 .isInstanceOf(NullStruct.class).thenReturn(NullStruct.INSTANCE)
+		                 .isInstanceOf(NullStruct.class).thenReturn(NullElement.INSTANCE)
 		                 .otherwise(analyzer.analyzeForm(expandedForm, analysisBuilder));
 	}
 
-	private LispStruct analyzedExpandedFormListFunctionCall(final SemanticAnalyzer analyzer, final AnalysisBuilder analysisBuilder, final ListStruct expandedForm) {
+	private Element analyzedExpandedFormListFunctionCall(final SemanticAnalyzer analyzer, final AnalysisBuilder analysisBuilder, final ListStruct expandedForm) {
 
 		final LispStruct expandedFormListFirst = expandedForm.getFirst();
 		final ListStruct functionArguments = expandedForm.getRest();
@@ -154,15 +157,15 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 		                 });
 	}
 
-	private LispStruct analyzeSpecialOperator(final SemanticAnalyzer analyzer, final AnalysisBuilder analysisBuilder,
-	                                          final ListStruct expandedForm, final SpecialOperator specialOperator) {
+	private Element analyzeSpecialOperator(final SemanticAnalyzer analyzer, final AnalysisBuilder analysisBuilder,
+	                                       final ListStruct expandedForm, final SpecialOperator specialOperator) {
 
 		final Class<? extends SpecialOperatorAnalyzer> strategy = STRATEGIES.get(specialOperator);
 		if (strategy == null) {
 			throw new ProgramErrorException("LIST ANALYZER: SpecialOperator symbol supplied is not supported: " + specialOperator);
 		}
 
-		final Analyzer<? extends LispStruct, ListStruct> strategyBean = context.getBean(strategy);
+		final Analyzer<? extends Element, ListStruct> strategyBean = context.getBean(strategy);
 		return strategyBean.analyze(analyzer, expandedForm, analysisBuilder);
 	}
 
@@ -193,10 +196,10 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 			validateFunctionArguments(functionName, lambdaListBindings, functionArgumentsList);
 		}
 
-		final List<LispStruct> analyzedFunctionArguments = new ArrayList<>(functionArgumentsList.size());
+		final List<Element> analyzedFunctionArguments = new ArrayList<>(functionArgumentsList.size());
 
 		for (final LispStruct functionArgument : functionArgumentsList) {
-			final LispStruct analyzedFunctionArgument = analyzer.analyzeForm(functionArgument, analysisBuilder);
+			final Element analyzedFunctionArgument = analyzer.analyzeForm(functionArgument, analysisBuilder);
 			analyzedFunctionArguments.add(analyzedFunctionArgument);
 		}
 
@@ -205,7 +208,8 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		final boolean hasFunctionBinding = hasFunctionBinding(currentLexicalEnvironment, functionSymbol);
 
-		return new FunctionCallElement(hasFunctionBinding, functionSymbol, analyzedFunctionArguments);
+		final SymbolElement<?> functionSymbolSE = new SymbolElement<>(functionSymbol);
+		return new FunctionCallElement(hasFunctionBinding, functionSymbolSE, analyzedFunctionArguments);
 	}
 
 	private static boolean hasFunctionBinding(final LexicalEnvironment lexicalEnvironment, final SymbolStruct<?> variable) {
@@ -296,10 +300,10 @@ public class ListStructAnalyzer implements Analyzer<LispStruct, ListStruct> {
 
 		validateFunctionArguments("Anonymous Lambda", lambdaListBindings, functionArgumentsList);
 
-		final List<LispStruct> analyzedFunctionArguments = new ArrayList<>(functionArgumentsList.size());
+		final List<Element> analyzedFunctionArguments = new ArrayList<>(functionArgumentsList.size());
 
 		for (final LispStruct functionArgument : functionArgumentsList) {
-			final LispStruct analyzedFunctionArgument = analyzer.analyzeForm(functionArgument, analysisBuilder);
+			final Element analyzedFunctionArgument = analyzer.analyzeForm(functionArgument, analysisBuilder);
 			analyzedFunctionArguments.add(analyzedFunctionArgument);
 		}
 

@@ -4,7 +4,6 @@
 
 package jcl.compiler.real.sa.element.specialoperator;
 
-import jcl.LispStruct;
 import jcl.compiler.real.sa.element.Element;
 
 import java.util.List;
@@ -13,19 +12,19 @@ public class UnwindProtectElement implements Element {
 
 	private static final long serialVersionUID = 2849602976511423223L;
 
-	private final LispStruct protectedForm;
-	private final List<LispStruct> cleanupForms;
+	private final Element protectedForm;
+	private final List<Element> cleanupForms;
 
-	public UnwindProtectElement(final LispStruct protectedForm, final List<LispStruct> cleanupForms) {
+	public UnwindProtectElement(final Element protectedForm, final List<Element> cleanupForms) {
 		this.protectedForm = protectedForm;
 		this.cleanupForms = cleanupForms;
 	}
 
-	public LispStruct getProtectedForm() {
+	public Element getProtectedForm() {
 		return protectedForm;
 	}
 
-	public List<LispStruct> getCleanupForms() {
+	public List<Element> getCleanupForms() {
 		return cleanupForms;
 	}
 }

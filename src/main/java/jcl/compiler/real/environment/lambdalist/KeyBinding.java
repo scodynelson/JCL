@@ -1,14 +1,13 @@
 package jcl.compiler.real.environment.lambdalist;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.EnvironmentBinding;
 import jcl.compiler.real.environment.ParameterAllocation;
 import jcl.compiler.real.environment.Scope;
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.types.T;
 
-public class KeyBinding extends EnvironmentBinding {
+public class KeyBinding extends ParameterBinding {
 
 	private static final long serialVersionUID = -8247621420473541525L;
 

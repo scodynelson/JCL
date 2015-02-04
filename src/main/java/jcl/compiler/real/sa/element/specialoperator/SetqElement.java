@@ -4,9 +4,8 @@
 
 package jcl.compiler.real.sa.element.specialoperator;
 
-import jcl.LispStruct;
 import jcl.compiler.real.sa.element.Element;
-import jcl.symbols.SymbolStruct;
+import jcl.compiler.real.sa.element.SymbolElement;
 
 import java.io.Serializable;
 import java.util.List;
@@ -29,19 +28,19 @@ public class SetqElement implements Element {
 
 		private static final long serialVersionUID = -7804939280136663517L;
 
-		private final SymbolStruct<?> var;
-		private final LispStruct form;
+		private final SymbolElement<?> var;
+		private final Element form;
 
-		public SetqPair(final SymbolStruct<?> var, final LispStruct form) {
+		public SetqPair(final SymbolElement<?> var, final Element form) {
 			this.var = var;
 			this.form = form;
 		}
 
-		public SymbolStruct<?> getVar() {
+		public SymbolElement<?> getVar() {
 			return var;
 		}
 
-		public LispStruct getForm() {
+		public Element getForm() {
 			return form;
 		}
 	}

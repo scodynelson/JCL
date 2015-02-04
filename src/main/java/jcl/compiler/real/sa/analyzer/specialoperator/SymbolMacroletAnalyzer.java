@@ -7,11 +7,13 @@ import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.environment.ParameterAllocation;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.element.specialoperator.SymbolMacroletElement;
-import jcl.compiler.real.sa.element.declaration.DeclareElement;
-import jcl.compiler.real.sa.element.declaration.SpecialDeclarationElement;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyWithDeclaresAnalyzer;
+import jcl.compiler.real.sa.element.Element;
+import jcl.compiler.real.sa.element.SymbolElement;
+import jcl.compiler.real.sa.element.declaration.DeclareElement;
+import jcl.compiler.real.sa.element.declaration.SpecialDeclarationElement;
+import jcl.compiler.real.sa.element.specialoperator.SymbolMacroletElement;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.symbols.SymbolStruct;
@@ -74,7 +76,7 @@ public class SymbolMacroletAnalyzer implements SpecialOperatorAnalyzer {
 
 			final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
 
-			final List<LispStruct> analyzedBodyForms
+			final List<Element> analyzedBodyForms
 					= realBodyForms.stream()
 					               .map(e -> analyzer.analyzeForm(e, analysisBuilder))
 					               .collect(Collectors.toList());
@@ -110,7 +112,7 @@ public class SymbolMacroletAnalyzer implements SpecialOperatorAnalyzer {
 
 		final ListStruct listParameter = (ListStruct) parameter;
 		final SymbolStruct<?> var = getSymbolMacroletParameterVar(listParameter, lexicalEnvironmentStack);
-		final LispStruct expansion = getSymbolMacroletParameterExpansion(listParameter, analyzer, analysisBuilder, lexicalEnvironmentStack);
+		final Element expansion = getSymbolMacroletParameterExpansion(listParameter, analyzer, analysisBuilder, lexicalEnvironmentStack);
 
 		final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.peek();
 
@@ -120,7 +122,8 @@ public class SymbolMacroletAnalyzer implements SpecialOperatorAnalyzer {
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 		currentLexicalEnvironment.addBinding(var, allocation, expansion, false);
 
-		return new SymbolMacroletElement.SymbolMacroletElementVar(var, expansion);
+		final SymbolElement<?> varSE = new SymbolElement<>(var);
+		return new SymbolMacroletElement.SymbolMacroletElementVar(varSE, expansion);
 	}
 
 	private static SymbolStruct<?> getSymbolMacroletParameterVar(final ListStruct listParameter,
@@ -146,10 +149,10 @@ public class SymbolMacroletAnalyzer implements SpecialOperatorAnalyzer {
 		return parameterVar;
 	}
 
-	private static LispStruct getSymbolMacroletParameterExpansion(final ListStruct listParameter,
-	                                                              final SemanticAnalyzer analyzer,
-	                                                              final AnalysisBuilder analysisBuilder,
-	                                                              final Stack<LexicalEnvironment> lexicalEnvironmentStack) {
+	private static Element getSymbolMacroletParameterExpansion(final ListStruct listParameter,
+	                                                           final SemanticAnalyzer analyzer,
+	                                                           final AnalysisBuilder analysisBuilder,
+	                                                           final Stack<LexicalEnvironment> lexicalEnvironmentStack) {
 
 		final LispStruct parameterValue = listParameter.getRest().getFirst();
 

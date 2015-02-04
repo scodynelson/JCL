@@ -1,22 +1,22 @@
 package jcl.compiler.real.environment;
 
-import jcl.LispStruct;
 import jcl.LispType;
+import jcl.compiler.real.sa.element.Element;
 import jcl.symbols.SymbolStruct;
 
 public class EnvironmentBinding extends Binding {
 
 	private static final long serialVersionUID = 2910922877559341453L;
 
-	private final LispStruct initForm;
+	private final Element initForm;
 
 	public EnvironmentBinding(final SymbolStruct<?> symbolStruct, final ParameterAllocation allocation, final Scope scope,
-	                          final LispType type, final LispStruct initForm) {
+	                          final LispType type, final Element initForm) {
 		super(symbolStruct, allocation, scope, type);
 		this.initForm = initForm;
 	}
 
-	public LispStruct getInitForm() {
+	public Element getInitForm() {
 		return initForm;
 	}
 }

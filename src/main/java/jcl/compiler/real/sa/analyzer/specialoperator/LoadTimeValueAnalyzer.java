@@ -6,6 +6,7 @@ import jcl.compiler.real.environment.LoadTimeValue;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.element.Element;
 import jcl.compiler.real.sa.element.specialoperator.ImmutableLoadTimeValueElement;
 import jcl.compiler.real.sa.element.specialoperator.LoadTimeValueElement;
 import jcl.compiler.real.sa.element.specialoperator.MutableLoadTimeValueElement;
@@ -55,7 +56,7 @@ public class LoadTimeValueAnalyzer implements SpecialOperatorAnalyzer {
 		lexicalEnvironmentStack.push(nullLexicalEnvironment);
 
 		try {
-			final LispStruct analyzedEvalForm = analyzer.analyzeForm(evalForm, analysisBuilder);
+			final Element analyzedEvalForm = analyzer.analyzeForm(evalForm, analysisBuilder);
 
 			if (isReadOnly) {
 				final UUID uniqueLTVId = UUID.randomUUID();

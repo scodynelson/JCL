@@ -4,10 +4,9 @@
 
 package jcl.compiler.real.sa.element.specialoperator;
 
-import jcl.LispStruct;
 import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.sa.element.Element;
-import jcl.symbols.SymbolStruct;
+import jcl.compiler.real.sa.element.SymbolElement;
 
 import java.io.Serializable;
 import java.util.List;
@@ -17,11 +16,11 @@ public class SymbolMacroletElement implements Element {
 	private static final long serialVersionUID = 2362123144166759037L;
 
 	private final List<SymbolMacroletElementVar> vars;
-	private final List<LispStruct> forms;
+	private final List<Element> forms;
 
 	private final LexicalEnvironment lexicalEnvironment;
 
-	public SymbolMacroletElement(final List<SymbolMacroletElementVar> vars, final List<LispStruct> forms, final LexicalEnvironment lexicalEnvironment) {
+	public SymbolMacroletElement(final List<SymbolMacroletElementVar> vars, final List<Element> forms, final LexicalEnvironment lexicalEnvironment) {
 		this.vars = vars;
 		this.forms = forms;
 		this.lexicalEnvironment = lexicalEnvironment;
@@ -31,7 +30,7 @@ public class SymbolMacroletElement implements Element {
 		return vars;
 	}
 
-	public List<LispStruct> getForms() {
+	public List<Element> getForms() {
 		return forms;
 	}
 
@@ -43,19 +42,19 @@ public class SymbolMacroletElement implements Element {
 
 		private static final long serialVersionUID = -601687250765470819L;
 
-		private final SymbolStruct<?> var;
-		private final LispStruct expansion;
+		private final SymbolElement<?> var;
+		private final Element expansion;
 
-		public SymbolMacroletElementVar(final SymbolStruct<?> var, final LispStruct expansion) {
+		public SymbolMacroletElementVar(final SymbolElement<?> var, final Element expansion) {
 			this.var = var;
 			this.expansion = expansion;
 		}
 
-		public SymbolStruct<?> getVar() {
+		public SymbolElement<?> getVar() {
 			return var;
 		}
 
-		public LispStruct getExpansion() {
+		public Element getExpansion() {
 			return expansion;
 		}
 	}

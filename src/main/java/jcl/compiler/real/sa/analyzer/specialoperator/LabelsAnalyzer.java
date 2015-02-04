@@ -1,10 +1,10 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import jcl.LispStruct;
 import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.Marker;
+import jcl.compiler.real.sa.element.Element;
+import jcl.compiler.real.sa.element.SymbolElement;
 import jcl.compiler.real.sa.element.specialoperator.LabelsElement;
-import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -19,13 +19,13 @@ public class LabelsAnalyzer extends InnerFunctionAnalyzer<LabelsElement, LabelsE
 	}
 
 	@Override
-	protected LabelsElement getFunctionElement(final List<LabelsElement.LabelsVar> vars, final List<LispStruct> bodyForms,
+	protected LabelsElement getFunctionElement(final List<LabelsElement.LabelsVar> vars, final List<Element> bodyForms,
 	                                           final LexicalEnvironment lexicalEnvironment) {
 		return new LabelsElement(vars, bodyForms, lexicalEnvironment);
 	}
 
 	@Override
-	protected LabelsElement.LabelsVar getFunctionElementVar(final SymbolStruct<?> var, final LispStruct initForm) {
+	protected LabelsElement.LabelsVar getFunctionElementVar(final SymbolElement<?> var, final Element initForm) {
 		return new LabelsElement.LabelsVar(var, initForm);
 	}
 }

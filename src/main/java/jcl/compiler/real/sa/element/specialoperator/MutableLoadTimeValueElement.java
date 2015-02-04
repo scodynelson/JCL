@@ -4,19 +4,19 @@
 
 package jcl.compiler.real.sa.element.specialoperator;
 
-import jcl.LispStruct;
+import jcl.compiler.real.sa.element.Element;
 
 public class MutableLoadTimeValueElement implements LoadTimeValueElement {
 
 	private static final long serialVersionUID = 8088799347738800471L;
 
-	private final LispStruct form;
+	private final Element form;
 
-	public MutableLoadTimeValueElement(final LispStruct form) {
+	public MutableLoadTimeValueElement(final Element form) {
 		this.form = form;
 	}
 
-	public LispStruct getForm() {
+	public Element getForm() {
 		return form;
 	}
 }

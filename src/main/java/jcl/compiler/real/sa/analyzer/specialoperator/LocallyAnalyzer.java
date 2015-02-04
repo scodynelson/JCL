@@ -5,6 +5,7 @@ import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.element.Element;
 import jcl.compiler.real.sa.element.specialoperator.LocallyElement;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyWithDeclaresAnalyzer;
@@ -45,7 +46,7 @@ public class LocallyAnalyzer implements SpecialOperatorAnalyzer {
 
 			final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
 
-			final List<LispStruct> analyzedBodyForms
+			final List<Element> analyzedBodyForms
 					= realBodyForms.stream()
 					               .map(e -> analyzer.analyzeForm(e, analysisBuilder))
 					               .collect(Collectors.toList());

@@ -7,6 +7,7 @@ import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.LexicalSymbolStructAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.special.LambdaAnalyzer;
+import jcl.compiler.real.sa.element.SymbolElement;
 import jcl.compiler.real.sa.element.specialoperator.FunctionElement;
 import jcl.compiler.real.sa.element.specialoperator.LambdaElement;
 import jcl.compiler.real.sa.element.specialoperator.LambdaFunctionElement;
@@ -58,11 +59,15 @@ public class FunctionAnalyzer implements SpecialOperatorAnalyzer {
 		final LexicalEnvironment bindingLexicalEnvironment = getBindingEnvironment(currentLexicalEnvironment, functionSymbol);
 
 		final boolean missingFunctionSymbolBinding = !bindingLexicalEnvironment.hasBinding(functionSymbol);
+
+		final SymbolElement<?> functionSymbolSE;
 		if (missingFunctionSymbolBinding) {
-			lexicalSymbolStructAnalyzer.analyze(analyzer, functionSymbol, analysisBuilder);
+			functionSymbolSE = lexicalSymbolStructAnalyzer.analyze(analyzer, functionSymbol, analysisBuilder);
+		} else {
+			functionSymbolSE = new SymbolElement<>(functionSymbol);
 		}
 
-		return new SymbolFunctionElement(functionSymbol);
+		return new SymbolFunctionElement(functionSymbolSE);
 	}
 
 	private static LexicalEnvironment getBindingEnvironment(final LexicalEnvironment lexicalEnvironment, final SymbolStruct<?> variable) {

@@ -4,9 +4,8 @@
 
 package jcl.compiler.real.sa.element.specialoperator;
 
-import jcl.LispStruct;
 import jcl.compiler.real.sa.element.Element;
-import jcl.symbols.SymbolStruct;
+import jcl.compiler.real.sa.element.SymbolElement;
 
 import java.util.List;
 
@@ -14,19 +13,19 @@ public class BlockElement implements Element {
 
 	private static final long serialVersionUID = -115779602179582479L;
 
-	private final SymbolStruct<?> name;
-	private final List<LispStruct> forms;
+	private final SymbolElement<?> name;
+	private final List<Element> forms;
 
-	public BlockElement(final SymbolStruct<?> name, final List<LispStruct> forms) {
+	public BlockElement(final SymbolElement<?> name, final List<Element> forms) {
 		this.name = name;
 		this.forms = forms;
 	}
 
-	public SymbolStruct<?> getName() {
+	public SymbolElement<?> getName() {
 		return name;
 	}
 
-	public List<LispStruct> getForms() {
+	public List<Element> getForms() {
 		return forms;
 	}
 }

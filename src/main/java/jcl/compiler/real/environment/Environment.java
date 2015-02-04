@@ -5,6 +5,7 @@
 package jcl.compiler.real.environment;
 
 import jcl.LispStruct;
+import jcl.compiler.real.sa.element.Element;
 import jcl.symbols.SymbolStruct;
 import jcl.types.T;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -47,7 +48,7 @@ public abstract class Environment<E extends Environment<E>> implements LispStruc
 		               .findFirst();
 	}
 
-	public void addBinding(final SymbolStruct<?> newVariable, final ParameterAllocation allocation, final LispStruct initForm, final boolean isSpecial) {
+	public void addBinding(final SymbolStruct<?> newVariable, final ParameterAllocation allocation, final Element initForm, final boolean isSpecial) {
 		final Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
 		final Binding binding = new EnvironmentBinding(newVariable, allocation, scope, T.INSTANCE, initForm);
 		bindings.add(binding);

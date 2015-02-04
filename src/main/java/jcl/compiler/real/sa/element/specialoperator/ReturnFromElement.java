@@ -4,33 +4,32 @@
 
 package jcl.compiler.real.sa.element.specialoperator;
 
-import jcl.LispStruct;
 import jcl.compiler.real.sa.element.Element;
-import jcl.symbols.NILStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.compiler.real.sa.element.NullElement;
+import jcl.compiler.real.sa.element.SymbolElement;
 
 public class ReturnFromElement implements Element {
 
 	private static final long serialVersionUID = -6095397540807480492L;
 
-	private final SymbolStruct<?> name;
-	private final LispStruct result;
+	private final SymbolElement<?> name;
+	private final Element result;
 
-	public ReturnFromElement(final SymbolStruct<?> name) {
+	public ReturnFromElement(final SymbolElement<?> name) {
 		this.name = name;
-		result = NILStruct.INSTANCE;
+		result = NullElement.INSTANCE;
 	}
 
-	public ReturnFromElement(final SymbolStruct<?> name, final LispStruct result) {
+	public ReturnFromElement(final SymbolElement<?> name, final Element result) {
 		this.name = name;
 		this.result = result;
 	}
 
-	public SymbolStruct<?> getName() {
+	public SymbolElement<?> getName() {
 		return name;
 	}
 
-	public LispStruct getResult() {
+	public Element getResult() {
 		return result;
 	}
 }

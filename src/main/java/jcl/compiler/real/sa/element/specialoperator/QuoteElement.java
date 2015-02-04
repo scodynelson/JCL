@@ -4,20 +4,19 @@
 
 package jcl.compiler.real.sa.element.specialoperator;
 
-import jcl.LispStruct;
 import jcl.compiler.real.sa.element.Element;
 
 public class QuoteElement implements Element {
 
 	private static final long serialVersionUID = 2854755653951600124L;
 
-	private final LispStruct object;
+	private final Element object;
 
-	public QuoteElement(final LispStruct object) {
+	public QuoteElement(final Element object) {
 		this.object = object;
 	}
 
-	public LispStruct getObject() {
+	public Element getObject() {
 		return object;
 	}
 }

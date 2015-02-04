@@ -4,7 +4,6 @@
 
 package jcl.compiler.real.sa.element.specialoperator;
 
-import jcl.LispStruct;
 import jcl.compiler.real.sa.element.Element;
 
 import java.util.List;
@@ -13,13 +12,13 @@ public class PrognElement implements Element {
 
 	private static final long serialVersionUID = 2712116484918089080L;
 
-	private final List<LispStruct> forms;
+	private final List<Element> forms;
 
-	public PrognElement(final List<LispStruct> forms) {
+	public PrognElement(final List<Element> forms) {
 		this.forms = forms;
 	}
 
-	public List<LispStruct> getForms() {
+	public List<Element> getForms() {
 		return forms;
 	}
 }

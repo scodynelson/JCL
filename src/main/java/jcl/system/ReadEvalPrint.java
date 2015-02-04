@@ -2,6 +2,7 @@ package jcl.system;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.element.Element;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.lists.ListStruct;
@@ -151,7 +152,7 @@ public class ReadEvalPrint {
 					// TEMPORARY: ANALYZER
 
 					if (whatRead != null) {
-						LispStruct whatAnalyzed = null;
+						Element whatAnalyzed = null;
 						try {
 							final LispStruct lambdaWhatRead = wrapFormInLambda(whatRead);
 

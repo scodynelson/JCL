@@ -11,6 +11,7 @@ import jcl.compiler.real.environment.lambdalist.SuppliedPBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.LambdaListParser;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.element.Element;
 import jcl.compiler.real.sa.element.specialoperator.LambdaElement;
 import jcl.compiler.real.sa.element.declaration.DeclareElement;
 import jcl.compiler.real.sa.analyzer.specialoperator.SpecialOperatorAnalyzer;
@@ -74,7 +75,7 @@ public class LambdaAnalyzer implements SpecialOperatorAnalyzer {
 			final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
 			newStartingLambdaBody.addAll(realBodyForms);
 
-			final List<LispStruct> analyzedBodyForms
+			final List<Element> analyzedBodyForms
 					= newStartingLambdaBody.stream()
 					                       .map(e -> analyzer.analyzeForm(e, analysisBuilder))
 					                       .collect(Collectors.toList());

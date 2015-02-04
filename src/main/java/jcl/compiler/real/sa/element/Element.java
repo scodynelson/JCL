@@ -4,7 +4,7 @@
 
 package jcl.compiler.real.sa.element;
 
-import jcl.LispStruct;
+import java.io.Serializable;
 
-public interface Element extends LispStruct {
+public interface Element extends Serializable {
 }

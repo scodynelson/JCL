@@ -4,39 +4,38 @@
 
 package jcl.compiler.real.sa.element.specialoperator;
 
-import jcl.LispStruct;
 import jcl.compiler.real.sa.element.Element;
-import jcl.symbols.NILStruct;
+import jcl.compiler.real.sa.element.NullElement;
 
 public class IfElement implements Element {
 
 	private static final long serialVersionUID = 9172097134073138710L;
 
-	private final LispStruct testForm;
-	private final LispStruct thenForm;
-	private final LispStruct elseForm;
+	private final Element testForm;
+	private final Element thenForm;
+	private final Element elseForm;
 
-	public IfElement(final LispStruct testForm, final LispStruct thenForm) {
+	public IfElement(final Element testForm, final Element thenForm) {
 		this.testForm = testForm;
 		this.thenForm = thenForm;
-		elseForm = NILStruct.INSTANCE;
+		elseForm = NullElement.INSTANCE;
 	}
 
-	public IfElement(final LispStruct testForm, final LispStruct thenForm, final LispStruct elseForm) {
+	public IfElement(final Element testForm, final Element thenForm, final Element elseForm) {
 		this.testForm = testForm;
 		this.thenForm = thenForm;
 		this.elseForm = elseForm;
 	}
 
-	public LispStruct getTestForm() {
+	public Element getTestForm() {
 		return testForm;
 	}
 
-	public LispStruct getThenForm() {
+	public Element getThenForm() {
 		return thenForm;
 	}
 
-	public LispStruct getElseForm() {
+	public Element getElseForm() {
 		return elseForm;
 	}
 }

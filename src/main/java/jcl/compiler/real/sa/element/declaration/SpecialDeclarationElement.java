@@ -4,19 +4,19 @@
 
 package jcl.compiler.real.sa.element.declaration;
 
-import jcl.symbols.SymbolStruct;
+import jcl.compiler.real.sa.element.SymbolElement;
 
 public class SpecialDeclarationElement implements DeclarationElement {
 
 	private static final long serialVersionUID = 7353657327204677544L;
 
-	private final SymbolStruct<?> var;
+	private final SymbolElement<?> var;
 
-	public SpecialDeclarationElement(final SymbolStruct<?> var) {
+	public SpecialDeclarationElement(final SymbolElement<?> var) {
 		this.var = var;
 	}
 
-	public SymbolStruct<?> getVar() {
+	public SymbolElement<?> getVar() {
 		return var;
 	}
 }

@@ -1,12 +1,11 @@
 package jcl.compiler.real.environment.lambdalist;
 
-import jcl.compiler.real.environment.EnvironmentBinding;
 import jcl.compiler.real.environment.ParameterAllocation;
 import jcl.compiler.real.environment.Scope;
 import jcl.symbols.SymbolStruct;
 import jcl.types.T;
 
-public class SuppliedPBinding extends EnvironmentBinding {
+public class SuppliedPBinding extends ParameterBinding {
 
 	private static final long serialVersionUID = -8399229506171557644L;
 

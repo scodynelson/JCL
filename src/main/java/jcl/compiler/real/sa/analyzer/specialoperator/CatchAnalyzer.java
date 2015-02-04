@@ -3,6 +3,7 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.element.Element;
 import jcl.compiler.real.sa.element.specialoperator.CatchElement;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
@@ -25,11 +26,11 @@ public class CatchAnalyzer implements SpecialOperatorAnalyzer {
 		}
 
 		final LispStruct catchTag = input.getRest().getFirst();
-		final LispStruct catchTagAnalyzed = analyzer.analyzeForm(catchTag, analysisBuilder);
+		final Element catchTagAnalyzed = analyzer.analyzeForm(catchTag, analysisBuilder);
 
 		final ListStruct forms = input.getRest().getRest();
 		final List<LispStruct> formsJavaList = forms.getAsJavaList();
-		final List<LispStruct> analyzedForms =
+		final List<Element> analyzedForms =
 				formsJavaList.stream()
 				             .map(e -> analyzer.analyzeForm(e, analysisBuilder))
 				             .collect(Collectors.toList());

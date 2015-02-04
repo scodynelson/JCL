@@ -4,6 +4,7 @@ import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.element.Element;
 import jcl.compiler.real.sa.element.specialoperator.QuoteElement;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
@@ -18,7 +19,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Component
 public class QuoteAnalyzer implements SpecialOperatorAnalyzer {
@@ -36,25 +36,29 @@ public class QuoteAnalyzer implements SpecialOperatorAnalyzer {
 			throw new ProgramErrorException("QUOTE: Incorrect number of arguments: " + inputSize + ". Expected 2 arguments.");
 		}
 
-		LispStruct element = input.getRest().getFirst();
+		final LispStruct quotedObject = input.getRest().getFirst();
 
 		final Optional<ListStruct> analyzedElement
-				= InstanceOf.when(element)
-				            .isInstanceOf(ListStruct.class).thenReturn(e -> analyzeQuoteList(analyzer, e, analysisBuilder))
+				= InstanceOf.when(quotedObject)
+				            .isInstanceOf(ListStruct.class).thenReturn(QuoteAnalyzer::analyzeQuoteList)
 				            .isInstanceOf(SymbolStruct.class).thenReturn(QuoteAnalyzer::analyzeQuoteSymbol)
 				            .get();
+
+		final Element element;
 
 		if (analyzedElement.isPresent()) {
 			final ListStruct analyzedListElement = analyzedElement.get();
 			// If was ListStruct or SymbolStruct, wrap resulting form in Load-Time-Value.
 			final ListStruct loadTimeValueForm = ListStruct.buildProperList(SpecialOperator.LOAD_TIME_VALUE, analyzedListElement);
 			element = loadTimeValueAnalyzer.analyze(analyzer, loadTimeValueForm, analysisBuilder);
+		} else {
+			element = analyzer.analyzeForm(quotedObject);
 		}
 
 		return new QuoteElement(element);
 	}
 
-	private static ListStruct analyzeQuoteList(final SemanticAnalyzer analyzer, final ListStruct element, final AnalysisBuilder analysisBuilder) {
+	private static ListStruct analyzeQuoteList(final ListStruct element) {
 		final SymbolStruct<?> listFnSym;
 		if (element.isDotted()) {
 			listFnSym = GlobalPackageStruct.COMMON_LISP.findSymbol("LIST*").getSymbolStruct();
@@ -64,14 +68,9 @@ public class QuoteAnalyzer implements SpecialOperatorAnalyzer {
 
 		final List<LispStruct> formJavaList = element.getAsJavaList();
 
-		final List<LispStruct> transformedForms
-				= formJavaList.stream()
-				              .map(e -> analyzer.analyzeForm(e, analysisBuilder))
-				              .collect(Collectors.toList());
-
-		final List<LispStruct> transformedListForms = new ArrayList<>(transformedForms.size() + 1);
+		final List<LispStruct> transformedListForms = new ArrayList<>(formJavaList.size() + 1);
 		transformedListForms.add(listFnSym);
-		transformedListForms.addAll(transformedForms);
+		transformedListForms.addAll(formJavaList);
 
 		return ListStruct.buildProperList(transformedListForms);
 	}

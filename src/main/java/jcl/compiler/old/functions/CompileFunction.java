@@ -82,7 +82,7 @@ public class CompileFunction {
 				formCopy = copyTree.funcall(formCopy);
 			}
 			obj = wrapFormInLambda(obj);
-			obj = sa.analyzeForm(obj);
+			obj = (LispStruct) sa.analyzeForm(obj);
 
 			Vector<Emitter.ClassDef> v = (Vector<Emitter.ClassDef>) icg.funcall(obj);
 			Vector<String> oc = new Vector<String>(v.size());

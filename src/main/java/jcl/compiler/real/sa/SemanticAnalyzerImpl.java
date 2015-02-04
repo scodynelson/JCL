@@ -9,6 +9,7 @@ import jcl.characters.CharacterStruct;
 import jcl.compiler.real.sa.analyzer.LexicalSymbolStructAnalyzer;
 import jcl.compiler.real.sa.analyzer.ListStructAnalyzer;
 import jcl.compiler.real.sa.element.CharacterElement;
+import jcl.compiler.real.sa.element.Element;
 import jcl.compiler.real.sa.element.FloatElement;
 import jcl.compiler.real.sa.element.IntegerElement;
 import jcl.compiler.real.sa.element.RatioElement;
@@ -44,11 +45,11 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 	private LexicalSymbolStructAnalyzer lexicalSymbolStructAnalyzer;
 
 	@Override
-	public LispStruct analyzeForm(final LispStruct form) {
+	public Element analyzeForm(final LispStruct form) {
 
 		final AnalysisBuilder analysisBuilder = new AnalysisBuilder();
 
-		final LispStruct analyzedForm = analyzeForm(form, analysisBuilder);
+		final Element analyzedForm = analyzeForm(form, analysisBuilder);
 
 		// now see if we have any functions still undefined
 		final Set<SymbolStruct<?>> undefinedFunctions = analysisBuilder.getUndefinedFunctions();
@@ -70,7 +71,7 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 	}
 
 	@Override
-	public LispStruct analyzeForm(final LispStruct form, final AnalysisBuilder analysisBuilder) {
+	public Element analyzeForm(final LispStruct form, final AnalysisBuilder analysisBuilder) {
 		return InstanceOf.when(form)
 		                 .isInstanceOf(ListStruct.class).thenReturn(e -> listStructAnalyzer.analyze(this, e, analysisBuilder))
 		                 .isInstanceOf(SymbolStruct.class).thenReturn(e -> lexicalSymbolStructAnalyzer.analyze(this, e, analysisBuilder))

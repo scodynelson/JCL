@@ -9,6 +9,7 @@ import jcl.compiler.real.environment.PositionAllocation;
 import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
+import jcl.compiler.real.sa.element.Element;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.SpecialOperator;
@@ -68,7 +69,7 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 				final SymbolStruct<?> sym = binding.getSymbolStruct();
 				// (:allocation ... :binding ... :scope ... :type ... :init-form ...)
 				// get the variable's init form
-				final LispStruct initForm = ((EnvironmentBinding) binding).getInitForm();
+				final Element initForm = ((EnvironmentBinding) binding).getInitForm();
 				// is this a local or dynamic variable?
 				final Scope scope = binding.getScope();
 				//** this is the place where the ICG has to choose to allocate a variable

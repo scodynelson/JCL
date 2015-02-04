@@ -4,7 +4,6 @@
 
 package jcl.compiler.real.sa.element.specialoperator;
 
-import jcl.LispStruct;
 import jcl.compiler.real.sa.element.Element;
 
 import java.util.List;
@@ -14,13 +13,13 @@ public class TagbodyElement implements Element {
 
 	private static final long serialVersionUID = -2970777170741142162L;
 
-	private final Map<LispStruct, List<LispStruct>> tagbodyForms;
+	private final Map<Element, List<Element>> tagbodyForms;
 
-	public TagbodyElement(final Map<LispStruct, List<LispStruct>> tagbodyForms) {
+	public TagbodyElement(final Map<Element, List<Element>> tagbodyForms) {
 		this.tagbodyForms = tagbodyForms;
 	}
 
-	public Map<LispStruct, List<LispStruct>> getTagbodyForms() {
+	public Map<Element, List<Element>> getTagbodyForms() {
 		return tagbodyForms;
 	}
 }

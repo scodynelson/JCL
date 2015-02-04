@@ -4,9 +4,9 @@
 
 package jcl.compiler.real.sa.element.specialoperator;
 
-import jcl.LispStruct;
 import jcl.compiler.real.environment.LexicalEnvironment;
-import jcl.symbols.SymbolStruct;
+import jcl.compiler.real.sa.element.Element;
+import jcl.compiler.real.sa.element.SymbolElement;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ public class FletElement extends InnerFunctionElement {
 
 	private static final long serialVersionUID = 3770382068803341963L;
 
-	public FletElement(final List<FletVar> vars, final List<LispStruct> forms, final LexicalEnvironment lexicalEnvironment) {
+	public FletElement(final List<FletVar> vars, final List<Element> forms, final LexicalEnvironment lexicalEnvironment) {
 		super(vars, forms, lexicalEnvironment);
 	}
 
@@ -22,7 +22,7 @@ public class FletElement extends InnerFunctionElement {
 
 		private static final long serialVersionUID = -794246121764492302L;
 
-		public FletVar(final SymbolStruct<?> var, final LispStruct initForm) {
+		public FletVar(final SymbolElement<?> var, final Element initForm) {
 			super(var, initForm);
 		}
 	}

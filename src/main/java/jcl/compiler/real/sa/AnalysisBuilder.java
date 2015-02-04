@@ -4,10 +4,11 @@
 
 package jcl.compiler.real.sa;
 
-import jcl.LispStruct;
 import jcl.compiler.real.environment.DynamicEnvironment;
 import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.Marker;
+import jcl.compiler.real.sa.element.SymbolElement;
+import jcl.compiler.real.sa.element.specialoperator.GoElement;
 import jcl.symbols.SymbolStruct;
 
 import java.io.Serializable;
@@ -28,8 +29,8 @@ public class AnalysisBuilder implements Serializable {
 	private int bindingsPosition;
 	private int closureDepth;
 
-	private final Stack<SymbolStruct<?>> blockStack = new Stack<>();
-	private final Stack<Set<LispStruct>> tagbodyStack = new Stack<>();
+	private final Stack<SymbolElement<?>> blockStack = new Stack<>();
+	private final Stack<Set<GoElement>> tagbodyStack = new Stack<>();
 
 	// eval-when processing modes
 	private boolean topLevelMode;
@@ -80,11 +81,11 @@ public class AnalysisBuilder implements Serializable {
 		this.closureDepth = closureDepth;
 	}
 
-	public Stack<SymbolStruct<?>> getBlockStack() {
+	public Stack<SymbolElement<?>> getBlockStack() {
 		return blockStack;
 	}
 
-	public Stack<Set<LispStruct>> getTagbodyStack() {
+	public Stack<Set<GoElement>> getTagbodyStack() {
 		return tagbodyStack;
 	}
 

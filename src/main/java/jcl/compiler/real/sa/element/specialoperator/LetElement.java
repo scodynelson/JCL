@@ -4,10 +4,9 @@
 
 package jcl.compiler.real.sa.element.specialoperator;
 
-import jcl.LispStruct;
 import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.sa.element.Element;
-import jcl.symbols.SymbolStruct;
+import jcl.compiler.real.sa.element.SymbolElement;
 
 import java.io.Serializable;
 import java.util.List;
@@ -17,11 +16,11 @@ public class LetElement implements Element {
 	private static final long serialVersionUID = -3186671381163635893L;
 
 	private final List<LetVar> vars;
-	private final List<LispStruct> forms;
+	private final List<Element> forms;
 
 	private final LexicalEnvironment lexicalEnvironment;
 
-	public LetElement(final List<LetVar> vars, final List<LispStruct> forms, final LexicalEnvironment lexicalEnvironment) {
+	public LetElement(final List<LetVar> vars, final List<Element> forms, final LexicalEnvironment lexicalEnvironment) {
 		this.vars = vars;
 		this.forms = forms;
 		this.lexicalEnvironment = lexicalEnvironment;
@@ -31,7 +30,7 @@ public class LetElement implements Element {
 		return vars;
 	}
 
-	public List<LispStruct> getForms() {
+	public List<Element> getForms() {
 		return forms;
 	}
 
@@ -43,19 +42,19 @@ public class LetElement implements Element {
 
 		private static final long serialVersionUID = 3246152127057600416L;
 
-		private final SymbolStruct<?> var;
-		private final LispStruct initForm;
+		private final SymbolElement<?> var;
+		private final Element initForm;
 
-		public LetVar(final SymbolStruct<?> var, final LispStruct initForm) {
+		public LetVar(final SymbolElement<?> var, final Element initForm) {
 			this.var = var;
 			this.initForm = initForm;
 		}
 
-		public SymbolStruct<?> getVar() {
+		public SymbolElement<?> getVar() {
 			return var;
 		}
 
-		public LispStruct getInitForm() {
+		public Element getInitForm() {
 			return initForm;
 		}
 	}

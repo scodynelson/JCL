@@ -4,9 +4,9 @@
 
 package jcl.compiler.real.sa.element.specialoperator;
 
-import jcl.LispStruct;
 import jcl.compiler.real.environment.LexicalEnvironment;
-import jcl.symbols.SymbolStruct;
+import jcl.compiler.real.sa.element.Element;
+import jcl.compiler.real.sa.element.SymbolElement;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ public class LabelsElement extends InnerFunctionElement {
 
 	private static final long serialVersionUID = -2347494500321073144L;
 
-	public LabelsElement(final List<LabelsVar> vars, final List<LispStruct> forms, final LexicalEnvironment lexicalEnvironment) {
+	public LabelsElement(final List<LabelsVar> vars, final List<Element> forms, final LexicalEnvironment lexicalEnvironment) {
 		super(vars, forms, lexicalEnvironment);
 	}
 
@@ -22,7 +22,7 @@ public class LabelsElement extends InnerFunctionElement {
 
 		private static final long serialVersionUID = 2989214415282349607L;
 
-		public LabelsVar(final SymbolStruct<?> var, final LispStruct initForm) {
+		public LabelsVar(final SymbolElement<?> var, final Element initForm) {
 			super(var, initForm);
 		}
 	}

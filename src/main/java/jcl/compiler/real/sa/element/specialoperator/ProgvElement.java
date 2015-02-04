@@ -4,10 +4,9 @@
 
 package jcl.compiler.real.sa.element.specialoperator;
 
-import jcl.LispStruct;
 import jcl.compiler.real.environment.DynamicEnvironment;
 import jcl.compiler.real.sa.element.Element;
-import jcl.symbols.SymbolStruct;
+import jcl.compiler.real.sa.element.SymbolElement;
 
 import java.io.Serializable;
 import java.util.List;
@@ -17,11 +16,11 @@ public class ProgvElement implements Element {
 	private static final long serialVersionUID = 6286708668973616872L;
 
 	private final List<ProgvVar> vars;
-	private final List<LispStruct> forms;
+	private final List<Element> forms;
 
 	private final DynamicEnvironment dynamicEnvironment;
 
-	public ProgvElement(final List<ProgvVar> vars, final List<LispStruct> forms, final DynamicEnvironment dynamicEnvironment) {
+	public ProgvElement(final List<ProgvVar> vars, final List<Element> forms, final DynamicEnvironment dynamicEnvironment) {
 		this.vars = vars;
 		this.forms = forms;
 		this.dynamicEnvironment = dynamicEnvironment;
@@ -31,7 +30,7 @@ public class ProgvElement implements Element {
 		return vars;
 	}
 
-	public List<LispStruct> getForms() {
+	public List<Element> getForms() {
 		return forms;
 	}
 
@@ -43,19 +42,19 @@ public class ProgvElement implements Element {
 
 		private static final long serialVersionUID = -5131005121770228469L;
 
-		private final SymbolStruct<?> var;
-		private final LispStruct val;
+		private final SymbolElement<?> var;
+		private final Element val;
 
-		public ProgvVar(final SymbolStruct<?> var, final LispStruct val) {
+		public ProgvVar(final SymbolElement<?> var, final Element val) {
 			this.var = var;
 			this.val = val;
 		}
 
-		public SymbolStruct<?> getVar() {
+		public SymbolElement<?> getVar() {
 			return var;
 		}
 
-		public LispStruct getVal() {
+		public Element getVal() {
 			return val;
 		}
 	}

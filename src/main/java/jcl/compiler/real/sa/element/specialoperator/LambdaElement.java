@@ -4,7 +4,6 @@
 
 package jcl.compiler.real.sa.element.specialoperator;
 
-import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.lambdalist.OrdinaryLambdaListBindings;
@@ -20,11 +19,11 @@ public class LambdaElement implements Element {
 
 	private final StringStruct docString;
 
-	private final List<LispStruct> forms;
+	private final List<Element> forms;
 
 	private final LexicalEnvironment lexicalEnvironment;
 
-	public LambdaElement(final OrdinaryLambdaListBindings lambdaListBindings, final StringStruct docString, final List<LispStruct> forms,
+	public LambdaElement(final OrdinaryLambdaListBindings lambdaListBindings, final StringStruct docString, final List<Element> forms,
 	                     final LexicalEnvironment lexicalEnvironment) {
 		this.lambdaListBindings = lambdaListBindings;
 		this.docString = docString;
@@ -40,7 +39,7 @@ public class LambdaElement implements Element {
 		return docString;
 	}
 
-	public List<LispStruct> getForms() {
+	public List<Element> getForms() {
 		return forms;
 	}
 

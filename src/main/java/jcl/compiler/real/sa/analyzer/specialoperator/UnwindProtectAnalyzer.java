@@ -3,6 +3,7 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.element.Element;
 import jcl.compiler.real.sa.element.specialoperator.UnwindProtectElement;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
@@ -29,10 +30,10 @@ public class UnwindProtectAnalyzer implements SpecialOperatorAnalyzer {
 		}
 
 		final LispStruct protectedForm = input.getRest().getFirst();
-		final LispStruct analyzedProtectedForm = analyzer.analyzeForm(protectedForm, analysisBuilder);
+		final Element analyzedProtectedForm = analyzer.analyzeForm(protectedForm, analysisBuilder);
 
 		final ListStruct cleanupForms = input.getRest().getRest();
-		final List<LispStruct> analyzedCleanupForms = bodyAnalyzer.analyze(analyzer, cleanupForms, analysisBuilder);
+		final List<Element> analyzedCleanupForms = bodyAnalyzer.analyze(analyzer, cleanupForms, analysisBuilder);
 
 		return new UnwindProtectElement(analyzedProtectedForm, analyzedCleanupForms);
 	}

@@ -3,6 +3,7 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.element.Element;
 import jcl.compiler.real.sa.element.specialoperator.MultipleValueProg1Element;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
@@ -24,11 +25,11 @@ public class MultipleValueProg1Analyzer implements SpecialOperatorAnalyzer {
 		}
 
 		final LispStruct firstForm = input.getRest().getFirst();
-		final LispStruct firstFormAnalyzed = analyzer.analyzeForm(firstForm, analysisBuilder);
+		final Element firstFormAnalyzed = analyzer.analyzeForm(firstForm, analysisBuilder);
 
 		final ListStruct forms = input.getRest().getRest();
 		final List<LispStruct> formsJavaList = forms.getAsJavaList();
-		final List<LispStruct> analyzedForms =
+		final List<Element> analyzedForms =
 				formsJavaList.stream()
 				             .map(e -> analyzer.analyzeForm(e, analysisBuilder))
 				             .collect(Collectors.toList());

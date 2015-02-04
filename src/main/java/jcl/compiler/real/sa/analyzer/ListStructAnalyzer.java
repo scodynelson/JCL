@@ -3,6 +3,12 @@ package jcl.compiler.real.sa.analyzer;
 import jcl.LispStruct;
 import jcl.compiler.old.functions.MacroExpandFunction;
 import jcl.compiler.old.functions.MacroExpandReturn;
+import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.FunctionCallElement;
+import jcl.compiler.real.element.LambdaFunctionCallElement;
+import jcl.compiler.real.element.NullElement;
+import jcl.compiler.real.element.SymbolElement;
+import jcl.compiler.real.element.specialoperator.lambda.LambdaElement;
 import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.lambdalist.OptionalBinding;
@@ -12,40 +18,8 @@ import jcl.compiler.real.environment.lambdalist.RestBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.analyzer.specialoperator.BlockAnalyzer;
-import jcl.compiler.real.sa.analyzer.specialoperator.CatchAnalyzer;
-import jcl.compiler.real.sa.analyzer.specialoperator.EvalWhenAnalyzer;
-import jcl.compiler.real.sa.analyzer.specialoperator.FletAnalyzer;
-import jcl.compiler.real.sa.analyzer.specialoperator.FunctionAnalyzer;
-import jcl.compiler.real.sa.analyzer.specialoperator.GoAnalyzer;
-import jcl.compiler.real.sa.analyzer.specialoperator.IfAnalyzer;
-import jcl.compiler.real.sa.analyzer.specialoperator.LabelsAnalyzer;
-import jcl.compiler.real.sa.analyzer.specialoperator.LetAnalyzer;
-import jcl.compiler.real.sa.analyzer.specialoperator.LetStarAnalyzer;
-import jcl.compiler.real.sa.analyzer.specialoperator.LoadTimeValueAnalyzer;
-import jcl.compiler.real.sa.analyzer.specialoperator.LocallyAnalyzer;
-import jcl.compiler.real.sa.analyzer.specialoperator.MacroletAnalyzer;
-import jcl.compiler.real.sa.analyzer.specialoperator.MultipleValueCallAnalyzer;
-import jcl.compiler.real.sa.analyzer.specialoperator.MultipleValueProg1Analyzer;
-import jcl.compiler.real.sa.analyzer.specialoperator.PrognAnalyzer;
-import jcl.compiler.real.sa.analyzer.specialoperator.ProgvAnalyzer;
-import jcl.compiler.real.sa.analyzer.specialoperator.QuoteAnalyzer;
-import jcl.compiler.real.sa.analyzer.specialoperator.ReturnFromAnalyzer;
-import jcl.compiler.real.sa.analyzer.specialoperator.SetqAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.SpecialOperatorAnalyzer;
-import jcl.compiler.real.sa.analyzer.specialoperator.SymbolMacroletAnalyzer;
-import jcl.compiler.real.sa.analyzer.specialoperator.TagbodyAnalyzer;
-import jcl.compiler.real.sa.analyzer.specialoperator.TheAnalyzer;
-import jcl.compiler.real.sa.analyzer.specialoperator.ThrowAnalyzer;
-import jcl.compiler.real.sa.analyzer.specialoperator.UnwindProtectAnalyzer;
-import jcl.compiler.real.sa.analyzer.specialoperator.compiler.DefstructAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.lambda.LambdaAnalyzer;
-import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.FunctionCallElement;
-import jcl.compiler.real.element.LambdaFunctionCallElement;
-import jcl.compiler.real.element.NullElement;
-import jcl.compiler.real.element.SymbolElement;
-import jcl.compiler.real.element.specialoperator.lambda.LambdaElement;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ConsStruct;
@@ -56,11 +30,10 @@ import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 import jcl.util.InstanceOf;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -72,46 +45,11 @@ public class ListStructAnalyzer implements Analyzer<Element, ListStruct> {
 
 	private static final long serialVersionUID = 5454983196467731873L;
 
-	private static final Map<SpecialOperator, Class<? extends SpecialOperatorAnalyzer>> STRATEGIES = new HashMap<>();
-
-	static {
-		STRATEGIES.put(SpecialOperator.BLOCK, BlockAnalyzer.class);
-		STRATEGIES.put(SpecialOperator.CATCH, CatchAnalyzer.class);
-		STRATEGIES.put(SpecialOperator.EVAL_WHEN, EvalWhenAnalyzer.class);
-		STRATEGIES.put(SpecialOperator.FLET, FletAnalyzer.class);
-		STRATEGIES.put(SpecialOperator.FUNCTION, FunctionAnalyzer.class);
-		STRATEGIES.put(SpecialOperator.GO, GoAnalyzer.class);
-		STRATEGIES.put(SpecialOperator.IF, IfAnalyzer.class);
-		STRATEGIES.put(SpecialOperator.LABELS, LabelsAnalyzer.class);
-		STRATEGIES.put(SpecialOperator.LET, LetAnalyzer.class);
-		STRATEGIES.put(SpecialOperator.LET_STAR, LetStarAnalyzer.class);
-		STRATEGIES.put(SpecialOperator.LOAD_TIME_VALUE, LoadTimeValueAnalyzer.class);
-		STRATEGIES.put(SpecialOperator.LOCALLY, LocallyAnalyzer.class);
-		STRATEGIES.put(SpecialOperator.MACROLET, MacroletAnalyzer.class);
-		STRATEGIES.put(SpecialOperator.MULTIPLE_VALUE_CALL, MultipleValueCallAnalyzer.class);
-		STRATEGIES.put(SpecialOperator.MULTIPLE_VALUE_PROG1, MultipleValueProg1Analyzer.class);
-		STRATEGIES.put(SpecialOperator.PROGN, PrognAnalyzer.class);
-		STRATEGIES.put(SpecialOperator.PROGV, ProgvAnalyzer.class);
-		STRATEGIES.put(SpecialOperator.QUOTE, QuoteAnalyzer.class);
-		STRATEGIES.put(SpecialOperator.RETURN_FROM, ReturnFromAnalyzer.class);
-		STRATEGIES.put(SpecialOperator.SETQ, SetqAnalyzer.class);
-		STRATEGIES.put(SpecialOperator.SYMBOL_MACROLET, SymbolMacroletAnalyzer.class);
-		STRATEGIES.put(SpecialOperator.TAGBODY, TagbodyAnalyzer.class);
-		STRATEGIES.put(SpecialOperator.THE, TheAnalyzer.class);
-		STRATEGIES.put(SpecialOperator.THROW, ThrowAnalyzer.class);
-		STRATEGIES.put(SpecialOperator.UNWIND_PROTECT, UnwindProtectAnalyzer.class);
-
-//		STRATEGIES.put(SpecialOperator.DECLARE, DeclareAnalyzer.INSTANCE);
-		STRATEGIES.put(SpecialOperator.LAMBDA, LambdaAnalyzer.class);
-
-		STRATEGIES.put(SpecialOperator.DEFSTRUCT, DefstructAnalyzer.class);
-	}
-
 	@Autowired
 	private LambdaAnalyzer lambdaAnalyzer;
 
-	@Autowired
-	private transient ApplicationContext context;
+	@Resource
+	private Map<SpecialOperator, SpecialOperatorAnalyzer> specialOperatorAnalyzerStrategies;
 
 	@Override
 	public Element analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
@@ -160,13 +98,12 @@ public class ListStructAnalyzer implements Analyzer<Element, ListStruct> {
 	private Element analyzeSpecialOperator(final SemanticAnalyzer analyzer, final AnalysisBuilder analysisBuilder,
 	                                       final ListStruct expandedForm, final SpecialOperator specialOperator) {
 
-		final Class<? extends SpecialOperatorAnalyzer> strategy = STRATEGIES.get(specialOperator);
-		if (strategy == null) {
+		final SpecialOperatorAnalyzer specialOperatorAnalyzer = specialOperatorAnalyzerStrategies.get(specialOperator);
+		if (specialOperatorAnalyzer == null) {
 			throw new ProgramErrorException("LIST ANALYZER: SpecialOperator symbol supplied is not supported: " + specialOperator);
 		}
 
-		final Analyzer<? extends Element, ListStruct> strategyBean = context.getBean(strategy);
-		return strategyBean.analyze(analyzer, expandedForm, analysisBuilder);
+		return specialOperatorAnalyzer.analyze(analyzer, expandedForm, analysisBuilder);
 	}
 
 	private static FunctionCallElement analyzeFunctionCall(final SemanticAnalyzer analyzer, final AnalysisBuilder analysisBuilder,

@@ -13,6 +13,7 @@ import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.specialoperator.lambda.LambdaElement;
 import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
+import jcl.compiler.real.sa.analyzer.ListStructAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.SpecialOperatorAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyWithDeclaresAndDocStringAnalyzer;
@@ -35,6 +36,9 @@ public class LambdaAnalyzer implements SpecialOperatorAnalyzer {
 
 	@Autowired
 	private BodyWithDeclaresAndDocStringAnalyzer bodyWithDeclaresAndDocStringAnalyzer;
+
+	@Autowired
+	private ListStructAnalyzer listStructAnalyzer;
 
 	@Override
 	public LambdaElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
@@ -74,14 +78,15 @@ public class LambdaAnalyzer implements SpecialOperatorAnalyzer {
 			final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
 			newStartingLambdaBody.addAll(realBodyForms);
 
-			final List<Element> analyzedBodyForms
-					= newStartingLambdaBody.stream()
-					                       .map(e -> analyzer.analyzeForm(e, analysisBuilder))
-					                       .collect(Collectors.toList());
+			final ListStruct newLambdaBodyListStruct = ListStruct.buildProperList(newStartingLambdaBody);
+
+			// TODO: HOLY SHIT BUG: What's happening is that we're creating a new body here and trying to just analyze every element of it instead of delegating properly.
+			// TODO:    Need to research this in ALL the other analyzers as well.
+			final Element analyzedBodyForms = listStructAnalyzer.analyze(analyzer, newLambdaBodyListStruct, analysisBuilder);
 
 			final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.peek();
 
-			return new LambdaElement(parsedLambdaList, bodyProcessingResult.getDocString(), analyzedBodyForms, currentLexicalEnvironment);
+			return new LambdaElement(parsedLambdaList, bodyProcessingResult.getDocString(), null, currentLexicalEnvironment);
 		} finally {
 			analysisBuilder.setClosureDepth(tempClosureDepth);
 			analysisBuilder.setBindingsPosition(tempBindingsPosition);

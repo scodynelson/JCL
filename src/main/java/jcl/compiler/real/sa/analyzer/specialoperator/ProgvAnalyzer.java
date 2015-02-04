@@ -2,6 +2,8 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.DynamicEnvironment;
+import jcl.compiler.real.environment.EnvironmentBinding;
+import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.analyzer.DynamicSymbolStructAnalyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
@@ -11,6 +13,7 @@ import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
+import jcl.types.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -116,7 +119,9 @@ public class ProgvAnalyzer implements SpecialOperatorAnalyzer {
 
 				dynamicSymbolStructAnalyzer.analyze(analyzer, var, analysisBuilder);
 
-				progvEnvironment.addBinding(var, null, analyzedVal, true);
+				// TODO: really a 'null' allocation here???
+				final EnvironmentBinding binding = new EnvironmentBinding(var, null, Scope.DYNAMIC, T.INSTANCE, analyzedVal);
+				progvEnvironment.addBinding(binding);
 
 				progvVars.add(progvVar);
 			}

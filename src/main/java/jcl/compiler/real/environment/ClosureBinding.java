@@ -4,10 +4,16 @@ import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class ClosureBinding {
+import java.io.Serializable;
+
+public class ClosureBinding implements Serializable {
+
+	private static final long serialVersionUID = 3814280129166840828L;
 
 	private final SymbolStruct<?> symbolStruct;
+
 	private final int position;
+
 	private int references;
 
 	public ClosureBinding(final SymbolStruct<?> symbolStruct, final int position, final int references) {

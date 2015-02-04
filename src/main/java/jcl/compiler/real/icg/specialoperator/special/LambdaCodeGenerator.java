@@ -2,6 +2,7 @@ package jcl.compiler.real.icg.specialoperator.special;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Binding;
+import jcl.compiler.real.environment.EnvironmentBinding;
 import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.LoadTimeValue;
 import jcl.compiler.real.icg.CodeGenerator;
@@ -75,7 +76,7 @@ public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 			interfaces.add("lisp/common/type/MacroFunction");
 			icg.MacroLambda = false;
 		}
-		final List<Binding> bindingSetBody = ((LexicalEnvironment) list.getFirst()).getBindings();
+		final List<EnvironmentBinding> bindingSetBody = ((LexicalEnvironment) list.getFirst()).getBindings();
 
 		final int numParams = bindingSetBody.size();
 		if (numParams <= 11) {

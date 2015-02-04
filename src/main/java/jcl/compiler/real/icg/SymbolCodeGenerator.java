@@ -32,7 +32,7 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 		// ==> free and dynamic
 		// 4. the binding is completely local and allocated to a JVM local
 		//    If there is no binding and this is special, it's really free!
-		final Closure closure = codeGenerator.bindingEnvironment.getEnvironmentClosure();
+		final Closure closure = codeGenerator.bindingEnvironment.getClosure();
 		final Optional<ClosureBinding> closureBinding = closure.getBinding(input);
 		if (!closureBinding.isPresent()) {
 			// set up for 2 or 3

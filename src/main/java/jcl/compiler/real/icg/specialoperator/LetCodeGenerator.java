@@ -45,7 +45,7 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 		// are we building a closure here?
 		//----->
 		codeGenerator.bindingEnvironment = codeGenerator.bindingStack.push((LexicalEnvironment) input.getFirst());
-		final Closure closureSetBody = codeGenerator.bindingEnvironment.getEnvironmentClosure();
+		final Closure closureSetBody = codeGenerator.bindingEnvironment.getClosure();
 //        int numParams = closureSetBody.size() - 1;
 
 		try {
@@ -55,7 +55,7 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 			final LexicalEnvironment bindings = codeGenerator.bindingEnvironment;
 			// ((:parent ...) (:bindings ...) (:symbol-table ...) (:closure ...)))
 			// Now get just the bindings list and drop the :bindings
-			final List<Binding> bindingList = codeGenerator.bindingEnvironment.getBindings();
+			final List<EnvironmentBinding> bindingList = codeGenerator.bindingEnvironment.getBindings();
 			// ((sym1 :allocation ... :binding ... :scope ... :type ... :init-form ...)
 			//  (sym2 :allocation ... :binding ... :scope ... :type ... :init-form ...)...)
 			// Now to loop thru the bindings, gen code for the init forms and store them in the

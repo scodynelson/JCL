@@ -4,13 +4,17 @@ import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class Closure {
+public class Closure implements Serializable {
+
+	private static final long serialVersionUID = 1822050348694422252L;
 
 	private final List<ClosureBinding> bindings = new ArrayList<>();
+
 	private final int depth;
 
 	public Closure(final int depth) {
@@ -33,11 +37,6 @@ public class Closure {
 	}
 
 	public void addBinding(final ClosureBinding closureBinding) {
-		bindings.add(closureBinding);
-	}
-
-	public void addBinding(final SymbolStruct<?> newVariable) {
-		final ClosureBinding closureBinding = new ClosureBinding(newVariable, bindings.size(), 1);
 		bindings.add(closureBinding);
 	}
 

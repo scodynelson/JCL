@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public abstract class PositionAllocation implements Allocation {
 
+	private static final long serialVersionUID = -1200453833243116544L;
+
 	private final int position;
 
 	protected PositionAllocation(final int position) {

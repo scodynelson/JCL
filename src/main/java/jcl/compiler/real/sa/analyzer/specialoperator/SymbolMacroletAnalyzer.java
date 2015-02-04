@@ -2,9 +2,11 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.EnvironmentAccessor;
+import jcl.compiler.real.environment.EnvironmentBinding;
 import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.environment.ParameterAllocation;
+import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.element.SymbolMacroletElement;
@@ -15,6 +17,7 @@ import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyWithDeclaresAnalyz
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.symbols.SymbolStruct;
+import jcl.types.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -118,7 +121,8 @@ public class SymbolMacroletAnalyzer implements SpecialOperatorAnalyzer {
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
-		currentLexicalEnvironment.addBinding(var, allocation, expansion, false);
+		final EnvironmentBinding binding = new EnvironmentBinding(var, allocation, Scope.LEXICAL, T.INSTANCE, expansion);
+		currentLexicalEnvironment.addBinding(binding);
 
 		return new SymbolMacroletElement.SymbolMacroletElementVar(var, expansion);
 	}

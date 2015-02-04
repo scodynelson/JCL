@@ -11,9 +11,13 @@ public class OrdinaryLambdaListBindings implements Serializable {
 	private static final long serialVersionUID = 3980582571605022674L;
 
 	private final List<RequiredBinding> requiredBindings;
+
 	private final List<OptionalBinding> optionalBindings;
+
 	private final RestBinding restBinding;
+
 	private final List<KeyBinding> keyBindings;
+
 	private final List<AuxBinding> auxBindings;
 
 	private final boolean allowOtherKeys;

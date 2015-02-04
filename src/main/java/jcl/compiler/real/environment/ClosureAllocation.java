@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class ClosureAllocation implements Allocation {
 
+	private static final long serialVersionUID = 8918948643826465949L;
+
 	private final Closure closure;
 
 	public ClosureAllocation(final Closure closure) {

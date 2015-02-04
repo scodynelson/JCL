@@ -2,8 +2,10 @@ package jcl.compiler.real.sa;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.EnvironmentAccessor;
+import jcl.compiler.real.environment.EnvironmentBinding;
 import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.ParameterAllocation;
+import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.environment.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.lambdalist.OptionalBinding;
@@ -20,6 +22,7 @@ import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
+import jcl.types.T;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -140,7 +143,10 @@ public final class LambdaListParser {
 
 			final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 			final boolean isSpecial = isSpecial(declareElement, currentParam);
-			currentLexicalEnvironment.addBinding(currentParam, allocation, NILStruct.INSTANCE, isSpecial);
+
+			final Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
+			final EnvironmentBinding binding = new EnvironmentBinding(currentParam, allocation, scope, T.INSTANCE, NILStruct.INSTANCE);
+			currentLexicalEnvironment.addBinding(binding);
 		}
 
 		return new RequiredParseResult(currentElement, currentPosition, requiredBindings);
@@ -169,7 +175,10 @@ public final class LambdaListParser {
 
 				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 				final boolean isSpecial = isSpecial(declareElement, currentParam);
-				currentLexicalEnvironment.addBinding(currentParam, allocation, NILStruct.INSTANCE, isSpecial);
+
+				final Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
+				final EnvironmentBinding binding = new EnvironmentBinding(currentParam, allocation, scope, T.INSTANCE, NILStruct.INSTANCE);
+				currentLexicalEnvironment.addBinding(binding);
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
 				if ((currentParam.size() < 1) || (currentParam.size() > 3)) {
@@ -200,7 +209,10 @@ public final class LambdaListParser {
 
 				ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 				boolean isSpecial = isSpecial(declareElement, varNameCurrent);
-				currentLexicalEnvironment.addBinding(varNameCurrent, allocation, parameterValueInitForm, isSpecial);
+
+				Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
+				EnvironmentBinding binding = new EnvironmentBinding(varNameCurrent, allocation, scope, T.INSTANCE, parameterValueInitForm);
+				currentLexicalEnvironment.addBinding(binding);
 
 				SuppliedPBinding suppliedPBinding = null;
 				if (!thirdInCurrent.equals(NullStruct.INSTANCE)) {
@@ -217,7 +229,10 @@ public final class LambdaListParser {
 
 					allocation = new ParameterAllocation(newBindingsPosition);
 					isSpecial = isSpecial(declareElement, suppliedPCurrent);
-					currentLexicalEnvironment.addBinding(suppliedPCurrent, allocation, NILStruct.INSTANCE, isSpecial);
+
+					scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
+					binding = new EnvironmentBinding(suppliedPCurrent, allocation, scope, T.INSTANCE, NILStruct.INSTANCE);
+					currentLexicalEnvironment.addBinding(binding);
 				}
 
 				final ParameterAllocation optionalAllocation = new ParameterAllocation(currentPosition++);
@@ -256,7 +271,10 @@ public final class LambdaListParser {
 
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 		final boolean isSpecial = isSpecial(declareElement, currentParam);
-		currentLexicalEnvironment.addBinding(currentParam, allocation, NILStruct.INSTANCE, isSpecial);
+
+		final Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
+		final EnvironmentBinding binding = new EnvironmentBinding(currentParam, allocation, scope, T.INSTANCE, NILStruct.INSTANCE);
+		currentLexicalEnvironment.addBinding(binding);
 
 		final ParameterAllocation restAllocation = new ParameterAllocation(currentPosition++);
 		final RestBinding restBinding = new RestBinding(currentParam, restAllocation);
@@ -287,7 +305,10 @@ public final class LambdaListParser {
 
 				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 				final boolean isSpecial = isSpecial(declareElement, currentParam);
-				currentLexicalEnvironment.addBinding(currentParam, allocation, NILStruct.INSTANCE, isSpecial);
+
+				final Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
+				final EnvironmentBinding binding = new EnvironmentBinding(currentParam, allocation, scope, T.INSTANCE, NILStruct.INSTANCE);
+				currentLexicalEnvironment.addBinding(binding);
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
 				if ((currentParam.size() < 1) || (currentParam.size() > 3)) {
@@ -339,7 +360,10 @@ public final class LambdaListParser {
 
 				ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 				boolean isSpecial = isSpecial(declareElement, varNameCurrent);
-				currentLexicalEnvironment.addBinding(varNameCurrent, allocation, parameterValueInitForm, isSpecial);
+
+				Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
+				EnvironmentBinding binding = new EnvironmentBinding(varNameCurrent, allocation, scope, T.INSTANCE, parameterValueInitForm);
+				currentLexicalEnvironment.addBinding(binding);
 
 				SuppliedPBinding suppliedPBinding = null;
 				if (!thirdInCurrent.equals(NullStruct.INSTANCE)) {
@@ -356,7 +380,10 @@ public final class LambdaListParser {
 
 					allocation = new ParameterAllocation(newBindingsPosition);
 					isSpecial = isSpecial(declareElement, suppliedPCurrent);
-					currentLexicalEnvironment.addBinding(suppliedPCurrent, allocation, NILStruct.INSTANCE, isSpecial);
+
+					scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
+					binding = new EnvironmentBinding(suppliedPCurrent, allocation, scope, T.INSTANCE, NILStruct.INSTANCE);
+					currentLexicalEnvironment.addBinding(binding);
 				}
 
 				final ParameterAllocation keyAllocation = new ParameterAllocation(currentPosition++);
@@ -401,7 +428,10 @@ public final class LambdaListParser {
 
 				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 				final boolean isSpecial = isSpecial(declareElement, currentParam);
-				currentLexicalEnvironment.addBinding(currentParam, allocation, NILStruct.INSTANCE, isSpecial);
+
+				final Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
+				final EnvironmentBinding binding = new EnvironmentBinding(currentParam, allocation, scope, T.INSTANCE, NILStruct.INSTANCE);
+				currentLexicalEnvironment.addBinding(binding);
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
 				if ((currentParam.size() < 1) || (currentParam.size() > 2)) {
@@ -435,7 +465,10 @@ public final class LambdaListParser {
 
 				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 				final boolean isSpecial = isSpecial(declareElement, varNameCurrent);
-				currentLexicalEnvironment.addBinding(varNameCurrent, allocation, parameterValueInitForm, isSpecial);
+
+				final Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
+				final EnvironmentBinding binding = new EnvironmentBinding(varNameCurrent, allocation, scope, T.INSTANCE, parameterValueInitForm);
+				currentLexicalEnvironment.addBinding(binding);
 			} else {
 				throw new ProgramErrorException("LambdaList aux parameters must be of type SymbolStruct or ListStruct: " + currentElement);
 			}

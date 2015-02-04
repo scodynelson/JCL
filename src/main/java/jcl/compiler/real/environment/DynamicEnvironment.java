@@ -13,7 +13,6 @@ public class DynamicEnvironment extends Environment<DynamicEnvironment> {
 
 	private static final long serialVersionUID = 4931675023340550160L;
 
-	// TODO: load-time-value ???
 	public DynamicEnvironment(final DynamicEnvironment parent) {
 		super(parent);
 	}

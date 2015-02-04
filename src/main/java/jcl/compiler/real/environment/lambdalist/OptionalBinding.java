@@ -14,7 +14,7 @@ public class OptionalBinding extends EnvironmentBinding {
 	private final SuppliedPBinding suppliedPBinding;
 
 	public OptionalBinding(final SymbolStruct<?> symbolStruct, final ParameterAllocation allocation, final LispStruct initForm,
-						   final SuppliedPBinding suppliedPBinding) {
+	                       final SuppliedPBinding suppliedPBinding) {
 		super(symbolStruct, allocation, Scope.LEXICAL, T.INSTANCE, initForm);
 		this.suppliedPBinding = suppliedPBinding;
 	}

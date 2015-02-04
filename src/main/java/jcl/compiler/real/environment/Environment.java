@@ -6,7 +6,6 @@ package jcl.compiler.real.environment;
 
 import jcl.LispStruct;
 import jcl.symbols.SymbolStruct;
-import jcl.types.T;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -20,7 +19,7 @@ public abstract class Environment<E extends Environment<E>> implements LispStruc
 
 	private final E parent;
 
-	private final List<Binding> bindings = new ArrayList<>();
+	private final List<EnvironmentBinding> bindings = new ArrayList<>();
 
 	private final SymbolTable symbolTable = new SymbolTable();
 
@@ -32,7 +31,7 @@ public abstract class Environment<E extends Environment<E>> implements LispStruc
 		return parent;
 	}
 
-	public List<Binding> getBindings() {
+	public List<EnvironmentBinding> getBindings() {
 		return bindings;
 	}
 
@@ -41,16 +40,14 @@ public abstract class Environment<E extends Environment<E>> implements LispStruc
 		               .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct));
 	}
 
-	public Optional<Binding> getBinding(final SymbolStruct<?> symbolStruct) {
+	public Optional<EnvironmentBinding> getBinding(final SymbolStruct<?> symbolStruct) {
 		return bindings.stream()
 		               .filter(e -> e.getSymbolStruct().equals(symbolStruct))
 		               .findFirst();
 	}
 
-	public void addBinding(final SymbolStruct<?> newVariable, final ParameterAllocation allocation, final LispStruct initForm, final boolean isSpecial) {
-		final Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
-		final Binding binding = new EnvironmentBinding(newVariable, allocation, scope, T.INSTANCE, initForm);
-		bindings.add(binding);
+	public void addBinding(final EnvironmentBinding environmentBinding) {
+		bindings.add(environmentBinding);
 	}
 
 	public SymbolTable getSymbolTable() {

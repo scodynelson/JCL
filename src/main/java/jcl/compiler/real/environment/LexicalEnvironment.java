@@ -18,27 +18,30 @@ public class LexicalEnvironment extends Environment<LexicalEnvironment> {
 
 	private final Marker marker;
 
-	private final Closure environmentClosure;
+	private final Closure closure;
 
 	private final List<LoadTimeValue> loadTimeValues = new ArrayList<>();
 
-	// TODO: load-time-value ???
 	public LexicalEnvironment(final LexicalEnvironment parent, final Marker marker, final int closureDepth) {
 		super(parent);
 		this.marker = marker;
-		environmentClosure = new Closure(closureDepth);
-	}
-
-	public List<LoadTimeValue> getLoadTimeValues() {
-		return loadTimeValues;
+		closure = new Closure(closureDepth);
 	}
 
 	public Marker getMarker() {
 		return marker;
 	}
 
-	public Closure getEnvironmentClosure() {
-		return environmentClosure;
+	public Closure getClosure() {
+		return closure;
+	}
+
+	public List<LoadTimeValue> getLoadTimeValues() {
+		return loadTimeValues;
+	}
+
+	public void addLoadTimeValue(final LoadTimeValue loadTimeValue) {
+		loadTimeValues.add(loadTimeValue);
 	}
 
 	@Override

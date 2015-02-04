@@ -1,4 +1,6 @@
 package jcl.compiler.real.environment;
 
-public interface Allocation {
+import java.io.Serializable;
+
+public interface Allocation extends Serializable {
 }

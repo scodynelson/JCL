@@ -8,7 +8,7 @@ import java.util.List;
 public class EnvironmentAccessor {
 
 	public static LexicalEnvironment getBindingEnvironment(final LexicalEnvironment environment, final SymbolStruct<?> variable,
-	                                                final boolean valueBinding) {
+	                                                       final boolean valueBinding) {
 
 		LexicalEnvironment currentEnvironment = environment;
 

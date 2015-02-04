@@ -7,6 +7,7 @@ import jcl.compiler.real.environment.Binding;
 import jcl.compiler.real.environment.Closure;
 import jcl.compiler.real.environment.ClosureBinding;
 import jcl.compiler.real.environment.DynamicEnvironment;
+import jcl.compiler.real.environment.EnvironmentBinding;
 import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.LocalAllocation;
 import jcl.compiler.real.environment.PositionAllocation;
@@ -134,7 +135,7 @@ public class IntermediateCodeGenerator {
 
 	private Closure findNearestClosure(final LexicalEnvironment bindingEnv) {
 		// get the current closure
-		final Closure closure = bindingEnv.getEnvironmentClosure();
+		final Closure closure = bindingEnv.getClosure();
 		if (closure != null) {
 			// return the closure. It's an error if there's no depth value
 			return closure;
@@ -249,7 +250,7 @@ public class IntermediateCodeGenerator {
 	}
 
 	public void undoClosureSetup(final LexicalEnvironment environment) {
-		final Closure closureSetBody = environment.getEnvironmentClosure();
+		final Closure closureSetBody = environment.getClosure();
 		final int numParams = closureSetBody.getBindings().size() - 1; // remove :closure and (:depth . n) from contention
 		if (numParams > 0) {
 			// keep a copy of the 'this' reference
@@ -261,7 +262,7 @@ public class IntermediateCodeGenerator {
 	}
 
 	public void doClosureSetup(final LexicalEnvironment environment) {
-		final Closure closureSetBody = environment.getEnvironmentClosure();
+		final Closure closureSetBody = environment.getClosure();
 		final int numParams = closureSetBody.getBindings().size(); // remove :closure and (:depth . n) from contention
 
 		if (numParams > 0) {
@@ -277,8 +278,8 @@ public class IntermediateCodeGenerator {
 			emitter.emitPop();
 		}
 		// get the :closure information
-		final Closure closureStuff = environment.getEnvironmentClosure();
-		final List<Binding> bindings = environment.getBindings();
+		final Closure closureStuff = environment.getClosure();
+		final List<EnvironmentBinding> bindings = environment.getBindings();
 		// (:closure (:depth . n) (x ....) (y ....) ...)
 		// if there is one, allocate the object
 		if (CollectionUtils.isNotEmpty(bindings) && (closureStuff != null)) {
@@ -387,7 +388,7 @@ public class IntermediateCodeGenerator {
 		emitter.endMethod();
 	}
 
-	public int countRequiredParams(final List<Binding> bindingSetBody) {
+	public int countRequiredParams(final List<EnvironmentBinding> bindingSetBody) {
 		int countRequired = 0;
 		// go through the list counting the usage :required entries
 		for (final Binding binding : bindingSetBody) {

@@ -79,7 +79,7 @@ public class LexicalSymbolStructAnalyzer extends SymbolStructAnalyzer {
 		}
 
 		// There is an Outer Binding Lexical Environment. Therefore, we will create a Closure Binding in that Lexical Environment.
-		final Closure closure = outerBindingLexicalEnvironment.getEnvironmentClosure();
+		final Closure closure = outerBindingLexicalEnvironment.getClosure();
 
 		final Optional<ClosureBinding> closureBinding = closure.getBinding(input);
 

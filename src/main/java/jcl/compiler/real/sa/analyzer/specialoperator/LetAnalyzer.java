@@ -2,9 +2,11 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.EnvironmentAccessor;
+import jcl.compiler.real.environment.EnvironmentBinding;
 import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.environment.ParameterAllocation;
+import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.element.LetElement;
@@ -16,6 +18,7 @@ import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
+import jcl.types.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -117,7 +120,9 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 		final boolean isSpecial = isSpecial(declareElement, var);
 
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
-		currentLexicalEnvironment.addBinding(var, allocation, initForm, isSpecial);
+		final Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
+		final EnvironmentBinding binding = new EnvironmentBinding(var, allocation, scope, T.INSTANCE, initForm);
+		currentLexicalEnvironment.addBinding(binding);
 
 		return new LetElement.LetVar(var, initForm);
 	}

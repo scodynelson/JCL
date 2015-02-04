@@ -12,8 +12,11 @@ public abstract class Binding implements Serializable {
 	private static final long serialVersionUID = 5776546981120800982L;
 
 	private final SymbolStruct<?> symbolStruct;
+
 	private final Allocation allocation;
+
 	private final Scope scope;
+
 	private final LispType type;
 
 	protected Binding(final SymbolStruct<?> symbolStruct, final Allocation allocation, final Scope scope,

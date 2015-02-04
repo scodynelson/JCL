@@ -3,7 +3,8 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.element.PrognElement;
+import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.specialoperator.PrognElement;
 import jcl.lists.ListStruct;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +22,7 @@ public class PrognAnalyzer implements SpecialOperatorAnalyzer {
 		final ListStruct forms = input.getRest();
 
 		final List<LispStruct> formsJavaList = forms.getAsJavaList();
-		final List<LispStruct> analyzedForms =
+		final List<Element> analyzedForms =
 				formsJavaList.stream()
 				             .map(e -> analyzer.analyzeForm(e, analysisBuilder))
 				             .collect(Collectors.toList());

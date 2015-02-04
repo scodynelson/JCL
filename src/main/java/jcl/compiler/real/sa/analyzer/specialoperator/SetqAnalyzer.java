@@ -3,7 +3,9 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.element.SetqElement;
+import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.SymbolElement;
+import jcl.compiler.real.element.specialoperator.SetqElement;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.symbols.SymbolStruct;
@@ -38,11 +40,12 @@ public class SetqAnalyzer implements SpecialOperatorAnalyzer {
 				throw new ProgramErrorException("SETQ: Variable must be of type SymbolStruct. Got: " + var);
 			}
 			final SymbolStruct<?> varSymbol = (SymbolStruct) var;
+			final SymbolElement<?> varSymbolSE = new SymbolElement<>(varSymbol);
 
 			final LispStruct form = formsJavaList.get(index + 1);
-			final LispStruct formAnalyzed = analyzer.analyzeForm(form, analysisBuilder);
+			final Element formAnalyzed = analyzer.analyzeForm(form, analysisBuilder);
 
-			final SetqElement.SetqPair setqPair = new SetqElement.SetqPair(varSymbol, formAnalyzed);
+			final SetqElement.SetqPair setqPair = new SetqElement.SetqPair(varSymbolSE, formAnalyzed);
 			setqPairs.add(setqPair);
 		}
 

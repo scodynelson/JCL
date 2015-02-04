@@ -5,6 +5,7 @@
       <configuration>
         <fileset id="fileset" name="Spring Application Context" removed="false">
           <file>file://$MODULE_DIR$/src/main/java/jcl/system/JCL.java</file>
+          <file>file://$MODULE_DIR$/src/main/resources/applicationContext.xml</file>
         </fileset>
       </configuration>
     </facet>
@@ -42,5 +43,6 @@
     <orderEntry type="library" exported="" name="Gradle: commons-logging:commons-logging:1.2" level="project" />
     <orderEntry type="library" exported="" scope="RUNTIME" name="Gradle: org.codehaus.groovy:groovy:2.4.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.testng:testng:6.8.17" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: org.slf4j:jcl-over-slf4j:1.7.10" level="project" />
   </component>
 </module>

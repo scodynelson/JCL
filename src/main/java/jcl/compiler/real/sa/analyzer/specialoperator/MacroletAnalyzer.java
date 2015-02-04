@@ -1,10 +1,10 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import jcl.LispStruct;
 import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.Marker;
-import jcl.compiler.real.sa.element.MacroletElement;
-import jcl.symbols.SymbolStruct;
+import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.SymbolElement;
+import jcl.compiler.real.element.specialoperator.MacroletElement;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -19,13 +19,13 @@ public class MacroletAnalyzer extends InnerFunctionAnalyzer<MacroletElement, Mac
 	}
 
 	@Override
-	protected MacroletElement getFunctionElement(final List<MacroletElement.MacroletVar> vars, final List<LispStruct> bodyForms,
+	protected MacroletElement getFunctionElement(final List<MacroletElement.MacroletVar> vars, final List<Element> bodyForms,
 	                                             final LexicalEnvironment lexicalEnvironment) {
 		return new MacroletElement(vars, bodyForms, lexicalEnvironment);
 	}
 
 	@Override
-	protected MacroletElement.MacroletVar getFunctionElementVar(final SymbolStruct<?> var, final LispStruct initForm) {
+	protected MacroletElement.MacroletVar getFunctionElementVar(final SymbolElement<?> var, final Element initForm) {
 		return new MacroletElement.MacroletVar(var, initForm);
 	}
 }

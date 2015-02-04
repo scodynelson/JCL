@@ -9,9 +9,11 @@ import jcl.compiler.real.environment.ParameterAllocation;
 import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.element.InnerFunctionElement;
-import jcl.compiler.real.sa.element.declaration.DeclareElement;
-import jcl.compiler.real.sa.element.declaration.SpecialDeclarationElement;
+import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.SymbolElement;
+import jcl.compiler.real.element.specialoperator.InnerFunctionElement;
+import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
+import jcl.compiler.real.element.specialoperator.declare.SpecialDeclarationElement;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyWithDeclaresAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
@@ -99,7 +101,7 @@ abstract class InnerFunctionAnalyzer<T extends InnerFunctionElement, S extends I
 
 			final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
 
-			final List<LispStruct> analyzedBodyForms
+			final List<Element> analyzedBodyForms
 					= realBodyForms.stream()
 					               .map(e -> analyzer.analyzeForm(e, analysisBuilder))
 					               .collect(Collectors.toList());
@@ -118,9 +120,9 @@ abstract class InnerFunctionAnalyzer<T extends InnerFunctionElement, S extends I
 		}
 	}
 
-	protected abstract T getFunctionElement(List<S> vars, List<LispStruct> bodyForms, LexicalEnvironment lexicalEnvironment);
+	protected abstract T getFunctionElement(List<S> vars, List<Element> bodyForms, LexicalEnvironment lexicalEnvironment);
 
-	protected abstract S getFunctionElementVar(SymbolStruct<?> var, LispStruct initForm);
+	protected abstract S getFunctionElementVar(SymbolElement<?> var, Element initForm);
 
 	private List<SymbolStruct<?>> getFunctionNames(final List<LispStruct> functionDefinitions) {
 
@@ -192,7 +194,7 @@ abstract class InnerFunctionAnalyzer<T extends InnerFunctionElement, S extends I
 		// Evaluate in the outer environment. This is one of the differences between Flet and Labels.
 		final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.pop();
 
-		final LispStruct functionInitForm;
+		final Element functionInitForm;
 		try {
 			functionInitForm = analyzer.analyzeForm(innerFunctionListStruct, analysisBuilder);
 		} finally {
@@ -202,22 +204,23 @@ abstract class InnerFunctionAnalyzer<T extends InnerFunctionElement, S extends I
 		final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentLexicalEnvironment);
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
-		final boolean isSpecial = isSpecial(declareElement, functionName);
+		final SymbolElement<?> functionNameSE = new SymbolElement<>(functionName);
+		final boolean isSpecial = isSpecial(declareElement, functionNameSE);
 
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 		final Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
 		final EnvironmentBinding binding = new EnvironmentBinding(functionName, allocation, scope, jcl.types.T.INSTANCE, functionInitForm);
 		currentLexicalEnvironment.addBinding(binding);
 
-		return getFunctionElementVar(functionName, functionInitForm);
+		return getFunctionElementVar(functionNameSE, functionInitForm);
 	}
 
-	private static boolean isSpecial(final DeclareElement declareElement, final SymbolStruct<?> var) {
+	private static boolean isSpecial(final DeclareElement declareElement, final SymbolElement<?> var) {
 		boolean isSpecial = false;
 
 		final List<SpecialDeclarationElement> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
 		for (final SpecialDeclarationElement specialDeclarationElement : specialDeclarationElements) {
-			final SymbolStruct<?> specialVar = specialDeclarationElement.getVar();
+			final SymbolElement<?> specialVar = specialDeclarationElement.getVar();
 			if (var.equals(specialVar)) {
 				isSpecial = true;
 				break;

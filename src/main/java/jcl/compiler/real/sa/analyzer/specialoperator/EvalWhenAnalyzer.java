@@ -5,10 +5,11 @@ import jcl.compiler.old.symbol.KeywordOld;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyAnalyzer;
+import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.NullElement;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SpecialOperator;
 import org.apache.commons.collections4.CollectionUtils;
@@ -37,11 +38,11 @@ public class EvalWhenAnalyzer implements SpecialOperatorAnalyzer {
 	}
 
 	@Override
-	public ListStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
+	public Element analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 		return analyze(analyzer, input, analysisBuilder, false, false);
 	}
 
-	public ListStruct analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder, final boolean isTopLevel,
+	public Element analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder, final boolean isTopLevel,
 	                          final boolean isCompileOrCompileFile) {
 
 		final LispStruct second = input.getRest().getFirst();
@@ -93,7 +94,7 @@ public class EvalWhenAnalyzer implements SpecialOperatorAnalyzer {
 		}
 
 		// TODO: Really, we just do nothing. Should we actually do a 'void' return here???
-		return NullStruct.INSTANCE;
+		return NullElement.INSTANCE;
 	}
 
 	private static boolean isCompileTopLevel(final List<LispStruct> situationList) {

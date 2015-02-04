@@ -3,7 +3,9 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.element.ReturnFromElement;
+import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.SymbolElement;
+import jcl.compiler.real.element.specialoperator.ReturnFromElement;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.symbols.SymbolStruct;
@@ -27,17 +29,18 @@ public class ReturnFromAnalyzer implements SpecialOperatorAnalyzer {
 		}
 
 		final SymbolStruct<?> name = (SymbolStruct) second;
+		final SymbolElement<?> nameSE = new SymbolElement<>(name);
 
-		if (analysisBuilder.getBlockStack().search(name) == -1) {
+		if (analysisBuilder.getBlockStack().search(nameSE) == -1) {
 			throw new ProgramErrorException("RETURN-FROM: No BLOCK with name " + second + " is visible.");
 		}
 
 		if (input.size() == 3) {
 			final LispStruct result = input.getRest().getRest().getFirst();
-			final LispStruct analyzedResult = analyzer.analyzeForm(result, analysisBuilder);
-			return new ReturnFromElement(name, analyzedResult);
+			final Element analyzedResult = analyzer.analyzeForm(result, analysisBuilder);
+			return new ReturnFromElement(nameSE, analyzedResult);
 		} else {
-			return new ReturnFromElement(name);
+			return new ReturnFromElement(nameSE);
 		}
 	}
 }

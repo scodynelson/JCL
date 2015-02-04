@@ -1,10 +1,10 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import jcl.LispStruct;
 import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.Marker;
-import jcl.compiler.real.sa.element.FletElement;
-import jcl.symbols.SymbolStruct;
+import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.SymbolElement;
+import jcl.compiler.real.element.specialoperator.FletElement;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -19,13 +19,13 @@ public class FletAnalyzer extends InnerFunctionAnalyzer<FletElement, FletElement
 	}
 
 	@Override
-	protected FletElement getFunctionElement(final List<FletElement.FletVar> vars, final List<LispStruct> bodyForms,
+	protected FletElement getFunctionElement(final List<FletElement.FletVar> vars, final List<Element> bodyForms,
 	                                         final LexicalEnvironment lexicalEnvironment) {
 		return new FletElement(vars, bodyForms, lexicalEnvironment);
 	}
 
 	@Override
-	protected FletElement.FletVar getFunctionElementVar(final SymbolStruct<?> var, final LispStruct initForm) {
+	protected FletElement.FletVar getFunctionElementVar(final SymbolElement<?> var, final Element initForm) {
 		return new FletElement.FletVar(var, initForm);
 	}
 }

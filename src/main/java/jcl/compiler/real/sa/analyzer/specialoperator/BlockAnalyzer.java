@@ -3,7 +3,9 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.element.BlockElement;
+import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.SymbolElement;
+import jcl.compiler.real.element.specialoperator.BlockElement;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.symbols.SymbolStruct;
@@ -30,18 +32,19 @@ public class BlockAnalyzer implements SpecialOperatorAnalyzer {
 		}
 
 		final SymbolStruct<?> name = (SymbolStruct) second;
-		analysisBuilder.getBlockStack().push(name);
+		final SymbolElement<?> nameSE = new SymbolElement<>(name);
+		analysisBuilder.getBlockStack().push(nameSE);
 
 		try {
 			final ListStruct forms = input.getRest().getRest();
 
 			final List<LispStruct> formsJavaList = forms.getAsJavaList();
-			final List<LispStruct> analyzedForms =
+			final List<Element> analyzedForms =
 					formsJavaList.stream()
 					             .map(e -> analyzer.analyzeForm(e, analysisBuilder))
 					             .collect(Collectors.toList());
 
-			return new BlockElement(name, analyzedForms);
+			return new BlockElement(nameSE, analyzedForms);
 		} finally {
 			analysisBuilder.getBlockStack().pop();
 		}

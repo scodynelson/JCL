@@ -9,14 +9,16 @@ import jcl.compiler.real.environment.ParameterAllocation;
 import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.element.LetElement;
-import jcl.compiler.real.sa.element.declaration.DeclareElement;
-import jcl.compiler.real.sa.element.declaration.SpecialDeclarationElement;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyWithDeclaresAnalyzer;
+import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.NullElement;
+import jcl.compiler.real.element.SymbolElement;
+import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
+import jcl.compiler.real.element.specialoperator.declare.SpecialDeclarationElement;
+import jcl.compiler.real.element.specialoperator.LetElement;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
-import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.types.T;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +77,7 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 
 			final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
 
-			final List<LispStruct> analyzedBodyForms
+			final List<Element> analyzedBodyForms
 					= realBodyForms.stream()
 					               .map(e -> analyzer.analyzeForm(e, analysisBuilder))
 					               .collect(Collectors.toList());
@@ -101,7 +103,7 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 		}
 
 		final SymbolStruct<?> var;
-		final LispStruct initForm;
+		final Element initForm;
 
 		if (parameter instanceof ListStruct) {
 			final ListStruct listParameter = (ListStruct) parameter;
@@ -109,7 +111,7 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 			initForm = getLetListParameterInitForm(listParameter, analyzer, analysisBuilder, lexicalEnvironmentStack);
 		} else {
 			var = (SymbolStruct) parameter;
-			initForm = NILStruct.INSTANCE;
+			initForm = NullElement.INSTANCE;
 		}
 
 		final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.peek();
@@ -117,22 +119,23 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 		final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentLexicalEnvironment);
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
-		final boolean isSpecial = isSpecial(declareElement, var);
+		final SymbolElement<?> varSE = new SymbolElement<>(var);
+		final boolean isSpecial = isSpecial(declareElement, varSE);
 
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 		final Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
 		final EnvironmentBinding binding = new EnvironmentBinding(var, allocation, scope, T.INSTANCE, initForm);
 		currentLexicalEnvironment.addBinding(binding);
 
-		return new LetElement.LetVar(var, initForm);
+		return new LetElement.LetVar(varSE, initForm);
 	}
 
-	private static boolean isSpecial(final DeclareElement declareElement, final SymbolStruct<?> var) {
+	private static boolean isSpecial(final DeclareElement declareElement, final SymbolElement<?> var) {
 		boolean isSpecial = false;
 
 		final List<SpecialDeclarationElement> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
 		for (final SpecialDeclarationElement specialDeclarationElement : specialDeclarationElements) {
-			final SymbolStruct<?> specialVar = specialDeclarationElement.getVar();
+			final SymbolElement<?> specialVar = specialDeclarationElement.getVar();
 			if (var.equals(specialVar)) {
 				isSpecial = true;
 				break;
@@ -155,10 +158,10 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 		return (SymbolStruct) listParameterFirst;
 	}
 
-	private static LispStruct getLetListParameterInitForm(final ListStruct listParameter,
-	                                                      final SemanticAnalyzer analyzer,
-	                                                      final AnalysisBuilder analysisBuilder,
-	                                                      final Stack<LexicalEnvironment> lexicalEnvironmentStack) {
+	private static Element getLetListParameterInitForm(final ListStruct listParameter,
+	                                                   final SemanticAnalyzer analyzer,
+	                                                   final AnalysisBuilder analysisBuilder,
+	                                                   final Stack<LexicalEnvironment> lexicalEnvironmentStack) {
 
 		final LispStruct parameterValue = listParameter.getRest().getFirst();
 

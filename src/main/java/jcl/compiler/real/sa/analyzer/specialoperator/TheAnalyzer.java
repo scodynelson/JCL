@@ -3,7 +3,8 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.element.TheElement;
+import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.specialoperator.TheElement;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.symbols.SymbolStruct;
@@ -28,7 +29,7 @@ public class TheAnalyzer implements SpecialOperatorAnalyzer {
 		// TODO: do we actually want to somehow factor in the 'TypeSpecifier' produced by the second value?
 
 		final LispStruct form = input.getRest().getRest().getFirst();
-		final LispStruct formAnalyzed = analyzer.analyzeForm(form, analysisBuilder);
+		final Element formAnalyzed = analyzer.analyzeForm(form, analysisBuilder);
 
 		return new TheElement(null, formAnalyzed);
 	}

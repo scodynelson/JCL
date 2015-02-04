@@ -7,7 +7,9 @@ import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.analyzer.DynamicSymbolStructAnalyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.element.ProgvElement;
+import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.SymbolElement;
+import jcl.compiler.real.element.specialoperator.ProgvElement;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
@@ -114,10 +116,10 @@ public class ProgvAnalyzer implements SpecialOperatorAnalyzer {
 					val = actualValsJavaList.get(i);
 				}
 
-				final LispStruct analyzedVal = analyzer.analyzeForm(val, analysisBuilder);
-				final ProgvElement.ProgvVar progvVar = new ProgvElement.ProgvVar(var, analyzedVal);
+				final SymbolElement<?> varSE = dynamicSymbolStructAnalyzer.analyze(analyzer, var, analysisBuilder);
 
-				dynamicSymbolStructAnalyzer.analyze(analyzer, var, analysisBuilder);
+				final Element analyzedVal = analyzer.analyzeForm(val, analysisBuilder);
+				final ProgvElement.ProgvVar progvVar = new ProgvElement.ProgvVar(varSE, analyzedVal);
 
 				// TODO: really a 'null' allocation here???
 				final EnvironmentBinding binding = new EnvironmentBinding(var, null, Scope.DYNAMIC, T.INSTANCE, analyzedVal);
@@ -127,7 +129,7 @@ public class ProgvAnalyzer implements SpecialOperatorAnalyzer {
 			}
 
 			final ListStruct bodyForms = input.getRest().getRest().getRest();
-			final List<LispStruct> analyzedBodyForms = bodyAnalyzer.analyze(analyzer, bodyForms, analysisBuilder);
+			final List<Element> analyzedBodyForms = bodyAnalyzer.analyze(analyzer, bodyForms, analysisBuilder);
 
 			return new ProgvElement(progvVars, analyzedBodyForms, progvEnvironment);
 		} finally {

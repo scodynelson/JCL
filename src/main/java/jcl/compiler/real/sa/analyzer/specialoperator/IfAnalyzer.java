@@ -3,7 +3,8 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.element.IfElement;
+import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.specialoperator.IfElement;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import org.springframework.stereotype.Component;
@@ -21,14 +22,14 @@ public class IfAnalyzer implements SpecialOperatorAnalyzer {
 		}
 
 		final LispStruct testForm = input.getRest().getFirst();
-		final LispStruct testFormAnalyzed = analyzer.analyzeForm(testForm, analysisBuilder);
+		final Element testFormAnalyzed = analyzer.analyzeForm(testForm, analysisBuilder);
 
 		final LispStruct thenForm = input.getRest().getRest().getFirst();
-		final LispStruct thenFormAnalyzed = analyzer.analyzeForm(thenForm, analysisBuilder);
+		final Element thenFormAnalyzed = analyzer.analyzeForm(thenForm, analysisBuilder);
 
 		if (input.size() == 4) {
 			final LispStruct elseForm = input.getRest().getRest().getRest().getFirst();
-			final LispStruct elseFormAnalyzed = analyzer.analyzeForm(elseForm, analysisBuilder);
+			final Element elseFormAnalyzed = analyzer.analyzeForm(elseForm, analysisBuilder);
 			return new IfElement(testFormAnalyzed, thenFormAnalyzed, elseFormAnalyzed);
 		} else {
 			return new IfElement(testFormAnalyzed, thenFormAnalyzed);

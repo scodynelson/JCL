@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<util:map id="specialOperatorAnalyzerStrategies"
+	          key-type="jcl.symbols.SpecialOperator"
+	          value-type="jcl.compiler.real.sa.analyzer.specialoperator.SpecialOperatorAnalyzer">
+
+		<entry key="#{T(jcl.symbols.SpecialOperator).BLOCK}" value-ref="blockAnalyzer"/>
+		<entry key="#{T(jcl.symbols.SpecialOperator).CATCH}" value-ref="catchAnalyzer"/>
+		<entry key="#{T(jcl.symbols.SpecialOperator).EVAL_WHEN}" value-ref="evalWhenAnalyzer"/>
+		<entry key="#{T(jcl.symbols.SpecialOperator).FLET}" value-ref="fletAnalyzer"/>
+		<entry key="#{T(jcl.symbols.SpecialOperator).FUNCTION}" value-ref="functionAnalyzer"/>
+		<entry key="#{T(jcl.symbols.SpecialOperator).GO}" value-ref="goAnalyzer"/>
+		<entry key="#{T(jcl.symbols.SpecialOperator).IF}" value-ref="ifAnalyzer"/>
+		<entry key="#{T(jcl.symbols.SpecialOperator).LABELS}" value-ref="labelsAnalyzer"/>
+		<entry key="#{T(jcl.symbols.SpecialOperator).LET}" value-ref="letAnalyzer"/>
+		<entry key="#{T(jcl.symbols.SpecialOperator).LET_STAR}" value-ref="letStarAnalyzer"/>
+		<entry key="#{T(jcl.symbols.SpecialOperator).LOAD_TIME_VALUE}" value-ref="loadTimeValueAnalyzer"/>
+		<entry key="#{T(jcl.symbols.SpecialOperator).LOCALLY}" value-ref="locallyAnalyzer"/>
+		<entry key="#{T(jcl.symbols.SpecialOperator).MACROLET}" value-ref="macroletAnalyzer"/>
+		<entry key="#{T(jcl.symbols.SpecialOperator).MULTIPLE_VALUE_CALL}" value-ref="multipleValueCallAnalyzer"/>
+		<entry key="#{T(jcl.symbols.SpecialOperator).MULTIPLE_VALUE_PROG1}" value-ref="multipleValueProg1Analyzer"/>
+		<entry key="#{T(jcl.symbols.SpecialOperator).PROGN}" value-ref="prognAnalyzer"/>
+		<entry key="#{T(jcl.symbols.SpecialOperator).PROGV}" value-ref="progvAnalyzer"/>
+		<entry key="#{T(jcl.symbols.SpecialOperator).QUOTE}" value-ref="quoteAnalyzer"/>
+		<entry key="#{T(jcl.symbols.SpecialOperator).RETURN_FROM}" value-ref="returnFromAnalyzer"/>
+		<entry key="#{T(jcl.symbols.SpecialOperator).SETQ}" value-ref="setqAnalyzer"/>
+		<entry key="#{T(jcl.symbols.SpecialOperator).SYMBOL_MACROLET}" value-ref="symbolMacroletAnalyzer"/>
+		<entry key="#{T(jcl.symbols.SpecialOperator).TAGBODY}" value-ref="tagbodyAnalyzer"/>
+		<entry key="#{T(jcl.symbols.SpecialOperator).THE}" value-ref="theAnalyzer"/>
+		<entry key="#{T(jcl.symbols.SpecialOperator).THROW}" value-ref="throwAnalyzer"/>
+		<entry key="#{T(jcl.symbols.SpecialOperator).UNWIND_PROTECT}" value-ref="unwindProtectAnalyzer"/>
+
+		<!--<entry key="#{T(jcl.symbols.SpecialOperator).DECLARE}" value-ref="declareAnalyzer"/>-->
+		<entry key="#{T(jcl.symbols.SpecialOperator).LAMBDA}" value-ref="lambdaAnalyzer"/>
+
+		<entry key="#{T(jcl.symbols.SpecialOperator).DEFSTRUCT}" value-ref="defstructAnalyzer"/>
+	</util:map>
+
+</beans>

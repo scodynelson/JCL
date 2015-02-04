@@ -3,7 +3,8 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.element.ThrowElement;
+import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.specialoperator.ThrowElement;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import org.springframework.stereotype.Component;
@@ -21,10 +22,10 @@ public class ThrowAnalyzer implements SpecialOperatorAnalyzer {
 		}
 
 		final LispStruct catchTag = input.getRest().getFirst();
-		final LispStruct catchTagAnalyzed = analyzer.analyzeForm(catchTag, analysisBuilder);
+		final Element catchTagAnalyzed = analyzer.analyzeForm(catchTag, analysisBuilder);
 
 		final LispStruct resultForm = input.getRest().getRest().getFirst();
-		final LispStruct resultFormAnalyzed = analyzer.analyzeForm(resultForm, analysisBuilder);
+		final Element resultFormAnalyzed = analyzer.analyzeForm(resultForm, analysisBuilder);
 
 		return new ThrowElement(catchTagAnalyzed, resultFormAnalyzed);
 	}

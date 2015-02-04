@@ -1,6 +1,6 @@
 package jcl.compiler.real.environment;
 
-import jcl.compiler.real.sa.element.Element;
+import jcl.compiler.real.element.Element;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 

@@ -7,7 +7,7 @@ package jcl.compiler.real.sa.analyzer;
 import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.Analyzer;
-import jcl.compiler.real.sa.element.Element;
+import jcl.compiler.real.element.Element;
 import jcl.symbols.SymbolStruct;
 
 abstract class SymbolStructAnalyzer implements Analyzer<Element, SymbolStruct<?>> {

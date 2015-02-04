@@ -9,7 +9,7 @@ import jcl.compiler.real.environment.PositionAllocation;
 import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
-import jcl.compiler.real.sa.element.Element;
+import jcl.compiler.real.element.Element;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.SpecialOperator;

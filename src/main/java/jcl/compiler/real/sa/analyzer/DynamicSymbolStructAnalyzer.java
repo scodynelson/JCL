@@ -11,7 +11,7 @@ import jcl.compiler.real.environment.SymbolBinding;
 import jcl.compiler.real.environment.SymbolTable;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.element.SymbolElement;
+import jcl.compiler.real.element.SymbolElement;
 import jcl.symbols.SymbolStruct;
 import jcl.types.T;
 import org.springframework.stereotype.Component;

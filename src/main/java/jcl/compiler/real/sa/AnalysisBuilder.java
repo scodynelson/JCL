@@ -7,8 +7,8 @@ package jcl.compiler.real.sa;
 import jcl.compiler.real.environment.DynamicEnvironment;
 import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.Marker;
-import jcl.compiler.real.sa.element.SymbolElement;
-import jcl.compiler.real.sa.element.specialoperator.GoElement;
+import jcl.compiler.real.element.SymbolElement;
+import jcl.compiler.real.element.specialoperator.GoElement;
 import jcl.symbols.SymbolStruct;
 
 import java.io.Serializable;

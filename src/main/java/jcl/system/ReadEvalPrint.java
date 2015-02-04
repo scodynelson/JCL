@@ -2,7 +2,7 @@ package jcl.system;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.element.Element;
+import jcl.compiler.real.element.Element;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.lists.ListStruct;

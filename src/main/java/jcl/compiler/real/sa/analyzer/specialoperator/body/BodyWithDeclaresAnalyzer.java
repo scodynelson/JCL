@@ -3,7 +3,7 @@ package jcl.compiler.real.sa.analyzer.specialoperator.body;
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.element.declaration.DeclareElement;
+import jcl.compiler.real.element.declaration.DeclareElement;
 import jcl.compiler.real.sa.analyzer.specialoperator.special.DeclareAnalyzer;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;

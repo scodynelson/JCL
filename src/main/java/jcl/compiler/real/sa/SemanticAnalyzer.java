@@ -5,7 +5,7 @@
 package jcl.compiler.real.sa;
 
 import jcl.LispStruct;
-import jcl.compiler.real.sa.element.Element;
+import jcl.compiler.real.element.Element;
 
 import java.io.Serializable;
 

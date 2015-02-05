@@ -10,7 +10,7 @@ import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class EnvironmentBinding extends Binding {
+public class EnvironmentBinding extends Binding<ParameterAllocation> {
 
 	private static final long serialVersionUID = 2910922877559341453L;
 

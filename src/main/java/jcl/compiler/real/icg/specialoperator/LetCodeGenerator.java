@@ -65,7 +65,7 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 			// any init forms get evaluated in the parent binding
 			codeGenerator.bindingEnvironment = codeGenerator.bindingEnvironment.getParent();
 			// now, run the bindings
-			for (final Binding binding : bindingList) {
+			for (final Binding<?> binding : bindingList) {
 				final SymbolStruct<?> sym = binding.getSymbolStruct();
 				// (:allocation ... :binding ... :scope ... :type ... :init-form ...)
 				// get the variable's init form

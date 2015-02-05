@@ -142,7 +142,7 @@ public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 			//---------> funcall <-----------
 			// funcall method
 			String funcallParams = "";
-			for (final Binding aBindingSetBody1 : bindingSetBody) {
+			for (final Binding<?> aBindingSetBody1 : bindingSetBody) {
 				funcallParams += "Ljava/lang/Object;";
 			}
 			icg.emitter.newMethod(Opcodes.ACC_PUBLIC, "funcall", '(' + funcallParams + ')', "Ljava/lang/Object;", null, null);
@@ -183,7 +183,7 @@ public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 			// Now unfurl the arg list onto the stack and call the funcall method
 			//...
 			// Roll out the number of params defined for the fn - numParams
-			for (final Binding aBindingSetBody : bindingSetBody) {
+			for (final Binding<?> aBindingSetBody : bindingSetBody) {
 				icg.emitter.emitAload(1); // get the current value of arg list
 				// get the car of the list
 				icg.emitter.emitInvokeinterface("lisp/common/type/ListStruct", "getCar", "()", "Ljava/lang/Object;", true);

@@ -8,7 +8,7 @@ public class GoException extends TOCException {
 	 * Creates a new instance of GoException
 	 */
 	//public GoException(Symbol tagName) {
-	public GoException(Object tagName) {        //me
-		this.tag = tagName;
+	public GoException(final Object tagName) {        //me
+		tag = tagName;
 	}
 }

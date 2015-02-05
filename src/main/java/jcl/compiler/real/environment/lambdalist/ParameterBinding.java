@@ -13,13 +13,13 @@ import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class ParameterBinding extends Binding {
+public class ParameterBinding extends Binding<ParameterAllocation> {
 
 	private static final long serialVersionUID = 4128878993186537174L;
 
 	private final LispStruct initForm;
 
-	public ParameterBinding(final SymbolStruct<?> symbolStruct, final ParameterAllocation allocation, final Scope scope,
+	protected ParameterBinding(final SymbolStruct<?> symbolStruct, final ParameterAllocation allocation, final Scope scope,
 	                        final LispType type, final LispStruct initForm) {
 		super(symbolStruct, allocation, scope, type);
 		this.initForm = initForm;

@@ -11,19 +11,19 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.io.Serializable;
 
-public abstract class Binding implements Serializable {
+public abstract class Binding<A extends Allocation> implements Serializable {
 
 	private static final long serialVersionUID = 5776546981120800982L;
 
 	private final SymbolStruct<?> symbolStruct;
 
-	private final Allocation allocation;
+	private final A allocation;
 
 	private final Scope scope;
 
 	private final LispType type;
 
-	protected Binding(final SymbolStruct<?> symbolStruct, final Allocation allocation, final Scope scope,
+	protected Binding(final SymbolStruct<?> symbolStruct, final A allocation, final Scope scope,
 	                  final LispType type) {
 		this.symbolStruct = symbolStruct;
 		this.allocation = allocation;
@@ -35,7 +35,7 @@ public abstract class Binding implements Serializable {
 		return symbolStruct;
 	}
 
-	public Allocation getAllocation() {
+	public A getAllocation() {
 		return allocation;
 	}
 

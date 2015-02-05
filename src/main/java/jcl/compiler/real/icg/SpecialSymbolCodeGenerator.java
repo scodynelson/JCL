@@ -1,11 +1,11 @@
 package jcl.compiler.real.icg;
 
-import jcl.compiler.real.environment.Allocation;
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.LexicalEnvironment;
-import jcl.compiler.real.environment.PositionAllocation;
-import jcl.compiler.real.environment.SymbolBinding;
+import jcl.compiler.real.environment.SymbolLocalBinding;
 import jcl.symbols.SymbolStruct;
+
+import java.util.Optional;
 
 public class SpecialSymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 
@@ -35,22 +35,20 @@ public class SpecialSymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>
 	private static int getSymbolAllocation(final LexicalEnvironment currentEnvironment, final SymbolStruct<?> variable) {
 
 		// look up the symbol in the symbol table
-		final SymbolBinding symPList = EnvironmentAccessor.getSymbolTableEntry(currentEnvironment, variable);
+		final Optional<SymbolLocalBinding> symPList = EnvironmentAccessor.getSymbolTableEntry(currentEnvironment, variable);
 //        List symPList = getSymbolInTable(currentEnvironmentInner, variable);
 
 //        // (:ALLOCATION (:LOCAL . n) :BINDING :FREE :SCOPE :DYNAMIC :TYPE T)
 //        // we need the local slot in the allocation, get the CDR of the GET of :ALLOCATION
 
-		final Allocation alloc = symPList.getAllocation();
-
 //        // if the cons starts with LOCAL, we're there
 //        // otherwise, we have to go to the actual env of allocation
 //        if (alloc.getFirst() != KeywordOld.Local) {
 //            symPList = getSymbolInTable(alloc, variable);
-		if (alloc == null) {
-			return -1;
+		if (symPList.isPresent()) {
+			return symPList.get().getAllocation().getPosition();
 		} else {
-			return ((PositionAllocation) alloc).getPosition();
+			return -1;
 		}
 	}
 

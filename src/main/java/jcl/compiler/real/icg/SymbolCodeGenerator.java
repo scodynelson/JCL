@@ -36,7 +36,7 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 		final Optional<ClosureBinding> closureBinding = closure.getBinding(input);
 		if (!closureBinding.isPresent()) {
 			// set up for 2 or 3
-			final Optional<SymbolBinding> entryOptional = codeGenerator.bindingEnvironment.getSymbolTable().getBinding(input);
+			final Optional<SymbolBinding<?>> entryOptional = null; //codeGenerator.bindingEnvironment.getSymbolTable().getBinding(input);
 			// (:allocation ... :
 			if (!entryOptional.isPresent()) {
 				// it's 4
@@ -56,7 +56,7 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 			} else {
 				// it's 2 or 3
 				// check the scope, if :dynamic it's 3
-				SymbolBinding entry = entryOptional.get();
+				SymbolBinding<?> entry = entryOptional.get();
 
 				if (entry.getScope() == Scope.DYNAMIC) {
 					// it's number 3

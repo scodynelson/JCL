@@ -10,8 +10,8 @@ public class ReturnFromException extends TRFException {
 	/**
 	 * Creates a new instance of ReturnFromException
 	 */
-	public ReturnFromException(SymbolStruct<?> blockName, Object value) {
-		this.tag = blockName;
+	public ReturnFromException(final SymbolStruct<?> blockName, final Object value) {
+		tag = blockName;
 		this.value = value;
 	}
 
@@ -25,7 +25,7 @@ public class ReturnFromException extends TRFException {
 		return getTag();
 	}
 	/*
-    public Object getValue() {
+	public Object getValue() {
     return value;
     }
      */

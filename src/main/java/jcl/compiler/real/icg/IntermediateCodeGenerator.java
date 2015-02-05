@@ -2,7 +2,6 @@ package jcl.compiler.real.icg;
 
 import jcl.LispStruct;
 import jcl.compiler.old.Emitter;
-import jcl.compiler.real.environment.Allocation;
 import jcl.compiler.real.environment.Binding;
 import jcl.compiler.real.environment.Closure;
 import jcl.compiler.real.environment.ClosureBinding;
@@ -12,7 +11,7 @@ import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.LocalAllocation;
 import jcl.compiler.real.environment.PositionAllocation;
 import jcl.compiler.real.environment.Scope;
-import jcl.compiler.real.environment.SymbolBinding;
+import jcl.compiler.real.environment.SymbolLocalBinding;
 import jcl.compiler.real.environment.SymbolTable;
 import jcl.compiler.real.environment.lambdalist.RequiredBinding;
 import jcl.compiler.real.icg.specialoperator.TagbodyCodeGenerator;
@@ -154,7 +153,7 @@ public class IntermediateCodeGenerator {
 	public static int genLocalSlot(final SymbolStruct<?> sym, final LexicalEnvironment binding) {
 		// get the :bindings list
 		// ((x :allocation ...) (y :allocation ...) ...)
-		final Binding symBinding = binding.getBinding(sym).get();
+		final Binding<?> symBinding = binding.getBinding(sym).get();
 		// (:allocation ... :scope ... )
 		// get the allocated slot for the symbol and put it on the stack
 		return ((PositionAllocation) symBinding.getAllocation()).getPosition();
@@ -289,7 +288,7 @@ public class IntermediateCodeGenerator {
 			emitter.emitDup();
 			// run the list of variables
 			//TODO handle parameters that are special variables
-			for (final Binding binding : bindings) {
+			for (final Binding<?> binding : bindings) {
 				final SymbolStruct<?> variable = binding.getSymbolStruct();
 				final Optional<ClosureBinding> closureEntry = closureStuff.getBinding(variable);
 				if (closureEntry.isPresent()) {
@@ -326,33 +325,29 @@ public class IntermediateCodeGenerator {
 		//-- get the symbol-table
 		final SymbolTable symbolTable = bindingEnvironment.getSymbolTable();
 		// Now iterate over the entries, looking for ones to allocate
-		for (final Binding binding : symbolTable.getBindings()) {
+		for (final SymbolLocalBinding binding : symbolTable.getLocalBindings()) {
 			// (symbol :allocation ... :binding ... :scope ... :type ...)
 			// (:allocation ... :binding ... :scope ... :type ...)
 			// for free and dynamic
-			final SymbolBinding symbolBinding = (SymbolBinding) binding;
-			if (symbolBinding.getBinding().equals(DynamicEnvironment.FREE)
-					&& (symbolBinding.getScope() == Scope.DYNAMIC)) {
+			if (binding.getBinding().equals(DynamicEnvironment.FREE)
+					&& (binding.getScope() == Scope.DYNAMIC)) {
 				// get the local variable slot
-				final Allocation alloc = symbolBinding.getAllocation();
+				final LocalAllocation alloc = binding.getAllocation();
 				// (:local . n)
-				if (alloc instanceof LocalAllocation) {
-					final LocalAllocation localAllocation = (LocalAllocation) alloc;
-					final int slot = localAllocation.getPosition();
-					// now gen some code (whew)
-					// gen code to either intern a symbol or call make-symbol if uninterned
-					final SymbolStruct<?> symbol = symbolBinding.getSymbolStruct();
-					if (symbol.getSymbolPackage() == null) {
-						final String name = symbol.getName();
-						// have to gen a make-symbol
-						emitter.emitLdc(name);
-						emitter.emitInvokestatic("lisp/common/type/Symbol$Factory", "newInstance", "(Ljava/lang/String;)", "Llisp/common/type/Symbol;", false);
-					} else {
-						genCodeSpecialVariable(symbol);
-					}
-					// store the symbol in the indicated local variable
-					emitter.emitAstore(slot);
+				final int slot = alloc.getPosition();
+				// now gen some code (whew)
+				// gen code to either intern a symbol or call make-symbol if uninterned
+				final SymbolStruct<?> symbol = binding.getSymbolStruct();
+				if (symbol.getSymbolPackage() == null) {
+					final String name = symbol.getName();
+					// have to gen a make-symbol
+					emitter.emitLdc(name);
+					emitter.emitInvokestatic("lisp/common/type/Symbol$Factory", "newInstance", "(Ljava/lang/String;)", "Llisp/common/type/Symbol;", false);
+				} else {
+					genCodeSpecialVariable(symbol);
 				}
+				// store the symbol in the indicated local variable
+				emitter.emitAstore(slot);
 			}
 		}
 	}
@@ -391,7 +386,7 @@ public class IntermediateCodeGenerator {
 	public int countRequiredParams(final List<EnvironmentBinding> bindingSetBody) {
 		int countRequired = 0;
 		// go through the list counting the usage :required entries
-		for (final Binding binding : bindingSetBody) {
+		for (final Binding<?> binding : bindingSetBody) {
 			if (binding instanceof RequiredBinding) {
 				countRequired++;
 			} else {

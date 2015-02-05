@@ -1,13 +1,13 @@
 package jcl.compiler.real.sa.analyzer;
 
-import jcl.compiler.real.environment.Allocation;
 import jcl.compiler.real.environment.DynamicEnvironment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.EnvironmentAllocation;
 import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.LocalAllocation;
 import jcl.compiler.real.environment.Scope;
-import jcl.compiler.real.environment.SymbolBinding;
+import jcl.compiler.real.environment.SymbolEnvironmentBinding;
+import jcl.compiler.real.environment.SymbolLocalBinding;
 import jcl.compiler.real.environment.SymbolTable;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
@@ -16,7 +16,6 @@ import jcl.symbols.SymbolStruct;
 import jcl.types.T;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
 import java.util.Stack;
 
 @Component
@@ -31,9 +30,9 @@ public class DynamicSymbolStructAnalyzer extends SymbolStructAnalyzer {
 		final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.peek();
 
 		final SymbolTable currentLexicalEnvironmentSymbolTable = currentLexicalEnvironment.getSymbolTable();
-		final Optional<SymbolBinding> bindingInSymbolTable = currentLexicalEnvironmentSymbolTable.getBinding(input);
+		final boolean hasSymbolBinding = currentLexicalEnvironmentSymbolTable.hasBinding(input);
 
-		if (bindingInSymbolTable.isPresent()) {
+		if (hasSymbolBinding) {
 			// Binding already exists in the current lexical environment.
 			return new SymbolElement<>(input);
 		}
@@ -45,33 +44,36 @@ public class DynamicSymbolStructAnalyzer extends SymbolStructAnalyzer {
 
 		if (currentLexicalEnvironment.equals(currentEnclosingLambda)) {
 			final int position = EnvironmentAccessor.getNextAvailableParameterNumber(currentLexicalEnvironment);
-			final Allocation allocation = new LocalAllocation(position);
+			final LocalAllocation allocation = new LocalAllocation(position);
 
-			final SymbolBinding symbolBinding = new SymbolBinding(input, allocation, Scope.DYNAMIC, T.INSTANCE, dynamicEnvironment);
-			currentLexicalEnvironmentSymbolTable.addBinding(symbolBinding);
+			final SymbolLocalBinding symbolBinding
+					= new SymbolLocalBinding(input, allocation, Scope.DYNAMIC, T.INSTANCE, dynamicEnvironment);
+			currentLexicalEnvironmentSymbolTable.addLocalBinding(symbolBinding);
 
 			return new SymbolElement<>(input);
 		}
 
 		// Add Binding to SymbolTable in the current lexical environment
 		final EnvironmentAllocation environmentAllocation = new EnvironmentAllocation(currentEnclosingLambda);
-		final SymbolBinding symbolBinding = new SymbolBinding(input, environmentAllocation, Scope.DYNAMIC, T.INSTANCE, currentEnclosingLambda);
-		currentLexicalEnvironmentSymbolTable.addBinding(symbolBinding);
+		final SymbolEnvironmentBinding symbolBinding
+				= new SymbolEnvironmentBinding(input, environmentAllocation, Scope.DYNAMIC, T.INSTANCE, currentEnclosingLambda);
+		currentLexicalEnvironmentSymbolTable.addEnvironmentBinding(symbolBinding);
 
 		final SymbolTable enclosingLambdaSymbolTable = currentEnclosingLambda.getSymbolTable();
-		final Optional<SymbolBinding> enclosingSymbolBinding = enclosingLambdaSymbolTable.getBinding(input);
+		final boolean enclosingLambdaHasSymbolBinding = enclosingLambdaSymbolTable.hasBinding(input);
 
-		if (enclosingSymbolBinding.isPresent()) {
+		if (enclosingLambdaHasSymbolBinding) {
 			// Binding already exists in the Enclosing Lambda.
 			return new SymbolElement<>(input);
 		}
 
 		// Add Binding to SymbolTable in the Enclosing Lambda.
 		final int position = EnvironmentAccessor.getNextAvailableParameterNumber(currentLexicalEnvironment);
-		final Allocation allocation = new LocalAllocation(position);
+		final LocalAllocation allocation = new LocalAllocation(position);
 
-		final SymbolBinding newSymbolBinding = new SymbolBinding(input, allocation, Scope.DYNAMIC, T.INSTANCE, dynamicEnvironment);
-		enclosingLambdaSymbolTable.addBinding(newSymbolBinding);
+		final SymbolLocalBinding newSymbolBinding
+				= new SymbolLocalBinding(input, allocation, Scope.DYNAMIC, T.INSTANCE, dynamicEnvironment);
+		enclosingLambdaSymbolTable.addLocalBinding(newSymbolBinding);
 
 		return new SymbolElement<>(input);
 	}

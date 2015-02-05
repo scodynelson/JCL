@@ -18,14 +18,14 @@ public class ThrowException extends TRFException {
 	/**
 	 * Creates a new instance of ThrowException
 	 */
-	public ThrowException(Object catchTag, Object value) {
-		this.tag = catchTag;
+	public ThrowException(final Object catchTag, final Object value) {
+		tag = catchTag;
 		this.value = value;
 	}
 
 	/** This checks to see if the catch tag values match
 	 * the current object's value with the object passed as a parameter. */
-    /*
+	/*
     public boolean equals(Object obj) {
     return (obj instanceof ThrowException &&
     (((ThrowException)obj).getCatchTag() == catchTag));

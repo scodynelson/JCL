@@ -1,6 +1,7 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
 import jcl.LispStruct;
+import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.AnalysisBuilder;
@@ -56,7 +57,8 @@ public class FunctionAnalyzer implements SpecialOperatorAnalyzer {
 		final Stack<LexicalEnvironment> lexicalEnvironmentStack = analysisBuilder.getLexicalEnvironmentStack();
 		final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.peek();
 
-		final LexicalEnvironment bindingLexicalEnvironment = getBindingEnvironment(currentLexicalEnvironment, functionSymbol);
+		final LexicalEnvironment bindingLexicalEnvironment
+				= EnvironmentAccessor.getBindingEnvironment(functionSymbol, currentLexicalEnvironment, Marker.FUNCTION_MARKERS);
 
 		final boolean missingFunctionSymbolBinding = !bindingLexicalEnvironment.hasBinding(functionSymbol);
 
@@ -68,27 +70,6 @@ public class FunctionAnalyzer implements SpecialOperatorAnalyzer {
 		}
 
 		return new SymbolFunctionElement(functionSymbolSE);
-	}
-
-	private static LexicalEnvironment getBindingEnvironment(final LexicalEnvironment lexicalEnvironment, final SymbolStruct<?> variable) {
-
-		LexicalEnvironment currentLexicalEnvironment = lexicalEnvironment;
-
-		while (!currentLexicalEnvironment.equals(LexicalEnvironment.NULL)) {
-
-			final Marker marker = currentLexicalEnvironment.getMarker();
-			if (Marker.FUNCTION_MARKERS.contains(marker)) {
-
-				final boolean hasBinding = currentLexicalEnvironment.hasBinding(variable);
-				if (hasBinding) {
-					break;
-				}
-			}
-
-			currentLexicalEnvironment = currentLexicalEnvironment.getParent();
-		}
-
-		return currentLexicalEnvironment;
 	}
 
 	private FunctionElement analyzeFunctionList(final SemanticAnalyzer analyzer, final ListStruct functionList, final AnalysisBuilder analysisBuilder) {

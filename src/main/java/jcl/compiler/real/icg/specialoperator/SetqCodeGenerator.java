@@ -3,13 +3,15 @@ package jcl.compiler.real.icg.specialoperator;
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.Scope;
-import jcl.compiler.real.environment.SymbolBinding;
+import jcl.compiler.real.environment.SymbolLocalBinding;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.SpecialSymbolCodeGenerator;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.SymbolStruct;
+
+import java.util.Optional;
 
 public class SetqCodeGenerator implements CodeGenerator<ListStruct> {
 
@@ -55,8 +57,7 @@ public class SetqCodeGenerator implements CodeGenerator<ListStruct> {
 	private static Scope getSymbolScope(final LexicalEnvironment currentEnvironment, final SymbolStruct<?> variable) {
 
 		// look up the symbol in the symbol table
-		final SymbolBinding symPList = EnvironmentAccessor.getSymbolTableEntry(currentEnvironment, variable);
-		return symPList.getScope();
+		final Optional<SymbolLocalBinding> symPList = EnvironmentAccessor.getSymbolTableEntry(currentEnvironment, variable);
+		return symPList.get().getScope();
 	}
-
 }

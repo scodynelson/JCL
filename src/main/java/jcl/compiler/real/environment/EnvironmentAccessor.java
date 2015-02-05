@@ -2,10 +2,76 @@ package jcl.compiler.real.environment;
 
 import jcl.symbols.SymbolStruct;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 public class EnvironmentAccessor {
+
+	public static LexicalEnvironment getBindingEnvironment(final SymbolStruct<?> variable, final LexicalEnvironment lexicalEnvironment,
+	                                                       final Set<Marker> lexicalEnvironmentTypes) {
+
+		LexicalEnvironment currentLexicalEnvironment = lexicalEnvironment;
+
+		while (!currentLexicalEnvironment.equals(LexicalEnvironment.NULL)) {
+
+			final Marker lexicalEnvironmentType = currentLexicalEnvironment.getMarker();
+			if (lexicalEnvironmentTypes.contains(lexicalEnvironmentType)) {
+
+				final boolean hasBinding = currentLexicalEnvironment.hasBinding(variable);
+				if (hasBinding) {
+					break;
+				}
+			}
+
+			currentLexicalEnvironment = currentLexicalEnvironment.getParent();
+		}
+
+		return currentLexicalEnvironment;
+	}
+
+	public static int getNextAvailableParameterNumber(final LexicalEnvironment environment) {
+
+		int currentMax = 0;
+
+		LexicalEnvironment currentEnvironment = environment;
+		Marker marker;
+
+		do {
+			// loop up through the local env we're turn looking through
+			final List<EnvironmentBinding> environmentBindings = currentEnvironment.getBindings();
+
+			int envBindingsMax = environmentBindings
+					.stream()
+					.map(EnvironmentBinding::getAllocation)
+					.mapToInt(ParameterAllocation::getPosition)
+					.max()
+					.orElse(currentMax);
+			currentMax = Math.max(currentMax, envBindingsMax);
+
+			// now look through through the symbol table (free variables)
+			final List<SymbolLocalBinding> symbolBindings = currentEnvironment.getSymbolTable().getLocalBindings();
+
+			envBindingsMax = symbolBindings
+					.stream()
+					.map(SymbolLocalBinding::getAllocation)
+					.mapToInt(LocalAllocation::getPosition)
+					.max()
+					.orElse(currentMax);
+			currentMax = Math.max(currentMax, envBindingsMax);
+
+			// Need to see if we just got params from a lambda environment.
+			marker = currentEnvironment.getMarker();
+
+			currentEnvironment = currentEnvironment.getParent();
+		} while (!Marker.LAMBDA_MARKERS.contains(marker));
+
+		return currentMax + 1;
+	}
+
+	/*
+	OLD BELOW
+	 */
 
 	public static LexicalEnvironment getBindingEnvironment(final LexicalEnvironment environment, final SymbolStruct<?> variable,
 	                                                       final boolean valueBinding) {
@@ -36,70 +102,26 @@ public class EnvironmentAccessor {
 		return currentEnvironment;
 	}
 
-	public static SymbolBinding getSymbolTableEntry(final LexicalEnvironment currentEnvironment, final SymbolStruct<?> variable) {
+	public static Optional<SymbolLocalBinding> getSymbolTableEntry(final LexicalEnvironment currentEnvironment,
+	                                                               final SymbolStruct<?> variable) {
 
 		// look up the symbol in the symbol table
-		SymbolBinding symPList = getSymbolInTable(currentEnvironment, variable);
+		final SymbolTable symTable = currentEnvironment.getSymbolTable();
 
-		// (:ALLOCATION (:LOCAL . n) :BINDING :FREE :SCOPE :DYNAMIC :TYPE T)
-		// we need the local slot in the allocation, get the CDR of the GET of :ALLOCATION
-		final Allocation alloc = symPList.getAllocation();
+		Optional<SymbolLocalBinding> symbolLocalBinding = symTable.getLocalBinding(variable);
 
 		// if the cons starts with LOCAL, we're there
 		// otherwise, we have to go to the actual env of allocation
-		if (!(alloc instanceof LocalAllocation)) {
-			symPList = getSymbolInTable(symPList.getBinding(), variable);
-		}
+		if (!symbolLocalBinding.isPresent()) {
+			final Optional<SymbolEnvironmentBinding> symbolEnvironmentBinding = symTable.getEnvironmentBinding(variable);
+			if (symbolEnvironmentBinding.isPresent()) {
+				final SymbolEnvironmentBinding realSEB = symbolEnvironmentBinding.get();
+				final SymbolTable sebSymbolTable = realSEB.getBinding().getSymbolTable();
 
-		return symPList;
-	}
-
-	private static SymbolBinding getSymbolInTable(final Environment<?> currentEnvironment, final SymbolStruct<?> variable) {
-
-		final SymbolTable symTable = currentEnvironment.getSymbolTable();
-		final List<SymbolBinding> symbolBindings = symTable.getBindings();
-
-		return symbolBindings
-				.stream()
-				.filter(e -> e.getSymbolStruct().equals(variable))
-				.findFirst()
-				.orElse(null);
-	}
-
-	public static int getNextAvailableParameterNumber(final LexicalEnvironment environment) {
-		int currentMax = 0;
-
-		LexicalEnvironment currentEnvironment = environment;
-		while (!currentEnvironment.equals(LexicalEnvironment.NULL)) {
-
-			final List<Binding> allEnvironmentBindings = new ArrayList<>();
-
-			// loop up through the local env we're turn looking through
-			allEnvironmentBindings.addAll(currentEnvironment.getBindings());
-
-			// now look through through the symbol table (free variables)
-			allEnvironmentBindings.addAll(currentEnvironment.getSymbolTable().getBindings());
-
-			final int envBindingsMax = allEnvironmentBindings
-					.stream()
-					.map(Binding::getAllocation)
-					.filter(e -> e instanceof PositionAllocation)
-					.map(e -> (PositionAllocation) e)
-					.mapToInt(PositionAllocation::getPosition)
-					.max()
-					.orElse(currentMax);
-			currentMax = Math.max(currentMax, envBindingsMax);
-
-			// see if we just handled a lambda environment
-			final Marker marker = currentEnvironment.getMarker();
-			if (Marker.LAMBDA_MARKERS.contains(marker)) {
-				// yup, all done
-				break;
+				symbolLocalBinding = sebSymbolTable.getLocalBinding(variable);
 			}
-
-			currentEnvironment = currentEnvironment.getParent();
 		}
 
-		return currentMax + 1;
+		return symbolLocalBinding;
 	}
 }

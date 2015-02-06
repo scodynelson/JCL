@@ -2,32 +2,28 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 
 import jcl.LispStruct;
 import jcl.compiler.old.symbol.KeywordOld;
-import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyAnalyzer;
 import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.NullElement;
+import jcl.compiler.real.sa.AnalysisBuilder;
+import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SpecialOperator;
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class EvalWhenAnalyzer implements SpecialOperatorAnalyzer {
 
 	private static final long serialVersionUID = -7301369273443154417L;
-
-	@Autowired
-	private BodyAnalyzer bodyAnalyzer;
 
 	private static final Set<KeywordSymbolStruct> SITUATION_KEYWORDS = new HashSet<>(3);
 
@@ -43,7 +39,7 @@ public class EvalWhenAnalyzer implements SpecialOperatorAnalyzer {
 	}
 
 	public Element analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder, final boolean isTopLevel,
-	                          final boolean isCompileOrCompileFile) {
+	                       final boolean isCompileOrCompileFile) {
 
 		final LispStruct second = input.getRest().getFirst();
 		if (!(second instanceof ListStruct)) {
@@ -58,12 +54,12 @@ public class EvalWhenAnalyzer implements SpecialOperatorAnalyzer {
 			throw new ProgramErrorException("EVAL-WHEN: Situations must be one of ':COMPILE-TOP-LEVEL', ':LOAD-TIME-LEVEL', or ':EXECUTE'. Got: " + situationList);
 		}
 
-		final ListStruct body = input.getRest().getRest();
+		final ListStruct forms = input.getRest().getRest();
 
 		if (isTopLevel) {
 			if (isCompileTopLevel(situationJavaList)) {
 				// (eval `(progn ,@body)))
-				final ListStruct prognBody = new ConsStruct(SpecialOperator.PROGN, body);
+				final ListStruct prognBody = new ConsStruct(SpecialOperator.PROGN, forms);
 
 				// TODO: what we need to do here is:
 				// TODO: 1.) Get global instance of 'EVAL' function
@@ -74,7 +70,11 @@ public class EvalWhenAnalyzer implements SpecialOperatorAnalyzer {
 
 			if (isLoadTopLevel(situationJavaList) || (!isCompileOrCompileFile && isExecute(situationJavaList))) {
 				// (funcall #'(lambda (forms) (ir1-convert-progn-body start cont forms)) body)
-				bodyAnalyzer.analyze(analyzer, body, analysisBuilder);
+				final List<LispStruct> formsJavaList = forms.getAsJavaList();
+				final List<Element> analyzedForms =
+						formsJavaList.stream()
+						             .map(e -> analyzer.analyzeForm(e, analysisBuilder))
+						             .collect(Collectors.toList());
 
 				// TODO: what we need to do here is:
 				// TODO: 1.) Create a new 'LAMBDA' function
@@ -84,7 +84,11 @@ public class EvalWhenAnalyzer implements SpecialOperatorAnalyzer {
 			}
 		} else if (isExecute(situationJavaList)) {
 			// (funcall #'(lambda (forms) (ir1-convert-progn-body start cont forms)) body)
-			bodyAnalyzer.analyze(analyzer, body, analysisBuilder);
+			final List<LispStruct> formsJavaList = forms.getAsJavaList();
+			final List<Element> analyzedForms =
+					formsJavaList.stream()
+					             .map(e -> analyzer.analyzeForm(e, analysisBuilder))
+					             .collect(Collectors.toList());
 
 			// TODO: what we need to do here is:
 			// TODO: 1.) Create a new 'LAMBDA' function

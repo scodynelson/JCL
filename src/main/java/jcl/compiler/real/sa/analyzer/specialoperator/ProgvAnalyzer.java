@@ -1,16 +1,15 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
 import jcl.LispStruct;
+import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.SymbolElement;
+import jcl.compiler.real.element.specialoperator.ProgvElement;
 import jcl.compiler.real.environment.DynamicEnvironment;
 import jcl.compiler.real.environment.EnvironmentBinding;
 import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.analyzer.DynamicSymbolStructAnalyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.SymbolElement;
-import jcl.compiler.real.element.specialoperator.ProgvElement;
-import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyAnalyzer;
+import jcl.compiler.real.sa.analyzer.DynamicSymbolStructAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
@@ -23,14 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 @Component
 public class ProgvAnalyzer implements SpecialOperatorAnalyzer {
 
 	private static final long serialVersionUID = 2755221428467421207L;
-
-	@Autowired
-	private BodyAnalyzer bodyAnalyzer;
 
 	@Autowired
 	private DynamicSymbolStructAnalyzer dynamicSymbolStructAnalyzer;
@@ -128,10 +125,14 @@ public class ProgvAnalyzer implements SpecialOperatorAnalyzer {
 				progvVars.add(progvVar);
 			}
 
-			final ListStruct bodyForms = input.getRest().getRest().getRest();
-			final List<Element> analyzedBodyForms = bodyAnalyzer.analyze(analyzer, bodyForms, analysisBuilder);
+			final ListStruct forms = input.getRest().getRest().getRest();
+			final List<LispStruct> formsJavaList = forms.getAsJavaList();
+			final List<Element> analyzedForms =
+					formsJavaList.stream()
+					             .map(e -> analyzer.analyzeForm(e, analysisBuilder))
+					             .collect(Collectors.toList());
 
-			return new ProgvElement(progvVars, analyzedBodyForms, progvEnvironment);
+			return new ProgvElement(progvVars, analyzedForms, progvEnvironment);
 		} finally {
 			analysisBuilder.setBindingsPosition(tempBindingsPosition);
 			dynamicEnvironmentStack.pop();

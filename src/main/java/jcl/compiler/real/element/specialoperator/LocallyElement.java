@@ -4,8 +4,8 @@
 
 package jcl.compiler.real.element.specialoperator;
 
-import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.element.Element;
+import jcl.compiler.real.environment.LocallyEnvironment;
 
 import java.util.List;
 
@@ -15,18 +15,18 @@ public class LocallyElement implements Element {
 
 	private final List<Element> forms;
 
-	private final LexicalEnvironment lexicalEnvironment;
+	private final LocallyEnvironment locallyEnvironment;
 
-	public LocallyElement(final List<Element> forms, final LexicalEnvironment lexicalEnvironment) {
+	public LocallyElement(final List<Element> forms, final LocallyEnvironment locallyEnvironment) {
 		this.forms = forms;
-		this.lexicalEnvironment = lexicalEnvironment;
+		this.locallyEnvironment = locallyEnvironment;
 	}
 
 	public List<Element> getForms() {
 		return forms;
 	}
 
-	public LexicalEnvironment getLexicalEnvironment() {
-		return lexicalEnvironment;
+	public LocallyEnvironment getLocallyEnvironment() {
+		return locallyEnvironment;
 	}
 }

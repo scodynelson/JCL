@@ -9,7 +9,7 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.LexicalEnvironment;
-import jcl.compiler.real.environment.Marker;
+import jcl.compiler.real.environment.LocallyEnvironment;
 import jcl.compiler.real.environment.allocation.EnvironmentAllocation;
 import jcl.compiler.real.environment.binding.EnvironmentBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
@@ -41,7 +41,7 @@ public class LocallyAnalyzer implements SpecialOperatorAnalyzer {
 		final int tempClosureDepth = analysisBuilder.getClosureDepth();
 		final int newClosureDepth = tempClosureDepth + 1;
 
-		final LexicalEnvironment locallyEnvironment = new LexicalEnvironment(parentEnvironment, Marker.LOCALLY, newClosureDepth);
+		final LocallyEnvironment locallyEnvironment = new LocallyEnvironment(parentEnvironment, newClosureDepth);
 		environmentStack.push(locallyEnvironment);
 
 		final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
@@ -72,7 +72,7 @@ public class LocallyAnalyzer implements SpecialOperatorAnalyzer {
 
 	private static void addDynamicVariableBinding(final SpecialDeclarationElement specialDeclarationElement,
 	                                              final AnalysisBuilder analysisBuilder,
-	                                              final LexicalEnvironment locallyEnvironment) {
+	                                              final LocallyEnvironment locallyEnvironment) {
 
 		final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(locallyEnvironment);
 		analysisBuilder.setBindingsPosition(newBindingsPosition);

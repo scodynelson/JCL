@@ -11,7 +11,7 @@ public class LambdaEnvironment extends FunctionEnvironment {
 
 	private static final long serialVersionUID = -1182568685360839544L;
 
-	public LambdaEnvironment(final LexicalEnvironment parent, final int closureDepth) {
+	public LambdaEnvironment(final Environment parent, final int closureDepth) {
 		super(parent, Marker.LAMBDA, closureDepth);
 	}
 

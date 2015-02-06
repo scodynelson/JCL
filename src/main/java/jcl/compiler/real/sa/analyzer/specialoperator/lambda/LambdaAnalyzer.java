@@ -6,8 +6,7 @@ import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
 import jcl.compiler.real.element.specialoperator.lambda.LambdaElement;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
-import jcl.compiler.real.environment.LexicalEnvironment;
-import jcl.compiler.real.environment.Marker;
+import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
@@ -59,7 +58,7 @@ public class LambdaAnalyzer implements SpecialOperatorAnalyzer {
 		final int tempClosureDepth = analysisBuilder.getClosureDepth();
 		final int newClosureDepth = tempClosureDepth + 1;
 
-		final LexicalEnvironment lambdaEnvironment = new LexicalEnvironment(parentEnvironment, Marker.LAMBDA, newClosureDepth);
+		final LambdaEnvironment lambdaEnvironment = new LambdaEnvironment(parentEnvironment, newClosureDepth);
 		environmentStack.push(lambdaEnvironment);
 
 		final int tempBindingsPosition = analysisBuilder.getBindingsPosition();

@@ -4,29 +4,31 @@
 
 package jcl.compiler.real.element.specialoperator;
 
-import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.SymbolElement;
+import jcl.compiler.real.element.specialoperator.InnerFunctionElement.InnerFunctionVar;
+import jcl.compiler.real.environment.LexicalEnvironment;
 
 import java.io.Serializable;
 import java.util.List;
 
-public abstract class InnerFunctionElement implements Element {
+public abstract class InnerFunctionElement<E extends LexicalEnvironment, V extends InnerFunctionVar> implements Element {
 
 	private static final long serialVersionUID = -535794959428263863L;
 
-	private final List<? extends InnerFunctionVar> vars;
+	private final List<V> vars;
+
 	private final List<Element> forms;
 
-	private final LexicalEnvironment lexicalEnvironment;
+	private final E lexicalEnvironment;
 
-	InnerFunctionElement(final List<? extends InnerFunctionVar> vars, final List<Element> forms, final LexicalEnvironment lexicalEnvironment) {
+	InnerFunctionElement(final List<V> vars, final List<Element> forms, final E lexicalEnvironment) {
 		this.vars = vars;
 		this.forms = forms;
 		this.lexicalEnvironment = lexicalEnvironment;
 	}
 
-	public List<? extends InnerFunctionVar> getVars() {
+	public List<V> getVars() {
 		return vars;
 	}
 
@@ -34,15 +36,16 @@ public abstract class InnerFunctionElement implements Element {
 		return forms;
 	}
 
-	public LexicalEnvironment getLexicalEnvironment() {
+	public E getLexicalEnvironment() {
 		return lexicalEnvironment;
 	}
 
-	public abstract static class InnerFunctionVar implements Serializable {
+	public static class InnerFunctionVar implements Serializable {
 
 		private static final long serialVersionUID = 891453745075246590L;
 
 		private final SymbolElement<?> var;
+
 		private final Element initForm;
 
 		InnerFunctionVar(final SymbolElement<?> var, final Element initForm) {

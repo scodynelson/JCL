@@ -11,7 +11,7 @@ public class FunctionEnvironment extends LexicalEnvironment {
 
 	private static final long serialVersionUID = -5882720704455871085L;
 
-	protected FunctionEnvironment(final LexicalEnvironment parent, final Marker marker, final int closureDepth) {
+	protected FunctionEnvironment(final Environment parent, final Marker marker, final int closureDepth) {
 		super(parent, marker, closureDepth);
 	}
 

@@ -11,7 +11,7 @@ public class LabelsEnvironment extends InnerFunctionEnvironment {
 
 	private static final long serialVersionUID = 8774938340814484890L;
 
-	public LabelsEnvironment(final LexicalEnvironment parent, final int closureDepth) {
+	public LabelsEnvironment(final Environment parent, final int closureDepth) {
 		super(parent, Marker.LABELS, closureDepth);
 	}
 

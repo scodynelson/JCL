@@ -10,8 +10,7 @@ import jcl.compiler.real.element.specialoperator.declare.SpecialDeclarationEleme
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.EnvironmentStack;
-import jcl.compiler.real.environment.LexicalEnvironment;
-import jcl.compiler.real.environment.Marker;
+import jcl.compiler.real.environment.LetEnvironment;
 import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.EnvironmentBinding;
@@ -56,7 +55,7 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 		final int tempClosureDepth = analysisBuilder.getClosureDepth();
 		final int newClosureDepth = tempClosureDepth + 1;
 
-		final LexicalEnvironment letEnvironment = new LexicalEnvironment(parentEnvironment, Marker.LET, newClosureDepth);
+		final LetEnvironment letEnvironment = new LetEnvironment(parentEnvironment, newClosureDepth);
 		environmentStack.push(letEnvironment);
 
 		final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
@@ -95,7 +94,7 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 	                                           final DeclareElement declareElement,
 	                                           final SemanticAnalyzer analyzer,
 	                                           final AnalysisBuilder analysisBuilder,
-	                                           final LexicalEnvironment letEnvironment,
+	                                           final LetEnvironment letEnvironment,
 	                                           final EnvironmentStack environmentStack) {
 
 		if (!(parameter instanceof SymbolStruct) && !(parameter instanceof ListStruct)) {

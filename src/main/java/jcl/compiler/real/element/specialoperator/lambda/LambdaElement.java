@@ -5,9 +5,9 @@
 package jcl.compiler.real.element.specialoperator.lambda;
 
 import jcl.arrays.StringStruct;
-import jcl.compiler.real.environment.LexicalEnvironment;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.element.Element;
+import jcl.compiler.real.environment.LambdaEnvironment;
+import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 
 import java.util.List;
 
@@ -21,14 +21,14 @@ public class LambdaElement implements Element {
 
 	private final List<Element> forms;
 
-	private final LexicalEnvironment lexicalEnvironment;
+	private final LambdaEnvironment lambdaEnvironment;
 
 	public LambdaElement(final OrdinaryLambdaListBindings lambdaListBindings, final StringStruct docString, final List<Element> forms,
-	                     final LexicalEnvironment lexicalEnvironment) {
+	                     final LambdaEnvironment lambdaEnvironment) {
 		this.lambdaListBindings = lambdaListBindings;
 		this.docString = docString;
 		this.forms = forms;
-		this.lexicalEnvironment = lexicalEnvironment;
+		this.lambdaEnvironment = lambdaEnvironment;
 	}
 
 	public OrdinaryLambdaListBindings getLambdaListBindings() {
@@ -43,7 +43,7 @@ public class LambdaElement implements Element {
 		return forms;
 	}
 
-	public LexicalEnvironment getLexicalEnvironment() {
-		return lexicalEnvironment;
+	public LambdaEnvironment getLambdaEnvironment() {
+		return lambdaEnvironment;
 	}
 }

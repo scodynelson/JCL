@@ -9,9 +9,8 @@ import jcl.compiler.real.element.specialoperator.declare.SpecialDeclarationEleme
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.EnvironmentStack;
-import jcl.compiler.real.environment.LexicalEnvironment;
-import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.environment.Scope;
+import jcl.compiler.real.environment.SymbolMacroletEnvironment;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.EnvironmentBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
@@ -55,7 +54,7 @@ public class SymbolMacroletAnalyzer implements SpecialOperatorAnalyzer {
 		final int tempClosureDepth = analysisBuilder.getClosureDepth();
 		final int newClosureDepth = tempClosureDepth + 1;
 
-		final LexicalEnvironment symbolMacroletEnvironment = new LexicalEnvironment(parentEnvironment, Marker.SYMBOL_MACROLET, newClosureDepth);
+		final SymbolMacroletEnvironment symbolMacroletEnvironment = new SymbolMacroletEnvironment(parentEnvironment, newClosureDepth);
 		environmentStack.push(symbolMacroletEnvironment);
 
 		final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
@@ -106,7 +105,7 @@ public class SymbolMacroletAnalyzer implements SpecialOperatorAnalyzer {
 	                                                                                          final DeclareElement declareElement,
 	                                                                                          final SemanticAnalyzer analyzer,
 	                                                                                          final AnalysisBuilder analysisBuilder,
-	                                                                                          final LexicalEnvironment symbolMacroletEnvironment,
+	                                                                                          final SymbolMacroletEnvironment symbolMacroletEnvironment,
 	                                                                                          final EnvironmentStack environmentStack) {
 
 		if (!(parameter instanceof ListStruct)) {

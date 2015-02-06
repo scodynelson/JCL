@@ -11,7 +11,7 @@ public class InnerFunctionEnvironment extends FunctionEnvironment {
 
 	private static final long serialVersionUID = -5882720704455871085L;
 
-	protected InnerFunctionEnvironment(final LexicalEnvironment parent, final Marker marker, final int closureDepth) {
+	protected InnerFunctionEnvironment(final Environment parent, final Marker marker, final int closureDepth) {
 		super(parent, marker, closureDepth);
 	}
 

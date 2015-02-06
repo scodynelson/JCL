@@ -10,7 +10,6 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.LexicalEnvironment;
-import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.EnvironmentBinding;
@@ -23,6 +22,7 @@ import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 import jcl.system.StackUtils;
+import jcl.types.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,27 +32,25 @@ import java.util.Stack;
 import java.util.stream.Collectors;
 
 @Component
-abstract class InnerFunctionAnalyzer<T extends InnerFunctionElement, S extends InnerFunctionElement.InnerFunctionVar> implements SpecialOperatorAnalyzer {
+abstract class InnerFunctionAnalyzer<E extends LexicalEnvironment, I extends InnerFunctionElement<E, S>, S extends InnerFunctionElement.InnerFunctionVar>
+		implements SpecialOperatorAnalyzer {
 
 	private static final long serialVersionUID = -142718897684745213L;
 
 	private final String analyzerName;
-
-	private final Marker marker;
 
 	private final boolean getFunctionNamesBeforeInitForms;
 
 	@Autowired
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
 
-	protected InnerFunctionAnalyzer(final String analyzerName, final Marker marker, final boolean getFunctionNamesBeforeInitForms) {
+	protected InnerFunctionAnalyzer(final String analyzerName, final boolean getFunctionNamesBeforeInitForms) {
 		this.analyzerName = analyzerName;
-		this.marker = marker;
 		this.getFunctionNamesBeforeInitForms = getFunctionNamesBeforeInitForms;
 	}
 
 	@Override
-	public T analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
+	public I analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
 		if (input.size() < 2) {
 			throw new ProgramErrorException(analyzerName + ": Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
@@ -69,7 +67,7 @@ abstract class InnerFunctionAnalyzer<T extends InnerFunctionElement, S extends I
 		final int tempClosureDepth = analysisBuilder.getClosureDepth();
 		final int newClosureDepth = tempClosureDepth + 1;
 
-		final LexicalEnvironment innerFunctionEnvironment = new LexicalEnvironment(parentEnvironment, marker, newClosureDepth);
+		final E innerFunctionEnvironment = getInnerFunctionEnvironment(parentEnvironment, newClosureDepth);
 		environmentStack.push(innerFunctionEnvironment);
 
 		final Stack<SymbolStruct<?>> functionNameStack = analysisBuilder.getFunctionNameStack();
@@ -122,7 +120,9 @@ abstract class InnerFunctionAnalyzer<T extends InnerFunctionElement, S extends I
 		}
 	}
 
-	protected abstract T getFunctionElement(List<S> vars, List<Element> bodyForms, LexicalEnvironment lexicalEnvironment);
+	protected abstract E getInnerFunctionEnvironment(Environment parent, int closureDepth);
+
+	protected abstract I getFunctionElement(List<S> vars, List<Element> bodyForms, E lexicalEnvironment);
 
 	private List<SymbolStruct<?>> getFunctionNames(final List<LispStruct> functionDefinitions) {
 
@@ -150,7 +150,7 @@ abstract class InnerFunctionAnalyzer<T extends InnerFunctionElement, S extends I
 	                              final DeclareElement declareElement,
 	                              final SemanticAnalyzer analyzer,
 	                              final AnalysisBuilder analysisBuilder,
-	                              final LexicalEnvironment innerFunctionEnvironment,
+	                              final E innerFunctionEnvironment,
 	                              final EnvironmentStack lexicalEnvironmentStack) {
 
 		if (!(function instanceof ListStruct)) {
@@ -210,7 +210,7 @@ abstract class InnerFunctionAnalyzer<T extends InnerFunctionElement, S extends I
 
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 		final Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
-		final EnvironmentBinding binding = new EnvironmentBinding(functionName, allocation, scope, jcl.types.T.INSTANCE, functionInitForm);
+		final EnvironmentBinding binding = new EnvironmentBinding(functionName, allocation, scope, T.INSTANCE, functionInitForm);
 		innerFunctionEnvironment.addLexicalBinding(binding);
 
 		return getFunctionElementVar(functionNameSE, functionInitForm);

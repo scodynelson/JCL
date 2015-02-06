@@ -4,7 +4,7 @@
 
 package jcl.compiler.real.element.specialoperator;
 
-import jcl.compiler.real.environment.LexicalEnvironment;
+import jcl.compiler.real.environment.LetEnvironment;
 import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.SymbolElement;
 
@@ -18,12 +18,12 @@ public class LetElement implements Element {
 	private final List<LetVar> vars;
 	private final List<Element> forms;
 
-	private final LexicalEnvironment lexicalEnvironment;
+	private final LetEnvironment letEnvironment;
 
-	public LetElement(final List<LetVar> vars, final List<Element> forms, final LexicalEnvironment lexicalEnvironment) {
+	public LetElement(final List<LetVar> vars, final List<Element> forms, final LetEnvironment letEnvironment) {
 		this.vars = vars;
 		this.forms = forms;
-		this.lexicalEnvironment = lexicalEnvironment;
+		this.letEnvironment = letEnvironment;
 	}
 
 	public List<LetVar> getVars() {
@@ -34,8 +34,8 @@ public class LetElement implements Element {
 		return forms;
 	}
 
-	public LexicalEnvironment getLexicalEnvironment() {
-		return lexicalEnvironment;
+	public LetEnvironment getLetEnvironment() {
+		return letEnvironment;
 	}
 
 	public static class LetVar implements Serializable {

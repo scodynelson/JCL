@@ -46,22 +46,22 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 		// are we building a closure here?
 		//----->
 		codeGenerator.bindingEnvironment = codeGenerator.bindingStack.push((LexicalEnvironment) input.getFirst());
-		final Closure closureSetBody = codeGenerator.bindingEnvironment.getClosure();
+		final Closure closureSetBody = ((LexicalEnvironment)codeGenerator.bindingEnvironment).getClosure();
 //        int numParams = closureSetBody.size() - 1;
 
 		try {
 			// (%let... (:parent ...) (:bindings ...) (:symbol-table ...) (:closure ...))
 			// Handle all of the binding information
 			//----->
-			final LexicalEnvironment bindings = codeGenerator.bindingEnvironment;
+			final LexicalEnvironment bindings = (LexicalEnvironment)codeGenerator.bindingEnvironment;
 			// ((:parent ...) (:bindings ...) (:symbol-table ...) (:closure ...)))
 			// Now get just the bindings list and drop the :bindings
-			final List<EnvironmentBinding> bindingList = codeGenerator.bindingEnvironment.getBindings();
+			final List<EnvironmentBinding> bindingList = codeGenerator.bindingEnvironment.getLexicalBindings();
 			// ((sym1 :allocation ... :binding ... :scope ... :type ... :init-form ...)
 			//  (sym2 :allocation ... :binding ... :scope ... :type ... :init-form ...)...)
 			// Now to loop thru the bindings, gen code for the init forms and store them in the
 			// proper slots. Note that init forms are evaluated in the enclosing environment
-			final LexicalEnvironment tmpEnv = codeGenerator.bindingEnvironment;
+			final LexicalEnvironment tmpEnv = (LexicalEnvironment)codeGenerator.bindingEnvironment;
 			// any init forms get evaluated in the parent binding
 			codeGenerator.bindingEnvironment = codeGenerator.bindingEnvironment.getParent();
 			// now, run the bindings
@@ -111,7 +111,7 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 			codeGenerator.bindingEnvironment = tmpEnv;
 
 			// we may have a closure to handle as well
-			codeGenerator.doClosureSetup(codeGenerator.bindingEnvironment);
+			codeGenerator.doClosureSetup((LexicalEnvironment)codeGenerator.bindingEnvironment);
 			codeGenerator.doFreeVariableSetup();
 
 			// all args are in the proper local slots, so do the body of the let

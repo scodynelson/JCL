@@ -1,21 +1,23 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
 import jcl.LispStruct;
+import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.SymbolElement;
+import jcl.compiler.real.element.specialoperator.SymbolMacroletElement;
+import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
+import jcl.compiler.real.element.specialoperator.declare.SpecialDeclarationElement;
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
-import jcl.compiler.real.environment.binding.EnvironmentBinding;
+import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.Marker;
-import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.Scope;
+import jcl.compiler.real.environment.allocation.ParameterAllocation;
+import jcl.compiler.real.environment.binding.EnvironmentBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyWithDeclaresAnalyzer;
-import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.SymbolElement;
-import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
-import jcl.compiler.real.element.specialoperator.declare.SpecialDeclarationElement;
-import jcl.compiler.real.element.specialoperator.SymbolMacroletElement;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.symbols.SymbolStruct;
@@ -24,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Stack;
 import java.util.stream.Collectors;
 
 @Component
@@ -48,14 +49,14 @@ public class SymbolMacroletAnalyzer implements SpecialOperatorAnalyzer {
 			throw new ProgramErrorException("SYMBOL-MACROLET: Parameter list must be of type ListStruct. Got: " + second);
 		}
 
-		final Stack<LexicalEnvironment> lexicalEnvironmentStack = analysisBuilder.getLexicalEnvironmentStack();
-		final LexicalEnvironment parentLexicalEnvironment = lexicalEnvironmentStack.peek();
+		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
+		final Environment parentEnvironment = environmentStack.peek();
 
 		final int tempClosureDepth = analysisBuilder.getClosureDepth();
 		final int newClosureDepth = tempClosureDepth + 1;
 
-		final LexicalEnvironment symbolMacroletEnvironment = new LexicalEnvironment(parentLexicalEnvironment, Marker.SYMBOL_MACROLET, newClosureDepth);
-		lexicalEnvironmentStack.push(symbolMacroletEnvironment);
+		final LexicalEnvironment symbolMacroletEnvironment = new LexicalEnvironment(parentEnvironment, Marker.SYMBOL_MACROLET, newClosureDepth);
+		environmentStack.push(symbolMacroletEnvironment);
 
 		final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
 		try {
@@ -73,7 +74,7 @@ public class SymbolMacroletAnalyzer implements SpecialOperatorAnalyzer {
 
 			final List<SymbolMacroletElement.SymbolMacroletElementVar> letVars
 					= parametersAsJavaList.stream()
-					                      .map(e -> getSymbolMacroletElementVar(e, declareElement, analyzer, analysisBuilder, lexicalEnvironmentStack))
+					                      .map(e -> getSymbolMacroletElementVar(e, declareElement, analyzer, analysisBuilder, symbolMacroletEnvironment, environmentStack))
 					                      .collect(Collectors.toList());
 
 
@@ -84,13 +85,11 @@ public class SymbolMacroletAnalyzer implements SpecialOperatorAnalyzer {
 					               .map(e -> analyzer.analyzeForm(e, analysisBuilder))
 					               .collect(Collectors.toList());
 
-			final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.peek();
-
-			return new SymbolMacroletElement(letVars, analyzedBodyForms, currentLexicalEnvironment);
+			return new SymbolMacroletElement(letVars, analyzedBodyForms, symbolMacroletEnvironment);
 		} finally {
 			analysisBuilder.setClosureDepth(tempClosureDepth);
 			analysisBuilder.setBindingsPosition(tempBindingsPosition);
-			lexicalEnvironmentStack.pop();
+			environmentStack.pop();
 		}
 	}
 
@@ -107,31 +106,30 @@ public class SymbolMacroletAnalyzer implements SpecialOperatorAnalyzer {
 	                                                                                          final DeclareElement declareElement,
 	                                                                                          final SemanticAnalyzer analyzer,
 	                                                                                          final AnalysisBuilder analysisBuilder,
-	                                                                                          final Stack<LexicalEnvironment> lexicalEnvironmentStack) {
+	                                                                                          final LexicalEnvironment symbolMacroletEnvironment,
+	                                                                                          final EnvironmentStack environmentStack) {
 
 		if (!(parameter instanceof ListStruct)) {
 			throw new ProgramErrorException("SYMBOL-MACROLET: Parameter must be of type ListStruct. Got: " + parameter);
 		}
 
 		final ListStruct listParameter = (ListStruct) parameter;
-		final SymbolStruct<?> var = getSymbolMacroletParameterVar(listParameter, lexicalEnvironmentStack);
-		final Element expansion = getSymbolMacroletParameterExpansion(listParameter, analyzer, analysisBuilder, lexicalEnvironmentStack);
+		final SymbolStruct<?> var = getSymbolMacroletParameterVar(listParameter, environmentStack);
+		final Element expansion = getSymbolMacroletParameterExpansion(listParameter, analyzer, analysisBuilder, environmentStack);
 
-		final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.peek();
-
-		final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentLexicalEnvironment);
+		final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(symbolMacroletEnvironment);
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 		final EnvironmentBinding binding = new EnvironmentBinding(var, allocation, Scope.LEXICAL, T.INSTANCE, expansion);
-		currentLexicalEnvironment.addBinding(binding);
+		symbolMacroletEnvironment.addLexicalBinding(binding);
 
 		final SymbolElement<?> varSE = new SymbolElement<>(var);
 		return new SymbolMacroletElement.SymbolMacroletElementVar(varSE, expansion);
 	}
 
 	private static SymbolStruct<?> getSymbolMacroletParameterVar(final ListStruct listParameter,
-	                                                             final Stack<LexicalEnvironment> lexicalEnvironmentStack) {
+	                                                             final EnvironmentStack lexicalEnvironmentStack) {
 		final int listParameterSize = listParameter.size();
 		if (listParameterSize != 2) {
 			throw new ProgramErrorException("SYMBOL-MACROLET: ListStruct parameter must have only 2 elements. Got: " + listParameter);
@@ -144,8 +142,8 @@ public class SymbolMacroletAnalyzer implements SpecialOperatorAnalyzer {
 
 		final SymbolStruct<?> parameterVar = (SymbolStruct) listParameterFirst;
 
-		final LexicalEnvironment globalEnvironment = lexicalEnvironmentStack.firstElement();
-		final boolean hasGlobalBinding = globalEnvironment.hasBinding(parameterVar);
+		final Environment globalEnvironment = lexicalEnvironmentStack.firstElement();
+		final boolean hasGlobalBinding = globalEnvironment.hasLexicalBinding(parameterVar);
 		if (hasGlobalBinding) {
 			throw new ProgramErrorException("SYMBOL-MACROLET: ListStruct parameter first element symbol must not exist in the global environment.");
 		}
@@ -156,17 +154,17 @@ public class SymbolMacroletAnalyzer implements SpecialOperatorAnalyzer {
 	private static Element getSymbolMacroletParameterExpansion(final ListStruct listParameter,
 	                                                           final SemanticAnalyzer analyzer,
 	                                                           final AnalysisBuilder analysisBuilder,
-	                                                           final Stack<LexicalEnvironment> lexicalEnvironmentStack) {
+	                                                           final EnvironmentStack environmentStack) {
 
 		final LispStruct parameterValue = listParameter.getRest().getFirst();
 
 		// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
-		final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.pop();
+		final Environment currentEnvironment = environmentStack.pop();
 
 		try {
 			return analyzer.analyzeForm(parameterValue, analysisBuilder);
 		} finally {
-			lexicalEnvironmentStack.push(currentLexicalEnvironment);
+			environmentStack.push(currentEnvironment);
 		}
 	}
 

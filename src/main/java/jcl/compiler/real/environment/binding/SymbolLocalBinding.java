@@ -17,7 +17,7 @@ public class SymbolLocalBinding extends SymbolBinding<LocalAllocation> {
 	private static final long serialVersionUID = 2199826721253003696L;
 
 	public SymbolLocalBinding(final SymbolStruct<?> symbolStruct, final LocalAllocation allocation, final Scope scope,
-	                          final LispType type, final Environment<?> binding) {
+	                          final LispType type, final Environment binding) {
 		super(symbolStruct, allocation, scope, type, binding);
 	}
 

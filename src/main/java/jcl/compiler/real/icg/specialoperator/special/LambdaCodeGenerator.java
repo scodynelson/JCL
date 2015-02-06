@@ -76,7 +76,7 @@ public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 			interfaces.add("lisp/common/type/MacroFunction");
 			icg.MacroLambda = false;
 		}
-		final List<EnvironmentBinding> bindingSetBody = ((LexicalEnvironment) list.getFirst()).getBindings();
+		final List<EnvironmentBinding> bindingSetBody = ((LexicalEnvironment) list.getFirst()).getLexicalBindings();
 
 		final int numParams = bindingSetBody.size();
 		if (numParams <= 11) {
@@ -148,7 +148,7 @@ public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 			icg.emitter.newMethod(Opcodes.ACC_PUBLIC, "funcall", '(' + funcallParams + ')', "Ljava/lang/Object;", null, null);
 
 			// allocate and fill a closure if there is one defined
-			icg.doClosureSetup(icg.bindingEnvironment);
+			icg.doClosureSetup((LexicalEnvironment) icg.bindingEnvironment);
 
 			// set up the free radicals - 1960's!!
 			icg.doFreeVariableSetup();
@@ -166,7 +166,7 @@ public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 				}
 			}
 			// pop the closure if there was a new one
-			icg.undoClosureSetup(icg.bindingEnvironment);
+			icg.undoClosureSetup((LexicalEnvironment) icg.bindingEnvironment);
 
 			// now we'return done..
 			icg.emitter.emitAreturn();
@@ -256,7 +256,7 @@ public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 		codeGenerator.emitter.emitPutstatic(className, "SYMBOL", "Llisp/common/type/Symbol;");
 
 		// Creating and initializing any necessary load-time-values
-		final LexicalEnvironment env = codeGenerator.bindingEnvironment;
+		final LexicalEnvironment env = (LexicalEnvironment) codeGenerator.bindingEnvironment;
 
 		// see if we have to add any static fields for load-time-value
 		final List<LoadTimeValue> ltvList = env.getLoadTimeValues();

@@ -9,6 +9,8 @@ import jcl.compiler.real.element.LambdaFunctionCallElement;
 import jcl.compiler.real.element.NullElement;
 import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.element.specialoperator.lambda.LambdaElement;
+import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
@@ -70,10 +72,10 @@ public class ListStructAnalyzer implements Analyzer<Element, ListStruct> {
 
 	private Element analyzeFunctionCall(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
-		final Stack<LexicalEnvironment> lexicalEnvironmentStack = analysisBuilder.getLexicalEnvironmentStack();
-		final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.peek();
+		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
+		final Environment currentEnvironment = environmentStack.peek();
 
-		final MacroExpandReturn macroExpandReturn = MacroExpandFunction.FUNCTION.funcall(input, currentLexicalEnvironment);
+		final MacroExpandReturn macroExpandReturn = MacroExpandFunction.FUNCTION.funcall(input, currentEnvironment);
 		final LispStruct expandedForm = macroExpandReturn.getExpandedForm();
 
 		return InstanceOf.when(expandedForm)
@@ -140,27 +142,27 @@ public class ListStructAnalyzer implements Analyzer<Element, ListStruct> {
 			analyzedFunctionArguments.add(analyzedFunctionArgument);
 		}
 
-		final Stack<LexicalEnvironment> lexicalEnvironmentStack = analysisBuilder.getLexicalEnvironmentStack();
-		final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.peek();
+		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
+		final Environment currentEnvironment = environmentStack.peek();
 
-		final boolean hasFunctionBinding = hasFunctionBinding(currentLexicalEnvironment, functionSymbol);
+		final boolean hasFunctionBinding = hasFunctionBinding(currentEnvironment, functionSymbol);
 
 		final SymbolElement<?> functionSymbolSE = new SymbolElement<>(functionSymbol);
 		return new FunctionCallElement(hasFunctionBinding, functionSymbolSE, analyzedFunctionArguments);
 	}
 
-	private static boolean hasFunctionBinding(final LexicalEnvironment lexicalEnvironment, final SymbolStruct<?> variable) {
+	private static boolean hasFunctionBinding(final Environment environment, final SymbolStruct<?> variable) {
 
-		LexicalEnvironment currentLexicalEnvironment = lexicalEnvironment;
+		Environment currentEnvironment = environment;
 
 		boolean hasFunctionBinding = false;
 
-		while (!currentLexicalEnvironment.equals(LexicalEnvironment.NULL)) {
-			if (currentLexicalEnvironment.hasBinding(variable)) {
+		while (!currentEnvironment.equals(LexicalEnvironment.NULL)) {
+			if (currentEnvironment.hasLexicalBinding(variable)) {
 				hasFunctionBinding = true;
 				break;
 			}
-			currentLexicalEnvironment = currentLexicalEnvironment.getParent();
+			currentEnvironment = currentEnvironment.getParent();
 		}
 
 		return hasFunctionBinding;

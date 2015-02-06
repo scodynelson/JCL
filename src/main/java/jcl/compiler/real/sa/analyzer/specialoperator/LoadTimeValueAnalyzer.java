@@ -1,15 +1,16 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
 import jcl.LispStruct;
+import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.specialoperator.ImmutableLoadTimeValueElement;
+import jcl.compiler.real.element.specialoperator.LoadTimeValueElement;
+import jcl.compiler.real.element.specialoperator.MutableLoadTimeValueElement;
+import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.LoadTimeValue;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.specialoperator.ImmutableLoadTimeValueElement;
-import jcl.compiler.real.element.specialoperator.LoadTimeValueElement;
-import jcl.compiler.real.element.specialoperator.MutableLoadTimeValueElement;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
@@ -19,7 +20,6 @@ import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Stack;
 import java.util.UUID;
 
 @Component
@@ -48,12 +48,13 @@ public class LoadTimeValueAnalyzer implements SpecialOperatorAnalyzer {
 		final SymbolStruct<?> evalFnSym = GlobalPackageStruct.COMMON_LISP.findSymbol("EVAL").getSymbolStruct();
 		final ListStruct evalForm = new ConsStruct(evalFnSym, form);
 
-		final Stack<LexicalEnvironment> lexicalEnvironmentStack = analysisBuilder.getLexicalEnvironmentStack();
-		final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.peek();
+		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
+//		final Environment currentEnvironment = environmentStack.peek();
+		final LexicalEnvironment currentLexicalEnvironment = environmentStack.getCurrentLexicalEnvironment();
 		final LexicalEnvironment currentEnclosingLambda = getEnclosingLambda(currentLexicalEnvironment);
 
 		final LexicalEnvironment nullLexicalEnvironment = LexicalEnvironment.NULL;
-		lexicalEnvironmentStack.push(nullLexicalEnvironment);
+		environmentStack.push(nullLexicalEnvironment);
 
 		try {
 			final Element analyzedEvalForm = analyzer.analyzeForm(evalForm, analysisBuilder);
@@ -71,25 +72,17 @@ public class LoadTimeValueAnalyzer implements SpecialOperatorAnalyzer {
 				return new MutableLoadTimeValueElement(analyzedEvalForm);
 			}
 		} finally {
-			lexicalEnvironmentStack.pop();
+			environmentStack.pop();
 		}
 	}
 
-	/**
-	 * This method takes an environment and looks for the nearest enclosing lambda.
-	 *
-	 * @param lexicalEnvironment
-	 * 		The environment that is enclosed by a lambda
-	 *
-	 * @return The lambda enclosing the given environment.
-	 */
 	private static LexicalEnvironment getEnclosingLambda(final LexicalEnvironment lexicalEnvironment) {
 
 		LexicalEnvironment currentLexicalEnvironment = lexicalEnvironment;
 
 		final Marker marker = currentLexicalEnvironment.getMarker();
 		while (!Marker.LAMBDA_MARKERS.contains(marker)) {
-			currentLexicalEnvironment = currentLexicalEnvironment.getParent();
+			currentLexicalEnvironment = (LexicalEnvironment) currentLexicalEnvironment.getParent(); // TODO
 		}
 
 		return currentLexicalEnvironment;

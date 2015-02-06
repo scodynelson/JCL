@@ -4,11 +4,12 @@
 
 package jcl.compiler.real.sa;
 
-import jcl.compiler.real.environment.DynamicEnvironment;
-import jcl.compiler.real.environment.LexicalEnvironment;
-import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.element.specialoperator.GoElement;
+import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.EnvironmentStack;
+import jcl.compiler.real.environment.LexicalEnvironment;
+import jcl.compiler.real.environment.Marker;
 import jcl.symbols.SymbolStruct;
 
 import java.io.Serializable;
@@ -21,16 +22,19 @@ public class AnalysisBuilder implements Serializable {
 
 	private static final long serialVersionUID = 3885902321477664662L;
 
-	private final Stack<LexicalEnvironment> lexicalEnvironmentStack = new Stack<>();
-	private final Stack<DynamicEnvironment> dynamicEnvironmentStack = new Stack<>();
+	private final EnvironmentStack environmentStack = new EnvironmentStack();
+
 	private final Stack<SymbolStruct<?>> functionNameStack = new Stack<>();
 
 	private final Set<SymbolStruct<?>> undefinedFunctions = Collections.synchronizedSet(new HashSet<>());
-	private int bindingsPosition;
-	private int closureDepth;
 
 	private final Stack<SymbolElement<?>> blockStack = new Stack<>();
+
 	private final Stack<Set<GoElement>> tagbodyStack = new Stack<>();
+
+	private int bindingsPosition;
+
+	private int closureDepth;
 
 	// eval-when processing modes
 	private boolean topLevelMode;
@@ -40,21 +44,14 @@ public class AnalysisBuilder implements Serializable {
 		closureDepth = 0;
 		topLevelMode = true;
 
-		final LexicalEnvironment globalLexicalEnvironment = new LexicalEnvironment(LexicalEnvironment.NULL, Marker.LAMBDA, 0);
-		lexicalEnvironmentStack.push(globalLexicalEnvironment);
-
-		final DynamicEnvironment globalDynamicEnvironment = new DynamicEnvironment(DynamicEnvironment.FREE);
-		dynamicEnvironmentStack.push(globalDynamicEnvironment);
+		final Environment globalEnvironment = new LexicalEnvironment(LexicalEnvironment.NULL, Marker.LAMBDA, 0);
+		environmentStack.push(globalEnvironment);
 
 		functionNameStack.push(null);
 	}
 
-	public Stack<LexicalEnvironment> getLexicalEnvironmentStack() {
-		return lexicalEnvironmentStack;
-	}
-
-	public Stack<DynamicEnvironment> getDynamicEnvironmentStack() {
-		return dynamicEnvironmentStack;
+	public EnvironmentStack getEnvironmentStack() {
+		return environmentStack;
 	}
 
 	public Stack<SymbolStruct<?>> getFunctionNameStack() {

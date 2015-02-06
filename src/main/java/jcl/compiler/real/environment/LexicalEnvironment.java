@@ -10,7 +10,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LexicalEnvironment extends Environment<LexicalEnvironment> {
+public class LexicalEnvironment extends Environment {
 
 	public static final LexicalEnvironment NULL = new LexicalEnvironment(null, Marker.LAMBDA, 0);
 
@@ -22,7 +22,7 @@ public class LexicalEnvironment extends Environment<LexicalEnvironment> {
 
 	private final List<LoadTimeValue> loadTimeValues = new ArrayList<>();
 
-	public LexicalEnvironment(final LexicalEnvironment parent, final Marker marker, final int closureDepth) {
+	public LexicalEnvironment(final Environment parent, final Marker marker, final int closureDepth) {
 		super(parent);
 		this.marker = marker;
 		closure = new Closure(closureDepth);

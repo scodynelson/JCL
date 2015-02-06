@@ -2,10 +2,10 @@ package jcl.compiler.real.icg;
 
 import jcl.LispStruct;
 import jcl.compiler.old.Emitter;
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.environment.Closure;
 import jcl.compiler.real.environment.binding.ClosureBinding;
-import jcl.compiler.real.environment.DynamicEnvironment;
 import jcl.compiler.real.environment.binding.EnvironmentBinding;
 import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.allocation.LocalAllocation;
@@ -47,7 +47,7 @@ public class IntermediateCodeGenerator {
 
 	// this is the current binding environment. It always matches the value
 	// on top of the binding stack
-	public LexicalEnvironment bindingEnvironment;
+	public Environment bindingEnvironment;
 	// Whenever a binding environment is encountered, it is pushed on the stack and
 	// bindingEnvironment is set to the new environment. When that binding is no
 	// longer in force, the stack is popped and the value of bindingEnvironment is
@@ -139,13 +139,13 @@ public class IntermediateCodeGenerator {
 			// return the closure. It's an error if there's no depth value
 			return closure;
 		} else {
-			final LexicalEnvironment parent = bindingEnv.getParent();
+			final Environment parent = bindingEnv.getParent();
 			// (:Parent ...)
 			if (parent.equals(LexicalEnvironment.NULL)) {
 				return null;
 			} else {
 				// go up to the top if necessary
-				return findNearestClosure(parent);
+				return findNearestClosure((LexicalEnvironment) parent);
 			}
 		}
 	}
@@ -153,7 +153,7 @@ public class IntermediateCodeGenerator {
 	public static int genLocalSlot(final SymbolStruct<?> sym, final LexicalEnvironment binding) {
 		// get the :bindings list
 		// ((x :allocation ...) (y :allocation ...) ...)
-		final Binding<?> symBinding = binding.getBinding(sym).get();
+		final Binding<?> symBinding = binding.getLexicalBinding(sym).get();
 		// (:allocation ... :scope ... )
 		// get the allocated slot for the symbol and put it on the stack
 		return ((PositionAllocation) symBinding.getAllocation()).getPosition();
@@ -278,7 +278,7 @@ public class IntermediateCodeGenerator {
 		}
 		// get the :closure information
 		final Closure closureStuff = environment.getClosure();
-		final List<EnvironmentBinding> bindings = environment.getBindings();
+		final List<EnvironmentBinding> bindings = environment.getLexicalBindings();
 		// (:closure (:depth . n) (x ....) (y ....) ...)
 		// if there is one, allocate the object
 		if (CollectionUtils.isNotEmpty(bindings) && (closureStuff != null)) {
@@ -329,8 +329,9 @@ public class IntermediateCodeGenerator {
 			// (symbol :allocation ... :binding ... :scope ... :type ...)
 			// (:allocation ... :binding ... :scope ... :type ...)
 			// for free and dynamic
-			if (binding.getBinding().equals(DynamicEnvironment.FREE)
-					&& (binding.getScope() == Scope.DYNAMIC)) {
+			if (
+//					binding.getBinding().equals(DynamicEnvironment.FREE) &&
+							(binding.getScope() == Scope.DYNAMIC)) {
 				// get the local variable slot
 				final LocalAllocation alloc = binding.getAllocation();
 				// (:local . n)

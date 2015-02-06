@@ -1,19 +1,21 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.EnvironmentAccessor;
-import jcl.compiler.real.environment.binding.EnvironmentBinding;
-import jcl.compiler.real.environment.LexicalEnvironment;
-import jcl.compiler.real.environment.Marker;
-import jcl.compiler.real.environment.allocation.ParameterAllocation;
-import jcl.compiler.real.environment.Scope;
-import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.element.specialoperator.InnerFunctionElement;
 import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
 import jcl.compiler.real.element.specialoperator.declare.SpecialDeclarationElement;
+import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.EnvironmentAccessor;
+import jcl.compiler.real.environment.EnvironmentStack;
+import jcl.compiler.real.environment.LexicalEnvironment;
+import jcl.compiler.real.environment.Marker;
+import jcl.compiler.real.environment.Scope;
+import jcl.compiler.real.environment.allocation.ParameterAllocation;
+import jcl.compiler.real.environment.binding.EnvironmentBinding;
+import jcl.compiler.real.sa.AnalysisBuilder;
+import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyWithDeclaresAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
@@ -35,7 +37,9 @@ abstract class InnerFunctionAnalyzer<T extends InnerFunctionElement, S extends I
 	private static final long serialVersionUID = -142718897684745213L;
 
 	private final String analyzerName;
+
 	private final Marker marker;
+
 	private final boolean getFunctionNamesBeforeInitForms;
 
 	@Autowired
@@ -59,14 +63,14 @@ abstract class InnerFunctionAnalyzer<T extends InnerFunctionElement, S extends I
 			throw new ProgramErrorException(analyzerName + ": Parameter list must be of type ListStruct. Got: " + second);
 		}
 
-		final Stack<LexicalEnvironment> lexicalEnvironmentStack = analysisBuilder.getLexicalEnvironmentStack();
-		final LexicalEnvironment parentLexicalEnvironment = lexicalEnvironmentStack.peek();
+		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
+		final Environment parentEnvironment = environmentStack.peek();
 
 		final int tempClosureDepth = analysisBuilder.getClosureDepth();
 		final int newClosureDepth = tempClosureDepth + 1;
 
-		final LexicalEnvironment fletEnvironment = new LexicalEnvironment(parentLexicalEnvironment, marker, newClosureDepth);
-		lexicalEnvironmentStack.push(fletEnvironment);
+		final LexicalEnvironment innerFunctionEnvironment = new LexicalEnvironment(parentEnvironment, marker, newClosureDepth);
+		environmentStack.push(innerFunctionEnvironment);
 
 		final Stack<SymbolStruct<?>> functionNameStack = analysisBuilder.getFunctionNameStack();
 		List<SymbolStruct<?>> functionNames = null;
@@ -91,7 +95,7 @@ abstract class InnerFunctionAnalyzer<T extends InnerFunctionElement, S extends I
 
 			final List<S> innerFunctionVars
 					= innerFunctionsJavaList.stream()
-					                        .map(e -> getInnerFunctionVar(e, declareElement, analyzer, analysisBuilder, lexicalEnvironmentStack))
+					                        .map(e -> getInnerFunctionVar(e, declareElement, analyzer, analysisBuilder, innerFunctionEnvironment, environmentStack))
 					                        .collect(Collectors.toList());
 
 			if (!getFunctionNamesBeforeInitForms) {
@@ -106,9 +110,7 @@ abstract class InnerFunctionAnalyzer<T extends InnerFunctionElement, S extends I
 					               .map(e -> analyzer.analyzeForm(e, analysisBuilder))
 					               .collect(Collectors.toList());
 
-			final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.peek();
-
-			return getFunctionElement(innerFunctionVars, analyzedBodyForms, currentLexicalEnvironment);
+			return getFunctionElement(innerFunctionVars, analyzedBodyForms, innerFunctionEnvironment);
 		} finally {
 			if (functionNames != null) {
 				StackUtils.popX(functionNameStack, functionNames.size());
@@ -116,13 +118,11 @@ abstract class InnerFunctionAnalyzer<T extends InnerFunctionElement, S extends I
 
 			analysisBuilder.setClosureDepth(tempClosureDepth);
 			analysisBuilder.setBindingsPosition(tempBindingsPosition);
-			lexicalEnvironmentStack.pop();
+			environmentStack.pop();
 		}
 	}
 
 	protected abstract T getFunctionElement(List<S> vars, List<Element> bodyForms, LexicalEnvironment lexicalEnvironment);
-
-	protected abstract S getFunctionElementVar(SymbolElement<?> var, Element initForm);
 
 	private List<SymbolStruct<?>> getFunctionNames(final List<LispStruct> functionDefinitions) {
 
@@ -150,7 +150,8 @@ abstract class InnerFunctionAnalyzer<T extends InnerFunctionElement, S extends I
 	                              final DeclareElement declareElement,
 	                              final SemanticAnalyzer analyzer,
 	                              final AnalysisBuilder analysisBuilder,
-	                              final Stack<LexicalEnvironment> lexicalEnvironmentStack) {
+	                              final LexicalEnvironment innerFunctionEnvironment,
+	                              final EnvironmentStack lexicalEnvironmentStack) {
 
 		if (!(function instanceof ListStruct)) {
 			throw new ProgramErrorException(analyzerName + ": Function parameter must be of type ListStruct. Got: " + function);
@@ -192,16 +193,16 @@ abstract class InnerFunctionAnalyzer<T extends InnerFunctionElement, S extends I
 		final ListStruct innerFunctionListStruct = ListStruct.buildProperList(innerFunction);
 
 		// Evaluate in the outer environment. This is one of the differences between Flet and Labels.
-		final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.pop();
+		final Environment currentEnvironment = lexicalEnvironmentStack.pop();
 
 		final Element functionInitForm;
 		try {
 			functionInitForm = analyzer.analyzeForm(innerFunctionListStruct, analysisBuilder);
 		} finally {
-			lexicalEnvironmentStack.push(currentLexicalEnvironment);
+			lexicalEnvironmentStack.push(currentEnvironment);
 		}
 
-		final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentLexicalEnvironment);
+		final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(innerFunctionEnvironment);
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 		final SymbolElement<?> functionNameSE = new SymbolElement<>(functionName);
@@ -210,10 +211,12 @@ abstract class InnerFunctionAnalyzer<T extends InnerFunctionElement, S extends I
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 		final Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
 		final EnvironmentBinding binding = new EnvironmentBinding(functionName, allocation, scope, jcl.types.T.INSTANCE, functionInitForm);
-		currentLexicalEnvironment.addBinding(binding);
+		innerFunctionEnvironment.addLexicalBinding(binding);
 
 		return getFunctionElementVar(functionNameSE, functionInitForm);
 	}
+
+	protected abstract S getFunctionElementVar(SymbolElement<?> var, Element initForm);
 
 	private static boolean isSpecial(final DeclareElement declareElement, final SymbolElement<?> var) {
 		boolean isSpecial = false;

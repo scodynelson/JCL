@@ -23,13 +23,13 @@ public class EnvironmentAccessor {
 			final Marker lexicalEnvironmentType = currentLexicalEnvironment.getMarker();
 			if (lexicalEnvironmentTypes.contains(lexicalEnvironmentType)) {
 
-				final boolean hasBinding = currentLexicalEnvironment.hasBinding(variable);
+				final boolean hasBinding = currentLexicalEnvironment.hasLexicalBinding(variable);
 				if (hasBinding) {
 					break;
 				}
 			}
 
-			currentLexicalEnvironment = currentLexicalEnvironment.getParent();
+			currentLexicalEnvironment = (LexicalEnvironment) currentLexicalEnvironment.getParent(); // TODO
 		}
 
 		return currentLexicalEnvironment;
@@ -44,7 +44,7 @@ public class EnvironmentAccessor {
 
 		do {
 			// loop up through the local env we're turn looking through
-			final List<EnvironmentBinding> environmentBindings = currentEnvironment.getBindings();
+			final List<EnvironmentBinding> environmentBindings = currentEnvironment.getLexicalBindings();
 
 			int envBindingsMax = environmentBindings
 					.stream()
@@ -68,7 +68,8 @@ public class EnvironmentAccessor {
 			// Need to see if we just got params from a lambda environment.
 			marker = currentEnvironment.getMarker();
 
-			currentEnvironment = currentEnvironment.getParent();
+			// TODO
+			currentEnvironment = (LexicalEnvironment) currentEnvironment.getParent();
 		} while (!Marker.LAMBDA_MARKERS.contains(marker));
 
 		return currentMax + 1;
@@ -85,7 +86,7 @@ public class EnvironmentAccessor {
 
 		while (!currentEnvironment.equals(LexicalEnvironment.NULL)) {
 
-			if (currentEnvironment.hasBinding(variable)) {
+			if (currentEnvironment.hasLexicalBinding(variable)) {
 
 				final Marker envType = currentEnvironment.getMarker();
 				if (((envType == Marker.LAMBDA) || (envType == Marker.LET)) && valueBinding) {
@@ -101,7 +102,8 @@ public class EnvironmentAccessor {
 				}
 			}
 
-			currentEnvironment = currentEnvironment.getParent();
+			// TODO:
+			currentEnvironment = (LexicalEnvironment) currentEnvironment.getParent();
 		}
 
 		return currentEnvironment;

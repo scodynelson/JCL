@@ -14,41 +14,62 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class Environment<E extends Environment<E>> implements LispStruct {
+public abstract class Environment implements LispStruct {
 
 	private static final long serialVersionUID = 7523547599975901124L;
 
-	private final E parent;
+	private final Environment parent;
 
-	private final List<EnvironmentBinding> bindings = new ArrayList<>();
+	private final List<EnvironmentBinding> lexicalBindings = new ArrayList<>();
+
+	private final List<EnvironmentBinding> dynamicBindings = new ArrayList<>();
 
 	private final SymbolTable symbolTable = new SymbolTable();
 
-	protected Environment(final E parent) {
+	protected Environment(final Environment parent) {
 		this.parent = parent;
 	}
 
-	public E getParent() {
+	public Environment getParent() {
 		return parent;
 	}
 
-	public List<EnvironmentBinding> getBindings() {
-		return bindings;
+	public List<EnvironmentBinding> getLexicalBindings() {
+		return lexicalBindings;
 	}
 
-	public boolean hasBinding(final SymbolStruct<?> symbolStruct) {
-		return bindings.stream()
-		               .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct));
+	public boolean hasLexicalBinding(final SymbolStruct<?> symbolStruct) {
+		return lexicalBindings.stream()
+		                      .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct));
 	}
 
-	public Optional<EnvironmentBinding> getBinding(final SymbolStruct<?> symbolStruct) {
-		return bindings.stream()
-		               .filter(e -> e.getSymbolStruct().equals(symbolStruct))
-		               .findFirst();
+	public Optional<EnvironmentBinding> getLexicalBinding(final SymbolStruct<?> symbolStruct) {
+		return lexicalBindings.stream()
+		                      .filter(e -> e.getSymbolStruct().equals(symbolStruct))
+		                      .findFirst();
 	}
 
-	public void addBinding(final EnvironmentBinding environmentBinding) {
-		bindings.add(environmentBinding);
+	public void addLexicalBinding(final EnvironmentBinding environmentBinding) {
+		lexicalBindings.add(environmentBinding);
+	}
+
+	public List<EnvironmentBinding> getDynamicBindings() {
+		return dynamicBindings;
+	}
+
+	public boolean hasDynamicBinding(final SymbolStruct<?> symbolStruct) {
+		return dynamicBindings.stream()
+		                      .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct));
+	}
+
+	public Optional<EnvironmentBinding> getDynamicBinding(final SymbolStruct<?> symbolStruct) {
+		return dynamicBindings.stream()
+		                      .filter(e -> e.getSymbolStruct().equals(symbolStruct))
+		                      .findFirst();
+	}
+
+	public void addDynamicBinding(final EnvironmentBinding environmentBinding) {
+		dynamicBindings.add(environmentBinding);
 	}
 
 	public SymbolTable getSymbolTable() {

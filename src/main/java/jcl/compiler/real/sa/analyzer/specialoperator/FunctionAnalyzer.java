@@ -1,18 +1,20 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
 import jcl.LispStruct;
+import jcl.compiler.real.element.SymbolElement;
+import jcl.compiler.real.element.specialoperator.FunctionElement;
+import jcl.compiler.real.element.specialoperator.LambdaFunctionElement;
+import jcl.compiler.real.element.specialoperator.SymbolFunctionElement;
+import jcl.compiler.real.element.specialoperator.lambda.LambdaElement;
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
+import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.LexicalSymbolStructAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.lambda.LambdaAnalyzer;
-import jcl.compiler.real.element.SymbolElement;
-import jcl.compiler.real.element.specialoperator.FunctionElement;
-import jcl.compiler.real.element.specialoperator.lambda.LambdaElement;
-import jcl.compiler.real.element.specialoperator.LambdaFunctionElement;
-import jcl.compiler.real.element.specialoperator.SymbolFunctionElement;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
@@ -20,8 +22,6 @@ import jcl.symbols.SymbolStruct;
 import jcl.util.InstanceOf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Stack;
 
 @Component
 public class FunctionAnalyzer implements SpecialOperatorAnalyzer {
@@ -54,13 +54,14 @@ public class FunctionAnalyzer implements SpecialOperatorAnalyzer {
 
 	private FunctionElement analyzeFunctionSymbol(final SemanticAnalyzer analyzer, final SymbolStruct<?> functionSymbol, final AnalysisBuilder analysisBuilder) {
 
-		final Stack<LexicalEnvironment> lexicalEnvironmentStack = analysisBuilder.getLexicalEnvironmentStack();
-		final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.peek();
+		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
+//		final Environment currentEnvironment = environmentStack.peek();
+		final LexicalEnvironment currentLexicalEnvironment = environmentStack.getCurrentLexicalEnvironment();
 
-		final LexicalEnvironment bindingLexicalEnvironment
+		final Environment bindingEnvironment
 				= EnvironmentAccessor.getBindingEnvironment(functionSymbol, currentLexicalEnvironment, Marker.FUNCTION_MARKERS);
 
-		final boolean missingFunctionSymbolBinding = !bindingLexicalEnvironment.hasBinding(functionSymbol);
+		final boolean missingFunctionSymbolBinding = !bindingEnvironment.hasLexicalBinding(functionSymbol);
 
 		final SymbolElement<?> functionSymbolSE;
 		if (missingFunctionSymbolBinding) {

@@ -17,7 +17,7 @@ public class SymbolEnvironmentBinding extends SymbolBinding<EnvironmentAllocatio
 	private static final long serialVersionUID = 3886048220499523668L;
 
 	public SymbolEnvironmentBinding(final SymbolStruct<?> symbolStruct, final EnvironmentAllocation allocation, final Scope scope,
-	                                final LispType type, final Environment<?> binding) {
+	                                final LispType type, final Environment binding) {
 		super(symbolStruct, allocation, scope, type, binding);
 	}
 

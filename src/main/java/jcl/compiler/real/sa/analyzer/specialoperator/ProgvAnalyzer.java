@@ -4,9 +4,11 @@ import jcl.LispStruct;
 import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.element.specialoperator.ProgvElement;
-import jcl.compiler.real.environment.DynamicEnvironment;
-import jcl.compiler.real.environment.binding.EnvironmentBinding;
+import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.EnvironmentStack;
+import jcl.compiler.real.environment.ProgvEnvironment;
 import jcl.compiler.real.environment.Scope;
+import jcl.compiler.real.environment.binding.EnvironmentBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.DynamicSymbolStructAnalyzer;
@@ -21,7 +23,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Stack;
 import java.util.stream.Collectors;
 
 @Component
@@ -93,11 +94,11 @@ public class ProgvAnalyzer implements SpecialOperatorAnalyzer {
 
 		// Do other stuff
 
-		final Stack<DynamicEnvironment> dynamicEnvironmentStack = analysisBuilder.getDynamicEnvironmentStack();
-		final DynamicEnvironment parentDynamicEnvironment = dynamicEnvironmentStack.peek();
+		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
+		final Environment parentDynamicEnvironment = environmentStack.peek();
 
-		final DynamicEnvironment progvEnvironment = new DynamicEnvironment(parentDynamicEnvironment);
-		dynamicEnvironmentStack.push(progvEnvironment);
+		final ProgvEnvironment progvEnvironment = new ProgvEnvironment(parentDynamicEnvironment);
+		environmentStack.push(progvEnvironment);
 
 		final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
 		try {
@@ -120,7 +121,7 @@ public class ProgvAnalyzer implements SpecialOperatorAnalyzer {
 
 				// TODO: really a 'null' allocation here???
 				final EnvironmentBinding binding = new EnvironmentBinding(var, null, Scope.DYNAMIC, T.INSTANCE, analyzedVal);
-				progvEnvironment.addBinding(binding);
+				progvEnvironment.addLexicalBinding(binding);
 
 				progvVars.add(progvVar);
 			}
@@ -135,7 +136,7 @@ public class ProgvAnalyzer implements SpecialOperatorAnalyzer {
 			return new ProgvElement(progvVars, analyzedForms, progvEnvironment);
 		} finally {
 			analysisBuilder.setBindingsPosition(tempBindingsPosition);
-			dynamicEnvironmentStack.pop();
+			environmentStack.pop();
 		}
 	}
 }

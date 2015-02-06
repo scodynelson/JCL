@@ -16,15 +16,15 @@ public class SymbolBinding<A extends Allocation> extends Binding<A> {
 
 	private static final long serialVersionUID = -3462756070576114237L;
 
-	private final Environment<?> binding;
+	private final Environment binding;
 
 	protected SymbolBinding(final SymbolStruct<?> symbolStruct, final A allocation, final Scope scope,
-	                     final LispType type, final Environment<?> binding) {
+	                        final LispType type, final Environment binding) {
 		super(symbolStruct, allocation, scope, type);
 		this.binding = binding;
 	}
 
-	public Environment<?> getBinding() {
+	public Environment getBinding() {
 		return binding;
 	}
 

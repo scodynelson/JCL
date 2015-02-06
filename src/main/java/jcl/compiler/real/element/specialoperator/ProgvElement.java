@@ -4,9 +4,9 @@
 
 package jcl.compiler.real.element.specialoperator;
 
-import jcl.compiler.real.environment.DynamicEnvironment;
 import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.SymbolElement;
+import jcl.compiler.real.environment.Environment;
 
 import java.io.Serializable;
 import java.util.List;
@@ -16,11 +16,12 @@ public class ProgvElement implements Element {
 	private static final long serialVersionUID = 6286708668973616872L;
 
 	private final List<ProgvVar> vars;
+
 	private final List<Element> forms;
 
-	private final DynamicEnvironment dynamicEnvironment;
+	private final Environment dynamicEnvironment;
 
-	public ProgvElement(final List<ProgvVar> vars, final List<Element> forms, final DynamicEnvironment dynamicEnvironment) {
+	public ProgvElement(final List<ProgvVar> vars, final List<Element> forms, final Environment dynamicEnvironment) {
 		this.vars = vars;
 		this.forms = forms;
 		this.dynamicEnvironment = dynamicEnvironment;
@@ -34,7 +35,7 @@ public class ProgvElement implements Element {
 		return forms;
 	}
 
-	public DynamicEnvironment getDynamicEnvironment() {
+	public Environment getDynamicEnvironment() {
 		return dynamicEnvironment;
 	}
 
@@ -43,6 +44,7 @@ public class ProgvElement implements Element {
 		private static final long serialVersionUID = -5131005121770228469L;
 
 		private final SymbolElement<?> var;
+
 		private final Element val;
 
 		public ProgvVar(final SymbolElement<?> var, final Element val) {

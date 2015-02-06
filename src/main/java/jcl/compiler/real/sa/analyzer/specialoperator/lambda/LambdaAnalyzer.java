@@ -1,6 +1,11 @@
 package jcl.compiler.real.sa.analyzer.specialoperator.lambda;
 
 import jcl.LispStruct;
+import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
+import jcl.compiler.real.element.specialoperator.lambda.LambdaElement;
+import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
@@ -10,9 +15,6 @@ import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindin
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.specialoperator.lambda.LambdaElement;
-import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
 import jcl.compiler.real.sa.analyzer.ListStructAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.SpecialOperatorAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyProcessingResult;
@@ -26,7 +28,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 import java.util.stream.Collectors;
 
 @Component
@@ -52,14 +53,14 @@ public class LambdaAnalyzer implements SpecialOperatorAnalyzer {
 			throw new ProgramErrorException("LAMBDA: Parameter list must be of type ListStruct. Got: " + second);
 		}
 
-		final Stack<LexicalEnvironment> lexicalEnvironmentStack = analysisBuilder.getLexicalEnvironmentStack();
-		final LexicalEnvironment parentLexicalEnvironment = lexicalEnvironmentStack.peek();
+		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
+		final Environment parentEnvironment = environmentStack.peek();
 
 		final int tempClosureDepth = analysisBuilder.getClosureDepth();
 		final int newClosureDepth = tempClosureDepth + 1;
 
-		final LexicalEnvironment lambdaEnvironment = new LexicalEnvironment(parentLexicalEnvironment, Marker.LAMBDA, newClosureDepth);
-		lexicalEnvironmentStack.push(lambdaEnvironment);
+		final LexicalEnvironment lambdaEnvironment = new LexicalEnvironment(parentEnvironment, Marker.LAMBDA, newClosureDepth);
+		environmentStack.push(lambdaEnvironment);
 
 		final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
 		try {
@@ -84,13 +85,11 @@ public class LambdaAnalyzer implements SpecialOperatorAnalyzer {
 			// TODO:    Need to research this in ALL the other analyzers as well.
 			final Element analyzedBodyForms = listStructAnalyzer.analyze(analyzer, newLambdaBodyListStruct, analysisBuilder);
 
-			final LexicalEnvironment currentLexicalEnvironment = lexicalEnvironmentStack.peek();
-
-			return new LambdaElement(parsedLambdaList, bodyProcessingResult.getDocString(), null, currentLexicalEnvironment);
+			return new LambdaElement(parsedLambdaList, bodyProcessingResult.getDocString(), null, lambdaEnvironment);
 		} finally {
 			analysisBuilder.setClosureDepth(tempClosureDepth);
 			analysisBuilder.setBindingsPosition(tempBindingsPosition);
-			lexicalEnvironmentStack.pop();
+			environmentStack.pop();
 		}
 	}
 

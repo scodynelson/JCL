@@ -32,15 +32,15 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 		// ==> free and dynamic
 		// 4. the binding is completely local and allocated to a JVM local
 		//    If there is no binding and this is special, it's really free!
-		final Closure closure = codeGenerator.bindingEnvironment.getClosure();
+		final Closure closure = ((LexicalEnvironment)codeGenerator.bindingEnvironment).getClosure();
 		final Optional<ClosureBinding> closureBinding = closure.getBinding(input);
 		if (!closureBinding.isPresent()) {
 			// set up for 2 or 3
-			final Optional<SymbolBinding<?>> entryOptional = null; //codeGenerator.bindingEnvironment.getSymbolTable().getBinding(input);
+			final Optional<SymbolBinding<?>> entryOptional = null; //codeGenerator.bindingEnvironment.getSymbolTable().getLexicalBinding(input);
 			// (:allocation ... :
 			if (!entryOptional.isPresent()) {
 				// it's 4
-				final LexicalEnvironment binding = EnvironmentAccessor.getBindingEnvironment(codeGenerator.bindingEnvironment, input, true);
+				final LexicalEnvironment binding = EnvironmentAccessor.getBindingEnvironment((LexicalEnvironment) codeGenerator.bindingEnvironment, input, true);
 				if (binding.equals(LexicalEnvironment.NULL)) {
 					// This is a truly free variable, check to make sure it's special
 					// if not, issue a warning, then treat it as special
@@ -99,7 +99,7 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 						codeGenerator.emitter.emitInvokeinterface("lisp/extensions/type/Closure", "getBindingAt", "(II)", "Ljava/lang/Object;", true);
 					} else {
 						// go find it
-						final LexicalEnvironment binding = EnvironmentAccessor.getBindingEnvironment(codeGenerator.bindingEnvironment, input, true);
+						final LexicalEnvironment binding = EnvironmentAccessor.getBindingEnvironment((LexicalEnvironment) codeGenerator.bindingEnvironment, input, true);
 						final int slot = IntermediateCodeGenerator.genLocalSlot(input, binding);
 						codeGenerator.emitter.emitAload(slot);
 					}

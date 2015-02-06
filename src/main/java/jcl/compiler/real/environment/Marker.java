@@ -30,4 +30,24 @@ public enum Marker {
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
+
+
+	/*
+
+	locally - lexical, environment
+
+	let - variable-binding, lexical, environment
+
+	progv - [variable-binding], [dynamic], environment
+
+	lambda - variable-binding, lambda, lexical, environment
+
+	flet - function-binding, lambda, lexical, environment
+	labels - function-binding, lambda, lexical, environment
+
+	macrolet - macro-binding, function-binding, lexical, environment
+
+	symbol-macrolet - symbol-macro-binding, variable-binding, lexical, environment
+
+	 */
 }

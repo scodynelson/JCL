@@ -2,23 +2,17 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.compiler.real.environment;
+package jcl.compiler.real.environment.allocation;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class ClosureAllocation implements Allocation {
+public class ParameterAllocation extends PositionAllocation {
 
-	private static final long serialVersionUID = 8918948643826465949L;
+	private static final long serialVersionUID = 4141262392866115079L;
 
-	private final Closure closure;
-
-	public ClosureAllocation(final Closure closure) {
-		this.closure = closure;
-	}
-
-	public Closure getClosure() {
-		return closure;
+	public ParameterAllocation(final int position) {
+		super(position);
 	}
 
 	@Override

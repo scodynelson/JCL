@@ -1,13 +1,13 @@
 package jcl.compiler.real.icg;
 
-import jcl.compiler.real.environment.Allocation;
+import jcl.compiler.real.environment.allocation.Allocation;
 import jcl.compiler.real.environment.Closure;
-import jcl.compiler.real.environment.ClosureAllocation;
-import jcl.compiler.real.environment.ClosureBinding;
+import jcl.compiler.real.environment.allocation.ClosureAllocation;
+import jcl.compiler.real.environment.binding.ClosureBinding;
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.Scope;
-import jcl.compiler.real.environment.SymbolBinding;
+import jcl.compiler.real.environment.binding.SymbolBinding;
 import jcl.symbols.SymbolStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

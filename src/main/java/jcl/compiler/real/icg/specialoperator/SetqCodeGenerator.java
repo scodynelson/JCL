@@ -3,7 +3,7 @@ package jcl.compiler.real.icg.specialoperator;
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.Scope;
-import jcl.compiler.real.environment.SymbolLocalBinding;
+import jcl.compiler.real.environment.binding.SymbolLocalBinding;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.SpecialSymbolCodeGenerator;

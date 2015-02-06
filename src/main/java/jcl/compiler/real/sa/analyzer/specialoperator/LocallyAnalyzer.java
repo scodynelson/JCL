@@ -1,7 +1,6 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.EnvironmentAllocation;
 import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.AnalysisBuilder;
@@ -9,15 +8,9 @@ import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.specialoperator.LocallyElement;
 import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
-import jcl.compiler.real.element.specialoperator.declare.SpecialDeclarationElement;
-import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.EnvironmentAccessor;
-import jcl.compiler.real.environment.LocallyEnvironment;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyWithDeclaresAnalyzer;
 import jcl.lists.ListStruct;
-import jcl.symbols.SymbolStruct;
-import jcl.types.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

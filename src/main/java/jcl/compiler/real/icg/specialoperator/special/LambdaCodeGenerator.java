@@ -1,8 +1,8 @@
 package jcl.compiler.real.icg.specialoperator.special;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.Binding;
-import jcl.compiler.real.environment.EnvironmentBinding;
+import jcl.compiler.real.environment.binding.Binding;
+import jcl.compiler.real.environment.binding.EnvironmentBinding;
 import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.LoadTimeValue;
 import jcl.compiler.real.icg.CodeGenerator;

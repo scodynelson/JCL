@@ -1,5 +1,10 @@
 package jcl.compiler.real.environment;
 
+import jcl.compiler.real.environment.allocation.LocalAllocation;
+import jcl.compiler.real.environment.allocation.ParameterAllocation;
+import jcl.compiler.real.environment.binding.EnvironmentBinding;
+import jcl.compiler.real.environment.binding.SymbolEnvironmentBinding;
+import jcl.compiler.real.environment.binding.SymbolLocalBinding;
 import jcl.symbols.SymbolStruct;
 
 import java.util.List;

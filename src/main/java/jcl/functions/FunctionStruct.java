@@ -2,7 +2,7 @@ package jcl.functions;
 
 import jcl.LispStruct;
 import jcl.LispType;
-import jcl.compiler.real.environment.lambdalist.OrdinaryLambdaListBindings;
+import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.classes.BuiltInClassStruct;
 import jcl.types.Function;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;

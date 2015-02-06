@@ -5,7 +5,7 @@
 package jcl.compiler.real.environment;
 
 import jcl.LispStruct;
-import jcl.compiler.real.element.Element;
+import jcl.compiler.real.environment.binding.EnvironmentBinding;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

@@ -4,6 +4,9 @@
 
 package jcl.compiler.real.environment;
 
+import jcl.compiler.real.environment.binding.SymbolBinding;
+import jcl.compiler.real.environment.binding.SymbolEnvironmentBinding;
+import jcl.compiler.real.environment.binding.SymbolLocalBinding;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

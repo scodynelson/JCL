@@ -2,7 +2,7 @@ package jcl.compiler.real.icg;
 
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.LexicalEnvironment;
-import jcl.compiler.real.environment.SymbolLocalBinding;
+import jcl.compiler.real.environment.binding.SymbolLocalBinding;
 import jcl.symbols.SymbolStruct;
 
 import java.util.Optional;

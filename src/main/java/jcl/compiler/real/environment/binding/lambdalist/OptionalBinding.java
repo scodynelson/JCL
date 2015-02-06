@@ -2,34 +2,27 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.compiler.real.environment.lambdalist;
+package jcl.compiler.real.environment.binding.lambdalist;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.ParameterAllocation;
+import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.Scope;
-import jcl.symbols.KeywordSymbolStruct;
+import jcl.compiler.real.environment.binding.ParameterBinding;
 import jcl.symbols.SymbolStruct;
 import jcl.types.T;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class KeyBinding extends ParameterBinding {
+public class OptionalBinding extends ParameterBinding {
 
-	private static final long serialVersionUID = -8247621420473541525L;
-
-	private final KeywordSymbolStruct keyName;
+	private static final long serialVersionUID = 3357381481589151323L;
 
 	private final SuppliedPBinding suppliedPBinding;
 
-	public KeyBinding(final SymbolStruct<?> symbolStruct, final ParameterAllocation allocation, final LispStruct initForm,
-	                  final KeywordSymbolStruct keyName, final SuppliedPBinding suppliedPBinding) {
+	public OptionalBinding(final SymbolStruct<?> symbolStruct, final ParameterAllocation allocation, final LispStruct initForm,
+	                       final SuppliedPBinding suppliedPBinding) {
 		super(symbolStruct, allocation, Scope.LEXICAL, T.INSTANCE, initForm);
-		this.keyName = keyName;
 		this.suppliedPBinding = suppliedPBinding;
-	}
-
-	public KeywordSymbolStruct getKeyName() {
-		return keyName;
 	}
 
 	public SuppliedPBinding getSuppliedPBinding() {

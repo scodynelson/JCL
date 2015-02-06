@@ -1,11 +1,11 @@
 package jcl.compiler.real.icg.specialoperator;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.Binding;
+import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.environment.Closure;
-import jcl.compiler.real.environment.EnvironmentBinding;
+import jcl.compiler.real.environment.binding.EnvironmentBinding;
 import jcl.compiler.real.environment.LexicalEnvironment;
-import jcl.compiler.real.environment.PositionAllocation;
+import jcl.compiler.real.environment.allocation.PositionAllocation;
 import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;

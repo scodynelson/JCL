@@ -2,10 +2,10 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.EnvironmentAccessor;
-import jcl.compiler.real.environment.EnvironmentBinding;
+import jcl.compiler.real.environment.binding.EnvironmentBinding;
 import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.Marker;
-import jcl.compiler.real.environment.ParameterAllocation;
+import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;

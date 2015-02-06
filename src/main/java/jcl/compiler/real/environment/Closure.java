@@ -4,6 +4,7 @@
 
 package jcl.compiler.real.environment;
 
+import jcl.compiler.real.environment.binding.ClosureBinding;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

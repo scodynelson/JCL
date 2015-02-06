@@ -6,7 +6,7 @@ package jcl.compiler.real.element.specialoperator.lambda;
 
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.environment.LexicalEnvironment;
-import jcl.compiler.real.environment.lambdalist.OrdinaryLambdaListBindings;
+import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.element.Element;
 
 import java.util.List;

@@ -5,7 +5,7 @@ import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.element.specialoperator.ProgvElement;
 import jcl.compiler.real.environment.DynamicEnvironment;
-import jcl.compiler.real.environment.EnvironmentBinding;
+import jcl.compiler.real.environment.binding.EnvironmentBinding;
 import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;

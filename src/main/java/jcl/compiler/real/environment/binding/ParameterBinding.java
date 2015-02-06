@@ -2,12 +2,12 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.compiler.real.environment.lambdalist;
+package jcl.compiler.real.environment.binding;
 
 import jcl.LispStruct;
 import jcl.LispType;
-import jcl.compiler.real.environment.Binding;
-import jcl.compiler.real.environment.ParameterAllocation;
+import jcl.compiler.real.environment.binding.Binding;
+import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.Scope;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;

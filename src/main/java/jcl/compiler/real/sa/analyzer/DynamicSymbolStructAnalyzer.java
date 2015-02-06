@@ -2,12 +2,12 @@ package jcl.compiler.real.sa.analyzer;
 
 import jcl.compiler.real.environment.DynamicEnvironment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
-import jcl.compiler.real.environment.EnvironmentAllocation;
+import jcl.compiler.real.environment.allocation.EnvironmentAllocation;
 import jcl.compiler.real.environment.LexicalEnvironment;
-import jcl.compiler.real.environment.LocalAllocation;
+import jcl.compiler.real.environment.allocation.LocalAllocation;
 import jcl.compiler.real.environment.Scope;
-import jcl.compiler.real.environment.SymbolEnvironmentBinding;
-import jcl.compiler.real.environment.SymbolLocalBinding;
+import jcl.compiler.real.environment.binding.SymbolEnvironmentBinding;
+import jcl.compiler.real.environment.binding.SymbolLocalBinding;
 import jcl.compiler.real.environment.SymbolTable;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;

@@ -10,7 +10,6 @@ public class UnwindProtectCodeGenerator implements CodeGenerator<ListStruct> {
 
 	/**
 	 * Transfer of Control Sequence for unwind-protect.
-	 * http://clforjava.cs.cofc.edu/twiki/bin/view/CLJcompiler/TransferOfControl#Compilation_Time_TOC_Sequences_f
 	 * ---------------------------
 	 * 1. Start the try block
 	 * 2. Setup for the evaluation of the protected form

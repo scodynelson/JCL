@@ -19,7 +19,7 @@ public class JCL {
 	public static ClassLoader CURRENT_CLASSLOADER = CompilerClassLoader.Loader;
 
 	public static void main(final String... args) {
-		// make a new instance of CLforJava
+		// make a new instance of JCL
 
 		try (final AutoCloseable context = new AnnotationConfigApplicationContext(JCL.class)) {
 			final ReadEvalPrint repl = ((ApplicationContext) context).getBean(ReadEvalPrint.class);

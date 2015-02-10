@@ -20,13 +20,13 @@ public class LispClassLoader extends ClassLoader {
 	}
 
 //    public LispClassLoader(String jarFileName) {
-//        super(lisp.common.CLforJava.CURRENT_CLASSLOADER);
+//        super(jcl.system.JCL.CURRENT_CLASSLOADER);
 //        try {
 //            jarFile = new JarFile(new File(jarFileName));
 //        } catch (Exception ex) {
 //            System.out.println("Unable to create class loader from jar file: " + jarFileName);
 //        }
-//        lisp.common.CLforJava.CURRENT_CLASSLOADER = this;
+//        jcl.system.JCL.CURRENT_CLASSLOADER = this;
 //    }
 
 	//    public void changeJarFile(JarFile jarFile) {

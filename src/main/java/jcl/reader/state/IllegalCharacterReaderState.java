@@ -4,10 +4,11 @@
 
 package jcl.reader.state;
 
+import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.reader.Reader;
 import jcl.reader.TokenBuilder;
+import jcl.streams.ReadPeekResult;
 import org.springframework.stereotype.Component;
 
 /**
@@ -25,12 +26,26 @@ class IllegalCharacterReaderState implements ReaderState {
 	private static final long serialVersionUID = 6789972435089995401L;
 
 	@Override
-	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
-		final Integer codePoint = tokenBuilder.getPreviousReadCharacter();
+	public void process(final TokenBuilder tokenBuilder) {
 
-		if (ReaderState.isEndOfFileCharacter(codePoint) && tokenBuilder.isEofErrorP()) {
+		if (!tokenBuilder.isEofErrorP()) {
+			final LispStruct eofValue = tokenBuilder.getEofValue();
+			tokenBuilder.setReturnToken(eofValue);
+			return;
+		}
+
+		final ReadPeekResult readResult = tokenBuilder.getPreviousReadResult();
+
+		if (readResult == null) {
+			throw new ReaderErrorException("No token elements could be read.");
+		}
+
+		if (readResult.isEof()) {
 			throw new ReaderErrorException("End-of-File was encountered.");
-		} else if (codePoint != CharacterConstants.EXIT_CHAR) {
+		}
+
+		final int codePoint = readResult.getResult();
+		if (codePoint != CharacterConstants.EXIT_CHAR) {
 			throw new ReaderErrorException("Illegal Character was encountered: " + codePoint);
 		}
 	}

@@ -58,19 +58,23 @@ class OddMultiEscapeReaderState implements ReaderState {
 	private ReaderStateMediator readerStateMediator;
 
 	@Override
-	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
+	public void process(final TokenBuilder tokenBuilder) {
 
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();
 		final boolean isRecursiveP = tokenBuilder.isRecursiveP();
 
+		final Reader reader = tokenBuilder.getReader();
+
 		ReadPeekResult readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
+		tokenBuilder.setPreviousReadResult(readResult);
+
 		if (readResult.isEof()) {
-			readerStateMediator.readIllegalCharacter(reader, tokenBuilder);
+			readerStateMediator.readIllegalCharacter(tokenBuilder);
+			return;
 		}
 
 		int codePoint = readResult.getResult();
-		tokenBuilder.setPreviousReadCharacter(codePoint);
 
 		final ReadtableStruct readtable = ReaderVariables.READTABLE.getValue();
 		final SyntaxType syntaxType = readtable.getSyntaxType(codePoint);
@@ -82,23 +86,24 @@ class OddMultiEscapeReaderState implements ReaderState {
 
 			tokenBuilder.addToTokenAttributes(codePoint, AttributeType.ALPHABETIC);
 
-			readerStateMediator.readOddMultipleEscape(reader, tokenBuilder);
+			readerStateMediator.readOddMultipleEscape(tokenBuilder);
 		} else if (syntaxType == SyntaxType.SINGLE_ESCAPE) {
 
 			readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
+			tokenBuilder.setPreviousReadResult(readResult);
+
 			if (readResult.isEof()) {
-				readerStateMediator.readIllegalCharacter(reader, tokenBuilder);
+				readerStateMediator.readIllegalCharacter(tokenBuilder);
 			} else {
 				codePoint = readResult.getResult();
-				tokenBuilder.setPreviousReadCharacter(codePoint);
 				tokenBuilder.addToTokenAttributes(codePoint, AttributeType.ALPHABETIC);
 
-				readerStateMediator.readOddMultipleEscape(reader, tokenBuilder);
+				readerStateMediator.readOddMultipleEscape(tokenBuilder);
 			}
 		} else if (syntaxType == SyntaxType.MULTIPLE_ESCAPE) {
-			readerStateMediator.readEvenMultipleEscape(reader, tokenBuilder);
+			readerStateMediator.readEvenMultipleEscape(tokenBuilder);
 		} else {
-			readerStateMediator.readIllegalCharacter(reader, tokenBuilder);
+			readerStateMediator.readIllegalCharacter(tokenBuilder);
 		}
 	}
 

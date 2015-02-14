@@ -39,36 +39,39 @@ class ReadReaderState implements ReaderState {
 	private ReaderStateMediator readerStateMediator;
 
 	@Override
-	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
+	public void process(final TokenBuilder tokenBuilder) {
 
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();
 		final boolean isRecursiveP = tokenBuilder.isRecursiveP();
 
+		final Reader reader = tokenBuilder.getReader();
+
 		final ReadPeekResult readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
+		tokenBuilder.setPreviousReadResult(readResult);
+
 		if (readResult.isEof()) {
-			ReaderState.handleEndOfFile(tokenBuilder, "ReadReaderState");
+			readerStateMediator.readIllegalCharacter(tokenBuilder);
 			return;
 		}
 
 		final int codePoint = readResult.getResult();
-		tokenBuilder.setPreviousReadCharacter(codePoint);
 
 		final ReadtableStruct readtable = ReaderVariables.READTABLE.getValue();
 		final SyntaxType syntaxType = readtable.getSyntaxType(codePoint);
 
 		if (syntaxType == SyntaxType.WHITESPACE) {
-			readerStateMediator.readWhitespace(reader, tokenBuilder);
+			readerStateMediator.readWhitespace(tokenBuilder);
 		} else if ((syntaxType == SyntaxType.TERMINATING) || (syntaxType == SyntaxType.NON_TERMINATING)) {
-			readerStateMediator.readMacroCharacter(reader, tokenBuilder);
+			readerStateMediator.readMacroCharacter(tokenBuilder);
 		} else if (syntaxType == SyntaxType.SINGLE_ESCAPE) {
-			readerStateMediator.readSingleEscape(reader, tokenBuilder);
+			readerStateMediator.readSingleEscape(tokenBuilder);
 		} else if (syntaxType == SyntaxType.MULTIPLE_ESCAPE) {
-			readerStateMediator.readMultipleEscape(reader, tokenBuilder);
+			readerStateMediator.readMultipleEscape(tokenBuilder);
 		} else if (syntaxType == SyntaxType.CONSTITUENT) {
-			readerStateMediator.readConstituent(reader, tokenBuilder);
+			readerStateMediator.readConstituent(tokenBuilder);
 		} else {
-			readerStateMediator.readIllegalCharacter(reader, tokenBuilder);
+			readerStateMediator.readIllegalCharacter(tokenBuilder);
 		}
 	}
 

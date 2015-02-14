@@ -5,7 +5,7 @@
 package jcl.reader.state;
 
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.reader.Reader;
+import jcl.reader.ReaderStateMediator;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
 import jcl.reader.struct.ReaderVariables;
@@ -43,27 +43,33 @@ class TokenAccumulatedReaderState implements ReaderState {
 	@Autowired
 	private NumberTokenAccumulatedReaderState numberTokenAccumulatedReaderState;
 
-	@Override
-	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
-		final Integer codePoint = tokenBuilder.getPreviousReadCharacter();
+	/**
+	 * {@link ReaderStateMediator} singleton used by the reader algorithm.
+	 */
+	@Autowired
+	private ReaderStateMediator readerStateMediator;
 
-		final List<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
-		if (ReaderState.isEndOfFileCharacter(codePoint) && tokenAttributes.isEmpty()) {
-			ReaderState.handleEndOfFile(tokenBuilder, "TokenAccumulatedReaderState");
-			return;
-		}
+	@Override
+	public void process(final TokenBuilder tokenBuilder) {
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			tokenBuilder.setReturnToken(null);
 			return;
 		}
 
+		final List<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
+
+		if (tokenAttributes.isEmpty()) {
+			readerStateMediator.readIllegalCharacter(tokenBuilder);
+			return;
+		}
+
 		final String tokenString = ReaderState.convertTokensToString(tokenAttributes);
 		if (".".equals(tokenString)) {
 			throw new ReaderErrorException("Dot context error in '.'");
-		} else {
-			numberTokenAccumulatedReaderState.process(reader, tokenBuilder);
 		}
+
+		numberTokenAccumulatedReaderState.process(tokenBuilder);
 	}
 
 	@Override

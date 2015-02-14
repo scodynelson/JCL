@@ -4,10 +4,7 @@
 
 package jcl.reader.state;
 
-import jcl.characters.CharacterConstants;
-import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.reader.AttributeType;
-import jcl.reader.Reader;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
 import jcl.reader.struct.ReadtableCase;
@@ -46,35 +43,6 @@ interface ReaderState extends Serializable {
 	 * Serializable Version Unique Identifier.
 	 */
 	long serialVersionUID = -1;
-
-	/**
-	 * Determines if the provided {@code codePoint} is either null or equal to {@link CharacterConstants#EOF}.
-	 *
-	 * @param codePoint
-	 * 		the value to determine is either null or equal to {@link CharacterConstants#EOF}
-	 *
-	 * @return true if the provided {@code codePoint} is an End-Of-File character
-	 */
-	static boolean isEndOfFileCharacter(final Integer codePoint) {
-		return (codePoint == null) || (codePoint == CharacterConstants.EOF);
-	}
-
-	/**
-	 * Handles End-of-File characters based on the {@link TokenBuilder#isEofErrorP} value inside the provided {@link
-	 * TokenBuilder}.
-	 *
-	 * @param tokenBuilder
-	 * 		the {@link TokenBuilder} used to determine the handling of End-of-File characters
-	 * @param stateEofOccurred
-	 * 		the State the End-of-File character occurred
-	 */
-	static void handleEndOfFile(final TokenBuilder tokenBuilder, final String stateEofOccurred) {
-		if (tokenBuilder.isEofErrorP()) {
-			throw new ReaderErrorException("End-of-File encountered in " + stateEofOccurred + '.');
-		} else {
-			tokenBuilder.setReturnToken(null);
-		}
-	}
 
 	/**
 	 * Converts the provided list of {@link TokenAttribute}s to a {@link String}.
@@ -186,11 +154,9 @@ interface ReaderState extends Serializable {
 	/**
 	 * Used to handle reader processing in the respective state instance.
 	 *
-	 * @param reader
-	 * 		the JCL {@link Reader} instance to use for reading lisp tokens
 	 * @param tokenBuilder
 	 * 		the {@link TokenBuilder} used to build the resulting lisp token and house token parsing information throughout
 	 * 		the read process
 	 */
-	void process(Reader reader, TokenBuilder tokenBuilder);
+	void process(TokenBuilder tokenBuilder);
 }

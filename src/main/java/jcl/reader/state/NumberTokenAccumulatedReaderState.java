@@ -10,7 +10,6 @@ import jcl.numbers.IntegerStruct;
 import jcl.numbers.NumberStruct;
 import jcl.numbers.RatioStruct;
 import jcl.reader.AttributeType;
-import jcl.reader.Reader;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
 import jcl.reader.struct.ReaderVariables;
@@ -84,11 +83,11 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 	private SymbolTokenAccumulatedReaderState symbolTokenAccumulatedReaderState;
 
 	@Override
-	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
+	public void process(final TokenBuilder tokenBuilder) {
 
 		final NumberStruct numberToken = getNumberToken(tokenBuilder);
 		if (numberToken == null) {
-			symbolTokenAccumulatedReaderState.process(reader, tokenBuilder);
+			symbolTokenAccumulatedReaderState.process(tokenBuilder);
 		} else {
 			tokenBuilder.setReturnToken(numberToken);
 		}
@@ -106,7 +105,7 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 
 		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
 
-		// If there are no tokens, not a number
+		// If there are no tokens, not a number. NOTE: We should never get here in the sequence. This is a protection.
 		if (CollectionUtils.isEmpty(tokenAttributes)) {
 			return null;
 		}

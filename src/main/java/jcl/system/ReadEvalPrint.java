@@ -156,15 +156,15 @@ public class ReadEvalPrint {
 						try {
 							final LispStruct lambdaWhatRead = wrapFormInLambda(whatRead);
 
-							final SemanticAnalyzer sa = context.getBean(SemanticAnalyzer.class);
-							whatAnalyzed = sa.analyzeForm(lambdaWhatRead);
+//							final SemanticAnalyzer sa = context.getBean(SemanticAnalyzer.class);
+//							whatAnalyzed = sa.analyzeForm(lambdaWhatRead);
 
-							if (whatAnalyzed != null) {
-								LOGGER.debug("ANALYZED:\n");
+//							if (whatAnalyzed != null) {
+//								LOGGER.debug("ANALYZED:\n");
 //								LOGGER.debug("{}\n", whatAnalyzed.printStruct());
-							} else {
-								LOGGER.warn("; WARNING: Null response from analyzer");
-							}
+//							} else {
+//								LOGGER.warn("; WARNING: Null response from analyzer");
+//							}
 						} catch (final ReaderErrorException ex) {
 							LOGGER.warn("; WARNING: Analysis Exception condition during Analyzer operation -> {}", ex.getMessage(), ex);
 						} catch (final Exception ex) {

@@ -38,22 +38,26 @@ class SingleEscapeReaderState implements ReaderState {
 	private ReaderStateMediator readerStateMediator;
 
 	@Override
-	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
+	public void process(final TokenBuilder tokenBuilder) {
+
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();
 		final boolean isRecursiveP = tokenBuilder.isRecursiveP();
 
+		final Reader reader = tokenBuilder.getReader();
+
 		final ReadPeekResult readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
+		tokenBuilder.setPreviousReadResult(readResult);
+
 		if (readResult.isEof()) {
-			readerStateMediator.readIllegalCharacter(reader, tokenBuilder);
-		} else {
-			final int codePoint = readResult.getResult();
-			tokenBuilder.setPreviousReadCharacter(codePoint);
-
-			tokenBuilder.addToTokenAttributes(codePoint, AttributeType.ALPHABETIC);
-
-			readerStateMediator.readEvenMultipleEscape(reader, tokenBuilder);
+			readerStateMediator.readIllegalCharacter(tokenBuilder);
+			return;
 		}
+
+		final int codePoint = readResult.getResult();
+		tokenBuilder.addToTokenAttributes(codePoint, AttributeType.ALPHABETIC);
+
+		readerStateMediator.readEvenMultipleEscape(tokenBuilder);
 	}
 
 	@Override

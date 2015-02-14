@@ -5,6 +5,7 @@
 package jcl.reader;
 
 import jcl.LispStruct;
+import jcl.streams.ReadPeekResult;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -14,6 +15,11 @@ import java.util.LinkedList;
  * Used to build {@link LispStruct} tokens as a {@link Reader} process executes.
  */
 public class TokenBuilder {
+
+	/**
+	 * The {@link Reader} instance to use when building lisp tokens.
+	 */
+	private final Reader reader;
 
 	/**
 	 * Determines if an error should be thrown when an End-of-File character is encountered.
@@ -41,14 +47,15 @@ public class TokenBuilder {
 	private LispStruct returnToken;
 
 	/**
-	 * The previously read character token. This value is null if no tokens have been read. This is primarily used for
-	 * handling {@link Reader#unreadChar} operations.
+	 * The previously read result. This value is null if no tokens have been read.
 	 */
-	private Integer previousReadCharacter;
+	private ReadPeekResult previousReadResult;
 
 	/**
 	 * Package private constructor.
 	 *
+	 * @param reader
+	 * 		the {@link Reader} used to read tokens
 	 * @param eofErrorP
 	 * 		whether or not to throw an error when an End-Of-File is reached
 	 * @param eofValue
@@ -56,14 +63,24 @@ public class TokenBuilder {
 	 * @param recursiveP
 	 * 		whether or not to recursively read tokens
 	 */
-	TokenBuilder(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
+	TokenBuilder(final Reader reader, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
+		this.reader = reader;
 		this.eofErrorP = eofErrorP;
 		this.eofValue = eofValue;
 		this.recursiveP = recursiveP;
 		tokenAttributes = new LinkedList<>();
 
 		returnToken = null;
-		previousReadCharacter = null;
+		previousReadResult = null;
+	}
+
+	/**
+	 * Getter for {@link #reader} property.
+	 *
+	 * @return {@link #reader} property
+	 */
+	public Reader getReader() {
+		return reader;
 	}
 
 	/**
@@ -113,22 +130,22 @@ public class TokenBuilder {
 	}
 
 	/**
-	 * Getter for {@link #previousReadCharacter} property.
+	 * Getter for {@link #previousReadResult} property.
 	 *
-	 * @return {@link #previousReadCharacter} property
+	 * @return {@link #previousReadResult} property
 	 */
-	public Integer getPreviousReadCharacter() {
-		return previousReadCharacter;
+	public ReadPeekResult getPreviousReadResult() {
+		return previousReadResult;
 	}
 
 	/**
-	 * Setter for the {@link #previousReadCharacter} property.
+	 * Setter for the {@link #previousReadResult} property.
 	 *
-	 * @param previousReadCharacter
-	 * 		the new value of the {@link #previousReadCharacter} property
+	 * @param previousReadResult
+	 * 		the new value of the {@link #previousReadResult} property
 	 */
-	public void setPreviousReadCharacter(final int previousReadCharacter) {
-		this.previousReadCharacter = previousReadCharacter;
+	public void setPreviousReadResult(final ReadPeekResult previousReadResult) {
+		this.previousReadResult = previousReadResult;
 	}
 
 	/**

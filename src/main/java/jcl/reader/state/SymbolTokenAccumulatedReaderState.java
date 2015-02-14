@@ -10,12 +10,16 @@ import jcl.packages.PackageStruct;
 import jcl.packages.PackageSymbolStruct;
 import jcl.packages.PackageVariables;
 import jcl.reader.AttributeType;
-import jcl.reader.Reader;
+import jcl.reader.ReaderStateMediator;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SymbolStruct;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -68,15 +72,18 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 	 */
 	private static final long serialVersionUID = 4237075506539486959L;
 
+	/**
+	 * {@link ReaderStateMediator} singleton used by the reader algorithm.
+	 */
+	@Autowired
+	private ReaderStateMediator readerStateMediator;
+
 	@Override
-	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
+	public void process(final TokenBuilder tokenBuilder) {
 
 		final SymbolStruct<?> symbolToken = getSymbolToken(tokenBuilder);
 		if (symbolToken == null) {
-			final Integer codePoint = tokenBuilder.getPreviousReadCharacter();
-			if (ReaderState.isEndOfFileCharacter(codePoint) && tokenBuilder.isEofErrorP()) {
-				throw new ReaderErrorException("End-of-File encountered in SymbolTokenAccumulatedReaderState.");
-			}
+			readerStateMediator.readIllegalCharacter(tokenBuilder);
 		} else {
 			tokenBuilder.setReturnToken(symbolToken);
 		}
@@ -93,6 +100,11 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 	private static SymbolStruct<?> getSymbolToken(final TokenBuilder tokenBuilder) {
 
 		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
+
+		// If there are no tokens, not a symbol. NOTE: We should never get here in the sequence. This is a protection.
+		if (CollectionUtils.isEmpty(tokenAttributes)) {
+			return null;
+		}
 
 		// Check that there is at least 1 'ALPHADIGIT'
 		final boolean hasNoPackageMarkers = ReaderState.hasNoAttributes(tokenAttributes, AttributeType.PACKAGEMARKER);
@@ -190,9 +202,14 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 				}
 				return symbol;
 			}
-		} else {
-			final PackageSymbolStruct pkgSymStruct = GlobalPackageStruct.KEYWORD.findSymbol(symName);
-			return (pkgSymStruct == null) ? new KeywordSymbolStruct(symName) : pkgSymStruct.getSymbolStruct();
 		}
+
+		final PackageSymbolStruct pkgSymStruct = GlobalPackageStruct.KEYWORD.findSymbol(symName);
+		return (pkgSymStruct == null) ? new KeywordSymbolStruct(symName) : pkgSymStruct.getSymbolStruct();
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

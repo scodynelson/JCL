@@ -4,7 +4,6 @@
 
 package jcl.reader.state;
 
-import jcl.reader.Reader;
 import jcl.reader.ReaderStateMediator;
 import jcl.reader.TokenBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -34,8 +33,8 @@ class MultipleEscapeReaderState implements ReaderState {
 	private ReaderStateMediator readerStateMediator;
 
 	@Override
-	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
-		readerStateMediator.readOddMultipleEscape(reader, tokenBuilder);
+	public void process(final TokenBuilder tokenBuilder) {
+		readerStateMediator.readOddMultipleEscape(tokenBuilder);
 	}
 
 	@Override

@@ -6,12 +6,12 @@ package jcl.reader.state;
 
 import jcl.numbers.IntegerStruct;
 import jcl.reader.AttributeType;
-import jcl.reader.Reader;
 import jcl.reader.ReaderStateMediator;
 import jcl.reader.TokenBuilder;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableCase;
 import jcl.reader.struct.ReadtableStruct;
+import jcl.streams.ReadPeekResult;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,13 +42,10 @@ class ConstituentReaderState implements ReaderState {
 	private ReaderStateMediator readerStateMediator;
 
 	@Override
-	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
-		Integer codePoint = tokenBuilder.getPreviousReadCharacter();
+	public void process(final TokenBuilder tokenBuilder) {
 
-		if (ReaderState.isEndOfFileCharacter(codePoint)) {
-			ReaderState.handleEndOfFile(tokenBuilder, "ConstituentReaderState");
-			return;
-		}
+		final ReadPeekResult readResult = tokenBuilder.getPreviousReadResult();
+		int codePoint = readResult.getResult(); // This will not be 'null'. We check for EOFs after each 'read'.
 
 		final ReadtableStruct readtable = ReaderVariables.READTABLE.getValue();
 		final ReadtableCase readtableCase = readtable.getReadtableCase();
@@ -59,7 +56,7 @@ class ConstituentReaderState implements ReaderState {
 		codePoint = ReaderState.properCaseCodePoint(codePoint, attributeType, readtableCase);
 		tokenBuilder.addToTokenAttributes(codePoint, attributeType);
 
-		readerStateMediator.readEvenMultipleEscape(reader, tokenBuilder);
+		readerStateMediator.readEvenMultipleEscape(tokenBuilder);
 	}
 
 	@Override

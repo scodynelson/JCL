@@ -40,6 +40,7 @@ dependencies {
 	compile group: 'org.ow2.asm', name: 'asm-all', version: "$ASM_ALL_VERSION"
 
 	compile group: 'org.springframework', name: 'spring-context', version: "$SPRING_VERSION"
+	compile group: 'org.springframework', name: 'spring-integration', version: "$SPRING_VERSION"
 
 	compile group: 'org.slf4j', name: 'slf4j-api', version: "$SLF4J_VERSION"
 	compile group: 'org.slf4j', name: 'jcl-over-slf4j', version: "$SLF4J_VERSION"

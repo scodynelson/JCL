@@ -79,19 +79,23 @@ class EvenMultiEscapeReaderState implements ReaderState {
 	private ReaderStateMediator readerStateMediator;
 
 	@Override
-	public void process(final Reader reader, final TokenBuilder tokenBuilder) {
+	public void process(final TokenBuilder tokenBuilder) {
 
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();
 		final boolean isRecursiveP = tokenBuilder.isRecursiveP();
 
+		final Reader reader = tokenBuilder.getReader();
+
 		ReadPeekResult readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
+		tokenBuilder.setPreviousReadResult(readResult);
+
 		if (readResult.isEof()) {
-			readerStateMediator.readTokenAccumulated(reader, tokenBuilder);
+			readerStateMediator.readTokenAccumulated(tokenBuilder);
+			return;
 		}
 
 		int codePoint = readResult.getResult();
-		tokenBuilder.setPreviousReadCharacter(codePoint);
 
 		final ReadtableStruct readtable = ReaderVariables.READTABLE.getValue();
 		final SyntaxType syntaxType = readtable.getSyntaxType(codePoint);
@@ -105,30 +109,31 @@ class EvenMultiEscapeReaderState implements ReaderState {
 			codePoint = ReaderState.properCaseCodePoint(codePoint, attributeType, readtableCase);
 			tokenBuilder.addToTokenAttributes(codePoint, attributeType);
 
-			readerStateMediator.readEvenMultipleEscape(reader, tokenBuilder);
+			readerStateMediator.readEvenMultipleEscape(tokenBuilder);
 		} else if (syntaxType == SyntaxType.SINGLE_ESCAPE) {
 
 			readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
+			tokenBuilder.setPreviousReadResult(readResult);
+
 			if (readResult.isEof()) {
-				readerStateMediator.readIllegalCharacter(reader, tokenBuilder);
+				readerStateMediator.readIllegalCharacter(tokenBuilder);
 			} else {
 				codePoint = readResult.getResult();
-				tokenBuilder.setPreviousReadCharacter(codePoint);
 				tokenBuilder.addToTokenAttributes(codePoint, AttributeType.ALPHABETIC);
 
-				readerStateMediator.readEvenMultipleEscape(reader, tokenBuilder);
+				readerStateMediator.readEvenMultipleEscape(tokenBuilder);
 			}
 		} else if (syntaxType == SyntaxType.MULTIPLE_ESCAPE) {
-			readerStateMediator.readOddMultipleEscape(reader, tokenBuilder);
+			readerStateMediator.readOddMultipleEscape(tokenBuilder);
 		} else if ((syntaxType == SyntaxType.TERMINATING) || (syntaxType == SyntaxType.WHITESPACE)) {
 			// NOTE from CLHS in regarding 'SyntaxType.WHITESPACE' characters:
 			//      If a command interpreter takes single-character commands, but occasionally reads an object then if
 			//      the whitespace[2] after a symbol is not discarded it might be interpreted as a command some time
 			//      later after the symbol had been read.
 			reader.unreadChar(codePoint);
-			readerStateMediator.readTokenAccumulated(reader, tokenBuilder);
+			readerStateMediator.readTokenAccumulated(tokenBuilder);
 		} else {
-			readerStateMediator.readIllegalCharacter(reader, tokenBuilder);
+			readerStateMediator.readIllegalCharacter(tokenBuilder);
 		}
 	}
 

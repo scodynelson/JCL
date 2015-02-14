@@ -19,8 +19,10 @@ public interface ReaderStateMediator extends Serializable {
 	 * @param tokenBuilder
 	 * 		the {@link TokenBuilder} used to build the resulting lisp token and house token parsing information throughout
 	 * 		the read process
+	 *
+	 * @return the resulting {@link LispStruct} token after a successful read
 	 */
-	void read(TokenBuilder tokenBuilder);
+	LispStruct read(TokenBuilder tokenBuilder);
 
 	/**
 	 * Handle reading illegal characters.
@@ -28,8 +30,10 @@ public interface ReaderStateMediator extends Serializable {
 	 * @param tokenBuilder
 	 * 		the {@link TokenBuilder} used to build the resulting lisp token and house token parsing information throughout
 	 * 		the read process
+	 *
+	 * @return the resulting {@link LispStruct} token after a successful read
 	 */
-	void readIllegalCharacter(TokenBuilder tokenBuilder);
+	LispStruct readIllegalCharacter(TokenBuilder tokenBuilder);
 
 	/**
 	 * Handle reading whitespace type tokens.
@@ -37,8 +41,10 @@ public interface ReaderStateMediator extends Serializable {
 	 * @param tokenBuilder
 	 * 		the {@link TokenBuilder} used to build the resulting lisp token and house token parsing information throughout
 	 * 		the read process
+	 *
+	 * @return the resulting {@link LispStruct} token after a successful read
 	 */
-	void readWhitespace(TokenBuilder tokenBuilder);
+	LispStruct readWhitespace(TokenBuilder tokenBuilder);
 
 	/**
 	 * Handle reading macro characters.
@@ -46,8 +52,10 @@ public interface ReaderStateMediator extends Serializable {
 	 * @param tokenBuilder
 	 * 		the {@link TokenBuilder} used to build the resulting lisp token and house token parsing information throughout
 	 * 		the read process
+	 *
+	 * @return the resulting {@link LispStruct} token after a successful read
 	 */
-	void readMacroCharacter(TokenBuilder tokenBuilder);
+	LispStruct readMacroCharacter(TokenBuilder tokenBuilder);
 
 	/**
 	 * Handle reading single escape type tokens.
@@ -55,8 +63,10 @@ public interface ReaderStateMediator extends Serializable {
 	 * @param tokenBuilder
 	 * 		the {@link TokenBuilder} used to build the resulting lisp token and house token parsing information throughout
 	 * 		the read process
+	 *
+	 * @return the resulting {@link LispStruct} token after a successful read
 	 */
-	void readSingleEscape(TokenBuilder tokenBuilder);
+	LispStruct readSingleEscape(TokenBuilder tokenBuilder);
 
 	/**
 	 * Handle reading multiple escape type tokens.
@@ -64,8 +74,10 @@ public interface ReaderStateMediator extends Serializable {
 	 * @param tokenBuilder
 	 * 		the {@link TokenBuilder} used to build the resulting lisp token and house token parsing information throughout
 	 * 		the read process
+	 *
+	 * @return the resulting {@link LispStruct} token after a successful read
 	 */
-	void readMultipleEscape(TokenBuilder tokenBuilder);
+	LispStruct readMultipleEscape(TokenBuilder tokenBuilder);
 
 	/**
 	 * Handle reading constituent type tokens.
@@ -73,8 +85,10 @@ public interface ReaderStateMediator extends Serializable {
 	 * @param tokenBuilder
 	 * 		the {@link TokenBuilder} used to build the resulting lisp token and house token parsing information throughout
 	 * 		the read process
+	 *
+	 * @return the resulting {@link LispStruct} token after a successful read
 	 */
-	void readConstituent(TokenBuilder tokenBuilder);
+	LispStruct readConstituent(TokenBuilder tokenBuilder);
 
 	/**
 	 * Handle reading even number multiple escape type tokens.
@@ -82,8 +96,10 @@ public interface ReaderStateMediator extends Serializable {
 	 * @param tokenBuilder
 	 * 		the {@link TokenBuilder} used to build the resulting lisp token and house token parsing information throughout
 	 * 		the read process
+	 *
+	 * @return the resulting {@link LispStruct} token after a successful read
 	 */
-	void readEvenMultipleEscape(TokenBuilder tokenBuilder);
+	LispStruct readEvenMultipleEscape(TokenBuilder tokenBuilder);
 
 	/**
 	 * Handle reading odd number multiple escape type tokens.
@@ -91,8 +107,10 @@ public interface ReaderStateMediator extends Serializable {
 	 * @param tokenBuilder
 	 * 		the {@link TokenBuilder} used to build the resulting lisp token and house token parsing information throughout
 	 * 		the read process
+	 *
+	 * @return the resulting {@link LispStruct} token after a successful read
 	 */
-	void readOddMultipleEscape(TokenBuilder tokenBuilder);
+	LispStruct readOddMultipleEscape(TokenBuilder tokenBuilder);
 
 	/**
 	 * Handle accumulating read tokens.
@@ -100,6 +118,8 @@ public interface ReaderStateMediator extends Serializable {
 	 * @param tokenBuilder
 	 * 		the {@link TokenBuilder} used to build the resulting lisp token and house token parsing information throughout
 	 * 		the read process
+	 *
+	 * @return the resulting {@link LispStruct} token after a successful read
 	 */
-	void readTokenAccumulated(TokenBuilder tokenBuilder);
+	LispStruct readTokenAccumulated(TokenBuilder tokenBuilder);
 }

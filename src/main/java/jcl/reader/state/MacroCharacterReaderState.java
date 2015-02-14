@@ -58,7 +58,7 @@ class MacroCharacterReaderState implements ReaderState {
 	private ReaderStateMediator readerStateMediator;
 
 	@Override
-	public void process(final TokenBuilder tokenBuilder) {
+	public LispStruct process(final TokenBuilder tokenBuilder) {
 
 		final ReadPeekResult readResult = tokenBuilder.getPreviousReadResult();
 		final int codePoint = readResult.getResult(); // This will not be 'null'. We check for EOFs after each 'read'.
@@ -78,10 +78,10 @@ class MacroCharacterReaderState implements ReaderState {
 		}
 
 		final LispStruct lispToken = readerMacroFunction.readMacro(codePoint, reader, numArg);
-		tokenBuilder.setReturnToken(lispToken);
-
 		if (lispToken == null) {
-			readerStateMediator.read(tokenBuilder);
+			return readerStateMediator.read(tokenBuilder);
+		} else {
+			return lispToken;
 		}
 	}
 

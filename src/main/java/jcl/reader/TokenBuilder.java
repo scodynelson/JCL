@@ -42,11 +42,6 @@ public class TokenBuilder {
 	private final LinkedList<TokenAttribute> tokenAttributes;
 
 	/**
-	 * The resulting {@link LispStruct} token after a successful read.
-	 */
-	private LispStruct returnToken;
-
-	/**
 	 * The previously read result. This value is null if no tokens have been read.
 	 */
 	private ReadPeekResult previousReadResult;
@@ -70,7 +65,6 @@ public class TokenBuilder {
 		this.recursiveP = recursiveP;
 		tokenAttributes = new LinkedList<>();
 
-		returnToken = null;
 		previousReadResult = null;
 	}
 
@@ -108,25 +102,6 @@ public class TokenBuilder {
 	 */
 	public boolean isRecursiveP() {
 		return recursiveP;
-	}
-
-	/**
-	 * Getter for {@link #returnToken} property.
-	 *
-	 * @return {@link #returnToken} property
-	 */
-	public LispStruct getReturnToken() {
-		return returnToken;
-	}
-
-	/**
-	 * Setter for the {@link #returnToken} property.
-	 *
-	 * @param returnToken
-	 * 		the new value of the {@link #returnToken} property
-	 */
-	public void setReturnToken(final LispStruct returnToken) {
-		this.returnToken = returnToken;
 	}
 
 	/**

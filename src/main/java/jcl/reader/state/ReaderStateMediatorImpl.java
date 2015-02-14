@@ -4,6 +4,7 @@
 
 package jcl.reader.state;
 
+import jcl.LispStruct;
 import jcl.reader.Reader;
 import jcl.reader.ReaderStateMediator;
 import jcl.reader.TokenBuilder;
@@ -84,53 +85,53 @@ class ReaderStateMediatorImpl implements ReaderStateMediator {
 	private TokenAccumulatedReaderState tokenAccumulatedReaderState;
 
 	@Override
-	public void read(final TokenBuilder tokenBuilder) {
-		readReaderState.process(tokenBuilder);
+	public LispStruct read(final TokenBuilder tokenBuilder) {
+		return readReaderState.process(tokenBuilder);
 	}
 
 	@Override
-	public void readIllegalCharacter(final TokenBuilder tokenBuilder) {
-		illegalCharacterReaderState.process(tokenBuilder);
+	public LispStruct readIllegalCharacter(final TokenBuilder tokenBuilder) {
+		return illegalCharacterReaderState.process(tokenBuilder);
 	}
 
 	@Override
-	public void readWhitespace(final TokenBuilder tokenBuilder) {
-		whitespaceReaderState.process(tokenBuilder);
+	public LispStruct readWhitespace(final TokenBuilder tokenBuilder) {
+		return whitespaceReaderState.process(tokenBuilder);
 	}
 
 	@Override
-	public void readMacroCharacter(final TokenBuilder tokenBuilder) {
-		macroCharacterReaderState.process(tokenBuilder);
+	public LispStruct readMacroCharacter(final TokenBuilder tokenBuilder) {
+		return macroCharacterReaderState.process(tokenBuilder);
 	}
 
 	@Override
-	public void readSingleEscape(final TokenBuilder tokenBuilder) {
-		singleEscapeReaderState.process(tokenBuilder);
+	public LispStruct readSingleEscape(final TokenBuilder tokenBuilder) {
+		return singleEscapeReaderState.process(tokenBuilder);
 	}
 
 	@Override
-	public void readMultipleEscape(final TokenBuilder tokenBuilder) {
-		multipleEscapeReaderState.process(tokenBuilder);
+	public LispStruct readMultipleEscape(final TokenBuilder tokenBuilder) {
+		return multipleEscapeReaderState.process(tokenBuilder);
 	}
 
 	@Override
-	public void readConstituent(final TokenBuilder tokenBuilder) {
-		constituentReaderState.process(tokenBuilder);
+	public LispStruct readConstituent(final TokenBuilder tokenBuilder) {
+		return constituentReaderState.process(tokenBuilder);
 	}
 
 	@Override
-	public void readEvenMultipleEscape(final TokenBuilder tokenBuilder) {
-		evenMultiEscapeReaderState.process(tokenBuilder);
+	public LispStruct readEvenMultipleEscape(final TokenBuilder tokenBuilder) {
+		return evenMultiEscapeReaderState.process(tokenBuilder);
 	}
 
 	@Override
-	public void readOddMultipleEscape(final TokenBuilder tokenBuilder) {
-		oddMultiEscapeReaderState.process(tokenBuilder);
+	public LispStruct readOddMultipleEscape(final TokenBuilder tokenBuilder) {
+		return oddMultiEscapeReaderState.process(tokenBuilder);
 	}
 
 	@Override
-	public void readTokenAccumulated(final TokenBuilder tokenBuilder) {
-		tokenAccumulatedReaderState.process(tokenBuilder);
+	public LispStruct readTokenAccumulated(final TokenBuilder tokenBuilder) {
+		return tokenAccumulatedReaderState.process(tokenBuilder);
 	}
 
 	@Override

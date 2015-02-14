@@ -4,6 +4,7 @@
 
 package jcl.reader.state;
 
+import jcl.LispStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
@@ -79,13 +80,13 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 	private ReaderStateMediator readerStateMediator;
 
 	@Override
-	public void process(final TokenBuilder tokenBuilder) {
+	public LispStruct process(final TokenBuilder tokenBuilder) {
 
 		final SymbolStruct<?> symbolToken = getSymbolToken(tokenBuilder);
 		if (symbolToken == null) {
-			readerStateMediator.readIllegalCharacter(tokenBuilder);
+			return readerStateMediator.readIllegalCharacter(tokenBuilder);
 		} else {
-			tokenBuilder.setReturnToken(symbolToken);
+			return symbolToken;
 		}
 	}
 

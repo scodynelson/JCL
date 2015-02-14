@@ -5,13 +5,11 @@
 package jcl.reader.state;
 
 import jcl.LispStruct;
-import jcl.numbers.IntegerStruct;
 import jcl.reader.AttributeType;
 import jcl.reader.Reader;
 import jcl.reader.ReaderStateMediator;
 import jcl.reader.TokenBuilder;
 import jcl.reader.struct.ReaderVariables;
-import jcl.reader.struct.ReadtableCase;
 import jcl.reader.struct.ReadtableStruct;
 import jcl.reader.struct.SyntaxType;
 import jcl.streams.ReadPeekResult;
@@ -79,7 +77,7 @@ class EvenMultiEscapeReaderState implements ReaderState {
 	private ReaderStateMediator readerStateMediator;
 
 	@Override
-	public void process(final TokenBuilder tokenBuilder) {
+	public LispStruct process(final TokenBuilder tokenBuilder) {
 
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();
@@ -91,8 +89,7 @@ class EvenMultiEscapeReaderState implements ReaderState {
 		tokenBuilder.setPreviousReadResult(readResult);
 
 		if (readResult.isEof()) {
-			readerStateMediator.readTokenAccumulated(tokenBuilder);
-			return;
+			return readerStateMediator.readTokenAccumulated(tokenBuilder);
 		}
 
 		int codePoint = readResult.getResult();
@@ -101,39 +98,31 @@ class EvenMultiEscapeReaderState implements ReaderState {
 		final SyntaxType syntaxType = readtable.getSyntaxType(codePoint);
 
 		if ((syntaxType == SyntaxType.CONSTITUENT) || (syntaxType == SyntaxType.NON_TERMINATING)) {
-			final ReadtableCase readtableCase = readtable.getReadtableCase();
-
-			final IntegerStruct readBase = ReaderVariables.READ_BASE.getValue();
-			final AttributeType attributeType = readtable.getAttributeType(codePoint, readBase);
-
-			codePoint = ReaderState.properCaseCodePoint(codePoint, attributeType, readtableCase);
-			tokenBuilder.addToTokenAttributes(codePoint, attributeType);
-
-			readerStateMediator.readEvenMultipleEscape(tokenBuilder);
+			return readerStateMediator.readConstituent(tokenBuilder);
 		} else if (syntaxType == SyntaxType.SINGLE_ESCAPE) {
 
 			readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
 			tokenBuilder.setPreviousReadResult(readResult);
 
 			if (readResult.isEof()) {
-				readerStateMediator.readIllegalCharacter(tokenBuilder);
-			} else {
-				codePoint = readResult.getResult();
-				tokenBuilder.addToTokenAttributes(codePoint, AttributeType.ALPHABETIC);
-
-				readerStateMediator.readEvenMultipleEscape(tokenBuilder);
+				return readerStateMediator.readIllegalCharacter(tokenBuilder);
 			}
+
+			codePoint = readResult.getResult();
+			tokenBuilder.addToTokenAttributes(codePoint, AttributeType.ALPHABETIC);
+
+			return readerStateMediator.readEvenMultipleEscape(tokenBuilder);
 		} else if (syntaxType == SyntaxType.MULTIPLE_ESCAPE) {
-			readerStateMediator.readOddMultipleEscape(tokenBuilder);
+			return readerStateMediator.readOddMultipleEscape(tokenBuilder);
 		} else if ((syntaxType == SyntaxType.TERMINATING) || (syntaxType == SyntaxType.WHITESPACE)) {
 			// NOTE from CLHS in regarding 'SyntaxType.WHITESPACE' characters:
 			//      If a command interpreter takes single-character commands, but occasionally reads an object then if
 			//      the whitespace[2] after a symbol is not discarded it might be interpreted as a command some time
 			//      later after the symbol had been read.
 			reader.unreadChar(codePoint);
-			readerStateMediator.readTokenAccumulated(tokenBuilder);
+			return readerStateMediator.readTokenAccumulated(tokenBuilder);
 		} else {
-			readerStateMediator.readIllegalCharacter(tokenBuilder);
+			return readerStateMediator.readIllegalCharacter(tokenBuilder);
 		}
 	}
 

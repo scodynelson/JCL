@@ -4,6 +4,7 @@
 
 package jcl.reader.state;
 
+import jcl.LispStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.reader.AttributeType;
 import jcl.reader.ReaderStateMediator;
@@ -42,7 +43,7 @@ class ConstituentReaderState implements ReaderState {
 	private ReaderStateMediator readerStateMediator;
 
 	@Override
-	public void process(final TokenBuilder tokenBuilder) {
+	public LispStruct process(final TokenBuilder tokenBuilder) {
 
 		final ReadPeekResult readResult = tokenBuilder.getPreviousReadResult();
 		int codePoint = readResult.getResult(); // This will not be 'null'. We check for EOFs after each 'read'.
@@ -56,7 +57,7 @@ class ConstituentReaderState implements ReaderState {
 		codePoint = ReaderState.properCaseCodePoint(codePoint, attributeType, readtableCase);
 		tokenBuilder.addToTokenAttributes(codePoint, attributeType);
 
-		readerStateMediator.readEvenMultipleEscape(tokenBuilder);
+		return readerStateMediator.readEvenMultipleEscape(tokenBuilder);
 	}
 
 	@Override

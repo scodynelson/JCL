@@ -55,9 +55,7 @@ class ReaderImpl implements Reader {
 	@Override
 	public LispStruct read(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		final TokenBuilder tokenBuilder = new TokenBuilder(this, eofErrorP, eofValue, recursiveP);
-		readerStateMediator.read(tokenBuilder);
-
-		return tokenBuilder.getReturnToken();
+		return readerStateMediator.read(tokenBuilder);
 	}
 
 	@Override

@@ -26,12 +26,10 @@ class IllegalCharacterReaderState implements ReaderState {
 	private static final long serialVersionUID = 6789972435089995401L;
 
 	@Override
-	public void process(final TokenBuilder tokenBuilder) {
+	public LispStruct process(final TokenBuilder tokenBuilder) {
 
 		if (!tokenBuilder.isEofErrorP()) {
-			final LispStruct eofValue = tokenBuilder.getEofValue();
-			tokenBuilder.setReturnToken(eofValue);
-			return;
+			return tokenBuilder.getEofValue();
 		}
 
 		final ReadPeekResult readResult = tokenBuilder.getPreviousReadResult();
@@ -48,5 +46,7 @@ class IllegalCharacterReaderState implements ReaderState {
 		if (codePoint != CharacterConstants.EXIT_CHAR) {
 			throw new ReaderErrorException("Illegal Character was encountered: " + codePoint);
 		}
+
+		return null;
 	}
 }

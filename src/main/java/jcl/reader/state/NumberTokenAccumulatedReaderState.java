@@ -4,6 +4,7 @@
 
 package jcl.reader.state;
 
+import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.numbers.FloatStruct;
 import jcl.numbers.IntegerStruct;
@@ -83,13 +84,13 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 	private SymbolTokenAccumulatedReaderState symbolTokenAccumulatedReaderState;
 
 	@Override
-	public void process(final TokenBuilder tokenBuilder) {
+	public LispStruct process(final TokenBuilder tokenBuilder) {
 
 		final NumberStruct numberToken = getNumberToken(tokenBuilder);
 		if (numberToken == null) {
-			symbolTokenAccumulatedReaderState.process(tokenBuilder);
+			return symbolTokenAccumulatedReaderState.process(tokenBuilder);
 		} else {
-			tokenBuilder.setReturnToken(numberToken);
+			return numberToken;
 		}
 	}
 

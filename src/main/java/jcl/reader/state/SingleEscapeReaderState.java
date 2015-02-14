@@ -38,7 +38,7 @@ class SingleEscapeReaderState implements ReaderState {
 	private ReaderStateMediator readerStateMediator;
 
 	@Override
-	public void process(final TokenBuilder tokenBuilder) {
+	public LispStruct process(final TokenBuilder tokenBuilder) {
 
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();
@@ -50,14 +50,13 @@ class SingleEscapeReaderState implements ReaderState {
 		tokenBuilder.setPreviousReadResult(readResult);
 
 		if (readResult.isEof()) {
-			readerStateMediator.readIllegalCharacter(tokenBuilder);
-			return;
+			return readerStateMediator.readIllegalCharacter(tokenBuilder);
 		}
 
 		final int codePoint = readResult.getResult();
 		tokenBuilder.addToTokenAttributes(codePoint, AttributeType.ALPHABETIC);
 
-		readerStateMediator.readEvenMultipleEscape(tokenBuilder);
+		return readerStateMediator.readEvenMultipleEscape(tokenBuilder);
 	}
 
 	@Override

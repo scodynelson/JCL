@@ -4,6 +4,7 @@
 
 package jcl.reader.state;
 
+import jcl.LispStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.reader.ReaderStateMediator;
 import jcl.reader.TokenAttribute;
@@ -50,18 +51,16 @@ class TokenAccumulatedReaderState implements ReaderState {
 	private ReaderStateMediator readerStateMediator;
 
 	@Override
-	public void process(final TokenBuilder tokenBuilder) {
+	public LispStruct process(final TokenBuilder tokenBuilder) {
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
-			tokenBuilder.setReturnToken(null);
-			return;
+			return null;
 		}
 
 		final List<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
 
 		if (tokenAttributes.isEmpty()) {
-			readerStateMediator.readIllegalCharacter(tokenBuilder);
-			return;
+			return readerStateMediator.readIllegalCharacter(tokenBuilder);
 		}
 
 		final String tokenString = ReaderState.convertTokensToString(tokenAttributes);
@@ -69,7 +68,7 @@ class TokenAccumulatedReaderState implements ReaderState {
 			throw new ReaderErrorException("Dot context error in '.'");
 		}
 
-		numberTokenAccumulatedReaderState.process(tokenBuilder);
+		return numberTokenAccumulatedReaderState.process(tokenBuilder);
 	}
 
 	@Override

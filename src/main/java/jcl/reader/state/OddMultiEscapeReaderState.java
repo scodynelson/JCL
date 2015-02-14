@@ -58,7 +58,7 @@ class OddMultiEscapeReaderState implements ReaderState {
 	private ReaderStateMediator readerStateMediator;
 
 	@Override
-	public void process(final TokenBuilder tokenBuilder) {
+	public LispStruct process(final TokenBuilder tokenBuilder) {
 
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();
@@ -70,8 +70,7 @@ class OddMultiEscapeReaderState implements ReaderState {
 		tokenBuilder.setPreviousReadResult(readResult);
 
 		if (readResult.isEof()) {
-			readerStateMediator.readIllegalCharacter(tokenBuilder);
-			return;
+			return readerStateMediator.readIllegalCharacter(tokenBuilder);
 		}
 
 		int codePoint = readResult.getResult();
@@ -86,24 +85,24 @@ class OddMultiEscapeReaderState implements ReaderState {
 
 			tokenBuilder.addToTokenAttributes(codePoint, AttributeType.ALPHABETIC);
 
-			readerStateMediator.readOddMultipleEscape(tokenBuilder);
+			return readerStateMediator.readOddMultipleEscape(tokenBuilder);
 		} else if (syntaxType == SyntaxType.SINGLE_ESCAPE) {
 
 			readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
 			tokenBuilder.setPreviousReadResult(readResult);
 
 			if (readResult.isEof()) {
-				readerStateMediator.readIllegalCharacter(tokenBuilder);
-			} else {
-				codePoint = readResult.getResult();
-				tokenBuilder.addToTokenAttributes(codePoint, AttributeType.ALPHABETIC);
-
-				readerStateMediator.readOddMultipleEscape(tokenBuilder);
+				return readerStateMediator.readIllegalCharacter(tokenBuilder);
 			}
+
+			codePoint = readResult.getResult();
+			tokenBuilder.addToTokenAttributes(codePoint, AttributeType.ALPHABETIC);
+
+			return readerStateMediator.readOddMultipleEscape(tokenBuilder);
 		} else if (syntaxType == SyntaxType.MULTIPLE_ESCAPE) {
-			readerStateMediator.readEvenMultipleEscape(tokenBuilder);
+			return readerStateMediator.readEvenMultipleEscape(tokenBuilder);
 		} else {
-			readerStateMediator.readIllegalCharacter(tokenBuilder);
+			return readerStateMediator.readIllegalCharacter(tokenBuilder);
 		}
 	}
 

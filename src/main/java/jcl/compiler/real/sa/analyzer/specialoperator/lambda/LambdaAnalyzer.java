@@ -3,10 +3,15 @@ package jcl.compiler.real.sa.analyzer.specialoperator.lambda;
 import jcl.LispStruct;
 import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
+import jcl.compiler.real.element.specialoperator.declare.SpecialDeclarationElement;
 import jcl.compiler.real.element.specialoperator.lambda.LambdaElement;
 import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.LambdaEnvironment;
+import jcl.compiler.real.environment.Scope;
+import jcl.compiler.real.environment.allocation.EnvironmentAllocation;
+import jcl.compiler.real.environment.binding.EnvironmentEnvironmentBinding;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
@@ -22,6 +27,8 @@ import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
+import jcl.symbols.SymbolStruct;
+import jcl.types.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -66,7 +73,6 @@ public class LambdaAnalyzer implements SpecialOperatorAnalyzer {
 			analysisBuilder.setClosureDepth(newClosureDepth);
 
 			final ListStruct parameters = (ListStruct) second;
-
 			final ListStruct bodyForms = input.getRest().getRest();
 
 			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAndDocStringAnalyzer.analyze(analyzer, bodyForms, analysisBuilder);
@@ -74,6 +80,9 @@ public class LambdaAnalyzer implements SpecialOperatorAnalyzer {
 
 			final OrdinaryLambdaListBindings parsedLambdaList = LambdaListParser.parseOrdinaryLambdaList(analyzer, analysisBuilder, parameters, declareElement);
 			final List<LispStruct> newStartingLambdaBody = getNewStartingLambdaBody(parsedLambdaList);
+
+			final List<SpecialDeclarationElement> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
+			specialDeclarationElements.forEach(e -> addDynamicVariableBinding(e, analysisBuilder, lambdaEnvironment));
 
 			final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
 			newStartingLambdaBody.addAll(realBodyForms);
@@ -161,5 +170,21 @@ public class LambdaAnalyzer implements SpecialOperatorAnalyzer {
 		}
 
 		return initFormIfSetqs;
+	}
+
+	private static void addDynamicVariableBinding(final SpecialDeclarationElement specialDeclarationElement,
+	                                              final AnalysisBuilder analysisBuilder,
+	                                              final LambdaEnvironment lambdaEnvironment) {
+
+		final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(lambdaEnvironment);
+		analysisBuilder.setBindingsPosition(newBindingsPosition);
+
+		final SymbolStruct<?> var = specialDeclarationElement.getVar().getSymbolStruct();
+
+		final Environment bindingEnvironment = Environment.getDynamicBindingEnvironment(lambdaEnvironment, var);
+		final EnvironmentAllocation allocation = new EnvironmentAllocation(bindingEnvironment);
+
+		final EnvironmentEnvironmentBinding binding = new EnvironmentEnvironmentBinding(var, allocation, Scope.DYNAMIC, T.INSTANCE, bindingEnvironment);
+		lambdaEnvironment.addDynamicBinding(binding);
 	}
 }

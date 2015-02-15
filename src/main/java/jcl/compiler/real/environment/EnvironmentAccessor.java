@@ -2,38 +2,15 @@ package jcl.compiler.real.environment;
 
 import jcl.compiler.real.environment.allocation.LocalAllocation;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
-import jcl.compiler.real.environment.binding.EnvironmentBinding;
+import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.environment.binding.SymbolEnvironmentBinding;
 import jcl.compiler.real.environment.binding.SymbolLocalBinding;
 import jcl.symbols.SymbolStruct;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public class EnvironmentAccessor {
-
-	public static Environment getBindingEnvironment(final SymbolStruct<?> variable, final Environment lexicalEnvironment,
-	                                                       final Set<Marker> lexicalEnvironmentTypes) {
-
-		Environment currentLexicalEnvironment = lexicalEnvironment;
-
-		while (!currentLexicalEnvironment.equals(Environment.NULL)) {
-
-			final Marker lexicalEnvironmentType = currentLexicalEnvironment.getMarker();
-			if (lexicalEnvironmentTypes.contains(lexicalEnvironmentType)) {
-
-				final boolean hasBinding = currentLexicalEnvironment.hasLexicalBinding(variable);
-				if (hasBinding) {
-					break;
-				}
-			}
-
-			currentLexicalEnvironment = currentLexicalEnvironment.getParent();
-		}
-
-		return currentLexicalEnvironment;
-	}
 
 	public static int getNextAvailableParameterNumber(final Environment environment) {
 
@@ -44,11 +21,11 @@ public class EnvironmentAccessor {
 
 		do {
 			// loop up through the local env we're turn looking through
-			final List<EnvironmentBinding> environmentBindings = currentEnvironment.getLexicalBindings();
+			final List<EnvironmentParameterBinding> environmentBindings = currentEnvironment.getLexicalBindings();
 
 			int envBindingsMax = environmentBindings
 					.stream()
-					.map(EnvironmentBinding::getAllocation)
+					.map(EnvironmentParameterBinding::getAllocation)
 					.mapToInt(ParameterAllocation::getPosition)
 					.max()
 					.orElse(currentMax);

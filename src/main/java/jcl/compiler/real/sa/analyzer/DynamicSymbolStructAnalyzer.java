@@ -25,10 +25,9 @@ public class DynamicSymbolStructAnalyzer extends SymbolStructAnalyzer {
 	public SymbolElement<?> analyze(final SemanticAnalyzer analyzer, final SymbolStruct<?> input, final AnalysisBuilder analysisBuilder) {
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
-//		final Environment currentEnvironment = environmentStack.peek(); // TODO
-		final Environment currentLexicalEnvironment = environmentStack.getCurrentLexicalEnvironment();
+		final Environment currentEnvironment = environmentStack.peek();
 
-		final SymbolTable currentLexicalEnvironmentSymbolTable = currentLexicalEnvironment.getSymbolTable();
+		final SymbolTable currentLexicalEnvironmentSymbolTable = currentEnvironment.getSymbolTable();
 		final boolean hasSymbolBinding = currentLexicalEnvironmentSymbolTable.hasBinding(input);
 
 		if (hasSymbolBinding) {
@@ -36,13 +35,13 @@ public class DynamicSymbolStructAnalyzer extends SymbolStructAnalyzer {
 			return new SymbolElement<>(input);
 		}
 
-		final Environment currentEnclosingLambda = getEnclosingLambda(currentLexicalEnvironment);
+		final Environment currentEnclosingLambda = Environment.getEnclosingLambda(currentEnvironment);
 
 //		final Stack<DynamicEnvironment> dynamicEnvironmentStack = analysisBuilder.getDynamicEnvironmentStack();
 //		final DynamicEnvironment dynamicEnvironment = dynamicEnvironmentStack.peek();
 
-		if (currentLexicalEnvironment.equals(currentEnclosingLambda)) {
-			final int position = EnvironmentAccessor.getNextAvailableParameterNumber(currentLexicalEnvironment);
+		if (currentEnvironment.equals(currentEnclosingLambda)) {
+			final int position = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
 			final LocalAllocation allocation = new LocalAllocation(position);
 
 			final SymbolLocalBinding symbolBinding
@@ -67,7 +66,7 @@ public class DynamicSymbolStructAnalyzer extends SymbolStructAnalyzer {
 		}
 
 		// Add Binding to SymbolTable in the Enclosing Lambda.
-		final int position = EnvironmentAccessor.getNextAvailableParameterNumber(currentLexicalEnvironment);
+		final int position = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
 		final LocalAllocation allocation = new LocalAllocation(position);
 
 		final SymbolLocalBinding newSymbolBinding

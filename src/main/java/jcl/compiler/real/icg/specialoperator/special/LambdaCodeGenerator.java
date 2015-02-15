@@ -4,7 +4,7 @@ import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.LoadTimeValue;
 import jcl.compiler.real.environment.binding.Binding;
-import jcl.compiler.real.environment.binding.EnvironmentBinding;
+import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.lists.ListStruct;
@@ -76,7 +76,7 @@ public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 			interfaces.add("lisp/common/type/MacroFunction");
 			icg.MacroLambda = false;
 		}
-		final List<EnvironmentBinding> bindingSetBody = ((Environment) list.getFirst()).getLexicalBindings();
+		final List<EnvironmentParameterBinding> bindingSetBody = ((Environment) list.getFirst()).getLexicalBindings();
 
 		final int numParams = bindingSetBody.size();
 		if (numParams <= 11) {

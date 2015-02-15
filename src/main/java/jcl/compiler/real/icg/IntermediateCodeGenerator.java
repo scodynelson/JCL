@@ -6,10 +6,10 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.environment.Closure;
 import jcl.compiler.real.environment.binding.ClosureBinding;
-import jcl.compiler.real.environment.binding.EnvironmentBinding;
 import jcl.compiler.real.environment.allocation.LocalAllocation;
 import jcl.compiler.real.environment.allocation.PositionAllocation;
 import jcl.compiler.real.environment.Scope;
+import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.environment.binding.SymbolLocalBinding;
 import jcl.compiler.real.environment.SymbolTable;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
@@ -277,7 +277,7 @@ public class IntermediateCodeGenerator {
 		}
 		// get the :closure information
 		final Closure closureStuff = environment.getClosure();
-		final List<EnvironmentBinding> bindings = environment.getLexicalBindings();
+		final List<EnvironmentParameterBinding> bindings = environment.getLexicalBindings();
 		// (:closure (:depth . n) (x ....) (y ....) ...)
 		// if there is one, allocate the object
 		if (CollectionUtils.isNotEmpty(bindings) && (closureStuff != null)) {
@@ -383,7 +383,7 @@ public class IntermediateCodeGenerator {
 		emitter.endMethod();
 	}
 
-	public int countRequiredParams(final List<EnvironmentBinding> bindingSetBody) {
+	public int countRequiredParams(final List<EnvironmentParameterBinding> bindingSetBody) {
 		int countRequired = 0;
 		// go through the list counting the usage :required entries
 		for (final Binding<?> binding : bindingSetBody) {

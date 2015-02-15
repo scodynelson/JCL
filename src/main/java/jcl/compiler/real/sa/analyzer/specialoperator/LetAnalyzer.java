@@ -12,8 +12,10 @@ import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.LetEnvironment;
 import jcl.compiler.real.environment.Scope;
+import jcl.compiler.real.environment.allocation.EnvironmentAllocation;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
-import jcl.compiler.real.environment.binding.EnvironmentBinding;
+import jcl.compiler.real.environment.binding.EnvironmentEnvironmentBinding;
+import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyProcessingResult;
@@ -75,6 +77,9 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 					                      .map(e -> getLetVar(e, declareElement, analyzer, analysisBuilder, letEnvironment, environmentStack))
 					                      .collect(Collectors.toList());
 
+			final List<SpecialDeclarationElement> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
+			specialDeclarationElements.forEach(e -> addDynamicVariableBinding(e, analysisBuilder, letEnvironment));
+
 			final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
 
 			final List<Element> analyzedBodyForms
@@ -117,23 +122,28 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 		final SymbolElement<?> varSE = new SymbolElement<>(var);
-		final boolean isSpecial = isSpecial(declareElement, varSE);
+		final boolean isSpecial = isSpecial(declareElement, var);
 
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
+		// TODO: get rid of scope here
 		final Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
-		final EnvironmentBinding binding = new EnvironmentBinding(var, allocation, scope, T.INSTANCE, initForm);
-		letEnvironment.addLexicalBinding(binding);
+		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(var, allocation, scope, T.INSTANCE, initForm);
+		if (isSpecial) {
+			letEnvironment.addDynamicBinding(binding);
+		} else {
+			letEnvironment.addLexicalBinding(binding);
+		}
 
 		return new LetElement.LetVar(varSE, initForm);
 	}
 
-	private static boolean isSpecial(final DeclareElement declareElement, final SymbolElement<?> var) {
+	private static boolean isSpecial(final DeclareElement declareElement, final SymbolStruct<?> var) {
 		boolean isSpecial = false;
 
 		final List<SpecialDeclarationElement> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
 		for (final SpecialDeclarationElement specialDeclarationElement : specialDeclarationElements) {
 			final SymbolElement<?> specialVar = specialDeclarationElement.getVar();
-			if (var.equals(specialVar)) {
+			if (var.equals(specialVar.getSymbolStruct())) {
 				isSpecial = true;
 				break;
 			}
@@ -163,12 +173,28 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 		final LispStruct parameterValue = listParameter.getRest().getFirst();
 
 		// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
-		final Environment currentLexicalEnvironment = environmentStack.pop();
+		final Environment currentEnvironment = environmentStack.pop();
 
 		try {
 			return analyzer.analyzeForm(parameterValue, analysisBuilder);
 		} finally {
-			environmentStack.push(currentLexicalEnvironment);
+			environmentStack.push(currentEnvironment);
 		}
+	}
+
+	private static void addDynamicVariableBinding(final SpecialDeclarationElement specialDeclarationElement,
+	                                              final AnalysisBuilder analysisBuilder,
+	                                              final LetEnvironment letEnvironment) {
+
+		final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(letEnvironment);
+		analysisBuilder.setBindingsPosition(newBindingsPosition);
+
+		final SymbolStruct<?> var = specialDeclarationElement.getVar().getSymbolStruct();
+
+		final Environment bindingEnvironment = Environment.getDynamicBindingEnvironment(letEnvironment, var);
+		final EnvironmentAllocation allocation = new EnvironmentAllocation(bindingEnvironment);
+
+		final EnvironmentEnvironmentBinding binding = new EnvironmentEnvironmentBinding(var, allocation, Scope.DYNAMIC, T.INSTANCE, bindingEnvironment);
+		letEnvironment.addDynamicBinding(binding);
 	}
 }

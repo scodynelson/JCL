@@ -9,14 +9,16 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.LocallyEnvironment;
+import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.environment.allocation.EnvironmentAllocation;
-import jcl.compiler.real.environment.binding.EnvironmentBinding;
+import jcl.compiler.real.environment.binding.EnvironmentEnvironmentBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyWithDeclaresAnalyzer;
 import jcl.lists.ListStruct;
 import jcl.symbols.SymbolStruct;
+import jcl.types.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -48,9 +50,10 @@ public class LocallyAnalyzer implements SpecialOperatorAnalyzer {
 			analysisBuilder.setClosureDepth(newClosureDepth);
 
 			final ListStruct bodyForms = input.getRest();
-			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(analyzer, bodyForms, analysisBuilder);
 
+			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(analyzer, bodyForms, analysisBuilder);
 			final DeclareElement declareElement = bodyProcessingResult.getDeclareElement();
+
 			final List<SpecialDeclarationElement> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
 			specialDeclarationElements.forEach(e -> addDynamicVariableBinding(e, analysisBuilder, locallyEnvironment));
 
@@ -78,27 +81,10 @@ public class LocallyAnalyzer implements SpecialOperatorAnalyzer {
 
 		final SymbolStruct<?> var = specialDeclarationElement.getVar().getSymbolStruct();
 
-		final Environment bindingEnvironment = getBindingEnvironment(var, locallyEnvironment);
+		final Environment bindingEnvironment = Environment.getDynamicBindingEnvironment(locallyEnvironment, var);
 		final EnvironmentAllocation allocation = new EnvironmentAllocation(bindingEnvironment);
 
-		final EnvironmentBinding binding = null; // TODO: new EnvironmentBinding(var, allocation, Scope.DYNAMIC, T.INSTANCE, null);
+		final EnvironmentEnvironmentBinding binding = new EnvironmentEnvironmentBinding(var, allocation, Scope.DYNAMIC, T.INSTANCE, bindingEnvironment);
 		locallyEnvironment.addDynamicBinding(binding);
-	}
-
-	private static Environment getBindingEnvironment(final SymbolStruct<?> var, final Environment environment) {
-
-		Environment currentEnvironment = environment;
-
-		while (!currentEnvironment.equals(Environment.NULL)) {
-
-			final boolean hasDynamicBinding = currentEnvironment.hasDynamicBinding(var);
-			if (hasDynamicBinding) {
-				break;
-			}
-
-			currentEnvironment = currentEnvironment.getParent();
-		}
-
-		return currentEnvironment;
 	}
 }

@@ -7,9 +7,7 @@ import jcl.compiler.real.element.specialoperator.LambdaFunctionElement;
 import jcl.compiler.real.element.specialoperator.SymbolFunctionElement;
 import jcl.compiler.real.element.specialoperator.lambda.LambdaElement;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.EnvironmentStack;
-import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.LexicalSymbolStructAnalyzer;
@@ -54,16 +52,15 @@ public class FunctionAnalyzer implements SpecialOperatorAnalyzer {
 	private FunctionElement analyzeFunctionSymbol(final SemanticAnalyzer analyzer, final SymbolStruct<?> functionSymbol, final AnalysisBuilder analysisBuilder) {
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
-//		final Environment currentEnvironment = environmentStack.peek();
-		final Environment currentLexicalEnvironment = environmentStack.getCurrentLexicalEnvironment();
+		final Environment currentEnvironment = environmentStack.peek();
 
 		final Environment bindingEnvironment
-				= EnvironmentAccessor.getBindingEnvironment(functionSymbol, currentLexicalEnvironment, Marker.FUNCTION_MARKERS);
+				= Environment.getInnerFunctionBindingEnvironment(currentEnvironment, functionSymbol);
 
-		final boolean missingFunctionSymbolBinding = !bindingEnvironment.hasLexicalBinding(functionSymbol);
+		final boolean hasNoFunctionSymbolBinding = !bindingEnvironment.hasLexicalBinding(functionSymbol);
 
 		final SymbolElement<?> functionSymbolSE;
-		if (missingFunctionSymbolBinding) {
+		if (hasNoFunctionSymbolBinding) {
 			functionSymbolSE = lexicalSymbolStructAnalyzer.analyze(analyzer, functionSymbol, analysisBuilder);
 		} else {
 			functionSymbolSE = new SymbolElement<>(functionSymbol);

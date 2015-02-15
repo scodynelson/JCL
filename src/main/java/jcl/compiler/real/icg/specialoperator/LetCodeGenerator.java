@@ -7,7 +7,7 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.environment.allocation.PositionAllocation;
 import jcl.compiler.real.environment.binding.Binding;
-import jcl.compiler.real.environment.binding.EnvironmentBinding;
+import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.lists.ListStruct;
@@ -56,7 +56,7 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 			final Environment bindings = codeGenerator.bindingEnvironment;
 			// ((:parent ...) (:bindings ...) (:symbol-table ...) (:closure ...)))
 			// Now get just the bindings list and drop the :bindings
-			final List<EnvironmentBinding> bindingList = codeGenerator.bindingEnvironment.getLexicalBindings();
+			final List<EnvironmentParameterBinding> bindingList = codeGenerator.bindingEnvironment.getLexicalBindings();
 			// ((sym1 :allocation ... :binding ... :scope ... :type ... :init-form ...)
 			//  (sym2 :allocation ... :binding ... :scope ... :type ... :init-form ...)...)
 			// Now to loop thru the bindings, gen code for the init forms and store them in the
@@ -69,7 +69,7 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 				final SymbolStruct<?> sym = binding.getSymbolStruct();
 				// (:allocation ... :binding ... :scope ... :type ... :init-form ...)
 				// get the variable's init form
-				final Element initForm = ((EnvironmentBinding) binding).getInitForm();
+				final Element initForm = ((EnvironmentParameterBinding) binding).getInitForm();
 				// is this a local or dynamic variable?
 				final Scope scope = binding.getScope();
 				//** this is the place where the ICG has to choose to allocate a variable

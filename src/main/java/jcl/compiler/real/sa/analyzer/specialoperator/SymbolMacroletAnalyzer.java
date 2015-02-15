@@ -12,7 +12,7 @@ import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.environment.SymbolMacroletEnvironment;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
-import jcl.compiler.real.environment.binding.EnvironmentBinding;
+import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyProcessingResult;
@@ -68,14 +68,12 @@ public class SymbolMacroletAnalyzer implements SpecialOperatorAnalyzer {
 			final DeclareElement declareElement = bodyProcessingResult.getDeclareElement();
 			validateDeclares(declareElement);
 
-
 			final List<LispStruct> parametersAsJavaList = parameters.getAsJavaList();
 
-			final List<SymbolMacroletElement.SymbolMacroletElementVar> letVars
+			final List<SymbolMacroletElement.SymbolMacroletElementVar> symbolMacroletVars
 					= parametersAsJavaList.stream()
 					                      .map(e -> getSymbolMacroletElementVar(e, declareElement, analyzer, analysisBuilder, symbolMacroletEnvironment, environmentStack))
 					                      .collect(Collectors.toList());
-
 
 			final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
 
@@ -84,7 +82,7 @@ public class SymbolMacroletAnalyzer implements SpecialOperatorAnalyzer {
 					               .map(e -> analyzer.analyzeForm(e, analysisBuilder))
 					               .collect(Collectors.toList());
 
-			return new SymbolMacroletElement(letVars, analyzedBodyForms, symbolMacroletEnvironment);
+			return new SymbolMacroletElement(symbolMacroletVars, analyzedBodyForms, symbolMacroletEnvironment);
 		} finally {
 			analysisBuilder.setClosureDepth(tempClosureDepth);
 			analysisBuilder.setBindingsPosition(tempBindingsPosition);
@@ -120,7 +118,8 @@ public class SymbolMacroletAnalyzer implements SpecialOperatorAnalyzer {
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
-		final EnvironmentBinding binding = new EnvironmentBinding(var, allocation, Scope.LEXICAL, T.INSTANCE, expansion);
+		// TODO: get rid of scope here
+		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(var, allocation, Scope.LEXICAL, T.INSTANCE, expansion);
 		symbolMacroletEnvironment.addLexicalBinding(binding);
 
 		final SymbolElement<?> varSE = new SymbolElement<>(var);

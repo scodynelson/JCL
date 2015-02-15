@@ -10,8 +10,10 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Scope;
+import jcl.compiler.real.environment.allocation.EnvironmentAllocation;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
-import jcl.compiler.real.environment.binding.EnvironmentBinding;
+import jcl.compiler.real.environment.binding.EnvironmentEnvironmentBinding;
+import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyProcessingResult;
@@ -95,6 +97,9 @@ abstract class InnerFunctionAnalyzer<E extends Environment, I extends InnerFunct
 					                        .map(e -> getInnerFunctionVar(e, declareElement, analyzer, analysisBuilder, innerFunctionEnvironment, environmentStack))
 					                        .collect(Collectors.toList());
 
+			final List<SpecialDeclarationElement> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
+			specialDeclarationElements.forEach(e -> addDynamicVariableBinding(e, analysisBuilder, innerFunctionEnvironment));
+
 			if (!getFunctionNamesBeforeInitForms) {
 				// Add function names AFTER analyzing the functions
 				StackUtils.pushAll(functionNameStack, functionNames);
@@ -133,43 +138,63 @@ abstract class InnerFunctionAnalyzer<E extends Environment, I extends InnerFunct
 			}
 			final ListStruct functionList = (ListStruct) currentFunctionDef;
 
-			final LispStruct functionListFirst = functionList.getFirst();
-			if (!(functionListFirst instanceof SymbolStruct)) {
-				throw new ProgramErrorException(analyzerName + ": Function parameter first element value must be of type SymbolStruct. Got: " + functionListFirst);
-			}
-
-			final SymbolStruct<?> functionName = (SymbolStruct) functionListFirst;
+			final SymbolStruct<?> functionName = getFunctionListParameterName(functionList);
 			functionNames.add(functionName);
 		}
 
 		return functionNames;
 	}
 
-	private S getInnerFunctionVar(final LispStruct function,
+	private SymbolStruct<?> getFunctionListParameterName(final ListStruct functionListParameter) {
+		final LispStruct functionListParameterFirst = functionListParameter.getFirst();
+		if (!(functionListParameterFirst instanceof SymbolStruct)) {
+			throw new ProgramErrorException(analyzerName + ": Function parameter first element value must be of type SymbolStruct. Got: " + functionListParameterFirst);
+		}
+		return (SymbolStruct) functionListParameterFirst;
+	}
+
+	private S getInnerFunctionVar(final LispStruct functionParameter,
 	                              final DeclareElement declareElement,
 	                              final SemanticAnalyzer analyzer,
 	                              final AnalysisBuilder analysisBuilder,
 	                              final E innerFunctionEnvironment,
 	                              final EnvironmentStack lexicalEnvironmentStack) {
 
-		if (!(function instanceof ListStruct)) {
-			throw new ProgramErrorException(analyzerName + ": Function parameter must be of type ListStruct. Got: " + function);
-		}
-		final ListStruct functionList = (ListStruct) function;
-
-		final LispStruct functionListFirst = functionList.getFirst();
-		if (!(functionListFirst instanceof SymbolStruct)) {
-			throw new ProgramErrorException(analyzerName + ": Function parameter first element value must be of type SymbolStruct. Got: " + functionListFirst);
-		}
-		final SymbolStruct<?> functionName = (SymbolStruct) functionListFirst;
-
-		final LispStruct functionListSecond = functionList.getRest().getFirst();
-		if (!(functionListSecond instanceof ListStruct)) {
-			throw new ProgramErrorException(analyzerName + ": Function parameter second element value must be of type ListStruct. Got: " + functionListSecond);
+		if (!(functionParameter instanceof ListStruct)) {
+			throw new ProgramErrorException(analyzerName + ": Function parameter must be of type ListStruct. Got: " + functionParameter);
 		}
 
-		final ListStruct lambdaList = (ListStruct) functionListSecond;
-		final ListStruct body = functionList.getRest().getRest();
+		final ListStruct functionListParameter = (ListStruct) functionParameter;
+		final SymbolStruct<?> functionName = getFunctionListParameterName(functionListParameter);
+		final Element functionInitForm = getFunctionParameterInitForm(functionListParameter, analyzer, analysisBuilder, lexicalEnvironmentStack);
+
+		final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(innerFunctionEnvironment);
+		analysisBuilder.setBindingsPosition(newBindingsPosition);
+
+		final SymbolElement<?> functionNameSE = new SymbolElement<>(functionName);
+		final boolean isSpecial = isSpecial(declareElement, functionNameSE);
+
+		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
+		// TODO: get rid of scope here
+		final Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
+		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(functionName, allocation, scope, T.INSTANCE, functionInitForm);
+		if (isSpecial) {
+			innerFunctionEnvironment.addDynamicBinding(binding);
+		} else {
+			innerFunctionEnvironment.addLexicalBinding(binding);
+		}
+
+		return getFunctionElementVar(functionNameSE, functionInitForm);
+	}
+
+	private static Element getFunctionParameterInitForm(final ListStruct functionListParameter,
+	                                                    final SemanticAnalyzer analyzer,
+	                                                    final AnalysisBuilder analysisBuilder,
+	                                                    final EnvironmentStack lexicalEnvironmentStack) {
+
+		final LispStruct functionName = functionListParameter.getFirst();
+		final LispStruct lambdaList = functionListParameter.getRest().getFirst();
+		final ListStruct body = functionListParameter.getRest().getRest();
 
 		final List<LispStruct> innerBlock = new ArrayList<>();
 		innerBlock.add(SpecialOperator.BLOCK);
@@ -200,19 +225,7 @@ abstract class InnerFunctionAnalyzer<E extends Environment, I extends InnerFunct
 		} finally {
 			lexicalEnvironmentStack.push(currentEnvironment);
 		}
-
-		final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(innerFunctionEnvironment);
-		analysisBuilder.setBindingsPosition(newBindingsPosition);
-
-		final SymbolElement<?> functionNameSE = new SymbolElement<>(functionName);
-		final boolean isSpecial = isSpecial(declareElement, functionNameSE);
-
-		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
-		final Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
-		final EnvironmentBinding binding = new EnvironmentBinding(functionName, allocation, scope, T.INSTANCE, functionInitForm);
-		innerFunctionEnvironment.addLexicalBinding(binding);
-
-		return getFunctionElementVar(functionNameSE, functionInitForm);
+		return functionInitForm;
 	}
 
 	protected abstract S getFunctionElementVar(SymbolElement<?> var, Element initForm);
@@ -230,5 +243,21 @@ abstract class InnerFunctionAnalyzer<E extends Environment, I extends InnerFunct
 		}
 
 		return isSpecial;
+	}
+
+	private void addDynamicVariableBinding(final SpecialDeclarationElement specialDeclarationElement,
+	                                       final AnalysisBuilder analysisBuilder,
+	                                       final E innerFunctionEnvironment) {
+
+		final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(innerFunctionEnvironment);
+		analysisBuilder.setBindingsPosition(newBindingsPosition);
+
+		final SymbolStruct<?> var = specialDeclarationElement.getVar().getSymbolStruct();
+
+		final Environment bindingEnvironment = Environment.getDynamicBindingEnvironment(innerFunctionEnvironment, var);
+		final EnvironmentAllocation allocation = new EnvironmentAllocation(bindingEnvironment);
+
+		final EnvironmentEnvironmentBinding binding = new EnvironmentEnvironmentBinding(var, allocation, Scope.DYNAMIC, T.INSTANCE, bindingEnvironment);
+		innerFunctionEnvironment.addDynamicBinding(binding);
 	}
 }

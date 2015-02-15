@@ -5,27 +5,18 @@
 package jcl.compiler.real.environment.binding;
 
 import jcl.LispType;
-import jcl.compiler.real.element.Element;
 import jcl.compiler.real.environment.Scope;
-import jcl.compiler.real.environment.allocation.ParameterAllocation;
+import jcl.compiler.real.environment.allocation.Allocation;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class EnvironmentBinding extends Binding<ParameterAllocation> {
+public abstract class EnvironmentBinding<A extends Allocation> extends Binding<A> {
 
 	private static final long serialVersionUID = 2910922877559341453L;
 
-	private final Element initForm;
-
-	public EnvironmentBinding(final SymbolStruct<?> symbolStruct, final ParameterAllocation allocation, final Scope scope,
-	                          final LispType type, final Element initForm) {
+	protected EnvironmentBinding(final SymbolStruct<?> symbolStruct, final A allocation, final Scope scope, final LispType type) {
 		super(symbolStruct, allocation, scope, type);
-		this.initForm = initForm;
-	}
-
-	public Element getInitForm() {
-		return initForm;
 	}
 
 	@Override

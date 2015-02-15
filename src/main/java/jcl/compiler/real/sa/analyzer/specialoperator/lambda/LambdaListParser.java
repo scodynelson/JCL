@@ -11,7 +11,7 @@ import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
-import jcl.compiler.real.environment.binding.EnvironmentBinding;
+import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
@@ -125,8 +125,7 @@ final class LambdaListParser {
 	                                                         final int position, final DeclareElement declareElement) {
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
-//		final Environment currentEnvironment = environmentStack.peek(); // TODO
-		final Environment currentLexicalEnvironment = environmentStack.getCurrentLexicalEnvironment();
+		final Environment currentEnvironment = environmentStack.peek();
 
 		final List<RequiredBinding> requiredBindings = new ArrayList<>();
 		int currentPosition = position;
@@ -143,15 +142,20 @@ final class LambdaListParser {
 
 			currentElement = iterator.next();
 
-			final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentLexicalEnvironment);
+			final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
 			analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 			final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 			final boolean isSpecial = isSpecial(declareElement, currentParam);
 
+			// TODO: get rid of scope here
 			final Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
-			final EnvironmentBinding binding = new EnvironmentBinding(currentParam, allocation, scope, T.INSTANCE, NullElement.INSTANCE);
-			currentLexicalEnvironment.addLexicalBinding(binding);
+			final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, scope, T.INSTANCE, NullElement.INSTANCE);
+			if (isSpecial) {
+				currentEnvironment.addDynamicBinding(binding);
+			} else {
+				currentEnvironment.addLexicalBinding(binding);
+			}
 		}
 
 		return new RequiredParseResult(currentElement, currentPosition, requiredBindings);
@@ -162,8 +166,7 @@ final class LambdaListParser {
 	                                                         final DeclareElement declareElement) {
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
-//		final Environment currentEnvironment = environmentStack.peek(); // TODO
-		final Environment currentLexicalEnvironment = environmentStack.getCurrentLexicalEnvironment();
+		final Environment currentEnvironment = environmentStack.peek();
 
 		final List<OptionalBinding> optionalBindings = new ArrayList<>();
 		int currentPosition = position;
@@ -176,15 +179,20 @@ final class LambdaListParser {
 				final OptionalBinding optionalBinding = new OptionalBinding(currentParam, optionalAllocation, null, null);
 				optionalBindings.add(optionalBinding);
 
-				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentLexicalEnvironment);
+				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
 				analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 				final boolean isSpecial = isSpecial(declareElement, currentParam);
 
+				// TODO: get rid of scope here
 				final Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
-				final EnvironmentBinding binding = new EnvironmentBinding(currentParam, allocation, scope, T.INSTANCE, NullElement.INSTANCE);
-				currentLexicalEnvironment.addLexicalBinding(binding);
+				final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, scope, T.INSTANCE, NullElement.INSTANCE);
+				if (isSpecial) {
+					currentEnvironment.addDynamicBinding(binding);
+				} else {
+					currentEnvironment.addLexicalBinding(binding);
+				}
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
 				if ((currentParam.size() < 1) || (currentParam.size() > 3)) {
@@ -206,19 +214,24 @@ final class LambdaListParser {
 				}
 
 				// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
-				final Environment currentEnvironment = environmentStack.pop();
+				final Environment currentEnvironment1 = environmentStack.pop();
 				final Element parameterValueInitForm = semanticAnalyzer.analyzeForm(initForm, analysisBuilder);
-				environmentStack.push(currentEnvironment);
+				environmentStack.push(currentEnvironment1);
 
-				int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentLexicalEnvironment);
+				int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
 				analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 				ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 				boolean isSpecial = isSpecial(declareElement, varNameCurrent);
 
+				// TODO: get rid of scope here
 				Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
-				EnvironmentBinding binding = new EnvironmentBinding(varNameCurrent, allocation, scope, T.INSTANCE, parameterValueInitForm);
-				currentEnvironment.addLexicalBinding(binding);
+				EnvironmentParameterBinding binding = new EnvironmentParameterBinding(varNameCurrent, allocation, scope, T.INSTANCE, parameterValueInitForm);
+				if (isSpecial) {
+					currentEnvironment.addDynamicBinding(binding);
+				} else {
+					currentEnvironment.addLexicalBinding(binding);
+				}
 
 				SuppliedPBinding suppliedPBinding = null;
 				if (!thirdInCurrent.equals(NullStruct.INSTANCE)) {
@@ -230,15 +243,20 @@ final class LambdaListParser {
 					final ParameterAllocation suppliedPAllocation = new ParameterAllocation(currentPosition++);
 					suppliedPBinding = new SuppliedPBinding(suppliedPCurrent, suppliedPAllocation);
 
-					newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentLexicalEnvironment);
+					newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
 					analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 					allocation = new ParameterAllocation(newBindingsPosition);
 					isSpecial = isSpecial(declareElement, suppliedPCurrent);
 
+					// TODO: get rid of scope here
 					scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
-					binding = new EnvironmentBinding(suppliedPCurrent, allocation, scope, T.INSTANCE, NullElement.INSTANCE);
-					currentEnvironment.addLexicalBinding(binding);
+					binding = new EnvironmentParameterBinding(suppliedPCurrent, allocation, scope, T.INSTANCE, NullElement.INSTANCE);
+					if (isSpecial) {
+						currentEnvironment.addDynamicBinding(binding);
+					} else {
+						currentEnvironment.addLexicalBinding(binding);
+					}
 				}
 
 				final ParameterAllocation optionalAllocation = new ParameterAllocation(currentPosition++);
@@ -270,18 +288,22 @@ final class LambdaListParser {
 		final SymbolStruct<?> currentParam = (SymbolStruct<?>) currentElement;
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
-//		final Environment currentEnvironment = environmentStack.peek(); // TODO
-		final Environment currentLexicalEnvironment = environmentStack.getCurrentLexicalEnvironment();
+		final Environment currentEnvironment = environmentStack.peek();
 
-		final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentLexicalEnvironment);
+		final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 		final boolean isSpecial = isSpecial(declareElement, currentParam);
 
+		// TODO: get rid of scope here
 		final Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
-		final EnvironmentBinding binding = new EnvironmentBinding(currentParam, allocation, scope, T.INSTANCE, NullElement.INSTANCE);
-		currentLexicalEnvironment.addLexicalBinding(binding);
+		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, scope, T.INSTANCE, NullElement.INSTANCE);
+		if (isSpecial) {
+			currentEnvironment.addDynamicBinding(binding);
+		} else {
+			currentEnvironment.addLexicalBinding(binding);
+		}
 
 		final ParameterAllocation restAllocation = new ParameterAllocation(currentPosition++);
 		final RestBinding restBinding = new RestBinding(currentParam, restAllocation);
@@ -293,8 +315,7 @@ final class LambdaListParser {
 	                                               final DeclareElement declareElement) {
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
-//		final Environment currentEnvironment = environmentStack.peek(); // TODO
-		final Environment currentLexicalEnvironment = environmentStack.getCurrentLexicalEnvironment();
+		final Environment currentEnvironment = environmentStack.peek();
 
 		final List<KeyBinding> keyBindings = new ArrayList<>();
 		int currentPosition = position;
@@ -308,15 +329,20 @@ final class LambdaListParser {
 				final KeyBinding keyBinding = new KeyBinding(currentParam, keyAllocation, null, keyName, null);
 				keyBindings.add(keyBinding);
 
-				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentLexicalEnvironment);
+				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
 				analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 				final boolean isSpecial = isSpecial(declareElement, currentParam);
 
+				// TODO: get rid of scope here
 				final Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
-				final EnvironmentBinding binding = new EnvironmentBinding(currentParam, allocation, scope, T.INSTANCE, NullElement.INSTANCE);
-				currentLexicalEnvironment.addLexicalBinding(binding);
+				final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, scope, T.INSTANCE, NullElement.INSTANCE);
+				if (isSpecial) {
+					currentEnvironment.addDynamicBinding(binding);
+				} else {
+					currentEnvironment.addLexicalBinding(binding);
+				}
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
 				if ((currentParam.size() < 1) || (currentParam.size() > 3)) {
@@ -359,19 +385,24 @@ final class LambdaListParser {
 				}
 
 				// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
-				final Environment currentEnvironment = environmentStack.pop();
+				final Environment currentEnvironment1 = environmentStack.pop();
 				final Element parameterValueInitForm = semanticAnalyzer.analyzeForm(initForm, analysisBuilder);
-				environmentStack.push(currentEnvironment);
+				environmentStack.push(currentEnvironment1);
 
-				int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentLexicalEnvironment);
+				int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
 				analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 				ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 				boolean isSpecial = isSpecial(declareElement, varNameCurrent);
 
+				// TODO: get rid of scope here
 				Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
-				EnvironmentBinding binding = new EnvironmentBinding(varNameCurrent, allocation, scope, T.INSTANCE, parameterValueInitForm);
-				currentEnvironment.addLexicalBinding(binding);
+				EnvironmentParameterBinding binding = new EnvironmentParameterBinding(varNameCurrent, allocation, scope, T.INSTANCE, parameterValueInitForm);
+				if (isSpecial) {
+					currentEnvironment.addDynamicBinding(binding);
+				} else {
+					currentEnvironment.addLexicalBinding(binding);
+				}
 
 				SuppliedPBinding suppliedPBinding = null;
 				if (!thirdInCurrent.equals(NullStruct.INSTANCE)) {
@@ -383,15 +414,20 @@ final class LambdaListParser {
 					final ParameterAllocation suppliedPAllocation = new ParameterAllocation(currentPosition++);
 					suppliedPBinding = new SuppliedPBinding(suppliedPCurrent, suppliedPAllocation);
 
-					newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentLexicalEnvironment);
+					newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
 					analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 					allocation = new ParameterAllocation(newBindingsPosition);
 					isSpecial = isSpecial(declareElement, suppliedPCurrent);
 
+					// TODO: get rid of scope here
 					scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
-					binding = new EnvironmentBinding(suppliedPCurrent, allocation, scope, T.INSTANCE, NullElement.INSTANCE);
-					currentEnvironment.addLexicalBinding(binding);
+					binding = new EnvironmentParameterBinding(suppliedPCurrent, allocation, scope, T.INSTANCE, NullElement.INSTANCE);
+					if (isSpecial) {
+						currentEnvironment.addDynamicBinding(binding);
+					} else {
+						currentEnvironment.addLexicalBinding(binding);
+					}
 				}
 
 				final ParameterAllocation keyAllocation = new ParameterAllocation(currentPosition++);
@@ -418,8 +454,7 @@ final class LambdaListParser {
 	                                               final DeclareElement declareElement) {
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
-//		final Environment currentEnvironment = environmentStack.peek(); // TODO
-		final Environment currentLexicalEnvironment = environmentStack.getCurrentLexicalEnvironment();
+		final Environment currentEnvironment = environmentStack.peek();
 
 		final List<AuxBinding> auxBindings = new ArrayList<>();
 		int currentPosition = position;
@@ -432,15 +467,20 @@ final class LambdaListParser {
 				final AuxBinding auxBinding = new AuxBinding(currentParam, auxAllocation, null);
 				auxBindings.add(auxBinding);
 
-				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentLexicalEnvironment);
+				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
 				analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 				final boolean isSpecial = isSpecial(declareElement, currentParam);
 
+				// TODO: get rid of scope here
 				final Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
-				final EnvironmentBinding binding = new EnvironmentBinding(currentParam, allocation, scope, T.INSTANCE, NullElement.INSTANCE);
-				currentLexicalEnvironment.addLexicalBinding(binding);
+				final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, scope, T.INSTANCE, NullElement.INSTANCE);
+				if (isSpecial) {
+					currentEnvironment.addDynamicBinding(binding);
+				} else {
+					currentEnvironment.addLexicalBinding(binding);
+				}
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
 				if ((currentParam.size() < 1) || (currentParam.size() > 2)) {
@@ -465,19 +505,24 @@ final class LambdaListParser {
 				auxBindings.add(auxBinding);
 
 				// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
-				final Environment currentEnvironment = environmentStack.pop();
+				final Environment currentEnvironment1 = environmentStack.pop();
 				final Element parameterValueInitForm = semanticAnalyzer.analyzeForm(initForm, analysisBuilder);
-				environmentStack.push(currentEnvironment);
+				environmentStack.push(currentEnvironment1);
 
-				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentLexicalEnvironment);
+				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
 				analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 				final boolean isSpecial = isSpecial(declareElement, varNameCurrent);
 
+				// TODO: get rid of scope here
 				final Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
-				final EnvironmentBinding binding = new EnvironmentBinding(varNameCurrent, allocation, scope, T.INSTANCE, parameterValueInitForm);
-				currentEnvironment.addLexicalBinding(binding);
+				final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(varNameCurrent, allocation, scope, T.INSTANCE, parameterValueInitForm);
+				if (isSpecial) {
+					currentEnvironment.addDynamicBinding(binding);
+				} else {
+					currentEnvironment.addLexicalBinding(binding);
+				}
 			} else {
 				throw new ProgramErrorException("LambdaList aux parameters must be of type SymbolStruct or ListStruct: " + currentElement);
 			}

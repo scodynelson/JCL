@@ -1,10 +1,10 @@
 package jcl.compiler.real.icg.specialoperator.special;
 
 import jcl.LispStruct;
+import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.LoadTimeValue;
 import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.environment.binding.EnvironmentBinding;
-import jcl.compiler.real.environment.LexicalEnvironment;
-import jcl.compiler.real.environment.LoadTimeValue;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.lists.ListStruct;
@@ -76,7 +76,7 @@ public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 			interfaces.add("lisp/common/type/MacroFunction");
 			icg.MacroLambda = false;
 		}
-		final List<EnvironmentBinding> bindingSetBody = ((LexicalEnvironment) list.getFirst()).getLexicalBindings();
+		final List<EnvironmentBinding> bindingSetBody = ((Environment) list.getFirst()).getLexicalBindings();
 
 		final int numParams = bindingSetBody.size();
 		if (numParams <= 11) {
@@ -133,7 +133,7 @@ public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 
 		// Handle all of the binding information
 		try {
-			icg.bindingEnvironment = icg.bindingStack.push((LexicalEnvironment) list.getFirst());
+			icg.bindingEnvironment = icg.bindingStack.push((Environment) list.getFirst());
 
 			// now create the check arguments method that's used when safety > 1
 			//-----------> checkArguments <--------------------
@@ -148,7 +148,7 @@ public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 			icg.emitter.newMethod(Opcodes.ACC_PUBLIC, "funcall", '(' + funcallParams + ')', "Ljava/lang/Object;", null, null);
 
 			// allocate and fill a closure if there is one defined
-			icg.doClosureSetup((LexicalEnvironment) icg.bindingEnvironment);
+			icg.doClosureSetup(icg.bindingEnvironment);
 
 			// set up the free radicals - 1960's!!
 			icg.doFreeVariableSetup();
@@ -166,7 +166,7 @@ public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 				}
 			}
 			// pop the closure if there was a new one
-			icg.undoClosureSetup((LexicalEnvironment) icg.bindingEnvironment);
+			icg.undoClosureSetup(icg.bindingEnvironment);
 
 			// now we'return done..
 			icg.emitter.emitAreturn();
@@ -256,7 +256,7 @@ public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 		codeGenerator.emitter.emitPutstatic(className, "SYMBOL", "Llisp/common/type/Symbol;");
 
 		// Creating and initializing any necessary load-time-values
-		final LexicalEnvironment env = (LexicalEnvironment) codeGenerator.bindingEnvironment;
+		final Environment env = codeGenerator.bindingEnvironment;
 
 		// see if we have to add any static fields for load-time-value
 		final List<LoadTimeValue> ltvList = env.getLoadTimeValues();

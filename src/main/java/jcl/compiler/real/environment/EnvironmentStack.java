@@ -10,19 +10,19 @@ public class EnvironmentStack extends Stack<Environment> {
 
 	private static final long serialVersionUID = 8920610864631178978L;
 
-	public LexicalEnvironment getCurrentLexicalEnvironment() {
+	public Environment getCurrentLexicalEnvironment() {
 
 		// First lets check the top to see if it's Lexical (most of the time it will be).
 		Environment currentEnvironment = peek();
-		if (currentEnvironment instanceof LexicalEnvironment) {
-			return (LexicalEnvironment) currentEnvironment;
+		if (currentEnvironment != null) {
+			return currentEnvironment;
 		}
 
 		// Temporary Stack to store the current environment as we traverse.
 		final Stack<Environment> tempStack = new Stack<>();
 
 		try {
-			while (!(currentEnvironment instanceof LexicalEnvironment)) {
+			while (currentEnvironment == null) {
 				currentEnvironment = pop();
 				tempStack.push(currentEnvironment);
 			}
@@ -33,6 +33,6 @@ public class EnvironmentStack extends Stack<Environment> {
 			}
 		}
 
-		return (LexicalEnvironment) currentEnvironment;
+		return currentEnvironment;
 	}
 }

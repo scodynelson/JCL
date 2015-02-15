@@ -1,15 +1,15 @@
 package jcl.compiler.real.icg.specialoperator;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.binding.Binding;
+import jcl.compiler.real.element.Element;
 import jcl.compiler.real.environment.Closure;
-import jcl.compiler.real.environment.binding.EnvironmentBinding;
-import jcl.compiler.real.environment.LexicalEnvironment;
-import jcl.compiler.real.environment.allocation.PositionAllocation;
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Scope;
+import jcl.compiler.real.environment.allocation.PositionAllocation;
+import jcl.compiler.real.environment.binding.Binding;
+import jcl.compiler.real.environment.binding.EnvironmentBinding;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
-import jcl.compiler.real.element.Element;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.SpecialOperator;
@@ -45,15 +45,15 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 
 		// are we building a closure here?
 		//----->
-		codeGenerator.bindingEnvironment = codeGenerator.bindingStack.push((LexicalEnvironment) input.getFirst());
-		final Closure closureSetBody = ((LexicalEnvironment)codeGenerator.bindingEnvironment).getClosure();
+		codeGenerator.bindingEnvironment = codeGenerator.bindingStack.push((Environment) input.getFirst());
+		final Closure closureSetBody = (codeGenerator.bindingEnvironment).getClosure();
 //        int numParams = closureSetBody.size() - 1;
 
 		try {
 			// (%let... (:parent ...) (:bindings ...) (:symbol-table ...) (:closure ...))
 			// Handle all of the binding information
 			//----->
-			final LexicalEnvironment bindings = (LexicalEnvironment)codeGenerator.bindingEnvironment;
+			final Environment bindings = codeGenerator.bindingEnvironment;
 			// ((:parent ...) (:bindings ...) (:symbol-table ...) (:closure ...)))
 			// Now get just the bindings list and drop the :bindings
 			final List<EnvironmentBinding> bindingList = codeGenerator.bindingEnvironment.getLexicalBindings();
@@ -61,7 +61,7 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 			//  (sym2 :allocation ... :binding ... :scope ... :type ... :init-form ...)...)
 			// Now to loop thru the bindings, gen code for the init forms and store them in the
 			// proper slots. Note that init forms are evaluated in the enclosing environment
-			final LexicalEnvironment tmpEnv = (LexicalEnvironment)codeGenerator.bindingEnvironment;
+			final Environment tmpEnv = codeGenerator.bindingEnvironment;
 			// any init forms get evaluated in the parent binding
 			codeGenerator.bindingEnvironment = codeGenerator.bindingEnvironment.getParent();
 			// now, run the bindings
@@ -111,7 +111,7 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 			codeGenerator.bindingEnvironment = tmpEnv;
 
 			// we may have a closure to handle as well
-			codeGenerator.doClosureSetup((LexicalEnvironment)codeGenerator.bindingEnvironment);
+			codeGenerator.doClosureSetup(codeGenerator.bindingEnvironment);
 			codeGenerator.doFreeVariableSetup();
 
 			// all args are in the proper local slots, so do the body of the let

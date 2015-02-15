@@ -1,7 +1,7 @@
 package jcl.compiler.real.icg;
 
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
-import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.binding.SymbolLocalBinding;
 import jcl.symbols.SymbolStruct;
 
@@ -19,7 +19,7 @@ public class SpecialSymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>
 
 	@Override
 	public void generate(final SymbolStruct<?> input, final IntermediateCodeGenerator codeGenerator) {
-		final int theInt = getSymbolAllocation((LexicalEnvironment) codeGenerator.bindingEnvironment, input);
+		final int theInt = getSymbolAllocation(codeGenerator.bindingEnvironment, input);
 		//****** this is a premature optimization. Good idea, but should wait for a new version of the compiler ****
 		final int slot = 0;
 		// it may not be in one of the accessible lambdas, so do it the old fashioned way
@@ -32,7 +32,7 @@ public class SpecialSymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>
 		}
 	}
 
-	private static int getSymbolAllocation(final LexicalEnvironment currentEnvironment, final SymbolStruct<?> variable) {
+	private static int getSymbolAllocation(final Environment currentEnvironment, final SymbolStruct<?> variable) {
 
 		// look up the symbol in the symbol table
 		final Optional<SymbolLocalBinding> symPList = EnvironmentAccessor.getSymbolTableEntry(currentEnvironment, variable);

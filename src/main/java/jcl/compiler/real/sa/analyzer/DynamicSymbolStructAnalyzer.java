@@ -1,9 +1,9 @@
 package jcl.compiler.real.sa.analyzer;
 
 import jcl.compiler.real.element.SymbolElement;
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.EnvironmentStack;
-import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.environment.SymbolTable;
 import jcl.compiler.real.environment.allocation.EnvironmentAllocation;
@@ -26,7 +26,7 @@ public class DynamicSymbolStructAnalyzer extends SymbolStructAnalyzer {
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 //		final Environment currentEnvironment = environmentStack.peek(); // TODO
-		final LexicalEnvironment currentLexicalEnvironment = environmentStack.getCurrentLexicalEnvironment();
+		final Environment currentLexicalEnvironment = environmentStack.getCurrentLexicalEnvironment();
 
 		final SymbolTable currentLexicalEnvironmentSymbolTable = currentLexicalEnvironment.getSymbolTable();
 		final boolean hasSymbolBinding = currentLexicalEnvironmentSymbolTable.hasBinding(input);
@@ -36,7 +36,7 @@ public class DynamicSymbolStructAnalyzer extends SymbolStructAnalyzer {
 			return new SymbolElement<>(input);
 		}
 
-		final LexicalEnvironment currentEnclosingLambda = getEnclosingLambda(currentLexicalEnvironment);
+		final Environment currentEnclosingLambda = getEnclosingLambda(currentLexicalEnvironment);
 
 //		final Stack<DynamicEnvironment> dynamicEnvironmentStack = analysisBuilder.getDynamicEnvironmentStack();
 //		final DynamicEnvironment dynamicEnvironment = dynamicEnvironmentStack.peek();

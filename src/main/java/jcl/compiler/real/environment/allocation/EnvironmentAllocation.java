@@ -4,7 +4,7 @@
 
 package jcl.compiler.real.environment.allocation;
 
-import jcl.compiler.real.environment.LexicalEnvironment;
+import jcl.compiler.real.environment.Environment;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -12,13 +12,13 @@ public class EnvironmentAllocation implements Allocation {
 
 	private static final long serialVersionUID = 1294755562180249532L;
 
-	private final LexicalEnvironment environment;
+	private final Environment environment;
 
-	public EnvironmentAllocation(final LexicalEnvironment environment) {
+	public EnvironmentAllocation(final Environment environment) {
 		this.environment = environment;
 	}
 
-	public LexicalEnvironment getEnvironment() {
+	public Environment getEnvironment() {
 		return environment;
 	}
 

@@ -8,7 +8,6 @@ import jcl.compiler.real.element.specialoperator.declare.SpecialDeclarationEleme
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.EnvironmentStack;
-import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.LocallyEnvironment;
 import jcl.compiler.real.environment.allocation.EnvironmentAllocation;
 import jcl.compiler.real.environment.binding.EnvironmentBinding;
@@ -79,25 +78,25 @@ public class LocallyAnalyzer implements SpecialOperatorAnalyzer {
 
 		final SymbolStruct<?> var = specialDeclarationElement.getVar().getSymbolStruct();
 
-		final LexicalEnvironment bindingEnvironment = getBindingEnvironment(var, locallyEnvironment);
+		final Environment bindingEnvironment = getBindingEnvironment(var, locallyEnvironment);
 		final EnvironmentAllocation allocation = new EnvironmentAllocation(bindingEnvironment);
 
 		final EnvironmentBinding binding = null; // TODO: new EnvironmentBinding(var, allocation, Scope.DYNAMIC, T.INSTANCE, null);
 		locallyEnvironment.addDynamicBinding(binding);
 	}
 
-	private static LexicalEnvironment getBindingEnvironment(final SymbolStruct<?> var, final LexicalEnvironment environment) {
+	private static Environment getBindingEnvironment(final SymbolStruct<?> var, final Environment environment) {
 
-		LexicalEnvironment currentEnvironment = environment;
+		Environment currentEnvironment = environment;
 
-		while (!currentEnvironment.equals(LexicalEnvironment.NULL)) {
+		while (!currentEnvironment.equals(Environment.NULL)) {
 
 			final boolean hasDynamicBinding = currentEnvironment.hasDynamicBinding(var);
 			if (hasDynamicBinding) {
 				break;
 			}
 
-			currentEnvironment = (LexicalEnvironment) currentEnvironment.getParent(); // TODO
+			currentEnvironment = currentEnvironment.getParent();
 		}
 
 		return currentEnvironment;

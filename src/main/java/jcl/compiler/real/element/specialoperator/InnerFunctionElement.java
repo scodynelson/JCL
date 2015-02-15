@@ -7,12 +7,12 @@ package jcl.compiler.real.element.specialoperator;
 import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.element.specialoperator.InnerFunctionElement.InnerFunctionVar;
-import jcl.compiler.real.environment.LexicalEnvironment;
+import jcl.compiler.real.environment.Environment;
 
 import java.io.Serializable;
 import java.util.List;
 
-public abstract class InnerFunctionElement<E extends LexicalEnvironment, V extends InnerFunctionVar> implements Element {
+public abstract class InnerFunctionElement<E extends Environment, V extends InnerFunctionVar> implements Element {
 
 	private static final long serialVersionUID = -535794959428263863L;
 

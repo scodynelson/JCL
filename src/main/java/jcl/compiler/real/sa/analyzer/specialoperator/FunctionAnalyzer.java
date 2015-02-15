@@ -9,7 +9,6 @@ import jcl.compiler.real.element.specialoperator.lambda.LambdaElement;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.EnvironmentStack;
-import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
@@ -56,7 +55,7 @@ public class FunctionAnalyzer implements SpecialOperatorAnalyzer {
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 //		final Environment currentEnvironment = environmentStack.peek();
-		final LexicalEnvironment currentLexicalEnvironment = environmentStack.getCurrentLexicalEnvironment();
+		final Environment currentLexicalEnvironment = environmentStack.getCurrentLexicalEnvironment();
 
 		final Environment bindingEnvironment
 				= EnvironmentAccessor.getBindingEnvironment(functionSymbol, currentLexicalEnvironment, Marker.FUNCTION_MARKERS);

@@ -9,7 +9,6 @@ import jcl.compiler.real.element.specialoperator.declare.SpecialDeclarationEleme
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.EnvironmentStack;
-import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.EnvironmentBinding;
@@ -32,7 +31,7 @@ import java.util.Stack;
 import java.util.stream.Collectors;
 
 @Component
-abstract class InnerFunctionAnalyzer<E extends LexicalEnvironment, I extends InnerFunctionElement<E, S>, S extends InnerFunctionElement.InnerFunctionVar>
+abstract class InnerFunctionAnalyzer<E extends Environment, I extends InnerFunctionElement<E, S>, S extends InnerFunctionElement.InnerFunctionVar>
 		implements SpecialOperatorAnalyzer {
 
 	private static final long serialVersionUID = -142718897684745213L;

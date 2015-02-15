@@ -1,13 +1,17 @@
 package jcl.compiler.real.sa.analyzer.specialoperator.lambda;
 
 import jcl.LispStruct;
+import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.NullElement;
+import jcl.compiler.real.element.SymbolElement;
+import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
+import jcl.compiler.real.element.specialoperator.declare.SpecialDeclarationElement;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.EnvironmentStack;
-import jcl.compiler.real.environment.binding.EnvironmentBinding;
-import jcl.compiler.real.environment.LexicalEnvironment;
-import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.Scope;
+import jcl.compiler.real.environment.allocation.ParameterAllocation;
+import jcl.compiler.real.environment.binding.EnvironmentBinding;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
@@ -15,11 +19,6 @@ import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindin
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
-import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.NullElement;
-import jcl.compiler.real.element.SymbolElement;
-import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
-import jcl.compiler.real.element.specialoperator.declare.SpecialDeclarationElement;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
@@ -127,7 +126,7 @@ final class LambdaListParser {
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 //		final Environment currentEnvironment = environmentStack.peek(); // TODO
-		final LexicalEnvironment currentLexicalEnvironment = environmentStack.getCurrentLexicalEnvironment();
+		final Environment currentLexicalEnvironment = environmentStack.getCurrentLexicalEnvironment();
 
 		final List<RequiredBinding> requiredBindings = new ArrayList<>();
 		int currentPosition = position;
@@ -164,7 +163,7 @@ final class LambdaListParser {
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 //		final Environment currentEnvironment = environmentStack.peek(); // TODO
-		final LexicalEnvironment currentLexicalEnvironment = environmentStack.getCurrentLexicalEnvironment();
+		final Environment currentLexicalEnvironment = environmentStack.getCurrentLexicalEnvironment();
 
 		final List<OptionalBinding> optionalBindings = new ArrayList<>();
 		int currentPosition = position;
@@ -272,7 +271,7 @@ final class LambdaListParser {
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 //		final Environment currentEnvironment = environmentStack.peek(); // TODO
-		final LexicalEnvironment currentLexicalEnvironment = environmentStack.getCurrentLexicalEnvironment();
+		final Environment currentLexicalEnvironment = environmentStack.getCurrentLexicalEnvironment();
 
 		final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentLexicalEnvironment);
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
@@ -295,7 +294,7 @@ final class LambdaListParser {
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 //		final Environment currentEnvironment = environmentStack.peek(); // TODO
-		final LexicalEnvironment currentLexicalEnvironment = environmentStack.getCurrentLexicalEnvironment();
+		final Environment currentLexicalEnvironment = environmentStack.getCurrentLexicalEnvironment();
 
 		final List<KeyBinding> keyBindings = new ArrayList<>();
 		int currentPosition = position;
@@ -420,7 +419,7 @@ final class LambdaListParser {
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 //		final Environment currentEnvironment = environmentStack.peek(); // TODO
-		final LexicalEnvironment currentLexicalEnvironment = environmentStack.getCurrentLexicalEnvironment();
+		final Environment currentLexicalEnvironment = environmentStack.getCurrentLexicalEnvironment();
 
 		final List<AuxBinding> auxBindings = new ArrayList<>();
 		int currentPosition = position;

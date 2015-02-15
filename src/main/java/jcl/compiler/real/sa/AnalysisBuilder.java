@@ -8,8 +8,7 @@ import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.element.specialoperator.GoElement;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
-import jcl.compiler.real.environment.LexicalEnvironment;
-import jcl.compiler.real.environment.Marker;
+import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.symbols.SymbolStruct;
 
 import java.io.Serializable;
@@ -44,7 +43,7 @@ public class AnalysisBuilder implements Serializable {
 		closureDepth = 0;
 		topLevelMode = true;
 
-		final Environment globalEnvironment = new LexicalEnvironment(LexicalEnvironment.NULL, Marker.LAMBDA, 0);
+		final Environment globalEnvironment = new LambdaEnvironment(Environment.NULL, 0);
 		environmentStack.push(globalEnvironment);
 
 		functionNameStack.push(null);

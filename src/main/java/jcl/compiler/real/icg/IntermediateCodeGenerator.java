@@ -7,7 +7,6 @@ import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.environment.Closure;
 import jcl.compiler.real.environment.binding.ClosureBinding;
 import jcl.compiler.real.environment.binding.EnvironmentBinding;
-import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.allocation.LocalAllocation;
 import jcl.compiler.real.environment.allocation.PositionAllocation;
 import jcl.compiler.real.environment.Scope;
@@ -52,7 +51,7 @@ public class IntermediateCodeGenerator {
 	// bindingEnvironment is set to the new environment. When that binding is no
 	// longer in force, the stack is popped and the value of bindingEnvironment is
 	// set to the new top of stack
-	public Stack<LexicalEnvironment> bindingStack;
+	public Stack<Environment> bindingStack;
 	// make a stack of current class names
 	public Stack<String> classNames;
 	public Emitter emitter;
@@ -73,9 +72,9 @@ public class IntermediateCodeGenerator {
 	public void initialize() {
 		MacroLambda = false;
 		emitter = new Emitter();
-		bindingEnvironment = LexicalEnvironment.NULL;
+		bindingEnvironment = Environment.NULL;
 		bindingStack = new Stack<>();
-		bindingStack.push(LexicalEnvironment.NULL);
+		bindingStack.push(Environment.NULL);
 		classNames = new Stack<>();
 		TagbodyCodeGenerator.tagCounter = 0;
 		allowMultipleValues = false;
@@ -132,7 +131,7 @@ public class IntermediateCodeGenerator {
 	 *********************************************************
 	 */
 
-	private Closure findNearestClosure(final LexicalEnvironment bindingEnv) {
+	private Closure findNearestClosure(final Environment bindingEnv) {
 		// get the current closure
 		final Closure closure = bindingEnv.getClosure();
 		if (closure != null) {
@@ -141,16 +140,16 @@ public class IntermediateCodeGenerator {
 		} else {
 			final Environment parent = bindingEnv.getParent();
 			// (:Parent ...)
-			if (parent.equals(LexicalEnvironment.NULL)) {
+			if (parent.equals(Environment.NULL)) {
 				return null;
 			} else {
 				// go up to the top if necessary
-				return findNearestClosure((LexicalEnvironment) parent);
+				return findNearestClosure(parent);
 			}
 		}
 	}
 
-	public static int genLocalSlot(final SymbolStruct<?> sym, final LexicalEnvironment binding) {
+	public static int genLocalSlot(final SymbolStruct<?> sym, final Environment binding) {
 		// get the :bindings list
 		// ((x :allocation ...) (y :allocation ...) ...)
 		final Binding<?> symBinding = binding.getLexicalBinding(sym).get();
@@ -248,7 +247,7 @@ public class IntermediateCodeGenerator {
 		emitter.endMethod();
 	}
 
-	public void undoClosureSetup(final LexicalEnvironment environment) {
+	public void undoClosureSetup(final Environment environment) {
 		final Closure closureSetBody = environment.getClosure();
 		final int numParams = closureSetBody.getBindings().size() - 1; // remove :closure and (:depth . n) from contention
 		if (numParams > 0) {
@@ -260,7 +259,7 @@ public class IntermediateCodeGenerator {
 		}
 	}
 
-	public void doClosureSetup(final LexicalEnvironment environment) {
+	public void doClosureSetup(final Environment environment) {
 		final Closure closureSetBody = environment.getClosure();
 		final int numParams = closureSetBody.getBindings().size(); // remove :closure and (:depth . n) from contention
 

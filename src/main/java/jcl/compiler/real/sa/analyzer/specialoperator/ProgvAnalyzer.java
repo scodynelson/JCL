@@ -6,7 +6,6 @@ import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.element.specialoperator.ProgvElement;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
-import jcl.compiler.real.environment.ProgvEnvironment;
 import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.environment.binding.EnvironmentBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
@@ -95,48 +94,38 @@ public class ProgvAnalyzer implements SpecialOperatorAnalyzer {
 		// Do other stuff
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
-		final Environment parentDynamicEnvironment = environmentStack.peek();
+		final Environment currentEnvironment = environmentStack.peek();
 
-		final ProgvEnvironment progvEnvironment = new ProgvEnvironment(parentDynamicEnvironment);
-		environmentStack.push(progvEnvironment);
+		final int numberOfProgvVars = actualVarsJavaList.size();
+		final List<ProgvElement.ProgvVar> progvVars = new ArrayList<>(numberOfProgvVars);
 
-		final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
-		try {
-			final int numberOfProgvVars = actualVarsJavaList.size();
-			final List<ProgvElement.ProgvVar> progvVars = new ArrayList<>(numberOfProgvVars);
+		for (int i = 0; i < numberOfProgvVars; i++) {
 
-			for (int i = 0; i < numberOfProgvVars; i++) {
-
-				// NOTE: We can cast here since we checked the type earlier
-				final SymbolStruct<?> var = (SymbolStruct<?>) actualVarsJavaList.get(i);
-				LispStruct val = null;
-				if (i < actualValsJavaList.size()) {
-					val = actualValsJavaList.get(i);
-				}
-
-				final SymbolElement<?> varSE = dynamicSymbolStructAnalyzer.analyze(analyzer, var, analysisBuilder);
-
-				final Element analyzedVal = analyzer.analyzeForm(val, analysisBuilder);
-				final ProgvElement.ProgvVar progvVar = new ProgvElement.ProgvVar(varSE, analyzedVal);
-
-				// TODO: really a 'null' allocation here???
-				final EnvironmentBinding binding = new EnvironmentBinding(var, null, Scope.DYNAMIC, T.INSTANCE, analyzedVal);
-				progvEnvironment.addLexicalBinding(binding);
-
-				progvVars.add(progvVar);
+			// NOTE: We can cast here since we checked the type earlier
+			final SymbolStruct<?> var = (SymbolStruct<?>) actualVarsJavaList.get(i);
+			LispStruct val = null;
+			if (i < actualValsJavaList.size()) {
+				val = actualValsJavaList.get(i);
 			}
 
-			final ListStruct forms = input.getRest().getRest().getRest();
-			final List<LispStruct> formsJavaList = forms.getAsJavaList();
-			final List<Element> analyzedForms =
-					formsJavaList.stream()
-					             .map(e -> analyzer.analyzeForm(e, analysisBuilder))
-					             .collect(Collectors.toList());
+			final SymbolElement<?> varSE = dynamicSymbolStructAnalyzer.analyze(analyzer, var, analysisBuilder);
 
-			return new ProgvElement(progvVars, analyzedForms, progvEnvironment);
-		} finally {
-			analysisBuilder.setBindingsPosition(tempBindingsPosition);
-			environmentStack.pop();
+			final Element analyzedVal = analyzer.analyzeForm(val, analysisBuilder);
+			final ProgvElement.ProgvVar progvVar = new ProgvElement.ProgvVar(varSE, analyzedVal);
+
+			// TODO: really a 'null' allocation here???
+			final EnvironmentBinding binding = new EnvironmentBinding(var, null, Scope.DYNAMIC, T.INSTANCE, analyzedVal);
+
+			progvVars.add(progvVar);
 		}
+
+		final ListStruct forms = input.getRest().getRest().getRest();
+		final List<LispStruct> formsJavaList = forms.getAsJavaList();
+		final List<Element> analyzedForms =
+				formsJavaList.stream()
+				             .map(e -> analyzer.analyzeForm(e, analysisBuilder))
+				             .collect(Collectors.toList());
+
+		return new ProgvElement(progvVars, analyzedForms, null, currentEnvironment);
 	}
 }

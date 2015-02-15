@@ -13,12 +13,12 @@ import java.util.Set;
 
 public class EnvironmentAccessor {
 
-	public static LexicalEnvironment getBindingEnvironment(final SymbolStruct<?> variable, final LexicalEnvironment lexicalEnvironment,
+	public static Environment getBindingEnvironment(final SymbolStruct<?> variable, final Environment lexicalEnvironment,
 	                                                       final Set<Marker> lexicalEnvironmentTypes) {
 
-		LexicalEnvironment currentLexicalEnvironment = lexicalEnvironment;
+		Environment currentLexicalEnvironment = lexicalEnvironment;
 
-		while (!currentLexicalEnvironment.equals(LexicalEnvironment.NULL)) {
+		while (!currentLexicalEnvironment.equals(Environment.NULL)) {
 
 			final Marker lexicalEnvironmentType = currentLexicalEnvironment.getMarker();
 			if (lexicalEnvironmentTypes.contains(lexicalEnvironmentType)) {
@@ -29,17 +29,17 @@ public class EnvironmentAccessor {
 				}
 			}
 
-			currentLexicalEnvironment = (LexicalEnvironment) currentLexicalEnvironment.getParent(); // TODO
+			currentLexicalEnvironment = currentLexicalEnvironment.getParent();
 		}
 
 		return currentLexicalEnvironment;
 	}
 
-	public static int getNextAvailableParameterNumber(final LexicalEnvironment environment) {
+	public static int getNextAvailableParameterNumber(final Environment environment) {
 
 		int currentMax = 0;
 
-		LexicalEnvironment currentEnvironment = environment;
+		Environment currentEnvironment = environment;
 		Marker marker;
 
 		do {
@@ -68,8 +68,7 @@ public class EnvironmentAccessor {
 			// Need to see if we just got params from a lambda environment.
 			marker = currentEnvironment.getMarker();
 
-			// TODO
-			currentEnvironment = (LexicalEnvironment) currentEnvironment.getParent();
+			currentEnvironment = currentEnvironment.getParent();
 		} while (!Marker.LAMBDA_MARKERS.contains(marker));
 
 		return currentMax + 1;
@@ -79,12 +78,12 @@ public class EnvironmentAccessor {
 	OLD BELOW
 	 */
 
-	public static LexicalEnvironment getBindingEnvironment(final LexicalEnvironment environment, final SymbolStruct<?> variable,
+	public static Environment getBindingEnvironment(final Environment environment, final SymbolStruct<?> variable,
 	                                                       final boolean valueBinding) {
 
-		LexicalEnvironment currentEnvironment = environment;
+		Environment currentEnvironment = environment;
 
-		while (!currentEnvironment.equals(LexicalEnvironment.NULL)) {
+		while (!currentEnvironment.equals(Environment.NULL)) {
 
 			if (currentEnvironment.hasLexicalBinding(variable)) {
 
@@ -102,14 +101,13 @@ public class EnvironmentAccessor {
 				}
 			}
 
-			// TODO:
-			currentEnvironment = (LexicalEnvironment) currentEnvironment.getParent();
+			currentEnvironment = currentEnvironment.getParent();
 		}
 
 		return currentEnvironment;
 	}
 
-	public static Optional<SymbolLocalBinding> getSymbolTableEntry(final LexicalEnvironment currentEnvironment,
+	public static Optional<SymbolLocalBinding> getSymbolTableEntry(final Environment currentEnvironment,
 	                                                               final SymbolStruct<?> variable) {
 
 		// look up the symbol in the symbol table

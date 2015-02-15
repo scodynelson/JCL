@@ -5,8 +5,8 @@ import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.specialoperator.ImmutableLoadTimeValueElement;
 import jcl.compiler.real.element.specialoperator.LoadTimeValueElement;
 import jcl.compiler.real.element.specialoperator.MutableLoadTimeValueElement;
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
-import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.LoadTimeValue;
 import jcl.compiler.real.environment.Marker;
 import jcl.compiler.real.sa.AnalysisBuilder;
@@ -50,10 +50,10 @@ public class LoadTimeValueAnalyzer implements SpecialOperatorAnalyzer {
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 //		final Environment currentEnvironment = environmentStack.peek();
-		final LexicalEnvironment currentLexicalEnvironment = environmentStack.getCurrentLexicalEnvironment();
-		final LexicalEnvironment currentEnclosingLambda = getEnclosingLambda(currentLexicalEnvironment);
+		final Environment currentLexicalEnvironment = environmentStack.getCurrentLexicalEnvironment();
+		final Environment currentEnclosingLambda = getEnclosingLambda(currentLexicalEnvironment);
 
-		final LexicalEnvironment nullLexicalEnvironment = LexicalEnvironment.NULL;
+		final Environment nullLexicalEnvironment = Environment.NULL;
 		environmentStack.push(nullLexicalEnvironment);
 
 		try {
@@ -76,13 +76,13 @@ public class LoadTimeValueAnalyzer implements SpecialOperatorAnalyzer {
 		}
 	}
 
-	private static LexicalEnvironment getEnclosingLambda(final LexicalEnvironment lexicalEnvironment) {
+	private static Environment getEnclosingLambda(final Environment lexicalEnvironment) {
 
-		LexicalEnvironment currentLexicalEnvironment = lexicalEnvironment;
+		Environment currentLexicalEnvironment = lexicalEnvironment;
 
 		final Marker marker = currentLexicalEnvironment.getMarker();
 		while (!Marker.LAMBDA_MARKERS.contains(marker)) {
-			currentLexicalEnvironment = (LexicalEnvironment) currentLexicalEnvironment.getParent(); // TODO
+			currentLexicalEnvironment = currentLexicalEnvironment.getParent();
 		}
 
 		return currentLexicalEnvironment;

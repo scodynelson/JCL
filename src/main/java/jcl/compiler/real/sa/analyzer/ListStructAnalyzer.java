@@ -11,7 +11,6 @@ import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.element.specialoperator.lambda.LambdaElement;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
-import jcl.compiler.real.environment.LexicalEnvironment;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
@@ -157,7 +156,7 @@ public class ListStructAnalyzer implements Analyzer<Element, ListStruct> {
 
 		boolean hasFunctionBinding = false;
 
-		while (!currentEnvironment.equals(LexicalEnvironment.NULL)) {
+		while (!currentEnvironment.equals(Environment.NULL)) {
 			if (currentEnvironment.hasLexicalBinding(variable)) {
 				hasFunctionBinding = true;
 				break;

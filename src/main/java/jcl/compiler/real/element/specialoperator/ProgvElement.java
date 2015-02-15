@@ -7,6 +7,7 @@ package jcl.compiler.real.element.specialoperator;
 import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.binding.Binding;
 
 import java.io.Serializable;
 import java.util.List;
@@ -19,12 +20,16 @@ public class ProgvElement implements Element {
 
 	private final List<Element> forms;
 
-	private final Environment dynamicEnvironment;
+	private final List<Binding<?>> previousBindings;
 
-	public ProgvElement(final List<ProgvVar> vars, final List<Element> forms, final Environment dynamicEnvironment) {
+	private final Environment environment;
+
+	public ProgvElement(final List<ProgvVar> vars, final List<Element> forms, final List<Binding<?>> previousBindings,
+	                    final Environment environment) {
 		this.vars = vars;
 		this.forms = forms;
-		this.dynamicEnvironment = dynamicEnvironment;
+		this.previousBindings = previousBindings;
+		this.environment = environment;
 	}
 
 	public List<ProgvVar> getVars() {
@@ -35,8 +40,12 @@ public class ProgvElement implements Element {
 		return forms;
 	}
 
-	public Environment getDynamicEnvironment() {
-		return dynamicEnvironment;
+	public List<Binding<?>> getPreviousBindings() {
+		return previousBindings;
+	}
+
+	public Environment getEnvironment() {
+		return environment;
 	}
 
 	public static class ProgvVar implements Serializable {

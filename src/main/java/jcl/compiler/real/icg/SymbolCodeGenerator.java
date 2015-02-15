@@ -1,12 +1,12 @@
 package jcl.compiler.real.icg;
 
-import jcl.compiler.real.environment.allocation.Allocation;
 import jcl.compiler.real.environment.Closure;
+import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.EnvironmentAccessor;
+import jcl.compiler.real.environment.Scope;
+import jcl.compiler.real.environment.allocation.Allocation;
 import jcl.compiler.real.environment.allocation.ClosureAllocation;
 import jcl.compiler.real.environment.binding.ClosureBinding;
-import jcl.compiler.real.environment.EnvironmentAccessor;
-import jcl.compiler.real.environment.LexicalEnvironment;
-import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.environment.binding.SymbolBinding;
 import jcl.symbols.SymbolStruct;
 import org.slf4j.Logger;
@@ -32,7 +32,7 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 		// ==> free and dynamic
 		// 4. the binding is completely local and allocated to a JVM local
 		//    If there is no binding and this is special, it's really free!
-		final Closure closure = ((LexicalEnvironment)codeGenerator.bindingEnvironment).getClosure();
+		final Closure closure = (codeGenerator.bindingEnvironment).getClosure();
 		final Optional<ClosureBinding> closureBinding = closure.getBinding(input);
 		if (!closureBinding.isPresent()) {
 			// set up for 2 or 3
@@ -40,8 +40,8 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 			// (:allocation ... :
 			if (!entryOptional.isPresent()) {
 				// it's 4
-				final LexicalEnvironment binding = EnvironmentAccessor.getBindingEnvironment((LexicalEnvironment) codeGenerator.bindingEnvironment, input, true);
-				if (binding.equals(LexicalEnvironment.NULL)) {
+				final Environment binding = EnvironmentAccessor.getBindingEnvironment(codeGenerator.bindingEnvironment, input, true);
+				if (binding.equals(Environment.NULL)) {
 					// This is a truly free variable, check to make sure it's special
 					// if not, issue a warning, then treat it as special
 					if (!input.isSpecial()) {
@@ -99,7 +99,7 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 						codeGenerator.emitter.emitInvokeinterface("lisp/extensions/type/Closure", "getBindingAt", "(II)", "Ljava/lang/Object;", true);
 					} else {
 						// go find it
-						final LexicalEnvironment binding = EnvironmentAccessor.getBindingEnvironment((LexicalEnvironment) codeGenerator.bindingEnvironment, input, true);
+						final Environment binding = EnvironmentAccessor.getBindingEnvironment(codeGenerator.bindingEnvironment, input, true);
 						final int slot = IntermediateCodeGenerator.genLocalSlot(input, binding);
 						codeGenerator.emitter.emitAload(slot);
 					}

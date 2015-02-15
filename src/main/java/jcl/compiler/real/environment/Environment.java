@@ -14,7 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class Environment implements LispStruct {
+public class Environment implements LispStruct {
+
+	public static final Environment NULL = new Environment(null, Marker.LAMBDA, 0);
 
 	private static final long serialVersionUID = 7523547599975901124L;
 
@@ -26,8 +28,16 @@ public abstract class Environment implements LispStruct {
 
 	private final SymbolTable symbolTable = new SymbolTable();
 
-	protected Environment(final Environment parent) {
+	private final Marker marker;
+
+	private final Closure closure;
+
+	private final List<LoadTimeValue> loadTimeValues = new ArrayList<>();
+
+	protected Environment(final Environment parent, final Marker marker, final int closureDepth) {
 		this.parent = parent;
+		this.marker = marker;
+		closure = new Closure(closureDepth);
 	}
 
 	public Environment getParent() {
@@ -74,6 +84,22 @@ public abstract class Environment implements LispStruct {
 
 	public SymbolTable getSymbolTable() {
 		return symbolTable;
+	}
+
+	public Marker getMarker() {
+		return marker;
+	}
+
+	public Closure getClosure() {
+		return closure;
+	}
+
+	public List<LoadTimeValue> getLoadTimeValues() {
+		return loadTimeValues;
+	}
+
+	public void addLoadTimeValue(final LoadTimeValue loadTimeValue) {
+		loadTimeValues.add(loadTimeValue);
 	}
 
 	@Override

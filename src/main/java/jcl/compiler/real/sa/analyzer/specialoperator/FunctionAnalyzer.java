@@ -17,7 +17,6 @@ import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
-import jcl.util.InstanceOf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -41,13 +40,13 @@ public class FunctionAnalyzer implements SpecialOperatorAnalyzer {
 		}
 
 		final LispStruct second = input.getRest().getFirst();
-
-		return InstanceOf.when(second)
-		                 .isInstanceOf(SymbolStruct.class).thenReturn(e -> analyzeFunctionSymbol(analyzer, e, analysisBuilder))
-		                 .isInstanceOf(ListStruct.class).thenReturn(e -> analyzeFunctionList(analyzer, e, analysisBuilder))
-		                 .otherwise(e -> {
-			                 throw new ProgramErrorException("FUNCTION: Function argument must be of type SymbolStruct or ListStruct. Got: " + e);
-		                 });
+		if (second instanceof SymbolStruct) {
+			return analyzeFunctionSymbol(analyzer, (SymbolStruct<?>) second, analysisBuilder);
+		} else if (second instanceof ListStruct) {
+			return analyzeFunctionList(analyzer, (ListStruct) second, analysisBuilder);
+		} else {
+			throw new ProgramErrorException("FUNCTION: Function argument must be of type SymbolStruct or ListStruct. Got: " + second);
+		}
 	}
 
 	private FunctionElement analyzeFunctionSymbol(final SemanticAnalyzer analyzer, final SymbolStruct<?> functionSymbol, final AnalysisBuilder analysisBuilder) {

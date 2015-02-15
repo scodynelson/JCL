@@ -1,8 +1,6 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
 import jcl.LispStruct;
-import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.IntegerElement;
 import jcl.compiler.real.element.SymbolElement;
@@ -10,11 +8,12 @@ import jcl.compiler.real.element.specialoperator.GoElement;
 import jcl.compiler.real.element.specialoperator.GoIntegerElement;
 import jcl.compiler.real.element.specialoperator.GoSymbolElement;
 import jcl.compiler.real.element.specialoperator.TagbodyElement;
+import jcl.compiler.real.sa.AnalysisBuilder;
+import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.symbols.SymbolStruct;
-import jcl.util.InstanceOf;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -24,7 +23,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.BiConsumer;
@@ -90,14 +88,12 @@ public class TagbodyAnalyzer implements SpecialOperatorAnalyzer {
 		@Override
 		public BiConsumer<Set<GoElement>, LispStruct> accumulator() {
 			return (goElementSet, lispStruct) -> {
-				final Optional<GoElement> goElement
-						= InstanceOf.when(lispStruct)
-						            .isInstanceOf(SymbolStruct.class).thenReturn(TagbodyInitialTagCollector::getGoSymbolElementTag)
-						            .isInstanceOf(IntegerStruct.class).thenReturn(TagbodyInitialTagCollector::getGoIntegerElementTag)
-						            .get();
-				if (goElement.isPresent()) {
-					final GoElement goElementVal = goElement.get();
-					goElementSet.add(goElementVal);
+				if (lispStruct instanceof SymbolStruct) {
+					final GoElement goSymbolElementTag = getGoSymbolElementTag((SymbolStruct<?>) lispStruct);
+					goElementSet.add(goSymbolElementTag);
+				} else if (lispStruct instanceof IntegerStruct) {
+					final GoElement goIntegerElementTag = getGoIntegerElementTag((IntegerStruct) lispStruct);
+					goElementSet.add(goIntegerElementTag);
 				}
 			};
 		}
@@ -161,11 +157,16 @@ public class TagbodyAnalyzer implements SpecialOperatorAnalyzer {
 
 		@Override
 		public BiConsumer<Map<Element, List<Element>>, LispStruct> accumulator() {
-			return (elementListMap, lispStruct) ->
-					InstanceOf.when(lispStruct)
-					          .isInstanceOf(SymbolStruct.class).then(this::updateCurrentTagToSymbol)
-					          .isInstanceOf(IntegerStruct.class).then(this::updateCurrentTagToInteger)
-					          .otherwise(e -> handleOtherwise(elementListMap, e));
+			return (elementListMap, lispStruct) -> {
+
+				if (lispStruct instanceof SymbolStruct) {
+					updateCurrentTagToSymbol((SymbolStruct<?>) lispStruct);
+				} else if (lispStruct instanceof IntegerStruct) {
+					updateCurrentTagToInteger((IntegerStruct) lispStruct);
+				} else {
+					handleOtherwise(elementListMap, lispStruct);
+				}
+			};
 		}
 
 		@Override

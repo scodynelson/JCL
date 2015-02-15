@@ -9,8 +9,6 @@ import jcl.compiler.real.element.Element;
 import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 
-import java.util.List;
-
 public class LambdaElement implements Element {
 
 	private static final long serialVersionUID = -3234593852889478530L;
@@ -19,15 +17,15 @@ public class LambdaElement implements Element {
 
 	private final StringStruct docString;
 
-	private final List<Element> forms;
+	private final Element body;
 
 	private final LambdaEnvironment lambdaEnvironment;
 
-	public LambdaElement(final OrdinaryLambdaListBindings lambdaListBindings, final StringStruct docString, final List<Element> forms,
+	public LambdaElement(final OrdinaryLambdaListBindings lambdaListBindings, final StringStruct docString, final Element body,
 	                     final LambdaEnvironment lambdaEnvironment) {
 		this.lambdaListBindings = lambdaListBindings;
 		this.docString = docString;
-		this.forms = forms;
+		this.body = body;
 		this.lambdaEnvironment = lambdaEnvironment;
 	}
 
@@ -39,8 +37,8 @@ public class LambdaElement implements Element {
 		return docString;
 	}
 
-	public List<Element> getForms() {
-		return forms;
+	public Element getBody() {
+		return body;
 	}
 
 	public LambdaEnvironment getLambdaEnvironment() {

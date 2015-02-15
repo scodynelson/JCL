@@ -2,23 +2,21 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
-import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.specialoperator.QuoteElement;
+import jcl.compiler.real.sa.AnalysisBuilder;
+import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
-import jcl.util.InstanceOf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class QuoteAnalyzer implements SpecialOperatorAnalyzer {
@@ -38,21 +36,21 @@ public class QuoteAnalyzer implements SpecialOperatorAnalyzer {
 
 		final LispStruct quotedObject = input.getRest().getFirst();
 
-		final Optional<ListStruct> analyzedElement
-				= InstanceOf.when(quotedObject)
-				            .isInstanceOf(ListStruct.class).thenReturn(QuoteAnalyzer::analyzeQuoteList)
-				            .isInstanceOf(SymbolStruct.class).thenReturn(QuoteAnalyzer::analyzeQuoteSymbol)
-				            .get();
+		ListStruct analyzedElement = null;
+		if (quotedObject instanceof SymbolStruct) {
+			analyzedElement = analyzeQuoteSymbol((SymbolStruct<?>) quotedObject);
+		} else if (quotedObject instanceof ListStruct) {
+			analyzedElement = analyzeQuoteList((ListStruct) quotedObject);
+		}
 
 		final Element element;
 
-		if (analyzedElement.isPresent()) {
-			final ListStruct analyzedListElement = analyzedElement.get();
-			// If was ListStruct or SymbolStruct, wrap resulting form in Load-Time-Value.
-			final ListStruct loadTimeValueForm = ListStruct.buildProperList(SpecialOperator.LOAD_TIME_VALUE, analyzedListElement);
-			element = loadTimeValueAnalyzer.analyze(analyzer, loadTimeValueForm, analysisBuilder);
-		} else {
+		if (analyzedElement == null) {
 			element = analyzer.analyzeForm(quotedObject);
+		} else {
+			// If was ListStruct or SymbolStruct, wrap resulting form in Load-Time-Value.
+			final ListStruct loadTimeValueForm = ListStruct.buildProperList(SpecialOperator.LOAD_TIME_VALUE, analyzedElement);
+			element = loadTimeValueAnalyzer.analyze(analyzer, loadTimeValueForm, analysisBuilder);
 		}
 
 		return new QuoteElement(element);

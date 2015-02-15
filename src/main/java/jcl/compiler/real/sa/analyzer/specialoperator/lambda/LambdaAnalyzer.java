@@ -90,11 +90,8 @@ public class LambdaAnalyzer implements SpecialOperatorAnalyzer {
 
 			final ListStruct newLambdaBodyListStruct = ListStruct.buildProperList(newStartingLambdaBody);
 
-			// TODO: HOLY SHIT BUG: What's happening is that we're creating a new body here and trying to just analyze every element of it instead of delegating properly.
-			// TODO:    Need to research this in ALL the other analyzers as well.
 			final Element analyzedBodyForms = listStructAnalyzer.analyze(analyzer, newLambdaBodyListStruct, analysisBuilder);
-
-			return new LambdaElement(parsedLambdaList, bodyProcessingResult.getDocString(), null, lambdaEnvironment);
+			return new LambdaElement(parsedLambdaList, bodyProcessingResult.getDocString(), analyzedBodyForms, lambdaEnvironment);
 		} finally {
 			analysisBuilder.setClosureDepth(tempClosureDepth);
 			analysisBuilder.setBindingsPosition(tempBindingsPosition);

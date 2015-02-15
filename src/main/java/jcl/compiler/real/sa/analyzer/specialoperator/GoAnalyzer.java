@@ -1,22 +1,20 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
 import jcl.LispStruct;
-import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.element.IntegerElement;
 import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.element.specialoperator.GoElement;
 import jcl.compiler.real.element.specialoperator.GoIntegerElement;
 import jcl.compiler.real.element.specialoperator.GoSymbolElement;
+import jcl.compiler.real.sa.AnalysisBuilder;
+import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.symbols.SymbolStruct;
-import jcl.util.InstanceOf;
 import org.springframework.stereotype.Component;
 
 import java.util.ListIterator;
-import java.util.Optional;
 import java.util.Set;
 import java.util.Stack;
 
@@ -34,17 +32,17 @@ public class GoAnalyzer implements SpecialOperatorAnalyzer {
 
 		final LispStruct second = input.getRest().getFirst();
 
-		final Optional<GoElement> tagToFind
-				= InstanceOf.when(second)
-				            .isInstanceOf(SymbolStruct.class).thenReturn(GoAnalyzer::getGoSymbolElementTag)
-				            .isInstanceOf(IntegerStruct.class).thenReturn(GoAnalyzer::getGoIntegerElementTag)
-				            .get();
+		GoElement tagToFind = null;
+		if (second instanceof SymbolStruct) {
+			tagToFind = getGoSymbolElementTag((SymbolStruct<?>) second);
+		} else if (second instanceof IntegerStruct) {
+			tagToFind = getGoIntegerElementTag((IntegerStruct) second);
+		}
 
-		if (tagToFind.isPresent()) {
-			final GoElement realTagToFind = tagToFind.get();
-			return getGoTag(analysisBuilder, realTagToFind);
-		} else {
+		if (tagToFind == null) {
 			throw new ProgramErrorException("GO: Tag must be of type SymbolStruct or IntegerStruct. Got: " + second);
+		} else {
+			return getGoTag(analysisBuilder, tagToFind);
 		}
 	}
 

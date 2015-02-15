@@ -6,21 +6,23 @@ package jcl.compiler.real.sa;
 
 import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
-import jcl.compiler.real.sa.analyzer.LexicalSymbolStructAnalyzer;
-import jcl.compiler.real.sa.analyzer.ListStructAnalyzer;
 import jcl.compiler.real.element.CharacterElement;
 import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.FloatElement;
 import jcl.compiler.real.element.IntegerElement;
+import jcl.compiler.real.element.NullElement;
 import jcl.compiler.real.element.RatioElement;
+import jcl.compiler.real.sa.analyzer.LexicalSymbolStructAnalyzer;
+import jcl.compiler.real.sa.analyzer.ListStructAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
+import jcl.lists.NullStruct;
 import jcl.numbers.FloatStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.RatioStruct;
 import jcl.packages.PackageStruct;
+import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
-import jcl.util.InstanceOf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,15 +74,23 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 
 	@Override
 	public Element analyzeForm(final LispStruct form, final AnalysisBuilder analysisBuilder) {
-		return InstanceOf.when(form)
-		                 .isInstanceOf(ListStruct.class).thenReturn(e -> listStructAnalyzer.analyze(this, e, analysisBuilder))
-		                 .isInstanceOf(SymbolStruct.class).thenReturn(e -> lexicalSymbolStructAnalyzer.analyze(this, e, analysisBuilder))
-		                 .isInstanceOf(CharacterStruct.class).thenReturn(CharacterElement::new)
-		                 .isInstanceOf(IntegerStruct.class).thenReturn(IntegerElement::new)
-		                 .isInstanceOf(FloatStruct.class).thenReturn(FloatElement::new)
-		                 .isInstanceOf(RatioStruct.class).thenReturn(RatioElement::new)
-		                 .otherwise(e -> {
-			                 throw new ProgramErrorException("Semantic Analyzer: Unsupported object type cannot be analyzed: " + e);
-		                 });
+
+		if (NullStruct.INSTANCE.equals(form) || NILStruct.INSTANCE.equals(form)) {
+			return NullElement.INSTANCE;
+		} else if (form instanceof CharacterStruct) {
+			return new CharacterElement((CharacterStruct) form);
+		} else if (form instanceof IntegerStruct) {
+			return new IntegerElement((IntegerStruct) form);
+		} else if (form instanceof FloatStruct) {
+			return new FloatElement((FloatStruct) form);
+		} else if (form instanceof RatioStruct) {
+			return new RatioElement((RatioStruct) form);
+		} else if (form instanceof SymbolStruct) {
+			return lexicalSymbolStructAnalyzer.analyze(this, (SymbolStruct<?>) form, analysisBuilder);
+		} else if (form instanceof ListStruct) {
+			return listStructAnalyzer.analyze(this, (ListStruct) form, analysisBuilder);
+		} else {
+			throw new ProgramErrorException("Semantic Analyzer: Unsupported object type cannot be analyzed: " + form);
+		}
 	}
 }

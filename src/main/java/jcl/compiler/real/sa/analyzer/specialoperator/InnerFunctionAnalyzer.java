@@ -9,6 +9,7 @@ import jcl.compiler.real.element.specialoperator.declare.SpecialDeclarationEleme
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.EnvironmentStack;
+import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.environment.allocation.EnvironmentAllocation;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
@@ -254,7 +255,7 @@ abstract class InnerFunctionAnalyzer<E extends Environment, I extends InnerFunct
 
 		final SymbolStruct<?> var = specialDeclarationElement.getVar().getSymbolStruct();
 
-		final Environment bindingEnvironment = Environment.getDynamicBindingEnvironment(innerFunctionEnvironment, var);
+		final Environment bindingEnvironment = Environments.getDynamicBindingEnvironment(innerFunctionEnvironment, var);
 		final EnvironmentAllocation allocation = new EnvironmentAllocation(bindingEnvironment);
 
 		final EnvironmentEnvironmentBinding binding = new EnvironmentEnvironmentBinding(var, allocation, Scope.DYNAMIC, T.INSTANCE, bindingEnvironment);

@@ -8,6 +8,7 @@ import jcl.compiler.real.element.specialoperator.SymbolFunctionElement;
 import jcl.compiler.real.element.specialoperator.lambda.LambdaElement;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
+import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.LexicalSymbolStructAnalyzer;
@@ -55,7 +56,7 @@ public class FunctionAnalyzer implements SpecialOperatorAnalyzer {
 		final Environment currentEnvironment = environmentStack.peek();
 
 		final Environment bindingEnvironment
-				= Environment.getInnerFunctionBindingEnvironment(currentEnvironment, functionSymbol);
+				= Environments.getInnerFunctionLexicalBindingEnvironment(currentEnvironment, functionSymbol);
 
 		final boolean hasNoFunctionSymbolBinding = !bindingEnvironment.hasLexicalBinding(functionSymbol);
 

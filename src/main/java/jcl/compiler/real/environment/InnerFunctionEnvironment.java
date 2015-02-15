@@ -7,7 +7,7 @@ package jcl.compiler.real.environment;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class InnerFunctionEnvironment extends FunctionEnvironment {
+public class InnerFunctionEnvironment extends LambdaEnvironment {
 
 	private static final long serialVersionUID = -5882720704455871085L;
 

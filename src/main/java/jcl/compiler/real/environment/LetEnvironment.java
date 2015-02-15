@@ -7,7 +7,7 @@ package jcl.compiler.real.environment;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class LetEnvironment extends Environment {
+public class LetEnvironment extends BindingEnvironment {
 
 	private static final long serialVersionUID = -6810260653724112416L;
 

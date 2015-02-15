@@ -10,6 +10,7 @@ import jcl.compiler.real.element.specialoperator.declare.SpecialDeclarationEleme
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.EnvironmentStack;
+import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LetEnvironment;
 import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.environment.allocation.EnvironmentAllocation;
@@ -191,7 +192,7 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 
 		final SymbolStruct<?> var = specialDeclarationElement.getVar().getSymbolStruct();
 
-		final Environment bindingEnvironment = Environment.getDynamicBindingEnvironment(letEnvironment, var);
+		final Environment bindingEnvironment = Environments.getDynamicBindingEnvironment(letEnvironment, var);
 		final EnvironmentAllocation allocation = new EnvironmentAllocation(bindingEnvironment);
 
 		final EnvironmentEnvironmentBinding binding = new EnvironmentEnvironmentBinding(var, allocation, Scope.DYNAMIC, T.INSTANCE, bindingEnvironment);

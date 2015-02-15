@@ -7,6 +7,7 @@ import jcl.compiler.real.element.specialoperator.LoadTimeValueElement;
 import jcl.compiler.real.element.specialoperator.MutableLoadTimeValueElement;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
+import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LoadTimeValue;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
@@ -49,7 +50,7 @@ public class LoadTimeValueAnalyzer implements SpecialOperatorAnalyzer {
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment currentEnvironment = environmentStack.peek();
-		final Environment currentEnclosingLambda = Environment.getEnclosingLambda(currentEnvironment); // TODO: can we move this to the EnvironmentStack object??
+		final Environment currentEnclosingLambda = Environments.getEnclosingLambda(currentEnvironment);
 
 		final int tempClosureDepth = analysisBuilder.getClosureDepth();
 		final int newClosureDepth = tempClosureDepth + 1;

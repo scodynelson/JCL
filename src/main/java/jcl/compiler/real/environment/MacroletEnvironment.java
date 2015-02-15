@@ -7,7 +7,7 @@ package jcl.compiler.real.environment;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class MacroletEnvironment extends Environment {
+public class MacroletEnvironment extends BindingEnvironment {
 
 	private static final long serialVersionUID = 2950482835657167464L;
 

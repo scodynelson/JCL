@@ -11,6 +11,7 @@ import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.element.specialoperator.lambda.LambdaElement;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
+import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
@@ -144,27 +145,10 @@ public class ListStructAnalyzer implements Analyzer<Element, ListStruct> {
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment currentEnvironment = environmentStack.peek();
 
-		final boolean hasFunctionBinding = hasFunctionBinding(currentEnvironment, functionSymbol);
+		final boolean hasFunctionBinding = Environments.hasFunctionBinding(currentEnvironment, functionSymbol);
 
 		final SymbolElement<?> functionSymbolSE = new SymbolElement<>(functionSymbol);
 		return new FunctionCallElement(hasFunctionBinding, functionSymbolSE, analyzedFunctionArguments);
-	}
-
-	private static boolean hasFunctionBinding(final Environment environment, final SymbolStruct<?> variable) {
-
-		Environment currentEnvironment = environment;
-
-		boolean hasFunctionBinding = false;
-
-		while (!currentEnvironment.equals(Environment.NULL)) {
-			if (currentEnvironment.hasLexicalBinding(variable)) {
-				hasFunctionBinding = true;
-				break;
-			}
-			currentEnvironment = currentEnvironment.getParent();
-		}
-
-		return hasFunctionBinding;
 	}
 
 	private static void validateFunctionArguments(final String functionName, final OrdinaryLambdaListBindings lambdaListBindings,

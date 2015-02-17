@@ -32,7 +32,7 @@ public class EnvironmentAccessor {
 			currentMax = Math.max(currentMax, envBindingsMax);
 
 			// now look through through the symbol table (free variables)
-			final List<SymbolLocalBinding> symbolBindings = currentEnvironment.getSymbolTable().getLocalBindings();
+			final List<SymbolLocalBinding> symbolBindings = currentEnvironment.getSymbolTable().getDynamicLocalBindings();
 
 			envBindingsMax = symbolBindings
 					.stream()
@@ -90,17 +90,17 @@ public class EnvironmentAccessor {
 		// look up the symbol in the symbol table
 		final SymbolTable symTable = currentEnvironment.getSymbolTable();
 
-		Optional<SymbolLocalBinding> symbolLocalBinding = symTable.getLocalBinding(variable);
+		Optional<SymbolLocalBinding> symbolLocalBinding = symTable.getDynamicLocalBinding(variable);
 
 		// if the cons starts with LOCAL, we're there
 		// otherwise, we have to go to the actual env of allocation
 		if (!symbolLocalBinding.isPresent()) {
-			final Optional<SymbolEnvironmentBinding> symbolEnvironmentBinding = symTable.getEnvironmentBinding(variable);
+			final Optional<SymbolEnvironmentBinding> symbolEnvironmentBinding = symTable.getDynamicEnvironmentBinding(variable);
 			if (symbolEnvironmentBinding.isPresent()) {
 				final SymbolEnvironmentBinding realSEB = symbolEnvironmentBinding.get();
 				final SymbolTable sebSymbolTable = realSEB.getBinding().getSymbolTable();
 
-				symbolLocalBinding = sebSymbolTable.getLocalBinding(variable);
+				symbolLocalBinding = sebSymbolTable.getDynamicLocalBinding(variable);
 			}
 		}
 

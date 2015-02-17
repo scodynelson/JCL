@@ -7,10 +7,11 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LambdaEnvironment;
-import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.environment.SymbolTable;
+import jcl.compiler.real.environment.allocation.ClosureAllocation;
 import jcl.compiler.real.environment.allocation.EnvironmentAllocation;
 import jcl.compiler.real.environment.binding.ClosureBinding;
+import jcl.compiler.real.environment.binding.SymbolClosureBinding;
 import jcl.compiler.real.environment.binding.SymbolEnvironmentBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
@@ -59,12 +60,11 @@ public class LexicalSymbolStructAnalyzer extends SymbolStructAnalyzer {
 
 			// Create a new SymbolBinding and reference it to the 'bindingEnvironment' with allocation to the 'bindingEnclosingLambda'
 			final EnvironmentAllocation allocation = new EnvironmentAllocation(bindingEnclosingLambda);
-			// TODO: get rid of Scope
 			final SymbolEnvironmentBinding symbolBinding
-					= new SymbolEnvironmentBinding(input, allocation, Scope.LEXICAL, T.INSTANCE, bindingEnvironment);
+					= new SymbolEnvironmentBinding(input, allocation, T.INSTANCE, bindingEnvironment);
 
 			// Now add that new symbol to the SymbolTable of the 'currentEnvironment'
-			currentEnvironmentSymbolTable.addEnvironmentBinding(symbolBinding);
+			currentEnvironmentSymbolTable.addLexicalEnvironmentBinding(symbolBinding);
 			return new SymbolElement<>(input);
 		}
 
@@ -77,12 +77,11 @@ public class LexicalSymbolStructAnalyzer extends SymbolStructAnalyzer {
 
 			// Create a new SymbolBinding and reference it to the 'bindingEnvironment', with allocation to the NULL Environment
 			final EnvironmentAllocation allocation = new EnvironmentAllocation(Environment.NULL);
-			// TODO: get rid of Scope
 			final SymbolEnvironmentBinding symbolBinding
-					= new SymbolEnvironmentBinding(input, allocation, Scope.LEXICAL, T.INSTANCE, bindingEnvironment);
+					= new SymbolEnvironmentBinding(input, allocation, T.INSTANCE, bindingEnvironment);
 
 			// Now add that new symbol to the SymbolTable of the 'currentEnvironment'
-			currentEnvironmentSymbolTable.addEnvironmentBinding(symbolBinding);
+			currentEnvironmentSymbolTable.addLexicalEnvironmentBinding(symbolBinding);
 			return new SymbolElement<>(input);
 		}
 
@@ -104,7 +103,12 @@ public class LexicalSymbolStructAnalyzer extends SymbolStructAnalyzer {
 			closure.addBinding(newClosureBinding);
 		}
 
-		// TODO: we need to add this binding to the environment AFTER we add it to the closure??
+		// Create a new SymbolBinding and reference it to the 'bindingEnvironment', with allocation to the Closure
+		final ClosureAllocation allocation = new ClosureAllocation(closure);
+		final SymbolClosureBinding symbolBinding
+				= new SymbolClosureBinding(input, allocation, T.INSTANCE, bindingEnvironment);
+
+		currentEnvironmentSymbolTable.addClosureBinding(symbolBinding);
 
 		return new SymbolElement<>(input);
 	}

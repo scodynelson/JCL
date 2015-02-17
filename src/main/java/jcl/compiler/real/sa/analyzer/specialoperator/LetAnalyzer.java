@@ -12,7 +12,6 @@ import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LetEnvironment;
-import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.environment.allocation.EnvironmentAllocation;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.EnvironmentEnvironmentBinding;
@@ -126,9 +125,7 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 		final boolean isSpecial = isSpecial(declareElement, var);
 
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
-		// TODO: get rid of scope here
-		final Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
-		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(var, allocation, scope, T.INSTANCE, initForm);
+		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(var, allocation, T.INSTANCE, initForm);
 		if (isSpecial) {
 			letEnvironment.addDynamicBinding(binding);
 		} else {
@@ -195,7 +192,7 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 		final Environment bindingEnvironment = Environments.getDynamicBindingEnvironment(letEnvironment, var);
 		final EnvironmentAllocation allocation = new EnvironmentAllocation(bindingEnvironment);
 
-		final EnvironmentEnvironmentBinding binding = new EnvironmentEnvironmentBinding(var, allocation, Scope.DYNAMIC, T.INSTANCE, bindingEnvironment);
+		final EnvironmentEnvironmentBinding binding = new EnvironmentEnvironmentBinding(var, allocation, T.INSTANCE, bindingEnvironment);
 		letEnvironment.addDynamicBinding(binding);
 	}
 }

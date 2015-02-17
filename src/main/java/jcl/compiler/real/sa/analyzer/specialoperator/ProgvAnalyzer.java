@@ -6,7 +6,6 @@ import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.element.specialoperator.ProgvElement;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
-import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
@@ -114,7 +113,7 @@ public class ProgvAnalyzer implements SpecialOperatorAnalyzer {
 			final ProgvElement.ProgvVar progvVar = new ProgvElement.ProgvVar(varSE, analyzedVal);
 
 			// TODO: really a 'null' allocation here???
-			final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(var, null, Scope.DYNAMIC, T.INSTANCE, analyzedVal);
+			final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(var, null, T.INSTANCE, analyzedVal);
 
 			progvVars.add(progvVar);
 		}

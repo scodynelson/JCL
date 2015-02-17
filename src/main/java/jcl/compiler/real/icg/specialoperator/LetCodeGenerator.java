@@ -4,9 +4,9 @@ import jcl.LispStruct;
 import jcl.compiler.real.element.Element;
 import jcl.compiler.real.environment.Closure;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.environment.allocation.PositionAllocation;
-import jcl.compiler.real.environment.binding.Binding;
+import jcl.compiler.real.environment.binding.EnvironmentBinding;
+import jcl.compiler.real.environment.binding.EnvironmentEnvironmentBinding;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
@@ -23,10 +23,10 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 
 	private static class SymbolBindingLabel {
 
-		Label endLabel = null;
-		Label finallyLabel = null;
-		Label handlerLabel = null;
-		SymbolStruct<?> dynamicSymbol = null;
+		Label endLabel;
+		Label finallyLabel;
+		Label handlerLabel;
+		SymbolStruct<?> dynamicSymbol;
 
 		private SymbolBindingLabel(final Label endLabel, final Label finallyLabel, final Label handlerLabel, final SymbolStruct<?> dynamicSymbol) {
 			this.endLabel = endLabel;
@@ -46,7 +46,7 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 		// are we building a closure here?
 		//----->
 		codeGenerator.bindingEnvironment = codeGenerator.bindingStack.push((Environment) input.getFirst());
-		final Closure closureSetBody = (codeGenerator.bindingEnvironment).getClosure();
+		final Closure closureSetBody = codeGenerator.bindingEnvironment.getClosure();
 //        int numParams = closureSetBody.size() - 1;
 
 		try {
@@ -56,7 +56,7 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 			final Environment bindings = codeGenerator.bindingEnvironment;
 			// ((:parent ...) (:bindings ...) (:symbol-table ...) (:closure ...)))
 			// Now get just the bindings list and drop the :bindings
-			final List<EnvironmentParameterBinding> bindingList = codeGenerator.bindingEnvironment.getLexicalBindings();
+			final List<EnvironmentParameterBinding> lexicalBindingList = codeGenerator.bindingEnvironment.getLexicalBindings();
 			// ((sym1 :allocation ... :binding ... :scope ... :type ... :init-form ...)
 			//  (sym2 :allocation ... :binding ... :scope ... :type ... :init-form ...)...)
 			// Now to loop thru the bindings, gen code for the init forms and store them in the
@@ -65,48 +65,61 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 			// any init forms get evaluated in the parent binding
 			codeGenerator.bindingEnvironment = codeGenerator.bindingEnvironment.getParent();
 			// now, run the bindings
-			for (final Binding<?> binding : bindingList) {
+			for (final EnvironmentParameterBinding binding : lexicalBindingList) {
 				final SymbolStruct<?> sym = binding.getSymbolStruct();
 				// (:allocation ... :binding ... :scope ... :type ... :init-form ...)
 				// get the variable's init form
-				final Element initForm = ((EnvironmentParameterBinding) binding).getInitForm();
+				final Element initForm = binding.getInitForm();
 				// is this a local or dynamic variable?
-				final Scope scope = binding.getScope();
 				//** this is the place where the ICG has to choose to allocate a variable
 				//** in a local or it's a binding of a special variable
-				// now, which is it: :local or :dynamic
-				if (scope == Scope.DYNAMIC) {
-					// handle binding a dynamic variable
-					// 0. create an end and a handler Label, add them to a stack, create a start Label
-					final Label startLabel = new Label();
-					final Label endLabel = new Label();
-					final Label finallyLabel = new Label();
-					final Label handlerLabel = new Label();
-					final SymbolBindingLabel labelSym = new SymbolBindingLabel(endLabel, finallyLabel, handlerLabel, sym);
-					// 1. emit the tryFinally node with these labels
-					codeGenerator.emitter.visitTryCatchBlock(startLabel, endLabel, handlerLabel, null);
-					// 2. emit the binding call
-					codeGenerator.genCodeSpecialVariable(sym);
-					codeGenerator.emitter.emitCheckcast("lisp/system/SymbolImpl");
-					// 3. emit the eval of the init form
-					// hand the init form to icgMainLoop...
-					// the generated code leaves its value on the stack
-					codeGenerator.icgMainLoop(initForm);
-					codeGenerator.emitter.emitInvokevirtual("lisp/system/SymbolImpl", "bind", "(Ljava/lang/Object;)", "V", false);
-					// 4. set handler start label
-					codeGenerator.emitter.visitMethodLabel(startLabel);
-					// 5. push end/handler label and the symbol on a stack
-					bindingLabels.push(labelSym);
-				} else {
-					// Now get the allocation value
-					final PositionAllocation alloc = (PositionAllocation) binding.getAllocation();
-					final int slot = alloc.getPosition();
-					// hand the init form to icgMainLoop...
-					// the generated code leaves its value on the stack
-					codeGenerator.icgMainLoop(initForm);
-					// store the value in the proper local slot
-					codeGenerator.emitter.emitAstore(slot);
+				// Now get the allocation value
+				final PositionAllocation alloc = binding.getAllocation();
+				final int slot = alloc.getPosition();
+				// hand the init form to icgMainLoop...
+				// the generated code leaves its value on the stack
+				codeGenerator.icgMainLoop(initForm);
+				// store the value in the proper local slot
+				codeGenerator.emitter.emitAstore(slot);
+			}
+
+			final List<EnvironmentBinding<?>> dynamicBindingList = codeGenerator.bindingEnvironment.getDynamicBindings();
+			for (final EnvironmentBinding<?> binding : dynamicBindingList) {
+				final SymbolStruct<?> sym = binding.getSymbolStruct();
+				// (:allocation ... :binding ... :scope ... :type ... :init-form ...)
+				// get the variable's init form
+				Element initForm = null;
+				if (binding instanceof EnvironmentParameterBinding) {
+					initForm = ((EnvironmentParameterBinding) binding).getInitForm();
+				} else if (binding instanceof EnvironmentEnvironmentBinding) {
+					final Environment bindingEnvironment = ((EnvironmentEnvironmentBinding) binding).getEnvironment();
+					initForm = ((EnvironmentParameterBinding) bindingEnvironment.getDynamicBinding(sym).get()).getInitForm();
 				}
+
+				// is this a local or dynamic variable?
+				//** this is the place where the ICG has to choose to allocate a variable
+				//** in a local or it's a binding of a special variable
+				// handle binding a dynamic variable
+				// 0. create an end and a handler Label, add them to a stack, create a start Label
+				final Label startLabel = new Label();
+				final Label endLabel = new Label();
+				final Label finallyLabel = new Label();
+				final Label handlerLabel = new Label();
+				final SymbolBindingLabel labelSym = new SymbolBindingLabel(endLabel, finallyLabel, handlerLabel, sym);
+				// 1. emit the tryFinally node with these labels
+				codeGenerator.emitter.visitTryCatchBlock(startLabel, endLabel, handlerLabel, null);
+				// 2. emit the binding call
+				codeGenerator.genCodeSpecialVariable(sym);
+				codeGenerator.emitter.emitCheckcast("lisp/system/SymbolImpl");
+				// 3. emit the eval of the init form
+				// hand the init form to icgMainLoop...
+				// the generated code leaves its value on the stack
+				codeGenerator.icgMainLoop(initForm);
+				codeGenerator.emitter.emitInvokevirtual("lisp/system/SymbolImpl", "bind", "(Ljava/lang/Object;)", "V", false);
+				// 4. set handler start label
+				codeGenerator.emitter.visitMethodLabel(startLabel);
+				// 5. push end/handler label and the symbol on a stack
+				bindingLabels.push(labelSym);
 			}
 			codeGenerator.bindingEnvironment = tmpEnv;
 

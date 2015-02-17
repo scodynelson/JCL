@@ -4,7 +4,7 @@
 
 package jcl.compiler.real.environment;
 
-import jcl.compiler.real.environment.binding.SymbolBinding;
+import jcl.compiler.real.environment.binding.SymbolClosureBinding;
 import jcl.compiler.real.environment.binding.SymbolEnvironmentBinding;
 import jcl.compiler.real.environment.binding.SymbolLocalBinding;
 import jcl.symbols.SymbolStruct;
@@ -15,73 +15,100 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class SymbolTable implements Serializable {
 
 	private static final long serialVersionUID = 7149597963303419636L;
 
-	private final List<SymbolBinding<?>> bindings = new ArrayList<>();
+	private final List<SymbolEnvironmentBinding> lexicalEnvironmentBindings = new ArrayList<>();
+
+	private final List<SymbolClosureBinding> closureBindings = new ArrayList<>();
+
+	private final List<SymbolEnvironmentBinding> dynamicEnvironmentBindings = new ArrayList<>();
+
+	private final List<SymbolLocalBinding> dynamicLocalBindings = new ArrayList<>();
 
 	public boolean hasBinding(final SymbolStruct<?> symbolStruct) {
-		return bindings.stream()
-		               .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct));
+		return lexicalEnvironmentBindings.stream()
+		                                 .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct))
+				||
+				closureBindings.stream()
+				               .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct))
+				||
+				dynamicEnvironmentBindings.stream()
+				                          .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct))
+				||
+				dynamicLocalBindings.stream()
+				                    .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct));
 	}
 
-	public Optional<SymbolBinding<?>> getBinding(final SymbolStruct<?> symbolStruct) {
-		return bindings.stream()
-		               .filter(e -> e.getSymbolStruct().equals(symbolStruct))
-		               .findFirst();
+	public boolean hasDynamicBinding(final SymbolStruct<?> symbolStruct) {
+		return dynamicEnvironmentBindings.stream()
+		                                 .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct))
+				||
+				dynamicLocalBindings.stream()
+				                    .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct));
 	}
 
-	public List<SymbolLocalBinding> getLocalBindings() {
-		return bindings.stream()
-		               .filter(e -> e instanceof SymbolLocalBinding)
-		               .map(SymbolLocalBinding.class::cast)
-		               .collect(Collectors.toList());
+	public boolean hasClosureBinding(final SymbolStruct<?> symbolStruct) {
+		return closureBindings.stream()
+		                      .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct));
 	}
 
-	public boolean hasLocalBinding(final SymbolStruct<?> symbolStruct) {
-		return bindings.stream()
-		               .filter(e -> e instanceof SymbolLocalBinding)
-		               .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct));
+	public List<SymbolEnvironmentBinding> getLexicalEnvironmentBindings() {
+		return lexicalEnvironmentBindings;
 	}
 
-	public Optional<SymbolLocalBinding> getLocalBinding(final SymbolStruct<?> symbolStruct) {
-		return bindings.stream()
-		               .filter(e -> e.getSymbolStruct().equals(symbolStruct))
-		               .filter(e -> e instanceof SymbolLocalBinding)
-		               .map(SymbolLocalBinding.class::cast)
-		               .findFirst();
+	public List<SymbolClosureBinding> getClosureBindings() {
+		return closureBindings;
 	}
 
-	public void addLocalBinding(final SymbolLocalBinding symbolBinding) {
-		bindings.add(symbolBinding);
+	public List<SymbolEnvironmentBinding> getDynamicEnvironmentBindings() {
+		return dynamicEnvironmentBindings;
 	}
 
-	public List<SymbolEnvironmentBinding> getEnvironmentBindings() {
-		return bindings.stream()
-		               .filter(e -> e instanceof SymbolEnvironmentBinding)
-		               .map(SymbolEnvironmentBinding.class::cast)
-		               .collect(Collectors.toList());
+	public List<SymbolLocalBinding> getDynamicLocalBindings() {
+		return dynamicLocalBindings;
 	}
 
-	public Optional<SymbolEnvironmentBinding> getEnvironmentBinding(final SymbolStruct<?> symbolStruct) {
-		return bindings.stream()
-		               .filter(e -> e.getSymbolStruct().equals(symbolStruct))
-		               .filter(e -> e instanceof SymbolEnvironmentBinding)
-		               .map(SymbolEnvironmentBinding.class::cast)
-		               .findFirst();
+	public Optional<SymbolEnvironmentBinding> getLexicalEnvironmentBinding(final SymbolStruct<?> symbolStruct) {
+		return lexicalEnvironmentBindings.stream()
+		                                 .filter(e -> e.getSymbolStruct().equals(symbolStruct))
+		                                 .findFirst();
 	}
 
-	public boolean hasEnvironmentBinding(final SymbolStruct<?> symbolStruct) {
-		return bindings.stream()
-		               .filter(e -> e instanceof SymbolEnvironmentBinding)
-		               .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct));
+	public Optional<SymbolClosureBinding> getClosureBinding(final SymbolStruct<?> symbolStruct) {
+		return closureBindings.stream()
+		                      .filter(e -> e.getSymbolStruct().equals(symbolStruct))
+		                      .findFirst();
 	}
 
-	public void addEnvironmentBinding(final SymbolEnvironmentBinding symbolBinding) {
-		bindings.add(symbolBinding);
+	public Optional<SymbolEnvironmentBinding> getDynamicEnvironmentBinding(final SymbolStruct<?> symbolStruct) {
+		return dynamicEnvironmentBindings.stream()
+		                                 .filter(e -> e.getSymbolStruct().equals(symbolStruct))
+		                                 .findFirst();
+	}
+
+	public Optional<SymbolLocalBinding> getDynamicLocalBinding(final SymbolStruct<?> symbolStruct) {
+		return dynamicLocalBindings.stream()
+		                           .filter(e -> e.getSymbolStruct().equals(symbolStruct))
+		                           .findFirst();
+	}
+
+	public void addClosureBinding(final SymbolClosureBinding symbolBinding) {
+		closureBindings.add(symbolBinding);
+	}
+
+	public void addLexicalEnvironmentBinding(final SymbolEnvironmentBinding symbolBinding) {
+		lexicalEnvironmentBindings.add(symbolBinding);
+	}
+
+	public void addDynamicEnvironmentBinding(final SymbolEnvironmentBinding symbolBinding) {
+		dynamicEnvironmentBindings.add(symbolBinding);
+	}
+
+	public void addDynamicLocalBinding(final SymbolLocalBinding symbolBinding) {
+		dynamicLocalBindings.add(symbolBinding);
 	}
 
 	@Override

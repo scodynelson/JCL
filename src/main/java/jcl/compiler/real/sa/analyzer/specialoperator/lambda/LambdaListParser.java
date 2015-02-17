@@ -9,7 +9,6 @@ import jcl.compiler.real.element.specialoperator.declare.SpecialDeclarationEleme
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.EnvironmentStack;
-import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
@@ -148,9 +147,7 @@ final class LambdaListParser {
 			final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 			final boolean isSpecial = isSpecial(declareElement, currentParam);
 
-			// TODO: get rid of scope here
-			final Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
-			final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, scope, T.INSTANCE, NullElement.INSTANCE);
+			final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullElement.INSTANCE);
 			if (isSpecial) {
 				currentEnvironment.addDynamicBinding(binding);
 			} else {
@@ -185,9 +182,7 @@ final class LambdaListParser {
 				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 				final boolean isSpecial = isSpecial(declareElement, currentParam);
 
-				// TODO: get rid of scope here
-				final Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
-				final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, scope, T.INSTANCE, NullElement.INSTANCE);
+				final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullElement.INSTANCE);
 				if (isSpecial) {
 					currentEnvironment.addDynamicBinding(binding);
 				} else {
@@ -224,9 +219,7 @@ final class LambdaListParser {
 				ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 				boolean isSpecial = isSpecial(declareElement, varNameCurrent);
 
-				// TODO: get rid of scope here
-				Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
-				EnvironmentParameterBinding binding = new EnvironmentParameterBinding(varNameCurrent, allocation, scope, T.INSTANCE, parameterValueInitForm);
+				EnvironmentParameterBinding binding = new EnvironmentParameterBinding(varNameCurrent, allocation, T.INSTANCE, parameterValueInitForm);
 				if (isSpecial) {
 					currentEnvironment.addDynamicBinding(binding);
 				} else {
@@ -249,9 +242,7 @@ final class LambdaListParser {
 					allocation = new ParameterAllocation(newBindingsPosition);
 					isSpecial = isSpecial(declareElement, suppliedPCurrent);
 
-					// TODO: get rid of scope here
-					scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
-					binding = new EnvironmentParameterBinding(suppliedPCurrent, allocation, scope, T.INSTANCE, NullElement.INSTANCE);
+					binding = new EnvironmentParameterBinding(suppliedPCurrent, allocation, T.INSTANCE, NullElement.INSTANCE);
 					if (isSpecial) {
 						currentEnvironment.addDynamicBinding(binding);
 					} else {
@@ -296,9 +287,7 @@ final class LambdaListParser {
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 		final boolean isSpecial = isSpecial(declareElement, currentParam);
 
-		// TODO: get rid of scope here
-		final Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
-		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, scope, T.INSTANCE, NullElement.INSTANCE);
+		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullElement.INSTANCE);
 		if (isSpecial) {
 			currentEnvironment.addDynamicBinding(binding);
 		} else {
@@ -335,9 +324,7 @@ final class LambdaListParser {
 				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 				final boolean isSpecial = isSpecial(declareElement, currentParam);
 
-				// TODO: get rid of scope here
-				final Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
-				final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, scope, T.INSTANCE, NullElement.INSTANCE);
+				final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullElement.INSTANCE);
 				if (isSpecial) {
 					currentEnvironment.addDynamicBinding(binding);
 				} else {
@@ -395,9 +382,7 @@ final class LambdaListParser {
 				ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 				boolean isSpecial = isSpecial(declareElement, varNameCurrent);
 
-				// TODO: get rid of scope here
-				Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
-				EnvironmentParameterBinding binding = new EnvironmentParameterBinding(varNameCurrent, allocation, scope, T.INSTANCE, parameterValueInitForm);
+				EnvironmentParameterBinding binding = new EnvironmentParameterBinding(varNameCurrent, allocation, T.INSTANCE, parameterValueInitForm);
 				if (isSpecial) {
 					currentEnvironment.addDynamicBinding(binding);
 				} else {
@@ -420,9 +405,7 @@ final class LambdaListParser {
 					allocation = new ParameterAllocation(newBindingsPosition);
 					isSpecial = isSpecial(declareElement, suppliedPCurrent);
 
-					// TODO: get rid of scope here
-					scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
-					binding = new EnvironmentParameterBinding(suppliedPCurrent, allocation, scope, T.INSTANCE, NullElement.INSTANCE);
+					binding = new EnvironmentParameterBinding(suppliedPCurrent, allocation, T.INSTANCE, NullElement.INSTANCE);
 					if (isSpecial) {
 						currentEnvironment.addDynamicBinding(binding);
 					} else {
@@ -473,9 +456,7 @@ final class LambdaListParser {
 				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 				final boolean isSpecial = isSpecial(declareElement, currentParam);
 
-				// TODO: get rid of scope here
-				final Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
-				final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, scope, T.INSTANCE, NullElement.INSTANCE);
+				final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullElement.INSTANCE);
 				if (isSpecial) {
 					currentEnvironment.addDynamicBinding(binding);
 				} else {
@@ -515,9 +496,7 @@ final class LambdaListParser {
 				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 				final boolean isSpecial = isSpecial(declareElement, varNameCurrent);
 
-				// TODO: get rid of scope here
-				final Scope scope = isSpecial ? Scope.DYNAMIC : Scope.LEXICAL;
-				final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(varNameCurrent, allocation, scope, T.INSTANCE, parameterValueInitForm);
+				final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(varNameCurrent, allocation, T.INSTANCE, parameterValueInitForm);
 				if (isSpecial) {
 					currentEnvironment.addDynamicBinding(binding);
 				} else {

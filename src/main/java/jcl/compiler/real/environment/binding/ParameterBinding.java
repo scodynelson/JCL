@@ -6,9 +6,7 @@ package jcl.compiler.real.environment.binding;
 
 import jcl.LispStruct;
 import jcl.LispType;
-import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
-import jcl.compiler.real.environment.Scope;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -19,9 +17,9 @@ public class ParameterBinding extends Binding<ParameterAllocation> {
 
 	private final LispStruct initForm;
 
-	protected ParameterBinding(final SymbolStruct<?> symbolStruct, final ParameterAllocation allocation, final Scope scope,
-	                        final LispType type, final LispStruct initForm) {
-		super(symbolStruct, allocation, scope, type);
+	protected ParameterBinding(final SymbolStruct<?> symbolStruct, final ParameterAllocation allocation, final LispType type,
+	                           final LispStruct initForm) {
+		super(symbolStruct, allocation, type);
 		this.initForm = initForm;
 	}
 

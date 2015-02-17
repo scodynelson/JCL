@@ -6,17 +6,17 @@ package jcl.compiler.real.environment.binding;
 
 import jcl.LispType;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.allocation.EnvironmentAllocation;
+import jcl.compiler.real.environment.allocation.ClosureAllocation;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class SymbolEnvironmentBinding extends SymbolBinding<EnvironmentAllocation> {
+public class SymbolClosureBinding extends SymbolBinding<ClosureAllocation> {
 
-	private static final long serialVersionUID = 3886048220499523668L;
+	private static final long serialVersionUID = -5306882046173256938L;
 
-	public SymbolEnvironmentBinding(final SymbolStruct<?> symbolStruct, final EnvironmentAllocation allocation, final LispType type,
-	                                final Environment binding) {
+	public SymbolClosureBinding(final SymbolStruct<?> symbolStruct, final ClosureAllocation allocation, final LispType type,
+	                            final Environment binding) {
 		super(symbolStruct, allocation, type, binding);
 	}
 

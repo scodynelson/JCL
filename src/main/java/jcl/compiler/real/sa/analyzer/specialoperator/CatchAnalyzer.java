@@ -29,6 +29,7 @@ public class CatchAnalyzer implements SpecialOperatorAnalyzer {
 		final Element catchTagAnalyzed = analyzer.analyzeForm(catchTag, analysisBuilder);
 
 		final ListStruct forms = input.getRest().getRest();
+
 		final List<LispStruct> formsJavaList = forms.getAsJavaList();
 		final List<Element> analyzedForms =
 				formsJavaList.stream()

@@ -10,7 +10,6 @@ import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LocallyEnvironment;
-import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.environment.allocation.EnvironmentAllocation;
 import jcl.compiler.real.environment.binding.EnvironmentEnvironmentBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
@@ -85,7 +84,7 @@ public class LocallyAnalyzer implements SpecialOperatorAnalyzer {
 		final Environment bindingEnvironment = Environments.getDynamicBindingEnvironment(locallyEnvironment, var);
 		final EnvironmentAllocation allocation = new EnvironmentAllocation(bindingEnvironment);
 
-		final EnvironmentEnvironmentBinding binding = new EnvironmentEnvironmentBinding(var, allocation, Scope.DYNAMIC, T.INSTANCE, bindingEnvironment);
+		final EnvironmentEnvironmentBinding binding = new EnvironmentEnvironmentBinding(var, allocation, T.INSTANCE, bindingEnvironment);
 		locallyEnvironment.addDynamicBinding(binding);
 	}
 }

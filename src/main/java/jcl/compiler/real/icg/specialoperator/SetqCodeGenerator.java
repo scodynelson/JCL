@@ -2,16 +2,12 @@ package jcl.compiler.real.icg.specialoperator;
 
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
-import jcl.compiler.real.environment.Scope;
-import jcl.compiler.real.environment.binding.SymbolLocalBinding;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.SpecialSymbolCodeGenerator;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.SymbolStruct;
-
-import java.util.Optional;
 
 public class SetqCodeGenerator implements CodeGenerator<ListStruct> {
 
@@ -31,16 +27,8 @@ public class SetqCodeGenerator implements CodeGenerator<ListStruct> {
 			// value is now on the stack, we have to determine where to put it
 			// determine if this is a local variable or a special variable
 			final Environment binding = EnvironmentAccessor.getBindingEnvironment(codeGenerator.bindingEnvironment, symbol, true);
-			if (!binding.equals(Environment.NULL)
-					&& (getSymbolScope(codeGenerator.bindingEnvironment, symbol) != Scope.DYNAMIC)) {
-				// so find what local slot it is
-				final int slot = IntermediateCodeGenerator.genLocalSlot(symbol, binding); // drop the %let
-				// if this is the last set, dup the value so it's returned
-				if (restOfList.getRest().equals(NullStruct.INSTANCE)) {
-					codeGenerator.emitter.emitDup(); // leaves the value on the stack
-				}
-				codeGenerator.emitter.emitAstore(slot);
-			} else {
+			final boolean hasDynamicBinding = codeGenerator.bindingEnvironment.getSymbolTable().hasDynamicBinding(symbol);
+			if (binding.equals(Environment.NULL) || hasDynamicBinding) {
 				// now the value is on the stack, is the variable local or special?
 				SpecialSymbolCodeGenerator.INSTANCE.generate(symbol, codeGenerator);
 				codeGenerator.emitter.emitSwap();
@@ -48,16 +36,17 @@ public class SetqCodeGenerator implements CodeGenerator<ListStruct> {
 				if (!restOfList.getRest().equals(NullStruct.INSTANCE)) {
 					codeGenerator.emitter.emitPop(); // pop the value on the stack execpt for the last one
 				}
+			} else {
+				// so find what local slot it is
+				final int slot = IntermediateCodeGenerator.genLocalSlot(symbol, binding); // drop the %let
+				// if this is the last set, dup the value so it's returned
+				if (restOfList.getRest().equals(NullStruct.INSTANCE)) {
+					codeGenerator.emitter.emitDup(); // leaves the value on the stack
+				}
+				codeGenerator.emitter.emitAstore(slot);
 			}
 			// step through the rest pair or done
 			restOfList = restOfList.getRest();
 		}
-	}
-
-	private static Scope getSymbolScope(final Environment currentEnvironment, final SymbolStruct<?> variable) {
-
-		// look up the symbol in the symbol table
-		final Optional<SymbolLocalBinding> symPList = EnvironmentAccessor.getSymbolTableEntry(currentEnvironment, variable);
-		return symPList.get().getScope();
 	}
 }

@@ -9,7 +9,6 @@ import jcl.compiler.real.element.specialoperator.declare.SpecialDeclarationEleme
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.EnvironmentStack;
-import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.environment.SymbolMacroletEnvironment;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
@@ -118,8 +117,7 @@ public class SymbolMacroletAnalyzer implements SpecialOperatorAnalyzer {
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
-		// TODO: get rid of scope here
-		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(var, allocation, Scope.LEXICAL, T.INSTANCE, expansion);
+		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(var, allocation, T.INSTANCE, expansion);
 		symbolMacroletEnvironment.addLexicalBinding(binding);
 
 		final SymbolElement<?> varSE = new SymbolElement<>(var);
@@ -165,5 +163,4 @@ public class SymbolMacroletAnalyzer implements SpecialOperatorAnalyzer {
 			environmentStack.push(currentEnvironment);
 		}
 	}
-
 }

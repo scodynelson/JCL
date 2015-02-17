@@ -5,7 +5,6 @@
 package jcl.compiler.real.environment.binding;
 
 import jcl.LispType;
-import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.environment.allocation.Allocation;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -21,15 +20,11 @@ public abstract class Binding<A extends Allocation> implements Serializable {
 
 	private final A allocation;
 
-	private final Scope scope;
-
 	private final LispType type;
 
-	protected Binding(final SymbolStruct<?> symbolStruct, final A allocation, final Scope scope,
-	                  final LispType type) {
+	protected Binding(final SymbolStruct<?> symbolStruct, final A allocation, final LispType type) {
 		this.symbolStruct = symbolStruct;
 		this.allocation = allocation;
-		this.scope = scope;
 		this.type = type;
 	}
 
@@ -39,10 +34,6 @@ public abstract class Binding<A extends Allocation> implements Serializable {
 
 	public A getAllocation() {
 		return allocation;
-	}
-
-	public Scope getScope() {
-		return scope;
 	}
 
 	public LispType getType() {

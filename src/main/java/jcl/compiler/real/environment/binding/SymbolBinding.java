@@ -6,7 +6,6 @@ package jcl.compiler.real.environment.binding;
 
 import jcl.LispType;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.environment.allocation.Allocation;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -18,9 +17,9 @@ public class SymbolBinding<A extends Allocation> extends Binding<A> {
 
 	private final Environment binding;
 
-	protected SymbolBinding(final SymbolStruct<?> symbolStruct, final A allocation, final Scope scope,
-	                        final LispType type, final Environment binding) {
-		super(symbolStruct, allocation, scope, type);
+	protected SymbolBinding(final SymbolStruct<?> symbolStruct, final A allocation, final LispType type,
+	                        final Environment binding) {
+		super(symbolStruct, allocation, type);
 		this.binding = binding;
 	}
 

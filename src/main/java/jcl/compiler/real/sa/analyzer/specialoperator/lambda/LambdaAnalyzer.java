@@ -10,7 +10,6 @@ import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LambdaEnvironment;
-import jcl.compiler.real.environment.Scope;
 import jcl.compiler.real.environment.allocation.EnvironmentAllocation;
 import jcl.compiler.real.environment.binding.EnvironmentEnvironmentBinding;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
@@ -182,7 +181,7 @@ public class LambdaAnalyzer implements SpecialOperatorAnalyzer {
 		final Environment bindingEnvironment = Environments.getDynamicBindingEnvironment(lambdaEnvironment, var);
 		final EnvironmentAllocation allocation = new EnvironmentAllocation(bindingEnvironment);
 
-		final EnvironmentEnvironmentBinding binding = new EnvironmentEnvironmentBinding(var, allocation, Scope.DYNAMIC, T.INSTANCE, bindingEnvironment);
+		final EnvironmentEnvironmentBinding binding = new EnvironmentEnvironmentBinding(var, allocation, T.INSTANCE, bindingEnvironment);
 		lambdaEnvironment.addDynamicBinding(binding);
 	}
 }

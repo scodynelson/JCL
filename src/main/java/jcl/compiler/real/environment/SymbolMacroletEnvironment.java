@@ -12,7 +12,7 @@ public class SymbolMacroletEnvironment extends Environment {
 	private static final long serialVersionUID = 1037128089833502867L;
 
 	public SymbolMacroletEnvironment(final Environment parent, final int closureDepth) {
-		super(parent, Marker.SYMBOL_MACROLET, closureDepth);
+		super(parent, closureDepth);
 	}
 
 	@Override

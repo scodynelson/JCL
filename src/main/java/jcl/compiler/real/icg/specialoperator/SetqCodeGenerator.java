@@ -1,7 +1,8 @@
 package jcl.compiler.real.icg.specialoperator;
 
+import jcl.compiler.real.environment.BindingEnvironment;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.EnvironmentAccessor;
+import jcl.compiler.real.environment.InnerFunctionEnvironment;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.SpecialSymbolCodeGenerator;
@@ -26,7 +27,7 @@ public class SetqCodeGenerator implements CodeGenerator<ListStruct> {
 			codeGenerator.icgMainLoop(restOfList.getFirst());
 			// value is now on the stack, we have to determine where to put it
 			// determine if this is a local variable or a special variable
-			final Environment binding = EnvironmentAccessor.getBindingEnvironment(codeGenerator.bindingEnvironment, symbol, true);
+			final Environment binding = getBindingEnvironment(codeGenerator.bindingEnvironment, symbol);
 			final boolean hasDynamicBinding = codeGenerator.bindingEnvironment.getSymbolTable().hasDynamicBinding(symbol);
 			if (binding.equals(Environment.NULL) || hasDynamicBinding) {
 				// now the value is on the stack, is the variable local or special?
@@ -48,5 +49,24 @@ public class SetqCodeGenerator implements CodeGenerator<ListStruct> {
 			// step through the rest pair or done
 			restOfList = restOfList.getRest();
 		}
+	}
+
+	private static Environment getBindingEnvironment(final Environment environment, final SymbolStruct<?> variable) {
+
+		Environment currentEnvironment = environment;
+
+		while (!currentEnvironment.equals(Environment.NULL)) {
+
+			if (currentEnvironment.hasLexicalBinding(variable)) {
+
+				if ((currentEnvironment instanceof BindingEnvironment) && !(currentEnvironment instanceof InnerFunctionEnvironment)) {
+					return currentEnvironment;
+				}
+			}
+
+			currentEnvironment = currentEnvironment.getParent();
+		}
+
+		return currentEnvironment;
 	}
 }

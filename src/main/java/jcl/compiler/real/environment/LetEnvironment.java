@@ -12,7 +12,7 @@ public class LetEnvironment extends BindingEnvironment {
 	private static final long serialVersionUID = -6810260653724112416L;
 
 	public LetEnvironment(final Environment parent, final int closureDepth) {
-		super(parent, Marker.LET, closureDepth);
+		super(parent, closureDepth);
 	}
 
 	@Override

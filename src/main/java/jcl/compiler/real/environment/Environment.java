@@ -29,15 +29,12 @@ public class Environment implements LispStruct {
 
 	private final SymbolTable symbolTable = new SymbolTable();
 
-	private final Marker marker;
-
 	private final Closure closure;
 
 	private final List<LoadTimeValue> loadTimeValues = new ArrayList<>();
 
-	protected Environment(final Environment parent, final Marker marker, final int closureDepth) {
+	protected Environment(final Environment parent, final int closureDepth) {
 		this.parent = parent;
-		this.marker = marker;
 		closure = new Closure(closureDepth);
 	}
 
@@ -85,10 +82,6 @@ public class Environment implements LispStruct {
 
 	public SymbolTable getSymbolTable() {
 		return symbolTable;
-	}
-
-	public Marker getMarker() {
-		return marker;
 	}
 
 	public Closure getClosure() {

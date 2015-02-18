@@ -11,8 +11,8 @@ public class BindingEnvironment extends Environment {
 
 	private static final long serialVersionUID = -4289822446049832634L;
 
-	protected BindingEnvironment(final Environment parent, final Marker marker, final int closureDepth) {
-		super(parent, marker, closureDepth);
+	protected BindingEnvironment(final Environment parent, final int closureDepth) {
+		super(parent, closureDepth);
 	}
 
 	@Override

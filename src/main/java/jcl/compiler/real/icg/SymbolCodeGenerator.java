@@ -1,8 +1,9 @@
 package jcl.compiler.real.icg;
 
+import jcl.compiler.real.environment.BindingEnvironment;
 import jcl.compiler.real.environment.Closure;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.EnvironmentAccessor;
+import jcl.compiler.real.environment.InnerFunctionEnvironment;
 import jcl.compiler.real.environment.SymbolTable;
 import jcl.compiler.real.environment.allocation.ClosureAllocation;
 import jcl.compiler.real.environment.binding.ClosureBinding;
@@ -94,13 +95,13 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 					codeGenerator.emitter.emitInvokeinterface("lisp/extensions/type/Closure", "getBindingAt", "(II)", "Ljava/lang/Object;", true);
 				} else {
 					// go find it
-					final Environment binding = EnvironmentAccessor.getBindingEnvironment(codeGenerator.bindingEnvironment, input, true);
+					final Environment binding = getBindingEnvironment(codeGenerator.bindingEnvironment, input);
 					final int slot = IntermediateCodeGenerator.genLocalSlot(input, binding);
 					codeGenerator.emitter.emitAload(slot);
 				}
 			} else {
 				// it's 4
-				final Environment binding = EnvironmentAccessor.getBindingEnvironment(codeGenerator.bindingEnvironment, input, true);
+				final Environment binding = getBindingEnvironment(codeGenerator.bindingEnvironment, input);
 				if (binding.equals(Environment.NULL)) {
 					// This is a truly free variable, check to make sure it's special
 					// if not, issue a warning, then treat it as special
@@ -115,5 +116,24 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 				}
 			}
 		}
+	}
+
+	private static Environment getBindingEnvironment(final Environment environment, final SymbolStruct<?> variable) {
+
+		Environment currentEnvironment = environment;
+
+		while (!currentEnvironment.equals(Environment.NULL)) {
+
+			if (currentEnvironment.hasLexicalBinding(variable)) {
+
+				if ((currentEnvironment instanceof BindingEnvironment) && !(currentEnvironment instanceof InnerFunctionEnvironment)) {
+					return currentEnvironment;
+				}
+			}
+
+			currentEnvironment = currentEnvironment.getParent();
+		}
+
+		return currentEnvironment;
 	}
 }

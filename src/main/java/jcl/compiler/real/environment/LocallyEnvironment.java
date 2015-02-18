@@ -12,7 +12,7 @@ public class LocallyEnvironment extends Environment {
 	private static final long serialVersionUID = 8519831785716648716L;
 
 	public LocallyEnvironment(final Environment parent, final int closureDepth) {
-		super(parent, Marker.LOCALLY, closureDepth);
+		super(parent, closureDepth);
 	}
 
 	@Override

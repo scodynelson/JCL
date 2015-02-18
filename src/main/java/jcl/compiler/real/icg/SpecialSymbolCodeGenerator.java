@@ -1,7 +1,8 @@
 package jcl.compiler.real.icg;
 
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.EnvironmentAccessor;
+import jcl.compiler.real.environment.SymbolTable;
+import jcl.compiler.real.environment.binding.SymbolEnvironmentBinding;
 import jcl.compiler.real.environment.binding.SymbolLocalBinding;
 import jcl.symbols.SymbolStruct;
 
@@ -35,7 +36,7 @@ public class SpecialSymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>
 	private static int getSymbolAllocation(final Environment currentEnvironment, final SymbolStruct<?> variable) {
 
 		// look up the symbol in the symbol table
-		final Optional<SymbolLocalBinding> symPList = EnvironmentAccessor.getSymbolTableEntry(currentEnvironment, variable);
+		final Optional<SymbolLocalBinding> symPList = getSymbolTableEntry(currentEnvironment, variable);
 //        List symPList = getSymbolInTable(currentEnvironmentInner, variable);
 
 //        // (:ALLOCATION (:LOCAL . n) :BINDING :FREE :SCOPE :DYNAMIC :TYPE T)
@@ -52,4 +53,26 @@ public class SpecialSymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>
 		}
 	}
 
+	private static Optional<SymbolLocalBinding> getSymbolTableEntry(final Environment currentEnvironment,
+	                                                               final SymbolStruct<?> variable) {
+
+		// look up the symbol in the symbol table
+		final SymbolTable symTable = currentEnvironment.getSymbolTable();
+
+		Optional<SymbolLocalBinding> symbolLocalBinding = symTable.getDynamicLocalBinding(variable);
+
+		// if the cons starts with LOCAL, we're there
+		// otherwise, we have to go to the actual env of allocation
+		if (!symbolLocalBinding.isPresent()) {
+			final Optional<SymbolEnvironmentBinding> symbolEnvironmentBinding = symTable.getDynamicEnvironmentBinding(variable);
+			if (symbolEnvironmentBinding.isPresent()) {
+				final SymbolEnvironmentBinding realSEB = symbolEnvironmentBinding.get();
+				final SymbolTable sebSymbolTable = realSEB.getBinding().getSymbolTable();
+
+				symbolLocalBinding = sebSymbolTable.getDynamicLocalBinding(variable);
+			}
+		}
+
+		return symbolLocalBinding;
+	}
 }

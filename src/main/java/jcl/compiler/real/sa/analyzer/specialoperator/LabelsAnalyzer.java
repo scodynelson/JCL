@@ -7,10 +7,10 @@ import jcl.compiler.real.element.specialoperator.LabelsElement;
 import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
 import jcl.compiler.real.element.specialoperator.declare.SpecialDeclarationElement;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LabelsEnvironment;
+import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.allocation.EnvironmentAllocation;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.EnvironmentEnvironmentBinding;
@@ -148,7 +148,8 @@ public class LabelsAnalyzer implements SpecialOperatorAnalyzer {
 		final SymbolStruct<?> functionName = getFunctionListParameterName(functionListParameter);
 		final Element functionInitForm = getFunctionParameterInitForm(functionListParameter, analyzer, analysisBuilder, lexicalEnvironmentStack);
 
-		final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(labelsEnvironment);
+		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(labelsEnvironment);
+		final int newBindingsPosition = currentLambda.getNextParameterNumber();
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 		final SymbolElement<?> functionNameSE = new SymbolElement<>(functionName);
@@ -225,7 +226,8 @@ public class LabelsAnalyzer implements SpecialOperatorAnalyzer {
 	                                       final AnalysisBuilder analysisBuilder,
 	                                       final LabelsEnvironment labelsEnvironment) {
 
-		final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(labelsEnvironment);
+		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(labelsEnvironment);
+		final int newBindingsPosition = currentLambda.getNextParameterNumber();
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 		final SymbolStruct<?> var = specialDeclarationElement.getVar().getSymbolStruct();

@@ -7,8 +7,9 @@ import jcl.compiler.real.element.specialoperator.SymbolMacroletElement;
 import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
 import jcl.compiler.real.element.specialoperator.declare.SpecialDeclarationElement;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.EnvironmentStack;
+import jcl.compiler.real.environment.Environments;
+import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.SymbolMacroletEnvironment;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
@@ -113,7 +114,8 @@ public class SymbolMacroletAnalyzer implements SpecialOperatorAnalyzer {
 		final SymbolStruct<?> var = getSymbolMacroletParameterVar(listParameter, environmentStack);
 		final Element expansion = getSymbolMacroletParameterExpansion(listParameter, analyzer, analysisBuilder, environmentStack);
 
-		final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(symbolMacroletEnvironment);
+		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(symbolMacroletEnvironment);
+		final int newBindingsPosition = currentLambda.getNextParameterNumber();
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);

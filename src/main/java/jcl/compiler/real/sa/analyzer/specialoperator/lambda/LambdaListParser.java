@@ -7,8 +7,9 @@ import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
 import jcl.compiler.real.element.specialoperator.declare.SpecialDeclarationElement;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.EnvironmentStack;
+import jcl.compiler.real.environment.Environments;
+import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
@@ -141,7 +142,8 @@ final class LambdaListParser {
 
 			currentElement = iterator.next();
 
-			final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+			final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(currentEnvironment);
+			final int newBindingsPosition = currentLambda.getNextParameterNumber();
 			analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 			final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
@@ -176,7 +178,8 @@ final class LambdaListParser {
 				final OptionalBinding optionalBinding = new OptionalBinding(currentParam, optionalAllocation, null, null);
 				optionalBindings.add(optionalBinding);
 
-				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+				final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(currentEnvironment);
+				final int newBindingsPosition = currentLambda.getNextParameterNumber();
 				analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
@@ -213,7 +216,8 @@ final class LambdaListParser {
 				final Element parameterValueInitForm = semanticAnalyzer.analyzeForm(initForm, analysisBuilder);
 				environmentStack.push(currentEnvironment1);
 
-				int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+				LambdaEnvironment currentLambda = Environments.getEnclosingLambda(currentEnvironment);
+				int newBindingsPosition = currentLambda.getNextParameterNumber();
 				analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 				ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
@@ -236,7 +240,8 @@ final class LambdaListParser {
 					final ParameterAllocation suppliedPAllocation = new ParameterAllocation(currentPosition++);
 					suppliedPBinding = new SuppliedPBinding(suppliedPCurrent, suppliedPAllocation);
 
-					newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+					currentLambda = Environments.getEnclosingLambda(currentEnvironment);
+					newBindingsPosition = currentLambda.getNextParameterNumber();
 					analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 					allocation = new ParameterAllocation(newBindingsPosition);
@@ -281,7 +286,8 @@ final class LambdaListParser {
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment currentEnvironment = environmentStack.peek();
 
-		final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(currentEnvironment);
+		final int newBindingsPosition = currentLambda.getNextParameterNumber();
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
@@ -318,7 +324,8 @@ final class LambdaListParser {
 				final KeyBinding keyBinding = new KeyBinding(currentParam, keyAllocation, null, keyName, null);
 				keyBindings.add(keyBinding);
 
-				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+				final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(currentEnvironment);
+				final int newBindingsPosition = currentLambda.getNextParameterNumber();
 				analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
@@ -376,7 +383,8 @@ final class LambdaListParser {
 				final Element parameterValueInitForm = semanticAnalyzer.analyzeForm(initForm, analysisBuilder);
 				environmentStack.push(currentEnvironment1);
 
-				int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+				LambdaEnvironment currentLambda = Environments.getEnclosingLambda(currentEnvironment);
+				int newBindingsPosition = currentLambda.getNextParameterNumber();
 				analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 				ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
@@ -399,7 +407,8 @@ final class LambdaListParser {
 					final ParameterAllocation suppliedPAllocation = new ParameterAllocation(currentPosition++);
 					suppliedPBinding = new SuppliedPBinding(suppliedPCurrent, suppliedPAllocation);
 
-					newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+					currentLambda = Environments.getEnclosingLambda(currentEnvironment);
+					newBindingsPosition = currentLambda.getNextParameterNumber();
 					analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 					allocation = new ParameterAllocation(newBindingsPosition);
@@ -450,7 +459,8 @@ final class LambdaListParser {
 				final AuxBinding auxBinding = new AuxBinding(currentParam, auxAllocation, null);
 				auxBindings.add(auxBinding);
 
-				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+				final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(currentEnvironment);
+				final int newBindingsPosition = currentLambda.getNextParameterNumber();
 				analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
@@ -490,7 +500,8 @@ final class LambdaListParser {
 				final Element parameterValueInitForm = semanticAnalyzer.analyzeForm(initForm, analysisBuilder);
 				environmentStack.push(currentEnvironment1);
 
-				final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+				final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(currentEnvironment);
+				final int newBindingsPosition = currentLambda.getNextParameterNumber();
 				analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);

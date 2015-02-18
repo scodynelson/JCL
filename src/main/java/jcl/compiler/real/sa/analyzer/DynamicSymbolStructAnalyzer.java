@@ -2,7 +2,6 @@ package jcl.compiler.real.sa.analyzer;
 
 import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LambdaEnvironment;
@@ -39,7 +38,8 @@ public class DynamicSymbolStructAnalyzer extends SymbolStructAnalyzer {
 		final LambdaEnvironment currentEnclosingLambda = Environments.getEnclosingLambda(currentEnvironment);
 
 		if (currentEnvironment.equals(currentEnclosingLambda)) {
-			final int position = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+			final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(currentEnvironment);
+			final int position = currentLambda.getNextParameterNumber();
 			final LocalAllocation allocation = new LocalAllocation(position);
 
 			final SymbolLocalBinding symbolBinding
@@ -64,7 +64,8 @@ public class DynamicSymbolStructAnalyzer extends SymbolStructAnalyzer {
 		}
 
 		// Add Binding to SymbolTable in the Enclosing Lambda.
-		final int position = EnvironmentAccessor.getNextAvailableParameterNumber(currentEnvironment);
+		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(currentEnvironment);
+		final int position = currentLambda.getNextParameterNumber();
 		final LocalAllocation allocation = new LocalAllocation(position);
 
 		final SymbolLocalBinding newSymbolBinding

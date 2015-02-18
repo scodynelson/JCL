@@ -8,9 +8,9 @@ import jcl.compiler.real.element.specialoperator.LetElement;
 import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
 import jcl.compiler.real.element.specialoperator.declare.SpecialDeclarationElement;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
+import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.LetEnvironment;
 import jcl.compiler.real.environment.allocation.EnvironmentAllocation;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
@@ -118,7 +118,8 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 			initForm = NullElement.INSTANCE;
 		}
 
-		final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(letEnvironment);
+		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(letEnvironment);
+		final int newBindingsPosition = currentLambda.getNextParameterNumber();
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 		final SymbolElement<?> varSE = new SymbolElement<>(var);
@@ -184,7 +185,8 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 	                                              final AnalysisBuilder analysisBuilder,
 	                                              final LetEnvironment letEnvironment) {
 
-		final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(letEnvironment);
+		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(letEnvironment);
+		final int newBindingsPosition = currentLambda.getNextParameterNumber();
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 		final SymbolStruct<?> var = specialDeclarationElement.getVar().getSymbolStruct();

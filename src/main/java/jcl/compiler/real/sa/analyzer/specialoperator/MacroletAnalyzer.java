@@ -7,9 +7,9 @@ import jcl.compiler.real.element.specialoperator.MacroletElement;
 import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
 import jcl.compiler.real.element.specialoperator.declare.SpecialDeclarationElement;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
+import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.MacroletEnvironment;
 import jcl.compiler.real.environment.allocation.EnvironmentAllocation;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
@@ -148,7 +148,8 @@ public class MacroletAnalyzer implements SpecialOperatorAnalyzer {
 		final SymbolStruct<?> functionName = getFunctionListParameterName(functionListParameter);
 		final Element functionInitForm = getFunctionParameterInitForm(functionListParameter, analyzer, analysisBuilder, lexicalEnvironmentStack);
 
-		final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(macroletEnvironment);
+		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(macroletEnvironment);
+		final int newBindingsPosition = currentLambda.getNextParameterNumber();
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 		final SymbolElement<?> functionNameSE = new SymbolElement<>(functionName);
@@ -225,7 +226,8 @@ public class MacroletAnalyzer implements SpecialOperatorAnalyzer {
 	                                       final AnalysisBuilder analysisBuilder,
 	                                       final MacroletEnvironment macroletEnvironment) {
 
-		final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(macroletEnvironment);
+		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(macroletEnvironment);
+		final int newBindingsPosition = currentLambda.getNextParameterNumber();
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 		final SymbolStruct<?> var = specialDeclarationElement.getVar().getSymbolStruct();

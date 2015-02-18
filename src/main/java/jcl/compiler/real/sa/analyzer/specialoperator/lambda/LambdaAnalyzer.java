@@ -6,7 +6,6 @@ import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
 import jcl.compiler.real.element.specialoperator.declare.SpecialDeclarationElement;
 import jcl.compiler.real.element.specialoperator.lambda.LambdaElement;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.EnvironmentAccessor;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LambdaEnvironment;
@@ -173,7 +172,8 @@ public class LambdaAnalyzer implements SpecialOperatorAnalyzer {
 	                                              final AnalysisBuilder analysisBuilder,
 	                                              final LambdaEnvironment lambdaEnvironment) {
 
-		final int newBindingsPosition = EnvironmentAccessor.getNextAvailableParameterNumber(lambdaEnvironment);
+		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(lambdaEnvironment);
+		final int newBindingsPosition = currentLambda.getNextParameterNumber();
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 		final SymbolStruct<?> var = specialDeclarationElement.getVar().getSymbolStruct();

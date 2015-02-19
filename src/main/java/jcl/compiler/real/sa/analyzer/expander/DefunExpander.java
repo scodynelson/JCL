@@ -1,4 +1,4 @@
-package jcl.compiler.old.expander;
+package jcl.compiler.real.sa.analyzer.expander;
 
 import jcl.LispStruct;
 import jcl.lists.ConsStruct;
@@ -17,28 +17,17 @@ import java.util.List;
  * The second argument is the environment.
  * <p>
  * If DefunExpander receives the list (defun foo (x) (+ x 7)),
- * it will return (PROGN (SETSYMBOLFUNCTION (QUOTE FOO) (LAMBDA (X) (+ X 7))) (QUOTE FOO))
+ * it will return (PROGN (SET-SYMBOL-FUNCTION (QUOTE FOO) (LAMBDA (X) (+ X 7))) (QUOTE FOO))
  * <p>
  * The call to DefunExpander would look like this : (%DEFUN-EXPANDER (LIST 'DEFUN 'FOO '(X) '(+ X 7)) '(ENV))
  */
 public class DefunExpander implements MacroFunctionExpander {
 
-	public static final DefunExpander FUNCTION = new DefunExpander();
-
 	//build necessary symbols for defun : SET-SYMBOL-FUNCTION, QUOTE, LAMBDA.
-	protected SymbolStruct<?> quoteSymbol = SpecialOperator.QUOTE;
-	protected SymbolStruct<?> setSymbolFunction = GlobalPackageStruct.COMMON_LISP.intern("SET-SYMBOL-FUNCTION").getSymbolStruct();
-	protected SymbolStruct<?> lambdaSymbol = SpecialOperator.LAMBDA;
-	protected SymbolStruct<?> prognSymbol = SpecialOperator.PROGN;
-	protected SymbolStruct<?> blockSymbol = SpecialOperator.BLOCK;
-	protected SymbolStruct<?> lispName = Declaration.LISP_NAME;
-	protected SymbolStruct<?> setFunctionField = GlobalPackageStruct.SYSTEM.intern("SET-FUNCTION-FIELD").getSymbolStruct();
 	// place to hang onto declarations and a doc string
 	private ListStruct declsAndDoc = NullStruct.INSTANCE;
-	private SymbolStruct<?> declareSymbol = SpecialOperator.DECLARE;
 
 	// expands the defun macro
-	@SuppressWarnings("unchecked")
 	public LispStruct expand(Object form, Object env) {
 		ListStruct listToExpand = (ListStruct) form;
 		// (defun foo (args) (decls or doc...) theBody)
@@ -50,8 +39,8 @@ public class DefunExpander implements MacroFunctionExpander {
 		SymbolStruct<?> functionName = (SymbolStruct) listCdr.getFirst();
 
 		// create the function name declaration
-		ListStruct nameDeclareClause = ListStruct.buildProperList(lispName, functionName);
-		ListStruct nameDeclaration = ListStruct.buildProperList(declareSymbol, nameDeclareClause);
+		ListStruct nameDeclareClause = ListStruct.buildProperList(Declaration.LISP_NAME, functionName);
+		ListStruct nameDeclaration = ListStruct.buildProperList(SpecialOperator.DECLARE, nameDeclareClause);
 
 		//set parameterList to the list of parameters passed in the list.
 		listCdr = listCdr.getRest();
@@ -66,7 +55,7 @@ public class DefunExpander implements MacroFunctionExpander {
 
 		//build a list containing the lambda symbol, the function parameters, and the function body
 		ListStruct result = new ConsStruct(functionName, functionBody);
-		result = new ConsStruct(blockSymbol, result);
+		result = new ConsStruct(SpecialOperator.BLOCK, result);
 		result = new ConsStruct(result, NullStruct.INSTANCE);
 		result = new ConsStruct(nameDeclaration, result);
 		if (declsAndDoc != NullStruct.INSTANCE) {
@@ -77,23 +66,25 @@ public class DefunExpander implements MacroFunctionExpander {
 		result = new ConsStruct(parameterList, result);
 		result = setTypeSymbol(result);
 
-		ListStruct quotedFunctionName = ListStruct.buildProperList(quoteSymbol, functionName);
+		ListStruct quotedFunctionName = ListStruct.buildProperList(SpecialOperator.QUOTE, functionName);
 
 		result = ListStruct.buildProperList(quotedFunctionName, result);
+		final SymbolStruct<?> setSymbolFunction = GlobalPackageStruct.COMMON_LISP.intern("SET-SYMBOL-FUNCTION").getSymbolStruct();
 		result = new ConsStruct(setSymbolFunction, result);
 
+		final SymbolStruct<?> setFunctionField = GlobalPackageStruct.SYSTEM.intern("SET-FUNCTION-FIELD").getSymbolStruct();
 		ListStruct setField = ListStruct.buildProperList(setFunctionField, quotedFunctionName);
 
 		// null out the extra list so that it's garbage
 		declsAndDoc = NullStruct.INSTANCE;
 
-		ListStruct theList = ListStruct.buildProperList(prognSymbol, result, setField, quotedFunctionName);
+		ListStruct theList = ListStruct.buildProperList(SpecialOperator.PROGN, result, setField, quotedFunctionName);
 
 		return theList;
 	}
 
 	protected ListStruct setTypeSymbol(ListStruct mostlyLambda) {
-		return new ConsStruct(lambdaSymbol, mostlyLambda);
+		return new ConsStruct(SpecialOperator.LAMBDA, mostlyLambda);
 	}
 
 	/**
@@ -105,7 +96,7 @@ public class DefunExpander implements MacroFunctionExpander {
 	private ListStruct processDeclsOrString(ListStruct maybeDeclsBody) {
 		LispStruct firstDecls = maybeDeclsBody.getFirst();
 
-		if ((firstDecls instanceof ListStruct) && (((ListStruct) firstDecls).getFirst() == declareSymbol)) {
+		if ((firstDecls instanceof ListStruct) && (((ListStruct) firstDecls).getFirst() == SpecialOperator.DECLARE)) {
 			declsAndDoc = new ConsStruct(firstDecls, declsAndDoc);
 			return processDeclsOrString(maybeDeclsBody.getRest());
 
@@ -132,11 +123,46 @@ public class DefunExpander implements MacroFunctionExpander {
 	private ListStruct processDeclsOnly(ListStruct maybeDeclsBody) {
 		LispStruct firstDecls = maybeDeclsBody.getFirst();
 
-		if ((firstDecls instanceof ListStruct) && (((ListStruct) firstDecls).getFirst() == declareSymbol)) {
+		if ((firstDecls instanceof ListStruct) && (((ListStruct) firstDecls).getFirst() == SpecialOperator.DECLARE)) {
 			declsAndDoc = new ConsStruct(firstDecls, declsAndDoc);
 			return processDeclsOnly(maybeDeclsBody.getRest());
 		} else {
 			return maybeDeclsBody;
 		}
 	}
+
+	/*
+(defmacro1 defun1 (fn-name parameter-list &body full-body)
+  (declare (system::%java-class-name "lisp.common.function.Defun"))
+    (if (symbolp fn-name)
+      (let* ((parsed-lambda-list (parse-ordinary-lambda-list parameter-list))
+             (body (decls-and-strings full-body))
+             (decls-etc (snip-full-body full-body body)))
+        (let ((arglist-munge (compiler::make-args-for-apply parsed-lambda-list)))
+          `(progn
+             (common-lisp::set-symbol-function
+               (quote ,fn-name)
+               (common-lisp:lambda (,@parameter-list)
+                 (declare (system::%lisp-name ,fn-name)) ,@decls-etc
+                 (block ,fn-name ,@body)))
+             (system::set-function-field (quote ,fn-name))
+             ;; take the parameter list, use it to create a fn that checks the args
+             ;; it's usually for APPLY
+             (system::%set-function-arglist-munger (symbol-function ',fn-name) ,arglist-munge)
+             (quote ,fn-name))))
+      (if (and (listp fn-name) (eq (car fn-name) 'common-lisp::setf))
+        (let* ((parsed-lambda-list (parse-defsetf-lambda-list parameter-list))
+               (body (decls-and-strings full-body))
+               (decls-etc (snip-full-body full-body body))
+               (parse-fn-name (cadr fn-name)))
+          ;; now we have to put this lambda into the function's setf slot
+          `(progn
+             (system::%set-setf-function
+               (quote ,parse-fn-name)
+               (common-lisp:lambda (,@parameter-list)
+                 (declare (system::%lisp-name ,(gensym parse-fn-name))) ,@decls-etc
+                 (block ,parse-fn-name ,@body)))
+             (quote ,fn-name)))
+        (error "Improper function name, ~S, to DEFUN: " fn-name))))
+	 */
 }

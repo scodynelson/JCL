@@ -1,7 +1,7 @@
 package jcl.compiler.old.functions;
 
 import jcl.LispStruct;
-import jcl.compiler.old.expander.MacroFunctionExpander;
+import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
 

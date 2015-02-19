@@ -1,6 +1,6 @@
 package jcl.compiler.real.icg;
 
-import jcl.compiler.old.expander.MacroFunctionExpander;
+import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.Label;

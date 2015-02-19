@@ -6,6 +6,8 @@ import jcl.arrays.StringStruct;
 import jcl.characters.CharacterStruct;
 import jcl.classes.StructureClassStruct;
 import jcl.classes.StructureObjectStruct;
+import jcl.compiler.real.sa.analyzer.expander.MacroExpandFunction;
+import jcl.compiler.real.sa.analyzer.expander.MacroExpandReturn;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;

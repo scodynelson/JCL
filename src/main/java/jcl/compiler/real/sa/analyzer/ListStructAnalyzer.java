@@ -1,8 +1,8 @@
 package jcl.compiler.real.sa.analyzer;
 
 import jcl.LispStruct;
-import jcl.compiler.old.functions.MacroExpandFunction;
-import jcl.compiler.old.functions.MacroExpandReturn;
+import jcl.compiler.real.sa.analyzer.expander.MacroExpandFunction;
+import jcl.compiler.real.sa.analyzer.expander.MacroExpandReturn;
 import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.FunctionCallElement;
 import jcl.compiler.real.element.LambdaFunctionCallElement;

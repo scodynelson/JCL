@@ -18,7 +18,6 @@ import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindin
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.analyzer.ListStructAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.SpecialOperatorAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyWithDeclaresAndDocStringAnalyzer;
@@ -42,9 +41,6 @@ public class LambdaAnalyzer implements SpecialOperatorAnalyzer {
 
 	@Autowired
 	private BodyWithDeclaresAndDocStringAnalyzer bodyWithDeclaresAndDocStringAnalyzer;
-
-	@Autowired
-	private ListStructAnalyzer listStructAnalyzer;
 
 	@Override
 	public LambdaElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
@@ -88,7 +84,7 @@ public class LambdaAnalyzer implements SpecialOperatorAnalyzer {
 
 			final ListStruct newLambdaBodyListStruct = ListStruct.buildProperList(newStartingLambdaBody);
 
-			final Element analyzedBodyForms = listStructAnalyzer.analyze(analyzer, newLambdaBodyListStruct, analysisBuilder);
+			final Element analyzedBodyForms = analyzer.analyzeForm(newLambdaBodyListStruct, analysisBuilder);
 			return new LambdaElement(parsedLambdaList, bodyProcessingResult.getDocString(), analyzedBodyForms, lambdaEnvironment);
 		} finally {
 			analysisBuilder.setClosureDepth(tempClosureDepth);

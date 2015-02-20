@@ -7,6 +7,8 @@ import jcl.compiler.real.element.specialoperator.LetElement;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -55,5 +57,10 @@ public class LetStarAnalyzer implements SpecialOperatorAnalyzer {
 		}
 
 		return letAnalyzer.analyze(analyzer, body, analysisBuilder);
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

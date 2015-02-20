@@ -9,7 +9,7 @@ import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.analyzer.DynamicSymbolStructAnalyzer;
+import jcl.compiler.real.sa.analyzer.DynamicSymbolAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
@@ -29,7 +29,7 @@ public class ProgvAnalyzer implements SpecialOperatorAnalyzer {
 	private static final long serialVersionUID = 2755221428467421207L;
 
 	@Autowired
-	private DynamicSymbolStructAnalyzer dynamicSymbolStructAnalyzer;
+	private DynamicSymbolAnalyzer dynamicSymbolAnalyzer;
 
 	@Override
 	public ProgvElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
@@ -107,7 +107,7 @@ public class ProgvAnalyzer implements SpecialOperatorAnalyzer {
 				val = actualValsJavaList.get(i);
 			}
 
-			final SymbolElement<?> varSE = dynamicSymbolStructAnalyzer.analyze(analyzer, var, analysisBuilder);
+			final SymbolElement<?> varSE = dynamicSymbolAnalyzer.analyze(analyzer, var, analysisBuilder);
 
 			final Element analyzedVal = analyzer.analyzeForm(val, analysisBuilder);
 			final ProgvElement.ProgvVar progvVar = new ProgvElement.ProgvVar(varSE, analyzedVal);

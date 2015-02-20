@@ -14,6 +14,8 @@ import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.symbols.SymbolStruct;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -115,6 +117,11 @@ public class TagbodyAnalyzer implements SpecialOperatorAnalyzer {
 		public Set<Characteristics> characteristics() {
 			return Collections.unmodifiableSet(EnumSet.of(Collector.Characteristics.UNORDERED, Collector.Characteristics.IDENTITY_FINISH));
 		}
+
+		@Override
+		public String toString() {
+			return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+		}
 	}
 
 	private static final class TagbodyCollector implements Collector<LispStruct, Map<Element, List<Element>>, Map<Element, List<Element>>> {
@@ -192,6 +199,11 @@ public class TagbodyAnalyzer implements SpecialOperatorAnalyzer {
 		@Override
 		public Set<Characteristics> characteristics() {
 			return Collections.unmodifiableSet(EnumSet.of(Collector.Characteristics.IDENTITY_FINISH));
+		}
+
+		@Override
+		public String toString() {
+			return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 		}
 	}
 }

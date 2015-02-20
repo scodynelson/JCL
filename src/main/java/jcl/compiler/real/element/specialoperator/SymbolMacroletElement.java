@@ -7,6 +7,8 @@ package jcl.compiler.real.element.specialoperator;
 import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.environment.SymbolMacroletEnvironment;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.io.Serializable;
 import java.util.List;
@@ -39,6 +41,11 @@ public class SymbolMacroletElement implements Element {
 		return symbolMacroletEnvironment;
 	}
 
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+	}
+
 	public static class SymbolMacroletElementVar implements Serializable {
 
 		private static final long serialVersionUID = -601687250765470819L;
@@ -58,6 +65,11 @@ public class SymbolMacroletElement implements Element {
 
 		public Element getExpansion() {
 			return expansion;
+		}
+
+		@Override
+		public String toString() {
+			return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 		}
 	}
 }

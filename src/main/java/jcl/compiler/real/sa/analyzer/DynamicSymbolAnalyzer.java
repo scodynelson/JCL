@@ -1,5 +1,6 @@
 package jcl.compiler.real.sa.analyzer;
 
+import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
@@ -11,13 +12,14 @@ import jcl.compiler.real.environment.allocation.LocalAllocation;
 import jcl.compiler.real.environment.binding.SymbolEnvironmentBinding;
 import jcl.compiler.real.environment.binding.SymbolLocalBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
+import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.symbols.SymbolStruct;
 import jcl.types.T;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DynamicSymbolStructAnalyzer extends SymbolStructAnalyzer {
+public class DynamicSymbolAnalyzer implements Analyzer<Element, SymbolStruct<?>> {
 
 	private static final long serialVersionUID = 4236867001501188408L;
 

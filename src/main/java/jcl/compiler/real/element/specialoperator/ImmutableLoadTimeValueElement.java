@@ -4,6 +4,9 @@
 
 package jcl.compiler.real.element.specialoperator;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import java.util.UUID;
 
 public class ImmutableLoadTimeValueElement implements LoadTimeValueElement {
@@ -18,5 +21,10 @@ public class ImmutableLoadTimeValueElement implements LoadTimeValueElement {
 
 	public UUID getUniqueLTVId() {
 		return uniqueLTVId;
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

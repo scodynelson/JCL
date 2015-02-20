@@ -10,6 +10,8 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.symbols.SymbolStruct;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -91,5 +93,10 @@ public class AnalysisBuilder implements Serializable {
 
 	public void setTopLevelMode(final boolean topLevelMode) {
 		this.topLevelMode = topLevelMode;
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

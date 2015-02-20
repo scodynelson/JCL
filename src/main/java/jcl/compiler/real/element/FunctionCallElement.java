@@ -4,6 +4,9 @@
 
 package jcl.compiler.real.element;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import java.util.List;
 
 public class FunctionCallElement implements Element {
@@ -31,5 +34,10 @@ public class FunctionCallElement implements Element {
 
 	public List<Element> getArguments() {
 		return arguments;
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

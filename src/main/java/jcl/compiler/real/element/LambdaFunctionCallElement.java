@@ -5,6 +5,8 @@
 package jcl.compiler.real.element;
 
 import jcl.compiler.real.element.specialoperator.lambda.LambdaElement;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.List;
 
@@ -26,5 +28,10 @@ public class LambdaFunctionCallElement implements Element {
 
 	public List<Element> getArguments() {
 		return arguments;
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

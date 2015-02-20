@@ -6,6 +6,8 @@ package jcl.compiler.real.element.specialoperator;
 
 import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.SymbolElement;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.io.Serializable;
 import java.util.List;
@@ -22,6 +24,11 @@ public class SetqElement implements Element {
 
 	public List<SetqPair> getSetqPairs() {
 		return setqPairs;
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 
 	public static class SetqPair implements Serializable {
@@ -42,6 +49,11 @@ public class SetqElement implements Element {
 
 		public Element getForm() {
 			return form;
+		}
+
+		@Override
+		public String toString() {
+			return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 		}
 	}
 }

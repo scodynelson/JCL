@@ -5,6 +5,8 @@
 package jcl.compiler.real.element;
 
 import jcl.numbers.FloatStruct;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class FloatElement implements Element {
 
@@ -18,5 +20,10 @@ public class FloatElement implements Element {
 
 	public FloatStruct getFloatStruct() {
 		return floatStruct;
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

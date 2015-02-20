@@ -11,12 +11,14 @@ import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.analyzer.LexicalSymbolStructAnalyzer;
+import jcl.compiler.real.sa.analyzer.LexicalSymbolAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.lambda.LambdaAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +28,7 @@ public class FunctionAnalyzer implements SpecialOperatorAnalyzer {
 	private static final long serialVersionUID = -8290125563768560922L;
 
 	@Autowired
-	private LexicalSymbolStructAnalyzer lexicalSymbolStructAnalyzer;
+	private LexicalSymbolAnalyzer lexicalSymbolAnalyzer;
 
 	@Autowired
 	private LambdaAnalyzer lambdaAnalyzer;
@@ -61,7 +63,7 @@ public class FunctionAnalyzer implements SpecialOperatorAnalyzer {
 
 		final SymbolElement<?> functionSymbolSE;
 		if (hasNoFunctionSymbolBinding) {
-			functionSymbolSE = lexicalSymbolStructAnalyzer.analyze(analyzer, functionSymbol, analysisBuilder);
+			functionSymbolSE = lexicalSymbolAnalyzer.analyze(analyzer, functionSymbol, analysisBuilder);
 		} else {
 			functionSymbolSE = new SymbolElement<>(functionSymbol);
 		}
@@ -79,5 +81,10 @@ public class FunctionAnalyzer implements SpecialOperatorAnalyzer {
 
 		final LambdaElement lambdaElement = lambdaAnalyzer.analyze(analyzer, functionList, analysisBuilder);
 		return new LambdaFunctionElement(lambdaElement);
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

@@ -5,31 +5,20 @@
 package jcl.compiler.real.sa;
 
 import jcl.LispStruct;
-import jcl.characters.CharacterStruct;
-import jcl.compiler.real.element.CharacterElement;
 import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.FloatElement;
-import jcl.compiler.real.element.IntegerElement;
-import jcl.compiler.real.element.NullElement;
-import jcl.compiler.real.element.RatioElement;
-import jcl.compiler.real.sa.analyzer.LexicalSymbolStructAnalyzer;
-import jcl.compiler.real.sa.analyzer.ListStructAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
-import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
-import jcl.numbers.FloatStruct;
-import jcl.numbers.IntegerStruct;
-import jcl.numbers.RatioStruct;
 import jcl.packages.PackageStruct;
-import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
+import java.util.Map;
 import java.util.Set;
 
 @Component
@@ -40,11 +29,8 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SemanticAnalyzerImpl.class);
 
-	@Autowired
-	private ListStructAnalyzer listStructAnalyzer;
-
-	@Autowired
-	private LexicalSymbolStructAnalyzer lexicalSymbolStructAnalyzer;
+	@Resource
+	private Map<Class<? extends LispStruct>, Analyzer<? extends Element, LispStruct>> elementAnalyzerStrategies;
 
 	@Override
 	public Element analyzeForm(final LispStruct form) {
@@ -75,22 +61,16 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 	@Override
 	public Element analyzeForm(final LispStruct form, final AnalysisBuilder analysisBuilder) {
 
-		if (NullStruct.INSTANCE.equals(form) || NILStruct.INSTANCE.equals(form)) {
-			return NullElement.INSTANCE;
-		} else if (form instanceof CharacterStruct) {
-			return new CharacterElement((CharacterStruct) form);
-		} else if (form instanceof IntegerStruct) {
-			return new IntegerElement((IntegerStruct) form);
-		} else if (form instanceof FloatStruct) {
-			return new FloatElement((FloatStruct) form);
-		} else if (form instanceof RatioStruct) {
-			return new RatioElement((RatioStruct) form);
-		} else if (form instanceof SymbolStruct) {
-			return lexicalSymbolStructAnalyzer.analyze(this, (SymbolStruct<?>) form, analysisBuilder);
-		} else if (form instanceof ListStruct) {
-			return listStructAnalyzer.analyze(this, (ListStruct) form, analysisBuilder);
-		} else {
+		final Analyzer<? extends Element, LispStruct> functionCallAnalyzer = elementAnalyzerStrategies.get(form.getClass());
+		if (functionCallAnalyzer == null) {
 			throw new ProgramErrorException("Semantic Analyzer: Unsupported object type cannot be analyzed: " + form);
 		}
+
+		return functionCallAnalyzer.analyze(this, form, analysisBuilder);
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

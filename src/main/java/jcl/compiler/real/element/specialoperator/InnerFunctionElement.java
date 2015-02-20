@@ -8,6 +8,8 @@ import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.element.specialoperator.InnerFunctionElement.InnerFunctionVar;
 import jcl.compiler.real.environment.Environment;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.io.Serializable;
 import java.util.List;
@@ -40,6 +42,11 @@ public abstract class InnerFunctionElement<E extends Environment, V extends Inne
 		return lexicalEnvironment;
 	}
 
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+	}
+
 	public static class InnerFunctionVar implements Serializable {
 
 		private static final long serialVersionUID = 891453745075246590L;
@@ -59,6 +66,11 @@ public abstract class InnerFunctionElement<E extends Environment, V extends Inne
 
 		public Element getInitForm() {
 			return initForm;
+		}
+
+		@Override
+		public String toString() {
+			return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 		}
 	}
 }

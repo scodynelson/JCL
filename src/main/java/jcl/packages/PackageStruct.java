@@ -600,6 +600,7 @@ public class PackageStruct extends BuiltInClassStruct {
 
 	@Override
 	public String toString() {
-		return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).setExcludeFieldNames("externalSymbols", "internalSymbols", "shadowingSymbols").toString();
+		return name;
+//		return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).setExcludeFieldNames("useList", "usedByList", "externalSymbols", "internalSymbols", "shadowingSymbols").toString();
 	}
 }

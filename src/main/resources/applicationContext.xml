@@ -9,6 +9,38 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
+	<util:map id="elementAnalyzerStrategies"
+	          key-type="java.lang.Class"
+	          value-type="jcl.compiler.real.sa.Analyzer">
+
+		<entry key="jcl.symbols.NILStruct" value-ref="NILAnalyzer"/>
+		<entry key="jcl.lists.NullStruct" value-ref="nullAnalyzer"/>
+		<entry key="jcl.characters.CharacterStruct" value-ref="characterAnalyzer"/>
+		<entry key="jcl.numbers.IntegerStruct" value-ref="integerAnalyzer"/>
+		<entry key="jcl.numbers.FloatStruct" value-ref="floatAnalyzer"/>
+		<entry key="jcl.numbers.RatioStruct" value-ref="ratioAnalyzer"/>
+		<entry key="jcl.symbols.SymbolStruct" value-ref="lexicalSymbolAnalyzer"/>
+		<entry key="jcl.lists.ConsStruct" value-ref="consAnalyzer"/>
+	</util:map>
+
+	<util:map id="functionCallAnalyzerStrategies"
+	          key-type="java.lang.Class"
+	          value-type="jcl.compiler.real.sa.Analyzer">
+
+		<entry key="jcl.symbols.SpecialOperator" value-ref="functionCallExpanderAnalyzer"/>
+		<entry key="jcl.symbols.SymbolStruct" value-ref="functionCallExpanderAnalyzer"/>
+		<entry key="jcl.lists.NullStruct" value-ref="nullAnalyzer"/>
+		<entry key="jcl.lists.ListStruct" value-ref="lambdaFunctionCallAnalyzer"/>
+	</util:map>
+
+	<util:map id="expandedFunctionCallAnalyzerStrategies"
+	          key-type="java.lang.Class"
+	          value-type="jcl.compiler.real.sa.analyzer.FunctionCallAnalyzer">
+
+		<entry key="jcl.symbols.SpecialOperator" value-ref="specialOperatorFunctionCallAnalyzer"/>
+		<entry key="jcl.symbols.SymbolStruct" value-ref="symbolFunctionCallAnalyzer"/>
+	</util:map>
+
 	<util:map id="specialOperatorAnalyzerStrategies"
 	          key-type="jcl.symbols.SpecialOperator"
 	          value-type="jcl.compiler.real.sa.analyzer.specialoperator.SpecialOperatorAnalyzer">
@@ -44,5 +76,19 @@
 
 		<entry key="#{T(jcl.symbols.SpecialOperator).DEFSTRUCT}" value-ref="defstructAnalyzer"/>
 	</util:map>
+
+	<!--<util:map id="goTagMapping"
+	          key-type="java.lang.Class"
+	          value-type="jcl.compiler.real.element.specialoperator.GoElement">
+
+		<entry key="#{T(jcl.symbols.SymbolStruct).class}"
+		       value="#{T(jcl.compiler.real.element.specialoperator.GoSymbolElement).class.getConstructor('jcl.symbols.SymbolStruct').newInstance()}"/>
+	</util:map>
+
+	<bean id="goTagGenerator"
+	      factory-method="#{T(jcl.compiler.real.element.specialoperator.GoElement).class.getConstructor('jcl.symbols.SymbolStruct').newInstance()}">
+
+	</bean>-->
+
 
 </beans>

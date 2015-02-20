@@ -8,6 +8,8 @@ import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.element.specialoperator.MacroletElement.MacroletVar;
 import jcl.compiler.real.environment.MacroletEnvironment;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.List;
 
@@ -19,12 +21,22 @@ public class MacroletElement extends InnerFunctionElement<MacroletEnvironment, M
 		super(vars, forms, lexicalEnvironment);
 	}
 
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+	}
+
 	public static class MacroletVar extends InnerFunctionElement.InnerFunctionVar {
 
 		private static final long serialVersionUID = -169311089356148669L;
 
 		public MacroletVar(final SymbolElement<?> var, final Element initForm) {
 			super(var, initForm);
+		}
+
+		@Override
+		public String toString() {
+			return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 		}
 	}
 }

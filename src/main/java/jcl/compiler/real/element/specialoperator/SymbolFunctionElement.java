@@ -5,6 +5,8 @@
 package jcl.compiler.real.element.specialoperator;
 
 import jcl.compiler.real.element.SymbolElement;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class SymbolFunctionElement implements FunctionElement {
 
@@ -18,5 +20,10 @@ public class SymbolFunctionElement implements FunctionElement {
 
 	public SymbolElement<?> getFunctionSymbol() {
 		return functionSymbol;
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

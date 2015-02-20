@@ -6,6 +6,8 @@ package jcl.compiler.real.element.specialoperator;
 
 import jcl.compiler.real.element.Element;
 import jcl.types.typespecifiers.TypeSpecifier;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class TheElement implements Element {
 
@@ -25,5 +27,10 @@ public class TheElement implements Element {
 
 	public Element getForm() {
 		return form;
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

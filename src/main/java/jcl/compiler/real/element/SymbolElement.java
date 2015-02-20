@@ -6,6 +6,8 @@ package jcl.compiler.real.element;
 
 import jcl.LispStruct;
 import jcl.symbols.SymbolStruct;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class SymbolElement<T extends LispStruct> implements Element {
 
@@ -19,5 +21,10 @@ public class SymbolElement<T extends LispStruct> implements Element {
 
 	public SymbolStruct<T> getSymbolStruct() {
 		return symbolStruct;
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

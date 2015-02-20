@@ -8,6 +8,8 @@ import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.binding.Binding;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.io.Serializable;
 import java.util.List;
@@ -48,6 +50,11 @@ public class ProgvElement implements Element {
 		return environment;
 	}
 
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+	}
+
 	public static class ProgvVar implements Serializable {
 
 		private static final long serialVersionUID = -5131005121770228469L;
@@ -67,6 +74,11 @@ public class ProgvElement implements Element {
 
 		public Element getVal() {
 			return val;
+		}
+
+		@Override
+		public String toString() {
+			return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 		}
 	}
 }

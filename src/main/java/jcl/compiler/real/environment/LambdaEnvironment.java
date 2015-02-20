@@ -11,7 +11,7 @@ public class LambdaEnvironment extends BindingEnvironment {
 
 	private static final long serialVersionUID = -1182568685360839544L;
 
-	private int parameterNumber = -1;
+	private int parameterNumber;
 
 	public LambdaEnvironment(final Environment parent, final int closureDepth) {
 		super(parent, closureDepth);
@@ -23,6 +23,6 @@ public class LambdaEnvironment extends BindingEnvironment {
 
 	@Override
 	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+		return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).setExcludeFieldNames("parent").toString();
 	}
 }

@@ -5,18 +5,19 @@
 package jcl.compiler.real.element.specialoperator;
 
 import jcl.compiler.real.element.IntegerElement;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class GoIntegerElement implements GoElement {
+public class GoIntegerElement extends GoElement<IntegerElement> {
 
 	private static final long serialVersionUID = 6515586661046207604L;
 
-	private final IntegerElement tag;
-
 	public GoIntegerElement(final IntegerElement tag) {
-		this.tag = tag;
+		super(tag);
 	}
 
-	public IntegerElement getTag() {
-		return tag;
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

@@ -2,7 +2,7 @@ package jcl.compiler.real.sa.analyzer.specialoperator.declare;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.analyzer.DynamicSymbolStructAnalyzer;
+import jcl.compiler.real.sa.analyzer.DynamicSymbolAnalyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
@@ -24,7 +24,7 @@ public class DeclareAnalyzer implements SpecialOperatorAnalyzer {
 	private static final long serialVersionUID = -27949883247210201L;
 
 	@Autowired
-	private DynamicSymbolStructAnalyzer dynamicSymbolStructAnalyzer;
+	private DynamicSymbolAnalyzer dynamicSymbolAnalyzer;
 
 	@Override
 	public DeclareElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
@@ -87,7 +87,7 @@ public class DeclareAnalyzer implements SpecialOperatorAnalyzer {
 
 			final SymbolStruct<?> sym = (SymbolStruct) declSpecBodyElement;
 
-			dynamicSymbolStructAnalyzer.analyze(analyzer, sym, analysisBuilder);
+			dynamicSymbolAnalyzer.analyze(analyzer, sym, analysisBuilder);
 
 			final SymbolElement<?> symSE = new SymbolElement<>(sym);
 			final SpecialDeclarationElement specialDeclarationElement = new SpecialDeclarationElement(symSE);

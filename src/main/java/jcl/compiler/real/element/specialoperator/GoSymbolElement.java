@@ -5,18 +5,19 @@
 package jcl.compiler.real.element.specialoperator;
 
 import jcl.compiler.real.element.SymbolElement;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class GoSymbolElement implements GoElement {
+public class GoSymbolElement extends GoElement<SymbolElement<?>> {
 
 	private static final long serialVersionUID = -6696260185148126193L;
 
-	private final SymbolElement<?> tag;
-
 	public GoSymbolElement(final SymbolElement<?> tag) {
-		this.tag = tag;
+		super(tag);
 	}
 
-	public SymbolElement<?> getTag() {
-		return tag;
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

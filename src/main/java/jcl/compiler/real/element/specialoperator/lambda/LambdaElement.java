@@ -8,6 +8,8 @@ import jcl.arrays.StringStruct;
 import jcl.compiler.real.element.Element;
 import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class LambdaElement implements Element {
 
@@ -43,5 +45,10 @@ public class LambdaElement implements Element {
 
 	public LambdaEnvironment getLambdaEnvironment() {
 		return lambdaEnvironment;
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

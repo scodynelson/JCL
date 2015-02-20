@@ -5,6 +5,8 @@
 package jcl.compiler.real.element;
 
 import jcl.characters.CharacterStruct;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class CharacterElement implements Element {
 
@@ -18,5 +20,10 @@ public class CharacterElement implements Element {
 
 	public CharacterStruct getCharacterStruct() {
 		return characterStruct;
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

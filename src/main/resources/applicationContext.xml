@@ -77,18 +77,12 @@
 		<entry key="#{T(jcl.symbols.SpecialOperator).DEFSTRUCT}" value-ref="defstructAnalyzer"/>
 	</util:map>
 
-	<!--<util:map id="goTagMapping"
+	<util:map id="goElementGeneratorStrategies"
 	          key-type="java.lang.Class"
-	          value-type="jcl.compiler.real.element.specialoperator.GoElement">
+	          value-type="jcl.compiler.real.element.specialoperator.go.GoElementGenerator">
 
-		<entry key="#{T(jcl.symbols.SymbolStruct).class}"
-		       value="#{T(jcl.compiler.real.element.specialoperator.GoSymbolElement).class.getConstructor('jcl.symbols.SymbolStruct').newInstance()}"/>
+		<entry key="jcl.symbols.SymbolStruct" value-ref="goSymbolElementGenerator"/>
+		<entry key="jcl.numbers.IntegerStruct" value-ref="goIntegerElementGenerator"/>
 	</util:map>
-
-	<bean id="goTagGenerator"
-	      factory-method="#{T(jcl.compiler.real.element.specialoperator.GoElement).class.getConstructor('jcl.symbols.SymbolStruct').newInstance()}">
-
-	</bean>-->
-
 
 </beans>

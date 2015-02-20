@@ -5,7 +5,7 @@
 package jcl.compiler.real.sa;
 
 import jcl.compiler.real.element.SymbolElement;
-import jcl.compiler.real.element.specialoperator.GoElement;
+import jcl.compiler.real.element.specialoperator.go.GoElement;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.LambdaEnvironment;
@@ -31,7 +31,7 @@ public class AnalysisBuilder implements Serializable {
 
 	private final Stack<SymbolElement<?>> blockStack = new Stack<>();
 
-	private final Stack<Set<GoElement>> tagbodyStack = new Stack<>();
+	private final Stack<Set<GoElement<?>>> tagbodyStack = new Stack<>();
 
 	private int bindingsPosition;
 
@@ -83,7 +83,7 @@ public class AnalysisBuilder implements Serializable {
 		return blockStack;
 	}
 
-	public Stack<Set<GoElement>> getTagbodyStack() {
+	public Stack<Set<GoElement<?>>> getTagbodyStack() {
 		return tagbodyStack;
 	}
 

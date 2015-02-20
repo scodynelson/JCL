@@ -2,17 +2,17 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.compiler.real.element.specialoperator;
+package jcl.compiler.real.element.specialoperator.go;
 
-import jcl.compiler.real.element.IntegerElement;
+import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class GoIntegerElement extends GoElement<IntegerElement> {
+public class GoSymbolElement extends GoElement<SymbolStruct<?>> {
 
-	private static final long serialVersionUID = 6515586661046207604L;
+	private static final long serialVersionUID = -6696260185148126193L;
 
-	public GoIntegerElement(final IntegerElement tag) {
+	public GoSymbolElement(final SymbolStruct<?> tag) {
 		super(tag);
 	}
 

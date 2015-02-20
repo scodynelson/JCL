@@ -2,23 +2,24 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.compiler.real.element.specialoperator;
+package jcl.compiler.real.element.specialoperator.go;
 
+import jcl.LispStruct;
 import jcl.compiler.real.element.Element;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public abstract class GoElement<T extends Element> implements Element {
+public class GoElement<T extends LispStruct> implements Element {
 
 	private static final long serialVersionUID = -4331758400526441262L;
 
-	private final Element tag;
+	private final T tag;
 
-	public GoElement(final T tag) {
+	protected GoElement(final T tag) {
 		this.tag = tag;
 	}
 
-	public Element getTag() {
+	public T getTag() {
 		return tag;
 	}
 

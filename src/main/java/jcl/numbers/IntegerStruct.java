@@ -6,6 +6,8 @@ package jcl.numbers;
 
 import jcl.printer.PrinterVariables;
 import jcl.types.Integer;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -22,18 +24,22 @@ public class IntegerStruct extends RationalStruct {
 	 * Int constant for the value '2'.
 	 */
 	private static final int TWO = 2;
+
 	/**
 	 * Int constant for the value '8'.
 	 */
 	private static final int EIGHT = 8;
+
 	/**
 	 * Int constant for the value '10'.
 	 */
 	private static final int TEN = 10;
+
 	/**
 	 * Int constant for the value '16'.
 	 */
 	private static final int SIXTEEN = 16;
+
 	/**
 	 * The internal {@link BigInteger} containing the float contents.
 	 */
@@ -99,6 +105,16 @@ public class IntegerStruct extends RationalStruct {
 		}
 
 		return stringBuilder.toString();
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

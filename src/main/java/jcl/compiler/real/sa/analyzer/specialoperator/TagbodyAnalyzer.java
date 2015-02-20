@@ -2,12 +2,9 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 
 import jcl.LispStruct;
 import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.IntegerElement;
-import jcl.compiler.real.element.SymbolElement;
-import jcl.compiler.real.element.specialoperator.GoElement;
-import jcl.compiler.real.element.specialoperator.GoIntegerElement;
-import jcl.compiler.real.element.specialoperator.GoSymbolElement;
 import jcl.compiler.real.element.specialoperator.TagbodyElement;
+import jcl.compiler.real.element.specialoperator.go.GoElement;
+import jcl.compiler.real.element.specialoperator.go.GoElementGenerator;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.lists.ConsStruct;
@@ -18,6 +15,7 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -38,14 +36,17 @@ public class TagbodyAnalyzer implements SpecialOperatorAnalyzer {
 
 	private static final long serialVersionUID = -1543233114989622747L;
 
+	@Resource
+	private Map<Class<? extends LispStruct>, GoElementGenerator<LispStruct>> goElementGeneratorStrategies;
+
 	@Override
 	public TagbodyElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
 		ListStruct body = input.getRest();
 
 		List<LispStruct> bodyJavaList = body.getAsJavaList();
-		final Set<GoElement> currentTagSet = bodyJavaList.stream()
-		                                                 .collect(new TagbodyInitialTagCollector());
+		final Set<GoElement<?>> currentTagSet = bodyJavaList.stream()
+		                                                    .collect(new TagbodyInitialTagCollector());
 
 		analysisBuilder.getTagbodyStack().push(currentTagSet);
 
@@ -70,38 +71,27 @@ public class TagbodyAnalyzer implements SpecialOperatorAnalyzer {
 		return (element instanceof SymbolStruct) || (element instanceof IntegerStruct);
 	}
 
-	private static final class TagbodyInitialTagCollector implements Collector<LispStruct, Set<GoElement>, Set<GoElement>> {
+	private final class TagbodyInitialTagCollector implements Collector<LispStruct, Set<GoElement<?>>, Set<GoElement<?>>> {
 
 		@Override
-		public Supplier<Set<GoElement>> supplier() {
+		public Supplier<Set<GoElement<?>>> supplier() {
 			return HashSet::new;
 		}
 
-		private static GoElement getGoSymbolElementTag(final SymbolStruct<?> symbolStruct) {
-			final SymbolElement<?> symbolElement = new SymbolElement<>(symbolStruct);
-			return new GoSymbolElement(symbolElement);
-		}
-
-		private static GoElement getGoIntegerElementTag(final IntegerStruct integerStruct) {
-			final IntegerElement integerElement = new IntegerElement(integerStruct);
-			return new GoIntegerElement(integerElement);
-		}
-
 		@Override
-		public BiConsumer<Set<GoElement>, LispStruct> accumulator() {
+		public BiConsumer<Set<GoElement<?>>, LispStruct> accumulator() {
 			return (goElementSet, lispStruct) -> {
-				if (lispStruct instanceof SymbolStruct) {
-					final GoElement goSymbolElementTag = getGoSymbolElementTag((SymbolStruct<?>) lispStruct);
-					goElementSet.add(goSymbolElementTag);
-				} else if (lispStruct instanceof IntegerStruct) {
-					final GoElement goIntegerElementTag = getGoIntegerElementTag((IntegerStruct) lispStruct);
-					goElementSet.add(goIntegerElementTag);
+
+				final GoElementGenerator<LispStruct> goElementGenerator = goElementGeneratorStrategies.get(lispStruct.getClass());
+				if (goElementGenerator != null) {
+					final GoElement<?> goElement = goElementGenerator.generateGoElement(lispStruct);
+					goElementSet.add(goElement);
 				}
 			};
 		}
 
 		@Override
-		public BinaryOperator<Set<GoElement>> combiner() {
+		public BinaryOperator<Set<GoElement<?>>> combiner() {
 			return (left, right) -> {
 				left.addAll(right);
 				return left;
@@ -109,7 +99,7 @@ public class TagbodyAnalyzer implements SpecialOperatorAnalyzer {
 		}
 
 		@Override
-		public Function<Set<GoElement>, Set<GoElement>> finisher() {
+		public Function<Set<GoElement<?>>, Set<GoElement<?>>> finisher() {
 			return Function.identity();
 		}
 
@@ -124,28 +114,18 @@ public class TagbodyAnalyzer implements SpecialOperatorAnalyzer {
 		}
 	}
 
-	private static final class TagbodyCollector implements Collector<LispStruct, Map<Element, List<Element>>, Map<Element, List<Element>>> {
+	private final class TagbodyCollector implements Collector<LispStruct, Map<Element, List<Element>>, Map<Element, List<Element>>> {
 
 		private final SemanticAnalyzer analyzer;
 
 		private final AnalysisBuilder analysisBuilder;
 
-		private GoElement currentTag;
+		private GoElement<?> currentTag;
 
 		private TagbodyCollector(final SemanticAnalyzer analyzer, final AnalysisBuilder analysisBuilder) {
 			this.analyzer = analyzer;
 			this.analysisBuilder = analysisBuilder;
 			currentTag = null;
-		}
-
-		private void updateCurrentTagToSymbol(final SymbolStruct<?> symbolStruct) {
-			final SymbolElement<?> symbolElement = new SymbolElement<>(symbolStruct);
-			currentTag = new GoSymbolElement(symbolElement);
-		}
-
-		private void updateCurrentTagToInteger(final IntegerStruct integerStruct) {
-			final IntegerElement integerElement = new IntegerElement(integerStruct);
-			currentTag = new GoIntegerElement(integerElement);
 		}
 
 		private void handleOtherwise(final Map<Element, List<Element>> lispStructListMap, final LispStruct lispStruct) {
@@ -166,12 +146,11 @@ public class TagbodyAnalyzer implements SpecialOperatorAnalyzer {
 		public BiConsumer<Map<Element, List<Element>>, LispStruct> accumulator() {
 			return (elementListMap, lispStruct) -> {
 
-				if (lispStruct instanceof SymbolStruct) {
-					updateCurrentTagToSymbol((SymbolStruct<?>) lispStruct);
-				} else if (lispStruct instanceof IntegerStruct) {
-					updateCurrentTagToInteger((IntegerStruct) lispStruct);
-				} else {
+				final GoElementGenerator<LispStruct> goElementGenerator = goElementGeneratorStrategies.get(lispStruct.getClass());
+				if (goElementGenerator == null) {
 					handleOtherwise(elementListMap, lispStruct);
+				} else {
+					currentTag = goElementGenerator.generateGoElement(lispStruct);
 				}
 			};
 		}

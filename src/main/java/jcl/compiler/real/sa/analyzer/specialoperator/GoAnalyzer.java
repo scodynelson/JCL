@@ -1,11 +1,7 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
 import jcl.LispStruct;
-import jcl.compiler.real.element.IntegerElement;
-import jcl.compiler.real.element.SymbolElement;
-import jcl.compiler.real.element.specialoperator.GoElement;
-import jcl.compiler.real.element.specialoperator.GoIntegerElement;
-import jcl.compiler.real.element.specialoperator.GoSymbolElement;
+import jcl.compiler.real.element.specialoperator.go.GoElement;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
@@ -24,7 +20,7 @@ public class GoAnalyzer implements SpecialOperatorAnalyzer {
 	private static final long serialVersionUID = -6523523596100793498L;
 
 	@Override
-	public GoElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
+	public GoElement<?> analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
 		if (input.size() != 2) {
 			throw new ProgramErrorException("GO: Incorrect number of arguments: " + input.size() + ". Expected 2 arguments.");
@@ -32,32 +28,33 @@ public class GoAnalyzer implements SpecialOperatorAnalyzer {
 
 		final LispStruct second = input.getRest().getFirst();
 
-		GoElement tagToFind = null;
-		if (second instanceof SymbolStruct) {
-			tagToFind = getGoSymbolElementTag((SymbolStruct<?>) second);
-		} else if (second instanceof IntegerStruct) {
-			tagToFind = getGoIntegerElementTag((IntegerStruct) second);
+		if (!isTagbodyTag(second)) {
+			throw new ProgramErrorException("GO: Tag must be of type SymbolStruct or IntegerStruct. Got: " + second);
 		}
 
-		if (tagToFind == null) {
-			throw new ProgramErrorException("GO: Tag must be of type SymbolStruct or IntegerStruct. Got: " + second);
-		} else {
-			return getGoTag(analysisBuilder, tagToFind);
-		}
+		return getGoTag(analysisBuilder, second);
 	}
 
-	private static GoElement getGoTag(final AnalysisBuilder analysisBuilder, final GoElement tagToFind) {
+	private static boolean isTagbodyTag(final LispStruct element) {
+		return (element instanceof SymbolStruct) || (element instanceof IntegerStruct);
+	}
 
-		final Stack<Set<GoElement>> tagbodyStack = analysisBuilder.getTagbodyStack();
-		final ListIterator<Set<GoElement>> tagbodyListIterator = tagbodyStack.listIterator(tagbodyStack.size());
+	private static GoElement<?> getGoTag(final AnalysisBuilder analysisBuilder, final LispStruct tagToFind) {
 
-		GoElement tag = null;
+		final Stack<Set<GoElement<?>>> tagbodyStack = analysisBuilder.getTagbodyStack();
+		final ListIterator<Set<GoElement<?>>> tagbodyListIterator = tagbodyStack.listIterator(tagbodyStack.size());
 
+		GoElement<?> tag = null;
+
+		out:
 		while (tagbodyListIterator.hasPrevious()) {
-			final Set<GoElement> previousStack = tagbodyListIterator.previous();
-			if (previousStack.contains(tagToFind)) {
-				tag = tagToFind;
-				break;
+			final Set<GoElement<?>> previousStack = tagbodyListIterator.previous();
+			for (final GoElement<?> goElement : previousStack) {
+				final LispStruct goElementTag = goElement.getTag();
+				if (tagToFind.equals(goElementTag)) {
+					tag = goElement;
+					break out;
+				}
 			}
 		}
 
@@ -66,15 +63,5 @@ public class GoAnalyzer implements SpecialOperatorAnalyzer {
 		}
 
 		return tag;
-	}
-
-	private static GoElement getGoSymbolElementTag(final SymbolStruct<?> symbolStruct) {
-		final SymbolElement<?> symbolElement = new SymbolElement<>(symbolStruct);
-		return new GoSymbolElement(symbolElement);
-	}
-
-	private static GoElement getGoIntegerElementTag(final IntegerStruct integerStruct) {
-		final IntegerElement integerElement = new IntegerElement(integerStruct);
-		return new GoIntegerElement(integerElement);
 	}
 }

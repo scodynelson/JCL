@@ -1,11 +1,12 @@
 package jcl.compiler.real.sa.analyzer.expander;
 
 import jcl.LispStruct;
+import jcl.lists.ListStruct;
 
 /**
  * Defines an interface for MacroFunction lisp type
  */
 public interface MacroFunctionExpander {
 
-	LispStruct expand(Object arg1, Object arg2);
+	LispStruct expand(ListStruct arg1);
 }

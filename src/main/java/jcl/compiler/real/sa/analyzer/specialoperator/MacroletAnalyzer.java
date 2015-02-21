@@ -173,6 +173,8 @@ public class MacroletAnalyzer implements SpecialOperatorAnalyzer {
 	                                                    final AnalysisBuilder analysisBuilder,
 	                                                    final EnvironmentStack environmentStack) {
 
+		// TODO: This will be a MacroLambda, NOT a Lambda form!!!
+
 		final LispStruct functionName = functionListParameter.getFirst();
 		final LispStruct lambdaList = functionListParameter.getRest().getFirst();
 		final ListStruct body = functionListParameter.getRest().getRest();

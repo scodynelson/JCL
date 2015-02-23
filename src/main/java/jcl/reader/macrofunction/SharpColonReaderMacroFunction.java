@@ -4,12 +4,12 @@
 
 package jcl.reader.macrofunction;
 
-import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
+import jcl.compiler.real.element.SimpleElement;
+import jcl.compiler.real.element.SymbolElement;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
-import jcl.symbols.SymbolStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -42,7 +42,7 @@ public class SharpColonReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public SimpleElement readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.COLON;
 
 		final ExtendedTokenReaderMacroFunction.ReadExtendedToken readExtendedToken = ExtendedTokenReaderMacroFunction.readExtendedToken(reader, false);
@@ -58,6 +58,6 @@ public class SharpColonReaderMacroFunction extends ReaderMacroFunctionImpl {
 		if (readExtendedToken.isHasPackageDelimiter()) {
 			throw new ReaderErrorException("Symbol following #: contains a package marker: " + token);
 		}
-		return new SymbolStruct<>(token);
+		return new SymbolElement(token, null);
 	}
 }

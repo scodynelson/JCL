@@ -4,13 +4,14 @@
 
 package jcl.reader.macrofunction;
 
-import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
+import jcl.compiler.real.element.ConsElement;
+import jcl.compiler.real.element.SimpleElement;
+import jcl.compiler.real.element.SymbolElement;
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.lists.ListStruct;
+import jcl.packages.GlobalPackageStruct;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
-import jcl.symbols.SpecialOperator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -43,13 +44,13 @@ public class ApostropheReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public SimpleElement readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.APOSTROPHE;
 
-		final LispStruct lispToken = reader.read();
+		final SimpleElement lispToken = reader.read();
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("{} suppressed.", lispToken.printStruct());
+				LOGGER.debug("{} suppressed.", lispToken.toLispStruct().printStruct()); // TODO: fix
 			}
 			return null;
 		}
@@ -58,6 +59,7 @@ public class ApostropheReaderMacroFunction extends ReaderMacroFunctionImpl {
 			throw new ReaderErrorException("Missing expression.");
 		}
 
-		return ListStruct.buildProperList(SpecialOperator.QUOTE, lispToken);
+		final SymbolElement quoteSpecialOperator = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "QUOTE"); // TODO: fix
+		return new ConsElement(quoteSpecialOperator, lispToken);
 	}
 }

@@ -6,7 +6,7 @@ package jcl.compiler.real.sa.analyzer;
 
 import jcl.LispStruct;
 import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.FunctionCallElement;
+import jcl.compiler.real.element.functioncall.FunctionCallElement;
 import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
@@ -72,7 +72,7 @@ public class SymbolFunctionCallAnalyzer extends FunctionCallAnalyzer {
 
 		final boolean hasFunctionBinding = Environments.hasFunctionBinding(currentEnvironment, functionSymbol);
 
-		final SymbolElement<?> functionSymbolSE = new SymbolElement<>(functionSymbol);
+		final SymbolElement functionSymbolSE = new SymbolElement(functionSymbol.getSymbolPackage().getName(), functionSymbol.getName()); // TODO: fix
 		return new FunctionCallElement(hasFunctionBinding, functionSymbolSE, analyzedFunctionArguments);
 	}
 }

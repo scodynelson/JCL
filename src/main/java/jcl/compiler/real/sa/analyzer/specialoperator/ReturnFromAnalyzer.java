@@ -29,7 +29,7 @@ public class ReturnFromAnalyzer implements SpecialOperatorAnalyzer {
 		}
 
 		final SymbolStruct<?> name = (SymbolStruct) second;
-		final SymbolElement<?> nameSE = new SymbolElement<>(name);
+		final SymbolElement nameSE = new SymbolElement(name.getSymbolPackage().getName(), name.getName()); // TODO: fix
 
 		if (analysisBuilder.getBlockStack().search(nameSE) == -1) {
 			throw new ProgramErrorException("RETURN-FROM: No BLOCK with name " + second + " is visible.");

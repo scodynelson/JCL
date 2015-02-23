@@ -51,16 +51,16 @@ public abstract class InnerFunctionElement<E extends Environment, V extends Inne
 
 		private static final long serialVersionUID = 891453745075246590L;
 
-		private final SymbolElement<?> var;
+		private final SymbolElement var;
 
 		private final Element initForm;
 
-		InnerFunctionVar(final SymbolElement<?> var, final Element initForm) {
+		InnerFunctionVar(final SymbolElement var, final Element initForm) {
 			this.var = var;
 			this.initForm = initForm;
 		}
 
-		public SymbolElement<?> getVar() {
+		public SymbolElement getVar() {
 			return var;
 		}
 

@@ -4,8 +4,8 @@
 
 package jcl.reader.macrofunction;
 
-import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
+import jcl.compiler.real.element.SimpleElement;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
@@ -34,7 +34,7 @@ public class RightParenthesisReaderMacroFunction extends ReaderMacroFunctionImpl
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public SimpleElement readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.RIGHT_PARENTHESIS;
 
 		throw new ReaderErrorException("Unmatched close parenthesis.");

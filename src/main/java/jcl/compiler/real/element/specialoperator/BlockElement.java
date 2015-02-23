@@ -15,15 +15,15 @@ public class BlockElement implements Element {
 
 	private static final long serialVersionUID = -115779602179582479L;
 
-	private final SymbolElement<?> name;
+	private final SymbolElement name;
 	private final List<Element> forms;
 
-	public BlockElement(final SymbolElement<?> name, final List<Element> forms) {
+	public BlockElement(final SymbolElement name, final List<Element> forms) {
 		this.name = name;
 		this.forms = forms;
 	}
 
-	public SymbolElement<?> getName() {
+	public SymbolElement getName() {
 		return name;
 	}
 

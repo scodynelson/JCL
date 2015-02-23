@@ -59,16 +59,16 @@ public class ProgvElement implements Element {
 
 		private static final long serialVersionUID = -5131005121770228469L;
 
-		private final SymbolElement<?> var;
+		private final SymbolElement var;
 
 		private final Element val;
 
-		public ProgvVar(final SymbolElement<?> var, final Element val) {
+		public ProgvVar(final SymbolElement var, final Element val) {
 			this.var = var;
 			this.val = val;
 		}
 
-		public SymbolElement<?> getVar() {
+		public SymbolElement getVar() {
 			return var;
 		}
 

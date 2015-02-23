@@ -124,7 +124,7 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
-		final SymbolElement<?> varSE = new SymbolElement<>(var);
+		final SymbolElement varSE = new SymbolElement(var.getSymbolPackage().getName(), var.getName()); // TODO: fix
 		final boolean isSpecial = isSpecial(declareElement, var);
 
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
@@ -143,8 +143,8 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 
 		final List<SpecialDeclarationElement> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
 		for (final SpecialDeclarationElement specialDeclarationElement : specialDeclarationElements) {
-			final SymbolElement<?> specialVar = specialDeclarationElement.getVar();
-			if (var.equals(specialVar.getSymbolStruct())) {
+			final SymbolElement specialVar = specialDeclarationElement.getVar();
+			if (var.equals(specialVar.toLispStruct())) { // TODO: fix
 				isSpecial = true;
 				break;
 			}
@@ -191,7 +191,7 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
-		final SymbolStruct<?> var = specialDeclarationElement.getVar().getSymbolStruct();
+		final SymbolStruct<?> var = (SymbolStruct<?>) specialDeclarationElement.getVar().toLispStruct(); // TODO: fix
 
 		final Environment bindingEnvironment = Environments.getDynamicBindingEnvironment(letEnvironment, var);
 		final EnvironmentAllocation allocation = new EnvironmentAllocation(bindingEnvironment);

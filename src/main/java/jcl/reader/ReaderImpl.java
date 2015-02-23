@@ -5,6 +5,7 @@
 package jcl.reader;
 
 import jcl.LispStruct;
+import jcl.compiler.real.element.SimpleElement;
 import jcl.streams.InputStream;
 import jcl.streams.ReadPeekResult;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -48,12 +49,12 @@ class ReaderImpl implements Reader {
 	}
 
 	@Override
-	public LispStruct read() {
+	public SimpleElement read() {
 		return read(true, null, true);
 	}
 
 	@Override
-	public LispStruct read(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
+	public SimpleElement read(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		final TokenBuilder tokenBuilder = new TokenBuilder(this, eofErrorP, eofValue, recursiveP);
 		return readerStateMediator.read(tokenBuilder);
 	}

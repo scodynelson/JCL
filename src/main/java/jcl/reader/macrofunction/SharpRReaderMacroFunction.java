@@ -4,8 +4,8 @@
 
 package jcl.reader.macrofunction;
 
-import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
+import jcl.compiler.real.element.SimpleElement;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
@@ -36,7 +36,7 @@ public class SharpRReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public SimpleElement readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_R) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_R);
 
 		return RationalReaderMacroFunction.readRational(reader, numArg);

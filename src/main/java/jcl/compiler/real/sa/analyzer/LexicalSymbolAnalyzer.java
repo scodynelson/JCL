@@ -33,7 +33,7 @@ public class LexicalSymbolAnalyzer implements Analyzer<Element, SymbolStruct<?>>
 	private DynamicSymbolAnalyzer dynamicSymbolAnalyzer;
 
 	@Override
-	public SymbolElement<?> analyze(final SemanticAnalyzer analyzer, final SymbolStruct<?> input, final AnalysisBuilder analysisBuilder) {
+	public SymbolElement analyze(final SemanticAnalyzer analyzer, final SymbolStruct<?> input, final AnalysisBuilder analysisBuilder) {
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment currentEnvironment = environmentStack.peek();
@@ -41,7 +41,7 @@ public class LexicalSymbolAnalyzer implements Analyzer<Element, SymbolStruct<?>>
 		final boolean symbolBoundInCurrentLexicalEnvironment = currentEnvironment.hasLexicalBinding(input);
 		if (symbolBoundInCurrentLexicalEnvironment) {
 			// Binding already exists in the current lexical environment.
-			return new SymbolElement<>(input);
+			return new SymbolElement(input.getSymbolPackage().getName(), input.getName()); // TODO: fix
 		}
 
 		final BindingEnvironment bindingEnvironment
@@ -67,7 +67,7 @@ public class LexicalSymbolAnalyzer implements Analyzer<Element, SymbolStruct<?>>
 
 			// Now add that new symbol to the SymbolTable of the 'currentEnvironment'
 			currentEnvironmentSymbolTable.addLexicalEnvironmentBinding(symbolBinding);
-			return new SymbolElement<>(input);
+			return new SymbolElement(input.getSymbolPackage().getName(), input.getName()); // TODO: fix
 		}
 
 		// Here the Binding Lambda is outside of the Enclosing Lambda
@@ -84,7 +84,7 @@ public class LexicalSymbolAnalyzer implements Analyzer<Element, SymbolStruct<?>>
 
 			// Now add that new symbol to the SymbolTable of the 'currentEnvironment'
 			currentEnvironmentSymbolTable.addLexicalEnvironmentBinding(symbolBinding);
-			return new SymbolElement<>(input);
+			return new SymbolElement(input.getSymbolPackage().getName(), input.getName()); // TODO: fix
 		}
 
 		// There is an Outer Binding Environment. Therefore, we will create a Closure Binding in that Environment.
@@ -112,6 +112,6 @@ public class LexicalSymbolAnalyzer implements Analyzer<Element, SymbolStruct<?>>
 
 		currentEnvironmentSymbolTable.addClosureBinding(symbolBinding);
 
-		return new SymbolElement<>(input);
+		return new SymbolElement(input.getSymbolPackage().getName(), input.getName()); // TODO: fix
 	}
 }

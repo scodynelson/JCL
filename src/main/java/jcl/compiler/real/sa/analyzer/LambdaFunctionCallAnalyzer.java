@@ -6,7 +6,7 @@ package jcl.compiler.real.sa.analyzer;
 
 import jcl.LispStruct;
 import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.LambdaFunctionCallElement;
+import jcl.compiler.real.element.functioncall.LambdaFunctionCallElement;
 import jcl.compiler.real.element.specialoperator.lambda.LambdaElement;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.sa.AnalysisBuilder;

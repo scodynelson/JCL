@@ -18,6 +18,6 @@ public class FloatAnalyzer implements Analyzer<FloatElement, FloatStruct> {
 
 	@Override
 	public FloatElement analyze(final SemanticAnalyzer analyzer, final FloatStruct input, final AnalysisBuilder analysisBuilder) {
-		return new FloatElement(input);
+		return new FloatElement((jcl.types.Float) input.getType(), input.getBigDecimal());
 	}
 }

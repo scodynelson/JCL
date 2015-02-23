@@ -2,21 +2,16 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.reader.macrofunction;
+package jcl.compiler.real.element;
 
 import jcl.LispStruct;
+import jcl.reader.macrofunction.CommentStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-/**
- * The object representation of a Lisp 'comment' type.
- */
-public class CommentStruct implements LispStruct {
+public class CommentElement implements SimpleElement {
 
-	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = 8261638201983129004L;
+	private static final long serialVersionUID = -3063330797183559711L;
 
 	/**
 	 * The read in comment string.
@@ -29,7 +24,7 @@ public class CommentStruct implements LispStruct {
 	 * @param commentString
 	 * 		the {@link String} comment value
 	 */
-	public CommentStruct(final String commentString) {
+	public CommentElement(final String commentString) {
 		this.commentString = commentString;
 	}
 
@@ -40,6 +35,11 @@ public class CommentStruct implements LispStruct {
 	 */
 	public String getCommentString() {
 		return commentString;
+	}
+
+	@Override
+	public LispStruct toLispStruct() {
+		return new CommentStruct(commentString);
 	}
 
 	@Override

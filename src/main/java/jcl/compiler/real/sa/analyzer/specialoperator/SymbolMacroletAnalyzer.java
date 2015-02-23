@@ -124,7 +124,7 @@ public class SymbolMacroletAnalyzer implements SpecialOperatorAnalyzer {
 		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(var, allocation, T.INSTANCE, expansion);
 		symbolMacroletEnvironment.addLexicalBinding(binding);
 
-		final SymbolElement<?> varSE = new SymbolElement<>(var);
+		final SymbolElement varSE = new SymbolElement(var.getSymbolPackage().getName(), var.getName()); // TODO: fix
 		return new SymbolMacroletElement.SymbolMacroletElementVar(varSE, expansion);
 	}
 

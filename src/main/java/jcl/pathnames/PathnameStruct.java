@@ -4,6 +4,7 @@
 
 package jcl.pathnames;
 
+import jcl.arrays.StringStruct;
 import jcl.classes.BuiltInClassStruct;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.printer.PrinterVariables;
@@ -105,6 +106,22 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 		this.name = name;
 		this.type = type;
 		this.version = version;
+	}
+
+	/**
+	 * Builds and returns a pathname with the provided {@code pathname} parsed as its elements.
+	 *
+	 * @param pathname
+	 * 		the pathname {@link StringStruct} to parse into the pathname object elements
+	 *
+	 * @return the constructed pathname with constructed elements
+	 *
+	 * @throws URISyntaxException
+	 * 		if the provided pathname is determined to be a URI, but cannot be parsed as one
+	 * 		NOTE: THIS SHOULD NEVER HAPPEN BUT WE THROW THIS FOR SAFETY CASES
+	 */
+	public static PathnameStruct buildPathname(final StringStruct pathname) throws URISyntaxException {
+		return buildPathname(pathname.getAsJavaString());
 	}
 
 	/**

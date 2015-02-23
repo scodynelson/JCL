@@ -12,13 +12,13 @@ public class SpecialDeclarationElement implements DeclarationElement {
 
 	private static final long serialVersionUID = 7353657327204677544L;
 
-	private final SymbolElement<?> var;
+	private final SymbolElement var;
 
-	public SpecialDeclarationElement(final SymbolElement<?> var) {
+	public SpecialDeclarationElement(final SymbolElement var) {
 		this.var = var;
 	}
 
-	public SymbolElement<?> getVar() {
+	public SymbolElement getVar() {
 		return var;
 	}
 

@@ -4,8 +4,8 @@
 
 package jcl.reader.macrofunction;
 
-import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
+import jcl.compiler.real.element.SimpleElement;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import org.springframework.stereotype.Component;
@@ -33,7 +33,7 @@ public class LeftParenthesisReaderMacroFunction extends ReaderMacroFunctionImpl 
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public SimpleElement readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.LEFT_PARENTHESIS;
 
 		return ListReaderMacroFunction.readList(reader);

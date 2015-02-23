@@ -1,6 +1,7 @@
 package jcl.system;
 
 import jcl.LispStruct;
+import jcl.compiler.real.element.SimpleElement;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.element.Element;
 import jcl.conditions.exceptions.ReaderErrorException;
@@ -110,7 +111,7 @@ public class ReadEvalPrint {
 					SharpTagReaderConstants.SHARP_EQUAL_REPL_TABLE.clear();
 					SharpTagReaderConstants.SHARP_EQUAL_FINAL_TABLE.clear();
 
-					LispStruct whatRead = null;
+					SimpleElement whatRead = null;
 					try {
 						if (isFile) {
 							whatRead = reader.read(false, null, true);
@@ -119,7 +120,7 @@ public class ReadEvalPrint {
 						}
 						if (whatRead != null) {
 							LOGGER.debug("READ:\n");
-							LOGGER.debug("{}\n", whatRead.printStruct());
+							LOGGER.debug("{}\n", whatRead.toLispStruct().printStruct()); // TODO: fix
 						} else {
 							LOGGER.warn("; WARNING: Null response from reader");
 						}
@@ -154,14 +155,14 @@ public class ReadEvalPrint {
 					if (whatRead != null) {
 						Element whatAnalyzed = null;
 						try {
-							final LispStruct lambdaWhatRead = wrapFormInLambda(whatRead);
-
+//							final LispStruct lambdaWhatRead = wrapFormInLambda(whatRead);
+//
 //							final SemanticAnalyzer sa = context.getBean(SemanticAnalyzer.class);
 //							whatAnalyzed = sa.analyzeForm(lambdaWhatRead);
-
+//
 //							if (whatAnalyzed != null) {
 //								LOGGER.debug("ANALYZED:\n");
-//								LOGGER.debug("{}\n", whatAnalyzed.printStruct());
+//								LOGGER.debug("{}\n", whatAnalyzed);
 //							} else {
 //								LOGGER.warn("; WARNING: Null response from analyzer");
 //							}
@@ -220,7 +221,7 @@ public class ReadEvalPrint {
 //							LOGGER.info(mv[count].toString());
 //						}
 					} else {
-						final String printedValue = whatRead.printStruct();
+						final String printedValue = whatRead.toLispStruct().printStruct();
 						LOGGER.info(printedValue);
 					}
 				} catch (final Exception ex) {

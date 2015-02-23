@@ -50,16 +50,16 @@ public class SymbolMacroletElement implements Element {
 
 		private static final long serialVersionUID = -601687250765470819L;
 
-		private final SymbolElement<?> var;
+		private final SymbolElement var;
 
 		private final Element expansion;
 
-		public SymbolMacroletElementVar(final SymbolElement<?> var, final Element expansion) {
+		public SymbolMacroletElementVar(final SymbolElement var, final Element expansion) {
 			this.var = var;
 			this.expansion = expansion;
 		}
 
-		public SymbolElement<?> getVar() {
+		public SymbolElement getVar() {
 			return var;
 		}
 

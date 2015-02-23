@@ -4,9 +4,9 @@
 
 package jcl.reader.macrofunction;
 
-import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
-import jcl.characters.CharacterStruct;
+import jcl.compiler.real.element.CharacterElement;
+import jcl.compiler.real.element.SimpleElement;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
@@ -43,7 +43,7 @@ public class SharpBackslashReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public SimpleElement readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.BACKSLASH;
 
 		final ExtendedTokenReaderMacroFunction.ReadExtendedToken readExtendedToken = ExtendedTokenReaderMacroFunction.readExtendedToken(reader, true);
@@ -59,7 +59,7 @@ public class SharpBackslashReaderMacroFunction extends ReaderMacroFunctionImpl {
 		final int maxCharTokenLength = 1;
 		if (StringUtils.length(token) == maxCharTokenLength) {
 			final char theChar = token.charAt(0);
-			return new CharacterStruct(theChar);
+			return new CharacterElement(theChar);
 		}
 
 		Integer nameCodePoint = null;
@@ -75,6 +75,6 @@ public class SharpBackslashReaderMacroFunction extends ReaderMacroFunctionImpl {
 			throw new ReaderErrorException("Unrecognized character name: " + token);
 		}
 
-		return new CharacterStruct(nameCodePoint);
+		return new CharacterElement(nameCodePoint);
 	}
 }

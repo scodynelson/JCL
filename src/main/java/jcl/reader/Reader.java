@@ -5,6 +5,8 @@
 package jcl.reader;
 
 import jcl.LispStruct;
+import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.SimpleElement;
 import jcl.streams.InputStream;
 import jcl.streams.ReadPeekResult;
 
@@ -20,9 +22,10 @@ public interface Reader extends Serializable {
 	 * LispStruct, boolean)} method with {@code eofErrorP} as true, {@code eofValue} as null, and {@code recursiveP} as
 	 * true.
 	 *
-	 * @return the next {@link LispStruct} from the {@link InputStream}.
+	 * @return the next {@link LispStruct} from the {@link InputStream}
+	 * TODO: fix Javadoc
 	 */
-	LispStruct read();
+	SimpleElement read();
 
 	/**
 	 * Reads the next {@link LispStruct} from the {@link InputStream}.
@@ -34,16 +37,17 @@ public interface Reader extends Serializable {
 	 * @param recursiveP
 	 * 		whether or not to recursively read tokens
 	 *
-	 * @return the next {@link LispStruct} from the {@link InputStream}.
+	 * @return the next {@link LispStruct} from the {@link InputStream}
+	 * TODO fix Javadoc
 	 */
-	LispStruct read(boolean eofErrorP, LispStruct eofValue, boolean recursiveP);
+	SimpleElement read(boolean eofErrorP, LispStruct eofValue, boolean recursiveP);
 
 	/**
 	 * Reads the next {@link ReadPeekResult} from the {@link InputStream}. This calls the overloaded {@link
 	 * #readChar(boolean, LispStruct, boolean)} method with {@code eofErrorP} as true, {@code eofValue} as null, and
 	 * {@code recursiveP} as true.
 	 *
-	 * @return the next {@link ReadPeekResult} from the {@link InputStream}.
+	 * @return the next {@link ReadPeekResult} from the {@link InputStream}
 	 */
 	ReadPeekResult readChar();
 
@@ -57,7 +61,7 @@ public interface Reader extends Serializable {
 	 * @param recursiveP
 	 * 		whether or not to recursively read tokens
 	 *
-	 * @return the next {@link ReadPeekResult} from the {@link InputStream}.
+	 * @return the next {@link ReadPeekResult} from the {@link InputStream}
 	 */
 	ReadPeekResult readChar(boolean eofErrorP, LispStruct eofValue, boolean recursiveP);
 
@@ -72,7 +76,7 @@ public interface Reader extends Serializable {
 	/**
 	 * Gets the {@link InputStream} for the JCL Reader instance.
 	 *
-	 * @return the {@link InputStream} for the JCL Reader instance.
+	 * @return the {@link InputStream} for the JCL Reader instance
 	 */
 	InputStream getInputStream();
 }

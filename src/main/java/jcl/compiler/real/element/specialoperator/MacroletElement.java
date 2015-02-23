@@ -30,7 +30,7 @@ public class MacroletElement extends InnerFunctionElement<MacroletEnvironment, M
 
 		private static final long serialVersionUID = -169311089356148669L;
 
-		public MacroletVar(final SymbolElement<?> var, final Element initForm) {
+		public MacroletVar(final SymbolElement var, final Element initForm) {
 			super(var, initForm);
 		}
 

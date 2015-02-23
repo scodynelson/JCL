@@ -35,15 +35,15 @@ public class SetqElement implements Element {
 
 		private static final long serialVersionUID = -7804939280136663517L;
 
-		private final SymbolElement<?> var;
+		private final SymbolElement var;
 		private final Element form;
 
-		public SetqPair(final SymbolElement<?> var, final Element form) {
+		public SetqPair(final SymbolElement var, final Element form) {
 			this.var = var;
 			this.form = form;
 		}
 
-		public SymbolElement<?> getVar() {
+		public SymbolElement getVar() {
 			return var;
 		}
 

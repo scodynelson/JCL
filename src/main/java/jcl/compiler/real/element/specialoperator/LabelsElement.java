@@ -30,7 +30,7 @@ public class LabelsElement extends InnerFunctionElement<LabelsEnvironment, Label
 
 		private static final long serialVersionUID = 2989214415282349607L;
 
-		public LabelsVar(final SymbolElement<?> var, final Element initForm) {
+		public LabelsVar(final SymbolElement var, final Element initForm) {
 			super(var, initForm);
 		}
 

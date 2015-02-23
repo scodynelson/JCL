@@ -4,24 +4,22 @@
 
 package jcl.reader.macrofunction;
 
-import jcl.LispStruct;
-import jcl.arrays.StringStruct;
 import jcl.characters.CharacterConstants;
+import jcl.compiler.real.element.ConsElement;
+import jcl.compiler.real.element.SimpleElement;
+import jcl.compiler.real.element.StringElement;
+import jcl.compiler.real.element.SymbolElement;
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
-import jcl.pathnames.PathnameStruct;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
-import jcl.symbols.SymbolStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.math.BigInteger;
-import java.net.URISyntaxException;
 
 /**
  * Implements the '#p' Lisp reader macro.
@@ -50,27 +48,22 @@ public class SharpPReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public SimpleElement readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_P) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_P);
 
-		final LispStruct lispToken = reader.read();
+		final SimpleElement lispToken = reader.read();
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("{} suppressed.", lispToken.printStruct());
+				LOGGER.debug("{} suppressed.", lispToken.toLispStruct().printStruct()); // TODO: fix
 			}
 			return null;
 		}
 
-		if (lispToken instanceof StringStruct) {
-			final String javaString = ((StringStruct) lispToken).getAsJavaString();
-			try {
-				final SymbolStruct<?> pathnameFnSymbol = GlobalPackageStruct.COMMON_LISP.findSymbol("PATHNAME").getSymbolStruct();
-				final PathnameStruct pathnameStruct = PathnameStruct.buildPathname(javaString);
+		if (lispToken instanceof StringElement) {
+			final SymbolElement pathnameFnSymbol = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "PATHNAME"); // TODO: fix
+			final StringElement pathnameString = (StringElement) lispToken;
 
-				return ListStruct.buildProperList(pathnameFnSymbol, pathnameStruct);
-			} catch (final URISyntaxException use) {
-				throw new ReaderErrorException("Improper namestring provided to #P: " + lispToken, use);
-			}
+			return new ConsElement(pathnameFnSymbol, pathnameString);
 		} else {
 			throw new ReaderErrorException("Improper namestring provided to #P: " + lispToken);
 		}

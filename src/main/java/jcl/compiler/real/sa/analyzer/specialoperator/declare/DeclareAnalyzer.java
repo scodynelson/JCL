@@ -89,7 +89,7 @@ public class DeclareAnalyzer implements SpecialOperatorAnalyzer {
 
 			dynamicSymbolAnalyzer.analyze(analyzer, sym, analysisBuilder);
 
-			final SymbolElement<?> symSE = new SymbolElement<>(sym);
+			final SymbolElement symSE = new SymbolElement(sym.getSymbolPackage().getName(), sym.getName()); // TODO: fix
 			final SpecialDeclarationElement specialDeclarationElement = new SpecialDeclarationElement(symSE);
 			specialDeclarationElements.add(specialDeclarationElement);
 		}

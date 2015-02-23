@@ -49,15 +49,15 @@ public class LetElement implements Element {
 
 		private static final long serialVersionUID = 3246152127057600416L;
 
-		private final SymbolElement<?> var;
+		private final SymbolElement var;
 		private final Element initForm;
 
-		public LetVar(final SymbolElement<?> var, final Element initForm) {
+		public LetVar(final SymbolElement var, final Element initForm) {
 			this.var = var;
 			this.initForm = initForm;
 		}
 
-		public SymbolElement<?> getVar() {
+		public SymbolElement getVar() {
 			return var;
 		}
 

@@ -107,7 +107,7 @@ public class ProgvAnalyzer implements SpecialOperatorAnalyzer {
 				val = actualValsJavaList.get(i);
 			}
 
-			final SymbolElement<?> varSE = dynamicSymbolAnalyzer.analyze(analyzer, var, analysisBuilder);
+			final SymbolElement varSE = dynamicSymbolAnalyzer.analyze(analyzer, var, analysisBuilder);
 
 			final Element analyzedVal = analyzer.analyzeForm(val, analysisBuilder);
 			final ProgvElement.ProgvVar progvVar = new ProgvElement.ProgvVar(varSE, analyzedVal);

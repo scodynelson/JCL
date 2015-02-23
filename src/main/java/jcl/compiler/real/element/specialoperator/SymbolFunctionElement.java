@@ -12,13 +12,13 @@ public class SymbolFunctionElement implements FunctionElement {
 
 	private static final long serialVersionUID = 1450935885516226944L;
 
-	private final SymbolElement<?> functionSymbol;
+	private final SymbolElement functionSymbol;
 
-	public SymbolFunctionElement(final SymbolElement<?> functionSymbol) {
+	public SymbolFunctionElement(final SymbolElement functionSymbol) {
 		this.functionSymbol = functionSymbol;
 	}
 
-	public SymbolElement<?> getFunctionSymbol() {
+	public SymbolElement getFunctionSymbol() {
 		return functionSymbol;
 	}
 

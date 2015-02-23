@@ -528,8 +528,8 @@ final class LambdaListParser {
 
 		final List<SpecialDeclarationElement> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
 		for (final SpecialDeclarationElement specialDeclarationElement : specialDeclarationElements) {
-			final SymbolElement<?> specialVar = specialDeclarationElement.getVar();
-			if (var.equals(specialVar.getSymbolStruct())) {
+			final SymbolElement specialVar = specialDeclarationElement.getVar();
+			if (var.equals(specialVar.toLispStruct())) { // TODO: fix
 				isSpecial = true;
 				break;
 			}

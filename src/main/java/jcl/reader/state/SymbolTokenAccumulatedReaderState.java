@@ -4,17 +4,16 @@
 
 package jcl.reader.state;
 
-import jcl.LispStruct;
+import jcl.compiler.real.element.SimpleElement;
+import jcl.compiler.real.element.SymbolElement;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
-import jcl.packages.PackageSymbolStruct;
 import jcl.packages.PackageVariables;
 import jcl.reader.AttributeType;
 import jcl.reader.ReaderStateMediator;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
-import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -80,25 +79,26 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 	private ReaderStateMediator readerStateMediator;
 
 	@Override
-	public LispStruct process(final TokenBuilder tokenBuilder) {
+	public SimpleElement process(final TokenBuilder tokenBuilder) {
 
-		final SymbolStruct<?> symbolToken = getSymbolToken(tokenBuilder);
-		if (symbolToken == null) {
+		final SymbolElement symbolElement = getSymbolElement(tokenBuilder);
+		if (symbolElement == null) {
 			return readerStateMediator.readIllegalCharacter(tokenBuilder);
 		} else {
-			return symbolToken;
+			return symbolElement;
 		}
 	}
 
 	/**
-	 * This method gets a symbolToken from the provided tokenBuilder and it's tokenAttributes.
+	 * This method gets a {@link SymbolElement} from the provided {@link TokenBuilder} and it's {@link
+	 * TokenBuilder#tokenAttributes}.
 	 *
 	 * @param tokenBuilder
-	 * 		the reader state containing the tokenAttributes to derive the symbolToken
+	 * 		the reader state containing the {@link TokenBuilder#tokenAttributes} to derive the {@link SymbolElement}
 	 *
-	 * @return the built symbolToken value
+	 * @return the built {@link SymbolElement} value
 	 */
-	private static SymbolStruct<?> getSymbolToken(final TokenBuilder tokenBuilder) {
+	private static SymbolElement getSymbolElement(final TokenBuilder tokenBuilder) {
 
 		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
 
@@ -113,12 +113,8 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 			final String symName = ReaderState.convertTokensToString(tokenAttributes);
 
 			final PackageStruct pkg = PackageVariables.PACKAGE.getValue();
-			final PackageSymbolStruct packageSymbol = pkg.findSymbol(symName);
-			if (packageSymbol == null) {
-//				tokenBuilder.setErrorMessage("Unbound variable: " + symName); // TODO: This check will happen in the compiler...
-				return new SymbolStruct<>(symName, pkg);
-			}
-			return packageSymbol.getSymbolStruct();
+			return new SymbolElement(pkg.getName(), symName);
+//			throw new ReaderErrorException("Unbound variable: " + symName); // TODO: This check will happen in the compiler...
 		}
 
 		// Check if last element is a 'PACKAGEMARKER'
@@ -193,20 +189,16 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 				if (externalSymbol == null) {
 					throw new ReaderErrorException("No external symbol named \"" + symName + "\" in package " + pkgName);
 				}
-				return externalSymbol;
+				return new SymbolElement(pkgName, symName, true);
+//				throw new ReaderErrorException("Unbound variable: " + symName); // TODO: This check will happen in the compiler...
 			} else {
-				final PackageSymbolStruct packageSymbol = pkg.findSymbol(symName);
-
-				final SymbolStruct<?> symbol = packageSymbol.getSymbolStruct();
-				if (symbol == null) {
-					throw new ReaderErrorException("Unbound variable: " + pkgName + "::" + symName);
-				}
-				return symbol;
+				return new SymbolElement(pkgName, symName);
+//				throw new ReaderErrorException("Unbound variable: " + pkgName + "::" + symName); // TODO: This check will happen in the compiler...
 			}
 		}
 
-		final PackageSymbolStruct pkgSymStruct = GlobalPackageStruct.KEYWORD.findSymbol(symName);
-		return (pkgSymStruct == null) ? new KeywordSymbolStruct(symName) : pkgSymStruct.getSymbolStruct();
+		final PackageStruct pkg = GlobalPackageStruct.KEYWORD;
+		return new SymbolElement(pkg.getName(), symName);
 	}
 
 	@Override

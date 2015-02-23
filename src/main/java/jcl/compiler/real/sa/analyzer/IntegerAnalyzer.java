@@ -18,6 +18,6 @@ public class IntegerAnalyzer implements Analyzer<IntegerElement, IntegerStruct> 
 
 	@Override
 	public IntegerElement analyze(final SemanticAnalyzer analyzer, final IntegerStruct input, final AnalysisBuilder analysisBuilder) {
-		return new IntegerElement(input);
+		return new IntegerElement(input.getBigInteger());
 	}
 }

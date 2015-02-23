@@ -4,8 +4,8 @@
 
 package jcl.reader.macrofunction;
 
-import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
+import jcl.compiler.real.element.SimpleElement;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
@@ -35,7 +35,7 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctionImpl 
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public SimpleElement readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.EQUALS_SIGN;
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
@@ -54,7 +54,7 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctionImpl 
 		final UUID tag = UUID.randomUUID();
 
 		SharpTagReaderConstants.SHARP_EQUAL_TEMP_TABLE.put(numArg, tag);
-		final LispStruct token = reader.read();
+		final SimpleElement token = reader.read();
 		SharpTagReaderConstants.SHARP_EQUAL_REPL_TABLE.put(tag, token);
 
 		SharpTagReaderConstants.SHARP_EQUAL_FINAL_TABLE.put(numArg, token);

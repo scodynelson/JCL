@@ -4,9 +4,9 @@
 
 package jcl.reader.macrofunction;
 
-import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
-import jcl.characters.CharacterStruct;
+import jcl.compiler.real.element.CharacterElement;
+import jcl.compiler.real.element.SimpleElement;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
@@ -37,7 +37,7 @@ public class SharpUReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public SimpleElement readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_U) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_U);
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
@@ -45,6 +45,6 @@ public class SharpUReaderMacroFunction extends ReaderMacroFunctionImpl {
 		}
 
 		final int unicodeChar = UnicodeCharacterReaderMacroFunction.readUnicodeCharacter(reader);
-		return new CharacterStruct(unicodeChar);
+		return new CharacterElement(unicodeChar);
 	}
 }

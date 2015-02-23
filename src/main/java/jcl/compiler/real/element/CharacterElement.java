@@ -4,26 +4,32 @@
 
 package jcl.compiler.real.element;
 
+import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class CharacterElement implements Element {
+public class CharacterElement implements SimpleElement {
 
 	private static final long serialVersionUID = 8285480869779461957L;
 
-	private final CharacterStruct characterStruct;
+	private final int codePoint;
 
-	public CharacterElement(final CharacterStruct characterStruct) {
-		this.characterStruct = characterStruct;
+	public CharacterElement(final int codePoint) {
+		this.codePoint = codePoint;
 	}
 
-	public CharacterStruct getCharacterStruct() {
-		return characterStruct;
+	public int getCodePoint() {
+		return codePoint;
 	}
 
 	@Override
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+	}
+
+	@Override
+	public LispStruct toLispStruct() {
+		return new CharacterStruct(codePoint);
 	}
 }

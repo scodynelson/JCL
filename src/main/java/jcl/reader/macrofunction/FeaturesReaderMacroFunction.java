@@ -6,6 +6,8 @@ package jcl.reader.macrofunction;
 
 import jcl.LispStruct;
 import jcl.compiler.real.CompilerVariables;
+import jcl.compiler.real.element.ConsElement;
+import jcl.compiler.real.element.SimpleElement;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
@@ -73,7 +75,7 @@ final class FeaturesReaderMacroFunction {
 			ReaderVariables.READ_SUPPRESS.setValue(NILStruct.INSTANCE);
 
 			PackageVariables.PACKAGE.setValue(GlobalPackageStruct.KEYWORD);
-			final LispStruct lispStruct = reader.read();
+			final SimpleElement lispStruct = reader.read();
 			PackageVariables.PACKAGE.setValue(previousPackage);
 
 			final boolean isFeature = isFeature(lispStruct);
@@ -99,12 +101,12 @@ final class FeaturesReaderMacroFunction {
 	 *
 	 * @return true if the provided {@link LispStruct} is a feature that should be read in; false otherwise
 	 */
-	private static boolean isFeature(final LispStruct lispStruct) {
-		if (lispStruct instanceof ListStruct) {
-			return isListFeature((ListStruct) lispStruct);
+	private static boolean isFeature(final SimpleElement lispStruct) {
+		if (lispStruct instanceof ConsElement) {
+			return isListFeature((ConsElement) lispStruct);
 		} else {
 			final List<LispStruct> featuresList = CompilerVariables.FEATURES.getValue().getAsJavaList();
-			return featuresList.contains(lispStruct);
+			return featuresList.contains(lispStruct.toLispStruct());
 		}
 	}
 
@@ -117,8 +119,8 @@ final class FeaturesReaderMacroFunction {
 	 *
 	 * @return true if the provided {@link ListStruct} is a feature that should be read in; false otherwise
 	 */
-	private static boolean isListFeature(final ListStruct listStruct) {
-		return (listStruct instanceof ConsStruct) && isConsFeature((ConsStruct) listStruct);
+	private static boolean isListFeature(final ConsElement listStruct) {
+		return (listStruct.toLispStruct() instanceof ConsStruct) && isConsFeature(listStruct); // TODO: fix
 	}
 
 	/**
@@ -129,18 +131,18 @@ final class FeaturesReaderMacroFunction {
 	 *
 	 * @return true if the provided {@link ConsStruct} is a feature that should be read in; false otherwise
 	 */
-	private static boolean isConsFeature(final ConsStruct consStruct) {
-		final LispStruct first = consStruct.getFirst();
+	private static boolean isConsFeature(final ConsElement consStruct) { // TODO: fix
+		final LispStruct first = ((ConsStruct) consStruct.toLispStruct()).getFirst();
 
 		if (!(first instanceof KeywordSymbolStruct)) {
 			throw new ReaderErrorException("First element of feature expression must be either: :NOT, :AND, or :OR.");
 		}
 
-		final List<LispStruct> rest = consStruct.getRest().getAsJavaList();
+		final List<LispStruct> rest = ((ConsStruct) consStruct.toLispStruct()).getRest().getAsJavaList();
 
 		final KeywordSymbolStruct featureOperator = (KeywordSymbolStruct) first;
 		if (featureOperator.equals(NOT)) {
-			return !isFeature(rest.get(0));
+			return !isFeature((SimpleElement) rest.get(0)); // TODO: FIX THIS!!!!
 		} else if (featureOperator.equals(AND)) {
 			return isAndConsFeature(rest);
 		} else if (featureOperator.equals(OR)) {
@@ -158,10 +160,10 @@ final class FeaturesReaderMacroFunction {
 	 *
 	 * @return true if all of the elements are features; false otherwise
 	 */
-	private static boolean isAndConsFeature(final List<LispStruct> elements) {
+	private static boolean isAndConsFeature(final List<LispStruct> elements) { // TODO: fix
 		boolean tempReturnVal = true;
 		for (final LispStruct lispStruct : elements) {
-			tempReturnVal = tempReturnVal && isFeature(lispStruct);
+			tempReturnVal = tempReturnVal && isFeature((SimpleElement) lispStruct); // TODO: FIX THIS!!!!
 		}
 		return tempReturnVal;
 	}
@@ -174,10 +176,10 @@ final class FeaturesReaderMacroFunction {
 	 *
 	 * @return true if any of the elements are features; false otherwise
 	 */
-	private static boolean isOrConsFeature(final List<LispStruct> elements) {
+	private static boolean isOrConsFeature(final List<LispStruct> elements) { // TODO: fix
 		boolean tempReturnVal = false;
 		for (final LispStruct lispStruct : elements) {
-			tempReturnVal = tempReturnVal || isFeature(lispStruct);
+			tempReturnVal = tempReturnVal || isFeature((SimpleElement) lispStruct); // TODO: FIX THIS!!!!
 		}
 		return tempReturnVal;
 	}

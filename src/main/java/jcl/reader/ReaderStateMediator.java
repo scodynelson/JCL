@@ -5,6 +5,7 @@
 package jcl.reader;
 
 import jcl.LispStruct;
+import jcl.compiler.real.element.SimpleElement;
 
 import java.io.Serializable;
 
@@ -21,8 +22,9 @@ public interface ReaderStateMediator extends Serializable {
 	 * 		the read process
 	 *
 	 * @return the resulting {@link LispStruct} token after a successful read
+	 * TODO: fix Javadoc
 	 */
-	LispStruct read(TokenBuilder tokenBuilder);
+	SimpleElement read(TokenBuilder tokenBuilder);
 
 	/**
 	 * Handle reading illegal characters.
@@ -32,8 +34,9 @@ public interface ReaderStateMediator extends Serializable {
 	 * 		the read process
 	 *
 	 * @return the resulting {@link LispStruct} token after a successful read
+	 * TODO: fix Javadoc
 	 */
-	LispStruct readIllegalCharacter(TokenBuilder tokenBuilder);
+	SimpleElement readIllegalCharacter(TokenBuilder tokenBuilder);
 
 	/**
 	 * Handle reading whitespace type tokens.
@@ -43,8 +46,9 @@ public interface ReaderStateMediator extends Serializable {
 	 * 		the read process
 	 *
 	 * @return the resulting {@link LispStruct} token after a successful read
+	 * TODO: fix Javadoc
 	 */
-	LispStruct readWhitespace(TokenBuilder tokenBuilder);
+	SimpleElement readWhitespace(TokenBuilder tokenBuilder);
 
 	/**
 	 * Handle reading macro characters.
@@ -54,8 +58,9 @@ public interface ReaderStateMediator extends Serializable {
 	 * 		the read process
 	 *
 	 * @return the resulting {@link LispStruct} token after a successful read
+	 * TODO: fix Javadoc
 	 */
-	LispStruct readMacroCharacter(TokenBuilder tokenBuilder);
+	SimpleElement readMacroCharacter(TokenBuilder tokenBuilder);
 
 	/**
 	 * Handle reading single escape type tokens.
@@ -65,8 +70,9 @@ public interface ReaderStateMediator extends Serializable {
 	 * 		the read process
 	 *
 	 * @return the resulting {@link LispStruct} token after a successful read
+	 * TODO: fix Javadoc
 	 */
-	LispStruct readSingleEscape(TokenBuilder tokenBuilder);
+	SimpleElement readSingleEscape(TokenBuilder tokenBuilder);
 
 	/**
 	 * Handle reading multiple escape type tokens.
@@ -76,8 +82,9 @@ public interface ReaderStateMediator extends Serializable {
 	 * 		the read process
 	 *
 	 * @return the resulting {@link LispStruct} token after a successful read
+	 * TODO: fix Javadoc
 	 */
-	LispStruct readMultipleEscape(TokenBuilder tokenBuilder);
+	SimpleElement readMultipleEscape(TokenBuilder tokenBuilder);
 
 	/**
 	 * Handle reading constituent type tokens.
@@ -87,8 +94,9 @@ public interface ReaderStateMediator extends Serializable {
 	 * 		the read process
 	 *
 	 * @return the resulting {@link LispStruct} token after a successful read
+	 * TODO: fix Javadoc
 	 */
-	LispStruct readConstituent(TokenBuilder tokenBuilder);
+	SimpleElement readConstituent(TokenBuilder tokenBuilder);
 
 	/**
 	 * Handle reading even number multiple escape type tokens.
@@ -98,8 +106,9 @@ public interface ReaderStateMediator extends Serializable {
 	 * 		the read process
 	 *
 	 * @return the resulting {@link LispStruct} token after a successful read
+	 * TODO: fix Javadoc
 	 */
-	LispStruct readEvenMultipleEscape(TokenBuilder tokenBuilder);
+	SimpleElement readEvenMultipleEscape(TokenBuilder tokenBuilder);
 
 	/**
 	 * Handle reading odd number multiple escape type tokens.
@@ -109,8 +118,9 @@ public interface ReaderStateMediator extends Serializable {
 	 * 		the read process
 	 *
 	 * @return the resulting {@link LispStruct} token after a successful read
+	 * TODO: fix Javadoc
 	 */
-	LispStruct readOddMultipleEscape(TokenBuilder tokenBuilder);
+	SimpleElement readOddMultipleEscape(TokenBuilder tokenBuilder);
 
 	/**
 	 * Handle accumulating read tokens.
@@ -120,6 +130,7 @@ public interface ReaderStateMediator extends Serializable {
 	 * 		the read process
 	 *
 	 * @return the resulting {@link LispStruct} token after a successful read
+	 * TODO: fix Javadoc
 	 */
-	LispStruct readTokenAccumulated(TokenBuilder tokenBuilder);
+	SimpleElement readTokenAccumulated(TokenBuilder tokenBuilder);
 }

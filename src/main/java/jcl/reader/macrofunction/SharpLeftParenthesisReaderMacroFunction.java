@@ -7,16 +7,16 @@ package jcl.reader.macrofunction;
 import jcl.LispStruct;
 import jcl.arrays.VectorStruct;
 import jcl.characters.CharacterConstants;
+import jcl.compiler.real.element.ConsElement;
+import jcl.compiler.real.element.IntegerElement;
+import jcl.compiler.real.element.NullElement;
+import jcl.compiler.real.element.SimpleElement;
+import jcl.compiler.real.element.SymbolElement;
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.conditions.exceptions.SimpleErrorException;
-import jcl.conditions.exceptions.TypeErrorException;
 import jcl.lists.ListStruct;
-import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
-import jcl.symbols.SymbolStruct;
-import jcl.types.T;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,10 +51,10 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public SimpleElement readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.LEFT_PARENTHESIS;
 
-		final ListStruct listToken = ListReaderMacroFunction.readList(reader);
+		final ConsElement listToken = ListReaderMacroFunction.readList(reader);
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			if (LOGGER.isDebugEnabled()) {
@@ -71,13 +71,13 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 			throw new ReaderErrorException("Ill-formed vector: #" + listToken);
 		}
 
-		final List<LispStruct> lispTokens = listToken.getAsJavaList();
+		final List<SimpleElement> lispTokens = listToken.getElements();
 
 		if (numArg == null) {
 			return createVector(lispTokens);
 		}
 
-		return handleNumArg(lispTokens, numArg, listToken.printStruct());
+		return handleNumArg(lispTokens, numArg, listToken.toLispStruct().printStruct()); // TODO: fix
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 	 *
 	 * @return the properly created {@link VectorStruct} taking care of the proper vector length
 	 */
-	private static LispStruct handleNumArg(final List<LispStruct> lispTokens, final BigInteger numArg, final String listToken) {
+	private static ConsElement handleNumArg(final List<SimpleElement> lispTokens, final BigInteger numArg, final String listToken) {
 
 		final int numberOfTokens = lispTokens.size();
 		final int numArgInt = numArg.intValueExact();
@@ -101,7 +101,7 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 			throw new ReaderErrorException("Vector is longer than specified length: #" + numArg + listToken);
 		}
 
-		LispStruct lastToken = null;
+		SimpleElement lastToken = null;
 		if (CollectionUtils.isNotEmpty(lispTokens)) {
 			lastToken = lispTokens.get(numberOfTokens - 1);
 		}
@@ -123,21 +123,23 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 	 *
 	 * @return the {@link ListStruct} calling the appropriate function needed to produce the {@link VectorStruct}
 	 */
-	private static LispStruct createVector(final List<LispStruct> lispTokens) {
+	private static ConsElement createVector(final List<SimpleElement> lispTokens) {
 		final int numberOfTokens = lispTokens.size();
 		final BigInteger numberOfTokensBI = BigInteger.valueOf(numberOfTokens);
 
-		try {
-			final SymbolStruct<?> makeArrayFnSymbol = GlobalPackageStruct.COMMON_LISP.findSymbol("MAKE-ARRAY").getSymbolStruct();
-			final IntegerStruct dimensions = new IntegerStruct(numberOfTokensBI);
-			final SymbolStruct<?> elementTypeKeyword = GlobalPackageStruct.KEYWORD.findSymbol("ELEMENT-TYPE").getSymbolStruct();
-			final LispStruct elementType = T.INSTANCE;
-			final SymbolStruct<?> initialContentsKeyword = GlobalPackageStruct.KEYWORD.findSymbol("INITIAL-CONTENTS").getSymbolStruct();
-			final ListStruct initialContents = ListStruct.buildProperList(lispTokens);
+		final SymbolElement makeArrayFnSymbol = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "MAKE-ARRAY");
+		final IntegerElement dimensions = new IntegerElement(numberOfTokensBI);
+		final SymbolElement elementTypeKeyword = new SymbolElement(GlobalPackageStruct.KEYWORD.getName(), "ELEMENT-TYPE");
+		final SymbolElement elementType = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "T");
+		final SymbolElement initialContentsKeyword = new SymbolElement(GlobalPackageStruct.KEYWORD.getName(), "INITIAL-CONTENTS");
 
-			return ListStruct.buildProperList(makeArrayFnSymbol, dimensions, elementTypeKeyword, elementType, initialContentsKeyword, initialContents);
-		} catch (final TypeErrorException | SimpleErrorException e) {
-			throw new ReaderErrorException("Error occurred creating vector.", e);
+		final SimpleElement initialContents;
+		if (lispTokens.isEmpty()) {
+			initialContents = NullElement.INSTANCE;
+		} else {
+			initialContents = new ConsElement(lispTokens);
 		}
+
+		return new ConsElement(makeArrayFnSymbol, dimensions, elementTypeKeyword, elementType, initialContentsKeyword, initialContents);
 	}
 }

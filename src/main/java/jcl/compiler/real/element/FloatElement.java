@@ -4,26 +4,42 @@
 
 package jcl.compiler.real.element;
 
+import jcl.LispStruct;
 import jcl.numbers.FloatStruct;
+import jcl.types.Float;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class FloatElement implements Element {
+import java.math.BigDecimal;
+
+public class FloatElement implements NumberElement {
 
 	private static final long serialVersionUID = 9120922223192617896L;
 
-	private final FloatStruct floatStruct;
+	private final jcl.types.Float floatFormat;
 
-	public FloatElement(final FloatStruct floatStruct) {
-		this.floatStruct = floatStruct;
+	private final BigDecimal bigDecimal;
+
+	public FloatElement(final Float floatFormat, final BigDecimal bigDecimal) {
+		this.floatFormat = floatFormat;
+		this.bigDecimal = bigDecimal;
 	}
 
-	public FloatStruct getFloatStruct() {
-		return floatStruct;
+	public Float getFloatFormat() {
+		return floatFormat;
+	}
+
+	public BigDecimal getBigDecimal() {
+		return bigDecimal;
 	}
 
 	@Override
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+	}
+
+	@Override
+	public LispStruct toLispStruct() {
+		return new FloatStruct(floatFormat, bigDecimal);
 	}
 }

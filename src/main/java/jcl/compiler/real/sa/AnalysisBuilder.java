@@ -29,7 +29,7 @@ public class AnalysisBuilder implements Serializable {
 
 	private final Set<SymbolStruct<?>> undefinedFunctions = Collections.synchronizedSet(new HashSet<>());
 
-	private final Stack<SymbolElement<?>> blockStack = new Stack<>();
+	private final Stack<SymbolElement> blockStack = new Stack<>();
 
 	private final Stack<Set<GoElement<?>>> tagbodyStack = new Stack<>();
 
@@ -79,7 +79,7 @@ public class AnalysisBuilder implements Serializable {
 		this.closureDepth = closureDepth;
 	}
 
-	public Stack<SymbolElement<?>> getBlockStack() {
+	public Stack<SymbolElement> getBlockStack() {
 		return blockStack;
 	}
 

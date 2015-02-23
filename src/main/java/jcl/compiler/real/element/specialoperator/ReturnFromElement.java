@@ -14,20 +14,20 @@ public class ReturnFromElement implements Element {
 
 	private static final long serialVersionUID = -6095397540807480492L;
 
-	private final SymbolElement<?> name;
+	private final SymbolElement name;
 	private final Element result;
 
-	public ReturnFromElement(final SymbolElement<?> name) {
+	public ReturnFromElement(final SymbolElement name) {
 		this.name = name;
 		result = NullElement.INSTANCE;
 	}
 
-	public ReturnFromElement(final SymbolElement<?> name, final Element result) {
+	public ReturnFromElement(final SymbolElement name, final Element result) {
 		this.name = name;
 		this.result = result;
 	}
 
-	public SymbolElement<?> getName() {
+	public SymbolElement getName() {
 		return name;
 	}
 

@@ -18,6 +18,6 @@ public class CharacterAnalyzer implements Analyzer<CharacterElement, CharacterSt
 
 	@Override
 	public CharacterElement analyze(final SemanticAnalyzer analyzer, final CharacterStruct input, final AnalysisBuilder analysisBuilder) {
-		return new CharacterElement(input);
+		return new CharacterElement(input.getCodePoint());
 	}
 }

@@ -529,7 +529,7 @@ public class CompileFileFunction {
 //		lineNumber.add(new IntegerStruct(BigInteger.valueOf(file.getLineNumber())));
 
 		// each read creates a new top-level form
-		while ((form = reader.read(false, eofValue, true)) != eofValue) {
+		while ((form = (LispStruct) reader.read(false, eofValue, true)) != eofValue) {
 			assert (form != null);
 			Object formCopy = null;
 			Object result = null;

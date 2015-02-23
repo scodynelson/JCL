@@ -4,18 +4,12 @@
 
 package jcl.reader.macrofunction;
 
-import jcl.LispStruct;
-import jcl.arrays.StringStruct;
 import jcl.characters.CharacterConstants;
-import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.conditions.exceptions.SimpleErrorException;
-import jcl.conditions.exceptions.TypeErrorException;
-import jcl.lists.ListStruct;
-import jcl.packages.GlobalPackageStruct;
+import jcl.compiler.real.element.SimpleElement;
+import jcl.compiler.real.element.StringElement;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.streams.ReadPeekResult;
-import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -41,7 +35,7 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public SimpleElement readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.QUOTATION_MARK;
 
 		final StringBuilder stringBuilder = new StringBuilder();
@@ -67,14 +61,7 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunctionImpl {
 		}
 
 		final String stringValue = stringBuilder.toString();
-		try {
-			final SymbolStruct<?> stringFnSymbol = GlobalPackageStruct.COMMON_LISP.findSymbol("STRING").getSymbolStruct();
-			final StringStruct stringStruct = new StringStruct(stringValue);
-
-			return ListStruct.buildProperList(stringFnSymbol, stringStruct);
-		} catch (final TypeErrorException | SimpleErrorException e) {
-			throw new ReaderErrorException("Error occurred creating string.", e);
-		}
+		return new StringElement(stringValue);
 	}
 
 	/**

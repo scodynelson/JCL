@@ -154,7 +154,7 @@ public class MacroletAnalyzer implements SpecialOperatorAnalyzer {
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
-		final SymbolElement<?> functionNameSE = new SymbolElement<>(functionName);
+		final SymbolElement functionNameSE = new SymbolElement(functionName.getSymbolPackage().getName(), functionName.getName()); // TODO: fix
 		final boolean isSpecial = isSpecial(declareElement, functionNameSE);
 
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
@@ -209,12 +209,12 @@ public class MacroletAnalyzer implements SpecialOperatorAnalyzer {
 		return functionInitForm;
 	}
 
-	private static boolean isSpecial(final DeclareElement declareElement, final SymbolElement<?> var) {
+	private static boolean isSpecial(final DeclareElement declareElement, final SymbolElement var) {
 		boolean isSpecial = false;
 
 		final List<SpecialDeclarationElement> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
 		for (final SpecialDeclarationElement specialDeclarationElement : specialDeclarationElements) {
-			final SymbolElement<?> specialVar = specialDeclarationElement.getVar();
+			final SymbolElement specialVar = specialDeclarationElement.getVar();
 			if (var.equals(specialVar)) {
 				isSpecial = true;
 				break;
@@ -232,7 +232,7 @@ public class MacroletAnalyzer implements SpecialOperatorAnalyzer {
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
-		final SymbolStruct<?> var = specialDeclarationElement.getVar().getSymbolStruct();
+		final SymbolStruct<?> var = (SymbolStruct<?>) specialDeclarationElement.getVar().toLispStruct(); // TODO: fix
 
 		final Environment bindingEnvironment = Environments.getDynamicBindingEnvironment(macroletEnvironment, var);
 		final EnvironmentAllocation allocation = new EnvironmentAllocation(bindingEnvironment);

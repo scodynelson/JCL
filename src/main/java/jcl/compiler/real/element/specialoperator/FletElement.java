@@ -30,7 +30,7 @@ public class FletElement extends InnerFunctionElement<FletEnvironment, FletVar> 
 
 		private static final long serialVersionUID = -794246121764492302L;
 
-		public FletVar(final SymbolElement<?> var, final Element initForm) {
+		public FletVar(final SymbolElement var, final Element initForm) {
 			super(var, initForm);
 		}
 

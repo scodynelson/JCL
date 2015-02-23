@@ -5,6 +5,7 @@
 package jcl.reader.macrofunction;
 
 import jcl.LispStruct;
+import jcl.compiler.real.element.SimpleElement;
 
 import java.math.BigInteger;
 import java.util.Map;
@@ -19,7 +20,7 @@ public interface SharpTagReaderConstants {
 	/**
 	 * Map containing the number argument to #= to parsed {@link LispStruct}s produced by the #= reader macro function.
 	 */
-	Map<BigInteger, LispStruct> SHARP_EQUAL_FINAL_TABLE = new ConcurrentHashMap<>();
+	Map<BigInteger, SimpleElement> SHARP_EQUAL_FINAL_TABLE = new ConcurrentHashMap<>();
 
 	/**
 	 * Map containing the number argument of #= to a temporary {@link UUID} tag value to handle {@link LispStruct}s not
@@ -31,5 +32,5 @@ public interface SharpTagReaderConstants {
 	 * Map containing the temporary {@link UUID} tag value to a {@link LispStruct} that has been parsed by the reader,
 	 * but may have yet to return to the top level of the #= parse.
 	 */
-	Map<UUID, LispStruct> SHARP_EQUAL_REPL_TABLE = new ConcurrentHashMap<>();
+	Map<UUID, SimpleElement> SHARP_EQUAL_REPL_TABLE = new ConcurrentHashMap<>();
 }

@@ -40,7 +40,7 @@ public class SetqAnalyzer implements SpecialOperatorAnalyzer {
 				throw new ProgramErrorException("SETQ: Variable must be of type SymbolStruct. Got: " + var);
 			}
 			final SymbolStruct<?> varSymbol = (SymbolStruct) var;
-			final SymbolElement<?> varSymbolSE = new SymbolElement<>(varSymbol);
+			final SymbolElement varSymbolSE = new SymbolElement(varSymbol.getSymbolPackage().getName(), varSymbol.getName()); // TODO: fix
 
 			final LispStruct form = formsJavaList.get(index + 1);
 			final Element formAnalyzed = analyzer.analyzeForm(form, analysisBuilder);

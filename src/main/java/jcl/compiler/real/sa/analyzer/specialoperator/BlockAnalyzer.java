@@ -32,7 +32,7 @@ public class BlockAnalyzer implements SpecialOperatorAnalyzer {
 		}
 
 		final SymbolStruct<?> name = (SymbolStruct) second;
-		final SymbolElement<?> nameSE = new SymbolElement<>(name);
+		final SymbolElement nameSE = new SymbolElement(name.getSymbolPackage().getName(), name.getName()); // TODO: fix
 		analysisBuilder.getBlockStack().push(nameSE);
 
 		try {

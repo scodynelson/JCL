@@ -4,12 +4,12 @@
 
 package jcl.reader.state;
 
-import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
-import jcl.numbers.FloatStruct;
-import jcl.numbers.IntegerStruct;
-import jcl.numbers.NumberStruct;
-import jcl.numbers.RatioStruct;
+import jcl.compiler.real.element.FloatElement;
+import jcl.compiler.real.element.IntegerElement;
+import jcl.compiler.real.element.NumberElement;
+import jcl.compiler.real.element.RatioElement;
+import jcl.compiler.real.element.SimpleElement;
 import jcl.reader.AttributeType;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
@@ -84,25 +84,26 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 	private SymbolTokenAccumulatedReaderState symbolTokenAccumulatedReaderState;
 
 	@Override
-	public LispStruct process(final TokenBuilder tokenBuilder) {
+	public SimpleElement process(final TokenBuilder tokenBuilder) {
 
-		final NumberStruct numberToken = getNumberToken(tokenBuilder);
-		if (numberToken == null) {
+		final NumberElement numberElement = getNumberElement(tokenBuilder);
+		if (numberElement == null) {
 			return symbolTokenAccumulatedReaderState.process(tokenBuilder);
 		} else {
-			return numberToken;
+			return numberElement;
 		}
 	}
 
 	/**
-	 * This method gets a numberToken from the provided tokenBuilder and it's tokenAttributes.
+	 * This method gets a {@link NumberElement} from the provided {@link TokenBuilder} and it's {@link
+	 * TokenBuilder#tokenAttributes}.
 	 *
 	 * @param tokenBuilder
-	 * 		the reader state containing the tokenAttributes to derive the numberToken
+	 * 		the reader state containing the {@link TokenBuilder#tokenAttributes} to derive the {@link NumberElement}
 	 *
-	 * @return the built numberToken value
+	 * @return the built {@link NumberElement} value
 	 */
-	private static NumberStruct getNumberToken(final TokenBuilder tokenBuilder) {
+	private static NumberElement getNumberElement(final TokenBuilder tokenBuilder) {
 
 		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
 
@@ -168,7 +169,7 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 			final BigInteger denominator = new BigInteger(rationalParts[1], currentRadix);
 
 			final BigFraction rational = new BigFraction(numerator, denominator);
-			return new RatioStruct(rational);
+			return new RatioElement(rational);
 		} else if (hasDecimal) {
 			final Integer exponentToken = ReaderState.getTokenByAttribute(tokenAttributes, AttributeType.EXPONENTMARKER);
 
@@ -176,10 +177,10 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 
 			final Float aFloat = getFloatType(exponentToken);
 			final BigDecimal bigDecimal = new BigDecimal(tokenString);
-			return new FloatStruct(aFloat, bigDecimal);
+			return new FloatElement(aFloat, bigDecimal);
 		} else {
 			final BigInteger basicInteger = new BigInteger(tokenString, currentRadix);
-			return new IntegerStruct(basicInteger);
+			return new IntegerElement(basicInteger);
 		}
 	}
 
@@ -190,8 +191,7 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 	 * @param tokenAttributes
 	 * 		the token attributes to check
 	 *
-	 * @return true if any of the tokens are invalidly placed
-	 * false if all the tokens are validly placed
+	 * @return true if any of the tokens are invalidly placed; false if all the tokens are validly placed
 	 */
 	private static boolean areNumberAttributesInvalid(final LinkedList<TokenAttribute> tokenAttributes) {
 

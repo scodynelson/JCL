@@ -18,6 +18,6 @@ public class RatioAnalyzer implements Analyzer<RatioElement, RatioStruct> {
 
 	@Override
 	public RatioElement analyze(final SemanticAnalyzer analyzer, final RatioStruct input, final AnalysisBuilder analysisBuilder) {
-		return new RatioElement(input);
+		return new RatioElement(input.getBigFraction());
 	}
 }

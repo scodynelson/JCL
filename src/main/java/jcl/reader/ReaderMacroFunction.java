@@ -5,6 +5,7 @@
 package jcl.reader;
 
 import jcl.LispStruct;
+import jcl.compiler.real.element.SimpleElement;
 
 import java.io.Serializable;
 import java.math.BigInteger;
@@ -33,8 +34,9 @@ public interface ReaderMacroFunction extends Serializable {
 	 * 		the optional number argument
 	 *
 	 * @return the parsed {@link LispStruct} token
+	 * TODO: fix Javadoc
 	 */
-	LispStruct readMacro(int codePoint, Reader reader, BigInteger numArg);
+	SimpleElement readMacro(int codePoint, Reader reader, BigInteger numArg);
 
 	/**
 	 * Default method used to determine if the ReaderMacroFunction is a dispatching macro. The default value return is

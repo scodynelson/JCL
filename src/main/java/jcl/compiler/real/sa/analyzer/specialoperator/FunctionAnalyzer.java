@@ -61,11 +61,11 @@ public class FunctionAnalyzer implements SpecialOperatorAnalyzer {
 
 		final boolean hasNoFunctionSymbolBinding = !bindingEnvironment.hasLexicalBinding(functionSymbol);
 
-		final SymbolElement<?> functionSymbolSE;
+		final SymbolElement functionSymbolSE;
 		if (hasNoFunctionSymbolBinding) {
 			functionSymbolSE = lexicalSymbolAnalyzer.analyze(analyzer, functionSymbol, analysisBuilder);
 		} else {
-			functionSymbolSE = new SymbolElement<>(functionSymbol);
+			functionSymbolSE = new SymbolElement(functionSymbol.getSymbolPackage().getName(), functionSymbol.getName()); // TODO: fix
 		}
 
 		return new SymbolFunctionElement(functionSymbolSE);

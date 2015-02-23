@@ -4,26 +4,34 @@
 
 package jcl.compiler.real.element;
 
+import jcl.LispStruct;
 import jcl.numbers.IntegerStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class IntegerElement implements Element {
+import java.math.BigInteger;
+
+public class IntegerElement implements RationalElement {
 
 	private static final long serialVersionUID = 4314662992381073176L;
 
-	private final IntegerStruct integerStruct;
+	private final BigInteger bigInteger;
 
-	public IntegerElement(final IntegerStruct integerStruct) {
-		this.integerStruct = integerStruct;
+	public IntegerElement(final BigInteger bigInteger) {
+		this.bigInteger = bigInteger;
 	}
 
-	public IntegerStruct getIntegerStruct() {
-		return integerStruct;
+	public BigInteger getBigInteger() {
+		return bigInteger;
 	}
 
 	@Override
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+	}
+
+	@Override
+	public LispStruct toLispStruct() {
+		return new IntegerStruct(bigInteger);
 	}
 }

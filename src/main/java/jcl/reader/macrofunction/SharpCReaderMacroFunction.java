@@ -4,16 +4,16 @@
 
 package jcl.reader.macrofunction;
 
-import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
+import jcl.compiler.real.element.ConsElement;
+import jcl.compiler.real.element.RealElement;
+import jcl.compiler.real.element.SimpleElement;
+import jcl.compiler.real.element.SymbolElement;
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.lists.ListStruct;
-import jcl.numbers.RealStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
-import jcl.symbols.SymbolStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -49,40 +49,40 @@ public class SharpCReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public SimpleElement readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_C) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_C);
 
-		final LispStruct lispToken = reader.read();
+		final SimpleElement lispToken = reader.read();
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("{} suppressed.", lispToken.printStruct());
+				LOGGER.debug("{} suppressed.", lispToken.toLispStruct().printStruct()); // TODO: fix
 			}
 			return null;
 		}
 
-		if (!(lispToken instanceof ListStruct)) {
-			throw new ReaderErrorException("Illegal complex number format: #C" + lispToken);
+		if (!(lispToken instanceof ConsElement)) {
+			throw new ReaderErrorException("Illegal complex number format: #C" + lispToken.toLispStruct().printStruct()); // TODO: fix
 		}
 
-		final ListStruct listToken = (ListStruct) lispToken;
-		final List<LispStruct> lispTokens = listToken.getAsJavaList();
+		final ConsElement listToken = (ConsElement) lispToken;
+		final List<SimpleElement> lispTokens = listToken.getElements();
 
 		final int maxNumberOfTokensForComplex = 2;
 		if (lispTokens.size() != maxNumberOfTokensForComplex) {
-			throw new ReaderErrorException("Illegal complex number format: #C" + lispToken);
+			throw new ReaderErrorException("Illegal complex number format: #C" + lispToken.toLispStruct().printStruct());
 		}
 
-		final LispStruct real = lispTokens.get(0);
-		if (!(real instanceof RealStruct)) {
-			throw new ReaderErrorException("Only real numbers are valid tokens for #c. Got: " + real);
+		final SimpleElement real = lispTokens.get(0);
+		if (!(real instanceof RealElement)) {
+			throw new ReaderErrorException("Only real numbers are valid tokens for #c. Got: " + real.toLispStruct().printStruct());
 		}
 
-		final LispStruct imaginary = lispTokens.get(1);
-		if (!(imaginary instanceof RealStruct)) {
-			throw new ReaderErrorException("Only real numbers are valid tokens for #c. Got: " + imaginary);
+		final SimpleElement imaginary = lispTokens.get(1);
+		if (!(imaginary instanceof RealElement)) {
+			throw new ReaderErrorException("Only real numbers are valid tokens for #c. Got: " + imaginary.toLispStruct().printStruct());
 		}
 
-		final SymbolStruct<?> complexFnSymbol = GlobalPackageStruct.COMMON_LISP.findSymbol("COMPLEX").getSymbolStruct();
-		return ListStruct.buildProperList(complexFnSymbol, real, imaginary);
+		final SymbolElement complexFnSymbol = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "COMPLEX"); // TODO: fix
+		return new ConsElement(complexFnSymbol, real, imaginary);
 	}
 }

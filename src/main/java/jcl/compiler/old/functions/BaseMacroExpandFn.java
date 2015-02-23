@@ -21,6 +21,6 @@ public class BaseMacroExpandFn extends FunctionStruct {
 	}
 
 	public LispStruct funcall(final MacroFunctionExpander expander, final ListStruct form, final LispStruct env) {
-		return expander.expand(form, env);
+		return expander.expand(form);
 	}
 }

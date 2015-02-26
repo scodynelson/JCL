@@ -30,9 +30,4 @@ public abstract class TypeBaseClass extends SymbolStruct<LispType> implements Li
 	private void init() {
 		setValue(this);
 	}
-
-	@Override
-	public String printStruct() {
-		return null;
-	}
 }

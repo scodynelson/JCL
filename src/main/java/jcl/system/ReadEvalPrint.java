@@ -2,7 +2,6 @@ package jcl.system;
 
 import jcl.LispStruct;
 import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.element.Element;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.conditions.exceptions.StreamErrorException;
@@ -10,6 +9,7 @@ import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
+import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.macrofunction.SharpTagReaderConstants;
 import jcl.streams.CharacterStreamStruct;
@@ -34,6 +34,9 @@ public class ReadEvalPrint {
 
 	@Autowired
 	private ApplicationContext context;
+
+	@Autowired
+	private Printer printer;
 
 	public Object funcall(final String... args) {
 		Object temp = SpecialOperator.BLOCK;
@@ -120,7 +123,9 @@ public class ReadEvalPrint {
 						}
 						if (whatRead != null) {
 							LOGGER.debug("READ:\n");
-							LOGGER.debug("{}\n", whatRead.toLispStruct().printStruct()); // TODO: fix
+
+							final String printedWhatRead = printer.print(whatRead);
+							LOGGER.debug("{}\n", printedWhatRead);
 						} else {
 							LOGGER.warn("; WARNING: Null response from reader");
 						}
@@ -221,7 +226,7 @@ public class ReadEvalPrint {
 //							LOGGER.info(mv[count].toString());
 //						}
 					} else {
-						final String printedValue = whatRead.toLispStruct().printStruct();
+						final String printedValue = printer.print(whatRead);
 						LOGGER.info(printedValue);
 					}
 				} catch (final Exception ex) {

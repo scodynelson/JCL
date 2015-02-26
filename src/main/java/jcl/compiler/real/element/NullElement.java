@@ -29,8 +29,8 @@ public final class NullElement implements ListElement {
 	}
 
 	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+	public List<SimpleElement> getElements() {
+		return Collections.emptyList();
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public final class NullElement implements ListElement {
 	}
 
 	@Override
-	public List<SimpleElement> getElements() {
-		return Collections.emptyList();
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

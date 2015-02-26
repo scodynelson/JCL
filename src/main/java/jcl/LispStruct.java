@@ -22,13 +22,4 @@ public interface LispStruct extends Serializable {
 	default LispType getType() {
 		return T.INSTANCE;
 	}
-
-	/**
-	 * This method returns the printed representation of the struct.
-	 *
-	 * @return the printed representation of the struct
-	 */
-	default String printStruct() {
-		return toString();
-	}
 }

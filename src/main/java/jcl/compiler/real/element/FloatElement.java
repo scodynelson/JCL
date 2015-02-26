@@ -6,7 +6,6 @@ package jcl.compiler.real.element;
 
 import jcl.LispStruct;
 import jcl.numbers.FloatStruct;
-import jcl.types.Float;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -20,12 +19,12 @@ public class FloatElement implements NumberElement {
 
 	private final BigDecimal bigDecimal;
 
-	public FloatElement(final Float floatFormat, final BigDecimal bigDecimal) {
+	public FloatElement(final jcl.types.Float floatFormat, final BigDecimal bigDecimal) {
 		this.floatFormat = floatFormat;
 		this.bigDecimal = bigDecimal;
 	}
 
-	public Float getFloatFormat() {
+	public jcl.types.Float getFloatFormat() {
 		return floatFormat;
 	}
 
@@ -34,12 +33,12 @@ public class FloatElement implements NumberElement {
 	}
 
 	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+	public LispStruct toLispStruct() {
+		return new FloatStruct(floatFormat, bigDecimal);
 	}
 
 	@Override
-	public LispStruct toLispStruct() {
-		return new FloatStruct(floatFormat, bigDecimal);
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

@@ -15,7 +15,6 @@ import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
 import jcl.reader.struct.ReaderVariables;
 import jcl.types.DoubleFloat;
-import jcl.types.Float;
 import jcl.types.LongFloat;
 import jcl.types.ShortFloat;
 import jcl.types.SingleFloat;
@@ -175,7 +174,7 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 
 			tokenString = getFloatTokenString(tokenString, exponentToken);
 
-			final Float aFloat = getFloatType(exponentToken);
+			final jcl.types.Float aFloat = getFloatType(exponentToken);
 			final BigDecimal bigDecimal = new BigDecimal(tokenString);
 			return new FloatElement(aFloat, bigDecimal);
 		} else {
@@ -340,8 +339,8 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 	 *
 	 * @return the proper float type
 	 */
-	private static Float getFloatType(final Integer exponentToken) {
-		Float floatType = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getValue();
+	private static jcl.types.Float getFloatType(final Integer exponentToken) {
+		jcl.types.Float floatType = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getValue();
 
 		if (exponentToken != null) {
 			final int exponentTokenInt = exponentToken;

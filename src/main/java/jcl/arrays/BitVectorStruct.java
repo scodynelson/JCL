@@ -2,7 +2,6 @@ package jcl.arrays;
 
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.numbers.IntegerStruct;
-import jcl.printer.PrinterVariables;
 import jcl.types.Bit;
 import jcl.types.BitVector;
 import jcl.types.SimpleBitVector;
@@ -67,12 +66,12 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 	}
 
 	/**
-	 * Gets a list of {@link IntegerStruct}s from the provided {@link java.lang.String} value.
+	 * Gets a list of {@link IntegerStruct}s from the provided {@link String} value.
 	 *
 	 * @param bitString
 	 * 		the Java string to convert to a list of {@link IntegerStruct}s
 	 *
-	 * @return a list of {@link IntegerStruct}s from the provided {@link java.lang.String} value
+	 * @return a list of {@link IntegerStruct}s from the provided {@link String} value
 	 */
 	private static List<IntegerStruct> getBitList(final String bitString) {
 		if (!BIT_PATTERN.matcher(bitString).matches()) {
@@ -88,44 +87,6 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 			}
 		}
 		return bitList;
-	}
-
-	@Override
-	public String printStruct() {
-		final boolean printArray = PrinterVariables.PRINT_ARRAY.getValue().booleanValue();
-
-		final StringBuilder stringBuilder = new StringBuilder();
-
-		if (printArray) {
-			stringBuilder.append("#*");
-
-			final int amountToPrint = (fillPointer == null) ? contents.size() : fillPointer;
-
-			for (int i = 0; i < amountToPrint; i++) {
-				final IntegerStruct integerStruct = contents.get(i);
-				stringBuilder.append(integerStruct.printStruct());
-			}
-		} else {
-			final String typeClassName = getType().getClass().getName().toUpperCase();
-
-			stringBuilder.append("#<");
-			stringBuilder.append(typeClassName);
-			stringBuilder.append(' ');
-			stringBuilder.append(totalSize);
-
-			if (fillPointer != null) {
-				stringBuilder.append(" fill-pointer ");
-				stringBuilder.append(fillPointer);
-			}
-
-			if (isAdjustable) {
-				stringBuilder.append(" adjustable");
-			}
-
-			stringBuilder.append('>');
-		}
-
-		return stringBuilder.toString();
 	}
 
 	@Override

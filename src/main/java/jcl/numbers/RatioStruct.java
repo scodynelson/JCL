@@ -57,14 +57,6 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	@Override
-	public String printStruct() {
-		final IntegerStruct numerator = new IntegerStruct(bigFraction.getNumerator());
-		final IntegerStruct denominator = new IntegerStruct(bigFraction.getNumerator());
-
-		return numerator.printStruct() + '/' + denominator.printStruct();
-	}
-
-	@Override
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}

@@ -8,6 +8,7 @@ import jcl.characters.CharacterConstants;
 import jcl.compiler.real.element.SimpleElement;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -24,6 +25,9 @@ public class LeftParenthesisReaderMacroFunction extends ReaderMacroFunctionImpl 
 	 */
 	private static final long serialVersionUID = 8364282884759641778L;
 
+	@Autowired
+	private ListReaderMacroFunction listReaderMacroFunction;
+
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
@@ -36,6 +40,6 @@ public class LeftParenthesisReaderMacroFunction extends ReaderMacroFunctionImpl 
 	public SimpleElement readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.LEFT_PARENTHESIS;
 
-		return ListReaderMacroFunction.readList(reader);
+		return listReaderMacroFunction.readList(reader);
 	}
 }

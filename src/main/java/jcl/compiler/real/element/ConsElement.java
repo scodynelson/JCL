@@ -17,9 +17,9 @@ public class ConsElement implements ListElement {
 
 	private static final long serialVersionUID = -8355540372664272579L;
 
-	private List<SimpleElement> elements;
-
 	private boolean isDotted;
+
+	private List<SimpleElement> elements;
 
 	public ConsElement(final SimpleElement... elements) {
 		this(Arrays.asList(elements));
@@ -38,13 +38,13 @@ public class ConsElement implements ListElement {
 		this(isDotted, Arrays.asList(elements));
 	}
 
+	public boolean isDotted() {
+		return isDotted;
+	}
+
 	@Override
 	public List<SimpleElement> getElements() {
 		return elements;
-	}
-
-	public boolean isDotted() {
-		return isDotted;
 	}
 
 	@Override

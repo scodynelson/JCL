@@ -11,11 +11,13 @@ import jcl.compiler.real.element.StringElement;
 import jcl.compiler.real.element.SymbolElement;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.packages.GlobalPackageStruct;
+import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -37,6 +39,9 @@ public class SharpPReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(SharpPReaderMacroFunction.class);
 
+	@Autowired
+	private Printer printer;
+
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
@@ -54,7 +59,8 @@ public class SharpPReaderMacroFunction extends ReaderMacroFunctionImpl {
 		final SimpleElement lispToken = reader.read();
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("{} suppressed.", lispToken.toLispStruct().printStruct()); // TODO: fix
+				final String printedToken = printer.print(lispToken);
+				LOGGER.debug("{} suppressed.", printedToken);
 			}
 			return null;
 		}
@@ -65,7 +71,8 @@ public class SharpPReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 			return new ConsElement(pathnameFnSymbol, pathnameString);
 		} else {
-			throw new ReaderErrorException("Improper namestring provided to #P: " + lispToken);
+			final String printedToken = printer.print(lispToken);
+			throw new ReaderErrorException("Improper namestring provided to #P: " + printedToken);
 		}
 	}
 }

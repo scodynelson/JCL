@@ -149,11 +149,6 @@ public class HashTableStruct extends BuiltInClassStruct {
 	}
 
 	@Override
-	protected String getPrintableObjectProperties() {
-		return " :TEST " + test.printStruct() + " size " + map.size();
-	}
-
-	@Override
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
@@ -161,7 +156,7 @@ public class HashTableStruct extends BuiltInClassStruct {
 	/**
 	 * Private inner class that acts as a wrapper around hash keys for proper equality testing.
 	 */
-	private static final class KeyWrapper implements LispStruct {
+	public static final class KeyWrapper implements LispStruct {
 
 		private static final long serialVersionUID = -5433164484857026785L;
 		/**
@@ -187,14 +182,13 @@ public class HashTableStruct extends BuiltInClassStruct {
 			this.equator = equator;
 		}
 
-		@Override
-		public LispType getType() {
-			return key.getType();
+		public LispStruct getKey() {
+			return key;
 		}
 
 		@Override
-		public String printStruct() {
-			return key.printStruct();
+		public LispType getType() {
+			return key.getType();
 		}
 
 		@Override

@@ -26,12 +26,12 @@ public class IntegerElement implements RationalElement {
 	}
 
 	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+	public LispStruct toLispStruct() {
+		return new IntegerStruct(bigInteger);
 	}
 
 	@Override
-	public LispStruct toLispStruct() {
-		return new IntegerStruct(bigInteger);
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

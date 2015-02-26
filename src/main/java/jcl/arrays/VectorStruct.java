@@ -4,7 +4,6 @@ import jcl.LispStruct;
 import jcl.LispType;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
-import jcl.printer.PrinterVariables;
 import jcl.sequences.SequenceStruct;
 import jcl.types.SimpleVector;
 import jcl.types.T;
@@ -180,57 +179,6 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 			throw new TypeErrorException("Vector is not an adjustable array.");
 		}
 		return push(element);
-	}
-
-	@Override
-	public String printStruct() {
-		// TODO: Ignoring *PRINT-LEVEL* and *PRINT-LENGTH*
-
-		final boolean printArray = PrinterVariables.PRINT_ARRAY.getValue().booleanValue();
-		final boolean printReadably = PrinterVariables.PRINT_READABLY.getValue().booleanValue();
-
-		final StringBuilder stringBuilder = new StringBuilder();
-
-		if (printArray || printReadably) {
-			stringBuilder.append("#(");
-
-			final int amountToPrint = (fillPointer == null) ? contents.size() : fillPointer;
-
-			for (int i = 0; i < amountToPrint; i++) {
-				final LispStruct lispStruct = contents.get(i);
-				stringBuilder.append(lispStruct.printStruct());
-
-				if (i < (amountToPrint - 1)) {
-					stringBuilder.append(' ');
-				}
-			}
-
-			stringBuilder.append(')');
-		} else {
-			final String typeClassName = getType().getClass().getName().toUpperCase();
-
-			stringBuilder.append("#<");
-			stringBuilder.append(typeClassName);
-			stringBuilder.append(' ');
-			stringBuilder.append(totalSize);
-
-			stringBuilder.append(" type ");
-			final String elementTypeClassName = elementType.getClass().getName().toUpperCase();
-			stringBuilder.append(elementTypeClassName);
-
-			if (fillPointer != null) {
-				stringBuilder.append(" fill-pointer ");
-				stringBuilder.append(fillPointer);
-			}
-
-			if (isAdjustable) {
-				stringBuilder.append(" adjustable");
-			}
-
-			stringBuilder.append('>');
-		}
-
-		return stringBuilder.toString();
 	}
 
 	@Override

@@ -5,13 +5,14 @@
 package jcl.reader.macrofunction;
 
 import jcl.characters.CharacterConstants;
-import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.SimpleElement;
 import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -33,6 +34,9 @@ public class SharpFullStopReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(SharpFullStopReaderMacroFunction.class);
 
+	@Autowired
+	private Printer printer;
+
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
@@ -48,7 +52,8 @@ public class SharpFullStopReaderMacroFunction extends ReaderMacroFunctionImpl {
 		final SimpleElement lispToken = reader.read();
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("{} suppressed.", lispToken.toLispStruct().printStruct()); // TODO: fix
+				final String printedToken = printer.print(lispToken);
+				LOGGER.debug("{} suppressed.", printedToken);
 			}
 			return null;
 		}

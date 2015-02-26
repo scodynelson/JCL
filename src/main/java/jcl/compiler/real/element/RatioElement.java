@@ -25,12 +25,12 @@ public class RatioElement implements RationalElement {
 	}
 
 	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+	public LispStruct toLispStruct() {
+		return new RatioStruct(bigFraction);
 	}
 
 	@Override
-	public LispStruct toLispStruct() {
-		return new RatioStruct(bigFraction);
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

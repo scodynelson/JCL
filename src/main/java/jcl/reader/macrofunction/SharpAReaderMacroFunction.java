@@ -17,11 +17,13 @@ import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ListStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
+import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -45,6 +47,9 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(SharpAReaderMacroFunction.class);
 
+	@Autowired
+	private Printer printer;
+
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
@@ -62,7 +67,8 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 		final SimpleElement lispToken = reader.read();
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("{} suppressed.", lispToken.toLispStruct().printStruct()); // TODO: fix
+				final String printedToken = printer.print(lispToken);
+				LOGGER.debug("{} suppressed.", printedToken);
 			}
 			return null;
 		}
@@ -74,7 +80,8 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 		if (BigInteger.ZERO.compareTo(numArg) > 0) {
 			if (!(lispToken instanceof SequenceElement)) {
 				// TODO: this is NOT adequate!! Because we MAKE ListElements in other parts of the reader...
-				throw new ReaderErrorException("The form following a #" + numArg + "A reader macro should have been a sequence, but it was: " + lispToken.toLispStruct().printStruct());
+				final String printedToken = printer.print(lispToken);
+				throw new ReaderErrorException("The form following a #" + numArg + "A reader macro should have been a sequence, but it was: " + printedToken);
 			}
 		}
 
@@ -112,7 +119,7 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 		final SimpleElement initialContents;
 		if (contents instanceof SequenceElement) {
 			final SequenceElement sequenceContents = (SequenceElement) contents;
-			final List<SimpleElement> sequenceContentsAsJavaList = sequenceContents.getElements();
+			final List<? extends SimpleElement> sequenceContentsAsJavaList = sequenceContents.getElements();
 
 			if (sequenceContentsAsJavaList.isEmpty()) {
 				initialContents = NullElement.INSTANCE;
@@ -158,7 +165,7 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 				throw new ReaderErrorException("#" + dimensions + "A axis " + axis + " is not a sequence: " + seq);
 			}
 
-			final List<SimpleElement> lispTokens = seqList.getElements();
+			final List<? extends SimpleElement> lispTokens = seqList.getElements();
 
 			final int seqLength = lispTokens.size();
 			final BigInteger seqLengthBI = BigInteger.valueOf(seqLength);

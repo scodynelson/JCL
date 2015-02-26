@@ -5,8 +5,6 @@ import jcl.conditions.exceptions.PackageErrorException;
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.types.Package;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -591,11 +589,6 @@ public class PackageStruct extends BuiltInClassStruct {
 		}
 
 		return foundSymbol;
-	}
-
-	@Override
-	protected String getPrintableObjectProperties() {
-		return ' ' + name;
 	}
 
 	@Override

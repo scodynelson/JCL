@@ -11,11 +11,13 @@ import jcl.compiler.real.element.SimpleElement;
 import jcl.compiler.real.element.SymbolElement;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.packages.GlobalPackageStruct;
+import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -38,6 +40,9 @@ public class SharpCReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(SharpCReaderMacroFunction.class);
 
+	@Autowired
+	private Printer printer;
+
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
@@ -55,13 +60,15 @@ public class SharpCReaderMacroFunction extends ReaderMacroFunctionImpl {
 		final SimpleElement lispToken = reader.read();
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("{} suppressed.", lispToken.toLispStruct().printStruct()); // TODO: fix
+				final String printedToken = printer.print(lispToken);
+				LOGGER.debug("{} suppressed.", printedToken);
 			}
 			return null;
 		}
 
 		if (!(lispToken instanceof ConsElement)) {
-			throw new ReaderErrorException("Illegal complex number format: #C" + lispToken.toLispStruct().printStruct()); // TODO: fix
+			final String printedToken = printer.print(lispToken);
+			throw new ReaderErrorException("Illegal complex number format: #C" + printedToken);
 		}
 
 		final ConsElement listToken = (ConsElement) lispToken;
@@ -69,17 +76,20 @@ public class SharpCReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 		final int maxNumberOfTokensForComplex = 2;
 		if (lispTokens.size() != maxNumberOfTokensForComplex) {
-			throw new ReaderErrorException("Illegal complex number format: #C" + lispToken.toLispStruct().printStruct());
+			final String printedToken = printer.print(lispToken);
+			throw new ReaderErrorException("Illegal complex number format: #C" + printedToken);
 		}
 
 		final SimpleElement real = lispTokens.get(0);
 		if (!(real instanceof RealElement)) {
-			throw new ReaderErrorException("Only real numbers are valid tokens for #c. Got: " + real.toLispStruct().printStruct());
+			final String printedReal = printer.print(real);
+			throw new ReaderErrorException("Only real numbers are valid tokens for #c. Got: " + printedReal);
 		}
 
 		final SimpleElement imaginary = lispTokens.get(1);
 		if (!(imaginary instanceof RealElement)) {
-			throw new ReaderErrorException("Only real numbers are valid tokens for #c. Got: " + imaginary.toLispStruct().printStruct());
+			final String printedImaginary = printer.print(imaginary);
+			throw new ReaderErrorException("Only real numbers are valid tokens for #c. Got: " + printedImaginary);
 		}
 
 		final SymbolElement complexFnSymbol = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "COMPLEX"); // TODO: fix

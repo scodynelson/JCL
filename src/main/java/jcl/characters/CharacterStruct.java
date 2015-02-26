@@ -5,9 +5,7 @@
 package jcl.characters;
 
 import jcl.classes.BuiltInClassStruct;
-import jcl.printer.PrinterVariables;
 import jcl.types.BaseChar;
-import jcl.types.Character;
 import jcl.types.ExtendedChar;
 import jcl.types.StandardChar;
 import org.apache.commons.lang3.CharUtils;
@@ -45,17 +43,17 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 *
 	 * @return the matching character type for the provided character {@code codePoint}
 	 */
-	private static Character getCharacterType(final int codePoint) {
-		final Character characterType;
+	private static jcl.types.Character getCharacterType(final int codePoint) {
+		final jcl.types.Character characterType;
 
 		if (CharUtils.isAsciiControl((char) codePoint) && (codePoint != CharUtils.LF)) {
 			characterType = BaseChar.INSTANCE;
 		} else if (CharUtils.isAscii((char) codePoint)) {
 			characterType = StandardChar.INSTANCE;
-		} else if (java.lang.Character.isDefined(codePoint)) {
+		} else if (Character.isDefined(codePoint)) {
 			characterType = ExtendedChar.INSTANCE;
 		} else {
-			characterType = Character.INSTANCE;
+			characterType = jcl.types.Character.INSTANCE;
 		}
 
 		return characterType;
@@ -77,24 +75,6 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 */
 	public char getCharacter() {
 		return (char) codePoint;
-	}
-
-	@Override
-	public String printStruct() {
-		final boolean printEscape = PrinterVariables.PRINT_ESCAPE.getValue().booleanValue();
-
-		final StringBuilder stringBuilder = new StringBuilder();
-		if (printEscape) {
-			stringBuilder.append("#\\");
-		}
-
-		if (java.lang.Character.isLetterOrDigit(codePoint)) {
-			stringBuilder.append(codePoint);
-		} else {
-			stringBuilder.append(java.lang.Character.getName(codePoint));
-		}
-
-		return stringBuilder.toString();
 	}
 
 	@Override

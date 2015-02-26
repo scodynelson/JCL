@@ -68,11 +68,6 @@ public class TwoWayStreamStruct extends AbstractDualStreamStruct {
 	}
 
 	@Override
-	protected String getPrintableObjectProperties() {
-		return " input " + inputStream.printStruct() + ", output " + outputStream.printStruct();
-	}
-
-	@Override
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}

@@ -19,12 +19,6 @@ public abstract class MethodCombinationStruct implements LispStruct {
 	}
 
 	@Override
-	public String printStruct() {
-		final String typeClassName = getType().getClass().getName().toUpperCase();
-		return "#<" + typeClassName + '>';
-	}
-
-	@Override
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}

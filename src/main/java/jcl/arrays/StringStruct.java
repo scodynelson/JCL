@@ -1,10 +1,6 @@
 package jcl.arrays;
 
 import jcl.characters.CharacterStruct;
-import jcl.printer.PrinterVariables;
-import jcl.reader.struct.ReaderVariables;
-import jcl.reader.struct.ReadtableStruct;
-import jcl.reader.struct.SyntaxType;
 import jcl.types.BaseChar;
 import jcl.types.BaseString;
 import jcl.types.Character;
@@ -101,37 +97,6 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 		for (final CharacterStruct characterStruct : contents) {
 			final int codePoint = characterStruct.getCodePoint();
 			stringBuilder.appendCodePoint(codePoint);
-		}
-
-		return stringBuilder.toString();
-	}
-
-	@Override
-	public java.lang.String printStruct() {
-		final boolean printEscape = PrinterVariables.PRINT_ESCAPE.getValue().booleanValue();
-
-		final ReadtableStruct readtable = ReaderVariables.READTABLE.getValue();
-
-		final StringBuilder stringBuilder = new StringBuilder();
-		if (printEscape) {
-			stringBuilder.append('"');
-		}
-
-		final int amountToPrint = (fillPointer == null) ? contents.size() : fillPointer;
-
-		for (int i = 0; i < amountToPrint; i++) {
-			final CharacterStruct characterStruct = contents.get(i);
-			final int codePoint = characterStruct.getCodePoint();
-
-			final SyntaxType syntaxType = readtable.getSyntaxType(codePoint);
-			if ((codePoint == '"') || (syntaxType == SyntaxType.SINGLE_ESCAPE)) {
-				stringBuilder.append('\\');
-			}
-			stringBuilder.appendCodePoint(codePoint);
-		}
-
-		if (printEscape) {
-			stringBuilder.append('"');
 		}
 
 		return stringBuilder.toString();

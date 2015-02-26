@@ -24,12 +24,12 @@ public class CharacterElement implements SimpleElement {
 	}
 
 	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+	public LispStruct toLispStruct() {
+		return new CharacterStruct(codePoint);
 	}
 
 	@Override
-	public LispStruct toLispStruct() {
-		return new CharacterStruct(codePoint);
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

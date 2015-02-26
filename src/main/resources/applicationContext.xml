@@ -9,6 +9,60 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
+	<!-- Printer -->
+
+	<util:map id="structPrinterStrategies"
+	          key-type="java.lang.Class"
+	          value-type="jcl.printer.impl.LispPrinter">
+
+		<entry key="jcl.arrays.ArrayStruct" value-ref="arrayStructPrinter"/>
+		<entry key="jcl.arrays.BitVectorStruct" value-ref="bitVectorStructPrinter"/>
+		<entry key="jcl.arrays.StringStruct" value-ref="stringStructPrinter"/>
+		<entry key="jcl.arrays.VectorStruct" value-ref="vectorStructPrinter"/>
+
+		<entry key="jcl.hashtables.HashTableStruct" value-ref="hashTableStructPrinter"/>
+		<entry key="jcl.hashtables.HashTableStruct.KeyWrapper" value-ref="hashTableKeyWrapperPrinter"/>
+
+		<entry key="jcl.lists.ConsStruct" value-ref="consStructPrinter"/>
+		<entry key="jcl.lists.NullStruct" value-ref="nullStructPrinter"/>
+
+		<entry key="jcl.numbers.ComplexStruct" value-ref="complexStructPrinter"/>
+		<entry key="jcl.numbers.FloatStruct" value-ref="floatStructPrinter"/>
+		<entry key="jcl.numbers.IntegerStruct" value-ref="integerStructPrinter"/>
+		<entry key="jcl.numbers.RatioStruct" value-ref="ratioStructPrinter"/>
+
+		<entry key="jcl.packages.PackageStruct" value-ref="packageStructPrinter"/>
+
+		<entry key="jcl.pathnames.PathnameStruct" value-ref="pathnameStructPrinter"/>
+
+		<entry key="jcl.reader.macrofunction.CommentStruct" value-ref="commentStructPrinter"/>
+
+		<entry key="jcl.streams.EchoStreamStruct" value-ref="echoStreamStructPrinter"/>
+		<entry key="jcl.streams.SynonymStreamStruct" value-ref="synonymStreamStructPrinter"/>
+		<entry key="jcl.streams.TwoWayStreamStruct" value-ref="twoWayStreamStructPrinter"/>
+
+		<entry key="jcl.symbols.SymbolStruct" value-ref="symbolStructPrinter"/>
+
+	</util:map>
+
+	<util:map id="elementPrinterStrategies"
+	          key-type="java.lang.Class"
+	          value-type="jcl.printer.impl.LispPrinter">
+
+		<entry key="jcl.compiler.real.element.CharacterElement" value-ref="characterElementPrinter"/>
+		<entry key="jcl.compiler.real.element.CommentElement" value-ref="commentElementPrinter"/>
+		<entry key="jcl.compiler.real.element.ConsElement" value-ref="consElementPrinter"/>
+		<entry key="jcl.compiler.real.element.FloatElement" value-ref="floatElementPrinter"/>
+		<entry key="jcl.compiler.real.element.IntegerElement" value-ref="integerElementPrinter"/>
+		<entry key="jcl.compiler.real.element.NullElement" value-ref="nullElementPrinter"/>
+		<entry key="jcl.compiler.real.element.RatioElement" value-ref="ratioElementPrinter"/>
+		<entry key="jcl.compiler.real.element.StringElement" value-ref="stringElementPrinter"/>
+		<entry key="jcl.compiler.real.element.SymbolElement" value-ref="symbolElementPrinter"/>
+
+	</util:map>
+
+	<!-- Semantic Analyzer -->
+
 	<util:map id="elementAnalyzerStrategies"
 	          key-type="java.lang.Class"
 	          value-type="jcl.compiler.real.sa.Analyzer">

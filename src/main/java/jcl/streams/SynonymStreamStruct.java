@@ -203,9 +203,4 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 		final StreamStruct stream = symbol.getValue();
 		return stream.filePosition(filePosition);
 	}
-
-	@Override
-	protected String getPrintableObjectProperties() {
-		return " to " + symbol.printStruct();
-	}
 }

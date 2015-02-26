@@ -15,11 +15,13 @@ import jcl.compiler.real.element.SymbolElement;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
+import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -42,6 +44,12 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(SharpLeftParenthesisReaderMacroFunction.class);
 
+	@Autowired
+	private ListReaderMacroFunction listReaderMacroFunction;
+
+	@Autowired
+	private Printer printer;
+
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
@@ -54,11 +62,12 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 	public SimpleElement readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.LEFT_PARENTHESIS;
 
-		final ConsElement listToken = ListReaderMacroFunction.readList(reader);
+		final ConsElement listToken = listReaderMacroFunction.readList(reader);
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("{} suppressed.", listToken);
+				final String printedToken = printer.print(listToken);
+				LOGGER.debug("{} suppressed.", printedToken);
 			}
 			return null;
 		}
@@ -68,7 +77,8 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 		}
 
 		if (listToken.isDotted()) {
-			throw new ReaderErrorException("Ill-formed vector: #" + listToken);
+			final String printedToken = printer.print(listToken);
+			throw new ReaderErrorException("Ill-formed vector: #" + printedToken);
 		}
 
 		final List<SimpleElement> lispTokens = listToken.getElements();
@@ -77,7 +87,7 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 			return createVector(lispTokens);
 		}
 
-		return handleNumArg(lispTokens, numArg, listToken.toLispStruct().printStruct()); // TODO: fix
+		return handleNumArg(lispTokens, numArg, listToken);
 	}
 
 	/**
@@ -93,12 +103,13 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 	 *
 	 * @return the properly created {@link VectorStruct} taking care of the proper vector length
 	 */
-	private static ConsElement handleNumArg(final List<SimpleElement> lispTokens, final BigInteger numArg, final String listToken) {
+	private ConsElement handleNumArg(final List<SimpleElement> lispTokens, final BigInteger numArg, final ConsElement listToken) {
 
 		final int numberOfTokens = lispTokens.size();
 		final int numArgInt = numArg.intValueExact();
 		if (numberOfTokens > numArgInt) {
-			throw new ReaderErrorException("Vector is longer than specified length: #" + numArg + listToken);
+			final String printedToken = printer.print(listToken);
+			throw new ReaderErrorException("Vector is longer than specified length: #" + numArg + printedToken);
 		}
 
 		SimpleElement lastToken = null;

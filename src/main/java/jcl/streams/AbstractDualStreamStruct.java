@@ -71,6 +71,14 @@ abstract class AbstractDualStreamStruct extends StreamStruct implements InputStr
 		return inType.equals(outType) ? inType : new AndTypeSpecifier(inType, outType);
 	}
 
+	public InputStream getInputStream() {
+		return inputStream;
+	}
+
+	public OutputStream getOutputStream() {
+		return outputStream;
+	}
+
 	@Override
 	public void writeChar(final int aChar) {
 		outputStream.writeChar(aChar);

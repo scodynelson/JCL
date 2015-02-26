@@ -49,11 +49,6 @@ public class SymbolElement implements SimpleElement {
 	}
 
 	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
-	}
-
-	@Override
 	public LispStruct toLispStruct() {
 		final PackageStruct pkg = PackageStruct.findPackage(packageName);
 
@@ -83,5 +78,10 @@ public class SymbolElement implements SimpleElement {
 			}
 			return symbol;
 		}
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

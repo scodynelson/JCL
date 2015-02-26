@@ -192,11 +192,6 @@ public class ComplexStruct extends NumberStruct {
 	}
 
 	@Override
-	public String printStruct() {
-		return "#C(" + real.printStruct() + ' ' + imaginary.printStruct() + ')';
-	}
-
-	@Override
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}

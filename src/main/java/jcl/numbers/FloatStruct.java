@@ -4,11 +4,7 @@
 
 package jcl.numbers;
 
-import jcl.reader.struct.ReaderVariables;
-import jcl.types.DoubleFloat;
 import jcl.types.Float;
-import jcl.types.LongFloat;
-import jcl.types.ShortFloat;
 import jcl.types.SingleFloat;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -57,27 +53,6 @@ public class FloatStruct extends RealStruct {
 	 */
 	public BigDecimal getBigDecimal() {
 		return bigDecimal;
-	}
-
-	@Override
-	public String printStruct() {
-		final Float floatFormat = (Float) getType();
-		final Float defaultFloatFormat = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getValue();
-
-		String bigDecimalString = bigDecimal.toString();
-		if (!floatFormat.equals(defaultFloatFormat)) {
-			if (floatFormat.equals(ShortFloat.INSTANCE)) {
-				bigDecimalString = bigDecimalString.replace('E', 'S');
-			} else if (floatFormat.equals(SingleFloat.INSTANCE)) {
-				bigDecimalString = bigDecimalString.replace('E', 'F');
-			} else if (floatFormat.equals(DoubleFloat.INSTANCE)) {
-				bigDecimalString = bigDecimalString.replace('E', 'D');
-			} else if (floatFormat.equals(LongFloat.INSTANCE)) {
-				bigDecimalString = bigDecimalString.replace('E', 'L');
-			}
-		}
-
-		return bigDecimalString;
 	}
 
 	@Override

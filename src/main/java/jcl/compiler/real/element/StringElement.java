@@ -27,8 +27,10 @@ public class StringElement implements SequenceElement {
 	}
 
 	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+	public List<CharacterElement> getElements() {
+		return javaString.chars()
+		                 .mapToObj(CharacterElement::new)
+		                 .collect(Collectors.toList());
 	}
 
 	@Override
@@ -37,9 +39,7 @@ public class StringElement implements SequenceElement {
 	}
 
 	@Override
-	public List<SimpleElement> getElements() {
-		return javaString.chars()
-		                 .mapToObj(CharacterElement::new)
-		                 .collect(Collectors.toList());
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

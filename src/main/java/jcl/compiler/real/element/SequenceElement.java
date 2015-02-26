@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface SequenceElement extends SimpleElement {
 
-	List<SimpleElement> getElements();
+	List<? extends SimpleElement> getElements();
 }

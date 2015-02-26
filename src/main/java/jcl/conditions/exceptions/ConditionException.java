@@ -19,10 +19,4 @@ public class ConditionException extends RuntimeException implements LispStruct {
 	public LispType getType() {
 		return null;
 	}
-
-	@Override
-	public String printStruct() {
-		final String typeClassName = getType().getClass().getName().toUpperCase();
-		return "#<" + typeClassName + '>';
-	}
 }

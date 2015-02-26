@@ -10,9 +10,12 @@ import jcl.compiler.real.element.ConsElement;
 import jcl.compiler.real.element.SimpleElement;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ListStruct;
+import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.streams.ReadPeekResult;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,13 +25,11 @@ import java.util.List;
  * according to list parsing rules of where in the list the '.' can appear and how many items must both precede and
  * follow it.
  */
+@Component
 final class ListReaderMacroFunction {
 
-	/**
-	 * Private constructor.
-	 */
-	private ListReaderMacroFunction() {
-	}
+	@Autowired
+	private Printer printer;
 
 	/**
 	 * Reads in an returns a properly parsed {@link ListStruct}, handling whitespaces and '.' characters. If a '.'
@@ -39,7 +40,7 @@ final class ListReaderMacroFunction {
 	 *
 	 * @return the properly parsed {@link ListStruct}
 	 */
-	static ConsElement readList(final Reader reader) {
+	ConsElement readList(final Reader reader) {
 		final List<SimpleElement> currentTokenList = new ArrayList<>();
 
 		boolean isDottedList = false;
@@ -84,7 +85,7 @@ final class ListReaderMacroFunction {
 	 * @return true if the list to be created post processing of the '.' character is indeed a dotted list; false
 	 * otherwise
 	 */
-	private static boolean processDot(final Reader reader, final List<SimpleElement> currentTokenList) {
+	private boolean processDot(final Reader reader, final List<SimpleElement> currentTokenList) {
 
 		boolean isDotted = false;
 
@@ -116,7 +117,7 @@ final class ListReaderMacroFunction {
 	 * @param codePoint
 	 * 		the next character code point following the '.' (at this point, either a whitespace or terminating character)
 	 */
-	private static void processAfterDot(final Reader reader, final List<SimpleElement> currentTokenList, final int codePoint) {
+	private void processAfterDot(final Reader reader, final List<SimpleElement> currentTokenList, final int codePoint) {
 		int firstCodePoint = codePoint;
 		if (ReaderMacroFunctionImpl.isWhitespace(codePoint)) {
 			firstCodePoint = flushWhitespace(reader);
@@ -143,7 +144,8 @@ final class ListReaderMacroFunction {
 			// NOTE: This will throw errors when it reaches an EOF
 			lispStruct = reader.read();
 			if (lispStruct != null) {
-				throw new ReaderErrorException("More than one object follows . in list: " + lispStruct.toLispStruct().printStruct()); // TODO: fix
+				final String printedLispStruct = printer.print(lispStruct);
+				throw new ReaderErrorException("More than one object follows . in list: " + printedLispStruct);
 			}
 
 			firstCodePoint = flushWhitespace(reader);

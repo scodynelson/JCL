@@ -5,7 +5,6 @@ import jcl.LispType;
 import jcl.classes.BuiltInClassStruct;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
-import jcl.printer.PrinterVariables;
 import jcl.types.Array;
 import jcl.types.SimpleArray;
 import jcl.types.T;
@@ -275,59 +274,6 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		for (final Integer dimension : dimensions) {
 			totalSize += dimension;
 		}
-	}
-
-	@Override
-	public String printStruct() {
-		// TODO: Ignoring *PRINT-LEVEL* and *PRINT-LENGTH*
-
-		final boolean printArray = PrinterVariables.PRINT_ARRAY.getValue().booleanValue();
-		final boolean printReadably = PrinterVariables.PRINT_READABLY.getValue().booleanValue();
-
-		final StringBuilder stringBuilder = new StringBuilder();
-
-		if (printArray || printReadably) {
-			stringBuilder.append('#');
-			stringBuilder.append(rank);
-			stringBuilder.append("#(");
-
-			for (int i = 0; i < totalSize; i++) {
-				final LispStruct lispStruct = contents.get(i);
-				stringBuilder.append(lispStruct.printStruct());
-
-				if (i < (totalSize - 1)) {
-					stringBuilder.append(' ');
-				}
-			}
-
-			stringBuilder.append(')');
-		} else {
-			final String typeClassName = getType().getClass().getName().toUpperCase();
-
-			stringBuilder.append("#<");
-			stringBuilder.append(typeClassName);
-			stringBuilder.append(' ');
-
-			for (int i = 0; i < dimensions.size(); i++) {
-				stringBuilder.append(dimensions.get(i));
-
-				if ((i + 1) != dimensions.size()) {
-					stringBuilder.append('x');
-				}
-			}
-
-			stringBuilder.append(" type ");
-			final String elementTypeClassName = elementType.getClass().getName().toUpperCase();
-			stringBuilder.append(elementTypeClassName);
-
-			if (isAdjustable) {
-				stringBuilder.append(" adjustable");
-			}
-
-			stringBuilder.append('>');
-		}
-
-		return stringBuilder.toString();
 	}
 
 	@Override

@@ -1,7 +1,9 @@
 package jcl.compiler.real.icg.specialoperator;
 
-import jcl.LispStruct;
+import jcl.compiler.real.element.ConsElement;
 import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.SimpleElement;
+import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.environment.Closure;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.allocation.PositionAllocation;
@@ -13,22 +15,22 @@ import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.SpecialOperator;
-import jcl.symbols.SymbolStruct;
+import jcl.system.EnhancedLinkedList;
 import org.objectweb.asm.Label;
 
 import java.util.List;
 import java.util.Stack;
 
-public class LetCodeGenerator implements CodeGenerator<ListStruct> {
+public class LetCodeGenerator implements CodeGenerator<ConsElement> {
 
 	private static class SymbolBindingLabel {
 
 		Label endLabel;
 		Label finallyLabel;
 		Label handlerLabel;
-		SymbolStruct<?> dynamicSymbol;
+		SymbolElement dynamicSymbol;
 
-		private SymbolBindingLabel(final Label endLabel, final Label finallyLabel, final Label handlerLabel, final SymbolStruct<?> dynamicSymbol) {
+		private SymbolBindingLabel(final Label endLabel, final Label finallyLabel, final Label handlerLabel, final SymbolElement dynamicSymbol) {
 			this.endLabel = endLabel;
 			this.finallyLabel = finallyLabel;
 			this.handlerLabel = handlerLabel;
@@ -39,13 +41,13 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 	public static final LetCodeGenerator INSTANCE = new LetCodeGenerator();
 
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator) {
+	public void generate(final ConsElement input, final IntermediateCodeGenerator codeGenerator) {
 		// ((%let... (:parent ...) (:bindings ...) (:symbol-table ...) (:closure ...)))
 		final Stack<SymbolBindingLabel> bindingLabels = new Stack<>();
 
 		// are we building a closure here?
 		//----->
-		codeGenerator.bindingEnvironment = codeGenerator.bindingStack.push((Environment) input.getFirst());
+		codeGenerator.bindingEnvironment = codeGenerator.bindingStack.push((Environment) input.getElements().getFirst());
 		final Closure closureSetBody = codeGenerator.bindingEnvironment.getClosure();
 //        int numParams = closureSetBody.size() - 1;
 
@@ -66,7 +68,7 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 			codeGenerator.bindingEnvironment = codeGenerator.bindingEnvironment.getParent();
 			// now, run the bindings
 			for (final EnvironmentParameterBinding binding : lexicalBindingList) {
-				final SymbolStruct<?> sym = binding.getSymbolStruct();
+				final SymbolElement sym = binding.getSymbolStruct();
 				// (:allocation ... :binding ... :scope ... :type ... :init-form ...)
 				// get the variable's init form
 				final Element initForm = binding.getInitForm();
@@ -85,7 +87,7 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 
 			final List<EnvironmentBinding<?>> dynamicBindingList = codeGenerator.bindingEnvironment.getDynamicBindings();
 			for (final EnvironmentBinding<?> binding : dynamicBindingList) {
-				final SymbolStruct<?> sym = binding.getSymbolStruct();
+				final SymbolElement sym = binding.getSymbolStruct();
 				// (:allocation ... :binding ... :scope ... :type ... :init-form ...)
 				// get the variable's init form
 				Element initForm = null;
@@ -128,17 +130,17 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 			codeGenerator.doFreeVariableSetup();
 
 			// all args are in the proper local slots, so do the body of the let
-			final List<LispStruct> copyListJavaList = input.getAsJavaList();
-			final ListStruct copyList = ListStruct.buildProperList(copyListJavaList);
-			ListStruct funcallList = copyList.getRest();
+			final EnhancedLinkedList<SimpleElement> copyListJavaList = input.getElements();
+			final ConsElement copyList = new ConsElement(copyListJavaList);
+			EnhancedLinkedList<SimpleElement> funcallList = copyList.getElements().getAllButFirst();
 
 			while (!NullStruct.INSTANCE.equals(funcallList)) {
 				final Object firstElt = funcallList.getFirst();
 				if ((firstElt instanceof ListStruct) && ((ListStruct) firstElt).getFirst().equals(SpecialOperator.DECLARE)) {
-					funcallList = funcallList.getRest();
+					funcallList = funcallList.getAllButFirst();
 				} else {
 					codeGenerator.icgMainLoop(funcallList.getFirst());
-					funcallList = funcallList.getRest();
+					funcallList = funcallList.getAllButFirst();
 					if (!NullStruct.INSTANCE.equals(funcallList)) {
 						codeGenerator.emitter.emitPop();
 					}

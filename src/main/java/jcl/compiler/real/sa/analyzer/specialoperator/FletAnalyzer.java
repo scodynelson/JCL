@@ -1,7 +1,10 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import jcl.LispStruct;
+import jcl.compiler.real.element.ConsElement;
 import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.ListElement;
+import jcl.compiler.real.element.SimpleElement;
+import jcl.compiler.real.element.SpecialOperatorElement;
 import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.element.specialoperator.FletElement;
 import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
@@ -20,9 +23,7 @@ import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyWithDeclaresAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
-import jcl.lists.ListStruct;
-import jcl.symbols.SpecialOperator;
-import jcl.symbols.SymbolStruct;
+import jcl.system.EnhancedLinkedList;
 import jcl.system.StackUtils;
 import jcl.types.T;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -44,15 +45,20 @@ public class FletAnalyzer implements SpecialOperatorAnalyzer {
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
 
 	@Override
-	public FletElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
+	public FletElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
-		if (input.size() < 2) {
-			throw new ProgramErrorException("FLET: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
+		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
+
+		final int inputSize = elements.size();
+		if (inputSize < 2) {
+			throw new ProgramErrorException("FLET: Incorrect number of arguments: " + inputSize + ". Expected at least 2 arguments.");
 		}
 
-		final LispStruct second = input.getRest().getFirst();
-		if (!(second instanceof ListStruct)) {
-			throw new ProgramErrorException("FLET: Parameter list must be of type ListStruct. Got: " + second);
+		final EnhancedLinkedList<SimpleElement> inputRest = elements.getAllButFirst();
+
+		final SimpleElement second = inputRest.getFirst();
+		if (!(second instanceof ListElement)) {
+			throw new ProgramErrorException("FLET: Parameter list must be of type List. Got: " + second);
 		}
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
@@ -64,18 +70,18 @@ public class FletAnalyzer implements SpecialOperatorAnalyzer {
 		final FletEnvironment fletEnvironment = new FletEnvironment(parentEnvironment, newClosureDepth);
 		environmentStack.push(fletEnvironment);
 
-		final Stack<SymbolStruct<?>> functionNameStack = analysisBuilder.getFunctionNameStack();
-		List<SymbolStruct<?>> functionNames = null;
+		final Stack<SymbolElement> functionNameStack = analysisBuilder.getFunctionNameStack();
+		List<SymbolElement> functionNames = null;
 
 		final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
 		try {
 			analysisBuilder.setClosureDepth(newClosureDepth);
 
-			final ListStruct innerFunctions = (ListStruct) second;
-			final List<LispStruct> innerFunctionsJavaList = innerFunctions.getAsJavaList();
+			final ListElement innerFunctions = (ListElement) second;
+			final List<? extends SimpleElement> innerFunctionsJavaList = innerFunctions.getElements();
 			functionNames = getFunctionNames(innerFunctionsJavaList);
 
-			final ListStruct bodyForms = input.getRest().getRest();
+			final EnhancedLinkedList<SimpleElement> bodyForms = inputRest.getAllButFirst();
 
 			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(analyzer, bodyForms, analysisBuilder);
 			final DeclareElement declareElement = bodyProcessingResult.getDeclareElement();
@@ -91,7 +97,7 @@ public class FletAnalyzer implements SpecialOperatorAnalyzer {
 			// Add function names AFTER analyzing the functions
 			StackUtils.pushAll(functionNameStack, functionNames);
 
-			final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
+			final List<SimpleElement> realBodyForms = bodyProcessingResult.getBodyForms();
 
 			final List<Element> analyzedBodyForms
 					= realBodyForms.stream()
@@ -110,52 +116,51 @@ public class FletAnalyzer implements SpecialOperatorAnalyzer {
 		}
 	}
 
-	private List<SymbolStruct<?>> getFunctionNames(final List<LispStruct> functionDefinitions) {
+	private List<SymbolElement> getFunctionNames(final List<? extends SimpleElement> functionDefinitions) {
 
-		final List<SymbolStruct<?>> functionNames = new ArrayList<>(functionDefinitions.size());
+		final List<SymbolElement> functionNames = new ArrayList<>(functionDefinitions.size());
 
-		for (final LispStruct currentFunctionDef : functionDefinitions) {
-			if (!(currentFunctionDef instanceof ListStruct)) {
-				throw new ProgramErrorException("FLET: Function parameter must be of type ListStruct. Got: " + currentFunctionDef);
+		for (final SimpleElement currentFunctionDef : functionDefinitions) {
+			if (!(currentFunctionDef instanceof ListElement)) {
+				throw new ProgramErrorException("FLET: Function parameter must be of type List. Got: " + currentFunctionDef);
 			}
-			final ListStruct functionList = (ListStruct) currentFunctionDef;
+			final ListElement functionList = (ListElement) currentFunctionDef;
 
-			final SymbolStruct<?> functionName = getFunctionListParameterName(functionList);
+			final SymbolElement functionName = getFunctionListParameterName(functionList);
 			functionNames.add(functionName);
 		}
 
 		return functionNames;
 	}
 
-	private SymbolStruct<?> getFunctionListParameterName(final ListStruct functionListParameter) {
-		final LispStruct functionListParameterFirst = functionListParameter.getFirst();
-		if (!(functionListParameterFirst instanceof SymbolStruct)) {
-			throw new ProgramErrorException("FLET: Function parameter first element value must be of type SymbolStruct. Got: " + functionListParameterFirst);
+	private SymbolElement getFunctionListParameterName(final ListElement functionListParameter) {
+		final SimpleElement functionListParameterFirst = functionListParameter.getElements().get(0); // TODO: should we be checking the size here???
+		if (!(functionListParameterFirst instanceof SymbolElement)) {
+			throw new ProgramErrorException("FLET: Function parameter first element value must be of type Symbol. Got: " + functionListParameterFirst);
 		}
-		return (SymbolStruct) functionListParameterFirst;
+		return (SymbolElement) functionListParameterFirst;
 	}
 
-	private FletElement.FletVar getFletVar(final LispStruct functionParameter,
+	private FletElement.FletVar getFletVar(final SimpleElement functionParameter,
 	                                       final DeclareElement declareElement,
 	                                       final SemanticAnalyzer analyzer,
 	                                       final AnalysisBuilder analysisBuilder,
 	                                       final FletEnvironment fletEnvironment,
 	                                       final EnvironmentStack environmentStack) {
 
-		if (!(functionParameter instanceof ListStruct)) {
-			throw new ProgramErrorException("FLET: Function parameter must be of type ListStruct. Got: " + functionParameter);
+		if (!(functionParameter instanceof ConsElement)) {
+			throw new ProgramErrorException("FLET: Function parameter must be of type Cons. Got: " + functionParameter);
 		}
 
-		final ListStruct functionListParameter = (ListStruct) functionParameter;
-		final SymbolStruct<?> functionName = getFunctionListParameterName(functionListParameter);
+		final ConsElement functionListParameter = (ConsElement) functionParameter;
+		final SymbolElement functionName = getFunctionListParameterName(functionListParameter);
 		final Element functionInitForm = getFunctionParameterInitForm(functionListParameter, analyzer, analysisBuilder, environmentStack);
 
 		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(fletEnvironment);
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
-		final SymbolElement functionNameSE = new SymbolElement(functionName.getSymbolPackage().getName(), functionName.getName()); // TODO: fix
-		final boolean isSpecial = isSpecial(declareElement, functionNameSE);
+		final boolean isSpecial = isSpecial(declareElement, functionName);
 
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(functionName, allocation, T.INSTANCE, functionInitForm);
@@ -165,37 +170,48 @@ public class FletAnalyzer implements SpecialOperatorAnalyzer {
 			fletEnvironment.addLexicalBinding(binding);
 		}
 
-		return new FletElement.FletVar(functionNameSE, functionInitForm);
+		return new FletElement.FletVar(functionName, functionInitForm);
 	}
 
-	private static Element getFunctionParameterInitForm(final ListStruct functionListParameter,
+	private static Element getFunctionParameterInitForm(final ConsElement functionListParameter,
 	                                                    final SemanticAnalyzer analyzer,
 	                                                    final AnalysisBuilder analysisBuilder,
 	                                                    final EnvironmentStack environmentStack) {
 
-		final LispStruct functionName = functionListParameter.getFirst();
-		final LispStruct lambdaList = functionListParameter.getRest().getFirst();
-		final ListStruct body = functionListParameter.getRest().getRest();
+		final EnhancedLinkedList<SimpleElement> functionListParameterElements = functionListParameter.getElements();
 
-		final List<LispStruct> innerBlock = new ArrayList<>();
-		innerBlock.add(SpecialOperator.BLOCK);
+		final int functionListParameterSize = functionListParameterElements.size();
+		if (functionListParameterSize < 2) {
+			throw new ProgramErrorException("FLET: Incorrect number of arguments to function parameter: " + functionListParameterSize + ". Expected at least 2 arguments.");
+		}
+
+		final SimpleElement functionName = functionListParameterElements.getFirst();
+
+		final EnhancedLinkedList<SimpleElement> functionListParameterRest = functionListParameterElements.getAllButFirst();
+
+		final SimpleElement lambdaList = functionListParameterRest.getFirst();
+
+		final EnhancedLinkedList<SimpleElement> body = functionListParameterRest.getAllButFirst();
+
+		final EnhancedLinkedList<SimpleElement> innerBlock = new EnhancedLinkedList<>();
+		innerBlock.add(SpecialOperatorElement.BLOCK);
 		innerBlock.add(functionName);
-		innerBlock.addAll(body.getAsJavaList());
+		innerBlock.addAll(body);
 
-		final ListStruct innerBlockListStruct = ListStruct.buildProperList(innerBlock);
+		final ConsElement innerBlockListStruct = new ConsElement(innerBlock);
 
-		final List<LispStruct> innerLambda = new ArrayList<>();
-		innerLambda.add(SpecialOperator.LAMBDA);
+		final EnhancedLinkedList<SimpleElement> innerLambda = new EnhancedLinkedList<>();
+		innerLambda.add(SpecialOperatorElement.LAMBDA);
 		innerLambda.add(lambdaList);
 		innerLambda.add(innerBlockListStruct);
 
-		final ListStruct innerLambdaListStruct = ListStruct.buildProperList(innerLambda);
+		final ConsElement innerLambdaListStruct = new ConsElement(innerLambda);
 
-		final List<LispStruct> innerFunction = new ArrayList<>();
-		innerFunction.add(SpecialOperator.FUNCTION);
+		final EnhancedLinkedList<SimpleElement> innerFunction = new EnhancedLinkedList<>();
+		innerFunction.add(SpecialOperatorElement.FUNCTION);
 		innerFunction.add(innerLambdaListStruct);
 
-		final ListStruct innerFunctionListStruct = ListStruct.buildProperList(innerFunction);
+		final ConsElement innerFunctionListStruct = new ConsElement(innerFunction);
 
 		// Evaluate in the outer environment. This is one of the differences between Flet and Labels.
 		final Environment currentEnvironment = environmentStack.pop();
@@ -232,7 +248,7 @@ public class FletAnalyzer implements SpecialOperatorAnalyzer {
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
-		final SymbolStruct<?> var = (SymbolStruct<?>) specialDeclarationElement.getVar().toLispStruct(); // TODO: fix
+		final SymbolElement var = specialDeclarationElement.getVar();
 
 		final Environment bindingEnvironment = Environments.getDynamicBindingEnvironment(fletEnvironment, var);
 		final EnvironmentAllocation allocation = new EnvironmentAllocation(bindingEnvironment);

@@ -4,9 +4,9 @@
 
 package jcl.compiler.real.element.specialoperator.go;
 
-import jcl.LispStruct;
+import jcl.compiler.real.element.SimpleElement;
 
-public abstract class GoElementGenerator<T extends LispStruct> {
+public abstract class GoElementGenerator<T extends SimpleElement> {
 
 	protected GoElementGenerator() {
 	}

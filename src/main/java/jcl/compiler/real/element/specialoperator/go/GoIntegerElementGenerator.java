@@ -4,13 +4,13 @@
 
 package jcl.compiler.real.element.specialoperator.go;
 
-import jcl.numbers.IntegerStruct;
+import jcl.compiler.real.element.IntegerElement;
 import org.springframework.stereotype.Component;
 
 @Component
-public class GoIntegerElementGenerator extends GoElementGenerator<IntegerStruct> {
+public class GoIntegerElementGenerator extends GoElementGenerator<IntegerElement> {
 
-	public GoIntegerElement generateGoElement(final IntegerStruct tag) {
+	public GoIntegerElement generateGoElement(final IntegerElement tag) {
 		return new GoIntegerElement(tag);
 	}
 }

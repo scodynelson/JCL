@@ -1,22 +1,24 @@
 package jcl.compiler.real.icg.specialoperator;
 
+import jcl.compiler.real.element.ConsElement;
+import jcl.compiler.real.element.SimpleElement;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
-import jcl.lists.ListStruct;
+import jcl.system.EnhancedLinkedList;
 import org.objectweb.asm.Label;
 
-public class IfCodeGenerator implements CodeGenerator<ListStruct> {
+public class IfCodeGenerator implements CodeGenerator<ConsElement> {
 
 	public static final IfCodeGenerator INSTANCE = new IfCodeGenerator();
 
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator) {
+	public void generate(final ConsElement input, final IntermediateCodeGenerator codeGenerator) {
 
-		ListStruct restOfList = input.getRest();
+		EnhancedLinkedList<SimpleElement> restOfList = input.getElements().getAllButFirst();
 		final Object testObj = restOfList.getFirst();
-		restOfList = restOfList.getRest();
+		restOfList = restOfList.getAllButFirst();
 		final Object thenObj = restOfList.getFirst();
-		restOfList = restOfList.getRest();
+		restOfList = restOfList.getAllButFirst();
 		final Object elseObj = restOfList.getFirst();
 
 		codeGenerator.icgMainLoop(testObj);

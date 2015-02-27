@@ -1,7 +1,9 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import jcl.LispStruct;
+import jcl.compiler.real.element.ConsElement;
 import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.ListElement;
+import jcl.compiler.real.element.SimpleElement;
 import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.element.specialoperator.SymbolMacroletElement;
 import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
@@ -18,8 +20,7 @@ import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyWithDeclaresAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
-import jcl.lists.ListStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.system.EnhancedLinkedList;
 import jcl.types.T;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -38,15 +39,19 @@ public class SymbolMacroletAnalyzer implements SpecialOperatorAnalyzer {
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
 
 	@Override
-	public SymbolMacroletElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
+	public SymbolMacroletElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
-		final int inputSize = input.size();
+		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
+
+		final int inputSize = elements.size();
 		if (inputSize < 2) {
 			throw new ProgramErrorException("SYMBOL-MACROLET: Incorrect number of arguments: " + inputSize + ". Expected at least 2 arguments.");
 		}
 
-		final LispStruct second = input.getRest().getFirst();
-		if (!(second instanceof ListStruct)) {
+		final EnhancedLinkedList<SimpleElement> inputRest = elements.getAllButFirst();
+
+		final SimpleElement second = inputRest.getFirst();
+		if (!(second instanceof ListElement)) {
 			throw new ProgramErrorException("SYMBOL-MACROLET: Parameter list must be of type ListStruct. Got: " + second);
 		}
 
@@ -63,21 +68,21 @@ public class SymbolMacroletAnalyzer implements SpecialOperatorAnalyzer {
 		try {
 			analysisBuilder.setClosureDepth(newClosureDepth);
 
-			final ListStruct parameters = (ListStruct) second;
-			final ListStruct bodyForms = input.getRest().getRest();
+			final ListElement parameters = (ListElement) second;
+			final EnhancedLinkedList<SimpleElement> bodyForms = inputRest.getAllButFirst();
 
 			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(analyzer, bodyForms, analysisBuilder);
 			final DeclareElement declareElement = bodyProcessingResult.getDeclareElement();
 			validateDeclares(declareElement);
 
-			final List<LispStruct> parametersAsJavaList = parameters.getAsJavaList();
+			final List<? extends SimpleElement> parametersAsJavaList = parameters.getElements();
 
 			final List<SymbolMacroletElement.SymbolMacroletElementVar> symbolMacroletVars
 					= parametersAsJavaList.stream()
 					                      .map(e -> getSymbolMacroletElementVar(e, declareElement, analyzer, analysisBuilder, symbolMacroletEnvironment, environmentStack))
 					                      .collect(Collectors.toList());
 
-			final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
+			final List<SimpleElement> realBodyForms = bodyProcessingResult.getBodyForms();
 
 			final List<Element> analyzedBodyForms
 					= realBodyForms.stream()
@@ -101,19 +106,19 @@ public class SymbolMacroletAnalyzer implements SpecialOperatorAnalyzer {
 		}
 	}
 
-	private static SymbolMacroletElement.SymbolMacroletElementVar getSymbolMacroletElementVar(final LispStruct parameter,
+	private static SymbolMacroletElement.SymbolMacroletElementVar getSymbolMacroletElementVar(final SimpleElement parameter,
 	                                                                                          final DeclareElement declareElement,
 	                                                                                          final SemanticAnalyzer analyzer,
 	                                                                                          final AnalysisBuilder analysisBuilder,
 	                                                                                          final SymbolMacroletEnvironment symbolMacroletEnvironment,
 	                                                                                          final EnvironmentStack environmentStack) {
 
-		if (!(parameter instanceof ListStruct)) {
+		if (!(parameter instanceof ListElement)) {
 			throw new ProgramErrorException("SYMBOL-MACROLET: Parameter must be of type ListStruct. Got: " + parameter);
 		}
 
-		final ListStruct listParameter = (ListStruct) parameter;
-		final SymbolStruct<?> var = getSymbolMacroletParameterVar(listParameter, environmentStack);
+		final ListElement listParameter = (ListElement) parameter;
+		final SymbolElement var = getSymbolMacroletParameterVar(listParameter, environmentStack);
 		final Element expansion = getSymbolMacroletParameterExpansion(listParameter, analyzer, analysisBuilder, environmentStack);
 
 		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(symbolMacroletEnvironment);
@@ -124,23 +129,25 @@ public class SymbolMacroletAnalyzer implements SpecialOperatorAnalyzer {
 		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(var, allocation, T.INSTANCE, expansion);
 		symbolMacroletEnvironment.addLexicalBinding(binding);
 
-		final SymbolElement varSE = new SymbolElement(var.getSymbolPackage().getName(), var.getName()); // TODO: fix
-		return new SymbolMacroletElement.SymbolMacroletElementVar(varSE, expansion);
+		return new SymbolMacroletElement.SymbolMacroletElementVar(var, expansion);
 	}
 
-	private static SymbolStruct<?> getSymbolMacroletParameterVar(final ListStruct listParameter,
-	                                                             final EnvironmentStack lexicalEnvironmentStack) {
-		final int listParameterSize = listParameter.size();
+	private static SymbolElement getSymbolMacroletParameterVar(final ListElement listParameter,
+	                                                           final EnvironmentStack lexicalEnvironmentStack) {
+
+		final List<? extends SimpleElement> listParameterElement = listParameter.getElements();
+
+		final int listParameterSize = listParameterElement.size();
 		if (listParameterSize != 2) {
 			throw new ProgramErrorException("SYMBOL-MACROLET: ListStruct parameter must have only 2 elements. Got: " + listParameter);
 		}
 
-		final LispStruct listParameterFirst = listParameter.getFirst();
-		if (!(listParameterFirst instanceof SymbolStruct)) {
+		final SimpleElement listParameterFirst = listParameterElement.get(0); // TODO
+		if (!(listParameterFirst instanceof SymbolElement)) {
 			throw new ProgramErrorException("SYMBOL-MACROLET: ListStruct parameter first element value must be of type SymbolStruct. Got: " + listParameterFirst);
 		}
 
-		final SymbolStruct<?> parameterVar = (SymbolStruct) listParameterFirst;
+		final SymbolElement parameterVar = (SymbolElement) listParameterFirst;
 
 		final Environment globalEnvironment = lexicalEnvironmentStack.firstElement();
 		final boolean hasGlobalBinding = globalEnvironment.hasLexicalBinding(parameterVar);
@@ -151,12 +158,14 @@ public class SymbolMacroletAnalyzer implements SpecialOperatorAnalyzer {
 		return parameterVar;
 	}
 
-	private static Element getSymbolMacroletParameterExpansion(final ListStruct listParameter,
+	private static Element getSymbolMacroletParameterExpansion(final ListElement listParameter,
 	                                                           final SemanticAnalyzer analyzer,
 	                                                           final AnalysisBuilder analysisBuilder,
 	                                                           final EnvironmentStack environmentStack) {
 
-		final LispStruct parameterValue = listParameter.getRest().getFirst();
+		final List<? extends SimpleElement> listParameterElement = listParameter.getElements();
+
+		final SimpleElement parameterValue = listParameterElement.get(1); // TODO: rest().getFirst();
 
 		// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
 		final Environment currentEnvironment = environmentStack.pop();

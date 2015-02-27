@@ -6,6 +6,7 @@ package jcl.compiler.real.element;
 
 import jcl.LispStruct;
 import jcl.lists.ListStruct;
+import jcl.system.EnhancedLinkedList;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -19,23 +20,23 @@ public class ConsElement implements ListElement {
 
 	private boolean isDotted;
 
-	private List<SimpleElement> elements;
+	private EnhancedLinkedList<SimpleElement> elements;
 
 	public ConsElement(final SimpleElement... elements) {
-		this(Arrays.asList(elements));
+		this(new EnhancedLinkedList<>(Arrays.asList(elements)));
 	}
 
-	public ConsElement(final List<SimpleElement> elements) {
+	public ConsElement(final EnhancedLinkedList<SimpleElement> elements) {
 		this(false, elements);
 	}
 
-	public ConsElement(final boolean isDotted, final List<SimpleElement> elements) {
+	public ConsElement(final boolean isDotted, final EnhancedLinkedList<SimpleElement> elements) {
 		this.elements = elements;
 		this.isDotted = isDotted;
 	}
 
 	public ConsElement(final boolean isDotted, final SimpleElement... elements) {
-		this(isDotted, Arrays.asList(elements));
+		this(isDotted, new EnhancedLinkedList<>(Arrays.asList(elements)));
 	}
 
 	public boolean isDotted() {
@@ -43,7 +44,7 @@ public class ConsElement implements ListElement {
 	}
 
 	@Override
-	public List<SimpleElement> getElements() {
+	public EnhancedLinkedList<SimpleElement> getElements() {
 		return elements;
 	}
 

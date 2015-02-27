@@ -1,6 +1,8 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import jcl.LispStruct;
+import jcl.compiler.real.element.ConsElement;
+import jcl.compiler.real.element.SimpleElement;
+import jcl.compiler.real.element.SpecialOperatorElement;
 import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.element.specialoperator.FunctionElement;
 import jcl.compiler.real.element.specialoperator.LambdaFunctionElement;
@@ -14,9 +16,7 @@ import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.LexicalSymbolAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.lambda.LambdaAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
-import jcl.lists.ListStruct;
-import jcl.symbols.SpecialOperator;
-import jcl.symbols.SymbolStruct;
+import jcl.system.EnhancedLinkedList;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,24 +34,28 @@ public class FunctionAnalyzer implements SpecialOperatorAnalyzer {
 	private LambdaAnalyzer lambdaAnalyzer;
 
 	@Override
-	public FunctionElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
+	public FunctionElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
-		final int inputSize = input.size();
+		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
+
+		final int inputSize = elements.size();
 		if (inputSize != 2) {
 			throw new ProgramErrorException("FUNCTION: Incorrect number of arguments: " + inputSize + ". Expected 2 arguments.");
 		}
 
-		final LispStruct second = input.getRest().getFirst();
-		if (second instanceof SymbolStruct) {
-			return analyzeFunctionSymbol(analyzer, (SymbolStruct<?>) second, analysisBuilder);
-		} else if (second instanceof ListStruct) {
-			return analyzeFunctionList(analyzer, (ListStruct) second, analysisBuilder);
+		final EnhancedLinkedList<SimpleElement> inputRest = elements.getAllButFirst();
+		final SimpleElement second = inputRest.getFirst();
+
+		if (second instanceof SymbolElement) {
+			return analyzeFunctionSymbol(analyzer, (SymbolElement) second, analysisBuilder);
+		} else if (second instanceof ConsElement) {
+			return analyzeFunctionList(analyzer, (ConsElement) second, analysisBuilder);
 		} else {
 			throw new ProgramErrorException("FUNCTION: Function argument must be of type SymbolStruct or ListStruct. Got: " + second);
 		}
 	}
 
-	private FunctionElement analyzeFunctionSymbol(final SemanticAnalyzer analyzer, final SymbolStruct<?> functionSymbol, final AnalysisBuilder analysisBuilder) {
+	private FunctionElement analyzeFunctionSymbol(final SemanticAnalyzer analyzer, final SymbolElement functionSymbol, final AnalysisBuilder analysisBuilder) {
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment currentEnvironment = environmentStack.peek();
@@ -61,21 +65,19 @@ public class FunctionAnalyzer implements SpecialOperatorAnalyzer {
 
 		final boolean hasNoFunctionSymbolBinding = !bindingEnvironment.hasLexicalBinding(functionSymbol);
 
-		final SymbolElement functionSymbolSE;
+		SymbolElement functionSymbolAnalyzed = functionSymbol;
 		if (hasNoFunctionSymbolBinding) {
-			functionSymbolSE = lexicalSymbolAnalyzer.analyze(analyzer, functionSymbol, analysisBuilder);
-		} else {
-			functionSymbolSE = new SymbolElement(functionSymbol.getSymbolPackage().getName(), functionSymbol.getName()); // TODO: fix
+			functionSymbolAnalyzed = lexicalSymbolAnalyzer.analyze(analyzer, functionSymbol, analysisBuilder);
 		}
 
-		return new SymbolFunctionElement(functionSymbolSE);
+		return new SymbolFunctionElement(functionSymbolAnalyzed);
 	}
 
-	private FunctionElement analyzeFunctionList(final SemanticAnalyzer analyzer, final ListStruct functionList, final AnalysisBuilder analysisBuilder) {
+	private FunctionElement analyzeFunctionList(final SemanticAnalyzer analyzer, final ConsElement functionList, final AnalysisBuilder analysisBuilder) {
 
-		final LispStruct functionListFirst = functionList.getFirst();
+		final SimpleElement functionListFirst = functionList.getElements().getFirst();
 
-		if (!functionListFirst.equals(SpecialOperator.LAMBDA)) {
+		if (!functionListFirst.equals(SpecialOperatorElement.LAMBDA)) {
 			throw new ProgramErrorException("FUNCTION: First element of List argument must be the Symbol LAMBDA. Got: " + functionListFirst);
 		}
 

@@ -1,12 +1,14 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import jcl.LispStruct;
+import jcl.compiler.real.element.ConsElement;
+import jcl.compiler.real.element.ListElement;
+import jcl.compiler.real.element.SimpleElement;
+import jcl.compiler.real.element.SpecialOperatorElement;
+import jcl.compiler.real.element.specialoperator.LetElement;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.element.specialoperator.LetElement;
 import jcl.conditions.exceptions.ProgramErrorException;
-import jcl.lists.ListStruct;
-import jcl.symbols.SpecialOperator;
+import jcl.system.EnhancedLinkedList;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,38 +27,41 @@ public class LetStarAnalyzer implements SpecialOperatorAnalyzer {
 	private LetAnalyzer letAnalyzer;
 
 	@Override
-	public LetElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
+	public LetElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
-		if (input.size() < 2) {
-			throw new ProgramErrorException("LET*: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
+		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
+
+		final int inputSize = elements.size();
+		if (inputSize < 2) {
+			throw new ProgramErrorException("LET*: Incorrect number of arguments: " + inputSize + ". Expected at least 2 arguments.");
 		}
 
-		final LispStruct second = input.getRest().getFirst();
-		if (!(second instanceof ListStruct)) {
-			throw new ProgramErrorException("LET*: Parameter list must be of type ListStruct. Got: " + second);
+		final EnhancedLinkedList<SimpleElement> inputRest = elements.getAllButFirst();
+
+		final SimpleElement second = inputRest.getFirst();
+		if (!(second instanceof ListElement)) {
+			throw new ProgramErrorException("LET*: Parameter list must be of type List. Got: " + second);
 		}
 
-		final ListStruct parameters = (ListStruct) second;
-		final List<LispStruct> parametersAsJavaList = parameters.getAsJavaList();
+		final ListElement parameters = (ListElement) second;
+		final List<? extends SimpleElement> parametersAsJavaList = parameters.getElements();
 
-		final ListIterator<LispStruct> iterator = parametersAsJavaList.listIterator(parametersAsJavaList.size());
+		final ListIterator<? extends SimpleElement> iterator = parametersAsJavaList.listIterator(parametersAsJavaList.size());
 
-		ListStruct body = input.getRest().getRest();
+		EnhancedLinkedList<SimpleElement> body = inputRest.getAllButFirst();
 
 		while (iterator.hasPrevious()) {
-			final LispStruct previousParams = iterator.previous();
+			final SimpleElement previousParams = iterator.previous();
 
-			final List<LispStruct> previousBodyJavaList = body.getAsJavaList();
-
-			final List<LispStruct> innerLet = new ArrayList<>();
-			innerLet.add(SpecialOperator.LET);
+			final List<SimpleElement> innerLet = new ArrayList<>();
+			innerLet.add(SpecialOperatorElement.LET);
 			innerLet.add(previousParams);
-			innerLet.addAll(previousBodyJavaList);
+			innerLet.addAll(body);
 
-			body = ListStruct.buildProperList(innerLet);
+			body = new EnhancedLinkedList<>(innerLet);
 		}
 
-		return letAnalyzer.analyze(analyzer, body, analysisBuilder);
+		return letAnalyzer.analyze(analyzer, new ConsElement(body), analysisBuilder);
 	}
 
 	@Override

@@ -1,6 +1,9 @@
 package jcl.compiler.real.icg.specialoperator.special;
 
 import jcl.LispStruct;
+import jcl.compiler.real.element.ConsElement;
+import jcl.compiler.real.element.SimpleElement;
+import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.LoadTimeValue;
 import jcl.compiler.real.environment.binding.Binding;
@@ -11,6 +14,7 @@ import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.Declaration;
 import jcl.symbols.SymbolStruct;
+import jcl.system.EnhancedLinkedList;
 import org.objectweb.asm.Opcodes;
 
 import java.util.Date;
@@ -18,7 +22,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.Vector;
 
-public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
+public class LambdaCodeGenerator implements CodeGenerator<ConsElement> {
 
 	//TODO when checking bindings, in handling the init-forms, start with the just previous
 	// bindings in the lambda list. Differs from how LET handles it
@@ -26,15 +30,15 @@ public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 	public static final LambdaCodeGenerator INSTANCE = new LambdaCodeGenerator();
 
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator) {
+	public void generate(final ConsElement input, final IntermediateCodeGenerator codeGenerator) {
 		genCodeLambdaInContext(codeGenerator, input, false);
 	}
 
-	private static void genCodeLambdaInContext(final IntermediateCodeGenerator icg, final ListStruct list, final boolean inStaticContext) {
+	private static void genCodeLambdaInContext(final IntermediateCodeGenerator icg, final ConsElement list, final boolean inStaticContext) {
 
 		//--------
 		// get the class name out of the list
-		ListStruct decl = (ListStruct) list.getRest().getFirst();
+		ListStruct decl = (ListStruct) list.getElements().getAllButFirst().getFirst();
 		// (declare (mumble...) (more-mumble...))
 		decl = decl.getRest();
 		// ((mumble...) (more-mumble...))
@@ -66,7 +70,7 @@ public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 		if (lispSymbolName.equals(NullStruct.INSTANCE)) {
 			lispSymbolName = javaSymbolName;
 		}
-		final SymbolStruct<?> lispName = (SymbolStruct) lispSymbolName.getRest().getFirst();
+		final SymbolElement lispName = (SymbolElement) lispSymbolName.getRest().getFirst();
 		//
 
 		// compile the new function class
@@ -76,7 +80,7 @@ public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 			interfaces.add("lisp/common/type/MacroFunction");
 			icg.MacroLambda = false;
 		}
-		final List<EnvironmentParameterBinding> bindingSetBody = ((Environment) list.getFirst()).getLexicalBindings();
+		final List<EnvironmentParameterBinding> bindingSetBody = ((Environment) list.getElements().getFirst()).getLexicalBindings();
 
 		final int numParams = bindingSetBody.size();
 		if (numParams <= 11) {
@@ -133,7 +137,7 @@ public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 
 		// Handle all of the binding information
 		try {
-			icg.bindingEnvironment = icg.bindingStack.push((Environment) list.getFirst());
+			icg.bindingEnvironment = icg.bindingStack.push((Environment) list.getElements().getFirst());
 
 			// now create the check arguments method that's used when safety > 1
 			//-----------> checkArguments <--------------------
@@ -154,13 +158,13 @@ public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 			icg.doFreeVariableSetup();
 
 			// Beginning gen code for the body
-			final List<LispStruct> copyListJavaList = list.getAsJavaList();
-			final ListStruct copyList = ListStruct.buildProperList(copyListJavaList);
-			ListStruct funcallList = copyList.getRest().getRest();
+			final EnhancedLinkedList<SimpleElement> copyListJavaList = list.getElements();
+			final ConsElement copyList = new ConsElement(copyListJavaList);
+			EnhancedLinkedList<SimpleElement> funcallList = copyList.getElements().getAllButFirst().getAllButFirst();
 
 			while (!NullStruct.INSTANCE.equals(funcallList)) {
 				icg.icgMainLoop(funcallList.getFirst());
-				funcallList = funcallList.getRest();
+				funcallList = funcallList.getAllButFirst();
 				if (!NullStruct.INSTANCE.equals(funcallList)) {
 					icg.emitter.emitPop();
 				}
@@ -239,11 +243,11 @@ public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 		icg.classNames.pop();
 	}
 
-	private static void doStaticInit(final IntermediateCodeGenerator codeGenerator, final String className, final SymbolStruct<?> lispName) {
+	private static void doStaticInit(final IntermediateCodeGenerator codeGenerator, final String className, final SymbolElement lispName) {
 		// static init
 		codeGenerator.emitter.newMethod(Opcodes.ACC_STATIC + Opcodes.ACC_PUBLIC, "<clinit>", "()", "V", null, null);
 		// init the SYMBOL field with the LISP name symbol
-		if (lispName.getSymbolPackage() != null) {
+		if (lispName.getPackageName() != null) {
 			codeGenerator.genCodeSpecialVariable(lispName);
 		} else {
 			//make the symbol
@@ -270,7 +274,7 @@ public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 			// now get down to the function
 			// gen code for the function
 
-			genCodeLambdaInContext(codeGenerator, (ListStruct) loadTimeValue.getValue(), true);
+			genCodeLambdaInContext(codeGenerator, (ConsElement) loadTimeValue.getValue(), true);
 			// now there's an instance of the function on the stack, call it
 			codeGenerator.emitter.emitInvokeinterface("lisp/extensions/type/Function0", "funcall", "()", "Ljava/lang/Object;", true);
 			// now put the value into the static field

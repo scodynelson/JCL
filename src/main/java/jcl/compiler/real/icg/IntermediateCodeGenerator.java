@@ -1,28 +1,27 @@
 package jcl.compiler.real.icg;
 
-import jcl.LispStruct;
 import jcl.compiler.old.Emitter;
-import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.binding.Binding;
+import jcl.compiler.real.element.CharacterElement;
+import jcl.compiler.real.element.ConsElement;
+import jcl.compiler.real.element.FloatElement;
+import jcl.compiler.real.element.IntegerElement;
+import jcl.compiler.real.element.NullElement;
+import jcl.compiler.real.element.RatioElement;
+import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.environment.Closure;
-import jcl.compiler.real.environment.binding.ClosureBinding;
+import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.SymbolTable;
 import jcl.compiler.real.environment.allocation.LocalAllocation;
 import jcl.compiler.real.environment.allocation.PositionAllocation;
+import jcl.compiler.real.environment.binding.Binding;
+import jcl.compiler.real.environment.binding.ClosureBinding;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.environment.binding.SymbolEnvironmentBinding;
 import jcl.compiler.real.environment.binding.SymbolLocalBinding;
-import jcl.compiler.real.environment.SymbolTable;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.icg.specialoperator.TagbodyCodeGenerator;
-import jcl.characters.CharacterStruct;
 import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
-import jcl.numbers.ComplexStruct;
-import jcl.numbers.FloatStruct;
-import jcl.numbers.IntegerStruct;
-import jcl.numbers.RatioStruct;
 import jcl.packages.GlobalPackageStruct;
-import jcl.packages.PackageStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
@@ -104,22 +103,22 @@ public class IntermediateCodeGenerator {
 
 	public void icgMainLoop(final Object obj) {
 
-		if (obj.equals(NullStruct.INSTANCE)) {
-			NILCodeGenerator.INSTANCE.generate((NILStruct) obj, this);
-		} else if (obj instanceof CharacterStruct) {
-			CharacterCodeGenerator.INSTANCE.generate((CharacterStruct) obj, this);
-		} else if (obj instanceof IntegerStruct) {
-			IntegerCodeGenerator.INSTANCE.generate((IntegerStruct) obj, this);
-		} else if (obj instanceof FloatStruct) {
-			FloatCodeGenerator.INSTANCE.generate((FloatStruct) obj, this);
-		} else if (obj instanceof RatioStruct) {
-			RatioCodeGenerator.INSTANCE.generate((RatioStruct) obj, this);
-		} else if (obj instanceof ComplexStruct) {
-			ComplexCodeGenerator.INSTANCE.generate((ComplexStruct) obj, this);
-		} else if (obj instanceof SymbolStruct) {
-			SymbolCodeGenerator.INSTANCE.generate((SymbolStruct) obj, this);
-		} else if (obj instanceof ListStruct) {
-			ListCodeGenerator.INSTANCE.generate((ListStruct) obj, this);
+		if (obj.equals(NullElement.INSTANCE)) {
+			NILCodeGenerator.INSTANCE.generate((NullElement) obj, this);
+		} else if (obj instanceof CharacterElement) {
+			CharacterCodeGenerator.INSTANCE.generate((CharacterElement) obj, this);
+		} else if (obj instanceof IntegerElement) {
+			IntegerCodeGenerator.INSTANCE.generate((IntegerElement) obj, this);
+		} else if (obj instanceof FloatElement) {
+			FloatCodeGenerator.INSTANCE.generate((FloatElement) obj, this);
+		} else if (obj instanceof RatioElement) {
+			RatioCodeGenerator.INSTANCE.generate((RatioElement) obj, this);
+//		} else if (obj instanceof ComplexStruct) {
+//			ComplexCodeGenerator.INSTANCE.generate((ComplexStruct) obj, this);
+		} else if (obj instanceof SymbolElement) {
+			SymbolCodeGenerator.INSTANCE.generate((SymbolElement) obj, this);
+		} else if (obj instanceof ConsElement) {
+			ListCodeGenerator.INSTANCE.generate((ConsElement) obj, this);
 		} else {
 			LOGGER.error("ICG: Found thing I can't generate code for: {}, class: {}", obj, obj.getClass().getName());
 		}
@@ -149,7 +148,7 @@ public class IntermediateCodeGenerator {
 		}
 	}
 
-	public static int genLocalSlot(final SymbolStruct<?> sym, final Environment binding) {
+	public static int genLocalSlot(final SymbolElement sym, final Environment binding) {
 		// get the :bindings list
 		// ((x :allocation ...) (y :allocation ...) ...)
 		final Binding<?> symBinding = binding.getLexicalBinding(sym).get();
@@ -158,7 +157,7 @@ public class IntermediateCodeGenerator {
 		return ((PositionAllocation) symBinding.getAllocation()).getPosition();
 	}
 
-	public <X extends LispStruct> void genCodeSpecialVariable(final SymbolStruct<X> sym) {
+	public void genCodeSpecialVariable(final SymbolElement sym) {
 		if (sym.equals(NILStruct.INSTANCE)) {
 			emitter.emitGetstatic("jcl/symbols/NILStruct", "INSTANCE", "Ljcl/symbols/NILStruct;");
 		} else if (sym.equals(TStruct.INSTANCE)) {
@@ -166,7 +165,7 @@ public class IntermediateCodeGenerator {
 		} else {
 			// push current package
 			emitSymbolPackage(sym);
-			emitter.emitLdc(sym.getName());
+			emitter.emitLdc(sym.getSymbolName());
 			// invoke package.intern() - we may not have seen it before
 			emitter.emitInvokeinterface("lisp/common/type/Package", "intern", "(Ljava/lang/String;)", "[Llisp/common/type/Symbol;", true);
 			emitter.emitLdc(0);
@@ -181,17 +180,17 @@ public class IntermediateCodeGenerator {
 	 * @param sym
 	 * 		lisp.common.type.Sybmbol sym
 	 */
-	private Object emitSymbolPackage(final SymbolStruct<?> sym) {
+	private Object emitSymbolPackage(final SymbolElement sym) {
 		// There are optimizations for the standard packages
-		if (sym.getSymbolPackage() != null) {
-			final PackageStruct homePkgName = sym.getSymbolPackage();
-			if (homePkgName.equals(GlobalPackageStruct.COMMON_LISP)) {
+		if (sym.getPackageName() != null) {
+			final String homePkgName = sym.getPackageName();
+			if (homePkgName.equals(GlobalPackageStruct.COMMON_LISP.getName())) {
 				emitter.emitGetstatic("lisp/common/type/Package", "CommonLisp", "Llisp/common/type/Package;");
-			} else if (homePkgName.equals(GlobalPackageStruct.COMMON_LISP_USER)) {
+			} else if (homePkgName.equals(GlobalPackageStruct.COMMON_LISP_USER.getName())) {
 				emitter.emitGetstatic("lisp/common/type/Package", "CommonLispUser", "Llisp/common/type/Package;");
-			} else if (homePkgName.equals(GlobalPackageStruct.KEYWORD)) {
+			} else if (homePkgName.equals(GlobalPackageStruct.KEYWORD.getName())) {
 				emitter.emitGetstatic("lisp/common/type/Package", "Keyword", "Llisp/common/type/Package;");
-			} else if (homePkgName.equals(GlobalPackageStruct.SYSTEM)) {
+			} else if (homePkgName.equals(GlobalPackageStruct.SYSTEM.getName())) {
 				emitter.emitGetstatic("lisp/common/type/Package", "System", "Llisp/common/type/Package;");
 			} else {
 				emitPackage(homePkgName);
@@ -209,17 +208,17 @@ public class IntermediateCodeGenerator {
 	 * @param name
 	 * 		lisp.common.type.Package name
 	 */
-	private Object emitPackage(final PackageStruct name) {
+	private Object emitPackage(final String name) {
 //        Label label = new Label();
 //        visitMethodLabel(label);
 //        emitLine(++LineNumber, label);
-		emitter.emitLdc(name.getName());
+		emitter.emitLdc(name);
 		//String owner, String name, String descr
 		emitter.emitInvokestatic("lisp/system/PackageImpl", "findPackage", "(Ljava/lang/String;)", "Llisp/common/type/Package;", false);
 		return NILStruct.INSTANCE;
 	}
 
-	public void doConstructor(final ListStruct list, final String className) {
+	public void doConstructor(final ConsElement list, final String className) {
 		// The basic constructor used when compiling a top-level lambda
 		emitter.newMethod(Opcodes.ACC_PUBLIC, "<init>", "()", "V", null, null);
 		emitter.emitAload(0);
@@ -288,7 +287,7 @@ public class IntermediateCodeGenerator {
 			// run the list of variables
 			//TODO handle parameters that are special variables
 			for (final Binding<?> binding : bindings) {
-				final SymbolStruct<?> variable = binding.getSymbolStruct();
+				final SymbolElement variable = binding.getSymbolStruct();
 				final Optional<ClosureBinding> closureEntry = closureStuff.getBinding(variable);
 				if (closureEntry.isPresent()) {
 					// this entry is a closure
@@ -329,7 +328,7 @@ public class IntermediateCodeGenerator {
 
 		for (final SymbolEnvironmentBinding symbolEnvironmentBinding : dynamicEnvironmentBindings) {
 			final Environment environment = symbolEnvironmentBinding.getBinding();
-			final SymbolStruct<?> sym = symbolEnvironmentBinding.getSymbolStruct();
+			final SymbolElement sym = symbolEnvironmentBinding.getSymbolStruct();
 			final Optional<SymbolLocalBinding> dynamicLocalBinding = environment.getSymbolTable().getDynamicLocalBinding(sym);
 			if (dynamicLocalBinding.isPresent()) {
 				dynamicLocalBindings.add(dynamicLocalBinding.get());
@@ -346,9 +345,9 @@ public class IntermediateCodeGenerator {
 			final int slot = alloc.getPosition();
 			// now gen some code (whew)
 			// gen code to either intern a symbol or call make-symbol if uninterned
-			final SymbolStruct<?> symbol = binding.getSymbolStruct();
-			if (symbol.getSymbolPackage() == null) {
-				final String name = symbol.getName();
+			final SymbolElement symbol = binding.getSymbolStruct();
+			if (symbol.getPackageName() == null) {
+				final String name = symbol.getSymbolName();
 				// have to gen a make-symbol
 				emitter.emitLdc(name);
 				emitter.emitInvokestatic("lisp/common/type/Symbol$Factory", "newInstance", "(Ljava/lang/String;)", "Llisp/common/type/Symbol;", false);

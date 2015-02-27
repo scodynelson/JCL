@@ -4,8 +4,8 @@
 
 package jcl.compiler.real.element.specialoperator.lambda;
 
-import jcl.arrays.StringStruct;
 import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.StringElement;
 import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -17,13 +17,13 @@ public class LambdaElement implements Element {
 
 	private final OrdinaryLambdaListBindings lambdaListBindings;
 
-	private final StringStruct docString;
+	private final StringElement docString;
 
 	private final Element body;
 
 	private final LambdaEnvironment lambdaEnvironment;
 
-	public LambdaElement(final OrdinaryLambdaListBindings lambdaListBindings, final StringStruct docString, final Element body,
+	public LambdaElement(final OrdinaryLambdaListBindings lambdaListBindings, final StringElement docString, final Element body,
 	                     final LambdaEnvironment lambdaEnvironment) {
 		this.lambdaListBindings = lambdaListBindings;
 		this.docString = docString;
@@ -35,7 +35,7 @@ public class LambdaElement implements Element {
 		return lambdaListBindings;
 	}
 
-	public StringStruct getDocString() {
+	public StringElement getDocString() {
 		return docString;
 	}
 

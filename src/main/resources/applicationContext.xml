@@ -67,32 +67,38 @@
 	          key-type="java.lang.Class"
 	          value-type="jcl.compiler.real.sa.Analyzer">
 
-		<entry key="jcl.symbols.NILStruct" value-ref="NILAnalyzer"/>
-		<entry key="jcl.lists.NullStruct" value-ref="nullAnalyzer"/>
-		<entry key="jcl.characters.CharacterStruct" value-ref="characterAnalyzer"/>
-		<entry key="jcl.numbers.IntegerStruct" value-ref="integerAnalyzer"/>
-		<entry key="jcl.numbers.FloatStruct" value-ref="floatAnalyzer"/>
-		<entry key="jcl.numbers.RatioStruct" value-ref="ratioAnalyzer"/>
-		<entry key="jcl.symbols.SymbolStruct" value-ref="lexicalSymbolAnalyzer"/>
-		<entry key="jcl.lists.ConsStruct" value-ref="consAnalyzer"/>
+		<entry key="jcl.compiler.real.element.CharacterElement" value-ref="constantAnalyzer"/>
+		<entry key="jcl.compiler.real.element.CommentElement" value-ref="constantAnalyzer"/>
+		<entry key="jcl.compiler.real.element.ConsElement" value-ref="consAnalyzer"/>
+		<entry key="jcl.compiler.real.element.FloatElement" value-ref="constantAnalyzer"/>
+		<entry key="jcl.compiler.real.element.IntegerElement" value-ref="constantAnalyzer"/>
+		<entry key="jcl.compiler.real.element.NullElement" value-ref="constantAnalyzer"/>
+		<entry key="jcl.compiler.real.element.RatioElement" value-ref="constantAnalyzer"/>
+		<entry key="jcl.compiler.real.element.StringElement" value-ref="constantAnalyzer"/>
+		<entry key="jcl.compiler.real.element.SymbolElement" value-ref="lexicalSymbolAnalyzer"/>
+
 	</util:map>
 
 	<util:map id="functionCallAnalyzerStrategies"
 	          key-type="java.lang.Class"
 	          value-type="jcl.compiler.real.sa.Analyzer">
 
+		<!-- TODO: special operators -->
 		<entry key="jcl.symbols.SpecialOperator" value-ref="functionCallExpanderAnalyzer"/>
-		<entry key="jcl.symbols.SymbolStruct" value-ref="functionCallExpanderAnalyzer"/>
-		<entry key="jcl.lists.NullStruct" value-ref="nullAnalyzer"/>
-		<entry key="jcl.lists.ListStruct" value-ref="lambdaFunctionCallAnalyzer"/>
+		<entry key="jcl.compiler.real.element.SymbolElement" value-ref="functionCallExpanderAnalyzer"/>
+		<entry key="jcl.compiler.real.element.NullElement" value-ref="constantAnalyzer"/>
+		<entry key="jcl.compiler.real.element.ConsElement" value-ref="lambdaFunctionCallAnalyzer"/>
+
 	</util:map>
 
 	<util:map id="expandedFunctionCallAnalyzerStrategies"
 	          key-type="java.lang.Class"
 	          value-type="jcl.compiler.real.sa.analyzer.FunctionCallAnalyzer">
 
+		<!-- TODO: special operators -->
 		<entry key="jcl.symbols.SpecialOperator" value-ref="specialOperatorFunctionCallAnalyzer"/>
-		<entry key="jcl.symbols.SymbolStruct" value-ref="symbolFunctionCallAnalyzer"/>
+		<entry key="jcl.compiler.real.element.SymbolElement" value-ref="symbolFunctionCallAnalyzer"/>
+
 	</util:map>
 
 	<util:map id="specialOperatorAnalyzerStrategies"

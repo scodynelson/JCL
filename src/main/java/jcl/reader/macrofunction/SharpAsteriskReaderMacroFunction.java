@@ -17,6 +17,7 @@ import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
+import jcl.system.EnhancedLinkedList;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +25,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.math.BigInteger;
-import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -133,7 +133,7 @@ public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunctionImpl {
 		final int numberOfTokens = token.length();
 		final BigInteger numberOfTokensBI = BigInteger.valueOf(numberOfTokens);
 
-		final List<SimpleElement> bits = convertBitStringToBits(token);
+		final EnhancedLinkedList<SimpleElement> bits = convertBitStringToBits(token);
 
 		final SymbolElement makeArrayFnSymbol = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "MAKE-ARRAY");
 		final IntegerElement dimensions = new IntegerElement(numberOfTokensBI);
@@ -159,12 +159,12 @@ public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 *
 	 * @return the list of {@link IntegerStruct} bits comprising the provided {@code token}
 	 */
-	private static List<SimpleElement> convertBitStringToBits(final String token) {
-		return token.chars()
-		            .map(e -> Character.getNumericValue((char) e))
-		            .mapToObj(BigInteger::valueOf)
-		            .map(IntegerElement::new)
-		            .collect(Collectors.toList());
+	private static EnhancedLinkedList<SimpleElement> convertBitStringToBits(final String token) {
+		return new EnhancedLinkedList<>(token.chars()
+		                                     .map(e -> Character.getNumericValue((char) e))
+		                                     .mapToObj(BigInteger::valueOf)
+		                                     .map(IntegerElement::new)
+		                                     .collect(Collectors.toList()));
 	}
 
 	/**

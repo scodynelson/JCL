@@ -1,12 +1,15 @@
 package jcl.compiler.real.icg.specialoperator;
 
+import jcl.compiler.real.element.ConsElement;
+import jcl.compiler.real.element.SimpleElement;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
+import jcl.system.EnhancedLinkedList;
 import org.objectweb.asm.Label;
 
-public class UnwindProtectCodeGenerator implements CodeGenerator<ListStruct> {
+public class UnwindProtectCodeGenerator implements CodeGenerator<ConsElement> {
 
 	/**
 	 * Transfer of Control Sequence for unwind-protect.
@@ -27,14 +30,14 @@ public class UnwindProtectCodeGenerator implements CodeGenerator<ListStruct> {
 	public static final UnwindProtectCodeGenerator INSTANCE = new UnwindProtectCodeGenerator();
 
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator) {
+	public void generate(final ConsElement input, final IntermediateCodeGenerator codeGenerator) {
 
 		// Burn off the special symbol (UNWIND-PROTECT)
-		final ListStruct restOfList = input.getRest();
+		final EnhancedLinkedList<SimpleElement> restOfList = input.getElements().getAllButFirst();
 
 		//Get the protected form and the cleanup form(s) after the UNWIND-PROTECT symbol
 		final ListStruct protectedForm = (ListStruct) restOfList.getFirst();                //The protected form
-		ListStruct cleanupForm = restOfList.getRest();                  //The cleanup form
+		EnhancedLinkedList<SimpleElement> cleanupForm = restOfList.getAllButFirst();                  //The cleanup form
 
 		//Create the exception table
 		final Label startTryBlock = new Label();               //The start of the try block
@@ -77,7 +80,7 @@ public class UnwindProtectCodeGenerator implements CodeGenerator<ListStruct> {
 		//Evalute the cleanup form
 		while (!cleanupForm.equals(NullStruct.INSTANCE)) {
 			codeGenerator.icgMainLoop(cleanupForm.getFirst());
-			cleanupForm = cleanupForm.getRest();
+			cleanupForm = cleanupForm.getAllButFirst();
 			codeGenerator.emitter.emitPop();
 		}
 

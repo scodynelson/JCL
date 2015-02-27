@@ -4,10 +4,10 @@
 
 package jcl.compiler.real.environment.binding;
 
-import jcl.LispStruct;
 import jcl.LispType;
+import jcl.compiler.real.element.SimpleElement;
+import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
-import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -15,15 +15,15 @@ public class ParameterBinding extends Binding<ParameterAllocation> {
 
 	private static final long serialVersionUID = 4128878993186537174L;
 
-	private final LispStruct initForm;
+	private final SimpleElement initForm;
 
-	protected ParameterBinding(final SymbolStruct<?> symbolStruct, final ParameterAllocation allocation, final LispType type,
-	                           final LispStruct initForm) {
+	protected ParameterBinding(final SymbolElement symbolStruct, final ParameterAllocation allocation, final LispType type,
+	                           final SimpleElement initForm) {
 		super(symbolStruct, allocation, type);
 		this.initForm = initForm;
 	}
 
-	public LispStruct getInitForm() {
+	public SimpleElement getInitForm() {
 		return initForm;
 	}
 

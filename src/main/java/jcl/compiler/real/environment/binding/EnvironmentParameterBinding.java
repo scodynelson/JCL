@@ -6,8 +6,8 @@ package jcl.compiler.real.environment.binding;
 
 import jcl.LispType;
 import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
-import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -17,7 +17,7 @@ public class EnvironmentParameterBinding extends EnvironmentBinding<ParameterAll
 
 	private final Element initForm;
 
-	public EnvironmentParameterBinding(final SymbolStruct<?> symbolStruct, final ParameterAllocation allocation, final LispType type,
+	public EnvironmentParameterBinding(final SymbolElement symbolStruct, final ParameterAllocation allocation, final LispType type,
 	                                   final Element initForm) {
 		super(symbolStruct, allocation, type);
 		this.initForm = initForm;

@@ -7,6 +7,7 @@ import jcl.compiler.old.Emitter;
 import jcl.compiler.old.EmptyVisitor;
 import jcl.compiler.old.documentation.AnnotationCollector;
 import jcl.compiler.old.documentation.DocumentFactory;
+import jcl.compiler.real.element.SimpleElement;
 import jcl.compiler.real.sa.analyzer.expander.MacroExpandFunction;
 import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
 import jcl.compiler.old.symbol.KeywordOld;
@@ -154,7 +155,7 @@ public class CompileFileFunction {
 
 			baseTime = System.currentTimeMillis();
 			formList = (ListStruct) wrapFormInLambda(formList);
-			formList = (ListStruct) sa.analyzeForm(formList);
+			formList = (ListStruct) sa.analyzeForm((SimpleElement) formList);
 			saTime = System.currentTimeMillis() - baseTime;
 
 			baseTime = System.currentTimeMillis();

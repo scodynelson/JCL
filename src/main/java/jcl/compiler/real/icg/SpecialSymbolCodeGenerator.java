@@ -1,14 +1,14 @@
 package jcl.compiler.real.icg;
 
+import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.SymbolTable;
 import jcl.compiler.real.environment.binding.SymbolEnvironmentBinding;
 import jcl.compiler.real.environment.binding.SymbolLocalBinding;
-import jcl.symbols.SymbolStruct;
 
 import java.util.Optional;
 
-public class SpecialSymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
+public class SpecialSymbolCodeGenerator implements CodeGenerator<SymbolElement> {
 
 	public static final SpecialSymbolCodeGenerator INSTANCE = new SpecialSymbolCodeGenerator();
 
@@ -19,7 +19,7 @@ public class SpecialSymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>
 	 */
 
 	@Override
-	public void generate(final SymbolStruct<?> input, final IntermediateCodeGenerator codeGenerator) {
+	public void generate(final SymbolElement input, final IntermediateCodeGenerator codeGenerator) {
 		final int theInt = getSymbolAllocation(codeGenerator.bindingEnvironment, input);
 		//****** this is a premature optimization. Good idea, but should wait for a new version of the compiler ****
 		final int slot = 0;
@@ -33,7 +33,7 @@ public class SpecialSymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>
 		}
 	}
 
-	private static int getSymbolAllocation(final Environment currentEnvironment, final SymbolStruct<?> variable) {
+	private static int getSymbolAllocation(final Environment currentEnvironment, final SymbolElement variable) {
 
 		// look up the symbol in the symbol table
 		final Optional<SymbolLocalBinding> symPList = getSymbolTableEntry(currentEnvironment, variable);
@@ -54,7 +54,7 @@ public class SpecialSymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>
 	}
 
 	private static Optional<SymbolLocalBinding> getSymbolTableEntry(final Environment currentEnvironment,
-	                                                               final SymbolStruct<?> variable) {
+	                                                               final SymbolElement variable) {
 
 		// look up the symbol in the symbol table
 		final SymbolTable symTable = currentEnvironment.getSymbolTable();

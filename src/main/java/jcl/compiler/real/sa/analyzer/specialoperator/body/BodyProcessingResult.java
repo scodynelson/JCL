@@ -1,7 +1,7 @@
 package jcl.compiler.real.sa.analyzer.specialoperator.body;
 
-import jcl.LispStruct;
-import jcl.arrays.StringStruct;
+import jcl.compiler.real.element.SimpleElement;
+import jcl.compiler.real.element.StringElement;
 import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
 
 import java.util.List;
@@ -9,10 +9,12 @@ import java.util.List;
 public class BodyProcessingResult {
 
 	private final DeclareElement declareElement;
-	private final StringStruct docString;
-	private final List<LispStruct> bodyForms;
 
-	public BodyProcessingResult(final DeclareElement declareElement, final StringStruct docString, final List<LispStruct> bodyForms) {
+	private final StringElement docString;
+
+	private final List<SimpleElement> bodyForms;
+
+	public BodyProcessingResult(final DeclareElement declareElement, final StringElement docString, final List<SimpleElement> bodyForms) {
 		this.declareElement = declareElement;
 		this.docString = docString;
 		this.bodyForms = bodyForms;
@@ -22,11 +24,11 @@ public class BodyProcessingResult {
 		return declareElement;
 	}
 
-	public StringStruct getDocString() {
+	public StringElement getDocString() {
 		return docString;
 	}
 
-	public List<LispStruct> getBodyForms() {
+	public List<SimpleElement> getBodyForms() {
 		return bodyForms;
 	}
 }

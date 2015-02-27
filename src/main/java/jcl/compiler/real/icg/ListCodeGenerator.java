@@ -1,41 +1,43 @@
 package jcl.compiler.real.icg;
 
-import jcl.LispStruct;
+import jcl.compiler.real.element.ConsElement;
+import jcl.compiler.real.element.SimpleElement;
+import jcl.compiler.real.element.SpecialOperatorElement;
+import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.icg.specialoperator.FletCodeGenerator;
 import jcl.compiler.real.icg.specialoperator.LabelsCodeGenerator;
 import jcl.compiler.real.icg.specialoperator.LetCodeGenerator;
 import jcl.compiler.real.icg.specialoperator.MacroletCodeGenerator;
 import jcl.compiler.real.icg.specialoperator.special.LambdaCodeGenerator;
 import jcl.compiler.real.icg.specialoperator.special.MacroLambdaCodeGenerator;
-import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.Declaration;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
+import jcl.system.EnhancedLinkedList;
 import org.objectweb.asm.Label;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ListCodeGenerator implements CodeGenerator<ListStruct> {
+public class ListCodeGenerator implements CodeGenerator<ConsElement> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ListCodeGenerator.class);
 
 	public static final ListCodeGenerator INSTANCE = new ListCodeGenerator();
 
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator) {
+	public void generate(final ConsElement input, final IntermediateCodeGenerator codeGenerator) {
 
-		final LispStruct firstElement = input.getFirst();
-		if (firstElement instanceof SymbolStruct) {
+		final SimpleElement firstElement = input.getElements().getFirst();
+		if (firstElement instanceof SymbolElement) {
 			// generally an application (foobar ...)
-			if (firstElement instanceof SpecialOperator) {
+			if (firstElement instanceof SpecialOperatorElement) {
 				SpecialFormCodeGenerator.INSTANCE.generate(input, codeGenerator);
-			} else if (firstElement instanceof Declaration) {
-//                genCodeDeclare(list);
+//			} else if (firstElement instanceof Declaration) { // TODO fix??
+////                genCodeDeclare(list);
 			} else if (formOptimizable(input)) {
 				genOptimizedForm(input, codeGenerator);
 			} else {
-				SymbolFunctionCodeGenerator.INSTANCE.generate((SymbolStruct) firstElement, codeGenerator);
+				SymbolFunctionCodeGenerator.INSTANCE.generate((SymbolElement) firstElement, codeGenerator);
 
 				final boolean acceptsMultipleValues = FunctionCallCodeGenerator.INSTANCE.isAcceptsMultipleValues();
 				try {
@@ -47,24 +49,24 @@ public class ListCodeGenerator implements CodeGenerator<ListStruct> {
 					FunctionCallCodeGenerator.INSTANCE.setAcceptsMultipleValues(acceptsMultipleValues);
 				}
 			}
-		} else if (firstElement instanceof ListStruct) {
-			final ListStruct first = (ListStruct) firstElement;
-			final ListStruct maybeLast = input.getRest();
+		} else if (firstElement instanceof ConsElement) {
+			final ConsElement first = (ConsElement) firstElement;
+			final EnhancedLinkedList<SimpleElement> maybeLast = input.getElements().getAllButFirst();
 			// could be ((%lambda bindings...) body) or
 			// could be (((%lambda bindings...) body) ...args...)
-			if (first.getFirst() instanceof SymbolStruct) {
+			if (first.getElements().getFirst() instanceof SymbolStruct) {
 				// it's ((%lambda bindings...) body)
-				if (first.getFirst().equals(SpecialOperator.LAMBDA_MARKER)) {
+				if (first.getElements().getFirst().equals(SpecialOperator.LAMBDA_MARKER)) {
 					LambdaCodeGenerator.INSTANCE.generate(input, codeGenerator);
-				} else if (first.getFirst().equals(SpecialOperator.MACRO_MARKER)) {
+				} else if (first.getElements().getFirst().equals(SpecialOperator.MACRO_MARKER)) {
 					MacroLambdaCodeGenerator.INSTANCE.generate(input, codeGenerator);
-				} else if (first.getFirst().equals(SpecialOperator.LET)) {
+				} else if (first.getElements().getFirst().equals(SpecialOperator.LET)) {
 					LetCodeGenerator.INSTANCE.generate(input, codeGenerator);
-				} else if (first.getFirst().equals(SpecialOperator.FLET)) {
+				} else if (first.getElements().getFirst().equals(SpecialOperator.FLET)) {
 					FletCodeGenerator.INSTANCE.generate(input, codeGenerator);
-				} else if (first.getFirst().equals(SpecialOperator.LABELS)) {
+				} else if (first.getElements().getFirst().equals(SpecialOperator.LABELS)) {
 					LabelsCodeGenerator.INSTANCE.generate(input, codeGenerator);
-				} else if (first.getFirst().equals(SpecialOperator.MACROLET)) {
+				} else if (first.getElements().getFirst().equals(SpecialOperator.MACROLET)) {
 					MacroletCodeGenerator.INSTANCE.generate(input, codeGenerator);
 				} else {
 					LOGGER.info("It's something else, {}", first);
@@ -84,17 +86,17 @@ public class ListCodeGenerator implements CodeGenerator<ListStruct> {
 		}
 	}
 
-	private static boolean formOptimizable(final ListStruct list) {
-		return list.getFirst().equals(GlobalPackageStruct.COMMON_LISP.intern("EQ").getSymbolStruct());
+	private static boolean formOptimizable(final ConsElement list) {
+		return list.getElements().getFirst().equals(GlobalPackageStruct.COMMON_LISP.intern("EQ").getSymbolStruct());
 	}
 
-	private static void genOptimizedForm(final ListStruct list, final IntermediateCodeGenerator codeGenerator) {
-		final SymbolStruct<?> sym = (SymbolStruct) list.getFirst();
+	private static void genOptimizedForm(final ConsElement list, final IntermediateCodeGenerator codeGenerator) {
+		final SymbolStruct<?> sym = (SymbolStruct) list.getElements().getFirst();
 		if (sym.equals(GlobalPackageStruct.COMMON_LISP.intern("EQ").getSymbolStruct())) {
-			final ListStruct args = list.getRest();
+			final EnhancedLinkedList<SimpleElement> args = list.getElements().getAllButFirst();
 			// gen the 2 arguments and leave their values on the stack
 			codeGenerator.icgMainLoop(args.getFirst());
-			codeGenerator.icgMainLoop(args.getRest().getFirst());
+			codeGenerator.icgMainLoop(args.getAllButFirst().getFirst());
 			// now gen the VM if test
 			// just generate direct VM instructions for eq refs
 			// get a uniquifier value

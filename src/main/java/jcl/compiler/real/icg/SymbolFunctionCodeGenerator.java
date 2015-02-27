@@ -1,25 +1,24 @@
 package jcl.compiler.real.icg;
 
-import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
+import jcl.compiler.real.element.SymbolElement;
 import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.Label;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SymbolFunctionCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
+public class SymbolFunctionCodeGenerator implements CodeGenerator<SymbolElement> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SymbolFunctionCodeGenerator.class);
 
 	public static final SymbolFunctionCodeGenerator INSTANCE = new SymbolFunctionCodeGenerator();
 
 	@Override
-	public void generate(final SymbolStruct<?> input, final IntermediateCodeGenerator codeGenerator) {
+	public void generate(final SymbolElement input, final IntermediateCodeGenerator codeGenerator) {
 		// there are multiple ways to handle this
 		// we add an optimization for calling a CL function
 		// it becomes a static field reference instead of a runtime symbol lookup
 		// +0 ->
-		if (input.getSymbolPackage().equals(GlobalPackageStruct.COMMON_LISP)) {
+		if (input.getPackageName().equals(GlobalPackageStruct.COMMON_LISP.getName())) {
 			String fnFieldName = "FUNCTION NAME"; // TODO: CommonLispFunctions.getFieldName(sym.getName().toString());
 			// get the type of the field as well...
 			if (fnFieldName != null) {
@@ -40,11 +39,12 @@ public class SymbolFunctionCodeGenerator implements CodeGenerator<SymbolStruct<?
 				codeGenerator.emitter.visitMethodLabel(label);
 				codeGenerator.emitter.emitGetstatic("lisp/extensions/type/CommonLispFunctions", "StdFunctions", "Llisp/extensions/type/CommonLispFunctions;");
 				// +1 -> StdFns
-				if (input.getFunction() instanceof MacroFunctionExpander) {
-					codeGenerator.emitter.emitGetfield("lisp/extensions/type/CommonLispFunctions", fnFieldName, "Llisp/common/type/MacroFunction;");
-				} else {
-					codeGenerator.emitter.emitGetfield("lisp/extensions/type/CommonLispFunctions", fnFieldName, canonicalName);//"Llisp/common/type/Function;");
-				}
+				// TODO: the following 5 lines...
+//				if (input.getFunction() instanceof MacroFunctionExpander) {
+//					codeGenerator.emitter.emitGetfield("lisp/extensions/type/CommonLispFunctions", fnFieldName, "Llisp/common/type/MacroFunction;");
+//				} else {
+//					codeGenerator.emitter.emitGetfield("lisp/extensions/type/CommonLispFunctions", fnFieldName, canonicalName);//"Llisp/common/type/Function;");
+//				}
 				// +1 -> fn
 			} else {
 				final Label label = new Label();

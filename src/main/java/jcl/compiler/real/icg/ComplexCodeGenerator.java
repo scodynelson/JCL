@@ -1,37 +1,38 @@
 package jcl.compiler.real.icg;
 
-import jcl.numbers.ComplexStruct;
-import jcl.numbers.FloatStruct;
-import jcl.numbers.IntegerStruct;
-import jcl.numbers.RatioStruct;
-import jcl.numbers.RealStruct;
+import jcl.compiler.real.element.ConsElement;
+import jcl.compiler.real.element.FloatElement;
+import jcl.compiler.real.element.IntegerElement;
+import jcl.compiler.real.element.RatioElement;
+import jcl.compiler.real.element.RealElement;
 
-public class ComplexCodeGenerator implements CodeGenerator<ComplexStruct> {
+public class ComplexCodeGenerator implements CodeGenerator<ConsElement> {
 
 	public static final ComplexCodeGenerator INSTANCE = new ComplexCodeGenerator();
 
 	@Override
-	public void generate(final ComplexStruct input, final IntermediateCodeGenerator codeGenerator) {
+	public void generate(final ConsElement input, final IntermediateCodeGenerator codeGenerator) {
 		// TODO: we NEED to do Complex numbers better!!
-		final RealStruct real = input.getReal();
-		final RealStruct imaginary = input.getImaginary();
+		// TODO: now this is hacked up. we probably shouldn't even have this generator to begin with...
+		final RealElement real = (RealElement) input.getElements().get(1);
+		final RealElement imaginary = (RealElement) input.getElements().get(2);
 
-		if (real instanceof IntegerStruct) {
-			IntegerCodeGenerator.INSTANCE.generate((IntegerStruct) real, codeGenerator);
-		} else if (real instanceof FloatStruct) {
-			FloatCodeGenerator.INSTANCE.generate((FloatStruct) real, codeGenerator);
-		} else if (real instanceof RatioStruct) {
-			RatioCodeGenerator.INSTANCE.generate((RatioStruct) real, codeGenerator);
+		if (real instanceof IntegerElement) {
+			IntegerCodeGenerator.INSTANCE.generate((IntegerElement) real, codeGenerator);
+		} else if (real instanceof FloatElement) {
+			FloatCodeGenerator.INSTANCE.generate((FloatElement) real, codeGenerator);
+		} else if (real instanceof RatioElement) {
+			RatioCodeGenerator.INSTANCE.generate((RatioElement) real, codeGenerator);
 		} else {
 			throw new RuntimeException("Only reals are valid for the Complex 'real' part.");
 		}
 
-		if (imaginary instanceof IntegerStruct) {
-			IntegerCodeGenerator.INSTANCE.generate((IntegerStruct) imaginary, codeGenerator);
-		} else if (imaginary instanceof FloatStruct) {
-			FloatCodeGenerator.INSTANCE.generate((FloatStruct) imaginary, codeGenerator);
-		} else if (imaginary instanceof RatioStruct) {
-			RatioCodeGenerator.INSTANCE.generate((RatioStruct) imaginary, codeGenerator);
+		if (imaginary instanceof IntegerElement) {
+			IntegerCodeGenerator.INSTANCE.generate((IntegerElement) imaginary, codeGenerator);
+		} else if (imaginary instanceof FloatElement) {
+			FloatCodeGenerator.INSTANCE.generate((FloatElement) imaginary, codeGenerator);
+		} else if (imaginary instanceof RatioElement) {
+			RatioCodeGenerator.INSTANCE.generate((RatioElement) imaginary, codeGenerator);
 		} else {
 			throw new RuntimeException("Only reals are valid for the Complex 'real' part.");
 		}

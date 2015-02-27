@@ -1,7 +1,9 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import jcl.LispStruct;
+import jcl.compiler.real.element.ConsElement;
 import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.SimpleElement;
+import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.element.specialoperator.ImmutableLoadTimeValueElement;
 import jcl.compiler.real.element.specialoperator.LoadTimeValueElement;
 import jcl.compiler.real.element.specialoperator.MutableLoadTimeValueElement;
@@ -12,11 +14,9 @@ import jcl.compiler.real.environment.LoadTimeValue;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
-import jcl.lists.ConsStruct;
-import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.BooleanStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.system.EnhancedLinkedList;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -28,25 +28,30 @@ public class LoadTimeValueAnalyzer implements SpecialOperatorAnalyzer {
 	private static final long serialVersionUID = 2168018740373766746L;
 
 	@Override
-	public LoadTimeValueElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
+	public LoadTimeValueElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
-		final int inputSize = input.size();
+		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
+
+		final int inputSize = elements.size();
 		if ((inputSize < 2) || (inputSize > 3)) {
 			throw new ProgramErrorException("LOAD-TIME-VALUE: Incorrect number of arguments: " + inputSize + ". Expected either 2 or 3 arguments.");
 		}
 
-		final LispStruct third = input.getRest().getRest().getFirst();
-		if (!(third instanceof BooleanStruct)) {
+		final EnhancedLinkedList<SimpleElement> inputRest = elements.getAllButFirst();
+		final EnhancedLinkedList<SimpleElement> inputRestRest = inputRest.getAllButFirst();
+
+		final SimpleElement third = inputRestRest.getFirst();
+		if (!(third instanceof BooleanStruct)) { // TODO: fix
 			throw new ProgramErrorException("LOAD-TIME-VALUE: Read-Only-P value must be of type BooleanStruct. Got: " + third);
 		}
 
 		final BooleanStruct readOnlyP = (BooleanStruct) third;
 		final boolean isReadOnly = readOnlyP.booleanValue();
 
-		final LispStruct form = input.getRest().getFirst();
+		final SimpleElement form = inputRest.getFirst();
 
-		final SymbolStruct<?> evalFnSym = GlobalPackageStruct.COMMON_LISP.findSymbol("EVAL").getSymbolStruct();
-		final ListStruct evalForm = new ConsStruct(evalFnSym, form);
+		final SymbolElement evalFnSym = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "EVAL");
+		final ConsElement evalForm = new ConsElement(evalFnSym, form);
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment currentEnvironment = environmentStack.peek();

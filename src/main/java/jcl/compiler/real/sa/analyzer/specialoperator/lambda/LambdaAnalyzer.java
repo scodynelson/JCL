@@ -1,7 +1,11 @@
 package jcl.compiler.real.sa.analyzer.specialoperator.lambda;
 
-import jcl.LispStruct;
+import jcl.compiler.real.element.ConsElement;
 import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.ListElement;
+import jcl.compiler.real.element.SimpleElement;
+import jcl.compiler.real.element.SpecialOperatorElement;
+import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
 import jcl.compiler.real.element.specialoperator.declare.SpecialDeclarationElement;
 import jcl.compiler.real.element.specialoperator.lambda.LambdaElement;
@@ -22,15 +26,11 @@ import jcl.compiler.real.sa.analyzer.specialoperator.SpecialOperatorAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyWithDeclaresAndDocStringAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
-import jcl.lists.ConsStruct;
-import jcl.lists.ListStruct;
-import jcl.symbols.SpecialOperator;
-import jcl.symbols.SymbolStruct;
+import jcl.system.EnhancedLinkedList;
 import jcl.types.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,14 +43,19 @@ public class LambdaAnalyzer implements SpecialOperatorAnalyzer {
 	private BodyWithDeclaresAndDocStringAnalyzer bodyWithDeclaresAndDocStringAnalyzer;
 
 	@Override
-	public LambdaElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
+	public LambdaElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
-		if (input.size() < 2) {
-			throw new ProgramErrorException("LAMBDA: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
+		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
+
+		final int inputSize = elements.size();
+		if (inputSize < 2) {
+			throw new ProgramErrorException("LAMBDA: Incorrect number of arguments: " + inputSize + ". Expected at least 2 arguments.");
 		}
 
-		final LispStruct second = input.getRest().getFirst();
-		if (!(second instanceof ListStruct)) {
+		final EnhancedLinkedList<SimpleElement> inputRest = elements.getAllButFirst();
+
+		final SimpleElement second = inputRest.getFirst();
+		if (!(second instanceof ListElement)) {
 			throw new ProgramErrorException("LAMBDA: Parameter list must be of type ListStruct. Got: " + second);
 		}
 
@@ -67,22 +72,22 @@ public class LambdaAnalyzer implements SpecialOperatorAnalyzer {
 		try {
 			analysisBuilder.setClosureDepth(newClosureDepth);
 
-			final ListStruct parameters = (ListStruct) second;
-			final ListStruct bodyForms = input.getRest().getRest();
+			final ListElement parameters = (ListElement) second;
+			final EnhancedLinkedList<SimpleElement> bodyForms = inputRest.getAllButFirst();
 
 			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAndDocStringAnalyzer.analyze(analyzer, bodyForms, analysisBuilder);
 			final DeclareElement declareElement = bodyProcessingResult.getDeclareElement();
 
 			final OrdinaryLambdaListBindings parsedLambdaList = LambdaListParser.parseOrdinaryLambdaList(analyzer, analysisBuilder, parameters, declareElement);
-			final List<LispStruct> newStartingLambdaBody = getNewStartingLambdaBody(parsedLambdaList);
+			final EnhancedLinkedList<SimpleElement> newStartingLambdaBody = getNewStartingLambdaBody(parsedLambdaList);
 
 			final List<SpecialDeclarationElement> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
 			specialDeclarationElements.forEach(e -> addDynamicVariableBinding(e, analysisBuilder, lambdaEnvironment));
 
-			final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
+			final List<SimpleElement> realBodyForms = bodyProcessingResult.getBodyForms();
 			newStartingLambdaBody.addAll(realBodyForms);
 
-			final ListStruct newLambdaBodyListStruct = ListStruct.buildProperList(newStartingLambdaBody);
+			final ConsElement newLambdaBodyListStruct = new ConsElement(newStartingLambdaBody);
 
 			final Element analyzedBodyForms = analyzer.analyzeForm(newLambdaBodyListStruct, analysisBuilder);
 			return new LambdaElement(parsedLambdaList, bodyProcessingResult.getDocString(), analyzedBodyForms, lambdaEnvironment);
@@ -93,51 +98,51 @@ public class LambdaAnalyzer implements SpecialOperatorAnalyzer {
 		}
 	}
 
-	private static List<LispStruct> getNewStartingLambdaBody(final OrdinaryLambdaListBindings parsedLambdaList) {
-		final List<LispStruct> newLambdaBody = new ArrayList<>();
+	private static EnhancedLinkedList<SimpleElement> getNewStartingLambdaBody(final OrdinaryLambdaListBindings parsedLambdaList) {
+		final EnhancedLinkedList<SimpleElement> newLambdaBody = new EnhancedLinkedList<>();
 
 		final List<AuxBinding> auxBindings = parsedLambdaList.getAuxBindings();
 		if (auxBindings.isEmpty()) {
-			newLambdaBody.add(SpecialOperator.PROGN);
+			newLambdaBody.add(SpecialOperatorElement.PROGN);
 		} else {
-			newLambdaBody.add(SpecialOperator.LET_STAR);
+			newLambdaBody.add(SpecialOperatorElement.LET_STAR);
 
-			final List<LispStruct> auxLetStarVars = auxBindings
+			final List<ConsElement> auxLetStarVars = auxBindings
 					.stream()
-					.map(e -> new ConsStruct(e.getSymbolStruct(), e.getInitForm()))
+					.map(e -> new ConsElement(e.getSymbolStruct(), e.getInitForm()))
 					.collect(Collectors.toList());
 
-			final ListStruct auxLetStarVarsLL = ListStruct.buildProperList(auxLetStarVars);
+			final ConsElement auxLetStarVarsLL = new ConsElement(new EnhancedLinkedList<>(auxLetStarVars));
 			newLambdaBody.add(auxLetStarVarsLL);
 		}
 
-		final List<LispStruct> initFormIfSetqs = getInitFormIfSetqs(parsedLambdaList);
+		final EnhancedLinkedList<SimpleElement> initFormIfSetqs = getInitFormIfSetqs(parsedLambdaList);
 		newLambdaBody.addAll(initFormIfSetqs);
 
 		return newLambdaBody;
 	}
 
-	private static List<LispStruct> getInitFormIfSetqs(final OrdinaryLambdaListBindings parsedLambdaList) {
+	private static EnhancedLinkedList<SimpleElement> getInitFormIfSetqs(final OrdinaryLambdaListBindings parsedLambdaList) {
 
-		final List<LispStruct> initFormIfSetqs = new ArrayList<>();
+		final EnhancedLinkedList<SimpleElement> initFormIfSetqs = new EnhancedLinkedList<>();
 
 		final List<OptionalBinding> optionalBindings = parsedLambdaList.getOptionalBindings();
 		for (final OptionalBinding optionalBinding : optionalBindings) {
 			final SuppliedPBinding suppliedPBinding = optionalBinding.getSuppliedPBinding();
 
-			final List<LispStruct> initFormIfSetq = new ArrayList<>();
-			initFormIfSetq.add(SpecialOperator.IF);
+			final EnhancedLinkedList<SimpleElement> initFormIfSetq = new EnhancedLinkedList<>();
+			initFormIfSetq.add(SpecialOperatorElement.IF);
 			initFormIfSetq.add(suppliedPBinding.getSymbolStruct());
 
-			final List<LispStruct> initFormSetq = new ArrayList<>();
-			initFormSetq.add(SpecialOperator.SETQ);
+			final EnhancedLinkedList<SimpleElement> initFormSetq = new EnhancedLinkedList<>();
+			initFormSetq.add(SpecialOperatorElement.SETQ);
 			initFormSetq.add(optionalBinding.getSymbolStruct());
 			initFormSetq.add(optionalBinding.getInitForm());
 
-			final ListStruct initFormSetqLL = ListStruct.buildProperList(initFormSetq);
+			final ConsElement initFormSetqLL = new ConsElement(initFormSetq);
 			initFormIfSetq.add(initFormSetqLL);
 
-			final ListStruct initFormIfSetqLL = ListStruct.buildProperList(initFormIfSetq);
+			final ConsElement initFormIfSetqLL = new ConsElement(initFormIfSetq);
 			initFormIfSetqs.add(initFormIfSetqLL);
 		}
 
@@ -145,19 +150,19 @@ public class LambdaAnalyzer implements SpecialOperatorAnalyzer {
 		for (final KeyBinding keyBinding : keyBindings) {
 			final SuppliedPBinding suppliedPBinding = keyBinding.getSuppliedPBinding();
 
-			final List<LispStruct> initFormIfSetq = new ArrayList<>();
-			initFormIfSetq.add(SpecialOperator.IF);
+			final EnhancedLinkedList<SimpleElement> initFormIfSetq = new EnhancedLinkedList<>();
+			initFormIfSetq.add(SpecialOperatorElement.IF);
 			initFormIfSetq.add(suppliedPBinding.getSymbolStruct());
 
-			final List<LispStruct> initFormSetq = new ArrayList<>();
-			initFormSetq.add(SpecialOperator.SETQ);
+			final EnhancedLinkedList<SimpleElement> initFormSetq = new EnhancedLinkedList<>();
+			initFormSetq.add(SpecialOperatorElement.SETQ);
 			initFormSetq.add(keyBinding.getSymbolStruct());
 			initFormSetq.add(keyBinding.getInitForm());
 
-			final ListStruct initFormSetqLL = ListStruct.buildProperList(initFormSetq);
+			final ConsElement initFormSetqLL = new ConsElement(initFormSetq);
 			initFormIfSetq.add(initFormSetqLL);
 
-			final ListStruct initFormIfSetqLL = ListStruct.buildProperList(initFormIfSetq);
+			final ConsElement initFormIfSetqLL = new ConsElement(initFormIfSetq);
 			initFormIfSetqs.add(initFormIfSetqLL);
 		}
 
@@ -172,7 +177,7 @@ public class LambdaAnalyzer implements SpecialOperatorAnalyzer {
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
-		final SymbolStruct<?> var = (SymbolStruct<?>) specialDeclarationElement.getVar().toLispStruct(); // TODO: fix
+		final SymbolElement var = specialDeclarationElement.getVar();
 
 		final Environment bindingEnvironment = Environments.getDynamicBindingEnvironment(lambdaEnvironment, var);
 		final EnvironmentAllocation allocation = new EnvironmentAllocation(bindingEnvironment);

@@ -4,11 +4,10 @@
 
 package jcl.compiler.real.sa;
 
-import jcl.LispStruct;
 import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.SimpleElement;
+import jcl.compiler.real.element.SymbolElement;
 import jcl.conditions.exceptions.ProgramErrorException;
-import jcl.packages.PackageStruct;
-import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
@@ -30,26 +29,26 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SemanticAnalyzerImpl.class);
 
 	@Resource
-	private Map<Class<? extends LispStruct>, Analyzer<? extends Element, LispStruct>> elementAnalyzerStrategies;
+	private Map<Class<? extends SimpleElement>, Analyzer<? extends Element, SimpleElement>> elementAnalyzerStrategies;
 
 	@Override
-	public Element analyzeForm(final LispStruct form) {
+	public Element analyzeForm(final SimpleElement form) {
 
 		final AnalysisBuilder analysisBuilder = new AnalysisBuilder();
 
 		final Element analyzedForm = analyzeForm(form, analysisBuilder);
 
 		// now see if we have any functions still undefined
-		final Set<SymbolStruct<?>> undefinedFunctions = analysisBuilder.getUndefinedFunctions();
+		final Set<SymbolElement> undefinedFunctions = analysisBuilder.getUndefinedFunctions();
 
 		undefinedFunctions.stream()
 		                  .forEach(undefinedFunction -> {
 			                  LOGGER.warn("; Warning: no function or macro function defined for ");
 
-			                  final String functionName = undefinedFunction.getName();
-			                  final PackageStruct symbolPackage = undefinedFunction.getSymbolPackage();
+			                  final String functionName = undefinedFunction.getSymbolName();
+			                  final String symbolPackage = undefinedFunction.getPackageName();
 			                  if (symbolPackage != null) {
-				                  LOGGER.warn("{}::{}\n", symbolPackage.getName(), functionName);
+				                  LOGGER.warn("{}::{}\n", symbolPackage, functionName);
 			                  } else {
 				                  LOGGER.warn("#:{}\n", functionName);
 			                  }
@@ -59,9 +58,9 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 	}
 
 	@Override
-	public Element analyzeForm(final LispStruct form, final AnalysisBuilder analysisBuilder) {
+	public Element analyzeForm(final SimpleElement form, final AnalysisBuilder analysisBuilder) {
 
-		final Analyzer<? extends Element, LispStruct> functionCallAnalyzer = elementAnalyzerStrategies.get(form.getClass());
+		final Analyzer<? extends Element, SimpleElement> functionCallAnalyzer = elementAnalyzerStrategies.get(form.getClass());
 		if (functionCallAnalyzer == null) {
 			throw new ProgramErrorException("Semantic Analyzer: Unsupported object type cannot be analyzed: " + form);
 		}

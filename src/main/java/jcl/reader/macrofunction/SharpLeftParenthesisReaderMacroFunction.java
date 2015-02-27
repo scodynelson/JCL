@@ -18,6 +18,7 @@ import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
+import jcl.system.EnhancedLinkedList;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.math.BigInteger;
-import java.util.List;
 
 /**
  * Implements the '#(...)' Lisp reader macro.
@@ -81,7 +81,7 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 			throw new ReaderErrorException("Ill-formed vector: #" + printedToken);
 		}
 
-		final List<SimpleElement> lispTokens = listToken.getElements();
+		final EnhancedLinkedList<SimpleElement> lispTokens = listToken.getElements();
 
 		if (numArg == null) {
 			return createVector(lispTokens);
@@ -103,7 +103,7 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 	 *
 	 * @return the properly created {@link VectorStruct} taking care of the proper vector length
 	 */
-	private ConsElement handleNumArg(final List<SimpleElement> lispTokens, final BigInteger numArg, final ConsElement listToken) {
+	private ConsElement handleNumArg(final EnhancedLinkedList<SimpleElement> lispTokens, final BigInteger numArg, final ConsElement listToken) {
 
 		final int numberOfTokens = lispTokens.size();
 		final int numArgInt = numArg.intValueExact();
@@ -134,7 +134,7 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 	 *
 	 * @return the {@link ListStruct} calling the appropriate function needed to produce the {@link VectorStruct}
 	 */
-	private static ConsElement createVector(final List<SimpleElement> lispTokens) {
+	private static ConsElement createVector(final EnhancedLinkedList<SimpleElement> lispTokens) {
 		final int numberOfTokens = lispTokens.size();
 		final BigInteger numberOfTokensBI = BigInteger.valueOf(numberOfTokens);
 

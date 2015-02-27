@@ -9,7 +9,6 @@ import jcl.compiler.real.element.specialoperator.go.GoElement;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.LambdaEnvironment;
-import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -25,9 +24,9 @@ public class AnalysisBuilder implements Serializable {
 
 	private final EnvironmentStack environmentStack = new EnvironmentStack();
 
-	private final Stack<SymbolStruct<?>> functionNameStack = new Stack<>();
+	private final Stack<SymbolElement> functionNameStack = new Stack<>();
 
-	private final Set<SymbolStruct<?>> undefinedFunctions = Collections.synchronizedSet(new HashSet<>());
+	private final Set<SymbolElement> undefinedFunctions = Collections.synchronizedSet(new HashSet<>());
 
 	private final Stack<SymbolElement> blockStack = new Stack<>();
 
@@ -55,11 +54,11 @@ public class AnalysisBuilder implements Serializable {
 		return environmentStack;
 	}
 
-	public Stack<SymbolStruct<?>> getFunctionNameStack() {
+	public Stack<SymbolElement> getFunctionNameStack() {
 		return functionNameStack;
 	}
 
-	public Set<SymbolStruct<?>> getUndefinedFunctions() {
+	public Set<SymbolElement> getUndefinedFunctions() {
 		return undefinedFunctions;
 	}
 

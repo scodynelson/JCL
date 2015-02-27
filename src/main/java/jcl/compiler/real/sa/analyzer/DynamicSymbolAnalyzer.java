@@ -14,17 +14,16 @@ import jcl.compiler.real.environment.binding.SymbolLocalBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.symbols.SymbolStruct;
 import jcl.types.T;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DynamicSymbolAnalyzer implements Analyzer<Element, SymbolStruct<?>> {
+public class DynamicSymbolAnalyzer implements Analyzer<Element, SymbolElement> {
 
 	private static final long serialVersionUID = 4236867001501188408L;
 
 	@Override
-	public SymbolElement analyze(final SemanticAnalyzer analyzer, final SymbolStruct<?> input, final AnalysisBuilder analysisBuilder) {
+	public SymbolElement analyze(final SemanticAnalyzer analyzer, final SymbolElement input, final AnalysisBuilder analysisBuilder) {
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment currentEnvironment = environmentStack.peek();
@@ -34,7 +33,7 @@ public class DynamicSymbolAnalyzer implements Analyzer<Element, SymbolStruct<?>>
 
 		if (hasSymbolBinding) {
 			// Binding already exists in the current environment.
-			return new SymbolElement(input.getSymbolPackage().getName(), input.getName()); // TODO: fix
+			return input; // TODO: fix
 		}
 
 		final LambdaEnvironment currentEnclosingLambda = Environments.getEnclosingLambda(currentEnvironment);
@@ -48,7 +47,7 @@ public class DynamicSymbolAnalyzer implements Analyzer<Element, SymbolStruct<?>>
 					= new SymbolLocalBinding(input, allocation, T.INSTANCE, currentEnvironment);
 			currentEnvironmentSymbolTable.addDynamicLocalBinding(symbolBinding);
 
-			return new SymbolElement(input.getSymbolPackage().getName(), input.getName()); // TODO: fix
+			return input; // TODO: fix
 		}
 
 		// Add Binding to SymbolTable in the current environment
@@ -62,7 +61,7 @@ public class DynamicSymbolAnalyzer implements Analyzer<Element, SymbolStruct<?>>
 
 		if (enclosingLambdaHasSymbolBinding) {
 			// Binding already exists in the Enclosing Lambda.
-			return new SymbolElement(input.getSymbolPackage().getName(), input.getName()); // TODO: fix
+			return input; // TODO: fix
 		}
 
 		// Add Binding to SymbolTable in the Enclosing Lambda.
@@ -74,6 +73,6 @@ public class DynamicSymbolAnalyzer implements Analyzer<Element, SymbolStruct<?>>
 				= new SymbolLocalBinding(input, allocation, T.INSTANCE, currentEnclosingLambda);
 		enclosingLambdaSymbolTable.addDynamicLocalBinding(newSymbolBinding);
 
-		return new SymbolElement(input.getSymbolPackage().getName(), input.getName()); // TODO: fix
+		return input; // TODO: fix
 	}
 }

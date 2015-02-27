@@ -21,6 +21,7 @@ import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
+import jcl.system.EnhancedLinkedList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -101,7 +101,7 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 */
 	private static ConsElement createArray(final BigInteger numArg, final SimpleElement contents) {
 
-		final List<SimpleElement> dimensionsAsJavaList = getDimensions(numArg, contents);
+		final EnhancedLinkedList<SimpleElement> dimensionsAsJavaList = getDimensions(numArg, contents);
 
 		final SymbolElement makeArrayFnSymbol = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "MAKE-ARRAY");
 
@@ -147,12 +147,12 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 * @throws ReaderErrorException
 	 * 		if dimensions do not match the provided contents list
 	 */
-	private static List<SimpleElement> getDimensions(final BigInteger dimensions, final SimpleElement contents) {
+	private static EnhancedLinkedList<SimpleElement> getDimensions(final BigInteger dimensions, final SimpleElement contents) {
 
 		SimpleElement seq = contents;
 		BigInteger zeroAxis = null;
 
-		final List<SimpleElement> dimensionsAsJavaList = new ArrayList<>();
+		final EnhancedLinkedList<SimpleElement> dimensionsAsJavaList = new EnhancedLinkedList<>();
 
 		for (BigInteger axis = BigInteger.ZERO;
 		     dimensions.compareTo(axis) >= 0;

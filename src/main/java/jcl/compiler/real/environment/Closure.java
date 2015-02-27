@@ -4,8 +4,8 @@
 
 package jcl.compiler.real.environment;
 
+import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.environment.binding.ClosureBinding;
-import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -30,12 +30,12 @@ public class Closure implements Serializable {
 		return bindings;
 	}
 
-	public boolean hasBinding(final SymbolStruct<?> symbolStruct) {
+	public boolean hasBinding(final SymbolElement symbolStruct) {
 		return bindings.stream()
 		               .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct));
 	}
 
-	public Optional<ClosureBinding> getBinding(final SymbolStruct<?> symbolStruct) {
+	public Optional<ClosureBinding> getBinding(final SymbolElement symbolStruct) {
 		return bindings.stream()
 		               .filter(e -> e.getSymbolStruct().equals(symbolStruct))
 		               .findFirst();

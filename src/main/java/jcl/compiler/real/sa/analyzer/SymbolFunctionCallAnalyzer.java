@@ -4,10 +4,11 @@
 
 package jcl.compiler.real.sa.analyzer;
 
-import jcl.LispStruct;
+import jcl.compiler.real.element.ConsElement;
 import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.functioncall.FunctionCallElement;
+import jcl.compiler.real.element.SimpleElement;
 import jcl.compiler.real.element.SymbolElement;
+import jcl.compiler.real.element.functioncall.FunctionCallElement;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
@@ -15,9 +16,7 @@ import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindin
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.functions.FunctionStruct;
-import jcl.lists.ConsStruct;
-import jcl.lists.ListStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.system.EnhancedLinkedList;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -31,18 +30,18 @@ public class SymbolFunctionCallAnalyzer extends FunctionCallAnalyzer {
 	private static final long serialVersionUID = -2348426068345427015L;
 
 	@Override
-	public FunctionCallElement analyze(final SemanticAnalyzer analyzer, final ConsStruct input, final AnalysisBuilder analysisBuilder) {
+	public FunctionCallElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
-		final SymbolStruct<?> functionSymbol = (SymbolStruct<?>) input.getFirst();
-		final ListStruct functionArguments = input.getRest();
+		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
 
-		final List<LispStruct> functionArgumentsList = functionArguments.getAsJavaList();
+		final SymbolElement functionSymbol = (SymbolElement) elements.getFirst();
+		final EnhancedLinkedList<SimpleElement> functionArguments = elements.getAllButFirst();
 
-		final Set<SymbolStruct<?>> undefinedFunctions = analysisBuilder.getUndefinedFunctions();
+		final Set<SymbolElement> undefinedFunctions = analysisBuilder.getUndefinedFunctions();
 
-		final FunctionStruct function = functionSymbol.getFunction();
+		final FunctionStruct function = null; //functionSymbol.getFunction(); TODO: ???
 		if (function == null) {
-			final Stack<SymbolStruct<?>> functionNameStack = analysisBuilder.getFunctionNameStack();
+			final Stack<SymbolElement> functionNameStack = analysisBuilder.getFunctionNameStack();
 
 			if (functionNameStack.contains(functionSymbol)) {
 				// Function is undefined, but name exists on the stack to be created
@@ -55,14 +54,14 @@ public class SymbolFunctionCallAnalyzer extends FunctionCallAnalyzer {
 			// Function is defined
 			undefinedFunctions.remove(functionSymbol);
 
-			final String functionName = functionSymbol.getName();
+			final String functionName = functionSymbol.getSymbolName();
 			final OrdinaryLambdaListBindings lambdaListBindings = function.getLambdaListBindings();
-			validateFunctionArguments(functionName, lambdaListBindings, functionArgumentsList);
+			validateFunctionArguments(functionName, lambdaListBindings, functionArguments);
 		}
 
-		final List<Element> analyzedFunctionArguments = new ArrayList<>(functionArgumentsList.size());
+		final List<Element> analyzedFunctionArguments = new ArrayList<>(functionArguments.size());
 
-		for (final LispStruct functionArgument : functionArgumentsList) {
+		for (final SimpleElement functionArgument : functionArguments) {
 			final Element analyzedFunctionArgument = analyzer.analyzeForm(functionArgument, analysisBuilder);
 			analyzedFunctionArguments.add(analyzedFunctionArgument);
 		}
@@ -72,7 +71,6 @@ public class SymbolFunctionCallAnalyzer extends FunctionCallAnalyzer {
 
 		final boolean hasFunctionBinding = Environments.hasFunctionBinding(currentEnvironment, functionSymbol);
 
-		final SymbolElement functionSymbolSE = new SymbolElement(functionSymbol.getSymbolPackage().getName(), functionSymbol.getName()); // TODO: fix
-		return new FunctionCallElement(hasFunctionBinding, functionSymbolSE, analyzedFunctionArguments);
+		return new FunctionCallElement(hasFunctionBinding, functionSymbol, analyzedFunctionArguments);
 	}
 }

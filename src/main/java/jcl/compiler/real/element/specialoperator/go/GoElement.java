@@ -4,12 +4,12 @@
 
 package jcl.compiler.real.element.specialoperator.go;
 
-import jcl.LispStruct;
 import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.SimpleElement;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class GoElement<T extends LispStruct> implements Element {
+public class GoElement<T extends SimpleElement> implements Element {
 
 	private static final long serialVersionUID = -4331758400526441262L;
 

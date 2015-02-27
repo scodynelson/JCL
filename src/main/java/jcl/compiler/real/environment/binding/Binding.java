@@ -5,8 +5,8 @@
 package jcl.compiler.real.environment.binding;
 
 import jcl.LispType;
+import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.environment.allocation.Allocation;
-import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -16,19 +16,19 @@ public abstract class Binding<A extends Allocation> implements Serializable {
 
 	private static final long serialVersionUID = 5776546981120800982L;
 
-	private final SymbolStruct<?> symbolStruct;
+	private final SymbolElement symbolStruct;
 
 	private final A allocation;
 
 	private final LispType type;
 
-	protected Binding(final SymbolStruct<?> symbolStruct, final A allocation, final LispType type) {
+	protected Binding(final SymbolElement symbolStruct, final A allocation, final LispType type) {
 		this.symbolStruct = symbolStruct;
 		this.allocation = allocation;
 		this.type = type;
 	}
 
-	public SymbolStruct<?> getSymbolStruct() {
+	public SymbolElement getSymbolStruct() {
 		return symbolStruct;
 	}
 

@@ -4,8 +4,9 @@
 
 package jcl.compiler.real.sa.analyzer;
 
-import jcl.LispStruct;
+import jcl.compiler.real.element.ConsElement;
 import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.SimpleElement;
 import jcl.compiler.real.element.functioncall.LambdaFunctionCallElement;
 import jcl.compiler.real.element.specialoperator.lambda.LambdaElement;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
@@ -13,9 +14,8 @@ import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.lambda.LambdaAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
-import jcl.lists.ConsStruct;
-import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
+import jcl.system.EnhancedLinkedList;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +33,16 @@ public class LambdaFunctionCallAnalyzer extends FunctionCallAnalyzer {
 	private LambdaAnalyzer lambdaAnalyzer;
 
 	@Override
-	public LambdaFunctionCallElement analyze(final SemanticAnalyzer analyzer, final ConsStruct input, final AnalysisBuilder analysisBuilder) {
-		// ex ((lambda (x) (+ x 1)) 3)
-		final ListStruct functionList = (ListStruct) input.getFirst();
+	public LambdaFunctionCallElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
-		final LispStruct functionListFirst = functionList.getFirst();
+		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
+
+		// ex ((lambda (x) (+ x 1)) 3)
+		final ConsElement functionList = (ConsElement) elements.getFirst();
+
+		final EnhancedLinkedList<SimpleElement> functionListElements = input.getElements();
+
+		final SimpleElement functionListFirst = functionListElements.getFirst();
 
 		if (!functionListFirst.equals(SpecialOperator.LAMBDA)) {
 			throw new ProgramErrorException("LIST ANALYZER: First element of a first element ListStruct must be the SpecialOperator 'LAMBDA'. Got: " + functionListFirst);
@@ -46,14 +51,13 @@ public class LambdaFunctionCallAnalyzer extends FunctionCallAnalyzer {
 		final LambdaElement lambdaAnalyzed = lambdaAnalyzer.analyze(analyzer, functionList, analysisBuilder);
 		final OrdinaryLambdaListBindings lambdaListBindings = lambdaAnalyzed.getLambdaListBindings();
 
-		final ListStruct functionArguments = input.getRest();
-		final List<LispStruct> functionArgumentsList = functionArguments.getAsJavaList();
+		final List<SimpleElement> functionArguments = elements.getAllButFirst();
 
-		validateFunctionArguments("Anonymous Lambda", lambdaListBindings, functionArgumentsList);
+		validateFunctionArguments("Anonymous Lambda", lambdaListBindings, functionArguments);
 
-		final List<Element> analyzedFunctionArguments = new ArrayList<>(functionArgumentsList.size());
+		final List<Element> analyzedFunctionArguments = new ArrayList<>(functionArguments.size());
 
-		for (final LispStruct functionArgument : functionArgumentsList) {
+		for (final SimpleElement functionArgument : functionArguments) {
 			final Element analyzedFunctionArgument = analyzer.analyzeForm(functionArgument, analysisBuilder);
 			analyzedFunctionArguments.add(analyzedFunctionArgument);
 		}

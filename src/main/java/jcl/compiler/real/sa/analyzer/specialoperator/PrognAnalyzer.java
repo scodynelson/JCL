@@ -1,11 +1,12 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import jcl.LispStruct;
+import jcl.compiler.real.element.ConsElement;
+import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.SimpleElement;
+import jcl.compiler.real.element.specialoperator.PrognElement;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.specialoperator.PrognElement;
-import jcl.lists.ListStruct;
+import jcl.system.EnhancedLinkedList;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -17,15 +18,16 @@ public class PrognAnalyzer implements SpecialOperatorAnalyzer {
 	private static final long serialVersionUID = -2851059577992887882L;
 
 	@Override
-	public PrognElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
+	public PrognElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
-		final ListStruct forms = input.getRest();
+		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
 
-		final List<LispStruct> formsJavaList = forms.getAsJavaList();
+		final EnhancedLinkedList<SimpleElement> forms = elements.getAllButFirst();
+
 		final List<Element> analyzedForms =
-				formsJavaList.stream()
-				             .map(e -> analyzer.analyzeForm(e, analysisBuilder))
-				             .collect(Collectors.toList());
+				forms.stream()
+				     .map(e -> analyzer.analyzeForm(e, analysisBuilder))
+				     .collect(Collectors.toList());
 
 		return new PrognElement(analyzedForms);
 	}

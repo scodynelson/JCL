@@ -1,12 +1,14 @@
 package jcl.compiler.real.icg.specialoperator;
 
+import jcl.compiler.real.element.ConsElement;
+import jcl.compiler.real.element.SimpleElement;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
-import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
+import jcl.system.EnhancedLinkedList;
 import org.objectweb.asm.Label;
 
-public class CatchCodeGenerator implements CodeGenerator<ListStruct> {
+public class CatchCodeGenerator implements CodeGenerator<ConsElement> {
 
 	/**
 	 * Implements the initial base code for a basis catch statement
@@ -15,14 +17,14 @@ public class CatchCodeGenerator implements CodeGenerator<ListStruct> {
 	public static final CatchCodeGenerator INSTANCE = new CatchCodeGenerator();
 
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator) {
+	public void generate(final ConsElement input, final IntermediateCodeGenerator codeGenerator) {
 
 		// Burn off the special symbol (CATCH)
-		ListStruct restOfList = input.getRest();
+		EnhancedLinkedList<SimpleElement> restOfList = input.getElements().getAllButFirst();
 
 		//Get the catchTag and set up for runtime eval of the catchTag
 		final Object catchTag = restOfList.getFirst();                    //The first parameter to CATCH that must first be evaluated
-		restOfList = restOfList.getRest();
+		restOfList = restOfList.getAllButFirst();
 
 		// ... ,
 		codeGenerator.icgMainLoop(catchTag);
@@ -46,7 +48,7 @@ public class CatchCodeGenerator implements CodeGenerator<ListStruct> {
 		//Evalute the rest of the list
 		while (!restOfList.equals(NullStruct.INSTANCE)) {
 			codeGenerator.icgMainLoop(restOfList.getFirst());
-			restOfList = restOfList.getRest();
+			restOfList = restOfList.getAllButFirst();
 			if (!restOfList.equals(NullStruct.INSTANCE)) {
 				codeGenerator.emitter.emitPop();
 			}

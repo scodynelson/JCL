@@ -4,7 +4,7 @@
 
 package jcl.compiler.real.environment.binding;
 
-import jcl.symbols.SymbolStruct;
+import jcl.compiler.real.element.SymbolElement;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -14,19 +14,19 @@ public class ClosureBinding implements Serializable {
 
 	private static final long serialVersionUID = 3814280129166840828L;
 
-	private final SymbolStruct<?> symbolStruct;
+	private final SymbolElement symbolStruct;
 
 	private final int position;
 
 	private int references;
 
-	public ClosureBinding(final SymbolStruct<?> symbolStruct, final int position, final int references) {
+	public ClosureBinding(final SymbolElement symbolStruct, final int position, final int references) {
 		this.symbolStruct = symbolStruct;
 		this.position = position;
 		this.references = references;
 	}
 
-	public SymbolStruct<?> getSymbolStruct() {
+	public SymbolElement getSymbolStruct() {
 		return symbolStruct;
 	}
 

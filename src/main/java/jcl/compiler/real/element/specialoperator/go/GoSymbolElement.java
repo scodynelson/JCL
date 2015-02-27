@@ -4,15 +4,15 @@
 
 package jcl.compiler.real.element.specialoperator.go;
 
-import jcl.symbols.SymbolStruct;
+import jcl.compiler.real.element.SymbolElement;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class GoSymbolElement extends GoElement<SymbolStruct<?>> {
+public class GoSymbolElement extends GoElement<SymbolElement> {
 
 	private static final long serialVersionUID = -6696260185148126193L;
 
-	public GoSymbolElement(final SymbolStruct<?> tag) {
+	public GoSymbolElement(final SymbolElement tag) {
 		super(tag);
 	}
 

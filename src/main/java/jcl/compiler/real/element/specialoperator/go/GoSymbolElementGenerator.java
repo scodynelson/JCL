@@ -4,13 +4,13 @@
 
 package jcl.compiler.real.element.specialoperator.go;
 
-import jcl.symbols.SymbolStruct;
+import jcl.compiler.real.element.SymbolElement;
 import org.springframework.stereotype.Component;
 
 @Component
-public class GoSymbolElementGenerator extends GoElementGenerator<SymbolStruct<?>> {
+public class GoSymbolElementGenerator extends GoElementGenerator<SymbolElement> {
 
-	public GoSymbolElement generateGoElement(final SymbolStruct<?> tag) {
+	public GoSymbolElement generateGoElement(final SymbolElement tag) {
 		return new GoSymbolElement(tag);
 	}
 }

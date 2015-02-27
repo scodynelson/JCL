@@ -14,10 +14,10 @@ import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.streams.ReadPeekResult;
+import jcl.system.EnhancedLinkedList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,7 +41,7 @@ final class ListReaderMacroFunction {
 	 * @return the properly parsed {@link ListStruct}
 	 */
 	ConsElement readList(final Reader reader) {
-		final List<SimpleElement> currentTokenList = new ArrayList<>();
+		final EnhancedLinkedList<SimpleElement> currentTokenList = new EnhancedLinkedList<>();
 
 		boolean isDottedList = false;
 

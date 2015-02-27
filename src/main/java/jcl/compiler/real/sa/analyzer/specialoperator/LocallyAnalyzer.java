@@ -1,7 +1,9 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import jcl.LispStruct;
+import jcl.compiler.real.element.ConsElement;
 import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.SimpleElement;
+import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.element.specialoperator.LocallyElement;
 import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
 import jcl.compiler.real.element.specialoperator.declare.SpecialDeclarationElement;
@@ -16,8 +18,7 @@ import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyWithDeclaresAnalyzer;
-import jcl.lists.ListStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.system.EnhancedLinkedList;
 import jcl.types.T;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -36,7 +37,9 @@ public class LocallyAnalyzer implements SpecialOperatorAnalyzer {
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
 
 	@Override
-	public LocallyElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
+	public LocallyElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
+
+		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment parentEnvironment = environmentStack.peek();
@@ -51,7 +54,7 @@ public class LocallyAnalyzer implements SpecialOperatorAnalyzer {
 		try {
 			analysisBuilder.setClosureDepth(newClosureDepth);
 
-			final ListStruct bodyForms = input.getRest();
+			final EnhancedLinkedList<SimpleElement> bodyForms = elements.getAllButFirst();
 
 			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(analyzer, bodyForms, analysisBuilder);
 			final DeclareElement declareElement = bodyProcessingResult.getDeclareElement();
@@ -59,7 +62,7 @@ public class LocallyAnalyzer implements SpecialOperatorAnalyzer {
 			final List<SpecialDeclarationElement> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
 			specialDeclarationElements.forEach(e -> addDynamicVariableBinding(e, analysisBuilder, locallyEnvironment));
 
-			final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
+			final List<SimpleElement> realBodyForms = bodyProcessingResult.getBodyForms();
 
 			final List<Element> analyzedBodyForms
 					= realBodyForms.stream()
@@ -82,7 +85,7 @@ public class LocallyAnalyzer implements SpecialOperatorAnalyzer {
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
-		final SymbolStruct<?> var = (SymbolStruct<?>) specialDeclarationElement.getVar().toLispStruct(); // TODO: fix
+		final SymbolElement var = specialDeclarationElement.getVar();
 
 		final Environment bindingEnvironment = Environments.getDynamicBindingEnvironment(locallyEnvironment, var);
 		final EnvironmentAllocation allocation = new EnvironmentAllocation(bindingEnvironment);

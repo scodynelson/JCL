@@ -5,9 +5,9 @@
 package jcl.compiler.real.environment;
 
 import jcl.LispStruct;
+import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.environment.binding.EnvironmentBinding;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
-import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -46,12 +46,12 @@ public class Environment implements LispStruct {
 		return lexicalBindings;
 	}
 
-	public boolean hasLexicalBinding(final SymbolStruct<?> symbolStruct) {
+	public boolean hasLexicalBinding(final SymbolElement symbolStruct) {
 		return lexicalBindings.stream()
 		                      .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct));
 	}
 
-	public Optional<EnvironmentParameterBinding> getLexicalBinding(final SymbolStruct<?> symbolStruct) {
+	public Optional<EnvironmentParameterBinding> getLexicalBinding(final SymbolElement symbolStruct) {
 		return lexicalBindings.stream()
 		                      .filter(e -> e.getSymbolStruct().equals(symbolStruct))
 		                      .findFirst();
@@ -65,12 +65,12 @@ public class Environment implements LispStruct {
 		return dynamicBindings;
 	}
 
-	public boolean hasDynamicBinding(final SymbolStruct<?> symbolStruct) {
+	public boolean hasDynamicBinding(final SymbolElement symbolStruct) {
 		return dynamicBindings.stream()
 		                      .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct));
 	}
 
-	public Optional<EnvironmentBinding<?>> getDynamicBinding(final SymbolStruct<?> symbolStruct) {
+	public Optional<EnvironmentBinding<?>> getDynamicBinding(final SymbolElement symbolStruct) {
 		return dynamicBindings.stream()
 		                      .filter(e -> e.getSymbolStruct().equals(symbolStruct))
 		                      .findFirst();

@@ -2,6 +2,9 @@ package jcl.compiler.real.icg.specialoperator.compiler;
 
 import jcl.LispStruct;
 import jcl.compiler.old.functions.CompileFunction;
+import jcl.compiler.real.element.ConsElement;
+import jcl.compiler.real.element.SimpleElement;
+import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.SymbolCodeGenerator;
@@ -12,10 +15,11 @@ import jcl.numbers.IntegerStruct;
 import jcl.numbers.NumberStruct;
 import jcl.symbols.DefstructSymbolStruct;
 import jcl.symbols.SymbolStruct;
+import jcl.system.EnhancedLinkedList;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 
-public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
+public class DefstructCodeGenerator implements CodeGenerator<ConsElement> {
 
 	/**
 	 * This method processes all the info needed to create a new definition of struct.
@@ -35,43 +39,44 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 	public static final DefstructCodeGenerator INSTANCE = new DefstructCodeGenerator();
 
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator) {
+	public void generate(final ConsElement input, final IntermediateCodeGenerator codeGenerator) {
 		//Chop off %defstruct part. We don't need it.
-		final ListStruct arguments = input.getRest();
+		final EnhancedLinkedList<SimpleElement> arguments = input.getElements().getAllButFirst();
 
 		//Get the Java name of struct
 		ListStruct classStuff = (ListStruct) arguments.getFirst();
 		//now classStuff ~= (Defstruct12071907613439006 BAR FOO)
 
-		final SymbolStruct<?> javaName = (SymbolStruct) classStuff.getFirst();
+		final SymbolElement javaName = (SymbolElement) classStuff.getFirst();
 		classStuff = classStuff.getRest();
 		//now classStuff ~= (BAR FOO) or just (BAR) if no include struct
 
-		final DefstructSymbolStruct lispName = (DefstructSymbolStruct) classStuff.getFirst();
+//		final DefstructSymbolStruct lispName = (DefstructSymbolStruct) classStuff.getFirst(); // TODO fix
+		final SymbolElement lispName = (SymbolElement) classStuff.getFirst();
 		//cache the javaName with the lispName
-		lispName.setJavaName(javaName.toString());
+//		lispName.setJavaName(javaName.toString()); TODO: fix
 
 		classStuff = classStuff.getRest();
 		//now classStuff ~= (FOO) or NIL
 		final DefstructSymbolStruct includeName = (DefstructSymbolStruct) classStuff.getFirst();
 
-		final LispStruct printer = arguments.getRest().getFirst();
+		final SimpleElement printer = arguments.getAllButFirst().getFirst();
 
 		final Object printerFunction;
 		if ((printer instanceof SymbolStruct) && !printer.equals(NullStruct.INSTANCE)) {
 			printerFunction = printer;
 		} else if ((printer instanceof ListStruct) && !printer.equals(NullStruct.INSTANCE)) {
-			printerFunction = CompileFunction.FUNCTION.funcall(printer);
+			printerFunction = CompileFunction.FUNCTION.funcall((LispStruct) printer);
 		} else {
 			printerFunction = null;
 		}
 
 		//Get field list.
-		final NumberStruct includedSlotNumber = (NumberStruct) arguments.getRest().getRest().getFirst();
+		final NumberStruct includedSlotNumber = (NumberStruct) arguments.getAllButFirst().getAllButFirst().getFirst();
 		final int includedSlotNumberAsInt = ((IntegerStruct) includedSlotNumber).getBigInteger().intValue();
 
 		//Get field list.
-		ListStruct fieldList = arguments.getRest().getRest().getRest();
+		EnhancedLinkedList<SimpleElement> fieldList = arguments.getAllButFirst().getAllButFirst().getAllButFirst();
 		//fieldList now ~= ((A TYPE T) (B TYPE T))
 
 		//interface used by the struct impl. Always javaName.
@@ -87,14 +92,14 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 
 		//Process the fields (i.e. slots)
 		final int fieldListSize = fieldList.size();
-		final SymbolStruct<?>[] fields = new SymbolStruct<?>[fieldListSize];
+		final SymbolElement[] fields = new SymbolElement[fieldListSize];
 
 		//values = new Object[fieldListSize];
 		for (int i = 0; i < fieldListSize; i++) {
 			//get first set of field info
-			final SymbolStruct<?> tempName = (SymbolStruct) fieldList.getFirst();
+			final SymbolElement tempName = (SymbolElement) fieldList.getFirst();
 			//if there are more fields, get the rest of them
-			fieldList = fieldList.getRest();
+			fieldList = fieldList.getAllButFirst();
 			//parse out the field name, type, and init value info
 			fields[i] = tempName;
 		}
@@ -184,7 +189,7 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 	}
 
 	// Making FooStruct
-	private static void icgCreateDefstruct(final IntermediateCodeGenerator icg, final String name, final String[] implementing, final SymbolStruct<?> lispName) {
+	private static void icgCreateDefstruct(final IntermediateCodeGenerator icg, final String name, final String[] implementing, final SymbolElement lispName) {
 		icg.emitter.newClass(Opcodes.ACC_PUBLIC + Opcodes.ACC_ABSTRACT + Opcodes.ACC_INTERFACE, name, null, "java/lang/Object", implementing);
 		icg.emitter.newField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "factory", "L" + name + "$AbstractFactory;", null, null);
 		icg.emitter.newField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "typeName", "Llisp/common/type/Symbol;", null, null);
@@ -239,7 +244,7 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 	}
 
 	// Making FooStructImpl$Class.
-	private static void icgCreateDefstructImplClass(final IntermediateCodeGenerator icg, final String name, final String[] interfaces, final SymbolStruct<?> lispName, final SymbolStruct<?>[] fields, final Object printer, final DefstructSymbolStruct includedStruct, final int includedSlotNumber) {
+	private static void icgCreateDefstructImplClass(final IntermediateCodeGenerator icg, final String name, final String[] interfaces, final SymbolElement lispName, final SymbolElement[] fields, final Object printer, final DefstructSymbolStruct includedStruct, final int includedSlotNumber) {
 
 		final String implName = name + "Impl";
 		final String implFactoryName = name + "Impl$Factory";
@@ -295,8 +300,8 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 		icg.emitter.emitPutstatic(implName, "slotCount", "I");
 
 		// if a print option was passed in, make an instance and store it
-		if (printer instanceof SymbolStruct) {
-			icg.genCodeSpecialVariable((SymbolStruct<?>) printer);
+		if (printer instanceof SymbolElement) {
+			icg.genCodeSpecialVariable((SymbolElement) printer);
 			icg.emitter.emitPutstatic(implName, "printDefstructFunction", "Llisp/common/type/Symbol;");
 		} else if ((printer instanceof FunctionStruct) || (printer instanceof FunctionStruct)) { // TODO: Function2 || Function3
 			icg.emitter.emitNew(printer.getClass().getName());

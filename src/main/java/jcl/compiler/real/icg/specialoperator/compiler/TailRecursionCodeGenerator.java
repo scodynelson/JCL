@@ -1,28 +1,30 @@
 package jcl.compiler.real.icg.specialoperator.compiler;
 
+import jcl.compiler.real.element.ConsElement;
+import jcl.compiler.real.element.SimpleElement;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.FunctionCallCodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
-import jcl.lists.ListStruct;
 import jcl.symbols.SymbolStruct;
+import jcl.system.EnhancedLinkedList;
 
-public class TailRecursionCodeGenerator implements CodeGenerator<ListStruct> {
+public class TailRecursionCodeGenerator implements CodeGenerator<ConsElement> {
 
 	// the list is of the form (%tail-recursion fn-symbol arg...)
 
 	public static final TailRecursionCodeGenerator INSTANCE = new TailRecursionCodeGenerator();
 
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator) {
+	public void generate(final ConsElement input, final IntermediateCodeGenerator codeGenerator) {
 		// drop the special operator
-		final ListStruct restOfList = input.getRest();
+		final EnhancedLinkedList<SimpleElement> restOfList = input.getElements().getAllButFirst();
 		// set up the proper function object (this)
 		genCodeTailRecursionSetup(codeGenerator, (SymbolStruct) restOfList.getFirst());
 		// now set up the rest of the call just like any other fn call
 		final boolean acceptsMultipleValues = FunctionCallCodeGenerator.INSTANCE.isAcceptsMultipleValues();
 		try {
 			FunctionCallCodeGenerator.INSTANCE.setAcceptsMultipleValues(false);
-			FunctionCallCodeGenerator.INSTANCE.generate(restOfList, codeGenerator);
+			FunctionCallCodeGenerator.INSTANCE.generate(new ConsElement(restOfList), codeGenerator);
 		} finally {
 			FunctionCallCodeGenerator.INSTANCE.setAcceptsMultipleValues(acceptsMultipleValues);
 		}

@@ -1,14 +1,14 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import jcl.LispStruct;
-import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.element.ConsElement;
 import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.SimpleElement;
 import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.element.specialoperator.BlockElement;
+import jcl.compiler.real.sa.AnalysisBuilder;
+import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
-import jcl.lists.ListStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.system.EnhancedLinkedList;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -20,31 +20,34 @@ public class BlockAnalyzer implements SpecialOperatorAnalyzer {
 	private static final long serialVersionUID = -5185467468586381117L;
 
 	@Override
-	public BlockElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
+	public BlockElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
-		if (input.size() < 2) {
-			throw new ProgramErrorException("BLOCK: Incorrect number of arguments: " + input.size() + ". Expected at least 2 arguments.");
+		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
+
+		final int inputSize = elements.size();
+		if (inputSize < 2) {
+			throw new ProgramErrorException("BLOCK: Incorrect number of arguments: " + inputSize + ". Expected at least 2 arguments.");
 		}
 
-		final LispStruct second = input.getRest().getFirst();
-		if (!(second instanceof SymbolStruct)) {
+		final EnhancedLinkedList<SimpleElement> inputRest = elements.getAllButFirst();
+
+		final SimpleElement second = inputRest.getFirst();
+		if (!(second instanceof SymbolElement)) {
 			throw new ProgramErrorException("BLOCK: Label must be of type SymbolStruct. Got: " + second);
 		}
 
-		final SymbolStruct<?> name = (SymbolStruct) second;
-		final SymbolElement nameSE = new SymbolElement(name.getSymbolPackage().getName(), name.getName()); // TODO: fix
-		analysisBuilder.getBlockStack().push(nameSE);
+		final SymbolElement name = (SymbolElement) second;
+		analysisBuilder.getBlockStack().push(name);
 
 		try {
-			final ListStruct forms = input.getRest().getRest();
+			final EnhancedLinkedList<SimpleElement> forms = inputRest.getAllButFirst();
 
-			final List<LispStruct> formsJavaList = forms.getAsJavaList();
 			final List<Element> analyzedForms =
-					formsJavaList.stream()
-					             .map(e -> analyzer.analyzeForm(e, analysisBuilder))
-					             .collect(Collectors.toList());
+					forms.stream()
+					     .map(e -> analyzer.analyzeForm(e, analysisBuilder))
+					     .collect(Collectors.toList());
 
-			return new BlockElement(nameSE, analyzedForms);
+			return new BlockElement(name, analyzedForms);
 		} finally {
 			analysisBuilder.getBlockStack().pop();
 		}

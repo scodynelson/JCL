@@ -4,10 +4,10 @@
 
 package jcl.compiler.real.environment.binding.lambdalist;
 
-import jcl.LispStruct;
+import jcl.compiler.real.element.SimpleElement;
+import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.ParameterBinding;
-import jcl.symbols.SymbolStruct;
 import jcl.types.List;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -16,7 +16,7 @@ public class BodyBinding extends ParameterBinding {
 
 	private static final long serialVersionUID = 491035484834969841L;
 
-	public BodyBinding(final SymbolStruct<?> symbolStruct, final ParameterAllocation allocation, final LispStruct initForm) {
+	public BodyBinding(final SymbolElement symbolStruct, final ParameterAllocation allocation, final SimpleElement initForm) {
 		super(symbolStruct, allocation, List.INSTANCE, initForm);
 	}
 

@@ -1,5 +1,7 @@
 package jcl.compiler.real.icg.specialoperator;
 
+import jcl.compiler.real.element.ConsElement;
+import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.environment.BindingEnvironment;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.InnerFunctionEnvironment;
@@ -8,19 +10,18 @@ import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.SpecialSymbolCodeGenerator;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
-import jcl.symbols.SymbolStruct;
 
-public class SetqCodeGenerator implements CodeGenerator<ListStruct> {
+public class SetqCodeGenerator implements CodeGenerator<ConsElement> {
 
 	public static final SetqCodeGenerator INSTANCE = new SetqCodeGenerator();
 
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator) {
+	public void generate(final ConsElement input, final IntermediateCodeGenerator codeGenerator) {
 
-		ListStruct restOfList = input.getRest();
+		ListStruct restOfList = (ListStruct) input.getElements().getAllButFirst().get(0); // getRest(), not this nonsense
 		while (!NullStruct.INSTANCE.equals(restOfList)) {
 			// get the first symbol
-			final SymbolStruct<?> symbol = (SymbolStruct) restOfList.getFirst();
+			final SymbolElement symbol = (SymbolElement) restOfList.getFirst();
 			// step over the variable
 			restOfList = restOfList.getRest();
 			// get the form to evaluate
@@ -51,7 +52,7 @@ public class SetqCodeGenerator implements CodeGenerator<ListStruct> {
 		}
 	}
 
-	private static Environment getBindingEnvironment(final Environment environment, final SymbolStruct<?> variable) {
+	private static Environment getBindingEnvironment(final Environment environment, final SymbolElement variable) {
 
 		Environment currentEnvironment = environment;
 

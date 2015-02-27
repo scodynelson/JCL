@@ -1,13 +1,13 @@
 package jcl.compiler.real.sa.analyzer.specialoperator.body;
 
-import jcl.LispStruct;
+import jcl.compiler.real.element.ConsElement;
+import jcl.compiler.real.element.SimpleElement;
+import jcl.compiler.real.element.SpecialOperatorElement;
+import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
 import jcl.compiler.real.sa.analyzer.specialoperator.declare.DeclareAnalyzer;
-import jcl.lists.ConsStruct;
-import jcl.lists.ListStruct;
-import jcl.symbols.SpecialOperator;
+import jcl.system.EnhancedLinkedList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,28 +24,29 @@ public class BodyWithDeclaresAnalyzer implements Serializable {
 	@Autowired
 	private DeclareAnalyzer declareAnalyzer;
 
-	public BodyProcessingResult analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
-		final List<LispStruct> bodyJavaList = input.getAsJavaList();
+	public BodyProcessingResult analyze(final SemanticAnalyzer analyzer, final EnhancedLinkedList<SimpleElement> input, final AnalysisBuilder analysisBuilder) {
 
 		DeclareElement declareElement = null;
-		final List<LispStruct> bodyForms = new ArrayList<>();
+		final List<SimpleElement> bodyForms = new ArrayList<>();
 
-		final Iterator<LispStruct> iterator = bodyJavaList.iterator();
+		final Iterator<SimpleElement> iterator = input.iterator();
 
 		if (iterator.hasNext()) {
-			LispStruct next = iterator.next();
+			SimpleElement next = iterator.next();
 
-			final List<LispStruct> allDeclarations = new ArrayList<>();
-			while (iterator.hasNext() && (next instanceof ListStruct) && ((ListStruct) next).getFirst().equals(SpecialOperator.DECLARE)) {
+			final EnhancedLinkedList<SimpleElement> allDeclarations = new EnhancedLinkedList<>();
+			allDeclarations.add(SpecialOperatorElement.DECLARE);
 
-				final ListStruct declareStatement = (ListStruct) next;
-				final ListStruct declarations = declareStatement.getRest();
+			while (iterator.hasNext() && (next instanceof ConsElement) && ((ConsElement) next).getElements().getFirst().equals(SpecialOperatorElement.DECLARE)) {
 
-				allDeclarations.addAll(declarations.getAsJavaList());
+				final ConsElement declareStatement = (ConsElement) next;
+				final EnhancedLinkedList<SimpleElement> declarations = declareStatement.getElements().getAllButFirst();
+
+				allDeclarations.addAll(declarations);
 				next = iterator.next();
 			}
 
-			final ListStruct fullDeclaration = new ConsStruct(SpecialOperator.DECLARE, ListStruct.buildProperList(allDeclarations));
+			final ConsElement fullDeclaration = new ConsElement(allDeclarations);
 			declareElement = declareAnalyzer.analyze(analyzer, fullDeclaration, analysisBuilder);
 
 			while (iterator.hasNext()) {

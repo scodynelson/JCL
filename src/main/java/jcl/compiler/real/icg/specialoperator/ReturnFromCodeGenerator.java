@@ -1,20 +1,22 @@
 package jcl.compiler.real.icg.specialoperator;
 
+import jcl.compiler.real.element.ConsElement;
+import jcl.compiler.real.element.SimpleElement;
+import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
-import jcl.lists.ListStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.system.EnhancedLinkedList;
 
-public class ReturnFromCodeGenerator implements CodeGenerator<ListStruct> {
+public class ReturnFromCodeGenerator implements CodeGenerator<ConsElement> {
 
 	public static final ReturnFromCodeGenerator INSTANCE = new ReturnFromCodeGenerator();
 
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator) {
+	public void generate(final ConsElement input, final IntermediateCodeGenerator codeGenerator) {
 		// Get rid of the RETURN-FROM symbol
-		ListStruct restOfList = input.getRest();
-		final SymbolStruct<?> sym = (SymbolStruct) restOfList.getFirst();
-		restOfList = restOfList.getRest();
+		EnhancedLinkedList<SimpleElement> restOfList = input.getElements().getAllButFirst();
+		final SymbolElement sym = (SymbolElement) restOfList.getFirst();
+		restOfList = restOfList.getAllButFirst();
 
 		codeGenerator.emitter.emitNew("lisp/system/compiler/exceptions/ReturnFromException");
 		// +1 -> exception

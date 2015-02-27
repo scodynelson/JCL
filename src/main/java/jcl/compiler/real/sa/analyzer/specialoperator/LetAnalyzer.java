@@ -1,8 +1,10 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import jcl.LispStruct;
+import jcl.compiler.real.element.ConsElement;
 import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.ListElement;
 import jcl.compiler.real.element.NullElement;
+import jcl.compiler.real.element.SimpleElement;
 import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.element.specialoperator.LetElement;
 import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
@@ -21,8 +23,7 @@ import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyWithDeclaresAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
-import jcl.lists.ListStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.system.EnhancedLinkedList;
 import jcl.types.T;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -41,15 +42,19 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
 
 	@Override
-	public LetElement analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
+	public LetElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
-		final int inputSize = input.size();
+		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
+
+		final int inputSize = elements.size();
 		if (inputSize < 2) {
 			throw new ProgramErrorException("LET: Incorrect number of arguments: " + inputSize + ". Expected at least 2 arguments.");
 		}
 
-		final LispStruct second = input.getRest().getFirst();
-		if (!(second instanceof ListStruct)) {
+		final EnhancedLinkedList<SimpleElement> inputRest = elements.getAllButFirst();
+
+		final SimpleElement second = inputRest.getFirst();
+		if (!(second instanceof ListElement)) {
 			throw new ProgramErrorException("LET: Parameter list must be of type ListStruct. Got: " + second);
 		}
 
@@ -66,13 +71,13 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 		try {
 			analysisBuilder.setClosureDepth(newClosureDepth);
 
-			final ListStruct parameters = (ListStruct) second;
-			final ListStruct bodyForms = input.getRest().getRest();
+			final ListElement parameters = (ListElement) second;
+			final EnhancedLinkedList<SimpleElement> bodyForms = inputRest.getAllButFirst();
 
 			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(analyzer, bodyForms, analysisBuilder);
 			final DeclareElement declareElement = bodyProcessingResult.getDeclareElement();
 
-			final List<LispStruct> parametersAsJavaList = parameters.getAsJavaList();
+			final List<? extends SimpleElement> parametersAsJavaList = parameters.getElements();
 
 			final List<LetElement.LetVar> letVars
 					= parametersAsJavaList.stream()
@@ -82,7 +87,7 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 			final List<SpecialDeclarationElement> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
 			specialDeclarationElements.forEach(e -> addDynamicVariableBinding(e, analysisBuilder, letEnvironment));
 
-			final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
+			final List<SimpleElement> realBodyForms = bodyProcessingResult.getBodyForms();
 
 			final List<Element> analyzedBodyForms
 					= realBodyForms.stream()
@@ -97,26 +102,26 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 		}
 	}
 
-	private static LetElement.LetVar getLetVar(final LispStruct parameter,
+	private static LetElement.LetVar getLetVar(final SimpleElement parameter,
 	                                           final DeclareElement declareElement,
 	                                           final SemanticAnalyzer analyzer,
 	                                           final AnalysisBuilder analysisBuilder,
 	                                           final LetEnvironment letEnvironment,
 	                                           final EnvironmentStack environmentStack) {
 
-		if (!(parameter instanceof SymbolStruct) && !(parameter instanceof ListStruct)) {
+		if (!(parameter instanceof SymbolElement) && !(parameter instanceof ConsElement)) {
 			throw new ProgramErrorException("LET: Parameter must be of type SymbolStruct or ListStruct. Got: " + parameter);
 		}
 
-		final SymbolStruct<?> var;
+		final SymbolElement var;
 		final Element initForm;
 
-		if (parameter instanceof ListStruct) {
-			final ListStruct listParameter = (ListStruct) parameter;
+		if (parameter instanceof ConsElement) {
+			final ConsElement listParameter = (ConsElement) parameter;
 			var = getLetListParameterVar(listParameter);
 			initForm = getLetListParameterInitForm(listParameter, analyzer, analysisBuilder, environmentStack);
 		} else {
-			var = (SymbolStruct) parameter;
+			var = (SymbolElement) parameter;
 			initForm = NullElement.INSTANCE;
 		}
 
@@ -124,7 +129,6 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
-		final SymbolElement varSE = new SymbolElement(var.getSymbolPackage().getName(), var.getName()); // TODO: fix
 		final boolean isSpecial = isSpecial(declareElement, var);
 
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
@@ -135,16 +139,16 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 			letEnvironment.addLexicalBinding(binding);
 		}
 
-		return new LetElement.LetVar(varSE, initForm);
+		return new LetElement.LetVar(var, initForm);
 	}
 
-	private static boolean isSpecial(final DeclareElement declareElement, final SymbolStruct<?> var) {
+	private static boolean isSpecial(final DeclareElement declareElement, final SymbolElement var) {
 		boolean isSpecial = false;
 
 		final List<SpecialDeclarationElement> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
 		for (final SpecialDeclarationElement specialDeclarationElement : specialDeclarationElements) {
 			final SymbolElement specialVar = specialDeclarationElement.getVar();
-			if (var.equals(specialVar.toLispStruct())) { // TODO: fix
+			if (var.equals(specialVar)) {
 				isSpecial = true;
 				break;
 			}
@@ -153,25 +157,25 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 		return isSpecial;
 	}
 
-	private static SymbolStruct<?> getLetListParameterVar(final ListStruct listParameter) {
-		final int listParameterSize = listParameter.size();
+	private static SymbolElement getLetListParameterVar(final ConsElement listParameter) {
+		final int listParameterSize = listParameter.getElements().size();
 		if ((listParameterSize < 1) || (listParameterSize > 2)) {
 			throw new ProgramErrorException("LET: ListStruct parameter must have only 1 or 2 elements. Got: " + listParameter);
 		}
 
-		final LispStruct listParameterFirst = listParameter.getFirst();
-		if (!(listParameterFirst instanceof SymbolStruct)) {
+		final SimpleElement listParameterFirst = listParameter.getElements().getFirst();
+		if (!(listParameterFirst instanceof SymbolElement)) {
 			throw new ProgramErrorException("LET: ListStruct parameter first element value must be of type SymbolStruct. Got: " + listParameterFirst);
 		}
-		return (SymbolStruct) listParameterFirst;
+		return (SymbolElement) listParameterFirst;
 	}
 
-	private static Element getLetListParameterInitForm(final ListStruct listParameter,
+	private static Element getLetListParameterInitForm(final ConsElement listParameter,
 	                                                   final SemanticAnalyzer analyzer,
 	                                                   final AnalysisBuilder analysisBuilder,
 	                                                   final EnvironmentStack environmentStack) {
 
-		final LispStruct parameterValue = listParameter.getRest().getFirst();
+		final SimpleElement parameterValue = listParameter.getElements().getAllButFirst().getFirst();
 
 		// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
 		final Environment currentEnvironment = environmentStack.pop();
@@ -191,7 +195,7 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
-		final SymbolStruct<?> var = (SymbolStruct<?>) specialDeclarationElement.getVar().toLispStruct(); // TODO: fix
+		final SymbolElement var = specialDeclarationElement.getVar();
 
 		final Environment bindingEnvironment = Environments.getDynamicBindingEnvironment(letEnvironment, var);
 		final EnvironmentAllocation allocation = new EnvironmentAllocation(bindingEnvironment);

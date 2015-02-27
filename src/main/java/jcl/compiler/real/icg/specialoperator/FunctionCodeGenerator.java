@@ -1,22 +1,25 @@
 package jcl.compiler.real.icg.specialoperator;
 
+import jcl.compiler.real.element.ConsElement;
+import jcl.compiler.real.element.SimpleElement;
+import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.SymbolFunctionCodeGenerator;
 import jcl.lists.ListStruct;
-import jcl.symbols.SymbolStruct;
+import jcl.system.EnhancedLinkedList;
 import org.objectweb.asm.Label;
 
-public class FunctionCodeGenerator implements CodeGenerator<ListStruct> {
+public class FunctionCodeGenerator implements CodeGenerator<ConsElement> {
 
 	public static final FunctionCodeGenerator INSTANCE = new FunctionCodeGenerator();
 
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator) {
-		ListStruct restOfList = input.getRest();
+	public void generate(final ConsElement input, final IntermediateCodeGenerator codeGenerator) {
+		EnhancedLinkedList<SimpleElement> restOfList = input.getElements().getAllButFirst();
 		final Object fn = restOfList.getFirst();
-		if (fn instanceof SymbolStruct) {
-			SymbolFunctionCodeGenerator.INSTANCE.generate((SymbolStruct) fn, codeGenerator);
+		if (fn instanceof SymbolElement) {
+			SymbolFunctionCodeGenerator.INSTANCE.generate((SymbolElement) fn, codeGenerator);
 		} else if (fn instanceof ListStruct) {
 			final ListStruct fnList = (ListStruct) fn;
 //            if (fnList.getCar() == SpecialOperator.LAMBDA) {
@@ -29,7 +32,7 @@ public class FunctionCodeGenerator implements CodeGenerator<ListStruct> {
 			// Step 1: get the symbol
 			// Step 2: return the function stashed in the symbol or NIL if not there
 			// The SETF expander will ensure that there will be a FUNCALL #'(setf foo) with args
-			final SymbolStruct<?> setfSymbol = (SymbolStruct) ((ListStruct) fn).getRest().getFirst();
+			final SymbolElement setfSymbol = (SymbolElement) ((ListStruct) fn).getRest().getFirst();
 			codeGenerator.genCodeSpecialVariable(setfSymbol); // now we have the symbol on the stack
 			// number the invoke
 			final Label label = new Label();

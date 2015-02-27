@@ -1,16 +1,16 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import jcl.LispStruct;
 import jcl.compiler.old.symbol.KeywordOld;
+import jcl.compiler.real.element.ConsElement;
 import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.ListElement;
 import jcl.compiler.real.element.NullElement;
+import jcl.compiler.real.element.SimpleElement;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
-import jcl.lists.ConsStruct;
-import jcl.lists.ListStruct;
 import jcl.symbols.KeywordSymbolStruct;
-import jcl.symbols.SpecialOperator;
+import jcl.system.EnhancedLinkedList;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
@@ -34,32 +34,37 @@ public class EvalWhenAnalyzer implements SpecialOperatorAnalyzer {
 	}
 
 	@Override
-	public Element analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder) {
+	public Element analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
 		return analyze(analyzer, input, analysisBuilder, false, false);
 	}
 
-	public Element analyze(final SemanticAnalyzer analyzer, final ListStruct input, final AnalysisBuilder analysisBuilder, final boolean isTopLevel,
+	public Element analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder, final boolean isTopLevel,
 	                       final boolean isCompileOrCompileFile) {
 
-		final LispStruct second = input.getRest().getFirst();
-		if (!(second instanceof ListStruct)) {
+		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
+
+		final EnhancedLinkedList<SimpleElement> inputRest = elements.getAllButFirst();
+
+		final SimpleElement second = inputRest.getFirst();
+		if (!(second instanceof ListElement)) {
 			throw new ProgramErrorException("EVAL-WHEN: Situation list must be of type ListStruct. Got: " + second);
 		}
 
-		final ListStruct situationList = (ListStruct) second;
-		final List<LispStruct> situationJavaList = situationList.getAsJavaList();
+		final ListElement situationList = (ListElement) second;
+		final List<? extends SimpleElement> situationJavaList = situationList.getElements();
 
-		final Collection<LispStruct> difference = CollectionUtils.removeAll(situationJavaList, SITUATION_KEYWORDS);
+		// TODO: fix Keyword check here
+		final Collection<? extends SimpleElement> difference = CollectionUtils.removeAll(situationJavaList, SITUATION_KEYWORDS);
 		if (!difference.isEmpty()) {
 			throw new ProgramErrorException("EVAL-WHEN: Situations must be one of ':COMPILE-TOP-LEVEL', ':LOAD-TIME-LEVEL', or ':EXECUTE'. Got: " + situationList);
 		}
 
-		final ListStruct forms = input.getRest().getRest();
+		final EnhancedLinkedList<SimpleElement> forms = inputRest.getAllButFirst();
 
 		if (isTopLevel) {
 			if (isCompileTopLevel(situationJavaList)) {
 				// (eval `(progn ,@body)))
-				final ListStruct prognBody = new ConsStruct(SpecialOperator.PROGN, forms);
+//				final ListStruct prognBody = new ConsStruct(SpecialOperator.PROGN, forms);
 
 				// TODO: what we need to do here is:
 				// TODO: 1.) Get global instance of 'EVAL' function
@@ -70,9 +75,8 @@ public class EvalWhenAnalyzer implements SpecialOperatorAnalyzer {
 
 			if (isLoadTopLevel(situationJavaList) || (!isCompileOrCompileFile && isExecute(situationJavaList))) {
 				// (funcall #'(lambda (forms) (ir1-convert-progn-body start cont forms)) body)
-				final List<LispStruct> formsJavaList = forms.getAsJavaList();
 				final List<Element> analyzedForms =
-						formsJavaList.stream()
+						forms.stream()
 						             .map(e -> analyzer.analyzeForm(e, analysisBuilder))
 						             .collect(Collectors.toList());
 
@@ -84,9 +88,8 @@ public class EvalWhenAnalyzer implements SpecialOperatorAnalyzer {
 			}
 		} else if (isExecute(situationJavaList)) {
 			// (funcall #'(lambda (forms) (ir1-convert-progn-body start cont forms)) body)
-			final List<LispStruct> formsJavaList = forms.getAsJavaList();
 			final List<Element> analyzedForms =
-					formsJavaList.stream()
+					forms.stream()
 					             .map(e -> analyzer.analyzeForm(e, analysisBuilder))
 					             .collect(Collectors.toList());
 
@@ -101,15 +104,15 @@ public class EvalWhenAnalyzer implements SpecialOperatorAnalyzer {
 		return NullElement.INSTANCE;
 	}
 
-	private static boolean isCompileTopLevel(final List<LispStruct> situationList) {
+	private static boolean isCompileTopLevel(final List<? extends SimpleElement> situationList) {
 		return situationList.contains(KeywordOld.CompileToplevel);
 	}
 
-	private static boolean isLoadTopLevel(final List<LispStruct> situationList) {
+	private static boolean isLoadTopLevel(final List<? extends SimpleElement> situationList) {
 		return situationList.contains(KeywordOld.LoadToplevel);
 	}
 
-	private static boolean isExecute(final List<LispStruct> situationList) {
+	private static boolean isExecute(final List<? extends SimpleElement> situationList) {
 		return situationList.contains(KeywordOld.Execute);
 	}
 }

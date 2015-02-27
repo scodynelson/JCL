@@ -1,5 +1,6 @@
 package jcl.compiler.real.icg;
 
+import jcl.compiler.real.element.ConsElement;
 import jcl.compiler.real.icg.specialoperator.BlockCodeGenerator;
 import jcl.compiler.real.icg.specialoperator.CatchCodeGenerator;
 import jcl.compiler.real.icg.specialoperator.EvalWhenCodeGenerator;
@@ -26,18 +27,17 @@ import jcl.compiler.real.icg.specialoperator.UnwindProtectCodeGenerator;
 import jcl.compiler.real.icg.specialoperator.compiler.DefstructCodeGenerator;
 import jcl.compiler.real.icg.specialoperator.compiler.TailRecursionCodeGenerator;
 import jcl.compiler.real.icg.specialoperator.special.LambdaCodeGenerator;
-import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 
-public class SpecialFormCodeGenerator implements CodeGenerator<ListStruct> {
+public class SpecialFormCodeGenerator implements CodeGenerator<ConsElement> {
 
 	public static final SpecialFormCodeGenerator INSTANCE = new SpecialFormCodeGenerator();
 
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator) {
-		if (input.getFirst() instanceof SymbolStruct) {
-			final SymbolStruct<?> symName = (SymbolStruct) input.getFirst();
+	public void generate(final ConsElement input, final IntermediateCodeGenerator codeGenerator) {
+		if (input.getElements().getFirst() instanceof SymbolStruct) {
+			final SymbolStruct<?> symName = (SymbolStruct) input.getElements().getFirst();
 
 			// Determine the special form ) generate its code.
 			if (symName.equals(SpecialOperator.BLOCK)) {

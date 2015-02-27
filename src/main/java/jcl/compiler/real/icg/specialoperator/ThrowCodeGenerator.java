@@ -1,22 +1,24 @@
 package jcl.compiler.real.icg.specialoperator;
 
+import jcl.compiler.real.element.ConsElement;
+import jcl.compiler.real.element.SimpleElement;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
-import jcl.lists.ListStruct;
+import jcl.system.EnhancedLinkedList;
 
-public class ThrowCodeGenerator implements CodeGenerator<ListStruct> {
+public class ThrowCodeGenerator implements CodeGenerator<ConsElement> {
 
 	public static final ThrowCodeGenerator INSTANCE = new ThrowCodeGenerator();
 
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator) {
+	public void generate(final ConsElement input, final IntermediateCodeGenerator codeGenerator) {
 
 		// Remove the special symbol (THROW) from the list
-		ListStruct restOfList = input.getRest();
+		EnhancedLinkedList<SimpleElement> restOfList = input.getElements().getAllButFirst();
 
 		//Get the catch tag and store for later evaluation
 		final Object catchTag = restOfList.getFirst();         //The catch tag value that must be evaluated
-		restOfList = restOfList.getRest();
+		restOfList = restOfList.getAllButFirst();
 
 
 		codeGenerator.emitter.emitNew("lisp/system/compiler/exceptions/ThrowException");

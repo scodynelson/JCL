@@ -19,10 +19,24 @@ import java.util.Objects;
  */
 public class ValuesTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecifier {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = 8149280908073613528L;
 
+	/**
+	 * The required arguments.
+	 */
 	private final List<TypeSpecifier> typeSpecifiers;
+
+	/**
+	 * The optional arguments.
+	 */
 	private final Optional<TypeSpecifier> optional;
+
+	/**
+	 * The rest arguments.
+	 */
 	private final Rest<TypeSpecifier> rest;
 
 	/**
@@ -61,6 +75,11 @@ public class ValuesTypeSpecifier extends TypeBaseClass implements CompoundTypeSp
 	}
 
 	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
 	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
@@ -75,11 +94,6 @@ public class ValuesTypeSpecifier extends TypeBaseClass implements CompoundTypeSp
 		return Objects.equals(typeSpecifiers, valuesTypeSpecifier.typeSpecifiers)
 				&& Objects.equals(optional, valuesTypeSpecifier.optional)
 				&& Objects.equals(rest, valuesTypeSpecifier.rest);
-	}
-
-	@Override
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
 	}
 
 	@Override

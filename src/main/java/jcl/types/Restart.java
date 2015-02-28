@@ -2,8 +2,6 @@ package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
@@ -17,6 +15,9 @@ import java.lang.String;
  */
 public interface Restart extends T {
 
+	/**
+	 * Singleton instance of the {@link Restart} type.
+	 */
 	Restart INSTANCE = new Factory.RestartImpl();
 
 	/**
@@ -34,6 +35,9 @@ public interface Restart extends T {
 		 */
 		private static final class RestartImpl extends TypeBaseClass implements Restart, AtomicTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = -7905323000782513518L;
 
 			/**
@@ -55,7 +59,8 @@ public interface Restart extends T {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

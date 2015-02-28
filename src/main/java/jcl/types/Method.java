@@ -2,8 +2,6 @@ package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
@@ -24,6 +22,9 @@ import java.lang.String;
  */
 public interface Method extends T {
 
+	/**
+	 * Singleton instance of the {@link Method} type.
+	 */
 	Method INSTANCE = new Factory.MethodImpl();
 
 	/**
@@ -41,6 +42,9 @@ public interface Method extends T {
 		 */
 		private static final class MethodImpl extends TypeBaseClass implements Method, AtomicTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = 3888222951043301596L;
 
 			/**
@@ -62,7 +66,8 @@ public interface Method extends T {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

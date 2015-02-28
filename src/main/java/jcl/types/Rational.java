@@ -4,8 +4,6 @@ import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import jcl.types.typespecifiers.designator.IntervalDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 import java.math.BigInteger;
@@ -20,6 +18,9 @@ import java.math.BigInteger;
  */
 public interface Rational extends Real {
 
+	/**
+	 * Singleton instance of the {@link Rational} type.
+	 */
 	Rational INSTANCE = new Factory.RationalImpl();
 
 	/**
@@ -56,7 +57,7 @@ public interface Rational extends Real {
 		 * @return the newly created compound {@link Rational} type
 		 */
 		public static Rational getInstance(final BigInteger lowerBound, final boolean lowerInclusive,
-										   final BigInteger upperBound, final boolean upperInclusive) {
+		                                   final BigInteger upperBound, final boolean upperInclusive) {
 			return RationalImpl.getInstance(lowerBound, lowerInclusive, upperBound, upperInclusive);
 		}
 
@@ -70,8 +71,14 @@ public interface Rational extends Real {
 		 */
 		private static final class RationalImpl extends TypeBaseClass implements Rational, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = 5111174222785842955L;
 
+			/**
+			 * The interval range in which the {@link Rational} type exists.
+			 */
 			private final IntervalDesignator<BigInteger> intervalDesignator;
 
 			/**
@@ -95,7 +102,7 @@ public interface Rational extends Real {
 			 * 		whether to include the upper bound in the interval
 			 */
 			private RationalImpl(final BigInteger lowerBound, final boolean lowerInclusive,
-								 final BigInteger upperBound, final boolean upperInclusive) {
+			                     final BigInteger upperBound, final boolean upperInclusive) {
 				super("RATIONAL");
 
 				final BigInteger realLower = lowerInclusive ? lowerBound : lowerBound.add(BigInteger.ONE);
@@ -118,7 +125,7 @@ public interface Rational extends Real {
 			 * @return the newly created compound {@link Rational} type
 			 */
 			public static Rational getInstance(final BigInteger lowerBound, final boolean lowerInclusive,
-											   final BigInteger upperBound, final boolean upperInclusive) {
+			                                   final BigInteger upperBound, final boolean upperInclusive) {
 				return new RationalImpl(lowerBound, lowerInclusive, upperBound, upperInclusive);
 			}
 
@@ -153,7 +160,8 @@ public interface Rational extends Real {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

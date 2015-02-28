@@ -5,8 +5,6 @@ import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import jcl.types.typespecifiers.designator.DimensionsDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.Integer;
 import java.lang.String;
@@ -20,6 +18,9 @@ import java.lang.String;
  */
 public interface SimpleBitVector extends BitVector, SimpleArray {
 
+	/**
+	 * Singleton instance of the {@link SimpleBitVector} type.
+	 */
 	SimpleBitVector INSTANCE = new Factory.SimpleBitVectorImpl();
 
 	/**
@@ -49,9 +50,19 @@ public interface SimpleBitVector extends BitVector, SimpleArray {
 		 */
 		private static final class SimpleBitVectorImpl extends TypeBaseClass implements SimpleBitVector, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = 8121576367616102856L;
 
+			/**
+			 * Static {@link Bit} element type for {@link SimpleBitVector} types.
+			 */
 			private static final LispType ELEMENT_TYPE = Bit.INSTANCE;
+
+			/**
+			 * The dimensions of the {@link SimpleBitVector} type.
+			 */
 			private final DimensionsDesignator size;
 
 			/**
@@ -125,7 +136,8 @@ public interface SimpleBitVector extends BitVector, SimpleArray {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

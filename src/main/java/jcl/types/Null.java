@@ -2,8 +2,6 @@ package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
@@ -15,6 +13,9 @@ import java.lang.String;
  */
 public interface Null extends Symbol, List {
 
+	/**
+	 * Singleton instance of the {@link Null} type.
+	 */
 	Null INSTANCE = new Factory.NullImpl();
 
 	/**
@@ -32,6 +33,9 @@ public interface Null extends Symbol, List {
 		 */
 		private static final class NullImpl extends TypeBaseClass implements Null, AtomicTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = -9181095754133674561L;
 
 			/**
@@ -53,7 +57,8 @@ public interface Null extends Symbol, List {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

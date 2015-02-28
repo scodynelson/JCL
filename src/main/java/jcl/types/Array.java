@@ -5,8 +5,6 @@ import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import jcl.types.typespecifiers.designator.DimensionsDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.Integer;
 import java.lang.String;
@@ -24,6 +22,9 @@ import java.util.List;
  */
 public interface Array extends T {
 
+	/**
+	 * Singleton instance of the {@link Array} type.
+	 */
 	Array INSTANCE = new Factory.ArrayImpl();
 
 	/**
@@ -69,9 +70,19 @@ public interface Array extends T {
 		 */
 		private static final class ArrayImpl extends TypeBaseClass implements Array, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = 2325035154860979758L;
 
+			/**
+			 * The dimensions of the {@link Array} type.
+			 */
 			private final DimensionsDesignator dimensions;
+
+			/**
+			 * Element type for {@link Array} type.
+			 */
 			private final LispType elementType;
 
 			/**
@@ -164,7 +175,8 @@ public interface Array extends T {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

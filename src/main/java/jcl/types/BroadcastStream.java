@@ -2,8 +2,6 @@ package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
@@ -21,6 +19,9 @@ import java.lang.String;
  */
 public interface BroadcastStream extends Stream {
 
+	/**
+	 * Singleton instance of the {@link BroadcastStream} type.
+	 */
 	BroadcastStream INSTANCE = new Factory.BroadcastStreamImpl();
 
 	/**
@@ -38,6 +39,9 @@ public interface BroadcastStream extends Stream {
 		 */
 		private static final class BroadcastStreamImpl extends TypeBaseClass implements BroadcastStream, AtomicTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = 4069710741454263582L;
 
 			/**
@@ -59,7 +63,8 @@ public interface BroadcastStream extends Stream {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

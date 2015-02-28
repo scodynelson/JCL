@@ -3,8 +3,6 @@ package jcl.types;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.OrTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
@@ -16,6 +14,9 @@ import java.lang.String;
  */
 public interface Boolean extends Symbol {
 
+	/**
+	 * Singleton instance of the {@link Boolean} type.
+	 */
 	Boolean INSTANCE = new Factory.BooleanImpl();
 
 	/**
@@ -33,6 +34,9 @@ public interface Boolean extends Symbol {
 		 */
 		private static final class BooleanImpl extends OrTypeSpecifier implements Boolean, AtomicTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = -6424016818134588642L;
 
 			/**
@@ -54,7 +58,8 @@ public interface Boolean extends Symbol {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

@@ -4,8 +4,6 @@ import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import jcl.types.typespecifiers.designator.IntervalDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 import java.math.BigInteger;
@@ -19,6 +17,9 @@ import java.math.BigInteger;
  */
 public interface Integer extends Rational {
 
+	/**
+	 * Singleton instance of the {@link Integer} type.
+	 */
 	Integer INSTANCE = new Factory.IntegerImpl();
 
 	/**
@@ -55,7 +56,7 @@ public interface Integer extends Rational {
 		 * @return the newly created compound {@link Integer} type
 		 */
 		public static Integer getInstance(final BigInteger lowerBound, final boolean lowerInclusive,
-										  final BigInteger upperBound, final boolean upperInclusive) {
+		                                  final BigInteger upperBound, final boolean upperInclusive) {
 			return IntegerImpl.getInstance(lowerBound, lowerInclusive, upperBound, upperInclusive);
 		}
 
@@ -69,8 +70,14 @@ public interface Integer extends Rational {
 		 */
 		private static final class IntegerImpl extends TypeBaseClass implements Integer, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = 7322232418971038179L;
 
+			/**
+			 * The interval range in which the {@link Integer} type exists.
+			 */
 			private final IntervalDesignator<BigInteger> intervalDesignator;
 
 			/**
@@ -94,7 +101,7 @@ public interface Integer extends Rational {
 			 * 		whether to include the upper bound in the interval
 			 */
 			private IntegerImpl(final BigInteger lowerBound, final boolean lowerInclusive,
-								final BigInteger upperBound, final boolean upperInclusive) {
+			                    final BigInteger upperBound, final boolean upperInclusive) {
 				super("INTEGER");
 
 				BigInteger realLower = null;
@@ -125,7 +132,7 @@ public interface Integer extends Rational {
 			 * @return the newly created compound {@link Integer} type
 			 */
 			public static Integer getInstance(final BigInteger lowerBound, final boolean lowerInclusive,
-											  final BigInteger upperBound, final boolean upperInclusive) {
+			                                  final BigInteger upperBound, final boolean upperInclusive) {
 				return new IntegerImpl(lowerBound, lowerInclusive, upperBound, upperInclusive);
 			}
 
@@ -160,7 +167,8 @@ public interface Integer extends Rational {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

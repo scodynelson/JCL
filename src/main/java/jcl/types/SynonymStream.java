@@ -2,8 +2,6 @@ package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
@@ -19,6 +17,9 @@ import java.lang.String;
  */
 public interface SynonymStream extends Stream {
 
+	/**
+	 * Singleton instance of the {@link SynonymStream} type.
+	 */
 	SynonymStream INSTANCE = new Factory.SynonymStreamImpl();
 
 	/**
@@ -36,6 +37,9 @@ public interface SynonymStream extends Stream {
 		 */
 		private static final class SynonymStreamImpl extends TypeBaseClass implements SynonymStream, AtomicTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = -6782441795090632210L;
 
 			/**
@@ -57,7 +61,8 @@ public interface SynonymStream extends Stream {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

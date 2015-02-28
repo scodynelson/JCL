@@ -2,8 +2,6 @@ package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
@@ -74,6 +72,9 @@ import java.lang.String;
  */
 public interface Symbol extends T {
 
+	/**
+	 * Singleton instance of the {@link Symbol} type.
+	 */
 	Symbol INSTANCE = new Factory.SymbolImpl();
 
 	/**
@@ -91,6 +92,9 @@ public interface Symbol extends T {
 		 */
 		private static final class SymbolImpl extends TypeBaseClass implements Symbol, AtomicTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = 8451494531682274447L;
 
 			/**
@@ -112,7 +116,8 @@ public interface Symbol extends T {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

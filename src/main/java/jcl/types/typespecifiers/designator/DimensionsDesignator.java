@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,8 +14,16 @@ import java.util.List;
 /**
  * This class represents a dimensions designator, found within compound {@link Array}s.
  */
-public class DimensionsDesignator {
+public class DimensionsDesignator implements Serializable {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
+	private static final long serialVersionUID = 4135680663527588143L;
+
+	/**
+	 * The list of {@link Integer} dimensions.
+	 */
 	private final List<Integer> dimensions;
 
 	/**
@@ -44,6 +53,11 @@ public class DimensionsDesignator {
 	 */
 	public List<Integer> getDimensions() {
 		return dimensions;
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
 	}
 
 	@Override
@@ -91,11 +105,6 @@ public class DimensionsDesignator {
 		}
 
 		return true;
-	}
-
-	@Override
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
 	}
 
 	@Override

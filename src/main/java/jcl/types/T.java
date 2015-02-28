@@ -3,8 +3,6 @@ package jcl.types;
 import jcl.LispType;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
@@ -16,6 +14,9 @@ import java.lang.String;
  */
 public interface T extends LispType {
 
+	/**
+	 * Singleton instance of the {@link T} type.
+	 */
 	T INSTANCE = new Factory.TImpl();
 
 	/**
@@ -33,6 +34,9 @@ public interface T extends LispType {
 		 */
 		private static final class TImpl extends TypeBaseClass implements T, AtomicTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = -5539110546772298423L;
 
 			/**
@@ -54,7 +58,8 @@ public interface T extends LispType {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

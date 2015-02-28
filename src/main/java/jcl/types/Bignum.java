@@ -4,8 +4,6 @@ import jcl.types.typespecifiers.AndTypeSpecifier;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.NotTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
@@ -16,6 +14,9 @@ import java.lang.String;
  */
 public interface Bignum extends Integer {
 
+	/**
+	 * Singleton instance of the {@link Bignum} type.
+	 */
 	Bignum INSTANCE = new Factory.BignumImpl();
 
 	/**
@@ -33,6 +34,9 @@ public interface Bignum extends Integer {
 		 */
 		private static final class BignumImpl extends AndTypeSpecifier implements Bignum, AtomicTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = -2641268480714921916L;
 
 			/**
@@ -54,7 +58,8 @@ public interface Bignum extends Integer {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

@@ -13,8 +13,14 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public class EQLTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecifier {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = -7650231234468723756L;
 
+	/**
+	 * The {@link TypeSpecifier} to check against the 'EQL' type specifier.
+	 */
 	private final TypeSpecifier typeSpecifier;
 
 	/**
@@ -41,6 +47,11 @@ public class EQLTypeSpecifier extends TypeBaseClass implements CompoundTypeSpeci
 	}
 
 	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
 	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
@@ -53,11 +64,6 @@ public class EQLTypeSpecifier extends TypeBaseClass implements CompoundTypeSpeci
 		// TODO: does this account for x.equals(y) and y.equals(x)???
 		final LispType lispType = (LispType) obj;
 		return typeSpecifier.equals(lispType);
-	}
-
-	@Override
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
 	}
 
 	@Override

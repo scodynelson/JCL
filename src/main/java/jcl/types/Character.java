@@ -2,8 +2,6 @@ package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
@@ -16,6 +14,9 @@ import java.lang.String;
  */
 public interface Character extends T {
 
+	/**
+	 * Singleton instance of the {@link Character} type.
+	 */
 	Character INSTANCE = new Factory.CharacterImpl();
 
 	/**
@@ -33,6 +34,9 @@ public interface Character extends T {
 		 */
 		private static final class CharacterImpl extends TypeBaseClass implements Character, AtomicTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = 8069574443377375137L;
 
 			/**
@@ -54,7 +58,8 @@ public interface Character extends T {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

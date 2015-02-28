@@ -17,8 +17,14 @@ import java.util.List;
  */
 public class OrTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecifier {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = 4007082814148597401L;
 
+	/**
+	 * The list of {@link LispType}s to 'OR'.
+	 */
 	private final List<LispType> types;
 
 	/**
@@ -45,6 +51,11 @@ public class OrTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecif
 	}
 
 	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
 	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
@@ -61,11 +72,6 @@ public class OrTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecif
 			result = result || lispType.equals(type) || type.equals(lispType);
 		}
 		return result;
-	}
-
-	@Override
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
 	}
 
 	@Override

@@ -4,8 +4,6 @@ import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import jcl.types.typespecifiers.designator.IntervalDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 import java.math.BigDecimal;
@@ -17,6 +15,9 @@ import java.math.BigDecimal;
  */
 public interface SingleFloat extends Float {
 
+	/**
+	 * Singleton instance of the {@link SingleFloat} type.
+	 */
 	SingleFloat INSTANCE = new Factory.SingleFloatImpl();
 
 	/**
@@ -53,7 +54,7 @@ public interface SingleFloat extends Float {
 		 * @return the newly created compound {@link SingleFloat} type
 		 */
 		public static SingleFloat getInstance(final BigDecimal lowerBound, final boolean lowerInclusive,
-											  final BigDecimal upperBound, final boolean upperInclusive) {
+		                                      final BigDecimal upperBound, final boolean upperInclusive) {
 			return SingleFloatImpl.getInstance(lowerBound, lowerInclusive, upperBound, upperInclusive);
 		}
 
@@ -67,8 +68,14 @@ public interface SingleFloat extends Float {
 		 */
 		private static final class SingleFloatImpl extends TypeBaseClass implements SingleFloat, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = 4101497705229577694L;
 
+			/**
+			 * The interval range in which the {@link SingleFloat} type exists.
+			 */
 			private final IntervalDesignator<BigDecimal> intervalDesignator;
 
 			/**
@@ -92,7 +99,7 @@ public interface SingleFloat extends Float {
 			 * 		whether to include the upper bound in the interval
 			 */
 			private SingleFloatImpl(final BigDecimal lowerBound, final boolean lowerInclusive,
-									final BigDecimal upperBound, final boolean upperInclusive) {
+			                        final BigDecimal upperBound, final boolean upperInclusive) {
 				super("SINGLE-FLOAT");
 
 				final BigDecimal realLower = lowerInclusive ? lowerBound : lowerBound.add(BigDecimal.ONE);
@@ -115,7 +122,7 @@ public interface SingleFloat extends Float {
 			 * @return the newly created compound {@link SingleFloat} type
 			 */
 			public static SingleFloat getInstance(final BigDecimal lowerBound, final boolean lowerInclusive,
-												  final BigDecimal upperBound, final boolean upperInclusive) {
+			                                      final BigDecimal upperBound, final boolean upperInclusive) {
 				return new SingleFloatImpl(lowerBound, lowerInclusive, upperBound, upperInclusive);
 			}
 
@@ -150,7 +157,8 @@ public interface SingleFloat extends Float {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

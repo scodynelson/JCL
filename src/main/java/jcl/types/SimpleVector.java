@@ -5,8 +5,6 @@ import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import jcl.types.typespecifiers.designator.DimensionsDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.Integer;
 import java.lang.String;
@@ -22,6 +20,9 @@ import java.lang.String;
  */
 public interface SimpleVector extends Vector, SimpleArray {
 
+	/**
+	 * Singleton instance of the {@link SimpleVector} type.
+	 */
 	SimpleVector INSTANCE = new Factory.SimpleVectorImpl();
 
 	/**
@@ -65,9 +66,19 @@ public interface SimpleVector extends Vector, SimpleArray {
 		 */
 		private static final class SimpleVectorImpl extends TypeBaseClass implements SimpleVector, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = 1492335612869841944L;
 
+			/**
+			 * The dimensions of the {@link SimpleVector} type.
+			 */
 			private final DimensionsDesignator size;
+
+			/**
+			 * Element type for {@link SimpleVector} type.
+			 */
 			private final LispType elementType;
 
 			/**
@@ -160,7 +171,8 @@ public interface SimpleVector extends Vector, SimpleArray {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

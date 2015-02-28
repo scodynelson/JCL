@@ -5,8 +5,6 @@ import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import jcl.types.typespecifiers.designator.DimensionsDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.Integer;
 
@@ -20,6 +18,9 @@ import java.lang.Integer;
  */
 public interface SimpleString extends String, SimpleArray {
 
+	/**
+	 * Singleton instance of the {@link SimpleString} type.
+	 */
 	SimpleString INSTANCE = new Factory.SimpleStringImpl();
 
 	/**
@@ -49,9 +50,19 @@ public interface SimpleString extends String, SimpleArray {
 		 */
 		private static final class SimpleStringImpl extends TypeBaseClass implements SimpleString, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = -3796698605847581326L;
 
+			/**
+			 * Static {@link Character} element type for {@link SimpleString} types.
+			 */
 			private static final LispType ELEMENT_TYPE = Character.INSTANCE;
+
+			/**
+			 * The dimensions of the {@link SimpleString} type.
+			 */
 			private final DimensionsDesignator size;
 
 			/**
@@ -125,7 +136,8 @@ public interface SimpleString extends String, SimpleArray {
 
 			@Override
 			public java.lang.String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

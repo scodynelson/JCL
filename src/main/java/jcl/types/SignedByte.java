@@ -3,8 +3,6 @@ package jcl.types;
 import jcl.types.typespecifiers.AndTypeSpecifier;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.math3.util.ArithmeticUtils;
 
 import java.lang.String;
@@ -22,6 +20,9 @@ import java.math.BigInteger;
  */
 public interface SignedByte extends Integer {
 
+	/**
+	 * Singleton instance of the {@link SignedByte} type.
+	 */
 	SignedByte INSTANCE = new Factory.SignedByteImpl();
 
 	/**
@@ -51,6 +52,9 @@ public interface SignedByte extends Integer {
 		 */
 		private static final class SignedByteImpl extends AndTypeSpecifier implements SignedByte, AtomicTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = 5435575518396163160L;
 
 			/**
@@ -111,7 +115,8 @@ public interface SignedByte extends Integer {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

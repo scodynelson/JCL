@@ -2,8 +2,6 @@ package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
@@ -21,6 +19,9 @@ import java.lang.String;
  */
 public interface GenericFunction extends Function {
 
+	/**
+	 * Singleton instance of the {@link GenericFunction} type.
+	 */
 	GenericFunction INSTANCE = new Factory.GenericFunctionImpl();
 
 	/**
@@ -38,6 +39,9 @@ public interface GenericFunction extends Function {
 		 */
 		private static final class GenericFunctionImpl extends TypeBaseClass implements GenericFunction, AtomicTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = 2621198636561454203L;
 
 			/**
@@ -59,7 +63,8 @@ public interface GenericFunction extends Function {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

@@ -2,8 +2,6 @@ package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
@@ -15,6 +13,9 @@ import java.lang.String;
  */
 public interface BuiltInClass extends Class {
 
+	/**
+	 * Singleton instance of the {@link BuiltInClass} type.
+	 */
 	BuiltInClass INSTANCE = new Factory.BuiltInClassImpl();
 
 	/**
@@ -32,6 +33,9 @@ public interface BuiltInClass extends Class {
 		 */
 		private static final class BuiltInClassImpl extends TypeBaseClass implements BuiltInClass, AtomicTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = -3777422495647309699L;
 
 			/**
@@ -53,7 +57,8 @@ public interface BuiltInClass extends Class {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

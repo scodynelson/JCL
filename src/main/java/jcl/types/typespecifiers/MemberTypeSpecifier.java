@@ -18,8 +18,14 @@ import java.util.List;
  */
 public class MemberTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecifier {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = 4089986064857457060L;
 
+	/**
+	 * The list of {@link LispStruct} to check against the 'MEMBER' type specifier.
+	 */
 	private final List<LispStruct> lispStructs;
 
 	/**
@@ -46,6 +52,11 @@ public class MemberTypeSpecifier extends TypeBaseClass implements CompoundTypeSp
 	}
 
 	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
 	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
@@ -63,11 +74,6 @@ public class MemberTypeSpecifier extends TypeBaseClass implements CompoundTypeSp
 			}
 		}
 		return false;
-	}
-
-	@Override
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
 	}
 
 	@Override

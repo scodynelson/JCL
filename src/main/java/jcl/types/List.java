@@ -2,8 +2,6 @@ package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
@@ -29,6 +27,9 @@ import java.lang.String;
  */
 public interface List extends Sequence {
 
+	/**
+	 * Singleton instance of the {@link List} type.
+	 */
 	List INSTANCE = new Factory.ListImpl();
 
 	/**
@@ -46,6 +47,9 @@ public interface List extends Sequence {
 		 */
 		private static final class ListImpl extends TypeBaseClass implements List, AtomicTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = 8480820578792501223L;
 
 			/**
@@ -67,7 +71,8 @@ public interface List extends Sequence {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

@@ -2,8 +2,6 @@ package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
@@ -15,6 +13,9 @@ import java.lang.String;
  */
 public interface StructureObject extends T {
 
+	/**
+	 * Singleton instance of the {@link StructureObject} type.
+	 */
 	StructureObject INSTANCE = new Factory.StructureObjectImpl();
 
 	/**
@@ -32,6 +33,9 @@ public interface StructureObject extends T {
 		 */
 		private static final class StructureObjectImpl extends TypeBaseClass implements StructureObject, AtomicTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = 1530448854463167701L;
 
 			/**
@@ -53,7 +57,8 @@ public interface StructureObject extends T {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

@@ -3,8 +3,6 @@ package jcl.types;
 import jcl.types.typespecifiers.AndTypeSpecifier;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 import java.math.BigInteger;
@@ -17,6 +15,9 @@ import java.math.BigInteger;
  */
 public interface Fixnum extends Integer {
 
+	/**
+	 * Singleton instance of the {@link Fixnum} type.
+	 */
 	Fixnum INSTANCE = new Factory.FixnumImpl();
 
 	/**
@@ -34,6 +35,9 @@ public interface Fixnum extends Integer {
 		 */
 		private static final class FixnumImpl extends AndTypeSpecifier implements Fixnum, AtomicTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = 5001042603403390586L;
 
 			/**
@@ -64,7 +68,8 @@ public interface Fixnum extends Integer {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

@@ -2,8 +2,6 @@ package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
@@ -16,6 +14,9 @@ import java.lang.String;
  */
 public interface Pathname extends T {
 
+	/**
+	 * Singleton instance of the {@link Pathname} type.
+	 */
 	Pathname INSTANCE = new Factory.PathnameImpl();
 
 	/**
@@ -33,6 +34,9 @@ public interface Pathname extends T {
 		 */
 		private static final class PathnameImpl extends TypeBaseClass implements Pathname, AtomicTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = -7343108902657436359L;
 
 			/**
@@ -54,7 +58,8 @@ public interface Pathname extends T {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

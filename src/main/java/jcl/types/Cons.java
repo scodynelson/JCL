@@ -4,8 +4,6 @@ import jcl.LispType;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
@@ -17,6 +15,9 @@ import java.lang.String;
  */
 public interface Cons extends List {
 
+	/**
+	 * Singleton instance of the {@link Cons} type.
+	 */
 	Cons INSTANCE = new Factory.ConsImpl();
 
 	/**
@@ -48,9 +49,19 @@ public interface Cons extends List {
 		 */
 		private static final class ConsImpl extends TypeBaseClass implements Cons, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = -991060349966644883L;
 
+			/**
+			 * The type of the car element.
+			 */
 			private final LispType carSpec;
+
+			/**
+			 * The type of the cdr element.
+			 */
 			private final LispType cdrSpec;
 
 			/**
@@ -125,7 +136,8 @@ public interface Cons extends List {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

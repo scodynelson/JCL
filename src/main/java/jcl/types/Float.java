@@ -4,8 +4,6 @@ import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import jcl.types.typespecifiers.designator.IntervalDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 import java.math.BigDecimal;
@@ -23,6 +21,9 @@ import java.math.BigDecimal;
  */
 public interface Float extends Real {
 
+	/**
+	 * Singleton instance of the {@link Float} type.
+	 */
 	Float INSTANCE = new Factory.FloatImpl();
 
 	/**
@@ -59,7 +60,7 @@ public interface Float extends Real {
 		 * @return the newly created compound {@link Float} type
 		 */
 		public static Float getInstance(final BigDecimal lowerBound, final boolean lowerInclusive,
-										final BigDecimal upperBound, final boolean upperInclusive) {
+		                                final BigDecimal upperBound, final boolean upperInclusive) {
 			return FloatImpl.getInstance(lowerBound, lowerInclusive, upperBound, upperInclusive);
 		}
 
@@ -73,8 +74,14 @@ public interface Float extends Real {
 		 */
 		private static final class FloatImpl extends TypeBaseClass implements Float, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = -2016076958464841739L;
 
+			/**
+			 * The interval range in which the {@link Float} type exists.
+			 */
 			private final IntervalDesignator<BigDecimal> intervalDesignator;
 
 			/**
@@ -98,7 +105,7 @@ public interface Float extends Real {
 			 * 		whether to include the upper bound in the interval
 			 */
 			private FloatImpl(final BigDecimal lowerBound, final boolean lowerInclusive,
-							  final BigDecimal upperBound, final boolean upperInclusive) {
+			                  final BigDecimal upperBound, final boolean upperInclusive) {
 				super("FLOAT");
 
 				final BigDecimal realLower = lowerInclusive ? lowerBound : lowerBound.add(BigDecimal.ONE);
@@ -121,7 +128,7 @@ public interface Float extends Real {
 			 * @return the newly created compound {@link Float} type
 			 */
 			public static Float getInstance(final BigDecimal lowerBound, final boolean lowerInclusive,
-											final BigDecimal upperBound, final boolean upperInclusive) {
+			                                final BigDecimal upperBound, final boolean upperInclusive) {
 				return new FloatImpl(lowerBound, lowerInclusive, upperBound, upperInclusive);
 			}
 
@@ -156,7 +163,8 @@ public interface Float extends Real {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

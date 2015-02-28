@@ -2,8 +2,6 @@ package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
@@ -15,6 +13,9 @@ import java.lang.String;
  */
 public interface Ratio extends Rational {
 
+	/**
+	 * Singleton instance of the {@link Ratio} type.
+	 */
 	Ratio INSTANCE = new Factory.RatioImpl();
 
 	/**
@@ -32,6 +33,9 @@ public interface Ratio extends Rational {
 		 */
 		private static final class RatioImpl extends TypeBaseClass implements Ratio, AtomicTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = -7412019342239495711L;
 
 			/**
@@ -53,7 +57,8 @@ public interface Ratio extends Rational {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

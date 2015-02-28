@@ -2,8 +2,6 @@ package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
@@ -23,6 +21,9 @@ import java.lang.String;
  */
 public interface BaseChar extends Character {
 
+	/**
+	 * Singleton instance of the {@link BaseChar} type.
+	 */
 	BaseChar INSTANCE = new Factory.BaseCharImpl();
 
 	/**
@@ -40,6 +41,9 @@ public interface BaseChar extends Character {
 		 */
 		private static final class BaseCharImpl extends TypeBaseClass implements BaseChar, AtomicTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = -8696160841949273489L;
 
 			/**
@@ -61,7 +65,8 @@ public interface BaseChar extends Character {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

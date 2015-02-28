@@ -4,8 +4,6 @@ import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import jcl.types.typespecifiers.designator.IntervalDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 import java.math.BigDecimal;
@@ -17,6 +15,9 @@ import java.math.BigDecimal;
  */
 public interface LongFloat extends Float {
 
+	/**
+	 * Singleton instance of the {@link LongFloat} type.
+	 */
 	LongFloat INSTANCE = new Factory.LongFloatImpl();
 
 	/**
@@ -53,7 +54,7 @@ public interface LongFloat extends Float {
 		 * @return the newly created compound {@link LongFloat} type
 		 */
 		public static LongFloat getInstance(final BigDecimal lowerBound, final boolean lowerInclusive,
-											final BigDecimal upperBound, final boolean upperInclusive) {
+		                                    final BigDecimal upperBound, final boolean upperInclusive) {
 			return LongFloatImpl.getInstance(lowerBound, lowerInclusive, upperBound, upperInclusive);
 		}
 
@@ -67,8 +68,14 @@ public interface LongFloat extends Float {
 		 */
 		private static final class LongFloatImpl extends TypeBaseClass implements LongFloat, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = 2113007121037284963L;
 
+			/**
+			 * The interval range in which the {@link LongFloat} type exists.
+			 */
 			private final IntervalDesignator<BigDecimal> intervalDesignator;
 
 			/**
@@ -92,7 +99,7 @@ public interface LongFloat extends Float {
 			 * 		whether to include the upper bound in the interval
 			 */
 			private LongFloatImpl(final BigDecimal lowerBound, final boolean lowerInclusive,
-								  final BigDecimal upperBound, final boolean upperInclusive) {
+			                      final BigDecimal upperBound, final boolean upperInclusive) {
 				super("LONG-FLOAT");
 
 				final BigDecimal realLower = lowerInclusive ? lowerBound : lowerBound.add(BigDecimal.ONE);
@@ -115,7 +122,7 @@ public interface LongFloat extends Float {
 			 * @return the newly created compound {@link LongFloat} type
 			 */
 			public static LongFloat getInstance(final BigDecimal lowerBound, final boolean lowerInclusive,
-												final BigDecimal upperBound, final boolean upperInclusive) {
+			                                    final BigDecimal upperBound, final boolean upperInclusive) {
 				return new LongFloatImpl(lowerBound, lowerInclusive, upperBound, upperInclusive);
 			}
 
@@ -150,7 +157,8 @@ public interface LongFloat extends Float {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

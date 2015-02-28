@@ -2,8 +2,6 @@ package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
@@ -14,6 +12,9 @@ import java.lang.String;
  */
 public interface StandardClass extends Class {
 
+	/**
+	 * Singleton instance of the {@link StandardClass} type.
+	 */
 	StandardClass INSTANCE = new Factory.StandardClassImpl();
 
 	/**
@@ -31,6 +32,9 @@ public interface StandardClass extends Class {
 		 */
 		private static final class StandardClassImpl extends TypeBaseClass implements StandardClass, AtomicTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = 8869486055336833896L;
 
 			/**
@@ -52,7 +56,8 @@ public interface StandardClass extends Class {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

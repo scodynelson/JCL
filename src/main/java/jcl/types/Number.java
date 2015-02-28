@@ -2,8 +2,6 @@ package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
@@ -22,6 +20,9 @@ import java.lang.String;
  */
 public interface Number extends T {
 
+	/**
+	 * Singleton instance of the {@link Number} type.
+	 */
 	Number INSTANCE = new Factory.NumberImpl();
 
 	/**
@@ -39,6 +40,9 @@ public interface Number extends T {
 		 */
 		private static final class NumberImpl extends TypeBaseClass implements Number, AtomicTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = -5294062331876830385L;
 
 			/**
@@ -60,7 +64,8 @@ public interface Number extends T {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

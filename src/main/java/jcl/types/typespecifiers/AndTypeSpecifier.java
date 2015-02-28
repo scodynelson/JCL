@@ -17,8 +17,14 @@ import java.util.List;
  */
 public class AndTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecifier {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = 426612277888344025L;
 
+	/**
+	 * The list of {@link LispType}s to 'AND'.
+	 */
 	private final List<LispType> types;
 
 	/**
@@ -46,6 +52,11 @@ public class AndTypeSpecifier extends TypeBaseClass implements CompoundTypeSpeci
 	}
 
 	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
 	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
@@ -62,11 +73,6 @@ public class AndTypeSpecifier extends TypeBaseClass implements CompoundTypeSpeci
 			result = result && (lispType.equals(type) || type.equals(lispType));
 		}
 		return result;
-	}
-
-	@Override
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
 	}
 
 	@Override

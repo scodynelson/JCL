@@ -2,8 +2,6 @@ package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
@@ -15,6 +13,9 @@ import java.lang.String;
  */
 public interface TwoWayStream extends Stream {
 
+	/**
+	 * Singleton instance of the {@link TwoWayStream} type.
+	 */
 	TwoWayStream INSTANCE = new Factory.TwoWayStreamImpl();
 
 	/**
@@ -32,6 +33,9 @@ public interface TwoWayStream extends Stream {
 		 */
 		private static final class TwoWayStreamImpl extends TypeBaseClass implements TwoWayStream, AtomicTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = -6594390772220907590L;
 
 			/**
@@ -53,7 +57,8 @@ public interface TwoWayStream extends Stream {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

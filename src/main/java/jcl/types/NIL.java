@@ -2,8 +2,6 @@ package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
@@ -17,6 +15,9 @@ import java.lang.String;
  */
 public interface NIL extends T { // TODO: this needs to extend ALL types...
 
+	/**
+	 * Singleton instance of the {@link NIL} type.
+	 */
 	NIL INSTANCE = new Factory.NILImpl();
 
 	/**
@@ -34,6 +35,9 @@ public interface NIL extends T { // TODO: this needs to extend ALL types...
 		 */
 		private static final class NILImpl extends TypeBaseClass implements NIL, AtomicTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = 7666156319177181978L;
 
 			/**
@@ -55,7 +59,8 @@ public interface NIL extends T { // TODO: this needs to extend ALL types...
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

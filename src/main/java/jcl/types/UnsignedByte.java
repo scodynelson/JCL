@@ -3,8 +3,6 @@ package jcl.types;
 import jcl.types.typespecifiers.AndTypeSpecifier;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.math3.util.ArithmeticUtils;
 
 import java.lang.String;
@@ -23,6 +21,9 @@ import java.math.BigInteger;
  */
 public interface UnsignedByte extends SignedByte {
 
+	/**
+	 * Singleton instance of the {@link UnsignedByte} type.
+	 */
 	UnsignedByte INSTANCE = new Factory.UnsignedByteImpl();
 
 	/**
@@ -52,6 +53,9 @@ public interface UnsignedByte extends SignedByte {
 		 */
 		private static final class UnsignedByteImpl extends AndTypeSpecifier implements UnsignedByte, AtomicTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = 7776477100685781384L;
 
 			/**
@@ -111,7 +115,8 @@ public interface UnsignedByte extends SignedByte {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

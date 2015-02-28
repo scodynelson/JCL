@@ -2,8 +2,6 @@ package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
@@ -14,6 +12,9 @@ import java.lang.String;
  */
 public interface FileStream extends Stream {
 
+	/**
+	 * Singleton instance of the {@link FileStream} type.
+	 */
 	FileStream INSTANCE = new Factory.FileStreamImpl();
 
 	/**
@@ -31,6 +32,9 @@ public interface FileStream extends Stream {
 		 */
 		private static final class FileStreamImpl extends TypeBaseClass implements FileStream, AtomicTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = 772081181395170511L;
 
 			/**
@@ -52,7 +56,8 @@ public interface FileStream extends Stream {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

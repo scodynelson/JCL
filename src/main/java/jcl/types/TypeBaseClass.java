@@ -9,8 +9,11 @@ import java.lang.String;
 /**
  * Abstract base class for all {@link LispType} implementations.
  */
-public abstract class TypeBaseClass extends SymbolStruct<LispType> implements LispType {
+public class TypeBaseClass extends SymbolStruct<LispType> implements LispType {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = 3499497199319905092L;
 
 	/**

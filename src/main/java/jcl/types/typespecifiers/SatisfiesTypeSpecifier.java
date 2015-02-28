@@ -11,13 +11,20 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * A {@link SatisfiesTypeSpecifier} denotes the set of all objects that satisfy the predicate predicate-name, which
  * must be a symbol whose global function definition is a one-argument predicate. A name is required for
  * predicate-name; lambda expressions are not allowed. The argument is required. The symbol * can be the argument, but
- * it denotes itself (the symbol *), and does not represent an unspecified value. The symbol satisfies is not valid as a
+ * it denotes itself (the symbol *), and does not represent an unspecified value. The symbol satisfies is not valid as
+ * a
  * type specifier.
  */
 public class SatisfiesTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecifier {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = -7481582322732047642L;
 
+	/**
+	 * The {@link PredicateFunctionStruct} to check against the 'SATISFIES' type specifier.
+	 */
 	private final PredicateFunctionStruct<LispStruct> predicate;
 
 	/**
@@ -44,6 +51,11 @@ public class SatisfiesTypeSpecifier extends TypeBaseClass implements CompoundTyp
 	}
 
 	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
 	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
@@ -56,11 +68,6 @@ public class SatisfiesTypeSpecifier extends TypeBaseClass implements CompoundTyp
 		final LispStruct lispStruct = (LispStruct) obj;
 
 		return predicate.evaluate(lispStruct);
-	}
-
-	@Override
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
 	}
 
 	@Override

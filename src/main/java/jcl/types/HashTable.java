@@ -2,8 +2,6 @@ package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
@@ -14,6 +12,9 @@ import java.lang.String;
  */
 public interface HashTable extends T {
 
+	/**
+	 * Singleton instance of the {@link HashTable} type.
+	 */
 	HashTable INSTANCE = new Factory.HashTableImpl();
 
 	/**
@@ -31,6 +32,9 @@ public interface HashTable extends T {
 		 */
 		private static final class HashTableImpl extends TypeBaseClass implements HashTable, AtomicTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = 1398788699336001310L;
 
 			/**
@@ -52,7 +56,8 @@ public interface HashTable extends T {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

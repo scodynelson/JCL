@@ -5,16 +5,31 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.io.Serializable;
+
 /**
  * This class represents an interval designator, found within compound type specifiers.
  *
  * @param <N>
  * 		the number type used for the interval boundaries
  */
-public class IntervalDesignator<N extends Number> {
+public class IntervalDesignator<N extends Number> implements Serializable {
 
-	// NOTE: Both of these are inclusive; inclusive/exclusive is to be taken care of before create of this
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
+	private static final long serialVersionUID = -3886366956143132538L;
+
+	/**
+	 * The lower boundary for the interval. This is 'inclusive'. The 'inclusive/exclusive' handling is taken care of
+	 * before creation.
+	 */
 	private final N lowerBound;
+
+	/**
+	 * The upper boundary for the interval.  This is 'inclusive'. The 'inclusive/exclusive' handling is taken care of
+	 * before creation.
+	 */
 	private final N upperBound;
 
 	/**
@@ -53,6 +68,11 @@ public class IntervalDesignator<N extends Number> {
 	}
 
 	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
 	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
@@ -80,11 +100,6 @@ public class IntervalDesignator<N extends Number> {
 		final int upperCompare = TypeSpecifierUtils.numberCompareTo(upperBound, number);
 
 		return (lowerCompare >= 0) && (upperCompare <= 0);
-	}
-
-	@Override
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
 	}
 
 	@Override

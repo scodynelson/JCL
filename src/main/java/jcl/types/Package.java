@@ -2,8 +2,6 @@ package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 
@@ -14,6 +12,9 @@ import java.lang.String;
  */
 public interface Package extends T {
 
+	/**
+	 * Singleton instance of the {@link Package} type.
+	 */
 	Package INSTANCE = new Factory.PackageImpl();
 
 	/**
@@ -31,6 +32,9 @@ public interface Package extends T {
 		 */
 		private static final class PackageImpl extends TypeBaseClass implements Package, AtomicTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = -3289071503998628075L;
 
 			/**
@@ -52,7 +56,8 @@ public interface Package extends T {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

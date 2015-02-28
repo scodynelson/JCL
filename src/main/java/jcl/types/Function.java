@@ -8,8 +8,6 @@ import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import jcl.types.typespecifiers.TypeSpecifier;
 import jcl.types.typespecifiers.ValuesTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 import java.util.List;
@@ -23,6 +21,9 @@ import java.util.Objects;
  */
 public interface Function extends T {
 
+	/**
+	 * Singleton instance of the {@link Function} type.
+	 */
 	Function INSTANCE = new Factory.FunctionImpl();
 
 	/**
@@ -47,8 +48,8 @@ public interface Function extends T {
 		 * @return the newly created compound {@link Function} type
 		 */
 		public static Function getInstance(final List<TypeSpecifier> typeSpecifiers, final Optional<TypeSpecifier> optional,
-										   final Rest<TypeSpecifier> rest, final Key<TypeSpecifier> key,
-										   final ValuesTypeSpecifier valuesTypeSpecifier) {
+		                                   final Rest<TypeSpecifier> rest, final Key<TypeSpecifier> key,
+		                                   final ValuesTypeSpecifier valuesTypeSpecifier) {
 			return FunctionImpl.getInstance(typeSpecifiers, optional, rest, key, valuesTypeSpecifier);
 		}
 
@@ -62,13 +63,34 @@ public interface Function extends T {
 		 */
 		private static final class FunctionImpl extends TypeBaseClass implements Function, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = -6069975817174759971L;
 
+			/**
+			 * The required arguments.
+			 */
 			private final List<TypeSpecifier> typeSpecifiers;
+
+			/**
+			 * The optional arguments.
+			 */
 			private final Optional<TypeSpecifier> optional;
+
+			/**
+			 * The rest arguments.
+			 */
 			private final Rest<TypeSpecifier> rest;
+
+			/**
+			 * The key arguments.
+			 */
 			private final Key<TypeSpecifier> key;
 
+			/**
+			 * The values arguments.
+			 */
 			private final ValuesTypeSpecifier valuesTypeSpecifier;
 
 			/**
@@ -93,8 +115,8 @@ public interface Function extends T {
 			 * 		the values arguments
 			 */
 			private FunctionImpl(final List<TypeSpecifier> typeSpecifiers, final Optional<TypeSpecifier> optional,
-								 final Rest<TypeSpecifier> rest, final Key<TypeSpecifier> key,
-								 final ValuesTypeSpecifier valuesTypeSpecifier) {
+			                     final Rest<TypeSpecifier> rest, final Key<TypeSpecifier> key,
+			                     final ValuesTypeSpecifier valuesTypeSpecifier) {
 				super("FUNCTION");
 				this.typeSpecifiers = typeSpecifiers;
 				this.optional = optional;
@@ -121,8 +143,8 @@ public interface Function extends T {
 			 * @return the newly created compound {@link Function} type
 			 */
 			public static Function getInstance(final List<TypeSpecifier> typeSpecifiers, final Optional<TypeSpecifier> optional,
-											   final Rest<TypeSpecifier> rest, final Key<TypeSpecifier> key,
-											   final ValuesTypeSpecifier valuesTypeSpecifier) {
+			                                   final Rest<TypeSpecifier> rest, final Key<TypeSpecifier> key,
+			                                   final ValuesTypeSpecifier valuesTypeSpecifier) {
 				return new FunctionImpl(typeSpecifiers, optional, rest, key, valuesTypeSpecifier);
 			}
 
@@ -163,7 +185,8 @@ public interface Function extends T {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

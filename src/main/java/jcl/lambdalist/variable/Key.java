@@ -1,5 +1,7 @@
 package jcl.lambdalist.variable;
 
+import java.io.Serializable;
+
 /**
  * If &key is present, all specifiers up to the next lambda list keyword or the end of the list are keyword parameter
  * specifiers. When keyword parameters are processed, the same arguments are processed that would be made into a list for
@@ -56,7 +58,9 @@ package jcl.lambdalist.variable;
  *
  * @param <VAR>
  */
-public class Key<VAR> {
+public class Key<VAR> implements Serializable {
+
+	private static final long serialVersionUID = -3463375471898706592L;
 
 	private final KeyVar<VAR> vars;
 	private final boolean allowOtherKeys;

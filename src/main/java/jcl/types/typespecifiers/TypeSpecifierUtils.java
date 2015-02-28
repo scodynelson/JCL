@@ -20,8 +20,11 @@ public final class TypeSpecifierUtils {
 	 * This method compares the two provided numbers to test their equality.
 	 * NOTE: This only will compare BigIntegers, BigDecimals, and BigFractions!!
 	 *
-	 * @param num1 the first number to compare
-	 * @param num2 the second number to compare
+	 * @param num1
+	 * 		the first number to compare
+	 * @param num2
+	 * 		the second number to compare
+	 *
 	 * @return the comparison of the two numbers
 	 */
 	public static int numberCompareTo(final Number num1, final Number num2) {

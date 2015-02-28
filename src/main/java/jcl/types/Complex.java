@@ -3,8 +3,6 @@ package jcl.types;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 import java.util.Objects;
@@ -20,6 +18,9 @@ import java.util.Objects;
  */
 public interface Complex extends Number {
 
+	/**
+	 * Singleton instance of the {@link Complex} type.
+	 */
 	Complex INSTANCE = new Factory.ComplexImpl();
 
 	/**
@@ -49,8 +50,14 @@ public interface Complex extends Number {
 		 */
 		private static final class ComplexImpl extends TypeBaseClass implements Complex, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = -5225089521365916136L;
 
+			/**
+			 * The type of {@link Real} that comprises the {@link Complex}.
+			 */
 			private final Real realType;
 
 			/**
@@ -114,7 +121,8 @@ public interface Complex extends Number {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

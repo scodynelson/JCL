@@ -15,8 +15,14 @@ import java.math.BigInteger;
  */
 public class ModTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecifier {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = -1987661534825521492L;
 
+	/**
+	 * The {@link IntegerStruct} to check against the 'MOD' type specifier.
+	 */
 	private final IntegerStruct integerStruct;
 
 	/**
@@ -43,6 +49,11 @@ public class ModTypeSpecifier extends TypeBaseClass implements CompoundTypeSpeci
 	}
 
 	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
 	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
@@ -62,11 +73,6 @@ public class ModTypeSpecifier extends TypeBaseClass implements CompoundTypeSpeci
 		}
 
 		return false;
-	}
-
-	@Override
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
 	}
 
 	@Override

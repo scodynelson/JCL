@@ -12,8 +12,14 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public class NotTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecifier {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = 3614079184143374832L;
 
+	/**
+	 * The {@link LispType} to 'NOT'.
+	 */
 	private final LispType type;
 
 	/**
@@ -40,6 +46,11 @@ public class NotTypeSpecifier extends TypeBaseClass implements CompoundTypeSpeci
 	}
 
 	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
 	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
@@ -52,11 +63,6 @@ public class NotTypeSpecifier extends TypeBaseClass implements CompoundTypeSpeci
 		final LispType lispType = (LispType) obj;
 
 		return !lispType.equals(type) && !type.equals(lispType);
-	}
-
-	@Override
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
 	}
 
 	@Override

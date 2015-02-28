@@ -4,8 +4,6 @@ import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import jcl.types.typespecifiers.designator.IntervalDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 import java.math.BigDecimal;
@@ -21,6 +19,9 @@ import java.math.BigInteger;
  */
 public interface Real extends Number {
 
+	/**
+	 * Singleton instance of the {@link Real} type.
+	 */
 	Real INSTANCE = new Factory.RealImpl();
 
 	/**
@@ -57,7 +58,7 @@ public interface Real extends Number {
 		 * @return the newly created compound {@link Real} type
 		 */
 		public static Real getInstance(final BigInteger lowerBound, final boolean lowerInclusive,
-									   final BigInteger upperBound, final boolean upperInclusive) {
+		                               final BigInteger upperBound, final boolean upperInclusive) {
 			return RealImpl.getInstance(lowerBound, lowerInclusive, upperBound, upperInclusive);
 		}
 
@@ -90,7 +91,7 @@ public interface Real extends Number {
 		 * @return the newly created compound {@link Real} type
 		 */
 		public static Real getInstance(final BigDecimal lowerBound, final boolean lowerInclusive,
-									   final BigDecimal upperBound, final boolean upperInclusive) {
+		                               final BigDecimal upperBound, final boolean upperInclusive) {
 			return RealImpl.getInstance(lowerBound, lowerInclusive, upperBound, upperInclusive);
 		}
 
@@ -104,9 +105,19 @@ public interface Real extends Number {
 		 */
 		private static final class RealImpl extends TypeBaseClass implements Real, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = -1322534214307811494L;
 
+			/**
+			 * The interval range for {@link Integer} types in which the {@link Real} type exists.
+			 */
 			private final IntervalDesignator<BigInteger> integerIntervalDesignator;
+
+			/**
+			 * The interval range for {@link Float} types in which the {@link Real} type exists.
+			 */
 			private final IntervalDesignator<BigDecimal> decimalIntervalDesignator;
 
 			/**
@@ -131,7 +142,7 @@ public interface Real extends Number {
 			 * 		whether to include the upper bound in the interval
 			 */
 			private RealImpl(final BigInteger lowerBound, final boolean lowerInclusive,
-							 final BigInteger upperBound, final boolean upperInclusive) {
+			                 final BigInteger upperBound, final boolean upperInclusive) {
 				super("REAL");
 
 				final BigInteger realLower = lowerInclusive ? lowerBound : lowerBound.add(BigInteger.ONE);
@@ -154,7 +165,7 @@ public interface Real extends Number {
 			 * 		whether to include the upper bound in the interval
 			 */
 			private RealImpl(final BigDecimal lowerBound, final boolean lowerInclusive,
-							 final BigDecimal upperBound, final boolean upperInclusive) {
+			                 final BigDecimal upperBound, final boolean upperInclusive) {
 				super("REAL");
 
 				final BigDecimal realLower = lowerInclusive ? lowerBound : lowerBound.add(BigDecimal.ONE);
@@ -179,7 +190,7 @@ public interface Real extends Number {
 			 * @return the newly created compound {@link Real} type
 			 */
 			public static Real getInstance(final BigInteger lowerBound, final boolean lowerInclusive,
-										   final BigInteger upperBound, final boolean upperInclusive) {
+			                               final BigInteger upperBound, final boolean upperInclusive) {
 				return new RealImpl(lowerBound, lowerInclusive, upperBound, upperInclusive);
 			}
 
@@ -198,7 +209,7 @@ public interface Real extends Number {
 			 * @return the newly created compound {@link Real} type
 			 */
 			public static Real getInstance(final BigDecimal lowerBound, final boolean lowerInclusive,
-										   final BigDecimal upperBound, final boolean upperInclusive) {
+			                               final BigDecimal upperBound, final boolean upperInclusive) {
 				return new RealImpl(lowerBound, lowerInclusive, upperBound, upperInclusive);
 			}
 
@@ -239,7 +250,8 @@ public interface Real extends Number {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

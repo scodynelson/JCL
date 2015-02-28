@@ -5,8 +5,6 @@ import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import jcl.types.typespecifiers.designator.DimensionsDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.Integer;
 import java.lang.String;
@@ -24,6 +22,9 @@ import java.lang.String;
  */
 public interface Vector extends Array, Sequence {
 
+	/**
+	 * Singleton instance of the {@link Vector} type.
+	 */
 	Vector INSTANCE = new Factory.VectorImpl();
 
 	/**
@@ -55,9 +56,19 @@ public interface Vector extends Array, Sequence {
 		 */
 		private static final class VectorImpl extends TypeBaseClass implements Vector, AtomicTypeSpecifier, CompoundTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = 8666531696390635781L;
 
+			/**
+			 * The dimensions of the {@link Vector} type.
+			 */
 			private final DimensionsDesignator size;
+
+			/**
+			 * Element type for {@link Vector} type.
+			 */
 			private final LispType elementType;
 
 			/**
@@ -150,7 +161,8 @@ public interface Vector extends Array, Sequence {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

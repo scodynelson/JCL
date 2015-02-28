@@ -3,8 +3,6 @@ package jcl.types;
 import jcl.types.typespecifiers.AndTypeSpecifier;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.lang.String;
 import java.math.BigInteger;
@@ -17,6 +15,9 @@ import java.math.BigInteger;
  */
 public interface Bit extends UnsignedByte {
 
+	/**
+	 * Singleton instance of the {@link Bit} type.
+	 */
 	Bit INSTANCE = new Factory.BitImpl();
 
 	/**
@@ -34,6 +35,9 @@ public interface Bit extends UnsignedByte {
 		 */
 		private static final class BitImpl extends AndTypeSpecifier implements Bit, AtomicTypeSpecifier {
 
+			/**
+			 * Serializable Version Unique Identifier.
+			 */
 			private static final long serialVersionUID = 1872465815435985391L;
 
 			/**
@@ -55,7 +59,8 @@ public interface Bit extends UnsignedByte {
 
 			@Override
 			public String toString() {
-				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+				return getName();
 			}
 		}
 	}

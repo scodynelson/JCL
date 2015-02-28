@@ -10,11 +10,14 @@ import jcl.compiler.real.element.specialoperator.go.GoElement;
 import jcl.compiler.real.element.specialoperator.go.GoElementGenerator;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
+import jcl.symbols.SpecialOperator;
 import jcl.system.EnhancedLinkedList;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,12 +35,25 @@ import java.util.function.Supplier;
 import java.util.stream.Collector;
 
 @Component
-public class TagbodyAnalyzer implements SpecialOperatorAnalyzer {
+public class TagbodyAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
 
 	private static final long serialVersionUID = -1543233114989622747L;
 
 	@Resource
 	private Map<Class<? extends SimpleElement>, GoElementGenerator<SimpleElement>> goElementGeneratorStrategies;
+
+	/**
+	 * Initializes the block macro function and adds it to the special operator 'block'.
+	 */
+	@PostConstruct
+	private void init() {
+		SpecialOperator.TAGBODY.setMacroFunctionExpander(this);
+	}
+
+	@Override
+	public Element expand(final ConsElement form, final AnalysisBuilder analysisBuilder) {
+		return analyze(form, analysisBuilder);
+	}
 
 	@Override
 	public TagbodyElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {

@@ -8,12 +8,15 @@ import jcl.compiler.real.element.NullElement;
 import jcl.compiler.real.element.SimpleElement;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.symbols.KeywordSymbolStruct;
+import jcl.symbols.SpecialOperator;
 import jcl.system.EnhancedLinkedList;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -21,7 +24,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
-public class EvalWhenAnalyzer implements SpecialOperatorAnalyzer {
+public class EvalWhenAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
 
 	private static final long serialVersionUID = -7301369273443154417L;
 
@@ -31,6 +34,19 @@ public class EvalWhenAnalyzer implements SpecialOperatorAnalyzer {
 		SITUATION_KEYWORDS.add(KeywordOld.CompileToplevel);
 		SITUATION_KEYWORDS.add(KeywordOld.LoadToplevel);
 		SITUATION_KEYWORDS.add(KeywordOld.Execute);
+	}
+
+	/**
+	 * Initializes the block macro function and adds it to the special operator 'block'.
+	 */
+	@PostConstruct
+	private void init() {
+		SpecialOperator.EVAL_WHEN.setMacroFunctionExpander(this);
+	}
+
+	@Override
+	public Element expand(final ConsElement form, final AnalysisBuilder analysisBuilder) {
+		return analyze(form, analysisBuilder);
 	}
 
 	@Override

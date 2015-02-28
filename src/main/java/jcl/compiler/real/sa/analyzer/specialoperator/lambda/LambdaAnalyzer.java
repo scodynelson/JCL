@@ -22,25 +22,41 @@ import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindin
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.sa.analyzer.specialoperator.SpecialOperatorAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyWithDeclaresAndDocStringAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.symbols.SpecialOperator;
 import jcl.system.EnhancedLinkedList;
 import jcl.types.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class LambdaAnalyzer implements SpecialOperatorAnalyzer {
+public class LambdaAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
 
 	private static final long serialVersionUID = -7592502247452528911L;
 
 	@Autowired
 	private BodyWithDeclaresAndDocStringAnalyzer bodyWithDeclaresAndDocStringAnalyzer;
+
+	/**
+	 * Initializes the block macro function and adds it to the special operator 'block'.
+	 */
+	@PostConstruct
+	private void init() {
+		SpecialOperator.LAMBDA.setMacroFunctionExpander(this);
+	}
+
+	@Override
+	public Element expand(final ConsElement form, final AnalysisBuilder analysisBuilder) {
+		return analyze(form, analysisBuilder);
+	}
 
 	@Override
 	public LambdaElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {

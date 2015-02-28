@@ -1,6 +1,7 @@
 package jcl.compiler.real.sa.analyzer.specialoperator.declare;
 
 import jcl.compiler.real.element.ConsElement;
+import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.ListElement;
 import jcl.compiler.real.element.SimpleElement;
 import jcl.compiler.real.element.SymbolElement;
@@ -9,23 +10,39 @@ import jcl.compiler.real.element.specialoperator.declare.SpecialDeclarationEleme
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.DynamicSymbolAnalyzer;
+import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.sa.analyzer.specialoperator.SpecialOperatorAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.symbols.Declaration;
+import jcl.symbols.SpecialOperator;
 import jcl.system.EnhancedLinkedList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class DeclareAnalyzer implements SpecialOperatorAnalyzer {
+public class DeclareAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
 
 	private static final long serialVersionUID = -27949883247210201L;
 
 	@Autowired
 	private DynamicSymbolAnalyzer dynamicSymbolAnalyzer;
+
+	/**
+	 * Initializes the block macro function and adds it to the special operator 'block'.
+	 */
+	@PostConstruct
+	private void init() {
+		SpecialOperator.DECLARE.setMacroFunctionExpander(this);
+	}
+
+	@Override
+	public Element expand(final ConsElement form, final AnalysisBuilder analysisBuilder) {
+		return analyze(form, analysisBuilder);
+	}
 
 	@Override
 	public DeclareElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {

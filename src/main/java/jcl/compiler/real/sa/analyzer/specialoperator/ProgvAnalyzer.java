@@ -13,24 +13,40 @@ import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.DynamicSymbolAnalyzer;
+import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.symbols.SpecialOperator;
 import jcl.system.EnhancedLinkedList;
 import jcl.types.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
-public class ProgvAnalyzer implements SpecialOperatorAnalyzer {
+public class ProgvAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
 
 	private static final long serialVersionUID = 2755221428467421207L;
 
 	@Autowired
 	private DynamicSymbolAnalyzer dynamicSymbolAnalyzer;
+
+	/**
+	 * Initializes the block macro function and adds it to the special operator 'block'.
+	 */
+	@PostConstruct
+	private void init() {
+		SpecialOperator.PROGV.setMacroFunctionExpander(this);
+	}
+
+	@Override
+	public Element expand(final ConsElement form, final AnalysisBuilder analysisBuilder) {
+		return analyze(form, analysisBuilder);
+	}
 
 	@Override
 	public ProgvElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {

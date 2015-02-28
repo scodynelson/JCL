@@ -71,7 +71,8 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 
 		final Analyzer<? extends Element, Element> functionCallAnalyzer = elementAnalyzerStrategies.get(expandedForm.getClass());
 		if (functionCallAnalyzer == null) {
-			throw new ProgramErrorException("Semantic Analyzer: Unsupported object type cannot be analyzed: " + expandedForm);
+			return expandedForm; // TODO: we need to rework the logic a bit, so for now we just return...
+//			throw new ProgramErrorException("Semantic Analyzer: Unsupported object type cannot be analyzed: " + expandedForm);
 		}
 
 		return functionCallAnalyzer.analyze(expandedForm, analysisBuilder);

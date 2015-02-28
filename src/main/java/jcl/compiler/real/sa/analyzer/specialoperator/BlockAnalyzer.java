@@ -7,6 +7,7 @@ import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.element.specialoperator.BlockElement;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.symbols.SpecialOperator;
 import jcl.system.EnhancedLinkedList;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class BlockAnalyzer implements SpecialOperatorAnalyzer {
+public class BlockAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
 
 	private static final long serialVersionUID = -5185467468586381117L;
 
@@ -26,7 +27,12 @@ public class BlockAnalyzer implements SpecialOperatorAnalyzer {
 	 */
 	@PostConstruct
 	private void init() {
-//		SpecialOperator.BLOCK.setMacroFunctionExpander(this);
+		SpecialOperator.BLOCK.setMacroFunctionExpander(this);
+	}
+
+	@Override
+	public Element expand(final ConsElement form, final AnalysisBuilder analysisBuilder) {
+		return analyze(form, analysisBuilder);
 	}
 
 	@Override

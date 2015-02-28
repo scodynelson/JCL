@@ -56,7 +56,13 @@ final class LambdaListParser {
 	                                                                 final DeclareElement declareElement) {
 
 		final List<? extends SimpleElement> lambdaListJava = lambdaList.getElements();
-		final Iterator<? extends SimpleElement> iterator = lambdaListJava.iterator();
+
+		// *** HACK: This is here because the parsing algorithm below relies on the list to have the last element as a NIL currently. Oops.
+		final List<SimpleElement> copyLambdaListJava = new ArrayList<>(lambdaListJava);
+		copyLambdaListJava.add(NullElement.INSTANCE);
+		// ***
+
+		final Iterator<? extends SimpleElement> iterator = copyLambdaListJava.iterator();
 
 		SimpleElement currentElement = null;
 		int position = 0;

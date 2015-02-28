@@ -6,17 +6,33 @@ import jcl.compiler.real.element.SimpleElement;
 import jcl.compiler.real.element.specialoperator.MultipleValueProg1Element;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.symbols.SpecialOperator;
 import jcl.system.EnhancedLinkedList;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class MultipleValueProg1Analyzer implements SpecialOperatorAnalyzer {
+public class MultipleValueProg1Analyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
 
 	private static final long serialVersionUID = 1791554561862006171L;
+
+	/**
+	 * Initializes the block macro function and adds it to the special operator 'block'.
+	 */
+	@PostConstruct
+	private void init() {
+		SpecialOperator.MULTIPLE_VALUE_PROG1.setMacroFunctionExpander(this);
+	}
+
+	@Override
+	public Element expand(final ConsElement form, final AnalysisBuilder analysisBuilder) {
+		return analyze(form, analysisBuilder);
+	}
 
 	@Override
 	public MultipleValueProg1Element analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {

@@ -94,8 +94,10 @@ public class NewMacroExpand {
 				final String symbolName = symbolElement.getSymbolName();
 				final PackageSymbolStruct thePackageSymbol = thePackage.findSymbol(symbolName);
 
-				final SymbolStruct<?> theSymbol = thePackageSymbol.getSymbolStruct();
-				return Optional.ofNullable(theSymbol);
+				if (thePackageSymbol != null) {
+					final SymbolStruct<?> theSymbol = thePackageSymbol.getSymbolStruct();
+					return Optional.ofNullable(theSymbol);
+				}
 			}
 		}
 

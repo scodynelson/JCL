@@ -1,12 +1,14 @@
 package jcl.system;
 
-import jcl.LispStruct;
+import jcl.compiler.real.element.ConsElement;
+import jcl.compiler.real.element.NullElement;
 import jcl.compiler.real.element.SimpleElement;
 import jcl.compiler.real.element.Element;
+import jcl.compiler.real.element.SpecialOperatorElement;
+import jcl.compiler.real.element.SymbolElement;
+import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.conditions.exceptions.StreamErrorException;
-import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
 import jcl.printer.Printer;
@@ -160,17 +162,17 @@ public class ReadEvalPrint {
 					if (whatRead != null) {
 						Element whatAnalyzed = null;
 						try {
-//							final LispStruct lambdaWhatRead = wrapFormInLambda(whatRead);
-//
-//							final SemanticAnalyzer sa = context.getBean(SemanticAnalyzer.class);
-//							whatAnalyzed = sa.analyzeForm(lambdaWhatRead);
-//
-//							if (whatAnalyzed != null) {
-//								LOGGER.debug("ANALYZED:\n");
-//								LOGGER.debug("{}\n", whatAnalyzed);
-//							} else {
-//								LOGGER.warn("; WARNING: Null response from analyzer");
-//							}
+							final SimpleElement lambdaWhatRead = wrapFormInLambda(whatRead);
+
+							final SemanticAnalyzer sa = context.getBean(SemanticAnalyzer.class);
+							whatAnalyzed = sa.analyzeForm(lambdaWhatRead);
+
+							if (whatAnalyzed != null) {
+								LOGGER.debug("ANALYZED:\n");
+								LOGGER.debug("{}\n", whatAnalyzed);
+							} else {
+								LOGGER.warn("; WARNING: Null response from analyzer");
+							}
 						} catch (final ReaderErrorException ex) {
 							LOGGER.warn("; WARNING: Analysis Exception condition during Analyzer operation -> {}", ex.getMessage(), ex);
 						} catch (final Exception ex) {
@@ -259,17 +261,35 @@ public class ReadEvalPrint {
 		return null;
 	}
 
-	private static LispStruct wrapFormInLambda(final LispStruct form) {
+	private static SimpleElement wrapFormInLambda(final SimpleElement form) {
 
-		LispStruct lambdaForm = form;
-		if (form instanceof ListStruct) {
-			final ListStruct formList = (ListStruct) form;
-			final LispStruct firstOfFormList = formList.getFirst();
-			if (!firstOfFormList.equals(SpecialOperator.LAMBDA)) {
-				lambdaForm = ListStruct.buildProperList(SpecialOperator.LAMBDA, NullStruct.INSTANCE, form);
+		SimpleElement lambdaForm = form;
+		if (form instanceof ConsElement) {
+			final ConsElement formList = (ConsElement) form;
+			final EnhancedLinkedList<SimpleElement> elements = formList.getElements();
+			final SimpleElement firstOfFormList = elements.getFirst();
+			if (!(firstOfFormList instanceof SymbolElement)) {
+
+				final EnhancedLinkedList<SimpleElement> enhancedLinkedList = new EnhancedLinkedList<>(elements);
+				enhancedLinkedList.addFirst(NullElement.INSTANCE);
+				enhancedLinkedList.addFirst(SpecialOperatorElement.LAMBDA);
+
+				lambdaForm = new ConsElement(enhancedLinkedList);
+			} else if (!firstOfFormList.toLispStruct().equals(SpecialOperator.LAMBDA)) {
+
+				final EnhancedLinkedList<SimpleElement> enhancedLinkedList = new EnhancedLinkedList<>(elements);
+				enhancedLinkedList.addFirst(NullElement.INSTANCE);
+				enhancedLinkedList.addFirst(SpecialOperatorElement.LAMBDA);
+
+				lambdaForm = new ConsElement(enhancedLinkedList);
 			}
 		} else {
-			lambdaForm = ListStruct.buildProperList(SpecialOperator.LAMBDA, NullStruct.INSTANCE, form);
+			final EnhancedLinkedList<SimpleElement> enhancedLinkedList = new EnhancedLinkedList<>();
+			enhancedLinkedList.addFirst(form);
+			enhancedLinkedList.addFirst(NullElement.INSTANCE);
+			enhancedLinkedList.addFirst(SpecialOperatorElement.LAMBDA);
+
+			lambdaForm = new ConsElement(enhancedLinkedList);
 		}
 
 		return lambdaForm;

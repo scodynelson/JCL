@@ -1,23 +1,40 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
 import jcl.compiler.real.element.ConsElement;
+import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.IntegerElement;
 import jcl.compiler.real.element.SimpleElement;
 import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.element.specialoperator.go.GoElement;
 import jcl.compiler.real.sa.AnalysisBuilder;
+import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.symbols.SpecialOperator;
 import jcl.system.EnhancedLinkedList;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.ListIterator;
 import java.util.Set;
 import java.util.Stack;
 
 @Component
-public class GoAnalyzer implements SpecialOperatorAnalyzer {
+public class GoAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
 
 	private static final long serialVersionUID = -6523523596100793498L;
+
+	/**
+	 * Initializes the block macro function and adds it to the special operator 'block'.
+	 */
+	@PostConstruct
+	private void init() {
+		SpecialOperator.GO.setMacroFunctionExpander(this);
+	}
+
+	@Override
+	public Element expand(final ConsElement form, final AnalysisBuilder analysisBuilder) {
+		return analyze(form, analysisBuilder);
+	}
 
 	@Override
 	public GoElement<?> analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {

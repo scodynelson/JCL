@@ -54,10 +54,7 @@ public class PackageStruct extends BuiltInClassStruct {
 	 * 		the package nicknames
 	 */
 	public PackageStruct(final String name, final List<String> nicknames) {
-		super(Package.INSTANCE, null, null);
-		this.name = name;
-		this.nicknames = nicknames;
-		useList = new HashSet<>();
+		this(name, nicknames, new HashSet<>());
 	}
 
 	/**

@@ -18,14 +18,7 @@ public final class NullElement implements ListElement {
 
 	private static final long serialVersionUID = -5896411725518882129L;
 
-	private final NullStruct nullStruct;
-
 	private NullElement() {
-		nullStruct = NullStruct.INSTANCE;
-	}
-
-	public NullStruct getNullStruct() {
-		return nullStruct;
 	}
 
 	@Override
@@ -35,7 +28,7 @@ public final class NullElement implements ListElement {
 
 	@Override
 	public LispStruct toLispStruct() {
-		return nullStruct;
+		return NullStruct.INSTANCE;
 	}
 
 	@Override

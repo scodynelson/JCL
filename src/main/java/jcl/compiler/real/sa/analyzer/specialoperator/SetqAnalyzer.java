@@ -20,7 +20,7 @@ public class SetqAnalyzer implements SpecialOperatorAnalyzer {
 	private static final long serialVersionUID = 5324580926862048137L;
 
 	@Override
-	public SetqElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public SetqElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
 		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
 
@@ -40,6 +40,8 @@ public class SetqAnalyzer implements SpecialOperatorAnalyzer {
 				throw new ProgramErrorException("SETQ: Variable must be of type SymbolStruct. Got: " + var);
 			}
 			final SymbolElement varSymbol = (SymbolElement) var;
+
+			final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
 			final SimpleElement form = forms.get(index + 1);
 			final Element formAnalyzed = analyzer.analyzeForm(form, analysisBuilder);

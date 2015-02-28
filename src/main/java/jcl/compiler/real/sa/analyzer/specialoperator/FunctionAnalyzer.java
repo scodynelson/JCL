@@ -12,7 +12,6 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.LexicalSymbolAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.lambda.LambdaAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
@@ -34,7 +33,7 @@ public class FunctionAnalyzer implements SpecialOperatorAnalyzer {
 	private LambdaAnalyzer lambdaAnalyzer;
 
 	@Override
-	public FunctionElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public FunctionElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
 		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
 
@@ -47,15 +46,15 @@ public class FunctionAnalyzer implements SpecialOperatorAnalyzer {
 		final SimpleElement second = inputRest.getFirst();
 
 		if (second instanceof SymbolElement) {
-			return analyzeFunctionSymbol(analyzer, (SymbolElement) second, analysisBuilder);
+			return analyzeFunctionSymbol((SymbolElement) second, analysisBuilder);
 		} else if (second instanceof ConsElement) {
-			return analyzeFunctionList(analyzer, (ConsElement) second, analysisBuilder);
+			return analyzeFunctionList((ConsElement) second, analysisBuilder);
 		} else {
 			throw new ProgramErrorException("FUNCTION: Function argument must be of type SymbolStruct or ListStruct. Got: " + second);
 		}
 	}
 
-	private FunctionElement analyzeFunctionSymbol(final SemanticAnalyzer analyzer, final SymbolElement functionSymbol, final AnalysisBuilder analysisBuilder) {
+	private FunctionElement analyzeFunctionSymbol(final SymbolElement functionSymbol, final AnalysisBuilder analysisBuilder) {
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment currentEnvironment = environmentStack.peek();
@@ -67,13 +66,13 @@ public class FunctionAnalyzer implements SpecialOperatorAnalyzer {
 
 		SymbolElement functionSymbolAnalyzed = functionSymbol;
 		if (hasNoFunctionSymbolBinding) {
-			functionSymbolAnalyzed = lexicalSymbolAnalyzer.analyze(analyzer, functionSymbol, analysisBuilder);
+			functionSymbolAnalyzed = lexicalSymbolAnalyzer.analyze(functionSymbol, analysisBuilder);
 		}
 
 		return new SymbolFunctionElement(functionSymbolAnalyzed);
 	}
 
-	private FunctionElement analyzeFunctionList(final SemanticAnalyzer analyzer, final ConsElement functionList, final AnalysisBuilder analysisBuilder) {
+	private FunctionElement analyzeFunctionList(final ConsElement functionList, final AnalysisBuilder analysisBuilder) {
 
 		final SimpleElement functionListFirst = functionList.getElements().getFirst();
 
@@ -81,7 +80,7 @@ public class FunctionAnalyzer implements SpecialOperatorAnalyzer {
 			throw new ProgramErrorException("FUNCTION: First element of List argument must be the Symbol LAMBDA. Got: " + functionListFirst);
 		}
 
-		final LambdaElement lambdaElement = lambdaAnalyzer.analyze(analyzer, functionList, analysisBuilder);
+		final LambdaElement lambdaElement = lambdaAnalyzer.analyze(functionList, analysisBuilder);
 		return new LambdaFunctionElement(lambdaElement);
 	}
 

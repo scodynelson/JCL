@@ -7,11 +7,14 @@ package jcl.compiler.real.sa;
 import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.SimpleElement;
 import jcl.compiler.real.element.SymbolElement;
+import jcl.compiler.real.sa.analyzer.expander.real.NewMacroExpand;
+import jcl.compiler.real.sa.analyzer.expander.real.NewMacroExpandReturn;
 import jcl.conditions.exceptions.ProgramErrorException;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -28,13 +31,16 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SemanticAnalyzerImpl.class);
 
+	@Autowired
+	private NewMacroExpand newMacroExpand;
+
 	@Resource
-	private Map<Class<? extends SimpleElement>, Analyzer<? extends Element, SimpleElement>> elementAnalyzerStrategies;
+	private Map<Class<? extends Element>, Analyzer<? extends Element, Element>> elementAnalyzerStrategies;
 
 	@Override
 	public Element analyzeForm(final SimpleElement form) {
 
-		final AnalysisBuilder analysisBuilder = new AnalysisBuilder();
+		final AnalysisBuilder analysisBuilder = new AnalysisBuilder(this);
 
 		final Element analyzedForm = analyzeForm(form, analysisBuilder);
 
@@ -60,12 +66,15 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 	@Override
 	public Element analyzeForm(final SimpleElement form, final AnalysisBuilder analysisBuilder) {
 
-		final Analyzer<? extends Element, SimpleElement> functionCallAnalyzer = elementAnalyzerStrategies.get(form.getClass());
+		final NewMacroExpandReturn macroExpandReturn = newMacroExpand.macroExpand(form, analysisBuilder);
+		final Element expandedForm = macroExpandReturn.getExpandedForm();
+
+		final Analyzer<? extends Element, Element> functionCallAnalyzer = elementAnalyzerStrategies.get(expandedForm.getClass());
 		if (functionCallAnalyzer == null) {
-			throw new ProgramErrorException("Semantic Analyzer: Unsupported object type cannot be analyzed: " + form);
+			throw new ProgramErrorException("Semantic Analyzer: Unsupported object type cannot be analyzed: " + expandedForm);
 		}
 
-		return functionCallAnalyzer.analyze(this, form, analysisBuilder);
+		return functionCallAnalyzer.analyze(expandedForm, analysisBuilder);
 	}
 
 	@Override

@@ -9,7 +9,6 @@ import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.SimpleElement;
 import jcl.compiler.real.element.SpecialOperatorElement;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.SpecialOperatorAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.symbols.SpecialOperator;
@@ -30,7 +29,7 @@ public class SpecialOperatorFunctionCallAnalyzer extends FunctionCallAnalyzer {
 	private Map<SpecialOperator, SpecialOperatorAnalyzer> specialOperatorAnalyzerStrategies;
 
 	@Override
-	public Element analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public Element analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
 		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
 
@@ -40,7 +39,7 @@ public class SpecialOperatorFunctionCallAnalyzer extends FunctionCallAnalyzer {
 			throw new ProgramErrorException("LIST ANALYZER: SpecialOperator symbol supplied is not supported: " + specialOperator);
 		}
 
-		return specialOperatorAnalyzer.analyze(analyzer, input, analysisBuilder);
+		return specialOperatorAnalyzer.analyze(input, analysisBuilder);
 	}
 
 	@Override

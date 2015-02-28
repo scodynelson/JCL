@@ -19,7 +19,7 @@ public class CatchAnalyzer implements SpecialOperatorAnalyzer {
 	private static final long serialVersionUID = -4421664278117234704L;
 
 	@Override
-	public CatchElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public CatchElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
 		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
 
@@ -29,6 +29,8 @@ public class CatchAnalyzer implements SpecialOperatorAnalyzer {
 		}
 
 		final EnhancedLinkedList<SimpleElement> inputRest = elements.getAllButFirst();
+
+		final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
 		final SimpleElement catchTag = inputRest.getFirst();
 		final Element catchTagAnalyzed = analyzer.analyzeForm(catchTag, analysisBuilder);

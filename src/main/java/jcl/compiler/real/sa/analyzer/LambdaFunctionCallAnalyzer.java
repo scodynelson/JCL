@@ -33,7 +33,7 @@ public class LambdaFunctionCallAnalyzer extends FunctionCallAnalyzer {
 	private LambdaAnalyzer lambdaAnalyzer;
 
 	@Override
-	public LambdaFunctionCallElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public LambdaFunctionCallElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
 		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
 
@@ -48,7 +48,7 @@ public class LambdaFunctionCallAnalyzer extends FunctionCallAnalyzer {
 			throw new ProgramErrorException("LIST ANALYZER: First element of a first element ListStruct must be the SpecialOperator 'LAMBDA'. Got: " + functionListFirst);
 		}
 
-		final LambdaElement lambdaAnalyzed = lambdaAnalyzer.analyze(analyzer, functionList, analysisBuilder);
+		final LambdaElement lambdaAnalyzed = lambdaAnalyzer.analyze(functionList, analysisBuilder);
 		final OrdinaryLambdaListBindings lambdaListBindings = lambdaAnalyzed.getLambdaListBindings();
 
 		final List<SimpleElement> functionArguments = elements.getAllButFirst();
@@ -56,6 +56,8 @@ public class LambdaFunctionCallAnalyzer extends FunctionCallAnalyzer {
 		validateFunctionArguments("Anonymous Lambda", lambdaListBindings, functionArguments);
 
 		final List<Element> analyzedFunctionArguments = new ArrayList<>(functionArguments.size());
+
+		final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
 		for (final SimpleElement functionArgument : functionArguments) {
 			final Element analyzedFunctionArgument = analyzer.analyzeForm(functionArgument, analysisBuilder);

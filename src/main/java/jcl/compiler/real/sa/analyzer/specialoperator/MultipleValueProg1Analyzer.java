@@ -19,7 +19,7 @@ public class MultipleValueProg1Analyzer implements SpecialOperatorAnalyzer {
 	private static final long serialVersionUID = 1791554561862006171L;
 
 	@Override
-	public MultipleValueProg1Element analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public MultipleValueProg1Element analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
 		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
 
@@ -29,6 +29,8 @@ public class MultipleValueProg1Analyzer implements SpecialOperatorAnalyzer {
 		}
 
 		final EnhancedLinkedList<SimpleElement> inputRest = elements.getAllButFirst();
+
+		final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
 		final SimpleElement firstForm = inputRest.getFirst();
 		final Element firstFormAnalyzed = analyzer.analyzeForm(firstForm, analysisBuilder);

@@ -45,7 +45,7 @@ public class MacroletAnalyzer implements SpecialOperatorAnalyzer {
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
 
 	@Override
-	public MacroletElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public MacroletElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
 		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
 
@@ -86,8 +86,10 @@ public class MacroletAnalyzer implements SpecialOperatorAnalyzer {
 
 			final EnhancedLinkedList<SimpleElement> bodyForms = inputRest.getAllButFirst();
 
-			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(analyzer, bodyForms, analysisBuilder);
+			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(bodyForms, analysisBuilder);
 			final DeclareElement declareElement = bodyProcessingResult.getDeclareElement();
+
+			final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
 			final List<MacroletElement.MacroletVar> macroletVars
 					= innerFunctionsJavaList.stream()

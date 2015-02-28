@@ -17,7 +17,7 @@ public class ReturnFromAnalyzer implements SpecialOperatorAnalyzer {
 	private static final long serialVersionUID = 3328790948675693554L;
 
 	@Override
-	public ReturnFromElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public ReturnFromElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
 		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
 
@@ -41,6 +41,8 @@ public class ReturnFromAnalyzer implements SpecialOperatorAnalyzer {
 
 		if (inputSize == 3) {
 			final EnhancedLinkedList<SimpleElement> inputRestRest = inputRest.getAllButFirst();
+
+			final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
 			final SimpleElement result = inputRestRest.getFirst();
 			final Element analyzedResult = analyzer.analyzeForm(result, analysisBuilder);

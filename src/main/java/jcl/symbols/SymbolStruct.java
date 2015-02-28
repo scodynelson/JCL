@@ -2,7 +2,12 @@ package jcl.symbols;
 
 import jcl.LispStruct;
 import jcl.classes.BuiltInClassStruct;
+import jcl.compiler.real.sa.analyzer.expander.real.CompilerMacroFunctionExpander;
+import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
+import jcl.compiler.real.sa.analyzer.expander.real.SymbolMacroExpander;
+import jcl.functions.CompilerMacroFunctionStruct;
 import jcl.functions.FunctionStruct;
+import jcl.functions.MacroFunctionStruct;
 import jcl.packages.PackageStruct;
 import jcl.types.NIL;
 import jcl.types.Symbol;
@@ -30,8 +35,9 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 
 	protected final List<LispStruct> properties = new ArrayList<>();
 
-	// TODO: Handle special's correctly...
-	protected boolean isSpecial;
+	protected MacroFunctionExpander macroFunctionExpander;
+	protected CompilerMacroFunctionExpander compilerMacroFunctionExpander;
+	protected SymbolMacroExpander symbolMacroExpander;
 
 	/**
 	 * Public constructor.
@@ -221,12 +227,60 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	}
 
 	/**
-	 * Getter for symbol {@link #properties} property.
+	 * Getter for symbol {@link #macroFunctionExpander} property.
 	 *
-	 * @return symbol {@link #properties} property
+	 * @return symbol {@link #macroFunctionExpander} property
 	 */
-	public boolean isSpecial() {
-		return isSpecial;
+	public MacroFunctionExpander getMacroFunctionExpander() {
+		return macroFunctionExpander;
+	}
+
+	/**
+	 * Setter for symbol {@link #macroFunctionExpander} property.
+	 *
+	 * @param macroFunctionExpander
+	 * 		new symbol {@link #macroFunctionExpander} property value
+	 */
+	public void setMacroFunctionExpander(final MacroFunctionExpander macroFunctionExpander) {
+		this.macroFunctionExpander = macroFunctionExpander;
+	}
+
+	/**
+	 * Getter for symbol {@link #compilerMacroFunctionExpander} property.
+	 *
+	 * @return symbol {@link #compilerMacroFunctionExpander} property
+	 */
+	public CompilerMacroFunctionExpander getCompilerMacroFunctionExpander() {
+		return compilerMacroFunctionExpander;
+	}
+
+	/**
+	 * Setter for symbol {@link #compilerMacroFunctionExpander} property.
+	 *
+	 * @param compilerMacroFunctionExpander
+	 * 		new symbol {@link #compilerMacroFunctionExpander} property value
+	 */
+	public void setCompilerMacroFunctionExpander(final CompilerMacroFunctionExpander compilerMacroFunctionExpander) {
+		this.compilerMacroFunctionExpander = compilerMacroFunctionExpander;
+	}
+
+	/**
+	 * Getter for symbol {@link #symbolMacroExpander} property.
+	 *
+	 * @return symbol {@link #symbolMacroExpander} property
+	 */
+	public SymbolMacroExpander getSymbolMacroExpander() {
+		return symbolMacroExpander;
+	}
+
+	/**
+	 * Setter for symbol {@link #symbolMacroExpander} property.
+	 *
+	 * @param symbolMacroExpander
+	 * 		new symbol {@link #symbolMacroExpander} property value
+	 */
+	public void setSymbolMacroExpander(final SymbolMacroExpander symbolMacroExpander) {
+		this.symbolMacroExpander = symbolMacroExpander;
 	}
 
 	/**

@@ -37,7 +37,7 @@ public class LocallyAnalyzer implements SpecialOperatorAnalyzer {
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
 
 	@Override
-	public LocallyElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public LocallyElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
 		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
 
@@ -56,13 +56,15 @@ public class LocallyAnalyzer implements SpecialOperatorAnalyzer {
 
 			final EnhancedLinkedList<SimpleElement> bodyForms = elements.getAllButFirst();
 
-			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(analyzer, bodyForms, analysisBuilder);
+			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(bodyForms, analysisBuilder);
 			final DeclareElement declareElement = bodyProcessingResult.getDeclareElement();
 
 			final List<SpecialDeclarationElement> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
 			specialDeclarationElements.forEach(e -> addDynamicVariableBinding(e, analysisBuilder, locallyEnvironment));
 
 			final List<SimpleElement> realBodyForms = bodyProcessingResult.getBodyForms();
+
+			final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
 			final List<Element> analyzedBodyForms
 					= realBodyForms.stream()

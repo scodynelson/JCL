@@ -4,16 +4,10 @@
 
 package jcl.compiler.real.sa.analyzer;
 
-import jcl.LispStruct;
 import jcl.compiler.real.element.ConsElement;
 import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.analyzer.expander.MacroExpandFunction;
-import jcl.compiler.real.sa.analyzer.expander.MacroExpandReturn;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.system.EnhancedLinkedList;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -32,31 +26,18 @@ public class FunctionCallExpanderAnalyzer extends FunctionCallAnalyzer {
 	private Map<Class<? extends SimpleElement>, FunctionCallAnalyzer> expandedFunctionCallAnalyzerStrategies;
 
 	@Override
-	public Element analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public Element analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
-		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
-		final Environment currentEnvironment = environmentStack.peek();
+		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
 
-		// TODO: fix macroexpander
-		final MacroExpandReturn macroExpandReturn = MacroExpandFunction.FUNCTION.funcall((LispStruct) input, currentEnvironment);
-		final SimpleElement expandedForm = (SimpleElement) macroExpandReturn.getExpandedForm();
+		final SimpleElement formFirst = elements.getFirst();
 
-		if (expandedForm instanceof ConsElement) {
-			final ConsElement expandedFormList = (ConsElement) expandedForm;
-
-			final EnhancedLinkedList<SimpleElement> elements = input.getElements();
-
-			final SimpleElement expandedFormListFirst = elements.getFirst();
-
-			final FunctionCallAnalyzer expandedFunctionCallAnalyzer = expandedFunctionCallAnalyzerStrategies.get(expandedFormListFirst.getClass());
-			if (expandedFunctionCallAnalyzer == null) {
-				throw new ProgramErrorException("LIST ANALYZER: First element of expanded form must be a SpecialOperator or of type SymbolStruct. Got: " + expandedFormListFirst);
-			}
-
-			return expandedFunctionCallAnalyzer.analyze(analyzer, expandedFormList, analysisBuilder);
-		} else {
-			return analyzer.analyzeForm(expandedForm, analysisBuilder);
+		final FunctionCallAnalyzer expandedFunctionCallAnalyzer = expandedFunctionCallAnalyzerStrategies.get(formFirst.getClass());
+		if (expandedFunctionCallAnalyzer == null) {
+			throw new ProgramErrorException("LIST ANALYZER: First element of expanded form must be a SpecialOperator or of type SymbolStruct. Got: " + formFirst);
 		}
+
+		return expandedFunctionCallAnalyzer.analyze(input, analysisBuilder);
 	}
 
 	@Override

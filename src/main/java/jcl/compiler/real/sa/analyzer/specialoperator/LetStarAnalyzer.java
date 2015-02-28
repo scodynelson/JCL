@@ -6,7 +6,6 @@ import jcl.compiler.real.element.SimpleElement;
 import jcl.compiler.real.element.SpecialOperatorElement;
 import jcl.compiler.real.element.specialoperator.LetElement;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.system.EnhancedLinkedList;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -27,7 +26,7 @@ public class LetStarAnalyzer implements SpecialOperatorAnalyzer {
 	private LetAnalyzer letAnalyzer;
 
 	@Override
-	public LetElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public LetElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
 		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
 
@@ -61,7 +60,7 @@ public class LetStarAnalyzer implements SpecialOperatorAnalyzer {
 			body = new EnhancedLinkedList<>(innerLet);
 		}
 
-		return letAnalyzer.analyze(analyzer, new ConsElement(body), analysisBuilder);
+		return letAnalyzer.analyze(new ConsElement(body), analysisBuilder);
 	}
 
 	@Override

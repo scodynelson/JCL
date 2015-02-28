@@ -15,6 +15,7 @@ import java.math.BigInteger;
 
 public interface CompilerVariables {
 
+	// TODO: this should just use "FUNCALL" instead of this BaseMacroExpandFn stuff...
     Variable<FunctionStruct> MACROEXPAND_HOOK = new Variable<>("*MACROEXPAND-HOOK*", GlobalPackageStruct.COMMON_LISP, BaseMacroExpandFn.FUNCTION);
 
     Variable<?> DEBUGGER_HOOK = new Variable<>("*DEBUGGER-HOOK*", GlobalPackageStruct.COMMON_LISP, null);

@@ -22,6 +22,8 @@ public class AnalysisBuilder implements Serializable {
 
 	private static final long serialVersionUID = 3885902321477664662L;
 
+	private final SemanticAnalyzer analyzer;
+
 	private final EnvironmentStack environmentStack = new EnvironmentStack();
 
 	private final Stack<SymbolElement> functionNameStack = new Stack<>();
@@ -39,7 +41,9 @@ public class AnalysisBuilder implements Serializable {
 	// eval-when processing modes
 	private boolean topLevelMode;
 
-	public AnalysisBuilder() {
+	public AnalysisBuilder(final SemanticAnalyzer analyzer) {
+		this.analyzer = analyzer;
+
 		bindingsPosition = 0;
 		closureDepth = 0;
 		topLevelMode = true;
@@ -48,6 +52,10 @@ public class AnalysisBuilder implements Serializable {
 		environmentStack.push(globalEnvironment);
 
 		functionNameStack.push(null);
+	}
+
+	public SemanticAnalyzer getAnalyzer() {
+		return analyzer;
 	}
 
 	public EnvironmentStack getEnvironmentStack() {

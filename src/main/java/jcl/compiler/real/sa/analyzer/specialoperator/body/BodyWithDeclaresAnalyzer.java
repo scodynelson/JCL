@@ -5,7 +5,6 @@ import jcl.compiler.real.element.SimpleElement;
 import jcl.compiler.real.element.SpecialOperatorElement;
 import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.declare.DeclareAnalyzer;
 import jcl.system.EnhancedLinkedList;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,7 @@ public class BodyWithDeclaresAnalyzer implements Serializable {
 	@Autowired
 	private DeclareAnalyzer declareAnalyzer;
 
-	public BodyProcessingResult analyze(final SemanticAnalyzer analyzer, final EnhancedLinkedList<SimpleElement> input, final AnalysisBuilder analysisBuilder) {
+	public BodyProcessingResult analyze(final EnhancedLinkedList<SimpleElement> input, final AnalysisBuilder analysisBuilder) {
 
 		DeclareElement declareElement = null;
 		final List<SimpleElement> bodyForms = new ArrayList<>();
@@ -47,7 +46,7 @@ public class BodyWithDeclaresAnalyzer implements Serializable {
 			}
 
 			final ConsElement fullDeclaration = new ConsElement(allDeclarations);
-			declareElement = declareAnalyzer.analyze(analyzer, fullDeclaration, analysisBuilder);
+			declareElement = declareAnalyzer.analyze(fullDeclaration, analysisBuilder);
 
 			while (iterator.hasNext()) {
 				bodyForms.add(next);

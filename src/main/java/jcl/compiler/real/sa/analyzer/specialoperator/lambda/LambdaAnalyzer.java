@@ -43,7 +43,7 @@ public class LambdaAnalyzer implements SpecialOperatorAnalyzer {
 	private BodyWithDeclaresAndDocStringAnalyzer bodyWithDeclaresAndDocStringAnalyzer;
 
 	@Override
-	public LambdaElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public LambdaElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
 		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
 
@@ -75,8 +75,10 @@ public class LambdaAnalyzer implements SpecialOperatorAnalyzer {
 			final ListElement parameters = (ListElement) second;
 			final EnhancedLinkedList<SimpleElement> bodyForms = inputRest.getAllButFirst();
 
-			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAndDocStringAnalyzer.analyze(analyzer, bodyForms, analysisBuilder);
+			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAndDocStringAnalyzer.analyze(bodyForms, analysisBuilder);
 			final DeclareElement declareElement = bodyProcessingResult.getDeclareElement();
+
+			final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
 			final OrdinaryLambdaListBindings parsedLambdaList = LambdaListParser.parseOrdinaryLambdaList(analyzer, analysisBuilder, parameters, declareElement);
 			final EnhancedLinkedList<SimpleElement> newStartingLambdaBody = getNewStartingLambdaBody(parsedLambdaList);

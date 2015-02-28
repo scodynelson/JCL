@@ -33,7 +33,7 @@ public class ProgvAnalyzer implements SpecialOperatorAnalyzer {
 	private DynamicSymbolAnalyzer dynamicSymbolAnalyzer;
 
 	@Override
-	public ProgvElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public ProgvElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
 		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
 
@@ -105,6 +105,8 @@ public class ProgvAnalyzer implements SpecialOperatorAnalyzer {
 		final int numberOfProgvVars = actualVarsJavaList.size();
 		final List<ProgvElement.ProgvVar> progvVars = new ArrayList<>(numberOfProgvVars);
 
+		final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
+
 		for (int i = 0; i < numberOfProgvVars; i++) {
 
 			// NOTE: We can cast here since we checked the type earlier
@@ -114,7 +116,7 @@ public class ProgvAnalyzer implements SpecialOperatorAnalyzer {
 				val = actualValsJavaList.get(i);
 			}
 
-			final SymbolElement varSE = dynamicSymbolAnalyzer.analyze(analyzer, var, analysisBuilder);
+			final SymbolElement varSE = dynamicSymbolAnalyzer.analyze(var, analysisBuilder);
 
 			final Element analyzedVal = analyzer.analyzeForm(val, analysisBuilder);
 			final ProgvElement.ProgvVar progvVar = new ProgvElement.ProgvVar(varSE, analyzedVal);

@@ -16,7 +16,6 @@ import jcl.compiler.real.environment.binding.SymbolClosureBinding;
 import jcl.compiler.real.environment.binding.SymbolEnvironmentBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.Analyzer;
-import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.types.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -32,7 +31,7 @@ public class LexicalSymbolAnalyzer implements Analyzer<Element, SymbolElement> {
 	private DynamicSymbolAnalyzer dynamicSymbolAnalyzer;
 
 	@Override
-	public SymbolElement analyze(final SemanticAnalyzer analyzer, final SymbolElement input, final AnalysisBuilder analysisBuilder) {
+	public SymbolElement analyze(final SymbolElement input, final AnalysisBuilder analysisBuilder) {
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment currentEnvironment = environmentStack.peek();
@@ -48,7 +47,7 @@ public class LexicalSymbolAnalyzer implements Analyzer<Element, SymbolElement> {
 
 		if (bindingEnvironment.equals(Environment.NULL)) {
 			// No inner binding lexical environments. Add it as a DYNAMIC symbol in the current lexical environment before we proceed.
-			dynamicSymbolAnalyzer.analyze(analyzer, input, analysisBuilder);
+			dynamicSymbolAnalyzer.analyze(input, analysisBuilder);
 		}
 
 		final LambdaEnvironment currentEnclosingLambda = Environments.getEnclosingLambda(currentEnvironment);

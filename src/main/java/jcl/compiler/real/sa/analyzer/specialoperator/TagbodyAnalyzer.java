@@ -40,7 +40,7 @@ public class TagbodyAnalyzer implements SpecialOperatorAnalyzer {
 	private Map<Class<? extends SimpleElement>, GoElementGenerator<SimpleElement>> goElementGeneratorStrategies;
 
 	@Override
-	public TagbodyElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public TagbodyElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
 		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
 
@@ -59,6 +59,8 @@ public class TagbodyAnalyzer implements SpecialOperatorAnalyzer {
 		}
 
 		try {
+			final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
+
 			final Map<Element, List<Element>> tagbodyForms = body.stream()
 			                                                     .collect(new TagbodyCollector(analyzer, analysisBuilder));
 			return new TagbodyElement(tagbodyForms);

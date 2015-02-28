@@ -45,7 +45,7 @@ public class FletAnalyzer implements SpecialOperatorAnalyzer {
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
 
 	@Override
-	public FletElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public FletElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
 		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
 
@@ -83,8 +83,10 @@ public class FletAnalyzer implements SpecialOperatorAnalyzer {
 
 			final EnhancedLinkedList<SimpleElement> bodyForms = inputRest.getAllButFirst();
 
-			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(analyzer, bodyForms, analysisBuilder);
+			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(bodyForms, analysisBuilder);
 			final DeclareElement declareElement = bodyProcessingResult.getDeclareElement();
+
+			final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
 			final List<FletElement.FletVar> fletVars
 					= innerFunctionsJavaList.stream()

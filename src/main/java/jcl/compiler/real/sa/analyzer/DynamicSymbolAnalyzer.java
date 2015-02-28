@@ -13,7 +13,6 @@ import jcl.compiler.real.environment.binding.SymbolEnvironmentBinding;
 import jcl.compiler.real.environment.binding.SymbolLocalBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.Analyzer;
-import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.types.T;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +22,7 @@ public class DynamicSymbolAnalyzer implements Analyzer<Element, SymbolElement> {
 	private static final long serialVersionUID = 4236867001501188408L;
 
 	@Override
-	public SymbolElement analyze(final SemanticAnalyzer analyzer, final SymbolElement input, final AnalysisBuilder analysisBuilder) {
+	public SymbolElement analyze(final SymbolElement input, final AnalysisBuilder analysisBuilder) {
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment currentEnvironment = environmentStack.peek();

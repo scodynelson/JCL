@@ -16,7 +16,7 @@ public class IfAnalyzer implements SpecialOperatorAnalyzer {
 	private static final long serialVersionUID = -5414856145190749144L;
 
 	@Override
-	public IfElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public IfElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
 		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
 
@@ -26,6 +26,8 @@ public class IfAnalyzer implements SpecialOperatorAnalyzer {
 		}
 
 		final EnhancedLinkedList<SimpleElement> inputRest = elements.getAllButFirst();
+
+		final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
 		final SimpleElement testForm = inputRest.getFirst();
 		final Element testFormAnalyzed = analyzer.analyzeForm(testForm, analysisBuilder);

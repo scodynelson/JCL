@@ -18,7 +18,7 @@ public class TheAnalyzer implements SpecialOperatorAnalyzer {
 	private static final long serialVersionUID = 6723289642694216454L;
 
 	@Override
-	public TheElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public TheElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
 		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
 
@@ -36,6 +36,8 @@ public class TheAnalyzer implements SpecialOperatorAnalyzer {
 		// TODO: do we actually want to somehow factor in the 'TypeSpecifier' produced by the second value?
 
 		final EnhancedLinkedList<SimpleElement> inputRestRest = inputRest.getAllButFirst();
+
+		final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
 		final SimpleElement form = inputRestRest.getFirst();
 		final Element formAnalyzed = analyzer.analyzeForm(form, analysisBuilder);

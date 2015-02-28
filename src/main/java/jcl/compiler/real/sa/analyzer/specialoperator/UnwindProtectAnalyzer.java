@@ -19,7 +19,7 @@ public class UnwindProtectAnalyzer implements SpecialOperatorAnalyzer {
 	private static final long serialVersionUID = 3379320303375207710L;
 
 	@Override
-	public UnwindProtectElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public UnwindProtectElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
 		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
 
@@ -27,6 +27,8 @@ public class UnwindProtectAnalyzer implements SpecialOperatorAnalyzer {
 		if (inputSize < 2) {
 			throw new ProgramErrorException("UNWIND-PROTECT: Incorrect number of arguments: " + inputSize + ". Expected at least 2 arguments.");
 		}
+
+		final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
 		final EnhancedLinkedList<SimpleElement> inputRest = elements.getAllButFirst();
 		final SimpleElement protectedForm = inputRest.getFirst();

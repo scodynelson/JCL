@@ -28,7 +28,7 @@ public class DeclareAnalyzer implements SpecialOperatorAnalyzer {
 	private DynamicSymbolAnalyzer dynamicSymbolAnalyzer;
 
 	@Override
-	public DeclareElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public DeclareElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
 		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
 		final EnhancedLinkedList<SimpleElement> declSpecs = elements.getAllButFirst();
@@ -44,6 +44,8 @@ public class DeclareAnalyzer implements SpecialOperatorAnalyzer {
 			final ListElement declSpecList = (ListElement) declSpec;
 			final Object declIdentifier = null; //TODO: declSpecList.getFirst();
 			final EnhancedLinkedList<SimpleElement> declSpecBody = null; //TODO: declSpecList.getRest();
+
+			final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
 			// now come the various cases
 			if (declIdentifier.equals(Declaration.DECLARATION)) {
@@ -88,7 +90,7 @@ public class DeclareAnalyzer implements SpecialOperatorAnalyzer {
 
 			final SymbolElement sym = (SymbolElement) declSpecBodyElement;
 
-			dynamicSymbolAnalyzer.analyze(analyzer, sym, analysisBuilder);
+			dynamicSymbolAnalyzer.analyze(sym, analysisBuilder);
 
 			final SpecialDeclarationElement specialDeclarationElement = new SpecialDeclarationElement(sym);
 			specialDeclarationElements.add(specialDeclarationElement);

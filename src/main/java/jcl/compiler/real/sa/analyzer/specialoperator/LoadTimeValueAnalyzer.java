@@ -28,7 +28,7 @@ public class LoadTimeValueAnalyzer implements SpecialOperatorAnalyzer {
 	private static final long serialVersionUID = 2168018740373766746L;
 
 	@Override
-	public LoadTimeValueElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public LoadTimeValueElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
 		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
 
@@ -66,6 +66,8 @@ public class LoadTimeValueAnalyzer implements SpecialOperatorAnalyzer {
 		final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
 		try {
 			analysisBuilder.setClosureDepth(newClosureDepth);
+
+			final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
 			final Element analyzedEvalForm = analyzer.analyzeForm(evalForm, analysisBuilder);
 

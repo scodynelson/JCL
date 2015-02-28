@@ -42,7 +42,7 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
 
 	@Override
-	public LetElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public LetElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
 		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
 
@@ -74,10 +74,12 @@ public class LetAnalyzer implements SpecialOperatorAnalyzer {
 			final ListElement parameters = (ListElement) second;
 			final EnhancedLinkedList<SimpleElement> bodyForms = inputRest.getAllButFirst();
 
-			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(analyzer, bodyForms, analysisBuilder);
+			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze( bodyForms, analysisBuilder);
 			final DeclareElement declareElement = bodyProcessingResult.getDeclareElement();
 
 			final List<? extends SimpleElement> parametersAsJavaList = parameters.getElements();
+
+			final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
 			final List<LetElement.LetVar> letVars
 					= parametersAsJavaList.stream()

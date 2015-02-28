@@ -28,7 +28,7 @@ public class QuoteAnalyzer implements SpecialOperatorAnalyzer {
 	private LoadTimeValueAnalyzer loadTimeValueAnalyzer;
 
 	@Override
-	public QuoteElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public QuoteElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
 		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
 
@@ -51,11 +51,12 @@ public class QuoteAnalyzer implements SpecialOperatorAnalyzer {
 		final Element element;
 
 		if (analyzedElement == null) {
+			final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 			element = analyzer.analyzeForm(quotedObject);
 		} else {
 			// If was ListStruct or SymbolStruct, wrap resulting form in Load-Time-Value.
 			final ConsElement loadTimeValueForm = new ConsElement(SpecialOperatorElement.LOAD_TIME_VALUE, analyzedElement);
-			element = loadTimeValueAnalyzer.analyze(analyzer, loadTimeValueForm, analysisBuilder);
+			element = loadTimeValueAnalyzer.analyze(loadTimeValueForm, analysisBuilder);
 		}
 
 		return new QuoteElement(element);

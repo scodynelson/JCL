@@ -30,7 +30,7 @@ public class SymbolFunctionCallAnalyzer extends FunctionCallAnalyzer {
 	private static final long serialVersionUID = -2348426068345427015L;
 
 	@Override
-	public FunctionCallElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public FunctionCallElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
 		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
 
@@ -60,6 +60,8 @@ public class SymbolFunctionCallAnalyzer extends FunctionCallAnalyzer {
 		}
 
 		final List<Element> analyzedFunctionArguments = new ArrayList<>(functionArguments.size());
+
+		final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
 		for (final SimpleElement functionArgument : functionArguments) {
 			final Element analyzedFunctionArgument = analyzer.analyzeForm(functionArgument, analysisBuilder);

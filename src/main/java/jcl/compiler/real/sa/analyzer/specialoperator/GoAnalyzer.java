@@ -6,7 +6,6 @@ import jcl.compiler.real.element.SimpleElement;
 import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.element.specialoperator.go.GoElement;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.system.EnhancedLinkedList;
 import org.springframework.stereotype.Component;
@@ -21,7 +20,7 @@ public class GoAnalyzer implements SpecialOperatorAnalyzer {
 	private static final long serialVersionUID = -6523523596100793498L;
 
 	@Override
-	public GoElement<?> analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public GoElement<?> analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
 		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
 

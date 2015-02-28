@@ -19,7 +19,7 @@ public class MultipleValueCallAnalyzer implements SpecialOperatorAnalyzer {
 	private static final long serialVersionUID = -8350781874747372684L;
 
 	@Override
-	public MultipleValueCallElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public MultipleValueCallElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
 		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
 
@@ -29,6 +29,8 @@ public class MultipleValueCallAnalyzer implements SpecialOperatorAnalyzer {
 		}
 
 		final EnhancedLinkedList<SimpleElement> inputRest = elements.getAllButFirst();
+
+		final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
 		final SimpleElement functionForm = inputRest.getFirst();
 		final Element functionFormAnalyzed = analyzer.analyzeForm(functionForm, analysisBuilder);

@@ -39,7 +39,7 @@ public class SymbolMacroletAnalyzer implements SpecialOperatorAnalyzer {
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
 
 	@Override
-	public SymbolMacroletElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public SymbolMacroletElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
 		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
 
@@ -71,11 +71,13 @@ public class SymbolMacroletAnalyzer implements SpecialOperatorAnalyzer {
 			final ListElement parameters = (ListElement) second;
 			final EnhancedLinkedList<SimpleElement> bodyForms = inputRest.getAllButFirst();
 
-			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(analyzer, bodyForms, analysisBuilder);
+			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(bodyForms, analysisBuilder);
 			final DeclareElement declareElement = bodyProcessingResult.getDeclareElement();
 			validateDeclares(declareElement);
 
 			final List<? extends SimpleElement> parametersAsJavaList = parameters.getElements();
+
+			final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
 			final List<SymbolMacroletElement.SymbolMacroletElementVar> symbolMacroletVars
 					= parametersAsJavaList.stream()

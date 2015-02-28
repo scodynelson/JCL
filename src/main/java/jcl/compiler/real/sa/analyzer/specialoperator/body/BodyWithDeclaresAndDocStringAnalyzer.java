@@ -6,7 +6,6 @@ import jcl.compiler.real.element.SpecialOperatorElement;
 import jcl.compiler.real.element.StringElement;
 import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.declare.DeclareAnalyzer;
 import jcl.system.EnhancedLinkedList;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ public class BodyWithDeclaresAndDocStringAnalyzer implements Serializable {
 	@Autowired
 	private DeclareAnalyzer declareAnalyzer;
 
-	public BodyProcessingResult analyze(final SemanticAnalyzer analyzer, final EnhancedLinkedList<SimpleElement> input, final AnalysisBuilder analysisBuilder) {
+	public BodyProcessingResult analyze(final EnhancedLinkedList<SimpleElement> input, final AnalysisBuilder analysisBuilder) {
 
 		DeclareElement declareElement = null;
 		StringElement docString = null;
@@ -49,7 +48,7 @@ public class BodyWithDeclaresAndDocStringAnalyzer implements Serializable {
 			}
 
 			final ConsElement fullDeclaration = new ConsElement(allDeclarations);
-			declareElement = declareAnalyzer.analyze(analyzer, fullDeclaration, analysisBuilder);
+			declareElement = declareAnalyzer.analyze(fullDeclaration, analysisBuilder);
 
 			if ((next instanceof StringElement) && iterator.hasNext()) {
 				docString = (StringElement) next; // No need to analyze this

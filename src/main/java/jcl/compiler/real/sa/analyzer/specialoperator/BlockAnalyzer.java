@@ -8,9 +8,11 @@ import jcl.compiler.real.element.specialoperator.BlockElement;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.symbols.SpecialOperator;
 import jcl.system.EnhancedLinkedList;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,8 +21,16 @@ public class BlockAnalyzer implements SpecialOperatorAnalyzer {
 
 	private static final long serialVersionUID = -5185467468586381117L;
 
+	/**
+	 * Initializes the block macro function and adds it to the special operator 'block'.
+	 */
+	@PostConstruct
+	private void init() {
+//		SpecialOperator.BLOCK.setMacroFunctionExpander(this);
+	}
+
 	@Override
-	public BlockElement analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public BlockElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
 		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
 
@@ -41,6 +51,8 @@ public class BlockAnalyzer implements SpecialOperatorAnalyzer {
 
 		try {
 			final EnhancedLinkedList<SimpleElement> forms = inputRest.getAllButFirst();
+
+			final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
 			final List<Element> analyzedForms =
 					forms.stream()

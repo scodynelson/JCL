@@ -5,7 +5,6 @@ import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.SimpleElement;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.Analyzer;
-import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.system.EnhancedLinkedList;
 import org.springframework.stereotype.Component;
@@ -22,7 +21,7 @@ public class ConsAnalyzer implements Analyzer<Element, ConsElement> {
 	private Map<Class<? extends SimpleElement>, Analyzer<? extends Element, SimpleElement>> functionCallAnalyzerStrategies;
 
 	@Override
-	public Element analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public Element analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
 
 		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
 
@@ -32,6 +31,6 @@ public class ConsAnalyzer implements Analyzer<Element, ConsElement> {
 			throw new ProgramErrorException("SA LIST: First element must be of type SymbolStruct or ListStruct. Got: " + first);
 		}
 
-		return functionCallAnalyzer.analyze(analyzer, input, analysisBuilder);
+		return functionCallAnalyzer.analyze(input, analysisBuilder);
 	}
 }

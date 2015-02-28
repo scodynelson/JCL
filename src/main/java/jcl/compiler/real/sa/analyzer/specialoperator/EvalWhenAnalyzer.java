@@ -34,11 +34,11 @@ public class EvalWhenAnalyzer implements SpecialOperatorAnalyzer {
 	}
 
 	@Override
-	public Element analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder) {
-		return analyze(analyzer, input, analysisBuilder, false, false);
+	public Element analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
+		return analyze(input, analysisBuilder, false, false);
 	}
 
-	public Element analyze(final SemanticAnalyzer analyzer, final ConsElement input, final AnalysisBuilder analysisBuilder, final boolean isTopLevel,
+	public Element analyze(final ConsElement input, final AnalysisBuilder analysisBuilder, final boolean isTopLevel,
 	                       final boolean isCompileOrCompileFile) {
 
 		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
@@ -60,6 +60,8 @@ public class EvalWhenAnalyzer implements SpecialOperatorAnalyzer {
 		}
 
 		final EnhancedLinkedList<SimpleElement> forms = inputRest.getAllButFirst();
+
+		final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
 		if (isTopLevel) {
 			if (isCompileTopLevel(situationJavaList)) {

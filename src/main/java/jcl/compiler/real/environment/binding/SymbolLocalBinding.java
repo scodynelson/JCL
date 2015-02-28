@@ -8,6 +8,8 @@ import jcl.LispType;
 import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.allocation.LocalAllocation;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -18,6 +20,16 @@ public class SymbolLocalBinding extends SymbolBinding<LocalAllocation> {
 	public SymbolLocalBinding(final SymbolElement symbolStruct, final LocalAllocation allocation, final LispType type,
 	                          final Environment binding) {
 		super(symbolStruct, allocation, type, binding);
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

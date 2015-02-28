@@ -6,6 +6,8 @@ package jcl.compiler.real.element;
 
 import jcl.LispStruct;
 import jcl.numbers.IntegerStruct;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -28,6 +30,16 @@ public class IntegerElement implements RationalElement {
 	@Override
 	public LispStruct toLispStruct() {
 		return new IntegerStruct(bigInteger);
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

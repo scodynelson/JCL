@@ -4,9 +4,11 @@
 
 package jcl.compiler.real.element.specialoperator;
 
-import jcl.compiler.real.environment.LetEnvironment;
 import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.SymbolElement;
+import jcl.compiler.real.environment.LetEnvironment;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -18,6 +20,7 @@ public class LetElement implements Element {
 	private static final long serialVersionUID = -3186671381163635893L;
 
 	private final List<LetVar> vars;
+
 	private final List<Element> forms;
 
 	private final LetEnvironment letEnvironment;
@@ -41,6 +44,16 @@ public class LetElement implements Element {
 	}
 
 	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
+	}
+
+	@Override
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
@@ -50,6 +63,7 @@ public class LetElement implements Element {
 		private static final long serialVersionUID = 3246152127057600416L;
 
 		private final SymbolElement var;
+
 		private final Element initForm;
 
 		public LetVar(final SymbolElement var, final Element initForm) {
@@ -63,6 +77,16 @@ public class LetElement implements Element {
 
 		public Element getInitForm() {
 			return initForm;
+		}
+
+		@Override
+		public int hashCode() {
+			return HashCodeBuilder.reflectionHashCode(this);
+		}
+
+		@Override
+		public boolean equals(final Object obj) {
+			return EqualsBuilder.reflectionEquals(this, obj);
 		}
 
 		@Override

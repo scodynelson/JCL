@@ -6,6 +6,8 @@ package jcl.compiler.real.element.specialoperator.go;
 
 import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.SimpleElement;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -21,6 +23,16 @@ public class GoElement<T extends SimpleElement> implements Element {
 
 	public T getTag() {
 		return tag;
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

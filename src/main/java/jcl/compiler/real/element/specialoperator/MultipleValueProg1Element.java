@@ -5,6 +5,8 @@
 package jcl.compiler.real.element.specialoperator;
 
 import jcl.compiler.real.element.Element;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -15,6 +17,7 @@ public class MultipleValueProg1Element implements Element {
 	private static final long serialVersionUID = -1036080843176598388L;
 
 	private final Element firstForm;
+
 	private final List<Element> forms;
 
 	public MultipleValueProg1Element(final Element firstForm, final List<Element> forms) {
@@ -28,6 +31,16 @@ public class MultipleValueProg1Element implements Element {
 
 	public List<Element> getForms() {
 		return forms;
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

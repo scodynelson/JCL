@@ -7,6 +7,8 @@ package jcl.compiler.real.environment.binding;
 import jcl.LispType;
 import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.environment.allocation.Allocation;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -16,6 +18,16 @@ public abstract class EnvironmentBinding<A extends Allocation> extends Binding<A
 
 	protected EnvironmentBinding(final SymbolElement symbolStruct, final A allocation, final LispType type) {
 		super(symbolStruct, allocation, type);
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

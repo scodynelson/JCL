@@ -5,6 +5,8 @@
 package jcl.compiler.real.environment;
 
 import jcl.compiler.real.element.Element;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -12,13 +14,13 @@ import java.io.Serializable;
 import java.util.UUID;
 
 public class LoadTimeValue implements Serializable {
-	
+
 	private static final long serialVersionUID = -3900591459449629077L;
 
 	private final UUID uniqueLTVId;
-	
+
 	private final Element value;
-	
+
 	public LoadTimeValue(final UUID uniqueLTVId, final Element value) {
 		this.uniqueLTVId = uniqueLTVId;
 		this.value = value;
@@ -30,6 +32,16 @@ public class LoadTimeValue implements Serializable {
 
 	public Element getValue() {
 		return value;
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

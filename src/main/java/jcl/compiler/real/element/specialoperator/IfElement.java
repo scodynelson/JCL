@@ -6,6 +6,8 @@ package jcl.compiler.real.element.specialoperator;
 
 import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.NullElement;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -14,7 +16,9 @@ public class IfElement implements Element {
 	private static final long serialVersionUID = 9172097134073138710L;
 
 	private final Element testForm;
+
 	private final Element thenForm;
+
 	private final Element elseForm;
 
 	public IfElement(final Element testForm, final Element thenForm) {
@@ -39,6 +43,16 @@ public class IfElement implements Element {
 
 	public Element getElseForm() {
 		return elseForm;
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

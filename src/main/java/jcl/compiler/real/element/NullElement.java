@@ -6,6 +6,8 @@ package jcl.compiler.real.element;
 
 import jcl.LispStruct;
 import jcl.lists.NullStruct;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -29,6 +31,16 @@ public final class NullElement implements ListElement {
 	@Override
 	public LispStruct toLispStruct() {
 		return NullStruct.INSTANCE;
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

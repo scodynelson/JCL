@@ -6,6 +6,8 @@ package jcl.compiler.real.environment;
 
 import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.environment.binding.ClosureBinding;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -47,6 +49,16 @@ public class Closure implements Serializable {
 
 	public int getDepth() {
 		return depth;
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

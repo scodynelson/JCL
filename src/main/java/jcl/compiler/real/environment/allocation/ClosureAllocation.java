@@ -5,6 +5,8 @@
 package jcl.compiler.real.environment.allocation;
 
 import jcl.compiler.real.environment.Closure;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -20,6 +22,16 @@ public class ClosureAllocation implements Allocation {
 
 	public Closure getClosure() {
 		return closure;
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

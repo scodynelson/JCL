@@ -5,6 +5,8 @@
 package jcl.compiler.real.environment.allocation;
 
 import jcl.compiler.real.environment.Environment;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -20,6 +22,16 @@ public class EnvironmentAllocation implements Allocation {
 
 	public Environment getEnvironment() {
 		return environment;
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

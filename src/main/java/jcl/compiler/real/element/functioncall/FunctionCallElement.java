@@ -6,6 +6,8 @@ package jcl.compiler.real.element.functioncall;
 
 import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.SymbolElement;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -18,6 +20,7 @@ public class FunctionCallElement implements Element {
 	private final boolean isRecursiveCall;
 
 	private final SymbolElement functionSymbol;
+
 	private final List<Element> arguments;
 
 	public FunctionCallElement(final boolean isRecursiveCall, final SymbolElement functionSymbol, final List<Element> arguments) {
@@ -36,6 +39,16 @@ public class FunctionCallElement implements Element {
 
 	public List<Element> getArguments() {
 		return arguments;
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

@@ -6,13 +6,11 @@ package jcl.compiler.real.element;
 
 import jcl.LispStruct;
 import jcl.lists.NullStruct;
+import jcl.system.EnhancedLinkedList;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.util.Collections;
-import java.util.List;
 
 public final class NullElement implements ListElement {
 
@@ -24,8 +22,8 @@ public final class NullElement implements ListElement {
 	}
 
 	@Override
-	public List<SimpleElement> getElements() {
-		return Collections.emptyList();
+	public EnhancedLinkedList<SimpleElement> getElements() {
+		return new EnhancedLinkedList<>();
 	}
 
 	@Override

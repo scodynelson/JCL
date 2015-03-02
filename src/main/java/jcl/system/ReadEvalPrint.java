@@ -162,17 +162,17 @@ public class ReadEvalPrint {
 					if (whatRead != null) {
 						Element whatAnalyzed = null;
 						try {
-							final SimpleElement lambdaWhatRead = wrapFormInLambda(whatRead);
-
-							final SemanticAnalyzer sa = context.getBean(SemanticAnalyzer.class);
-							whatAnalyzed = sa.analyzeForm(lambdaWhatRead);
-
-							if (whatAnalyzed != null) {
-								LOGGER.debug("ANALYZED:\n");
-								LOGGER.debug("{}\n", whatAnalyzed);
-							} else {
-								LOGGER.warn("; WARNING: Null response from analyzer");
-							}
+//							final SimpleElement lambdaWhatRead = wrapFormInLambda(whatRead);
+//
+//							final SemanticAnalyzer sa = context.getBean(SemanticAnalyzer.class);
+//							whatAnalyzed = sa.analyzeForm(lambdaWhatRead);
+//
+//							if (whatAnalyzed != null) {
+//								LOGGER.debug("ANALYZED:\n");
+//								LOGGER.debug("{}\n", whatAnalyzed);
+//							} else {
+//								LOGGER.warn("; WARNING: Null response from analyzer");
+//							}
 						} catch (final ReaderErrorException ex) {
 							LOGGER.warn("; WARNING: Analysis Exception condition during Analyzer operation -> {}", ex.getMessage(), ex);
 						} catch (final Exception ex) {
@@ -270,16 +270,18 @@ public class ReadEvalPrint {
 			final SimpleElement firstOfFormList = elements.getFirst();
 			if (!(firstOfFormList instanceof SymbolElement)) {
 
-				final EnhancedLinkedList<SimpleElement> enhancedLinkedList = new EnhancedLinkedList<>(elements);
-				enhancedLinkedList.addFirst(NullElement.INSTANCE);
-				enhancedLinkedList.addFirst(SpecialOperatorElement.LAMBDA);
+				final EnhancedLinkedList<SimpleElement> enhancedLinkedList = new EnhancedLinkedList<>();
+				enhancedLinkedList.add(SpecialOperatorElement.LAMBDA);
+				enhancedLinkedList.add(NullElement.INSTANCE);
+				enhancedLinkedList.add(formList);
 
 				lambdaForm = new ConsElement(enhancedLinkedList);
-			} else if (!firstOfFormList.toLispStruct().equals(SpecialOperator.LAMBDA)) {
+			} else if (!firstOfFormList.equals(SpecialOperatorElement.LAMBDA)) {
 
-				final EnhancedLinkedList<SimpleElement> enhancedLinkedList = new EnhancedLinkedList<>(elements);
-				enhancedLinkedList.addFirst(NullElement.INSTANCE);
-				enhancedLinkedList.addFirst(SpecialOperatorElement.LAMBDA);
+				final EnhancedLinkedList<SimpleElement> enhancedLinkedList = new EnhancedLinkedList<>();
+				enhancedLinkedList.add(SpecialOperatorElement.LAMBDA);
+				enhancedLinkedList.add(NullElement.INSTANCE);
+				enhancedLinkedList.add(formList);
 
 				lambdaForm = new ConsElement(enhancedLinkedList);
 			}

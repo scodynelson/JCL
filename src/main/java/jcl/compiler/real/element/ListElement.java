@@ -4,5 +4,10 @@
 
 package jcl.compiler.real.element;
 
+import jcl.system.EnhancedLinkedList;
+
 public interface ListElement extends SequenceElement {
+
+	@Override
+	EnhancedLinkedList<SimpleElement> getElements();
 }

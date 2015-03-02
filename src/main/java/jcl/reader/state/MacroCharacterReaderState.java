@@ -4,7 +4,6 @@
 
 package jcl.reader.state;
 
-import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.SimpleElement;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.reader.Reader;

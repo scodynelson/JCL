@@ -7,6 +7,7 @@ package jcl.compiler.real.sa.analyzer;
 import jcl.compiler.real.element.ConsElement;
 import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.SimpleElement;
+import jcl.compiler.real.element.SpecialOperatorElement;
 import jcl.compiler.real.element.functioncall.LambdaFunctionCallElement;
 import jcl.compiler.real.element.specialoperator.lambda.LambdaElement;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
@@ -14,7 +15,6 @@ import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.lambda.LambdaAnalyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
-import jcl.symbols.SpecialOperator;
 import jcl.system.EnhancedLinkedList;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -44,7 +44,7 @@ public class LambdaFunctionCallAnalyzer extends FunctionCallAnalyzer {
 
 		final SimpleElement functionListFirst = functionListElements.getFirst();
 
-		if (!functionListFirst.equals(SpecialOperator.LAMBDA)) {
+		if (!functionListFirst.equals(SpecialOperatorElement.LAMBDA)) {
 			throw new ProgramErrorException("LIST ANALYZER: First element of a first element ListStruct must be the SpecialOperator 'LAMBDA'. Got: " + functionListFirst);
 		}
 

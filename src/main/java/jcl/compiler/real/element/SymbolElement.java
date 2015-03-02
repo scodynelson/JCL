@@ -73,6 +73,9 @@ public class SymbolElement implements SimpleElement {
 			return externalSymbol;
 		} else {
 			final PackageSymbolStruct packageSymbol = pkg.findSymbol(symbolName);
+			if (packageSymbol == null) {
+				throw new ReaderErrorException("Unbound variable: " + packageName + "::" + symbolName);
+			}
 
 			final SymbolStruct<?> symbol = packageSymbol.getSymbolStruct();
 			if (symbol == null) {

@@ -4,6 +4,10 @@
 
 package jcl.system;
 
+import jcl.compiler.real.element.NullElement;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Deque;
@@ -42,8 +46,24 @@ public class EnhancedLinkedList<E> implements List<E>, Deque<E>, Serializable {
 
 	public EnhancedLinkedList<E> getAllButFirst() {
 		final EnhancedLinkedList<E> allButFirst = new EnhancedLinkedList<>(this);
-		allButFirst.removeFirst();
+
+		// TODO: fix this is in here temporarily until we clean up the Backquote Analyzer
+		if (!allButFirst.isEmpty()) {
+			allButFirst.removeFirst();
+		}
+
 		return allButFirst;
+	}
+
+	public EnhancedLinkedList<E> getAllButLast() {
+		final EnhancedLinkedList<E> allButLast = new EnhancedLinkedList<>(this);
+
+		// TODO: fix this is in here temporarily until we clean up the Backquote Analyzer
+		if (!allButLast.isEmpty()) {
+			allButLast.removeLast();
+		}
+
+		return allButLast;
 	}
 
 	public EnhancedLinkedList<E> getAllButFirstN(final int n) {
@@ -98,6 +118,10 @@ public class EnhancedLinkedList<E> implements List<E>, Deque<E>, Serializable {
 
 	@Override
 	public E getFirst() {
+		// TODO: fix this is in here temporarily until we clean up the Backquote Analyzer
+		if (linkedList.isEmpty()) {
+			return (E) NullElement.INSTANCE;
+		}
 		return linkedList.getFirst();
 	}
 
@@ -284,5 +308,10 @@ public class EnhancedLinkedList<E> implements List<E>, Deque<E>, Serializable {
 	@Override
 	public Spliterator<E> spliterator() {
 		return linkedList.spliterator();
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

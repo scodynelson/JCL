@@ -5,10 +5,19 @@
 package jcl.reader.macrofunction;
 
 import jcl.characters.CharacterConstants;
+import jcl.compiler.real.element.ListElement;
 import jcl.compiler.real.element.SimpleElement;
+import jcl.compiler.real.element.SymbolElement;
+import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
+import jcl.streams.ReadPeekResult;
+import jcl.system.EnhancedLinkedList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -26,6 +35,17 @@ public class SharpSReaderMacroFunction extends ReaderMacroFunctionImpl {
 	private static final long serialVersionUID = -3540324881853180103L;
 
 	/**
+	 * The logger for this class.
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(SharpSReaderMacroFunction.class);
+
+	@Autowired
+	private ListReaderMacroFunction listReaderMacroFunction;
+
+	@Autowired
+	private Printer printer;
+
+	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
 	@PostConstruct
@@ -40,29 +60,34 @@ public class SharpSReaderMacroFunction extends ReaderMacroFunctionImpl {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_S) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_S);
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
-			reader.read();
+			final SimpleElement lispToken = reader.read();
+			if (LOGGER.isDebugEnabled()) {
+				final String printedToken = printer.print(lispToken);
+				LOGGER.debug("{} suppressed.", printedToken);
+			}
 			return null;
 		}
 
-//		final int readChar = reader.readChar();
-//		if (readChar != CharacterConstants.LEFT_PARENTHESIS) {
-//			throw new ReaderErrorException("Non-list following #S");
-//		}
+		final ReadPeekResult readResult = reader.readChar();
+		final int nextCodePoint = readResult.getResult();
+		if (nextCodePoint != CharacterConstants.LEFT_PARENTHESIS) {
+			throw new ReaderErrorException("Non-list following #S");
+		}
 
-//		final ListStruct listToken = ReaderUtils.readList(reader);
-//		if (listToken == null) {
-//			throw new ReaderErrorException("Non-list following #S");
-//		}
+		final ListElement listToken = listReaderMacroFunction.readList(reader);
+		if (listToken == null) {
+			throw new ReaderErrorException("Non-list following #S");
+		}
 
-//		final List<LispStruct> lispTokens = listToken.getAsJavaList();
-//		if (CollectionUtils.isEmpty(lispTokens)) {
-//			throw new ReaderErrorException("Structure type was not supplied");
-//		}
+		final EnhancedLinkedList<SimpleElement> elements = listToken.getElements();
+		if (elements.isEmpty()) {
+			throw new ReaderErrorException("Structure type was not supplied");
+		}
 
-//		final LispStruct structureType = lispTokens.get(0);
-//		if (!(structureType instanceof SymbolStruct)) {
-//			throw new ReaderErrorException("Structure type is not a symbol: " + structureType);
-//		}
+		final SimpleElement structureType = elements.getFirst();
+		if (!(structureType instanceof SymbolElement)) {
+			throw new ReaderErrorException("Structure type is not a symbol: " + structureType);
+		}
 
 		// TODO: Find class object from structureType value
 //		if (!(classObj instanceof StructureClass)) {

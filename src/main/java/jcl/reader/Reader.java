@@ -5,12 +5,14 @@
 package jcl.reader;
 
 import jcl.LispStruct;
-import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.SimpleElement;
 import jcl.streams.InputStream;
 import jcl.streams.ReadPeekResult;
 
 import java.io.Serializable;
+import java.math.BigInteger;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * JCL Reader that handles reading in lisp tokens and parsing them as {@link LispStruct}s.
@@ -85,4 +87,10 @@ public interface Reader extends Serializable {
 	void increaseBackquoteLevel();
 
 	void decreaseBackquoteLevel();
+
+	Map<BigInteger, SimpleElement> getSharpEqualFinalTable();
+
+	Map<BigInteger, UUID> getSharpEqualTempTable();
+
+	Map<UUID, SimpleElement> getSharpEqualReplTable();
 }

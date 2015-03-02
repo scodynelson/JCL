@@ -7,9 +7,7 @@ package jcl.reader.macrofunction;
 import jcl.characters.CharacterConstants;
 import jcl.compiler.real.element.ConsElement;
 import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.element.SymbolElement;
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
@@ -65,7 +63,6 @@ public class SharpApostropheReaderMacroFunction extends ReaderMacroFunctionImpl 
 			throw new ReaderErrorException("Missing expression.");
 		}
 
-		final SymbolElement functionSpecialOperator = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "FUNCTION"); // TODO: fix
-		return new ConsElement(functionSpecialOperator, lispToken);
+		return new ConsElement(FUNCTION, lispToken);
 	}
 }

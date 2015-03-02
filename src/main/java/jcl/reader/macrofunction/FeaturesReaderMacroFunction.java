@@ -16,22 +16,25 @@ import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
+import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.symbols.BooleanStruct;
-import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.TStruct;
+import jcl.system.EnhancedLinkedList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Reader Macro Function for handling the reading of *features* in the system, handling whether or not those specific
  * features should be hidden or not (aka. the token is read in but ignored).
  */
+@Component
 final class FeaturesReaderMacroFunction {
 
 	/**
@@ -42,25 +45,22 @@ final class FeaturesReaderMacroFunction {
 	// TODO: is this where we keep these next 3???
 
 	/**
-	 * Not {@link KeywordSymbolStruct} for processing features that should 'not' be included.
+	 * NOT keyword {@link SymbolElement} for processing features that should 'not' be included.
 	 */
 	private static final SymbolElement NOT = new SymbolElement(GlobalPackageStruct.KEYWORD.getName(), "NOT");
 
 	/**
-	 * And {@link KeywordSymbolStruct} for processing features that should be included via 'and' operation.
+	 * AND keyword {@link SymbolElement} for processing features that should be included via 'and' operation.
 	 */
 	private static final SymbolElement AND = new SymbolElement(GlobalPackageStruct.KEYWORD.getName(), "AND");
 
 	/**
-	 * Or {@link KeywordSymbolStruct} for processing features that should be included via 'or' operation.
+	 * OR keyword {@link SymbolElement} for processing features that should be included via 'or' operation.
 	 */
 	private static final SymbolElement OR = new SymbolElement(GlobalPackageStruct.KEYWORD.getName(), "OR");
 
-	/**
-	 * Private constructor.
-	 */
-	private FeaturesReaderMacroFunction() {
-	}
+	@Autowired
+	private Printer printer;
 
 	/**
 	 * Reads in the next set of *features*, following the {@code shouldHideFeatures} property to properly suppress the
@@ -71,8 +71,7 @@ final class FeaturesReaderMacroFunction {
 	 * @param shouldHideFeatures
 	 * 		whether or not the *features* read should be hidden or not (aka. the token is read in but ignored)
 	 */
-	static void readFeatures(final Reader reader, final boolean shouldHideFeatures) {
-		// TODO: i need to revisit this logic at some point...
+	void readFeatures(final Reader reader, final boolean shouldHideFeatures) {
 
 		final BooleanStruct previousReadSuppress = ReaderVariables.READ_SUPPRESS.getValue();
 		final PackageStruct previousPackage = PackageVariables.PACKAGE.getValue();
@@ -106,12 +105,12 @@ final class FeaturesReaderMacroFunction {
 	 *
 	 * @return true if the provided {@link LispStruct} is a feature that should be read in; false otherwise
 	 */
-	private static boolean isFeature(final SimpleElement lispStruct) {
+	private boolean isFeature(final SimpleElement lispStruct) {
 		if (lispStruct instanceof ListElement) {
 			return isListFeature((ListElement) lispStruct);
 		} else {
 			final List<LispStruct> featuresList = CompilerVariables.FEATURES.getValue().getAsJavaList();
-			return featuresList.contains(lispStruct.toLispStruct()); // TODO: can we fix this??
+			return featuresList.contains(lispStruct.toLispStruct());
 		}
 	}
 
@@ -124,7 +123,7 @@ final class FeaturesReaderMacroFunction {
 	 *
 	 * @return true if the provided {@link ListStruct} is a feature that should be read in; false otherwise
 	 */
-	private static boolean isListFeature(final ListElement listStruct) {
+	private boolean isListFeature(final ListElement listStruct) {
 		return (listStruct instanceof ConsElement) && isConsFeature((ConsElement) listStruct);
 	}
 
@@ -136,27 +135,25 @@ final class FeaturesReaderMacroFunction {
 	 *
 	 * @return true if the provided {@link ConsStruct} is a feature that should be read in; false otherwise
 	 */
-	private static boolean isConsFeature(final ConsElement consStruct) {
-		final List<SimpleElement> elements = consStruct.getElements();
-		final SimpleElement first = elements.get(0);
+	private boolean isConsFeature(final ConsElement consStruct) {
+		final EnhancedLinkedList<SimpleElement> elements = consStruct.getElements();
+		final SimpleElement first = elements.getFirst();
 
 		if (!(first instanceof SymbolElement)) {
 			throw new ReaderErrorException("First element of feature expression must be either: :NOT, :AND, or :OR.");
 		}
 
-		// TODO: we should replace the ConsStruct elements list with a Customized LinkedList that allows us to get the "rest" of elements
-		final List<SimpleElement> rest = new ArrayList<>(elements);
-		rest.remove(0);
+		final EnhancedLinkedList<SimpleElement> rest = elements.getAllButFirst();
 
 		final SymbolElement featureOperator = (SymbolElement) first;
 		if (featureOperator.equals(NOT)) {
-			return !isFeature(rest.get(0));
+			return !isFeature(rest.getFirst());
 		} else if (featureOperator.equals(AND)) {
 			return isAndConsFeature(rest);
 		} else if (featureOperator.equals(OR)) {
 			return isOrConsFeature(rest);
 		} else {
-			throw new ReaderErrorException("Unknown operator in feature expression: " + featureOperator);
+			throw new ReaderErrorException("Unknown operator in feature expression: " + printer.print(featureOperator));
 		}
 	}
 
@@ -168,7 +165,7 @@ final class FeaturesReaderMacroFunction {
 	 *
 	 * @return true if all of the elements are features; false otherwise
 	 */
-	private static boolean isAndConsFeature(final List<SimpleElement> elements) {
+	private boolean isAndConsFeature(final EnhancedLinkedList<SimpleElement> elements) {
 		boolean tempReturnVal = true;
 		for (final SimpleElement lispStruct : elements) {
 			tempReturnVal = tempReturnVal && isFeature(lispStruct);
@@ -184,7 +181,7 @@ final class FeaturesReaderMacroFunction {
 	 *
 	 * @return true if any of the elements are features; false otherwise
 	 */
-	private static boolean isOrConsFeature(final List<SimpleElement> elements) {
+	private boolean isOrConsFeature(final EnhancedLinkedList<SimpleElement> elements) {
 		boolean tempReturnVal = false;
 		for (final SimpleElement lispStruct : elements) {
 			tempReturnVal = tempReturnVal || isFeature(lispStruct);

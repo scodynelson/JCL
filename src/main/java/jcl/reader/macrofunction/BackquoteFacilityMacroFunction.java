@@ -13,22 +13,6 @@ import jcl.system.EnhancedLinkedList;
 
 abstract class BackquoteFacilityMacroFunction extends ReaderMacroFunctionImpl {
 
-	protected static final SymbolElement APPEND = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "APPEND");
-
-	protected static final SymbolElement CONS = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "CONS");
-
-	protected static final SymbolElement LIST = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "LIST");
-
-	protected static final SymbolElement LIST_STAR = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "LIST*");
-
-	protected static final SymbolElement NCONC = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "NCONC");
-
-	protected static final SymbolElement NIL = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "NIL");
-
-	protected static final SymbolElement QUOTE = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "QUOTE");
-
-	protected static final SymbolElement T = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "T");
-
 	protected static final SymbolElement BQ_COMMA_FLAG = new SymbolElement(GlobalPackageStruct.BACKQUOTE.getName(), ",");
 
 	protected static final SymbolElement BQ_AT_FLAG = new SymbolElement(GlobalPackageStruct.BACKQUOTE.getName(), ",@");

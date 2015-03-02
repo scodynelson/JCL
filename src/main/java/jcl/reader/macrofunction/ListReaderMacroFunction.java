@@ -7,6 +7,8 @@ package jcl.reader.macrofunction;
 import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.compiler.real.element.ConsElement;
+import jcl.compiler.real.element.ListElement;
+import jcl.compiler.real.element.NullElement;
 import jcl.compiler.real.element.SimpleElement;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ListStruct;
@@ -40,7 +42,7 @@ final class ListReaderMacroFunction {
 	 *
 	 * @return the properly parsed {@link ListStruct}
 	 */
-	ConsElement readList(final Reader reader) {
+	ListElement readList(final Reader reader) {
 		final EnhancedLinkedList<SimpleElement> currentTokenList = new EnhancedLinkedList<>();
 
 		boolean isDottedList = false;
@@ -67,6 +69,10 @@ final class ListReaderMacroFunction {
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			return null;
+		}
+
+		if (currentTokenList.isEmpty()) {
+			return NullElement.INSTANCE;
 		}
 
 		return isDottedList ? new ConsElement(true, currentTokenList) : new ConsElement(false, currentTokenList);

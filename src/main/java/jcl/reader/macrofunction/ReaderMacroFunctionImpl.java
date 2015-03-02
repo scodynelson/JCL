@@ -5,8 +5,10 @@
 package jcl.reader.macrofunction;
 
 import jcl.LispStruct;
+import jcl.compiler.real.element.SymbolElement;
 import jcl.functions.FunctionStruct;
 import jcl.numbers.IntegerStruct;
+import jcl.packages.GlobalPackageStruct;
 import jcl.reader.AttributeType;
 import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
@@ -28,6 +30,28 @@ abstract class ReaderMacroFunctionImpl extends FunctionStruct implements ReaderM
 		// TODO: do this
 		return null;
 	}
+
+	protected static final SymbolElement APPEND = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "APPEND");
+
+	protected static final SymbolElement COMPLEX = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "COMPLEX");
+
+	protected static final SymbolElement CONS = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "CONS");
+
+	protected static final SymbolElement FUNCTION = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "FUNCTION");
+
+	protected static final SymbolElement LIST = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "LIST");
+
+	protected static final SymbolElement LIST_STAR = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "LIST*");
+
+	protected static final SymbolElement NCONC = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "NCONC");
+
+	protected static final SymbolElement NIL = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "NIL");
+
+	protected static final SymbolElement PATHNAME = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "PATHNAME");
+
+	protected static final SymbolElement QUOTE = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "QUOTE");
+
+	protected static final SymbolElement T = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "T");
 
 	/**
 	 * Determines if the provided {@code codePoint} is a {@link SyntaxType#WHITESPACE} based on the current readtable.

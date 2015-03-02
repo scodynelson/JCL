@@ -9,6 +9,7 @@ import jcl.arrays.VectorStruct;
 import jcl.characters.CharacterConstants;
 import jcl.compiler.real.element.ConsElement;
 import jcl.compiler.real.element.IntegerElement;
+import jcl.compiler.real.element.ListElement;
 import jcl.compiler.real.element.NullElement;
 import jcl.compiler.real.element.SimpleElement;
 import jcl.compiler.real.element.SymbolElement;
@@ -62,7 +63,7 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 	public SimpleElement readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.LEFT_PARENTHESIS;
 
-		final ConsElement listToken = listReaderMacroFunction.readList(reader);
+		final ListElement listToken = listReaderMacroFunction.readList(reader);
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			if (LOGGER.isDebugEnabled()) {
@@ -103,7 +104,7 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 	 *
 	 * @return the properly created {@link VectorStruct} taking care of the proper vector length
 	 */
-	private ConsElement handleNumArg(final EnhancedLinkedList<SimpleElement> lispTokens, final BigInteger numArg, final ConsElement listToken) {
+	private ConsElement handleNumArg(final EnhancedLinkedList<SimpleElement> lispTokens, final BigInteger numArg, final ListElement listToken) {
 
 		final int numberOfTokens = lispTokens.size();
 		final int numArgInt = numArg.intValueExact();

@@ -7,9 +7,7 @@ package jcl.reader.macrofunction;
 import jcl.characters.CharacterConstants;
 import jcl.compiler.real.element.ConsElement;
 import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.element.SymbolElement;
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
@@ -65,7 +63,6 @@ public class ApostropheReaderMacroFunction extends ReaderMacroFunctionImpl {
 			throw new ReaderErrorException("Missing expression.");
 		}
 
-		final SymbolElement quoteSpecialOperator = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "QUOTE"); // TODO: fix
-		return new ConsElement(quoteSpecialOperator, lispToken);
+		return new ConsElement(QUOTE, lispToken);
 	}
 }

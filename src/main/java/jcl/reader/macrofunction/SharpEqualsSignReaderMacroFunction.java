@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.math.BigInteger;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -46,18 +47,21 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctionImpl 
 			throw new ReaderErrorException("Missing label for #=.");
 		}
 
-		if (SharpTagReaderConstants.SHARP_EQUAL_FINAL_TABLE.containsKey(numArg)
-				|| SharpTagReaderConstants.SHARP_EQUAL_TEMP_TABLE.containsKey(numArg)) {
+		final Map<BigInteger, SimpleElement> sharpEqualFinalTable = reader.getSharpEqualFinalTable();
+		final Map<BigInteger, UUID> sharpEqualTempTable = reader.getSharpEqualTempTable();
+
+		if (sharpEqualFinalTable.containsKey(numArg)
+				|| sharpEqualTempTable.containsKey(numArg)) {
 			throw new ReaderErrorException("Label already defined: #" + numArg + '=');
 		}
 
 		final UUID tag = UUID.randomUUID();
+		sharpEqualTempTable.put(numArg, tag);
 
-		SharpTagReaderConstants.SHARP_EQUAL_TEMP_TABLE.put(numArg, tag);
 		final SimpleElement token = reader.read();
-		SharpTagReaderConstants.SHARP_EQUAL_REPL_TABLE.put(tag, token);
+		reader.getSharpEqualReplTable().put(tag, token);
 
-		SharpTagReaderConstants.SHARP_EQUAL_FINAL_TABLE.put(numArg, token);
+		sharpEqualFinalTable.put(numArg, token);
 
 		return null;
 	}

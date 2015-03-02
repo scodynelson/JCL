@@ -15,6 +15,11 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.math.BigInteger;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * JCL Reader that handles reading in lisp tokens and parsing them as {@link LispStruct}s.
  */
@@ -31,6 +36,23 @@ class ReaderImpl implements Reader {
 	 * The {@link InputStream} the ReaderImpl reads lisp tokens from.
 	 */
 	private final InputStream inputStream;
+
+	/**
+	 * Map containing the number argument to #= to parsed {@link LispStruct}s produced by the #= reader macro function.
+	 */
+	private final Map<BigInteger, SimpleElement> sharpEqualFinalTable = new ConcurrentHashMap<>();
+
+	/**
+	 * Map containing the number argument of #= to a temporary {@link UUID} tag value to handle {@link LispStruct}s not
+	 * yet parsed by the reader.
+	 */
+	private final Map<BigInteger, UUID> sharpEqualTempTable = new ConcurrentHashMap<>();
+
+	/**
+	 * Map containing the temporary {@link UUID} tag value to a {@link LispStruct} that has been parsed by the reader,
+	 * but may have yet to return to the top level of the #= parse.
+	 */
+	private final Map<UUID, SimpleElement> sharpEqualReplTable = new ConcurrentHashMap<>();
 
 	/**
 	 * {@link ReaderStateMediator} singleton used by the reader algorithm.
@@ -94,6 +116,21 @@ class ReaderImpl implements Reader {
 	@Override
 	public void decreaseBackquoteLevel() {
 		backquoteLevel--;
+	}
+
+	@Override
+	public Map<BigInteger, SimpleElement> getSharpEqualFinalTable() {
+		return sharpEqualFinalTable;
+	}
+
+	@Override
+	public Map<BigInteger, UUID> getSharpEqualTempTable() {
+		return sharpEqualTempTable;
+	}
+
+	@Override
+	public Map<UUID, SimpleElement> getSharpEqualReplTable() {
+		return sharpEqualReplTable;
 	}
 
 	@Override

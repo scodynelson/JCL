@@ -6,14 +6,12 @@ import jcl.compiler.real.element.SimpleElement;
 import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.SpecialOperatorElement;
 import jcl.compiler.real.element.SymbolElement;
-import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
 import jcl.printer.Printer;
 import jcl.reader.Reader;
-import jcl.reader.macrofunction.SharpTagReaderConstants;
 import jcl.streams.CharacterStreamStruct;
 import jcl.streams.FileStreamStruct;
 import jcl.streams.InputStream;
@@ -112,9 +110,6 @@ public class ReadEvalPrint {
 					LOGGER.info("\n{}: {}> ", pkg.getName(), ++lineCounter);
 
 					// READ --------------
-					SharpTagReaderConstants.SHARP_EQUAL_TEMP_TABLE.clear();
-					SharpTagReaderConstants.SHARP_EQUAL_REPL_TABLE.clear();
-					SharpTagReaderConstants.SHARP_EQUAL_FINAL_TABLE.clear();
 
 					SimpleElement whatRead = null;
 					try {
@@ -145,10 +140,6 @@ public class ReadEvalPrint {
 					} catch (final Exception ex) {
 						LOGGER.warn("; WARNING: Exception condition during Read -> {}\n", ex.getMessage(), ex);
 						break;
-					} finally {
-						SharpTagReaderConstants.SHARP_EQUAL_TEMP_TABLE.clear();
-						SharpTagReaderConstants.SHARP_EQUAL_REPL_TABLE.clear();
-						SharpTagReaderConstants.SHARP_EQUAL_FINAL_TABLE.clear();
 					}
 
 					// bind '-' to the form just read

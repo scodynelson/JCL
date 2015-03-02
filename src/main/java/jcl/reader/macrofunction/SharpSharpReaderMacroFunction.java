@@ -46,13 +46,13 @@ public class SharpSharpReaderMacroFunction extends ReaderMacroFunctionImpl {
 			throw new ReaderErrorException("Missing label for ##.");
 		}
 
-		final SimpleElement labelObject = SharpTagReaderConstants.SHARP_EQUAL_FINAL_TABLE.get(numArg);
+		final SimpleElement labelObject = reader.getSharpEqualFinalTable().get(numArg);
 		if (labelObject != null) {
 			return labelObject;
 		}
 
-		final UUID possibleLabelTag = SharpTagReaderConstants.SHARP_EQUAL_TEMP_TABLE.get(numArg);
-		final SimpleElement possibleLabelObject = SharpTagReaderConstants.SHARP_EQUAL_REPL_TABLE.get(possibleLabelTag);
+		final UUID possibleLabelTag = reader.getSharpEqualTempTable().get(numArg);
+		final SimpleElement possibleLabelObject = reader.getSharpEqualReplTable().get(possibleLabelTag);
 		if (possibleLabelObject != null) {
 			return possibleLabelObject;
 		}

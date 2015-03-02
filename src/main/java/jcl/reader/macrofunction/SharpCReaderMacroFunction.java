@@ -8,9 +8,7 @@ import jcl.characters.CharacterConstants;
 import jcl.compiler.real.element.ConsElement;
 import jcl.compiler.real.element.RealElement;
 import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.element.SymbolElement;
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
@@ -92,7 +90,6 @@ public class SharpCReaderMacroFunction extends ReaderMacroFunctionImpl {
 			throw new ReaderErrorException("Only real numbers are valid tokens for #c. Got: " + printedImaginary);
 		}
 
-		final SymbolElement complexFnSymbol = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "COMPLEX"); // TODO: fix
-		return new ConsElement(complexFnSymbol, real, imaginary);
+		return new ConsElement(COMPLEX, real, imaginary);
 	}
 }

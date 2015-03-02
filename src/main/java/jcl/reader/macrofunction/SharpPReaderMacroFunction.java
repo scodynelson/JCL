@@ -8,9 +8,7 @@ import jcl.characters.CharacterConstants;
 import jcl.compiler.real.element.ConsElement;
 import jcl.compiler.real.element.SimpleElement;
 import jcl.compiler.real.element.StringElement;
-import jcl.compiler.real.element.SymbolElement;
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
@@ -66,10 +64,9 @@ public class SharpPReaderMacroFunction extends ReaderMacroFunctionImpl {
 		}
 
 		if (lispToken instanceof StringElement) {
-			final SymbolElement pathnameFnSymbol = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "PATHNAME"); // TODO: fix
 			final StringElement pathnameString = (StringElement) lispToken;
 
-			return new ConsElement(pathnameFnSymbol, pathnameString);
+			return new ConsElement(PATHNAME, pathnameString);
 		} else {
 			final String printedToken = printer.print(lispToken);
 			throw new ReaderErrorException("Improper namestring provided to #P: " + printedToken);

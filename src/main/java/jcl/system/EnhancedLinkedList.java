@@ -4,7 +4,6 @@
 
 package jcl.system;
 
-import jcl.compiler.real.element.NullElement;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -46,23 +45,13 @@ public class EnhancedLinkedList<E> implements List<E>, Deque<E>, Serializable {
 
 	public EnhancedLinkedList<E> getAllButFirst() {
 		final EnhancedLinkedList<E> allButFirst = new EnhancedLinkedList<>(this);
-
-		// TODO: fix this is in here temporarily until we clean up the Backquote Analyzer
-		if (!allButFirst.isEmpty()) {
-			allButFirst.removeFirst();
-		}
-
+		allButFirst.removeFirst();
 		return allButFirst;
 	}
 
 	public EnhancedLinkedList<E> getAllButLast() {
 		final EnhancedLinkedList<E> allButLast = new EnhancedLinkedList<>(this);
-
-		// TODO: fix this is in here temporarily until we clean up the Backquote Analyzer
-		if (!allButLast.isEmpty()) {
-			allButLast.removeLast();
-		}
-
+		allButLast.removeLast();
 		return allButLast;
 	}
 
@@ -98,12 +87,14 @@ public class EnhancedLinkedList<E> implements List<E>, Deque<E>, Serializable {
 
 	@Override
 	public E removeFirst() {
-		return linkedList.removeFirst();
+		// Use pollFirst so we can avoid hitting the NoSuchElementException. We don't want to hit this.
+		return linkedList.pollFirst();
 	}
 
 	@Override
 	public E removeLast() {
-		return linkedList.removeLast();
+		// Use pollLast so we can avoid hitting the NoSuchElementException. We don't want to hit this.
+		return linkedList.pollLast();
 	}
 
 	@Override
@@ -118,16 +109,14 @@ public class EnhancedLinkedList<E> implements List<E>, Deque<E>, Serializable {
 
 	@Override
 	public E getFirst() {
-		// TODO: fix this is in here temporarily until we clean up the Backquote Analyzer
-		if (linkedList.isEmpty()) {
-			return (E) NullElement.INSTANCE;
-		}
-		return linkedList.getFirst();
+		// Use peekFirst so we can avoid hitting the NoSuchElementException. We don't want to hit this.
+		return linkedList.peekFirst();
 	}
 
 	@Override
 	public E getLast() {
-		return linkedList.getLast();
+		// Use peekLast so we can avoid hitting the NoSuchElementException. We don't want to hit this.
+		return linkedList.peekLast();
 	}
 
 	@Override
@@ -167,7 +156,8 @@ public class EnhancedLinkedList<E> implements List<E>, Deque<E>, Serializable {
 
 	@Override
 	public E element() {
-		return linkedList.element();
+		// Use peekFirst so we can avoid hitting the NoSuchElementException. We don't want to hit this.
+		return linkedList.peekFirst();
 	}
 
 	@Override
@@ -182,7 +172,8 @@ public class EnhancedLinkedList<E> implements List<E>, Deque<E>, Serializable {
 
 	@Override
 	public E pop() {
-		return linkedList.pop();
+		// Use pollFirst so we can avoid hitting the NoSuchElementException. We don't want to hit this.
+		return linkedList.pollFirst();
 	}
 
 	@Override

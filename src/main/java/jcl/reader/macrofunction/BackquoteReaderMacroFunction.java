@@ -567,7 +567,6 @@ JCL:
 					return new ConsElement(isDotted, newElements);
 				}
 
-				// TODO: check to make sure this is always fine!!!
 				final SimpleElement last = listElements.getLast();
 
 				final ListElement lastThing;

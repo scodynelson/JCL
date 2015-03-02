@@ -54,9 +54,9 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 			                  final String functionName = undefinedFunction.getSymbolName();
 			                  final String symbolPackage = undefinedFunction.getPackageName();
 			                  if (symbolPackage != null) {
-				                  LOGGER.warn("{}::{}\n", symbolPackage, functionName);
+				                  LOGGER.warn("{}::{}", symbolPackage, functionName);
 			                  } else {
-				                  LOGGER.warn("#:{}\n", functionName);
+				                  LOGGER.warn("#:{}", functionName);
 			                  }
 		                  });
 

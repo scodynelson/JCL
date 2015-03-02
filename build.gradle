@@ -20,16 +20,14 @@ String COMMONS_MATH_VERSION = '3.4.1';
 String COMMONS_COLLECTIONS_VERSION = '4.0';
 String COMMONS_IO_VERSION = '2.4';
 
-String SPRING_VERSION = '4.1.4.RELEASE';
+String SPRING_VERSION = '4.1.5.RELEASE';
 
 String ASM_ALL_VERSION = '5.0.3';
 
 String SLF4J_VERSION = '1.7.10';
 String LOGBACK_VERSION = '1.1.2';
 
-String TESTNG_VERSION = '6.8.17';
-
-String GROOVY_VERSION = '2.4.0';
+String TESTNG_VERSION = '6.8.21';
 
 dependencies {
 	compile group: 'org.apache.commons', name: 'commons-lang3', version: "$COMMONS_LANG_VERSION"
@@ -40,17 +38,17 @@ dependencies {
 	compile group: 'org.ow2.asm', name: 'asm-all', version: "$ASM_ALL_VERSION"
 
 	compile group: 'org.springframework', name: 'spring-context', version: "$SPRING_VERSION"
-//	compile group: 'org.springframework', name: 'spring-integration', version: "$SPRING_VERSION"
 
 	compile group: 'org.slf4j', name: 'slf4j-api', version: "$SLF4J_VERSION"
 	compile group: 'org.slf4j', name: 'jcl-over-slf4j', version: "$SLF4J_VERSION"
+	compile group: 'org.slf4j', name: 'jul-to-slf4j', version: "$SLF4J_VERSION"
+	compile group: 'org.slf4j', name: 'log4j-over-slf4j', version: "$SLF4J_VERSION"
+	compile group: 'org.slf4j', name: 'osgi-over-slf4j', version: "$SLF4J_VERSION"
 
 	compile group: 'ch.qos.logback', name: 'logback-core', version: "$LOGBACK_VERSION"
 	compile group: 'ch.qos.logback', name: 'logback-classic', version: "$LOGBACK_VERSION"
 
 	testCompile group: 'org.testng', name: 'testng', version: "$TESTNG_VERSION"
-
-	runtime group: 'org.codehaus.groovy', name: 'groovy', version: "$GROOVY_VERSION"
 }
 
 apply plugin: 'application'
@@ -64,7 +62,7 @@ build.dependsOn(copyToLib)
 
 apply plugin: 'jacoco'
 jacoco {
-	toolVersion = '0.7.2.201409121644'
+	toolVersion = '0.7.4.201502262128'
 }
 test {
 	useTestNG()

@@ -56,7 +56,7 @@ public class ReadEvalPrint {
 				final InputStream fileStream = new FileStreamStruct(path);
 				return doStuff(fileStream, true);
 			} catch (final StreamErrorException ex) {
-				LOGGER.error("; WARNING: Exception condition -> {}\n", ex.getMessage(), ex);
+				LOGGER.error("; WARNING: Exception condition -> {}", ex.getMessage(), ex);
 				return null;
 			}
 		} else {
@@ -64,7 +64,7 @@ public class ReadEvalPrint {
 				final InputStream characterStream = new CharacterStreamStruct(System.in, loggerOutputStream);
 				return doStuff(characterStream, false);
 			} catch (final IOException ex) {
-				LOGGER.error("; WARNING: Exception condition -> {}\n", ex.getMessage(), ex);
+				LOGGER.error("; WARNING: Exception condition -> {}", ex.getMessage(), ex);
 				return null;
 			}
 //			catch (StreamErrorException ex) {
@@ -107,7 +107,7 @@ public class ReadEvalPrint {
 				try {
 					// THE PROMPT
 					final PackageStruct pkg = PackageVariables.PACKAGE.getValue();
-					LOGGER.info("\n{}: {}> ", pkg.getName(), ++lineCounter);
+					LOGGER.info("{}: {}> ", pkg.getName(), ++lineCounter);
 
 					// READ --------------
 
@@ -119,10 +119,10 @@ public class ReadEvalPrint {
 							whatRead = reader.read();
 						}
 						if (whatRead != null) {
-							LOGGER.debug("READ:\n");
+							LOGGER.debug("READ:");
 
 							final String printedWhatRead = printer.print(whatRead);
-							LOGGER.debug("{}\n", printedWhatRead);
+							LOGGER.debug("{}", printedWhatRead);
 						} else {
 							LOGGER.warn("; WARNING: Null response from reader");
 						}
@@ -136,9 +136,9 @@ public class ReadEvalPrint {
 							readChar = readResult.getResult();
 						}
 
-						LOGGER.warn("; WARNING: Reader Exception condition during Read -> {}\n", ex.getMessage(), ex);
+						LOGGER.warn("; WARNING: Reader Exception condition during Read -> {}", ex.getMessage(), ex);
 					} catch (final Exception ex) {
-						LOGGER.warn("; WARNING: Exception condition during Read -> {}\n", ex.getMessage(), ex);
+						LOGGER.warn("; WARNING: Exception condition during Read -> {}", ex.getMessage(), ex);
 						break;
 					}
 
@@ -159,8 +159,8 @@ public class ReadEvalPrint {
 //							whatAnalyzed = sa.analyzeForm(lambdaWhatRead);
 //
 //							if (whatAnalyzed != null) {
-//								LOGGER.debug("ANALYZED:\n");
-//								LOGGER.debug("{}\n", whatAnalyzed);
+//								LOGGER.debug("ANALYZED:");
+//								LOGGER.debug("{}", whatAnalyzed);
 //							} else {
 //								LOGGER.warn("; WARNING: Null response from analyzer");
 //							}
@@ -214,7 +214,7 @@ public class ReadEvalPrint {
 //							for (int index = 0; index < count; index++) {
 //								final Object lcl = mv[index];
 //								LOGGER.info(lcl.toString());
-//								LOGGER.info(" ;\n");
+//								LOGGER.info(" ;");
 //							}
 //							LOGGER.info(mv[count].toString());
 //						}

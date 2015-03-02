@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 @Component
 public class StringElementPrinter extends StringPrinter<StringElement> {
 
+	private static final long serialVersionUID = -5804243997621850572L;
+
 	@Override
 	protected List<Integer> getCodePoints(final StringElement object) {
 		return object.getElements()

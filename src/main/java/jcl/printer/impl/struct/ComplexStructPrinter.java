@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ComplexStructPrinter implements LispPrinter<ComplexStruct> {
 
+	private static final long serialVersionUID = 948389112917380146L;
+
 	@Autowired
 	private Printer printer;
 

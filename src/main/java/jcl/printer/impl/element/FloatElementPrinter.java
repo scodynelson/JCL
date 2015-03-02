@@ -13,6 +13,8 @@ import java.math.BigDecimal;
 @Component
 public class FloatElementPrinter extends FloatPrinter<FloatElement> {
 
+	private static final long serialVersionUID = -4957809224621379673L;
+
 	@Override
 	protected jcl.types.Float getFloatType(final FloatElement object) {
 		return object.getFloatFormat();

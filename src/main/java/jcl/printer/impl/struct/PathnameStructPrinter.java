@@ -23,6 +23,8 @@ import java.util.List;
 @Component
 public class PathnameStructPrinter implements LispPrinter<PathnameStruct> {
 
+	private static final long serialVersionUID = 778383508578673692L;
+
 	@Override
 	public String print(final PathnameStruct object) {
 		final BooleanStruct printEscape = PrinterVariables.PRINT_ESCAPE.getValue();

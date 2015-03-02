@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class CommentStructPrinter extends CommentPrinter<CommentStruct> {
 
+	private static final long serialVersionUID = 3702811009619046535L;
+
 	@Override
 	protected String getCommentString(final CommentStruct object) {
 		return object.getCommentString();

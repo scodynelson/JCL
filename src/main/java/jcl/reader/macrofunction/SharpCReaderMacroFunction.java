@@ -13,6 +13,8 @@ import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,9 @@ public class SharpCReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(SharpCReaderMacroFunction.class);
 
+	/**
+	 * {@link Autowired} {@link Printer} used for printing elements and structures to the output stream.
+	 */
 	@Autowired
 	private Printer printer;
 
@@ -91,5 +96,10 @@ public class SharpCReaderMacroFunction extends ReaderMacroFunctionImpl {
 		}
 
 		return new ConsElement(COMPLEX, real, imaginary);
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

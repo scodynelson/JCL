@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class CharacterStructPrinter extends CharacterPrinter<CharacterStruct> {
 
+	private static final long serialVersionUID = 5997216783690456319L;
+
 	@Override
 	protected int getCodePoint(final CharacterStruct object) {
 		return object.getCodePoint();

@@ -4,7 +4,9 @@
 
 package jcl.printer.impl;
 
-public interface LispPrinter<O> {
+import java.io.Serializable;
+
+public interface LispPrinter<O> extends Serializable {
 
 	String print(O object);
 }

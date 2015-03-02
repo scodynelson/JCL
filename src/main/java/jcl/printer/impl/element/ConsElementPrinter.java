@@ -17,6 +17,8 @@ import java.util.List;
 @Component
 public class ConsElementPrinter extends ConsPrinter<ConsElement> {
 
+	private static final long serialVersionUID = 3319578059674196660L;
+
 	@Autowired
 	private Printer printer;
 

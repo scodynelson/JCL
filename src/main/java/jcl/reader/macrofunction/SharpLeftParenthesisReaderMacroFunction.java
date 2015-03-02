@@ -21,6 +21,8 @@ import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.system.EnhancedLinkedList;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,9 +47,15 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(SharpLeftParenthesisReaderMacroFunction.class);
 
+	/**
+	 * {@link Autowired} {@link ListReaderMacroFunction} used for reading {@link ListElement}s.
+	 */
 	@Autowired
 	private ListReaderMacroFunction listReaderMacroFunction;
 
+	/**
+	 * {@link Autowired} {@link Printer} used for printing elements and structures to the output stream.
+	 */
 	@Autowired
 	private Printer printer;
 
@@ -153,5 +161,10 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 		}
 
 		return new ConsElement(makeArrayFnSymbol, dimensions, elementTypeKeyword, elementType, initialContentsKeyword, initialContents);
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

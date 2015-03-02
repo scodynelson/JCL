@@ -13,6 +13,8 @@ import java.math.BigInteger;
 @Component
 public class IntegerStructPrinter extends IntegerPrinter<IntegerStruct> {
 
+	private static final long serialVersionUID = 3499223261380244866L;
+
 	@Override
 	protected BigInteger getBigInteger(final IntegerStruct object) {
 		return object.getBigInteger();

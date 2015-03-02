@@ -7,7 +7,9 @@ package jcl.printer;
 import jcl.LispStruct;
 import jcl.compiler.real.element.Element;
 
-public interface Printer {
+import java.io.Serializable;
+
+public interface Printer extends Serializable {
 
 	String print(LispStruct object);
 

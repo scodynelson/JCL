@@ -13,15 +13,15 @@ import jcl.system.EnhancedLinkedList;
 
 abstract class BackquoteFacilityMacroFunction extends ReaderMacroFunctionImpl {
 
-	protected static final SymbolElement BQ_COMMA_FLAG = new SymbolElement(GlobalPackageStruct.BACKQUOTE.getName(), ",");
+	static final SymbolElement BQ_COMMA_FLAG = new SymbolElement(GlobalPackageStruct.BACKQUOTE.getName(), ",");
 
-	protected static final SymbolElement BQ_AT_FLAG = new SymbolElement(GlobalPackageStruct.BACKQUOTE.getName(), ",@");
+	static final SymbolElement BQ_AT_FLAG = new SymbolElement(GlobalPackageStruct.BACKQUOTE.getName(), ",@");
 
-	protected static final SymbolElement BQ_DOT_FLAG = new SymbolElement(GlobalPackageStruct.BACKQUOTE.getName(), ",.");
+	static final SymbolElement BQ_DOT_FLAG = new SymbolElement(GlobalPackageStruct.BACKQUOTE.getName(), ",.");
 
-	private static final long serialVersionUID = 816197148338656390L;
+	static final long serialVersionUID = 816197148338656390L;
 
-	protected static ConsElement getConsElement(final SimpleElement flag, final SimpleElement code) {
+	static ConsElement getConsElement(final SimpleElement flag, final SimpleElement code) {
 		final ConsElement consElement;
 		if (code instanceof NullElement) {
 			consElement = new ConsElement(flag);
@@ -42,7 +42,7 @@ abstract class BackquoteFacilityMacroFunction extends ReaderMacroFunctionImpl {
 		return consElement;
 	}
 
-	protected static SimpleElement getCdrElement(final EnhancedLinkedList<SimpleElement> elements, final boolean isDotted) {
+	static SimpleElement getCdrElement(final EnhancedLinkedList<SimpleElement> elements, final boolean isDotted) {
 		if (elements.isEmpty()) {
 			return NullElement.INSTANCE;
 		} else if (isDotted && (elements.size() == 1)) {

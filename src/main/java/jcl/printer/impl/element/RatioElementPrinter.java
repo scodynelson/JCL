@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class RatioElementPrinter extends RatioPrinter<RatioElement, IntegerElement> {
 
+	private static final long serialVersionUID = 5245656290553922612L;
+
 	@Autowired
 	private IntegerElementPrinter integerElementPrinter;
 

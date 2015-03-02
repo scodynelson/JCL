@@ -8,6 +8,8 @@ import jcl.characters.CharacterConstants;
 import jcl.compiler.real.element.SimpleElement;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +27,10 @@ public class SharpHyphenMinusReaderMacroFunction extends ReaderMacroFunctionImpl
 	 */
 	private static final long serialVersionUID = -582954823547720438L;
 
+	/**
+	 * {@link Autowired} {@link FeaturesReaderMacroFunction} used for reading features and either reading or
+	 * suppressing the following {@link SimpleElement}s based on whether or not the feature is present.
+	 */
 	@Autowired
 	private FeaturesReaderMacroFunction featuresReaderMacroFunction;
 
@@ -42,5 +48,10 @@ public class SharpHyphenMinusReaderMacroFunction extends ReaderMacroFunctionImpl
 
 		featuresReaderMacroFunction.readFeatures(reader, true);
 		return null;
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

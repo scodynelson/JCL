@@ -23,11 +23,14 @@ import jcl.symbols.BooleanStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.TStruct;
 import jcl.system.EnhancedLinkedList;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -35,7 +38,12 @@ import java.util.List;
  * features should be hidden or not (aka. the token is read in but ignored).
  */
 @Component
-final class FeaturesReaderMacroFunction {
+final class FeaturesReaderMacroFunction implements Serializable {
+
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
+	private static final long serialVersionUID = 3522803992369397668L;
 
 	/**
 	 * The logger for this class.
@@ -59,6 +67,9 @@ final class FeaturesReaderMacroFunction {
 	 */
 	private static final SymbolElement OR = new SymbolElement(GlobalPackageStruct.KEYWORD.getName(), "OR");
 
+	/**
+	 * {@link Autowired} {@link Printer} used for printing elements and structures to the output stream.
+	 */
 	@Autowired
 	private Printer printer;
 
@@ -187,5 +198,10 @@ final class FeaturesReaderMacroFunction {
 			tempReturnVal = tempReturnVal || isFeature(lispStruct);
 		}
 		return tempReturnVal;
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

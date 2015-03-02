@@ -16,6 +16,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class SymbolElementPrinter extends SymbolPrinter<SymbolElement> {
 
+	private static final long serialVersionUID = -6158572235952098019L;
+
 	@Override
 	protected String getName(final SymbolElement object) {
 		final String packageName = object.getPackageName();

@@ -9,6 +9,8 @@ import java.util.List;
 
 public abstract class StringPrinter<O> implements LispPrinter<O> {
 
+	private static final long serialVersionUID = -1460076608687611503L;
+
 	@Override
 	public String print(final O object) {
 		final boolean printEscape = PrinterVariables.PRINT_ESCAPE.getValue().booleanValue();

@@ -9,6 +9,8 @@ import jcl.symbols.BooleanStruct;
 
 public abstract class SymbolPrinter<O> implements LispPrinter<O> {
 
+	private static final long serialVersionUID = 3265320493330001842L;
+
 	@Override
 	public String print(final O object) {
 		final BooleanStruct printEscape = PrinterVariables.PRINT_ESCAPE.getValue();

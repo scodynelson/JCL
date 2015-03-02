@@ -6,6 +6,8 @@ package jcl.printer.impl;
 
 public abstract class ConsPrinter<O> implements LispPrinter<O> {
 
+	private static final long serialVersionUID = -3269320519627603719L;
+
 	@Override
 	public String print(final O object) {
 		// TODO: Ignoring *PRINT-PRETTY* and the pretty printer in general right now...

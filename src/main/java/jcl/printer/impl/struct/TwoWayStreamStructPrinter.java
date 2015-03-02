@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class TwoWayStreamStructPrinter implements LispPrinter<TwoWayStreamStruct> {
 
+	private static final long serialVersionUID = -7785883762162329655L;
+
 	@Autowired
 	private Printer printer;
 

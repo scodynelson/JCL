@@ -30,6 +30,8 @@ public abstract class IntegerPrinter<O> implements LispPrinter<O> {
 	 */
 	private static final int SIXTEEN = 16;
 
+	private static final long serialVersionUID = 1051464035751713538L;
+
 	@Override
 	public String print(final O object) {
 		final boolean printRadix = PrinterVariables.PRINT_RADIX.getValue().booleanValue();

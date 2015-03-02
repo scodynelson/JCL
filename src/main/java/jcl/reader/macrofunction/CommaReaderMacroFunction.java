@@ -8,13 +8,13 @@ import jcl.characters.CharacterConstants;
 import jcl.compiler.real.element.ConsElement;
 import jcl.compiler.real.element.SimpleElement;
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.streams.ReadPeekResult;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -35,9 +35,6 @@ public class CommaReaderMacroFunction extends BackquoteFacilityMacroFunction {
 	 * The logger for this class.
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(CommaReaderMacroFunction.class);
-
-	@Autowired
-	private Printer printer;
 
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
@@ -86,5 +83,10 @@ public class CommaReaderMacroFunction extends BackquoteFacilityMacroFunction {
 		} finally {
 			reader.increaseBackquoteLevel();
 		}
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

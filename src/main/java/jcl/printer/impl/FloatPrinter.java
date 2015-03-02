@@ -15,6 +15,8 @@ import java.math.BigDecimal;
 
 public abstract class FloatPrinter<O> implements LispPrinter<O> {
 
+	private static final long serialVersionUID = -2482654535846962538L;
+
 	@Override
 	public String print(final O object) {
 		final jcl.types.Float floatFormat = getFloatType(object);

@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class SymbolStructPrinter extends SymbolPrinter<SymbolStruct<?>> {
 
+	private static final long serialVersionUID = 5098070113503702856L;
+
 	@Override
 	protected String getName(final SymbolStruct<?> object) {
 		return object.getName();

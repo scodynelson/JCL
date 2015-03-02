@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class HashTableKeyWrapperPrinter implements LispPrinter<HashTableStruct.KeyWrapper> {
 
+	private static final long serialVersionUID = 7702478572510338520L;
+
 	@Autowired
 	private Printer printer;
 

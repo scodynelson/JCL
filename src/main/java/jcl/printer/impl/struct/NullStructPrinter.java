@@ -10,4 +10,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class NullStructPrinter extends NullPrinter<NullStruct> {
+
+	private static final long serialVersionUID = -1270182745085221302L;
 }

@@ -17,9 +17,12 @@ import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.streams.ReadPeekResult;
 import jcl.system.EnhancedLinkedList;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -28,8 +31,16 @@ import java.util.List;
  * follow it.
  */
 @Component
-final class ListReaderMacroFunction {
+final class ListReaderMacroFunction implements Serializable {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
+	private static final long serialVersionUID = 5022365174547071098L;
+
+	/**
+	 * {@link Autowired} {@link Printer} used for printing elements and structures to the output stream.
+	 */
 	@Autowired
 	private Printer printer;
 
@@ -176,5 +187,10 @@ final class ListReaderMacroFunction {
 			codePoint = readResult.getResult();
 		}
 		return codePoint;
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

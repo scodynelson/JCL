@@ -16,8 +16,8 @@ import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.system.EnhancedLinkedList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -36,10 +36,8 @@ public class BackquoteReaderMacroFunction extends BackquoteFacilityMacroFunction
 	private static final long serialVersionUID = 7900660772057166319L;
 
 	/**
-	 * The logger for this class.
+	 * {@link Autowired} {@link Printer} used for printing elements and structures to the output stream.
 	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(BackquoteReaderMacroFunction.class);
-
 	@Autowired
 	private Printer printer;
 
@@ -528,7 +526,7 @@ JCL:
 		return new BackquoteReturn(BQ_COMMA_FLAG, code);
 	}
 
-	private boolean expandableBackqExpressionP(final SimpleElement o) {
+	private static boolean expandableBackqExpressionP(final SimpleElement o) {
 		if (o instanceof ConsElement) {
 			final ConsElement consElement = (ConsElement) o;
 			final SimpleElement flag = consElement.getElements().getFirst();
@@ -610,6 +608,11 @@ JCL:
 		return getConsElement(flag, thing);
 	}
 
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+	}
+
 	static class BackquoteReturn {
 
 		private final SymbolElement flag;
@@ -627,6 +630,11 @@ JCL:
 
 		public SimpleElement getThing() {
 			return thing;
+		}
+
+		@Override
+		public String toString() {
+			return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 		}
 	}
 }

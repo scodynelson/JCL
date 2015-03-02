@@ -15,6 +15,8 @@ import java.util.Map;
 @Component
 public class PrinterImpl implements Printer {
 
+	private static final long serialVersionUID = -3051919400352866531L;
+
 	@Resource
 	private Map<Class<? extends LispStruct>, LispPrinter<LispStruct>> structPrinterStrategies;
 

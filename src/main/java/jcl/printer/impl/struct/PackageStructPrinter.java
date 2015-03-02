@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class PackageStructPrinter implements LispPrinter<PackageStruct> {
 
+	private static final long serialVersionUID = -7212596989249677180L;
+
 	@Override
 	public String print(final PackageStruct object) {
 		final String typeClassName = object.getType().getClass().getName().toUpperCase();

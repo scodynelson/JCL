@@ -18,6 +18,8 @@ import java.util.List;
 @Component
 public class ArrayStructPrinter<TYPE extends LispStruct> implements LispPrinter<ArrayStruct<TYPE>> {
 
+	private static final long serialVersionUID = -4715974488949942878L;
+
 	@Autowired
 	private Printer printer;
 

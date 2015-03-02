@@ -8,6 +8,8 @@ import jcl.printer.PrinterVariables;
 
 public abstract class CharacterPrinter<O> implements LispPrinter<O> {
 
+	private static final long serialVersionUID = 1389513684443461697L;
+
 	@Override
 	public String print(final O object) {
 		final boolean printEscape = PrinterVariables.PRINT_ESCAPE.getValue().booleanValue();

@@ -6,6 +6,8 @@ package jcl.printer.impl;
 
 public abstract class RatioPrinter<O, P> implements LispPrinter<O> {
 
+	private static final long serialVersionUID = 98246264280544825L;
+
 	@Override
 	public String print(final O object) {
 		final P numerator = getNumerator(object);

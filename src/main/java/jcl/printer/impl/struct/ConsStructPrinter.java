@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ConsStructPrinter extends ConsPrinter<ConsStruct> {
 
+	private static final long serialVersionUID = 2018276801770003739L;
+
 	@Autowired
 	private Printer printer;
 

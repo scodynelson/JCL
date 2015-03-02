@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class SynonymStreamStructPrinter implements LispPrinter<SynonymStreamStruct> {
 
+	private static final long serialVersionUID = 1464134062277994189L;
+
 	@Autowired
 	private Printer printer;
 

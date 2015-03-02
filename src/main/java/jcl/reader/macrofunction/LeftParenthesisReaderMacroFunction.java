@@ -5,9 +5,12 @@
 package jcl.reader.macrofunction;
 
 import jcl.characters.CharacterConstants;
+import jcl.compiler.real.element.ListElement;
 import jcl.compiler.real.element.SimpleElement;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +28,9 @@ public class LeftParenthesisReaderMacroFunction extends ReaderMacroFunctionImpl 
 	 */
 	private static final long serialVersionUID = 8364282884759641778L;
 
+	/**
+	 * {@link Autowired} {@link ListReaderMacroFunction} used for reading {@link ListElement}s.
+	 */
 	@Autowired
 	private ListReaderMacroFunction listReaderMacroFunction;
 
@@ -41,5 +47,10 @@ public class LeftParenthesisReaderMacroFunction extends ReaderMacroFunctionImpl 
 		assert codePoint == CharacterConstants.LEFT_PARENTHESIS;
 
 		return listReaderMacroFunction.readList(reader);
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

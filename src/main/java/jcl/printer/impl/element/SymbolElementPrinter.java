@@ -7,9 +7,9 @@ package jcl.printer.impl.element;
 import jcl.compiler.real.element.SymbolElement;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
+import jcl.packages.PackageSymbolStruct;
 import jcl.packages.PackageVariables;
 import jcl.printer.impl.SymbolPrinter;
-import jcl.symbols.Variable;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -29,14 +29,21 @@ public class SymbolElementPrinter extends SymbolPrinter<SymbolElement> {
 
 		// TODO: the following isn't right. It's more like the symbol is not "accessible" in the current package...
 		// TODO: probably by use of 'findSymbol'
-		if (!StringUtils.equalsIgnoreCase(PackageVariables.PACKAGE.getValue().getName(), packageName)) {
 
-			final boolean externalSymbol = object.isExternalSymbol();
-			if (externalSymbol) {
-				// TODO: verify it is a single colon for external symbols when printing...
-				return packageName + ':' + symbolName;
-			} else {
-				return packageName + "::" + symbolName;
+		final PackageStruct currentPackage = PackageVariables.PACKAGE.getValue();
+		final String currentPackageName = currentPackage.getName();
+
+		final PackageSymbolStruct symbol = currentPackage.findSymbol(symbolName);
+		if (symbol == null) {
+
+			if (!currentPackageName.equals(packageName)) {
+				final boolean externalSymbol = object.isExternalSymbol();
+				if (externalSymbol) {
+					// TODO: verify it is a single colon for external symbols when printing...
+					return packageName + ':' + symbolName;
+				} else {
+					return packageName + "::" + symbolName;
+				}
 			}
 		}
 		return symbolName;

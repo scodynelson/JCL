@@ -41,6 +41,7 @@ public class ConsElement implements ListElement {
 		this(isDotted, new EnhancedLinkedList<>(Arrays.asList(elements)));
 	}
 
+	@Override
 	public boolean isDotted() {
 		return isDotted;
 	}

@@ -4,7 +4,6 @@
 
 package jcl.reader.macrofunction;
 
-import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.compiler.real.element.ConsElement;
 import jcl.compiler.real.element.ListElement;
@@ -13,11 +12,9 @@ import jcl.compiler.real.element.NumberElement;
 import jcl.compiler.real.element.SimpleElement;
 import jcl.compiler.real.element.SymbolElement;
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
-import jcl.system.CommonLispSymbols;
 import jcl.system.EnhancedLinkedList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,14 +23,12 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.math.BigInteger;
-import java.util.EnumMap;
-import java.util.Map;
 
 /**
  * Implements the '`' Lisp reader macro.
  */
 @Component
-public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
+public class BackquoteReaderMacroFunction extends BackquoteFacilityMacroFunction {
 
 	/**
 	 * Serializable Version Unique Identifier.
@@ -44,20 +39,6 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 * The logger for this class.
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(BackquoteReaderMacroFunction.class);
-
-	private static final SymbolElement APPEND = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "APPEND");
-
-	private static final SymbolElement CONS = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "CONS");
-
-	private static final SymbolElement LIST = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "LIST");
-
-	private static final SymbolElement LIST_STAR = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "LIST*");
-
-	private static final SymbolElement NCONC = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "NCONC");
-
-	private static final SymbolElement QUOTE = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "QUOTE");
-
-	static int backQuoteCount;
 
 	@Autowired
 	private Printer printer;
@@ -344,50 +325,39 @@ JCL:
 	public SimpleElement readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.GRAVE_ACCENT;
 
-		backQuoteCount++;
+		reader.increaseBackquoteLevel();
 		try {
 			final SimpleElement code = reader.read();
 			final BackquoteReturn backquoteReturn = backquotify(code);
 
-			final Flag flag = backquoteReturn.getFlag();
+			final SymbolElement flag = backquoteReturn.getFlag();
 			final SimpleElement thing = backquoteReturn.getThing();
 
-			if (flag == Flag.BQ_AT_FLAG) {
-				throw new ReaderErrorException(",@ after backquote in " + thing);
+			if (BQ_AT_FLAG.equals(flag)) {
+				throw new ReaderErrorException(",@ after backquote in " + printer.print(thing));
 			}
-			if (flag == Flag.BQ_DOT_FLAG) {
-				throw new ReaderErrorException(",. after backquote in " + thing);
+			if (BQ_DOT_FLAG.equals(flag)) {
+				throw new ReaderErrorException(",. after backquote in " + printer.print(thing));
 			}
 
 			return backquotify_1(flag, thing);
 		} finally {
-			backQuoteCount--;
+			reader.decreaseBackquoteLevel();
 		}
-	}
-
-	private boolean expandableBackqExpressionP(final Object o) {
-		if (o instanceof ConsElement) {
-			final ConsElement consElement = (ConsElement) o;
-			final SimpleElement flag = consElement.getElements().getFirst();
-			if ((flag == Flag.BQ_AT_FLAG) || (flag == Flag.BQ_DOT_FLAG)) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	private BackquoteReturn backquotify(final SimpleElement code) {
 
 		if (!(code instanceof ConsElement)) {
 			if (code instanceof NullElement) {
-				return new BackquoteReturn(Flag.NIL, NullElement.INSTANCE);
+				return new BackquoteReturn(NIL, NullElement.INSTANCE);
 			}
 
 			if (code instanceof SymbolElement) {
-				return new BackquoteReturn(Flag.QUOTE, code);
+				return new BackquoteReturn(QUOTE, code);
 			}
 
-			return new BackquoteReturn(Flag.T, code);
+			return new BackquoteReturn(T, code);
 		}
 
 		final ConsElement consCode = (ConsElement) code;
@@ -398,193 +368,137 @@ JCL:
 
 		final SimpleElement cdrElement = getCdrElement(cdrConsCode, consCode.isDotted());
 
-		if ((Flag.BQ_AT_FLAG == carConsCode) || (Flag.BQ_DOT_FLAG == carConsCode)) {
-			final Flag carConsCodeFlag = (Flag) carConsCode;
+		if (BQ_AT_FLAG.equals(carConsCode) || BQ_DOT_FLAG.equals(carConsCode)) {
+			final SymbolElement carConsCodeFlag = (SymbolElement) carConsCode;
 			return new BackquoteReturn(carConsCodeFlag, cdrElement);
 		}
 
-		if (Flag.BQ_COMMA_FLAG == carConsCode) {
+		if (BQ_COMMA_FLAG.equals(carConsCode)) {
 			return comma(cdrElement);
 		}
 
 		final BackquoteReturn carBqtify = backquotify(carConsCode);
 
-		final Flag aflag = carBqtify.getFlag();
-		SimpleElement a = carBqtify.getThing();
+		final SymbolElement carBqtifyFlag = carBqtify.getFlag();
+		SimpleElement carBqtifyThing = carBqtify.getThing();
 
 		final BackquoteReturn cdrBqtify = backquotify(cdrElement);
 
-		final Flag dflag = cdrBqtify.getFlag();
-		final SimpleElement d = cdrBqtify.getThing();
+		final SymbolElement cdrBqtifyFlag = cdrBqtify.getFlag();
+		final SimpleElement cdrBqtifyThing = cdrBqtify.getThing();
 
-		if (dflag == Flag.BQ_AT_FLAG) {
-			throw new ReaderErrorException(",@ after dot in " + code);
+		if (BQ_AT_FLAG.equals(cdrBqtifyFlag)) {
+			throw new ReaderErrorException(",@ after dot in " + printer.print(code));
 		}
 
-		if (dflag == Flag.BQ_DOT_FLAG) {
-			throw new ReaderErrorException(",. after dot in " + code);
+		if (BQ_DOT_FLAG.equals(cdrBqtifyFlag)) {
+			throw new ReaderErrorException(",. after dot in " + printer.print(code));
 		}
 
-		if (aflag == Flag.BQ_AT_FLAG) {
-			if (dflag == Flag.NIL) {
-				if (expandableBackqExpressionP(a)) {
-					return new BackquoteReturn(Flag.APPEND, new ConsElement(a));
+		if (BQ_AT_FLAG.equals(carBqtifyFlag)) {
+			if (NIL.equals(cdrBqtifyFlag)) {
+				if (expandableBackqExpressionP(carBqtifyThing)) {
+					return new BackquoteReturn(APPEND, new ConsElement(carBqtifyThing));
 				} else {
-					return comma(a);
+					return comma(carBqtifyThing);
 				}
 			} else {
 
 				final SimpleElement bqReturnThing;
-				if (dflag == Flag.APPEND) {
-					if (d instanceof NullElement) {
-						bqReturnThing = new ConsElement(a);
-					} else if (d instanceof ConsElement) {
-						final ConsElement dConsElement = (ConsElement) d;
-						final EnhancedLinkedList<SimpleElement> dElements = dConsElement.getElements();
-
-						final EnhancedLinkedList<SimpleElement> bqReturnThingElements = new EnhancedLinkedList<>();
-						bqReturnThingElements.add(a);
-						bqReturnThingElements.addAll(dElements);
-
-						final boolean isDotted = dConsElement.isDotted();
-						bqReturnThing = new ConsElement(isDotted, bqReturnThingElements);
-					} else {
-						// This is fine to create ConsElement like this here since the second element is not a ListElement type
-						bqReturnThing = new ConsElement(true, a, d);
-					}
+				if (APPEND.equals(cdrBqtifyFlag)) {
+					bqReturnThing = getConsElement(carBqtifyThing, cdrBqtifyThing);
 				} else {
-					final SimpleElement backquotify_1 = backquotify_1(dflag, d);
+					final SimpleElement backquotify_1 = backquotify_1(cdrBqtifyFlag, cdrBqtifyThing);
 					// This is fine to create ConsElement like this here since it is using 'LIST' in the algorithm
-					bqReturnThing = new ConsElement(a, backquotify_1);
+					bqReturnThing = new ConsElement(carBqtifyThing, backquotify_1);
 				}
 
-				return new BackquoteReturn(Flag.APPEND, bqReturnThing);
+				return new BackquoteReturn(APPEND, bqReturnThing);
 			}
 		}
 
-		if (aflag == Flag.BQ_DOT_FLAG) {
-			if (dflag == Flag.NIL) {
-				if (expandableBackqExpressionP(a)) {
-					return new BackquoteReturn(Flag.NCONC, new ConsElement(a));
+		if (BQ_DOT_FLAG.equals(carBqtifyFlag)) {
+			if (NIL.equals(cdrBqtifyFlag)) {
+				if (expandableBackqExpressionP(carBqtifyThing)) {
+					return new BackquoteReturn(NCONC, new ConsElement(carBqtifyThing));
 				} else {
-					return comma(a);
+					return comma(carBqtifyThing);
 				}
 			} else {
 
 				final SimpleElement bqReturnThing;
-				if (dflag == Flag.NCONC) {
-					if (d instanceof NullElement) {
-						bqReturnThing = new ConsElement(a);
-					} else if (d instanceof ConsElement) {
-						final ConsElement dConsElement = (ConsElement) d;
-						final EnhancedLinkedList<SimpleElement> dElements = dConsElement.getElements();
-
-						final EnhancedLinkedList<SimpleElement> bqReturnThingElements = new EnhancedLinkedList<>();
-						bqReturnThingElements.add(a);
-						bqReturnThingElements.addAll(dElements);
-
-						final boolean isDotted = dConsElement.isDotted();
-						bqReturnThing = new ConsElement(isDotted, bqReturnThingElements);
-					} else {
-						// This is fine to create ConsElement like this here since the second element is not a ListElement type
-						bqReturnThing = new ConsElement(true, a, d);
-					}
+				if (NCONC.equals(cdrBqtifyFlag)) {
+					bqReturnThing = getConsElement(carBqtifyThing, cdrBqtifyThing);
 				} else {
-					final SimpleElement backquotify_1 = backquotify_1(dflag, d);
+					final SimpleElement backquotify_1 = backquotify_1(cdrBqtifyFlag, cdrBqtifyThing);
 					// This is fine to create ConsElement like this here since it is using 'LIST' in the algorithm
-					bqReturnThing = new ConsElement(a, backquotify_1);
+					bqReturnThing = new ConsElement(carBqtifyThing, backquotify_1);
 				}
 
-				return new BackquoteReturn(Flag.NCONC, bqReturnThing);
+				return new BackquoteReturn(NCONC, bqReturnThing);
 			}
 		}
 
-		if (dflag == Flag.NIL) {
-			if ((aflag == Flag.QUOTE) || (aflag == Flag.T) || (aflag == Flag.NIL)) {
-				return new BackquoteReturn(Flag.QUOTE, new ConsElement(a));
+		if (NIL.equals(cdrBqtifyFlag)) {
+			if (QUOTE.equals(carBqtifyFlag) || T.equals(carBqtifyFlag) || NIL.equals(carBqtifyFlag)) {
+				return new BackquoteReturn(QUOTE, new ConsElement(carBqtifyThing));
 			} else {
 
-				final SimpleElement backquotify_1 = backquotify_1(aflag, a);
+				final SimpleElement backquotify_1 = backquotify_1(carBqtifyFlag, carBqtifyThing);
 				final SimpleElement bqReturnThing = new ConsElement(backquotify_1);
 
-				return new BackquoteReturn(Flag.LIST, bqReturnThing);
+				return new BackquoteReturn(LIST, bqReturnThing);
 			}
 		}
 
-		if ((dflag == Flag.QUOTE) || (dflag == Flag.T)) {
-			if ((aflag == Flag.QUOTE) || (aflag == Flag.T) || (aflag == Flag.NIL)) {
-				final ConsElement bqReturnThing;
-				if (d instanceof NullElement) {
-					bqReturnThing = new ConsElement(a);
-				} else if (d instanceof ConsElement) {
-					final ConsElement dConsElement = (ConsElement) d;
-					final EnhancedLinkedList<SimpleElement> dElements = dConsElement.getElements();
-
-					final EnhancedLinkedList<SimpleElement> bqReturnThingElements = new EnhancedLinkedList<>();
-					bqReturnThingElements.add(a);
-					bqReturnThingElements.addAll(dElements);
-
-					final boolean isDotted = dConsElement.isDotted();
-					bqReturnThing = new ConsElement(isDotted, bqReturnThingElements);
-				} else {
-					// This is fine to create ConsElement like this here since the second element is not a ListElement type
-					bqReturnThing = new ConsElement(true, a, d);
-				}
-				return new BackquoteReturn(Flag.QUOTE, bqReturnThing);
+		if (QUOTE.equals(cdrBqtifyFlag) || T.equals(cdrBqtifyFlag)) {
+			if (QUOTE.equals(carBqtifyFlag) || T.equals(carBqtifyFlag) || NIL.equals(carBqtifyFlag)) {
+				final ConsElement bqReturnThing = getConsElement(carBqtifyThing, cdrBqtifyThing);
+				return new BackquoteReturn(QUOTE, bqReturnThing);
 			} else {
 
-				final SimpleElement backquotify_1_a = backquotify_1(aflag, a);
-				final SimpleElement backquotify_1_d = backquotify_1(dflag, d);
+				final SimpleElement backquotify_1_a = backquotify_1(carBqtifyFlag, carBqtifyThing);
+				final SimpleElement backquotify_1_d = backquotify_1(cdrBqtifyFlag, cdrBqtifyThing);
 				// This is fine to create ConsElement like this here since it is using 'LIST' in the algorithm
-				final SimpleElement bqReturnThing = new ConsElement(backquotify_1_a, backquotify_1_d);
+				final ConsElement bqReturnThing = new ConsElement(backquotify_1_a, backquotify_1_d);
 
-				return new BackquoteReturn(Flag.LIST_STAR, bqReturnThing);
+				return new BackquoteReturn(LIST_STAR, bqReturnThing);
 			}
 		}
 
-		a = backquotify_1(aflag, a);
+		carBqtifyThing = backquotify_1(carBqtifyFlag, carBqtifyThing);
 
-		if ((dflag == Flag.LIST) || (dflag == Flag.LIST_STAR)) {
-			final ConsElement bqReturnThing;
-			if (d instanceof NullElement) {
-				bqReturnThing = new ConsElement(a);
-			} else if (d instanceof ConsElement) {
-				final ConsElement dConsElement = (ConsElement) d;
-				final EnhancedLinkedList<SimpleElement> dElements = dConsElement.getElements();
-
-				final EnhancedLinkedList<SimpleElement> bqReturnThingElements = new EnhancedLinkedList<>();
-				bqReturnThingElements.add(a);
-				bqReturnThingElements.addAll(dElements);
-
-				final boolean isDotted = dConsElement.isDotted();
-				bqReturnThing = new ConsElement(isDotted, bqReturnThingElements);
-			} else {
-				// This is fine to create ConsElement like this here since the second element is not a ListElement type
-				bqReturnThing = new ConsElement(true, a, d);
-			}
-			return new BackquoteReturn(dflag, bqReturnThing);
+		if (LIST.equals(cdrBqtifyFlag) || LIST_STAR.equals(cdrBqtifyFlag)) {
+			final ConsElement bqReturnThing = getConsElement(carBqtifyThing, cdrBqtifyThing);
+			return new BackquoteReturn(cdrBqtifyFlag, bqReturnThing);
 		}
 
-		final SimpleElement backquotify_1_d = backquotify_1(dflag, d);
+		final SimpleElement backquotify_1_d = backquotify_1(cdrBqtifyFlag, cdrBqtifyThing);
 		// This is fine to create ConsElement like this here since it is using 'LIST' in the algorithm
-		final ConsElement bqReturnThing = new ConsElement(a, backquotify_1_d);
+		final ConsElement bqReturnThing = new ConsElement(carBqtifyThing, backquotify_1_d);
 
-		return new BackquoteReturn(Flag.LIST_STAR, bqReturnThing);
+		return new BackquoteReturn(LIST_STAR, bqReturnThing);
 	}
 
 	private BackquoteReturn comma(final SimpleElement code) {
 
 		if (!(code instanceof ConsElement)) {
 			if (code instanceof NullElement) {
-				return new BackquoteReturn(Flag.NIL, NullElement.INSTANCE);
+				return new BackquoteReturn(NIL, NullElement.INSTANCE);
 			}
 
-			// TODO: code comparison here might be against the 'T symbol itself...
-			if ((code instanceof NumberElement) || (code == CommonLispSymbols.T)) {
-				return new BackquoteReturn(Flag.T, code);
+			if (code instanceof NumberElement) {
+				return new BackquoteReturn(T, code);
 			}
 
-			return new BackquoteReturn(Flag.BQ_COMMA_FLAG, code);
+			if (code instanceof SymbolElement) {
+				final SymbolElement codeSymbol = (SymbolElement) code;
+				if (T.equals(codeSymbol)) {
+					return new BackquoteReturn(T, code);
+				}
+			}
+
+			return new BackquoteReturn(BQ_COMMA_FLAG, code);
 		}
 
 		final ConsElement consCode = (ConsElement) code;
@@ -595,157 +509,119 @@ JCL:
 
 		final SimpleElement cadrConsCode = cdrConsCode.getFirst();
 
-		if ((carConsCode == Flag.QUOTE) && !expandableBackqExpressionP(cadrConsCode)) {
-			final Flag carConsCodeFlag = (Flag) carConsCode;
+		if (QUOTE.equals(carConsCode) && !expandableBackqExpressionP(cadrConsCode)) {
+			final SymbolElement carConsCodeFlag = (SymbolElement) carConsCode;
 			return new BackquoteReturn(carConsCodeFlag, cadrConsCode);
 		}
 
 		final SimpleElement cdrElement = getCdrElement(cdrConsCode, consCode.isDotted());
 
-		if ((carConsCode == Flag.APPEND) || (carConsCode == Flag.LIST) || (carConsCode == Flag.LIST_STAR) || (carConsCode == Flag.NCONC)) {
-			final Flag carConsCodeFlag = (Flag) carConsCode;
+		if (APPEND.equals(carConsCode) || LIST.equals(carConsCode) || NCONC.equals(carConsCode)) {
+			final SymbolElement carConsCodeFlag = (SymbolElement) carConsCode;
 			return new BackquoteReturn(carConsCodeFlag, cdrElement);
 		}
 
-		if (carConsCode == Flag.CONS) {
-			return new BackquoteReturn(Flag.LIST_STAR, cdrElement);
+		if (CONS.equals(carConsCode) || LIST_STAR.equals(carConsCode)) {
+			return new BackquoteReturn(LIST_STAR, cdrElement);
 		}
 
-		return new BackquoteReturn(Flag.BQ_COMMA_FLAG, code);
+		return new BackquoteReturn(BQ_COMMA_FLAG, code);
 	}
 
-	private SimpleElement backquotify_1(final Flag flag, final SimpleElement thing) {
+	private boolean expandableBackqExpressionP(final SimpleElement o) {
+		if (o instanceof ConsElement) {
+			final ConsElement consElement = (ConsElement) o;
+			final SimpleElement flag = consElement.getElements().getFirst();
+			if (BQ_AT_FLAG.equals(flag) || BQ_DOT_FLAG.equals(flag)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
-		if ((flag == Flag.BQ_COMMA_FLAG) || (flag == Flag.T) || (flag == Flag.NIL)) {
+	private SimpleElement backquotify_1(final SymbolElement flag, final SimpleElement thing) {
+
+		if (BQ_COMMA_FLAG.equals(flag) || T.equals(flag) || NIL.equals(flag)) {
 			return thing;
 		}
 
-		if (flag == Flag.QUOTE) {
+		if (QUOTE.equals(flag)) {
 			// This is fine to create ConsElement like this here since it is using 'LIST' in the algorithm
 			return new ConsElement(QUOTE, thing);
 		}
 
-		if (flag == Flag.LIST_STAR) {
-			// TODO: Is this cast safe??
-			final ConsElement consElementThing = (ConsElement) thing;
-			final boolean isDotted = consElementThing.isDotted();
+		if (LIST_STAR.equals(flag)) {
+			if (thing instanceof ListElement) {
+				final ListElement listElementThing = (ListElement) thing;
+				final boolean isDotted = listElementThing.isDotted();
 
-			final EnhancedLinkedList<SimpleElement> consElements = consElementThing.getElements();
+				final EnhancedLinkedList<SimpleElement> listElements = listElementThing.getElements();
 
-			final EnhancedLinkedList<SimpleElement> cdrThing = consElements.getAllButFirst();
+				final EnhancedLinkedList<SimpleElement> cdrThing = listElements.getAllButFirst();
 
-			final SimpleElement cadrThing = cdrThing.getFirst();
-			final EnhancedLinkedList<SimpleElement> cddrThing = cdrThing.getAllButFirst();
+				final SimpleElement cadrThing = cdrThing.getFirst();
+				final EnhancedLinkedList<SimpleElement> cddrThing = cdrThing.getAllButFirst();
 
-			if (cddrThing.isEmpty() && !expandableBackqExpressionP(cadrThing)) {
+				if (cddrThing.isEmpty() && !expandableBackqExpressionP(cadrThing)) {
+					final EnhancedLinkedList<SimpleElement> newElements = new EnhancedLinkedList<>();
+					newElements.add(CONS);
+					newElements.addAll(listElements);
+					return new ConsElement(isDotted, newElements);
+				}
+
+				// TODO: check to make sure this is always fine!!!
+				final SimpleElement last = listElements.getLast();
+
+				final ListElement lastThing;
+				if (last instanceof ListElement) {
+					lastThing = (ListElement) last;
+				} else {
+					lastThing = new ConsElement(last);
+				}
+
+				final SimpleElement carOfLastThing = lastThing.getElements().getFirst();
+				if (expandableBackqExpressionP(carOfLastThing)) {
+
+					// NOTE: no need to worry about dotted conses here. The butlast operation doesn't return the last element
+					//       and a cons pair is considered the last element. therefore, the new cons created next will never
+					//       be a dotted cons.
+					final EnhancedLinkedList<SimpleElement> allButLast = listElements.getAllButLast();
+					allButLast.addFirst(LIST);
+
+					final ConsElement consElement = new ConsElement(allButLast);
+
+					final EnhancedLinkedList<SimpleElement> returnConsElements = new EnhancedLinkedList<>();
+					returnConsElements.add(APPEND);
+					returnConsElements.add(consElement);
+					returnConsElements.add(carOfLastThing);
+
+					return new ConsElement(returnConsElements);
+				}
+
 				final EnhancedLinkedList<SimpleElement> newElements = new EnhancedLinkedList<>();
-				newElements.add(CONS);
-				newElements.addAll(consElements);
+				newElements.add(LIST_STAR);
+				newElements.addAll(listElements);
 				return new ConsElement(isDotted, newElements);
-			}
-
-			// TODO: check to make sure this is always fine!!!
-			final SimpleElement last = consElements.getLast();
-
-			final ListElement lastThing;
-			if (last instanceof ListElement) {
-				lastThing = (ListElement) last;
 			} else {
-				lastThing = new ConsElement(last);
+				return new ConsElement(true, LIST_STAR, thing);
 			}
-
-			final SimpleElement carOfLastThing = lastThing.getElements().getFirst();
-			if (expandableBackqExpressionP(carOfLastThing)) {
-
-				// NOTE: no need to worry about dotted conses here. The butlast operation doesn't return the last element
-				//       and a cons pair is considered the last element. therefore, the new cons created next will never
-				//       be a dotted cons.
-				final EnhancedLinkedList<SimpleElement> allButLast = consElements.getAllButLast();
-				allButLast.addFirst(LIST);
-
-				final ConsElement consElement = new ConsElement(allButLast);
-
-				final EnhancedLinkedList<SimpleElement> returnConsElements = new EnhancedLinkedList<>();
-				returnConsElements.add(APPEND);
-				returnConsElements.add(consElement);
-				returnConsElements.add(carOfLastThing);
-
-				return new ConsElement(returnConsElements);
-			}
-
-			final EnhancedLinkedList<SimpleElement> newElements = new EnhancedLinkedList<>();
-			newElements.add(LIST_STAR);
-			newElements.addAll(consElements);
-			return new ConsElement(isDotted, newElements);
 		}
 
-		final Map<Flag, SymbolElement> assocFlagMap = new EnumMap<>(Flag.class);
-		assocFlagMap.put(Flag.CONS, CONS);
-		assocFlagMap.put(Flag.LIST, LIST);
-		assocFlagMap.put(Flag.APPEND, APPEND);
-		assocFlagMap.put(Flag.NCONC, NCONC);
-
-		final SymbolElement flagAssocResult = assocFlagMap.get(flag);
-
-		if (thing instanceof NullElement) {
-			return new ConsElement(flagAssocResult);
-		} else if (thing instanceof ConsElement) {
-			final ConsElement consElementThing = (ConsElement) thing;
-			final boolean isDotted = consElementThing.isDotted();
-
-			final EnhancedLinkedList<SimpleElement> newElements = new EnhancedLinkedList<>();
-			newElements.add(flagAssocResult);
-			newElements.addAll(consElementThing.getElements());
-
-			return new ConsElement(isDotted, newElements);
-		} else {
-			// This is fine to create ConsElement like this here since the second element is not a ListElement type
-			return new ConsElement(true, flagAssocResult, thing);
-		}
-	}
-
-	private static SimpleElement getCdrElement(final EnhancedLinkedList<SimpleElement> elements, final boolean isDotted) {
-		if (elements.isEmpty()) {
-			return NullElement.INSTANCE;
-		} else if (isDotted && (elements.size() == 1)) {
-			return elements.getFirst();
-		} else {
-			return new ConsElement(isDotted, elements);
-		}
-	}
-
-	enum Flag implements SimpleElement {
-		QUOTE,
-		CONS,
-		LIST,
-		LIST_STAR,
-		APPEND,
-		NCONC,
-		T,
-		NIL,
-
-		BQ_COMMA_FLAG,
-		BQ_AT_FLAG,
-		BQ_DOT_FLAG;
-
-		@Override
-		public LispStruct toLispStruct() {
-			return null;
-		}
+		return getConsElement(flag, thing);
 	}
 
 	static class BackquoteReturn {
 
-		private final Flag flag;
+		private final SymbolElement flag;
 
 		private final SimpleElement thing;
 
-		BackquoteReturn(final Flag flag, final SimpleElement thing) {
+		BackquoteReturn(final SymbolElement flag, final SimpleElement thing) {
 			this.flag = flag;
 			this.thing = thing;
 		}
 
-		public Flag getFlag() {
+		public SymbolElement getFlag() {
 			return flag;
 		}
 
@@ -753,5 +629,4 @@ JCL:
 			return thing;
 		}
 	}
-
 }

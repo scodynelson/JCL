@@ -27,6 +27,11 @@ public final class NullElement implements ListElement {
 	}
 
 	@Override
+	public boolean isDotted() {
+		return false;
+	}
+
+	@Override
 	public LispStruct toLispStruct() {
 		return NullStruct.INSTANCE;
 	}

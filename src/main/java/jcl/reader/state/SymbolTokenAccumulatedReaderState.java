@@ -9,6 +9,7 @@ import jcl.compiler.real.element.SymbolElement;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
+import jcl.packages.PackageSymbolStruct;
 import jcl.packages.PackageVariables;
 import jcl.reader.AttributeType;
 import jcl.reader.ReaderStateMediator;
@@ -113,8 +114,15 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 			final String symName = ReaderState.convertTokensToString(tokenAttributes);
 
 			final PackageStruct pkg = PackageVariables.PACKAGE.getValue();
-			return new SymbolElement(pkg.getName(), symName);
-//			throw new ReaderErrorException("Unbound variable: " + symName); // TODO: This check will happen in the compiler...
+
+			final PackageSymbolStruct foundSymbol = pkg.findSymbol(symName);
+			if (foundSymbol == null) {
+				return new SymbolElement(pkg.getName(), symName);
+//			    throw new ReaderErrorException("Unbound variable: " + symName); // TODO: This check will happen in the compiler...
+			} else {
+				final SymbolStruct<?> foundSymbolStruct = foundSymbol.getSymbolStruct();
+				return new SymbolElement(foundSymbolStruct.getSymbolPackage().getName(), foundSymbolStruct.getName());
+			}
 		}
 
 		// Check if last element is a 'PACKAGEMARKER'

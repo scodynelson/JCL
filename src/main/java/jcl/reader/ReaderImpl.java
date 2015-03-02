@@ -38,6 +38,8 @@ class ReaderImpl implements Reader {
 	@Autowired
 	private ReaderStateMediator readerStateMediator;
 
+	private int backquoteLevel;
+
 	/**
 	 * Public constructor for creating a new JCL Reader.
 	 *
@@ -77,6 +79,21 @@ class ReaderImpl implements Reader {
 	@Override
 	public InputStream getInputStream() {
 		return inputStream;
+	}
+
+	@Override
+	public int getBackquoteLevel() {
+		return backquoteLevel;
+	}
+
+	@Override
+	public void increaseBackquoteLevel() {
+		backquoteLevel++;
+	}
+
+	@Override
+	public void decreaseBackquoteLevel() {
+		backquoteLevel--;
 	}
 
 	@Override

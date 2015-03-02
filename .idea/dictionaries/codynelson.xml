@@ -16,6 +16,7 @@
       <w>atan</w>
       <w>atanh</w>
       <w>attrs</w>
+      <w>backquote</w>
       <w>bignum</w>
       <w>boundp</w>
       <w>butlast</w>

@@ -10,4 +10,6 @@ public interface ListElement extends SequenceElement {
 
 	@Override
 	EnhancedLinkedList<SimpleElement> getElements();
+
+	boolean isDotted();
 }

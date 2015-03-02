@@ -1,5 +1,6 @@
 package jcl.system;
 
+import jcl.LispStruct;
 import jcl.arrays.ArrayConstants;
 import jcl.characters.CharacterConstants;
 import jcl.compiler.real.CompilerConstants;
@@ -185,7 +186,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> ALPHA_CHAR_P = null;
 	SymbolStruct<?> ALPHANUMERICP = null;
 	SymbolStruct<?> AND = null;
-	SymbolStruct<?> APPEND = null;
+	SymbolStruct<?> APPEND = new SymbolStruct<>("APPEND", GlobalPackageStruct.COMMON_LISP);
 	SymbolStruct<?> APPLY = null;
 	SymbolStruct<?> APROPOS = null;
 	SymbolStruct<?> APROPOS_LIST = null;
@@ -333,7 +334,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> COND = null;
 	SymbolStruct<?> CONDITION = null;
 	SymbolStruct<?> CONJUGATE = null;
-	SymbolStruct<?> CONS = null;
+	SymbolStruct<?> CONS = new SymbolStruct<>("CONS", GlobalPackageStruct.COMMON_LISP);
 	SymbolStruct<?> CONSP = null;
 	SymbolStruct<?> CONSTANTLY = null;
 	SymbolStruct<?> CONSTANTP = null;
@@ -548,8 +549,8 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> LET_STAR = null;
 	SymbolStruct<?> LISP_IMPLEMENTATION_TYPE = null;
 	SymbolStruct<?> LISP_IMPLEMENTATION_VERSION = null;
-	SymbolStruct<?> LIST = null;
-	SymbolStruct<?> LIST_STAR = null;
+	SymbolStruct<?> LIST = new SymbolStruct<>("LIST", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct<?> LIST_STAR = new SymbolStruct<>("LIST*", GlobalPackageStruct.COMMON_LISP);
 	SymbolStruct<?> LIST_ALL_PACKAGES = null;
 	SymbolStruct<?> LIST_LENGTH = null;
 	SymbolStruct<?> LISTEN = null;
@@ -644,7 +645,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> NAME_CHAR = null;
 	SymbolStruct<?> NAMESTRING = null;
 	SymbolStruct<?> NBUTLAST = null;
-	SymbolStruct<?> NCONC = null;
+	SymbolStruct<?> NCONC = new SymbolStruct<>("NCONC", GlobalPackageStruct.COMMON_LISP);
 	SymbolStruct<?> NEXT_METHOD_P = null;
 	SymbolStruct<?> NINTERSECTION = null;
 	SymbolStruct<?> NINTH = null;

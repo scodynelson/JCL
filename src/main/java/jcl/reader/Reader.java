@@ -79,4 +79,10 @@ public interface Reader extends Serializable {
 	 * @return the {@link InputStream} for the JCL Reader instance
 	 */
 	InputStream getInputStream();
+
+	int getBackquoteLevel();
+
+	void increaseBackquoteLevel();
+
+	void decreaseBackquoteLevel();
 }

@@ -216,6 +216,8 @@
       <w>truename</w>
       <w>typecase</w>
       <w>typep</w>
+      <w>typespec</w>
+      <w>typespecs</w>
       <w>unexport</w>
       <w>unintern</w>
       <w>uninterned</w>

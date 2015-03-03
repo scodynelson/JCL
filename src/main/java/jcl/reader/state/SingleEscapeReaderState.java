@@ -5,7 +5,6 @@
 package jcl.reader.state;
 
 import jcl.LispStruct;
-import jcl.compiler.real.element.SimpleElement;
 import jcl.reader.AttributeType;
 import jcl.reader.Reader;
 import jcl.reader.ReaderStateMediator;
@@ -39,7 +38,7 @@ class SingleEscapeReaderState implements ReaderState {
 	private ReaderStateMediator readerStateMediator;
 
 	@Override
-	public SimpleElement process(final TokenBuilder tokenBuilder) {
+	public LispStruct process(final TokenBuilder tokenBuilder) {
 
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();

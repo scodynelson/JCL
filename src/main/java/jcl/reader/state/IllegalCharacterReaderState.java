@@ -4,9 +4,8 @@
 
 package jcl.reader.state;
 
+import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
-import jcl.compiler.real.element.NullElement;
-import jcl.compiler.real.element.SimpleElement;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.reader.TokenBuilder;
 import jcl.streams.ReadPeekResult;
@@ -27,11 +26,10 @@ class IllegalCharacterReaderState implements ReaderState {
 	private static final long serialVersionUID = 6789972435089995401L;
 
 	@Override
-	public SimpleElement process(final TokenBuilder tokenBuilder) {
+	public LispStruct process(final TokenBuilder tokenBuilder) {
 
 		if (!tokenBuilder.isEofErrorP()) {
-//			return tokenBuilder.getEofValue();
-			return NullElement.INSTANCE; // TODO: handle Eof values
+			return tokenBuilder.getEofValue();
 		}
 
 		final ReadPeekResult readResult = tokenBuilder.getPreviousReadResult();

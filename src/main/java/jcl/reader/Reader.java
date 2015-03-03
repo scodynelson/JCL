@@ -25,9 +25,8 @@ public interface Reader extends Serializable {
 	 * true.
 	 *
 	 * @return the next {@link LispStruct} from the {@link InputStream}
-	 * TODO: fix Javadoc
 	 */
-	SimpleElement read();
+	LispStruct read();
 
 	/**
 	 * Reads the next {@link LispStruct} from the {@link InputStream}.
@@ -40,9 +39,8 @@ public interface Reader extends Serializable {
 	 * 		whether or not to recursively read tokens
 	 *
 	 * @return the next {@link LispStruct} from the {@link InputStream}
-	 * TODO fix Javadoc
 	 */
-	SimpleElement read(boolean eofErrorP, LispStruct eofValue, boolean recursiveP);
+	LispStruct read(boolean eofErrorP, LispStruct eofValue, boolean recursiveP);
 
 	/**
 	 * Reads the next {@link ReadPeekResult} from the {@link InputStream}. This calls the overloaded {@link
@@ -88,9 +86,9 @@ public interface Reader extends Serializable {
 
 	void decreaseBackquoteLevel();
 
-	Map<BigInteger, SimpleElement> getSharpEqualFinalTable();
+	Map<BigInteger, LispStruct> getSharpEqualFinalTable();
 
 	Map<BigInteger, UUID> getSharpEqualTempTable();
 
-	Map<UUID, SimpleElement> getSharpEqualReplTable();
+	Map<UUID, LispStruct> getSharpEqualReplTable();
 }

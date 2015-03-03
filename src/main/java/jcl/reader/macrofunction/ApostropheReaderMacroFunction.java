@@ -4,10 +4,10 @@
 
 package jcl.reader.macrofunction;
 
+import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.SimpleElement;
 import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.lists.ListStruct;
 import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
@@ -52,10 +52,10 @@ public class ApostropheReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public SimpleElement readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.APOSTROPHE;
 
-		final SimpleElement lispToken = reader.read();
+		final LispStruct lispToken = reader.read();
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			if (LOGGER.isDebugEnabled()) {
 				final String printedToken = printer.print(lispToken);
@@ -68,7 +68,7 @@ public class ApostropheReaderMacroFunction extends ReaderMacroFunctionImpl {
 			throw new ReaderErrorException("Missing expression.");
 		}
 
-		return new ConsElement(QUOTE, lispToken);
+		return ListStruct.buildProperList(QUOTE, lispToken);
 	}
 
 	@Override

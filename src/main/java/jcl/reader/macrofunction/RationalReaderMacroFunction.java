@@ -4,8 +4,7 @@
 
 package jcl.reader.macrofunction;
 
-import jcl.compiler.real.element.RationalElement;
-import jcl.compiler.real.element.SimpleElement;
+import jcl.LispStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.RationalStruct;
@@ -44,7 +43,7 @@ final class RationalReaderMacroFunction {
 	 *
 	 * @return the properly parsed {@link RationalStruct}
 	 */
-	static RationalElement readRational(final Reader reader, final BigInteger radix) {
+	static RationalStruct readRational(final Reader reader, final BigInteger radix) {
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			ExtendedTokenReaderMacroFunction.readExtendedToken(reader, false);
 			return null;
@@ -64,15 +63,16 @@ final class RationalReaderMacroFunction {
 		ReaderVariables.READ_BASE.setValue(new IntegerStruct(radix));
 
 		// read rational
-		final SimpleElement lispToken = reader.read();
+		final LispStruct lispToken = reader.read();
 
 		// reset the read-base
 		ReaderVariables.READ_BASE.setValue(previousReadBase);
 
-		if (lispToken instanceof RationalElement) {
-			return (RationalElement) lispToken;
+		if (lispToken instanceof RationalStruct) {
+			return (RationalStruct) lispToken;
 		}
 
+		// TODO: need to use the Printer to print the 'lispToken' here
 		throw new ReaderErrorException("#R (base " + radix + ") value is not a rational: " + lispToken + '.');
 	}
 }

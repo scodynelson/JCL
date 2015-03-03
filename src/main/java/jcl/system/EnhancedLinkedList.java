@@ -65,6 +65,16 @@ public class EnhancedLinkedList<E> implements List<E>, Deque<E>, Serializable {
 		return allButFirstN;
 	}
 
+	public EnhancedLinkedList<E> getAllButLastN(final int n) {
+		final EnhancedLinkedList<E> allButLastN = new EnhancedLinkedList<>(this);
+
+		for (int i = 0; i < n; i++) {
+			allButLastN.removeLast();
+		}
+
+		return allButLastN;
+	}
+
 	@Override
 	public void addFirst(final E e) {
 		linkedList.addFirst(e);
@@ -117,6 +127,13 @@ public class EnhancedLinkedList<E> implements List<E>, Deque<E>, Serializable {
 	public E getLast() {
 		// Use peekLast so we can avoid hitting the NoSuchElementException. We don't want to hit this.
 		return linkedList.peekLast();
+	}
+
+	public List<E> getLastN(final int n) {
+		// Use peekLast so we can avoid hitting the NoSuchElementException. We don't want to hit this.
+		final int lastIndex = size() - 1;
+		final int firstElementIndex = lastIndex - n;
+		return subList(firstElementIndex, lastIndex);
 	}
 
 	@Override

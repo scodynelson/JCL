@@ -4,17 +4,16 @@
 
 package jcl.reader.macrofunction;
 
+import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
-import jcl.compiler.real.element.ListElement;
-import jcl.compiler.real.element.SimpleElement;
 import jcl.compiler.real.element.SymbolElement;
 import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.lists.ListStruct;
 import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
 import jcl.streams.ReadPeekResult;
-import jcl.system.EnhancedLinkedList;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
@@ -24,6 +23,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.math.BigInteger;
+import java.util.List;
 
 /**
  * Implements the '#s' Lisp reader macro.
@@ -61,11 +61,11 @@ public class SharpSReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public SimpleElement readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_S) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_S);
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
-			final SimpleElement lispToken = reader.read();
+			final LispStruct lispToken = reader.read();
 			if (LOGGER.isDebugEnabled()) {
 				final String printedToken = printer.print(lispToken);
 				LOGGER.debug("{} suppressed.", printedToken);
@@ -79,17 +79,17 @@ public class SharpSReaderMacroFunction extends ReaderMacroFunctionImpl {
 			throw new ReaderErrorException("Non-list following #S");
 		}
 
-		final ListElement listToken = listReaderMacroFunction.readList(reader);
+		final ListStruct listToken = listReaderMacroFunction.readList(reader);
 		if (listToken == null) {
 			throw new ReaderErrorException("Non-list following #S");
 		}
 
-		final EnhancedLinkedList<SimpleElement> elements = listToken.getElements();
+		final List<LispStruct> elements = listToken.getAsJavaList();
 		if (elements.isEmpty()) {
 			throw new ReaderErrorException("Structure type was not supplied");
 		}
 
-		final SimpleElement structureType = elements.getFirst();
+		final LispStruct structureType = listToken.getFirst();
 		if (!(structureType instanceof SymbolElement)) {
 			throw new ReaderErrorException("Structure type is not a symbol: " + structureType);
 		}

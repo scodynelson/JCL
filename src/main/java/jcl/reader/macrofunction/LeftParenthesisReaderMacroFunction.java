@@ -6,7 +6,7 @@ package jcl.reader.macrofunction;
 
 import jcl.characters.CharacterConstants;
 import jcl.compiler.real.element.ListElement;
-import jcl.compiler.real.element.SimpleElement;
+import jcl.lists.ListStruct;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -43,7 +43,7 @@ public class LeftParenthesisReaderMacroFunction extends ReaderMacroFunctionImpl 
 	}
 
 	@Override
-	public SimpleElement readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public ListStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.LEFT_PARENTHESIS;
 
 		return listReaderMacroFunction.readList(reader);

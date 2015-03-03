@@ -4,9 +4,8 @@
 
 package jcl.reader.macrofunction;
 
+import jcl.arrays.StringStruct;
 import jcl.characters.CharacterConstants;
-import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.element.StringElement;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.streams.ReadPeekResult;
@@ -35,7 +34,7 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public SimpleElement readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public StringStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.QUOTATION_MARK;
 
 		final StringBuilder stringBuilder = new StringBuilder();
@@ -61,7 +60,7 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunctionImpl {
 		}
 
 		final String stringValue = stringBuilder.toString();
-		return new StringElement(stringValue);
+		return new StringStruct(stringValue);
 	}
 
 	/**

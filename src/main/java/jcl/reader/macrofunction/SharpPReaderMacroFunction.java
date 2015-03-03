@@ -4,11 +4,11 @@
 
 package jcl.reader.macrofunction;
 
+import jcl.LispStruct;
+import jcl.arrays.StringStruct;
 import jcl.characters.CharacterConstants;
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.element.StringElement;
 import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.lists.ListStruct;
 import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
@@ -56,10 +56,10 @@ public class SharpPReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public SimpleElement readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_P) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_P);
 
-		final SimpleElement lispToken = reader.read();
+		final LispStruct lispToken = reader.read();
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			if (LOGGER.isDebugEnabled()) {
 				final String printedToken = printer.print(lispToken);
@@ -68,10 +68,10 @@ public class SharpPReaderMacroFunction extends ReaderMacroFunctionImpl {
 			return null;
 		}
 
-		if (lispToken instanceof StringElement) {
-			final StringElement pathnameString = (StringElement) lispToken;
+		if (lispToken instanceof StringStruct) {
+			final StringStruct pathnameString = (StringStruct) lispToken;
 
-			return new ConsElement(PATHNAME, pathnameString);
+			return ListStruct.buildProperList(PATHNAME, pathnameString);
 		} else {
 			final String printedToken = printer.print(lispToken);
 			throw new ReaderErrorException("Improper namestring provided to #P: " + printedToken);

@@ -1,9 +1,10 @@
 package jcl.system;
 
+import jcl.LispStruct;
 import jcl.compiler.real.element.ConsElement;
+import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.NullElement;
 import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.element.Element;
 import jcl.compiler.real.element.SpecialOperatorElement;
 import jcl.compiler.real.element.SymbolElement;
 import jcl.conditions.exceptions.ReaderErrorException;
@@ -111,7 +112,7 @@ public class ReadEvalPrint {
 
 					// READ --------------
 
-					SimpleElement whatRead = null;
+					LispStruct whatRead = null;
 					try {
 						if (isFile) {
 							whatRead = reader.read(false, null, true);

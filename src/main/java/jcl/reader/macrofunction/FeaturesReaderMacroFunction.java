@@ -6,10 +6,6 @@ package jcl.reader.macrofunction;
 
 import jcl.LispStruct;
 import jcl.compiler.real.CompilerVariables;
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.ListElement;
-import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.element.SymbolElement;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
@@ -20,9 +16,10 @@ import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.symbols.BooleanStruct;
+import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.NILStruct;
+import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
-import jcl.system.EnhancedLinkedList;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
@@ -53,19 +50,19 @@ final class FeaturesReaderMacroFunction implements Serializable {
 	// TODO: is this where we keep these next 3???
 
 	/**
-	 * NOT keyword {@link SymbolElement} for processing features that should 'not' be included.
+	 * NOT {@link KeywordSymbolStruct} for processing features that should 'not' be included.
 	 */
-	private static final SymbolElement NOT = new SymbolElement(GlobalPackageStruct.KEYWORD.getName(), "NOT");
+	private static final KeywordSymbolStruct NOT = new KeywordSymbolStruct("NOT");
 
 	/**
-	 * AND keyword {@link SymbolElement} for processing features that should be included via 'and' operation.
+	 * AND {@link KeywordSymbolStruct} for processing features that should be included via 'and' operation.
 	 */
-	private static final SymbolElement AND = new SymbolElement(GlobalPackageStruct.KEYWORD.getName(), "AND");
+	private static final KeywordSymbolStruct AND = new KeywordSymbolStruct("AND");
 
 	/**
-	 * OR keyword {@link SymbolElement} for processing features that should be included via 'or' operation.
+	 * OR {@link KeywordSymbolStruct} for processing features that should be included via 'or' operation.
 	 */
-	private static final SymbolElement OR = new SymbolElement(GlobalPackageStruct.KEYWORD.getName(), "OR");
+	private static final KeywordSymbolStruct OR = new KeywordSymbolStruct("OR");
 
 	/**
 	 * {@link Autowired} {@link Printer} used for printing elements and structures to the output stream.
@@ -90,7 +87,7 @@ final class FeaturesReaderMacroFunction implements Serializable {
 			ReaderVariables.READ_SUPPRESS.setValue(NILStruct.INSTANCE);
 
 			PackageVariables.PACKAGE.setValue(GlobalPackageStruct.KEYWORD);
-			final SimpleElement lispStruct = reader.read();
+			final LispStruct lispStruct = reader.read();
 			PackageVariables.PACKAGE.setValue(previousPackage);
 
 			final boolean isFeature = isFeature(lispStruct);
@@ -116,12 +113,12 @@ final class FeaturesReaderMacroFunction implements Serializable {
 	 *
 	 * @return true if the provided {@link LispStruct} is a feature that should be read in; false otherwise
 	 */
-	private boolean isFeature(final SimpleElement lispStruct) {
-		if (lispStruct instanceof ListElement) {
-			return isListFeature((ListElement) lispStruct);
+	private boolean isFeature(final LispStruct lispStruct) {
+		if (lispStruct instanceof ListStruct) {
+			return isListFeature((ListStruct) lispStruct);
 		} else {
 			final List<LispStruct> featuresList = CompilerVariables.FEATURES.getValue().getAsJavaList();
-			return featuresList.contains(lispStruct.toLispStruct());
+			return featuresList.contains(lispStruct);
 		}
 	}
 
@@ -134,8 +131,8 @@ final class FeaturesReaderMacroFunction implements Serializable {
 	 *
 	 * @return true if the provided {@link ListStruct} is a feature that should be read in; false otherwise
 	 */
-	private boolean isListFeature(final ListElement listStruct) {
-		return (listStruct instanceof ConsElement) && isConsFeature((ConsElement) listStruct);
+	private boolean isListFeature(final ListStruct listStruct) {
+		return (listStruct instanceof ConsStruct) && isConsFeature((ConsStruct) listStruct);
 	}
 
 	/**
@@ -146,19 +143,19 @@ final class FeaturesReaderMacroFunction implements Serializable {
 	 *
 	 * @return true if the provided {@link ConsStruct} is a feature that should be read in; false otherwise
 	 */
-	private boolean isConsFeature(final ConsElement consStruct) {
-		final EnhancedLinkedList<SimpleElement> elements = consStruct.getElements();
-		final SimpleElement first = elements.getFirst();
+	private boolean isConsFeature(final ConsStruct consStruct) {
+		final LispStruct first = consStruct.getFirst();
 
-		if (!(first instanceof SymbolElement)) {
+		if (!(first instanceof SymbolStruct)) {
 			throw new ReaderErrorException("First element of feature expression must be either: :NOT, :AND, or :OR.");
 		}
 
-		final EnhancedLinkedList<SimpleElement> rest = elements.getAllButFirst();
+		final ListStruct rest = consStruct.getRest();
 
-		final SymbolElement featureOperator = (SymbolElement) first;
+		final SymbolStruct<?> featureOperator = (SymbolStruct) first;
 		if (featureOperator.equals(NOT)) {
-			return !isFeature(rest.getFirst());
+			final LispStruct firstOfRest = rest.getFirst();
+			return !isFeature(firstOfRest);
 		} else if (featureOperator.equals(AND)) {
 			return isAndConsFeature(rest);
 		} else if (featureOperator.equals(OR)) {
@@ -171,14 +168,16 @@ final class FeaturesReaderMacroFunction implements Serializable {
 	/**
 	 * Determines if all of the elements are features.
 	 *
-	 * @param elements
+	 * @param listStruct
 	 * 		the elements to check are features
 	 *
 	 * @return true if all of the elements are features; false otherwise
 	 */
-	private boolean isAndConsFeature(final EnhancedLinkedList<SimpleElement> elements) {
+	private boolean isAndConsFeature(final ListStruct listStruct) {
+		final List<LispStruct> listStructAsJavaList = listStruct.getAsJavaList();
+
 		boolean tempReturnVal = true;
-		for (final SimpleElement lispStruct : elements) {
+		for (final LispStruct lispStruct : listStructAsJavaList) {
 			tempReturnVal = tempReturnVal && isFeature(lispStruct);
 		}
 		return tempReturnVal;
@@ -187,14 +186,16 @@ final class FeaturesReaderMacroFunction implements Serializable {
 	/**
 	 * Determines if any of the elements are features.
 	 *
-	 * @param elements
+	 * @param listStruct
 	 * 		the elements to check are features
 	 *
 	 * @return true if any of the elements are features; false otherwise
 	 */
-	private boolean isOrConsFeature(final EnhancedLinkedList<SimpleElement> elements) {
+	private boolean isOrConsFeature(final ListStruct listStruct) {
+		final List<LispStruct> listStructAsJavaList = listStruct.getAsJavaList();
+
 		boolean tempReturnVal = false;
-		for (final SimpleElement lispStruct : elements) {
+		for (final LispStruct lispStruct : listStructAsJavaList) {
 			tempReturnVal = tempReturnVal || isFeature(lispStruct);
 		}
 		return tempReturnVal;

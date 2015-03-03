@@ -4,7 +4,7 @@
 
 package jcl.reader.state;
 
-import jcl.compiler.real.element.SimpleElement;
+import jcl.LispStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.reader.Reader;
 import jcl.reader.ReaderMacroFunction;
@@ -58,7 +58,7 @@ class MacroCharacterReaderState implements ReaderState {
 	private ReaderStateMediator readerStateMediator;
 
 	@Override
-	public SimpleElement process(final TokenBuilder tokenBuilder) {
+	public LispStruct process(final TokenBuilder tokenBuilder) {
 
 		final ReadPeekResult readResult = tokenBuilder.getPreviousReadResult();
 		final int codePoint = readResult.getResult(); // This will not be 'null'. We check for EOFs after each 'read'.
@@ -77,11 +77,11 @@ class MacroCharacterReaderState implements ReaderState {
 			numArg = getNumberArgument(reader);
 		}
 
-		final SimpleElement element = readerMacroFunction.readMacro(codePoint, reader, numArg);
-		if (element == null) {
+		final LispStruct lispToken = readerMacroFunction.readMacro(codePoint, reader, numArg);
+		if (lispToken == null) {
 			return readerStateMediator.read(tokenBuilder);
 		} else {
-			return element;
+			return lispToken;
 		}
 	}
 

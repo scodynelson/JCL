@@ -5,7 +5,6 @@
 package jcl.reader;
 
 import jcl.LispStruct;
-import jcl.compiler.real.element.SimpleElement;
 import jcl.streams.InputStream;
 import jcl.streams.ReadPeekResult;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -40,7 +39,7 @@ class ReaderImpl implements Reader {
 	/**
 	 * Map containing the number argument to #= to parsed {@link LispStruct}s produced by the #= reader macro function.
 	 */
-	private final Map<BigInteger, SimpleElement> sharpEqualFinalTable = new ConcurrentHashMap<>();
+	private final Map<BigInteger, LispStruct> sharpEqualFinalTable = new ConcurrentHashMap<>();
 
 	/**
 	 * Map containing the number argument of #= to a temporary {@link UUID} tag value to handle {@link LispStruct}s not
@@ -52,7 +51,7 @@ class ReaderImpl implements Reader {
 	 * Map containing the temporary {@link UUID} tag value to a {@link LispStruct} that has been parsed by the reader,
 	 * but may have yet to return to the top level of the #= parse.
 	 */
-	private final Map<UUID, SimpleElement> sharpEqualReplTable = new ConcurrentHashMap<>();
+	private final Map<UUID, LispStruct> sharpEqualReplTable = new ConcurrentHashMap<>();
 
 	/**
 	 * {@link ReaderStateMediator} singleton used by the reader algorithm.
@@ -73,12 +72,12 @@ class ReaderImpl implements Reader {
 	}
 
 	@Override
-	public SimpleElement read() {
+	public LispStruct read() {
 		return read(true, null, true);
 	}
 
 	@Override
-	public SimpleElement read(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
+	public LispStruct read(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		final TokenBuilder tokenBuilder = new TokenBuilder(this, eofErrorP, eofValue, recursiveP);
 		return readerStateMediator.read(tokenBuilder);
 	}
@@ -119,7 +118,7 @@ class ReaderImpl implements Reader {
 	}
 
 	@Override
-	public Map<BigInteger, SimpleElement> getSharpEqualFinalTable() {
+	public Map<BigInteger, LispStruct> getSharpEqualFinalTable() {
 		return sharpEqualFinalTable;
 	}
 
@@ -129,7 +128,7 @@ class ReaderImpl implements Reader {
 	}
 
 	@Override
-	public Map<UUID, SimpleElement> getSharpEqualReplTable() {
+	public Map<UUID, LispStruct> getSharpEqualReplTable() {
 		return sharpEqualReplTable;
 	}
 

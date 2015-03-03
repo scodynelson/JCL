@@ -4,10 +4,10 @@
 
 package jcl.reader.macrofunction;
 
+import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.SimpleElement;
 import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.lists.ConsStruct;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.streams.ReadPeekResult;
@@ -24,7 +24,7 @@ import java.math.BigInteger;
  * Implements the ',' Lisp reader macro.
  */
 @Component
-public class CommaReaderMacroFunction extends BackquoteFacilityMacroFunction {
+public class CommaReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	/**
 	 * Serializable Version Unique Identifier.
@@ -45,7 +45,7 @@ public class CommaReaderMacroFunction extends BackquoteFacilityMacroFunction {
 	}
 
 	@Override
-	public SimpleElement readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.GRAVE_ACCENT;
 
 		final int currentBackquoteLevel = reader.getBackquoteLevel();
@@ -65,21 +65,20 @@ public class CommaReaderMacroFunction extends BackquoteFacilityMacroFunction {
 
 		reader.decreaseBackquoteLevel();
 		try {
-
-			final ConsElement consElement;
+			final ConsStruct consStruct;
 
 			if (nextCodePoint == CharacterConstants.AT_SIGN) {
-				final SimpleElement code = reader.read();
-				consElement = getConsElement(BQ_AT_FLAG, code);
+				final LispStruct code = reader.read();
+				consStruct = new ConsStruct(BQ_AT_FLAG, code);
 			} else if (nextCodePoint == CharacterConstants.FULL_STOP) {
-				final SimpleElement code = reader.read();
-				consElement = getConsElement(BQ_DOT_FLAG, code);
+				final LispStruct code = reader.read();
+				consStruct = new ConsStruct(BQ_DOT_FLAG, code);
 			} else {
 				reader.unreadChar(nextCodePoint);
-				final SimpleElement code = reader.read();
-				consElement = getConsElement(BQ_COMMA_FLAG, code);
+				final LispStruct code = reader.read();
+				consStruct = new ConsStruct(BQ_COMMA_FLAG, code);
 			}
-			return consElement;
+			return consStruct;
 		} finally {
 			reader.increaseBackquoteLevel();
 		}

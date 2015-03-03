@@ -35,6 +35,10 @@ public class ConsStructPrinter extends ConsPrinter<ConsStruct> {
 	 */
 	@Override
 	protected void printElements(final ConsStruct object, final StringBuilder stringBuilder) {
+		printElementsInner(object, stringBuilder);
+	}
+
+	protected String printElementsInner(final ConsStruct object, final StringBuilder stringBuilder) {
 
 		final LispStruct car = object.getCar();
 		final String printedCar = printer.print(car);
@@ -43,7 +47,7 @@ public class ConsStructPrinter extends ConsPrinter<ConsStruct> {
 
 		if (object.getCdr() instanceof ConsStruct) {
 			final ConsStruct cdrAsCons = (ConsStruct) object.getCdr();
-			final String innerConsPrinted = printer.print(cdrAsCons);
+			final String innerConsPrinted = printElementsInner(cdrAsCons, new StringBuilder());
 
 			stringBuilder.append(' ');
 			stringBuilder.append(innerConsPrinted);
@@ -55,5 +59,7 @@ public class ConsStructPrinter extends ConsPrinter<ConsStruct> {
 
 			stringBuilder.append(printedCdr);
 		}
+
+		return stringBuilder.toString();
 	}
 }

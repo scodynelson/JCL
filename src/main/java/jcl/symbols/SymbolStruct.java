@@ -5,12 +5,12 @@ import jcl.classes.BuiltInClassStruct;
 import jcl.compiler.real.sa.analyzer.expander.real.CompilerMacroFunctionExpander;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.sa.analyzer.expander.real.SymbolMacroExpander;
-import jcl.functions.CompilerMacroFunctionStruct;
 import jcl.functions.FunctionStruct;
-import jcl.functions.MacroFunctionStruct;
 import jcl.packages.PackageStruct;
 import jcl.types.NIL;
 import jcl.types.Symbol;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -339,6 +339,16 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		} else {
 			return new SymbolStruct<>(name);
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

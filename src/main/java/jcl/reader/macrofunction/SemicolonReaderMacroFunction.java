@@ -4,9 +4,8 @@
 
 package jcl.reader.macrofunction;
 
+import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
-import jcl.compiler.real.element.CommentElement;
-import jcl.compiler.real.element.SimpleElement;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.streams.ReadPeekResult;
@@ -35,7 +34,7 @@ public class SemicolonReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public SimpleElement readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.SEMICOLON;
 
 		final StringBuilder stringBuilder = new StringBuilder();
@@ -54,6 +53,6 @@ public class SemicolonReaderMacroFunction extends ReaderMacroFunctionImpl {
 		}
 
 		final String stringValue = stringBuilder.toString();
-		return new CommentElement(stringValue);
+		return new CommentStruct(stringValue);
 	}
 }

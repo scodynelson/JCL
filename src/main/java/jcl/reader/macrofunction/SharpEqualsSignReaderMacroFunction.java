@@ -4,8 +4,8 @@
 
 package jcl.reader.macrofunction;
 
+import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
-import jcl.compiler.real.element.SimpleElement;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
@@ -36,7 +36,7 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctionImpl 
 	}
 
 	@Override
-	public SimpleElement readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.EQUALS_SIGN;
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
@@ -47,7 +47,7 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctionImpl 
 			throw new ReaderErrorException("Missing label for #=.");
 		}
 
-		final Map<BigInteger, SimpleElement> sharpEqualFinalTable = reader.getSharpEqualFinalTable();
+		final Map<BigInteger, LispStruct> sharpEqualFinalTable = reader.getSharpEqualFinalTable();
 		final Map<BigInteger, UUID> sharpEqualTempTable = reader.getSharpEqualTempTable();
 
 		if (sharpEqualFinalTable.containsKey(numArg)
@@ -58,7 +58,7 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctionImpl 
 		final UUID tag = UUID.randomUUID();
 		sharpEqualTempTable.put(numArg, tag);
 
-		final SimpleElement token = reader.read();
+		final LispStruct token = reader.read();
 		reader.getSharpEqualReplTable().put(tag, token);
 
 		sharpEqualFinalTable.put(numArg, token);

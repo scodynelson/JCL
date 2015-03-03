@@ -4,11 +4,11 @@
 
 package jcl.reader.macrofunction;
 
+import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.RealElement;
-import jcl.compiler.real.element.SimpleElement;
 import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.lists.ListStruct;
+import jcl.numbers.RealStruct;
 import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
@@ -57,10 +57,10 @@ public class SharpCReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public SimpleElement readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_C) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_C);
 
-		final SimpleElement lispToken = reader.read();
+		final LispStruct lispToken = reader.read();
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			if (LOGGER.isDebugEnabled()) {
 				final String printedToken = printer.print(lispToken);
@@ -69,13 +69,13 @@ public class SharpCReaderMacroFunction extends ReaderMacroFunctionImpl {
 			return null;
 		}
 
-		if (!(lispToken instanceof ConsElement)) {
+		if (!(lispToken instanceof ListStruct)) {
 			final String printedToken = printer.print(lispToken);
 			throw new ReaderErrorException("Illegal complex number format: #C" + printedToken);
 		}
 
-		final ConsElement listToken = (ConsElement) lispToken;
-		final List<SimpleElement> lispTokens = listToken.getElements();
+		final ListStruct listToken = (ListStruct) lispToken;
+		final List<LispStruct> lispTokens = listToken.getAsJavaList();
 
 		final int maxNumberOfTokensForComplex = 2;
 		if (lispTokens.size() != maxNumberOfTokensForComplex) {
@@ -83,19 +83,19 @@ public class SharpCReaderMacroFunction extends ReaderMacroFunctionImpl {
 			throw new ReaderErrorException("Illegal complex number format: #C" + printedToken);
 		}
 
-		final SimpleElement real = lispTokens.get(0);
-		if (!(real instanceof RealElement)) {
+		final LispStruct real = lispTokens.get(0);
+		if (!(real instanceof RealStruct)) {
 			final String printedReal = printer.print(real);
 			throw new ReaderErrorException("Only real numbers are valid tokens for #c. Got: " + printedReal);
 		}
 
-		final SimpleElement imaginary = lispTokens.get(1);
-		if (!(imaginary instanceof RealElement)) {
+		final LispStruct imaginary = lispTokens.get(1);
+		if (!(imaginary instanceof RealStruct)) {
 			final String printedImaginary = printer.print(imaginary);
 			throw new ReaderErrorException("Only real numbers are valid tokens for #c. Got: " + printedImaginary);
 		}
 
-		return new ConsElement(COMPLEX, real, imaginary);
+		return ListStruct.buildProperList(COMPLEX, real, imaginary);
 	}
 
 	@Override

@@ -6,12 +6,9 @@ package jcl.reader.macrofunction;
 
 import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.ListElement;
-import jcl.compiler.real.element.NullElement;
-import jcl.compiler.real.element.SimpleElement;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ListStruct;
+import jcl.lists.NullStruct;
 import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
@@ -53,8 +50,8 @@ final class ListReaderMacroFunction implements Serializable {
 	 *
 	 * @return the properly parsed {@link ListStruct}
 	 */
-	ListElement readList(final Reader reader) {
-		final EnhancedLinkedList<SimpleElement> currentTokenList = new EnhancedLinkedList<>();
+	ListStruct readList(final Reader reader) {
+		final EnhancedLinkedList<LispStruct> currentTokenList = new EnhancedLinkedList<>();
 
 		boolean isDottedList = false;
 
@@ -70,7 +67,7 @@ final class ListReaderMacroFunction implements Serializable {
 
 			reader.unreadChar(codePoint);
 
-			final SimpleElement lispStruct = reader.read();
+			final LispStruct lispStruct = reader.read();
 			if (lispStruct != null) {
 				currentTokenList.add(lispStruct);
 			}
@@ -83,10 +80,10 @@ final class ListReaderMacroFunction implements Serializable {
 		}
 
 		if (currentTokenList.isEmpty()) {
-			return NullElement.INSTANCE;
+			return NullStruct.INSTANCE;
 		}
 
-		return isDottedList ? new ConsElement(true, currentTokenList) : new ConsElement(false, currentTokenList);
+		return isDottedList ? ListStruct.buildDottedList(currentTokenList) : ListStruct.buildProperList(currentTokenList);
 	}
 
 	/**
@@ -102,7 +99,7 @@ final class ListReaderMacroFunction implements Serializable {
 	 * @return true if the list to be created post processing of the '.' character is indeed a dotted list; false
 	 * otherwise
 	 */
-	private boolean processDot(final Reader reader, final List<SimpleElement> currentTokenList) {
+	private boolean processDot(final Reader reader, final List<LispStruct> currentTokenList) {
 
 		boolean isDotted = false;
 
@@ -134,13 +131,13 @@ final class ListReaderMacroFunction implements Serializable {
 	 * @param codePoint
 	 * 		the next character code point following the '.' (at this point, either a whitespace or terminating character)
 	 */
-	private void processAfterDot(final Reader reader, final List<SimpleElement> currentTokenList, final int codePoint) {
+	private void processAfterDot(final Reader reader, final List<LispStruct> currentTokenList, final int codePoint) {
 		int firstCodePoint = codePoint;
 		if (ReaderMacroFunctionImpl.isWhitespace(codePoint)) {
 			firstCodePoint = flushWhitespace(reader);
 		}
 
-		SimpleElement lispStruct = null;
+		LispStruct lispStruct = null;
 
 		while (lispStruct == null) {
 

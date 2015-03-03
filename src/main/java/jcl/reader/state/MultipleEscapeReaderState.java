@@ -4,7 +4,7 @@
 
 package jcl.reader.state;
 
-import jcl.compiler.real.element.SimpleElement;
+import jcl.LispStruct;
 import jcl.reader.ReaderStateMediator;
 import jcl.reader.TokenBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -34,7 +34,7 @@ class MultipleEscapeReaderState implements ReaderState {
 	private ReaderStateMediator readerStateMediator;
 
 	@Override
-	public SimpleElement process(final TokenBuilder tokenBuilder) {
+	public LispStruct process(final TokenBuilder tokenBuilder) {
 		return readerStateMediator.readOddMultipleEscape(tokenBuilder);
 	}
 

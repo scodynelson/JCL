@@ -4,8 +4,8 @@
 
 package jcl.reader.macrofunction;
 
+import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
-import jcl.compiler.real.element.SimpleElement;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.printer.Printer;
 import jcl.reader.Reader;
@@ -51,10 +51,10 @@ public class SharpFullStopReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public SimpleElement readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.FULL_STOP;
 
-		final SimpleElement lispToken = reader.read();
+		final LispStruct lispToken = reader.read();
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			if (LOGGER.isDebugEnabled()) {
 				final String printedToken = printer.print(lispToken);

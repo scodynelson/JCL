@@ -4,9 +4,9 @@
 
 package jcl.reader.struct;
 
+import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.classes.BuiltInClassStruct;
-import jcl.compiler.real.element.SimpleElement;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.numbers.IntegerStruct;
 import jcl.reader.AttributeType;
@@ -220,7 +220,7 @@ public class ReadtableStruct extends BuiltInClassStruct {
 		private final Map<Integer, ReaderMacroFunction> readerMacroFunctionMap = new ConcurrentHashMap<>();
 
 		@Override
-		public SimpleElement readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+		public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 
 			final ReadPeekResult readResult = reader.readChar(false, null, false);
 			if (readResult.isEof()) {

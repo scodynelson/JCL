@@ -4,7 +4,7 @@
 
 package jcl.reader.state;
 
-import jcl.compiler.real.element.SimpleElement;
+import jcl.LispStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.reader.AttributeType;
 import jcl.reader.ReaderStateMediator;
@@ -43,7 +43,7 @@ class ConstituentReaderState implements ReaderState {
 	private ReaderStateMediator readerStateMediator;
 
 	@Override
-	public SimpleElement process(final TokenBuilder tokenBuilder) {
+	public LispStruct process(final TokenBuilder tokenBuilder) {
 
 		final ReadPeekResult readResult = tokenBuilder.getPreviousReadResult();
 		int codePoint = readResult.getResult(); // This will not be 'null'. We check for EOFs after each 'read'.

@@ -5,7 +5,6 @@
 package jcl.reader.macrofunction;
 
 import jcl.LispStruct;
-import jcl.compiler.real.element.SymbolElement;
 import jcl.functions.FunctionStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
@@ -13,6 +12,8 @@ import jcl.reader.AttributeType;
 import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.SyntaxType;
+import jcl.symbols.SymbolStruct;
+import jcl.system.CommonLispSymbols;
 
 /**
  * Abstract implementation definition for all Reader defined macro functions that read character macros based off of a
@@ -31,27 +32,33 @@ abstract class ReaderMacroFunctionImpl extends FunctionStruct implements ReaderM
 		return null;
 	}
 
-	static final SymbolElement APPEND = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "APPEND");
+	static final SymbolStruct<?> APPEND = CommonLispSymbols.APPEND;
 
-	static final SymbolElement COMPLEX = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "COMPLEX");
+	static final SymbolStruct<?> COMPLEX = CommonLispSymbols.COMPLEX;
 
-	static final SymbolElement CONS = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "CONS");
+	static final SymbolStruct<?> CONS = CommonLispSymbols.CONS;
 
-	static final SymbolElement FUNCTION = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "FUNCTION");
+	static final SymbolStruct<?> FUNCTION = CommonLispSymbols.FUNCTION;
 
-	static final SymbolElement LIST = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "LIST");
+	static final SymbolStruct<?> LIST = CommonLispSymbols.LIST;
 
-	static final SymbolElement LIST_STAR = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "LIST*");
+	static final SymbolStruct<?> LIST_STAR = CommonLispSymbols.LIST_STAR;
 
-	static final SymbolElement NCONC = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "NCONC");
+	static final SymbolStruct<?> NCONC = CommonLispSymbols.NCONC;
 
-	static final SymbolElement NIL = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "NIL");
+	static final SymbolStruct<?> NIL = CommonLispSymbols.NIL;
 
-	static final SymbolElement PATHNAME = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "PATHNAME");
+	static final SymbolStruct<?> PATHNAME = CommonLispSymbols.PATHNAME;
 
-	static final SymbolElement QUOTE = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "QUOTE");
+	static final SymbolStruct<?> QUOTE = CommonLispSymbols.QUOTE;
 
-	static final SymbolElement T = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "T");
+	static final SymbolStruct<?> T = CommonLispSymbols.T;
+
+	static final SymbolStruct<?> BQ_COMMA_FLAG = new SymbolStruct<>(",", GlobalPackageStruct.BACKQUOTE);
+
+	static final SymbolStruct<?> BQ_AT_FLAG = new SymbolStruct<>(",@", GlobalPackageStruct.BACKQUOTE);
+
+	static final SymbolStruct<?> BQ_DOT_FLAG = new SymbolStruct<>(",.", GlobalPackageStruct.BACKQUOTE);
 
 	/**
 	 * Determines if the provided {@code codePoint} is a {@link SyntaxType#WHITESPACE} based on the current readtable.

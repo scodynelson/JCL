@@ -4,7 +4,7 @@
 
 package jcl.reader.state;
 
-import jcl.compiler.real.element.SimpleElement;
+import jcl.LispStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.reader.ReaderStateMediator;
 import jcl.reader.TokenAttribute;
@@ -51,7 +51,7 @@ class TokenAccumulatedReaderState implements ReaderState {
 	private ReaderStateMediator readerStateMediator;
 
 	@Override
-	public SimpleElement process(final TokenBuilder tokenBuilder) {
+	public LispStruct process(final TokenBuilder tokenBuilder) {
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			return null;

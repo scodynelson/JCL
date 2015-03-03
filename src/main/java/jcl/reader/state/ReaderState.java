@@ -5,7 +5,6 @@
 package jcl.reader.state;
 
 import jcl.LispStruct;
-import jcl.compiler.real.element.SimpleElement;
 import jcl.reader.AttributeType;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
@@ -161,7 +160,6 @@ interface ReaderState extends Serializable {
 	 * 		the read process
 	 *
 	 * @return the resulting {@link LispStruct} token after a successful read
-	 * TODO: fix Javadoc
 	 */
-	SimpleElement process(TokenBuilder tokenBuilder);
+	LispStruct process(TokenBuilder tokenBuilder);
 }

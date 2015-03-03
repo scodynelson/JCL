@@ -4,8 +4,8 @@
 
 package jcl.reader.macrofunction;
 
+import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
-import jcl.compiler.real.element.SimpleElement;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
@@ -35,7 +35,7 @@ public class SharpSharpReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public SimpleElement readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.NUMBER_SIGN;
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
@@ -46,13 +46,13 @@ public class SharpSharpReaderMacroFunction extends ReaderMacroFunctionImpl {
 			throw new ReaderErrorException("Missing label for ##.");
 		}
 
-		final SimpleElement labelObject = reader.getSharpEqualFinalTable().get(numArg);
+		final LispStruct labelObject = reader.getSharpEqualFinalTable().get(numArg);
 		if (labelObject != null) {
 			return labelObject;
 		}
 
 		final UUID possibleLabelTag = reader.getSharpEqualTempTable().get(numArg);
-		final SimpleElement possibleLabelObject = reader.getSharpEqualReplTable().get(possibleLabelTag);
+		final LispStruct possibleLabelObject = reader.getSharpEqualReplTable().get(possibleLabelTag);
 		if (possibleLabelObject != null) {
 			return possibleLabelObject;
 		}

@@ -4,20 +4,17 @@
 
 package jcl.reader.macrofunction;
 
+import jcl.LispStruct;
 import jcl.arrays.BitVectorStruct;
 import jcl.characters.CharacterConstants;
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.IntegerElement;
-import jcl.compiler.real.element.NullElement;
-import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.element.SymbolElement;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ListStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
-import jcl.system.EnhancedLinkedList;
+import jcl.symbols.SymbolStruct;
+import jcl.system.CommonLispSymbols;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +22,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.math.BigInteger;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -52,7 +50,7 @@ public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public SimpleElement readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.ASTERISK;
 
 		final ExtendedTokenReaderMacroFunction.ReadExtendedToken readExtendedToken = ExtendedTokenReaderMacroFunction.readExtendedToken(reader, false);
@@ -94,7 +92,7 @@ public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 *
 	 * @return the properly created {@link BitVectorStruct} taking care of the proper bit-vector length
 	 */
-	private static ConsElement handleNumArg(final String token, final BigInteger numArg) {
+	private static ListStruct handleNumArg(final String token, final BigInteger numArg) {
 
 		if (StringUtils.isEmpty(token)) {
 			throw new ReaderErrorException("At least one bit must be supplied for non-zero #* bit-vectors.");
@@ -129,26 +127,21 @@ public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 *
 	 * @return the {@link ListStruct} calling the appropriate function needed to produce the {@link BitVectorStruct}
 	 */
-	private static ConsElement createBitVector(final String token) {
+	private static ListStruct createBitVector(final String token) {
 		final int numberOfTokens = token.length();
 		final BigInteger numberOfTokensBI = BigInteger.valueOf(numberOfTokens);
 
-		final EnhancedLinkedList<SimpleElement> bits = convertBitStringToBits(token);
+		final List<LispStruct> bits = convertBitStringToBits(token);
 
-		final SymbolElement makeArrayFnSymbol = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "MAKE-ARRAY");
-		final IntegerElement dimensions = new IntegerElement(numberOfTokensBI);
-		final SymbolElement elementTypeKeyword = new SymbolElement(GlobalPackageStruct.KEYWORD.getName(), "ELEMENT-TYPE");
-		final SymbolElement elementType = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "BIT");
-		final SymbolElement initialContentsKeyword = new SymbolElement(GlobalPackageStruct.KEYWORD.getName(), "INITIAL-CONTENTS");
+		final SymbolStruct<?> makeArrayFnSymbol = CommonLispSymbols.MAKE_ARRAY;
+		final IntegerStruct dimensions = new IntegerStruct(numberOfTokensBI);
+		final SymbolStruct<?> elementTypeKeyword = GlobalPackageStruct.KEYWORD.findSymbol("ELEMENT-TYPE").getSymbolStruct();
+		final SymbolStruct<?> elementType = CommonLispSymbols.BIT;
+		final SymbolStruct<?> initialContentsKeyword = GlobalPackageStruct.KEYWORD.findSymbol("INITIAL-CONTENTS").getSymbolStruct();
 
-		final SimpleElement initialContents;
-		if (bits.isEmpty()) {
-			initialContents = NullElement.INSTANCE;
-		} else {
-			initialContents = new ConsElement(bits);
-		}
+		final ListStruct contents = ListStruct.buildProperList(bits);
 
-		return new ConsElement(makeArrayFnSymbol, dimensions, elementTypeKeyword, elementType, initialContentsKeyword, initialContents);
+		return ListStruct.buildProperList(makeArrayFnSymbol, dimensions, elementTypeKeyword, elementType, initialContentsKeyword, contents);
 	}
 
 	/**
@@ -159,12 +152,12 @@ public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 *
 	 * @return the list of {@link IntegerStruct} bits comprising the provided {@code token}
 	 */
-	private static EnhancedLinkedList<SimpleElement> convertBitStringToBits(final String token) {
-		return new EnhancedLinkedList<>(token.chars()
-		                                     .map(e -> Character.getNumericValue((char) e))
-		                                     .mapToObj(BigInteger::valueOf)
-		                                     .map(IntegerElement::new)
-		                                     .collect(Collectors.toList()));
+	private static List<LispStruct> convertBitStringToBits(final String token) {
+		return token.chars()
+		            .map(e -> Character.getNumericValue((char) e))
+		            .mapToObj(BigInteger::valueOf)
+		            .map(IntegerStruct::new)
+		            .collect(Collectors.toList());
 	}
 
 	/**

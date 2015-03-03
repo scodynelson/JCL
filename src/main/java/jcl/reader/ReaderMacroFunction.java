@@ -34,9 +34,8 @@ public interface ReaderMacroFunction extends Serializable {
 	 * 		the optional number argument
 	 *
 	 * @return the parsed {@link LispStruct} token
-	 * TODO: fix Javadoc
 	 */
-	SimpleElement readMacro(int codePoint, Reader reader, BigInteger numArg);
+	LispStruct readMacro(int codePoint, Reader reader, BigInteger numArg);
 
 	/**
 	 * Default method used to determine if the ReaderMacroFunction is a dispatching macro. The default value return is

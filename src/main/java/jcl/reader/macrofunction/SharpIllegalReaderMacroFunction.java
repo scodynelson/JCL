@@ -4,8 +4,8 @@
 
 package jcl.reader.macrofunction;
 
+import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
-import jcl.compiler.real.element.SimpleElement;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
@@ -44,7 +44,7 @@ public class SharpIllegalReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public SimpleElement readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		throw new ReaderErrorException("Illegal sharp character " + codePoint);
 	}
 }

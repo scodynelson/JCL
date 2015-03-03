@@ -4,8 +4,7 @@
 
 package jcl.reader.state;
 
-import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.element.SymbolElement;
+import jcl.LispStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
@@ -80,26 +79,26 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 	private ReaderStateMediator readerStateMediator;
 
 	@Override
-	public SimpleElement process(final TokenBuilder tokenBuilder) {
+	public LispStruct process(final TokenBuilder tokenBuilder) {
 
-		final SymbolElement symbolElement = getSymbolElement(tokenBuilder);
-		if (symbolElement == null) {
+		final SymbolStruct<?> symbolToken = getSymbolToken(tokenBuilder);
+		if (symbolToken == null) {
 			return readerStateMediator.readIllegalCharacter(tokenBuilder);
 		} else {
-			return symbolElement;
+			return symbolToken;
 		}
 	}
 
 	/**
-	 * This method gets a {@link SymbolElement} from the provided {@link TokenBuilder} and it's {@link
+	 * This method gets a {@link SymbolStruct} from the provided {@link TokenBuilder} and it's {@link
 	 * TokenBuilder#tokenAttributes}.
 	 *
 	 * @param tokenBuilder
-	 * 		the reader state containing the {@link TokenBuilder#tokenAttributes} to derive the {@link SymbolElement}
+	 * 		the reader state containing the {@link TokenBuilder#tokenAttributes} to derive the {@link SymbolStruct}
 	 *
-	 * @return the built {@link SymbolElement} value
+	 * @return the built {@link SymbolStruct} value
 	 */
-	private static SymbolElement getSymbolElement(final TokenBuilder tokenBuilder) {
+	private static SymbolStruct<?> getSymbolToken(final TokenBuilder tokenBuilder) {
 
 		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
 
@@ -117,11 +116,10 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 
 			final PackageSymbolStruct foundSymbol = pkg.findSymbol(symName);
 			if (foundSymbol == null) {
-				return new SymbolElement(pkg.getName(), symName);
+				return new SymbolStruct<>(symName, pkg);
 //			    throw new ReaderErrorException("Unbound variable: " + symName); // TODO: This check will happen in the compiler...
 			} else {
-				final SymbolStruct<?> foundSymbolStruct = foundSymbol.getSymbolStruct();
-				return new SymbolElement(foundSymbolStruct.getSymbolPackage().getName(), foundSymbolStruct.getName());
+				return foundSymbol.getSymbolStruct();
 			}
 		}
 
@@ -197,16 +195,15 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 				if (externalSymbol == null) {
 					throw new ReaderErrorException("No external symbol named \"" + symName + "\" in package " + pkgName);
 				}
-				return new SymbolElement(pkgName, symName, true);
+				return new SymbolStruct<>(symName, pkg);
 //				throw new ReaderErrorException("Unbound variable: " + symName); // TODO: This check will happen in the compiler...
 			} else {
-				return new SymbolElement(pkgName, symName);
+				return new SymbolStruct<>(symName, pkg);
 //				throw new ReaderErrorException("Unbound variable: " + pkgName + "::" + symName); // TODO: This check will happen in the compiler...
 			}
 		}
 
-		final PackageStruct pkg = GlobalPackageStruct.KEYWORD;
-		return new SymbolElement(pkg.getName(), symName);
+		return new SymbolStruct<>(symName, GlobalPackageStruct.KEYWORD);
 	}
 
 	@Override

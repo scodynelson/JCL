@@ -4,6 +4,7 @@
 
 package jcl.reader.macrofunction;
 
+import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.compiler.real.element.SimpleElement;
 import jcl.reader.Reader;
@@ -43,7 +44,7 @@ public class SharpHyphenMinusReaderMacroFunction extends ReaderMacroFunctionImpl
 	}
 
 	@Override
-	public SimpleElement readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.HYPHEN_MINUS;
 
 		featuresReaderMacroFunction.readFeatures(reader, true);

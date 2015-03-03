@@ -15,6 +15,7 @@ import jcl.reader.struct.ReaderVariables;
 import jcl.streams.StreamVariables;
 import jcl.symbols.Declaration;
 import jcl.symbols.KeywordSymbolStruct;
+import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolConstants;
 import jcl.symbols.SymbolStruct;
 
@@ -218,7 +219,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> BASE_CHAR = null;
 	SymbolStruct<?> BASE_STRING = null;
 	SymbolStruct<?> BIGNUM = null;
-	SymbolStruct<?> BIT = null;
+	SymbolStruct<?> BIT = new SymbolStruct<>("BIT", GlobalPackageStruct.COMMON_LISP);
 	SymbolStruct<?> BIT_AND = null;
 	SymbolStruct<?> BIT_ANDC_1 = null;
 	SymbolStruct<?> BIT_ANDC_2 = null;
@@ -481,7 +482,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> FROUND = null;
 	SymbolStruct<?> FTRUNCATE = null;
 	SymbolStruct<?> FUNCALL = null;
-	SymbolStruct<?> FUNCTION = null;
+	SymbolStruct<?> FUNCTION = SpecialOperator.FUNCTION;
 	SymbolStruct<?> FUNCTION_KEYWORDS = null;
 	SymbolStruct<?> FUNCTION_LAMBDA_EXPRESSION = null;
 	SymbolStruct<?> FUNCTIONP = null;
@@ -695,7 +696,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> PARSE_ERROR = null;
 	SymbolStruct<?> PARSE_INTEGER = null;
 	SymbolStruct<?> PARSE_NAMESTRING = null;
-	SymbolStruct<?> PATHNAME = null;
+	SymbolStruct<?> PATHNAME = new SymbolStruct<>("PATHNAME", GlobalPackageStruct.COMMON_LISP);
 	SymbolStruct<?> PATHNAME_DEVICE = null;
 	SymbolStruct<?> PATHNAME_DIRECTORY = null;
 	SymbolStruct<?> PATHNAME_HOST = null;
@@ -745,7 +746,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> PSETQ = null;
 	SymbolStruct<?> PUSH = null;
 	SymbolStruct<?> PUSHNEW = null;
-	SymbolStruct<?> QUOTE = null;
+	SymbolStruct<?> QUOTE = SpecialOperator.QUOTE;
 	SymbolStruct<?> RANDOM = null;
 	SymbolStruct<?> RANDOM_STATE = null;
 	SymbolStruct<?> RANDOM_STATE_P = null;

@@ -88,13 +88,6 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 	public abstract void setElement(int index, LispStruct newValue);
 
 	/**
-	 * Returns the Lisp list as a Java list.
-	 *
-	 * @return the Lisp list as a Java list
-	 */
-	public abstract java.util.List<LispStruct> getAsJavaList();
-
-	/**
 	 * Determines if the list is a dotted list.
 	 *
 	 * @return if the list is a dotted list

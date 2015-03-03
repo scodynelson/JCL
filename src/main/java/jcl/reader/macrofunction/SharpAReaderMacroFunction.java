@@ -7,12 +7,6 @@ package jcl.reader.macrofunction;
 import jcl.LispStruct;
 import jcl.arrays.ArrayStruct;
 import jcl.characters.CharacterConstants;
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.IntegerElement;
-import jcl.compiler.real.element.NullElement;
-import jcl.compiler.real.element.SequenceElement;
-import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.element.SymbolElement;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ListStruct;
 import jcl.numbers.IntegerStruct;
@@ -21,7 +15,9 @@ import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
-import jcl.system.EnhancedLinkedList;
+import jcl.sequences.SequenceStruct;
+import jcl.symbols.SymbolStruct;
+import jcl.system.CommonLispSymbols;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
@@ -31,6 +27,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -66,10 +63,10 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public SimpleElement readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_A) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_A);
 
-		final SimpleElement lispToken = reader.read();
+		final LispStruct lispToken = reader.read();
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			if (LOGGER.isDebugEnabled()) {
 				final String printedToken = printer.print(lispToken);
@@ -83,8 +80,7 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 		}
 
 		if (BigInteger.ZERO.compareTo(numArg) > 0) {
-			if (!(lispToken instanceof SequenceElement)) {
-				// TODO: this is NOT adequate!! Because we MAKE ListElements in other parts of the reader...
+			if (!(lispToken instanceof SequenceStruct)) {
 				final String printedToken = printer.print(lispToken);
 				throw new ReaderErrorException("The form following a #" + numArg + "A reader macro should have been a sequence, but it was: " + printedToken);
 			}
@@ -104,38 +100,17 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 *
 	 * @return the {@link ListStruct} calling the appropriate function needed to produce the {@link ArrayStruct}
 	 */
-	private static ConsElement createArray(final BigInteger numArg, final SimpleElement contents) {
+	private static ListStruct createArray(final BigInteger numArg, final LispStruct contents) {
 
-		final EnhancedLinkedList<SimpleElement> dimensionsAsJavaList = getDimensions(numArg, contents);
+		final List<LispStruct> dimensionsAsJavaList = getDimensions(numArg, contents);
 
-		final SymbolElement makeArrayFnSymbol = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "MAKE-ARRAY");
+		final SymbolStruct<?> makeArrayFnSymbol = CommonLispSymbols.MAKE_ARRAY;
+		final ListStruct dimensions = ListStruct.buildProperList(dimensionsAsJavaList);
+		final SymbolStruct<?> elementTypeKeyword = GlobalPackageStruct.KEYWORD.findSymbol("ELEMENT-TYPE").getSymbolStruct();
+		final SymbolStruct<?> elementType = CommonLispSymbols.T;
+		final SymbolStruct<?> initialContentsKeyword = GlobalPackageStruct.KEYWORD.findSymbol("INITIAL-CONTENTS").getSymbolStruct();
 
-		final SimpleElement dimensions;
-		if (dimensionsAsJavaList.isEmpty()) {
-			dimensions = NullElement.INSTANCE;
-		} else {
-			dimensions = new ConsElement(dimensionsAsJavaList);
-		}
-
-		final SymbolElement elementTypeKeyword = new SymbolElement(GlobalPackageStruct.KEYWORD.getName(), "ELEMENT-TYPE");
-		final SymbolElement elementType = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "T");
-		final SymbolElement initialContentsKeyword = new SymbolElement(GlobalPackageStruct.KEYWORD.getName(), "INITIAL-CONTENTS");
-
-		final SimpleElement initialContents;
-		if (contents instanceof SequenceElement) {
-			final SequenceElement sequenceContents = (SequenceElement) contents;
-			final List<? extends SimpleElement> sequenceContentsAsJavaList = sequenceContents.getElements();
-
-			if (sequenceContentsAsJavaList.isEmpty()) {
-				initialContents = NullElement.INSTANCE;
-			} else {
-				initialContents = new ConsElement(contents);
-			}
-		} else {
-			initialContents = contents;
-		}
-
-		return new ConsElement(makeArrayFnSymbol, dimensions, elementTypeKeyword, elementType, initialContentsKeyword, initialContents);
+		return ListStruct.buildProperList(makeArrayFnSymbol, dimensions, elementTypeKeyword, elementType, initialContentsKeyword, contents);
 	}
 
 	/**
@@ -152,29 +127,29 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 * @throws ReaderErrorException
 	 * 		if dimensions do not match the provided contents list
 	 */
-	private static EnhancedLinkedList<SimpleElement> getDimensions(final BigInteger dimensions, final SimpleElement contents) {
+	private static List<LispStruct> getDimensions(final BigInteger dimensions, final LispStruct contents) {
 
-		SimpleElement seq = contents;
+		LispStruct seq = contents;
 		BigInteger zeroAxis = null;
 
-		final EnhancedLinkedList<SimpleElement> dimensionsAsJavaList = new EnhancedLinkedList<>();
+		final List<LispStruct> dimensionsAsJavaList = new ArrayList<>();
 
 		for (BigInteger axis = BigInteger.ZERO;
 		     dimensions.compareTo(axis) >= 0;
 		     axis = axis.add(BigInteger.ONE)) {
 
-			final SequenceElement seqList;
-			if (seq instanceof SequenceElement) {
-				seqList = (SequenceElement) seq;
+			final SequenceStruct seqList;
+			if (seq instanceof SequenceStruct) {
+				seqList = (SequenceStruct) seq;
 			} else {
 				throw new ReaderErrorException("#" + dimensions + "A axis " + axis + " is not a sequence: " + seq);
 			}
 
-			final List<? extends SimpleElement> lispTokens = seqList.getElements();
+			final List<LispStruct> lispTokens = seqList.getAsJavaList();
 
 			final int seqLength = lispTokens.size();
 			final BigInteger seqLengthBI = BigInteger.valueOf(seqLength);
-			final IntegerElement dimension = new IntegerElement(seqLengthBI);
+			final IntegerStruct dimension = new IntegerStruct(seqLengthBI);
 			dimensionsAsJavaList.add(dimension);
 
 			if (!axis.equals(dimensions.subtract(BigInteger.ONE))) {

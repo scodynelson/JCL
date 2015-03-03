@@ -8,6 +8,8 @@ import jcl.LispType;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.types.Stream;
 import jcl.types.typespecifiers.AndTypeSpecifier;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -16,17 +18,20 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 abstract class AbstractDualStreamStruct extends StreamStruct implements InputStream, OutputStream {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = -3285885552701366356L;
 
 	/**
-	 * This {@link InputStream} in the DualStreamStruct.
+	 * This {@link InputStream} in the AbstractDualStreamStruct.
 	 */
-	protected final InputStream inputStream;
+	final InputStream inputStream;
 
 	/**
-	 * This {@link OutputStream} in the DualStreamStruct.
+	 * This {@link OutputStream} in the AbstractDualStreamStruct.
 	 */
-	protected final OutputStream outputStream;
+	final OutputStream outputStream;
 
 	/**
 	 * Protected constructor.
@@ -36,12 +41,12 @@ abstract class AbstractDualStreamStruct extends StreamStruct implements InputStr
 	 * @param interactive
 	 * 		whether or not the struct created is 'interactive'
 	 * @param inputStream
-	 * 		the {@link InputStream} to create a DualStreamStruct from
+	 * 		the {@link InputStream} to create an AbstractDualStreamStruct from
 	 * @param outputStream
-	 * 		the {@link OutputStream} to create a DualStreamStruct from
+	 * 		the {@link OutputStream} to create an AbstractDualStreamStruct from
 	 */
-	protected AbstractDualStreamStruct(final Stream type,
-	                                   final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
+	AbstractDualStreamStruct(final Stream type,
+	                         final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
 		super(type, null, null, interactive, getElementType(inputStream, outputStream));
 		this.inputStream = inputStream;
 		this.outputStream = outputStream;
@@ -51,9 +56,9 @@ abstract class AbstractDualStreamStruct extends StreamStruct implements InputStr
 	 * This method is used to retrieve the element type for object construction.
 	 *
 	 * @param inputStream
-	 * 		the {@link InputStream} to create a DualStreamStruct from
+	 * 		the {@link InputStream} to create an AbstractDualStreamStruct from
 	 * @param outputStream
-	 * 		the {@link OutputStream} to create a DualStreamStruct from
+	 * 		the {@link OutputStream} to create an AbstractDualStreamStruct from
 	 *
 	 * @return the element type for object construction
 	 */
@@ -71,10 +76,20 @@ abstract class AbstractDualStreamStruct extends StreamStruct implements InputStr
 		return inType.equals(outType) ? inType : new AndTypeSpecifier(inType, outType);
 	}
 
+	/**
+	 * Getter for {@link #inputStream} property.
+	 *
+	 * @return {@link #inputStream} property
+	 */
 	public InputStream getInputStream() {
 		return inputStream;
 	}
 
+	/**
+	 * Getter for {@link #outputStream} property.
+	 *
+	 * @return {@link #outputStream} property
+	 */
 	public OutputStream getOutputStream() {
 		return outputStream;
 	}
@@ -121,7 +136,17 @@ abstract class AbstractDualStreamStruct extends StreamStruct implements InputStr
 
 	@Override
 	public Long fileLength() {
-		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_FILESTREAM);
+		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_FILE_STREAM);
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

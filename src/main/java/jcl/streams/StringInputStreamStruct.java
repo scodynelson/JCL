@@ -9,6 +9,8 @@ import jcl.conditions.exceptions.EndOfFileException;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.types.BaseChar;
 import jcl.types.StringStream;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -17,10 +19,13 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public class StringInputStreamStruct extends StreamStruct implements InputStream {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = 4439375845861585598L;
 
 	/**
-	 * The {@link java.lang.String} input value to read characters from.
+	 * The {@link String} input value to read characters from.
 	 */
 	private final String inputString;
 
@@ -81,7 +86,7 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 
 	@Override
 	public ReadPeekResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
-		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_BINARYSTREAM);
+		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_BINARY_STREAM);
 	}
 
 	@Override
@@ -179,7 +184,7 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 
 	@Override
 	public Long fileLength() {
-		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_FILESTREAM);
+		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_FILE_STREAM);
 	}
 
 	@Override
@@ -188,6 +193,16 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 			current = filePosition.intValue();
 		}
 		return (long) current;
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

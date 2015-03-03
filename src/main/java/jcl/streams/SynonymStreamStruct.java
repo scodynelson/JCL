@@ -9,6 +9,8 @@ import jcl.LispType;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.symbols.SymbolStruct;
 import jcl.types.SynonymStream;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -17,6 +19,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public class SynonymStreamStruct extends StreamStruct implements InputStream, OutputStream {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = -3809768442993249585L;
 
 	/**
@@ -188,11 +193,6 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	}
 
 	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
-	}
-
-	@Override
 	public Long fileLength() {
 		final StreamStruct stream = symbol.getValue();
 		return stream.fileLength();
@@ -202,5 +202,20 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	public Long filePosition(final Long filePosition) {
 		final StreamStruct stream = symbol.getValue();
 		return stream.filePosition(filePosition);
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

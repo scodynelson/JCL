@@ -9,6 +9,8 @@ import jcl.LispType;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.types.FileStream;
 import jcl.types.SignedByte;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
@@ -29,6 +31,9 @@ import java.nio.file.StandardOpenOption;
  */
 public class FileStreamStruct extends AbstractNativeStreamStruct {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = 5508947420127346965L;
 
 	/**
@@ -361,6 +366,16 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 		} catch (final IOException ioe) {
 			throw new StreamErrorException("Could not retrieve file position.", ioe);
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

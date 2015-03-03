@@ -7,6 +7,8 @@ package jcl.streams;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.types.BaseChar;
 import jcl.types.StringStream;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -15,6 +17,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public class StringOutputStreamStruct extends StreamStruct implements OutputStream {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = -6102057416932242456L;
 
 	/**
@@ -46,7 +51,7 @@ public class StringOutputStreamStruct extends StreamStruct implements OutputStre
 
 	@Override
 	public void writeByte(final int aByte) {
-		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_BINARYSTREAM);
+		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_BINARY_STREAM);
 	}
 
 	@Override
@@ -72,7 +77,7 @@ public class StringOutputStreamStruct extends StreamStruct implements OutputStre
 
 	@Override
 	public Long fileLength() {
-		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_FILESTREAM);
+		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_FILE_STREAM);
 	}
 
 	@Override
@@ -81,6 +86,16 @@ public class StringOutputStreamStruct extends StreamStruct implements OutputStre
 			return (long) stringBuffer.length();
 		}
 		return null;
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

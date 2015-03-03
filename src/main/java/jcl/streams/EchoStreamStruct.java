@@ -7,6 +7,8 @@ package jcl.streams;
 import jcl.LispStruct;
 import jcl.conditions.exceptions.EndOfFileException;
 import jcl.types.EchoStream;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -18,6 +20,9 @@ import java.util.Deque;
  */
 public class EchoStreamStruct extends AbstractDualStreamStruct {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = 5140093388290527648L;
 
 	/**
@@ -122,6 +127,16 @@ public class EchoStreamStruct extends AbstractDualStreamStruct {
 	@Override
 	public Long filePosition(final Long filePosition) {
 		return null;
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

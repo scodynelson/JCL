@@ -8,6 +8,8 @@ import jcl.LispStruct;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.types.Character;
 import jcl.types.Stream;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
@@ -27,6 +29,9 @@ import java.nio.charset.Charset;
  */
 public class CharacterStreamStruct extends AbstractNativeStreamStruct {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = 3029213066284401689L;
 
 	/**
@@ -87,7 +92,7 @@ public class CharacterStreamStruct extends AbstractNativeStreamStruct {
 
 	@Override
 	public ReadPeekResult readByte(final boolean eofErrorP, final LispStruct eofValue) {
-		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_BINARYSTREAM);
+		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_BINARY_STREAM);
 	}
 
 	@Override
@@ -203,7 +208,7 @@ public class CharacterStreamStruct extends AbstractNativeStreamStruct {
 
 	@Override
 	public void writeByte(final int aByte) {
-		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_BINARYSTREAM);
+		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_BINARY_STREAM);
 	}
 
 	@Override
@@ -239,12 +244,22 @@ public class CharacterStreamStruct extends AbstractNativeStreamStruct {
 
 	@Override
 	public Long fileLength() {
-		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_FILESTREAM);
+		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_FILE_STREAM);
 	}
 
 	@Override
 	public Long filePosition(final Long filePosition) {
 		return null;
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

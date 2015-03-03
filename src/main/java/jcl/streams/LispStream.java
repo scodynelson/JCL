@@ -10,7 +10,7 @@ import jcl.LispType;
 /**
  * The {@link LispStream} is the representation for all Lisp 'stream' types.
  */
-public interface LispStream extends LispStruct {
+interface LispStream extends LispStruct {
 
 	/**
 	 * Closes the stream.

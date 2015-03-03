@@ -21,8 +21,8 @@ final class StreamUtils {
 	static final String FAILED_TO_WRITE_BYTE = "Failed to write byte.";
 	static final String FAILED_TO_WRITE_CHAR = "Failed to write character.";
 	static final String FAILED_TO_WRITE_STRING = "Failed to write string.";
-	static final String OPERATION_ONLY_FILESTREAM = "Operation only supported on a FileStream.";
-	static final String OPERATION_ONLY_BINARYSTREAM = "Operation only supported for BinaryStreams.";
+	static final String OPERATION_ONLY_FILE_STREAM = "Operation only supported on a FileStream.";
+	static final String OPERATION_ONLY_BINARY_STREAM = "Operation only supported for BinaryStreams.";
 
 	/**
 	 * Private constructor.

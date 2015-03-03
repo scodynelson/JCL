@@ -8,6 +8,8 @@ import jcl.LispType;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.types.BroadcastStream;
 import jcl.types.T;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -19,6 +21,9 @@ import java.util.Deque;
  */
 public class BroadcastStreamStruct extends StreamStruct implements OutputStream {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = 9133930758245275144L;
 
 	/**
@@ -88,54 +93,37 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 
 	@Override
 	public void writeChar(final int aChar) {
-		for (final OutputStream outputStream : outputStreams) {
-			outputStream.writeChar(aChar);
-		}
+		outputStreams.forEach(e -> e.writeChar(aChar));
 	}
 
 	@Override
 	public void writeByte(final int aByte) {
-		for (final OutputStream outputStream : outputStreams) {
-			outputStream.writeByte(aByte);
-		}
+		outputStreams.forEach(e -> e.writeChar(aByte));
 	}
 
 	@Override
 	public void writeString(final String outputString, final int start, final int end) {
-		for (final OutputStream outputStream : outputStreams) {
-			outputStream.writeString(outputString, start, end);
-		}
+		outputStreams.forEach(e -> e.writeString(outputString, start, end));
 	}
 
 	@Override
 	public void clearOutput() {
-		for (final OutputStream outputStream : outputStreams) {
-			outputStream.clearOutput();
-		}
+		outputStreams.forEach(OutputStream::clearOutput);
 	}
 
 	@Override
 	public void finishOutput() {
-		for (final OutputStream outputStream : outputStreams) {
-			outputStream.finishOutput();
-		}
+		outputStreams.forEach(OutputStream::finishOutput);
 	}
 
 	@Override
 	public void forceOutput() {
-		for (final OutputStream outputStream : outputStreams) {
-			outputStream.forceOutput();
-		}
+		outputStreams.forEach(OutputStream::forceOutput);
 	}
 
 	@Override
 	public LispType getElementType() {
 		return getElementType3(outputStreams);
-	}
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 
 	@Override
@@ -156,5 +144,20 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 
 		final OutputStream last = outputStreams.getLast();
 		return last.filePosition(filePosition);
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

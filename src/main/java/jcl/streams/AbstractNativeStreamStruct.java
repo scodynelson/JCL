@@ -8,6 +8,8 @@ import jcl.LispType;
 import jcl.conditions.exceptions.EndOfFileException;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.types.Stream;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
@@ -18,6 +20,9 @@ import org.slf4j.LoggerFactory;
  */
 abstract class AbstractNativeStreamStruct extends StreamStruct implements InputStream, OutputStream {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = -4334429877946908390L;
 
 	/**
@@ -35,8 +40,8 @@ abstract class AbstractNativeStreamStruct extends StreamStruct implements InputS
 	 * @param elementType
 	 * 		the stream elementType
 	 */
-	protected AbstractNativeStreamStruct(final Stream type,
-	                                     final boolean interactive, final LispType elementType) {
+	AbstractNativeStreamStruct(final Stream type,
+	                           final boolean interactive, final LispType elementType) {
 		super(type, null, null, interactive, elementType);
 	}
 
@@ -56,6 +61,16 @@ abstract class AbstractNativeStreamStruct extends StreamStruct implements InputS
 			}
 			return false;
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

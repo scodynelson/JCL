@@ -6,6 +6,8 @@ package jcl.numbers;
 
 import jcl.LispStruct;
 import jcl.types.Rational;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -14,8 +16,11 @@ import java.util.List;
 /**
  * The {@link RationalStruct} is the object representation of a Lisp 'rational' type.
  */
-public abstract class RationalStruct extends RealStruct {
+public class RationalStruct extends RealStruct {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = 3775544213011392520L;
 
 	/**
@@ -40,9 +45,19 @@ public abstract class RationalStruct extends RealStruct {
 	 * @param subClasses
 	 * 		the subclasses
 	 */
-	protected RationalStruct(final Rational type,
+	RationalStruct(final Rational type,
 	                         final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
 		super(type, directSuperClasses, subClasses);
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

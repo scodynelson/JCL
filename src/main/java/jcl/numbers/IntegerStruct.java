@@ -16,6 +16,9 @@ import java.math.BigInteger;
  */
 public class IntegerStruct extends RationalStruct {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = -4665072618932472349L;
 
 	/**

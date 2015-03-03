@@ -6,6 +6,8 @@ package jcl.numbers;
 
 import jcl.types.Float;
 import jcl.types.SingleFloat;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -16,6 +18,9 @@ import java.math.BigDecimal;
  */
 public class FloatStruct extends RealStruct {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = 4803312076840516559L;
 
 	/**
@@ -53,6 +58,16 @@ public class FloatStruct extends RealStruct {
 	 */
 	public BigDecimal getBigDecimal() {
 		return bigDecimal;
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

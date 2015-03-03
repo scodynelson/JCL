@@ -5,6 +5,8 @@
 package jcl.numbers;
 
 import jcl.types.Complex;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.math3.fraction.BigFraction;
@@ -17,6 +19,9 @@ import java.math.BigInteger;
  */
 public class ComplexStruct extends NumberStruct {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = 7848008215064899579L;
 
 	/**
@@ -189,6 +194,16 @@ public class ComplexStruct extends NumberStruct {
 	 */
 	public RealStruct getImaginary() {
 		return imaginary;
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

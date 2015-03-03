@@ -6,6 +6,8 @@ package jcl.numbers;
 
 import jcl.classes.BuiltInClassStruct;
 import jcl.types.RandomState;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -20,6 +22,9 @@ import java.util.List;
  */
 public class RandomStateStruct extends BuiltInClassStruct {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = 457336984118960936L;
 
 	/**
@@ -192,11 +197,6 @@ public class RandomStateStruct extends BuiltInClassStruct {
 		return ifAPart;
 	}
 
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
-	}
-
 	/**
 	 * Performs bit shifting depending on the sign of the shift value.
 	 *
@@ -207,5 +207,20 @@ public class RandomStateStruct extends BuiltInClassStruct {
 	 */
 	private static BigInteger ash(final BigInteger bits) {
 		return (BIT_SHIFT_AMOUNT_AS_INT <= 0) ? bits.shiftRight(BIT_SHIFT_AMOUNT_AS_INT) : bits.shiftLeft(BIT_SHIFT_AMOUNT_AS_INT);
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

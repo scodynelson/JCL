@@ -28,6 +28,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
@@ -69,7 +70,7 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 	/**
 	 * The list of {@link AttributeType}s that should not be first nor last if present in a numeric token.
 	 */
-	private static final List<AttributeType> NOT_FIRST_OR_LAST_ATTRS = Arrays.asList(AttributeType.DECIMAL, AttributeType.RATIOMARKER);
+	private static final List<AttributeType> NOT_FIRST_OR_LAST_ATTRS = Collections.singletonList(AttributeType.RATIOMARKER);
 
 	/**
 	 * The list of {@link AttributeType}s that there should only be one of if present in a numeric token.
@@ -120,6 +121,7 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 		// If there are any 'INVALID', 'ALPHABETIC', or 'PACKAGEMARKER' tokens, not a number
 		final boolean containsNonNumberAttrs =
 				tokenAttributes.stream()
+				               .map(TokenAttribute::getAttributeType)
 				               .anyMatch(NOT_NUMBER_ATTRS::contains);
 		if (containsNonNumberAttrs) {
 			return null;
@@ -138,7 +140,7 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 		final TokenAttribute firstTokenAttribute = tokenAttributes.getFirst();
 		final int firstToken = firstTokenAttribute.getToken();
 
-		final boolean areAnyTokensInvalidRegexAndUnicode = areValidNumericTokens(currentRadix, firstToken, tokenAttributes);
+		final boolean areAnyTokensInvalidRegexAndUnicode = !areValidNumericTokens(currentRadix, firstToken, tokenAttributes);
 		if (areAnyTokensInvalidRegexAndUnicode) {
 			return null;
 		}
@@ -159,9 +161,7 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 		final boolean hasRatioMarker = ReaderState.hasAnyAttribute(tokenAttributes, AttributeType.RATIOMARKER);
 		final boolean hasExponentMarker = ReaderState.hasAnyAttribute(tokenAttributes, AttributeType.EXPONENTMARKER);
 
-		if (hasExponentMarker && !hasDecimal) {
-			return null;
-		} else if (hasRatioMarker) {
+		if (hasRatioMarker) {
 			final int numberOfRationalParts = 2;
 			final String[] rationalParts = tokenString.split("/", numberOfRationalParts);
 			final BigInteger numerator = new BigInteger(rationalParts[0], currentRadix);
@@ -169,7 +169,7 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 
 			final BigFraction rational = new BigFraction(numerator, denominator);
 			return new RatioStruct(rational);
-		} else if (hasDecimal) {
+		} else if (hasDecimal || hasExponentMarker) {
 			final Integer exponentToken = ReaderState.getTokenByAttribute(tokenAttributes, AttributeType.EXPONENTMARKER);
 
 			tokenString = getFloatTokenString(tokenString, exponentToken);
@@ -219,7 +219,7 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 		final TokenAttribute lastTokenAttribute = tokenAttributes.getLast();
 		final AttributeType lastAttributeType = lastTokenAttribute.getAttributeType();
 
-		// Checks to make sure if either 'DECIMAL' or 'RATIOMARKER' is supplied, that it is neither first nor last
+		// Checks to make sure if either 'RATIOMARKER' is supplied, that it is neither first nor last
 		final boolean hasAttributesAndFirstOrLast
 				= hasAnyAttributes(NOT_FIRST_OR_LAST_ATTRS, e ->
 						ReaderState.hasAnyAttribute(tokenAttributes, e) && ((firstAttributeType == e) || (lastAttributeType == e))
@@ -286,8 +286,9 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 	private static boolean areValidNumericTokens(final int currentRadix, final int firstToken, final List<TokenAttribute> tokenAttributes) {
 		return tokenAttributes
 				.stream()
-				.map(e -> (e.getAttributeType() != AttributeType.ALPHADIGIT) || isValidNumericToken(currentRadix, firstToken, e.getToken()))
-				.reduce(false, (result, e) -> result || e);
+				.filter(e -> e.getAttributeType() == AttributeType.ALPHADIGIT)
+				.map(e -> isValidNumericToken(currentRadix, firstToken, e.getToken()))
+				.reduce(true, (result, e) -> result && e);
 	}
 
 	/**
@@ -304,11 +305,12 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 	 * @return true if the provided {@code currentToken} is a valid part of a numeric token; false otherwise
 	 */
 	private static boolean isValidNumericToken(final int currentRadix, final int firstToken, final int currentToken) {
-		final boolean isDigitWithRadix = Character.digit(currentToken, currentRadix) >= 0;
+		final int digit = Character.digit(currentToken, currentRadix);
+		final boolean isDigitWithRadix = digit >= 0;
 
 		final Character.UnicodeBlock tokenBlock = Character.UnicodeBlock.of(firstToken);
 		final boolean isDigitInSameBlock = Character.UnicodeBlock.of(currentToken).equals(tokenBlock);
-		return !(isDigitWithRadix && isDigitInSameBlock);
+		return isDigitWithRadix && isDigitInSameBlock;
 	}
 
 	/**
@@ -324,7 +326,7 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 	 */
 	private static String getFloatTokenString(final String tokenString, final Integer exponentToken) {
 		if (exponentToken != null) {
-			final String exponentTokenString = String.valueOf(exponentToken);
+			final String exponentTokenString = String.valueOf(Character.toChars(exponentToken));
 			final String eCapitalLetterString = CharacterConstants.LATIN_CAPITAL_LETTER_E.toString();
 			return tokenString.replace(exponentTokenString, eCapitalLetterString);
 		}

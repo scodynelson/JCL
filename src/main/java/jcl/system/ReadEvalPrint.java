@@ -120,7 +120,7 @@ public class ReadEvalPrint {
 							whatRead = reader.read();
 						}
 						if (whatRead != null) {
-							LOGGER.debug("READ:");
+							LOGGER.debug("READ: " + whatRead.getClass().getSimpleName());
 
 							final String printedWhatRead = printer.print(whatRead);
 							LOGGER.debug("{}", printedWhatRead);

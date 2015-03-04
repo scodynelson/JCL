@@ -25,13 +25,15 @@ import org.apache.commons.math3.fraction.BigFraction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.lang.Boolean;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Step 10.1 of the Reader Algorithm.
@@ -66,11 +68,6 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 	 * The list of {@link AttributeType}s that should only be first if present in a numeric token.
 	 */
 	private static final List<AttributeType> FIRST_ONLY_ATTRS = Arrays.asList(AttributeType.PLUS, AttributeType.MINUS);
-
-	/**
-	 * The list of {@link AttributeType}s that should not be first nor last if present in a numeric token.
-	 */
-	private static final List<AttributeType> NOT_FIRST_OR_LAST_ATTRS = Collections.singletonList(AttributeType.RATIOMARKER);
 
 	/**
 	 * The list of {@link AttributeType}s that there should only be one of if present in a numeric token.
@@ -195,17 +192,18 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 	private static boolean areNumberAttributesInvalid(final LinkedList<TokenAttribute> tokenAttributes) {
 
 		// Checks to make sure there are not more than one of: 'PLUS', 'MINUS', 'DECIMAL', 'RATIOMARKER'
+		final Map<AttributeType, List<TokenAttribute>> attributeTypeToAttributes
+				= tokenAttributes.stream()
+				                 .collect(Collectors.groupingBy(TokenAttribute::getAttributeType));
+
 		final boolean hasMoreThanOneOfAttributes
-				= hasAnyAttributes(NOT_MORE_THAN_ONE_ATTRS, e ->
-		{
-			final long numberOfMatchingAttributes =
-					tokenAttributes
-							.stream()
-							.filter(tokenAttribute -> tokenAttribute.getAttributeType() == e)
-							.limit(2)
-							.count();
-			return numberOfMatchingAttributes > 1;
-		});
+				= attributeTypeToAttributes.entrySet()
+				                           .stream()
+				                           .filter(e -> NOT_MORE_THAN_ONE_ATTRS.contains(e.getKey()))
+				                           .map(Map.Entry::getValue)
+				                           .map(List::size)
+				                           .map(e -> e > 1)
+				                           .anyMatch(Boolean.TRUE::equals);
 
 		final TokenAttribute firstTokenAttribute = tokenAttributes.getFirst();
 		final AttributeType firstAttributeType = firstTokenAttribute.getAttributeType();
@@ -220,36 +218,16 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 		final AttributeType lastAttributeType = lastTokenAttribute.getAttributeType();
 
 		// Checks to make sure if either 'RATIOMARKER' is supplied, that it is neither first nor last
-		final boolean hasAttributesAndFirstOrLast
-				= hasAnyAttributes(NOT_FIRST_OR_LAST_ATTRS, e ->
-						ReaderState.hasAnyAttribute(tokenAttributes, e) && ((firstAttributeType == e) || (lastAttributeType == e))
-		);
+		final boolean isRatioMarkerFirstOrLast = (firstAttributeType == AttributeType.RATIOMARKER) || (lastAttributeType == AttributeType.RATIOMARKER);
 
 		// Checks to make sure that both 'DECIMAL' and 'RATIOMARKER' are not supplied at the same time
 		final boolean hasSimultaneousAttributes
-				= hasAllAttributes(NO_SIMULTANEOUS_ATTRS, e ->
-						ReaderState.hasAnyAttribute(tokenAttributes, e)
-		);
+				= attributeTypeToAttributes.entrySet()
+				                           .stream()
+				                           .filter(e -> NO_SIMULTANEOUS_ATTRS.contains(e.getKey()))
+				                           .count() > 1;
 
-		return hasMoreThanOneOfAttributes || hasAttributesAndNotFirst || hasAttributesAndFirstOrLast || hasSimultaneousAttributes;
-	}
-
-	/**
-	 * Determines if all of the provided {@code attributeTypes} are present according to the results of the application
-	 * of the provided {@code function}.
-	 *
-	 * @param function
-	 * 		the function to apply to determine the presence of the provided {@code attributeTypes}
-	 * @param attributeTypes
-	 * 		the AttributeType values to test for presence
-	 *
-	 * @return true if all of the provided {@code attributeTypes} are present; false otherwise
-	 */
-	private static boolean hasAllAttributes(final List<AttributeType> attributeTypes, final Function<AttributeType, Boolean> function) {
-		return attributeTypes
-				.stream()
-				.map(function)
-				.reduce(true, (result, e) -> result && e);
+		return hasMoreThanOneOfAttributes || hasAttributesAndNotFirst || isRatioMarkerFirstOrLast || hasSimultaneousAttributes;
 	}
 
 	/**

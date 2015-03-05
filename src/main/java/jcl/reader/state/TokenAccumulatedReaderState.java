@@ -6,7 +6,6 @@ package jcl.reader.state;
 
 import jcl.LispStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.reader.ReaderStateMediator;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
 import jcl.reader.struct.ReaderVariables;
@@ -44,12 +43,6 @@ class TokenAccumulatedReaderState implements ReaderState {
 	@Autowired
 	private NumberTokenAccumulatedReaderState numberTokenAccumulatedReaderState;
 
-	/**
-	 * {@link ReaderStateMediator} singleton used by the reader algorithm.
-	 */
-	@Autowired
-	private ReaderStateMediator readerStateMediator;
-
 	@Override
 	public LispStruct process(final TokenBuilder tokenBuilder) {
 
@@ -58,10 +51,6 @@ class TokenAccumulatedReaderState implements ReaderState {
 		}
 
 		final List<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
-
-		if (tokenAttributes.isEmpty()) {
-			return readerStateMediator.readIllegalCharacter(tokenBuilder);
-		}
 
 		final String tokenString = ReaderState.convertTokensToString(tokenAttributes);
 		if (".".equals(tokenString)) {

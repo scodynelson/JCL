@@ -100,6 +100,7 @@ class OddMultiEscapeReaderState implements ReaderState {
 
 			return readerStateMediator.readOddMultipleEscape(tokenBuilder);
 		} else if (syntaxType == SyntaxType.MULTIPLE_ESCAPE) {
+			tokenBuilder.setMultiEscapedToken();
 			return readerStateMediator.readEvenMultipleEscape(tokenBuilder);
 		} else {
 			return readerStateMediator.readIllegalCharacter(tokenBuilder);

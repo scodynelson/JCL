@@ -47,6 +47,11 @@ public class TokenBuilder {
 	private ReadPeekResult previousReadResult;
 
 	/**
+	 * Notes whether the token was multi-escaped.
+	 */
+	private boolean isMultiEscapedToken;
+
+	/**
 	 * Package private constructor.
 	 *
 	 * @param reader
@@ -66,6 +71,7 @@ public class TokenBuilder {
 		tokenAttributes = new LinkedList<>();
 
 		previousReadResult = null;
+		isMultiEscapedToken = false;
 	}
 
 	/**
@@ -105,25 +111,6 @@ public class TokenBuilder {
 	}
 
 	/**
-	 * Getter for {@link #previousReadResult} property.
-	 *
-	 * @return {@link #previousReadResult} property
-	 */
-	public ReadPeekResult getPreviousReadResult() {
-		return previousReadResult;
-	}
-
-	/**
-	 * Setter for the {@link #previousReadResult} property.
-	 *
-	 * @param previousReadResult
-	 * 		the new value of the {@link #previousReadResult} property
-	 */
-	public void setPreviousReadResult(final ReadPeekResult previousReadResult) {
-		this.previousReadResult = previousReadResult;
-	}
-
-	/**
 	 * Getter for {@link #tokenAttributes} property.
 	 *
 	 * @return {@link #tokenAttributes} property
@@ -144,6 +131,41 @@ public class TokenBuilder {
 	public void addToTokenAttributes(final int token, final AttributeType attributeType) {
 		final TokenAttribute tokenAttribute = new TokenAttribute(token, attributeType);
 		tokenAttributes.add(tokenAttribute);
+	}
+
+	/**
+	 * Getter for {@link #previousReadResult} property.
+	 *
+	 * @return {@link #previousReadResult} property
+	 */
+	public ReadPeekResult getPreviousReadResult() {
+		return previousReadResult;
+	}
+
+	/**
+	 * Setter for the {@link #previousReadResult} property.
+	 *
+	 * @param previousReadResult
+	 * 		the new value of the {@link #previousReadResult} property
+	 */
+	public void setPreviousReadResult(final ReadPeekResult previousReadResult) {
+		this.previousReadResult = previousReadResult;
+	}
+
+	/**
+	 * Getter for {@link #isMultiEscapedToken} property.
+	 *
+	 * @return {@link #isMultiEscapedToken} property
+	 */
+	public boolean isMultiEscapedToken() {
+		return isMultiEscapedToken;
+	}
+
+	/**
+	 * Setter for the {@link #isMultiEscapedToken} property that will always set the value to true.
+	 */
+	public void setMultiEscapedToken() {
+		isMultiEscapedToken = true;
 	}
 
 	@Override

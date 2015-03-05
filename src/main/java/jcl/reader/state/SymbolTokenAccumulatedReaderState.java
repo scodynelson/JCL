@@ -15,7 +15,6 @@ import jcl.reader.ReaderStateMediator;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
 import jcl.symbols.SymbolStruct;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -101,11 +100,6 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 	private static SymbolStruct<?> getSymbolToken(final TokenBuilder tokenBuilder) {
 
 		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
-
-		// If there are no tokens, not a symbol. NOTE: We should never get here in the sequence. This is a protection.
-		if (CollectionUtils.isEmpty(tokenAttributes)) {
-			return null;
-		}
 
 		// Check that there is at least 1 'ALPHADIGIT'
 		final boolean hasNoPackageMarkers = ReaderState.hasNoAttributes(tokenAttributes, AttributeType.PACKAGEMARKER);

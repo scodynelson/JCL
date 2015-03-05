@@ -66,6 +66,7 @@ class ReadReaderState implements ReaderState {
 		} else if (syntaxType == SyntaxType.SINGLE_ESCAPE) {
 			return readerStateMediator.readSingleEscape(tokenBuilder);
 		} else if (syntaxType == SyntaxType.MULTIPLE_ESCAPE) {
+			tokenBuilder.setMultiEscapedToken();
 			return readerStateMediator.readMultipleEscape(tokenBuilder);
 		} else if (syntaxType == SyntaxType.CONSTITUENT) {
 			return readerStateMediator.readConstituent(tokenBuilder);

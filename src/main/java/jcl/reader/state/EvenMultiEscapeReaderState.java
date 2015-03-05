@@ -76,6 +76,12 @@ class EvenMultiEscapeReaderState implements ReaderState {
 	@Autowired
 	private ReaderStateMediator readerStateMediator;
 
+	/**
+	 * {@link SymbolTokenAccumulatedReaderState} singleton used by the reader algorithm.
+	 */
+	@Autowired
+	private SymbolTokenAccumulatedReaderState symbolTokenAccumulatedReaderState;
+
 	@Override
 	public LispStruct process(final TokenBuilder tokenBuilder) {
 
@@ -89,7 +95,12 @@ class EvenMultiEscapeReaderState implements ReaderState {
 		tokenBuilder.setPreviousReadResult(readResult);
 
 		if (readResult.isEof()) {
-			return readerStateMediator.readTokenAccumulated(tokenBuilder);
+			final boolean isMultiEscapedToken = tokenBuilder.isMultiEscapedToken();
+			if (isMultiEscapedToken) {
+				return symbolTokenAccumulatedReaderState.process(tokenBuilder);
+			} else {
+				return readerStateMediator.readTokenAccumulated(tokenBuilder);
+			}
 		}
 
 		int codePoint = readResult.getResult();
@@ -113,6 +124,7 @@ class EvenMultiEscapeReaderState implements ReaderState {
 
 			return readerStateMediator.readEvenMultipleEscape(tokenBuilder);
 		} else if (syntaxType == SyntaxType.MULTIPLE_ESCAPE) {
+			tokenBuilder.setMultiEscapedToken();
 			return readerStateMediator.readOddMultipleEscape(tokenBuilder);
 		} else if ((syntaxType == SyntaxType.TERMINATING) || (syntaxType == SyntaxType.WHITESPACE)) {
 			// NOTE from CLHS in regarding 'SyntaxType.WHITESPACE' characters:
@@ -120,7 +132,13 @@ class EvenMultiEscapeReaderState implements ReaderState {
 			//      the whitespace[2] after a symbol is not discarded it might be interpreted as a command some time
 			//      later after the symbol had been read.
 			reader.unreadChar(codePoint);
-			return readerStateMediator.readTokenAccumulated(tokenBuilder);
+
+			final boolean isMultiEscapedToken = tokenBuilder.isMultiEscapedToken();
+			if (isMultiEscapedToken) {
+				return symbolTokenAccumulatedReaderState.process(tokenBuilder);
+			} else {
+				return readerStateMediator.readTokenAccumulated(tokenBuilder);
+			}
 		} else {
 			return readerStateMediator.readIllegalCharacter(tokenBuilder);
 		}

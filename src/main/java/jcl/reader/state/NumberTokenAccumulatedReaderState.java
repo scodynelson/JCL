@@ -25,13 +25,14 @@ import org.apache.commons.math3.fraction.BigFraction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.lang.Boolean;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -62,17 +63,12 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 	/**
 	 * The list of {@link AttributeType}s that there should not be more than one of if present in a numeric token.
 	 */
-	private static final List<AttributeType> NOT_MORE_THAN_ONE_ATTRS = Arrays.asList(AttributeType.PLUS, AttributeType.MINUS, AttributeType.DECIMAL, AttributeType.RATIOMARKER);
+	private static final List<AttributeType> NOT_MORE_THAN_ONE_ATTRS = Arrays.asList(AttributeType.DECIMAL, AttributeType.RATIOMARKER);
 
 	/**
 	 * The list of {@link AttributeType}s that should only be first if present in a numeric token.
 	 */
 	private static final List<AttributeType> FIRST_ONLY_ATTRS = Arrays.asList(AttributeType.PLUS, AttributeType.MINUS);
-
-	/**
-	 * The list of {@link AttributeType}s that there should only be one of if present in a numeric token.
-	 */
-	private static final List<AttributeType> NO_SIMULTANEOUS_ATTRS = Arrays.asList(AttributeType.DECIMAL, AttributeType.RATIOMARKER);
 
 	/**
 	 * {@link SymbolTokenAccumulatedReaderState} singleton used by the reader algorithm.
@@ -124,9 +120,23 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 			return null;
 		}
 
-		// Check number attributes
-		final boolean areNumberAttributesInvalid = areNumberAttributesInvalid(tokenAttributes);
-		if (areNumberAttributesInvalid) {
+		// Checks to make sure there are not more than one of: 'PLUS', 'MINUS', 'DECIMAL', 'RATIOMARKER'
+		final Map<AttributeType, List<TokenAttribute>> attributeTypeToAttributes
+				= tokenAttributes.stream()
+				                 .collect(Collectors.groupingBy(TokenAttribute::getAttributeType));
+
+		final Set<Map.Entry<AttributeType, List<TokenAttribute>>> attributeTypeEntries = attributeTypeToAttributes.entrySet();
+
+		final boolean hasMoreThanOneOfAttributes
+				= attributeTypeEntries
+				.stream()
+				.filter(e -> NOT_MORE_THAN_ONE_ATTRS.contains(e.getKey()))
+				.map(Map.Entry::getValue)
+				.map(List::size)
+				.map(e -> e > 1)
+				.anyMatch(Boolean.TRUE::equals);
+
+		if (hasMoreThanOneOfAttributes) {
 			return null;
 		}
 
@@ -142,70 +152,103 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 			return null;
 		}
 
-		String tokenString = ReaderState.convertTokensToString(tokenAttributes);
-
-		// Java does not support numbers in the format +12345, so we need to get rid of the plus sign if it exists
-		if (tokenString.startsWith("+")) {
-			tokenString = tokenString.substring(1);
-		}
+		final TokenAttribute lastTokenAttribute = tokenAttributes.getLast();
+		final AttributeType lastAttributeType = lastTokenAttribute.getAttributeType();
 
 		// Strip off the ending '.' if it exists
-		if (tokenString.endsWith(".")) {
-			tokenString = tokenString.substring(0, tokenString.length() - 1);
+		if (lastAttributeType == AttributeType.DECIMAL) {
+			tokenAttributes.removeLast();
 		}
 
+		String tokenString = ReaderState.convertTokensToString(tokenAttributes);
+
 		final boolean hasDecimal = ReaderState.hasAnyAttribute(tokenAttributes, AttributeType.DECIMAL);
-		final boolean hasRatioMarker = ReaderState.hasAnyAttribute(tokenAttributes, AttributeType.RATIOMARKER);
 		final boolean hasExponentMarker = ReaderState.hasAnyAttribute(tokenAttributes, AttributeType.EXPONENTMARKER);
+		final boolean hasRatioMarker = ReaderState.hasAnyAttribute(tokenAttributes, AttributeType.RATIOMARKER);
 
-		if (hasRatioMarker) {
-			final int numberOfRationalParts = 2;
-			final String[] rationalParts = tokenString.split("/", numberOfRationalParts);
-			final BigInteger numerator = new BigInteger(rationalParts[0], currentRadix);
-			final BigInteger denominator = new BigInteger(rationalParts[1], currentRadix);
+		if (hasDecimal && hasRatioMarker) {
+			// TODO: 1/.2       should be 5.0       not 5
+			// TODO: 1/2.0      should be 0.5       not 1
+			// TODO: 1/.3       should be 3.333333  not 3
+			// TODO: 1/2.0E2    should be 0.005     not 0
 
-			final BigFraction rational = new BigFraction(numerator, denominator);
-			return new RatioStruct(rational);
-		} else if (hasDecimal || hasExponentMarker) {
+			final AttributeType firstAttributeType = firstTokenAttribute.getAttributeType();
+
+			// Checks to make sure if either 'RATIOMARKER' is supplied, that it is neither first nor last
+			if ((firstAttributeType == AttributeType.RATIOMARKER) || (lastAttributeType == AttributeType.RATIOMARKER)) {
+				return null;
+			}
+
+			final boolean moreThanOneRatioMarker
+					= tokenAttributes.stream()
+					                 .filter(e -> e.getAttributeType() == AttributeType.RATIOMARKER)
+					                 .count() > 1;
+			if (moreThanOneRatioMarker) {
+				return null;
+			}
+
 			final Integer exponentToken = ReaderState.getTokenByAttribute(tokenAttributes, AttributeType.EXPONENTMARKER);
 
+			final int numberOfRationalParts = 2;
+			final String[] rationalParts = tokenString.split("/", numberOfRationalParts);
+
+			final String numeratorPart = rationalParts[0];
+
+			// Numerator cannot contain a DECIMAL
+			if (numeratorPart.contains(".")) {
+				return null;
+			}
+
+			final String numeratorTokenString = getFloatTokenString(numeratorPart, exponentToken);
+			final BigDecimal numeratorBigDecimal = new BigDecimal(numeratorTokenString);
+
+			final String denominatorPart = rationalParts[1];
+			final String denominatorTokenString = getFloatTokenString(denominatorPart, exponentToken);
+			final BigDecimal denominatorBigDecimal = new BigDecimal(denominatorTokenString);
+
+			final BigDecimal bigDecimal = numeratorBigDecimal.divide(denominatorBigDecimal, RoundingMode.HALF_UP);
+
+			final jcl.types.Float aFloat = getFloatType(exponentToken);
+			return new FloatStruct(aFloat, bigDecimal);
+		}
+
+		if (hasDecimal || hasExponentMarker) {
+			// TODO: 0e0 should be 0.0, not 0
+
+			final Integer exponentToken = ReaderState.getTokenByAttribute(tokenAttributes, AttributeType.EXPONENTMARKER);
 			tokenString = getFloatTokenString(tokenString, exponentToken);
 
 			final jcl.types.Float aFloat = getFloatType(exponentToken);
 			final BigDecimal bigDecimal = new BigDecimal(tokenString);
 			return new FloatStruct(aFloat, bigDecimal);
-		} else {
-			final BigInteger basicInteger = new BigInteger(tokenString, currentRadix);
-			return new IntegerStruct(basicInteger);
 		}
-	}
 
-	/**
-	 * This method checks to see if any of the number specific attributes are invalidly placed in the token, which
-	 * would make the token non-numeric.
-	 *
-	 * @param tokenAttributes
-	 * 		the token attributes to check
-	 *
-	 * @return true if any of the tokens are invalidly placed; false if all the tokens are validly placed
-	 */
-	private static boolean areNumberAttributesInvalid(final LinkedList<TokenAttribute> tokenAttributes) {
+		if (hasRatioMarker) {
+			final AttributeType firstAttributeType = firstTokenAttribute.getAttributeType();
 
-		// Checks to make sure there are not more than one of: 'PLUS', 'MINUS', 'DECIMAL', 'RATIOMARKER'
-		final Map<AttributeType, List<TokenAttribute>> attributeTypeToAttributes
-				= tokenAttributes.stream()
-				                 .collect(Collectors.groupingBy(TokenAttribute::getAttributeType));
+			// Checks to make sure if either 'RATIOMARKER' is supplied, that it is neither first nor last
+			if ((firstAttributeType == AttributeType.RATIOMARKER) || (lastAttributeType == AttributeType.RATIOMARKER)) {
+				return null;
+			}
 
-		final boolean hasMoreThanOneOfAttributes
-				= attributeTypeToAttributes.entrySet()
-				                           .stream()
-				                           .filter(e -> NOT_MORE_THAN_ONE_ATTRS.contains(e.getKey()))
-				                           .map(Map.Entry::getValue)
-				                           .map(List::size)
-				                           .map(e -> e > 1)
-				                           .anyMatch(Boolean.TRUE::equals);
+			final boolean moreThanOneRatioMarker
+					= tokenAttributes.stream()
+					                 .filter(e -> e.getAttributeType() == AttributeType.RATIOMARKER)
+					                 .count() > 1;
+			if (moreThanOneRatioMarker) {
+				return null;
+			}
 
-		final TokenAttribute firstTokenAttribute = tokenAttributes.getFirst();
+			final int numberOfRationalParts = 2;
+			final String[] rationalParts = tokenString.split("/", numberOfRationalParts);
+
+			final BigInteger numerator = new BigInteger(rationalParts[0], currentRadix);
+			final BigInteger denominator = new BigInteger(rationalParts[1], currentRadix);
+
+			final BigFraction rational = new BigFraction(numerator, denominator);
+			return new RatioStruct(rational);
+		}
+
 		final AttributeType firstAttributeType = firstTokenAttribute.getAttributeType();
 
 		// Checks to make sure if either 'PLUS' or 'MINUS' is supplied, that it is first
@@ -213,21 +256,12 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 				= hasAnyAttributes(FIRST_ONLY_ATTRS, e ->
 						ReaderState.hasAnyAttribute(tokenAttributes, e) && (firstAttributeType != e)
 		);
+		if (hasAttributesAndNotFirst) {
+			return null;
+		}
 
-		final TokenAttribute lastTokenAttribute = tokenAttributes.getLast();
-		final AttributeType lastAttributeType = lastTokenAttribute.getAttributeType();
-
-		// Checks to make sure if either 'RATIOMARKER' is supplied, that it is neither first nor last
-		final boolean isRatioMarkerFirstOrLast = (firstAttributeType == AttributeType.RATIOMARKER) || (lastAttributeType == AttributeType.RATIOMARKER);
-
-		// Checks to make sure that both 'DECIMAL' and 'RATIOMARKER' are not supplied at the same time
-		final boolean hasSimultaneousAttributes
-				= attributeTypeToAttributes.entrySet()
-				                           .stream()
-				                           .filter(e -> NO_SIMULTANEOUS_ATTRS.contains(e.getKey()))
-				                           .count() > 1;
-
-		return hasMoreThanOneOfAttributes || hasAttributesAndNotFirst || isRatioMarkerFirstOrLast || hasSimultaneousAttributes;
+		final BigInteger basicInteger = new BigInteger(tokenString, currentRadix);
+		return new IntegerStruct(basicInteger);
 	}
 
 	/**

@@ -27,6 +27,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -167,10 +168,6 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 		final boolean hasRatioMarker = ReaderState.hasAnyAttribute(tokenAttributes, AttributeType.RATIOMARKER);
 
 		if (hasDecimal && hasRatioMarker) {
-			// TODO: 1/.2       should be 5.0       not 5
-			// TODO: 1/2.0      should be 0.5       not 1
-			// TODO: 1/.3       should be 3.333333  not 3
-			// TODO: 1/2.0E2    should be 0.005     not 0
 
 			final AttributeType firstAttributeType = firstTokenAttribute.getAttributeType();
 
@@ -206,20 +203,30 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 			final String denominatorTokenString = getFloatTokenString(denominatorPart, exponentToken);
 			final BigDecimal denominatorBigDecimal = new BigDecimal(denominatorTokenString);
 
-			final BigDecimal bigDecimal = numeratorBigDecimal.divide(denominatorBigDecimal, RoundingMode.HALF_UP);
+			BigDecimal bigDecimal = numeratorBigDecimal.divide(denominatorBigDecimal, MathContext.DECIMAL128);
+
+			final int scale = bigDecimal.scale();
+			if (scale < 1) {
+				bigDecimal = bigDecimal.setScale(1, RoundingMode.HALF_UP);
+			}
 
 			final jcl.types.Float aFloat = getFloatType(exponentToken);
 			return new FloatStruct(aFloat, bigDecimal);
 		}
 
 		if (hasDecimal || hasExponentMarker) {
-			// TODO: 0e0 should be 0.0, not 0
 
 			final Integer exponentToken = ReaderState.getTokenByAttribute(tokenAttributes, AttributeType.EXPONENTMARKER);
 			tokenString = getFloatTokenString(tokenString, exponentToken);
 
 			final jcl.types.Float aFloat = getFloatType(exponentToken);
-			final BigDecimal bigDecimal = new BigDecimal(tokenString);
+			BigDecimal bigDecimal = new BigDecimal(tokenString);
+
+			final int scale = bigDecimal.scale();
+			if (scale < 1) {
+				bigDecimal = bigDecimal.setScale(1, RoundingMode.HALF_UP);
+			}
+
 			return new FloatStruct(aFloat, bigDecimal);
 		}
 

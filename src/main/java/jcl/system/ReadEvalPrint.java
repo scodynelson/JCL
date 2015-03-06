@@ -120,7 +120,7 @@ public class ReadEvalPrint {
 							whatRead = reader.read();
 						}
 						if (whatRead != null) {
-							LOGGER.debug("READ: " + whatRead.getClass().getSimpleName());
+							LOGGER.debug("READ: {}", whatRead.getClass().getSimpleName());
 
 							final String printedWhatRead = printer.print(whatRead);
 							LOGGER.debug("{}", printedWhatRead);
@@ -137,9 +137,9 @@ public class ReadEvalPrint {
 							readChar = readResult.getResult();
 						}
 
-						LOGGER.warn("; WARNING: Reader Exception condition during Read -> {}", ex.getMessage(), ex);
+						LOGGER.warn("; WARNING: Reader Exception condition during Read -> ", ex);
 					} catch (final Exception ex) {
-						LOGGER.warn("; WARNING: Exception condition during Read -> {}", ex.getMessage(), ex);
+						LOGGER.warn("; WARNING: Exception condition during Read -> ", ex);
 						break;
 					}
 
@@ -166,9 +166,9 @@ public class ReadEvalPrint {
 //								LOGGER.warn("; WARNING: Null response from analyzer");
 //							}
 						} catch (final ReaderErrorException ex) {
-							LOGGER.warn("; WARNING: Analysis Exception condition during Analyzer operation -> {}", ex.getMessage(), ex);
+							LOGGER.warn("; WARNING: Analysis Exception condition during Analyzer operation -> ", ex);
 						} catch (final Exception ex) {
-							LOGGER.warn("; WARNING: Analysis condition during Analyzer operation -> {}", ex.getMessage(), ex);
+							LOGGER.warn("; WARNING: Analysis condition during Analyzer operation -> ", ex);
 							break;
 						}
 					}
@@ -224,7 +224,7 @@ public class ReadEvalPrint {
 						LOGGER.info(printedValue);
 					}
 				} catch (final Exception ex) {
-					LOGGER.error("; WARNING: Exception condition -> {}", ex.getMessage(), ex);
+					LOGGER.error("; WARNING: Exception condition -> ", ex);
 //				} catch (StackOverflowError err) {
 //					LOGGER.error(">> Stack Overflow Error, restarting REP function.", err);
 //				} catch (OutOfMemoryError err) {

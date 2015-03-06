@@ -6,7 +6,6 @@ package jcl.reader.state;
 
 import jcl.LispStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageSymbolStruct;
 import jcl.packages.PackageVariables;
@@ -14,6 +13,7 @@ import jcl.reader.AttributeType;
 import jcl.reader.ReaderStateMediator;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
+import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -188,13 +188,16 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 				if (externalSymbol == null) {
 					throw new ReaderErrorException("No external symbol named \"" + symName + "\" in package " + pkgName);
 				}
+				// TODO: need to do the same findSymbol stuff as above...
 				return new SymbolStruct<>(symName, pkg);
 			} else {
+				// TODO: need to do the same findSymbol stuff as above...
 				return new SymbolStruct<>(symName, pkg);
 			}
 		}
 
-		return new SymbolStruct<>(symName, GlobalPackageStruct.KEYWORD);
+		// TODO: need to do the same findSymbol stuff as above...
+		return new KeywordSymbolStruct(symName);
 	}
 
 	@Override

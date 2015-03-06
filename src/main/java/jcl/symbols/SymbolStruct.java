@@ -149,6 +149,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	private void init() {
 		if (symbolPackage != null) {
 			symbolPackage.importSymbols(this);
+			// TODO: we REALLY shouldn't be exporting here, BUT so we can test things right now, we will.
 			symbolPackage.export(this);
 		}
 	}

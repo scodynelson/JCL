@@ -5,8 +5,10 @@ import jcl.classes.BuiltInClassStruct;
 import jcl.compiler.real.sa.analyzer.expander.real.CompilerMacroFunctionExpander;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.sa.analyzer.expander.real.SymbolMacroExpander;
+import jcl.conditions.exceptions.ErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.packages.PackageStruct;
+import jcl.packages.PackageVariables;
 import jcl.types.NIL;
 import jcl.types.Symbol;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -185,6 +187,22 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 * @return symbol {@link #value} property
 	 */
 	public TYPE getValue() {
+		if (value == null) {
+			String variableName = name;
+			final PackageStruct currentPackage = PackageVariables.PACKAGE.getValue();
+
+			if (!currentPackage.equals(symbolPackage)) {
+				final String packageName = symbolPackage.getName();
+
+				if (currentPackage.getExternalSymbols().containsKey(name)) {
+					variableName = packageName + ':' + name;
+				} else {
+					variableName = packageName + "::" + name;
+				}
+			}
+
+			throw new ErrorException("Unbound variable: " + variableName);
+		}
 		return value;
 	}
 

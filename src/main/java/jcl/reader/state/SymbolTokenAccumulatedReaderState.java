@@ -111,7 +111,6 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 			final PackageSymbolStruct foundSymbol = pkg.findSymbol(symName);
 			if (foundSymbol == null) {
 				return new SymbolStruct<>(symName, pkg);
-//			    throw new ReaderErrorException("Unbound variable: " + symName); // TODO: This check will happen in the compiler...
 			} else {
 				return foundSymbol.getSymbolStruct();
 			}
@@ -190,10 +189,8 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 					throw new ReaderErrorException("No external symbol named \"" + symName + "\" in package " + pkgName);
 				}
 				return new SymbolStruct<>(symName, pkg);
-//				throw new ReaderErrorException("Unbound variable: " + symName); // TODO: This check will happen in the compiler...
 			} else {
 				return new SymbolStruct<>(symName, pkg);
-//				throw new ReaderErrorException("Unbound variable: " + pkgName + "::" + symName); // TODO: This check will happen in the compiler...
 			}
 		}
 

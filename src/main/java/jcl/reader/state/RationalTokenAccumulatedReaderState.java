@@ -17,8 +17,13 @@ import org.springframework.stereotype.Component;
 import java.math.BigInteger;
 import java.util.LinkedList;
 
+/**
+ * Sub-piece of Reader algorithm part 10.1, used to produce a {@link RatioStruct} output when a rational token is
+ * supplied with an {@link AttributeType#RATIOMARKER}. This will also produce an {@link IntegerStruct} when the
+ * resulting {@link BigInteger} has a denominator of {@link BigInteger#ONE}.
+ */
 @Component
-public class RatioTokenAccumulatedReaderState implements ReaderState {
+public class RationalTokenAccumulatedReaderState implements ReaderState {
 
 	/**
 	 * Serializable Version Unique Identifier.

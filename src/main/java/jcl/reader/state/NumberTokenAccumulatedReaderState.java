@@ -59,17 +59,30 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 	@Autowired
 	private SymbolTokenAccumulatedReaderState symbolTokenAccumulatedReaderState;
 
+	/**
+	 * {@link FloatTokenAccumulatedReaderState} singleton used to accumulate a float token.
+	 */
 	@Autowired
 	private FloatTokenAccumulatedReaderState floatTokenAccumulatedReaderState;
 
+	/**
+	 * {@link IntegerTokenAccumulatedReaderState} singleton used to accumulate an integer token.
+	 */
 	@Autowired
 	private IntegerTokenAccumulatedReaderState integerTokenAccumulatedReaderState;
 
+	/**
+	 * {@link RationalFloatTokenAccumulatedReaderState} singleton used to accumulate a float token from a rational
+	 * token.
+	 */
 	@Autowired
 	private RationalFloatTokenAccumulatedReaderState rationalFloatTokenAccumulatedReaderState;
 
+	/**
+	 * {@link RationalTokenAccumulatedReaderState} singleton used to accumulate a rational token.
+	 */
 	@Autowired
-	private RatioTokenAccumulatedReaderState ratioTokenAccumulatedReaderState;
+	private RationalTokenAccumulatedReaderState rationalTokenAccumulatedReaderState;
 
 	@Override
 	public LispStruct process(final TokenBuilder tokenBuilder) {
@@ -162,7 +175,7 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 		}
 
 		if (hasRatioMarker) {
-			return ratioTokenAccumulatedReaderState.process(tokenBuilder);
+			return rationalTokenAccumulatedReaderState.process(tokenBuilder);
 		}
 
 		return integerTokenAccumulatedReaderState.process(tokenBuilder);

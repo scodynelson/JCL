@@ -21,6 +21,10 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.LinkedList;
 
+/**
+ * Sub-piece of Reader algorithm part 10.1, used to produce a {@link FloatStruct} output when a float token is
+ * supplied. This means using the correct exponential {@link RoundingMode#HALF_UP} to produce an accurate float result.
+ */
 @Component
 public class FloatTokenAccumulatedReaderState implements ReaderState {
 

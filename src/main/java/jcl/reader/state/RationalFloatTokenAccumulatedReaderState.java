@@ -16,6 +16,12 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.LinkedList;
 
+/**
+ * Sub-piece of Reader algorithm part 10.1, used to produce a {@link FloatStruct} output when a rational token is
+ * supplied with both an {@link AttributeType#RATIOMARKER} and {@link AttributeType#DECIMAL}. This means using the
+ * correct exponential division using {@link MathContext#DECIMAL128} and {@link RoundingMode#HALF_UP} to produce an
+ * accurate float result.
+ */
 @Component
 public class RationalFloatTokenAccumulatedReaderState extends FloatTokenAccumulatedReaderState {
 

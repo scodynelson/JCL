@@ -55,10 +55,9 @@ interface ReaderState extends Serializable {
 	 */
 	static String convertTokensToString(final List<TokenAttribute> tokenAttributes) {
 		final StringBuilder stringBuilder = new StringBuilder();
-		tokenAttributes
-				.stream()
-				.mapToInt(TokenAttribute::getToken)
-				.forEachOrdered(stringBuilder::appendCodePoint);
+		tokenAttributes.stream()
+		               .mapToInt(TokenAttribute::getToken)
+		               .forEachOrdered(stringBuilder::appendCodePoint);
 		return stringBuilder.toString();
 	}
 
@@ -107,9 +106,9 @@ interface ReaderState extends Serializable {
 	 * equal to the provided {@code attributeType} value.
 	 */
 	static boolean hasAnyAttribute(final List<TokenAttribute> tokenAttributes, final AttributeType attributeType) {
-		return tokenAttributes
-				.stream()
-				.anyMatch(e -> e.getAttributeType() == attributeType);
+		return tokenAttributes.stream()
+							  .map(TokenAttribute::getAttributeType)
+		                      .anyMatch(e -> e == attributeType);
 	}
 
 	/**
@@ -125,9 +124,9 @@ interface ReaderState extends Serializable {
 	 * the provided {@code attributeType} value.
 	 */
 	static boolean hasNoAttributes(final List<TokenAttribute> tokenAttributes, final AttributeType attributeType) {
-		return tokenAttributes
-				.stream()
-				.noneMatch(e -> e.getAttributeType() == attributeType);
+		return tokenAttributes.stream()
+		                      .map(TokenAttribute::getAttributeType)
+		                      .noneMatch(e -> e == attributeType);
 	}
 
 	/**
@@ -144,12 +143,11 @@ interface ReaderState extends Serializable {
 	 * value in the provided list of {@link TokenAttribute}s or null if no such token can be found
 	 */
 	static Integer getTokenByAttribute(final List<TokenAttribute> tokenAttributes, final AttributeType attributeType) {
-		return tokenAttributes
-				.stream()
-				.filter(e -> e.getAttributeType() == attributeType)
-				.map(TokenAttribute::getToken)
-				.findFirst()
-				.orElse(null);
+		return tokenAttributes.stream()
+		                      .filter(e -> e.getAttributeType() == attributeType)
+		                      .map(TokenAttribute::getToken)
+		                      .findFirst()
+		                      .orElse(null);
 	}
 
 	/**

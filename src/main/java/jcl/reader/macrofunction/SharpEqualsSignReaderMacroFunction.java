@@ -7,13 +7,18 @@ package jcl.reader.macrofunction;
 import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.lists.ConsStruct;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
+import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.math.BigInteger;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -48,21 +53,58 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctionImpl 
 		}
 
 		final Map<BigInteger, LispStruct> sharpEqualFinalTable = reader.getSharpEqualFinalTable();
-		final Map<BigInteger, UUID> sharpEqualTempTable = reader.getSharpEqualTempTable();
+		final Map<BigInteger, SymbolStruct<?>> sharpEqualTempTable = reader.getSharpEqualTempTable();
 
 		if (sharpEqualFinalTable.containsKey(numArg)
 				|| sharpEqualTempTable.containsKey(numArg)) {
 			throw new ReaderErrorException("Label already defined: #" + numArg + '=');
 		}
 
-		final UUID tag = UUID.randomUUID();
+		final String tagName = UUID.randomUUID().toString();
+		final SymbolStruct<?> tag = new SymbolStruct<>(tagName);
 		sharpEqualTempTable.put(numArg, tag);
 
 		final LispStruct token = reader.read();
 		reader.getSharpEqualReplTable().put(tag, token);
 
+		final Set<LispStruct> sharpEqualCircleSet = new HashSet<>();
+		circleSubst(reader, sharpEqualCircleSet, token);
+
 		sharpEqualFinalTable.put(numArg, token);
 
-		return null;
+		return token;
+	}
+
+	private LispStruct circleSubst(final Reader reader, final Set<LispStruct> sharpEqualCircleSet, final LispStruct tree) {
+
+		final Map<SymbolStruct<?>, LispStruct> sharpEqualReplTable = reader.getSharpEqualReplTable();
+		if (tree instanceof SymbolStruct) {
+			if (sharpEqualReplTable.containsKey(tree)) {
+				return sharpEqualReplTable.get(tree);
+			}
+		} else if (tree instanceof ConsStruct) {
+
+			if (!sharpEqualCircleSet.contains(tree)) {
+				sharpEqualCircleSet.add(tree);
+
+				final ConsStruct consTree = (ConsStruct) tree;
+
+				final LispStruct car = consTree.getCar();
+				final LispStruct cdr = consTree.getCdr();
+
+				final LispStruct carSubst = circleSubst(reader, sharpEqualCircleSet, car);
+				final LispStruct cdrSubst = circleSubst(reader, sharpEqualCircleSet, cdr);
+
+				if (!Objects.equals(carSubst, car)) {
+					consTree.setCar(carSubst);
+				}
+
+				if (!Objects.equals(cdrSubst, cdr)) {
+					consTree.setCdr(cdrSubst);
+				}
+			}
+		}
+
+		return tree;
 	}
 }

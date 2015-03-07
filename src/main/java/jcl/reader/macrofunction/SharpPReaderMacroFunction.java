@@ -74,7 +74,7 @@ public class SharpPReaderMacroFunction extends ReaderMacroFunctionImpl {
 			return ListStruct.buildProperList(PATHNAME, pathnameString);
 		} else {
 			final String printedToken = printer.print(lispToken);
-			throw new ReaderErrorException("Improper namestring provided to #P: " + printedToken);
+			throw new ReaderErrorException("The value " + printedToken + " is not of expected type STRING in argument to #P.");
 		}
 	}
 

@@ -21,10 +21,10 @@ public abstract class CharacterPrinter<O> implements LispPrinter<O> {
 
 		final int codePoint = getCodePoint(object);
 
-		if (Character.isLetterOrDigit(codePoint)) {
-			stringBuilder.append(codePoint);
-		} else {
+		if (Character.isWhitespace(codePoint)) {
 			stringBuilder.append(Character.getName(codePoint));
+		} else {
+			stringBuilder.appendCodePoint(codePoint);
 		}
 
 		return stringBuilder.toString();

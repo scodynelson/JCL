@@ -193,6 +193,7 @@ public class ConsStruct extends ListStruct {
 
 			conses.add(elementAsCons);
 			isElementCircular = innerIsCircular(elementAsCons, conses);
+			conses.remove(elementAsCons);
 		} else {
 			isElementCircular = false;
 		}

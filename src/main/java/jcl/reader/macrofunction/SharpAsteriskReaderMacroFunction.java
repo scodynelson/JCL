@@ -94,24 +94,26 @@ public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 */
 	private static ListStruct handleNumArg(final String token, final BigInteger numArg) {
 
-		if (StringUtils.isEmpty(token)) {
+		if (StringUtils.isEmpty(token) && (numArg.compareTo(BigInteger.ZERO) > 0)) {
 			throw new ReaderErrorException("At least one bit must be supplied for non-zero #* bit-vectors.");
 		}
 
-		final int bitStringLength = token.length();
-
+		final int numberOfTokens = token.length();
 		final int numArgInt = numArg.intValueExact();
-		if (bitStringLength > numArgInt) {
+		if (numberOfTokens > numArgInt) {
 			throw new ReaderErrorException("Bit vector is longer than specified length: #" + numArg + '*' + token);
 		}
 
-		final char lastChar = token.charAt(bitStringLength - 1);
+		Character lastToken = null;
+		if (StringUtils.isNotEmpty(token)) {
+			lastToken = token.charAt(numberOfTokens - 1);
+		}
 
 		final StringBuilder bitStringBuilder = new StringBuilder(token);
 
-		final int fillAmount = numArgInt - bitStringLength;
+		final int fillAmount = numArgInt - numberOfTokens;
 		for (int i = 0; i < fillAmount; i++) {
-			bitStringBuilder.append(lastChar);
+			bitStringBuilder.append(lastToken);
 		}
 
 		final String newBitString = bitStringBuilder.toString();
@@ -136,12 +138,13 @@ public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunctionImpl {
 		final SymbolStruct<?> makeArrayFnSymbol = CommonLispSymbols.MAKE_ARRAY;
 		final IntegerStruct dimensions = new IntegerStruct(numberOfTokensBI);
 		final SymbolStruct<?> elementTypeKeyword = GlobalPackageStruct.KEYWORD.findSymbol("ELEMENT-TYPE").getSymbolStruct();
-		final SymbolStruct<?> elementType = CommonLispSymbols.BIT;
+		final ListStruct elementType = ListStruct.buildProperList(QUOTE, CommonLispSymbols.BIT);
 		final SymbolStruct<?> initialContentsKeyword = GlobalPackageStruct.KEYWORD.findSymbol("INITIAL-CONTENTS").getSymbolStruct();
 
 		final ListStruct contents = ListStruct.buildProperList(bits);
+		final ListStruct initialContents = ListStruct.buildProperList(QUOTE, contents);
 
-		return ListStruct.buildProperList(makeArrayFnSymbol, dimensions, elementTypeKeyword, elementType, initialContentsKeyword, contents);
+		return ListStruct.buildProperList(makeArrayFnSymbol, dimensions, elementTypeKeyword, elementType, initialContentsKeyword, initialContents);
 	}
 
 	/**

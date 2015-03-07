@@ -20,6 +20,8 @@
 		<entry key="jcl.arrays.StringStruct" value-ref="stringStructPrinter"/>
 		<entry key="jcl.arrays.VectorStruct" value-ref="vectorStructPrinter"/>
 
+		<entry key="jcl.characters.CharacterStruct" value-ref="characterStructPrinter"/>
+
 		<entry key="jcl.hashtables.HashTableStruct" value-ref="hashTableStructPrinter"/>
 		<entry key="jcl.hashtables.HashTableStruct.KeyWrapper" value-ref="hashTableKeyWrapperPrinter"/>
 
@@ -41,11 +43,14 @@
 		<entry key="jcl.streams.SynonymStreamStruct" value-ref="synonymStreamStructPrinter"/>
 		<entry key="jcl.streams.TwoWayStreamStruct" value-ref="twoWayStreamStructPrinter"/>
 
+		<entry key="jcl.symbols.Constant" value-ref="symbolStructPrinter"/>
+		<entry key="jcl.symbols.Declaration" value-ref="symbolStructPrinter"/>
 		<entry key="jcl.symbols.KeywordSymbolStruct" value-ref="symbolStructPrinter"/>
 		<entry key="jcl.symbols.SymbolStruct" value-ref="symbolStructPrinter"/>
 		<entry key="jcl.symbols.SpecialOperator" value-ref="symbolStructPrinter"/>
 		<entry key="jcl.symbols.TStruct" value-ref="symbolStructPrinter"/>
 		<entry key="jcl.symbols.NILStruct" value-ref="symbolStructPrinter"/>
+		<entry key="jcl.symbols.Variable" value-ref="symbolStructPrinter"/>
 
 	</util:map>
 

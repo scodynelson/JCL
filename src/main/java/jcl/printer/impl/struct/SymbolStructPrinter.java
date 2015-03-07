@@ -22,6 +22,10 @@ public class SymbolStructPrinter extends SymbolPrinter<SymbolStruct<?>> {
 		final PackageStruct pkg = object.getSymbolPackage();
 		final String name = object.getName();
 
+		if (pkg == null) {
+			return "#:" + name;
+		}
+
 		// TODO: look into symbols with '|x| pattern...
 
 		if (GlobalPackageStruct.KEYWORD.equals(pkg)) {

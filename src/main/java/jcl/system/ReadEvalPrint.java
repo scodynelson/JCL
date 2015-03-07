@@ -114,6 +114,10 @@ public class ReadEvalPrint {
 
 					LispStruct whatRead = null;
 					try {
+						reader.getSharpEqualFinalTable().clear();
+						reader.getSharpEqualReplTable().clear();
+						reader.getSharpEqualTempTable().clear();
+
 						if (isFile) {
 							whatRead = reader.read(false, null, true);
 						} else {

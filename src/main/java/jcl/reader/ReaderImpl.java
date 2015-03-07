@@ -7,6 +7,7 @@ package jcl.reader;
 import jcl.LispStruct;
 import jcl.streams.InputStream;
 import jcl.streams.ReadPeekResult;
+import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,13 +46,13 @@ class ReaderImpl implements Reader {
 	 * Map containing the number argument of #= to a temporary {@link UUID} tag value to handle {@link LispStruct}s not
 	 * yet parsed by the reader.
 	 */
-	private final Map<BigInteger, UUID> sharpEqualTempTable = new ConcurrentHashMap<>();
+	private final Map<BigInteger, SymbolStruct<?>> sharpEqualTempTable = new ConcurrentHashMap<>();
 
 	/**
 	 * Map containing the temporary {@link UUID} tag value to a {@link LispStruct} that has been parsed by the reader,
 	 * but may have yet to return to the top level of the #= parse.
 	 */
-	private final Map<UUID, LispStruct> sharpEqualReplTable = new ConcurrentHashMap<>();
+	private final Map<SymbolStruct<?>, LispStruct> sharpEqualReplTable = new ConcurrentHashMap<>();
 
 	/**
 	 * {@link ReaderStateMediator} singleton used by the reader algorithm.
@@ -123,12 +124,12 @@ class ReaderImpl implements Reader {
 	}
 
 	@Override
-	public Map<BigInteger, UUID> getSharpEqualTempTable() {
+	public Map<BigInteger, SymbolStruct<?>> getSharpEqualTempTable() {
 		return sharpEqualTempTable;
 	}
 
 	@Override
-	public Map<UUID, LispStruct> getSharpEqualReplTable() {
+	public Map<SymbolStruct<?>, LispStruct> getSharpEqualReplTable() {
 		return sharpEqualReplTable;
 	}
 

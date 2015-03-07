@@ -107,10 +107,12 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 		final SymbolStruct<?> makeArrayFnSymbol = CommonLispSymbols.MAKE_ARRAY;
 		final ListStruct dimensions = ListStruct.buildProperList(dimensionsAsJavaList);
 		final SymbolStruct<?> elementTypeKeyword = GlobalPackageStruct.KEYWORD.findSymbol("ELEMENT-TYPE").getSymbolStruct();
-		final SymbolStruct<?> elementType = CommonLispSymbols.T;
+		final ListStruct elementType = ListStruct.buildProperList(QUOTE, CommonLispSymbols.T);
 		final SymbolStruct<?> initialContentsKeyword = GlobalPackageStruct.KEYWORD.findSymbol("INITIAL-CONTENTS").getSymbolStruct();
 
-		return ListStruct.buildProperList(makeArrayFnSymbol, dimensions, elementTypeKeyword, elementType, initialContentsKeyword, contents);
+		final ListStruct initialContents = ListStruct.buildProperList(QUOTE, contents);
+
+		return ListStruct.buildProperList(makeArrayFnSymbol, dimensions, elementTypeKeyword, elementType, initialContentsKeyword, initialContents);
 	}
 
 	/**
@@ -135,7 +137,7 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 		final List<LispStruct> dimensionsAsJavaList = new ArrayList<>();
 
 		for (BigInteger axis = BigInteger.ZERO;
-		     dimensions.compareTo(axis) >= 0;
+		     dimensions.compareTo(axis) > 0;
 		     axis = axis.add(BigInteger.ONE)) {
 
 			final SequenceStruct seqList;

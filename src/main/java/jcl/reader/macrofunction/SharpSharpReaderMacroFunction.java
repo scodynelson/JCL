@@ -9,11 +9,11 @@ import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
+import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.math.BigInteger;
-import java.util.UUID;
 
 /**
  * Implements the '##' Lisp reader macro.
@@ -51,10 +51,9 @@ public class SharpSharpReaderMacroFunction extends ReaderMacroFunctionImpl {
 			return labelObject;
 		}
 
-		final UUID possibleLabelTag = reader.getSharpEqualTempTable().get(numArg);
-		final LispStruct possibleLabelObject = reader.getSharpEqualReplTable().get(possibleLabelTag);
-		if (possibleLabelObject != null) {
-			return possibleLabelObject;
+		final SymbolStruct<?> possibleLabelTag = reader.getSharpEqualTempTable().get(numArg);
+		if (possibleLabelTag != null) {
+			return possibleLabelTag;
 		}
 
 		throw new ReaderErrorException("Reference to undefined label #" + numArg + '#');

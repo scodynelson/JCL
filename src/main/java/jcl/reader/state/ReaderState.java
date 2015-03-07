@@ -9,6 +9,7 @@ import jcl.reader.AttributeType;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
 import jcl.reader.struct.ReadtableCase;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.io.Serializable;
 import java.util.List;
@@ -54,6 +55,10 @@ interface ReaderState extends Serializable {
 	 * @return the {@link String} produced from the list of {@link TokenAttribute}s
 	 */
 	static String convertTokensToString(final List<TokenAttribute> tokenAttributes) {
+		if (CollectionUtils.isEmpty(tokenAttributes)) {
+			return "";
+		}
+
 		final StringBuilder stringBuilder = new StringBuilder();
 		tokenAttributes.stream()
 		               .mapToInt(TokenAttribute::getToken)

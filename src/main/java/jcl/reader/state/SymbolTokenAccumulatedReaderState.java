@@ -6,6 +6,7 @@ package jcl.reader.state;
 
 import jcl.LispStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageSymbolStruct;
 import jcl.packages.PackageVariables;
@@ -107,13 +108,7 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 			final String symName = ReaderState.convertTokensToString(tokenAttributes);
 
 			final PackageStruct pkg = PackageVariables.PACKAGE.getValue();
-
-			final PackageSymbolStruct foundSymbol = pkg.findSymbol(symName);
-			if (foundSymbol == null) {
-				return new SymbolStruct<>(symName, pkg);
-			} else {
-				return foundSymbol.getSymbolStruct();
-			}
+			return findExistingOrCreateNewSymbol(symName, pkg);
 		}
 
 		// Check if last element is a 'PACKAGEMARKER'
@@ -188,16 +183,41 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 				if (externalSymbol == null) {
 					throw new ReaderErrorException("No external symbol named \"" + symName + "\" in package " + pkgName);
 				}
-				// TODO: need to do the same findSymbol stuff as above...
-				return new SymbolStruct<>(symName, pkg);
+				return externalSymbol;
 			} else {
-				// TODO: need to do the same findSymbol stuff as above...
-				return new SymbolStruct<>(symName, pkg);
+				return findExistingOrCreateNewSymbol(symName, pkg);
 			}
 		}
 
-		// TODO: need to do the same findSymbol stuff as above...
-		return new KeywordSymbolStruct(symName);
+		final PackageStruct pkg = GlobalPackageStruct.KEYWORD;
+		return findExistingOrCreateNewSymbol(symName, pkg);
+	}
+
+	/**
+	 * Either finds the existing {@link SymbolStruct} within the provided {@link PackageStruct} using {@link
+	 * PackageStruct#findSymbol} or creates a new {@link SymbolStruct}. If the provided {@code PackageStruct} is equal
+	 * to {@link GlobalPackageStruct#KEYWORD}, a
+	 * {@link KeywordSymbolStruct} will be returned instead.
+	 *
+	 * @param symName
+	 * 		the name of the {@link SymbolStruct} to find or create
+	 * @param pkg
+	 * 		the {@link PackageStruct} to either find the {@link SymbolStruct} or create and intern
+	 *
+	 * @return the existing {@link SymbolStruct} or a newly created one
+	 */
+	private static SymbolStruct<?> findExistingOrCreateNewSymbol(final String symName, final PackageStruct pkg) {
+
+		final PackageSymbolStruct foundSymbol = pkg.findSymbol(symName);
+		if (foundSymbol == null) {
+			final boolean isKeyword = GlobalPackageStruct.KEYWORD.equals(pkg);
+			if (isKeyword) {
+				return new KeywordSymbolStruct(symName);
+			}
+			return new SymbolStruct<>(symName, pkg);
+		} else {
+			return foundSymbol.getSymbolStruct();
+		}
 	}
 
 	@Override

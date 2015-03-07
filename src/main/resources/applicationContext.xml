@@ -41,6 +41,7 @@
 		<entry key="jcl.streams.SynonymStreamStruct" value-ref="synonymStreamStructPrinter"/>
 		<entry key="jcl.streams.TwoWayStreamStruct" value-ref="twoWayStreamStructPrinter"/>
 
+		<entry key="jcl.symbols.KeywordSymbolStruct" value-ref="symbolStructPrinter"/>
 		<entry key="jcl.symbols.SymbolStruct" value-ref="symbolStructPrinter"/>
 		<entry key="jcl.symbols.SpecialOperator" value-ref="symbolStructPrinter"/>
 		<entry key="jcl.symbols.TStruct" value-ref="symbolStructPrinter"/>

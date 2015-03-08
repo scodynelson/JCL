@@ -130,7 +130,6 @@ class EvenMultiEscapeReaderState implements ReaderState {
 			//      If a command interpreter takes single-character commands, but occasionally reads an object then if
 			//      the whitespace[2] after a symbol is not discarded it might be interpreted as a command some time
 			//      later after the symbol had been read.
-			// TODO: do we unread here now that we support read-preserving-whitespace???
 			reader.unreadChar(codePoint);
 
 			final boolean isMultiEscapedToken = tokenBuilder.isMultiEscapedToken();

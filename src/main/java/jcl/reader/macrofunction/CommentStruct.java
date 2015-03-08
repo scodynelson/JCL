@@ -10,7 +10,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The object representation of a Lisp 'comment' type.
- * TODO: where should we move this?? Or should we??
  */
 public class CommentStruct implements LispStruct {
 

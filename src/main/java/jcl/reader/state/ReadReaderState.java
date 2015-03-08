@@ -12,8 +12,11 @@ import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
 import jcl.reader.struct.SyntaxType;
 import jcl.streams.ReadPeekResult;
+import jcl.types.Null;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +34,11 @@ class ReadReaderState implements ReaderState {
 	 * Serializable Version Unique Identifier.
 	 */
 	private static final long serialVersionUID = 5191264706029366940L;
+
+	/**
+	 * The logger for this class.
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(ReadReaderState.class);
 
 	/**
 	 * {@link ReaderStateMediator} singleton used by the reader algorithm.
@@ -58,20 +66,30 @@ class ReadReaderState implements ReaderState {
 		final ReadtableStruct readtable = ReaderVariables.READTABLE.getValue();
 		final SyntaxType syntaxType = readtable.getSyntaxType(codePoint);
 
+		final LispStruct token;
+
 		if (syntaxType == SyntaxType.WHITESPACE) {
-			return readerStateMediator.readWhitespace(tokenBuilder);
+			token = readerStateMediator.readWhitespace(tokenBuilder);
 		} else if ((syntaxType == SyntaxType.TERMINATING) || (syntaxType == SyntaxType.NON_TERMINATING)) {
-			return readerStateMediator.readMacroCharacter(tokenBuilder);
+			token = readerStateMediator.readMacroCharacter(tokenBuilder);
 		} else if (syntaxType == SyntaxType.SINGLE_ESCAPE) {
-			return readerStateMediator.readSingleEscape(tokenBuilder);
+			token = readerStateMediator.readSingleEscape(tokenBuilder);
 		} else if (syntaxType == SyntaxType.MULTIPLE_ESCAPE) {
 			tokenBuilder.setMultiEscapedToken();
-			return readerStateMediator.readMultipleEscape(tokenBuilder);
+			token = readerStateMediator.readMultipleEscape(tokenBuilder);
 		} else if (syntaxType == SyntaxType.CONSTITUENT) {
-			return readerStateMediator.readConstituent(tokenBuilder);
+			token = readerStateMediator.readConstituent(tokenBuilder);
 		} else {
-			return readerStateMediator.readIllegalCharacter(tokenBuilder);
+			token = readerStateMediator.readIllegalCharacter(tokenBuilder);
 		}
+
+		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("{} suppressed.", token);
+			}
+			return Null.INSTANCE;
+		}
+		return token;
 	}
 
 	@Override

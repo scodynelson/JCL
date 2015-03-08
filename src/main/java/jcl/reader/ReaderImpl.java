@@ -5,15 +5,11 @@
 package jcl.reader;
 
 import jcl.LispStruct;
-import jcl.reader.struct.ReaderVariables;
 import jcl.streams.InputStream;
 import jcl.streams.ReadPeekResult;
 import jcl.symbols.SymbolStruct;
-import jcl.types.Null;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -36,11 +32,6 @@ class ReaderImpl implements Reader {
 	 * Serializable Version Unique Identifier.
 	 */
 	private static final long serialVersionUID = -7380620097058028927L;
-
-	/**
-	 * The logger for this class.
-	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(ReaderImpl.class);
 
 	/**
 	 * The {@link InputStream} the ReaderImpl reads lisp tokens from.
@@ -103,15 +94,7 @@ class ReaderImpl implements Reader {
 	public LispStruct readPreservingWhitespace(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		if (recursiveP) {
 			final TokenBuilder tokenBuilder = new TokenBuilder(this, eofErrorP, eofValue);
-			final LispStruct token = readerStateMediator.read(tokenBuilder);
-
-			if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("{} suppressed.", token);
-				}
-				return Null.INSTANCE;
-			}
-			return token;
+			return readerStateMediator.read(tokenBuilder);
 		}
 
 		final Map<BigInteger, LispStruct> tempSharpEqualFinalTable = new HashMap<>(sharpEqualFinalTable);

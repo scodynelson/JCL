@@ -97,10 +97,10 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 		final SymbolStruct<?> makeArrayFnSymbol = CommonLispSymbols.MAKE_ARRAY;
 		final ListStruct dimensions = ListStruct.buildProperList(dimensionsAsJavaList);
 		final SymbolStruct<?> elementTypeKeyword = GlobalPackageStruct.KEYWORD.findSymbol("ELEMENT-TYPE").getSymbolStruct();
-		final ListStruct elementType = ListStruct.buildProperList(QUOTE, CommonLispSymbols.T);
+		final ListStruct elementType = ListStruct.buildProperList(CommonLispSymbols.QUOTE, CommonLispSymbols.T);
 		final SymbolStruct<?> initialContentsKeyword = GlobalPackageStruct.KEYWORD.findSymbol("INITIAL-CONTENTS").getSymbolStruct();
 
-		final ListStruct initialContents = ListStruct.buildProperList(QUOTE, contents);
+		final ListStruct initialContents = ListStruct.buildProperList(CommonLispSymbols.QUOTE, contents);
 
 		return ListStruct.buildProperList(makeArrayFnSymbol, dimensions, elementTypeKeyword, elementType, initialContentsKeyword, initialContents);
 	}

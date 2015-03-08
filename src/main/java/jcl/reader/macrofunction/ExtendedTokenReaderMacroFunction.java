@@ -166,7 +166,6 @@ final class ExtendedTokenReaderMacroFunction {
 			}
 			stringBuilder.appendCodePoint(token);
 		}
-		// TODO: throw error when EOF reached???
 	}
 
 	/**

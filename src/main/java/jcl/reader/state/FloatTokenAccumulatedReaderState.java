@@ -55,8 +55,8 @@ public class FloatTokenAccumulatedReaderState implements ReaderState {
 	}
 
 	/**
-	 * This method gets the float token string from the provided tokenString and exponentToken. The exponentToken
-	 * determines how the tokenString exponent should be replaced to look like a valid exponent string in Java.
+	 * Gets the float token string from the provided tokenString and exponentToken. The exponentToken determines how the
+	 * tokenString exponent should be replaced to look like a valid exponent string in Java.
 	 *
 	 * @param tokenString
 	 * 		the tokenString
@@ -65,7 +65,7 @@ public class FloatTokenAccumulatedReaderState implements ReaderState {
 	 *
 	 * @return the proper float token string
 	 */
-	protected static String getFloatTokenString(final String tokenString, final Integer exponentToken) {
+	static String getFloatTokenString(final String tokenString, final Integer exponentToken) {
 		if (exponentToken != null) {
 			final String exponentTokenString = String.valueOf(Character.toChars(exponentToken));
 			final String eCapitalLetterString = CharacterConstants.LATIN_CAPITAL_LETTER_E.toString();
@@ -75,14 +75,14 @@ public class FloatTokenAccumulatedReaderState implements ReaderState {
 	}
 
 	/**
-	 * This method gets the float type from the based off of the exponentToken parameter.
+	 * Gets the float type from the based off of the exponentToken parameter.
 	 *
 	 * @param exponentToken
 	 * 		the exponentToken used to determine the float type
 	 *
 	 * @return the proper float type
 	 */
-	protected static jcl.types.Float getFloatType(final Integer exponentToken) {
+	static jcl.types.Float getFloatType(final Integer exponentToken) {
 		jcl.types.Float floatType = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getValue();
 
 		if (exponentToken != null) {

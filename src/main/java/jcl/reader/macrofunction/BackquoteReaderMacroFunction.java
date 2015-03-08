@@ -11,10 +11,12 @@ import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.numbers.NumberStruct;
+import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.symbols.SymbolStruct;
+import jcl.system.CommonLispSymbols;
 import jcl.system.EnhancedLinkedList;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -35,6 +37,28 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 * Serializable Version Unique Identifier.
 	 */
 	private static final long serialVersionUID = 7900660772057166319L;
+
+	static final SymbolStruct<?> APPEND = CommonLispSymbols.APPEND;
+
+	static final SymbolStruct<?> CONS = CommonLispSymbols.CONS;
+
+	static final SymbolStruct<?> LIST = CommonLispSymbols.LIST;
+
+	static final SymbolStruct<?> LIST_STAR = CommonLispSymbols.LIST_STAR;
+
+	static final SymbolStruct<?> NCONC = CommonLispSymbols.NCONC;
+
+	static final SymbolStruct<?> NIL = CommonLispSymbols.NIL;
+
+	static final SymbolStruct<?> QUOTE = CommonLispSymbols.QUOTE;
+
+	static final SymbolStruct<?> T = CommonLispSymbols.T;
+
+	static final SymbolStruct<?> BQ_COMMA_FLAG = new SymbolStruct<>(",", GlobalPackageStruct.BACKQUOTE);
+
+	static final SymbolStruct<?> BQ_AT_FLAG = new SymbolStruct<>(",@", GlobalPackageStruct.BACKQUOTE);
+
+	static final SymbolStruct<?> BQ_DOT_FLAG = new SymbolStruct<>(",.", GlobalPackageStruct.BACKQUOTE);
 
 	/**
 	 * {@link Autowired} {@link Printer} used for printing elements and structures to the output stream.

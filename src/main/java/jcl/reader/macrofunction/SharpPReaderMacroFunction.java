@@ -14,6 +14,7 @@ import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
+import jcl.system.CommonLispSymbols;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +62,7 @@ public class SharpPReaderMacroFunction extends ReaderMacroFunctionImpl {
 		if (lispToken instanceof StringStruct) {
 			final StringStruct pathnameString = (StringStruct) lispToken;
 
-			return ListStruct.buildProperList(PATHNAME, pathnameString);
+			return ListStruct.buildProperList(CommonLispSymbols.PATHNAME, pathnameString);
 		} else {
 			final String printedToken = printer.print(lispToken);
 			throw new ReaderErrorException("The value " + printedToken + " is not of expected type STRING in argument to #P.");

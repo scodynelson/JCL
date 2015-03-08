@@ -11,6 +11,7 @@ import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
+import jcl.system.CommonLispSymbols;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.stereotype.Component;
@@ -46,7 +47,7 @@ public class SharpApostropheReaderMacroFunction extends ReaderMacroFunctionImpl 
 			throw new ReaderErrorException("Missing expression.");
 		}
 
-		return ListStruct.buildProperList(FUNCTION, lispToken);
+		return ListStruct.buildProperList(CommonLispSymbols.FUNCTION, lispToken);
 	}
 
 	@Override

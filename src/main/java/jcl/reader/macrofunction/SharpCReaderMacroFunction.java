@@ -14,6 +14,7 @@ import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
+import jcl.system.CommonLispSymbols;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,7 +88,7 @@ public class SharpCReaderMacroFunction extends ReaderMacroFunctionImpl {
 			throw new ReaderErrorException("Only real numbers are valid tokens for #c. Got: " + printedImaginary);
 		}
 
-		return ListStruct.buildProperList(COMPLEX, real, imaginary);
+		return ListStruct.buildProperList(CommonLispSymbols.COMPLEX, real, imaginary);
 	}
 
 	@Override

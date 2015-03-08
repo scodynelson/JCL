@@ -5,7 +5,6 @@
 package jcl.reader;
 
 import jcl.LispStruct;
-import jcl.compiler.real.element.SimpleElement;
 
 import java.io.Serializable;
 import java.math.BigInteger;

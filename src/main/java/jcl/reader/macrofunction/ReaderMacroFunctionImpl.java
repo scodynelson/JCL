@@ -7,13 +7,10 @@ package jcl.reader.macrofunction;
 import jcl.LispStruct;
 import jcl.functions.FunctionStruct;
 import jcl.numbers.IntegerStruct;
-import jcl.packages.GlobalPackageStruct;
 import jcl.reader.AttributeType;
 import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.SyntaxType;
-import jcl.symbols.SymbolStruct;
-import jcl.system.CommonLispSymbols;
 
 /**
  * Abstract implementation definition for all Reader defined macro functions that read character macros based off of a
@@ -31,34 +28,6 @@ abstract class ReaderMacroFunctionImpl extends FunctionStruct implements ReaderM
 		// TODO: do this
 		return null;
 	}
-
-	static final SymbolStruct<?> APPEND = CommonLispSymbols.APPEND;
-
-	static final SymbolStruct<?> COMPLEX = CommonLispSymbols.COMPLEX;
-
-	static final SymbolStruct<?> CONS = CommonLispSymbols.CONS;
-
-	static final SymbolStruct<?> FUNCTION = CommonLispSymbols.FUNCTION;
-
-	static final SymbolStruct<?> LIST = CommonLispSymbols.LIST;
-
-	static final SymbolStruct<?> LIST_STAR = CommonLispSymbols.LIST_STAR;
-
-	static final SymbolStruct<?> NCONC = CommonLispSymbols.NCONC;
-
-	static final SymbolStruct<?> NIL = CommonLispSymbols.NIL;
-
-	static final SymbolStruct<?> PATHNAME = CommonLispSymbols.PATHNAME;
-
-	static final SymbolStruct<?> QUOTE = CommonLispSymbols.QUOTE;
-
-	static final SymbolStruct<?> T = CommonLispSymbols.T;
-
-	static final SymbolStruct<?> BQ_COMMA_FLAG = new SymbolStruct<>(",", GlobalPackageStruct.BACKQUOTE);
-
-	static final SymbolStruct<?> BQ_AT_FLAG = new SymbolStruct<>(",@", GlobalPackageStruct.BACKQUOTE);
-
-	static final SymbolStruct<?> BQ_DOT_FLAG = new SymbolStruct<>(",.", GlobalPackageStruct.BACKQUOTE);
 
 	/**
 	 * Determines if the provided {@code codePoint} is a {@link SyntaxType#WHITESPACE} based on the current readtable.

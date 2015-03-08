@@ -38,22 +38,6 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 */
 	private static final long serialVersionUID = 7900660772057166319L;
 
-	static final SymbolStruct<?> APPEND = CommonLispSymbols.APPEND;
-
-	static final SymbolStruct<?> CONS = CommonLispSymbols.CONS;
-
-	static final SymbolStruct<?> LIST = CommonLispSymbols.LIST;
-
-	static final SymbolStruct<?> LIST_STAR = CommonLispSymbols.LIST_STAR;
-
-	static final SymbolStruct<?> NCONC = CommonLispSymbols.NCONC;
-
-	static final SymbolStruct<?> NIL = CommonLispSymbols.NIL;
-
-	static final SymbolStruct<?> QUOTE = CommonLispSymbols.QUOTE;
-
-	static final SymbolStruct<?> T = CommonLispSymbols.T;
-
 	static final SymbolStruct<?> BQ_COMMA_FLAG = new SymbolStruct<>(",", GlobalPackageStruct.BACKQUOTE);
 
 	static final SymbolStruct<?> BQ_AT_FLAG = new SymbolStruct<>(",@", GlobalPackageStruct.BACKQUOTE);
@@ -103,14 +87,22 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 		if (!(code instanceof ConsStruct)) {
 			if (code instanceof NullStruct) {
-				return new BackquoteReturn(NIL, NullStruct.INSTANCE);
+				return new BackquoteReturn(CommonLispSymbols.NIL, code);
 			}
 
 			if (code instanceof SymbolStruct<?>) {
-				return new BackquoteReturn(QUOTE, code);
+				// Need to check the constant symbols here
+				final SymbolStruct<?> codeSymbol = (SymbolStruct<?>) code;
+				if (CommonLispSymbols.T.equals(codeSymbol)) {
+					return new BackquoteReturn(CommonLispSymbols.T, code);
+				}
+				if (CommonLispSymbols.NIL.equals(codeSymbol)) {
+					return new BackquoteReturn(CommonLispSymbols.NIL, code);
+				}
+				return new BackquoteReturn(CommonLispSymbols.QUOTE, code);
 			}
 
-			return new BackquoteReturn(T, code);
+			return new BackquoteReturn(CommonLispSymbols.T, code);
 		}
 
 		final ConsStruct consCode = (ConsStruct) code;
@@ -146,108 +138,107 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 		}
 
 		if (BQ_AT_FLAG.equals(carBqtifyFlag)) {
-			if (NIL.equals(cdrBqtifyFlag)) {
+			if (CommonLispSymbols.NIL.equals(cdrBqtifyFlag)) {
 				if (expandableBackqExpressionP(carBqtifyThing)) {
 					final ListStruct bqReturnThing = ListStruct.buildProperList(carBqtifyThing);
-					return new BackquoteReturn(APPEND, bqReturnThing);
+					return new BackquoteReturn(CommonLispSymbols.APPEND, bqReturnThing);
 				} else {
 					return comma(carBqtifyThing);
 				}
 			} else {
 
 				final ListStruct bqReturnThing;
-				if (APPEND.equals(cdrBqtifyFlag)) {
+				if (CommonLispSymbols.APPEND.equals(cdrBqtifyFlag)) {
 					bqReturnThing = new ConsStruct(carBqtifyThing, cdrBqtifyThing);
 				} else {
 					final LispStruct backquotify_1 = backquotify_1(cdrBqtifyFlag, cdrBqtifyThing);
-					// This is fine to create ConsElement like this here since it is using 'LIST' in the algorithm
 					bqReturnThing = ListStruct.buildProperList(carBqtifyThing, backquotify_1);
 				}
 
-				return new BackquoteReturn(APPEND, bqReturnThing);
+				return new BackquoteReturn(CommonLispSymbols.APPEND, bqReturnThing);
 			}
 		}
 
 		if (BQ_DOT_FLAG.equals(carBqtifyFlag)) {
-			if (NIL.equals(cdrBqtifyFlag)) {
+			if (CommonLispSymbols.NIL.equals(cdrBqtifyFlag)) {
 				if (expandableBackqExpressionP(carBqtifyThing)) {
 					final ListStruct bqReturnThing = ListStruct.buildProperList(carBqtifyThing);
-					return new BackquoteReturn(NCONC, bqReturnThing);
+					return new BackquoteReturn(CommonLispSymbols.NCONC, bqReturnThing);
 				} else {
 					return comma(carBqtifyThing);
 				}
 			} else {
 
 				final ListStruct bqReturnThing;
-				if (NCONC.equals(cdrBqtifyFlag)) {
+				if (CommonLispSymbols.NCONC.equals(cdrBqtifyFlag)) {
 					bqReturnThing = new ConsStruct(carBqtifyThing, cdrBqtifyThing);
 				} else {
 					final LispStruct backquotify_1 = backquotify_1(cdrBqtifyFlag, cdrBqtifyThing);
-					// This is fine to create ConsElement like this here since it is using 'LIST' in the algorithm
 					bqReturnThing = ListStruct.buildProperList(carBqtifyThing, backquotify_1);
 				}
 
-				return new BackquoteReturn(NCONC, bqReturnThing);
+				return new BackquoteReturn(CommonLispSymbols.NCONC, bqReturnThing);
 			}
 		}
 
-		if (NIL.equals(cdrBqtifyFlag)) {
-			if (QUOTE.equals(carBqtifyFlag) || T.equals(carBqtifyFlag) || NIL.equals(carBqtifyFlag)) {
+		if (CommonLispSymbols.NIL.equals(cdrBqtifyFlag)) {
+			if (CommonLispSymbols.QUOTE.equals(carBqtifyFlag) || CommonLispSymbols.T.equals(carBqtifyFlag) || CommonLispSymbols.NIL.equals(carBqtifyFlag)) {
 				final ListStruct bqReturnThing = ListStruct.buildProperList(carBqtifyThing);
-				return new BackquoteReturn(QUOTE, bqReturnThing);
+				return new BackquoteReturn(CommonLispSymbols.QUOTE, bqReturnThing);
 			} else {
 
 				final LispStruct backquotify_1 = backquotify_1(carBqtifyFlag, carBqtifyThing);
 				final ListStruct bqReturnThing = ListStruct.buildProperList(backquotify_1);
 
-				return new BackquoteReturn(LIST, bqReturnThing);
+				return new BackquoteReturn(CommonLispSymbols.LIST, bqReturnThing);
 			}
 		}
 
-		if (QUOTE.equals(cdrBqtifyFlag) || T.equals(cdrBqtifyFlag)) {
-			if (QUOTE.equals(carBqtifyFlag) || T.equals(carBqtifyFlag) || NIL.equals(carBqtifyFlag)) {
+		if (CommonLispSymbols.QUOTE.equals(cdrBqtifyFlag) || CommonLispSymbols.T.equals(cdrBqtifyFlag)) {
+			if (CommonLispSymbols.QUOTE.equals(carBqtifyFlag) || CommonLispSymbols.T.equals(carBqtifyFlag) || CommonLispSymbols.NIL.equals(carBqtifyFlag)) {
 				final ConsStruct bqReturnThing = new ConsStruct(carBqtifyThing, cdrBqtifyThing);
-				return new BackquoteReturn(QUOTE, bqReturnThing);
+				return new BackquoteReturn(CommonLispSymbols.QUOTE, bqReturnThing);
 			} else {
 
 				final LispStruct backquotify_1_a = backquotify_1(carBqtifyFlag, carBqtifyThing);
 				final LispStruct backquotify_1_d = backquotify_1(cdrBqtifyFlag, cdrBqtifyThing);
-				// This is fine to create ConsElement like this here since it is using 'LIST' in the algorithm
 				final ListStruct bqReturnThing = ListStruct.buildProperList(backquotify_1_a, backquotify_1_d);
 
-				return new BackquoteReturn(LIST_STAR, bqReturnThing);
+				return new BackquoteReturn(CommonLispSymbols.LIST_STAR, bqReturnThing);
 			}
 		}
 
 		carBqtifyThing = backquotify_1(carBqtifyFlag, carBqtifyThing);
 
-		if (LIST.equals(cdrBqtifyFlag) || LIST_STAR.equals(cdrBqtifyFlag)) {
+		if (CommonLispSymbols.LIST.equals(cdrBqtifyFlag) || CommonLispSymbols.LIST_STAR.equals(cdrBqtifyFlag)) {
 			final ListStruct bqReturnThing = new ConsStruct(carBqtifyThing, cdrBqtifyThing);
 			return new BackquoteReturn(cdrBqtifyFlag, bqReturnThing);
 		}
 
 		final LispStruct backquotify_1_d = backquotify_1(cdrBqtifyFlag, cdrBqtifyThing);
-		// This is fine to create ConsElement like this here since it is using 'LIST' in the algorithm
 		final ListStruct bqReturnThing = ListStruct.buildProperList(carBqtifyThing, backquotify_1_d);
 
-		return new BackquoteReturn(LIST_STAR, bqReturnThing);
+		return new BackquoteReturn(CommonLispSymbols.LIST_STAR, bqReturnThing);
 	}
 
 	private BackquoteReturn comma(final LispStruct code) {
 
 		if (!(code instanceof ConsStruct)) {
 			if (code instanceof NullStruct) {
-				return new BackquoteReturn(NIL, NullStruct.INSTANCE);
+				return new BackquoteReturn(CommonLispSymbols.NIL, code);
 			}
 
 			if (code instanceof NumberStruct) {
-				return new BackquoteReturn(T, code);
+				return new BackquoteReturn(CommonLispSymbols.T, code);
 			}
 
 			if (code instanceof SymbolStruct<?>) {
+				// Need to check the constant symbols here
 				final SymbolStruct<?> codeSymbol = (SymbolStruct<?>) code;
-				if (T.equals(codeSymbol)) {
-					return new BackquoteReturn(T, code);
+				if (CommonLispSymbols.T.equals(codeSymbol)) {
+					return new BackquoteReturn(CommonLispSymbols.T, code);
+				} else if (CommonLispSymbols.NIL.equals(codeSymbol)) {
+					return new BackquoteReturn(CommonLispSymbols.NIL, code);
 				}
 			}
 
@@ -259,21 +250,21 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 		final LispStruct carConsCode = consCode.getCar();
 		final LispStruct cdrConsCode = consCode.getCdr();
 
-		// TODO: check this!!!
+		// NOTE: This cast will always be fine because of how we build the ConsStruct in the CommaReaderMacroFunction
 		final LispStruct cadrConsCode = ((ConsStruct) cdrConsCode).getCar();
 
-		if (QUOTE.equals(carConsCode) && !expandableBackqExpressionP(cadrConsCode)) {
+		if (CommonLispSymbols.QUOTE.equals(carConsCode) && !expandableBackqExpressionP(cadrConsCode)) {
 			final SymbolStruct<?> carConsCodeFlag = (SymbolStruct<?>) carConsCode;
 			return new BackquoteReturn(carConsCodeFlag, cadrConsCode);
 		}
 
-		if (APPEND.equals(carConsCode) || LIST.equals(carConsCode) || NCONC.equals(carConsCode)) {
+		if (CommonLispSymbols.APPEND.equals(carConsCode) || CommonLispSymbols.LIST.equals(carConsCode) || CommonLispSymbols.NCONC.equals(carConsCode)) {
 			final SymbolStruct<?> carConsCodeFlag = (SymbolStruct<?>) carConsCode;
 			return new BackquoteReturn(carConsCodeFlag, cdrConsCode);
 		}
 
-		if (CONS.equals(carConsCode) || LIST_STAR.equals(carConsCode)) {
-			return new BackquoteReturn(LIST_STAR, cdrConsCode);
+		if (CommonLispSymbols.CONS.equals(carConsCode) || CommonLispSymbols.LIST_STAR.equals(carConsCode)) {
+			return new BackquoteReturn(CommonLispSymbols.LIST_STAR, cdrConsCode);
 		}
 
 		return new BackquoteReturn(BQ_COMMA_FLAG, code);
@@ -292,28 +283,27 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	private LispStruct backquotify_1(final SymbolStruct<?> flag, final LispStruct thing) {
 
-		if (BQ_COMMA_FLAG.equals(flag) || T.equals(flag) || NIL.equals(flag)) {
+		if (BQ_COMMA_FLAG.equals(flag) || CommonLispSymbols.T.equals(flag) || CommonLispSymbols.NIL.equals(flag)) {
 			return thing;
 		}
 
-		if (QUOTE.equals(flag)) {
-			// This is fine to create ConsElement like this here since it is using 'LIST' in the algorithm
-			return ListStruct.buildProperList(QUOTE, thing);
+		if (CommonLispSymbols.QUOTE.equals(flag)) {
+			return ListStruct.buildProperList(CommonLispSymbols.QUOTE, thing);
 		}
 
-		if (LIST_STAR.equals(flag)) {
+		if (CommonLispSymbols.LIST_STAR.equals(flag)) {
 			// NOTE: The following check is not in CMUCL. Actually a semi-bug found when handling improperly created lists.
 			if (thing instanceof ConsStruct) {
 				final ConsStruct consThing = (ConsStruct) thing;
 
 				final LispStruct cdrThing = consThing.getCdr();
 
-				// TODO: check this!!!
+				// NOTE: This will always be an ok cast due to the backquote reader algorithm
 				final LispStruct cadrThing = ((ConsStruct) cdrThing).getCar();
 				final LispStruct cddrThing = ((ConsStruct) cdrThing).getCdr();
 
 				if (NullStruct.INSTANCE.equals(cddrThing) && !expandableBackqExpressionP(cadrThing)) {
-					return new ConsStruct(CONS, thing);
+					return new ConsStruct(CommonLispSymbols.CONS, thing);
 				}
 
 				final List<LispStruct> consThingElements = consThing.getAsJavaList();
@@ -340,13 +330,13 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 						allButLast = consElements.getAllButLast();
 					}
 
-					final ConsStruct consStruct = new ConsStruct(LIST, ListStruct.buildProperList(allButLast));
-					return ListStruct.buildProperList(APPEND, consStruct, carOfLastThing);
+					final ConsStruct consStruct = new ConsStruct(CommonLispSymbols.LIST, ListStruct.buildProperList(allButLast));
+					return ListStruct.buildProperList(CommonLispSymbols.APPEND, consStruct, carOfLastThing);
 				}
 
-				return new ConsStruct(LIST_STAR, thing);
+				return new ConsStruct(CommonLispSymbols.LIST_STAR, thing);
 			} else {
-				return new ConsStruct(LIST_STAR, thing);
+				return new ConsStruct(CommonLispSymbols.LIST_STAR, thing);
 			}
 		}
 

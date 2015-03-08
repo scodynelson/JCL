@@ -6,6 +6,7 @@ package jcl.reader.state;
 
 import jcl.LispStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.lists.NullStruct;
 import jcl.reader.Reader;
 import jcl.reader.ReaderMacroFunction;
 import jcl.reader.ReaderStateMediator;
@@ -96,7 +97,7 @@ class MacroCharacterReaderState implements ReaderState {
 	private static BigInteger getNumberArgument(final Reader reader) {
 
 		// NOTE: This will throw errors when it reaches an EOF. That's why we can un-box the 'readChar' variable below.
-		ReadPeekResult readResult = reader.readChar();
+		ReadPeekResult readResult = reader.readChar(true, NullStruct.INSTANCE, false);
 		int readChar = readResult.getResult();
 
 		final StringBuilder digitStringBuilder = new StringBuilder();
@@ -104,7 +105,7 @@ class MacroCharacterReaderState implements ReaderState {
 		while (Character.isDigit(readChar)) {
 			digitStringBuilder.appendCodePoint(readChar);
 
-			readResult = reader.readChar();
+			readResult = reader.readChar(true, NullStruct.INSTANCE, false);
 			readChar = readResult.getResult();
 		}
 

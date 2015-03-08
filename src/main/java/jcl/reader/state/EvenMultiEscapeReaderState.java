@@ -87,11 +87,10 @@ class EvenMultiEscapeReaderState implements ReaderState {
 
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();
-		final boolean isRecursiveP = tokenBuilder.isRecursiveP();
 
 		final Reader reader = tokenBuilder.getReader();
 
-		ReadPeekResult readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
+		ReadPeekResult readResult = reader.readChar(isEofErrorP, eofValue, true);
 		tokenBuilder.setPreviousReadResult(readResult);
 
 		if (readResult.isEof()) {
@@ -112,7 +111,7 @@ class EvenMultiEscapeReaderState implements ReaderState {
 			return readerStateMediator.readConstituent(tokenBuilder);
 		} else if (syntaxType == SyntaxType.SINGLE_ESCAPE) {
 
-			readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
+			readResult = reader.readChar(isEofErrorP, eofValue, true);
 			tokenBuilder.setPreviousReadResult(readResult);
 
 			if (readResult.isEof()) {
@@ -131,6 +130,7 @@ class EvenMultiEscapeReaderState implements ReaderState {
 			//      If a command interpreter takes single-character commands, but occasionally reads an object then if
 			//      the whitespace[2] after a symbol is not discarded it might be interpreted as a command some time
 			//      later after the symbol had been read.
+			// TODO: do we unread here now that we support read-preserving-whitespace???
 			reader.unreadChar(codePoint);
 
 			final boolean isMultiEscapedToken = tokenBuilder.isMultiEscapedToken();

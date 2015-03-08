@@ -9,6 +9,7 @@ import jcl.arrays.ArrayStruct;
 import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ListStruct;
+import jcl.lists.NullStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
@@ -20,8 +21,6 @@ import jcl.symbols.SymbolStruct;
 import jcl.system.CommonLispSymbols;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -40,11 +39,6 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 * Serializable Version Unique Identifier.
 	 */
 	private static final long serialVersionUID = -3446360583440445990L;
-
-	/**
-	 * The logger for this class.
-	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(SharpAReaderMacroFunction.class);
 
 	/**
 	 * {@link Autowired} {@link Printer} used for printing elements and structures to the output stream.
@@ -66,13 +60,9 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_A) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_A);
 
-		final LispStruct lispToken = reader.read();
+		final LispStruct lispToken = reader.read(true, NullStruct.INSTANCE, true);
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
-			if (LOGGER.isDebugEnabled()) {
-				final String printedToken = printer.print(lispToken);
-				LOGGER.debug("{} suppressed.", printedToken);
-			}
-			return null;
+			return NullStruct.INSTANCE;
 		}
 
 		if (numArg == null) {

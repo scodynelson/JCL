@@ -9,6 +9,7 @@ import jcl.arrays.BitVectorStruct;
 import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ListStruct;
+import jcl.lists.NullStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.reader.Reader;
@@ -16,8 +17,6 @@ import jcl.reader.struct.ReaderVariables;
 import jcl.symbols.SymbolStruct;
 import jcl.system.CommonLispSymbols;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -37,11 +36,6 @@ public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunctionImpl {
 	private static final long serialVersionUID = -1951661697106448531L;
 
 	/**
-	 * The logger for this class.
-	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(SharpAsteriskReaderMacroFunction.class);
-
-	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
 	@PostConstruct
@@ -57,10 +51,7 @@ public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunctionImpl {
 		final String token = readExtendedToken.getToken();
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("{} suppressed.", token);
-			}
-			return null;
+			return NullStruct.INSTANCE;
 		}
 
 		if (readExtendedToken.isHasEscapes()) {

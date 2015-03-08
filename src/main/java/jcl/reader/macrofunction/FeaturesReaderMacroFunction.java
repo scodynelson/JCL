@@ -9,6 +9,7 @@ import jcl.compiler.real.CompilerVariables;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
+import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
@@ -87,13 +88,13 @@ final class FeaturesReaderMacroFunction implements Serializable {
 			ReaderVariables.READ_SUPPRESS.setValue(NILStruct.INSTANCE);
 
 			PackageVariables.PACKAGE.setValue(GlobalPackageStruct.KEYWORD);
-			final LispStruct lispStruct = reader.read();
+			final LispStruct lispStruct = reader.read(true, NullStruct.INSTANCE, true);
 			PackageVariables.PACKAGE.setValue(previousPackage);
 
 			final boolean isFeature = isFeature(lispStruct);
 			if (isFeature && shouldHideFeatures) {
 				ReaderVariables.READ_SUPPRESS.setValue(TStruct.INSTANCE);
-				reader.read();
+				reader.read(true, NullStruct.INSTANCE, true);
 			}
 		} catch (final ReaderErrorException ree) {
 			if (LOGGER.isDebugEnabled()) {

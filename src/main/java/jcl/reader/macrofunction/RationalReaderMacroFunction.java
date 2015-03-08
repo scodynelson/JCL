@@ -6,19 +6,32 @@ package jcl.reader.macrofunction;
 
 import jcl.LispStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.lists.NullStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.RationalStruct;
+import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import org.apache.commons.lang3.Range;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 
 /**
  * Reader Macro Function for handling the reading of {@link RationalStruct}s, following proper radix rules for a
  * provided radix value.
  */
-final class RationalReaderMacroFunction {
+@Component
+final class RationalReaderMacroFunction implements Serializable {
+
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
+	private static final long serialVersionUID = -8849349790791106477L;
 
 	/**
 	 * The valid range of radix values.
@@ -27,10 +40,10 @@ final class RationalReaderMacroFunction {
 	private static final Range<BigInteger> RADIX_RANGE = Range.between(BigInteger.valueOf(2), BigInteger.valueOf(36));
 
 	/**
-	 * Private constructor.
+	 * {@link Autowired} {@link Printer} used for printing elements and structures to the output stream.
 	 */
-	private RationalReaderMacroFunction() {
-	}
+	@Autowired
+	private Printer printer;
 
 	/**
 	 * Read in and returns a properly parsed {@link RationalStruct}, handling proper radix rules for reader number base
@@ -43,10 +56,10 @@ final class RationalReaderMacroFunction {
 	 *
 	 * @return the properly parsed {@link RationalStruct}
 	 */
-	static RationalStruct readRational(final Reader reader, final BigInteger radix) {
+	LispStruct readRational(final Reader reader, final BigInteger radix) {
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			ExtendedTokenReaderMacroFunction.readExtendedToken(reader, false);
-			return null;
+			return NullStruct.INSTANCE;
 		}
 
 		if (radix == null) {
@@ -63,16 +76,21 @@ final class RationalReaderMacroFunction {
 		ReaderVariables.READ_BASE.setValue(new IntegerStruct(radix));
 
 		// read rational
-		final LispStruct lispToken = reader.read();
+		final LispStruct lispToken = reader.read(true, NullStruct.INSTANCE, true);
 
 		// reset the read-base
 		ReaderVariables.READ_BASE.setValue(previousReadBase);
 
 		if (lispToken instanceof RationalStruct) {
-			return (RationalStruct) lispToken;
+			return lispToken;
 		}
 
-		// TODO: need to use the Printer to print the 'lispToken' here
-		throw new ReaderErrorException("#R (base " + radix + ") value is not a rational: " + lispToken + '.');
+		final String printedLispStruct = printer.print(lispToken);
+		throw new ReaderErrorException("#R (base " + radix + ") value is not a rational: " + printedLispStruct + '.');
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

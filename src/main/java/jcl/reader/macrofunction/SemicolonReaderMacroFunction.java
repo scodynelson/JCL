@@ -48,10 +48,6 @@ public class SemicolonReaderMacroFunction extends ReaderMacroFunctionImpl {
 			readChar = readResult.getResult();
 		}
 
-		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
-			return null;
-		}
-
 		final String stringValue = stringBuilder.toString();
 		return new CommentStruct(stringValue);
 	}

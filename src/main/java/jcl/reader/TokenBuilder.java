@@ -32,11 +32,6 @@ public class TokenBuilder {
 	private final LispStruct eofValue;
 
 	/**
-	 * Determines if the read operation should operate recursively for lisp tokens.
-	 */
-	private final boolean recursiveP;
-
-	/**
 	 * The current list of {@link TokenAttribute}s accumulated through the read operation.
 	 */
 	private final LinkedList<TokenAttribute> tokenAttributes;
@@ -60,14 +55,11 @@ public class TokenBuilder {
 	 * 		whether or not to throw an error when an End-Of-File is reached
 	 * @param eofValue
 	 * 		the value to return if an End-Of-File is reached and an error is not to be thrown
-	 * @param recursiveP
-	 * 		whether or not to recursively read tokens
 	 */
-	TokenBuilder(final Reader reader, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
+	TokenBuilder(final Reader reader, final boolean eofErrorP, final LispStruct eofValue) {
 		this.reader = reader;
 		this.eofErrorP = eofErrorP;
 		this.eofValue = eofValue;
-		this.recursiveP = recursiveP;
 		tokenAttributes = new LinkedList<>();
 
 		previousReadResult = null;
@@ -99,15 +91,6 @@ public class TokenBuilder {
 	 */
 	public LispStruct getEofValue() {
 		return eofValue;
-	}
-
-	/**
-	 * Getter for {@link #recursiveP} property.
-	 *
-	 * @return {@link #recursiveP} property
-	 */
-	public boolean isRecursiveP() {
-		return recursiveP;
 	}
 
 	/**

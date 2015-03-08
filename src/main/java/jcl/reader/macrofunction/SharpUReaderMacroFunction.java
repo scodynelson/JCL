@@ -7,6 +7,7 @@ package jcl.reader.macrofunction;
 import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.characters.CharacterStruct;
+import jcl.lists.NullStruct;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
@@ -41,7 +42,7 @@ public class SharpUReaderMacroFunction extends ReaderMacroFunctionImpl {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_U) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_U);
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
-			return null;
+			return NullStruct.INSTANCE;
 		}
 
 		final int unicodeChar = UnicodeCharacterReaderMacroFunction.readUnicodeCharacter(reader);

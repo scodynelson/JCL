@@ -5,6 +5,7 @@
 package jcl.reader.macrofunction;
 
 import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.lists.NullStruct;
 import jcl.reader.Reader;
 import jcl.streams.ReadPeekResult;
 
@@ -37,12 +38,12 @@ final class UnicodeCharacterReaderMacroFunction {
 		final StringBuilder unicodeCharBuilder = new StringBuilder();
 
 		// NOTE: This will throw errors when it reaches an EOF
-		ReadPeekResult readResult = reader.readChar();
+		ReadPeekResult readResult = reader.readChar(true, NullStruct.INSTANCE, false);
 		int codePoint = readResult.getResult();
 		while (!ReaderMacroFunctionImpl.isWhitespace(codePoint)) {
 			unicodeCharBuilder.appendCodePoint(codePoint);
 
-			readResult = reader.readChar();
+			readResult = reader.readChar(true, NullStruct.INSTANCE, false);
 			codePoint = readResult.getResult();
 		}
 

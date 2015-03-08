@@ -7,6 +7,7 @@ package jcl.reader.macrofunction;
 import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.lists.NullStruct;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.symbols.SymbolStruct;
@@ -39,7 +40,7 @@ public class SharpSharpReaderMacroFunction extends ReaderMacroFunctionImpl {
 		assert codePoint == CharacterConstants.NUMBER_SIGN;
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
-			return null;
+			return NullStruct.INSTANCE;
 		}
 
 		if (numArg == null) {

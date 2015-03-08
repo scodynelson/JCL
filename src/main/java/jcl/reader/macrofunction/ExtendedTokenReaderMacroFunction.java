@@ -4,6 +4,7 @@
 
 package jcl.reader.macrofunction;
 
+import jcl.lists.NullStruct;
 import jcl.reader.AttributeType;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
@@ -114,7 +115,7 @@ final class ExtendedTokenReaderMacroFunction {
 				appendToken(tempReadResult, stringBuilder, true);
 			}
 
-			tempReadResult = reader.readChar(true, null, false);
+			tempReadResult = reader.readChar(true, NullStruct.INSTANCE, false);
 			tempCodePoint = tempReadResult.getResult();
 		}
 		appendToken(tempReadResult, stringBuilder, false);
@@ -141,7 +142,7 @@ final class ExtendedTokenReaderMacroFunction {
 	 */
 	private static ReadPeekResult readToken(final Reader reader, final boolean eofErrorP, final boolean recursiveP,
 	                                        final StringBuilder stringBuilder, final boolean isEscaped) {
-		final ReadPeekResult readResult = reader.readChar(eofErrorP, null, recursiveP);
+		final ReadPeekResult readResult = reader.readChar(eofErrorP, NullStruct.INSTANCE, recursiveP);
 		appendToken(readResult, stringBuilder, isEscaped);
 		return readResult;
 	}
@@ -165,6 +166,7 @@ final class ExtendedTokenReaderMacroFunction {
 			}
 			stringBuilder.appendCodePoint(token);
 		}
+		// TODO: throw error when EOF reached???
 	}
 
 	/**

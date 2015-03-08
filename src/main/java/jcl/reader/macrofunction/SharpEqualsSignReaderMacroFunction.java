@@ -8,6 +8,7 @@ import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ConsStruct;
+import jcl.lists.NullStruct;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.symbols.SymbolStruct;
@@ -64,7 +65,7 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctionImpl 
 		final SymbolStruct<?> tag = new SymbolStruct<>(tagName);
 		sharpEqualTempTable.put(numArg, tag);
 
-		final LispStruct token = reader.read();
+		final LispStruct token = reader.read(true, NullStruct.INSTANCE, true);
 		reader.getSharpEqualReplTable().put(tag, token);
 
 		final Set<LispStruct> sharpEqualCircleSet = new HashSet<>();

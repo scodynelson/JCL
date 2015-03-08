@@ -19,15 +19,6 @@ import java.util.Map;
 public interface Reader extends Serializable {
 
 	/**
-	 * Reads the next {@link LispStruct} from the {@link InputStream}. This calls the overloaded {@link #read(boolean,
-	 * LispStruct, boolean)} method with {@code eofErrorP} as true, {@code eofValue} as null, and {@code recursiveP} as
-	 * true.
-	 *
-	 * @return the next {@link LispStruct} from the {@link InputStream}
-	 */
-	LispStruct read();
-
-	/**
 	 * Reads the next {@link LispStruct} from the {@link InputStream}.
 	 *
 	 * @param eofErrorP
@@ -42,13 +33,19 @@ public interface Reader extends Serializable {
 	LispStruct read(boolean eofErrorP, LispStruct eofValue, boolean recursiveP);
 
 	/**
-	 * Reads the next {@link ReadPeekResult} from the {@link InputStream}. This calls the overloaded {@link
-	 * #readChar(boolean, LispStruct, boolean)} method with {@code eofErrorP} as true, {@code eofValue} as null, and
-	 * {@code recursiveP} as true.
+	 * TODO
+	 * Reads the next {@link LispStruct} from the {@link InputStream}.
 	 *
-	 * @return the next {@link ReadPeekResult} from the {@link InputStream}
+	 * @param eofErrorP
+	 * 		whether or not to throw an error when an End-Of-File is reached
+	 * @param eofValue
+	 * 		the value to return if an End-Of-File is reached and an error is not to be thrown
+	 * @param recursiveP
+	 * 		whether or not to recursively read tokens
+	 *
+	 * @return the next {@link LispStruct} from the {@link InputStream}
 	 */
-	ReadPeekResult readChar();
+	LispStruct readPreservingWhitespace(boolean eofErrorP, LispStruct eofValue, boolean recursiveP);
 
 	/**
 	 * Reads the next {@link ReadPeekResult} from the {@link InputStream}.

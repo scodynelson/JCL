@@ -67,7 +67,7 @@ final class ListReaderMacroFunction implements Serializable {
 
 			reader.unreadChar(codePoint);
 
-			final LispStruct lispStruct = reader.read();
+			final LispStruct lispStruct = reader.read(true, NullStruct.INSTANCE, true);
 			if (lispStruct != null) {
 				currentTokenList.add(lispStruct);
 			}
@@ -76,7 +76,7 @@ final class ListReaderMacroFunction implements Serializable {
 		}
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
-			return null;
+			return NullStruct.INSTANCE;
 		}
 
 		if (currentTokenList.isEmpty()) {
@@ -104,7 +104,7 @@ final class ListReaderMacroFunction implements Serializable {
 		boolean isDotted = false;
 
 		// NOTE: This will throw errors when it reaches an EOF
-		final ReadPeekResult readResult = reader.readChar();
+		final ReadPeekResult readResult = reader.readChar(true, NullStruct.INSTANCE, false);
 		final int nextCodePoint = readResult.getResult();
 
 		if (ReaderMacroFunctionImpl.isWhitespaceOrTerminating(nextCodePoint)) {
@@ -147,7 +147,7 @@ final class ListReaderMacroFunction implements Serializable {
 			reader.unreadChar(codePoint);
 
 			// NOTE: This will throw errors when it reaches an EOF
-			lispStruct = reader.read();
+			lispStruct = reader.read(true, NullStruct.INSTANCE, true);
 			firstCodePoint = flushWhitespace(reader);
 		}
 		currentTokenList.add(lispStruct);
@@ -156,7 +156,7 @@ final class ListReaderMacroFunction implements Serializable {
 			reader.unreadChar(firstCodePoint);
 
 			// NOTE: This will throw errors when it reaches an EOF
-			lispStruct = reader.read();
+			lispStruct = reader.read(true, NullStruct.INSTANCE, true);
 			if (lispStruct != null) {
 				final String printedLispStruct = printer.print(lispStruct);
 				throw new ReaderErrorException("More than one object follows . in list: " + printedLispStruct);
@@ -177,10 +177,10 @@ final class ListReaderMacroFunction implements Serializable {
 	private static int flushWhitespace(final Reader reader) {
 
 		// NOTE: This will throw errors when it reaches an EOF
-		ReadPeekResult readResult = reader.readChar();
+		ReadPeekResult readResult = reader.readChar(true, NullStruct.INSTANCE, false);
 		int codePoint = readResult.getResult();
 		while (ReaderMacroFunctionImpl.isWhitespace(codePoint)) {
-			readResult = reader.readChar();
+			readResult = reader.readChar(true, NullStruct.INSTANCE, false);
 			codePoint = readResult.getResult();
 		}
 		return codePoint;

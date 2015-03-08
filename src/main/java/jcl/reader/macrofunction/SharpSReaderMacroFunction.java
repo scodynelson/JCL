@@ -9,15 +9,13 @@ import jcl.characters.CharacterConstants;
 import jcl.compiler.real.element.SymbolElement;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ListStruct;
-import jcl.printer.Printer;
+import jcl.lists.NullStruct;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
 import jcl.streams.ReadPeekResult;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -37,18 +35,10 @@ public class SharpSReaderMacroFunction extends ReaderMacroFunctionImpl {
 	private static final long serialVersionUID = -3540324881853180103L;
 
 	/**
-	 * The logger for this class.
+	 * {@link Autowired} {@link ListReaderMacroFunction} used for reading {@link ListStruct}s.
 	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(SharpSReaderMacroFunction.class);
-
 	@Autowired
 	private ListReaderMacroFunction listReaderMacroFunction;
-
-	/**
-	 * {@link Autowired} {@link Printer} used for printing elements and structures to the output stream.
-	 */
-	@Autowired
-	private Printer printer;
 
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
@@ -65,15 +55,11 @@ public class SharpSReaderMacroFunction extends ReaderMacroFunctionImpl {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_S) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_S);
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
-			final LispStruct lispToken = reader.read();
-			if (LOGGER.isDebugEnabled()) {
-				final String printedToken = printer.print(lispToken);
-				LOGGER.debug("{} suppressed.", printedToken);
-			}
-			return null;
+			reader.read(true, NullStruct.INSTANCE, true);
+			return NullStruct.INSTANCE;
 		}
 
-		final ReadPeekResult readResult = reader.readChar();
+		final ReadPeekResult readResult = reader.readChar(true, NullStruct.INSTANCE, false);
 		final int nextCodePoint = readResult.getResult();
 		if (nextCodePoint != CharacterConstants.LEFT_PARENTHESIS) {
 			throw new ReaderErrorException("Non-list following #S");

@@ -9,6 +9,7 @@ import jcl.compiler.real.element.SpecialOperatorElement;
 import jcl.compiler.real.element.SymbolElement;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.conditions.exceptions.StreamErrorException;
+import jcl.lists.NullStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
 import jcl.printer.Printer;
@@ -114,14 +115,10 @@ public class ReadEvalPrint {
 
 					LispStruct whatRead = null;
 					try {
-						reader.getSharpEqualFinalTable().clear();
-						reader.getSharpEqualReplTable().clear();
-						reader.getSharpEqualTempTable().clear();
-
 						if (isFile) {
-							whatRead = reader.read(false, null, true);
+							whatRead = reader.read(false, null, false);
 						} else {
-							whatRead = reader.read();
+							whatRead = reader.read(true, NullStruct.INSTANCE, false);
 						}
 						if (whatRead != null) {
 							LOGGER.debug("READ: {}", whatRead.getClass().getSimpleName());

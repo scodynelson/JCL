@@ -5,17 +5,22 @@
 package jcl.reader;
 
 import jcl.LispStruct;
+import jcl.reader.struct.ReaderVariables;
 import jcl.streams.InputStream;
 import jcl.streams.ReadPeekResult;
 import jcl.symbols.SymbolStruct;
+import jcl.types.Null;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,6 +36,11 @@ class ReaderImpl implements Reader {
 	 * Serializable Version Unique Identifier.
 	 */
 	private static final long serialVersionUID = -7380620097058028927L;
+
+	/**
+	 * The logger for this class.
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(ReaderImpl.class);
 
 	/**
 	 * The {@link InputStream} the ReaderImpl reads lisp tokens from.
@@ -73,19 +83,54 @@ class ReaderImpl implements Reader {
 	}
 
 	@Override
-	public LispStruct read() {
-		return read(true, null, true);
-	}
-
-	@Override
 	public LispStruct read(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
-		final TokenBuilder tokenBuilder = new TokenBuilder(this, eofErrorP, eofValue, recursiveP);
-		return readerStateMediator.read(tokenBuilder);
+		final LispStruct token = readPreservingWhitespace(eofErrorP, eofValue, recursiveP);
+
+		final ReadPeekResult whiteChar = readChar(false, eofValue, false);
+		final Integer result = whiteChar.getResult();
+		if (!whiteChar.isEof() && (!Character.isWhitespace(result) || recursiveP)) {
+			unreadChar(result);
+		}
+
+		return token;
 	}
 
 	@Override
-	public ReadPeekResult readChar() {
-		return readChar(true, null, true);
+	public LispStruct readPreservingWhitespace(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
+		if (recursiveP) {
+			final TokenBuilder tokenBuilder = new TokenBuilder(this, eofErrorP, eofValue);
+			final LispStruct token = readerStateMediator.read(tokenBuilder);
+
+			if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
+				if (LOGGER.isDebugEnabled()) {
+					LOGGER.debug("{} suppressed.", token);
+				}
+				return Null.INSTANCE;
+			}
+			return token;
+		}
+
+		final Map<BigInteger, LispStruct> tempSharpEqualFinalTable = new HashMap<>(sharpEqualFinalTable);
+		final Map<BigInteger, SymbolStruct<?>> tempSharpEqualTempTable = new HashMap<>(sharpEqualTempTable);
+		final Map<SymbolStruct<?>, LispStruct> tempSharpEqualReplTable = new HashMap<>(sharpEqualReplTable);
+
+		try {
+			sharpEqualFinalTable.clear();
+			sharpEqualTempTable.clear();
+			sharpEqualReplTable.clear();
+
+			return readPreservingWhitespace(eofErrorP, eofValue, true);
+		} finally {
+			// Clear them back out.
+			sharpEqualFinalTable.clear();
+			sharpEqualTempTable.clear();
+			sharpEqualReplTable.clear();
+
+			// Restore their values.
+			sharpEqualFinalTable.putAll(tempSharpEqualFinalTable);
+			sharpEqualTempTable.putAll(tempSharpEqualTempTable);
+			sharpEqualReplTable.putAll(tempSharpEqualReplTable);
+		}
 	}
 
 	@Override

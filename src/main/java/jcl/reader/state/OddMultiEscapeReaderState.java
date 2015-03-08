@@ -62,11 +62,10 @@ class OddMultiEscapeReaderState implements ReaderState {
 
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();
-		final boolean isRecursiveP = tokenBuilder.isRecursiveP();
 
 		final Reader reader = tokenBuilder.getReader();
 
-		ReadPeekResult readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
+		ReadPeekResult readResult = reader.readChar(isEofErrorP, eofValue, true);
 		tokenBuilder.setPreviousReadResult(readResult);
 
 		if (readResult.isEof()) {
@@ -88,7 +87,7 @@ class OddMultiEscapeReaderState implements ReaderState {
 			return readerStateMediator.readOddMultipleEscape(tokenBuilder);
 		} else if (syntaxType == SyntaxType.SINGLE_ESCAPE) {
 
-			readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
+			readResult = reader.readChar(isEofErrorP, eofValue, true);
 			tokenBuilder.setPreviousReadResult(readResult);
 
 			if (readResult.isEof()) {

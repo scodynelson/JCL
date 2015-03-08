@@ -7,11 +7,10 @@ package jcl.reader.macrofunction;
 import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.lists.NullStruct;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.symbols.SymbolStruct;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -29,11 +28,6 @@ public class SharpColonReaderMacroFunction extends ReaderMacroFunctionImpl {
 	private static final long serialVersionUID = -7264077548468382838L;
 
 	/**
-	 * The logger for this class.
-	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(SharpColonReaderMacroFunction.class);
-
-	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
 	@PostConstruct
@@ -49,10 +43,7 @@ public class SharpColonReaderMacroFunction extends ReaderMacroFunctionImpl {
 		final String token = readExtendedToken.getToken();
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("{} suppressed.", token);
-			}
-			return null;
+			return NullStruct.INSTANCE;
 		}
 
 		if (readExtendedToken.isHasPackageDelimiter()) {

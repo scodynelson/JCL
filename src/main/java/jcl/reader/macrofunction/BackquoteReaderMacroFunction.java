@@ -135,7 +135,7 @@ JCL:
 
 		reader.increaseBackquoteLevel();
 		try {
-			final LispStruct code = reader.read();
+			final LispStruct code = reader.read(true, NullStruct.INSTANCE, true);
 			final BackquoteReturn backquoteReturn = backquotify(code);
 
 			final SymbolStruct<?> flag = backquoteReturn.getFlag();

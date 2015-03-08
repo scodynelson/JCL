@@ -10,9 +10,8 @@ import jcl.characters.CharacterStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
+import jcl.types.Null;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -30,11 +29,6 @@ public class SharpBackslashReaderMacroFunction extends ReaderMacroFunctionImpl {
 	private static final long serialVersionUID = 3860297910163190444L;
 
 	/**
-	 * The logger for this class.
-	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(SharpBackslashReaderMacroFunction.class);
-
-	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
 	@PostConstruct
@@ -50,10 +44,7 @@ public class SharpBackslashReaderMacroFunction extends ReaderMacroFunctionImpl {
 		final String token = readExtendedToken.getToken();
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("{} suppressed.", token);
-			}
-			return null;
+			return Null.INSTANCE;
 		}
 
 		final int maxCharTokenLength = 1;

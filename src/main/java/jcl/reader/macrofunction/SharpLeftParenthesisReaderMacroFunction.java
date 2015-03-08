@@ -7,7 +7,6 @@ package jcl.reader.macrofunction;
 import jcl.LispStruct;
 import jcl.arrays.VectorStruct;
 import jcl.characters.CharacterConstants;
-import jcl.compiler.real.element.ListElement;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ListStruct;
 import jcl.numbers.IntegerStruct;
@@ -17,11 +16,10 @@ import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.symbols.SymbolStruct;
 import jcl.system.CommonLispSymbols;
+import jcl.types.Null;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -41,12 +39,7 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 	private static final long serialVersionUID = -1826957244403929085L;
 
 	/**
-	 * The logger for this class.
-	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(SharpLeftParenthesisReaderMacroFunction.class);
-
-	/**
-	 * {@link Autowired} {@link ListReaderMacroFunction} used for reading {@link ListElement}s.
+	 * {@link Autowired} {@link ListReaderMacroFunction} used for reading {@link ListStruct}s.
 	 */
 	@Autowired
 	private ListReaderMacroFunction listReaderMacroFunction;
@@ -72,11 +65,7 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 		final ListStruct listToken = listReaderMacroFunction.readList(reader);
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
-			if (LOGGER.isDebugEnabled()) {
-				final String printedToken = printer.print(listToken);
-				LOGGER.debug("{} suppressed.", printedToken);
-			}
-			return null;
+			return Null.INSTANCE;
 		}
 
 		if (listToken == null) {

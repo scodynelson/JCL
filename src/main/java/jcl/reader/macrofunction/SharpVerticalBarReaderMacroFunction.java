@@ -6,6 +6,7 @@ package jcl.reader.macrofunction;
 
 import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
+import jcl.lists.NullStruct;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.streams.ReadPeekResult;
@@ -41,8 +42,8 @@ public class SharpVerticalBarReaderMacroFunction extends ReaderMacroFunctionImpl
 		int level = 1;
 
 		// NOTE: This will throw errors when it reaches an EOF
-		ReadPeekResult prevReadResult = reader.readChar();
-		ReadPeekResult nextReadResult = reader.readChar();
+		ReadPeekResult prevReadResult = reader.readChar(true, NullStruct.INSTANCE, false);
+		ReadPeekResult nextReadResult = reader.readChar(true, NullStruct.INSTANCE, false);
 
 		final StringBuilder stringBuilder = new StringBuilder();
 		while (true) {
@@ -61,7 +62,7 @@ public class SharpVerticalBarReaderMacroFunction extends ReaderMacroFunctionImpl
 				stringBuilder.appendCodePoint(nextChar);
 
 				// NOTE: This will throw errors when it reaches an EOF
-				nextReadResult = reader.readChar();
+				nextReadResult = reader.readChar(true, NullStruct.INSTANCE, false);
 				level += 1;
 			} else {
 				stringBuilder.appendCodePoint(prevChar);
@@ -69,11 +70,7 @@ public class SharpVerticalBarReaderMacroFunction extends ReaderMacroFunctionImpl
 
 			// NOTE: This will throw errors when it reaches an EOF
 			prevReadResult = nextReadResult;
-			nextReadResult = reader.readChar();
-		}
-
-		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
-			return null;
+			nextReadResult = reader.readChar(true, NullStruct.INSTANCE, false);
 		}
 
 		final String stringValue = stringBuilder.toString();

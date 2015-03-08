@@ -6,9 +6,13 @@ package jcl.reader.macrofunction;
 
 import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
+import jcl.numbers.RationalStruct;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -26,6 +30,12 @@ public class SharpRReaderMacroFunction extends ReaderMacroFunctionImpl {
 	private static final long serialVersionUID = -7260114375261055287L;
 
 	/**
+	 * {@link Autowired} {@link RationalReaderMacroFunction} used for reading {@link RationalStruct}s.
+	 */
+	@Autowired
+	private RationalReaderMacroFunction rationalReaderMacroFunction;
+
+	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
 	@PostConstruct
@@ -39,6 +49,11 @@ public class SharpRReaderMacroFunction extends ReaderMacroFunctionImpl {
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_R) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_R);
 
-		return RationalReaderMacroFunction.readRational(reader, numArg);
+		return rationalReaderMacroFunction.readRational(reader, numArg);
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

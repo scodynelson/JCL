@@ -6,6 +6,7 @@ package jcl.reader.macrofunction;
 
 import jcl.arrays.StringStruct;
 import jcl.characters.CharacterConstants;
+import jcl.lists.NullStruct;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.streams.ReadPeekResult;
@@ -40,7 +41,7 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunctionImpl {
 		final StringBuilder stringBuilder = new StringBuilder();
 
 		// NOTE: This will throw errors when it reaches an EOF
-		ReadPeekResult readResult = reader.readChar();
+		ReadPeekResult readResult = reader.readChar(true, NullStruct.INSTANCE, true);
 		int readChar = readResult.getResult();
 
 		while (readChar != CharacterConstants.QUOTATION_MARK) {
@@ -51,7 +52,7 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunctionImpl {
 			}
 
 			// NOTE: This will throw errors when it reaches an EOF
-			readResult = reader.readChar();
+			readResult = reader.readChar(true, NullStruct.INSTANCE, true);
 			readChar = readResult.getResult();
 		}
 
@@ -75,12 +76,12 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunctionImpl {
 		int readChar = CharacterConstants.BACKSLASH;
 
 		// NOTE: This will throw errors when it reaches an EOF
-		final ReadPeekResult tmpReadResult = reader.readChar();
+		final ReadPeekResult tmpReadResult = reader.readChar(true, NullStruct.INSTANCE, true);
 		final int tmpChar = tmpReadResult.getResult();
 		if ((tmpChar == CharacterConstants.LATIN_SMALL_LETTER_U)
 				|| (tmpChar == CharacterConstants.LATIN_CAPITAL_LETTER_U)) {
 
-			final ReadPeekResult nextTmpReadResult = reader.readChar();
+			final ReadPeekResult nextTmpReadResult = reader.readChar(true, NullStruct.INSTANCE, true);
 			final int nextTmpChar = nextTmpReadResult.getResult();
 			if (nextTmpChar == CharacterConstants.PLUS_SIGN) {
 				readChar = UnicodeCharacterReaderMacroFunction.readUnicodeCharacter(reader);

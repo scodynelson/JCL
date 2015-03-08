@@ -8,6 +8,7 @@ import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ConsStruct;
+import jcl.lists.NullStruct;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.streams.ReadPeekResult;
@@ -32,11 +33,6 @@ public class CommaReaderMacroFunction extends ReaderMacroFunctionImpl {
 	private static final long serialVersionUID = -8890411312426952661L;
 
 	/**
-	 * The logger for this class.
-	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(CommaReaderMacroFunction.class);
-
-	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
 	@PostConstruct
@@ -51,16 +47,13 @@ public class CommaReaderMacroFunction extends ReaderMacroFunctionImpl {
 		final int currentBackquoteLevel = reader.getBackquoteLevel();
 		if (currentBackquoteLevel <= 0) {
 			if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Illegal comma location error suppressed.");
-				}
-				return null;
+				return NullStruct.INSTANCE;
 			}
 
 			throw new ReaderErrorException("Comma not inside a backquote.");
 		}
 
-		final ReadPeekResult readResult = reader.readChar();
+		final ReadPeekResult readResult = reader.readChar(true, NullStruct.INSTANCE, false);
 		final int nextCodePoint = readResult.getResult();
 
 		reader.decreaseBackquoteLevel();
@@ -68,14 +61,14 @@ public class CommaReaderMacroFunction extends ReaderMacroFunctionImpl {
 			final ConsStruct consStruct;
 
 			if (nextCodePoint == CharacterConstants.AT_SIGN) {
-				final LispStruct code = reader.read();
+				final LispStruct code = reader.read(true, NullStruct.INSTANCE, true);
 				consStruct = new ConsStruct(BQ_AT_FLAG, code);
 			} else if (nextCodePoint == CharacterConstants.FULL_STOP) {
-				final LispStruct code = reader.read();
+				final LispStruct code = reader.read(true, NullStruct.INSTANCE, true);
 				consStruct = new ConsStruct(BQ_DOT_FLAG, code);
 			} else {
 				reader.unreadChar(nextCodePoint);
-				final LispStruct code = reader.read();
+				final LispStruct code = reader.read(true, NullStruct.INSTANCE, true);
 				consStruct = new ConsStruct(BQ_COMMA_FLAG, code);
 			}
 			return consStruct;

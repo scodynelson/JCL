@@ -5,7 +5,6 @@
 package jcl.reader.macrofunction;
 
 import jcl.characters.CharacterConstants;
-import jcl.compiler.real.element.ListElement;
 import jcl.lists.ListStruct;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
@@ -29,7 +28,7 @@ public class LeftParenthesisReaderMacroFunction extends ReaderMacroFunctionImpl 
 	private static final long serialVersionUID = 8364282884759641778L;
 
 	/**
-	 * {@link Autowired} {@link ListReaderMacroFunction} used for reading {@link ListElement}s.
+	 * {@link Autowired} {@link ListReaderMacroFunction} used for reading {@link ListStruct}s.
 	 */
 	@Autowired
 	private ListReaderMacroFunction listReaderMacroFunction;

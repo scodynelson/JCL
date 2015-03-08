@@ -43,11 +43,10 @@ class ReadReaderState implements ReaderState {
 
 		final boolean isEofErrorP = tokenBuilder.isEofErrorP();
 		final LispStruct eofValue = tokenBuilder.getEofValue();
-		final boolean isRecursiveP = tokenBuilder.isRecursiveP();
 
 		final Reader reader = tokenBuilder.getReader();
 
-		final ReadPeekResult readResult = reader.readChar(isEofErrorP, eofValue, isRecursiveP);
+		final ReadPeekResult readResult = reader.readChar(isEofErrorP, eofValue, true);
 		tokenBuilder.setPreviousReadResult(readResult);
 
 		if (readResult.isEof()) {

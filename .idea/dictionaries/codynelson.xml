@@ -17,6 +17,7 @@
       <w>atanh</w>
       <w>attrs</w>
       <w>backquote</w>
+      <w>backquotes</w>
       <w>bignum</w>
       <w>boundp</w>
       <w>butlast</w>
@@ -51,6 +52,7 @@
       <w>cddr</w>
       <w>cerror</w>
       <w>characterp</w>
+      <w>circularities</w>
       <w>clhs</w>
       <w>clrhash</w>
       <w>complexp</w>

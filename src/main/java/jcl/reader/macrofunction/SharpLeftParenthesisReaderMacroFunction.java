@@ -72,7 +72,7 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 			throw new ReaderErrorException("Ill-formed vector: #");
 		}
 
-		if (listToken.isDotted()) {
+		if (!listToken.isProper()) {
 			final String printedToken = printer.print(listToken);
 			throw new ReaderErrorException("Ill-formed vector: #" + printedToken);
 		}

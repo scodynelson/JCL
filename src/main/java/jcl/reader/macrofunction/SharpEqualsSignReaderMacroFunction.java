@@ -66,39 +66,60 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctionImpl 
 		sharpEqualTempTable.put(numArg, tag);
 
 		final LispStruct token = reader.read(true, NullStruct.INSTANCE, true);
-		reader.getSharpEqualReplTable().put(tag, token);
+
+		final Map<SymbolStruct<?>, LispStruct> sharpEqualReplTable = reader.getSharpEqualReplTable();
+		sharpEqualReplTable.put(tag, token);
 
 		final Set<LispStruct> sharpEqualCircleSet = new HashSet<>();
-		circleSubst(reader, sharpEqualCircleSet, token);
+		replaceTagsWithTokens(token, sharpEqualReplTable, sharpEqualCircleSet);
 
 		sharpEqualFinalTable.put(numArg, token);
 
 		return token;
 	}
 
-	private LispStruct circleSubst(final Reader reader, final Set<LispStruct> sharpEqualCircleSet, final LispStruct tree) {
+	/**
+	 * Replaces the {@link SymbolStruct} tags located within the provided {@link LispStruct} token with the mapped
+	 * token values located within the provided {@code sharpEqualReplTable} {@link Map}. Circularities are also
+	 * accounted for by using the provided {@code sharpEqualCircleSet} {@link Set} to keep track of the {@link
+	 * ConsStruct} tokens throughout the replacement process.
+	 * </p>
+	 * NOTE: This method destructively modified the provided {@link LispStruct} token if it is a {@link ConsStruct}
+	 *
+	 * @param token
+	 * 		the {@link LispStruct} token to replace {@link SymbolStruct} tags with their mapped {@link LispStruct} tokens
+	 * @param sharpEqualReplTable
+	 * 		the {@link Map} of {@link SymbolStruct} tags to their mapped {@link LispStruct} tokens
+	 * @param sharpEqualCircleSet
+	 * 		the {@link Set} of {@link ConsStruct} tokens within the provided {@link LispStruct} token used to track
+	 * 		circularities.
+	 *
+	 * @return the modified token with all {@link SymbolStruct} tags replaced with their corresponding {@link
+	 * LispStruct} tokens
+	 */
+	private static LispStruct replaceTagsWithTokens(final LispStruct token, final Map<SymbolStruct<?>, LispStruct> sharpEqualReplTable,
+	                                                final Set<LispStruct> sharpEqualCircleSet) {
 
-		final Map<SymbolStruct<?>, LispStruct> sharpEqualReplTable = reader.getSharpEqualReplTable();
-		if (tree instanceof SymbolStruct) {
-			if (sharpEqualReplTable.containsKey(tree)) {
-				return sharpEqualReplTable.get(tree);
+		if (token instanceof SymbolStruct) {
+			if (sharpEqualReplTable.containsKey(token)) {
+				return sharpEqualReplTable.get(token);
 			}
-		} else if (tree instanceof ConsStruct) {
+		} else if (token instanceof ConsStruct) {
 
-			if (!sharpEqualCircleSet.contains(tree)) {
-				sharpEqualCircleSet.add(tree);
+			if (!sharpEqualCircleSet.contains(token)) {
+				sharpEqualCircleSet.add(token);
 
-				final ConsStruct consTree = (ConsStruct) tree;
+				final ConsStruct consTree = (ConsStruct) token;
 
 				final LispStruct car = consTree.getCar();
-				final LispStruct cdr = consTree.getCdr();
-
-				final LispStruct carSubst = circleSubst(reader, sharpEqualCircleSet, car);
-				final LispStruct cdrSubst = circleSubst(reader, sharpEqualCircleSet, cdr);
+				final LispStruct carSubst = replaceTagsWithTokens(car, sharpEqualReplTable, sharpEqualCircleSet);
 
 				if (!Objects.equals(carSubst, car)) {
 					consTree.setCar(carSubst);
 				}
+
+				final LispStruct cdr = consTree.getCdr();
+				final LispStruct cdrSubst = replaceTagsWithTokens(cdr, sharpEqualReplTable, sharpEqualCircleSet);
 
 				if (!Objects.equals(cdrSubst, cdr)) {
 					consTree.setCdr(cdrSubst);
@@ -106,6 +127,6 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctionImpl 
 			}
 		}
 
-		return tree;
+		return token;
 	}
 }

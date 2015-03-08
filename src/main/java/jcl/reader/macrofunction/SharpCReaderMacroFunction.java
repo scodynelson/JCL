@@ -21,7 +21,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.math.BigInteger;
-import java.util.List;
 
 /**
  * Implements the '#c' Lisp reader macro.
@@ -65,21 +64,24 @@ public class SharpCReaderMacroFunction extends ReaderMacroFunctionImpl {
 		}
 
 		final ListStruct listToken = (ListStruct) lispToken;
-		final List<LispStruct> lispTokens = listToken.getAsJavaList();
-
-		final int maxNumberOfTokensForComplex = 2;
-		if (lispTokens.size() != maxNumberOfTokensForComplex) {
+		if (!listToken.isProper()) {
 			final String printedToken = printer.print(lispToken);
 			throw new ReaderErrorException("Illegal complex number format: #C" + printedToken);
 		}
 
-		final LispStruct real = lispTokens.get(0);
+		final int maxNumberOfTokensForComplex = 2;
+		if (listToken.size() != maxNumberOfTokensForComplex) {
+			final String printedToken = printer.print(lispToken);
+			throw new ReaderErrorException("Illegal complex number format: #C" + printedToken);
+		}
+
+		final LispStruct real = listToken.getFirst();
 		if (!(real instanceof RealStruct)) {
 			final String printedReal = printer.print(real);
 			throw new ReaderErrorException("Only real numbers are valid tokens for #c. Got: " + printedReal);
 		}
 
-		final LispStruct imaginary = lispTokens.get(1);
+		final LispStruct imaginary = listToken.getRest().getFirst();
 		if (!(imaginary instanceof RealStruct)) {
 			final String printedImaginary = printer.print(imaginary);
 			throw new ReaderErrorException("Only real numbers are valid tokens for #c. Got: " + printedImaginary);

@@ -70,6 +70,10 @@ class ReaderImpl implements Reader {
 	@Autowired
 	private ReaderStateMediator readerStateMediator;
 
+	/**
+	 * The current backquote nesting level when dealing with nested backquotes. This is used to determine proper comma
+	 * usage and evaluation.
+	 */
 	private int backquoteLevel;
 
 	/**
@@ -154,12 +158,12 @@ class ReaderImpl implements Reader {
 	}
 
 	@Override
-	public void increaseBackquoteLevel() {
+	public void incrementBackquoteLevel() {
 		backquoteLevel++;
 	}
 
 	@Override
-	public void decreaseBackquoteLevel() {
+	public void decrementBackquoteLevel() {
 		backquoteLevel--;
 	}
 

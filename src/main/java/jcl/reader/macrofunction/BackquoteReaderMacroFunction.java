@@ -42,85 +42,6 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 	@Autowired
 	private Printer printer;
 
-	/*
-
-ORIGINAL:
-`(cond ((numberp ,x) ,@y) (t (print ,x) ,@y))
-`(x ,x ,@x foo ,(cadr x) bar ,(cdr x) baz ,@(cdr x))
-`((,a b) ,c ,@d)
-
-(DEFUN BUILD-LAMBDA-ELEMENTS (PARSED-LAMBDA-LIST ARGLIST-PARAM-SYM ARGLIST-LENGTH-SYM FN)
-  (SETQ PARSED-LAMBDA-LIST (KILL-FAKE-ENTRY PARSED-LAMBDA-LIST))
-  (LET ((RESULT NIL)
-        (COUNT 0)
-        (OPTIONAL-P-COUNT (CDR (COUNT-PARAMETERS PARSED-LAMBDA-LIST :OPTIONAL)))
-        (KEY-P-COUNT (CDR (COUNT-PARAMETERS PARSED-LAMBDA-LIST :KEY)))
-        (LET-VARIABLE (GENSYM '|LetVariable-|))
-        (REST-OR-KEY (REST-OR-KEY-PARAM-P PARSED-LAMBDA-LIST)))
-    (SETQ *REST-ARGS-PARAM*
-          (LET ((PARAM-TYPE REST-OR-KEY))
-            (IF PARAM-TYPE (LIST (GET-NAME (SECOND PARAM-TYPE)) (COUNT-REQ-AND-OPT-PARAMS PARSED-LAMBDA-LIST (FIRST PARAM-TYPE))) NIL)))
-    (TAGBODY
-     TOP     (WHEN PARSED-LAMBDA-LIST
-               (SETQ RESULT
-                     `(,@(SYSTEM::%MAPCAN
-                          #'(LAMBDA (X) (AND X (LIST X)))
-                          (BUILD-LAMBDA-ELEMENT (FIRST PARSED-LAMBDA-LIST) COUNT ARGLIST-PARAM-SYM ARGLIST-LENGTH-SYM))
-                       ,@RESULT))
-               (SETQ PARSED-LAMBDA-LIST (REST PARSED-LAMBDA-LIST))
-               (UNLESS (EQ (GET-USAGE (FIRST PARSED-LAMBDA-LIST)) :SUPPLIED-P) (SETQ COUNT (1+ COUNT)))
-               (GO TOP)))
-    (SETQ RESULT (SYSTEM::%REVERSE RESULT))
-    (IF *REST-ARGS-PARAM*
-        (LET ((&REST-NAME (FIRST *REST-ARGS-PARAM*)) (REQ-AND-OPT-COUNT (SECOND *REST-ARGS-PARAM*)))
-          (LET* ((ALTERED-REQ-OPT-P-COUNT (- REQ-AND-OPT-COUNT OPTIONAL-P-COUNT))
-                 (FAKE-NEEDED (EQ (FIRST REST-OR-KEY) :KEY))
-                 (RESULT-LENGTH (IF FAKE-NEEDED (LENGTH RESULT) (1+ (LENGTH RESULT))))
-                 (GENSYM-ARG-LIST (MAKE-GENSYM-LIST (IF FAKE-NEEDED RESULT-LENGTH (1- RESULT-LENGTH)))))
-            (UNLESS FAKE-NEEDED
-              (SETQ &REST-NAME (NTH (- REQ-AND-OPT-COUNT OPTIONAL-P-COUNT) GENSYM-ARG-LIST))
-              (SETQ RESULT (CHANGE-VARIABLE-NAME RESULT &REST-NAME)))
-            (LET* ((PAIRED-GENSYM-REQ-OPT (PAIRUP GENSYM-ARG-LIST RESULT REQ-AND-OPT-COUNT))
-                   (FIRST-PART-OF-PARSER (SYSTEM::%MAPCAR #'(LAMBDA (X) `(IDENTITY (LIST (LIST ',(FIRST X) ,@(REST X))))) PAIRED-GENSYM-REQ-OPT))
-                   (SECOND-PART-OF-PARSER (IF FAKE-NEEDED (INTERN (SYMBOL-NAME (GENSYM '|FakeRest-|))) (NTH (LENGTH PAIRED-GENSYM-REQ-OPT) GENSYM-ARG-LIST)))
-                   (FOURTH-PART-OF-PARSER
-                    (SYSTEM::%MAPCAR
-                     #'(LAMBDA (X)
-                         (LET ((SYS-%GET-FORM (CADADR X)))
-                           (WHEN (EQ (FIRST SYS-%GET-FORM) 'SYSTEM::%GET-PLIST) (RPLACA (REST SYS-%GET-FORM) SECOND-PART-OF-PARSER)))
-                         `(IDENTITY (LIST (LIST ',(FIRST X) ,@(REST X)))))
-                     (PAIRUP
-                      (NTHCDR (IF FAKE-NEEDED REQ-AND-OPT-COUNT (1+ REQ-AND-OPT-COUNT)) GENSYM-ARG-LIST)
-                      (NTHCDR (IF FAKE-NEEDED REQ-AND-OPT-COUNT (1+ REQ-AND-OPT-COUNT)) (NTHCDR 0 RESULT))
-                      (- RESULT-LENGTH REQ-AND-OPT-COUNT)))))
-              (LET ((OUTPUT
-                     `(LIST 'LET*
-                            `(,@,@FIRST-PART-OF-PARSER
-                              (,',SECOND-PART-OF-PARSER (LIST ,@(NTHCDR ,ALTERED-REQ-OPT-P-COUNT ,ARGLIST-PARAM-SYM)))
-                              ,@,@FOURTH-PART-OF-PARSER)
-                            `(COMPILER::%FUNCTION-MARKER% ,,FN ,@',GENSYM-ARG-LIST))))
-                (SETQ *REST-ARGS-PARAM* NIL)
-                OUTPUT))))
-      `(LIST 'COMPILER::%FUNCTION-MARKER% ,FN ,@RESULT))))
-
-ORIGINAL:
-`(cond ((numberp ,x) ,@y) (t (print ,x) ,@y))
-`(x ,x ,@x foo ,(cadr x) bar ,(cdr x) baz ,@(cdr x))
-`((,a b) ,c ,@d)
-
-
-CMUCL:
-(LIST (QUOTE COND) (CONS (LIST (QUOTE NUMBERP) X) Y) (LIST* (QUOTE T) (LIST (QUOTE PRINT) X) Y))
-(LIST* (QUOTE X) X (APPEND X (LIST* (QUOTE FOO) (CADR X) (QUOTE BAR) (CDR X) (QUOTE BAZ) (CDR X))))
-(LIST* (CONS A (QUOTE (B))) C D)
-
-
-JCL:
-(LIST (QUOTE COND) (CONS (LIST (QUOTE NUMBERP) X) Y) (LIST* (QUOTE T) (LIST (QUOTE PRINT) X) Y))
-(LIST* (QUOTE X) X (APPEND X (LIST* (QUOTE FOO) (CADR X) (QUOTE BAR) (CDR X) (QUOTE BAZ) (CDR X))))
-(LIST* (CONS A (QUOTE (B))) C D)
-	 */
-
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
@@ -133,7 +54,7 @@ JCL:
 	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
 		assert codePoint == CharacterConstants.GRAVE_ACCENT;
 
-		reader.increaseBackquoteLevel();
+		reader.incrementBackquoteLevel();
 		try {
 			final LispStruct code = reader.read(true, NullStruct.INSTANCE, true);
 			final BackquoteReturn backquoteReturn = backquotify(code);
@@ -150,7 +71,7 @@ JCL:
 
 			return backquotify_1(flag, thing);
 		} finally {
-			reader.decreaseBackquoteLevel();
+			reader.decrementBackquoteLevel();
 		}
 	}
 

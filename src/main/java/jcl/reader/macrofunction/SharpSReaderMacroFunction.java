@@ -21,7 +21,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.math.BigInteger;
-import java.util.List;
 
 /**
  * Implements the '#s' Lisp reader macro.
@@ -70,8 +69,7 @@ public class SharpSReaderMacroFunction extends ReaderMacroFunctionImpl {
 			throw new ReaderErrorException("Non-list following #S");
 		}
 
-		final List<LispStruct> elements = listToken.getAsJavaList();
-		if (elements.isEmpty()) {
+		if (listToken.size() == 0) {
 			throw new ReaderErrorException("Structure type was not supplied");
 		}
 

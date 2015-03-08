@@ -14,8 +14,6 @@ import jcl.reader.struct.ReaderVariables;
 import jcl.streams.ReadPeekResult;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -56,7 +54,7 @@ public class CommaReaderMacroFunction extends ReaderMacroFunctionImpl {
 		final ReadPeekResult readResult = reader.readChar(true, NullStruct.INSTANCE, false);
 		final int nextCodePoint = readResult.getResult();
 
-		reader.decreaseBackquoteLevel();
+		reader.decrementBackquoteLevel();
 		try {
 			final ConsStruct consStruct;
 
@@ -73,7 +71,7 @@ public class CommaReaderMacroFunction extends ReaderMacroFunctionImpl {
 			}
 			return consStruct;
 		} finally {
-			reader.increaseBackquoteLevel();
+			reader.incrementBackquoteLevel();
 		}
 	}
 

@@ -4,14 +4,18 @@
 
 package jcl.printer.impl;
 
+import jcl.characters.CharacterStruct;
+import jcl.printer.LispPrinter;
 import jcl.printer.PrinterVariables;
+import org.springframework.stereotype.Component;
 
-public abstract class CharacterPrinter<O> implements LispPrinter<O> {
+@Component
+public class CharacterStructPrinter implements LispPrinter<CharacterStruct> {
 
-	private static final long serialVersionUID = 1389513684443461697L;
+	private static final long serialVersionUID = 5997216783690456319L;
 
 	@Override
-	public String print(final O object) {
+	public String print(final CharacterStruct object) {
 		final boolean printEscape = PrinterVariables.PRINT_ESCAPE.getValue().booleanValue();
 
 		final StringBuilder stringBuilder = new StringBuilder();
@@ -19,7 +23,7 @@ public abstract class CharacterPrinter<O> implements LispPrinter<O> {
 			stringBuilder.append("#\\");
 		}
 
-		final int codePoint = getCodePoint(object);
+		final int codePoint = object.getCodePoint();
 
 		if (Character.isWhitespace(codePoint)) {
 			stringBuilder.append(Character.getName(codePoint));
@@ -29,6 +33,4 @@ public abstract class CharacterPrinter<O> implements LispPrinter<O> {
 
 		return stringBuilder.toString();
 	}
-
-	protected abstract int getCodePoint(O object);
 }

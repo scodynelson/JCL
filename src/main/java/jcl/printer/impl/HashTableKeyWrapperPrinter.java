@@ -2,12 +2,12 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.printer.impl.struct;
+package jcl.printer.impl;
 
 import jcl.LispStruct;
 import jcl.hashtables.HashTableStruct;
 import jcl.printer.Printer;
-import jcl.printer.impl.LispPrinter;
+import jcl.printer.LispPrinter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -4,25 +4,28 @@
 
 package jcl.printer.impl;
 
+import java.math.BigDecimal;
+
+import jcl.numbers.FloatStruct;
+import jcl.printer.LispPrinter;
 import jcl.reader.struct.ReaderVariables;
 import jcl.types.DoubleFloat;
-import jcl.types.Float;
 import jcl.types.LongFloat;
 import jcl.types.ShortFloat;
 import jcl.types.SingleFloat;
+import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
+@Component
+public class FloatStructPrinter implements LispPrinter<FloatStruct> {
 
-public abstract class FloatPrinter<O> implements LispPrinter<O> {
-
-	private static final long serialVersionUID = -2482654535846962538L;
+	private static final long serialVersionUID = 5762270611242790794L;
 
 	@Override
-	public String print(final O object) {
-		final jcl.types.Float floatFormat = getFloatType(object);
-		final Float defaultFloatFormat = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getValue();
+	public String print(final FloatStruct object) {
+		final jcl.types.Float floatFormat = (jcl.types.Float) object.getType();
+		final jcl.types.Float defaultFloatFormat = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getValue();
 
-		final BigDecimal bigDecimal = getBigDecimal(object);
+		final BigDecimal bigDecimal = object.getBigDecimal();
 		String bigDecimalString = bigDecimal.toString();
 		if (!floatFormat.equals(defaultFloatFormat)) {
 			if (floatFormat.equals(ShortFloat.INSTANCE)) {
@@ -38,8 +41,4 @@ public abstract class FloatPrinter<O> implements LispPrinter<O> {
 
 		return bigDecimalString;
 	}
-
-	protected abstract jcl.types.Float getFloatType(O object);
-
-	protected abstract BigDecimal getBigDecimal(O object);
 }

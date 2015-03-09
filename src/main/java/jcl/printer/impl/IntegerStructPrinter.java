@@ -4,11 +4,17 @@
 
 package jcl.printer.impl;
 
-import jcl.printer.PrinterVariables;
-
 import java.math.BigInteger;
 
-public abstract class IntegerPrinter<O> implements LispPrinter<O> {
+import jcl.numbers.IntegerStruct;
+import jcl.printer.LispPrinter;
+import jcl.printer.PrinterVariables;
+import org.springframework.stereotype.Component;
+
+@Component
+public class IntegerStructPrinter implements LispPrinter<IntegerStruct> {
+
+	private static final long serialVersionUID = 3499223261380244866L;
 
 	/**
 	 * Int constant for the value '2'.
@@ -30,10 +36,8 @@ public abstract class IntegerPrinter<O> implements LispPrinter<O> {
 	 */
 	private static final int SIXTEEN = 16;
 
-	private static final long serialVersionUID = 1051464035751713538L;
-
 	@Override
-	public String print(final O object) {
+	public String print(final IntegerStruct object) {
 		final boolean printRadix = PrinterVariables.PRINT_RADIX.getValue().booleanValue();
 		final int printBase = PrinterVariables.PRINT_BASE.getValue().getBigInteger().intValue();
 
@@ -53,7 +57,7 @@ public abstract class IntegerPrinter<O> implements LispPrinter<O> {
 			}
 		}
 
-		final BigInteger bigInteger = getBigInteger(object);
+		final BigInteger bigInteger = object.getBigInteger();
 		stringBuilder.append(bigInteger.toString(printBase));
 
 		if (printRadix && (printBase == TEN)) {
@@ -62,6 +66,4 @@ public abstract class IntegerPrinter<O> implements LispPrinter<O> {
 
 		return stringBuilder.toString();
 	}
-
-	protected abstract BigInteger getBigInteger(O object);
 }

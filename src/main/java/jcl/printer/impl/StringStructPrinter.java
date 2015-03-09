@@ -1,18 +1,28 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.printer.impl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import jcl.arrays.StringStruct;
+import jcl.characters.CharacterStruct;
+import jcl.printer.LispPrinter;
 import jcl.printer.PrinterVariables;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
 import jcl.reader.struct.SyntaxType;
+import org.springframework.stereotype.Component;
 
-import java.util.List;
+@Component
+public class StringStructPrinter implements LispPrinter<StringStruct> {
 
-public abstract class StringPrinter<O> implements LispPrinter<O> {
-
-	private static final long serialVersionUID = -1460076608687611503L;
+	private static final long serialVersionUID = -1997189358891781811L;
 
 	@Override
-	public String print(final O object) {
+	public String print(final StringStruct object) {
 		final boolean printEscape = PrinterVariables.PRINT_ESCAPE.getValue().booleanValue();
 
 		final ReadtableStruct readtable = ReaderVariables.READTABLE.getValue();
@@ -22,8 +32,13 @@ public abstract class StringPrinter<O> implements LispPrinter<O> {
 			stringBuilder.append('"');
 		}
 
-		final List<Integer> contents = getCodePoints(object);
-		final int amountToPrint = getAmountToPrint(object, contents);
+		final List<Integer> contents = object.getContents()
+		                                     .stream()
+		                                     .map(CharacterStruct::getCodePoint)
+		                                     .collect(Collectors.toList());
+
+		final Integer fillPointer = object.getFillPointer();
+		final int amountToPrint = (fillPointer == null) ? contents.size() : fillPointer;
 
 		for (int i = 0; i < amountToPrint; i++) {
 			final int codePoint = contents.get(i);
@@ -41,8 +56,4 @@ public abstract class StringPrinter<O> implements LispPrinter<O> {
 
 		return stringBuilder.toString();
 	}
-
-	protected abstract List<Integer> getCodePoints(O object);
-
-	protected abstract int getAmountToPrint(O object, List<Integer> contents);
 }

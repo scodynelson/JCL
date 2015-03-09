@@ -13,7 +13,7 @@
 
 	<util:map id="structPrinterStrategies"
 	          key-type="java.lang.Class"
-	          value-type="jcl.printer.impl.LispPrinter">
+	          value-type="jcl.printer.LispPrinter">
 
 		<entry key="jcl.arrays.ArrayStruct" value-ref="arrayStructPrinter"/>
 		<entry key="jcl.arrays.BitVectorStruct" value-ref="bitVectorStructPrinter"/>

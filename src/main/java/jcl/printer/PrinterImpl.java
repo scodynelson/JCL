@@ -8,7 +8,6 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import jcl.LispStruct;
-import jcl.printer.impl.LispPrinter;
 import org.springframework.stereotype.Component;
 
 @Component

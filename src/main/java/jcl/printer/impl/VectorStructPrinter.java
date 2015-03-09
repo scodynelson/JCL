@@ -2,29 +2,29 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.printer.impl.struct;
+package jcl.printer.impl;
 
 import jcl.LispStruct;
 import jcl.LispType;
-import jcl.arrays.ArrayStruct;
+import jcl.arrays.VectorStruct;
 import jcl.printer.Printer;
 import jcl.printer.PrinterVariables;
-import jcl.printer.impl.LispPrinter;
+import jcl.printer.LispPrinter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-public class ArrayStructPrinter<TYPE extends LispStruct> implements LispPrinter<ArrayStruct<TYPE>> {
+public class VectorStructPrinter<TYPE extends LispStruct> implements LispPrinter<VectorStruct<TYPE>> {
 
-	private static final long serialVersionUID = -4715974488949942878L;
+	private static final long serialVersionUID = -2331277349287306421L;
 
 	@Autowired
 	private Printer printer;
 
 	@Override
-	public String print(final ArrayStruct<TYPE> object) {
+	public String print(final VectorStruct<TYPE> object) {
 		// TODO: Ignoring *PRINT-LEVEL* and *PRINT-LENGTH*
 
 		final boolean printArray = PrinterVariables.PRINT_ARRAY.getValue().booleanValue();
@@ -32,23 +32,21 @@ public class ArrayStructPrinter<TYPE extends LispStruct> implements LispPrinter<
 
 		final StringBuilder stringBuilder = new StringBuilder();
 
-		if (printArray || printReadably) {
-			stringBuilder.append('#');
+		final Integer fillPointer = object.getFillPointer();
+		final List<TYPE> contents = object.getContents();
 
-			final int rank = object.getRank();
-			stringBuilder.append(rank);
+		if (printArray || printReadably) {
 			stringBuilder.append("#(");
 
-			final int totalSize = object.getTotalSize();
-			final List<TYPE> contents = object.getContents();
+			final int amountToPrint = (fillPointer == null) ? contents.size() : fillPointer;
 
-			for (int i = 0; i < totalSize; i++) {
+			for (int i = 0; i < amountToPrint; i++) {
 				final TYPE lispStruct = contents.get(i);
 				final String printedLispStruct = printer.print(lispStruct);
 
 				stringBuilder.append(printedLispStruct);
 
-				if (i < (totalSize - 1)) {
+				if (i < (amountToPrint - 1)) {
 					stringBuilder.append(' ');
 				}
 			}
@@ -61,21 +59,19 @@ public class ArrayStructPrinter<TYPE extends LispStruct> implements LispPrinter<
 			stringBuilder.append(typeClassName);
 			stringBuilder.append(' ');
 
-			final List<Integer> dimensions = object.getDimensions();
-
-			for (int i = 0; i < dimensions.size(); i++) {
-				stringBuilder.append(dimensions.get(i));
-
-				if ((i + 1) != dimensions.size()) {
-					stringBuilder.append('x');
-				}
-			}
+			final int totalSize = object.getTotalSize();
+			stringBuilder.append(totalSize);
 
 			stringBuilder.append(" type ");
 
 			final LispType elementType = object.getElementType();
 			final String elementTypeClassName = elementType.getClass().getName().toUpperCase();
 			stringBuilder.append(elementTypeClassName);
+
+			if (fillPointer != null) {
+				stringBuilder.append(" fill-pointer ");
+				stringBuilder.append(fillPointer);
+			}
 
 			final boolean isAdjustable = object.isAdjustable();
 			if (isAdjustable) {

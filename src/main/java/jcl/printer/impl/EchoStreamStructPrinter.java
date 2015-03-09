@@ -2,10 +2,10 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.printer.impl.struct;
+package jcl.printer.impl;
 
 import jcl.printer.Printer;
-import jcl.printer.impl.LispPrinter;
+import jcl.printer.LispPrinter;
 import jcl.streams.EchoStreamStruct;
 import jcl.streams.InputStream;
 import jcl.streams.OutputStream;

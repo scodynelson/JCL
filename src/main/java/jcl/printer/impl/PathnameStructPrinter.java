@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.printer.impl.struct;
+package jcl.printer.impl;
 
 import jcl.pathnames.PathnameDevice;
 import jcl.pathnames.PathnameDirectory;
@@ -12,7 +12,7 @@ import jcl.pathnames.PathnameStruct;
 import jcl.pathnames.PathnameType;
 import jcl.pathnames.PathnameVersion;
 import jcl.printer.PrinterVariables;
-import jcl.printer.impl.LispPrinter;
+import jcl.printer.LispPrinter;
 import jcl.symbols.BooleanStruct;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;

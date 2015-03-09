@@ -2,18 +2,18 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.printer.impl.struct;
+package jcl.printer.impl;
 
 import jcl.LispStruct;
 import jcl.lists.ConsStruct;
 import jcl.lists.NullStruct;
+import jcl.printer.LispPrinter;
 import jcl.printer.Printer;
-import jcl.printer.impl.ConsPrinter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ConsStructPrinter extends ConsPrinter<ConsStruct> {
+public class ConsStructPrinter implements LispPrinter<ConsStruct> {
 
 	private static final long serialVersionUID = 2018276801770003739L;
 
@@ -21,24 +21,24 @@ public class ConsStructPrinter extends ConsPrinter<ConsStruct> {
 	private Printer printer;
 
 	@Override
-	protected boolean isCircular(final ConsStruct object) {
-		return object.isCircular();
+	public String print(final ConsStruct object) {
+		// TODO: Ignoring *PRINT-PRETTY* and the pretty printer in general right now...
+
+		if (object.isCircular()) {
+			return "CIRCULAR LIST PRINTING NOT YET SUPPORTED!!!";
+		}
+
+		final StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append('(');
+
+		printElements(object, stringBuilder);
+
+		stringBuilder.append(')');
+
+		return stringBuilder.toString();
 	}
 
-	/**
-	 * Prints the inner cons value of the provided {@code consStruct}, handling the recursive nature of printing each
-	 * internal layer repeatedly until the last cdr has been identified as either being a {@link NullStruct} or not a
-	 * ConsStruct.
-	 *
-	 * @param object
-	 * 		the ConsStruct to print each inner cons
-	 */
-	@Override
-	protected void printElements(final ConsStruct object, final StringBuilder stringBuilder) {
-		printElementsInner(object, stringBuilder);
-	}
-
-	protected String printElementsInner(final ConsStruct object, final StringBuilder stringBuilder) {
+	protected String printElements(final ConsStruct object, final StringBuilder stringBuilder) {
 
 		final LispStruct car = object.getCar();
 		final String printedCar = printer.print(car);
@@ -47,7 +47,7 @@ public class ConsStructPrinter extends ConsPrinter<ConsStruct> {
 
 		if (object.getCdr() instanceof ConsStruct) {
 			final ConsStruct cdrAsCons = (ConsStruct) object.getCdr();
-			final String innerConsPrinted = printElementsInner(cdrAsCons, new StringBuilder());
+			final String innerConsPrinted = printElements(cdrAsCons, new StringBuilder());
 
 			stringBuilder.append(' ');
 			stringBuilder.append(innerConsPrinted);

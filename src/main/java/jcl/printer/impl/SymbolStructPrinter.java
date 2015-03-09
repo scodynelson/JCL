@@ -2,23 +2,29 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.printer.impl.struct;
+package jcl.printer.impl;
 
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageSymbolStruct;
 import jcl.packages.PackageVariables;
-import jcl.printer.impl.SymbolPrinter;
+import jcl.printer.LispPrinter;
+import jcl.printer.PrinterVariables;
+import jcl.symbols.BooleanStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SymbolStructPrinter extends SymbolPrinter<SymbolStruct<?>> {
+public class SymbolStructPrinter implements LispPrinter<SymbolStruct<?>> {
 
 	private static final long serialVersionUID = 5098070113503702856L;
 
 	@Override
-	protected String getName(final SymbolStruct<?> object) {
+	public String print(final SymbolStruct<?> object) {
+		final BooleanStruct printEscape = PrinterVariables.PRINT_ESCAPE.getValue();
+
+		// TODO: deal with *PRINT-CASE* and *PRINT-ESCAPE*
+
 		final PackageStruct pkg = object.getSymbolPackage();
 		final String name = object.getName();
 

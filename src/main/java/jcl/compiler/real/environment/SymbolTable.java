@@ -4,19 +4,19 @@
 
 package jcl.compiler.real.environment;
 
-import jcl.compiler.real.element.SymbolElement;
-import jcl.compiler.real.environment.binding.SymbolClosureBinding;
-import jcl.compiler.real.environment.binding.SymbolEnvironmentBinding;
-import jcl.compiler.real.environment.binding.SymbolLocalBinding;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import jcl.compiler.real.environment.binding.SymbolClosureBinding;
+import jcl.compiler.real.environment.binding.SymbolEnvironmentBinding;
+import jcl.compiler.real.environment.binding.SymbolLocalBinding;
+import jcl.symbols.SymbolStruct;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class SymbolTable implements Serializable {
 
@@ -30,7 +30,7 @@ public class SymbolTable implements Serializable {
 
 	private final List<SymbolLocalBinding> dynamicLocalBindings = new ArrayList<>();
 
-	public boolean hasBinding(final SymbolElement symbolStruct) {
+	public boolean hasBinding(final SymbolStruct<?> symbolStruct) {
 		return lexicalEnvironmentBindings.stream()
 		                                 .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct))
 				||
@@ -44,7 +44,7 @@ public class SymbolTable implements Serializable {
 				                    .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct));
 	}
 
-	public boolean hasDynamicBinding(final SymbolElement symbolStruct) {
+	public boolean hasDynamicBinding(final SymbolStruct<?> symbolStruct) {
 		return dynamicEnvironmentBindings.stream()
 		                                 .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct))
 				||
@@ -52,7 +52,7 @@ public class SymbolTable implements Serializable {
 				                    .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct));
 	}
 
-	public boolean hasClosureBinding(final SymbolElement symbolStruct) {
+	public boolean hasClosureBinding(final SymbolStruct<?> symbolStruct) {
 		return closureBindings.stream()
 		                      .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct));
 	}
@@ -73,25 +73,25 @@ public class SymbolTable implements Serializable {
 		return dynamicLocalBindings;
 	}
 
-	public Optional<SymbolEnvironmentBinding> getLexicalEnvironmentBinding(final SymbolElement symbolStruct) {
+	public Optional<SymbolEnvironmentBinding> getLexicalEnvironmentBinding(final SymbolStruct<?> symbolStruct) {
 		return lexicalEnvironmentBindings.stream()
 		                                 .filter(e -> e.getSymbolStruct().equals(symbolStruct))
 		                                 .findFirst();
 	}
 
-	public Optional<SymbolClosureBinding> getClosureBinding(final SymbolElement symbolStruct) {
+	public Optional<SymbolClosureBinding> getClosureBinding(final SymbolStruct<?> symbolStruct) {
 		return closureBindings.stream()
 		                      .filter(e -> e.getSymbolStruct().equals(symbolStruct))
 		                      .findFirst();
 	}
 
-	public Optional<SymbolEnvironmentBinding> getDynamicEnvironmentBinding(final SymbolElement symbolStruct) {
+	public Optional<SymbolEnvironmentBinding> getDynamicEnvironmentBinding(final SymbolStruct<?> symbolStruct) {
 		return dynamicEnvironmentBindings.stream()
 		                                 .filter(e -> e.getSymbolStruct().equals(symbolStruct))
 		                                 .findFirst();
 	}
 
-	public Optional<SymbolLocalBinding> getDynamicLocalBinding(final SymbolElement symbolStruct) {
+	public Optional<SymbolLocalBinding> getDynamicLocalBinding(final SymbolStruct<?> symbolStruct) {
 		return dynamicLocalBindings.stream()
 		                           .filter(e -> e.getSymbolStruct().equals(symbolStruct))
 		                           .findFirst();

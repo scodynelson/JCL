@@ -1,24 +1,22 @@
 package jcl.compiler.real.icg.specialoperator;
 
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.icg.CodeGenerator;
-import jcl.compiler.real.icg.IntermediateCodeGenerator;
-import jcl.lists.NullStruct;
-import jcl.symbols.SymbolStruct;
-import jcl.system.EnhancedLinkedList;
-import org.objectweb.asm.Label;
-
 import java.util.Stack;
 
-public class TagbodyCodeGenerator implements CodeGenerator<ConsElement> {
+import jcl.compiler.real.icg.CodeGenerator;
+import jcl.compiler.real.icg.IntermediateCodeGenerator;
+import jcl.lists.ListStruct;
+import jcl.lists.NullStruct;
+import jcl.symbols.SymbolStruct;
+import org.objectweb.asm.Label;
+
+public class TagbodyCodeGenerator implements CodeGenerator<ListStruct> {
 
 	public static int tagCounter;
 
 	public static final TagbodyCodeGenerator INSTANCE = new TagbodyCodeGenerator();
 
 	@Override
-	public void generate(final ConsElement input, final IntermediateCodeGenerator codeGenerator) {
+	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator) {
 		String tagbodyName;
 
 		final Label startTryBlock = new Label();                //The start of the try block
@@ -28,7 +26,7 @@ public class TagbodyCodeGenerator implements CodeGenerator<ConsElement> {
 		final Label elseBlock = new Label();                    //If the exception is caught block
 
         /* Skip past the TAGBODY symbol. */
-		EnhancedLinkedList<SimpleElement> restOfList = input.getElements().getAllButFirst();
+		ListStruct restOfList = input.getRest();
 
         /* Read all the tags within the TAGBODY form. */
 		final Stack<TagbodyLabel> tagStack = tagbodyReadLabels(restOfList);
@@ -72,7 +70,7 @@ public class TagbodyCodeGenerator implements CodeGenerator<ConsElement> {
 				codeGenerator.icgMainLoop(obj);
 				codeGenerator.emitter.emitPop(); // Throws away the results of any forms in the tag body
 			}
-			restOfList = restOfList.getAllButFirst();
+			restOfList = restOfList.getRest();
 		}
 
         /* If execution makes it all the way through with no exception then skip
@@ -168,7 +166,7 @@ public class TagbodyCodeGenerator implements CodeGenerator<ConsElement> {
 		}
 	}
 
-	private static Stack<TagbodyLabel> tagbodyReadLabels(EnhancedLinkedList<SimpleElement> list) {
+	private static Stack<TagbodyLabel> tagbodyReadLabels(ListStruct list) {
 		final Stack<TagbodyLabel> tagStack = new Stack<>();
 
 		while (!list.equals(NullStruct.INSTANCE)) {
@@ -177,7 +175,7 @@ public class TagbodyCodeGenerator implements CodeGenerator<ConsElement> {
 				// Insert the tag into the stack.
 				tagStack.push(new TagbodyLabel((SymbolStruct) obj, new Label()));
 			}
-			list = list.getAllButFirst();
+			list = list.getRest();
 		}
 
 		return tagStack;

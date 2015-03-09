@@ -1,14 +1,8 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.element.SpecialOperatorElement;
-import jcl.compiler.real.element.SymbolElement;
-import jcl.compiler.real.element.specialoperator.FunctionElement;
-import jcl.compiler.real.element.specialoperator.LambdaFunctionElement;
-import jcl.compiler.real.element.specialoperator.SymbolFunctionElement;
-import jcl.compiler.real.element.specialoperator.lambda.LambdaElement;
+import javax.annotation.PostConstruct;
+
+import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
@@ -16,15 +10,18 @@ import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.analyzer.LexicalSymbolAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.sa.analyzer.specialoperator.lambda.LambdaAnalyzer;
+import jcl.compiler.real.struct.specialoperator.CompilerFunctionStruct;
+import jcl.compiler.real.struct.specialoperator.LambdaCompilerFunctionStruct;
+import jcl.compiler.real.struct.specialoperator.SymbolCompilerFunctionStruct;
+import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
-import jcl.system.EnhancedLinkedList;
+import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
 
 @Component
 public class FunctionAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
@@ -46,33 +43,31 @@ public class FunctionAnalyzer extends MacroFunctionExpander implements SpecialOp
 	}
 
 	@Override
-	public Element expand(final ConsElement form, final AnalysisBuilder analysisBuilder) {
+	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 		return analyze(form, analysisBuilder);
 	}
 
 	@Override
-	public FunctionElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public CompilerFunctionStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
-		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
-
-		final int inputSize = elements.size();
+		final int inputSize = input.size();
 		if (inputSize != 2) {
 			throw new ProgramErrorException("FUNCTION: Incorrect number of arguments: " + inputSize + ". Expected 2 arguments.");
 		}
 
-		final EnhancedLinkedList<SimpleElement> inputRest = elements.getAllButFirst();
-		final SimpleElement second = inputRest.getFirst();
+		final ListStruct inputRest = input.getRest();
+		final LispStruct second = inputRest.getFirst();
 
-		if (second instanceof SymbolElement) {
-			return analyzeFunctionSymbol((SymbolElement) second, analysisBuilder);
-		} else if (second instanceof ConsElement) {
-			return analyzeFunctionList((ConsElement) second, analysisBuilder);
+		if (second instanceof SymbolStruct) {
+			return analyzeFunctionSymbol((SymbolStruct<?>) second, analysisBuilder);
+		} else if (second instanceof ListStruct) {
+			return analyzeFunctionList((ListStruct) second, analysisBuilder);
 		} else {
 			throw new ProgramErrorException("FUNCTION: Function argument must be of type SymbolStruct or ListStruct. Got: " + second);
 		}
 	}
 
-	private FunctionElement analyzeFunctionSymbol(final SymbolElement functionSymbol, final AnalysisBuilder analysisBuilder) {
+	private CompilerFunctionStruct analyzeFunctionSymbol(final SymbolStruct<?> functionSymbol, final AnalysisBuilder analysisBuilder) {
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment currentEnvironment = environmentStack.peek();
@@ -82,24 +77,24 @@ public class FunctionAnalyzer extends MacroFunctionExpander implements SpecialOp
 
 		final boolean hasNoFunctionSymbolBinding = !bindingEnvironment.hasLexicalBinding(functionSymbol);
 
-		SymbolElement functionSymbolAnalyzed = functionSymbol;
+		SymbolStruct<?> functionSymbolAnalyzed = functionSymbol;
 		if (hasNoFunctionSymbolBinding) {
 			functionSymbolAnalyzed = lexicalSymbolAnalyzer.analyze(functionSymbol, analysisBuilder);
 		}
 
-		return new SymbolFunctionElement(functionSymbolAnalyzed);
+		return new SymbolCompilerFunctionStruct(functionSymbolAnalyzed);
 	}
 
-	private FunctionElement analyzeFunctionList(final ConsElement functionList, final AnalysisBuilder analysisBuilder) {
+	private CompilerFunctionStruct analyzeFunctionList(final ListStruct functionList, final AnalysisBuilder analysisBuilder) {
 
-		final SimpleElement functionListFirst = functionList.getElements().getFirst();
+		final LispStruct functionListFirst = functionList.getFirst();
 
-		if (!functionListFirst.equals(SpecialOperatorElement.LAMBDA)) {
+		if (!functionListFirst.equals(SpecialOperator.LAMBDA)) {
 			throw new ProgramErrorException("FUNCTION: First element of List argument must be the Symbol LAMBDA. Got: " + functionListFirst);
 		}
 
-		final LambdaElement lambdaElement = lambdaAnalyzer.analyze(functionList, analysisBuilder);
-		return new LambdaFunctionElement(lambdaElement);
+		final LambdaStruct lambdaElement = lambdaAnalyzer.analyze(functionList, analysisBuilder);
+		return new LambdaCompilerFunctionStruct(lambdaElement);
 	}
 
 	@Override

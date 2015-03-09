@@ -1,9 +1,9 @@
 package jcl.compiler.real.icg.specialoperator;
 
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.element.SymbolElement;
+import java.util.List;
+import java.util.Stack;
+
+import jcl.LispStruct;
 import jcl.compiler.real.environment.Closure;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.allocation.PositionAllocation;
@@ -15,22 +15,19 @@ import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.SpecialOperator;
-import jcl.system.EnhancedLinkedList;
+import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.Label;
 
-import java.util.List;
-import java.util.Stack;
-
-public class LetCodeGenerator implements CodeGenerator<ConsElement> {
+public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 
 	private static class SymbolBindingLabel {
 
 		Label endLabel;
 		Label finallyLabel;
 		Label handlerLabel;
-		SymbolElement dynamicSymbol;
+		SymbolStruct<?> dynamicSymbol;
 
-		private SymbolBindingLabel(final Label endLabel, final Label finallyLabel, final Label handlerLabel, final SymbolElement dynamicSymbol) {
+		private SymbolBindingLabel(final Label endLabel, final Label finallyLabel, final Label handlerLabel, final SymbolStruct<?> dynamicSymbol) {
 			this.endLabel = endLabel;
 			this.finallyLabel = finallyLabel;
 			this.handlerLabel = handlerLabel;
@@ -41,13 +38,13 @@ public class LetCodeGenerator implements CodeGenerator<ConsElement> {
 	public static final LetCodeGenerator INSTANCE = new LetCodeGenerator();
 
 	@Override
-	public void generate(final ConsElement input, final IntermediateCodeGenerator codeGenerator) {
+	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator) {
 		// ((%let... (:parent ...) (:bindings ...) (:symbol-table ...) (:closure ...)))
 		final Stack<SymbolBindingLabel> bindingLabels = new Stack<>();
 
 		// are we building a closure here?
 		//----->
-		codeGenerator.bindingEnvironment = codeGenerator.bindingStack.push((Environment) input.getElements().getFirst());
+		codeGenerator.bindingEnvironment = codeGenerator.bindingStack.push((Environment) input.getFirst());
 		final Closure closureSetBody = codeGenerator.bindingEnvironment.getClosure();
 //        int numParams = closureSetBody.size() - 1;
 
@@ -68,10 +65,10 @@ public class LetCodeGenerator implements CodeGenerator<ConsElement> {
 			codeGenerator.bindingEnvironment = codeGenerator.bindingEnvironment.getParent();
 			// now, run the bindings
 			for (final EnvironmentParameterBinding binding : lexicalBindingList) {
-				final SymbolElement sym = binding.getSymbolStruct();
+				final SymbolStruct<?> sym = binding.getSymbolStruct();
 				// (:allocation ... :binding ... :scope ... :type ... :init-form ...)
 				// get the variable's init form
-				final Element initForm = binding.getInitForm();
+				final LispStruct initForm = binding.getInitForm();
 				// is this a local or dynamic variable?
 				//** this is the place where the ICG has to choose to allocate a variable
 				//** in a local or it's a binding of a special variable
@@ -87,10 +84,10 @@ public class LetCodeGenerator implements CodeGenerator<ConsElement> {
 
 			final List<EnvironmentBinding<?>> dynamicBindingList = codeGenerator.bindingEnvironment.getDynamicBindings();
 			for (final EnvironmentBinding<?> binding : dynamicBindingList) {
-				final SymbolElement sym = binding.getSymbolStruct();
+				final SymbolStruct<?> sym = binding.getSymbolStruct();
 				// (:allocation ... :binding ... :scope ... :type ... :init-form ...)
 				// get the variable's init form
-				Element initForm = null;
+				LispStruct initForm = null;
 				if (binding instanceof EnvironmentParameterBinding) {
 					initForm = ((EnvironmentParameterBinding) binding).getInitForm();
 				} else if (binding instanceof EnvironmentEnvironmentBinding) {
@@ -130,17 +127,17 @@ public class LetCodeGenerator implements CodeGenerator<ConsElement> {
 			codeGenerator.doFreeVariableSetup();
 
 			// all args are in the proper local slots, so do the body of the let
-			final EnhancedLinkedList<SimpleElement> copyListJavaList = input.getElements();
-			final ConsElement copyList = new ConsElement(copyListJavaList);
-			EnhancedLinkedList<SimpleElement> funcallList = copyList.getElements().getAllButFirst();
+			final List<LispStruct> copyListJavaList = input.getAsJavaList();
+			final ListStruct copyList = ListStruct.buildProperList(copyListJavaList);
+			ListStruct funcallList = copyList.getRest();
 
 			while (!NullStruct.INSTANCE.equals(funcallList)) {
 				final Object firstElt = funcallList.getFirst();
 				if ((firstElt instanceof ListStruct) && ((ListStruct) firstElt).getFirst().equals(SpecialOperator.DECLARE)) {
-					funcallList = funcallList.getAllButFirst();
+					funcallList = funcallList.getRest();
 				} else {
 					codeGenerator.icgMainLoop(funcallList.getFirst());
-					funcallList = funcallList.getAllButFirst();
+					funcallList = funcallList.getRest();
 					if (!NullStruct.INSTANCE.equals(funcallList)) {
 						codeGenerator.emitter.emitPop();
 					}

@@ -1,14 +1,12 @@
 package jcl.compiler.real.icg;
 
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.SimpleElement;
 import jcl.functions.FunctionStruct;
+import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.SymbolStruct;
-import jcl.system.EnhancedLinkedList;
 import org.objectweb.asm.Label;
 
-public class FunctionCallCodeGenerator implements CodeGenerator<ConsElement> {
+public class FunctionCallCodeGenerator implements CodeGenerator<ListStruct> {
 
 	public static final FunctionCallCodeGenerator INSTANCE = new FunctionCallCodeGenerator();
 
@@ -26,16 +24,16 @@ public class FunctionCallCodeGenerator implements CodeGenerator<ConsElement> {
 	 */
 
 	@Override
-	public void generate(ConsElement input, final IntermediateCodeGenerator codeGenerator) {
+	public void generate(ListStruct input, final IntermediateCodeGenerator codeGenerator) {
 		// +1 -> fn
 		final int argsExistCt = 0;
 		SymbolStruct<?> theFnName = null;
-		if (input.getElements().getFirst() instanceof SymbolStruct) {
-			theFnName = (SymbolStruct) input.getElements().getFirst();
+		if (input.getFirst() instanceof SymbolStruct) {
+			theFnName = (SymbolStruct) input.getFirst();
 		}
 
 		// drop leading function name or lambda
-		EnhancedLinkedList<SimpleElement> inputAgain = input.getElements().getAllButFirst();
+		ListStruct inputAgain = input.getRest();
 		final int numParams = inputAgain.size();
 		// +2 -> fn, fn
 		// +1 -> fn
@@ -97,7 +95,7 @@ public class FunctionCallCodeGenerator implements CodeGenerator<ConsElement> {
 				}
 				//TODO this isn't the best way to do this. Better if the compiler
 				// knows all of the data flow.
-				inputAgain = inputAgain.getAllButFirst();
+				inputAgain = inputAgain.getRest();
 			}
 			// +numParams -> (fn), p, p, ...
 			// if (numParams >= 0 || numParams <= 9) make funcall
@@ -150,7 +148,7 @@ public class FunctionCallCodeGenerator implements CodeGenerator<ConsElement> {
 				// +5 -> fn, array, array, index, value
 				codeGenerator.emitter.emitAastore();
 				// +2 -> fn, array
-				inputAgain = inputAgain.getAllButFirst();
+				inputAgain = inputAgain.getRest();
 				count++;
 			}
 			// +2 -> fn, array

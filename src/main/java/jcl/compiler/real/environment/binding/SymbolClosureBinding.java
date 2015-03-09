@@ -5,9 +5,9 @@
 package jcl.compiler.real.environment.binding;
 
 import jcl.LispType;
-import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.allocation.ClosureAllocation;
+import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -17,7 +17,7 @@ public class SymbolClosureBinding extends SymbolBinding<ClosureAllocation> {
 
 	private static final long serialVersionUID = -5306882046173256938L;
 
-	public SymbolClosureBinding(final SymbolElement symbolStruct, final ClosureAllocation allocation, final LispType type,
+	public SymbolClosureBinding(final SymbolStruct<?> symbolStruct, final ClosureAllocation allocation, final LispType type,
 	                            final Environment binding) {
 		super(symbolStruct, allocation, type, binding);
 	}

@@ -4,9 +4,9 @@
 
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.Element;
+import jcl.LispStruct;
 import jcl.compiler.real.sa.Analyzer;
+import jcl.lists.ListStruct;
 
-public interface SpecialOperatorAnalyzer extends Analyzer<Element, ConsElement> {
+public interface SpecialOperatorAnalyzer extends Analyzer<LispStruct, ListStruct> {
 }

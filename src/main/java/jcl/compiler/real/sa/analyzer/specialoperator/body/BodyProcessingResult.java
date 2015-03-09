@@ -1,34 +1,34 @@
 package jcl.compiler.real.sa.analyzer.specialoperator.body;
 
-import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.element.StringElement;
-import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
-
 import java.util.List;
+
+import jcl.LispStruct;
+import jcl.arrays.StringStruct;
+import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 
 public class BodyProcessingResult {
 
-	private final DeclareElement declareElement;
+	private final DeclareStruct declareElement;
 
-	private final StringElement docString;
+	private final StringStruct docString;
 
-	private final List<SimpleElement> bodyForms;
+	private final List<LispStruct> bodyForms;
 
-	public BodyProcessingResult(final DeclareElement declareElement, final StringElement docString, final List<SimpleElement> bodyForms) {
+	public BodyProcessingResult(final DeclareStruct declareElement, final StringStruct docString, final List<LispStruct> bodyForms) {
 		this.declareElement = declareElement;
 		this.docString = docString;
 		this.bodyForms = bodyForms;
 	}
 
-	public DeclareElement getDeclareElement() {
+	public DeclareStruct getDeclareElement() {
 		return declareElement;
 	}
 
-	public StringElement getDocString() {
+	public StringStruct getDocString() {
 		return docString;
 	}
 
-	public List<SimpleElement> getBodyForms() {
+	public List<LispStruct> getBodyForms() {
 		return bodyForms;
 	}
 }

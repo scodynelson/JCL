@@ -5,8 +5,8 @@
 package jcl.compiler.real.environment.binding;
 
 import jcl.LispType;
-import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.environment.allocation.Allocation;
+import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -16,7 +16,7 @@ public abstract class EnvironmentBinding<A extends Allocation> extends Binding<A
 
 	private static final long serialVersionUID = 2910922877559341453L;
 
-	protected EnvironmentBinding(final SymbolElement symbolStruct, final A allocation, final LispType type) {
+	protected EnvironmentBinding(final SymbolStruct<?> symbolStruct, final A allocation, final LispType type) {
 		super(symbolStruct, allocation, type);
 	}
 

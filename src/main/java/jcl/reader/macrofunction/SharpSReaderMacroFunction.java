@@ -9,7 +9,6 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
-import jcl.compiler.real.element.SymbolElement;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
@@ -17,6 +16,7 @@ import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
 import jcl.streams.ReadPeekResult;
+import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +74,7 @@ public class SharpSReaderMacroFunction extends ReaderMacroFunctionImpl {
 		}
 
 		final LispStruct structureType = listToken.getFirst();
-		if (!(structureType instanceof SymbolElement)) {
+		if (!(structureType instanceof SymbolStruct)) {
 			throw new ReaderErrorException("Structure type is not a symbol: " + structureType);
 		}
 

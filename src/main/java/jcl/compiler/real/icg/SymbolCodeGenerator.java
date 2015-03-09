@@ -1,6 +1,7 @@
 package jcl.compiler.real.icg;
 
-import jcl.compiler.real.element.SymbolElement;
+import java.util.Optional;
+
 import jcl.compiler.real.environment.BindingEnvironment;
 import jcl.compiler.real.environment.Closure;
 import jcl.compiler.real.environment.Environment;
@@ -9,19 +10,18 @@ import jcl.compiler.real.environment.SymbolTable;
 import jcl.compiler.real.environment.allocation.ClosureAllocation;
 import jcl.compiler.real.environment.binding.ClosureBinding;
 import jcl.compiler.real.environment.binding.SymbolClosureBinding;
+import jcl.symbols.SymbolStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Optional;
-
-public class SymbolCodeGenerator implements CodeGenerator<SymbolElement> {
+public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SymbolCodeGenerator.class);
 
 	public static final SymbolCodeGenerator INSTANCE = new SymbolCodeGenerator();
 
 	@Override
-	public void generate(final SymbolElement input, final IntermediateCodeGenerator codeGenerator) {
+	public void generate(final SymbolStruct<?> input, final IntermediateCodeGenerator codeGenerator) {
 		// must determine one of 4 options:
 		// 1. this is in a closure that's local to the environment
 		// => assoc on the closure property of the current env
@@ -118,7 +118,7 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolElement> {
 		}
 	}
 
-	private static Environment getBindingEnvironment(final Environment environment, final SymbolElement variable) {
+	private static Environment getBindingEnvironment(final Environment environment, final SymbolStruct<?> variable) {
 
 		Environment currentEnvironment = environment;
 

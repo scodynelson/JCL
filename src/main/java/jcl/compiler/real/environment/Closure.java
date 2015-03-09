@@ -4,17 +4,17 @@
 
 package jcl.compiler.real.environment;
 
-import jcl.compiler.real.element.SymbolElement;
-import jcl.compiler.real.environment.binding.ClosureBinding;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import jcl.compiler.real.environment.binding.ClosureBinding;
+import jcl.symbols.SymbolStruct;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class Closure implements Serializable {
 
@@ -32,12 +32,12 @@ public class Closure implements Serializable {
 		return bindings;
 	}
 
-	public boolean hasBinding(final SymbolElement symbolStruct) {
+	public boolean hasBinding(final SymbolStruct<?> symbolStruct) {
 		return bindings.stream()
 		               .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct));
 	}
 
-	public Optional<ClosureBinding> getBinding(final SymbolElement symbolStruct) {
+	public Optional<ClosureBinding> getBinding(final SymbolStruct<?> symbolStruct) {
 		return bindings.stream()
 		               .filter(e -> e.getSymbolStruct().equals(symbolStruct))
 		               .findFirst();

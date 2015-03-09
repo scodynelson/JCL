@@ -1,11 +1,11 @@
 package jcl.compiler.real.sa;
 
-import jcl.compiler.real.element.Element;
-
 import java.io.Serializable;
 
+import jcl.LispStruct;
+
 @FunctionalInterface
-public interface Analyzer<O extends Element, I extends Element> extends Serializable {
+public interface Analyzer<O extends LispStruct, I extends LispStruct> extends Serializable {
 
 	O analyze(I input, AnalysisBuilder analysisBuilder);
 }

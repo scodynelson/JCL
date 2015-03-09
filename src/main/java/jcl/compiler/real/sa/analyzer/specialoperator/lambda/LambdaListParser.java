@@ -1,13 +1,11 @@
 package jcl.compiler.real.sa.analyzer.specialoperator.lambda;
 
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.ListElement;
-import jcl.compiler.real.element.NullElement;
-import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.element.SymbolElement;
-import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
-import jcl.compiler.real.element.specialoperator.declare.SpecialDeclarationElement;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
+import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
@@ -23,16 +21,15 @@ import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
+import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
+import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.types.T;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
 
 final class LambdaListParser {
 
@@ -52,19 +49,14 @@ final class LambdaListParser {
 
 	public static OrdinaryLambdaListBindings parseOrdinaryLambdaList(final SemanticAnalyzer semanticAnalyzer,
 	                                                                 final AnalysisBuilder analysisBuilder,
-	                                                                 final ListElement lambdaList,
-	                                                                 final DeclareElement declareElement) {
+	                                                                 final ListStruct lambdaList,
+	                                                                 final DeclareStruct declareElement) {
 
-		final List<? extends SimpleElement> lambdaListJava = lambdaList.getElements();
+		final List<? extends LispStruct> lambdaListJava = lambdaList.getAsJavaList();
 
-		// *** HACK: This is here because the parsing algorithm below relies on the list to have the last element as a NIL currently. Oops.
-		final List<SimpleElement> copyLambdaListJava = new ArrayList<>(lambdaListJava);
-		copyLambdaListJava.add(NullElement.INSTANCE);
-		// ***
+		final Iterator<? extends LispStruct> iterator = lambdaListJava.iterator();
 
-		final Iterator<? extends SimpleElement> iterator = copyLambdaListJava.iterator();
-
-		SimpleElement currentElement = null;
+		LispStruct currentElement = null;
 		int position = 0;
 
 		List<RequiredBinding> requiredBindings = Collections.emptyList();
@@ -128,8 +120,8 @@ final class LambdaListParser {
 	 * BINDING PARSE METHODS
 	 */
 
-	private static RequiredParseResult parseRequiredBindings(final AnalysisBuilder analysisBuilder, final Iterator<? extends SimpleElement> iterator,
-	                                                         final int position, final DeclareElement declareElement) {
+	private static RequiredParseResult parseRequiredBindings(final AnalysisBuilder analysisBuilder, final Iterator<? extends LispStruct> iterator,
+	                                                         final int position, final DeclareStruct declareElement) {
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment currentEnvironment = environmentStack.peek();
@@ -137,12 +129,12 @@ final class LambdaListParser {
 		final List<RequiredBinding> requiredBindings = new ArrayList<>();
 		int currentPosition = position;
 
-		SimpleElement currentElement = iterator.next();
+		LispStruct currentElement = iterator.next();
 		while (iterator.hasNext() && !isLambdaListKeyword(currentElement)) {
-			if (!(currentElement instanceof SymbolElement)) {
+			if (!(currentElement instanceof SymbolStruct)) {
 				throw new ProgramErrorException("LambdaList required parameters must be of type SymbolStruct: " + currentElement);
 			}
-			final SymbolElement currentParam = (SymbolElement) currentElement;
+			final SymbolStruct<?> currentParam = (SymbolStruct) currentElement;
 			final ParameterAllocation requiredAllocation = new ParameterAllocation(currentPosition++);
 			final RequiredBinding requiredBinding = new RequiredBinding(currentParam, requiredAllocation);
 			requiredBindings.add(requiredBinding);
@@ -156,7 +148,7 @@ final class LambdaListParser {
 			final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 			final boolean isSpecial = isSpecial(declareElement, currentParam);
 
-			final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullElement.INSTANCE);
+			final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullStruct.INSTANCE);
 			if (isSpecial) {
 				currentEnvironment.addDynamicBinding(binding);
 			} else {
@@ -168,8 +160,8 @@ final class LambdaListParser {
 	}
 
 	private static OptionalParseResult parseOptionalBindings(final SemanticAnalyzer semanticAnalyzer, final AnalysisBuilder analysisBuilder,
-	                                                         final Iterator<? extends SimpleElement> iterator, final int position,
-	                                                         final DeclareElement declareElement) {
+	                                                         final Iterator<? extends LispStruct> iterator, final int position,
+	                                                         final DeclareStruct declareElement) {
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment currentEnvironment = environmentStack.peek();
@@ -177,10 +169,10 @@ final class LambdaListParser {
 		final List<OptionalBinding> optionalBindings = new ArrayList<>();
 		int currentPosition = position;
 
-		SimpleElement currentElement = iterator.next();
+		LispStruct currentElement = iterator.next();
 		while (iterator.hasNext() && !isLambdaListKeyword(currentElement)) {
-			if (currentElement instanceof SymbolElement) {
-				final SymbolElement currentParam = (SymbolElement) currentElement;
+			if (currentElement instanceof SymbolStruct) {
+				final SymbolStruct<?> currentParam = (SymbolStruct) currentElement;
 				final ParameterAllocation optionalAllocation = new ParameterAllocation(currentPosition++);
 				final OptionalBinding optionalBinding = new OptionalBinding(currentParam, optionalAllocation, null, null);
 				optionalBindings.add(optionalBinding);
@@ -192,35 +184,35 @@ final class LambdaListParser {
 				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 				final boolean isSpecial = isSpecial(declareElement, currentParam);
 
-				final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullElement.INSTANCE);
+				final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullStruct.INSTANCE);
 				if (isSpecial) {
 					currentEnvironment.addDynamicBinding(binding);
 				} else {
 					currentEnvironment.addLexicalBinding(binding);
 				}
-			} else if (currentElement instanceof ConsElement) {
-				final ConsElement currentParam = (ConsElement) currentElement;
-				if ((currentParam.getElements().size() < 1) || (currentParam.getElements().size() > 3)) {
+			} else if (currentElement instanceof ListStruct) {
+				final ListStruct currentParam = (ListStruct) currentElement;
+				if ((currentParam.size() < 1) || (currentParam.size() > 3)) {
 					throw new ProgramErrorException("LambdaList optional parameters must have between 1 and 3 parameters: " + currentParam);
 				}
 
-				final SimpleElement firstInCurrent = currentParam.getElements().get(0);
-				final SimpleElement secondInCurrent = currentParam.getElements().get(1);
-				final SimpleElement thirdInCurrent = currentParam.getElements().get(2);
+				final LispStruct firstInCurrent = currentParam.getFirst();
+				final LispStruct secondInCurrent = currentParam.getRest().getFirst();
+				final LispStruct thirdInCurrent = currentParam.getRest().getRest().getFirst();
 
-				if (!(firstInCurrent instanceof SymbolElement)) {
+				if (!(firstInCurrent instanceof SymbolStruct)) {
 					throw new ProgramErrorException("LambdaList optional var name parameters must be of type SymbolStruct: " + firstInCurrent);
 				}
-				final SymbolElement varNameCurrent = (SymbolElement) firstInCurrent;
+				final SymbolStruct<?> varNameCurrent = (SymbolStruct) firstInCurrent;
 
-				SimpleElement initForm = null;
+				LispStruct initForm = null;
 				if (!secondInCurrent.equals(NullStruct.INSTANCE)) {
 					initForm = secondInCurrent;
 				}
 
 				// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
 				final Environment currentEnvironment1 = environmentStack.pop();
-				final Element parameterValueInitForm = semanticAnalyzer.analyzeForm(initForm, analysisBuilder);
+				final LispStruct parameterValueInitForm = semanticAnalyzer.analyzeForm(initForm, analysisBuilder);
 				environmentStack.push(currentEnvironment1);
 
 				LambdaEnvironment currentLambda = Environments.getEnclosingLambda(currentEnvironment);
@@ -238,12 +230,12 @@ final class LambdaListParser {
 				}
 
 				SuppliedPBinding suppliedPBinding = null;
-				if (!thirdInCurrent.equals(NullElement.INSTANCE)) {
-					if (!(thirdInCurrent instanceof SymbolElement)) {
+				if (!thirdInCurrent.equals(NullStruct.INSTANCE)) {
+					if (!(thirdInCurrent instanceof SymbolStruct)) {
 						throw new ProgramErrorException("LambdaList optional supplied-p parameters must be of type SymbolStruct: " + thirdInCurrent);
 					}
 
-					final SymbolElement suppliedPCurrent = (SymbolElement) thirdInCurrent;
+					final SymbolStruct<?> suppliedPCurrent = (SymbolStruct) thirdInCurrent;
 					final ParameterAllocation suppliedPAllocation = new ParameterAllocation(currentPosition++);
 					suppliedPBinding = new SuppliedPBinding(suppliedPCurrent, suppliedPAllocation);
 
@@ -254,7 +246,7 @@ final class LambdaListParser {
 					allocation = new ParameterAllocation(newBindingsPosition);
 					isSpecial = isSpecial(declareElement, suppliedPCurrent);
 
-					binding = new EnvironmentParameterBinding(suppliedPCurrent, allocation, T.INSTANCE, NullElement.INSTANCE);
+					binding = new EnvironmentParameterBinding(suppliedPCurrent, allocation, T.INSTANCE, NullStruct.INSTANCE);
 					if (isSpecial) {
 						currentEnvironment.addDynamicBinding(binding);
 					} else {
@@ -275,20 +267,20 @@ final class LambdaListParser {
 		return new OptionalParseResult(currentElement, currentPosition, optionalBindings);
 	}
 
-	private static RestParseResult parseRestBinding(final AnalysisBuilder analysisBuilder, final Iterator<? extends SimpleElement> iterator,
-	                                                final int position, final DeclareElement declareElement) {
+	private static RestParseResult parseRestBinding(final AnalysisBuilder analysisBuilder, final Iterator<? extends LispStruct> iterator,
+	                                                final int position, final DeclareStruct declareElement) {
 
 		int currentPosition = position;
 
-		final SimpleElement currentElement = iterator.next();
+		final LispStruct currentElement = iterator.next();
 		if (iterator.hasNext() && !isLambdaListKeyword(currentElement)) {
 			throw new ProgramErrorException("LambdaList rest parameter must only have 1 parameter: " + iterator.next());
 		}
 
-		if (!(currentElement instanceof SymbolElement)) {
+		if (!(currentElement instanceof SymbolStruct)) {
 			throw new ProgramErrorException("LambdaList rest parameters must be of type SymbolStruct: " + currentElement);
 		}
-		final SymbolElement currentParam = (SymbolElement) currentElement;
+		final SymbolStruct<?> currentParam = (SymbolStruct) currentElement;
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment currentEnvironment = environmentStack.peek();
@@ -300,7 +292,7 @@ final class LambdaListParser {
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 		final boolean isSpecial = isSpecial(declareElement, currentParam);
 
-		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullElement.INSTANCE);
+		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullStruct.INSTANCE);
 		if (isSpecial) {
 			currentEnvironment.addDynamicBinding(binding);
 		} else {
@@ -313,8 +305,8 @@ final class LambdaListParser {
 	}
 
 	private static KeyParseResult parseKeyBindings(final SemanticAnalyzer semanticAnalyzer, final AnalysisBuilder analysisBuilder,
-	                                               final Iterator<? extends SimpleElement> iterator, final int position,
-	                                               final DeclareElement declareElement) {
+	                                               final Iterator<? extends LispStruct> iterator, final int position,
+	                                               final DeclareStruct declareElement) {
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment currentEnvironment = environmentStack.peek();
@@ -322,11 +314,11 @@ final class LambdaListParser {
 		final List<KeyBinding> keyBindings = new ArrayList<>();
 		int currentPosition = position;
 
-		SimpleElement currentElement = iterator.next();
+		LispStruct currentElement = iterator.next();
 		while (iterator.hasNext() && !isLambdaListKeyword(currentElement)) {
-			if (currentElement instanceof SymbolElement) {
-				final SymbolElement currentParam = (SymbolElement) currentElement;
-				final SymbolElement keyName = new SymbolElement(GlobalPackageStruct.KEYWORD.getName(), currentParam.getSymbolName());
+			if (currentElement instanceof SymbolStruct) {
+				final SymbolStruct<?> currentParam = (SymbolStruct) currentElement;
+				final KeywordSymbolStruct keyName = new KeywordSymbolStruct(currentParam.getName());
 				final ParameterAllocation keyAllocation = new ParameterAllocation(currentPosition++);
 				final KeyBinding keyBinding = new KeyBinding(currentParam, keyAllocation, null, keyName, null);
 				keyBindings.add(keyBinding);
@@ -338,56 +330,56 @@ final class LambdaListParser {
 				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 				final boolean isSpecial = isSpecial(declareElement, currentParam);
 
-				final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullElement.INSTANCE);
+				final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullStruct.INSTANCE);
 				if (isSpecial) {
 					currentEnvironment.addDynamicBinding(binding);
 				} else {
 					currentEnvironment.addLexicalBinding(binding);
 				}
-			} else if (currentElement instanceof ConsElement) {
-				final ConsElement currentParam = (ConsElement) currentElement;
-				if ((currentParam.getElements().size() < 1) || (currentParam.getElements().size() > 3)) {
+			} else if (currentElement instanceof ListStruct) {
+				final ListStruct currentParam = (ListStruct) currentElement;
+				if ((currentParam.size() < 1) || (currentParam.size() > 3)) {
 					throw new ProgramErrorException("LambdaList key parameters must have between 1 and 3 parameters: " + currentParam);
 				}
 
-				final SimpleElement firstInCurrent = currentParam.getElements().get(0);
-				final SimpleElement secondInCurrent = currentParam.getElements().get(1);
-				final SimpleElement thirdInCurrent = currentParam.getElements().get(2);
+				final LispStruct firstInCurrent = currentParam.getFirst();
+				final LispStruct secondInCurrent = currentParam.getRest().getFirst();
+				final LispStruct thirdInCurrent = currentParam.getRest().getRest().getFirst();
 
-				final SymbolElement varNameCurrent;
-				final SymbolElement varKeyNameCurrent;
-				if (firstInCurrent instanceof SymbolElement) {
-					varNameCurrent = (SymbolElement) firstInCurrent;
-					varKeyNameCurrent = new SymbolElement(GlobalPackageStruct.KEYWORD.getName(), varNameCurrent.getSymbolName());
-				} else if (firstInCurrent instanceof ConsElement) {
-					final ConsElement currentVar = (ConsElement) firstInCurrent;
-					if (currentVar.getElements().size() != 2) {
+				final SymbolStruct<?> varNameCurrent;
+				final KeywordSymbolStruct varKeyNameCurrent;
+				if (firstInCurrent instanceof SymbolStruct) {
+					varNameCurrent = (SymbolStruct) firstInCurrent;
+					varKeyNameCurrent = new KeywordSymbolStruct(varNameCurrent.getName());
+				} else if (firstInCurrent instanceof ListStruct) {
+					final ListStruct currentVar = (ListStruct) firstInCurrent;
+					if (currentVar.size() != 2) {
 						throw new ProgramErrorException("LambdaList key var name list parameters must have 2 parameters: " + currentVar);
 					}
 
-					final SimpleElement firstInCurrentVar = currentVar.getElements().getFirst();
-					if (!(firstInCurrentVar instanceof SymbolElement) || !((SymbolElement) firstInCurrentVar).getPackageName().equals(GlobalPackageStruct.KEYWORD.getName())) {
+					final LispStruct firstInCurrentVar = currentVar.getFirst();
+					if (!(firstInCurrentVar instanceof KeywordSymbolStruct)) {
 						throw new ProgramErrorException("LambdaList key var name list key-name parameters must be of type KeywordStruct: " + firstInCurrentVar);
 					}
-					varKeyNameCurrent = (SymbolElement) firstInCurrentVar;
+					varKeyNameCurrent = (KeywordSymbolStruct) firstInCurrentVar;
 
-					final SimpleElement secondInCurrentVar = currentVar.getElements().getAllButFirst().getFirst();
-					if (!(secondInCurrentVar instanceof SymbolElement)) {
+					final LispStruct secondInCurrentVar = currentVar.getRest().getFirst();
+					if (!(secondInCurrentVar instanceof SymbolStruct)) {
 						throw new ProgramErrorException("LambdaList key var name list name parameters must be of type SymbolStruct: " + secondInCurrentVar);
 					}
-					varNameCurrent = (SymbolElement) secondInCurrentVar;
+					varNameCurrent = (SymbolStruct) secondInCurrentVar;
 				} else {
 					throw new ProgramErrorException("LambdaList key var name parameters must be of type SymbolStruct or ListStruct: " + firstInCurrent);
 				}
 
-				SimpleElement initForm = null;
-				if (!secondInCurrent.equals(NullElement.INSTANCE)) {
+				LispStruct initForm = null;
+				if (!secondInCurrent.equals(NullStruct.INSTANCE)) {
 					initForm = secondInCurrent;
 				}
 
 				// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
 				final Environment currentEnvironment1 = environmentStack.pop();
-				final Element parameterValueInitForm = semanticAnalyzer.analyzeForm(initForm, analysisBuilder);
+				final LispStruct parameterValueInitForm = semanticAnalyzer.analyzeForm(initForm, analysisBuilder);
 				environmentStack.push(currentEnvironment1);
 
 				LambdaEnvironment currentLambda = Environments.getEnclosingLambda(currentEnvironment);
@@ -405,12 +397,12 @@ final class LambdaListParser {
 				}
 
 				SuppliedPBinding suppliedPBinding = null;
-				if (!thirdInCurrent.equals(NullElement.INSTANCE)) {
-					if (!(thirdInCurrent instanceof SymbolElement)) {
+				if (!thirdInCurrent.equals(NullStruct.INSTANCE)) {
+					if (!(thirdInCurrent instanceof SymbolStruct)) {
 						throw new ProgramErrorException("LambdaList key supplied-p parameters must be of type SymbolStruct: " + thirdInCurrent);
 					}
 
-					final SymbolElement suppliedPCurrent = (SymbolElement) thirdInCurrent;
+					final SymbolStruct<?> suppliedPCurrent = (SymbolStruct) thirdInCurrent;
 					final ParameterAllocation suppliedPAllocation = new ParameterAllocation(currentPosition++);
 					suppliedPBinding = new SuppliedPBinding(suppliedPCurrent, suppliedPAllocation);
 
@@ -421,7 +413,7 @@ final class LambdaListParser {
 					allocation = new ParameterAllocation(newBindingsPosition);
 					isSpecial = isSpecial(declareElement, suppliedPCurrent);
 
-					binding = new EnvironmentParameterBinding(suppliedPCurrent, allocation, T.INSTANCE, NullElement.INSTANCE);
+					binding = new EnvironmentParameterBinding(suppliedPCurrent, allocation, T.INSTANCE, NullStruct.INSTANCE);
 					if (isSpecial) {
 						currentEnvironment.addDynamicBinding(binding);
 					} else {
@@ -449,8 +441,8 @@ final class LambdaListParser {
 	}
 
 	private static AuxParseResult parseAuxBindings(final SemanticAnalyzer semanticAnalyzer, final AnalysisBuilder analysisBuilder,
-	                                               final Iterator<? extends SimpleElement> iterator, final int position,
-	                                               final DeclareElement declareElement) {
+	                                               final Iterator<? extends LispStruct> iterator, final int position,
+	                                               final DeclareStruct declareElement) {
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment currentEnvironment = environmentStack.peek();
@@ -458,10 +450,10 @@ final class LambdaListParser {
 		final List<AuxBinding> auxBindings = new ArrayList<>();
 		int currentPosition = position;
 
-		SimpleElement currentElement = iterator.next();
+		LispStruct currentElement = iterator.next();
 		while (iterator.hasNext() && !isLambdaListKeyword(currentElement)) {
-			if (currentElement instanceof SymbolElement) {
-				final SymbolElement currentParam = (SymbolElement) currentElement;
+			if (currentElement instanceof SymbolStruct) {
+				final SymbolStruct<?> currentParam = (SymbolStruct) currentElement;
 				final ParameterAllocation auxAllocation = new ParameterAllocation(currentPosition++);
 				final AuxBinding auxBinding = new AuxBinding(currentParam, auxAllocation, null);
 				auxBindings.add(auxBinding);
@@ -473,28 +465,28 @@ final class LambdaListParser {
 				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 				final boolean isSpecial = isSpecial(declareElement, currentParam);
 
-				final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullElement.INSTANCE);
+				final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullStruct.INSTANCE);
 				if (isSpecial) {
 					currentEnvironment.addDynamicBinding(binding);
 				} else {
 					currentEnvironment.addLexicalBinding(binding);
 				}
-			} else if (currentElement instanceof ConsElement) {
-				final ConsElement currentParam = (ConsElement) currentElement;
-				if ((currentParam.getElements().size() < 1) || (currentParam.getElements().size() > 2)) {
+			} else if (currentElement instanceof ListStruct) {
+				final ListStruct currentParam = (ListStruct) currentElement;
+				if ((currentParam.size() < 1) || (currentParam.size() > 2)) {
 					throw new ProgramErrorException("LambdaList aux parameters must have between 1 and 3 parameters: " + currentParam);
 				}
 
-				final SimpleElement firstInCurrent = currentParam.getElements().get(0);
-				final SimpleElement secondInCurrent = currentParam.getElements().get(1);
+				final LispStruct firstInCurrent = currentParam.getFirst();
+				final LispStruct secondInCurrent = currentParam.getRest().getFirst();
 
-				if (!(firstInCurrent instanceof SymbolElement)) {
+				if (!(firstInCurrent instanceof SymbolStruct)) {
 					throw new ProgramErrorException("LambdaList aux var name parameters must be of type SymbolStruct: " + firstInCurrent);
 				}
-				final SymbolElement varNameCurrent = (SymbolElement) firstInCurrent;
+				final SymbolStruct<?> varNameCurrent = (SymbolStruct) firstInCurrent;
 
-				SimpleElement initForm = null;
-				if (!secondInCurrent.equals(NullElement.INSTANCE)) {
+				LispStruct initForm = null;
+				if (!secondInCurrent.equals(NullStruct.INSTANCE)) {
 					initForm = secondInCurrent;
 				}
 
@@ -504,7 +496,7 @@ final class LambdaListParser {
 
 				// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
 				final Environment currentEnvironment1 = environmentStack.pop();
-				final Element parameterValueInitForm = semanticAnalyzer.analyzeForm(initForm, analysisBuilder);
+				final LispStruct parameterValueInitForm = semanticAnalyzer.analyzeForm(initForm, analysisBuilder);
 				environmentStack.push(currentEnvironment1);
 
 				final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(currentEnvironment);
@@ -530,12 +522,12 @@ final class LambdaListParser {
 		return new AuxParseResult(currentElement, currentPosition, auxBindings);
 	}
 
-	private static boolean isSpecial(final DeclareElement declareElement, final SymbolElement var) {
+	private static boolean isSpecial(final DeclareStruct declareElement, final SymbolStruct<?> var) {
 		boolean isSpecial = false;
 
-		final List<SpecialDeclarationElement> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
-		for (final SpecialDeclarationElement specialDeclarationElement : specialDeclarationElements) {
-			final SymbolElement specialVar = specialDeclarationElement.getVar();
+		final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
+		for (final SpecialDeclarationStruct specialDeclarationElement : specialDeclarationElements) {
+			final SymbolStruct<?> specialVar = specialDeclarationElement.getVar();
 			if (var.equals(specialVar)) {
 				isSpecial = true;
 				break;
@@ -551,15 +543,15 @@ final class LambdaListParser {
 
 	private static class ParseResult {
 
-		private final SimpleElement currentElement;
+		private final LispStruct currentElement;
 		private final int currentPosition;
 
-		ParseResult(final SimpleElement currentElement, final int currentPosition) {
+		ParseResult(final LispStruct currentElement, final int currentPosition) {
 			this.currentElement = currentElement;
 			this.currentPosition = currentPosition;
 		}
 
-		public SimpleElement getCurrentElement() {
+		public LispStruct getCurrentElement() {
 			return currentElement;
 		}
 
@@ -572,7 +564,7 @@ final class LambdaListParser {
 
 		private final List<RequiredBinding> requiredBindings;
 
-		private RequiredParseResult(final SimpleElement currentElement, final int currentPosition, final List<RequiredBinding> requiredBindings) {
+		private RequiredParseResult(final LispStruct currentElement, final int currentPosition, final List<RequiredBinding> requiredBindings) {
 			super(currentElement, currentPosition);
 			this.requiredBindings = requiredBindings;
 		}
@@ -586,7 +578,7 @@ final class LambdaListParser {
 
 		private final List<OptionalBinding> optionalBindings;
 
-		private OptionalParseResult(final SimpleElement currentElement, final int currentPosition, final List<OptionalBinding> optionalBindings) {
+		private OptionalParseResult(final LispStruct currentElement, final int currentPosition, final List<OptionalBinding> optionalBindings) {
 			super(currentElement, currentPosition);
 			this.optionalBindings = optionalBindings;
 		}
@@ -600,7 +592,7 @@ final class LambdaListParser {
 
 		private final RestBinding restBinding;
 
-		private RestParseResult(final SimpleElement currentElement, final int currentPosition, final RestBinding restBinding) {
+		private RestParseResult(final LispStruct currentElement, final int currentPosition, final RestBinding restBinding) {
 			super(currentElement, currentPosition);
 			this.restBinding = restBinding;
 		}
@@ -615,7 +607,7 @@ final class LambdaListParser {
 		private final List<KeyBinding> keyBindings;
 		private final boolean allowOtherKeys;
 
-		private KeyParseResult(final SimpleElement currentElement, final int currentPosition, final List<KeyBinding> keyBindings,
+		private KeyParseResult(final LispStruct currentElement, final int currentPosition, final List<KeyBinding> keyBindings,
 		                       final boolean allowOtherKeys) {
 			super(currentElement, currentPosition);
 			this.keyBindings = keyBindings;
@@ -635,7 +627,7 @@ final class LambdaListParser {
 
 		private final List<AuxBinding> auxBindings;
 
-		private AuxParseResult(final SimpleElement currentElement, final int currentPosition, final List<AuxBinding> auxBindings) {
+		private AuxParseResult(final LispStruct currentElement, final int currentPosition, final List<AuxBinding> auxBindings) {
 			super(currentElement, currentPosition);
 			this.auxBindings = auxBindings;
 		}
@@ -649,7 +641,7 @@ final class LambdaListParser {
 	 * UTILITY METHODS
 	 */
 
-	private static boolean isLambdaListKeyword(final SimpleElement lispStruct) {
+	private static boolean isLambdaListKeyword(final LispStruct lispStruct) {
 		return lispStruct.equals(AND_AUX)
 				|| lispStruct.equals(AND_ALLOW_OTHER_KEYS)
 				|| lispStruct.equals(AND_KEY)

@@ -1,14 +1,11 @@
 package jcl.compiler.real.sa.analyzer.specialoperator.lambda;
 
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.ListElement;
-import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.element.SpecialOperatorElement;
-import jcl.compiler.real.element.SymbolElement;
-import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
-import jcl.compiler.real.element.specialoperator.declare.SpecialDeclarationElement;
-import jcl.compiler.real.element.specialoperator.lambda.LambdaElement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
+
+import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
@@ -26,16 +23,17 @@ import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.sa.analyzer.specialoperator.SpecialOperatorAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyWithDeclaresAndDocStringAnalyzer;
+import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
+import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
+import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
+import jcl.symbols.SymbolStruct;
 import jcl.system.EnhancedLinkedList;
 import jcl.types.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class LambdaAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
@@ -54,24 +52,22 @@ public class LambdaAnalyzer extends MacroFunctionExpander implements SpecialOper
 	}
 
 	@Override
-	public Element expand(final ConsElement form, final AnalysisBuilder analysisBuilder) {
+	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 		return analyze(form, analysisBuilder);
 	}
 
 	@Override
-	public LambdaElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public LambdaStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
-		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
-
-		final int inputSize = elements.size();
+		final int inputSize = input.size();
 		if (inputSize < 2) {
 			throw new ProgramErrorException("LAMBDA: Incorrect number of arguments: " + inputSize + ". Expected at least 2 arguments.");
 		}
 
-		final EnhancedLinkedList<SimpleElement> inputRest = elements.getAllButFirst();
+		final ListStruct inputRest = input.getRest();
 
-		final SimpleElement second = inputRest.getFirst();
-		if (!(second instanceof ListElement)) {
+		final LispStruct second = inputRest.getFirst();
+		if (!(second instanceof ListStruct)) {
 			throw new ProgramErrorException("LAMBDA: Parameter list must be of type ListStruct. Got: " + second);
 		}
 
@@ -88,27 +84,27 @@ public class LambdaAnalyzer extends MacroFunctionExpander implements SpecialOper
 		try {
 			analysisBuilder.setClosureDepth(newClosureDepth);
 
-			final ListElement parameters = (ListElement) second;
-			final EnhancedLinkedList<SimpleElement> bodyForms = inputRest.getAllButFirst();
+			final ListStruct parameters = (ListStruct) second;
+			final List<LispStruct> bodyForms = inputRest.getRest().getAsJavaList();
 
 			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAndDocStringAnalyzer.analyze(bodyForms, analysisBuilder);
-			final DeclareElement declareElement = bodyProcessingResult.getDeclareElement();
+			final DeclareStruct declareElement = bodyProcessingResult.getDeclareElement();
 
 			final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
 			final OrdinaryLambdaListBindings parsedLambdaList = LambdaListParser.parseOrdinaryLambdaList(analyzer, analysisBuilder, parameters, declareElement);
-			final EnhancedLinkedList<SimpleElement> newStartingLambdaBody = getNewStartingLambdaBody(parsedLambdaList);
+			final EnhancedLinkedList<LispStruct> newStartingLambdaBody = getNewStartingLambdaBody(parsedLambdaList);
 
-			final List<SpecialDeclarationElement> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
+			final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
 			specialDeclarationElements.forEach(e -> addDynamicVariableBinding(e, analysisBuilder, lambdaEnvironment));
 
-			final List<SimpleElement> realBodyForms = bodyProcessingResult.getBodyForms();
+			final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
 			newStartingLambdaBody.addAll(realBodyForms);
 
-			final ConsElement newLambdaBodyListStruct = new ConsElement(newStartingLambdaBody);
+			final ListStruct newLambdaBodyListStruct = ListStruct.buildProperList(newStartingLambdaBody);
 
-			final Element analyzedBodyForms = analyzer.analyzeForm(newLambdaBodyListStruct, analysisBuilder);
-			return new LambdaElement(parsedLambdaList, bodyProcessingResult.getDocString(), analyzedBodyForms, lambdaEnvironment);
+			final LispStruct analyzedBodyForms = analyzer.analyzeForm(newLambdaBodyListStruct, analysisBuilder);
+			return new LambdaStruct(parsedLambdaList, bodyProcessingResult.getDocString(), analyzedBodyForms, lambdaEnvironment);
 		} finally {
 			analysisBuilder.setClosureDepth(tempClosureDepth);
 			analysisBuilder.setBindingsPosition(tempBindingsPosition);
@@ -116,51 +112,51 @@ public class LambdaAnalyzer extends MacroFunctionExpander implements SpecialOper
 		}
 	}
 
-	private static EnhancedLinkedList<SimpleElement> getNewStartingLambdaBody(final OrdinaryLambdaListBindings parsedLambdaList) {
-		final EnhancedLinkedList<SimpleElement> newLambdaBody = new EnhancedLinkedList<>();
+	private static EnhancedLinkedList<LispStruct> getNewStartingLambdaBody(final OrdinaryLambdaListBindings parsedLambdaList) {
+		final EnhancedLinkedList<LispStruct> newLambdaBody = new EnhancedLinkedList<>();
 
 		final List<AuxBinding> auxBindings = parsedLambdaList.getAuxBindings();
 		if (auxBindings.isEmpty()) {
-			newLambdaBody.add(SpecialOperatorElement.PROGN);
+			newLambdaBody.add(SpecialOperator.PROGN);
 		} else {
-			newLambdaBody.add(SpecialOperatorElement.LET_STAR);
+			newLambdaBody.add(SpecialOperator.LET_STAR);
 
-			final List<ConsElement> auxLetStarVars = auxBindings
+			final List<LispStruct> auxLetStarVars = auxBindings
 					.stream()
-					.map(e -> new ConsElement(e.getSymbolStruct(), e.getInitForm()))
+					.map(e -> ListStruct.buildProperList(e.getSymbolStruct(), e.getInitForm()))
 					.collect(Collectors.toList());
 
-			final ConsElement auxLetStarVarsLL = new ConsElement(new EnhancedLinkedList<>(auxLetStarVars));
+			final ListStruct auxLetStarVarsLL = ListStruct.buildProperList(auxLetStarVars);
 			newLambdaBody.add(auxLetStarVarsLL);
 		}
 
-		final EnhancedLinkedList<SimpleElement> initFormIfSetqs = getInitFormIfSetqs(parsedLambdaList);
+		final List<LispStruct> initFormIfSetqs = getInitFormIfSetqs(parsedLambdaList);
 		newLambdaBody.addAll(initFormIfSetqs);
 
 		return newLambdaBody;
 	}
 
-	private static EnhancedLinkedList<SimpleElement> getInitFormIfSetqs(final OrdinaryLambdaListBindings parsedLambdaList) {
+	private static List<LispStruct> getInitFormIfSetqs(final OrdinaryLambdaListBindings parsedLambdaList) {
 
-		final EnhancedLinkedList<SimpleElement> initFormIfSetqs = new EnhancedLinkedList<>();
+		final List<LispStruct> initFormIfSetqs = new ArrayList<>();
 
 		final List<OptionalBinding> optionalBindings = parsedLambdaList.getOptionalBindings();
 		for (final OptionalBinding optionalBinding : optionalBindings) {
 			final SuppliedPBinding suppliedPBinding = optionalBinding.getSuppliedPBinding();
 
-			final EnhancedLinkedList<SimpleElement> initFormIfSetq = new EnhancedLinkedList<>();
-			initFormIfSetq.add(SpecialOperatorElement.IF);
+			final List<LispStruct> initFormIfSetq = new ArrayList<>();
+			initFormIfSetq.add(SpecialOperator.IF);
 			initFormIfSetq.add(suppliedPBinding.getSymbolStruct());
 
-			final EnhancedLinkedList<SimpleElement> initFormSetq = new EnhancedLinkedList<>();
-			initFormSetq.add(SpecialOperatorElement.SETQ);
+			final List<LispStruct> initFormSetq = new ArrayList<>();
+			initFormSetq.add(SpecialOperator.SETQ);
 			initFormSetq.add(optionalBinding.getSymbolStruct());
 			initFormSetq.add(optionalBinding.getInitForm());
 
-			final ConsElement initFormSetqLL = new ConsElement(initFormSetq);
+			final ListStruct initFormSetqLL = ListStruct.buildProperList(initFormSetq);
 			initFormIfSetq.add(initFormSetqLL);
 
-			final ConsElement initFormIfSetqLL = new ConsElement(initFormIfSetq);
+			final ListStruct initFormIfSetqLL = ListStruct.buildProperList(initFormIfSetq);
 			initFormIfSetqs.add(initFormIfSetqLL);
 		}
 
@@ -168,26 +164,26 @@ public class LambdaAnalyzer extends MacroFunctionExpander implements SpecialOper
 		for (final KeyBinding keyBinding : keyBindings) {
 			final SuppliedPBinding suppliedPBinding = keyBinding.getSuppliedPBinding();
 
-			final EnhancedLinkedList<SimpleElement> initFormIfSetq = new EnhancedLinkedList<>();
-			initFormIfSetq.add(SpecialOperatorElement.IF);
+			final List<LispStruct> initFormIfSetq = new ArrayList<>();
+			initFormIfSetq.add(SpecialOperator.IF);
 			initFormIfSetq.add(suppliedPBinding.getSymbolStruct());
 
-			final EnhancedLinkedList<SimpleElement> initFormSetq = new EnhancedLinkedList<>();
-			initFormSetq.add(SpecialOperatorElement.SETQ);
+			final List<LispStruct> initFormSetq = new ArrayList<>();
+			initFormSetq.add(SpecialOperator.SETQ);
 			initFormSetq.add(keyBinding.getSymbolStruct());
 			initFormSetq.add(keyBinding.getInitForm());
 
-			final ConsElement initFormSetqLL = new ConsElement(initFormSetq);
+			final ListStruct initFormSetqLL = ListStruct.buildProperList(initFormSetq);
 			initFormIfSetq.add(initFormSetqLL);
 
-			final ConsElement initFormIfSetqLL = new ConsElement(initFormIfSetq);
+			final ListStruct initFormIfSetqLL = ListStruct.buildProperList(initFormIfSetq);
 			initFormIfSetqs.add(initFormIfSetqLL);
 		}
 
 		return initFormIfSetqs;
 	}
 
-	private static void addDynamicVariableBinding(final SpecialDeclarationElement specialDeclarationElement,
+	private static void addDynamicVariableBinding(final SpecialDeclarationStruct specialDeclarationElement,
 	                                              final AnalysisBuilder analysisBuilder,
 	                                              final LambdaEnvironment lambdaEnvironment) {
 
@@ -195,7 +191,7 @@ public class LambdaAnalyzer extends MacroFunctionExpander implements SpecialOper
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
-		final SymbolElement var = specialDeclarationElement.getVar();
+		final SymbolStruct<?> var = specialDeclarationElement.getVar();
 
 		final Environment bindingEnvironment = Environments.getDynamicBindingEnvironment(lambdaEnvironment, var);
 		final EnvironmentAllocation allocation = new EnvironmentAllocation(bindingEnvironment);

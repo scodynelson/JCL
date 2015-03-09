@@ -4,14 +4,14 @@
 
 package jcl.compiler.real.struct.specialoperator;
 
+import java.util.List;
+import java.util.Map;
+
 import jcl.LispStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.util.List;
-import java.util.Map;
 
 public class TagbodyStruct implements LispStruct {
 

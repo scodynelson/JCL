@@ -4,6 +4,9 @@
 
 package jcl.compiler.real.struct.specialoperator;
 
+import java.io.Serializable;
+import java.util.List;
+
 import jcl.LispStruct;
 import jcl.compiler.real.environment.LetEnvironment;
 import jcl.symbols.SymbolStruct;
@@ -11,9 +14,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.io.Serializable;
-import java.util.List;
 
 public class LetStruct implements LispStruct {
 

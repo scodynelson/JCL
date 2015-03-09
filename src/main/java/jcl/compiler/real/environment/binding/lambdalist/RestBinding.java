@@ -4,9 +4,9 @@
 
 package jcl.compiler.real.environment.binding.lambdalist;
 
-import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.ParameterBinding;
+import jcl.symbols.SymbolStruct;
 import jcl.types.List;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -17,7 +17,7 @@ public class RestBinding extends ParameterBinding {
 
 	private static final long serialVersionUID = 5070599837585531277L;
 
-	public RestBinding(final SymbolElement symbolStruct, final ParameterAllocation allocation) {
+	public RestBinding(final SymbolStruct<?> symbolStruct, final ParameterAllocation allocation) {
 		super(symbolStruct, allocation, List.INSTANCE, null);
 	}
 

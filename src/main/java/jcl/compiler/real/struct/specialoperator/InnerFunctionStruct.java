@@ -4,6 +4,9 @@
 
 package jcl.compiler.real.struct.specialoperator;
 
+import java.io.Serializable;
+import java.util.List;
+
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.struct.specialoperator.InnerFunctionStruct.InnerFunctionVar;
@@ -12,9 +15,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.io.Serializable;
-import java.util.List;
 
 public abstract class InnerFunctionStruct<E extends Environment, V extends InnerFunctionVar> implements LispStruct {
 

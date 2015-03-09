@@ -1,20 +1,18 @@
 package jcl.compiler.real.icg.specialoperator;
 
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
+import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
-import jcl.system.EnhancedLinkedList;
+import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.Label;
 
-public class BlockCodeGenerator implements CodeGenerator<ConsElement> {
+public class BlockCodeGenerator implements CodeGenerator<ListStruct> {
 
 	public static final BlockCodeGenerator INSTANCE = new BlockCodeGenerator();
 
 	@Override
-	public void generate(final ConsElement input, final IntermediateCodeGenerator codeGenerator) {
+	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator) {
 
 		final Label startTryBlock = new Label();                //The start of the try block
 		final Label catchBlock = new Label();                   //The start of the catch block
@@ -22,9 +20,9 @@ public class BlockCodeGenerator implements CodeGenerator<ConsElement> {
 		final Label ifBlock = new Label();                      //If block executed if this catches someone else's excepton
 
 		// Get rid of the BLOCK symbol
-		EnhancedLinkedList<SimpleElement> restOfList = input.getElements().getAllButFirst();
-		final SymbolElement sym = (SymbolElement) restOfList.getFirst();
-		restOfList = restOfList.getAllButFirst();
+		ListStruct restOfList = input.getRest();
+		final SymbolStruct<?> sym = (SymbolStruct<?>) restOfList.getFirst();
+		restOfList = restOfList.getRest();
 
 		// ... ,
 		codeGenerator.genCodeSpecialVariable(sym);
@@ -42,7 +40,7 @@ public class BlockCodeGenerator implements CodeGenerator<ConsElement> {
 		codeGenerator.emitter.visitMethodLabel(startTryBlock);
 		while (!restOfList.equals(NullStruct.INSTANCE)) {
 			codeGenerator.icgMainLoop(restOfList.getFirst());
-			restOfList = restOfList.getAllButFirst();
+			restOfList = restOfList.getRest();
 			if (!restOfList.equals(NullStruct.INSTANCE)) {
 				codeGenerator.emitter.emitNop();
 				codeGenerator.emitter.emitPop();

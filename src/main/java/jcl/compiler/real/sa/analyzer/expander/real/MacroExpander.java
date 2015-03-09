@@ -5,12 +5,10 @@
 package jcl.compiler.real.sa.analyzer.expander.real;
 
 import jcl.LispStruct;
-import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.SimpleElement;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.functions.FunctionStruct;
 
-public abstract class MacroExpander<E extends SimpleElement> extends FunctionStruct {
+public abstract class MacroExpander<E extends LispStruct> extends FunctionStruct {
 
 	private static final long serialVersionUID = 4976821260573562104L;
 
@@ -20,5 +18,5 @@ public abstract class MacroExpander<E extends SimpleElement> extends FunctionStr
 		return null;
 	}
 
-	public abstract Element expand(E form, AnalysisBuilder analysisBuilder);
+	public abstract LispStruct expand(E form, AnalysisBuilder analysisBuilder);
 }

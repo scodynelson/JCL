@@ -4,10 +4,10 @@
 
 package jcl.compiler.real.environment.binding.lambdalist;
 
-import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.element.SymbolElement;
+import jcl.LispStruct;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.ParameterBinding;
+import jcl.symbols.SymbolStruct;
 import jcl.types.List;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -18,7 +18,7 @@ public class WholeBinding extends ParameterBinding {
 
 	private static final long serialVersionUID = 1375721535668777719L;
 
-	public WholeBinding(final SymbolElement symbolStruct, final ParameterAllocation allocation, final SimpleElement initForm) {
+	public WholeBinding(final SymbolStruct<?> symbolStruct, final ParameterAllocation allocation, final LispStruct initForm) {
 		super(symbolStruct, allocation, List.INSTANCE, initForm);
 	}
 

@@ -1,31 +1,29 @@
 package jcl.compiler.real.icg.specialoperator;
 
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.SimpleElement;
+import java.util.UUID;
+
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
+import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.SymbolStruct;
-import jcl.system.EnhancedLinkedList;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 
-import java.util.UUID;
-
-public class MultipleValueCallCodeGenerator implements CodeGenerator<ConsElement> {
+public class MultipleValueCallCodeGenerator implements CodeGenerator<ListStruct> {
 
 	public static final MultipleValueCallCodeGenerator INSTANCE = new MultipleValueCallCodeGenerator();
 
 	@Override
-	public void generate(final ConsElement input, final IntermediateCodeGenerator codeGenerator) {
+	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator) {
 
 		// evaluate the lambda, leaving an instance on the stack
-		EnhancedLinkedList<SimpleElement> restOfList = input.getElements().getAllButFirst();
+		ListStruct restOfList = input.getRest();
 		final Object fn = restOfList.getFirst();
 		codeGenerator.icgMainLoop(fn);
 
 		// now process each of the arguments, leaving them on the stack
-		restOfList = restOfList.getAllButFirst();
+		restOfList = restOfList.getRest();
 
 		// now stuff into a list. It's a bit tricky sense functions can return
 		// objects or arrays of objects. Have to check at runtime
@@ -92,7 +90,7 @@ public class MultipleValueCallCodeGenerator implements CodeGenerator<ConsElement
 			codeGenerator.emitter.emitSwap();
 			codeGenerator.emitter.emitPutfield(codeGenerator.classNames.peek(), mvcFieldName.toString(), "Llisp/common/type/ListStruct;");
 
-			restOfList = restOfList.getAllButFirst();
+			restOfList = restOfList.getRest();
 		}
 
 		// get the held value

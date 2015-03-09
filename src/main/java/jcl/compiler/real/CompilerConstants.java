@@ -4,12 +4,12 @@
 
 package jcl.compiler.real;
 
+import java.math.BigInteger;
+
 import jcl.lists.ListStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.Constant;
-
-import java.math.BigInteger;
 
 public interface CompilerConstants {
 

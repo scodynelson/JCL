@@ -4,31 +4,31 @@
 
 package jcl.compiler.real.environment.binding;
 
-import jcl.compiler.real.element.SymbolElement;
+import java.io.Serializable;
+
+import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import java.io.Serializable;
-
 public class ClosureBinding implements Serializable {
 
 	private static final long serialVersionUID = 3814280129166840828L;
 
-	private final SymbolElement symbolStruct;
+	private final SymbolStruct<?> symbolStruct;
 
 	private final int position;
 
 	private int references;
 
-	public ClosureBinding(final SymbolElement symbolStruct, final int position, final int references) {
+	public ClosureBinding(final SymbolStruct<?> symbolStruct, final int position, final int references) {
 		this.symbolStruct = symbolStruct;
 		this.position = position;
 		this.references = references;
 	}
 
-	public SymbolElement getSymbolStruct() {
+	public SymbolStruct<?> getSymbolStruct() {
 		return symbolStruct;
 	}
 

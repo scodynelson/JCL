@@ -54,37 +54,21 @@
 
 	</util:map>
 
-	<util:map id="elementPrinterStrategies"
-	          key-type="java.lang.Class"
-	          value-type="jcl.printer.impl.LispPrinter">
-
-		<entry key="jcl.compiler.real.element.CharacterElement" value-ref="characterElementPrinter"/>
-		<entry key="jcl.compiler.real.element.CommentElement" value-ref="commentElementPrinter"/>
-		<entry key="jcl.compiler.real.element.ConsElement" value-ref="consElementPrinter"/>
-		<entry key="jcl.compiler.real.element.FloatElement" value-ref="floatElementPrinter"/>
-		<entry key="jcl.compiler.real.element.IntegerElement" value-ref="integerElementPrinter"/>
-		<entry key="jcl.compiler.real.element.NullElement" value-ref="nullElementPrinter"/>
-		<entry key="jcl.compiler.real.element.RatioElement" value-ref="ratioElementPrinter"/>
-		<entry key="jcl.compiler.real.element.StringElement" value-ref="stringElementPrinter"/>
-		<entry key="jcl.compiler.real.element.SymbolElement" value-ref="symbolElementPrinter"/>
-
-	</util:map>
-
 	<!-- Semantic Analyzer -->
 
 	<util:map id="elementAnalyzerStrategies"
 	          key-type="java.lang.Class"
 	          value-type="jcl.compiler.real.sa.Analyzer">
 
-		<entry key="jcl.compiler.real.element.CharacterElement" value-ref="constantAnalyzer"/>
-		<entry key="jcl.compiler.real.element.CommentElement" value-ref="constantAnalyzer"/>
-		<entry key="jcl.compiler.real.element.ConsElement" value-ref="consAnalyzer"/>
-		<entry key="jcl.compiler.real.element.FloatElement" value-ref="constantAnalyzer"/>
-		<entry key="jcl.compiler.real.element.IntegerElement" value-ref="constantAnalyzer"/>
-		<entry key="jcl.compiler.real.element.NullElement" value-ref="constantAnalyzer"/>
-		<entry key="jcl.compiler.real.element.RatioElement" value-ref="constantAnalyzer"/>
-		<entry key="jcl.compiler.real.element.StringElement" value-ref="constantAnalyzer"/>
-		<entry key="jcl.compiler.real.element.SymbolElement" value-ref="lexicalSymbolAnalyzer"/>
+		<entry key="jcl.characters.CharacterStruct" value-ref="constantAnalyzer"/>
+		<entry key="jcl.reader.macrofunction.CommentStruct" value-ref="constantAnalyzer"/>
+		<entry key="jcl.lists.ConsStruct" value-ref="consAnalyzer"/>
+		<entry key="jcl.numbers.FloatStruct" value-ref="constantAnalyzer"/>
+		<entry key="jcl.numbers.IntegerStruct" value-ref="constantAnalyzer"/>
+		<entry key="jcl.lists.NullStruct" value-ref="constantAnalyzer"/>
+		<entry key="jcl.numbers.RatioStruct" value-ref="constantAnalyzer"/>
+		<entry key="jcl.arrays.StringStruct" value-ref="constantAnalyzer"/>
+		<entry key="jcl.symbols.SymbolStruct" value-ref="lexicalSymbolAnalyzer"/>
 
 	</util:map>
 
@@ -92,11 +76,10 @@
 	          key-type="java.lang.Class"
 	          value-type="jcl.compiler.real.sa.Analyzer">
 
-		<!-- TODO: special operators -->
 		<entry key="jcl.symbols.SpecialOperator" value-ref="functionCallExpanderAnalyzer"/>
-		<entry key="jcl.compiler.real.element.SymbolElement" value-ref="functionCallExpanderAnalyzer"/>
-		<entry key="jcl.compiler.real.element.NullElement" value-ref="constantAnalyzer"/>
-		<entry key="jcl.compiler.real.element.ConsElement" value-ref="lambdaFunctionCallAnalyzer"/>
+		<entry key="jcl.symbols.SymbolStruct" value-ref="functionCallExpanderAnalyzer"/>
+		<entry key="jcl.lists.NullStruct" value-ref="constantAnalyzer"/>
+		<entry key="jcl.lists.ConsStruct" value-ref="lambdaFunctionCallAnalyzer"/>
 
 	</util:map>
 
@@ -104,9 +87,8 @@
 	          key-type="java.lang.Class"
 	          value-type="jcl.compiler.real.sa.analyzer.FunctionCallAnalyzer">
 
-		<!-- TODO: special operators -->
 		<entry key="jcl.symbols.SpecialOperator" value-ref="specialOperatorFunctionCallAnalyzer"/>
-		<entry key="jcl.compiler.real.element.SymbolElement" value-ref="symbolFunctionCallAnalyzer"/>
+		<entry key="jcl.symbols.SymbolStruct" value-ref="symbolFunctionCallAnalyzer"/>
 
 	</util:map>
 
@@ -148,10 +130,10 @@
 
 	<util:map id="goElementGeneratorStrategies"
 	          key-type="java.lang.Class"
-	          value-type="jcl.compiler.real.element.specialoperator.go.GoElementGenerator">
+	          value-type="jcl.compiler.real.struct.specialoperator.go.GoStructGenerator">
 
-		<entry key="jcl.symbols.SymbolStruct" value-ref="goSymbolElementGenerator"/>
-		<entry key="jcl.numbers.IntegerStruct" value-ref="goIntegerElementGenerator"/>
+		<entry key="jcl.symbols.SymbolStruct" value-ref="goSymbolStructGenerator"/>
+		<entry key="jcl.numbers.IntegerStruct" value-ref="goIntegerStructGenerator"/>
 	</util:map>
 
 </beans>

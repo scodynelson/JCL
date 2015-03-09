@@ -4,14 +4,13 @@
 
 package jcl.compiler.real.sa;
 
-import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.SimpleElement;
-
 import java.io.Serializable;
+
+import jcl.LispStruct;
 
 public interface SemanticAnalyzer extends Serializable {
 
-	Element analyzeForm(final SimpleElement form);
+	LispStruct analyzeForm(final LispStruct form);
 
-	Element analyzeForm(final SimpleElement form, final AnalysisBuilder analysisBuilder);
+	LispStruct analyzeForm(final LispStruct form, final AnalysisBuilder analysisBuilder);
 }

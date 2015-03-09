@@ -1,15 +1,12 @@
 package jcl.compiler.real.icg.specialoperator;
 
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.SimpleElement;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
-import jcl.system.EnhancedLinkedList;
 import org.objectweb.asm.Label;
 
-public class UnwindProtectCodeGenerator implements CodeGenerator<ConsElement> {
+public class UnwindProtectCodeGenerator implements CodeGenerator<ListStruct> {
 
 	/**
 	 * Transfer of Control Sequence for unwind-protect.
@@ -30,14 +27,14 @@ public class UnwindProtectCodeGenerator implements CodeGenerator<ConsElement> {
 	public static final UnwindProtectCodeGenerator INSTANCE = new UnwindProtectCodeGenerator();
 
 	@Override
-	public void generate(final ConsElement input, final IntermediateCodeGenerator codeGenerator) {
+	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator) {
 
 		// Burn off the special symbol (UNWIND-PROTECT)
-		final EnhancedLinkedList<SimpleElement> restOfList = input.getElements().getAllButFirst();
+		final ListStruct restOfList = input.getRest();
 
 		//Get the protected form and the cleanup form(s) after the UNWIND-PROTECT symbol
 		final ListStruct protectedForm = (ListStruct) restOfList.getFirst();                //The protected form
-		EnhancedLinkedList<SimpleElement> cleanupForm = restOfList.getAllButFirst();                  //The cleanup form
+		ListStruct cleanupForm = restOfList.getRest();                  //The cleanup form
 
 		//Create the exception table
 		final Label startTryBlock = new Label();               //The start of the try block
@@ -80,7 +77,7 @@ public class UnwindProtectCodeGenerator implements CodeGenerator<ConsElement> {
 		//Evalute the cleanup form
 		while (!cleanupForm.equals(NullStruct.INSTANCE)) {
 			codeGenerator.icgMainLoop(cleanupForm.getFirst());
-			cleanupForm = cleanupForm.getAllButFirst();
+			cleanupForm = cleanupForm.getRest();
 			codeGenerator.emitter.emitPop();
 		}
 

@@ -4,14 +4,14 @@
 
 package jcl.compiler.real.struct.specialoperator.declare;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jcl.LispStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class DeclareStruct implements LispStruct {
 

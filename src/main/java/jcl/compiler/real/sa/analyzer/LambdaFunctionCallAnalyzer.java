@@ -4,25 +4,23 @@
 
 package jcl.compiler.real.sa.analyzer;
 
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.element.SpecialOperatorElement;
-import jcl.compiler.real.element.functioncall.LambdaFunctionCallElement;
-import jcl.compiler.real.element.specialoperator.lambda.LambdaElement;
+import java.util.ArrayList;
+import java.util.List;
+
+import jcl.LispStruct;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.lambda.LambdaAnalyzer;
+import jcl.compiler.real.struct.functioncall.LambdaFunctionCallStruct;
+import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
-import jcl.system.EnhancedLinkedList;
+import jcl.lists.ListStruct;
+import jcl.symbols.SpecialOperator;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class LambdaFunctionCallAnalyzer extends FunctionCallAnalyzer {
@@ -33,38 +31,34 @@ public class LambdaFunctionCallAnalyzer extends FunctionCallAnalyzer {
 	private LambdaAnalyzer lambdaAnalyzer;
 
 	@Override
-	public LambdaFunctionCallElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
-
-		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
+	public LambdaFunctionCallStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
 		// ex ((lambda (x) (+ x 1)) 3)
-		final ConsElement functionList = (ConsElement) elements.getFirst();
+		final ListStruct functionList = (ListStruct) input.getFirst();
 
-		final EnhancedLinkedList<SimpleElement> functionListElements = input.getElements();
+		final LispStruct functionListFirst = functionList.getFirst();
 
-		final SimpleElement functionListFirst = functionListElements.getFirst();
-
-		if (!functionListFirst.equals(SpecialOperatorElement.LAMBDA)) {
+		if (!functionListFirst.equals(SpecialOperator.LAMBDA)) {
 			throw new ProgramErrorException("LIST ANALYZER: First element of a first element ListStruct must be the SpecialOperator 'LAMBDA'. Got: " + functionListFirst);
 		}
 
-		final LambdaElement lambdaAnalyzed = lambdaAnalyzer.analyze(functionList, analysisBuilder);
+		final LambdaStruct lambdaAnalyzed = lambdaAnalyzer.analyze(functionList, analysisBuilder);
 		final OrdinaryLambdaListBindings lambdaListBindings = lambdaAnalyzed.getLambdaListBindings();
 
-		final List<SimpleElement> functionArguments = elements.getAllButFirst();
+		final List<LispStruct> functionArguments = input.getRest().getAsJavaList();
 
 		validateFunctionArguments("Anonymous Lambda", lambdaListBindings, functionArguments);
 
-		final List<Element> analyzedFunctionArguments = new ArrayList<>(functionArguments.size());
+		final List<LispStruct> analyzedFunctionArguments = new ArrayList<>(functionArguments.size());
 
 		final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
-		for (final SimpleElement functionArgument : functionArguments) {
-			final Element analyzedFunctionArgument = analyzer.analyzeForm(functionArgument, analysisBuilder);
+		for (final LispStruct functionArgument : functionArguments) {
+			final LispStruct analyzedFunctionArgument = analyzer.analyzeForm(functionArgument, analysisBuilder);
 			analyzedFunctionArguments.add(analyzedFunctionArgument);
 		}
 
-		return new LambdaFunctionCallElement(lambdaAnalyzed, analyzedFunctionArguments);
+		return new LambdaFunctionCallStruct(lambdaAnalyzed, analyzedFunctionArguments);
 	}
 
 	@Override

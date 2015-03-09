@@ -1,26 +1,25 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.element.SpecialOperatorElement;
-import jcl.compiler.real.element.StringElement;
-import jcl.compiler.real.element.SymbolElement;
-import jcl.compiler.real.element.specialoperator.QuoteElement;
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.PostConstruct;
+
+import jcl.LispStruct;
+import jcl.arrays.StringStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
+import jcl.compiler.real.struct.specialoperator.QuoteStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
-import jcl.packages.GlobalPackageStruct;
+import jcl.lists.ListStruct;
+import jcl.packages.PackageStruct;
 import jcl.symbols.SpecialOperator;
-import jcl.system.EnhancedLinkedList;
+import jcl.symbols.SymbolStruct;
+import jcl.system.CommonLispSymbols;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import java.util.List;
 
 @Component
 public class QuoteAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
@@ -39,84 +38,80 @@ public class QuoteAnalyzer extends MacroFunctionExpander implements SpecialOpera
 	}
 
 	@Override
-	public Element expand(final ConsElement form, final AnalysisBuilder analysisBuilder) {
+	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 		return analyze(form, analysisBuilder);
 	}
 
 	@Override
-	public QuoteElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public QuoteStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
-		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
-
-		final int inputSize = elements.size();
+		final int inputSize = input.size();
 		if (inputSize != 2) {
 			throw new ProgramErrorException("QUOTE: Incorrect number of arguments: " + inputSize + ". Expected 2 arguments.");
 		}
 
-		final EnhancedLinkedList<SimpleElement> inputRest = elements.getAllButFirst();
+		final ListStruct inputRest = input.getRest();
 
-		final SimpleElement quotedObject = inputRest.getFirst();
+		final LispStruct quotedObject = inputRest.getFirst();
 
-		ConsElement analyzedElement = null;
-		if (quotedObject instanceof SymbolElement) {
-			analyzedElement = analyzeQuoteSymbol((SymbolElement) quotedObject);
-		} else if (quotedObject instanceof ConsElement) {
-			analyzedElement = analyzeQuoteList((ConsElement) quotedObject);
+		ListStruct analyzedElement = null;
+		if (quotedObject instanceof SymbolStruct) {
+			analyzedElement = analyzeQuoteSymbol((SymbolStruct<?>) quotedObject);
+		} else if (quotedObject instanceof ListStruct) {
+			analyzedElement = analyzeQuoteList((ListStruct) quotedObject);
 		}
 
-		final Element element;
+		final LispStruct element;
 
 		if (analyzedElement == null) {
 			final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 			element = analyzer.analyzeForm(quotedObject);
 		} else {
 			// If was ListStruct or SymbolStruct, wrap resulting form in Load-Time-Value.
-			final ConsElement loadTimeValueForm = new ConsElement(SpecialOperatorElement.LOAD_TIME_VALUE, analyzedElement);
+			final ListStruct loadTimeValueForm = ListStruct.buildProperList(SpecialOperator.LOAD_TIME_VALUE, analyzedElement);
 			element = loadTimeValueAnalyzer.analyze(loadTimeValueForm, analysisBuilder);
 		}
 
-		return new QuoteElement(element);
+		return new QuoteStruct(element);
 	}
 
-	private static ConsElement analyzeQuoteList(final ConsElement element) {
-		final SymbolElement listFnSym;
+	private static ListStruct analyzeQuoteList(final ListStruct element) {
+		final SymbolStruct<?> listFnSym;
 		if (element.isDotted()) {
-			listFnSym = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "LIST*");
+			listFnSym = CommonLispSymbols.LIST_STAR;
 		} else {
-			listFnSym = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "LIST");
+			listFnSym = CommonLispSymbols.LIST;
 		}
 
-		final List<? extends SimpleElement> formJavaList = element.getElements();
+		final List<? extends LispStruct> formJavaList = element.getAsJavaList();
 
-		final EnhancedLinkedList<SimpleElement> transformedListForms = new EnhancedLinkedList<>();
+		final List<LispStruct> transformedListForms = new ArrayList<>();
 		transformedListForms.add(listFnSym);
 		transformedListForms.addAll(formJavaList);
 
-		return new ConsElement(transformedListForms);
+		return ListStruct.buildProperList(transformedListForms);
 	}
 
-	private static ConsElement analyzeQuoteSymbol(final SymbolElement element) {
-		final String symbolFunctionString;
+	private static ListStruct analyzeQuoteSymbol(final SymbolStruct<?> element) {
+		final SymbolStruct<?> symbolFnSym;
 		final String symbolNameString;
 
-		// TODO: need to review this a bit...
-		final String symbolPackage = element.getPackageName();
+		final PackageStruct symbolPackage = element.getSymbolPackage();
 		if (symbolPackage != null) {
-			symbolFunctionString = "FIND-SYMBOL";
-			symbolNameString = symbolPackage;
+			symbolFnSym = CommonLispSymbols.FIND_SYMBOL;
+			symbolNameString = symbolPackage.getName();
 		} else {
-			symbolFunctionString = "MAKE-SYMBOL";
-			symbolNameString = element.getSymbolName();
+			symbolFnSym = CommonLispSymbols.MAKE_SYMBOL;
+			symbolNameString = element.getName();
 		}
 
-		final SymbolElement symbolFnSym = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), symbolFunctionString);
-		final StringElement symbolNameStringStruct = new StringElement(symbolNameString);
+		final StringStruct symbolNameStringStruct = new StringStruct(symbolNameString);
 
-		final EnhancedLinkedList<SimpleElement> symbolQuoteList = new EnhancedLinkedList<>();
+		final List<LispStruct> symbolQuoteList = new ArrayList<>();
 		symbolQuoteList.add(symbolFnSym);
 		symbolQuoteList.add(symbolNameStringStruct);
 
-		return new ConsElement(symbolQuoteList);
+		return ListStruct.buildProperList(symbolQuoteList);
 	}
 
 	@Override

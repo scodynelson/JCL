@@ -1,12 +1,10 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.element.SymbolElement;
-import jcl.compiler.real.element.specialoperator.ImmutableLoadTimeValueElement;
-import jcl.compiler.real.element.specialoperator.LoadTimeValueElement;
-import jcl.compiler.real.element.specialoperator.MutableLoadTimeValueElement;
+import java.util.List;
+import java.util.UUID;
+import javax.annotation.PostConstruct;
+
+import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
@@ -14,16 +12,15 @@ import jcl.compiler.real.environment.LoadTimeValue;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
+import jcl.compiler.real.struct.specialoperator.ImmutableLoadTimeValueStruct;
+import jcl.compiler.real.struct.specialoperator.LoadTimeValueStruct;
+import jcl.compiler.real.struct.specialoperator.MutableLoadTimeValueStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
-import jcl.packages.GlobalPackageStruct;
+import jcl.lists.ListStruct;
 import jcl.symbols.BooleanStruct;
 import jcl.symbols.SpecialOperator;
-import jcl.system.EnhancedLinkedList;
+import jcl.system.CommonLispSymbols;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import java.util.List;
-import java.util.UUID;
 
 @Component
 public class LoadTimeValueAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
@@ -39,35 +36,31 @@ public class LoadTimeValueAnalyzer extends MacroFunctionExpander implements Spec
 	}
 
 	@Override
-	public Element expand(final ConsElement form, final AnalysisBuilder analysisBuilder) {
+	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 		return analyze(form, analysisBuilder);
 	}
 
 	@Override
-	public LoadTimeValueElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public LoadTimeValueStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
-		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
-
-		final int inputSize = elements.size();
+		final int inputSize = input.size();
 		if ((inputSize < 2) || (inputSize > 3)) {
 			throw new ProgramErrorException("LOAD-TIME-VALUE: Incorrect number of arguments: " + inputSize + ". Expected either 2 or 3 arguments.");
 		}
 
-		final EnhancedLinkedList<SimpleElement> inputRest = elements.getAllButFirst();
-		final EnhancedLinkedList<SimpleElement> inputRestRest = inputRest.getAllButFirst();
+		final ListStruct inputRest = input.getRest();
+		final ListStruct inputRestRest = inputRest.getRest();
 
-		final SimpleElement third = inputRestRest.getFirst();
-		if (!(third instanceof BooleanStruct)) { // TODO: fix
+		final LispStruct third = inputRestRest.getFirst();
+		if (!(third instanceof BooleanStruct)) {
 			throw new ProgramErrorException("LOAD-TIME-VALUE: Read-Only-P value must be of type BooleanStruct. Got: " + third);
 		}
 
 		final BooleanStruct readOnlyP = (BooleanStruct) third;
 		final boolean isReadOnly = readOnlyP.booleanValue();
 
-		final SimpleElement form = inputRest.getFirst();
-
-		final SymbolElement evalFnSym = new SymbolElement(GlobalPackageStruct.COMMON_LISP.getName(), "EVAL");
-		final ConsElement evalForm = new ConsElement(evalFnSym, form);
+		final LispStruct form = inputRest.getFirst();
+		final ListStruct evalForm = ListStruct.buildProperList(CommonLispSymbols.EVAL, form);
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment currentEnvironment = environmentStack.peek();
@@ -85,7 +78,7 @@ public class LoadTimeValueAnalyzer extends MacroFunctionExpander implements Spec
 
 			final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
-			final Element analyzedEvalForm = analyzer.analyzeForm(evalForm, analysisBuilder);
+			final LispStruct analyzedEvalForm = analyzer.analyzeForm(evalForm, analysisBuilder);
 
 			if (isReadOnly) {
 				final UUID uniqueLTVId = UUID.randomUUID();
@@ -96,9 +89,9 @@ public class LoadTimeValueAnalyzer extends MacroFunctionExpander implements Spec
 				final LoadTimeValue newLoadTimeValue = new LoadTimeValue(uniqueLTVId, analyzedEvalForm);
 				currentLoadTimeValues.add(newLoadTimeValue);
 
-				return new ImmutableLoadTimeValueElement(uniqueLTVId);
+				return new ImmutableLoadTimeValueStruct(uniqueLTVId);
 			} else {
-				return new MutableLoadTimeValueElement(analyzedEvalForm);
+				return new MutableLoadTimeValueStruct(analyzedEvalForm);
 			}
 		} finally {
 			analysisBuilder.setClosureDepth(tempClosureDepth);

@@ -1,21 +1,19 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.element.SymbolElement;
-import jcl.compiler.real.element.specialoperator.SetqElement;
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.PostConstruct;
+
+import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
+import jcl.compiler.real.struct.specialoperator.SetqStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
-import jcl.system.EnhancedLinkedList;
+import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class SetqAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
@@ -31,41 +29,39 @@ public class SetqAnalyzer extends MacroFunctionExpander implements SpecialOperat
 	}
 
 	@Override
-	public Element expand(final ConsElement form, final AnalysisBuilder analysisBuilder) {
+	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 		return analyze(form, analysisBuilder);
 	}
 
 	@Override
-	public SetqElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public SetqStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
-		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
-
-		final EnhancedLinkedList<SimpleElement> forms = elements.getAllButFirst();
+		final List<LispStruct> forms = input.getRest().getAsJavaList();
 
 		final int numberOfForms = forms.size();
 		if ((numberOfForms % 2) != 0) {
 			throw new ProgramErrorException("SETQ: Odd number of arguments received: " + input + ". Expected an even number of arguments.");
 		}
 
-		final List<SetqElement.SetqPair> setqPairs = new ArrayList<>(numberOfForms / 2);
+		final List<SetqStruct.SetqPair> setqPairs = new ArrayList<>(numberOfForms / 2);
 
 		for (int index = 0; index < forms.size(); index += 2) {
 
-			final SimpleElement var = forms.get(index);
-			if (!(var instanceof SymbolElement)) {
+			final LispStruct var = forms.get(index);
+			if (!(var instanceof SymbolStruct)) {
 				throw new ProgramErrorException("SETQ: Variable must be of type SymbolStruct. Got: " + var);
 			}
-			final SymbolElement varSymbol = (SymbolElement) var;
+			final SymbolStruct<?> varSymbol = (SymbolStruct<?>) var;
 
 			final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
-			final SimpleElement form = forms.get(index + 1);
-			final Element formAnalyzed = analyzer.analyzeForm(form, analysisBuilder);
+			final LispStruct form = forms.get(index + 1);
+			final LispStruct formAnalyzed = analyzer.analyzeForm(form, analysisBuilder);
 
-			final SetqElement.SetqPair setqPair = new SetqElement.SetqPair(varSymbol, formAnalyzed);
+			final SetqStruct.SetqPair setqPair = new SetqStruct.SetqPair(varSymbol, formAnalyzed);
 			setqPairs.add(setqPair);
 		}
 
-		return new SetqElement(setqPairs);
+		return new SetqStruct(setqPairs);
 	}
 }

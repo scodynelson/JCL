@@ -1,20 +1,17 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.ListElement;
-import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.element.SymbolElement;
-import jcl.compiler.real.element.specialoperator.TheElement;
+import javax.annotation.PostConstruct;
+
+import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
+import jcl.compiler.real.struct.specialoperator.TheStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
-import jcl.system.EnhancedLinkedList;
+import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
 
 @Component
 public class TheAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
@@ -30,35 +27,33 @@ public class TheAnalyzer extends MacroFunctionExpander implements SpecialOperato
 	}
 
 	@Override
-	public Element expand(final ConsElement form, final AnalysisBuilder analysisBuilder) {
+	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 		return analyze(form, analysisBuilder);
 	}
 
 	@Override
-	public TheElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public TheStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
-		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
-
-		final int inputSize = elements.size();
+		final int inputSize = input.size();
 		if (inputSize != 3) {
 			throw new ProgramErrorException("THE: Incorrect number of arguments: " + inputSize + ". Expected 3 arguments.");
 		}
 
-		final EnhancedLinkedList<SimpleElement> inputRest = elements.getAllButFirst();
+		final ListStruct inputRest = input.getRest();
 
-		final SimpleElement valueType = inputRest.getFirst();
-		if (!(valueType instanceof SymbolElement) && !(valueType instanceof ListElement)) {
+		final LispStruct valueType = inputRest.getFirst();
+		if (!(valueType instanceof SymbolStruct) && !(valueType instanceof ListStruct)) {
 			throw new ProgramErrorException("THE: Type specifier must be of type SymbolStruct or ListStruct. Got: " + valueType);
 		}
 		// TODO: do we actually want to somehow factor in the 'TypeSpecifier' produced by the second value?
 
-		final EnhancedLinkedList<SimpleElement> inputRestRest = inputRest.getAllButFirst();
+		final ListStruct inputRestRest = inputRest.getRest();
 
 		final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
-		final SimpleElement form = inputRestRest.getFirst();
-		final Element formAnalyzed = analyzer.analyzeForm(form, analysisBuilder);
+		final LispStruct form = inputRestRest.getFirst();
+		final LispStruct formAnalyzed = analyzer.analyzeForm(form, analysisBuilder);
 
-		return new TheElement(null, formAnalyzed);
+		return new TheStruct(null, formAnalyzed);
 	}
 }

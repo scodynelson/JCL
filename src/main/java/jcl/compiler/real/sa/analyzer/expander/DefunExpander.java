@@ -1,13 +1,13 @@
 package jcl.compiler.real.sa.analyzer.expander;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jcl.LispStruct;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class DefunExpander implements MacroFunctionExpander {
 

@@ -4,19 +4,19 @@
 
 package jcl.compiler.real.sa;
 
-import jcl.compiler.real.element.SymbolElement;
-import jcl.compiler.real.element.specialoperator.go.GoElement;
-import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.EnvironmentStack;
-import jcl.compiler.real.environment.LambdaEnvironment;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
+
+import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.EnvironmentStack;
+import jcl.compiler.real.environment.LambdaEnvironment;
+import jcl.compiler.real.struct.specialoperator.go.GoStruct;
+import jcl.symbols.SymbolStruct;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class AnalysisBuilder implements Serializable {
 
@@ -26,13 +26,13 @@ public class AnalysisBuilder implements Serializable {
 
 	private final EnvironmentStack environmentStack = new EnvironmentStack();
 
-	private final Stack<SymbolElement> functionNameStack = new Stack<>();
+	private final Stack<SymbolStruct<?>> functionNameStack = new Stack<>();
 
-	private final Set<SymbolElement> undefinedFunctions = Collections.synchronizedSet(new HashSet<>());
+	private final Set<SymbolStruct<?>> undefinedFunctions = Collections.synchronizedSet(new HashSet<>());
 
-	private final Stack<SymbolElement> blockStack = new Stack<>();
+	private final Stack<SymbolStruct<?>> blockStack = new Stack<>();
 
-	private final Stack<Set<GoElement<?>>> tagbodyStack = new Stack<>();
+	private final Stack<Set<GoStruct<?>>> tagbodyStack = new Stack<>();
 
 	private int bindingsPosition;
 
@@ -62,11 +62,11 @@ public class AnalysisBuilder implements Serializable {
 		return environmentStack;
 	}
 
-	public Stack<SymbolElement> getFunctionNameStack() {
+	public Stack<SymbolStruct<?>> getFunctionNameStack() {
 		return functionNameStack;
 	}
 
-	public Set<SymbolElement> getUndefinedFunctions() {
+	public Set<SymbolStruct<?>> getUndefinedFunctions() {
 		return undefinedFunctions;
 	}
 
@@ -86,11 +86,11 @@ public class AnalysisBuilder implements Serializable {
 		this.closureDepth = closureDepth;
 	}
 
-	public Stack<SymbolElement> getBlockStack() {
+	public Stack<SymbolStruct<?>> getBlockStack() {
 		return blockStack;
 	}
 
-	public Stack<Set<GoElement<?>>> getTagbodyStack() {
+	public Stack<Set<GoStruct<?>>> getTagbodyStack() {
 		return tagbodyStack;
 	}
 

@@ -4,12 +4,12 @@
 
 package jcl.compiler.real.struct.specialoperator;
 
+import java.util.UUID;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.util.UUID;
 
 public class ImmutableLoadTimeValueStruct implements LoadTimeValueStruct {
 

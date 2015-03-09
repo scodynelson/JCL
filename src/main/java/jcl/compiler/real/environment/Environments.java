@@ -4,14 +4,14 @@
 
 package jcl.compiler.real.environment;
 
-import jcl.compiler.real.element.SymbolElement;
+import jcl.symbols.SymbolStruct;
 
 public final class Environments {
 
 	private Environments() {
 	}
 
-	public static Environment getDynamicBindingEnvironment(final Environment environment, final SymbolElement var) {
+	public static Environment getDynamicBindingEnvironment(final Environment environment, final SymbolStruct<?> var) {
 
 		Environment currentEnvironment = environment;
 
@@ -28,7 +28,7 @@ public final class Environments {
 		return currentEnvironment;
 	}
 
-	public static Environment getInnerFunctionLexicalBindingEnvironment(final Environment environment, final SymbolElement variable) {
+	public static Environment getInnerFunctionLexicalBindingEnvironment(final Environment environment, final SymbolStruct<?> variable) {
 
 		Environment currentEnvironment = environment;
 
@@ -48,7 +48,7 @@ public final class Environments {
 		return currentEnvironment;
 	}
 
-	public static Environment getFunctionLexicalBindingEnvironment(final Environment environment, final SymbolElement variable) {
+	public static Environment getFunctionLexicalBindingEnvironment(final Environment environment, final SymbolStruct<?> variable) {
 
 		Environment currentEnvironment = environment;
 
@@ -68,7 +68,7 @@ public final class Environments {
 		return currentEnvironment;
 	}
 
-	public static BindingEnvironment getDynamicBindingBindingEnvironment(final Environment environment, final SymbolElement variable) {
+	public static BindingEnvironment getDynamicBindingBindingEnvironment(final Environment environment, final SymbolStruct<?> variable) {
 
 		Environment currentEnvironment = environment;
 
@@ -89,7 +89,7 @@ public final class Environments {
 		return (BindingEnvironment) currentEnvironment;
 	}
 
-	public static BindingEnvironment getLexicalBindingBindingEnvironment(final Environment environment, final SymbolElement variable) {
+	public static BindingEnvironment getLexicalBindingBindingEnvironment(final Environment environment, final SymbolStruct<?> variable) {
 
 		Environment currentEnvironment = environment;
 
@@ -122,7 +122,7 @@ public final class Environments {
 		return (LambdaEnvironment) currentEnvironment;
 	}
 
-	public static boolean hasFunctionBinding(final Environment environment, final SymbolElement variable) {
+	public static boolean hasFunctionBinding(final Environment environment, final SymbolStruct<?> variable) {
 
 		Environment currentEnvironment = environment;
 

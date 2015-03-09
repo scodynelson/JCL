@@ -4,9 +4,9 @@
 
 package jcl.compiler.real.sa.analyzer.expander.real;
 
-import jcl.compiler.real.element.ConsElement;
+import jcl.lists.ListStruct;
 
-public abstract class MacroFunctionExpander extends MacroExpander<ConsElement> {
+public abstract class MacroFunctionExpander extends MacroExpander<ListStruct> {
 
 	private static final long serialVersionUID = -4041262906159677088L;
 }

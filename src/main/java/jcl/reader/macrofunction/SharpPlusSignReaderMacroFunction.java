@@ -9,7 +9,6 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
-import jcl.compiler.real.element.SimpleElement;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -30,7 +29,7 @@ public class SharpPlusSignReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	/**
 	 * {@link Autowired} {@link FeaturesReaderMacroFunction} used for reading features and either reading or
-	 * suppressing the following {@link SimpleElement}s based on whether or not the feature is present.
+	 * suppressing the following {@link LispStruct}s based on whether or not the feature is present.
 	 */
 	@Autowired
 	private FeaturesReaderMacroFunction featuresReaderMacroFunction;

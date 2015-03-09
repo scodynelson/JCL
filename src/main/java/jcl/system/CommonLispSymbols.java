@@ -456,7 +456,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> FIND_METHOD = null;
 	SymbolStruct<?> FIND_PACKAGE = null;
 	SymbolStruct<?> FIND_RESTART = null;
-	SymbolStruct<?> FIND_SYMBOL = null;
+	SymbolStruct<?> FIND_SYMBOL = new SymbolStruct<>("FIND-SYMBOL", GlobalPackageStruct.COMMON_LISP);
 	SymbolStruct<?> FINISH_OUTPUT = null;
 	SymbolStruct<?> FIRST = null;
 	SymbolStruct<?> FIXNUM = null;
@@ -608,7 +608,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> MAKE_STRING = null;
 	SymbolStruct<?> MAKE_STRING_INPUT_STREAM = null;
 	SymbolStruct<?> MAKE_STRING_OUTPUT_STREAM = null;
-	SymbolStruct<?> MAKE_SYMBOL = null;
+	SymbolStruct<?> MAKE_SYMBOL = new SymbolStruct<>("MAKE-SYMBOL", GlobalPackageStruct.COMMON_LISP);
 	SymbolStruct<?> MAKE_SYNONYM_STREAM = null;
 	SymbolStruct<?> MAKE_TWO_WAY_STREAM = null;
 	SymbolStruct<?> MAKUNBOUND = null;

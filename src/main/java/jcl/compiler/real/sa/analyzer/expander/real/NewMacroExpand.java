@@ -4,33 +4,31 @@
 
 package jcl.compiler.real.sa.analyzer.expander.real;
 
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.element.SymbolElement;
+import java.util.Optional;
+
+import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
+import jcl.lists.ListStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageSymbolStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 @Component
 public class NewMacroExpand {
 
-	public NewMacroExpandReturn macroExpand(final Element element, final AnalysisBuilder analysisBuilder) {
+	public NewMacroExpandReturn macroExpand(final LispStruct element, final AnalysisBuilder analysisBuilder) {
 		NewMacroExpandReturn expansion;
 
-		if (element instanceof ConsElement) {
-			expansion = macroExpand1((ConsElement) element, analysisBuilder);
-		} else if (element instanceof SymbolElement) {
-			expansion = macroExpand1((SymbolElement) element, analysisBuilder);
+		if (element instanceof ListStruct) {
+			expansion = macroExpand1((ListStruct) element, analysisBuilder);
+		} else if (element instanceof SymbolStruct) {
+			expansion = macroExpand1((SymbolStruct<?>) element, analysisBuilder);
 		} else {
 			expansion = new NewMacroExpandReturn(element, false);
 		}
 
-		Element expandedForm = expansion.getExpandedForm();
+		LispStruct expandedForm = expansion.getExpandedForm();
 		boolean wasExpanded = expansion.wasExpanded();
 
 		while (wasExpanded) {
@@ -45,19 +43,19 @@ public class NewMacroExpand {
 
 	// MacroExpand1
 
-	public NewMacroExpandReturn macroExpand1(final ConsElement form, final AnalysisBuilder analysisBuilder) {
+	public NewMacroExpandReturn macroExpand1(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 
-		final SimpleElement first = form.getElements().getFirst();
-		if (first instanceof SymbolElement) {
+		final LispStruct first = form.getFirst();
+		if (first instanceof SymbolStruct<?>) {
 
-			final Optional<SymbolStruct<?>> symbolStruct = getSymbolStruct((SymbolElement) first);
+			final Optional<SymbolStruct<?>> symbolStruct = getSymbolStruct((SymbolStruct<?>) first);
 			if (symbolStruct.isPresent()) {
 				final SymbolStruct<?> theSymbol = symbolStruct.get();
 
 				final MacroFunctionExpander macroFunctionExpander = theSymbol.getMacroFunctionExpander();
 
 				if (macroFunctionExpander != null) {
-					final Element expansion = macroFunctionExpander.expand(form, analysisBuilder);
+					final LispStruct expansion = macroFunctionExpander.expand(form, analysisBuilder);
 					return new NewMacroExpandReturn(expansion, true);
 				}
 				// TODO: support compiler-macro-functions
@@ -67,7 +65,7 @@ public class NewMacroExpand {
 		return new NewMacroExpandReturn(form, false);
 	}
 
-	public NewMacroExpandReturn macroExpand1(final SymbolElement form, final AnalysisBuilder analysisBuilder) {
+	public NewMacroExpandReturn macroExpand1(final SymbolStruct<?> form, final AnalysisBuilder analysisBuilder) {
 
 		final Optional<SymbolStruct<?>> symbolStruct = getSymbolStruct(form);
 		if (symbolStruct.isPresent()) {
@@ -76,7 +74,7 @@ public class NewMacroExpand {
 			final SymbolMacroExpander symbolMacroExpander = theSymbol.getSymbolMacroExpander();
 
 			if (symbolMacroExpander != null) {
-				final Element expansion = symbolMacroExpander.expand(form, analysisBuilder);
+				final LispStruct expansion = symbolMacroExpander.expand(form, analysisBuilder);
 				return new NewMacroExpandReturn(expansion, true);
 			}
 		}
@@ -84,20 +82,16 @@ public class NewMacroExpand {
 		return new NewMacroExpandReturn(form, false);
 	}
 
-	private Optional<SymbolStruct<?>> getSymbolStruct(final SymbolElement symbolElement) {
-		final String packageName = symbolElement.getPackageName();
-		if (packageName != null) {
+	private Optional<SymbolStruct<?>> getSymbolStruct(final SymbolStruct<?> symbolElement) {
+		final PackageStruct thePackage = symbolElement.getSymbolPackage();
+		if (thePackage != null) {
 
-			final PackageStruct thePackage = PackageStruct.findPackage(packageName);
-			if (thePackage != null) {
+			final String symbolName = symbolElement.getName();
+			final PackageSymbolStruct thePackageSymbol = thePackage.findSymbol(symbolName);
 
-				final String symbolName = symbolElement.getSymbolName();
-				final PackageSymbolStruct thePackageSymbol = thePackage.findSymbol(symbolName);
-
-				if (thePackageSymbol != null) {
-					final SymbolStruct<?> theSymbol = thePackageSymbol.getSymbolStruct();
-					return Optional.ofNullable(theSymbol);
-				}
+			if (thePackageSymbol != null) {
+				final SymbolStruct<?> theSymbol = thePackageSymbol.getSymbolStruct();
+				return Optional.ofNullable(theSymbol);
 			}
 		}
 

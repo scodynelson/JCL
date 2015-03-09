@@ -1,24 +1,5 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.IntegerElement;
-import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.element.SymbolElement;
-import jcl.compiler.real.element.specialoperator.TagbodyElement;
-import jcl.compiler.real.element.specialoperator.go.GoElement;
-import jcl.compiler.real.element.specialoperator.go.GoElementGenerator;
-import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
-import jcl.symbols.SpecialOperator;
-import jcl.system.EnhancedLinkedList;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -33,6 +14,24 @@ import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+
+import jcl.LispStruct;
+import jcl.compiler.real.sa.AnalysisBuilder;
+import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
+import jcl.compiler.real.struct.specialoperator.TagbodyStruct;
+import jcl.compiler.real.struct.specialoperator.go.GoStruct;
+import jcl.compiler.real.struct.specialoperator.go.GoStructGenerator;
+import jcl.lists.ConsStruct;
+import jcl.lists.ListStruct;
+import jcl.numbers.IntegerStruct;
+import jcl.symbols.SpecialOperator;
+import jcl.symbols.SymbolStruct;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.stereotype.Component;
 
 @Component
 public class TagbodyAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
@@ -40,7 +39,7 @@ public class TagbodyAnalyzer extends MacroFunctionExpander implements SpecialOpe
 	private static final long serialVersionUID = -1543233114989622747L;
 
 	@Resource
-	private Map<Class<? extends SimpleElement>, GoElementGenerator<SimpleElement>> goElementGeneratorStrategies;
+	private Map<Class<? extends LispStruct>, GoStructGenerator<LispStruct>> goElementGeneratorStrategies;
 
 	/**
 	 * Initializes the block macro function and adds it to the special operator 'block'.
@@ -51,18 +50,17 @@ public class TagbodyAnalyzer extends MacroFunctionExpander implements SpecialOpe
 	}
 
 	@Override
-	public Element expand(final ConsElement form, final AnalysisBuilder analysisBuilder) {
+	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 		return analyze(form, analysisBuilder);
 	}
 
 	@Override
-	public TagbodyElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public TagbodyStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
-		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
+		ListStruct body = input.getRest();
+		List<LispStruct> bodyAsJavaList = body.getAsJavaList();
 
-		final EnhancedLinkedList<SimpleElement> body = elements.getAllButFirst();
-
-		final Set<GoElement<?>> currentTagSet = body.stream()
+		final Set<GoStruct<?>> currentTagSet = bodyAsJavaList.stream()
 		                                            .collect(new TagbodyInitialTagCollector());
 
 		analysisBuilder.getTagbodyStack().push(currentTagSet);
@@ -70,49 +68,47 @@ public class TagbodyAnalyzer extends MacroFunctionExpander implements SpecialOpe
 		// If the first element is not a 'tag', we have a default form set. Therefore, we are going to generate a
 		// temporary 'tag' for this form set.
 		if (!isTagbodyTag(body.getFirst())) {
-			final SymbolElement defaultFormsTag = new SymbolElement(null, "Tag" + UUID.randomUUID());
-			body.addFirst(defaultFormsTag);
+			final SymbolStruct<?> defaultFormsTag = new SymbolStruct<>("Tag" + UUID.randomUUID());
+			body = new ConsStruct(defaultFormsTag, body);
+			bodyAsJavaList = body.getAsJavaList();
 		}
 
 		try {
 			final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
-			final Map<Element, List<Element>> tagbodyForms = body.stream()
+			final Map<LispStruct, List<LispStruct>> tagbodyForms = bodyAsJavaList.stream()
 			                                                     .collect(new TagbodyCollector(analyzer, analysisBuilder));
-			return new TagbodyElement(tagbodyForms);
+			return new TagbodyStruct(tagbodyForms);
 		} finally {
 			analysisBuilder.getTagbodyStack().pop();
 		}
 	}
 
-	private static boolean isTagbodyTag(final SimpleElement element) {
-		return (element instanceof SymbolElement) || (element instanceof IntegerElement);
+	private static boolean isTagbodyTag(final LispStruct element) {
+		return (element instanceof SymbolStruct) || (element instanceof IntegerStruct);
 	}
 
-	private final class TagbodyInitialTagCollector implements Collector<SimpleElement, Set<GoElement<?>>, Set<GoElement<?>>> {
+	private final class TagbodyInitialTagCollector implements Collector<LispStruct, Set<GoStruct<?>>, Set<GoStruct<?>>> {
 
 		@Override
-		public Supplier<Set<GoElement<?>>> supplier() {
+		public Supplier<Set<GoStruct<?>>> supplier() {
 			return HashSet::new;
 		}
 
 		@Override
-		public String toString() {
-			return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
-		}		@Override
-		public BiConsumer<Set<GoElement<?>>, SimpleElement> accumulator() {
+		public BiConsumer<Set<GoStruct<?>>, LispStruct> accumulator() {
 			return (goElementSet, lispStruct) -> {
 
-				final GoElementGenerator<SimpleElement> goElementGenerator = goElementGeneratorStrategies.get(lispStruct.getClass());
+				final GoStructGenerator<LispStruct> goElementGenerator = goElementGeneratorStrategies.get(lispStruct.getClass());
 				if (goElementGenerator != null) {
-					final GoElement<?> goElement = goElementGenerator.generateGoElement(lispStruct);
+					final GoStruct<?> goElement = goElementGenerator.generateGoElement(lispStruct);
 					goElementSet.add(goElement);
 				}
 			};
 		}
 
 		@Override
-		public BinaryOperator<Set<GoElement<?>>> combiner() {
+		public BinaryOperator<Set<GoStruct<?>>> combiner() {
 			return (left, right) -> {
 				left.addAll(right);
 				return left;
@@ -120,7 +116,7 @@ public class TagbodyAnalyzer extends MacroFunctionExpander implements SpecialOpe
 		}
 
 		@Override
-		public Function<Set<GoElement<?>>, Set<GoElement<?>>> finisher() {
+		public Function<Set<GoStruct<?>>, Set<GoStruct<?>>> finisher() {
 			return Function.identity();
 		}
 
@@ -129,16 +125,19 @@ public class TagbodyAnalyzer extends MacroFunctionExpander implements SpecialOpe
 			return Collections.unmodifiableSet(EnumSet.of(Collector.Characteristics.UNORDERED, Collector.Characteristics.IDENTITY_FINISH));
 		}
 
-
+		@Override
+		public String toString() {
+			return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+		}
 	}
 
-	private final class TagbodyCollector implements Collector<SimpleElement, Map<Element, List<Element>>, Map<Element, List<Element>>> {
+	private final class TagbodyCollector implements Collector<LispStruct, Map<LispStruct, List<LispStruct>>, Map<LispStruct, List<LispStruct>>> {
 
 		private final SemanticAnalyzer analyzer;
 
 		private final AnalysisBuilder analysisBuilder;
 
-		private GoElement<?> currentTag;
+		private GoStruct<?> currentTag;
 
 		private TagbodyCollector(final SemanticAnalyzer analyzer, final AnalysisBuilder analysisBuilder) {
 			this.analyzer = analyzer;
@@ -146,25 +145,25 @@ public class TagbodyAnalyzer extends MacroFunctionExpander implements SpecialOpe
 			currentTag = null;
 		}
 
-		private void handleOtherwise(final Map<Element, List<Element>> lispStructListMap, final SimpleElement lispStruct) {
+		private void handleOtherwise(final Map<LispStruct, List<LispStruct>> lispStructListMap, final LispStruct lispStruct) {
 			if (!lispStructListMap.containsKey(currentTag)) {
 				lispStructListMap.put(currentTag, new ArrayList<>());
 			}
 
-			final Element analyzedForm = analyzer.analyzeForm(lispStruct, analysisBuilder);
+			final LispStruct analyzedForm = analyzer.analyzeForm(lispStruct, analysisBuilder);
 			lispStructListMap.get(currentTag).add(analyzedForm);
 		}
 
 		@Override
-		public Supplier<Map<Element, List<Element>>> supplier() {
+		public Supplier<Map<LispStruct, List<LispStruct>>> supplier() {
 			return HashMap::new;
 		}
 
 		@Override
-		public BiConsumer<Map<Element, List<Element>>, SimpleElement> accumulator() {
+		public BiConsumer<Map<LispStruct, List<LispStruct>>, LispStruct> accumulator() {
 			return (elementListMap, lispStruct) -> {
 
-				final GoElementGenerator<SimpleElement> goElementGenerator = goElementGeneratorStrategies.get(lispStruct.getClass());
+				final GoStructGenerator<LispStruct> goElementGenerator = goElementGeneratorStrategies.get(lispStruct.getClass());
 				if (goElementGenerator == null) {
 					handleOtherwise(elementListMap, lispStruct);
 				} else {
@@ -174,9 +173,9 @@ public class TagbodyAnalyzer extends MacroFunctionExpander implements SpecialOpe
 		}
 
 		@Override
-		public BinaryOperator<Map<Element, List<Element>>> combiner() {
+		public BinaryOperator<Map<LispStruct, List<LispStruct>>> combiner() {
 			return (elementListMap, elementListMap2) -> {
-				for (Map.Entry<Element, List<Element>> e : elementListMap2.entrySet()) {
+				for (Map.Entry<LispStruct, List<LispStruct>> e : elementListMap2.entrySet()) {
 					elementListMap.merge(
 							e.getKey(),
 							e.getValue(),
@@ -189,7 +188,7 @@ public class TagbodyAnalyzer extends MacroFunctionExpander implements SpecialOpe
 		}
 
 		@Override
-		public Function<Map<Element, List<Element>>, Map<Element, List<Element>>> finisher() {
+		public Function<Map<LispStruct, List<LispStruct>>, Map<LispStruct, List<LispStruct>>> finisher() {
 			return Function.identity();
 		}
 

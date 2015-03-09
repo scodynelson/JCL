@@ -1,27 +1,24 @@
 package jcl.compiler.real.sa.analyzer.specialoperator.declare;
 
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.ListElement;
-import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.element.SymbolElement;
-import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
-import jcl.compiler.real.element.specialoperator.declare.SpecialDeclarationElement;
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.PostConstruct;
+
+import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.DynamicSymbolAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.sa.analyzer.specialoperator.SpecialOperatorAnalyzer;
+import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
+import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.lists.ListStruct;
 import jcl.symbols.Declaration;
 import jcl.symbols.SpecialOperator;
-import jcl.system.EnhancedLinkedList;
+import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class DeclareAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
@@ -40,27 +37,26 @@ public class DeclareAnalyzer extends MacroFunctionExpander implements SpecialOpe
 	}
 
 	@Override
-	public Element expand(final ConsElement form, final AnalysisBuilder analysisBuilder) {
+	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 		return analyze(form, analysisBuilder);
 	}
 
 	@Override
-	public DeclareElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public DeclareStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
-		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
-		final EnhancedLinkedList<SimpleElement> declSpecs = elements.getAllButFirst();
+		final List<LispStruct> declSpecs = input.getRest().getAsJavaList();
 
-		final DeclareElement declareElement = new DeclareElement();
+		final DeclareStruct declareElement = new DeclareStruct();
 
-		for (final SimpleElement declSpec : declSpecs) {
+		for (final LispStruct declSpec : declSpecs) {
 
-			if (!(declSpec instanceof ListElement)) {
+			if (!(declSpec instanceof ListStruct)) {
 				throw new ProgramErrorException("DECLARE: Declaration specifier must be of type ListStruct. Got: " + declSpec);
 			}
 
-			final ListElement declSpecList = (ListElement) declSpec;
-			final Object declIdentifier = null; //TODO: declSpecList.getFirst();
-			final EnhancedLinkedList<SimpleElement> declSpecBody = null; //TODO: declSpecList.getRest();
+			final ListStruct declSpecList = (ListStruct) declSpec;
+			final LispStruct declIdentifier = declSpecList.getFirst();
+			final ListStruct declSpecBody = declSpecList.getRest();
 
 			final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
@@ -82,7 +78,7 @@ public class DeclareAnalyzer extends MacroFunctionExpander implements SpecialOpe
 			} else if (declIdentifier.equals(Declaration.OPTIMIZE)) {
 				//TODO: we don't do anything here yet
 			} else if (declIdentifier.equals(Declaration.SPECIAL)) {
-				final List<SpecialDeclarationElement> sdes = saSpecialDeclaration(analyzer, analysisBuilder, declSpecBody);
+				final List<SpecialDeclarationStruct> sdes = saSpecialDeclaration(analyzer, analysisBuilder, declSpecBody.getAsJavaList());
 				declareElement.getSpecialDeclarationElements().addAll(sdes);
 			} else if (declIdentifier.equals(Declaration.TYPE)) {
 				//we don't do anything here yet
@@ -94,22 +90,22 @@ public class DeclareAnalyzer extends MacroFunctionExpander implements SpecialOpe
 		return declareElement;
 	}
 
-	private List<SpecialDeclarationElement> saSpecialDeclaration(final SemanticAnalyzer analyzer, final AnalysisBuilder analysisBuilder,
-	                                                             final EnhancedLinkedList<SimpleElement> declSpecBody) {
+	private List<SpecialDeclarationStruct> saSpecialDeclaration(final SemanticAnalyzer analyzer, final AnalysisBuilder analysisBuilder,
+	                                                             final List<LispStruct> declSpecBody) {
 
-		final List<SpecialDeclarationElement> specialDeclarationElements = new ArrayList<>(declSpecBody.size());
+		final List<SpecialDeclarationStruct> specialDeclarationElements = new ArrayList<>(declSpecBody.size());
 
 		// Special declaration can apply to multiple SymbolStructs
-		for (final SimpleElement declSpecBodyElement : declSpecBody) {
-			if (!(declSpecBodyElement instanceof SymbolElement)) {
+		for (final LispStruct declSpecBodyElement : declSpecBody) {
+			if (!(declSpecBodyElement instanceof SymbolStruct)) {
 				throw new ProgramErrorException("DECLARE: a non-SymbolStruct entity cannot be made SPECIAL: " + declSpecBodyElement);
 			}
 
-			final SymbolElement sym = (SymbolElement) declSpecBodyElement;
+			final SymbolStruct<?> sym = (SymbolStruct<?>) declSpecBodyElement;
 
 			dynamicSymbolAnalyzer.analyze(sym, analysisBuilder);
 
-			final SpecialDeclarationElement specialDeclarationElement = new SpecialDeclarationElement(sym);
+			final SpecialDeclarationStruct specialDeclarationElement = new SpecialDeclarationStruct(sym);
 			specialDeclarationElements.add(specialDeclarationElement);
 		}
 

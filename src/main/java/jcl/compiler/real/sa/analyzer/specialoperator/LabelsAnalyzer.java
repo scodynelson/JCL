@@ -1,14 +1,12 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.ListElement;
-import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.element.SpecialOperatorElement;
-import jcl.compiler.real.element.SymbolElement;
-import jcl.compiler.real.element.specialoperator.LabelsElement;
-import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
-import jcl.compiler.real.element.specialoperator.declare.SpecialDeclarationElement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
+import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
+
+import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
@@ -23,21 +21,19 @@ import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyWithDeclaresAnalyzer;
+import jcl.compiler.real.struct.specialoperator.LabelsStruct;
+import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
+import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
-import jcl.system.EnhancedLinkedList;
+import jcl.symbols.SymbolStruct;
 import jcl.system.StackUtils;
 import jcl.types.T;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
-import java.util.stream.Collectors;
 
 @Component
 public class LabelsAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
@@ -56,24 +52,22 @@ public class LabelsAnalyzer extends MacroFunctionExpander implements SpecialOper
 	}
 
 	@Override
-	public Element expand(final ConsElement form, final AnalysisBuilder analysisBuilder) {
+	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 		return analyze(form, analysisBuilder);
 	}
 
 	@Override
-	public LabelsElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public LabelsStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
-		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
-
-		final int inputSize = elements.size();
+		final int inputSize = input.size();
 		if (inputSize < 2) {
 			throw new ProgramErrorException("LABELS: Incorrect number of arguments: " + inputSize + ". Expected at least 2 arguments.");
 		}
 
-		final EnhancedLinkedList<SimpleElement> inputRest = elements.getAllButFirst();
+		final ListStruct inputRest = input.getRest();
 
-		final SimpleElement second = inputRest.getFirst();
-		if (!(second instanceof ListElement)) {
+		final LispStruct second = inputRest.getFirst();
+		if (!(second instanceof ListStruct)) {
 			throw new ProgramErrorException("LABELS: Parameter list must be of type ListStruct. Got: " + second);
 		}
 
@@ -86,43 +80,43 @@ public class LabelsAnalyzer extends MacroFunctionExpander implements SpecialOper
 		final LabelsEnvironment labelsEnvironment = new LabelsEnvironment(parentEnvironment, newClosureDepth);
 		environmentStack.push(labelsEnvironment);
 
-		final Stack<SymbolElement> functionNameStack = analysisBuilder.getFunctionNameStack();
-		List<SymbolElement> functionNames = null;
+		final Stack<SymbolStruct<?>> functionNameStack = analysisBuilder.getFunctionNameStack();
+		List<SymbolStruct<?>> functionNames = null;
 
 		final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
 		try {
 			analysisBuilder.setClosureDepth(newClosureDepth);
 
-			final ListElement innerFunctions = (ListElement) second;
-			final List<? extends SimpleElement> innerFunctionsJavaList = innerFunctions.getElements();
+			final ListStruct innerFunctions = (ListStruct) second;
+			final List<? extends LispStruct> innerFunctionsJavaList = innerFunctions.getAsJavaList();
 			functionNames = getFunctionNames(innerFunctionsJavaList);
 
 			// Add function names BEFORE analyzing the functions
 			StackUtils.pushAll(functionNameStack, functionNames);
 
-			final EnhancedLinkedList<SimpleElement> bodyForms = inputRest.getAllButFirst();
+			final List<LispStruct> bodyForms = inputRest.getRest().getAsJavaList();
 
 			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(bodyForms, analysisBuilder);
-			final DeclareElement declareElement = bodyProcessingResult.getDeclareElement();
+			final DeclareStruct declareElement = bodyProcessingResult.getDeclareElement();
 
 			final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
-			final List<LabelsElement.LabelsVar> labelsVars
+			final List<LabelsStruct.LabelsVar> labelsVars
 					= innerFunctionsJavaList.stream()
 					                        .map(e -> getLabelsVar(e, declareElement, analyzer, analysisBuilder, labelsEnvironment, environmentStack))
 					                        .collect(Collectors.toList());
 
-			final List<SpecialDeclarationElement> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
+			final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
 			specialDeclarationElements.forEach(e -> addDynamicVariableBinding(e, analysisBuilder, labelsEnvironment));
 
-			final List<SimpleElement> realBodyForms = bodyProcessingResult.getBodyForms();
+			final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
 
-			final List<Element> analyzedBodyForms
+			final List<LispStruct> analyzedBodyForms
 					= realBodyForms.stream()
 					               .map(e -> analyzer.analyzeForm(e, analysisBuilder))
 					               .collect(Collectors.toList());
 
-			return new LabelsElement(labelsVars, analyzedBodyForms, labelsEnvironment);
+			return new LabelsStruct(labelsVars, analyzedBodyForms, labelsEnvironment);
 		} finally {
 			if (functionNames != null) {
 				StackUtils.popX(functionNameStack, functionNames.size());
@@ -134,45 +128,45 @@ public class LabelsAnalyzer extends MacroFunctionExpander implements SpecialOper
 		}
 	}
 
-	private List<SymbolElement> getFunctionNames(final List<? extends SimpleElement> functionDefinitions) {
+	private List<SymbolStruct<?>> getFunctionNames(final List<? extends LispStruct> functionDefinitions) {
 
-		final List<SymbolElement> functionNames = new ArrayList<>(functionDefinitions.size());
+		final List<SymbolStruct<?>> functionNames = new ArrayList<>(functionDefinitions.size());
 
-		for (final SimpleElement currentFunctionDef : functionDefinitions) {
-			if (!(currentFunctionDef instanceof ListElement)) {
+		for (final LispStruct currentFunctionDef : functionDefinitions) {
+			if (!(currentFunctionDef instanceof ListStruct)) {
 				throw new ProgramErrorException("LABELS: Function parameter must be of type ListStruct. Got: " + currentFunctionDef);
 			}
-			final ListElement functionList = (ListElement) currentFunctionDef;
+			final ListStruct functionList = (ListStruct) currentFunctionDef;
 
-			final SymbolElement functionName = getFunctionListParameterName(functionList);
+			final SymbolStruct<?> functionName = getFunctionListParameterName(functionList);
 			functionNames.add(functionName);
 		}
 
 		return functionNames;
 	}
 
-	private SymbolElement getFunctionListParameterName(final ListElement functionListParameter) {
-		final SimpleElement functionListParameterFirst = functionListParameter.getElements().get(0); // TODO: should we be checking the size here???
-		if (!(functionListParameterFirst instanceof SymbolElement)) {
+	private SymbolStruct<?> getFunctionListParameterName(final ListStruct functionListParameter) {
+		final LispStruct functionListParameterFirst = functionListParameter.getFirst();
+		if (!(functionListParameterFirst instanceof SymbolStruct)) {
 			throw new ProgramErrorException("LABELS: Function parameter first element value must be of type SymbolStruct. Got: " + functionListParameterFirst);
 		}
-		return (SymbolElement) functionListParameterFirst;
+		return (SymbolStruct<?>) functionListParameterFirst;
 	}
 
-	private LabelsElement.LabelsVar getLabelsVar(final SimpleElement functionParameter,
-	                                             final DeclareElement declareElement,
+	private LabelsStruct.LabelsVar getLabelsVar(final LispStruct functionParameter,
+	                                             final DeclareStruct declareElement,
 	                                             final SemanticAnalyzer analyzer,
 	                                             final AnalysisBuilder analysisBuilder,
 	                                             final LabelsEnvironment labelsEnvironment,
 	                                             final EnvironmentStack lexicalEnvironmentStack) {
 
-		if (!(functionParameter instanceof ConsElement)) {
-			throw new ProgramErrorException("LABELS: Function parameter must be of type Cons. Got: " + functionParameter);
+		if (!(functionParameter instanceof ListStruct)) {
+			throw new ProgramErrorException("LABELS: Function parameter must be of type ListStruct. Got: " + functionParameter);
 		}
 
-		final ConsElement functionListParameter = (ConsElement) functionParameter;
-		final SymbolElement functionName = getFunctionListParameterName(functionListParameter);
-		final Element functionInitForm = getFunctionParameterInitForm(functionListParameter, analyzer, analysisBuilder, lexicalEnvironmentStack);
+		final ListStruct functionListParameter = (ListStruct) functionParameter;
+		final SymbolStruct<?> functionName = getFunctionListParameterName(functionListParameter);
+		final LispStruct functionInitForm = getFunctionParameterInitForm(functionListParameter, analyzer, analysisBuilder, lexicalEnvironmentStack);
 
 		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(labelsEnvironment);
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
@@ -188,53 +182,51 @@ public class LabelsAnalyzer extends MacroFunctionExpander implements SpecialOper
 			labelsEnvironment.addLexicalBinding(binding);
 		}
 
-		return new LabelsElement.LabelsVar(functionName, functionInitForm);
+		return new LabelsStruct.LabelsVar(functionName, functionInitForm);
 	}
 
-	private static Element getFunctionParameterInitForm(final ConsElement functionListParameter,
-	                                                    final SemanticAnalyzer analyzer,
-	                                                    final AnalysisBuilder analysisBuilder,
-	                                                    final EnvironmentStack environmentStack) {
+	private static LispStruct getFunctionParameterInitForm(final ListStruct functionListParameter,
+	                                                       final SemanticAnalyzer analyzer,
+	                                                       final AnalysisBuilder analysisBuilder,
+	                                                       final EnvironmentStack environmentStack) {
 
-		final EnhancedLinkedList<SimpleElement> functionListParameterElements = functionListParameter.getElements();
-
-		final int functionListParameterSize = functionListParameterElements.size();
+		final int functionListParameterSize = functionListParameter.size();
 		if (functionListParameterSize < 2) {
 			throw new ProgramErrorException("LABELS: Incorrect number of arguments to function parameter: " + functionListParameterSize + ". Expected at least 2 arguments.");
 		}
 
-		final SimpleElement functionName = functionListParameterElements.getFirst();
+		final LispStruct functionName = functionListParameter.getFirst();
 
-		final EnhancedLinkedList<SimpleElement> functionListParameterRest = functionListParameterElements.getAllButFirst();
+		final ListStruct functionListParameterRest = functionListParameter.getRest();
 
-		final SimpleElement lambdaList = functionListParameterRest.getFirst();
+		final LispStruct lambdaList = functionListParameterRest.getFirst();
 
-		final EnhancedLinkedList<SimpleElement> body = functionListParameterRest.getAllButFirst();
+		final List<LispStruct> body = functionListParameterRest.getRest().getAsJavaList();
 
-		final EnhancedLinkedList<SimpleElement> innerBlock = new EnhancedLinkedList<>();
-		innerBlock.add(SpecialOperatorElement.BLOCK);
+		final List<LispStruct> innerBlock = new ArrayList<>();
+		innerBlock.add(SpecialOperator.BLOCK);
 		innerBlock.add(functionName);
 		innerBlock.addAll(body);
 
-		final ConsElement innerBlockListStruct = new ConsElement(innerBlock);
+		final ListStruct innerBlockListStruct = ListStruct.buildProperList(innerBlock);
 
-		final EnhancedLinkedList<SimpleElement> innerLambda = new EnhancedLinkedList<>();
-		innerLambda.add(SpecialOperatorElement.LAMBDA);
+		final List<LispStruct> innerLambda = new ArrayList<>();
+		innerLambda.add(SpecialOperator.LAMBDA);
 		innerLambda.add(lambdaList);
 		innerLambda.add(innerBlockListStruct);
 
-		final ConsElement innerLambdaListStruct = new ConsElement(innerLambda);
+		final ListStruct innerLambdaListStruct = ListStruct.buildProperList(innerLambda);
 
-		final EnhancedLinkedList<SimpleElement> innerFunction = new EnhancedLinkedList<>();
-		innerFunction.add(SpecialOperatorElement.FUNCTION);
+		final List<LispStruct> innerFunction = new ArrayList<>();
+		innerFunction.add(SpecialOperator.FUNCTION);
 		innerFunction.add(innerLambdaListStruct);
 
-		final ConsElement innerFunctionListStruct = new ConsElement(innerFunction);
+		final ListStruct innerFunctionListStruct = ListStruct.buildProperList(innerFunction);
 
 		// Evaluate in the outer environment. This is one of the differences between Flet and Labels.
 		final Environment currentEnvironment = environmentStack.pop();
 
-		final Element functionInitForm;
+		final LispStruct functionInitForm;
 		try {
 			functionInitForm = analyzer.analyzeForm(innerFunctionListStruct, analysisBuilder);
 		} finally {
@@ -243,12 +235,12 @@ public class LabelsAnalyzer extends MacroFunctionExpander implements SpecialOper
 		return functionInitForm;
 	}
 
-	private static boolean isSpecial(final DeclareElement declareElement, final SymbolElement var) {
+	private static boolean isSpecial(final DeclareStruct declareElement, final SymbolStruct<?> var) {
 		boolean isSpecial = false;
 
-		final List<SpecialDeclarationElement> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
-		for (final SpecialDeclarationElement specialDeclarationElement : specialDeclarationElements) {
-			final SymbolElement specialVar = specialDeclarationElement.getVar();
+		final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
+		for (final SpecialDeclarationStruct specialDeclarationElement : specialDeclarationElements) {
+			final SymbolStruct<?> specialVar = specialDeclarationElement.getVar();
 			if (var.equals(specialVar)) {
 				isSpecial = true;
 				break;
@@ -258,15 +250,15 @@ public class LabelsAnalyzer extends MacroFunctionExpander implements SpecialOper
 		return isSpecial;
 	}
 
-	private void addDynamicVariableBinding(final SpecialDeclarationElement specialDeclarationElement,
-	                                       final AnalysisBuilder analysisBuilder,
-	                                       final LabelsEnvironment labelsEnvironment) {
+	private static void addDynamicVariableBinding(final SpecialDeclarationStruct specialDeclarationElement,
+	                                              final AnalysisBuilder analysisBuilder,
+	                                              final LabelsEnvironment labelsEnvironment) {
 
 		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(labelsEnvironment);
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
-		final SymbolElement var = specialDeclarationElement.getVar();
+		final SymbolStruct<?> var = specialDeclarationElement.getVar();
 
 		final Environment bindingEnvironment = Environments.getDynamicBindingEnvironment(labelsEnvironment, var);
 		final EnvironmentAllocation allocation = new EnvironmentAllocation(bindingEnvironment);

@@ -1,14 +1,15 @@
 package jcl.system;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+
 import jcl.LispStruct;
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.NullElement;
-import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.element.SpecialOperatorElement;
-import jcl.compiler.real.element.SymbolElement;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.conditions.exceptions.StreamErrorException;
+import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
@@ -19,15 +20,12 @@ import jcl.streams.FileStreamStruct;
 import jcl.streams.InputStream;
 import jcl.streams.ReadPeekResult;
 import jcl.symbols.SpecialOperator;
+import jcl.symbols.SymbolStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
 
 @Component
 public class ReadEvalPrint {
@@ -153,9 +151,9 @@ public class ReadEvalPrint {
 					// TEMPORARY: ANALYZER
 
 					if (whatRead != null) {
-						Element whatAnalyzed = null;
+						LispStruct whatAnalyzed = null;
 						try {
-//							final SimpleElement lambdaWhatRead = wrapFormInLambda(whatRead);
+//							final LispStruct lambdaWhatRead = wrapFormInLambda(whatRead);
 //
 //							final SemanticAnalyzer sa = context.getBean(SemanticAnalyzer.class);
 //							whatAnalyzed = sa.analyzeForm(lambdaWhatRead);
@@ -254,37 +252,36 @@ public class ReadEvalPrint {
 		return null;
 	}
 
-	private static SimpleElement wrapFormInLambda(final SimpleElement form) {
+	private static LispStruct wrapFormInLambda(final LispStruct form) {
 
-		SimpleElement lambdaForm = form;
-		if (form instanceof ConsElement) {
-			final ConsElement formList = (ConsElement) form;
-			final EnhancedLinkedList<SimpleElement> elements = formList.getElements();
-			final SimpleElement firstOfFormList = elements.getFirst();
-			if (!(firstOfFormList instanceof SymbolElement)) {
+		LispStruct lambdaForm = form;
+		if (form instanceof ListStruct) {
+			final ListStruct formList = (ListStruct) form;
+			final LispStruct firstOfFormList = formList.getFirst();
+			if (!(firstOfFormList instanceof SymbolStruct)) {
 
-				final EnhancedLinkedList<SimpleElement> enhancedLinkedList = new EnhancedLinkedList<>();
-				enhancedLinkedList.add(SpecialOperatorElement.LAMBDA);
-				enhancedLinkedList.add(NullElement.INSTANCE);
+				final List<LispStruct> enhancedLinkedList = new ArrayList<>();
+				enhancedLinkedList.add(SpecialOperator.LAMBDA);
+				enhancedLinkedList.add(NullStruct.INSTANCE);
 				enhancedLinkedList.add(formList);
 
-				lambdaForm = new ConsElement(enhancedLinkedList);
-			} else if (!firstOfFormList.equals(SpecialOperatorElement.LAMBDA)) {
+				lambdaForm = ListStruct.buildProperList(enhancedLinkedList);
+			} else if (!firstOfFormList.equals(SpecialOperator.LAMBDA)) {
 
-				final EnhancedLinkedList<SimpleElement> enhancedLinkedList = new EnhancedLinkedList<>();
-				enhancedLinkedList.add(SpecialOperatorElement.LAMBDA);
-				enhancedLinkedList.add(NullElement.INSTANCE);
+				final List<LispStruct> enhancedLinkedList = new ArrayList<>();
+				enhancedLinkedList.add(SpecialOperator.LAMBDA);
+				enhancedLinkedList.add(NullStruct.INSTANCE);
 				enhancedLinkedList.add(formList);
 
-				lambdaForm = new ConsElement(enhancedLinkedList);
+				lambdaForm = ListStruct.buildProperList(enhancedLinkedList);
 			}
 		} else {
-			final EnhancedLinkedList<SimpleElement> enhancedLinkedList = new EnhancedLinkedList<>();
-			enhancedLinkedList.addFirst(form);
-			enhancedLinkedList.addFirst(NullElement.INSTANCE);
-			enhancedLinkedList.addFirst(SpecialOperatorElement.LAMBDA);
+			final List<LispStruct> enhancedLinkedList = new ArrayList<>();
+			enhancedLinkedList.add(SpecialOperator.LAMBDA);
+			enhancedLinkedList.add(NullStruct.INSTANCE);
+			enhancedLinkedList.add(form);
 
-			lambdaForm = new ConsElement(enhancedLinkedList);
+			lambdaForm = ListStruct.buildProperList(enhancedLinkedList);
 		}
 
 		return lambdaForm;

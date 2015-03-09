@@ -4,9 +4,9 @@
 
 package jcl.compiler.real.sa.analyzer.expander.real;
 
-import jcl.compiler.real.element.SymbolElement;
+import jcl.symbols.SymbolStruct;
 
-public abstract class SymbolMacroExpander extends MacroExpander<SymbolElement> {
+public abstract class SymbolMacroExpander extends MacroExpander<SymbolStruct<?>> {
 
 	private static final long serialVersionUID = -4579665130389126919L;
 }

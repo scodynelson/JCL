@@ -4,18 +4,18 @@
 
 package jcl.compiler.real.environment;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import jcl.LispStruct;
-import jcl.compiler.real.element.SymbolElement;
 import jcl.compiler.real.environment.binding.EnvironmentBinding;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
+import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 public class Environment implements LispStruct {
 
@@ -48,12 +48,12 @@ public class Environment implements LispStruct {
 		return lexicalBindings;
 	}
 
-	public boolean hasLexicalBinding(final SymbolElement symbolStruct) {
+	public boolean hasLexicalBinding(final SymbolStruct<?> symbolStruct) {
 		return lexicalBindings.stream()
 		                      .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct));
 	}
 
-	public Optional<EnvironmentParameterBinding> getLexicalBinding(final SymbolElement symbolStruct) {
+	public Optional<EnvironmentParameterBinding> getLexicalBinding(final SymbolStruct<?> symbolStruct) {
 		return lexicalBindings.stream()
 		                      .filter(e -> e.getSymbolStruct().equals(symbolStruct))
 		                      .findFirst();
@@ -67,12 +67,12 @@ public class Environment implements LispStruct {
 		return dynamicBindings;
 	}
 
-	public boolean hasDynamicBinding(final SymbolElement symbolStruct) {
+	public boolean hasDynamicBinding(final SymbolStruct<?> symbolStruct) {
 		return dynamicBindings.stream()
 		                      .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct));
 	}
 
-	public Optional<EnvironmentBinding<?>> getDynamicBinding(final SymbolElement symbolStruct) {
+	public Optional<EnvironmentBinding<?>> getDynamicBinding(final SymbolStruct<?> symbolStruct) {
 		return dynamicBindings.stream()
 		                      .filter(e -> e.getSymbolStruct().equals(symbolStruct))
 		                      .findFirst();

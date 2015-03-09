@@ -1,19 +1,17 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.element.SymbolElement;
-import jcl.compiler.real.element.specialoperator.ReturnFromElement;
+import javax.annotation.PostConstruct;
+
+import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
+import jcl.compiler.real.struct.specialoperator.ReturnFromStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
-import jcl.system.EnhancedLinkedList;
+import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
 
 @Component
 public class ReturnFromAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
@@ -29,43 +27,41 @@ public class ReturnFromAnalyzer extends MacroFunctionExpander implements Special
 	}
 
 	@Override
-	public Element expand(final ConsElement form, final AnalysisBuilder analysisBuilder) {
+	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 		return analyze(form, analysisBuilder);
 	}
 
 	@Override
-	public ReturnFromElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public ReturnFromStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
-		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
-
-		final int inputSize = elements.size();
+		final int inputSize = input.size();
 		if ((inputSize < 2) || (inputSize > 3)) {
 			throw new ProgramErrorException("RETURN-FROM: Incorrect number of arguments: " + inputSize + ". Expected either 2 or 3 arguments.");
 		}
 
-		final EnhancedLinkedList<SimpleElement> inputRest = elements.getAllButFirst();
+		final ListStruct inputRest = input.getRest();
 
-		final SimpleElement second = inputRest.getFirst();
-		if (!(second instanceof SymbolElement)) {
+		final LispStruct second = inputRest.getFirst();
+		if (!(second instanceof SymbolStruct)) {
 			throw new ProgramErrorException("RETURN-FROM: Name must be of type SymbolStruct. Got: " + second);
 		}
 
-		final SymbolElement name = (SymbolElement) second;
+		final SymbolStruct<?> name = (SymbolStruct<?>) second;
 
 		if (analysisBuilder.getBlockStack().search(name) == -1) {
 			throw new ProgramErrorException("RETURN-FROM: No BLOCK with name " + second + " is visible.");
 		}
 
 		if (inputSize == 3) {
-			final EnhancedLinkedList<SimpleElement> inputRestRest = inputRest.getAllButFirst();
+			final ListStruct inputRestRest = inputRest.getRest();
 
 			final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
-			final SimpleElement result = inputRestRest.getFirst();
-			final Element analyzedResult = analyzer.analyzeForm(result, analysisBuilder);
-			return new ReturnFromElement(name, analyzedResult);
+			final LispStruct result = inputRestRest.getFirst();
+			final LispStruct analyzedResult = analyzer.analyzeForm(result, analysisBuilder);
+			return new ReturnFromStruct(name, analyzedResult);
 		} else {
-			return new ReturnFromElement(name);
+			return new ReturnFromStruct(name);
 		}
 	}
 }

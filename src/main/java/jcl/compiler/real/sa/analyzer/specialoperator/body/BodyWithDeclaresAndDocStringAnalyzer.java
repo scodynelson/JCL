@@ -1,20 +1,19 @@
 package jcl.compiler.real.sa.analyzer.specialoperator.body;
 
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.element.SpecialOperatorElement;
-import jcl.compiler.real.element.StringElement;
-import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
-import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.analyzer.specialoperator.declare.DeclareAnalyzer;
-import jcl.system.EnhancedLinkedList;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import jcl.LispStruct;
+import jcl.arrays.StringStruct;
+import jcl.compiler.real.sa.AnalysisBuilder;
+import jcl.compiler.real.sa.analyzer.specialoperator.declare.DeclareAnalyzer;
+import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
+import jcl.lists.ListStruct;
+import jcl.symbols.SpecialOperator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Component
 public class BodyWithDeclaresAndDocStringAnalyzer implements Serializable {
@@ -24,34 +23,34 @@ public class BodyWithDeclaresAndDocStringAnalyzer implements Serializable {
 	@Autowired
 	private DeclareAnalyzer declareAnalyzer;
 
-	public BodyProcessingResult analyze(final EnhancedLinkedList<SimpleElement> input, final AnalysisBuilder analysisBuilder) {
+	public BodyProcessingResult analyze(final List<LispStruct> input, final AnalysisBuilder analysisBuilder) {
 
-		DeclareElement declareElement = null;
-		StringElement docString = null;
-		final List<SimpleElement> bodyForms = new ArrayList<>();
+		DeclareStruct declareElement = null;
+		StringStruct docString = null;
+		final List<LispStruct> bodyForms = new ArrayList<>();
 
-		final Iterator<SimpleElement> iterator = input.iterator();
+		final Iterator<LispStruct> iterator = input.iterator();
 
 		if (iterator.hasNext()) {
-			SimpleElement next = iterator.next();
+			LispStruct next = iterator.next();
 
-			final EnhancedLinkedList<SimpleElement> allDeclarations = new EnhancedLinkedList<>();
-			allDeclarations.add(SpecialOperatorElement.DECLARE);
+			final List<LispStruct> allDeclarations = new ArrayList<>();
+			allDeclarations.add(SpecialOperator.DECLARE);
 
-			while (iterator.hasNext() && (next instanceof ConsElement) && ((ConsElement) next).getElements().getFirst().equals(SpecialOperatorElement.DECLARE)) {
+			while (iterator.hasNext() && (next instanceof ListStruct) && ((ListStruct) next).getFirst().equals(SpecialOperator.DECLARE)) {
 
-				final ConsElement declareStatement = (ConsElement) next;
-				final EnhancedLinkedList<SimpleElement> declarations = declareStatement.getElements().getAllButFirst();
+				final ListStruct declareStatement = (ListStruct) next;
+				final List<LispStruct> declarations = declareStatement.getRest().getAsJavaList();
 
 				allDeclarations.addAll(declarations);
 				next = iterator.next();
 			}
 
-			final ConsElement fullDeclaration = new ConsElement(allDeclarations);
+			final ListStruct fullDeclaration = ListStruct.buildProperList(allDeclarations);
 			declareElement = declareAnalyzer.analyze(fullDeclaration, analysisBuilder);
 
-			if ((next instanceof StringElement) && iterator.hasNext()) {
-				docString = (StringElement) next; // No need to analyze this
+			if ((next instanceof StringStruct) && iterator.hasNext()) {
+				docString = (StringStruct) next; // No need to analyze this
 				next = iterator.next();
 			}
 

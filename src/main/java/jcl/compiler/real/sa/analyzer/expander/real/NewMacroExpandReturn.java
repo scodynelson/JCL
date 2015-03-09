@@ -4,20 +4,20 @@
 
 package jcl.compiler.real.sa.analyzer.expander.real;
 
-import jcl.compiler.real.element.Element;
+import jcl.LispStruct;
 
 public class NewMacroExpandReturn {
 
-	private final Element expandedForm;
+	private final LispStruct expandedForm;
 
 	private final boolean wasExpanded;
 
-	public NewMacroExpandReturn(final Element expandedForm, final boolean wasExpanded) {
+	public NewMacroExpandReturn(final LispStruct expandedForm, final boolean wasExpanded) {
 		this.expandedForm = expandedForm;
 		this.wasExpanded = wasExpanded;
 	}
 
-	public Element getExpandedForm() {
+	public LispStruct getExpandedForm() {
 		return expandedForm;
 	}
 

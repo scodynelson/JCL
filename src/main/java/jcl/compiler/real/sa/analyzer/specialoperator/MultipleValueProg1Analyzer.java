@@ -1,20 +1,18 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.element.specialoperator.MultipleValueProg1Element;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
+
+import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
+import jcl.compiler.real.struct.specialoperator.MultipleValueProg1Struct;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
-import jcl.system.EnhancedLinkedList;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class MultipleValueProg1Analyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
@@ -30,33 +28,31 @@ public class MultipleValueProg1Analyzer extends MacroFunctionExpander implements
 	}
 
 	@Override
-	public Element expand(final ConsElement form, final AnalysisBuilder analysisBuilder) {
+	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 		return analyze(form, analysisBuilder);
 	}
 
 	@Override
-	public MultipleValueProg1Element analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public MultipleValueProg1Struct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
-		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
-
-		final int inputSize = elements.size();
+		final int inputSize = input.size();
 		if (inputSize < 2) {
 			throw new ProgramErrorException("MULTIPLE-VALUE-PROG1: Incorrect number of arguments: " + inputSize + ". Expected at least 2 arguments.");
 		}
 
-		final EnhancedLinkedList<SimpleElement> inputRest = elements.getAllButFirst();
+		final ListStruct inputRest = input.getRest();
 
 		final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
-		final SimpleElement firstForm = inputRest.getFirst();
-		final Element firstFormAnalyzed = analyzer.analyzeForm(firstForm, analysisBuilder);
+		final LispStruct firstForm = inputRest.getFirst();
+		final LispStruct firstFormAnalyzed = analyzer.analyzeForm(firstForm, analysisBuilder);
 
-		final EnhancedLinkedList<SimpleElement> forms = inputRest.getAllButFirst();
-		final List<Element> analyzedForms =
+		final List<LispStruct> forms = inputRest.getRest().getAsJavaList();
+		final List<LispStruct> analyzedForms =
 				forms.stream()
 				     .map(e -> analyzer.analyzeForm(e, analysisBuilder))
 				     .collect(Collectors.toList());
 
-		return new MultipleValueProg1Element(firstFormAnalyzed, analyzedForms);
+		return new MultipleValueProg1Struct(firstFormAnalyzed, analyzedForms);
 	}
 }

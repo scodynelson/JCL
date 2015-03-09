@@ -7,7 +7,6 @@ import jcl.compiler.old.Emitter;
 import jcl.compiler.old.EmptyVisitor;
 import jcl.compiler.old.documentation.AnnotationCollector;
 import jcl.compiler.old.documentation.DocumentFactory;
-import jcl.compiler.real.element.SimpleElement;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.lists.ConsStruct;
@@ -83,7 +82,7 @@ public class CompileFunction {
 				formCopy = copyTree.funcall(formCopy);
 			}
 			obj = wrapFormInLambda(obj);
-			obj = (LispStruct) sa.analyzeForm((SimpleElement) obj);
+			obj = sa.analyzeForm(obj);
 
 			Vector<Emitter.ClassDef> v = (Vector<Emitter.ClassDef>) icg.funcall(obj);
 			Vector<String> oc = new Vector<String>(v.size());

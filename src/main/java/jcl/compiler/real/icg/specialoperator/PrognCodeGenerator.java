@@ -1,27 +1,25 @@
 package jcl.compiler.real.icg.specialoperator;
 
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.NullElement;
-import jcl.compiler.real.element.SimpleElement;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
-import jcl.system.EnhancedLinkedList;
+import jcl.lists.ListStruct;
+import jcl.lists.NullStruct;
 
-public class PrognCodeGenerator implements CodeGenerator<ConsElement> {
+public class PrognCodeGenerator implements CodeGenerator<ListStruct> {
 
 	public static final PrognCodeGenerator INSTANCE = new PrognCodeGenerator();
 
 	@Override
-	public void generate(final ConsElement input, final IntermediateCodeGenerator codeGenerator) {
+	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator) {
 		// Get rid of the PROGN symbol
-		EnhancedLinkedList<SimpleElement> restOfList = input.getElements().getAllButFirst();
+		ListStruct restOfList = input.getRest();
 
         /* Call icgMainLoop() for each expression in the PROGN call,
 		 * and remove all but the last expression's value from the stack  */
-		while (!restOfList.equals(NullElement.INSTANCE)) {
+		while (!restOfList.equals(NullStruct.INSTANCE)) {
 			codeGenerator.icgMainLoop(restOfList.getFirst());
-			restOfList = restOfList.getAllButFirst();
-			if (!restOfList.equals(NullElement.INSTANCE)) {
+			restOfList = restOfList.getRest();
+			if (!restOfList.equals(NullStruct.INSTANCE)) {
 				codeGenerator.emitter.emitPop();
 			}
 		}

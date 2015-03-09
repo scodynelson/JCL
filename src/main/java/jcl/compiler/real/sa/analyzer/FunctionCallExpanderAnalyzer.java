@@ -4,18 +4,16 @@
 
 package jcl.compiler.real.sa.analyzer;
 
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.SimpleElement;
+import java.util.Map;
+import javax.annotation.Resource;
+
+import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.conditions.exceptions.ProgramErrorException;
-import jcl.system.EnhancedLinkedList;
+import jcl.lists.ListStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
-import java.util.Map;
 
 @Component
 public class FunctionCallExpanderAnalyzer extends FunctionCallAnalyzer {
@@ -23,14 +21,12 @@ public class FunctionCallExpanderAnalyzer extends FunctionCallAnalyzer {
 	private static final long serialVersionUID = 322096040503229739L;
 
 	@Resource
-	private Map<Class<? extends SimpleElement>, FunctionCallAnalyzer> expandedFunctionCallAnalyzerStrategies;
+	private Map<Class<? extends LispStruct>, FunctionCallAnalyzer> expandedFunctionCallAnalyzerStrategies;
 
 	@Override
-	public Element analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public LispStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
-		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
-
-		final SimpleElement formFirst = elements.getFirst();
+		final LispStruct formFirst = input.getFirst();
 
 		final FunctionCallAnalyzer expandedFunctionCallAnalyzer = expandedFunctionCallAnalyzerStrategies.get(formFirst.getClass());
 		if (expandedFunctionCallAnalyzer == null) {

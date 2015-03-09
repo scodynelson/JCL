@@ -1,12 +1,10 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.element.SymbolElement;
-import jcl.compiler.real.element.specialoperator.LocallyElement;
-import jcl.compiler.real.element.specialoperator.declare.DeclareElement;
-import jcl.compiler.real.element.specialoperator.declare.SpecialDeclarationElement;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
+
+import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
@@ -19,17 +17,17 @@ import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyWithDeclaresAnalyzer;
+import jcl.compiler.real.struct.specialoperator.LocallyStruct;
+import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
+import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
+import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
-import jcl.system.EnhancedLinkedList;
+import jcl.symbols.SymbolStruct;
 import jcl.types.T;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class LocallyAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
@@ -48,14 +46,12 @@ public class LocallyAnalyzer extends MacroFunctionExpander implements SpecialOpe
 	}
 
 	@Override
-	public Element expand(final ConsElement form, final AnalysisBuilder analysisBuilder) {
+	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 		return analyze(form, analysisBuilder);
 	}
 
 	@Override
-	public LocallyElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
-
-		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
+	public LocallyStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment parentEnvironment = environmentStack.peek();
@@ -70,24 +66,24 @@ public class LocallyAnalyzer extends MacroFunctionExpander implements SpecialOpe
 		try {
 			analysisBuilder.setClosureDepth(newClosureDepth);
 
-			final EnhancedLinkedList<SimpleElement> bodyForms = elements.getAllButFirst();
+			final List<LispStruct> bodyForms = input.getRest().getAsJavaList();
 
 			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(bodyForms, analysisBuilder);
-			final DeclareElement declareElement = bodyProcessingResult.getDeclareElement();
+			final DeclareStruct declareElement = bodyProcessingResult.getDeclareElement();
 
-			final List<SpecialDeclarationElement> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
+			final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
 			specialDeclarationElements.forEach(e -> addDynamicVariableBinding(e, analysisBuilder, locallyEnvironment));
 
-			final List<SimpleElement> realBodyForms = bodyProcessingResult.getBodyForms();
+			final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
 
 			final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
-			final List<Element> analyzedBodyForms
+			final List<LispStruct> analyzedBodyForms
 					= realBodyForms.stream()
 					               .map(e -> analyzer.analyzeForm(e, analysisBuilder))
 					               .collect(Collectors.toList());
 
-			return new LocallyElement(analyzedBodyForms, locallyEnvironment);
+			return new LocallyStruct(analyzedBodyForms, locallyEnvironment);
 		} finally {
 			analysisBuilder.setClosureDepth(tempClosureDepth);
 			analysisBuilder.setBindingsPosition(tempBindingsPosition);
@@ -95,7 +91,7 @@ public class LocallyAnalyzer extends MacroFunctionExpander implements SpecialOpe
 		}
 	}
 
-	private static void addDynamicVariableBinding(final SpecialDeclarationElement specialDeclarationElement,
+	private static void addDynamicVariableBinding(final SpecialDeclarationStruct specialDeclarationElement,
 	                                              final AnalysisBuilder analysisBuilder,
 	                                              final LocallyEnvironment locallyEnvironment) {
 
@@ -103,7 +99,7 @@ public class LocallyAnalyzer extends MacroFunctionExpander implements SpecialOpe
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
-		final SymbolElement var = specialDeclarationElement.getVar();
+		final SymbolStruct<?> var = specialDeclarationElement.getVar();
 
 		final Environment bindingEnvironment = Environments.getDynamicBindingEnvironment(locallyEnvironment, var);
 		final EnvironmentAllocation allocation = new EnvironmentAllocation(bindingEnvironment);

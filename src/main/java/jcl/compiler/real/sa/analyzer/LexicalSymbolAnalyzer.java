@@ -1,7 +1,8 @@
 package jcl.compiler.real.sa.analyzer;
 
-import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.SymbolElement;
+import java.util.Optional;
+
+import jcl.LispStruct;
 import jcl.compiler.real.environment.BindingEnvironment;
 import jcl.compiler.real.environment.Closure;
 import jcl.compiler.real.environment.Environment;
@@ -16,14 +17,13 @@ import jcl.compiler.real.environment.binding.SymbolClosureBinding;
 import jcl.compiler.real.environment.binding.SymbolEnvironmentBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.Analyzer;
+import jcl.symbols.SymbolStruct;
 import jcl.types.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 @Component
-public class LexicalSymbolAnalyzer implements Analyzer<Element, SymbolElement> {
+public class LexicalSymbolAnalyzer implements Analyzer<LispStruct, SymbolStruct<?>> {
 
 	private static final long serialVersionUID = 231543795392423102L;
 
@@ -31,7 +31,7 @@ public class LexicalSymbolAnalyzer implements Analyzer<Element, SymbolElement> {
 	private DynamicSymbolAnalyzer dynamicSymbolAnalyzer;
 
 	@Override
-	public SymbolElement analyze(final SymbolElement input, final AnalysisBuilder analysisBuilder) {
+	public SymbolStruct<?> analyze(final SymbolStruct<?> input, final AnalysisBuilder analysisBuilder) {
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment currentEnvironment = environmentStack.peek();

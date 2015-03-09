@@ -1,25 +1,21 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.ListElement;
-import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.element.SpecialOperatorElement;
-import jcl.compiler.real.element.specialoperator.LetElement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
+import javax.annotation.PostConstruct;
+
+import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
+import jcl.compiler.real.struct.specialoperator.LetStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
-import jcl.system.EnhancedLinkedList;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ListIterator;
 
 @Component
 public class LetStarAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
@@ -38,46 +34,44 @@ public class LetStarAnalyzer extends MacroFunctionExpander implements SpecialOpe
 	}
 
 	@Override
-	public Element expand(final ConsElement form, final AnalysisBuilder analysisBuilder) {
+	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 		return analyze(form, analysisBuilder);
 	}
 
 	@Override
-	public LetElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public LetStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
-		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
-
-		final int inputSize = elements.size();
+		final int inputSize = input.size();
 		if (inputSize < 2) {
 			throw new ProgramErrorException("LET*: Incorrect number of arguments: " + inputSize + ". Expected at least 2 arguments.");
 		}
 
-		final EnhancedLinkedList<SimpleElement> inputRest = elements.getAllButFirst();
+		final ListStruct inputRest = input.getRest();
 
-		final SimpleElement second = inputRest.getFirst();
-		if (!(second instanceof ListElement)) {
+		final LispStruct second = inputRest.getFirst();
+		if (!(second instanceof ListStruct)) {
 			throw new ProgramErrorException("LET*: Parameter list must be of type List. Got: " + second);
 		}
 
-		final ListElement parameters = (ListElement) second;
-		final List<? extends SimpleElement> parametersAsJavaList = parameters.getElements();
+		final ListStruct parameters = (ListStruct) second;
+		final List<? extends LispStruct> parametersAsJavaList = parameters.getAsJavaList();
 
-		final ListIterator<? extends SimpleElement> iterator = parametersAsJavaList.listIterator(parametersAsJavaList.size());
+		final ListIterator<? extends LispStruct> iterator = parametersAsJavaList.listIterator(parametersAsJavaList.size());
 
-		EnhancedLinkedList<SimpleElement> body = inputRest.getAllButFirst();
+		List<LispStruct> body = inputRest.getRest().getAsJavaList();
 
 		while (iterator.hasPrevious()) {
-			final SimpleElement previousParams = iterator.previous();
+			final LispStruct previousParams = iterator.previous();
 
-			final List<SimpleElement> innerLet = new ArrayList<>();
-			innerLet.add(SpecialOperatorElement.LET);
+			final List<LispStruct> innerLet = new ArrayList<>();
+			innerLet.add(SpecialOperator.LET);
 			innerLet.add(previousParams);
 			innerLet.addAll(body);
 
-			body = new EnhancedLinkedList<>(innerLet);
+			body = innerLet;
 		}
 
-		return letAnalyzer.analyze(new ConsElement(body), analysisBuilder);
+		return letAnalyzer.analyze(ListStruct.buildProperList(body), analysisBuilder);
 	}
 
 	@Override

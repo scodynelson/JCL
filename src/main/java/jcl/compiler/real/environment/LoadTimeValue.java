@@ -4,14 +4,14 @@
 
 package jcl.compiler.real.environment;
 
-import jcl.compiler.real.element.Element;
+import java.io.Serializable;
+import java.util.UUID;
+
+import jcl.LispStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.io.Serializable;
-import java.util.UUID;
 
 public class LoadTimeValue implements Serializable {
 
@@ -19,9 +19,9 @@ public class LoadTimeValue implements Serializable {
 
 	private final UUID uniqueLTVId;
 
-	private final Element value;
+	private final LispStruct value;
 
-	public LoadTimeValue(final UUID uniqueLTVId, final Element value) {
+	public LoadTimeValue(final UUID uniqueLTVId, final LispStruct value) {
 		this.uniqueLTVId = uniqueLTVId;
 		this.value = value;
 	}
@@ -30,7 +30,7 @@ public class LoadTimeValue implements Serializable {
 		return uniqueLTVId;
 	}
 
-	public Element getValue() {
+	public LispStruct getValue() {
 		return value;
 	}
 

@@ -1,27 +1,24 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import jcl.compiler.old.symbol.KeywordOld;
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.ListElement;
-import jcl.compiler.real.element.NullElement;
-import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
-import jcl.conditions.exceptions.ProgramErrorException;
-import jcl.symbols.KeywordSymbolStruct;
-import jcl.symbols.SpecialOperator;
-import jcl.system.EnhancedLinkedList;
-import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
+
+import jcl.LispStruct;
+import jcl.compiler.old.symbol.KeywordOld;
+import jcl.compiler.real.sa.AnalysisBuilder;
+import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
+import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.lists.ListStruct;
+import jcl.lists.NullStruct;
+import jcl.symbols.KeywordSymbolStruct;
+import jcl.symbols.SpecialOperator;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.stereotype.Component;
 
 @Component
 public class EvalWhenAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
@@ -45,37 +42,34 @@ public class EvalWhenAnalyzer extends MacroFunctionExpander implements SpecialOp
 	}
 
 	@Override
-	public Element expand(final ConsElement form, final AnalysisBuilder analysisBuilder) {
+	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 		return analyze(form, analysisBuilder);
 	}
 
 	@Override
-	public Element analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public LispStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
 		return analyze(input, analysisBuilder, false, false);
 	}
 
-	public Element analyze(final ConsElement input, final AnalysisBuilder analysisBuilder, final boolean isTopLevel,
+	public LispStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder, final boolean isTopLevel,
 	                       final boolean isCompileOrCompileFile) {
 
-		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
+		final ListStruct inputRest = input.getRest();
 
-		final EnhancedLinkedList<SimpleElement> inputRest = elements.getAllButFirst();
-
-		final SimpleElement second = inputRest.getFirst();
-		if (!(second instanceof ListElement)) {
+		final LispStruct second = inputRest.getFirst();
+		if (!(second instanceof ListStruct)) {
 			throw new ProgramErrorException("EVAL-WHEN: Situation list must be of type ListStruct. Got: " + second);
 		}
 
-		final ListElement situationList = (ListElement) second;
-		final List<? extends SimpleElement> situationJavaList = situationList.getElements();
+		final ListStruct situationList = (ListStruct) second;
+		final List<? extends LispStruct> situationJavaList = situationList.getAsJavaList();
 
-		// TODO: fix Keyword check here
-		final Collection<? extends SimpleElement> difference = CollectionUtils.removeAll(situationJavaList, SITUATION_KEYWORDS);
+		final Collection<? extends LispStruct> difference = CollectionUtils.removeAll(situationJavaList, SITUATION_KEYWORDS);
 		if (!difference.isEmpty()) {
 			throw new ProgramErrorException("EVAL-WHEN: Situations must be one of ':COMPILE-TOP-LEVEL', ':LOAD-TIME-LEVEL', or ':EXECUTE'. Got: " + situationList);
 		}
 
-		final EnhancedLinkedList<SimpleElement> forms = inputRest.getAllButFirst();
+		final List<LispStruct> forms = inputRest.getRest().getAsJavaList();
 
 		final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
@@ -93,7 +87,7 @@ public class EvalWhenAnalyzer extends MacroFunctionExpander implements SpecialOp
 
 			if (isLoadTopLevel(situationJavaList) || (!isCompileOrCompileFile && isExecute(situationJavaList))) {
 				// (funcall #'(lambda (forms) (ir1-convert-progn-body start cont forms)) body)
-				final List<Element> analyzedForms =
+				final List<LispStruct> analyzedForms =
 						forms.stream()
 						             .map(e -> analyzer.analyzeForm(e, analysisBuilder))
 						             .collect(Collectors.toList());
@@ -106,7 +100,7 @@ public class EvalWhenAnalyzer extends MacroFunctionExpander implements SpecialOp
 			}
 		} else if (isExecute(situationJavaList)) {
 			// (funcall #'(lambda (forms) (ir1-convert-progn-body start cont forms)) body)
-			final List<Element> analyzedForms =
+			final List<LispStruct> analyzedForms =
 					forms.stream()
 					             .map(e -> analyzer.analyzeForm(e, analysisBuilder))
 					             .collect(Collectors.toList());
@@ -119,18 +113,18 @@ public class EvalWhenAnalyzer extends MacroFunctionExpander implements SpecialOp
 		}
 
 		// TODO: Really, we just do nothing. Should we actually do a 'void' return here???
-		return NullElement.INSTANCE;
+		return NullStruct.INSTANCE;
 	}
 
-	private static boolean isCompileTopLevel(final List<? extends SimpleElement> situationList) {
+	private static boolean isCompileTopLevel(final List<? extends LispStruct> situationList) {
 		return situationList.contains(KeywordOld.CompileToplevel);
 	}
 
-	private static boolean isLoadTopLevel(final List<? extends SimpleElement> situationList) {
+	private static boolean isLoadTopLevel(final List<? extends LispStruct> situationList) {
 		return situationList.contains(KeywordOld.LoadToplevel);
 	}
 
-	private static boolean isExecute(final List<? extends SimpleElement> situationList) {
+	private static boolean isExecute(final List<? extends LispStruct> situationList) {
 		return situationList.contains(KeywordOld.Execute);
 	}
 }

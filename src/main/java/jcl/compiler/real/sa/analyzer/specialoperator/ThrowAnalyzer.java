@@ -1,18 +1,16 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import jcl.compiler.real.element.ConsElement;
-import jcl.compiler.real.element.Element;
-import jcl.compiler.real.element.SimpleElement;
-import jcl.compiler.real.element.specialoperator.ThrowElement;
+import javax.annotation.PostConstruct;
+
+import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
+import jcl.compiler.real.struct.specialoperator.ThrowStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
-import jcl.system.EnhancedLinkedList;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
 
 @Component
 public class ThrowAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
@@ -28,32 +26,30 @@ public class ThrowAnalyzer extends MacroFunctionExpander implements SpecialOpera
 	}
 
 	@Override
-	public Element expand(final ConsElement form, final AnalysisBuilder analysisBuilder) {
+	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 		return analyze(form, analysisBuilder);
 	}
 
 	@Override
-	public ThrowElement analyze(final ConsElement input, final AnalysisBuilder analysisBuilder) {
+	public ThrowStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
 
-		final EnhancedLinkedList<SimpleElement> elements = input.getElements();
-
-		final int inputSize = elements.size();
+		final int inputSize = input.size();
 		if (inputSize != 3) {
 			throw new ProgramErrorException("THROW: Incorrect number of arguments: " + inputSize + ". Expected 3 arguments.");
 		}
 
-		final EnhancedLinkedList<SimpleElement> inputRest = elements.getAllButFirst();
+		final ListStruct inputRest = input.getRest();
 
 		final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
-		final SimpleElement catchTag = inputRest.getFirst();
-		final Element catchTagAnalyzed = analyzer.analyzeForm(catchTag, analysisBuilder);
+		final LispStruct catchTag = inputRest.getFirst();
+		final LispStruct catchTagAnalyzed = analyzer.analyzeForm(catchTag, analysisBuilder);
 
-		final EnhancedLinkedList<SimpleElement> inputRestRest = inputRest.getAllButFirst();
+		final ListStruct inputRestRest = inputRest.getRest();
 
-		final SimpleElement resultForm = inputRestRest.getFirst();
-		final Element resultFormAnalyzed = analyzer.analyzeForm(resultForm, analysisBuilder);
+		final LispStruct resultForm = inputRestRest.getFirst();
+		final LispStruct resultFormAnalyzed = analyzer.analyzeForm(resultForm, analysisBuilder);
 
-		return new ThrowElement(catchTagAnalyzed, resultFormAnalyzed);
+		return new ThrowStruct(catchTagAnalyzed, resultFormAnalyzed);
 	}
 }

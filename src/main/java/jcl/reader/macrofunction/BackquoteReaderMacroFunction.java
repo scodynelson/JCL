@@ -11,7 +11,6 @@ import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.numbers.NumberStruct;
-import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
@@ -35,12 +34,6 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 * Serializable Version Unique Identifier.
 	 */
 	private static final long serialVersionUID = 7900660772057166319L;
-
-	static final SymbolStruct<?> BQ_COMMA_FLAG = new SymbolStruct<>(",", GlobalPackageStruct.BACKQUOTE);
-
-	static final SymbolStruct<?> BQ_AT_FLAG = new SymbolStruct<>(",@", GlobalPackageStruct.BACKQUOTE);
-
-	static final SymbolStruct<?> BQ_DOT_FLAG = new SymbolStruct<>(",.", GlobalPackageStruct.BACKQUOTE);
 
 	/**
 	 * {@link Autowired} {@link Printer} used for printing elements and structures to the output stream.
@@ -68,10 +61,10 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 			final SymbolStruct<?> flag = backquoteReturn.getFlag();
 			final LispStruct thing = backquoteReturn.getThing();
 
-			if (BQ_AT_FLAG.equals(flag)) {
+			if (CommonLispSymbols.BQ_AT_FLAG.equals(flag)) {
 				throw new ReaderErrorException(",@ after backquote in " + printer.print(thing));
 			}
-			if (BQ_DOT_FLAG.equals(flag)) {
+			if (CommonLispSymbols.BQ_DOT_FLAG.equals(flag)) {
 				throw new ReaderErrorException(",. after backquote in " + printer.print(thing));
 			}
 
@@ -105,12 +98,12 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 			final LispStruct carConsCode = consCode.getCar();
 			final LispStruct cdrConsCode = consCode.getCdr();
 
-			if (BQ_AT_FLAG.equals(carConsCode) || BQ_DOT_FLAG.equals(carConsCode)) {
+			if (CommonLispSymbols.BQ_AT_FLAG.equals(carConsCode) || CommonLispSymbols.BQ_DOT_FLAG.equals(carConsCode)) {
 				final SymbolStruct<?> carConsCodeFlag = (SymbolStruct<?>) carConsCode;
 				return new BackquoteReturn(carConsCodeFlag, cdrConsCode);
 			}
 
-			if (BQ_COMMA_FLAG.equals(carConsCode)) {
+			if (CommonLispSymbols.BQ_COMMA_FLAG.equals(carConsCode)) {
 				return comma(cdrConsCode);
 			}
 
@@ -124,19 +117,19 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 			final SymbolStruct<?> cdrBqtifyFlag = cdrBqtify.getFlag();
 			final LispStruct cdrBqtifyThing = cdrBqtify.getThing();
 
-			if (BQ_AT_FLAG.equals(cdrBqtifyFlag)) {
+			if (CommonLispSymbols.BQ_AT_FLAG.equals(cdrBqtifyFlag)) {
 				throw new ReaderErrorException(",@ after dot in " + printer.print(code));
 			}
 
-			if (BQ_DOT_FLAG.equals(cdrBqtifyFlag)) {
+			if (CommonLispSymbols.BQ_DOT_FLAG.equals(cdrBqtifyFlag)) {
 				throw new ReaderErrorException(",. after dot in " + printer.print(code));
 			}
 
-			if (BQ_AT_FLAG.equals(carBqtifyFlag)) {
+			if (CommonLispSymbols.BQ_AT_FLAG.equals(carBqtifyFlag)) {
 				return backquotifyAtFlag(carBqtifyThing, cdrBqtifyFlag, cdrBqtifyThing);
 			}
 
-			if (BQ_DOT_FLAG.equals(carBqtifyFlag)) {
+			if (CommonLispSymbols.BQ_DOT_FLAG.equals(carBqtifyFlag)) {
 				return backquotifyDotFlag(carBqtifyThing, cdrBqtifyFlag, cdrBqtifyThing);
 			}
 
@@ -237,6 +230,11 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 		}
 	}
 
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+	}
+
 	private static BackquoteReturn comma(final LispStruct code) {
 
 		if (code instanceof NullStruct) {
@@ -287,14 +285,14 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 			}
 		}
 
-		return new BackquoteReturn(BQ_COMMA_FLAG, code);
+		return new BackquoteReturn(CommonLispSymbols.BQ_COMMA_FLAG, code);
 	}
 
 	private static boolean expandableBackqExpressionP(final LispStruct o) {
 		if (o instanceof ConsStruct) {
 			final ConsStruct consStruct = (ConsStruct) o;
 			final LispStruct flag = consStruct.getFirst();
-			if (BQ_AT_FLAG.equals(flag) || BQ_DOT_FLAG.equals(flag)) {
+			if (CommonLispSymbols.BQ_AT_FLAG.equals(flag) || CommonLispSymbols.BQ_DOT_FLAG.equals(flag)) {
 				return true;
 			}
 		}
@@ -303,7 +301,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 	private static LispStruct backquotify_1(final SymbolStruct<?> flag, final LispStruct thing) {
 
-		if (BQ_COMMA_FLAG.equals(flag) || CommonLispSymbols.T.equals(flag) || CommonLispSymbols.NIL.equals(flag)) {
+		if (CommonLispSymbols.BQ_COMMA_FLAG.equals(flag) || CommonLispSymbols.T.equals(flag) || CommonLispSymbols.NIL.equals(flag)) {
 			return thing;
 		}
 
@@ -342,11 +340,6 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 		}
 
 		return new ConsStruct(flag, thing);
-	}
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 
 	private static final class BackquoteReturn {

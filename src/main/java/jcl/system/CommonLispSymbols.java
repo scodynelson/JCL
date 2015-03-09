@@ -1008,4 +1008,10 @@ public interface CommonLispSymbols {
 	// Other....
 	SymbolStruct<?> ELEMENT_TYPE = new KeywordSymbolStruct("ELEMENT-TYPE");
 	SymbolStruct<?> INITIAL_CONTENTS = new KeywordSymbolStruct("INITIAL-CONTENTS");
+
+	// Backquote
+	SymbolStruct<?> BQ_COMMA_FLAG = new SymbolStruct<>(",", GlobalPackageStruct.BACKQUOTE);
+	SymbolStruct<?> BQ_AT_FLAG = new SymbolStruct<>(",@", GlobalPackageStruct.BACKQUOTE);
+	SymbolStruct<?> BQ_DOT_FLAG = new SymbolStruct<>(",.", GlobalPackageStruct.BACKQUOTE);
+
 }

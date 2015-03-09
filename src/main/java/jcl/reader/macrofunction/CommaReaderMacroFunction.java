@@ -9,11 +9,10 @@ import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ConsStruct;
 import jcl.lists.NullStruct;
-import jcl.packages.GlobalPackageStruct;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.streams.ReadPeekResult;
-import jcl.symbols.SymbolStruct;
+import jcl.system.CommonLispSymbols;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.stereotype.Component;
@@ -31,12 +30,6 @@ public class CommaReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 * Serializable Version Unique Identifier.
 	 */
 	private static final long serialVersionUID = -8890411312426952661L;
-
-	static final SymbolStruct<?> BQ_COMMA_FLAG = new SymbolStruct<>(",", GlobalPackageStruct.BACKQUOTE);
-
-	static final SymbolStruct<?> BQ_AT_FLAG = new SymbolStruct<>(",@", GlobalPackageStruct.BACKQUOTE);
-
-	static final SymbolStruct<?> BQ_DOT_FLAG = new SymbolStruct<>(",.", GlobalPackageStruct.BACKQUOTE);
 
 	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
@@ -68,14 +61,14 @@ public class CommaReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 			if (nextCodePoint == CharacterConstants.AT_SIGN) {
 				final LispStruct code = reader.read(true, NullStruct.INSTANCE, true);
-				consStruct = new ConsStruct(BQ_AT_FLAG, code);
+				consStruct = new ConsStruct(CommonLispSymbols.BQ_AT_FLAG, code);
 			} else if (nextCodePoint == CharacterConstants.FULL_STOP) {
 				final LispStruct code = reader.read(true, NullStruct.INSTANCE, true);
-				consStruct = new ConsStruct(BQ_DOT_FLAG, code);
+				consStruct = new ConsStruct(CommonLispSymbols.BQ_DOT_FLAG, code);
 			} else {
 				reader.unreadChar(nextCodePoint);
 				final LispStruct code = reader.read(true, NullStruct.INSTANCE, true);
-				consStruct = new ConsStruct(BQ_COMMA_FLAG, code);
+				consStruct = new ConsStruct(CommonLispSymbols.BQ_COMMA_FLAG, code);
 			}
 			return consStruct;
 		} finally {

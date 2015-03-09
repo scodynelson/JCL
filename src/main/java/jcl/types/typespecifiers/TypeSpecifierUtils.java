@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.types.typespecifiers;
 
 import org.apache.commons.math3.fraction.BigFraction;

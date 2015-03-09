@@ -66,6 +66,20 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 	public abstract ListStruct getRest();
 
 	/**
+	 * Returns the last element in the list.
+	 *
+	 * @return the last element in the list
+	 */
+	public abstract ListStruct getLast();
+
+	/**
+	 * Returns all but the last element in the list.
+	 *
+	 * @return all but the last element in the list
+	 */
+	public abstract ListStruct getAllButLast();
+
+	/**
 	 * Returns the element at the provided {@code index} location in the list.
 	 *
 	 * @param index

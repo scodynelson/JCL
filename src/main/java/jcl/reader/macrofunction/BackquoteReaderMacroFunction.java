@@ -250,12 +250,13 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 		final LispStruct carConsCode = consCode.getCar();
 		final LispStruct cdrConsCode = consCode.getCdr();
 
-		// NOTE: This cast will always be fine because of how we build the ConsStruct in the CommaReaderMacroFunction
-		final LispStruct cadrConsCode = ((ConsStruct) cdrConsCode).getCar();
-
-		if (CommonLispSymbols.QUOTE.equals(carConsCode) && !expandableBackqExpressionP(cadrConsCode)) {
-			final SymbolStruct<?> carConsCodeFlag = (SymbolStruct<?>) carConsCode;
-			return new BackquoteReturn(carConsCodeFlag, cadrConsCode);
+		if (CommonLispSymbols.QUOTE.equals(carConsCode)) {
+			// NOTE: This cast will always be fine because of how we build the ConsStruct in the CommaReaderMacroFunction
+			final LispStruct cadrConsCode = ((ConsStruct) cdrConsCode).getCar();
+			if (!expandableBackqExpressionP(cadrConsCode)) {
+				final SymbolStruct<?> carConsCodeFlag = (SymbolStruct<?>) carConsCode;
+				return new BackquoteReturn(carConsCodeFlag, cadrConsCode);
+			}
 		}
 
 		if (CommonLispSymbols.APPEND.equals(carConsCode) || CommonLispSymbols.LIST.equals(carConsCode) || CommonLispSymbols.NCONC.equals(carConsCode)) {
@@ -292,7 +293,7 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 		}
 
 		if (CommonLispSymbols.LIST_STAR.equals(flag)) {
-			// NOTE: The following check is not in CMUCL. Actually a semi-bug found when handling improperly created lists.
+			// NOTE: The following check is not in CMU-CL. Actually a semi-bug found when handling improperly created lists.
 			if (thing instanceof ConsStruct) {
 				final ConsStruct consThing = (ConsStruct) thing;
 
@@ -303,41 +304,22 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 				final LispStruct cddrThing = ((ConsStruct) cdrThing).getCdr();
 
 				if (NullStruct.INSTANCE.equals(cddrThing) && !expandableBackqExpressionP(cadrThing)) {
+					// Basically if there are only 2 items in the list, just use Cons function
 					return new ConsStruct(CommonLispSymbols.CONS, thing);
 				}
 
-				final List<LispStruct> consThingElements = consThing.getAsJavaList();
-				final EnhancedLinkedList<LispStruct> consElements = new EnhancedLinkedList<>(consThingElements);
-
-				final ListStruct lastThing;
-
-				final boolean isDotted = consThing.isDotted();
-				if (isDotted) {
-					final List<LispStruct> lastTwo = consElements.getLastN(2);
-					lastThing = ListStruct.buildDottedList(lastTwo);
-				} else {
-					final LispStruct last = consElements.getLast();
-					lastThing = ListStruct.buildProperList(last);
-				}
-
+				final ListStruct lastThing = consThing.getLast();
 				final LispStruct carOfLastThing = lastThing.getFirst();
+
 				if (expandableBackqExpressionP(carOfLastThing)) {
+					final ListStruct allButLast = consThing.getAllButLast();
+					final ConsStruct consStruct = new ConsStruct(CommonLispSymbols.LIST, allButLast);
 
-					final EnhancedLinkedList<LispStruct> allButLast;
-					if (isDotted) {
-						allButLast = consElements.getAllButLastN(2);
-					} else {
-						allButLast = consElements.getAllButLast();
-					}
-
-					final ConsStruct consStruct = new ConsStruct(CommonLispSymbols.LIST, ListStruct.buildProperList(allButLast));
 					return ListStruct.buildProperList(CommonLispSymbols.APPEND, consStruct, carOfLastThing);
 				}
-
-				return new ConsStruct(CommonLispSymbols.LIST_STAR, thing);
-			} else {
-				return new ConsStruct(CommonLispSymbols.LIST_STAR, thing);
 			}
+
+			return new ConsStruct(CommonLispSymbols.LIST_STAR, thing);
 		}
 
 		return new ConsStruct(flag, thing);

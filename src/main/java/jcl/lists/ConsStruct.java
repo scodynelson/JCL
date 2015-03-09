@@ -127,6 +127,23 @@ public class ConsStruct extends ListStruct {
 	}
 
 	@Override
+	public ListStruct getLast() {
+		return (cdr instanceof ConsStruct) ? ((ConsStruct) cdr).getLast() : new ConsStruct(car, cdr);
+	}
+
+	@Override
+	public ListStruct getAllButLast() {
+		if (!(cdr instanceof ConsStruct)) {
+			return NullStruct.INSTANCE;
+		}
+
+		final ConsStruct cdrAsCons = (ConsStruct) cdr;
+		final ListStruct newCdr = cdrAsCons.getAllButLast();
+
+		return new ConsStruct(car, newCdr);
+	}
+
+	@Override
 	public List<LispStruct> getAsJavaList() {
 		final List<LispStruct> javaList = new ArrayList<>();
 		javaList.add(car);

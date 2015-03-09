@@ -51,6 +51,16 @@ public final class NullStruct extends ListStruct {
 	}
 
 	@Override
+	public ListStruct getLast() {
+		return INSTANCE;
+	}
+
+	@Override
+	public ListStruct getAllButLast() {
+		return INSTANCE;
+	}
+
+	@Override
 	public List<LispStruct> getAsJavaList() {
 		return Collections.emptyList();
 	}

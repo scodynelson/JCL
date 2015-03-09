@@ -22,6 +22,8 @@ import jcl.reader.TokenBuilder;
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,22 +105,22 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
 
 		// Check that there is at least 1 'ALPHADIGIT'
-		final boolean hasNoPackageMarkers = ReaderState.hasNoAttributes(tokenAttributes, AttributeType.PACKAGEMARKER);
+		final boolean hasNoPackageMarkers = ReaderState.hasNoAttributesWithAttributeType(tokenAttributes, AttributeType.PACKAGEMARKER);
 		if (hasNoPackageMarkers) {
-			final String symName = ReaderState.convertTokensToString(tokenAttributes);
+			final String symbolName = ReaderState.convertTokenAttributesToString(tokenAttributes);
 
-			final PackageStruct pkg = PackageVariables.PACKAGE.getValue();
-			return findExistingOrCreateNewSymbol(symName, pkg);
+			final PackageStruct symbolPackage = PackageVariables.PACKAGE.getValue();
+			return findExistingOrCreateNewSymbol(symbolName, symbolPackage);
 		}
 
 		// Check if last element is a 'PACKAGEMARKER'
-		final TokenAttribute lastToken = tokenAttributes.getLast();
-		if (lastToken.getAttributeType() == AttributeType.PACKAGEMARKER) {
+		final TokenAttribute lastTokenAttribute = tokenAttributes.getLast();
+		if (lastTokenAttribute.getAttributeType() == AttributeType.PACKAGEMARKER) {
 			throw new ReaderErrorException("Illegal symbol syntax.");
 		}
 
 		// Grab tokens up to the first 'PACKAGEMARKER' (this is the package name)
-		final List<TokenAttribute> packageTokenAttributes = new ArrayList<>();
+		final List<TokenAttribute> packageNameTokenAttributes = new ArrayList<>();
 
 		int packageMarkerStartIndex = 0;
 		for (int i = 0; i < tokenAttributes.size(); i++) {
@@ -130,7 +132,7 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 				break;
 			}
 
-			packageTokenAttributes.add(tokenAttribute);
+			packageNameTokenAttributes.add(tokenAttribute);
 		}
 
 		// Skip up to 2 'PACKAGEMARKER' tokens or until a different attribute is found
@@ -158,39 +160,38 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 		}
 
 		// Grab the rest of the tokens (this is the symbol name)
-		final List<TokenAttribute> symbolTokenAttributes = new ArrayList<>();
+		final List<TokenAttribute> symbolNameTokenAttributes = new ArrayList<>();
 
 		for (int i = symbolStartIndex; i < tokenAttributes.size(); i++) {
 			final TokenAttribute tokenAttribute = tokenAttributes.get(i);
-			symbolTokenAttributes.add(tokenAttribute);
+			symbolNameTokenAttributes.add(tokenAttribute);
 		}
 
-		final String pkgName = ReaderState.convertTokensToString(packageTokenAttributes);
-		final String symName = ReaderState.convertTokensToString(symbolTokenAttributes);
+		final String packageName = ReaderState.convertTokenAttributesToString(packageNameTokenAttributes);
+		final String symbolName = ReaderState.convertTokenAttributesToString(symbolNameTokenAttributes);
 
-		if (StringUtils.isNotEmpty(pkgName)) {
-			final PackageStruct pkg = PackageStruct.findPackage(pkgName);
+		if (StringUtils.isNotEmpty(packageName)) {
+			final PackageStruct symbolPackage = PackageStruct.findPackage(packageName);
 
-			if (pkg == null) {
-				throw new ReaderErrorException("There is no package named " + pkgName);
+			if (symbolPackage == null) {
+				throw new ReaderErrorException("There is no package named " + packageName);
 			}
 
-			final int singlePackageMarker = 1;
-			if (packageMarkerCount == singlePackageMarker) {
-				final Map<String, SymbolStruct<?>> pkgExternalSymbols = pkg.getExternalSymbols();
+			if (packageMarkerCount == 1) {
+				final Map<String, SymbolStruct<?>> symbolPackageExternalSymbols = symbolPackage.getExternalSymbols();
 
-				final SymbolStruct<?> externalSymbol = pkgExternalSymbols.get(symName);
+				final SymbolStruct<?> externalSymbol = symbolPackageExternalSymbols.get(symbolName);
 				if (externalSymbol == null) {
-					throw new ReaderErrorException("No external symbol named \"" + symName + "\" in package " + pkgName);
+					throw new ReaderErrorException("No external symbol named \"" + symbolName + "\" in package " + packageName);
 				}
 				return externalSymbol;
 			} else {
-				return findExistingOrCreateNewSymbol(symName, pkg);
+				return findExistingOrCreateNewSymbol(symbolName, symbolPackage);
 			}
 		}
 
-		final PackageStruct pkg = GlobalPackageStruct.KEYWORD;
-		return findExistingOrCreateNewSymbol(symName, pkg);
+		final PackageStruct symbolPackage = GlobalPackageStruct.KEYWORD;
+		return findExistingOrCreateNewSymbol(symbolName, symbolPackage);
 	}
 
 	/**
@@ -199,25 +200,35 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 	 * to {@link GlobalPackageStruct#KEYWORD}, a
 	 * {@link KeywordSymbolStruct} will be returned instead.
 	 *
-	 * @param symName
+	 * @param symbolName
 	 * 		the name of the {@link SymbolStruct} to find or create
-	 * @param pkg
+	 * @param symbolPackage
 	 * 		the {@link PackageStruct} to either find the {@link SymbolStruct} or create and intern
 	 *
 	 * @return the existing {@link SymbolStruct} or a newly created one
 	 */
-	private static SymbolStruct<?> findExistingOrCreateNewSymbol(final String symName, final PackageStruct pkg) {
+	private static SymbolStruct<?> findExistingOrCreateNewSymbol(final String symbolName, final PackageStruct symbolPackage) {
 
-		final PackageSymbolStruct foundSymbol = pkg.findSymbol(symName);
+		final PackageSymbolStruct foundSymbol = symbolPackage.findSymbol(symbolName);
 		if (foundSymbol == null) {
-			final boolean isKeyword = GlobalPackageStruct.KEYWORD.equals(pkg);
+			final boolean isKeyword = GlobalPackageStruct.KEYWORD.equals(symbolPackage);
 			if (isKeyword) {
-				return new KeywordSymbolStruct(symName);
+				return new KeywordSymbolStruct(symbolName);
 			}
-			return new SymbolStruct<>(symName, pkg);
+			return new SymbolStruct<>(symbolName, symbolPackage);
 		} else {
 			return foundSymbol.getSymbol();
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

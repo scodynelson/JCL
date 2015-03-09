@@ -37,33 +37,33 @@ public class SharpBackslashReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numberArgument) {
 		assert codePoint == CharacterConstants.BACKSLASH;
 
-		final ExtendedTokenReaderMacroFunction.ReadExtendedToken readExtendedToken = ExtendedTokenReaderMacroFunction.readExtendedToken(reader, true);
-		final String token = readExtendedToken.getToken();
+		final ExtendedTokenReaderMacroFunction.ReadExtendedToken extendedToken = ExtendedTokenReaderMacroFunction.readExtendedToken(reader, true);
+		final String tokenString = extendedToken.getTokenString();
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			return Null.INSTANCE;
 		}
 
-		final int maxCharTokenLength = 1;
-		if (StringUtils.length(token) == maxCharTokenLength) {
-			final char theChar = token.charAt(0);
-			return new CharacterStruct(theChar);
+		final int maxTokenStringLength = 1;
+		if (StringUtils.length(tokenString) == maxTokenStringLength) {
+			final char characterToken = tokenString.charAt(0);
+			return new CharacterStruct(characterToken);
 		}
 
 		Integer nameCodePoint = null;
 		for (final CharacterName characterName : CharacterName.values()) {
 			final String name = characterName.getName();
-			if (StringUtils.equalsIgnoreCase(token, name)) {
+			if (StringUtils.equalsIgnoreCase(tokenString, name)) {
 				nameCodePoint = characterName.getCodePoint();
 				break;
 			}
 		}
 
 		if (nameCodePoint == null) {
-			throw new ReaderErrorException("Unrecognized character name: " + token);
+			throw new ReaderErrorException("Unrecognized character name: " + tokenString);
 		}
 
 		return new CharacterStruct(nameCodePoint);

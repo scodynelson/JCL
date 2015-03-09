@@ -13,6 +13,8 @@ import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.NullStruct;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.stereotype.Component;
@@ -37,10 +39,10 @@ public class SharpFullStopReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numberArgument) {
 		assert codePoint == CharacterConstants.FULL_STOP;
 
-		final LispStruct lispToken = reader.read(true, NullStruct.INSTANCE, true);
+		final LispStruct token = reader.read(true, NullStruct.INSTANCE, true);
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			return NullStruct.INSTANCE;
 		}
@@ -52,7 +54,17 @@ public class SharpFullStopReaderMacroFunction extends ReaderMacroFunctionImpl {
 		// TODO: need to evaluate and return the evaluated result
 		// Evaluate the lisp token
 
-		return lispToken;
+		return token;
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

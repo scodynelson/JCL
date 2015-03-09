@@ -34,7 +34,7 @@ public class RightParenthesisReaderMacroFunction extends ReaderMacroFunctionImpl
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numberArgument) {
 		assert codePoint == CharacterConstants.RIGHT_PARENTHESIS;
 
 		throw new ReaderErrorException("Unmatched close parenthesis.");

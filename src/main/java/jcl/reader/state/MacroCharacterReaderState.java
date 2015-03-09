@@ -16,6 +16,8 @@ import jcl.reader.TokenBuilder;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
 import jcl.streams.ReadPeekResult;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,16 +75,16 @@ class MacroCharacterReaderState implements ReaderState {
 
 		final Reader reader = tokenBuilder.getReader();
 
-		BigInteger numArg = null;
+		BigInteger numberArgument = null;
 		if (readerMacroFunction.isDispatch()) {
-			numArg = getNumberArgument(reader);
+			numberArgument = getNumberArgument(reader);
 		}
 
-		final LispStruct lispToken = readerMacroFunction.readMacro(codePoint, reader, numArg);
-		if (lispToken == null) {
+		final LispStruct token = readerMacroFunction.readMacro(codePoint, reader, numberArgument);
+		if (token == null) {
 			return readerStateMediator.read(tokenBuilder);
 		} else {
-			return lispToken;
+			return token;
 		}
 	}
 
@@ -98,29 +100,39 @@ class MacroCharacterReaderState implements ReaderState {
 
 		// NOTE: This will throw errors when it reaches an EOF. That's why we can un-box the 'readChar' variable below.
 		ReadPeekResult readResult = reader.readChar(true, NullStruct.INSTANCE, false);
-		int readChar = readResult.getResult();
+		int codePoint = readResult.getResult();
 
 		final StringBuilder digitStringBuilder = new StringBuilder();
 
-		while (Character.isDigit(readChar)) {
-			digitStringBuilder.appendCodePoint(readChar);
+		while (Character.isDigit(codePoint)) {
+			digitStringBuilder.appendCodePoint(codePoint);
 
 			readResult = reader.readChar(true, NullStruct.INSTANCE, false);
-			readChar = readResult.getResult();
+			codePoint = readResult.getResult();
 		}
 
 		final int minimumDigitLength = 1;
 
-		BigInteger numArg = null;
+		BigInteger numberArgument = null;
 		if (digitStringBuilder.length() >= minimumDigitLength) {
 			final String digitString = digitStringBuilder.toString();
-			numArg = new BigInteger(digitString);
+			numberArgument = new BigInteger(digitString);
 		}
 
 		// Make sure to unread the last character read after the number arg
-		reader.unreadChar(readChar);
+		reader.unreadChar(codePoint);
 
-		return numArg;
+		return numberArgument;
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

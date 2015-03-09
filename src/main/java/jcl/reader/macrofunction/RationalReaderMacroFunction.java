@@ -16,6 +16,8 @@ import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import org.apache.commons.lang3.Range;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,17 +78,27 @@ final class RationalReaderMacroFunction implements Serializable {
 		ReaderVariables.READ_BASE.setValue(new IntegerStruct(radix));
 
 		// read rational
-		final LispStruct lispToken = reader.read(true, NullStruct.INSTANCE, true);
+		final LispStruct token = reader.read(true, NullStruct.INSTANCE, true);
 
 		// reset the read-base
 		ReaderVariables.READ_BASE.setValue(previousReadBase);
 
-		if (lispToken instanceof RationalStruct) {
-			return lispToken;
+		if (token instanceof RationalStruct) {
+			return token;
 		}
 
-		final String printedLispStruct = printer.print(lispToken);
-		throw new ReaderErrorException("#R (base " + radix + ") value is not a rational: " + printedLispStruct + '.');
+		final String printedToken = printer.print(token);
+		throw new ReaderErrorException("#R (base " + radix + ") value is not a rational: " + printedToken + '.');
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

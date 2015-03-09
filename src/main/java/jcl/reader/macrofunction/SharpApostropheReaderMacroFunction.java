@@ -39,15 +39,15 @@ public class SharpApostropheReaderMacroFunction extends ReaderMacroFunctionImpl 
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numberArgument) {
 		assert codePoint == CharacterConstants.APOSTROPHE;
 
-		final LispStruct lispToken = reader.read(true, NullStruct.INSTANCE, true);
-		if (lispToken == null) {
+		final LispStruct token = reader.read(true, NullStruct.INSTANCE, true);
+		if (token == null) {
 			throw new ReaderErrorException("Missing expression.");
 		}
 
-		return ListStruct.buildProperList(CommonLispSymbols.FUNCTION, lispToken);
+		return ListStruct.buildProperList(CommonLispSymbols.FUNCTION, token);
 	}
 
 	@Override

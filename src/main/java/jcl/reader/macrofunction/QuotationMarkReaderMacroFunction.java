@@ -35,25 +35,25 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public StringStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public StringStruct readMacro(final int codePoint, final Reader reader, final BigInteger numberArgument) {
 		assert codePoint == CharacterConstants.QUOTATION_MARK;
 
 		final StringBuilder stringBuilder = new StringBuilder();
 
 		// NOTE: This will throw errors when it reaches an EOF
 		ReadPeekResult readResult = reader.readChar(true, NullStruct.INSTANCE, true);
-		int readChar = readResult.getResult();
+		int nextCodePoint = readResult.getResult();
 
-		while (readChar != CharacterConstants.QUOTATION_MARK) {
-			if (readChar == CharacterConstants.BACKSLASH) {
+		while (nextCodePoint != CharacterConstants.QUOTATION_MARK) {
+			if (nextCodePoint == CharacterConstants.BACKSLASH) {
 				handleEscapedCharacter(reader, stringBuilder);
 			} else {
-				stringBuilder.appendCodePoint(readChar);
+				stringBuilder.appendCodePoint(nextCodePoint);
 			}
 
 			// NOTE: This will throw errors when it reaches an EOF
 			readResult = reader.readChar(true, NullStruct.INSTANCE, true);
-			readChar = readResult.getResult();
+			nextCodePoint = readResult.getResult();
 		}
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
@@ -73,29 +73,29 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 * 		the {@link StringBuilder} used to build the final token
 	 */
 	private static void handleEscapedCharacter(final Reader reader, final StringBuilder stringBuilder) {
-		int readChar = CharacterConstants.BACKSLASH;
+		int codePoint = CharacterConstants.BACKSLASH;
 
 		// NOTE: This will throw errors when it reaches an EOF
-		final ReadPeekResult tmpReadResult = reader.readChar(true, NullStruct.INSTANCE, true);
-		final int tmpChar = tmpReadResult.getResult();
-		if ((tmpChar == CharacterConstants.LATIN_SMALL_LETTER_U)
-				|| (tmpChar == CharacterConstants.LATIN_CAPITAL_LETTER_U)) {
+		final ReadPeekResult tempReadResult = reader.readChar(true, NullStruct.INSTANCE, true);
+		final int tempCodePoint = tempReadResult.getResult();
+		if ((tempCodePoint == CharacterConstants.LATIN_SMALL_LETTER_U)
+				|| (tempCodePoint == CharacterConstants.LATIN_CAPITAL_LETTER_U)) {
 
-			final ReadPeekResult nextTmpReadResult = reader.readChar(true, NullStruct.INSTANCE, true);
-			final int nextTmpChar = nextTmpReadResult.getResult();
-			if (nextTmpChar == CharacterConstants.PLUS_SIGN) {
-				readChar = UnicodeCharacterReaderMacroFunction.readUnicodeCharacter(reader);
-				stringBuilder.appendCodePoint(readChar);
+			final ReadPeekResult nextTempReadResult = reader.readChar(true, NullStruct.INSTANCE, true);
+			final int nextTempCodePoint = nextTempReadResult.getResult();
+			if (nextTempCodePoint == CharacterConstants.PLUS_SIGN) {
+				codePoint = UnicodeCharacterReaderMacroFunction.readUnicodeCharacter(reader);
+				stringBuilder.appendCodePoint(codePoint);
 			} else {
 				// NOTE: Order matters here!!
-				stringBuilder.appendCodePoint(readChar);
-				stringBuilder.appendCodePoint(tmpChar);
-				stringBuilder.appendCodePoint(nextTmpChar);
+				stringBuilder.appendCodePoint(codePoint);
+				stringBuilder.appendCodePoint(tempCodePoint);
+				stringBuilder.appendCodePoint(nextTempCodePoint);
 			}
 		} else {
 			// NOTE: Order matters here!!
-			stringBuilder.appendCodePoint(readChar);
-			stringBuilder.appendCodePoint(tmpChar);
+			stringBuilder.appendCodePoint(codePoint);
+			stringBuilder.appendCodePoint(tempCodePoint);
 		}
 	}
 }

@@ -38,14 +38,14 @@ public class SharpUReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numberArgument) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_U) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_U);
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			return NullStruct.INSTANCE;
 		}
 
-		final int unicodeChar = UnicodeCharacterReaderMacroFunction.readUnicodeCharacter(reader);
-		return new CharacterStruct(unicodeChar);
+		final int unicodeCodePoint = UnicodeCharacterReaderMacroFunction.readUnicodeCharacter(reader);
+		return new CharacterStruct(unicodeCodePoint);
 	}
 }

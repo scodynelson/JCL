@@ -4,6 +4,8 @@
 
 package jcl.reader;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -15,33 +17,33 @@ public class TokenAttribute {
 	/**
 	 * The character token code point.
 	 */
-	private final int token;
+	private final int codePoint;
 
 	/**
-	 * The {@link AttributeType} of the {@link #token}.
+	 * The {@link AttributeType} of the {@link #codePoint}.
 	 */
 	private final AttributeType attributeType;
 
 	/**
 	 * Package private constructor.
 	 *
-	 * @param token
-	 * 		the character token value
+	 * @param codePoint
+	 * 		the character token code point
 	 * @param attributeType
 	 * 		the {@link AttributeType} of the character token
 	 */
-	TokenAttribute(final int token, final AttributeType attributeType) {
-		this.token = token;
+	TokenAttribute(final int codePoint, final AttributeType attributeType) {
+		this.codePoint = codePoint;
 		this.attributeType = attributeType;
 	}
 
 	/**
-	 * Getter for {@link #token} property.
+	 * Getter for {@link #codePoint} property.
 	 *
-	 * @return {@link #token} property
+	 * @return {@link #codePoint} property
 	 */
-	public int getToken() {
-		return token;
+	public int getCodePoint() {
+		return codePoint;
 	}
 
 	/**
@@ -51,6 +53,16 @@ public class TokenAttribute {
 	 */
 	public AttributeType getAttributeType() {
 		return attributeType;
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

@@ -32,7 +32,7 @@ public class IntegerTokenAccumulatedReaderState implements ReaderState {
 	/**
 	 * The list of {@link AttributeType}s that should only be first if present in a numeric token.
 	 */
-	private static final List<AttributeType> FIRST_ONLY_ATTRS = Arrays.asList(AttributeType.PLUS, AttributeType.MINUS);
+	private static final List<AttributeType> FIRST_ONLY_ATTRIBUTES = Arrays.asList(AttributeType.PLUS, AttributeType.MINUS);
 
 	@Override
 	public NumberStruct process(final TokenBuilder tokenBuilder) {
@@ -45,16 +45,16 @@ public class IntegerTokenAccumulatedReaderState implements ReaderState {
 		final boolean hasAttributesAndNotFirst
 				= allButFirstTokenAttribute.stream()
 				                           .map(TokenAttribute::getAttributeType)
-				                           .anyMatch(FIRST_ONLY_ATTRS::contains);
+				                           .anyMatch(FIRST_ONLY_ATTRIBUTES::contains);
 
 		if (hasAttributesAndNotFirst) {
 			return null;
 		}
 
-		final String tokenString = ReaderState.convertTokensToString(tokenAttributes);
+		final String tokenString = ReaderState.convertTokenAttributesToString(tokenAttributes);
 		final int currentRadix = ReaderVariables.READ_BASE.getValue().getBigInteger().intValueExact();
 
-		final BigInteger basicInteger = new BigInteger(tokenString, currentRadix);
-		return new IntegerStruct(basicInteger);
+		final BigInteger bigInteger = new BigInteger(tokenString, currentRadix);
+		return new IntegerStruct(bigInteger);
 	}
 }

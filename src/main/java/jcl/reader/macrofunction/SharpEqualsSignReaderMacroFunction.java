@@ -42,38 +42,38 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctionImpl 
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numberArgument) {
 		assert codePoint == CharacterConstants.EQUALS_SIGN;
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			return null;
 		}
 
-		if (numArg == null) {
+		if (numberArgument == null) {
 			throw new ReaderErrorException("Missing label for #=.");
 		}
 
 		final Map<BigInteger, LispStruct> sharpEqualFinalTable = reader.getSharpEqualFinalTable();
 		final Map<BigInteger, SymbolStruct<?>> sharpEqualTempTable = reader.getSharpEqualTempTable();
 
-		if (sharpEqualFinalTable.containsKey(numArg)
-				|| sharpEqualTempTable.containsKey(numArg)) {
-			throw new ReaderErrorException("Label already defined: #" + numArg + '=');
+		if (sharpEqualFinalTable.containsKey(numberArgument)
+				|| sharpEqualTempTable.containsKey(numberArgument)) {
+			throw new ReaderErrorException("Label already defined: #" + numberArgument + '=');
 		}
 
-		final String tagName = UUID.randomUUID().toString();
-		final SymbolStruct<?> tag = new SymbolStruct<>(tagName);
-		sharpEqualTempTable.put(numArg, tag);
+		final String labelTagName = UUID.randomUUID().toString();
+		final SymbolStruct<?> labelTag = new SymbolStruct<>(labelTagName);
+		sharpEqualTempTable.put(numberArgument, labelTag);
 
 		final LispStruct token = reader.read(true, NullStruct.INSTANCE, true);
 
 		final Map<SymbolStruct<?>, LispStruct> sharpEqualReplTable = reader.getSharpEqualReplTable();
-		sharpEqualReplTable.put(tag, token);
+		sharpEqualReplTable.put(labelTag, token);
 
 		final Set<LispStruct> sharpEqualCircleSet = new HashSet<>();
 		replaceTagsWithTokens(token, sharpEqualReplTable, sharpEqualCircleSet);
 
-		sharpEqualFinalTable.put(numArg, token);
+		sharpEqualFinalTable.put(numberArgument, token);
 
 		return token;
 	}
@@ -109,20 +109,20 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunctionImpl 
 			if (!sharpEqualCircleSet.contains(token)) {
 				sharpEqualCircleSet.add(token);
 
-				final ConsStruct consTree = (ConsStruct) token;
+				final ConsStruct consToken = (ConsStruct) token;
 
-				final LispStruct car = consTree.getCar();
+				final LispStruct car = consToken.getCar();
 				final LispStruct carSubst = replaceTagsWithTokens(car, sharpEqualReplTable, sharpEqualCircleSet);
 
 				if (!Objects.equals(carSubst, car)) {
-					consTree.setCar(carSubst);
+					consToken.setCar(carSubst);
 				}
 
-				final LispStruct cdr = consTree.getCdr();
+				final LispStruct cdr = consToken.getCdr();
 				final LispStruct cdrSubst = replaceTagsWithTokens(cdr, sharpEqualReplTable, sharpEqualCircleSet);
 
 				if (!Objects.equals(cdrSubst, cdr)) {
-					consTree.setCdr(cdrSubst);
+					consToken.setCdr(cdrSubst);
 				}
 			}
 		}

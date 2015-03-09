@@ -20,10 +20,12 @@ import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.symbols.BooleanStruct;
-import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
+import jcl.system.CommonLispSymbols;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
@@ -48,23 +50,6 @@ final class FeaturesReaderMacroFunction implements Serializable {
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(FeaturesReaderMacroFunction.class);
 
-	// TODO: is this where we keep these next 3???
-
-	/**
-	 * NOT {@link KeywordSymbolStruct} for processing features that should 'not' be included.
-	 */
-	private static final KeywordSymbolStruct NOT = new KeywordSymbolStruct("NOT");
-
-	/**
-	 * AND {@link KeywordSymbolStruct} for processing features that should be included via 'and' operation.
-	 */
-	private static final KeywordSymbolStruct AND = new KeywordSymbolStruct("AND");
-
-	/**
-	 * OR {@link KeywordSymbolStruct} for processing features that should be included via 'or' operation.
-	 */
-	private static final KeywordSymbolStruct OR = new KeywordSymbolStruct("OR");
-
 	/**
 	 * {@link Autowired} {@link Printer} used for printing elements and structures to the output stream.
 	 */
@@ -88,10 +73,10 @@ final class FeaturesReaderMacroFunction implements Serializable {
 			ReaderVariables.READ_SUPPRESS.setValue(NILStruct.INSTANCE);
 
 			PackageVariables.PACKAGE.setValue(GlobalPackageStruct.KEYWORD);
-			final LispStruct lispStruct = reader.read(true, NullStruct.INSTANCE, true);
+			final LispStruct token = reader.read(true, NullStruct.INSTANCE, true);
 			PackageVariables.PACKAGE.setValue(previousPackage);
 
-			final boolean isFeature = isFeature(lispStruct);
+			final boolean isFeature = isFeature(token);
 			if (isFeature && shouldHideFeatures) {
 				ReaderVariables.READ_SUPPRESS.setValue(TStruct.INSTANCE);
 				reader.read(true, NullStruct.INSTANCE, true);
@@ -109,17 +94,17 @@ final class FeaturesReaderMacroFunction implements Serializable {
 	/**
 	 * Determines if the provided {@link LispStruct} is a feature that should be read in or not.
 	 *
-	 * @param lispStruct
+	 * @param token
 	 * 		the {@link LispStruct} used to determine if a feature should be read in or not
 	 *
 	 * @return true if the provided {@link LispStruct} is a feature that should be read in; false otherwise
 	 */
-	private boolean isFeature(final LispStruct lispStruct) {
-		if (lispStruct instanceof ListStruct) {
-			return isListFeature((ListStruct) lispStruct);
+	private boolean isFeature(final LispStruct token) {
+		if (token instanceof ListStruct) {
+			return isListFeature((ListStruct) token);
 		} else {
 			final List<LispStruct> featuresList = CompilerVariables.FEATURES.getValue().getAsJavaList();
-			return featuresList.contains(lispStruct);
+			return featuresList.contains(token);
 		}
 	}
 
@@ -127,39 +112,39 @@ final class FeaturesReaderMacroFunction implements Serializable {
 	 * Determines if the provided {@link ListStruct} is a feature that should be read in or not. If it is not an
 	 * instance of {@link ConsStruct}, it is automatically not a feature.
 	 *
-	 * @param listStruct
+	 * @param listToken
 	 * 		the {@link ListStruct} used to determine if a feature should be read in or not
 	 *
 	 * @return true if the provided {@link ListStruct} is a feature that should be read in; false otherwise
 	 */
-	private boolean isListFeature(final ListStruct listStruct) {
-		return (listStruct instanceof ConsStruct) && isConsFeature((ConsStruct) listStruct);
+	private boolean isListFeature(final ListStruct listToken) {
+		return (listToken instanceof ConsStruct) && isConsFeature((ConsStruct) listToken);
 	}
 
 	/**
 	 * Determines if the provided {@link ConsStruct} is a feature that should be read in or not.
 	 *
-	 * @param consStruct
+	 * @param consToken
 	 * 		the {@link ConsStruct} used to determine if a feature should be read in or not
 	 *
 	 * @return true if the provided {@link ConsStruct} is a feature that should be read in; false otherwise
 	 */
-	private boolean isConsFeature(final ConsStruct consStruct) {
-		final LispStruct first = consStruct.getFirst();
+	private boolean isConsFeature(final ConsStruct consToken) {
+		final LispStruct first = consToken.getFirst();
 
 		if (!(first instanceof SymbolStruct)) {
 			throw new ReaderErrorException("First element of feature expression must be either: :NOT, :AND, or :OR.");
 		}
 
-		final ListStruct rest = consStruct.getRest();
+		final ListStruct rest = consToken.getRest();
 
 		final SymbolStruct<?> featureOperator = (SymbolStruct) first;
-		if (featureOperator.equals(NOT)) {
+		if (featureOperator.equals(CommonLispSymbols.NOT_KEYWORD)) {
 			final LispStruct firstOfRest = rest.getFirst();
 			return !isFeature(firstOfRest);
-		} else if (featureOperator.equals(AND)) {
+		} else if (featureOperator.equals(CommonLispSymbols.AND_KEYWORD)) {
 			return isAndConsFeature(rest);
-		} else if (featureOperator.equals(OR)) {
+		} else if (featureOperator.equals(CommonLispSymbols.OR_KEYWORD)) {
 			return isOrConsFeature(rest);
 		} else {
 			throw new ReaderErrorException("Unknown operator in feature expression: " + printer.print(featureOperator));
@@ -169,37 +154,47 @@ final class FeaturesReaderMacroFunction implements Serializable {
 	/**
 	 * Determines if all of the elements are features.
 	 *
-	 * @param listStruct
+	 * @param listToken
 	 * 		the elements to check are features
 	 *
 	 * @return true if all of the elements are features; false otherwise
 	 */
-	private boolean isAndConsFeature(final ListStruct listStruct) {
-		final List<LispStruct> listStructAsJavaList = listStruct.getAsJavaList();
+	private boolean isAndConsFeature(final ListStruct listToken) {
+		final List<LispStruct> tokensAsJavaList = listToken.getAsJavaList();
 
-		boolean tempReturnVal = true;
-		for (final LispStruct lispStruct : listStructAsJavaList) {
-			tempReturnVal = tempReturnVal && isFeature(lispStruct);
+		boolean isFeature = true;
+		for (final LispStruct token : tokensAsJavaList) {
+			isFeature = isFeature && isFeature(token);
 		}
-		return tempReturnVal;
+		return isFeature;
 	}
 
 	/**
 	 * Determines if any of the elements are features.
 	 *
-	 * @param listStruct
+	 * @param listToken
 	 * 		the elements to check are features
 	 *
 	 * @return true if any of the elements are features; false otherwise
 	 */
-	private boolean isOrConsFeature(final ListStruct listStruct) {
-		final List<LispStruct> listStructAsJavaList = listStruct.getAsJavaList();
+	private boolean isOrConsFeature(final ListStruct listToken) {
+		final List<LispStruct> tokensAsJavaList = listToken.getAsJavaList();
 
-		boolean tempReturnVal = false;
-		for (final LispStruct lispStruct : listStructAsJavaList) {
-			tempReturnVal = tempReturnVal || isFeature(lispStruct);
+		boolean isFeature = false;
+		for (final LispStruct token : tokensAsJavaList) {
+			isFeature = isFeature || isFeature(token);
 		}
-		return tempReturnVal;
+		return isFeature;
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

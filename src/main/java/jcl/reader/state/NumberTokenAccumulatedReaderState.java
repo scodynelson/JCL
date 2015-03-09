@@ -19,6 +19,8 @@ import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
 import jcl.reader.struct.ReaderVariables;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,12 +48,12 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 	/**
 	 * The list of {@link AttributeType}s that should not be present in a numeric token.
 	 */
-	private static final List<AttributeType> NOT_NUMBER_ATTRS = Arrays.asList(AttributeType.INVALID, AttributeType.ALPHABETIC, AttributeType.PACKAGEMARKER);
+	private static final List<AttributeType> NOT_NUMBER_ATTRIBUTES = Arrays.asList(AttributeType.INVALID, AttributeType.ALPHABETIC, AttributeType.PACKAGEMARKER);
 
 	/**
 	 * The list of {@link AttributeType}s that there should not be more than one of if present in a numeric token.
 	 */
-	private static final List<AttributeType> NOT_MORE_THAN_ONE_ATTRS = Arrays.asList(AttributeType.DECIMAL, AttributeType.RATIOMARKER);
+	private static final List<AttributeType> NOT_MORE_THAN_ONE_ATTRIBUTES = Arrays.asList(AttributeType.DECIMAL, AttributeType.RATIOMARKER);
 
 	/**
 	 * {@link SymbolTokenAccumulatedReaderState} singleton used by the reader algorithm.
@@ -117,13 +119,13 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 		final boolean containsNonNumberAttrs
 				= tokenAttributes.stream()
 				                 .map(TokenAttribute::getAttributeType)
-				                 .anyMatch(NOT_NUMBER_ATTRS::contains);
+				                 .anyMatch(NOT_NUMBER_ATTRIBUTES::contains);
 		if (containsNonNumberAttrs) {
 			return null;
 		}
 
 		// Check that there is at least 1 'ALPHADIGIT'
-		final boolean hasNoAlphaDigits = ReaderState.hasNoAttributes(tokenAttributes, AttributeType.ALPHADIGIT);
+		final boolean hasNoAlphaDigits = ReaderState.hasNoAttributesWithAttributeType(tokenAttributes, AttributeType.ALPHADIGIT);
 		if (hasNoAlphaDigits) {
 			return null;
 		}
@@ -142,7 +144,7 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 		final Map<AttributeType, Long> attributeTypeToAttributes
 				= tokenAttributes.stream()
 				                 .map(TokenAttribute::getAttributeType)
-				                 .filter(NOT_MORE_THAN_ONE_ATTRS::contains)
+				                 .filter(NOT_MORE_THAN_ONE_ATTRIBUTES::contains)
 				                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
 		final Collection<Long> attributeTypeEntries = attributeTypeToAttributes.values();
@@ -162,9 +164,9 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 			tokenAttributes.removeLast();
 		}
 
-		final boolean hasDecimal = ReaderState.hasAnyAttribute(tokenAttributes, AttributeType.DECIMAL);
-		final boolean hasExponentMarker = ReaderState.hasAnyAttribute(tokenAttributes, AttributeType.EXPONENTMARKER);
-		final boolean hasRatioMarker = ReaderState.hasAnyAttribute(tokenAttributes, AttributeType.RATIOMARKER);
+		final boolean hasDecimal = ReaderState.hasAnyAttributeWithAttributeType(tokenAttributes, AttributeType.DECIMAL);
+		final boolean hasExponentMarker = ReaderState.hasAnyAttributeWithAttributeType(tokenAttributes, AttributeType.EXPONENTMARKER);
+		final boolean hasRatioMarker = ReaderState.hasAnyAttributeWithAttributeType(tokenAttributes, AttributeType.RATIOMARKER);
 
 		if (hasDecimal && hasRatioMarker) {
 			return rationalFloatTokenAccumulatedReaderState.process(tokenBuilder);
@@ -193,12 +195,12 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 	 */
 	private static boolean areValidNumericTokens(final LinkedList<TokenAttribute> tokenAttributes) {
 		final TokenAttribute firstTokenAttribute = tokenAttributes.getFirst();
-		final int firstToken = firstTokenAttribute.getToken();
+		final int firstTokenCodePoint = firstTokenAttribute.getCodePoint();
 
 		return tokenAttributes.stream()
 		                      .filter(e -> e.getAttributeType() == AttributeType.ALPHADIGIT)
-		                      .mapToInt(TokenAttribute::getToken)
-		                      .mapToObj(e -> isValidNumericToken(firstToken, e))
+		                      .mapToInt(TokenAttribute::getCodePoint)
+		                      .mapToObj(e -> isValidNumericToken(firstTokenCodePoint, e))
 		                      .allMatch(Boolean.TRUE::equals);
 	}
 
@@ -207,22 +209,32 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 	 * ReaderVariables#READ_BASE} value and ensuring it is in the same Unicode block as the provided {@code
 	 * firstToken}.
 	 *
-	 * @param firstToken
-	 * 		the first token in the item to process
+	 * @param firstTokenCodePoint
+	 * 		the first token code point in the item to process
 	 * @param currentToken
 	 * 		the current token to verify is a valid part of a numeric token
 	 *
 	 * @return true if the provided {@code currentToken} is a valid part of a numeric token; false otherwise
 	 */
-	private static boolean isValidNumericToken(final int firstToken, final int currentToken) {
+	private static boolean isValidNumericToken(final int firstTokenCodePoint, final int currentToken) {
 		final int currentRadix = ReaderVariables.READ_BASE.getValue().getBigInteger().intValueExact();
 
 		final int digit = Character.digit(currentToken, currentRadix);
 		final boolean isDigitWithRadix = digit >= 0;
 
-		final Character.UnicodeBlock tokenBlock = Character.UnicodeBlock.of(firstToken);
-		final boolean isDigitInSameBlock = Character.UnicodeBlock.of(currentToken).equals(tokenBlock);
+		final Character.UnicodeBlock firstTokenCodePointBlock = Character.UnicodeBlock.of(firstTokenCodePoint);
+		final boolean isDigitInSameBlock = Character.UnicodeBlock.of(currentToken).equals(firstTokenCodePointBlock);
 		return isDigitWithRadix && isDigitInSameBlock;
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

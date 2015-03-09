@@ -35,27 +35,27 @@ final class UnicodeCharacterReaderMacroFunction {
 	 * @return a Unicode character code point
 	 */
 	static int readUnicodeCharacter(final Reader reader) {
-		final StringBuilder unicodeCharBuilder = new StringBuilder();
+		final StringBuilder unicodeCharacterBuilder = new StringBuilder();
 
 		// NOTE: This will throw errors when it reaches an EOF
 		ReadPeekResult readResult = reader.readChar(true, NullStruct.INSTANCE, false);
 		int codePoint = readResult.getResult();
 		while (!ReaderMacroFunctionImpl.isWhitespace(codePoint)) {
-			unicodeCharBuilder.appendCodePoint(codePoint);
+			unicodeCharacterBuilder.appendCodePoint(codePoint);
 
 			readResult = reader.readChar(true, NullStruct.INSTANCE, false);
 			codePoint = readResult.getResult();
 		}
 
-		final String unicodeCharString = unicodeCharBuilder.toString();
+		final String unicodeCharacterString = unicodeCharacterBuilder.toString();
 		try {
-			final int unicodeCodePoint = Integer.parseInt(unicodeCharString, UNICODE_RADIX);
+			final int unicodeCodePoint = Integer.parseInt(unicodeCharacterString, UNICODE_RADIX);
 			if (!Character.isValidCodePoint(unicodeCodePoint)) {
-				throw new ReaderErrorException("0x" + unicodeCharString + " is not a valid code point.");
+				throw new ReaderErrorException("0x" + unicodeCharacterString + " is not a valid code point.");
 			}
 			return unicodeCodePoint;
 		} catch (final NumberFormatException nfe) {
-			throw new ReaderErrorException('"' + unicodeCharString + "\" does not represent a hexadecimal integer.", nfe);
+			throw new ReaderErrorException('"' + unicodeCharacterString + "\" does not represent a hexadecimal integer.", nfe);
 		}
 	}
 }

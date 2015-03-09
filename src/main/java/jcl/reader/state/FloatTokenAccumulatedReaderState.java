@@ -38,10 +38,10 @@ public class FloatTokenAccumulatedReaderState implements ReaderState {
 
 		final LinkedList<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
 
-		final Integer exponentToken = ReaderState.getTokenByAttribute(tokenAttributes, AttributeType.EXPONENTMARKER);
+		final Integer exponentTokenCodePoint = ReaderState.getTokenCodePointByAttribute(tokenAttributes, AttributeType.EXPONENTMARKER);
 
-		String tokenString = ReaderState.convertTokensToString(tokenAttributes);
-		tokenString = getFloatTokenString(tokenString, exponentToken);
+		String tokenString = ReaderState.convertTokenAttributesToString(tokenAttributes);
+		tokenString = getFloatTokenString(tokenString, exponentTokenCodePoint);
 
 		BigDecimal bigDecimal = new BigDecimal(tokenString);
 
@@ -50,24 +50,24 @@ public class FloatTokenAccumulatedReaderState implements ReaderState {
 			bigDecimal = bigDecimal.setScale(1, RoundingMode.HALF_UP);
 		}
 
-		final jcl.types.Float aFloat = getFloatType(exponentToken);
-		return new FloatStruct(aFloat, bigDecimal);
+		final jcl.types.Float floatType = getFloatType(exponentTokenCodePoint);
+		return new FloatStruct(floatType, bigDecimal);
 	}
 
 	/**
-	 * Gets the float token string from the provided tokenString and exponentToken. The exponentToken determines how the
-	 * tokenString exponent should be replaced to look like a valid exponent string in Java.
+	 * Gets the float token string from the provided tokenString and exponentToken code point. The exponentToken code
+	 * point determines how the tokenString exponent should be replaced to look like a valid exponent string in Java.
 	 *
 	 * @param tokenString
 	 * 		the tokenString
-	 * @param exponentToken
-	 * 		the exponentToken
+	 * @param exponentTokenCodePoint
+	 * 		the exponentToken code point
 	 *
 	 * @return the proper float token string
 	 */
-	static String getFloatTokenString(final String tokenString, final Integer exponentToken) {
-		if (exponentToken != null) {
-			final String exponentTokenString = String.valueOf(Character.toChars(exponentToken));
+	static String getFloatTokenString(final String tokenString, final Integer exponentTokenCodePoint) {
+		if (exponentTokenCodePoint != null) {
+			final String exponentTokenString = String.valueOf(Character.toChars(exponentTokenCodePoint));
 			final String eCapitalLetterString = CharacterConstants.LATIN_CAPITAL_LETTER_E.toString();
 			return tokenString.replace(exponentTokenString, eCapitalLetterString);
 		}
@@ -75,18 +75,18 @@ public class FloatTokenAccumulatedReaderState implements ReaderState {
 	}
 
 	/**
-	 * Gets the float type from the based off of the exponentToken parameter.
+	 * Gets the float type from the based off of the exponentToken code point parameter.
 	 *
-	 * @param exponentToken
-	 * 		the exponentToken used to determine the float type
+	 * @param exponentTokenCodePoint
+	 * 		the exponentToken code point used to determine the float type
 	 *
 	 * @return the proper float type
 	 */
-	static jcl.types.Float getFloatType(final Integer exponentToken) {
+	static jcl.types.Float getFloatType(final Integer exponentTokenCodePoint) {
 		jcl.types.Float floatType = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getValue();
 
-		if (exponentToken != null) {
-			final int exponentTokenInt = exponentToken;
+		if (exponentTokenCodePoint != null) {
+			final int exponentTokenInt = exponentTokenCodePoint;
 			if ((exponentTokenInt == CharacterConstants.LATIN_SMALL_LETTER_S) || (exponentTokenInt == CharacterConstants.LATIN_CAPITAL_LETTER_S)) {
 				floatType = ShortFloat.INSTANCE;
 			} else if ((exponentTokenInt == CharacterConstants.LATIN_SMALL_LETTER_F) || (exponentTokenInt == CharacterConstants.LATIN_CAPITAL_LETTER_F)) {

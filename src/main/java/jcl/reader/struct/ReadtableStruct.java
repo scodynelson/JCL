@@ -18,6 +18,8 @@ import jcl.reader.Reader;
 import jcl.reader.ReaderMacroFunction;
 import jcl.streams.ReadPeekResult;
 import jcl.types.Readtable;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -200,6 +202,16 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	}
 
 	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
+	}
+
+	@Override
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
@@ -220,20 +232,20 @@ public class ReadtableStruct extends BuiltInClassStruct {
 		private final Map<Integer, ReaderMacroFunction> readerMacroFunctionMap = new ConcurrentHashMap<>();
 
 		@Override
-		public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+		public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numberArgument) {
 
 			final ReadPeekResult readResult = reader.readChar(false, null, false);
 			if (readResult.isEof()) {
 				throw new ReaderErrorException("End of file reached when trying to determine read macro function.");
 			}
 
-			final int readChar = readResult.getResult();
-			final ReaderMacroFunction macroFunction = getMacroFunction(readChar);
+			final int nextCodePoint = readResult.getResult();
+			final ReaderMacroFunction macroFunction = getMacroFunction(nextCodePoint);
 			if (macroFunction == null) {
-				throw new ReaderErrorException("No reader macro function exists for: " + codePoint + readChar + '.');
+				throw new ReaderErrorException("No reader macro function exists for: " + codePoint + nextCodePoint + '.');
 			}
 
-			return macroFunction.readMacro(readChar, reader, numArg);
+			return macroFunction.readMacro(nextCodePoint, reader, numberArgument);
 		}
 
 		@Override
@@ -266,6 +278,16 @@ public class ReadtableStruct extends BuiltInClassStruct {
 		 */
 		private void setMacroCharacter(final int codePoint, final ReaderMacroFunction readerMacroFunction) {
 			readerMacroFunctionMap.put(codePoint, readerMacroFunction);
+		}
+
+		@Override
+		public int hashCode() {
+			return HashCodeBuilder.reflectionHashCode(this);
+		}
+
+		@Override
+		public boolean equals(final Object obj) {
+			return EqualsBuilder.reflectionEquals(this, obj);
 		}
 
 		@Override

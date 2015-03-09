@@ -35,41 +35,41 @@ public class SharpVerticalBarReaderMacroFunction extends ReaderMacroFunctionImpl
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numberArgument) {
 		assert codePoint == CharacterConstants.VERTICAL_LINE;
 
 		final int baseLevel = 0;
-		int level = 1;
+		int currentLevel = 1;
 
 		// NOTE: This will throw errors when it reaches an EOF
-		ReadPeekResult prevReadResult = reader.readChar(true, NullStruct.INSTANCE, false);
+		ReadPeekResult previousReadResult = reader.readChar(true, NullStruct.INSTANCE, false);
 		ReadPeekResult nextReadResult = reader.readChar(true, NullStruct.INSTANCE, false);
 
 		final StringBuilder stringBuilder = new StringBuilder();
 		while (true) {
 
-			final int prevChar = prevReadResult.getResult();
-			final int nextChar = nextReadResult.getResult();
-			if ((prevChar == CharacterConstants.VERTICAL_LINE) && (nextChar == CharacterConstants.NUMBER_SIGN)) {
-				level -= 1;
-				if (level == baseLevel) {
+			final int previousCodePoint = previousReadResult.getResult();
+			final int nextCodePoint = nextReadResult.getResult();
+			if ((previousCodePoint == CharacterConstants.VERTICAL_LINE) && (nextCodePoint == CharacterConstants.NUMBER_SIGN)) {
+				currentLevel -= 1;
+				if (currentLevel == baseLevel) {
 					break;
 				} else {
-					stringBuilder.appendCodePoint(prevChar);
+					stringBuilder.appendCodePoint(previousCodePoint);
 				}
-			} else if ((prevChar == CharacterConstants.NUMBER_SIGN) && (nextChar == CharacterConstants.VERTICAL_LINE)) {
-				stringBuilder.appendCodePoint(prevChar);
-				stringBuilder.appendCodePoint(nextChar);
+			} else if ((previousCodePoint == CharacterConstants.NUMBER_SIGN) && (nextCodePoint == CharacterConstants.VERTICAL_LINE)) {
+				stringBuilder.appendCodePoint(previousCodePoint);
+				stringBuilder.appendCodePoint(nextCodePoint);
 
 				// NOTE: This will throw errors when it reaches an EOF
 				nextReadResult = reader.readChar(true, NullStruct.INSTANCE, false);
-				level += 1;
+				currentLevel += 1;
 			} else {
-				stringBuilder.appendCodePoint(prevChar);
+				stringBuilder.appendCodePoint(previousCodePoint);
 			}
 
 			// NOTE: This will throw errors when it reaches an EOF
-			prevReadResult = nextReadResult;
+			previousReadResult = nextReadResult;
 			nextReadResult = reader.readChar(true, NullStruct.INSTANCE, false);
 		}
 

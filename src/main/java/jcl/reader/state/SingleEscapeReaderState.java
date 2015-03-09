@@ -10,6 +10,8 @@ import jcl.reader.Reader;
 import jcl.reader.ReaderStateMediator;
 import jcl.reader.TokenBuilder;
 import jcl.streams.ReadPeekResult;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +58,16 @@ class SingleEscapeReaderState implements ReaderState {
 		tokenBuilder.addToTokenAttributes(codePoint, AttributeType.ALPHABETIC);
 
 		return readerStateMediator.readEvenMultipleEscape(tokenBuilder);
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

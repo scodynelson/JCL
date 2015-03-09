@@ -36,27 +36,27 @@ public class SharpSharpReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numberArgument) {
 		assert codePoint == CharacterConstants.NUMBER_SIGN;
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			return NullStruct.INSTANCE;
 		}
 
-		if (numArg == null) {
+		if (numberArgument == null) {
 			throw new ReaderErrorException("Missing label for ##.");
 		}
 
-		final LispStruct labelObject = reader.getSharpEqualFinalTable().get(numArg);
-		if (labelObject != null) {
-			return labelObject;
+		final LispStruct labelToken = reader.getSharpEqualFinalTable().get(numberArgument);
+		if (labelToken != null) {
+			return labelToken;
 		}
 
-		final SymbolStruct<?> possibleLabelTag = reader.getSharpEqualTempTable().get(numArg);
+		final SymbolStruct<?> possibleLabelTag = reader.getSharpEqualTempTable().get(numberArgument);
 		if (possibleLabelTag != null) {
 			return possibleLabelTag;
 		}
 
-		throw new ReaderErrorException("Reference to undefined label #" + numArg + '#');
+		throw new ReaderErrorException("Reference to undefined label #" + numberArgument + '#');
 	}
 }

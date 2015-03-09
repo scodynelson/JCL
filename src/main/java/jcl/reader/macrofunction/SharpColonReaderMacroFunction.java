@@ -36,19 +36,19 @@ public class SharpColonReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numberArgument) {
 		assert codePoint == CharacterConstants.COLON;
 
-		final ExtendedTokenReaderMacroFunction.ReadExtendedToken readExtendedToken = ExtendedTokenReaderMacroFunction.readExtendedToken(reader, false);
-		final String token = readExtendedToken.getToken();
+		final ExtendedTokenReaderMacroFunction.ReadExtendedToken extendedToken = ExtendedTokenReaderMacroFunction.readExtendedToken(reader, false);
+		final String tokenString = extendedToken.getTokenString();
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			return NullStruct.INSTANCE;
 		}
 
-		if (readExtendedToken.isHasPackageDelimiter()) {
-			throw new ReaderErrorException("Symbol following #: contains a package marker: " + token);
+		if (extendedToken.isHasPackageDelimiter()) {
+			throw new ReaderErrorException("Symbol following #: contains a package marker: " + tokenString);
 		}
-		return new SymbolStruct<>(token);
+		return new SymbolStruct<>(tokenString);
 	}
 }

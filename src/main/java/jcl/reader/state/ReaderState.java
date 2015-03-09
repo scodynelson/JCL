@@ -54,14 +54,14 @@ interface ReaderState extends Serializable {
 	 *
 	 * @return the {@link String} produced from the list of {@link TokenAttribute}s
 	 */
-	static String convertTokensToString(final List<TokenAttribute> tokenAttributes) {
+	static String convertTokenAttributesToString(final List<TokenAttribute> tokenAttributes) {
 		if (CollectionUtils.isEmpty(tokenAttributes)) {
 			return "";
 		}
 
 		final StringBuilder stringBuilder = new StringBuilder();
 		tokenAttributes.stream()
-		               .mapToInt(TokenAttribute::getToken)
+		               .mapToInt(TokenAttribute::getCodePoint)
 		               .forEachOrdered(stringBuilder::appendCodePoint);
 		return stringBuilder.toString();
 	}
@@ -79,7 +79,7 @@ interface ReaderState extends Serializable {
 	 *
 	 * @return the proper code point value based from the provided {@code codePoint}
 	 */
-	static int properCaseCodePoint(final int codePoint, final AttributeType attributeType, final ReadtableCase readtableCase) {
+	static int getProperCaseForCodePoint(final int codePoint, final AttributeType attributeType, final ReadtableCase readtableCase) {
 
 		int properCaseCodePoint = codePoint;
 		if (Character.isBmpCodePoint(codePoint)) {
@@ -110,9 +110,9 @@ interface ReaderState extends Serializable {
 	 * @return if the provided list of {@link TokenAttribute}s contains at least one token with an {@link AttributeType}
 	 * equal to the provided {@code attributeType} value.
 	 */
-	static boolean hasAnyAttribute(final List<TokenAttribute> tokenAttributes, final AttributeType attributeType) {
+	static boolean hasAnyAttributeWithAttributeType(final List<TokenAttribute> tokenAttributes, final AttributeType attributeType) {
 		return tokenAttributes.stream()
-							  .map(TokenAttribute::getAttributeType)
+		                      .map(TokenAttribute::getAttributeType)
 		                      .anyMatch(e -> e == attributeType);
 	}
 
@@ -128,29 +128,31 @@ interface ReaderState extends Serializable {
 	 * @return if the provided list of {@link TokenAttribute}s contains no tokens with an {@link AttributeType} equal to
 	 * the provided {@code attributeType} value.
 	 */
-	static boolean hasNoAttributes(final List<TokenAttribute> tokenAttributes, final AttributeType attributeType) {
+	static boolean hasNoAttributesWithAttributeType(final List<TokenAttribute> tokenAttributes, final AttributeType attributeType) {
 		return tokenAttributes.stream()
 		                      .map(TokenAttribute::getAttributeType)
 		                      .noneMatch(e -> e == attributeType);
 	}
 
 	/**
-	 * Gets the first occurrence of a token with an {@link AttributeType} equal to the provided {@code attributeType}
-	 * value in the provided list of {@link TokenAttribute}s. If no tokens have an {@link AttributeType} that matches
-	 * the provided {@code attributeType} value, null will be returned.
+	 * Gets the first occurrence of a token code point with an {@link AttributeType} equal to the provided {@code
+	 * attributeType} value in the provided list of {@link TokenAttribute}s. If no token code points have an {@link
+	 * AttributeType} that matches the provided {@code attributeType} value, null will be returned.
 	 *
 	 * @param tokenAttributes
 	 * 		the list of {@link TokenAttribute}s containing the current tokens
 	 * @param attributeType
-	 * 		the {@link AttributeType} value used to locate the first matching token in the {@code tokenAttributes} list
+	 * 		the {@link AttributeType} value used to locate the first matching token code point in the {@code
+	 * 		tokenAttributes} list
 	 *
-	 * @return the first occurrence of a token with an {@link AttributeType} equal to the provided {@code attributeType}
-	 * value in the provided list of {@link TokenAttribute}s or null if no such token can be found
+	 * @return the first occurrence of a token code point with an {@link AttributeType} equal to the provided {@code
+	 * attributeType} value in the provided list of {@link TokenAttribute}s or null if no such token code point can be
+	 * found
 	 */
-	static Integer getTokenByAttribute(final List<TokenAttribute> tokenAttributes, final AttributeType attributeType) {
+	static Integer getTokenCodePointByAttribute(final List<TokenAttribute> tokenAttributes, final AttributeType attributeType) {
 		return tokenAttributes.stream()
 		                      .filter(e -> e.getAttributeType() == attributeType)
-		                      .map(TokenAttribute::getToken)
+		                      .map(TokenAttribute::getCodePoint)
 		                      .findFirst()
 		                      .orElse(null);
 	}

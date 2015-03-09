@@ -29,12 +29,12 @@ public interface ReaderMacroFunction extends Serializable {
 	 * 		the character code point that determines the macro function
 	 * @param reader
 	 * 		the {@link Reader} used to read tokens
-	 * @param numArg
+	 * @param numberArgument
 	 * 		the optional number argument
 	 *
 	 * @return the parsed {@link LispStruct} token
 	 */
-	LispStruct readMacro(int codePoint, Reader reader, BigInteger numArg);
+	LispStruct readMacro(int codePoint, Reader reader, BigInteger numberArgument);
 
 	/**
 	 * Default method used to determine if the ReaderMacroFunction is a dispatching macro. The default value return is

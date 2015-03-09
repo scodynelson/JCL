@@ -16,6 +16,8 @@ import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.streams.ReadPeekResult;
 import jcl.system.CommonLispSymbols;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.stereotype.Component;
@@ -40,7 +42,7 @@ public class CommaReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numberArgument) {
 		assert codePoint == CharacterConstants.GRAVE_ACCENT;
 
 		final int currentBackquoteLevel = reader.getBackquoteLevel();
@@ -57,23 +59,33 @@ public class CommaReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 		reader.decrementBackquoteLevel();
 		try {
-			final ConsStruct consStruct;
+			final ConsStruct commaCons;
 
 			if (nextCodePoint == CharacterConstants.AT_SIGN) {
-				final LispStruct code = reader.read(true, NullStruct.INSTANCE, true);
-				consStruct = new ConsStruct(CommonLispSymbols.BQ_AT_FLAG, code);
+				final LispStruct token = reader.read(true, NullStruct.INSTANCE, true);
+				commaCons = new ConsStruct(CommonLispSymbols.BQ_AT_FLAG, token);
 			} else if (nextCodePoint == CharacterConstants.FULL_STOP) {
-				final LispStruct code = reader.read(true, NullStruct.INSTANCE, true);
-				consStruct = new ConsStruct(CommonLispSymbols.BQ_DOT_FLAG, code);
+				final LispStruct token = reader.read(true, NullStruct.INSTANCE, true);
+				commaCons = new ConsStruct(CommonLispSymbols.BQ_DOT_FLAG, token);
 			} else {
 				reader.unreadChar(nextCodePoint);
-				final LispStruct code = reader.read(true, NullStruct.INSTANCE, true);
-				consStruct = new ConsStruct(CommonLispSymbols.BQ_COMMA_FLAG, code);
+				final LispStruct token = reader.read(true, NullStruct.INSTANCE, true);
+				commaCons = new ConsStruct(CommonLispSymbols.BQ_COMMA_FLAG, token);
 			}
-			return consStruct;
+			return commaCons;
 		} finally {
 			reader.incrementBackquoteLevel();
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

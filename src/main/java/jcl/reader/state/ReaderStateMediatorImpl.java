@@ -8,6 +8,8 @@ import jcl.LispStruct;
 import jcl.reader.Reader;
 import jcl.reader.ReaderStateMediator;
 import jcl.reader.TokenBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -132,6 +134,16 @@ class ReaderStateMediatorImpl implements ReaderStateMediator {
 	@Override
 	public LispStruct readTokenAccumulated(final TokenBuilder tokenBuilder) {
 		return tokenAccumulatedReaderState.process(tokenBuilder);
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

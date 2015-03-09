@@ -14,14 +14,14 @@ import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ListStruct;
 import jcl.numbers.IntegerStruct;
-import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
-import jcl.symbols.SymbolStruct;
 import jcl.system.CommonLispSymbols;
 import jcl.types.Null;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +59,7 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numberArgument) {
 		assert codePoint == CharacterConstants.LEFT_PARENTHESIS;
 
 		final ListStruct listToken = listReaderMacroFunction.readList(reader);
@@ -77,73 +77,80 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 			throw new ReaderErrorException("Ill-formed vector: #" + printedToken);
 		}
 
-		final List<LispStruct> lispTokens = listToken.getAsJavaList();
-
-		if (numArg == null) {
-			return createVector(lispTokens);
+		if (numberArgument == null) {
+			final List<LispStruct> tokensAsJavaList = listToken.getAsJavaList();
+			return createVector(tokensAsJavaList);
 		}
 
-		return handleNumArg(lispTokens, numArg, listToken);
+		return handleNumArg(listToken, numberArgument);
 	}
 
 	/**
 	 * Handles the processing of the number argument when parsing the provided list of {@link LispStruct}s into a
 	 * {@link VectorStruct}.
 	 *
-	 * @param lispTokens
-	 * 		the vector contents
-	 * @param numArg
-	 * 		the number argument passed to be used as the vector length
 	 * @param listToken
-	 * 		the printed representation of the vector contents
+	 * 		the vector contents
+	 * @param numberArgument
+	 * 		the number argument passed to be used as the vector length
 	 *
 	 * @return the properly created {@link VectorStruct} taking care of the proper vector length
 	 */
-	private ListStruct handleNumArg(final List<LispStruct> lispTokens, final BigInteger numArg, final LispStruct listToken) {
+	private ListStruct handleNumArg(final ListStruct listToken, final BigInteger numberArgument) {
+		final List<LispStruct> tokensAsJavaList = listToken.getAsJavaList();
 
-		final int numberOfTokens = lispTokens.size();
-		final int numArgInt = numArg.intValueExact();
-		if (numberOfTokens > numArgInt) {
+		final int numberOfTokens = tokensAsJavaList.size();
+		final int numberArgumentIntValue = numberArgument.intValueExact();
+		if (numberOfTokens > numberArgumentIntValue) {
 			final String printedToken = printer.print(listToken);
-			throw new ReaderErrorException("Vector is longer than specified length: #" + numArg + printedToken);
+			throw new ReaderErrorException("Vector is longer than specified length: #" + numberArgument + printedToken);
 		}
 
 		LispStruct lastToken = null;
-		if (CollectionUtils.isNotEmpty(lispTokens)) {
-			lastToken = lispTokens.get(numberOfTokens - 1);
+		if (CollectionUtils.isNotEmpty(tokensAsJavaList)) {
+			lastToken = tokensAsJavaList.get(numberOfTokens - 1);
 		}
 
-		final int fillAmount = numArgInt - numberOfTokens;
+		final int fillAmount = numberArgumentIntValue - numberOfTokens;
 		for (int i = 0; i < fillAmount; i++) {
-			lispTokens.add(lastToken);
+			tokensAsJavaList.add(lastToken);
 		}
 
-		return createVector(lispTokens);
+		return createVector(tokensAsJavaList);
 	}
 
 	/**
 	 * Creates creates the {@link ListStruct} calling the appropriate function needed to produce the {@link
 	 * VectorStruct} from the provided {@code lispTokens}.
 	 *
-	 * @param lispTokens
+	 * @param tokensAsJavaList
 	 * 		the {@link LispStruct} tokens used to create the {@link VectorStruct}
 	 *
 	 * @return the {@link ListStruct} calling the appropriate function needed to produce the {@link VectorStruct}
 	 */
-	private static ListStruct createVector(final List<LispStruct> lispTokens) {
-		final int numberOfTokens = lispTokens.size();
-		final BigInteger numberOfTokensBI = BigInteger.valueOf(numberOfTokens);
+	private static ListStruct createVector(final List<LispStruct> tokensAsJavaList) {
+		final BigInteger numberOfTokens = BigInteger.valueOf(tokensAsJavaList.size());
 
-		final SymbolStruct<?> makeArrayFnSymbol = CommonLispSymbols.MAKE_ARRAY;
-		final IntegerStruct dimensions = new IntegerStruct(numberOfTokensBI);
-		final SymbolStruct<?> elementTypeKeyword = GlobalPackageStruct.KEYWORD.findSymbol("ELEMENT-TYPE").getSymbol();
+		final IntegerStruct dimensions = new IntegerStruct(numberOfTokens);
 		final ListStruct elementType = ListStruct.buildProperList(CommonLispSymbols.QUOTE, CommonLispSymbols.T);
-		final SymbolStruct<?> initialContentsKeyword = GlobalPackageStruct.KEYWORD.findSymbol("INITIAL-CONTENTS").getSymbol();
+		final ListStruct initialContents = ListStruct.buildProperList(CommonLispSymbols.QUOTE, ListStruct.buildProperList(tokensAsJavaList));
 
-		final ListStruct contents = ListStruct.buildProperList(lispTokens);
-		final ListStruct initialContents = ListStruct.buildProperList(CommonLispSymbols.QUOTE, contents);
+		return ListStruct.buildProperList(CommonLispSymbols.MAKE_ARRAY,
+				dimensions,
+				CommonLispSymbols.ELEMENT_TYPE_KEYWORD,
+				elementType,
+				CommonLispSymbols.INITIAL_CONTENTS_KEYWORD,
+				initialContents);
+	}
 
-		return ListStruct.buildProperList(makeArrayFnSymbol, dimensions, elementTypeKeyword, elementType, initialContentsKeyword, initialContents);
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

@@ -13,6 +13,8 @@ import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableCase;
 import jcl.reader.struct.ReadtableStruct;
 import jcl.streams.ReadPeekResult;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,10 +57,20 @@ class ConstituentReaderState implements ReaderState {
 		final IntegerStruct readBase = ReaderVariables.READ_BASE.getValue();
 		final AttributeType attributeType = readtable.getAttributeType(codePoint, readBase);
 
-		codePoint = ReaderState.properCaseCodePoint(codePoint, attributeType, readtableCase);
+		codePoint = ReaderState.getProperCaseForCodePoint(codePoint, attributeType, readtableCase);
 		tokenBuilder.addToTokenAttributes(codePoint, attributeType);
 
 		return readerStateMediator.readEvenMultipleEscape(tokenBuilder);
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

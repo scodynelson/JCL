@@ -1014,8 +1014,28 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> BQ_AT_FLAG = new SymbolStruct<>(",@", GlobalPackageStruct.BACKQUOTE);
 	SymbolStruct<?> BQ_DOT_FLAG = new SymbolStruct<>(",.", GlobalPackageStruct.BACKQUOTE);
 
+	// Standard Keywords
+	KeywordSymbolStruct ELEMENT_TYPE_KEYWORD = new KeywordSymbolStruct("ELEMENT-TYPE");
+	KeywordSymbolStruct INITIAL_CONTENTS_KEYWORD = new KeywordSymbolStruct("INITIAL-CONTENTS");
+
 	// Package Keywords
 	KeywordSymbolStruct INTERNAL = new KeywordSymbolStruct("INTERNAL");
 	KeywordSymbolStruct EXTERNAL = new KeywordSymbolStruct("EXTERNAL");
 	KeywordSymbolStruct INHERITED = new KeywordSymbolStruct("INHERITED");
+
+	// Features Keywords
+	/**
+	 * NOT {@link KeywordSymbolStruct} for processing features that should 'not' be included.
+	 */
+	KeywordSymbolStruct NOT_KEYWORD = new KeywordSymbolStruct("NOT");
+
+	/**
+	 * AND {@link KeywordSymbolStruct} for processing features that should be included via 'and' operation.
+	 */
+	KeywordSymbolStruct AND_KEYWORD = new KeywordSymbolStruct("AND");
+
+	/**
+	 * OR {@link KeywordSymbolStruct} for processing features that should be included via 'or' operation.
+	 */
+	KeywordSymbolStruct OR_KEYWORD = new KeywordSymbolStruct("OR");
 }

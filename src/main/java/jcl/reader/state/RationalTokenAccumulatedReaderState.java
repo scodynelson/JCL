@@ -46,7 +46,7 @@ public class RationalTokenAccumulatedReaderState implements ReaderState {
 			return null;
 		}
 
-		final String tokenString = ReaderState.convertTokensToString(tokenAttributes);
+		final String tokenString = ReaderState.convertTokenAttributesToString(tokenAttributes);
 
 		final int numberOfRationalParts = 2;
 		final String[] rationalParts = tokenString.split("/", numberOfRationalParts);

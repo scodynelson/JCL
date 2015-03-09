@@ -18,6 +18,8 @@ import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
 import jcl.system.CommonLispSymbols;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,44 +53,54 @@ public class SharpCReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numberArgument) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_C) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_C);
 
-		final LispStruct lispToken = reader.read(true, NullStruct.INSTANCE, true);
+		final LispStruct token = reader.read(true, NullStruct.INSTANCE, true);
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			return NullStruct.INSTANCE;
 		}
 
-		if (!(lispToken instanceof ListStruct)) {
-			final String printedToken = printer.print(lispToken);
+		if (!(token instanceof ListStruct)) {
+			final String printedToken = printer.print(token);
 			throw new ReaderErrorException("Illegal complex number format: #C" + printedToken);
 		}
 
-		final ListStruct listToken = (ListStruct) lispToken;
+		final ListStruct listToken = (ListStruct) token;
 		if (!listToken.isProper()) {
-			final String printedToken = printer.print(lispToken);
+			final String printedToken = printer.print(token);
 			throw new ReaderErrorException("Illegal complex number format: #C" + printedToken);
 		}
 
 		final int maxNumberOfTokensForComplex = 2;
 		if (listToken.size() != maxNumberOfTokensForComplex) {
-			final String printedToken = printer.print(lispToken);
+			final String printedToken = printer.print(token);
 			throw new ReaderErrorException("Illegal complex number format: #C" + printedToken);
 		}
 
-		final LispStruct real = listToken.getFirst();
-		if (!(real instanceof RealStruct)) {
-			final String printedReal = printer.print(real);
-			throw new ReaderErrorException("Only real numbers are valid tokens for #c. Got: " + printedReal);
+		final LispStruct realToken = listToken.getFirst();
+		if (!(realToken instanceof RealStruct)) {
+			final String printedRealToken = printer.print(realToken);
+			throw new ReaderErrorException("Only real numbers are valid tokens for #c. Got: " + printedRealToken);
 		}
 
-		final LispStruct imaginary = listToken.getRest().getFirst();
-		if (!(imaginary instanceof RealStruct)) {
-			final String printedImaginary = printer.print(imaginary);
-			throw new ReaderErrorException("Only real numbers are valid tokens for #c. Got: " + printedImaginary);
+		final LispStruct imaginaryToken = listToken.getRest().getFirst();
+		if (!(imaginaryToken instanceof RealStruct)) {
+			final String printedImaginaryToken = printer.print(imaginaryToken);
+			throw new ReaderErrorException("Only real numbers are valid tokens for #c. Got: " + printedImaginaryToken);
 		}
 
-		return ListStruct.buildProperList(CommonLispSymbols.COMPLEX, real, imaginary);
+		return ListStruct.buildProperList(CommonLispSymbols.COMPLEX, realToken, imaginaryToken);
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

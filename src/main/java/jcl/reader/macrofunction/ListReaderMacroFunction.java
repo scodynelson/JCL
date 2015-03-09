@@ -5,6 +5,7 @@
 package jcl.reader.macrofunction;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import jcl.LispStruct;
@@ -16,7 +17,8 @@ import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.streams.ReadPeekResult;
-import jcl.system.EnhancedLinkedList;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +53,7 @@ final class ListReaderMacroFunction implements Serializable {
 	 * @return the properly parsed {@link ListStruct}
 	 */
 	ListStruct readList(final Reader reader) {
-		final EnhancedLinkedList<LispStruct> currentTokenList = new EnhancedLinkedList<>();
+		final List<LispStruct> currentTokenList = new ArrayList<>();
 
 		boolean isDottedList = false;
 
@@ -67,9 +69,9 @@ final class ListReaderMacroFunction implements Serializable {
 
 			reader.unreadChar(codePoint);
 
-			final LispStruct lispStruct = reader.read(true, NullStruct.INSTANCE, true);
-			if (lispStruct != null) {
-				currentTokenList.add(lispStruct);
+			final LispStruct token = reader.read(true, NullStruct.INSTANCE, true);
+			if (token != null) {
+				currentTokenList.add(token);
 			}
 
 			codePoint = flushWhitespace(reader);
@@ -137,9 +139,9 @@ final class ListReaderMacroFunction implements Serializable {
 			firstCodePoint = flushWhitespace(reader);
 		}
 
-		LispStruct lispStruct = null;
+		LispStruct token = null;
 
-		while (lispStruct == null) {
+		while (token == null) {
 
 			if (firstCodePoint == CharacterConstants.RIGHT_PARENTHESIS) {
 				throw new ReaderErrorException("Nothing appears after . in list.");
@@ -147,19 +149,19 @@ final class ListReaderMacroFunction implements Serializable {
 			reader.unreadChar(codePoint);
 
 			// NOTE: This will throw errors when it reaches an EOF
-			lispStruct = reader.read(true, NullStruct.INSTANCE, true);
+			token = reader.read(true, NullStruct.INSTANCE, true);
 			firstCodePoint = flushWhitespace(reader);
 		}
-		currentTokenList.add(lispStruct);
+		currentTokenList.add(token);
 
 		while (firstCodePoint != CharacterConstants.RIGHT_PARENTHESIS) {
 			reader.unreadChar(firstCodePoint);
 
 			// NOTE: This will throw errors when it reaches an EOF
-			lispStruct = reader.read(true, NullStruct.INSTANCE, true);
-			if (lispStruct != null) {
-				final String printedLispStruct = printer.print(lispStruct);
-				throw new ReaderErrorException("More than one object follows . in list: " + printedLispStruct);
+			token = reader.read(true, NullStruct.INSTANCE, true);
+			if (token != null) {
+				final String printedToken = printer.print(token);
+				throw new ReaderErrorException("More than one object follows . in list: " + printedToken);
 			}
 
 			firstCodePoint = flushWhitespace(reader);
@@ -184,6 +186,16 @@ final class ListReaderMacroFunction implements Serializable {
 			codePoint = readResult.getResult();
 		}
 		return codePoint;
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

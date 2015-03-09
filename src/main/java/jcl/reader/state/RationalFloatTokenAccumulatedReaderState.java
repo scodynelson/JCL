@@ -46,7 +46,7 @@ public class RationalFloatTokenAccumulatedReaderState extends FloatTokenAccumula
 			return null;
 		}
 
-		final String tokenString = ReaderState.convertTokensToString(tokenAttributes);
+		final String tokenString = ReaderState.convertTokenAttributesToString(tokenAttributes);
 
 		final int numberOfRationalParts = 2;
 		final String[] rationalParts = tokenString.split("/", numberOfRationalParts);
@@ -58,12 +58,12 @@ public class RationalFloatTokenAccumulatedReaderState extends FloatTokenAccumula
 			return null;
 		}
 
-		final Integer exponentToken = ReaderState.getTokenByAttribute(tokenAttributes, AttributeType.EXPONENTMARKER);
+		final Integer exponentTokenCodePoint = ReaderState.getTokenCodePointByAttribute(tokenAttributes, AttributeType.EXPONENTMARKER);
 
-		final String numeratorTokenString = getFloatTokenString(numeratorPart, exponentToken);
+		final String numeratorTokenString = getFloatTokenString(numeratorPart, exponentTokenCodePoint);
 		final BigDecimal numeratorBigDecimal = new BigDecimal(numeratorTokenString);
 
-		final String denominatorTokenString = getFloatTokenString(rationalParts[1], exponentToken);
+		final String denominatorTokenString = getFloatTokenString(rationalParts[1], exponentTokenCodePoint);
 		final BigDecimal denominatorBigDecimal = new BigDecimal(denominatorTokenString);
 
 		BigDecimal bigDecimal = numeratorBigDecimal.divide(denominatorBigDecimal, MathContext.DECIMAL128);
@@ -73,7 +73,7 @@ public class RationalFloatTokenAccumulatedReaderState extends FloatTokenAccumula
 			bigDecimal = bigDecimal.setScale(1, RoundingMode.HALF_UP);
 		}
 
-		final jcl.types.Float aFloat = getFloatType(exponentToken);
-		return new FloatStruct(aFloat, bigDecimal);
+		final jcl.types.Float floatType = getFloatType(exponentTokenCodePoint);
+		return new FloatStruct(floatType, bigDecimal);
 	}
 }

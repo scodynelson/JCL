@@ -7,6 +7,8 @@ package jcl.reader.state;
 import jcl.LispStruct;
 import jcl.reader.ReaderStateMediator;
 import jcl.reader.TokenBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,16 @@ class MultipleEscapeReaderState implements ReaderState {
 	@Override
 	public LispStruct process(final TokenBuilder tokenBuilder) {
 		return readerStateMediator.readOddMultipleEscape(tokenBuilder);
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

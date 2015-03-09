@@ -11,6 +11,8 @@ import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
 import jcl.reader.struct.ReaderVariables;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,12 +54,22 @@ class TokenAccumulatedReaderState implements ReaderState {
 
 		final List<TokenAttribute> tokenAttributes = tokenBuilder.getTokenAttributes();
 
-		final String tokenString = ReaderState.convertTokensToString(tokenAttributes);
+		final String tokenString = ReaderState.convertTokenAttributesToString(tokenAttributes);
 		if (".".equals(tokenString)) {
 			throw new ReaderErrorException("Dot context error in '.'");
 		}
 
 		return numberTokenAccumulatedReaderState.process(tokenBuilder);
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

@@ -11,6 +11,8 @@ import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableCase;
 import jcl.reader.struct.SyntaxType;
 import jcl.streams.ReadPeekResult;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -160,11 +162,11 @@ final class ExtendedTokenReaderMacroFunction {
 	 */
 	private static void appendToken(final ReadPeekResult readResult, final StringBuilder stringBuilder, final boolean isEscaped) {
 		if (!readResult.isEof()) {
-			int token = readResult.getResult();
+			int codePoint = readResult.getResult();
 			if (!isEscaped) {
-				token = getTokenWithCase(token);
+				codePoint = getCodePointWithCase(codePoint);
 			}
-			stringBuilder.appendCodePoint(token);
+			stringBuilder.appendCodePoint(codePoint);
 		}
 	}
 
@@ -210,33 +212,33 @@ final class ExtendedTokenReaderMacroFunction {
 	}
 
 	/**
-	 * Transforms the provided {@code currentToken} value into it's correct case based on properties of the current
+	 * Transforms the provided {@code codePoint} value into it's correct case based on properties of the current
 	 * readtable.
 	 *
-	 * @param currentToken
-	 * 		the token to transform to the proper case
+	 * @param codePoint
+	 * 		the code point to transform to the proper case
 	 *
 	 * @return the transformed token with the correct case
 	 */
-	private static int getTokenWithCase(final int currentToken) {
+	private static int getCodePointWithCase(final int codePoint) {
 		final ReadtableCase readtableCase = ReaderVariables.READTABLE.getValue().getReadtableCase();
 
-		int properCaseToken = currentToken;
+		int properCaseCodePoint = codePoint;
 		switch (readtableCase) {
 			case UPCASE:
-				properCaseToken = Character.toUpperCase(currentToken);
+				properCaseCodePoint = Character.toUpperCase(codePoint);
 				break;
 			case DOWNCASE:
-				properCaseToken = Character.toLowerCase(currentToken);
+				properCaseCodePoint = Character.toLowerCase(codePoint);
 				break;
 			case INVERT:
-				properCaseToken = Character.isUpperCase(currentToken) ? Character.toLowerCase(currentToken) : Character.toUpperCase(currentToken);
+				properCaseCodePoint = Character.isUpperCase(codePoint) ? Character.toLowerCase(codePoint) : Character.toUpperCase(codePoint);
 				break;
 			case PRESERVE:
-				properCaseToken = currentToken;
+				properCaseCodePoint = codePoint;
 				break;
 		}
-		return properCaseToken;
+		return properCaseCodePoint;
 	}
 
 	/**
@@ -248,41 +250,41 @@ final class ExtendedTokenReaderMacroFunction {
 		/**
 		 * The tokenized string value.
 		 */
-		private final String token;
+		private final String tokenString;
 
 		/**
-		 * Whether or not the {@link #token} contains escape characters.
+		 * Whether or not the {@link #tokenString} contains escape characters.
 		 */
 		private final boolean hasEscapes;
 
 		/**
-		 * Whether or not the {@link #token} contains a package delimiter.
+		 * Whether or not the {@link #tokenString} contains a package delimiter.
 		 */
 		private final boolean hasPackageDelimiter;
 
 		/**
 		 * Private constructor.
 		 *
-		 * @param token
+		 * @param tokenString
 		 * 		the token string
 		 * @param hasEscapes
 		 * 		whether or not the token has escape characters
 		 * @param hasPackageDelimiter
 		 * 		whether or not the token contains a package delimiter
 		 */
-		private ReadExtendedToken(final String token, final boolean hasEscapes, final boolean hasPackageDelimiter) {
-			this.token = token;
+		private ReadExtendedToken(final String tokenString, final boolean hasEscapes, final boolean hasPackageDelimiter) {
+			this.tokenString = tokenString;
 			this.hasEscapes = hasEscapes;
 			this.hasPackageDelimiter = hasPackageDelimiter;
 		}
 
 		/**
-		 * Getter for {@link #token} property.
+		 * Getter for {@link #tokenString} property.
 		 *
-		 * @return {@link #token} property
+		 * @return {@link #tokenString} property
 		 */
-		String getToken() {
-			return token;
+		String getTokenString() {
+			return tokenString;
 		}
 
 		/**
@@ -301,6 +303,16 @@ final class ExtendedTokenReaderMacroFunction {
 		 */
 		boolean isHasPackageDelimiter() {
 			return hasPackageDelimiter;
+		}
+
+		@Override
+		public int hashCode() {
+			return HashCodeBuilder.reflectionHashCode(this);
+		}
+
+		@Override
+		public boolean equals(final Object obj) {
+			return EqualsBuilder.reflectionEquals(this, obj);
 		}
 
 		@Override

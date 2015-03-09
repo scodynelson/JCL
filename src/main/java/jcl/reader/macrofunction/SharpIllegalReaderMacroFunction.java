@@ -44,7 +44,7 @@ public class SharpIllegalReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numberArgument) {
 		throw new ReaderErrorException("Illegal sharp character " + codePoint);
 	}
 }

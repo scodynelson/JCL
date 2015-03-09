@@ -16,14 +16,14 @@ import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.numbers.IntegerStruct;
-import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
 import jcl.sequences.SequenceStruct;
-import jcl.symbols.SymbolStruct;
 import jcl.system.CommonLispSymbols;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,52 +57,52 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numberArgument) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_A) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_A);
 
-		final LispStruct lispToken = reader.read(true, NullStruct.INSTANCE, true);
+		final LispStruct token = reader.read(true, NullStruct.INSTANCE, true);
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			return NullStruct.INSTANCE;
 		}
 
-		if (numArg == null) {
+		if (numberArgument == null) {
 			throw new ReaderErrorException("#A used without a rank argument.");
 		}
 
-		if (BigInteger.ZERO.compareTo(numArg) > 0) {
-			if (!(lispToken instanceof SequenceStruct)) {
-				final String printedToken = printer.print(lispToken);
-				throw new ReaderErrorException("The form following a #" + numArg + "A reader macro should have been a sequence, but it was: " + printedToken);
+		if (BigInteger.ZERO.compareTo(numberArgument) > 0) {
+			if (!(token instanceof SequenceStruct)) {
+				final String printedToken = printer.print(token);
+				throw new ReaderErrorException("The form following a #" + numberArgument + "A reader macro should have been a sequence, but it was: " + printedToken);
 			}
 		}
 
-		return createArray(numArg, lispToken);
+		return createArray(token, numberArgument);
 	}
 
 	/**
 	 * Creates creates the {@link ListStruct} calling the appropriate function needed to produce the {@link
 	 * ArrayStruct} from the provided {@code contents}.
 	 *
-	 * @param numArg
-	 * 		the number of expected dimensions
 	 * @param contents
 	 * 		the {@link LispStruct} tokens used to create the {@link ArrayStruct}
+	 * @param numberArgument
+	 * 		the number of expected dimensions
 	 *
 	 * @return the {@link ListStruct} calling the appropriate function needed to produce the {@link ArrayStruct}
 	 */
-	private static ListStruct createArray(final BigInteger numArg, final LispStruct contents) {
+	private static ListStruct createArray(final LispStruct contents, final BigInteger numberArgument) {
+		final List<LispStruct> dimensionsAsJavaList = getDimensions(numberArgument, contents);
 
-		final List<LispStruct> dimensionsAsJavaList = getDimensions(numArg, contents);
-
-		final SymbolStruct<?> makeArrayFnSymbol = CommonLispSymbols.MAKE_ARRAY;
 		final ListStruct dimensions = ListStruct.buildProperList(dimensionsAsJavaList);
-		final SymbolStruct<?> elementTypeKeyword = GlobalPackageStruct.KEYWORD.findSymbol("ELEMENT-TYPE").getSymbol();
 		final ListStruct elementType = ListStruct.buildProperList(CommonLispSymbols.QUOTE, CommonLispSymbols.T);
-		final SymbolStruct<?> initialContentsKeyword = GlobalPackageStruct.KEYWORD.findSymbol("INITIAL-CONTENTS").getSymbol();
-
 		final ListStruct initialContents = ListStruct.buildProperList(CommonLispSymbols.QUOTE, contents);
 
-		return ListStruct.buildProperList(makeArrayFnSymbol, dimensions, elementTypeKeyword, elementType, initialContentsKeyword, initialContents);
+		return ListStruct.buildProperList(CommonLispSymbols.MAKE_ARRAY,
+				dimensions,
+				CommonLispSymbols.ELEMENT_TYPE_KEYWORD,
+				elementType,
+				CommonLispSymbols.INITIAL_CONTENTS_KEYWORD,
+				initialContents);
 	}
 
 	/**
@@ -121,7 +121,7 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 	 */
 	private static List<LispStruct> getDimensions(final BigInteger dimensions, final LispStruct contents) {
 
-		LispStruct seq = contents;
+		LispStruct sequence = contents;
 		BigInteger zeroAxis = null;
 
 		final List<LispStruct> dimensionsAsJavaList = new ArrayList<>();
@@ -130,25 +130,24 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 		     dimensions.compareTo(axis) > 0;
 		     axis = axis.add(BigInteger.ONE)) {
 
-			final SequenceStruct seqList;
-			if (seq instanceof SequenceStruct) {
-				seqList = (SequenceStruct) seq;
+			final SequenceStruct sequenceToken;
+			if (sequence instanceof SequenceStruct) {
+				sequenceToken = (SequenceStruct) sequence;
 			} else {
-				throw new ReaderErrorException("#" + dimensions + "A axis " + axis + " is not a sequence: " + seq);
+				throw new ReaderErrorException("#" + dimensions + "A axis " + axis + " is not a sequence: " + sequence);
 			}
 
-			final List<LispStruct> lispTokens = seqList.getAsJavaList();
+			final List<LispStruct> tokensAsJavaList = sequenceToken.getAsJavaList();
 
-			final int seqLength = lispTokens.size();
-			final BigInteger seqLengthBI = BigInteger.valueOf(seqLength);
-			final IntegerStruct dimension = new IntegerStruct(seqLengthBI);
+			final BigInteger sequenceLength = BigInteger.valueOf(tokensAsJavaList.size());
+			final IntegerStruct dimension = new IntegerStruct(sequenceLength);
 			dimensionsAsJavaList.add(dimension);
 
 			if (!axis.equals(dimensions.subtract(BigInteger.ONE))) {
-				if (lispTokens.isEmpty()) {
+				if (tokensAsJavaList.isEmpty()) {
 					zeroAxis = axis;
 				} else if (zeroAxis == null) {
-					seq = lispTokens.get(0);
+					sequence = tokensAsJavaList.get(0);
 				} else {
 					throw new ReaderErrorException("#" + dimensions + "A axis " + zeroAxis + " is empty, but axis " + axis + " is non-empty.");
 				}
@@ -156,6 +155,16 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
 		}
 
 		return dimensionsAsJavaList;
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

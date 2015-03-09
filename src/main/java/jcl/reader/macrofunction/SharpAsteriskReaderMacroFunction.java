@@ -16,10 +16,8 @@ import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.numbers.IntegerStruct;
-import jcl.packages.GlobalPackageStruct;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
-import jcl.symbols.SymbolStruct;
 import jcl.system.CommonLispSymbols;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -44,114 +42,113 @@ public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numberArgument) {
 		assert codePoint == CharacterConstants.ASTERISK;
 
-		final ExtendedTokenReaderMacroFunction.ReadExtendedToken readExtendedToken = ExtendedTokenReaderMacroFunction.readExtendedToken(reader, false);
-		final String token = readExtendedToken.getToken();
+		final ExtendedTokenReaderMacroFunction.ReadExtendedToken extendedToken = ExtendedTokenReaderMacroFunction.readExtendedToken(reader, false);
+		final String tokenString = extendedToken.getTokenString();
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			return NullStruct.INSTANCE;
 		}
 
-		if (readExtendedToken.isHasEscapes()) {
+		if (extendedToken.isHasEscapes()) {
 			throw new ReaderErrorException("Escape character appeared after #*");
 		}
 
-		final boolean isInvalidBitString = token.chars()
-		                                        .map(e -> Character.getNumericValue((char) e))
-		                                        .anyMatch(SharpAsteriskReaderMacroFunction::isInvalidBit);
+		final boolean isInvalidBitString = tokenString.chars()
+		                                              .map(e -> Character.getNumericValue((char) e))
+		                                              .anyMatch(SharpAsteriskReaderMacroFunction::isInvalidBit);
 		if (isInvalidBitString) {
 			throw new ReaderErrorException("Bad Bit for Bit Vector...");
 		}
 
-		if (numArg == null) {
-			return createBitVector(token);
+		if (numberArgument == null) {
+			return createBitVector(tokenString);
 		}
 
-		return handleNumArg(token, numArg);
+		return handleNumArg(tokenString, numberArgument);
 	}
 
 	/**
 	 * Handles the processing of the number argument when parsing the provided {@code token} string into a {@link
 	 * BitVectorStruct}.
 	 *
-	 * @param token
+	 * @param tokenString
 	 * 		the bit-vector contents
-	 * @param numArg
+	 * @param numberArgument
 	 * 		the number argument passed to be used as the bit-vector length
 	 *
 	 * @return the properly created {@link BitVectorStruct} taking care of the proper bit-vector length
 	 */
-	private static ListStruct handleNumArg(final String token, final BigInteger numArg) {
+	private static ListStruct handleNumArg(final String tokenString, final BigInteger numberArgument) {
 
-		if (StringUtils.isEmpty(token) && (numArg.compareTo(BigInteger.ZERO) > 0)) {
+		if (StringUtils.isEmpty(tokenString) && (numberArgument.compareTo(BigInteger.ZERO) > 0)) {
 			throw new ReaderErrorException("At least one bit must be supplied for non-zero #* bit-vectors.");
 		}
 
-		final int numberOfTokens = token.length();
-		final int numArgInt = numArg.intValueExact();
-		if (numberOfTokens > numArgInt) {
-			throw new ReaderErrorException("Bit vector is longer than specified length: #" + numArg + '*' + token);
+		final int numberOfTokens = tokenString.length();
+		final int numberArgumentIntValue = numberArgument.intValueExact();
+		if (numberOfTokens > numberArgumentIntValue) {
+			throw new ReaderErrorException("Bit vector is longer than specified length: #" + numberArgument + '*' + tokenString);
 		}
 
 		Character lastToken = null;
-		if (StringUtils.isNotEmpty(token)) {
-			lastToken = token.charAt(numberOfTokens - 1);
+		if (StringUtils.isNotEmpty(tokenString)) {
+			lastToken = tokenString.charAt(numberOfTokens - 1);
 		}
 
-		final StringBuilder bitStringBuilder = new StringBuilder(token);
+		final StringBuilder bitStringBuilder = new StringBuilder(tokenString);
 
-		final int fillAmount = numArgInt - numberOfTokens;
+		final int fillAmount = numberArgumentIntValue - numberOfTokens;
 		for (int i = 0; i < fillAmount; i++) {
 			bitStringBuilder.append(lastToken);
 		}
 
-		final String newBitString = bitStringBuilder.toString();
-		return createBitVector(newBitString);
+		final String bitString = bitStringBuilder.toString();
+		return createBitVector(bitString);
 	}
 
 	/**
 	 * Creates creates the {@link ListStruct} calling the appropriate function needed to produce the {@link
 	 * BitVectorStruct} from the provided {@code token}.
 	 *
-	 * @param token
+	 * @param tokenString
 	 * 		the bit-vector contents used to create the {@link BitVectorStruct}
 	 *
 	 * @return the {@link ListStruct} calling the appropriate function needed to produce the {@link BitVectorStruct}
 	 */
-	private static ListStruct createBitVector(final String token) {
-		final int numberOfTokens = token.length();
-		final BigInteger numberOfTokensBI = BigInteger.valueOf(numberOfTokens);
+	private static ListStruct createBitVector(final String tokenString) {
+		final BigInteger numberOfTokens = BigInteger.valueOf(tokenString.length());
 
-		final List<LispStruct> bits = convertBitStringToBits(token);
+		final List<LispStruct> bits = convertBitStringToBits(tokenString);
 
-		final SymbolStruct<?> makeArrayFnSymbol = CommonLispSymbols.MAKE_ARRAY;
-		final IntegerStruct dimensions = new IntegerStruct(numberOfTokensBI);
-		final SymbolStruct<?> elementTypeKeyword = GlobalPackageStruct.KEYWORD.findSymbol("ELEMENT-TYPE").getSymbol();
+		final IntegerStruct dimensions = new IntegerStruct(numberOfTokens);
 		final ListStruct elementType = ListStruct.buildProperList(CommonLispSymbols.QUOTE, CommonLispSymbols.BIT);
-		final SymbolStruct<?> initialContentsKeyword = GlobalPackageStruct.KEYWORD.findSymbol("INITIAL-CONTENTS").getSymbol();
+		final ListStruct initialContents = ListStruct.buildProperList(CommonLispSymbols.QUOTE, ListStruct.buildProperList(bits));
 
-		final ListStruct contents = ListStruct.buildProperList(bits);
-		final ListStruct initialContents = ListStruct.buildProperList(CommonLispSymbols.QUOTE, contents);
-
-		return ListStruct.buildProperList(makeArrayFnSymbol, dimensions, elementTypeKeyword, elementType, initialContentsKeyword, initialContents);
+		return ListStruct.buildProperList(CommonLispSymbols.MAKE_ARRAY,
+				dimensions,
+				CommonLispSymbols.ELEMENT_TYPE_KEYWORD,
+				elementType,
+				CommonLispSymbols.INITIAL_CONTENTS_KEYWORD,
+				initialContents);
 	}
 
 	/**
 	 * Converts the provided {@code token} string into a list of {@link IntegerStruct} bits.
 	 *
-	 * @param token
+	 * @param tokenString
 	 * 		the bit-vector contents to convert into a list of {@link IntegerStruct} bits
 	 *
 	 * @return the list of {@link IntegerStruct} bits comprising the provided {@code token}
 	 */
-	private static List<LispStruct> convertBitStringToBits(final String token) {
-		return token.chars()
-		            .map(e -> Character.getNumericValue((char) e))
-		            .mapToObj(BigInteger::valueOf)
-		            .map(IntegerStruct::new)
-		            .collect(Collectors.toList());
+	private static List<LispStruct> convertBitStringToBits(final String tokenString) {
+		return tokenString.chars()
+		                  .map(e -> Character.getNumericValue((char) e))
+		                  .mapToObj(BigInteger::valueOf)
+		                  .map(IntegerStruct::new)
+		                  .collect(Collectors.toList());
 	}
 
 	/**

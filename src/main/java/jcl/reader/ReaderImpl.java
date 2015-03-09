@@ -14,6 +14,8 @@ import jcl.LispStruct;
 import jcl.streams.InputStream;
 import jcl.streams.ReadPeekResult;
 import jcl.symbols.SymbolStruct;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,10 +83,10 @@ class ReaderImpl implements Reader {
 	public LispStruct read(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		final LispStruct token = readPreservingWhitespace(eofErrorP, eofValue, recursiveP);
 
-		final ReadPeekResult whiteChar = readChar(false, eofValue, false);
-		final Integer result = whiteChar.getResult();
-		if (!whiteChar.isEof() && (!Character.isWhitespace(result) || recursiveP)) {
-			unreadChar(result);
+		final ReadPeekResult possibleWhitespace = readChar(false, eofValue, false);
+		final Integer codePoint = possibleWhitespace.getResult();
+		if (!possibleWhitespace.isEof() && (!Character.isWhitespace(codePoint) || recursiveP)) {
+			unreadChar(codePoint);
 		}
 
 		return token;
@@ -163,6 +165,16 @@ class ReaderImpl implements Reader {
 	@Override
 	public Map<SymbolStruct<?>, LispStruct> getSharpEqualReplTable() {
 		return sharpEqualReplTable;
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

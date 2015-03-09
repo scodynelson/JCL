@@ -34,18 +34,18 @@ public class SemicolonReaderMacroFunction extends ReaderMacroFunctionImpl {
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numArg) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numberArgument) {
 		assert codePoint == CharacterConstants.SEMICOLON;
 
 		final StringBuilder stringBuilder = new StringBuilder();
 
 		ReadPeekResult readResult = reader.readChar(false, null, false);
-		Integer readChar = readResult.getResult();
-		while (!readResult.isEof() && (readChar.intValue() != CharacterConstants.NEWLINE)) {
-			stringBuilder.appendCodePoint(readChar);
+		Integer nextCodePoint = readResult.getResult();
+		while (!readResult.isEof() && (nextCodePoint.intValue() != CharacterConstants.NEWLINE)) {
+			stringBuilder.appendCodePoint(nextCodePoint);
 
 			readResult = reader.readChar(false, null, false);
-			readChar = readResult.getResult();
+			nextCodePoint = readResult.getResult();
 		}
 
 		final String stringValue = stringBuilder.toString();

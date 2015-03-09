@@ -133,51 +133,19 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 			}
 
 			if (BQ_AT_FLAG.equals(carBqtifyFlag)) {
-				if (CommonLispSymbols.NIL.equals(cdrBqtifyFlag)) {
-					if (expandableBackqExpressionP(carBqtifyThing)) {
-						final ListStruct bqReturnThing = ListStruct.buildProperList(carBqtifyThing);
-						return new BackquoteReturn(CommonLispSymbols.APPEND, bqReturnThing);
-					} else {
-						return comma(carBqtifyThing);
-					}
-				} else {
-
-					final ListStruct bqReturnThing;
-					if (CommonLispSymbols.APPEND.equals(cdrBqtifyFlag)) {
-						bqReturnThing = new ConsStruct(carBqtifyThing, cdrBqtifyThing);
-					} else {
-						final LispStruct backquotify_1 = backquotify_1(cdrBqtifyFlag, cdrBqtifyThing);
-						bqReturnThing = ListStruct.buildProperList(carBqtifyThing, backquotify_1);
-					}
-
-					return new BackquoteReturn(CommonLispSymbols.APPEND, bqReturnThing);
-				}
+				return backquotifyAtFlag(carBqtifyThing, cdrBqtifyFlag, cdrBqtifyThing);
 			}
 
 			if (BQ_DOT_FLAG.equals(carBqtifyFlag)) {
-				if (CommonLispSymbols.NIL.equals(cdrBqtifyFlag)) {
-					if (expandableBackqExpressionP(carBqtifyThing)) {
-						final ListStruct bqReturnThing = ListStruct.buildProperList(carBqtifyThing);
-						return new BackquoteReturn(CommonLispSymbols.NCONC, bqReturnThing);
-					} else {
-						return comma(carBqtifyThing);
-					}
-				} else {
-
-					final ListStruct bqReturnThing;
-					if (CommonLispSymbols.NCONC.equals(cdrBqtifyFlag)) {
-						bqReturnThing = new ConsStruct(carBqtifyThing, cdrBqtifyThing);
-					} else {
-						final LispStruct backquotify_1 = backquotify_1(cdrBqtifyFlag, cdrBqtifyThing);
-						bqReturnThing = ListStruct.buildProperList(carBqtifyThing, backquotify_1);
-					}
-
-					return new BackquoteReturn(CommonLispSymbols.NCONC, bqReturnThing);
-				}
+				return backquotifyDotFlag(carBqtifyThing, cdrBqtifyFlag, cdrBqtifyThing);
 			}
 
 			if (CommonLispSymbols.NIL.equals(cdrBqtifyFlag)) {
-				if (CommonLispSymbols.QUOTE.equals(carBqtifyFlag) || CommonLispSymbols.T.equals(carBqtifyFlag) || CommonLispSymbols.NIL.equals(carBqtifyFlag)) {
+
+				if (CommonLispSymbols.QUOTE.equals(carBqtifyFlag)
+						|| CommonLispSymbols.T.equals(carBqtifyFlag)
+						|| CommonLispSymbols.NIL.equals(carBqtifyFlag)) {
+
 					final ListStruct bqReturnThing = ListStruct.buildProperList(carBqtifyThing);
 					return new BackquoteReturn(CommonLispSymbols.QUOTE, bqReturnThing);
 				} else {
@@ -189,8 +157,13 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 				}
 			}
 
-			if (CommonLispSymbols.QUOTE.equals(cdrBqtifyFlag) || CommonLispSymbols.T.equals(cdrBqtifyFlag)) {
-				if (CommonLispSymbols.QUOTE.equals(carBqtifyFlag) || CommonLispSymbols.T.equals(carBqtifyFlag) || CommonLispSymbols.NIL.equals(carBqtifyFlag)) {
+			if (CommonLispSymbols.QUOTE.equals(cdrBqtifyFlag)
+					|| CommonLispSymbols.T.equals(cdrBqtifyFlag)) {
+
+				if (CommonLispSymbols.QUOTE.equals(carBqtifyFlag)
+						|| CommonLispSymbols.T.equals(carBqtifyFlag)
+						|| CommonLispSymbols.NIL.equals(carBqtifyFlag)) {
+
 					final ConsStruct bqReturnThing = new ConsStruct(carBqtifyThing, cdrBqtifyThing);
 					return new BackquoteReturn(CommonLispSymbols.QUOTE, bqReturnThing);
 				} else {
@@ -205,7 +178,8 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 
 			final LispStruct nextCarBqtifyThing = backquotify_1(carBqtifyFlag, carBqtifyThing);
 
-			if (CommonLispSymbols.LIST.equals(cdrBqtifyFlag) || CommonLispSymbols.LIST_STAR.equals(cdrBqtifyFlag)) {
+			if (CommonLispSymbols.LIST.equals(cdrBqtifyFlag)
+					|| CommonLispSymbols.LIST_STAR.equals(cdrBqtifyFlag)) {
 				final ListStruct bqReturnThing = new ConsStruct(nextCarBqtifyThing, cdrBqtifyThing);
 				return new BackquoteReturn(cdrBqtifyFlag, bqReturnThing);
 			}
@@ -217,6 +191,50 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 		}
 
 		return new BackquoteReturn(CommonLispSymbols.T, code);
+	}
+
+	private BackquoteReturn backquotifyAtFlag(final LispStruct carBqtifyThing, final SymbolStruct<?> cdrBqtifyFlag, final LispStruct cdrBqtifyThing) {
+		if (CommonLispSymbols.NIL.equals(cdrBqtifyFlag)) {
+			if (expandableBackqExpressionP(carBqtifyThing)) {
+				final ListStruct bqReturnThing = ListStruct.buildProperList(carBqtifyThing);
+				return new BackquoteReturn(CommonLispSymbols.APPEND, bqReturnThing);
+			} else {
+				return comma(carBqtifyThing);
+			}
+		} else {
+
+			final ListStruct bqReturnThing;
+			if (CommonLispSymbols.APPEND.equals(cdrBqtifyFlag)) {
+				bqReturnThing = new ConsStruct(carBqtifyThing, cdrBqtifyThing);
+			} else {
+				final LispStruct backquotify_1 = backquotify_1(cdrBqtifyFlag, cdrBqtifyThing);
+				bqReturnThing = ListStruct.buildProperList(carBqtifyThing, backquotify_1);
+			}
+
+			return new BackquoteReturn(CommonLispSymbols.APPEND, bqReturnThing);
+		}
+	}
+
+	private BackquoteReturn backquotifyDotFlag(final LispStruct carBqtifyThing, final SymbolStruct<?> cdrBqtifyFlag, final LispStruct cdrBqtifyThing) {
+		if (CommonLispSymbols.NIL.equals(cdrBqtifyFlag)) {
+			if (expandableBackqExpressionP(carBqtifyThing)) {
+				final ListStruct bqReturnThing = ListStruct.buildProperList(carBqtifyThing);
+				return new BackquoteReturn(CommonLispSymbols.NCONC, bqReturnThing);
+			} else {
+				return comma(carBqtifyThing);
+			}
+		} else {
+
+			final ListStruct bqReturnThing;
+			if (CommonLispSymbols.NCONC.equals(cdrBqtifyFlag)) {
+				bqReturnThing = new ConsStruct(carBqtifyThing, cdrBqtifyThing);
+			} else {
+				final LispStruct backquotify_1 = backquotify_1(cdrBqtifyFlag, cdrBqtifyThing);
+				bqReturnThing = ListStruct.buildProperList(carBqtifyThing, backquotify_1);
+			}
+
+			return new BackquoteReturn(CommonLispSymbols.NCONC, bqReturnThing);
+		}
 	}
 
 	private static BackquoteReturn comma(final LispStruct code) {
@@ -254,12 +272,17 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunctionImpl {
 				}
 			}
 
-			if (CommonLispSymbols.APPEND.equals(carConsCode) || CommonLispSymbols.LIST.equals(carConsCode) || CommonLispSymbols.NCONC.equals(carConsCode)) {
+			if (CommonLispSymbols.APPEND.equals(carConsCode)
+					|| CommonLispSymbols.LIST.equals(carConsCode)
+					|| CommonLispSymbols.NCONC.equals(carConsCode)) {
+
 				final SymbolStruct<?> carConsCodeFlag = (SymbolStruct<?>) carConsCode;
 				return new BackquoteReturn(carConsCodeFlag, cdrConsCode);
 			}
 
-			if (CommonLispSymbols.CONS.equals(carConsCode) || CommonLispSymbols.LIST_STAR.equals(carConsCode)) {
+			if (CommonLispSymbols.CONS.equals(carConsCode)
+					|| CommonLispSymbols.LIST_STAR.equals(carConsCode)) {
+
 				return new BackquoteReturn(CommonLispSymbols.LIST_STAR, cdrConsCode);
 			}
 		}

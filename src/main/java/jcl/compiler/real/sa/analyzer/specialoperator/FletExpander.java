@@ -10,8 +10,8 @@ import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
+import jcl.compiler.real.environment.FletEnvironment;
 import jcl.compiler.real.environment.LambdaEnvironment;
-import jcl.compiler.real.environment.MacroletEnvironment;
 import jcl.compiler.real.environment.allocation.EnvironmentAllocation;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.EnvironmentEnvironmentBinding;
@@ -21,7 +21,7 @@ import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyWithDeclaresAnalyzer;
-import jcl.compiler.real.struct.specialoperator.MacroletStruct;
+import jcl.compiler.real.struct.specialoperator.FletStruct;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
@@ -36,9 +36,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MacroletAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
+public class FletExpander extends MacroFunctionExpander {
 
-	private static final long serialVersionUID = 920568167525914860L;
+	private static final long serialVersionUID = -3183832254183452606L;
 
 	@Autowired
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
@@ -48,27 +48,22 @@ public class MacroletAnalyzer extends MacroFunctionExpander implements SpecialOp
 	 */
 	@PostConstruct
 	private void init() {
-		SpecialOperator.MACROLET.setMacroFunctionExpander(this);
+		SpecialOperator.FLET.setMacroFunctionExpander(this);
 	}
 
 	@Override
-	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
-		return analyze(form, analysisBuilder);
-	}
+	public FletStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 
-	@Override
-	public MacroletStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
-
-		final int inputSize = input.size();
+		final int inputSize = form.size();
 		if (inputSize < 2) {
-			throw new ProgramErrorException("MACROLET: Incorrect number of arguments: " + inputSize + ". Expected at least 2 arguments.");
+			throw new ProgramErrorException("FLET: Incorrect number of arguments: " + inputSize + ". Expected at least 2 arguments.");
 		}
 
-		final ListStruct inputRest = input.getRest();
+		final ListStruct inputRest = form.getRest();
 
 		final LispStruct second = inputRest.getFirst();
 		if (!(second instanceof ListStruct)) {
-			throw new ProgramErrorException("MACROLET: Parameter list must be of type ListStruct. Got: " + second);
+			throw new ProgramErrorException("FLET: Parameter list must be of type List. Got: " + second);
 		}
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
@@ -77,8 +72,8 @@ public class MacroletAnalyzer extends MacroFunctionExpander implements SpecialOp
 		final int tempClosureDepth = analysisBuilder.getClosureDepth();
 		final int newClosureDepth = tempClosureDepth + 1;
 
-		final MacroletEnvironment macroletEnvironment = new MacroletEnvironment(parentEnvironment, newClosureDepth);
-		environmentStack.push(macroletEnvironment);
+		final FletEnvironment fletEnvironment = new FletEnvironment(parentEnvironment, newClosureDepth);
+		environmentStack.push(fletEnvironment);
 
 		final Stack<SymbolStruct<?>> functionNameStack = analysisBuilder.getFunctionNameStack();
 		List<SymbolStruct<?>> functionNames = null;
@@ -91,9 +86,6 @@ public class MacroletAnalyzer extends MacroFunctionExpander implements SpecialOp
 			final List<? extends LispStruct> innerFunctionsJavaList = innerFunctions.getAsJavaList();
 			functionNames = getFunctionNames(innerFunctionsJavaList);
 
-			// Add function names BEFORE analyzing the functions
-			StackUtils.pushAll(functionNameStack, functionNames);
-
 			final List<LispStruct> bodyForms = inputRest.getRest().getAsJavaList();
 
 			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(bodyForms, analysisBuilder);
@@ -101,13 +93,16 @@ public class MacroletAnalyzer extends MacroFunctionExpander implements SpecialOp
 
 			final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
-			final List<MacroletStruct.MacroletVar> macroletVars
+			final List<FletStruct.FletVar> fletVars
 					= innerFunctionsJavaList.stream()
-					                        .map(e -> getMacroletVar(e, declareElement, analyzer, analysisBuilder, macroletEnvironment, environmentStack))
+					                        .map(e -> getFletVar(e, declareElement, analyzer, analysisBuilder, fletEnvironment, environmentStack))
 					                        .collect(Collectors.toList());
 
 			final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
-			specialDeclarationElements.forEach(e -> addDynamicVariableBinding(e, analysisBuilder, macroletEnvironment));
+			specialDeclarationElements.forEach(e -> addDynamicVariableBinding(e, analysisBuilder, fletEnvironment));
+
+			// Add function names AFTER analyzing the functions
+			StackUtils.pushAll(functionNameStack, functionNames);
 
 			final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
 
@@ -116,7 +111,7 @@ public class MacroletAnalyzer extends MacroFunctionExpander implements SpecialOp
 					               .map(e -> analyzer.analyzeForm(e, analysisBuilder))
 					               .collect(Collectors.toList());
 
-			return new MacroletStruct(macroletVars, analyzedBodyForms, macroletEnvironment);
+			return new FletStruct(fletVars, analyzedBodyForms, fletEnvironment);
 		} finally {
 			if (functionNames != null) {
 				StackUtils.popX(functionNameStack, functionNames.size());
@@ -134,7 +129,7 @@ public class MacroletAnalyzer extends MacroFunctionExpander implements SpecialOp
 
 		for (final LispStruct currentFunctionDef : functionDefinitions) {
 			if (!(currentFunctionDef instanceof ListStruct)) {
-				throw new ProgramErrorException("MACROLET: Function parameter must be of type ListStruct. Got: " + currentFunctionDef);
+				throw new ProgramErrorException("FLET: Function parameter must be of type List. Got: " + currentFunctionDef);
 			}
 			final ListStruct functionList = (ListStruct) currentFunctionDef;
 
@@ -148,27 +143,27 @@ public class MacroletAnalyzer extends MacroFunctionExpander implements SpecialOp
 	private SymbolStruct<?> getFunctionListParameterName(final ListStruct functionListParameter) {
 		final LispStruct functionListParameterFirst = functionListParameter.getFirst();
 		if (!(functionListParameterFirst instanceof SymbolStruct)) {
-			throw new ProgramErrorException("MACROLET: Function parameter first element value must be of type SymbolStruct. Got: " + functionListParameterFirst);
+			throw new ProgramErrorException("FLET: Function parameter first element value must be of type Symbol. Got: " + functionListParameterFirst);
 		}
 		return (SymbolStruct<?>) functionListParameterFirst;
 	}
 
-	private MacroletStruct.MacroletVar getMacroletVar(final LispStruct functionParameter,
-	                                                   final DeclareStruct declareElement,
-	                                                   final SemanticAnalyzer analyzer,
-	                                                   final AnalysisBuilder analysisBuilder,
-	                                                   final MacroletEnvironment macroletEnvironment,
-	                                                   final EnvironmentStack lexicalEnvironmentStack) {
+	private FletStruct.FletVar getFletVar(final LispStruct functionParameter,
+	                                       final DeclareStruct declareElement,
+	                                       final SemanticAnalyzer analyzer,
+	                                       final AnalysisBuilder analysisBuilder,
+	                                       final FletEnvironment fletEnvironment,
+	                                       final EnvironmentStack environmentStack) {
 
 		if (!(functionParameter instanceof ListStruct)) {
-			throw new ProgramErrorException("MACROLET: Function parameter must be of type ListStruct. Got: " + functionParameter);
+			throw new ProgramErrorException("FLET: Function parameter must be of type ListStruct. Got: " + functionParameter);
 		}
 
 		final ListStruct functionListParameter = (ListStruct) functionParameter;
 		final SymbolStruct<?> functionName = getFunctionListParameterName(functionListParameter);
-		final LispStruct functionInitForm = getFunctionParameterInitForm(functionListParameter, analyzer, analysisBuilder, lexicalEnvironmentStack);
+		final LispStruct functionInitForm = getFunctionParameterInitForm(functionListParameter, analyzer, analysisBuilder, environmentStack);
 
-		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(macroletEnvironment);
+		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(fletEnvironment);
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
@@ -177,24 +172,22 @@ public class MacroletAnalyzer extends MacroFunctionExpander implements SpecialOp
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(functionName, allocation, T.INSTANCE, functionInitForm);
 		if (isSpecial) {
-			macroletEnvironment.addDynamicBinding(binding);
+			fletEnvironment.addDynamicBinding(binding);
 		} else {
-			macroletEnvironment.addLexicalBinding(binding);
+			fletEnvironment.addLexicalBinding(binding);
 		}
 
-		return new MacroletStruct.MacroletVar(functionName, functionInitForm);
+		return new FletStruct.FletVar(functionName, functionInitForm);
 	}
 
 	private static LispStruct getFunctionParameterInitForm(final ListStruct functionListParameter,
-	                                                       final SemanticAnalyzer analyzer,
-	                                                       final AnalysisBuilder analysisBuilder,
-	                                                       final EnvironmentStack environmentStack) {
-
-		// TODO: This will be a MacroLambda, NOT a Lambda form!!!
+	                                                    final SemanticAnalyzer analyzer,
+	                                                    final AnalysisBuilder analysisBuilder,
+	                                                    final EnvironmentStack environmentStack) {
 
 		final int functionListParameterSize = functionListParameter.size();
 		if (functionListParameterSize < 2) {
-			throw new ProgramErrorException("MACROLET: Incorrect number of arguments to function parameter: " + functionListParameterSize + ". Expected at least 2 arguments.");
+			throw new ProgramErrorException("FLET: Incorrect number of arguments to function parameter: " + functionListParameterSize + ". Expected at least 2 arguments.");
 		}
 
 		final LispStruct functionName = functionListParameter.getFirst();
@@ -254,19 +247,19 @@ public class MacroletAnalyzer extends MacroFunctionExpander implements SpecialOp
 
 	private static void addDynamicVariableBinding(final SpecialDeclarationStruct specialDeclarationElement,
 	                                              final AnalysisBuilder analysisBuilder,
-	                                              final MacroletEnvironment macroletEnvironment) {
+	                                              final FletEnvironment fletEnvironment) {
 
-		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(macroletEnvironment);
+		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(fletEnvironment);
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
 		analysisBuilder.setBindingsPosition(newBindingsPosition);
 
 		final SymbolStruct<?> var = specialDeclarationElement.getVar();
 
-		final Environment bindingEnvironment = Environments.getDynamicBindingEnvironment(macroletEnvironment, var);
+		final Environment bindingEnvironment = Environments.getDynamicBindingEnvironment(fletEnvironment, var);
 		final EnvironmentAllocation allocation = new EnvironmentAllocation(bindingEnvironment);
 
 		final EnvironmentEnvironmentBinding binding = new EnvironmentEnvironmentBinding(var, allocation, T.INSTANCE, bindingEnvironment);
-		macroletEnvironment.addDynamicBinding(binding);
+		fletEnvironment.addDynamicBinding(binding);
 	}
 
 	@Override

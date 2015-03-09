@@ -15,7 +15,7 @@ import jcl.symbols.SpecialOperator;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CatchAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
+public class CatchExpander extends MacroFunctionExpander {
 
 	private static final long serialVersionUID = -4421664278117234704L;
 
@@ -28,19 +28,14 @@ public class CatchAnalyzer extends MacroFunctionExpander implements SpecialOpera
 	}
 
 	@Override
-	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
-		return analyze(form, analysisBuilder);
-	}
+	public CatchStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 
-	@Override
-	public CatchStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
-
-		final int inputSize = input.size();
+		final int inputSize = form.size();
 		if (inputSize < 2) {
 			throw new ProgramErrorException("CATCH: Incorrect number of arguments: " + inputSize + ". Expected at least 2 arguments.");
 		}
 
-		final ListStruct inputRest = input.getRest();
+		final ListStruct inputRest = form.getRest();
 
 		final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 

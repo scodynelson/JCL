@@ -24,7 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProgvAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
+public class ProgvExpander extends MacroFunctionExpander {
 
 	private static final long serialVersionUID = 2755221428467421207L;
 
@@ -40,21 +40,16 @@ public class ProgvAnalyzer extends MacroFunctionExpander implements SpecialOpera
 	}
 
 	@Override
-	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
-		return analyze(form, analysisBuilder);
-	}
+	public ProgvStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 
-	@Override
-	public ProgvStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
-
-		final int inputSize = input.size();
+		final int inputSize = form.size();
 		if (inputSize < 3) {
 			throw new ProgramErrorException("PROGV: Incorrect number of arguments: " + inputSize + ". Expected at least 3 arguments.");
 		}
 
 		// Check Vars List
 
-		final ListStruct inputRest = input.getRest();
+		final ListStruct inputRest = form.getRest();
 
 		final LispStruct second = inputRest.getFirst();
 		if (!(second instanceof ListStruct)) {

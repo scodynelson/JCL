@@ -21,7 +21,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EvalWhenAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
+public class EvalWhenExpander extends MacroFunctionExpander {
 
 	private static final long serialVersionUID = -7301369273443154417L;
 
@@ -43,18 +43,13 @@ public class EvalWhenAnalyzer extends MacroFunctionExpander implements SpecialOp
 
 	@Override
 	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
-		return analyze(form, analysisBuilder);
+		return expand(form, analysisBuilder, false, false);
 	}
 
-	@Override
-	public LispStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
-		return analyze(input, analysisBuilder, false, false);
-	}
-
-	public LispStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder, final boolean isTopLevel,
+	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder, final boolean isTopLevel,
 	                       final boolean isCompileOrCompileFile) {
 
-		final ListStruct inputRest = input.getRest();
+		final ListStruct inputRest = form.getRest();
 
 		final LispStruct second = inputRest.getFirst();
 		if (!(second instanceof ListStruct)) {

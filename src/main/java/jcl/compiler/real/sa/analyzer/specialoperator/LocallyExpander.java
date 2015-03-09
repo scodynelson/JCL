@@ -30,7 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LocallyAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
+public class LocallyExpander extends MacroFunctionExpander {
 
 	private static final long serialVersionUID = 8925649944409732052L;
 
@@ -46,12 +46,7 @@ public class LocallyAnalyzer extends MacroFunctionExpander implements SpecialOpe
 	}
 
 	@Override
-	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
-		return analyze(form, analysisBuilder);
-	}
-
-	@Override
-	public LocallyStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
+	public LocallyStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment parentEnvironment = environmentStack.peek();
@@ -66,7 +61,7 @@ public class LocallyAnalyzer extends MacroFunctionExpander implements SpecialOpe
 		try {
 			analysisBuilder.setClosureDepth(newClosureDepth);
 
-			final List<LispStruct> bodyForms = input.getRest().getAsJavaList();
+			final List<LispStruct> bodyForms = form.getRest().getAsJavaList();
 
 			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(bodyForms, analysisBuilder);
 			final DeclareStruct declareElement = bodyProcessingResult.getDeclareElement();

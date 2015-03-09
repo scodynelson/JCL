@@ -20,7 +20,6 @@ import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
-import jcl.compiler.real.sa.analyzer.specialoperator.SpecialOperatorAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyWithDeclaresAndDocStringAnalyzer;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
@@ -36,7 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LambdaAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
+public class LambdaExpander extends MacroFunctionExpander {
 
 	private static final long serialVersionUID = -7592502247452528911L;
 
@@ -52,19 +51,14 @@ public class LambdaAnalyzer extends MacroFunctionExpander implements SpecialOper
 	}
 
 	@Override
-	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
-		return analyze(form, analysisBuilder);
-	}
+	public LambdaStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 
-	@Override
-	public LambdaStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
-
-		final int inputSize = input.size();
+		final int inputSize = form.size();
 		if (inputSize < 2) {
 			throw new ProgramErrorException("LAMBDA: Incorrect number of arguments: " + inputSize + ". Expected at least 2 arguments.");
 		}
 
-		final ListStruct inputRest = input.getRest();
+		final ListStruct inputRest = form.getRest();
 
 		final LispStruct second = inputRest.getFirst();
 		if (!(second instanceof ListStruct)) {

@@ -11,7 +11,7 @@ import jcl.LispStruct;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.analyzer.specialoperator.lambda.LambdaAnalyzer;
+import jcl.compiler.real.sa.analyzer.specialoperator.lambda.LambdaExpander;
 import jcl.compiler.real.struct.functioncall.LambdaFunctionCallStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
@@ -28,7 +28,7 @@ public class LambdaFunctionCallAnalyzer extends FunctionCallAnalyzer {
 	private static final long serialVersionUID = -2147198941590214441L;
 
 	@Autowired
-	private LambdaAnalyzer lambdaAnalyzer;
+	private LambdaExpander lambdaExpander;
 
 	@Override
 	public LambdaFunctionCallStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
@@ -42,7 +42,7 @@ public class LambdaFunctionCallAnalyzer extends FunctionCallAnalyzer {
 			throw new ProgramErrorException("LIST ANALYZER: First element of a first element ListStruct must be the SpecialOperator 'LAMBDA'. Got: " + functionListFirst);
 		}
 
-		final LambdaStruct lambdaAnalyzed = lambdaAnalyzer.analyze(functionList, analysisBuilder);
+		final LambdaStruct lambdaAnalyzed = lambdaExpander.expand(functionList, analysisBuilder);
 		final OrdinaryLambdaListBindings lambdaListBindings = lambdaAnalyzed.getLambdaListBindings();
 
 		final List<LispStruct> functionArguments = input.getRest().getAsJavaList();

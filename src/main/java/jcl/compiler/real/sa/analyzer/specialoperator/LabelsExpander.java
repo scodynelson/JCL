@@ -36,7 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LabelsAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
+public class LabelsExpander extends MacroFunctionExpander {
 
 	private static final long serialVersionUID = -3698985413039911540L;
 
@@ -52,19 +52,14 @@ public class LabelsAnalyzer extends MacroFunctionExpander implements SpecialOper
 	}
 
 	@Override
-	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
-		return analyze(form, analysisBuilder);
-	}
+	public LabelsStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 
-	@Override
-	public LabelsStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
-
-		final int inputSize = input.size();
+		final int inputSize = form.size();
 		if (inputSize < 2) {
 			throw new ProgramErrorException("LABELS: Incorrect number of arguments: " + inputSize + ". Expected at least 2 arguments.");
 		}
 
-		final ListStruct inputRest = input.getRest();
+		final ListStruct inputRest = form.getRest();
 
 		final LispStruct second = inputRest.getFirst();
 		if (!(second instanceof ListStruct)) {

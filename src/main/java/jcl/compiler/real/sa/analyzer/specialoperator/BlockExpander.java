@@ -16,7 +16,7 @@ import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BlockAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
+public class BlockExpander extends MacroFunctionExpander {
 
 	private static final long serialVersionUID = -5185467468586381117L;
 
@@ -29,19 +29,14 @@ public class BlockAnalyzer extends MacroFunctionExpander implements SpecialOpera
 	}
 
 	@Override
-	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
-		return analyze(form, analysisBuilder);
-	}
+	public BlockStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 
-	@Override
-	public BlockStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
-
-		final int inputSize = input.size();
+		final int inputSize = form.size();
 		if (inputSize < 2) {
 			throw new ProgramErrorException("BLOCK: Incorrect number of arguments: " + inputSize + ". Expected at least 2 arguments.");
 		}
 
-		final ListStruct inputRest = input.getRest();
+		final ListStruct inputRest = form.getRest();
 
 		final LispStruct second = inputRest.getFirst();
 		if (!(second instanceof SymbolStruct)) {

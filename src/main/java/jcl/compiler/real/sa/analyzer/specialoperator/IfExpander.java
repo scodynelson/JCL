@@ -13,7 +13,7 @@ import jcl.symbols.SpecialOperator;
 import org.springframework.stereotype.Component;
 
 @Component
-public class IfAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
+public class IfExpander extends MacroFunctionExpander {
 
 	private static final long serialVersionUID = -5414856145190749144L;
 
@@ -26,19 +26,14 @@ public class IfAnalyzer extends MacroFunctionExpander implements SpecialOperator
 	}
 
 	@Override
-	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
-		return analyze(form, analysisBuilder);
-	}
+	public IfStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 
-	@Override
-	public IfStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
-
-		final int inputSize = input.size();
+		final int inputSize = form.size();
 		if ((inputSize < 3) || (inputSize > 4)) {
 			throw new ProgramErrorException("IF: Incorrect number of arguments: " + inputSize + ". Expected either 3 or 4 arguments.");
 		}
 
-		final ListStruct inputRest = input.getRest();
+		final ListStruct inputRest = form.getRest();
 
 		final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 

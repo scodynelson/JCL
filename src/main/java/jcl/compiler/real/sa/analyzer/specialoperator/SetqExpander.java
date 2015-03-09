@@ -16,7 +16,7 @@ import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SetqAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
+public class SetqExpander extends MacroFunctionExpander {
 
 	private static final long serialVersionUID = 5324580926862048137L;
 
@@ -29,18 +29,13 @@ public class SetqAnalyzer extends MacroFunctionExpander implements SpecialOperat
 	}
 
 	@Override
-	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
-		return analyze(form, analysisBuilder);
-	}
+	public SetqStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 
-	@Override
-	public SetqStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
-
-		final List<LispStruct> forms = input.getRest().getAsJavaList();
+		final List<LispStruct> forms = form.getRest().getAsJavaList();
 
 		final int numberOfForms = forms.size();
 		if ((numberOfForms % 2) != 0) {
-			throw new ProgramErrorException("SETQ: Odd number of arguments received: " + input + ". Expected an even number of arguments.");
+			throw new ProgramErrorException("SETQ: Odd number of arguments received: " + form + ". Expected an even number of arguments.");
 		}
 
 		final List<SetqStruct.SetqPair> setqPairs = new ArrayList<>(numberOfForms / 2);
@@ -55,10 +50,10 @@ public class SetqAnalyzer extends MacroFunctionExpander implements SpecialOperat
 
 			final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
-			final LispStruct form = forms.get(index + 1);
-			final LispStruct formAnalyzed = analyzer.analyzeForm(form, analysisBuilder);
+			final LispStruct setqForm = forms.get(index + 1);
+			final LispStruct setqFormAnalyzed = analyzer.analyzeForm(setqForm, analysisBuilder);
 
-			final SetqStruct.SetqPair setqPair = new SetqStruct.SetqPair(varSymbol, formAnalyzed);
+			final SetqStruct.SetqPair setqPair = new SetqStruct.SetqPair(varSymbol, setqFormAnalyzed);
 			setqPairs.add(setqPair);
 		}
 

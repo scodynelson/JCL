@@ -14,7 +14,7 @@ import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TheAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
+public class TheExpander extends MacroFunctionExpander {
 
 	private static final long serialVersionUID = 6723289642694216454L;
 
@@ -27,19 +27,14 @@ public class TheAnalyzer extends MacroFunctionExpander implements SpecialOperato
 	}
 
 	@Override
-	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
-		return analyze(form, analysisBuilder);
-	}
+	public TheStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 
-	@Override
-	public TheStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
-
-		final int inputSize = input.size();
+		final int inputSize = form.size();
 		if (inputSize != 3) {
 			throw new ProgramErrorException("THE: Incorrect number of arguments: " + inputSize + ". Expected 3 arguments.");
 		}
 
-		final ListStruct inputRest = input.getRest();
+		final ListStruct inputRest = form.getRest();
 
 		final LispStruct valueType = inputRest.getFirst();
 		if (!(valueType instanceof SymbolStruct) && !(valueType instanceof ListStruct)) {
@@ -51,9 +46,9 @@ public class TheAnalyzer extends MacroFunctionExpander implements SpecialOperato
 
 		final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
-		final LispStruct form = inputRestRest.getFirst();
-		final LispStruct formAnalyzed = analyzer.analyzeForm(form, analysisBuilder);
+		final LispStruct theForm = inputRestRest.getFirst();
+		final LispStruct theFormAnalyzed = analyzer.analyzeForm(theForm, analysisBuilder);
 
-		return new TheStruct(null, formAnalyzed);
+		return new TheStruct(null, theFormAnalyzed);
 	}
 }

@@ -17,7 +17,7 @@ import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public class GoAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
+public class GoExpander extends MacroFunctionExpander {
 
 	private static final long serialVersionUID = -6523523596100793498L;
 
@@ -30,19 +30,14 @@ public class GoAnalyzer extends MacroFunctionExpander implements SpecialOperator
 	}
 
 	@Override
-	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
-		return analyze(form, analysisBuilder);
-	}
+	public GoStruct<?> expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 
-	@Override
-	public GoStruct<?> analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
-
-		final int inputSize = input.size();
+		final int inputSize = form.size();
 		if (inputSize != 2) {
 			throw new ProgramErrorException("GO: Incorrect number of arguments: " + inputSize + ". Expected 2 arguments.");
 		}
 
-		final ListStruct inputRest = input.getRest();
+		final ListStruct inputRest = form.getRest();
 
 		final LispStruct second = inputRest.getFirst();
 

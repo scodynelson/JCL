@@ -18,12 +18,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LetStarAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
+public class LetStarExpander extends MacroFunctionExpander {
 
 	private static final long serialVersionUID = 6456555635583825339L;
 
 	@Autowired
-	private LetAnalyzer letAnalyzer;
+	private LetExpander letExpander;
 
 	/**
 	 * Initializes the block macro function and adds it to the special operator 'block'.
@@ -34,19 +34,14 @@ public class LetStarAnalyzer extends MacroFunctionExpander implements SpecialOpe
 	}
 
 	@Override
-	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
-		return analyze(form, analysisBuilder);
-	}
+	public LetStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 
-	@Override
-	public LetStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
-
-		final int inputSize = input.size();
+		final int inputSize = form.size();
 		if (inputSize < 2) {
 			throw new ProgramErrorException("LET*: Incorrect number of arguments: " + inputSize + ". Expected at least 2 arguments.");
 		}
 
-		final ListStruct inputRest = input.getRest();
+		final ListStruct inputRest = form.getRest();
 
 		final LispStruct second = inputRest.getFirst();
 		if (!(second instanceof ListStruct)) {
@@ -71,7 +66,7 @@ public class LetStarAnalyzer extends MacroFunctionExpander implements SpecialOpe
 			body = innerLet;
 		}
 
-		return letAnalyzer.analyze(ListStruct.buildProperList(body), analysisBuilder);
+		return letExpander.expand(ListStruct.buildProperList(body), analysisBuilder);
 	}
 
 	@Override

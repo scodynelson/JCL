@@ -15,7 +15,7 @@ import jcl.symbols.SpecialOperator;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MultipleValueCallAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
+public class MultipleValueCallExpander extends MacroFunctionExpander {
 
 	private static final long serialVersionUID = -8350781874747372684L;
 
@@ -28,19 +28,14 @@ public class MultipleValueCallAnalyzer extends MacroFunctionExpander implements 
 	}
 
 	@Override
-	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
-		return analyze(form, analysisBuilder);
-	}
+	public MultipleValueCallStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 
-	@Override
-	public MultipleValueCallStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
-
-		final int inputSize = input.size();
+		final int inputSize = form.size();
 		if (inputSize < 2) {
 			throw new ProgramErrorException("MULTIPLE-VALUE-CALL: Incorrect number of arguments: " + inputSize + ". Expected at least 2 arguments.");
 		}
 
-		final ListStruct inputRest = input.getRest();
+		final ListStruct inputRest = form.getRest();
 
 		final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 

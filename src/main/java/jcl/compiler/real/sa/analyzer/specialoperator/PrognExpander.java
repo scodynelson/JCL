@@ -14,7 +14,7 @@ import jcl.symbols.SpecialOperator;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PrognAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
+public class PrognExpander extends MacroFunctionExpander {
 
 	private static final long serialVersionUID = -2851059577992887882L;
 
@@ -27,14 +27,9 @@ public class PrognAnalyzer extends MacroFunctionExpander implements SpecialOpera
 	}
 
 	@Override
-	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
-		return analyze(form, analysisBuilder);
-	}
+	public PrognStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 
-	@Override
-	public PrognStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
-
-		final List<LispStruct> forms = input.getRest().getAsJavaList();
+		final List<LispStruct> forms = form.getRest().getAsJavaList();
 
 		final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 

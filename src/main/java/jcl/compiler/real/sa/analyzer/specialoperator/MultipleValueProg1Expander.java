@@ -15,7 +15,7 @@ import jcl.symbols.SpecialOperator;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MultipleValueProg1Analyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
+public class MultipleValueProg1Expander extends MacroFunctionExpander {
 
 	private static final long serialVersionUID = 1791554561862006171L;
 
@@ -28,19 +28,14 @@ public class MultipleValueProg1Analyzer extends MacroFunctionExpander implements
 	}
 
 	@Override
-	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
-		return analyze(form, analysisBuilder);
-	}
+	public MultipleValueProg1Struct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 
-	@Override
-	public MultipleValueProg1Struct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
-
-		final int inputSize = input.size();
+		final int inputSize = form.size();
 		if (inputSize < 2) {
 			throw new ProgramErrorException("MULTIPLE-VALUE-PROG1: Incorrect number of arguments: " + inputSize + ". Expected at least 2 arguments.");
 		}
 
-		final ListStruct inputRest = input.getRest();
+		final ListStruct inputRest = form.getRest();
 
 		final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 

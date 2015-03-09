@@ -9,7 +9,7 @@ import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.analyzer.LexicalSymbolAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
-import jcl.compiler.real.sa.analyzer.specialoperator.lambda.LambdaAnalyzer;
+import jcl.compiler.real.sa.analyzer.specialoperator.lambda.LambdaExpander;
 import jcl.compiler.real.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.LambdaCompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.SymbolCompilerFunctionStruct;
@@ -24,7 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class FunctionAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
+public class FunctionExpander extends MacroFunctionExpander {
 
 	private static final long serialVersionUID = -8290125563768560922L;
 
@@ -32,7 +32,7 @@ public class FunctionAnalyzer extends MacroFunctionExpander implements SpecialOp
 	private LexicalSymbolAnalyzer lexicalSymbolAnalyzer;
 
 	@Autowired
-	private LambdaAnalyzer lambdaAnalyzer;
+	private LambdaExpander lambdaExpander;
 
 	/**
 	 * Initializes the block macro function and adds it to the special operator 'block'.
@@ -43,19 +43,14 @@ public class FunctionAnalyzer extends MacroFunctionExpander implements SpecialOp
 	}
 
 	@Override
-	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
-		return analyze(form, analysisBuilder);
-	}
+	public CompilerFunctionStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 
-	@Override
-	public CompilerFunctionStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
-
-		final int inputSize = input.size();
+		final int inputSize = form.size();
 		if (inputSize != 2) {
 			throw new ProgramErrorException("FUNCTION: Incorrect number of arguments: " + inputSize + ". Expected 2 arguments.");
 		}
 
-		final ListStruct inputRest = input.getRest();
+		final ListStruct inputRest = form.getRest();
 		final LispStruct second = inputRest.getFirst();
 
 		if (second instanceof SymbolStruct) {
@@ -93,7 +88,7 @@ public class FunctionAnalyzer extends MacroFunctionExpander implements SpecialOp
 			throw new ProgramErrorException("FUNCTION: First element of List argument must be the Symbol LAMBDA. Got: " + functionListFirst);
 		}
 
-		final LambdaStruct lambdaElement = lambdaAnalyzer.analyze(functionList, analysisBuilder);
+		final LambdaStruct lambdaElement = lambdaExpander.expand(functionList, analysisBuilder);
 		return new LambdaCompilerFunctionStruct(lambdaElement);
 	}
 

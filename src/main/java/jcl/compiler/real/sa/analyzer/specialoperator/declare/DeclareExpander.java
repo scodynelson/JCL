@@ -9,7 +9,6 @@ import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.DynamicSymbolAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
-import jcl.compiler.real.sa.analyzer.specialoperator.SpecialOperatorAnalyzer;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
@@ -21,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DeclareAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
+public class DeclareExpander extends MacroFunctionExpander {
 
 	private static final long serialVersionUID = -27949883247210201L;
 
@@ -37,14 +36,9 @@ public class DeclareAnalyzer extends MacroFunctionExpander implements SpecialOpe
 	}
 
 	@Override
-	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
-		return analyze(form, analysisBuilder);
-	}
+	public DeclareStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 
-	@Override
-	public DeclareStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
-
-		final List<LispStruct> declSpecs = input.getRest().getAsJavaList();
+		final List<LispStruct> declSpecs = form.getRest().getAsJavaList();
 
 		final DeclareStruct declareElement = new DeclareStruct();
 

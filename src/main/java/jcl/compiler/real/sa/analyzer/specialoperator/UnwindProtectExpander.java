@@ -15,7 +15,7 @@ import jcl.symbols.SpecialOperator;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UnwindProtectAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
+public class UnwindProtectExpander extends MacroFunctionExpander {
 
 	private static final long serialVersionUID = 3379320303375207710L;
 
@@ -28,21 +28,16 @@ public class UnwindProtectAnalyzer extends MacroFunctionExpander implements Spec
 	}
 
 	@Override
-	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
-		return analyze(form, analysisBuilder);
-	}
+	public UnwindProtectStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 
-	@Override
-	public UnwindProtectStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
-
-		final int inputSize = input.size();
+		final int inputSize = form.size();
 		if (inputSize < 2) {
 			throw new ProgramErrorException("UNWIND-PROTECT: Incorrect number of arguments: " + inputSize + ". Expected at least 2 arguments.");
 		}
 
 		final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
 
-		final ListStruct inputRest = input.getRest();
+		final ListStruct inputRest = form.getRest();
 		final LispStruct protectedForm = inputRest.getFirst();
 		final LispStruct analyzedProtectedForm = analyzer.analyzeForm(protectedForm, analysisBuilder);
 

@@ -7,7 +7,7 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.analyzer.specialoperator.declare.DeclareAnalyzer;
+import jcl.compiler.real.sa.analyzer.specialoperator.declare.DeclareExpander;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
@@ -20,7 +20,7 @@ public class BodyWithDeclaresAnalyzer implements Serializable {
 	private static final long serialVersionUID = -4533785417061599823L;
 
 	@Autowired
-	private DeclareAnalyzer declareAnalyzer;
+	private DeclareExpander declareExpander;
 
 	public BodyProcessingResult analyze(final List<LispStruct> input, final AnalysisBuilder analysisBuilder) {
 
@@ -45,7 +45,7 @@ public class BodyWithDeclaresAnalyzer implements Serializable {
 			}
 
 			final ListStruct fullDeclaration = ListStruct.buildProperList(allDeclarations);
-			declareElement = declareAnalyzer.analyze(fullDeclaration, analysisBuilder);
+			declareElement = declareExpander.expand(fullDeclaration, analysisBuilder);
 
 			while (iterator.hasNext()) {
 				bodyForms.add(next);

@@ -18,16 +18,12 @@ import jcl.symbols.SymbolStruct;
 import jcl.system.CommonLispSymbols;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class QuoteAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
+public class QuoteExpander extends MacroFunctionExpander {
 
 	private static final long serialVersionUID = 2741011595927247743L;
-
-	@Autowired
-	private LoadTimeValueAnalyzer loadTimeValueAnalyzer;
 
 	/**
 	 * Initializes the block macro function and adds it to the special operator 'block'.
@@ -38,19 +34,14 @@ public class QuoteAnalyzer extends MacroFunctionExpander implements SpecialOpera
 	}
 
 	@Override
-	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
-		return analyze(form, analysisBuilder);
-	}
+	public QuoteStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 
-	@Override
-	public QuoteStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
-
-		final int inputSize = input.size();
+		final int inputSize = form.size();
 		if (inputSize != 2) {
 			throw new ProgramErrorException("QUOTE: Incorrect number of arguments: " + inputSize + ". Expected 2 arguments.");
 		}
 
-		final ListStruct inputRest = input.getRest();
+		final ListStruct inputRest = form.getRest();
 
 		final LispStruct quotedObject = inputRest.getFirst();
 
@@ -61,16 +52,16 @@ public class QuoteAnalyzer extends MacroFunctionExpander implements SpecialOpera
 			analyzedElement = analyzeQuoteList((ListStruct) quotedObject);
 		}
 
-		final LispStruct element;
-
+		final LispStruct elementToAnalyze;
 		if (analyzedElement == null) {
-			final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
-			element = analyzer.analyzeForm(quotedObject);
+			elementToAnalyze = quotedObject;
 		} else {
 			// If was ListStruct or SymbolStruct, wrap resulting form in Load-Time-Value.
-			final ListStruct loadTimeValueForm = ListStruct.buildProperList(SpecialOperator.LOAD_TIME_VALUE, analyzedElement);
-			element = loadTimeValueAnalyzer.analyze(loadTimeValueForm, analysisBuilder);
+			elementToAnalyze = ListStruct.buildProperList(SpecialOperator.LOAD_TIME_VALUE, analyzedElement);
 		}
+
+		final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
+		final LispStruct element = analyzer.analyzeForm(elementToAnalyze);
 
 		return new QuoteStruct(element);
 	}

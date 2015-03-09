@@ -23,7 +23,7 @@ import jcl.system.CommonLispSymbols;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LoadTimeValueAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
+public class LoadTimeValueExpander extends MacroFunctionExpander {
 
 	private static final long serialVersionUID = 2168018740373766746L;
 
@@ -36,19 +36,14 @@ public class LoadTimeValueAnalyzer extends MacroFunctionExpander implements Spec
 	}
 
 	@Override
-	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
-		return analyze(form, analysisBuilder);
-	}
+	public LoadTimeValueStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 
-	@Override
-	public LoadTimeValueStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
-
-		final int inputSize = input.size();
+		final int inputSize = form.size();
 		if ((inputSize < 2) || (inputSize > 3)) {
 			throw new ProgramErrorException("LOAD-TIME-VALUE: Incorrect number of arguments: " + inputSize + ". Expected either 2 or 3 arguments.");
 		}
 
-		final ListStruct inputRest = input.getRest();
+		final ListStruct inputRest = form.getRest();
 		final ListStruct inputRestRest = inputRest.getRest();
 
 		final LispStruct third = inputRestRest.getFirst();
@@ -59,8 +54,8 @@ public class LoadTimeValueAnalyzer extends MacroFunctionExpander implements Spec
 		final BooleanStruct readOnlyP = (BooleanStruct) third;
 		final boolean isReadOnly = readOnlyP.booleanValue();
 
-		final LispStruct form = inputRest.getFirst();
-		final ListStruct evalForm = ListStruct.buildProperList(CommonLispSymbols.EVAL, form);
+		final LispStruct ltvForm = inputRest.getFirst();
+		final ListStruct evalForm = ListStruct.buildProperList(CommonLispSymbols.EVAL, ltvForm);
 
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment currentEnvironment = environmentStack.peek();

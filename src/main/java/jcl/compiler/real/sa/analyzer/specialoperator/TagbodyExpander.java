@@ -34,7 +34,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TagbodyAnalyzer extends MacroFunctionExpander implements SpecialOperatorAnalyzer {
+public class TagbodyExpander extends MacroFunctionExpander {
 
 	private static final long serialVersionUID = -1543233114989622747L;
 
@@ -50,14 +50,9 @@ public class TagbodyAnalyzer extends MacroFunctionExpander implements SpecialOpe
 	}
 
 	@Override
-	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
-		return analyze(form, analysisBuilder);
-	}
+	public TagbodyStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
 
-	@Override
-	public TagbodyStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
-
-		ListStruct body = input.getRest();
+		ListStruct body = form.getRest();
 		List<LispStruct> bodyAsJavaList = body.getAsJavaList();
 
 		final Set<GoStruct<?>> currentTagSet = bodyAsJavaList.stream()

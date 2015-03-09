@@ -48,5 +48,5 @@ build/
 # Ignore Gradle GUI config
 gradle-app.setting
 
-### Sonar templace
+### Sonar template
 .sonar/

@@ -25,7 +25,7 @@ public class DefunExpander implements MacroFunctionExpander {
 
 		if (functionName instanceof SymbolStruct) {
 
-			final SymbolStruct<?> setSymbolFunctionSymbol = GlobalPackageStruct.COMMON_LISP.intern("SET-SYMBOL-FUNCTION").getSymbolStruct();
+			final SymbolStruct<?> setSymbolFunctionSymbol = GlobalPackageStruct.COMMON_LISP.intern("SET-SYMBOL-FUNCTION").getSymbol();
 			setFunction.add(setSymbolFunctionSymbol);
 		} else if (functionName instanceof ListStruct) {
 
@@ -35,7 +35,7 @@ public class DefunExpander implements MacroFunctionExpander {
 			}
 
 			final LispStruct functionNameListFirst = functionNameList.getFirst();
-			final SymbolStruct<?> setfSymbol = GlobalPackageStruct.COMMON_LISP.intern("SETF").getSymbolStruct();
+			final SymbolStruct<?> setfSymbol = GlobalPackageStruct.COMMON_LISP.intern("SETF").getSymbol();
 
 			// (setf foo)
 			if (!functionNameListFirst.equals(setfSymbol)) {
@@ -48,7 +48,7 @@ public class DefunExpander implements MacroFunctionExpander {
 			}
 
 			// TODO: This is a DEFSETF lambda list, NOT an ORDINARY lambda list!!!
-			final SymbolStruct<?> setSymbolSetfFunctionSymbol = GlobalPackageStruct.COMMON_LISP.intern("SET-SYMBOL-SETF-FUNCTION").getSymbolStruct();
+			final SymbolStruct<?> setSymbolSetfFunctionSymbol = GlobalPackageStruct.COMMON_LISP.intern("SET-SYMBOL-SETF-FUNCTION").getSymbol();
 			setFunction.add(setSymbolSetfFunctionSymbol);
 		} else {
 			throw new RuntimeException("Improper function name supplied to DEFUN: " + functionName);

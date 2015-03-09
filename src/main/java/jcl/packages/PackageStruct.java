@@ -1,11 +1,5 @@
 package jcl.packages;
 
-import jcl.classes.BuiltInClassStruct;
-import jcl.conditions.exceptions.PackageErrorException;
-import jcl.symbols.KeywordSymbolStruct;
-import jcl.symbols.SymbolStruct;
-import jcl.types.Package;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -15,24 +9,64 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import jcl.classes.BuiltInClassStruct;
+import jcl.conditions.exceptions.PackageErrorException;
+import jcl.symbols.KeywordSymbolStruct;
+import jcl.symbols.SymbolStruct;
+import jcl.system.CommonLispSymbols;
+import jcl.types.Package;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 /**
  * The {@link PackageStruct} is the object representation of a Lisp 'package' type.
  */
 public class PackageStruct extends BuiltInClassStruct {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = -1802514718401723443L;
 
+	/**
+	 * The name of package.
+	 */
 	private String name;
+
+	/**
+	 * The {@link List} of nicknames of the package.
+	 */
 	private List<String> nicknames;
 
+	/**
+	 * The {@link Set} of {@link PackageStruct}s that the package uses.
+	 */
 	private final Set<PackageStruct> useList;
+
+	/**
+	 * The {@link Set} of {@link PackageStruct}s that the package is used by.
+	 */
 	private final Set<PackageStruct> usedByList = new HashSet<>();
 
+	/**
+	 * The {@link Map} of the packages external {@link SymbolStruct}s.
+	 * NOTE: ExternalSymbols and ShadowingSymbols are subsets of InternalSymbols (aka. anything in ExternalSymbols or
+	 * ShadowingSymbols are in InternalSymbols but not vice-versa)
+	 */
+	protected final Map<String, SymbolStruct<?>> externalSymbols = new ConcurrentHashMap<>();
+
+	/**
+	 * The {@link Map} of the packages internal {@link SymbolStruct}s.
+	 */
 	private final Map<String, SymbolStruct<?>> internalSymbols = new ConcurrentHashMap<>();
 
-	// NOTE: ExternalSymbols and ShadowingSymbols are subsets of InternalSymbols
-	// (aka. anything in ExternalSymbols or ShadowingSymbols are in InternalSymbols but not vice-versa)
-	protected final Map<String, SymbolStruct<?>> externalSymbols = new ConcurrentHashMap<>();
+	/**
+	 * The {@link Map} of the packages shadowing {@link SymbolStruct}s.
+	 * NOTE: ExternalSymbols and ShadowingSymbols are subsets of InternalSymbols (aka. anything in ExternalSymbols or
+	 * ShadowingSymbols are in InternalSymbols but not vice-versa)
+	 */
 	private final Map<String, SymbolStruct<?>> shadowingSymbols = new ConcurrentHashMap<>();
 
 	/**
@@ -208,7 +242,7 @@ public class PackageStruct extends BuiltInClassStruct {
 			for (final String symbolName : packageToUse.externalSymbols.keySet()) {
 				final PackageSymbolStruct nonInheritedPackageSymbol = findNonInheritedSymbol(symbolName);
 				if (nonInheritedPackageSymbol != null) {
-					final SymbolStruct<?> nonInheritedSymbol = nonInheritedPackageSymbol.getSymbolStruct();
+					final SymbolStruct<?> nonInheritedSymbol = nonInheritedPackageSymbol.getSymbol();
 					shadowingSymbols.put(symbolName, nonInheritedSymbol);
 				}
 			}
@@ -251,7 +285,7 @@ public class PackageStruct extends BuiltInClassStruct {
 
 		final SymbolStruct<?> foundSymbol = findInheritedSymbol(symbolName);
 		if (foundSymbol != null) {
-			return new PackageSymbolStruct(foundSymbol, PackageSymbolStruct.INHERITED);
+			return new PackageSymbolStruct(foundSymbol, CommonLispSymbols.INHERITED);
 		}
 
 		return null;
@@ -298,7 +332,7 @@ public class PackageStruct extends BuiltInClassStruct {
 
 			final PackageSymbolStruct nonInheritedPackageSymbol = findNonInheritedSymbol(symbolName);
 			if (nonInheritedPackageSymbol != null) {
-				final SymbolStruct<?> nonInheritedSymbol = nonInheritedPackageSymbol.getSymbolStruct();
+				final SymbolStruct<?> nonInheritedSymbol = nonInheritedPackageSymbol.getSymbol();
 				unintern(nonInheritedSymbol);
 			}
 
@@ -401,7 +435,7 @@ public class PackageStruct extends BuiltInClassStruct {
 		for (final String symbolName : symbolNames) {
 			final PackageSymbolStruct nonInheritedPackageSymbol = findNonInheritedSymbol(symbolName);
 
-			SymbolStruct<?> nonInheritedSymbol = nonInheritedPackageSymbol.getSymbolStruct();
+			SymbolStruct<?> nonInheritedSymbol = nonInheritedPackageSymbol.getSymbol();
 			if (nonInheritedSymbol == null) {
 				nonInheritedSymbol = new SymbolStruct<>(symbolName);
 				internalSymbols.put(symbolName, nonInheritedSymbol);
@@ -429,7 +463,7 @@ public class PackageStruct extends BuiltInClassStruct {
 		final SymbolStruct<?> symbolStruct = new SymbolStruct<>(symbolName);
 		internalSymbols.put(symbolName, symbolStruct);
 		symbolStruct.setSymbolPackage(this);
-		return new PackageSymbolStruct(symbolStruct, PackageSymbolStruct.INTERNAL);
+		return new PackageSymbolStruct(symbolStruct, CommonLispSymbols.INTERNAL);
 	}
 
 	/**
@@ -491,7 +525,7 @@ public class PackageStruct extends BuiltInClassStruct {
 		final Set<SymbolStruct<?>> allSymbols = new HashSet<>();
 		for (final PackageStruct packageStruct : GlobalPackageStruct.ALL_PACKAGES.values()) {
 			final PackageSymbolStruct foundPackageSymbol = packageStruct.findSymbol(symbolName);
-			final SymbolStruct<?> foundSymbol = foundPackageSymbol.getSymbolStruct();
+			final SymbolStruct<?> foundSymbol = foundPackageSymbol.getSymbol();
 			allSymbols.add(foundSymbol);
 		}
 		return new ArrayList<>(allSymbols);
@@ -524,7 +558,7 @@ public class PackageStruct extends BuiltInClassStruct {
 		for (final PackageStruct usedPackage : useList) {
 			final PackageSymbolStruct inheritedPackageSymbol = usedPackage.findSymbol(symbolName);
 			if (inheritedPackageSymbol != null) {
-				final SymbolStruct<?> inheritedSymbol = inheritedPackageSymbol.getSymbolStruct();
+				final SymbolStruct<?> inheritedSymbol = inheritedPackageSymbol.getSymbol();
 				conflictingInheritedSymbols.add(inheritedSymbol);
 			}
 		}
@@ -544,17 +578,17 @@ public class PackageStruct extends BuiltInClassStruct {
 
 		SymbolStruct<?> foundSymbol = externalSymbols.get(symbolName);
 		if (foundSymbol != null) {
-			return new PackageSymbolStruct(foundSymbol, PackageSymbolStruct.EXTERNAL);
+			return new PackageSymbolStruct(foundSymbol, CommonLispSymbols.EXTERNAL);
 		}
 
 		foundSymbol = shadowingSymbols.get(symbolName);
 		if (foundSymbol != null) {
-			return new PackageSymbolStruct(foundSymbol, PackageSymbolStruct.INTERNAL);
+			return new PackageSymbolStruct(foundSymbol, CommonLispSymbols.INTERNAL);
 		}
 
 		foundSymbol = internalSymbols.get(symbolName);
 		if (foundSymbol != null) {
-			return new PackageSymbolStruct(foundSymbol, PackageSymbolStruct.INTERNAL);
+			return new PackageSymbolStruct(foundSymbol, CommonLispSymbols.INTERNAL);
 		}
 
 		return null;
@@ -579,8 +613,8 @@ public class PackageStruct extends BuiltInClassStruct {
 			}
 
 			final KeywordSymbolStruct packageSymbolType = inheritedPackageSymbol.getPackageSymbolType();
-			if (PackageSymbolStruct.EXTERNAL.equals(packageSymbolType)) {
-				foundSymbol = inheritedPackageSymbol.getSymbolStruct();
+			if (CommonLispSymbols.EXTERNAL.equals(packageSymbolType)) {
+				foundSymbol = inheritedPackageSymbol.getSymbol();
 				break;
 			}
 		}
@@ -589,8 +623,17 @@ public class PackageStruct extends BuiltInClassStruct {
 	}
 
 	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
+	}
+
+	@Override
 	public String toString() {
-		return name;
-//		return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).setExcludeFieldNames("useList", "usedByList", "externalSymbols", "internalSymbols", "shadowingSymbols").toString();
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

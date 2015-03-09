@@ -4,8 +4,12 @@
 
 package jcl.pathnames;
 
+import java.io.Serializable;
+
 import jcl.conditions.exceptions.FileErrorException;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -13,7 +17,12 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * The {@link PathnameDirectoryLevel} is the object representation of a specific directory level of the 'directory'
  * element of a Lisp 'pathname' type.
  */
-public final class PathnameDirectoryLevel {
+public final class PathnameDirectoryLevel implements Serializable {
+
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
+	private static final long serialVersionUID = 6880250210314842459L;
 
 	/**
 	 * The pathname directory level value.
@@ -68,6 +77,16 @@ public final class PathnameDirectoryLevel {
 	 */
 	public PathnameDirectoryLevelType getDirectoryLevelType() {
 		return directoryLevelType;
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

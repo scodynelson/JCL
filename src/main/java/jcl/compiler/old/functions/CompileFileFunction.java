@@ -55,12 +55,12 @@ public class CompileFileFunction {
 	public static final CompileFileFunction FUNCTION = new CompileFileFunction();
 
 	// compilation modes
-	public static final SymbolStruct<?> COMPILE = GlobalPackageStruct.SYSTEM.intern("%COMPILE").getSymbolStruct();
-	public static final SymbolStruct<?> LOAD = GlobalPackageStruct.COMMON_LISP.intern("LOAD").getSymbolStruct();
-	public static final SymbolStruct<?> EVAL = GlobalPackageStruct.COMMON_LISP.intern("EVAL").getSymbolStruct();
-	public static final SymbolStruct<?> COMPILE_TOPLEVEL = GlobalPackageStruct.KEYWORD.intern("COMPILE-TOPLEVEL").getSymbolStruct();
-	public static final SymbolStruct<?> LOAD_TOPLEVEL = GlobalPackageStruct.KEYWORD.intern("LOAD-TOPLEVEL").getSymbolStruct();
-	public static final SymbolStruct<?> EXECUTE = GlobalPackageStruct.KEYWORD.intern("EXECUTE").getSymbolStruct();
+	public static final SymbolStruct<?> COMPILE = GlobalPackageStruct.SYSTEM.intern("%COMPILE").getSymbol();
+	public static final SymbolStruct<?> LOAD = GlobalPackageStruct.COMMON_LISP.intern("LOAD").getSymbol();
+	public static final SymbolStruct<?> EVAL = GlobalPackageStruct.COMMON_LISP.intern("EVAL").getSymbol();
+	public static final SymbolStruct<?> COMPILE_TOPLEVEL = GlobalPackageStruct.KEYWORD.intern("COMPILE-TOPLEVEL").getSymbol();
+	public static final SymbolStruct<?> LOAD_TOPLEVEL = GlobalPackageStruct.KEYWORD.intern("LOAD-TOPLEVEL").getSymbol();
+	public static final SymbolStruct<?> EXECUTE = GlobalPackageStruct.KEYWORD.intern("EXECUTE").getSymbol();
 	private SemanticAnalyzer sa;
 	private IntermediateCodeGenerator icg;
 	private CompilerClassLoader cl;
@@ -141,7 +141,7 @@ public class CompileFileFunction {
 			formList = new ConsStruct(NullStruct.INSTANCE, formList);
 			formList = new ConsStruct(SpecialOperator.LAMBDA, formList);
 
-			SymbolStruct<?> newSA = GlobalPackageStruct.COMMON_LISP.findSymbol("SEMANTIC-ANALYZER").getSymbolStruct();
+			SymbolStruct<?> newSA = GlobalPackageStruct.COMMON_LISP.findSymbol("SEMANTIC-ANALYZER").getSymbol();
 			sa = context.getBean(SemanticAnalyzer.class);
 //            sa = (newSA == NullStruct.INSTANCE) ? new SemanticAnalyzer() : (Function1)newSA.getFunction();
 			icg = new IntermediateCodeGenerator();

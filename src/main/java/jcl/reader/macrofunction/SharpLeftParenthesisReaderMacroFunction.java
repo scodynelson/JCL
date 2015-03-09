@@ -136,9 +136,9 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 
 		final SymbolStruct<?> makeArrayFnSymbol = CommonLispSymbols.MAKE_ARRAY;
 		final IntegerStruct dimensions = new IntegerStruct(numberOfTokensBI);
-		final SymbolStruct<?> elementTypeKeyword = GlobalPackageStruct.KEYWORD.findSymbol("ELEMENT-TYPE").getSymbolStruct();
+		final SymbolStruct<?> elementTypeKeyword = GlobalPackageStruct.KEYWORD.findSymbol("ELEMENT-TYPE").getSymbol();
 		final ListStruct elementType = ListStruct.buildProperList(CommonLispSymbols.QUOTE, CommonLispSymbols.T);
-		final SymbolStruct<?> initialContentsKeyword = GlobalPackageStruct.KEYWORD.findSymbol("INITIAL-CONTENTS").getSymbolStruct();
+		final SymbolStruct<?> initialContentsKeyword = GlobalPackageStruct.KEYWORD.findSymbol("INITIAL-CONTENTS").getSymbol();
 
 		final ListStruct contents = ListStruct.buildProperList(lispTokens);
 		final ListStruct initialContents = ListStruct.buildProperList(CommonLispSymbols.QUOTE, contents);

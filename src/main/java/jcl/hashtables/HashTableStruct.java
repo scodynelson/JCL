@@ -4,22 +4,22 @@
 
 package jcl.hashtables;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
+
 import jcl.LispStruct;
 import jcl.LispType;
 import jcl.classes.BuiltInClassStruct;
 import jcl.functions.EquatorFunctionStruct;
 import jcl.functions.FunctionStruct;
 import jcl.types.HashTable;
-import org.apache.commons.collections4.Equator;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The {@link HashTableStruct} is the object representation of a Lisp 'hash-table' type.
@@ -29,6 +29,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class HashTableStruct extends BuiltInClassStruct {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = -1366238928844179728L;
 
 	/**
@@ -149,6 +152,16 @@ public class HashTableStruct extends BuiltInClassStruct {
 	}
 
 	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
+	}
+
+	@Override
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
@@ -158,16 +171,20 @@ public class HashTableStruct extends BuiltInClassStruct {
 	 */
 	public static final class KeyWrapper implements LispStruct {
 
+		/**
+		 * Serializable Version Unique Identifier.
+		 */
 		private static final long serialVersionUID = -5433164484857026785L;
+
 		/**
 		 * The {@link LispStruct} key to wrap.
 		 */
 		private final LispStruct key;
 
 		/**
-		 * The {@link Equator} used to test equivalence of a key.
+		 * The {@link EquatorFunctionStruct} used to test equivalence of a key.
 		 */
-		private final Equator<LispStruct> equator;
+		private final EquatorFunctionStruct<LispStruct> equator;
 
 		/**
 		 * Private constructor.
@@ -177,11 +194,16 @@ public class HashTableStruct extends BuiltInClassStruct {
 		 * @param equator
 		 * 		the equator function used to test equality of keys
 		 */
-		private KeyWrapper(final LispStruct key, final Equator<LispStruct> equator) {
+		private KeyWrapper(final LispStruct key, final EquatorFunctionStruct<LispStruct> equator) {
 			this.key = key;
 			this.equator = equator;
 		}
 
+		/**
+		 * Getter for key-wrapper {@link #key} property.
+		 *
+		 * @return key-wrapper {@link #key} property
+		 */
 		public LispStruct getKey() {
 			return key;
 		}
@@ -221,7 +243,7 @@ public class HashTableStruct extends BuiltInClassStruct {
 		 *
 		 * @return the newly created KeyWrapper object
 		 */
-		private static KeyWrapper getInstance(final LispStruct key, final Equator<LispStruct> equator) {
+		private static KeyWrapper getInstance(final LispStruct key, final EquatorFunctionStruct<LispStruct> equator) {
 			return new KeyWrapper(key, equator);
 		}
 	}

@@ -4,14 +4,23 @@
 
 package jcl.pathnames;
 
+import java.io.Serializable;
+
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link PathnameName} is the object representation of the 'name' element of a Lisp 'pathname' type.
  */
-public final class PathnameName {
+public final class PathnameName implements Serializable {
+
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
+	private static final long serialVersionUID = 8569658491700316910L;
 
 	/**
 	 * The pathname name value.
@@ -76,6 +85,16 @@ public final class PathnameName {
 	 */
 	public PathnameComponentType getComponentType() {
 		return componentType;
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

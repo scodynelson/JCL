@@ -216,7 +216,7 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 			}
 			return new SymbolStruct<>(symName, pkg);
 		} else {
-			return foundSymbol.getSymbolStruct();
+			return foundSymbol.getSymbol();
 		}
 	}
 

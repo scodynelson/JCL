@@ -1,7 +1,11 @@
 package jcl.packages;
 
+import java.io.Serializable;
+
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SymbolStruct;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -9,35 +13,43 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * Internal class for returning a {@link SymbolStruct} and it's current package symbol type as a {@link
  * KeywordSymbolStruct}.
  */
-public class PackageSymbolStruct {
+public class PackageSymbolStruct implements Serializable {
 
-	public static final KeywordSymbolStruct INTERNAL = new KeywordSymbolStruct("INTERNAL");
-	public static final KeywordSymbolStruct EXTERNAL = new KeywordSymbolStruct("EXTERNAL");
-	public static final KeywordSymbolStruct INHERITED = new KeywordSymbolStruct("INHERITED");
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
+	private static final long serialVersionUID = -8169693960575105621L;
 
-	private final SymbolStruct<?> symbolStruct;
+	/**
+	 * The {@link SymbolStruct} symbol.
+	 */
+	private final SymbolStruct<?> symbol;
+
+	/**
+	 * The {@link #symbol}s package location type.
+	 */
 	private final KeywordSymbolStruct packageSymbolType;
 
 	/**
 	 * Protected constructor.
 	 *
-	 * @param symbolStruct
+	 * @param symbol
 	 * 		the symbol result
 	 * @param packageSymbolType
 	 * 		the symbol package location
 	 */
-	public PackageSymbolStruct(final SymbolStruct<?> symbolStruct, final KeywordSymbolStruct packageSymbolType) {
-		this.symbolStruct = symbolStruct;
+	public PackageSymbolStruct(final SymbolStruct<?> symbol, final KeywordSymbolStruct packageSymbolType) {
+		this.symbol = symbol;
 		this.packageSymbolType = packageSymbolType;
 	}
 
 	/**
-	 * Getter for package-symbol {@link #symbolStruct} property.
+	 * Getter for package-symbol {@link #symbol} property.
 	 *
-	 * @return package-symbol {@link #symbolStruct} property
+	 * @return package-symbol {@link #symbol} property
 	 */
-	public SymbolStruct<?> getSymbolStruct() {
-		return symbolStruct;
+	public SymbolStruct<?> getSymbol() {
+		return symbol;
 	}
 
 	/**
@@ -47,6 +59,16 @@ public class PackageSymbolStruct {
 	 */
 	public KeywordSymbolStruct getPackageSymbolType() {
 		return packageSymbolType;
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

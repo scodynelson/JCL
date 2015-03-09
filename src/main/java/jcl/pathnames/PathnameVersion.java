@@ -4,14 +4,23 @@
 
 package jcl.pathnames;
 
+import java.io.Serializable;
+
 import jcl.conditions.exceptions.FileErrorException;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link PathnameVersion} is the object representation of the 'version' element of a Lisp 'pathname' type.
  */
-public final class PathnameVersion {
+public final class PathnameVersion implements Serializable {
+
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
+	private static final long serialVersionUID = -7874975312401979568L;
 
 	/**
 	 * The pathname version value.
@@ -73,6 +82,16 @@ public final class PathnameVersion {
 	 */
 	public PathnameVersionComponentType getComponentType() {
 		return componentType;
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

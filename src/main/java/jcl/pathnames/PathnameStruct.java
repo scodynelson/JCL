@@ -4,49 +4,60 @@
 
 package jcl.pathnames;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import jcl.arrays.StringStruct;
 import jcl.classes.BuiltInClassStruct;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.types.Pathname;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
 /**
  * The {@link PathnameStruct} is the object representation of a Lisp 'pathname' type.
  */
-public abstract class PathnameStruct extends BuiltInClassStruct {
+public class PathnameStruct extends BuiltInClassStruct {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = -5845491980801761678L;
 
 	/**
 	 * The logger for this class.
 	 */
 	private static final Logger LOGGER = LoggerFactory.getLogger(PathnameStruct.class);
+
 	/**
 	 * The {@link PathnameHost} value.
 	 */
 	protected final PathnameHost host;
+
 	/**
 	 * The {@link PathnameDevice} value.
 	 */
 	protected final PathnameDevice device;
+
 	/**
 	 * The {@link PathnameDirectory} value.
 	 */
 	protected final PathnameDirectory directory;
+
 	/**
 	 * The {@link PathnameName} value.
 	 */
 	protected final PathnameName name;
+
 	/**
 	 * The {@link PathnameType} value.
 	 */
 	protected final PathnameType type;
+
 	/**
 	 * The {@link PathnameVersion} value.
 	 */
@@ -246,6 +257,16 @@ public abstract class PathnameStruct extends BuiltInClassStruct {
 	 */
 	public PathnameVersion getPathnameVersion() {
 		return version;
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

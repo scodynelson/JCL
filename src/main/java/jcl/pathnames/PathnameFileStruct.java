@@ -4,11 +4,6 @@
 
 package jcl.pathnames;
 
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,11 +13,21 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 /**
  * The {@link PathnameFileStruct} is the file-type object representation of a Lisp 'pathname' type.
  */
 class PathnameFileStruct extends PathnameStruct {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = -6116704485090857692L;
 
 	/**
@@ -297,6 +302,16 @@ class PathnameFileStruct extends PathnameStruct {
 	 */
 	private static PathnameVersion getVersion() {
 		return new PathnameVersion();
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

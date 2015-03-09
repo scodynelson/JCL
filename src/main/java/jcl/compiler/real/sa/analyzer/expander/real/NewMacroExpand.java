@@ -90,7 +90,7 @@ public class NewMacroExpand {
 			final PackageSymbolStruct thePackageSymbol = thePackage.findSymbol(symbolName);
 
 			if (thePackageSymbol != null) {
-				final SymbolStruct<?> theSymbol = thePackageSymbol.getSymbolStruct();
+				final SymbolStruct<?> theSymbol = thePackageSymbol.getSymbol();
 				return Optional.ofNullable(theSymbol);
 			}
 		}

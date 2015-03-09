@@ -40,8 +40,8 @@ public class ListCodeGenerator implements CodeGenerator<ListStruct> {
 				final boolean acceptsMultipleValues = FunctionCallCodeGenerator.INSTANCE.isAcceptsMultipleValues();
 				try {
 					FunctionCallCodeGenerator.INSTANCE.setAcceptsMultipleValues(
-							firstElement.equals(GlobalPackageStruct.COMMON_LISP.intern("FUNCALL").getSymbolStruct())
-									|| firstElement.equals(GlobalPackageStruct.COMMON_LISP.intern("APPLY").getSymbolStruct()));
+							firstElement.equals(GlobalPackageStruct.COMMON_LISP.intern("FUNCALL").getSymbol())
+									|| firstElement.equals(GlobalPackageStruct.COMMON_LISP.intern("APPLY").getSymbol()));
 					FunctionCallCodeGenerator.INSTANCE.generate(input, codeGenerator);
 				} finally {
 					FunctionCallCodeGenerator.INSTANCE.setAcceptsMultipleValues(acceptsMultipleValues);
@@ -85,12 +85,12 @@ public class ListCodeGenerator implements CodeGenerator<ListStruct> {
 	}
 
 	private static boolean formOptimizable(final ListStruct list) {
-		return list.getFirst().equals(GlobalPackageStruct.COMMON_LISP.intern("EQ").getSymbolStruct());
+		return list.getFirst().equals(GlobalPackageStruct.COMMON_LISP.intern("EQ").getSymbol());
 	}
 
 	private static void genOptimizedForm(final ListStruct list, final IntermediateCodeGenerator codeGenerator) {
 		final SymbolStruct<?> sym = (SymbolStruct) list.getFirst();
-		if (sym.equals(GlobalPackageStruct.COMMON_LISP.intern("EQ").getSymbolStruct())) {
+		if (sym.equals(GlobalPackageStruct.COMMON_LISP.intern("EQ").getSymbol())) {
 			final ListStruct args = list.getRest();
 			// gen the 2 arguments and leave their values on the stack
 			codeGenerator.icgMainLoop(args.getFirst());

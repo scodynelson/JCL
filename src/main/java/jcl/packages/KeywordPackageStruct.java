@@ -1,6 +1,9 @@
 package jcl.packages;
 
 import jcl.symbols.KeywordSymbolStruct;
+import jcl.system.CommonLispSymbols;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -10,8 +13,14 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 final class KeywordPackageStruct extends PackageStruct {
 
+	/**
+	 * Singleton instance of the Keyword package.
+	 */
 	public static final PackageStruct INSTANCE = new KeywordPackageStruct();
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = 5527737254864167846L;
 
 	/**
@@ -31,7 +40,17 @@ final class KeywordPackageStruct extends PackageStruct {
 		final KeywordSymbolStruct symbolStruct = new KeywordSymbolStruct(symbolName);
 		externalSymbols.put(symbolName, symbolStruct);
 		symbolStruct.setSymbolPackage(this);
-		return new PackageSymbolStruct(symbolStruct, PackageSymbolStruct.INTERNAL);
+		return new PackageSymbolStruct(symbolStruct, CommonLispSymbols.INTERNAL);
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

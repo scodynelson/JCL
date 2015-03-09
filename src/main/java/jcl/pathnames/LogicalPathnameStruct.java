@@ -6,6 +6,8 @@ package jcl.pathnames;
 
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.types.LogicalPathname;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
@@ -21,6 +23,9 @@ import java.util.regex.Pattern;
  */
 public class LogicalPathnameStruct extends PathnameStruct {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = 7133088468874193624L;
 
 	/**
@@ -345,6 +350,16 @@ public class LogicalPathnameStruct extends PathnameStruct {
 			return pathname;
 		}
 		return pathname.substring(versionMarkerIndex + 1);
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

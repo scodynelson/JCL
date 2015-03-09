@@ -214,7 +214,7 @@ public class CompileFunction {
 				NamedNodeMap attributes = instance.getAttributes();
 				if (attributes.getLength() > 0) {
 					String uidValue = attributes.getNamedItem("docUID").getNodeValue();
-					SymbolStruct<?> uid = GlobalPackageStruct.COMPILER.intern(uidValue).getSymbolStruct();
+					SymbolStruct<?> uid = GlobalPackageStruct.COMPILER.intern(uidValue).getSymbol();
 					mainList = new ConsStruct(new StringStruct(instance.toString()), mainList);
 					mainList = new ConsStruct(uid, mainList);
 				}

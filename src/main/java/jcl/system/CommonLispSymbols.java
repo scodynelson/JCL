@@ -1014,4 +1014,8 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> BQ_AT_FLAG = new SymbolStruct<>(",@", GlobalPackageStruct.BACKQUOTE);
 	SymbolStruct<?> BQ_DOT_FLAG = new SymbolStruct<>(",.", GlobalPackageStruct.BACKQUOTE);
 
+	// Package Keywords
+	KeywordSymbolStruct INTERNAL = new KeywordSymbolStruct("INTERNAL");
+	KeywordSymbolStruct EXTERNAL = new KeywordSymbolStruct("EXTERNAL");
+	KeywordSymbolStruct INHERITED = new KeywordSymbolStruct("INHERITED");
 }

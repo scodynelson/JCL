@@ -6,6 +6,8 @@ package jcl.pathnames;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -23,6 +25,9 @@ import java.util.regex.Pattern;
  */
 class PathnameURIStruct extends PathnameStruct {
 
+	/**
+	 * Serializable Version Unique Identifier.
+	 */
 	private static final long serialVersionUID = 6269284949167744555L;
 
 	/**
@@ -217,6 +222,16 @@ class PathnameURIStruct extends PathnameStruct {
 	private static URI getURI(final String pathname) throws URISyntaxException {
 		final String realPathname = pathname.toLowerCase(Locale.getDefault());
 		return new URI(realPathname);
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

@@ -12,6 +12,7 @@ import jcl.printer.LispPrinter;
 import jcl.printer.PrinterVariables;
 import jcl.symbols.BooleanStruct;
 import jcl.symbols.SymbolStruct;
+import jcl.system.CommonLispSymbols;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -49,7 +50,7 @@ public class SymbolStructPrinter implements LispPrinter<SymbolStruct<?>> {
 
 			final String packageName = pkg.getName();
 
-			final boolean externalSymbol = PackageSymbolStruct.EXTERNAL.equals(symbol.getPackageSymbolType());
+			final boolean externalSymbol = CommonLispSymbols.EXTERNAL.equals(symbol.getPackageSymbolType());
 			if (externalSymbol) {
 				// TODO: verify it is a single colon for external symbols when printing...
 				return packageName + ':' + name;

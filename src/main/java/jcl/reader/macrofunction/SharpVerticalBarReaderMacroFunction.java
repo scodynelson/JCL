@@ -4,6 +4,9 @@
 
 package jcl.reader.macrofunction;
 
+import java.math.BigInteger;
+import javax.annotation.PostConstruct;
+
 import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.lists.NullStruct;
@@ -11,9 +14,6 @@ import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.streams.ReadPeekResult;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import java.math.BigInteger;
 
 /**
  * Implements the '#|...|#' Lisp reader macro.

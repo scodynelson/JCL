@@ -46,7 +46,8 @@ class ConstituentReaderState implements ReaderState {
 	public LispStruct process(final TokenBuilder tokenBuilder) {
 
 		final ReadPeekResult readResult = tokenBuilder.getPreviousReadResult();
-		int codePoint = readResult.getResult(); // This will not be 'null'. We check for EOFs after each 'read'.
+		// This 'codePoint' will not be 'null'. We check for EOFs after each 'read'.
+		int codePoint = readResult.getResult();
 
 		final ReadtableStruct readtable = ReaderVariables.READTABLE.getValue();
 		final ReadtableCase readtableCase = readtable.getReadtableCase();

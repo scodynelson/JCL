@@ -4,6 +4,11 @@
 
 package jcl.reader.macrofunction;
 
+import java.math.BigInteger;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
+
 import jcl.LispStruct;
 import jcl.arrays.BitVectorStruct;
 import jcl.characters.CharacterConstants;
@@ -18,11 +23,6 @@ import jcl.symbols.SymbolStruct;
 import jcl.system.CommonLispSymbols;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import java.math.BigInteger;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Implements the '#*' Lisp reader macro.

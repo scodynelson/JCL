@@ -4,6 +4,9 @@
 
 package jcl.reader.macrofunction;
 
+import java.math.BigInteger;
+import javax.annotation.PostConstruct;
+
 import jcl.characters.CharacterConstants;
 import jcl.lists.ListStruct;
 import jcl.reader.Reader;
@@ -12,9 +15,6 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import java.math.BigInteger;
 
 /**
  * Implements the '(...)' Lisp reader macro.

@@ -4,17 +4,17 @@
 
 package jcl.reader.state;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+import java.util.LinkedList;
+
 import jcl.numbers.FloatStruct;
 import jcl.numbers.NumberStruct;
 import jcl.reader.AttributeType;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
 import org.springframework.stereotype.Component;
-
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
-import java.util.LinkedList;
 
 /**
  * Sub-piece of Reader algorithm part 10.1, used to produce a {@link FloatStruct} output when a rational token is

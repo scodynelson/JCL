@@ -4,6 +4,8 @@
 
 package jcl.reader.state;
 
+import java.math.BigInteger;
+
 import jcl.LispStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.NullStruct;
@@ -18,8 +20,6 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.math.BigInteger;
 
 /**
  * Step 4 of the Reader Algorithm.

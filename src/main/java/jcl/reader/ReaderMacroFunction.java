@@ -4,10 +4,10 @@
 
 package jcl.reader;
 
-import jcl.LispStruct;
-
 import java.io.Serializable;
 import java.math.BigInteger;
+
+import jcl.LispStruct;
 
 /**
  * Interface definition for all Reader defined macro functions that read character macros based off of a provided

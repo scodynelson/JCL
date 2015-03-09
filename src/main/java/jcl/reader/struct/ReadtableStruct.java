@@ -4,6 +4,10 @@
 
 package jcl.reader.struct;
 
+import java.math.BigInteger;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.classes.BuiltInClassStruct;
@@ -16,10 +20,6 @@ import jcl.streams.ReadPeekResult;
 import jcl.types.Readtable;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.math.BigInteger;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The {@link ReadtableStruct} is the object representation of a Lisp 'readtable' type.

@@ -4,6 +4,9 @@
 
 package jcl.reader.macrofunction;
 
+import java.io.Serializable;
+import java.math.BigInteger;
+
 import jcl.LispStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.NullStruct;
@@ -17,9 +20,6 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.io.Serializable;
-import java.math.BigInteger;
 
 /**
  * Reader Macro Function for handling the reading of {@link RationalStruct}s, following proper radix rules for a

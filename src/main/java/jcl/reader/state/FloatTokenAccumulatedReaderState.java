@@ -4,6 +4,10 @@
 
 package jcl.reader.state;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.LinkedList;
+
 import jcl.characters.CharacterConstants;
 import jcl.numbers.FloatStruct;
 import jcl.numbers.NumberStruct;
@@ -16,10 +20,6 @@ import jcl.types.LongFloat;
 import jcl.types.ShortFloat;
 import jcl.types.SingleFloat;
 import org.springframework.stereotype.Component;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.LinkedList;
 
 /**
  * Sub-piece of Reader algorithm part 10.1, used to produce a {@link FloatStruct} output when a float token is

@@ -4,9 +4,9 @@
 
 package jcl.reader;
 
-import jcl.LispStruct;
-
 import java.io.Serializable;
+
+import jcl.LispStruct;
 
 /**
  * Mediator for {@link Reader} state algorithm invocations throughout the read process.

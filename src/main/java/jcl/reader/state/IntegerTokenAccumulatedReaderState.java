@@ -4,6 +4,11 @@
 
 package jcl.reader.state;
 
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.NumberStruct;
 import jcl.reader.AttributeType;
@@ -11,11 +16,6 @@ import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
 import jcl.reader.struct.ReaderVariables;
 import org.springframework.stereotype.Component;
-
-import java.math.BigInteger;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Sub-piece of Reader algorithm part 10.1, used to produce an {@link IntegerStruct} output when a rational token is

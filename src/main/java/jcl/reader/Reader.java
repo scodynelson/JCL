@@ -4,14 +4,14 @@
 
 package jcl.reader;
 
+import java.io.Serializable;
+import java.math.BigInteger;
+import java.util.Map;
+
 import jcl.LispStruct;
 import jcl.streams.InputStream;
 import jcl.streams.ReadPeekResult;
 import jcl.symbols.SymbolStruct;
-
-import java.io.Serializable;
-import java.math.BigInteger;
-import java.util.Map;
 
 /**
  * JCL Reader that handles reading in lisp tokens and parsing them as {@link LispStruct}s.

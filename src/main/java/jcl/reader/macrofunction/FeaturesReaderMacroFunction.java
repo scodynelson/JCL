@@ -4,6 +4,9 @@
 
 package jcl.reader.macrofunction;
 
+import java.io.Serializable;
+import java.util.List;
+
 import jcl.LispStruct;
 import jcl.compiler.real.CompilerVariables;
 import jcl.conditions.exceptions.ReaderErrorException;
@@ -27,9 +30,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.io.Serializable;
-import java.util.List;
 
 /**
  * Reader Macro Function for handling the reading of *features* in the system, handling whether or not those specific

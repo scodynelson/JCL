@@ -4,15 +4,15 @@
 
 package jcl.reader.state;
 
+import java.io.Serializable;
+import java.util.List;
+
 import jcl.LispStruct;
 import jcl.reader.AttributeType;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
 import jcl.reader.struct.ReadtableCase;
 import org.apache.commons.collections4.CollectionUtils;
-
-import java.io.Serializable;
-import java.util.List;
 
 /**
  * This interface defines a set of anonymous classes that comprise the states of the Reader state machine as defined in

@@ -4,14 +4,14 @@
 
 package jcl.reader.struct;
 
+import java.io.Serializable;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import jcl.numbers.IntegerStruct;
 import jcl.reader.AttributeType;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.io.Serializable;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Represents a lookup table for {@link AttributeType}s matching {@link Integer} code points.

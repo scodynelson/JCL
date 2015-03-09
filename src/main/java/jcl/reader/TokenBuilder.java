@@ -4,12 +4,12 @@
 
 package jcl.reader;
 
+import java.util.LinkedList;
+
 import jcl.LispStruct;
 import jcl.streams.ReadPeekResult;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.util.LinkedList;
 
 /**
  * Used to build {@link LispStruct} tokens as a {@link Reader} process executes.

@@ -4,6 +4,9 @@
 
 package jcl.reader.macrofunction;
 
+import java.math.BigInteger;
+import javax.annotation.PostConstruct;
+
 import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.characters.CharacterStruct;
@@ -12,9 +15,6 @@ import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import java.math.BigInteger;
 
 /**
  * Implements the '#u' Lisp reader macro.

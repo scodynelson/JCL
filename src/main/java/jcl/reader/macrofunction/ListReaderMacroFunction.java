@@ -4,6 +4,9 @@
 
 package jcl.reader.macrofunction;
 
+import java.io.Serializable;
+import java.util.List;
+
 import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
@@ -18,9 +21,6 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.io.Serializable;
-import java.util.List;
 
 /**
  * Reader Macro Function for handling the reading of lists, properly handling the encountering of a '.' character

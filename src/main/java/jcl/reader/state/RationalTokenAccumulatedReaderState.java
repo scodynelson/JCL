@@ -4,6 +4,9 @@
 
 package jcl.reader.state;
 
+import java.math.BigInteger;
+import java.util.LinkedList;
+
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.NumberStruct;
 import jcl.numbers.RatioStruct;
@@ -13,9 +16,6 @@ import jcl.reader.TokenBuilder;
 import jcl.reader.struct.ReaderVariables;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.springframework.stereotype.Component;
-
-import java.math.BigInteger;
-import java.util.LinkedList;
 
 /**
  * Sub-piece of Reader algorithm part 10.1, used to produce a {@link RatioStruct} output when a rational token is

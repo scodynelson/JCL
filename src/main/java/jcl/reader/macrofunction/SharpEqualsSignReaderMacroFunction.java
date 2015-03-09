@@ -4,6 +4,14 @@
 
 package jcl.reader.macrofunction;
 
+import java.math.BigInteger;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
+import javax.annotation.PostConstruct;
+
 import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
@@ -13,14 +21,6 @@ import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
 import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import java.math.BigInteger;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
 
 /**
  * Implements the '#=' Lisp reader macro.

@@ -74,7 +74,7 @@ public class CompileFunction {
 		LispStruct formCopy = NullStruct.INSTANCE;
 
 		sa = context.getBean(SemanticAnalyzer.class);
-		icg = new IntermediateCodeGenerator();
+		icg = context.getBean(IntermediateCodeGenerator.class);
 
 		try {
 			// formCopy is a copy of the original form to tack onto the function object

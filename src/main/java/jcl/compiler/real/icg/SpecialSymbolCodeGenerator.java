@@ -29,7 +29,7 @@ public class SpecialSymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>
 			classBuilder.getEmitter().emitAload(slot);
 			classBuilder.getEmitter().emitCheckcast("lisp/common/type/Symbol");
 		} else {
-			codeGenerator.genCodeSpecialVariable(input, classBuilder);
+			SpecialVariableCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
 		}
 	}
 

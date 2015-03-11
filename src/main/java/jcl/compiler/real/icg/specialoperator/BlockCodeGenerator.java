@@ -3,6 +3,7 @@ package jcl.compiler.real.icg.specialoperator;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.SpecialVariableCodeGenerator;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.SymbolStruct;
@@ -26,7 +27,7 @@ public class BlockCodeGenerator implements CodeGenerator<ListStruct> {
 		restOfList = restOfList.getRest();
 
 		// ... ,
-		codeGenerator.genCodeSpecialVariable(sym, classBuilder);
+		SpecialVariableCodeGenerator.INSTANCE.generate(sym, codeGenerator, classBuilder);
 		// ..., sym
 
 		classBuilder.getEmitter().emitGetstatic("lisp/system/TransferOfControl", "BLOCK", "Ljava/lang/String;");

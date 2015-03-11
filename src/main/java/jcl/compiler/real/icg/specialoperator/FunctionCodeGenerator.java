@@ -3,6 +3,7 @@ package jcl.compiler.real.icg.specialoperator;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.SpecialVariableCodeGenerator;
 import jcl.compiler.real.icg.SymbolFunctionCodeGenerator;
 import jcl.lists.ListStruct;
 import jcl.symbols.SymbolStruct;
@@ -31,7 +32,7 @@ public class FunctionCodeGenerator implements CodeGenerator<ListStruct> {
 			// Step 2: return the function stashed in the symbol or NIL if not there
 			// The SETF expander will ensure that there will be a FUNCALL #'(setf foo) with args
 			final SymbolStruct<?> setfSymbol = (SymbolStruct<?>) ((ListStruct) fn).getRest().getFirst();
-			codeGenerator.genCodeSpecialVariable(setfSymbol, classBuilder); // now we have the symbol on the stack
+			SpecialVariableCodeGenerator.INSTANCE.generate(setfSymbol, codeGenerator, classBuilder); // now we have the symbol on the stack
 			// number the invoke
 			final Label label = new Label();
 			classBuilder.getEmitter().visitMethodLabel(label);

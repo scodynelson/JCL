@@ -3,6 +3,7 @@ package jcl.compiler.real.icg.specialoperator;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.SpecialVariableCodeGenerator;
 import jcl.lists.ListStruct;
 import jcl.symbols.SymbolStruct;
 
@@ -21,7 +22,7 @@ public class ReturnFromCodeGenerator implements CodeGenerator<ListStruct> {
 		// +1 -> exception
 		classBuilder.getEmitter().emitDup();
 		// +2 -> exception, exception
-		codeGenerator.genCodeSpecialVariable(sym, classBuilder);
+		SpecialVariableCodeGenerator.INSTANCE.generate(sym, codeGenerator, classBuilder);
 		// +3 -> exception, exception, name
 		codeGenerator.icgMainLoop(restOfList.getFirst(), classBuilder);
 		classBuilder.getEmitter().emitInvokespecial("lisp/system/compiler/exceptions/ReturnFromException", "<init>", "(Llisp/common/type/Symbol;Ljava/lang/Object;)", "V", false);

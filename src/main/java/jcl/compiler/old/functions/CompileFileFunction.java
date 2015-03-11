@@ -7,10 +7,10 @@ import jcl.compiler.old.Emitter;
 import jcl.compiler.old.EmptyVisitor;
 import jcl.compiler.old.documentation.AnnotationCollector;
 import jcl.compiler.old.documentation.DocumentFactory;
+import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.sa.analyzer.expander.MacroExpandFunction;
 import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
 import jcl.compiler.old.symbol.KeywordOld;
-import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
@@ -144,7 +144,7 @@ public class CompileFileFunction {
 			SymbolStruct<?> newSA = GlobalPackageStruct.COMMON_LISP.findSymbol("SEMANTIC-ANALYZER").getSymbol();
 			sa = context.getBean(SemanticAnalyzer.class);
 //            sa = (newSA == NullStruct.INSTANCE) ? new SemanticAnalyzer() : (Function1)newSA.getFunction();
-			icg = new IntermediateCodeGenerator();
+			icg = context.getBean(IntermediateCodeGenerator.class);
 
 			// set up the timers...
 			long baseTime;

@@ -4,6 +4,7 @@ import jcl.LispStruct;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.SpecialVariableCodeGenerator;
 import jcl.compiler.real.icg.SymbolCodeGenerator;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
@@ -299,7 +300,7 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 
 		// if a print option was passed in, make an instance and store it
 		if (printer instanceof SymbolStruct<?>) {
-			icg.genCodeSpecialVariable((SymbolStruct<?>) printer, classBuilder);
+			SpecialVariableCodeGenerator.INSTANCE.generate((SymbolStruct<?>) printer, icg, classBuilder);
 			classBuilder.getEmitter().emitPutstatic(implName, "printDefstructFunction", "Llisp/common/type/Symbol;");
 		} else if ((printer instanceof FunctionStruct) || (printer instanceof FunctionStruct)) { // TODO: Function2 || Function3
 			classBuilder.getEmitter().emitNew(printer.getClass().getName());
@@ -313,7 +314,7 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 		}
 
 		// hold on to the original lispName
-		icg.genCodeSpecialVariable(lispName, classBuilder);
+		SpecialVariableCodeGenerator.INSTANCE.generate(lispName, icg, classBuilder);
 		classBuilder.getEmitter().emitPutstatic(implName, "lispName", "Llisp/common/type/Symbol;");
 
 		// make an instance of the nested Factory class
@@ -334,7 +335,7 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 		for (int i = 0; i < fields.length; i++) {
 			classBuilder.getEmitter().emitDup();
 			classBuilder.getEmitter().emitLdc(i);
-			icg.genCodeSpecialVariable(fields[i], classBuilder);
+			SpecialVariableCodeGenerator.INSTANCE.generate(fields[i], icg, classBuilder);
 			classBuilder.getEmitter().emitAastore();
 		}
 		classBuilder.getEmitter().emitDup();

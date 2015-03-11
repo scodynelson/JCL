@@ -49,7 +49,7 @@ public class SymbolFunctionCodeGenerator implements CodeGenerator<SymbolStruct<?
 			} else {
 				final Label label = new Label();
 				classBuilder.getEmitter().visitMethodLabel(label);
-				codeGenerator.genCodeSpecialVariable(input, classBuilder);
+				SpecialVariableCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
 				// invoke symbol.getFunction()
 				classBuilder.getEmitter().emitInvokeinterface("lisp/common/type/Symbol", "getFunction", "()", "Llisp/common/type/Function;", true);
 				// if the symbol has defined less than 12 params, we can say that it takes that number of args
@@ -57,7 +57,7 @@ public class SymbolFunctionCodeGenerator implements CodeGenerator<SymbolStruct<?
 		} else {
 			final Label label = new Label();
 			classBuilder.getEmitter().visitMethodLabel(label);
-			codeGenerator.genCodeSpecialVariable(input, classBuilder);
+			SpecialVariableCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
 			// invoke symbol.getFunction()
 			classBuilder.getEmitter().emitInvokeinterface("lisp/common/type/Symbol", "getFunction", "()", "Llisp/common/type/Function;", true);
 			// if the symbol has defined less than 12 params, we can say that it takes that number of args

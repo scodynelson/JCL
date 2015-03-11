@@ -3,6 +3,8 @@ package jcl.compiler.real.icg.specialoperator;
 import jcl.compiler.real.environment.BindingEnvironment;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.InnerFunctionEnvironment;
+import jcl.compiler.real.environment.allocation.PositionAllocation;
+import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
@@ -40,7 +42,14 @@ public class SetqCodeGenerator implements CodeGenerator<ListStruct> {
 				}
 			} else {
 				// so find what local slot it is
-				final int slot = IntermediateCodeGenerator.genLocalSlot(symbol, binding); // drop the %let
+
+				// get the :bindings list
+				// ((x :allocation ...) (y :allocation ...) ...)
+				final Binding<?> symBinding = binding.getLexicalBinding(symbol).get();
+				// (:allocation ... :scope ... )
+				// get the allocated slot for the symbol and put it on the stack
+				final int slot = ((PositionAllocation) symBinding.getAllocation()).getPosition();
+
 				// if this is the last set, dup the value so it's returned
 				if (restOfList.getRest().equals(NullStruct.INSTANCE)) {
 					classBuilder.getEmitter().emitDup(); // leaves the value on the stack

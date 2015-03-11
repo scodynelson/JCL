@@ -6,6 +6,7 @@ import jcl.compiler.real.icg.IntegerCodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.RatioCodeGenerator;
+import jcl.compiler.real.icg.SpecialVariableCodeGenerator;
 import jcl.lists.ListStruct;
 import jcl.numbers.FloatStruct;
 import jcl.numbers.IntegerStruct;
@@ -30,7 +31,7 @@ public class QuoteCodeGenerator implements CodeGenerator<ListStruct> {
 				classBuilder.getEmitter().emitLdc(sym.getName());
 				classBuilder.getEmitter().emitInvokestatic("lisp/common/type/Symbol$Factory", "newInstance", "(Ljava/lang/String;)", "Llisp/common/type/Symbol;", false);
 			} else {
-				codeGenerator.genCodeSpecialVariable(sym, classBuilder);
+				SpecialVariableCodeGenerator.INSTANCE.generate(sym, codeGenerator, classBuilder);
 			}
 		} else if (quotedObj instanceof IntegerStruct) {
 			IntegerCodeGenerator.INSTANCE.generate((IntegerStruct) quotedObj, codeGenerator, classBuilder);

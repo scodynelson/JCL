@@ -8,6 +8,8 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.InnerFunctionEnvironment;
 import jcl.compiler.real.environment.SymbolTable;
 import jcl.compiler.real.environment.allocation.ClosureAllocation;
+import jcl.compiler.real.environment.allocation.PositionAllocation;
+import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.environment.binding.ClosureBinding;
 import jcl.compiler.real.environment.binding.SymbolClosureBinding;
 import jcl.symbols.SymbolStruct;
@@ -96,7 +98,14 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 				} else {
 					// go find it
 					final Environment binding = getBindingEnvironment(classBuilder.getBindingEnvironment(), input);
-					final int slot = IntermediateCodeGenerator.genLocalSlot(input, binding);
+
+					// get the :bindings list
+					// ((x :allocation ...) (y :allocation ...) ...)
+					final Binding<?> symBinding = binding.getLexicalBinding(input).get();
+					// (:allocation ... :scope ... )
+					// get the allocated slot for the symbol and put it on the stack
+					final int slot = ((PositionAllocation) symBinding.getAllocation()).getPosition();
+
 					classBuilder.getEmitter().emitAload(slot);
 				}
 			} else {
@@ -111,7 +120,13 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 					SpecialSymbolCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
 					classBuilder.getEmitter().emitInvokestatic("jcl/symbols/SymbolStruct", "getValue", "()", "Ljava/lang/Object;", true);
 				} else {
-					final int slot = IntermediateCodeGenerator.genLocalSlot(input, binding);
+					// get the :bindings list
+					// ((x :allocation ...) (y :allocation ...) ...)
+					final Binding<?> symBinding = binding.getLexicalBinding(input).get();
+					// (:allocation ... :scope ... )
+					// get the allocated slot for the symbol and put it on the stack
+					final int slot = ((PositionAllocation) symBinding.getAllocation()).getPosition();
+
 					classBuilder.getEmitter().emitAload(slot);
 				}
 			}

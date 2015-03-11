@@ -13,7 +13,7 @@ public class SymbolFunctionCodeGenerator implements CodeGenerator<SymbolStruct<?
 	public static final SymbolFunctionCodeGenerator INSTANCE = new SymbolFunctionCodeGenerator();
 
 	@Override
-	public void generate(final SymbolStruct<?> input, final IntermediateCodeGenerator codeGenerator) {
+	public void generate(final SymbolStruct<?> input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
 		// there are multiple ways to handle this
 		// we add an optimization for calling a CL function
 		// it becomes a static field reference instead of a runtime symbol lookup
@@ -36,8 +36,8 @@ public class SymbolFunctionCodeGenerator implements CodeGenerator<SymbolStruct<?
 					fnFieldName = strs[strs.length - 1];
 				}
 				final Label label = new Label();
-				codeGenerator.emitter.visitMethodLabel(label);
-				codeGenerator.emitter.emitGetstatic("lisp/extensions/type/CommonLispFunctions", "StdFunctions", "Llisp/extensions/type/CommonLispFunctions;");
+				classBuilder.getEmitter().visitMethodLabel(label);
+				classBuilder.getEmitter().emitGetstatic("lisp/extensions/type/CommonLispFunctions", "StdFunctions", "Llisp/extensions/type/CommonLispFunctions;");
 				// +1 -> StdFns
 				// TODO: the following 5 lines...
 //				if (input.getFunction() instanceof MacroFunctionExpander) {
@@ -48,18 +48,18 @@ public class SymbolFunctionCodeGenerator implements CodeGenerator<SymbolStruct<?
 				// +1 -> fn
 			} else {
 				final Label label = new Label();
-				codeGenerator.emitter.visitMethodLabel(label);
-				codeGenerator.genCodeSpecialVariable(input);
+				classBuilder.getEmitter().visitMethodLabel(label);
+				codeGenerator.genCodeSpecialVariable(input, classBuilder);
 				// invoke symbol.getFunction()
-				codeGenerator.emitter.emitInvokeinterface("lisp/common/type/Symbol", "getFunction", "()", "Llisp/common/type/Function;", true);
+				classBuilder.getEmitter().emitInvokeinterface("lisp/common/type/Symbol", "getFunction", "()", "Llisp/common/type/Function;", true);
 				// if the symbol has defined less than 12 params, we can say that it takes that number of args
 			}
 		} else {
 			final Label label = new Label();
-			codeGenerator.emitter.visitMethodLabel(label);
-			codeGenerator.genCodeSpecialVariable(input);
+			classBuilder.getEmitter().visitMethodLabel(label);
+			codeGenerator.genCodeSpecialVariable(input, classBuilder);
 			// invoke symbol.getFunction()
-			codeGenerator.emitter.emitInvokeinterface("lisp/common/type/Symbol", "getFunction", "()", "Llisp/common/type/Function;", true);
+			classBuilder.getEmitter().emitInvokeinterface("lisp/common/type/Symbol", "getFunction", "()", "Llisp/common/type/Function;", true);
 			// if the symbol has defined less than 12 params, we can say that it takes that number of args
 		}
 	}

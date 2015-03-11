@@ -7,11 +7,11 @@ public class RatioCodeGenerator implements CodeGenerator<RatioStruct> {
 	public static final RatioCodeGenerator INSTANCE = new RatioCodeGenerator();
 
 	@Override
-	public void generate(final RatioStruct input, final IntermediateCodeGenerator codeGenerator) {
-		codeGenerator.emitter.emitLdc(input.getBigFraction().getNumerator().toString());
-		codeGenerator.emitter.emitInvokestatic("java/math/BigInteger", "<init>", "(Ljava/lang/String;)", "V", false);
-		codeGenerator.emitter.emitLdc(input.getBigFraction().getDenominator().toString());
-		codeGenerator.emitter.emitInvokestatic("java/math/BigInteger", "<init>", "(Ljava/lang/String;)", "V", false);
-		codeGenerator.emitter.emitInvokestatic("jcl/numbers/RatioStruct", "<init>", "(Ljava/math/BigInteger;Ljava/math/BigInteger;)", "V", false);
+	public void generate(final RatioStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
+		classBuilder.getEmitter().emitLdc(input.getBigFraction().getNumerator().toString());
+		classBuilder.getEmitter().emitInvokestatic("java/math/BigInteger", "<init>", "(Ljava/lang/String;)", "V", false);
+		classBuilder.getEmitter().emitLdc(input.getBigFraction().getDenominator().toString());
+		classBuilder.getEmitter().emitInvokestatic("java/math/BigInteger", "<init>", "(Ljava/lang/String;)", "V", false);
+		classBuilder.getEmitter().emitInvokestatic("jcl/numbers/RatioStruct", "<init>", "(Ljava/math/BigInteger;Ljava/math/BigInteger;)", "V", false);
 	}
 }

@@ -21,7 +21,7 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 	public static final SymbolCodeGenerator INSTANCE = new SymbolCodeGenerator();
 
 	@Override
-	public void generate(final SymbolStruct<?> input, final IntermediateCodeGenerator codeGenerator) {
+	public void generate(final SymbolStruct<?> input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
 		// must determine one of 4 options:
 		// 1. this is in a closure that's local to the environment
 		// => assoc on the closure property of the current env
@@ -32,7 +32,7 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 		// ==> free and dynamic
 		// 4. the binding is completely local and allocated to a JVM local
 		//    If there is no binding and this is special, it's really free!
-		final Closure closure = codeGenerator.bindingEnvironment.getClosure();
+		final Closure closure = classBuilder.getBindingEnvironment().getClosure();
 		final Optional<ClosureBinding> closureBinding = closure.getBinding(input);
 		if (closureBinding.isPresent()) {
 			// #1. it's in a local closure
@@ -40,14 +40,14 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 			final int position = closureBinding.get().getPosition();
 			// now get the object out of the current closure
 			// get this
-			codeGenerator.emitter.emitAload(0);
-			codeGenerator.emitter.emitInvokespecial("lisp/common/function/FunctionBaseClass", "getClosure", "()", "Llisp/extensions/type/Closure;", false);
-			codeGenerator.emitter.emitLdc(position);
-			codeGenerator.emitter.emitLdc(0);
-			codeGenerator.emitter.emitInvokeinterface("lisp/extensions/type/Closure", "getBindingAt", "(II)", "Ljava/lang/Object;", true);
+			classBuilder.getEmitter().emitAload(0);
+			classBuilder.getEmitter().emitInvokespecial("lisp/common/function/FunctionBaseClass", "getClosure", "()", "Llisp/extensions/type/Closure;", false);
+			classBuilder.getEmitter().emitLdc(position);
+			classBuilder.getEmitter().emitLdc(0);
+			classBuilder.getEmitter().emitInvokeinterface("lisp/extensions/type/Closure", "getBindingAt", "(II)", "Ljava/lang/Object;", true);
 		} else {
 			// set up for 2 or 3
-			final SymbolTable symbolTable = codeGenerator.bindingEnvironment.getSymbolTable();
+			final SymbolTable symbolTable = classBuilder.getBindingEnvironment().getSymbolTable();
 			final boolean hasSymbolTableEntry = symbolTable.hasBinding(input);
 			// (:allocation ... :
 			if (hasSymbolTableEntry) {
@@ -58,8 +58,8 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 				final boolean hasClosureBinding = symbolTable.hasClosureBinding(input);
 				if (hasDynamicBinding) {
 					// it's number 3
-					SpecialSymbolCodeGenerator.INSTANCE.generate(input, codeGenerator);
-					codeGenerator.emitter.emitInvokestatic("jcl/symbols/SymbolStruct", "getValue", "()", "Ljava/lang/Object;", true);
+					SpecialSymbolCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
+					classBuilder.getEmitter().emitInvokestatic("jcl/symbols/SymbolStruct", "getValue", "()", "Ljava/lang/Object;", true);
 				} else if (hasClosureBinding) {
 					final SymbolClosureBinding entry = symbolTable.getClosureBinding(input).get();
 					// it's door number 2
@@ -85,34 +85,34 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 
 					// Whew!! Now we can gen some code
 					// get this
-					codeGenerator.emitter.emitAload(0);
+					classBuilder.getEmitter().emitAload(0);
 					// get the current closure
-					codeGenerator.emitter.emitInvokespecial("lisp/common/function/FunctionBaseClass", "getClosure", "()", "Llisp/extensions/type/Closure;", false);
+					classBuilder.getEmitter().emitInvokespecial("lisp/common/function/FunctionBaseClass", "getClosure", "()", "Llisp/extensions/type/Closure;", false);
 					// set up the constants for seeking
-					codeGenerator.emitter.emitLdc(position);
-					codeGenerator.emitter.emitLdc(nesting);
+					classBuilder.getEmitter().emitLdc(position);
+					classBuilder.getEmitter().emitLdc(nesting);
 					// now give chase up the chain
-					codeGenerator.emitter.emitInvokeinterface("lisp/extensions/type/Closure", "getBindingAt", "(II)", "Ljava/lang/Object;", true);
+					classBuilder.getEmitter().emitInvokeinterface("lisp/extensions/type/Closure", "getBindingAt", "(II)", "Ljava/lang/Object;", true);
 				} else {
 					// go find it
-					final Environment binding = getBindingEnvironment(codeGenerator.bindingEnvironment, input);
+					final Environment binding = getBindingEnvironment(classBuilder.getBindingEnvironment(), input);
 					final int slot = IntermediateCodeGenerator.genLocalSlot(input, binding);
-					codeGenerator.emitter.emitAload(slot);
+					classBuilder.getEmitter().emitAload(slot);
 				}
 			} else {
 				// it's 4
-				final Environment binding = getBindingEnvironment(codeGenerator.bindingEnvironment, input);
+				final Environment binding = getBindingEnvironment(classBuilder.getBindingEnvironment(), input);
 				if (binding.equals(Environment.NULL)) {
 					// This is a truly free variable, check to make sure it's special
 					// if not, issue a warning, then treat it as special
 //					if (!input.isSpecial()) {
 //						LOGGER.warn("; Warning: variable {} is assumed free", input);
 //					}
-					SpecialSymbolCodeGenerator.INSTANCE.generate(input, codeGenerator);
-					codeGenerator.emitter.emitInvokestatic("jcl/symbols/SymbolStruct", "getValue", "()", "Ljava/lang/Object;", true);
+					SpecialSymbolCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
+					classBuilder.getEmitter().emitInvokestatic("jcl/symbols/SymbolStruct", "getValue", "()", "Ljava/lang/Object;", true);
 				} else {
 					final int slot = IntermediateCodeGenerator.genLocalSlot(input, binding);
-					codeGenerator.emitter.emitAload(slot);
+					classBuilder.getEmitter().emitAload(slot);
 				}
 			}
 		}

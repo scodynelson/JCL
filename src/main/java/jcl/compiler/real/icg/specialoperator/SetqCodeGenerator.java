@@ -5,6 +5,7 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.InnerFunctionEnvironment;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
+import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.SpecialSymbolCodeGenerator;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
@@ -15,7 +16,7 @@ public class SetqCodeGenerator implements CodeGenerator<ListStruct> {
 	public static final SetqCodeGenerator INSTANCE = new SetqCodeGenerator();
 
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator) {
+	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
 
 		ListStruct restOfList = (ListStruct) input.getRest().getFirst();
 		while (!NullStruct.INSTANCE.equals(restOfList)) {
@@ -24,27 +25,27 @@ public class SetqCodeGenerator implements CodeGenerator<ListStruct> {
 			// step over the variable
 			restOfList = restOfList.getRest();
 			// get the form to evaluate
-			codeGenerator.icgMainLoop(restOfList.getFirst());
+			codeGenerator.icgMainLoop(restOfList.getFirst(), classBuilder);
 			// value is now on the stack, we have to determine where to put it
 			// determine if this is a local variable or a special variable
-			final Environment binding = getBindingEnvironment(codeGenerator.bindingEnvironment, symbol);
-			final boolean hasDynamicBinding = codeGenerator.bindingEnvironment.getSymbolTable().hasDynamicBinding(symbol);
+			final Environment binding = getBindingEnvironment(classBuilder.getBindingEnvironment(), symbol);
+			final boolean hasDynamicBinding = classBuilder.getBindingEnvironment().getSymbolTable().hasDynamicBinding(symbol);
 			if (binding.equals(Environment.NULL) || hasDynamicBinding) {
 				// now the value is on the stack, is the variable local or special?
-				SpecialSymbolCodeGenerator.INSTANCE.generate(symbol, codeGenerator);
-				codeGenerator.emitter.emitSwap();
-				codeGenerator.emitter.emitInvokeinterface("lisp/common/type/Symbol", "setValue", "(Ljava/lang/Object;)", "Ljava/lang/Object;", true);
+				SpecialSymbolCodeGenerator.INSTANCE.generate(symbol, codeGenerator, classBuilder);
+				classBuilder.getEmitter().emitSwap();
+				classBuilder.getEmitter().emitInvokeinterface("lisp/common/type/Symbol", "setValue", "(Ljava/lang/Object;)", "Ljava/lang/Object;", true);
 				if (!restOfList.getRest().equals(NullStruct.INSTANCE)) {
-					codeGenerator.emitter.emitPop(); // pop the value on the stack execpt for the last one
+					classBuilder.getEmitter().emitPop(); // pop the value on the stack execpt for the last one
 				}
 			} else {
 				// so find what local slot it is
 				final int slot = IntermediateCodeGenerator.genLocalSlot(symbol, binding); // drop the %let
 				// if this is the last set, dup the value so it's returned
 				if (restOfList.getRest().equals(NullStruct.INSTANCE)) {
-					codeGenerator.emitter.emitDup(); // leaves the value on the stack
+					classBuilder.getEmitter().emitDup(); // leaves the value on the stack
 				}
-				codeGenerator.emitter.emitAstore(slot);
+				classBuilder.getEmitter().emitAstore(slot);
 			}
 			// step through the rest pair or done
 			restOfList = restOfList.getRest();

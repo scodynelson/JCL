@@ -35,65 +35,65 @@ public class SpecialFormCodeGenerator implements CodeGenerator<ListStruct> {
 	public static final SpecialFormCodeGenerator INSTANCE = new SpecialFormCodeGenerator();
 
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator) {
+	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
 		if (input.getFirst() instanceof SymbolStruct) {
 			final SymbolStruct<?> symName = (SymbolStruct) input.getFirst();
 
 			// Determine the special form ) generate its code.
 			if (symName.equals(SpecialOperator.BLOCK)) {
-				BlockCodeGenerator.INSTANCE.generate(input, codeGenerator);
+				BlockCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
 			} else if (symName.equals(SpecialOperator.CATCH)) {
-				CatchCodeGenerator.INSTANCE.generate(input, codeGenerator);
+				CatchCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
 			} else if (symName.equals(SpecialOperator.DECLARE)) {
 //                genCodeDeclare(icg, list);
 			} else if (symName.equals(SpecialOperator.DEFSTRUCT)) {
-				DefstructCodeGenerator.INSTANCE.generate(input, codeGenerator);
+				DefstructCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
 			} else if (symName.equals(SpecialOperator.EVAL_WHEN)) {
-				EvalWhenCodeGenerator.INSTANCE.generate(input, codeGenerator);
+				EvalWhenCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
 			} else if (symName.equals(SpecialOperator.FLET)) {
-				FletCodeGenerator.INSTANCE.generate(input, codeGenerator);
+				FletCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
 			} else if (symName.equals(SpecialOperator.FUNCTION)) {
-				FunctionCodeGenerator.INSTANCE.generate(input, codeGenerator);
+				FunctionCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
 			} else if (symName.equals(SpecialOperator.GO)) {
-				GoCodeGenerator.INSTANCE.generate(input, codeGenerator);
+				GoCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
 			} else if (symName.equals(SpecialOperator.IF)) {
-				IfCodeGenerator.INSTANCE.generate(input, codeGenerator);
+				IfCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
 			} else if (symName.equals(SpecialOperator.LAMBDA)) {
-				LambdaCodeGenerator.INSTANCE.generate(input, codeGenerator);
+				LambdaCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
 			} else if (symName.equals(SpecialOperator.LABELS)) {
-				LabelsCodeGenerator.INSTANCE.generate(input, codeGenerator);
+				LabelsCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
 			} else if (symName.equals(SpecialOperator.LOAD_TIME_VALUE)) {
-				LoadTimeValueCodeGenerator.INSTANCE.generate(input, codeGenerator);
+				LoadTimeValueCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
 			} else if (symName.equals(SpecialOperator.LOCALLY)) {
-				LocallyCodeGenerator.INSTANCE.generate(input, codeGenerator);
+				LocallyCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
 			} else if (symName.equals(SpecialOperator.MACROLET)) {
-				MacroletCodeGenerator.INSTANCE.generate(input, codeGenerator);
+				MacroletCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
 			} else if (symName.equals(SpecialOperator.MULTIPLE_VALUE_CALL)) {
-				MultipleValueCallCodeGenerator.INSTANCE.generate(input, codeGenerator);
+				MultipleValueCallCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
 			} else if (symName.equals(SpecialOperator.MULTIPLE_VALUE_PROG1)) {
-				MultipleValueProg1CodeGenerator.INSTANCE.generate(input, codeGenerator);
+				MultipleValueProg1CodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
 			} else if (symName.equals(SpecialOperator.PROGN)) {
-				PrognCodeGenerator.INSTANCE.generate(input, codeGenerator);
+				PrognCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
 			} else if (symName.equals(SpecialOperator.PROGV)) {
-				ProgvCodeGenerator.INSTANCE.generate(input, codeGenerator);
+				ProgvCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
 			} else if (symName.equals(SpecialOperator.QUOTE)) {
-				QuoteCodeGenerator.INSTANCE.generate(input, codeGenerator);
+				QuoteCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
 			} else if (symName.equals(SpecialOperator.RETURN_FROM)) {
-				ReturnFromCodeGenerator.INSTANCE.generate(input, codeGenerator);
+				ReturnFromCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
 			} else if (symName.equals(SpecialOperator.SETQ)) {
-				SetqCodeGenerator.INSTANCE.generate(input, codeGenerator);
+				SetqCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
 			} else if (symName.equals(SpecialOperator.SYMBOL_MACROLET)) {
-				SymbolMacroletCodeGenerator.INSTANCE.generate(input, codeGenerator);
+				SymbolMacroletCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
 			} else if (symName.equals(SpecialOperator.TAGBODY)) {
-				TagbodyCodeGenerator.INSTANCE.generate(input, codeGenerator);
+				TagbodyCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
 			} else if (symName.equals(SpecialOperator.TAIL_RECURSION)) {
-				TailRecursionCodeGenerator.INSTANCE.generate(input, codeGenerator);
+				TailRecursionCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
 			} else if (symName.equals(SpecialOperator.THE)) {
-				TheCodeGenerator.INSTANCE.generate(input, codeGenerator);
+				TheCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
 			} else if (symName.equals(SpecialOperator.THROW)) {
-				ThrowCodeGenerator.INSTANCE.generate(input, codeGenerator);
+				ThrowCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
 			} else if (symName.equals(SpecialOperator.UNWIND_PROTECT)) {
-				UnwindProtectCodeGenerator.INSTANCE.generate(input, codeGenerator);
+				UnwindProtectCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
 			}
 		} else {
 			// handle when the car is a list - ((%lambda ....)... ) or ((%let...) ...)

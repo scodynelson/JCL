@@ -24,7 +24,7 @@ public class FunctionCallCodeGenerator implements CodeGenerator<ListStruct> {
 	 */
 
 	@Override
-	public void generate(ListStruct input, final IntermediateCodeGenerator codeGenerator) {
+	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
 		// +1 -> fn
 		final int argsExistCt = 0;
 		SymbolStruct<?> theFnName = null;
@@ -59,23 +59,23 @@ public class FunctionCallCodeGenerator implements CodeGenerator<ListStruct> {
 		// add a call to checkArguments if the compiler safety is other than 0
 		if (false) { //(compilerSafety != 0) {
 			// Dup the list and the object on the stack
-			codeGenerator.emitter.emitAload(1);  // put the list on the stack
-			codeGenerator.emitter.emitCheckcast("lisp/common/type/ListStruct");
+			classBuilder.getEmitter().emitAload(1);  // put the list on the stack
+			classBuilder.getEmitter().emitCheckcast("lisp/common/type/ListStruct");
 			//
-			codeGenerator.emitter.emitInvokeinterface("lisp/common/type/Function", "checkArguments",
+			classBuilder.getEmitter().emitInvokeinterface("lisp/common/type/Function", "checkArguments",
 					"(Llisp/common/type/ListStruct;)", "Llisp/common/type/Boolean;", true);
 			// throw away the result (it will throw an exception if something is wrong)
-			codeGenerator.emitter.emitPop();
+			classBuilder.getEmitter().emitPop();
 			// now the stack is where it was a little while ago
 		}
 		// +1 -> fn
 		if (fnOk) {
 			// Now evaluate the arguments. Puts all of them on the stack
 			while (!inputAgain.equals(NullStruct.INSTANCE)) {
-				codeGenerator.icgMainLoop(inputAgain.getFirst());
+				codeGenerator.icgMainLoop(inputAgain.getFirst(), classBuilder);
 				// check for multiple value returns
 				// maybe this returned multiple values
-				if (!(codeGenerator.allowMultipleValues || acceptsMultipleValues)) {
+				if (!(classBuilder.isAllowMultipleValues() || acceptsMultipleValues)) {
 					// call a short routine to handle a possible return,
 					// leaving the value on top - except...
 					// the routine messes with reg 0, you have to restore it
@@ -85,13 +85,13 @@ public class FunctionCallCodeGenerator implements CodeGenerator<ListStruct> {
 //                    emitter.emitAstore(0);
 					// ... fnVal
 					final Label outLabel = new Label();
-					codeGenerator.emitter.emitDup();
-					codeGenerator.emitter.emitInstanceof("[Ljava/lang/Object;");
-					codeGenerator.emitter.emitIfeq(outLabel);
-					codeGenerator.emitter.emitCheckcast("[Ljava/lang/Object;");
-					codeGenerator.emitter.emitLdc(0);
-					codeGenerator.emitter.emitAaload();
-					codeGenerator.emitter.visitMethodLabel(outLabel);
+					classBuilder.getEmitter().emitDup();
+					classBuilder.getEmitter().emitInstanceof("[Ljava/lang/Object;");
+					classBuilder.getEmitter().emitIfeq(outLabel);
+					classBuilder.getEmitter().emitCheckcast("[Ljava/lang/Object;");
+					classBuilder.getEmitter().emitLdc(0);
+					classBuilder.getEmitter().emitAaload();
+					classBuilder.getEmitter().visitMethodLabel(outLabel);
 				}
 				//TODO this isn't the best way to do this. Better if the compiler
 				// knows all of the data flow.
@@ -105,29 +105,29 @@ public class FunctionCallCodeGenerator implements CodeGenerator<ListStruct> {
 			}
 			paramsDesc += ")";
 //*******
-			codeGenerator.emitter.emitInvokeinterface("lisp/extensions/type/Function" + numParams, "funcall", paramsDesc, "Ljava/lang/Object;", true);
+			classBuilder.getEmitter().emitInvokeinterface("lisp/extensions/type/Function" + numParams, "funcall", paramsDesc, "Ljava/lang/Object;", true);
 
 			// +1 -> result
 		} else {
 			// apply
 			// +1 -> fn
-			codeGenerator.emitter.emitLdc(numParams);
+			classBuilder.getEmitter().emitLdc(numParams);
 			// +2 -> fn, numParams
-			codeGenerator.emitter.emitAnewarray("java/lang/Object");
+			classBuilder.getEmitter().emitAnewarray("java/lang/Object");
 			// +2 -> fn, the array
 			int count = 0;
 			while (!inputAgain.equals(NullStruct.INSTANCE)) {
-				codeGenerator.emitter.emitDup();
+				classBuilder.getEmitter().emitDup();
 				// +3 -> fn, array, array
-				codeGenerator.emitter.emitLdc(count);
+				classBuilder.getEmitter().emitLdc(count);
 				// +4 -> fn, array, array, index
-				codeGenerator.icgMainLoop(inputAgain.getFirst());
+				codeGenerator.icgMainLoop(inputAgain.getFirst(), classBuilder);
 				// check for multiple value returns
 				//TODO this isn't the best way to do this. Better if the compiler
 				// knows all of the data flow.
 				// check for multiple value returns
 				// maybe this returned multiple values
-				if (!(codeGenerator.allowMultipleValues || acceptsMultipleValues)) {
+				if (!(classBuilder.isAllowMultipleValues() || acceptsMultipleValues)) {
 					// call a short routine to handle a possible return,
 					// leaving the value on top - except...
 					// the routine messes with reg 0, you have to restore it
@@ -137,38 +137,38 @@ public class FunctionCallCodeGenerator implements CodeGenerator<ListStruct> {
 //                    emitter.emitAstore(0);
 					// ... fnVal
 					final Label outLabel = new Label();
-					codeGenerator.emitter.emitDup();
-					codeGenerator.emitter.emitInstanceof("[Ljava/lang/Object;");
-					codeGenerator.emitter.emitIfeq(outLabel);
-					codeGenerator.emitter.emitCheckcast("[Ljava/lang/Object;");
-					codeGenerator.emitter.emitLdc(0);
-					codeGenerator.emitter.emitAaload();
-					codeGenerator.emitter.visitMethodLabel(outLabel);
+					classBuilder.getEmitter().emitDup();
+					classBuilder.getEmitter().emitInstanceof("[Ljava/lang/Object;");
+					classBuilder.getEmitter().emitIfeq(outLabel);
+					classBuilder.getEmitter().emitCheckcast("[Ljava/lang/Object;");
+					classBuilder.getEmitter().emitLdc(0);
+					classBuilder.getEmitter().emitAaload();
+					classBuilder.getEmitter().visitMethodLabel(outLabel);
 				}
 				// +5 -> fn, array, array, index, value
-				codeGenerator.emitter.emitAastore();
+				classBuilder.getEmitter().emitAastore();
 				// +2 -> fn, array
 				inputAgain = inputAgain.getRest();
 				count++;
 			}
 			// +2 -> fn, array
-			codeGenerator.emitter.emitInvokestatic("lisp/common/type/List$Factory", "newInstance", "([Ljava/lang/Object;)", "Llisp/common/type/ListStruct;", false);
+			classBuilder.getEmitter().emitInvokestatic("lisp/common/type/List$Factory", "newInstance", "([Ljava/lang/Object;)", "Llisp/common/type/ListStruct;", false);
 			// +2 -> fn, the list
 			// Now if we have the list, if the compiler is set to safety > 0 - call checkArguments
 			// Dup the list and the object on the stack
 			if (false) { //(compilerSafety != 0) {
 				// +2 -> fn, list
 				// Dup the list and the object on the stack
-				codeGenerator.emitter.emitDup2(); // we need the arg list to still be there to be there
+				classBuilder.getEmitter().emitDup2(); // we need the arg list to still be there to be there
 				// +4 -> fn, list, fn, list
-				codeGenerator.emitter.emitInvokeinterface("lisp/common/type/Function", "checkArguments", "(Llisp/common/type/ListStruct;)", "Llisp/common/type/Boolean;", true);
+				classBuilder.getEmitter().emitInvokeinterface("lisp/common/type/Function", "checkArguments", "(Llisp/common/type/ListStruct;)", "Llisp/common/type/Boolean;", true);
 				// +3 -> fn, list, T
 				// throw away the result (it will throw an exception if something is wrong)
-				codeGenerator.emitter.emitPop();
+				classBuilder.getEmitter().emitPop();
 				// +2 -> fn, list
 				// now the stack is where it was a little while ago
 			}
-			codeGenerator.emitter.emitInvokeinterface("lisp/common/type/Function", "apply", "(Llisp/common/type/ListStruct;)", "Ljava/lang/Object;", true);
+			classBuilder.getEmitter().emitInvokeinterface("lisp/common/type/Function", "apply", "(Llisp/common/type/ListStruct;)", "Ljava/lang/Object;", true);
 			// maybe this returned multiple values
 			// +1 -> result
 		}

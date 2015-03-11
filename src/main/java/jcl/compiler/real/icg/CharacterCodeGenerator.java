@@ -7,8 +7,8 @@ public class CharacterCodeGenerator implements CodeGenerator<CharacterStruct> {
 	public static final CharacterCodeGenerator INSTANCE = new CharacterCodeGenerator();
 
 	@Override
-	public void generate(final CharacterStruct input, final IntermediateCodeGenerator codeGenerator) {
-		codeGenerator.emitter.emitIconst(input.getCodePoint());
-		codeGenerator.emitter.emitInvokestatic("jcl/characters/CharacterStruct", "<init>", "(I)", "V", false);
+	public void generate(final CharacterStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
+		classBuilder.getEmitter().emitIconst(input.getCodePoint());
+		classBuilder.getEmitter().emitInvokestatic("jcl/characters/CharacterStruct", "<init>", "(I)", "V", false);
 	}
 }

@@ -2,6 +2,7 @@ package jcl.compiler.real.icg.specialoperator;
 
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
+import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.SymbolFunctionCodeGenerator;
 import jcl.lists.ListStruct;
 import jcl.symbols.SymbolStruct;
@@ -12,11 +13,11 @@ public class FunctionCodeGenerator implements CodeGenerator<ListStruct> {
 	public static final FunctionCodeGenerator INSTANCE = new FunctionCodeGenerator();
 
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator) {
-		ListStruct restOfList = input.getRest();
+	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
+		final ListStruct restOfList = input.getRest();
 		final Object fn = restOfList.getFirst();
 		if (fn instanceof SymbolStruct) {
-			SymbolFunctionCodeGenerator.INSTANCE.generate((SymbolStruct<?>) fn, codeGenerator);
+			SymbolFunctionCodeGenerator.INSTANCE.generate((SymbolStruct<?>) fn, codeGenerator, classBuilder);
 		} else if (fn instanceof ListStruct) {
 			final ListStruct fnList = (ListStruct) fn;
 //            if (fnList.getCar() == SpecialOperator.LAMBDA) {
@@ -30,22 +31,22 @@ public class FunctionCodeGenerator implements CodeGenerator<ListStruct> {
 			// Step 2: return the function stashed in the symbol or NIL if not there
 			// The SETF expander will ensure that there will be a FUNCALL #'(setf foo) with args
 			final SymbolStruct<?> setfSymbol = (SymbolStruct<?>) ((ListStruct) fn).getRest().getFirst();
-			codeGenerator.genCodeSpecialVariable(setfSymbol); // now we have the symbol on the stack
+			codeGenerator.genCodeSpecialVariable(setfSymbol, classBuilder); // now we have the symbol on the stack
 			// number the invoke
 			final Label label = new Label();
-			codeGenerator.emitter.visitMethodLabel(label);
+			classBuilder.getEmitter().visitMethodLabel(label);
 			// extract the setf function if there is one
-			codeGenerator.emitter.emitCheckcast("lisp/system/SymbolImpl");
-			codeGenerator.emitter.emitInvokevirtual("lisp/system/SymbolImpl", "getSetfFunction", "()", "Llisp/common/type/Function;", false);
-			codeGenerator.emitter.emitDup();      // need to test to see it's there
+			classBuilder.getEmitter().emitCheckcast("lisp/system/SymbolImpl");
+			classBuilder.getEmitter().emitInvokevirtual("lisp/system/SymbolImpl", "getSetfFunction", "()", "Llisp/common/type/Function;", false);
+			classBuilder.getEmitter().emitDup();      // need to test to see it's there
 			final Label yesSetfFunction = new Label();
-			codeGenerator.emitter.emitIfnonnull(yesSetfFunction); // there is no setf function, return NIL
-			codeGenerator.emitter.emitPop();      // balance the stack
-			codeGenerator.emitter.emitGetstatic("lisp/common/type/Null", "NIL", "Llisp/common/type/Null;");
-			codeGenerator.emitter.visitMethodLabel(yesSetfFunction);
+			classBuilder.getEmitter().emitIfnonnull(yesSetfFunction); // there is no setf function, return NIL
+			classBuilder.getEmitter().emitPop();      // balance the stack
+			classBuilder.getEmitter().emitGetstatic("lisp/common/type/Null", "NIL", "Llisp/common/type/Null;");
+			classBuilder.getEmitter().visitMethodLabel(yesSetfFunction);
 //            }
 		} else {
-			codeGenerator.icgMainLoop(fn);
+			codeGenerator.icgMainLoop(fn, classBuilder);
 		}
 	}
 }

@@ -2,6 +2,7 @@ package jcl.compiler.real.icg.specialoperator;
 
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
+import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.lists.ListStruct;
 import jcl.symbols.SymbolStruct;
 
@@ -10,9 +11,9 @@ public class GoCodeGenerator implements CodeGenerator<ListStruct> {
 	public static final GoCodeGenerator INSTANCE = new GoCodeGenerator();
 
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator) {
+	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
 		/* Get the symbol out of the list. */
-		ListStruct restOfList = input.getRest();
+		final ListStruct restOfList = input.getRest();
 		final SymbolStruct<?> sym = (SymbolStruct) restOfList.getFirst();
 
         /*
@@ -23,13 +24,13 @@ public class GoCodeGenerator implements CodeGenerator<ListStruct> {
         } else {
          */
 		/* Throw a GoException. */
-		codeGenerator.emitter.emitNew("lisp/system/compiler/exceptions/GoException");
-		codeGenerator.emitter.emitDup();
+		classBuilder.getEmitter().emitNew("lisp/system/compiler/exceptions/GoException");
+		classBuilder.getEmitter().emitDup();
 		//genCodeSpecialSymbol(sym);
-		codeGenerator.emitter.emitLdc("" + TagbodyCodeGenerator.findTagbodyInStack(codeGenerator.tagbodyStack, sym).index);   // me
+		classBuilder.getEmitter().emitLdc(String.valueOf(TagbodyCodeGenerator.findTagbodyInStack(classBuilder.getTagbodyStack(), sym).index));   // me
 		//emitter.emitInvokespecial("lisp/system/compiler/exceptions/GoException", "<init>", "(Llisp/common/type/Symbol;)V"); //me
-		codeGenerator.emitter.emitInvokespecial("lisp/system/compiler/exceptions/GoException", "<init>", "(Ljava/lang/Object;)", "V", false);
-		codeGenerator.emitter.emitAthrow();
+		classBuilder.getEmitter().emitInvokespecial("lisp/system/compiler/exceptions/GoException", "<init>", "(Ljava/lang/Object;)", "V", false);
+		classBuilder.getEmitter().emitAthrow();
 		//}
 	}
 }

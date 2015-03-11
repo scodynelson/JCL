@@ -12,6 +12,7 @@ import jcl.compiler.real.environment.binding.EnvironmentEnvironmentBinding;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
+import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.SpecialOperator;
@@ -20,12 +21,12 @@ import org.objectweb.asm.Label;
 
 public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 
-	private static class SymbolBindingLabel {
+	private static final class SymbolBindingLabel {
 
-		Label endLabel;
-		Label finallyLabel;
-		Label handlerLabel;
-		SymbolStruct<?> dynamicSymbol;
+		final Label endLabel;
+		final Label finallyLabel;
+		final Label handlerLabel;
+		final SymbolStruct<?> dynamicSymbol;
 
 		private SymbolBindingLabel(final Label endLabel, final Label finallyLabel, final Label handlerLabel, final SymbolStruct<?> dynamicSymbol) {
 			this.endLabel = endLabel;
@@ -38,31 +39,31 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 	public static final LetCodeGenerator INSTANCE = new LetCodeGenerator();
 
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator) {
+	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
 		// ((%let... (:parent ...) (:bindings ...) (:symbol-table ...) (:closure ...)))
 		final Stack<SymbolBindingLabel> bindingLabels = new Stack<>();
 
 		// are we building a closure here?
 		//----->
-		codeGenerator.bindingEnvironment = codeGenerator.bindingStack.push((Environment) input.getFirst());
-		final Closure closureSetBody = codeGenerator.bindingEnvironment.getClosure();
+		classBuilder.setBindingEnvironment(classBuilder.getBindingStack().push((Environment) input.getFirst()));
+		final Closure closureSetBody = classBuilder.getBindingEnvironment().getClosure();
 //        int numParams = closureSetBody.size() - 1;
 
 		try {
 			// (%let... (:parent ...) (:bindings ...) (:symbol-table ...) (:closure ...))
 			// Handle all of the binding information
 			//----->
-			final Environment bindings = codeGenerator.bindingEnvironment;
+			final Environment bindings = classBuilder.getBindingEnvironment();
 			// ((:parent ...) (:bindings ...) (:symbol-table ...) (:closure ...)))
 			// Now get just the bindings list and drop the :bindings
-			final List<EnvironmentParameterBinding> lexicalBindingList = codeGenerator.bindingEnvironment.getLexicalBindings();
+			final List<EnvironmentParameterBinding> lexicalBindingList = classBuilder.getBindingEnvironment().getLexicalBindings();
 			// ((sym1 :allocation ... :binding ... :scope ... :type ... :init-form ...)
 			//  (sym2 :allocation ... :binding ... :scope ... :type ... :init-form ...)...)
 			// Now to loop thru the bindings, gen code for the init forms and store them in the
 			// proper slots. Note that init forms are evaluated in the enclosing environment
-			final Environment tmpEnv = codeGenerator.bindingEnvironment;
+			final Environment tmpEnv = classBuilder.getBindingEnvironment();
 			// any init forms get evaluated in the parent binding
-			codeGenerator.bindingEnvironment = codeGenerator.bindingEnvironment.getParent();
+			classBuilder.setBindingEnvironment(classBuilder.getBindingEnvironment().getParent());
 			// now, run the bindings
 			for (final EnvironmentParameterBinding binding : lexicalBindingList) {
 				final SymbolStruct<?> sym = binding.getSymbolStruct();
@@ -77,12 +78,12 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 				final int slot = alloc.getPosition();
 				// hand the init form to icgMainLoop...
 				// the generated code leaves its value on the stack
-				codeGenerator.icgMainLoop(initForm);
+				codeGenerator.icgMainLoop(initForm, classBuilder);
 				// store the value in the proper local slot
-				codeGenerator.emitter.emitAstore(slot);
+				classBuilder.getEmitter().emitAstore(slot);
 			}
 
-			final List<EnvironmentBinding<?>> dynamicBindingList = codeGenerator.bindingEnvironment.getDynamicBindings();
+			final List<EnvironmentBinding<?>> dynamicBindingList = classBuilder.getBindingEnvironment().getDynamicBindings();
 			for (final EnvironmentBinding<?> binding : dynamicBindingList) {
 				final SymbolStruct<?> sym = binding.getSymbolStruct();
 				// (:allocation ... :binding ... :scope ... :type ... :init-form ...)
@@ -106,25 +107,25 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 				final Label handlerLabel = new Label();
 				final SymbolBindingLabel labelSym = new SymbolBindingLabel(endLabel, finallyLabel, handlerLabel, sym);
 				// 1. emit the tryFinally node with these labels
-				codeGenerator.emitter.visitTryCatchBlock(startLabel, endLabel, handlerLabel, null);
+				classBuilder.getEmitter().visitTryCatchBlock(startLabel, endLabel, handlerLabel, null);
 				// 2. emit the binding call
-				codeGenerator.genCodeSpecialVariable(sym);
-				codeGenerator.emitter.emitCheckcast("lisp/system/SymbolImpl");
+				codeGenerator.genCodeSpecialVariable(sym, classBuilder);
+				classBuilder.getEmitter().emitCheckcast("lisp/system/SymbolImpl");
 				// 3. emit the eval of the init form
 				// hand the init form to icgMainLoop...
 				// the generated code leaves its value on the stack
-				codeGenerator.icgMainLoop(initForm);
-				codeGenerator.emitter.emitInvokevirtual("lisp/system/SymbolImpl", "bind", "(Ljava/lang/Object;)", "V", false);
+				codeGenerator.icgMainLoop(initForm, classBuilder);
+				classBuilder.getEmitter().emitInvokevirtual("lisp/system/SymbolImpl", "bind", "(Ljava/lang/Object;)", "V", false);
 				// 4. set handler start label
-				codeGenerator.emitter.visitMethodLabel(startLabel);
+				classBuilder.getEmitter().visitMethodLabel(startLabel);
 				// 5. push end/handler label and the symbol on a stack
 				bindingLabels.push(labelSym);
 			}
-			codeGenerator.bindingEnvironment = tmpEnv;
+			classBuilder.setBindingEnvironment(tmpEnv);
 
 			// we may have a closure to handle as well
-			codeGenerator.doClosureSetup(codeGenerator.bindingEnvironment);
-			codeGenerator.doFreeVariableSetup();
+			IntermediateCodeGenerator.doClosureSetup(classBuilder.getBindingEnvironment(), classBuilder);
+			codeGenerator.doFreeVariableSetup(classBuilder);
 
 			// all args are in the proper local slots, so do the body of the let
 			final List<LispStruct> copyListJavaList = input.getAsJavaList();
@@ -136,10 +137,10 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 				if ((firstElt instanceof ListStruct) && ((ListStruct) firstElt).getFirst().equals(SpecialOperator.DECLARE)) {
 					funcallList = funcallList.getRest();
 				} else {
-					codeGenerator.icgMainLoop(funcallList.getFirst());
+					codeGenerator.icgMainLoop(funcallList.getFirst(), classBuilder);
 					funcallList = funcallList.getRest();
 					if (!NullStruct.INSTANCE.equals(funcallList)) {
-						codeGenerator.emitter.emitPop();
+						classBuilder.getEmitter().emitPop();
 					}
 				}
 			}
@@ -150,36 +151,36 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 				final Label outLabel = new Label();
 				// 1. emit the end/handler label
 				final SymbolBindingLabel labelSym = bindingLabels.pop();
-				codeGenerator.emitter.visitMethodLabel(labelSym.endLabel); // end of the try block
+				classBuilder.getEmitter().visitMethodLabel(labelSym.endLabel); // end of the try block
 				// now call the finally block
-				codeGenerator.genCodeSpecialVariable(labelSym.dynamicSymbol);
-				codeGenerator.emitter.emitCheckcast("lisp/system/SymbolImpl");
-				codeGenerator.emitter.emitInvokevirtual("lisp/system/SymbolImpl", "unbind", "()", "Ljava/lang/Object;", false);
-				codeGenerator.emitter.emitPop(); // would mask the real return
+				codeGenerator.genCodeSpecialVariable(labelSym.dynamicSymbol, classBuilder);
+				classBuilder.getEmitter().emitCheckcast("lisp/system/SymbolImpl");
+				classBuilder.getEmitter().emitInvokevirtual("lisp/system/SymbolImpl", "unbind", "()", "Ljava/lang/Object;", false);
+				classBuilder.getEmitter().emitPop(); // would mask the real return
 				// now jump to the end of this block
-				codeGenerator.emitter.emitGoto(outLabel);
+				classBuilder.getEmitter().emitGoto(outLabel);
 
 				// now for the handler part
-				codeGenerator.emitter.visitMethodLabel(labelSym.handlerLabel);
+				classBuilder.getEmitter().visitMethodLabel(labelSym.handlerLabel);
 				// I have no idea why adding this DUP works, but it does...
-				codeGenerator.emitter.emitDup();
-				codeGenerator.emitter.emitAstore(1); // save the exception
-				codeGenerator.genCodeSpecialVariable(labelSym.dynamicSymbol);
-				codeGenerator.emitter.emitCheckcast("lisp/system/SymbolImpl");
-				codeGenerator.emitter.emitInvokevirtual("lisp/system/SymbolImpl", "unbind", "()", "Ljava/lang/Object;", false);
-				codeGenerator.emitter.emitPop(); // would mask the real return
-				codeGenerator.emitter.emitAload(1); // reload the exception
-				codeGenerator.emitter.emitAthrow(); // re-throw it
+				classBuilder.getEmitter().emitDup();
+				classBuilder.getEmitter().emitAstore(1); // save the exception
+				codeGenerator.genCodeSpecialVariable(labelSym.dynamicSymbol, classBuilder);
+				classBuilder.getEmitter().emitCheckcast("lisp/system/SymbolImpl");
+				classBuilder.getEmitter().emitInvokevirtual("lisp/system/SymbolImpl", "unbind", "()", "Ljava/lang/Object;", false);
+				classBuilder.getEmitter().emitPop(); // would mask the real return
+				classBuilder.getEmitter().emitAload(1); // reload the exception
+				classBuilder.getEmitter().emitAthrow(); // re-throw it
 
 				// 2. emit unbind (finally clause) - it gets there either way
-				codeGenerator.emitter.visitMethodLabel(labelSym.finallyLabel); // start of the finally block
+				classBuilder.getEmitter().visitMethodLabel(labelSym.finallyLabel); // start of the finally block
 				// -- however it gets into the sequence of unbinds, it just runs them in
 				// -- reverse order of binding
-				codeGenerator.emitter.visitMethodLabel(outLabel);
+				classBuilder.getEmitter().visitMethodLabel(outLabel);
 			}
 		} finally {
-			codeGenerator.bindingStack.pop();
-			codeGenerator.bindingEnvironment = codeGenerator.bindingStack.peek();
+			classBuilder.getBindingStack().pop();
+			classBuilder.setBindingEnvironment(classBuilder.getBindingStack().peek());
 		}
 	}
 }

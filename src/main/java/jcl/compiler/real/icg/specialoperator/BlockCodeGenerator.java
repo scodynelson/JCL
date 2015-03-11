@@ -2,6 +2,7 @@ package jcl.compiler.real.icg.specialoperator;
 
 import jcl.compiler.real.icg.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
+import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.SymbolStruct;
@@ -12,7 +13,7 @@ public class BlockCodeGenerator implements CodeGenerator<ListStruct> {
 	public static final BlockCodeGenerator INSTANCE = new BlockCodeGenerator();
 
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator) {
+	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
 
 		final Label startTryBlock = new Label();                //The start of the try block
 		final Label catchBlock = new Label();                   //The start of the catch block
@@ -25,69 +26,69 @@ public class BlockCodeGenerator implements CodeGenerator<ListStruct> {
 		restOfList = restOfList.getRest();
 
 		// ... ,
-		codeGenerator.genCodeSpecialVariable(sym);
+		codeGenerator.genCodeSpecialVariable(sym, classBuilder);
 		// ..., sym
 
-		codeGenerator.emitter.emitGetstatic("lisp/system/TransferOfControl", "BLOCK", "Ljava/lang/String;");
+		classBuilder.getEmitter().emitGetstatic("lisp/system/TransferOfControl", "BLOCK", "Ljava/lang/String;");
 		// ..., sym, BLOCK
-		codeGenerator.emitter.emitSwap();
+		classBuilder.getEmitter().emitSwap();
 		// ... , BLOCK, sym
-		codeGenerator.emitter.emitInvokestatic("lisp/system/TransferOfControl", "addTOCRecord", "(Ljava/lang/String;Ljava/lang/Object;)", "V", false);
+		classBuilder.getEmitter().emitInvokestatic("lisp/system/TransferOfControl", "addTOCRecord", "(Ljava/lang/String;Ljava/lang/Object;)", "V", false);
 
 
         /* Call icgMainLoop() for each expression in the PROGN call,
 		 * and remove all but the last expression's value from the stack  */
-		codeGenerator.emitter.visitMethodLabel(startTryBlock);
+		classBuilder.getEmitter().visitMethodLabel(startTryBlock);
 		while (!restOfList.equals(NullStruct.INSTANCE)) {
-			codeGenerator.icgMainLoop(restOfList.getFirst());
+			codeGenerator.icgMainLoop(restOfList.getFirst(), classBuilder);
 			restOfList = restOfList.getRest();
 			if (!restOfList.equals(NullStruct.INSTANCE)) {
-				codeGenerator.emitter.emitNop();
-				codeGenerator.emitter.emitPop();
-				codeGenerator.emitter.emitNop();
+				classBuilder.getEmitter().emitNop();
+				classBuilder.getEmitter().emitPop();
+				classBuilder.getEmitter().emitNop();
 			}
 		}
-		codeGenerator.emitter.emitGoto(continueBlock);
+		classBuilder.getEmitter().emitGoto(continueBlock);
 
 		//Start catch block
-		codeGenerator.emitter.visitMethodLabel(catchBlock);
+		classBuilder.getEmitter().visitMethodLabel(catchBlock);
 		// ..., throw_excep
-		codeGenerator.emitter.emitDup();
+		classBuilder.getEmitter().emitDup();
 		// ..., throw_excep, throw_excep
-		codeGenerator.emitter.emitInvokestatic("lisp/system/TransferOfControl", "isMine", "(Ljava/lang/Throwable;)", "Ljava/lang/Object;", false);
+		classBuilder.getEmitter().emitInvokestatic("lisp/system/TransferOfControl", "isMine", "(Ljava/lang/Throwable;)", "Ljava/lang/Object;", false);
 		// ..., throw_excep, result
-		codeGenerator.emitter.emitDup();
+		classBuilder.getEmitter().emitDup();
 		// ..., throw_excep, result, result
-		codeGenerator.emitter.emitIfnull(ifBlock);
+		classBuilder.getEmitter().emitIfnull(ifBlock);
 		//Else block start
 		// ..., throw_excep, result
-		codeGenerator.emitter.emitSwap();
+		classBuilder.getEmitter().emitSwap();
 		// ..., result, throw_excep
-		codeGenerator.emitter.emitPop();
+		classBuilder.getEmitter().emitPop();
 		// ..., result
-		codeGenerator.emitter.emitGoto(continueBlock);
+		classBuilder.getEmitter().emitGoto(continueBlock);
 		//Else block end
 
 		//If block start
-		codeGenerator.emitter.visitMethodLabel(ifBlock);
+		classBuilder.getEmitter().visitMethodLabel(ifBlock);
 		// ..., throw_excep, result
-		codeGenerator.emitter.emitSwap();
+		classBuilder.getEmitter().emitSwap();
 		// ..., result, throw_excep
-		codeGenerator.emitter.emitInvokestatic("lisp/system/TransferOfControl", "setReturnException", "(Ljava/lang/Throwable;)", "V", false);
+		classBuilder.getEmitter().emitInvokestatic("lisp/system/TransferOfControl", "setReturnException", "(Ljava/lang/Throwable;)", "V", false);
 		// ..., result
 		//If block end
 
-		codeGenerator.emitter.visitMethodLabel(continueBlock);
+		classBuilder.getEmitter().visitMethodLabel(continueBlock);
 
-		codeGenerator.emitter.visitTryCatchBlock(
+		classBuilder.getEmitter().visitTryCatchBlock(
 				startTryBlock, //blockName + "_BlockA",
 				catchBlock, //blockName + "_BlockB",
 				catchBlock, //blockName + "_BlockB",
 				"java/lang/Throwable");
 
 		//Here is the finally code
-		codeGenerator.emitter.emitInvokestatic("lisp/system/TransferOfControl", "popTOCRecord", "()", "V", false);
+		classBuilder.getEmitter().emitInvokestatic("lisp/system/TransferOfControl", "popTOCRecord", "()", "V", false);
 
-		codeGenerator.emitter.emitInvokestatic("lisp/system/TransferOfControl", "processReturnException", "()", "V", false);
+		classBuilder.getEmitter().emitInvokestatic("lisp/system/TransferOfControl", "processReturnException", "()", "V", false);
 	}
 }

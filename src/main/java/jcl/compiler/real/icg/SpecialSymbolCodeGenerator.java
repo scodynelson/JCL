@@ -19,17 +19,17 @@ public class SpecialSymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>
 	 */
 
 	@Override
-	public void generate(final SymbolStruct<?> input, final IntermediateCodeGenerator codeGenerator) {
-		final int theInt = getSymbolAllocation(codeGenerator.bindingEnvironment, input);
+	public void generate(final SymbolStruct<?> input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
+		final int theInt = getSymbolAllocation(classBuilder.getBindingEnvironment(), input);
 		//****** this is a premature optimization. Good idea, but should wait for a new version of the compiler ****
 		final int slot = 0;
 		// it may not be in one of the accessible lambdas, so do it the old fashioned way
 		if (slot > 0) {
 			// now put the ALoad in the instruction stream
-			codeGenerator.emitter.emitAload(slot);
-			codeGenerator.emitter.emitCheckcast("lisp/common/type/Symbol");
+			classBuilder.getEmitter().emitAload(slot);
+			classBuilder.getEmitter().emitCheckcast("lisp/common/type/Symbol");
 		} else {
-			codeGenerator.genCodeSpecialVariable(input);
+			codeGenerator.genCodeSpecialVariable(input, classBuilder);
 		}
 	}
 

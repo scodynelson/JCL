@@ -1,5 +1,8 @@
 package jcl.compiler.real.icg;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Stack;
 
 import jcl.compiler.real.environment.Environment;
@@ -27,6 +30,10 @@ public class JavaClassBuilder {
 	private int tagCounter;
 
 	private boolean MacroLambda;
+
+	private final List<ClassDef> classes = Collections.synchronizedList(new ArrayList<>());
+	private final Stack<ClassDef> classStack = new Stack<>();
+	private ClassDef currentClass;
 
 	public JavaClassBuilder() {
 		MacroLambda = false;
@@ -121,5 +128,21 @@ public class JavaClassBuilder {
 
 	public void setMacroLambda(final boolean macroLambda) {
 		MacroLambda = macroLambda;
+	}
+
+	public List<ClassDef> getClasses() {
+		return classes;
+	}
+
+	public Stack<ClassDef> getClassStack() {
+		return classStack;
+	}
+
+	public ClassDef getCurrentClass() {
+		return currentClass;
+	}
+
+	public void setCurrentClass(final ClassDef currentClass) {
+		this.currentClass = currentClass;
 	}
 }

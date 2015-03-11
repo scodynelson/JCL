@@ -9,48 +9,48 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 
-/**
-* Created by codynelson on 3/10/15.
-*/
 public class ClassDef {
-	private final ClassWriter cw;
-	private MethodVisitor mv;
-	private FieldVisitor fv;
-	private AnnotationVisitor av;
+
+	private final ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 
 	private final String name;
 
-	ClassDef(final ClassWriter cw, final String name) {
-		this.cw = cw;
+	private MethodVisitor methodVisitor;
+
+	private FieldVisitor fieldVisitor;
+
+	private AnnotationVisitor annotationVisitor;
+
+	ClassDef(final String name) {
 		this.name = name;
 	}
 
-	public ClassWriter getCw() {
-		return cw;
+	public ClassWriter getClassWriter() {
+		return classWriter;
 	}
 
-	public MethodVisitor getMv() {
-		return mv;
+	public MethodVisitor getMethodVisitor() {
+		return methodVisitor;
 	}
 
-	public void setMv(final MethodVisitor mv) {
-		this.mv = mv;
+	public void setMethodVisitor(final MethodVisitor methodVisitor) {
+		this.methodVisitor = methodVisitor;
 	}
 
-	public FieldVisitor getFv() {
-		return fv;
+	public FieldVisitor getFieldVisitor() {
+		return fieldVisitor;
 	}
 
-	public void setFv(final FieldVisitor fv) {
-		this.fv = fv;
+	public void setFieldVisitor(final FieldVisitor fieldVisitor) {
+		this.fieldVisitor = fieldVisitor;
 	}
 
-	public AnnotationVisitor getAv() {
-		return av;
+	public AnnotationVisitor getAnnotationVisitor() {
+		return annotationVisitor;
 	}
 
-	public void setAv(final AnnotationVisitor av) {
-		this.av = av;
+	public void setAnnotationVisitor(final AnnotationVisitor annotationVisitor) {
+		this.annotationVisitor = annotationVisitor;
 	}
 
 	public String getName() {

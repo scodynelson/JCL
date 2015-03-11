@@ -12,7 +12,6 @@ import java.util.Stack;
 
 import org.objectweb.asm.Attribute;
 import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -57,14 +56,15 @@ public class NewEmitter {
 	 * Emitter method for Java function NEW-CLASS and class for Lisp
 	 * function for new Lisp compiler.
 	 *
-	 * @param name       String name
 	 * @param access     integer access
+	 * @param name       String name
+	 * @param signature  String signature
 	 * @param superName  String superName
 	 * @param interfaces String[] interfaces
 	 */
 	public void newClass(final int access, final String name, final String signature, final String superName, final String[] interfaces) {
-		currentClass = new ClassDef(new ClassWriter(ClassWriter.COMPUTE_MAXS), name);
-		currentClass.getCw().visit(classVersion, access, name, signature, superName, interfaces);
+		currentClass = new ClassDef(name);
+		currentClass.getClassWriter().visit(classVersion, access, name, signature, superName, interfaces);
 
 		classes.add(currentClass);
 		classStack.add(currentClass);
@@ -77,7 +77,7 @@ public class NewEmitter {
 	 * @param debug          String debug
 	 */
 	public void visitClassSource(final String sourceFileName, final String debug) {
-		currentClass.getCw().visitSource(sourceFileName, debug);
+		currentClass.getClassWriter().visitSource(sourceFileName, debug);
 	}
 
 	/**
@@ -89,11 +89,11 @@ public class NewEmitter {
 	 * @param desc  String desc
 	 */
 	public void addOuterClass(final String owner, final String name, final String desc) {
-		currentClass.getCw().visitOuterClass(owner, name, desc);
+		currentClass.getClassWriter().visitOuterClass(owner, name, desc);
 	}
 
 	public void visitClassAttribute(final Attribute attr) {
-		currentClass.getCw().visitAttribute(attr);
+		currentClass.getClassWriter().visitAttribute(attr);
 	}
 
 	/**
@@ -106,7 +106,7 @@ public class NewEmitter {
 	 * @param access    Java integer access
 	 */
 	public void addInnerClass(final String name, final String outerName, final String innerName, final int access) {
-		currentClass.getCw().visitInnerClass(name, outerName, innerName, access);
+		currentClass.getClassWriter().visitInnerClass(name, outerName, innerName, access);
 	}
 
 	/**
@@ -118,7 +118,7 @@ public class NewEmitter {
 			throw new RuntimeException("Tried to endClass with classStack empty");
 		}
 
-		currentClass.getCw().visitEnd();
+		currentClass.getClassWriter().visitEnd();
 
 		// pop it off the stack
 		classStack.remove(classStack.size() - 1);
@@ -157,7 +157,7 @@ public class NewEmitter {
 	 * @param value     Object value
 	 */
 	public void newField(final int access, final String name, final String desc, final String signature, final Object value) {
-		currentClass.setFv(currentClass.getCw().visitField(access, name, desc, signature, value));
+		currentClass.setFieldVisitor(currentClass.getClassWriter().visitField(access, name, desc, signature, value));
 	}
 
 	/**
@@ -169,24 +169,24 @@ public class NewEmitter {
 			throw new RuntimeException("Tried to endField with classStack empty");
 		}
 
-		if (currentClass.getFv() == null) {
+		if (currentClass.getFieldVisitor() == null) {
 			throw new RuntimeException("Tried to endField with a null field");
 		}
 
-		currentClass.getFv().visitEnd();
-		currentClass.setFv(null);
+		currentClass.getFieldVisitor().visitEnd();
+		currentClass.setFieldVisitor(null);
 	}
 
 	public void visitFieldAnnotation(final String desc, final boolean visible) {
-		currentClass.getFv().visitAnnotation(desc, visible);
+		currentClass.getFieldVisitor().visitAnnotation(desc, visible);
 	}
 
 	public void visitFieldTypeAnnotation(final int typeRef, final TypePath typePath, final String desc, final boolean visible) {
-		currentClass.getFv().visitTypeAnnotation(typeRef, typePath, desc, visible);
+		currentClass.getFieldVisitor().visitTypeAnnotation(typeRef, typePath, desc, visible);
 	}
 
 	public void visitFieldAttribute(final Attribute attr) {
-		currentClass.getFv().visitAttribute(attr);
+		currentClass.getFieldVisitor().visitAttribute(attr);
 	}
 	
 	/*
@@ -202,7 +202,7 @@ public class NewEmitter {
 	 * @param name String name
 	 */
 	public void newAnnotation(final String name, final boolean visible) {
-		currentClass.setAv(currentClass.getCw().visitAnnotation(name, visible));
+		currentClass.setAnnotationVisitor(currentClass.getClassWriter().visitAnnotation(name, visible));
 	}
 
 	/**
@@ -210,7 +210,7 @@ public class NewEmitter {
 	 * function for new Lisp compiler.
 	 */
 	public void newTypeAnnotation(final int typeRef, final TypePath typePath, final String desc, final boolean visible) {
-		currentClass.setAv(currentClass.getCw().visitTypeAnnotation(typeRef, typePath, desc, visible));
+		currentClass.setAnnotationVisitor(currentClass.getClassWriter().visitTypeAnnotation(typeRef, typePath, desc, visible));
 	}
 
 	/**
@@ -222,12 +222,12 @@ public class NewEmitter {
 			throw new RuntimeException("Tried to endAnnotation with classStack empty");
 		}
 
-		if (currentClass.getAv() == null) {
+		if (currentClass.getAnnotationVisitor() == null) {
 			throw new RuntimeException("Tried to endAnnotation with a null annotation");
 		}
 
-		currentClass.getAv().visitEnd();
-		currentClass.setAv(null);
+		currentClass.getAnnotationVisitor().visitEnd();
+		currentClass.setAnnotationVisitor(null);
 	}
 
 	/**
@@ -239,19 +239,19 @@ public class NewEmitter {
 	 */
 	public void visitAnnotationValue(final String name, final Object value) {
 		final String finalFieldValue = value.toString(); // TODO: why are we doing a .toString() here???
-		currentClass.getAv().visit(name, finalFieldValue);
+		currentClass.getAnnotationVisitor().visit(name, finalFieldValue);
 	}
 
 	public void visitAnnotationEnum(final String name, final String desc, final String value) {
-		currentClass.getAv().visitEnum(name, desc, value);
+		currentClass.getAnnotationVisitor().visitEnum(name, desc, value);
 	}
 
 	public void visitAnnotationAnnotation(final String name, final String desc) {
-		currentClass.getAv().visitAnnotation(name, desc);
+		currentClass.getAnnotationVisitor().visitAnnotation(name, desc);
 	}
 
 	public void visitAnnotationArray(final String name) {
-		currentClass.getAv().visitArray(name);
+		currentClass.getAnnotationVisitor().visitArray(name);
 	}
 
 	/*
@@ -272,37 +272,37 @@ public class NewEmitter {
 	 * @param exceptions String[] exceptions
 	 */
 	public void newMethod(final int access, final String name, final String paramDesc, final String returnDesc, final String signature, final String[] exceptions) {
-		final MethodVisitor mv = currentClass.getCw().visitMethod(access, name, paramDesc + returnDesc, signature, exceptions);
+		final MethodVisitor mv = currentClass.getClassWriter().visitMethod(access, name, paramDesc + returnDesc, signature, exceptions);
 		mv.visitCode();
-		currentClass.setMv(mv);
+		currentClass.setMethodVisitor(mv);
 	}
 
 	public void visitMethodParameter(final String name, final int access) {
-		currentClass.getMv().visitParameter(name, access);
+		currentClass.getMethodVisitor().visitParameter(name, access);
 	}
 
 	public void visitMethodAnnotationDefault() {
-		currentClass.getMv().visitAnnotationDefault();
+		currentClass.getMethodVisitor().visitAnnotationDefault();
 	}
 
 	public void visitMethodAnnotation(final String desc, final boolean visible) {
-		currentClass.getMv().visitAnnotation(desc, visible);
+		currentClass.getMethodVisitor().visitAnnotation(desc, visible);
 	}
 
 	public void visitMethodTypeAnnotation(final int typeRef, final TypePath typePath, final String desc, final boolean visible) {
-		currentClass.getMv().visitTypeAnnotation(typeRef, typePath, desc, visible);
+		currentClass.getMethodVisitor().visitTypeAnnotation(typeRef, typePath, desc, visible);
 	}
 
 	public void visitMethodParameterAnnotation(final int parameter, final String desc, final boolean visible) {
-		currentClass.getMv().visitParameterAnnotation(parameter, desc, visible);
+		currentClass.getMethodVisitor().visitParameterAnnotation(parameter, desc, visible);
 	}
 
 	public void visitMethodAttribute(final Attribute attr) {
-		currentClass.getMv().visitAttribute(attr);
+		currentClass.getMethodVisitor().visitAttribute(attr);
 	}
 
 	public void visitMethodFrame(final int type, final int nLocal, final Object[] local, final int nStack, final Object[] stack) {
-		currentClass.getMv().visitFrame(type, nLocal, local, nStack, stack);
+		currentClass.getMethodVisitor().visitFrame(type, nLocal, local, nStack, stack);
 	}
 
 	/**
@@ -312,11 +312,11 @@ public class NewEmitter {
 	 * @param label Label arg1
 	 */
 	public void visitMethodLabel(final Label label) {
-		currentClass.getMv().visitLabel(label);
+		currentClass.getMethodVisitor().visitLabel(label);
 	}
 
 	public void visitMethodInsnAnnotation(final int typeRef, final TypePath typePath, final String desc, final boolean visible) {
-		currentClass.getMv().visitInsnAnnotation(typeRef, typePath, desc, visible);
+		currentClass.getMethodVisitor().visitInsnAnnotation(typeRef, typePath, desc, visible);
 	}
 
 	/**
@@ -330,25 +330,25 @@ public class NewEmitter {
 	 * @return visitTryCatchBlock Object visitTryCatchBlock
 	 */
 	public void visitTryCatchBlock(final Label start, final Label end, final Label handler, final String type) {
-		currentClass.getMv().visitTryCatchBlock(start, end, handler, type);
+		currentClass.getMethodVisitor().visitTryCatchBlock(start, end, handler, type);
 	}
 
 	public void visitTryCatchAnnotation(final int typeRef, final TypePath typePath, final String desc, final boolean visible) {
-		currentClass.getMv().visitTryCatchAnnotation(typeRef, typePath, desc, visible);
+		currentClass.getMethodVisitor().visitTryCatchAnnotation(typeRef, typePath, desc, visible);
 	}
 
 	public void visitLocalVariable(final String name, final String desc, final String signature, final Label start,
 	                               final Label end, final int index) {
-		currentClass.getMv().visitLocalVariable(name, desc, signature, start, end, index);
+		currentClass.getMethodVisitor().visitLocalVariable(name, desc, signature, start, end, index);
 	}
 
 	public void visitLocalVariableAnnotation(final int typeRef, final TypePath typePath, final Label[] start, final Label[] end,
 	                                         final int[] index, final String desc, final boolean visible) {
-		currentClass.getMv().visitLocalVariableAnnotation(typeRef, typePath, start, end, index, desc, visible);
+		currentClass.getMethodVisitor().visitLocalVariableAnnotation(typeRef, typePath, start, end, index, desc, visible);
 	}
 
 	public void visitLineNumber(final int line, final Label start) {
-		currentClass.getMv().visitLineNumber(line, start);
+		currentClass.getMethodVisitor().visitLineNumber(line, start);
 	}
 
 	/**
@@ -360,13 +360,13 @@ public class NewEmitter {
 			throw new RuntimeException("Tried to endMethod with classStack empty");
 		}
 
-		if (currentClass.getMv() == null) {
+		if (currentClass.getMethodVisitor() == null) {
 			throw new RuntimeException("Tried to endMethod with a null method");
 		}
 
-		currentClass.getMv().visitMaxs(0, 0);
-		currentClass.getMv().visitEnd();
-		currentClass.setMv(null);
+		currentClass.getMethodVisitor().visitMaxs(0, 0);
+		currentClass.getMethodVisitor().visitEnd();
+		currentClass.setMethodVisitor(null);
 	}
 
 	// -------------------------------------------------------------------------
@@ -384,7 +384,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitAaload() {
-		currentClass.getMv().visitInsn(Opcodes.AALOAD);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.AALOAD);
 	}
 
 	/**
@@ -392,7 +392,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitAastore() {
-		currentClass.getMv().visitInsn(Opcodes.AASTORE);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.AASTORE);
 	}
 
 	/**
@@ -400,7 +400,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitAconst_null() {
-		currentClass.getMv().visitInsn(Opcodes.ACONST_NULL);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.ACONST_NULL);
 	}
 
 	/**
@@ -410,7 +410,7 @@ public class NewEmitter {
 	 * @param var Java integer
 	 */
 	public void emitAload(final int var) {
-		currentClass.getMv().visitVarInsn(Opcodes.ALOAD, var);
+		currentClass.getMethodVisitor().visitVarInsn(Opcodes.ALOAD, var);
 	}
 
 	/**
@@ -420,7 +420,7 @@ public class NewEmitter {
 	 * @param type Java String
 	 */
 	public void emitAnewarray(final String type) {
-		currentClass.getMv().visitTypeInsn(Opcodes.ANEWARRAY, type);
+		currentClass.getMethodVisitor().visitTypeInsn(Opcodes.ANEWARRAY, type);
 	}
 
 	/**
@@ -428,7 +428,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitAreturn() {
-		currentClass.getMv().visitInsn(Opcodes.ARETURN);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.ARETURN);
 
 	}
 
@@ -437,7 +437,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitArraylength() {
-		currentClass.getMv().visitInsn(Opcodes.ARRAYLENGTH);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.ARRAYLENGTH);
 
 	}
 
@@ -449,7 +449,7 @@ public class NewEmitter {
 	 * @return Object emitAstore
 	 */
 	public void emitAstore(final int var) {
-		currentClass.getMv().visitVarInsn(Opcodes.ASTORE, var);
+		currentClass.getMethodVisitor().visitVarInsn(Opcodes.ASTORE, var);
 	}
 
 	/**
@@ -457,7 +457,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitAthrow() {
-		currentClass.getMv().visitInsn(Opcodes.ATHROW);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.ATHROW);
 	}
 
 	/**
@@ -465,7 +465,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitBaload() {
-		currentClass.getMv().visitInsn(Opcodes.BALOAD);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.BALOAD);
 	}
 
 	/**
@@ -473,7 +473,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitBastore() {
-		currentClass.getMv().visitInsn(Opcodes.BASTORE);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.BASTORE);
 	}
 
 	/**
@@ -483,7 +483,7 @@ public class NewEmitter {
 	 * @param operand Java Integer
 	 */
 	public void emitBipush(final int operand) {
-		currentClass.getMv().visitIntInsn(Opcodes.BIPUSH, operand);
+		currentClass.getMethodVisitor().visitIntInsn(Opcodes.BIPUSH, operand);
 	}
 
 	/**
@@ -491,7 +491,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitCaload() {
-		currentClass.getMv().visitInsn(Opcodes.CALOAD);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.CALOAD);
 	}
 
 	/**
@@ -499,7 +499,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitCastore() {
-		currentClass.getMv().visitInsn(Opcodes.CASTORE);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.CASTORE);
 	}
 
 	/**
@@ -509,7 +509,7 @@ public class NewEmitter {
 	 * @param type Java String
 	 */
 	public void emitCheckcast(final String type) {
-		currentClass.getMv().visitTypeInsn(Opcodes.CHECKCAST, type);
+		currentClass.getMethodVisitor().visitTypeInsn(Opcodes.CHECKCAST, type);
 	}
 
 	/**
@@ -517,7 +517,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitD2f() {
-		currentClass.getMv().visitInsn(Opcodes.D2F);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.D2F);
 	}
 
 	/**
@@ -525,7 +525,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitD2i() {
-		currentClass.getMv().visitInsn(Opcodes.D2I);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.D2I);
 	}
 
 	/**
@@ -533,7 +533,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitD2l() {
-		currentClass.getMv().visitInsn(Opcodes.D2L);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.D2L);
 	}
 
 	/**
@@ -541,7 +541,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitDadd() {
-		currentClass.getMv().visitInsn(Opcodes.DADD);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.DADD);
 	}
 
 	/**
@@ -549,7 +549,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitDaload() {
-		currentClass.getMv().visitInsn(Opcodes.DALOAD);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.DALOAD);
 	}
 
 	/**
@@ -557,7 +557,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitDastore() {
-		currentClass.getMv().visitInsn(Opcodes.DASTORE);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.DASTORE);
 	}
 
 	/**
@@ -565,7 +565,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitDcmpg() {
-		currentClass.getMv().visitInsn(Opcodes.DCMPG);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.DCMPG);
 	}
 
 	/**
@@ -573,7 +573,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitDcmpl() {
-		currentClass.getMv().visitInsn(Opcodes.DCMPL);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.DCMPL);
 	}
 
 	/**
@@ -592,7 +592,7 @@ public class NewEmitter {
 			throw new RuntimeException("DCONST called with illegal argument " + arg1 + '.');
 		}
 
-		currentClass.getMv().visitInsn(dConst);
+		currentClass.getMethodVisitor().visitInsn(dConst);
 	}
 
 	/**
@@ -600,7 +600,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitDdiv() {
-		currentClass.getMv().visitInsn(Opcodes.DDIV);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.DDIV);
 	}
 
 	/**
@@ -610,7 +610,7 @@ public class NewEmitter {
 	 * @param var Java integer
 	 */
 	public void emitDload(final int var) {
-		currentClass.getMv().visitVarInsn(Opcodes.DLOAD, var);
+		currentClass.getMethodVisitor().visitVarInsn(Opcodes.DLOAD, var);
 	}
 
 	/**
@@ -618,7 +618,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitDmul() {
-		currentClass.getMv().visitInsn(Opcodes.DMUL);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.DMUL);
 	}
 
 	/**
@@ -626,7 +626,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitDneg() {
-		currentClass.getMv().visitInsn(Opcodes.DNEG);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.DNEG);
 	}
 
 	/**
@@ -634,7 +634,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitDrem() {
-		currentClass.getMv().visitInsn(Opcodes.DREM);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.DREM);
 	}
 
 	/**
@@ -642,7 +642,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitDreturn() {
-		currentClass.getMv().visitInsn(Opcodes.DRETURN);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.DRETURN);
 	}
 
 	/**
@@ -652,7 +652,7 @@ public class NewEmitter {
 	 * @param var Java integer
 	 */
 	public void emitDstore(final int var) {
-		currentClass.getMv().visitVarInsn(Opcodes.DSTORE, var);
+		currentClass.getMethodVisitor().visitVarInsn(Opcodes.DSTORE, var);
 	}
 
 	/**
@@ -660,7 +660,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitDsub() {
-		currentClass.getMv().visitInsn(Opcodes.DSUB);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.DSUB);
 	}
 
 	/**
@@ -668,7 +668,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitDup() {
-		currentClass.getMv().visitInsn(Opcodes.DUP);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.DUP);
 	}
 
 	/**
@@ -676,7 +676,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitDup_x1() {
-		currentClass.getMv().visitInsn(Opcodes.DUP_X1);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.DUP_X1);
 	}
 
 	/**
@@ -684,7 +684,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitDup_x2() {
-		currentClass.getMv().visitInsn(Opcodes.DUP_X2);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.DUP_X2);
 	}
 
 	/**
@@ -692,7 +692,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitDup2() {
-		currentClass.getMv().visitInsn(Opcodes.DUP2);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.DUP2);
 	}
 
 	/**
@@ -700,7 +700,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitDup2_x1() {
-		currentClass.getMv().visitInsn(Opcodes.DUP2_X1);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.DUP2_X1);
 	}
 
 	/**
@@ -708,7 +708,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitDup2_x2() {
-		currentClass.getMv().visitInsn(Opcodes.DUP2_X2);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.DUP2_X2);
 	}
 
 	/**
@@ -716,7 +716,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitF2d() {
-		currentClass.getMv().visitInsn(Opcodes.F2D);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.F2D);
 	}
 
 	/**
@@ -724,7 +724,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitF2i() {
-		currentClass.getMv().visitInsn(Opcodes.F2I);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.F2I);
 	}
 
 	/**
@@ -732,7 +732,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitF2l() {
-		currentClass.getMv().visitInsn(Opcodes.F2L);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.F2L);
 	}
 
 	/**
@@ -740,7 +740,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitFadd() {
-		currentClass.getMv().visitInsn(Opcodes.FADD);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.FADD);
 	}
 
 	/**
@@ -748,7 +748,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitFaload() {
-		currentClass.getMv().visitInsn(Opcodes.FALOAD);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.FALOAD);
 	}
 
 	/**
@@ -756,7 +756,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitFastore() {
-		currentClass.getMv().visitInsn(Opcodes.FASTORE);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.FASTORE);
 	}
 
 	/**
@@ -764,7 +764,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitFcmpg() {
-		currentClass.getMv().visitInsn(Opcodes.FCMPG);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.FCMPG);
 	}
 
 	/**
@@ -772,7 +772,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitFcmpl() {
-		currentClass.getMv().visitInsn(Opcodes.FCMPL);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.FCMPL);
 	}
 
 	/**
@@ -797,7 +797,7 @@ public class NewEmitter {
 				throw new RuntimeException("FCONST called with illegal argument " + arg1 + '.');
 		}
 
-		currentClass.getMv().visitInsn(fConst);
+		currentClass.getMethodVisitor().visitInsn(fConst);
 	}
 
 	/**
@@ -805,7 +805,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitFdiv() {
-		currentClass.getMv().visitInsn(Opcodes.FDIV);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.FDIV);
 	}
 
 	/**
@@ -815,7 +815,7 @@ public class NewEmitter {
 	 * @param var Java Integer
 	 */
 	public void emitFload(final int var) {
-		currentClass.getMv().visitVarInsn(Opcodes.FLOAD, var);
+		currentClass.getMethodVisitor().visitVarInsn(Opcodes.FLOAD, var);
 	}
 
 	/**
@@ -823,7 +823,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitFmul() {
-		currentClass.getMv().visitInsn(Opcodes.FMUL);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.FMUL);
 	}
 
 	/**
@@ -831,7 +831,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitFneg() {
-		currentClass.getMv().visitInsn(Opcodes.FNEG);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.FNEG);
 
 	}
 
@@ -840,7 +840,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitFrem() {
-		currentClass.getMv().visitInsn(Opcodes.FREM);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.FREM);
 	}
 
 	/**
@@ -848,7 +848,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitFreturn() {
-		currentClass.getMv().visitInsn(Opcodes.FRETURN);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.FRETURN);
 	}
 
 	/**
@@ -858,7 +858,7 @@ public class NewEmitter {
 	 * @param var Java integer
 	 */
 	public void emitFstore(final int var) {
-		currentClass.getMv().visitVarInsn(Opcodes.FSTORE, var);
+		currentClass.getMethodVisitor().visitVarInsn(Opcodes.FSTORE, var);
 	}
 
 	/**
@@ -866,7 +866,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitFsub() {
-		currentClass.getMv().visitInsn(Opcodes.FSUB);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.FSUB);
 	}
 
 	/**
@@ -878,7 +878,7 @@ public class NewEmitter {
 	 * @param desc  Java String
 	 */
 	public void emitGetfield(final String owner, final String name, final String desc) {
-		currentClass.getMv().visitFieldInsn(Opcodes.GETFIELD, owner, name, desc);
+		currentClass.getMethodVisitor().visitFieldInsn(Opcodes.GETFIELD, owner, name, desc);
 	}
 
 	/**
@@ -891,7 +891,7 @@ public class NewEmitter {
 	 * @return Object emitGetstatic
 	 */
 	public void emitGetstatic(final String owner, final String name, final String desc) {
-		currentClass.getMv().visitFieldInsn(Opcodes.GETSTATIC, owner, name, desc);
+		currentClass.getMethodVisitor().visitFieldInsn(Opcodes.GETSTATIC, owner, name, desc);
 	}
 
 	/**
@@ -902,7 +902,7 @@ public class NewEmitter {
 	 * @return Object emitGoto
 	 */
 	public void emitGoto(final Label label) {
-		currentClass.getMv().visitJumpInsn(Opcodes.GOTO, label);
+		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.GOTO, label);
 	}
 
 	/**
@@ -910,7 +910,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitI2b() {
-		currentClass.getMv().visitInsn(Opcodes.I2B);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.I2B);
 	}
 
 	/**
@@ -918,7 +918,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitI2c() {
-		currentClass.getMv().visitInsn(Opcodes.I2C);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.I2C);
 	}
 
 	/**
@@ -926,7 +926,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitI2d() {
-		currentClass.getMv().visitInsn(Opcodes.I2D);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.I2D);
 
 	}
 
@@ -935,7 +935,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitI2f() {
-		currentClass.getMv().visitInsn(Opcodes.I2F);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.I2F);
 	}
 
 	/**
@@ -943,7 +943,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitI2l() {
-		currentClass.getMv().visitInsn(Opcodes.I2L);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.I2L);
 	}
 
 	/**
@@ -951,7 +951,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitI2s() {
-		currentClass.getMv().visitInsn(Opcodes.I2S);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.I2S);
 	}
 
 	/**
@@ -959,7 +959,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitIadd() {
-		currentClass.getMv().visitInsn(Opcodes.IADD);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.IADD);
 	}
 
 	/**
@@ -967,7 +967,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitIaload() {
-		currentClass.getMv().visitInsn(Opcodes.IALOAD);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.IALOAD);
 	}
 
 	/**
@@ -975,7 +975,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitIand() {
-		currentClass.getMv().visitInsn(Opcodes.IAND);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.IAND);
 	}
 
 	/**
@@ -983,7 +983,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitIastore() {
-		currentClass.getMv().visitInsn(Opcodes.IASTORE);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.IASTORE);
 	}
 
 	/**
@@ -1020,7 +1020,7 @@ public class NewEmitter {
 				throw new RuntimeException("ICONST called with illegal argument " + arg1 + '.');
 		}
 
-		currentClass.getMv().visitInsn(iConst);
+		currentClass.getMethodVisitor().visitInsn(iConst);
 	}
 
 	/**
@@ -1028,7 +1028,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitIdiv() {
-		currentClass.getMv().visitInsn(Opcodes.IDIV);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.IDIV);
 	}
 
 	/**
@@ -1038,7 +1038,7 @@ public class NewEmitter {
 	 * @param label Java Label
 	 */
 	public void emitIf_acmpeq(final Label label) {
-		currentClass.getMv().visitJumpInsn(Opcodes.IF_ACMPEQ, label);
+		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.IF_ACMPEQ, label);
 	}
 
 	/**
@@ -1048,7 +1048,7 @@ public class NewEmitter {
 	 * @param label Java Label
 	 */
 	public void emitIf_acmpne(final Label label) {
-		currentClass.getMv().visitJumpInsn(Opcodes.IF_ACMPNE, label);
+		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.IF_ACMPNE, label);
 	}
 
 	/**
@@ -1058,7 +1058,7 @@ public class NewEmitter {
 	 * @param label Java Label
 	 */
 	public void emitIf_icmpeq(final Label label) {
-		currentClass.getMv().visitJumpInsn(Opcodes.IF_ICMPEQ, label);
+		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.IF_ICMPEQ, label);
 	}
 
 	/**
@@ -1068,7 +1068,7 @@ public class NewEmitter {
 	 * @param label Java Label
 	 */
 	public void emitIf_icmpge(final Label label) {
-		currentClass.getMv().visitJumpInsn(Opcodes.IF_ICMPGE, label);
+		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.IF_ICMPGE, label);
 	}
 
 	/**
@@ -1078,7 +1078,7 @@ public class NewEmitter {
 	 * @param label Java Label
 	 */
 	public void emitIf_icmpgt(final Label label) {
-		currentClass.getMv().visitJumpInsn(Opcodes.IF_ICMPGT, label);
+		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.IF_ICMPGT, label);
 	}
 
 	/**
@@ -1088,7 +1088,7 @@ public class NewEmitter {
 	 * @param label Java Label
 	 */
 	public void emitIf_icmple(final Label label) {
-		currentClass.getMv().visitJumpInsn(Opcodes.IF_ICMPLE, label);
+		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.IF_ICMPLE, label);
 	}
 
 	/**
@@ -1098,7 +1098,7 @@ public class NewEmitter {
 	 * @param label Java Label
 	 */
 	public void emitIf_icmplt(final Label label) {
-		currentClass.getMv().visitJumpInsn(Opcodes.IF_ICMPLT, label);
+		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.IF_ICMPLT, label);
 	}
 
 	/**
@@ -1108,7 +1108,7 @@ public class NewEmitter {
 	 * @param label Java Label
 	 */
 	public void emitIf_icmpne(final Label label) {
-		currentClass.getMv().visitJumpInsn(Opcodes.IF_ICMPNE, label);
+		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.IF_ICMPNE, label);
 	}
 
 	/**
@@ -1118,7 +1118,7 @@ public class NewEmitter {
 	 * @param label Java Label
 	 */
 	public void emitIfeq(final Label label) {
-		currentClass.getMv().visitJumpInsn(Opcodes.IFEQ, label);
+		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.IFEQ, label);
 	}
 
 	/**
@@ -1128,7 +1128,7 @@ public class NewEmitter {
 	 * @param label Java Label
 	 */
 	public void emitIfge(final Label label) {
-		currentClass.getMv().visitJumpInsn(Opcodes.IFGE, label);
+		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.IFGE, label);
 	}
 
 	/**
@@ -1138,7 +1138,7 @@ public class NewEmitter {
 	 * @param label Java Label
 	 */
 	public void emitIfgt(final Label label) {
-		currentClass.getMv().visitJumpInsn(Opcodes.IFGT, label);
+		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.IFGT, label);
 	}
 
 	/**
@@ -1148,7 +1148,7 @@ public class NewEmitter {
 	 * @param label Java Label
 	 */
 	public void emitIfle(final Label label) {
-		currentClass.getMv().visitJumpInsn(Opcodes.IFLE, label);
+		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.IFLE, label);
 	}
 
 	/**
@@ -1158,7 +1158,7 @@ public class NewEmitter {
 	 * @param label Java Label
 	 */
 	public void emitIflt(final Label label) {
-		currentClass.getMv().visitJumpInsn(Opcodes.IFLT, label);
+		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.IFLT, label);
 	}
 
 	/**
@@ -1168,7 +1168,7 @@ public class NewEmitter {
 	 * @param label Java Label
 	 */
 	public void emitIfne(final Label label) {
-		currentClass.getMv().visitJumpInsn(Opcodes.IFNE, label);
+		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.IFNE, label);
 	}
 
 	/**
@@ -1178,7 +1178,7 @@ public class NewEmitter {
 	 * @param label Java Label
 	 */
 	public void emitIfnonnull(final Label label) {
-		currentClass.getMv().visitJumpInsn(Opcodes.IFNONNULL, label);
+		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.IFNONNULL, label);
 	}
 
 	/**
@@ -1188,7 +1188,7 @@ public class NewEmitter {
 	 * @param label Java Label
 	 */
 	public void emitIfnull(final Label label) {
-		currentClass.getMv().visitJumpInsn(Opcodes.IFNULL, label);
+		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.IFNULL, label);
 	}
 
 	/**
@@ -1199,7 +1199,7 @@ public class NewEmitter {
 	 * @param increment Java integer
 	 */
 	public void emitIinc(final int var, final int increment) {
-		currentClass.getMv().visitIincInsn(var, increment);
+		currentClass.getMethodVisitor().visitIincInsn(var, increment);
 	}
 
 	/**
@@ -1209,7 +1209,7 @@ public class NewEmitter {
 	 * @param var Java integer
 	 */
 	public void emitIload(final int var) {
-		currentClass.getMv().visitVarInsn(Opcodes.ILOAD, var);
+		currentClass.getMethodVisitor().visitVarInsn(Opcodes.ILOAD, var);
 	}
 
 	/**
@@ -1217,7 +1217,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitImul() {
-		currentClass.getMv().visitInsn(Opcodes.IMUL);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.IMUL);
 	}
 
 	/**
@@ -1225,7 +1225,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitIneg() {
-		currentClass.getMv().visitInsn(Opcodes.INEG);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.INEG);
 	}
 
 	/**
@@ -1235,7 +1235,7 @@ public class NewEmitter {
 	 * @param type Java String
 	 */
 	public void emitInstanceof(final String type) {
-		currentClass.getMv().visitTypeInsn(Opcodes.INSTANCEOF, type);
+		currentClass.getMethodVisitor().visitTypeInsn(Opcodes.INSTANCEOF, type);
 	}
 
 	/**
@@ -1248,7 +1248,7 @@ public class NewEmitter {
 	 * @param bsmArgs Handle arguments
 	 */
 	public void emitInvokedynamic(final String name, final String desc, final Handle bsm, final Object... bsmArgs) {
-		currentClass.getMv().visitInvokeDynamicInsn(name, desc, bsm, bsmArgs);
+		currentClass.getMethodVisitor().visitInvokeDynamicInsn(name, desc, bsm, bsmArgs);
 	}
 
 	/**
@@ -1262,7 +1262,7 @@ public class NewEmitter {
 	 * @param itf        true if method's owner is an interface
 	 */
 	public void emitInvokeinterface(final String owner, final String name, final String paramDesc, final String returnDesc, final boolean itf) {
-		currentClass.getMv().visitMethodInsn(Opcodes.INVOKEINTERFACE, owner, name, paramDesc + returnDesc, itf);
+		currentClass.getMethodVisitor().visitMethodInsn(Opcodes.INVOKEINTERFACE, owner, name, paramDesc + returnDesc, itf);
 	}
 
 	/**
@@ -1276,7 +1276,7 @@ public class NewEmitter {
 	 * @param itf        true if method's owner is an interface
 	 */
 	public void emitInvokespecial(final String owner, final String name, final String paramDesc, final String returnDesc, final boolean itf) {
-		currentClass.getMv().visitMethodInsn(Opcodes.INVOKESPECIAL, owner, name, paramDesc + returnDesc, itf);
+		currentClass.getMethodVisitor().visitMethodInsn(Opcodes.INVOKESPECIAL, owner, name, paramDesc + returnDesc, itf);
 	}
 
 	/**
@@ -1290,7 +1290,7 @@ public class NewEmitter {
 	 * @param itf        true if method's owner is an interface
 	 */
 	public void emitInvokestatic(final String owner, final String name, final String paramDesc, final String returnDesc, final boolean itf) {
-		currentClass.getMv().visitMethodInsn(Opcodes.INVOKESTATIC, owner, name, paramDesc + returnDesc, itf);
+		currentClass.getMethodVisitor().visitMethodInsn(Opcodes.INVOKESTATIC, owner, name, paramDesc + returnDesc, itf);
 	}
 
 	/**
@@ -1304,7 +1304,7 @@ public class NewEmitter {
 	 * @param itf        true if method's owner is an interface
 	 */
 	public void emitInvokevirtual(final String owner, final String name, final String paramDesc, final String returnDesc, final boolean itf) {
-		currentClass.getMv().visitMethodInsn(Opcodes.INVOKEVIRTUAL, owner, name, paramDesc + returnDesc, itf);
+		currentClass.getMethodVisitor().visitMethodInsn(Opcodes.INVOKEVIRTUAL, owner, name, paramDesc + returnDesc, itf);
 	}
 
 	/**
@@ -1312,7 +1312,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitIor() {
-		currentClass.getMv().visitInsn(Opcodes.IOR);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.IOR);
 	}
 
 	/**
@@ -1320,7 +1320,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitIrem() {
-		currentClass.getMv().visitInsn(Opcodes.IREM);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.IREM);
 	}
 
 	/**
@@ -1328,7 +1328,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitIreturn() {
-		currentClass.getMv().visitInsn(Opcodes.IRETURN);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.IRETURN);
 	}
 
 	/**
@@ -1336,7 +1336,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitIshl() {
-		currentClass.getMv().visitInsn(Opcodes.ISHL);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.ISHL);
 	}
 
 	/**
@@ -1344,7 +1344,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitIshr() {
-		currentClass.getMv().visitInsn(Opcodes.ISHR);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.ISHR);
 	}
 
 	/**
@@ -1354,7 +1354,7 @@ public class NewEmitter {
 	 * @param var Java integer
 	 */
 	public void emitIstore(final int var) {
-		currentClass.getMv().visitVarInsn(Opcodes.ISTORE, var);
+		currentClass.getMethodVisitor().visitVarInsn(Opcodes.ISTORE, var);
 	}
 
 	/**
@@ -1362,7 +1362,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitIsub() {
-		currentClass.getMv().visitInsn(Opcodes.ISUB);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.ISUB);
 	}
 
 	/**
@@ -1370,7 +1370,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitIushr() {
-		currentClass.getMv().visitInsn(Opcodes.IUSHR);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.IUSHR);
 	}
 
 	/**
@@ -1378,7 +1378,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitIxor() {
-		currentClass.getMv().visitInsn(Opcodes.IXOR);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.IXOR);
 	}
 
 	/**
@@ -1388,7 +1388,7 @@ public class NewEmitter {
 	 * @param label Java Label
 	 */
 	public void emitJsr(final Label label) {
-		currentClass.getMv().visitJumpInsn(Opcodes.JSR, label);
+		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.JSR, label);
 	}
 
 	/**
@@ -1396,7 +1396,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitL2d() {
-		currentClass.getMv().visitInsn(Opcodes.L2D);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.L2D);
 	}
 
 	/**
@@ -1404,7 +1404,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitL2f() {
-		currentClass.getMv().visitInsn(Opcodes.L2F);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.L2F);
 	}
 
 	/**
@@ -1412,7 +1412,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitL2i() {
-		currentClass.getMv().visitInsn(Opcodes.L2I);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.L2I);
 	}
 
 	/**
@@ -1420,7 +1420,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitLadd() {
-		currentClass.getMv().visitInsn(Opcodes.LADD);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.LADD);
 	}
 
 	/**
@@ -1428,7 +1428,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitLaload() {
-		currentClass.getMv().visitInsn(Opcodes.LALOAD);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.LALOAD);
 	}
 
 	/**
@@ -1436,7 +1436,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitLand() {
-		currentClass.getMv().visitInsn(Opcodes.LAND);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.LAND);
 	}
 
 	/**
@@ -1444,7 +1444,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitLastore() {
-		currentClass.getMv().visitInsn(Opcodes.LASTORE);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.LASTORE);
 	}
 
 	/**
@@ -1452,7 +1452,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitLcmp() {
-		currentClass.getMv().visitInsn(Opcodes.LCMP);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.LCMP);
 	}
 
 	/**
@@ -1471,7 +1471,7 @@ public class NewEmitter {
 			throw new RuntimeException("LCONST called with illegal argument " + arg1 + '.');
 		}
 
-		currentClass.getMv().visitInsn(lConst);
+		currentClass.getMethodVisitor().visitInsn(lConst);
 	}
 
 	/**
@@ -1509,7 +1509,7 @@ public class NewEmitter {
 						opCode = Opcodes.ICONST_5;
 						break;
 				}
-				currentClass.getMv().visitInsn(opCode);
+				currentClass.getMethodVisitor().visitInsn(opCode);
 			}
 		}
 		if ((cst instanceof String) ||
@@ -1518,7 +1518,7 @@ public class NewEmitter {
 				(cst instanceof Double) ||
 				(cst instanceof Long) ||
 				(cst instanceof Type)) {
-			currentClass.getMv().visitLdcInsn(cst);
+			currentClass.getMethodVisitor().visitLdcInsn(cst);
 		} else {
 			throw new RuntimeException("Ldc called with argument " + cst + ", illegal type");
 		}
@@ -1529,7 +1529,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitLdiv() {
-		currentClass.getMv().visitInsn(Opcodes.LDIV);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.LDIV);
 	}
 
 	/**
@@ -1539,7 +1539,7 @@ public class NewEmitter {
 	 * @param var Java integer
 	 */
 	public void emitLload(final int var) {
-		currentClass.getMv().visitVarInsn(Opcodes.LLOAD, var);
+		currentClass.getMethodVisitor().visitVarInsn(Opcodes.LLOAD, var);
 	}
 
 	/**
@@ -1547,7 +1547,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitLmul() {
-		currentClass.getMv().visitInsn(Opcodes.LMUL);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.LMUL);
 	}
 
 	/**
@@ -1555,7 +1555,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitLneg() {
-		currentClass.getMv().visitInsn(Opcodes.LNEG);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.LNEG);
 	}
 
 	/**
@@ -1567,7 +1567,7 @@ public class NewEmitter {
 	 * @param labels Java Label[]
 	 */
 	public void emitLookupswitch(final Label dflt, final int[] keys, final Label[] labels) {
-		currentClass.getMv().visitLookupSwitchInsn(dflt, keys, labels);
+		currentClass.getMethodVisitor().visitLookupSwitchInsn(dflt, keys, labels);
 	}
 
 	/**
@@ -1575,7 +1575,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitLor() {
-		currentClass.getMv().visitInsn(Opcodes.LOR);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.LOR);
 	}
 
 	/**
@@ -1583,7 +1583,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitLrem() {
-		currentClass.getMv().visitInsn(Opcodes.LREM);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.LREM);
 	}
 
 	/**
@@ -1591,7 +1591,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitLreturn() {
-		currentClass.getMv().visitInsn(Opcodes.LRETURN);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.LRETURN);
 	}
 
 	/**
@@ -1599,7 +1599,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitLshl() {
-		currentClass.getMv().visitInsn(Opcodes.LSHL);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.LSHL);
 	}
 
 	/**
@@ -1607,7 +1607,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitLshr() {
-		currentClass.getMv().visitInsn(Opcodes.LSHR);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.LSHR);
 	}
 
 	/**
@@ -1617,7 +1617,7 @@ public class NewEmitter {
 	 * @param var Java integer
 	 */
 	public void emitLstore(final int var) {
-		currentClass.getMv().visitVarInsn(Opcodes.LSTORE, var);
+		currentClass.getMethodVisitor().visitVarInsn(Opcodes.LSTORE, var);
 	}
 
 	/**
@@ -1625,7 +1625,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitLsub() {
-		currentClass.getMv().visitInsn(Opcodes.LSUB);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.LSUB);
 	}
 
 	/**
@@ -1633,7 +1633,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitLushr() {
-		currentClass.getMv().visitInsn(Opcodes.LUSHR);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.LUSHR);
 	}
 
 	/**
@@ -1641,7 +1641,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitLxor() {
-		currentClass.getMv().visitInsn(Opcodes.LXOR);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.LXOR);
 	}
 
 	/**
@@ -1649,7 +1649,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitMonitorenter() {
-		currentClass.getMv().visitInsn(Opcodes.MONITORENTER);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.MONITORENTER);
 	}
 
 	/**
@@ -1657,7 +1657,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitMonitorexit() {
-		currentClass.getMv().visitInsn(Opcodes.MONITOREXIT);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.MONITOREXIT);
 	}
 
 	/**
@@ -1668,7 +1668,7 @@ public class NewEmitter {
 	 * @param dims Java Integer
 	 */
 	public void emitMultianewarray(final String desc, final int dims) {
-		currentClass.getMv().visitMultiANewArrayInsn(desc, dims);
+		currentClass.getMethodVisitor().visitMultiANewArrayInsn(desc, dims);
 	}
 
 	/**
@@ -1678,7 +1678,7 @@ public class NewEmitter {
 	 * @param type Java String
 	 */
 	public void emitNew(final String type) {
-		currentClass.getMv().visitTypeInsn(Opcodes.NEW, type);
+		currentClass.getMethodVisitor().visitTypeInsn(Opcodes.NEW, type);
 	}
 
 	/**
@@ -1688,7 +1688,7 @@ public class NewEmitter {
 	 * @param operand Java Integer
 	 */
 	public void emitNewarray(final int operand) {
-		currentClass.getMv().visitIntInsn(Opcodes.NEWARRAY, operand);
+		currentClass.getMethodVisitor().visitIntInsn(Opcodes.NEWARRAY, operand);
 	}
 
 	/**
@@ -1696,7 +1696,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitNop() {
-		currentClass.getMv().visitInsn(Opcodes.NOP);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.NOP);
 	}
 
 	/**
@@ -1704,7 +1704,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitPop() {
-		currentClass.getMv().visitInsn(Opcodes.POP);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.POP);
 	}
 
 	/**
@@ -1712,7 +1712,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitPop2() {
-		currentClass.getMv().visitInsn(Opcodes.POP2);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.POP2);
 	}
 
 	/**
@@ -1724,7 +1724,7 @@ public class NewEmitter {
 	 * @param desc  Java String
 	 */
 	public void emitPutfield(final String owner, final String name, final String desc) {
-		currentClass.getMv().visitFieldInsn(Opcodes.PUTFIELD, owner, name, desc);
+		currentClass.getMethodVisitor().visitFieldInsn(Opcodes.PUTFIELD, owner, name, desc);
 	}
 
 	/**
@@ -1736,7 +1736,7 @@ public class NewEmitter {
 	 * @param desc  Java String
 	 */
 	public void emitPutstatic(final String owner, final String name, final String desc) {
-		currentClass.getMv().visitFieldInsn(Opcodes.PUTSTATIC, owner, name, desc);
+		currentClass.getMethodVisitor().visitFieldInsn(Opcodes.PUTSTATIC, owner, name, desc);
 	}
 
 	/**
@@ -1746,7 +1746,7 @@ public class NewEmitter {
 	 * @param var Java integer
 	 */
 	public void emitRet(final int var) {
-		currentClass.getMv().visitVarInsn(Opcodes.RET, var);
+		currentClass.getMethodVisitor().visitVarInsn(Opcodes.RET, var);
 	}
 
 	/**
@@ -1754,7 +1754,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitReturn() {
-		currentClass.getMv().visitInsn(Opcodes.RETURN);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.RETURN);
 	}
 
 	/**
@@ -1762,7 +1762,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitSaload() {
-		currentClass.getMv().visitInsn(Opcodes.SALOAD);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.SALOAD);
 	}
 
 	/**
@@ -1770,7 +1770,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitSastore() {
-		currentClass.getMv().visitInsn(Opcodes.SALOAD);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.SALOAD);
 	}
 
 	/**
@@ -1780,7 +1780,7 @@ public class NewEmitter {
 	 * @param operand Java integer
 	 */
 	public void emitSipush(final int operand) {
-		currentClass.getMv().visitIntInsn(Opcodes.SIPUSH, operand);
+		currentClass.getMethodVisitor().visitIntInsn(Opcodes.SIPUSH, operand);
 	}
 
 	/**
@@ -1788,7 +1788,7 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 */
 	public void emitSwap() {
-		currentClass.getMv().visitInsn(Opcodes.SWAP);
+		currentClass.getMethodVisitor().visitInsn(Opcodes.SWAP);
 	}
 
 	/**
@@ -1801,7 +1801,7 @@ public class NewEmitter {
 	 * @param labels Java Label[]
 	 */
 	public void emitTableswitch(final int min, final int max, final Label dflt, final Label[] labels) {
-		currentClass.getMv().visitTableSwitchInsn(min, max, dflt, labels);
+		currentClass.getMethodVisitor().visitTableSwitchInsn(min, max, dflt, labels);
 	}
 
 /*
@@ -1812,7 +1812,7 @@ public class NewEmitter {
 */
 
 	public static void checkClass(final ClassDef classDef) {
-		checkClass(classDef.getCw().toByteArray());
+		checkClass(classDef.getClassWriter().toByteArray());
 	}
 
 	private static void checkClass(final byte[] classBytes) {

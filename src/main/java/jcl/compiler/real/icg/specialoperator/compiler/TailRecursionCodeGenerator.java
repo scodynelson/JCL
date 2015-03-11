@@ -6,12 +6,16 @@ import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.lists.ListStruct;
 import jcl.symbols.SymbolStruct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class TailRecursionCodeGenerator implements CodeGenerator<ListStruct> {
 
 	// the list is of the form (%tail-recursion fn-symbol arg...)
 
-	public static final TailRecursionCodeGenerator INSTANCE = new TailRecursionCodeGenerator();
+	@Autowired
+	private FunctionCallCodeGenerator functionCallCodeGenerator;
 
 	@Override
 	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
@@ -20,12 +24,12 @@ public class TailRecursionCodeGenerator implements CodeGenerator<ListStruct> {
 		// set up the proper function object (this)
 		genCodeTailRecursionSetup(codeGenerator, (SymbolStruct) restOfList.getFirst(), classBuilder);
 		// now set up the rest of the call just like any other fn call
-		final boolean acceptsMultipleValues = FunctionCallCodeGenerator.INSTANCE.isAcceptsMultipleValues();
+		final boolean acceptsMultipleValues = functionCallCodeGenerator.isAcceptsMultipleValues();
 		try {
-			FunctionCallCodeGenerator.INSTANCE.setAcceptsMultipleValues(false);
-			FunctionCallCodeGenerator.INSTANCE.generate(restOfList, codeGenerator, classBuilder);
+			functionCallCodeGenerator.setAcceptsMultipleValues(false);
+			functionCallCodeGenerator.generate(restOfList, codeGenerator, classBuilder);
 		} finally {
-			FunctionCallCodeGenerator.INSTANCE.setAcceptsMultipleValues(acceptsMultipleValues);
+			functionCallCodeGenerator.setAcceptsMultipleValues(acceptsMultipleValues);
 		}
 	}
 

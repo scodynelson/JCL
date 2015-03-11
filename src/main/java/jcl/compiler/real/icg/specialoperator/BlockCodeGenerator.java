@@ -8,10 +8,14 @@ import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.Label;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class BlockCodeGenerator implements CodeGenerator<ListStruct> {
 
-	public static final BlockCodeGenerator INSTANCE = new BlockCodeGenerator();
+	@Autowired
+	private SpecialVariableCodeGenerator specialVariableCodeGenerator;
 
 	@Override
 	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
@@ -27,7 +31,7 @@ public class BlockCodeGenerator implements CodeGenerator<ListStruct> {
 		restOfList = restOfList.getRest();
 
 		// ... ,
-		SpecialVariableCodeGenerator.INSTANCE.generate(sym, codeGenerator, classBuilder);
+		specialVariableCodeGenerator.generate(sym, codeGenerator, classBuilder);
 		// ..., sym
 
 		classBuilder.getEmitter().emitGetstatic("lisp/system/TransferOfControl", "BLOCK", "Ljava/lang/String;");

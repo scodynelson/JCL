@@ -15,10 +15,10 @@ import jcl.compiler.real.environment.binding.ClosureBinding;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ClosureCodeGenerator implements CodeGenerator<Environment> {
-
-	public static final ClosureCodeGenerator INSTANCE = new ClosureCodeGenerator();
 
 	@Override
 	public void generate(final Environment input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {

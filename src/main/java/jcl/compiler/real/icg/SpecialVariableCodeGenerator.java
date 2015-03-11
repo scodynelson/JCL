@@ -9,10 +9,10 @@ import jcl.packages.PackageStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
+import org.springframework.stereotype.Component;
 
+@Component
 public class SpecialVariableCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
-
-	public static final SpecialVariableCodeGenerator INSTANCE = new SpecialVariableCodeGenerator();
 
 	@Override
 	public void generate(final SymbolStruct<?> input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {

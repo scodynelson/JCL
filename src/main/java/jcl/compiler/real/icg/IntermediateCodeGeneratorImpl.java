@@ -9,6 +9,7 @@ import jcl.numbers.RatioStruct;
 import jcl.symbols.SymbolStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,30 @@ import org.springframework.stereotype.Component;
 public class IntermediateCodeGeneratorImpl implements IntermediateCodeGenerator {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(IntermediateCodeGeneratorImpl.class);
+
+	@Autowired
+	private NILCodeGenerator nilCodeGenerator;
+
+	@Autowired
+	private CharacterCodeGenerator characterCodeGenerator;
+
+	@Autowired
+	private IntegerCodeGenerator integerCodeGenerator;
+
+	@Autowired
+	private FloatCodeGenerator floatCodeGenerator;
+
+	@Autowired
+	private RatioCodeGenerator ratioCodeGenerator;
+
+	@Autowired
+	private ComplexCodeGenerator complexCodeGenerator;
+
+	@Autowired
+	private SymbolCodeGenerator symbolCodeGenerator;
+
+	@Autowired
+	private ListCodeGenerator listCodeGenerator;
 
 	@Override
 	public Object funcall(final Object lispFunc) {
@@ -42,21 +67,21 @@ public class IntermediateCodeGeneratorImpl implements IntermediateCodeGenerator 
 	public void icgMainLoop(final Object obj, final JavaClassBuilder classBuilder) {
 
 		if (obj.equals(NullStruct.INSTANCE)) {
-			NILCodeGenerator.INSTANCE.generate((NullStruct) obj, this, classBuilder);
+			nilCodeGenerator.generate((NullStruct) obj, this, classBuilder);
 		} else if (obj instanceof CharacterStruct) {
-			CharacterCodeGenerator.INSTANCE.generate((CharacterStruct) obj, this, classBuilder);
+			characterCodeGenerator.generate((CharacterStruct) obj, this, classBuilder);
 		} else if (obj instanceof IntegerStruct) {
-			IntegerCodeGenerator.INSTANCE.generate((IntegerStruct) obj, this, classBuilder);
+			integerCodeGenerator.generate((IntegerStruct) obj, this, classBuilder);
 		} else if (obj instanceof FloatStruct) {
-			FloatCodeGenerator.INSTANCE.generate((FloatStruct) obj, this, classBuilder);
+			floatCodeGenerator.generate((FloatStruct) obj, this, classBuilder);
 		} else if (obj instanceof RatioStruct) {
-			RatioCodeGenerator.INSTANCE.generate((RatioStruct) obj, this, classBuilder);
+			ratioCodeGenerator.generate((RatioStruct) obj, this, classBuilder);
 //		} else if (obj instanceof ComplexStruct) {
-//			ComplexCodeGenerator.INSTANCE.generate((ComplexStruct) obj, this, classBuilder);
+//			complexCodeGenerator.generate((ComplexStruct) obj, this, classBuilder);
 		} else if (obj instanceof SymbolStruct) {
-			SymbolCodeGenerator.INSTANCE.generate((SymbolStruct) obj, this, classBuilder);
+			symbolCodeGenerator.generate((SymbolStruct) obj, this, classBuilder);
 		} else if (obj instanceof ConsStruct) {
-			ListCodeGenerator.INSTANCE.generate((ConsStruct) obj, this, classBuilder);
+			listCodeGenerator.generate((ConsStruct) obj, this, classBuilder);
 		} else {
 			LOGGER.error("ICG: Found thing I can't generate code for: {}, class: {}", obj, obj.getClass().getName());
 		}

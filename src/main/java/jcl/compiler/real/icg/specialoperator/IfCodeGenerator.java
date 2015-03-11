@@ -5,10 +5,10 @@ import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.lists.ListStruct;
 import org.objectweb.asm.Label;
+import org.springframework.stereotype.Component;
 
+@Component
 public class IfCodeGenerator implements CodeGenerator<ListStruct> {
-
-	public static final IfCodeGenerator INSTANCE = new IfCodeGenerator();
 
 	@Override
 	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {

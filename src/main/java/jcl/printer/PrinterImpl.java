@@ -16,12 +16,12 @@ public class PrinterImpl implements Printer {
 	private static final long serialVersionUID = -3051919400352866531L;
 
 	@Resource
-	private Map<Class<? extends LispStruct>, LispPrinter<LispStruct>> structPrinterStrategies;
+	private Map<Class<? extends LispStruct>, LispPrinter<LispStruct>> printerStrategies;
 
 	@Override
 	public String print(final LispStruct object) {
 
-		final LispPrinter<LispStruct> printer = structPrinterStrategies.get(object.getClass());
+		final LispPrinter<LispStruct> printer = printerStrategies.get(object.getClass());
 		if (printer == null) {
 			final String typeClassName = object.getType().getClass().getName().toUpperCase();
 			return "#<" + typeClassName + '>';

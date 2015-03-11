@@ -34,15 +34,19 @@
     <orderEntry type="library" scope="TEST" name="Gradle: com.beust:jcommander:1.27" level="project" />
     <orderEntry type="library" exported="" name="Gradle: aopalliance:aopalliance:1.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.apache.commons:commons-math3:3.4.1" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: org.springframework:spring-context:4.1.4.RELEASE" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.slf4j:slf4j-api:1.7.10" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: org.springframework:spring-aop:4.1.4.RELEASE" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: org.springframework:spring-beans:4.1.4.RELEASE" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: org.springframework:spring-core:4.1.4.RELEASE" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: org.springframework:spring-expression:4.1.4.RELEASE" level="project" />
     <orderEntry type="library" exported="" name="Gradle: commons-logging:commons-logging:1.2" level="project" />
-    <orderEntry type="library" exported="" scope="RUNTIME" name="Gradle: org.codehaus.groovy:groovy:2.4.0" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: org.testng:testng:6.8.17" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.slf4j:jcl-over-slf4j:1.7.10" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: org.springframework:spring-context:4.1.5.RELEASE" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: org.springframework:spring-context-support:4.1.5.RELEASE" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: org.slf4j:jul-to-slf4j:1.7.10" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: org.slf4j:log4j-over-slf4j:1.7.10" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: org.slf4j:osgi-over-slf4j:1.7.10" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: net.sf.ehcache:ehcache:2.9.0" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: org.springframework:spring-aop:4.1.5.RELEASE" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: org.springframework:spring-beans:4.1.5.RELEASE" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: org.springframework:spring-core:4.1.5.RELEASE" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: org.springframework:spring-expression:4.1.5.RELEASE" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: org.testng:testng:6.8.21" level="project" />
   </component>
 </module>

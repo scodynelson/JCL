@@ -5,10 +5,10 @@ import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.Label;
+import org.springframework.stereotype.Component;
 
+@Component
 public class FunctionCallCodeGenerator implements CodeGenerator<ListStruct> {
-
-	public static final FunctionCallCodeGenerator INSTANCE = new FunctionCallCodeGenerator();
 
 	private boolean acceptsMultipleValues;
 

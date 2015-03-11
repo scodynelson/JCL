@@ -7,16 +7,20 @@ import jcl.compiler.real.environment.SymbolTable;
 import jcl.compiler.real.environment.binding.SymbolEnvironmentBinding;
 import jcl.compiler.real.environment.binding.SymbolLocalBinding;
 import jcl.symbols.SymbolStruct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class SpecialSymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
-
-	public static final SpecialSymbolCodeGenerator INSTANCE = new SpecialSymbolCodeGenerator();
 
 	/*
 	 * Looks up the symbol in the :symbol-table and retrieves the local JVM
 	 * variable number. It generates code to fetch that symbol and put it on
 	 * the stack.
 	 */
+
+	@Autowired
+	private SpecialVariableCodeGenerator specialVariableCodeGenerator;
 
 	@Override
 	public void generate(final SymbolStruct<?> input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
@@ -29,7 +33,7 @@ public class SpecialSymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>
 			classBuilder.getEmitter().emitAload(slot);
 			classBuilder.getEmitter().emitCheckcast("lisp/common/type/Symbol");
 		} else {
-			SpecialVariableCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
+			specialVariableCodeGenerator.generate(input, codeGenerator, classBuilder);
 		}
 	}
 

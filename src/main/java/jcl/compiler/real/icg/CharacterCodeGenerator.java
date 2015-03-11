@@ -1,10 +1,10 @@
 package jcl.compiler.real.icg;
 
 import jcl.characters.CharacterStruct;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CharacterCodeGenerator implements CodeGenerator<CharacterStruct> {
-
-	public static final CharacterCodeGenerator INSTANCE = new CharacterCodeGenerator();
 
 	@Override
 	public void generate(final CharacterStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {

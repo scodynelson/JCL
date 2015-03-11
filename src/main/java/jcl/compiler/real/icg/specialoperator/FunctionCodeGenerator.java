@@ -8,17 +8,24 @@ import jcl.compiler.real.icg.SymbolFunctionCodeGenerator;
 import jcl.lists.ListStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.Label;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class FunctionCodeGenerator implements CodeGenerator<ListStruct> {
 
-	public static final FunctionCodeGenerator INSTANCE = new FunctionCodeGenerator();
+	@Autowired
+	private SpecialVariableCodeGenerator specialVariableCodeGenerator;
+
+	@Autowired
+	private SymbolFunctionCodeGenerator symbolFunctionCodeGenerator;
 
 	@Override
 	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
 		final ListStruct restOfList = input.getRest();
 		final Object fn = restOfList.getFirst();
 		if (fn instanceof SymbolStruct) {
-			SymbolFunctionCodeGenerator.INSTANCE.generate((SymbolStruct<?>) fn, codeGenerator, classBuilder);
+			symbolFunctionCodeGenerator.generate((SymbolStruct<?>) fn, codeGenerator, classBuilder);
 		} else if (fn instanceof ListStruct) {
 			final ListStruct fnList = (ListStruct) fn;
 //            if (fnList.getCar() == SpecialOperator.LAMBDA) {
@@ -32,7 +39,7 @@ public class FunctionCodeGenerator implements CodeGenerator<ListStruct> {
 			// Step 2: return the function stashed in the symbol or NIL if not there
 			// The SETF expander will ensure that there will be a FUNCALL #'(setf foo) with args
 			final SymbolStruct<?> setfSymbol = (SymbolStruct<?>) ((ListStruct) fn).getRest().getFirst();
-			SpecialVariableCodeGenerator.INSTANCE.generate(setfSymbol, codeGenerator, classBuilder); // now we have the symbol on the stack
+			specialVariableCodeGenerator.generate(setfSymbol, codeGenerator, classBuilder); // now we have the symbol on the stack
 			// number the invoke
 			final Label label = new Label();
 			classBuilder.getEmitter().visitMethodLabel(label);

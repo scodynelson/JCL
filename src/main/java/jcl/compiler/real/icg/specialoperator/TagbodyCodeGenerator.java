@@ -9,10 +9,10 @@ import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.Label;
+import org.springframework.stereotype.Component;
 
+@Component
 public class TagbodyCodeGenerator implements CodeGenerator<ListStruct> {
-
-	public static final TagbodyCodeGenerator INSTANCE = new TagbodyCodeGenerator();
 
 	@Override
 	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {

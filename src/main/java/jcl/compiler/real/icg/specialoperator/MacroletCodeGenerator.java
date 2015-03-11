@@ -5,10 +5,10 @@ import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
+import org.springframework.stereotype.Component;
 
+@Component
 public class MacroletCodeGenerator implements CodeGenerator<ListStruct> {
-
-	public static final MacroletCodeGenerator INSTANCE = new MacroletCodeGenerator();
 
 	@Override
 	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {

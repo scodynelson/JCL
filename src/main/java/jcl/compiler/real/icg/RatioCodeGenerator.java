@@ -1,10 +1,10 @@
 package jcl.compiler.real.icg;
 
 import jcl.numbers.RatioStruct;
+import org.springframework.stereotype.Component;
 
+@Component
 public class RatioCodeGenerator implements CodeGenerator<RatioStruct> {
-
-	public static final RatioCodeGenerator INSTANCE = new RatioCodeGenerator();
 
 	@Override
 	public void generate(final RatioStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {

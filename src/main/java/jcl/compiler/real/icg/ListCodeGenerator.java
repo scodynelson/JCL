@@ -15,12 +15,40 @@ import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.Label;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ListCodeGenerator implements CodeGenerator<ListStruct> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ListCodeGenerator.class);
 
-	public static final ListCodeGenerator INSTANCE = new ListCodeGenerator();
+	@Autowired
+	private SpecialFormCodeGenerator specialFormCodeGenerator;
+
+	@Autowired
+	private SymbolFunctionCodeGenerator symbolFunctionCodeGenerator;
+
+	@Autowired
+	private FunctionCallCodeGenerator functionCallCodeGenerator;
+
+	@Autowired
+	private LambdaCodeGenerator lambdaCodeGenerator;
+
+	@Autowired
+	private MacroLambdaCodeGenerator macroLambdaCodeGenerator;
+
+	@Autowired
+	private LetCodeGenerator letCodeGenerator;
+
+	@Autowired
+	private FletCodeGenerator fletCodeGenerator;
+
+	@Autowired
+	private LabelsCodeGenerator labelsCodeGenerator;
+
+	@Autowired
+	private MacroletCodeGenerator macroletCodeGenerator;
 
 	@Override
 	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
@@ -29,22 +57,22 @@ public class ListCodeGenerator implements CodeGenerator<ListStruct> {
 		if (firstElement instanceof SymbolStruct) {
 			// generally an application (foobar ...)
 			if (firstElement instanceof SpecialOperator) {
-				SpecialFormCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
+				specialFormCodeGenerator.generate(input, codeGenerator, classBuilder);
 			} else if (firstElement instanceof Declaration) {
 //                genCodeDeclare(list);
 			} else if (formOptimizable(input)) {
 				genOptimizedForm(input, codeGenerator, classBuilder);
 			} else {
-				SymbolFunctionCodeGenerator.INSTANCE.generate((SymbolStruct<?>) firstElement, codeGenerator, classBuilder);
+				symbolFunctionCodeGenerator.generate((SymbolStruct<?>) firstElement, codeGenerator, classBuilder);
 
-				final boolean acceptsMultipleValues = FunctionCallCodeGenerator.INSTANCE.isAcceptsMultipleValues();
+				final boolean acceptsMultipleValues = functionCallCodeGenerator.isAcceptsMultipleValues();
 				try {
-					FunctionCallCodeGenerator.INSTANCE.setAcceptsMultipleValues(
+					functionCallCodeGenerator.setAcceptsMultipleValues(
 							firstElement.equals(GlobalPackageStruct.COMMON_LISP.intern("FUNCALL").getSymbol())
 									|| firstElement.equals(GlobalPackageStruct.COMMON_LISP.intern("APPLY").getSymbol()));
-					FunctionCallCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
+					functionCallCodeGenerator.generate(input, codeGenerator, classBuilder);
 				} finally {
-					FunctionCallCodeGenerator.INSTANCE.setAcceptsMultipleValues(acceptsMultipleValues);
+					functionCallCodeGenerator.setAcceptsMultipleValues(acceptsMultipleValues);
 				}
 			}
 		} else if (firstElement instanceof ListStruct) {
@@ -55,17 +83,17 @@ public class ListCodeGenerator implements CodeGenerator<ListStruct> {
 			if (first.getFirst() instanceof SymbolStruct) {
 				// it's ((%lambda bindings...) body)
 				if (first.getFirst().equals(SpecialOperator.LAMBDA_MARKER)) {
-					LambdaCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
+					lambdaCodeGenerator.generate(input, codeGenerator, classBuilder);
 				} else if (first.getFirst().equals(SpecialOperator.MACRO_MARKER)) {
-					MacroLambdaCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
+					macroLambdaCodeGenerator.generate(input, codeGenerator, classBuilder);
 				} else if (first.getFirst().equals(SpecialOperator.LET)) {
-					LetCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
+					letCodeGenerator.generate(input, codeGenerator, classBuilder);
 				} else if (first.getFirst().equals(SpecialOperator.FLET)) {
-					FletCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
+					fletCodeGenerator.generate(input, codeGenerator, classBuilder);
 				} else if (first.getFirst().equals(SpecialOperator.LABELS)) {
-					LabelsCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
+					labelsCodeGenerator.generate(input, codeGenerator, classBuilder);
 				} else if (first.getFirst().equals(SpecialOperator.MACROLET)) {
-					MacroletCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
+					macroletCodeGenerator.generate(input, codeGenerator, classBuilder);
 				} else {
 					LOGGER.info("It's something else, {}", first);
 				}
@@ -73,12 +101,12 @@ public class ListCodeGenerator implements CodeGenerator<ListStruct> {
 				// assume it's (((%lambda bindings...) body) ...args...)
 				generate(first, codeGenerator, classBuilder);
 
-				final boolean acceptsMultipleValues = FunctionCallCodeGenerator.INSTANCE.isAcceptsMultipleValues();
+				final boolean acceptsMultipleValues = functionCallCodeGenerator.isAcceptsMultipleValues();
 				try {
-					FunctionCallCodeGenerator.INSTANCE.setAcceptsMultipleValues(false);
-					FunctionCallCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
+					functionCallCodeGenerator.setAcceptsMultipleValues(false);
+					functionCallCodeGenerator.generate(input, codeGenerator, classBuilder);
 				} finally {
-					FunctionCallCodeGenerator.INSTANCE.setAcceptsMultipleValues(acceptsMultipleValues);
+					functionCallCodeGenerator.setAcceptsMultipleValues(acceptsMultipleValues);
 				}
 			}
 		}

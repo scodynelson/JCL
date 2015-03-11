@@ -6,14 +6,14 @@ import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import org.objectweb.asm.Label;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CatchCodeGenerator implements CodeGenerator<ListStruct> {
 
 	/**
 	 * Implements the initial base code for a basis catch statement
 	 */
-
-	public static final CatchCodeGenerator INSTANCE = new CatchCodeGenerator();
 
 	@Override
 	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {

@@ -10,10 +10,10 @@ import jcl.lists.NullStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
+import org.springframework.stereotype.Component;
 
+@Component
 public class MultipleValueCallCodeGenerator implements CodeGenerator<ListStruct> {
-
-	public static final MultipleValueCallCodeGenerator INSTANCE = new MultipleValueCallCodeGenerator();
 
 	@Override
 	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {

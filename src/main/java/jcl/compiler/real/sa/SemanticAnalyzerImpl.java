@@ -33,7 +33,7 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 	private NewMacroExpand newMacroExpand;
 
 	@Resource
-	private Map<Class<? extends LispStruct>, Analyzer<? extends LispStruct, LispStruct>> elementAnalyzerStrategies;
+	private Map<Class<? extends LispStruct>, Analyzer<? extends LispStruct, LispStruct>> analyzerStrategies;
 
 	@Override
 	public LispStruct analyzeForm(final LispStruct form) {
@@ -67,7 +67,7 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 		final NewMacroExpandReturn macroExpandReturn = newMacroExpand.macroExpand(form, analysisBuilder);
 		final LispStruct expandedForm = macroExpandReturn.getExpandedForm();
 
-		final Analyzer<? extends LispStruct, LispStruct> functionCallAnalyzer = elementAnalyzerStrategies.get(expandedForm.getClass());
+		final Analyzer<? extends LispStruct, LispStruct> functionCallAnalyzer = analyzerStrategies.get(expandedForm.getClass());
 		if (functionCallAnalyzer == null) {
 			return expandedForm; // TODO: we need to rework the logic a bit, so for now we just return...
 //			throw new ProgramErrorException("Semantic Analyzer: Unsupported object type cannot be analyzed: " + expandedForm);

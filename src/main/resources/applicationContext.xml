@@ -11,7 +11,7 @@
 
 	<!-- Printer -->
 
-	<util:map id="structPrinterStrategies"
+	<util:map id="printerStrategies"
 	          key-type="java.lang.Class"
 	          value-type="jcl.printer.LispPrinter">
 
@@ -56,7 +56,7 @@
 
 	<!-- Semantic Analyzer -->
 
-	<util:map id="elementAnalyzerStrategies"
+	<util:map id="analyzerStrategies"
 	          key-type="java.lang.Class"
 	          value-type="jcl.compiler.real.sa.Analyzer">
 
@@ -88,12 +88,20 @@
 
 	</util:map>
 
-	<util:map id="goElementGeneratorStrategies"
+	<util:map id="goStructGeneratorStrategies"
 	          key-type="java.lang.Class"
 	          value-type="jcl.compiler.real.struct.specialoperator.go.GoStructGenerator">
 
 		<entry key="jcl.symbols.SymbolStruct" value-ref="goSymbolStructGenerator"/>
 		<entry key="jcl.numbers.IntegerStruct" value-ref="goIntegerStructGenerator"/>
+	</util:map>
+
+	<!-- Intermediate Code Generator -->
+
+	<util:map id="codeGeneratorStrategies"
+	          key-type="java.lang.Class"
+	          value-type="jcl.compiler.real.icg.CodeGenerator">
+
 	</util:map>
 
 </beans>

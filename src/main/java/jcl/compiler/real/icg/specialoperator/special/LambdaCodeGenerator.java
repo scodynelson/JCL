@@ -28,20 +28,27 @@ import jcl.symbols.Declaration;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 
 	//TODO when checking bindings, in handling the init-forms, start with the just previous
 	// bindings in the lambda list. Differs from how LET handles it
 
-	public static final LambdaCodeGenerator INSTANCE = new LambdaCodeGenerator();
+	@Autowired
+	private ClosureCodeGenerator closureCodeGenerator;
+
+	@Autowired
+	private SpecialVariableCodeGenerator specialVariableCodeGenerator;
 
 	@Override
 	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
 		genCodeLambdaInContext(codeGenerator, input, false, classBuilder);
 	}
 
-	private static void genCodeLambdaInContext(final IntermediateCodeGenerator icg, final ListStruct list, final boolean inStaticContext, final JavaClassBuilder classBuilder) {
+	private void genCodeLambdaInContext(final IntermediateCodeGenerator icg, final ListStruct list, final boolean inStaticContext, final JavaClassBuilder classBuilder) {
 
 		//--------
 		// get the class name out of the list
@@ -159,7 +166,7 @@ public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 			classBuilder.getEmitter().newMethod(Opcodes.ACC_PUBLIC, "funcall", '(' + funcallParams + ')', "Ljava/lang/Object;", null, null);
 
 			// allocate and fill a closure if there is one defined
-			ClosureCodeGenerator.INSTANCE.generate(classBuilder.getBindingEnvironment(), icg, classBuilder);
+			closureCodeGenerator.generate(classBuilder.getBindingEnvironment(), icg, classBuilder);
 
 			// set up the free radicals - 1960's!!
 			doFreeVariableSetup(icg, classBuilder);
@@ -250,12 +257,12 @@ public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 		classBuilder.getClassNames().pop();
 	}
 
-	private static void doStaticInit(final IntermediateCodeGenerator codeGenerator, final String className, final SymbolStruct<?> lispName, final JavaClassBuilder classBuilder) {
+	private void doStaticInit(final IntermediateCodeGenerator codeGenerator, final String className, final SymbolStruct<?> lispName, final JavaClassBuilder classBuilder) {
 		// static init
 		classBuilder.getEmitter().newMethod(Opcodes.ACC_STATIC + Opcodes.ACC_PUBLIC, "<clinit>", "()", "V", null, null);
 		// init the SYMBOL field with the LISP name symbol
 		if (lispName.getSymbolPackage() != null) {
-			SpecialVariableCodeGenerator.INSTANCE.generate(lispName, codeGenerator, classBuilder);
+			specialVariableCodeGenerator.generate(lispName, codeGenerator, classBuilder);
 		} else {
 			//make the symbol
 			classBuilder.getEmitter().emitLdc(lispName.toString());
@@ -403,7 +410,7 @@ public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 	 * environment and unbound at the end. This necessitates a try-finally block. The same code is
 	 * used in the LET form.
 	 */
-	private static void doFreeVariableSetup(final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
+	private void doFreeVariableSetup(final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
 		//-- get the symbol-table
 		final SymbolTable symbolTable = classBuilder.getBindingEnvironment().getSymbolTable();
 		// Now iterate over the entries, looking for ones to allocate
@@ -436,7 +443,7 @@ public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 				classBuilder.getEmitter().emitLdc(name);
 				classBuilder.getEmitter().emitInvokestatic("lisp/common/type/Symbol$Factory", "newInstance", "(Ljava/lang/String;)", "Llisp/common/type/Symbol;", false);
 			} else {
-				SpecialVariableCodeGenerator.INSTANCE.generate(symbol, codeGenerator, classBuilder);
+				specialVariableCodeGenerator.generate(symbol, codeGenerator, classBuilder);
 			}
 			// store the symbol in the indicated local variable
 			classBuilder.getEmitter().emitAstore(slot);

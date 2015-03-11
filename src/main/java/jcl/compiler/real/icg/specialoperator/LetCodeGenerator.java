@@ -25,25 +25,17 @@ import jcl.lists.NullStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.Label;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 
-	private static final class SymbolBindingLabel {
+	@Autowired
+	private SpecialVariableCodeGenerator specialVariableCodeGenerator;
 
-		final Label endLabel;
-		final Label finallyLabel;
-		final Label handlerLabel;
-		final SymbolStruct<?> dynamicSymbol;
-
-		private SymbolBindingLabel(final Label endLabel, final Label finallyLabel, final Label handlerLabel, final SymbolStruct<?> dynamicSymbol) {
-			this.endLabel = endLabel;
-			this.finallyLabel = finallyLabel;
-			this.handlerLabel = handlerLabel;
-			this.dynamicSymbol = dynamicSymbol;
-		}
-	}
-
-	public static final LetCodeGenerator INSTANCE = new LetCodeGenerator();
+	@Autowired
+	private ClosureCodeGenerator closureCodeGenerator;
 
 	@Override
 	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
@@ -116,7 +108,7 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 				// 1. emit the tryFinally node with these labels
 				classBuilder.getEmitter().visitTryCatchBlock(startLabel, endLabel, handlerLabel, null);
 				// 2. emit the binding call
-				SpecialVariableCodeGenerator.INSTANCE.generate(sym, codeGenerator, classBuilder);
+				specialVariableCodeGenerator.generate(sym, codeGenerator, classBuilder);
 				classBuilder.getEmitter().emitCheckcast("lisp/system/SymbolImpl");
 				// 3. emit the eval of the init form
 				// hand the init form to icgMainLoop...
@@ -131,7 +123,7 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 			classBuilder.setBindingEnvironment(tmpEnv);
 
 			// we may have a closure to handle as well
-			ClosureCodeGenerator.INSTANCE.generate(classBuilder.getBindingEnvironment(), codeGenerator, classBuilder);
+			closureCodeGenerator.generate(classBuilder.getBindingEnvironment(), codeGenerator, classBuilder);
 			doFreeVariableSetup(codeGenerator, classBuilder);
 
 			// all args are in the proper local slots, so do the body of the let
@@ -160,7 +152,7 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 				final SymbolBindingLabel labelSym = bindingLabels.pop();
 				classBuilder.getEmitter().visitMethodLabel(labelSym.endLabel); // end of the try block
 				// now call the finally block
-				SpecialVariableCodeGenerator.INSTANCE.generate(labelSym.dynamicSymbol, codeGenerator, classBuilder);
+				specialVariableCodeGenerator.generate(labelSym.dynamicSymbol, codeGenerator, classBuilder);
 				classBuilder.getEmitter().emitCheckcast("lisp/system/SymbolImpl");
 				classBuilder.getEmitter().emitInvokevirtual("lisp/system/SymbolImpl", "unbind", "()", "Ljava/lang/Object;", false);
 				classBuilder.getEmitter().emitPop(); // would mask the real return
@@ -172,7 +164,7 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 				// I have no idea why adding this DUP works, but it does...
 				classBuilder.getEmitter().emitDup();
 				classBuilder.getEmitter().emitAstore(1); // save the exception
-				SpecialVariableCodeGenerator.INSTANCE.generate(labelSym.dynamicSymbol, codeGenerator, classBuilder);
+				specialVariableCodeGenerator.generate(labelSym.dynamicSymbol, codeGenerator, classBuilder);
 				classBuilder.getEmitter().emitCheckcast("lisp/system/SymbolImpl");
 				classBuilder.getEmitter().emitInvokevirtual("lisp/system/SymbolImpl", "unbind", "()", "Ljava/lang/Object;", false);
 				classBuilder.getEmitter().emitPop(); // would mask the real return
@@ -200,7 +192,7 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 	 * environment and unbound at the end. This necessitates a try-finally block. The same code is
 	 * used in the LET form.
 	 */
-	private static void doFreeVariableSetup(final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
+	private void doFreeVariableSetup(final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
 		//-- get the symbol-table
 		final SymbolTable symbolTable = classBuilder.getBindingEnvironment().getSymbolTable();
 		// Now iterate over the entries, looking for ones to allocate
@@ -233,10 +225,25 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 				classBuilder.getEmitter().emitLdc(name);
 				classBuilder.getEmitter().emitInvokestatic("lisp/common/type/Symbol$Factory", "newInstance", "(Ljava/lang/String;)", "Llisp/common/type/Symbol;", false);
 			} else {
-				SpecialVariableCodeGenerator.INSTANCE.generate(symbol, codeGenerator, classBuilder);
+				specialVariableCodeGenerator.generate(symbol, codeGenerator, classBuilder);
 			}
 			// store the symbol in the indicated local variable
 			classBuilder.getEmitter().emitAstore(slot);
+		}
+	}
+
+	private static final class SymbolBindingLabel {
+
+		final Label endLabel;
+		final Label finallyLabel;
+		final Label handlerLabel;
+		final SymbolStruct<?> dynamicSymbol;
+
+		private SymbolBindingLabel(final Label endLabel, final Label finallyLabel, final Label handlerLabel, final SymbolStruct<?> dynamicSymbol) {
+			this.endLabel = endLabel;
+			this.finallyLabel = finallyLabel;
+			this.handlerLabel = handlerLabel;
+			this.dynamicSymbol = dynamicSymbol;
 		}
 	}
 }

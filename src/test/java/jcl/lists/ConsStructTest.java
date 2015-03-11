@@ -321,9 +321,9 @@ public class ConsStructTest {
 	 *
 	 * @throws Exception if any error occurs
 	 */
-	@Test
-	public void testToString_notCircular() throws Exception {
-		final ConsStruct consStruct = new ConsStruct(TStruct.INSTANCE);
-		Assert.assertNotNull(consStruct.toString(), "'toString' value for ConsStruct was null.");
-	}
+//	@Test
+//	public void testToString_notCircular() throws Exception {
+//		final ConsStruct consStruct = new ConsStruct(TStruct.INSTANCE);
+//		Assert.assertNotNull(consStruct.toString(), "'toString' value for ConsStruct was null.");
+//	}
 }

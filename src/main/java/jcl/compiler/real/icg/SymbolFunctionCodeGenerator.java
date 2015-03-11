@@ -5,12 +5,16 @@ import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.Label;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class SymbolFunctionCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SymbolFunctionCodeGenerator.class);
 
-	public static final SymbolFunctionCodeGenerator INSTANCE = new SymbolFunctionCodeGenerator();
+	@Autowired
+	private SpecialVariableCodeGenerator specialVariableCodeGenerator;
 
 	@Override
 	public void generate(final SymbolStruct<?> input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
@@ -49,7 +53,7 @@ public class SymbolFunctionCodeGenerator implements CodeGenerator<SymbolStruct<?
 			} else {
 				final Label label = new Label();
 				classBuilder.getEmitter().visitMethodLabel(label);
-				SpecialVariableCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
+				specialVariableCodeGenerator.generate(input, codeGenerator, classBuilder);
 				// invoke symbol.getFunction()
 				classBuilder.getEmitter().emitInvokeinterface("lisp/common/type/Symbol", "getFunction", "()", "Llisp/common/type/Function;", true);
 				// if the symbol has defined less than 12 params, we can say that it takes that number of args
@@ -57,7 +61,7 @@ public class SymbolFunctionCodeGenerator implements CodeGenerator<SymbolStruct<?
 		} else {
 			final Label label = new Label();
 			classBuilder.getEmitter().visitMethodLabel(label);
-			SpecialVariableCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
+			specialVariableCodeGenerator.generate(input, codeGenerator, classBuilder);
 			// invoke symbol.getFunction()
 			classBuilder.getEmitter().emitInvokeinterface("lisp/common/type/Symbol", "getFunction", "()", "Llisp/common/type/Function;", true);
 			// if the symbol has defined less than 12 params, we can say that it takes that number of args

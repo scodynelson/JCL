@@ -6,7 +6,9 @@ import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import org.objectweb.asm.Label;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UnwindProtectCodeGenerator implements CodeGenerator<ListStruct> {
 
 	/**
@@ -24,8 +26,6 @@ public class UnwindProtectCodeGenerator implements CodeGenerator<ListStruct> {
 	 * automatically)
 	 * 10. Register an exception handler for type Throwable
 	 */
-
-	public static final UnwindProtectCodeGenerator INSTANCE = new UnwindProtectCodeGenerator();
 
 	@Override
 	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {

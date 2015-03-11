@@ -1,10 +1,10 @@
 package jcl.compiler.real.icg;
 
 import jcl.numbers.IntegerStruct;
+import org.springframework.stereotype.Component;
 
+@Component
 public class IntegerCodeGenerator implements CodeGenerator<IntegerStruct> {
-
-	public static final IntegerCodeGenerator INSTANCE = new IntegerCodeGenerator();
 
 	@Override
 	public void generate(final IntegerStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {

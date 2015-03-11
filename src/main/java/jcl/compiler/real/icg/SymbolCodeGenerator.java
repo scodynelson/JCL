@@ -15,12 +15,16 @@ import jcl.compiler.real.environment.binding.SymbolClosureBinding;
 import jcl.symbols.SymbolStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SymbolCodeGenerator.class);
 
-	public static final SymbolCodeGenerator INSTANCE = new SymbolCodeGenerator();
+	@Autowired
+	private SpecialSymbolCodeGenerator specialSymbolCodeGenerator;
 
 	@Override
 	public void generate(final SymbolStruct<?> input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
@@ -60,7 +64,7 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 				final boolean hasClosureBinding = symbolTable.hasClosureBinding(input);
 				if (hasDynamicBinding) {
 					// it's number 3
-					SpecialSymbolCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
+					specialSymbolCodeGenerator.generate(input, codeGenerator, classBuilder);
 					classBuilder.getEmitter().emitInvokestatic("jcl/symbols/SymbolStruct", "getValue", "()", "Ljava/lang/Object;", true);
 				} else if (hasClosureBinding) {
 					final SymbolClosureBinding entry = symbolTable.getClosureBinding(input).get();
@@ -117,7 +121,7 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 //					if (!input.isSpecial()) {
 //						LOGGER.warn("; Warning: variable {} is assumed free", input);
 //					}
-					SpecialSymbolCodeGenerator.INSTANCE.generate(input, codeGenerator, classBuilder);
+					specialSymbolCodeGenerator.generate(input, codeGenerator, classBuilder);
 					classBuilder.getEmitter().emitInvokestatic("jcl/symbols/SymbolStruct", "getValue", "()", "Ljava/lang/Object;", true);
 				} else {
 					// get the :bindings list

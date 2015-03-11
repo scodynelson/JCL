@@ -12,10 +12,14 @@ import jcl.compiler.real.icg.SpecialSymbolCodeGenerator;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.SymbolStruct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class SetqCodeGenerator implements CodeGenerator<ListStruct> {
 
-	public static final SetqCodeGenerator INSTANCE = new SetqCodeGenerator();
+	@Autowired
+	private SpecialSymbolCodeGenerator specialSymbolCodeGenerator;
 
 	@Override
 	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
@@ -34,7 +38,7 @@ public class SetqCodeGenerator implements CodeGenerator<ListStruct> {
 			final boolean hasDynamicBinding = classBuilder.getBindingEnvironment().getSymbolTable().hasDynamicBinding(symbol);
 			if (binding.equals(Environment.NULL) || hasDynamicBinding) {
 				// now the value is on the stack, is the variable local or special?
-				SpecialSymbolCodeGenerator.INSTANCE.generate(symbol, codeGenerator, classBuilder);
+				specialSymbolCodeGenerator.generate(symbol, codeGenerator, classBuilder);
 				classBuilder.getEmitter().emitSwap();
 				classBuilder.getEmitter().emitInvokeinterface("lisp/common/type/Symbol", "setValue", "(Ljava/lang/Object;)", "Ljava/lang/Object;", true);
 				if (!restOfList.getRest().equals(NullStruct.INSTANCE)) {

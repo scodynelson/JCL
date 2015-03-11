@@ -1,10 +1,10 @@
 package jcl.compiler.real.icg;
 
 import jcl.numbers.FloatStruct;
+import org.springframework.stereotype.Component;
 
+@Component
 public class FloatCodeGenerator implements CodeGenerator<FloatStruct> {
-
-	public static final FloatCodeGenerator INSTANCE = new FloatCodeGenerator();
 
 	@Override
 	public void generate(final FloatStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {

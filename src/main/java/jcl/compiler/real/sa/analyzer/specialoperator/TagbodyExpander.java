@@ -39,7 +39,7 @@ public class TagbodyExpander extends MacroFunctionExpander {
 	private static final long serialVersionUID = -1543233114989622747L;
 
 	@Resource
-	private Map<Class<? extends LispStruct>, GoStructGenerator<LispStruct>> goElementGeneratorStrategies;
+	private Map<Class<? extends LispStruct>, GoStructGenerator<LispStruct>> goStructGeneratorStrategies;
 
 	/**
 	 * Initializes the block macro function and adds it to the special operator 'block'.
@@ -94,7 +94,7 @@ public class TagbodyExpander extends MacroFunctionExpander {
 		public BiConsumer<Set<GoStruct<?>>, LispStruct> accumulator() {
 			return (goElementSet, lispStruct) -> {
 
-				final GoStructGenerator<LispStruct> goElementGenerator = goElementGeneratorStrategies.get(lispStruct.getClass());
+				final GoStructGenerator<LispStruct> goElementGenerator = goStructGeneratorStrategies.get(lispStruct.getClass());
 				if (goElementGenerator != null) {
 					final GoStruct<?> goElement = goElementGenerator.generateGoElement(lispStruct);
 					goElementSet.add(goElement);
@@ -158,7 +158,7 @@ public class TagbodyExpander extends MacroFunctionExpander {
 		public BiConsumer<Map<LispStruct, List<LispStruct>>, LispStruct> accumulator() {
 			return (elementListMap, lispStruct) -> {
 
-				final GoStructGenerator<LispStruct> goElementGenerator = goElementGeneratorStrategies.get(lispStruct.getClass());
+				final GoStructGenerator<LispStruct> goElementGenerator = goStructGeneratorStrategies.get(lispStruct.getClass());
 				if (goElementGenerator == null) {
 					handleOtherwise(elementListMap, lispStruct);
 				} else {

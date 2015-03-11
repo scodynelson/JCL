@@ -1,6 +1,7 @@
 package jcl.compiler.real.icg.specialoperator;
 
 import jcl.compiler.real.icg.CodeGenerator;
+import jcl.compiler.real.icg.ComplexCodeGenerator;
 import jcl.compiler.real.icg.FloatCodeGenerator;
 import jcl.compiler.real.icg.IntegerCodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
@@ -12,13 +13,29 @@ import jcl.numbers.FloatStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.RatioStruct;
 import jcl.symbols.SymbolStruct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class QuoteCodeGenerator implements CodeGenerator<ListStruct> {
 
 	// this method can ONLY handle simple constants such as numbers, strings,
 	// and literal symbols
 
-	public static final QuoteCodeGenerator INSTANCE = new QuoteCodeGenerator();
+	@Autowired
+	private SpecialVariableCodeGenerator specialVariableCodeGenerator;
+
+	@Autowired
+	private IntegerCodeGenerator integerCodeGenerator;
+
+	@Autowired
+	private FloatCodeGenerator floatCodeGenerator;
+
+	@Autowired
+	private RatioCodeGenerator ratioCodeGenerator;
+
+	@Autowired
+	private ComplexCodeGenerator complexCodeGenerator;
 
 	@Override
 	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
@@ -31,16 +48,16 @@ public class QuoteCodeGenerator implements CodeGenerator<ListStruct> {
 				classBuilder.getEmitter().emitLdc(sym.getName());
 				classBuilder.getEmitter().emitInvokestatic("lisp/common/type/Symbol$Factory", "newInstance", "(Ljava/lang/String;)", "Llisp/common/type/Symbol;", false);
 			} else {
-				SpecialVariableCodeGenerator.INSTANCE.generate(sym, codeGenerator, classBuilder);
+				specialVariableCodeGenerator.generate(sym, codeGenerator, classBuilder);
 			}
 		} else if (quotedObj instanceof IntegerStruct) {
-			IntegerCodeGenerator.INSTANCE.generate((IntegerStruct) quotedObj, codeGenerator, classBuilder);
+			integerCodeGenerator.generate((IntegerStruct) quotedObj, codeGenerator, classBuilder);
 		} else if (quotedObj instanceof FloatStruct) {
-			FloatCodeGenerator.INSTANCE.generate((FloatStruct) quotedObj, codeGenerator, classBuilder);
+			floatCodeGenerator.generate((FloatStruct) quotedObj, codeGenerator, classBuilder);
 		} else if (quotedObj instanceof RatioStruct) {
-			RatioCodeGenerator.INSTANCE.generate((RatioStruct) quotedObj, codeGenerator, classBuilder);
+			ratioCodeGenerator.generate((RatioStruct) quotedObj, codeGenerator, classBuilder);
 //		} else if (quotedObj instanceof ComplexStruct) {
-//			ComplexCodeGenerator.INSTANCE.generate((ComplexStruct) quotedObj, codeGenerator);
+//			complexCodeGenerator.generate((ComplexStruct) quotedObj, codeGenerator, classBuilder);
 		} else {
 			throw new RuntimeException("Unable to quote: " + quotedObj);
 		}

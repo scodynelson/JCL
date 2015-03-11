@@ -16,7 +16,7 @@ public abstract class BuiltInClassStruct extends ClassStruct {
 	private static final long serialVersionUID = -4998279729528734323L;
 
 	/**
-	 * Public constructor.
+	 * Protected constructor.
 	 *
 	 * @param directSuperClasses
 	 * 		the direct super classes
@@ -24,7 +24,22 @@ public abstract class BuiltInClassStruct extends ClassStruct {
 	 * 		the subclasses
 	 */
 	protected BuiltInClassStruct(final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
-		this(BuiltInClass.INSTANCE, directSuperClasses, subClasses);
+		this(null, BuiltInClass.INSTANCE, directSuperClasses, subClasses);
+	}
+
+	/**
+	 * Protected constructor.
+	 *
+	 * @param documentation
+	 * 		instance documentation string
+	 * @param directSuperClasses
+	 * 		the direct super classes
+	 * @param subClasses
+	 * 		the subclasses
+	 */
+	protected BuiltInClassStruct(final String documentation,
+	                             final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+		this(documentation, BuiltInClass.INSTANCE, directSuperClasses, subClasses);
 	}
 
 	/**
@@ -39,7 +54,24 @@ public abstract class BuiltInClassStruct extends ClassStruct {
 	 */
 	protected BuiltInClassStruct(final LispType type,
 	                             final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
-		super(type, directSuperClasses, subClasses);
+		super(null, type, directSuperClasses, subClasses);
+	}
+
+	/**
+	 * Protected constructor.
+	 *
+	 * @param documentation
+	 * 		instance documentation string
+	 * @param type
+	 * 		the type of the class object
+	 * @param directSuperClasses
+	 * 		the direct super classes
+	 * @param subClasses
+	 * 		the subclasses
+	 */
+	protected BuiltInClassStruct(final String documentation, final LispType type,
+	                             final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+		super(documentation, type, directSuperClasses, subClasses);
 	}
 
 	@Override

@@ -13,13 +13,23 @@ public abstract class StandardObjectStruct implements LispStruct {
 
 	private static final long serialVersionUID = -6010971799794147777L;
 
-	private String documentation;
+	protected String documentation;
 
 	/**
-	 * Public constructor.
+	 * Protected constructor.
 	 */
 	protected StandardObjectStruct() {
 		documentation = null;
+	}
+
+	/**
+	 * Protected constructor.
+	 *
+	 * @param documentation
+	 * 		instance documentation string
+	 */
+	protected StandardObjectStruct(final String documentation) {
+		this.documentation = documentation;
 	}
 
 	/**

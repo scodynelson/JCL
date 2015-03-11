@@ -4,9 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.Vector;
 
-import jcl.LispStruct;
 import jcl.compiler.real.environment.Closure;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.LoadTimeValue;
@@ -17,14 +15,15 @@ import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.environment.binding.SymbolEnvironmentBinding;
 import jcl.compiler.real.environment.binding.SymbolLocalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
-import jcl.compiler.real.icg.generator.ClosureCodeGenerator;
-import jcl.compiler.real.icg.generator.CodeGenerator;
+import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.generator.ClosureCodeGenerator;
+import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.SpecialVariableCodeGenerator;
+import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
-import jcl.symbols.Declaration;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
@@ -32,7 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
+public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 	//TODO when checking bindings, in handling the init-forms, start with the just previous
 	// bindings in the lambda list. Differs from how LET handles it
@@ -44,38 +43,17 @@ public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 	private SpecialVariableCodeGenerator specialVariableCodeGenerator;
 
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
+	public void generate(final LambdaStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
 		genCodeLambdaInContext(codeGenerator, input, false, classBuilder);
 	}
 
-	private void genCodeLambdaInContext(final IntermediateCodeGenerator icg, final ListStruct list, final boolean inStaticContext, final JavaClassBuilder classBuilder) {
+	private void genCodeLambdaInContext(final IntermediateCodeGenerator icg, final LambdaStruct lambdaStruct, final boolean inStaticContext, final JavaClassBuilder classBuilder) {
 
-		//--------
-		// get the class name out of the list
-		ListStruct decl = (ListStruct) list.getRest().getFirst();
-		// (declare (mumble...) (more-mumble...))
-		decl = decl.getRest();
-		// ((mumble...) (more-mumble...))
+		final ClassDef currentClass = classBuilder.getCurrentClass();
 
 		ListStruct javaSymbolName = NullStruct.INSTANCE;
 		ListStruct lispSymbolName = NullStruct.INSTANCE;
 		ListStruct documentation = NullStruct.INSTANCE;
-
-		final List<LispStruct> declJavaList = decl.getAsJavaList();
-		for (final LispStruct lispStruct : declJavaList) {
-			final ListStruct element = (ListStruct) lispStruct;
-
-			final LispStruct first = element.getFirst();
-			if (Declaration.JAVA_CLASS_NAME.equals(first)) {
-				javaSymbolName = element;
-			}
-			if (Declaration.LISP_NAME.equals(first)) {
-				lispSymbolName = element;
-			}
-			if (Declaration.DOCUMENTATION.equals(first)) {
-				documentation = element;
-			}
-		}
 
 		final String className = javaSymbolName.getRest().getFirst().toString().replace('.', '/');
 		classBuilder.getClassNames().push(className);
@@ -88,45 +66,23 @@ public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 		//
 
 		// compile the new function class
-		final Vector<String> interfaces = new Vector<>();
-		interfaces.add("lisp/common/type/CompiledFunction");
-		if (classBuilder.isMacroLambda()) {
-			interfaces.add("lisp/common/type/MacroFunction");
-			classBuilder.setMacroLambda(false);
-		}
-		final List<EnvironmentParameterBinding> bindingSetBody = ((Environment) list.getFirst()).getLexicalBindings();
-
-		final int numParams = bindingSetBody.size();
-		if (numParams <= 11) {
-			interfaces.add("lisp/extensions/type/Function" + numParams);
-		}
+		final List<EnvironmentParameterBinding> bindingSetBody = lambdaStruct.getLambdaEnvironment().getLexicalBindings();
 
 		final int numRequiredParams = countRequiredParams(bindingSetBody);
 
 		// compile the new function class
-		classBuilder.getEmitter().newClass(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL, className, null,
-				"lisp/common/function/FunctionBaseClass",
-				interfaces.toArray(new String[1]));
-
-		final SymbolStruct<?> docUID = new SymbolStruct<>("docUID_" + UUID.randomUUID());
+		classBuilder.getEmitter().newClass(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL, className, null, "lisp/common/function/FunctionBaseClass", null);
 
 		// if this is from a compile-file, add the source file name
 		final String fileName = classBuilder.getSourceFile().getRest().getFirst().toString();
 		classBuilder.getEmitter().visitClassSource(fileName, null);
 
-		String docString = "";
+		String docString = lambdaStruct.getDocString().getAsJavaString();
 
 		// add the documentation for the class
 		if (!documentation.equals(NullStruct.INSTANCE)) {
 			docString = documentation.getRest().getFirst().toString();
 		}
-
-		classBuilder.getEmitter().newAnnotation("Llisp/system/documentation/DocStringAnn;", true);
-		classBuilder.getEmitter().visitAnnotationValue("docUID", docUID.toString());
-		classBuilder.getEmitter().visitAnnotationValue("docString", docString);
-		classBuilder.getEmitter().visitAnnotationValue("generated", System.currentTimeMillis());
-		classBuilder.getEmitter().visitAnnotationValue("javaName", className);
-		classBuilder.getEmitter().endAnnotation();
 
 		classBuilder.getEmitter().newAnnotation("Llisp/extensions/type/SourceFileAnnotation;", true);
 		classBuilder.getEmitter().visitAnnotationValue("dateTime", new Date().toString());
@@ -137,21 +93,16 @@ public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 		}
 		classBuilder.getEmitter().endAnnotation();
 
-		//Add the UID to the class so we can find our DOM later.
-		classBuilder.getEmitter().newField(Opcodes.ACC_PUBLIC + Opcodes.ACC_STATIC + Opcodes.ACC_FINAL,
-				"DOCUMENTATION_UID", "Ljava/lang/String;", null, docUID.toString());
-
 		// add the static initialization
 		// Need to separate the static init and any static methods and fields in here
-		classBuilder.getEmitter().newField(Opcodes.ACC_PUBLIC + Opcodes.ACC_STATIC + Opcodes.ACC_FINAL,
-				"SYMBOL", "Llisp/common/type/Symbol;", null, null);
+		classBuilder.getEmitter().newField(Opcodes.ACC_PUBLIC + Opcodes.ACC_STATIC + Opcodes.ACC_FINAL, "SYMBOL", "Llisp/common/type/Symbol;", null, null);
 
 		// constructor();
-		doConstructor(list, className, classBuilder);
+		doConstructor(lambdaStruct, className, classBuilder);
 
 		// Handle all of the binding information
 		try {
-			classBuilder.setBindingEnvironment(classBuilder.getBindingStack().push((Environment) list.getFirst()));
+			classBuilder.setBindingEnvironment(classBuilder.getBindingStack().push(lambdaStruct.getLambdaEnvironment()));
 
 			// now create the check arguments method that's used when safety > 1
 			//-----------> checkArguments <--------------------
@@ -172,9 +123,7 @@ public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 			doFreeVariableSetup(icg, classBuilder);
 
 			// Beginning gen code for the body
-			final List<LispStruct> copyListJavaList = list.getAsJavaList();
-			final ListStruct copyList = ListStruct.buildProperList(copyListJavaList);
-			ListStruct funcallList = copyList.getRest().getRest();
+			ListStruct funcallList = null;
 
 			while (!NullStruct.INSTANCE.equals(funcallList)) {
 				icg.icgMainLoop(funcallList.getFirst(), classBuilder);
@@ -288,7 +237,7 @@ public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 			// now get down to the function
 			// gen code for the function
 
-			genCodeLambdaInContext(codeGenerator, (ListStruct) loadTimeValue.getValue(), true, classBuilder);
+//			genCodeLambdaInContext(codeGenerator, loadTimeValue.getValue(), true, classBuilder);
 			// now there's an instance of the function on the stack, call it
 			classBuilder.getEmitter().emitInvokeinterface("lisp/extensions/type/Function0", "funcall", "()", "Ljava/lang/Object;", true);
 			// now put the value into the static field
@@ -312,7 +261,7 @@ public class LambdaCodeGenerator implements CodeGenerator<ListStruct> {
 		return countRequired;
 	}
 
-	private static void doConstructor(final ListStruct list, final String className, final JavaClassBuilder classBuilder) {
+	private static void doConstructor(final LambdaStruct lambdaStruct, final String className, final JavaClassBuilder classBuilder) {
 		// The basic constructor used when compiling a top-level lambda
 		classBuilder.getEmitter().newMethod(Opcodes.ACC_PUBLIC, "<init>", "()", "V", null, null);
 		classBuilder.getEmitter().emitAload(0);

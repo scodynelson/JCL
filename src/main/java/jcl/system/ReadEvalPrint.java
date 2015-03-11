@@ -2,13 +2,16 @@ package jcl.system;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 import jcl.LispStruct;
+import jcl.compiler.real.icg.generator.specialoperator.lambda.NewLambdaCodeGenerator;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.conditions.exceptions.StreamErrorException;
+import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.PackageStruct;
@@ -21,6 +24,11 @@ import jcl.streams.InputStream;
 import jcl.streams.ReadPeekResult;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.util.CheckClassAdapter;
+import org.objectweb.asm.util.CheckMethodAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -151,6 +159,8 @@ public class ReadEvalPrint {
 					// TEMPORARY: ANALYZER
 
 					if (whatRead != null) {
+//						generatorTest();
+
 						LispStruct whatAnalyzed = null;
 						try {
 //							final LispStruct lambdaWhatRead = wrapFormInLambda(whatRead);
@@ -285,5 +295,46 @@ public class ReadEvalPrint {
 		}
 
 		return lambdaForm;
+	}
+
+	private void generatorTest() throws NoSuchMethodException, InstantiationException, IllegalAccessException, java.lang.reflect.InvocationTargetException {
+		final NewLambdaCodeGenerator codeGenerator = context.getBean(NewLambdaCodeGenerator.class);
+		final ClassWriter cw = codeGenerator.generate();
+
+		byte[] byteArray = cw.toByteArray();
+
+//						FileOutputStream outputStream = new FileOutputStream(new File("/Volumes/Dev/repo/JCL/TestLambdaGenerator.class"));
+//						outputStream.write(byteArray);
+//						outputStream.close();
+
+		ClassReader cr = new ClassReader(byteArray);
+		CheckClassAdapter cca = new CheckClassAdapter(new MethodEmptyVisitor());
+
+//						System.out.println("Printing the class " + "jcl.TestLambdaGenerator" + '\n');
+//						CheckClassAdapter.verify(new ClassReader(byteArray), true, new java.io.PrintWriter(System.out));
+//						System.out.println("Done  with class " + "jcl.TestLambdaGenerator" + '\n');
+
+		cr.accept(cca, 0); //ClassReader.EXPAND_FRAMES);
+
+		final CompilerClassLoader cl = CompilerClassLoader.Loader;
+
+		Class<?> classLoaded = cl.loadClass(byteArray, "jcl.TestLambdaGenerator");
+		Constructor<?> constructor = classLoaded.getDeclaredConstructor();
+		constructor.setAccessible(true);
+		final FunctionStruct lambda = (FunctionStruct) constructor.newInstance();
+		constructor.setAccessible(false);
+		LOGGER.info("GENERATED CLASS -> " + printer.print(lambda));
+		LOGGER.info("Result -> " + printer.print(lambda.apply()));
+	}
+
+	class MethodEmptyVisitor extends EmptyVisitor {
+
+		@Override
+		public MethodVisitor visitMethod(int access, String name, String desc,
+		                                 String signature, String[] exceptions) {
+			MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
+			CheckMethodAdapter cma = new CheckMethodAdapter(mv);
+			return cma;
+		}
 	}
 }

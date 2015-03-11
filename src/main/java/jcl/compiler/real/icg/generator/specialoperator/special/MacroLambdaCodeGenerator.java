@@ -16,6 +16,6 @@ public class MacroLambdaCodeGenerator implements CodeGenerator<ListStruct> {
 	@Override
 	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
 		classBuilder.setMacroLambda(true);
-		lambdaCodeGenerator.generate(input, codeGenerator, classBuilder);
+//		lambdaCodeGenerator.generate(input, codeGenerator, classBuilder); TODO
 	}
 }

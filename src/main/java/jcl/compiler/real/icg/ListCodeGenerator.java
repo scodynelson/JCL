@@ -87,7 +87,7 @@ public class ListCodeGenerator implements CodeGenerator<ListStruct> {
 			if (first.getFirst() instanceof SymbolStruct) {
 				// it's ((%lambda bindings...) body)
 				if (first.getFirst().equals(SpecialOperator.LAMBDA_MARKER)) {
-					lambdaCodeGenerator.generate(input, codeGenerator, classBuilder);
+//					lambdaCodeGenerator.generate(input, codeGenerator, classBuilder); TODO
 				} else if (first.getFirst().equals(SpecialOperator.MACRO_MARKER)) {
 					macroLambdaCodeGenerator.generate(input, codeGenerator, classBuilder);
 				} else if (first.getFirst().equals(SpecialOperator.LET)) {

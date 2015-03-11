@@ -20,16 +20,24 @@ public abstract class ClassStruct extends StandardObjectStruct {
 	private final List<Class<LispStruct>> subClasses;
 
 	/**
-	 * Public constructor.
+	 * Protected constructor.
 	 */
 	protected ClassStruct() {
-		type = jcl.types.Class.INSTANCE;
-		directSuperClasses = null;
-		subClasses = null;
+		this(null);
 	}
 
 	/**
-	 * Public constructor.
+	 * Protected constructor.
+	 *
+	 * @param documentation
+	 * 		instance documentation string
+	 */
+	protected ClassStruct(final String documentation) {
+		this(documentation, jcl.types.Class.INSTANCE, null, null);
+	}
+
+	/**
+	 * Protected constructor.
 	 *
 	 * @param type
 	 * 		the type of the class object
@@ -40,6 +48,24 @@ public abstract class ClassStruct extends StandardObjectStruct {
 	 */
 	protected ClassStruct(final LispType type,
 	                      final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+		this(null, type, directSuperClasses, subClasses);
+	}
+
+	/**
+	 * Protected constructor.
+	 *
+	 * @param documentation
+	 * 		instance documentation string
+	 * @param type
+	 * 		the type of the class object
+	 * @param directSuperClasses
+	 * 		the direct super classes
+	 * @param subClasses
+	 * 		the subclasses
+	 */
+	protected ClassStruct(final String documentation, final LispType type,
+	                      final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+		super(documentation);
 		this.type = type;
 		this.directSuperClasses = (directSuperClasses == null) ? Collections.emptyList() : directSuperClasses;
 		this.subClasses = (subClasses == null) ? Collections.emptyList() : subClasses;

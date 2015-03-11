@@ -10,11 +10,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 
-import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Attribute;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -38,52 +36,6 @@ public class NewEmitter {
 
 	//TODO - fix this to be an external property
 	private static final int classVersion = 52; //TODO: 52 == Java 8, 51 == Java 7, 50 == Java 6
-
-	public static class ClassDef {
-		private final ClassWriter cw;
-		private MethodVisitor mv;
-		private FieldVisitor fv;
-		private AnnotationVisitor av;
-
-		private final String name;
-
-		ClassDef(final ClassWriter cw, final String name) {
-			this.cw = cw;
-			this.name = name;
-		}
-
-		public ClassWriter getCw() {
-			return cw;
-		}
-
-		public MethodVisitor getMv() {
-			return mv;
-		}
-
-		public void setMv(final MethodVisitor mv) {
-			this.mv = mv;
-		}
-
-		public FieldVisitor getFv() {
-			return fv;
-		}
-
-		public void setFv(final FieldVisitor fv) {
-			this.fv = fv;
-		}
-
-		public AnnotationVisitor getAv() {
-			return av;
-		}
-
-		public void setAv(final AnnotationVisitor av) {
-			this.av = av;
-		}
-
-		public String getName() {
-			return name;
-		}
-	}
 
 	private final List<ClassDef> classes = Collections.synchronizedList(new ArrayList<>());
 	private final Stack<ClassDef> classStack = new Stack<>();

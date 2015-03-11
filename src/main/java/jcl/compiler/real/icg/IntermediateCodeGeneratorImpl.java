@@ -1,6 +1,13 @@
 package jcl.compiler.real.icg;
 
 import jcl.characters.CharacterStruct;
+import jcl.compiler.real.icg.generator.CharacterCodeGenerator;
+import jcl.compiler.real.icg.generator.ComplexCodeGenerator;
+import jcl.compiler.real.icg.generator.FloatCodeGenerator;
+import jcl.compiler.real.icg.generator.IntegerCodeGenerator;
+import jcl.compiler.real.icg.generator.NILCodeGenerator;
+import jcl.compiler.real.icg.generator.RatioCodeGenerator;
+import jcl.compiler.real.icg.generator.SymbolCodeGenerator;
 import jcl.lists.ConsStruct;
 import jcl.lists.NullStruct;
 import jcl.numbers.FloatStruct;

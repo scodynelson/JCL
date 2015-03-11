@@ -3,7 +3,7 @@ package jcl.compiler.real.icg;
 import java.util.Stack;
 
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.icg.specialoperator.TagbodyCodeGenerator;
+import jcl.compiler.real.icg.generator.specialoperator.TagbodyLabel;
 import jcl.lists.ListStruct;
 
 public class JavaClassBuilder {
@@ -20,7 +20,7 @@ public class JavaClassBuilder {
 	private Stack<String> classNames;
 	private NewEmitter emitter;
 	private boolean allowMultipleValues;
-	private Stack<Stack<TagbodyCodeGenerator.TagbodyLabel>> tagbodyStack;
+	private Stack<Stack<TagbodyLabel>> tagbodyStack;
 	private ListStruct sourceFile;
 	private int LineNumber;
 
@@ -80,11 +80,11 @@ public class JavaClassBuilder {
 		this.allowMultipleValues = allowMultipleValues;
 	}
 
-	public Stack<Stack<TagbodyCodeGenerator.TagbodyLabel>> getTagbodyStack() {
+	public Stack<Stack<TagbodyLabel>> getTagbodyStack() {
 		return tagbodyStack;
 	}
 
-	public void setTagbodyStack(final Stack<Stack<TagbodyCodeGenerator.TagbodyLabel>> tagbodyStack) {
+	public void setTagbodyStack(final Stack<Stack<TagbodyLabel>> tagbodyStack) {
 		this.tagbodyStack = tagbodyStack;
 	}
 

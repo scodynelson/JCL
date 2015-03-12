@@ -6,7 +6,6 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.DynamicSymbolAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
@@ -52,8 +51,6 @@ public class DeclareExpander extends MacroFunctionExpander {
 			final LispStruct declIdentifier = declSpecList.getFirst();
 			final ListStruct declSpecBody = declSpecList.getRest();
 
-			final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
-
 			// now come the various cases
 			if (declIdentifier.equals(Declaration.DECLARATION)) {
 				//TODO: we don't do anything here yet
@@ -72,7 +69,7 @@ public class DeclareExpander extends MacroFunctionExpander {
 			} else if (declIdentifier.equals(Declaration.OPTIMIZE)) {
 				//TODO: we don't do anything here yet
 			} else if (declIdentifier.equals(Declaration.SPECIAL)) {
-				final List<SpecialDeclarationStruct> sdes = saSpecialDeclaration(analyzer, analysisBuilder, declSpecBody.getAsJavaList());
+				final List<SpecialDeclarationStruct> sdes = saSpecialDeclaration(analysisBuilder, declSpecBody.getAsJavaList());
 				declareElement.getSpecialDeclarationElements().addAll(sdes);
 			} else if (declIdentifier.equals(Declaration.TYPE)) {
 				//we don't do anything here yet
@@ -84,8 +81,7 @@ public class DeclareExpander extends MacroFunctionExpander {
 		return declareElement;
 	}
 
-	private List<SpecialDeclarationStruct> saSpecialDeclaration(final SemanticAnalyzer analyzer, final AnalysisBuilder analysisBuilder,
-	                                                             final List<LispStruct> declSpecBody) {
+	private List<SpecialDeclarationStruct> saSpecialDeclaration(final AnalysisBuilder analysisBuilder, final List<LispStruct> declSpecBody) {
 
 		final List<SpecialDeclarationStruct> specialDeclarationElements = new ArrayList<>(declSpecBody.size());
 

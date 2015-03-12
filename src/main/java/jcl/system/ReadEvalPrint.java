@@ -4,15 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 
 import jcl.LispStruct;
 import jcl.compiler.real.icg.generator.specialoperator.lambda.NewLambdaCodeGenerator;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.functions.FunctionStruct;
-import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
@@ -23,7 +20,6 @@ import jcl.streams.FileStreamStruct;
 import jcl.streams.InputStream;
 import jcl.streams.ReadPeekResult;
 import jcl.symbols.SpecialOperator;
-import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
@@ -163,10 +159,8 @@ public class ReadEvalPrint {
 
 						LispStruct whatAnalyzed = null;
 						try {
-//							final LispStruct lambdaWhatRead = wrapFormInLambda(whatRead);
-//
 //							final SemanticAnalyzer sa = context.getBean(SemanticAnalyzer.class);
-//							whatAnalyzed = sa.analyzeForm(lambdaWhatRead);
+//							whatAnalyzed = sa.analyze(whatRead);
 //
 //							if (whatAnalyzed != null) {
 //								LOGGER.debug("ANALYZED:");
@@ -260,41 +254,6 @@ public class ReadEvalPrint {
 		}
 
 		return null;
-	}
-
-	private static LispStruct wrapFormInLambda(final LispStruct form) {
-
-		LispStruct lambdaForm = form;
-		if (form instanceof ListStruct) {
-			final ListStruct formList = (ListStruct) form;
-			final LispStruct firstOfFormList = formList.getFirst();
-			if (!(firstOfFormList instanceof SymbolStruct)) {
-
-				final List<LispStruct> enhancedLinkedList = new ArrayList<>();
-				enhancedLinkedList.add(SpecialOperator.LAMBDA);
-				enhancedLinkedList.add(NullStruct.INSTANCE);
-				enhancedLinkedList.add(formList);
-
-				lambdaForm = ListStruct.buildProperList(enhancedLinkedList);
-			} else if (!firstOfFormList.equals(SpecialOperator.LAMBDA)) {
-
-				final List<LispStruct> enhancedLinkedList = new ArrayList<>();
-				enhancedLinkedList.add(SpecialOperator.LAMBDA);
-				enhancedLinkedList.add(NullStruct.INSTANCE);
-				enhancedLinkedList.add(formList);
-
-				lambdaForm = ListStruct.buildProperList(enhancedLinkedList);
-			}
-		} else {
-			final List<LispStruct> enhancedLinkedList = new ArrayList<>();
-			enhancedLinkedList.add(SpecialOperator.LAMBDA);
-			enhancedLinkedList.add(NullStruct.INSTANCE);
-			enhancedLinkedList.add(form);
-
-			lambdaForm = ListStruct.buildProperList(enhancedLinkedList);
-		}
-
-		return lambdaForm;
 	}
 
 	private void generatorTest() throws NoSuchMethodException, InstantiationException, IllegalAccessException, java.lang.reflect.InvocationTargetException {

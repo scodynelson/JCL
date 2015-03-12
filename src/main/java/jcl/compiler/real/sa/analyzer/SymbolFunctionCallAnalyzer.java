@@ -15,17 +15,21 @@ import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.struct.functioncall.FunctionCallStruct;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.symbols.SymbolStruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class SymbolFunctionCallAnalyzer extends FunctionCallAnalyzer {
 
 	private static final long serialVersionUID = -2348426068345427015L;
+
+	@Autowired
+	private FormAnalyzer formAnalyzer;
 
 	@Override
 	public FunctionCallStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
@@ -57,10 +61,8 @@ public class SymbolFunctionCallAnalyzer extends FunctionCallAnalyzer {
 
 		final List<LispStruct> analyzedFunctionArguments = new ArrayList<>(functionArguments.size());
 
-		final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
-
 		for (final LispStruct functionArgument : functionArguments) {
-			final LispStruct analyzedFunctionArgument = analyzer.analyzeForm(functionArgument, analysisBuilder);
+			final LispStruct analyzedFunctionArgument = formAnalyzer.analyze(functionArgument, analysisBuilder);
 			analyzedFunctionArguments.add(analyzedFunctionArgument);
 		}
 

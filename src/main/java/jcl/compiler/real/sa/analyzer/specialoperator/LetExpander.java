@@ -15,7 +15,7 @@ import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.EnvironmentEnvironmentBinding;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyWithDeclaresAnalyzer;
@@ -37,6 +37,9 @@ import org.springframework.stereotype.Component;
 public class LetExpander extends MacroFunctionExpander {
 
 	private static final long serialVersionUID = 2933802423859476026L;
+
+	@Autowired
+	private FormAnalyzer formAnalyzer;
 
 	@Autowired
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
@@ -85,11 +88,9 @@ public class LetExpander extends MacroFunctionExpander {
 
 			final List<? extends LispStruct> parametersAsJavaList = parameters.getAsJavaList();
 
-			final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
-
 			final List<LetStruct.LetVar> letVars
 					= parametersAsJavaList.stream()
-					                      .map(e -> getLetVar(e, declareElement, analyzer, analysisBuilder, letEnvironment, environmentStack))
+					                      .map(e -> getLetVar(e, declareElement, analysisBuilder, letEnvironment, environmentStack))
 					                      .collect(Collectors.toList());
 
 			final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
@@ -99,7 +100,7 @@ public class LetExpander extends MacroFunctionExpander {
 
 			final List<LispStruct> analyzedBodyForms
 					= realBodyForms.stream()
-					               .map(e -> analyzer.analyzeForm(e, analysisBuilder))
+					               .map(e -> formAnalyzer.analyze(e, analysisBuilder))
 					               .collect(Collectors.toList());
 
 			return new LetStruct(letVars, analyzedBodyForms, letEnvironment);
@@ -110,12 +111,11 @@ public class LetExpander extends MacroFunctionExpander {
 		}
 	}
 
-	private static LetStruct.LetVar getLetVar(final LispStruct parameter,
-	                                           final DeclareStruct declareElement,
-	                                           final SemanticAnalyzer analyzer,
-	                                           final AnalysisBuilder analysisBuilder,
-	                                           final LetEnvironment letEnvironment,
-	                                           final EnvironmentStack environmentStack) {
+	private LetStruct.LetVar getLetVar(final LispStruct parameter,
+	                                   final DeclareStruct declareElement,
+	                                   final AnalysisBuilder analysisBuilder,
+	                                   final LetEnvironment letEnvironment,
+	                                   final EnvironmentStack environmentStack) {
 
 		if (!(parameter instanceof SymbolStruct) && !(parameter instanceof ListStruct)) {
 			throw new ProgramErrorException("LET: Parameter must be of type SymbolStruct or ListStruct. Got: " + parameter);
@@ -127,7 +127,7 @@ public class LetExpander extends MacroFunctionExpander {
 		if (parameter instanceof ListStruct) {
 			final ListStruct listParameter = (ListStruct) parameter;
 			var = getLetListParameterVar(listParameter);
-			initForm = getLetListParameterInitForm(listParameter, analyzer, analysisBuilder, environmentStack);
+			initForm = getLetListParameterInitForm(listParameter, analysisBuilder, environmentStack);
 		} else {
 			var = (SymbolStruct<?>) parameter;
 			initForm = NullStruct.INSTANCE;
@@ -178,10 +178,9 @@ public class LetExpander extends MacroFunctionExpander {
 		return (SymbolStruct<?>) listParameterFirst;
 	}
 
-	private static LispStruct getLetListParameterInitForm(final ListStruct listParameter,
-	                                                   final SemanticAnalyzer analyzer,
-	                                                   final AnalysisBuilder analysisBuilder,
-	                                                   final EnvironmentStack environmentStack) {
+	private LispStruct getLetListParameterInitForm(final ListStruct listParameter,
+	                                               final AnalysisBuilder analysisBuilder,
+	                                               final EnvironmentStack environmentStack) {
 
 		final LispStruct parameterValue = listParameter.getRest().getFirst();
 
@@ -189,7 +188,7 @@ public class LetExpander extends MacroFunctionExpander {
 		final Environment currentEnvironment = environmentStack.pop();
 
 		try {
-			return analyzer.analyzeForm(parameterValue, analysisBuilder);
+			return formAnalyzer.analyze(parameterValue, analysisBuilder);
 		} finally {
 			environmentStack.push(currentEnvironment);
 		}

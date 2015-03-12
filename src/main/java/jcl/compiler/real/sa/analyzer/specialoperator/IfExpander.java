@@ -4,18 +4,22 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.IfStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class IfExpander extends MacroFunctionExpander {
 
 	private static final long serialVersionUID = -5414856145190749144L;
+
+	@Autowired
+	private FormAnalyzer formAnalyzer;
 
 	/**
 	 * Initializes the block macro function and adds it to the special operator 'block'.
@@ -35,21 +39,19 @@ public class IfExpander extends MacroFunctionExpander {
 
 		final ListStruct inputRest = form.getRest();
 
-		final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
-
 		final LispStruct testForm = inputRest.getFirst();
-		final LispStruct testFormAnalyzed = analyzer.analyzeForm(testForm, analysisBuilder);
+		final LispStruct testFormAnalyzed = formAnalyzer.analyze(testForm, analysisBuilder);
 
 		final ListStruct inputRestRest = inputRest.getRest();
 
 		final LispStruct thenForm = inputRestRest.getFirst();
-		final LispStruct thenFormAnalyzed = analyzer.analyzeForm(thenForm, analysisBuilder);
+		final LispStruct thenFormAnalyzed = formAnalyzer.analyze(thenForm, analysisBuilder);
 
 		if (inputSize == 4) {
 			final ListStruct inputRestRestRest = inputRestRest.getRest();
 
 			final LispStruct elseForm = inputRestRestRest.getFirst();
-			final LispStruct elseFormAnalyzed = analyzer.analyzeForm(elseForm, analysisBuilder);
+			final LispStruct elseFormAnalyzed = formAnalyzer.analyze(elseForm, analysisBuilder);
 			return new IfStruct(testFormAnalyzed, thenFormAnalyzed, elseFormAnalyzed);
 		} else {
 			return new IfStruct(testFormAnalyzed, thenFormAnalyzed);

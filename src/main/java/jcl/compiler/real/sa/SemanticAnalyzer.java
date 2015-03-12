@@ -7,10 +7,10 @@ package jcl.compiler.real.sa;
 import java.io.Serializable;
 
 import jcl.LispStruct;
+import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 
+@FunctionalInterface
 public interface SemanticAnalyzer extends Serializable {
 
-	LispStruct analyzeForm(final LispStruct form);
-
-	LispStruct analyzeForm(final LispStruct form, final AnalysisBuilder analysisBuilder);
+	LambdaStruct analyze(final LispStruct form);
 }

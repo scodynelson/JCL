@@ -13,7 +13,7 @@ import jcl.compiler.real.environment.SymbolMacroletEnvironment;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyWithDeclaresAnalyzer;
@@ -34,6 +34,9 @@ import org.springframework.stereotype.Component;
 public class SymbolMacroletExpander extends MacroFunctionExpander {
 
 	private static final long serialVersionUID = 3878455475225336840L;
+
+	@Autowired
+	private FormAnalyzer formAnalyzer;
 
 	@Autowired
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
@@ -83,18 +86,16 @@ public class SymbolMacroletExpander extends MacroFunctionExpander {
 
 			final List<? extends LispStruct> parametersAsJavaList = parameters.getAsJavaList();
 
-			final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
-
 			final List<SymbolMacroletStruct.SymbolMacroletElementVar> symbolMacroletVars
 					= parametersAsJavaList.stream()
-					                      .map(e -> getSymbolMacroletElementVar(e, declareElement, analyzer, analysisBuilder, symbolMacroletEnvironment, environmentStack))
+					                      .map(e -> getSymbolMacroletElementVar(e, declareElement, analysisBuilder, symbolMacroletEnvironment, environmentStack))
 					                      .collect(Collectors.toList());
 
 			final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
 
 			final List<LispStruct> analyzedBodyForms
 					= realBodyForms.stream()
-					               .map(e -> analyzer.analyzeForm(e, analysisBuilder))
+					               .map(e -> formAnalyzer.analyze(e, analysisBuilder))
 					               .collect(Collectors.toList());
 
 			return new SymbolMacroletStruct(symbolMacroletVars, analyzedBodyForms, symbolMacroletEnvironment);
@@ -114,12 +115,11 @@ public class SymbolMacroletExpander extends MacroFunctionExpander {
 		}
 	}
 
-	private static SymbolMacroletStruct.SymbolMacroletElementVar getSymbolMacroletElementVar(final LispStruct parameter,
-	                                                                                          final DeclareStruct declareElement,
-	                                                                                          final SemanticAnalyzer analyzer,
-	                                                                                          final AnalysisBuilder analysisBuilder,
-	                                                                                          final SymbolMacroletEnvironment symbolMacroletEnvironment,
-	                                                                                          final EnvironmentStack environmentStack) {
+	private SymbolMacroletStruct.SymbolMacroletElementVar getSymbolMacroletElementVar(final LispStruct parameter,
+	                                                                                  final DeclareStruct declareElement,
+	                                                                                  final AnalysisBuilder analysisBuilder,
+	                                                                                  final SymbolMacroletEnvironment symbolMacroletEnvironment,
+	                                                                                  final EnvironmentStack environmentStack) {
 
 		if (!(parameter instanceof ListStruct)) {
 			throw new ProgramErrorException("SYMBOL-MACROLET: Parameter must be of type ListStruct. Got: " + parameter);
@@ -127,7 +127,7 @@ public class SymbolMacroletExpander extends MacroFunctionExpander {
 
 		final ListStruct listParameter = (ListStruct) parameter;
 		final SymbolStruct<?> var = getSymbolMacroletParameterVar(listParameter, environmentStack);
-		final LispStruct expansion = getSymbolMacroletParameterExpansion(listParameter, analyzer, analysisBuilder, environmentStack);
+		final LispStruct expansion = getSymbolMacroletParameterExpansion(listParameter, analysisBuilder, environmentStack);
 
 		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(symbolMacroletEnvironment);
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
@@ -141,7 +141,7 @@ public class SymbolMacroletExpander extends MacroFunctionExpander {
 	}
 
 	private static SymbolStruct<?> getSymbolMacroletParameterVar(final ListStruct listParameter,
-	                                                           final EnvironmentStack lexicalEnvironmentStack) {
+	                                                             final EnvironmentStack lexicalEnvironmentStack) {
 
 		final int listParameterSize = listParameter.size();
 		if (listParameterSize != 2) {
@@ -164,10 +164,9 @@ public class SymbolMacroletExpander extends MacroFunctionExpander {
 		return parameterVar;
 	}
 
-	private static LispStruct getSymbolMacroletParameterExpansion(final ListStruct listParameter,
-	                                                           final SemanticAnalyzer analyzer,
-	                                                           final AnalysisBuilder analysisBuilder,
-	                                                           final EnvironmentStack environmentStack) {
+	private LispStruct getSymbolMacroletParameterExpansion(final ListStruct listParameter,
+	                                                       final AnalysisBuilder analysisBuilder,
+	                                                       final EnvironmentStack environmentStack) {
 
 		final LispStruct parameterValue = listParameter.getRest().getFirst();
 
@@ -175,7 +174,7 @@ public class SymbolMacroletExpander extends MacroFunctionExpander {
 		final Environment currentEnvironment = environmentStack.pop();
 
 		try {
-			return analyzer.analyzeForm(parameterValue, analysisBuilder);
+			return formAnalyzer.analyze(parameterValue, analysisBuilder);
 		} finally {
 			environmentStack.push(currentEnvironment);
 		}

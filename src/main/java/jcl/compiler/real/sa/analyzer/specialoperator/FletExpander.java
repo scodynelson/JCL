@@ -17,7 +17,7 @@ import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.EnvironmentEnvironmentBinding;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyWithDeclaresAnalyzer;
@@ -39,6 +39,9 @@ import org.springframework.stereotype.Component;
 public class FletExpander extends MacroFunctionExpander {
 
 	private static final long serialVersionUID = -3183832254183452606L;
+
+	@Autowired
+	private FormAnalyzer formAnalyzer;
 
 	@Autowired
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
@@ -91,11 +94,9 @@ public class FletExpander extends MacroFunctionExpander {
 			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(bodyForms, analysisBuilder);
 			final DeclareStruct declareElement = bodyProcessingResult.getDeclareElement();
 
-			final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
-
 			final List<FletStruct.FletVar> fletVars
 					= innerFunctionsJavaList.stream()
-					                        .map(e -> getFletVar(e, declareElement, analyzer, analysisBuilder, fletEnvironment, environmentStack))
+					                        .map(e -> getFletVar(e, declareElement, analysisBuilder, fletEnvironment, environmentStack))
 					                        .collect(Collectors.toList());
 
 			final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
@@ -108,7 +109,7 @@ public class FletExpander extends MacroFunctionExpander {
 
 			final List<LispStruct> analyzedBodyForms
 					= realBodyForms.stream()
-					               .map(e -> analyzer.analyzeForm(e, analysisBuilder))
+					               .map(e -> formAnalyzer.analyze(e, analysisBuilder))
 					               .collect(Collectors.toList());
 
 			return new FletStruct(fletVars, analyzedBodyForms, fletEnvironment);
@@ -149,11 +150,10 @@ public class FletExpander extends MacroFunctionExpander {
 	}
 
 	private FletStruct.FletVar getFletVar(final LispStruct functionParameter,
-	                                       final DeclareStruct declareElement,
-	                                       final SemanticAnalyzer analyzer,
-	                                       final AnalysisBuilder analysisBuilder,
-	                                       final FletEnvironment fletEnvironment,
-	                                       final EnvironmentStack environmentStack) {
+	                                      final DeclareStruct declareElement,
+	                                      final AnalysisBuilder analysisBuilder,
+	                                      final FletEnvironment fletEnvironment,
+	                                      final EnvironmentStack environmentStack) {
 
 		if (!(functionParameter instanceof ListStruct)) {
 			throw new ProgramErrorException("FLET: Function parameter must be of type ListStruct. Got: " + functionParameter);
@@ -161,7 +161,7 @@ public class FletExpander extends MacroFunctionExpander {
 
 		final ListStruct functionListParameter = (ListStruct) functionParameter;
 		final SymbolStruct<?> functionName = getFunctionListParameterName(functionListParameter);
-		final LispStruct functionInitForm = getFunctionParameterInitForm(functionListParameter, analyzer, analysisBuilder, environmentStack);
+		final LispStruct functionInitForm = getFunctionParameterInitForm(functionListParameter, analysisBuilder, environmentStack);
 
 		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(fletEnvironment);
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
@@ -180,10 +180,9 @@ public class FletExpander extends MacroFunctionExpander {
 		return new FletStruct.FletVar(functionName, functionInitForm);
 	}
 
-	private static LispStruct getFunctionParameterInitForm(final ListStruct functionListParameter,
-	                                                    final SemanticAnalyzer analyzer,
-	                                                    final AnalysisBuilder analysisBuilder,
-	                                                    final EnvironmentStack environmentStack) {
+	private LispStruct getFunctionParameterInitForm(final ListStruct functionListParameter,
+	                                                final AnalysisBuilder analysisBuilder,
+	                                                final EnvironmentStack environmentStack) {
 
 		final int functionListParameterSize = functionListParameter.size();
 		if (functionListParameterSize < 2) {
@@ -223,7 +222,7 @@ public class FletExpander extends MacroFunctionExpander {
 
 		final LispStruct functionInitForm;
 		try {
-			functionInitForm = analyzer.analyzeForm(innerFunctionListStruct, analysisBuilder);
+			functionInitForm = formAnalyzer.analyze(innerFunctionListStruct, analysisBuilder);
 		} finally {
 			environmentStack.push(currentEnvironment);
 		}

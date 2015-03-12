@@ -10,7 +10,7 @@ import java.util.List;
 import jcl.LispStruct;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.specialoperator.lambda.LambdaExpander;
 import jcl.compiler.real.struct.functioncall.LambdaFunctionCallStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
@@ -26,6 +26,9 @@ import org.springframework.stereotype.Component;
 public class LambdaFunctionCallAnalyzer extends FunctionCallAnalyzer {
 
 	private static final long serialVersionUID = -2147198941590214441L;
+
+	@Autowired
+	private FormAnalyzer formAnalyzer;
 
 	@Autowired
 	private LambdaExpander lambdaExpander;
@@ -51,10 +54,8 @@ public class LambdaFunctionCallAnalyzer extends FunctionCallAnalyzer {
 
 		final List<LispStruct> analyzedFunctionArguments = new ArrayList<>(functionArguments.size());
 
-		final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
-
 		for (final LispStruct functionArgument : functionArguments) {
-			final LispStruct analyzedFunctionArgument = analyzer.analyzeForm(functionArgument, analysisBuilder);
+			final LispStruct analyzedFunctionArgument = formAnalyzer.analyze(functionArgument, analysisBuilder);
 			analyzedFunctionArguments.add(analyzedFunctionArgument);
 		}
 

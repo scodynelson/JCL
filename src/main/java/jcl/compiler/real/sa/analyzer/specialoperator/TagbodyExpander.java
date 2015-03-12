@@ -19,7 +19,7 @@ import javax.annotation.Resource;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.TagbodyStruct;
 import jcl.compiler.real.struct.specialoperator.go.GoStruct;
@@ -31,12 +31,16 @@ import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TagbodyExpander extends MacroFunctionExpander {
 
 	private static final long serialVersionUID = -1543233114989622747L;
+
+	@Autowired
+	private FormAnalyzer formAnalyzer;
 
 	@Resource
 	private Map<Class<? extends LispStruct>, GoStructGenerator<LispStruct>> goStructGeneratorStrategies;
@@ -56,7 +60,7 @@ public class TagbodyExpander extends MacroFunctionExpander {
 		List<LispStruct> bodyAsJavaList = body.getAsJavaList();
 
 		final Set<GoStruct<?>> currentTagSet = bodyAsJavaList.stream()
-		                                            .collect(new TagbodyInitialTagCollector());
+		                                                     .collect(new TagbodyInitialTagCollector());
 
 		analysisBuilder.getTagbodyStack().push(currentTagSet);
 
@@ -69,10 +73,8 @@ public class TagbodyExpander extends MacroFunctionExpander {
 		}
 
 		try {
-			final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
-
 			final Map<LispStruct, List<LispStruct>> tagbodyForms = bodyAsJavaList.stream()
-			                                                     .collect(new TagbodyCollector(analyzer, analysisBuilder));
+			                                                                     .collect(new TagbodyCollector(formAnalyzer, analysisBuilder));
 			return new TagbodyStruct(tagbodyForms);
 		} finally {
 			analysisBuilder.getTagbodyStack().pop();
@@ -128,13 +130,13 @@ public class TagbodyExpander extends MacroFunctionExpander {
 
 	private final class TagbodyCollector implements Collector<LispStruct, Map<LispStruct, List<LispStruct>>, Map<LispStruct, List<LispStruct>>> {
 
-		private final SemanticAnalyzer analyzer;
+		private final FormAnalyzer analyzer;
 
 		private final AnalysisBuilder analysisBuilder;
 
 		private GoStruct<?> currentTag;
 
-		private TagbodyCollector(final SemanticAnalyzer analyzer, final AnalysisBuilder analysisBuilder) {
+		private TagbodyCollector(final FormAnalyzer analyzer, final AnalysisBuilder analysisBuilder) {
 			this.analyzer = analyzer;
 			this.analysisBuilder = analysisBuilder;
 			currentTag = null;
@@ -145,7 +147,7 @@ public class TagbodyExpander extends MacroFunctionExpander {
 				lispStructListMap.put(currentTag, new ArrayList<>());
 			}
 
-			final LispStruct analyzedForm = analyzer.analyzeForm(lispStruct, analysisBuilder);
+			final LispStruct analyzedForm = analyzer.analyze(lispStruct, analysisBuilder);
 			lispStructListMap.get(currentTag).add(analyzedForm);
 		}
 

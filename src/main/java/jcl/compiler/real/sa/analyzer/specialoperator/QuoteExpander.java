@@ -7,7 +7,7 @@ import javax.annotation.PostConstruct;
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.QuoteStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
@@ -18,12 +18,16 @@ import jcl.symbols.SymbolStruct;
 import jcl.system.CommonLispSymbols;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class QuoteExpander extends MacroFunctionExpander {
 
 	private static final long serialVersionUID = 2741011595927247743L;
+
+	@Autowired
+	private FormAnalyzer formAnalyzer;
 
 	/**
 	 * Initializes the block macro function and adds it to the special operator 'block'.
@@ -60,8 +64,7 @@ public class QuoteExpander extends MacroFunctionExpander {
 			elementToAnalyze = ListStruct.buildProperList(SpecialOperator.LOAD_TIME_VALUE, analyzedElement);
 		}
 
-		final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
-		final LispStruct element = analyzer.analyzeForm(elementToAnalyze);
+		final LispStruct element = formAnalyzer.analyze(elementToAnalyze, analysisBuilder);
 
 		return new QuoteStruct(element);
 	}

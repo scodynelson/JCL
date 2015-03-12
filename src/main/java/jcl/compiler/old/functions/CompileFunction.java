@@ -81,8 +81,7 @@ public class CompileFunction {
 			if (formCopy instanceof List) {
 				formCopy = copyTree.funcall(formCopy);
 			}
-			obj = wrapFormInLambda(obj);
-			obj = sa.analyzeForm(obj);
+			obj = sa.analyze(obj);
 
 			Vector<Emitter.ClassDef> v = (Vector<Emitter.ClassDef>) icg.funcall(obj);
 			Vector<String> oc = new Vector<String>(v.size());
@@ -282,21 +281,5 @@ public class CompileFunction {
 				structLoader = cl;
 			}
 		}
-	}
-
-	private static LispStruct wrapFormInLambda(final LispStruct form) {
-
-		LispStruct lambdaForm = form;
-		if (form instanceof ListStruct) {
-			final ListStruct formList = (ListStruct) form;
-			final LispStruct firstOfFormList = formList.getFirst();
-			if (!firstOfFormList.equals(SpecialOperator.LAMBDA)) {
-				lambdaForm = ListStruct.buildProperList(SpecialOperator.LAMBDA, NullStruct.INSTANCE, form);
-			}
-		} else {
-			lambdaForm = ListStruct.buildProperList(SpecialOperator.LAMBDA, NullStruct.INSTANCE, form);
-		}
-
-		return lambdaForm;
 	}
 }

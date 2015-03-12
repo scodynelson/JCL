@@ -18,7 +18,7 @@ import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyWithDeclaresAndDocStringAnalyzer;
@@ -38,6 +38,9 @@ import org.springframework.stereotype.Component;
 public class LambdaExpander extends MacroFunctionExpander {
 
 	private static final long serialVersionUID = -7592502247452528911L;
+
+	@Autowired
+	private FormAnalyzer formAnalyzer;
 
 	@Autowired
 	private BodyWithDeclaresAndDocStringAnalyzer bodyWithDeclaresAndDocStringAnalyzer;
@@ -84,9 +87,7 @@ public class LambdaExpander extends MacroFunctionExpander {
 			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAndDocStringAnalyzer.analyze(bodyForms, analysisBuilder);
 			final DeclareStruct declareElement = bodyProcessingResult.getDeclareElement();
 
-			final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
-
-			final OrdinaryLambdaListBindings parsedLambdaList = LambdaListParser.parseOrdinaryLambdaList(analyzer, analysisBuilder, parameters, declareElement);
+			final OrdinaryLambdaListBindings parsedLambdaList = LambdaListParser.parseOrdinaryLambdaList(formAnalyzer, analysisBuilder, parameters, declareElement);
 			final EnhancedLinkedList<LispStruct> newStartingLambdaBody = getNewStartingLambdaBody(parsedLambdaList);
 
 			final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
@@ -97,7 +98,7 @@ public class LambdaExpander extends MacroFunctionExpander {
 
 			final ListStruct newLambdaBodyListStruct = ListStruct.buildProperList(newStartingLambdaBody);
 
-			final LispStruct analyzedBodyForms = analyzer.analyzeForm(newLambdaBodyListStruct, analysisBuilder);
+			final LispStruct analyzedBodyForms = formAnalyzer.analyze(newLambdaBodyListStruct, analysisBuilder);
 			return new LambdaStruct(parsedLambdaList, bodyProcessingResult.getDocString(), analyzedBodyForms, lambdaEnvironment);
 		} finally {
 			analysisBuilder.setClosureDepth(tempClosureDepth);

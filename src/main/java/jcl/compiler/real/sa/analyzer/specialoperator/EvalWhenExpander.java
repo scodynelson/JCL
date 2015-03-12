@@ -10,7 +10,7 @@ import javax.annotation.PostConstruct;
 import jcl.LispStruct;
 import jcl.compiler.old.symbol.KeywordOld;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
@@ -18,6 +18,7 @@ import jcl.lists.NullStruct;
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SpecialOperator;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -32,6 +33,9 @@ public class EvalWhenExpander extends MacroFunctionExpander {
 		SITUATION_KEYWORDS.add(KeywordOld.LoadToplevel);
 		SITUATION_KEYWORDS.add(KeywordOld.Execute);
 	}
+
+	@Autowired
+	private FormAnalyzer formAnalyzer;
 
 	/**
 	 * Initializes the block macro function and adds it to the special operator 'block'.
@@ -66,8 +70,6 @@ public class EvalWhenExpander extends MacroFunctionExpander {
 
 		final List<LispStruct> forms = inputRest.getRest().getAsJavaList();
 
-		final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
-
 		if (isTopLevel) {
 			if (isCompileTopLevel(situationJavaList)) {
 				// (eval `(progn ,@body)))
@@ -84,7 +86,7 @@ public class EvalWhenExpander extends MacroFunctionExpander {
 				// (funcall #'(lambda (forms) (ir1-convert-progn-body start cont forms)) body)
 				final List<LispStruct> analyzedForms =
 						forms.stream()
-						             .map(e -> analyzer.analyzeForm(e, analysisBuilder))
+						             .map(e -> formAnalyzer.analyze(e, analysisBuilder))
 						             .collect(Collectors.toList());
 
 				// TODO: what we need to do here is:
@@ -97,7 +99,7 @@ public class EvalWhenExpander extends MacroFunctionExpander {
 			// (funcall #'(lambda (forms) (ir1-convert-progn-body start cont forms)) body)
 			final List<LispStruct> analyzedForms =
 					forms.stream()
-					             .map(e -> analyzer.analyzeForm(e, analysisBuilder))
+					             .map(e -> formAnalyzer.analyze(e, analysisBuilder))
 					             .collect(Collectors.toList());
 
 			// TODO: what we need to do here is:

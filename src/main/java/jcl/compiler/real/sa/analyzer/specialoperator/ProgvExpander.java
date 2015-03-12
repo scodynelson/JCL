@@ -10,8 +10,8 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.sa.analyzer.DynamicSymbolAnalyzer;
+import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.ProgvStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
@@ -27,6 +27,9 @@ import org.springframework.stereotype.Component;
 public class ProgvExpander extends MacroFunctionExpander {
 
 	private static final long serialVersionUID = 2755221428467421207L;
+
+	@Autowired
+	private FormAnalyzer formAnalyzer;
 
 	@Autowired
 	private DynamicSymbolAnalyzer dynamicSymbolAnalyzer;
@@ -110,8 +113,6 @@ public class ProgvExpander extends MacroFunctionExpander {
 		final int numberOfProgvVars = actualVarsJavaList.size();
 		final List<ProgvStruct.ProgvVar> progvVars = new ArrayList<>(numberOfProgvVars);
 
-		final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
-
 		for (int i = 0; i < numberOfProgvVars; i++) {
 
 			// NOTE: We can cast here since we checked the type earlier
@@ -123,7 +124,7 @@ public class ProgvExpander extends MacroFunctionExpander {
 
 			final SymbolStruct<?> varSE = dynamicSymbolAnalyzer.analyze(var, analysisBuilder);
 
-			final LispStruct analyzedVal = analyzer.analyzeForm(val, analysisBuilder);
+			final LispStruct analyzedVal = formAnalyzer.analyze(val, analysisBuilder);
 			final ProgvStruct.ProgvVar progvVar = new ProgvStruct.ProgvVar(varSE, analyzedVal);
 
 			// TODO: really a 'null' allocation here???
@@ -135,7 +136,7 @@ public class ProgvExpander extends MacroFunctionExpander {
 		final List<LispStruct> forms = inputRestRest.getRest().getAsJavaList();
 		final List<LispStruct> analyzedForms =
 				forms.stream()
-				     .map(e -> analyzer.analyzeForm(e, analysisBuilder))
+				     .map(e -> formAnalyzer.analyze(e, analysisBuilder))
 				     .collect(Collectors.toList());
 
 		return new ProgvStruct(progvVars, analyzedForms, null, currentEnvironment);

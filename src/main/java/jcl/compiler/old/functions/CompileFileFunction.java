@@ -12,6 +12,7 @@ import jcl.compiler.real.sa.analyzer.expander.MacroExpandFunction;
 import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
 import jcl.compiler.old.symbol.KeywordOld;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
@@ -153,13 +154,12 @@ public class CompileFileFunction {
 			long jarTime;
 
 			baseTime = System.currentTimeMillis();
-			formList = (ListStruct) wrapFormInLambda(formList);
-			formList = (ListStruct) sa.analyzeForm(formList);
+			LambdaStruct lambdaForm = sa.analyze(formList);
 			saTime = System.currentTimeMillis() - baseTime;
 
 			baseTime = System.currentTimeMillis();
 
-			Vector<Emitter.ClassDef> v = (Vector<Emitter.ClassDef>) icg.funcall(formList);
+			Vector<Emitter.ClassDef> v = (Vector<Emitter.ClassDef>) icg.funcall(lambdaForm);
 			Vector<String> oc = new Vector<String>(v.size());
 			Vector<byte[]> classBytes = new Vector<>(v.size());
 
@@ -567,21 +567,5 @@ public class CompileFileFunction {
 		value.add(forms);
 //		value.add(lineNumber);
 		return value;
-	}
-
-	private static LispStruct wrapFormInLambda(final LispStruct form) {
-
-		LispStruct lambdaForm = form;
-		if (form instanceof ListStruct) {
-			final ListStruct formList = (ListStruct) form;
-			final LispStruct firstOfFormList = formList.getFirst();
-			if (!firstOfFormList.equals(SpecialOperator.LAMBDA)) {
-				lambdaForm = ListStruct.buildProperList(SpecialOperator.LAMBDA, NullStruct.INSTANCE, form);
-			}
-		} else {
-			lambdaForm = ListStruct.buildProperList(SpecialOperator.LAMBDA, NullStruct.INSTANCE, form);
-		}
-
-		return lambdaForm;
 	}
 }

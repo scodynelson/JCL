@@ -6,19 +6,23 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.SetqStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class SetqExpander extends MacroFunctionExpander {
 
 	private static final long serialVersionUID = 5324580926862048137L;
+
+	@Autowired
+	private FormAnalyzer formAnalyzer;
 
 	/**
 	 * Initializes the block macro function and adds it to the special operator 'block'.
@@ -48,10 +52,8 @@ public class SetqExpander extends MacroFunctionExpander {
 			}
 			final SymbolStruct<?> varSymbol = (SymbolStruct<?>) var;
 
-			final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
-
 			final LispStruct setqForm = forms.get(index + 1);
-			final LispStruct setqFormAnalyzed = analyzer.analyzeForm(setqForm, analysisBuilder);
+			final LispStruct setqFormAnalyzed = formAnalyzer.analyze(setqForm, analysisBuilder);
 
 			final SetqStruct.SetqPair setqPair = new SetqStruct.SetqPair(varSymbol, setqFormAnalyzed);
 			setqPairs.add(setqPair);

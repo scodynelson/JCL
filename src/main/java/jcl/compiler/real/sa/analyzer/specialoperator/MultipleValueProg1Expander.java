@@ -6,18 +6,22 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.MultipleValueProg1Struct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MultipleValueProg1Expander extends MacroFunctionExpander {
 
 	private static final long serialVersionUID = 1791554561862006171L;
+
+	@Autowired
+	private FormAnalyzer formAnalyzer;
 
 	/**
 	 * Initializes the block macro function and adds it to the special operator 'block'.
@@ -37,15 +41,13 @@ public class MultipleValueProg1Expander extends MacroFunctionExpander {
 
 		final ListStruct inputRest = form.getRest();
 
-		final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
-
 		final LispStruct firstForm = inputRest.getFirst();
-		final LispStruct firstFormAnalyzed = analyzer.analyzeForm(firstForm, analysisBuilder);
+		final LispStruct firstFormAnalyzed = formAnalyzer.analyze(firstForm, analysisBuilder);
 
 		final List<LispStruct> forms = inputRest.getRest().getAsJavaList();
 		final List<LispStruct> analyzedForms =
 				forms.stream()
-				     .map(e -> analyzer.analyzeForm(e, analysisBuilder))
+				     .map(e -> formAnalyzer.analyze(e, analysisBuilder))
 				     .collect(Collectors.toList());
 
 		return new MultipleValueProg1Struct(firstFormAnalyzed, analyzedForms);

@@ -4,13 +4,17 @@
 
 package jcl.compiler.real.sa;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
-import javax.annotation.Resource;
 
 import jcl.LispStruct;
-import jcl.compiler.real.sa.analyzer.expander.real.NewMacroExpand;
-import jcl.compiler.real.sa.analyzer.expander.real.NewMacroExpandReturn;
+import jcl.compiler.real.sa.analyzer.specialoperator.lambda.LambdaExpander;
+import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
+import jcl.lists.ListStruct;
+import jcl.lists.NullStruct;
+import jcl.printer.Printer;
+import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -30,50 +34,58 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SemanticAnalyzerImpl.class);
 
 	@Autowired
-	private NewMacroExpand newMacroExpand;
+	private LambdaExpander lambdaExpander;
 
-	@Resource
-	private Map<Class<? extends LispStruct>, Analyzer<? extends LispStruct, LispStruct>> analyzerStrategies;
+	@Autowired
+	private Printer printer;
 
 	@Override
-	public LispStruct analyzeForm(final LispStruct form) {
+	public LambdaStruct analyze(final LispStruct form) {
 
-		final AnalysisBuilder analysisBuilder = new AnalysisBuilder(this);
+		final AnalysisBuilder analysisBuilder = new AnalysisBuilder();
 
-		final LispStruct analyzedForm = analyzeForm(form, analysisBuilder);
+		final ListStruct lambdaForm = wrapFormInLambda(form);
+		final LambdaStruct analyzedForm = lambdaExpander.expand(lambdaForm, analysisBuilder);
 
 		// now see if we have any functions still undefined
 		final Set<SymbolStruct<?>> undefinedFunctions = analysisBuilder.getUndefinedFunctions();
 
 		undefinedFunctions.stream()
-		                  .forEach(undefinedFunction -> {
-			                  LOGGER.warn("; Warning: no function or macro function defined for ");
-
-			                  final String functionName = undefinedFunction.getName();
-			                  final String symbolPackage = undefinedFunction.getSymbolPackage().getName();
-			                  if (symbolPackage != null) {
-				                  LOGGER.warn("{}::{}", symbolPackage, functionName);
-			                  } else {
-				                  LOGGER.warn("#:{}", functionName);
-			                  }
-		                  });
+		                  .forEach(this::unknownFunctionWarning);
 
 		return analyzedForm;
 	}
 
-	@Override
-	public LispStruct analyzeForm(final LispStruct form, final AnalysisBuilder analysisBuilder) {
+	private static ListStruct wrapFormInLambda(final LispStruct form) {
 
-		final NewMacroExpandReturn macroExpandReturn = newMacroExpand.macroExpand(form, analysisBuilder);
-		final LispStruct expandedForm = macroExpandReturn.getExpandedForm();
-
-		final Analyzer<? extends LispStruct, LispStruct> functionCallAnalyzer = analyzerStrategies.get(expandedForm.getClass());
-		if (functionCallAnalyzer == null) {
-			return expandedForm; // TODO: we need to rework the logic a bit, so for now we just return...
-//			throw new ProgramErrorException("Semantic Analyzer: Unsupported object type cannot be analyzed: " + expandedForm);
+		final ListStruct lambdaForm;
+		if (form instanceof ListStruct) {
+			final ListStruct formList = (ListStruct) form;
+			final LispStruct firstOfFormList = formList.getFirst();
+			if (firstOfFormList.equals(SpecialOperator.LAMBDA)) {
+				lambdaForm = formList;
+			} else {
+				lambdaForm = getLambdaFormList(formList);
+			}
+		} else {
+			lambdaForm = getLambdaFormList(form);
 		}
 
-		return functionCallAnalyzer.analyze(expandedForm, analysisBuilder);
+		return lambdaForm;
+	}
+
+	private static ListStruct getLambdaFormList(final LispStruct form) {
+		final List<LispStruct> lambdaFormList = new ArrayList<>();
+		lambdaFormList.add(SpecialOperator.LAMBDA);
+		lambdaFormList.add(NullStruct.INSTANCE);
+		lambdaFormList.add(form);
+
+		return ListStruct.buildProperList(lambdaFormList);
+	}
+
+	private void unknownFunctionWarning(final SymbolStruct<?> undefinedFunction) {
+		final String printedUndefinedFunction = printer.print(undefinedFunction);
+		LOGGER.warn("Warning: no function or macro function defined for: {}", printedUndefinedFunction);
 	}
 
 	@Override

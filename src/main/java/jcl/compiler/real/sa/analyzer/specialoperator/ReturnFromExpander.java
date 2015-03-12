@@ -4,19 +4,23 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.ReturnFromStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ReturnFromExpander extends MacroFunctionExpander {
 
 	private static final long serialVersionUID = 3328790948675693554L;
+
+	@Autowired
+	private FormAnalyzer formAnalyzer;
 
 	/**
 	 * Initializes the block macro function and adds it to the special operator 'block'.
@@ -50,10 +54,8 @@ public class ReturnFromExpander extends MacroFunctionExpander {
 		if (inputSize == 3) {
 			final ListStruct inputRestRest = inputRest.getRest();
 
-			final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
-
 			final LispStruct result = inputRestRest.getFirst();
-			final LispStruct analyzedResult = analyzer.analyzeForm(result, analysisBuilder);
+			final LispStruct analyzedResult = formAnalyzer.analyze(result, analysisBuilder);
 			return new ReturnFromStruct(name, analyzedResult);
 		} else {
 			return new ReturnFromStruct(name);

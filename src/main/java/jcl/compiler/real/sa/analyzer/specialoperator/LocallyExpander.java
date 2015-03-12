@@ -13,7 +13,7 @@ import jcl.compiler.real.environment.LocallyEnvironment;
 import jcl.compiler.real.environment.allocation.EnvironmentAllocation;
 import jcl.compiler.real.environment.binding.EnvironmentEnvironmentBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyWithDeclaresAnalyzer;
@@ -33,6 +33,9 @@ import org.springframework.stereotype.Component;
 public class LocallyExpander extends MacroFunctionExpander {
 
 	private static final long serialVersionUID = 8925649944409732052L;
+
+	@Autowired
+	private FormAnalyzer formAnalyzer;
 
 	@Autowired
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
@@ -71,11 +74,9 @@ public class LocallyExpander extends MacroFunctionExpander {
 
 			final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
 
-			final SemanticAnalyzer analyzer = analysisBuilder.getAnalyzer();
-
 			final List<LispStruct> analyzedBodyForms
 					= realBodyForms.stream()
-					               .map(e -> analyzer.analyzeForm(e, analysisBuilder))
+					               .map(e -> formAnalyzer.analyze(e, analysisBuilder))
 					               .collect(Collectors.toList());
 
 			return new LocallyStruct(analyzedBodyForms, locallyEnvironment);

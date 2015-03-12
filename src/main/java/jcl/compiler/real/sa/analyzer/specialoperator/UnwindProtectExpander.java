@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UnwindProtectExpander extends MacroFunctionExpander {
+public class UnwindProtectExpander extends MacroFunctionExpander<UnwindProtectStruct> {
 
 	private static final long serialVersionUID = 3379320303375207710L;
 

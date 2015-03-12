@@ -10,8 +10,8 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.analyzer.DynamicSymbolAnalyzer;
 import jcl.compiler.real.sa.FormAnalyzer;
+import jcl.compiler.real.sa.analyzer.SymbolAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.ProgvStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
@@ -24,7 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProgvExpander extends MacroFunctionExpander {
+public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 
 	private static final long serialVersionUID = 2755221428467421207L;
 
@@ -32,7 +32,7 @@ public class ProgvExpander extends MacroFunctionExpander {
 	private FormAnalyzer formAnalyzer;
 
 	@Autowired
-	private DynamicSymbolAnalyzer dynamicSymbolAnalyzer;
+	private SymbolAnalyzer symbolAnalyzer;
 
 	/**
 	 * Initializes the block macro function and adds it to the special operator 'block'.
@@ -122,7 +122,7 @@ public class ProgvExpander extends MacroFunctionExpander {
 				val = actualValsJavaList.get(i);
 			}
 
-			final SymbolStruct<?> varSE = dynamicSymbolAnalyzer.analyze(var, analysisBuilder);
+			final SymbolStruct<?> varSE = symbolAnalyzer.analyzeDynamic(var, analysisBuilder);
 
 			final LispStruct analyzedVal = formAnalyzer.analyze(val, analysisBuilder);
 			final ProgvStruct.ProgvVar progvVar = new ProgvStruct.ProgvVar(varSE, analyzedVal);

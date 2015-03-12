@@ -35,7 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TagbodyExpander extends MacroFunctionExpander {
+public class TagbodyExpander extends MacroFunctionExpander<TagbodyStruct> {
 
 	private static final long serialVersionUID = -1543233114989622747L;
 

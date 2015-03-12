@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LetStarExpander extends MacroFunctionExpander {
+public class LetStarExpander extends MacroFunctionExpander<LetStruct> {
 
 	private static final long serialVersionUID = 6456555635583825339L;
 

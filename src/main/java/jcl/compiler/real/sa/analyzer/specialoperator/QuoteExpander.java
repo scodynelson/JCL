@@ -22,7 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class QuoteExpander extends MacroFunctionExpander {
+public class QuoteExpander extends MacroFunctionExpander<QuoteStruct> {
 
 	private static final long serialVersionUID = 2741011595927247743L;
 

@@ -24,7 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LoadTimeValueExpander extends MacroFunctionExpander {
+public class LoadTimeValueExpander extends MacroFunctionExpander<LoadTimeValueStruct> {
 
 	private static final long serialVersionUID = 2168018740373766746L;
 

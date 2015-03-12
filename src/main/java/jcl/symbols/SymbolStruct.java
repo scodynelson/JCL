@@ -37,9 +37,9 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 
 	protected final List<LispStruct> properties = new ArrayList<>();
 
-	protected MacroFunctionExpander macroFunctionExpander;
-	protected CompilerMacroFunctionExpander compilerMacroFunctionExpander;
-	protected SymbolMacroExpander symbolMacroExpander;
+	protected MacroFunctionExpander<?> macroFunctionExpander;
+	protected CompilerMacroFunctionExpander<?> compilerMacroFunctionExpander;
+	protected SymbolMacroExpander<?> symbolMacroExpander;
 
 	/**
 	 * Public constructor.
@@ -250,7 +250,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 *
 	 * @return symbol {@link #macroFunctionExpander} property
 	 */
-	public MacroFunctionExpander getMacroFunctionExpander() {
+	public MacroFunctionExpander<?> getMacroFunctionExpander() {
 		return macroFunctionExpander;
 	}
 
@@ -260,7 +260,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 * @param macroFunctionExpander
 	 * 		new symbol {@link #macroFunctionExpander} property value
 	 */
-	public void setMacroFunctionExpander(final MacroFunctionExpander macroFunctionExpander) {
+	public void setMacroFunctionExpander(final MacroFunctionExpander<?> macroFunctionExpander) {
 		this.macroFunctionExpander = macroFunctionExpander;
 	}
 
@@ -269,7 +269,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 *
 	 * @return symbol {@link #compilerMacroFunctionExpander} property
 	 */
-	public CompilerMacroFunctionExpander getCompilerMacroFunctionExpander() {
+	public CompilerMacroFunctionExpander<?> getCompilerMacroFunctionExpander() {
 		return compilerMacroFunctionExpander;
 	}
 
@@ -279,7 +279,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 * @param compilerMacroFunctionExpander
 	 * 		new symbol {@link #compilerMacroFunctionExpander} property value
 	 */
-	public void setCompilerMacroFunctionExpander(final CompilerMacroFunctionExpander compilerMacroFunctionExpander) {
+	public void setCompilerMacroFunctionExpander(final CompilerMacroFunctionExpander<?> compilerMacroFunctionExpander) {
 		this.compilerMacroFunctionExpander = compilerMacroFunctionExpander;
 	}
 
@@ -288,7 +288,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 *
 	 * @return symbol {@link #symbolMacroExpander} property
 	 */
-	public SymbolMacroExpander getSymbolMacroExpander() {
+	public SymbolMacroExpander<?> getSymbolMacroExpander() {
 		return symbolMacroExpander;
 	}
 
@@ -298,7 +298,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 * @param symbolMacroExpander
 	 * 		new symbol {@link #symbolMacroExpander} property value
 	 */
-	public void setSymbolMacroExpander(final SymbolMacroExpander symbolMacroExpander) {
+	public void setSymbolMacroExpander(final SymbolMacroExpander<?> symbolMacroExpander) {
 		this.symbolMacroExpander = symbolMacroExpander;
 	}
 

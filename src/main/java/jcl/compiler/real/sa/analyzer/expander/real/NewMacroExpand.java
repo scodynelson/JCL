@@ -52,7 +52,7 @@ public class NewMacroExpand {
 			if (symbolStruct.isPresent()) {
 				final SymbolStruct<?> theSymbol = symbolStruct.get();
 
-				final MacroFunctionExpander macroFunctionExpander = theSymbol.getMacroFunctionExpander();
+				final MacroFunctionExpander<?> macroFunctionExpander = theSymbol.getMacroFunctionExpander();
 
 				if (macroFunctionExpander != null) {
 					final LispStruct expansion = macroFunctionExpander.expand(form, analysisBuilder);
@@ -71,7 +71,7 @@ public class NewMacroExpand {
 		if (symbolStruct.isPresent()) {
 			final SymbolStruct<?> theSymbol = symbolStruct.get();
 
-			final SymbolMacroExpander symbolMacroExpander = theSymbol.getSymbolMacroExpander();
+			final SymbolMacroExpander<?> symbolMacroExpander = theSymbol.getSymbolMacroExpander();
 
 			if (symbolMacroExpander != null) {
 				final LispStruct expansion = symbolMacroExpander.expand(form, analysisBuilder);

@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Set;
 
 import jcl.LispStruct;
-import jcl.compiler.real.sa.analyzer.specialoperator.lambda.LambdaExpander;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
@@ -34,7 +33,7 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SemanticAnalyzerImpl.class);
 
 	@Autowired
-	private LambdaExpander lambdaExpander;
+	private MacroExpander<LambdaStruct, ListStruct> lambdaExpander;
 
 	@Autowired
 	private Printer printer;

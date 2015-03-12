@@ -1,4 +1,4 @@
-package jcl.compiler.real.sa.analyzer.specialoperator.body;
+package jcl.compiler.real.sa.analyzer.body;
 
 import java.util.List;
 

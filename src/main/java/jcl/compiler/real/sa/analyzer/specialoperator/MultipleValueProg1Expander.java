@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MultipleValueProg1Expander extends MacroFunctionExpander {
+public class MultipleValueProg1Expander extends MacroFunctionExpander<MultipleValueProg1Struct> {
 
 	private static final long serialVersionUID = 1791554561862006171L;
 

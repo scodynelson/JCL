@@ -1,4 +1,4 @@
-package jcl.compiler.real.sa.analyzer.specialoperator.declare;
+package jcl.compiler.real.sa.analyzer.declare;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,7 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.analyzer.DynamicSymbolAnalyzer;
+import jcl.compiler.real.sa.analyzer.SymbolAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
@@ -19,12 +19,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DeclareExpander extends MacroFunctionExpander {
+public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 
 	private static final long serialVersionUID = -27949883247210201L;
 
 	@Autowired
-	private DynamicSymbolAnalyzer dynamicSymbolAnalyzer;
+	private SymbolAnalyzer symbolAnalyzer;
 
 	/**
 	 * Initializes the block macro function and adds it to the special operator 'block'.
@@ -93,7 +93,7 @@ public class DeclareExpander extends MacroFunctionExpander {
 
 			final SymbolStruct<?> sym = (SymbolStruct<?>) declSpecBodyElement;
 
-			dynamicSymbolAnalyzer.analyze(sym, analysisBuilder);
+			symbolAnalyzer.analyzeDynamic(sym, analysisBuilder);
 
 			final SpecialDeclarationStruct specialDeclarationElement = new SpecialDeclarationStruct(sym);
 			specialDeclarationElements.add(specialDeclarationElement);

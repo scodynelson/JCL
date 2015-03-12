@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class IfExpander extends MacroFunctionExpander {
+public class IfExpander extends MacroFunctionExpander<IfStruct> {
 
 	private static final long serialVersionUID = -5414856145190749144L;
 

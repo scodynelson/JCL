@@ -2,13 +2,12 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.compiler.real.sa.analyzer.expander.real;
+package jcl.compiler.real.sa;
 
 import jcl.LispStruct;
-import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.functions.FunctionStruct;
 
-public abstract class MacroExpander<E extends LispStruct> extends FunctionStruct {
+public abstract class MacroExpander<O extends LispStruct, I extends LispStruct> extends FunctionStruct {
 
 	private static final long serialVersionUID = 4976821260573562104L;
 
@@ -18,5 +17,5 @@ public abstract class MacroExpander<E extends LispStruct> extends FunctionStruct
 		return null;
 	}
 
-	public abstract LispStruct expand(E form, AnalysisBuilder analysisBuilder);
+	public abstract O expand(I form, AnalysisBuilder analysisBuilder);
 }

@@ -17,7 +17,7 @@ import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public class GoExpander extends MacroFunctionExpander {
+public class GoExpander extends MacroFunctionExpander<GoStruct<?>> {
 
 	private static final long serialVersionUID = -6523523596100793498L;
 

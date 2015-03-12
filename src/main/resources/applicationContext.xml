@@ -73,7 +73,7 @@
 
 		<entry key="jcl.reader.macrofunction.CommentStruct" value-ref="constantAnalyzer"/>
 
-		<entry key="jcl.symbols.SymbolStruct" value-ref="lexicalSymbolAnalyzer"/>
+		<entry key="jcl.symbols.SymbolStruct" value-ref="symbolAnalyzerImpl"/>
 
 	</util:map>
 

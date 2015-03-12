@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CatchExpander extends MacroFunctionExpander {
+public class CatchExpander extends MacroFunctionExpander<CatchStruct> {
 
 	private static final long serialVersionUID = -4421664278117234704L;
 

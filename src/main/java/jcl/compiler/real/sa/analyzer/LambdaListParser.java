@@ -1,4 +1,4 @@
-package jcl.compiler.real.sa.analyzer.specialoperator.lambda;
+package jcl.compiler.real.sa.analyzer;
 
 import java.util.ArrayList;
 import java.util.Collections;

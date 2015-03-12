@@ -1,4 +1,4 @@
-package jcl.compiler.real.sa.analyzer.specialoperator.lambda;
+package jcl.compiler.real.sa.analyzer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +20,8 @@ import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
 import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
-import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyProcessingResult;
-import jcl.compiler.real.sa.analyzer.specialoperator.body.BodyWithDeclaresAndDocStringAnalyzer;
+import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
+import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAndDocStringAnalyzer;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
@@ -35,7 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LambdaExpander extends MacroFunctionExpander {
+public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 
 	private static final long serialVersionUID = -7592502247452528911L;
 

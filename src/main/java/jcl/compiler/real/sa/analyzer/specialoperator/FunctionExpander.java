@@ -7,9 +7,9 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.sa.AnalysisBuilder;
-import jcl.compiler.real.sa.analyzer.LexicalSymbolAnalyzer;
+import jcl.compiler.real.sa.analyzer.SymbolAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
-import jcl.compiler.real.sa.analyzer.specialoperator.lambda.LambdaExpander;
+import jcl.compiler.real.sa.analyzer.LambdaExpander;
 import jcl.compiler.real.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.LambdaCompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.SymbolCompilerFunctionStruct;
@@ -24,12 +24,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class FunctionExpander extends MacroFunctionExpander {
+public class FunctionExpander extends MacroFunctionExpander<CompilerFunctionStruct> {
 
 	private static final long serialVersionUID = -8290125563768560922L;
 
 	@Autowired
-	private LexicalSymbolAnalyzer lexicalSymbolAnalyzer;
+	private SymbolAnalyzer symbolAnalyzer;
 
 	@Autowired
 	private LambdaExpander lambdaExpander;
@@ -74,7 +74,7 @@ public class FunctionExpander extends MacroFunctionExpander {
 
 		SymbolStruct<?> functionSymbolAnalyzed = functionSymbol;
 		if (hasNoFunctionSymbolBinding) {
-			functionSymbolAnalyzed = lexicalSymbolAnalyzer.analyze(functionSymbol, analysisBuilder);
+			functionSymbolAnalyzed = symbolAnalyzer.analyzeLexical(functionSymbol, analysisBuilder);
 		}
 
 		return new SymbolCompilerFunctionStruct(functionSymbolAnalyzed);

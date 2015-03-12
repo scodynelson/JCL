@@ -22,7 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EvalWhenExpander extends MacroFunctionExpander {
+public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 
 	private static final long serialVersionUID = -7301369273443154417L;
 

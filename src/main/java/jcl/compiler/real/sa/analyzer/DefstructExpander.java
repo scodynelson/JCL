@@ -1,4 +1,4 @@
-package jcl.compiler.real.sa.analyzer.specialoperator.compiler;
+package jcl.compiler.real.sa.analyzer;
 
 import javax.annotation.PostConstruct;
 
@@ -10,7 +10,7 @@ import jcl.symbols.SpecialOperator;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DefstructExpander extends MacroFunctionExpander {
+public class DefstructExpander extends MacroFunctionExpander<LispStruct> {
 
 	private static final long serialVersionUID = 5336983779662053736L;
 

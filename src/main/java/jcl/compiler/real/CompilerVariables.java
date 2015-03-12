@@ -6,7 +6,6 @@ package jcl.compiler.real;
 
 import java.math.BigInteger;
 
-import jcl.compiler.old.functions.BaseMacroExpandFn;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.numbers.IntegerStruct;
@@ -16,7 +15,8 @@ import jcl.symbols.Variable;
 public interface CompilerVariables {
 
 	// TODO: this should just use "FUNCALL" instead of this BaseMacroExpandFn stuff...
-    Variable<FunctionStruct> MACROEXPAND_HOOK = new Variable<>("*MACROEXPAND-HOOK*", GlobalPackageStruct.COMMON_LISP, BaseMacroExpandFn.FUNCTION);
+//    Variable<FunctionStruct> MACROEXPAND_HOOK = new Variable<>("*MACROEXPAND-HOOK*", GlobalPackageStruct.COMMON_LISP, BaseMacroExpandFn.FUNCTION);
+    Variable<FunctionStruct> MACROEXPAND_HOOK = new Variable<>("*MACROEXPAND-HOOK*", GlobalPackageStruct.COMMON_LISP, new Funcall());
 
     Variable<?> DEBUGGER_HOOK = new Variable<>("*DEBUGGER-HOOK*", GlobalPackageStruct.COMMON_LISP, null);
     Variable<?> BREAK_ON_SIGNALS = new Variable<>("*BREAK-ON-SIGNALS*", GlobalPackageStruct.COMMON_LISP, null);

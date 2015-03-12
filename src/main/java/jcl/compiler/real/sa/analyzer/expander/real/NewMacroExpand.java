@@ -55,6 +55,10 @@ public class NewMacroExpand {
 				final MacroFunctionExpander<?> macroFunctionExpander = theSymbol.getMacroFunctionExpander();
 
 				if (macroFunctionExpander != null) {
+//					final FunctionStruct macroExpandHook = CompilerVariables.MACROEXPAND_HOOK.getValue();
+//					final Environment currentEnvironment = analysisBuilder.getEnvironmentStack().peek();
+//					final LispStruct expansion = macroExpandHook.apply(macroFunctionExpander, form, currentEnvironment);
+
 					final LispStruct expansion = macroFunctionExpander.expand(form, analysisBuilder);
 					return new NewMacroExpandReturn(expansion, true);
 				}
@@ -74,6 +78,10 @@ public class NewMacroExpand {
 			final SymbolMacroExpander<?> symbolMacroExpander = theSymbol.getSymbolMacroExpander();
 
 			if (symbolMacroExpander != null) {
+//				final FunctionStruct macroExpandHook = CompilerVariables.MACROEXPAND_HOOK.getValue();
+//				final Environment currentEnvironment = analysisBuilder.getEnvironmentStack().peek();
+//				final LispStruct expansion = macroExpandHook.apply(macroFunctionExpander, form, currentEnvironment);
+
 				final LispStruct expansion = symbolMacroExpander.expand(form, analysisBuilder);
 				return new NewMacroExpandReturn(expansion, true);
 			}

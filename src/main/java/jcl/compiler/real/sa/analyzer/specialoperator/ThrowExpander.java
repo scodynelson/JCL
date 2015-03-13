@@ -3,7 +3,7 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.sa.AnalysisBuilder;
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.ThrowStruct;
@@ -30,7 +30,7 @@ public class ThrowExpander extends MacroFunctionExpander<ThrowStruct> {
 	}
 
 	@Override
-	public ThrowStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
+	public ThrowStruct expand(final ListStruct form, final Environment environment) {
 
 		final int inputSize = form.size();
 		if (inputSize != 3) {
@@ -40,12 +40,12 @@ public class ThrowExpander extends MacroFunctionExpander<ThrowStruct> {
 		final ListStruct inputRest = form.getRest();
 
 		final LispStruct catchTag = inputRest.getFirst();
-		final LispStruct catchTagAnalyzed = formAnalyzer.analyze(catchTag, analysisBuilder);
+		final LispStruct catchTagAnalyzed = formAnalyzer.analyze(catchTag, environment);
 
 		final ListStruct inputRestRest = inputRest.getRest();
 
 		final LispStruct resultForm = inputRestRest.getFirst();
-		final LispStruct resultFormAnalyzed = formAnalyzer.analyze(resultForm, analysisBuilder);
+		final LispStruct resultFormAnalyzed = formAnalyzer.analyze(resultForm, environment);
 
 		return new ThrowStruct(catchTagAnalyzed, resultFormAnalyzed);
 	}

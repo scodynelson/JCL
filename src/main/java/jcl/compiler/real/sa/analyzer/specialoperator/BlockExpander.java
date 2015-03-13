@@ -5,7 +5,8 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.sa.AnalysisBuilder;
+import jcl.compiler.real.environment.AnalysisBuilder;
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.BlockStruct;
@@ -33,7 +34,7 @@ public class BlockExpander extends MacroFunctionExpander<BlockStruct> {
 	}
 
 	@Override
-	public BlockStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
+	public BlockStruct expand(final ListStruct form, final Environment environment) {
 
 		final int inputSize = form.size();
 		if (inputSize < 2) {
@@ -47,6 +48,8 @@ public class BlockExpander extends MacroFunctionExpander<BlockStruct> {
 			throw new ProgramErrorException("BLOCK: Label must be of type SymbolStruct. Got: " + second);
 		}
 
+		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
+
 		final SymbolStruct<?> name = (SymbolStruct<?>) second;
 		analysisBuilder.getBlockStack().push(name);
 
@@ -55,7 +58,7 @@ public class BlockExpander extends MacroFunctionExpander<BlockStruct> {
 
 			final List<LispStruct> analyzedForms =
 					forms.stream()
-					     .map(e -> formAnalyzer.analyze(e, analysisBuilder))
+					     .map(e -> formAnalyzer.analyze(e, environment))
 					     .collect(Collectors.toList());
 
 			return new BlockStruct(name, analyzedForms);

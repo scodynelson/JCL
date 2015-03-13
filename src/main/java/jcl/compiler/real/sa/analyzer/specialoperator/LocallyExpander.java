@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
+import jcl.compiler.real.environment.AnalysisBuilder;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
@@ -12,11 +13,10 @@ import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.LocallyEnvironment;
 import jcl.compiler.real.environment.allocation.EnvironmentAllocation;
 import jcl.compiler.real.environment.binding.EnvironmentEnvironmentBinding;
-import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.FormAnalyzer;
-import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAnalyzer;
+import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.LocallyStruct;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
@@ -49,15 +49,16 @@ public class LocallyExpander extends MacroFunctionExpander<LocallyStruct> {
 	}
 
 	@Override
-	public LocallyStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
+	public LocallyStruct expand(final ListStruct form, final Environment environment) {
 
+		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment parentEnvironment = environmentStack.peek();
 
 		final int tempClosureDepth = analysisBuilder.getClosureDepth();
 		final int newClosureDepth = tempClosureDepth + 1;
 
-		final LocallyEnvironment locallyEnvironment = new LocallyEnvironment(parentEnvironment, newClosureDepth);
+		final LocallyEnvironment locallyEnvironment = new LocallyEnvironment(parentEnvironment, analysisBuilder, newClosureDepth);
 		environmentStack.push(locallyEnvironment);
 
 		final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
@@ -66,7 +67,7 @@ public class LocallyExpander extends MacroFunctionExpander<LocallyStruct> {
 
 			final List<LispStruct> bodyForms = form.getRest().getAsJavaList();
 
-			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(bodyForms, analysisBuilder);
+			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(bodyForms, locallyEnvironment);
 			final DeclareStruct declareElement = bodyProcessingResult.getDeclareElement();
 
 			final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
@@ -76,7 +77,7 @@ public class LocallyExpander extends MacroFunctionExpander<LocallyStruct> {
 
 			final List<LispStruct> analyzedBodyForms
 					= realBodyForms.stream()
-					               .map(e -> formAnalyzer.analyze(e, analysisBuilder))
+					               .map(e -> formAnalyzer.analyze(e, locallyEnvironment))
 					               .collect(Collectors.toList());
 
 			return new LocallyStruct(analyzedBodyForms, locallyEnvironment);

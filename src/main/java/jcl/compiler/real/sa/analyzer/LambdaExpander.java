@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
+import jcl.compiler.real.environment.AnalysisBuilder;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
@@ -17,11 +18,10 @@ import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
-import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.FormAnalyzer;
-import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAndDocStringAnalyzer;
+import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
@@ -54,7 +54,7 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 	}
 
 	@Override
-	public LambdaStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
+	public LambdaStruct expand(final ListStruct form, final Environment environment) {
 
 		final int inputSize = form.size();
 		if (inputSize < 2) {
@@ -68,13 +68,14 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 			throw new ProgramErrorException("LAMBDA: Parameter list must be of type ListStruct. Got: " + second);
 		}
 
+		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment parentEnvironment = environmentStack.peek();
 
 		final int tempClosureDepth = analysisBuilder.getClosureDepth();
 		final int newClosureDepth = tempClosureDepth + 1;
 
-		final LambdaEnvironment lambdaEnvironment = new LambdaEnvironment(parentEnvironment, newClosureDepth);
+		final LambdaEnvironment lambdaEnvironment = new LambdaEnvironment(parentEnvironment, analysisBuilder, newClosureDepth);
 		environmentStack.push(lambdaEnvironment);
 
 		final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
@@ -84,10 +85,10 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 			final ListStruct parameters = (ListStruct) second;
 			final List<LispStruct> bodyForms = inputRest.getRest().getAsJavaList();
 
-			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAndDocStringAnalyzer.analyze(bodyForms, analysisBuilder);
+			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAndDocStringAnalyzer.analyze(bodyForms, lambdaEnvironment);
 			final DeclareStruct declareElement = bodyProcessingResult.getDeclareElement();
 
-			final OrdinaryLambdaListBindings parsedLambdaList = LambdaListParser.parseOrdinaryLambdaList(formAnalyzer, analysisBuilder, parameters, declareElement);
+			final OrdinaryLambdaListBindings parsedLambdaList = LambdaListParser.parseOrdinaryLambdaList(formAnalyzer, lambdaEnvironment, parameters, declareElement);
 			final EnhancedLinkedList<LispStruct> newStartingLambdaBody = getNewStartingLambdaBody(parsedLambdaList);
 
 			final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
@@ -98,7 +99,7 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 
 			final ListStruct newLambdaBodyListStruct = ListStruct.buildProperList(newStartingLambdaBody);
 
-			final LispStruct analyzedBodyForms = formAnalyzer.analyze(newLambdaBodyListStruct, analysisBuilder);
+			final LispStruct analyzedBodyForms = formAnalyzer.analyze(newLambdaBodyListStruct, lambdaEnvironment);
 			return new LambdaStruct(parsedLambdaList, bodyProcessingResult.getDocString(), analyzedBodyForms, lambdaEnvironment);
 		} finally {
 			analysisBuilder.setClosureDepth(tempClosureDepth);

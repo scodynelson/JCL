@@ -8,7 +8,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import jcl.LispStruct;
-import jcl.compiler.real.sa.AnalysisBuilder;
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.NewMacroExpand;
@@ -30,9 +30,9 @@ public class FormAnalyzerImpl implements FormAnalyzer {
 	private Map<Class<? extends LispStruct>, Analyzer<? extends LispStruct, LispStruct>> analyzerStrategies;
 
 	@Override
-	public LispStruct analyze(final LispStruct input, final AnalysisBuilder analysisBuilder) {
+	public LispStruct analyze(final LispStruct input, final Environment environment) {
 
-		final NewMacroExpandReturn macroExpandReturn = newMacroExpand.macroExpand(input, analysisBuilder);
+		final NewMacroExpandReturn macroExpandReturn = newMacroExpand.macroExpand(input, environment);
 		final LispStruct expandedForm = macroExpandReturn.getExpandedForm();
 
 		final Analyzer<? extends LispStruct, LispStruct> functionCallAnalyzer = analyzerStrategies.get(expandedForm.getClass());
@@ -41,7 +41,7 @@ public class FormAnalyzerImpl implements FormAnalyzer {
 //			throw new ProgramErrorException("Semantic Analyzer: Unsupported object type cannot be analyzed: " + expandedForm);
 		}
 
-		return functionCallAnalyzer.analyze(expandedForm, analysisBuilder);
+		return functionCallAnalyzer.analyze(expandedForm, environment);
 	}
 
 	@Override

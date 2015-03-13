@@ -5,7 +5,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.sa.AnalysisBuilder;
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.analyzer.SymbolAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
@@ -35,7 +35,7 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 	}
 
 	@Override
-	public DeclareStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
+	public DeclareStruct expand(final ListStruct form, final Environment environment) {
 
 		final List<LispStruct> declSpecs = form.getRest().getAsJavaList();
 
@@ -69,7 +69,7 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 			} else if (declIdentifier.equals(Declaration.OPTIMIZE)) {
 				//TODO: we don't do anything here yet
 			} else if (declIdentifier.equals(Declaration.SPECIAL)) {
-				final List<SpecialDeclarationStruct> sdes = saSpecialDeclaration(analysisBuilder, declSpecBody.getAsJavaList());
+				final List<SpecialDeclarationStruct> sdes = saSpecialDeclaration(environment, declSpecBody.getAsJavaList());
 				declareElement.getSpecialDeclarationElements().addAll(sdes);
 			} else if (declIdentifier.equals(Declaration.TYPE)) {
 				//we don't do anything here yet
@@ -81,7 +81,7 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 		return declareElement;
 	}
 
-	private List<SpecialDeclarationStruct> saSpecialDeclaration(final AnalysisBuilder analysisBuilder, final List<LispStruct> declSpecBody) {
+	private List<SpecialDeclarationStruct> saSpecialDeclaration(final Environment environment, final List<LispStruct> declSpecBody) {
 
 		final List<SpecialDeclarationStruct> specialDeclarationElements = new ArrayList<>(declSpecBody.size());
 
@@ -93,7 +93,7 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 
 			final SymbolStruct<?> sym = (SymbolStruct<?>) declSpecBodyElement;
 
-			symbolAnalyzer.analyzeDynamic(sym, analysisBuilder);
+			symbolAnalyzer.analyzeDynamic(sym, environment);
 
 			final SpecialDeclarationStruct specialDeclarationElement = new SpecialDeclarationStruct(sym);
 			specialDeclarationElements.add(specialDeclarationElement);

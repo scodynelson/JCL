@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.sa.AnalysisBuilder;
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.UnwindProtectStruct;
@@ -32,7 +32,7 @@ public class UnwindProtectExpander extends MacroFunctionExpander<UnwindProtectSt
 	}
 
 	@Override
-	public UnwindProtectStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
+	public UnwindProtectStruct expand(final ListStruct form, final Environment environment) {
 
 		final int inputSize = form.size();
 		if (inputSize < 2) {
@@ -41,13 +41,13 @@ public class UnwindProtectExpander extends MacroFunctionExpander<UnwindProtectSt
 
 		final ListStruct inputRest = form.getRest();
 		final LispStruct protectedForm = inputRest.getFirst();
-		final LispStruct analyzedProtectedForm = formAnalyzer.analyze(protectedForm, analysisBuilder);
+		final LispStruct analyzedProtectedForm = formAnalyzer.analyze(protectedForm, environment);
 
 		final List<LispStruct> cleanupForms = inputRest.getRest().getAsJavaList();
 
 		final List<LispStruct> analyzedCleanupForms =
 				cleanupForms.stream()
-				            .map(e -> formAnalyzer.analyze(e, analysisBuilder))
+				            .map(e -> formAnalyzer.analyze(e, environment))
 				            .collect(Collectors.toList());
 
 		return new UnwindProtectStruct(analyzedProtectedForm, analyzedCleanupForms);

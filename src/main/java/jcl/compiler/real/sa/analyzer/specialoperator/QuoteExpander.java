@@ -6,7 +6,7 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
-import jcl.compiler.real.sa.AnalysisBuilder;
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.QuoteStruct;
@@ -38,7 +38,7 @@ public class QuoteExpander extends MacroFunctionExpander<QuoteStruct> {
 	}
 
 	@Override
-	public QuoteStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
+	public QuoteStruct expand(final ListStruct form, final Environment environment) {
 
 		final int inputSize = form.size();
 		if (inputSize != 2) {
@@ -64,7 +64,7 @@ public class QuoteExpander extends MacroFunctionExpander<QuoteStruct> {
 			elementToAnalyze = ListStruct.buildProperList(SpecialOperator.LOAD_TIME_VALUE, analyzedElement);
 		}
 
-		final LispStruct element = formAnalyzer.analyze(elementToAnalyze, analysisBuilder);
+		final LispStruct element = formAnalyzer.analyze(elementToAnalyze, environment);
 
 		return new QuoteStruct(element);
 	}

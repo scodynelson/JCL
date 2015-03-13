@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.compiler.real.sa;
+package jcl.compiler.real.environment;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -10,9 +10,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
 
-import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.EnvironmentStack;
-import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.struct.specialoperator.go.GoStruct;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -44,7 +41,7 @@ public class AnalysisBuilder implements Serializable {
 		closureDepth = 0;
 		topLevelMode = true;
 
-		final Environment globalEnvironment = new LambdaEnvironment(Environment.NULL, 0);
+		final Environment globalEnvironment = new LambdaEnvironment(Environment.NULL, new AnalysisBuilder(), 0);
 		environmentStack.push(globalEnvironment);
 
 		functionNameStack.push(null);

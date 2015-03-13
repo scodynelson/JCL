@@ -19,7 +19,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class Environment implements LispStruct {
 
-	public static final Environment NULL = new LambdaEnvironment(null, 0);
+	public static final Environment NULL = new LambdaEnvironment(null, new AnalysisBuilder(), 0);
 
 	private static final long serialVersionUID = 7523547599975901124L;
 
@@ -35,13 +35,20 @@ public class Environment implements LispStruct {
 
 	private final List<LoadTimeValue> loadTimeValues = new ArrayList<>();
 
-	protected Environment(final Environment parent, final int closureDepth) {
+	private final AnalysisBuilder analysisBuilder;
+
+	protected Environment(final Environment parent, final AnalysisBuilder analysisBuilder, final int closureDepth) {
 		this.parent = parent;
+		this.analysisBuilder = analysisBuilder;
 		closure = new Closure(closureDepth);
 	}
 
 	public Environment getParent() {
 		return parent;
+	}
+
+	public AnalysisBuilder getAnalysisBuilder() {
+		return analysisBuilder;
 	}
 
 	public List<EnvironmentParameterBinding> getLexicalBindings() {

@@ -9,7 +9,7 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.old.symbol.KeywordOld;
-import jcl.compiler.real.sa.AnalysisBuilder;
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.conditions.exceptions.ProgramErrorException;
@@ -46,11 +46,11 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 	}
 
 	@Override
-	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
-		return expand(form, analysisBuilder, false, false);
+	public LispStruct expand(final ListStruct form, final Environment environment) {
+		return expand(form, environment, false, false);
 	}
 
-	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder, final boolean isTopLevel,
+	public LispStruct expand(final ListStruct form, final Environment environment, final boolean isTopLevel,
 	                       final boolean isCompileOrCompileFile) {
 
 		final ListStruct inputRest = form.getRest();
@@ -86,7 +86,7 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 				// (funcall #'(lambda (forms) (ir1-convert-progn-body start cont forms)) body)
 				final List<LispStruct> analyzedForms =
 						forms.stream()
-						             .map(e -> formAnalyzer.analyze(e, analysisBuilder))
+						             .map(e -> formAnalyzer.analyze(e, environment))
 						             .collect(Collectors.toList());
 
 				// TODO: what we need to do here is:
@@ -99,7 +99,7 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 			// (funcall #'(lambda (forms) (ir1-convert-progn-body start cont forms)) body)
 			final List<LispStruct> analyzedForms =
 					forms.stream()
-					             .map(e -> formAnalyzer.analyze(e, analysisBuilder))
+					             .map(e -> formAnalyzer.analyze(e, environment))
 					             .collect(Collectors.toList());
 
 			// TODO: what we need to do here is:

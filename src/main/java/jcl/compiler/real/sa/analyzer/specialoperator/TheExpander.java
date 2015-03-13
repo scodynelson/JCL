@@ -3,7 +3,7 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.sa.AnalysisBuilder;
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.TheStruct;
@@ -31,7 +31,7 @@ public class TheExpander extends MacroFunctionExpander<TheStruct> {
 	}
 
 	@Override
-	public TheStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
+	public TheStruct expand(final ListStruct form, final Environment environment) {
 
 		final int inputSize = form.size();
 		if (inputSize != 3) {
@@ -49,7 +49,7 @@ public class TheExpander extends MacroFunctionExpander<TheStruct> {
 		final ListStruct inputRestRest = inputRest.getRest();
 
 		final LispStruct theForm = inputRestRest.getFirst();
-		final LispStruct theFormAnalyzed = formAnalyzer.analyze(theForm, analysisBuilder);
+		final LispStruct theFormAnalyzed = formAnalyzer.analyze(theForm, environment);
 
 		return new TheStruct(null, theFormAnalyzed);
 	}

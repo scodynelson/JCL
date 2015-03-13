@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jcl.LispStruct;
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
-import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.struct.functioncall.LambdaFunctionCallStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
@@ -33,7 +33,7 @@ public class LambdaFunctionCallAnalyzer extends FunctionCallAnalyzer {
 	private LambdaExpander lambdaExpander;
 
 	@Override
-	public LambdaFunctionCallStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
+	public LambdaFunctionCallStruct analyze(final ListStruct input, final Environment environment) {
 
 		// ex ((lambda (x) (+ x 1)) 3)
 		final ListStruct functionList = (ListStruct) input.getFirst();
@@ -44,7 +44,7 @@ public class LambdaFunctionCallAnalyzer extends FunctionCallAnalyzer {
 			throw new ProgramErrorException("LIST ANALYZER: First element of a first element ListStruct must be the SpecialOperator 'LAMBDA'. Got: " + functionListFirst);
 		}
 
-		final LambdaStruct lambdaAnalyzed = lambdaExpander.expand(functionList, analysisBuilder);
+		final LambdaStruct lambdaAnalyzed = lambdaExpander.expand(functionList, environment);
 		final OrdinaryLambdaListBindings lambdaListBindings = lambdaAnalyzed.getLambdaListBindings();
 
 		final List<LispStruct> functionArguments = input.getRest().getAsJavaList();
@@ -54,7 +54,7 @@ public class LambdaFunctionCallAnalyzer extends FunctionCallAnalyzer {
 		final List<LispStruct> analyzedFunctionArguments = new ArrayList<>(functionArguments.size());
 
 		for (final LispStruct functionArgument : functionArguments) {
-			final LispStruct analyzedFunctionArgument = formAnalyzer.analyze(functionArgument, analysisBuilder);
+			final LispStruct analyzedFunctionArgument = formAnalyzer.analyze(functionArgument, environment);
 			analyzedFunctionArguments.add(analyzedFunctionArgument);
 		}
 

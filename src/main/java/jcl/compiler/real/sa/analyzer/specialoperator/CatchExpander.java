@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.sa.AnalysisBuilder;
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.CatchStruct;
@@ -32,7 +32,7 @@ public class CatchExpander extends MacroFunctionExpander<CatchStruct> {
 	}
 
 	@Override
-	public CatchStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
+	public CatchStruct expand(final ListStruct form, final Environment environment) {
 
 		final int inputSize = form.size();
 		if (inputSize < 2) {
@@ -42,13 +42,13 @@ public class CatchExpander extends MacroFunctionExpander<CatchStruct> {
 		final ListStruct inputRest = form.getRest();
 
 		final LispStruct catchTag = inputRest.getFirst();
-		final LispStruct catchTagAnalyzed = formAnalyzer.analyze(catchTag, analysisBuilder);
+		final LispStruct catchTagAnalyzed = formAnalyzer.analyze(catchTag, environment);
 
 		final List<LispStruct> forms = inputRest.getRest().getAsJavaList();
 
 		final List<LispStruct> analyzedForms =
 				forms.stream()
-				     .map(e -> formAnalyzer.analyze(e, analysisBuilder))
+				     .map(e -> formAnalyzer.analyze(e, environment))
 				     .collect(Collectors.toList());
 
 		return new CatchStruct(catchTagAnalyzed, analyzedForms);

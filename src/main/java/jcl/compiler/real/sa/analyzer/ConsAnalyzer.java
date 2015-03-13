@@ -4,7 +4,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import jcl.LispStruct;
-import jcl.compiler.real.sa.AnalysisBuilder;
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.Analyzer;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ConsStruct;
@@ -19,7 +19,7 @@ public class ConsAnalyzer implements Analyzer<LispStruct, ConsStruct> {
 	private Map<Class<? extends LispStruct>, Analyzer<? extends LispStruct, LispStruct>> functionCallAnalyzerStrategies;
 
 	@Override
-	public LispStruct analyze(final ConsStruct input, final AnalysisBuilder analysisBuilder) {
+	public LispStruct analyze(final ConsStruct input, final Environment environment) {
 
 		final LispStruct first = input.getFirst();
 		final Analyzer<? extends LispStruct, LispStruct> functionCallAnalyzer = functionCallAnalyzerStrategies.get(first.getClass());
@@ -27,6 +27,6 @@ public class ConsAnalyzer implements Analyzer<LispStruct, ConsStruct> {
 			throw new ProgramErrorException("SA LIST: First element must be of type SymbolStruct or ListStruct. Got: " + first);
 		}
 
-		return functionCallAnalyzer.analyze(input, analysisBuilder);
+		return functionCallAnalyzer.analyze(input, environment);
 	}
 }

@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.sa.AnalysisBuilder;
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.MultipleValueCallStruct;
@@ -32,7 +32,7 @@ public class MultipleValueCallExpander extends MacroFunctionExpander<MultipleVal
 	}
 
 	@Override
-	public MultipleValueCallStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
+	public MultipleValueCallStruct expand(final ListStruct form, final Environment environment) {
 
 		final int inputSize = form.size();
 		if (inputSize < 2) {
@@ -42,12 +42,12 @@ public class MultipleValueCallExpander extends MacroFunctionExpander<MultipleVal
 		final ListStruct inputRest = form.getRest();
 
 		final LispStruct functionForm = inputRest.getFirst();
-		final LispStruct functionFormAnalyzed = formAnalyzer.analyze(functionForm, analysisBuilder);
+		final LispStruct functionFormAnalyzed = formAnalyzer.analyze(functionForm, environment);
 
 		final List<LispStruct> forms = inputRest.getRest().getAsJavaList();
 		final List<LispStruct> analyzedForms =
 				forms.stream()
-				     .map(e -> formAnalyzer.analyze(e, analysisBuilder))
+				     .map(e -> formAnalyzer.analyze(e, environment))
 				     .collect(Collectors.toList());
 
 		return new MultipleValueCallStruct(functionFormAnalyzed, analyzedForms);

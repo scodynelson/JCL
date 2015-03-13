@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
+import jcl.compiler.real.environment.AnalysisBuilder;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
@@ -16,11 +17,10 @@ import jcl.compiler.real.environment.allocation.EnvironmentAllocation;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.EnvironmentEnvironmentBinding;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
-import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.FormAnalyzer;
-import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAnalyzer;
+import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.FletStruct;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
@@ -55,7 +55,7 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 	}
 
 	@Override
-	public FletStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
+	public FletStruct expand(final ListStruct form, final Environment environment) {
 
 		final int inputSize = form.size();
 		if (inputSize < 2) {
@@ -69,13 +69,14 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 			throw new ProgramErrorException("FLET: Parameter list must be of type List. Got: " + second);
 		}
 
+		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment parentEnvironment = environmentStack.peek();
 
 		final int tempClosureDepth = analysisBuilder.getClosureDepth();
 		final int newClosureDepth = tempClosureDepth + 1;
 
-		final FletEnvironment fletEnvironment = new FletEnvironment(parentEnvironment, newClosureDepth);
+		final FletEnvironment fletEnvironment = new FletEnvironment(parentEnvironment, analysisBuilder, newClosureDepth);
 		environmentStack.push(fletEnvironment);
 
 		final Stack<SymbolStruct<?>> functionNameStack = analysisBuilder.getFunctionNameStack();
@@ -91,7 +92,7 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 
 			final List<LispStruct> bodyForms = inputRest.getRest().getAsJavaList();
 
-			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(bodyForms, analysisBuilder);
+			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(bodyForms, fletEnvironment);
 			final DeclareStruct declareElement = bodyProcessingResult.getDeclareElement();
 
 			final List<FletStruct.FletVar> fletVars
@@ -109,7 +110,7 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 
 			final List<LispStruct> analyzedBodyForms
 					= realBodyForms.stream()
-					               .map(e -> formAnalyzer.analyze(e, analysisBuilder))
+					               .map(e -> formAnalyzer.analyze(e, fletEnvironment))
 					               .collect(Collectors.toList());
 
 			return new FletStruct(fletVars, analyzedBodyForms, fletEnvironment);
@@ -161,7 +162,7 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 
 		final ListStruct functionListParameter = (ListStruct) functionParameter;
 		final SymbolStruct<?> functionName = getFunctionListParameterName(functionListParameter);
-		final LispStruct functionInitForm = getFunctionParameterInitForm(functionListParameter, analysisBuilder, environmentStack);
+		final LispStruct functionInitForm = getFunctionParameterInitForm(functionListParameter, environmentStack);
 
 		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(fletEnvironment);
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
@@ -181,7 +182,6 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 	}
 
 	private LispStruct getFunctionParameterInitForm(final ListStruct functionListParameter,
-	                                                final AnalysisBuilder analysisBuilder,
 	                                                final EnvironmentStack environmentStack) {
 
 		final int functionListParameterSize = functionListParameter.size();
@@ -222,7 +222,8 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 
 		final LispStruct functionInitForm;
 		try {
-			functionInitForm = formAnalyzer.analyze(innerFunctionListStruct, analysisBuilder);
+			final Environment tempEnvironment = environmentStack.peek();
+			functionInitForm = formAnalyzer.analyze(innerFunctionListStruct, tempEnvironment);
 		} finally {
 			environmentStack.push(currentEnvironment);
 		}

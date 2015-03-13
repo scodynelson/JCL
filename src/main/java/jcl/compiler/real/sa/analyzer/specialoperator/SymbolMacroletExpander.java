@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
+import jcl.compiler.real.environment.AnalysisBuilder;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
@@ -12,11 +13,10 @@ import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.SymbolMacroletEnvironment;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
-import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.FormAnalyzer;
-import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAnalyzer;
+import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.SymbolMacroletStruct;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
@@ -50,7 +50,7 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 	}
 
 	@Override
-	public SymbolMacroletStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
+	public SymbolMacroletStruct expand(final ListStruct form, final Environment environment) {
 
 		final int inputSize = form.size();
 		if (inputSize < 2) {
@@ -64,13 +64,14 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 			throw new ProgramErrorException("SYMBOL-MACROLET: Parameter list must be of type ListStruct. Got: " + second);
 		}
 
+		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment parentEnvironment = environmentStack.peek();
 
 		final int tempClosureDepth = analysisBuilder.getClosureDepth();
 		final int newClosureDepth = tempClosureDepth + 1;
 
-		final SymbolMacroletEnvironment symbolMacroletEnvironment = new SymbolMacroletEnvironment(parentEnvironment, newClosureDepth);
+		final SymbolMacroletEnvironment symbolMacroletEnvironment = new SymbolMacroletEnvironment(parentEnvironment, analysisBuilder, newClosureDepth);
 		environmentStack.push(symbolMacroletEnvironment);
 
 		final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
@@ -80,7 +81,7 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 			final ListStruct parameters = (ListStruct) second;
 			final List<LispStruct> bodyForms = inputRest.getRest().getAsJavaList();
 
-			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(bodyForms, analysisBuilder);
+			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(bodyForms, symbolMacroletEnvironment);
 			final DeclareStruct declareElement = bodyProcessingResult.getDeclareElement();
 			validateDeclares(declareElement);
 
@@ -95,7 +96,7 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 
 			final List<LispStruct> analyzedBodyForms
 					= realBodyForms.stream()
-					               .map(e -> formAnalyzer.analyze(e, analysisBuilder))
+					               .map(e -> formAnalyzer.analyze(e, symbolMacroletEnvironment))
 					               .collect(Collectors.toList());
 
 			return new SymbolMacroletStruct(symbolMacroletVars, analyzedBodyForms, symbolMacroletEnvironment);
@@ -127,7 +128,7 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 
 		final ListStruct listParameter = (ListStruct) parameter;
 		final SymbolStruct<?> var = getSymbolMacroletParameterVar(listParameter, environmentStack);
-		final LispStruct expansion = getSymbolMacroletParameterExpansion(listParameter, analysisBuilder, environmentStack);
+		final LispStruct expansion = getSymbolMacroletParameterExpansion(listParameter, environmentStack);
 
 		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(symbolMacroletEnvironment);
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
@@ -165,7 +166,6 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 	}
 
 	private LispStruct getSymbolMacroletParameterExpansion(final ListStruct listParameter,
-	                                                       final AnalysisBuilder analysisBuilder,
 	                                                       final EnvironmentStack environmentStack) {
 
 		final LispStruct parameterValue = listParameter.getRest().getFirst();
@@ -174,7 +174,8 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 		final Environment currentEnvironment = environmentStack.pop();
 
 		try {
-			return formAnalyzer.analyze(parameterValue, analysisBuilder);
+			final Environment tempEnvironment = environmentStack.peek();
+			return formAnalyzer.analyze(parameterValue, tempEnvironment);
 		} finally {
 			environmentStack.push(currentEnvironment);
 		}

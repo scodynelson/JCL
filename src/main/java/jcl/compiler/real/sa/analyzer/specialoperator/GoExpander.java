@@ -6,7 +6,8 @@ import java.util.Stack;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.sa.AnalysisBuilder;
+import jcl.compiler.real.environment.AnalysisBuilder;
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.go.GoStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
@@ -30,7 +31,7 @@ public class GoExpander extends MacroFunctionExpander<GoStruct<?>> {
 	}
 
 	@Override
-	public GoStruct<?> expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
+	public GoStruct<?> expand(final ListStruct form, final Environment environment) {
 
 		final int inputSize = form.size();
 		if (inputSize != 2) {
@@ -45,15 +46,16 @@ public class GoExpander extends MacroFunctionExpander<GoStruct<?>> {
 			throw new ProgramErrorException("GO: Tag must be of type SymbolStruct or IntegerStruct. Got: " + second);
 		}
 
-		return getGoTag(analysisBuilder, second);
+		return getGoTag(environment, second);
 	}
 
 	private static boolean isTagbodyTag(final LispStruct element) {
 		return (element instanceof SymbolStruct) || (element instanceof IntegerStruct);
 	}
 
-	private static GoStruct<?> getGoTag(final AnalysisBuilder analysisBuilder, final LispStruct tagToFind) {
+	private static GoStruct<?> getGoTag(final Environment environment, final LispStruct tagToFind) {
 
+		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
 		final Stack<Set<GoStruct<?>>> tagbodyStack = analysisBuilder.getTagbodyStack();
 		final ListIterator<Set<GoStruct<?>>> tagbodyListIterator = tagbodyStack.listIterator(tagbodyStack.size());
 

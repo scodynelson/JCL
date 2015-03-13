@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import jcl.LispStruct;
+import jcl.compiler.real.environment.AnalysisBuilder;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
@@ -19,7 +20,6 @@ import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindin
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
-import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
@@ -48,7 +48,7 @@ final class LambdaListParser {
 	}
 
 	public static OrdinaryLambdaListBindings parseOrdinaryLambdaList(final FormAnalyzer formAnalyzer,
-	                                                                 final AnalysisBuilder analysisBuilder,
+	                                                                 final Environment environment,
 	                                                                 final ListStruct lambdaList,
 	                                                                 final DeclareStruct declareElement) {
 
@@ -62,7 +62,7 @@ final class LambdaListParser {
 		List<RequiredBinding> requiredBindings = Collections.emptyList();
 		if (iterator.hasNext()) {
 			final RequiredParseResult requiredParseResult
-					= parseRequiredBindings(analysisBuilder, iterator, position, declareElement);
+					= parseRequiredBindings(environment, iterator, position, declareElement);
 
 			requiredBindings = requiredParseResult.getRequiredBindings();
 			currentElement = requiredParseResult.getCurrentElement();
@@ -72,7 +72,7 @@ final class LambdaListParser {
 		List<OptionalBinding> optionalBindings = Collections.emptyList();
 		if (AND_OPTIONAL.equals(currentElement)) {
 			final OptionalParseResult optionalParseResult
-					= parseOptionalBindings(formAnalyzer, analysisBuilder, iterator, position, declareElement);
+					= parseOptionalBindings(formAnalyzer, environment, iterator, position, declareElement);
 
 			optionalBindings = optionalParseResult.getOptionalBindings();
 			currentElement = optionalParseResult.getCurrentElement();
@@ -82,7 +82,7 @@ final class LambdaListParser {
 		RestBinding restBinding = null;
 		if (AND_REST.equals(currentElement)) {
 			final RestParseResult restParseResult
-					= parseRestBinding(analysisBuilder, iterator, position, declareElement);
+					= parseRestBinding(environment, iterator, position, declareElement);
 
 			restBinding = restParseResult.getRestBinding();
 			currentElement = restParseResult.getCurrentElement();
@@ -93,7 +93,7 @@ final class LambdaListParser {
 		boolean allowOtherKeys = false;
 		if (AND_KEY.equals(currentElement)) {
 			final KeyParseResult keyParseResult
-					= parseKeyBindings(formAnalyzer, analysisBuilder, iterator, position, declareElement);
+					= parseKeyBindings(formAnalyzer, environment, iterator, position, declareElement);
 
 			keyBindings = keyParseResult.getKeyBindings();
 			allowOtherKeys = keyParseResult.isAllowOtherKeys();
@@ -104,7 +104,7 @@ final class LambdaListParser {
 		List<AuxBinding> auxBindings = Collections.emptyList();
 		if (AND_AUX.equals(currentElement)) {
 			final AuxParseResult auxParseResult
-					= parseAuxBindings(formAnalyzer, analysisBuilder, iterator, position, declareElement);
+					= parseAuxBindings(formAnalyzer, environment, iterator, position, declareElement);
 
 			auxBindings = auxParseResult.getAuxBindings();
 		}
@@ -120,9 +120,10 @@ final class LambdaListParser {
 	 * BINDING PARSE METHODS
 	 */
 
-	private static RequiredParseResult parseRequiredBindings(final AnalysisBuilder analysisBuilder, final Iterator<? extends LispStruct> iterator,
+	private static RequiredParseResult parseRequiredBindings(final Environment environment, final Iterator<? extends LispStruct> iterator,
 	                                                         final int position, final DeclareStruct declareElement) {
 
+		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment currentEnvironment = environmentStack.peek();
 
@@ -159,10 +160,11 @@ final class LambdaListParser {
 		return new RequiredParseResult(currentElement, currentPosition, requiredBindings);
 	}
 
-	private static OptionalParseResult parseOptionalBindings(final FormAnalyzer formAnalyzer, final AnalysisBuilder analysisBuilder,
+	private static OptionalParseResult parseOptionalBindings(final FormAnalyzer formAnalyzer, final Environment environment,
 	                                                         final Iterator<? extends LispStruct> iterator, final int position,
 	                                                         final DeclareStruct declareElement) {
 
+		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment currentEnvironment = environmentStack.peek();
 
@@ -212,7 +214,8 @@ final class LambdaListParser {
 
 				// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
 				final Environment currentEnvironment1 = environmentStack.pop();
-				final LispStruct parameterValueInitForm = formAnalyzer.analyze(initForm, analysisBuilder);
+				final Environment tempEnvironment = environmentStack.peek();
+				final LispStruct parameterValueInitForm = formAnalyzer.analyze(initForm, tempEnvironment);
 				environmentStack.push(currentEnvironment1);
 
 				LambdaEnvironment currentLambda = Environments.getEnclosingLambda(currentEnvironment);
@@ -267,7 +270,7 @@ final class LambdaListParser {
 		return new OptionalParseResult(currentElement, currentPosition, optionalBindings);
 	}
 
-	private static RestParseResult parseRestBinding(final AnalysisBuilder analysisBuilder, final Iterator<? extends LispStruct> iterator,
+	private static RestParseResult parseRestBinding(final Environment environment, final Iterator<? extends LispStruct> iterator,
 	                                                final int position, final DeclareStruct declareElement) {
 
 		int currentPosition = position;
@@ -282,6 +285,7 @@ final class LambdaListParser {
 		}
 		final SymbolStruct<?> currentParam = (SymbolStruct) currentElement;
 
+		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment currentEnvironment = environmentStack.peek();
 
@@ -304,10 +308,11 @@ final class LambdaListParser {
 		return new RestParseResult(currentElement, currentPosition, restBinding);
 	}
 
-	private static KeyParseResult parseKeyBindings(final FormAnalyzer formAnalyzer, final AnalysisBuilder analysisBuilder,
+	private static KeyParseResult parseKeyBindings(final FormAnalyzer formAnalyzer, final Environment environment,
 	                                               final Iterator<? extends LispStruct> iterator, final int position,
 	                                               final DeclareStruct declareElement) {
 
+		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment currentEnvironment = environmentStack.peek();
 
@@ -379,7 +384,8 @@ final class LambdaListParser {
 
 				// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
 				final Environment currentEnvironment1 = environmentStack.pop();
-				final LispStruct parameterValueInitForm = formAnalyzer.analyze(initForm, analysisBuilder);
+				final Environment tempEnvironment = environmentStack.peek();
+				final LispStruct parameterValueInitForm = formAnalyzer.analyze(initForm, tempEnvironment);
 				environmentStack.push(currentEnvironment1);
 
 				LambdaEnvironment currentLambda = Environments.getEnclosingLambda(currentEnvironment);
@@ -440,10 +446,11 @@ final class LambdaListParser {
 		return new KeyParseResult(currentElement, currentPosition, keyBindings, allowOtherKeys);
 	}
 
-	private static AuxParseResult parseAuxBindings(final FormAnalyzer formAnalyzer, final AnalysisBuilder analysisBuilder,
+	private static AuxParseResult parseAuxBindings(final FormAnalyzer formAnalyzer, final Environment environment,
 	                                               final Iterator<? extends LispStruct> iterator, final int position,
 	                                               final DeclareStruct declareElement) {
 
+		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment currentEnvironment = environmentStack.peek();
 
@@ -496,7 +503,8 @@ final class LambdaListParser {
 
 				// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
 				final Environment currentEnvironment1 = environmentStack.pop();
-				final LispStruct parameterValueInitForm = formAnalyzer.analyze(initForm, analysisBuilder);
+				final Environment tempEnvironment = environmentStack.peek();
+				final LispStruct parameterValueInitForm = formAnalyzer.analyze(initForm, tempEnvironment);
 				environmentStack.push(currentEnvironment1);
 
 				final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(currentEnvironment);

@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.real.sa.AnalysisBuilder;
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.MacroExpander;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.lists.ListStruct;
@@ -22,7 +22,7 @@ public class BodyWithDeclaresAnalyzer implements Serializable {
 	@Autowired
 	private MacroExpander<DeclareStruct, ListStruct> declareExpander;
 
-	public BodyProcessingResult analyze(final List<LispStruct> input, final AnalysisBuilder analysisBuilder) {
+	public BodyProcessingResult analyze(final List<LispStruct> input, final Environment environment) {
 
 		DeclareStruct declareElement = null;
 		final List<LispStruct> bodyForms = new ArrayList<>();
@@ -45,7 +45,7 @@ public class BodyWithDeclaresAnalyzer implements Serializable {
 			}
 
 			final ListStruct fullDeclaration = ListStruct.buildProperList(allDeclarations);
-			declareElement = declareExpander.expand(fullDeclaration, analysisBuilder);
+			declareElement = declareExpander.expand(fullDeclaration, environment);
 
 			while (iterator.hasNext()) {
 				bodyForms.add(next);

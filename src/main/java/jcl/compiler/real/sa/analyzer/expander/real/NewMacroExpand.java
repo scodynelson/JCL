@@ -7,7 +7,7 @@ package jcl.compiler.real.sa.analyzer.expander.real;
 import java.util.Optional;
 
 import jcl.LispStruct;
-import jcl.compiler.real.sa.AnalysisBuilder;
+import jcl.compiler.real.environment.Environment;
 import jcl.lists.ListStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageSymbolStruct;
@@ -17,13 +17,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class NewMacroExpand {
 
-	public NewMacroExpandReturn macroExpand(final LispStruct element, final AnalysisBuilder analysisBuilder) {
+	public NewMacroExpandReturn macroExpand(final LispStruct element, final Environment environment) {
 		NewMacroExpandReturn expansion;
 
 		if (element instanceof ListStruct) {
-			expansion = macroExpand1((ListStruct) element, analysisBuilder);
+			expansion = macroExpand1((ListStruct) element, environment);
 		} else if (element instanceof SymbolStruct) {
-			expansion = macroExpand1((SymbolStruct<?>) element, analysisBuilder);
+			expansion = macroExpand1((SymbolStruct<?>) element, environment);
 		} else {
 			expansion = new NewMacroExpandReturn(element, false);
 		}
@@ -32,7 +32,7 @@ public class NewMacroExpand {
 		boolean wasExpanded = expansion.wasExpanded();
 
 		while (wasExpanded) {
-			expansion = macroExpand(expandedForm, analysisBuilder);
+			expansion = macroExpand(expandedForm, environment);
 
 			expandedForm = expansion.getExpandedForm();
 			wasExpanded = expansion.wasExpanded();
@@ -43,7 +43,7 @@ public class NewMacroExpand {
 
 	// MacroExpand1
 
-	public NewMacroExpandReturn macroExpand1(final ListStruct form, final AnalysisBuilder analysisBuilder) {
+	public NewMacroExpandReturn macroExpand1(final ListStruct form, final Environment environment) {
 
 		final LispStruct first = form.getFirst();
 		if (first instanceof SymbolStruct<?>) {
@@ -59,7 +59,7 @@ public class NewMacroExpand {
 //					final Environment currentEnvironment = analysisBuilder.getEnvironmentStack().peek();
 //					final LispStruct expansion = macroExpandHook.apply(macroFunctionExpander, form, currentEnvironment);
 
-					final LispStruct expansion = macroFunctionExpander.expand(form, analysisBuilder);
+					final LispStruct expansion = macroFunctionExpander.expand(form, environment);
 					return new NewMacroExpandReturn(expansion, true);
 				}
 				// TODO: support compiler-macro-functions
@@ -69,7 +69,7 @@ public class NewMacroExpand {
 		return new NewMacroExpandReturn(form, false);
 	}
 
-	public NewMacroExpandReturn macroExpand1(final SymbolStruct<?> form, final AnalysisBuilder analysisBuilder) {
+	public NewMacroExpandReturn macroExpand1(final SymbolStruct<?> form, final Environment environment) {
 
 		final Optional<SymbolStruct<?>> symbolStruct = getSymbolStruct(form);
 		if (symbolStruct.isPresent()) {
@@ -82,7 +82,7 @@ public class NewMacroExpand {
 //				final Environment currentEnvironment = analysisBuilder.getEnvironmentStack().peek();
 //				final LispStruct expansion = macroExpandHook.apply(macroFunctionExpander, form, currentEnvironment);
 
-				final LispStruct expansion = symbolMacroExpander.expand(form, analysisBuilder);
+				final LispStruct expansion = symbolMacroExpander.expand(form, environment);
 				return new NewMacroExpandReturn(expansion, true);
 			}
 		}

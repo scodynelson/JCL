@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
+import jcl.compiler.real.environment.AnalysisBuilder;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
@@ -14,11 +15,10 @@ import jcl.compiler.real.environment.allocation.EnvironmentAllocation;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.EnvironmentEnvironmentBinding;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
-import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.FormAnalyzer;
-import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAnalyzer;
+import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.LetStruct;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
@@ -53,7 +53,7 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 	}
 
 	@Override
-	public LetStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
+	public LetStruct expand(final ListStruct form, final Environment environment) {
 
 		final int inputSize = form.size();
 		if (inputSize < 2) {
@@ -67,13 +67,14 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 			throw new ProgramErrorException("LET: Parameter list must be of type ListStruct. Got: " + second);
 		}
 
+		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment parentEnvironment = environmentStack.peek();
 
 		final int tempClosureDepth = analysisBuilder.getClosureDepth();
 		final int newClosureDepth = tempClosureDepth + 1;
 
-		final LetEnvironment letEnvironment = new LetEnvironment(parentEnvironment, newClosureDepth);
+		final LetEnvironment letEnvironment = new LetEnvironment(parentEnvironment, analysisBuilder, newClosureDepth);
 		environmentStack.push(letEnvironment);
 
 		final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
@@ -83,7 +84,7 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 			final ListStruct parameters = (ListStruct) second;
 			final List<LispStruct> bodyForms = inputRest.getRest().getAsJavaList();
 
-			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(bodyForms, analysisBuilder);
+			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(bodyForms, letEnvironment);
 			final DeclareStruct declareElement = bodyProcessingResult.getDeclareElement();
 
 			final List<? extends LispStruct> parametersAsJavaList = parameters.getAsJavaList();
@@ -100,7 +101,7 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 
 			final List<LispStruct> analyzedBodyForms
 					= realBodyForms.stream()
-					               .map(e -> formAnalyzer.analyze(e, analysisBuilder))
+					               .map(e -> formAnalyzer.analyze(e, letEnvironment))
 					               .collect(Collectors.toList());
 
 			return new LetStruct(letVars, analyzedBodyForms, letEnvironment);
@@ -127,7 +128,7 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 		if (parameter instanceof ListStruct) {
 			final ListStruct listParameter = (ListStruct) parameter;
 			var = getLetListParameterVar(listParameter);
-			initForm = getLetListParameterInitForm(listParameter, analysisBuilder, environmentStack);
+			initForm = getLetListParameterInitForm(listParameter, environmentStack);
 		} else {
 			var = (SymbolStruct<?>) parameter;
 			initForm = NullStruct.INSTANCE;
@@ -179,7 +180,6 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 	}
 
 	private LispStruct getLetListParameterInitForm(final ListStruct listParameter,
-	                                               final AnalysisBuilder analysisBuilder,
 	                                               final EnvironmentStack environmentStack) {
 
 		final LispStruct parameterValue = listParameter.getRest().getFirst();
@@ -188,7 +188,8 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 		final Environment currentEnvironment = environmentStack.pop();
 
 		try {
-			return formAnalyzer.analyze(parameterValue, analysisBuilder);
+			final Environment tempEnvironment = environmentStack.peek();
+			return formAnalyzer.analyze(parameterValue, tempEnvironment);
 		} finally {
 			environmentStack.push(currentEnvironment);
 		}

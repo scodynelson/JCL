@@ -13,8 +13,8 @@ public class MacroletEnvironment extends BindingEnvironment {
 
 	private static final long serialVersionUID = 2950482835657167464L;
 
-	public MacroletEnvironment(final Environment parent, final int closureDepth) {
-		super(parent, closureDepth);
+	public MacroletEnvironment(final Environment parent, final AnalysisBuilder analysisBuilder, final int closureDepth) {
+		super(parent, analysisBuilder, closureDepth);
 	}
 
 	@Override

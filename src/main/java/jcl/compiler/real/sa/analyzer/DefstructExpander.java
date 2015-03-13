@@ -3,7 +3,7 @@ package jcl.compiler.real.sa.analyzer;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.sa.AnalysisBuilder;
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
@@ -23,7 +23,7 @@ public class DefstructExpander extends MacroFunctionExpander<LispStruct> {
 	}
 
 	@Override
-	public LispStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
+	public LispStruct expand(final ListStruct form, final Environment environment) {
 		// TODO: what do we do here???
 		return null;
 	}

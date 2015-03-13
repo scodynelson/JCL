@@ -5,6 +5,7 @@
 package jcl.compiler.real.sa;
 
 import jcl.LispStruct;
+import jcl.compiler.real.environment.Environment;
 import jcl.functions.FunctionStruct;
 
 public abstract class MacroExpander<O extends LispStruct, I extends LispStruct> extends FunctionStruct {
@@ -17,5 +18,5 @@ public abstract class MacroExpander<O extends LispStruct, I extends LispStruct> 
 		return null;
 	}
 
-	public abstract O expand(I form, AnalysisBuilder analysisBuilder);
+	public abstract O expand(I form, Environment environment);
 }

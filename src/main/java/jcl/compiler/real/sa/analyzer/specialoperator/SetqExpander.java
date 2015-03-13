@@ -5,7 +5,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.sa.AnalysisBuilder;
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.SetqStruct;
@@ -33,7 +33,7 @@ public class SetqExpander extends MacroFunctionExpander<SetqStruct> {
 	}
 
 	@Override
-	public SetqStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
+	public SetqStruct expand(final ListStruct form, final Environment environment) {
 
 		final List<LispStruct> forms = form.getRest().getAsJavaList();
 
@@ -53,7 +53,7 @@ public class SetqExpander extends MacroFunctionExpander<SetqStruct> {
 			final SymbolStruct<?> varSymbol = (SymbolStruct<?>) var;
 
 			final LispStruct setqForm = forms.get(index + 1);
-			final LispStruct setqFormAnalyzed = formAnalyzer.analyze(setqForm, analysisBuilder);
+			final LispStruct setqFormAnalyzed = formAnalyzer.analyze(setqForm, environment);
 
 			final SetqStruct.SetqPair setqPair = new SetqStruct.SetqPair(varSymbol, setqFormAnalyzed);
 			setqPairs.add(setqPair);

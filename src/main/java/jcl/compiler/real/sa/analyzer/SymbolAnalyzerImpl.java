@@ -2,6 +2,7 @@ package jcl.compiler.real.sa.analyzer;
 
 import java.util.Optional;
 
+import jcl.compiler.real.environment.AnalysisBuilder;
 import jcl.compiler.real.environment.BindingEnvironment;
 import jcl.compiler.real.environment.Closure;
 import jcl.compiler.real.environment.Environment;
@@ -16,7 +17,6 @@ import jcl.compiler.real.environment.binding.ClosureBinding;
 import jcl.compiler.real.environment.binding.SymbolClosureBinding;
 import jcl.compiler.real.environment.binding.SymbolEnvironmentBinding;
 import jcl.compiler.real.environment.binding.SymbolLocalBinding;
-import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.symbols.SymbolStruct;
 import jcl.types.T;
 import org.springframework.stereotype.Component;
@@ -27,13 +27,14 @@ public class SymbolAnalyzerImpl implements SymbolAnalyzer {
 	private static final long serialVersionUID = 4236867001501188408L;
 
 	@Override
-	public SymbolStruct<?> analyze(final SymbolStruct<?> input, final AnalysisBuilder analysisBuilder) {
-		return analyzeLexical(input, analysisBuilder);
+	public SymbolStruct<?> analyze(final SymbolStruct<?> input, final Environment environment) {
+		return analyzeLexical(input, environment);
 	}
 
 	@Override
-	public SymbolStruct<?> analyzeLexical(final SymbolStruct<?> input, final AnalysisBuilder analysisBuilder) {
+	public SymbolStruct<?> analyzeLexical(final SymbolStruct<?> input, final Environment environment) {
 
+		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment currentEnvironment = environmentStack.peek();
 
@@ -48,7 +49,7 @@ public class SymbolAnalyzerImpl implements SymbolAnalyzer {
 
 		if (bindingEnvironment.equals(Environment.NULL)) {
 			// No inner binding lexical environments. Add it as a DYNAMIC symbol in the current lexical environment before we proceed.
-			analyzeDynamic(input, analysisBuilder);
+			analyzeDynamic(input, environment);
 		}
 
 		final LambdaEnvironment currentEnclosingLambda = Environments.getEnclosingLambda(currentEnvironment);
@@ -115,8 +116,9 @@ public class SymbolAnalyzerImpl implements SymbolAnalyzer {
 	}
 
 	@Override
-	public SymbolStruct<?> analyzeDynamic(final SymbolStruct<?> input, final AnalysisBuilder analysisBuilder) {
+	public SymbolStruct<?> analyzeDynamic(final SymbolStruct<?> input, final Environment environment) {
 
+		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment currentEnvironment = environmentStack.peek();
 

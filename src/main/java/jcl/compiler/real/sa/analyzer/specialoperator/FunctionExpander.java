@@ -3,13 +3,13 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
+import jcl.compiler.real.environment.AnalysisBuilder;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
-import jcl.compiler.real.sa.AnalysisBuilder;
+import jcl.compiler.real.sa.analyzer.LambdaExpander;
 import jcl.compiler.real.sa.analyzer.SymbolAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
-import jcl.compiler.real.sa.analyzer.LambdaExpander;
 import jcl.compiler.real.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.LambdaCompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.SymbolCompilerFunctionStruct;
@@ -43,7 +43,7 @@ public class FunctionExpander extends MacroFunctionExpander<CompilerFunctionStru
 	}
 
 	@Override
-	public CompilerFunctionStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
+	public CompilerFunctionStruct expand(final ListStruct form, final Environment environment) {
 
 		final int inputSize = form.size();
 		if (inputSize != 2) {
@@ -54,16 +54,17 @@ public class FunctionExpander extends MacroFunctionExpander<CompilerFunctionStru
 		final LispStruct second = inputRest.getFirst();
 
 		if (second instanceof SymbolStruct) {
-			return analyzeFunctionSymbol((SymbolStruct<?>) second, analysisBuilder);
+			return analyzeFunctionSymbol((SymbolStruct<?>) second, environment);
 		} else if (second instanceof ListStruct) {
-			return analyzeFunctionList((ListStruct) second, analysisBuilder);
+			return analyzeFunctionList((ListStruct) second, environment);
 		} else {
 			throw new ProgramErrorException("FUNCTION: Function argument must be of type SymbolStruct or ListStruct. Got: " + second);
 		}
 	}
 
-	private CompilerFunctionStruct analyzeFunctionSymbol(final SymbolStruct<?> functionSymbol, final AnalysisBuilder analysisBuilder) {
+	private CompilerFunctionStruct analyzeFunctionSymbol(final SymbolStruct<?> functionSymbol, final Environment environment) {
 
+		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment currentEnvironment = environmentStack.peek();
 
@@ -74,13 +75,13 @@ public class FunctionExpander extends MacroFunctionExpander<CompilerFunctionStru
 
 		SymbolStruct<?> functionSymbolAnalyzed = functionSymbol;
 		if (hasNoFunctionSymbolBinding) {
-			functionSymbolAnalyzed = symbolAnalyzer.analyzeLexical(functionSymbol, analysisBuilder);
+			functionSymbolAnalyzed = symbolAnalyzer.analyzeLexical(functionSymbol, environment);
 		}
 
 		return new SymbolCompilerFunctionStruct(functionSymbolAnalyzed);
 	}
 
-	private CompilerFunctionStruct analyzeFunctionList(final ListStruct functionList, final AnalysisBuilder analysisBuilder) {
+	private CompilerFunctionStruct analyzeFunctionList(final ListStruct functionList, final Environment environment) {
 
 		final LispStruct functionListFirst = functionList.getFirst();
 
@@ -88,7 +89,7 @@ public class FunctionExpander extends MacroFunctionExpander<CompilerFunctionStru
 			throw new ProgramErrorException("FUNCTION: First element of List argument must be the Symbol LAMBDA. Got: " + functionListFirst);
 		}
 
-		final LambdaStruct lambdaElement = lambdaExpander.expand(functionList, analysisBuilder);
+		final LambdaStruct lambdaElement = lambdaExpander.expand(functionList, environment);
 		return new LambdaCompilerFunctionStruct(lambdaElement);
 	}
 

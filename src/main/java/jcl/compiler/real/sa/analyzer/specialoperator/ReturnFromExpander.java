@@ -3,7 +3,8 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.sa.AnalysisBuilder;
+import jcl.compiler.real.environment.AnalysisBuilder;
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.ReturnFromStruct;
@@ -31,7 +32,7 @@ public class ReturnFromExpander extends MacroFunctionExpander<ReturnFromStruct> 
 	}
 
 	@Override
-	public ReturnFromStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
+	public ReturnFromStruct expand(final ListStruct form, final Environment environment) {
 
 		final int inputSize = form.size();
 		if ((inputSize < 2) || (inputSize > 3)) {
@@ -47,6 +48,7 @@ public class ReturnFromExpander extends MacroFunctionExpander<ReturnFromStruct> 
 
 		final SymbolStruct<?> name = (SymbolStruct<?>) second;
 
+		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
 		if (analysisBuilder.getBlockStack().search(name) == -1) {
 			throw new ProgramErrorException("RETURN-FROM: No BLOCK with name " + second + " is visible.");
 		}
@@ -55,7 +57,7 @@ public class ReturnFromExpander extends MacroFunctionExpander<ReturnFromStruct> 
 			final ListStruct inputRestRest = inputRest.getRest();
 
 			final LispStruct result = inputRestRest.getFirst();
-			final LispStruct analyzedResult = formAnalyzer.analyze(result, analysisBuilder);
+			final LispStruct analyzedResult = formAnalyzer.analyze(result, environment);
 			return new ReturnFromStruct(name, analyzedResult);
 		} else {
 			return new ReturnFromStruct(name);

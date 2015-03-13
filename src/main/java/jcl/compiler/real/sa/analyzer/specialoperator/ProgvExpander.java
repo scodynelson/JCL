@@ -6,10 +6,10 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
+import jcl.compiler.real.environment.AnalysisBuilder;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
-import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.SymbolAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
@@ -43,7 +43,7 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 	}
 
 	@Override
-	public ProgvStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
+	public ProgvStruct expand(final ListStruct form, final Environment environment) {
 
 		final int inputSize = form.size();
 		if (inputSize < 3) {
@@ -107,6 +107,7 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 
 		// Do other stuff
 
+		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment currentEnvironment = environmentStack.peek();
 
@@ -122,9 +123,9 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 				val = actualValsJavaList.get(i);
 			}
 
-			final SymbolStruct<?> varSE = symbolAnalyzer.analyzeDynamic(var, analysisBuilder);
+			final SymbolStruct<?> varSE = symbolAnalyzer.analyzeDynamic(var, currentEnvironment);
 
-			final LispStruct analyzedVal = formAnalyzer.analyze(val, analysisBuilder);
+			final LispStruct analyzedVal = formAnalyzer.analyze(val, currentEnvironment);
 			final ProgvStruct.ProgvVar progvVar = new ProgvStruct.ProgvVar(varSE, analyzedVal);
 
 			// TODO: really a 'null' allocation here???
@@ -136,7 +137,7 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 		final List<LispStruct> forms = inputRestRest.getRest().getAsJavaList();
 		final List<LispStruct> analyzedForms =
 				forms.stream()
-				     .map(e -> formAnalyzer.analyze(e, analysisBuilder))
+				     .map(e -> formAnalyzer.analyze(e, currentEnvironment))
 				     .collect(Collectors.toList());
 
 		return new ProgvStruct(progvVars, analyzedForms, null, currentEnvironment);

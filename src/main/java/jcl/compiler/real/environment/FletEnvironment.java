@@ -13,8 +13,8 @@ public class FletEnvironment extends InnerFunctionEnvironment {
 
 	private static final long serialVersionUID = -5894291977824149893L;
 
-	public FletEnvironment(final Environment parent, final int closureDepth) {
-		super(parent, closureDepth);
+	public FletEnvironment(final Environment parent, final AnalysisBuilder analysisBuilder, final int closureDepth) {
+		super(parent, analysisBuilder, closureDepth);
 	}
 
 	@Override

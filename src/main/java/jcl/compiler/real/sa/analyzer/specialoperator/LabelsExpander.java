@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
+import jcl.compiler.real.environment.AnalysisBuilder;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
@@ -16,11 +17,10 @@ import jcl.compiler.real.environment.allocation.EnvironmentAllocation;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.EnvironmentEnvironmentBinding;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
-import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.FormAnalyzer;
-import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAnalyzer;
+import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.LabelsStruct;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
@@ -55,7 +55,7 @@ public class LabelsExpander extends MacroFunctionExpander<LabelsStruct> {
 	}
 
 	@Override
-	public LabelsStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
+	public LabelsStruct expand(final ListStruct form, final Environment environment) {
 
 		final int inputSize = form.size();
 		if (inputSize < 2) {
@@ -69,13 +69,14 @@ public class LabelsExpander extends MacroFunctionExpander<LabelsStruct> {
 			throw new ProgramErrorException("LABELS: Parameter list must be of type ListStruct. Got: " + second);
 		}
 
+		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment parentEnvironment = environmentStack.peek();
 
 		final int tempClosureDepth = analysisBuilder.getClosureDepth();
 		final int newClosureDepth = tempClosureDepth + 1;
 
-		final LabelsEnvironment labelsEnvironment = new LabelsEnvironment(parentEnvironment, newClosureDepth);
+		final LabelsEnvironment labelsEnvironment = new LabelsEnvironment(parentEnvironment, analysisBuilder, newClosureDepth);
 		environmentStack.push(labelsEnvironment);
 
 		final Stack<SymbolStruct<?>> functionNameStack = analysisBuilder.getFunctionNameStack();
@@ -94,7 +95,7 @@ public class LabelsExpander extends MacroFunctionExpander<LabelsStruct> {
 
 			final List<LispStruct> bodyForms = inputRest.getRest().getAsJavaList();
 
-			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(bodyForms, analysisBuilder);
+			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(bodyForms, labelsEnvironment);
 			final DeclareStruct declareElement = bodyProcessingResult.getDeclareElement();
 
 			final List<LabelsStruct.LabelsVar> labelsVars
@@ -109,7 +110,7 @@ public class LabelsExpander extends MacroFunctionExpander<LabelsStruct> {
 
 			final List<LispStruct> analyzedBodyForms
 					= realBodyForms.stream()
-					               .map(e -> formAnalyzer.analyze(e, analysisBuilder))
+					               .map(e -> formAnalyzer.analyze(e, labelsEnvironment))
 					               .collect(Collectors.toList());
 
 			return new LabelsStruct(labelsVars, analyzedBodyForms, labelsEnvironment);
@@ -161,7 +162,7 @@ public class LabelsExpander extends MacroFunctionExpander<LabelsStruct> {
 
 		final ListStruct functionListParameter = (ListStruct) functionParameter;
 		final SymbolStruct<?> functionName = getFunctionListParameterName(functionListParameter);
-		final LispStruct functionInitForm = getFunctionParameterInitForm(functionListParameter, analysisBuilder, lexicalEnvironmentStack);
+		final LispStruct functionInitForm = getFunctionParameterInitForm(functionListParameter, lexicalEnvironmentStack);
 
 		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(labelsEnvironment);
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
@@ -181,7 +182,6 @@ public class LabelsExpander extends MacroFunctionExpander<LabelsStruct> {
 	}
 
 	private LispStruct getFunctionParameterInitForm(final ListStruct functionListParameter,
-	                                                final AnalysisBuilder analysisBuilder,
 	                                                final EnvironmentStack environmentStack) {
 
 		final int functionListParameterSize = functionListParameter.size();
@@ -222,7 +222,8 @@ public class LabelsExpander extends MacroFunctionExpander<LabelsStruct> {
 
 		final LispStruct functionInitForm;
 		try {
-			functionInitForm = formAnalyzer.analyze(innerFunctionListStruct, analysisBuilder);
+			final Environment tempEnvironment = environmentStack.peek();
+			functionInitForm = formAnalyzer.analyze(innerFunctionListStruct, tempEnvironment);
 		} finally {
 			environmentStack.push(currentEnvironment);
 		}

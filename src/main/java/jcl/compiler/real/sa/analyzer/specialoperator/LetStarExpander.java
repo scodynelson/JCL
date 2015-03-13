@@ -6,7 +6,7 @@ import java.util.ListIterator;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.sa.AnalysisBuilder;
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.LetStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
@@ -34,7 +34,7 @@ public class LetStarExpander extends MacroFunctionExpander<LetStruct> {
 	}
 
 	@Override
-	public LetStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
+	public LetStruct expand(final ListStruct form, final Environment environment) {
 
 		final int inputSize = form.size();
 		if (inputSize < 2) {
@@ -66,7 +66,7 @@ public class LetStarExpander extends MacroFunctionExpander<LetStruct> {
 			body = innerLet;
 		}
 
-		return letExpander.expand(ListStruct.buildProperList(body), analysisBuilder);
+		return letExpander.expand(ListStruct.buildProperList(body), environment);
 	}
 
 	@Override

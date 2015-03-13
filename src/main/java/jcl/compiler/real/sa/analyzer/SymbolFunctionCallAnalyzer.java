@@ -10,11 +10,11 @@ import java.util.Set;
 import java.util.Stack;
 
 import jcl.LispStruct;
+import jcl.compiler.real.environment.AnalysisBuilder;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
-import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.struct.functioncall.FunctionCallStruct;
 import jcl.functions.FunctionStruct;
@@ -32,11 +32,12 @@ public class SymbolFunctionCallAnalyzer extends FunctionCallAnalyzer {
 	private FormAnalyzer formAnalyzer;
 
 	@Override
-	public FunctionCallStruct analyze(final ListStruct input, final AnalysisBuilder analysisBuilder) {
+	public FunctionCallStruct analyze(final ListStruct input, final Environment environment) {
 
 		final SymbolStruct<?> functionSymbol = (SymbolStruct<?>) input.getFirst();
 		final List<LispStruct> functionArguments = input.getRest().getAsJavaList();
 
+		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
 		final Set<SymbolStruct<?>> undefinedFunctions = analysisBuilder.getUndefinedFunctions();
 
 		final FunctionStruct function = functionSymbol.getFunction();
@@ -62,7 +63,7 @@ public class SymbolFunctionCallAnalyzer extends FunctionCallAnalyzer {
 		final List<LispStruct> analyzedFunctionArguments = new ArrayList<>(functionArguments.size());
 
 		for (final LispStruct functionArgument : functionArguments) {
-			final LispStruct analyzedFunctionArgument = formAnalyzer.analyze(functionArgument, analysisBuilder);
+			final LispStruct analyzedFunctionArgument = formAnalyzer.analyze(functionArgument, environment);
 			analyzedFunctionArguments.add(analyzedFunctionArgument);
 		}
 

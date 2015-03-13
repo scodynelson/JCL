@@ -18,7 +18,8 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 import jcl.LispStruct;
-import jcl.compiler.real.sa.AnalysisBuilder;
+import jcl.compiler.real.environment.AnalysisBuilder;
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.TagbodyStruct;
@@ -54,7 +55,7 @@ public class TagbodyExpander extends MacroFunctionExpander<TagbodyStruct> {
 	}
 
 	@Override
-	public TagbodyStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
+	public TagbodyStruct expand(final ListStruct form, final Environment environment) {
 
 		ListStruct body = form.getRest();
 		List<LispStruct> bodyAsJavaList = body.getAsJavaList();
@@ -62,6 +63,7 @@ public class TagbodyExpander extends MacroFunctionExpander<TagbodyStruct> {
 		final Set<GoStruct<?>> currentTagSet = bodyAsJavaList.stream()
 		                                                     .collect(new TagbodyInitialTagCollector());
 
+		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
 		analysisBuilder.getTagbodyStack().push(currentTagSet);
 
 		// If the first element is not a 'tag', we have a default form set. Therefore, we are going to generate a
@@ -74,7 +76,7 @@ public class TagbodyExpander extends MacroFunctionExpander<TagbodyStruct> {
 
 		try {
 			final Map<LispStruct, List<LispStruct>> tagbodyForms = bodyAsJavaList.stream()
-			                                                                     .collect(new TagbodyCollector(formAnalyzer, analysisBuilder));
+			                                                                     .collect(new TagbodyCollector(formAnalyzer, environment));
 			return new TagbodyStruct(tagbodyForms);
 		} finally {
 			analysisBuilder.getTagbodyStack().pop();
@@ -132,13 +134,13 @@ public class TagbodyExpander extends MacroFunctionExpander<TagbodyStruct> {
 
 		private final FormAnalyzer analyzer;
 
-		private final AnalysisBuilder analysisBuilder;
+		private final Environment environment;
 
 		private GoStruct<?> currentTag;
 
-		private TagbodyCollector(final FormAnalyzer analyzer, final AnalysisBuilder analysisBuilder) {
+		private TagbodyCollector(final FormAnalyzer analyzer, final Environment environment) {
 			this.analyzer = analyzer;
-			this.analysisBuilder = analysisBuilder;
+			this.environment = environment;
 			currentTag = null;
 		}
 
@@ -147,7 +149,7 @@ public class TagbodyExpander extends MacroFunctionExpander<TagbodyStruct> {
 				lispStructListMap.put(currentTag, new ArrayList<>());
 			}
 
-			final LispStruct analyzedForm = analyzer.analyze(lispStruct, analysisBuilder);
+			final LispStruct analyzedForm = analyzer.analyze(lispStruct, environment);
 			lispStructListMap.get(currentTag).add(analyzedForm);
 		}
 

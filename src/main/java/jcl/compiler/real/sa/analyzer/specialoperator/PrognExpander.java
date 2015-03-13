@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.sa.AnalysisBuilder;
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
@@ -31,13 +31,13 @@ public class PrognExpander extends MacroFunctionExpander<PrognStruct> {
 	}
 
 	@Override
-	public PrognStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
+	public PrognStruct expand(final ListStruct form, final Environment environment) {
 
 		final List<LispStruct> forms = form.getRest().getAsJavaList();
 
 		final List<LispStruct> analyzedForms =
 				forms.stream()
-				     .map(e -> formAnalyzer.analyze(e, analysisBuilder))
+				     .map(e -> formAnalyzer.analyze(e, environment))
 				     .collect(Collectors.toList());
 
 		return new PrognStruct(analyzedForms);

@@ -5,11 +5,11 @@ import java.util.UUID;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
+import jcl.compiler.real.environment.AnalysisBuilder;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LoadTimeValue;
-import jcl.compiler.real.sa.AnalysisBuilder;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.ImmutableLoadTimeValueStruct;
@@ -40,7 +40,7 @@ public class LoadTimeValueExpander extends MacroFunctionExpander<LoadTimeValueSt
 	}
 
 	@Override
-	public LoadTimeValueStruct expand(final ListStruct form, final AnalysisBuilder analysisBuilder) {
+	public LoadTimeValueStruct expand(final ListStruct form, final Environment environment) {
 
 		final int inputSize = form.size();
 		if ((inputSize < 2) || (inputSize > 3)) {
@@ -61,6 +61,7 @@ public class LoadTimeValueExpander extends MacroFunctionExpander<LoadTimeValueSt
 		final LispStruct ltvForm = inputRest.getFirst();
 		final ListStruct evalForm = ListStruct.buildProperList(CommonLispSymbols.EVAL, ltvForm);
 
+		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
 		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
 		final Environment currentEnvironment = environmentStack.peek();
 		final Environment currentEnclosingLambda = Environments.getEnclosingLambda(currentEnvironment);
@@ -75,7 +76,7 @@ public class LoadTimeValueExpander extends MacroFunctionExpander<LoadTimeValueSt
 		try {
 			analysisBuilder.setClosureDepth(newClosureDepth);
 
-			final LispStruct analyzedEvalForm = formAnalyzer.analyze(evalForm, analysisBuilder);
+			final LispStruct analyzedEvalForm = formAnalyzer.analyze(evalForm, nullLexicalEnvironment);
 
 			if (isReadOnly) {
 				final UUID uniqueLTVId = UUID.randomUUID();

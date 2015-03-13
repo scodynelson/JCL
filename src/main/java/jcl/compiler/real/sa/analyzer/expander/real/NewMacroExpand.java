@@ -7,7 +7,9 @@ package jcl.compiler.real.sa.analyzer.expander.real;
 import java.util.Optional;
 
 import jcl.LispStruct;
+import jcl.compiler.real.CompilerVariables;
 import jcl.compiler.real.environment.Environment;
+import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageSymbolStruct;
@@ -55,11 +57,10 @@ public class NewMacroExpand {
 				final MacroFunctionExpander<?> macroFunctionExpander = theSymbol.getMacroFunctionExpander();
 
 				if (macroFunctionExpander != null) {
-//					final FunctionStruct macroExpandHook = CompilerVariables.MACROEXPAND_HOOK.getValue();
-//					final Environment currentEnvironment = analysisBuilder.getEnvironmentStack().peek();
-//					final LispStruct expansion = macroExpandHook.apply(macroFunctionExpander, form, currentEnvironment);
+					final FunctionStruct macroExpandHook = CompilerVariables.MACROEXPAND_HOOK.getValue();
+					final LispStruct expansion = macroExpandHook.apply(macroFunctionExpander, form, environment);
 
-					final LispStruct expansion = macroFunctionExpander.expand(form, environment);
+//					final LispStruct expansion = macroFunctionExpander.expand(form, environment);
 					return new NewMacroExpandReturn(expansion, true);
 				}
 				// TODO: support compiler-macro-functions
@@ -78,11 +79,10 @@ public class NewMacroExpand {
 			final SymbolMacroExpander<?> symbolMacroExpander = theSymbol.getSymbolMacroExpander();
 
 			if (symbolMacroExpander != null) {
-//				final FunctionStruct macroExpandHook = CompilerVariables.MACROEXPAND_HOOK.getValue();
-//				final Environment currentEnvironment = analysisBuilder.getEnvironmentStack().peek();
-//				final LispStruct expansion = macroExpandHook.apply(macroFunctionExpander, form, currentEnvironment);
+				final FunctionStruct macroExpandHook = CompilerVariables.MACROEXPAND_HOOK.getValue();
+				final LispStruct expansion = macroExpandHook.apply(symbolMacroExpander, form, environment);
 
-				final LispStruct expansion = symbolMacroExpander.expand(form, environment);
+//				final LispStruct expansion = symbolMacroExpander.expand(form, environment);
 				return new NewMacroExpandReturn(expansion, true);
 			}
 		}

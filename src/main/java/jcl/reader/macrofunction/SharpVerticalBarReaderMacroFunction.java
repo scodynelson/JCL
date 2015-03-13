@@ -11,6 +11,7 @@ import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.lists.NullStruct;
 import jcl.reader.Reader;
+import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
 import jcl.streams.ReadPeekResult;
 import org.springframework.stereotype.Component;
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Component;
  * Implements the '#|...|#' Lisp reader macro.
  */
 @Component
-public class SharpVerticalBarReaderMacroFunction extends ReaderMacroFunctionImpl {
+public class SharpVerticalBarReaderMacroFunction extends ReaderMacroFunction {
 
 	/**
 	 * Serializable Version Unique Identifier.

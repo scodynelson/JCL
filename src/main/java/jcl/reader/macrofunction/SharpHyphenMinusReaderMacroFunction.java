@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.reader.Reader;
+import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -22,7 +23,7 @@ import org.springframework.stereotype.Component;
  * Implements the '#-' Lisp reader macro.
  */
 @Component
-public class SharpHyphenMinusReaderMacroFunction extends ReaderMacroFunctionImpl {
+public class SharpHyphenMinusReaderMacroFunction extends ReaderMacroFunction {
 
 	/**
 	 * Serializable Version Unique Identifier.

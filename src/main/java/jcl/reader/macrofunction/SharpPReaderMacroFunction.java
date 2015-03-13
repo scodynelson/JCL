@@ -15,6 +15,7 @@ import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.printer.Printer;
 import jcl.reader.Reader;
+import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
 import jcl.system.CommonLispSymbols;
@@ -29,7 +30,7 @@ import org.springframework.stereotype.Component;
  * Implements the '#p' Lisp reader macro.
  */
 @Component
-public class SharpPReaderMacroFunction extends ReaderMacroFunctionImpl {
+public class SharpPReaderMacroFunction extends ReaderMacroFunction {
 
 	/**
 	 * Serializable Version Unique Identifier.

@@ -11,6 +11,7 @@ import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.numbers.RationalStruct;
 import jcl.reader.Reader;
+import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -24,7 +25,7 @@ import org.springframework.stereotype.Component;
  * Implements the '#b' Lisp reader macro.
  */
 @Component
-public class SharpBReaderMacroFunction extends ReaderMacroFunctionImpl {
+public class SharpBReaderMacroFunction extends ReaderMacroFunction {
 
 	/**
 	 * Serializable Version Unique Identifier.

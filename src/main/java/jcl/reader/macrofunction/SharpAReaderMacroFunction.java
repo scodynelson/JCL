@@ -18,6 +18,7 @@ import jcl.lists.NullStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.printer.Printer;
 import jcl.reader.Reader;
+import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
 import jcl.sequences.SequenceStruct;
@@ -33,7 +34,7 @@ import org.springframework.stereotype.Component;
  * Implements the '#a' Lisp reader macro.
  */
 @Component
-public class SharpAReaderMacroFunction extends ReaderMacroFunctionImpl {
+public class SharpAReaderMacroFunction extends ReaderMacroFunction {
 
 	/**
 	 * Serializable Version Unique Identifier.

@@ -4,22 +4,48 @@
 
 package jcl.reader;
 
-import java.io.Serializable;
 import java.math.BigInteger;
 
 import jcl.LispStruct;
+import jcl.characters.CharacterStruct;
+import jcl.functions.FunctionStruct;
+import jcl.numbers.IntegerStruct;
+import jcl.streams.InputStream;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 /**
- * Interface definition for all Reader defined macro functions that read character macros based off of a provided
- * {@link Integer} code point.
+ * Abstract implementation definition for all Reader defined macro functions that read character macros based off of a
+ * provided {@link Integer} code point.
  */
-@FunctionalInterface
-public interface ReaderMacroFunction extends Serializable {
+public abstract class ReaderMacroFunction extends FunctionStruct {
 
 	/**
 	 * Serializable Version Unique Identifier.
 	 */
-	long serialVersionUID = -1L;
+	private static final long serialVersionUID = -5244042303586458372L;
+
+	@Autowired
+	private ApplicationContext applicationContext;
+
+	@Override
+	public LispStruct apply(final LispStruct... lispStructs) {
+
+		final InputStream stream = (InputStream) lispStructs[0];
+
+		final CharacterStruct macroCharacter = (CharacterStruct) lispStructs[1];
+		final int codePoint = macroCharacter.getCodePoint();
+
+		BigInteger numberArgument = null;
+		if (isDispatch()) {
+			final IntegerStruct macroNumberArgument = (IntegerStruct) lispStructs[2];
+			numberArgument = macroNumberArgument.getBigInteger();
+		}
+
+		final Reader reader = applicationContext.getBean(Reader.class, stream);
+
+		return readMacro(codePoint, reader, numberArgument);
+	}
 
 	/**
 	 * Interpret the character stream from the provided {@link Reader} (up to End-of-File or new line) based on the
@@ -34,7 +60,7 @@ public interface ReaderMacroFunction extends Serializable {
 	 *
 	 * @return the parsed {@link LispStruct} token
 	 */
-	LispStruct readMacro(int codePoint, Reader reader, BigInteger numberArgument);
+	public abstract LispStruct readMacro(int codePoint, Reader reader, BigInteger numberArgument);
 
 	/**
 	 * Default method used to determine if the ReaderMacroFunction is a dispatching macro. The default value return is
@@ -42,7 +68,7 @@ public interface ReaderMacroFunction extends Serializable {
 	 *
 	 * @return whether or not the ReaderMacroFunction is a dispatching macro
 	 */
-	default boolean isDispatch() {
+	public boolean isDispatch() {
 		return false;
 	}
 }

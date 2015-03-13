@@ -12,6 +12,7 @@ import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.NullStruct;
 import jcl.reader.Reader;
+import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
 import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Component;
  * Implements the '#:' Lisp reader macro.
  */
 @Component
-public class SharpColonReaderMacroFunction extends ReaderMacroFunctionImpl {
+public class SharpColonReaderMacroFunction extends ReaderMacroFunction {
 
 	/**
 	 * Serializable Version Unique Identifier.

@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.reader.Reader;
+import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
 import jcl.streams.ReadPeekResult;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Component;
  * Implements the ';' Lisp reader macro.
  */
 @Component
-public class SemicolonReaderMacroFunction extends ReaderMacroFunctionImpl {
+public class SemicolonReaderMacroFunction extends ReaderMacroFunction {
 
 	/**
 	 * Serializable Version Unique Identifier.

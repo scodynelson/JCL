@@ -55,7 +55,7 @@ final class ExtendedTokenReaderMacroFunction {
 		while (!readResult.isEof()) {
 
 			final int codePoint = readResult.getResult();
-			if (ReaderMacroFunctionImpl.isWhitespaceOrTerminating(codePoint)) {
+			if (ReaderMacroFunctionUtil.isWhitespaceOrTerminating(codePoint)) {
 				reader.unreadChar(codePoint);
 
 				// Makes sure to remove the last character read from the builder
@@ -180,7 +180,7 @@ final class ExtendedTokenReaderMacroFunction {
 	 * @return true if the provided {@code codePoint} is a {@link SyntaxType#SINGLE_ESCAPE}; false otherwise
 	 */
 	private static boolean isSingleEscape(final int codePoint) {
-		return ReaderMacroFunctionImpl.isSyntaxType(codePoint, SyntaxType.SINGLE_ESCAPE);
+		return ReaderMacroFunctionUtil.isSyntaxType(codePoint, SyntaxType.SINGLE_ESCAPE);
 	}
 
 	/**
@@ -193,7 +193,7 @@ final class ExtendedTokenReaderMacroFunction {
 	 * @return true if the provided {@code codePoint} is a {@link SyntaxType#SINGLE_ESCAPE}; false otherwise
 	 */
 	private static boolean isMultipleEscape(final int codePoint) {
-		return ReaderMacroFunctionImpl.isSyntaxType(codePoint, SyntaxType.MULTIPLE_ESCAPE);
+		return ReaderMacroFunctionUtil.isSyntaxType(codePoint, SyntaxType.MULTIPLE_ESCAPE);
 	}
 
 	/**
@@ -207,8 +207,8 @@ final class ExtendedTokenReaderMacroFunction {
 	 * AttributeType#PACKAGEMARKER}; false otherwise
 	 */
 	private static boolean isPackageMarker(final int codePoint) {
-		return ReaderMacroFunctionImpl.isSyntaxType(codePoint, SyntaxType.CONSTITUENT)
-				&& ReaderMacroFunctionImpl.isAttributeType(codePoint, AttributeType.PACKAGEMARKER);
+		return ReaderMacroFunctionUtil.isSyntaxType(codePoint, SyntaxType.CONSTITUENT)
+				&& ReaderMacroFunctionUtil.isAttributeType(codePoint, AttributeType.PACKAGEMARKER);
 	}
 
 	/**

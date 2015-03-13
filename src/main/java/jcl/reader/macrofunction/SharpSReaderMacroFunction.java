@@ -13,6 +13,7 @@ import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.reader.Reader;
+import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
 import jcl.streams.ReadPeekResult;
@@ -28,7 +29,7 @@ import org.springframework.stereotype.Component;
  * Implements the '#s' Lisp reader macro.
  */
 @Component
-public class SharpSReaderMacroFunction extends ReaderMacroFunctionImpl {
+public class SharpSReaderMacroFunction extends ReaderMacroFunction {
 
 	/**
 	 * Serializable Version Unique Identifier.

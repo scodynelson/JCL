@@ -17,6 +17,7 @@ import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.reader.Reader;
+import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
 import jcl.system.CommonLispSymbols;
 import org.apache.commons.lang3.StringUtils;
@@ -26,7 +27,7 @@ import org.springframework.stereotype.Component;
  * Implements the '#*' Lisp reader macro.
  */
 @Component
-public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunctionImpl {
+public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunction {
 
 	/**
 	 * Serializable Version Unique Identifier.

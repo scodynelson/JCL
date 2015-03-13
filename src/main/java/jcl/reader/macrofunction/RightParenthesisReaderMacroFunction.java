@@ -11,6 +11,7 @@ import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.reader.Reader;
+import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Component;
  * Implements the ')' Lisp reader macro.
  */
 @Component
-public class RightParenthesisReaderMacroFunction extends ReaderMacroFunctionImpl {
+public class RightParenthesisReaderMacroFunction extends ReaderMacroFunction {
 
 	/**
 	 * Serializable Version Unique Identifier.

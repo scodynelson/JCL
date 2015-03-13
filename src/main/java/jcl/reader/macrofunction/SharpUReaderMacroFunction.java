@@ -12,6 +12,7 @@ import jcl.characters.CharacterConstants;
 import jcl.characters.CharacterStruct;
 import jcl.lists.NullStruct;
 import jcl.reader.Reader;
+import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
 import org.springframework.stereotype.Component;
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Component;
  * Implements the '#u' Lisp reader macro.
  */
 @Component
-public class SharpUReaderMacroFunction extends ReaderMacroFunctionImpl {
+public class SharpUReaderMacroFunction extends ReaderMacroFunction {
 
 	/**
 	 * Serializable Version Unique Identifier.

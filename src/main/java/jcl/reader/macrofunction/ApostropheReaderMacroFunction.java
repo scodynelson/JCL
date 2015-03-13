@@ -13,6 +13,7 @@ import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.reader.Reader;
+import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
 import jcl.system.CommonLispSymbols;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -25,7 +26,7 @@ import org.springframework.stereotype.Component;
  * Implements the ''' Lisp reader macro.
  */
 @Component
-public class ApostropheReaderMacroFunction extends ReaderMacroFunctionImpl {
+public class ApostropheReaderMacroFunction extends ReaderMacroFunction {
 
 	/**
 	 * Serializable Version Unique Identifier.

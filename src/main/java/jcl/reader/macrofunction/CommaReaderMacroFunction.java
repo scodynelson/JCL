@@ -13,6 +13,7 @@ import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ConsStruct;
 import jcl.lists.NullStruct;
 import jcl.reader.Reader;
+import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
 import jcl.streams.ReadPeekResult;
 import jcl.system.CommonLispSymbols;
@@ -26,7 +27,7 @@ import org.springframework.stereotype.Component;
  * Implements the ',' Lisp reader macro.
  */
 @Component
-public class CommaReaderMacroFunction extends ReaderMacroFunctionImpl {
+public class CommaReaderMacroFunction extends ReaderMacroFunction {
 
 	/**
 	 * Serializable Version Unique Identifier.

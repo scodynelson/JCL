@@ -4,29 +4,14 @@
 
 package jcl.reader.macrofunction;
 
-import jcl.LispStruct;
-import jcl.functions.FunctionStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.reader.AttributeType;
-import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.SyntaxType;
 
-/**
- * Abstract implementation definition for all Reader defined macro functions that read character macros based off of a
- * provided {@link Integer} code point.
- */
-abstract class ReaderMacroFunctionImpl extends FunctionStruct implements ReaderMacroFunction {
+final class ReaderMacroFunctionUtil {
 
-	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	private static final long serialVersionUID = -5244042303586458372L;
-
-	@Override
-	public LispStruct apply(final LispStruct... lispStructs) {
-		// TODO: do this
-		return null;
+	private ReaderMacroFunctionUtil() {
 	}
 
 	/**

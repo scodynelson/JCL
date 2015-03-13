@@ -109,7 +109,7 @@ final class ListReaderMacroFunction implements Serializable {
 		final ReadPeekResult readResult = reader.readChar(true, NullStruct.INSTANCE, false);
 		final int nextCodePoint = readResult.getResult();
 
-		if (ReaderMacroFunctionImpl.isWhitespaceOrTerminating(nextCodePoint)) {
+		if (ReaderMacroFunctionUtil.isWhitespaceOrTerminating(nextCodePoint)) {
 			if (currentTokenList.isEmpty()) {
 				throw new ReaderErrorException("Nothing appears before . in list.");
 			}
@@ -135,7 +135,7 @@ final class ListReaderMacroFunction implements Serializable {
 	 */
 	private void processAfterDot(final Reader reader, final List<LispStruct> currentTokenList, final int codePoint) {
 		int firstCodePoint = codePoint;
-		if (ReaderMacroFunctionImpl.isWhitespace(codePoint)) {
+		if (ReaderMacroFunctionUtil.isWhitespace(codePoint)) {
 			firstCodePoint = flushWhitespace(reader);
 		}
 
@@ -181,7 +181,7 @@ final class ListReaderMacroFunction implements Serializable {
 		// NOTE: This will throw errors when it reaches an EOF
 		ReadPeekResult readResult = reader.readChar(true, NullStruct.INSTANCE, false);
 		int codePoint = readResult.getResult();
-		while (ReaderMacroFunctionImpl.isWhitespace(codePoint)) {
+		while (ReaderMacroFunctionUtil.isWhitespace(codePoint)) {
 			readResult = reader.readChar(true, NullStruct.INSTANCE, false);
 			codePoint = readResult.getResult();
 		}

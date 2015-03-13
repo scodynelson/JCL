@@ -219,7 +219,7 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	/**
 	 * This holds mappings for code points to {@link ReaderMacroFunction}s and delegates to the proper one when used.
 	 */
-	private static final class DispatchTable implements ReaderMacroFunction {
+	private static final class DispatchTable extends ReaderMacroFunction {
 
 		/**
 		 * Serializable Version Unique Identifier.

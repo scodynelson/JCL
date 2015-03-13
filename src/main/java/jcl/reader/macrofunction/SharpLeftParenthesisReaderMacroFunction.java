@@ -16,6 +16,7 @@ import jcl.lists.ListStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.printer.Printer;
 import jcl.reader.Reader;
+import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
 import jcl.system.CommonLispSymbols;
 import jcl.types.Null;
@@ -31,7 +32,7 @@ import org.springframework.stereotype.Component;
  * Implements the '#(...)' Lisp reader macro.
  */
 @Component
-public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunctionImpl {
+public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction {
 
 	/**
 	 * Serializable Version Unique Identifier.

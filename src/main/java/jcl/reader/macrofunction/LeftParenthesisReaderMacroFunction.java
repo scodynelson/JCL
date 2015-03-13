@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 import jcl.characters.CharacterConstants;
 import jcl.lists.ListStruct;
 import jcl.reader.Reader;
+import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -22,7 +23,7 @@ import org.springframework.stereotype.Component;
  * Implements the '(...)' Lisp reader macro.
  */
 @Component
-public class LeftParenthesisReaderMacroFunction extends ReaderMacroFunctionImpl {
+public class LeftParenthesisReaderMacroFunction extends ReaderMacroFunction {
 
 	/**
 	 * Serializable Version Unique Identifier.

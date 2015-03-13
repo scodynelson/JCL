@@ -40,7 +40,7 @@ final class UnicodeCharacterReaderMacroFunction {
 		// NOTE: This will throw errors when it reaches an EOF
 		ReadPeekResult readResult = reader.readChar(true, NullStruct.INSTANCE, false);
 		int codePoint = readResult.getResult();
-		while (!ReaderMacroFunctionImpl.isWhitespace(codePoint)) {
+		while (!ReaderMacroFunctionUtil.isWhitespace(codePoint)) {
 			unicodeCharacterBuilder.appendCodePoint(codePoint);
 
 			readResult = reader.readChar(true, NullStruct.INSTANCE, false);

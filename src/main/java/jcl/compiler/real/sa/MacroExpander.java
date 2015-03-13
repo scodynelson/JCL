@@ -12,11 +12,5 @@ public abstract class MacroExpander<O extends LispStruct, I extends LispStruct> 
 
 	private static final long serialVersionUID = 4976821260573562104L;
 
-	@Override
-	public LispStruct apply(LispStruct... lispStructs) {
-		// TODO: do this
-		return null;
-	}
-
 	public abstract O expand(I form, Environment environment);
 }

@@ -5,9 +5,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.AnalysisBuilder;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.LetEnvironment;
@@ -67,56 +65,37 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 			throw new ProgramErrorException("LET: Parameter list must be of type ListStruct. Got: " + second);
 		}
 
-		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
-		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
-		final Environment parentEnvironment = environmentStack.peek();
+		final LetEnvironment letEnvironment = new LetEnvironment(environment);
 
-		final int tempClosureDepth = analysisBuilder.getClosureDepth();
-		final int newClosureDepth = tempClosureDepth + 1;
+		final ListStruct parameters = (ListStruct) second;
+		final List<LispStruct> bodyForms = inputRest.getRest().getAsJavaList();
 
-		final LetEnvironment letEnvironment = new LetEnvironment(parentEnvironment, analysisBuilder, newClosureDepth);
-		environmentStack.push(letEnvironment);
+		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(bodyForms, letEnvironment);
+		final DeclareStruct declareElement = bodyProcessingResult.getDeclareElement();
 
-		final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
-		try {
-			analysisBuilder.setClosureDepth(newClosureDepth);
+		final List<? extends LispStruct> parametersAsJavaList = parameters.getAsJavaList();
 
-			final ListStruct parameters = (ListStruct) second;
-			final List<LispStruct> bodyForms = inputRest.getRest().getAsJavaList();
+		final List<LetStruct.LetVar> letVars
+				= parametersAsJavaList.stream()
+				                      .map(e -> getLetVar(e, declareElement, letEnvironment))
+				                      .collect(Collectors.toList());
 
-			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(bodyForms, letEnvironment);
-			final DeclareStruct declareElement = bodyProcessingResult.getDeclareElement();
+		final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
+		specialDeclarationElements.forEach(e -> addDynamicVariableBinding(e, letEnvironment));
 
-			final List<? extends LispStruct> parametersAsJavaList = parameters.getAsJavaList();
+		final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
 
-			final List<LetStruct.LetVar> letVars
-					= parametersAsJavaList.stream()
-					                      .map(e -> getLetVar(e, declareElement, analysisBuilder, letEnvironment, environmentStack))
-					                      .collect(Collectors.toList());
+		final List<LispStruct> analyzedBodyForms
+				= realBodyForms.stream()
+				               .map(e -> formAnalyzer.analyze(e, letEnvironment))
+				               .collect(Collectors.toList());
 
-			final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
-			specialDeclarationElements.forEach(e -> addDynamicVariableBinding(e, analysisBuilder, letEnvironment));
-
-			final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
-
-			final List<LispStruct> analyzedBodyForms
-					= realBodyForms.stream()
-					               .map(e -> formAnalyzer.analyze(e, letEnvironment))
-					               .collect(Collectors.toList());
-
-			return new LetStruct(letVars, analyzedBodyForms, letEnvironment);
-		} finally {
-			analysisBuilder.setClosureDepth(tempClosureDepth);
-			analysisBuilder.setBindingsPosition(tempBindingsPosition);
-			environmentStack.pop();
-		}
+		return new LetStruct(letVars, analyzedBodyForms, letEnvironment);
 	}
 
 	private LetStruct.LetVar getLetVar(final LispStruct parameter,
 	                                   final DeclareStruct declareElement,
-	                                   final AnalysisBuilder analysisBuilder,
-	                                   final LetEnvironment letEnvironment,
-	                                   final EnvironmentStack environmentStack) {
+	                                   final LetEnvironment letEnvironment) {
 
 		if (!(parameter instanceof SymbolStruct) && !(parameter instanceof ListStruct)) {
 			throw new ProgramErrorException("LET: Parameter must be of type SymbolStruct or ListStruct. Got: " + parameter);
@@ -128,7 +107,7 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 		if (parameter instanceof ListStruct) {
 			final ListStruct listParameter = (ListStruct) parameter;
 			var = getLetListParameterVar(listParameter);
-			initForm = getLetListParameterInitForm(listParameter, environmentStack);
+			initForm = getLetListParameterInitForm(listParameter, letEnvironment);
 		} else {
 			var = (SymbolStruct<?>) parameter;
 			initForm = NullStruct.INSTANCE;
@@ -136,7 +115,7 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 
 		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(letEnvironment);
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
-		analysisBuilder.setBindingsPosition(newBindingsPosition);
+		letEnvironment.setBindingsPosition(newBindingsPosition);
 
 		final boolean isSpecial = isSpecial(declareElement, var);
 
@@ -180,28 +159,21 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 	}
 
 	private LispStruct getLetListParameterInitForm(final ListStruct listParameter,
-	                                               final EnvironmentStack environmentStack) {
+	                                               final LetEnvironment letEnvironment) {
 
 		final LispStruct parameterValue = listParameter.getRest().getFirst();
 
 		// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
-		final Environment currentEnvironment = environmentStack.pop();
-
-		try {
-			final Environment tempEnvironment = environmentStack.peek();
-			return formAnalyzer.analyze(parameterValue, tempEnvironment);
-		} finally {
-			environmentStack.push(currentEnvironment);
-		}
+		final Environment parentEnvironment = letEnvironment.getParent();
+		return formAnalyzer.analyze(parameterValue, parentEnvironment);
 	}
 
 	private static void addDynamicVariableBinding(final SpecialDeclarationStruct specialDeclarationElement,
-	                                              final AnalysisBuilder analysisBuilder,
 	                                              final LetEnvironment letEnvironment) {
 
 		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(letEnvironment);
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
-		analysisBuilder.setBindingsPosition(newBindingsPosition);
+		letEnvironment.setBindingsPosition(newBindingsPosition);
 
 		final SymbolStruct<?> var = specialDeclarationElement.getVar();
 

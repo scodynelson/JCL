@@ -5,9 +5,7 @@ import java.util.UUID;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.AnalysisBuilder;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LoadTimeValue;
 import jcl.compiler.real.sa.FormAnalyzer;
@@ -61,40 +59,24 @@ public class LoadTimeValueExpander extends MacroFunctionExpander<LoadTimeValueSt
 		final LispStruct ltvForm = inputRest.getFirst();
 		final ListStruct evalForm = ListStruct.buildProperList(CommonLispSymbols.EVAL, ltvForm);
 
-		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
-		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
-		final Environment currentEnvironment = environmentStack.peek();
-		final Environment currentEnclosingLambda = Environments.getEnclosingLambda(currentEnvironment);
-
-		final int tempClosureDepth = analysisBuilder.getClosureDepth();
-		final int newClosureDepth = tempClosureDepth + 1;
+		final Environment enclosingLambda = Environments.getEnclosingLambda(environment);
 
 		final Environment nullLexicalEnvironment = Environment.NULL;
-		environmentStack.push(nullLexicalEnvironment);
 
-		final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
-		try {
-			analysisBuilder.setClosureDepth(newClosureDepth);
+		final LispStruct analyzedEvalForm = formAnalyzer.analyze(evalForm, nullLexicalEnvironment);
 
-			final LispStruct analyzedEvalForm = formAnalyzer.analyze(evalForm, nullLexicalEnvironment);
+		if (isReadOnly) {
+			final UUID uniqueLTVId = UUID.randomUUID();
 
-			if (isReadOnly) {
-				final UUID uniqueLTVId = UUID.randomUUID();
+			// TODO: move LTVs to LambdaEnvironment???
+			final List<LoadTimeValue> currentLoadTimeValues = enclosingLambda.getLoadTimeValues();
 
-				// TODO: move LTVs to LambdaEnvironment???
-				final List<LoadTimeValue> currentLoadTimeValues = currentEnclosingLambda.getLoadTimeValues();
+			final LoadTimeValue newLoadTimeValue = new LoadTimeValue(uniqueLTVId, analyzedEvalForm);
+			currentLoadTimeValues.add(newLoadTimeValue);
 
-				final LoadTimeValue newLoadTimeValue = new LoadTimeValue(uniqueLTVId, analyzedEvalForm);
-				currentLoadTimeValues.add(newLoadTimeValue);
-
-				return new ImmutableLoadTimeValueStruct(uniqueLTVId);
-			} else {
-				return new MutableLoadTimeValueStruct(analyzedEvalForm);
-			}
-		} finally {
-			analysisBuilder.setClosureDepth(tempClosureDepth);
-			analysisBuilder.setBindingsPosition(tempBindingsPosition);
-			environmentStack.pop();
+			return new ImmutableLoadTimeValueStruct(uniqueLTVId);
+		} else {
+			return new MutableLoadTimeValueStruct(analyzedEvalForm);
 		}
 	}
 }

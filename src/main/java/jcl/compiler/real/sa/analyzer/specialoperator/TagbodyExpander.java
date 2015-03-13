@@ -18,7 +18,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.AnalysisBuilder;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
@@ -63,8 +62,7 @@ public class TagbodyExpander extends MacroFunctionExpander<TagbodyStruct> {
 		final Set<GoStruct<?>> currentTagSet = bodyAsJavaList.stream()
 		                                                     .collect(new TagbodyInitialTagCollector());
 
-		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
-		analysisBuilder.getTagbodyStack().push(currentTagSet);
+		environment.getTagbodyStack().push(currentTagSet);
 
 		// If the first element is not a 'tag', we have a default form set. Therefore, we are going to generate a
 		// temporary 'tag' for this form set.
@@ -79,7 +77,7 @@ public class TagbodyExpander extends MacroFunctionExpander<TagbodyStruct> {
 			                                                                     .collect(new TagbodyCollector(formAnalyzer, environment));
 			return new TagbodyStruct(tagbodyForms);
 		} finally {
-			analysisBuilder.getTagbodyStack().pop();
+			environment.getTagbodyStack().pop();
 		}
 	}
 

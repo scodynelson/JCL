@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Set;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.AnalysisBuilder;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lists.ListStruct;
@@ -49,8 +48,7 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 		final LambdaStruct analyzedForm = lambdaExpander.expand(lambdaForm, nullEnvironment);
 
 		// now see if we have any functions still undefined
-		final AnalysisBuilder analysisBuilder = nullEnvironment.getAnalysisBuilder();
-		final Set<SymbolStruct<?>> undefinedFunctions = analysisBuilder.getUndefinedFunctions();
+		final Set<SymbolStruct<?>> undefinedFunctions = nullEnvironment.getUndefinedFunctions();
 
 		undefinedFunctions.stream()
 		                  .forEach(this::unknownFunctionWarning);

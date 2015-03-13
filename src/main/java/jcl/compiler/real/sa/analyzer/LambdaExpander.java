@@ -6,9 +6,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.AnalysisBuilder;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.allocation.EnvironmentAllocation;
@@ -68,44 +66,27 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 			throw new ProgramErrorException("LAMBDA: Parameter list must be of type ListStruct. Got: " + second);
 		}
 
-		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
-		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
-		final Environment parentEnvironment = environmentStack.peek();
+		final LambdaEnvironment lambdaEnvironment = new LambdaEnvironment(environment);
 
-		final int tempClosureDepth = analysisBuilder.getClosureDepth();
-		final int newClosureDepth = tempClosureDepth + 1;
+		final ListStruct parameters = (ListStruct) second;
+		final List<LispStruct> bodyForms = inputRest.getRest().getAsJavaList();
 
-		final LambdaEnvironment lambdaEnvironment = new LambdaEnvironment(parentEnvironment, analysisBuilder, newClosureDepth);
-		environmentStack.push(lambdaEnvironment);
+		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAndDocStringAnalyzer.analyze(bodyForms, lambdaEnvironment);
+		final DeclareStruct declareElement = bodyProcessingResult.getDeclareElement();
 
-		final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
-		try {
-			analysisBuilder.setClosureDepth(newClosureDepth);
+		final OrdinaryLambdaListBindings parsedLambdaList = LambdaListParser.parseOrdinaryLambdaList(formAnalyzer, lambdaEnvironment, parameters, declareElement);
+		final EnhancedLinkedList<LispStruct> newStartingLambdaBody = getNewStartingLambdaBody(parsedLambdaList);
 
-			final ListStruct parameters = (ListStruct) second;
-			final List<LispStruct> bodyForms = inputRest.getRest().getAsJavaList();
+		final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
+		specialDeclarationElements.forEach(e -> addDynamicVariableBinding(e, lambdaEnvironment));
 
-			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAndDocStringAnalyzer.analyze(bodyForms, lambdaEnvironment);
-			final DeclareStruct declareElement = bodyProcessingResult.getDeclareElement();
+		final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
+		newStartingLambdaBody.addAll(realBodyForms);
 
-			final OrdinaryLambdaListBindings parsedLambdaList = LambdaListParser.parseOrdinaryLambdaList(formAnalyzer, lambdaEnvironment, parameters, declareElement);
-			final EnhancedLinkedList<LispStruct> newStartingLambdaBody = getNewStartingLambdaBody(parsedLambdaList);
+		final ListStruct newLambdaBodyListStruct = ListStruct.buildProperList(newStartingLambdaBody);
 
-			final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
-			specialDeclarationElements.forEach(e -> addDynamicVariableBinding(e, analysisBuilder, lambdaEnvironment));
-
-			final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
-			newStartingLambdaBody.addAll(realBodyForms);
-
-			final ListStruct newLambdaBodyListStruct = ListStruct.buildProperList(newStartingLambdaBody);
-
-			final LispStruct analyzedBodyForms = formAnalyzer.analyze(newLambdaBodyListStruct, lambdaEnvironment);
-			return new LambdaStruct(parsedLambdaList, bodyProcessingResult.getDocString(), analyzedBodyForms, lambdaEnvironment);
-		} finally {
-			analysisBuilder.setClosureDepth(tempClosureDepth);
-			analysisBuilder.setBindingsPosition(tempBindingsPosition);
-			environmentStack.pop();
-		}
+		final LispStruct analyzedBodyForms = formAnalyzer.analyze(newLambdaBodyListStruct, lambdaEnvironment);
+		return new LambdaStruct(parsedLambdaList, bodyProcessingResult.getDocString(), analyzedBodyForms, lambdaEnvironment);
 	}
 
 	private static EnhancedLinkedList<LispStruct> getNewStartingLambdaBody(final OrdinaryLambdaListBindings parsedLambdaList) {
@@ -180,12 +161,11 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 	}
 
 	private static void addDynamicVariableBinding(final SpecialDeclarationStruct specialDeclarationElement,
-	                                              final AnalysisBuilder analysisBuilder,
 	                                              final LambdaEnvironment lambdaEnvironment) {
 
 		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(lambdaEnvironment);
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
-		analysisBuilder.setBindingsPosition(newBindingsPosition);
+		lambdaEnvironment.setBindingsPosition(newBindingsPosition);
 
 		final SymbolStruct<?> var = specialDeclarationElement.getVar();
 

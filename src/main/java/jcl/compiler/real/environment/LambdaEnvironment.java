@@ -15,8 +15,8 @@ public class LambdaEnvironment extends BindingEnvironment {
 
 	private int parameterNumber;
 
-	public LambdaEnvironment(final Environment parent, final AnalysisBuilder analysisBuilder, final int closureDepth) {
-		super(parent, analysisBuilder, closureDepth);
+	public LambdaEnvironment(final Environment parent) {
+		super(parent);
 	}
 
 	public int getNextParameterNumber() {

@@ -7,9 +7,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.AnalysisBuilder;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.FletEnvironment;
 import jcl.compiler.real.environment.LambdaEnvironment;
@@ -69,23 +67,12 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 			throw new ProgramErrorException("FLET: Parameter list must be of type List. Got: " + second);
 		}
 
-		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
-		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
-		final Environment parentEnvironment = environmentStack.peek();
+		final FletEnvironment fletEnvironment = new FletEnvironment(environment);
 
-		final int tempClosureDepth = analysisBuilder.getClosureDepth();
-		final int newClosureDepth = tempClosureDepth + 1;
-
-		final FletEnvironment fletEnvironment = new FletEnvironment(parentEnvironment, analysisBuilder, newClosureDepth);
-		environmentStack.push(fletEnvironment);
-
-		final Stack<SymbolStruct<?>> functionNameStack = analysisBuilder.getFunctionNameStack();
+		final Stack<SymbolStruct<?>> functionNameStack = environment.getFunctionNameStack();
 		List<SymbolStruct<?>> functionNames = null;
 
-		final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
 		try {
-			analysisBuilder.setClosureDepth(newClosureDepth);
-
 			final ListStruct innerFunctions = (ListStruct) second;
 			final List<? extends LispStruct> innerFunctionsJavaList = innerFunctions.getAsJavaList();
 			functionNames = getFunctionNames(innerFunctionsJavaList);
@@ -97,11 +84,11 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 
 			final List<FletStruct.FletVar> fletVars
 					= innerFunctionsJavaList.stream()
-					                        .map(e -> getFletVar(e, declareElement, analysisBuilder, fletEnvironment, environmentStack))
+					                        .map(e -> getFletVar(e, declareElement, fletEnvironment))
 					                        .collect(Collectors.toList());
 
 			final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
-			specialDeclarationElements.forEach(e -> addDynamicVariableBinding(e, analysisBuilder, fletEnvironment));
+			specialDeclarationElements.forEach(e -> addDynamicVariableBinding(e, fletEnvironment));
 
 			// Add function names AFTER analyzing the functions
 			StackUtils.pushAll(functionNameStack, functionNames);
@@ -118,10 +105,6 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 			if (functionNames != null) {
 				StackUtils.popX(functionNameStack, functionNames.size());
 			}
-
-			analysisBuilder.setClosureDepth(tempClosureDepth);
-			analysisBuilder.setBindingsPosition(tempBindingsPosition);
-			environmentStack.pop();
 		}
 	}
 
@@ -152,9 +135,7 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 
 	private FletStruct.FletVar getFletVar(final LispStruct functionParameter,
 	                                      final DeclareStruct declareElement,
-	                                      final AnalysisBuilder analysisBuilder,
-	                                      final FletEnvironment fletEnvironment,
-	                                      final EnvironmentStack environmentStack) {
+	                                      final FletEnvironment fletEnvironment) {
 
 		if (!(functionParameter instanceof ListStruct)) {
 			throw new ProgramErrorException("FLET: Function parameter must be of type ListStruct. Got: " + functionParameter);
@@ -162,11 +143,11 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 
 		final ListStruct functionListParameter = (ListStruct) functionParameter;
 		final SymbolStruct<?> functionName = getFunctionListParameterName(functionListParameter);
-		final LispStruct functionInitForm = getFunctionParameterInitForm(functionListParameter, environmentStack);
+		final LispStruct functionInitForm = getFunctionParameterInitForm(functionListParameter, fletEnvironment);
 
 		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(fletEnvironment);
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
-		analysisBuilder.setBindingsPosition(newBindingsPosition);
+		fletEnvironment.setBindingsPosition(newBindingsPosition);
 
 		final boolean isSpecial = isSpecial(declareElement, functionName);
 
@@ -182,7 +163,7 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 	}
 
 	private LispStruct getFunctionParameterInitForm(final ListStruct functionListParameter,
-	                                                final EnvironmentStack environmentStack) {
+	                                                final FletEnvironment fletEnvironment) {
 
 		final int functionListParameterSize = functionListParameter.size();
 		if (functionListParameterSize < 2) {
@@ -218,16 +199,8 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 		final ListStruct innerFunctionListStruct = ListStruct.buildProperList(innerFunction);
 
 		// Evaluate in the outer environment. This is one of the differences between Flet and Labels.
-		final Environment currentEnvironment = environmentStack.pop();
-
-		final LispStruct functionInitForm;
-		try {
-			final Environment tempEnvironment = environmentStack.peek();
-			functionInitForm = formAnalyzer.analyze(innerFunctionListStruct, tempEnvironment);
-		} finally {
-			environmentStack.push(currentEnvironment);
-		}
-		return functionInitForm;
+		final Environment parentEnvironment = fletEnvironment.getParent();
+		return formAnalyzer.analyze(innerFunctionListStruct, parentEnvironment);
 	}
 
 	private static boolean isSpecial(final DeclareStruct declareElement, final SymbolStruct<?> var) {
@@ -246,12 +219,11 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 	}
 
 	private static void addDynamicVariableBinding(final SpecialDeclarationStruct specialDeclarationElement,
-	                                              final AnalysisBuilder analysisBuilder,
 	                                              final FletEnvironment fletEnvironment) {
 
 		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(fletEnvironment);
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
-		analysisBuilder.setBindingsPosition(newBindingsPosition);
+		fletEnvironment.setBindingsPosition(newBindingsPosition);
 
 		final SymbolStruct<?> var = specialDeclarationElement.getVar();
 

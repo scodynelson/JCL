@@ -2,11 +2,9 @@ package jcl.compiler.real.sa.analyzer;
 
 import java.util.Optional;
 
-import jcl.compiler.real.environment.AnalysisBuilder;
 import jcl.compiler.real.environment.BindingEnvironment;
 import jcl.compiler.real.environment.Closure;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.SymbolTable;
@@ -34,28 +32,24 @@ public class SymbolAnalyzerImpl implements SymbolAnalyzer {
 	@Override
 	public SymbolStruct<?> analyzeLexical(final SymbolStruct<?> input, final Environment environment) {
 
-		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
-		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
-		final Environment currentEnvironment = environmentStack.peek();
-
-		final boolean symbolBoundInCurrentLexicalEnvironment = currentEnvironment.hasLexicalBinding(input);
+		final boolean symbolBoundInCurrentLexicalEnvironment = environment.hasLexicalBinding(input);
 		if (symbolBoundInCurrentLexicalEnvironment) {
 			// Binding already exists in the current lexical environment.
 			return input; // TODO: fix
 		}
 
 		final BindingEnvironment bindingEnvironment
-				= Environments.getLexicalBindingBindingEnvironment(currentEnvironment, input);
+				= Environments.getLexicalBindingBindingEnvironment(environment, input);
 
 		if (bindingEnvironment.equals(Environment.NULL)) {
 			// No inner binding lexical environments. Add it as a DYNAMIC symbol in the current lexical environment before we proceed.
 			analyzeDynamic(input, environment);
 		}
 
-		final LambdaEnvironment currentEnclosingLambda = Environments.getEnclosingLambda(currentEnvironment);
+		final LambdaEnvironment currentEnclosingLambda = Environments.getEnclosingLambda(environment);
 		final LambdaEnvironment bindingEnclosingLambda = Environments.getEnclosingLambda(bindingEnvironment);
 
-		final SymbolTable currentEnvironmentSymbolTable = currentEnvironment.getSymbolTable();
+		final SymbolTable currentEnvironmentSymbolTable = environment.getSymbolTable();
 
 		if (currentEnclosingLambda.equals(bindingEnclosingLambda)) {
 			// Binding Lambda and Enclosing Lambda are the same. No need for a Closure.
@@ -72,7 +66,7 @@ public class SymbolAnalyzerImpl implements SymbolAnalyzer {
 
 		// Here the Binding Lambda is outside of the Enclosing Lambda
 		final BindingEnvironment outerBindingEnvironment
-				= Environments.getLexicalBindingBindingEnvironment(currentEnvironment, input);
+				= Environments.getLexicalBindingBindingEnvironment(environment, input);
 
 		if (outerBindingEnvironment.equals(Environment.NULL)) {
 			// Outer Binding Environment is the NULL Environment. Therefore, we can't create a Closure.
@@ -118,11 +112,7 @@ public class SymbolAnalyzerImpl implements SymbolAnalyzer {
 	@Override
 	public SymbolStruct<?> analyzeDynamic(final SymbolStruct<?> input, final Environment environment) {
 
-		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
-		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
-		final Environment currentEnvironment = environmentStack.peek();
-
-		final SymbolTable currentEnvironmentSymbolTable = currentEnvironment.getSymbolTable();
+		final SymbolTable currentEnvironmentSymbolTable = environment.getSymbolTable();
 		final boolean hasSymbolBinding = currentEnvironmentSymbolTable.hasBinding(input);
 
 		if (hasSymbolBinding) {
@@ -130,15 +120,15 @@ public class SymbolAnalyzerImpl implements SymbolAnalyzer {
 			return input; // TODO: fix
 		}
 
-		final LambdaEnvironment currentEnclosingLambda = Environments.getEnclosingLambda(currentEnvironment);
+		final LambdaEnvironment currentEnclosingLambda = Environments.getEnclosingLambda(environment);
 
-		if (currentEnvironment.equals(currentEnclosingLambda)) {
-			final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(currentEnvironment);
+		if (environment.equals(currentEnclosingLambda)) {
+			final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(environment);
 			final int position = currentLambda.getNextParameterNumber();
 			final LocalAllocation allocation = new LocalAllocation(position);
 
 			final SymbolLocalBinding symbolBinding
-					= new SymbolLocalBinding(input, allocation, T.INSTANCE, currentEnvironment);
+					= new SymbolLocalBinding(input, allocation, T.INSTANCE, environment);
 			currentEnvironmentSymbolTable.addDynamicLocalBinding(symbolBinding);
 
 			return input; // TODO: fix
@@ -159,7 +149,7 @@ public class SymbolAnalyzerImpl implements SymbolAnalyzer {
 		}
 
 		// Add Binding to SymbolTable in the Enclosing Lambda.
-		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(currentEnvironment);
+		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(environment);
 		final int position = currentLambda.getNextParameterNumber();
 		final LocalAllocation allocation = new LocalAllocation(position);
 

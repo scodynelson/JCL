@@ -5,9 +5,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.AnalysisBuilder;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.LocallyEnvironment;
@@ -51,50 +49,32 @@ public class LocallyExpander extends MacroFunctionExpander<LocallyStruct> {
 	@Override
 	public LocallyStruct expand(final ListStruct form, final Environment environment) {
 
-		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
-		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
-		final Environment parentEnvironment = environmentStack.peek();
+		final LocallyEnvironment locallyEnvironment = new LocallyEnvironment(environment);
 
-		final int tempClosureDepth = analysisBuilder.getClosureDepth();
-		final int newClosureDepth = tempClosureDepth + 1;
+		final List<LispStruct> bodyForms = form.getRest().getAsJavaList();
 
-		final LocallyEnvironment locallyEnvironment = new LocallyEnvironment(parentEnvironment, analysisBuilder, newClosureDepth);
-		environmentStack.push(locallyEnvironment);
+		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(bodyForms, locallyEnvironment);
+		final DeclareStruct declareElement = bodyProcessingResult.getDeclareElement();
 
-		final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
-		try {
-			analysisBuilder.setClosureDepth(newClosureDepth);
+		final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
+		specialDeclarationElements.forEach(e -> addDynamicVariableBinding(e, locallyEnvironment));
 
-			final List<LispStruct> bodyForms = form.getRest().getAsJavaList();
+		final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
 
-			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(bodyForms, locallyEnvironment);
-			final DeclareStruct declareElement = bodyProcessingResult.getDeclareElement();
+		final List<LispStruct> analyzedBodyForms
+				= realBodyForms.stream()
+				               .map(e -> formAnalyzer.analyze(e, locallyEnvironment))
+				               .collect(Collectors.toList());
 
-			final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
-			specialDeclarationElements.forEach(e -> addDynamicVariableBinding(e, analysisBuilder, locallyEnvironment));
-
-			final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
-
-			final List<LispStruct> analyzedBodyForms
-					= realBodyForms.stream()
-					               .map(e -> formAnalyzer.analyze(e, locallyEnvironment))
-					               .collect(Collectors.toList());
-
-			return new LocallyStruct(analyzedBodyForms, locallyEnvironment);
-		} finally {
-			analysisBuilder.setClosureDepth(tempClosureDepth);
-			analysisBuilder.setBindingsPosition(tempBindingsPosition);
-			environmentStack.pop();
-		}
+		return new LocallyStruct(analyzedBodyForms, locallyEnvironment);
 	}
 
 	private static void addDynamicVariableBinding(final SpecialDeclarationStruct specialDeclarationElement,
-	                                              final AnalysisBuilder analysisBuilder,
 	                                              final LocallyEnvironment locallyEnvironment) {
 
 		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(locallyEnvironment);
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
-		analysisBuilder.setBindingsPosition(newBindingsPosition);
+		locallyEnvironment.setBindingsPosition(newBindingsPosition);
 
 		final SymbolStruct<?> var = specialDeclarationElement.getVar();
 

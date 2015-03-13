@@ -13,8 +13,8 @@ public class LabelsEnvironment extends InnerFunctionEnvironment {
 
 	private static final long serialVersionUID = 8774938340814484890L;
 
-	public LabelsEnvironment(final Environment parent, final AnalysisBuilder analysisBuilder, final int closureDepth) {
-		super(parent, analysisBuilder, closureDepth);
+	public LabelsEnvironment(final Environment parent) {
+		super(parent);
 	}
 
 	@Override

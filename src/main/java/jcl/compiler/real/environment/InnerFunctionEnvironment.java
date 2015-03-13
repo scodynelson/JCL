@@ -13,8 +13,8 @@ public class InnerFunctionEnvironment extends LambdaEnvironment {
 
 	private static final long serialVersionUID = -5882720704455871085L;
 
-	protected InnerFunctionEnvironment(final Environment parent, final AnalysisBuilder analysisBuilder, final int closureDepth) {
-		super(parent, analysisBuilder, closureDepth);
+	protected InnerFunctionEnvironment(final Environment parent) {
+		super(parent);
 	}
 
 	@Override

@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.AnalysisBuilder;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
@@ -48,10 +47,8 @@ public class BlockExpander extends MacroFunctionExpander<BlockStruct> {
 			throw new ProgramErrorException("BLOCK: Label must be of type SymbolStruct. Got: " + second);
 		}
 
-		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
-
 		final SymbolStruct<?> name = (SymbolStruct<?>) second;
-		analysisBuilder.getBlockStack().push(name);
+		environment.getBlockStack().push(name);
 
 		try {
 			final List<LispStruct> forms = inputRest.getRest().getAsJavaList();
@@ -63,7 +60,7 @@ public class BlockExpander extends MacroFunctionExpander<BlockStruct> {
 
 			return new BlockStruct(name, analyzedForms);
 		} finally {
-			analysisBuilder.getBlockStack().pop();
+			environment.getBlockStack().pop();
 		}
 	}
 }

@@ -6,9 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.AnalysisBuilder;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
@@ -123,10 +121,6 @@ final class LambdaListParser {
 	private static RequiredParseResult parseRequiredBindings(final Environment environment, final Iterator<? extends LispStruct> iterator,
 	                                                         final int position, final DeclareStruct declareElement) {
 
-		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
-		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
-		final Environment currentEnvironment = environmentStack.peek();
-
 		final List<RequiredBinding> requiredBindings = new ArrayList<>();
 		int currentPosition = position;
 
@@ -142,18 +136,18 @@ final class LambdaListParser {
 
 			currentElement = iterator.next();
 
-			final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(currentEnvironment);
+			final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(environment);
 			final int newBindingsPosition = currentLambda.getNextParameterNumber();
-			analysisBuilder.setBindingsPosition(newBindingsPosition);
+			environment.setBindingsPosition(newBindingsPosition);
 
 			final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 			final boolean isSpecial = isSpecial(declareElement, currentParam);
 
 			final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullStruct.INSTANCE);
 			if (isSpecial) {
-				currentEnvironment.addDynamicBinding(binding);
+				environment.addDynamicBinding(binding);
 			} else {
-				currentEnvironment.addLexicalBinding(binding);
+				environment.addLexicalBinding(binding);
 			}
 		}
 
@@ -163,10 +157,6 @@ final class LambdaListParser {
 	private static OptionalParseResult parseOptionalBindings(final FormAnalyzer formAnalyzer, final Environment environment,
 	                                                         final Iterator<? extends LispStruct> iterator, final int position,
 	                                                         final DeclareStruct declareElement) {
-
-		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
-		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
-		final Environment currentEnvironment = environmentStack.peek();
 
 		final List<OptionalBinding> optionalBindings = new ArrayList<>();
 		int currentPosition = position;
@@ -179,18 +169,18 @@ final class LambdaListParser {
 				final OptionalBinding optionalBinding = new OptionalBinding(currentParam, optionalAllocation, null, null);
 				optionalBindings.add(optionalBinding);
 
-				final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(currentEnvironment);
+				final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(environment);
 				final int newBindingsPosition = currentLambda.getNextParameterNumber();
-				analysisBuilder.setBindingsPosition(newBindingsPosition);
+				environment.setBindingsPosition(newBindingsPosition);
 
 				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 				final boolean isSpecial = isSpecial(declareElement, currentParam);
 
 				final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullStruct.INSTANCE);
 				if (isSpecial) {
-					currentEnvironment.addDynamicBinding(binding);
+					environment.addDynamicBinding(binding);
 				} else {
-					currentEnvironment.addLexicalBinding(binding);
+					environment.addLexicalBinding(binding);
 				}
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
@@ -213,23 +203,21 @@ final class LambdaListParser {
 				}
 
 				// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
-				final Environment currentEnvironment1 = environmentStack.pop();
-				final Environment tempEnvironment = environmentStack.peek();
-				final LispStruct parameterValueInitForm = formAnalyzer.analyze(initForm, tempEnvironment);
-				environmentStack.push(currentEnvironment1);
+				final Environment parentEnvironment = environment.getParent();
+				final LispStruct parameterValueInitForm = formAnalyzer.analyze(initForm, parentEnvironment);
 
-				LambdaEnvironment currentLambda = Environments.getEnclosingLambda(currentEnvironment);
+				LambdaEnvironment currentLambda = Environments.getEnclosingLambda(environment);
 				int newBindingsPosition = currentLambda.getNextParameterNumber();
-				analysisBuilder.setBindingsPosition(newBindingsPosition);
+				environment.setBindingsPosition(newBindingsPosition);
 
 				ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 				boolean isSpecial = isSpecial(declareElement, varNameCurrent);
 
 				EnvironmentParameterBinding binding = new EnvironmentParameterBinding(varNameCurrent, allocation, T.INSTANCE, parameterValueInitForm);
 				if (isSpecial) {
-					currentEnvironment.addDynamicBinding(binding);
+					environment.addDynamicBinding(binding);
 				} else {
-					currentEnvironment.addLexicalBinding(binding);
+					environment.addLexicalBinding(binding);
 				}
 
 				SuppliedPBinding suppliedPBinding = null;
@@ -242,18 +230,18 @@ final class LambdaListParser {
 					final ParameterAllocation suppliedPAllocation = new ParameterAllocation(currentPosition++);
 					suppliedPBinding = new SuppliedPBinding(suppliedPCurrent, suppliedPAllocation);
 
-					currentLambda = Environments.getEnclosingLambda(currentEnvironment);
+					currentLambda = Environments.getEnclosingLambda(environment);
 					newBindingsPosition = currentLambda.getNextParameterNumber();
-					analysisBuilder.setBindingsPosition(newBindingsPosition);
+					environment.setBindingsPosition(newBindingsPosition);
 
 					allocation = new ParameterAllocation(newBindingsPosition);
 					isSpecial = isSpecial(declareElement, suppliedPCurrent);
 
 					binding = new EnvironmentParameterBinding(suppliedPCurrent, allocation, T.INSTANCE, NullStruct.INSTANCE);
 					if (isSpecial) {
-						currentEnvironment.addDynamicBinding(binding);
+						environment.addDynamicBinding(binding);
 					} else {
-						currentEnvironment.addLexicalBinding(binding);
+						environment.addLexicalBinding(binding);
 					}
 				}
 
@@ -285,22 +273,18 @@ final class LambdaListParser {
 		}
 		final SymbolStruct<?> currentParam = (SymbolStruct) currentElement;
 
-		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
-		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
-		final Environment currentEnvironment = environmentStack.peek();
-
-		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(currentEnvironment);
+		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(environment);
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
-		analysisBuilder.setBindingsPosition(newBindingsPosition);
+		environment.setBindingsPosition(newBindingsPosition);
 
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 		final boolean isSpecial = isSpecial(declareElement, currentParam);
 
 		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullStruct.INSTANCE);
 		if (isSpecial) {
-			currentEnvironment.addDynamicBinding(binding);
+			environment.addDynamicBinding(binding);
 		} else {
-			currentEnvironment.addLexicalBinding(binding);
+			environment.addLexicalBinding(binding);
 		}
 
 		final ParameterAllocation restAllocation = new ParameterAllocation(currentPosition++);
@@ -311,10 +295,6 @@ final class LambdaListParser {
 	private static KeyParseResult parseKeyBindings(final FormAnalyzer formAnalyzer, final Environment environment,
 	                                               final Iterator<? extends LispStruct> iterator, final int position,
 	                                               final DeclareStruct declareElement) {
-
-		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
-		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
-		final Environment currentEnvironment = environmentStack.peek();
 
 		final List<KeyBinding> keyBindings = new ArrayList<>();
 		int currentPosition = position;
@@ -328,18 +308,18 @@ final class LambdaListParser {
 				final KeyBinding keyBinding = new KeyBinding(currentParam, keyAllocation, null, keyName, null);
 				keyBindings.add(keyBinding);
 
-				final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(currentEnvironment);
+				final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(environment);
 				final int newBindingsPosition = currentLambda.getNextParameterNumber();
-				analysisBuilder.setBindingsPosition(newBindingsPosition);
+				environment.setBindingsPosition(newBindingsPosition);
 
 				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 				final boolean isSpecial = isSpecial(declareElement, currentParam);
 
 				final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullStruct.INSTANCE);
 				if (isSpecial) {
-					currentEnvironment.addDynamicBinding(binding);
+					environment.addDynamicBinding(binding);
 				} else {
-					currentEnvironment.addLexicalBinding(binding);
+					environment.addLexicalBinding(binding);
 				}
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
@@ -383,23 +363,21 @@ final class LambdaListParser {
 				}
 
 				// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
-				final Environment currentEnvironment1 = environmentStack.pop();
-				final Environment tempEnvironment = environmentStack.peek();
-				final LispStruct parameterValueInitForm = formAnalyzer.analyze(initForm, tempEnvironment);
-				environmentStack.push(currentEnvironment1);
+				final Environment parentEnvironment = environment.getParent();
+				final LispStruct parameterValueInitForm = formAnalyzer.analyze(initForm, parentEnvironment);
 
-				LambdaEnvironment currentLambda = Environments.getEnclosingLambda(currentEnvironment);
+				LambdaEnvironment currentLambda = Environments.getEnclosingLambda(environment);
 				int newBindingsPosition = currentLambda.getNextParameterNumber();
-				analysisBuilder.setBindingsPosition(newBindingsPosition);
+				environment.setBindingsPosition(newBindingsPosition);
 
 				ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 				boolean isSpecial = isSpecial(declareElement, varNameCurrent);
 
 				EnvironmentParameterBinding binding = new EnvironmentParameterBinding(varNameCurrent, allocation, T.INSTANCE, parameterValueInitForm);
 				if (isSpecial) {
-					currentEnvironment.addDynamicBinding(binding);
+					environment.addDynamicBinding(binding);
 				} else {
-					currentEnvironment.addLexicalBinding(binding);
+					environment.addLexicalBinding(binding);
 				}
 
 				SuppliedPBinding suppliedPBinding = null;
@@ -412,18 +390,18 @@ final class LambdaListParser {
 					final ParameterAllocation suppliedPAllocation = new ParameterAllocation(currentPosition++);
 					suppliedPBinding = new SuppliedPBinding(suppliedPCurrent, suppliedPAllocation);
 
-					currentLambda = Environments.getEnclosingLambda(currentEnvironment);
+					currentLambda = Environments.getEnclosingLambda(environment);
 					newBindingsPosition = currentLambda.getNextParameterNumber();
-					analysisBuilder.setBindingsPosition(newBindingsPosition);
+					environment.setBindingsPosition(newBindingsPosition);
 
 					allocation = new ParameterAllocation(newBindingsPosition);
 					isSpecial = isSpecial(declareElement, suppliedPCurrent);
 
 					binding = new EnvironmentParameterBinding(suppliedPCurrent, allocation, T.INSTANCE, NullStruct.INSTANCE);
 					if (isSpecial) {
-						currentEnvironment.addDynamicBinding(binding);
+						environment.addDynamicBinding(binding);
 					} else {
-						currentEnvironment.addLexicalBinding(binding);
+						environment.addLexicalBinding(binding);
 					}
 				}
 
@@ -450,10 +428,6 @@ final class LambdaListParser {
 	                                               final Iterator<? extends LispStruct> iterator, final int position,
 	                                               final DeclareStruct declareElement) {
 
-		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
-		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
-		final Environment currentEnvironment = environmentStack.peek();
-
 		final List<AuxBinding> auxBindings = new ArrayList<>();
 		int currentPosition = position;
 
@@ -465,18 +439,18 @@ final class LambdaListParser {
 				final AuxBinding auxBinding = new AuxBinding(currentParam, auxAllocation, null);
 				auxBindings.add(auxBinding);
 
-				final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(currentEnvironment);
+				final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(environment);
 				final int newBindingsPosition = currentLambda.getNextParameterNumber();
-				analysisBuilder.setBindingsPosition(newBindingsPosition);
+				environment.setBindingsPosition(newBindingsPosition);
 
 				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 				final boolean isSpecial = isSpecial(declareElement, currentParam);
 
 				final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullStruct.INSTANCE);
 				if (isSpecial) {
-					currentEnvironment.addDynamicBinding(binding);
+					environment.addDynamicBinding(binding);
 				} else {
-					currentEnvironment.addLexicalBinding(binding);
+					environment.addLexicalBinding(binding);
 				}
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
@@ -502,23 +476,21 @@ final class LambdaListParser {
 				auxBindings.add(auxBinding);
 
 				// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
-				final Environment currentEnvironment1 = environmentStack.pop();
-				final Environment tempEnvironment = environmentStack.peek();
-				final LispStruct parameterValueInitForm = formAnalyzer.analyze(initForm, tempEnvironment);
-				environmentStack.push(currentEnvironment1);
+				final Environment parentEnvironment = environment.getParent();
+				final LispStruct parameterValueInitForm = formAnalyzer.analyze(initForm, parentEnvironment);
 
-				final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(currentEnvironment);
+				final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(environment);
 				final int newBindingsPosition = currentLambda.getNextParameterNumber();
-				analysisBuilder.setBindingsPosition(newBindingsPosition);
+				environment.setBindingsPosition(newBindingsPosition);
 
 				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 				final boolean isSpecial = isSpecial(declareElement, varNameCurrent);
 
 				final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(varNameCurrent, allocation, T.INSTANCE, parameterValueInitForm);
 				if (isSpecial) {
-					currentEnvironment.addDynamicBinding(binding);
+					environment.addDynamicBinding(binding);
 				} else {
-					currentEnvironment.addLexicalBinding(binding);
+					environment.addLexicalBinding(binding);
 				}
 			} else {
 				throw new ProgramErrorException("LambdaList aux parameters must be of type SymbolStruct or ListStruct: " + currentElement);

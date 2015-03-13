@@ -6,9 +6,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.AnalysisBuilder;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.SymbolAnalyzer;
@@ -107,10 +105,6 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 
 		// Do other stuff
 
-		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
-		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
-		final Environment currentEnvironment = environmentStack.peek();
-
 		final int numberOfProgvVars = actualVarsJavaList.size();
 		final List<ProgvStruct.ProgvVar> progvVars = new ArrayList<>(numberOfProgvVars);
 
@@ -123,9 +117,9 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 				val = actualValsJavaList.get(i);
 			}
 
-			final SymbolStruct<?> varSE = symbolAnalyzer.analyzeDynamic(var, currentEnvironment);
+			final SymbolStruct<?> varSE = symbolAnalyzer.analyzeDynamic(var, environment);
 
-			final LispStruct analyzedVal = formAnalyzer.analyze(val, currentEnvironment);
+			final LispStruct analyzedVal = formAnalyzer.analyze(val, environment);
 			final ProgvStruct.ProgvVar progvVar = new ProgvStruct.ProgvVar(varSE, analyzedVal);
 
 			// TODO: really a 'null' allocation here???
@@ -137,9 +131,9 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 		final List<LispStruct> forms = inputRestRest.getRest().getAsJavaList();
 		final List<LispStruct> analyzedForms =
 				forms.stream()
-				     .map(e -> formAnalyzer.analyze(e, currentEnvironment))
+				     .map(e -> formAnalyzer.analyze(e, environment))
 				     .collect(Collectors.toList());
 
-		return new ProgvStruct(progvVars, analyzedForms, null, currentEnvironment);
+		return new ProgvStruct(progvVars, analyzedForms, null, environment);
 	}
 }

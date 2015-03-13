@@ -5,9 +5,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.AnalysisBuilder;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.SymbolMacroletEnvironment;
@@ -64,47 +62,30 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 			throw new ProgramErrorException("SYMBOL-MACROLET: Parameter list must be of type ListStruct. Got: " + second);
 		}
 
-		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
-		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
-		final Environment parentEnvironment = environmentStack.peek();
+		final SymbolMacroletEnvironment symbolMacroletEnvironment = new SymbolMacroletEnvironment(environment);
 
-		final int tempClosureDepth = analysisBuilder.getClosureDepth();
-		final int newClosureDepth = tempClosureDepth + 1;
+		final ListStruct parameters = (ListStruct) second;
+		final List<LispStruct> bodyForms = inputRest.getRest().getAsJavaList();
 
-		final SymbolMacroletEnvironment symbolMacroletEnvironment = new SymbolMacroletEnvironment(parentEnvironment, analysisBuilder, newClosureDepth);
-		environmentStack.push(symbolMacroletEnvironment);
+		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(bodyForms, symbolMacroletEnvironment);
+		final DeclareStruct declareElement = bodyProcessingResult.getDeclareElement();
+		validateDeclares(declareElement);
 
-		final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
-		try {
-			analysisBuilder.setClosureDepth(newClosureDepth);
+		final List<? extends LispStruct> parametersAsJavaList = parameters.getAsJavaList();
 
-			final ListStruct parameters = (ListStruct) second;
-			final List<LispStruct> bodyForms = inputRest.getRest().getAsJavaList();
+		final List<SymbolMacroletStruct.SymbolMacroletElementVar> symbolMacroletVars
+				= parametersAsJavaList.stream()
+				                      .map(e -> getSymbolMacroletElementVar(e, declareElement, symbolMacroletEnvironment))
+				                      .collect(Collectors.toList());
 
-			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(bodyForms, symbolMacroletEnvironment);
-			final DeclareStruct declareElement = bodyProcessingResult.getDeclareElement();
-			validateDeclares(declareElement);
+		final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
 
-			final List<? extends LispStruct> parametersAsJavaList = parameters.getAsJavaList();
+		final List<LispStruct> analyzedBodyForms
+				= realBodyForms.stream()
+				               .map(e -> formAnalyzer.analyze(e, symbolMacroletEnvironment))
+				               .collect(Collectors.toList());
 
-			final List<SymbolMacroletStruct.SymbolMacroletElementVar> symbolMacroletVars
-					= parametersAsJavaList.stream()
-					                      .map(e -> getSymbolMacroletElementVar(e, declareElement, analysisBuilder, symbolMacroletEnvironment, environmentStack))
-					                      .collect(Collectors.toList());
-
-			final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
-
-			final List<LispStruct> analyzedBodyForms
-					= realBodyForms.stream()
-					               .map(e -> formAnalyzer.analyze(e, symbolMacroletEnvironment))
-					               .collect(Collectors.toList());
-
-			return new SymbolMacroletStruct(symbolMacroletVars, analyzedBodyForms, symbolMacroletEnvironment);
-		} finally {
-			analysisBuilder.setClosureDepth(tempClosureDepth);
-			analysisBuilder.setBindingsPosition(tempBindingsPosition);
-			environmentStack.pop();
-		}
+		return new SymbolMacroletStruct(symbolMacroletVars, analyzedBodyForms, symbolMacroletEnvironment);
 	}
 
 	private static void validateDeclares(final DeclareStruct declareElement) {
@@ -118,21 +99,19 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 
 	private SymbolMacroletStruct.SymbolMacroletElementVar getSymbolMacroletElementVar(final LispStruct parameter,
 	                                                                                  final DeclareStruct declareElement,
-	                                                                                  final AnalysisBuilder analysisBuilder,
-	                                                                                  final SymbolMacroletEnvironment symbolMacroletEnvironment,
-	                                                                                  final EnvironmentStack environmentStack) {
+	                                                                                  final SymbolMacroletEnvironment symbolMacroletEnvironment) {
 
 		if (!(parameter instanceof ListStruct)) {
 			throw new ProgramErrorException("SYMBOL-MACROLET: Parameter must be of type ListStruct. Got: " + parameter);
 		}
 
 		final ListStruct listParameter = (ListStruct) parameter;
-		final SymbolStruct<?> var = getSymbolMacroletParameterVar(listParameter, environmentStack);
-		final LispStruct expansion = getSymbolMacroletParameterExpansion(listParameter, environmentStack);
+		final SymbolStruct<?> var = getSymbolMacroletParameterVar(listParameter);
+		final LispStruct expansion = getSymbolMacroletParameterExpansion(listParameter, symbolMacroletEnvironment);
 
 		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(symbolMacroletEnvironment);
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
-		analysisBuilder.setBindingsPosition(newBindingsPosition);
+		symbolMacroletEnvironment.setBindingsPosition(newBindingsPosition);
 
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(var, allocation, T.INSTANCE, expansion);
@@ -141,8 +120,7 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 		return new SymbolMacroletStruct.SymbolMacroletElementVar(var, expansion);
 	}
 
-	private static SymbolStruct<?> getSymbolMacroletParameterVar(final ListStruct listParameter,
-	                                                             final EnvironmentStack lexicalEnvironmentStack) {
+	private static SymbolStruct<?> getSymbolMacroletParameterVar(final ListStruct listParameter) {
 
 		final int listParameterSize = listParameter.size();
 		if (listParameterSize != 2) {
@@ -156,7 +134,7 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 
 		final SymbolStruct<?> parameterVar = (SymbolStruct<?>) listParameterFirst;
 
-		final Environment globalEnvironment = lexicalEnvironmentStack.firstElement();
+		final Environment globalEnvironment = Environment.NULL;
 		final boolean hasGlobalBinding = globalEnvironment.hasLexicalBinding(parameterVar);
 		if (hasGlobalBinding) {
 			throw new ProgramErrorException("SYMBOL-MACROLET: ListStruct parameter first element symbol must not exist in the global environment.");
@@ -166,19 +144,13 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 	}
 
 	private LispStruct getSymbolMacroletParameterExpansion(final ListStruct listParameter,
-	                                                       final EnvironmentStack environmentStack) {
+	                                                       final SymbolMacroletEnvironment symbolMacroletEnvironment) {
 
 		final LispStruct parameterValue = listParameter.getRest().getFirst();
 
 		// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
-		final Environment currentEnvironment = environmentStack.pop();
-
-		try {
-			final Environment tempEnvironment = environmentStack.peek();
-			return formAnalyzer.analyze(parameterValue, tempEnvironment);
-		} finally {
-			environmentStack.push(currentEnvironment);
-		}
+		final Environment parentEnvironment = symbolMacroletEnvironment.getParent();
+		return formAnalyzer.analyze(parameterValue, parentEnvironment);
 	}
 
 	@Override

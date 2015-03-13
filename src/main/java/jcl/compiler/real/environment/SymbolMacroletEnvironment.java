@@ -13,8 +13,8 @@ public class SymbolMacroletEnvironment extends Environment {
 
 	private static final long serialVersionUID = 1037128089833502867L;
 
-	public SymbolMacroletEnvironment(final Environment parent, final AnalysisBuilder analysisBuilder, final int closureDepth) {
-		super(parent, analysisBuilder, closureDepth);
+	public SymbolMacroletEnvironment(final Environment parent) {
+		super(parent);
 	}
 
 	@Override

@@ -7,9 +7,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.AnalysisBuilder;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.MacroletEnvironment;
@@ -69,23 +67,12 @@ public class MacroletExpander extends MacroFunctionExpander<MacroletStruct> {
 			throw new ProgramErrorException("MACROLET: Parameter list must be of type ListStruct. Got: " + second);
 		}
 
-		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
-		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
-		final Environment parentEnvironment = environmentStack.peek();
+		final MacroletEnvironment macroletEnvironment = new MacroletEnvironment(environment);
 
-		final int tempClosureDepth = analysisBuilder.getClosureDepth();
-		final int newClosureDepth = tempClosureDepth + 1;
-
-		final MacroletEnvironment macroletEnvironment = new MacroletEnvironment(parentEnvironment, analysisBuilder, newClosureDepth);
-		environmentStack.push(macroletEnvironment);
-
-		final Stack<SymbolStruct<?>> functionNameStack = analysisBuilder.getFunctionNameStack();
+		final Stack<SymbolStruct<?>> functionNameStack = macroletEnvironment.getFunctionNameStack();
 		List<SymbolStruct<?>> functionNames = null;
 
-		final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
 		try {
-			analysisBuilder.setClosureDepth(newClosureDepth);
-
 			final ListStruct innerFunctions = (ListStruct) second;
 			final List<? extends LispStruct> innerFunctionsJavaList = innerFunctions.getAsJavaList();
 			functionNames = getFunctionNames(innerFunctionsJavaList);
@@ -100,11 +87,11 @@ public class MacroletExpander extends MacroFunctionExpander<MacroletStruct> {
 
 			final List<MacroletStruct.MacroletVar> macroletVars
 					= innerFunctionsJavaList.stream()
-					                        .map(e -> getMacroletVar(e, declareElement, analysisBuilder, macroletEnvironment, environmentStack))
+					                        .map(e -> getMacroletVar(e, declareElement, macroletEnvironment))
 					                        .collect(Collectors.toList());
 
 			final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
-			specialDeclarationElements.forEach(e -> addDynamicVariableBinding(e, analysisBuilder, macroletEnvironment));
+			specialDeclarationElements.forEach(e -> addDynamicVariableBinding(e, macroletEnvironment));
 
 			final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
 
@@ -118,10 +105,6 @@ public class MacroletExpander extends MacroFunctionExpander<MacroletStruct> {
 			if (functionNames != null) {
 				StackUtils.popX(functionNameStack, functionNames.size());
 			}
-
-			analysisBuilder.setClosureDepth(tempClosureDepth);
-			analysisBuilder.setBindingsPosition(tempBindingsPosition);
-			environmentStack.pop();
 		}
 	}
 
@@ -152,9 +135,7 @@ public class MacroletExpander extends MacroFunctionExpander<MacroletStruct> {
 
 	private MacroletStruct.MacroletVar getMacroletVar(final LispStruct functionParameter,
 	                                                  final DeclareStruct declareElement,
-	                                                  final AnalysisBuilder analysisBuilder,
-	                                                  final MacroletEnvironment macroletEnvironment,
-	                                                  final EnvironmentStack lexicalEnvironmentStack) {
+	                                                  final MacroletEnvironment macroletEnvironment) {
 
 		if (!(functionParameter instanceof ListStruct)) {
 			throw new ProgramErrorException("MACROLET: Function parameter must be of type ListStruct. Got: " + functionParameter);
@@ -162,11 +143,11 @@ public class MacroletExpander extends MacroFunctionExpander<MacroletStruct> {
 
 		final ListStruct functionListParameter = (ListStruct) functionParameter;
 		final SymbolStruct<?> functionName = getFunctionListParameterName(functionListParameter);
-		final LispStruct functionInitForm = getFunctionParameterInitForm(functionListParameter, lexicalEnvironmentStack);
+		final LispStruct functionInitForm = getFunctionParameterInitForm(functionListParameter, macroletEnvironment);
 
 		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(macroletEnvironment);
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
-		analysisBuilder.setBindingsPosition(newBindingsPosition);
+		macroletEnvironment.setBindingsPosition(newBindingsPosition);
 
 		final boolean isSpecial = isSpecial(declareElement, functionName);
 
@@ -182,7 +163,7 @@ public class MacroletExpander extends MacroFunctionExpander<MacroletStruct> {
 	}
 
 	private LispStruct getFunctionParameterInitForm(final ListStruct functionListParameter,
-	                                                final EnvironmentStack environmentStack) {
+	                                                final MacroletEnvironment macroletEnvironment) {
 
 		// TODO: This will be a MacroLambda, NOT a Lambda form!!!
 
@@ -220,16 +201,8 @@ public class MacroletExpander extends MacroFunctionExpander<MacroletStruct> {
 		final ListStruct innerFunctionListStruct = ListStruct.buildProperList(innerFunction);
 
 		// Evaluate in the outer environment. This is one of the differences between Flet and Labels.
-		final Environment currentEnvironment = environmentStack.pop();
-
-		final LispStruct functionInitForm;
-		try {
-			final Environment tempEnvironment = environmentStack.peek();
-			functionInitForm = formAnalyzer.analyze(innerFunctionListStruct, tempEnvironment);
-		} finally {
-			environmentStack.push(currentEnvironment);
-		}
-		return functionInitForm;
+		final Environment parentEnvironment = macroletEnvironment.getParent();
+		return formAnalyzer.analyze(innerFunctionListStruct, parentEnvironment);
 	}
 
 	private static boolean isSpecial(final DeclareStruct declareElement, final SymbolStruct<?> var) {
@@ -248,12 +221,11 @@ public class MacroletExpander extends MacroFunctionExpander<MacroletStruct> {
 	}
 
 	private static void addDynamicVariableBinding(final SpecialDeclarationStruct specialDeclarationElement,
-	                                              final AnalysisBuilder analysisBuilder,
 	                                              final MacroletEnvironment macroletEnvironment) {
 
 		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(macroletEnvironment);
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
-		analysisBuilder.setBindingsPosition(newBindingsPosition);
+		macroletEnvironment.setBindingsPosition(newBindingsPosition);
 
 		final SymbolStruct<?> var = specialDeclarationElement.getVar();
 

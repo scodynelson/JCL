@@ -10,9 +10,7 @@ import java.util.Set;
 import java.util.Stack;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.AnalysisBuilder;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.sa.FormAnalyzer;
@@ -37,12 +35,11 @@ public class SymbolFunctionCallAnalyzer extends FunctionCallAnalyzer {
 		final SymbolStruct<?> functionSymbol = (SymbolStruct<?>) input.getFirst();
 		final List<LispStruct> functionArguments = input.getRest().getAsJavaList();
 
-		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
-		final Set<SymbolStruct<?>> undefinedFunctions = analysisBuilder.getUndefinedFunctions();
+		final Set<SymbolStruct<?>> undefinedFunctions = environment.getUndefinedFunctions();
 
 		final FunctionStruct function = functionSymbol.getFunction();
 		if (function == null) {
-			final Stack<SymbolStruct<?>> functionNameStack = analysisBuilder.getFunctionNameStack();
+			final Stack<SymbolStruct<?>> functionNameStack = environment.getFunctionNameStack();
 
 			if (functionNameStack.contains(functionSymbol)) {
 				// Function is undefined, but name exists on the stack to be created
@@ -67,10 +64,7 @@ public class SymbolFunctionCallAnalyzer extends FunctionCallAnalyzer {
 			analyzedFunctionArguments.add(analyzedFunctionArgument);
 		}
 
-		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
-		final Environment currentEnvironment = environmentStack.peek();
-
-		final boolean hasFunctionBinding = Environments.hasFunctionBinding(currentEnvironment, functionSymbol);
+		final boolean hasFunctionBinding = Environments.hasFunctionBinding(environment, functionSymbol);
 
 		return new FunctionCallStruct(hasFunctionBinding, functionSymbol, analyzedFunctionArguments);
 	}

@@ -3,7 +3,6 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.AnalysisBuilder;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
@@ -48,8 +47,7 @@ public class ReturnFromExpander extends MacroFunctionExpander<ReturnFromStruct> 
 
 		final SymbolStruct<?> name = (SymbolStruct<?>) second;
 
-		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
-		if (analysisBuilder.getBlockStack().search(name) == -1) {
+		if (environment.getBlockStack().search(name) == -1) {
 			throw new ProgramErrorException("RETURN-FROM: No BLOCK with name " + second + " is visible.");
 		}
 

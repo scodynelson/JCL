@@ -3,9 +3,7 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.AnalysisBuilder;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.sa.analyzer.LambdaExpander;
 import jcl.compiler.real.sa.analyzer.SymbolAnalyzer;
@@ -64,12 +62,8 @@ public class FunctionExpander extends MacroFunctionExpander<CompilerFunctionStru
 
 	private CompilerFunctionStruct analyzeFunctionSymbol(final SymbolStruct<?> functionSymbol, final Environment environment) {
 
-		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
-		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
-		final Environment currentEnvironment = environmentStack.peek();
-
 		final Environment bindingEnvironment
-				= Environments.getInnerFunctionLexicalBindingEnvironment(currentEnvironment, functionSymbol);
+				= Environments.getInnerFunctionLexicalBindingEnvironment(environment, functionSymbol);
 
 		final boolean hasNoFunctionSymbolBinding = !bindingEnvironment.hasLexicalBinding(functionSymbol);
 

@@ -6,7 +6,6 @@ import java.util.Stack;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.AnalysisBuilder;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.go.GoStruct;
@@ -55,8 +54,7 @@ public class GoExpander extends MacroFunctionExpander<GoStruct<?>> {
 
 	private static GoStruct<?> getGoTag(final Environment environment, final LispStruct tagToFind) {
 
-		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
-		final Stack<Set<GoStruct<?>>> tagbodyStack = analysisBuilder.getTagbodyStack();
+		final Stack<Set<GoStruct<?>>> tagbodyStack = environment.getTagbodyStack();
 		final ListIterator<Set<GoStruct<?>>> tagbodyListIterator = tagbodyStack.listIterator(tagbodyStack.size());
 
 		GoStruct<?> tag = null;

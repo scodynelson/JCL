@@ -7,9 +7,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.AnalysisBuilder;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.EnvironmentStack;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LabelsEnvironment;
 import jcl.compiler.real.environment.LambdaEnvironment;
@@ -69,23 +67,12 @@ public class LabelsExpander extends MacroFunctionExpander<LabelsStruct> {
 			throw new ProgramErrorException("LABELS: Parameter list must be of type ListStruct. Got: " + second);
 		}
 
-		final AnalysisBuilder analysisBuilder = environment.getAnalysisBuilder();
-		final EnvironmentStack environmentStack = analysisBuilder.getEnvironmentStack();
-		final Environment parentEnvironment = environmentStack.peek();
+		final LabelsEnvironment labelsEnvironment = new LabelsEnvironment(environment);
 
-		final int tempClosureDepth = analysisBuilder.getClosureDepth();
-		final int newClosureDepth = tempClosureDepth + 1;
-
-		final LabelsEnvironment labelsEnvironment = new LabelsEnvironment(parentEnvironment, analysisBuilder, newClosureDepth);
-		environmentStack.push(labelsEnvironment);
-
-		final Stack<SymbolStruct<?>> functionNameStack = analysisBuilder.getFunctionNameStack();
+		final Stack<SymbolStruct<?>> functionNameStack = environment.getFunctionNameStack();
 		List<SymbolStruct<?>> functionNames = null;
 
-		final int tempBindingsPosition = analysisBuilder.getBindingsPosition();
 		try {
-			analysisBuilder.setClosureDepth(newClosureDepth);
-
 			final ListStruct innerFunctions = (ListStruct) second;
 			final List<? extends LispStruct> innerFunctionsJavaList = innerFunctions.getAsJavaList();
 			functionNames = getFunctionNames(innerFunctionsJavaList);
@@ -100,11 +87,11 @@ public class LabelsExpander extends MacroFunctionExpander<LabelsStruct> {
 
 			final List<LabelsStruct.LabelsVar> labelsVars
 					= innerFunctionsJavaList.stream()
-					                        .map(e -> getLabelsVar(e, declareElement, analysisBuilder, labelsEnvironment, environmentStack))
+					                        .map(e -> getLabelsVar(e, declareElement, labelsEnvironment))
 					                        .collect(Collectors.toList());
 
 			final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
-			specialDeclarationElements.forEach(e -> addDynamicVariableBinding(e, analysisBuilder, labelsEnvironment));
+			specialDeclarationElements.forEach(e -> addDynamicVariableBinding(e, labelsEnvironment));
 
 			final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
 
@@ -118,10 +105,6 @@ public class LabelsExpander extends MacroFunctionExpander<LabelsStruct> {
 			if (functionNames != null) {
 				StackUtils.popX(functionNameStack, functionNames.size());
 			}
-
-			analysisBuilder.setClosureDepth(tempClosureDepth);
-			analysisBuilder.setBindingsPosition(tempBindingsPosition);
-			environmentStack.pop();
 		}
 	}
 
@@ -152,9 +135,7 @@ public class LabelsExpander extends MacroFunctionExpander<LabelsStruct> {
 
 	private LabelsStruct.LabelsVar getLabelsVar(final LispStruct functionParameter,
 	                                            final DeclareStruct declareElement,
-	                                            final AnalysisBuilder analysisBuilder,
-	                                            final LabelsEnvironment labelsEnvironment,
-	                                            final EnvironmentStack lexicalEnvironmentStack) {
+	                                            final LabelsEnvironment labelsEnvironment) {
 
 		if (!(functionParameter instanceof ListStruct)) {
 			throw new ProgramErrorException("LABELS: Function parameter must be of type ListStruct. Got: " + functionParameter);
@@ -162,11 +143,11 @@ public class LabelsExpander extends MacroFunctionExpander<LabelsStruct> {
 
 		final ListStruct functionListParameter = (ListStruct) functionParameter;
 		final SymbolStruct<?> functionName = getFunctionListParameterName(functionListParameter);
-		final LispStruct functionInitForm = getFunctionParameterInitForm(functionListParameter, lexicalEnvironmentStack);
+		final LispStruct functionInitForm = getFunctionParameterInitForm(functionListParameter, labelsEnvironment);
 
 		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(labelsEnvironment);
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
-		analysisBuilder.setBindingsPosition(newBindingsPosition);
+		labelsEnvironment.setBindingsPosition(newBindingsPosition);
 
 		final boolean isSpecial = isSpecial(declareElement, functionName);
 
@@ -182,7 +163,7 @@ public class LabelsExpander extends MacroFunctionExpander<LabelsStruct> {
 	}
 
 	private LispStruct getFunctionParameterInitForm(final ListStruct functionListParameter,
-	                                                final EnvironmentStack environmentStack) {
+	                                                final LabelsEnvironment labelsEnvironment) {
 
 		final int functionListParameterSize = functionListParameter.size();
 		if (functionListParameterSize < 2) {
@@ -218,16 +199,8 @@ public class LabelsExpander extends MacroFunctionExpander<LabelsStruct> {
 		final ListStruct innerFunctionListStruct = ListStruct.buildProperList(innerFunction);
 
 		// Evaluate in the outer environment. This is one of the differences between Flet and Labels.
-		final Environment currentEnvironment = environmentStack.pop();
-
-		final LispStruct functionInitForm;
-		try {
-			final Environment tempEnvironment = environmentStack.peek();
-			functionInitForm = formAnalyzer.analyze(innerFunctionListStruct, tempEnvironment);
-		} finally {
-			environmentStack.push(currentEnvironment);
-		}
-		return functionInitForm;
+		final Environment parentEnvironment = labelsEnvironment.getParent();
+		return formAnalyzer.analyze(innerFunctionListStruct, parentEnvironment);
 	}
 
 	private static boolean isSpecial(final DeclareStruct declareElement, final SymbolStruct<?> var) {
@@ -246,12 +219,11 @@ public class LabelsExpander extends MacroFunctionExpander<LabelsStruct> {
 	}
 
 	private static void addDynamicVariableBinding(final SpecialDeclarationStruct specialDeclarationElement,
-	                                              final AnalysisBuilder analysisBuilder,
 	                                              final LabelsEnvironment labelsEnvironment) {
 
 		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(labelsEnvironment);
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
-		analysisBuilder.setBindingsPosition(newBindingsPosition);
+		labelsEnvironment.setBindingsPosition(newBindingsPosition);
 
 		final SymbolStruct<?> var = specialDeclarationElement.getVar();
 

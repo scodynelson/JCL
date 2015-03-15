@@ -6,8 +6,6 @@ import jcl.arrays.StringStruct;
 import jcl.characters.CharacterStruct;
 import jcl.classes.StructureClassStruct;
 import jcl.classes.StructureObjectStruct;
-import jcl.compiler.real.sa.analyzer.expander.MacroExpandFunction;
-import jcl.compiler.real.sa.analyzer.expander.MacroExpandReturn;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
@@ -62,13 +60,14 @@ public class EvalFunction {
 
 		try {
 			// try out Macroexpand before we do anything else
-			MacroExpandReturn macroExpandReturn = MacroExpandFunction.FUNCTION.funcall(arg1);
-			arg1 = macroExpandReturn.getExpandedForm();
-
-			while (macroExpandReturn.wasExpanded()) {
-				macroExpandReturn = MacroExpandFunction.FUNCTION.funcall(arg1);
-				arg1 = macroExpandReturn.getExpandedForm();
-			}
+			// TODO the commented out block below!!
+//			MacroExpandReturn macroExpandReturn = MacroExpandFunction.FUNCTION.funcall(arg1);
+//			arg1 = macroExpandReturn.getExpandedForm();
+//
+//			while (macroExpandReturn.wasExpanded()) {
+//				macroExpandReturn = MacroExpandFunction.FUNCTION.funcall(arg1);
+//				arg1 = macroExpandReturn.getExpandedForm();
+//			}
 
 			if (arg1 instanceof StringStruct) {
 				rtnObj = arg1;

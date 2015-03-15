@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.compiler.real.sa.analyzer.expander.real;
+package jcl.compiler.real.sa.analyzer.expander;
 
 import jcl.LispStruct;
 

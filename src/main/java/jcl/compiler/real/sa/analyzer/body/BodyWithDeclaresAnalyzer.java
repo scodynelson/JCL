@@ -7,7 +7,7 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.sa.MacroExpander;
+import jcl.compiler.real.sa.analyzer.expander.MacroExpander;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;

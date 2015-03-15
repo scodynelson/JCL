@@ -2,9 +2,9 @@ package jcl.symbols;
 
 import jcl.LispStruct;
 import jcl.classes.BuiltInClassStruct;
-import jcl.compiler.real.sa.analyzer.expander.real.CompilerMacroFunctionExpander;
-import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
-import jcl.compiler.real.sa.analyzer.expander.real.SymbolMacroExpander;
+import jcl.compiler.real.sa.analyzer.expander.CompilerMacroFunctionExpander;
+import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
+import jcl.compiler.real.sa.analyzer.expander.SymbolMacroExpander;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.packages.PackageStruct;

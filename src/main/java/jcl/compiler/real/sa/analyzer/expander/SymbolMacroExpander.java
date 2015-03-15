@@ -2,11 +2,10 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.compiler.real.sa.analyzer.expander.real;
+package jcl.compiler.real.sa.analyzer.expander;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.sa.MacroExpander;
 import jcl.symbols.SymbolStruct;
 
 public abstract class SymbolMacroExpander<O extends LispStruct> extends MacroExpander<O, SymbolStruct<?>> {

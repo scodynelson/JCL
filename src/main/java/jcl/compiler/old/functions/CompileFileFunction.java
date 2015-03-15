@@ -8,8 +8,7 @@ import jcl.compiler.old.EmptyVisitor;
 import jcl.compiler.old.documentation.AnnotationCollector;
 import jcl.compiler.old.documentation.DocumentFactory;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
-import jcl.compiler.real.sa.analyzer.expander.MacroExpandFunction;
-import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
+import jcl.compiler.old.MacroFunctionExpander;
 import jcl.compiler.old.symbol.KeywordOld;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
@@ -437,7 +436,7 @@ public class CompileFileFunction {
 				if (((SymbolStruct) car).getFunction() instanceof MacroFunctionExpander) {
 					if (((SymbolStruct) car).getFunction() == null) {
 					}
-					theForm = processTopLevelForm(MacroExpandFunction.FUNCTION.funcall(form).getExpandedForm());
+//					theForm = processTopLevelForm(MacroExpandFunction.FUNCTION.funcall(form).getExpandedForm()); TODO
 				} else if (car == SpecialOperator.PROGN) {
 					ListStruct resultForms = NullStruct.INSTANCE;
 					ListStruct forms = form.getRest();

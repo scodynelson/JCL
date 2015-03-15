@@ -7,7 +7,7 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.sa.analyzer.LambdaExpander;
 import jcl.compiler.real.sa.analyzer.SymbolAnalyzer;
-import jcl.compiler.real.sa.analyzer.expander.real.MacroFunctionExpander;
+import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.LambdaCompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.SymbolCompilerFunctionStruct;

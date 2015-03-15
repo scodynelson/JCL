@@ -10,6 +10,7 @@ import java.util.Set;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.sa.analyzer.expander.MacroExpander;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;

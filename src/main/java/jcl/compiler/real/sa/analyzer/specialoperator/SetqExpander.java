@@ -11,8 +11,11 @@ import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.SetqStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
+import jcl.printer.Printer;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,8 +27,11 @@ public class SetqExpander extends MacroFunctionExpander<SetqStruct> {
 	@Autowired
 	private FormAnalyzer formAnalyzer;
 
+	@Autowired
+	private Printer printer;
+
 	/**
-	 * Initializes the block macro function and adds it to the special operator 'block'.
+	 * Initializes the setq macro function and adds it to the special operator 'setq'.
 	 */
 	@PostConstruct
 	private void init() {
@@ -46,19 +52,25 @@ public class SetqExpander extends MacroFunctionExpander<SetqStruct> {
 
 		for (int index = 0; index < forms.size(); index += 2) {
 
-			final LispStruct var = forms.get(index);
-			if (!(var instanceof SymbolStruct)) {
-				throw new ProgramErrorException("SETQ: Variable must be of type SymbolStruct. Got: " + var);
+			final LispStruct setqVar = forms.get(index);
+			if (!(setqVar instanceof SymbolStruct)) {
+				final String printedSetqVar = printer.print(setqVar);
+				throw new ProgramErrorException("SETQ: Variable must be a symbol. Got: " + printedSetqVar);
 			}
-			final SymbolStruct<?> varSymbol = (SymbolStruct<?>) var;
+			final SymbolStruct<?> setqVarSymbol = (SymbolStruct<?>) setqVar;
 
 			final LispStruct setqForm = forms.get(index + 1);
 			final LispStruct setqFormAnalyzed = formAnalyzer.analyze(setqForm, environment);
 
-			final SetqStruct.SetqPair setqPair = new SetqStruct.SetqPair(varSymbol, setqFormAnalyzed);
+			final SetqStruct.SetqPair setqPair = new SetqStruct.SetqPair(setqVarSymbol, setqFormAnalyzed);
 			setqPairs.add(setqPair);
 		}
 
 		return new SetqStruct(setqPairs);
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

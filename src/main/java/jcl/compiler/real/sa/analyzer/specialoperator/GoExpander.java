@@ -22,7 +22,7 @@ public class GoExpander extends MacroFunctionExpander<GoStruct<?>> {
 	private static final long serialVersionUID = -6523523596100793498L;
 
 	/**
-	 * Initializes the block macro function and adds it to the special operator 'block'.
+	 * Initializes the go macro function and adds it to the special operator 'go'.
 	 */
 	@PostConstruct
 	private void init() {
@@ -40,9 +40,8 @@ public class GoExpander extends MacroFunctionExpander<GoStruct<?>> {
 		final ListStruct inputRest = form.getRest();
 
 		final LispStruct second = inputRest.getFirst();
-
 		if (!isTagbodyTag(second)) {
-			throw new ProgramErrorException("GO: Tag must be of type SymbolStruct or IntegerStruct. Got: " + second);
+			throw new ProgramErrorException("GO: Tag must be a symbol or an integer. Got: " + second);
 		}
 
 		return getGoTag(environment, second);
@@ -62,10 +61,10 @@ public class GoExpander extends MacroFunctionExpander<GoStruct<?>> {
 		out:
 		while (tagbodyListIterator.hasPrevious()) {
 			final Set<GoStruct<?>> previousStack = tagbodyListIterator.previous();
-			for (final GoStruct<?> goElement : previousStack) {
-				final LispStruct goElementTag = goElement.getTag();
-				if (tagToFind.equals(goElementTag)) {
-					tag = goElement;
+			for (final GoStruct<?> goStruct : previousStack) {
+				final LispStruct goTag = goStruct.getTag();
+				if (tagToFind.equals(goTag)) {
+					tag = goStruct;
 					break out;
 				}
 			}

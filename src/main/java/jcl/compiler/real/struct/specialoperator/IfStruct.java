@@ -5,7 +5,6 @@
 package jcl.compiler.real.struct.specialoperator;
 
 import jcl.LispStruct;
-import jcl.lists.NullStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -20,12 +19,6 @@ public class IfStruct implements LispStruct {
 	private final LispStruct thenForm;
 
 	private final LispStruct elseForm;
-
-	public IfStruct(final LispStruct testForm, final LispStruct thenForm) {
-		this.testForm = testForm;
-		this.thenForm = thenForm;
-		elseForm = NullStruct.INSTANCE;
-	}
 
 	public IfStruct(final LispStruct testForm, final LispStruct thenForm, final LispStruct elseForm) {
 		this.testForm = testForm;

@@ -11,8 +11,11 @@ import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.BlockStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
+import jcl.printer.Printer;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +26,9 @@ public class BlockExpander extends MacroFunctionExpander<BlockStruct> {
 
 	@Autowired
 	private FormAnalyzer formAnalyzer;
+
+	@Autowired
+	private Printer printer;
 
 	/**
 	 * Initializes the block macro function and adds it to the special operator 'block'.
@@ -44,15 +50,17 @@ public class BlockExpander extends MacroFunctionExpander<BlockStruct> {
 
 		final LispStruct second = inputRest.getFirst();
 		if (!(second instanceof SymbolStruct)) {
-			throw new ProgramErrorException("BLOCK: Label must be of type SymbolStruct. Got: " + second);
+			final String printedObject = printer.print(second);
+			throw new ProgramErrorException("BLOCK: Name must be a symbol. Got: " + printedObject);
 		}
 
 		final SymbolStruct<?> name = (SymbolStruct<?>) second;
 		environment.getBlockStack().push(name);
 
 		try {
-			final List<LispStruct> forms = inputRest.getRest().getAsJavaList();
+			final ListStruct inputRestRest = inputRest.getRest();
 
+			final List<LispStruct> forms = inputRestRest.getAsJavaList();
 			final List<LispStruct> analyzedForms =
 					forms.stream()
 					     .map(e -> formAnalyzer.analyze(e, environment))
@@ -62,5 +70,10 @@ public class BlockExpander extends MacroFunctionExpander<BlockStruct> {
 		} finally {
 			environment.getBlockStack().pop();
 		}
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

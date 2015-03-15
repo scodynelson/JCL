@@ -9,8 +9,11 @@ import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.TheStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
+import jcl.printer.Printer;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,8 +25,11 @@ public class TheExpander extends MacroFunctionExpander<TheStruct> {
 	@Autowired
 	private FormAnalyzer formAnalyzer;
 
+	@Autowired
+	private Printer printer;
+
 	/**
-	 * Initializes the block macro function and adds it to the special operator 'block'.
+	 * Initializes the the macro function and adds it to the special operator 'the'.
 	 */
 	@PostConstruct
 	private void init() {
@@ -42,7 +48,8 @@ public class TheExpander extends MacroFunctionExpander<TheStruct> {
 
 		final LispStruct valueType = inputRest.getFirst();
 		if (!(valueType instanceof SymbolStruct) && !(valueType instanceof ListStruct)) {
-			throw new ProgramErrorException("THE: Type specifier must be of type SymbolStruct or ListStruct. Got: " + valueType);
+			final String printedValueType = printer.print(valueType);
+			throw new ProgramErrorException("THE: Type specifier must be a symbol or a list. Got: " + printedValueType);
 		}
 		// TODO: do we actually want to somehow factor in the 'TypeSpecifier' produced by the second value?
 
@@ -52,5 +59,10 @@ public class TheExpander extends MacroFunctionExpander<TheStruct> {
 		final LispStruct theFormAnalyzed = formAnalyzer.analyze(theForm, environment);
 
 		return new TheStruct(null, theFormAnalyzed);
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

@@ -1,19 +1,9 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.function.BiConsumer;
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collector;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
@@ -46,7 +36,7 @@ public class TagbodyExpander extends MacroFunctionExpander<TagbodyStruct> {
 	private Map<Class<? extends LispStruct>, GoStructGenerator<LispStruct>> goStructGeneratorStrategies;
 
 	/**
-	 * Initializes the block macro function and adds it to the special operator 'block'.
+	 * Initializes the tagbody macro function and adds it to the special operator 'tagbody'.
 	 */
 	@PostConstruct
 	private void init() {
@@ -59,13 +49,16 @@ public class TagbodyExpander extends MacroFunctionExpander<TagbodyStruct> {
 		ListStruct body = form.getRest();
 		List<LispStruct> bodyAsJavaList = body.getAsJavaList();
 
-		final Set<GoStruct<?>> currentTagSet = bodyAsJavaList.stream()
-		                                                     .collect(new TagbodyInitialTagCollector());
+		final TagbodyTagSetCollector tagSetCollector = new TagbodyTagSetCollector(goStructGeneratorStrategies);
+		final Set<GoStruct<?>> tagSet = bodyAsJavaList.stream()
+		                                              .collect(tagSetCollector);
 
-		environment.getTagbodyStack().push(currentTagSet);
+		environment.getTagbodyStack().push(tagSet);
 
 		// If the first element is not a 'tag', we have a default form set. Therefore, we are going to generate a
 		// temporary 'tag' for this form set.
+		// NOTE: We don't care about adding this to the TagbodyStack since it is generated just for us here and will
+		//       will never be used as a real transfer of control point.
 		if (!isTagbodyTag(body.getFirst())) {
 			final SymbolStruct<?> defaultFormsTag = new SymbolStruct<>("Tag" + UUID.randomUUID());
 			body = new ConsStruct(defaultFormsTag, body);
@@ -73,8 +66,9 @@ public class TagbodyExpander extends MacroFunctionExpander<TagbodyStruct> {
 		}
 
 		try {
-			final Map<LispStruct, List<LispStruct>> tagbodyForms = bodyAsJavaList.stream()
-			                                                                     .collect(new TagbodyCollector(formAnalyzer, environment));
+			final TagbodyCollector collector = new TagbodyCollector(formAnalyzer, environment, goStructGeneratorStrategies);
+			final Map<GoStruct<?>, List<LispStruct>> tagbodyForms = bodyAsJavaList.stream()
+			                                                                      .collect(collector);
 			return new TagbodyStruct(tagbodyForms);
 		} finally {
 			environment.getTagbodyStack().pop();
@@ -85,118 +79,8 @@ public class TagbodyExpander extends MacroFunctionExpander<TagbodyStruct> {
 		return (element instanceof SymbolStruct) || (element instanceof IntegerStruct);
 	}
 
-	private final class TagbodyInitialTagCollector implements Collector<LispStruct, Set<GoStruct<?>>, Set<GoStruct<?>>> {
-
-		@Override
-		public Supplier<Set<GoStruct<?>>> supplier() {
-			return HashSet::new;
-		}
-
-		@Override
-		public BiConsumer<Set<GoStruct<?>>, LispStruct> accumulator() {
-			return (goElementSet, lispStruct) -> {
-
-				final GoStructGenerator<LispStruct> goElementGenerator = goStructGeneratorStrategies.get(lispStruct.getClass());
-				if (goElementGenerator != null) {
-					final GoStruct<?> goElement = goElementGenerator.generateGoElement(lispStruct);
-					goElementSet.add(goElement);
-				}
-			};
-		}
-
-		@Override
-		public BinaryOperator<Set<GoStruct<?>>> combiner() {
-			return (left, right) -> {
-				left.addAll(right);
-				return left;
-			};
-		}
-
-		@Override
-		public Function<Set<GoStruct<?>>, Set<GoStruct<?>>> finisher() {
-			return Function.identity();
-		}
-
-		@Override
-		public Set<Characteristics> characteristics() {
-			return Collections.unmodifiableSet(EnumSet.of(Collector.Characteristics.UNORDERED, Collector.Characteristics.IDENTITY_FINISH));
-		}
-
-		@Override
-		public String toString() {
-			return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
-		}
-	}
-
-	private final class TagbodyCollector implements Collector<LispStruct, Map<LispStruct, List<LispStruct>>, Map<LispStruct, List<LispStruct>>> {
-
-		private final FormAnalyzer analyzer;
-
-		private final Environment environment;
-
-		private GoStruct<?> currentTag;
-
-		private TagbodyCollector(final FormAnalyzer analyzer, final Environment environment) {
-			this.analyzer = analyzer;
-			this.environment = environment;
-			currentTag = null;
-		}
-
-		private void handleOtherwise(final Map<LispStruct, List<LispStruct>> lispStructListMap, final LispStruct lispStruct) {
-			if (!lispStructListMap.containsKey(currentTag)) {
-				lispStructListMap.put(currentTag, new ArrayList<>());
-			}
-
-			final LispStruct analyzedForm = analyzer.analyze(lispStruct, environment);
-			lispStructListMap.get(currentTag).add(analyzedForm);
-		}
-
-		@Override
-		public Supplier<Map<LispStruct, List<LispStruct>>> supplier() {
-			return HashMap::new;
-		}
-
-		@Override
-		public BiConsumer<Map<LispStruct, List<LispStruct>>, LispStruct> accumulator() {
-			return (elementListMap, lispStruct) -> {
-
-				final GoStructGenerator<LispStruct> goElementGenerator = goStructGeneratorStrategies.get(lispStruct.getClass());
-				if (goElementGenerator == null) {
-					handleOtherwise(elementListMap, lispStruct);
-				} else {
-					currentTag = goElementGenerator.generateGoElement(lispStruct);
-				}
-			};
-		}
-
-		@Override
-		public BinaryOperator<Map<LispStruct, List<LispStruct>>> combiner() {
-			return (elementListMap, elementListMap2) -> {
-				for (Map.Entry<LispStruct, List<LispStruct>> e : elementListMap2.entrySet()) {
-					elementListMap.merge(
-							e.getKey(),
-							e.getValue(),
-							(u, v) -> {
-								throw new IllegalStateException(String.format("Duplicate key %s", u));
-							});
-				}
-				return elementListMap;
-			};
-		}
-
-		@Override
-		public Function<Map<LispStruct, List<LispStruct>>, Map<LispStruct, List<LispStruct>>> finisher() {
-			return Function.identity();
-		}
-
-		@Override
-		public Set<Characteristics> characteristics() {
-			return Collections.unmodifiableSet(EnumSet.of(Collector.Characteristics.IDENTITY_FINISH));
-		}
-
-		@Override
-		public String toString() {
-			return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
-		}
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

@@ -108,7 +108,7 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 		}
 	}
 
-	private List<SymbolStruct<?>> getFunctionNames(final List<? extends LispStruct> functionDefinitions) {
+	private static List<SymbolStruct<?>> getFunctionNames(final List<? extends LispStruct> functionDefinitions) {
 
 		final List<SymbolStruct<?>> functionNames = new ArrayList<>(functionDefinitions.size());
 
@@ -125,7 +125,7 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 		return functionNames;
 	}
 
-	private SymbolStruct<?> getFunctionListParameterName(final ListStruct functionListParameter) {
+	private static SymbolStruct<?> getFunctionListParameterName(final ListStruct functionListParameter) {
 		final LispStruct functionListParameterFirst = functionListParameter.getFirst();
 		if (!(functionListParameterFirst instanceof SymbolStruct)) {
 			throw new ProgramErrorException("FLET: Function parameter first element value must be of type Symbol. Got: " + functionListParameterFirst);

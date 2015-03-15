@@ -5,7 +5,6 @@
 package jcl.compiler.real.struct.specialoperator;
 
 import jcl.LispStruct;
-import jcl.lists.NullStruct;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -19,11 +18,6 @@ public class ReturnFromStruct implements LispStruct {
 	private final SymbolStruct<?> name;
 
 	private final LispStruct result;
-
-	public ReturnFromStruct(final SymbolStruct<?> name) {
-		this.name = name;
-		result = NullStruct.INSTANCE;
-	}
 
 	public ReturnFromStruct(final SymbolStruct<?> name, final LispStruct result) {
 		this.name = name;

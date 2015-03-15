@@ -12,6 +12,8 @@ import jcl.compiler.real.struct.specialoperator.UnwindProtectStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +26,7 @@ public class UnwindProtectExpander extends MacroFunctionExpander<UnwindProtectSt
 	private FormAnalyzer formAnalyzer;
 
 	/**
-	 * Initializes the block macro function and adds it to the special operator 'block'.
+	 * Initializes the unwind-protect macro function and adds it to the special operator 'unwind-protect'.
 	 */
 	@PostConstruct
 	private void init() {
@@ -40,16 +42,23 @@ public class UnwindProtectExpander extends MacroFunctionExpander<UnwindProtectSt
 		}
 
 		final ListStruct inputRest = form.getRest();
+
 		final LispStruct protectedForm = inputRest.getFirst();
 		final LispStruct analyzedProtectedForm = formAnalyzer.analyze(protectedForm, environment);
 
-		final List<LispStruct> cleanupForms = inputRest.getRest().getAsJavaList();
+		final ListStruct inputRestRest = inputRest.getRest();
 
+		final List<LispStruct> cleanupForms = inputRestRest.getAsJavaList();
 		final List<LispStruct> analyzedCleanupForms =
 				cleanupForms.stream()
 				            .map(e -> formAnalyzer.analyze(e, environment))
 				            .collect(Collectors.toList());
 
 		return new UnwindProtectStruct(analyzedProtectedForm, analyzedCleanupForms);
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

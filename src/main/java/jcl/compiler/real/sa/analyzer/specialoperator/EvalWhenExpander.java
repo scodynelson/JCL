@@ -4,20 +4,23 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.old.symbol.KeywordOld;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
+import jcl.printer.Printer;
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SpecialOperator;
+import jcl.symbols.SymbolStruct;
+import jcl.system.CommonLispSymbols;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,16 +32,16 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 	private static final Set<KeywordSymbolStruct> SITUATION_KEYWORDS = new HashSet<>(3);
 
 	static {
-		SITUATION_KEYWORDS.add(KeywordOld.CompileToplevel);
-		SITUATION_KEYWORDS.add(KeywordOld.LoadToplevel);
-		SITUATION_KEYWORDS.add(KeywordOld.Execute);
+		SITUATION_KEYWORDS.add(CommonLispSymbols.COMPILE_TOPLEVEL);
+		SITUATION_KEYWORDS.add(CommonLispSymbols.LOAD_TOPLEVEL);
+		SITUATION_KEYWORDS.add(CommonLispSymbols.EXECUTE);
 	}
 
 	@Autowired
-	private FormAnalyzer formAnalyzer;
+	private Printer printer;
 
 	/**
-	 * Initializes the block macro function and adds it to the special operator 'block'.
+	 * Initializes the eval-when macro function and adds it to the special operator 'eval-when'.
 	 */
 	@PostConstruct
 	private void init() {
@@ -47,17 +50,22 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 
 	@Override
 	public LispStruct expand(final ListStruct form, final Environment environment) {
-		return expand(form, environment, false, false);
+		return expand(form, false, false);
 	}
 
-	public LispStruct expand(final ListStruct form, final Environment environment, final boolean isTopLevel,
-	                       final boolean isCompileOrCompileFile) {
+	public LispStruct expand(final ListStruct form, final boolean isTopLevel, final boolean isCompileOrCompileFile) {
+
+		final int inputSize = form.size();
+		if (inputSize < 2) {
+			throw new ProgramErrorException("EVAL-WHEN: Incorrect number of arguments: " + inputSize + ". Expected at least 2 arguments.");
+		}
 
 		final ListStruct inputRest = form.getRest();
 
 		final LispStruct second = inputRest.getFirst();
 		if (!(second instanceof ListStruct)) {
-			throw new ProgramErrorException("EVAL-WHEN: Situation list must be of type ListStruct. Got: " + second);
+			final String printedObject = printer.print(second);
+			throw new ProgramErrorException("EVAL-WHEN: Situation list must be a list. Got: " + printedObject);
 		}
 
 		final ListStruct situationList = (ListStruct) second;
@@ -65,63 +73,75 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 
 		final Collection<? extends LispStruct> difference = CollectionUtils.removeAll(situationJavaList, SITUATION_KEYWORDS);
 		if (!difference.isEmpty()) {
-			throw new ProgramErrorException("EVAL-WHEN: Situations must be one of ':COMPILE-TOP-LEVEL', ':LOAD-TIME-LEVEL', or ':EXECUTE'. Got: " + situationList);
+			final String printedSituationList = printer.print(situationList);
+			throw new ProgramErrorException("EVAL-WHEN: Situations must be one of ':COMPILE-TOP-LEVEL', ':LOAD-TIME-LEVEL', or ':EXECUTE'. Got: " + printedSituationList);
 		}
 
-		final List<LispStruct> forms = inputRest.getRest().getAsJavaList();
+		final ListStruct forms = inputRest.getRest();
 
 		if (isTopLevel) {
 			if (isCompileTopLevel(situationJavaList)) {
 				// (eval `(progn ,@body)))
-//				final ListStruct prognBody = new ConsStruct(SpecialOperator.PROGN, forms);
+				final ListStruct prognOperatorList = new ConsStruct(SpecialOperator.PROGN, forms);
 
 				// TODO: what we need to do here is:
 				// TODO: 1.) Get global instance of 'EVAL' function
 				// TODO: 2.) Pass the new 'prognBody' to the 'EVAL' function
 				// TODO: 3.) Forcefully evaluate the 'EVAL' function
-
 			}
 
 			if (isLoadTopLevel(situationJavaList) || (!isCompileOrCompileFile && isExecute(situationJavaList))) {
-				// (funcall #'(lambda (forms) (ir1-convert-progn-body start cont forms)) body)
-				final List<LispStruct> analyzedForms =
-						forms.stream()
-						             .map(e -> formAnalyzer.analyze(e, environment))
-						             .collect(Collectors.toList());
+				// (eval (funcall (function (lambda (forms) (progn forms))) body))
+
+				final SymbolStruct<?> formsSymbol = new SymbolStruct<>("FORMS");
+				final ListStruct prognOperatorList = ListStruct.buildProperList(SpecialOperator.PROGN, formsSymbol);
+
+				final ListStruct lambdaArgumentsList = ListStruct.buildProperList(formsSymbol);
+				final ListStruct lambdaOperatorList = ListStruct.buildProperList(SpecialOperator.LAMBDA, lambdaArgumentsList, prognOperatorList);
+
+				final ListStruct functionOperatorList = ListStruct.buildProperList(SpecialOperator.FUNCTION, lambdaOperatorList);
+				final ListStruct funcallList = ListStruct.buildProperList(functionOperatorList, forms);
 
 				// TODO: what we need to do here is:
 				// TODO: 1.) Create a new 'LAMBDA' function
 				// TODO: 2.) Set the body of the lambda as the 'analyzedBodyForms'
 				// TODO: 3.) Forcefully evaluate the created 'LAMBDA' function
-
 			}
 		} else if (isExecute(situationJavaList)) {
-			// (funcall #'(lambda (forms) (ir1-convert-progn-body start cont forms)) body)
-			final List<LispStruct> analyzedForms =
-					forms.stream()
-					             .map(e -> formAnalyzer.analyze(e, environment))
-					             .collect(Collectors.toList());
+			// (eval (funcall (function (lambda (forms) (progn forms))) body))
+
+			final SymbolStruct<?> formsSymbol = new SymbolStruct<>("FORMS");
+			final ListStruct prognOperatorList = ListStruct.buildProperList(SpecialOperator.PROGN, formsSymbol);
+
+			final ListStruct lambdaArgumentsList = ListStruct.buildProperList(formsSymbol);
+			final ListStruct lambdaOperatorList = ListStruct.buildProperList(SpecialOperator.LAMBDA, lambdaArgumentsList, prognOperatorList);
+
+			final ListStruct functionOperatorList = ListStruct.buildProperList(SpecialOperator.FUNCTION, lambdaOperatorList);
+			final ListStruct funcallList = ListStruct.buildProperList(functionOperatorList, forms);
 
 			// TODO: what we need to do here is:
 			// TODO: 1.) Create a new 'LAMBDA' function
 			// TODO: 2.) Set the body of the lambda as the 'analyzedBodyForms'
 			// TODO: 3.) Forcefully evaluate the created 'LAMBDA' function
-
 		}
 
-		// TODO: Really, we just do nothing. Should we actually do a 'void' return here???
 		return NullStruct.INSTANCE;
 	}
 
 	private static boolean isCompileTopLevel(final List<? extends LispStruct> situationList) {
-		return situationList.contains(KeywordOld.CompileToplevel);
+		return situationList.contains(CommonLispSymbols.COMPILE_TOPLEVEL);
 	}
 
 	private static boolean isLoadTopLevel(final List<? extends LispStruct> situationList) {
-		return situationList.contains(KeywordOld.LoadToplevel);
+		return situationList.contains(CommonLispSymbols.LOAD_TOPLEVEL);
 	}
 
 	private static boolean isExecute(final List<? extends LispStruct> situationList) {
-		return situationList.contains(KeywordOld.Execute);
+		return situationList.contains(CommonLispSymbols.EXECUTE);
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

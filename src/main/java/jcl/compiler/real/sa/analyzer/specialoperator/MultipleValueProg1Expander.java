@@ -12,6 +12,8 @@ import jcl.compiler.real.struct.specialoperator.MultipleValueProg1Struct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +26,7 @@ public class MultipleValueProg1Expander extends MacroFunctionExpander<MultipleVa
 	private FormAnalyzer formAnalyzer;
 
 	/**
-	 * Initializes the block macro function and adds it to the special operator 'block'.
+	 * Initializes the multiple-value-prog1 macro function and adds it to the special operator 'multiple-value-prog1'.
 	 */
 	@PostConstruct
 	private void init() {
@@ -44,12 +46,19 @@ public class MultipleValueProg1Expander extends MacroFunctionExpander<MultipleVa
 		final LispStruct firstForm = inputRest.getFirst();
 		final LispStruct firstFormAnalyzed = formAnalyzer.analyze(firstForm, environment);
 
-		final List<LispStruct> forms = inputRest.getRest().getAsJavaList();
+		final ListStruct inputRestRest = inputRest.getRest();
+
+		final List<LispStruct> forms = inputRestRest.getAsJavaList();
 		final List<LispStruct> analyzedForms =
 				forms.stream()
 				     .map(e -> formAnalyzer.analyze(e, environment))
 				     .collect(Collectors.toList());
 
 		return new MultipleValueProg1Struct(firstFormAnalyzed, analyzedForms);
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

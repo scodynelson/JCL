@@ -4,9 +4,7 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.sa.analyzer.LambdaExpander;
-import jcl.compiler.real.sa.analyzer.SymbolAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.LambdaCompilerFunctionStruct;
@@ -14,6 +12,7 @@ import jcl.compiler.real.struct.specialoperator.SymbolCompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
+import jcl.printer.Printer;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -27,13 +26,13 @@ public class FunctionExpander extends MacroFunctionExpander<CompilerFunctionStru
 	private static final long serialVersionUID = -8290125563768560922L;
 
 	@Autowired
-	private SymbolAnalyzer symbolAnalyzer;
-
-	@Autowired
 	private LambdaExpander lambdaExpander;
 
+	@Autowired
+	private Printer printer;
+
 	/**
-	 * Initializes the block macro function and adds it to the special operator 'block'.
+	 * Initializes the function macro function and adds it to the special operator 'function'.
 	 */
 	@PostConstruct
 	private void init() {
@@ -49,42 +48,28 @@ public class FunctionExpander extends MacroFunctionExpander<CompilerFunctionStru
 		}
 
 		final ListStruct inputRest = form.getRest();
-		final LispStruct second = inputRest.getFirst();
 
+		final LispStruct second = inputRest.getFirst();
 		if (second instanceof SymbolStruct) {
-			return analyzeFunctionSymbol((SymbolStruct<?>) second, environment);
+			return new SymbolCompilerFunctionStruct((SymbolStruct<?>) second);
 		} else if (second instanceof ListStruct) {
 			return analyzeFunctionList((ListStruct) second, environment);
 		} else {
-			throw new ProgramErrorException("FUNCTION: Function argument must be of type SymbolStruct or ListStruct. Got: " + second);
+			throw new ProgramErrorException("FUNCTION: Function argument must be a symbol or a list. Got: " + second);
 		}
-	}
-
-	private CompilerFunctionStruct analyzeFunctionSymbol(final SymbolStruct<?> functionSymbol, final Environment environment) {
-
-		final Environment bindingEnvironment
-				= Environments.getInnerFunctionLexicalBindingEnvironment(environment, functionSymbol);
-
-		final boolean hasNoFunctionSymbolBinding = !bindingEnvironment.hasLexicalBinding(functionSymbol);
-
-		SymbolStruct<?> functionSymbolAnalyzed = functionSymbol;
-		if (hasNoFunctionSymbolBinding) {
-			functionSymbolAnalyzed = symbolAnalyzer.analyzeLexical(functionSymbol, environment);
-		}
-
-		return new SymbolCompilerFunctionStruct(functionSymbolAnalyzed);
 	}
 
 	private CompilerFunctionStruct analyzeFunctionList(final ListStruct functionList, final Environment environment) {
 
 		final LispStruct functionListFirst = functionList.getFirst();
 
-		if (!functionListFirst.equals(SpecialOperator.LAMBDA)) {
-			throw new ProgramErrorException("FUNCTION: First element of List argument must be the Symbol LAMBDA. Got: " + functionListFirst);
+		if (!SpecialOperator.LAMBDA.equals(functionListFirst)) {
+			final String printedObject = printer.print(functionListFirst);
+			throw new ProgramErrorException("FUNCTION: First element of list argument must be the symbol 'LAMBDA'. Got: " + printedObject);
 		}
 
-		final LambdaStruct lambdaElement = lambdaExpander.expand(functionList, environment);
-		return new LambdaCompilerFunctionStruct(lambdaElement);
+		final LambdaStruct analyzedLambda = lambdaExpander.expand(functionList, environment);
+		return new LambdaCompilerFunctionStruct(analyzedLambda);
 	}
 
 	@Override

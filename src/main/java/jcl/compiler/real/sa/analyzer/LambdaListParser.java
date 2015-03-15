@@ -28,6 +28,10 @@ import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.types.T;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 final class LambdaListParser {
 
@@ -538,6 +542,21 @@ final class LambdaListParser {
 		public int getCurrentPosition() {
 			return currentPosition;
 		}
+
+		@Override
+		public int hashCode() {
+			return HashCodeBuilder.reflectionHashCode(this);
+		}
+
+		@Override
+		public boolean equals(final Object obj) {
+			return EqualsBuilder.reflectionEquals(this, obj);
+		}
+
+		@Override
+		public String toString() {
+			return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).setExcludeFieldNames("parent").toString();
+		}
 	}
 
 	private static final class RequiredParseResult extends ParseResult {
@@ -551,6 +570,21 @@ final class LambdaListParser {
 
 		public List<RequiredBinding> getRequiredBindings() {
 			return requiredBindings;
+		}
+
+		@Override
+		public int hashCode() {
+			return HashCodeBuilder.reflectionHashCode(this);
+		}
+
+		@Override
+		public boolean equals(final Object obj) {
+			return EqualsBuilder.reflectionEquals(this, obj);
+		}
+
+		@Override
+		public String toString() {
+			return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).setExcludeFieldNames("parent").toString();
 		}
 	}
 
@@ -566,6 +600,21 @@ final class LambdaListParser {
 		public List<OptionalBinding> getOptionalBindings() {
 			return optionalBindings;
 		}
+
+		@Override
+		public int hashCode() {
+			return HashCodeBuilder.reflectionHashCode(this);
+		}
+
+		@Override
+		public boolean equals(final Object obj) {
+			return EqualsBuilder.reflectionEquals(this, obj);
+		}
+
+		@Override
+		public String toString() {
+			return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).setExcludeFieldNames("parent").toString();
+		}
 	}
 
 	private static final class RestParseResult extends ParseResult {
@@ -579,6 +628,21 @@ final class LambdaListParser {
 
 		public RestBinding getRestBinding() {
 			return restBinding;
+		}
+
+		@Override
+		public int hashCode() {
+			return HashCodeBuilder.reflectionHashCode(this);
+		}
+
+		@Override
+		public boolean equals(final Object obj) {
+			return EqualsBuilder.reflectionEquals(this, obj);
+		}
+
+		@Override
+		public String toString() {
+			return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).setExcludeFieldNames("parent").toString();
 		}
 	}
 
@@ -601,6 +665,21 @@ final class LambdaListParser {
 		public boolean isAllowOtherKeys() {
 			return allowOtherKeys;
 		}
+
+		@Override
+		public int hashCode() {
+			return HashCodeBuilder.reflectionHashCode(this);
+		}
+
+		@Override
+		public boolean equals(final Object obj) {
+			return EqualsBuilder.reflectionEquals(this, obj);
+		}
+
+		@Override
+		public String toString() {
+			return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).setExcludeFieldNames("parent").toString();
+		}
 	}
 
 	private static final class AuxParseResult extends ParseResult {
@@ -614,6 +693,21 @@ final class LambdaListParser {
 
 		public List<AuxBinding> getAuxBindings() {
 			return auxBindings;
+		}
+
+		@Override
+		public int hashCode() {
+			return HashCodeBuilder.reflectionHashCode(this);
+		}
+
+		@Override
+		public boolean equals(final Object obj) {
+			return EqualsBuilder.reflectionEquals(this, obj);
+		}
+
+		@Override
+		public String toString() {
+			return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).setExcludeFieldNames("parent").toString();
 		}
 	}
 

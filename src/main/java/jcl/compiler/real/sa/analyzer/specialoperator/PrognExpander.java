@@ -11,6 +11,8 @@ import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +25,7 @@ public class PrognExpander extends MacroFunctionExpander<PrognStruct> {
 	private FormAnalyzer formAnalyzer;
 
 	/**
-	 * Initializes the block macro function and adds it to the special operator 'block'.
+	 * Initializes the progn macro function and adds it to the special operator 'progn'.
 	 */
 	@PostConstruct
 	private void init() {
@@ -34,12 +36,16 @@ public class PrognExpander extends MacroFunctionExpander<PrognStruct> {
 	public PrognStruct expand(final ListStruct form, final Environment environment) {
 
 		final List<LispStruct> forms = form.getRest().getAsJavaList();
-
 		final List<LispStruct> analyzedForms =
 				forms.stream()
 				     .map(e -> formAnalyzer.analyze(e, environment))
 				     .collect(Collectors.toList());
 
 		return new PrognStruct(analyzedForms);
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

@@ -1,12 +1,12 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import java.util.List;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Environments;
+import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.LoadTimeValue;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
@@ -15,9 +15,12 @@ import jcl.compiler.real.struct.specialoperator.LoadTimeValueStruct;
 import jcl.compiler.real.struct.specialoperator.MutableLoadTimeValueStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
+import jcl.printer.Printer;
 import jcl.symbols.BooleanStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.system.CommonLispSymbols;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,8 +32,11 @@ public class LoadTimeValueExpander extends MacroFunctionExpander<LoadTimeValueSt
 	@Autowired
 	private FormAnalyzer formAnalyzer;
 
+	@Autowired
+	private Printer printer;
+
 	/**
-	 * Initializes the block macro function and adds it to the special operator 'block'.
+	 * Initializes the load-time-value macro function and adds it to the special operator 'load-time-value'.
 	 */
 	@PostConstruct
 	private void init() {
@@ -50,33 +56,33 @@ public class LoadTimeValueExpander extends MacroFunctionExpander<LoadTimeValueSt
 
 		final LispStruct third = inputRestRest.getFirst();
 		if (!(third instanceof BooleanStruct)) {
-			throw new ProgramErrorException("LOAD-TIME-VALUE: Read-Only-P value must be of type BooleanStruct. Got: " + third);
+			final String printedObject = printer.print(third);
+			throw new ProgramErrorException("LOAD-TIME-VALUE: Read-Only-P value must be either 'T' or 'NIL'. Got: " + printedObject);
 		}
 
 		final BooleanStruct readOnlyP = (BooleanStruct) third;
 		final boolean isReadOnly = readOnlyP.booleanValue();
 
-		final LispStruct ltvForm = inputRest.getFirst();
-		final ListStruct evalForm = ListStruct.buildProperList(CommonLispSymbols.EVAL, ltvForm);
+		final LispStruct loadTimeValueForm = inputRest.getFirst();
+		final ListStruct evalForm = ListStruct.buildProperList(CommonLispSymbols.EVAL, loadTimeValueForm);
 
-		final Environment enclosingLambda = Environments.getEnclosingLambda(environment);
-
-		final Environment nullLexicalEnvironment = Environment.NULL;
-
-		final LispStruct analyzedEvalForm = formAnalyzer.analyze(evalForm, nullLexicalEnvironment);
+		final LispStruct analyzedEvalForm = formAnalyzer.analyze(evalForm, Environment.NULL);
 
 		if (isReadOnly) {
+			final LambdaEnvironment enclosingLambda = Environments.getEnclosingLambda(environment);
+
 			final UUID uniqueLTVId = UUID.randomUUID();
-
-			// TODO: move LTVs to LambdaEnvironment???
-			final List<LoadTimeValue> currentLoadTimeValues = enclosingLambda.getLoadTimeValues();
-
 			final LoadTimeValue newLoadTimeValue = new LoadTimeValue(uniqueLTVId, analyzedEvalForm);
-			currentLoadTimeValues.add(newLoadTimeValue);
+			enclosingLambda.addLoadTimeValue(newLoadTimeValue);
 
 			return new ImmutableLoadTimeValueStruct(uniqueLTVId);
 		} else {
 			return new MutableLoadTimeValueStruct(analyzedEvalForm);
 		}
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

@@ -10,6 +10,8 @@ import jcl.compiler.real.struct.specialoperator.ThrowStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +24,7 @@ public class ThrowExpander extends MacroFunctionExpander<ThrowStruct> {
 	private FormAnalyzer formAnalyzer;
 
 	/**
-	 * Initializes the block macro function and adds it to the special operator 'block'.
+	 * Initializes the throw macro function and adds it to the special operator 'throw'.
 	 */
 	@PostConstruct
 	private void init() {
@@ -48,5 +50,10 @@ public class ThrowExpander extends MacroFunctionExpander<ThrowStruct> {
 		final LispStruct resultFormAnalyzed = formAnalyzer.analyze(resultForm, environment);
 
 		return new ThrowStruct(catchTagAnalyzed, resultFormAnalyzed);
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

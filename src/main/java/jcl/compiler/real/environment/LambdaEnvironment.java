@@ -4,6 +4,9 @@
 
 package jcl.compiler.real.environment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -13,10 +16,20 @@ public class LambdaEnvironment extends BindingEnvironment {
 
 	private static final long serialVersionUID = -1182568685360839544L;
 
+	private final List<LoadTimeValue> loadTimeValues = new ArrayList<>();
+
 	private int parameterNumber;
 
 	public LambdaEnvironment(final Environment parent) {
 		super(parent);
+	}
+
+	public List<LoadTimeValue> getLoadTimeValues() {
+		return loadTimeValues;
+	}
+
+	public void addLoadTimeValue(final LoadTimeValue loadTimeValue) {
+		loadTimeValues.add(loadTimeValue);
 	}
 
 	public int getNextParameterNumber() {

@@ -9,8 +9,12 @@ import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.ReturnFromStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
+import jcl.lists.NullStruct;
+import jcl.printer.Printer;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,8 +26,11 @@ public class ReturnFromExpander extends MacroFunctionExpander<ReturnFromStruct> 
 	@Autowired
 	private FormAnalyzer formAnalyzer;
 
+	@Autowired
+	private Printer printer;
+
 	/**
-	 * Initializes the block macro function and adds it to the special operator 'block'.
+	 * Initializes the return-from macro function and adds it to the special operator 'return-from'.
 	 */
 	@PostConstruct
 	private void init() {
@@ -42,23 +49,29 @@ public class ReturnFromExpander extends MacroFunctionExpander<ReturnFromStruct> 
 
 		final LispStruct second = inputRest.getFirst();
 		if (!(second instanceof SymbolStruct)) {
-			throw new ProgramErrorException("RETURN-FROM: Name must be of type SymbolStruct. Got: " + second);
+			final String printedObject = printer.print(second);
+			throw new ProgramErrorException("RETURN-FROM: Name must be a symbol. Got: " + printedObject);
 		}
 
 		final SymbolStruct<?> name = (SymbolStruct<?>) second;
-
 		if (environment.getBlockStack().search(name) == -1) {
-			throw new ProgramErrorException("RETURN-FROM: No BLOCK with name " + second + " is visible.");
+			final String printedObject = printer.print(second);
+			throw new ProgramErrorException("RETURN-FROM: No BLOCK with name " + printedObject + " is visible.");
 		}
 
+		LispStruct analyzedResult = NullStruct.INSTANCE;
 		if (inputSize == 3) {
 			final ListStruct inputRestRest = inputRest.getRest();
 
 			final LispStruct result = inputRestRest.getFirst();
-			final LispStruct analyzedResult = formAnalyzer.analyze(result, environment);
-			return new ReturnFromStruct(name, analyzedResult);
-		} else {
-			return new ReturnFromStruct(name);
+			analyzedResult = formAnalyzer.analyze(result, environment);
 		}
+
+		return new ReturnFromStruct(name, analyzedResult);
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

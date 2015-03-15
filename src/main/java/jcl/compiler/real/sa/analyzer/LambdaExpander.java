@@ -29,6 +29,8 @@ import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 import jcl.system.EnhancedLinkedList;
 import jcl.types.T;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -174,5 +176,10 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 
 		final EnvironmentEnvironmentBinding binding = new EnvironmentEnvironmentBinding(var, allocation, T.INSTANCE, bindingEnvironment);
 		lambdaEnvironment.addDynamicBinding(binding);
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

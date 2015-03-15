@@ -9,7 +9,10 @@ import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.IfStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
+import jcl.lists.NullStruct;
 import jcl.symbols.SpecialOperator;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +25,7 @@ public class IfExpander extends MacroFunctionExpander<IfStruct> {
 	private FormAnalyzer formAnalyzer;
 
 	/**
-	 * Initializes the block macro function and adds it to the special operator 'block'.
+	 * Initializes the if macro function and adds it to the special operator 'if'.
 	 */
 	@PostConstruct
 	private void init() {
@@ -47,14 +50,19 @@ public class IfExpander extends MacroFunctionExpander<IfStruct> {
 		final LispStruct thenForm = inputRestRest.getFirst();
 		final LispStruct thenFormAnalyzed = formAnalyzer.analyze(thenForm, environment);
 
+		LispStruct elseFormAnalyzed = NullStruct.INSTANCE;
 		if (inputSize == 4) {
 			final ListStruct inputRestRestRest = inputRestRest.getRest();
 
 			final LispStruct elseForm = inputRestRestRest.getFirst();
-			final LispStruct elseFormAnalyzed = formAnalyzer.analyze(elseForm, environment);
-			return new IfStruct(testFormAnalyzed, thenFormAnalyzed, elseFormAnalyzed);
-		} else {
-			return new IfStruct(testFormAnalyzed, thenFormAnalyzed);
+			elseFormAnalyzed = formAnalyzer.analyze(elseForm, environment);
 		}
+
+		return new IfStruct(testFormAnalyzed, thenFormAnalyzed, elseFormAnalyzed);
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

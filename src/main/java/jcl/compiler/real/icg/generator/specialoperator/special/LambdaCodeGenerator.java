@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import jcl.compiler.real.environment.Closure;
 import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.LoadTimeValue;
 import jcl.compiler.real.environment.SymbolTable;
 import jcl.compiler.real.environment.allocation.LocalAllocation;
@@ -223,7 +224,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		classBuilder.getEmitter().emitPutstatic(className, "SYMBOL", "Llisp/common/type/Symbol;");
 
 		// Creating and initializing any necessary load-time-values
-		final Environment env = classBuilder.getBindingEnvironment();
+		final LambdaEnvironment env = (LambdaEnvironment) classBuilder.getBindingEnvironment();
 
 		// see if we have to add any static fields for load-time-value
 		final List<LoadTimeValue> ltvList = env.getLoadTimeValues();

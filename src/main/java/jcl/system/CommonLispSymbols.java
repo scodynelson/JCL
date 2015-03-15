@@ -1038,4 +1038,14 @@ public interface CommonLispSymbols {
 	 * OR {@link KeywordSymbolStruct} for processing features that should be included via 'or' operation.
 	 */
 	KeywordSymbolStruct OR_KEYWORD = new KeywordSymbolStruct("OR");
+
+	// Eval-When Keywords
+	KeywordSymbolStruct COMPILE_TOPLEVEL = new KeywordSymbolStruct("COMPILE-TOPLEVEL");
+	KeywordSymbolStruct LOAD_TOPLEVEL = new KeywordSymbolStruct("LOAD-TOPLEVEL");
+	KeywordSymbolStruct EXECUTE = new KeywordSymbolStruct("EXECUTE");
+
+	// Print-Case Keywords
+	KeywordSymbolStruct UPCASE = new KeywordSymbolStruct("UPCASE");
+	KeywordSymbolStruct DOWNCASE = new KeywordSymbolStruct("DOWNCASE");
+	KeywordSymbolStruct CAPITALIZE = new KeywordSymbolStruct("CAPITALIZE");
 }

@@ -38,8 +38,6 @@ public class Environment implements LispStruct {
 
 	private final Closure closure;
 
-	private final List<LoadTimeValue> loadTimeValues = new ArrayList<>();
-
 	private int bindingsPosition;
 
 	private int closureDepth = -1;
@@ -157,14 +155,6 @@ public class Environment implements LispStruct {
 
 	public Closure getClosure() {
 		return closure;
-	}
-
-	public List<LoadTimeValue> getLoadTimeValues() {
-		return loadTimeValues;
-	}
-
-	public void addLoadTimeValue(final LoadTimeValue loadTimeValue) {
-		loadTimeValues.add(loadTimeValue);
 	}
 
 	@Override

@@ -1,14 +1,14 @@
 package jcl.printer;
 
-import jcl.compiler.old.symbol.KeywordOld;
+import java.util.HashSet;
+import java.util.Set;
+
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.Variable;
+import jcl.system.CommonLispSymbols;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.HashSet;
-import java.util.Set;
 
 class PrintCaseVariable extends Variable<KeywordSymbolStruct> {
 
@@ -19,15 +19,15 @@ class PrintCaseVariable extends Variable<KeywordSymbolStruct> {
 	private static final Set<KeywordSymbolStruct> CASE_KEYWORDS = new HashSet<>();
 
 	static {
-		CASE_KEYWORDS.add(KeywordOld.Upcase);
-		CASE_KEYWORDS.add(KeywordOld.Downcase);
-		CASE_KEYWORDS.add(KeywordOld.Capitalize);
+		CASE_KEYWORDS.add(CommonLispSymbols.UPCASE);
+		CASE_KEYWORDS.add(CommonLispSymbols.DOWNCASE);
+		CASE_KEYWORDS.add(CommonLispSymbols.CAPITALIZE);
 	}
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PrintCaseVariable.class);
 
 	private PrintCaseVariable() {
-		super("*PRINT-CASE*", GlobalPackageStruct.COMMON_LISP, KeywordOld.Upcase);
+		super("*PRINT-CASE*", GlobalPackageStruct.COMMON_LISP, CommonLispSymbols.UPCASE);
 	}
 
 	@Override
@@ -37,7 +37,7 @@ class PrintCaseVariable extends Variable<KeywordSymbolStruct> {
 		} else {
 			LOGGER.warn("Error: *PRINT-CASE* had illegal value {}. Reset to :UPCASE", value);
 
-			this.value = KeywordOld.Upcase;
+			this.value = CommonLispSymbols.UPCASE;
 		}
 	}
 }

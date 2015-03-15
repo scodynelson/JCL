@@ -7,6 +7,10 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.Environments;
+import jcl.compiler.real.environment.LambdaEnvironment;
+import jcl.compiler.real.environment.ProgvEnvironment;
+import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.SymbolAnalyzer;
@@ -18,6 +22,8 @@ import jcl.lists.NullStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 import jcl.types.T;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +39,7 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 	private SymbolAnalyzer symbolAnalyzer;
 
 	/**
-	 * Initializes the block macro function and adds it to the special operator 'block'.
+	 * Initializes the progv macro function and adds it to the special operator 'progv'.
 	 */
 	@PostConstruct
 	private void init() {
@@ -54,7 +60,7 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 
 		final LispStruct second = inputRest.getFirst();
 		if (!(second instanceof ListStruct)) {
-			throw new ProgramErrorException("PROGV: Symbols list must be a quoted ListStruct. Got: " + second);
+			throw new ProgramErrorException("PROGV: Symbols list must be a quoted list. Got: " + second);
 		}
 
 		final ListStruct secondListStruct = (ListStruct) second;
@@ -67,14 +73,14 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 
 		final LispStruct actualVarsList = secondListStruct.getRest().getFirst();
 		if (!(actualVarsList instanceof ListStruct)) {
-			throw new ProgramErrorException("PROGV: TODO: Symbols list must be of type ListStruct. Got: " + actualVarsList);
+			throw new ProgramErrorException("PROGV: TODO: Symbols list must be a list. Got: " + actualVarsList);
 		}
 
 		final ListStruct actualVarsListStruct = (ListStruct) actualVarsList;
 		final List<? extends LispStruct> actualVarsJavaList = actualVarsListStruct.getAsJavaList();
 		for (final LispStruct currentVar : actualVarsJavaList) {
 			if (!(currentVar instanceof SymbolStruct)) {
-				throw new ProgramErrorException("PROGV: Elements in symbols list must be of type SymbolStruct. Got: " + currentVar);
+				throw new ProgramErrorException("PROGV: Elements in symbols list must be symbols. Got: " + currentVar);
 			}
 		}
 
@@ -84,7 +90,7 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 
 		final LispStruct third = inputRestRest.getFirst();
 		if (!(third instanceof ListStruct)) {
-			throw new ProgramErrorException("PROGV: Values list must be a quoted ListStruct. Got: " + third);
+			throw new ProgramErrorException("PROGV: Values list must be a quoted list. Got: " + third);
 		}
 
 		final ListStruct thirdListStruct = (ListStruct) third;
@@ -97,13 +103,15 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 
 		final LispStruct actualValsList = thirdListStruct.getRest().getFirst();
 		if (!(actualValsList instanceof ListStruct)) {
-			throw new ProgramErrorException("PROGV: Values list must be of type ListStruct. Got: " + actualValsList);
+			throw new ProgramErrorException("PROGV: Values list must be a list. Got: " + actualValsList);
 		}
 
 		final ListStruct actualValsListStruct = (ListStruct) actualValsList;
 		final List<? extends LispStruct> actualValsJavaList = actualValsListStruct.getAsJavaList();
 
 		// Do other stuff
+
+		final ProgvEnvironment progvEnvironment = new ProgvEnvironment(environment);
 
 		final int numberOfProgvVars = actualVarsJavaList.size();
 		final List<ProgvStruct.ProgvVar> progvVars = new ArrayList<>(numberOfProgvVars);
@@ -117,23 +125,35 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 				val = actualValsJavaList.get(i);
 			}
 
-			final SymbolStruct<?> varSE = symbolAnalyzer.analyzeDynamic(var, environment);
+			final SymbolStruct<?> varSE = symbolAnalyzer.analyzeDynamic(var, progvEnvironment);
 
-			final LispStruct analyzedVal = formAnalyzer.analyze(val, environment);
+			final LispStruct analyzedVal = formAnalyzer.analyze(val, progvEnvironment);
 			final ProgvStruct.ProgvVar progvVar = new ProgvStruct.ProgvVar(varSE, analyzedVal);
 
-			// TODO: really a 'null' allocation here???
-			final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(var, null, T.INSTANCE, analyzedVal);
+			final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(progvEnvironment);
+			final int newBindingsPosition = currentLambda.getNextParameterNumber();
+			progvEnvironment.setBindingsPosition(newBindingsPosition);
+
+			final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
+
+			final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(var, allocation, T.INSTANCE, analyzedVal);
+			progvEnvironment.addDynamicBinding(binding);
 
 			progvVars.add(progvVar);
 		}
 
-		final List<LispStruct> forms = inputRestRest.getRest().getAsJavaList();
+		final ListStruct inputRestRestRest = inputRestRest.getRest();
+		final List<LispStruct> forms = inputRestRestRest.getAsJavaList();
 		final List<LispStruct> analyzedForms =
 				forms.stream()
 				     .map(e -> formAnalyzer.analyze(e, environment))
 				     .collect(Collectors.toList());
 
 		return new ProgvStruct(progvVars, analyzedForms, null, environment);
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

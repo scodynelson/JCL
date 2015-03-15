@@ -4,6 +4,7 @@
 
 package jcl.compiler.real.sa.analyzer.expander;
 
+import java.io.Serializable;
 import java.util.Optional;
 
 import jcl.LispStruct;
@@ -17,7 +18,9 @@ import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public class NewMacroExpand {
+public class NewMacroExpand implements Serializable {
+
+	private static final long serialVersionUID = 5991270831364188635L;
 
 	public NewMacroExpandReturn macroExpand(final LispStruct element, final Environment environment) {
 		NewMacroExpandReturn expansion;
@@ -90,7 +93,7 @@ public class NewMacroExpand {
 		return new NewMacroExpandReturn(form, false);
 	}
 
-	private Optional<SymbolStruct<?>> getSymbolStruct(final SymbolStruct<?> symbolElement) {
+	private static Optional<SymbolStruct<?>> getSymbolStruct(final SymbolStruct<?> symbolElement) {
 		final PackageStruct thePackage = symbolElement.getSymbolPackage();
 		if (thePackage != null) {
 

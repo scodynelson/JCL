@@ -10,6 +10,8 @@ import jcl.arrays.ArrayStruct;
 import jcl.printer.Printer;
 import jcl.printer.PrinterVariables;
 import jcl.printer.LispPrinter;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -86,5 +88,10 @@ public class ArrayStructPrinter<TYPE extends LispStruct> implements LispPrinter<
 		}
 
 		return stringBuilder.toString();
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

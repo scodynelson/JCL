@@ -9,6 +9,8 @@ import jcl.numbers.IntegerStruct;
 import jcl.printer.Printer;
 import jcl.printer.PrinterVariables;
 import jcl.printer.LispPrinter;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -66,5 +68,10 @@ public class BitVectorStructPrinter implements LispPrinter<BitVectorStruct> {
 		}
 
 		return stringBuilder.toString();
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

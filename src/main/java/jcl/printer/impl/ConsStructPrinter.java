@@ -9,6 +9,8 @@ import jcl.lists.ConsStruct;
 import jcl.lists.NullStruct;
 import jcl.printer.LispPrinter;
 import jcl.printer.Printer;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,7 +40,7 @@ public class ConsStructPrinter implements LispPrinter<ConsStruct> {
 		return stringBuilder.toString();
 	}
 
-	protected String printElements(final ConsStruct object, final StringBuilder stringBuilder) {
+	private String printElements(final ConsStruct object, final StringBuilder stringBuilder) {
 
 		final LispStruct car = object.getCar();
 		final String printedCar = printer.print(car);
@@ -61,5 +63,10 @@ public class ConsStructPrinter implements LispPrinter<ConsStruct> {
 		}
 
 		return stringBuilder.toString();
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

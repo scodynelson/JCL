@@ -6,6 +6,7 @@ package jcl.printer;
 
 import java.io.Serializable;
 
+@FunctionalInterface
 public interface LispPrinter<O> extends Serializable {
 
 	String print(O object);

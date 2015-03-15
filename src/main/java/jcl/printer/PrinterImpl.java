@@ -8,6 +8,8 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import jcl.LispStruct;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -28,5 +30,10 @@ public class PrinterImpl implements Printer {
 		}
 
 		return printer.print(object);
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

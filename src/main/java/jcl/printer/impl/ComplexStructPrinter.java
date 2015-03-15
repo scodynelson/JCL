@@ -8,6 +8,8 @@ import jcl.numbers.ComplexStruct;
 import jcl.numbers.RealStruct;
 import jcl.printer.Printer;
 import jcl.printer.LispPrinter;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,5 +30,10 @@ public class ComplexStructPrinter implements LispPrinter<ComplexStruct> {
 		final String printedImaginary = printer.print(imaginary);
 
 		return "#C(" +printedReal + ' ' + printedImaginary + ')';
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

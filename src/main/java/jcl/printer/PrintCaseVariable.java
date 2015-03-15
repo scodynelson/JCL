@@ -10,7 +10,7 @@ import jcl.system.CommonLispSymbols;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class PrintCaseVariable extends Variable<KeywordSymbolStruct> {
+final class PrintCaseVariable extends Variable<KeywordSymbolStruct> {
 
 	public static final PrintCaseVariable INSTANCE = new PrintCaseVariable();
 

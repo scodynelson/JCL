@@ -8,6 +8,7 @@ import java.io.Serializable;
 
 import jcl.LispStruct;
 
+@FunctionalInterface
 public interface Printer extends Serializable {
 
 	String print(LispStruct object);

@@ -9,6 +9,8 @@ import jcl.printer.LispPrinter;
 import jcl.streams.InputStream;
 import jcl.streams.OutputStream;
 import jcl.streams.TwoWayStreamStruct;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,5 +33,10 @@ public class TwoWayStreamStructPrinter implements LispPrinter<TwoWayStreamStruct
 		final String printedOutputStream = printer.print(outputStream);
 
 		return "#<" + typeClassName + " input " + printedInputStream + ", output " + printedOutputStream + '>';
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

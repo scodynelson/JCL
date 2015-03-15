@@ -7,6 +7,8 @@ package jcl.printer.impl;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.RatioStruct;
 import jcl.printer.LispPrinter;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,5 +26,10 @@ public class RatioStructPrinter implements LispPrinter<RatioStruct> {
 		final IntegerStruct denominator = new IntegerStruct(object.getBigFraction().getDenominator());
 
 		return integerStructPrinter.print(numerator) + '/' + integerStructPrinter.print(denominator);
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

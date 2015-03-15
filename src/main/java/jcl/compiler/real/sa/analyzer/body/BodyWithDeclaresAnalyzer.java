@@ -7,7 +7,7 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.sa.analyzer.expander.MacroExpander;
+import jcl.compiler.real.sa.analyzer.declare.DeclareExpander;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
@@ -20,7 +20,7 @@ public class BodyWithDeclaresAnalyzer implements Serializable {
 	private static final long serialVersionUID = -4533785417061599823L;
 
 	@Autowired
-	private MacroExpander<DeclareStruct, ListStruct> declareExpander;
+	private DeclareExpander declareExpander;
 
 	public BodyProcessingResult analyze(final List<LispStruct> input, final Environment environment) {
 

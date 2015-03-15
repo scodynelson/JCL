@@ -4,15 +4,13 @@
 
 package jcl.compiler.real.sa.analyzer;
 
-import java.util.Map;
-import javax.annotation.Resource;
-
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.sa.Analyzer;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.NewMacroExpand;
 import jcl.compiler.real.sa.analyzer.expander.NewMacroExpandReturn;
+import jcl.lists.ConsStruct;
+import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +24,11 @@ public class FormAnalyzerImpl implements FormAnalyzer {
 	@Autowired
 	private NewMacroExpand newMacroExpand;
 
-	@Resource
-	private Map<Class<? extends LispStruct>, Analyzer<? extends LispStruct, LispStruct>> analyzerStrategies;
+	@Autowired
+	private SymbolAnalyzer symbolAnalyzer;
+
+	@Autowired
+	private ConsAnalyzer consAnalyzer;
 
 	@Override
 	public LispStruct analyze(final LispStruct input, final Environment environment) {
@@ -35,13 +36,13 @@ public class FormAnalyzerImpl implements FormAnalyzer {
 		final NewMacroExpandReturn macroExpandReturn = newMacroExpand.macroExpand(input, environment);
 		final LispStruct expandedForm = macroExpandReturn.getExpandedForm();
 
-		final Analyzer<? extends LispStruct, LispStruct> functionCallAnalyzer = analyzerStrategies.get(expandedForm.getClass());
-		if (functionCallAnalyzer == null) {
-			return expandedForm; // TODO: we need to rework the logic a bit, so for now we just return...
-//			throw new ProgramErrorException("Semantic Analyzer: Unsupported object type cannot be analyzed: " + expandedForm);
+		if (expandedForm instanceof SymbolStruct) {
+			return symbolAnalyzer.analyze((SymbolStruct<?>) expandedForm, environment);
+		} else if (expandedForm instanceof ConsStruct) {
+			return consAnalyzer.analyze((ConsStruct) expandedForm, environment);
+		} else {
+			return expandedForm;
 		}
-
-		return functionCallAnalyzer.analyze(expandedForm, environment);
 	}
 
 	@Override

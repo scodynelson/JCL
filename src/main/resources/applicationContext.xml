@@ -56,38 +56,6 @@
 
 	<!-- Semantic Analyzer -->
 
-	<util:map id="analyzerStrategies"
-	          key-type="java.lang.Class"
-	          value-type="jcl.compiler.real.sa.Analyzer">
-
-		<entry key="jcl.arrays.StringStruct" value-ref="constantAnalyzer"/>
-
-		<entry key="jcl.characters.CharacterStruct" value-ref="constantAnalyzer"/>
-
-		<entry key="jcl.lists.ConsStruct" value-ref="consAnalyzer"/>
-		<entry key="jcl.lists.NullStruct" value-ref="constantAnalyzer"/>
-
-		<entry key="jcl.numbers.FloatStruct" value-ref="constantAnalyzer"/>
-		<entry key="jcl.numbers.IntegerStruct" value-ref="constantAnalyzer"/>
-		<entry key="jcl.numbers.RatioStruct" value-ref="constantAnalyzer"/>
-
-		<entry key="jcl.reader.macrofunction.CommentStruct" value-ref="constantAnalyzer"/>
-
-		<entry key="jcl.symbols.SymbolStruct" value-ref="symbolAnalyzerImpl"/>
-
-	</util:map>
-
-	<util:map id="functionCallAnalyzerStrategies"
-	          key-type="java.lang.Class"
-	          value-type="jcl.compiler.real.sa.Analyzer">
-
-		<entry key="jcl.lists.ConsStruct" value-ref="lambdaFunctionCallAnalyzer"/>
-		<entry key="jcl.lists.NullStruct" value-ref="constantAnalyzer"/>
-
-		<entry key="jcl.symbols.SymbolStruct" value-ref="symbolFunctionCallAnalyzer"/>
-
-	</util:map>
-
 	<util:map id="goStructGeneratorStrategies"
 	          key-type="java.lang.Class"
 	          value-type="jcl.compiler.real.struct.specialoperator.go.GoStructGenerator">

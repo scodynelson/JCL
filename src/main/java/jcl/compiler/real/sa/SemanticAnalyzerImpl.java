@@ -10,7 +10,7 @@ import java.util.Set;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.sa.analyzer.expander.MacroExpander;
+import jcl.compiler.real.sa.analyzer.LambdaExpander;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
@@ -35,7 +35,7 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SemanticAnalyzerImpl.class);
 
 	@Autowired
-	private MacroExpander<LambdaStruct, ListStruct> lambdaExpander;
+	private LambdaExpander lambdaExpander;
 
 	@Autowired
 	private Printer printer;

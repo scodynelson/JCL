@@ -6,7 +6,9 @@ public class ClosureImpl implements Closure {
 	private Object[] boundValues;
 
 	/**
-	 * Creates a new instance of ClosureImpl
+	 * Creates a new instance of ClosureImpl.
+	 * @param parent parent
+	 * @param size size
 	 */
 	public ClosureImpl(Closure parent, int size) {
 		this.parent = parent;

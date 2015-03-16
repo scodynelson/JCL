@@ -12,7 +12,7 @@ import java.lang.String;
 /**
  * A {@link Package} is a namespace that maps symbol names to {@link Symbol}s.
  * <p>
- * {@link Package} -> {@link T}
+ * {@link Package} -&gt; {@link T}
  */
 public interface Package extends T {
 

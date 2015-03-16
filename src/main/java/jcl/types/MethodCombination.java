@@ -14,7 +14,7 @@ import java.lang.String;
  * {@link GenericFunction}. A {@link MethodCombination} object contains information about both the type of
  * {@link MethodCombination} and the arguments being used with that type.
  * <p>
- * {@link MethodCombination} -> {@link T}
+ * {@link MethodCombination} -&gt; {@link T}
  */
 public interface MethodCombination extends T {
 

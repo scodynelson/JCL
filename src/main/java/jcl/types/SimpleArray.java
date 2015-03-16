@@ -22,7 +22,7 @@ import java.util.List;
  * {@link SimpleArray}, for they respectively mean (simple-array t (*)), the union of all (simple-array c (*)) for any
  * c being a subtype of type {@link Character}, and (simple-array bit (*)).
  * <p>
- * {@link SimpleArray} -> {@link Array} -> {@link T}
+ * {@link SimpleArray} -&gt; {@link Array} -&gt; {@link T}
  */
 public interface SimpleArray extends Array {
 

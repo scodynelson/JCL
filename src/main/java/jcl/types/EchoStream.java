@@ -14,7 +14,7 @@ import java.lang.String;
  * and sends its output to an associated output stream. All input taken from the input stream is echoed to the output
  * stream.
  * <p>
- * {@link EchoStream} -> {@link Stream} -> {@link T}
+ * {@link EchoStream} -&gt; {@link Stream} -&gt; {@link T}
  */
 public interface EchoStream extends Stream {
 

@@ -9,7 +9,8 @@ public abstract class TRFException extends TOCException {
 	//static Stack<Object> catchTags = new Stack<Object>();
 
 	/**
-	 * This returns the result-form that is returned with the transfer of control
+	 * This returns the result-form that is returned with the transfer of control.
+	 * @return object
 	 */
 	public Object getValue() {
 		return value;

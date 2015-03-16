@@ -16,8 +16,8 @@ import java.lang.String;
 /**
  * The type {@link SimpleBaseString} is equivalent to (simple-array base-char (*)).
  * <p>
- * {@link SimpleBaseString} -> {@link BaseString} -> {@link SimpleString} -> {@link String} -> {@link Vector} -> {@link
- * SimpleArray} -> {@link Array} -> {@link Sequence} -> {@link T}
+ * {@link SimpleBaseString} -&gt; {@link BaseString} -&gt; {@link SimpleString} -&gt; {@link String}
+ * -&gt; {@link Vector} -&gt; {@link SimpleArray} -&gt; {@link Array} -&gt; {@link Sequence} -&gt; {@link T}
  */
 public interface SimpleBaseString extends BaseString, SimpleString {
 

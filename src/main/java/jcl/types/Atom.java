@@ -13,7 +13,7 @@ import java.lang.String;
 /**
  * An {@link Atom} is a type equivalent to (not cons).
  * <p>
- * {@link Atom} -> {@link T}
+ * {@link Atom} -&gt; {@link T}
  */
 public interface Atom extends T {
 

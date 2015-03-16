@@ -30,10 +30,13 @@ public interface Closure {
 	 * Examples
 	 * <ul>
 	 * <li>If the reference is to the 2nd bound variable in the current Closure,
-	 * the the call will be <code>getBindingsAt(1, 0)</code.</li>
+	 * the the call will be {@code getBindingsAt(1, 0)}.</li>
 	 * <li>If the reference is the the first bound variable in the parent of the parent of the
 	 * current Closure, the call witll be {@code getBindingsAt(0, 2)}</li>
 	 * </ul>
+	 * @param index index
+	 * @param nestingLevel nestingLevel
+	 * @return object
 	 */
 	Object getBindingAt(int index, int nestingLevel);
 
@@ -41,6 +44,9 @@ public interface Closure {
 	 * This method sets the bound value of a lexical variable in the context of a binding
 	 * environment. The binding values in a closure are indexed in the lexical order of the bound variables.
 	 * This method does not chain. It is commonly used with the current closure.<p>
+	 * @param index index
+	 * @param nestingLevel nestingLevel
+	 * @param value value
 	 */
 	void setBindingAt(int index, int nestingLevel, Object value);
 }

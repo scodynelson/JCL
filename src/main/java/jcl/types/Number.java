@@ -20,7 +20,7 @@ import java.lang.String;
  * these differences include historical precedent, compatibility with most other popular computer languages, and
  * various issues of time and space efficiency.
  * <p>
- * {@link Number} -> {@link T}
+ * {@link Number} -&gt; {@link T}
  */
 public interface Number extends T {
 

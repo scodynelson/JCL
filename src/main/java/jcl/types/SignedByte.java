@@ -20,7 +20,8 @@ import java.math.BigInteger;
  * is equivalent to (integer -2^s-1 2^s-1-1). The type {@link SignedByte} or the type (signed-byte *) is the same as
  * the type {@link Integer}.
  * <p>
- * {@link SignedByte} -> {@link Integer} -> {@link Rational} -> {@link Real} -> {@link Number} -> {@link T}
+ * {@link SignedByte} -&gt; {@link Integer} -&gt; {@link Rational} -&gt; {@link Real} -&gt; {@link Number}
+ * -&gt; {@link T}
  */
 public interface SignedByte extends Integer {
 

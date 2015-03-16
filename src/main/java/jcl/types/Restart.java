@@ -15,7 +15,7 @@ import java.lang.String;
  * <p>
  * A {@link Restart} has only dynamic extent relative to the scope of the binding form which establishes it.
  * <p>
- * {@link Restart} -> {@link T}
+ * {@link Restart} -&gt; {@link T}
  */
 public interface Restart extends T {
 

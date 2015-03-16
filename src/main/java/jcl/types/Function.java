@@ -21,7 +21,7 @@ import java.util.Objects;
  * A {@link Function} is an object that represents code to be executed when an appropriate number of arguments is
  * supplied.
  * <p>
- * {@link Function} -> {@link T}
+ * {@link Function} -&gt; {@link T}
  */
 public interface Function extends T {
 

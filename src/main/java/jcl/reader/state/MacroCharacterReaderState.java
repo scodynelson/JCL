@@ -28,7 +28,6 @@ import org.springframework.stereotype.Component;
  * <p>
  * If x is a terminating or non-terminating macro character then its associated reader macro function is called with
  * two arguments, the input stream and x.
- * <tab>
  * <p>
  * The reader macro function may read characters from the input stream; if it does, it will see those characters
  * following the macro character. The Lisp reader may be invoked recursively from the reader macro function.
@@ -42,8 +41,6 @@ import org.springframework.stereotype.Component;
  * <p>
  * The reader macro function may return zero values or one value. If one value is returned, then that value is returned
  * as the result of the read operation; the algorithm is done. If zero values are returned, then step 1 is re-entered.
- * </p>
- * </tab>
  * </p>
  */
 @Component
@@ -63,8 +60,9 @@ class MacroCharacterReaderState implements ReaderState {
 	@Override
 	public LispStruct process(final TokenBuilder tokenBuilder) {
 
+		// NOTE: This will throw errors when it reaches an EOF
 		final ReadPeekResult readResult = tokenBuilder.getPreviousReadResult();
-		final int codePoint = readResult.getResult(); // This will not be 'null'. We check for EOFs after each 'read'.
+		final int codePoint = readResult.getResult();
 
 		final ReadtableStruct readtable = ReaderVariables.READTABLE.getValue();
 		final ReaderMacroFunction readerMacroFunction = readtable.getMacroCharacter(codePoint);
@@ -75,6 +73,7 @@ class MacroCharacterReaderState implements ReaderState {
 
 		final Reader reader = tokenBuilder.getReader();
 
+		// TODO: DD-anomaly
 		BigInteger numberArgument = null;
 		if (readerMacroFunction.isDispatch()) {
 			numberArgument = getNumberArgument(reader);
@@ -113,6 +112,7 @@ class MacroCharacterReaderState implements ReaderState {
 
 		final int minimumDigitLength = 1;
 
+		// TODO: DD-anomaly
 		BigInteger numberArgument = null;
 		if (digitStringBuilder.length() >= minimumDigitLength) {
 			final String digitString = digitStringBuilder.toString();

@@ -14,7 +14,7 @@ import java.lang.String;
 /**
  * The type {@link Bignum} is defined to be exactly (and integer (not fixnum)).
  * <p>
- * {@link Bignum} -> {@link Integer} -> {@link Rational} -> {@link Real} -> {@link Number} -> {@link T}
+ * {@link Bignum} -&gt; {@link Integer} -&gt; {@link Rational} -&gt; {@link Real} -&gt; {@link Number} -&gt; {@link T}
  */
 public interface Bignum extends Integer {
 

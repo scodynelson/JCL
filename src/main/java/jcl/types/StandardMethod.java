@@ -12,7 +12,7 @@ import java.lang.String;
 /**
  * A {@link StandardMethod} is the default method type {@link Class}.
  * <p>
- * {@link StandardMethod} -> {@link Method} -> {@link StandardObject} -> {@link T}
+ * {@link StandardMethod} -&gt; {@link Method} -&gt; {@link StandardObject} -&gt; {@link T}
  */
 public interface StandardMethod extends Method, StandardObject {
 

@@ -14,7 +14,7 @@ import java.lang.String;
  * <p>
  * There are two kinds of {@link Pathname}s---physical pathnames and {@link LogicalPathname}s.
  * <p>
- * {@link Pathname} -> {@link T}
+ * {@link Pathname} -&gt; {@link T}
  */
 public interface Pathname extends T {
 

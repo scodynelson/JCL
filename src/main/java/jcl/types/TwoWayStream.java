@@ -13,7 +13,7 @@ import java.lang.String;
  * A {@link TwoWayStream} is a bidirectional composite stream that receives its input from an associated input stream
  * and sends its output to an associated output stream.
  * <p>
- * {@link TwoWayStream} -> {@link Stream} -> {@link T}
+ * {@link TwoWayStream} -&gt; {@link Stream} -&gt; {@link T}
  */
 public interface TwoWayStream extends Stream {
 

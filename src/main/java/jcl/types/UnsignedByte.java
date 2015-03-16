@@ -4,13 +4,13 @@
 
 package jcl.types;
 
+import java.lang.String;
+import java.math.BigInteger;
+
 import jcl.types.typespecifiers.AndTypeSpecifier;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.math3.util.ArithmeticUtils;
-
-import java.lang.String;
-import java.math.BigInteger;
 
 /**
  * The atomic type specifier {@link UnsignedByte} denotes the same type as is denoted by the type specifier
@@ -20,8 +20,8 @@ import java.math.BigInteger;
  * equivalent to (mod m) for m=2^s, or to (integer 0 n) for n=2^s-1. The type {@link UnsignedByte} or the type
  * (unsigned-byte *) is the same as the type (integer 0 *), the set of non-negative {@link Integer}s.
  * <p>
- * {@link UnsignedByte} -> {@link SignedByte} -> {@link Integer} -> {@link Rational} -> {@link Real} -> {@link Number}
- * -> {@link T}
+ * {@link UnsignedByte} -&gt; {@link SignedByte} -&gt; {@link Integer} -&gt; {@link Rational} -&gt; {@link Real} -&gt;
+ * {@link Number} -&gt; {@link T}
  */
 public interface UnsignedByte extends SignedByte {
 
@@ -108,13 +108,13 @@ public interface UnsignedByte extends SignedByte {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return super.equals(obj) || (obj == INSTANCE);
+			public int hashCode() {
+				return HashCodeBuilder.reflectionHashCode(this);
 			}
 
 			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+			public boolean equals(final Object obj) {
+				return super.equals(obj) || (obj == INSTANCE);
 			}
 
 			@Override

@@ -12,7 +12,7 @@ import java.lang.String;
 /**
  * The class {@link StandardGenericFunction} is the default {@link Class} of {@link GenericFunction}s.
  * <p>
- * {@link StandardGenericFunction} -> {@link GenericFunction} -> {@link Function} -> {@link T}
+ * {@link StandardGenericFunction} -&gt; {@link GenericFunction} -&gt; {@link Function} -&gt; {@link T}
  */
 public interface StandardGenericFunction extends GenericFunction {
 

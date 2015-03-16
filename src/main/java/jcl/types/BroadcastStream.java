@@ -19,7 +19,7 @@ import java.lang.String;
  * The set of operations that may be performed on a broadcast stream is the intersection of those for its associated
  * output streams.
  * <p>
- * {@link BroadcastStream} -> {@link Stream} -> {@link T}
+ * {@link BroadcastStream} -&gt; {@link Stream} -&gt; {@link T}
  */
 public interface BroadcastStream extends Stream {
 

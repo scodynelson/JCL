@@ -45,7 +45,7 @@ public class TransferOfControl {
 	private static Throwable returnException = null;
 
 	/**
-	 * This is a private constructor to support the creation of this singleton class
+	 * This is a private constructor to support the creation of this singleton class.
 	 */
 	private TransferOfControl() {
 	}
@@ -56,6 +56,8 @@ public class TransferOfControl {
 	 * They store thier type of TOC and what tag values or symbols they are authorized to process in the event a
 	 * corresponding event
 	 * (go, throw, return-from) occurs.
+	 * @param type type
+	 * @param value value
 	 */
 	public static void addTOCRecord(final String type, final Object value) {
 		TOCMgmt.push(new TOCRecord(type, value));
@@ -83,6 +85,8 @@ public class TransferOfControl {
 	 * and return the result of the comparison. If the compare fails, the caller will remove himself
 	 * from the stack and rethrow the exception; otherwise, they will remove themselves from the stack,
 	 * handle the exception, and continue as normal.
+	 * @param ex ex
+	 * @return object
 	 */
 	public static Object isMine(final Throwable ex) {
 		Class<?> tempCatch;  //Classes for Catchtag and Thrown exception
@@ -149,6 +153,7 @@ public class TransferOfControl {
 	 * to transfer back into anything that was within scope during the protected form execution.
 	 * If this does occur, when the exception handler from the protected form tries to handle the exception,
 	 * it will get a false from isMine and therefore, throw the exception right back up the runtime stack.
+	 * @param ex ex
 	 */
 	public static void disableExitPoints(final Throwable ex) {
 		final Stack<TOCRecord> tempStack = new Stack<>();     //Stack used to simply optimize a normally recursive call
@@ -175,6 +180,7 @@ public class TransferOfControl {
 	 * This value will be utilized later to throw back up after the TOC has executed finally code.
 	 * If another control transfer occurs in the finally code, the value will be ignored and never used.
 	 * It will get set back to null every time a processReturnException call is made.
+	 * @param ex ex
 	 */
 	public static void setReturnException(final Throwable ex) {
 		returnException = ex;
@@ -188,6 +194,7 @@ public class TransferOfControl {
 	 * the continuation block. If there is a valid exception, it will simply be rethrown; otherwise, control will return
 	 * to the
 	 * current TOC, and they will proceed to their respective continuation block.
+	 * @throws Throwable throwable
 	 */
 	public static void processReturnException() throws Throwable {
 		final Throwable temp = returnException;
@@ -213,7 +220,9 @@ public class TransferOfControl {
 		public boolean valid;       //Whether this TOCRecord is still in scope or not
 
 		/**
-		 * Creates a new instance of the TOCRecord with it being valid by default
+		 * Creates a new instance of the TOCRecord with it being valid by default.
+		 * @param type type
+		 * @param value value
 		 */
 		public TOCRecord(final String type, final Object value) {
 			this.type = type;

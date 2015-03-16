@@ -13,7 +13,7 @@ import java.lang.String;
  * The {@link StructureObject} is an instance of {@link StructureClass} and is a superclass of every {@link Class} that
  * is an instance of {@link StructureClass} except itself.
  * <p>
- * {@link StructureObject} -> {@link T}
+ * {@link StructureObject} -&gt; {@link T}
  */
 public interface StructureObject extends T {
 

@@ -18,7 +18,7 @@ import java.lang.String;
  * <p>
  * The type {@link Vector} is a subtype of type {@link Vector}, for {@link BitVector} means (vector bit).
  * <p>
- * {@link BitVector} -> {@link Vector} -> {@link Array} -> {@link Sequence} -> {@link T}
+ * {@link BitVector} -&gt; {@link Vector} -&gt; {@link Array} -&gt; {@link Sequence} -&gt; {@link T}
  */
 public interface BitVector extends Vector {
 

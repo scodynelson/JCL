@@ -4,6 +4,9 @@
 
 package jcl.types.typespecifiers;
 
+import java.util.List;
+import java.util.Objects;
+
 import jcl.lambdalist.variable.Optional;
 import jcl.lambdalist.variable.Rest;
 import jcl.types.TypeBaseClass;
@@ -11,15 +14,12 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import java.util.List;
-import java.util.Objects;
-
 /**
  * A {@link ValuesTypeSpecifier} can be used only as the value-type in a function type specifier or a the special form.
- * It is used to specify individual types when multiple values are involved. The &optional and &rest markers can appear
- * in the value-type list; they indicate the parameter list of a function that, when given to multiple-value-call along
- * with the values, would correctly receive those values. The symbol values is not valid as a type specifier; and,
- * specifically, it is not an abbreviation for (values).
+ * It is used to specify individual types when multiple values are involved. The &amp;optional and &amp;rest markers
+ * can appear in the value-type list; they indicate the parameter list of a function that, when given to
+ * multiple-value-call along with the values, would correctly receive those values. The symbol values is not valid as a
+ * type specifier; and, specifically, it is not an abbreviation for (values).
  */
 public class ValuesTypeSpecifier extends TypeBaseClass implements CompoundTypeSpecifier {
 

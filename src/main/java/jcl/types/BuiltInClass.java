@@ -13,7 +13,7 @@ import java.lang.String;
  * A {@link BuiltInClass} is a {@link Class} whose instances have restricted capabilities or special representations.
  * {@link BuiltInClass}es can be used as parameter specializers in {@link Method}s.
  * <p>
- * {@link BuiltInClass} -> {@link Class} -> {@link StandardObject} -> {@link T}
+ * {@link BuiltInClass} -&gt; {@link Class} -&gt; {@link StandardObject} -&gt; {@link T}
  */
 public interface BuiltInClass extends Class {
 

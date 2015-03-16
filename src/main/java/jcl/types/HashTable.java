@@ -12,7 +12,7 @@ import java.lang.String;
 /**
  * A {@link HashTable} provide a way of mapping any object (a key) to an associated object (a value).
  * <p>
- * {@link HashTable} -> {@link T}
+ * {@link HashTable} -&gt; {@link T}
  */
 public interface HashTable extends T {
 

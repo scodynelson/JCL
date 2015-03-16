@@ -22,7 +22,7 @@ import java.lang.String;
  * and the values that are returned by the {@link GenericFunction}. The object system offers a default {@link
  * MethodCombination} type and provides a facility for declaring new types of {@link MethodCombination}.
  * <p>
- * {@link Method} -> {@link T}
+ * {@link Method} -&gt; {@link T}
  */
 public interface Method extends T {
 

@@ -16,7 +16,7 @@ import java.lang.Integer;
  * A {@link String} is a specialized {@link Vector} whose elements are of type {@link Character} or a subtype of type
  * {@link Character}. When used as a type specifier for object creation, {@link String} means (vector character).
  * <p>
- * {@link String} -> {@link Vector} -> {@link Array} -> {@link Sequence} -> {@link T}
+ * {@link String} -&gt; {@link Vector} -&gt; {@link Array} -&gt; {@link Sequence} -&gt; {@link T}
  */
 public interface String extends Vector {
 

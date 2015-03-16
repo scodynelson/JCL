@@ -119,9 +119,6 @@ public class JavaClassBuilder {
 		this.tagCounter = tagCounter;
 	}
 
-	/**
-	 * the rest Lambda generated will be for a macro
-	 */
 	public boolean isMacroLambda() {
 		return MacroLambda;
 	}

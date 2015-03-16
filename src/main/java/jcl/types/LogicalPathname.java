@@ -13,7 +13,7 @@ import java.lang.String;
  * A {@link LogicalPathname} is a {@link Pathname} that uses a namestring syntax and has component values.
  * {@link LogicalPathname}s do not refer directly to file names.
  * <p>
- * {@link LogicalPathname} -> {@link Pathname} -> {@link T}
+ * {@link LogicalPathname} -&gt; {@link Pathname} -&gt; {@link T}
  */
 public interface LogicalPathname extends Pathname {
 

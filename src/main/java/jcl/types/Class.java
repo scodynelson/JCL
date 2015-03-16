@@ -14,7 +14,7 @@ import java.lang.String;
  * with an object of type {@link Class} is information describing its place in the directed acyclic graph of classes,
  * its slots, and its options.
  * <p>
- * {@link Class} -> {@link StandardObject} -> {@link T}
+ * {@link Class} -&gt; {@link StandardObject} -&gt; {@link T}
  */
 public interface Class extends StandardObject {
 

@@ -111,8 +111,8 @@ public class OpenFunction {
 	 * funcall method.
 	 *
 	 * @param pathname    Object the pathnamespec
-	 * @param direction
-	 * @param elementType
+	 * @param direction direction
+	 * @param elementType elementType
 	 * @return a Stream Object
 	 */
 	public Object funcall(Object pathname, Object direction, Object elementType) {
@@ -124,9 +124,9 @@ public class OpenFunction {
 	 * The default values include :ERROR, :CREATE, and :NIL.
 	 *
 	 * @param pathname    Object the pathnamespec
-	 * @param direction
-	 * @param elementType
-	 * @param ifExists
+	 * @param direction direction
+	 * @param elementType elementType
+	 * @param ifExists ifExists
 	 * @return a Stream Object
 	 */
 	public Object funcall(Object pathname, Object direction, Object elementType, Object ifExists) {
@@ -145,10 +145,10 @@ public class OpenFunction {
 	 * funcall method which passes along the default value :DEFAULT for the external-format parameter to the next funcall method.
 	 *
 	 * @param pathname       Object the pathnamespec
-	 * @param direction
-	 * @param elementType
-	 * @param ifExists
-	 * @param ifDoesNotExist
+	 * @param direction direction
+	 * @param elementType elementType
+	 * @param ifExists ifExists
+	 * @param ifDoesNotExist ifDoesNotExist
 	 * @return a Stream Object
 	 */
 	public Object funcall(Object pathname, Object direction, Object elementType, Object ifExists, Object ifDoesNotExist) {
@@ -159,12 +159,12 @@ public class OpenFunction {
 	 * The main funcall method for the Open function.  This method handles the backwards default logic for multiple parameters and uses the Stream
 	 * factory to return a stream object.
 	 *
-	 * @param pathnameSpec
-	 * @param direction
-	 * @param elementType
-	 * @param ifExists
-	 * @param ifDoesNotExist
-	 * @param externalFormat
+	 * @param pathnameSpec    Object the pathnamespec
+	 * @param direction direction
+	 * @param elementType elementType
+	 * @param ifExists ifExists
+	 * @param ifDoesNotExist ifDoesNotExist
+	 * @param externalFormat externalFormat
 	 * @return a stream object
 	 */
 	public Object funcall(Object pathnameSpec, Object direction, Object elementType, Object ifExists, Object ifDoesNotExist, Object externalFormat) {

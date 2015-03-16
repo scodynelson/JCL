@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 /**
  * A {@link DoubleFloat} is a {@link Float} type with a minimum of 50 precision bits and 8 exponent bits.
  * <p>
- * {@link DoubleFloat} -> {@link Float} -> {@link Real} -> {@link Number} -> {@link T}
+ * {@link DoubleFloat} -&gt; {@link Float} -&gt; {@link Real} -&gt; {@link Number} -&gt; {@link T}
  */
 public interface DoubleFloat extends Float {
 

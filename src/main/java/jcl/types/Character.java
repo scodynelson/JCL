@@ -14,7 +14,7 @@ import java.lang.String;
  * <p>
  * The types {@link BaseChar} and {@link ExtendedChar} form an exhaustive partition of the type {@link Character}.
  * <p>
- * {@link Character} -> {@link T}
+ * {@link Character} -&gt; {@link T}
  */
 public interface Character extends T {
 

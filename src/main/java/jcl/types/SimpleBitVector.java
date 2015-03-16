@@ -17,8 +17,8 @@ import java.lang.String;
  * A {@link SimpleBitVector} is a type of a {@link BitVector} that is not displaced to another {@link Array}, has no
  * fill pointer, and is not expressly adjustable is a subtype of type {@link SimpleBitVector}.
  * <p>
- * {@link SimpleBitVector} -> {@link BitVector} -> {@link Vector} -> {@link SimpleArray} -> {@link Array} -> {@link
- * Sequence} -> {@link T}
+ * {@link SimpleBitVector} -&gt; {@link BitVector} -&gt; {@link Vector} -&gt; {@link SimpleArray} -&gt; {@link Array}
+ * -&gt; {@link Sequence} -&gt; {@link T}
  */
 public interface SimpleBitVector extends BitVector, SimpleArray {
 

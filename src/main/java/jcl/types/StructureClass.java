@@ -12,7 +12,7 @@ import java.lang.String;
 /**
  * A {@link StructureClass} is the default structure type {@link Class}.
  * <p>
- * {@link StructureClass} -> {@link Class} -> {@link StandardObject} -> {@link T}
+ * {@link StructureClass} -&gt; {@link Class} -&gt; {@link StandardObject} -&gt; {@link T}
  */
 public interface StructureClass extends Class {
 

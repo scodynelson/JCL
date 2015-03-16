@@ -13,7 +13,7 @@ import java.lang.String;
  * The only object of type {@link Null} is {@link NIL}, which represents the empty {@link List} and can also be notated
  * ().
  * <p>
- * {@link Null} -> {@link Symbol} -> {@link List} -> {@link Sequence} -> {@link T}
+ * {@link Null} -&gt; {@link Symbol} -&gt; {@link List} -&gt; {@link Sequence} -&gt; {@link T}
  */
 public interface Null extends Symbol, List {
 

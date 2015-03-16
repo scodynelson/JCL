@@ -36,10 +36,13 @@ public abstract class ReaderMacroFunction extends FunctionStruct {
 		final CharacterStruct macroCharacter = (CharacterStruct) lispStructs[1];
 		final int codePoint = macroCharacter.getCodePoint();
 
-		BigInteger numberArgument = null;
+		// TODO: DD-anomaly
+		final BigInteger numberArgument;
 		if (isDispatch()) {
 			final IntegerStruct macroNumberArgument = (IntegerStruct) lispStructs[2];
 			numberArgument = macroNumberArgument.getBigInteger();
+		} else {
+			numberArgument = null;
 		}
 
 		final Reader reader = applicationContext.getBean(Reader.class, stream);

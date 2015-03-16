@@ -4,25 +4,25 @@
 
 package jcl.types;
 
+import java.lang.Integer;
+import java.lang.String;
+import java.util.List;
+
 import jcl.LispType;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import jcl.types.typespecifiers.designator.DimensionsDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.lang.Integer;
-import java.lang.String;
-import java.util.List;
-
 /**
  * An {@link Array} contains objects arranged according to a Cartesian coordinate system. An {@link Array} provides
- * mappings from a set of fixnums {i0,i1,...,ir-1} to corresponding elements of the {@link Array}, where 0 <=ij < dj, r
- * is the rank of the {@link Array}, and dj is the size of dimension j of the {@link Array}.
+ * mappings from a set of fixnums {i0,i1,...,ir-1} to corresponding elements of the {@link Array}, where 0 &lt;=ij &lt;
+ * dj, r is the rank of the {@link Array}, and dj is the size of dimension j of the {@link Array}.
  * <p>
  * When an {@link Array} is created, the program requesting its creation may declare that all elements are of a
  * particular type, called the expressed array element type.
  * <p>
- * {@link Array} -> {@link T}
+ * {@link Array} -&gt; {@link T}
  */
 public interface Array extends T {
 

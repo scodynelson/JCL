@@ -20,7 +20,7 @@ import java.lang.String;
  * time a client of a {@link ConcatenatedStream} sees an end of file is when an attempt is made to obtain data from the
  * {@link ConcatenatedStream} but it has no remaining input streams from which to obtain such data.
  * <p>
- * {@link ConcatenatedStream} -> {@link Stream} -> {@link T}
+ * {@link ConcatenatedStream} -&gt; {@link Stream} -&gt; {@link T}
  */
 public interface ConcatenatedStream extends Stream {
 

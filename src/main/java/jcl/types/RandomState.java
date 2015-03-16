@@ -12,7 +12,7 @@ import java.lang.String;
 /**
  * A {@link RandomState} object contains state information used by the pseudo-random number generator.
  * <p>
- * {@link RandomState} -> {@link T}
+ * {@link RandomState} -&gt; {@link T}
  */
 public interface RandomState extends T {
 

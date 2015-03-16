@@ -21,7 +21,6 @@ import org.apache.commons.collections4.CollectionUtils;
  * Reader instance contains a reference to the current input Stream. A state processes according to the specification
  * and returns the next state. The states in CLtL are numbered. The following is a correspondence list between the
  * numbered states and the named states in this interface.
- * <p>
  * <ol start=0>
  * <li>ReadState
  * <li>IllegalCharState
@@ -34,17 +33,11 @@ import org.apache.commons.collections4.CollectionUtils;
  * <li>OddMultiEscapeState
  * <li>TokenAccumulatedState
  * </ol>
- * </p>
  * For online specifications of these states, goto http://www.lispworks.com/documentation/HyperSpec/Body/02_b.htm
  * This site is the Reader Algorithm that is outlined within the CommonLisp HyperSpec (TM).
  */
 @FunctionalInterface
 interface ReaderState extends Serializable {
-
-	/**
-	 * Serializable Version Unique Identifier.
-	 */
-	long serialVersionUID = -1;
 
 	/**
 	 * Converts the provided list of {@link TokenAttribute}s to a {@link String}.
@@ -81,6 +74,7 @@ interface ReaderState extends Serializable {
 	 */
 	static int getProperCaseForCodePoint(final int codePoint, final AttributeType attributeType, final ReadtableCase readtableCase) {
 
+		// TODO: DD-anomaly
 		int properCaseCodePoint = codePoint;
 		if (Character.isBmpCodePoint(codePoint)) {
 			if ((readtableCase == ReadtableCase.UPCASE) && ((attributeType == AttributeType.ALPHADIGIT) || (attributeType == AttributeType.EXPONENTMARKER))) {
@@ -113,7 +107,7 @@ interface ReaderState extends Serializable {
 	static boolean hasAnyAttributeWithAttributeType(final List<TokenAttribute> tokenAttributes, final AttributeType attributeType) {
 		return tokenAttributes.stream()
 		                      .map(TokenAttribute::getAttributeType)
-		                      .anyMatch(e -> e == attributeType);
+		                      .anyMatch(currentAttributeType -> currentAttributeType == attributeType);
 	}
 
 	/**
@@ -131,7 +125,7 @@ interface ReaderState extends Serializable {
 	static boolean hasNoAttributesWithAttributeType(final List<TokenAttribute> tokenAttributes, final AttributeType attributeType) {
 		return tokenAttributes.stream()
 		                      .map(TokenAttribute::getAttributeType)
-		                      .noneMatch(e -> e == attributeType);
+		                      .noneMatch(currentAttributeType -> currentAttributeType == attributeType);
 	}
 
 	/**
@@ -151,7 +145,7 @@ interface ReaderState extends Serializable {
 	 */
 	static Integer getTokenCodePointByAttribute(final List<TokenAttribute> tokenAttributes, final AttributeType attributeType) {
 		return tokenAttributes.stream()
-		                      .filter(e -> e.getAttributeType() == attributeType)
+		                      .filter(currentTokenAttribute -> currentTokenAttribute.getAttributeType() == attributeType)
 		                      .map(TokenAttribute::getCodePoint)
 		                      .findFirst()
 		                      .orElse(null);

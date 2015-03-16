@@ -22,7 +22,7 @@ import java.lang.String;
  * The type (vector t), the type {@link String}, and the type {@link BitVector} are disjoint subtypes of type
  * {@link Vector}.
  * <p>
- * {@link Vector} -> {@link Array} -> {@link Sequence} -> {@link T}
+ * {@link Vector} -&gt; {@link Array} -&gt; {@link Sequence} -&gt; {@link T}
  */
 public interface Vector extends Array, Sequence {
 

@@ -20,7 +20,8 @@ import java.lang.String;
  * <p>
  * The type {@link SimpleVector} is a subtype of type {@link Vector}, and is a subtype of type (vector t).
  * <p>
- * {@link SimpleVector} -> {@link Vector} -> {@link SimpleArray} -> {@link Array} -> {@link Sequence} -> {@link T}
+ * {@link SimpleVector} -&gt; {@link Vector} -&gt; {@link SimpleArray} -&gt; {@link Array} -&gt; {@link Sequence}
+ * -&gt; {@link T}
  */
 public interface SimpleVector extends Vector, SimpleArray {
 

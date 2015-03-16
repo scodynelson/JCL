@@ -5,7 +5,8 @@ public class GoException extends TOCException {
 	//private Symbol tagName;
 
 	/**
-	 * Creates a new instance of GoException
+	 * Creates a new instance of GoException.
+	 * @param tagName tagName
 	 */
 	//public GoException(Symbol tagName) {
 	public GoException(final Object tagName) {        //me

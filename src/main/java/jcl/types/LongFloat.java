@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 /**
  * A {@link LongFloat} is a {@link Float} type with a minimum of 50 precision bits and 8 exponent bits.
  * <p>
- * {@link LongFloat} -> {@link Float} -> {@link Real} -> {@link Number} -> {@link T}
+ * {@link LongFloat} -&gt; {@link Float} -&gt; {@link Real} -&gt; {@link Number} -&gt; {@link T}
  */
 public interface LongFloat extends Float {
 

@@ -17,7 +17,7 @@ import java.math.BigInteger;
  * <p>
  * The types {@link Fixnum} and {@link Bignum} form an exhaustive partition of type {@link Integer}.
  * <p>
- * {@link Integer} -> {@link Rational} -> {@link Real} -> {@link Number} -> {@link T}
+ * {@link Integer} -&gt; {@link Rational} -&gt; {@link Real} -&gt; {@link Number} -&gt; {@link T}
  */
 public interface Integer extends Rational {
 

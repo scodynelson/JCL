@@ -18,7 +18,7 @@ import java.util.Objects;
  * imaginary part can be a {@link Float} zero, but can never be a {@link Rational} zero, for such a number is always
  * represented by Common Lisp as a {@link Rational} rather than a {@link Complex}.
  * <p>
- * {@link Complex} -> {@link Number} -> {@link T}
+ * {@link Complex} -&gt; {@link Number} -&gt; {@link T}
  */
 public interface Complex extends Number {
 

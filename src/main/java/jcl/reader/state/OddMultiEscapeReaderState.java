@@ -26,7 +26,6 @@ import org.springframework.stereotype.Component;
  * At this point a token is being accumulated, and an odd number of multiple escape characters have been encountered.
  * If at end of file, an error of type end-of-file is signaled. Otherwise, a character, y, is read, and one of the
  * following actions is performed according to its syntax type:
- * <tab>
  * <p>
  * If y is a constituent, macro, or whitespace character, y is treated as a constituent whose only constituent trait is
  * alphabetic. Y is appended to the token being built, and step 9 is repeated.
@@ -41,8 +40,6 @@ import org.springframework.stereotype.Component;
  * </p>
  * <p>
  * If y is an invalid character, an error of type reader-error is signaled.
- * </p>
- * </tab>
  * </p>
  */
 @Component

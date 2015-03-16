@@ -14,7 +14,7 @@ import java.lang.String;
  * <p>
  * The stream element type of a {@link StringStream} is always a subtype of type {@link Character}.
  * <p>
- * {@link StringStream} -> {@link Stream} -> {@link T}
+ * {@link StringStream} -&gt; {@link Stream} -&gt; {@link T}
  */
 public interface StringStream extends Stream {
 

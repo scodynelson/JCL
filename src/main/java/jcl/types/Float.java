@@ -21,7 +21,7 @@ import java.math.BigDecimal;
  * The types {@link ShortFloat}, {@link SingleFloat}, {@link DoubleFloat}, and {@link LongFloat} are subtypes of type
  * {@link Float}.
  * <p>
- * {@link Float} -> {@link Real} -> {@link Number} -> {@link T}
+ * {@link Float} -&gt; {@link Real} -&gt; {@link Number} -&gt; {@link T}
  */
 public interface Float extends Real {
 

@@ -13,7 +13,7 @@ import java.lang.String;
  * A {@link Ratio} is a {@link Number} representing the mathematical ratio of two non-zero integers, the numerator and
  * denominator, whose greatest common divisor is one, and of which the denominator is positive and greater than one.
  * <p>
- * {@link Ratio} -> {@link Rational} -> {@link Real} -> {@link Number} -> {@link T}
+ * {@link Ratio} -&gt; {@link Rational} -&gt; {@link Real} -&gt; {@link Number} -&gt; {@link T}
  */
 public interface Ratio extends Rational {
 

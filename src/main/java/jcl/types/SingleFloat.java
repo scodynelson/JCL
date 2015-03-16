@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 /**
  * A {@link SingleFloat} is a {@link Float} type with a minimum of 24 precision bits and 8 exponent bits.
  * <p>
- * {@link SingleFloat} -> {@link Float} -> {@link Real} -> {@link Number} -> {@link T}
+ * {@link SingleFloat} -&gt; {@link Float} -&gt; {@link Real} -&gt; {@link Number} -&gt; {@link T}
  */
 public interface SingleFloat extends Float {
 

@@ -68,6 +68,7 @@ class ReadReaderState implements ReaderState {
 		final ReadtableStruct readtable = ReaderVariables.READTABLE.getValue();
 		final SyntaxType syntaxType = readtable.getSyntaxType(codePoint);
 
+		// TODO: DU-anomaly
 		final LispStruct token;
 
 		if (syntaxType == SyntaxType.WHITESPACE) {

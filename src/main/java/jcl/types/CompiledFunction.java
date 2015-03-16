@@ -16,7 +16,7 @@ import java.lang.String;
  * {@link Function}s whose definitions appear lexically within a file that has been compiled and then loaded are of
  * type {@link CompiledFunction}.
  * <p>
- * {@link CompiledFunction} -> {@link Function} -> {@link T}
+ * {@link CompiledFunction} -&gt; {@link Function} -&gt; {@link T}
  */
 public interface CompiledFunction extends Function {
 

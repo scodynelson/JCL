@@ -13,7 +13,7 @@ public class CompilerClassLoader extends ClassLoader {
 	public static final CompilerClassLoader Loader = new CompilerClassLoader(ClassLoader.getSystemClassLoader());
 
 	/**
-	 * Creates a new instance of CompilerClassLoader
+	 * Creates a new instance of CompilerClassLoader.
 	 */
 	public CompilerClassLoader() {
 		super(JCL.CURRENT_CLASSLOADER);
@@ -37,14 +37,14 @@ public class CompilerClassLoader extends ClassLoader {
 	 * specTitle, specVersion, specVendor, implTitle, implVersion,
 	 * implVendor, and sealBase.
 	 *
-	 * @param arg1
-	 * @param arg2
-	 * @param arg3
-	 * @param arg4
-	 * @param arg5
-	 * @param arg6
-	 * @param arg7
-	 * @param arg8
+	 * @param arg1 arg1
+	 * @param arg2 arg2
+	 * @param arg3 arg3
+	 * @param arg4 arg4
+	 * @param arg5 arg5
+	 * @param arg6 arg6
+	 * @param arg7 arg7
+	 * @param arg8 arg8
 	 * @return Defined Package
 	 */
 	public Package defineJavaPackage(Object arg1, Object arg2, Object arg3, Object arg4, Object arg5, Object arg6, Object arg7, Object arg8) {

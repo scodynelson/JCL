@@ -191,6 +191,8 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 	 * The other aspect of dealing with special variables is that they have to be bound in the
 	 * environment and unbound at the end. This necessitates a try-finally block. The same code is
 	 * used in the LET form.
+	 * @param codeGenerator codeGenerator
+	 * @param classBuilder classBuilder
 	 */
 	private void doFreeVariableSetup(final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
 		//-- get the symbol-table

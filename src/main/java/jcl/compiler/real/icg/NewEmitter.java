@@ -200,6 +200,7 @@ public class NewEmitter {
 	 * function for new Lisp compiler.
 	 *
 	 * @param name String name
+	 * @param visible visible
 	 */
 	public void newAnnotation(final String name, final boolean visible) {
 		currentClass.setAnnotationVisitor(currentClass.getClassWriter().visitAnnotation(name, visible));
@@ -208,6 +209,10 @@ public class NewEmitter {
 	/**
 	 * Emitter method for Java function NEW-TYPE-ANNOTATION and class for Lisp
 	 * function for new Lisp compiler.
+	 * @param typeRef typeRef
+	 * @param typePath typePath
+	 * @param desc desc
+	 * @param visible visible
 	 */
 	public void newTypeAnnotation(final int typeRef, final TypePath typePath, final String desc, final boolean visible) {
 		currentClass.setAnnotationVisitor(currentClass.getClassWriter().visitTypeAnnotation(typeRef, typePath, desc, visible));
@@ -327,7 +332,6 @@ public class NewEmitter {
 	 * @param end     Label end
 	 * @param handler Label handler
 	 * @param type    String type
-	 * @return visitTryCatchBlock Object visitTryCatchBlock
 	 */
 	public void visitTryCatchBlock(final Label start, final Label end, final Label handler, final String type) {
 		currentClass.getMethodVisitor().visitTryCatchBlock(start, end, handler, type);
@@ -446,7 +450,6 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 *
 	 * @param var Java integer
-	 * @return Object emitAstore
 	 */
 	public void emitAstore(final int var) {
 		currentClass.getMethodVisitor().visitVarInsn(Opcodes.ASTORE, var);
@@ -888,7 +891,6 @@ public class NewEmitter {
 	 * @param owner Java String
 	 * @param name  Java String
 	 * @param desc  Java String
-	 * @return Object emitGetstatic
 	 */
 	public void emitGetstatic(final String owner, final String name, final String desc) {
 		currentClass.getMethodVisitor().visitFieldInsn(Opcodes.GETSTATIC, owner, name, desc);
@@ -899,7 +901,6 @@ public class NewEmitter {
 	 * compiler to access Java code.
 	 *
 	 * @param label Java Label
-	 * @return Object emitGoto
 	 */
 	public void emitGoto(final Label label) {
 		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.GOTO, label);

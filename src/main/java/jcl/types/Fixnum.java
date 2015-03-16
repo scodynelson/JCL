@@ -15,7 +15,7 @@ import java.math.BigInteger;
  * A {@link Fixnum} is an {@link Integer} whose value is between most-negative-fixnum and most-positive-fixnum
  * inclusive. The type {@link Fixnum} is a supertype of (signed-byte 16).
  * <p>
- * {@link Fixnum} -> {@link Integer} -> {@link Rational} -> {@link Real} -> {@link Number} -> {@link T}
+ * {@link Fixnum} -&gt; {@link Integer} -&gt; {@link Rational} -&gt; {@link Real} -&gt; {@link Number} -&gt; {@link T}
  */
 public interface Fixnum extends Integer {
 

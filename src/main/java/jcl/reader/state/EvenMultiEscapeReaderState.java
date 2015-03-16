@@ -26,10 +26,8 @@ import org.springframework.stereotype.Component;
  * At this point a token is being accumulated, and an even number of multiple escape characters have been encountered.
  * If at end of file, step 10 is entered. Otherwise, a character, y, is read, and one of the following actions is
  * performed according to its syntax type:
- * <tab>
  * <p>
  * If y is a constituent or non-terminating macro character:
- * <tab>
  * <p>
  * -- If y is a character with case, it might be replaced with the corresponding character of the opposite case,
  * depending on the readtable case of the current readtable.
@@ -39,8 +37,6 @@ import org.springframework.stereotype.Component;
  * </p>
  * <p>
  * -- Step 8 is repeated.
- * </p>
- * </tab>
  * </p>
  * <p>
  * If y is a single escape character, then the next character, z, is read, or an error of type end-of-file is signaled
@@ -60,8 +56,6 @@ import org.springframework.stereotype.Component;
  * <p>
  * If y is a whitespace character, then it terminates the token. First the character y is unread if appropriate, and
  * then step 10 is entered.
- * </p>
- * </tab>
  * </p>
  */
 @Component

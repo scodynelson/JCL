@@ -16,15 +16,19 @@ public class ThrowException extends TRFException {
      */
 
 	/**
-	 * Creates a new instance of ThrowException
+	 * Creates a new instance of ThrowException.
+	 * @param catchTag catchTag
+	 * @param value value
 	 */
 	public ThrowException(final Object catchTag, final Object value) {
 		tag = catchTag;
 		this.value = value;
 	}
 
-	/** This checks to see if the catch tag values match
-	 * the current object's value with the object passed as a parameter. */
+	/**
+	 * This checks to see if the catch tag values match
+	 * the current object's value with the object passed as a parameter.
+	 */
 	/*
     public boolean equals(Object obj) {
     return (obj instanceof ThrowException &&
@@ -33,20 +37,25 @@ public class ThrowException extends TRFException {
      */
 
 	/**
-	 * This returns the current catch tag name
+	 * This returns the current catch tag name.
+	 * @return object
 	 */
 	public Object getCatchTag() {
 		return getTag();
 	}
-	/** This returns the result-form that is returned with the transfer of control */
+	/**
+	 * This returns the result-form that is returned with the transfer of control
+	 */
     /*
     public Object getValue() {
     return value;
     }
      */
-	/** This determines if the current exception object is supposed to handle the current catch tag name;
+	/**
+	 * This determines if the current exception object is supposed to handle the current catch tag name;
 	 * otherwise, it throws the exception back up the runtime stack for the
-	 * next exception handler to catch and process */
+	 * next exception handler to catch and process
+	 */
     /*
     public Object process(Object name) {
     if (name != this.catchTag) {

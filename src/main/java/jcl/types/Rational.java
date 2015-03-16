@@ -18,7 +18,7 @@ import java.math.BigInteger;
  * <p>
  * The types {@link Integer} and {@link Ratio} are disjoint subtypes of type {@link Rational}.
  * <p>
- * {@link Rational} -> {@link Real} -> {@link Number} -> {@link T}
+ * {@link Rational} -&gt; {@link Real} -&gt; {@link Number} -&gt; {@link T}
  */
 public interface Rational extends Real {
 

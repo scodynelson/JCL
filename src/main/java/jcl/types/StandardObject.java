@@ -13,7 +13,7 @@ import java.lang.String;
  * The {@link StandardObject} is an instance of {@link StandardClass} and is a superclass of every {@link Class} that
  * is an instance of {@link StandardClass} except itself.
  * <p>
- * {@link StandardObject} -> {@link T}
+ * {@link StandardObject} -&gt; {@link T}
  */
 public interface StandardObject extends T {
 

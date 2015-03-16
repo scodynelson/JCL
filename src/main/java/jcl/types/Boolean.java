@@ -14,7 +14,7 @@ import java.lang.String;
  * The type {@link Boolean} contains the {@link Symbol}s {@link T} and {@link NIL}, which represent true and false,
  * respectively.
  * <p>
- * {@link Boolean} -> {@link Symbol} -> {@link T}
+ * {@link Boolean} -&gt; {@link Symbol} -&gt; {@link T}
  */
 public interface Boolean extends Symbol {
 

@@ -15,6 +15,7 @@ public class ArgHandler {
 
 	/**
 	 * Creates a new instance of ArgHandler
+	 * @param args args
 	 */
 	public ArgHandler(List<?> args) {
 		this.args = args.toArray();

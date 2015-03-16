@@ -39,6 +39,9 @@ public class TailRecursionCodeGenerator implements CodeGenerator<ListStruct> {
 	 * just sets up to call the enclosing function's funcall or apply method. Since the
 	 * enclosing function is the current object, the method only generates an ALOAD 0 -
 	 * the reference to 'this'.
+	 * @param icg icg
+	 * @param sym sym
+	 * @param classBuilder classBuilder
 	 */
 	private static void genCodeTailRecursionSetup(final IntermediateCodeGenerator icg, final SymbolStruct<?> sym, final JavaClassBuilder classBuilder) {
 		classBuilder.getEmitter().emitAload(0);

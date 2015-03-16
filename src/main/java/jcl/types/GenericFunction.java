@@ -19,7 +19,7 @@ import java.lang.String;
  * <p>
  * A {@link GenericFunction} can be used in the same ways that an ordinary {@link Function} can be used.
  * <p>
- * {@link GenericFunction} -> {@link Function} -> {@link T}
+ * {@link GenericFunction} -&gt; {@link Function} -&gt; {@link T}
  */
 public interface GenericFunction extends Function {
 

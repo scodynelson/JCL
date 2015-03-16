@@ -14,7 +14,7 @@ import java.lang.String;
  * <p>
  * Any character that is not simple is not a standard character.
  * <p>
- * {@link StandardChar} -> {@link BaseChar} -> {@link Character} -> {@link T}
+ * {@link StandardChar} -&gt; {@link BaseChar} -&gt; {@link Character} -&gt; {@link T}
  */
 public interface StandardChar extends BaseChar {
 

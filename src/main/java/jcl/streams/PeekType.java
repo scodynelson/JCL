@@ -11,12 +11,10 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * Special object denoting a peek type in how the 'peek-char' should operate. There are 3 categories of PeekTypes:
- * <tab>
  * 1. {@link PeekType#NIL_PEEK_TYPE} - this denotes the NIL based PeekType
  * 2. {@link PeekType#T_PEEK_TYPE} - this denotes the T based PeekType
  * 3. Character based PeekTypes - these are created by calling the static method {@link PeekType#getCharacterPeekType}
  * to create a specific character-based PeekType based off of a provided {@link Integer} codePoint value
- * </tab>
  */
 final class PeekType {
 

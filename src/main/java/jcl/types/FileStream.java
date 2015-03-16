@@ -12,7 +12,7 @@ import java.lang.String;
 /**
  * A {@link FileStream} is a {@link Stream} from which the direct source or sink is a file.
  * <p>
- * {@link FileStream} -> {@link Stream} -> {@link T}
+ * {@link FileStream} -&gt; {@link Stream} -&gt; {@link T}
  */
 public interface FileStream extends Stream {
 

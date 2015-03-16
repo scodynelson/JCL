@@ -12,7 +12,7 @@ import java.lang.String;
 /**
  * The type {@link ExtendedChar} is equivalent to the type (and character (not base-char)).
  * <p>
- * {@link ExtendedChar} -> {@link Character} -> {@link T}
+ * {@link ExtendedChar} -&gt; {@link Character} -&gt; {@link T}
  */
 public interface ExtendedChar extends Character {
 

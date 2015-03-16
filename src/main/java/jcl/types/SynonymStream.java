@@ -17,7 +17,7 @@ import java.lang.String;
  * variable named by the synonym stream symbol. If the value of the variable should change, or if the variable should
  * be bound, then the stream will operate on the new value of the variable.
  * <p>
- * {@link SynonymStream} -> {@link Stream} -> {@link T}
+ * {@link SynonymStream} -&gt; {@link Stream} -&gt; {@link T}
  */
 public interface SynonymStream extends Stream {
 

@@ -8,7 +8,9 @@ public class ReturnFromException extends TRFException {
 	//Object value;
 
 	/**
-	 * Creates a new instance of ReturnFromException
+	 * Creates a new instance of ReturnFromException.
+	 * @param blockName blockName
+	 * @param value value
 	 */
 	public ReturnFromException(final SymbolStruct<?> blockName, final Object value) {
 		tag = blockName;

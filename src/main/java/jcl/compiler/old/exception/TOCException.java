@@ -17,14 +17,15 @@ public abstract class TOCException extends RuntimeException {
 	}
 
 	/**
-	 * This returns the current catch tag name
+	 * This returns the current catch tag name.
+	 * @return object
 	 */
 	public Object getTag() {
 		return tag;
 	}
 
 	/**
-	 * Overwrite the fillInStackTrace method for performance reasons
+	 * Overwrite the fillInStackTrace method for performance reasons.
 	 */
 	@Override
 	public Throwable fillInStackTrace() {

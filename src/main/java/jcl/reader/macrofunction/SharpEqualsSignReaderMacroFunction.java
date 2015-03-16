@@ -84,7 +84,7 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunction {
 	 * token values located within the provided {@code sharpEqualReplTable} {@link Map}. Circularities are also
 	 * accounted for by using the provided {@code sharpEqualCircleSet} {@link Set} to keep track of the {@link
 	 * ConsStruct} tokens throughout the replacement process.
-	 * </p>
+	 * <p>
 	 * NOTE: This method destructively modified the provided {@link LispStruct} token if it is a {@link ConsStruct}
 	 *
 	 * @param token

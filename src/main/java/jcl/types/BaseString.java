@@ -16,7 +16,8 @@ import java.lang.Integer;
  * The type {@link BaseString} is equivalent to (vector base-char). The {@link BaseString} representation is the most
  * efficient {@link String} representation that can hold an arbitrary sequence of {@link StandardChar}s.
  * <p>
- * {@link BaseString} -> {@link String} -> {@link Vector} -> {@link Array} -> {@link Sequence} -> {@link T}
+ * {@link BaseString} -&gt; {@link String} -&gt; {@link Vector} -&gt; {@link Array} -&gt; {@link Sequence}
+ * -&gt; {@link T}
  */
 public interface BaseString extends String {
 

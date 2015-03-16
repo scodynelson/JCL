@@ -16,7 +16,7 @@ import java.lang.String;
  * <p>
  * Each simple {@link Character} must be representable in the {@link Readtable}.
  * <p>
- * {@link Readtable} -> {@link T}
+ * {@link Readtable} -&gt; {@link T}
  */
 public interface Readtable extends T {
 

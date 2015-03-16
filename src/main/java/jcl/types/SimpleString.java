@@ -17,8 +17,8 @@ import java.lang.Integer;
  * {@link Character} or a subtype of type {@link Character}. When used as a type specifier for object creation,
  * {@link SimpleString} means (simple-array character (size)).
  * <p>
- * {@link SimpleString} -> {@link String} -> {@link Vector} -> {@link SimpleArray} -> {@link Array} -> {@link Sequence}
- * -> {@link T}
+ * {@link SimpleString} -&gt; {@link String} -&gt; {@link Vector} -&gt; {@link SimpleArray} -&gt; {@link Array}
+ * -&gt; {@link Sequence} -&gt; {@link T}
  */
 public interface SimpleString extends String, SimpleArray {
 

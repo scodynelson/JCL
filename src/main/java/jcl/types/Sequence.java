@@ -16,7 +16,7 @@ import java.lang.String;
  * that {@link Vector} are considered elements of the {@link Sequence}; that is, {@link Sequence} operations respect
  * the fill pointer when the given {@link Sequence} represents a {@link Vector}.
  * <p>
- * {@link Sequence} -> {@link T}
+ * {@link Sequence} -&gt; {@link T}
  */
 public interface Sequence extends T {
 

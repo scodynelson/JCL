@@ -71,6 +71,7 @@ public class Emitter {
 	 *
 	 * @param name       String name
 	 * @param access     integer access
+	 * @param signature  String signature
 	 * @param superName  String superName
 	 * @param interfaces String[] interfaces
 	 */
@@ -212,6 +213,7 @@ public class Emitter {
 	 * function for new Lisp compiler.
 	 *
 	 * @param name String name
+	 * @param visible visible
 	 */
 	public void newAnnotation(final String name, final boolean visible) {
 		currentClass.av = currentClass.cw.visitAnnotation(name, visible);
@@ -220,6 +222,10 @@ public class Emitter {
 	/**
 	 * Emitter method for Java function NEW-TYPE-ANNOTATION and class for Lisp
 	 * function for new Lisp compiler.
+	 * @param typeRef typeRef
+	 * @param typePath typePath
+	 * @param desc desc
+	 * @param visible visible
 	 */
 	public void newTypeAnnotation(final int typeRef, final TypePath typePath, final String desc, final boolean visible) {
 		currentClass.av = currentClass.cw.visitTypeAnnotation(typeRef, typePath, desc, visible);
@@ -339,7 +345,6 @@ public class Emitter {
 	 * @param end     Label end
 	 * @param handler Label handler
 	 * @param type    String type
-	 * @return visitTryCatchBlock Object visitTryCatchBlock
 	 */
 	public void visitTryCatchBlock(final Label start, final Label end, final Label handler, final String type) {
 		currentClass.mv.visitTryCatchBlock(start, end, handler, type);
@@ -458,7 +463,6 @@ public class Emitter {
 	 * compiler to access Java code.
 	 *
 	 * @param var Java integer
-	 * @return Object emitAstore
 	 */
 	public void emitAstore(final int var) {
 		currentClass.mv.visitVarInsn(Opcodes.ASTORE, var);
@@ -900,7 +904,6 @@ public class Emitter {
 	 * @param owner Java String
 	 * @param name  Java String
 	 * @param desc  Java String
-	 * @return Object emitGetstatic
 	 */
 	public void emitGetstatic(final String owner, final String name, final String desc) {
 		currentClass.mv.visitFieldInsn(Opcodes.GETSTATIC, owner, name, desc);
@@ -911,7 +914,6 @@ public class Emitter {
 	 * compiler to access Java code.
 	 *
 	 * @param label Java Label
-	 * @return Object emitGoto
 	 */
 	public void emitGoto(final Label label) {
 		currentClass.mv.visitJumpInsn(Opcodes.GOTO, label);

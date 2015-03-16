@@ -19,7 +19,7 @@ import java.math.BigInteger;
  * <p>
  * The types {@link Rational} and {@link Float} are disjoint subtypes of type {@link Real}.
  * <p>
- * {@link Real} -> {@link Number} -> {@link T}
+ * {@link Real} -&gt; {@link Number} -&gt; {@link T}
  */
 public interface Real extends Number {
 

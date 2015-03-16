@@ -17,7 +17,7 @@ import java.lang.String;
  * 2. It causes the {@link Symbol} to become an external symbol of the KEYWORD package.
  * 3. It causes the {@link Symbol} to become a constant variable.
  * <p>
- * {@link Keyword} -> {@link Symbol} -> {@link T}
+ * {@link Keyword} -&gt; {@link Symbol} -&gt; {@link T}
  */
 public interface Keyword extends Symbol {
 

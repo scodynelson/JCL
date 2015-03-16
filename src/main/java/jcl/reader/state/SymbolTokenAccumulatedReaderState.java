@@ -40,7 +40,6 @@ import org.springframework.stereotype.Component;
  * First we attempt to see if it contains any Package Markers, if it does, then we attempt to get the package for it
  * based on 3 formats.  The formats are as follows:
  * </p>
- * <tab>
  * <p>
  * 1) ":SYMBOL_NAME" - This format should find the symbol in the Keyword Package.
  * </p>
@@ -55,7 +54,6 @@ import org.springframework.stereotype.Component;
  * <p>
  * 4) Any other combinations of Package Markers will result in an error.
  * </p>
- * </tab>
  * <p>
  * After the token has been made into an object, that object is set as the return object for the read function.  We
  * then

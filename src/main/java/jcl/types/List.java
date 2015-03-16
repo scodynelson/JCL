@@ -27,7 +27,7 @@ import java.lang.String;
  * <p>
  * The types {@link Cons} and {@link Null} form an exhaustive partition of the type {@link List}.
  * <p>
- * {@link List} -> {@link Sequence} -> {@link T}
+ * {@link List} -&gt; {@link Sequence} -&gt; {@link T}
  */
 public interface List extends Sequence {
 

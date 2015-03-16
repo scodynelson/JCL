@@ -12,7 +12,7 @@ import java.lang.String;
 /**
  * A {@link StandardClass} is the default class type {@link Class}.
  * <p>
- * {@link StandardClass} -> {@link Class} -> {@link StandardObject} -> {@link T}
+ * {@link StandardClass} -&gt; {@link Class} -&gt; {@link StandardObject} -&gt; {@link T}
  */
 public interface StandardClass extends Class {
 

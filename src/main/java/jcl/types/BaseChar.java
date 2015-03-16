@@ -21,7 +21,7 @@ import java.lang.String;
  * <p>
  * The type {@link StandardChar} is a subtype of type {@link BaseChar}.
  * <p>
- * {@link BaseChar} -> {@link Character} -> {@link T}
+ * {@link BaseChar} -&gt; {@link Character} -&gt; {@link T}
  */
 public interface BaseChar extends Character {
 

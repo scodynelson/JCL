@@ -15,7 +15,7 @@ import java.lang.String;
  * A {@link Cons} is a compound object having two components, called the car and cdr. These form a dotted pair. Each
  * component can be any object.
  * <p>
- * {@link Cons} -> {@link List} -> {@link Sequence} -> {@link T}
+ * {@link Cons} -&gt; {@link List} -&gt; {@link Sequence} -&gt; {@link T}
  */
 public interface Cons extends List {
 

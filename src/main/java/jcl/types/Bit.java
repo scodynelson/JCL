@@ -14,8 +14,8 @@ import java.math.BigInteger;
 /**
  * The type {@link Bit} is equivalent to the type (integer 0 1) and (unsigned-byte 1).
  * <p>
- * {@link Bit} -> {@link UnsignedByte} -> {@link SignedByte} -> {@link Integer} -> {@link Rational} -> {@link Real} ->
- * {@link Number} -> {@link T}
+ * {@link Bit} -&gt; {@link UnsignedByte} -&gt; {@link SignedByte} -&gt; {@link Integer} -&gt; {@link Rational}
+ * -&gt; {@link Real} -&gt; {@link Number} -&gt; {@link T}
  */
 public interface Bit extends UnsignedByte {
 

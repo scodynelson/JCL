@@ -13,7 +13,7 @@ import java.lang.String;
  * A {@link Stream} is an object that can be used with an input or output function to identify an appropriate source or
  * sink of characters or bytes for that operation.
  * <p>
- * {@link Stream} -> {@link T}
+ * {@link Stream} -&gt; {@link T}
  */
 public interface Stream extends T {
 

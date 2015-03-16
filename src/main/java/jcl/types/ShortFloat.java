@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 /**
  * A {@link ShortFloat} is a {@link Float} type with a minimum of 13 precision bits and 5 exponent bits.
  * <p>
- * {@link ShortFloat} -> {@link Float} -> {@link Real} -> {@link Number} -> {@link T}
+ * {@link ShortFloat} -&gt; {@link Float} -&gt; {@link Real} -&gt; {@link Number} -&gt; {@link T}
  */
 public interface ShortFloat extends Float {
 

@@ -6,6 +6,7 @@ package jcl.reader.struct;
 
 import java.math.BigInteger;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import jcl.LispStruct;
@@ -232,7 +233,7 @@ public class ReadtableStruct extends BuiltInClassStruct {
 		private final Map<Integer, ReaderMacroFunction> readerMacroFunctionMap = new ConcurrentHashMap<>();
 
 		@Override
-		public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numberArgument) {
+		public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
 
 			final ReadPeekResult readResult = reader.readChar(false, null, false);
 			if (readResult.isEof()) {

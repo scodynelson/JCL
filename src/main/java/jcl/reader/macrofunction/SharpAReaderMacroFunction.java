@@ -7,6 +7,7 @@ package jcl.reader.macrofunction;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
@@ -58,7 +59,7 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunction {
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numberArgument) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_A) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_A);
 
 		final LispStruct token = reader.read(true, NullStruct.INSTANCE, true);
@@ -66,18 +67,19 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunction {
 			return NullStruct.INSTANCE;
 		}
 
-		if (numberArgument == null) {
+		if (!numberArgument.isPresent()) {
 			throw new ReaderErrorException("#A used without a rank argument.");
 		}
+		final BigInteger numberArgumentValue = numberArgument.get();
 
-		if (BigInteger.ZERO.compareTo(numberArgument) > 0) {
+		if (BigInteger.ZERO.compareTo(numberArgumentValue) > 0) {
 			if (!(token instanceof SequenceStruct)) {
 				final String printedToken = printer.print(token);
-				throw new ReaderErrorException("The form following a #" + numberArgument + "A reader macro should have been a sequence, but it was: " + printedToken);
+				throw new ReaderErrorException("The form following a #" + numberArgumentValue + "A reader macro should have been a sequence, but it was: " + printedToken);
 			}
 		}
 
-		return createArray(token, numberArgument);
+		return createArray(token, numberArgumentValue);
 	}
 
 	/**

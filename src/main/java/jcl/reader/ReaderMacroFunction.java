@@ -5,12 +5,17 @@
 package jcl.reader;
 
 import java.math.BigInteger;
+import java.util.Optional;
 
 import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
 import jcl.functions.FunctionStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.streams.InputStream;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
@@ -25,6 +30,9 @@ public abstract class ReaderMacroFunction extends FunctionStruct {
 	 */
 	private static final long serialVersionUID = -5244042303586458372L;
 
+	/**
+	 * {@link Autowired} {@link ApplicationContext} used for getting a new {@link Reader} bean instance.
+	 */
 	@Autowired
 	private ApplicationContext applicationContext;
 
@@ -36,13 +44,13 @@ public abstract class ReaderMacroFunction extends FunctionStruct {
 		final CharacterStruct macroCharacter = (CharacterStruct) lispStructs[1];
 		final int codePoint = macroCharacter.getCodePoint();
 
-		// TODO: DD-anomaly
-		final BigInteger numberArgument;
+		final Optional<BigInteger> numberArgument;
 		if (isDispatch()) {
 			final IntegerStruct macroNumberArgument = (IntegerStruct) lispStructs[2];
-			numberArgument = macroNumberArgument.getBigInteger();
+			final BigInteger bigInteger = macroNumberArgument.getBigInteger();
+			numberArgument = Optional.of(bigInteger);
 		} else {
-			numberArgument = null;
+			numberArgument = Optional.empty();
 		}
 
 		final Reader reader = applicationContext.getBean(Reader.class, stream);
@@ -63,7 +71,7 @@ public abstract class ReaderMacroFunction extends FunctionStruct {
 	 *
 	 * @return the parsed {@link LispStruct} token
 	 */
-	public abstract LispStruct readMacro(int codePoint, Reader reader, BigInteger numberArgument);
+	public abstract LispStruct readMacro(int codePoint, Reader reader, Optional<BigInteger> numberArgument);
 
 	/**
 	 * Default method used to determine if the ReaderMacroFunction is a dispatching macro. The default value return is
@@ -73,5 +81,20 @@ public abstract class ReaderMacroFunction extends FunctionStruct {
 	 */
 	public boolean isDispatch() {
 		return false;
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 }

@@ -5,6 +5,7 @@
 package jcl.reader.macrofunction;
 
 import java.math.BigInteger;
+import java.util.Optional;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
@@ -38,7 +39,7 @@ public class SharpBackslashReaderMacroFunction extends ReaderMacroFunction {
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numberArgument) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
 		assert codePoint == CharacterConstants.BACKSLASH;
 
 		final ExtendedTokenReaderMacroFunction.ReadExtendedToken extendedToken = ExtendedTokenReaderMacroFunction.readExtendedToken(reader, true);

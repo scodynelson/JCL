@@ -6,6 +6,7 @@ package jcl.reader.macrofunction;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
@@ -43,7 +44,7 @@ public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunction {
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numberArgument) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
 		assert codePoint == CharacterConstants.ASTERISK;
 
 		final ExtendedTokenReaderMacroFunction.ReadExtendedToken extendedToken = ExtendedTokenReaderMacroFunction.readExtendedToken(reader, false);
@@ -64,11 +65,12 @@ public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunction {
 			throw new ReaderErrorException("Bad Bit for Bit Vector...");
 		}
 
-		if (numberArgument == null) {
+		if (!numberArgument.isPresent()) {
 			return createBitVector(tokenString);
 		}
 
-		return handleNumArg(tokenString, numberArgument);
+		final BigInteger numberArgumentValue = numberArgument.get();
+		return handleNumberArgument(tokenString, numberArgumentValue);
 	}
 
 	/**
@@ -82,7 +84,7 @@ public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunction {
 	 *
 	 * @return the properly created {@link BitVectorStruct} taking care of the proper bit-vector length
 	 */
-	private static ListStruct handleNumArg(final String tokenString, final BigInteger numberArgument) {
+	private static ListStruct handleNumberArgument(final String tokenString, final BigInteger numberArgument) {
 
 		if (StringUtils.isEmpty(tokenString) && (numberArgument.compareTo(BigInteger.ZERO) > 0)) {
 			throw new ReaderErrorException("At least one bit must be supplied for non-zero #* bit-vectors.");

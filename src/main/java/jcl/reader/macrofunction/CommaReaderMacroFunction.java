@@ -5,6 +5,7 @@
 package jcl.reader.macrofunction;
 
 import java.math.BigInteger;
+import java.util.Optional;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
@@ -43,7 +44,7 @@ public class CommaReaderMacroFunction extends ReaderMacroFunction {
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numberArgument) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
 		assert codePoint == CharacterConstants.GRAVE_ACCENT;
 
 		final int currentBackquoteLevel = reader.getBackquoteLevel();

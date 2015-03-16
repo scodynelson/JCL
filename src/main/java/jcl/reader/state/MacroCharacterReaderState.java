@@ -5,6 +5,7 @@
 package jcl.reader.state;
 
 import java.math.BigInteger;
+import java.util.Optional;
 
 import jcl.LispStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
@@ -73,11 +74,8 @@ class MacroCharacterReaderState implements ReaderState {
 
 		final Reader reader = tokenBuilder.getReader();
 
-		// TODO: DD-anomaly
-		BigInteger numberArgument = null;
-		if (readerMacroFunction.isDispatch()) {
-			numberArgument = getNumberArgument(reader);
-		}
+		final Optional<BigInteger> numberArgument
+				= readerMacroFunction.isDispatch() ? getNumberArgument(reader) : Optional.empty();
 
 		final LispStruct token = readerMacroFunction.readMacro(codePoint, reader, numberArgument);
 		if (token == null) {
@@ -93,9 +91,9 @@ class MacroCharacterReaderState implements ReaderState {
 	 * @param reader
 	 * 		the reader to use for reading the number argument
 	 *
-	 * @return the number argument if it exists; null if no number argument was read in
+	 * @return the number argument if it exists; {@link Optional#empty} if no number argument was read in
 	 */
-	private static BigInteger getNumberArgument(final Reader reader) {
+	private static Optional<BigInteger> getNumberArgument(final Reader reader) {
 
 		// NOTE: This will throw errors when it reaches an EOF. That's why we can un-box the 'readChar' variable below.
 		ReadPeekResult readResult = reader.readChar(true, NullStruct.INSTANCE, false);
@@ -112,11 +110,13 @@ class MacroCharacterReaderState implements ReaderState {
 
 		final int minimumDigitLength = 1;
 
-		// TODO: DD-anomaly
-		BigInteger numberArgument = null;
+		final Optional<BigInteger> numberArgument;
 		if (digitStringBuilder.length() >= minimumDigitLength) {
 			final String digitString = digitStringBuilder.toString();
-			numberArgument = new BigInteger(digitString);
+			final BigInteger bigInteger = new BigInteger(digitString);
+			numberArgument = Optional.of(bigInteger);
+		} else {
+			numberArgument = Optional.empty();
 		}
 
 		// Make sure to unread the last character read after the number arg

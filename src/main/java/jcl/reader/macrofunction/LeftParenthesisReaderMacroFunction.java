@@ -5,6 +5,7 @@
 package jcl.reader.macrofunction;
 
 import java.math.BigInteger;
+import java.util.Optional;
 import javax.annotation.PostConstruct;
 
 import jcl.characters.CharacterConstants;
@@ -45,7 +46,7 @@ public class LeftParenthesisReaderMacroFunction extends ReaderMacroFunction {
 	}
 
 	@Override
-	public ListStruct readMacro(final int codePoint, final Reader reader, final BigInteger numberArgument) {
+	public ListStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
 		assert codePoint == CharacterConstants.LEFT_PARENTHESIS;
 
 		return listReaderMacroFunction.readList(reader);

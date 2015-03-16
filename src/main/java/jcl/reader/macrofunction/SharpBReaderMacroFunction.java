@@ -5,6 +5,7 @@
 package jcl.reader.macrofunction;
 
 import java.math.BigInteger;
+import java.util.Optional;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
@@ -54,7 +55,7 @@ public class SharpBReaderMacroFunction extends ReaderMacroFunction {
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numberArgument) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
 		assert (codePoint == CharacterConstants.LATIN_SMALL_LETTER_B) || (codePoint == CharacterConstants.LATIN_CAPITAL_LETTER_B);
 
 		return rationalReaderMacroFunction.readRational(reader, BigInteger.valueOf(RADIX));

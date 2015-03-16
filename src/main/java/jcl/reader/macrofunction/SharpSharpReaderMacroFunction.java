@@ -5,6 +5,7 @@
 package jcl.reader.macrofunction;
 
 import java.math.BigInteger;
+import java.util.Optional;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
@@ -37,27 +38,28 @@ public class SharpSharpReaderMacroFunction extends ReaderMacroFunction {
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numberArgument) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
 		assert codePoint == CharacterConstants.NUMBER_SIGN;
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			return NullStruct.INSTANCE;
 		}
 
-		if (numberArgument == null) {
+		if (!numberArgument.isPresent()) {
 			throw new ReaderErrorException("Missing label for ##.");
 		}
+		final BigInteger numberArgumentValue = numberArgument.get();
 
-		final LispStruct labelToken = reader.getSharpEqualFinalTable().get(numberArgument);
+		final LispStruct labelToken = reader.getSharpEqualFinalTable().get(numberArgumentValue);
 		if (labelToken != null) {
 			return labelToken;
 		}
 
-		final SymbolStruct<?> possibleLabelTag = reader.getSharpEqualTempTable().get(numberArgument);
+		final SymbolStruct<?> possibleLabelTag = reader.getSharpEqualTempTable().get(numberArgumentValue);
 		if (possibleLabelTag != null) {
 			return possibleLabelTag;
 		}
 
-		throw new ReaderErrorException("Reference to undefined label #" + numberArgument + '#');
+		throw new ReaderErrorException("Reference to undefined label #" + numberArgumentValue + '#');
 	}
 }

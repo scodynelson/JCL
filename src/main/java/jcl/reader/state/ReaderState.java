@@ -74,8 +74,7 @@ interface ReaderState extends Serializable {
 	 */
 	static int getProperCaseForCodePoint(final int codePoint, final AttributeType attributeType, final ReadtableCase readtableCase) {
 
-		// TODO: DD-anomaly
-		int properCaseCodePoint = codePoint;
+		final int properCaseCodePoint;
 		if (Character.isBmpCodePoint(codePoint)) {
 			if ((readtableCase == ReadtableCase.UPCASE) && ((attributeType == AttributeType.ALPHADIGIT) || (attributeType == AttributeType.EXPONENTMARKER))) {
 				properCaseCodePoint = Character.toUpperCase(codePoint);
@@ -87,7 +86,11 @@ interface ReaderState extends Serializable {
 				} else {
 					properCaseCodePoint = Character.toUpperCase(codePoint);
 				}
+			} else {
+				properCaseCodePoint = codePoint;
 			}
+		} else {
+			properCaseCodePoint = codePoint;
 		}
 		return properCaseCodePoint;
 	}

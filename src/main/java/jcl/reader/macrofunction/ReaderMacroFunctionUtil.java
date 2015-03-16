@@ -6,11 +6,18 @@ package jcl.reader.macrofunction;
 
 import jcl.numbers.IntegerStruct;
 import jcl.reader.AttributeType;
+import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.SyntaxType;
 
+/**
+ * Utility class for common operations for {@link ReaderMacroFunction}s.
+ */
 final class ReaderMacroFunctionUtil {
 
+	/**
+	 * Private constructor.
+	 */
 	private ReaderMacroFunctionUtil() {
 	}
 

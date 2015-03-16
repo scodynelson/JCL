@@ -15,7 +15,6 @@ import jcl.numbers.RationalStruct;
 import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.struct.ReaderVariables;
-import org.apache.commons.lang3.Range;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -34,12 +33,6 @@ final class RationalReaderMacroFunction implements Serializable {
 	 * Serializable Version Unique Identifier.
 	 */
 	private static final long serialVersionUID = -8849349790791106477L;
-
-	/**
-	 * The valid range of radix values.
-	 */
-	@SuppressWarnings("MagicNumber")
-	private static final Range<BigInteger> RADIX_RANGE = Range.between(BigInteger.valueOf(2), BigInteger.valueOf(36));
 
 	/**
 	 * {@link Autowired} {@link Printer} used for printing elements and structures to the output stream.
@@ -62,14 +55,6 @@ final class RationalReaderMacroFunction implements Serializable {
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			ExtendedTokenReaderMacroFunction.readExtendedToken(reader, false);
 			return NullStruct.INSTANCE;
-		}
-
-		if (radix == null) {
-			throw new ReaderErrorException("Radix missing in #R.");
-		}
-
-		if (!RADIX_RANGE.contains(radix)) {
-			throw new ReaderErrorException("Illegal radix for #R: " + radix + '.');
 		}
 
 		final IntegerStruct previousReadBase = ReaderVariables.READ_BASE.getValue();

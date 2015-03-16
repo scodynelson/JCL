@@ -5,6 +5,7 @@
 package jcl.reader.macrofunction;
 
 import java.math.BigInteger;
+import java.util.Optional;
 import javax.annotation.PostConstruct;
 
 import jcl.arrays.StringStruct;
@@ -36,7 +37,7 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunction {
 	}
 
 	@Override
-	public StringStruct readMacro(final int codePoint, final Reader reader, final BigInteger numberArgument) {
+	public StringStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
 		assert codePoint == CharacterConstants.QUOTATION_MARK;
 
 		final StringBuilder stringBuilder = new StringBuilder();

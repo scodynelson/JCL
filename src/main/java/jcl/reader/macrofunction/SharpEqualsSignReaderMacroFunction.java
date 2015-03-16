@@ -8,6 +8,7 @@ import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
@@ -43,28 +44,29 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunction {
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numberArgument) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
 		assert codePoint == CharacterConstants.EQUALS_SIGN;
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
 			return null;
 		}
 
-		if (numberArgument == null) {
+		if (!numberArgument.isPresent()) {
 			throw new ReaderErrorException("Missing label for #=.");
 		}
+		final BigInteger numberArgumentValue = numberArgument.get();
 
 		final Map<BigInteger, LispStruct> sharpEqualFinalTable = reader.getSharpEqualFinalTable();
 		final Map<BigInteger, SymbolStruct<?>> sharpEqualTempTable = reader.getSharpEqualTempTable();
 
-		if (sharpEqualFinalTable.containsKey(numberArgument)
-				|| sharpEqualTempTable.containsKey(numberArgument)) {
-			throw new ReaderErrorException("Label already defined: #" + numberArgument + '=');
+		if (sharpEqualFinalTable.containsKey(numberArgumentValue)
+				|| sharpEqualTempTable.containsKey(numberArgumentValue)) {
+			throw new ReaderErrorException("Label already defined: #" + numberArgumentValue + '=');
 		}
 
 		final String labelTagName = UUID.randomUUID().toString();
 		final SymbolStruct<?> labelTag = new SymbolStruct<>(labelTagName);
-		sharpEqualTempTable.put(numberArgument, labelTag);
+		sharpEqualTempTable.put(numberArgumentValue, labelTag);
 
 		final LispStruct token = reader.read(true, NullStruct.INSTANCE, true);
 
@@ -74,7 +76,7 @@ public class SharpEqualsSignReaderMacroFunction extends ReaderMacroFunction {
 		final Set<LispStruct> sharpEqualCircleSet = new HashSet<>();
 		replaceTagsWithTokens(token, sharpEqualReplTable, sharpEqualCircleSet);
 
-		sharpEqualFinalTable.put(numberArgument, token);
+		sharpEqualFinalTable.put(numberArgumentValue, token);
 
 		return token;
 	}

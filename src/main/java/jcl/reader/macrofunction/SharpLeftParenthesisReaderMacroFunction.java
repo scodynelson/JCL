@@ -6,6 +6,7 @@ package jcl.reader.macrofunction;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Optional;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
@@ -60,7 +61,7 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 	}
 
 	@Override
-	public LispStruct readMacro(final int codePoint, final Reader reader, final BigInteger numberArgument) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
 		assert codePoint == CharacterConstants.LEFT_PARENTHESIS;
 
 		final ListStruct listToken = listReaderMacroFunction.readList(reader);
@@ -78,12 +79,13 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 			throw new ReaderErrorException("Ill-formed vector: #" + printedToken);
 		}
 
-		if (numberArgument == null) {
+		if (!numberArgument.isPresent()) {
 			final List<LispStruct> tokensAsJavaList = listToken.getAsJavaList();
 			return createVector(tokensAsJavaList);
 		}
 
-		return handleNumArg(listToken, numberArgument);
+		final BigInteger numberArgumentValue = numberArgument.get();
+		return handleNumberArgument(listToken, numberArgumentValue);
 	}
 
 	/**
@@ -97,7 +99,7 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 	 *
 	 * @return the properly created {@link VectorStruct} taking care of the proper vector length
 	 */
-	private ListStruct handleNumArg(final ListStruct listToken, final BigInteger numberArgument) {
+	private ListStruct handleNumberArgument(final ListStruct listToken, final BigInteger numberArgument) {
 		final List<LispStruct> tokensAsJavaList = listToken.getAsJavaList();
 
 		final int numberOfTokens = tokensAsJavaList.size();

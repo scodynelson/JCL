@@ -19,6 +19,8 @@ import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 import jcl.system.CommonLispSymbols;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,14 +57,14 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 
 	public LispStruct expand(final ListStruct form, final boolean isTopLevel, final boolean isCompileOrCompileFile) {
 
-		final int inputSize = form.size();
-		if (inputSize < 2) {
-			throw new ProgramErrorException("EVAL-WHEN: Incorrect number of arguments: " + inputSize + ". Expected at least 2 arguments.");
+		final int formSize = form.size();
+		if (formSize < 2) {
+			throw new ProgramErrorException("EVAL-WHEN: Incorrect number of arguments: " + formSize + ". Expected at least 2 arguments.");
 		}
 
-		final ListStruct inputRest = form.getRest();
+		final ListStruct formRest = form.getRest();
 
-		final LispStruct second = inputRest.getFirst();
+		final LispStruct second = formRest.getFirst();
 		if (!(second instanceof ListStruct)) {
 			final String printedObject = printer.print(second);
 			throw new ProgramErrorException("EVAL-WHEN: Situation list must be a list. Got: " + printedObject);
@@ -77,7 +79,7 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 			throw new ProgramErrorException("EVAL-WHEN: Situations must be one of ':COMPILE-TOP-LEVEL', ':LOAD-TIME-LEVEL', or ':EXECUTE'. Got: " + printedSituationList);
 		}
 
-		final ListStruct forms = inputRest.getRest();
+		final ListStruct forms = formRest.getRest();
 
 		if (isTopLevel) {
 			if (isCompileTopLevel(situationJavaList)) {
@@ -138,6 +140,16 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 
 	private static boolean isExecute(final List<? extends LispStruct> situationList) {
 		return situationList.contains(CommonLispSymbols.EXECUTE);
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

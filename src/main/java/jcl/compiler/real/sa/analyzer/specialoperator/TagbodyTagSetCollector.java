@@ -18,6 +18,8 @@ import java.util.stream.Collector;
 import jcl.LispStruct;
 import jcl.compiler.real.struct.specialoperator.go.GoStruct;
 import jcl.compiler.real.struct.specialoperator.go.GoStructGenerator;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -62,6 +64,16 @@ final class TagbodyTagSetCollector implements Collector<LispStruct, Set<GoStruct
 	@Override
 	public Set<Characteristics> characteristics() {
 		return Collections.unmodifiableSet(EnumSet.of(Characteristics.UNORDERED, Characteristics.IDENTITY_FINISH));
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

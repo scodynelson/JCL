@@ -19,6 +19,8 @@ import jcl.printer.Printer;
 import jcl.symbols.BooleanStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.system.CommonLispSymbols;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,15 +48,15 @@ public class LoadTimeValueExpander extends MacroFunctionExpander<LoadTimeValueSt
 	@Override
 	public LoadTimeValueStruct expand(final ListStruct form, final Environment environment) {
 
-		final int inputSize = form.size();
-		if ((inputSize < 2) || (inputSize > 3)) {
-			throw new ProgramErrorException("LOAD-TIME-VALUE: Incorrect number of arguments: " + inputSize + ". Expected either 2 or 3 arguments.");
+		final int formSize = form.size();
+		if ((formSize < 2) || (formSize > 3)) {
+			throw new ProgramErrorException("LOAD-TIME-VALUE: Incorrect number of arguments: " + formSize + ". Expected either 2 or 3 arguments.");
 		}
 
-		final ListStruct inputRest = form.getRest();
-		final ListStruct inputRestRest = inputRest.getRest();
+		final ListStruct formRest = form.getRest();
+		final ListStruct formRestRest = formRest.getRest();
 
-		final LispStruct third = inputRestRest.getFirst();
+		final LispStruct third = formRestRest.getFirst();
 		if (!(third instanceof BooleanStruct)) {
 			final String printedObject = printer.print(third);
 			throw new ProgramErrorException("LOAD-TIME-VALUE: Read-Only-P value must be either 'T' or 'NIL'. Got: " + printedObject);
@@ -63,7 +65,7 @@ public class LoadTimeValueExpander extends MacroFunctionExpander<LoadTimeValueSt
 		final BooleanStruct readOnlyP = (BooleanStruct) third;
 		final boolean isReadOnly = readOnlyP.booleanValue();
 
-		final LispStruct loadTimeValueForm = inputRest.getFirst();
+		final LispStruct loadTimeValueForm = formRest.getFirst();
 		final ListStruct evalForm = ListStruct.buildProperList(CommonLispSymbols.EVAL, loadTimeValueForm);
 
 		final LispStruct analyzedEvalForm = formAnalyzer.analyze(evalForm, Environment.NULL);
@@ -79,6 +81,16 @@ public class LoadTimeValueExpander extends MacroFunctionExpander<LoadTimeValueSt
 		} else {
 			return new MutableLoadTimeValueStruct(analyzedEvalForm);
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

@@ -11,6 +11,8 @@ import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,13 +37,25 @@ public class PrognExpander extends MacroFunctionExpander<PrognStruct> {
 	@Override
 	public PrognStruct expand(final ListStruct form, final Environment environment) {
 
-		final List<LispStruct> forms = form.getRest().getAsJavaList();
+		final ListStruct formRest = form.getRest();
+
+		final List<LispStruct> forms = formRest.getAsJavaList();
 		final List<LispStruct> analyzedForms =
 				forms.stream()
 				     .map(e -> formAnalyzer.analyze(e, environment))
 				     .collect(Collectors.toList());
 
 		return new PrognStruct(analyzedForms);
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

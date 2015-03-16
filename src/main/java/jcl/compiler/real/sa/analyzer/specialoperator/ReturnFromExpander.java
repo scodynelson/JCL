@@ -13,6 +13,8 @@ import jcl.lists.NullStruct;
 import jcl.printer.Printer;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,14 +42,14 @@ public class ReturnFromExpander extends MacroFunctionExpander<ReturnFromStruct> 
 	@Override
 	public ReturnFromStruct expand(final ListStruct form, final Environment environment) {
 
-		final int inputSize = form.size();
-		if ((inputSize < 2) || (inputSize > 3)) {
-			throw new ProgramErrorException("RETURN-FROM: Incorrect number of arguments: " + inputSize + ". Expected either 2 or 3 arguments.");
+		final int formSize = form.size();
+		if ((formSize < 2) || (formSize > 3)) {
+			throw new ProgramErrorException("RETURN-FROM: Incorrect number of arguments: " + formSize + ". Expected either 2 or 3 arguments.");
 		}
 
-		final ListStruct inputRest = form.getRest();
+		final ListStruct formRest = form.getRest();
 
-		final LispStruct second = inputRest.getFirst();
+		final LispStruct second = formRest.getFirst();
 		if (!(second instanceof SymbolStruct)) {
 			final String printedObject = printer.print(second);
 			throw new ProgramErrorException("RETURN-FROM: Name must be a symbol. Got: " + printedObject);
@@ -59,15 +61,27 @@ public class ReturnFromExpander extends MacroFunctionExpander<ReturnFromStruct> 
 			throw new ProgramErrorException("RETURN-FROM: No BLOCK with name " + printedObject + " is visible.");
 		}
 
-		LispStruct analyzedResult = NullStruct.INSTANCE;
-		if (inputSize == 3) {
-			final ListStruct inputRestRest = inputRest.getRest();
+		final LispStruct analyzedResult;
+		if (formSize == 3) {
+			final ListStruct formRestRest = formRest.getRest();
 
-			final LispStruct result = inputRestRest.getFirst();
+			final LispStruct result = formRestRest.getFirst();
 			analyzedResult = formAnalyzer.analyze(result, environment);
+		} else {
+			analyzedResult = NullStruct.INSTANCE;
 		}
 
 		return new ReturnFromStruct(name, analyzedResult);
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

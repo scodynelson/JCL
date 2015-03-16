@@ -22,10 +22,12 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.struct.specialoperator.go.GoStruct;
 import jcl.compiler.real.struct.specialoperator.go.GoStructGenerator;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-final class TagbodyCollector implements Collector<LispStruct, Map<GoStruct<?>, List<LispStruct>>, Map<GoStruct<?>, List<LispStruct>>> {
+final class TagbodyFormCollector implements Collector<LispStruct, Map<GoStruct<?>, List<LispStruct>>, Map<GoStruct<?>, List<LispStruct>>> {
 
 	private final FormAnalyzer formAnalyzer;
 
@@ -35,8 +37,8 @@ final class TagbodyCollector implements Collector<LispStruct, Map<GoStruct<?>, L
 
 	private GoStruct<?> currentTag;
 
-	TagbodyCollector(final FormAnalyzer formAnalyzer, final Environment environment,
-	                 final Map<Class<? extends LispStruct>, GoStructGenerator<LispStruct>> goStructGeneratorStrategies) {
+	TagbodyFormCollector(final FormAnalyzer formAnalyzer, final Environment environment,
+	                     final Map<Class<? extends LispStruct>, GoStructGenerator<LispStruct>> goStructGeneratorStrategies) {
 		this.formAnalyzer = formAnalyzer;
 		this.environment = environment;
 		this.goStructGeneratorStrategies = goStructGeneratorStrategies;
@@ -94,6 +96,16 @@ final class TagbodyCollector implements Collector<LispStruct, Map<GoStruct<?>, L
 	@Override
 	public Set<Characteristics> characteristics() {
 		return Collections.unmodifiableSet(EnumSet.of(Characteristics.IDENTITY_FINISH));
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

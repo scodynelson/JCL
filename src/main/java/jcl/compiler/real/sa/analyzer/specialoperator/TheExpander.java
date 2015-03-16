@@ -12,6 +12,8 @@ import jcl.lists.ListStruct;
 import jcl.printer.Printer;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,26 +41,36 @@ public class TheExpander extends MacroFunctionExpander<TheStruct> {
 	@Override
 	public TheStruct expand(final ListStruct form, final Environment environment) {
 
-		final int inputSize = form.size();
-		if (inputSize != 3) {
-			throw new ProgramErrorException("THE: Incorrect number of arguments: " + inputSize + ". Expected 3 arguments.");
+		final int formSize = form.size();
+		if (formSize != 3) {
+			throw new ProgramErrorException("THE: Incorrect number of arguments: " + formSize + ". Expected 3 arguments.");
 		}
 
-		final ListStruct inputRest = form.getRest();
+		final ListStruct formRest = form.getRest();
 
-		final LispStruct valueType = inputRest.getFirst();
+		final LispStruct valueType = formRest.getFirst();
 		if (!(valueType instanceof SymbolStruct) && !(valueType instanceof ListStruct)) {
 			final String printedValueType = printer.print(valueType);
 			throw new ProgramErrorException("THE: Type specifier must be a symbol or a list. Got: " + printedValueType);
 		}
 		// TODO: do we actually want to somehow factor in the 'TypeSpecifier' produced by the second value?
 
-		final ListStruct inputRestRest = inputRest.getRest();
+		final ListStruct formRestRest = formRest.getRest();
 
-		final LispStruct theForm = inputRestRest.getFirst();
+		final LispStruct theForm = formRestRest.getFirst();
 		final LispStruct theFormAnalyzed = formAnalyzer.analyze(theForm, environment);
 
 		return new TheStruct(null, theFormAnalyzed);
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

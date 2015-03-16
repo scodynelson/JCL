@@ -12,14 +12,23 @@ import jcl.compiler.real.struct.specialoperator.go.GoStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.numbers.IntegerStruct;
+import jcl.printer.Printer;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GoExpander extends MacroFunctionExpander<GoStruct<?>> {
 
 	private static final long serialVersionUID = -6523523596100793498L;
+
+	@Autowired
+	private Printer printer;
 
 	/**
 	 * Initializes the go macro function and adds it to the special operator 'go'.
@@ -32,16 +41,17 @@ public class GoExpander extends MacroFunctionExpander<GoStruct<?>> {
 	@Override
 	public GoStruct<?> expand(final ListStruct form, final Environment environment) {
 
-		final int inputSize = form.size();
-		if (inputSize != 2) {
-			throw new ProgramErrorException("GO: Incorrect number of arguments: " + inputSize + ". Expected 2 arguments.");
+		final int formSize = form.size();
+		if (formSize != 2) {
+			throw new ProgramErrorException("GO: Incorrect number of arguments: " + formSize + ". Expected 2 arguments.");
 		}
 
-		final ListStruct inputRest = form.getRest();
+		final ListStruct formRest = form.getRest();
 
-		final LispStruct second = inputRest.getFirst();
+		final LispStruct second = formRest.getFirst();
 		if (!isTagbodyTag(second)) {
-			throw new ProgramErrorException("GO: Tag must be a symbol or an integer. Got: " + second);
+			final String printedObject = printer.print(second);
+			throw new ProgramErrorException("GO: Tag must be a symbol or an integer. Got: " + printedObject);
 		}
 
 		return getGoTag(environment, second);
@@ -51,7 +61,7 @@ public class GoExpander extends MacroFunctionExpander<GoStruct<?>> {
 		return (element instanceof SymbolStruct) || (element instanceof IntegerStruct);
 	}
 
-	private static GoStruct<?> getGoTag(final Environment environment, final LispStruct tagToFind) {
+	private GoStruct<?> getGoTag(final Environment environment, final LispStruct tagToFind) {
 
 		final Stack<Set<GoStruct<?>>> tagbodyStack = environment.getTagbodyStack();
 		final ListIterator<Set<GoStruct<?>>> tagbodyListIterator = tagbodyStack.listIterator(tagbodyStack.size());
@@ -71,9 +81,25 @@ public class GoExpander extends MacroFunctionExpander<GoStruct<?>> {
 		}
 
 		if (tag == null) {
-			throw new ProgramErrorException("GO: No TAGBODY with Tag " + tagToFind + " is visible.");
+			final String printedTagToFind = printer.print(tagToFind);
+			throw new ProgramErrorException("GO: No TAGBODY with Tag " + printedTagToFind + " is visible.");
 		}
 
 		return tag;
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

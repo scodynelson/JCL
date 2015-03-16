@@ -9,6 +9,8 @@ import jcl.compiler.real.struct.specialoperator.QuoteStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.stereotype.Component;
@@ -29,15 +31,25 @@ public class QuoteExpander extends MacroFunctionExpander<QuoteStruct> {
 	@Override
 	public QuoteStruct expand(final ListStruct form, final Environment environment) {
 
-		final int inputSize = form.size();
-		if (inputSize != 2) {
-			throw new ProgramErrorException("QUOTE: Incorrect number of arguments: " + inputSize + ". Expected 2 arguments.");
+		final int formSize = form.size();
+		if (formSize != 2) {
+			throw new ProgramErrorException("QUOTE: Incorrect number of arguments: " + formSize + ". Expected 2 arguments.");
 		}
 
-		final ListStruct inputRest = form.getRest();
+		final ListStruct formRest = form.getRest();
 
-		final LispStruct quotedObject = inputRest.getFirst();
+		final LispStruct quotedObject = formRest.getFirst();
 		return new QuoteStruct(quotedObject);
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

@@ -12,6 +12,8 @@ import jcl.compiler.real.struct.specialoperator.CatchStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,25 +38,35 @@ public class CatchExpander extends MacroFunctionExpander<CatchStruct> {
 	@Override
 	public CatchStruct expand(final ListStruct form, final Environment environment) {
 
-		final int inputSize = form.size();
-		if (inputSize < 2) {
-			throw new ProgramErrorException("CATCH: Incorrect number of arguments: " + inputSize + ". Expected at least 2 arguments.");
+		final int formSize = form.size();
+		if (formSize < 2) {
+			throw new ProgramErrorException("CATCH: Incorrect number of arguments: " + formSize + ". Expected at least 2 arguments.");
 		}
 
-		final ListStruct inputRest = form.getRest();
+		final ListStruct formRest = form.getRest();
 
-		final LispStruct catchTag = inputRest.getFirst();
+		final LispStruct catchTag = formRest.getFirst();
 		final LispStruct catchTagAnalyzed = formAnalyzer.analyze(catchTag, environment);
 
-		final ListStruct inputRestRest = inputRest.getRest();
+		final ListStruct formRestRest = formRest.getRest();
 
-		final List<LispStruct> forms = inputRestRest.getAsJavaList();
+		final List<LispStruct> forms = formRestRest.getAsJavaList();
 		final List<LispStruct> analyzedForms =
 				forms.stream()
 				     .map(e -> formAnalyzer.analyze(e, environment))
 				     .collect(Collectors.toList());
 
 		return new CatchStruct(catchTagAnalyzed, analyzedForms);
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

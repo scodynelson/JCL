@@ -11,6 +11,8 @@ import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.SpecialOperator;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,30 +37,42 @@ public class IfExpander extends MacroFunctionExpander<IfStruct> {
 	@Override
 	public IfStruct expand(final ListStruct form, final Environment environment) {
 
-		final int inputSize = form.size();
-		if ((inputSize < 3) || (inputSize > 4)) {
-			throw new ProgramErrorException("IF: Incorrect number of arguments: " + inputSize + ". Expected either 3 or 4 arguments.");
+		final int formSize = form.size();
+		if ((formSize < 3) || (formSize > 4)) {
+			throw new ProgramErrorException("IF: Incorrect number of arguments: " + formSize + ". Expected either 3 or 4 arguments.");
 		}
 
-		final ListStruct inputRest = form.getRest();
+		final ListStruct formRest = form.getRest();
 
-		final LispStruct testForm = inputRest.getFirst();
+		final LispStruct testForm = formRest.getFirst();
 		final LispStruct testFormAnalyzed = formAnalyzer.analyze(testForm, environment);
 
-		final ListStruct inputRestRest = inputRest.getRest();
+		final ListStruct formRestRest = formRest.getRest();
 
-		final LispStruct thenForm = inputRestRest.getFirst();
+		final LispStruct thenForm = formRestRest.getFirst();
 		final LispStruct thenFormAnalyzed = formAnalyzer.analyze(thenForm, environment);
 
-		LispStruct elseFormAnalyzed = NullStruct.INSTANCE;
-		if (inputSize == 4) {
-			final ListStruct inputRestRestRest = inputRestRest.getRest();
+		final LispStruct elseFormAnalyzed;
+		if (formSize == 4) {
+			final ListStruct formRestRestRest = formRestRest.getRest();
 
-			final LispStruct elseForm = inputRestRestRest.getFirst();
+			final LispStruct elseForm = formRestRestRest.getFirst();
 			elseFormAnalyzed = formAnalyzer.analyze(elseForm, environment);
+		} else {
+			elseFormAnalyzed = NullStruct.INSTANCE;
 		}
 
 		return new IfStruct(testFormAnalyzed, thenFormAnalyzed, elseFormAnalyzed);
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

@@ -19,6 +19,8 @@ import jcl.lists.ListStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,12 +48,12 @@ public class TagbodyExpander extends MacroFunctionExpander<TagbodyStruct> {
 	@Override
 	public TagbodyStruct expand(final ListStruct form, final Environment environment) {
 
-		ListStruct body = form.getRest();
-		List<LispStruct> bodyAsJavaList = body.getAsJavaList();
+		ListStruct formRest = form.getRest();
+		List<LispStruct> forms = formRest.getAsJavaList();
 
 		final TagbodyTagSetCollector tagSetCollector = new TagbodyTagSetCollector(goStructGeneratorStrategies);
-		final Set<GoStruct<?>> tagSet = bodyAsJavaList.stream()
-		                                              .collect(tagSetCollector);
+		final Set<GoStruct<?>> tagSet = forms.stream()
+		                                     .collect(tagSetCollector);
 
 		environment.getTagbodyStack().push(tagSet);
 
@@ -59,17 +61,17 @@ public class TagbodyExpander extends MacroFunctionExpander<TagbodyStruct> {
 		// temporary 'tag' for this form set.
 		// NOTE: We don't care about adding this to the TagbodyStack since it is generated just for us here and will
 		//       will never be used as a real transfer of control point.
-		if (!isTagbodyTag(body.getFirst())) {
-			final SymbolStruct<?> defaultFormsTag = new SymbolStruct<>("Tag" + UUID.randomUUID());
-			body = new ConsStruct(defaultFormsTag, body);
-			bodyAsJavaList = body.getAsJavaList();
+		if (!isTagbodyTag(formRest.getFirst())) {
+			final SymbolStruct<?> defaultFormsTag = new SymbolStruct<>("Tag-" + UUID.randomUUID());
+			formRest = new ConsStruct(defaultFormsTag, formRest);
+			forms = formRest.getAsJavaList();
 		}
 
 		try {
-			final TagbodyCollector collector = new TagbodyCollector(formAnalyzer, environment, goStructGeneratorStrategies);
-			final Map<GoStruct<?>, List<LispStruct>> tagbodyForms = bodyAsJavaList.stream()
-			                                                                      .collect(collector);
-			return new TagbodyStruct(tagbodyForms);
+			final TagbodyFormCollector tagbodyFormCollector = new TagbodyFormCollector(formAnalyzer, environment, goStructGeneratorStrategies);
+			final Map<GoStruct<?>, List<LispStruct>> analyzedTagbodyForms = forms.stream()
+			                                                                     .collect(tagbodyFormCollector);
+			return new TagbodyStruct(analyzedTagbodyForms);
 		} finally {
 			environment.getTagbodyStack().pop();
 		}
@@ -77,6 +79,16 @@ public class TagbodyExpander extends MacroFunctionExpander<TagbodyStruct> {
 
 	private static boolean isTagbodyTag(final LispStruct element) {
 		return (element instanceof SymbolStruct) || (element instanceof IntegerStruct);
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

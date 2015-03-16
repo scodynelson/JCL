@@ -14,6 +14,8 @@ import jcl.lists.ListStruct;
 import jcl.printer.Printer;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,16 +43,18 @@ public class SetqExpander extends MacroFunctionExpander<SetqStruct> {
 	@Override
 	public SetqStruct expand(final ListStruct form, final Environment environment) {
 
-		final List<LispStruct> forms = form.getRest().getAsJavaList();
+		final ListStruct formRest = form.getRest();
+		final List<LispStruct> forms = formRest.getAsJavaList();
 
 		final int numberOfForms = forms.size();
 		if ((numberOfForms % 2) != 0) {
-			throw new ProgramErrorException("SETQ: Odd number of arguments received: " + form + ". Expected an even number of arguments.");
+			final String printedObject = printer.print(formRest);
+			throw new ProgramErrorException("SETQ: Odd number of arguments received: " + printedObject + ". Expected an even number of arguments.");
 		}
 
 		final List<SetqStruct.SetqPair> setqPairs = new ArrayList<>(numberOfForms / 2);
 
-		for (int index = 0; index < forms.size(); index += 2) {
+		for (int index = 0; index < numberOfForms; index += 2) {
 
 			final LispStruct setqVar = forms.get(index);
 			if (!(setqVar instanceof SymbolStruct)) {
@@ -67,6 +71,16 @@ public class SetqExpander extends MacroFunctionExpander<SetqStruct> {
 		}
 
 		return new SetqStruct(setqPairs);
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

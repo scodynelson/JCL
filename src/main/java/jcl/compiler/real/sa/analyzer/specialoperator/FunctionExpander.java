@@ -15,6 +15,8 @@ import jcl.lists.ListStruct;
 import jcl.printer.Printer;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,20 +44,21 @@ public class FunctionExpander extends MacroFunctionExpander<CompilerFunctionStru
 	@Override
 	public CompilerFunctionStruct expand(final ListStruct form, final Environment environment) {
 
-		final int inputSize = form.size();
-		if (inputSize != 2) {
-			throw new ProgramErrorException("FUNCTION: Incorrect number of arguments: " + inputSize + ". Expected 2 arguments.");
+		final int formSize = form.size();
+		if (formSize != 2) {
+			throw new ProgramErrorException("FUNCTION: Incorrect number of arguments: " + formSize + ". Expected 2 arguments.");
 		}
 
-		final ListStruct inputRest = form.getRest();
+		final ListStruct formRest = form.getRest();
 
-		final LispStruct second = inputRest.getFirst();
+		final LispStruct second = formRest.getFirst();
 		if (second instanceof SymbolStruct) {
 			return new SymbolCompilerFunctionStruct((SymbolStruct<?>) second);
 		} else if (second instanceof ListStruct) {
 			return analyzeFunctionList((ListStruct) second, environment);
 		} else {
-			throw new ProgramErrorException("FUNCTION: Function argument must be a symbol or a list. Got: " + second);
+			final String printedObject = printer.print(second);
+			throw new ProgramErrorException("FUNCTION: Function argument must be a symbol or a list. Got: " + printedObject);
 		}
 	}
 
@@ -70,6 +73,16 @@ public class FunctionExpander extends MacroFunctionExpander<CompilerFunctionStru
 
 		final LambdaStruct analyzedLambda = lambdaExpander.expand(functionList, environment);
 		return new LambdaCompilerFunctionStruct(analyzedLambda);
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

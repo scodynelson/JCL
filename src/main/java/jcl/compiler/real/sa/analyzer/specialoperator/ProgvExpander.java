@@ -47,106 +47,109 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 	@Override
 	public ProgvStruct expand(final ListStruct form, final Environment environment) {
 
-		final int inputSize = form.size();
-		if (inputSize < 3) {
-			throw new ProgramErrorException("PROGV: Incorrect number of arguments: " + inputSize + ". Expected at least 3 arguments.");
+		final int formSize = form.size();
+		if (formSize < 3) {
+			throw new ProgramErrorException("PROGV: Incorrect number of arguments: " + formSize + ". Expected at least 3 arguments.");
 		}
 
 		// Check Vars List
+		final ListStruct formRest = form.getRest();
 
-		final ListStruct inputRest = form.getRest();
-
-		final LispStruct second = inputRest.getFirst();
+		final LispStruct second = formRest.getFirst();
 		if (!(second instanceof ListStruct)) {
 			throw new ProgramErrorException("PROGV: Symbols list must be a quoted list. Got: " + second);
 		}
 
-		final ListStruct secondListStruct = (ListStruct) second;
-		if (secondListStruct.size() != 2) {
+		final ListStruct secondAsList = (ListStruct) second;
+		if (secondAsList.size() != 2) {
 			throw new ProgramErrorException("PROGV: Symbols list must be properly quoted: " + second);
 		}
-		if (!SpecialOperator.QUOTE.equals(secondListStruct.getFirst())) {
+		final LispStruct secondAsListFirst = secondAsList.getFirst();
+		if (!SpecialOperator.QUOTE.equals(secondAsListFirst)) {
 			throw new ProgramErrorException("PROGV: Symbols list must be quoted: " + second);
 		}
 
-		final LispStruct actualVarsList = secondListStruct.getRest().getFirst();
-		if (!(actualVarsList instanceof ListStruct)) {
-			throw new ProgramErrorException("PROGV: TODO: Symbols list must be a list. Got: " + actualVarsList);
+		final ListStruct secondAsListRest = secondAsList.getRest();
+		final LispStruct actualVars = secondAsListRest.getFirst();
+		if (!(actualVars instanceof ListStruct)) {
+			throw new ProgramErrorException("PROGV: TODO: Symbols list must be a list. Got: " + actualVars);
 		}
 
-		final ListStruct actualVarsListStruct = (ListStruct) actualVarsList;
-		final List<? extends LispStruct> actualVarsJavaList = actualVarsListStruct.getAsJavaList();
-		for (final LispStruct currentVar : actualVarsJavaList) {
+		final ListStruct actualVarsAsList = (ListStruct) actualVars;
+		final List<LispStruct> actualVarsAsJavaList = actualVarsAsList.getAsJavaList();
+		for (final LispStruct currentVar : actualVarsAsJavaList) {
 			if (!(currentVar instanceof SymbolStruct)) {
 				throw new ProgramErrorException("PROGV: Elements in symbols list must be symbols. Got: " + currentVar);
 			}
 		}
 
 		// Check Vals List
+		final ListStruct formRestRest = formRest.getRest();
 
-		final ListStruct inputRestRest = inputRest.getRest();
-
-		final LispStruct third = inputRestRest.getFirst();
+		final LispStruct third = formRestRest.getFirst();
 		if (!(third instanceof ListStruct)) {
 			throw new ProgramErrorException("PROGV: Values list must be a quoted list. Got: " + third);
 		}
 
-		final ListStruct thirdListStruct = (ListStruct) third;
-		if (thirdListStruct.size() != 2) {
+		final ListStruct thirdAsList = (ListStruct) third;
+		if (thirdAsList.size() != 2) {
 			throw new ProgramErrorException("PROGV: Values list must be properly quoted: " + second);
 		}
-		if (!SpecialOperator.QUOTE.equals(thirdListStruct.getFirst())) {
+		final LispStruct thirdAsListFirst = thirdAsList.getFirst();
+		if (!SpecialOperator.QUOTE.equals(thirdAsListFirst)) {
 			throw new ProgramErrorException("PROGV: Values list must be quoted: " + second);
 		}
 
-		final LispStruct actualValsList = thirdListStruct.getRest().getFirst();
-		if (!(actualValsList instanceof ListStruct)) {
-			throw new ProgramErrorException("PROGV: Values list must be a list. Got: " + actualValsList);
+		final ListStruct thirdAsListRest = thirdAsList.getRest();
+		final LispStruct actualVals = thirdAsListRest.getFirst();
+		if (!(actualVals instanceof ListStruct)) {
+			throw new ProgramErrorException("PROGV: Values list must be a list. Got: " + actualVals);
 		}
 
-		final ListStruct actualValsListStruct = (ListStruct) actualValsList;
-		final List<? extends LispStruct> actualValsJavaList = actualValsListStruct.getAsJavaList();
+		final ListStruct actualValsAsList = (ListStruct) actualVals;
+		final List<LispStruct> actualValsAsJavaList = actualValsAsList.getAsJavaList();
 
-		// Do other stuff
-
+		// Handle Progn Environment processing
 		final ProgvEnvironment progvEnvironment = new ProgvEnvironment(environment);
 
-		final int numberOfProgvVars = actualVarsJavaList.size();
+		final int numberOfProgvVars = actualVarsAsJavaList.size();
 		final List<ProgvStruct.ProgvVar> progvVars = new ArrayList<>(numberOfProgvVars);
 
 		for (int i = 0; i < numberOfProgvVars; i++) {
 
-			// NOTE: We can cast here since we checked the type earlier
-			final SymbolStruct<?> var = (SymbolStruct) actualVarsJavaList.get(i);
-			LispStruct val = NullStruct.INSTANCE;
-			if (i < actualValsJavaList.size()) {
-				val = actualValsJavaList.get(i);
+			// NOTE: We can safely cast here since we checked the type earlier
+			final SymbolStruct<?> var = (SymbolStruct) actualVarsAsJavaList.get(i);
+
+			final LispStruct val;
+			if (i < actualValsAsJavaList.size()) {
+				val = actualValsAsJavaList.get(i);
+			} else {
+				val = NullStruct.INSTANCE;
 			}
 
-			final SymbolStruct<?> varSE = symbolAnalyzer.analyzeDynamic(var, progvEnvironment);
-
+			final SymbolStruct<?> analyzedVar = symbolAnalyzer.analyzeDynamic(var, progvEnvironment);
 			final LispStruct analyzedVal = formAnalyzer.analyze(val, progvEnvironment);
-			final ProgvStruct.ProgvVar progvVar = new ProgvStruct.ProgvVar(varSE, analyzedVal);
+			final ProgvStruct.ProgvVar progvVar = new ProgvStruct.ProgvVar(analyzedVar, analyzedVal);
 
 			final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(progvEnvironment);
-			final int newBindingsPosition = currentLambda.getNextParameterNumber();
-			progvEnvironment.setBindingsPosition(newBindingsPosition);
+			final int nextParameterNumber = currentLambda.getNextParameterNumber();
+			progvEnvironment.setBindingsPosition(nextParameterNumber);
 
-			final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
-
+			final ParameterAllocation allocation = new ParameterAllocation(nextParameterNumber);
 			final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(var, allocation, T.INSTANCE, analyzedVal);
 			progvEnvironment.addDynamicBinding(binding);
 
 			progvVars.add(progvVar);
 		}
 
-		final ListStruct inputRestRestRest = inputRestRest.getRest();
-		final List<LispStruct> forms = inputRestRestRest.getAsJavaList();
-		final List<LispStruct> analyzedForms =
-				forms.stream()
-				     .map(e -> formAnalyzer.analyze(e, environment))
-				     .collect(Collectors.toList());
+		final ListStruct formRestRestRest = formRestRest.getRest();
 
-		return new ProgvStruct(progvVars, analyzedForms, null, environment);
+		final List<LispStruct> bodyForms = formRestRestRest.getAsJavaList();
+		final List<LispStruct> analyzedBodyForms =
+				bodyForms.stream()
+				         .map(e -> formAnalyzer.analyze(e, environment))
+				         .collect(Collectors.toList());
+
+		return new ProgvStruct(progvVars, analyzedBodyForms, null, environment);
 	}
 }

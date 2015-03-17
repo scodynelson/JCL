@@ -1,6 +1,5 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import javax.annotation.PostConstruct;
@@ -11,6 +10,7 @@ import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.LetStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
+import jcl.printer.Printer;
 import jcl.symbols.SpecialOperator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,6 +23,9 @@ public class LetStarExpander extends MacroFunctionExpander<LetStruct> {
 	@Autowired
 	private LetExpander letExpander;
 
+	@Autowired
+	private Printer printer;
+
 	/**
 	 * Initializes the block macro function and adds it to the special operator 'block'.
 	 */
@@ -34,36 +37,33 @@ public class LetStarExpander extends MacroFunctionExpander<LetStruct> {
 	@Override
 	public LetStruct expand(final ListStruct form, final Environment environment) {
 
-		final int inputSize = form.size();
-		if (inputSize < 2) {
-			throw new ProgramErrorException("LET*: Incorrect number of arguments: " + inputSize + ". Expected at least 2 arguments.");
+		final int formSize = form.size();
+		if (formSize < 2) {
+			throw new ProgramErrorException("LET*: Incorrect number of arguments: " + formSize + ". Expected at least 2 arguments.");
 		}
 
-		final ListStruct inputRest = form.getRest();
+		final ListStruct formRest = form.getRest();
 
-		final LispStruct second = inputRest.getFirst();
+		final LispStruct second = formRest.getFirst();
 		if (!(second instanceof ListStruct)) {
-			throw new ProgramErrorException("LET*: Parameter list must be of type List. Got: " + second);
+			final String printedObject = printer.print(second);
+			throw new ProgramErrorException("LET*: Parameter list must be a list. Got: " + printedObject);
 		}
 
 		final ListStruct parameters = (ListStruct) second;
-		final List<? extends LispStruct> parametersAsJavaList = parameters.getAsJavaList();
 
-		final ListIterator<? extends LispStruct> iterator = parametersAsJavaList.listIterator(parametersAsJavaList.size());
+		final List<LispStruct> parametersAsJavaList = parameters.getAsJavaList();
+		final ListIterator<LispStruct> iterator = parametersAsJavaList.listIterator(parametersAsJavaList.size());
 
-		List<LispStruct> body = inputRest.getRest().getAsJavaList();
+		ListStruct body = formRest.getRest();
 
 		while (iterator.hasPrevious()) {
 			final LispStruct previousParams = iterator.previous();
 
-			final List<LispStruct> innerLet = new ArrayList<>();
-			innerLet.add(SpecialOperator.LET);
-			innerLet.add(previousParams);
-			innerLet.addAll(body);
-
-			body = innerLet;
+			// NOTE: Make Dotted list here so the 'contents' of the body get added to the let
+			body = ListStruct.buildDottedList(SpecialOperator.LET, previousParams, body);
 		}
 
-		return letExpander.expand(ListStruct.buildProperList(body), environment);
+		return letExpander.expand(body, environment);
 	}
 }

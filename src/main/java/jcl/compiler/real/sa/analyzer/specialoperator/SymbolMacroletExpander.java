@@ -20,6 +20,7 @@ import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
+import jcl.printer.Printer;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 import jcl.types.T;
@@ -37,6 +38,9 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 	@Autowired
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
 
+	@Autowired
+	private Printer printer;
+
 	/**
 	 * Initializes the block macro function and adds it to the special operator 'block'.
 	 */
@@ -48,40 +52,41 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 	@Override
 	public SymbolMacroletStruct expand(final ListStruct form, final Environment environment) {
 
-		final int inputSize = form.size();
-		if (inputSize < 2) {
-			throw new ProgramErrorException("SYMBOL-MACROLET: Incorrect number of arguments: " + inputSize + ". Expected at least 2 arguments.");
+		final int formSize = form.size();
+		if (formSize < 2) {
+			throw new ProgramErrorException("SYMBOL-MACROLET: Incorrect number of arguments: " + formSize + ". Expected at least 2 arguments.");
 		}
 
-		final ListStruct inputRest = form.getRest();
+		final ListStruct formRest = form.getRest();
 
-		final LispStruct second = inputRest.getFirst();
+		final LispStruct second = formRest.getFirst();
 		if (!(second instanceof ListStruct)) {
-			throw new ProgramErrorException("SYMBOL-MACROLET: Parameter list must be of type ListStruct. Got: " + second);
+			final String printedObject = printer.print(second);
+			throw new ProgramErrorException("SYMBOL-MACROLET: Parameter list must be of type ListStruct. Got: " + printedObject);
 		}
 
 		final SymbolMacroletEnvironment symbolMacroletEnvironment = new SymbolMacroletEnvironment(environment);
 
 		final ListStruct parameters = (ListStruct) second;
-		final List<LispStruct> bodyForms = inputRest.getRest().getAsJavaList();
+		final List<LispStruct> parametersAsJavaList = parameters.getAsJavaList();
 
-		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(bodyForms, symbolMacroletEnvironment);
+		final ListStruct formRestRest = formRest.getRest();
+		final List<LispStruct> forms = formRestRest.getAsJavaList();
+
+		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(forms, symbolMacroletEnvironment);
 		final DeclareStruct declareElement = bodyProcessingResult.getDeclareElement();
 		validateDeclares(declareElement);
-
-		final List<? extends LispStruct> parametersAsJavaList = parameters.getAsJavaList();
 
 		final List<SymbolMacroletStruct.SymbolMacroletElementVar> symbolMacroletVars
 				= parametersAsJavaList.stream()
 				                      .map(e -> getSymbolMacroletElementVar(e, declareElement, symbolMacroletEnvironment))
 				                      .collect(Collectors.toList());
 
-		final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
-
+		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 		final List<LispStruct> analyzedBodyForms
-				= realBodyForms.stream()
-				               .map(e -> formAnalyzer.analyze(e, symbolMacroletEnvironment))
-				               .collect(Collectors.toList());
+				= bodyForms.stream()
+				           .map(e -> formAnalyzer.analyze(e, symbolMacroletEnvironment))
+				           .collect(Collectors.toList());
 
 		return new SymbolMacroletStruct(symbolMacroletVars, analyzedBodyForms, symbolMacroletEnvironment);
 	}
@@ -90,17 +95,18 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 		if (declareElement != null) {
 			final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
 			if (!specialDeclarationElements.isEmpty()) {
+				// TODO: figure out how to print these well
 				throw new ProgramErrorException("SYMBOL-MACROLET: Special declarations not allowed. Got: " + specialDeclarationElements);
 			}
 		}
 	}
 
-	private SymbolMacroletStruct.SymbolMacroletElementVar getSymbolMacroletElementVar(final LispStruct parameter,
-	                                                                                  final DeclareStruct declareElement,
+	private SymbolMacroletStruct.SymbolMacroletElementVar getSymbolMacroletElementVar(final LispStruct parameter, final DeclareStruct declareElement,
 	                                                                                  final SymbolMacroletEnvironment symbolMacroletEnvironment) {
 
 		if (!(parameter instanceof ListStruct)) {
-			throw new ProgramErrorException("SYMBOL-MACROLET: Parameter must be of type ListStruct. Got: " + parameter);
+			final String printedParameter = printer.print(parameter);
+			throw new ProgramErrorException("SYMBOL-MACROLET: Parameter must be a list. Got: " + printedParameter);
 		}
 
 		final ListStruct listParameter = (ListStruct) parameter;
@@ -108,43 +114,44 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 		final LispStruct expansion = getSymbolMacroletParameterExpansion(listParameter, symbolMacroletEnvironment);
 
 		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(symbolMacroletEnvironment);
-		final int newBindingsPosition = currentLambda.getNextParameterNumber();
-		symbolMacroletEnvironment.setBindingsPosition(newBindingsPosition);
+		final int nextBindingsPosition = currentLambda.getNextParameterNumber();
+		symbolMacroletEnvironment.setBindingsPosition(nextBindingsPosition);
 
-		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
+		final ParameterAllocation allocation = new ParameterAllocation(nextBindingsPosition);
 		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(var, allocation, T.INSTANCE, expansion);
 		symbolMacroletEnvironment.addLexicalBinding(binding);
 
 		return new SymbolMacroletStruct.SymbolMacroletElementVar(var, expansion);
 	}
 
-	private static SymbolStruct<?> getSymbolMacroletParameterVar(final ListStruct listParameter) {
+	private SymbolStruct<?> getSymbolMacroletParameterVar(final ListStruct listParameter) {
 
 		final int listParameterSize = listParameter.size();
 		if (listParameterSize != 2) {
-			throw new ProgramErrorException("SYMBOL-MACROLET: ListStruct parameter must have only 2 elements. Got: " + listParameter);
+			throw new ProgramErrorException("SYMBOL-MACROLET: List parameter must have only 2 elements. Got: " + listParameter);
 		}
 
 		final LispStruct listParameterFirst = listParameter.getFirst();
 		if (!(listParameterFirst instanceof SymbolStruct)) {
-			throw new ProgramErrorException("SYMBOL-MACROLET: ListStruct parameter first element value must be of type SymbolStruct. Got: " + listParameterFirst);
+			final String printedObject = printer.print(listParameterFirst);
+			throw new ProgramErrorException("SYMBOL-MACROLET: First element of list parameter must be a symbol. Got: " + printedObject);
 		}
 
 		final SymbolStruct<?> parameterVar = (SymbolStruct<?>) listParameterFirst;
 
-		final Environment globalEnvironment = Environment.NULL;
-		final boolean hasGlobalBinding = globalEnvironment.hasLexicalBinding(parameterVar);
+		final boolean hasGlobalBinding = Environment.NULL.hasLexicalBinding(parameterVar);
 		if (hasGlobalBinding) {
-			throw new ProgramErrorException("SYMBOL-MACROLET: ListStruct parameter first element symbol must not exist in the global environment.");
+			final String printedObject = printer.print(parameterVar);
+			throw new ProgramErrorException("SYMBOL-MACROLET: First element symbol of list parameter must not exist in the global environment. Got: " + printedObject);
 		}
 
 		return parameterVar;
 	}
 
-	private LispStruct getSymbolMacroletParameterExpansion(final ListStruct listParameter,
-	                                                       final SymbolMacroletEnvironment symbolMacroletEnvironment) {
+	private LispStruct getSymbolMacroletParameterExpansion(final ListStruct listParameter, final SymbolMacroletEnvironment symbolMacroletEnvironment) {
 
-		final LispStruct parameterValue = listParameter.getRest().getFirst();
+		final ListStruct listParameterRest = listParameter.getRest();
+		final LispStruct parameterValue = listParameterRest.getFirst();
 
 		// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
 		final Environment parentEnvironment = symbolMacroletEnvironment.getParent();

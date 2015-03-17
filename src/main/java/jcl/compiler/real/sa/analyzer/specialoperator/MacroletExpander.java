@@ -79,8 +79,8 @@ public class MacroletExpander extends MacroFunctionExpander<MacroletStruct> {
 
 		try {
 			final ListStruct innerFunctions = (ListStruct) second;
-			final List<? extends LispStruct> innerFunctionsJavaList = innerFunctions.getAsJavaList();
-			functionNames = getFunctionNames(innerFunctionsJavaList);
+			final List<LispStruct> innerFunctionsAsJavaList = innerFunctions.getAsJavaList();
+			functionNames = getFunctionNames(innerFunctionsAsJavaList);
 
 			// Add function names BEFORE analyzing the functions. This is one of the differences between Flet and Labels/Macrolet.
 			StackUtils.pushAll(functionNameStack, functionNames);
@@ -92,9 +92,9 @@ public class MacroletExpander extends MacroFunctionExpander<MacroletStruct> {
 			final DeclareStruct declareElement = bodyProcessingResult.getDeclareElement();
 
 			final List<MacroletStruct.MacroletVar> macroletVars
-					= innerFunctionsJavaList.stream()
-					                        .map(e -> getMacroletVar(e, declareElement, macroletEnvironment))
-					                        .collect(Collectors.toList());
+					= innerFunctionsAsJavaList.stream()
+					                          .map(e -> getMacroletVar(e, declareElement, macroletEnvironment))
+					                          .collect(Collectors.toList());
 
 			final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
 			specialDeclarationElements.forEach(specialDeclarationElement -> Environments.addDynamicVariableBinding(specialDeclarationElement, macroletEnvironment));

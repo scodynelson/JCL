@@ -53,28 +53,29 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 	@Override
 	public LetStruct expand(final ListStruct form, final Environment environment) {
 
-		final int inputSize = form.size();
-		if (inputSize < 2) {
-			throw new ProgramErrorException("LET: Incorrect number of arguments: " + inputSize + ". Expected at least 2 arguments.");
+		final int formSize = form.size();
+		if (formSize < 2) {
+			throw new ProgramErrorException("LET: Incorrect number of arguments: " + formSize + ". Expected at least 2 arguments.");
 		}
 
-		final ListStruct inputRest = form.getRest();
+		final ListStruct formRest = form.getRest();
 
-		final LispStruct second = inputRest.getFirst();
+		final LispStruct second = formRest.getFirst();
 		if (!(second instanceof ListStruct)) {
 			final String printedObject = printer.print(second);
-			throw new ProgramErrorException("LET: Parameter list must be of type ListStruct. Got: " + printedObject);
+			throw new ProgramErrorException("LET: Parameter list must be a list. Got: " + printedObject);
 		}
 
 		final LetEnvironment letEnvironment = new LetEnvironment(environment);
 
 		final ListStruct parameters = (ListStruct) second;
-		final List<LispStruct> bodyForms = inputRest.getRest().getAsJavaList();
+		final List<LispStruct> parametersAsJavaList = parameters.getAsJavaList();
 
-		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(bodyForms, letEnvironment);
+		final ListStruct formRestRest = formRest.getRest();
+		final List<LispStruct> forms = formRestRest.getAsJavaList();
+
+		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(forms, letEnvironment);
 		final DeclareStruct declareElement = bodyProcessingResult.getDeclareElement();
-
-		final List<? extends LispStruct> parametersAsJavaList = parameters.getAsJavaList();
 
 		final List<LetStruct.LetVar> letVars
 				= parametersAsJavaList.stream()
@@ -84,22 +85,21 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 		final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
 		specialDeclarationElements.forEach(e -> Environments.addDynamicVariableBinding(e, letEnvironment));
 
-		final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
-
+		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 		final List<LispStruct> analyzedBodyForms
-				= realBodyForms.stream()
-				               .map(e -> formAnalyzer.analyze(e, letEnvironment))
-				               .collect(Collectors.toList());
+				= bodyForms.stream()
+				           .map(e -> formAnalyzer.analyze(e, letEnvironment))
+				           .collect(Collectors.toList());
 
 		return new LetStruct(letVars, analyzedBodyForms, letEnvironment);
 	}
 
-	private LetStruct.LetVar getLetVar(final LispStruct parameter,
-	                                   final DeclareStruct declareElement,
+	private LetStruct.LetVar getLetVar(final LispStruct parameter, final DeclareStruct declareElement,
 	                                   final LetEnvironment letEnvironment) {
 
 		if (!(parameter instanceof SymbolStruct) && !(parameter instanceof ListStruct)) {
-			throw new ProgramErrorException("LET: Parameter must be of type SymbolStruct or ListStruct. Got: " + parameter);
+			final String printedParameter = printer.print(parameter);
+			throw new ProgramErrorException("LET: Parameter must be a symbol or a list. Got: " + printedParameter);
 		}
 
 		final SymbolStruct<?> var;
@@ -131,23 +131,25 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 		return new LetStruct.LetVar(var, initForm);
 	}
 
-	private static SymbolStruct<?> getLetListParameterVar(final ListStruct listParameter) {
+	private SymbolStruct<?> getLetListParameterVar(final ListStruct listParameter) {
 		final int listParameterSize = listParameter.size();
 		if ((listParameterSize < 1) || (listParameterSize > 2)) {
-			throw new ProgramErrorException("LET: ListStruct parameter must have only 1 or 2 elements. Got: " + listParameter);
+			final String printedListParameter = printer.print(listParameter);
+			throw new ProgramErrorException("LET: List parameter must have only 1 or 2 elements. Got: " + printedListParameter);
 		}
 
 		final LispStruct listParameterFirst = listParameter.getFirst();
 		if (!(listParameterFirst instanceof SymbolStruct)) {
-			throw new ProgramErrorException("LET: ListStruct parameter first element value must be of type SymbolStruct. Got: " + listParameterFirst);
+			final String printedObject = printer.print(listParameterFirst);
+			throw new ProgramErrorException("LET: First element of list parameter must be a symbol. Got: " + printedObject);
 		}
 		return (SymbolStruct<?>) listParameterFirst;
 	}
 
-	private LispStruct getLetListParameterInitForm(final ListStruct listParameter,
-	                                               final LetEnvironment letEnvironment) {
+	private LispStruct getLetListParameterInitForm(final ListStruct listParameter, final LetEnvironment letEnvironment) {
 
-		final LispStruct parameterValue = listParameter.getRest().getFirst();
+		final ListStruct listParameterRest = listParameter.getRest();
+		final LispStruct parameterValue = listParameterRest.getFirst();
 
 		// Evaluate in the outer environment. This is because we want to ensure we don't have references to symbols that may not exist.
 		final Environment parentEnvironment = letEnvironment.getParent();

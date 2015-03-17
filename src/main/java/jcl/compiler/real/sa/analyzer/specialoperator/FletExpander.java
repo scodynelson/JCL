@@ -79,8 +79,8 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 
 		try {
 			final ListStruct innerFunctions = (ListStruct) second;
-			final List<? extends LispStruct> innerFunctionsJavaList = innerFunctions.getAsJavaList();
-			functionNames = getFunctionNames(innerFunctionsJavaList);
+			final List<LispStruct> innerFunctionsAsJavaList = innerFunctions.getAsJavaList();
+			functionNames = getFunctionNames(innerFunctionsAsJavaList);
 
 			final ListStruct formRestRest = formRest.getRest();
 			final List<LispStruct> forms = formRestRest.getAsJavaList();
@@ -89,9 +89,9 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 			final DeclareStruct declareElement = bodyProcessingResult.getDeclareElement();
 
 			final List<FletStruct.FletVar> fletVars
-					= innerFunctionsJavaList.stream()
-					                        .map(e -> getFletVar(e, declareElement, fletEnvironment))
-					                        .collect(Collectors.toList());
+					= innerFunctionsAsJavaList.stream()
+					                          .map(e -> getFletVar(e, declareElement, fletEnvironment))
+					                          .collect(Collectors.toList());
 
 			final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
 			specialDeclarationElements.forEach(specialDeclarationElement -> Environments.addDynamicVariableBinding(specialDeclarationElement, fletEnvironment));

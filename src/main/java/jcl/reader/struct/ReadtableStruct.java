@@ -202,6 +202,7 @@ public class ReadtableStruct extends BuiltInClassStruct {
 		return syntaxTable.getSyntaxType(codePoint);
 	}
 
+	//CHECKSTYLE.OFF: StrictDuplicateCodeCheck
 	@Override
 	public int hashCode() {
 		return HashCodeBuilder.reflectionHashCode(this);
@@ -216,6 +217,7 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
+	//CHECKSTYLE.ON: StrictDuplicateCodeCheck
 
 	/**
 	 * This holds mappings for code points to {@link ReaderMacroFunction}s and delegates to the proper one when used.
@@ -281,6 +283,7 @@ public class ReadtableStruct extends BuiltInClassStruct {
 			readerMacroFunctionMap.put(codePoint, readerMacroFunction);
 		}
 
+		//CHECKSTYLE.OFF: StrictDuplicateCodeCheck
 		@Override
 		public int hashCode() {
 			return HashCodeBuilder.reflectionHashCode(this);
@@ -295,5 +298,6 @@ public class ReadtableStruct extends BuiltInClassStruct {
 		public String toString() {
 			return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 		}
+		//CHECKSTYLE.ON: StrictDuplicateCodeCheck
 	}
 }

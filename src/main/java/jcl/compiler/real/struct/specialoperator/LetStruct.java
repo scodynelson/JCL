@@ -9,13 +9,14 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.LetEnvironment;
+import jcl.compiler.real.struct.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class LetStruct implements LispStruct {
+public class LetStruct extends SpecialOperatorStruct {
 
 	private static final long serialVersionUID = -3186671381163635893L;
 
@@ -41,24 +42,6 @@ public class LetStruct implements LispStruct {
 
 	public LetEnvironment getLetEnvironment() {
 		return letEnvironment;
-	}
-
-	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
-	}
-
-	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
-	public boolean equals(final Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
-	}
-
-	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 
 	public static class LetVar implements Serializable {

@@ -7,13 +7,10 @@ package jcl.compiler.real.struct.specialoperator;
 import java.util.List;
 
 import jcl.LispStruct;
+import jcl.compiler.real.struct.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class BlockStruct implements LispStruct {
+public class BlockStruct extends SpecialOperatorStruct {
 
 	private static final long serialVersionUID = -115779602179582479L;
 
@@ -32,23 +29,5 @@ public class BlockStruct implements LispStruct {
 
 	public List<LispStruct> getForms() {
 		return forms;
-	}
-
-	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
-	}
-
-	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
-	public boolean equals(final Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
-	}
-
-	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

@@ -234,21 +234,6 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 		}
 	}
 
-	@Override
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
-	}
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
-	}
-
 	private static BackquoteReturn comma(final LispStruct code) {
 
 		if (code instanceof NullStruct) {

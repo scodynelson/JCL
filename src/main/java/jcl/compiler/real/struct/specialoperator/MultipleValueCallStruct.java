@@ -7,12 +7,9 @@ package jcl.compiler.real.struct.specialoperator;
 import java.util.List;
 
 import jcl.LispStruct;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import jcl.compiler.real.struct.SpecialOperatorStruct;
 
-public class MultipleValueCallStruct implements LispStruct {
+public class MultipleValueCallStruct extends SpecialOperatorStruct {
 
 	private static final long serialVersionUID = 2789725049143539321L;
 
@@ -32,23 +29,5 @@ public class MultipleValueCallStruct implements LispStruct {
 
 	public List<LispStruct> getForms() {
 		return forms;
-	}
-
-	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
-	}
-
-	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
-	public boolean equals(final Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
-	}
-
-	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

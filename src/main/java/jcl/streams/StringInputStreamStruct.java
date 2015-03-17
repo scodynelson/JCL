@@ -9,10 +9,6 @@ import jcl.conditions.exceptions.EndOfFileException;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.types.BaseChar;
 import jcl.types.StringStream;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link StringInputStreamStruct} is the object representation of a Lisp 'string-stream' input type.
@@ -193,20 +189,5 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 			current = filePosition.intValue();
 		}
 		return (long) current;
-	}
-
-	@Override
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
-	}
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

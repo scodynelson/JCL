@@ -1,5 +1,8 @@
 package jcl.arrays;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jcl.LispStruct;
 import jcl.LispType;
 import jcl.classes.BuiltInClassStruct;
@@ -8,11 +11,6 @@ import jcl.conditions.exceptions.TypeErrorException;
 import jcl.types.Array;
 import jcl.types.SimpleArray;
 import jcl.types.T;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * The {@link ArrayStruct} is the object representation of a Lisp 'array' type.
@@ -274,10 +272,5 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		for (final Integer dimension : dimensions) {
 			totalSize += dimension;
 		}
-	}
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

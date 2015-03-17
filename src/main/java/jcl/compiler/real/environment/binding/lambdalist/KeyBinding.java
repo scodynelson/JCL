@@ -10,10 +10,6 @@ import jcl.compiler.real.environment.binding.ParameterBinding;
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.types.T;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class KeyBinding extends ParameterBinding {
 
@@ -36,20 +32,5 @@ public class KeyBinding extends ParameterBinding {
 
 	public SuppliedPBinding getSuppliedPBinding() {
 		return suppliedPBinding;
-	}
-
-	@Override
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
-	}
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

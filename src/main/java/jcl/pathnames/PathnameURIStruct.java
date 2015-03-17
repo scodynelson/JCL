@@ -6,10 +6,6 @@ package jcl.pathnames;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -222,20 +218,5 @@ class PathnameURIStruct extends PathnameStruct {
 	private static URI getURI(final String pathname) throws URISyntaxException {
 		final String realPathname = pathname.toLowerCase(Locale.getDefault());
 		return new URI(realPathname);
-	}
-
-	@Override
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
-	}
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

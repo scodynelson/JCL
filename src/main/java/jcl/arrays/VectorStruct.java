@@ -1,5 +1,8 @@
 package jcl.arrays;
 
+import java.util.Collections;
+import java.util.List;
+
 import jcl.LispStruct;
 import jcl.LispType;
 import jcl.conditions.exceptions.ErrorException;
@@ -8,11 +11,6 @@ import jcl.sequences.SequenceStruct;
 import jcl.types.SimpleVector;
 import jcl.types.T;
 import jcl.types.Vector;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * The {@link VectorStruct} is the object representation of a Lisp 'vector' type.
@@ -186,10 +184,5 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 			throw new TypeErrorException("Vector is not an adjustable array.");
 		}
 		return push(element);
-	}
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

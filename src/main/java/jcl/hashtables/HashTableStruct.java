@@ -16,7 +16,6 @@ import jcl.classes.BuiltInClassStruct;
 import jcl.functions.EquatorFunctionStruct;
 import jcl.functions.FunctionStruct;
 import jcl.types.HashTable;
-import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -149,21 +148,6 @@ public class HashTableStruct extends BuiltInClassStruct {
 			final LispStruct keyWrapper = KeyWrapper.getInstance(entry.getKey(), test);
 			function.apply(keyWrapper, entry.getValue());
 		}
-	}
-
-	@Override
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
-	}
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 
 	/**

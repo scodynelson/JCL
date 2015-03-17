@@ -1,17 +1,15 @@
 package jcl.arrays;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
+
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.numbers.IntegerStruct;
 import jcl.types.Bit;
 import jcl.types.BitVector;
 import jcl.types.SimpleBitVector;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * The {@link BitVectorStruct} is the object representation of a Lisp 'bit-vector' type.
@@ -87,10 +85,5 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 			}
 		}
 		return bitList;
-	}
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

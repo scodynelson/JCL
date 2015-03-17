@@ -112,7 +112,7 @@
     <inspection_tool class="CheckedExceptionClass" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ClashingGetters" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ClassEscapesItsScope" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="ClassHasNoToStringMethod" enabled="true" level="WARNING" enabled_by_default="true">
+    <inspection_tool class="ClassHasNoToStringMethod" enabled="false" level="WARNING" enabled_by_default="false">
       <option name="excludeClassNames" value="" />
       <option name="excludeException" value="false" />
       <option name="excludeDeprecated" value="true" />
@@ -758,7 +758,13 @@
     <inspection_tool class="SubstringZero" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SubtractionInCompareTo" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SuperClassHasFrequentlyUsedInheritors" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="SuppressionAnnotation" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="SuppressionAnnotation" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="myAllowedSuppressions">
+        <list>
+          <option value="checkstyle:strictduplicatecodecheck" />
+        </list>
+      </option>
+    </inspection_tool>
     <inspection_tool class="SuspiciousArrayCast" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SuspiciousIndentAfterControlStatement" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SwitchStatementWithConfusingDeclaration" enabled="true" level="WARNING" enabled_by_default="true" />

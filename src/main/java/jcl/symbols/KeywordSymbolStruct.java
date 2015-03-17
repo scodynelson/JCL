@@ -2,8 +2,6 @@ package jcl.symbols;
 
 import jcl.packages.GlobalPackageStruct;
 import jcl.types.Keyword;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link KeywordSymbolStruct} is the object representation of a Lisp 'keyword' type.
@@ -29,10 +27,5 @@ public class KeywordSymbolStruct extends SymbolStruct<KeywordSymbolStruct> {
 	 */
 	private void init() {
 		setValue(this);
-	}
-
-	@Override
-	public String toString() {
-		return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).setExcludeFieldNames("value").toString();
 	}
 }

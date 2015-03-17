@@ -7,8 +7,6 @@ import jcl.LispType;
 import jcl.classes.BuiltInClassStruct;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.types.Function;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link FunctionStruct} is the object representation of a Lisp 'function' type.
@@ -134,10 +132,5 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 
 	public void setLambdaListBindings(final OrdinaryLambdaListBindings lambdaListBindings) {
 		this.lambdaListBindings = lambdaListBindings;
-	}
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

@@ -17,10 +17,6 @@ import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -65,20 +61,5 @@ public class LocallyExpander extends MacroFunctionExpander<LocallyStruct> {
 				           .collect(Collectors.toList());
 
 		return new LocallyStruct(analyzedBodyForms, locallyEnvironment);
-	}
-
-	@Override
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
-	}
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

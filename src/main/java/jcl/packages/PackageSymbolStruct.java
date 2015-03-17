@@ -8,10 +8,6 @@ import java.io.Serializable;
 
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SymbolStruct;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * Internal class for returning a {@link SymbolStruct} and it's current package symbol type as a {@link
@@ -63,20 +59,5 @@ public class PackageSymbolStruct implements Serializable {
 	 */
 	public KeywordSymbolStruct getPackageSymbolType() {
 		return packageSymbolType;
-	}
-
-	@Override
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
-	}
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

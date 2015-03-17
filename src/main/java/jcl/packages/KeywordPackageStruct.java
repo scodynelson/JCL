@@ -6,10 +6,6 @@ package jcl.packages;
 
 import jcl.symbols.KeywordSymbolStruct;
 import jcl.system.CommonLispSymbols;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link KeywordPackageStruct} is the object representation of a Lisp 'package' type specific for 'keyword'
@@ -45,20 +41,5 @@ final class KeywordPackageStruct extends PackageStruct {
 		externalSymbols.put(symbolName, symbolStruct);
 		symbolStruct.setSymbolPackage(this);
 		return new PackageSymbolStruct(symbolStruct, CommonLispSymbols.INTERNAL);
-	}
-
-	@Override
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
-	}
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

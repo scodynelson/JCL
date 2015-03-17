@@ -12,17 +12,15 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.Stack;
 
-import jcl.LispStruct;
+import jcl.classes.StandardObjectStruct;
 import jcl.compiler.real.environment.binding.EnvironmentBinding;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.struct.specialoperator.go.GoStruct;
 import jcl.symbols.SymbolStruct;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class Environment implements LispStruct {
+public class Environment extends StandardObjectStruct {
 
 	public static final Environment NULL = new LambdaEnvironment(null);
 
@@ -155,16 +153,6 @@ public class Environment implements LispStruct {
 
 	public Closure getClosure() {
 		return closure;
-	}
-
-	@Override
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

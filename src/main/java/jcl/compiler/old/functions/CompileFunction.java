@@ -13,7 +13,6 @@ import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.MethodVisitor;

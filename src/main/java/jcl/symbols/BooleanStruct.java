@@ -2,8 +2,6 @@ package jcl.symbols;
 
 import jcl.packages.GlobalPackageStruct;
 import jcl.types.Boolean;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 public abstract class BooleanStruct extends SymbolStruct<Boolean> {
 
@@ -18,10 +16,5 @@ public abstract class BooleanStruct extends SymbolStruct<Boolean> {
 
 	public boolean booleanValue() {
 		return booleanValue;
-	}
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

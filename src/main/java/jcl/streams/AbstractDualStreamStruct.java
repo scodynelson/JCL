@@ -8,10 +8,6 @@ import jcl.LispType;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.types.Stream;
 import jcl.types.typespecifiers.AndTypeSpecifier;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link AbstractDualStreamStruct} is an abstraction for dual stream types.
@@ -137,20 +133,5 @@ abstract class AbstractDualStreamStruct extends StreamStruct implements InputStr
 	@Override
 	public Long fileLength() {
 		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_FILE_STREAM);
-	}
-
-	@Override
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
-	}
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

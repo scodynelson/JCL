@@ -12,10 +12,6 @@ import jcl.characters.CharacterStruct;
 import jcl.functions.FunctionStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.streams.InputStream;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
@@ -81,20 +77,5 @@ public abstract class ReaderMacroFunction extends FunctionStruct {
 	 */
 	public boolean isDispatch() {
 		return false;
-	}
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
-	}
-
-	@Override
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 }

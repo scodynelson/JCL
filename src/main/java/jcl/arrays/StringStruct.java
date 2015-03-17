@@ -1,5 +1,8 @@
 package jcl.arrays;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jcl.characters.CharacterStruct;
 import jcl.types.BaseChar;
 import jcl.types.BaseString;
@@ -7,11 +10,6 @@ import jcl.types.Character;
 import jcl.types.SimpleBaseString;
 import jcl.types.SimpleString;
 import jcl.types.String;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * The {@link StringStruct} is the object representation of a Lisp 'string' type.
@@ -100,10 +98,5 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 		}
 
 		return stringBuilder.toString();
-	}
-
-	@Override
-	public java.lang.String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

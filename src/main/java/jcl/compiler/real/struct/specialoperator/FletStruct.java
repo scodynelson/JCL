@@ -10,10 +10,6 @@ import jcl.LispStruct;
 import jcl.compiler.real.environment.FletEnvironment;
 import jcl.compiler.real.struct.specialoperator.FletStruct.FletVar;
 import jcl.symbols.SymbolStruct;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class FletStruct extends InnerFunctionStruct<FletEnvironment, FletVar> {
 
@@ -23,42 +19,12 @@ public class FletStruct extends InnerFunctionStruct<FletEnvironment, FletVar> {
 		super(vars, forms, lexicalEnvironment);
 	}
 
-	@Override
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
-	}
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
-	}
-
 	public static class FletVar extends InnerFunctionStruct.InnerFunctionVar {
 
 		private static final long serialVersionUID = -794246121764492302L;
 
 		public FletVar(final SymbolStruct<?> var, final CompilerFunctionStruct initForm) {
 			super(var, initForm);
-		}
-
-		@Override
-		public int hashCode() {
-			return HashCodeBuilder.reflectionHashCode(this);
-		}
-
-		@Override
-		public boolean equals(final Object obj) {
-			return EqualsBuilder.reflectionEquals(this, obj);
-		}
-
-		@Override
-		public String toString() {
-			return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 		}
 	}
 }

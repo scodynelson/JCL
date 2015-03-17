@@ -9,6 +9,8 @@ import jcl.printer.LispPrinter;
 import jcl.streams.EchoStreamStruct;
 import jcl.streams.InputStream;
 import jcl.streams.OutputStream;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,19 @@ public class EchoStreamStructPrinter implements LispPrinter<EchoStreamStruct> {
 	}
 
 	@Override
+	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	@Override
+	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
+	}
+
+	@Override
+	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}

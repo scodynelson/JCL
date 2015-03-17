@@ -528,18 +528,21 @@ final class LambdaListParser {
 		}
 
 		@Override
+		@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 		public int hashCode() {
 			return HashCodeBuilder.reflectionHashCode(this);
 		}
 
 		@Override
+		@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 		public boolean equals(final Object obj) {
 			return EqualsBuilder.reflectionEquals(this, obj);
 		}
 
 		@Override
+		@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 		public String toString() {
-			return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).setExcludeFieldNames("parent").toString();
+			return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 		}
 	}
 
@@ -555,21 +558,6 @@ final class LambdaListParser {
 		public List<RequiredBinding> getRequiredBindings() {
 			return requiredBindings;
 		}
-
-		@Override
-		public int hashCode() {
-			return HashCodeBuilder.reflectionHashCode(this);
-		}
-
-		@Override
-		public boolean equals(final Object obj) {
-			return EqualsBuilder.reflectionEquals(this, obj);
-		}
-
-		@Override
-		public String toString() {
-			return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).setExcludeFieldNames("parent").toString();
-		}
 	}
 
 	private static final class OptionalParseResult extends ParseResult {
@@ -584,21 +572,6 @@ final class LambdaListParser {
 		public List<OptionalBinding> getOptionalBindings() {
 			return optionalBindings;
 		}
-
-		@Override
-		public int hashCode() {
-			return HashCodeBuilder.reflectionHashCode(this);
-		}
-
-		@Override
-		public boolean equals(final Object obj) {
-			return EqualsBuilder.reflectionEquals(this, obj);
-		}
-
-		@Override
-		public String toString() {
-			return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).setExcludeFieldNames("parent").toString();
-		}
 	}
 
 	private static final class RestParseResult extends ParseResult {
@@ -612,21 +585,6 @@ final class LambdaListParser {
 
 		public RestBinding getRestBinding() {
 			return restBinding;
-		}
-
-		@Override
-		public int hashCode() {
-			return HashCodeBuilder.reflectionHashCode(this);
-		}
-
-		@Override
-		public boolean equals(final Object obj) {
-			return EqualsBuilder.reflectionEquals(this, obj);
-		}
-
-		@Override
-		public String toString() {
-			return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).setExcludeFieldNames("parent").toString();
 		}
 	}
 
@@ -649,21 +607,6 @@ final class LambdaListParser {
 		public boolean isAllowOtherKeys() {
 			return allowOtherKeys;
 		}
-
-		@Override
-		public int hashCode() {
-			return HashCodeBuilder.reflectionHashCode(this);
-		}
-
-		@Override
-		public boolean equals(final Object obj) {
-			return EqualsBuilder.reflectionEquals(this, obj);
-		}
-
-		@Override
-		public String toString() {
-			return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).setExcludeFieldNames("parent").toString();
-		}
 	}
 
 	private static final class AuxParseResult extends ParseResult {
@@ -677,21 +620,6 @@ final class LambdaListParser {
 
 		public List<AuxBinding> getAuxBindings() {
 			return auxBindings;
-		}
-
-		@Override
-		public int hashCode() {
-			return HashCodeBuilder.reflectionHashCode(this);
-		}
-
-		@Override
-		public boolean equals(final Object obj) {
-			return EqualsBuilder.reflectionEquals(this, obj);
-		}
-
-		@Override
-		public String toString() {
-			return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).setExcludeFieldNames("parent").toString();
 		}
 	}
 

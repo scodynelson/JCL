@@ -3,8 +3,6 @@ package jcl.lists;
 import jcl.LispStruct;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.types.Null;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.Collections;
 import java.util.List;
@@ -73,10 +71,5 @@ public final class NullStruct extends ListStruct {
 	@Override
 	public boolean isCircular() {
 		return false;
-	}
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

@@ -5,10 +5,6 @@
 package jcl.numbers;
 
 import jcl.types.Ratio;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.math3.fraction.BigFraction;
 
 import java.math.BigInteger;
@@ -59,20 +55,5 @@ public class RatioStruct extends RationalStruct {
 	 */
 	public BigFraction getBigFraction() {
 		return bigFraction;
-	}
-
-	@Override
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
-	}
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

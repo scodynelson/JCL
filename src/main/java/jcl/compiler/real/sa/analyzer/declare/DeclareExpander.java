@@ -15,8 +15,6 @@ import jcl.lists.ListStruct;
 import jcl.symbols.Declaration;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -102,10 +100,5 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 		}
 
 		return specialDeclarationElements;
-	}
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

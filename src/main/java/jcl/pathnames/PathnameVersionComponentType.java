@@ -63,6 +63,7 @@ public enum PathnameVersionComponentType {
 	}
 
 	@Override
+	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}

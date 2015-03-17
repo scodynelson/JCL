@@ -9,10 +9,6 @@ import jcl.LispType;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.symbols.SymbolStruct;
 import jcl.types.SynonymStream;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link SynonymStreamStruct} is the object representation of a Lisp 'synonym-stream' type.
@@ -202,20 +198,5 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	public Long filePosition(final Long filePosition) {
 		final StreamStruct stream = symbol.getValue();
 		return stream.filePosition(filePosition);
-	}
-
-	@Override
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
-	}
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

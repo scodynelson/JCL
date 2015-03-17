@@ -9,9 +9,7 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.LetEnvironment;
-import jcl.compiler.real.environment.allocation.EnvironmentAllocation;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
-import jcl.compiler.real.environment.binding.EnvironmentEnvironmentBinding;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
@@ -23,9 +21,12 @@ import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
+import jcl.printer.Printer;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 import jcl.types.T;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,9 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 
 	@Autowired
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
+
+	@Autowired
+	private Printer printer;
 
 	/**
 	 * Initializes the block macro function and adds it to the special operator 'block'.
@@ -62,7 +66,8 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 
 		final LispStruct second = inputRest.getFirst();
 		if (!(second instanceof ListStruct)) {
-			throw new ProgramErrorException("LET: Parameter list must be of type ListStruct. Got: " + second);
+			final String printedObject = printer.print(second);
+			throw new ProgramErrorException("LET: Parameter list must be of type ListStruct. Got: " + printedObject);
 		}
 
 		final LetEnvironment letEnvironment = new LetEnvironment(environment);
@@ -81,7 +86,7 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 				                      .collect(Collectors.toList());
 
 		final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
-		specialDeclarationElements.forEach(e -> addDynamicVariableBinding(e, letEnvironment));
+		specialDeclarationElements.forEach(e -> Environments.addDynamicVariableBinding(e, letEnvironment));
 
 		final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
 
@@ -117,7 +122,7 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
 		letEnvironment.setBindingsPosition(newBindingsPosition);
 
-		final boolean isSpecial = isSpecial(declareElement, var);
+		final boolean isSpecial = Environments.isSpecial(declareElement, var);
 
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(var, allocation, T.INSTANCE, initForm);
@@ -128,21 +133,6 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 		}
 
 		return new LetStruct.LetVar(var, initForm);
-	}
-
-	private static boolean isSpecial(final DeclareStruct declareElement, final SymbolStruct<?> var) {
-		boolean isSpecial = false;
-
-		final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
-		for (final SpecialDeclarationStruct specialDeclarationElement : specialDeclarationElements) {
-			final SymbolStruct<?> specialVar = specialDeclarationElement.getVar();
-			if (var.equals(specialVar)) {
-				isSpecial = true;
-				break;
-			}
-		}
-
-		return isSpecial;
 	}
 
 	private static SymbolStruct<?> getLetListParameterVar(final ListStruct listParameter) {
@@ -168,20 +158,14 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 		return formAnalyzer.analyze(parameterValue, parentEnvironment);
 	}
 
-	private static void addDynamicVariableBinding(final SpecialDeclarationStruct specialDeclarationElement,
-	                                              final LetEnvironment letEnvironment) {
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
 
-		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(letEnvironment);
-		final int newBindingsPosition = currentLambda.getNextParameterNumber();
-		letEnvironment.setBindingsPosition(newBindingsPosition);
-
-		final SymbolStruct<?> var = specialDeclarationElement.getVar();
-
-		final Environment bindingEnvironment = Environments.getDynamicBindingEnvironment(letEnvironment, var);
-		final EnvironmentAllocation allocation = new EnvironmentAllocation(bindingEnvironment);
-
-		final EnvironmentEnvironmentBinding binding = new EnvironmentEnvironmentBinding(var, allocation, T.INSTANCE, bindingEnvironment);
-		letEnvironment.addDynamicBinding(binding);
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

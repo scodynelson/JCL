@@ -9,8 +9,6 @@ import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LambdaEnvironment;
-import jcl.compiler.real.environment.allocation.EnvironmentAllocation;
-import jcl.compiler.real.environment.binding.EnvironmentEnvironmentBinding;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
@@ -25,10 +23,11 @@ import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
+import jcl.printer.Printer;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
-import jcl.system.EnhancedLinkedList;
-import jcl.types.T;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +44,9 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 	@Autowired
 	private BodyWithDeclaresAndDocStringAnalyzer bodyWithDeclaresAndDocStringAnalyzer;
 
+	@Autowired
+	private Printer printer;
+
 	/**
 	 * Initializes the block macro function and adds it to the special operator 'block'.
 	 */
@@ -56,43 +58,49 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 	@Override
 	public LambdaStruct expand(final ListStruct form, final Environment environment) {
 
-		final int inputSize = form.size();
-		if (inputSize < 2) {
-			throw new ProgramErrorException("LAMBDA: Incorrect number of arguments: " + inputSize + ". Expected at least 2 arguments.");
+		final int formSize = form.size();
+		if (formSize < 2) {
+			throw new ProgramErrorException("LAMBDA: Incorrect number of arguments: " + formSize + ". Expected at least 2 arguments.");
 		}
 
-		final ListStruct inputRest = form.getRest();
+		final ListStruct formRest = form.getRest();
 
-		final LispStruct second = inputRest.getFirst();
+		final LispStruct second = formRest.getFirst();
 		if (!(second instanceof ListStruct)) {
-			throw new ProgramErrorException("LAMBDA: Parameter list must be of type ListStruct. Got: " + second);
+			final String printedObject = printer.print(second);
+			throw new ProgramErrorException("LAMBDA: Parameter list must be a list. Got: " + printedObject);
 		}
 
 		final LambdaEnvironment lambdaEnvironment = new LambdaEnvironment(environment);
 
 		final ListStruct parameters = (ListStruct) second;
-		final List<LispStruct> bodyForms = inputRest.getRest().getAsJavaList();
 
-		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAndDocStringAnalyzer.analyze(bodyForms, lambdaEnvironment);
+		final ListStruct formRestRest = formRest.getRest();
+		final List<LispStruct> forms = formRestRest.getAsJavaList();
+
+		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAndDocStringAnalyzer.analyze(forms, lambdaEnvironment);
 		final DeclareStruct declareElement = bodyProcessingResult.getDeclareElement();
 
-		final OrdinaryLambdaListBindings parsedLambdaList = LambdaListParser.parseOrdinaryLambdaList(formAnalyzer, lambdaEnvironment, parameters, declareElement);
-		final EnhancedLinkedList<LispStruct> newStartingLambdaBody = getNewStartingLambdaBody(parsedLambdaList);
-
 		final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
-		specialDeclarationElements.forEach(e -> addDynamicVariableBinding(e, lambdaEnvironment));
+		specialDeclarationElements.forEach(specialDeclarationElement -> Environments.addDynamicVariableBinding(specialDeclarationElement, lambdaEnvironment));
 
-		final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
-		newStartingLambdaBody.addAll(realBodyForms);
+		final OrdinaryLambdaListBindings parsedLambdaList = LambdaListParser.parseOrdinaryLambdaList(formAnalyzer, lambdaEnvironment, parameters, declareElement);
 
-		final ListStruct newLambdaBodyListStruct = ListStruct.buildProperList(newStartingLambdaBody);
+		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
+		final ListStruct newStartingLambdaBody = getNewStartingLambdaBody(parsedLambdaList, bodyForms);
+		final List<LispStruct> newLambdaBodyForms = newStartingLambdaBody.getAsJavaList();
 
-		final LispStruct analyzedBodyForms = formAnalyzer.analyze(newLambdaBodyListStruct, lambdaEnvironment);
+		final List<LispStruct> analyzedBodyForms
+				= newLambdaBodyForms.stream()
+				                    .map(e -> formAnalyzer.analyze(e, lambdaEnvironment))
+				                    .collect(Collectors.toList());
 		return new LambdaStruct(parsedLambdaList, bodyProcessingResult.getDocString(), analyzedBodyForms, lambdaEnvironment);
 	}
 
-	private static EnhancedLinkedList<LispStruct> getNewStartingLambdaBody(final OrdinaryLambdaListBindings parsedLambdaList) {
-		final EnhancedLinkedList<LispStruct> newLambdaBody = new EnhancedLinkedList<>();
+	private static ListStruct getNewStartingLambdaBody(final OrdinaryLambdaListBindings parsedLambdaList,
+	                                                   final List<LispStruct> bodyForms) {
+
+		final List<LispStruct> newLambdaBody = new ArrayList<>();
 
 		final List<AuxBinding> auxBindings = parsedLambdaList.getAuxBindings();
 		if (auxBindings.isEmpty()) {
@@ -100,82 +108,73 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 		} else {
 			newLambdaBody.add(SpecialOperator.LET_STAR);
 
-			final List<LispStruct> auxLetStarVars = auxBindings
-					.stream()
-					.map(e -> ListStruct.buildProperList(e.getSymbolStruct(), e.getInitForm()))
-					.collect(Collectors.toList());
+			final List<LispStruct> auxLetStarVars
+					= auxBindings.stream()
+					             .map(e -> ListStruct.buildProperList(e.getSymbolStruct(), e.getInitForm()))
+					             .collect(Collectors.toList());
 
-			final ListStruct auxLetStarVarsLL = ListStruct.buildProperList(auxLetStarVars);
-			newLambdaBody.add(auxLetStarVarsLL);
+			final ListStruct auxLetStarParams = ListStruct.buildProperList(auxLetStarVars);
+			newLambdaBody.add(auxLetStarParams);
 		}
 
-		final List<LispStruct> initFormIfSetqs = getInitFormIfSetqs(parsedLambdaList);
+		final List<ListStruct> initFormIfSetqs = getInitFormIfSetqs(parsedLambdaList);
 		newLambdaBody.addAll(initFormIfSetqs);
 
-		return newLambdaBody;
+		newLambdaBody.addAll(bodyForms);
+
+		final ListStruct newLambdaBodyList = ListStruct.buildProperList(newLambdaBody);
+		// NOTE: We need to wrap this one more time so that we can use the analyzer to analyze the 'forms' correctly
+		//       even though there will only be either a 'progn' or 'let*' form.
+		return ListStruct.buildProperList(newLambdaBodyList);
 	}
 
-	private static List<LispStruct> getInitFormIfSetqs(final OrdinaryLambdaListBindings parsedLambdaList) {
+	private static List<ListStruct> getInitFormIfSetqs(final OrdinaryLambdaListBindings parsedLambdaList) {
 
-		final List<LispStruct> initFormIfSetqs = new ArrayList<>();
+		final List<ListStruct> initFormIfSetqs = new ArrayList<>();
 
 		final List<OptionalBinding> optionalBindings = parsedLambdaList.getOptionalBindings();
 		for (final OptionalBinding optionalBinding : optionalBindings) {
 			final SuppliedPBinding suppliedPBinding = optionalBinding.getSuppliedPBinding();
 
-			final List<LispStruct> initFormIfSetq = new ArrayList<>();
-			initFormIfSetq.add(SpecialOperator.IF);
-			initFormIfSetq.add(suppliedPBinding.getSymbolStruct());
+			final SymbolStruct<?> optionalVar = optionalBinding.getSymbolStruct();
+			final LispStruct optionalInitForm = optionalBinding.getInitForm();
+			final ListStruct initFormSetq
+					= ListStruct.buildProperList(SpecialOperator.SETQ, optionalVar, optionalInitForm);
 
-			final List<LispStruct> initFormSetq = new ArrayList<>();
-			initFormSetq.add(SpecialOperator.SETQ);
-			initFormSetq.add(optionalBinding.getSymbolStruct());
-			initFormSetq.add(optionalBinding.getInitForm());
+			final SymbolStruct<?> suppliedPVar = suppliedPBinding.getSymbolStruct();
+			final ListStruct initFormIfSetq
+					= ListStruct.buildProperList(SpecialOperator.IF, suppliedPVar, initFormSetq);
 
-			final ListStruct initFormSetqLL = ListStruct.buildProperList(initFormSetq);
-			initFormIfSetq.add(initFormSetqLL);
-
-			final ListStruct initFormIfSetqLL = ListStruct.buildProperList(initFormIfSetq);
-			initFormIfSetqs.add(initFormIfSetqLL);
+			initFormIfSetqs.add(initFormIfSetq);
 		}
 
 		final List<KeyBinding> keyBindings = parsedLambdaList.getKeyBindings();
 		for (final KeyBinding keyBinding : keyBindings) {
 			final SuppliedPBinding suppliedPBinding = keyBinding.getSuppliedPBinding();
 
-			final List<LispStruct> initFormIfSetq = new ArrayList<>();
-			initFormIfSetq.add(SpecialOperator.IF);
-			initFormIfSetq.add(suppliedPBinding.getSymbolStruct());
+			final SymbolStruct<?> keyVar = keyBinding.getSymbolStruct();
+			final LispStruct keyInitForm = keyBinding.getInitForm();
+			final ListStruct initFormSetq
+					= ListStruct.buildProperList(SpecialOperator.SETQ, keyVar, keyInitForm);
 
-			final List<LispStruct> initFormSetq = new ArrayList<>();
-			initFormSetq.add(SpecialOperator.SETQ);
-			initFormSetq.add(keyBinding.getSymbolStruct());
-			initFormSetq.add(keyBinding.getInitForm());
+			final SymbolStruct<?> suppliedPVar = suppliedPBinding.getSymbolStruct();
+			final ListStruct initFormIfSetq
+					= ListStruct.buildProperList(SpecialOperator.IF, suppliedPVar, initFormSetq);
 
-			final ListStruct initFormSetqLL = ListStruct.buildProperList(initFormSetq);
-			initFormIfSetq.add(initFormSetqLL);
-
-			final ListStruct initFormIfSetqLL = ListStruct.buildProperList(initFormIfSetq);
-			initFormIfSetqs.add(initFormIfSetqLL);
+			initFormIfSetqs.add(initFormIfSetq);
 		}
 
 		return initFormIfSetqs;
 	}
 
-	private static void addDynamicVariableBinding(final SpecialDeclarationStruct specialDeclarationElement,
-	                                              final LambdaEnvironment lambdaEnvironment) {
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
 
-		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(lambdaEnvironment);
-		final int newBindingsPosition = currentLambda.getNextParameterNumber();
-		lambdaEnvironment.setBindingsPosition(newBindingsPosition);
-
-		final SymbolStruct<?> var = specialDeclarationElement.getVar();
-
-		final Environment bindingEnvironment = Environments.getDynamicBindingEnvironment(lambdaEnvironment, var);
-		final EnvironmentAllocation allocation = new EnvironmentAllocation(bindingEnvironment);
-
-		final EnvironmentEnvironmentBinding binding = new EnvironmentEnvironmentBinding(var, allocation, T.INSTANCE, bindingEnvironment);
-		lambdaEnvironment.addDynamicBinding(binding);
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

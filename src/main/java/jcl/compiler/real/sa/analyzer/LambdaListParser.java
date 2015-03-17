@@ -20,7 +20,6 @@ import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
-import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
@@ -145,7 +144,7 @@ final class LambdaListParser {
 			environment.setBindingsPosition(newBindingsPosition);
 
 			final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
-			final boolean isSpecial = isSpecial(declareElement, currentParam);
+			final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
 
 			final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullStruct.INSTANCE);
 			if (isSpecial) {
@@ -178,7 +177,7 @@ final class LambdaListParser {
 				environment.setBindingsPosition(newBindingsPosition);
 
 				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
-				final boolean isSpecial = isSpecial(declareElement, currentParam);
+				final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
 
 				final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullStruct.INSTANCE);
 				if (isSpecial) {
@@ -215,7 +214,7 @@ final class LambdaListParser {
 				environment.setBindingsPosition(newBindingsPosition);
 
 				ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
-				boolean isSpecial = isSpecial(declareElement, varNameCurrent);
+				boolean isSpecial = Environments.isSpecial(declareElement, varNameCurrent);
 
 				EnvironmentParameterBinding binding = new EnvironmentParameterBinding(varNameCurrent, allocation, T.INSTANCE, parameterValueInitForm);
 				if (isSpecial) {
@@ -239,7 +238,7 @@ final class LambdaListParser {
 					environment.setBindingsPosition(newBindingsPosition);
 
 					allocation = new ParameterAllocation(newBindingsPosition);
-					isSpecial = isSpecial(declareElement, suppliedPCurrent);
+					isSpecial = Environments.isSpecial(declareElement, suppliedPCurrent);
 
 					binding = new EnvironmentParameterBinding(suppliedPCurrent, allocation, T.INSTANCE, NullStruct.INSTANCE);
 					if (isSpecial) {
@@ -282,7 +281,7 @@ final class LambdaListParser {
 		environment.setBindingsPosition(newBindingsPosition);
 
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
-		final boolean isSpecial = isSpecial(declareElement, currentParam);
+		final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
 
 		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullStruct.INSTANCE);
 		if (isSpecial) {
@@ -317,7 +316,7 @@ final class LambdaListParser {
 				environment.setBindingsPosition(newBindingsPosition);
 
 				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
-				final boolean isSpecial = isSpecial(declareElement, currentParam);
+				final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
 
 				final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullStruct.INSTANCE);
 				if (isSpecial) {
@@ -375,7 +374,7 @@ final class LambdaListParser {
 				environment.setBindingsPosition(newBindingsPosition);
 
 				ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
-				boolean isSpecial = isSpecial(declareElement, varNameCurrent);
+				boolean isSpecial = Environments.isSpecial(declareElement, varNameCurrent);
 
 				EnvironmentParameterBinding binding = new EnvironmentParameterBinding(varNameCurrent, allocation, T.INSTANCE, parameterValueInitForm);
 				if (isSpecial) {
@@ -399,7 +398,7 @@ final class LambdaListParser {
 					environment.setBindingsPosition(newBindingsPosition);
 
 					allocation = new ParameterAllocation(newBindingsPosition);
-					isSpecial = isSpecial(declareElement, suppliedPCurrent);
+					isSpecial = Environments.isSpecial(declareElement, suppliedPCurrent);
 
 					binding = new EnvironmentParameterBinding(suppliedPCurrent, allocation, T.INSTANCE, NullStruct.INSTANCE);
 					if (isSpecial) {
@@ -448,7 +447,7 @@ final class LambdaListParser {
 				environment.setBindingsPosition(newBindingsPosition);
 
 				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
-				final boolean isSpecial = isSpecial(declareElement, currentParam);
+				final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
 
 				final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullStruct.INSTANCE);
 				if (isSpecial) {
@@ -488,7 +487,7 @@ final class LambdaListParser {
 				environment.setBindingsPosition(newBindingsPosition);
 
 				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
-				final boolean isSpecial = isSpecial(declareElement, varNameCurrent);
+				final boolean isSpecial = Environments.isSpecial(declareElement, varNameCurrent);
 
 				final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(varNameCurrent, allocation, T.INSTANCE, parameterValueInitForm);
 				if (isSpecial) {
@@ -504,21 +503,6 @@ final class LambdaListParser {
 		}
 
 		return new AuxParseResult(currentElement, currentPosition, auxBindings);
-	}
-
-	private static boolean isSpecial(final DeclareStruct declareElement, final SymbolStruct<?> var) {
-		boolean isSpecial = false;
-
-		final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
-		for (final SpecialDeclarationStruct specialDeclarationElement : specialDeclarationElements) {
-			final SymbolStruct<?> specialVar = specialDeclarationElement.getVar();
-			if (var.equals(specialVar)) {
-				isSpecial = true;
-				break;
-			}
-		}
-
-		return isSpecial;
 	}
 
 	/*

@@ -7,10 +7,7 @@ import javax.annotation.PostConstruct;
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Environments;
-import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.LocallyEnvironment;
-import jcl.compiler.real.environment.allocation.EnvironmentAllocation;
-import jcl.compiler.real.environment.binding.EnvironmentEnvironmentBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAnalyzer;
@@ -20,8 +17,8 @@ import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
-import jcl.symbols.SymbolStruct;
-import jcl.types.T;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,38 +48,33 @@ public class LocallyExpander extends MacroFunctionExpander<LocallyStruct> {
 
 		final LocallyEnvironment locallyEnvironment = new LocallyEnvironment(environment);
 
-		final List<LispStruct> bodyForms = form.getRest().getAsJavaList();
+		final ListStruct formRest = form.getRest();
+		final List<LispStruct> forms = formRest.getAsJavaList();
 
-		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(bodyForms, locallyEnvironment);
+		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(forms, locallyEnvironment);
 		final DeclareStruct declareElement = bodyProcessingResult.getDeclareElement();
 
 		final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
-		specialDeclarationElements.forEach(e -> addDynamicVariableBinding(e, locallyEnvironment));
+		specialDeclarationElements.forEach(e -> Environments.addDynamicVariableBinding(e, locallyEnvironment));
 
-		final List<LispStruct> realBodyForms = bodyProcessingResult.getBodyForms();
+		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 
 		final List<LispStruct> analyzedBodyForms
-				= realBodyForms.stream()
-				               .map(e -> formAnalyzer.analyze(e, locallyEnvironment))
-				               .collect(Collectors.toList());
+				= bodyForms.stream()
+				           .map(e -> formAnalyzer.analyze(e, locallyEnvironment))
+				           .collect(Collectors.toList());
 
 		return new LocallyStruct(analyzedBodyForms, locallyEnvironment);
 	}
 
-	private static void addDynamicVariableBinding(final SpecialDeclarationStruct specialDeclarationElement,
-	                                              final LocallyEnvironment locallyEnvironment) {
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
 
-		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(locallyEnvironment);
-		final int newBindingsPosition = currentLambda.getNextParameterNumber();
-		locallyEnvironment.setBindingsPosition(newBindingsPosition);
-
-		final SymbolStruct<?> var = specialDeclarationElement.getVar();
-
-		final Environment bindingEnvironment = Environments.getDynamicBindingEnvironment(locallyEnvironment, var);
-		final EnvironmentAllocation allocation = new EnvironmentAllocation(bindingEnvironment);
-
-		final EnvironmentEnvironmentBinding binding = new EnvironmentEnvironmentBinding(var, allocation, T.INSTANCE, bindingEnvironment);
-		locallyEnvironment.addDynamicBinding(binding);
+	@Override
+	public boolean equals(final Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
 	}
 
 	@Override

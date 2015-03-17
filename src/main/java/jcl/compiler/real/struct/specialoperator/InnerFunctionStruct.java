@@ -65,9 +65,9 @@ public abstract class InnerFunctionStruct<E extends Environment, V extends Inner
 
 		private final SymbolStruct<?> var;
 
-		private final LispStruct initForm;
+		private final CompilerFunctionStruct initForm;
 
-		InnerFunctionVar(final SymbolStruct<?> var, final LispStruct initForm) {
+		InnerFunctionVar(final SymbolStruct<?> var, final CompilerFunctionStruct initForm) {
 			this.var = var;
 			this.initForm = initForm;
 		}
@@ -76,7 +76,7 @@ public abstract class InnerFunctionStruct<E extends Environment, V extends Inner
 			return var;
 		}
 
-		public LispStruct getInitForm() {
+		public CompilerFunctionStruct getInitForm() {
 			return initForm;
 		}
 

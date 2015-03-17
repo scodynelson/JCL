@@ -4,6 +4,8 @@
 
 package jcl.compiler.real.struct.specialoperator.lambda;
 
+import java.util.List;
+
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.environment.LambdaEnvironment;
@@ -21,15 +23,15 @@ public class LambdaStruct implements LispStruct {
 
 	private final StringStruct docString;
 
-	private final LispStruct body;
+	private final List<LispStruct> forms;
 
 	private final LambdaEnvironment lambdaEnvironment;
 
-	public LambdaStruct(final OrdinaryLambdaListBindings lambdaListBindings, final StringStruct docString, final LispStruct body,
+	public LambdaStruct(final OrdinaryLambdaListBindings lambdaListBindings, final StringStruct docString, final List<LispStruct> forms,
 	                    final LambdaEnvironment lambdaEnvironment) {
 		this.lambdaListBindings = lambdaListBindings;
 		this.docString = docString;
-		this.body = body;
+		this.forms = forms;
 		this.lambdaEnvironment = lambdaEnvironment;
 	}
 
@@ -41,8 +43,8 @@ public class LambdaStruct implements LispStruct {
 		return docString;
 	}
 
-	public LispStruct getBody() {
-		return body;
+	public List<LispStruct> getForms() {
+		return forms;
 	}
 
 	public LambdaEnvironment getLambdaEnvironment() {

@@ -42,7 +42,7 @@ public class MacroletStruct extends InnerFunctionStruct<MacroletEnvironment, Mac
 
 		private static final long serialVersionUID = -169311089356148669L;
 
-		public MacroletVar(final SymbolStruct<?> var, final LispStruct initForm) {
+		public MacroletVar(final SymbolStruct<?> var, final CompilerFunctionStruct initForm) {
 			super(var, initForm);
 		}
 

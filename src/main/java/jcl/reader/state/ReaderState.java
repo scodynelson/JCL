@@ -40,6 +40,11 @@ import org.apache.commons.collections4.CollectionUtils;
 interface ReaderState extends Serializable {
 
 	/**
+	 * Serializable Version Unique Identifier.
+	 */
+	long serialVersionUID = -1L;
+
+	/**
 	 * Converts the provided list of {@link TokenAttribute}s to a {@link String}.
 	 *
 	 * @param tokenAttributes

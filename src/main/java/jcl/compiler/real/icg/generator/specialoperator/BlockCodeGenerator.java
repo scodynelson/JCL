@@ -1,13 +1,20 @@
 package jcl.compiler.real.icg.generator.specialoperator;
 
+import java.util.List;
+
+import jcl.LispStruct;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.SpecialVariableCodeGenerator;
+import jcl.compiler.real.struct.specialoperator.BlockStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.SymbolStruct;
+import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -95,5 +102,99 @@ public class BlockCodeGenerator implements CodeGenerator<ListStruct> {
 		classBuilder.getEmitter().emitInvokestatic("lisp/system/TransferOfControl", "popTOCRecord", "()", "V", false);
 
 		classBuilder.getEmitter().emitInvokestatic("lisp/system/TransferOfControl", "processReturnException", "()", "V", false);
+	}
+
+	public void dump(final BlockStruct blockStruct, final ClassWriter cw, MethodVisitor mv) {
+
+		mv = cw.visitMethod(Opcodes.ACC_PRIVATE, "block", "()Ljava/lang/Object;", null, null);
+		mv.visitCode();
+		// TODO: don't know if we need the above 2 lines...
+
+		final Label tryBlockStart = new Label();
+		final Label tryBlockEnd = new Label();
+		final Label catchBlock = new Label();
+		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlock, "jcl/compiler/real/icg/generator/specialoperator/exception/ReturnFromException");
+
+		final SymbolStruct<?> name = blockStruct.getName();
+
+		final Label namePackage = new Label();
+		mv.visitLabel(namePackage);
+//		mv.visitLineNumber(16, namePackage);
+		final String packageName = name.getSymbolPackage().getName();
+		mv.visitLdcInsn(packageName);
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
+		mv.visitVarInsn(Opcodes.ASTORE, 1);
+
+		final Label nameSymbol = new Label();
+		mv.visitLabel(nameSymbol);
+//		mv.visitLineNumber(17, nameSymbol);
+		mv.visitVarInsn(Opcodes.ALOAD, 1);
+		final String symbolName = name.getName();
+		mv.visitLdcInsn(symbolName);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
+		mv.visitVarInsn(Opcodes.ASTORE, 2);
+
+		final List<LispStruct> forms = blockStruct.getForms();
+
+		mv.visitLabel(tryBlockStart);
+//		mv.visitLineNumber(20, tryBlockStart);
+		//**** TODO: START IGC LOOP CALL ON FORMS ****//
+		mv.visitTypeInsn(Opcodes.NEW, "jcl/characters/CharacterStruct");
+		mv.visitInsn(Opcodes.DUP);
+		mv.visitIntInsn(Opcodes.BIPUSH, 97);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/characters/CharacterStruct", "<init>", "(I)V", false);
+		//**** TODO: END IGC LOOP CALL ON FORMS ****//
+
+		mv.visitLabel(tryBlockEnd);
+		// TODO: don't know if the next line is necessary. we might want to remain in the same method...
+		mv.visitInsn(Opcodes.ARETURN);
+
+		mv.visitLabel(catchBlock);
+//		mv.visitLineNumber(21, catchBlock);
+		mv.visitFrame(Opcodes.F_FULL, 2, new Object[]{"jcl/packages/PackageStruct", "jcl/symbols/SymbolStruct"}, 1, new Object[]{"jcl/compiler/real/icg/generator/specialoperator/exception/ReturnFromException"});
+		mv.visitVarInsn(Opcodes.ASTORE, 3);
+
+		final Label getReturnFromName = new Label();
+		mv.visitLabel(getReturnFromName);
+//		mv.visitLineNumber(22, getReturnFromName);
+		mv.visitVarInsn(Opcodes.ALOAD, 3);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/compiler/real/icg/generator/specialoperator/exception/ReturnFromException", "getName", "()Ljcl/symbols/SymbolStruct;", false);
+		mv.visitVarInsn(Opcodes.ASTORE, 4);
+
+		final Label equalReturnFromNameToBlockName = new Label();
+		mv.visitLabel(equalReturnFromNameToBlockName);
+//		mv.visitLineNumber(23, equalReturnFromNameToBlockName);
+		mv.visitVarInsn(Opcodes.ALOAD, 4);
+		mv.visitVarInsn(Opcodes.ALOAD, 2);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "equals", "(Ljava/lang/Object;)Z", false);
+
+		final Label throwReturnFromException = new Label();
+		mv.visitJumpInsn(Opcodes.IFEQ, throwReturnFromException);
+
+		final Label returnReturnFromResult = new Label();
+		mv.visitLabel(returnReturnFromResult);
+//		mv.visitLineNumber(24, returnReturnFromResult);
+		mv.visitVarInsn(Opcodes.ALOAD, 3);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/compiler/real/icg/generator/specialoperator/exception/ReturnFromException", "getResult", "()Ljcl/LispStruct;", false);
+		// TODO: don't know if the next line is necessary. we might want to remain in the same method...
+		mv.visitInsn(Opcodes.ARETURN);
+
+		mv.visitLabel(throwReturnFromException);
+//		mv.visitLineNumber(26, throwReturnFromException);
+		mv.visitFrame(Opcodes.F_APPEND, 2, new Object[]{"jcl/compiler/real/icg/generator/specialoperator/exception/ReturnFromException", "jcl/symbols/SymbolStruct"}, 0, null);
+		mv.visitVarInsn(Opcodes.ALOAD, 3);
+		mv.visitInsn(Opcodes.ATHROW);
+
+		final Label localVariables = new Label();
+		mv.visitLabel(localVariables);
+		mv.visitLocalVariable("pkg", "Ljcl/packages/PackageStruct;", null, nameSymbol, localVariables, 1);
+		mv.visitLocalVariable("name", "Ljcl/symbols/SymbolStruct;", "Ljcl/symbols/SymbolStruct<*>;", tryBlockStart, localVariables, 2);
+		mv.visitLocalVariable("rte", "Ljcl/compiler/real/icg/generator/specialoperator/exception/ReturnFromException;", null, getReturnFromName, localVariables, 3);
+		mv.visitLocalVariable("rteName", "Ljcl/symbols/SymbolStruct;", "Ljcl/symbols/SymbolStruct<*>;", equalReturnFromNameToBlockName, localVariables, 4);
+
+		// TODO: don't know if we need the next 2 lines
+		mv.visitMaxs(3, 4);
+		mv.visitEnd();
 	}
 }

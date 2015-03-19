@@ -49,7 +49,7 @@ public class ReturnFromCodeGenerator implements CodeGenerator<ListStruct> {
 
 		final Label namePackage = new Label();
 		mv.visitLabel(namePackage);
-//		mv.visitLineNumber(32, namePackage);
+//		mv.visitLineNumber(38, namePackage);
 		final String packageName = name.getSymbolPackage().getName();
 		mv.visitLdcInsn(packageName);
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
@@ -57,7 +57,7 @@ public class ReturnFromCodeGenerator implements CodeGenerator<ListStruct> {
 
 		final Label nameSymbol = new Label();
 		mv.visitLabel(nameSymbol);
-//		mv.visitLineNumber(33, nameSymbol);
+//		mv.visitLineNumber(39, nameSymbol);
 		mv.visitVarInsn(Opcodes.ALOAD, 1);
 		final String symbolName = name.getName();
 		mv.visitLdcInsn(symbolName);
@@ -65,28 +65,38 @@ public class ReturnFromCodeGenerator implements CodeGenerator<ListStruct> {
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
 		mv.visitVarInsn(Opcodes.ASTORE, 2);
 
+		final LispStruct result = returnFromStruct.getResult();
+
+		final Label getResultValue = new Label();
+		mv.visitLabel(getResultValue);
+//		mv.visitLineNumber(41, getResultValue);
+		//**** TODO: START IGC LOOP CALL ON RESULT ****//
+		mv.visitTypeInsn(Opcodes.NEW, "jcl/characters/CharacterStruct");
+		mv.visitInsn(Opcodes.DUP);
+		mv.visitIntInsn(Opcodes.BIPUSH, 97);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/characters/CharacterStruct", "<init>", "(I)V", false);
+		//**** TODO: END IGC LOOP CALL ON RESULT ****//
+
+		mv.visitVarInsn(Opcodes.ASTORE, 3);
+
 		final Label throwReturnFromException = new Label();
 		mv.visitLabel(throwReturnFromException);
-//		mv.visitLineNumber(35, throwReturnFromException);
+//		mv.visitLineNumber(43, throwReturnFromException);
 		mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/icg/generator/specialoperator/exception/ReturnFromException");
 		mv.visitInsn(Opcodes.DUP);
 		mv.visitVarInsn(Opcodes.ALOAD, 2);
-
-		final LispStruct result = returnFromStruct.getResult();
-		//**** TODO: START IGC LOOP CALL ON RESULT ****//
-		mv.visitInsn(Opcodes.ACONST_NULL);
-		//**** TODO: END IGC LOOP CALL ON RESULT ****//
-
+		mv.visitVarInsn(Opcodes.ALOAD, 3);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/icg/generator/specialoperator/exception/ReturnFromException", "<init>", "(Ljcl/symbols/SymbolStruct;Ljcl/LispStruct;)V", false);
 		mv.visitInsn(Opcodes.ATHROW);
 
 		final Label localVariables = new Label();
 		mv.visitLabel(localVariables);
 		mv.visitLocalVariable("pkg", "Ljcl/packages/PackageStruct;", null, nameSymbol, localVariables, 1);
-		mv.visitLocalVariable("name", "Ljcl/symbols/SymbolStruct;", "Ljcl/symbols/SymbolStruct<*>;", throwReturnFromException, localVariables, 2);
+		mv.visitLocalVariable("name", "Ljcl/symbols/SymbolStruct;", "Ljcl/symbols/SymbolStruct<*>;", getResultValue, localVariables, 2);
+		mv.visitLocalVariable("result", "Ljcl/LispStruct;", null, throwReturnFromException, localVariables, 3);
 
 		// TODO: don't know if we need the next 2 lines
-		mv.visitMaxs(4, 2);
+		mv.visitMaxs(4, 3);
 		mv.visitEnd();
 	}
 }

@@ -95,8 +95,7 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 		if (declareElement != null) {
 			final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
 			if (!specialDeclarationElements.isEmpty()) {
-				// TODO: figure out how to print these well
-				throw new ProgramErrorException("SYMBOL-MACROLET: Special declarations not allowed. Got: " + specialDeclarationElements);
+				throw new ProgramErrorException("SYMBOL-MACROLET: Special declarations not allowed.");
 			}
 		}
 	}

@@ -49,7 +49,7 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			fv.visitEnd();
 		}
 		{
-			mv = cw.visitMethod(Opcodes.ACC_PRIVATE, "<init>", "()V", null, null);
+			mv = cw.visitMethod(Opcodes.ACC_PUBLIC, "<init>", "()V", null, null);
 			mv.visitCode();
 			final Label l0 = new Label();
 			mv.visitLabel(l0);

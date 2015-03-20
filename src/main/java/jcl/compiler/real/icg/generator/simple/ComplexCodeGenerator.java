@@ -1,6 +1,7 @@
-package jcl.compiler.real.icg.generator;
+package jcl.compiler.real.icg.generator.simple;
 
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.lists.ListStruct;
 import jcl.numbers.FloatStruct;
 import jcl.numbers.IntegerStruct;

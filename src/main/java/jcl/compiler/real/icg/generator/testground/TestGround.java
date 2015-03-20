@@ -4,14 +4,21 @@
 
 package jcl.compiler.real.icg.generator.testground;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
 import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
 import jcl.compiler.real.icg.generator.specialoperator.exception.ReturnFromException;
 import jcl.compiler.real.icg.generator.specialoperator.exception.ThrowException;
 import jcl.lists.NullStruct;
+import jcl.numbers.FloatStruct;
+import jcl.numbers.IntegerStruct;
+import jcl.numbers.RatioStruct;
 import jcl.packages.PackageStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
+import jcl.symbols.TStruct;
 
 public class TestGround {
 
@@ -33,7 +40,7 @@ public class TestGround {
 		return result;
 	}
 
-	private void returnFrom() {
+	private Object returnFrom() {
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct<?> name = pkg.findSymbol("FOO").getSymbol();
@@ -73,7 +80,7 @@ public class TestGround {
 		return resultForm;
 	}
 
-	private void throwGen() {
+	private Object throwGen() {
 
 		final LispStruct catchTag = new CharacterStruct(97);
 		final LispStruct resultForm = new CharacterStruct(197);
@@ -81,4 +88,35 @@ public class TestGround {
 		throw new ThrowException(catchTag, resultForm);
 	}
 
+	private Object tGen() {
+		return TStruct.INSTANCE;
+	}
+
+	private Object nilGen() {
+		return NILStruct.INSTANCE;
+	}
+
+	private Object nullGen() {
+		return NullStruct.INSTANCE;
+	}
+
+	private Object characterGen() {
+		return new CharacterStruct(66544564);
+	}
+
+	private Object floatGen() {
+		final BigDecimal bigDecimal = new BigDecimal("12345.0");
+		return new FloatStruct(bigDecimal);
+	}
+
+	private Object integerGen() {
+		final BigInteger bigInteger = new BigInteger("12345");
+		return new IntegerStruct(bigInteger);
+	}
+
+	private Object ratioGen() {
+		final BigInteger numerator = new BigInteger("1");
+		final BigInteger denominator = new BigInteger("2");
+		return new RatioStruct(numerator, denominator);
+	}
 }

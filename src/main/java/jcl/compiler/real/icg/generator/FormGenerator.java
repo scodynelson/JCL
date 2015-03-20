@@ -20,10 +20,10 @@ public class FormGenerator implements CodeGenerator<LispStruct> {
 	@Override
 	public void generate(final LispStruct input, final JavaClassBuilder classBuilder) {
 
-		final CodeGenerator<LispStruct> codeGenerator1 = codeGeneratorStrategies.get(input.getClass());
-		if (codeGenerator1 == null) {
+		final CodeGenerator<LispStruct> codeGenerator = codeGeneratorStrategies.get(input.getClass());
+		if (codeGenerator == null) {
 			throw new RuntimeException("ICG: Found thing I can't generate code for class: " + input.getClass().getName());
 		}
-		codeGenerator1.generate(input, classBuilder);
+		codeGenerator.generate(input, classBuilder);
 	}
 }

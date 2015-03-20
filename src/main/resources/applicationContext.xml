@@ -71,16 +71,19 @@
 	          key-type="java.lang.Class"
 	          value-type="jcl.compiler.real.icg.generator.CodeGenerator">
 
-		<entry key="jcl.lists.ConsStruct" value-ref="listCodeGenerator"/>
-		<!--<entry key="jcl.lists.NullStruct" value-ref="nullCodeGenerator"/>-->
+		<entry key="jcl.characters.CharacterStruct" value-ref="characterCodeGenerator"/>
 
-		<entry key="jcl.numbers.ComplexStruct" value-ref="complexCodeGenerator"/>
+		<entry key="jcl.lists.ConsStruct" value-ref="listCodeGenerator"/>
+		<entry key="jcl.lists.NullStruct" value-ref="nullCodeGenerator"/>
+
+		<!--<entry key="jcl.numbers.ComplexStruct" value-ref="complexCodeGenerator"/>-->
 		<entry key="jcl.numbers.FloatStruct" value-ref="floatCodeGenerator"/>
 		<entry key="jcl.numbers.IntegerStruct" value-ref="integerCodeGenerator"/>
 		<entry key="jcl.numbers.RatioStruct" value-ref="ratioCodeGenerator"/>
 
 		<entry key="jcl.symbols.NILStruct" value-ref="NILCodeGenerator"/>
 		<entry key="jcl.symbols.SymbolStruct" value-ref="symbolCodeGenerator"/>
+		<entry key="jcl.symbols.TStruct" value-ref="TCodeGenerator"/>
 
 		<!--<entry key="jcl.compiler.real.struct.functioncall.FunctionCallStruct" value-ref=""/>-->
 		<!--<entry key="jcl.compiler.real.struct.functioncall.LambdaFunctionCallStruct" value-ref=""/>-->

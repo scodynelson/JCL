@@ -8,7 +8,6 @@ import java.security.SecureRandom;
 import java.util.Random;
 
 import jcl.compiler.real.icg.JavaClassBuilder;
-import jcl.compiler.real.icg.generator.CharacterCodeGenerator;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import org.objectweb.asm.AnnotationVisitor;
@@ -17,14 +16,10 @@ import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
-
-	@Autowired
-	private CharacterCodeGenerator characterCodeGenerator;
 
 	@Override
 	public void generate(final LambdaStruct input, final JavaClassBuilder classBuilder) {

@@ -44,8 +44,7 @@ public class RatioStruct extends RationalStruct {
 	 * 		the denominator value of the RatioStruct
 	 */
 	public RatioStruct(final BigInteger numerator, final BigInteger denominator) {
-		super(Ratio.INSTANCE, null, null);
-		bigFraction = new BigFraction(numerator, denominator);
+		this(new BigFraction(numerator, denominator));
 	}
 
 	/**

@@ -3,13 +3,11 @@ package jcl.compiler.real.icg.generator.specialoperator;
 import java.util.List;
 
 import jcl.LispStruct;
+import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
-import jcl.compiler.real.icg.generator.SpecialVariableCodeGenerator;
 import jcl.compiler.real.struct.specialoperator.BlockStruct;
-import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
@@ -19,97 +17,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BlockCodeGenerator implements CodeGenerator<ListStruct> {
-
-	@Autowired
-	private SpecialVariableCodeGenerator specialVariableCodeGenerator;
+public class BlockCodeGenerator implements CodeGenerator<BlockStruct> {
 
 	@Autowired
 	private FormGenerator formGenerator;
 
 	@Override
-	public void generate(final ListStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final BlockStruct input, final JavaClassBuilder classBuilder) {
 
-		final Label startTryBlock = new Label();                //The start of the try block
-		final Label catchBlock = new Label();                   //The start of the catch block
-		final Label continueBlock = new Label();                //Subsequent code after the try/catch construct
-		final Label ifBlock = new Label();                      //If block executed if this catches someone else's excepton
+		final ClassDef currentClass = classBuilder.getCurrentClass();
+		final ClassWriter cw = currentClass.getClassWriter();
+		MethodVisitor mv = currentClass.getMethodVisitor();
 
-		// Get rid of the BLOCK symbol
-		ListStruct restOfList = input.getRest();
-		final SymbolStruct<?> sym = (SymbolStruct<?>) restOfList.getFirst();
-		restOfList = restOfList.getRest();
-
-		// ... ,
-		specialVariableCodeGenerator.generate(sym, classBuilder);
-		// ..., sym
-
-		classBuilder.getEmitter().emitGetstatic("lisp/system/TransferOfControl", "BLOCK", "Ljava/lang/String;");
-		// ..., sym, BLOCK
-		classBuilder.getEmitter().emitSwap();
-		// ... , BLOCK, sym
-		classBuilder.getEmitter().emitInvokestatic("lisp/system/TransferOfControl", "addTOCRecord", "(Ljava/lang/String;Ljava/lang/Object;)", "V", false);
-
-		classBuilder.getEmitter().visitMethodLabel(startTryBlock);
-
-        /* Call icgMainLoop() for each expression in the PROGN call,
-		 * and remove all but the last expression's value from the stack  */
-		while (!restOfList.equals(NullStruct.INSTANCE)) {
-			formGenerator.generate(restOfList.getFirst(), classBuilder);
-			restOfList = restOfList.getRest();
-			if (!restOfList.equals(NullStruct.INSTANCE)) {
-				classBuilder.getEmitter().emitNop();
-				classBuilder.getEmitter().emitPop();
-				classBuilder.getEmitter().emitNop();
-			}
-		}
-		classBuilder.getEmitter().emitGoto(continueBlock);
-
-		//Start catch block
-		classBuilder.getEmitter().visitMethodLabel(catchBlock);
-		// ..., throw_excep
-		classBuilder.getEmitter().emitDup();
-		// ..., throw_excep, throw_excep
-		classBuilder.getEmitter().emitInvokestatic("lisp/system/TransferOfControl", "isMine", "(Ljava/lang/Throwable;)", "Ljava/lang/Object;", false);
-		// ..., throw_excep, result
-		classBuilder.getEmitter().emitDup();
-		// ..., throw_excep, result, result
-		classBuilder.getEmitter().emitIfnull(ifBlock);
-		//Else block start
-		// ..., throw_excep, result
-		classBuilder.getEmitter().emitSwap();
-		// ..., result, throw_excep
-		classBuilder.getEmitter().emitPop();
-		// ..., result
-		classBuilder.getEmitter().emitGoto(continueBlock);
-		//Else block end
-
-		//If block start
-		classBuilder.getEmitter().visitMethodLabel(ifBlock);
-		// ..., throw_excep, result
-		classBuilder.getEmitter().emitSwap();
-		// ..., result, throw_excep
-		classBuilder.getEmitter().emitInvokestatic("lisp/system/TransferOfControl", "setReturnException", "(Ljava/lang/Throwable;)", "V", false);
-		// ..., result
-		//If block end
-
-		classBuilder.getEmitter().visitMethodLabel(continueBlock);
-
-		classBuilder.getEmitter().visitTryCatchBlock(
-				startTryBlock, //blockName + "_BlockA",
-				catchBlock, //blockName + "_BlockB",
-				catchBlock, //blockName + "_BlockB",
-				"java/lang/Throwable");
-
-		//Here is the finally code
-		classBuilder.getEmitter().emitInvokestatic("lisp/system/TransferOfControl", "popTOCRecord", "()", "V", false);
-
-		classBuilder.getEmitter().emitInvokestatic("lisp/system/TransferOfControl", "processReturnException", "()", "V", false);
-	}
-
-	public void dump(final BlockStruct blockStruct, final ClassWriter cw, MethodVisitor mv) {
-
-		mv = cw.visitMethod(Opcodes.ACC_PRIVATE, "block", "()Ljava/lang/Object;", null, null);
+		mv = cw.visitMethod(Opcodes.ACC_PRIVATE, "block", "()V", null, null);
 		mv.visitCode();
 		// TODO: don't know if we need the above 2 lines...
 
@@ -118,7 +38,7 @@ public class BlockCodeGenerator implements CodeGenerator<ListStruct> {
 		final Label catchBlock = new Label();
 		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlock, "jcl/compiler/real/icg/generator/specialoperator/exception/ReturnFromException");
 
-		final SymbolStruct<?> name = blockStruct.getName();
+		final SymbolStruct<?> name = input.getName();
 
 		final Label namePackage = new Label();
 		mv.visitLabel(namePackage);
@@ -138,17 +58,12 @@ public class BlockCodeGenerator implements CodeGenerator<ListStruct> {
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
 		mv.visitVarInsn(Opcodes.ASTORE, 2);
 
-		final List<LispStruct> forms = blockStruct.getForms();
-
 		mv.visitLabel(tryBlockStart);
 //		mv.visitLineNumber(24, tryBlockStart);
-		//**** TODO: START IGC LOOP CALL ON FORMS ****//
-		mv.visitTypeInsn(Opcodes.NEW, "jcl/characters/CharacterStruct");
-		mv.visitInsn(Opcodes.DUP);
-		mv.visitIntInsn(Opcodes.BIPUSH, 97);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/characters/CharacterStruct", "<init>", "(I)V", false);
-		//**** TODO: END IGC LOOP CALL ON FORMS ****//
-
+		final List<LispStruct> forms = input.getForms();
+		for (final LispStruct form : forms) {
+			formGenerator.generate(form, classBuilder);
+		}
 		mv.visitVarInsn(Opcodes.ASTORE, 3);
 
 		mv.visitLabel(tryBlockEnd);

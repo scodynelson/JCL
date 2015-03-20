@@ -1,12 +1,12 @@
 package jcl.compiler.real.icg.generator.specialoperator;
 
 import jcl.LispStruct;
+import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.icg.generator.SpecialVariableCodeGenerator;
 import jcl.compiler.real.struct.specialoperator.ReturnFromStruct;
-import jcl.lists.ListStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ReturnFromCodeGenerator implements CodeGenerator<ListStruct> {
+public class ReturnFromCodeGenerator implements CodeGenerator<ReturnFromStruct> {
 
 	@Autowired
 	private SpecialVariableCodeGenerator specialVariableCodeGenerator;
@@ -25,30 +25,17 @@ public class ReturnFromCodeGenerator implements CodeGenerator<ListStruct> {
 	private FormGenerator formGenerator;
 
 	@Override
-	public void generate(final ListStruct input, final JavaClassBuilder classBuilder) {
-		// Get rid of the RETURN-FROM symbol
-		ListStruct restOfList = input.getRest();
-		final SymbolStruct<?> sym = (SymbolStruct) restOfList.getFirst();
-		restOfList = restOfList.getRest();
+	public void generate(final ReturnFromStruct input, final JavaClassBuilder classBuilder) {
 
-		classBuilder.getEmitter().emitNew("lisp/system/compiler/exceptions/ReturnFromException");
-		// +1 -> exception
-		classBuilder.getEmitter().emitDup();
-		// +2 -> exception, exception
-		specialVariableCodeGenerator.generate(sym, classBuilder);
-		// +3 -> exception, exception, name
-		formGenerator.generate(restOfList.getFirst(), classBuilder);
-		classBuilder.getEmitter().emitInvokespecial("lisp/system/compiler/exceptions/ReturnFromException", "<init>", "(Llisp/common/type/Symbol;Ljava/lang/Object;)", "V", false);
-		classBuilder.getEmitter().emitAthrow();
-	}
-
-	public void dump(final ReturnFromStruct returnFromStruct, final ClassWriter cw, MethodVisitor mv) {
+		final ClassDef currentClass = classBuilder.getCurrentClass();
+		final ClassWriter cw = currentClass.getClassWriter();
+		MethodVisitor mv = currentClass.getMethodVisitor();
 
 		mv = cw.visitMethod(Opcodes.ACC_PRIVATE, "returnFrom", "()V", null, null);
 		mv.visitCode();
 		// TODO: don't know if we need the above 2 lines...
 
-		final SymbolStruct<?> name = returnFromStruct.getName();
+		final SymbolStruct<?> name = input.getName();
 
 		final Label namePackage = new Label();
 		mv.visitLabel(namePackage);
@@ -68,18 +55,11 @@ public class ReturnFromCodeGenerator implements CodeGenerator<ListStruct> {
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
 		mv.visitVarInsn(Opcodes.ASTORE, 2);
 
-		final LispStruct result = returnFromStruct.getResult();
-
 		final Label getResultValue = new Label();
 		mv.visitLabel(getResultValue);
 //		mv.visitLineNumber(41, getResultValue);
-		//**** TODO: START IGC LOOP CALL ON RESULT ****//
-		mv.visitTypeInsn(Opcodes.NEW, "jcl/characters/CharacterStruct");
-		mv.visitInsn(Opcodes.DUP);
-		mv.visitIntInsn(Opcodes.BIPUSH, 97);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/characters/CharacterStruct", "<init>", "(I)V", false);
-		//**** TODO: END IGC LOOP CALL ON RESULT ****//
-
+		final LispStruct result = input.getResult();
+		formGenerator.generate(result, classBuilder);
 		mv.visitVarInsn(Opcodes.ASTORE, 3);
 
 		final Label throwReturnFromException = new Label();

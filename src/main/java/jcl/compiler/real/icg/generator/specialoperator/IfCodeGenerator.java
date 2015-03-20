@@ -1,11 +1,11 @@
 package jcl.compiler.real.icg.generator.specialoperator;
 
 import jcl.LispStruct;
+import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.struct.specialoperator.IfStruct;
-import jcl.lists.ListStruct;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -14,61 +14,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class IfCodeGenerator implements CodeGenerator<ListStruct> {
+public class IfCodeGenerator implements CodeGenerator<IfStruct> {
 
 	@Autowired
 	private FormGenerator formGenerator;
 
 	@Override
-	public void generate(final ListStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final IfStruct input, final JavaClassBuilder classBuilder) {
 
-		ListStruct restOfList = input.getRest();
-		final LispStruct testObj = restOfList.getFirst();
-		restOfList = restOfList.getRest();
-		final LispStruct thenObj = restOfList.getFirst();
-		restOfList = restOfList.getRest();
-		final LispStruct elseObj = restOfList.getFirst();
+		final ClassDef currentClass = classBuilder.getCurrentClass();
+		final ClassWriter cw = currentClass.getClassWriter();
+		MethodVisitor mv = currentClass.getMethodVisitor();
 
-		formGenerator.generate(testObj, classBuilder);
-		final Label outLabel = new Label();
-		classBuilder.getEmitter().emitDup();
-		classBuilder.getEmitter().emitInstanceof("[Ljava/lang/Object;");
-		classBuilder.getEmitter().emitIfeq(outLabel);
-		classBuilder.getEmitter().emitCheckcast("[Ljava/lang/Object;");
-		classBuilder.getEmitter().emitLdc(0);
-		classBuilder.getEmitter().emitAaload();
-		classBuilder.getEmitter().visitMethodLabel(outLabel);
-		classBuilder.getEmitter().emitGetstatic("lisp/common/type/Null", "NIL", "Llisp/common/type/Null;");
-
-		final Label thenLabel = new Label();
-		final Label elseLabel = new Label();
-		final Label endLabel = new Label();
-
-		classBuilder.getEmitter().emitIf_acmpeq(elseLabel);
-		classBuilder.getEmitter().visitMethodLabel(thenLabel);
-		formGenerator.generate(thenObj, classBuilder);
-		classBuilder.getEmitter().emitGoto(endLabel);
-
-		classBuilder.getEmitter().visitMethodLabel(elseLabel);
-		formGenerator.generate(elseObj, classBuilder);
-
-		classBuilder.getEmitter().visitMethodLabel(endLabel);
-	}
-
-	public void dump(final IfStruct ifStruct, final ClassWriter cw, MethodVisitor mv) {
-
-		mv = cw.visitMethod(Opcodes.ACC_PRIVATE, "ifGen", "()Ljava/lang/Object;", null, null);
+		mv = cw.visitMethod(Opcodes.ACC_PRIVATE, "ifGen", "()V", null, null);
 		mv.visitCode();
 		// TODO: don't know if we need the above 2 lines...
-
-		final LispStruct testForm = ifStruct.getTestForm();
 
 		final Label loadTestForm = new Label();
 		mv.visitLabel(loadTestForm);
 //		mv.visitLineNumber(43, loadTestForm);
-		//**** TODO: START IGC LOOP CALL ON TEST-FORM ****//
-		mv.visitInsn(Opcodes.ACONST_NULL);
-		//**** TODO: END IGC LOOP CALL ON TEST-FORM ****//
+		final LispStruct testForm = input.getTestForm();
+		formGenerator.generate(testForm, classBuilder);
 		mv.visitVarInsn(Opcodes.ASTORE, 1);
 
 		final Label resultForm = new Label();
@@ -90,19 +56,11 @@ public class IfCodeGenerator implements CodeGenerator<ListStruct> {
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/NILStruct", "equals", "(Ljava/lang/Object;)Z", false);
 		mv.visitJumpInsn(Opcodes.IFNE, elseLabel);
 
-		final LispStruct thenForm = ifStruct.getThenForm();
-
 		final Label loadThenForm = new Label();
 		mv.visitLabel(loadThenForm);
 //		mv.visitLineNumber(47, loadThenForm);
-
-		//**** TODO: START IGC LOOP CALL ON THEN-FORM ****//
-		mv.visitTypeInsn(Opcodes.NEW, "jcl/characters/CharacterStruct");
-		mv.visitInsn(Opcodes.DUP);
-		mv.visitIntInsn(Opcodes.BIPUSH, 97);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/characters/CharacterStruct", "<init>", "(I)V", false);
-		//**** TODO: END IGC LOOP CALL ON THEN-FORM ****//
-
+		final LispStruct thenForm = input.getThenForm();
+		formGenerator.generate(thenForm, classBuilder);
 		mv.visitVarInsn(Opcodes.ASTORE, 2);
 
 		final Label ifEndLabel = new Label();
@@ -112,15 +70,8 @@ public class IfCodeGenerator implements CodeGenerator<ListStruct> {
 //		mv.visitLineNumber(49, elseLabel);
 		mv.visitFrame(Opcodes.F_APPEND, 1, new Object[]{"jcl/LispStruct"}, 0, null);
 
-		final LispStruct elseForm = ifStruct.getElseForm();
-
-		//**** TODO: START IGC LOOP CALL ON ELSE-FORM ****//
-		mv.visitTypeInsn(Opcodes.NEW, "jcl/characters/CharacterStruct");
-		mv.visitInsn(Opcodes.DUP);
-		mv.visitIntInsn(Opcodes.SIPUSH, 197);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/characters/CharacterStruct", "<init>", "(I)V", false);
-		//**** TODO: END IGC LOOP CALL ON ELSE-FORM ****//
-
+		final LispStruct elseForm = input.getElseForm();
+		formGenerator.generate(elseForm, classBuilder);
 		mv.visitVarInsn(Opcodes.ASTORE, 2);
 
 		mv.visitLabel(ifEndLabel);

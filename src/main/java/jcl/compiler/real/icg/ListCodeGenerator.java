@@ -12,6 +12,7 @@ import jcl.compiler.real.icg.generator.specialoperator.LetCodeGenerator;
 import jcl.compiler.real.icg.generator.specialoperator.MacroletCodeGenerator;
 import jcl.compiler.real.icg.generator.specialoperator.special.LambdaCodeGenerator;
 import jcl.compiler.real.icg.generator.specialoperator.special.MacroLambdaCodeGenerator;
+import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.Declaration;
@@ -97,9 +98,9 @@ public class ListCodeGenerator implements CodeGenerator<ListStruct> {
 				} else if (first.getFirst().equals(SpecialOperator.LET)) {
 					letCodeGenerator.generate(input, classBuilder);
 				} else if (first.getFirst().equals(SpecialOperator.FLET)) {
-					fletCodeGenerator.generate(input, classBuilder);
+//					fletCodeGenerator.generate(input, classBuilder);
 				} else if (first.getFirst().equals(SpecialOperator.LABELS)) {
-					labelsCodeGenerator.generate(input, classBuilder);
+//					labelsCodeGenerator.generate(input, classBuilder);
 				} else if (first.getFirst().equals(SpecialOperator.MACROLET)) {
 					macroletCodeGenerator.generate(input, classBuilder);
 				} else {

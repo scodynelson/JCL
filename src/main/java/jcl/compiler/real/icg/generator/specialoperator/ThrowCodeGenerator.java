@@ -1,11 +1,11 @@
 package jcl.compiler.real.icg.generator.specialoperator;
 
 import jcl.LispStruct;
+import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.struct.specialoperator.ThrowStruct;
-import jcl.lists.ListStruct;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -14,67 +14,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ThrowCodeGenerator implements CodeGenerator<ListStruct> {
+public class ThrowCodeGenerator implements CodeGenerator<ThrowStruct> {
 
 	@Autowired
 	private FormGenerator formGenerator;
 
 	@Override
-	public void generate(final ListStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final ThrowStruct input, final JavaClassBuilder classBuilder) {
 
-		// Remove the special symbol (THROW) from the list
-		ListStruct restOfList = input.getRest();
-
-		//Get the catch tag and store for later evaluation
-		final LispStruct catchTag = restOfList.getFirst();         //The catch tag value that must be evaluated
-		restOfList = restOfList.getRest();
-
-		classBuilder.getEmitter().emitNew("lisp/system/compiler/exceptions/ThrowException");
-		// +1 -> exception
-		classBuilder.getEmitter().emitDup();
-		// +2 -> exception, exception
-
-		//Run the catch tag through the compiler for eval with the intent that the result
-		//will be on the stack ready to be a parameter to the following method invokation
-		formGenerator.generate(catchTag, classBuilder);
-		// +3 -> exception, exception, name
-		formGenerator.generate(restOfList.getFirst(), classBuilder);
-		classBuilder.getEmitter().emitInvokespecial("lisp/system/compiler/exceptions/ThrowException", "<init>", "(Ljava/lang/Object;Ljava/lang/Object;)", "V", false);
-		classBuilder.getEmitter().emitAthrow();
-	}
-
-	public void dump(final ThrowStruct throwStruct, final ClassWriter cw, MethodVisitor mv) {
+		final ClassDef currentClass = classBuilder.getCurrentClass();
+		final ClassWriter cw = currentClass.getClassWriter();
+		MethodVisitor mv = currentClass.getMethodVisitor();
 
 		mv = cw.visitMethod(Opcodes.ACC_PRIVATE, "throwGen", "()V", null, null);
 		mv.visitCode();
 		// TODO: don't know if we need the above 2 lines...
 
-		final LispStruct catchTag = throwStruct.getCatchTag();
-
 		final Label getCatchTagValue = new Label();
 		mv.visitLabel(getCatchTagValue);
 //		mv.visitLineNumber(78, getCatchTagValue);
-		//**** TODO: START IGC LOOP CALL ON FORMS ****//
-		mv.visitTypeInsn(Opcodes.NEW, "jcl/characters/CharacterStruct");
-		mv.visitInsn(Opcodes.DUP);
-		mv.visitIntInsn(Opcodes.BIPUSH, 97);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/characters/CharacterStruct", "<init>", "(I)V", false);
-		//**** TODO: END IGC LOOP CALL ON FORMS ****//
-
+		final LispStruct catchTag = input.getCatchTag();
+		formGenerator.generate(catchTag, classBuilder);
 		mv.visitVarInsn(Opcodes.ASTORE, 1);
-
-		final LispStruct resultForm = throwStruct.getResultForm();
 
 		final Label getResultFormValue = new Label();
 		mv.visitLabel(getResultFormValue);
 //		mv.visitLineNumber(79, getResultFormValue);
-		//**** TODO: START IGC LOOP CALL ON RESULT ****//
-		mv.visitTypeInsn(Opcodes.NEW, "jcl/characters/CharacterStruct");
-		mv.visitInsn(Opcodes.DUP);
-		mv.visitIntInsn(Opcodes.BIPUSH, 97);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/characters/CharacterStruct", "<init>", "(I)V", false);
-		//**** TODO: END IGC LOOP CALL ON RESULT ****//
-
+		final LispStruct resultForm = input.getResultForm();
+		formGenerator.generate(resultForm, classBuilder);
 		mv.visitVarInsn(Opcodes.ASTORE, 2);
 
 		final Label throwThrowException = new Label();

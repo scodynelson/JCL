@@ -1,100 +1,70 @@
 package jcl.compiler.real.icg.generator.specialoperator;
 
+import jcl.LispStruct;
+import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
-import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
+import jcl.compiler.real.struct.specialoperator.PrognStruct;
+import jcl.compiler.real.struct.specialoperator.UnwindProtectStruct;
+import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UnwindProtectCodeGenerator implements CodeGenerator<ListStruct> {
+public class UnwindProtectCodeGenerator implements CodeGenerator<UnwindProtectStruct> {
 
 	@Autowired
 	private FormGenerator formGenerator;
 
-	/**
-	 * Transfer of Control Sequence for unwind-protect.
-	 * ---------------------------
-	 * 1. Start the try block
-	 * 2. Setup for the evaluation of the protected form
-	 * 3. Setup a goto for the finally block
-	 * 4. Start the catch block
-	 * 5. Using the exception, store the exception so that it can be rethrown after the cleanup form is executed
-	 * 6. In the finally block, disable invalid TOC Exit Points
-	 * 7. Setup a finally block
-	 * 8. Setup the evalution of the cleanup form
-	 * 9. Setup for a runtime call to process the return exception (if there was one, it will be rethrown
-	 * automatically)
-	 * 10. Register an exception handler for type Throwable
-	 */
+	@Autowired
+	private PrognCodeGenerator prognCodeGenerator;
 
 	@Override
-	public void generate(final ListStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final UnwindProtectStruct input, final JavaClassBuilder classBuilder) {
 
-		// Burn off the special symbol (UNWIND-PROTECT)
-		final ListStruct restOfList = input.getRest();
+		final ClassDef currentClass = classBuilder.getCurrentClass();
+		final ClassWriter cw = currentClass.getClassWriter();
+		MethodVisitor mv = currentClass.getMethodVisitor();
 
-		//Get the protected form and the cleanup form(s) after the UNWIND-PROTECT symbol
-		final ListStruct protectedForm = (ListStruct) restOfList.getFirst();                //The protected form
-		ListStruct cleanupForm = restOfList.getRest();                  //The cleanup form
+		mv = cw.visitMethod(Opcodes.ACC_PRIVATE, "unwindProtectGen", "()Ljava/lang/Object;", null, null);
+		mv.visitCode();
+		// TODO: don't know if we need the above 2 lines...
 
-		//Create the exception table
-		final Label startTryBlock = new Label();               //The start of the try block
-		final Label catchBlock = new Label();                  //The start of the catch block
-		final Label finallyBlock = new Label();                //The start of the finally block
+		final Label tryBlockStart = new Label();
+		final Label tryBlockEnd = new Label();
+		final Label catchBlock = new Label();
+		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlock, null);
 
-		//1. Start the try block
-		//Mark the start of the try block
-		classBuilder.getEmitter().visitMethodLabel(startTryBlock);
-
-		//2. Setup for the evaluation of the protected form
-		//Evalute the protected form
+		mv.visitLabel(tryBlockStart);
+//		mv.visitLineNumber(125, tryBlockStart);
+		final LispStruct protectedForm = input.getProtectedForm();
 		formGenerator.generate(protectedForm, classBuilder);
+		mv.visitVarInsn(Opcodes.ASTORE, 1);
 
-		//3. Setup a goto for the finally block
-		//If an exception wasn't thrown, go past the catch block to the finally block
-		classBuilder.getEmitter().emitGoto(finallyBlock);
+		mv.visitLabel(tryBlockEnd);
+//		mv.visitLineNumber(127, tryBlockEnd);
+		final PrognStruct cleanupForms = input.getCleanupForms();
+		prognCodeGenerator.generate(cleanupForms, classBuilder);
+		mv.visitInsn(Opcodes.POP);
+		mv.visitVarInsn(Opcodes.ALOAD, 1);
 
-		//4. Start the catch block
-		//Start the catch block
-		classBuilder.getEmitter().visitMethodLabel(catchBlock);
+		// TODO: don't know if the next line is necessary. we might want to remain in the same method...
+		mv.visitInsn(Opcodes.ARETURN);
 
-		//5. Using the exception, store the exception so that it can be rethrown after the cleanup form is executed
-		// ..., throw_excep
-		classBuilder.getEmitter().emitDup();
-		// ..., throw_excep, throw_excep
-		classBuilder.getEmitter().emitInvokestatic("lisp/system/TransferOfControl", "setReturnException", "(Ljava/lang/Throwable;)", "V", false);
-		// ..., throw_excep
+		mv.visitLabel(catchBlock);
+		mv.visitFrame(Opcodes.F_SAME1, 0, null, 1, new Object[]{"java/lang/Throwable"});
+		mv.visitVarInsn(Opcodes.ASTORE, 2);
+		prognCodeGenerator.generate(cleanupForms, classBuilder);
+		mv.visitInsn(Opcodes.POP);
+		mv.visitVarInsn(Opcodes.ALOAD, 2);
+		mv.visitInsn(Opcodes.ATHROW);
 
-		//6. In the finally block, disable invalid TOC Exit Points
-		classBuilder.getEmitter().emitInvokestatic("lisp/system/TransferOfControl", "disableExitPoints", "(Ljava/lang/Throwable;)", "V", false);
-		// ...
-		classBuilder.getEmitter().emitGetstatic("lisp/common/type/Null", "NIL", "Llisp/common/type/Null;");
-		//7. Setup a finally block
-		//Start the finally block
-		classBuilder.getEmitter().visitMethodLabel(finallyBlock);
-
-		//8. Setup the evalution of the cleanup form
-		//This is the finally code
-		//Evalute the cleanup form
-		while (!cleanupForm.equals(NullStruct.INSTANCE)) {
-			formGenerator.generate(cleanupForm.getFirst(), classBuilder);
-			cleanupForm = cleanupForm.getRest();
-			classBuilder.getEmitter().emitPop();
-		}
-
-		//9. Setup for a runtime call to process the return exception (if there was one, it will be rethrown automatically)
-		//Throw the stored exception if an exception was thrown in the protected form
-		classBuilder.getEmitter().emitInvokestatic("lisp/system/TransferOfControl", "processReturnException", "()", "V", false);
-
-		//10. Register an exception handler for type Throwable
-		classBuilder.getEmitter().visitTryCatchBlock(
-				startTryBlock,
-				catchBlock,
-				catchBlock,
-				"java/lang/Throwable");
+		// TODO: don't know if we need the next 2 lines
+		mv.visitMaxs(3, 2);
+		mv.visitEnd();
 	}
 }

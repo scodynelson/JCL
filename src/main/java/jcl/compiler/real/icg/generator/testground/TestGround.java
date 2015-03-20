@@ -22,7 +22,7 @@ import jcl.symbols.TStruct;
 
 public class TestGround {
 
-	private Object block() {
+	private Object blockGen() {
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct<?> name = pkg.findSymbol("FOO").getSymbol();
@@ -40,7 +40,7 @@ public class TestGround {
 		return result;
 	}
 
-	private Object returnFrom() {
+	private Object returnFromGen() {
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct<?> name = pkg.findSymbol("FOO").getSymbol();
@@ -118,5 +118,13 @@ public class TestGround {
 		final BigInteger numerator = new BigInteger("1");
 		final BigInteger denominator = new BigInteger("2");
 		return new RatioStruct(numerator, denominator);
+	}
+
+	private Object unwindProtectGen() {
+		try {
+			return new CharacterStruct(97);
+		} finally {
+			new CharacterStruct(197);
+		}
 	}
 }

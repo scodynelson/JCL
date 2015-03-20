@@ -3,7 +3,6 @@ package jcl.compiler.real.icg.generator.specialoperator;
 import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
-import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.struct.specialoperator.BlockStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.symbols.SymbolStruct;
@@ -16,9 +15,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class BlockCodeGenerator implements CodeGenerator<BlockStruct> {
-
-	@Autowired
-	private FormGenerator formGenerator;
 
 	@Autowired
 	private PrognCodeGenerator prognCodeGenerator;

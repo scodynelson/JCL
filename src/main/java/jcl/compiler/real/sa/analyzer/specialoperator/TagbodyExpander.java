@@ -11,6 +11,7 @@ import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
+import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.TagbodyStruct;
 import jcl.compiler.real.struct.specialoperator.go.GoStruct;
 import jcl.compiler.real.struct.specialoperator.go.GoStructGenerator;
@@ -65,8 +66,8 @@ public class TagbodyExpander extends MacroFunctionExpander<TagbodyStruct> {
 
 		try {
 			final TagbodyFormCollector tagbodyFormCollector = new TagbodyFormCollector(formAnalyzer, environment, goStructGeneratorStrategies);
-			final Map<GoStruct<?>, List<LispStruct>> analyzedTagbodyForms = forms.stream()
-			                                                                     .collect(tagbodyFormCollector);
+			final Map<GoStruct<?>, PrognStruct> analyzedTagbodyForms = forms.stream()
+			                                                                .collect(tagbodyFormCollector);
 			return new TagbodyStruct(analyzedTagbodyForms);
 		} finally {
 			environment.getTagbodyStack().pop();

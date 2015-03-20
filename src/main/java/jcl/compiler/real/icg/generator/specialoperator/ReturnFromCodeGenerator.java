@@ -5,7 +5,6 @@ import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
-import jcl.compiler.real.icg.generator.SpecialVariableCodeGenerator;
 import jcl.compiler.real.struct.specialoperator.ReturnFromStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.ClassWriter;
@@ -17,9 +16,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ReturnFromCodeGenerator implements CodeGenerator<ReturnFromStruct> {
-
-	@Autowired
-	private SpecialVariableCodeGenerator specialVariableCodeGenerator;
 
 	@Autowired
 	private FormGenerator formGenerator;

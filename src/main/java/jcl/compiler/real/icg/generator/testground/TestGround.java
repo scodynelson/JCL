@@ -9,6 +9,7 @@ import java.math.BigInteger;
 
 import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
+import jcl.compiler.old.exception.GoException;
 import jcl.compiler.real.icg.generator.specialoperator.exception.ReturnFromException;
 import jcl.compiler.real.icg.generator.specialoperator.exception.ThrowException;
 import jcl.lists.NullStruct;
@@ -126,5 +127,12 @@ public class TestGround {
 		} finally {
 			new CharacterStruct(197);
 		}
+	}
+
+	private Object goGen() {
+
+		final LispStruct tag = new CharacterStruct(97);
+
+		throw new GoException(tag);
 	}
 }

@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -20,6 +19,7 @@ import java.util.stream.Collector;
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.FormAnalyzer;
+import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.go.GoStruct;
 import jcl.compiler.real.struct.specialoperator.go.GoStructGenerator;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -27,7 +27,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-final class TagbodyFormCollector implements Collector<LispStruct, Map<GoStruct<?>, List<LispStruct>>, Map<GoStruct<?>, List<LispStruct>>> {
+final class TagbodyFormCollector implements Collector<LispStruct, Map<GoStruct<?>, PrognStruct>, Map<GoStruct<?>, PrognStruct>> {
 
 	private final FormAnalyzer formAnalyzer;
 
@@ -46,12 +46,12 @@ final class TagbodyFormCollector implements Collector<LispStruct, Map<GoStruct<?
 	}
 
 	@Override
-	public Supplier<Map<GoStruct<?>, List<LispStruct>>> supplier() {
+	public Supplier<Map<GoStruct<?>, PrognStruct>> supplier() {
 		return HashMap::new;
 	}
 
 	@Override
-	public BiConsumer<Map<GoStruct<?>, List<LispStruct>>, LispStruct> accumulator() {
+	public BiConsumer<Map<GoStruct<?>, PrognStruct>, LispStruct> accumulator() {
 		return (tagToFormsMap, current) -> {
 
 			final GoStructGenerator<LispStruct> goStructGenerator = goStructGeneratorStrategies.get(current.getClass());
@@ -63,19 +63,19 @@ final class TagbodyFormCollector implements Collector<LispStruct, Map<GoStruct<?
 		};
 	}
 
-	private void handleOtherwise(final Map<GoStruct<?>, List<LispStruct>> tagToFormsMap, final LispStruct lispStruct) {
+	private void handleOtherwise(final Map<GoStruct<?>, PrognStruct> tagToFormsMap, final LispStruct lispStruct) {
 		if (!tagToFormsMap.containsKey(currentTag)) {
-			tagToFormsMap.put(currentTag, new ArrayList<>());
+			tagToFormsMap.put(currentTag, new PrognStruct(new ArrayList<>()));
 		}
 
 		final LispStruct analyzedForm = formAnalyzer.analyze(lispStruct, environment);
-		tagToFormsMap.get(currentTag).add(analyzedForm);
+		tagToFormsMap.get(currentTag).getForms().add(analyzedForm);
 	}
 
 	@Override
-	public BinaryOperator<Map<GoStruct<?>, List<LispStruct>>> combiner() {
+	public BinaryOperator<Map<GoStruct<?>, PrognStruct>> combiner() {
 		return (tagToFormsMap1, tagToFormsMap2) -> {
-			for (Map.Entry<GoStruct<?>, List<LispStruct>> e : tagToFormsMap2.entrySet()) {
+			for (Map.Entry<GoStruct<?>, PrognStruct> e : tagToFormsMap2.entrySet()) {
 				tagToFormsMap1.merge(
 						e.getKey(),
 						e.getValue(),
@@ -89,7 +89,7 @@ final class TagbodyFormCollector implements Collector<LispStruct, Map<GoStruct<?
 	}
 
 	@Override
-	public Function<Map<GoStruct<?>, List<LispStruct>>, Map<GoStruct<?>, List<LispStruct>>> finisher() {
+	public Function<Map<GoStruct<?>, PrognStruct>, Map<GoStruct<?>, PrognStruct>> finisher() {
 		return Function.identity();
 	}
 

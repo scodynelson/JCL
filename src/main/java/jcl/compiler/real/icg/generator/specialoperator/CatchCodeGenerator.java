@@ -30,7 +30,7 @@ public class CatchCodeGenerator implements CodeGenerator<CatchStruct> {
 		final ClassWriter cw = currentClass.getClassWriter();
 		MethodVisitor mv = currentClass.getMethodVisitor();
 
-		mv = cw.visitMethod(Opcodes.ACC_PRIVATE, "catchGen", "()V", null, null);
+		mv = cw.visitMethod(Opcodes.ACC_PRIVATE, "catchGen", "()Ljava/lang/Object;", null, null);
 		mv.visitCode();
 		// TODO: don't know if we need the above 2 lines...
 
@@ -39,39 +39,27 @@ public class CatchCodeGenerator implements CodeGenerator<CatchStruct> {
 		final Label catchBlock = new Label();
 		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlock, "jcl/compiler/real/icg/generator/specialoperator/exception/ThrowException");
 
-		final Label getCatchTagValue = new Label();
-		mv.visitLabel(getCatchTagValue);
-//		mv.visitLineNumber(61, getCatchTagValue);
 		final LispStruct catchTag = input.getCatchTag();
 		formGenerator.generate(catchTag, classBuilder);
 		mv.visitVarInsn(Opcodes.ASTORE, 1);
 
 		mv.visitLabel(tryBlockStart);
-//		mv.visitLineNumber(65, tryBlockStart);
 		final PrognStruct forms = input.getForms();
 		prognCodeGenerator.generate(forms, classBuilder);
 		mv.visitVarInsn(Opcodes.ASTORE, 2);
 
 		mv.visitLabel(tryBlockEnd);
-//		mv.visitLineNumber(72, tryBlockEnd);
+
 		final Label catchBlockEnd = new Label();
 		mv.visitJumpInsn(Opcodes.GOTO, catchBlockEnd);
 
 		mv.visitLabel(catchBlock);
-//		mv.visitLineNumber(66, catchBlock);
-		mv.visitFrame(Opcodes.F_FULL, 1, new Object[]{"jcl/LispStruct"}, 1, new Object[]{"jcl/compiler/real/icg/generator/specialoperator/exception/ThrowException"});
 		mv.visitVarInsn(Opcodes.ASTORE, 3);
 
-		final Label getThrowCatchTag = new Label();
-		mv.visitLabel(getThrowCatchTag);
-//		mv.visitLineNumber(67, getThrowCatchTag);
 		mv.visitVarInsn(Opcodes.ALOAD, 3);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/compiler/real/icg/generator/specialoperator/exception/ThrowException", "getCatchTag", "()Ljcl/LispStruct;", false);
 		mv.visitVarInsn(Opcodes.ASTORE, 4);
 
-		final Label checkEqualsThrowCatchTagAndCatchTag = new Label();
-		mv.visitLabel(checkEqualsThrowCatchTagAndCatchTag);
-//		mv.visitLineNumber(68, checkEqualsThrowCatchTagAndCatchTag);
 		mv.visitVarInsn(Opcodes.ALOAD, 4);
 		mv.visitVarInsn(Opcodes.ALOAD, 1);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/Object", "equals", "(Ljava/lang/Object;)Z", false);
@@ -79,37 +67,21 @@ public class CatchCodeGenerator implements CodeGenerator<CatchStruct> {
 		final Label setResultValue = new Label();
 		mv.visitJumpInsn(Opcodes.IFNE, setResultValue);
 
-		final Label rethrowThrowException = new Label();
-		mv.visitLabel(rethrowThrowException);
-//		mv.visitLineNumber(69, rethrowThrowException);
 		mv.visitVarInsn(Opcodes.ALOAD, 3);
 		mv.visitInsn(Opcodes.ATHROW);
 
 		mv.visitLabel(setResultValue);
-//		mv.visitLineNumber(71, setResultValue);
-		mv.visitFrame(Opcodes.F_APPEND, 3, new Object[]{Opcodes.TOP, "jcl/compiler/real/icg/generator/specialoperator/exception/ThrowException", "jcl/LispStruct"}, 0, null);
 		mv.visitVarInsn(Opcodes.ALOAD, 3);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/compiler/real/icg/generator/specialoperator/exception/ThrowException", "getResultForm", "()Ljcl/LispStruct;", false);
 		mv.visitVarInsn(Opcodes.ASTORE, 2);
 
 		mv.visitLabel(catchBlockEnd);
-//		mv.visitLineNumber(73, catchBlockEnd);
-		mv.visitFrame(Opcodes.F_FULL, 2, new Object[]{"jcl/LispStruct", "jcl/LispStruct"}, 0, new Object[]{});
 		mv.visitVarInsn(Opcodes.ALOAD, 2);
 
 		// TODO: don't know if the next line is necessary. we might want to remain in the same method...
 		mv.visitInsn(Opcodes.ARETURN);
 
-		final Label localVariables = new Label();
-		mv.visitLabel(localVariables);
-		mv.visitLocalVariable("catchTag", "Ljcl/LispStruct;", null, tryBlockStart, localVariables, 1);
-		mv.visitLocalVariable("resultForm", "Ljcl/LispStruct;", null, tryBlockEnd, catchBlock, 2);
-		mv.visitLocalVariable("resultForm", "Ljcl/LispStruct;", null, catchBlockEnd, localVariables, 2);
-		mv.visitLocalVariable("te", "Ljcl/compiler/real/icg/generator/specialoperator/exception/ThrowException;", null, getThrowCatchTag, catchBlockEnd, 3);
-		mv.visitLocalVariable("teCatchTag", "Ljcl/LispStruct;", null, checkEqualsThrowCatchTagAndCatchTag, catchBlockEnd, 4);
-
-		// TODO: don't know if we need the next 2 lines
-		mv.visitMaxs(3, 4);
+		// TODO: don't know if we need the next line
 		mv.visitEnd();
 	}
 }

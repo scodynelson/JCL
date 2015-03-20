@@ -1,15 +1,33 @@
 package jcl.compiler.old.functions;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.Vector;
+import java.util.jar.JarEntry;
+import java.util.jar.JarOutputStream;
+import java.util.jar.Manifest;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.old.CompilerClassLoader;
-import jcl.compiler.old.Emitter;
 import jcl.compiler.old.EmptyVisitor;
+import jcl.compiler.old.MacroFunctionExpander;
 import jcl.compiler.old.documentation.AnnotationCollector;
 import jcl.compiler.old.documentation.DocumentFactory;
-import jcl.compiler.real.icg.IntermediateCodeGenerator;
-import jcl.compiler.old.MacroFunctionExpander;
 import jcl.compiler.old.symbol.KeywordOld;
+import jcl.compiler.real.icg.ClassDef;
+import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lists.ConsStruct;
@@ -31,24 +49,6 @@ import org.springframework.context.ApplicationContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.Vector;
-import java.util.jar.JarEntry;
-import java.util.jar.JarOutputStream;
-import java.util.jar.Manifest;
 
 public class CompileFileFunction {
 
@@ -158,7 +158,7 @@ public class CompileFileFunction {
 
 			baseTime = System.currentTimeMillis();
 
-			Vector<Emitter.ClassDef> v = (Vector<Emitter.ClassDef>) icg.funcall(lambdaForm);
+			Vector<ClassDef> v = new Vector<>(icg.funcall(lambdaForm));
 			Vector<String> oc = new Vector<String>(v.size());
 			Vector<byte[]> classBytes = new Vector<>(v.size());
 
@@ -169,8 +169,8 @@ public class CompileFileFunction {
 			xmlDoc.appendChild(root);
 
 			// change all of the ClassWriters into byte arrays
-			for (Emitter.ClassDef classDef : v) {
-				byte[] byteArray = classDef.cw.toByteArray();
+			for (ClassDef classDef : v) {
+				byte[] byteArray = classDef.getClassWriter().toByteArray();
 				ClassReader cr = new ClassReader(byteArray);
 
 				String key = "";
@@ -202,17 +202,17 @@ public class CompileFileFunction {
 				}
 
 				if (bDebug) {
-					System.out.println("Printing the class " + classDef.name + '\n');
+					System.out.println("Printing the class " + classDef.getName() + '\n');
 					CheckClassAdapter.verify(new ClassReader(byteArray), true, new java.io.PrintWriter(System.out));
 //                    TraceClassVisitor tcv = new TraceClassVisitor(new java.io.PrintWriter(System.out));
 //                    cr.accept(tcv, false);
-					System.out.println("Done  with class " + classDef.name + '\n');
+					System.out.println("Done  with class " + classDef.getName() + '\n');
 				} else {
 					CheckClassAdapter cca = new CheckClassAdapter(new EmptyVisitor());
 					cr.accept(cca, 0); //ClassReader.EXPAND_FRAMES);
 				}
 				classBytes.add(byteArray);
-				oc.add(classDef.name);
+				oc.add(classDef.getName());
 			}
 			// now load them
 			Vector<?> classesLoaded = new Vector<>(v.size());

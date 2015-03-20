@@ -4,9 +4,11 @@
 
 package jcl.compiler.real.icg;
 
-import jcl.LispStruct;
+import java.util.List;
+
+import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 
 public interface IntermediateCodeGenerator {
 
-	Object funcall(LispStruct lispFunc);
+	List<ClassDef> funcall(LambdaStruct lambdaStruct);
 }

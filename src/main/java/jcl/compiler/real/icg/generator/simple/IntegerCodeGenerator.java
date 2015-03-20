@@ -7,7 +7,6 @@ import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.numbers.IntegerStruct;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.stereotype.Component;
@@ -26,9 +25,6 @@ public class IntegerCodeGenerator implements CodeGenerator<IntegerStruct> {
 		mv.visitCode();
 		// TODO: don't know if we need the above 2 lines...
 
-		Label getBigInteger = new Label();
-		mv.visitLabel(getBigInteger);
-//		mv.visitLineNumber(114, getBigInteger);
 		mv.visitTypeInsn(Opcodes.NEW, "java/math/BigInteger");
 		mv.visitInsn(Opcodes.DUP);
 
@@ -38,9 +34,6 @@ public class IntegerCodeGenerator implements CodeGenerator<IntegerStruct> {
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/math/BigInteger", "<init>", "(Ljava/lang/String;)V", false);
 		mv.visitVarInsn(Opcodes.ASTORE, 1);
 
-		final Label getIntegerStruct = new Label();
-		mv.visitLabel(getIntegerStruct);
-//		mv.visitLineNumber(115, getIntegerStruct);
 		mv.visitTypeInsn(Opcodes.NEW, "jcl/numbers/IntegerStruct");
 		mv.visitInsn(Opcodes.DUP);
 
@@ -50,12 +43,7 @@ public class IntegerCodeGenerator implements CodeGenerator<IntegerStruct> {
 		// TODO: don't know if the next line is necessary. we might want to remain in the same method...
 		mv.visitInsn(Opcodes.ARETURN);
 
-		final Label localVariables = new Label();
-		mv.visitLabel(localVariables);
-		mv.visitLocalVariable("bigInteger", "Ljava/math/BigInteger;", null, getIntegerStruct, localVariables, 1);
-
-		// TODO: don't know if we need the next 2 lines
-		mv.visitMaxs(3, 1);
+		// TODO: don't know if we need the next line
 		mv.visitEnd();
 	}
 }

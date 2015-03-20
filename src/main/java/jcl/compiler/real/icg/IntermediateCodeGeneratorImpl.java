@@ -1,7 +1,9 @@
 package jcl.compiler.real.icg;
 
-import jcl.LispStruct;
-import jcl.compiler.real.icg.generator.FormGenerator;
+import java.util.List;
+
+import jcl.compiler.real.icg.generator.specialoperator.lambda.NewLambdaCodeGenerator;
+import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -12,12 +14,12 @@ import org.springframework.stereotype.Component;
 public class IntermediateCodeGeneratorImpl implements IntermediateCodeGenerator {
 
 	@Autowired
-	private FormGenerator formGenerator;
+	private NewLambdaCodeGenerator lambdaCodeGenerator;
 
 	@Override
-	public Object funcall(final LispStruct lispFunc) {
+	public List<ClassDef> funcall(final LambdaStruct lambdaStruct) {
 		final JavaClassBuilder classBuilder = new JavaClassBuilder();
-		formGenerator.generate(lispFunc, classBuilder);
+		lambdaCodeGenerator.generate(lambdaStruct, classBuilder);
 //        assert(closureDepth == 0) : "Unbalanced closure depth: " + closureDepth;
 		return classBuilder.getEmitter().getClasses();
 	}

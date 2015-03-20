@@ -5,7 +5,6 @@ import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.stereotype.Component;
@@ -24,9 +23,6 @@ public class CharacterCodeGenerator implements CodeGenerator<CharacterStruct> {
 		mv.visitCode();
 		// TODO: don't know if we need the above 2 lines...
 
-		final Label getCharacterStruct = new Label();
-		mv.visitLabel(getCharacterStruct);
-//		mv.visitLineNumber(105, getCharacterStruct);
 		mv.visitTypeInsn(Opcodes.NEW, "jcl/characters/CharacterStruct");
 		mv.visitInsn(Opcodes.DUP);
 
@@ -37,8 +33,7 @@ public class CharacterCodeGenerator implements CodeGenerator<CharacterStruct> {
 		// TODO: don't know if the next line is necessary. we might want to remain in the same method...
 		mv.visitInsn(Opcodes.ARETURN);
 
-		// TODO: don't know if we need the next 2 lines
-		mv.visitMaxs(3, 0);
+		// TODO: don't know if we need the next line
 		mv.visitEnd();
 	}
 }

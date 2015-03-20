@@ -28,7 +28,7 @@ public class PrognCodeGenerator implements CodeGenerator<PrognStruct> {
 		final ClassWriter cw = currentClass.getClassWriter();
 		MethodVisitor mv = currentClass.getMethodVisitor();
 
-		mv = cw.visitMethod(Opcodes.ACC_PRIVATE, "progn", "()V", null, null);
+		mv = cw.visitMethod(Opcodes.ACC_PRIVATE, "prognGen", "()V", null, null);
 		mv.visitCode();
 		// TODO: don't know if we need the above 2 lines...
 
@@ -45,8 +45,7 @@ public class PrognCodeGenerator implements CodeGenerator<PrognStruct> {
 				currentClass.getMethodVisitor().visitInsn(Opcodes.POP);
 			}
 		}
-		// TODO: don't know if we need the next 2 lines
-		mv.visitMaxs(1, 0);
+		// TODO: don't know if we need the next line
 		mv.visitEnd();
 	}
 }

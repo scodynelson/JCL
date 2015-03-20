@@ -8,7 +8,6 @@ import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.numbers.RatioStruct;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.stereotype.Component;
@@ -29,9 +28,6 @@ public class RatioCodeGenerator implements CodeGenerator<RatioStruct> {
 
 		final BigFraction bigFraction = input.getBigFraction();
 
-		final Label getNumerator = new Label();
-		mv.visitLabel(getNumerator);
-//		mv.visitLineNumber(119, getNumerator);
 		mv.visitTypeInsn(Opcodes.NEW, "java/math/BigInteger");
 		mv.visitInsn(Opcodes.DUP);
 
@@ -41,9 +37,6 @@ public class RatioCodeGenerator implements CodeGenerator<RatioStruct> {
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/math/BigInteger", "<init>", "(Ljava/lang/String;)V", false);
 		mv.visitVarInsn(Opcodes.ASTORE, 1);
 
-		final Label getDenominator = new Label();
-		mv.visitLabel(getDenominator);
-//		mv.visitLineNumber(120, getDenominator);
 		mv.visitTypeInsn(Opcodes.NEW, "java/math/BigInteger");
 		mv.visitInsn(Opcodes.DUP);
 
@@ -53,9 +46,6 @@ public class RatioCodeGenerator implements CodeGenerator<RatioStruct> {
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/math/BigInteger", "<init>", "(Ljava/lang/String;)V", false);
 		mv.visitVarInsn(Opcodes.ASTORE, 2);
 
-		final Label getRatioStruct = new Label();
-		mv.visitLabel(getRatioStruct);
-//		mv.visitLineNumber(121, getRatioStruct);
 		mv.visitTypeInsn(Opcodes.NEW, "jcl/numbers/RatioStruct");
 		mv.visitInsn(Opcodes.DUP);
 
@@ -66,13 +56,7 @@ public class RatioCodeGenerator implements CodeGenerator<RatioStruct> {
 		// TODO: don't know if the next line is necessary. we might want to remain in the same method...
 		mv.visitInsn(Opcodes.ARETURN);
 
-		final Label localVariables = new Label();
-		mv.visitLabel(localVariables);
-		mv.visitLocalVariable("numerator", "Ljava/math/BigInteger;", null, getDenominator, localVariables, 1);
-		mv.visitLocalVariable("denominator", "Ljava/math/BigInteger;", null, getRatioStruct, localVariables, 2);
-
-		// TODO: don't know if we need the next 2 lines
-		mv.visitMaxs(4, 2);
+		// TODO: don't know if we need the next line
 		mv.visitEnd();
 	}
 }

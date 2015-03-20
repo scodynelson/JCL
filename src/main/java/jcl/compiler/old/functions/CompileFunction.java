@@ -3,12 +3,13 @@ package jcl.compiler.old.functions;
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.old.CompilerClassLoader;
-import jcl.compiler.old.Emitter;
 import jcl.compiler.old.EmptyVisitor;
 import jcl.compiler.old.documentation.AnnotationCollector;
 import jcl.compiler.old.documentation.DocumentFactory;
+import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
@@ -80,9 +81,9 @@ public class CompileFunction {
 			if (formCopy instanceof List) {
 				formCopy = copyTree.funcall(formCopy);
 			}
-			obj = sa.analyze(obj);
+			LambdaStruct analyzedObj = sa.analyze(obj);
 
-			Vector<Emitter.ClassDef> v = (Vector<Emitter.ClassDef>) icg.funcall(obj);
+			Vector<ClassDef> v = new Vector<>(icg.funcall(analyzedObj));
 			Vector<String> oc = new Vector<String>(v.size());
 			Vector<byte[]> classBytes = new Vector<>(v.size());
 
@@ -94,8 +95,8 @@ public class CompileFunction {
 			// *** end setup of documentation
 
 			// change all of the ClassWriters into byte arrays
-			for (Emitter.ClassDef classDef : v) {
-				byte[] byteArray = classDef.cw.toByteArray();
+			for (ClassDef classDef : v) {
+				byte[] byteArray = classDef.getClassWriter().toByteArray();
 				ClassReader cr = new ClassReader(byteArray);
 				CheckClassAdapter cca = new CheckClassAdapter(new MethodEmptyVisitor());
 				cr.accept(cca, 0); //ClassReader.EXPAND_FRAMES);
@@ -104,7 +105,7 @@ public class CompileFunction {
 				insertDocumentation(cr, xmlDoc, root);
 
 				classBytes.add(byteArray);
-				oc.add(classDef.name);
+				oc.add(classDef.getName());
 			}
 			// now load them
 			Vector<?> classesLoaded = new Vector<>(v.size());

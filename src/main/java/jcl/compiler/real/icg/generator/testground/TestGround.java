@@ -53,13 +53,13 @@ public class TestGround {
 
 	private Object ifGen() {
 
-		final LispStruct testObj = null;
+		final LispStruct testObj = new CharacterStruct(97);
 
 		final LispStruct result;
 		if (!testObj.equals(NullStruct.INSTANCE) && !testObj.equals(NILStruct.INSTANCE)) {
-			result = new CharacterStruct(97);
-		} else {
 			result = new CharacterStruct(197);
+		} else {
+			result = new CharacterStruct(297);
 		}
 		return result;
 	}

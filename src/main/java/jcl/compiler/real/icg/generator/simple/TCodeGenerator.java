@@ -9,7 +9,6 @@ import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.symbols.TStruct;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.stereotype.Component;
@@ -28,16 +27,12 @@ public class TCodeGenerator implements CodeGenerator<TStruct> {
 		mv.visitCode();
 		// TODO: don't know if we need the above 2 lines...
 
-		final Label getTStruct = new Label();
-		mv.visitLabel(getTStruct);
-//		mv.visitLineNumber(93, getTStruct);
 		mv.visitFieldInsn(Opcodes.GETSTATIC, "jcl/symbols/TStruct", "INSTANCE", "Ljcl/symbols/TStruct;");
 
 		// TODO: don't know if the next line is necessary. we might want to remain in the same method...
 		mv.visitInsn(Opcodes.ARETURN);
 
-		// TODO: don't know if we need the next 2 lines
-		mv.visitMaxs(1, 0);
+		// TODO: don't know if we need the next line
 		mv.visitEnd();
 	}
 }

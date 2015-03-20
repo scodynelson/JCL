@@ -40,13 +40,11 @@ public class UnwindProtectCodeGenerator implements CodeGenerator<UnwindProtectSt
 		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlock, null);
 
 		mv.visitLabel(tryBlockStart);
-//		mv.visitLineNumber(125, tryBlockStart);
 		final LispStruct protectedForm = input.getProtectedForm();
 		formGenerator.generate(protectedForm, classBuilder);
 		mv.visitVarInsn(Opcodes.ASTORE, 1);
 
 		mv.visitLabel(tryBlockEnd);
-//		mv.visitLineNumber(127, tryBlockEnd);
 		final PrognStruct cleanupForms = input.getCleanupForms();
 		prognCodeGenerator.generate(cleanupForms, classBuilder);
 		mv.visitInsn(Opcodes.POP);
@@ -56,15 +54,13 @@ public class UnwindProtectCodeGenerator implements CodeGenerator<UnwindProtectSt
 		mv.visitInsn(Opcodes.ARETURN);
 
 		mv.visitLabel(catchBlock);
-		mv.visitFrame(Opcodes.F_SAME1, 0, null, 1, new Object[]{"java/lang/Throwable"});
 		mv.visitVarInsn(Opcodes.ASTORE, 2);
 		prognCodeGenerator.generate(cleanupForms, classBuilder);
 		mv.visitInsn(Opcodes.POP);
 		mv.visitVarInsn(Opcodes.ALOAD, 2);
 		mv.visitInsn(Opcodes.ATHROW);
 
-		// TODO: don't know if we need the next 2 lines
-		mv.visitMaxs(3, 2);
+		// TODO: don't know if we need the next line
 		mv.visitEnd();
 	}
 }

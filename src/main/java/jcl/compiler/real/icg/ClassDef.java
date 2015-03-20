@@ -21,7 +21,7 @@ public class ClassDef {
 
 	private AnnotationVisitor annotationVisitor;
 
-	ClassDef(final String name) {
+	public ClassDef(final String name) {
 		this.name = name;
 	}
 

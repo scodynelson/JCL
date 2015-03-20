@@ -1,5 +1,6 @@
 package jcl.compiler.real.icg.generator.specialoperator;
 
+import java.util.Iterator;
 import java.util.List;
 
 import jcl.LispStruct;
@@ -61,8 +62,18 @@ public class BlockCodeGenerator implements CodeGenerator<BlockStruct> {
 		mv.visitLabel(tryBlockStart);
 //		mv.visitLineNumber(24, tryBlockStart);
 		final List<LispStruct> forms = input.getForms();
-		for (final LispStruct form : forms) {
+		// TODO: would be nice if we just have the SA make this into a PrognStruct...
+		for (final Iterator<LispStruct> iterator = forms.iterator(); iterator.hasNext(); ) {
+
+			final LispStruct form = iterator.next();
+			if (form == null) {
+				// Remove the current element from the iterator and the list.
+				iterator.remove();
+			}
 			formGenerator.generate(form, classBuilder);
+			if (iterator.hasNext()) {
+				currentClass.getMethodVisitor().visitInsn(Opcodes.POP);
+			}
 		}
 		mv.visitVarInsn(Opcodes.ASTORE, 3);
 

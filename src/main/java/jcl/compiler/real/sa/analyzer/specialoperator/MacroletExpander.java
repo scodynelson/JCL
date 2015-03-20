@@ -19,6 +19,7 @@ import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.MacroletStruct;
+import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
@@ -105,7 +106,7 @@ public class MacroletExpander extends MacroFunctionExpander<MacroletStruct> {
 					           .map(e -> formAnalyzer.analyze(e, macroletEnvironment))
 					           .collect(Collectors.toList());
 
-			return new MacroletStruct(macroletVars, analyzedBodyForms, macroletEnvironment);
+			return new MacroletStruct(macroletVars, new PrognStruct(analyzedBodyForms), macroletEnvironment);
 		} finally {
 			if (functionNames != null) {
 				StackUtils.popX(functionNameStack, functionNames.size());

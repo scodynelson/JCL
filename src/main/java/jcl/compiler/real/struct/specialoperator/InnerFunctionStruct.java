@@ -7,7 +7,6 @@ package jcl.compiler.real.struct.specialoperator;
 import java.io.Serializable;
 import java.util.List;
 
-import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.struct.SpecialOperatorStruct;
 import jcl.compiler.real.struct.specialoperator.InnerFunctionStruct.InnerFunctionVar;
@@ -23,11 +22,11 @@ public abstract class InnerFunctionStruct<E extends Environment, V extends Inner
 
 	private final List<V> vars;
 
-	private final List<LispStruct> forms;
+	private final PrognStruct forms;
 
 	private final E lexicalEnvironment;
 
-	InnerFunctionStruct(final List<V> vars, final List<LispStruct> forms, final E lexicalEnvironment) {
+	InnerFunctionStruct(final List<V> vars, final PrognStruct forms, final E lexicalEnvironment) {
 		this.vars = vars;
 		this.forms = forms;
 		this.lexicalEnvironment = lexicalEnvironment;
@@ -37,7 +36,7 @@ public abstract class InnerFunctionStruct<E extends Environment, V extends Inner
 		return vars;
 	}
 
-	public List<LispStruct> getForms() {
+	public PrognStruct getForms() {
 		return forms;
 	}
 

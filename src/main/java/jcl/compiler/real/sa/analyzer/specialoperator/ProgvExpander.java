@@ -15,6 +15,7 @@ import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.SymbolAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
+import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.ProgvStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
@@ -150,6 +151,6 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 				         .map(e -> formAnalyzer.analyze(e, environment))
 				         .collect(Collectors.toList());
 
-		return new ProgvStruct(progvVars, analyzedBodyForms, null, environment);
+		return new ProgvStruct(progvVars, new PrognStruct(analyzedBodyForms), null, environment);
 	}
 }

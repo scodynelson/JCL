@@ -13,6 +13,7 @@ import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.LocallyStruct;
+import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.lists.ListStruct;
@@ -60,6 +61,6 @@ public class LocallyExpander extends MacroFunctionExpander<LocallyStruct> {
 				           .map(e -> formAnalyzer.analyze(e, locallyEnvironment))
 				           .collect(Collectors.toList());
 
-		return new LocallyStruct(analyzedBodyForms, locallyEnvironment);
+		return new LocallyStruct(new PrognStruct(analyzedBodyForms), locallyEnvironment);
 	}
 }

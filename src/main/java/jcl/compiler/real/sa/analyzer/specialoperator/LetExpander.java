@@ -16,6 +16,7 @@ import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.LetStruct;
+import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
@@ -91,7 +92,7 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 				           .map(e -> formAnalyzer.analyze(e, letEnvironment))
 				           .collect(Collectors.toList());
 
-		return new LetStruct(letVars, analyzedBodyForms, letEnvironment);
+		return new LetStruct(letVars, new PrognStruct(analyzedBodyForms), letEnvironment);
 	}
 
 	private LetStruct.LetVar getLetVar(final LispStruct parameter, final DeclareStruct declareElement,

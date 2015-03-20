@@ -23,13 +23,13 @@ public class ProgvStruct extends SpecialOperatorStruct {
 
 	private final List<ProgvVar> vars;
 
-	private final List<LispStruct> forms;
+	private final PrognStruct forms;
 
 	private final List<Binding<?>> previousBindings;
 
 	private final Environment environment;
 
-	public ProgvStruct(final List<ProgvVar> vars, final List<LispStruct> forms, final List<Binding<?>> previousBindings,
+	public ProgvStruct(final List<ProgvVar> vars, final PrognStruct forms, final List<Binding<?>> previousBindings,
 	                   final Environment environment) {
 		this.vars = vars;
 		this.forms = forms;
@@ -41,7 +41,7 @@ public class ProgvStruct extends SpecialOperatorStruct {
 		return vars;
 	}
 
-	public List<LispStruct> getForms() {
+	public PrognStruct getForms() {
 		return forms;
 	}
 

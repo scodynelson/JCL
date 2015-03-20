@@ -19,6 +19,7 @@ import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.LabelsStruct;
+import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
@@ -105,7 +106,7 @@ public class LabelsExpander extends MacroFunctionExpander<LabelsStruct> {
 					           .map(e -> formAnalyzer.analyze(e, labelsEnvironment))
 					           .collect(Collectors.toList());
 
-			return new LabelsStruct(labelsVars, analyzedBodyForms, labelsEnvironment);
+			return new LabelsStruct(labelsVars, new PrognStruct(analyzedBodyForms), labelsEnvironment);
 		} finally {
 			if (functionNames != null) {
 				StackUtils.popX(functionNameStack, functionNames.size());

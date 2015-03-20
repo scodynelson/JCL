@@ -15,6 +15,7 @@ import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
+import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.SymbolMacroletStruct;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
@@ -88,7 +89,7 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 				           .map(e -> formAnalyzer.analyze(e, symbolMacroletEnvironment))
 				           .collect(Collectors.toList());
 
-		return new SymbolMacroletStruct(symbolMacroletVars, analyzedBodyForms, symbolMacroletEnvironment);
+		return new SymbolMacroletStruct(symbolMacroletVars, new PrognStruct(analyzedBodyForms), symbolMacroletEnvironment);
 	}
 
 	private static void validateDeclares(final DeclareStruct declareElement) {

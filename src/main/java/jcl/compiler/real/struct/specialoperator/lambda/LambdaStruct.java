@@ -4,13 +4,11 @@
 
 package jcl.compiler.real.struct.specialoperator.lambda;
 
-import java.util.List;
-
-import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.struct.SpecialOperatorStruct;
+import jcl.compiler.real.struct.specialoperator.PrognStruct;
 
 public class LambdaStruct extends SpecialOperatorStruct {
 
@@ -20,11 +18,11 @@ public class LambdaStruct extends SpecialOperatorStruct {
 
 	private final StringStruct docString;
 
-	private final List<LispStruct> forms;
+	private final PrognStruct forms;
 
 	private final LambdaEnvironment lambdaEnvironment;
 
-	public LambdaStruct(final OrdinaryLambdaListBindings lambdaListBindings, final StringStruct docString, final List<LispStruct> forms,
+	public LambdaStruct(final OrdinaryLambdaListBindings lambdaListBindings, final StringStruct docString, final PrognStruct forms,
 	                    final LambdaEnvironment lambdaEnvironment) {
 		this.lambdaListBindings = lambdaListBindings;
 		this.docString = docString;
@@ -40,7 +38,7 @@ public class LambdaStruct extends SpecialOperatorStruct {
 		return docString;
 	}
 
-	public List<LispStruct> getForms() {
+	public PrognStruct getForms() {
 		return forms;
 	}
 

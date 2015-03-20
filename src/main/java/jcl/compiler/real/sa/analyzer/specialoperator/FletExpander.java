@@ -19,6 +19,7 @@ import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.FletStruct;
+import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
@@ -105,7 +106,7 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 					           .map(e -> formAnalyzer.analyze(e, fletEnvironment))
 					           .collect(Collectors.toList());
 
-			return new FletStruct(fletVars, analyzedBodyForms, fletEnvironment);
+			return new FletStruct(fletVars, new PrognStruct(analyzedBodyForms), fletEnvironment);
 		} finally {
 			if (functionNames != null) {
 				StackUtils.popX(functionNameStack, functionNames.size());

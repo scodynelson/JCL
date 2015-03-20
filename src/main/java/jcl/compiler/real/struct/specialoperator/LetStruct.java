@@ -22,11 +22,11 @@ public class LetStruct extends SpecialOperatorStruct {
 
 	private final List<LetVar> vars;
 
-	private final List<LispStruct> forms;
+	private final PrognStruct forms;
 
 	private final LetEnvironment letEnvironment;
 
-	public LetStruct(final List<LetVar> vars, final List<LispStruct> forms, final LetEnvironment letEnvironment) {
+	public LetStruct(final List<LetVar> vars, final PrognStruct forms, final LetEnvironment letEnvironment) {
 		this.vars = vars;
 		this.forms = forms;
 		this.letEnvironment = letEnvironment;
@@ -36,7 +36,7 @@ public class LetStruct extends SpecialOperatorStruct {
 		return vars;
 	}
 
-	public List<LispStruct> getForms() {
+	public PrognStruct getForms() {
 		return forms;
 	}
 

@@ -9,6 +9,7 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.BlockStruct;
+import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.printer.Printer;
@@ -64,7 +65,7 @@ public class BlockExpander extends MacroFunctionExpander<BlockStruct> {
 					     .map(e -> formAnalyzer.analyze(e, environment))
 					     .collect(Collectors.toList());
 
-			return new BlockStruct(name, analyzedForms);
+			return new BlockStruct(name, new PrognStruct(analyzedForms));
 		} finally {
 			environment.getBlockStack().pop();
 		}

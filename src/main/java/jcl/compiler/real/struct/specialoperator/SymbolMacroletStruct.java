@@ -22,11 +22,11 @@ public class SymbolMacroletStruct extends SpecialOperatorStruct {
 
 	private final List<SymbolMacroletElementVar> vars;
 
-	private final List<LispStruct> forms;
+	private final PrognStruct forms;
 
 	private final SymbolMacroletEnvironment symbolMacroletEnvironment;
 
-	public SymbolMacroletStruct(final List<SymbolMacroletElementVar> vars, final List<LispStruct> forms, final SymbolMacroletEnvironment symbolMacroletEnvironment) {
+	public SymbolMacroletStruct(final List<SymbolMacroletElementVar> vars, final PrognStruct forms, final SymbolMacroletEnvironment symbolMacroletEnvironment) {
 		this.vars = vars;
 		this.forms = forms;
 		this.symbolMacroletEnvironment = symbolMacroletEnvironment;
@@ -36,7 +36,7 @@ public class SymbolMacroletStruct extends SpecialOperatorStruct {
 		return vars;
 	}
 
-	public List<LispStruct> getForms() {
+	public PrognStruct getForms() {
 		return forms;
 	}
 

@@ -4,9 +4,6 @@
 
 package jcl.compiler.real.struct.specialoperator;
 
-import java.util.List;
-
-import jcl.LispStruct;
 import jcl.compiler.real.struct.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 
@@ -16,9 +13,9 @@ public class BlockStruct extends SpecialOperatorStruct {
 
 	private final SymbolStruct<?> name;
 
-	private final List<LispStruct> forms;
+	private final PrognStruct forms;
 
-	public BlockStruct(final SymbolStruct<?> name, final List<LispStruct> forms) {
+	public BlockStruct(final SymbolStruct<?> name, final PrognStruct forms) {
 		this.name = name;
 		this.forms = forms;
 	}
@@ -27,7 +24,7 @@ public class BlockStruct extends SpecialOperatorStruct {
 		return name;
 	}
 
-	public List<LispStruct> getForms() {
+	public PrognStruct getForms() {
 		return forms;
 	}
 }

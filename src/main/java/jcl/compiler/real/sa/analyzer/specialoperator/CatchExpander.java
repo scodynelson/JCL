@@ -9,6 +9,7 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.CatchStruct;
+import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
@@ -52,6 +53,6 @@ public class CatchExpander extends MacroFunctionExpander<CatchStruct> {
 				     .map(e -> formAnalyzer.analyze(e, environment))
 				     .collect(Collectors.toList());
 
-		return new CatchStruct(catchTagAnalyzed, analyzedForms);
+		return new CatchStruct(catchTagAnalyzed, new PrognStruct(analyzedForms));
 	}
 }

@@ -8,6 +8,7 @@ import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
+import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.UnwindProtectStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
@@ -52,6 +53,6 @@ public class UnwindProtectExpander extends MacroFunctionExpander<UnwindProtectSt
 				            .map(e -> formAnalyzer.analyze(e, environment))
 				            .collect(Collectors.toList());
 
-		return new UnwindProtectStruct(analyzedProtectedForm, analyzedCleanupForms);
+		return new UnwindProtectStruct(analyzedProtectedForm, new PrognStruct(analyzedCleanupForms));
 	}
 }

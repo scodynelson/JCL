@@ -18,6 +18,7 @@ import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAndDocStringAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
+import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
@@ -90,7 +91,7 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 				= newLambdaBodyForms.stream()
 				                    .map(e -> formAnalyzer.analyze(e, lambdaEnvironment))
 				                    .collect(Collectors.toList());
-		return new LambdaStruct(parsedLambdaList, bodyProcessingResult.getDocString(), analyzedBodyForms, lambdaEnvironment);
+		return new LambdaStruct(parsedLambdaList, bodyProcessingResult.getDocString(), new PrognStruct(analyzedBodyForms), lambdaEnvironment);
 	}
 
 	private static ListStruct getNewStartingLambdaBody(final OrdinaryLambdaListBindings parsedLambdaList,

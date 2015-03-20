@@ -6,7 +6,6 @@ package jcl.compiler.real.struct.specialoperator;
 
 import java.util.List;
 
-import jcl.LispStruct;
 import jcl.compiler.real.environment.FletEnvironment;
 import jcl.compiler.real.struct.specialoperator.FletStruct.FletVar;
 import jcl.symbols.SymbolStruct;
@@ -15,7 +14,7 @@ public class FletStruct extends InnerFunctionStruct<FletEnvironment, FletVar> {
 
 	private static final long serialVersionUID = 3770382068803341963L;
 
-	public FletStruct(final List<FletVar> vars, final List<LispStruct> forms, final FletEnvironment lexicalEnvironment) {
+	public FletStruct(final List<FletVar> vars, final PrognStruct forms, final FletEnvironment lexicalEnvironment) {
 		super(vars, forms, lexicalEnvironment);
 	}
 

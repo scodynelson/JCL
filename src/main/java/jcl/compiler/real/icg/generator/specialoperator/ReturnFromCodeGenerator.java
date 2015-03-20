@@ -1,9 +1,9 @@
 package jcl.compiler.real.icg.generator.specialoperator;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.generator.CodeGenerator;
-import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.generator.CodeGenerator;
+import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.icg.generator.SpecialVariableCodeGenerator;
 import jcl.compiler.real.struct.specialoperator.ReturnFromStruct;
 import jcl.lists.ListStruct;
@@ -21,8 +21,11 @@ public class ReturnFromCodeGenerator implements CodeGenerator<ListStruct> {
 	@Autowired
 	private SpecialVariableCodeGenerator specialVariableCodeGenerator;
 
+	@Autowired
+	private FormGenerator formGenerator;
+
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
+	public void generate(final ListStruct input, final JavaClassBuilder classBuilder) {
 		// Get rid of the RETURN-FROM symbol
 		ListStruct restOfList = input.getRest();
 		final SymbolStruct<?> sym = (SymbolStruct) restOfList.getFirst();
@@ -32,9 +35,9 @@ public class ReturnFromCodeGenerator implements CodeGenerator<ListStruct> {
 		// +1 -> exception
 		classBuilder.getEmitter().emitDup();
 		// +2 -> exception, exception
-		specialVariableCodeGenerator.generate(sym, codeGenerator, classBuilder);
+		specialVariableCodeGenerator.generate(sym, classBuilder);
 		// +3 -> exception, exception, name
-		codeGenerator.icgMainLoop(restOfList.getFirst(), classBuilder);
+		formGenerator.generate(restOfList.getFirst(), classBuilder);
 		classBuilder.getEmitter().emitInvokespecial("lisp/system/compiler/exceptions/ReturnFromException", "<init>", "(Llisp/common/type/Symbol;Ljava/lang/Object;)", "V", false);
 		classBuilder.getEmitter().emitAthrow();
 	}

@@ -3,24 +3,27 @@ package jcl.compiler.real.icg.generator.specialoperator;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.generator.CodeGenerator;
-import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.generator.CodeGenerator;
+import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.struct.specialoperator.CatchStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
-import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CatchCodeGenerator implements CodeGenerator<ListStruct> {
 
+	@Autowired
+	private FormGenerator formGenerator;
+
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
+	public void generate(final ListStruct input, final JavaClassBuilder classBuilder) {
 
 		//Create the exception table
 		final Label startTryBlock = new Label();                //The start of the try block
@@ -31,11 +34,11 @@ public class CatchCodeGenerator implements CodeGenerator<ListStruct> {
 		// Burn off the special symbol (CATCH)
 		ListStruct restOfList = input.getRest();
 		//Get the catchTag and set up for runtime eval of the catchTag
-		final Object catchTag = restOfList.getFirst();                    //The first parameter to CATCH that must first be evaluated
+		final LispStruct catchTag = restOfList.getFirst();                    //The first parameter to CATCH that must first be evaluated
 		restOfList = restOfList.getRest();
 
 		// ... ,
-		codeGenerator.icgMainLoop(catchTag, classBuilder);
+		formGenerator.generate(catchTag, classBuilder);
 		// ..., catchTag
 
 		classBuilder.getEmitter().emitGetstatic("lisp/system/TransferOfControl", "CATCH", "Ljava/lang/String;");
@@ -49,7 +52,7 @@ public class CatchCodeGenerator implements CodeGenerator<ListStruct> {
 
 		//Evalute the rest of the list
 		while (!restOfList.equals(NullStruct.INSTANCE)) {
-			codeGenerator.icgMainLoop(restOfList.getFirst(), classBuilder);
+			formGenerator.generate(restOfList.getFirst(), classBuilder);
 			restOfList = restOfList.getRest();
 			if (!restOfList.equals(NullStruct.INSTANCE)) {
 				classBuilder.getEmitter().emitPop();

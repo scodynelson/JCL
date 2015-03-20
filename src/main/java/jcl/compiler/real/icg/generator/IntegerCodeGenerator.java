@@ -3,7 +3,6 @@ package jcl.compiler.real.icg.generator;
 import java.math.BigInteger;
 
 import jcl.compiler.real.icg.ClassDef;
-import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.numbers.IntegerStruct;
 import org.objectweb.asm.MethodVisitor;
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class IntegerCodeGenerator implements CodeGenerator<IntegerStruct> {
 
 	@Override
-	public void generate(final IntegerStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
+	public void generate(final IntegerStruct input, final JavaClassBuilder classBuilder) {
 
 		final BigInteger bigInteger = input.getBigInteger();
 		final String integerString = bigInteger.toString();

@@ -1,16 +1,19 @@
 package jcl.compiler.real.icg.generator;
 
-import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.Label;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class FunctionCallCodeGenerator implements CodeGenerator<ListStruct> {
+
+	@Autowired
+	private FormGenerator formGenerator;
 
 	private boolean acceptsMultipleValues;
 
@@ -26,7 +29,7 @@ public class FunctionCallCodeGenerator implements CodeGenerator<ListStruct> {
 	 */
 
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
+	public void generate(final ListStruct input, final JavaClassBuilder classBuilder) {
 		// +1 -> fn
 		final int argsExistCt = 0;
 		SymbolStruct<?> theFnName = null;
@@ -74,7 +77,7 @@ public class FunctionCallCodeGenerator implements CodeGenerator<ListStruct> {
 		if (fnOk) {
 			// Now evaluate the arguments. Puts all of them on the stack
 			while (!inputAgain.equals(NullStruct.INSTANCE)) {
-				codeGenerator.icgMainLoop(inputAgain.getFirst(), classBuilder);
+				formGenerator.generate(inputAgain.getFirst(), classBuilder);
 				// check for multiple value returns
 				// maybe this returned multiple values
 				if (!(classBuilder.isAllowMultipleValues() || acceptsMultipleValues)) {
@@ -123,7 +126,7 @@ public class FunctionCallCodeGenerator implements CodeGenerator<ListStruct> {
 				// +3 -> fn, array, array
 				classBuilder.getEmitter().emitLdc(count);
 				// +4 -> fn, array, array, index
-				codeGenerator.icgMainLoop(inputAgain.getFirst(), classBuilder);
+				formGenerator.generate(inputAgain.getFirst(), classBuilder);
 				// check for multiple value returns
 				//TODO this isn't the best way to do this. Better if the compiler
 				// knows all of the data flow.

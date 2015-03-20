@@ -2,20 +2,25 @@ package jcl.compiler.real.icg.generator.specialoperator;
 
 import java.util.Stack;
 
-import jcl.compiler.real.icg.generator.CodeGenerator;
-import jcl.compiler.real.icg.IntermediateCodeGenerator;
+import jcl.LispStruct;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.generator.CodeGenerator;
+import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.Label;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TagbodyCodeGenerator implements CodeGenerator<ListStruct> {
 
+	@Autowired
+	private FormGenerator formGenerator;
+
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
+	public void generate(final ListStruct input, final JavaClassBuilder classBuilder) {
 		String tagbodyName;
 
 		final Label startTryBlock = new Label();                //The start of the try block
@@ -55,7 +60,7 @@ public class TagbodyCodeGenerator implements CodeGenerator<ListStruct> {
 		classBuilder.getEmitter().visitMethodLabel(startTryBlock);
 		// +0
 		while (!restOfList.equals(NullStruct.INSTANCE)) {
-			final Object obj = restOfList.getFirst();
+			final LispStruct obj = restOfList.getFirst();
 
             /* If the car of the list is a Symbol, then its a tag, which means
              * a label needs to be emitted. Otherwise call the ICG on the car of
@@ -66,7 +71,7 @@ public class TagbodyCodeGenerator implements CodeGenerator<ListStruct> {
 				final TagbodyLabel tbl = findTagbodyInStack(classBuilder.getTagbodyStack(), (SymbolStruct) obj);
 				classBuilder.getEmitter().visitMethodLabel(tbl.getLabel());
 			} else {
-				codeGenerator.icgMainLoop(obj, classBuilder);
+				formGenerator.generate(obj, classBuilder);
 				classBuilder.getEmitter().emitPop(); // Throws away the results of any forms in the tag body
 			}
 			restOfList = restOfList.getRest();

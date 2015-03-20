@@ -2,6 +2,7 @@ package jcl.compiler.real.icg;
 
 import jcl.LispStruct;
 import jcl.compiler.real.icg.generator.CodeGenerator;
+import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.icg.generator.FunctionCallCodeGenerator;
 import jcl.compiler.real.icg.generator.SpecialFormCodeGenerator;
 import jcl.compiler.real.icg.generator.SymbolFunctionCodeGenerator;
@@ -54,27 +55,30 @@ public class ListCodeGenerator implements CodeGenerator<ListStruct> {
 	@Autowired
 	private MacroletCodeGenerator macroletCodeGenerator;
 
+	@Autowired
+	private FormGenerator formGenerator;
+
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
+	public void generate(final ListStruct input, final JavaClassBuilder classBuilder) {
 
 		final LispStruct firstElement = input.getFirst();
 		if (firstElement instanceof SymbolStruct) {
 			// generally an application (foobar ...)
 			if (firstElement instanceof SpecialOperator) {
-				specialFormCodeGenerator.generate(input, codeGenerator, classBuilder);
+				specialFormCodeGenerator.generate(input, classBuilder);
 			} else if (firstElement instanceof Declaration) {
 //                genCodeDeclare(list);
 			} else if (formOptimizable(input)) {
-				genOptimizedForm(input, codeGenerator, classBuilder);
+				genOptimizedForm(input, classBuilder);
 			} else {
-				symbolFunctionCodeGenerator.generate((SymbolStruct<?>) firstElement, codeGenerator, classBuilder);
+				symbolFunctionCodeGenerator.generate((SymbolStruct<?>) firstElement, classBuilder);
 
 				final boolean acceptsMultipleValues = functionCallCodeGenerator.isAcceptsMultipleValues();
 				try {
 					functionCallCodeGenerator.setAcceptsMultipleValues(
 							firstElement.equals(GlobalPackageStruct.COMMON_LISP.intern("FUNCALL").getSymbol())
 									|| firstElement.equals(GlobalPackageStruct.COMMON_LISP.intern("APPLY").getSymbol()));
-					functionCallCodeGenerator.generate(input, codeGenerator, classBuilder);
+					functionCallCodeGenerator.generate(input, classBuilder);
 				} finally {
 					functionCallCodeGenerator.setAcceptsMultipleValues(acceptsMultipleValues);
 				}
@@ -89,26 +93,26 @@ public class ListCodeGenerator implements CodeGenerator<ListStruct> {
 				if (first.getFirst().equals(SpecialOperator.LAMBDA_MARKER)) {
 //					lambdaCodeGenerator.generate(input, codeGenerator, classBuilder); TODO
 				} else if (first.getFirst().equals(SpecialOperator.MACRO_MARKER)) {
-					macroLambdaCodeGenerator.generate(input, codeGenerator, classBuilder);
+					macroLambdaCodeGenerator.generate(input, classBuilder);
 				} else if (first.getFirst().equals(SpecialOperator.LET)) {
-					letCodeGenerator.generate(input, codeGenerator, classBuilder);
+					letCodeGenerator.generate(input, classBuilder);
 				} else if (first.getFirst().equals(SpecialOperator.FLET)) {
-					fletCodeGenerator.generate(input, codeGenerator, classBuilder);
+					fletCodeGenerator.generate(input, classBuilder);
 				} else if (first.getFirst().equals(SpecialOperator.LABELS)) {
-					labelsCodeGenerator.generate(input, codeGenerator, classBuilder);
+					labelsCodeGenerator.generate(input, classBuilder);
 				} else if (first.getFirst().equals(SpecialOperator.MACROLET)) {
-					macroletCodeGenerator.generate(input, codeGenerator, classBuilder);
+					macroletCodeGenerator.generate(input, classBuilder);
 				} else {
 					LOGGER.info("It's something else, {}", first);
 				}
 			} else {
 				// assume it's (((%lambda bindings...) body) ...args...)
-				generate(first, codeGenerator, classBuilder);
+				generate(first, classBuilder);
 
 				final boolean acceptsMultipleValues = functionCallCodeGenerator.isAcceptsMultipleValues();
 				try {
 					functionCallCodeGenerator.setAcceptsMultipleValues(false);
-					functionCallCodeGenerator.generate(input, codeGenerator, classBuilder);
+					functionCallCodeGenerator.generate(input, classBuilder);
 				} finally {
 					functionCallCodeGenerator.setAcceptsMultipleValues(acceptsMultipleValues);
 				}
@@ -120,13 +124,13 @@ public class ListCodeGenerator implements CodeGenerator<ListStruct> {
 		return list.getFirst().equals(GlobalPackageStruct.COMMON_LISP.intern("EQ").getSymbol());
 	}
 
-	private static void genOptimizedForm(final ListStruct list, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
+	private void genOptimizedForm(final ListStruct list, final JavaClassBuilder classBuilder) {
 		final SymbolStruct<?> sym = (SymbolStruct) list.getFirst();
 		if (sym.equals(GlobalPackageStruct.COMMON_LISP.intern("EQ").getSymbol())) {
 			final ListStruct args = list.getRest();
 			// gen the 2 arguments and leave their values on the stack
-			codeGenerator.icgMainLoop(args.getFirst(), classBuilder);
-			codeGenerator.icgMainLoop(args.getRest().getFirst(), classBuilder);
+			formGenerator.generate(args.getFirst(), classBuilder);
+			formGenerator.generate(args.getRest().getFirst(), classBuilder);
 			// now gen the VM if test
 			// just generate direct VM instructions for eq refs
 			// get a uniquifier value

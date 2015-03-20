@@ -4,7 +4,6 @@
 
 package jcl.compiler.real.icg.generator;
 
-import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
@@ -17,7 +16,7 @@ import org.springframework.stereotype.Component;
 public class SpecialVariableCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 
 	@Override
-	public void generate(final SymbolStruct<?> input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
+	public void generate(final SymbolStruct<?> input, final JavaClassBuilder classBuilder) {
 
 		if (input.equals(NILStruct.INSTANCE)) {
 			classBuilder.getEmitter().emitGetstatic("jcl/symbols/NILStruct", "INSTANCE", "Ljcl/symbols/NILStruct;");

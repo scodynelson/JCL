@@ -5,9 +5,9 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.InnerFunctionEnvironment;
 import jcl.compiler.real.environment.allocation.PositionAllocation;
 import jcl.compiler.real.environment.binding.Binding;
-import jcl.compiler.real.icg.generator.CodeGenerator;
-import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.generator.CodeGenerator;
+import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.icg.generator.SpecialSymbolCodeGenerator;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
@@ -21,8 +21,11 @@ public class SetqCodeGenerator implements CodeGenerator<ListStruct> {
 	@Autowired
 	private SpecialSymbolCodeGenerator specialSymbolCodeGenerator;
 
+	@Autowired
+	private FormGenerator formGenerator;
+
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
+	public void generate(final ListStruct input, final JavaClassBuilder classBuilder) {
 
 		ListStruct restOfList = (ListStruct) input.getRest().getFirst();
 		while (!NullStruct.INSTANCE.equals(restOfList)) {
@@ -31,14 +34,14 @@ public class SetqCodeGenerator implements CodeGenerator<ListStruct> {
 			// step over the variable
 			restOfList = restOfList.getRest();
 			// get the form to evaluate
-			codeGenerator.icgMainLoop(restOfList.getFirst(), classBuilder);
+			formGenerator.generate(restOfList.getFirst(), classBuilder);
 			// value is now on the stack, we have to determine where to put it
 			// determine if this is a local variable or a special variable
 			final Environment binding = getBindingEnvironment(classBuilder.getBindingEnvironment(), symbol);
 			final boolean hasDynamicBinding = classBuilder.getBindingEnvironment().getSymbolTable().hasDynamicBinding(symbol);
 			if (binding.equals(Environment.NULL) || hasDynamicBinding) {
 				// now the value is on the stack, is the variable local or special?
-				specialSymbolCodeGenerator.generate(symbol, codeGenerator, classBuilder);
+				specialSymbolCodeGenerator.generate(symbol, classBuilder);
 				classBuilder.getEmitter().emitSwap();
 				classBuilder.getEmitter().emitInvokeinterface("lisp/common/type/Symbol", "setValue", "(Ljava/lang/Object;)", "Ljava/lang/Object;", true);
 				if (!restOfList.getRest().equals(NullStruct.INSTANCE)) {

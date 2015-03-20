@@ -3,7 +3,6 @@ package jcl.compiler.real.icg.generator;
 import java.math.BigInteger;
 
 import jcl.compiler.real.icg.ClassDef;
-import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.numbers.RatioStruct;
 import org.apache.commons.math3.fraction.BigFraction;
@@ -15,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class RatioCodeGenerator implements CodeGenerator<RatioStruct> {
 
 	@Override
-	public void generate(final RatioStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
+	public void generate(final RatioStruct input, final JavaClassBuilder classBuilder) {
 
 		final BigFraction bigFraction = input.getBigFraction();
 

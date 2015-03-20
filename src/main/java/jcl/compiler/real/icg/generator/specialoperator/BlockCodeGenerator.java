@@ -3,9 +3,9 @@ package jcl.compiler.real.icg.generator.specialoperator;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.generator.CodeGenerator;
-import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.generator.CodeGenerator;
+import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.icg.generator.SpecialVariableCodeGenerator;
 import jcl.compiler.real.struct.specialoperator.BlockStruct;
 import jcl.lists.ListStruct;
@@ -24,8 +24,11 @@ public class BlockCodeGenerator implements CodeGenerator<ListStruct> {
 	@Autowired
 	private SpecialVariableCodeGenerator specialVariableCodeGenerator;
 
+	@Autowired
+	private FormGenerator formGenerator;
+
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
+	public void generate(final ListStruct input, final JavaClassBuilder classBuilder) {
 
 		final Label startTryBlock = new Label();                //The start of the try block
 		final Label catchBlock = new Label();                   //The start of the catch block
@@ -38,7 +41,7 @@ public class BlockCodeGenerator implements CodeGenerator<ListStruct> {
 		restOfList = restOfList.getRest();
 
 		// ... ,
-		specialVariableCodeGenerator.generate(sym, codeGenerator, classBuilder);
+		specialVariableCodeGenerator.generate(sym, classBuilder);
 		// ..., sym
 
 		classBuilder.getEmitter().emitGetstatic("lisp/system/TransferOfControl", "BLOCK", "Ljava/lang/String;");
@@ -52,7 +55,7 @@ public class BlockCodeGenerator implements CodeGenerator<ListStruct> {
         /* Call icgMainLoop() for each expression in the PROGN call,
 		 * and remove all but the last expression's value from the stack  */
 		while (!restOfList.equals(NullStruct.INSTANCE)) {
-			codeGenerator.icgMainLoop(restOfList.getFirst(), classBuilder);
+			formGenerator.generate(restOfList.getFirst(), classBuilder);
 			restOfList = restOfList.getRest();
 			if (!restOfList.equals(NullStruct.INSTANCE)) {
 				classBuilder.getEmitter().emitNop();

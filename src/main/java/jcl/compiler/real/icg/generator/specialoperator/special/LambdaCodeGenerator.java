@@ -17,10 +17,10 @@ import jcl.compiler.real.environment.binding.SymbolEnvironmentBinding;
 import jcl.compiler.real.environment.binding.SymbolLocalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.icg.ClassDef;
-import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.ClosureCodeGenerator;
 import jcl.compiler.real.icg.generator.CodeGenerator;
+import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.icg.generator.SpecialVariableCodeGenerator;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lists.ListStruct;
@@ -43,12 +43,15 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	@Autowired
 	private SpecialVariableCodeGenerator specialVariableCodeGenerator;
 
+	@Autowired
+	private FormGenerator formGenerator;
+
 	@Override
-	public void generate(final LambdaStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
-		genCodeLambdaInContext(codeGenerator, input, false, classBuilder);
+	public void generate(final LambdaStruct input, final JavaClassBuilder classBuilder) {
+		genCodeLambdaInContext(input, false, classBuilder);
 	}
 
-	private void genCodeLambdaInContext(final IntermediateCodeGenerator icg, final LambdaStruct lambdaStruct, final boolean inStaticContext, final JavaClassBuilder classBuilder) {
+	private void genCodeLambdaInContext(final LambdaStruct lambdaStruct, final boolean inStaticContext, final JavaClassBuilder classBuilder) {
 
 		final ClassDef currentClass = classBuilder.getCurrentClass();
 
@@ -118,16 +121,16 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			classBuilder.getEmitter().newMethod(Opcodes.ACC_PUBLIC, "funcall", '(' + funcallParams + ')', "Ljava/lang/Object;", null, null);
 
 			// allocate and fill a closure if there is one defined
-			closureCodeGenerator.generate(classBuilder.getBindingEnvironment(), icg, classBuilder);
+			closureCodeGenerator.generate(classBuilder.getBindingEnvironment(), classBuilder);
 
 			// set up the free radicals - 1960's!!
-			doFreeVariableSetup(icg, classBuilder);
+			doFreeVariableSetup(classBuilder);
 
 			// Beginning gen code for the body
 			ListStruct funcallList = null;
 
 			while (!NullStruct.INSTANCE.equals(funcallList)) {
-				icg.icgMainLoop(funcallList.getFirst(), classBuilder);
+				formGenerator.generate(funcallList.getFirst(), classBuilder);
 				funcallList = funcallList.getRest();
 				if (!NullStruct.INSTANCE.equals(funcallList)) {
 					classBuilder.getEmitter().emitPop();
@@ -173,7 +176,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			// 2a. for each field name, add field, gen code for lambda,
 			//     add code to init the field
 			// 2b. again
-			doStaticInit(icg, className, lispName, classBuilder);
+			doStaticInit(className, lispName, classBuilder);
 
 			classBuilder.getEmitter().endClass();
 		} finally {
@@ -207,12 +210,12 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		classBuilder.getClassNames().pop();
 	}
 
-	private void doStaticInit(final IntermediateCodeGenerator codeGenerator, final String className, final SymbolStruct<?> lispName, final JavaClassBuilder classBuilder) {
+	private void doStaticInit(final String className, final SymbolStruct<?> lispName, final JavaClassBuilder classBuilder) {
 		// static init
 		classBuilder.getEmitter().newMethod(Opcodes.ACC_STATIC + Opcodes.ACC_PUBLIC, "<clinit>", "()", "V", null, null);
 		// init the SYMBOL field with the LISP name symbol
 		if (lispName.getSymbolPackage() != null) {
-			specialVariableCodeGenerator.generate(lispName, codeGenerator, classBuilder);
+			specialVariableCodeGenerator.generate(lispName, classBuilder);
 		} else {
 			//make the symbol
 			classBuilder.getEmitter().emitLdc(lispName.toString());
@@ -359,10 +362,9 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 * The other aspect of dealing with special variables is that they have to be bound in the
 	 * environment and unbound at the end. This necessitates a try-finally block. The same code is
 	 * used in the LET form.
-	 * @param codeGenerator codeGenerator
 	 * @param classBuilder classBuilder
 	 */
-	private void doFreeVariableSetup(final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
+	private void doFreeVariableSetup(final JavaClassBuilder classBuilder) {
 		//-- get the symbol-table
 		final SymbolTable symbolTable = classBuilder.getBindingEnvironment().getSymbolTable();
 		// Now iterate over the entries, looking for ones to allocate
@@ -395,7 +397,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 				classBuilder.getEmitter().emitLdc(name);
 				classBuilder.getEmitter().emitInvokestatic("lisp/common/type/Symbol$Factory", "newInstance", "(Ljava/lang/String;)", "Llisp/common/type/Symbol;", false);
 			} else {
-				specialVariableCodeGenerator.generate(symbol, codeGenerator, classBuilder);
+				specialVariableCodeGenerator.generate(symbol, classBuilder);
 			}
 			// store the symbol in the indicated local variable
 			classBuilder.getEmitter().emitAstore(slot);

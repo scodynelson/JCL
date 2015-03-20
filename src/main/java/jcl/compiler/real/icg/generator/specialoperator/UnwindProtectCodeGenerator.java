@@ -1,15 +1,19 @@
 package jcl.compiler.real.icg.generator.specialoperator;
 
-import jcl.compiler.real.icg.generator.CodeGenerator;
-import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.generator.CodeGenerator;
+import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import org.objectweb.asm.Label;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UnwindProtectCodeGenerator implements CodeGenerator<ListStruct> {
+
+	@Autowired
+	private FormGenerator formGenerator;
 
 	/**
 	 * Transfer of Control Sequence for unwind-protect.
@@ -28,7 +32,7 @@ public class UnwindProtectCodeGenerator implements CodeGenerator<ListStruct> {
 	 */
 
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
+	public void generate(final ListStruct input, final JavaClassBuilder classBuilder) {
 
 		// Burn off the special symbol (UNWIND-PROTECT)
 		final ListStruct restOfList = input.getRest();
@@ -48,7 +52,7 @@ public class UnwindProtectCodeGenerator implements CodeGenerator<ListStruct> {
 
 		//2. Setup for the evaluation of the protected form
 		//Evalute the protected form
-		codeGenerator.icgMainLoop(protectedForm, classBuilder);
+		formGenerator.generate(protectedForm, classBuilder);
 
 		//3. Setup a goto for the finally block
 		//If an exception wasn't thrown, go past the catch block to the finally block
@@ -77,7 +81,7 @@ public class UnwindProtectCodeGenerator implements CodeGenerator<ListStruct> {
 		//This is the finally code
 		//Evalute the cleanup form
 		while (!cleanupForm.equals(NullStruct.INSTANCE)) {
-			codeGenerator.icgMainLoop(cleanupForm.getFirst(), classBuilder);
+			formGenerator.generate(cleanupForm.getFirst(), classBuilder);
 			cleanupForm = cleanupForm.getRest();
 			classBuilder.getEmitter().emitPop();
 		}

@@ -7,7 +7,6 @@ package jcl.compiler.real.icg.generator.specialoperator.lambda;
 import java.security.SecureRandom;
 import java.util.Random;
 
-import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CharacterCodeGenerator;
 import jcl.compiler.real.icg.generator.CodeGenerator;
@@ -28,7 +27,7 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	private CharacterCodeGenerator characterCodeGenerator;
 
 	@Override
-	public void generate(final LambdaStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
+	public void generate(final LambdaStruct input, final JavaClassBuilder classBuilder) {
 	}
 
 	public ClassWriter generate() {

@@ -4,7 +4,6 @@ import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.ComplexCodeGenerator;
 import jcl.compiler.real.icg.generator.FloatCodeGenerator;
 import jcl.compiler.real.icg.generator.IntegerCodeGenerator;
-import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.RatioCodeGenerator;
 import jcl.compiler.real.icg.generator.SpecialVariableCodeGenerator;
@@ -38,7 +37,7 @@ public class QuoteCodeGenerator implements CodeGenerator<ListStruct> {
 	private ComplexCodeGenerator complexCodeGenerator;
 
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
+	public void generate(final ListStruct input, final JavaClassBuilder classBuilder) {
 		final Object quotedObj = input.getRest().getFirst();
 		if (quotedObj instanceof SymbolStruct) {
 			final SymbolStruct<?> sym = (SymbolStruct<?>) quotedObj;
@@ -48,14 +47,14 @@ public class QuoteCodeGenerator implements CodeGenerator<ListStruct> {
 				classBuilder.getEmitter().emitLdc(sym.getName());
 				classBuilder.getEmitter().emitInvokestatic("lisp/common/type/Symbol$Factory", "newInstance", "(Ljava/lang/String;)", "Llisp/common/type/Symbol;", false);
 			} else {
-				specialVariableCodeGenerator.generate(sym, codeGenerator, classBuilder);
+				specialVariableCodeGenerator.generate(sym, classBuilder);
 			}
 		} else if (quotedObj instanceof IntegerStruct) {
-			integerCodeGenerator.generate((IntegerStruct) quotedObj, codeGenerator, classBuilder);
+			integerCodeGenerator.generate((IntegerStruct) quotedObj, classBuilder);
 		} else if (quotedObj instanceof FloatStruct) {
-			floatCodeGenerator.generate((FloatStruct) quotedObj, codeGenerator, classBuilder);
+			floatCodeGenerator.generate((FloatStruct) quotedObj, classBuilder);
 		} else if (quotedObj instanceof RatioStruct) {
-			ratioCodeGenerator.generate((RatioStruct) quotedObj, codeGenerator, classBuilder);
+			ratioCodeGenerator.generate((RatioStruct) quotedObj, classBuilder);
 //		} else if (quotedObj instanceof ComplexStruct) {
 //			complexCodeGenerator.generate((ComplexStruct) quotedObj, codeGenerator, classBuilder);
 		} else {

@@ -15,10 +15,10 @@ import jcl.compiler.real.environment.binding.EnvironmentEnvironmentBinding;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.environment.binding.SymbolEnvironmentBinding;
 import jcl.compiler.real.environment.binding.SymbolLocalBinding;
+import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.ClosureCodeGenerator;
 import jcl.compiler.real.icg.generator.CodeGenerator;
-import jcl.compiler.real.icg.IntermediateCodeGenerator;
-import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.icg.generator.SpecialVariableCodeGenerator;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
@@ -37,8 +37,11 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 	@Autowired
 	private ClosureCodeGenerator closureCodeGenerator;
 
+	@Autowired
+	private FormGenerator formGenerator;
+
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
+	public void generate(final ListStruct input, final JavaClassBuilder classBuilder) {
 		// ((%let... (:parent ...) (:bindings ...) (:symbol-table ...) (:closure ...)))
 		final Stack<SymbolBindingLabel> bindingLabels = new Stack<>();
 
@@ -77,7 +80,7 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 				final int slot = alloc.getPosition();
 				// hand the init form to icgMainLoop...
 				// the generated code leaves its value on the stack
-				codeGenerator.icgMainLoop(initForm, classBuilder);
+				formGenerator.generate(initForm, classBuilder);
 				// store the value in the proper local slot
 				classBuilder.getEmitter().emitAstore(slot);
 			}
@@ -108,12 +111,12 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 				// 1. emit the tryFinally node with these labels
 				classBuilder.getEmitter().visitTryCatchBlock(startLabel, endLabel, handlerLabel, null);
 				// 2. emit the binding call
-				specialVariableCodeGenerator.generate(sym, codeGenerator, classBuilder);
+				specialVariableCodeGenerator.generate(sym, classBuilder);
 				classBuilder.getEmitter().emitCheckcast("lisp/system/SymbolImpl");
 				// 3. emit the eval of the init form
 				// hand the init form to icgMainLoop...
 				// the generated code leaves its value on the stack
-				codeGenerator.icgMainLoop(initForm, classBuilder);
+				formGenerator.generate(initForm, classBuilder);
 				classBuilder.getEmitter().emitInvokevirtual("lisp/system/SymbolImpl", "bind", "(Ljava/lang/Object;)", "V", false);
 				// 4. set handler start label
 				classBuilder.getEmitter().visitMethodLabel(startLabel);
@@ -123,8 +126,8 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 			classBuilder.setBindingEnvironment(tmpEnv);
 
 			// we may have a closure to handle as well
-			closureCodeGenerator.generate(classBuilder.getBindingEnvironment(), codeGenerator, classBuilder);
-			doFreeVariableSetup(codeGenerator, classBuilder);
+			closureCodeGenerator.generate(classBuilder.getBindingEnvironment(), classBuilder);
+			doFreeVariableSetup(classBuilder);
 
 			// all args are in the proper local slots, so do the body of the let
 			final List<LispStruct> copyListJavaList = input.getAsJavaList();
@@ -136,7 +139,7 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 				if ((firstElt instanceof ListStruct) && ((ListStruct) firstElt).getFirst().equals(SpecialOperator.DECLARE)) {
 					funcallList = funcallList.getRest();
 				} else {
-					codeGenerator.icgMainLoop(funcallList.getFirst(), classBuilder);
+					formGenerator.generate(funcallList.getFirst(), classBuilder);
 					funcallList = funcallList.getRest();
 					if (!NullStruct.INSTANCE.equals(funcallList)) {
 						classBuilder.getEmitter().emitPop();
@@ -152,7 +155,7 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 				final SymbolBindingLabel labelSym = bindingLabels.pop();
 				classBuilder.getEmitter().visitMethodLabel(labelSym.endLabel); // end of the try block
 				// now call the finally block
-				specialVariableCodeGenerator.generate(labelSym.dynamicSymbol, codeGenerator, classBuilder);
+				specialVariableCodeGenerator.generate(labelSym.dynamicSymbol, classBuilder);
 				classBuilder.getEmitter().emitCheckcast("lisp/system/SymbolImpl");
 				classBuilder.getEmitter().emitInvokevirtual("lisp/system/SymbolImpl", "unbind", "()", "Ljava/lang/Object;", false);
 				classBuilder.getEmitter().emitPop(); // would mask the real return
@@ -164,7 +167,7 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 				// I have no idea why adding this DUP works, but it does...
 				classBuilder.getEmitter().emitDup();
 				classBuilder.getEmitter().emitAstore(1); // save the exception
-				specialVariableCodeGenerator.generate(labelSym.dynamicSymbol, codeGenerator, classBuilder);
+				specialVariableCodeGenerator.generate(labelSym.dynamicSymbol, classBuilder);
 				classBuilder.getEmitter().emitCheckcast("lisp/system/SymbolImpl");
 				classBuilder.getEmitter().emitInvokevirtual("lisp/system/SymbolImpl", "unbind", "()", "Ljava/lang/Object;", false);
 				classBuilder.getEmitter().emitPop(); // would mask the real return
@@ -191,10 +194,9 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 	 * The other aspect of dealing with special variables is that they have to be bound in the
 	 * environment and unbound at the end. This necessitates a try-finally block. The same code is
 	 * used in the LET form.
-	 * @param codeGenerator codeGenerator
 	 * @param classBuilder classBuilder
 	 */
-	private void doFreeVariableSetup(final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
+	private void doFreeVariableSetup(final JavaClassBuilder classBuilder) {
 		//-- get the symbol-table
 		final SymbolTable symbolTable = classBuilder.getBindingEnvironment().getSymbolTable();
 		// Now iterate over the entries, looking for ones to allocate
@@ -227,7 +229,7 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 				classBuilder.getEmitter().emitLdc(name);
 				classBuilder.getEmitter().emitInvokestatic("lisp/common/type/Symbol$Factory", "newInstance", "(Ljava/lang/String;)", "Llisp/common/type/Symbol;", false);
 			} else {
-				specialVariableCodeGenerator.generate(symbol, codeGenerator, classBuilder);
+				specialVariableCodeGenerator.generate(symbol, classBuilder);
 			}
 			// store the symbol in the indicated local variable
 			classBuilder.getEmitter().emitAstore(slot);

@@ -2,26 +2,31 @@ package jcl.compiler.real.icg.generator.specialoperator;
 
 import java.util.UUID;
 
-import jcl.compiler.real.icg.generator.CodeGenerator;
-import jcl.compiler.real.icg.IntermediateCodeGenerator;
+import jcl.LispStruct;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.generator.CodeGenerator;
+import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MultipleValueCallCodeGenerator implements CodeGenerator<ListStruct> {
 
+	@Autowired
+	private FormGenerator formGenerator;
+
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
+	public void generate(final ListStruct input, final JavaClassBuilder classBuilder) {
 
 		// evaluate the lambda, leaving an instance on the stack
 		ListStruct restOfList = input.getRest();
-		final Object fn = restOfList.getFirst();
-		codeGenerator.icgMainLoop(fn, classBuilder);
+		final LispStruct fn = restOfList.getFirst();
+		formGenerator.generate(fn, classBuilder);
 
 		// now process each of the arguments, leaving them on the stack
 		restOfList = restOfList.getRest();
@@ -38,7 +43,14 @@ public class MultipleValueCallCodeGenerator implements CodeGenerator<ListStruct>
 		classBuilder.getEmitter().emitPutfield(classBuilder.getClassNames().peek(), mvcFieldName.toString(), "Llisp/common/type/ListStruct;");
 		while (!restOfList.equals(NullStruct.INSTANCE)) {
 			// this puts a value or value[] on the stack
-			codeGenerator.icgMainLoop(restOfList.getFirst(), true, classBuilder);
+			final boolean currentMV = classBuilder.isAllowMultipleValues();
+			try {
+				classBuilder.setAllowMultipleValues(true);
+				formGenerator.generate(restOfList.getFirst(), classBuilder);
+			} finally {
+				classBuilder.setAllowMultipleValues(currentMV);
+			}
+
 			classBuilder.getEmitter().emitDup();
 			// which is it?
 			classBuilder.getEmitter().emitInstanceof("[Ljava/lang/Object;");

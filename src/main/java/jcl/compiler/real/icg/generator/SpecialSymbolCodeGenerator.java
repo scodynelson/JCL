@@ -6,7 +6,6 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.SymbolTable;
 import jcl.compiler.real.environment.binding.SymbolEnvironmentBinding;
 import jcl.compiler.real.environment.binding.SymbolLocalBinding;
-import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ public class SpecialSymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>
 	private SpecialVariableCodeGenerator specialVariableCodeGenerator;
 
 	@Override
-	public void generate(final SymbolStruct<?> input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
+	public void generate(final SymbolStruct<?> input, final JavaClassBuilder classBuilder) {
 		final int theInt = getSymbolAllocation(classBuilder.getBindingEnvironment(), input);
 		//****** this is a premature optimization. Good idea, but should wait for a new version of the compiler ****
 		final int slot = 0;
@@ -35,7 +34,7 @@ public class SpecialSymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>
 			classBuilder.getEmitter().emitAload(slot);
 			classBuilder.getEmitter().emitCheckcast("lisp/common/type/Symbol");
 		} else {
-			specialVariableCodeGenerator.generate(input, codeGenerator, classBuilder);
+			specialVariableCodeGenerator.generate(input, classBuilder);
 		}
 	}
 

@@ -1,8 +1,9 @@
 package jcl.compiler.real.icg.generator.specialoperator;
 
-import jcl.compiler.real.icg.generator.CodeGenerator;
-import jcl.compiler.real.icg.IntermediateCodeGenerator;
+import jcl.LispStruct;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.generator.CodeGenerator;
+import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.icg.generator.SpecialVariableCodeGenerator;
 import jcl.compiler.real.icg.generator.SymbolFunctionCodeGenerator;
 import jcl.lists.ListStruct;
@@ -20,12 +21,15 @@ public class FunctionCodeGenerator implements CodeGenerator<ListStruct> {
 	@Autowired
 	private SymbolFunctionCodeGenerator symbolFunctionCodeGenerator;
 
+	@Autowired
+	private FormGenerator formGenerator;
+
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
+	public void generate(final ListStruct input, final JavaClassBuilder classBuilder) {
 		final ListStruct restOfList = input.getRest();
-		final Object fn = restOfList.getFirst();
+		final LispStruct fn = restOfList.getFirst();
 		if (fn instanceof SymbolStruct) {
-			symbolFunctionCodeGenerator.generate((SymbolStruct<?>) fn, codeGenerator, classBuilder);
+			symbolFunctionCodeGenerator.generate((SymbolStruct<?>) fn, classBuilder);
 		} else if (fn instanceof ListStruct) {
 			final ListStruct fnList = (ListStruct) fn;
 //            if (fnList.getCar() == SpecialOperator.LAMBDA) {
@@ -39,7 +43,7 @@ public class FunctionCodeGenerator implements CodeGenerator<ListStruct> {
 			// Step 2: return the function stashed in the symbol or NIL if not there
 			// The SETF expander will ensure that there will be a FUNCALL #'(setf foo) with args
 			final SymbolStruct<?> setfSymbol = (SymbolStruct<?>) ((ListStruct) fn).getRest().getFirst();
-			specialVariableCodeGenerator.generate(setfSymbol, codeGenerator, classBuilder); // now we have the symbol on the stack
+			specialVariableCodeGenerator.generate(setfSymbol, classBuilder); // now we have the symbol on the stack
 			// number the invoke
 			final Label label = new Label();
 			classBuilder.getEmitter().visitMethodLabel(label);
@@ -54,7 +58,7 @@ public class FunctionCodeGenerator implements CodeGenerator<ListStruct> {
 			classBuilder.getEmitter().visitMethodLabel(yesSetfFunction);
 //            }
 		} else {
-			codeGenerator.icgMainLoop(fn, classBuilder);
+			formGenerator.generate(fn, classBuilder);
 		}
 	}
 }

@@ -1,31 +1,35 @@
 package jcl.compiler.real.icg.generator.specialoperator;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.generator.CodeGenerator;
-import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.generator.CodeGenerator;
+import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.struct.specialoperator.IfStruct;
 import jcl.lists.ListStruct;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class IfCodeGenerator implements CodeGenerator<ListStruct> {
 
+	@Autowired
+	private FormGenerator formGenerator;
+
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
+	public void generate(final ListStruct input, final JavaClassBuilder classBuilder) {
 
 		ListStruct restOfList = input.getRest();
-		final Object testObj = restOfList.getFirst();
+		final LispStruct testObj = restOfList.getFirst();
 		restOfList = restOfList.getRest();
-		final Object thenObj = restOfList.getFirst();
+		final LispStruct thenObj = restOfList.getFirst();
 		restOfList = restOfList.getRest();
-		final Object elseObj = restOfList.getFirst();
+		final LispStruct elseObj = restOfList.getFirst();
 
-		codeGenerator.icgMainLoop(testObj, classBuilder);
+		formGenerator.generate(testObj, classBuilder);
 		final Label outLabel = new Label();
 		classBuilder.getEmitter().emitDup();
 		classBuilder.getEmitter().emitInstanceof("[Ljava/lang/Object;");
@@ -42,11 +46,11 @@ public class IfCodeGenerator implements CodeGenerator<ListStruct> {
 
 		classBuilder.getEmitter().emitIf_acmpeq(elseLabel);
 		classBuilder.getEmitter().visitMethodLabel(thenLabel);
-		codeGenerator.icgMainLoop(thenObj, classBuilder);
+		formGenerator.generate(thenObj, classBuilder);
 		classBuilder.getEmitter().emitGoto(endLabel);
 
 		classBuilder.getEmitter().visitMethodLabel(elseLabel);
-		codeGenerator.icgMainLoop(elseObj, classBuilder);
+		formGenerator.generate(elseObj, classBuilder);
 
 		classBuilder.getEmitter().visitMethodLabel(endLabel);
 	}

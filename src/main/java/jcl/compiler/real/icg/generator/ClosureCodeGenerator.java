@@ -13,7 +13,6 @@ import jcl.compiler.real.environment.allocation.PositionAllocation;
 import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.environment.binding.ClosureBinding;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
-import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.collections4.CollectionUtils;
@@ -23,7 +22,7 @@ import org.springframework.stereotype.Component;
 public class ClosureCodeGenerator implements CodeGenerator<Environment> {
 
 	@Override
-	public void generate(final Environment input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
+	public void generate(final Environment input, final JavaClassBuilder classBuilder) {
 		final Closure closureSetBody = input.getClosure();
 		final int numParams = closureSetBody.getBindings().size(); // remove :closure and (:depth . n) from contention
 

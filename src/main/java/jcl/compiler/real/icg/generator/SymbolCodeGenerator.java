@@ -12,7 +12,6 @@ import jcl.compiler.real.environment.allocation.PositionAllocation;
 import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.environment.binding.ClosureBinding;
 import jcl.compiler.real.environment.binding.SymbolClosureBinding;
-import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.symbols.SymbolStruct;
 import org.slf4j.Logger;
@@ -29,7 +28,7 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 	private SpecialSymbolCodeGenerator specialSymbolCodeGenerator;
 
 	@Override
-	public void generate(final SymbolStruct<?> input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
+	public void generate(final SymbolStruct<?> input, final JavaClassBuilder classBuilder) {
 		// must determine one of 4 options:
 		// 1. this is in a closure that's local to the environment
 		// => assoc on the closure property of the current env
@@ -66,7 +65,7 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 				final boolean hasClosureBinding = symbolTable.hasClosureBinding(input);
 				if (hasDynamicBinding) {
 					// it's number 3
-					specialSymbolCodeGenerator.generate(input, codeGenerator, classBuilder);
+					specialSymbolCodeGenerator.generate(input, classBuilder);
 					classBuilder.getEmitter().emitInvokestatic("jcl/symbols/SymbolStruct", "getValue", "()", "Ljava/lang/Object;", true);
 				} else if (hasClosureBinding) {
 					final SymbolClosureBinding entry = symbolTable.getClosureBinding(input).get();
@@ -123,7 +122,7 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 //					if (!input.isSpecial()) {
 //						LOGGER.warn("; Warning: variable {} is assumed free", input);
 //					}
-					specialSymbolCodeGenerator.generate(input, codeGenerator, classBuilder);
+					specialSymbolCodeGenerator.generate(input, classBuilder);
 					classBuilder.getEmitter().emitInvokestatic("jcl/symbols/SymbolStruct", "getValue", "()", "Ljava/lang/Object;", true);
 				} else {
 					// get the :bindings list

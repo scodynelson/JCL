@@ -1,28 +1,32 @@
 package jcl.compiler.real.icg.generator.specialoperator;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.generator.CodeGenerator;
-import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.generator.CodeGenerator;
+import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.struct.specialoperator.ThrowStruct;
 import jcl.lists.ListStruct;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ThrowCodeGenerator implements CodeGenerator<ListStruct> {
 
+	@Autowired
+	private FormGenerator formGenerator;
+
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
+	public void generate(final ListStruct input, final JavaClassBuilder classBuilder) {
 
 		// Remove the special symbol (THROW) from the list
 		ListStruct restOfList = input.getRest();
 
 		//Get the catch tag and store for later evaluation
-		final Object catchTag = restOfList.getFirst();         //The catch tag value that must be evaluated
+		final LispStruct catchTag = restOfList.getFirst();         //The catch tag value that must be evaluated
 		restOfList = restOfList.getRest();
 
 		classBuilder.getEmitter().emitNew("lisp/system/compiler/exceptions/ThrowException");
@@ -32,9 +36,9 @@ public class ThrowCodeGenerator implements CodeGenerator<ListStruct> {
 
 		//Run the catch tag through the compiler for eval with the intent that the result
 		//will be on the stack ready to be a parameter to the following method invokation
-		codeGenerator.icgMainLoop(catchTag, classBuilder);
+		formGenerator.generate(catchTag, classBuilder);
 		// +3 -> exception, exception, name
-		codeGenerator.icgMainLoop(restOfList.getFirst(), classBuilder);
+		formGenerator.generate(restOfList.getFirst(), classBuilder);
 		classBuilder.getEmitter().emitInvokespecial("lisp/system/compiler/exceptions/ThrowException", "<init>", "(Ljava/lang/Object;Ljava/lang/Object;)", "V", false);
 		classBuilder.getEmitter().emitAthrow();
 	}

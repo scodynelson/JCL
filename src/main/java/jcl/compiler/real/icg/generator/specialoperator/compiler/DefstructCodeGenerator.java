@@ -1,9 +1,9 @@
 package jcl.compiler.real.icg.generator.specialoperator.compiler;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.generator.CodeGenerator;
-import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.generator.CodeGenerator;
+import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.icg.generator.SpecialVariableCodeGenerator;
 import jcl.compiler.real.icg.generator.SymbolCodeGenerator;
 import jcl.functions.FunctionStruct;
@@ -42,8 +42,11 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 	@Autowired
 	private SpecialVariableCodeGenerator specialVariableCodeGenerator;
 
+	@Autowired
+	private FormGenerator formGenerator;
+
 	@Override
-	public void generate(final ListStruct input, final IntermediateCodeGenerator codeGenerator, final JavaClassBuilder classBuilder) {
+	public void generate(final ListStruct input, final JavaClassBuilder classBuilder) {
 		//Chop off %defstruct part. We don't need it.
 		final ListStruct arguments = input.getRest();
 
@@ -109,11 +112,11 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 		}
 
 		//these methods generate the byte code to create the struct stuff
-		icgCreateDefstructFactory(codeGenerator, javaName.toString(), classBuilder);
-		icgCreateDefstructAbstractFactory(codeGenerator, javaName.toString(), classBuilder);
-		icgCreateDefstruct(codeGenerator, javaName.toString(), ifaceImplementing, lispName, classBuilder);
-		icgCreateDefstructImplFactory(codeGenerator, javaName.toString(), fields.length, classBuilder);
-		icgCreateDefstructImplClass(codeGenerator, javaName.toString(), implImplementing, lispName, fields, printerFunction, includeName, includedSlotNumberAsInt, classBuilder);
+		icgCreateDefstructFactory(javaName.toString(), classBuilder);
+		icgCreateDefstructAbstractFactory(javaName.toString(), classBuilder);
+		icgCreateDefstruct(javaName.toString(), ifaceImplementing, lispName, classBuilder);
+		icgCreateDefstructImplFactory(javaName.toString(), fields.length, classBuilder);
+		icgCreateDefstructImplClass(javaName.toString(), implImplementing, lispName, fields, printerFunction, includeName, includedSlotNumberAsInt, classBuilder);
 
 		// initializing code in the enclosing lambda
 		classBuilder.getEmitter().emitGetstatic(javaName + "Impl$Factory", "initialize", "Z");
@@ -121,7 +124,7 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 		classBuilder.getEmitter().emitGetstatic(javaName + "Impl", "initialize", "Z");
 		classBuilder.getEmitter().emitPop();
 
-		symbolCodeGenerator.generate(javaName, codeGenerator, classBuilder);
+		symbolCodeGenerator.generate(javaName, classBuilder);
 		classBuilder.getEmitter().emitGetstatic("lisp/common/type/StructureClass", "DEFSTRUCT_INDICATOR", "Llisp/common/type/Symbol;");
 		classBuilder.getEmitter().emitLdc(javaName + "$Factory");
 		classBuilder.getEmitter().emitInvokestatic("java/lang/Class", "forName", "(Ljava/lang/String;)", "Ljava/lang/Class;", false);
@@ -138,7 +141,7 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 	//
 	//
 	// Making FooStruct$Factory
-	private static void icgCreateDefstructFactory(final IntermediateCodeGenerator icg, final String name, final JavaClassBuilder classBuilder) {
+	private static void icgCreateDefstructFactory(final String name, final JavaClassBuilder classBuilder) {
 		classBuilder.getEmitter().newClass(Opcodes.ACC_PUBLIC, name + "$Factory", null, "java/lang/Object", new String[]{"lisp/extensions/type/StructureClassFactory"});
 		classBuilder.getEmitter().addInnerClass(name + "$Factory", name, "Factory", Opcodes.ACC_STATIC + Opcodes.ACC_PUBLIC);
 		classBuilder.getEmitter().addInnerClass(name + "$AbstractFactory", name, "AbstractFactory", Opcodes.ACC_STATIC + Opcodes.ACC_PUBLIC);
@@ -167,7 +170,7 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 	}
 
 	// Making FooStruct$AbstractFactory
-	private static void icgCreateDefstructAbstractFactory(final IntermediateCodeGenerator icg, final String name, final JavaClassBuilder classBuilder) {
+	private static void icgCreateDefstructAbstractFactory(final String name, final JavaClassBuilder classBuilder) {
 		classBuilder.getEmitter().newClass(Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER, name + "$AbstractFactory", null, "java/lang/Object", null);
 		classBuilder.getEmitter().addInnerClass(name + "$AbstractFactory", name, "AbstractFactory", Opcodes.ACC_STATIC);
 		classBuilder.getEmitter().newField(0, "trueFactory", "Llisp/extensions/type/StructureClassFactory;", null, null);
@@ -193,7 +196,7 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 	}
 
 	// Making FooStruct
-	private void icgCreateDefstruct(final IntermediateCodeGenerator icg, final String name, final String[] implementing, final SymbolStruct<?> lispName, final JavaClassBuilder classBuilder) {
+	private void icgCreateDefstruct(final String name, final String[] implementing, final SymbolStruct<?> lispName, final JavaClassBuilder classBuilder) {
 		classBuilder.getEmitter().newClass(Opcodes.ACC_PUBLIC + Opcodes.ACC_ABSTRACT + Opcodes.ACC_INTERFACE, name, null, "java/lang/Object", implementing);
 		classBuilder.getEmitter().newField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "factory", 'L' + name + "$AbstractFactory;", null, null);
 		classBuilder.getEmitter().newField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "typeName", "Llisp/common/type/Symbol;", null, null);
@@ -203,7 +206,7 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 
 		// <clinit>
 		classBuilder.getEmitter().newMethod(Opcodes.ACC_PUBLIC + Opcodes.ACC_STATIC, "<clinit>", "()", "V", null, null);
-		symbolCodeGenerator.generate(lispName, icg, classBuilder);
+		symbolCodeGenerator.generate(lispName, classBuilder);
 		classBuilder.getEmitter().emitPutstatic(name, "typeName", "Llisp/common/type/Symbol;");
 		classBuilder.getEmitter().emitNew(name + "$AbstractFactory");
 		classBuilder.getEmitter().emitDup();
@@ -215,7 +218,7 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 	}
 
 	// Making FooStructImpl$Factory
-	private static void icgCreateDefstructImplFactory(final IntermediateCodeGenerator icg, final String name, final int length, final JavaClassBuilder classBuilder) {
+	private static void icgCreateDefstructImplFactory(final String name, final int length, final JavaClassBuilder classBuilder) {
 		final String implName = name + "Impl";
 		final String implFactoryName = name + "Impl$Factory";
 		classBuilder.getEmitter().newClass(Opcodes.ACC_PUBLIC, implFactoryName, null, "java/lang/Object", new String[]{"lisp/extensions/type/StructureClassFactory"});
@@ -248,7 +251,7 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 	}
 
 	// Making FooStructImpl$Class.
-	private void icgCreateDefstructImplClass(final IntermediateCodeGenerator icg, final String name, final String[] interfaces,
+	private void icgCreateDefstructImplClass(final String name, final String[] interfaces,
 	                                                final SymbolStruct<?> lispName, final SymbolStruct<?>[] fields, final Object printer,
 	                                                final DefstructSymbolStruct includedStruct, final int includedSlotNumber,
 	                                                final JavaClassBuilder classBuilder) {
@@ -307,7 +310,7 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 
 		// if a print option was passed in, make an instance and store it
 		if (printer instanceof SymbolStruct<?>) {
-			specialVariableCodeGenerator.generate((SymbolStruct<?>) printer, icg, classBuilder);
+			specialVariableCodeGenerator.generate((SymbolStruct<?>) printer, classBuilder);
 			classBuilder.getEmitter().emitPutstatic(implName, "printDefstructFunction", "Llisp/common/type/Symbol;");
 		} else if ((printer instanceof FunctionStruct) || (printer instanceof FunctionStruct)) { // TODO: Function2 || Function3
 			classBuilder.getEmitter().emitNew(printer.getClass().getName());
@@ -321,7 +324,7 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 		}
 
 		// hold on to the original lispName
-		specialVariableCodeGenerator.generate(lispName, icg, classBuilder);
+		specialVariableCodeGenerator.generate(lispName, classBuilder);
 		classBuilder.getEmitter().emitPutstatic(implName, "lispName", "Llisp/common/type/Symbol;");
 
 		// make an instance of the nested Factory class
@@ -342,14 +345,14 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 		for (int i = 0; i < fields.length; i++) {
 			classBuilder.getEmitter().emitDup();
 			classBuilder.getEmitter().emitLdc(i);
-			specialVariableCodeGenerator.generate(fields[i], icg, classBuilder);
+			specialVariableCodeGenerator.generate(fields[i], classBuilder);
 			classBuilder.getEmitter().emitAastore();
 		}
 		classBuilder.getEmitter().emitDup();
 		classBuilder.getEmitter().emitPutstatic(implName, "slotNames", "[Llisp/common/type/Symbol;");
 
 		// put the same array of slot names into the type symbol
-		symbolCodeGenerator.generate(lispName, icg, classBuilder);
+		symbolCodeGenerator.generate(lispName, classBuilder);
 		classBuilder.getEmitter().emitCheckcast("lisp/system/SymbolImpl");
 		classBuilder.getEmitter().emitSwap();
 		classBuilder.getEmitter().emitInvokevirtual("lisp/system/SymbolImpl", "setDefstructSlotNames", "([Llisp/common/type/Symbol;)", "V", false);

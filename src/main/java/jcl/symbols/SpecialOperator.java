@@ -7,29 +7,29 @@ public final class SpecialOperator extends SymbolStruct<SpecialOperator> {
 
 	public static final SpecialOperator BLOCK = new SpecialOperator("BLOCK", GlobalPackageStruct.COMMON_LISP);
 	public static final SpecialOperator CATCH = new SpecialOperator("CATCH", GlobalPackageStruct.COMMON_LISP);
-	public static final SpecialOperator EVAL_WHEN = new SpecialOperator("EVAL_WHEN", GlobalPackageStruct.COMMON_LISP);
+	public static final SpecialOperator EVAL_WHEN = new SpecialOperator("EVAL-WHEN", GlobalPackageStruct.COMMON_LISP);
 	public static final SpecialOperator FLET = new SpecialOperator("FLET", GlobalPackageStruct.COMMON_LISP);
 	public static final SpecialOperator FUNCTION = new SpecialOperator("FUNCTION", GlobalPackageStruct.COMMON_LISP);
 	public static final SpecialOperator GO = new SpecialOperator("GO", GlobalPackageStruct.COMMON_LISP);
 	public static final SpecialOperator IF = new SpecialOperator("IF", GlobalPackageStruct.COMMON_LISP);
 	public static final SpecialOperator LABELS = new SpecialOperator("LABELS", GlobalPackageStruct.COMMON_LISP);
 	public static final SpecialOperator LET = new SpecialOperator("LET", GlobalPackageStruct.COMMON_LISP);
-	public static final SpecialOperator LET_STAR = new SpecialOperator("LET_STAR", GlobalPackageStruct.COMMON_LISP);
-	public static final SpecialOperator LOAD_TIME_VALUE = new SpecialOperator("LOAD_TIME_VALUE", GlobalPackageStruct.COMMON_LISP);
+	public static final SpecialOperator LET_STAR = new SpecialOperator("LET*", GlobalPackageStruct.COMMON_LISP);
+	public static final SpecialOperator LOAD_TIME_VALUE = new SpecialOperator("LOAD-TIME-VALUE", GlobalPackageStruct.COMMON_LISP);
 	public static final SpecialOperator LOCALLY = new SpecialOperator("LOCALLY", GlobalPackageStruct.COMMON_LISP);
 	public static final SpecialOperator MACROLET = new SpecialOperator("MACROLET", GlobalPackageStruct.COMMON_LISP);
-	public static final SpecialOperator MULTIPLE_VALUE_CALL = new SpecialOperator("MULTIPLE_VALUE_CALL", GlobalPackageStruct.COMMON_LISP);
-	public static final SpecialOperator MULTIPLE_VALUE_PROG1 = new SpecialOperator("MULTIPLE_VALUE_PROG1", GlobalPackageStruct.COMMON_LISP);
+	public static final SpecialOperator MULTIPLE_VALUE_CALL = new SpecialOperator("MULTIPLE-VALUE-CALL", GlobalPackageStruct.COMMON_LISP);
+	public static final SpecialOperator MULTIPLE_VALUE_PROG1 = new SpecialOperator("MULTIPLE-VALUE-PROG1", GlobalPackageStruct.COMMON_LISP);
 	public static final SpecialOperator PROGN = new SpecialOperator("PROGN", GlobalPackageStruct.COMMON_LISP);
 	public static final SpecialOperator PROGV = new SpecialOperator("PROGV", GlobalPackageStruct.COMMON_LISP);
 	public static final SpecialOperator QUOTE = new SpecialOperator("QUOTE", GlobalPackageStruct.COMMON_LISP);
-	public static final SpecialOperator RETURN_FROM = new SpecialOperator("RETURN_FROM", GlobalPackageStruct.COMMON_LISP);
+	public static final SpecialOperator RETURN_FROM = new SpecialOperator("RETURN-FROM", GlobalPackageStruct.COMMON_LISP);
 	public static final SpecialOperator SETQ = new SpecialOperator("SETQ", GlobalPackageStruct.COMMON_LISP);
-	public static final SpecialOperator SYMBOL_MACROLET = new SpecialOperator("SYMBOL_MACROLET", GlobalPackageStruct.COMMON_LISP);
+	public static final SpecialOperator SYMBOL_MACROLET = new SpecialOperator("SYMBOL-MACROLET", GlobalPackageStruct.COMMON_LISP);
 	public static final SpecialOperator TAGBODY = new SpecialOperator("TAGBODY", GlobalPackageStruct.COMMON_LISP);
 	public static final SpecialOperator THE = new SpecialOperator("THE", GlobalPackageStruct.COMMON_LISP);
 	public static final SpecialOperator THROW = new SpecialOperator("THROW", GlobalPackageStruct.COMMON_LISP);
-	public static final SpecialOperator UNWIND_PROTECT = new SpecialOperator("UNWIND_PROTECT", GlobalPackageStruct.COMMON_LISP);
+	public static final SpecialOperator UNWIND_PROTECT = new SpecialOperator("UNWIND-PROTECT", GlobalPackageStruct.COMMON_LISP);
 
 	public static final SpecialOperator DECLARE = new SpecialOperator("DECLARE", GlobalPackageStruct.COMMON_LISP);
 	public static final SpecialOperator LAMBDA = new SpecialOperator("LAMBDA", GlobalPackageStruct.COMMON_LISP);

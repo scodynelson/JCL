@@ -130,10 +130,10 @@ public class ReadEvalPrint {
 							whatRead = reader.read(true, NullStruct.INSTANCE, false);
 						}
 						if (whatRead != null) {
-							LOGGER.debug("READ: {}", whatRead.getClass().getSimpleName());
+							LOGGER.debug("READ Class: {}", whatRead.getClass().getSimpleName());
 
 							final String printedWhatRead = printer.print(whatRead);
-							LOGGER.debug("{}", printedWhatRead);
+							LOGGER.debug("READ Object: {}", printedWhatRead);
 						} else {
 							LOGGER.warn("; WARNING: Null response from reader");
 						}
@@ -170,7 +170,7 @@ public class ReadEvalPrint {
 							whatAnalyzed = sa.analyze(whatRead);
 //
 							if (whatAnalyzed != null) {
-								LOGGER.debug("ANALYZED:");
+//								LOGGER.debug("ANALYZED:");
 //								LOGGER.debug("{}", whatAnalyzed);
 							} else {
 								LOGGER.warn("; WARNING: Null response from analyzer");
@@ -195,7 +195,7 @@ public class ReadEvalPrint {
 //								LOGGER.warn("; WARNING: Null response from analyzer");
 //							}
 						} catch (final Exception ex) {
-//							LOGGER.warn("; WARNING: Exception condition during Generation -> ", ex);
+							LOGGER.warn("; WARNING: Exception condition during Generation -> ", ex);
 							break;
 						}
 					}
@@ -247,8 +247,8 @@ public class ReadEvalPrint {
 //							LOGGER.info(mv[count].toString());
 //						}
 					} else {
-						final String printedValue = printer.print(whatRead);
-						LOGGER.info(printedValue);
+//						final String printedValue = printer.print(whatRead);
+//						LOGGER.info(printedValue);
 					}
 				} catch (final Exception ex) {
 					LOGGER.error("; WARNING: Exception condition -> ", ex);
@@ -299,10 +299,10 @@ public class ReadEvalPrint {
 			String className = classDef.getName();
 			className = className.replace('/', '.');
 
-			LOGGER.info("Printing the class: {}", className);
-			final PrintWriter pw = new PrintWriter(System.out);
-			CheckClassAdapter.verify(cr, false, pw);
-			LOGGER.info("Done  with class: {}", className);
+//			LOGGER.info("Printing the class: {}", className);
+//			final PrintWriter pw = new PrintWriter(System.out);
+//			CheckClassAdapter.verify(cr, false, pw);
+//			LOGGER.info("Done with class: {}", className);
 
 			final CheckClassAdapter cca = new CheckClassAdapter(new ClassWriter(0), false);
 			cr.accept(cca, ClassReader.SKIP_DEBUG + ClassReader.SKIP_FRAMES);
@@ -316,8 +316,8 @@ public class ReadEvalPrint {
 			final FunctionStruct lambda = (FunctionStruct) constructor.newInstance();
 			constructor.setAccessible(false);
 
-			LOGGER.info("GENERATED CLASS -> {}", printer.print(lambda));
-			LOGGER.info("Result -> {}", printer.print(lambda.apply()));
+//			LOGGER.info("GENERATED CLASS -> {}", printer.print(lambda));
+			LOGGER.info(printer.print(lambda.apply()));
 		}
 	}
 

@@ -17,7 +17,7 @@ import jcl.reader.Reader;
 import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
 import jcl.system.CommonLispSymbols;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.stereotype.Component;
 
@@ -54,6 +54,6 @@ public class SharpApostropheReaderMacroFunction extends ReaderMacroFunction {
 
 	@Override
 	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
 	}
 }

@@ -7,7 +7,6 @@ import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.UnwindProtectStruct;
-import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -27,12 +26,7 @@ public class UnwindProtectCodeGenerator implements CodeGenerator<UnwindProtectSt
 	public void generate(final UnwindProtectStruct input, final JavaClassBuilder classBuilder) {
 
 		final ClassDef currentClass = classBuilder.getCurrentClass();
-		final ClassWriter cw = currentClass.getClassWriter();
-		MethodVisitor mv = currentClass.getMethodVisitor();
-
-		mv = cw.visitMethod(Opcodes.ACC_PRIVATE, "unwindProtectGen", "()Ljava/lang/Object;", null, null);
-		mv.visitCode();
-		// TODO: don't know if we need the above 2 lines...
+		final MethodVisitor mv = currentClass.getMethodVisitor();
 
 		final Label tryBlockStart = new Label();
 		final Label tryBlockEnd = new Label();
@@ -42,25 +36,24 @@ public class UnwindProtectCodeGenerator implements CodeGenerator<UnwindProtectSt
 		mv.visitLabel(tryBlockStart);
 		final LispStruct protectedForm = input.getProtectedForm();
 		formGenerator.generate(protectedForm, classBuilder);
-		mv.visitVarInsn(Opcodes.ASTORE, 1);
+		final int protectedFormStore = currentClass.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, protectedFormStore);
 
 		mv.visitLabel(tryBlockEnd);
 		final PrognStruct cleanupForms = input.getCleanupForms();
 		prognCodeGenerator.generate(cleanupForms, classBuilder);
 		mv.visitInsn(Opcodes.POP);
-		mv.visitVarInsn(Opcodes.ALOAD, 1);
+		mv.visitVarInsn(Opcodes.ALOAD, protectedFormStore);
 
 		// TODO: don't know if the next line is necessary. we might want to remain in the same method...
-		mv.visitInsn(Opcodes.ARETURN);
+//		mv.visitInsn(Opcodes.ARETURN);
 
 		mv.visitLabel(catchBlock);
-		mv.visitVarInsn(Opcodes.ASTORE, 2);
+		final int exceptionStore = currentClass.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, exceptionStore);
 		prognCodeGenerator.generate(cleanupForms, classBuilder);
 		mv.visitInsn(Opcodes.POP);
-		mv.visitVarInsn(Opcodes.ALOAD, 2);
+		mv.visitVarInsn(Opcodes.ALOAD, exceptionStore);
 		mv.visitInsn(Opcodes.ATHROW);
-
-		// TODO: don't know if we need the next line
-		mv.visitEnd();
 	}
 }

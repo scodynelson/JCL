@@ -1,12 +1,19 @@
 package jcl.system;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
+import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.generator.specialoperator.lambda.NewLambdaCodeGenerator;
+import jcl.compiler.real.icg.ClassDef;
+import jcl.compiler.real.icg.IntermediateCodeGenerator;
+import jcl.compiler.real.sa.SemanticAnalyzer;
+import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.functions.FunctionStruct;
@@ -154,13 +161,32 @@ public class ReadEvalPrint {
 
 					// TEMPORARY: ANALYZER
 
+					LambdaStruct whatAnalyzed = null;
 					if (whatRead != null) {
 //						generatorTest();
 
-						LispStruct whatAnalyzed = null;
 						try {
-//							final SemanticAnalyzer sa = context.getBean(SemanticAnalyzer.class);
-//							whatAnalyzed = sa.analyze(whatRead);
+							final SemanticAnalyzer sa = context.getBean(SemanticAnalyzer.class);
+							whatAnalyzed = sa.analyze(whatRead);
+//
+							if (whatAnalyzed != null) {
+								LOGGER.debug("ANALYZED:");
+//								LOGGER.debug("{}", whatAnalyzed);
+							} else {
+								LOGGER.warn("; WARNING: Null response from analyzer");
+							}
+						} catch (final Exception ex) {
+							LOGGER.warn("; WARNING: Exception condition during Analysis -> ", ex);
+							break;
+						}
+					}
+					if (whatAnalyzed != null) {
+
+						List<ClassDef> classDefList = null;
+						try {
+							final IntermediateCodeGenerator icg = context.getBean(IntermediateCodeGenerator.class);
+							classDefList = icg.generate(whatAnalyzed);
+							handleClassDefList(classDefList);
 //
 //							if (whatAnalyzed != null) {
 //								LOGGER.debug("ANALYZED:");
@@ -168,10 +194,8 @@ public class ReadEvalPrint {
 //							} else {
 //								LOGGER.warn("; WARNING: Null response from analyzer");
 //							}
-						} catch (final ReaderErrorException ex) {
-							LOGGER.warn("; WARNING: Analysis Exception condition during Analyzer operation -> ", ex);
 						} catch (final Exception ex) {
-							LOGGER.warn("; WARNING: Analysis condition during Analyzer operation -> ", ex);
+//							LOGGER.warn("; WARNING: Exception condition during Generation -> ", ex);
 							break;
 						}
 					}
@@ -256,34 +280,45 @@ public class ReadEvalPrint {
 		return null;
 	}
 
-	private void generatorTest() throws NoSuchMethodException, InstantiationException, IllegalAccessException, java.lang.reflect.InvocationTargetException {
-		final NewLambdaCodeGenerator codeGenerator = context.getBean(NewLambdaCodeGenerator.class);
-		final ClassWriter cw = codeGenerator.generate();
+	private void handleClassDefList(final List<ClassDef> classDefList)
+			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
 
-		byte[] byteArray = cw.toByteArray();
+		for (final ClassDef classDef : classDefList) {
+			final ClassWriter cw = classDef.getClassWriter();
 
-//						FileOutputStream outputStream = new FileOutputStream(new File("/Volumes/Dev/repo/JCL/TestLambdaGenerator.class"));
-//						outputStream.write(byteArray);
-//						outputStream.close();
+			final byte[] byteArray = cw.toByteArray();
 
-		ClassReader cr = new ClassReader(byteArray);
-		CheckClassAdapter cca = new CheckClassAdapter(new MethodEmptyVisitor());
+			try (FileOutputStream outputStream = new FileOutputStream(new File("/Volumes/Dev/repo/JCL/Temp.class"))) {
+				outputStream.write(byteArray);
+			} catch (final IOException ioe) {
+				LOGGER.info("Error writing class file.", ioe);
+			}
 
-//						System.out.println("Printing the class " + "jcl.TestLambdaGenerator" + '\n');
-//						CheckClassAdapter.verify(new ClassReader(byteArray), true, new java.io.PrintWriter(System.out));
-//						System.out.println("Done  with class " + "jcl.TestLambdaGenerator" + '\n');
+			final ClassReader cr = new ClassReader(byteArray);
 
-		cr.accept(cca, 0); //ClassReader.EXPAND_FRAMES);
+			String className = classDef.getName();
+			className = className.replace('/', '.');
 
-		final CompilerClassLoader cl = CompilerClassLoader.Loader;
+			LOGGER.info("Printing the class: {}", className);
+			final PrintWriter pw = new PrintWriter(System.out);
+			CheckClassAdapter.verify(cr, false, pw);
+			LOGGER.info("Done  with class: {}", className);
 
-		Class<?> classLoaded = cl.loadClass(byteArray, "jcl.TestLambdaGenerator");
-		Constructor<?> constructor = classLoaded.getDeclaredConstructor();
-		constructor.setAccessible(true);
-		final FunctionStruct lambda = (FunctionStruct) constructor.newInstance();
-		constructor.setAccessible(false);
-		LOGGER.info("GENERATED CLASS -> " + printer.print(lambda));
-		LOGGER.info("Result -> " + printer.print(lambda.apply()));
+			final CheckClassAdapter cca = new CheckClassAdapter(new ClassWriter(0), false);
+			cr.accept(cca, ClassReader.SKIP_DEBUG + ClassReader.SKIP_FRAMES);
+
+			final CompilerClassLoader cl = CompilerClassLoader.Loader;
+
+			final Class<?> classLoaded = cl.loadClass(byteArray, className);
+			final Constructor<?> constructor = classLoaded.getDeclaredConstructor();
+			constructor.setAccessible(true);
+
+			final FunctionStruct lambda = (FunctionStruct) constructor.newInstance();
+			constructor.setAccessible(false);
+
+			LOGGER.info("GENERATED CLASS -> {}", printer.print(lambda));
+			LOGGER.info("Result -> {}", printer.print(lambda.apply()));
+		}
 	}
 
 	class MethodEmptyVisitor extends EmptyVisitor {

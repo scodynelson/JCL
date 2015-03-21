@@ -1,5 +1,8 @@
 package jcl.symbols;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jcl.LispStruct;
 import jcl.classes.BuiltInClassStruct;
 import jcl.compiler.real.sa.analyzer.expander.CompilerMacroFunctionExpander;
@@ -11,11 +14,8 @@ import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
 import jcl.types.NIL;
 import jcl.types.Symbol;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * The {@link SymbolStruct} is the object representation of a Lisp 'symbol' type.
@@ -360,6 +360,6 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 
 	@Override
 	public String toString() {
-		return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).setExcludeFieldNames("type").toString();
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
 	}
 }

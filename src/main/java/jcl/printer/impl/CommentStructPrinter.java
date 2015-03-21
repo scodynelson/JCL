@@ -8,7 +8,7 @@ import jcl.printer.LispPrinter;
 import jcl.reader.macrofunction.CommentStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.stereotype.Component;
 
@@ -39,6 +39,6 @@ public class CommentStructPrinter implements LispPrinter<CommentStruct> {
 	@Override
 	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
 	}
 }

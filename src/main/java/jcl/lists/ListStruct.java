@@ -1,14 +1,12 @@
 package jcl.lists;
 
+import java.util.Arrays;
+
 import jcl.LispStruct;
 import jcl.classes.BuiltInClassStruct;
 import jcl.sequences.SequenceStruct;
 import jcl.types.List;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.util.Arrays;
 
 /**
  * The {@link ListStruct} is the object representation of a Lisp 'list' type.
@@ -124,11 +122,6 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 		return !isDotted() && !isCircular();
 	}
 
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
-	}
-
 	// BUILDERS
 
 	/**
@@ -183,7 +176,11 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 		if (lispStructs.length == 0) {
 			return NullStruct.INSTANCE;
 		} else if (lispStructs.length == 1) {
-			return new ConsStruct(lispStructs[0], NullStruct.INSTANCE);
+			final LispStruct firstElement = lispStructs[0];
+			if (firstElement instanceof ListStruct) {
+				return (ListStruct) firstElement;
+			}
+			return new ConsStruct(firstElement, NullStruct.INSTANCE);
 		} else {
 			return getDottedList(Arrays.asList(lispStructs));
 		}
@@ -201,7 +198,11 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 		if (CollectionUtils.isEmpty(lispStructs)) {
 			return NullStruct.INSTANCE;
 		} else if (lispStructs.size() == 1) {
-			return new ConsStruct(lispStructs.get(0), NullStruct.INSTANCE);
+			final LispStruct firstElement = lispStructs.get(0);
+			if (firstElement instanceof ListStruct) {
+				return (ListStruct) firstElement;
+			}
+			return new ConsStruct(firstElement, NullStruct.INSTANCE);
 		} else {
 			return getDottedList(lispStructs);
 		}

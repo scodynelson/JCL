@@ -83,7 +83,7 @@ public class CompileFunction {
 			}
 			LambdaStruct analyzedObj = sa.analyze(obj);
 
-			Vector<ClassDef> v = new Vector<>(icg.funcall(analyzedObj));
+			Vector<ClassDef> v = new Vector<>(icg.generate(analyzedObj));
 			Vector<String> oc = new Vector<String>(v.size());
 			Vector<byte[]> classBytes = new Vector<>(v.size());
 

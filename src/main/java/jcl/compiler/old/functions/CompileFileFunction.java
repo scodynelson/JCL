@@ -158,7 +158,7 @@ public class CompileFileFunction {
 
 			baseTime = System.currentTimeMillis();
 
-			Vector<ClassDef> v = new Vector<>(icg.funcall(lambdaForm));
+			Vector<ClassDef> v = new Vector<>(icg.generate(lambdaForm));
 			Vector<String> oc = new Vector<String>(v.size());
 			Vector<byte[]> classBytes = new Vector<>(v.size());
 

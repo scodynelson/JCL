@@ -17,7 +17,7 @@ import jcl.functions.EquatorFunctionStruct;
 import jcl.functions.FunctionStruct;
 import jcl.types.HashTable;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
@@ -214,7 +214,7 @@ public class HashTableStruct extends BuiltInClassStruct {
 
 		@Override
 		public String toString() {
-			return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
 		}
 
 		/**

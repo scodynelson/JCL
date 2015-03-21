@@ -7,7 +7,6 @@ import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.struct.specialoperator.CatchStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
-import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -27,12 +26,7 @@ public class CatchCodeGenerator implements CodeGenerator<CatchStruct> {
 	public void generate(final CatchStruct input, final JavaClassBuilder classBuilder) {
 
 		final ClassDef currentClass = classBuilder.getCurrentClass();
-		final ClassWriter cw = currentClass.getClassWriter();
-		MethodVisitor mv = currentClass.getMethodVisitor();
-
-		mv = cw.visitMethod(Opcodes.ACC_PRIVATE, "catchGen", "()Ljava/lang/Object;", null, null);
-		mv.visitCode();
-		// TODO: don't know if we need the above 2 lines...
+		final MethodVisitor mv = currentClass.getMethodVisitor();
 
 		final Label tryBlockStart = new Label();
 		final Label tryBlockEnd = new Label();
@@ -41,12 +35,14 @@ public class CatchCodeGenerator implements CodeGenerator<CatchStruct> {
 
 		final LispStruct catchTag = input.getCatchTag();
 		formGenerator.generate(catchTag, classBuilder);
-		mv.visitVarInsn(Opcodes.ASTORE, 1);
+		final int catchTagStore = currentClass.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, catchTagStore);
 
 		mv.visitLabel(tryBlockStart);
 		final PrognStruct forms = input.getForms();
 		prognCodeGenerator.generate(forms, classBuilder);
-		mv.visitVarInsn(Opcodes.ASTORE, 2);
+		final int resultFormStore = currentClass.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, resultFormStore);
 
 		mv.visitLabel(tryBlockEnd);
 
@@ -54,34 +50,33 @@ public class CatchCodeGenerator implements CodeGenerator<CatchStruct> {
 		mv.visitJumpInsn(Opcodes.GOTO, catchBlockEnd);
 
 		mv.visitLabel(catchBlock);
-		mv.visitVarInsn(Opcodes.ASTORE, 3);
+		final int throwExceptionStore = currentClass.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, throwExceptionStore);
 
-		mv.visitVarInsn(Opcodes.ALOAD, 3);
+		mv.visitVarInsn(Opcodes.ALOAD, throwExceptionStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/compiler/real/icg/generator/specialoperator/exception/ThrowException", "getCatchTag", "()Ljcl/LispStruct;", false);
-		mv.visitVarInsn(Opcodes.ASTORE, 4);
+		final int throwExceptionCatchTagStore = currentClass.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, throwExceptionCatchTagStore);
 
-		mv.visitVarInsn(Opcodes.ALOAD, 4);
-		mv.visitVarInsn(Opcodes.ALOAD, 1);
+		mv.visitVarInsn(Opcodes.ALOAD, throwExceptionCatchTagStore);
+		mv.visitVarInsn(Opcodes.ALOAD, catchTagStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/Object", "equals", "(Ljava/lang/Object;)Z", false);
 
 		final Label setResultValue = new Label();
 		mv.visitJumpInsn(Opcodes.IFNE, setResultValue);
 
-		mv.visitVarInsn(Opcodes.ALOAD, 3);
+		mv.visitVarInsn(Opcodes.ALOAD, throwExceptionStore);
 		mv.visitInsn(Opcodes.ATHROW);
 
 		mv.visitLabel(setResultValue);
-		mv.visitVarInsn(Opcodes.ALOAD, 3);
+		mv.visitVarInsn(Opcodes.ALOAD, throwExceptionStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/compiler/real/icg/generator/specialoperator/exception/ThrowException", "getResultForm", "()Ljcl/LispStruct;", false);
-		mv.visitVarInsn(Opcodes.ASTORE, 2);
+		mv.visitVarInsn(Opcodes.ASTORE, resultFormStore);
 
 		mv.visitLabel(catchBlockEnd);
-		mv.visitVarInsn(Opcodes.ALOAD, 2);
+		mv.visitVarInsn(Opcodes.ALOAD, resultFormStore);
 
 		// TODO: don't know if the next line is necessary. we might want to remain in the same method...
-		mv.visitInsn(Opcodes.ARETURN);
-
-		// TODO: don't know if we need the next line
-		mv.visitEnd();
+//		mv.visitInsn(Opcodes.ARETURN);
 	}
 }

@@ -11,7 +11,7 @@ import org.objectweb.asm.MethodVisitor;
 
 public class ClassDef {
 
-	private final ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+	private final ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 
 	private final String name;
 
@@ -20,6 +20,8 @@ public class ClassDef {
 	private FieldVisitor fieldVisitor;
 
 	private AnnotationVisitor annotationVisitor;
+
+	private int nextAvailableStore;
 
 	public ClassDef(final String name) {
 		this.name = name;
@@ -55,5 +57,9 @@ public class ClassDef {
 
 	public String getName() {
 		return name;
+	}
+
+	public int getNextAvailableStore() {
+		return nextAvailableStore++;
 	}
 }

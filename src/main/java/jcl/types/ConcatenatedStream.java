@@ -68,7 +68,7 @@ public interface ConcatenatedStream extends Stream {
 
 			@Override
 			public String toString() {
-//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
 				return getName();
 			}
 		}

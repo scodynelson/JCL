@@ -10,5 +10,5 @@ import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 
 public interface IntermediateCodeGenerator {
 
-	List<ClassDef> funcall(LambdaStruct lambdaStruct);
+	List<ClassDef> generate(LambdaStruct lambdaStruct);
 }

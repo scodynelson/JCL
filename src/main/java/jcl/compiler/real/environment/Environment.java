@@ -38,7 +38,7 @@ public class Environment extends StandardObjectStruct {
 
 	private int bindingsPosition;
 
-	private int closureDepth = -1;
+	private int closureDepth = 0;
 
 	private Stack<SymbolStruct<?>> functionNameStack = new Stack<>();
 
@@ -53,20 +53,25 @@ public class Environment extends StandardObjectStruct {
 
 	protected Environment(final Environment parent) {
 		this.parent = parent;
-		closureDepth = parent.closureDepth + 1;
+		if (parent != null) {
+			closureDepth = parent.closureDepth + 1;
+
+			bindingsPosition = parent.bindingsPosition;
+			topLevelMode = parent.topLevelMode;
+
+			functionNameStack = parent.functionNameStack;
+
+			undefinedFunctions = parent.undefinedFunctions;
+
+			blockStack = parent.blockStack;
+			tagbodyStack = parent.tagbodyStack;
+		}
+
 		closure = new Closure(closureDepth);
 
-		bindingsPosition = parent.bindingsPosition;
-		topLevelMode = parent.topLevelMode;
-
-		functionNameStack = parent.functionNameStack;
 		if (functionNameStack.isEmpty()) {
 			functionNameStack.push(null);
 		}
-
-		undefinedFunctions = parent.undefinedFunctions;
-		blockStack = parent.blockStack;
-		tagbodyStack = parent.tagbodyStack;
 	}
 
 	public Environment getParent() {

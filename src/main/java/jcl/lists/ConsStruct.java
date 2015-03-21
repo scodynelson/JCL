@@ -2,7 +2,7 @@ package jcl.lists;
 
 import jcl.LispStruct;
 import jcl.types.Cons;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.ArrayList;
@@ -222,7 +222,7 @@ public class ConsStruct extends ListStruct {
 		if (isCircular()) {
 			return "ConsStruct{'circular'}";
 		} else {
-			return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
 		}
 	}
 }

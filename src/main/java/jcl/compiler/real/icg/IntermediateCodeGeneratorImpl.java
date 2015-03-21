@@ -17,10 +17,10 @@ public class IntermediateCodeGeneratorImpl implements IntermediateCodeGenerator 
 	private NewLambdaCodeGenerator lambdaCodeGenerator;
 
 	@Override
-	public List<ClassDef> funcall(final LambdaStruct lambdaStruct) {
+	public List<ClassDef> generate(final LambdaStruct lambdaStruct) {
 		final JavaClassBuilder classBuilder = new JavaClassBuilder();
 		lambdaCodeGenerator.generate(lambdaStruct, classBuilder);
 //        assert(closureDepth == 0) : "Unbalanced closure depth: " + closureDepth;
-		return classBuilder.getEmitter().getClasses();
+		return classBuilder.getClasses();
 	}
 }

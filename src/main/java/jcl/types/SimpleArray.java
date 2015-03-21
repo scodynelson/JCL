@@ -165,7 +165,7 @@ public interface SimpleArray extends Array {
 
 			@Override
 			public String toString() {
-//				return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+//				return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
 				return getName();
 			}
 		}

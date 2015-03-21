@@ -7,7 +7,7 @@ package jcl.types.typespecifiers.designator;
 import jcl.types.Array;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.io.Serializable;
@@ -113,6 +113,6 @@ public class DimensionsDesignator implements Serializable {
 
 	@Override
 	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
 	}
 }

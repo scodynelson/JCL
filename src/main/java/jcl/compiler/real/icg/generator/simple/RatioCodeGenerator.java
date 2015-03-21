@@ -7,7 +7,6 @@ import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.numbers.RatioStruct;
 import org.apache.commons.math3.fraction.BigFraction;
-import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.stereotype.Component;
@@ -19,12 +18,7 @@ public class RatioCodeGenerator implements CodeGenerator<RatioStruct> {
 	public void generate(final RatioStruct input, final JavaClassBuilder classBuilder) {
 
 		final ClassDef currentClass = classBuilder.getCurrentClass();
-		final ClassWriter cw = currentClass.getClassWriter();
-		MethodVisitor mv = currentClass.getMethodVisitor();
-
-		mv = cw.visitMethod(Opcodes.ACC_PRIVATE, "ratioGen", "()Ljava/lang/Object;", null, null);
-		mv.visitCode();
-		// TODO: don't know if we need the above 2 lines...
+		final MethodVisitor mv = currentClass.getMethodVisitor();
 
 		final BigFraction bigFraction = input.getBigFraction();
 
@@ -35,7 +29,8 @@ public class RatioCodeGenerator implements CodeGenerator<RatioStruct> {
 		final String numeratorString = numerator.toString();
 		mv.visitLdcInsn(numeratorString);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/math/BigInteger", "<init>", "(Ljava/lang/String;)V", false);
-		mv.visitVarInsn(Opcodes.ASTORE, 1);
+		final int numeratorStore = currentClass.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, numeratorStore);
 
 		mv.visitTypeInsn(Opcodes.NEW, "java/math/BigInteger");
 		mv.visitInsn(Opcodes.DUP);
@@ -44,19 +39,14 @@ public class RatioCodeGenerator implements CodeGenerator<RatioStruct> {
 		final String denominatorString = denominator.toString();
 		mv.visitLdcInsn(denominatorString);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/math/BigInteger", "<init>", "(Ljava/lang/String;)V", false);
-		mv.visitVarInsn(Opcodes.ASTORE, 2);
+		final int denominatorStore = currentClass.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, denominatorStore);
 
 		mv.visitTypeInsn(Opcodes.NEW, "jcl/numbers/RatioStruct");
 		mv.visitInsn(Opcodes.DUP);
 
-		mv.visitVarInsn(Opcodes.ALOAD, 1);
-		mv.visitVarInsn(Opcodes.ALOAD, 2);
+		mv.visitVarInsn(Opcodes.ALOAD, numeratorStore);
+		mv.visitVarInsn(Opcodes.ALOAD, denominatorStore);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/numbers/RatioStruct", "<init>", "(Ljava/math/BigInteger;Ljava/math/BigInteger;)V", false);
-
-		// TODO: don't know if the next line is necessary. we might want to remain in the same method...
-		mv.visitInsn(Opcodes.ARETURN);
-
-		// TODO: don't know if we need the next line
-		mv.visitEnd();
 	}
 }

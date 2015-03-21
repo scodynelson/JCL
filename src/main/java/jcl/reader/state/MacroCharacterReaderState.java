@@ -19,7 +19,7 @@ import jcl.reader.struct.ReadtableStruct;
 import jcl.streams.ReadPeekResult;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -140,6 +140,6 @@ class MacroCharacterReaderState implements ReaderState {
 	@Override
 	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
 	}
 }

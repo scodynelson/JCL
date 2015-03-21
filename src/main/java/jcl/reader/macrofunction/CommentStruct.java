@@ -7,7 +7,7 @@ package jcl.reader.macrofunction;
 import jcl.LispStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
@@ -59,6 +59,6 @@ public class CommentStruct implements LispStruct {
 	@Override
 	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
 	}
 }

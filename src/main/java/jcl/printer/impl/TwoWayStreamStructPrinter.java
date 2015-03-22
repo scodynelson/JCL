@@ -39,8 +39,7 @@ public class TwoWayStreamStructPrinter implements LispPrinter<TwoWayStreamStruct
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(printer)
+		return new HashCodeBuilder().append(printer)
 		                            .toHashCode();
 	}
 
@@ -56,8 +55,7 @@ public class TwoWayStreamStructPrinter implements LispPrinter<TwoWayStreamStruct
 			return false;
 		}
 		final TwoWayStreamStructPrinter rhs = (TwoWayStreamStructPrinter) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(printer, rhs.printer)
+		return new EqualsBuilder().append(printer, rhs.printer)
 		                          .isEquals();
 	}
 

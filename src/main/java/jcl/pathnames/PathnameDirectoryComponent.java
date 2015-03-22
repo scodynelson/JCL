@@ -78,8 +78,7 @@ public final class PathnameDirectoryComponent implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(directoryLevels)
+		return new HashCodeBuilder().append(directoryLevels)
 		                            .append(pathnameDirectoryType)
 		                            .toHashCode();
 	}
@@ -96,8 +95,7 @@ public final class PathnameDirectoryComponent implements Serializable {
 			return false;
 		}
 		final PathnameDirectoryComponent rhs = (PathnameDirectoryComponent) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(directoryLevels, rhs.directoryLevels)
+		return new EqualsBuilder().append(directoryLevels, rhs.directoryLevels)
 		                          .append(pathnameDirectoryType, rhs.pathnameDirectoryType)
 		                          .isEquals();
 	}

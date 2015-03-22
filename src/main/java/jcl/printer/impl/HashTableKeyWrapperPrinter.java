@@ -31,8 +31,7 @@ public class HashTableKeyWrapperPrinter implements LispPrinter<HashTableStruct.K
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(printer)
+		return new HashCodeBuilder().append(printer)
 		                            .toHashCode();
 	}
 
@@ -48,8 +47,7 @@ public class HashTableKeyWrapperPrinter implements LispPrinter<HashTableStruct.K
 			return false;
 		}
 		final HashTableKeyWrapperPrinter rhs = (HashTableKeyWrapperPrinter) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(printer, rhs.printer)
+		return new EqualsBuilder().append(printer, rhs.printer)
 		                          .isEquals();
 	}
 

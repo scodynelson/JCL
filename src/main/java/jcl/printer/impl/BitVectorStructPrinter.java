@@ -74,8 +74,7 @@ public class BitVectorStructPrinter implements LispPrinter<BitVectorStruct> {
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(printer)
+		return new HashCodeBuilder().append(printer)
 		                            .toHashCode();
 	}
 
@@ -91,8 +90,7 @@ public class BitVectorStructPrinter implements LispPrinter<BitVectorStruct> {
 			return false;
 		}
 		final BitVectorStructPrinter rhs = (BitVectorStructPrinter) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(printer, rhs.printer)
+		return new EqualsBuilder().append(printer, rhs.printer)
 		                          .isEquals();
 	}
 

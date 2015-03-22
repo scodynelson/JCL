@@ -90,8 +90,7 @@ public class ReadPeekResult {
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(result)
+		return new HashCodeBuilder().append(result)
 		                            .append(eofValue)
 		                            .append(eof)
 		                            .toHashCode();
@@ -109,8 +108,7 @@ public class ReadPeekResult {
 			return false;
 		}
 		final ReadPeekResult rhs = (ReadPeekResult) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(result, rhs.result)
+		return new EqualsBuilder().append(result, rhs.result)
 		                          .append(eofValue, rhs.eofValue)
 		                          .append(eof, rhs.eof)
 		                          .isEquals();

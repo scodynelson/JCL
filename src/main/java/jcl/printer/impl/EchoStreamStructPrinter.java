@@ -39,8 +39,7 @@ public class EchoStreamStructPrinter implements LispPrinter<EchoStreamStruct> {
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(printer)
+		return new HashCodeBuilder().append(printer)
 		                            .toHashCode();
 	}
 
@@ -56,8 +55,7 @@ public class EchoStreamStructPrinter implements LispPrinter<EchoStreamStruct> {
 			return false;
 		}
 		final EchoStreamStructPrinter rhs = (EchoStreamStructPrinter) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(printer, rhs.printer)
+		return new EqualsBuilder().append(printer, rhs.printer)
 		                          .isEquals();
 	}
 

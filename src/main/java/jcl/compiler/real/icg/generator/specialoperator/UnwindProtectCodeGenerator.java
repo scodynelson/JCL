@@ -31,7 +31,7 @@ public class UnwindProtectCodeGenerator implements CodeGenerator<UnwindProtectSt
 		final Label tryBlockStart = new Label();
 		final Label tryBlockEnd = new Label();
 		final Label catchBlock = new Label();
-		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlock, null);
+		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlock, "java/lang/Throwable");
 
 		mv.visitLabel(tryBlockStart);
 		final LispStruct protectedForm = input.getProtectedForm();
@@ -40,20 +40,29 @@ public class UnwindProtectCodeGenerator implements CodeGenerator<UnwindProtectSt
 		mv.visitVarInsn(Opcodes.ASTORE, protectedFormStore);
 
 		mv.visitLabel(tryBlockEnd);
-		final PrognStruct cleanupForms = input.getCleanupForms();
-		prognCodeGenerator.generate(cleanupForms, classBuilder);
-		mv.visitInsn(Opcodes.POP);
-		mv.visitVarInsn(Opcodes.ALOAD, protectedFormStore);
 
-		// TODO: don't know if the next line is necessary. we might want to remain in the same method...
-//		mv.visitInsn(Opcodes.ARETURN);
+		final Label catchBlockEnd = new Label();
+		mv.visitJumpInsn(Opcodes.GOTO, catchBlockEnd);
 
 		mv.visitLabel(catchBlock);
 		final int exceptionStore = currentClass.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, exceptionStore);
+
+		final PrognStruct cleanupForms = input.getCleanupForms();
 		prognCodeGenerator.generate(cleanupForms, classBuilder);
 		mv.visitInsn(Opcodes.POP);
+
 		mv.visitVarInsn(Opcodes.ALOAD, exceptionStore);
 		mv.visitInsn(Opcodes.ATHROW);
+
+		mv.visitLabel(catchBlockEnd);
+
+		prognCodeGenerator.generate(cleanupForms, classBuilder);
+		mv.visitInsn(Opcodes.POP);
+
+		mv.visitVarInsn(Opcodes.ALOAD, protectedFormStore);
+
+		// TODO: don't know if the next line is necessary. we might want to remain in the same method...
+//		mv.visitInsn(Opcodes.ARETURN);
 	}
 }

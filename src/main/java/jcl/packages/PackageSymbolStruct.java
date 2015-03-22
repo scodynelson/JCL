@@ -67,8 +67,7 @@ public class PackageSymbolStruct implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(symbol)
+		return new HashCodeBuilder().append(symbol)
 		                            .append(packageSymbolType)
 		                            .toHashCode();
 	}
@@ -85,8 +84,7 @@ public class PackageSymbolStruct implements Serializable {
 			return false;
 		}
 		final PackageSymbolStruct rhs = (PackageSymbolStruct) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(symbol, rhs.symbol)
+		return new EqualsBuilder().append(symbol, rhs.symbol)
 		                          .append(packageSymbolType, rhs.packageSymbolType)
 		                          .isEquals();
 	}

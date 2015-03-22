@@ -86,8 +86,7 @@ public final class PathnameVersion implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(version)
+		return new HashCodeBuilder().append(version)
 		                            .append(componentType)
 		                            .toHashCode();
 	}
@@ -104,8 +103,7 @@ public final class PathnameVersion implements Serializable {
 			return false;
 		}
 		final PathnameVersion rhs = (PathnameVersion) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(version, rhs.version)
+		return new EqualsBuilder().append(version, rhs.version)
 		                          .append(componentType, rhs.componentType)
 		                          .isEquals();
 	}

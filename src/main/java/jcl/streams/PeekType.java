@@ -72,8 +72,7 @@ final class PeekType {
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(type)
+		return new HashCodeBuilder().append(type)
 		                            .append(codePoint)
 		                            .toHashCode();
 	}
@@ -90,8 +89,7 @@ final class PeekType {
 			return false;
 		}
 		final PeekType rhs = (PeekType) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(type, rhs.type)
+		return new EqualsBuilder().append(type, rhs.type)
 		                          .append(codePoint, rhs.codePoint)
 		                          .isEquals();
 	}

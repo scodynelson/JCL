@@ -77,8 +77,7 @@ public abstract class StandardObjectStruct implements LispStruct {
 			return false;
 		}
 		final StandardObjectStruct rhs = (StandardObjectStruct) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(documentation, rhs.documentation)
+		return new EqualsBuilder().append(documentation, rhs.documentation)
 		                          .isEquals();
 	}
 

@@ -36,8 +36,7 @@ public class PrinterImpl implements Printer {
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(printerStrategies)
+		return new HashCodeBuilder().append(printerStrategies)
 		                            .toHashCode();
 	}
 
@@ -53,8 +52,7 @@ public class PrinterImpl implements Printer {
 			return false;
 		}
 		final PrinterImpl rhs = (PrinterImpl) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(printerStrategies, rhs.printerStrategies)
+		return new EqualsBuilder().append(printerStrategies, rhs.printerStrategies)
 		                          .isEquals();
 	}
 

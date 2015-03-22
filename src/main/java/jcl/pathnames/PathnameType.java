@@ -89,8 +89,7 @@ public final class PathnameType implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(type)
+		return new HashCodeBuilder().append(type)
 		                            .append(componentType)
 		                            .toHashCode();
 	}
@@ -107,8 +106,7 @@ public final class PathnameType implements Serializable {
 			return false;
 		}
 		final PathnameType rhs = (PathnameType) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(type, rhs.type)
+		return new EqualsBuilder().append(type, rhs.type)
 		                          .append(componentType, rhs.componentType)
 		                          .isEquals();
 	}

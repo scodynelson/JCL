@@ -32,8 +32,7 @@ public class RatioStructPrinter implements LispPrinter<RatioStruct> {
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(integerStructPrinter)
+		return new HashCodeBuilder().append(integerStructPrinter)
 		                            .toHashCode();
 	}
 
@@ -49,8 +48,7 @@ public class RatioStructPrinter implements LispPrinter<RatioStruct> {
 			return false;
 		}
 		final RatioStructPrinter rhs = (RatioStructPrinter) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(integerStructPrinter, rhs.integerStructPrinter)
+		return new EqualsBuilder().append(integerStructPrinter, rhs.integerStructPrinter)
 		                          .isEquals();
 	}
 

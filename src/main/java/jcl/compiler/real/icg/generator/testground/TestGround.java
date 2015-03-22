@@ -13,6 +13,7 @@ import jcl.compiler.real.icg.generator.specialoperator.TagbodyLabel;
 import jcl.compiler.real.icg.generator.specialoperator.exception.GoException;
 import jcl.compiler.real.icg.generator.specialoperator.exception.ReturnFromException;
 import jcl.compiler.real.icg.generator.specialoperator.exception.ThrowException;
+import jcl.lists.ConsStruct;
 import jcl.lists.NullStruct;
 import jcl.numbers.FloatStruct;
 import jcl.numbers.IntegerStruct;
@@ -163,5 +164,12 @@ public class TestGround {
 		final TagbodyLabel tagbodyLabel = new TagbodyLabel(null, 20, new Label());
 		final int index = tagbodyLabel.getIndex();
 		return index;
+	}
+
+	private Object quoteListGen() {
+
+		final LispStruct element1 = new CharacterStruct(97);
+		final LispStruct element2 = new CharacterStruct(97);
+		return new ConsStruct(element1, element2);
 	}
 }

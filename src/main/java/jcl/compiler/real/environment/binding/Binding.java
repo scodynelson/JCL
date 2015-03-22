@@ -43,20 +43,36 @@ public abstract class Binding<A extends Allocation> implements Serializable {
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
+		return new HashCodeBuilder().append(symbolStruct)
+		                            .append(allocation)
+		                            .append(type)
+		                            .toHashCode();
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public boolean equals(final Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final Binding<?> rhs = (Binding) obj;
+		return new EqualsBuilder().append(symbolStruct, rhs.symbolStruct)
+		                          .append(allocation, rhs.allocation)
+		                          .append(type, rhs.type)
+		                          .isEquals();
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(symbolStruct)
+		                                                                .append(allocation)
+		                                                                .append(type)
+		                                                                .toString();
 	}
 }

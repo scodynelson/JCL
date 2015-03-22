@@ -19,6 +19,10 @@ import jcl.reader.Reader;
 import jcl.reader.ReaderMacroFunction;
 import jcl.streams.ReadPeekResult;
 import jcl.types.Readtable;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link ReadtableStruct} is the object representation of a Lisp 'readtable' type.
@@ -198,6 +202,48 @@ public class ReadtableStruct extends BuiltInClassStruct {
 		return syntaxTable.getSyntaxType(codePoint);
 	}
 
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(macroTableMap)
+		                            .append(dispatchTableMap)
+		                            .append(attributeTable)
+		                            .append(syntaxTable)
+		                            .append(readtableCase)
+		                            .toHashCode();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final ReadtableStruct rhs = (ReadtableStruct) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj))
+		                          .append(macroTableMap, rhs.macroTableMap)
+		                          .append(dispatchTableMap, rhs.dispatchTableMap)
+		                          .append(attributeTable, rhs.attributeTable)
+		                          .append(syntaxTable, rhs.syntaxTable)
+		                          .append(readtableCase, rhs.readtableCase)
+		                          .isEquals();
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(macroTableMap)
+		                                                                .append(dispatchTableMap)
+		                                                                .append(attributeTable)
+		                                                                .append(syntaxTable)
+		                                                                .append(readtableCase)
+		                                                                .toString();
+	}
+
 	/**
 	 * This holds mappings for code points to {@link ReaderMacroFunction}s and delegates to the proper one when used.
 	 */
@@ -260,6 +306,36 @@ public class ReadtableStruct extends BuiltInClassStruct {
 		 */
 		private void setMacroCharacter(final int codePoint, final ReaderMacroFunction readerMacroFunction) {
 			readerMacroFunctionMap.put(codePoint, readerMacroFunction);
+		}
+
+		@Override
+		public int hashCode() {
+			return new HashCodeBuilder().appendSuper(super.hashCode())
+			                            .append(readerMacroFunctionMap)
+			                            .toHashCode();
+		}
+
+		@Override
+		public boolean equals(final Object obj) {
+			if (obj == null) {
+				return false;
+			}
+			if (obj == this) {
+				return true;
+			}
+			if (obj.getClass() != getClass()) {
+				return false;
+			}
+			final DispatchTable rhs = (DispatchTable) obj;
+			return new EqualsBuilder().appendSuper(super.equals(obj))
+			                          .append(readerMacroFunctionMap, rhs.readerMacroFunctionMap)
+			                          .isEquals();
+		}
+
+		@Override
+		public String toString() {
+			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(readerMacroFunctionMap)
+			                                                                .toString();
 		}
 	}
 }

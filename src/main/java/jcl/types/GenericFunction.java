@@ -5,9 +5,6 @@
 package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import java.lang.String;
 
 /**
  * A {@link GenericFunction} is a {@link Function} whose behavior depends on the {@link Class}es or identities of the
@@ -53,22 +50,6 @@ public interface GenericFunction extends Function {
 			 */
 			private GenericFunctionImpl() {
 				super("GENERIC-FUNCTION");
-			}
-
-			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
-			}
-
-			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof GenericFunction);
-			}
-
-			@Override
-			public String toString() {
-//				return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
-				return getName();
 			}
 		}
 	}

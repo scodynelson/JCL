@@ -1,9 +1,9 @@
 package jcl.functions;
 
+import java.util.Objects;
+
 import org.apache.commons.collections4.Equator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import java.util.Objects;
 
 public abstract class EquatorFunctionStruct<T> extends FunctionStruct implements Equator<T> {
 
@@ -16,8 +16,7 @@ public abstract class EquatorFunctionStruct<T> extends FunctionStruct implements
 
 	@Override
 	public int hash(final T o) {
-		return new HashCodeBuilder()
-				.append(o)
-				.toHashCode();
+		return new HashCodeBuilder().append(o)
+		                            .toHashCode();
 	}
 }

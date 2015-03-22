@@ -4,14 +4,14 @@
 
 package jcl.types;
 
+import java.lang.String;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import jcl.types.typespecifiers.designator.IntervalDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import java.lang.String;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 
 /**
  * A {@link Real} includes all numbers that represent mathematical real numbers, though there are mathematical real
@@ -219,7 +219,10 @@ public interface Real extends Number {
 
 			@Override
 			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+				return new HashCodeBuilder().appendSuper(super.hashCode())
+				                            .append(integerIntervalDesignator)
+				                            .append(decimalIntervalDesignator)
+				                            .toHashCode();
 			}
 
 			@Override
@@ -254,8 +257,13 @@ public interface Real extends Number {
 
 			@Override
 			public String toString() {
-//				return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
-				return getName();
+				if (integerIntervalDesignator != null) {
+					return '(' + getName() + ' ' + integerIntervalDesignator + ')';
+				} else if (decimalIntervalDesignator != null) {
+					return '(' + getName() + ' ' + decimalIntervalDesignator + ')';
+				} else {
+					return '(' + getName() + ' ' + '*' + ')';
+				}
 			}
 		}
 	}

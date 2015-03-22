@@ -4,13 +4,13 @@
 
 package jcl.types;
 
+import java.lang.String;
+import java.math.BigInteger;
+
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import jcl.types.typespecifiers.designator.IntervalDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import java.lang.String;
-import java.math.BigInteger;
 
 /**
  * An {@link Integer} is a mathematical integer. There is no limit on the magnitude of an {@link Integer}.
@@ -142,7 +142,9 @@ public interface Integer extends Rational {
 
 			@Override
 			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+				return new HashCodeBuilder().appendSuper(super.hashCode())
+				                            .append(intervalDesignator)
+				                            .toHashCode();
 			}
 
 			@Override
@@ -171,8 +173,7 @@ public interface Integer extends Rational {
 
 			@Override
 			public String toString() {
-//				return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
-				return getName();
+				return '(' + getName() + ' ' + intervalDesignator + ')';
 			}
 		}
 	}

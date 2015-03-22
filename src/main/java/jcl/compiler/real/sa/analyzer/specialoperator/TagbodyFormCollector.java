@@ -99,20 +99,39 @@ final class TagbodyFormCollector implements Collector<LispStruct, Map<GoStruct<?
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
+		return new HashCodeBuilder().append(formAnalyzer)
+		                            .append(environment)
+		                            .append(goStructGeneratorStrategies)
+		                            .append(currentTag)
+		                            .toHashCode();
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public boolean equals(final Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final TagbodyFormCollector rhs = (TagbodyFormCollector) obj;
+		return new EqualsBuilder().append(formAnalyzer, rhs.formAnalyzer)
+		                          .append(environment, rhs.environment)
+		                          .append(goStructGeneratorStrategies, rhs.goStructGeneratorStrategies)
+		                          .append(currentTag, rhs.currentTag)
+		                          .isEquals();
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(formAnalyzer)
+		                                                                .append(environment)
+		                                                                .append(goStructGeneratorStrategies)
+		                                                                .append(currentTag)
+		                                                                .toString();
 	}
 }

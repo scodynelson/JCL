@@ -64,20 +64,45 @@ public class OrdinaryLambdaListBindings implements Serializable {
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
+		return new HashCodeBuilder().append(requiredBindings)
+		                            .append(optionalBindings)
+		                            .append(restBinding)
+		                            .append(keyBindings)
+		                            .append(auxBindings)
+		                            .append(allowOtherKeys)
+		                            .toHashCode();
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public boolean equals(final Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final OrdinaryLambdaListBindings rhs = (OrdinaryLambdaListBindings) obj;
+		return new EqualsBuilder().append(requiredBindings, rhs.requiredBindings)
+		                          .append(optionalBindings, rhs.optionalBindings)
+		                          .append(restBinding, rhs.restBinding)
+		                          .append(keyBindings, rhs.keyBindings)
+		                          .append(auxBindings, rhs.auxBindings)
+		                          .append(allowOtherKeys, rhs.allowOtherKeys)
+		                          .isEquals();
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(requiredBindings)
+		                                                                .append(optionalBindings)
+		                                                                .append(restBinding)
+		                                                                .append(keyBindings)
+		                                                                .append(auxBindings)
+		                                                                .append(allowOtherKeys)
+		                                                                .toString();
 	}
 }

@@ -202,20 +202,36 @@ public class FormAnalyzerImpl implements FormAnalyzer {
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
+		return new HashCodeBuilder().append(newMacroExpand)
+		                            .append(symbolAnalyzer)
+		                            .append(lambdaExpander)
+		                            .toHashCode();
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public boolean equals(final Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final FormAnalyzerImpl rhs = (FormAnalyzerImpl) obj;
+		return new EqualsBuilder().append(newMacroExpand, rhs.newMacroExpand)
+		                          .append(symbolAnalyzer, rhs.symbolAnalyzer)
+		                          .append(lambdaExpander, rhs.lambdaExpander)
+		                          .isEquals();
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(newMacroExpand)
+		                                                                .append(symbolAnalyzer)
+		                                                                .append(lambdaExpander)
+		                                                                .toString();
 	}
 }

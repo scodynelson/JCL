@@ -6,9 +6,6 @@ package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.NotTypeSpecifier;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import java.lang.String;
 
 /**
  * An {@link Atom} is a type equivalent to (not cons).
@@ -50,18 +47,7 @@ public interface Atom extends T {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return super.equals(obj) || (obj == INSTANCE);
-			}
-
-			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
-			}
-
-			@Override
-			public String toString() {
-//				return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+			public java.lang.String toString() {
 				return getName();
 			}
 		}

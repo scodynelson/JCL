@@ -5,9 +5,6 @@
 package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import java.lang.String;
 
 /**
  * The {@link StructureObject} is an instance of {@link StructureClass} and is a superclass of every {@link Class} that
@@ -47,22 +44,6 @@ public interface StructureObject extends T {
 			 */
 			private StructureObjectImpl() {
 				super("STRUCTURE-OBJECT");
-			}
-
-			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
-			}
-
-			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof StructureObject);
-			}
-
-			@Override
-			public String toString() {
-//				return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
-				return getName();
 			}
 		}
 	}

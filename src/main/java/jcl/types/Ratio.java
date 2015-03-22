@@ -5,9 +5,6 @@
 package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import java.lang.String;
 
 /**
  * A {@link Ratio} is a {@link Number} representing the mathematical ratio of two non-zero integers, the numerator and
@@ -47,22 +44,6 @@ public interface Ratio extends Rational {
 			 */
 			private RatioImpl() {
 				super("RATIO");
-			}
-
-			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
-			}
-
-			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof Ratio);
-			}
-
-			@Override
-			public String toString() {
-//				return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
-				return getName();
 			}
 		}
 	}

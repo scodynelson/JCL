@@ -7,6 +7,10 @@ package jcl.streams;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.types.BaseChar;
 import jcl.types.StringStream;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link StringOutputStreamStruct} is the object representation of a Lisp 'string-stream' output type.
@@ -82,5 +86,35 @@ public class StringOutputStreamStruct extends StreamStruct implements OutputStre
 			return (long) stringBuffer.length();
 		}
 		return null;
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(stringBuffer)
+		                            .toHashCode();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final StringOutputStreamStruct rhs = (StringOutputStreamStruct) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj))
+		                          .append(stringBuffer, rhs.stringBuffer)
+		                          .isEquals();
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(stringBuffer)
+		                                                                .toString();
 	}
 }

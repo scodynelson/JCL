@@ -7,10 +7,6 @@ package jcl.compiler.real.struct.specialoperator.go;
 import java.io.Serializable;
 
 import jcl.LispStruct;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 public abstract class GoStructGenerator<T extends LispStruct> implements Serializable {
 
@@ -20,22 +16,4 @@ public abstract class GoStructGenerator<T extends LispStruct> implements Seriali
 	}
 
 	public abstract GoStruct<T> generateGoElement(final T tag);
-
-	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
-	}
-
-	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
-	public boolean equals(final Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
-	}
-
-	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
-	}
 }

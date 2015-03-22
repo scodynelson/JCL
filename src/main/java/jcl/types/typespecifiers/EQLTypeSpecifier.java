@@ -52,7 +52,9 @@ public class EQLTypeSpecifier extends TypeBaseClass implements CompoundTypeSpeci
 
 	@Override
 	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(typeSpecifier)
+		                            .toHashCode();
 	}
 
 	@Override
@@ -72,6 +74,7 @@ public class EQLTypeSpecifier extends TypeBaseClass implements CompoundTypeSpeci
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(typeSpecifier)
+		                                                                .toString();
 	}
 }

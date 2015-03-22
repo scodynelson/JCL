@@ -8,6 +8,10 @@ import jcl.LispStruct;
 import jcl.LispType;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.symbols.SymbolStruct;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class ParameterBinding extends Binding<ParameterAllocation> {
 
@@ -23,5 +27,35 @@ public class ParameterBinding extends Binding<ParameterAllocation> {
 
 	public LispStruct getInitForm() {
 		return initForm;
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(initForm)
+		                            .toHashCode();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final ParameterBinding rhs = (ParameterBinding) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj))
+		                          .append(initForm, rhs.initForm)
+		                          .isEquals();
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(initForm)
+		                                                                .toString();
 	}
 }

@@ -24,20 +24,30 @@ public abstract class PositionAllocation implements Allocation {
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
+		return new HashCodeBuilder().append(position)
+		                            .toHashCode();
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public boolean equals(final Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final PositionAllocation rhs = (PositionAllocation) obj;
+		return new EqualsBuilder().append(position, rhs.position)
+		                          .isEquals();
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(position)
+		                                                                .toString();
 	}
 }

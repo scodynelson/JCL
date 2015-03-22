@@ -19,6 +19,10 @@ import jcl.symbols.KeywordSymbolStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.system.CommonLispSymbols;
 import jcl.types.Package;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link PackageStruct} is the object representation of a Lisp 'package' type.
@@ -620,5 +624,53 @@ public class PackageStruct extends BuiltInClassStruct {
 		}
 
 		return foundSymbol;
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(name)
+		                            .append(nicknames)
+//		                            .append(useList)
+//		                            .append(usedByList)
+//		                            .append(externalSymbols)
+//		                            .append(internalSymbols)
+//		                            .append(shadowingSymbols)
+		                            .toHashCode();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final PackageStruct rhs = (PackageStruct) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj))
+		                          .append(name, rhs.name)
+		                          .append(nicknames, rhs.nicknames)
+//		                          .append(useList, rhs.useList)
+//		                          .append(usedByList, rhs.usedByList)
+//		                          .append(externalSymbols, rhs.externalSymbols)
+//		                          .append(internalSymbols, rhs.internalSymbols)
+//		                          .append(shadowingSymbols, rhs.shadowingSymbols)
+		                          .isEquals();
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(name)
+		                                                                .append(nicknames)
+//		                                                                .append(useList)
+//		                                                                .append(usedByList)
+//		                                                                .append(externalSymbols)
+//		                                                                .append(internalSymbols)
+//		                                                                .append(shadowingSymbols)
+		                                                                .toString();
 	}
 }

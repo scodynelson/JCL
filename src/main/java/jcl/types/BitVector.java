@@ -4,14 +4,13 @@
 
 package jcl.types;
 
+import java.lang.Integer;
+
 import jcl.LispType;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import jcl.types.typespecifiers.designator.DimensionsDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import java.lang.Integer;
-import java.lang.String;
 
 /**
  * A {@link BitVector} is a {@link Vector} the element type of which is {@link Bit}.
@@ -111,7 +110,9 @@ public interface BitVector extends Vector {
 
 			@Override
 			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+				return new HashCodeBuilder().appendSuper(super.hashCode())
+				                            .append(size)
+				                            .toHashCode();
 			}
 
 			@Override
@@ -139,9 +140,9 @@ public interface BitVector extends Vector {
 			}
 
 			@Override
-			public String toString() {
-//				return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
-				return getName();
+			public java.lang.String toString() {
+				final java.util.List<Integer> dimensionsValue = size.getDimensions();
+				return '(' + getName() + ' ' + ((dimensionsValue == null) ? '*' : dimensionsValue.toString()) + ')';
 			}
 		}
 	}

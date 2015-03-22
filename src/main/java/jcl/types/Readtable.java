@@ -5,9 +5,6 @@
 package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import java.lang.String;
 
 /**
  * A {@link Readtable} maps characters into syntax types for the Lisp reader. A {@link Readtable} also contains
@@ -50,22 +47,6 @@ public interface Readtable extends T {
 			 */
 			private ReadtableImpl() {
 				super("READTABLE");
-			}
-
-			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
-			}
-
-			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof Readtable);
-			}
-
-			@Override
-			public String toString() {
-//				return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
-				return getName();
 			}
 		}
 	}

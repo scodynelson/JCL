@@ -14,10 +14,6 @@ import jcl.printer.PrinterVariables;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
 import jcl.reader.struct.SyntaxType;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -59,23 +55,5 @@ public class StringStructPrinter implements LispPrinter<StringStruct> {
 		}
 
 		return stringBuilder.toString();
-	}
-
-	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
-	}
-
-	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
-	public boolean equals(final Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
-	}
-
-	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
 	}
 }

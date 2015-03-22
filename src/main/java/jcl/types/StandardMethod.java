@@ -5,9 +5,6 @@
 package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import java.lang.String;
 
 /**
  * A {@link StandardMethod} is the default method type {@link Class}.
@@ -46,22 +43,6 @@ public interface StandardMethod extends Method, StandardObject {
 			 */
 			private StandardMethodImpl() {
 				super("STANDARD-METHOD");
-			}
-
-			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
-			}
-
-			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof StandardMethod);
-			}
-
-			@Override
-			public String toString() {
-//				return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
-				return getName();
 			}
 		}
 	}

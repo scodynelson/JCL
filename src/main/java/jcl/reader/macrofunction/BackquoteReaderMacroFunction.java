@@ -341,6 +341,36 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 		return new ConsStruct(flag, thing);
 	}
 
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(printer)
+		                            .toHashCode();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final BackquoteReaderMacroFunction rhs = (BackquoteReaderMacroFunction) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj))
+		                          .append(printer, rhs.printer)
+		                          .isEquals();
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(printer)
+		                                                                .toString();
+	}
+
 	private static final class BackquoteReturn {
 
 		private final SymbolStruct<?> flag;
@@ -362,17 +392,33 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 
 		@Override
 		public int hashCode() {
-			return HashCodeBuilder.reflectionHashCode(this);
+			return new HashCodeBuilder().append(flag)
+			                            .append(thing)
+			                            .toHashCode();
 		}
 
 		@Override
 		public boolean equals(final Object obj) {
-			return EqualsBuilder.reflectionEquals(this, obj);
+			if (obj == null) {
+				return false;
+			}
+			if (obj == this) {
+				return true;
+			}
+			if (obj.getClass() != getClass()) {
+				return false;
+			}
+			final BackquoteReturn rhs = (BackquoteReturn) obj;
+			return new EqualsBuilder().append(flag, rhs.flag)
+			                          .append(thing, rhs.thing)
+			                          .isEquals();
 		}
 
 		@Override
 		public String toString() {
-			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(flag)
+			                                                                .append(thing)
+			                                                                .toString();
 		}
 	}
 }

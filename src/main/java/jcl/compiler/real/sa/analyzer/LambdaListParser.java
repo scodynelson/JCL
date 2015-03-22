@@ -528,21 +528,34 @@ final class LambdaListParser {
 		}
 
 		@Override
-		@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 		public int hashCode() {
-			return HashCodeBuilder.reflectionHashCode(this);
+			return new HashCodeBuilder().append(currentElement)
+			                            .append(currentPosition)
+			                            .toHashCode();
 		}
 
 		@Override
-		@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 		public boolean equals(final Object obj) {
-			return EqualsBuilder.reflectionEquals(this, obj);
+			if (obj == null) {
+				return false;
+			}
+			if (obj == this) {
+				return true;
+			}
+			if (obj.getClass() != getClass()) {
+				return false;
+			}
+			final ParseResult rhs = (ParseResult) obj;
+			return new EqualsBuilder().append(currentElement, rhs.currentElement)
+			                          .append(currentPosition, rhs.currentPosition)
+			                          .isEquals();
 		}
 
 		@Override
-		@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 		public String toString() {
-			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(currentElement)
+			                                                                .append(currentPosition)
+			                                                                .toString();
 		}
 	}
 
@@ -558,6 +571,36 @@ final class LambdaListParser {
 		public List<RequiredBinding> getRequiredBindings() {
 			return requiredBindings;
 		}
+
+		@Override
+		public int hashCode() {
+			return new HashCodeBuilder().appendSuper(super.hashCode())
+			                            .append(requiredBindings)
+			                            .toHashCode();
+		}
+
+		@Override
+		public boolean equals(final Object obj) {
+			if (obj == null) {
+				return false;
+			}
+			if (obj == this) {
+				return true;
+			}
+			if (obj.getClass() != getClass()) {
+				return false;
+			}
+			final RequiredParseResult rhs = (RequiredParseResult) obj;
+			return new EqualsBuilder().appendSuper(super.equals(obj))
+			                          .append(requiredBindings, rhs.requiredBindings)
+			                          .isEquals();
+		}
+
+		@Override
+		public String toString() {
+			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(requiredBindings)
+			                                                                .toString();
+		}
 	}
 
 	private static final class OptionalParseResult extends ParseResult {
@@ -572,6 +615,36 @@ final class LambdaListParser {
 		public List<OptionalBinding> getOptionalBindings() {
 			return optionalBindings;
 		}
+
+		@Override
+		public int hashCode() {
+			return new HashCodeBuilder().appendSuper(super.hashCode())
+			                            .append(optionalBindings)
+			                            .toHashCode();
+		}
+
+		@Override
+		public boolean equals(final Object obj) {
+			if (obj == null) {
+				return false;
+			}
+			if (obj == this) {
+				return true;
+			}
+			if (obj.getClass() != getClass()) {
+				return false;
+			}
+			final OptionalParseResult rhs = (OptionalParseResult) obj;
+			return new EqualsBuilder().appendSuper(super.equals(obj))
+			                          .append(optionalBindings, rhs.optionalBindings)
+			                          .isEquals();
+		}
+
+		@Override
+		public String toString() {
+			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(optionalBindings)
+			                                                                .toString();
+		}
 	}
 
 	private static final class RestParseResult extends ParseResult {
@@ -585,6 +658,36 @@ final class LambdaListParser {
 
 		public RestBinding getRestBinding() {
 			return restBinding;
+		}
+
+		@Override
+		public int hashCode() {
+			return new HashCodeBuilder().appendSuper(super.hashCode())
+			                            .append(restBinding)
+			                            .toHashCode();
+		}
+
+		@Override
+		public boolean equals(final Object obj) {
+			if (obj == null) {
+				return false;
+			}
+			if (obj == this) {
+				return true;
+			}
+			if (obj.getClass() != getClass()) {
+				return false;
+			}
+			final RestParseResult rhs = (RestParseResult) obj;
+			return new EqualsBuilder().appendSuper(super.equals(obj))
+			                          .append(restBinding, rhs.restBinding)
+			                          .isEquals();
+		}
+
+		@Override
+		public String toString() {
+			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(restBinding)
+			                                                                .toString();
 		}
 	}
 
@@ -607,6 +710,39 @@ final class LambdaListParser {
 		public boolean isAllowOtherKeys() {
 			return allowOtherKeys;
 		}
+
+		@Override
+		public int hashCode() {
+			return new HashCodeBuilder().appendSuper(super.hashCode())
+			                            .append(keyBindings)
+			                            .append(allowOtherKeys)
+			                            .toHashCode();
+		}
+
+		@Override
+		public boolean equals(final Object obj) {
+			if (obj == null) {
+				return false;
+			}
+			if (obj == this) {
+				return true;
+			}
+			if (obj.getClass() != getClass()) {
+				return false;
+			}
+			final KeyParseResult rhs = (KeyParseResult) obj;
+			return new EqualsBuilder().appendSuper(super.equals(obj))
+			                          .append(keyBindings, rhs.keyBindings)
+			                          .append(allowOtherKeys, rhs.allowOtherKeys)
+			                          .isEquals();
+		}
+
+		@Override
+		public String toString() {
+			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(keyBindings)
+			                                                                .append(allowOtherKeys)
+			                                                                .toString();
+		}
 	}
 
 	private static final class AuxParseResult extends ParseResult {
@@ -620,6 +756,36 @@ final class LambdaListParser {
 
 		public List<AuxBinding> getAuxBindings() {
 			return auxBindings;
+		}
+
+		@Override
+		public int hashCode() {
+			return new HashCodeBuilder().appendSuper(super.hashCode())
+			                            .append(auxBindings)
+			                            .toHashCode();
+		}
+
+		@Override
+		public boolean equals(final Object obj) {
+			if (obj == null) {
+				return false;
+			}
+			if (obj == this) {
+				return true;
+			}
+			if (obj.getClass() != getClass()) {
+				return false;
+			}
+			final AuxParseResult rhs = (AuxParseResult) obj;
+			return new EqualsBuilder().appendSuper(super.equals(obj))
+			                          .append(auxBindings, rhs.auxBindings)
+			                          .isEquals();
+		}
+
+		@Override
+		public String toString() {
+			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(auxBindings)
+			                                                                .toString();
 		}
 	}
 

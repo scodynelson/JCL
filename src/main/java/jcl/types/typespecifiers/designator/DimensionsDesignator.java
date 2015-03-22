@@ -4,16 +4,14 @@
 
 package jcl.types.typespecifiers.designator;
 
-import jcl.types.Array;
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import jcl.types.Array;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * This class represents a dimensions designator, found within compound {@link Array}s.
@@ -61,7 +59,8 @@ public class DimensionsDesignator implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
+		return new HashCodeBuilder().append(dimensions)
+		                            .toHashCode();
 	}
 
 	@Override
@@ -113,6 +112,6 @@ public class DimensionsDesignator implements Serializable {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+		return (dimensions == null) ? "*" : dimensions.toString();
 	}
 }

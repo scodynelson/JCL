@@ -4,13 +4,13 @@
 
 package jcl.types.typespecifiers;
 
+import java.math.BigInteger;
+
 import jcl.numbers.IntegerStruct;
 import jcl.types.TypeBaseClass;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.math.BigInteger;
 
 /**
  * A {@link ModTypeSpecifier} denotes the set of non-negative integers less than n. This is equivalent to (integer 0
@@ -54,7 +54,9 @@ public class ModTypeSpecifier extends TypeBaseClass implements CompoundTypeSpeci
 
 	@Override
 	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(integerStruct)
+		                            .toHashCode();
 	}
 
 	@Override
@@ -81,6 +83,7 @@ public class ModTypeSpecifier extends TypeBaseClass implements CompoundTypeSpeci
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(integerStruct)
+		                                                                .toString();
 	}
 }

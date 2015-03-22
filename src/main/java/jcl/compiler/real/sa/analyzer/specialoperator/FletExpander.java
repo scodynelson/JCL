@@ -29,6 +29,10 @@ import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
 import jcl.system.StackUtils;
 import jcl.types.T;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -182,5 +186,44 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 		// Evaluate in the 'outer' environment. This is one of the differences between Flet and Labels/Macrolet.
 		final Environment parentEnvironment = fletEnvironment.getParent();
 		return functionExpander.expand(innerFunctionListStruct, parentEnvironment);
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(formAnalyzer)
+		                            .append(bodyWithDeclaresAnalyzer)
+		                            .append(functionExpander)
+		                            .append(printer)
+		                            .toHashCode();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final FletExpander rhs = (FletExpander) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj))
+		                          .append(formAnalyzer, rhs.formAnalyzer)
+		                          .append(bodyWithDeclaresAnalyzer, rhs.bodyWithDeclaresAnalyzer)
+		                          .append(functionExpander, rhs.functionExpander)
+		                          .append(printer, rhs.printer)
+		                          .isEquals();
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(formAnalyzer)
+		                                                                .append(bodyWithDeclaresAnalyzer)
+		                                                                .append(functionExpander)
+		                                                                .append(printer)
+		                                                                .toString();
 	}
 }

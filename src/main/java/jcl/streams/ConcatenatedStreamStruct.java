@@ -10,6 +10,10 @@ import jcl.conditions.exceptions.EndOfFileException;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.types.ConcatenatedStream;
 import jcl.types.T;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -203,5 +207,35 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 
 		final InputStream last = inputStreams.getLast();
 		return last.filePosition(filePosition);
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(inputStreams)
+		                            .toHashCode();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final ConcatenatedStreamStruct rhs = (ConcatenatedStreamStruct) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj))
+		                          .append(inputStreams, rhs.inputStreams)
+		                          .isEquals();
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(inputStreams)
+		                                                                .toString();
 	}
 }

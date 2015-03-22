@@ -13,6 +13,10 @@ import jcl.compiler.real.environment.binding.SymbolClosureBinding;
 import jcl.compiler.real.environment.binding.SymbolEnvironmentBinding;
 import jcl.compiler.real.environment.binding.SymbolLocalBinding;
 import jcl.symbols.SymbolStruct;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class SymbolTable implements Serializable {
 
@@ -107,5 +111,42 @@ public class SymbolTable implements Serializable {
 
 	public void addDynamicLocalBinding(final SymbolLocalBinding symbolBinding) {
 		dynamicLocalBindings.add(symbolBinding);
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().append(lexicalEnvironmentBindings)
+		                            .append(closureBindings)
+		                            .append(dynamicEnvironmentBindings)
+		                            .append(dynamicLocalBindings)
+		                            .toHashCode();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final SymbolTable rhs = (SymbolTable) obj;
+		return new EqualsBuilder().append(lexicalEnvironmentBindings, rhs.lexicalEnvironmentBindings)
+		                          .append(closureBindings, rhs.closureBindings)
+		                          .append(dynamicEnvironmentBindings, rhs.dynamicEnvironmentBindings)
+		                          .append(dynamicLocalBindings, rhs.dynamicLocalBindings)
+		                          .isEquals();
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(lexicalEnvironmentBindings)
+		                                                                .append(closureBindings)
+		                                                                .append(dynamicEnvironmentBindings)
+		                                                                .append(dynamicLocalBindings)
+		                                                                .toString();
 	}
 }

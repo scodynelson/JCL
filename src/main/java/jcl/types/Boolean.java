@@ -6,9 +6,6 @@ package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.OrTypeSpecifier;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import java.lang.String;
 
 /**
  * The type {@link Boolean} contains the {@link Symbol}s {@link T} and {@link NIL}, which represent true and false,
@@ -51,18 +48,7 @@ public interface Boolean extends Symbol {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return super.equals(obj) || (obj == INSTANCE);
-			}
-
-			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
-			}
-
-			@Override
-			public String toString() {
-//				return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+			public java.lang.String toString() {
 				return getName();
 			}
 		}

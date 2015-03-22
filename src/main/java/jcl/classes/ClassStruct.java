@@ -2,6 +2,10 @@ package jcl.classes;
 
 import jcl.LispStruct;
 import jcl.LispType;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.Collections;
 import java.util.List;
@@ -90,5 +94,41 @@ public abstract class ClassStruct extends StandardObjectStruct {
 	 */
 	public List<Class<LispStruct>> getSubClasses() {
 		return subClasses;
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(type)
+		                            .append(directSuperClasses)
+		                            .append(subClasses)
+		                            .toHashCode();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final ClassStruct rhs = (ClassStruct) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj))
+		                          .append(type, rhs.type)
+		                          .append(directSuperClasses, rhs.directSuperClasses)
+		                          .append(subClasses, rhs.subClasses)
+		                          .isEquals();
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(type)
+		                                                                .append(directSuperClasses)
+		                                                                .append(subClasses)
+		                                                                .toString();
 	}
 }

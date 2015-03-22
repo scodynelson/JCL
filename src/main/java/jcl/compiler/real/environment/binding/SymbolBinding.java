@@ -8,6 +8,10 @@ import jcl.LispType;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.allocation.Allocation;
 import jcl.symbols.SymbolStruct;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class SymbolBinding<A extends Allocation> extends Binding<A> {
 
@@ -23,5 +27,35 @@ public class SymbolBinding<A extends Allocation> extends Binding<A> {
 
 	public Environment getBinding() {
 		return binding;
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(binding)
+		                            .toHashCode();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final SymbolBinding<?> rhs = (SymbolBinding) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj))
+		                          .append(binding, rhs.binding)
+		                          .isEquals();
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(binding)
+		                                                                .toString();
 	}
 }

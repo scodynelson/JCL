@@ -137,20 +137,57 @@ class ReaderStateMediatorImpl implements ReaderStateMediator {
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
+		return new HashCodeBuilder().append(readReaderState)
+		                            .append(illegalCharacterReaderState)
+		                            .append(whitespaceReaderState)
+		                            .append(macroCharacterReaderState)
+		                            .append(singleEscapeReaderState)
+		                            .append(multipleEscapeReaderState)
+		                            .append(constituentReaderState)
+		                            .append(evenMultiEscapeReaderState)
+		                            .append(oddMultiEscapeReaderState)
+		                            .append(tokenAccumulatedReaderState)
+		                            .toHashCode();
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public boolean equals(final Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final ReaderStateMediatorImpl rhs = (ReaderStateMediatorImpl) obj;
+		return new EqualsBuilder().append(readReaderState, rhs.readReaderState)
+		                          .append(illegalCharacterReaderState, rhs.illegalCharacterReaderState)
+		                          .append(whitespaceReaderState, rhs.whitespaceReaderState)
+		                          .append(macroCharacterReaderState, rhs.macroCharacterReaderState)
+		                          .append(singleEscapeReaderState, rhs.singleEscapeReaderState)
+		                          .append(multipleEscapeReaderState, rhs.multipleEscapeReaderState)
+		                          .append(constituentReaderState, rhs.constituentReaderState)
+		                          .append(evenMultiEscapeReaderState, rhs.evenMultiEscapeReaderState)
+		                          .append(oddMultiEscapeReaderState, rhs.oddMultiEscapeReaderState)
+		                          .append(tokenAccumulatedReaderState, rhs.tokenAccumulatedReaderState)
+		                          .isEquals();
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(readReaderState)
+		                                                                .append(illegalCharacterReaderState)
+		                                                                .append(whitespaceReaderState)
+		                                                                .append(macroCharacterReaderState)
+		                                                                .append(singleEscapeReaderState)
+		                                                                .append(multipleEscapeReaderState)
+		                                                                .append(constituentReaderState)
+		                                                                .append(evenMultiEscapeReaderState)
+		                                                                .append(oddMultiEscapeReaderState)
+		                                                                .append(tokenAccumulatedReaderState)
+		                                                                .toString();
 	}
 }

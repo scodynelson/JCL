@@ -4,14 +4,14 @@
 
 package jcl.types;
 
+import java.lang.Integer;
+import java.lang.String;
+
 import jcl.LispType;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import jcl.types.typespecifiers.designator.DimensionsDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import java.lang.Integer;
-import java.lang.String;
 
 /**
  * A {@link SimpleVector} is a type of a {@link Vector} that is not displaced to another {@link Array}, has no fill
@@ -133,7 +133,10 @@ public interface SimpleVector extends Vector, SimpleArray {
 
 			@Override
 			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+				return new HashCodeBuilder().appendSuper(super.hashCode())
+				                            .append(size)
+				                            .append(elementType)
+				                            .toHashCode();
 			}
 
 			@Override
@@ -176,8 +179,8 @@ public interface SimpleVector extends Vector, SimpleArray {
 
 			@Override
 			public String toString() {
-//				return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
-				return getName();
+				final java.util.List<Integer> dimensionsValue = size.getDimensions();
+				return '(' + getName() + ' ' + elementType +  ' ' + ((dimensionsValue == null) ? '*' : dimensionsValue.toString()) + ')';
 			}
 		}
 	}

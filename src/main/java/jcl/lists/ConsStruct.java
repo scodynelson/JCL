@@ -2,6 +2,8 @@ package jcl.lists;
 
 import jcl.LispStruct;
 import jcl.types.Cons;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -218,11 +220,51 @@ public class ConsStruct extends ListStruct {
 	}
 
 	@Override
+	public int hashCode() {
+		// TODO: we should figure out how to handle circularities here... or should we???
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .toHashCode();
+//		if (isCircular()) {
+//		} else {
+//			return new HashCodeBuilder().appendSuper(super.hashCode())
+//			                            .append(car)
+//			                            .append(cdr)
+//			                            .toHashCode();
+//		}
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final ConsStruct rhs = (ConsStruct) obj;
+
+		if (isCircular() || rhs.isCircular()) {
+			// TODO: we should figure out how to handle circularities here... or should we???
+			return false;
+		} else {
+			return new EqualsBuilder().appendSuper(super.equals(obj))
+			                          .append(car, rhs.car)
+			                          .append(cdr, rhs.cdr)
+			                          .isEquals();
+		}
+	}
+
+	@Override
 	public String toString() {
 		if (isCircular()) {
 			return "ConsStruct{'circular'}";
 		} else {
-			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(car)
+			                                                                .append(cdr)
+			                                                                .toString();
 		}
 	}
 }

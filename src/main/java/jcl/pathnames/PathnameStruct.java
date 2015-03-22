@@ -11,6 +11,10 @@ import jcl.arrays.StringStruct;
 import jcl.classes.BuiltInClassStruct;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.types.Pathname;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -253,5 +257,50 @@ public class PathnameStruct extends BuiltInClassStruct {
 	 */
 	public PathnameVersion getPathnameVersion() {
 		return version;
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(host)
+		                            .append(device)
+		                            .append(directory)
+		                            .append(name)
+		                            .append(type)
+		                            .append(version)
+		                            .toHashCode();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final PathnameStruct rhs = (PathnameStruct) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj))
+		                          .append(host, rhs.host)
+		                          .append(device, rhs.device)
+		                          .append(directory, rhs.directory)
+		                          .append(name, rhs.name)
+		                          .append(type, rhs.type)
+		                          .append(version, rhs.version)
+		                          .isEquals();
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(host)
+		                                                                .append(device)
+		                                                                .append(directory)
+		                                                                .append(name)
+		                                                                .append(type)
+		                                                                .append(version)
+		                                                                .toString();
 	}
 }

@@ -4,14 +4,14 @@
 
 package jcl.types;
 
+import java.lang.Integer;
+import java.lang.String;
+
 import jcl.LispType;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import jcl.types.typespecifiers.designator.DimensionsDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import java.lang.Integer;
-import java.lang.String;
 
 /**
  * A {@link Vector} is any one-dimensional {@link Array}.
@@ -122,7 +122,10 @@ public interface Vector extends Array, Sequence {
 
 			@Override
 			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+				return new HashCodeBuilder().appendSuper(super.hashCode())
+				                            .append(size)
+				                            .append(elementType)
+				                            .toHashCode();
 			}
 
 			@Override
@@ -165,8 +168,8 @@ public interface Vector extends Array, Sequence {
 
 			@Override
 			public String toString() {
-//				return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
-				return getName();
+				final java.util.List<Integer> dimensionsValue = size.getDimensions();
+				return '(' + getName() + ' ' + elementType + ' ' + ((dimensionsValue == null) ? '*' : dimensionsValue) + ')';
 			}
 		}
 	}

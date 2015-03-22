@@ -4,15 +4,15 @@
 
 package jcl.types.typespecifiers;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import jcl.LispType;
 import jcl.types.TypeBaseClass;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * An {@link AndTypeSpecifier} denotes the set of all objects of the type determined by the intersection of the
@@ -57,7 +57,9 @@ public class AndTypeSpecifier extends TypeBaseClass implements CompoundTypeSpeci
 
 	@Override
 	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(types)
+		                            .toHashCode();
 	}
 
 	@Override
@@ -81,6 +83,7 @@ public class AndTypeSpecifier extends TypeBaseClass implements CompoundTypeSpeci
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(types)
+		                                                                .toString();
 	}
 }

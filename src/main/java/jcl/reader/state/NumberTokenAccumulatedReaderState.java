@@ -228,20 +228,42 @@ class NumberTokenAccumulatedReaderState implements ReaderState {
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
+		return new HashCodeBuilder().append(symbolTokenAccumulatedReaderState)
+		                            .append(floatTokenAccumulatedReaderState)
+		                            .append(integerTokenAccumulatedReaderState)
+		                            .append(rationalFloatTokenAccumulatedReaderState)
+		                            .append(rationalTokenAccumulatedReaderState)
+		                            .toHashCode();
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public boolean equals(final Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final NumberTokenAccumulatedReaderState rhs = (NumberTokenAccumulatedReaderState) obj;
+		return new EqualsBuilder().append(symbolTokenAccumulatedReaderState, rhs.symbolTokenAccumulatedReaderState)
+		                          .append(floatTokenAccumulatedReaderState, rhs.floatTokenAccumulatedReaderState)
+		                          .append(integerTokenAccumulatedReaderState, rhs.integerTokenAccumulatedReaderState)
+		                          .append(rationalFloatTokenAccumulatedReaderState, rhs.rationalFloatTokenAccumulatedReaderState)
+		                          .append(rationalTokenAccumulatedReaderState, rhs.rationalTokenAccumulatedReaderState)
+		                          .isEquals();
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(symbolTokenAccumulatedReaderState)
+		                                                                .append(floatTokenAccumulatedReaderState)
+		                                                                .append(integerTokenAccumulatedReaderState)
+		                                                                .append(rationalFloatTokenAccumulatedReaderState)
+		                                                                .append(rationalTokenAccumulatedReaderState)
+		                                                                .toString();
 	}
 }

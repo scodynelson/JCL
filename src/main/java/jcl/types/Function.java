@@ -4,6 +4,10 @@
 
 package jcl.types;
 
+import java.lang.String;
+import java.util.List;
+import java.util.Objects;
+
 import jcl.lambdalist.variable.Key;
 import jcl.lambdalist.variable.Optional;
 import jcl.lambdalist.variable.Rest;
@@ -12,10 +16,6 @@ import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import jcl.types.typespecifiers.TypeSpecifier;
 import jcl.types.typespecifiers.ValuesTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import java.lang.String;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * A {@link Function} is an object that represents code to be executed when an appropriate number of arguments is
@@ -154,7 +154,13 @@ public interface Function extends T {
 
 			@Override
 			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+				return new HashCodeBuilder().appendSuper(super.hashCode())
+				                            .append(typeSpecifiers)
+				                            .append(optional)
+				                            .append(rest)
+				                            .append(key)
+				                            .append(valuesTypeSpecifier)
+				                            .toHashCode();
 			}
 
 			@Override
@@ -189,8 +195,13 @@ public interface Function extends T {
 
 			@Override
 			public String toString() {
-//				return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
-				return getName();
+				return '(' + getName()
+						+ ((typeSpecifiers == null) ? '*' : typeSpecifiers)
+						+ ((optional == null) ? '*' : optional)
+						+ ((rest == null) ? '*' : rest)
+						+ ((key == null) ? '*' : key)
+						+ ((valuesTypeSpecifier == null) ? '*' : valuesTypeSpecifier)
+						+ ')';
 			}
 		}
 	}

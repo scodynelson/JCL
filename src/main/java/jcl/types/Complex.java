@@ -4,12 +4,12 @@
 
 package jcl.types;
 
+import java.lang.String;
+import java.util.Objects;
+
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import java.lang.String;
-import java.util.Objects;
 
 /**
  * A {@link Complex} includes all mathematical complex numbers other than those included in the type {@link Rational}.
@@ -96,7 +96,9 @@ public interface Complex extends Number {
 
 			@Override
 			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+				return new HashCodeBuilder().appendSuper(super.hashCode())
+				                            .append(realType)
+				                            .toHashCode();
 			}
 
 			@Override
@@ -125,8 +127,7 @@ public interface Complex extends Number {
 
 			@Override
 			public String toString() {
-//				return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
-				return getName();
+				return '(' + getName() + ' ' + ((realType == null) ? '*' : realType) + ')';
 			}
 		}
 	}

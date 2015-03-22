@@ -4,12 +4,10 @@
 
 package jcl.types;
 
+import java.math.BigInteger;
+
 import jcl.types.typespecifiers.AndTypeSpecifier;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import java.lang.String;
-import java.math.BigInteger;
 
 /**
  * A {@link Fixnum} is an {@link Integer} whose value is between most-negative-fixnum and most-positive-fixnum
@@ -61,18 +59,7 @@ public interface Fixnum extends Integer {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return super.equals(obj) || (obj == INSTANCE);
-			}
-
-			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
-			}
-
-			@Override
-			public String toString() {
-//				return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+			public java.lang.String toString() {
 				return getName();
 			}
 		}

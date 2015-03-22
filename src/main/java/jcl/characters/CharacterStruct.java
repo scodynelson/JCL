@@ -9,6 +9,10 @@ import jcl.types.BaseChar;
 import jcl.types.ExtendedChar;
 import jcl.types.StandardChar;
 import org.apache.commons.lang3.CharUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link CharacterStruct} is the object representation of a Lisp 'character' type.
@@ -76,5 +80,35 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 */
 	public char getCharacter() {
 		return (char) codePoint;
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(codePoint)
+		                            .toHashCode();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final CharacterStruct rhs = (CharacterStruct) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj))
+		                          .append(codePoint, rhs.codePoint)
+		                          .isEquals();
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(codePoint)
+		                                                                .toString();
 	}
 }

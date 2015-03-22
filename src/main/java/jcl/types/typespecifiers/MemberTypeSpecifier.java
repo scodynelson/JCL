@@ -4,15 +4,15 @@
 
 package jcl.types.typespecifiers;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import jcl.LispStruct;
 import jcl.types.TypeBaseClass;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * A {@link MemberTypeSpecifier} denotes the set containing the named objects. An object is of this type if and only if
@@ -57,7 +57,9 @@ public class MemberTypeSpecifier extends TypeBaseClass implements CompoundTypeSp
 
 	@Override
 	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(lispStructs)
+		                            .toHashCode();
 	}
 
 	@Override
@@ -82,6 +84,7 @@ public class MemberTypeSpecifier extends TypeBaseClass implements CompoundTypeSp
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(lispStructs)
+		                                                                .toString();
 	}
 }

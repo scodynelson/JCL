@@ -71,21 +71,36 @@ final class PeekType {
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(type)
+		                            .append(codePoint)
+		                            .toHashCode();
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public boolean equals(final Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final PeekType rhs = (PeekType) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj))
+		                          .append(type, rhs.type)
+		                          .append(codePoint, rhs.codePoint)
+		                          .isEquals();
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(type)
+		                                                                .append(codePoint)
+		                                                                .toString();
 	}
 
 	/**
@@ -118,12 +133,6 @@ final class PeekType {
 		/**
 		 * Character peek type.
 		 */
-		CHARACTER;
-
-		@Override
-		@SuppressWarnings("checkstyle:strictduplicatecodecheck")
-		public String toString() {
-			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
-		}
+		CHARACTER
 	}
 }

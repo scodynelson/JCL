@@ -8,6 +8,10 @@ import jcl.LispStruct;
 import jcl.LispType;
 import jcl.classes.BuiltInClassStruct;
 import jcl.types.Stream;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.List;
 
@@ -95,5 +99,41 @@ public abstract class StreamStruct extends BuiltInClassStruct implements LispStr
 	@Override
 	public boolean isClosed() {
 		return closed;
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(interactive)
+		                            .append(elementType)
+		                            .append(closed)
+		                            .toHashCode();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final StreamStruct rhs = (StreamStruct) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj))
+		                          .append(interactive, rhs.interactive)
+		                          .append(elementType, rhs.elementType)
+		                          .append(closed, rhs.closed)
+		                          .isEquals();
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(interactive)
+		                                                                .append(elementType)
+		                                                                .append(closed)
+		                                                                .toString();
 	}
 }

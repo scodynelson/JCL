@@ -8,6 +8,10 @@ import jcl.LispType;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.types.Stream;
 import jcl.types.typespecifiers.AndTypeSpecifier;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link AbstractDualStreamStruct} is an abstraction for dual stream types.
@@ -133,5 +137,38 @@ abstract class AbstractDualStreamStruct extends StreamStruct implements InputStr
 	@Override
 	public Long fileLength() {
 		throw new StreamErrorException(StreamUtils.OPERATION_ONLY_FILE_STREAM);
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(inputStream)
+		                            .append(outputStream)
+		                            .toHashCode();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final AbstractDualStreamStruct rhs = (AbstractDualStreamStruct) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj))
+		                          .append(inputStream, rhs.inputStream)
+		                          .append(outputStream, rhs.outputStream)
+		                          .isEquals();
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(inputStream)
+		                                                                .append(outputStream)
+		                                                                .toString();
 	}
 }

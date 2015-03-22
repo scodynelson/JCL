@@ -28,6 +28,10 @@ import jcl.lists.ListStruct;
 import jcl.printer.Printer;
 import jcl.symbols.SpecialOperator;
 import jcl.symbols.SymbolStruct;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -164,5 +168,41 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 		}
 
 		return initFormIfSetqs;
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(formAnalyzer)
+		                            .append(bodyWithDeclaresAndDocStringAnalyzer)
+		                            .append(printer)
+		                            .toHashCode();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final LambdaExpander rhs = (LambdaExpander) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj))
+		                          .append(formAnalyzer, rhs.formAnalyzer)
+		                          .append(bodyWithDeclaresAndDocStringAnalyzer, rhs.bodyWithDeclaresAndDocStringAnalyzer)
+		                          .append(printer, rhs.printer)
+		                          .isEquals();
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(formAnalyzer)
+		                                                                .append(bodyWithDeclaresAndDocStringAnalyzer)
+		                                                                .append(printer)
+		                                                                .toString();
 	}
 }

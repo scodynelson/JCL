@@ -11,6 +11,10 @@ import jcl.sequences.SequenceStruct;
 import jcl.types.SimpleVector;
 import jcl.types.T;
 import jcl.types.Vector;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link VectorStruct} is the object representation of a Lisp 'vector' type.
@@ -184,5 +188,41 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 			throw new TypeErrorException("Vector is not an adjustable array.");
 		}
 		return push(element);
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(fillPointer)
+		                            .toHashCode();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final VectorStruct<?> rhs = (VectorStruct) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj))
+		                          .append(fillPointer, rhs.fillPointer)
+		                          .isEquals();
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(isAdjustable)
+		                                                                .append(rank)
+		                                                                .append(totalSize)
+		                                                                .append(contents)
+		                                                                .append(dimensions)
+		                                                                .append(elementType)
+		                                                                .append(fillPointer)
+		                                                                .toString();
 	}
 }

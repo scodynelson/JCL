@@ -10,6 +10,8 @@ import jcl.numbers.IntegerStruct;
 import jcl.types.Bit;
 import jcl.types.BitVector;
 import jcl.types.SimpleBitVector;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The {@link BitVectorStruct} is the object representation of a Lisp 'bit-vector' type.
@@ -85,5 +87,26 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 			}
 		}
 		return bitList;
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .toHashCode();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		return new EqualsBuilder().appendSuper(super.equals(obj))
+		                          .isEquals();
 	}
 }

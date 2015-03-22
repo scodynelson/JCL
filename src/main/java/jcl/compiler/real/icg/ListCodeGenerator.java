@@ -12,7 +12,6 @@ import jcl.compiler.real.icg.generator.specialoperator.LetCodeGenerator;
 import jcl.compiler.real.icg.generator.specialoperator.MacroletCodeGenerator;
 import jcl.compiler.real.icg.generator.specialoperator.special.LambdaCodeGenerator;
 import jcl.compiler.real.icg.generator.specialoperator.special.MacroLambdaCodeGenerator;
-import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.Declaration;

@@ -168,20 +168,45 @@ class ReaderImpl implements Reader {
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
+		return new HashCodeBuilder().append(inputStream)
+		                            .append(sharpEqualFinalTable)
+		                            .append(sharpEqualTempTable)
+		                            .append(sharpEqualReplTable)
+		                            .append(readerStateMediator)
+		                            .append(backquoteLevel)
+		                            .toHashCode();
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public boolean equals(final Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final ReaderImpl rhs = (ReaderImpl) obj;
+		return new EqualsBuilder().append(inputStream, rhs.inputStream)
+		                          .append(sharpEqualFinalTable, rhs.sharpEqualFinalTable)
+		                          .append(sharpEqualTempTable, rhs.sharpEqualTempTable)
+		                          .append(sharpEqualReplTable, rhs.sharpEqualReplTable)
+		                          .append(readerStateMediator, rhs.readerStateMediator)
+		                          .append(backquoteLevel, rhs.backquoteLevel)
+		                          .isEquals();
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(inputStream)
+		                                                                .append(sharpEqualFinalTable)
+		                                                                .append(sharpEqualTempTable)
+		                                                                .append(sharpEqualReplTable)
+		                                                                .append(readerStateMediator)
+		                                                                .append(backquoteLevel)
+		                                                                .toString();
 	}
 }

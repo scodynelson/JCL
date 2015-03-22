@@ -4,9 +4,6 @@
 
 package jcl.system;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Deque;
@@ -316,10 +313,5 @@ public class EnhancedLinkedList<E> implements List<E>, Deque<E>, Serializable {
 	@Override
 	public Spliterator<E> spliterator() {
 		return linkedList.spliterator();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
 	}
 }

@@ -4,13 +4,13 @@
 
 package jcl.types;
 
+import java.lang.String;
+import java.math.BigDecimal;
+
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import jcl.types.typespecifiers.designator.IntervalDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import java.lang.String;
-import java.math.BigDecimal;
 
 /**
  * A {@link ShortFloat} is a {@link Float} type with a minimum of 13 precision bits and 5 exponent bits.
@@ -132,7 +132,9 @@ public interface ShortFloat extends Float {
 
 			@Override
 			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+				return new HashCodeBuilder().appendSuper(super.hashCode())
+				                            .append(intervalDesignator)
+				                            .toHashCode();
 			}
 
 			@Override
@@ -161,8 +163,7 @@ public interface ShortFloat extends Float {
 
 			@Override
 			public String toString() {
-//				return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
-				return getName();
+				return '(' + getName() + ' ' + intervalDesignator + ')';
 			}
 		}
 	}

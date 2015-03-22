@@ -4,12 +4,12 @@
 
 package jcl.types;
 
+import java.lang.String;
+
 import jcl.LispType;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import java.lang.String;
 
 /**
  * A {@link Cons} is a compound object having two components, called the car and cdr. These form a dotted pair. Each
@@ -105,7 +105,10 @@ public interface Cons extends List {
 
 			@Override
 			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+				return new HashCodeBuilder().appendSuper(super.hashCode())
+				                            .append(carSpec)
+				                            .append(cdrSpec)
+				                            .toHashCode();
 			}
 
 			@Override
@@ -140,8 +143,7 @@ public interface Cons extends List {
 
 			@Override
 			public String toString() {
-//				return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
-				return getName();
+				return '(' + getName() + ' ' + ((carSpec == null) ? '*' : carSpec) + ' ' + ((cdrSpec == null) ? '*' : cdrSpec) + ')';
 			}
 		}
 	}

@@ -37,4 +37,9 @@ public class TypeBaseClass extends SymbolStruct<LispType> implements LispType {
 	private void init() {
 		setValue(this);
 	}
+
+	@Override
+	public String toString() {
+		return getName();
+	}
 }

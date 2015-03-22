@@ -7,6 +7,10 @@ import jcl.LispType;
 import jcl.classes.BuiltInClassStruct;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.types.Function;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link FunctionStruct} is the object representation of a Lisp 'function' type.
@@ -132,5 +136,35 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 
 	public void setLambdaListBindings(final OrdinaryLambdaListBindings lambdaListBindings) {
 		this.lambdaListBindings = lambdaListBindings;
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(lambdaListBindings)
+		                            .toHashCode();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final FunctionStruct rhs = (FunctionStruct) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj))
+		                          .append(lambdaListBindings, rhs.lambdaListBindings)
+		                          .isEquals();
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(lambdaListBindings)
+		                                                                .toString();
 	}
 }

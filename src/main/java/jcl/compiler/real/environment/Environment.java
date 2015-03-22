@@ -17,7 +17,9 @@ import jcl.compiler.real.environment.binding.EnvironmentBinding;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.struct.specialoperator.go.GoStruct;
 import jcl.symbols.SymbolStruct;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class Environment extends StandardObjectStruct {
@@ -161,7 +163,65 @@ public class Environment extends StandardObjectStruct {
 	}
 
 	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+//		                            .append(parent)
+		                            .append(lexicalBindings)
+		                            .append(dynamicBindings)
+		                            .append(symbolTable)
+		                            .append(closure)
+		                            .append(bindingsPosition)
+		                            .append(closureDepth)
+		                            .append(functionNameStack)
+		                            .append(undefinedFunctions)
+		                            .append(blockStack)
+		                            .append(tagbodyStack)
+		                            .append(topLevelMode)
+		                            .toHashCode();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final Environment rhs = (Environment) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj))
+//		                          .append(parent, rhs.parent)
+		                          .append(lexicalBindings, rhs.lexicalBindings)
+		                          .append(dynamicBindings, rhs.dynamicBindings)
+		                          .append(symbolTable, rhs.symbolTable)
+		                          .append(closure, rhs.closure)
+		                          .append(bindingsPosition, rhs.bindingsPosition)
+		                          .append(closureDepth, rhs.closureDepth)
+		                          .append(functionNameStack, rhs.functionNameStack)
+		                          .append(undefinedFunctions, rhs.undefinedFunctions)
+		                          .append(blockStack, rhs.blockStack)
+		                          .append(tagbodyStack, rhs.tagbodyStack)
+		                          .append(topLevelMode, rhs.topLevelMode)
+		                          .isEquals();
+	}
+
+	@Override
 	public String toString() {
-		return new ReflectionToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).setExcludeFieldNames("parent").toString();
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(lexicalBindings)
+//		                                                                .append(parent)
+		                                                                .append(dynamicBindings)
+		                                                                .append(symbolTable)
+		                                                                .append(closure)
+		                                                                .append(bindingsPosition)
+		                                                                .append(closureDepth)
+		                                                                .append(functionNameStack)
+		                                                                .append(undefinedFunctions)
+		                                                                .append(blockStack)
+		                                                                .append(tagbodyStack)
+		                                                                .append(topLevelMode)
+		                                                                .toString();
 	}
 }

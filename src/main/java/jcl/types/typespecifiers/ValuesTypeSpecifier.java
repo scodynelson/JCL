@@ -80,7 +80,11 @@ public class ValuesTypeSpecifier extends TypeBaseClass implements CompoundTypeSp
 
 	@Override
 	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(typeSpecifiers)
+		                            .append(optional)
+		                            .append(rest)
+		                            .toHashCode();
 	}
 
 	@Override
@@ -102,6 +106,9 @@ public class ValuesTypeSpecifier extends TypeBaseClass implements CompoundTypeSp
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(typeSpecifiers)
+		                                                                .append(optional)
+		                                                                .append(rest)
+		                                                                .toString();
 	}
 }

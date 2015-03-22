@@ -154,20 +154,45 @@ public class TokenBuilder {
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
+		return new HashCodeBuilder().append(reader)
+		                            .append(eofErrorP)
+		                            .append(eofValue)
+		                            .append(tokenAttributes)
+		                            .append(previousReadResult)
+		                            .append(isMultiEscapedToken)
+		                            .toHashCode();
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public boolean equals(final Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final TokenBuilder rhs = (TokenBuilder) obj;
+		return new EqualsBuilder().append(reader, rhs.reader)
+		                          .append(eofErrorP, rhs.eofErrorP)
+		                          .append(eofValue, rhs.eofValue)
+		                          .append(tokenAttributes, rhs.tokenAttributes)
+		                          .append(previousReadResult, rhs.previousReadResult)
+		                          .append(isMultiEscapedToken, rhs.isMultiEscapedToken)
+		                          .isEquals();
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(reader)
+		                                                                .append(eofErrorP)
+		                                                                .append(eofValue)
+		                                                                .append(tokenAttributes)
+		                                                                .append(previousReadResult)
+		                                                                .append(isMultiEscapedToken)
+		                                                                .toString();
 	}
 }

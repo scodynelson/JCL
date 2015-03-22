@@ -4,12 +4,11 @@
 
 package jcl.types;
 
+import java.lang.*;
+import java.math.BigInteger;
+
 import jcl.types.typespecifiers.AndTypeSpecifier;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import java.lang.String;
-import java.math.BigInteger;
 
 /**
  * The type {@link Bit} is equivalent to the type (integer 0 1) and (unsigned-byte 1).
@@ -52,18 +51,7 @@ public interface Bit extends UnsignedByte {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return super.equals(obj) || (obj == INSTANCE);
-			}
-
-			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
-			}
-
-			@Override
-			public String toString() {
-//				return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+			public java.lang.String toString() {
 				return getName();
 			}
 		}

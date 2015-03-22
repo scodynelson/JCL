@@ -5,12 +5,13 @@
 package jcl.compiler.real.struct.specialoperator;
 
 import jcl.LispStruct;
+import jcl.compiler.real.struct.SpecialOperatorStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class MutableLoadTimeValueStruct implements LoadTimeValueStruct {
+public class MutableLoadTimeValueStruct extends SpecialOperatorStruct implements LoadTimeValueStruct {
 
 	private static final long serialVersionUID = 8088799347738800471L;
 
@@ -25,20 +26,32 @@ public class MutableLoadTimeValueStruct implements LoadTimeValueStruct {
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(form)
+		                            .toHashCode();
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public boolean equals(final Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final MutableLoadTimeValueStruct rhs = (MutableLoadTimeValueStruct) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj))
+		                          .append(form, rhs.form)
+		                          .isEquals();
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(form)
+		                                                                .toString();
 	}
 }

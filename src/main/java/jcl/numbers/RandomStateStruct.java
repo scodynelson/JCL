@@ -6,6 +6,10 @@ package jcl.numbers;
 
 import jcl.classes.BuiltInClassStruct;
 import jcl.types.RandomState;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -203,5 +207,41 @@ public class RandomStateStruct extends BuiltInClassStruct {
 	 */
 	private static BigInteger ash(final BigInteger bits) {
 		return (BIT_SHIFT_AMOUNT_AS_INT <= 0) ? bits.shiftRight(BIT_SHIFT_AMOUNT_AS_INT) : bits.shiftLeft(BIT_SHIFT_AMOUNT_AS_INT);
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(jValue)
+		                            .append(kValue)
+		                            .append(seed)
+		                            .toHashCode();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final RandomStateStruct rhs = (RandomStateStruct) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj))
+		                          .append(jValue, rhs.jValue)
+		                          .append(kValue, rhs.kValue)
+		                          .append(seed, rhs.seed)
+		                          .isEquals();
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(jValue)
+		                                                                .append(kValue)
+		                                                                .append(seed)
+		                                                                .toString();
 	}
 }

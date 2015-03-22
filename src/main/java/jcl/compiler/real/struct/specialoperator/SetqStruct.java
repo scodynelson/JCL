@@ -29,6 +29,36 @@ public class SetqStruct extends SpecialOperatorStruct {
 		return setqPairs;
 	}
 
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(setqPairs)
+		                            .toHashCode();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final SetqStruct rhs = (SetqStruct) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj))
+		                          .append(setqPairs, rhs.setqPairs)
+		                          .isEquals();
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(setqPairs)
+		                                                                .toString();
+	}
+
 	public static class SetqPair implements Serializable {
 
 		private static final long serialVersionUID = -7804939280136663517L;
@@ -51,21 +81,34 @@ public class SetqStruct extends SpecialOperatorStruct {
 		}
 
 		@Override
-		@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 		public int hashCode() {
-			return HashCodeBuilder.reflectionHashCode(this);
+			return new HashCodeBuilder().append(var)
+			                            .append(form)
+			                            .toHashCode();
 		}
 
 		@Override
-		@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 		public boolean equals(final Object obj) {
-			return EqualsBuilder.reflectionEquals(this, obj);
+			if (obj == null) {
+				return false;
+			}
+			if (obj == this) {
+				return true;
+			}
+			if (obj.getClass() != getClass()) {
+				return false;
+			}
+			final SetqPair rhs = (SetqPair) obj;
+			return new EqualsBuilder().append(var, rhs.var)
+			                          .append(form, rhs.form)
+			                          .isEquals();
 		}
 
 		@Override
-		@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 		public String toString() {
-			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(var)
+			                                                                .append(form)
+			                                                                .toString();
 		}
 	}
 }

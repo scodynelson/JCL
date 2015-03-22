@@ -11,6 +11,10 @@ import jcl.conditions.exceptions.TypeErrorException;
 import jcl.types.Array;
 import jcl.types.SimpleArray;
 import jcl.types.T;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link ArrayStruct} is the object representation of a Lisp 'array' type.
@@ -23,10 +27,15 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	private static final long serialVersionUID = 743238254447337109L;
 
 	protected List<TYPE> contents;
+
 	protected List<Integer> dimensions;
+
 	protected int totalSize;
+
 	protected int rank;
+
 	protected LispType elementType;
+
 	protected boolean isAdjustable;
 
 	/**
@@ -272,5 +281,50 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		for (final Integer dimension : dimensions) {
 			totalSize += dimension;
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(contents)
+		                            .append(dimensions)
+		                            .append(totalSize)
+		                            .append(rank)
+		                            .append(elementType)
+		                            .append(isAdjustable)
+		                            .toHashCode();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final ArrayStruct<?> rhs = (ArrayStruct) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj))
+		                          .append(contents, rhs.contents)
+		                          .append(dimensions, rhs.dimensions)
+		                          .append(totalSize, rhs.totalSize)
+		                          .append(rank, rhs.rank)
+		                          .append(elementType, rhs.elementType)
+		                          .append(isAdjustable, rhs.isAdjustable)
+		                          .isEquals();
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(contents)
+		                                                                .append(dimensions)
+		                                                                .append(totalSize)
+		                                                                .append(rank)
+		                                                                .append(elementType)
+		                                                                .append(isAdjustable)
+		                                                                .toString();
 	}
 }

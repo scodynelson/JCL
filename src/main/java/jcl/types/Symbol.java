@@ -4,10 +4,9 @@
 
 package jcl.types;
 
-import jcl.types.typespecifiers.AtomicTypeSpecifier;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 import java.lang.String;
+
+import jcl.types.typespecifiers.AtomicTypeSpecifier;
 
 /**
  * {@link Symbol}s are used for their object identity to name various entities in Common Lisp, including (but not
@@ -92,22 +91,6 @@ public interface Symbol extends T {
 			 */
 			private SymbolImpl() {
 				super("SYMBOL");
-			}
-
-			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
-			}
-
-			@Override
-			public boolean equals(final Object obj) {
-				return (this == obj) || (obj instanceof Symbol);
-			}
-
-			@Override
-			public String toString() {
-//				return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
-				return getName();
 			}
 		}
 	}

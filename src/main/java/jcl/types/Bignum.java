@@ -4,12 +4,11 @@
 
 package jcl.types;
 
+import java.lang.*;
+
 import jcl.types.typespecifiers.AndTypeSpecifier;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.NotTypeSpecifier;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import java.lang.String;
 
 /**
  * The type {@link Bignum} is defined to be exactly (and integer (not fixnum)).
@@ -51,18 +50,7 @@ public interface Bignum extends Integer {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return super.equals(obj) || (obj == INSTANCE);
-			}
-
-			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
-			}
-
-			@Override
-			public String toString() {
-//				return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+			public java.lang.String toString() {
 				return getName();
 			}
 		}

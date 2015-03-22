@@ -56,7 +56,9 @@ public class SatisfiesTypeSpecifier extends TypeBaseClass implements CompoundTyp
 
 	@Override
 	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(predicate)
+		                            .toHashCode();
 	}
 
 	@Override
@@ -76,6 +78,7 @@ public class SatisfiesTypeSpecifier extends TypeBaseClass implements CompoundTyp
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(predicate)
+		                                                                .toString();
 	}
 }

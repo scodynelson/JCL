@@ -18,6 +18,10 @@ import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperator;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -62,5 +66,38 @@ public class LocallyExpander extends MacroFunctionExpander<LocallyStruct> {
 				           .collect(Collectors.toList());
 
 		return new LocallyStruct(new PrognStruct(analyzedBodyForms), locallyEnvironment);
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(formAnalyzer)
+		                            .append(bodyWithDeclaresAnalyzer)
+		                            .toHashCode();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final LocallyExpander rhs = (LocallyExpander) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj))
+		                          .append(formAnalyzer, rhs.formAnalyzer)
+		                          .append(bodyWithDeclaresAnalyzer, rhs.bodyWithDeclaresAnalyzer)
+		                          .isEquals();
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(formAnalyzer)
+		                                                                .append(bodyWithDeclaresAnalyzer)
+		                                                                .toString();
 	}
 }

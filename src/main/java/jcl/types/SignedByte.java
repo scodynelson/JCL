@@ -4,13 +4,11 @@
 
 package jcl.types;
 
+import java.math.BigInteger;
+
 import jcl.types.typespecifiers.AndTypeSpecifier;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.math3.util.ArithmeticUtils;
-
-import java.lang.String;
-import java.math.BigInteger;
 
 /**
  * The atomic type specifier {@link SignedByte} denotes the same type as is denoted by the type specifier {@link
@@ -109,18 +107,7 @@ public interface SignedByte extends Integer {
 			}
 
 			@Override
-			public boolean equals(final Object obj) {
-				return super.equals(obj) || (obj == INSTANCE);
-			}
-
-			@Override
-			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
-			}
-
-			@Override
-			public String toString() {
-//				return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+			public java.lang.String toString() {
 				return getName();
 			}
 		}

@@ -14,6 +14,8 @@ import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
 import jcl.types.NIL;
 import jcl.types.Symbol;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -359,7 +361,53 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	}
 
 	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(name)
+		                            .append(symbolPackage)
+//		                            .append(value) TODO: why does this cause explosions???
+		                            .append(function)
+		                            .append(properties)
+		                            .append(macroFunctionExpander)
+		                            .append(compilerMacroFunctionExpander)
+		                            .append(symbolMacroExpander)
+		                            .toHashCode();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final SymbolStruct<?> rhs = (SymbolStruct) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj))
+		                          .append(name, rhs.name)
+		                          .append(symbolPackage, rhs.symbolPackage)
+		                          .append(value, rhs.value)
+		                          .append(function, rhs.function)
+		                          .append(properties, rhs.properties)
+		                          .append(macroFunctionExpander, rhs.macroFunctionExpander)
+		                          .append(compilerMacroFunctionExpander, rhs.compilerMacroFunctionExpander)
+		                          .append(symbolMacroExpander, rhs.symbolMacroExpander)
+		                          .isEquals();
+	}
+
+	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(name)
+		                                                                .append(symbolPackage)
+		                                                                .append(value)
+		                                                                .append(function)
+		                                                                .append(properties)
+		                                                                .append(macroFunctionExpander)
+		                                                                .append(compilerMacroFunctionExpander)
+		                                                                .append(symbolMacroExpander)
+		                                                                .toString();
 	}
 }

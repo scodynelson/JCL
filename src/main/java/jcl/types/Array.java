@@ -136,7 +136,10 @@ public interface Array extends T {
 
 			@Override
 			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+				return new HashCodeBuilder().appendSuper(super.hashCode())
+				                            .append(dimensions)
+				                            .append(elementType)
+				                            .toHashCode();
 			}
 
 			@Override
@@ -179,8 +182,8 @@ public interface Array extends T {
 
 			@Override
 			public String toString() {
-//				return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
-				return getName();
+				final List<Integer> dimensionsValue = dimensions.getDimensions();
+				return '(' + getName() + ' ' + elementType + ' ' + ((dimensionsValue == null) ? '*' : dimensionsValue) + ')';
 			}
 		}
 	}

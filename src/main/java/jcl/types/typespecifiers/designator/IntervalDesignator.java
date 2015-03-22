@@ -4,12 +4,10 @@
 
 package jcl.types.typespecifiers.designator;
 
+import java.io.Serializable;
+
 import jcl.types.typespecifiers.TypeSpecifierUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.io.Serializable;
 
 /**
  * This class represents an interval designator, found within compound type specifiers.
@@ -73,7 +71,9 @@ public class IntervalDesignator<N extends Number> implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
+		return new HashCodeBuilder().append(lowerBound)
+		                            .append(upperBound)
+		                            .toHashCode();
 	}
 
 	@Override
@@ -108,6 +108,6 @@ public class IntervalDesignator<N extends Number> implements Serializable {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+		return ((lowerBound == null) ? "*" : lowerBound) + " " + ((upperBound == null) ? "*" : upperBound);
 	}
 }

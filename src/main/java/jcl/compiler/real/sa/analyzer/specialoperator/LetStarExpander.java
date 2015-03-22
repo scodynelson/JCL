@@ -12,6 +12,10 @@ import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.printer.Printer;
 import jcl.symbols.SpecialOperator;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -65,5 +69,38 @@ public class LetStarExpander extends MacroFunctionExpander<LetStruct> {
 		}
 
 		return letExpander.expand(body, environment);
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(letExpander)
+		                            .append(printer)
+		                            .toHashCode();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final LetStarExpander rhs = (LetStarExpander) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj))
+		                          .append(letExpander, rhs.letExpander)
+		                          .append(printer, rhs.printer)
+		                          .isEquals();
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(letExpander)
+		                                                                .append(printer)
+		                                                                .toString();
 	}
 }

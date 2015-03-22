@@ -140,20 +140,33 @@ class EvenMultiEscapeReaderState implements ReaderState {
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
+		return new HashCodeBuilder().append(readerStateMediator)
+		                            .append(symbolTokenAccumulatedReaderState)
+		                            .toHashCode();
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public boolean equals(final Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final EvenMultiEscapeReaderState rhs = (EvenMultiEscapeReaderState) obj;
+		return new EqualsBuilder().append(readerStateMediator, rhs.readerStateMediator)
+		                          .append(symbolTokenAccumulatedReaderState, rhs.symbolTokenAccumulatedReaderState)
+		                          .isEquals();
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(readerStateMediator)
+		                                                                .append(symbolTokenAccumulatedReaderState)
+		                                                                .toString();
 	}
 }

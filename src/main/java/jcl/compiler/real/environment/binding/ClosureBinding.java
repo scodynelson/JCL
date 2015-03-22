@@ -45,20 +45,36 @@ public class ClosureBinding implements Serializable {
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
+		return new HashCodeBuilder().append(symbolStruct)
+		                            .append(position)
+		                            .append(references)
+		                            .toHashCode();
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public boolean equals(final Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final ClosureBinding rhs = (ClosureBinding) obj;
+		return new EqualsBuilder().append(symbolStruct, rhs.symbolStruct)
+		                          .append(position, rhs.position)
+		                          .append(references, rhs.references)
+		                          .isEquals();
 	}
 
 	@Override
-	@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(symbolStruct)
+		                                                                .append(position)
+		                                                                .append(references)
+		                                                                .toString();
 	}
 }

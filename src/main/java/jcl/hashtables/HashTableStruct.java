@@ -16,6 +16,7 @@ import jcl.classes.BuiltInClassStruct;
 import jcl.functions.EquatorFunctionStruct;
 import jcl.functions.FunctionStruct;
 import jcl.types.HashTable;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -150,6 +151,42 @@ public class HashTableStruct extends BuiltInClassStruct {
 		}
 	}
 
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(test)
+		                            .append(rehashThreshold)
+		                            .append(map)
+		                            .toHashCode();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final HashTableStruct rhs = (HashTableStruct) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj))
+		                          .append(test, rhs.test)
+		                          .append(rehashThreshold, rhs.rehashThreshold)
+		                          .append(map, rhs.map)
+		                          .isEquals();
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(test)
+		                                                                .append(rehashThreshold)
+		                                                                .append(map)
+		                                                                .toString();
+	}
+
 	/**
 	 * Private inner class that acts as a wrapper around hash keys for proper equality testing.
 	 */
@@ -199,7 +236,7 @@ public class HashTableStruct extends BuiltInClassStruct {
 
 		@Override
 		public int hashCode() {
-			return HashCodeBuilder.reflectionHashCode(this);
+			return equator.hash(key);
 		}
 
 		@Override
@@ -214,7 +251,9 @@ public class HashTableStruct extends BuiltInClassStruct {
 
 		@Override
 		public String toString() {
-			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(key)
+			                                                                .append(equator)
+			                                                                .toString();
 		}
 
 		/**

@@ -4,15 +4,15 @@
 
 package jcl.types;
 
+import java.lang.Integer;
+import java.lang.String;
+import java.util.List;
+
 import jcl.LispType;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import jcl.types.typespecifiers.designator.DimensionsDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import java.lang.Integer;
-import java.lang.String;
-import java.util.List;
 
 /**
  * A {@link SimpleArray} is the type of an {@link Array} that is not displaced to another {@link Array}, has no fill
@@ -122,7 +122,10 @@ public interface SimpleArray extends Array {
 
 			@Override
 			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+				return new HashCodeBuilder().appendSuper(super.hashCode())
+				                            .append(dimensions)
+				                            .append(elementType)
+				                            .toHashCode();
 			}
 
 			@Override
@@ -165,8 +168,8 @@ public interface SimpleArray extends Array {
 
 			@Override
 			public String toString() {
-//				return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
-				return getName();
+				final List<Integer> dimensionsValue = dimensions.getDimensions();
+				return '(' + getName() + ' ' + elementType + ' ' +((dimensionsValue == null) ? '*' : dimensionsValue.toString()) + ')';
 			}
 		}
 	}

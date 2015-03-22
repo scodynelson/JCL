@@ -44,6 +44,42 @@ public class LetStruct extends SpecialOperatorStruct {
 		return letEnvironment;
 	}
 
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(vars)
+		                            .append(forms)
+		                            .append(letEnvironment)
+		                            .toHashCode();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final LetStruct rhs = (LetStruct) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj))
+		                          .append(vars, rhs.vars)
+		                          .append(forms, rhs.forms)
+		                          .append(letEnvironment, rhs.letEnvironment)
+		                          .isEquals();
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(vars)
+		                                                                .append(forms)
+		                                                                .append(letEnvironment)
+		                                                                .toString();
+	}
+
 	public static class LetVar implements Serializable {
 
 		private static final long serialVersionUID = 3246152127057600416L;
@@ -66,21 +102,34 @@ public class LetStruct extends SpecialOperatorStruct {
 		}
 
 		@Override
-		@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 		public int hashCode() {
-			return HashCodeBuilder.reflectionHashCode(this);
+			return new HashCodeBuilder().append(var)
+			                            .append(initForm)
+			                            .toHashCode();
 		}
 
 		@Override
-		@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 		public boolean equals(final Object obj) {
-			return EqualsBuilder.reflectionEquals(this, obj);
+			if (obj == null) {
+				return false;
+			}
+			if (obj == this) {
+				return true;
+			}
+			if (obj.getClass() != getClass()) {
+				return false;
+			}
+			final LetVar rhs = (LetVar) obj;
+			return new EqualsBuilder().append(var, rhs.var)
+			                          .append(initForm, rhs.initForm)
+			                          .isEquals();
 		}
 
 		@Override
-		@SuppressWarnings("checkstyle:strictduplicatecodecheck")
 		public String toString() {
-			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(var)
+			                                                                .append(initForm)
+			                                                                .toString();
 		}
 	}
 }

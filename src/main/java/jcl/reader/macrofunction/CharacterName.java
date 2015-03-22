@@ -106,6 +106,8 @@ enum CharacterName {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(name)
+		                                                                .append(codePoint)
+		                                                                .toString();
 	}
 }

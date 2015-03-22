@@ -10,6 +10,8 @@ import jcl.types.Character;
 import jcl.types.SimpleBaseString;
 import jcl.types.SimpleString;
 import jcl.types.String;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The {@link StringStruct} is the object representation of a Lisp 'string' type.
@@ -98,5 +100,26 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 		}
 
 		return stringBuilder.toString();
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .toHashCode();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		return new EqualsBuilder().appendSuper(super.equals(obj))
+		                          .isEquals();
 	}
 }

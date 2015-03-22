@@ -4,13 +4,13 @@
 
 package jcl.types;
 
+import java.lang.Integer;
+
 import jcl.LispType;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.CompoundTypeSpecifier;
 import jcl.types.typespecifiers.designator.DimensionsDesignator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import java.lang.Integer;
 
 /**
  * A {@link SimpleString} is a specialized one-dimensional {@link SimpleArray} whose elements are of type
@@ -111,7 +111,9 @@ public interface SimpleString extends String, SimpleArray {
 
 			@Override
 			public int hashCode() {
-				return HashCodeBuilder.reflectionHashCode(this);
+				return new HashCodeBuilder().appendSuper(super.hashCode())
+				                            .append(size)
+				                            .toHashCode();
 			}
 
 			@Override
@@ -140,8 +142,8 @@ public interface SimpleString extends String, SimpleArray {
 
 			@Override
 			public java.lang.String toString() {
-//				return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).toString();
-				return getName();
+				final java.util.List<Integer> dimensionsValue = size.getDimensions();
+				return '(' + getName() +  ' ' + ((dimensionsValue == null) ? '*' : dimensionsValue.toString()) + ')';
 			}
 		}
 	}

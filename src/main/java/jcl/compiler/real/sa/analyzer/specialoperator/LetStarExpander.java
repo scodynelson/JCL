@@ -11,7 +11,7 @@ import jcl.compiler.real.struct.specialoperator.LetStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.printer.Printer;
-import jcl.symbols.SpecialOperator;
+import jcl.symbols.SpecialOperatorStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -35,7 +35,7 @@ public class LetStarExpander extends MacroFunctionExpander<LetStruct> {
 	 */
 	@PostConstruct
 	private void init() {
-		SpecialOperator.LET_STAR.setMacroFunctionExpander(this);
+		SpecialOperatorStruct.LET_STAR.setMacroFunctionExpander(this);
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class LetStarExpander extends MacroFunctionExpander<LetStruct> {
 			final LispStruct previousParams = iterator.previous();
 
 			// NOTE: Make Dotted list here so the 'contents' of the body get added to the let
-			body = ListStruct.buildDottedList(SpecialOperator.LET, previousParams, body);
+			body = ListStruct.buildDottedList(SpecialOperatorStruct.LET, previousParams, body);
 		}
 
 		return letExpander.expand(body, environment);

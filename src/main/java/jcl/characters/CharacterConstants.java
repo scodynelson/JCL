@@ -8,7 +8,7 @@ import java.math.BigInteger;
 
 import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.Constant;
+import jcl.symbols.ConstantStruct;
 
 /**
  * Defines the standard character constants for the system.
@@ -153,5 +153,5 @@ public interface CharacterConstants {
 
 	int EXIT_CHAR = 0xFFFF;
 
-	Constant<IntegerStruct> CHAR_CODE_LIMIT = new Constant<>("CHAR-CODE-LIMIT", GlobalPackageStruct.COMMON_LISP, new IntegerStruct(BigInteger.valueOf(Character.MAX_VALUE)));
+	ConstantStruct<IntegerStruct> CHAR_CODE_LIMIT = new ConstantStruct<>("CHAR-CODE-LIMIT", GlobalPackageStruct.COMMON_LISP, new IntegerStruct(BigInteger.valueOf(Character.MAX_VALUE)));
 }

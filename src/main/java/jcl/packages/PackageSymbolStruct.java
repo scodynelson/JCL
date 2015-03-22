@@ -6,7 +6,7 @@ package jcl.packages;
 
 import java.io.Serializable;
 
-import jcl.symbols.KeywordSymbolStruct;
+import jcl.symbols.KeywordStruct;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -14,8 +14,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * Internal class for returning a {@link SymbolStruct} and it's current package symbol type as a {@link
- * KeywordSymbolStruct}.
+ * Internal class for returning a {@link SymbolStruct} and it's current package symbol type as a {@link KeywordStruct}.
  */
 public class PackageSymbolStruct implements Serializable {
 
@@ -32,7 +31,7 @@ public class PackageSymbolStruct implements Serializable {
 	/**
 	 * The {@link #symbol}s package location type.
 	 */
-	private final KeywordSymbolStruct packageSymbolType;
+	private final KeywordStruct packageSymbolType;
 
 	/**
 	 * Protected constructor.
@@ -42,7 +41,7 @@ public class PackageSymbolStruct implements Serializable {
 	 * @param packageSymbolType
 	 * 		the symbol package location
 	 */
-	public PackageSymbolStruct(final SymbolStruct<?> symbol, final KeywordSymbolStruct packageSymbolType) {
+	public PackageSymbolStruct(final SymbolStruct<?> symbol, final KeywordStruct packageSymbolType) {
 		this.symbol = symbol;
 		this.packageSymbolType = packageSymbolType;
 	}
@@ -61,7 +60,7 @@ public class PackageSymbolStruct implements Serializable {
 	 *
 	 * @return package-symbol {@link #packageSymbolType} property
 	 */
-	public KeywordSymbolStruct getPackageSymbolType() {
+	public KeywordStruct getPackageSymbolType() {
 		return packageSymbolType;
 	}
 

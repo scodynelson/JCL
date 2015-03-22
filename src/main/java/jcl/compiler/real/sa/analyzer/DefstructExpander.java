@@ -6,7 +6,7 @@ import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
 import jcl.lists.ListStruct;
-import jcl.symbols.SpecialOperator;
+import jcl.symbols.SpecialOperatorStruct;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,7 +19,7 @@ public class DefstructExpander extends MacroFunctionExpander<LispStruct> {
 	 */
 	@PostConstruct
 	private void init() {
-		SpecialOperator.DEFSTRUCT.setMacroFunctionExpander(this);
+		SpecialOperatorStruct.DEFSTRUCT.setMacroFunctionExpander(this);
 	}
 
 	@Override

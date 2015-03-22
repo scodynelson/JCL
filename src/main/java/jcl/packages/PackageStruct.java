@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import jcl.classes.BuiltInClassStruct;
 import jcl.conditions.exceptions.PackageErrorException;
-import jcl.symbols.KeywordSymbolStruct;
+import jcl.symbols.KeywordStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.system.CommonLispSymbols;
 import jcl.types.Package;
@@ -616,7 +616,7 @@ public class PackageStruct extends BuiltInClassStruct {
 				continue;
 			}
 
-			final KeywordSymbolStruct packageSymbolType = inheritedPackageSymbol.getPackageSymbolType();
+			final KeywordStruct packageSymbolType = inheritedPackageSymbol.getPackageSymbolType();
 			if (CommonLispSymbols.EXTERNAL.equals(packageSymbolType)) {
 				foundSymbol = inheritedPackageSymbol.getSymbol();
 				break;

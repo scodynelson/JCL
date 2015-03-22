@@ -22,7 +22,7 @@ import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.printer.Printer;
-import jcl.symbols.SpecialOperator;
+import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.types.T;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -51,7 +51,7 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 	 */
 	@PostConstruct
 	private void init() {
-		SpecialOperator.SYMBOL_MACROLET.setMacroFunctionExpander(this);
+		SpecialOperatorStruct.SYMBOL_MACROLET.setMacroFunctionExpander(this);
 	}
 
 	@Override

@@ -18,7 +18,7 @@ import jcl.compiler.real.struct.specialoperator.go.GoStructGenerator;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.numbers.IntegerStruct;
-import jcl.symbols.SpecialOperator;
+import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -43,7 +43,7 @@ public class TagbodyExpander extends MacroFunctionExpander<TagbodyStruct> {
 	 */
 	@PostConstruct
 	private void init() {
-		SpecialOperator.TAGBODY.setMacroFunctionExpander(this);
+		SpecialOperatorStruct.TAGBODY.setMacroFunctionExpander(this);
 	}
 
 	@Override

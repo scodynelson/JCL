@@ -6,7 +6,7 @@ import java.util.List;
 import jcl.LispStruct;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.SpecialOperator;
+import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 
 public class DefunExpander implements MacroFunctionExpander {
@@ -19,7 +19,7 @@ public class DefunExpander implements MacroFunctionExpander {
 
 		// Create and add: (progn (set-symbol[-setf]-function (quote foo) (lambda (x) (block foo x))) (quote foo))
 		final List<LispStruct> expandedForm = new ArrayList<>();
-		expandedForm.add(SpecialOperator.PROGN);
+		expandedForm.add(SpecialOperatorStruct.PROGN);
 
 		final List<LispStruct> setFunction = new ArrayList<>();
 
@@ -56,7 +56,7 @@ public class DefunExpander implements MacroFunctionExpander {
 
 		// Create: (quote foo)
 		final List<LispStruct> quoteFunctionName = new ArrayList<>();
-		quoteFunctionName.add(SpecialOperator.QUOTE);
+		quoteFunctionName.add(SpecialOperatorStruct.QUOTE);
 		quoteFunctionName.add(functionName);
 
 		final ListStruct quoteFunctionNameList = ListStruct.buildProperList(quoteFunctionName);
@@ -65,7 +65,7 @@ public class DefunExpander implements MacroFunctionExpander {
 
 		// Create: (lambda (x) (block foo x))
 		final List<LispStruct> lambdaForm = new ArrayList<>();
-		lambdaForm.add(SpecialOperator.LAMBDA);
+		lambdaForm.add(SpecialOperatorStruct.LAMBDA);
 
 		// Create: (x)
 		final LispStruct lambdaParams = lambdaParamsAndBody.getFirst();
@@ -74,7 +74,7 @@ public class DefunExpander implements MacroFunctionExpander {
 
 		// Create: (block foo x)
 		final List<LispStruct> blockForm = new ArrayList<>();
-		blockForm.add(SpecialOperator.BLOCK);
+		blockForm.add(SpecialOperatorStruct.BLOCK);
 		blockForm.add(functionName);
 
 		final ListStruct lambdaBody = lambdaParamsAndBody.getRest();
@@ -100,7 +100,7 @@ public class DefunExpander implements MacroFunctionExpander {
 		return ListStruct.buildProperList(expandedForm);
 	}
 
-	protected SpecialOperator getLambdaSymbol() {
-		return SpecialOperator.LAMBDA;
+	protected SpecialOperatorStruct getLambdaSymbol() {
+		return SpecialOperatorStruct.LAMBDA;
 	}
 }

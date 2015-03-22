@@ -3,11 +3,11 @@ package jcl.compiler.real;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.PackageStruct;
-import jcl.symbols.Variable;
+import jcl.symbols.VariableStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class ProperListVariable extends Variable<ListStruct> {
+class ProperListVariable extends VariableStruct<ListStruct> {
 
 	private static final long serialVersionUID = -4038470250934507806L;
 
@@ -21,11 +21,11 @@ class ProperListVariable extends Variable<ListStruct> {
 	public void setValue(final ListStruct value) {
 
 		if (value.isProper()) {
-			this.value = value;
+			super.setValue(value);
 		} else {
 			LOGGER.warn("Error: {} had illegal value {}. Reset to NIL", name, value);
 
-			this.value = NullStruct.INSTANCE;
+			super.setValue(NullStruct.INSTANCE);
 		}
 	}
 }

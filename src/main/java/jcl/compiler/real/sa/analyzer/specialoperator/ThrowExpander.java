@@ -9,7 +9,7 @@ import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.ThrowStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
-import jcl.symbols.SpecialOperator;
+import jcl.symbols.SpecialOperatorStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -30,7 +30,7 @@ public class ThrowExpander extends MacroFunctionExpander<ThrowStruct> {
 	 */
 	@PostConstruct
 	private void init() {
-		SpecialOperator.THROW.setMacroFunctionExpander(this);
+		SpecialOperatorStruct.THROW.setMacroFunctionExpander(this);
 	}
 
 	@Override

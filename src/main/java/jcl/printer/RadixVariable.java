@@ -4,12 +4,12 @@ import java.math.BigInteger;
 
 import jcl.numbers.IntegerStruct;
 import jcl.packages.PackageStruct;
-import jcl.symbols.Variable;
+import jcl.symbols.VariableStruct;
 import org.apache.commons.lang3.Range;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RadixVariable extends Variable<IntegerStruct> {
+public class RadixVariable extends VariableStruct<IntegerStruct> {
 
 	private static final long serialVersionUID = -516538919173659084L;
 
@@ -32,11 +32,11 @@ public class RadixVariable extends Variable<IntegerStruct> {
 
 		final BigInteger bigIntegerValue = value.getBigInteger();
 		if (RADIX_RANGE.contains(bigIntegerValue)) {
-			this.value = value;
+			super.setValue(value);
 		} else {
 			LOGGER.warn("Error: {} had illegal value {}. Reset to 10", name, value);
 
-			this.value = TEN;
+			super.setValue(TEN);
 		}
 	}
 }

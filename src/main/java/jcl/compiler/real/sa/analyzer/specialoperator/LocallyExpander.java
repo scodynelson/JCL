@@ -17,7 +17,7 @@ import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.lists.ListStruct;
-import jcl.symbols.SpecialOperator;
+import jcl.symbols.SpecialOperatorStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -41,7 +41,7 @@ public class LocallyExpander extends MacroFunctionExpander<LocallyStruct> {
 	 */
 	@PostConstruct
 	private void init() {
-		SpecialOperator.LOCALLY.setMacroFunctionExpander(this);
+		SpecialOperatorStruct.LOCALLY.setMacroFunctionExpander(this);
 	}
 
 	@Override

@@ -13,7 +13,7 @@ import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.printer.Printer;
-import jcl.symbols.SpecialOperator;
+import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -38,7 +38,7 @@ public class BlockExpander extends MacroFunctionExpander<BlockStruct> {
 	 */
 	@PostConstruct
 	private void init() {
-		SpecialOperator.BLOCK.setMacroFunctionExpander(this);
+		SpecialOperatorStruct.BLOCK.setMacroFunctionExpander(this);
 	}
 
 	@Override

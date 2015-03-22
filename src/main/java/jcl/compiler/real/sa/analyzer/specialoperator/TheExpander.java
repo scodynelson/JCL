@@ -10,7 +10,7 @@ import jcl.compiler.real.struct.specialoperator.TheStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.printer.Printer;
-import jcl.symbols.SpecialOperator;
+import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -35,7 +35,7 @@ public class TheExpander extends MacroFunctionExpander<TheStruct> {
 	 */
 	@PostConstruct
 	private void init() {
-		SpecialOperator.THE.setMacroFunctionExpander(this);
+		SpecialOperatorStruct.THE.setMacroFunctionExpander(this);
 	}
 
 	@Override

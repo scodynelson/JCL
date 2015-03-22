@@ -5,9 +5,9 @@
 package jcl.numbers;
 
 import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.Variable;
+import jcl.symbols.VariableStruct;
 
 public interface NumberVariables {
 
-	Variable<RandomStateStruct> RANDOM_STATE = new Variable<>("*RANDOM-STATE*", GlobalPackageStruct.COMMON_LISP, new RandomStateStruct());
+	VariableStruct<RandomStateStruct> RANDOM_STATE = new VariableStruct<>("*RANDOM-STATE*", GlobalPackageStruct.COMMON_LISP, new RandomStateStruct());
 }

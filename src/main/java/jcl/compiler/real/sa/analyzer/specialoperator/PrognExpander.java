@@ -10,7 +10,7 @@ import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.lists.ListStruct;
-import jcl.symbols.SpecialOperator;
+import jcl.symbols.SpecialOperatorStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -31,7 +31,7 @@ public class PrognExpander extends MacroFunctionExpander<PrognStruct> {
 	 */
 	@PostConstruct
 	private void init() {
-		SpecialOperator.PROGN.setMacroFunctionExpander(this);
+		SpecialOperatorStruct.PROGN.setMacroFunctionExpander(this);
 	}
 
 	@Override

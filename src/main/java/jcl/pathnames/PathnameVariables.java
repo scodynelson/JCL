@@ -5,9 +5,9 @@
 package jcl.pathnames;
 
 import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.Variable;
+import jcl.symbols.VariableStruct;
 
 public interface PathnameVariables {
 
-	Variable<?> DEFAULT_PATHNAME_DEFAULTS = new Variable<>("*DEFAULT-PATHNAME-DEFAULTS*", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStruct<?> DEFAULT_PATHNAME_DEFAULTS = new VariableStruct<>("*DEFAULT-PATHNAME-DEFAULTS*", GlobalPackageStruct.COMMON_LISP, null);
 }

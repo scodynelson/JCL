@@ -11,7 +11,7 @@ import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.printer.Printer;
-import jcl.symbols.SpecialOperator;
+import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -36,7 +36,7 @@ public class ReturnFromExpander extends MacroFunctionExpander<ReturnFromStruct> 
 	 */
 	@PostConstruct
 	private void init() {
-		SpecialOperator.RETURN_FROM.setMacroFunctionExpander(this);
+		SpecialOperatorStruct.RETURN_FROM.setMacroFunctionExpander(this);
 	}
 
 	@Override

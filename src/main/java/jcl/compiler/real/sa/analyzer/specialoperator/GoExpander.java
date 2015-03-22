@@ -13,7 +13,7 @@ import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.printer.Printer;
-import jcl.symbols.SpecialOperator;
+import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -35,7 +35,7 @@ public class GoExpander extends MacroFunctionExpander<GoStruct<?>> {
 	 */
 	@PostConstruct
 	private void init() {
-		SpecialOperator.GO.setMacroFunctionExpander(this);
+		SpecialOperatorStruct.GO.setMacroFunctionExpander(this);
 	}
 
 	@Override

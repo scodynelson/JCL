@@ -26,7 +26,7 @@ import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.printer.Printer;
-import jcl.symbols.SpecialOperator;
+import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -54,7 +54,7 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 	 */
 	@PostConstruct
 	private void init() {
-		SpecialOperator.LAMBDA.setMacroFunctionExpander(this);
+		SpecialOperatorStruct.LAMBDA.setMacroFunctionExpander(this);
 	}
 
 	@Override
@@ -113,7 +113,7 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 		}
 
 		final List<LispStruct> bodyWithAuxBindings = new ArrayList<>();
-		bodyWithAuxBindings.add(SpecialOperator.LET_STAR);
+		bodyWithAuxBindings.add(SpecialOperatorStruct.LET_STAR);
 
 		final List<LispStruct> auxLetStarVars
 				= auxBindings.stream()
@@ -142,11 +142,11 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 			final SymbolStruct<?> optionalVar = optionalBinding.getSymbolStruct();
 			final LispStruct optionalInitForm = optionalBinding.getInitForm();
 			final ListStruct initFormSetq
-					= ListStruct.buildProperList(SpecialOperator.SETQ, optionalVar, optionalInitForm);
+					= ListStruct.buildProperList(SpecialOperatorStruct.SETQ, optionalVar, optionalInitForm);
 
 			final SymbolStruct<?> suppliedPVar = suppliedPBinding.getSymbolStruct();
 			final ListStruct initFormIfSetq
-					= ListStruct.buildProperList(SpecialOperator.IF, suppliedPVar, initFormSetq);
+					= ListStruct.buildProperList(SpecialOperatorStruct.IF, suppliedPVar, initFormSetq);
 
 			initFormIfSetqs.add(initFormIfSetq);
 		}
@@ -158,11 +158,11 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 			final SymbolStruct<?> keyVar = keyBinding.getSymbolStruct();
 			final LispStruct keyInitForm = keyBinding.getInitForm();
 			final ListStruct initFormSetq
-					= ListStruct.buildProperList(SpecialOperator.SETQ, keyVar, keyInitForm);
+					= ListStruct.buildProperList(SpecialOperatorStruct.SETQ, keyVar, keyInitForm);
 
 			final SymbolStruct<?> suppliedPVar = suppliedPBinding.getSymbolStruct();
 			final ListStruct initFormIfSetq
-					= ListStruct.buildProperList(SpecialOperator.IF, suppliedPVar, initFormSetq);
+					= ListStruct.buildProperList(SpecialOperatorStruct.IF, suppliedPVar, initFormSetq);
 
 			initFormIfSetqs.add(initFormIfSetq);
 		}

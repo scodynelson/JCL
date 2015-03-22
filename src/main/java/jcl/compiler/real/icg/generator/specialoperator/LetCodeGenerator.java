@@ -22,7 +22,7 @@ import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.icg.generator.SpecialVariableCodeGenerator;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
-import jcl.symbols.SpecialOperator;
+import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.Label;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,7 +136,7 @@ public class LetCodeGenerator implements CodeGenerator<ListStruct> {
 
 			while (!NullStruct.INSTANCE.equals(funcallList)) {
 				final Object firstElt = funcallList.getFirst();
-				if ((firstElt instanceof ListStruct) && ((ListStruct) firstElt).getFirst().equals(SpecialOperator.DECLARE)) {
+				if ((firstElt instanceof ListStruct) && ((ListStruct) firstElt).getFirst().equals(SpecialOperatorStruct.DECLARE)) {
 					funcallList = funcallList.getRest();
 				} else {
 					formGenerator.generate(funcallList.getFirst(), classBuilder);

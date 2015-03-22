@@ -10,7 +10,7 @@ import jcl.compiler.real.struct.specialoperator.IfStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
-import jcl.symbols.SpecialOperator;
+import jcl.symbols.SpecialOperatorStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -31,7 +31,7 @@ public class IfExpander extends MacroFunctionExpander<IfStruct> {
 	 */
 	@PostConstruct
 	private void init() {
-		SpecialOperator.IF.setMacroFunctionExpander(this);
+		SpecialOperatorStruct.IF.setMacroFunctionExpander(this);
 	}
 
 	@Override

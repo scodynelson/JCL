@@ -28,8 +28,8 @@ import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
-import jcl.symbols.KeywordSymbolStruct;
-import jcl.symbols.SpecialOperator;
+import jcl.symbols.KeywordStruct;
+import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -126,7 +126,7 @@ public class FormAnalyzerImpl implements FormAnalyzer {
 
 		final LispStruct functionListFirst = functionList.getFirst();
 
-		if (!functionListFirst.equals(SpecialOperator.LAMBDA)) {
+		if (!functionListFirst.equals(SpecialOperatorStruct.LAMBDA)) {
 			throw new ProgramErrorException("LIST ANALYZER: First element of a first element ListStruct must be the SpecialOperator 'LAMBDA'. Got: " + functionListFirst);
 		}
 
@@ -171,9 +171,9 @@ public class FormAnalyzerImpl implements FormAnalyzer {
 		}
 
 		final List<KeyBinding> keyBindings = lambdaListBindings.getKeyBindings();
-		final List<KeywordSymbolStruct> keys = new ArrayList<>(keyBindings.size());
+		final List<KeywordStruct> keys = new ArrayList<>(keyBindings.size());
 		for (final KeyBinding keyBinding : keyBindings) {
-			final KeywordSymbolStruct key = keyBinding.getKeyName();
+			final KeywordStruct key = keyBinding.getKeyName();
 			keys.add(key);
 		}
 
@@ -181,8 +181,8 @@ public class FormAnalyzerImpl implements FormAnalyzer {
 
 		while (functionArgumentsIterator.hasNext()) {
 			if (!keyBindings.isEmpty()) {
-				if (nextArgument instanceof KeywordSymbolStruct) {
-					final KeywordSymbolStruct argumentKey = (KeywordSymbolStruct) nextArgument;
+				if (nextArgument instanceof KeywordStruct) {
+					final KeywordStruct argumentKey = (KeywordStruct) nextArgument;
 					if (keys.contains(argumentKey)) {
 						// Consume the next argument
 						functionArgumentsIterator.next();

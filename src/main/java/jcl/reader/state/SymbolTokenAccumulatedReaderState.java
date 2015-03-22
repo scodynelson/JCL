@@ -19,7 +19,7 @@ import jcl.reader.AttributeType;
 import jcl.reader.ReaderStateMediator;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
-import jcl.symbols.KeywordSymbolStruct;
+import jcl.symbols.KeywordStruct;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -58,10 +58,6 @@ import org.springframework.stereotype.Component;
  * After the token has been made into an object, that object is set as the return object for the read function.  We
  * then
  * return the EndState.
- * </p>
- * <p>
- * This will have to be fixed because it only handles Symbols using the Common Lisp Package and Symbols that are in the
- * Keyword Package!!!
  * </p>
  */
 @Component
@@ -195,8 +191,7 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 	/**
 	 * Either finds the existing {@link SymbolStruct} within the provided {@link PackageStruct} using {@link
 	 * PackageStruct#findSymbol} or creates a new {@link SymbolStruct}. If the provided {@code PackageStruct} is equal
-	 * to {@link GlobalPackageStruct#KEYWORD}, a
-	 * {@link KeywordSymbolStruct} will be returned instead.
+	 * to {@link GlobalPackageStruct#KEYWORD}, a {@link KeywordStruct} will be returned instead.
 	 *
 	 * @param symbolName
 	 * 		the name of the {@link SymbolStruct} to find or create
@@ -211,7 +206,7 @@ class SymbolTokenAccumulatedReaderState implements ReaderState {
 		if (foundSymbol == null) {
 			final boolean isKeyword = GlobalPackageStruct.KEYWORD.equals(symbolPackage);
 			if (isKeyword) {
-				return new KeywordSymbolStruct(symbolName);
+				return new KeywordStruct(symbolName);
 			}
 			return new SymbolStruct<>(symbolName, symbolPackage);
 		} else {

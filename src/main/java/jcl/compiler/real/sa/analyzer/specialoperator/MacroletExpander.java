@@ -25,7 +25,7 @@ import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.printer.Printer;
-import jcl.symbols.SpecialOperator;
+import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.system.StackUtils;
 import jcl.types.T;
@@ -58,7 +58,7 @@ public class MacroletExpander extends MacroFunctionExpander<MacroletStruct> {
 	 */
 	@PostConstruct
 	private void init() {
-		SpecialOperator.MACROLET.setMacroFunctionExpander(this);
+		SpecialOperatorStruct.MACROLET.setMacroFunctionExpander(this);
 	}
 
 	@Override
@@ -182,9 +182,9 @@ public class MacroletExpander extends MacroFunctionExpander<MacroletStruct> {
 		final ListStruct body = functionListParameterRest.getRest();
 
 		// NOTE: Make Dotted list here so the 'contents' of the body get added to the block
-		final ListStruct innerBlockListStruct = ListStruct.buildDottedList(SpecialOperator.BLOCK, functionName, body);
-		final ListStruct innerLambdaListStruct = ListStruct.buildProperList(SpecialOperator.LAMBDA, lambdaList, innerBlockListStruct);
-		final ListStruct innerFunctionListStruct = ListStruct.buildProperList(SpecialOperator.FUNCTION, innerLambdaListStruct);
+		final ListStruct innerBlockListStruct = ListStruct.buildDottedList(SpecialOperatorStruct.BLOCK, functionName, body);
+		final ListStruct innerLambdaListStruct = ListStruct.buildProperList(SpecialOperatorStruct.LAMBDA, lambdaList, innerBlockListStruct);
+		final ListStruct innerFunctionListStruct = ListStruct.buildProperList(SpecialOperatorStruct.FUNCTION, innerLambdaListStruct);
 
 		// Evaluate in the 'current' environment. This is one of the differences between Flet and Labels/Macrolet.
 		return functionExpander.expand(innerFunctionListStruct, macroletEnvironment);

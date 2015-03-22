@@ -11,36 +11,36 @@ import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.Variable;
+import jcl.symbols.VariableStruct;
 
 public interface CompilerVariables {
 
-	Variable<FunctionStruct> MACROEXPAND_HOOK = new Variable<>("*MACROEXPAND-HOOK*", GlobalPackageStruct.COMMON_LISP, Funcall.INSTANCE);
+	VariableStruct<FunctionStruct> MACROEXPAND_HOOK = new VariableStruct<>("*MACROEXPAND-HOOK*", GlobalPackageStruct.COMMON_LISP, Funcall.INSTANCE);
 
-	Variable<?> DEBUGGER_HOOK = new Variable<>("*DEBUGGER-HOOK*", GlobalPackageStruct.COMMON_LISP, null);
-	Variable<?> BREAK_ON_SIGNALS = new Variable<>("*BREAK-ON-SIGNALS*", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStruct<?> DEBUGGER_HOOK = new VariableStruct<>("*DEBUGGER-HOOK*", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStruct<?> BREAK_ON_SIGNALS = new VariableStruct<>("*BREAK-ON-SIGNALS*", GlobalPackageStruct.COMMON_LISP, null);
 
-	Variable<IntegerStruct> GENSYM_COUNTER = new Variable<>("*GENSYM-COUNTER*", GlobalPackageStruct.COMMON_LISP, new IntegerStruct(BigInteger.ONE));
+	VariableStruct<IntegerStruct> GENSYM_COUNTER = new VariableStruct<>("*GENSYM-COUNTER*", GlobalPackageStruct.COMMON_LISP, new IntegerStruct(BigInteger.ONE));
 
-	Variable<ListStruct> FEATURES = new ProperListVariable("*FEATURES*", GlobalPackageStruct.COMMON_LISP);
-	Variable<?> COMPILE_FILE_PATHNAME = new Variable<>("*COMPILE-FILE-PATHNAME*", GlobalPackageStruct.COMMON_LISP, null);
-	Variable<?> COMPILE_FILE_TRUENAME = new Variable<>("*COMPILE-FILE-TRUENAME*", GlobalPackageStruct.COMMON_LISP, null);
-	Variable<?> LOAD_PATHNAME = new Variable<>("*LOAD-PATHNAME*", GlobalPackageStruct.COMMON_LISP, null);
-	Variable<?> LOAD_TRUENAME = new Variable<>("*LOAD-TRUENAME*", GlobalPackageStruct.COMMON_LISP, null);
-	Variable<?> COMPILE_PRINT = new Variable<>("*COMPILE-PRINT*", GlobalPackageStruct.COMMON_LISP, null);
-	Variable<?> COMPILE_VERBOSE = new Variable<>("*COMPILE-VERBOSE*", GlobalPackageStruct.COMMON_LISP, null);
-	Variable<?> LOAD_PRINT = new Variable<>("*LOAD-PRINT*", GlobalPackageStruct.COMMON_LISP, null);
-	Variable<?> LOAD_VERBOSE = new Variable<>("*LOAD-VERBOSE*", GlobalPackageStruct.COMMON_LISP, null);
-	Variable<?> MODULES = new Variable<>("*MODULES*", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStruct<ListStruct> FEATURES = new ProperListVariable("*FEATURES*", GlobalPackageStruct.COMMON_LISP);
+	VariableStruct<?> COMPILE_FILE_PATHNAME = new VariableStruct<>("*COMPILE-FILE-PATHNAME*", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStruct<?> COMPILE_FILE_TRUENAME = new VariableStruct<>("*COMPILE-FILE-TRUENAME*", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStruct<?> LOAD_PATHNAME = new VariableStruct<>("*LOAD-PATHNAME*", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStruct<?> LOAD_TRUENAME = new VariableStruct<>("*LOAD-TRUENAME*", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStruct<?> COMPILE_PRINT = new VariableStruct<>("*COMPILE-PRINT*", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStruct<?> COMPILE_VERBOSE = new VariableStruct<>("*COMPILE-VERBOSE*", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStruct<?> LOAD_PRINT = new VariableStruct<>("*LOAD-PRINT*", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStruct<?> LOAD_VERBOSE = new VariableStruct<>("*LOAD-VERBOSE*", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStruct<?> MODULES = new VariableStruct<>("*MODULES*", GlobalPackageStruct.COMMON_LISP, null);
 
-	Variable<?> DASH = new Variable<>("-", GlobalPackageStruct.COMMON_LISP, null);
-	Variable<?> PLUS = new Variable<>("+", GlobalPackageStruct.COMMON_LISP, null);
-	Variable<?> PLUS_PLUS = new Variable<>("++", GlobalPackageStruct.COMMON_LISP, null);
-	Variable<?> PLUS_PLUS_PLUS = new Variable<>("+++", GlobalPackageStruct.COMMON_LISP, null);
-	Variable<?> STAR = new Variable<>("*", GlobalPackageStruct.COMMON_LISP, null);
-	Variable<?> STAR_STAR = new Variable<>("**", GlobalPackageStruct.COMMON_LISP, null);
-	Variable<?> STAR_STAR_STAR = new Variable<>("***", GlobalPackageStruct.COMMON_LISP, null);
-	Variable<?> SLASH = new Variable<>("/", GlobalPackageStruct.COMMON_LISP, null);
-	Variable<?> SLASH_SLASH = new Variable<>("//", GlobalPackageStruct.COMMON_LISP, null);
-	Variable<?> SLASH_SLASH_SLASH = new Variable<>("///", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStruct<?> DASH = new VariableStruct<>("-", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStruct<?> PLUS = new VariableStruct<>("+", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStruct<?> PLUS_PLUS = new VariableStruct<>("++", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStruct<?> PLUS_PLUS_PLUS = new VariableStruct<>("+++", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStruct<?> STAR = new VariableStruct<>("*", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStruct<?> STAR_STAR = new VariableStruct<>("**", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStruct<?> STAR_STAR_STAR = new VariableStruct<>("***", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStruct<?> SLASH = new VariableStruct<>("/", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStruct<?> SLASH_SLASH = new VariableStruct<>("//", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStruct<?> SLASH_SLASH_SLASH = new VariableStruct<>("///", GlobalPackageStruct.COMMON_LISP, null);
 }

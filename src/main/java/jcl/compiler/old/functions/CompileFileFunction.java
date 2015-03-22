@@ -39,8 +39,8 @@ import jcl.packages.PackageVariables;
 import jcl.pathnames.PathnameStruct;
 import jcl.reader.Reader;
 import jcl.streams.CharacterStreamStruct;
-import jcl.symbols.Declaration;
-import jcl.symbols.SpecialOperator;
+import jcl.symbols.DeclarationStruct;
+import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.util.CheckClassAdapter;
@@ -134,12 +134,12 @@ public class CompileFileFunction {
 			// Create the wrap-around lambda expression that encloses all of the forms in the file.
 			// We have to give it a specific name so it can be loaded by name
 			ListStruct formList = ListStruct.buildProperList(formsToCompile);
-			ListStruct nameDeclSpec = ListStruct.buildProperList(Declaration.JAVA_CLASS_NAME, newJavaClassName);
+			ListStruct nameDeclSpec = ListStruct.buildProperList(DeclarationStruct.JAVA_CLASS_NAME, newJavaClassName);
 //			ListStruct fileDeclSpec = ListStruct.buildProperList(Declaration.SOURCE_FILE, new StringStruct(f.getAbsoluteFile().getName()));
-			ListStruct nameDecl = ListStruct.buildProperList(SpecialOperator.DECLARE, nameDeclSpec);
+			ListStruct nameDecl = ListStruct.buildProperList(SpecialOperatorStruct.DECLARE, nameDeclSpec);
 			formList = new ConsStruct(nameDecl, formList);
 			formList = new ConsStruct(NullStruct.INSTANCE, formList);
-			formList = new ConsStruct(SpecialOperator.LAMBDA, formList);
+			formList = new ConsStruct(SpecialOperatorStruct.LAMBDA, formList);
 
 			SymbolStruct<?> newSA = GlobalPackageStruct.COMMON_LISP.findSymbol("SEMANTIC-ANALYZER").getSymbol();
 			sa = context.getBean(SemanticAnalyzer.class);
@@ -437,7 +437,7 @@ public class CompileFileFunction {
 					if (((SymbolStruct) car).getFunction() == null) {
 					}
 //					theForm = processTopLevelForm(MacroExpandFunction.FUNCTION.funcall(form).getExpandedForm()); TODO
-				} else if (car == SpecialOperator.PROGN) {
+				} else if (car == SpecialOperatorStruct.PROGN) {
 					ListStruct resultForms = NullStruct.INSTANCE;
 					ListStruct forms = form.getRest();
 					while (forms != NullStruct.INSTANCE) {
@@ -447,13 +447,13 @@ public class CompileFileFunction {
 						forms = forms.getRest();
 					}
 					theForm = ReverseFunction.funcall(resultForms);
-				} else if ((car == SpecialOperator.LOCALLY)
-						|| (car == SpecialOperator.MACROLET)
-						|| (car == SpecialOperator.SYMBOL_MACROLET)) {
+				} else if ((car == SpecialOperatorStruct.LOCALLY)
+						|| (car == SpecialOperatorStruct.MACROLET)
+						|| (car == SpecialOperatorStruct.SYMBOL_MACROLET)) {
 					// these get handled as top-level forms but with the
 					// current lexical bindings
 					theForm = ListStruct.buildProperList(form);
-				} else if (car == SpecialOperator.EVAL_WHEN) {
+				} else if (car == SpecialOperatorStruct.EVAL_WHEN) {
 					// processEvalWhen...
 					LispStruct evalForm = handleEvalWhen(form);
 					theForm = processTopLevelForm(evalForm);

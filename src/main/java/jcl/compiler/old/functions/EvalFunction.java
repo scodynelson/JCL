@@ -12,7 +12,7 @@ import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.numbers.NumberStruct;
 import jcl.streams.StreamStruct;
-import jcl.symbols.SpecialOperator;
+import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 
 /**
@@ -109,7 +109,7 @@ public class EvalFunction {
 					// Invoke the compiler.
 
 					rtnObj = CompileFunction.FUNCTION.funcall(arg1);
-					if (first != SpecialOperator.LAMBDA) {
+					if (first != SpecialOperatorStruct.LAMBDA) {
 						//System.out.println("No Lambda, funcalling");
 						// The list passed in originally didn't have a lambda as
 						// the first element, so the compiler wrapped it in one.
@@ -136,7 +136,7 @@ public class EvalFunction {
 					// to evaluate the rest of the list.  We simply want to
 					// return the car of the cdr, or simply the rest of the
 					// unevaluated list.
-					if (operator == SpecialOperator.QUOTE) {
+					if (operator == SpecialOperatorStruct.QUOTE) {
 						if (numArgs == 1) {
 							rtnObj = argList.getFirst();
 						} else {
@@ -147,7 +147,7 @@ public class EvalFunction {
 					// evaluate the rest of the list and set the value of the
 					// symbol to the result of the evaluation.  Else, throw an
 					// exception.
-					else if (operator == SpecialOperator.SETQ) {
+					else if (operator == SpecialOperatorStruct.SETQ) {
 						if (numArgs % 2 == 0) {
 							while (argList != NullStruct.INSTANCE) {
 								if (argList.getFirst() instanceof SymbolStruct) {
@@ -191,7 +191,7 @@ public class EvalFunction {
 								// now we have to compile it to handle &optional, &rest, &key args, and then funcall it
 								// But first, a little foo-foo...
 								ListStruct listifiedList = ListStruct.buildProperList(list);
-								ListStruct formToCompile = new ConsStruct(SpecialOperator.LAMBDA, new ConsStruct(NullStruct.INSTANCE, listifiedList));
+								ListStruct formToCompile = new ConsStruct(SpecialOperatorStruct.LAMBDA, new ConsStruct(NullStruct.INSTANCE, listifiedList));
 								// TODO: when the new compile works
 								FunctionStruct compiledFn = (FunctionStruct) CompileFunction.FUNCTION.funcall(formToCompile);
 								rtnObj = compiledFn.apply();
@@ -219,14 +219,14 @@ public class EvalFunction {
 		Object theCar = list.getFirst();
 
 		// check the first element of the list
-		if (theCar instanceof SpecialOperator) {
+		if (theCar instanceof SpecialOperatorStruct) {
 			// its any one of the special operators, but if it's QUOTE or SETQ
 			// they get handled specially
-			if (theCar == SpecialOperator.QUOTE) {
+			if (theCar == SpecialOperatorStruct.QUOTE) {
 				// the rest thing is completely quoted, so cadr doesn't need
 				// to be examined
 				return false;
-			} else if (theCar == SpecialOperator.SETQ) {
+			} else if (theCar == SpecialOperatorStruct.SETQ) {
 				// ******** this is not correct!!!, fix later
 
 				// if SETQ, then skip the rest element and check the 2nd arg

@@ -14,8 +14,8 @@ import jcl.compiler.real.icg.generator.specialoperator.special.LambdaCodeGenerat
 import jcl.compiler.real.icg.generator.specialoperator.special.MacroLambdaCodeGenerator;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.Declaration;
-import jcl.symbols.SpecialOperator;
+import jcl.symbols.DeclarationStruct;
+import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.Label;
 import org.slf4j.Logger;
@@ -64,9 +64,9 @@ public class ListCodeGenerator implements CodeGenerator<ListStruct> {
 		final LispStruct firstElement = input.getFirst();
 		if (firstElement instanceof SymbolStruct) {
 			// generally an application (foobar ...)
-			if (firstElement instanceof SpecialOperator) {
+			if (firstElement instanceof SpecialOperatorStruct) {
 				specialFormCodeGenerator.generate(input, classBuilder);
-			} else if (firstElement instanceof Declaration) {
+			} else if (firstElement instanceof DeclarationStruct) {
 //                genCodeDeclare(list);
 			} else if (formOptimizable(input)) {
 				genOptimizedForm(input, classBuilder);
@@ -90,17 +90,17 @@ public class ListCodeGenerator implements CodeGenerator<ListStruct> {
 			// could be (((%lambda bindings...) body) ...args...)
 			if (first.getFirst() instanceof SymbolStruct) {
 				// it's ((%lambda bindings...) body)
-				if (first.getFirst().equals(SpecialOperator.LAMBDA_MARKER)) {
+				if (first.getFirst().equals(SpecialOperatorStruct.LAMBDA_MARKER)) {
 //					lambdaCodeGenerator.generate(input, codeGenerator, classBuilder); TODO
-				} else if (first.getFirst().equals(SpecialOperator.MACRO_MARKER)) {
+				} else if (first.getFirst().equals(SpecialOperatorStruct.MACRO_MARKER)) {
 					macroLambdaCodeGenerator.generate(input, classBuilder);
-				} else if (first.getFirst().equals(SpecialOperator.LET)) {
+				} else if (first.getFirst().equals(SpecialOperatorStruct.LET)) {
 					letCodeGenerator.generate(input, classBuilder);
-				} else if (first.getFirst().equals(SpecialOperator.FLET)) {
+				} else if (first.getFirst().equals(SpecialOperatorStruct.FLET)) {
 //					fletCodeGenerator.generate(input, classBuilder);
-				} else if (first.getFirst().equals(SpecialOperator.LABELS)) {
+				} else if (first.getFirst().equals(SpecialOperatorStruct.LABELS)) {
 //					labelsCodeGenerator.generate(input, classBuilder);
-				} else if (first.getFirst().equals(SpecialOperator.MACROLET)) {
+				} else if (first.getFirst().equals(SpecialOperatorStruct.MACROLET)) {
 					macroletCodeGenerator.generate(input, classBuilder);
 				} else {
 					LOGGER.info("It's something else, {}", first);

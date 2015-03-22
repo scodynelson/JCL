@@ -8,7 +8,7 @@ import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.QuoteStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
-import jcl.symbols.SpecialOperator;
+import jcl.symbols.SpecialOperatorStruct;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -21,7 +21,7 @@ public class QuoteExpander extends MacroFunctionExpander<QuoteStruct> {
 	 */
 	@PostConstruct
 	private void init() {
-		SpecialOperator.QUOTE.setMacroFunctionExpander(this);
+		SpecialOperatorStruct.QUOTE.setMacroFunctionExpander(this);
 	}
 
 	@Override

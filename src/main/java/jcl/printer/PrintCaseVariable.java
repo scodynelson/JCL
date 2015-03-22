@@ -4,19 +4,19 @@ import java.util.HashSet;
 import java.util.Set;
 
 import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.KeywordSymbolStruct;
-import jcl.symbols.Variable;
+import jcl.symbols.KeywordStruct;
+import jcl.symbols.VariableStruct;
 import jcl.system.CommonLispSymbols;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-final class PrintCaseVariable extends Variable<KeywordSymbolStruct> {
+final class PrintCaseVariable extends VariableStruct<KeywordStruct> {
 
 	public static final PrintCaseVariable INSTANCE = new PrintCaseVariable();
 
 	private static final long serialVersionUID = 7692936629546046586L;
 
-	private static final Set<KeywordSymbolStruct> CASE_KEYWORDS = new HashSet<>();
+	private static final Set<KeywordStruct> CASE_KEYWORDS = new HashSet<>();
 
 	static {
 		CASE_KEYWORDS.add(CommonLispSymbols.UPCASE);
@@ -31,13 +31,13 @@ final class PrintCaseVariable extends Variable<KeywordSymbolStruct> {
 	}
 
 	@Override
-	public void setValue(final KeywordSymbolStruct value) {
+	public void setValue(final KeywordStruct value) {
 		if (CASE_KEYWORDS.contains(value)) {
-			this.value = value;
+			super.setValue(value);
 		} else {
 			LOGGER.warn("Error: *PRINT-CASE* had illegal value {}. Reset to :UPCASE", value);
 
-			this.value = CommonLispSymbols.UPCASE;
+			super.setValue(CommonLispSymbols.UPCASE);
 		}
 	}
 }

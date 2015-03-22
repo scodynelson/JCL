@@ -12,7 +12,7 @@ import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.UnwindProtectStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
-import jcl.symbols.SpecialOperator;
+import jcl.symbols.SpecialOperatorStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -33,7 +33,7 @@ public class UnwindProtectExpander extends MacroFunctionExpander<UnwindProtectSt
 	 */
 	@PostConstruct
 	private void init() {
-		SpecialOperator.UNWIND_PROTECT.setMacroFunctionExpander(this);
+		SpecialOperatorStruct.UNWIND_PROTECT.setMacroFunctionExpander(this);
 	}
 
 	@Override

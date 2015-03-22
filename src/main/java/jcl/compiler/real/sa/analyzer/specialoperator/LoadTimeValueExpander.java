@@ -17,7 +17,7 @@ import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.printer.Printer;
 import jcl.symbols.BooleanStruct;
-import jcl.symbols.SpecialOperator;
+import jcl.symbols.SpecialOperatorStruct;
 import jcl.system.CommonLispSymbols;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -42,7 +42,7 @@ public class LoadTimeValueExpander extends MacroFunctionExpander<LoadTimeValueSt
 	 */
 	@PostConstruct
 	private void init() {
-		SpecialOperator.LOAD_TIME_VALUE.setMacroFunctionExpander(this);
+		SpecialOperatorStruct.LOAD_TIME_VALUE.setMacroFunctionExpander(this);
 	}
 
 	@Override

@@ -15,7 +15,7 @@ import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.printer.Printer;
-import jcl.symbols.SpecialOperator;
+import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -65,7 +65,7 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 		if (form instanceof ListStruct) {
 			final ListStruct formList = (ListStruct) form;
 			final LispStruct firstOfFormList = formList.getFirst();
-			if (firstOfFormList.equals(SpecialOperator.LAMBDA)) {
+			if (firstOfFormList.equals(SpecialOperatorStruct.LAMBDA)) {
 				lambdaForm = formList;
 			} else {
 				lambdaForm = getLambdaFormList(formList);
@@ -79,7 +79,7 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 
 	private static ListStruct getLambdaFormList(final LispStruct form) {
 		final List<LispStruct> lambdaFormList = new ArrayList<>();
-		lambdaFormList.add(SpecialOperator.LAMBDA);
+		lambdaFormList.add(SpecialOperatorStruct.LAMBDA);
 		lambdaFormList.add(NullStruct.INSTANCE);
 		lambdaFormList.add(form);
 

@@ -8,10 +8,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * The {@link KeywordSymbolStruct} is the object representation of a Lisp 'keyword' type.
+ * The {@link KeywordStruct} is the object representation of a Lisp 'keyword' type.
  */
-// TODO: should this be public?? Can we make it package visible??
-public class KeywordSymbolStruct extends SymbolStruct<KeywordSymbolStruct> {
+public class KeywordStruct extends ConstantStruct<KeywordStruct> {
 
 	private static final long serialVersionUID = -8081437644901785951L;
 
@@ -21,7 +20,7 @@ public class KeywordSymbolStruct extends SymbolStruct<KeywordSymbolStruct> {
 	 * @param name
 	 * 		the symbol name
 	 */
-	public KeywordSymbolStruct(final String name) {
+	public KeywordStruct(final String name) {
 		super(Keyword.INSTANCE, name, GlobalPackageStruct.KEYWORD, null, null);
 		init();
 	}
@@ -30,7 +29,7 @@ public class KeywordSymbolStruct extends SymbolStruct<KeywordSymbolStruct> {
 	 * Post construction method.
 	 */
 	private void init() {
-		setValue(this);
+		dynamicValueStack.push(this);
 	}
 
 	// NOTE: These 3 standard methods below exclude the 'value' property to avoid circularities since the value of a
@@ -41,7 +40,7 @@ public class KeywordSymbolStruct extends SymbolStruct<KeywordSymbolStruct> {
 		return new HashCodeBuilder().appendSuper(super.hashCode())
 		                            .append(name)
 		                            .append(symbolPackage)
-		                            .append(function)
+		                            .append(functionStack)
 		                            .append(properties)
 		                            .append(macroFunctionExpander)
 		                            .append(compilerMacroFunctionExpander)
@@ -60,11 +59,11 @@ public class KeywordSymbolStruct extends SymbolStruct<KeywordSymbolStruct> {
 		if (obj.getClass() != getClass()) {
 			return false;
 		}
-		final KeywordSymbolStruct rhs = (KeywordSymbolStruct) obj;
+		final KeywordStruct rhs = (KeywordStruct) obj;
 		return new EqualsBuilder().appendSuper(super.equals(obj))
 		                          .append(name, rhs.name)
 		                          .append(symbolPackage, rhs.symbolPackage)
-		                          .append(function, rhs.function)
+		                          .append(functionStack, rhs.functionStack)
 		                          .append(properties, rhs.properties)
 		                          .append(macroFunctionExpander, rhs.macroFunctionExpander)
 		                          .append(compilerMacroFunctionExpander, rhs.compilerMacroFunctionExpander)
@@ -76,7 +75,7 @@ public class KeywordSymbolStruct extends SymbolStruct<KeywordSymbolStruct> {
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(name)
 		                                                                .append(symbolPackage)
-		                                                                .append(function)
+		                                                                .append(functionStack)
 		                                                                .append(properties)
 		                                                                .append(macroFunctionExpander)
 		                                                                .append(compilerMacroFunctionExpander)

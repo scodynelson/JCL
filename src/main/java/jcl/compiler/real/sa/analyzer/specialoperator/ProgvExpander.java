@@ -20,7 +20,7 @@ import jcl.compiler.real.struct.specialoperator.ProgvStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
-import jcl.symbols.SpecialOperator;
+import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.types.T;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -46,7 +46,7 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 	 */
 	@PostConstruct
 	private void init() {
-		SpecialOperator.PROGV.setMacroFunctionExpander(this);
+		SpecialOperatorStruct.PROGV.setMacroFunctionExpander(this);
 	}
 
 	@Override
@@ -70,7 +70,7 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 			throw new ProgramErrorException("PROGV: Symbols list must be properly quoted: " + second);
 		}
 		final LispStruct secondAsListFirst = secondAsList.getFirst();
-		if (!SpecialOperator.QUOTE.equals(secondAsListFirst)) {
+		if (!SpecialOperatorStruct.QUOTE.equals(secondAsListFirst)) {
 			throw new ProgramErrorException("PROGV: Symbols list must be quoted: " + second);
 		}
 
@@ -101,7 +101,7 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 			throw new ProgramErrorException("PROGV: Values list must be properly quoted: " + second);
 		}
 		final LispStruct thirdAsListFirst = thirdAsList.getFirst();
-		if (!SpecialOperator.QUOTE.equals(thirdAsListFirst)) {
+		if (!SpecialOperatorStruct.QUOTE.equals(thirdAsListFirst)) {
 			throw new ProgramErrorException("PROGV: Values list must be quoted: " + second);
 		}
 

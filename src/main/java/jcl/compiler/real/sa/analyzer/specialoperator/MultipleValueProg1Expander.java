@@ -11,7 +11,7 @@ import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.MultipleValueProg1Struct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
-import jcl.symbols.SpecialOperator;
+import jcl.symbols.SpecialOperatorStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -32,7 +32,7 @@ public class MultipleValueProg1Expander extends MacroFunctionExpander<MultipleVa
 	 */
 	@PostConstruct
 	private void init() {
-		SpecialOperator.MULTIPLE_VALUE_PROG1.setMacroFunctionExpander(this);
+		SpecialOperatorStruct.MULTIPLE_VALUE_PROG1.setMacroFunctionExpander(this);
 	}
 
 	@Override

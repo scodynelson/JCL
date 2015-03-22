@@ -13,7 +13,7 @@ import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.printer.Printer;
-import jcl.symbols.SpecialOperator;
+import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -38,7 +38,7 @@ public class FunctionExpander extends MacroFunctionExpander<CompilerFunctionStru
 	 */
 	@PostConstruct
 	private void init() {
-		SpecialOperator.FUNCTION.setMacroFunctionExpander(this);
+		SpecialOperatorStruct.FUNCTION.setMacroFunctionExpander(this);
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class FunctionExpander extends MacroFunctionExpander<CompilerFunctionStru
 
 		final LispStruct functionListFirst = functionList.getFirst();
 
-		if (!SpecialOperator.LAMBDA.equals(functionListFirst)) {
+		if (!SpecialOperatorStruct.LAMBDA.equals(functionListFirst)) {
 			final String printedObject = printer.print(functionListFirst);
 			throw new ProgramErrorException("FUNCTION: First element of list argument must be the symbol 'LAMBDA'. Got: " + printedObject);
 		}

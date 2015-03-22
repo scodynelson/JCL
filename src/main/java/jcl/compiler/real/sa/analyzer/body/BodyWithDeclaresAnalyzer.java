@@ -10,7 +10,7 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.analyzer.declare.DeclareExpander;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.lists.ListStruct;
-import jcl.symbols.SpecialOperator;
+import jcl.symbols.SpecialOperatorStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -37,9 +37,9 @@ public class BodyWithDeclaresAnalyzer implements Serializable {
 			LispStruct next = iterator.next();
 
 			final List<LispStruct> allDeclarations = new ArrayList<>();
-			allDeclarations.add(SpecialOperator.DECLARE);
+			allDeclarations.add(SpecialOperatorStruct.DECLARE);
 
-			while (iterator.hasNext() && (next instanceof ListStruct) && ((ListStruct) next).getFirst().equals(SpecialOperator.DECLARE)) {
+			while (iterator.hasNext() && (next instanceof ListStruct) && ((ListStruct) next).getFirst().equals(SpecialOperatorStruct.DECLARE)) {
 
 				final ListStruct declareStatement = (ListStruct) next;
 				final List<LispStruct> declarations = declareStatement.getRest().getAsJavaList();

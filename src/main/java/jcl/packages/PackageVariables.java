@@ -4,9 +4,9 @@
 
 package jcl.packages;
 
-import jcl.symbols.Variable;
+import jcl.symbols.VariableStruct;
 
 public interface PackageVariables {
 
-	Variable<PackageStruct> PACKAGE = new Variable<>("*PACKAGE*", GlobalPackageStruct.COMMON_LISP, GlobalPackageStruct.COMMON_LISP_USER);
+	VariableStruct<PackageStruct> PACKAGE = new VariableStruct<>("*PACKAGE*", GlobalPackageStruct.COMMON_LISP, GlobalPackageStruct.COMMON_LISP_USER);
 }

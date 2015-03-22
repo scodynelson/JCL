@@ -2,6 +2,7 @@ package jcl.symbols;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import jcl.LispStruct;
 import jcl.classes.BuiltInClassStruct;
@@ -35,9 +36,11 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 
 	protected PackageStruct symbolPackage;
 
-	protected TYPE value;
+	protected Stack<TYPE> lexicalValueStack = new Stack<>();
 
-	protected FunctionStruct function;
+	protected Stack<TYPE> dynamicValueStack = new Stack<>();
+
+	protected Stack<FunctionStruct> functionStack = new Stack<>();
 
 	protected MacroFunctionExpander<?> macroFunctionExpander;
 
@@ -141,8 +144,12 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		this.name = name;
 
 		this.symbolPackage = symbolPackage;
-		this.value = value;
-		this.function = function;
+		if (value != null) {
+			lexicalValueStack.push(value);
+		}
+		if (function != null) {
+			functionStack.push(function);
+		}
 
 		init();
 	}
@@ -186,67 +193,101 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		this.symbolPackage = symbolPackage;
 	}
 
-	/**
-	 * Getter for symbol {@link #value} property.
-	 *
-	 * @return symbol {@link #value} property
-	 */
+//	/**
+//	 * Getter for symbol {@link #value} property.
+//	 *
+//	 * @return symbol {@link #value} property
+//	 */
 	public TYPE getValue() {
-		if (value == null) {
-			String variableName = name;
-			final PackageStruct currentPackage = PackageVariables.PACKAGE.getValue();
+		if (lexicalValueStack.isEmpty()) {
+			if (dynamicValueStack.isEmpty()) {
 
-			if (!currentPackage.equals(symbolPackage)) {
-				final String packageName = symbolPackage.getName();
+				String variableName = name;
+				final PackageStruct currentPackage = PackageVariables.PACKAGE.getValue();
 
-				if (currentPackage.getExternalSymbols().containsKey(name)) {
-					variableName = packageName + ':' + name;
-				} else {
-					variableName = packageName + "::" + name;
+				if (!currentPackage.equals(symbolPackage)) {
+					final String packageName = symbolPackage.getName();
+
+					if (currentPackage.getExternalSymbols().containsKey(name)) {
+						variableName = packageName + ':' + name;
+					} else {
+						variableName = packageName + "::" + name;
+					}
 				}
+
+				throw new ErrorException("Unbound variable: " + variableName);
 			}
-
-			throw new ErrorException("Unbound variable: " + variableName);
+			return dynamicValueStack.peek();
 		}
-		return value;
+		return lexicalValueStack.peek();
 	}
 
-	/**
-	 * Setter for symbol {@link #value} property.
-	 *
-	 * @param value
-	 * 		new symbol {@link #value} property value
-	 */
+//	/**
+//	 * Setter for symbol {@link #value} property.
+//	 *
+//	 * @param value
+//	 * 		new symbol {@link #value} property value
+//	 */
 	public void setValue(final TYPE value) {
-		this.value = value;
+		if (lexicalValueStack.isEmpty()) {
+			if (dynamicValueStack.isEmpty()) {
+				dynamicValueStack.push(value);
+			} else {
+				dynamicValueStack.pop();
+				dynamicValueStack.push(value);
+			}
+		} else {
+			lexicalValueStack.pop();
+			lexicalValueStack.push(value);
+		}
 	}
 
-	/**
-	 * Getter for symbol {@link #function} property.
-	 *
-	 * @return symbol {@link #function} property
-	 */
+	public void bindLexicalValue(final TYPE value) {
+		lexicalValueStack.push(value);
+	}
+
+	public void unbindLexicalValue() {
+		lexicalValueStack.pop();
+	}
+
+	public void bindDynamicValue(final TYPE value) {
+		dynamicValueStack.push(value);
+	}
+
+	public void unbindDynamicValue() {
+		dynamicValueStack.pop();
+	}
+
+//	/**
+//	 * Getter for symbol {@link #function} property.
+//	 *
+//	 * @return symbol {@link #function} property
+//	 */
 	public FunctionStruct getFunction() {
-		return function;
+		if (functionStack.isEmpty()) {
+			// TODO: return null???
+			return null;
+		}
+		return functionStack.peek();
 	}
 
-	/**
-	 * Setter for symbol {@link #function} property.
-	 *
-	 * @param function
-	 * 		new symbol {@link #function} property value
-	 */
+//	/**
+//	 * Setter for symbol {@link #function} property.
+//	 *
+//	 * @param function
+//	 * 		new symbol {@link #function} property value
+//	 */
 	public void setFunction(final FunctionStruct function) {
-		this.function = function;
+		functionStack.pop();
+		functionStack.push(function);
 	}
 
-	/**
-	 * Getter for symbol {@link #properties} property.
-	 *
-	 * @return symbol {@link #properties} property
-	 */
-	public List<LispStruct> getProperties() {
-		return properties;
+	public void bindFunction(final FunctionStruct function) {
+		functionStack.push(function);
+	}
+
+	public void unbindFunction() {
+		functionStack.pop();
 	}
 
 	/**
@@ -307,6 +348,15 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	}
 
 	/**
+	 * Getter for symbol {@link #properties} property.
+	 *
+	 * @return symbol {@link #properties} property
+	 */
+	public List<LispStruct> getProperties() {
+		return properties;
+	}
+
+	/**
 	 * Retrieves the property from the symbol {@link #properties} associated with the provided {@code key}. If the
 	 * property is not found, {@link NIL#INSTANCE} is returned.
 	 *
@@ -356,7 +406,10 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 */
 	public SymbolStruct<TYPE> copySymbol(final boolean copyProperties) {
 		if (copyProperties) {
-			final SymbolStruct<TYPE> newSymbol = new SymbolStruct<>(name, symbolPackage, value, function);
+			final SymbolStruct<TYPE> newSymbol = new SymbolStruct<>(name, symbolPackage);
+			newSymbol.lexicalValueStack.addAll(lexicalValueStack);
+			newSymbol.dynamicValueStack.addAll(dynamicValueStack);
+			newSymbol.functionStack.addAll(functionStack);
 			newSymbol.properties.addAll(properties);
 			return newSymbol;
 		} else {
@@ -369,13 +422,14 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		return new HashCodeBuilder().appendSuper(super.hashCode())
 		                            .append(name)
 		                            .append(symbolPackage)
-		                            .append(function)
+		                            .append(functionStack)
 		                            .append(properties)
 		                            .append(macroFunctionExpander)
 		                            .append(compilerMacroFunctionExpander)
 		                            .append(symbolMacroExpander)
 		                            .toHashCode();
-//		                            .append(value) TODO: why does this cause explosions???
+//		                            .append(lexicalValueStack) TODO: why does this cause explosions???
+//		                            .append(dynamicValueStack) TODO: why does this cause explosions???
 	}
 
 	@Override
@@ -393,8 +447,9 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		return new EqualsBuilder().appendSuper(super.equals(obj))
 		                          .append(name, rhs.name)
 		                          .append(symbolPackage, rhs.symbolPackage)
-		                          .append(value, rhs.value)
-		                          .append(function, rhs.function)
+		                          .append(lexicalValueStack, rhs.lexicalValueStack)
+		                          .append(dynamicValueStack, rhs.dynamicValueStack)
+		                          .append(functionStack, rhs.functionStack)
 		                          .append(properties, rhs.properties)
 		                          .append(macroFunctionExpander, rhs.macroFunctionExpander)
 		                          .append(compilerMacroFunctionExpander, rhs.compilerMacroFunctionExpander)
@@ -406,8 +461,9 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(name)
 		                                                                .append(symbolPackage)
-		                                                                .append(value)
-		                                                                .append(function)
+		                                                                .append(lexicalValueStack)
+		                                                                .append(dynamicValueStack)
+		                                                                .append(functionStack)
 		                                                                .append(properties)
 		                                                                .append(macroFunctionExpander)
 		                                                                .append(compilerMacroFunctionExpander)

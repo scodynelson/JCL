@@ -12,8 +12,8 @@ import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
-import jcl.symbols.Declaration;
-import jcl.symbols.SpecialOperator;
+import jcl.symbols.DeclarationStruct;
+import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -35,7 +35,7 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 	 */
 	@PostConstruct
 	private void init() {
-		SpecialOperator.DECLARE.setMacroFunctionExpander(this);
+		SpecialOperatorStruct.DECLARE.setMacroFunctionExpander(this);
 	}
 
 	@Override
@@ -56,26 +56,26 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 			final ListStruct declSpecBody = declSpecList.getRest();
 
 			// now come the various cases
-			if (declIdentifier.equals(Declaration.DECLARATION)) {
+			if (declIdentifier.equals(DeclarationStruct.DECLARATION)) {
 				//TODO: we don't do anything here yet
-			} else if (declIdentifier.equals(Declaration.DYNAMIC_EXTENT)) {
+			} else if (declIdentifier.equals(DeclarationStruct.DYNAMIC_EXTENT)) {
 				//TODO: we don't do anything here yet
-			} else if (declIdentifier.equals(Declaration.FTYPE)) {
+			} else if (declIdentifier.equals(DeclarationStruct.FTYPE)) {
 				//TODO: we don't do anything here yet
-			} else if (declIdentifier.equals(Declaration.IGNORABLE)) {
+			} else if (declIdentifier.equals(DeclarationStruct.IGNORABLE)) {
 				//TODO: we don't do anything here yet
-			} else if (declIdentifier.equals(Declaration.IGNORE)) {
+			} else if (declIdentifier.equals(DeclarationStruct.IGNORE)) {
 				//TODO: we don't do anything here yet
-			} else if (declIdentifier.equals(Declaration.INLINE)) {
+			} else if (declIdentifier.equals(DeclarationStruct.INLINE)) {
 				//TODO: we don't do anything here yet
-			} else if (declIdentifier.equals(Declaration.NOTINLINE)) {
+			} else if (declIdentifier.equals(DeclarationStruct.NOTINLINE)) {
 				//TODO: we don't do anything here yet
-			} else if (declIdentifier.equals(Declaration.OPTIMIZE)) {
+			} else if (declIdentifier.equals(DeclarationStruct.OPTIMIZE)) {
 				//TODO: we don't do anything here yet
-			} else if (declIdentifier.equals(Declaration.SPECIAL)) {
+			} else if (declIdentifier.equals(DeclarationStruct.SPECIAL)) {
 				final List<SpecialDeclarationStruct> sdes = saSpecialDeclaration(environment, declSpecBody.getAsJavaList());
 				declareElement.getSpecialDeclarationElements().addAll(sdes);
-			} else if (declIdentifier.equals(Declaration.TYPE)) {
+			} else if (declIdentifier.equals(DeclarationStruct.TYPE)) {
 				//we don't do anything here yet
 			} else {
 				throw new ProgramErrorException("DECLARE: Declaration specifier not supported: " + declIdentifier);

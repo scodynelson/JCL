@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import jcl.LispStruct;
+import jcl.compiler.real.CompilerConstants;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LambdaEnvironment;
@@ -24,7 +25,8 @@ import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.KeywordSymbolStruct;
+import jcl.packages.PackageSymbolStruct;
+import jcl.symbols.KeywordStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.types.T;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -33,23 +35,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 final class LambdaListParser {
-
-	// TODO: fix these!!!
-	private static final SymbolStruct<?> AND_OPTIONAL = GlobalPackageStruct.KEYWORD.intern("&OPTIONAL").getSymbol();
-
-	private static final SymbolStruct<?> AND_REST = GlobalPackageStruct.KEYWORD.intern("&REST").getSymbol();
-
-	private static final SymbolStruct<?> AND_KEY = GlobalPackageStruct.KEYWORD.intern("&KEY").getSymbol();
-
-	private static final SymbolStruct<?> AND_ALLOW_OTHER_KEYS = GlobalPackageStruct.KEYWORD.intern("&ALLOW-OTHER-KEYS").getSymbol();
-
-	private static final SymbolStruct<?> AND_AUX = GlobalPackageStruct.KEYWORD.intern("&AUX").getSymbol();
-
-	private static final SymbolStruct<?> AND_WHOLE = GlobalPackageStruct.KEYWORD.intern("&WHOLE").getSymbol();
-
-	private static final SymbolStruct<?> AND_BODY = GlobalPackageStruct.KEYWORD.intern("&BODY").getSymbol();
-
-	private static final SymbolStruct<?> AND_ENVIRONMENT = GlobalPackageStruct.KEYWORD.intern("&ENVIRONMENT").getSymbol();
 
 	private LambdaListParser() {
 	}
@@ -77,7 +62,7 @@ final class LambdaListParser {
 		}
 
 		List<OptionalBinding> optionalBindings = Collections.emptyList();
-		if (AND_OPTIONAL.equals(currentElement)) {
+		if (CompilerConstants.OPTIONAL.equals(currentElement)) {
 			final OptionalParseResult optionalParseResult
 					= parseOptionalBindings(formAnalyzer, environment, iterator, position, declareElement);
 
@@ -87,7 +72,7 @@ final class LambdaListParser {
 		}
 
 		RestBinding restBinding = null;
-		if (AND_REST.equals(currentElement)) {
+		if (CompilerConstants.REST.equals(currentElement)) {
 			final RestParseResult restParseResult
 					= parseRestBinding(environment, iterator, position, declareElement);
 
@@ -98,7 +83,7 @@ final class LambdaListParser {
 
 		List<KeyBinding> keyBindings = Collections.emptyList();
 		boolean allowOtherKeys = false;
-		if (AND_KEY.equals(currentElement)) {
+		if (CompilerConstants.KEY.equals(currentElement)) {
 			final KeyParseResult keyParseResult
 					= parseKeyBindings(formAnalyzer, environment, iterator, position, declareElement);
 
@@ -109,7 +94,7 @@ final class LambdaListParser {
 		}
 
 		List<AuxBinding> auxBindings = Collections.emptyList();
-		if (AND_AUX.equals(currentElement)) {
+		if (CompilerConstants.AUX.equals(currentElement)) {
 			final AuxParseResult auxParseResult
 					= parseAuxBindings(formAnalyzer, environment, iterator, position, declareElement);
 
@@ -164,14 +149,14 @@ final class LambdaListParser {
 	}
 
 	private static boolean isLambdaListKeyword(final LispStruct lispStruct) {
-		return lispStruct.equals(AND_AUX)
-				|| lispStruct.equals(AND_ALLOW_OTHER_KEYS)
-				|| lispStruct.equals(AND_KEY)
-				|| lispStruct.equals(AND_OPTIONAL)
-				|| lispStruct.equals(AND_REST)
-				|| lispStruct.equals(AND_WHOLE)
-				|| lispStruct.equals(AND_ENVIRONMENT)
-				|| lispStruct.equals(AND_BODY);
+		return lispStruct.equals(CompilerConstants.AUX)
+				|| lispStruct.equals(CompilerConstants.ALLOW_OTHER_KEYS)
+				|| lispStruct.equals(CompilerConstants.KEY)
+				|| lispStruct.equals(CompilerConstants.OPTIONAL)
+				|| lispStruct.equals(CompilerConstants.REST)
+				|| lispStruct.equals(CompilerConstants.WHOLE)
+				|| lispStruct.equals(CompilerConstants.ENVIRONMENT)
+				|| lispStruct.equals(CompilerConstants.BODY);
 	}
 
 	private static OptionalParseResult parseOptionalBindings(final FormAnalyzer formAnalyzer, final Environment environment,
@@ -323,7 +308,7 @@ final class LambdaListParser {
 		while (iterator.hasNext() && !isLambdaListKeyword(currentElement)) {
 			if (currentElement instanceof SymbolStruct) {
 				final SymbolStruct<?> currentParam = (SymbolStruct) currentElement;
-				final KeywordSymbolStruct keyName = new KeywordSymbolStruct(currentParam.getName());
+				final KeywordStruct keyName = getKeywordStruct(currentParam.getName());
 				final ParameterAllocation keyAllocation = new ParameterAllocation(currentPosition++);
 				final KeyBinding keyBinding = new KeyBinding(currentParam, keyAllocation, null, keyName, null);
 				keyBindings.add(keyBinding);
@@ -352,10 +337,10 @@ final class LambdaListParser {
 				final LispStruct thirdInCurrent = currentParam.getRest().getRest().getFirst();
 
 				final SymbolStruct<?> varNameCurrent;
-				final KeywordSymbolStruct varKeyNameCurrent;
+				final KeywordStruct varKeyNameCurrent;
 				if (firstInCurrent instanceof SymbolStruct) {
 					varNameCurrent = (SymbolStruct) firstInCurrent;
-					varKeyNameCurrent = new KeywordSymbolStruct(varNameCurrent.getName());
+					varKeyNameCurrent = getKeywordStruct(varNameCurrent.getName());
 				} else if (firstInCurrent instanceof ListStruct) {
 					final ListStruct currentVar = (ListStruct) firstInCurrent;
 					if (currentVar.size() != 2) {
@@ -363,10 +348,10 @@ final class LambdaListParser {
 					}
 
 					final LispStruct firstInCurrentVar = currentVar.getFirst();
-					if (!(firstInCurrentVar instanceof KeywordSymbolStruct)) {
+					if (!(firstInCurrentVar instanceof KeywordStruct)) {
 						throw new ProgramErrorException("LambdaList key var name list key-name parameters must be of type KeywordStruct: " + firstInCurrentVar);
 					}
-					varKeyNameCurrent = (KeywordSymbolStruct) firstInCurrentVar;
+					varKeyNameCurrent = (KeywordStruct) firstInCurrentVar;
 
 					final LispStruct secondInCurrentVar = currentVar.getRest().getFirst();
 					if (!(secondInCurrentVar instanceof SymbolStruct)) {
@@ -436,12 +421,23 @@ final class LambdaListParser {
 		}
 
 		boolean allowOtherKeys = false;
-		if (currentElement.equals(AND_ALLOW_OTHER_KEYS)) {
+		if (currentElement.equals(CompilerConstants.ALLOW_OTHER_KEYS)) {
 			allowOtherKeys = true;
 			currentElement = iterator.next();
 		}
 
 		return new KeyParseResult(currentElement, currentPosition, keyBindings, allowOtherKeys);
+	}
+
+	private static KeywordStruct getKeywordStruct(final String symbolName) {
+
+		final PackageSymbolStruct symbol = GlobalPackageStruct.KEYWORD.findSymbol(symbolName);
+		if (symbol == null) {
+			return new KeywordStruct(symbolName);
+		}
+		// NOTE: This should be a safe cast because we're finding the symbol in the Keyword Package and they are only
+		//       this type of symbol.
+		return (KeywordStruct) symbol.getSymbol();
 	}
 
 	private static AuxParseResult parseAuxBindings(final FormAnalyzer formAnalyzer, final Environment environment,

@@ -23,7 +23,7 @@ import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.printer.Printer;
-import jcl.symbols.SpecialOperator;
+import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.types.T;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -52,7 +52,7 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 	 */
 	@PostConstruct
 	private void init() {
-		SpecialOperator.LET.setMacroFunctionExpander(this);
+		SpecialOperatorStruct.LET.setMacroFunctionExpander(this);
 	}
 
 	@Override

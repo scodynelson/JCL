@@ -4,7 +4,7 @@
 
 package jcl.packages;
 
-import jcl.symbols.KeywordSymbolStruct;
+import jcl.symbols.KeywordStruct;
 import jcl.system.CommonLispSymbols;
 
 /**
@@ -37,7 +37,7 @@ final class KeywordPackageStruct extends PackageStruct {
 			return foundPackageSymbol;
 		}
 
-		final KeywordSymbolStruct symbolStruct = new KeywordSymbolStruct(symbolName);
+		final KeywordStruct symbolStruct = new KeywordStruct(symbolName);
 		externalSymbols.put(symbolName, symbolStruct);
 		symbolStruct.setSymbolPackage(this);
 		return new PackageSymbolStruct(symbolStruct, CommonLispSymbols.INTERNAL);

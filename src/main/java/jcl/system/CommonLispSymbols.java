@@ -12,9 +12,9 @@ import jcl.pathnames.PathnameVariables;
 import jcl.printer.PrinterVariables;
 import jcl.reader.struct.ReaderVariables;
 import jcl.streams.StreamVariables;
-import jcl.symbols.Declaration;
-import jcl.symbols.KeywordSymbolStruct;
-import jcl.symbols.SpecialOperator;
+import jcl.symbols.DeclarationStruct;
+import jcl.symbols.KeywordStruct;
+import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolConstants;
 import jcl.symbols.SymbolStruct;
 
@@ -92,21 +92,21 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> SINGLE_FLOAT_NEGATIVE_EPSILON = NumberConstants.SINGLE_FLOAT_NEGATIVE_EPSILON;
 	SymbolStruct<?> T = SymbolConstants.T;
 
-	SymbolStruct<?> COMPILATION_SPEED = Declaration.COMPILATION_SPEED;
-	SymbolStruct<?> DEBUG = Declaration.DEBUG;
-	SymbolStruct<?> DECLARATION = Declaration.DECLARATION;
-	SymbolStruct<?> DYNAMIC_EXTENT = Declaration.DYNAMIC_EXTENT;
-	SymbolStruct<?> FTYPE = Declaration.FTYPE;
-	SymbolStruct<?> IGNORABLE = Declaration.IGNORABLE;
-	SymbolStruct<?> IGNORE = Declaration.IGNORE;
-	SymbolStruct<?> INLINE = Declaration.INLINE;
-	SymbolStruct<?> NOTINLINE = Declaration.NOTINLINE;
-	SymbolStruct<?> OPTIMIZE = Declaration.OPTIMIZE;
-	SymbolStruct<?> SAFETY = Declaration.SAFETY;
-	SymbolStruct<?> SPACE = Declaration.SPACE;
-	SymbolStruct<?> SPECIAL = Declaration.SPECIAL;
-	SymbolStruct<?> SPEED = Declaration.SPEED;
-	SymbolStruct<?> TYPE = Declaration.TYPE;
+	SymbolStruct<?> COMPILATION_SPEED = DeclarationStruct.COMPILATION_SPEED;
+	SymbolStruct<?> DEBUG = DeclarationStruct.DEBUG;
+	SymbolStruct<?> DECLARATION = DeclarationStruct.DECLARATION;
+	SymbolStruct<?> DYNAMIC_EXTENT = DeclarationStruct.DYNAMIC_EXTENT;
+	SymbolStruct<?> FTYPE = DeclarationStruct.FTYPE;
+	SymbolStruct<?> IGNORABLE = DeclarationStruct.IGNORABLE;
+	SymbolStruct<?> IGNORE = DeclarationStruct.IGNORE;
+	SymbolStruct<?> INLINE = DeclarationStruct.INLINE;
+	SymbolStruct<?> NOTINLINE = DeclarationStruct.NOTINLINE;
+	SymbolStruct<?> OPTIMIZE = DeclarationStruct.OPTIMIZE;
+	SymbolStruct<?> SAFETY = DeclarationStruct.SAFETY;
+	SymbolStruct<?> SPACE = DeclarationStruct.SPACE;
+	SymbolStruct<?> SPECIAL = DeclarationStruct.SPECIAL;
+	SymbolStruct<?> SPEED = DeclarationStruct.SPEED;
+	SymbolStruct<?> TYPE = DeclarationStruct.TYPE;
 
 	SymbolStruct<?> BREAK_ON_SIGNALS_VAR = CompilerVariables.BREAK_ON_SIGNALS;
 	SymbolStruct<?> COMPILE_FILE_PATHNAME_VAR = CompilerVariables.COMPILE_FILE_PATHNAME;
@@ -481,7 +481,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> FROUND = null;
 	SymbolStruct<?> FTRUNCATE = null;
 	SymbolStruct<?> FUNCALL = null;
-	SymbolStruct<?> FUNCTION = SpecialOperator.FUNCTION;
+	SymbolStruct<?> FUNCTION = SpecialOperatorStruct.FUNCTION;
 	SymbolStruct<?> FUNCTION_KEYWORDS = null;
 	SymbolStruct<?> FUNCTION_LAMBDA_EXPRESSION = null;
 	SymbolStruct<?> FUNCTIONP = null;
@@ -745,7 +745,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> PSETQ = null;
 	SymbolStruct<?> PUSH = null;
 	SymbolStruct<?> PUSHNEW = null;
-	SymbolStruct<?> QUOTE = SpecialOperator.QUOTE;
+	SymbolStruct<?> QUOTE = SpecialOperatorStruct.QUOTE;
 	SymbolStruct<?> RANDOM = null;
 	SymbolStruct<?> RANDOM_STATE = null;
 	SymbolStruct<?> RANDOM_STATE_P = null;
@@ -1005,47 +1005,43 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> YES_OR_NO_P = null;
 	SymbolStruct<?> ZEROP = null;
 
-	// Other....
-	SymbolStruct<?> ELEMENT_TYPE = new KeywordSymbolStruct("ELEMENT-TYPE");
-	SymbolStruct<?> INITIAL_CONTENTS = new KeywordSymbolStruct("INITIAL-CONTENTS");
-
 	// Backquote
 	SymbolStruct<?> BQ_COMMA_FLAG = new SymbolStruct<>(",", GlobalPackageStruct.BACKQUOTE);
 	SymbolStruct<?> BQ_AT_FLAG = new SymbolStruct<>(",@", GlobalPackageStruct.BACKQUOTE);
 	SymbolStruct<?> BQ_DOT_FLAG = new SymbolStruct<>(",.", GlobalPackageStruct.BACKQUOTE);
 
 	// Standard Keywords
-	KeywordSymbolStruct ELEMENT_TYPE_KEYWORD = new KeywordSymbolStruct("ELEMENT-TYPE");
-	KeywordSymbolStruct INITIAL_CONTENTS_KEYWORD = new KeywordSymbolStruct("INITIAL-CONTENTS");
+	KeywordStruct ELEMENT_TYPE_KEYWORD = new KeywordStruct("ELEMENT-TYPE");
+	KeywordStruct INITIAL_CONTENTS_KEYWORD = new KeywordStruct("INITIAL-CONTENTS");
 
 	// Package Keywords
-	KeywordSymbolStruct INTERNAL = new KeywordSymbolStruct("INTERNAL");
-	KeywordSymbolStruct EXTERNAL = new KeywordSymbolStruct("EXTERNAL");
-	KeywordSymbolStruct INHERITED = new KeywordSymbolStruct("INHERITED");
+	KeywordStruct INTERNAL = new KeywordStruct("INTERNAL");
+	KeywordStruct EXTERNAL = new KeywordStruct("EXTERNAL");
+	KeywordStruct INHERITED = new KeywordStruct("INHERITED");
 
 	// Features Keywords
 	/**
-	 * NOT {@link KeywordSymbolStruct} for processing features that should 'not' be included.
+	 * NOT {@link KeywordStruct} for processing features that should 'not' be included.
 	 */
-	KeywordSymbolStruct NOT_KEYWORD = new KeywordSymbolStruct("NOT");
+	KeywordStruct NOT_KEYWORD = new KeywordStruct("NOT");
 
 	/**
-	 * AND {@link KeywordSymbolStruct} for processing features that should be included via 'and' operation.
+	 * AND {@link KeywordStruct} for processing features that should be included via 'and' operation.
 	 */
-	KeywordSymbolStruct AND_KEYWORD = new KeywordSymbolStruct("AND");
+	KeywordStruct AND_KEYWORD = new KeywordStruct("AND");
 
 	/**
-	 * OR {@link KeywordSymbolStruct} for processing features that should be included via 'or' operation.
+	 * OR {@link KeywordStruct} for processing features that should be included via 'or' operation.
 	 */
-	KeywordSymbolStruct OR_KEYWORD = new KeywordSymbolStruct("OR");
+	KeywordStruct OR_KEYWORD = new KeywordStruct("OR");
 
 	// Eval-When Keywords
-	KeywordSymbolStruct COMPILE_TOPLEVEL = new KeywordSymbolStruct("COMPILE-TOPLEVEL");
-	KeywordSymbolStruct LOAD_TOPLEVEL = new KeywordSymbolStruct("LOAD-TOPLEVEL");
-	KeywordSymbolStruct EXECUTE = new KeywordSymbolStruct("EXECUTE");
+	KeywordStruct COMPILE_TOPLEVEL = new KeywordStruct("COMPILE-TOPLEVEL");
+	KeywordStruct LOAD_TOPLEVEL = new KeywordStruct("LOAD-TOPLEVEL");
+	KeywordStruct EXECUTE = new KeywordStruct("EXECUTE");
 
 	// Print-Case Keywords
-	KeywordSymbolStruct UPCASE = new KeywordSymbolStruct("UPCASE");
-	KeywordSymbolStruct DOWNCASE = new KeywordSymbolStruct("DOWNCASE");
-	KeywordSymbolStruct CAPITALIZE = new KeywordSymbolStruct("CAPITALIZE");
+	KeywordStruct UPCASE = new KeywordStruct("UPCASE");
+	KeywordStruct DOWNCASE = new KeywordStruct("DOWNCASE");
+	KeywordStruct CAPITALIZE = new KeywordStruct("CAPITALIZE");
 }

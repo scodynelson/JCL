@@ -12,7 +12,7 @@ import jcl.compiler.real.struct.specialoperator.CatchStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
-import jcl.symbols.SpecialOperator;
+import jcl.symbols.SpecialOperatorStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -33,7 +33,7 @@ public class CatchExpander extends MacroFunctionExpander<CatchStruct> {
 	 */
 	@PostConstruct
 	private void init() {
-		SpecialOperator.CATCH.setMacroFunctionExpander(this);
+		SpecialOperatorStruct.CATCH.setMacroFunctionExpander(this);
 	}
 
 	@Override

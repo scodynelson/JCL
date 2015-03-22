@@ -14,8 +14,8 @@ import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.printer.Printer;
-import jcl.symbols.KeywordSymbolStruct;
-import jcl.symbols.SpecialOperator;
+import jcl.symbols.KeywordStruct;
+import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.system.CommonLispSymbols;
 import org.apache.commons.collections4.CollectionUtils;
@@ -31,7 +31,7 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 
 	private static final long serialVersionUID = -7301369273443154417L;
 
-	private static final Set<KeywordSymbolStruct> SITUATION_KEYWORDS = new HashSet<>(3);
+	private static final Set<KeywordStruct> SITUATION_KEYWORDS = new HashSet<>(3);
 
 	static {
 		SITUATION_KEYWORDS.add(CommonLispSymbols.COMPILE_TOPLEVEL);
@@ -47,7 +47,7 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 	 */
 	@PostConstruct
 	private void init() {
-		SpecialOperator.EVAL_WHEN.setMacroFunctionExpander(this);
+		SpecialOperatorStruct.EVAL_WHEN.setMacroFunctionExpander(this);
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 		if (isTopLevel) {
 			if (isCompileTopLevel(situationJavaList)) {
 				// (eval `(progn ,@body)))
-				final ListStruct prognOperatorList = new ConsStruct(SpecialOperator.PROGN, forms);
+				final ListStruct prognOperatorList = new ConsStruct(SpecialOperatorStruct.PROGN, forms);
 
 				// TODO: what we need to do here is:
 				// TODO: 1.) Get global instance of 'EVAL' function
@@ -96,12 +96,12 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 				// (eval (funcall (function (lambda (forms) (progn forms))) body))
 
 				final SymbolStruct<?> formsSymbol = new SymbolStruct<>("FORMS");
-				final ListStruct prognOperatorList = ListStruct.buildProperList(SpecialOperator.PROGN, formsSymbol);
+				final ListStruct prognOperatorList = ListStruct.buildProperList(SpecialOperatorStruct.PROGN, formsSymbol);
 
 				final ListStruct lambdaArgumentsList = ListStruct.buildProperList(formsSymbol);
-				final ListStruct lambdaOperatorList = ListStruct.buildProperList(SpecialOperator.LAMBDA, lambdaArgumentsList, prognOperatorList);
+				final ListStruct lambdaOperatorList = ListStruct.buildProperList(SpecialOperatorStruct.LAMBDA, lambdaArgumentsList, prognOperatorList);
 
-				final ListStruct functionOperatorList = ListStruct.buildProperList(SpecialOperator.FUNCTION, lambdaOperatorList);
+				final ListStruct functionOperatorList = ListStruct.buildProperList(SpecialOperatorStruct.FUNCTION, lambdaOperatorList);
 				final ListStruct funcallList = ListStruct.buildProperList(functionOperatorList, forms);
 
 				// TODO: what we need to do here is:
@@ -113,12 +113,12 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 			// (eval (funcall (function (lambda (forms) (progn forms))) body))
 
 			final SymbolStruct<?> formsSymbol = new SymbolStruct<>("FORMS");
-			final ListStruct prognOperatorList = ListStruct.buildProperList(SpecialOperator.PROGN, formsSymbol);
+			final ListStruct prognOperatorList = ListStruct.buildProperList(SpecialOperatorStruct.PROGN, formsSymbol);
 
 			final ListStruct lambdaArgumentsList = ListStruct.buildProperList(formsSymbol);
-			final ListStruct lambdaOperatorList = ListStruct.buildProperList(SpecialOperator.LAMBDA, lambdaArgumentsList, prognOperatorList);
+			final ListStruct lambdaOperatorList = ListStruct.buildProperList(SpecialOperatorStruct.LAMBDA, lambdaArgumentsList, prognOperatorList);
 
-			final ListStruct functionOperatorList = ListStruct.buildProperList(SpecialOperator.FUNCTION, lambdaOperatorList);
+			final ListStruct functionOperatorList = ListStruct.buildProperList(SpecialOperatorStruct.FUNCTION, lambdaOperatorList);
 			final ListStruct funcallList = ListStruct.buildProperList(functionOperatorList, forms);
 
 			// TODO: what we need to do here is:

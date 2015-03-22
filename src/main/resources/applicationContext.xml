@@ -82,7 +82,7 @@
 		<entry key="jcl.numbers.RatioStruct" value-ref="ratioCodeGenerator"/>
 
 		<entry key="jcl.symbols.NILStruct" value-ref="NILCodeGenerator"/>
-		<entry key="jcl.symbols.SymbolStruct" value-ref="symbolCodeGenerator"/>
+		<entry key="jcl.symbols.SymbolStruct" value-ref="newSymbolStructCodeGenerator"/>
 		<entry key="jcl.symbols.TStruct" value-ref="TCodeGenerator"/>
 
 		<!--<entry key="jcl.compiler.real.struct.functioncall.FunctionCallStruct" value-ref=""/>-->

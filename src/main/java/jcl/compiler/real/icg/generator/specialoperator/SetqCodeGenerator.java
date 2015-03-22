@@ -1,22 +1,22 @@
 package jcl.compiler.real.icg.generator.specialoperator;
 
-import jcl.compiler.real.environment.BindingEnvironment;
-import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.InnerFunctionEnvironment;
-import jcl.compiler.real.environment.allocation.PositionAllocation;
-import jcl.compiler.real.environment.binding.Binding;
+import java.util.List;
+
+import jcl.LispStruct;
+import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.icg.generator.SpecialSymbolCodeGenerator;
-import jcl.lists.ListStruct;
-import jcl.lists.NullStruct;
+import jcl.compiler.real.struct.specialoperator.SetqStruct;
 import jcl.symbols.SymbolStruct;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SetqCodeGenerator implements CodeGenerator<ListStruct> {
+public class SetqCodeGenerator implements CodeGenerator<SetqStruct> {
 
 	@Autowired
 	private SpecialSymbolCodeGenerator specialSymbolCodeGenerator;
@@ -25,65 +25,41 @@ public class SetqCodeGenerator implements CodeGenerator<ListStruct> {
 	private FormGenerator formGenerator;
 
 	@Override
-	public void generate(final ListStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final SetqStruct input, final JavaClassBuilder classBuilder) {
 
-		ListStruct restOfList = (ListStruct) input.getRest().getFirst();
-		while (!NullStruct.INSTANCE.equals(restOfList)) {
-			// get the first symbol
-			final SymbolStruct<?> symbol = (SymbolStruct<?>) restOfList.getFirst();
-			// step over the variable
-			restOfList = restOfList.getRest();
-			// get the form to evaluate
-			formGenerator.generate(restOfList.getFirst(), classBuilder);
-			// value is now on the stack, we have to determine where to put it
-			// determine if this is a local variable or a special variable
-			final Environment binding = getBindingEnvironment(classBuilder.getBindingEnvironment(), symbol);
-			final boolean hasDynamicBinding = classBuilder.getBindingEnvironment().getSymbolTable().hasDynamicBinding(symbol);
-			if (binding.equals(Environment.NULL) || hasDynamicBinding) {
-				// now the value is on the stack, is the variable local or special?
-				specialSymbolCodeGenerator.generate(symbol, classBuilder);
-				classBuilder.getEmitter().emitSwap();
-				classBuilder.getEmitter().emitInvokeinterface("lisp/common/type/Symbol", "setValue", "(Ljava/lang/Object;)", "Ljava/lang/Object;", true);
-				if (!restOfList.getRest().equals(NullStruct.INSTANCE)) {
-					classBuilder.getEmitter().emitPop(); // pop the value on the stack execpt for the last one
-				}
-			} else {
-				// so find what local slot it is
+		final ClassDef currentClass = classBuilder.getCurrentClass();
+		final MethodVisitor mv = currentClass.getMethodVisitor();
 
-				// get the :bindings list
-				// ((x :allocation ...) (y :allocation ...) ...)
-				final Binding<?> symBinding = binding.getLexicalBinding(symbol).get();
-				// (:allocation ... :scope ... )
-				// get the allocated slot for the symbol and put it on the stack
-				final int slot = ((PositionAllocation) symBinding.getAllocation()).getPosition();
+		final int packageStore = currentClass.getNextAvailableStore();
+		final int symbolStore = currentClass.getNextAvailableStore();
+		final int initFormStore = currentClass.getNextAvailableStore();
 
-				// if this is the last set, dup the value so it's returned
-				if (restOfList.getRest().equals(NullStruct.INSTANCE)) {
-					classBuilder.getEmitter().emitDup(); // leaves the value on the stack
-				}
-				classBuilder.getEmitter().emitAstore(slot);
-			}
-			// step through the rest pair or done
-			restOfList = restOfList.getRest();
-		}
-	}
+		final List<SetqStruct.SetqPair> setqPairs = input.getSetqPairs();
+		for (final SetqStruct.SetqPair setqPair : setqPairs) {
 
-	private static Environment getBindingEnvironment(final Environment environment, final SymbolStruct<?> variable) {
+			final SymbolStruct<?> var = setqPair.getVar();
 
-		Environment currentEnvironment = environment;
+			final String packageName = var.getSymbolPackage().getName();
+			mv.visitLdcInsn(packageName);
+			mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
+			mv.visitVarInsn(Opcodes.ASTORE, packageStore);
 
-		while (!currentEnvironment.equals(Environment.NULL)) {
+			mv.visitVarInsn(Opcodes.ALOAD, packageStore);
+			final String symbolName = var.getName();
+			mv.visitLdcInsn(symbolName);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
+			mv.visitVarInsn(Opcodes.ASTORE, symbolStore);
 
-			if (currentEnvironment.hasLexicalBinding(variable)) {
+			final LispStruct form = setqPair.getForm();
+			formGenerator.generate(form, classBuilder);
+			mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
 
-				if ((currentEnvironment instanceof BindingEnvironment) && !(currentEnvironment instanceof InnerFunctionEnvironment)) {
-					return currentEnvironment;
-				}
-			}
-
-			currentEnvironment = currentEnvironment.getParent();
+			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
+			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "setValue", "(Ljcl/LispStruct;)V", false);
 		}
 
-		return currentEnvironment;
+		mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 	}
 }

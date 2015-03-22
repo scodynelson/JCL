@@ -135,4 +135,24 @@ public class TestGround {
 
 		throw new GoException(tag);
 	}
+
+	private Object symbolGen() {
+
+		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
+		final SymbolStruct<?> symbol = pkg.findSymbol("FOO").getSymbol();
+
+		return symbol.getValue();
+	}
+
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	private Object setqGen() {
+
+		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
+		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
+
+		final LispStruct value = new CharacterStruct(97);
+		symbol.setValue(value);
+
+		return value;
+	}
 }

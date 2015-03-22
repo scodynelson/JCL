@@ -5,8 +5,9 @@
 package jcl.compiler.real.icg.generator.specialoperator.exception;
 
 import jcl.LispStruct;
+import jcl.conditions.exceptions.ProgramErrorException;
 
-public class ThrowException extends RuntimeException {
+public class ThrowException extends ProgramErrorException {
 
 	private static final long serialVersionUID = -6556966147073549239L;
 
@@ -15,6 +16,7 @@ public class ThrowException extends RuntimeException {
 	private final LispStruct resultForm;
 
 	public ThrowException(final LispStruct catchTag, final LispStruct resultForm) {
+		super("Tag: " + catchTag + " : Result: " + resultForm);
 		this.catchTag = catchTag;
 		this.resultForm = resultForm;
 	}

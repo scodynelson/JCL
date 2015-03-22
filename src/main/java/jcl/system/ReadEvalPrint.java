@@ -13,6 +13,7 @@ import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
+import jcl.conditions.exceptions.ConditionException;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.functions.FunctionStruct;
@@ -174,6 +175,8 @@ public class ReadEvalPrint {
 							} else {
 								LOGGER.warn("; WARNING: Null response from analyzer");
 							}
+						} catch (final ConditionException ex) {
+							LOGGER.warn("; WARNING: Exception condition during Generation -> ", ex);
 						} catch (final Exception ex) {
 							LOGGER.warn("; WARNING: Exception condition during Analysis -> ", ex);
 							break;
@@ -193,6 +196,8 @@ public class ReadEvalPrint {
 //							} else {
 //								LOGGER.warn("; WARNING: Null response from analyzer");
 //							}
+						} catch (final ConditionException ex) {
+							LOGGER.warn("; WARNING: Exception condition during Generation -> ", ex);
 						} catch (final Exception ex) {
 							LOGGER.warn("; WARNING: Exception condition during Generation -> ", ex);
 							break;

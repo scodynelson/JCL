@@ -5,6 +5,7 @@
 package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A {@link StandardClass} is the default class type {@link Class}.
@@ -43,6 +44,17 @@ public interface StandardClass extends Class {
 			 */
 			private StandardClassImpl() {
 				super("STANDARD-CLASS");
+			}
+
+			@Override
+			public int hashCode() {
+				return new HashCodeBuilder().appendSuper(super.hashCode())
+				                            .toHashCode();
+			}
+
+			@Override
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof StandardClass);
 			}
 		}
 	}

@@ -7,7 +7,7 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -47,7 +47,8 @@ final class TagbodyFormCollector implements Collector<LispStruct, Map<GoStruct<?
 
 	@Override
 	public Supplier<Map<GoStruct<?>, PrognStruct>> supplier() {
-		return HashMap::new;
+		// NOTE: use LinkedHashMap so the tags and forms are ordered appropriately
+		return LinkedHashMap::new;
 	}
 
 	@Override
@@ -59,15 +60,12 @@ final class TagbodyFormCollector implements Collector<LispStruct, Map<GoStruct<?
 				handleOtherwise(tagToFormsMap, current);
 			} else {
 				currentTag = goStructGenerator.generateGoElement(current);
+				tagToFormsMap.put(currentTag, new PrognStruct(new ArrayList<>()));
 			}
 		};
 	}
 
 	private void handleOtherwise(final Map<GoStruct<?>, PrognStruct> tagToFormsMap, final LispStruct lispStruct) {
-		if (!tagToFormsMap.containsKey(currentTag)) {
-			tagToFormsMap.put(currentTag, new PrognStruct(new ArrayList<>()));
-		}
-
 		final LispStruct analyzedForm = formAnalyzer.analyze(lispStruct, environment);
 		tagToFormsMap.get(currentTag).getForms().add(analyzedForm);
 	}

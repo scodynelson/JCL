@@ -4,9 +4,10 @@
 
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -23,7 +24,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-final class TagbodyTagSetCollector implements Collector<LispStruct, Set<GoStruct<?>>, Set<GoStruct<?>>> {
+final class TagbodyTagSetCollector implements Collector<LispStruct, List<GoStruct<?>>, List<GoStruct<?>>> {
 
 	private final Map<Class<? extends LispStruct>, GoStructGenerator<LispStruct>> goStructGeneratorStrategies;
 
@@ -32,12 +33,13 @@ final class TagbodyTagSetCollector implements Collector<LispStruct, Set<GoStruct
 	}
 
 	@Override
-	public Supplier<Set<GoStruct<?>>> supplier() {
-		return HashSet::new;
+	public Supplier<List<GoStruct<?>>> supplier() {
+		// NOTE: use ArrayList so the tags are ordered appropriately
+		return ArrayList::new;
 	}
 
 	@Override
-	public BiConsumer<Set<GoStruct<?>>, LispStruct> accumulator() {
+	public BiConsumer<List<GoStruct<?>>, LispStruct> accumulator() {
 		return (tagSet, current) -> {
 
 			final GoStructGenerator<LispStruct> goStructGenerator = goStructGeneratorStrategies.get(current.getClass());
@@ -49,7 +51,7 @@ final class TagbodyTagSetCollector implements Collector<LispStruct, Set<GoStruct
 	}
 
 	@Override
-	public BinaryOperator<Set<GoStruct<?>>> combiner() {
+	public BinaryOperator<List<GoStruct<?>>> combiner() {
 		return (left, right) -> {
 			left.addAll(right);
 			return left;
@@ -57,13 +59,13 @@ final class TagbodyTagSetCollector implements Collector<LispStruct, Set<GoStruct
 	}
 
 	@Override
-	public Function<Set<GoStruct<?>>, Set<GoStruct<?>>> finisher() {
+	public Function<List<GoStruct<?>>, List<GoStruct<?>>> finisher() {
 		return Function.identity();
 	}
 
 	@Override
 	public Set<Characteristics> characteristics() {
-		return Collections.unmodifiableSet(EnumSet.of(Characteristics.UNORDERED, Characteristics.IDENTITY_FINISH));
+		return Collections.unmodifiableSet(EnumSet.of(Characteristics.IDENTITY_FINISH));
 	}
 
 	@Override

@@ -1,15 +1,16 @@
 package jcl.compiler.real.icg.generator.specialoperator;
 
+import java.util.ListIterator;
+import java.util.Set;
+import java.util.Stack;
+
 import jcl.LispStruct;
 import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
-import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.struct.specialoperator.go.GoStruct;
-import jcl.lists.ListStruct;
-import jcl.symbols.SymbolStruct;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Label;
+import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.printer.Printer;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,64 +20,54 @@ import org.springframework.stereotype.Component;
 public class GoCodeGenerator implements CodeGenerator<GoStruct<?>> {
 
 	@Autowired
-	private FormGenerator formGenerator;
+	private Printer printer;
 
 	@Override
 	public void generate(final GoStruct<?> input, final JavaClassBuilder classBuilder) {
 
 		final ClassDef currentClass = classBuilder.getCurrentClass();
-		final ClassWriter cw = currentClass.getClassWriter();
-		MethodVisitor mv = currentClass.getMethodVisitor();
+		final MethodVisitor mv = currentClass.getMethodVisitor();
 
-		mv = cw.visitMethod(Opcodes.ACC_PRIVATE, "goGen", "()Ljava/lang/Object;", null, null);
-		mv.visitCode();
-		// TODO: don't know if we need the above 2 lines...
+		final Stack<Set<TagbodyLabel>> tagbodyLabelStack = classBuilder.getTagbodyLabelStack();
+		final TagbodyLabel tagbodyLabel = getTagbodyLabel(tagbodyLabelStack, input);
 
-		final Label getTagValue = new Label();
-		mv.visitLabel(getTagValue);
-//		mv.visitLineNumber(134, getTagValue);
-		final LispStruct tag = input.getTag();
-		formGenerator.generate(tag, classBuilder);
-		mv.visitVarInsn(Opcodes.ASTORE, 1);
+		final int index = tagbodyLabel.getIndex();
+		mv.visitLdcInsn(index);
+		final int tagIndexStore = currentClass.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ISTORE, tagIndexStore);
 
-		final Label throwGoException = new Label();
-		mv.visitLabel(throwGoException);
-//		mv.visitLineNumber(136, throwGoException);
-		mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/old/exception/GoException");
+		mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/icg/generator/specialoperator/exception/GoException");
 		mv.visitInsn(Opcodes.DUP);
-		mv.visitVarInsn(Opcodes.ALOAD, 1);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/old/exception/GoException", "<init>", "(Ljava/lang/Object;)V", false);
+		mv.visitVarInsn(Opcodes.ILOAD, tagIndexStore);
+
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/icg/generator/specialoperator/exception/GoException", "<init>", "(I)V", false);
 		mv.visitInsn(Opcodes.ATHROW);
-
-		final Label localVariables = new Label();
-		mv.visitLabel(localVariables);
-		mv.visitLocalVariable("tag", "Ljcl/LispStruct;", null, throwGoException, localVariables, 1);
-
-		// TODO: don't know if we need the next 2 lines
-		mv.visitMaxs(3, 2);
-		mv.visitEnd();
 	}
 
-	public void generate(final ListStruct input, final JavaClassBuilder classBuilder) {
-		/* Get the symbol out of the list. */
-		final ListStruct restOfList = input.getRest();
-		final SymbolStruct<?> sym = (SymbolStruct) restOfList.getFirst();
+	private TagbodyLabel getTagbodyLabel(final Stack<Set<TagbodyLabel>> tagbodyLabelStack, final GoStruct<?> tagToFind) {
 
-        /*
-		// first, try to see if this is a go in the same tagbody (the most common)
-        TagbodyLabel tbl = findTagbodyBySymbol(tagbodyStack.peek(), sym);
-        if (tbl != null) {
-        emitter.emitGoto(tbl.label);
-        } else {
-         */
-		/* Throw a GoException. */
-		classBuilder.getEmitter().emitNew("lisp/system/compiler/exceptions/GoException");
-		classBuilder.getEmitter().emitDup();
-		//genCodeSpecialSymbol(sym);
-		classBuilder.getEmitter().emitLdc(String.valueOf(TagbodyCodeGenerator.findTagbodyInStack(classBuilder.getTagbodyStack(), sym).getIndex()));   // me
-		//emitter.emitInvokespecial("lisp/system/compiler/exceptions/GoException", "<init>", "(Llisp/common/type/Symbol;)V"); //me
-		classBuilder.getEmitter().emitInvokespecial("lisp/system/compiler/exceptions/GoException", "<init>", "(Ljava/lang/Object;)", "V", false);
-		classBuilder.getEmitter().emitAthrow();
-		//}
+		final ListIterator<Set<TagbodyLabel>> tagbodyLabelListIterator = tagbodyLabelStack.listIterator(tagbodyLabelStack.size());
+
+		TagbodyLabel tagbodyLabel = null;
+
+		out:
+		while (tagbodyLabelListIterator.hasPrevious()) {
+			final Set<TagbodyLabel> previousStack = tagbodyLabelListIterator.previous();
+			for (final TagbodyLabel currentTBL : previousStack) {
+				final GoStruct<?> goTag = currentTBL.getTag();
+				if (tagToFind.equals(goTag)) {
+					tagbodyLabel = currentTBL;
+					break out;
+				}
+			}
+		}
+
+		if (tagbodyLabel == null) {
+			final LispStruct tagObject = tagToFind.getTag();
+			final String printedTagObject = printer.print(tagObject);
+			throw new ProgramErrorException("GO: No TAGBODY with Tag " + printedTagObject + " is visible.");
+		}
+
+		return tagbodyLabel;
 	}
 }

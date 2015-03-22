@@ -5,6 +5,7 @@
 package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The type {@link ExtendedChar} is equivalent to the type (and character (not base-char)).
@@ -43,6 +44,17 @@ public interface ExtendedChar extends Character {
 			 */
 			private ExtendedCharImpl() {
 				super("EXTENDED-CHAR");
+			}
+
+			@Override
+			public int hashCode() {
+				return new HashCodeBuilder().appendSuper(super.hashCode())
+				                            .toHashCode();
+			}
+
+			@Override
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof ExtendedChar);
 			}
 		}
 	}

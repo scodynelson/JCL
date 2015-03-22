@@ -1,7 +1,7 @@
 package jcl.compiler.real.sa.analyzer.specialoperator;
 
+import java.util.List;
 import java.util.ListIterator;
-import java.util.Set;
 import java.util.Stack;
 import javax.annotation.PostConstruct;
 
@@ -63,14 +63,14 @@ public class GoExpander extends MacroFunctionExpander<GoStruct<?>> {
 
 	private GoStruct<?> getGoTag(final Environment environment, final LispStruct tagToFind) {
 
-		final Stack<Set<GoStruct<?>>> tagbodyStack = environment.getTagbodyStack();
-		final ListIterator<Set<GoStruct<?>>> tagbodyListIterator = tagbodyStack.listIterator(tagbodyStack.size());
+		final Stack<List<GoStruct<?>>> tagbodyStack = environment.getTagbodyStack();
+		final ListIterator<List<GoStruct<?>>> tagbodyListIterator = tagbodyStack.listIterator(tagbodyStack.size());
 
 		GoStruct<?> tag = null;
 
 		out:
 		while (tagbodyListIterator.hasPrevious()) {
-			final Set<GoStruct<?>> previousStack = tagbodyListIterator.previous();
+			final List<GoStruct<?>> previousStack = tagbodyListIterator.previous();
 			for (final GoStruct<?> goStruct : previousStack) {
 				final LispStruct goTag = goStruct.getTag();
 				if (tagToFind.equals(goTag)) {

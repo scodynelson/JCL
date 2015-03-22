@@ -71,6 +71,8 @@
 	          key-type="java.lang.Class"
 	          value-type="jcl.compiler.real.icg.generator.CodeGenerator">
 
+		<entry key="jcl.arrays.StringStruct" value-ref="stringCodeGenerator"/>
+
 		<entry key="jcl.characters.CharacterStruct" value-ref="characterCodeGenerator"/>
 
 		<entry key="jcl.lists.ConsStruct" value-ref="listCodeGenerator"/>
@@ -115,8 +117,8 @@
 
 		<!--<entry key="jcl.compiler.real.struct.specialoperator.declare.DeclareStruct" value-ref=""/>-->
 
-		<!--<entry key="jcl.compiler.real.struct.specialoperator.go.GoIntegerStruct" value-ref=""/>-->
-		<!--<entry key="jcl.compiler.real.struct.specialoperator.go.GoSymbolStruct" value-ref=""/>-->
+		<entry key="jcl.compiler.real.struct.specialoperator.go.GoIntegerStruct" value-ref="goCodeGenerator"/>
+		<entry key="jcl.compiler.real.struct.specialoperator.go.GoSymbolStruct" value-ref="goCodeGenerator"/>
 
 		<entry key="jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct" value-ref="lambdaCodeGenerator"/>
 

@@ -5,6 +5,7 @@
 package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A {@link LogicalPathname} is a {@link Pathname} that uses a namestring syntax and has component values.
@@ -44,6 +45,17 @@ public interface LogicalPathname extends Pathname {
 			 */
 			private LogicalPathnameImpl() {
 				super("LOGICAL-PATHNAME");
+			}
+
+			@Override
+			public int hashCode() {
+				return new HashCodeBuilder().appendSuper(super.hashCode())
+				                            .toHashCode();
+			}
+
+			@Override
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof LogicalPathname);
 			}
 		}
 	}

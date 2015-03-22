@@ -59,6 +59,10 @@ public class ClassDef {
 		return name;
 	}
 
+	public int getCurrentStore() {
+		return nextAvailableStore;
+	}
+
 	public int getNextAvailableStore() {
 		return nextAvailableStore++;
 	}

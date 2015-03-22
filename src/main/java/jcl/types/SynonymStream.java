@@ -5,6 +5,7 @@
 package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A {@link SynonymStream} stream is a stream that is an alias for another stream, which is the value of a dynamic
@@ -48,6 +49,17 @@ public interface SynonymStream extends Stream {
 			 */
 			private SynonymStreamImpl() {
 				super("SYNONYM-STREAM");
+			}
+
+			@Override
+			public int hashCode() {
+				return new HashCodeBuilder().appendSuper(super.hashCode())
+				                            .toHashCode();
+			}
+
+			@Override
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof SynonymStream);
 			}
 		}
 	}

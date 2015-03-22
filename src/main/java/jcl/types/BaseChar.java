@@ -5,6 +5,7 @@
 package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The type {@link BaseChar} is defined as the upgraded array element type of {@link StandardChar}.
@@ -52,6 +53,17 @@ public interface BaseChar extends Character {
 			 */
 			private BaseCharImpl() {
 				super("BASE-CHAR");
+			}
+
+			@Override
+			public int hashCode() {
+				return new HashCodeBuilder().appendSuper(super.hashCode())
+				                            .toHashCode();
+			}
+
+			@Override
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof BaseChar);
 			}
 		}
 	}

@@ -7,6 +7,7 @@ package jcl.types;
 import java.lang.String;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A {@link StringStream} is a stream which reads input from or writes output to an associated {@link String}.
@@ -47,6 +48,17 @@ public interface StringStream extends Stream {
 			 */
 			private StringStreamImpl() {
 				super("STRING-STREAM");
+			}
+
+			@Override
+			public int hashCode() {
+				return new HashCodeBuilder().appendSuper(super.hashCode())
+				                            .toHashCode();
+			}
+
+			@Override
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof StringStream);
 			}
 		}
 	}

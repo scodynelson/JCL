@@ -5,6 +5,7 @@
 package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The type {@link Class} represents objects that determine the structure and behavior of their instances. Associated
@@ -45,6 +46,17 @@ public interface Class extends StandardObject {
 			 */
 			private ClassImpl() {
 				super("CLASS");
+			}
+
+			@Override
+			public int hashCode() {
+				return new HashCodeBuilder().appendSuper(super.hashCode())
+				                            .toHashCode();
+			}
+
+			@Override
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof Class);
 			}
 		}
 	}

@@ -8,6 +8,7 @@ import java.math.BigInteger;
 
 import jcl.types.typespecifiers.AndTypeSpecifier;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.math3.util.ArithmeticUtils;
 
 /**
@@ -104,6 +105,17 @@ public interface SignedByte extends Integer {
 			 */
 			public static SignedByte getInstance(final BigInteger bits) {
 				return new SignedByteImpl(bits);
+			}
+
+			@Override
+			public int hashCode() {
+				return new HashCodeBuilder().appendSuper(super.hashCode())
+				                            .toHashCode();
+			}
+
+			@Override
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof SignedByte);
 			}
 
 			@Override

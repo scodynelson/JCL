@@ -5,6 +5,7 @@
 package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The {@link StandardObject} is an instance of {@link StandardClass} and is a superclass of every {@link Class} that
@@ -44,6 +45,17 @@ public interface StandardObject extends T {
 			 */
 			private StandardObjectImpl() {
 				super("STANDARD-OBJECT");
+			}
+
+			@Override
+			public int hashCode() {
+				return new HashCodeBuilder().appendSuper(super.hashCode())
+				                            .toHashCode();
+			}
+
+			@Override
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof StandardObject);
 			}
 		}
 	}

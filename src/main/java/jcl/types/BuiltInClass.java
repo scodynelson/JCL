@@ -5,6 +5,7 @@
 package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A {@link BuiltInClass} is a {@link Class} whose instances have restricted capabilities or special representations.
@@ -44,6 +45,17 @@ public interface BuiltInClass extends Class {
 			 */
 			private BuiltInClassImpl() {
 				super("BUILT-IN-CLASS");
+			}
+
+			@Override
+			public int hashCode() {
+				return new HashCodeBuilder().appendSuper(super.hashCode())
+				                            .toHashCode();
+			}
+
+			@Override
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof BuiltInClass);
 			}
 		}
 	}

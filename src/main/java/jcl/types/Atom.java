@@ -6,6 +6,7 @@ package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.NotTypeSpecifier;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * An {@link Atom} is a type equivalent to (not cons).
@@ -44,6 +45,17 @@ public interface Atom extends T {
 			 */
 			private AtomImpl() {
 				super("ATOM", Cons.INSTANCE);
+			}
+
+			@Override
+			public int hashCode() {
+				return new HashCodeBuilder().appendSuper(super.hashCode())
+				                            .toHashCode();
+			}
+
+			@Override
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof Atom);
 			}
 
 			@Override

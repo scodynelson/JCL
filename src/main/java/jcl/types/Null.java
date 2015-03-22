@@ -5,6 +5,7 @@
 package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The only object of type {@link Null} is {@link NIL}, which represents the empty {@link List} and can also be notated
@@ -44,6 +45,17 @@ public interface Null extends Symbol, List {
 			 */
 			private NullImpl() {
 				super("NULL");
+			}
+
+			@Override
+			public int hashCode() {
+				return new HashCodeBuilder().appendSuper(super.hashCode())
+				                            .toHashCode();
+			}
+
+			@Override
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof Null);
 			}
 		}
 	}

@@ -2,7 +2,6 @@ package jcl.compiler.real.sa.analyzer.specialoperator;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -53,10 +52,10 @@ public class TagbodyExpander extends MacroFunctionExpander<TagbodyStruct> {
 		List<LispStruct> forms = formRest.getAsJavaList();
 
 		final TagbodyTagSetCollector tagSetCollector = new TagbodyTagSetCollector(goStructGeneratorStrategies);
-		final Set<GoStruct<?>> tagSet = forms.stream()
-		                                     .collect(tagSetCollector);
+		final List<GoStruct<?>> tagList = forms.stream()
+		                                       .collect(tagSetCollector);
 
-		environment.getTagbodyStack().push(tagSet);
+		environment.getTagbodyStack().push(tagList);
 
 		// If the first element is not a 'tag', we have a default form set. Therefore, we are going to generate a
 		// temporary 'tag' for this form set.

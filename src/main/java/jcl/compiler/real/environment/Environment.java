@@ -48,7 +48,7 @@ public class Environment extends StandardObjectStruct {
 
 	private Stack<SymbolStruct<?>> blockStack = new Stack<>();
 
-	private Stack<Set<GoStruct<?>>> tagbodyStack = new Stack<>();
+	private Stack<List<GoStruct<?>>> tagbodyStack = new Stack<>();
 
 	// eval-when processing modes
 	private boolean topLevelMode;
@@ -104,7 +104,7 @@ public class Environment extends StandardObjectStruct {
 		return blockStack;
 	}
 
-	public Stack<Set<GoStruct<?>>> getTagbodyStack() {
+	public Stack<List<GoStruct<?>>> getTagbodyStack() {
 		return tagbodyStack;
 	}
 

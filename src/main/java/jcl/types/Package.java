@@ -5,6 +5,7 @@
 package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A {@link Package} is a namespace that maps symbol names to {@link Symbol}s.
@@ -43,6 +44,17 @@ public interface Package extends T {
 			 */
 			private PackageImpl() {
 				super("PACKAGE");
+			}
+
+			@Override
+			public int hashCode() {
+				return new HashCodeBuilder().appendSuper(super.hashCode())
+				                            .toHashCode();
+			}
+
+			@Override
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof Package);
 			}
 		}
 	}

@@ -4,21 +4,21 @@
 
 package jcl.compiler.real.icg.generator.specialoperator.exception;
 
-import jcl.LispStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 
 public class GoException extends ProgramErrorException {
 
 	private static final long serialVersionUID = 4353009450417754927L;
 
-	private final LispStruct tag;
+	private final int tagIndex;
 
-	public GoException(final LispStruct tag) {
-		super("Tag: " + tag);
-		this.tag = tag;
+	public GoException(final int tagIndex) {
+		super("Tag Index: " + tagIndex);
+		// TODO: should we store the tag on here???
+		this.tagIndex = tagIndex;
 	}
 
-	public LispStruct getTag() {
-		return tag;
+	public int getTagIndex() {
+		return tagIndex;
 	}
 }

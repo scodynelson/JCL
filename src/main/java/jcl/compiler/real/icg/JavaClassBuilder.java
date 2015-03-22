@@ -3,6 +3,7 @@ package jcl.compiler.real.icg;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 
 import jcl.compiler.real.environment.Environment;
@@ -32,7 +33,7 @@ public class JavaClassBuilder {
 
 	private boolean allowMultipleValues;
 
-	private Stack<Stack<TagbodyLabel>> tagbodyStack;
+	private Stack<Set<TagbodyLabel>> tagbodyLabelStack;
 
 	private ListStruct sourceFile;
 
@@ -53,7 +54,7 @@ public class JavaClassBuilder {
 		classNames = new Stack<>();
 		tagCounter = 0;
 		allowMultipleValues = false;
-		tagbodyStack = new Stack<>();
+		tagbodyLabelStack = new Stack<>();
 	}
 
 	public NewEmitter getEmitter() {
@@ -96,12 +97,12 @@ public class JavaClassBuilder {
 		this.allowMultipleValues = allowMultipleValues;
 	}
 
-	public Stack<Stack<TagbodyLabel>> getTagbodyStack() {
-		return tagbodyStack;
+	public Stack<Set<TagbodyLabel>> getTagbodyLabelStack() {
+		return tagbodyLabelStack;
 	}
 
-	public void setTagbodyStack(final Stack<Stack<TagbodyLabel>> tagbodyStack) {
-		this.tagbodyStack = tagbodyStack;
+	public void setTagbodyLabelStack(final Stack<Set<TagbodyLabel>> tagbodyLabelStack) {
+		this.tagbodyLabelStack = tagbodyLabelStack;
 	}
 
 	public ListStruct getSourceFile() {
@@ -120,12 +121,8 @@ public class JavaClassBuilder {
 		LineNumber = lineNumber;
 	}
 
-	public int getTagCounter() {
-		return tagCounter;
-	}
-
-	public void setTagCounter(final int tagCounter) {
-		this.tagCounter = tagCounter;
+	public int getNextTagbodyTagIndex() {
+		return tagCounter++;
 	}
 
 	public boolean isMacroLambda() {

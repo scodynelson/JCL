@@ -5,6 +5,7 @@
 package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The type {@link NIL} contains no objects and so is also called the empty type. The type {@link NIL} is a subtype of
@@ -46,6 +47,17 @@ public interface NIL extends T { // TODO: this needs to extend ALL types...
 			 */
 			private NILImpl() {
 				super("NIL");
+			}
+
+			@Override
+			public int hashCode() {
+				return new HashCodeBuilder().appendSuper(super.hashCode())
+				                            .toHashCode();
+			}
+
+			@Override
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof NIL);
 			}
 		}
 	}

@@ -5,6 +5,7 @@
 package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * The type {@link Keyword} includes all {@link Symbol}s interned the KEYWORD {@link Package}.
@@ -48,6 +49,17 @@ public interface Keyword extends Symbol {
 			 */
 			private KeywordImpl() {
 				super("KEYWORD");
+			}
+
+			@Override
+			public int hashCode() {
+				return new HashCodeBuilder().appendSuper(super.hashCode())
+				                            .toHashCode();
+			}
+
+			@Override
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof Keyword);
 			}
 		}
 	}

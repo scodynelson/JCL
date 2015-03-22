@@ -5,6 +5,7 @@
 package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A {@link ConcatenatedStream} is an input stream which is a composite stream of zero or more other input streams,
@@ -51,6 +52,17 @@ public interface ConcatenatedStream extends Stream {
 			 */
 			private ConcatenatedStreamImpl() {
 				super("CONCATENATED-STREAM");
+			}
+
+			@Override
+			public int hashCode() {
+				return new HashCodeBuilder().appendSuper(super.hashCode())
+				                            .toHashCode();
+			}
+
+			@Override
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof ConcatenatedStream);
 			}
 		}
 	}

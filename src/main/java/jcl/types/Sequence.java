@@ -5,6 +5,7 @@
 package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A {@link Sequence} is an ordered collection of objects, called the elements of the sequence. The type {@link Vector}
@@ -47,6 +48,17 @@ public interface Sequence extends T {
 			 */
 			private SequenceImpl() {
 				super("SEQUENCE");
+			}
+
+			@Override
+			public int hashCode() {
+				return new HashCodeBuilder().appendSuper(super.hashCode())
+				                            .toHashCode();
+			}
+
+			@Override
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof Sequence);
 			}
 		}
 	}

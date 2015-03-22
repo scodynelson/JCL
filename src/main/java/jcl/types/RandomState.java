@@ -5,6 +5,7 @@
 package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A {@link RandomState} object contains state information used by the pseudo-random number generator.
@@ -43,6 +44,17 @@ public interface RandomState extends T {
 			 */
 			private RandomStateImpl() {
 				super("RANDOM-STATE");
+			}
+
+			@Override
+			public int hashCode() {
+				return new HashCodeBuilder().appendSuper(super.hashCode())
+				                            .toHashCode();
+			}
+
+			@Override
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof RandomState);
 			}
 		}
 	}

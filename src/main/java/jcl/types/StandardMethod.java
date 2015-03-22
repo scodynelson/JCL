@@ -5,6 +5,7 @@
 package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A {@link StandardMethod} is the default method type {@link Class}.
@@ -43,6 +44,17 @@ public interface StandardMethod extends Method, StandardObject {
 			 */
 			private StandardMethodImpl() {
 				super("STANDARD-METHOD");
+			}
+
+			@Override
+			public int hashCode() {
+				return new HashCodeBuilder().appendSuper(super.hashCode())
+				                            .toHashCode();
+			}
+
+			@Override
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof StandardMethod);
 			}
 		}
 	}

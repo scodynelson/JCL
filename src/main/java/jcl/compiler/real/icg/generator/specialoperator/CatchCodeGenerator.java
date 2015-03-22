@@ -31,6 +31,7 @@ public class CatchCodeGenerator implements CodeGenerator<CatchStruct> {
 		final Label tryBlockStart = new Label();
 		final Label tryBlockEnd = new Label();
 		final Label catchBlock = new Label();
+		final Label catchBlockEnd = new Label();
 		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlock, "jcl/compiler/real/icg/generator/specialoperator/exception/ThrowException");
 
 		final LispStruct catchTag = input.getCatchTag();
@@ -45,8 +46,6 @@ public class CatchCodeGenerator implements CodeGenerator<CatchStruct> {
 		mv.visitVarInsn(Opcodes.ASTORE, resultFormStore);
 
 		mv.visitLabel(tryBlockEnd);
-
-		final Label catchBlockEnd = new Label();
 		mv.visitJumpInsn(Opcodes.GOTO, catchBlockEnd);
 
 		mv.visitLabel(catchBlock);

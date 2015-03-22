@@ -5,6 +5,7 @@
 package jcl.types;
 
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * A {@link TwoWayStream} is a bidirectional composite stream that receives its input from an associated input stream
@@ -44,6 +45,17 @@ public interface TwoWayStream extends Stream {
 			 */
 			private TwoWayStreamImpl() {
 				super("TWO-WAY-STREAM");
+			}
+
+			@Override
+			public int hashCode() {
+				return new HashCodeBuilder().appendSuper(super.hashCode())
+				                            .toHashCode();
+			}
+
+			@Override
+			public boolean equals(final Object obj) {
+				return (this == obj) || (obj instanceof TwoWayStream);
 			}
 		}
 	}

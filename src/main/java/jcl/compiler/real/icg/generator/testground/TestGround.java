@@ -9,7 +9,8 @@ import java.math.BigInteger;
 
 import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
-import jcl.compiler.old.exception.GoException;
+import jcl.compiler.real.icg.generator.specialoperator.TagbodyLabel;
+import jcl.compiler.real.icg.generator.specialoperator.exception.GoException;
 import jcl.compiler.real.icg.generator.specialoperator.exception.ReturnFromException;
 import jcl.compiler.real.icg.generator.specialoperator.exception.ThrowException;
 import jcl.lists.NullStruct;
@@ -20,6 +21,7 @@ import jcl.packages.PackageStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
+import org.objectweb.asm.Label;
 
 public class TestGround {
 
@@ -131,9 +133,9 @@ public class TestGround {
 
 	private Object goGen() {
 
-		final LispStruct tag = new CharacterStruct(97);
+		final int tagIndex = 1234413124;
 
-		throw new GoException(tag);
+		throw new GoException(tagIndex);
 	}
 
 	private Object symbolGen() {
@@ -154,5 +156,12 @@ public class TestGround {
 		symbol.setValue(value);
 
 		return value;
+	}
+
+	private int tagbodyGen() {
+
+		final TagbodyLabel tagbodyLabel = new TagbodyLabel(null, 20, new Label());
+		final int index = tagbodyLabel.getIndex();
+		return index;
 	}
 }

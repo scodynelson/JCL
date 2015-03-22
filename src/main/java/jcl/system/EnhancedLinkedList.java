@@ -126,13 +126,6 @@ public class EnhancedLinkedList<E> implements List<E>, Deque<E>, Serializable {
 		return linkedList.peekLast();
 	}
 
-	public List<E> getLastN(final int n) {
-		// Use peekLast so we can avoid hitting the NoSuchElementException. We don't want to hit this.
-		final int lastIndex = size() - 1;
-		final int firstElementIndex = lastIndex - n;
-		return subList(firstElementIndex, lastIndex);
-	}
-
 	@Override
 	public E peekFirst() {
 		return linkedList.peekFirst();
@@ -193,6 +186,13 @@ public class EnhancedLinkedList<E> implements List<E>, Deque<E>, Serializable {
 	@Override
 	public Iterator<E> descendingIterator() {
 		return linkedList.descendingIterator();
+	}
+
+	public List<E> getLastN(final int n) {
+		// Use peekLast so we can avoid hitting the NoSuchElementException. We don't want to hit this.
+		final int lastIndex = size() - 1;
+		final int firstElementIndex = lastIndex - n;
+		return subList(firstElementIndex, lastIndex);
 	}
 
 	@Override

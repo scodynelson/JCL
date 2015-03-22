@@ -4,7 +4,6 @@
 
 package jcl.types;
 
-import java.lang.*;
 import java.math.BigInteger;
 
 import jcl.types.typespecifiers.AndTypeSpecifier;

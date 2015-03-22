@@ -1,12 +1,12 @@
 package jcl.printer;
 
+import java.math.BigInteger;
+
 import jcl.numbers.IntegerStruct;
 import jcl.packages.PackageStruct;
 import jcl.symbols.Variable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.math.BigInteger;
 
 class NonNegNilVariable extends Variable<IntegerStruct> {
 

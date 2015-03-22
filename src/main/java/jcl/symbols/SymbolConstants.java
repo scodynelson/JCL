@@ -8,6 +8,6 @@ import jcl.packages.GlobalPackageStruct;
 
 public interface SymbolConstants {
 
-    Constant<NILStruct> NIL = new Constant<>("NIL", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);
-    Constant<TStruct> T = new Constant<>("T", GlobalPackageStruct.COMMON_LISP, TStruct.INSTANCE);
+	Constant<NILStruct> NIL = new Constant<>("NIL", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);
+	Constant<TStruct> T = new Constant<>("T", GlobalPackageStruct.COMMON_LISP, TStruct.INSTANCE);
 }

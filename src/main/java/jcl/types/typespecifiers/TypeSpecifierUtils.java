@@ -4,10 +4,10 @@
 
 package jcl.types.typespecifiers;
 
-import org.apache.commons.math3.fraction.BigFraction;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
+
+import org.apache.commons.math3.fraction.BigFraction;
 
 /**
  * A Utility class for handling common utilities for lisp type specifiers.

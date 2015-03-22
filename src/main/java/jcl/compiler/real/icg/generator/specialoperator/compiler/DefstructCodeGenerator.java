@@ -252,9 +252,9 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 
 	// Making FooStructImpl$Class.
 	private void icgCreateDefstructImplClass(final String name, final String[] interfaces,
-	                                                final SymbolStruct<?> lispName, final SymbolStruct<?>[] fields, final Object printer,
-	                                                final DefstructSymbolStruct includedStruct, final int includedSlotNumber,
-	                                                final JavaClassBuilder classBuilder) {
+	                                         final SymbolStruct<?> lispName, final SymbolStruct<?>[] fields, final Object printer,
+	                                         final DefstructSymbolStruct includedStruct, final int includedSlotNumber,
+	                                         final JavaClassBuilder classBuilder) {
 
 		final String implName = name + "Impl";
 		final String implFactoryName = name + "Impl$Factory";

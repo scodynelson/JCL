@@ -36,13 +36,19 @@ final class LambdaListParser {
 
 	// TODO: fix these!!!
 	private static final SymbolStruct<?> AND_OPTIONAL = GlobalPackageStruct.KEYWORD.intern("&OPTIONAL").getSymbol();
+
 	private static final SymbolStruct<?> AND_REST = GlobalPackageStruct.KEYWORD.intern("&REST").getSymbol();
+
 	private static final SymbolStruct<?> AND_KEY = GlobalPackageStruct.KEYWORD.intern("&KEY").getSymbol();
+
 	private static final SymbolStruct<?> AND_ALLOW_OTHER_KEYS = GlobalPackageStruct.KEYWORD.intern("&ALLOW-OTHER-KEYS").getSymbol();
+
 	private static final SymbolStruct<?> AND_AUX = GlobalPackageStruct.KEYWORD.intern("&AUX").getSymbol();
 
 	private static final SymbolStruct<?> AND_WHOLE = GlobalPackageStruct.KEYWORD.intern("&WHOLE").getSymbol();
+
 	private static final SymbolStruct<?> AND_BODY = GlobalPackageStruct.KEYWORD.intern("&BODY").getSymbol();
+
 	private static final SymbolStruct<?> AND_ENVIRONMENT = GlobalPackageStruct.KEYWORD.intern("&ENVIRONMENT").getSymbol();
 
 	private LambdaListParser() {
@@ -155,6 +161,17 @@ final class LambdaListParser {
 		}
 
 		return new RequiredParseResult(currentElement, currentPosition, requiredBindings);
+	}
+
+	private static boolean isLambdaListKeyword(final LispStruct lispStruct) {
+		return lispStruct.equals(AND_AUX)
+				|| lispStruct.equals(AND_ALLOW_OTHER_KEYS)
+				|| lispStruct.equals(AND_KEY)
+				|| lispStruct.equals(AND_OPTIONAL)
+				|| lispStruct.equals(AND_REST)
+				|| lispStruct.equals(AND_WHOLE)
+				|| lispStruct.equals(AND_ENVIRONMENT)
+				|| lispStruct.equals(AND_BODY);
 	}
 
 	private static OptionalParseResult parseOptionalBindings(final FormAnalyzer formAnalyzer, final Environment environment,
@@ -512,6 +529,7 @@ final class LambdaListParser {
 	private static class ParseResult {
 
 		private final LispStruct currentElement;
+
 		private final int currentPosition;
 
 		ParseResult(final LispStruct currentElement, final int currentPosition) {
@@ -694,6 +712,7 @@ final class LambdaListParser {
 	private static final class KeyParseResult extends ParseResult {
 
 		private final List<KeyBinding> keyBindings;
+
 		private final boolean allowOtherKeys;
 
 		private KeyParseResult(final LispStruct currentElement, final int currentPosition, final List<KeyBinding> keyBindings,
@@ -787,20 +806,5 @@ final class LambdaListParser {
 			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(auxBindings)
 			                                                                .toString();
 		}
-	}
-
-	/*
-	 * UTILITY METHODS
-	 */
-
-	private static boolean isLambdaListKeyword(final LispStruct lispStruct) {
-		return lispStruct.equals(AND_AUX)
-				|| lispStruct.equals(AND_ALLOW_OTHER_KEYS)
-				|| lispStruct.equals(AND_KEY)
-				|| lispStruct.equals(AND_OPTIONAL)
-				|| lispStruct.equals(AND_REST)
-				|| lispStruct.equals(AND_WHOLE)
-				|| lispStruct.equals(AND_ENVIRONMENT)
-				|| lispStruct.equals(AND_BODY);
 	}
 }

@@ -148,7 +148,7 @@ public class FormAnalyzerImpl implements FormAnalyzer {
 	}
 
 	private static void validateFunctionArguments(final String functionName, final OrdinaryLambdaListBindings lambdaListBindings,
-	                                                final List<LispStruct> functionArguments) {
+	                                              final List<LispStruct> functionArguments) {
 
 		final Iterator<LispStruct> functionArgumentsIterator = functionArguments.iterator();
 

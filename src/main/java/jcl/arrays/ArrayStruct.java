@@ -141,6 +141,17 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	}
 
 	/**
+	 * Calculates and updates the {@link #totalSize} of the array based on the {@link
+	 * #dimensions} property.
+	 */
+	private void updateTotalSize() {
+		totalSize = 0;
+		for (final Integer dimension : dimensions) {
+			totalSize += dimension;
+		}
+	}
+
+	/**
 	 * Getter for array {@link #contents} property.
 	 *
 	 * @return array {@link #contents} property
@@ -270,17 +281,6 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 			contents.add(null);
 		}
 		contents.set(index, newValue);
-	}
-
-	/**
-	 * Calculates and updates the {@link #totalSize} of the array based on the {@link
-	 * #dimensions} property.
-	 */
-	private void updateTotalSize() {
-		totalSize = 0;
-		for (final Integer dimension : dimensions) {
-			totalSize += dimension;
-		}
 	}
 
 	@Override

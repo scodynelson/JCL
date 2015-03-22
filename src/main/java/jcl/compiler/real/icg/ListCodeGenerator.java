@@ -120,10 +120,6 @@ public class ListCodeGenerator implements CodeGenerator<ListStruct> {
 		}
 	}
 
-	private static boolean formOptimizable(final ListStruct list) {
-		return list.getFirst().equals(GlobalPackageStruct.COMMON_LISP.intern("EQ").getSymbol());
-	}
-
 	private void genOptimizedForm(final ListStruct list, final JavaClassBuilder classBuilder) {
 		final SymbolStruct<?> sym = (SymbolStruct) list.getFirst();
 		if (sym.equals(GlobalPackageStruct.COMMON_LISP.intern("EQ").getSymbol())) {
@@ -144,5 +140,9 @@ public class ListCodeGenerator implements CodeGenerator<ListStruct> {
 			classBuilder.getEmitter().emitGetstatic("lisp/common/type/Boolean", "T", "Llisp/common/type/Symbol;");
 			classBuilder.getEmitter().visitMethodLabel(endLabel);
 		}
+	}
+
+	private static boolean formOptimizable(final ListStruct list) {
+		return list.getFirst().equals(GlobalPackageStruct.COMMON_LISP.intern("EQ").getSymbol());
 	}
 }

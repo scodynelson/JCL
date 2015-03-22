@@ -4,14 +4,14 @@
 
 package jcl.numbers;
 
+import java.math.BigDecimal;
+
 import jcl.types.Float;
 import jcl.types.SingleFloat;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.math.BigDecimal;
 
 /**
  * The {@link FloatStruct} is the object representation of a Lisp 'float' type.

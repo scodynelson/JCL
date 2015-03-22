@@ -4,14 +4,14 @@
 
 package jcl.numbers;
 
+import java.math.BigInteger;
+
 import jcl.types.Ratio;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.math3.fraction.BigFraction;
-
-import java.math.BigInteger;
 
 /**
  * The {@link RatioStruct} is the object representation of a Lisp 'ratio' type.
@@ -31,17 +31,6 @@ public class RatioStruct extends RationalStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param bigFraction
-	 * 		the value of the RatioStruct
-	 */
-	public RatioStruct(final BigFraction bigFraction) {
-		super(Ratio.INSTANCE, null, null);
-		this.bigFraction = bigFraction;
-	}
-
-	/**
-	 * Public constructor.
-	 *
 	 * @param numerator
 	 * 		the numerator value of the RatioStruct
 	 * @param denominator
@@ -49,6 +38,17 @@ public class RatioStruct extends RationalStruct {
 	 */
 	public RatioStruct(final BigInteger numerator, final BigInteger denominator) {
 		this(new BigFraction(numerator, denominator));
+	}
+
+	/**
+	 * Public constructor.
+	 *
+	 * @param bigFraction
+	 * 		the value of the RatioStruct
+	 */
+	public RatioStruct(final BigFraction bigFraction) {
+		super(Ratio.INSTANCE, null, null);
+		this.bigFraction = bigFraction;
 	}
 
 	/**

@@ -15,7 +15,9 @@ import org.objectweb.asm.Label;
 public class TagbodyLabel {
 
 	private final SymbolStruct<?> symbol;
+
 	private final Label label;
+
 	private final int index;
 
 	public TagbodyLabel(final SymbolStruct<?> symbol, final Label label, final int index) {

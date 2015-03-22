@@ -33,8 +33,8 @@ public interface Reader extends Serializable {
 	LispStruct read(boolean eofErrorP, LispStruct eofValue, boolean recursiveP);
 
 	/**
-	 * Reads the next {@link LispStruct} from the {@link InputStream}, making sure to preserve any whitespace characters
-	 * after the {@link LispStruct} token is read.
+	 * Reads the next {@link LispStruct} from the {@link InputStream}, making sure to preserve any whitespace
+	 * characters after the {@link LispStruct} token is read.
 	 *
 	 * @param eofErrorP
 	 * 		whether or not to throw an error when an End-Of-File is reached

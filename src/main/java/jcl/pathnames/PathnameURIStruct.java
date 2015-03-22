@@ -4,9 +4,6 @@
 
 package jcl.pathnames;
 
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
@@ -15,6 +12,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
+
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * The {@link PathnameURIStruct} is the uri-type object representation of a Lisp 'pathname' type.

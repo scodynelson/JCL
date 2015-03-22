@@ -4,9 +4,9 @@
 
 package jcl;
 
-import jcl.types.T;
-
 import java.io.Serializable;
+
+import jcl.types.T;
 
 /**
  * The {@link LispStruct} is the representation for all Lisp types.

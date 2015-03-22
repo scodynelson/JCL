@@ -1,10 +1,10 @@
 package jcl.classes;
 
+import java.util.List;
+
 import jcl.LispStruct;
 import jcl.LispType;
 import jcl.types.BuiltInClass;
-
-import java.util.List;
 
 /**
  * The {@link BuiltInClassStruct} is the object representation of a Lisp 'built-in-class' type.
@@ -52,7 +52,7 @@ public abstract class BuiltInClassStruct extends ClassStruct {
 	 */
 	protected BuiltInClassStruct(final LispType type,
 	                             final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
-		super(null, type, directSuperClasses, subClasses);
+		this(null, type, directSuperClasses, subClasses);
 	}
 
 	/**

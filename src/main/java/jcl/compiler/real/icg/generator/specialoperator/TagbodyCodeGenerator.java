@@ -171,23 +171,23 @@ public class TagbodyCodeGenerator implements CodeGenerator<ListStruct> {
 		return tagStack;
 	}
 
-	private static TagbodyLabel findTagbodyBySymbol(final Stack<TagbodyLabel> stack, final SymbolStruct<?> symbol) {
-		int size = stack.size();
-		while (size-- > 0) {
-			final TagbodyLabel tbl = stack.get(size);
-			if (tbl.getSymbol().equals(symbol)) {
-				return tbl;
-			}
-		}
-		return null;
-	}
-
 	public static TagbodyLabel findTagbodyInStack(final Stack<Stack<TagbodyLabel>> stack, final SymbolStruct<?> symbol) {
 		int size = stack.size();
 		while (size-- > 0) {
 			final Stack<TagbodyLabel> tbs = stack.get(size);
 			final TagbodyLabel tbl = findTagbodyBySymbol(tbs, symbol);
 			if (tbl != null) {
+				return tbl;
+			}
+		}
+		return null;
+	}
+
+	private static TagbodyLabel findTagbodyBySymbol(final Stack<TagbodyLabel> stack, final SymbolStruct<?> symbol) {
+		int size = stack.size();
+		while (size-- > 0) {
+			final TagbodyLabel tbl = stack.get(size);
+			if (tbl.getSymbol().equals(symbol)) {
 				return tbl;
 			}
 		}

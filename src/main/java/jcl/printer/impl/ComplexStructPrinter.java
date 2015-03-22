@@ -6,8 +6,8 @@ package jcl.printer.impl;
 
 import jcl.numbers.ComplexStruct;
 import jcl.numbers.RealStruct;
-import jcl.printer.Printer;
 import jcl.printer.LispPrinter;
+import jcl.printer.Printer;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -31,7 +31,7 @@ public class ComplexStructPrinter implements LispPrinter<ComplexStruct> {
 		final RealStruct imaginary = object.getImaginary();
 		final String printedImaginary = printer.print(imaginary);
 
-		return "#C(" +printedReal + ' ' + printedImaginary + ')';
+		return "#C(" + printedReal + ' ' + printedImaginary + ')';
 	}
 
 	@Override

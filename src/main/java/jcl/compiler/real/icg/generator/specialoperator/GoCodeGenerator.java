@@ -2,8 +2,8 @@ package jcl.compiler.real.icg.generator.specialoperator;
 
 import jcl.LispStruct;
 import jcl.compiler.real.icg.ClassDef;
-import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.struct.specialoperator.go.GoStruct;
 import jcl.lists.ListStruct;

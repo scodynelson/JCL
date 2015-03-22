@@ -4,6 +4,9 @@
 
 package jcl.streams;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 import jcl.LispType;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.types.BroadcastStream;
@@ -12,9 +15,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.util.ArrayDeque;
-import java.util.Deque;
 
 /**
  * The {@link BroadcastStreamStruct} is the object representation of a Lisp 'broadcast-stream' type.

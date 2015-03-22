@@ -35,16 +35,6 @@ public class PackageStruct extends BuiltInClassStruct {
 	private static final long serialVersionUID = -1802514718401723443L;
 
 	/**
-	 * The name of package.
-	 */
-	private String name;
-
-	/**
-	 * The {@link List} of nicknames of the package.
-	 */
-	private List<String> nicknames;
-
-	/**
 	 * The {@link Set} of {@link PackageStruct}s that the package uses.
 	 */
 	private final Set<PackageStruct> useList;
@@ -72,6 +62,16 @@ public class PackageStruct extends BuiltInClassStruct {
 	 * ShadowingSymbols are in InternalSymbols but not vice-versa)
 	 */
 	private final Map<String, SymbolStruct<?>> shadowingSymbols = new ConcurrentHashMap<>();
+
+	/**
+	 * The name of package.
+	 */
+	private String name;
+
+	/**
+	 * The {@link List} of nicknames of the package.
+	 */
+	private List<String> nicknames;
 
 	/**
 	 * Public constructor.
@@ -631,12 +631,12 @@ public class PackageStruct extends BuiltInClassStruct {
 		return new HashCodeBuilder().appendSuper(super.hashCode())
 		                            .append(name)
 		                            .append(nicknames)
+		                            .toHashCode();
 //		                            .append(useList)
 //		                            .append(usedByList)
 //		                            .append(externalSymbols)
 //		                            .append(internalSymbols)
 //		                            .append(shadowingSymbols)
-		                            .toHashCode();
 	}
 
 	@Override
@@ -654,23 +654,23 @@ public class PackageStruct extends BuiltInClassStruct {
 		return new EqualsBuilder().appendSuper(super.equals(obj))
 		                          .append(name, rhs.name)
 		                          .append(nicknames, rhs.nicknames)
+		                          .isEquals();
 //		                          .append(useList, rhs.useList)
 //		                          .append(usedByList, rhs.usedByList)
 //		                          .append(externalSymbols, rhs.externalSymbols)
 //		                          .append(internalSymbols, rhs.internalSymbols)
 //		                          .append(shadowingSymbols, rhs.shadowingSymbols)
-		                          .isEquals();
 	}
 
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(name)
 		                                                                .append(nicknames)
+		                                                                .toString();
 //		                                                                .append(useList)
 //		                                                                .append(usedByList)
 //		                                                                .append(externalSymbols)
 //		                                                                .append(internalSymbols)
 //		                                                                .append(shadowingSymbols)
-		                                                                .toString();
 	}
 }

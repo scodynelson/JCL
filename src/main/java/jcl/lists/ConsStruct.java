@@ -1,16 +1,16 @@
 package jcl.lists;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import jcl.LispStruct;
 import jcl.types.Cons;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * The {@link ConsStruct} is the object representation of a Lisp 'cons' type.
@@ -20,6 +20,7 @@ public class ConsStruct extends ListStruct {
 	private static final long serialVersionUID = 4871665353563364787L;
 
 	private LispStruct car;
+
 	private LispStruct cdr;
 
 	/**
@@ -95,30 +96,6 @@ public class ConsStruct extends ListStruct {
 	}
 
 	@Override
-	public LispStruct getElement(final int index) {
-		if (index == 0) {
-			return car;
-		} else if (cdr instanceof ListStruct) {
-			final ListStruct cdrAsList = (ListStruct) cdr;
-			return cdrAsList.getElement(index - 1);
-		} else {
-			return cdr;
-		}
-	}
-
-	@Override
-	public void setElement(final int index, final LispStruct newValue) {
-		if (index == 0) {
-			car = newValue;
-		} else if (cdr instanceof ListStruct) {
-			final ListStruct cdrAsList = (ListStruct) cdr;
-			cdrAsList.setElement(index - 1, newValue);
-		} else {
-			cdr = newValue;
-		}
-	}
-
-	@Override
 	public LispStruct getFirst() {
 		return car;
 	}
@@ -146,16 +123,27 @@ public class ConsStruct extends ListStruct {
 	}
 
 	@Override
-	public List<LispStruct> getAsJavaList() {
-		final List<LispStruct> javaList = new ArrayList<>();
-		javaList.add(car);
-		if (cdr instanceof ListStruct) {
+	public LispStruct getElement(final int index) {
+		if (index == 0) {
+			return car;
+		} else if (cdr instanceof ListStruct) {
 			final ListStruct cdrAsList = (ListStruct) cdr;
-			javaList.addAll(cdrAsList.getAsJavaList());
+			return cdrAsList.getElement(index - 1);
 		} else {
-			javaList.add(cdr);
+			return cdr;
 		}
-		return javaList;
+	}
+
+	@Override
+	public void setElement(final int index, final LispStruct newValue) {
+		if (index == 0) {
+			car = newValue;
+		} else if (cdr instanceof ListStruct) {
+			final ListStruct cdrAsList = (ListStruct) cdr;
+			cdrAsList.setElement(index - 1, newValue);
+		} else {
+			cdr = newValue;
+		}
 	}
 
 	@Override
@@ -173,6 +161,19 @@ public class ConsStruct extends ListStruct {
 		conses.add(this);
 
 		return innerIsCircular(this, conses);
+	}
+
+	@Override
+	public List<LispStruct> getAsJavaList() {
+		final List<LispStruct> javaList = new ArrayList<>();
+		javaList.add(car);
+		if (cdr instanceof ListStruct) {
+			final ListStruct cdrAsList = (ListStruct) cdr;
+			javaList.addAll(cdrAsList.getAsJavaList());
+		} else {
+			javaList.add(cdr);
+		}
+		return javaList;
 	}
 
 	/**

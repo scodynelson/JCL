@@ -165,7 +165,7 @@ public class Environment extends StandardObjectStruct {
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder().appendSuper(super.hashCode())
-//		                            .append(parent)
+		                            .append(parent)
 		                            .append(lexicalBindings)
 		                            .append(dynamicBindings)
 		                            .append(symbolTable)
@@ -193,7 +193,7 @@ public class Environment extends StandardObjectStruct {
 		}
 		final Environment rhs = (Environment) obj;
 		return new EqualsBuilder().appendSuper(super.equals(obj))
-//		                          .append(parent, rhs.parent)
+		                          .append(parent, rhs.parent)
 		                          .append(lexicalBindings, rhs.lexicalBindings)
 		                          .append(dynamicBindings, rhs.dynamicBindings)
 		                          .append(symbolTable, rhs.symbolTable)
@@ -211,7 +211,7 @@ public class Environment extends StandardObjectStruct {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(lexicalBindings)
-//		                                                                .append(parent)
+		                                                                .append(parent)
 		                                                                .append(dynamicBindings)
 		                                                                .append(symbolTable)
 		                                                                .append(closure)

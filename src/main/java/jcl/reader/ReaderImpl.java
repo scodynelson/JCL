@@ -138,21 +138,6 @@ class ReaderImpl implements Reader {
 	}
 
 	@Override
-	public int getBackquoteLevel() {
-		return backquoteLevel;
-	}
-
-	@Override
-	public void incrementBackquoteLevel() {
-		backquoteLevel++;
-	}
-
-	@Override
-	public void decrementBackquoteLevel() {
-		backquoteLevel--;
-	}
-
-	@Override
 	public Map<BigInteger, LispStruct> getSharpEqualFinalTable() {
 		return sharpEqualFinalTable;
 	}
@@ -165,6 +150,21 @@ class ReaderImpl implements Reader {
 	@Override
 	public Map<SymbolStruct<?>, LispStruct> getSharpEqualReplTable() {
 		return sharpEqualReplTable;
+	}
+
+	@Override
+	public int getBackquoteLevel() {
+		return backquoteLevel;
+	}
+
+	@Override
+	public void incrementBackquoteLevel() {
+		backquoteLevel++;
+	}
+
+	@Override
+	public void decrementBackquoteLevel() {
+		backquoteLevel--;
 	}
 
 	@Override

@@ -1,12 +1,12 @@
 package jcl.compiler.real.icg.generator.specialoperator;
 
+import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
+import jcl.compiler.real.icg.generator.SpecialVariableCodeGenerator;
 import jcl.compiler.real.icg.generator.simple.ComplexCodeGenerator;
 import jcl.compiler.real.icg.generator.simple.FloatCodeGenerator;
 import jcl.compiler.real.icg.generator.simple.IntegerCodeGenerator;
-import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.simple.RatioCodeGenerator;
-import jcl.compiler.real.icg.generator.SpecialVariableCodeGenerator;
 import jcl.lists.ListStruct;
 import jcl.numbers.FloatStruct;
 import jcl.numbers.IntegerStruct;

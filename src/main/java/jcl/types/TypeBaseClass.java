@@ -4,11 +4,11 @@
 
 package jcl.types;
 
+import java.lang.String;
+
 import jcl.LispType;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.SymbolStruct;
-
-import java.lang.String;
 
 /**
  * Abstract base class for all {@link LispType} implementations.

@@ -59,7 +59,7 @@ public class SpecialSymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>
 	}
 
 	private static Optional<SymbolLocalBinding> getSymbolTableEntry(final Environment currentEnvironment,
-	                                                               final SymbolStruct<?> variable) {
+	                                                                final SymbolStruct<?> variable) {
 
 		// look up the symbol in the symbol table
 		final SymbolTable symTable = currentEnvironment.getSymbolTable();

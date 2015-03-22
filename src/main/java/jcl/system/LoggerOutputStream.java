@@ -1,20 +1,23 @@
 package jcl.system;
 
+import java.io.OutputStream;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
-
-import java.io.OutputStream;
 
 public class LoggerOutputStream extends OutputStream {
 
 	private final Logger logger;
+
 	private LogLevel logLevel;
+
 	private String mem;
 
 	/**
 	 * Creates a new log output stream which logs bytes to the specified logger with the specified level.
 	 *
-	 * @param logger the logger where to log the written bytes
+	 * @param logger
+	 * 		the logger where to log the written bytes
 	 */
 	public LoggerOutputStream(final Logger logger) {
 		this(logger, LogLevel.INFO);
@@ -23,8 +26,10 @@ public class LoggerOutputStream extends OutputStream {
 	/**
 	 * Creates a new log output stream which logs bytes to the specified logger with the specified level.
 	 *
-	 * @param logger   the logger where to log the written bytes
-	 * @param logLevel the level
+	 * @param logger
+	 * 		the logger where to log the written bytes
+	 * @param logLevel
+	 * 		the level
 	 */
 	public LoggerOutputStream(final Logger logger, final LogLevel logLevel) {
 		if (logger == null) {
@@ -47,7 +52,8 @@ public class LoggerOutputStream extends OutputStream {
 	/**
 	 * Sets the logging level.
 	 *
-	 * @param logLevel the log level to use
+	 * @param logLevel
+	 * 		the log level to use
 	 */
 	public void setLevel(final LogLevel logLevel) {
 		this.logLevel = logLevel;

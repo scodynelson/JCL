@@ -11,28 +11,37 @@ import jcl.lists.ListStruct;
 
 public class JavaClassBuilder {
 
+	private final List<ClassDef> classes = Collections.synchronizedList(new ArrayList<>());
+
+	private final Stack<ClassDef> classStack = new Stack<>();
+
 	// this is the current binding environment. It always matches the value
 	// on top of the binding stack
 	private Environment bindingEnvironment;
+
 	// Whenever a binding environment is encountered, it is pushed on the stack and
 	// bindingEnvironment is set to the new environment. When that binding is no
 	// longer in force, the stack is popped and the value of bindingEnvironment is
 	// set to the new top of stack
 	private Stack<Environment> bindingStack;
+
 	// make a stack of current class names
 	private Stack<String> classNames;
+
 	private NewEmitter emitter;
+
 	private boolean allowMultipleValues;
+
 	private Stack<Stack<TagbodyLabel>> tagbodyStack;
+
 	private ListStruct sourceFile;
+
 	private int LineNumber;
 
 	private int tagCounter;
 
 	private boolean MacroLambda;
 
-	private final List<ClassDef> classes = Collections.synchronizedList(new ArrayList<>());
-	private final Stack<ClassDef> classStack = new Stack<>();
 	private ClassDef currentClass;
 
 	public JavaClassBuilder() {

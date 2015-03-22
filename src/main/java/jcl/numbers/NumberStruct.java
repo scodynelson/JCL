@@ -4,11 +4,11 @@
 
 package jcl.numbers;
 
+import java.util.List;
+
 import jcl.LispStruct;
 import jcl.classes.BuiltInClassStruct;
 import jcl.types.Number;
-
-import java.util.List;
 
 /**
  * The {@link NumberStruct} is the object representation of a Lisp 'number' type.
@@ -43,7 +43,7 @@ public class NumberStruct extends BuiltInClassStruct {
 	 * 		the subclasses
 	 */
 	NumberStruct(final Number type,
-	                       final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+	             final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
 		super(type, directSuperClasses, subClasses);
 	}
 }

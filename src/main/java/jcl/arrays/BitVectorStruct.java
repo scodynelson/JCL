@@ -21,6 +21,7 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 	private static final long serialVersionUID = -5044373666080325007L;
 
 	private static final IntegerStruct ZERO = new IntegerStruct(BigInteger.ZERO);
+
 	private static final IntegerStruct ONE = new IntegerStruct(BigInteger.ONE);
 
 	private static final Pattern BIT_PATTERN = Pattern.compile("[0|1]+");

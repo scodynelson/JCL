@@ -14,14 +14,23 @@ final class StreamUtils {
 
 	// TODO: The following should probably go into a properties file...
 	static final String END_OF_FILE_REACHED = "End of file reached.";
+
 	static final String FAILED_TO_READ_BYTE = "Failed to read next byte.";
+
 	static final String FAILED_TO_READ_CHAR = "Failed to read next character.";
+
 	static final String FAILED_TO_PEEK_CHAR = "Failed to peek at next character.";
+
 	static final String FAILED_TO_UNREAD_CHAR = "Failed to unread previous character.";
+
 	static final String FAILED_TO_WRITE_BYTE = "Failed to write byte.";
+
 	static final String FAILED_TO_WRITE_CHAR = "Failed to write character.";
+
 	static final String FAILED_TO_WRITE_STRING = "Failed to write string.";
+
 	static final String OPERATION_ONLY_FILE_STREAM = "Operation only supported on a FileStream.";
+
 	static final String OPERATION_ONLY_BINARY_STREAM = "Operation only supported for BinaryStreams.";
 
 	/**

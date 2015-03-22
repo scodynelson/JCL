@@ -4,8 +4,6 @@
 
 package jcl.types;
 
-import java.lang.*;
-
 import jcl.types.typespecifiers.AndTypeSpecifier;
 import jcl.types.typespecifiers.AtomicTypeSpecifier;
 import jcl.types.typespecifiers.NotTypeSpecifier;

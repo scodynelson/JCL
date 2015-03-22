@@ -4,20 +4,20 @@
 
 package jcl.printer.impl;
 
+import java.util.List;
+
 import jcl.LispStruct;
 import jcl.LispType;
 import jcl.arrays.VectorStruct;
+import jcl.printer.LispPrinter;
 import jcl.printer.Printer;
 import jcl.printer.PrinterVariables;
-import jcl.printer.LispPrinter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 public class VectorStructPrinter<TYPE extends LispStruct> implements LispPrinter<VectorStruct<TYPE>> {

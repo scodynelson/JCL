@@ -37,10 +37,32 @@ public class NewEmitter {
 	private static final int classVersion = 52; //TODO: 52 == Java 8, 51 == Java 7, 50 == Java 6
 
 	private final List<ClassDef> classes = Collections.synchronizedList(new ArrayList<>());
+
 	private final Stack<ClassDef> classStack = new Stack<>();
+
 	private ClassDef currentClass;
 
 /*****************************************************************************/
+
+	public static void checkClass(final ClassDef classDef) {
+		checkClass(classDef.getClassWriter().toByteArray());
+	}
+
+	private static void checkClass(final byte[] classBytes) {
+		final ClassReader cr = new ClassReader(classBytes);
+		final CheckClassAdapter cca = new CheckClassAdapter(new EmptyVisitor());
+		cr.accept(cca, 0); //ClassReader.EXPAND_FRAMES);
+	}
+
+	public static void disassemble(final byte[] classBytes) {
+		disassemble(classBytes, new PrintWriter(System.out));
+	}
+
+	private static void disassemble(final byte[] classBytes, final PrintWriter out) {
+		final ClassReader cr = new ClassReader(classBytes);
+		final TraceClassVisitor tcv = new TraceClassVisitor(out);
+		cr.accept(tcv, 0); //ClassReader.EXPAND_FRAMES);
+	}
 
 	/**
 	 * Emitter method for Java function GET-CLASSES and class for Lisp
@@ -56,11 +78,16 @@ public class NewEmitter {
 	 * Emitter method for Java function NEW-CLASS and class for Lisp
 	 * function for new Lisp compiler.
 	 *
-	 * @param access     integer access
-	 * @param name       String name
-	 * @param signature  String signature
-	 * @param superName  String superName
-	 * @param interfaces String[] interfaces
+	 * @param access
+	 * 		integer access
+	 * @param name
+	 * 		String name
+	 * @param signature
+	 * 		String signature
+	 * @param superName
+	 * 		String superName
+	 * @param interfaces
+	 * 		String[] interfaces
 	 */
 	public void newClass(final int access, final String name, final String signature, final String superName, final String[] interfaces) {
 		currentClass = new ClassDef(name);
@@ -73,8 +100,10 @@ public class NewEmitter {
 	/**
 	 * Emitter method for Java visiting the source.
 	 *
-	 * @param sourceFileName String sourceFileName
-	 * @param debug          String debug
+	 * @param sourceFileName
+	 * 		String sourceFileName
+	 * @param debug
+	 * 		String debug
 	 */
 	public void visitClassSource(final String sourceFileName, final String debug) {
 		currentClass.getClassWriter().visitSource(sourceFileName, debug);
@@ -84,13 +113,22 @@ public class NewEmitter {
 	 * Emitter method for Java function ADD-OUTER-CLASS and class for Lisp
 	 * function for new Lisp compiler.
 	 *
-	 * @param owner String owner
-	 * @param name  String name
-	 * @param desc  String desc
+	 * @param owner
+	 * 		String owner
+	 * @param name
+	 * 		String name
+	 * @param desc
+	 * 		String desc
 	 */
 	public void addOuterClass(final String owner, final String name, final String desc) {
 		currentClass.getClassWriter().visitOuterClass(owner, name, desc);
 	}
+
+	/*
+	 *****************
+	 * FIELD
+	 *****************
+	 */
 
 	public void visitClassAttribute(final Attribute attr) {
 		currentClass.getClassWriter().visitAttribute(attr);
@@ -100,10 +138,14 @@ public class NewEmitter {
 	 * Emitter method for Java function ADD-INNER-CLASS and class for Lisp
 	 * function for new Lisp compiler.
 	 *
-	 * @param name      String name
-	 * @param outerName String outerName
-	 * @param innerName String innerName
-	 * @param access    Java integer access
+	 * @param name
+	 * 		String name
+	 * @param outerName
+	 * 		String outerName
+	 * @param innerName
+	 * 		String innerName
+	 * @param access
+	 * 		Java integer access
 	 */
 	public void addInnerClass(final String name, final String outerName, final String innerName, final int access) {
 		currentClass.getClassWriter().visitInnerClass(name, outerName, innerName, access);
@@ -139,26 +181,30 @@ public class NewEmitter {
 		return classStack.isEmpty();
 	}
 
-	/*
-	 *****************
-	 * FIELD
-	 *****************
-	 */
-
-
 	/**
 	 * Emitter method for Java function ADD-FIELD and class for Lisp
 	 * function for new Lisp compiler.
 	 *
-	 * @param access    Java Integer access
-	 * @param name      String name
-	 * @param desc      String desc
-	 * @param signature String signature
-	 * @param value     Object value
+	 * @param access
+	 * 		Java Integer access
+	 * @param name
+	 * 		String name
+	 * @param desc
+	 * 		String desc
+	 * @param signature
+	 * 		String signature
+	 * @param value
+	 * 		Object value
 	 */
 	public void newField(final int access, final String name, final String desc, final String signature, final Object value) {
 		currentClass.setFieldVisitor(currentClass.getClassWriter().visitField(access, name, desc, signature, value));
 	}
+	
+	/*
+	 *****************
+	 * ANNOTATION
+	 *****************
+	 */
 
 	/**
 	 * Emitter method for Java function END-FIELD and class for Lisp
@@ -188,19 +234,15 @@ public class NewEmitter {
 	public void visitFieldAttribute(final Attribute attr) {
 		currentClass.getFieldVisitor().visitAttribute(attr);
 	}
-	
-	/*
-	 *****************
-	 * ANNOTATION
-	 *****************
-	 */
 
 	/**
 	 * Emitter method for Java function NEW-ANNOTATION and class for Lisp
 	 * function for new Lisp compiler.
 	 *
-	 * @param name String name
-	 * @param visible visible
+	 * @param name
+	 * 		String name
+	 * @param visible
+	 * 		visible
 	 */
 	public void newAnnotation(final String name, final boolean visible) {
 		currentClass.setAnnotationVisitor(currentClass.getClassWriter().visitAnnotation(name, visible));
@@ -209,10 +251,15 @@ public class NewEmitter {
 	/**
 	 * Emitter method for Java function NEW-TYPE-ANNOTATION and class for Lisp
 	 * function for new Lisp compiler.
-	 * @param typeRef typeRef
-	 * @param typePath typePath
-	 * @param desc desc
-	 * @param visible visible
+	 *
+	 * @param typeRef
+	 * 		typeRef
+	 * @param typePath
+	 * 		typePath
+	 * @param desc
+	 * 		desc
+	 * @param visible
+	 * 		visible
 	 */
 	public void newTypeAnnotation(final int typeRef, final TypePath typePath, final String desc, final boolean visible) {
 		currentClass.setAnnotationVisitor(currentClass.getClassWriter().visitTypeAnnotation(typeRef, typePath, desc, visible));
@@ -235,12 +282,20 @@ public class NewEmitter {
 		currentClass.setAnnotationVisitor(null);
 	}
 
+	/*
+	 *****************
+	 * METHOD
+	 *****************
+	 */
+
 	/**
 	 * Emitter method for Java function EMIT-ANNOTATION-FIELD and class for Lisp
 	 * function for new Lisp compiler.
 	 *
-	 * @param name  String fieldName
-	 * @param value Object fieldValue
+	 * @param name
+	 * 		String fieldName
+	 * @param value
+	 * 		Object fieldValue
 	 */
 	public void visitAnnotationValue(final String name, final Object value) {
 		final String finalFieldValue = value.toString(); // TODO: why are we doing a .toString() here???
@@ -259,22 +314,22 @@ public class NewEmitter {
 		currentClass.getAnnotationVisitor().visitArray(name);
 	}
 
-	/*
-	 *****************
-	 * METHOD
-	 *****************
-	 */
-
 	/**
 	 * Emitter method for Java function NEW-METHOD and class for Lisp
 	 * function for new Lisp compiler.
 	 *
-	 * @param name       String name
-	 * @param access     Java integer accessFlags
-	 * @param paramDesc  String paramType
-	 * @param returnDesc String returnType
-	 * @param signature  String signature
-	 * @param exceptions String[] exceptions
+	 * @param name
+	 * 		String name
+	 * @param access
+	 * 		Java integer accessFlags
+	 * @param paramDesc
+	 * 		String paramType
+	 * @param returnDesc
+	 * 		String returnType
+	 * @param signature
+	 * 		String signature
+	 * @param exceptions
+	 * 		String[] exceptions
 	 */
 	public void newMethod(final int access, final String name, final String paramDesc, final String returnDesc, final String signature, final String[] exceptions) {
 		final MethodVisitor mv = currentClass.getClassWriter().visitMethod(access, name, paramDesc + returnDesc, signature, exceptions);
@@ -314,7 +369,8 @@ public class NewEmitter {
 	 * Emitter method for Java function EMIT-LABEL and class for Lisp
 	 * function for new Lisp compiler.
 	 *
-	 * @param label Label arg1
+	 * @param label
+	 * 		Label arg1
 	 */
 	public void visitMethodLabel(final Label label) {
 		currentClass.getMethodVisitor().visitLabel(label);
@@ -328,10 +384,14 @@ public class NewEmitter {
 	 * Emitter method for Java function ADD-CATCH and class for Lisp
 	 * function for new Lisp compiler.
 	 *
-	 * @param start   Label start
-	 * @param end     Label end
-	 * @param handler Label handler
-	 * @param type    String type
+	 * @param start
+	 * 		Label start
+	 * @param end
+	 * 		Label end
+	 * @param handler
+	 * 		Label handler
+	 * @param type
+	 * 		String type
 	 */
 	public void visitTryCatchBlock(final Label start, final Label end, final Label handler, final String type) {
 		currentClass.getMethodVisitor().visitTryCatchBlock(start, end, handler, type);
@@ -340,6 +400,16 @@ public class NewEmitter {
 	public void visitTryCatchAnnotation(final int typeRef, final TypePath typePath, final String desc, final boolean visible) {
 		currentClass.getMethodVisitor().visitTryCatchAnnotation(typeRef, typePath, desc, visible);
 	}
+
+	// -------------------------------------------------------------------------
+	// Parameters, annotations and non standard attributes
+	// -------------------------------------------------------------------------
+
+/*******************************************************************************
+ * The following methods are the emit statments for the individual bytecodes.
+ * Each method is followed by its Lisp function needed for the new Lisp
+ * compiler to be written.
+ *******************************************************************************/
 
 	public void visitLocalVariable(final String name, final String desc, final String signature, final Label start,
 	                               final Label end, final int index) {
@@ -373,16 +443,6 @@ public class NewEmitter {
 		currentClass.setMethodVisitor(null);
 	}
 
-	// -------------------------------------------------------------------------
-	// Parameters, annotations and non standard attributes
-	// -------------------------------------------------------------------------
-
-/*******************************************************************************
- * The following methods are the emit statments for the individual bytecodes.
- * Each method is followed by its Lisp function needed for the new Lisp
- * compiler to be written.
- *******************************************************************************/
-
 	/**
 	 * Emitter method for Java opcode AALOAD and Lisp function for new Lisp
 	 * compiler to access Java code.
@@ -411,7 +471,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode ALOAD and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param var Java integer
+	 * @param var
+	 * 		Java integer
 	 */
 	public void emitAload(final int var) {
 		currentClass.getMethodVisitor().visitVarInsn(Opcodes.ALOAD, var);
@@ -421,7 +482,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode ANEWARRAY and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param type Java String
+	 * @param type
+	 * 		Java String
 	 */
 	public void emitAnewarray(final String type) {
 		currentClass.getMethodVisitor().visitTypeInsn(Opcodes.ANEWARRAY, type);
@@ -449,7 +511,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode ASTORE and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param var Java integer
+	 * @param var
+	 * 		Java integer
 	 */
 	public void emitAstore(final int var) {
 		currentClass.getMethodVisitor().visitVarInsn(Opcodes.ASTORE, var);
@@ -483,7 +546,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode BIPUSH and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param operand Java Integer
+	 * @param operand
+	 * 		Java Integer
 	 */
 	public void emitBipush(final int operand) {
 		currentClass.getMethodVisitor().visitIntInsn(Opcodes.BIPUSH, operand);
@@ -509,7 +573,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode CHECKCAST and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param type Java String
+	 * @param type
+	 * 		Java String
 	 */
 	public void emitCheckcast(final String type) {
 		currentClass.getMethodVisitor().visitTypeInsn(Opcodes.CHECKCAST, type);
@@ -583,7 +648,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode DCONST and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param arg1 Java integer
+	 * @param arg1
+	 * 		Java integer
 	 */
 	public void emitDconst(final int arg1) {
 		final int dConst;
@@ -610,7 +676,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode DLOAD and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param var Java integer
+	 * @param var
+	 * 		Java integer
 	 */
 	public void emitDload(final int var) {
 		currentClass.getMethodVisitor().visitVarInsn(Opcodes.DLOAD, var);
@@ -652,7 +719,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode DSTORE and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param var Java integer
+	 * @param var
+	 * 		Java integer
 	 */
 	public void emitDstore(final int var) {
 		currentClass.getMethodVisitor().visitVarInsn(Opcodes.DSTORE, var);
@@ -782,7 +850,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode FCONST and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param arg1 Java integer
+	 * @param arg1
+	 * 		Java integer
 	 */
 	public void emitFconst(final int arg1) {
 		final int fConst;
@@ -815,7 +884,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode FLOAD and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param var Java Integer
+	 * @param var
+	 * 		Java Integer
 	 */
 	public void emitFload(final int var) {
 		currentClass.getMethodVisitor().visitVarInsn(Opcodes.FLOAD, var);
@@ -858,7 +928,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode FSTORE and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param var Java integer
+	 * @param var
+	 * 		Java integer
 	 */
 	public void emitFstore(final int var) {
 		currentClass.getMethodVisitor().visitVarInsn(Opcodes.FSTORE, var);
@@ -876,9 +947,12 @@ public class NewEmitter {
 	 * Emitter method for Java opcode GETFIELD and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param owner Java String
-	 * @param name  Java String
-	 * @param desc  Java String
+	 * @param owner
+	 * 		Java String
+	 * @param name
+	 * 		Java String
+	 * @param desc
+	 * 		Java String
 	 */
 	public void emitGetfield(final String owner, final String name, final String desc) {
 		currentClass.getMethodVisitor().visitFieldInsn(Opcodes.GETFIELD, owner, name, desc);
@@ -888,9 +962,12 @@ public class NewEmitter {
 	 * Emitter method for Java opcode GETSTATIC and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param owner Java String
-	 * @param name  Java String
-	 * @param desc  Java String
+	 * @param owner
+	 * 		Java String
+	 * @param name
+	 * 		Java String
+	 * @param desc
+	 * 		Java String
 	 */
 	public void emitGetstatic(final String owner, final String name, final String desc) {
 		currentClass.getMethodVisitor().visitFieldInsn(Opcodes.GETSTATIC, owner, name, desc);
@@ -900,7 +977,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode GOTO and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param label Java Label
+	 * @param label
+	 * 		Java Label
 	 */
 	public void emitGoto(final Label label) {
 		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.GOTO, label);
@@ -991,7 +1069,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode ICONST and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param arg1 Java integer
+	 * @param arg1
+	 * 		Java integer
 	 */
 	public void emitIconst(final int arg1) {
 		final int iConst;
@@ -1036,7 +1115,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode IF_ACMPEQ and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param label Java Label
+	 * @param label
+	 * 		Java Label
 	 */
 	public void emitIf_acmpeq(final Label label) {
 		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.IF_ACMPEQ, label);
@@ -1046,7 +1126,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode IF_ACMPNE and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param label Java Label
+	 * @param label
+	 * 		Java Label
 	 */
 	public void emitIf_acmpne(final Label label) {
 		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.IF_ACMPNE, label);
@@ -1056,7 +1137,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode IF_ICMPEQ and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param label Java Label
+	 * @param label
+	 * 		Java Label
 	 */
 	public void emitIf_icmpeq(final Label label) {
 		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.IF_ICMPEQ, label);
@@ -1066,7 +1148,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode IF_ICMPGE and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param label Java Label
+	 * @param label
+	 * 		Java Label
 	 */
 	public void emitIf_icmpge(final Label label) {
 		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.IF_ICMPGE, label);
@@ -1076,7 +1159,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode IF_ICMPGT and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param label Java Label
+	 * @param label
+	 * 		Java Label
 	 */
 	public void emitIf_icmpgt(final Label label) {
 		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.IF_ICMPGT, label);
@@ -1086,7 +1170,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode IF_ICMPLE and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param label Java Label
+	 * @param label
+	 * 		Java Label
 	 */
 	public void emitIf_icmple(final Label label) {
 		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.IF_ICMPLE, label);
@@ -1096,7 +1181,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode IF_ICMPLT and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param label Java Label
+	 * @param label
+	 * 		Java Label
 	 */
 	public void emitIf_icmplt(final Label label) {
 		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.IF_ICMPLT, label);
@@ -1106,7 +1192,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode IF_ICMPNE and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param label Java Label
+	 * @param label
+	 * 		Java Label
 	 */
 	public void emitIf_icmpne(final Label label) {
 		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.IF_ICMPNE, label);
@@ -1116,7 +1203,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode IFEQ and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param label Java Label
+	 * @param label
+	 * 		Java Label
 	 */
 	public void emitIfeq(final Label label) {
 		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.IFEQ, label);
@@ -1126,7 +1214,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode IFGE   and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param label Java Label
+	 * @param label
+	 * 		Java Label
 	 */
 	public void emitIfge(final Label label) {
 		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.IFGE, label);
@@ -1136,7 +1225,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode IFGT and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param label Java Label
+	 * @param label
+	 * 		Java Label
 	 */
 	public void emitIfgt(final Label label) {
 		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.IFGT, label);
@@ -1146,7 +1236,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode IFLE and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param label Java Label
+	 * @param label
+	 * 		Java Label
 	 */
 	public void emitIfle(final Label label) {
 		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.IFLE, label);
@@ -1156,7 +1247,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode IFLT and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param label Java Label
+	 * @param label
+	 * 		Java Label
 	 */
 	public void emitIflt(final Label label) {
 		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.IFLT, label);
@@ -1166,7 +1258,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode IFNE and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param label Java Label
+	 * @param label
+	 * 		Java Label
 	 */
 	public void emitIfne(final Label label) {
 		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.IFNE, label);
@@ -1176,7 +1269,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode IFNONNULL and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param label Java Label
+	 * @param label
+	 * 		Java Label
 	 */
 	public void emitIfnonnull(final Label label) {
 		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.IFNONNULL, label);
@@ -1186,7 +1280,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode IFNULL and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param label Java Label
+	 * @param label
+	 * 		Java Label
 	 */
 	public void emitIfnull(final Label label) {
 		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.IFNULL, label);
@@ -1196,8 +1291,10 @@ public class NewEmitter {
 	 * Emitter method for Java opcode IINC and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param var       Java integer
-	 * @param increment Java integer
+	 * @param var
+	 * 		Java integer
+	 * @param increment
+	 * 		Java integer
 	 */
 	public void emitIinc(final int var, final int increment) {
 		currentClass.getMethodVisitor().visitIincInsn(var, increment);
@@ -1207,7 +1304,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode ILOAD and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param var Java integer
+	 * @param var
+	 * 		Java integer
 	 */
 	public void emitIload(final int var) {
 		currentClass.getMethodVisitor().visitVarInsn(Opcodes.ILOAD, var);
@@ -1233,7 +1331,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode INSTANCEOF and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param type Java String
+	 * @param type
+	 * 		Java String
 	 */
 	public void emitInstanceof(final String type) {
 		currentClass.getMethodVisitor().visitTypeInsn(Opcodes.INSTANCEOF, type);
@@ -1243,10 +1342,14 @@ public class NewEmitter {
 	 * Emitter method for Java opcode INVOKEDYNAMIC and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param name    Java String
-	 * @param desc    Java String
-	 * @param bsm     Handle object
-	 * @param bsmArgs Handle arguments
+	 * @param name
+	 * 		Java String
+	 * @param desc
+	 * 		Java String
+	 * @param bsm
+	 * 		Handle object
+	 * @param bsmArgs
+	 * 		Handle arguments
 	 */
 	public void emitInvokedynamic(final String name, final String desc, final Handle bsm, final Object... bsmArgs) {
 		currentClass.getMethodVisitor().visitInvokeDynamicInsn(name, desc, bsm, bsmArgs);
@@ -1256,11 +1359,16 @@ public class NewEmitter {
 	 * Emitter method for Java opcode INVOKEINTERFACE and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param owner      Java String
-	 * @param name       Java String
-	 * @param paramDesc  Java String
-	 * @param returnDesc Java String
-	 * @param itf        true if method's owner is an interface
+	 * @param owner
+	 * 		Java String
+	 * @param name
+	 * 		Java String
+	 * @param paramDesc
+	 * 		Java String
+	 * @param returnDesc
+	 * 		Java String
+	 * @param itf
+	 * 		true if method's owner is an interface
 	 */
 	public void emitInvokeinterface(final String owner, final String name, final String paramDesc, final String returnDesc, final boolean itf) {
 		currentClass.getMethodVisitor().visitMethodInsn(Opcodes.INVOKEINTERFACE, owner, name, paramDesc + returnDesc, itf);
@@ -1270,11 +1378,16 @@ public class NewEmitter {
 	 * Emitter method for Java opcode INVOKESPECIAL and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param owner      Java String
-	 * @param name       Java String
-	 * @param paramDesc  Java String
-	 * @param returnDesc Java String
-	 * @param itf        true if method's owner is an interface
+	 * @param owner
+	 * 		Java String
+	 * @param name
+	 * 		Java String
+	 * @param paramDesc
+	 * 		Java String
+	 * @param returnDesc
+	 * 		Java String
+	 * @param itf
+	 * 		true if method's owner is an interface
 	 */
 	public void emitInvokespecial(final String owner, final String name, final String paramDesc, final String returnDesc, final boolean itf) {
 		currentClass.getMethodVisitor().visitMethodInsn(Opcodes.INVOKESPECIAL, owner, name, paramDesc + returnDesc, itf);
@@ -1284,11 +1397,16 @@ public class NewEmitter {
 	 * Emitter method for Java opcode INVOKESTATIC and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param owner      Java String
-	 * @param name       Java String
-	 * @param paramDesc  Java String
-	 * @param returnDesc Java String
-	 * @param itf        true if method's owner is an interface
+	 * @param owner
+	 * 		Java String
+	 * @param name
+	 * 		Java String
+	 * @param paramDesc
+	 * 		Java String
+	 * @param returnDesc
+	 * 		Java String
+	 * @param itf
+	 * 		true if method's owner is an interface
 	 */
 	public void emitInvokestatic(final String owner, final String name, final String paramDesc, final String returnDesc, final boolean itf) {
 		currentClass.getMethodVisitor().visitMethodInsn(Opcodes.INVOKESTATIC, owner, name, paramDesc + returnDesc, itf);
@@ -1298,11 +1416,16 @@ public class NewEmitter {
 	 * Emitter method for Java opcode INVOKEVIRTUAL and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param owner      Java String
-	 * @param name       Java String
-	 * @param paramDesc  Java String
-	 * @param returnDesc Java String
-	 * @param itf        true if method's owner is an interface
+	 * @param owner
+	 * 		Java String
+	 * @param name
+	 * 		Java String
+	 * @param paramDesc
+	 * 		Java String
+	 * @param returnDesc
+	 * 		Java String
+	 * @param itf
+	 * 		true if method's owner is an interface
 	 */
 	public void emitInvokevirtual(final String owner, final String name, final String paramDesc, final String returnDesc, final boolean itf) {
 		currentClass.getMethodVisitor().visitMethodInsn(Opcodes.INVOKEVIRTUAL, owner, name, paramDesc + returnDesc, itf);
@@ -1352,7 +1475,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode ISTORE and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param var Java integer
+	 * @param var
+	 * 		Java integer
 	 */
 	public void emitIstore(final int var) {
 		currentClass.getMethodVisitor().visitVarInsn(Opcodes.ISTORE, var);
@@ -1386,7 +1510,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode JSR and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param label Java Label
+	 * @param label
+	 * 		Java Label
 	 */
 	public void emitJsr(final Label label) {
 		currentClass.getMethodVisitor().visitJumpInsn(Opcodes.JSR, label);
@@ -1460,7 +1585,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode LCONST and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param arg1 Java integer
+	 * @param arg1
+	 * 		Java integer
 	 */
 	public void emitLconst(final int arg1) {
 		final int lConst;
@@ -1479,7 +1605,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode LDC and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param cst Java Object
+	 * @param cst
+	 * 		Java Object
 	 */
 	public void emitLdc(final Object cst) {
 		// TODO: Need to review what's done here and if it is right
@@ -1537,7 +1664,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode LLOAD and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param var Java integer
+	 * @param var
+	 * 		Java integer
 	 */
 	public void emitLload(final int var) {
 		currentClass.getMethodVisitor().visitVarInsn(Opcodes.LLOAD, var);
@@ -1563,9 +1691,12 @@ public class NewEmitter {
 	 * Emitter method for Java opcode LOOKUPSWITCH and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param dflt   Java Label
-	 * @param keys   Java int[]
-	 * @param labels Java Label[]
+	 * @param dflt
+	 * 		Java Label
+	 * @param keys
+	 * 		Java int[]
+	 * @param labels
+	 * 		Java Label[]
 	 */
 	public void emitLookupswitch(final Label dflt, final int[] keys, final Label[] labels) {
 		currentClass.getMethodVisitor().visitLookupSwitchInsn(dflt, keys, labels);
@@ -1615,7 +1746,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode LSTORE and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param var Java integer
+	 * @param var
+	 * 		Java integer
 	 */
 	public void emitLstore(final int var) {
 		currentClass.getMethodVisitor().visitVarInsn(Opcodes.LSTORE, var);
@@ -1665,8 +1797,10 @@ public class NewEmitter {
 	 * Emitter method for Java opcode MULTIANEWARRAY and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param desc Java String
-	 * @param dims Java Integer
+	 * @param desc
+	 * 		Java String
+	 * @param dims
+	 * 		Java Integer
 	 */
 	public void emitMultianewarray(final String desc, final int dims) {
 		currentClass.getMethodVisitor().visitMultiANewArrayInsn(desc, dims);
@@ -1676,7 +1810,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode NEW and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param type Java String
+	 * @param type
+	 * 		Java String
 	 */
 	public void emitNew(final String type) {
 		currentClass.getMethodVisitor().visitTypeInsn(Opcodes.NEW, type);
@@ -1686,7 +1821,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode NEWARRAY and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param operand Java Integer
+	 * @param operand
+	 * 		Java Integer
 	 */
 	public void emitNewarray(final int operand) {
 		currentClass.getMethodVisitor().visitIntInsn(Opcodes.NEWARRAY, operand);
@@ -1720,9 +1856,12 @@ public class NewEmitter {
 	 * Emitter method for Java opcode PUTFIELD and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param owner Java String
-	 * @param name  Java String
-	 * @param desc  Java String
+	 * @param owner
+	 * 		Java String
+	 * @param name
+	 * 		Java String
+	 * @param desc
+	 * 		Java String
 	 */
 	public void emitPutfield(final String owner, final String name, final String desc) {
 		currentClass.getMethodVisitor().visitFieldInsn(Opcodes.PUTFIELD, owner, name, desc);
@@ -1732,9 +1871,12 @@ public class NewEmitter {
 	 * Emitter method for Java opcode PUTSTATIC and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param owner Java String
-	 * @param name  Java String
-	 * @param desc  Java String
+	 * @param owner
+	 * 		Java String
+	 * @param name
+	 * 		Java String
+	 * @param desc
+	 * 		Java String
 	 */
 	public void emitPutstatic(final String owner, final String name, final String desc) {
 		currentClass.getMethodVisitor().visitFieldInsn(Opcodes.PUTSTATIC, owner, name, desc);
@@ -1744,7 +1886,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode RET and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param var Java integer
+	 * @param var
+	 * 		Java integer
 	 */
 	public void emitRet(final int var) {
 		currentClass.getMethodVisitor().visitVarInsn(Opcodes.RET, var);
@@ -1766,6 +1909,13 @@ public class NewEmitter {
 		currentClass.getMethodVisitor().visitInsn(Opcodes.SALOAD);
 	}
 
+/*
+******************************************************************************
+* Here are a set of static methods that can be useful in creating and
+* debugging an assembled class.
+******************************************************************************
+*/
+
 	/**
 	 * Emitter method for Java opcode SASTORE and Lisp function for new Lisp
 	 * compiler to access Java code.
@@ -1778,7 +1928,8 @@ public class NewEmitter {
 	 * Emitter method for Java opcode SIPUSH and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param operand Java integer
+	 * @param operand
+	 * 		Java integer
 	 */
 	public void emitSipush(final int operand) {
 		currentClass.getMethodVisitor().visitIntInsn(Opcodes.SIPUSH, operand);
@@ -1796,40 +1947,17 @@ public class NewEmitter {
 	 * Emitter method for Java opcode TABLESWITCH and Lisp function for new Lisp
 	 * compiler to access Java code.
 	 *
-	 * @param min    Java Integer
-	 * @param max    Java Integer
-	 * @param dflt   Java Label
-	 * @param labels Java Label[]
+	 * @param min
+	 * 		Java Integer
+	 * @param max
+	 * 		Java Integer
+	 * @param dflt
+	 * 		Java Label
+	 * @param labels
+	 * 		Java Label[]
 	 */
 	public void emitTableswitch(final int min, final int max, final Label dflt, final Label[] labels) {
 		currentClass.getMethodVisitor().visitTableSwitchInsn(min, max, dflt, labels);
-	}
-
-/*
-******************************************************************************
-* Here are a set of static methods that can be useful in creating and
-* debugging an assembled class.
-******************************************************************************
-*/
-
-	public static void checkClass(final ClassDef classDef) {
-		checkClass(classDef.getClassWriter().toByteArray());
-	}
-
-	private static void checkClass(final byte[] classBytes) {
-		final ClassReader cr = new ClassReader(classBytes);
-		final CheckClassAdapter cca = new CheckClassAdapter(new EmptyVisitor());
-		cr.accept(cca, 0); //ClassReader.EXPAND_FRAMES);
-	}
-
-	public static void disassemble(final byte[] classBytes) {
-		disassemble(classBytes, new PrintWriter(System.out));
-	}
-
-	private static void disassemble(final byte[] classBytes, final PrintWriter out) {
-		final ClassReader cr = new ClassReader(classBytes);
-		final TraceClassVisitor tcv = new TraceClassVisitor(out);
-		cr.accept(tcv, 0); //ClassReader.EXPAND_FRAMES);
 	}
 
 }

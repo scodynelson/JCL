@@ -31,14 +31,18 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 
 	protected final String name;
 
-	protected PackageStruct symbolPackage;
-	protected TYPE value;
-	protected FunctionStruct function;
-
 	protected final List<LispStruct> properties = new ArrayList<>();
 
+	protected PackageStruct symbolPackage;
+
+	protected TYPE value;
+
+	protected FunctionStruct function;
+
 	protected MacroFunctionExpander<?> macroFunctionExpander;
+
 	protected CompilerMacroFunctionExpander<?> compilerMacroFunctionExpander;
+
 	protected SymbolMacroExpander<?> symbolMacroExpander;
 
 	/**
@@ -365,13 +369,13 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		return new HashCodeBuilder().appendSuper(super.hashCode())
 		                            .append(name)
 		                            .append(symbolPackage)
-//		                            .append(value) TODO: why does this cause explosions???
 		                            .append(function)
 		                            .append(properties)
 		                            .append(macroFunctionExpander)
 		                            .append(compilerMacroFunctionExpander)
 		                            .append(symbolMacroExpander)
 		                            .toHashCode();
+//		                            .append(value) TODO: why does this cause explosions???
 	}
 
 	@Override

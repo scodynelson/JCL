@@ -1,13 +1,13 @@
 package jcl.printer;
 
+import java.math.BigInteger;
+
 import jcl.numbers.IntegerStruct;
 import jcl.packages.PackageStruct;
 import jcl.symbols.Variable;
 import org.apache.commons.lang3.Range;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.math.BigInteger;
 
 public class RadixVariable extends Variable<IntegerStruct> {
 
@@ -16,7 +16,9 @@ public class RadixVariable extends Variable<IntegerStruct> {
 	private static final IntegerStruct TEN = new IntegerStruct(BigInteger.TEN);
 
 	private static final int lowerBound = 2;
+
 	private static final int upperBound = 32;
+
 	private static final Range<BigInteger> RADIX_RANGE = Range.between(BigInteger.valueOf(lowerBound), BigInteger.valueOf(upperBound));
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RadixVariable.class);

@@ -4,6 +4,9 @@
 
 package jcl.streams;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 import jcl.LispStruct;
 import jcl.conditions.exceptions.EndOfFileException;
 import jcl.types.EchoStream;
@@ -11,9 +14,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.util.ArrayDeque;
-import java.util.Deque;
 
 /**
  * The {@link EchoStreamStruct} is the object representation of a Lisp 'echo-stream' type.

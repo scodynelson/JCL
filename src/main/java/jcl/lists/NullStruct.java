@@ -1,11 +1,11 @@
 package jcl.lists;
 
+import java.util.Collections;
+import java.util.List;
+
 import jcl.LispStruct;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.types.Null;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * The {@link NullStruct} is the object representation of a Lisp 'null' type.
@@ -29,16 +29,6 @@ public final class NullStruct extends ListStruct {
 	}
 
 	@Override
-	public LispStruct getElement(final int index) {
-		return INSTANCE;
-	}
-
-	@Override
-	public void setElement(final int index, final LispStruct newValue) {
-		throw new SimpleErrorException("Cannot set element within NIL.");
-	}
-
-	@Override
 	public LispStruct getFirst() {
 		return INSTANCE;
 	}
@@ -59,8 +49,13 @@ public final class NullStruct extends ListStruct {
 	}
 
 	@Override
-	public List<LispStruct> getAsJavaList() {
-		return Collections.emptyList();
+	public LispStruct getElement(final int index) {
+		return INSTANCE;
+	}
+
+	@Override
+	public void setElement(final int index, final LispStruct newValue) {
+		throw new SimpleErrorException("Cannot set element within NIL.");
 	}
 
 	@Override
@@ -71,5 +66,10 @@ public final class NullStruct extends ListStruct {
 	@Override
 	public boolean isCircular() {
 		return false;
+	}
+
+	@Override
+	public List<LispStruct> getAsJavaList() {
+		return Collections.emptyList();
 	}
 }

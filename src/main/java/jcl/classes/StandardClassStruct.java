@@ -1,10 +1,10 @@
 package jcl.classes;
 
+import java.util.List;
+
 import jcl.LispStruct;
 import jcl.LispType;
 import jcl.types.StandardClass;
-
-import java.util.List;
 
 /**
  * The {@link StandardClassStruct} is the object representation of a Lisp 'standard-class' type.

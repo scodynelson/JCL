@@ -25,6 +25,20 @@ interface LispStream extends LispStruct {
 	LispType getElementType();
 
 	/**
+	 * Returns whether or not the stream is interactive.
+	 *
+	 * @return whether or not the stream is interactive
+	 */
+	boolean isInteractive();
+
+	/**
+	 * Returns whether or not the stream is closed.
+	 *
+	 * @return whether or not the stream is closed
+	 */
+	boolean isClosed();
+
+	/**
 	 * Returns the length of the stream if it is a {@link FileStreamStruct}.
 	 *
 	 * @return the length of the stream
@@ -40,18 +54,4 @@ interface LispStream extends LispStruct {
 	 * @return the current position in the stream
 	 */
 	Long filePosition(Long filePosition);
-
-	/**
-	 * Returns whether or not the stream is interactive.
-	 *
-	 * @return whether or not the stream is interactive
-	 */
-	boolean isInteractive();
-
-	/**
-	 * Returns whether or not the stream is closed.
-	 *
-	 * @return whether or not the stream is closed
-	 */
-	boolean isClosed();
 }

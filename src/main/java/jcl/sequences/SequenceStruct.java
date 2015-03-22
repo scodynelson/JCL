@@ -4,9 +4,9 @@
 
 package jcl.sequences;
 
-import jcl.LispStruct;
-
 import java.util.List;
+
+import jcl.LispStruct;
 
 /**
  * The {@link SequenceStruct} is the object representation of a Lisp 'sequence' type.

@@ -169,7 +169,7 @@ public interface SimpleArray extends Array {
 			@Override
 			public String toString() {
 				final List<Integer> dimensionsValue = dimensions.getDimensions();
-				return '(' + getName() + ' ' + elementType + ' ' +((dimensionsValue == null) ? '*' : dimensionsValue.toString()) + ')';
+				return '(' + getName() + ' ' + elementType + ' ' + ((dimensionsValue == null) ? '*' : dimensionsValue.toString()) + ')';
 			}
 		}
 	}

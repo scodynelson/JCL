@@ -39,7 +39,9 @@ public class SpecialVariableCodeGenerator implements CodeGenerator<SymbolStruct<
 	 *
 	 * @param sym
 	 * 		lisp.common.type.Sybmbol sym
-	 * @param classBuilder classBuilder
+	 * @param classBuilder
+	 * 		classBuilder
+	 *
 	 * @return object
 	 */
 	public static Object emitSymbolPackage(final SymbolStruct<?> sym, final JavaClassBuilder classBuilder) {
@@ -69,7 +71,9 @@ public class SpecialVariableCodeGenerator implements CodeGenerator<SymbolStruct<
 	 *
 	 * @param name
 	 * 		lisp.common.type.Package name
-	 * @param classBuilder classBuilder
+	 * @param classBuilder
+	 * 		classBuilder
+	 *
 	 * @return object
 	 */
 	private static Object emitPackage(final String name, final JavaClassBuilder classBuilder) {

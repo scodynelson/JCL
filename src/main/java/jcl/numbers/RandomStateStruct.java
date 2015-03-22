@@ -4,18 +4,18 @@
 
 package jcl.numbers;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
+
 import jcl.classes.BuiltInClassStruct;
 import jcl.types.RandomState;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * The {@link RandomStateStruct} is the object representation of a Lisp 'random-state' type.

@@ -4,6 +4,8 @@
 
 package jcl.streams;
 
+import java.util.List;
+
 import jcl.LispStruct;
 import jcl.LispType;
 import jcl.classes.BuiltInClassStruct;
@@ -12,8 +14,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.util.List;
 
 /**
  * The {@link StreamStruct} is the object representation of a Lisp 'stream' type.

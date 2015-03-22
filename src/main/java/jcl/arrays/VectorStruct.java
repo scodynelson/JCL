@@ -81,13 +81,6 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 		this.fillPointer = fillPointer;
 	}
 
-	// TODO: FIX THIS!!!
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<LispStruct> getAsJavaList() {
-		return (List<LispStruct>) contents;
-	}
-
 	/**
 	 * Gets the vector type from the provided isAdjustable and fillPointer values.
 	 *
@@ -100,6 +93,13 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	 */
 	private static Vector getVectorType(final boolean isAdjustable, final Integer fillPointer) {
 		return (isAdjustable || (fillPointer != null)) ? Vector.INSTANCE : SimpleVector.INSTANCE;
+	}
+
+	// TODO: FIX THIS!!!
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<LispStruct> getAsJavaList() {
+		return (List<LispStruct>) contents;
 	}
 
 	/**

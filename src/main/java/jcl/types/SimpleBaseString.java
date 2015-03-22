@@ -142,7 +142,7 @@ public interface SimpleBaseString extends BaseString, SimpleString {
 			@Override
 			public java.lang.String toString() {
 				final java.util.List<Integer> dimensionsValue = size.getDimensions();
-				return '(' + getName() +  ' ' + ((dimensionsValue == null) ? '*' : dimensionsValue.toString()) + ')';
+				return '(' + getName() + ' ' + ((dimensionsValue == null) ? '*' : dimensionsValue.toString()) + ')';
 			}
 		}
 	}

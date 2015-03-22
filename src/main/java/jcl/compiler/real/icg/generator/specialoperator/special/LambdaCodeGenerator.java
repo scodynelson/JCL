@@ -305,6 +305,58 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 	}
 
+	/**
+	 * For Symbol-table, for each entry where the scope is :dynamic and the binding is :free,
+	 * gen code to retrieve the global variable and store it locally for easy reference. Once
+	 * it is stored, other code referencing that symbol can just pick up the symbol from a local
+	 * variable.
+	 * The other aspect of dealing with special variables is that they have to be bound in the
+	 * environment and unbound at the end. This necessitates a try-finally block. The same code is
+	 * used in the LET form.
+	 *
+	 * @param classBuilder
+	 * 		classBuilder
+	 */
+	private void doFreeVariableSetup(final JavaClassBuilder classBuilder) {
+		//-- get the symbol-table
+		final SymbolTable symbolTable = classBuilder.getBindingEnvironment().getSymbolTable();
+		// Now iterate over the entries, looking for ones to allocate
+		final List<SymbolLocalBinding> dynamicLocalBindings = symbolTable.getDynamicLocalBindings();
+		final List<SymbolEnvironmentBinding> dynamicEnvironmentBindings = symbolTable.getDynamicEnvironmentBindings();
+
+		for (final SymbolEnvironmentBinding symbolEnvironmentBinding : dynamicEnvironmentBindings) {
+			final Environment environment = symbolEnvironmentBinding.getBinding();
+			final SymbolStruct<?> sym = symbolEnvironmentBinding.getSymbolStruct();
+			final Optional<SymbolLocalBinding> dynamicLocalBinding = environment.getSymbolTable().getDynamicLocalBinding(sym);
+			if (dynamicLocalBinding.isPresent()) {
+				dynamicLocalBindings.add(dynamicLocalBinding.get());
+			}
+		}
+
+		for (final SymbolLocalBinding binding : dynamicLocalBindings) {
+			// (symbol :allocation ... :binding ... :scope ... :type ...)
+			// (:allocation ... :binding ... :scope ... :type ...)
+			// for free and dynamic
+			// get the local variable slot
+			final LocalAllocation alloc = binding.getAllocation();
+			// (:local . n)
+			final int slot = alloc.getPosition();
+			// now gen some code (whew)
+			// gen code to either intern a symbol or call make-symbol if uninterned
+			final SymbolStruct<?> symbol = binding.getSymbolStruct();
+			if (symbol.getSymbolPackage() == null) {
+				final String name = symbol.getName();
+				// have to gen a make-symbol
+				classBuilder.getEmitter().emitLdc(name);
+				classBuilder.getEmitter().emitInvokestatic("lisp/common/type/Symbol$Factory", "newInstance", "(Ljava/lang/String;)", "Llisp/common/type/Symbol;", false);
+			} else {
+				specialVariableCodeGenerator.generate(symbol, classBuilder);
+			}
+			// store the symbol in the indicated local variable
+			classBuilder.getEmitter().emitAstore(slot);
+		}
+	}
+
 	private static Closure findNearestClosure(final Environment bindingEnv) {
 		// get the current closure
 		final Closure closure = bindingEnv.getClosure();
@@ -352,55 +404,5 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		classBuilder.getEmitter().emitGetstatic("lisp/common/type/T", "T", "Llisp/common/type/Symbol;");
 		classBuilder.getEmitter().emitAreturn();
 		classBuilder.getEmitter().endMethod();
-	}
-
-	/**
-	 * For Symbol-table, for each entry where the scope is :dynamic and the binding is :free,
-	 * gen code to retrieve the global variable and store it locally for easy reference. Once
-	 * it is stored, other code referencing that symbol can just pick up the symbol from a local
-	 * variable.
-	 * The other aspect of dealing with special variables is that they have to be bound in the
-	 * environment and unbound at the end. This necessitates a try-finally block. The same code is
-	 * used in the LET form.
-	 * @param classBuilder classBuilder
-	 */
-	private void doFreeVariableSetup(final JavaClassBuilder classBuilder) {
-		//-- get the symbol-table
-		final SymbolTable symbolTable = classBuilder.getBindingEnvironment().getSymbolTable();
-		// Now iterate over the entries, looking for ones to allocate
-		final List<SymbolLocalBinding> dynamicLocalBindings = symbolTable.getDynamicLocalBindings();
-		final List<SymbolEnvironmentBinding> dynamicEnvironmentBindings = symbolTable.getDynamicEnvironmentBindings();
-
-		for (final SymbolEnvironmentBinding symbolEnvironmentBinding : dynamicEnvironmentBindings) {
-			final Environment environment = symbolEnvironmentBinding.getBinding();
-			final SymbolStruct<?> sym = symbolEnvironmentBinding.getSymbolStruct();
-			final Optional<SymbolLocalBinding> dynamicLocalBinding = environment.getSymbolTable().getDynamicLocalBinding(sym);
-			if (dynamicLocalBinding.isPresent()) {
-				dynamicLocalBindings.add(dynamicLocalBinding.get());
-			}
-		}
-
-		for (final SymbolLocalBinding binding : dynamicLocalBindings) {
-			// (symbol :allocation ... :binding ... :scope ... :type ...)
-			// (:allocation ... :binding ... :scope ... :type ...)
-			// for free and dynamic
-			// get the local variable slot
-			final LocalAllocation alloc = binding.getAllocation();
-			// (:local . n)
-			final int slot = alloc.getPosition();
-			// now gen some code (whew)
-			// gen code to either intern a symbol or call make-symbol if uninterned
-			final SymbolStruct<?> symbol = binding.getSymbolStruct();
-			if (symbol.getSymbolPackage() == null) {
-				final String name = symbol.getName();
-				// have to gen a make-symbol
-				classBuilder.getEmitter().emitLdc(name);
-				classBuilder.getEmitter().emitInvokestatic("lisp/common/type/Symbol$Factory", "newInstance", "(Ljava/lang/String;)", "Llisp/common/type/Symbol;", false);
-			} else {
-				specialVariableCodeGenerator.generate(symbol, classBuilder);
-			}
-			// store the symbol in the indicated local variable
-			classBuilder.getEmitter().emitAstore(slot);
-		}
 	}
 }

@@ -180,7 +180,7 @@ public interface SimpleVector extends Vector, SimpleArray {
 			@Override
 			public String toString() {
 				final java.util.List<Integer> dimensionsValue = size.getDimensions();
-				return '(' + getName() + ' ' + elementType +  ' ' + ((dimensionsValue == null) ? '*' : dimensionsValue.toString()) + ')';
+				return '(' + getName() + ' ' + elementType + ' ' + ((dimensionsValue == null) ? '*' : dimensionsValue.toString()) + ')';
 			}
 		}
 	}

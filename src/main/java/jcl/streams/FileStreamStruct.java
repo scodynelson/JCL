@@ -4,6 +4,16 @@
 
 package jcl.streams;
 
+import java.io.EOFException;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+
 import jcl.LispStruct;
 import jcl.LispType;
 import jcl.conditions.exceptions.StreamErrorException;
@@ -15,16 +25,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.EOFException;
-import java.io.IOException;
-import java.math.BigInteger;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.channels.FileChannel;
-import java.nio.charset.Charset;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 
 /**
  * The {@link FileStreamStruct} is the object representation of a Lisp 'file-stream' type.

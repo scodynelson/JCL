@@ -18,23 +18,6 @@ public final class Environments {
 	private Environments() {
 	}
 
-	public static Environment getDynamicBindingEnvironment(final Environment environment, final SymbolStruct<?> var) {
-
-		Environment currentEnvironment = environment;
-
-		while (!currentEnvironment.equals(Environment.NULL)) {
-
-			final boolean hasDynamicBinding = currentEnvironment.hasDynamicBinding(var);
-			if (hasDynamicBinding) {
-				break;
-			}
-
-			currentEnvironment = currentEnvironment.getParent();
-		}
-
-		return currentEnvironment;
-	}
-
 	public static Environment getInnerFunctionLexicalBindingEnvironment(final Environment environment, final SymbolStruct<?> variable) {
 
 		Environment currentEnvironment = environment;
@@ -117,18 +100,6 @@ public final class Environments {
 		return (BindingEnvironment) currentEnvironment;
 	}
 
-	public static LambdaEnvironment getEnclosingLambda(final Environment environment) {
-
-		Environment currentEnvironment = environment;
-
-		while (!(currentEnvironment instanceof LambdaEnvironment)) {
-			currentEnvironment = currentEnvironment.getParent();
-		}
-
-		// NOTE: This will never be an improper cast, since the Null Environment is a LambdaEnvironment
-		return (LambdaEnvironment) currentEnvironment;
-	}
-
 	public static boolean hasFunctionBinding(final Environment environment, final SymbolStruct<?> variable) {
 
 		Environment currentEnvironment = environment;
@@ -147,7 +118,7 @@ public final class Environments {
 	}
 
 	public static void addDynamicVariableBinding(final SpecialDeclarationStruct specialDeclarationElement,
-	                                              final Environment environment) {
+	                                             final Environment environment) {
 
 		final LambdaEnvironment currentLambda = getEnclosingLambda(environment);
 		final int nextBindingsPosition = currentLambda.getNextParameterNumber();
@@ -160,6 +131,35 @@ public final class Environments {
 
 		final EnvironmentEnvironmentBinding binding = new EnvironmentEnvironmentBinding(var, allocation, T.INSTANCE, bindingEnvironment);
 		environment.addDynamicBinding(binding);
+	}
+
+	public static Environment getDynamicBindingEnvironment(final Environment environment, final SymbolStruct<?> var) {
+
+		Environment currentEnvironment = environment;
+
+		while (!currentEnvironment.equals(Environment.NULL)) {
+
+			final boolean hasDynamicBinding = currentEnvironment.hasDynamicBinding(var);
+			if (hasDynamicBinding) {
+				break;
+			}
+
+			currentEnvironment = currentEnvironment.getParent();
+		}
+
+		return currentEnvironment;
+	}
+
+	public static LambdaEnvironment getEnclosingLambda(final Environment environment) {
+
+		Environment currentEnvironment = environment;
+
+		while (!(currentEnvironment instanceof LambdaEnvironment)) {
+			currentEnvironment = currentEnvironment.getParent();
+		}
+
+		// NOTE: This will never be an improper cast, since the Null Environment is a LambdaEnvironment
+		return (LambdaEnvironment) currentEnvironment;
 	}
 
 	public static boolean isSpecial(final DeclareStruct declareElement, final SymbolStruct<?> var) {

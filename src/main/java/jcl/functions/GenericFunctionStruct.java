@@ -1,10 +1,10 @@
 package jcl.functions;
 
+import java.util.List;
+
 import jcl.LispStruct;
 import jcl.LispType;
 import jcl.types.GenericFunction;
-
-import java.util.List;
 
 /**
  * The {@link GenericFunctionStruct} is the object representation of a Lisp 'generic-function' type.

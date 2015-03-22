@@ -4,8 +4,8 @@
 
 package jcl.printer.impl;
 
-import jcl.printer.Printer;
 import jcl.printer.LispPrinter;
+import jcl.printer.Printer;
 import jcl.streams.StreamStruct;
 import jcl.streams.SynonymStreamStruct;
 import jcl.symbols.SymbolStruct;

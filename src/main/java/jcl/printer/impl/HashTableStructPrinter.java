@@ -4,18 +4,18 @@
 
 package jcl.printer.impl;
 
+import java.math.BigInteger;
+
 import jcl.functions.FunctionStruct;
 import jcl.hashtables.HashTableStruct;
-import jcl.printer.Printer;
 import jcl.printer.LispPrinter;
+import jcl.printer.Printer;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.math.BigInteger;
 
 @Component
 public class HashTableStructPrinter implements LispPrinter<HashTableStruct> {

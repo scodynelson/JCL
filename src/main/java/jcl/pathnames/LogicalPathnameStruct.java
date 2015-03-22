@@ -4,15 +4,15 @@
 
 package jcl.pathnames;
 
-import jcl.conditions.exceptions.TypeErrorException;
-import jcl.types.LogicalPathname;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
+
+import jcl.conditions.exceptions.TypeErrorException;
+import jcl.types.LogicalPathname;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The {@link LogicalPathnameStruct} is the object representation of a Lisp 'logical-pathname' type.

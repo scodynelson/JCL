@@ -9,5 +9,5 @@ import jcl.symbols.Variable;
 
 public interface PathnameVariables {
 
-    Variable<?> DEFAULT_PATHNAME_DEFAULTS = new Variable<>("*DEFAULT-PATHNAME-DEFAULTS*", GlobalPackageStruct.COMMON_LISP, null);
+	Variable<?> DEFAULT_PATHNAME_DEFAULTS = new Variable<>("*DEFAULT-PATHNAME-DEFAULTS*", GlobalPackageStruct.COMMON_LISP, null);
 }

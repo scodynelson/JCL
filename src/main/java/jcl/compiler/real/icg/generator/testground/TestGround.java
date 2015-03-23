@@ -198,7 +198,7 @@ public class TestGround {
 	private Object symbolMacroletGen() {
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
-		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
+		final SymbolStruct<?> symbol = pkg.findSymbol("FOO").getSymbol();
 
 		final SymbolMacroExpander symbolMacroExpander = new TestGroundSymbolMacroExpander();
 		symbol.bindSymbolMacroExpander(symbolMacroExpander);
@@ -210,5 +210,13 @@ public class TestGround {
 			symbol.unbindSymbolMacroExpander();
 		}
 		return result;
+	}
+
+	private Object symbolFunctionGen() {
+
+		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
+		final SymbolStruct<?> symbol = pkg.findSymbol("FOO").getSymbol();
+
+		return symbol.getFunction();
 	}
 }

@@ -4,11 +4,26 @@
 
 package jcl.compiler.real.environment;
 
+import java.util.Optional;
+
+import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
+import jcl.symbols.SymbolStruct;
+
 public class ProgvEnvironment extends BindingEnvironment {
 
 	private static final long serialVersionUID = 5583104617030812969L;
 
 	public ProgvEnvironment(final Environment parent) {
 		super(parent);
+	}
+
+	@Override
+	public boolean hasLexicalBinding(final SymbolStruct<?> symbolStruct) {
+		return getParent().hasLexicalBinding(symbolStruct);
+	}
+
+	@Override
+	public Optional<EnvironmentParameterBinding> getLexicalBinding(final SymbolStruct<?> symbolStruct) {
+		return getParent().getLexicalBinding(symbolStruct);
 	}
 }

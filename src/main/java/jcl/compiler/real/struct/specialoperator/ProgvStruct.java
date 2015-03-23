@@ -8,8 +8,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.binding.Binding;
+import jcl.compiler.real.environment.ProgvEnvironment;
 import jcl.compiler.real.struct.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -25,16 +24,12 @@ public class ProgvStruct extends SpecialOperatorStruct {
 
 	private final PrognStruct forms;
 
-	private final List<Binding<?>> previousBindings;
+	private final ProgvEnvironment progvEnvironment;
 
-	private final Environment environment;
-
-	public ProgvStruct(final List<ProgvVar> vars, final PrognStruct forms, final List<Binding<?>> previousBindings,
-	                   final Environment environment) {
+	public ProgvStruct(final List<ProgvVar> vars, final PrognStruct forms, final ProgvEnvironment progvEnvironment) {
 		this.vars = vars;
 		this.forms = forms;
-		this.previousBindings = previousBindings;
-		this.environment = environment;
+		this.progvEnvironment = progvEnvironment;
 	}
 
 	public List<ProgvVar> getVars() {
@@ -45,12 +40,8 @@ public class ProgvStruct extends SpecialOperatorStruct {
 		return forms;
 	}
 
-	public List<Binding<?>> getPreviousBindings() {
-		return previousBindings;
-	}
-
-	public Environment getEnvironment() {
-		return environment;
+	public ProgvEnvironment getProgvEnvironment() {
+		return progvEnvironment;
 	}
 
 	@Override
@@ -58,8 +49,7 @@ public class ProgvStruct extends SpecialOperatorStruct {
 		return new HashCodeBuilder().appendSuper(super.hashCode())
 		                            .append(vars)
 		                            .append(forms)
-		                            .append(previousBindings)
-		                            .append(environment)
+		                            .append(progvEnvironment)
 		                            .toHashCode();
 	}
 
@@ -78,8 +68,7 @@ public class ProgvStruct extends SpecialOperatorStruct {
 		return new EqualsBuilder().appendSuper(super.equals(obj))
 		                          .append(vars, rhs.vars)
 		                          .append(forms, rhs.forms)
-		                          .append(previousBindings, rhs.previousBindings)
-		                          .append(environment, rhs.environment)
+		                          .append(progvEnvironment, rhs.progvEnvironment)
 		                          .isEquals();
 	}
 
@@ -87,8 +76,7 @@ public class ProgvStruct extends SpecialOperatorStruct {
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(vars)
 		                                                                .append(forms)
-		                                                                .append(previousBindings)
-		                                                                .append(environment)
+		                                                                .append(progvEnvironment)
 		                                                                .toString();
 	}
 

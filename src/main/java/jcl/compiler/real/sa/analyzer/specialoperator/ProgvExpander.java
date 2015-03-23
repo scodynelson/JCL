@@ -155,7 +155,7 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 				         .map(e -> formAnalyzer.analyze(e, environment))
 				         .collect(Collectors.toList());
 
-		return new ProgvStruct(progvVars, new PrognStruct(analyzedBodyForms), null, environment);
+		return new ProgvStruct(progvVars, new PrognStruct(analyzedBodyForms), progvEnvironment);
 	}
 
 	@Override

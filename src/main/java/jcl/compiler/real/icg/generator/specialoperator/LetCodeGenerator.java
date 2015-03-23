@@ -46,7 +46,7 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 		final Label catchBlockEnd = new Label();
 		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, null);
 
-		final Map<Integer, Boolean> varSymbolStores = new HashMap<>(vars.size());
+		final Map<Integer, Boolean> symbolVarStores = new HashMap<>(vars.size());
 
 		final int packageStore = currentClass.getNextAvailableStore();
 		final int initFormStore = currentClass.getNextAvailableStore();
@@ -72,7 +72,7 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 			mv.visitVarInsn(Opcodes.ASTORE, symbolStore);
 
 			// Add the symbolStore and the isSpecial value here so we can unbind the initForms later
-			varSymbolStores.put(symbolStore, isSpecial);
+			symbolVarStores.put(symbolStore, isSpecial);
 
 			formGenerator.generate(initForm, classBuilder);
 			mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
@@ -99,14 +99,14 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 		mv.visitVarInsn(Opcodes.ASTORE, resultStore);
 
 		mv.visitLabel(tryBlockEnd);
-		generateFinallyCode(mv, varSymbolStores);
+		generateFinallyCode(mv, symbolVarStores);
 		mv.visitJumpInsn(Opcodes.GOTO, catchBlockEnd);
 
 		mv.visitLabel(catchBlockStart);
 		final int exceptionStore = currentClass.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, exceptionStore);
 
-		generateFinallyCode(mv, varSymbolStores);
+		generateFinallyCode(mv, symbolVarStores);
 
 		mv.visitVarInsn(Opcodes.ALOAD, exceptionStore);
 		mv.visitInsn(Opcodes.ATHROW);

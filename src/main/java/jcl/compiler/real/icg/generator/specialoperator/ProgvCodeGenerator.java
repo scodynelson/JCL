@@ -46,14 +46,14 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 		final Label catchBlockEnd = new Label();
 		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, null);
 
-		final Set<Integer> varSymbolStores = new HashSet<>(vars.size());
+		final Set<Integer> symbolVarStores = new HashSet<>(vars.size());
 
 		final int packageStore = currentClass.getNextAvailableStore();
-		final int initFormStore = currentClass.getNextAvailableStore();
+		final int valStore = currentClass.getNextAvailableStore();
 
 		for (final ProgvStruct.ProgvVar var : vars) {
 			final SymbolStruct<?> symbolVar = var.getVar();
-			final LispStruct initForm = var.getVal();
+			final LispStruct symbolVal = var.getVal();
 
 			final String packageName = symbolVar.getSymbolPackage().getName();
 			final String symbolName = symbolVar.getName();
@@ -71,13 +71,13 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 			mv.visitVarInsn(Opcodes.ASTORE, symbolStore);
 
 			// Add the symbolStore here so we can unbind the vals later
-			varSymbolStores.add(symbolStore);
+			symbolVarStores.add(symbolStore);
 
-			formGenerator.generate(initForm, classBuilder);
-			mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
+			formGenerator.generate(symbolVal, classBuilder);
+			mv.visitVarInsn(Opcodes.ASTORE, valStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
-			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
+			mv.visitVarInsn(Opcodes.ALOAD, valStore);
 
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "bindDynamicValue", "(Ljcl/LispStruct;)V", false);
 		}
@@ -94,14 +94,14 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 		mv.visitVarInsn(Opcodes.ASTORE, resultStore);
 
 		mv.visitLabel(tryBlockEnd);
-		generateFinallyCode(mv, varSymbolStores);
+		generateFinallyCode(mv, symbolVarStores);
 		mv.visitJumpInsn(Opcodes.GOTO, catchBlockEnd);
 
 		mv.visitLabel(catchBlockStart);
 		final int exceptionStore = currentClass.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, exceptionStore);
 
-		generateFinallyCode(mv, varSymbolStores);
+		generateFinallyCode(mv, symbolVarStores);
 
 		mv.visitVarInsn(Opcodes.ALOAD, exceptionStore);
 		mv.visitInsn(Opcodes.ATHROW);

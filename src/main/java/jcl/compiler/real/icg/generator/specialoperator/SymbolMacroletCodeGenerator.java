@@ -1,15 +1,184 @@
 package jcl.compiler.real.icg.generator.specialoperator;
 
+import java.security.SecureRandom;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
+import java.util.Stack;
+
+import jcl.LispStruct;
+import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.SymbolMacroletEnvironment;
+import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
-import jcl.lists.ListStruct;
+import jcl.compiler.real.icg.generator.FormGenerator;
+import jcl.compiler.real.struct.specialoperator.PrognStruct;
+import jcl.compiler.real.struct.specialoperator.SymbolMacroletStruct;
+import jcl.symbols.SymbolStruct;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.FieldVisitor;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SymbolMacroletCodeGenerator implements CodeGenerator<ListStruct> {
+public class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacroletStruct> {
+
+	@Autowired
+	private FormGenerator formGenerator;
+
+	@Autowired
+	private PrognCodeGenerator prognCodeGenerator;
 
 	@Override
-	public void generate(final ListStruct input, final JavaClassBuilder classBuilder) {
-		//TODO unimplemented 'symbol-macrolet'
+	public void generate(final SymbolMacroletStruct input, final JavaClassBuilder classBuilder) {
+
+		final List<SymbolMacroletStruct.SymbolMacroletVar> vars = input.getVars();
+		final PrognStruct forms = input.getForms();
+		final SymbolMacroletEnvironment symbolMacroletEnvironment = input.getSymbolMacroletEnvironment();
+
+		final ClassDef currentClass = classBuilder.getCurrentClass();
+		final MethodVisitor mv = currentClass.getMethodVisitor();
+
+		final Label tryBlockStart = new Label();
+		final Label tryBlockEnd = new Label();
+		final Label catchBlockStart = new Label();
+		final Label catchBlockEnd = new Label();
+		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, null);
+
+		final Set<Integer> symbolVarStores = new HashSet<>(vars.size());
+
+		final int packageStore = currentClass.getNextAvailableStore();
+		final int expansionStore = currentClass.getNextAvailableStore();
+
+		for (final SymbolMacroletStruct.SymbolMacroletVar var : vars) {
+			final SymbolStruct<?> symbolVar = var.getVar();
+			final LispStruct expansion = var.getExpansion();
+
+			final String packageName = symbolVar.getSymbolPackage().getName();
+			final String symbolName = symbolVar.getName();
+
+			mv.visitLdcInsn(packageName);
+			mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
+			mv.visitVarInsn(Opcodes.ASTORE, packageStore);
+
+			mv.visitVarInsn(Opcodes.ALOAD, packageStore);
+			mv.visitLdcInsn(symbolName);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
+			// NOTE: we have to get a new 'symbolStore' for each var so we can properly unbind the expansions later
+			final int symbolStore = currentClass.getNextAvailableStore();
+			mv.visitVarInsn(Opcodes.ASTORE, symbolStore);
+
+			// Add the symbolStore here so we can unbind the expansions later
+			symbolVarStores.add(symbolStore);
+
+			final String symbolMacroExpanderClassName = generateSymbolMacroExpander(expansion, classBuilder);
+
+			mv.visitTypeInsn(Opcodes.NEW, symbolMacroExpanderClassName);
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, symbolMacroExpanderClassName, "<init>", "()V", false);
+			mv.visitVarInsn(Opcodes.ASTORE, expansionStore);
+
+			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
+			mv.visitVarInsn(Opcodes.ALOAD, expansionStore);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "bindSymbolMacroExpander", "(Ljcl/compiler/real/sa/analyzer/expander/SymbolMacroExpander;)V", false);
+		}
+
+		mv.visitLabel(tryBlockStart);
+
+		final Stack<Environment> bindingStack = classBuilder.getBindingStack();
+
+		bindingStack.push(symbolMacroletEnvironment);
+		prognCodeGenerator.generate(forms, classBuilder);
+		bindingStack.pop();
+
+		final int resultStore = currentClass.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, resultStore);
+
+		mv.visitLabel(tryBlockEnd);
+		generateFinallyCode(mv, symbolVarStores);
+		mv.visitJumpInsn(Opcodes.GOTO, catchBlockEnd);
+
+		mv.visitLabel(catchBlockStart);
+		final int exceptionStore = currentClass.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, exceptionStore);
+
+		generateFinallyCode(mv, symbolVarStores);
+
+		mv.visitVarInsn(Opcodes.ALOAD, exceptionStore);
+		mv.visitInsn(Opcodes.ATHROW);
+
+		mv.visitLabel(catchBlockEnd);
+		mv.visitVarInsn(Opcodes.ALOAD, resultStore);
+	}
+
+	private void generateFinallyCode(final MethodVisitor mv, final Set<Integer> varSymbolStores) {
+		for (final Integer varSymbolStore : varSymbolStores) {
+			mv.visitVarInsn(Opcodes.ALOAD, varSymbolStore);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindSymbolMacroExpander", "()V", false);
+		}
+	}
+
+	private String generateSymbolMacroExpander(final LispStruct expansion, final JavaClassBuilder classBuilder) {
+
+		final String fileName = "SymbolMacrolet" + '_' + System.currentTimeMillis();
+		final String className = "jcl/" + fileName;
+
+		final ClassDef currentClass = new ClassDef(className, fileName);
+		classBuilder.getClassStack().push(currentClass);
+		classBuilder.setCurrentClass(currentClass);
+		classBuilder.getClasses().addFirst(currentClass);
+
+		final ClassWriter cw = currentClass.getClassWriter();
+		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER, className, null, "jcl/compiler/real/sa/analyzer/expander/SymbolMacroExpander", null);
+
+		cw.visitSource(fileName + ".java", null);
+
+		final int thisStore = currentClass.getNextAvailableStore();
+		{
+			final Random random = new SecureRandom();
+			final long serialVersionUID = random.nextLong();
+
+			final FieldVisitor fv = cw.visitField(Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "serialVersionUID", "J", null, serialVersionUID);
+			currentClass.setFieldVisitor(fv);
+
+			fv.visitEnd();
+		}
+		{
+			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC, "<init>", "()V", null, null);
+			currentClass.setMethodVisitor(mv);
+			mv.visitCode();
+
+			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/sa/analyzer/expander/SymbolMacroExpander", "<init>", "()V", false);
+
+			mv.visitInsn(Opcodes.RETURN);
+
+			mv.visitMaxs(-1, -1);
+			mv.visitEnd();
+		}
+		{
+			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC, "expand", "(Ljcl/LispStruct;Ljcl/compiler/real/environment/Environment;)Ljcl/LispStruct;", null, null);
+			currentClass.setMethodVisitor(mv);
+			mv.visitCode();
+
+			formGenerator.generate(expansion, classBuilder);
+
+			mv.visitInsn(Opcodes.ARETURN);
+
+			mv.visitMaxs(-1, -1);
+			mv.visitEnd();
+		}
+		cw.visitEnd();
+
+		classBuilder.getClassStack().pop();
+		classBuilder.setCurrentClass(classBuilder.getClassStack().peek());
+
+		return className;
 	}
 }

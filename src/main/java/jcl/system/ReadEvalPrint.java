@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
-import java.util.List;
+import java.util.Deque;
 
 import jcl.LispStruct;
 import jcl.compiler.real.icg.ClassDef;
@@ -184,7 +184,7 @@ public class ReadEvalPrint {
 					}
 					if (whatAnalyzed != null) {
 
-						List<ClassDef> classDefList = null;
+						Deque<ClassDef> classDefList = null;
 						try {
 							final IntermediateCodeGenerator icg = context.getBean(IntermediateCodeGenerator.class);
 							classDefList = icg.generate(whatAnalyzed);
@@ -284,7 +284,7 @@ public class ReadEvalPrint {
 		return null;
 	}
 
-	private void handleClassDefList(final List<ClassDef> classDefList)
+	private void handleClassDefList(final Deque<ClassDef> classDefList)
 			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
 
 		for (final ClassDef classDef : classDefList) {
@@ -292,7 +292,8 @@ public class ReadEvalPrint {
 
 			final byte[] byteArray = cw.toByteArray();
 
-			try (FileOutputStream outputStream = new FileOutputStream(new File("/Volumes/Dev/repo/JCL/Temp.class"))) {
+			final String fileName = classDef.getFileName();
+			try (FileOutputStream outputStream = new FileOutputStream(new File("/Volumes/Dev/repo/JCL/tmp/" + fileName + ".class"))) {
 				outputStream.write(byteArray);
 			} catch (final IOException ioe) {
 				LOGGER.info("Error writing class file.", ioe);

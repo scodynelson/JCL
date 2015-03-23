@@ -63,7 +63,6 @@ public class NewMacroExpand implements Serializable {
 					final FunctionStruct macroExpandHook = CompilerVariables.MACROEXPAND_HOOK.getValue();
 					final LispStruct expansion = macroExpandHook.apply(macroFunctionExpander, form, environment);
 
-//					final LispStruct expansion = macroFunctionExpander.expand(form, environment);
 					return new NewMacroExpandReturn(expansion, true);
 				}
 				// TODO: support compiler-macro-functions
@@ -85,7 +84,6 @@ public class NewMacroExpand implements Serializable {
 				final FunctionStruct macroExpandHook = CompilerVariables.MACROEXPAND_HOOK.getValue();
 				final LispStruct expansion = macroExpandHook.apply(symbolMacroExpander, form, environment);
 
-//				final LispStruct expansion = symbolMacroExpander.expand(form, environment);
 				return new NewMacroExpandReturn(expansion, true);
 			}
 		}

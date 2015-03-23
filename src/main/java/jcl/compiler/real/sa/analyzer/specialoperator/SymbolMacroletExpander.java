@@ -82,7 +82,7 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 		final DeclareStruct declareElement = bodyProcessingResult.getDeclareElement();
 		validateDeclares(declareElement);
 
-		final List<SymbolMacroletStruct.SymbolMacroletElementVar> symbolMacroletVars
+		final List<SymbolMacroletStruct.SymbolMacroletVar> symbolMacroletVars
 				= parametersAsJavaList.stream()
 				                      .map(e -> getSymbolMacroletElementVar(e, declareElement, symbolMacroletEnvironment))
 				                      .collect(Collectors.toList());
@@ -105,8 +105,8 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 		}
 	}
 
-	private SymbolMacroletStruct.SymbolMacroletElementVar getSymbolMacroletElementVar(final LispStruct parameter, final DeclareStruct declareElement,
-	                                                                                  final SymbolMacroletEnvironment symbolMacroletEnvironment) {
+	private SymbolMacroletStruct.SymbolMacroletVar getSymbolMacroletElementVar(final LispStruct parameter, final DeclareStruct declareElement,
+	                                                                           final SymbolMacroletEnvironment symbolMacroletEnvironment) {
 
 		if (!(parameter instanceof ListStruct)) {
 			final String printedParameter = printer.print(parameter);
@@ -125,28 +125,28 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(var, allocation, T.INSTANCE, expansion);
 		symbolMacroletEnvironment.addLexicalBinding(binding);
 
-		return new SymbolMacroletStruct.SymbolMacroletElementVar(var, expansion);
+		return new SymbolMacroletStruct.SymbolMacroletVar(var, expansion);
 	}
 
 	private SymbolStruct<?> getSymbolMacroletParameterVar(final ListStruct listParameter) {
 
 		final int listParameterSize = listParameter.size();
 		if (listParameterSize != 2) {
-			throw new ProgramErrorException("SYMBOL-MACROLET: List parameter must have only 2 elements. Got: " + listParameter);
+			throw new ProgramErrorException("SYMBOL-MACROLET: Parameter list must have only 2 elements. Got: " + listParameter);
 		}
 
 		final LispStruct listParameterFirst = listParameter.getFirst();
 		if (!(listParameterFirst instanceof SymbolStruct)) {
 			final String printedObject = printer.print(listParameterFirst);
-			throw new ProgramErrorException("SYMBOL-MACROLET: First element of list parameter must be a symbol. Got: " + printedObject);
+			throw new ProgramErrorException("SYMBOL-MACROLET: First element of parameter list must be a symbol. Got: " + printedObject);
 		}
 
 		final SymbolStruct<?> parameterVar = (SymbolStruct<?>) listParameterFirst;
 
-		final boolean hasGlobalBinding = Environment.NULL.hasLexicalBinding(parameterVar);
+		final boolean hasGlobalBinding = Environment.NULL.hasDynamicBinding(parameterVar);
 		if (hasGlobalBinding) {
 			final String printedObject = printer.print(parameterVar);
-			throw new ProgramErrorException("SYMBOL-MACROLET: First element symbol of list parameter must not exist in the global environment. Got: " + printedObject);
+			throw new ProgramErrorException("SYMBOL-MACROLET: Parameter list symbol must not be a dynamic binding in the global environment. Got: " + printedObject);
 		}
 
 		return parameterVar;

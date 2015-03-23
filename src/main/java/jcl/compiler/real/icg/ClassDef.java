@@ -15,6 +15,8 @@ public class ClassDef {
 
 	private final String name;
 
+	private final String fileName;
+
 	private MethodVisitor methodVisitor;
 
 	private FieldVisitor fieldVisitor;
@@ -23,8 +25,9 @@ public class ClassDef {
 
 	private int nextAvailableStore;
 
-	public ClassDef(final String name) {
+	public ClassDef(final String name, final String fileName) {
 		this.name = name;
+		this.fileName = fileName;
 	}
 
 	public ClassWriter getClassWriter() {
@@ -57,6 +60,10 @@ public class ClassDef {
 
 	public String getName() {
 		return name;
+	}
+
+	public String getFileName() {
+		return fileName;
 	}
 
 	public int getCurrentStore() {

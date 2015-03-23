@@ -1,10 +1,9 @@
 package jcl.compiler.real.icg;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Deque;
 import java.util.Set;
 import java.util.Stack;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.icg.generator.specialoperator.TagbodyLabel;
@@ -12,7 +11,7 @@ import jcl.lists.ListStruct;
 
 public class JavaClassBuilder {
 
-	private final List<ClassDef> classes = Collections.synchronizedList(new ArrayList<>());
+	private final Deque<ClassDef> classes = new ConcurrentLinkedDeque<>();
 
 	private final Stack<ClassDef> classStack = new Stack<>();
 
@@ -129,7 +128,7 @@ public class JavaClassBuilder {
 		MacroLambda = macroLambda;
 	}
 
-	public List<ClassDef> getClasses() {
+	public Deque<ClassDef> getClasses() {
 		return classes;
 	}
 

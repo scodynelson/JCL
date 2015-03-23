@@ -112,7 +112,6 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 
 	private void generateFinallyCode(final MethodVisitor mv, final Set<Integer> varSymbolStores) {
 		for (final Integer varSymbolStore : varSymbolStores) {
-
 			mv.visitVarInsn(Opcodes.ALOAD, varSymbolStore);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindDynamicValue", "()V", false);
 		}

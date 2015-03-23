@@ -6,7 +6,6 @@ package jcl.compiler.real.icg.generator.specialoperator.lambda;
 
 import java.security.SecureRandom;
 import java.util.Random;
-import java.util.UUID;
 
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.icg.ClassDef;
@@ -31,19 +30,19 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	@Override
 	public void generate(final LambdaStruct input, final JavaClassBuilder classBuilder) {
 
-		final String uniqueName = UUID.randomUUID().toString().replace('-', '_');
+		final String fileName = "Lambda" + '_' + System.currentTimeMillis();
+		final String className = "jcl/" + fileName;
 
-		final String className = "jcl/Temp_" + uniqueName;
-		final ClassDef currentClass = new ClassDef(className);
+		final ClassDef currentClass = new ClassDef(className, fileName);
 		classBuilder.getClassStack().push(currentClass);
 		classBuilder.setCurrentClass(currentClass);
-		classBuilder.getClasses().add(currentClass);
+		classBuilder.getClasses().addFirst(currentClass);
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
 		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER, className, null, "jcl/functions/FunctionStruct", null);
 
-		cw.visitSource("Temp.java", null);
+		cw.visitSource(fileName + ".java", null);
 
 		final int thisStore = currentClass.getNextAvailableStore();
 		{

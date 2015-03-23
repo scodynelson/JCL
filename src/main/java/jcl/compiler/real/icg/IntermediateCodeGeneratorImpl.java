@@ -1,6 +1,6 @@
 package jcl.compiler.real.icg;
 
-import java.util.List;
+import java.util.Deque;
 
 import jcl.compiler.real.icg.generator.specialoperator.lambda.NewLambdaCodeGenerator;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
@@ -17,7 +17,7 @@ public class IntermediateCodeGeneratorImpl implements IntermediateCodeGenerator 
 	private NewLambdaCodeGenerator lambdaCodeGenerator;
 
 	@Override
-	public List<ClassDef> generate(final LambdaStruct lambdaStruct) {
+	public Deque<ClassDef> generate(final LambdaStruct lambdaStruct) {
 		final JavaClassBuilder classBuilder = new JavaClassBuilder();
 		lambdaCodeGenerator.generate(lambdaStruct, classBuilder);
 //        assert(closureDepth == 0) : "Unbalanced closure depth: " + closureDepth;

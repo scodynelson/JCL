@@ -44,7 +44,7 @@ public class KeywordStruct extends ConstantStruct<KeywordStruct> {
 		                            .append(properties)
 		                            .append(macroFunctionExpander)
 		                            .append(compilerMacroFunctionExpander)
-		                            .append(symbolMacroExpander)
+		                            .append(symbolMacroExpanderStack)
 		                            .toHashCode();
 	}
 
@@ -67,7 +67,7 @@ public class KeywordStruct extends ConstantStruct<KeywordStruct> {
 		                          .append(properties, rhs.properties)
 		                          .append(macroFunctionExpander, rhs.macroFunctionExpander)
 		                          .append(compilerMacroFunctionExpander, rhs.compilerMacroFunctionExpander)
-		                          .append(symbolMacroExpander, rhs.symbolMacroExpander)
+		                          .append(symbolMacroExpanderStack, rhs.symbolMacroExpanderStack)
 		                          .isEquals();
 	}
 
@@ -79,7 +79,7 @@ public class KeywordStruct extends ConstantStruct<KeywordStruct> {
 		                                                                .append(properties)
 		                                                                .append(macroFunctionExpander)
 		                                                                .append(compilerMacroFunctionExpander)
-		                                                                .append(symbolMacroExpander)
+		                                                                .append(symbolMacroExpanderStack)
 		                                                                .toString();
 	}
 }

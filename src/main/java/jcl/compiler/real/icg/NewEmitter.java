@@ -90,7 +90,7 @@ public class NewEmitter {
 	 * 		String[] interfaces
 	 */
 	public void newClass(final int access, final String name, final String signature, final String superName, final String[] interfaces) {
-		currentClass = new ClassDef(name);
+		currentClass = new ClassDef(name, "");
 		currentClass.getClassWriter().visit(classVersion, access, name, signature, superName, interfaces);
 
 		classes.add(currentClass);

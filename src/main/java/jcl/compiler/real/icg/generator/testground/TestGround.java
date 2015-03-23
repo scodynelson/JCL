@@ -13,6 +13,7 @@ import jcl.compiler.real.icg.generator.specialoperator.TagbodyLabel;
 import jcl.compiler.real.icg.generator.specialoperator.exception.GoException;
 import jcl.compiler.real.icg.generator.specialoperator.exception.ReturnFromException;
 import jcl.compiler.real.icg.generator.specialoperator.exception.ThrowException;
+import jcl.compiler.real.sa.analyzer.expander.SymbolMacroExpander;
 import jcl.lists.ConsStruct;
 import jcl.lists.NullStruct;
 import jcl.numbers.FloatStruct;
@@ -189,6 +190,24 @@ public class TestGround {
 			result = new CharacterStruct(197);
 		} finally {
 			symbol.unbindLexicalValue();
+		}
+		return result;
+	}
+
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	private Object symbolMacroletGen() {
+
+		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
+		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
+
+		final SymbolMacroExpander symbolMacroExpander = new TestGroundSymbolMacroExpander();
+		symbol.bindSymbolMacroExpander(symbolMacroExpander);
+
+		final LispStruct result;
+		try {
+			result = new CharacterStruct(197);
+		} finally {
+			symbol.unbindSymbolMacroExpander();
 		}
 		return result;
 	}

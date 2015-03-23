@@ -20,19 +20,19 @@ public class SymbolMacroletStruct extends SpecialOperatorStruct {
 
 	private static final long serialVersionUID = 2362123144166759037L;
 
-	private final List<SymbolMacroletElementVar> vars;
+	private final List<SymbolMacroletVar> vars;
 
 	private final PrognStruct forms;
 
 	private final SymbolMacroletEnvironment symbolMacroletEnvironment;
 
-	public SymbolMacroletStruct(final List<SymbolMacroletElementVar> vars, final PrognStruct forms, final SymbolMacroletEnvironment symbolMacroletEnvironment) {
+	public SymbolMacroletStruct(final List<SymbolMacroletVar> vars, final PrognStruct forms, final SymbolMacroletEnvironment symbolMacroletEnvironment) {
 		this.vars = vars;
 		this.forms = forms;
 		this.symbolMacroletEnvironment = symbolMacroletEnvironment;
 	}
 
-	public List<SymbolMacroletElementVar> getVars() {
+	public List<SymbolMacroletVar> getVars() {
 		return vars;
 	}
 
@@ -80,7 +80,7 @@ public class SymbolMacroletStruct extends SpecialOperatorStruct {
 		                                                                .toString();
 	}
 
-	public static class SymbolMacroletElementVar implements Serializable {
+	public static class SymbolMacroletVar implements Serializable {
 
 		private static final long serialVersionUID = -601687250765470819L;
 
@@ -88,7 +88,7 @@ public class SymbolMacroletStruct extends SpecialOperatorStruct {
 
 		private final LispStruct expansion;
 
-		public SymbolMacroletElementVar(final SymbolStruct<?> var, final LispStruct expansion) {
+		public SymbolMacroletVar(final SymbolStruct<?> var, final LispStruct expansion) {
 			this.var = var;
 			this.expansion = expansion;
 		}
@@ -119,7 +119,7 @@ public class SymbolMacroletStruct extends SpecialOperatorStruct {
 			if (obj.getClass() != getClass()) {
 				return false;
 			}
-			final SymbolMacroletElementVar rhs = (SymbolMacroletElementVar) obj;
+			final SymbolMacroletVar rhs = (SymbolMacroletVar) obj;
 			return new EqualsBuilder().append(var, rhs.var)
 			                          .append(expansion, rhs.expansion)
 			                          .isEquals();

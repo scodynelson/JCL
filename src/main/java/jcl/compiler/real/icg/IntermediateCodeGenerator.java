@@ -4,11 +4,11 @@
 
 package jcl.compiler.real.icg;
 
-import java.util.List;
+import java.util.Deque;
 
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 
 public interface IntermediateCodeGenerator {
 
-	List<ClassDef> generate(LambdaStruct lambdaStruct);
+	Deque<ClassDef> generate(LambdaStruct lambdaStruct);
 }

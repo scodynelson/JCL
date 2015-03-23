@@ -46,7 +46,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 
 	protected CompilerMacroFunctionExpander<?> compilerMacroFunctionExpander;
 
-	protected SymbolMacroExpander<?> symbolMacroExpander;
+	protected Stack<SymbolMacroExpander<?>> symbolMacroExpanderStack = new Stack<>();
 
 	/**
 	 * Public constructor.
@@ -323,7 +323,6 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 //	 */
 	public FunctionStruct getFunction() {
 		if (functionStack.isEmpty()) {
-			// TODO: return null???
 			return null;
 		}
 		return functionStack.peek();
@@ -386,23 +385,35 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		this.compilerMacroFunctionExpander = compilerMacroFunctionExpander;
 	}
 
-	/**
-	 * Getter for symbol {@link #symbolMacroExpander} property.
-	 *
-	 * @return symbol {@link #symbolMacroExpander} property
-	 */
+//	/**
+//	 * Getter for symbol {@link #symbolMacroExpander} property.
+//	 *
+//	 * @return symbol {@link #symbolMacroExpander} property
+//	 */
 	public SymbolMacroExpander<?> getSymbolMacroExpander() {
-		return symbolMacroExpander;
+		if (symbolMacroExpanderStack.isEmpty()) {
+			return null;
+		}
+		return symbolMacroExpanderStack.peek();
 	}
 
-	/**
-	 * Setter for symbol {@link #symbolMacroExpander} property.
-	 *
-	 * @param symbolMacroExpander
-	 * 		new symbol {@link #symbolMacroExpander} property value
-	 */
+//	/**
+//	 * Setter for symbol {@link #symbolMacroExpander} property.
+//	 *
+//	 * @param symbolMacroExpander
+//	 * 		new symbol {@link #symbolMacroExpander} property value
+//	 */
 	public void setSymbolMacroExpander(final SymbolMacroExpander<?> symbolMacroExpander) {
-		this.symbolMacroExpander = symbolMacroExpander;
+		symbolMacroExpanderStack.pop();
+		symbolMacroExpanderStack.push(symbolMacroExpander);
+	}
+
+	public void bindSymbolMacroExpander(final SymbolMacroExpander<?> symbolMacroExpander) {
+		symbolMacroExpanderStack.push(symbolMacroExpander);
+	}
+
+	public void unbindSymbolMacroExpander() {
+		symbolMacroExpanderStack.pop();
 	}
 
 	/**
@@ -484,7 +495,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		                            .append(properties)
 		                            .append(macroFunctionExpander)
 		                            .append(compilerMacroFunctionExpander)
-		                            .append(symbolMacroExpander)
+		                            .append(symbolMacroExpanderStack)
 		                            .toHashCode();
 //		                            .append(lexicalValueStack) TODO: why does this cause explosions???
 //		                            .append(dynamicValueStack) TODO: why does this cause explosions???
@@ -511,7 +522,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		                          .append(properties, rhs.properties)
 		                          .append(macroFunctionExpander, rhs.macroFunctionExpander)
 		                          .append(compilerMacroFunctionExpander, rhs.compilerMacroFunctionExpander)
-		                          .append(symbolMacroExpander, rhs.symbolMacroExpander)
+		                          .append(symbolMacroExpanderStack, rhs.symbolMacroExpanderStack)
 		                          .isEquals();
 	}
 
@@ -525,7 +536,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		                                                                .append(properties)
 		                                                                .append(macroFunctionExpander)
 		                                                                .append(compilerMacroFunctionExpander)
-		                                                                .append(symbolMacroExpander)
+		                                                                .append(symbolMacroExpanderStack)
 		                                                                .toString();
 	}
 }

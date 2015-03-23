@@ -1,9 +1,9 @@
-package jcl.compiler.real.icg.generator.specialoperator.compiler;
+package jcl.compiler.real.icg.generator.specialoperator.old.compiler;
 
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
-import jcl.compiler.real.icg.generator.FunctionCallCodeGenerator;
+import jcl.compiler.real.icg.generator.specialoperator.old.simple.FunctionCallCodeGenerator;
 import jcl.lists.ListStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;

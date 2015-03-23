@@ -1,4 +1,4 @@
-package jcl.compiler.real.icg.generator.specialoperator.special;
+package jcl.compiler.real.icg.generator.specialoperator.old.special;
 
 import java.util.Date;
 import java.util.List;
@@ -18,10 +18,10 @@ import jcl.compiler.real.environment.binding.SymbolLocalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
-import jcl.compiler.real.icg.generator.ClosureCodeGenerator;
+import jcl.compiler.real.icg.generator.specialoperator.old.simple.ClosureCodeGenerator;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
-import jcl.compiler.real.icg.generator.SpecialVariableCodeGenerator;
+import jcl.compiler.real.icg.generator.specialoperator.old.simple.SpecialVariableCodeGenerator;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;

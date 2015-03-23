@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.compiler.real.icg.generator;
+package jcl.compiler.real.icg.generator.specialoperator.old.simple;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +14,7 @@ import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.environment.binding.ClosureBinding;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;

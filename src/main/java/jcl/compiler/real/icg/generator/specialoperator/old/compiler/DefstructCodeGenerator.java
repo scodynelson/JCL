@@ -1,11 +1,11 @@
-package jcl.compiler.real.icg.generator.specialoperator.compiler;
+package jcl.compiler.real.icg.generator.specialoperator.old.compiler;
 
 import jcl.LispStruct;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
-import jcl.compiler.real.icg.generator.SpecialVariableCodeGenerator;
-import jcl.compiler.real.icg.generator.SymbolCodeGenerator;
+import jcl.compiler.real.icg.generator.specialoperator.old.simple.SpecialVariableCodeGenerator;
+import jcl.compiler.real.icg.generator.specialoperator.old.simple.SymbolCodeGenerator;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;

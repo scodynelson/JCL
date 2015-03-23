@@ -1,12 +1,12 @@
-package jcl.compiler.real.icg.generator.specialoperator;
+package jcl.compiler.real.icg.generator.specialoperator.old;
 
 import jcl.LispStruct;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
-import jcl.compiler.real.icg.generator.SpecialVariableCodeGenerator;
-import jcl.compiler.real.icg.generator.SymbolFunctionCodeGenerator;
-import jcl.compiler.real.icg.generator.specialoperator.special.LambdaCodeGenerator;
+import jcl.compiler.real.icg.generator.specialoperator.old.simple.SpecialVariableCodeGenerator;
+import jcl.compiler.real.icg.generator.specialoperator.old.simple.SymbolFunctionCodeGenerator;
+import jcl.compiler.real.icg.generator.specialoperator.old.special.LambdaCodeGenerator;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperatorStruct;

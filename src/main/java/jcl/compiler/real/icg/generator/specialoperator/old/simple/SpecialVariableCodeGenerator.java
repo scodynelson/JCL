@@ -2,9 +2,10 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.compiler.real.icg.generator;
+package jcl.compiler.real.icg.generator.specialoperator.old.simple;
 
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.symbols.NILStruct;

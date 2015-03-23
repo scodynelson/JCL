@@ -27,7 +27,7 @@ public class PrinterImpl implements Printer {
 
 		final LispPrinter<LispStruct> printer = printerStrategies.get(object.getClass());
 		if (printer == null) {
-			final String typeClassName = object.getType().getClass().getName().toUpperCase();
+			final String typeClassName = object.getClass().getSimpleName();
 			return "#<" + typeClassName + '>';
 		}
 

@@ -322,7 +322,9 @@ public class ReadEvalPrint {
 			constructor.setAccessible(false);
 
 //			LOGGER.info("GENERATED CLASS -> {}", printer.print(lambda));
-			LOGGER.info(printer.print(lambda.apply()));
+			final LispStruct apply = lambda.apply();
+			final String printedResult = printer.print(apply);
+			LOGGER.info(printedResult);
 		}
 	}
 

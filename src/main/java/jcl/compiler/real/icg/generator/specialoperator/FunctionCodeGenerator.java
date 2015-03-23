@@ -21,7 +21,7 @@ public class FunctionCodeGenerator implements CodeGenerator<ListStruct> {
 	@Autowired
 	private SpecialVariableCodeGenerator specialVariableCodeGenerator;
 
-	@Autowired
+//	@Autowired
 	private SymbolFunctionCodeGenerator symbolFunctionCodeGenerator;
 
 	@Autowired

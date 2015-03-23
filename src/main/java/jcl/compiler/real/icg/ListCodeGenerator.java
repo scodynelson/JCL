@@ -31,7 +31,7 @@ public class ListCodeGenerator implements CodeGenerator<ListStruct> {
 	@Autowired
 	private SpecialFormCodeGenerator specialFormCodeGenerator;
 
-	@Autowired
+//	@Autowired
 	private SymbolFunctionCodeGenerator symbolFunctionCodeGenerator;
 
 	@Autowired

@@ -187,7 +187,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> ALPHANUMERICP = null;
 	SymbolStruct<?> AND = null;
 	SymbolStruct<?> APPEND = new SymbolStruct<>("APPEND", GlobalPackageStruct.COMMON_LISP);
-	SymbolStruct<?> APPLY = null;
+	SymbolStruct<?> APPLY = new SymbolStruct<>("APPLY", GlobalPackageStruct.COMMON_LISP);
 	SymbolStruct<?> APROPOS = null;
 	SymbolStruct<?> APROPOS_LIST = null;
 	SymbolStruct<?> AREF = null;
@@ -480,7 +480,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> FRESH_LINE = null;
 	SymbolStruct<?> FROUND = null;
 	SymbolStruct<?> FTRUNCATE = null;
-	SymbolStruct<?> FUNCALL = null;
+	SymbolStruct<?> FUNCALL = new SymbolStruct<>("FUNCALL", GlobalPackageStruct.COMMON_LISP);
 	SymbolStruct<?> FUNCTION = SpecialOperatorStruct.FUNCTION;
 	SymbolStruct<?> FUNCTION_KEYWORDS = null;
 	SymbolStruct<?> FUNCTION_LAMBDA_EXPRESSION = null;

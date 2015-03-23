@@ -25,6 +25,8 @@ public class Funcall extends FunctionStruct {
 
 	public static final Funcall INSTANCE = new Funcall();
 
+	public static final SymbolStruct<?> FUNCALL = new SymbolStruct<>("FUNCALL", GlobalPackageStruct.COMMON_LISP, null, INSTANCE);
+
 	private static final long serialVersionUID = -1425587290881971372L;
 
 	private Funcall() {

@@ -323,7 +323,21 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 //	 */
 	public FunctionStruct getFunction() {
 		if (functionStack.isEmpty()) {
-			return null;
+
+			String variableName = name;
+			final PackageStruct currentPackage = PackageVariables.PACKAGE.getValue();
+
+			if (!currentPackage.equals(symbolPackage)) {
+				final String packageName = symbolPackage.getName();
+
+				if (currentPackage.getExternalSymbols().containsKey(name)) {
+					variableName = packageName + ':' + name;
+				} else {
+					variableName = packageName + "::" + name;
+				}
+			}
+
+			throw new ErrorException("Undefined function: " + variableName);
 		}
 		return functionStack.peek();
 	}

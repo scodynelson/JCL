@@ -26,6 +26,8 @@ public class Apply extends FunctionStruct {
 
 	public static final Apply INSTANCE = new Apply();
 
+	public static final SymbolStruct<?> APPLY = new SymbolStruct<>("APPLY", GlobalPackageStruct.COMMON_LISP, null, INSTANCE);
+
 	private static final long serialVersionUID = 1994110477366960170L;
 
 	private Apply() {

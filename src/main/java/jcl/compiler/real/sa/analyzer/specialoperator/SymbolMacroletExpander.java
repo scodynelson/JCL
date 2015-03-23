@@ -10,7 +10,7 @@ import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.SymbolMacroletEnvironment;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
-import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
+import jcl.compiler.real.environment.binding.SymbolMacroBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAnalyzer;
@@ -122,8 +122,8 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 		symbolMacroletEnvironment.setBindingsPosition(nextBindingsPosition);
 
 		final ParameterAllocation allocation = new ParameterAllocation(nextBindingsPosition);
-		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(var, allocation, T.INSTANCE, expansion);
-		symbolMacroletEnvironment.addLexicalBinding(binding);
+		final SymbolMacroBinding binding = new SymbolMacroBinding(var, allocation, T.INSTANCE, expansion);
+		symbolMacroletEnvironment.addSymbolMacroBinding(binding);
 
 		return new SymbolMacroletStruct.SymbolMacroletVar(var, expansion);
 	}

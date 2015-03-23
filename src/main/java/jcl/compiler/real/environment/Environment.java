@@ -15,6 +15,7 @@ import java.util.Stack;
 import jcl.classes.StandardObjectStruct;
 import jcl.compiler.real.environment.binding.EnvironmentBinding;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
+import jcl.compiler.real.environment.binding.SymbolMacroBinding;
 import jcl.compiler.real.struct.specialoperator.go.GoStruct;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -33,6 +34,8 @@ public class Environment extends StandardObjectStruct {
 	private final List<EnvironmentParameterBinding> lexicalBindings = new ArrayList<>();
 
 	private final List<EnvironmentBinding<?>> dynamicBindings = new ArrayList<>();
+
+	private final List<SymbolMacroBinding> symbolMacroBindings = new ArrayList<>();
 
 	private final SymbolTable symbolTable = new SymbolTable();
 
@@ -152,6 +155,21 @@ public class Environment extends StandardObjectStruct {
 
 	public void addDynamicBinding(final EnvironmentBinding<?> environmentBinding) {
 		dynamicBindings.add(environmentBinding);
+	}
+
+	public boolean hasSymbolMacroBinding(final SymbolStruct<?> symbolStruct) {
+		return symbolMacroBindings.stream()
+		                          .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct));
+	}
+
+	public Optional<SymbolMacroBinding> getSymbolMacroBinding(final SymbolStruct<?> symbolStruct) {
+		return symbolMacroBindings.stream()
+		                          .filter(e -> e.getSymbolStruct().equals(symbolStruct))
+		                          .findFirst();
+	}
+
+	public void addSymbolMacroBinding(final SymbolMacroBinding symbolMacroBinding) {
+		symbolMacroBindings.add(symbolMacroBinding);
 	}
 
 	public SymbolTable getSymbolTable() {

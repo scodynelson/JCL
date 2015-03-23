@@ -4,9 +4,6 @@ import jcl.LispStruct;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
-import jcl.compiler.real.icg.generator.specialoperator.old.FletCodeGenerator;
-import jcl.compiler.real.icg.generator.specialoperator.old.LabelsCodeGenerator;
-import jcl.compiler.real.icg.generator.specialoperator.old.MacroletCodeGenerator;
 import jcl.compiler.real.icg.generator.specialoperator.LetCodeGenerator;
 import jcl.compiler.real.icg.generator.specialoperator.old.special.LambdaCodeGenerator;
 import jcl.compiler.real.icg.generator.specialoperator.old.special.MacroLambdaCodeGenerator;
@@ -43,15 +40,6 @@ public class ListCodeGenerator implements CodeGenerator<ListStruct> {
 
 	@Autowired
 	private LetCodeGenerator letCodeGenerator;
-
-	@Autowired
-	private FletCodeGenerator fletCodeGenerator;
-
-	@Autowired
-	private LabelsCodeGenerator labelsCodeGenerator;
-
-	@Autowired
-	private MacroletCodeGenerator macroletCodeGenerator;
 
 	@Autowired
 	private FormGenerator formGenerator;
@@ -99,7 +87,7 @@ public class ListCodeGenerator implements CodeGenerator<ListStruct> {
 				} else if (first.getFirst().equals(SpecialOperatorStruct.LABELS)) {
 //					labelsCodeGenerator.generate(input, classBuilder);
 				} else if (first.getFirst().equals(SpecialOperatorStruct.MACROLET)) {
-					macroletCodeGenerator.generate(input, classBuilder);
+//					macroletCodeGenerator.generate(input, classBuilder);
 				} else {
 					LOGGER.info("It's something else, {}", first);
 				}

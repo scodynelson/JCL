@@ -22,8 +22,8 @@ public class LabelsStruct extends InnerFunctionStruct<LabelsEnvironment, LabelsV
 
 		private static final long serialVersionUID = 2989214415282349607L;
 
-		public LabelsVar(final SymbolStruct<?> var, final CompilerFunctionStruct initForm) {
-			super(var, initForm);
+		public LabelsVar(final SymbolStruct<?> var, final CompilerFunctionStruct initForm, final boolean isSpecial) {
+			super(var, initForm, isSpecial);
 		}
 	}
 }

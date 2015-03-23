@@ -22,8 +22,8 @@ public class FletStruct extends InnerFunctionStruct<FletEnvironment, FletVar> {
 
 		private static final long serialVersionUID = -794246121764492302L;
 
-		public FletVar(final SymbolStruct<?> var, final CompilerFunctionStruct initForm) {
-			super(var, initForm);
+		public FletVar(final SymbolStruct<?> var, final CompilerFunctionStruct initForm, final boolean isSpecial) {
+			super(var, initForm, isSpecial);
 		}
 	}
 }

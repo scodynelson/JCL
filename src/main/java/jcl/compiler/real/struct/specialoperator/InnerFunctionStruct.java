@@ -88,9 +88,12 @@ public abstract class InnerFunctionStruct<E extends Environment, V extends Inner
 
 		private final CompilerFunctionStruct initForm;
 
-		InnerFunctionVar(final SymbolStruct<?> var, final CompilerFunctionStruct initForm) {
+		private final boolean isSpecial;
+
+		InnerFunctionVar(final SymbolStruct<?> var, final CompilerFunctionStruct initForm, final boolean isSpecial) {
 			this.var = var;
 			this.initForm = initForm;
+			this.isSpecial = isSpecial;
 		}
 
 		public SymbolStruct<?> getVar() {
@@ -99,6 +102,10 @@ public abstract class InnerFunctionStruct<E extends Environment, V extends Inner
 
 		public CompilerFunctionStruct getInitForm() {
 			return initForm;
+		}
+
+		public boolean isSpecial() {
+			return isSpecial;
 		}
 
 		@Override

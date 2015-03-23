@@ -162,7 +162,7 @@ public class LabelsExpander extends MacroFunctionExpander<LabelsStruct> {
 			labelsEnvironment.addLexicalBinding(binding);
 		}
 
-		return new LabelsStruct.LabelsVar(functionName, functionInitForm);
+		return new LabelsStruct.LabelsVar(functionName, functionInitForm, isSpecial);
 	}
 
 	private CompilerFunctionStruct getFunctionParameterInitForm(final ListStruct functionListParameter,

@@ -162,7 +162,7 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 			fletEnvironment.addLexicalBinding(binding);
 		}
 
-		return new FletStruct.FletVar(functionName, functionInitForm);
+		return new FletStruct.FletVar(functionName, functionInitForm, isSpecial);
 	}
 
 	private CompilerFunctionStruct getFunctionParameterInitForm(final ListStruct functionListParameter, final FletEnvironment fletEnvironment) {

@@ -162,7 +162,7 @@ public class MacroletExpander extends MacroFunctionExpander<MacroletStruct> {
 			macroletEnvironment.addLexicalBinding(binding);
 		}
 
-		return new MacroletStruct.MacroletVar(functionName, functionInitForm);
+		return new MacroletStruct.MacroletVar(functionName, functionInitForm, isSpecial);
 	}
 
 	private CompilerFunctionStruct getFunctionParameterInitForm(final ListStruct functionListParameter,

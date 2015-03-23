@@ -28,7 +28,7 @@ public class BodyWithDeclaresAnalyzer implements Serializable {
 
 	public BodyProcessingResult analyze(final List<LispStruct> input, final Environment environment) {
 
-		DeclareStruct declareElement = null;
+		DeclareStruct declareElement = new DeclareStruct();
 		final List<LispStruct> bodyForms = new ArrayList<>();
 
 		final Iterator<LispStruct> iterator = input.iterator();

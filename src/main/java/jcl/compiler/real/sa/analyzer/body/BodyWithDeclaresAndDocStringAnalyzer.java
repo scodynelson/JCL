@@ -29,7 +29,7 @@ public class BodyWithDeclaresAndDocStringAnalyzer implements Serializable {
 
 	public BodyProcessingResult analyze(final List<LispStruct> input, final Environment environment) {
 
-		DeclareStruct declareElement = null;
+		DeclareStruct declareElement = new DeclareStruct();
 		StringStruct docString = null;
 		final List<LispStruct> bodyForms = new ArrayList<>();
 

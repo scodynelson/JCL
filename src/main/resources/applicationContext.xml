@@ -96,7 +96,7 @@
 		<entry key="jcl.compiler.real.struct.specialoperator.IfStruct" value-ref="ifCodeGenerator"/>
 		<!--<entry key="jcl.compiler.real.struct.specialoperator.ImmutableLoadTimeValueStruct" value-ref=""/>-->
 		<!--<entry key="jcl.compiler.real.struct.specialoperator.LabelsStruct" value-ref="labelsCodeGenerator"/>-->
-		<!--<entry key="jcl.compiler.real.struct.specialoperator.LambdaCompilerFunctionStruct" value-ref=""/>-->
+		<entry key="jcl.compiler.real.struct.specialoperator.LambdaCompilerFunctionStruct" value-ref="lambdaFunctionCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.LetStruct" value-ref="letCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.LocallyStruct" value-ref="locallyCodeGenerator"/>
 		<!--<entry key="jcl.compiler.real.struct.specialoperator.MacroletStruct" value-ref="macroletCodeGenerator"/>-->

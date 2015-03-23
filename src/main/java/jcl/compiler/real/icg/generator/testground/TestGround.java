@@ -14,6 +14,7 @@ import jcl.compiler.real.icg.generator.specialoperator.exception.GoException;
 import jcl.compiler.real.icg.generator.specialoperator.exception.ReturnFromException;
 import jcl.compiler.real.icg.generator.specialoperator.exception.ThrowException;
 import jcl.compiler.real.sa.analyzer.expander.SymbolMacroExpander;
+import jcl.functions.FunctionStruct;
 import jcl.lists.ConsStruct;
 import jcl.lists.NullStruct;
 import jcl.numbers.FloatStruct;
@@ -218,5 +219,11 @@ public class TestGround {
 		final SymbolStruct<?> symbol = pkg.findSymbol("FOO").getSymbol();
 
 		return symbol.getFunction();
+	}
+
+	private Object lambdaFunctionGen() {
+
+		final FunctionStruct functionStruct = new TestGroundLambdaFunction();
+		return functionStruct;
 	}
 }

@@ -25,22 +25,23 @@ public class CatchCodeGenerator implements CodeGenerator<CatchStruct> {
 	@Override
 	public void generate(final CatchStruct input, final JavaClassBuilder classBuilder) {
 
+		final LispStruct catchTag = input.getCatchTag();
+		final PrognStruct forms = input.getForms();
+
 		final ClassDef currentClass = classBuilder.getCurrentClass();
 		final MethodVisitor mv = currentClass.getMethodVisitor();
 
 		final Label tryBlockStart = new Label();
 		final Label tryBlockEnd = new Label();
-		final Label catchBlock = new Label();
+		final Label catchBlockStart = new Label();
 		final Label catchBlockEnd = new Label();
-		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlock, "jcl/compiler/real/icg/generator/specialoperator/exception/ThrowException");
+		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, "jcl/compiler/real/icg/generator/specialoperator/exception/ThrowException");
 
-		final LispStruct catchTag = input.getCatchTag();
 		formGenerator.generate(catchTag, classBuilder);
 		final int catchTagStore = currentClass.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, catchTagStore);
 
 		mv.visitLabel(tryBlockStart);
-		final PrognStruct forms = input.getForms();
 		prognCodeGenerator.generate(forms, classBuilder);
 		final int resultFormStore = currentClass.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, resultFormStore);
@@ -48,7 +49,7 @@ public class CatchCodeGenerator implements CodeGenerator<CatchStruct> {
 		mv.visitLabel(tryBlockEnd);
 		mv.visitJumpInsn(Opcodes.GOTO, catchBlockEnd);
 
-		mv.visitLabel(catchBlock);
+		mv.visitLabel(catchBlockStart);
 		final int throwExceptionStore = currentClass.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, throwExceptionStore);
 
@@ -74,8 +75,5 @@ public class CatchCodeGenerator implements CodeGenerator<CatchStruct> {
 
 		mv.visitLabel(catchBlockEnd);
 		mv.visitVarInsn(Opcodes.ALOAD, resultFormStore);
-
-		// TODO: don't know if the next line is necessary. we might want to remain in the same method...
-//		mv.visitInsn(Opcodes.ARETURN);
 	}
 }

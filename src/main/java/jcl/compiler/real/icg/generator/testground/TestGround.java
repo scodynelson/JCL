@@ -125,11 +125,13 @@ public class TestGround {
 	}
 
 	private Object unwindProtectGen() {
+		final LispStruct result;
 		try {
-			return new CharacterStruct(97);
+			result = new CharacterStruct(97);
 		} finally {
 			new CharacterStruct(197);
 		}
+		return result;
 	}
 
 	private Object goGen() {

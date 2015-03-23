@@ -25,44 +25,42 @@ public class UnwindProtectCodeGenerator implements CodeGenerator<UnwindProtectSt
 	@Override
 	public void generate(final UnwindProtectStruct input, final JavaClassBuilder classBuilder) {
 
+		final LispStruct protectedForm = input.getProtectedForm();
+		final PrognStruct cleanupForms = input.getCleanupForms();
+
 		final ClassDef currentClass = classBuilder.getCurrentClass();
 		final MethodVisitor mv = currentClass.getMethodVisitor();
 
 		final Label tryBlockStart = new Label();
 		final Label tryBlockEnd = new Label();
-		final Label catchBlock = new Label();
-		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlock, "java/lang/Throwable");
+		final Label catchBlockStart = new Label();
+		final Label catchBlockEnd = new Label();
+		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, null);
 
 		mv.visitLabel(tryBlockStart);
-		final LispStruct protectedForm = input.getProtectedForm();
 		formGenerator.generate(protectedForm, classBuilder);
 		final int protectedFormStore = currentClass.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, protectedFormStore);
 
 		mv.visitLabel(tryBlockEnd);
-
-		final Label catchBlockEnd = new Label();
+		generateFinallyCode(mv, classBuilder, cleanupForms);
 		mv.visitJumpInsn(Opcodes.GOTO, catchBlockEnd);
 
-		mv.visitLabel(catchBlock);
+		mv.visitLabel(catchBlockStart);
 		final int exceptionStore = currentClass.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, exceptionStore);
 
-		final PrognStruct cleanupForms = input.getCleanupForms();
-		prognCodeGenerator.generate(cleanupForms, classBuilder);
-		mv.visitInsn(Opcodes.POP);
+		generateFinallyCode(mv, classBuilder, cleanupForms);
 
 		mv.visitVarInsn(Opcodes.ALOAD, exceptionStore);
 		mv.visitInsn(Opcodes.ATHROW);
 
 		mv.visitLabel(catchBlockEnd);
+		mv.visitVarInsn(Opcodes.ALOAD, protectedFormStore);
+	}
 
+	private void generateFinallyCode(final MethodVisitor mv, final JavaClassBuilder classBuilder, final PrognStruct cleanupForms) {
 		prognCodeGenerator.generate(cleanupForms, classBuilder);
 		mv.visitInsn(Opcodes.POP);
-
-		mv.visitVarInsn(Opcodes.ALOAD, protectedFormStore);
-
-		// TODO: don't know if the next line is necessary. we might want to remain in the same method...
-//		mv.visitInsn(Opcodes.ARETURN);
 	}
 }

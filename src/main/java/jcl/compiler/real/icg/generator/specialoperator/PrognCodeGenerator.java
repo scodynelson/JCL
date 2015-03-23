@@ -38,10 +38,6 @@ public class PrognCodeGenerator implements CodeGenerator<PrognStruct> {
 			for (final Iterator<LispStruct> iterator = forms.iterator(); iterator.hasNext(); ) {
 
 				final LispStruct form = iterator.next();
-				if (form == null) {
-					// Remove the current element from the iterator and the list.
-					iterator.remove();
-				}
 				formGenerator.generate(form, classBuilder);
 				if (iterator.hasNext()) {
 					mv.visitInsn(Opcodes.POP);

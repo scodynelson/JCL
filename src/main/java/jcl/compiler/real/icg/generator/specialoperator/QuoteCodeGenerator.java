@@ -42,13 +42,14 @@ public class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 		final MethodVisitor mv = currentClass.getMethodVisitor();
 
 		final String packageName = quotedSymbol.getSymbolPackage().getName();
+		final String symbolName = quotedSymbol.getName();
+
 		mv.visitLdcInsn(packageName);
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
 		final int packageStore = currentClass.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, packageStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, packageStore);
-		final String symbolName = quotedSymbol.getName();
 		mv.visitLdcInsn(symbolName);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
@@ -98,10 +99,11 @@ public class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 		final int previousConsStore = currentClass.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, previousConsStore);
 
+		final int nextElementStore = currentClass.getNextAvailableStore();
+
 		while (listIterator.hasPrevious()) {
 			previousCdr = listIterator.previous();
 			formGenerator.generate(previousCdr, classBuilder);
-			final int nextElementStore = currentClass.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, nextElementStore);
 
 			mv.visitTypeInsn(Opcodes.NEW, "jcl/lists/ConsStruct");

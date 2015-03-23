@@ -1,6 +1,5 @@
 package jcl.compiler.real.icg.generator.specialoperator;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,48 +33,51 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 	@Override
 	public void generate(final LetStruct input, final JavaClassBuilder classBuilder) {
 
+		final List<LetStruct.LetVar> vars = input.getVars();
+		final PrognStruct forms = input.getForms();
+		final LetEnvironment letEnvironment = input.getLetEnvironment();
+
 		final ClassDef currentClass = classBuilder.getCurrentClass();
 		final MethodVisitor mv = currentClass.getMethodVisitor();
 
 		final Label tryBlockStart = new Label();
-		final Label nonExceptionFinally = new Label();
-		final Label catchBlock = new Label();
+		final Label tryBlockEnd = new Label();
+		final Label catchBlockStart = new Label();
 		final Label catchBlockEnd = new Label();
-		mv.visitTryCatchBlock(tryBlockStart, nonExceptionFinally, catchBlock, null);
+		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, null);
 
-		final Label exceptionFinally = new Label();
-		mv.visitTryCatchBlock(catchBlock, exceptionFinally, catchBlock, null);
-
-		final List<LetStruct.LetVar> vars = input.getVars();
 		final Map<Integer, Boolean> varSymbolStores = new HashMap<>(vars.size());
+
+		final int packageStore = currentClass.getNextAvailableStore();
+		final int initFormStore = currentClass.getNextAvailableStore();
 
 		for (final LetStruct.LetVar var : vars) {
 			final SymbolStruct<?> symbolVar = var.getVar();
+			final LispStruct initForm = var.getInitForm();
+			final boolean isSpecial = var.isSpecial();
 
 			final String packageName = symbolVar.getSymbolPackage().getName();
+			final String symbolName = symbolVar.getName();
+
 			mv.visitLdcInsn(packageName);
 			mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
-			final int packageStore = currentClass.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, packageStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, packageStore);
-			final String symbolName = symbolVar.getName();
 			mv.visitLdcInsn(symbolName);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
-			final int varSymbolStore = currentClass.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, varSymbolStore);
+			// NOTE: we have to get a new 'symbolStore' for each var so we can properly unbind the initForms later
+			final int symbolStore = currentClass.getNextAvailableStore();
+			mv.visitVarInsn(Opcodes.ASTORE, symbolStore);
 
-			// Add here so we can unbind the initForms later
-			final boolean isSpecial = var.isSpecial();
-			varSymbolStores.put(varSymbolStore, isSpecial);
+			// Add the symbolStore and the isSpecial value here so we can unbind the initForms later
+			varSymbolStores.put(symbolStore, isSpecial);
 
-			final LispStruct initForm = var.getInitForm();
 			formGenerator.generate(initForm, classBuilder);
-			final int initFormStore = currentClass.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
 
-			mv.visitVarInsn(Opcodes.ALOAD, varSymbolStore);
+			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 
 			if (isSpecial) {
@@ -89,63 +91,41 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 
 		final Stack<Environment> bindingStack = classBuilder.getBindingStack();
 
-		final LetEnvironment letEnvironment = input.getLetEnvironment();
 		bindingStack.push(letEnvironment);
-
-		final PrognStruct forms = input.getForms();
 		prognCodeGenerator.generate(forms, classBuilder);
-
 		bindingStack.pop();
 
 		final int resultStore = currentClass.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, resultStore);
 
-		// Start: Finally Non-exception
-		mv.visitLabel(nonExceptionFinally);
-		for (final Map.Entry<Integer, Boolean> varSymbolStore : varSymbolStores.entrySet()) {
-			final Integer var = varSymbolStore.getKey();
-			mv.visitVarInsn(Opcodes.ALOAD, var);
-
-			final Boolean isSpecial = varSymbolStore.getValue();
-
-			if (isSpecial) {
-				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindDynamicValue", "()V", false);
-			} else {
-				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindLexicalValue", "()V", false);
-			}
-		}
+		mv.visitLabel(tryBlockEnd);
+		generateFinallyCode(mv, varSymbolStores);
 		mv.visitJumpInsn(Opcodes.GOTO, catchBlockEnd);
-		// Start: Finally Non-exception
 
-		// Start: Catch
-		mv.visitLabel(catchBlock);
+		mv.visitLabel(catchBlockStart);
 		final int exceptionStore = currentClass.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, exceptionStore);
-		// End: Catch
 
-		// Start: Finally Exception
-		mv.visitLabel(exceptionFinally);
-		for (final Map.Entry<Integer, Boolean> varSymbolStore : varSymbolStores.entrySet()) {
-			final Integer var = varSymbolStore.getKey();
-			mv.visitVarInsn(Opcodes.ALOAD, var);
-
-			final Boolean isSpecial = varSymbolStore.getValue();
-
-			if (isSpecial) {
-				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindDynamicValue", "()V", false);
-			} else {
-				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindLexicalValue", "()V", false);
-			}
-		}
+		generateFinallyCode(mv, varSymbolStores);
 
 		mv.visitVarInsn(Opcodes.ALOAD, exceptionStore);
 		mv.visitInsn(Opcodes.ATHROW);
-		// End: Finally Exception
 
 		mv.visitLabel(catchBlockEnd);
 		mv.visitVarInsn(Opcodes.ALOAD, resultStore);
+	}
 
-		// TODO: don't know if the next line is necessary. we might want to remain in the same method...
-//		mv.visitInsn(Opcodes.ARETURN);
+	private void generateFinallyCode(final MethodVisitor mv, final Map<Integer, Boolean> varSymbolStores) {
+		for (final Map.Entry<Integer, Boolean> varSymbolStore : varSymbolStores.entrySet()) {
+			final Integer var = varSymbolStore.getKey();
+			final Boolean isSpecial = varSymbolStore.getValue();
+
+			mv.visitVarInsn(Opcodes.ALOAD, var);
+			if (isSpecial) {
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindDynamicValue", "()V", false);
+			} else {
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindLexicalValue", "()V", false);
+			}
+		}
 	}
 }

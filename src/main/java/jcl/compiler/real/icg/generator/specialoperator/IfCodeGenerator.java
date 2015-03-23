@@ -5,7 +5,11 @@ import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
+import jcl.compiler.real.icg.generator.simple.NILCodeGenerator;
+import jcl.compiler.real.icg.generator.simple.NullCodeGenerator;
 import jcl.compiler.real.struct.specialoperator.IfStruct;
+import jcl.lists.NullStruct;
+import jcl.symbols.NILStruct;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -18,47 +22,51 @@ public class IfCodeGenerator implements CodeGenerator<IfStruct> {
 	@Autowired
 	private FormGenerator formGenerator;
 
+	@Autowired
+	private NILCodeGenerator nilCodeGenerator;
+
+	@Autowired
+	private NullCodeGenerator nullCodeGenerator;
+
 	@Override
 	public void generate(final IfStruct input, final JavaClassBuilder classBuilder) {
+
+		final LispStruct testForm = input.getTestForm();
+		final LispStruct thenForm = input.getThenForm();
+		final LispStruct elseForm = input.getElseForm();
 
 		final ClassDef currentClass = classBuilder.getCurrentClass();
 		final MethodVisitor mv = currentClass.getMethodVisitor();
 
-		final LispStruct testForm = input.getTestForm();
 		formGenerator.generate(testForm, classBuilder);
 		final int testFormStore = currentClass.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, testFormStore);
 
-		final Label elseLabel = new Label();
+		final Label elseStart = new Label();
+		final Label elseEnd = new Label();
 
 		mv.visitVarInsn(Opcodes.ALOAD, testFormStore);
-		mv.visitFieldInsn(Opcodes.GETSTATIC, "jcl/lists/NullStruct", "INSTANCE", "Ljcl/lists/NullStruct;");
+		nullCodeGenerator.generate(NullStruct.INSTANCE, classBuilder);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/Object", "equals", "(Ljava/lang/Object;)Z", false);
-		mv.visitJumpInsn(Opcodes.IFNE, elseLabel);
+		mv.visitJumpInsn(Opcodes.IFNE, elseStart);
 
 		mv.visitVarInsn(Opcodes.ALOAD, testFormStore);
-		mv.visitFieldInsn(Opcodes.GETSTATIC, "jcl/symbols/NILStruct", "INSTANCE", "Ljcl/symbols/NILStruct;");
+		nilCodeGenerator.generate(NILStruct.INSTANCE, classBuilder);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/Object", "equals", "(Ljava/lang/Object;)Z", false);
-		mv.visitJumpInsn(Opcodes.IFNE, elseLabel);
+		mv.visitJumpInsn(Opcodes.IFNE, elseStart);
 
-		final LispStruct thenForm = input.getThenForm();
+		final int resultFormStore = currentClass.getNextAvailableStore();
+
 		formGenerator.generate(thenForm, classBuilder);
-		final int thenFormStore = currentClass.getNextAvailableStore();
-		mv.visitVarInsn(Opcodes.ASTORE, thenFormStore);
+		mv.visitVarInsn(Opcodes.ASTORE, resultFormStore);
 
-		final Label ifEndLabel = new Label();
-		mv.visitJumpInsn(Opcodes.GOTO, ifEndLabel);
+		mv.visitJumpInsn(Opcodes.GOTO, elseEnd);
 
-		mv.visitLabel(elseLabel);
-		final LispStruct elseForm = input.getElseForm();
+		mv.visitLabel(elseStart);
 		formGenerator.generate(elseForm, classBuilder);
-		mv.visitVarInsn(Opcodes.ASTORE, thenFormStore);
+		mv.visitVarInsn(Opcodes.ASTORE, resultFormStore);
 
-		mv.visitLabel(ifEndLabel);
-
-		mv.visitVarInsn(Opcodes.ALOAD, thenFormStore);
-
-		// TODO: don't know if the next line is necessary. we might want to remain in the same method...
-//		mv.visitInsn(Opcodes.ARETURN);
+		mv.visitLabel(elseEnd);
+		mv.visitVarInsn(Opcodes.ALOAD, resultFormStore);
 	}
 }

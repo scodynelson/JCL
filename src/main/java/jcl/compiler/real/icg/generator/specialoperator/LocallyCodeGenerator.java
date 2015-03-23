@@ -23,25 +23,21 @@ public class LocallyCodeGenerator implements CodeGenerator<LocallyStruct> {
 	@Override
 	public void generate(final LocallyStruct input, final JavaClassBuilder classBuilder) {
 
+		final PrognStruct forms = input.getForms();
+		final LocallyEnvironment locallyEnvironment = input.getLocallyEnvironment();
+
 		final ClassDef currentClass = classBuilder.getCurrentClass();
 		final MethodVisitor mv = currentClass.getMethodVisitor();
 
 		final Stack<Environment> bindingStack = classBuilder.getBindingStack();
 
-		final LocallyEnvironment locallyEnvironment = input.getLocallyEnvironment();
 		bindingStack.push(locallyEnvironment);
-
-		final PrognStruct forms = input.getForms();
 		prognCodeGenerator.generate(forms, classBuilder);
-
 		bindingStack.pop();
 
 		final int resultStore = currentClass.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, resultStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, resultStore);
-
-		// TODO: don't know if the next line is necessary. we might want to remain in the same method...
-//		mv.visitInsn(Opcodes.ARETURN);
 	}
 }

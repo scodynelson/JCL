@@ -32,30 +32,31 @@ public class TagbodyCodeGenerator implements CodeGenerator<TagbodyStruct> {
 	@Override
 	public void generate(final TagbodyStruct input, final JavaClassBuilder classBuilder) {
 
+		final Map<GoStruct<?>, PrognStruct> tagbodyForms = input.getTagbodyForms();
+
 		final ClassDef currentClass = classBuilder.getCurrentClass();
 		final MethodVisitor mv = currentClass.getMethodVisitor();
 
 		final Label tryBlockStart = new Label();
 		final Label tryBlockEnd = new Label();
-		final Label catchBlock = new Label();
+		final Label catchBlockStart = new Label();
 		final Label catchBlockEnd = new Label();
-		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlock, "jcl/compiler/real/icg/generator/specialoperator/exception/GoException");
+		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, "jcl/compiler/real/icg/generator/specialoperator/exception/GoException");
 
-		mv.visitLabel(tryBlockStart);
-
-		final Map<GoStruct<?>, PrognStruct> tagbodyForms = input.getTagbodyForms();
 		final Map<TagbodyLabel, PrognStruct> tagbodyLabeledForms = getTagbodyLabeledForms(tagbodyForms, classBuilder);
 
 		final Set<TagbodyLabel> tagbodyLabels = tagbodyLabeledForms.keySet();
 		classBuilder.getTagbodyLabelStack().push(tagbodyLabels);
 
+		mv.visitLabel(tryBlockStart);
+
 		for (final Map.Entry<TagbodyLabel, PrognStruct> tagbodyLabeledForm : tagbodyLabeledForms.entrySet()) {
 			final TagbodyLabel tagbodyLabel = tagbodyLabeledForm.getKey();
-			final Label tagLabel = tagbodyLabel.getLabel();
+			final PrognStruct forms = tagbodyLabeledForm.getValue();
 
+			final Label tagLabel = tagbodyLabel.getLabel();
 			mv.visitLabel(tagLabel);
 
-			final PrognStruct forms = tagbodyLabeledForm.getValue();
 			prognCodeGenerator.generate(forms, classBuilder);
 			mv.visitInsn(Opcodes.POP);
 		}
@@ -63,7 +64,7 @@ public class TagbodyCodeGenerator implements CodeGenerator<TagbodyStruct> {
 		mv.visitLabel(tryBlockEnd);
 		mv.visitJumpInsn(Opcodes.GOTO, catchBlockEnd);
 
-		mv.visitLabel(catchBlock);
+		mv.visitLabel(catchBlockStart);
 		final int goExceptionStore = currentClass.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, goExceptionStore);
 
@@ -71,8 +72,6 @@ public class TagbodyCodeGenerator implements CodeGenerator<TagbodyStruct> {
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/compiler/real/icg/generator/specialoperator/exception/GoException", "getTagIndex", "()I", false);
 		final int goExceptionIndexStore = currentClass.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ISTORE, goExceptionIndexStore);
-
-		mv.visitVarInsn(Opcodes.ILOAD, goExceptionIndexStore);
 
 		// NOTE: the 'tagbodyLabelList' here will be properly ordered because the 'tagbodyLabels' are an ordered LinkedKeySet
 		//       thanks to the usage of 'LinkedHashMap'
@@ -93,18 +92,15 @@ public class TagbodyCodeGenerator implements CodeGenerator<TagbodyStruct> {
 
 		final int minKey = tagNumbers[0];
 		final int maxKey = tagNumbers[tagsSize - 1];
-		final Label defaultLabel = new Label();
-		mv.visitTableSwitchInsn(minKey, maxKey, defaultLabel, tagLabels);
+		final Label defaultCase = new Label();
+		mv.visitTableSwitchInsn(minKey, maxKey, defaultCase, tagLabels);
 
-		mv.visitLabel(defaultLabel);
+		mv.visitLabel(defaultCase);
 		mv.visitVarInsn(Opcodes.ALOAD, goExceptionStore);
 		mv.visitInsn(Opcodes.ATHROW);
 
 		mv.visitLabel(catchBlockEnd);
 		nullCodeGenerator.generate(NullStruct.INSTANCE, classBuilder);
-
-		// TODO: don't know if the next line is necessary. we might want to remain in the same method...
-//		mv.visitInsn(Opcodes.ARETURN);
 	}
 
 	private Map<TagbodyLabel, PrognStruct> getTagbodyLabeledForms(final Map<GoStruct<?>, PrognStruct> tagbodyForms,

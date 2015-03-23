@@ -20,15 +20,16 @@ public class ThrowCodeGenerator implements CodeGenerator<ThrowStruct> {
 	@Override
 	public void generate(final ThrowStruct input, final JavaClassBuilder classBuilder) {
 
+		final LispStruct catchTag = input.getCatchTag();
+		final LispStruct resultForm = input.getResultForm();
+
 		final ClassDef currentClass = classBuilder.getCurrentClass();
 		final MethodVisitor mv = currentClass.getMethodVisitor();
 
-		final LispStruct catchTag = input.getCatchTag();
 		formGenerator.generate(catchTag, classBuilder);
 		final int catchTagStore = currentClass.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, catchTagStore);
 
-		final LispStruct resultForm = input.getResultForm();
 		formGenerator.generate(resultForm, classBuilder);
 		final int resultFormStore = currentClass.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, resultFormStore);

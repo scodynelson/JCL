@@ -172,4 +172,22 @@ public class TestGround {
 		final LispStruct element2 = new CharacterStruct(97);
 		return new ConsStruct(element1, element2);
 	}
+
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	private Object letGen() {
+
+		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
+		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
+
+		final LispStruct initForm = new CharacterStruct(97);
+		symbol.bindLexicalValue(initForm);
+
+		final LispStruct result;
+		try {
+			result = new CharacterStruct(197);
+		} finally {
+			symbol.unbindLexicalValue();
+		}
+		return result;
+	}
 }

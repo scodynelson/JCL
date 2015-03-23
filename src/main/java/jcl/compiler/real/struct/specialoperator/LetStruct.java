@@ -88,9 +88,12 @@ public class LetStruct extends SpecialOperatorStruct {
 
 		private final LispStruct initForm;
 
-		public LetVar(final SymbolStruct<?> var, final LispStruct initForm) {
+		private final boolean isSpecial;
+
+		public LetVar(final SymbolStruct<?> var, final LispStruct initForm, final boolean isSpecial) {
 			this.var = var;
 			this.initForm = initForm;
+			this.isSpecial = isSpecial;
 		}
 
 		public SymbolStruct<?> getVar() {
@@ -99,6 +102,10 @@ public class LetStruct extends SpecialOperatorStruct {
 
 		public LispStruct getInitForm() {
 			return initForm;
+		}
+
+		public boolean isSpecial() {
+			return isSpecial;
 		}
 
 		@Override

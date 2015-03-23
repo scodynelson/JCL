@@ -95,7 +95,7 @@ public class ListCodeGenerator implements CodeGenerator<ListStruct> {
 				} else if (first.getFirst().equals(SpecialOperatorStruct.MACRO_MARKER)) {
 					macroLambdaCodeGenerator.generate(input, classBuilder);
 				} else if (first.getFirst().equals(SpecialOperatorStruct.LET)) {
-					letCodeGenerator.generate(input, classBuilder);
+//					letCodeGenerator.generate(input, classBuilder);
 				} else if (first.getFirst().equals(SpecialOperatorStruct.FLET)) {
 //					fletCodeGenerator.generate(input, classBuilder);
 				} else if (first.getFirst().equals(SpecialOperatorStruct.LABELS)) {

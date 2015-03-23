@@ -133,7 +133,7 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 			letEnvironment.addLexicalBinding(binding);
 		}
 
-		return new LetStruct.LetVar(var, initForm);
+		return new LetStruct.LetVar(var, initForm, isSpecial);
 	}
 
 	private SymbolStruct<?> getLetListParameterVar(final ListStruct listParameter) {

@@ -66,11 +66,7 @@ public class JavaClassBuilder {
 	}
 
 	public Environment getBindingEnvironment() {
-		return bindingEnvironment;
-	}
-
-	public void setBindingEnvironment(final Environment bindingEnvironment) {
-		this.bindingEnvironment = bindingEnvironment;
+		return bindingStack.peek();
 	}
 
 	public Stack<Environment> getBindingStack() {

@@ -106,7 +106,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 		// Handle all of the binding information
 		try {
-			classBuilder.setBindingEnvironment(classBuilder.getBindingStack().push(lambdaStruct.getLambdaEnvironment()));
+			classBuilder.getBindingStack().push(lambdaStruct.getLambdaEnvironment());
 
 			// now create the check arguments method that's used when safety > 1
 			//-----------> checkArguments <--------------------
@@ -181,7 +181,6 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			classBuilder.getEmitter().endClass();
 		} finally {
 			classBuilder.getBindingStack().pop();
-			classBuilder.setBindingEnvironment(classBuilder.getBindingStack().peek());
 		}
 
 		// ** finished compiling the new lambda class **

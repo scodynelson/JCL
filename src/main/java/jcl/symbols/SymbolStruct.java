@@ -222,6 +222,48 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		return lexicalValueStack.peek();
 	}
 
+	public TYPE getLexicalValue() {
+		if (lexicalValueStack.isEmpty()) {
+
+			String variableName = name;
+			final PackageStruct currentPackage = PackageVariables.PACKAGE.getValue();
+
+			if (!currentPackage.equals(symbolPackage)) {
+				final String packageName = symbolPackage.getName();
+
+				if (currentPackage.getExternalSymbols().containsKey(name)) {
+					variableName = packageName + ':' + name;
+				} else {
+					variableName = packageName + "::" + name;
+				}
+			}
+
+			throw new ErrorException("Unbound variable: " + variableName);
+		}
+		return lexicalValueStack.peek();
+	}
+
+	public TYPE getDynamicValue() {
+		if (dynamicValueStack.isEmpty()) {
+
+			String variableName = name;
+			final PackageStruct currentPackage = PackageVariables.PACKAGE.getValue();
+
+			if (!currentPackage.equals(symbolPackage)) {
+				final String packageName = symbolPackage.getName();
+
+				if (currentPackage.getExternalSymbols().containsKey(name)) {
+					variableName = packageName + ':' + name;
+				} else {
+					variableName = packageName + "::" + name;
+				}
+			}
+
+			throw new ErrorException("Unbound variable: " + variableName);
+		}
+		return dynamicValueStack.peek();
+	}
+
 //	/**
 //	 * Setter for symbol {@link #value} property.
 //	 *
@@ -239,6 +281,22 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		} else {
 			lexicalValueStack.pop();
 			lexicalValueStack.push(value);
+		}
+	}
+
+	public void setLexicalValue(final TYPE value) {
+		if (!lexicalValueStack.isEmpty()) {
+			lexicalValueStack.pop();
+			lexicalValueStack.push(value);
+		}
+	}
+
+	public void setDynamicValue(final TYPE value) {
+		if (dynamicValueStack.isEmpty()) {
+			dynamicValueStack.push(value);
+		} else {
+			dynamicValueStack.pop();
+			dynamicValueStack.push(value);
 		}
 	}
 

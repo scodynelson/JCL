@@ -4,6 +4,9 @@
 
 package jcl.compiler.real.icg.generator.simple;
 
+import java.util.Stack;
+
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
@@ -36,6 +39,19 @@ public class NewSymbolStructCodeGenerator implements CodeGenerator<SymbolStruct<
 		mv.visitVarInsn(Opcodes.ASTORE, symbolStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "getValue", "()Ljcl/LispStruct;", false);
+
+		final Stack<Environment> bindingStack = classBuilder.getBindingStack();
+		final Environment currentEnvironment = bindingStack.peek();
+
+		final boolean hasLexicalBinding = currentEnvironment.hasLexicalBinding(input);
+		final boolean hasDynamicBinding = currentEnvironment.hasDynamicBinding(input);
+
+		if (hasLexicalBinding) {
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "getLexicalValue", "()Ljcl/LispStruct;", false);
+		} else if (hasDynamicBinding) {
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "getDynamicValue", "()Ljcl/LispStruct;", false);
+		} else {
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "getValue", "()Ljcl/LispStruct;", false);
+		}
 	}
 }

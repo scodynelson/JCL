@@ -1,8 +1,10 @@
 package jcl.compiler.real.icg.generator.specialoperator;
 
 import java.util.List;
+import java.util.Stack;
 
 import jcl.LispStruct;
+import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
@@ -57,7 +59,20 @@ public class SetqCodeGenerator implements CodeGenerator<SetqStruct> {
 
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "setValue", "(Ljcl/LispStruct;)V", false);
+
+			final Stack<Environment> bindingStack = classBuilder.getBindingStack();
+			final Environment currentEnvironment = bindingStack.peek();
+
+			final boolean hasLexicalBinding = currentEnvironment.hasLexicalBinding(var);
+			final boolean hasDynamicBinding = currentEnvironment.hasDynamicBinding(var);
+
+			if (hasLexicalBinding) {
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "setLexicalValue", "(Ljcl/LispStruct;)V", false);
+			} else if (hasDynamicBinding) {
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "setDynamicValue", "(Ljcl/LispStruct;)V", false);
+			} else {
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "setValue", "(Ljcl/LispStruct;)V", false);
+			}
 		}
 
 		mv.visitVarInsn(Opcodes.ALOAD, initFormStore);

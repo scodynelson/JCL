@@ -39,7 +39,7 @@ public class SymbolFunctionCodeGenerator implements CodeGenerator<SymbolCompiler
 		final int functionSymbolStore = currentClass.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, functionSymbolStore);
 
-		mv.visitVarInsn(Opcodes.ALOAD, 2);
+		mv.visitVarInsn(Opcodes.ALOAD, functionSymbolStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "getFunction", "()Ljcl/functions/FunctionStruct;", false);
 	}
 }

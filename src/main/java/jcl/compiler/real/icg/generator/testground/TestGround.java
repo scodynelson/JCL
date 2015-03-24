@@ -195,13 +195,12 @@ public class TestGround {
 		return result;
 	}
 
-	@SuppressWarnings({"unchecked", "rawtypes"})
 	private Object symbolMacroletGen() {
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct<?> symbol = pkg.findSymbol("FOO").getSymbol();
 
-		final SymbolMacroExpander symbolMacroExpander = new TestGroundSymbolMacroExpander();
+		final SymbolMacroExpander<?> symbolMacroExpander = new TestGroundSymbolMacroExpander();
 		symbol.bindSymbolMacroExpander(symbolMacroExpander);
 
 		final LispStruct result;
@@ -223,7 +222,49 @@ public class TestGround {
 
 	private Object lambdaFunctionGen() {
 
-		final FunctionStruct functionStruct = new TestGroundLambdaFunction();
-		return functionStruct;
+		final FunctionStruct function = new TestGroundLambdaFunction();
+		return function;
+	}
+
+	private Object functionCallGen() {
+
+		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
+		final SymbolStruct<?> symbol = pkg.findSymbol("FOO").getSymbol();
+
+		final FunctionStruct function = symbol.getFunction();
+
+		final LispStruct[] args = new LispStruct[12345678];
+		final CharacterStruct arg1 = new CharacterStruct(97);
+		args[1234677] = arg1;
+
+		return function.apply(args);
+	}
+
+	private Object lambdaFunctionCallGen() {
+
+		final FunctionStruct function = new TestGroundLambdaFunction();
+
+		final LispStruct[] args = new LispStruct[12345678];
+		final CharacterStruct arg1 = new CharacterStruct(97);
+		args[1234677] = arg1;
+
+		return function.apply(args);
+	}
+
+	private Object fletGen() {
+
+		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
+		final SymbolStruct<?> symbol = pkg.findSymbol("FOO").getSymbol();
+
+		final FunctionStruct initForm = new TestGroundLambdaFunction();
+		symbol.bindFunction(initForm);
+
+		final LispStruct result;
+		try {
+			result = new CharacterStruct(197);
+		} finally {
+			symbol.unbindFunction();
+		}
+		return result;
 	}
 }

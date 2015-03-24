@@ -87,8 +87,8 @@
 		<entry key="jcl.symbols.SymbolStruct" value-ref="newSymbolStructCodeGenerator"/>
 		<entry key="jcl.symbols.TStruct" value-ref="TCodeGenerator"/>
 
-		<!--<entry key="jcl.compiler.real.struct.functioncall.FunctionCallStruct" value-ref=""/>-->
-		<!--<entry key="jcl.compiler.real.struct.functioncall.LambdaFunctionCallStruct" value-ref=""/>-->
+		<entry key="jcl.compiler.real.struct.functioncall.FunctionCallStruct" value-ref="functionCallCodeGenerator"/>
+		<entry key="jcl.compiler.real.struct.functioncall.LambdaFunctionCallStruct" value-ref="lambdaFunctionCallCodeGenerator"/>
 
 		<entry key="jcl.compiler.real.struct.specialoperator.BlockStruct" value-ref="blockCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.CatchStruct" value-ref="catchCodeGenerator"/>

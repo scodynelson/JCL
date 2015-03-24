@@ -60,24 +60,6 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 	}
 
 	private static ListStruct wrapFormInLambda(final LispStruct form) {
-
-		final ListStruct lambdaForm;
-		if (form instanceof ListStruct) {
-			final ListStruct formList = (ListStruct) form;
-			final LispStruct firstOfFormList = formList.getFirst();
-			if (firstOfFormList.equals(SpecialOperatorStruct.LAMBDA)) {
-				lambdaForm = formList;
-			} else {
-				lambdaForm = getLambdaFormList(formList);
-			}
-		} else {
-			lambdaForm = getLambdaFormList(form);
-		}
-
-		return lambdaForm;
-	}
-
-	private static ListStruct getLambdaFormList(final LispStruct form) {
 		final List<LispStruct> lambdaFormList = new ArrayList<>();
 		lambdaFormList.add(SpecialOperatorStruct.LAMBDA);
 		lambdaFormList.add(NullStruct.INSTANCE);

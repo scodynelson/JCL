@@ -6,6 +6,7 @@ package jcl.compiler.real.icg.generator.specialoperator.lambda;
 
 import java.security.SecureRandom;
 import java.util.Random;
+import java.util.Stack;
 
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.icg.ClassDef;
@@ -30,11 +31,13 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	@Override
 	public void generate(final LambdaStruct input, final JavaClassBuilder classBuilder) {
 
-		final String fileName = "Lambda" + '_' + System.currentTimeMillis();
+		final String fileName = "Lambda" + '_' + System.nanoTime();
 		final String className = "jcl/" + fileName;
 
 		final ClassDef currentClass = new ClassDef(className, fileName);
-		classBuilder.getClassStack().push(currentClass);
+		final Stack<ClassDef> classStack = classBuilder.getClassStack();
+
+		classStack.push(currentClass);
 		classBuilder.setCurrentClass(currentClass);
 		classBuilder.getClasses().addFirst(currentClass);
 
@@ -140,5 +143,16 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitEnd();
 		}
 		cw.visitEnd();
+
+		classStack.pop();
+		if (!classStack.isEmpty()) {
+			final ClassDef previousClassDef = classStack.peek();
+			classBuilder.setCurrentClass(previousClassDef);
+			final MethodVisitor mv = previousClassDef.getMethodVisitor();
+
+			mv.visitTypeInsn(Opcodes.NEW, className);
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, className, "<init>", "()V", false);
+		}
 	}
 }

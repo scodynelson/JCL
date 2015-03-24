@@ -79,7 +79,7 @@ public class FletCodeGenerator implements CodeGenerator<FletStruct> {
 			mv.visitVarInsn(Opcodes.ALOAD, functionSymbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "bindFunction", "(Ljcl/LispStruct;)V", false);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "bindFunction", "(Ljcl/functions/FunctionStruct;)V", false);
 		}
 
 		mv.visitLabel(tryBlockStart);

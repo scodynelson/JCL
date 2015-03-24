@@ -3,7 +3,7 @@ package jcl.compiler.real.icg.generator.specialoperator.old.compiler;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
-import jcl.compiler.real.icg.generator.specialoperator.old.simple.FunctionCallCodeGenerator;
+import jcl.compiler.real.icg.generator.specialoperator.FunctionCallCodeGenerator;
 import jcl.lists.ListStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +27,12 @@ public class TailRecursionCodeGenerator implements CodeGenerator<ListStruct> {
 		// set up the proper function object (this)
 		genCodeTailRecursionSetup((SymbolStruct) restOfList.getFirst(), classBuilder);
 		// now set up the rest of the call just like any other fn call
-		final boolean acceptsMultipleValues = functionCallCodeGenerator.isAcceptsMultipleValues();
+		final boolean acceptsMultipleValues = classBuilder.isAcceptsMultipleValues();
 		try {
-			functionCallCodeGenerator.setAcceptsMultipleValues(false);
-			functionCallCodeGenerator.generate(restOfList, classBuilder);
+			classBuilder.setAcceptsMultipleValues(false);
+//			functionCallCodeGenerator.generate(restOfList, classBuilder);
 		} finally {
-			functionCallCodeGenerator.setAcceptsMultipleValues(acceptsMultipleValues);
+			classBuilder.setAcceptsMultipleValues(acceptsMultipleValues);
 		}
 	}
 

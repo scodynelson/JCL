@@ -126,7 +126,7 @@ public class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacrolet
 
 	private String generateSymbolMacroExpander(final LispStruct expansion, final JavaClassBuilder classBuilder) {
 
-		final String fileName = "SymbolMacrolet" + '_' + System.currentTimeMillis();
+		final String fileName = "SymbolMacrolet" + '_' + System.nanoTime();
 		final String className = "jcl/" + fileName;
 
 		final ClassDef currentClass = new ClassDef(className, fileName);

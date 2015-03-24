@@ -44,6 +44,8 @@ public class JavaClassBuilder {
 
 	private ClassDef currentClass;
 
+	private boolean acceptsMultipleValues;
+
 	public JavaClassBuilder() {
 		MacroLambda = false;
 		emitter = new NewEmitter();
@@ -54,6 +56,7 @@ public class JavaClassBuilder {
 		tagCounter = 0;
 		allowMultipleValues = false;
 		tagbodyLabelStack = new Stack<>();
+		acceptsMultipleValues = false;
 	}
 
 	public NewEmitter getEmitter() {
@@ -142,5 +145,13 @@ public class JavaClassBuilder {
 
 	public void setCurrentClass(final ClassDef currentClass) {
 		this.currentClass = currentClass;
+	}
+
+	public boolean isAcceptsMultipleValues() {
+		return acceptsMultipleValues;
+	}
+
+	public void setAcceptsMultipleValues(final boolean acceptsMultipleValues) {
+		this.acceptsMultipleValues = acceptsMultipleValues;
 	}
 }

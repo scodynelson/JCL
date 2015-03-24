@@ -24,6 +24,7 @@ import jcl.compiler.real.sa.analyzer.expander.NewMacroExpandReturn;
 import jcl.compiler.real.struct.functioncall.FunctionCallStruct;
 import jcl.compiler.real.struct.functioncall.LambdaFunctionCallStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
+import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ConsStruct;
@@ -87,7 +88,12 @@ public class FormAnalyzerImpl implements FormAnalyzer {
 
 		final Set<SymbolStruct<?>> undefinedFunctions = environment.getUndefinedFunctions();
 
-		final FunctionStruct function = functionSymbol.getFunction();
+		FunctionStruct function;
+		try {
+			function = functionSymbol.getFunction();
+		} catch (final ErrorException ignore) {
+			function = null;
+		}
 		if (function == null) {
 			final Stack<SymbolStruct<?>> functionNameStack = environment.getFunctionNameStack();
 

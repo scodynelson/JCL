@@ -4,6 +4,7 @@ import jcl.LispStruct;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
+import jcl.compiler.real.icg.generator.specialoperator.FunctionCallCodeGenerator;
 import jcl.compiler.real.icg.generator.specialoperator.LetCodeGenerator;
 import jcl.compiler.real.icg.generator.specialoperator.old.special.LambdaCodeGenerator;
 import jcl.compiler.real.icg.generator.specialoperator.old.special.MacroLambdaCodeGenerator;
@@ -59,14 +60,14 @@ public class ListCodeGenerator implements CodeGenerator<ListStruct> {
 			} else {
 				symbolFunctionCodeGenerator.generate((SymbolStruct<?>) firstElement, classBuilder);
 
-				final boolean acceptsMultipleValues = functionCallCodeGenerator.isAcceptsMultipleValues();
+				final boolean acceptsMultipleValues = classBuilder.isAcceptsMultipleValues();
 				try {
-					functionCallCodeGenerator.setAcceptsMultipleValues(
+					classBuilder.setAcceptsMultipleValues(
 							firstElement.equals(GlobalPackageStruct.COMMON_LISP.intern("FUNCALL").getSymbol())
 									|| firstElement.equals(GlobalPackageStruct.COMMON_LISP.intern("APPLY").getSymbol()));
-					functionCallCodeGenerator.generate(input, classBuilder);
+//					functionCallCodeGenerator.generate(input, classBuilder);
 				} finally {
-					functionCallCodeGenerator.setAcceptsMultipleValues(acceptsMultipleValues);
+					classBuilder.setAcceptsMultipleValues(acceptsMultipleValues);
 				}
 			}
 		} else if (firstElement instanceof ListStruct) {
@@ -95,12 +96,12 @@ public class ListCodeGenerator implements CodeGenerator<ListStruct> {
 				// assume it's (((%lambda bindings...) body) ...args...)
 				generate(first, classBuilder);
 
-				final boolean acceptsMultipleValues = functionCallCodeGenerator.isAcceptsMultipleValues();
+				final boolean acceptsMultipleValues = classBuilder.isAcceptsMultipleValues();
 				try {
-					functionCallCodeGenerator.setAcceptsMultipleValues(false);
-					functionCallCodeGenerator.generate(input, classBuilder);
+					classBuilder.setAcceptsMultipleValues(false);
+//					functionCallCodeGenerator.generate(input, classBuilder);
 				} finally {
-					functionCallCodeGenerator.setAcceptsMultipleValues(acceptsMultipleValues);
+					classBuilder.setAcceptsMultipleValues(acceptsMultipleValues);
 				}
 			}
 		}

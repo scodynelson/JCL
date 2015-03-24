@@ -1,11 +1,27 @@
 package jcl.functions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import jcl.LispStruct;
 import jcl.LispType;
 import jcl.classes.BuiltInClassStruct;
+import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
+import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
+import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
+import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
+import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
+import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.lists.ListStruct;
+import jcl.symbols.KeywordStruct;
+import jcl.symbols.NILStruct;
+import jcl.symbols.SymbolStruct;
+import jcl.symbols.TStruct;
 import jcl.types.Function;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -136,6 +152,118 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 
 	public void setLambdaListBindings(final OrdinaryLambdaListBindings lambdaListBindings) {
 		this.lambdaListBindings = lambdaListBindings;
+	}
+
+	protected Map<SymbolStruct<?>, LispStruct> getFunctionBindings(final LispStruct[] lispStructs) {
+		final List<RequiredBinding> requiredBindings = lambdaListBindings.getRequiredBindings();
+		final List<OptionalBinding> optionalBindings = lambdaListBindings.getOptionalBindings();
+		final RestBinding restBinding = lambdaListBindings.getRestBinding();
+		final List<KeyBinding> keyBindings = lambdaListBindings.getKeyBindings();
+		final boolean allowOtherKeys = lambdaListBindings.isAllowOtherKeys();
+
+		final Map<SymbolStruct<?>, LispStruct> symbolsToBind = new HashMap<>();
+
+		final List<LispStruct> functionArguments = Arrays.asList(lispStructs);
+		final int numberOfArguments = functionArguments.size();
+		final Iterator<LispStruct> functionArgumentsIterator = functionArguments.iterator();
+
+		final String functionClassName = getClass().getSimpleName();
+		final int numberOfRequired = requiredBindings.size();
+		for (final RequiredBinding requiredBinding : requiredBindings) {
+			if (!functionArgumentsIterator.hasNext()) {
+				throw new ProgramErrorException("Too few arguments in call to '" + functionClassName + "'. " + numberOfArguments + " arguments provided, at least " + numberOfRequired + " required.");
+			}
+
+			final SymbolStruct<?> requiredSymbol = requiredBinding.getSymbolStruct();
+			final LispStruct requiredInitForm = functionArgumentsIterator.next();
+			symbolsToBind.put(requiredSymbol, requiredInitForm);
+		}
+
+		for (final OptionalBinding optionalBinding : optionalBindings) {
+			final LispStruct optionalInitForm;
+			final LispStruct suppliedPInitForm;
+
+			if (functionArgumentsIterator.hasNext()) {
+				optionalInitForm = functionArgumentsIterator.next();
+				suppliedPInitForm = TStruct.INSTANCE;
+			} else {
+				optionalInitForm = optionalBinding.getInitForm();
+				suppliedPInitForm = NILStruct.INSTANCE;
+			}
+
+			final SymbolStruct<?> optionalSymbol = optionalBinding.getSymbolStruct();
+			symbolsToBind.put(optionalSymbol, optionalInitForm);
+
+			final SuppliedPBinding suppliedPBinding = optionalBinding.getSuppliedPBinding();
+
+			final SymbolStruct<?> suppliedPSymbol = suppliedPBinding.getSymbolStruct();
+			symbolsToBind.put(suppliedPSymbol, suppliedPInitForm);
+		}
+
+		final int numberOfKeys = keyBindings.size();
+		final Map<KeywordStruct, KeyBinding> keysToBindings = new HashMap<>();
+		for (final KeyBinding keyBinding : keyBindings) {
+			final KeywordStruct key = keyBinding.getKeyName();
+			keysToBindings.put(key, keyBinding);
+		}
+
+		final List<LispStruct> restList = new ArrayList<>();
+
+		while (functionArgumentsIterator.hasNext()) {
+			final LispStruct nextArgument = functionArgumentsIterator.next();
+
+			if (nextArgument instanceof KeywordStruct) {
+				restList.add(nextArgument);
+
+				final KeywordStruct keywordArgument = (KeywordStruct) nextArgument;
+				if (keysToBindings.containsKey(keywordArgument)) {
+					final KeyBinding keyBinding = keysToBindings.remove(keywordArgument);
+
+					final SymbolStruct<?> keySymbol = keyBinding.getSymbolStruct();
+					final LispStruct keyInitForm = functionArgumentsIterator.next();
+					symbolsToBind.put(keySymbol, keyInitForm);
+
+					final SuppliedPBinding suppliedPBinding = keyBinding.getSuppliedPBinding();
+
+					final SymbolStruct<?> suppliedPSymbol = suppliedPBinding.getSymbolStruct();
+					symbolsToBind.put(suppliedPSymbol, TStruct.INSTANCE);
+
+					restList.add(keyInitForm);
+				} else if (allowOtherKeys) {
+					final LispStruct keyInitForm = functionArgumentsIterator.next();
+					restList.add(keyInitForm);
+				} else {
+					throw new ProgramErrorException("Keyword argument not found in '" + functionClassName + "' function definition: :" + keywordArgument.getName());
+				}
+			} else if (!keysToBindings.isEmpty()) {
+				throw new ProgramErrorException("Expected Keyword argument for call to '" + functionClassName + " was: " + nextArgument);
+			} else if (restBinding == null) {
+				final int numberOfOptionals = optionalBindings.size();
+				final int maxNumberProvided = numberOfRequired + numberOfOptionals + numberOfKeys;
+				throw new ProgramErrorException("Too many arguments in call to '" + functionClassName + "'. " + numberOfArguments + " arguments provided, at most " + maxNumberProvided + " accepted.");
+			} else {
+				restList.add(nextArgument);
+			}
+		}
+
+		for (final KeyBinding keyBinding : keysToBindings.values()) {
+			final SymbolStruct<?> keySymbol = keyBinding.getSymbolStruct();
+			final LispStruct keyInitForm = keyBinding.getInitForm();
+			symbolsToBind.put(keySymbol, keyInitForm);
+
+			final SuppliedPBinding suppliedPBinding = keyBinding.getSuppliedPBinding();
+
+			final SymbolStruct<?> suppliedPSymbol = suppliedPBinding.getSymbolStruct();
+			symbolsToBind.put(suppliedPSymbol, NILStruct.INSTANCE);
+		}
+
+		if (restBinding != null) {
+			final SymbolStruct<?> restSymbol = restBinding.getSymbolStruct();
+			final LispStruct restListStruct = ListStruct.buildProperList(restList);
+			symbolsToBind.put(restSymbol, restListStruct);
+		}
+
+		return symbolsToBind;
 	}
 
 	@Override

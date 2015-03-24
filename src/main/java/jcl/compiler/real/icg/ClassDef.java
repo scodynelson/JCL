@@ -73,4 +73,8 @@ public class ClassDef {
 	public int getNextAvailableStore() {
 		return nextAvailableStore++;
 	}
+
+	public void resetStores() {
+		nextAvailableStore = 0;
+	}
 }

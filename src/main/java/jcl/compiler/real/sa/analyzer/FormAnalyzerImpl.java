@@ -5,7 +5,6 @@
 package jcl.compiler.real.sa.analyzer;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.Stack;
@@ -13,11 +12,6 @@ import java.util.Stack;
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Environments;
-import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
-import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
-import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.NewMacroExpand;
 import jcl.compiler.real.sa.analyzer.expander.NewMacroExpandReturn;
@@ -29,7 +23,6 @@ import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
-import jcl.symbols.KeywordStruct;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -107,10 +100,6 @@ public class FormAnalyzerImpl implements FormAnalyzer {
 		} else {
 			// Function is defined
 			undefinedFunctions.remove(functionSymbol);
-
-			final String functionName = functionSymbol.getName();
-			final OrdinaryLambdaListBindings lambdaListBindings = function.getLambdaListBindings();
-			validateFunctionArguments(functionName, lambdaListBindings, functionArguments);
 		}
 
 		final List<LispStruct> analyzedFunctionArguments = new ArrayList<>(functionArguments.size());
@@ -137,12 +126,8 @@ public class FormAnalyzerImpl implements FormAnalyzer {
 		}
 
 		final LambdaStruct lambdaAnalyzed = lambdaExpander.expand(functionList, environment);
-		final OrdinaryLambdaListBindings lambdaListBindings = lambdaAnalyzed.getLambdaListBindings();
 
 		final List<LispStruct> functionArguments = input.getRest().getAsJavaList();
-
-		validateFunctionArguments("Anonymous Lambda", lambdaListBindings, functionArguments);
-
 		final List<LispStruct> analyzedFunctionArguments = new ArrayList<>(functionArguments.size());
 
 		for (final LispStruct functionArgument : functionArguments) {
@@ -151,60 +136,6 @@ public class FormAnalyzerImpl implements FormAnalyzer {
 		}
 
 		return new LambdaFunctionCallStruct(lambdaAnalyzed, analyzedFunctionArguments);
-	}
-
-	private static void validateFunctionArguments(final String functionName, final OrdinaryLambdaListBindings lambdaListBindings,
-	                                              final List<LispStruct> functionArguments) {
-
-		final Iterator<LispStruct> functionArgumentsIterator = functionArguments.iterator();
-
-		LispStruct nextArgument = null;
-
-		final List<RequiredBinding> requiredBindings = lambdaListBindings.getRequiredBindings();
-		for (final RequiredBinding ignored : requiredBindings) {
-			if (!functionArgumentsIterator.hasNext()) {
-				throw new ProgramErrorException("LIST ANALYZER: Too few arguments in call to '" + functionName + "'. " + functionArguments.size() + " arguments provided, at least " + requiredBindings.size() + " required.");
-			}
-			nextArgument = functionArgumentsIterator.next();
-		}
-
-		final List<OptionalBinding> optionalBindings = lambdaListBindings.getOptionalBindings();
-		for (final OptionalBinding ignored : optionalBindings) {
-			if (!functionArgumentsIterator.hasNext()) {
-				break;
-			}
-			nextArgument = functionArgumentsIterator.next();
-		}
-
-		final List<KeyBinding> keyBindings = lambdaListBindings.getKeyBindings();
-		final List<KeywordStruct> keys = new ArrayList<>(keyBindings.size());
-		for (final KeyBinding keyBinding : keyBindings) {
-			final KeywordStruct key = keyBinding.getKeyName();
-			keys.add(key);
-		}
-
-		final RestBinding restBinding = lambdaListBindings.getRestBinding();
-
-		while (functionArgumentsIterator.hasNext()) {
-			if (!keyBindings.isEmpty()) {
-				if (nextArgument instanceof KeywordStruct) {
-					final KeywordStruct argumentKey = (KeywordStruct) nextArgument;
-					if (keys.contains(argumentKey)) {
-						// Consume the next argument
-						functionArgumentsIterator.next();
-						nextArgument = functionArgumentsIterator.next();
-					} else {
-						throw new ProgramErrorException("LIST ANALYZER: Keyword argument not found in '" + functionName + "' function definition: " + argumentKey);
-					}
-				} else {
-					throw new ProgramErrorException("LIST ANALYZER: Expected Keyword argument for call to '" + functionName + " was: " + nextArgument);
-				}
-			} else if (restBinding != null) {
-				functionArgumentsIterator.next();
-			} else {
-				throw new ProgramErrorException("LIST ANALYZER: Too many arguments in call to '" + functionName + "'. " + functionArguments.size() + " arguments provided, at most " + requiredBindings.size() + " accepted.");
-			}
-		}
 	}
 
 	@Override

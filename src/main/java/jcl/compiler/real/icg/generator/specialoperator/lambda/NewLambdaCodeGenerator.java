@@ -298,7 +298,8 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 //
 //			final RestBinding restBinding = lambdaListBindings.getRestBinding();
 //			if (restBinding == null) {
-//				// TODO
+//				mv.visitInsn(Opcodes.ACONST_NULL);
+//				mv.visitVarInsn(Opcodes.ASTORE, restBindingStore);
 //			} else {
 //				final SymbolStruct<?> restSymbol = restBinding.getSymbolStruct();
 //

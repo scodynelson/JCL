@@ -54,7 +54,7 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 	private Printer printer;
 
 	/**
-	 * Initializes the block macro function and adds it to the special operator 'block'.
+	 * Initializes the flet macro function and adds it to the special operator 'flet'.
 	 */
 	@PostConstruct
 	private void init() {

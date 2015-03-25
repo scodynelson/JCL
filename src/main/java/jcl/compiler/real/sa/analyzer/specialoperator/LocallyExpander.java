@@ -37,7 +37,7 @@ public class LocallyExpander extends MacroFunctionExpander<LocallyStruct> {
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
 
 	/**
-	 * Initializes the block macro function and adds it to the special operator 'block'.
+	 * Initializes the locally macro function and adds it to the special operator 'locally'.
 	 */
 	@PostConstruct
 	private void init() {

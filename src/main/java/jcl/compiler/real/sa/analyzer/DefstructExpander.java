@@ -15,7 +15,7 @@ public class DefstructExpander extends MacroFunctionExpander<LispStruct> {
 	private static final long serialVersionUID = 5336983779662053736L;
 
 	/**
-	 * Initializes the block macro function and adds it to the special operator 'block'.
+	 * Initializes the defstruct macro function and adds it to the special operator 'defstruct'.
 	 */
 	@PostConstruct
 	private void init() {

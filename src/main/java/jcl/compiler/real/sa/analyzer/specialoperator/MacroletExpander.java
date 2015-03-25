@@ -54,7 +54,7 @@ public class MacroletExpander extends MacroFunctionExpander<MacroletStruct> {
 	private Printer printer;
 
 	/**
-	 * Initializes the block macro function and adds it to the special operator 'block'.
+	 * Initializes the macrolet macro function and adds it to the special operator 'macrolet'.
 	 */
 	@PostConstruct
 	private void init() {

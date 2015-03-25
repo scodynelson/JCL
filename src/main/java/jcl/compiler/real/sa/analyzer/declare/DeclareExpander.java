@@ -31,7 +31,7 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 	private SymbolAnalyzer symbolAnalyzer;
 
 	/**
-	 * Initializes the block macro function and adds it to the special operator 'block'.
+	 * Initializes the declare macro function and adds it to the special operator 'declare'.
 	 */
 	@PostConstruct
 	private void init() {

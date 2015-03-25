@@ -54,7 +54,7 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 	private Printer printer;
 
 	/**
-	 * Initializes the block macro function and adds it to the special operator 'block'.
+	 * Initializes the lambda macro function and adds it to the special operator 'lambda'.
 	 */
 	@PostConstruct
 	private void init() {

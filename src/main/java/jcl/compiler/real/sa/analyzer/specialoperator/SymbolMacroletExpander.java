@@ -47,7 +47,7 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 	private Printer printer;
 
 	/**
-	 * Initializes the block macro function and adds it to the special operator 'block'.
+	 * Initializes the symbol-macrolet macro function and adds it to the special operator 'symbol-macrolet'.
 	 */
 	@PostConstruct
 	private void init() {

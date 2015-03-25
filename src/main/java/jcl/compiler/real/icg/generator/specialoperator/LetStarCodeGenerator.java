@@ -11,12 +11,12 @@ import java.util.Stack;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.LetEnvironment;
+import jcl.compiler.real.environment.LetStarEnvironment;
 import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
-import jcl.compiler.real.struct.specialoperator.LetStruct;
+import jcl.compiler.real.struct.specialoperator.LetStarStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.Label;
@@ -25,21 +25,21 @@ import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-//@Component
-public class LetStarCodeGenerator implements CodeGenerator<LetStruct> {
+@Component
+public class LetStarCodeGenerator implements CodeGenerator<LetStarStruct> {
 
-//	@Autowired
+	@Autowired
 	private FormGenerator formGenerator;
 
-//	@Autowired
+	@Autowired
 	private PrognCodeGenerator prognCodeGenerator;
 
 	@Override
-	public void generate(final LetStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final LetStarStruct input, final JavaClassBuilder classBuilder) {
 
-		final List<LetStruct.LetVar> vars = input.getVars();
+		final List<LetStarStruct.LetStarVar> vars = input.getVars();
 		final PrognStruct forms = input.getForms();
-		final LetEnvironment letEnvironment = input.getLetEnvironment();
+		final LetStarEnvironment letStarEnvironment = input.getLetStarEnvironment();
 
 		final ClassDef currentClass = classBuilder.getCurrentClass();
 		final MethodVisitor mv = currentClass.getMethodVisitor();
@@ -56,7 +56,7 @@ public class LetStarCodeGenerator implements CodeGenerator<LetStruct> {
 		final Set<Integer> lexicalSymbolStoresToUnbind = new HashSet<>();
 		final Set<Integer> dynamicSymbolStoresToUnbind = new HashSet<>();
 
-		for (final LetStruct.LetVar var : vars) {
+		for (final LetStarStruct.LetStarVar var : vars) {
 			final SymbolStruct<?> symbolVar = var.getVar();
 			final LispStruct initForm = var.getInitForm();
 			final boolean isSpecial = var.isSpecial();
@@ -95,7 +95,7 @@ public class LetStarCodeGenerator implements CodeGenerator<LetStruct> {
 
 		final Stack<Environment> bindingStack = classBuilder.getBindingStack();
 
-		bindingStack.push(letEnvironment);
+		bindingStack.push(letStarEnvironment);
 		prognCodeGenerator.generate(forms, classBuilder);
 		bindingStack.pop();
 

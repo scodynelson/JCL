@@ -54,7 +54,7 @@ public class LabelsExpander extends MacroFunctionExpander<LabelsStruct> {
 	private Printer printer;
 
 	/**
-	 * Initializes the block macro function and adds it to the special operator 'block'.
+	 * Initializes the labels macro function and adds it to the special operator 'labels'.
 	 */
 	@PostConstruct
 	private void init() {

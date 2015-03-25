@@ -98,6 +98,7 @@
 		<entry key="jcl.compiler.real.struct.specialoperator.LabelsStruct" value-ref="labelsCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.LambdaCompilerFunctionStruct" value-ref="lambdaFunctionCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.LetStruct" value-ref="letCodeGenerator"/>
+		<entry key="jcl.compiler.real.struct.specialoperator.LetStarStruct" value-ref="letStarCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.LocallyStruct" value-ref="locallyCodeGenerator"/>
 		<!--<entry key="jcl.compiler.real.struct.specialoperator.MacroletStruct" value-ref="macroletCodeGenerator"/>-->
 		<!--<entry key="jcl.compiler.real.struct.specialoperator.MultipleValueCallStruct" value-ref="multipleValueCallCodeGenerator"/>-->

@@ -48,7 +48,7 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 	private Printer printer;
 
 	/**
-	 * Initializes the block macro function and adds it to the special operator 'block'.
+	 * Initializes the let macro function and adds it to the special operator 'let'.
 	 */
 	@PostConstruct
 	private void init() {

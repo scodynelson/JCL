@@ -75,7 +75,6 @@
 
 		<entry key="jcl.characters.CharacterStruct" value-ref="characterCodeGenerator"/>
 
-		<!--<entry key="jcl.lists.ConsStruct" value-ref="listCodeGenerator"/>-->
 		<entry key="jcl.lists.NullStruct" value-ref="nullCodeGenerator"/>
 
 		<!--<entry key="jcl.numbers.ComplexStruct" value-ref="complexCodeGenerator"/>-->
@@ -96,7 +95,7 @@
 		<entry key="jcl.compiler.real.struct.specialoperator.FletStruct" value-ref="fletCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.IfStruct" value-ref="ifCodeGenerator"/>
 		<!--<entry key="jcl.compiler.real.struct.specialoperator.ImmutableLoadTimeValueStruct" value-ref=""/>-->
-		<!--<entry key="jcl.compiler.real.struct.specialoperator.LabelsStruct" value-ref="labelsCodeGenerator"/>-->
+		<entry key="jcl.compiler.real.struct.specialoperator.LabelsStruct" value-ref="labelsCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.LambdaCompilerFunctionStruct" value-ref="lambdaFunctionCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.LetStruct" value-ref="letCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.LocallyStruct" value-ref="locallyCodeGenerator"/>

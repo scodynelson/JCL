@@ -1,20 +1,19 @@
 package jcl.compiler.real.icg.generator.specialoperator;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.FletEnvironment;
+import jcl.compiler.real.environment.LabelsEnvironment;
 import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.struct.specialoperator.CompilerFunctionStruct;
-import jcl.compiler.real.struct.specialoperator.FletStruct;
+import jcl.compiler.real.struct.specialoperator.LabelsStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.Label;
@@ -24,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class FletCodeGenerator implements CodeGenerator<FletStruct> {
+public class LabelsCodeGenerator implements CodeGenerator<LabelsStruct> {
 
 	@Autowired
 	private FormGenerator formGenerator;
@@ -33,11 +32,11 @@ public class FletCodeGenerator implements CodeGenerator<FletStruct> {
 	private PrognCodeGenerator prognCodeGenerator;
 
 	@Override
-	public void generate(final FletStruct input, final JavaClassBuilder classBuilder) {
+	public void generate(final LabelsStruct input, final JavaClassBuilder classBuilder) {
 
-		final List<FletStruct.FletVar> vars = input.getVars();
+		final List<LabelsStruct.LabelsVar> vars = input.getVars();
 		final PrognStruct forms = input.getForms();
-		final FletEnvironment fletEnvironment = input.getLexicalEnvironment();
+		final LabelsEnvironment labelsEnvironment = input.getLexicalEnvironment();
 
 		final ClassDef currentClass = classBuilder.getCurrentClass();
 		final MethodVisitor mv = currentClass.getMethodVisitor();
@@ -52,7 +51,7 @@ public class FletCodeGenerator implements CodeGenerator<FletStruct> {
 
 		final Map<Integer, Integer> functionStoresToBind = new HashMap<>();
 
-		for (final FletStruct.FletVar var : vars) {
+		for (final LabelsStruct.LabelsVar var : vars) {
 			final SymbolStruct<?> functionSymbolVar = var.getVar();
 			final CompilerFunctionStruct initForm = var.getInitForm();
 
@@ -91,7 +90,7 @@ public class FletCodeGenerator implements CodeGenerator<FletStruct> {
 
 		final Stack<Environment> bindingStack = classBuilder.getBindingStack();
 
-		bindingStack.push(fletEnvironment);
+		bindingStack.push(labelsEnvironment);
 		prognCodeGenerator.generate(forms, classBuilder);
 		bindingStack.pop();
 

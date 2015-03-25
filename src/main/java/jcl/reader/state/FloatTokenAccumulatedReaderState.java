@@ -43,7 +43,12 @@ public class FloatTokenAccumulatedReaderState implements ReaderState {
 		String tokenString = ReaderState.convertTokenAttributesToString(tokenAttributes);
 		tokenString = getFloatTokenString(tokenString, exponentTokenCodePoint);
 
-		BigDecimal bigDecimal = new BigDecimal(tokenString);
+		BigDecimal bigDecimal;
+		try {
+			bigDecimal = new BigDecimal(tokenString);
+		} catch (final NumberFormatException ignore) {
+			return null;
+		}
 
 		final int scale = bigDecimal.scale();
 		if (scale < 1) {

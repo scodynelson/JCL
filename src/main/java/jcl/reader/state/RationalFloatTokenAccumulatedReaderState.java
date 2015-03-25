@@ -64,7 +64,14 @@ public class RationalFloatTokenAccumulatedReaderState extends FloatTokenAccumula
 		final BigDecimal numeratorBigDecimal = new BigDecimal(numeratorTokenString);
 
 		final String denominatorTokenString = getFloatTokenString(rationalParts[1], exponentTokenCodePoint);
-		final BigDecimal denominatorBigDecimal = new BigDecimal(denominatorTokenString);
+		final BigDecimal denominatorBigDecimal;
+		try {
+			denominatorBigDecimal = new BigDecimal(denominatorTokenString);
+		} catch (final NumberFormatException ignore) {
+			// NOTE: we don't check the 'numeratorBigDecimal' because it MUST be an integer token, therefore we won't
+			//       have the issues with the BigDecimal creations
+			return null;
+		}
 
 		BigDecimal bigDecimal = numeratorBigDecimal.divide(denominatorBigDecimal, MathContext.DECIMAL128);
 

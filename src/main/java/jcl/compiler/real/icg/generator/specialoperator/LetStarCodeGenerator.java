@@ -1,8 +1,11 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.compiler.real.icg.generator.specialoperator;
 
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
@@ -22,13 +25,13 @@ import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component
-public class LetCodeGenerator implements CodeGenerator<LetStruct> {
+//@Component
+public class LetStarCodeGenerator implements CodeGenerator<LetStruct> {
 
-	@Autowired
+//	@Autowired
 	private FormGenerator formGenerator;
 
-	@Autowired
+//	@Autowired
 	private PrognCodeGenerator prognCodeGenerator;
 
 	@Override
@@ -48,12 +51,10 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, null);
 
 		final int packageStore = currentClass.getNextAvailableStore();
+		final int initFormStore = currentClass.getNextAvailableStore();
 
-		final Map<Integer, Integer> lexicalSymbolStoresToBind = new HashMap<>();
-		final Map<Integer, Integer> dynamicSymbolStoresToBind = new HashMap<>();
-
-		final Set<Integer> lexicalSymbolStoresToUnbind = lexicalSymbolStoresToBind.keySet();
-		final Set<Integer> dynamicSymbolStoresToUnbind = dynamicSymbolStoresToBind.keySet();
+		final Set<Integer> lexicalSymbolStoresToUnbind = new HashSet<>();
+		final Set<Integer> dynamicSymbolStoresToUnbind = new HashSet<>();
 
 		for (final LetStruct.LetVar var : vars) {
 			final SymbolStruct<?> symbolVar = var.getVar();
@@ -76,32 +77,18 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 			mv.visitVarInsn(Opcodes.ASTORE, symbolStore);
 
 			formGenerator.generate(initForm, classBuilder);
-			final int initFormStore = currentClass.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
 
+			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
+			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
+
 			if (isSpecial) {
-				dynamicSymbolStoresToBind.put(symbolStore, initFormStore);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "bindDynamicValue", "(Ljcl/LispStruct;)V", false);
+				dynamicSymbolStoresToUnbind.add(symbolStore);
 			} else {
-				lexicalSymbolStoresToBind.put(symbolStore, initFormStore);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "bindLexicalValue", "(Ljcl/LispStruct;)V", false);
+				lexicalSymbolStoresToUnbind.add(symbolStore);
 			}
-		}
-
-		for (final Map.Entry<Integer, Integer> functionStoreToBind : lexicalSymbolStoresToBind.entrySet()) {
-			final Integer symbolStore = functionStoreToBind.getKey();
-			final Integer initFormStore = functionStoreToBind.getValue();
-
-			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
-			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "bindLexicalValue", "(Ljcl/LispStruct;)V", false);
-		}
-
-		for (final Map.Entry<Integer, Integer> functionStoreToBind : dynamicSymbolStoresToBind.entrySet()) {
-			final Integer symbolStore = functionStoreToBind.getKey();
-			final Integer initFormStore = functionStoreToBind.getValue();
-
-			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
-			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "bindDynamicValue", "(Ljcl/LispStruct;)V", false);
 		}
 
 		mv.visitLabel(tryBlockStart);

@@ -156,11 +156,7 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 
 		final ParameterAllocation allocation = new ParameterAllocation(nextBindingsPosition);
 		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(functionName, allocation, T.INSTANCE, functionInitForm);
-		if (isSpecial) {
-			fletEnvironment.addDynamicBinding(binding);
-		} else {
-			fletEnvironment.addLexicalBinding(binding);
-		}
+		fletEnvironment.addFunctionBinding(binding);
 
 		return new FletStruct.FletVar(functionName, functionInitForm, isSpecial);
 	}

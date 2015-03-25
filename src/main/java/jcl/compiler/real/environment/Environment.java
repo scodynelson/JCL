@@ -157,6 +157,10 @@ public class Environment extends StandardObjectStruct {
 		dynamicBindings.add(environmentBinding);
 	}
 
+	public List<SymbolMacroBinding> getSymbolMacroBindings() {
+		return symbolMacroBindings;
+	}
+
 	public boolean hasSymbolMacroBinding(final SymbolStruct<?> symbolStruct) {
 		return symbolMacroBindings.stream()
 		                          .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct));

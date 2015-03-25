@@ -156,11 +156,7 @@ public class LabelsExpander extends MacroFunctionExpander<LabelsStruct> {
 
 		final ParameterAllocation allocation = new ParameterAllocation(nextBindingsPosition);
 		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(functionName, allocation, T.INSTANCE, functionInitForm);
-		if (isSpecial) {
-			labelsEnvironment.addDynamicBinding(binding);
-		} else {
-			labelsEnvironment.addLexicalBinding(binding);
-		}
+		labelsEnvironment.addFunctionBinding(binding);
 
 		return new LabelsStruct.LabelsVar(functionName, functionInitForm, isSpecial);
 	}

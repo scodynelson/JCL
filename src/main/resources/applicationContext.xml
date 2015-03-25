@@ -87,16 +87,15 @@
 		<entry key="jcl.symbols.SymbolStruct" value-ref="newSymbolStructCodeGenerator"/>
 		<entry key="jcl.symbols.TStruct" value-ref="TCodeGenerator"/>
 
-		<entry key="jcl.compiler.real.struct.functioncall.FunctionCallStruct" value-ref="functionCallCodeGenerator"/>
-		<entry key="jcl.compiler.real.struct.functioncall.LambdaFunctionCallStruct" value-ref="lambdaFunctionCallCodeGenerator"/>
-
 		<entry key="jcl.compiler.real.struct.specialoperator.BlockStruct" value-ref="blockCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.CatchStruct" value-ref="catchCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.FletStruct" value-ref="fletCodeGenerator"/>
+		<entry key="jcl.compiler.real.struct.specialoperator.FunctionCallStruct" value-ref="functionCallCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.IfStruct" value-ref="ifCodeGenerator"/>
 		<!--<entry key="jcl.compiler.real.struct.specialoperator.ImmutableLoadTimeValueStruct" value-ref=""/>-->
 		<entry key="jcl.compiler.real.struct.specialoperator.LabelsStruct" value-ref="labelsCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.LambdaCompilerFunctionStruct" value-ref="lambdaFunctionCodeGenerator"/>
+		<entry key="jcl.compiler.real.struct.specialoperator.LambdaFunctionCallStruct" value-ref="lambdaFunctionCallCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.LetStruct" value-ref="letCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.LetStarStruct" value-ref="letStarCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.LocallyStruct" value-ref="locallyCodeGenerator"/>

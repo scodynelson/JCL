@@ -287,6 +287,7 @@ public class ReadEvalPrint {
 	private void handleClassDefList(final Deque<ClassDef> classDefList)
 			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
 
+		FunctionStruct finalLambda = null;
 		for (final ClassDef classDef : classDefList) {
 			final ClassWriter cw = classDef.getClassWriter();
 
@@ -318,11 +319,14 @@ public class ReadEvalPrint {
 			final Constructor<?> constructor = classLoaded.getDeclaredConstructor();
 			constructor.setAccessible(true);
 
-			final FunctionStruct lambda = (FunctionStruct) constructor.newInstance();
+			finalLambda = (FunctionStruct) constructor.newInstance();
 			constructor.setAccessible(false);
 
 //			LOGGER.info("GENERATED CLASS -> {}", printer.print(lambda));
-			final LispStruct apply = lambda.apply();
+		}
+
+		if (finalLambda != null) {
+			final LispStruct apply = finalLambda.apply();
 			final String printedResult = printer.print(apply);
 			LOGGER.info(printedResult);
 		}

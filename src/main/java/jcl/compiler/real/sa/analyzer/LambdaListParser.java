@@ -118,8 +118,13 @@ final class LambdaListParser {
 		final List<RequiredBinding> requiredBindings = new ArrayList<>();
 		int currentPosition = position;
 
-		LispStruct currentElement = iterator.next();
-		while (iterator.hasNext() && !isLambdaListKeyword(currentElement)) {
+		LispStruct currentElement;
+		do {
+			currentElement = iterator.next();
+			if (isLambdaListKeyword(currentElement)) {
+				return new RequiredParseResult(currentElement, currentPosition, requiredBindings);
+			}
+
 			if (!(currentElement instanceof SymbolStruct)) {
 				throw new ProgramErrorException("LambdaList required parameters must be of type SymbolStruct: " + currentElement);
 			}
@@ -127,8 +132,6 @@ final class LambdaListParser {
 			final ParameterAllocation requiredAllocation = new ParameterAllocation(currentPosition++);
 			final RequiredBinding requiredBinding = new RequiredBinding(currentParam, requiredAllocation);
 			requiredBindings.add(requiredBinding);
-
-			currentElement = iterator.next();
 
 			final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(environment);
 			final int newBindingsPosition = currentLambda.getNextParameterNumber();
@@ -143,7 +146,7 @@ final class LambdaListParser {
 			} else {
 				environment.addLexicalBinding(binding);
 			}
-		}
+		} while (iterator.hasNext());
 
 		return new RequiredParseResult(currentElement, currentPosition, requiredBindings);
 	}
@@ -166,8 +169,13 @@ final class LambdaListParser {
 		final List<OptionalBinding> optionalBindings = new ArrayList<>();
 		int currentPosition = position;
 
-		LispStruct currentElement = iterator.next();
-		while (iterator.hasNext() && !isLambdaListKeyword(currentElement)) {
+		LispStruct currentElement;
+		do {
+			currentElement = iterator.next();
+			if (isLambdaListKeyword(currentElement)) {
+				return new OptionalParseResult(currentElement, currentPosition, optionalBindings);
+			}
+
 			if (currentElement instanceof SymbolStruct) {
 				final SymbolStruct<?> currentParam = (SymbolStruct) currentElement;
 				final ParameterAllocation optionalAllocation = new ParameterAllocation(currentPosition++);
@@ -258,7 +266,7 @@ final class LambdaListParser {
 			}
 
 			currentElement = iterator.next();
-		}
+		} while (iterator.hasNext());
 
 		return new OptionalParseResult(currentElement, currentPosition, optionalBindings);
 	}
@@ -304,8 +312,19 @@ final class LambdaListParser {
 		final List<KeyBinding> keyBindings = new ArrayList<>();
 		int currentPosition = position;
 
-		LispStruct currentElement = iterator.next();
-		while (iterator.hasNext() && !isLambdaListKeyword(currentElement)) {
+		LispStruct currentElement;
+		do {
+			currentElement = iterator.next();
+			if (isLambdaListKeyword(currentElement)) {
+				boolean allowOtherKeys = false;
+				if (currentElement.equals(CompilerConstants.ALLOW_OTHER_KEYS)) {
+					allowOtherKeys = true;
+					currentElement = iterator.next();
+				}
+
+				return new KeyParseResult(currentElement, currentPosition, keyBindings, allowOtherKeys);
+			}
+
 			if (currentElement instanceof SymbolStruct) {
 				final SymbolStruct<?> currentParam = (SymbolStruct) currentElement;
 				final KeywordStruct keyName = getKeywordStruct(currentParam.getName());
@@ -418,7 +437,7 @@ final class LambdaListParser {
 			}
 
 			currentElement = iterator.next();
-		}
+		} while (iterator.hasNext());
 
 		boolean allowOtherKeys = false;
 		if (currentElement.equals(CompilerConstants.ALLOW_OTHER_KEYS)) {
@@ -447,8 +466,13 @@ final class LambdaListParser {
 		final List<AuxBinding> auxBindings = new ArrayList<>();
 		int currentPosition = position;
 
-		LispStruct currentElement = iterator.next();
-		while (iterator.hasNext() && !isLambdaListKeyword(currentElement)) {
+		LispStruct currentElement;
+		do {
+			currentElement = iterator.next();
+			if (isLambdaListKeyword(currentElement)) {
+				return new AuxParseResult(currentElement, currentPosition, auxBindings);
+			}
+
 			if (currentElement instanceof SymbolStruct) {
 				final SymbolStruct<?> currentParam = (SymbolStruct) currentElement;
 				final ParameterAllocation auxAllocation = new ParameterAllocation(currentPosition++);
@@ -513,7 +537,7 @@ final class LambdaListParser {
 			}
 
 			currentElement = iterator.next();
-		}
+		} while (iterator.hasNext());
 
 		return new AuxParseResult(currentElement, currentPosition, auxBindings);
 	}

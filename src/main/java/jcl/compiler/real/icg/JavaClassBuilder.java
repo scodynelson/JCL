@@ -1,6 +1,8 @@
 package jcl.compiler.real.icg;
 
 import java.util.Deque;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 import java.util.concurrent.ConcurrentLinkedDeque;
@@ -8,6 +10,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.icg.generator.specialoperator.TagbodyLabel;
 import jcl.lists.ListStruct;
+import jcl.symbols.SymbolStruct;
 
 public class JavaClassBuilder {
 
@@ -45,6 +48,8 @@ public class JavaClassBuilder {
 	private ClassDef currentClass;
 
 	private boolean acceptsMultipleValues;
+
+	final Map<SymbolStruct<?>, Integer> fletFunctionStoresToBind = new HashMap<>();
 
 	public JavaClassBuilder() {
 		MacroLambda = false;
@@ -153,5 +158,13 @@ public class JavaClassBuilder {
 
 	public void setAcceptsMultipleValues(final boolean acceptsMultipleValues) {
 		this.acceptsMultipleValues = acceptsMultipleValues;
+	}
+
+	public int getTagCounter() {
+		return tagCounter;
+	}
+
+	public Map<SymbolStruct<?>, Integer> getFletFunctionStoresToBind() {
+		return fletFunctionStoresToBind;
 	}
 }

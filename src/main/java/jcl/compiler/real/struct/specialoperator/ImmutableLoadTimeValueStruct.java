@@ -4,8 +4,6 @@
 
 package jcl.compiler.real.struct.specialoperator;
 
-import java.util.UUID;
-
 import jcl.compiler.real.struct.SpecialOperatorStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -16,13 +14,13 @@ public class ImmutableLoadTimeValueStruct extends SpecialOperatorStruct implemen
 
 	private static final long serialVersionUID = 857211495712280441L;
 
-	private final UUID uniqueLTVId;
+	private final String uniqueLTVId;
 
-	public ImmutableLoadTimeValueStruct(final UUID uniqueLTVId) {
+	public ImmutableLoadTimeValueStruct(final String uniqueLTVId) {
 		this.uniqueLTVId = uniqueLTVId;
 	}
 
-	public UUID getUniqueLTVId() {
+	public String getUniqueLTVId() {
 		return uniqueLTVId;
 	}
 

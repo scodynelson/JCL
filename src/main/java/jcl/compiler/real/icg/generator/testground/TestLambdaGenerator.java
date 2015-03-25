@@ -28,6 +28,8 @@ public class TestLambdaGenerator extends FunctionStruct {
 
 	private static final long serialVersionUID = 5616713628691655052L;
 
+	private static final LispStruct LTV_1 = new CharacterStruct(1997);
+
 	public TestLambdaGenerator() {
 		super("DocumentationString");
 		initLambdaListBindings();

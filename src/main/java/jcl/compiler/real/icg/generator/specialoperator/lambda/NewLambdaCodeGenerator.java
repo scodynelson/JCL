@@ -9,9 +9,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.Stack;
 
+import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.LambdaEnvironment;
+import jcl.compiler.real.environment.LoadTimeValue;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
@@ -53,6 +55,11 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	@Override
 	public void generate(final LambdaStruct input, final JavaClassBuilder classBuilder) {
 
+		final OrdinaryLambdaListBindings lambdaListBindings = input.getLambdaListBindings();
+		final StringStruct docString = input.getDocString();
+		final PrognStruct forms = input.getForms();
+		final LambdaEnvironment lambdaEnvironment = input.getLambdaEnvironment();
+
 		final String fileName = "Lambda" + '_' + System.nanoTime();
 		final String className = "jcl/" + fileName;
 
@@ -79,6 +86,15 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			fv.visitEnd();
 		}
 		{
+			final List<LoadTimeValue> loadTimeValues = lambdaEnvironment.getLoadTimeValues();
+			for (final LoadTimeValue loadTimeValue : loadTimeValues) {
+				final String uniqueLTVId = loadTimeValue.getUniqueLTVId();
+
+				final FieldVisitor fv = cw.visitField(Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, uniqueLTVId, "Ljcl/LispStruct;", null, null);
+				fv.visitEnd();
+			}
+		}
+		{
 			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC, "<init>", "()V", null, null);
 			currentClass.setMethodVisitor(mv);
 			mv.visitCode();
@@ -86,7 +102,6 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 
-			final StringStruct docString = input.getDocString();
 			String documentation = "";
 			if (docString != null) {
 				documentation = docString.getAsJavaString();
@@ -105,57 +120,11 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			currentClass.resetStores();
 		}
 		{
-			final OrdinaryLambdaListBindings lambdaListBindings = input.getLambdaListBindings();
-
 			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, "initLambdaListBindings", "()V", null, null);
 			currentClass.setMethodVisitor(mv);
 			mv.visitCode();
 			final int thisStore = currentClass.getNextAvailableStore();
 
-			// OLD: Start
-//			mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/util/Collections", "emptyList", "()Ljava/util/List;", false);
-//			final int requiredStore = currentClass.getNextAvailableStore();
-//			mv.visitVarInsn(Opcodes.ASTORE, requiredStore);
-//
-//			mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/util/Collections", "emptyList", "()Ljava/util/List;", false);
-//			final int optionalStore = currentClass.getNextAvailableStore();
-//			mv.visitVarInsn(Opcodes.ASTORE, optionalStore);
-//
-//			mv.visitInsn(Opcodes.ACONST_NULL);
-//			final int restStore = currentClass.getNextAvailableStore();
-//			mv.visitVarInsn(Opcodes.ASTORE, restStore);
-//
-//			mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/util/Collections", "emptyList", "()Ljava/util/List;", false);
-//			final int keyStore = currentClass.getNextAvailableStore();
-//			mv.visitVarInsn(Opcodes.ASTORE, keyStore);
-//
-//			mv.visitInsn(Opcodes.ICONST_0);
-//			final int allowOtherKeysStore = currentClass.getNextAvailableStore();
-//			mv.visitVarInsn(Opcodes.ISTORE, allowOtherKeysStore);
-//
-//			mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/util/Collections", "emptyList", "()Ljava/util/List;", false);
-//			final int auxStore = currentClass.getNextAvailableStore();
-//			mv.visitVarInsn(Opcodes.ASTORE, auxStore);
-//
-//			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
-//
-//			mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/environment/binding/lambdalist/OrdinaryLambdaListBindings");
-//			mv.visitInsn(Opcodes.DUP);
-//			mv.visitVarInsn(Opcodes.ALOAD, requiredStore);
-//			mv.visitVarInsn(Opcodes.ALOAD, optionalStore);
-//			mv.visitVarInsn(Opcodes.ALOAD, restStore);
-//			mv.visitVarInsn(Opcodes.ALOAD, keyStore);
-//			mv.visitVarInsn(Opcodes.ALOAD, auxStore);
-//			mv.visitInsn(Opcodes.ICONST_0);
-//
-//			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/binding/lambdalist/OrdinaryLambdaListBindings", "<init>", "(Ljava/util/List;Ljava/util/List;Ljcl/compiler/real/environment/binding/lambdalist/RestBinding;Ljava/util/List;Ljava/util/List;Z)V", false);
-//
-//			mv.visitFieldInsn(Opcodes.PUTFIELD, className, "lambdaListBindings", "Ljcl/compiler/real/environment/binding/lambdalist/OrdinaryLambdaListBindings;");
-//
-//			mv.visitInsn(Opcodes.RETURN);
-			// OLD: End
-
-			// NEW: Start
 			final int packageStore = currentClass.getNextAvailableStore();
 			final int allocationStore = currentClass.getNextAvailableStore();
 			final int suppliedPAllocationStore = currentClass.getNextAvailableStore();
@@ -207,7 +176,6 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitFieldInsn(Opcodes.PUTFIELD, className, "lambdaListBindings", "Ljcl/compiler/real/environment/binding/lambdalist/OrdinaryLambdaListBindings;");
 
 			mv.visitInsn(Opcodes.RETURN);
-			// NEW: END
 
 			mv.visitMaxs(-1, -1);
 			mv.visitEnd();
@@ -215,22 +183,12 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			currentClass.resetStores();
 		}
 		{
-			final PrognStruct forms = input.getForms();
-			final LambdaEnvironment lambdaEnvironment = input.getLambdaEnvironment();
-
 			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC + Opcodes.ACC_VARARGS, "apply", "([Ljcl/LispStruct;)Ljcl/LispStruct;", null, null);
 			currentClass.setMethodVisitor(mv);
 			mv.visitCode();
 			final int thisStore = currentClass.getNextAvailableStore();
 			final int argsStore = currentClass.getNextAvailableStore();
 
-			// OLD: Start
-//			prognCodeGenerator.generate(forms, classBuilder);
-//
-//			mv.visitInsn(Opcodes.ARETURN);
-			// OLD: End
-
-			// NEW: Start
 			final Label tryBlockStart = new Label();
 			final Label tryBlockEnd = new Label();
 			final Label catchBlockStart = new Label();
@@ -310,12 +268,30 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitVarInsn(Opcodes.ALOAD, resultStore);
 
 			mv.visitInsn(Opcodes.ARETURN);
-			// NEW: End
 
 			mv.visitMaxs(-1, -1);
 			mv.visitEnd();
 
 			currentClass.resetStores();
+		}
+		{
+			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_STATIC, "<clinit>", "()V", null, null);
+			currentClass.setMethodVisitor(mv);
+			mv.visitCode();
+
+			final List<LoadTimeValue> loadTimeValues = lambdaEnvironment.getLoadTimeValues();
+			for (final LoadTimeValue loadTimeValue : loadTimeValues) {
+				final String uniqueLTVId = loadTimeValue.getUniqueLTVId();
+				final LispStruct value = loadTimeValue.getValue();
+
+				formGenerator.generate(value, classBuilder);
+				mv.visitFieldInsn(Opcodes.PUTSTATIC, className, uniqueLTVId, "Ljcl/LispStruct;");
+			}
+
+			mv.visitInsn(Opcodes.RETURN);
+
+			mv.visitMaxs(-1, -1);
+			mv.visitEnd();
 		}
 		cw.visitEnd();
 
@@ -452,8 +428,8 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/allocation/ParameterAllocation", "<init>", "(I)V", false);
 			mv.visitVarInsn(Opcodes.ASTORE, allocationStore);
 
-//			final LispStruct optionalInitForm = optionalBinding.getInitForm();
-//			formGenerator.generate(optionalInitForm, classBuilder);
+			// NOTE: Just generate a null value for this initForm here. We take care of the read initForms in the body
+			//       when it is processed
 			nullCodeGenerator.generate(NullStruct.INSTANCE, classBuilder);
 			mv.visitVarInsn(Opcodes.ASTORE, optionalInitFormStore);
 
@@ -596,8 +572,8 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/allocation/ParameterAllocation", "<init>", "(I)V", false);
 			mv.visitVarInsn(Opcodes.ASTORE, allocationStore);
 
-//			final LispStruct keyInitForm = keyBinding.getInitForm();
-//			formGenerator.generate(keyInitForm, classBuilder);
+			// NOTE: Just generate a null value for this initForm here. We take care of the read initForms in the body
+			//       when it is processed
 			nullCodeGenerator.generate(NullStruct.INSTANCE, classBuilder);
 			mv.visitVarInsn(Opcodes.ASTORE, keyInitFormStore);
 
@@ -720,8 +696,8 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/allocation/ParameterAllocation", "<init>", "(I)V", false);
 			mv.visitVarInsn(Opcodes.ASTORE, allocationStore);
 
-//			final LispStruct auxInitForm = auxBinding.getInitForm();
-//			formGenerator.generate(auxInitForm, classBuilder);
+			// NOTE: Just generate a null value for this initForm here. We take care of the read initForms in the body
+			//       when it is processed
 			nullCodeGenerator.generate(NullStruct.INSTANCE, classBuilder);
 			mv.visitVarInsn(Opcodes.ASTORE, auxInitFormStore);
 

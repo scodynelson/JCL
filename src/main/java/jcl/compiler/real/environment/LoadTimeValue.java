@@ -5,7 +5,6 @@
 package jcl.compiler.real.environment;
 
 import java.io.Serializable;
-import java.util.UUID;
 
 import jcl.LispStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -17,16 +16,16 @@ public class LoadTimeValue implements Serializable {
 
 	private static final long serialVersionUID = -3900591459449629077L;
 
-	private final UUID uniqueLTVId;
+	private final String uniqueLTVId;
 
 	private final LispStruct value;
 
-	public LoadTimeValue(final UUID uniqueLTVId, final LispStruct value) {
+	public LoadTimeValue(final String uniqueLTVId, final LispStruct value) {
 		this.uniqueLTVId = uniqueLTVId;
 		this.value = value;
 	}
 
-	public UUID getUniqueLTVId() {
+	public String getUniqueLTVId() {
 		return uniqueLTVId;
 	}
 

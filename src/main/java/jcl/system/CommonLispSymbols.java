@@ -427,7 +427,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> EQUALP = null;
 	SymbolStruct<?> ERROR = null;
 	SymbolStruct<?> ETYPECASE = null;
-	SymbolStruct<?> EVAL = null;
+	SymbolStruct<?> EVAL = new SymbolStruct<>("EVAL", GlobalPackageStruct.COMMON_LISP);
 	SymbolStruct<?> EVAL_WHEN = null;
 	SymbolStruct<?> EVENP = null;
 	SymbolStruct<?> EVERY = null;

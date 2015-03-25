@@ -92,7 +92,7 @@
 		<entry key="jcl.compiler.real.struct.specialoperator.FletStruct" value-ref="fletCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.FunctionCallStruct" value-ref="functionCallCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.IfStruct" value-ref="ifCodeGenerator"/>
-		<!--<entry key="jcl.compiler.real.struct.specialoperator.ImmutableLoadTimeValueStruct" value-ref=""/>-->
+		<entry key="jcl.compiler.real.struct.specialoperator.ImmutableLoadTimeValueStruct" value-ref="immutableLoadTimeValueCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.LabelsStruct" value-ref="labelsCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.LambdaCompilerFunctionStruct" value-ref="lambdaFunctionCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.LambdaFunctionCallStruct" value-ref="lambdaFunctionCallCodeGenerator"/>
@@ -102,7 +102,7 @@
 		<!--<entry key="jcl.compiler.real.struct.specialoperator.MacroletStruct" value-ref="macroletCodeGenerator"/>-->
 		<!--<entry key="jcl.compiler.real.struct.specialoperator.MultipleValueCallStruct" value-ref="multipleValueCallCodeGenerator"/>-->
 		<!--<entry key="jcl.compiler.real.struct.specialoperator.MultipleValueProg1Struct" value-ref="multipleValueProg1CodeGenerator"/>-->
-		<!--<entry key="jcl.compiler.real.struct.specialoperator.MutableLoadTimeValueStruct" value-ref=""/>-->
+		<entry key="jcl.compiler.real.struct.specialoperator.MutableLoadTimeValueStruct" value-ref="mutableLoadTimeValueCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.PrognStruct" value-ref="prognCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.ProgvStruct" value-ref="progvCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.QuoteStruct" value-ref="quoteCodeGenerator"/>

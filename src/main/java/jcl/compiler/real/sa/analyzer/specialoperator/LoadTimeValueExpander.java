@@ -15,8 +15,10 @@ import jcl.compiler.real.struct.specialoperator.LoadTimeValueStruct;
 import jcl.compiler.real.struct.specialoperator.MutableLoadTimeValueStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
+import jcl.lists.NullStruct;
 import jcl.printer.Printer;
 import jcl.symbols.BooleanStruct;
+import jcl.symbols.NILStruct;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.system.CommonLispSymbols;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -56,8 +58,10 @@ public class LoadTimeValueExpander extends MacroFunctionExpander<LoadTimeValueSt
 		final ListStruct formRest = form.getRest();
 		final ListStruct formRestRest = formRest.getRest();
 
-		final LispStruct third = formRestRest.getFirst();
-		if (!(third instanceof BooleanStruct)) {
+		LispStruct third = formRestRest.getFirst();
+		if (third instanceof NullStruct) {
+			third = NILStruct.INSTANCE;
+		} else if (!(third instanceof BooleanStruct)) {
 			final String printedObject = printer.print(third);
 			throw new ProgramErrorException("LOAD-TIME-VALUE: Read-Only-P value must be either 'T' or 'NIL'. Got: " + printedObject);
 		}
@@ -73,7 +77,7 @@ public class LoadTimeValueExpander extends MacroFunctionExpander<LoadTimeValueSt
 		if (isReadOnly) {
 			final LambdaEnvironment enclosingLambda = Environments.getEnclosingLambda(environment);
 
-			final UUID uniqueLTVId = UUID.randomUUID();
+			final String uniqueLTVId = UUID.randomUUID().toString().replace('-', '_');
 			final LoadTimeValue newLoadTimeValue = new LoadTimeValue(uniqueLTVId, analyzedEvalForm);
 			enclosingLambda.addLoadTimeValue(newLoadTimeValue);
 

@@ -444,7 +444,7 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/environment/allocation/ParameterAllocation");
 			mv.visitInsn(Opcodes.DUP);
-			mv.visitInsn(parameterCounter++);
+			mv.visitLdcInsn(parameterCounter++);
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/allocation/ParameterAllocation", "<init>", "(I)V", false);
 			mv.visitVarInsn(Opcodes.ASTORE, allocationStore);
 
@@ -454,33 +454,38 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			// Start: Supplied-P
 			final SuppliedPBinding suppliedPBinding = optionalBinding.getSuppliedPBinding();
-			final SymbolStruct<?> optionalSuppliedPSymbol = suppliedPBinding.getSymbolStruct();
+			if (suppliedPBinding == null) {
+				mv.visitInsn(Opcodes.ACONST_NULL);
+				mv.visitVarInsn(Opcodes.ASTORE, optionalSuppliedPStore);
+			} else {
+				final SymbolStruct<?> optionalSuppliedPSymbol = suppliedPBinding.getSymbolStruct();
 
-			packageName = optionalSuppliedPSymbol.getSymbolPackage().getName();
-			symbolName = optionalSuppliedPSymbol.getName();
+				packageName = optionalSuppliedPSymbol.getSymbolPackage().getName();
+				symbolName = optionalSuppliedPSymbol.getName();
 
-			mv.visitLdcInsn(packageName);
-			mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
-			mv.visitVarInsn(Opcodes.ASTORE, packageStore);
+				mv.visitLdcInsn(packageName);
+				mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
+				mv.visitVarInsn(Opcodes.ASTORE, packageStore);
 
-			mv.visitVarInsn(Opcodes.ALOAD, packageStore);
-			mv.visitLdcInsn(symbolName);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
-			mv.visitVarInsn(Opcodes.ASTORE, optionalSuppliedPSymbolStore);
+				mv.visitVarInsn(Opcodes.ALOAD, packageStore);
+				mv.visitLdcInsn(symbolName);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
+				mv.visitVarInsn(Opcodes.ASTORE, optionalSuppliedPSymbolStore);
 
-			mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/environment/allocation/ParameterAllocation");
-			mv.visitInsn(Opcodes.DUP);
-			mv.visitLdcInsn(parameterCounter++);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/allocation/ParameterAllocation", "<init>", "(I)V", false);
-			mv.visitVarInsn(Opcodes.ASTORE, suppliedPAllocationStore);
+				mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/environment/allocation/ParameterAllocation");
+				mv.visitInsn(Opcodes.DUP);
+				mv.visitLdcInsn(parameterCounter++);
+				mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/allocation/ParameterAllocation", "<init>", "(I)V", false);
+				mv.visitVarInsn(Opcodes.ASTORE, suppliedPAllocationStore);
 
-			mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/environment/binding/lambdalist/SuppliedPBinding");
-			mv.visitInsn(Opcodes.DUP);
-			mv.visitVarInsn(Opcodes.ALOAD, optionalSuppliedPSymbolStore);
-			mv.visitVarInsn(Opcodes.ALOAD, suppliedPAllocationStore);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/binding/lambdalist/SuppliedPBinding", "<init>", "(Ljcl/symbols/SymbolStruct;Ljcl/compiler/real/environment/allocation/ParameterAllocation;)V", false);
-			mv.visitVarInsn(Opcodes.ASTORE, optionalSuppliedPStore);
+				mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/environment/binding/lambdalist/SuppliedPBinding");
+				mv.visitInsn(Opcodes.DUP);
+				mv.visitVarInsn(Opcodes.ALOAD, optionalSuppliedPSymbolStore);
+				mv.visitVarInsn(Opcodes.ALOAD, suppliedPAllocationStore);
+				mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/binding/lambdalist/SuppliedPBinding", "<init>", "(Ljcl/symbols/SymbolStruct;Ljcl/compiler/real/environment/allocation/ParameterAllocation;)V", false);
+				mv.visitVarInsn(Opcodes.ASTORE, optionalSuppliedPStore);
+			}
 			// End: Supplied-P
 
 			mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/environment/binding/lambdalist/OptionalBinding");
@@ -582,7 +587,7 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/environment/allocation/ParameterAllocation");
 			mv.visitInsn(Opcodes.DUP);
-			mv.visitInsn(parameterCounter++);
+			mv.visitLdcInsn(parameterCounter++);
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/allocation/ParameterAllocation", "<init>", "(I)V", false);
 			mv.visitVarInsn(Opcodes.ASTORE, allocationStore);
 
@@ -605,33 +610,38 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			// Start: Supplied-P
 			final SuppliedPBinding suppliedPBinding = keyBinding.getSuppliedPBinding();
-			final SymbolStruct<?> keySuppliedPSymbol = suppliedPBinding.getSymbolStruct();
+			if (suppliedPBinding == null) {
+				mv.visitInsn(Opcodes.ACONST_NULL);
+				mv.visitVarInsn(Opcodes.ASTORE, keySuppliedPStore);
+			} else {
+				final SymbolStruct<?> keySuppliedPSymbol = suppliedPBinding.getSymbolStruct();
 
-			packageName = keySuppliedPSymbol.getSymbolPackage().getName();
-			symbolName = keySuppliedPSymbol.getName();
+				packageName = keySuppliedPSymbol.getSymbolPackage().getName();
+				symbolName = keySuppliedPSymbol.getName();
 
-			mv.visitLdcInsn(packageName);
-			mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
-			mv.visitVarInsn(Opcodes.ASTORE, packageStore);
+				mv.visitLdcInsn(packageName);
+				mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
+				mv.visitVarInsn(Opcodes.ASTORE, packageStore);
 
-			mv.visitVarInsn(Opcodes.ALOAD, packageStore);
-			mv.visitLdcInsn(symbolName);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
-			mv.visitVarInsn(Opcodes.ASTORE, keySuppliedPSymbolStore);
+				mv.visitVarInsn(Opcodes.ALOAD, packageStore);
+				mv.visitLdcInsn(symbolName);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
+				mv.visitVarInsn(Opcodes.ASTORE, keySuppliedPSymbolStore);
 
-			mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/environment/allocation/ParameterAllocation");
-			mv.visitInsn(Opcodes.DUP);
-			mv.visitLdcInsn(parameterCounter++);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/allocation/ParameterAllocation", "<init>", "(I)V", false);
-			mv.visitVarInsn(Opcodes.ASTORE, suppliedPAllocationStore);
+				mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/environment/allocation/ParameterAllocation");
+				mv.visitInsn(Opcodes.DUP);
+				mv.visitLdcInsn(parameterCounter++);
+				mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/allocation/ParameterAllocation", "<init>", "(I)V", false);
+				mv.visitVarInsn(Opcodes.ASTORE, suppliedPAllocationStore);
 
-			mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/environment/binding/lambdalist/SuppliedPBinding");
-			mv.visitInsn(Opcodes.DUP);
-			mv.visitVarInsn(Opcodes.ALOAD, keySuppliedPSymbolStore);
-			mv.visitVarInsn(Opcodes.ALOAD, suppliedPAllocationStore);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/binding/lambdalist/SuppliedPBinding", "<init>", "(Ljcl/symbols/SymbolStruct;Ljcl/compiler/real/environment/allocation/ParameterAllocation;)V", false);
-			mv.visitVarInsn(Opcodes.ASTORE, keySuppliedPStore);
+				mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/environment/binding/lambdalist/SuppliedPBinding");
+				mv.visitInsn(Opcodes.DUP);
+				mv.visitVarInsn(Opcodes.ALOAD, keySuppliedPSymbolStore);
+				mv.visitVarInsn(Opcodes.ALOAD, suppliedPAllocationStore);
+				mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/binding/lambdalist/SuppliedPBinding", "<init>", "(Ljcl/symbols/SymbolStruct;Ljcl/compiler/real/environment/allocation/ParameterAllocation;)V", false);
+				mv.visitVarInsn(Opcodes.ASTORE, keySuppliedPStore);
+			}
 			// End: Supplied-P
 
 			mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/environment/binding/lambdalist/KeyBinding");
@@ -700,7 +710,7 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/environment/allocation/ParameterAllocation");
 			mv.visitInsn(Opcodes.DUP);
-			mv.visitInsn(parameterCounter++);
+			mv.visitLdcInsn(parameterCounter++);
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/allocation/ParameterAllocation", "<init>", "(I)V", false);
 			mv.visitVarInsn(Opcodes.ASTORE, allocationStore);
 

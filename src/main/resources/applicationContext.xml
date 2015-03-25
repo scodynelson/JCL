@@ -83,6 +83,7 @@
 		<entry key="jcl.numbers.IntegerStruct" value-ref="integerCodeGenerator"/>
 		<entry key="jcl.numbers.RatioStruct" value-ref="ratioCodeGenerator"/>
 
+		<entry key="jcl.symbols.KeywordStruct" value-ref="keywordStructCodeGenerator"/>
 		<entry key="jcl.symbols.NILStruct" value-ref="NILCodeGenerator"/>
 		<entry key="jcl.symbols.SymbolStruct" value-ref="newSymbolStructCodeGenerator"/>
 		<entry key="jcl.symbols.TStruct" value-ref="TCodeGenerator"/>

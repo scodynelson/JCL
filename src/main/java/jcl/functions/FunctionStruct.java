@@ -195,9 +195,10 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 			symbolsToBind.put(optionalSymbol, optionalInitForm);
 
 			final SuppliedPBinding suppliedPBinding = optionalBinding.getSuppliedPBinding();
-
-			final SymbolStruct<?> suppliedPSymbol = suppliedPBinding.getSymbolStruct();
-			symbolsToBind.put(suppliedPSymbol, suppliedPInitForm);
+			if (suppliedPBinding != null) {
+				final SymbolStruct<?> suppliedPSymbol = suppliedPBinding.getSymbolStruct();
+				symbolsToBind.put(suppliedPSymbol, suppliedPInitForm);
+			}
 		}
 
 		final int numberOfKeys = keyBindings.size();
@@ -219,14 +220,25 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 				if (keysToBindings.containsKey(keywordArgument)) {
 					final KeyBinding keyBinding = keysToBindings.remove(keywordArgument);
 
+					final LispStruct keyInitForm;
+					final LispStruct suppliedPInitForm;
+
+					if (functionArgumentsIterator.hasNext()) {
+						keyInitForm = functionArgumentsIterator.next();
+						suppliedPInitForm = TStruct.INSTANCE;
+					} else {
+						keyInitForm = keyBinding.getInitForm();
+						suppliedPInitForm = NILStruct.INSTANCE;
+					}
+
 					final SymbolStruct<?> keySymbol = keyBinding.getSymbolStruct();
-					final LispStruct keyInitForm = functionArgumentsIterator.next();
 					symbolsToBind.put(keySymbol, keyInitForm);
 
 					final SuppliedPBinding suppliedPBinding = keyBinding.getSuppliedPBinding();
-
-					final SymbolStruct<?> suppliedPSymbol = suppliedPBinding.getSymbolStruct();
-					symbolsToBind.put(suppliedPSymbol, TStruct.INSTANCE);
+					if (suppliedPBinding != null) {
+						final SymbolStruct<?> suppliedPSymbol = suppliedPBinding.getSymbolStruct();
+						symbolsToBind.put(suppliedPSymbol, suppliedPInitForm);
+					}
 
 					restList.add(keyInitForm);
 				} else if (allowOtherKeys) {
@@ -252,9 +264,10 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 			symbolsToBind.put(keySymbol, keyInitForm);
 
 			final SuppliedPBinding suppliedPBinding = keyBinding.getSuppliedPBinding();
-
-			final SymbolStruct<?> suppliedPSymbol = suppliedPBinding.getSymbolStruct();
-			symbolsToBind.put(suppliedPSymbol, NILStruct.INSTANCE);
+			if (suppliedPBinding != null) {
+				final SymbolStruct<?> suppliedPSymbol = suppliedPBinding.getSymbolStruct();
+				symbolsToBind.put(suppliedPSymbol, NILStruct.INSTANCE);
+			}
 		}
 
 		if (restBinding != null) {

@@ -11,7 +11,10 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
+import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
+import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
+import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAndDocStringAnalyzer;
@@ -22,8 +25,10 @@ import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
+import jcl.lists.NullStruct;
 import jcl.printer.Printer;
 import jcl.symbols.SpecialOperatorStruct;
+import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -100,9 +105,15 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 	private static List<LispStruct> getNewStartingLambdaBody(final OrdinaryLambdaListBindings parsedLambdaList,
 	                                                         final List<LispStruct> bodyForms) {
 
+		final List<LispStruct> bodyFormsWithInitFormSetqs = new ArrayList<>();
+
+		final List<ListStruct> initFormIfSetqs = getInitFormIfSetqs(parsedLambdaList);
+		bodyFormsWithInitFormSetqs.addAll(initFormIfSetqs);
+		bodyFormsWithInitFormSetqs.addAll(bodyForms);
+
 		final List<AuxBinding> auxBindings = parsedLambdaList.getAuxBindings();
 		if (auxBindings.isEmpty()) {
-			return bodyForms;
+			return bodyFormsWithInitFormSetqs;
 		}
 
 		final List<LispStruct> bodyWithAuxBindings = new ArrayList<>();
@@ -116,12 +127,56 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 		final ListStruct auxLetStarParams = ListStruct.buildProperList(auxLetStarVars);
 		bodyWithAuxBindings.add(auxLetStarParams);
 
-		bodyWithAuxBindings.addAll(bodyForms);
+		bodyWithAuxBindings.addAll(bodyFormsWithInitFormSetqs);
 
 		final ListStruct newLambdaBody = ListStruct.buildProperList(bodyWithAuxBindings);
 		// NOTE: We are making sure to wrap this in a list for the processing of the body.
 		//       Yes, it is a body of one element: a let* element
 		return Collections.singletonList(newLambdaBody);
+	}
+
+	private static List<ListStruct> getInitFormIfSetqs(final OrdinaryLambdaListBindings parsedLambdaList) {
+
+		final List<ListStruct> initFormIfSetqs = new ArrayList<>();
+
+		final List<OptionalBinding> optionalBindings = parsedLambdaList.getOptionalBindings();
+		for (final OptionalBinding optionalBinding : optionalBindings) {
+			final SuppliedPBinding suppliedPBinding = optionalBinding.getSuppliedPBinding();
+
+			final SymbolStruct<?> optionalVar = optionalBinding.getSymbolStruct();
+			final LispStruct optionalInitForm = optionalBinding.getInitForm();
+			final ListStruct initFormSetq
+					= ListStruct.buildProperList(SpecialOperatorStruct.SETQ, optionalVar, optionalInitForm);
+
+			final SymbolStruct<?> suppliedPVar = suppliedPBinding.getSymbolStruct();
+			final ListStruct initFormIfSetq
+					= ListStruct.buildProperList(SpecialOperatorStruct.IF, suppliedPVar, NullStruct.INSTANCE, initFormSetq);
+
+			initFormIfSetqs.add(initFormIfSetq);
+		}
+
+		final List<KeyBinding> keyBindings = parsedLambdaList.getKeyBindings();
+		for (final KeyBinding keyBinding : keyBindings) {
+			final SuppliedPBinding suppliedPBinding = keyBinding.getSuppliedPBinding();
+
+			final SymbolStruct<?> keyVar = keyBinding.getSymbolStruct();
+			final LispStruct keyInitForm = keyBinding.getInitForm();
+			final ListStruct initFormSetq
+					= ListStruct.buildProperList(SpecialOperatorStruct.SETQ, keyVar, keyInitForm);
+
+			final ListStruct initFormIfSetq;
+			if (suppliedPBinding == null) {
+				initFormIfSetq = initFormSetq;
+			} else {
+				final SymbolStruct<?> suppliedPVar = suppliedPBinding.getSymbolStruct();
+				initFormIfSetq
+						= ListStruct.buildProperList(SpecialOperatorStruct.IF, suppliedPVar, NullStruct.INSTANCE, initFormSetq);
+			}
+
+			initFormIfSetqs.add(initFormIfSetq);
+		}
+
+		return initFormIfSetqs;
 	}
 
 	@Override

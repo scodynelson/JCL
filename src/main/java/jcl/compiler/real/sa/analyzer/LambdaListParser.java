@@ -192,22 +192,43 @@ final class LambdaListParser {
 			if (currentElement instanceof SymbolStruct) {
 				final SymbolStruct<?> currentParam = (SymbolStruct) currentElement;
 				final ParameterAllocation optionalAllocation = new ParameterAllocation(currentPosition++);
-				final OptionalBinding optionalBinding = new OptionalBinding(currentParam, optionalAllocation, NullStruct.INSTANCE, null);
-				optionalBindings.add(optionalBinding);
 
 				final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(environment);
-				final int newBindingsPosition = currentLambda.getNextParameterNumber();
+				int newBindingsPosition = currentLambda.getNextParameterNumber();
 				environment.setBindingsPosition(newBindingsPosition);
 
-				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
-				final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
+				ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
+				boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
 
-				final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullStruct.INSTANCE);
+				EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullStruct.INSTANCE);
 				if (isSpecial) {
 					environment.addDynamicBinding(binding);
 				} else {
 					environment.addLexicalBinding(binding);
 				}
+
+				final String paramName = currentParam.getName();
+				final String customSuppliedPName = paramName + "-P-" + System.nanoTime();
+				final SymbolStruct<?> customSuppliedPCurrent = new SymbolStruct<>(customSuppliedPName, GlobalPackageStruct.SYSTEM);
+
+				final ParameterAllocation suppliedPAllocation = new ParameterAllocation(currentPosition++);
+				final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(customSuppliedPCurrent, suppliedPAllocation);
+
+				newBindingsPosition = currentLambda.getNextParameterNumber();
+				environment.setBindingsPosition(newBindingsPosition);
+
+				allocation = new ParameterAllocation(newBindingsPosition);
+				isSpecial = Environments.isSpecial(declareElement, customSuppliedPCurrent);
+
+				binding = new EnvironmentParameterBinding(customSuppliedPCurrent, allocation, T.INSTANCE, NullStruct.INSTANCE);
+				if (isSpecial) {
+					environment.addDynamicBinding(binding);
+				} else {
+					environment.addLexicalBinding(binding);
+				}
+
+				final OptionalBinding optionalBinding = new OptionalBinding(currentParam, optionalAllocation, NullStruct.INSTANCE, suppliedPBinding);
+				optionalBindings.add(optionalBinding);
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
 				if ((currentParam.size() < 1) || (currentParam.size() > 3)) {
@@ -246,8 +267,28 @@ final class LambdaListParser {
 					environment.addLexicalBinding(binding);
 				}
 
-				SuppliedPBinding suppliedPBinding = null;
-				if (!thirdInCurrent.equals(NullStruct.INSTANCE)) {
+				final SuppliedPBinding suppliedPBinding;
+				if (thirdInCurrent.equals(NullStruct.INSTANCE)) {
+					final String paramName = varNameCurrent.getName();
+					final String customSuppliedPName = paramName + "-P-" + System.nanoTime();
+					final SymbolStruct<?> customSuppliedPCurrent = new SymbolStruct<>(customSuppliedPName, GlobalPackageStruct.SYSTEM);
+
+					final ParameterAllocation suppliedPAllocation = new ParameterAllocation(currentPosition++);
+					suppliedPBinding = new SuppliedPBinding(customSuppliedPCurrent, suppliedPAllocation);
+
+					newBindingsPosition = currentLambda.getNextParameterNumber();
+					environment.setBindingsPosition(newBindingsPosition);
+
+					allocation = new ParameterAllocation(newBindingsPosition);
+					isSpecial = Environments.isSpecial(declareElement, customSuppliedPCurrent);
+
+					binding = new EnvironmentParameterBinding(customSuppliedPCurrent, allocation, T.INSTANCE, NullStruct.INSTANCE);
+					if (isSpecial) {
+						environment.addDynamicBinding(binding);
+					} else {
+						environment.addLexicalBinding(binding);
+					}
+				} else {
 					if (!(thirdInCurrent instanceof SymbolStruct)) {
 						final String printedElement = printer.print(thirdInCurrent);
 						throw new ProgramErrorException("LambdaList optional supplied-p parameters must be a symbol: " + printedElement);
@@ -340,22 +381,43 @@ final class LambdaListParser {
 				final SymbolStruct<?> currentParam = (SymbolStruct) currentElement;
 				final KeywordStruct keyName = getKeywordStruct(currentParam.getName());
 				final ParameterAllocation keyAllocation = new ParameterAllocation(currentPosition++);
-				final KeyBinding keyBinding = new KeyBinding(currentParam, keyAllocation, NullStruct.INSTANCE, keyName, null);
-				keyBindings.add(keyBinding);
 
 				final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(environment);
-				final int newBindingsPosition = currentLambda.getNextParameterNumber();
+				int newBindingsPosition = currentLambda.getNextParameterNumber();
 				environment.setBindingsPosition(newBindingsPosition);
 
-				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
-				final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
+				ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
+				boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
 
-				final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullStruct.INSTANCE);
+				EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullStruct.INSTANCE);
 				if (isSpecial) {
 					environment.addDynamicBinding(binding);
 				} else {
 					environment.addLexicalBinding(binding);
 				}
+
+				final String paramName = currentParam.getName();
+				final String customSuppliedPName = paramName + "-P-" + System.nanoTime();
+				final SymbolStruct<?> customSuppliedPCurrent = new SymbolStruct<>(customSuppliedPName, GlobalPackageStruct.SYSTEM);
+
+				final ParameterAllocation suppliedPAllocation = new ParameterAllocation(currentPosition++);
+				final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(customSuppliedPCurrent, suppliedPAllocation);
+
+				newBindingsPosition = currentLambda.getNextParameterNumber();
+				environment.setBindingsPosition(newBindingsPosition);
+
+				allocation = new ParameterAllocation(newBindingsPosition);
+				isSpecial = Environments.isSpecial(declareElement, customSuppliedPCurrent);
+
+				binding = new EnvironmentParameterBinding(customSuppliedPCurrent, allocation, T.INSTANCE, NullStruct.INSTANCE);
+				if (isSpecial) {
+					environment.addDynamicBinding(binding);
+				} else {
+					environment.addLexicalBinding(binding);
+				}
+
+				final KeyBinding keyBinding = new KeyBinding(currentParam, keyAllocation, NullStruct.INSTANCE, keyName, suppliedPBinding);
+				keyBindings.add(keyBinding);
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
 				if ((currentParam.size() < 1) || (currentParam.size() > 3)) {
@@ -422,8 +484,28 @@ final class LambdaListParser {
 					environment.addLexicalBinding(binding);
 				}
 
-				SuppliedPBinding suppliedPBinding = null;
-				if (!thirdInCurrent.equals(NullStruct.INSTANCE)) {
+				final SuppliedPBinding suppliedPBinding;
+				if (thirdInCurrent.equals(NullStruct.INSTANCE)) {
+					final String paramName = varNameCurrent.getName();
+					final String customSuppliedPName = paramName + "-P-" + System.nanoTime();
+					final SymbolStruct<?> customSuppliedPCurrent = new SymbolStruct<>(customSuppliedPName, GlobalPackageStruct.SYSTEM);
+
+					final ParameterAllocation suppliedPAllocation = new ParameterAllocation(currentPosition++);
+					suppliedPBinding = new SuppliedPBinding(customSuppliedPCurrent, suppliedPAllocation);
+
+					newBindingsPosition = currentLambda.getNextParameterNumber();
+					environment.setBindingsPosition(newBindingsPosition);
+
+					allocation = new ParameterAllocation(newBindingsPosition);
+					isSpecial = Environments.isSpecial(declareElement, customSuppliedPCurrent);
+
+					binding = new EnvironmentParameterBinding(customSuppliedPCurrent, allocation, T.INSTANCE, NullStruct.INSTANCE);
+					if (isSpecial) {
+						environment.addDynamicBinding(binding);
+					} else {
+						environment.addLexicalBinding(binding);
+					}
+				} else {
 					if (!(thirdInCurrent instanceof SymbolStruct)) {
 						final String printedElement = printer.print(thirdInCurrent);
 						throw new ProgramErrorException("LambdaList key supplied-p parameters must be a symbol: " + printedElement);

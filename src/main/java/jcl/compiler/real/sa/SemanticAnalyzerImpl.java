@@ -52,9 +52,9 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 
 		// now see if we have any functions still undefined
 		final Set<SymbolStruct<?>> undefinedFunctions = nullEnvironment.getUndefinedFunctions();
-
 		undefinedFunctions.stream()
 		                  .forEach(this::unknownFunctionWarning);
+		undefinedFunctions.clear();
 
 		return analyzedForm;
 	}

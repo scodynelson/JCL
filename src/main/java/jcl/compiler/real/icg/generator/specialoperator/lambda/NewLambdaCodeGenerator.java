@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Stack;
 
-import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.LambdaEnvironment;
@@ -24,9 +23,11 @@ import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
+import jcl.compiler.real.icg.generator.simple.NullCodeGenerator;
 import jcl.compiler.real.icg.generator.specialoperator.PrognCodeGenerator;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
+import jcl.lists.NullStruct;
 import jcl.symbols.KeywordStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.ClassWriter;
@@ -45,6 +46,9 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 	@Autowired
 	private FormGenerator formGenerator;
+
+	@Autowired
+	private NullCodeGenerator nullCodeGenerator;
 
 	@Override
 	public void generate(final LambdaStruct input, final JavaClassBuilder classBuilder) {
@@ -448,8 +452,9 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/allocation/ParameterAllocation", "<init>", "(I)V", false);
 			mv.visitVarInsn(Opcodes.ASTORE, allocationStore);
 
-			final LispStruct optionalInitForm = optionalBinding.getInitForm();
-			formGenerator.generate(optionalInitForm, classBuilder);
+//			final LispStruct optionalInitForm = optionalBinding.getInitForm();
+//			formGenerator.generate(optionalInitForm, classBuilder);
+			nullCodeGenerator.generate(NullStruct.INSTANCE, classBuilder);
 			mv.visitVarInsn(Opcodes.ASTORE, optionalInitFormStore);
 
 			// Start: Supplied-P
@@ -591,8 +596,9 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/allocation/ParameterAllocation", "<init>", "(I)V", false);
 			mv.visitVarInsn(Opcodes.ASTORE, allocationStore);
 
-			final LispStruct keyInitForm = keyBinding.getInitForm();
-			formGenerator.generate(keyInitForm, classBuilder);
+//			final LispStruct keyInitForm = keyBinding.getInitForm();
+//			formGenerator.generate(keyInitForm, classBuilder);
+			nullCodeGenerator.generate(NullStruct.INSTANCE, classBuilder);
 			mv.visitVarInsn(Opcodes.ASTORE, keyInitFormStore);
 
 			mv.visitFieldInsn(Opcodes.GETSTATIC, "jcl/packages/GlobalPackageStruct", "KEYWORD", "Ljcl/packages/PackageStruct;");
@@ -714,8 +720,9 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/allocation/ParameterAllocation", "<init>", "(I)V", false);
 			mv.visitVarInsn(Opcodes.ASTORE, allocationStore);
 
-			final LispStruct auxInitForm = auxBinding.getInitForm();
-			formGenerator.generate(auxInitForm, classBuilder);
+//			final LispStruct auxInitForm = auxBinding.getInitForm();
+//			formGenerator.generate(auxInitForm, classBuilder);
+			nullCodeGenerator.generate(NullStruct.INSTANCE, classBuilder);
 			mv.visitVarInsn(Opcodes.ASTORE, auxInitFormStore);
 
 			mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/environment/binding/lambdalist/AuxBinding");

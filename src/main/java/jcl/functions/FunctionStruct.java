@@ -3,9 +3,11 @@ package jcl.functions;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import jcl.LispStruct;
 import jcl.LispType;
@@ -18,6 +20,8 @@ import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
+import jcl.packages.GlobalPackageStruct;
+import jcl.packages.PackageSymbolStruct;
 import jcl.symbols.KeywordStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
@@ -195,10 +199,8 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 			symbolsToBind.put(optionalSymbol, optionalInitForm);
 
 			final SuppliedPBinding suppliedPBinding = optionalBinding.getSuppliedPBinding();
-			if (suppliedPBinding != null) {
-				final SymbolStruct<?> suppliedPSymbol = suppliedPBinding.getSymbolStruct();
-				symbolsToBind.put(suppliedPSymbol, suppliedPInitForm);
-			}
+			final SymbolStruct<?> suppliedPSymbol = suppliedPBinding.getSymbolStruct();
+			symbolsToBind.put(suppliedPSymbol, suppliedPInitForm);
 		}
 
 		final int numberOfKeys = keyBindings.size();
@@ -208,15 +210,24 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 			keysToBindings.put(key, keyBinding);
 		}
 
+		// Need to wrap the keySet() in a new HashSet because of the remove() operation below on the 'keysToBindings'
+		final Set<KeywordStruct> keys = new HashSet<>(keysToBindings.keySet());
+
 		final List<LispStruct> restList = new ArrayList<>();
 
 		while (functionArgumentsIterator.hasNext()) {
 			final LispStruct nextArgument = functionArgumentsIterator.next();
 
-			if (nextArgument instanceof KeywordStruct) {
+			LispStruct possiblyKeywordNexArgument = nextArgument;
+			if (nextArgument instanceof SymbolStruct) {
+				final SymbolStruct<?> symbolArgument = (SymbolStruct) nextArgument;
+				possiblyKeywordNexArgument = getKeywordStruct(symbolArgument.getName());
+			}
+
+			if (possiblyKeywordNexArgument instanceof KeywordStruct) {
 				restList.add(nextArgument);
 
-				final KeywordStruct keywordArgument = (KeywordStruct) nextArgument;
+				final KeywordStruct keywordArgument = (KeywordStruct) possiblyKeywordNexArgument;
 				if (keysToBindings.containsKey(keywordArgument)) {
 					final KeyBinding keyBinding = keysToBindings.remove(keywordArgument);
 
@@ -235,13 +246,11 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 					symbolsToBind.put(keySymbol, keyInitForm);
 
 					final SuppliedPBinding suppliedPBinding = keyBinding.getSuppliedPBinding();
-					if (suppliedPBinding != null) {
-						final SymbolStruct<?> suppliedPSymbol = suppliedPBinding.getSymbolStruct();
-						symbolsToBind.put(suppliedPSymbol, suppliedPInitForm);
-					}
+					final SymbolStruct<?> suppliedPSymbol = suppliedPBinding.getSymbolStruct();
+					symbolsToBind.put(suppliedPSymbol, suppliedPInitForm);
 
 					restList.add(keyInitForm);
-				} else if (allowOtherKeys) {
+				} else if (keys.contains(keywordArgument) || allowOtherKeys) {
 					final LispStruct keyInitForm = functionArgumentsIterator.next();
 					restList.add(keyInitForm);
 				} else {
@@ -264,10 +273,8 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 			symbolsToBind.put(keySymbol, keyInitForm);
 
 			final SuppliedPBinding suppliedPBinding = keyBinding.getSuppliedPBinding();
-			if (suppliedPBinding != null) {
-				final SymbolStruct<?> suppliedPSymbol = suppliedPBinding.getSymbolStruct();
-				symbolsToBind.put(suppliedPSymbol, NILStruct.INSTANCE);
-			}
+			final SymbolStruct<?> suppliedPSymbol = suppliedPBinding.getSymbolStruct();
+			symbolsToBind.put(suppliedPSymbol, NILStruct.INSTANCE);
 		}
 
 		if (restBinding != null) {
@@ -277,6 +284,17 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 		}
 
 		return symbolsToBind;
+	}
+
+	private static KeywordStruct getKeywordStruct(final String symbolName) {
+
+		final PackageSymbolStruct symbol = GlobalPackageStruct.KEYWORD.findSymbol(symbolName);
+		if (symbol == null) {
+			return new KeywordStruct(symbolName);
+		}
+		// NOTE: This should be a safe cast because we're finding the symbol in the Keyword Package and they are only
+		//       this type of symbol.
+		return (KeywordStruct) symbol.getSymbol();
 	}
 
 	@Override

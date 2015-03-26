@@ -1,19 +1,15 @@
 package jcl.compiler.real.functions;
 
 import jcl.LispStruct;
-import jcl.arrays.ArrayStruct;
-import jcl.arrays.StringStruct;
-import jcl.characters.CharacterStruct;
-import jcl.classes.StructureClassStruct;
-import jcl.classes.StructureObjectStruct;
 import jcl.compiler.old.functions.CompileFunction;
 import jcl.compiler.old.functions.NReverseFunction;
+import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.sa.analyzer.expander.NewMacroExpand;
+import jcl.compiler.real.sa.analyzer.expander.NewMacroExpandReturn;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
-import jcl.numbers.NumberStruct;
-import jcl.streams.StreamStruct;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 
@@ -29,7 +25,7 @@ public class EvalFunction {
 	private static byte recursionDepth = 0;
 
 	/**
-	 * funcall(Object arg1) takes an Object as a parameter, evaluates the
+	 * funcall(Object originalExp) takes an Object as a parameter, evaluates the
 	 * Object, and returns an Object based on the evaluation.  If the Object is
 	 * an instance of lisp.common.type.String or lisp.common.type.Integer,
 	 * return the Object.  If the Object is an instance of
@@ -48,52 +44,203 @@ public class EvalFunction {
 	 * Setq, check for instance of lisp.common.type.function.  If so, apply the
 	 * function to the list, and return the result.
 	 *
-	 * @param arg1 either lisp.common.type.Symbol, lisp.common.type.List,
-	 *             java.lang.String, or java.Lang.Integer
+	 * @param originalExp
+	 * 		either lisp.common.type.Symbol, lisp.common.type.List,
+	 * 		java.lang.String, or java.Lang.Integer
+	 *
 	 * @return an evaluated object
-	 * @throws IllegalArgumentException An illegal argument was passed
+	 *
+	 * @throws IllegalArgumentException
+	 * 		An illegal argument was passed
 	 */
 	@SuppressWarnings("unchecked")
-	public LispStruct funcall(LispStruct arg1) {
-		LispStruct rtnObj = null;
+	public LispStruct funcall(final LispStruct originalExp) {
 
 		// Increment the recusrion depth.
 		recursionDepth++;
 
+/*
+(defvar *top-level-auto-declare* :warn
+  "This variable controls whether assignments to unknown variables at top-level
+   (or in any other call to EVAL of SETQ) will implicitly declare the variable
+   SPECIAL.  These values are meaningful:
+     :WARN  -- Print a warning, but declare the variable special (the default.)
+      T     -- Quietly declare the variable special.
+      NIL   -- Never declare the variable, giving warnings on each use.")
+*/
+
 		try {
 			// try out Macroexpand before we do anything else
-			// TODO the commented out block below!!
-//			MacroExpandReturn macroExpandReturn = MacroExpandFunction.FUNCTION.funcall(arg1);
-//			arg1 = macroExpandReturn.getExpandedForm();
-//
-//			while (macroExpandReturn.wasExpanded()) {
-//				macroExpandReturn = MacroExpandFunction.FUNCTION.funcall(arg1);
-//				arg1 = macroExpandReturn.getExpandedForm();
-//			}
+			final Environment nullEnvironment = Environment.NULL;
 
-			if (arg1 instanceof StringStruct) {
-				rtnObj = arg1;
-			} else if (arg1 instanceof CharSequence) {
-				rtnObj = arg1;
-			} else if (arg1 instanceof NumberStruct) {
-				rtnObj = arg1;
-			} else if (arg1 instanceof ArrayStruct) {
-				rtnObj = arg1;
-			} else if (arg1 instanceof CharacterStruct) {
-				rtnObj = arg1;
-			} else if (arg1 instanceof StructureClassStruct) {
-				rtnObj = arg1;
-			} else if (arg1 instanceof StructureObjectStruct) {
-				rtnObj = arg1;
-			} else if (arg1 instanceof StreamStruct) {
-				rtnObj = arg1;
-			} else if (arg1 instanceof SymbolStruct) {
-				rtnObj = ((SymbolStruct) arg1).getFunction();
-			} else if (arg1 instanceof ListStruct) {
-				ListStruct list = (ListStruct) arg1;
-				Object first = list.getFirst();
-				ListStruct argList = list.getRest();
-				int numArgs = argList.size();
+			final NewMacroExpand newMacroExpand = new NewMacroExpand();
+			final NewMacroExpandReturn macroExpandReturn = newMacroExpand.macroExpand(originalExp, nullEnvironment);
+			final LispStruct exp = macroExpandReturn.getExpandedForm();
+
+			if (exp instanceof SymbolStruct) {
+				final SymbolStruct<?> symbol = (SymbolStruct) exp;
+				return symbol.getValue();
+			}
+
+			if (exp instanceof ListStruct) {
+				final ListStruct list = (ListStruct) exp;
+				final LispStruct name = list.getFirst();
+
+				ListStruct args = list.getRest();
+				final int numOfArgs = args.size();
+
+				if (SpecialOperatorStruct.FUNCTION.equals(name)) {
+/*
+(unless (= args 1)
+  (error 'simple-program-error "Wrong number of args to FUNCTION:~% ~S." (list exp)))
+(let ((name (second exp)))
+  (cond ((consp name)
+         (if (valid-function-name-p name)
+	         (get-symbol-function name)
+	       (eval:make-interpreted-function name)))
+        ((macro-function name)
+         (error 'simple-type-error name '(not (satisfies macro-function)) "~S is a macro." (list name)))
+        ((special-operator-p name)
+	     (error 'simple-type-error name '(not (satisfies special-operator-p)) "~S is a special operator." (list name)))
+        (t
+         (fdefinition name))))
+
+(defvar *valid-function-names* ())
+
+(defun valid-function-name-p (name)
+  "First value is true if NAME has valid function name syntax.
+  Second value is the name, a symbol, to use as a block name in DEFUNs
+  and in similar situations."
+  (typecase name
+    (cons
+     (cond ((and (symbolp (car name))
+	             (consp (cdr name)))
+			(let ((syntax-checker (cdr (assoc (car name) *valid-function-names* :test #'eq))))
+			  (if syntax-checker
+			      (funcall syntax-checker name)
+			    (values nil name))))
+           (t
+			(values nil name))))
+	(symbol (values t name))
+	(otherwise (values nil name))))
+
+(defun %define-function-name-syntax (name syntax-checker)
+  (let ((found (assoc name *valid-function-names* :test #'eq)))
+    (if found
+		(setf (cdr found) syntax-checker)
+	  (setq *valid-function-names* (acons name syntax-checker *valid-function-names*)))))
+
+(defmacro define-function-name-syntax (name (var) &body body)
+  "Define (NAME ...) to be a valid function name whose syntax is checked
+  by BODY.  In BODY, VAR is bound to an actual function name of the
+  form (NAME ...) to check.  BODY should return two values.
+  First value true means the function name is valid.  Second value
+  is the name, a symbol, of the function for use in the BLOCK of DEFUNs
+  and in similar situations."
+  (let ((syntax-checker (symbolicate '%check- name '-function-name)))
+    `(progn
+       (defun ,syntax-checker (,var) ,@body)
+       (%define-function-name-syntax ',name #',syntax-checker))))
+
+(define-function-name-syntax setf (name)
+  (destructuring-bind (setf fn &rest rest) name
+    (declare (ignore setf))
+    (if rest
+		(values nil name)
+	  (typecase fn
+	    (symbol
+	     (values t fn))
+	    (cons
+		 (cond ((eq 'setf (car fn))
+			    (values nil fn))
+			   (t
+			    (valid-function-name-p fn))))
+	    (otherwise
+	     (values nil fn))))))
+
+(define-function-name-syntax :macro (name)
+  (when (eql 2 (length name))
+    (valid-function-name-p (second name))))
+
+(define-function-name-syntax :compiler-macro (name)
+  (when (eql 2 (length name))
+    (valid-function-name-p (second name))))
+
+(define-function-name-syntax flet (name)
+  (valid-function-name-p (cadr name)))
+
+(define-function-name-syntax labels (name)
+  (valid-function-name-p (cadr name)))
+*/
+				} else if (SpecialOperatorStruct.QUOTE.equals(name)) {
+/*
+(unless (= args 1)
+  (error 'simple-program-error "Wrong number of args to QUOTE:~% ~S." (list exp)))
+(second exp)
+*/
+				} else if (SpecialOperatorStruct.SETQ.equals(name)) {
+/*
+(unless (evenp args)
+  (error 'simple-program-error "Odd number of args to SETQ:~% ~S." (list exp)))
+(unless (zerop args)
+  (do ((name (cdr exp) (cddr name)))
+	  ((null name)
+	   (do ((args (cdr exp) (cddr args)))
+		   ((null (cddr args))
+			;; We duplicate the call to SET so that the correct
+			;; value gets returned.
+			(set (first args) (eval (second args))))
+		 (set (first args) (eval (second args)))))
+	(let ((symbol (first name)))
+	  (case (info variable kind symbol)
+	        (:special)
+	        (:global
+	         (case *top-level-auto-declare*
+	               (:warn
+					(warn "Declaring ~S special." symbol))
+	               ((t))
+	               ((nil)
+					(return (eval:internal-eval original-exp))))
+	         (proclaim `(special ,symbol)))
+	        (t
+	         (return (eval:internal-eval original-exp)))))))
+*/
+				} else if (SpecialOperatorStruct.PROGN.equals(name)) {
+/*
+(when (> args 0)
+  (dolist (x (butlast (rest exp)) (eval (car (last exp))))
+	(eval x)))
+*/
+				} else if (SpecialOperatorStruct.EVAL_WHEN.equals(name)) {
+/*
+(when (plusp args)
+  (let* ((situations (second exp))
+         (bad-situations (if (listp situations)
+							 (set-difference situations '(compile load eval :compile-toplevel :load-toplevel :execute))
+	                       situations)))
+	(when (or (not (listp situations))
+	          bad-situations)
+      (warn "Bad Eval-When situation list: ~S." bad-situations))))
+(if (and (> args 0)
+         (or (member 'eval (second exp))
+	         (member :execute (second exp))))
+  (when (> args 1)
+    (dolist (x (butlast (cddr exp)) (eval (car (last exp))))
+      (eval x)))
+  (eval:internal-eval original-exp))
+*/
+				} else {
+/*
+(if (and (symbolp name)
+		 (eq (info function kind name) :function))
+    (collect ((args))
+	  (dolist (arg (rest exp))
+	    (args (eval arg)))
+	  (apply (symbol-function name) (args)))
+  (eval:internal-eval original-exp))
+*/
+				}
+
 
 				// Search the list for special symbols. If any are found, then
 				// we need to compile the list. Otherwise, `funcall' can be
@@ -110,111 +257,111 @@ public class EvalFunction {
 
 					// Invoke the compiler.
 
-					rtnObj = CompileFunction.FUNCTION.funcall(arg1);
-					if (first != SpecialOperatorStruct.LAMBDA) {
+					final LispStruct compiledExp = CompileFunction.FUNCTION.funcall(exp);
+					if (name == SpecialOperatorStruct.LAMBDA) {
+						//System.out.println("Lambda, just returning");
+					} else {
 						//System.out.println("No Lambda, funcalling");
 						// The list passed in originally didn't have a lambda as
 						// the first element, so the compiler wrapped it in one.
 						// Evaluate the lambda function the compiler wrapped it
 						// in and return the result.
-						if (rtnObj == null) {
-							System.out.println("Form: rtn null: " + arg1.toString().substring(0, 80) + "... compiled to null");
-//                            System.out.println("... get before the env: " + ((List)((List)arg1).rest().rest().getCar()).rest().rest() );
+						if (compiledExp == null) {
+							System.out.println("Form: rtn null: " + exp.toString().substring(0, 80) + "... compiled to null");
 						} else {
-							FunctionStruct lambda = (FunctionStruct) rtnObj;
-							if (lambda == null) {
-								System.out.println("Form rtn(F0) null" + rtnObj.toString().substring(0, 80) + "... compiled to null");
-//                                System.out.println("... get before the env: " + ((List)((List)arg1).rest().rest().getCar()).rest().rest() );
-							}
-							rtnObj = lambda.apply();
+							final FunctionStruct lambda = (FunctionStruct) compiledExp;
+							return lambda.apply();
 						}
-					} else {
-						//System.out.println("Lambda, just returning");
 					}
-				} else if (first instanceof SymbolStruct) {
-					SymbolStruct<?> operator = (SymbolStruct) first;
+				} else if (name instanceof SymbolStruct) {
+					final SymbolStruct<?> operator = (SymbolStruct) name;
 
 					// If the element being evaluated is Quote, we do not want
 					// to evaluate the rest of the list.  We simply want to
 					// return the car of the cdr, or simply the rest of the
 					// unevaluated list.
 					if (operator == SpecialOperatorStruct.QUOTE) {
-						if (numArgs == 1) {
-							rtnObj = argList.getFirst();
+						if (numOfArgs == 1) {
+							return args.getFirst();
 						} else {
 							throw new RuntimeException("Quote must have exactly one arg");
 						}
-					} // If the element being evaluated is Setq, we want to check
-					// that the rest element in the list is a symbol.  If so,
-					// evaluate the rest of the list and set the value of the
-					// symbol to the result of the evaluation.  Else, throw an
-					// exception.
-					else if (operator == SpecialOperatorStruct.SETQ) {
-						if (numArgs % 2 == 0) {
-							while (argList != NullStruct.INSTANCE) {
-								if (argList.getFirst() instanceof SymbolStruct) {
-									SymbolStruct<LispStruct> operand1 = (SymbolStruct) argList.getFirst();
-									operand1.setValue(funcall(argList.getRest().getFirst()));
-									rtnObj = operand1.getValue();
+					} else if (operator == SpecialOperatorStruct.SETQ) {
+
+						// If the element being evaluated is Setq, we want to check
+						// that the rest element in the list is a symbol.  If so,
+						// evaluate the rest of the list and set the value of the
+						// symbol to the result of the evaluation.  Else, throw an
+						// exception.
+						if ((numOfArgs % 2) == 0) {
+							LispStruct res = NullStruct.INSTANCE;
+							while (args != NullStruct.INSTANCE) {
+								if (args.getFirst() instanceof SymbolStruct) {
+									final SymbolStruct<LispStruct> operand1 = (SymbolStruct) args.getFirst();
+									operand1.setValue(funcall(args.getRest().getFirst()));
+									res = operand1.getValue();
 								} else {
 									throw new IllegalArgumentException(
 											"First argument must be a Symbol. "
-													+ argList.getFirst());
+													+ args.getFirst());
 								}
-								argList = argList.getRest().getRest();
+								args = args.getRest().getRest();
 							}
+							return res;
 						} else {
 							throw new RuntimeException("SetQ must have even number of args");
 						}
-					} // If the element is not a special form, a recursive call is
-					// made to evaluate the rest of the list.
-					else {
-						Object maybeFunction = operator.getFunction();
+					} else {
+						// If the element is not a special form, a recursive call is
+						// made to evaluate the rest of the list.
+						final Object maybeFunction = operator.getFunction();
 
 						if (maybeFunction instanceof FunctionStruct) {
-							FunctionStruct function = (FunctionStruct) maybeFunction;
+							final FunctionStruct function = (FunctionStruct) maybeFunction;
 							// evaluate the arguments left to right
 							boolean isBaseMunger = false;
 							try {
 								isBaseMunger = true; //SemanticAnalyzer.LAMBDA_ARGLIST_MUNGER == function.getClass().getField("LAMBDA_ARGLIST_MUNGER").get(null);
-							} catch (Exception ex) {
+							} catch (final Exception ex) {
 								isBaseMunger = true;
 							}
 							if (isBaseMunger) {
 								// if here, then it's all required args and can be simply eval'ed
 								ListStruct newArgList = NullStruct.INSTANCE;
-								while (argList != NullStruct.INSTANCE) {
-									newArgList = new ConsStruct(funcall(argList.getFirst()), newArgList);
-									argList = argList.getRest();
+								while (args != NullStruct.INSTANCE) {
+									newArgList = new ConsStruct(funcall(args.getFirst()), newArgList);
+									args = args.getRest();
 								}
 								newArgList = NReverseFunction.funcall(newArgList);
-								rtnObj = function.apply(newArgList);
+								return function.apply(newArgList);
 							} else {
 								// now we have to compile it to handle &optional, &rest, &key args, and then funcall it
 								// But first, a little foo-foo...
-								ListStruct listifiedList = ListStruct.buildProperList(list);
-								ListStruct formToCompile = new ConsStruct(SpecialOperatorStruct.LAMBDA, new ConsStruct(NullStruct.INSTANCE, listifiedList));
+								final ListStruct listifiedList = ListStruct.buildProperList(list);
+								final ListStruct formToCompile = new ConsStruct(SpecialOperatorStruct.LAMBDA, new ConsStruct(NullStruct.INSTANCE, listifiedList));
 								// TODO: when the new compile works
-								FunctionStruct compiledFn = (FunctionStruct) CompileFunction.FUNCTION.funcall(formToCompile);
-								rtnObj = compiledFn.apply();
+								final FunctionStruct compiledFn = (FunctionStruct) CompileFunction.FUNCTION.funcall(formToCompile);
+								return compiledFn.apply();
 							}
 						}
 					}
 				}
 			} else {
-				System.out.println("Eval: a form I can't evaluate, ~A" + arg1);
-				rtnObj = arg1;
+				return exp;
 			}
-
-			return rtnObj;
+			return exp; // TODO: get rid of this one later
 		} finally {
 			--recursionDepth;
 		}
 	}
 
+/* INTERNAL-EVAL
+(defun internal-eval (form &optional quietly env)
+  (let ((res (c:compile-for-eval form quietly env)))
+    (apply res nil)))
+*/
+
 	private boolean containsSpecialOperator(ListStruct list) {
-		//System.out.println("has specialop?: " + list);
-		boolean retval = false;
 		if (list == NullStruct.INSTANCE) {
 			return false;
 		}
@@ -234,25 +381,21 @@ public class EvalFunction {
 				// if SETQ, then skip the rest element and check the 2nd arg
 				// since it is evaluated
 				theCar = list.getRest().getRest().getFirst();
-				if (theCar instanceof ListStruct) {
-					return containsSpecialOperator((ListStruct) theCar);
-				} else {
-					return false;
-				}
+				return (theCar instanceof ListStruct) && containsSpecialOperator((ListStruct) theCar);
 			} else {
 				return true;
 			}
-		} else if (theCar instanceof ListStruct) {
-			return containsSpecialOperator((ListStruct) theCar)
-					|| containsSpecialOperator(list.getRest());
+		}
+
+		if (theCar instanceof ListStruct) {
+			return containsSpecialOperator((ListStruct) theCar) || containsSpecialOperator(list.getRest());
 		}
 		// run the rest of the list
 		if (((ConsStruct) list).getCdr() instanceof ListStruct) {
 			list = list.getRest();
 			while (list != NullStruct.INSTANCE) {
 				theCar = list.getFirst();
-				if ((theCar instanceof ListStruct)
-						&& (containsSpecialOperator((ListStruct) theCar))) {
+				if ((theCar instanceof ListStruct) && containsSpecialOperator((ListStruct) theCar)) {
 					return true;
 				}
 				if (((ConsStruct) list).getCdr() instanceof ListStruct) {

@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.functions;
+package jcl.functions.functions;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -17,19 +17,20 @@ import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindin
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.conditions.exceptions.ErrorException;
+import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.SymbolStruct;
 
-public class Funcall extends FunctionStruct {
+public class FuncallFunction extends FunctionStruct {
 
-	public static final Funcall INSTANCE = new Funcall();
+	public static final FuncallFunction INSTANCE = new FuncallFunction();
 
 	public static final SymbolStruct<?> FUNCALL = new SymbolStruct<>("FUNCALL", GlobalPackageStruct.COMMON_LISP, null, INSTANCE);
 
 	private static final long serialVersionUID = -1425587290881971372L;
 
-	private Funcall() {
+	private FuncallFunction() {
 		super("Applies function to args.", getInitLambdaListBindings());
 	}
 
@@ -73,6 +74,6 @@ public class Funcall extends FunctionStruct {
 			throw new ErrorException("Undefined function " + functionDesignator + " called with arguments " + argsAsListStruct);
 		}
 
-		return Apply.INSTANCE.apply(functionDesignator, argsAsListStruct);
+		return ApplyFunction.INSTANCE.apply(functionDesignator, argsAsListStruct);
 	}
 }

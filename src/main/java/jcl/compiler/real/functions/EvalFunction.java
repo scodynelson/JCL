@@ -1,4 +1,4 @@
-package jcl.compiler.old.functions;
+package jcl.compiler.real.functions;
 
 import jcl.LispStruct;
 import jcl.arrays.ArrayStruct;
@@ -6,6 +6,8 @@ import jcl.arrays.StringStruct;
 import jcl.characters.CharacterStruct;
 import jcl.classes.StructureClassStruct;
 import jcl.classes.StructureObjectStruct;
+import jcl.compiler.old.functions.CompileFunction;
+import jcl.compiler.old.functions.NReverseFunction;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;

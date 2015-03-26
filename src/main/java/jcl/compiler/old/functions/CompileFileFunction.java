@@ -455,19 +455,20 @@ public class CompileFileFunction {
 					theForm = ListStruct.buildProperList(form);
 				} else if (car == SpecialOperatorStruct.EVAL_WHEN) {
 					// processEvalWhen...
-					LispStruct evalForm = handleEvalWhen(form);
+//					LispStruct evalForm = handleEvalWhen(form); TODO
+					LispStruct evalForm = form;
 					theForm = processTopLevelForm(evalForm);
 				} else {
 					if (mode == ProcessingMode.COMPILE_TIME_TOO) {
 						LispStruct formCopy = (XCopyTreeFunction.FUNCTION).funcall(theForm);
-						EvalFunction.FUNCTION.funcall(formCopy);
+//						EvalFunction.FUNCTION.funcall(formCopy); TODO
 					}
 				}
 			}
 		}
 		return theForm;
 	}
-
+/* TODO
 	@SuppressWarnings("unchecked")
 	private LispStruct handleEvalWhen(ListStruct list) {
 		// starts with (eval-when theSituation then-the-rest)
@@ -512,6 +513,7 @@ public class CompileFileFunction {
 			mode = currentMode;
 		}
 	}
+ */
 
 	@SuppressWarnings("unchecked")
 	private Vector<Vector<LispStruct>> readForms(CharacterStreamStruct file) {

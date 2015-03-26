@@ -5,10 +5,10 @@ import jcl.characters.CharacterConstants;
 import jcl.compiler.real.CompilerConstants;
 import jcl.compiler.real.CompilerVariables;
 import jcl.compiler.real.ValuesFunction;
-import jcl.functions.Apply;
-import jcl.functions.Funcall;
-import jcl.lists.CarFunction;
-import jcl.lists.ListFunction;
+import jcl.functions.functions.ApplyFunction;
+import jcl.functions.functions.FuncallFunction;
+import jcl.lists.functions.CarFunction;
+import jcl.lists.functions.ListFunction;
 import jcl.numbers.NumberConstants;
 import jcl.numbers.NumberVariables;
 import jcl.packages.GlobalPackageStruct;
@@ -19,10 +19,10 @@ import jcl.reader.struct.ReaderVariables;
 import jcl.streams.StreamVariables;
 import jcl.symbols.DeclarationStruct;
 import jcl.symbols.KeywordStruct;
-import jcl.symbols.SetSymbolFunctionFunction;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolConstants;
 import jcl.symbols.SymbolStruct;
+import jcl.symbols.functions.SetSymbolFunctionFunction;
 
 public interface CommonLispSymbols {
 
@@ -193,7 +193,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> ALPHANUMERICP = null;
 	SymbolStruct<?> AND = null;
 	SymbolStruct<?> APPEND = new SymbolStruct<>("APPEND", GlobalPackageStruct.COMMON_LISP);
-	SymbolStruct<?> APPLY = Apply.APPLY;
+	SymbolStruct<?> APPLY = ApplyFunction.APPLY;
 	SymbolStruct<?> APROPOS = null;
 	SymbolStruct<?> APROPOS_LIST = null;
 	SymbolStruct<?> AREF = null;
@@ -486,7 +486,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> FRESH_LINE = null;
 	SymbolStruct<?> FROUND = null;
 	SymbolStruct<?> FTRUNCATE = null;
-	SymbolStruct<?> FUNCALL = Funcall.FUNCALL;
+	SymbolStruct<?> FUNCALL = FuncallFunction.FUNCALL;
 	SymbolStruct<?> FUNCTION = SpecialOperatorStruct.FUNCTION;
 	SymbolStruct<?> FUNCTION_KEYWORDS = null;
 	SymbolStruct<?> FUNCTION_LAMBDA_EXPRESSION = null;

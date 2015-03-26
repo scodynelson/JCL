@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.functions;
+package jcl.functions.functions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,19 +18,20 @@ import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindin
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.conditions.exceptions.ErrorException;
+import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.SymbolStruct;
 
-public class Apply extends FunctionStruct {
+public class ApplyFunction extends FunctionStruct {
 
-	public static final Apply INSTANCE = new Apply();
+	public static final ApplyFunction INSTANCE = new ApplyFunction();
 
 	public static final SymbolStruct<?> APPLY = new SymbolStruct<>("APPLY", GlobalPackageStruct.COMMON_LISP, null, INSTANCE);
 
 	private static final long serialVersionUID = 1994110477366960170L;
 
-	private Apply() {
+	private ApplyFunction() {
 		super("Applies the function to the args.", getInitLambdaListBindings());
 	}
 

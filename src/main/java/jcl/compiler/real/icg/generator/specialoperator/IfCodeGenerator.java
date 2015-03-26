@@ -42,6 +42,23 @@ public class IfCodeGenerator implements CodeGenerator<IfStruct> {
 		final int testFormStore = currentClass.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, testFormStore);
 
+		final Label valuesCheckIfEnd = new Label();
+
+		mv.visitVarInsn(Opcodes.ALOAD, testFormStore);
+		mv.visitTypeInsn(Opcodes.INSTANCEOF, "jcl/compiler/real/struct/ValuesStruct");
+		mv.visitJumpInsn(Opcodes.IFEQ, valuesCheckIfEnd);
+
+		mv.visitVarInsn(Opcodes.ALOAD, testFormStore);
+		mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/compiler/real/struct/ValuesStruct");
+		final int valuesStore = currentClass.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, valuesStore);
+
+		mv.visitVarInsn(Opcodes.ALOAD, valuesStore);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/compiler/real/struct/ValuesStruct", "getPrimaryValue", "()Ljcl/LispStruct;", false);
+		mv.visitVarInsn(Opcodes.ASTORE, testFormStore);
+
+		mv.visitLabel(valuesCheckIfEnd);
+
 		final Label elseStart = new Label();
 		final Label elseEnd = new Label();
 

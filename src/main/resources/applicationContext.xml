@@ -22,6 +22,8 @@
 
 		<entry key="jcl.characters.CharacterStruct" value-ref="characterStructPrinter"/>
 
+		<entry key="jcl.compiler.real.struct.ValuesStruct" value-ref="valuesStructPrinter"/>
+
 		<entry key="jcl.hashtables.HashTableStruct" value-ref="hashTableStructPrinter"/>
 		<entry key="jcl.hashtables.HashTableStruct.KeyWrapper" value-ref="hashTableKeyWrapperPrinter"/>
 
@@ -75,7 +77,10 @@
 
 		<entry key="jcl.characters.CharacterStruct" value-ref="characterCodeGenerator"/>
 
+		<entry key="jcl.compiler.real.struct.ValuesStruct" value-ref="valuesCodeGenerator"/>
+
 		<entry key="jcl.lists.NullStruct" value-ref="nullCodeGenerator"/>
+		<entry key="jcl.lists.ConsStruct" value-ref="consCodeGenerator"/>
 
 		<!--<entry key="jcl.numbers.ComplexStruct" value-ref="complexCodeGenerator"/>-->
 		<entry key="jcl.numbers.FloatStruct" value-ref="floatCodeGenerator"/>
@@ -84,7 +89,7 @@
 
 		<entry key="jcl.symbols.KeywordStruct" value-ref="keywordStructCodeGenerator"/>
 		<entry key="jcl.symbols.NILStruct" value-ref="NILCodeGenerator"/>
-		<entry key="jcl.symbols.SymbolStruct" value-ref="newSymbolStructCodeGenerator"/>
+		<entry key="jcl.symbols.SymbolStruct" value-ref="symbolBindingCodeGenerator"/>
 		<entry key="jcl.symbols.TStruct" value-ref="TCodeGenerator"/>
 
 		<entry key="jcl.compiler.real.struct.specialoperator.BlockStruct" value-ref="blockCodeGenerator"/>

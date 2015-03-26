@@ -6,6 +6,8 @@ package jcl.compiler.real.icg.generator.testground;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
@@ -14,6 +16,7 @@ import jcl.compiler.real.icg.generator.specialoperator.exception.GoException;
 import jcl.compiler.real.icg.generator.specialoperator.exception.ReturnFromException;
 import jcl.compiler.real.icg.generator.specialoperator.exception.ThrowException;
 import jcl.compiler.real.sa.analyzer.expander.SymbolMacroExpander;
+import jcl.compiler.real.struct.ValuesStruct;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ConsStruct;
 import jcl.lists.NullStruct;
@@ -60,7 +63,11 @@ public class TestGround {
 
 	private Object ifGen() {
 
-		final LispStruct testObj = new CharacterStruct(97);
+		LispStruct testObj = new CharacterStruct(97);
+		if (testObj instanceof ValuesStruct) {
+			final ValuesStruct valuesStruct = (ValuesStruct) testObj;
+			testObj = valuesStruct.getPrimaryValue();
+		}
 
 		final LispStruct result;
 		if (!testObj.equals(NullStruct.INSTANCE) && !testObj.equals(NILStruct.INSTANCE)) {
@@ -128,6 +135,22 @@ public class TestGround {
 		return new RatioStruct(numerator, denominator);
 	}
 
+	private Object valuesGen() {
+		final List<LispStruct> valuesList = new ArrayList<>();
+		final LispStruct value = new CharacterStruct(97);
+		valuesList.add(value);
+
+		return new ValuesStruct(valuesList);
+	}
+
+	private Object consGen() {
+
+		final LispStruct car = new CharacterStruct(97);
+		final LispStruct cdr = new CharacterStruct(197);
+
+		return new ConsStruct(car, cdr);
+	}
+
 	private Object unwindProtectGen() {
 		final LispStruct result;
 		try {
@@ -159,7 +182,11 @@ public class TestGround {
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
 
-		final LispStruct value = new CharacterStruct(97);
+		LispStruct value = new CharacterStruct(97);
+		if (value instanceof ValuesStruct) {
+			final ValuesStruct valuesStruct = (ValuesStruct) value;
+			value = valuesStruct.getPrimaryValue();
+		}
 		symbol.setValue(value);
 
 		return value;
@@ -185,7 +212,11 @@ public class TestGround {
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
 
-		final LispStruct initForm = new CharacterStruct(97);
+		LispStruct initForm = new CharacterStruct(97);
+		if (initForm instanceof ValuesStruct) {
+			final ValuesStruct valuesStruct = (ValuesStruct) initForm;
+			initForm = valuesStruct.getPrimaryValue();
+		}
 		symbol.bindLexicalValue(initForm);
 
 		final LispStruct result;

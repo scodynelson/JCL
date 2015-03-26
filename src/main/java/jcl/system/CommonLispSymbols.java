@@ -4,6 +4,7 @@ import jcl.arrays.ArrayConstants;
 import jcl.characters.CharacterConstants;
 import jcl.compiler.real.CompilerConstants;
 import jcl.compiler.real.CompilerVariables;
+import jcl.compiler.real.ValuesFunction;
 import jcl.functions.Apply;
 import jcl.functions.Funcall;
 import jcl.lists.CarFunction;
@@ -973,7 +974,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> USE_PACKAGE = null;
 	SymbolStruct<?> USE_VALUE = null;
 	SymbolStruct<?> USER_HOMEDIR_PATHNAME = null;
-	SymbolStruct<?> VALUES = null;
+	SymbolStruct<?> VALUES = ValuesFunction.VALUES;
 	SymbolStruct<?> VALUES_LIST = null;
 	SymbolStruct<?> VARIABLE = null;
 	SymbolStruct<?> VECTOR = null;

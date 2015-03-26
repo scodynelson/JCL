@@ -233,6 +233,23 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			final int lexicalValueStore = currentClass.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, lexicalValueStore);
 
+			final Label valuesCheckIfEnd = new Label();
+
+			mv.visitVarInsn(Opcodes.ALOAD, lexicalValueStore);
+			mv.visitTypeInsn(Opcodes.INSTANCEOF, "jcl/compiler/real/struct/ValuesStruct");
+			mv.visitJumpInsn(Opcodes.IFEQ, valuesCheckIfEnd);
+
+			mv.visitVarInsn(Opcodes.ALOAD, lexicalValueStore);
+			mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/compiler/real/struct/ValuesStruct");
+			final int valuesStore = currentClass.getNextAvailableStore();
+			mv.visitVarInsn(Opcodes.ASTORE, valuesStore);
+
+			mv.visitVarInsn(Opcodes.ALOAD, valuesStore);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/compiler/real/struct/ValuesStruct", "getPrimaryValue", "()Ljcl/LispStruct;", false);
+			mv.visitVarInsn(Opcodes.ASTORE, lexicalValueStore);
+
+			mv.visitLabel(valuesCheckIfEnd);
+
 			mv.visitVarInsn(Opcodes.ALOAD, symbolToBindStore);
 			mv.visitVarInsn(Opcodes.ALOAD, lexicalValueStore);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "bindLexicalValue", "(Ljcl/LispStruct;)V", false);
@@ -279,12 +296,34 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			currentClass.setMethodVisitor(mv);
 			mv.visitCode();
 
+			final int initFormStore = currentClass.getNextAvailableStore();
+
 			final List<LoadTimeValue> loadTimeValues = lambdaEnvironment.getLoadTimeValues();
 			for (final LoadTimeValue loadTimeValue : loadTimeValues) {
 				final String uniqueLTVId = loadTimeValue.getUniqueLTVId();
 				final LispStruct value = loadTimeValue.getValue();
 
 				formGenerator.generate(value, classBuilder);
+				mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
+
+				final Label valuesCheckIfEnd = new Label();
+
+				mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
+				mv.visitTypeInsn(Opcodes.INSTANCEOF, "jcl/compiler/real/struct/ValuesStruct");
+				mv.visitJumpInsn(Opcodes.IFEQ, valuesCheckIfEnd);
+
+				mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
+				mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/compiler/real/struct/ValuesStruct");
+				final int valuesStore = currentClass.getNextAvailableStore();
+				mv.visitVarInsn(Opcodes.ASTORE, valuesStore);
+
+				mv.visitVarInsn(Opcodes.ALOAD, valuesStore);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/compiler/real/struct/ValuesStruct", "getPrimaryValue", "()Ljcl/LispStruct;", false);
+				mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
+
+				mv.visitLabel(valuesCheckIfEnd);
+
+				mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 				mv.visitFieldInsn(Opcodes.PUTSTATIC, className, uniqueLTVId, "Ljcl/LispStruct;");
 			}
 

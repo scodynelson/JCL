@@ -76,6 +76,23 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 			formGenerator.generate(symbolVal, classBuilder);
 			mv.visitVarInsn(Opcodes.ASTORE, valStore);
 
+			final Label valuesCheckIfEnd = new Label();
+
+			mv.visitVarInsn(Opcodes.ALOAD, valStore);
+			mv.visitTypeInsn(Opcodes.INSTANCEOF, "jcl/compiler/real/struct/ValuesStruct");
+			mv.visitJumpInsn(Opcodes.IFEQ, valuesCheckIfEnd);
+
+			mv.visitVarInsn(Opcodes.ALOAD, valStore);
+			mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/compiler/real/struct/ValuesStruct");
+			final int valuesStore = currentClass.getNextAvailableStore();
+			mv.visitVarInsn(Opcodes.ASTORE, valuesStore);
+
+			mv.visitVarInsn(Opcodes.ALOAD, valuesStore);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/compiler/real/struct/ValuesStruct", "getPrimaryValue", "()Ljcl/LispStruct;", false);
+			mv.visitVarInsn(Opcodes.ASTORE, valStore);
+
+			mv.visitLabel(valuesCheckIfEnd);
+
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, valStore);
 

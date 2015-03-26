@@ -79,6 +79,23 @@ public class LetStarCodeGenerator implements CodeGenerator<LetStarStruct> {
 			formGenerator.generate(initForm, classBuilder);
 			mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
 
+			final Label valuesCheckIfEnd = new Label();
+
+			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
+			mv.visitTypeInsn(Opcodes.INSTANCEOF, "jcl/compiler/real/struct/ValuesStruct");
+			mv.visitJumpInsn(Opcodes.IFEQ, valuesCheckIfEnd);
+
+			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
+			mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/compiler/real/struct/ValuesStruct");
+			final int valuesStore = currentClass.getNextAvailableStore();
+			mv.visitVarInsn(Opcodes.ASTORE, valuesStore);
+
+			mv.visitVarInsn(Opcodes.ALOAD, valuesStore);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/compiler/real/struct/ValuesStruct", "getPrimaryValue", "()Ljcl/LispStruct;", false);
+			mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
+
+			mv.visitLabel(valuesCheckIfEnd);
+
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 

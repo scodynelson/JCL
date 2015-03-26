@@ -53,10 +53,6 @@ public class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 		mv.visitLdcInsn(symbolName);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
-		final int symbolStore = currentClass.getNextAvailableStore();
-		mv.visitVarInsn(Opcodes.ASTORE, symbolStore);
-
-		mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 	}
 
 	private void generateQuotedCons(final ConsStruct quotedCons, final JavaClassBuilder classBuilder) {

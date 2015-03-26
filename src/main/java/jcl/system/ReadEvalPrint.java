@@ -130,10 +130,10 @@ public class ReadEvalPrint {
 							whatRead = reader.read(true, NullStruct.INSTANCE, false);
 						}
 						if (whatRead != null) {
-							LOGGER.debug("READ Class: {}", whatRead.getClass().getSimpleName());
+//							LOGGER.debug("READ Class: {}", whatRead.getClass().getSimpleName());
 
-							final String printedWhatRead = printer.print(whatRead);
-							LOGGER.debug("READ Object: {}", printedWhatRead);
+//							final String printedWhatRead = printer.print(whatRead);
+//							LOGGER.debug("READ Object: {}", printedWhatRead);
 						} else {
 							LOGGER.warn("; WARNING: Null response from reader");
 						}

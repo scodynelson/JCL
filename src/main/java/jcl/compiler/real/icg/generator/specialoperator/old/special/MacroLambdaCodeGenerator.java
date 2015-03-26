@@ -7,7 +7,7 @@ import jcl.lists.ListStruct;
 //@Component
 public class MacroLambdaCodeGenerator implements CodeGenerator<ListStruct> {
 
-//	@Autowired
+	//	@Autowired
 	private LambdaCodeGenerator lambdaCodeGenerator;
 
 	@Override

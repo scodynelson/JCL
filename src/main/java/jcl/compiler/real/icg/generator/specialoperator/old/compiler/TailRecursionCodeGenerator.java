@@ -1,29 +1,36 @@
 package jcl.compiler.real.icg.generator.specialoperator.old.compiler;
 
+import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.icg.generator.specialoperator.FunctionCallCodeGenerator;
 import jcl.lists.ListStruct;
 import jcl.symbols.SymbolStruct;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 //@Component
 public class TailRecursionCodeGenerator implements CodeGenerator<ListStruct> {
 
 	// the list is of the form (%tail-recursion fn-symbol arg...)
 
-//	@Autowired
+	//	@Autowired
 	private FunctionCallCodeGenerator functionCallCodeGenerator;
 
-//	@Autowired
+	//	@Autowired
 	private FormGenerator formGenerator;
 
 	@Override
 	public void generate(final ListStruct input, final JavaClassBuilder classBuilder) {
+
+		final ClassDef currentClass = classBuilder.getCurrentClass();
+		final MethodVisitor mv = currentClass.getMethodVisitor();
+
 		// drop the special operator
 		final ListStruct restOfList = input.getRest();
 		// set up the proper function object (this)
-		genCodeTailRecursionSetup((SymbolStruct) restOfList.getFirst(), classBuilder);
+		genCodeTailRecursionSetup((SymbolStruct) restOfList.getFirst(), mv);
 		// now set up the rest of the call just like any other fn call
 		final boolean acceptsMultipleValues = classBuilder.isAcceptsMultipleValues();
 		try {
@@ -43,10 +50,10 @@ public class TailRecursionCodeGenerator implements CodeGenerator<ListStruct> {
 	 *
 	 * @param sym
 	 * 		sym
-	 * @param classBuilder
+	 * @param mv
 	 * 		classBuilder
 	 */
-	private static void genCodeTailRecursionSetup(final SymbolStruct<?> sym, final JavaClassBuilder classBuilder) {
-		classBuilder.getEmitter().emitAload(0);
+	private static void genCodeTailRecursionSetup(final SymbolStruct<?> sym, final MethodVisitor mv) {
+		mv.visitVarInsn(Opcodes.ALOAD, 0);
 	}
 }

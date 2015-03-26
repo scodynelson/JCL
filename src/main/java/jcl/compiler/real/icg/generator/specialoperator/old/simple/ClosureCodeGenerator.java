@@ -13,29 +13,36 @@ import jcl.compiler.real.environment.allocation.PositionAllocation;
 import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.environment.binding.ClosureBinding;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
+import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.collections4.CollectionUtils;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 public class ClosureCodeGenerator implements CodeGenerator<Environment> {
 
 	@Override
 	public void generate(final Environment input, final JavaClassBuilder classBuilder) {
+
+		final ClassDef currentClass = classBuilder.getCurrentClass();
+		final MethodVisitor mv = currentClass.getMethodVisitor();
+
 		final Closure closureSetBody = input.getClosure();
 		final int numParams = closureSetBody.getBindings().size(); // remove :closure and (:depth . n) from contention
 
 		if (numParams > 0) {
 			// keep a copy of the 'this' reference
-			classBuilder.getEmitter().emitAload(0);
-			classBuilder.getEmitter().emitDup();
-			classBuilder.getEmitter().emitInvokespecial("lisp/common/function/FunctionBaseClass", "getClosure", "()", "Llisp/extensions/type/Closure;", false);
-			classBuilder.getEmitter().emitLdc(numParams);
-			classBuilder.getEmitter().emitInvokestatic("lisp/extensions/type/Closure$Factory", "newInstance", "(Llisp/extensions/type/Closure;I)", "Llisp/extensions/type/Closure;", false);
+			mv.visitVarInsn(Opcodes.ALOAD, 0);
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "lisp/common/function/FunctionBaseClass", "getClosure", "()Llisp/extensions/type/Closure;", false);
+			mv.visitLdcInsn(numParams);
+			mv.visitMethodInsn(Opcodes.INVOKESTATIC, "lisp/extensions/type/Closure$Factory", "newInstance", "(Llisp/extensions/type/Closure;I)Llisp/extensions/type/Closure;", false);
 			// have a closure object on the stack
 			//push it onto the closure stack
-			classBuilder.getEmitter().emitInvokespecial("lisp/common/function/FunctionBaseClass", "addClosure", "(Llisp/extensions/type/Closure;)", "Llisp/extensions/type/Closure;", false);
-			classBuilder.getEmitter().emitPop();
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "lisp/common/function/FunctionBaseClass", "addClosure", "(Llisp/extensions/type/Closure;)Llisp/extensions/type/Closure;", false);
+			mv.visitInsn(Opcodes.POP);
 		}
 		// get the :closure information
 		final Closure closureStuff = input.getClosure();
@@ -44,9 +51,9 @@ public class ClosureCodeGenerator implements CodeGenerator<Environment> {
 		// if there is one, allocate the object
 		if (CollectionUtils.isNotEmpty(bindings) && (closureStuff != null)) {
 			// get the top closure object
-			classBuilder.getEmitter().emitAload(0);
-			classBuilder.getEmitter().emitInvokespecial("lisp/common/function/FunctionBaseClass", "getClosure", "()", "Llisp/extensions/type/Closure;", false);
-			classBuilder.getEmitter().emitDup();
+			mv.visitVarInsn(Opcodes.ALOAD, 0);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "lisp/common/function/FunctionBaseClass", "getClosure", "()Llisp/extensions/type/Closure;", false);
+			mv.visitInsn(Opcodes.DUP);
 			// run the list of variables
 			//TODO handle parameters that are special variables
 			for (final Binding<?> binding : bindings) {
@@ -59,16 +66,16 @@ public class ClosureCodeGenerator implements CodeGenerator<Environment> {
 					final int param = allocation.getPosition();
 					// now where does it go
 					final int position = closureEntry.get().getPosition();
-					classBuilder.getEmitter().emitLdc(position); // index
-					classBuilder.getEmitter().emitLdc(0);                   // nesting (current one)
-					classBuilder.getEmitter().emitAload(param);      // value from the arg list
-					classBuilder.getEmitter().emitInvokeinterface("lisp/extensions/type/Closure", "setBindingAt", "(IILjava/lang/Object;)", "V", true);
+					mv.visitLdcInsn(position); // index
+					mv.visitLdcInsn(0);                   // nesting (current one)
+					mv.visitVarInsn(Opcodes.ALOAD, param);      // value from the arg list
+					mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "lisp/extensions/type/Closure", "setBindingAt", "(IILjava/lang/Object;)V", true);
 					// the closure is left on the stack
 					// dup it for the rest loop, except the last time around
-					classBuilder.getEmitter().emitDup();
+					mv.visitInsn(Opcodes.DUP);
 				}
 			}
-			classBuilder.getEmitter().emitPop2();  // drop the remaining closure reference from the stack
+			mv.visitInsn(Opcodes.POP2);  // drop the remaining closure reference from the stack
 			// for each variable, gen code to get the value and store in the closure
 		}
 	}

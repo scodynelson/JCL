@@ -1,6 +1,7 @@
 package jcl.compiler.real.icg.generator.specialoperator.old.simple;
 
 import jcl.LispStruct;
+import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
@@ -11,6 +12,8 @@ import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.Label;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,6 +84,10 @@ public class ListCodeGenerator implements CodeGenerator<ListStruct> {
 	}
 
 	private void genOptimizedForm(final ListStruct list, final JavaClassBuilder classBuilder) {
+
+		final ClassDef currentClass = classBuilder.getCurrentClass();
+		final MethodVisitor mv = currentClass.getMethodVisitor();
+
 		final SymbolStruct<?> sym = (SymbolStruct) list.getFirst();
 		if (sym.equals(GlobalPackageStruct.COMMON_LISP.intern("EQ").getSymbol())) {
 			final ListStruct args = list.getRest();
@@ -92,13 +99,13 @@ public class ListCodeGenerator implements CodeGenerator<ListStruct> {
 			// get a uniquifier value
 			final Label trueLabel = new Label();
 			final Label endLabel = new Label();
-			classBuilder.getEmitter().emitIf_acmpeq(trueLabel);
+			mv.visitJumpInsn(Opcodes.IF_ACMPEQ, trueLabel);
 			// if not eq, then the value is NIL
-			classBuilder.getEmitter().emitGetstatic("lisp/common/type/Boolean", "NIL", "Llisp/common/type/Symbol;");
-			classBuilder.getEmitter().emitGoto(endLabel);
-			classBuilder.getEmitter().visitMethodLabel(trueLabel);
-			classBuilder.getEmitter().emitGetstatic("lisp/common/type/Boolean", "T", "Llisp/common/type/Symbol;");
-			classBuilder.getEmitter().visitMethodLabel(endLabel);
+			mv.visitFieldInsn(Opcodes.GETSTATIC, "lisp/common/type/Boolean", "NIL", "Llisp/common/type/Symbol;");
+			mv.visitJumpInsn(Opcodes.GOTO, endLabel);
+			mv.visitLabel(trueLabel);
+			mv.visitFieldInsn(Opcodes.GETSTATIC, "lisp/common/type/Boolean", "T", "Llisp/common/type/Symbol;");
+			mv.visitLabel(endLabel);
 		}
 	}
 

@@ -4,24 +4,31 @@
 
 package jcl.compiler.real.icg.generator.specialoperator.old.simple;
 
+import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.packages.PackageStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 public class SpecialVariableCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 
 	@Override
 	public void generate(final SymbolStruct<?> input, final JavaClassBuilder classBuilder) {
 
+		final ClassDef currentClass = classBuilder.getCurrentClass();
+		final MethodVisitor mv = currentClass.getMethodVisitor();
+
+
 		// push current package
-		emitSymbolPackage(input, classBuilder);
-		classBuilder.getEmitter().emitLdc(input.getName());
+		emitSymbolPackage(input, mv);
+		mv.visitLdcInsn(input.getName());
 		// invoke package.intern() - we may not have seen it before
-		classBuilder.getEmitter().emitInvokeinterface("lisp/common/type/Package", "intern", "(Ljava/lang/String;)", "[Llisp/common/type/Symbol;", true);
-		classBuilder.getEmitter().emitLdc(0);
-		classBuilder.getEmitter().emitAaload();
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "lisp/common/type/Package", "intern", "(Ljava/lang/String;)[Llisp/common/type/Symbol;", true);
+		mv.visitLdcInsn(0);
+		mv.visitInsn(Opcodes.AALOAD);
 	}
 
 	/**
@@ -30,16 +37,16 @@ public class SpecialVariableCodeGenerator implements CodeGenerator<SymbolStruct<
 	 *
 	 * @param sym
 	 * 		lisp.common.type.Sybmbol sym
-	 * @param classBuilder
+	 * @param mv
 	 * 		classBuilder
 	 *
 	 * @return object
 	 */
-	public static Object emitSymbolPackage(final SymbolStruct<?> sym, final JavaClassBuilder classBuilder) {
+	public static Object emitSymbolPackage(final SymbolStruct<?> sym, final MethodVisitor mv) {
 		// There are optimizations for the standard packages
 		if (sym.getSymbolPackage() != null) {
 			final PackageStruct homePkgName = sym.getSymbolPackage();
-			emitPackage(homePkgName.getName(), classBuilder);
+			emitPackage(homePkgName.getName(), mv);
 		} else {
 			// no package
 		}
@@ -52,15 +59,15 @@ public class SpecialVariableCodeGenerator implements CodeGenerator<SymbolStruct<
 	 *
 	 * @param name
 	 * 		lisp.common.type.Package name
-	 * @param classBuilder
+	 * @param mv
 	 * 		classBuilder
 	 *
 	 * @return object
 	 */
-	private static Object emitPackage(final String name, final JavaClassBuilder classBuilder) {
-		classBuilder.getEmitter().emitLdc(name);
+	private static Object emitPackage(final String name, final MethodVisitor mv) {
+		mv.visitLdcInsn(name);
 		//String owner, String name, String descr
-		classBuilder.getEmitter().emitInvokestatic("lisp/system/PackageImpl", "findPackage", "(Ljava/lang/String;)", "Llisp/common/type/Package;", false);
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC, "lisp/system/PackageImpl", "findPackage", "(Ljava/lang/String;)Llisp/common/type/Package;", false);
 		return NILStruct.INSTANCE;
 	}
 }

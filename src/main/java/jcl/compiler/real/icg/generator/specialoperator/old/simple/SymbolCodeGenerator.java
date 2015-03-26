@@ -12,9 +12,12 @@ import jcl.compiler.real.environment.allocation.PositionAllocation;
 import jcl.compiler.real.environment.binding.Binding;
 import jcl.compiler.real.environment.binding.ClosureBinding;
 import jcl.compiler.real.environment.binding.SymbolClosureBinding;
+import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.symbols.SymbolStruct;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 
@@ -23,6 +26,10 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 
 	@Override
 	public void generate(final SymbolStruct<?> input, final JavaClassBuilder classBuilder) {
+
+		final ClassDef currentClass = classBuilder.getCurrentClass();
+		final MethodVisitor mv = currentClass.getMethodVisitor();
+
 		// must determine one of 4 options:
 		// 1. this is in a closure that's local to the environment
 		// => assoc on the closure property of the current env
@@ -41,11 +48,11 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 			final int position = closureBinding.get().getPosition();
 			// now get the object out of the current closure
 			// get this
-			classBuilder.getEmitter().emitAload(0);
-			classBuilder.getEmitter().emitInvokespecial("lisp/common/function/FunctionBaseClass", "getClosure", "()", "Llisp/extensions/type/Closure;", false);
-			classBuilder.getEmitter().emitLdc(position);
-			classBuilder.getEmitter().emitLdc(0);
-			classBuilder.getEmitter().emitInvokeinterface("lisp/extensions/type/Closure", "getBindingAt", "(II)", "Ljava/lang/Object;", true);
+			mv.visitVarInsn(Opcodes.ALOAD, 0);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "lisp/common/function/FunctionBaseClass", "getClosure", "()Llisp/extensions/type/Closure;", false);
+			mv.visitLdcInsn(position);
+			mv.visitLdcInsn(0);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "lisp/extensions/type/Closure", "getBindingAt", "(II)Ljava/lang/Object;", true);
 		} else {
 			// set up for 2 or 3
 			final SymbolTable symbolTable = classBuilder.getBindingEnvironment().getSymbolTable();
@@ -60,7 +67,7 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 				if (hasDynamicBinding) {
 					// it's number 3
 					specialVariableCodeGenerator.generate(input, classBuilder);
-					classBuilder.getEmitter().emitInvokestatic("jcl/symbols/SymbolStruct", "getValue", "()", "Ljava/lang/Object;", true);
+					mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/symbols/SymbolStruct", "getValue", "()Ljava/lang/Object;", true);
 				} else if (hasClosureBinding) {
 					final SymbolClosureBinding entry = symbolTable.getClosureBinding(input).get();
 					// it's door number 2
@@ -86,14 +93,14 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 
 					// Whew!! Now we can gen some code
 					// get this
-					classBuilder.getEmitter().emitAload(0);
+					mv.visitVarInsn(Opcodes.ALOAD, 0);
 					// get the current closure
-					classBuilder.getEmitter().emitInvokespecial("lisp/common/function/FunctionBaseClass", "getClosure", "()", "Llisp/extensions/type/Closure;", false);
+					mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "lisp/common/function/FunctionBaseClass", "getClosure", "()Llisp/extensions/type/Closure;", false);
 					// set up the constants for seeking
-					classBuilder.getEmitter().emitLdc(position);
-					classBuilder.getEmitter().emitLdc(nesting);
+					mv.visitLdcInsn(position);
+					mv.visitLdcInsn(nesting);
 					// now give chase up the chain
-					classBuilder.getEmitter().emitInvokeinterface("lisp/extensions/type/Closure", "getBindingAt", "(II)", "Ljava/lang/Object;", true);
+					mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "lisp/extensions/type/Closure", "getBindingAt", "(II)Ljava/lang/Object;", true);
 				} else {
 					// go find it
 					final Environment binding = getBindingEnvironment(classBuilder.getBindingEnvironment(), input);
@@ -105,7 +112,7 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 					// get the allocated slot for the symbol and put it on the stack
 					final int slot = ((PositionAllocation) symBinding.getAllocation()).getPosition();
 
-					classBuilder.getEmitter().emitAload(slot);
+					mv.visitVarInsn(Opcodes.ALOAD, slot);
 				}
 			} else {
 				// it's 4
@@ -117,7 +124,7 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 //						LOGGER.warn("; Warning: variable {} is assumed free", input);
 //					}
 					specialVariableCodeGenerator.generate(input, classBuilder);
-					classBuilder.getEmitter().emitInvokestatic("jcl/symbols/SymbolStruct", "getValue", "()", "Ljava/lang/Object;", true);
+					mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/symbols/SymbolStruct", "getValue", "()Ljava/lang/Object;", true);
 				} else {
 					// get the :bindings list
 					// ((x :allocation ...) (y :allocation ...) ...)
@@ -126,7 +133,7 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 					// get the allocated slot for the symbol and put it on the stack
 					final int slot = ((PositionAllocation) symBinding.getAllocation()).getPosition();
 
-					classBuilder.getEmitter().emitAload(slot);
+					mv.visitVarInsn(Opcodes.ALOAD, slot);
 				}
 			}
 		}

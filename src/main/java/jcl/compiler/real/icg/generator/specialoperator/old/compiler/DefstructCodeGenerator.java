@@ -1,6 +1,9 @@
 package jcl.compiler.real.icg.generator.specialoperator.old.compiler;
 
+import java.util.Stack;
+
 import jcl.LispStruct;
+import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
@@ -13,7 +16,10 @@ import jcl.numbers.IntegerStruct;
 import jcl.numbers.NumberStruct;
 import jcl.symbols.DefstructSymbolStruct;
 import jcl.symbols.SymbolStruct;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Label;
+import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 //@Component
@@ -37,14 +43,18 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 //	@Autowired
 	private SymbolCodeGenerator symbolCodeGenerator;
 
-//	@Autowired
+	//	@Autowired
 	private SpecialVariableCodeGenerator specialVariableCodeGenerator;
 
-//	@Autowired
+	//	@Autowired
 	private FormGenerator formGenerator;
 
 	@Override
 	public void generate(final ListStruct input, final JavaClassBuilder classBuilder) {
+
+		final ClassDef currentClass = classBuilder.getCurrentClass();
+		final MethodVisitor mv = currentClass.getMethodVisitor();
+
 		//Chop off %defstruct part. We don't need it.
 		final ListStruct arguments = input.getRest();
 
@@ -117,19 +127,19 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 		icgCreateDefstructImplClass(javaName.toString(), implImplementing, lispName, fields, printerFunction, includeName, includedSlotNumberAsInt, classBuilder);
 
 		// initializing code in the enclosing lambda
-		classBuilder.getEmitter().emitGetstatic(javaName + "Impl$Factory", "initialize", "Z");
-		classBuilder.getEmitter().emitPop();
-		classBuilder.getEmitter().emitGetstatic(javaName + "Impl", "initialize", "Z");
-		classBuilder.getEmitter().emitPop();
+		mv.visitFieldInsn(Opcodes.GETSTATIC, javaName + "Impl$Factory", "initialize", "Z");
+		mv.visitInsn(Opcodes.POP);
+		mv.visitFieldInsn(Opcodes.GETSTATIC, javaName + "Impl", "initialize", "Z");
+		mv.visitInsn(Opcodes.POP);
 
 		symbolCodeGenerator.generate(javaName, classBuilder);
-		classBuilder.getEmitter().emitGetstatic("lisp/common/type/StructureClass", "DEFSTRUCT_INDICATOR", "Llisp/common/type/Symbol;");
-		classBuilder.getEmitter().emitLdc(javaName + "$Factory");
-		classBuilder.getEmitter().emitInvokestatic("java/lang/Class", "forName", "(Ljava/lang/String;)", "Ljava/lang/Class;", false);
-		classBuilder.getEmitter().emitInvokeinterface("lisp/common/type/Symbol", "setprop", "(Ljava/lang/Object;Ljava/lang/Object;)", "V", true);
+		mv.visitFieldInsn(Opcodes.GETSTATIC, "lisp/common/type/StructureClass", "DEFSTRUCT_INDICATOR", "Llisp/common/type/Symbol;");
+		mv.visitLdcInsn(javaName + "$Factory");
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Class", "forName", "(Ljava/lang/String;)Ljava/lang/Class;", false);
+		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "lisp/common/type/Symbol", "setprop", "(Ljava/lang/Object;Ljava/lang/Object;)V", true);
 
 		// it balances something that's popping...
-		classBuilder.getEmitter().emitGetstatic("lisp/common/type/Null", "NIL", "Llisp/common/type/Null;");
+		mv.visitFieldInsn(Opcodes.GETSTATIC, "lisp/common/type/Null", "NIL", "Llisp/common/type/Null;");
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -140,112 +150,261 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 	//
 	// Making FooStruct$Factory
 	private static void icgCreateDefstructFactory(final String name, final JavaClassBuilder classBuilder) {
-		classBuilder.getEmitter().newClass(Opcodes.ACC_PUBLIC, name + "$Factory", null, "java/lang/Object", new String[]{"lisp/extensions/type/StructureClassFactory"});
-		classBuilder.getEmitter().addInnerClass(name + "$Factory", name, "Factory", Opcodes.ACC_STATIC + Opcodes.ACC_PUBLIC);
-		classBuilder.getEmitter().addInnerClass(name + "$AbstractFactory", name, "AbstractFactory", Opcodes.ACC_STATIC + Opcodes.ACC_PUBLIC);
+
+		final ClassDef currentClass = new ClassDef(name, "");
+		final Stack<ClassDef> classStack = classBuilder.getClassStack();
+
+		classStack.push(currentClass);
+		classBuilder.setCurrentClass(currentClass);
+		classBuilder.getClasses().addFirst(currentClass);
+
+		final ClassWriter cw = currentClass.getClassWriter();
+
+		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, name + "$Factory", null, "java/lang/Object", new String[]{"lisp/extensions/type/StructureClassFactory"});
+		cw.visitInnerClass(name + "$Factory", name, "Factory", Opcodes.ACC_STATIC + Opcodes.ACC_PUBLIC);
+		cw.visitInnerClass(name + "$AbstractFactory", name, "AbstractFactory", Opcodes.ACC_STATIC + Opcodes.ACC_PUBLIC);
 
 		// <clinit>
-		classBuilder.getEmitter().newMethod(Opcodes.ACC_STATIC, "<clinit>", "()", "V", null, null);
-		classBuilder.getEmitter().emitReturn();
-		classBuilder.getEmitter().endMethod();
+		{
+			final MethodVisitor mv = currentClass.getClassWriter().visitMethod(Opcodes.ACC_STATIC, "<clinit>", "()V", null, null);
+			currentClass.setMethodVisitor(mv);
+			mv.visitCode();
 
+			mv.visitInsn(Opcodes.RETURN);
+
+			mv.visitMaxs(-1, -1);
+			mv.visitEnd();
+		}
 		// <init>
-		classBuilder.getEmitter().newMethod(Opcodes.ACC_PUBLIC, "<init>", "()", "V", null, null);
-		classBuilder.getEmitter().emitAload(0);
-		classBuilder.getEmitter().emitInvokespecial("java/lang/Object", "<init>", "()", "V", false);
-		classBuilder.getEmitter().emitReturn();
-		classBuilder.getEmitter().endMethod();
+		{
+			final MethodVisitor mv = currentClass.getClassWriter().visitMethod(Opcodes.ACC_PUBLIC, "<init>", "()V", null, null);
+			currentClass.setMethodVisitor(mv);
+			mv.visitCode();
 
+			mv.visitVarInsn(Opcodes.ALOAD, 0);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
+
+			mv.visitInsn(Opcodes.RETURN);
+
+			mv.visitMaxs(-1, -1);
+			mv.visitEnd();
+		}
 		// newInstance
-		classBuilder.getEmitter().newMethod(Opcodes.ACC_PUBLIC + Opcodes.ACC_STATIC, "newInstance", "([Ljava/lang/Object;)", "Llisp/common/type/StructureClass;", null, null);
-		classBuilder.getEmitter().emitGetstatic(name, "factory", 'L' + name + "$AbstractFactory;");
-		classBuilder.getEmitter().emitGetfield(name + "$AbstractFactory", "trueFactory", "Llisp/extensions/type/StructureClassFactory;");
-		classBuilder.getEmitter().emitAload(0);
-		classBuilder.getEmitter().emitInvokeinterface("lisp/extensions/type/StructureClassFactory", "newInstance", "([Ljava/lang/Object;)", "Llisp/common/type/StructureClass;", true);
-		classBuilder.getEmitter().emitAreturn();
-		classBuilder.getEmitter().endMethod();
-		classBuilder.getEmitter().endClass();
+		{
+			final MethodVisitor mv = currentClass.getClassWriter().visitMethod(Opcodes.ACC_PUBLIC + Opcodes.ACC_STATIC, "newInstance", "([Ljava/lang/Object;)Llisp/common/type/StructureClass;", null, null);
+			currentClass.setMethodVisitor(mv);
+			mv.visitCode();
+
+			mv.visitFieldInsn(Opcodes.GETSTATIC, name, "factory", 'L' + name + "$AbstractFactory;");
+			mv.visitFieldInsn(Opcodes.GETFIELD, name + "$AbstractFactory", "trueFactory", "Llisp/extensions/type/StructureClassFactory;");
+			mv.visitVarInsn(Opcodes.ALOAD, 0);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "lisp/extensions/type/StructureClassFactory", "newInstance", "([Ljava/lang/Object;)Llisp/common/type/StructureClass;", true);
+
+			mv.visitInsn(Opcodes.ARETURN);
+
+			mv.visitMaxs(-1, -1);
+			mv.visitEnd();
+		}
+		cw.visitEnd();
+
+		classStack.pop();
+		if (!classStack.isEmpty()) {
+			final ClassDef previousClassDef = classStack.peek();
+			classBuilder.setCurrentClass(previousClassDef);
+		}
 	}
 
 	// Making FooStruct$AbstractFactory
 	private static void icgCreateDefstructAbstractFactory(final String name, final JavaClassBuilder classBuilder) {
-		classBuilder.getEmitter().newClass(Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER, name + "$AbstractFactory", null, "java/lang/Object", null);
-		classBuilder.getEmitter().addInnerClass(name + "$AbstractFactory", name, "AbstractFactory", Opcodes.ACC_STATIC);
-		classBuilder.getEmitter().newField(0, "trueFactory", "Llisp/extensions/type/StructureClassFactory;", null, null);
-		classBuilder.getEmitter().newField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "initialize", "Z", null, null);
+
+		final ClassDef currentClass = new ClassDef(name, "");
+		final Stack<ClassDef> classStack = classBuilder.getClassStack();
+
+		classStack.push(currentClass);
+		classBuilder.setCurrentClass(currentClass);
+		classBuilder.getClasses().addFirst(currentClass);
+
+		final ClassWriter cw = currentClass.getClassWriter();
+
+		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER, name + "$AbstractFactory", null, "java/lang/Object", null);
+		cw.visitInnerClass(name + "$AbstractFactory", name, "AbstractFactory", Opcodes.ACC_STATIC);
+
+		{
+			final FieldVisitor fv = cw.visitField(0, "trueFactory", "Llisp/extensions/type/StructureClassFactory;", null, null);
+			currentClass.setFieldVisitor(fv);
+			fv.visitEnd();
+		}
+		{
+			final FieldVisitor fv = cw.visitField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "initialize", "Z", null, null);
+			currentClass.setFieldVisitor(fv);
+			fv.visitEnd();
+		}
 
 		// <clinit>
-		classBuilder.getEmitter().newMethod(Opcodes.ACC_STATIC, "<clinit>", "()", "V", null, null);
-		classBuilder.getEmitter().emitLdc(1);
-		classBuilder.getEmitter().emitPutstatic(name + "$AbstractFactory", "initialize", "Z");
-		classBuilder.getEmitter().emitReturn();
-		classBuilder.getEmitter().endMethod();
+		{
+			final MethodVisitor mv = currentClass.getClassWriter().visitMethod(Opcodes.ACC_STATIC, "<clinit>", "()V", null, null);
+			currentClass.setMethodVisitor(mv);
+			mv.visitCode();
+
+			mv.visitLdcInsn(1);
+			mv.visitFieldInsn(Opcodes.PUTSTATIC, name + "$AbstractFactory", "initialize", "Z");
+			mv.visitInsn(Opcodes.RETURN);
+
+			mv.visitMaxs(-1, -1);
+			mv.visitEnd();
+		}
 
 		// <init>
-		classBuilder.getEmitter().newMethod(Opcodes.ACC_PUBLIC, "<init>", "()", "V", null, null);
-		classBuilder.getEmitter().emitAload(0);
-		classBuilder.getEmitter().emitInvokespecial("java/lang/Object", "<init>", "()", "V", false);
-		classBuilder.getEmitter().emitAload(0);
-		classBuilder.getEmitter().emitAconst_null();
-		classBuilder.getEmitter().emitPutfield(name + "$AbstractFactory", "trueFactory", "Llisp/extensions/type/StructureClassFactory;");
-		classBuilder.getEmitter().emitReturn();
-		classBuilder.getEmitter().endMethod();
-		classBuilder.getEmitter().endClass();
+		{
+			final MethodVisitor mv = currentClass.getClassWriter().visitMethod(Opcodes.ACC_PUBLIC, "<init>", "()V", null, null);
+			currentClass.setMethodVisitor(mv);
+			mv.visitCode();
+
+			mv.visitVarInsn(Opcodes.ALOAD, 0);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
+			mv.visitVarInsn(Opcodes.ALOAD, 0);
+			mv.visitInsn(Opcodes.ACONST_NULL);
+			mv.visitFieldInsn(Opcodes.PUTFIELD, name + "$AbstractFactory", "trueFactory", "Llisp/extensions/type/StructureClassFactory;");
+			mv.visitInsn(Opcodes.RETURN);
+
+			mv.visitMaxs(-1, -1);
+			mv.visitEnd();
+		}
+		cw.visitEnd();
+
+		classStack.pop();
+		if (!classStack.isEmpty()) {
+			final ClassDef previousClassDef = classStack.peek();
+			classBuilder.setCurrentClass(previousClassDef);
+		}
 	}
 
 	// Making FooStruct
 	private void icgCreateDefstruct(final String name, final String[] implementing, final SymbolStruct<?> lispName, final JavaClassBuilder classBuilder) {
-		classBuilder.getEmitter().newClass(Opcodes.ACC_PUBLIC + Opcodes.ACC_ABSTRACT + Opcodes.ACC_INTERFACE, name, null, "java/lang/Object", implementing);
-		classBuilder.getEmitter().newField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "factory", 'L' + name + "$AbstractFactory;", null, null);
-		classBuilder.getEmitter().newField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "typeName", "Llisp/common/type/Symbol;", null, null);
 
-		classBuilder.getEmitter().addInnerClass(name + "$Factory", name, "Factory", Opcodes.ACC_STATIC + Opcodes.ACC_PUBLIC);
-		classBuilder.getEmitter().addInnerClass(name + "$AbstractFactory", name, "AbstractFactory", Opcodes.ACC_STATIC + Opcodes.ACC_PUBLIC);
+		final ClassDef currentClass = new ClassDef(name, "");
+		final Stack<ClassDef> classStack = classBuilder.getClassStack();
+
+		classStack.push(currentClass);
+		classBuilder.setCurrentClass(currentClass);
+		classBuilder.getClasses().addFirst(currentClass);
+
+		final ClassWriter cw = currentClass.getClassWriter();
+
+		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC + Opcodes.ACC_ABSTRACT + Opcodes.ACC_INTERFACE, name, null, "java/lang/Object", implementing);
+		cw.visitInnerClass(name + "$Factory", name, "Factory", Opcodes.ACC_STATIC + Opcodes.ACC_PUBLIC);
+		cw.visitInnerClass(name + "$AbstractFactory", name, "AbstractFactory", Opcodes.ACC_STATIC + Opcodes.ACC_PUBLIC);
+
+		{
+			final FieldVisitor fv = cw.visitField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "factory", 'L' + name + "$AbstractFactory;", null, null);
+			currentClass.setFieldVisitor(fv);
+			fv.visitEnd();
+		}
+		{
+			final FieldVisitor fv = cw.visitField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "typeName", "Llisp/common/type/Symbol;", null, null);
+			currentClass.setFieldVisitor(fv);
+			fv.visitEnd();
+		}
 
 		// <clinit>
-		classBuilder.getEmitter().newMethod(Opcodes.ACC_PUBLIC + Opcodes.ACC_STATIC, "<clinit>", "()", "V", null, null);
-		symbolCodeGenerator.generate(lispName, classBuilder);
-		classBuilder.getEmitter().emitPutstatic(name, "typeName", "Llisp/common/type/Symbol;");
-		classBuilder.getEmitter().emitNew(name + "$AbstractFactory");
-		classBuilder.getEmitter().emitDup();
-		classBuilder.getEmitter().emitInvokespecial(name + "$AbstractFactory", "<init>", "()", "V", false);
-		classBuilder.getEmitter().emitPutstatic(name, "factory", 'L' + name + "$AbstractFactory;");
-		classBuilder.getEmitter().emitReturn();
-		classBuilder.getEmitter().endMethod();
-		classBuilder.getEmitter().endClass();
+		{
+			final MethodVisitor mv = currentClass.getClassWriter().visitMethod(Opcodes.ACC_PUBLIC + Opcodes.ACC_STATIC, "<clinit>", "()V", null, null);
+			currentClass.setMethodVisitor(mv);
+			mv.visitCode();
+
+			symbolCodeGenerator.generate(lispName, classBuilder);
+			mv.visitFieldInsn(Opcodes.PUTSTATIC, name, "typeName", "Llisp/common/type/Symbol;");
+			mv.visitTypeInsn(Opcodes.NEW, name + "$AbstractFactory");
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, name + "$AbstractFactory", "<init>", "()V", false);
+			mv.visitFieldInsn(Opcodes.PUTSTATIC, name, "factory", 'L' + name + "$AbstractFactory;");
+			mv.visitInsn(Opcodes.RETURN);
+
+			mv.visitMaxs(-1, -1);
+			mv.visitEnd();
+		}
+		cw.visitEnd();
+
+		classStack.pop();
+		if (!classStack.isEmpty()) {
+			final ClassDef previousClassDef = classStack.peek();
+			classBuilder.setCurrentClass(previousClassDef);
+		}
 	}
 
 	// Making FooStructImpl$Factory
 	private static void icgCreateDefstructImplFactory(final String name, final int length, final JavaClassBuilder classBuilder) {
+
+		final ClassDef currentClass = new ClassDef(name, "");
+		final Stack<ClassDef> classStack = classBuilder.getClassStack();
+
+		classStack.push(currentClass);
+		classBuilder.setCurrentClass(currentClass);
+		classBuilder.getClasses().addFirst(currentClass);
+
+		final ClassWriter cw = currentClass.getClassWriter();
+
 		final String implName = name + "Impl";
 		final String implFactoryName = name + "Impl$Factory";
-		classBuilder.getEmitter().newClass(Opcodes.ACC_PUBLIC, implFactoryName, null, "java/lang/Object", new String[]{"lisp/extensions/type/StructureClassFactory"});
-		classBuilder.getEmitter().addInnerClass(implFactoryName, implName, "Factory", Opcodes.ACC_STATIC);
-		classBuilder.getEmitter().newField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "initialize", "Z", null, null);
+		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, implFactoryName, null, "java/lang/Object", new String[]{"lisp/extensions/type/StructureClassFactory"});
+		cw.visitInnerClass(implFactoryName, implName, "Factory", Opcodes.ACC_STATIC);
+
+		{
+			final FieldVisitor fv = cw.visitField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "initialize", "Z", null, null);
+			currentClass.setFieldVisitor(fv);
+			fv.visitEnd();
+		}
 
 		// <clinit>
-		classBuilder.getEmitter().newMethod(Opcodes.ACC_STATIC, "<clinit>", "()", "V", null, null);
-		classBuilder.getEmitter().emitLdc(1);
-		classBuilder.getEmitter().emitPutstatic(implFactoryName, "initialize", "Z");
-		classBuilder.getEmitter().emitReturn();
-		classBuilder.getEmitter().endMethod();
+		{
+			final MethodVisitor mv = currentClass.getClassWriter().visitMethod(Opcodes.ACC_STATIC, "<clinit>", "()V", null, null);
+			currentClass.setMethodVisitor(mv);
+			mv.visitCode();
+
+			mv.visitLdcInsn(1);
+			mv.visitFieldInsn(Opcodes.PUTSTATIC, implFactoryName, "initialize", "Z");
+			mv.visitInsn(Opcodes.RETURN);
+
+			mv.visitMaxs(-1, -1);
+			mv.visitEnd();
+		}
 
 		// <init>
-		classBuilder.getEmitter().newMethod(Opcodes.ACC_PUBLIC, "<init>", "()", "V", null, null);
-		classBuilder.getEmitter().emitAload(0);
-		classBuilder.getEmitter().emitInvokespecial("java/lang/Object", "<init>", "()", "V", false);
-		classBuilder.getEmitter().emitReturn();
-		classBuilder.getEmitter().endMethod();
+		{
+			final MethodVisitor mv = currentClass.getClassWriter().visitMethod(Opcodes.ACC_PUBLIC, "<init>", "()V", null, null);
+			currentClass.setMethodVisitor(mv);
+			mv.visitCode();
+
+			mv.visitVarInsn(Opcodes.ALOAD, 0);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
+			mv.visitInsn(Opcodes.RETURN);
+
+			mv.visitMaxs(-1, -1);
+			mv.visitEnd();
+		}
 
 		// newInstance
-		classBuilder.getEmitter().newMethod(Opcodes.ACC_PUBLIC, "newInstance", "([Ljava/lang/Object;)", "Llisp/common/type/StructureClass;", null, null);
-		classBuilder.getEmitter().emitNew(implName);
-		classBuilder.getEmitter().emitDup();
-		classBuilder.getEmitter().emitAload(1);
-		classBuilder.getEmitter().emitInvokespecial(implName, "<init>", "([Ljava/lang/Object;)", "V", false);
-		classBuilder.getEmitter().emitAreturn();
-		classBuilder.getEmitter().endMethod();
-		classBuilder.getEmitter().endClass();
+		{
+			final MethodVisitor mv = currentClass.getClassWriter().visitMethod(Opcodes.ACC_PUBLIC, "newInstance", "([Ljava/lang/Object;)Llisp/common/type/StructureClass;", null, null);
+			currentClass.setMethodVisitor(mv);
+			mv.visitCode();
+
+			mv.visitTypeInsn(Opcodes.NEW, implName);
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitVarInsn(Opcodes.ALOAD, 1);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, implName, "<init>", "([Ljava/lang/Object;)V", false);
+			mv.visitInsn(Opcodes.ARETURN);
+
+			mv.visitMaxs(-1, -1);
+			mv.visitEnd();
+		}
+		cw.visitEnd();
+
+		classStack.pop();
+		if (!classStack.isEmpty()) {
+			final ClassDef previousClassDef = classStack.peek();
+			classBuilder.setCurrentClass(previousClassDef);
+		}
 	}
 
 	// Making FooStructImpl$Class.
@@ -253,6 +412,15 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 	                                         final SymbolStruct<?> lispName, final SymbolStruct<?>[] fields, final Object printer,
 	                                         final DefstructSymbolStruct includedStruct, final int includedSlotNumber,
 	                                         final JavaClassBuilder classBuilder) {
+
+		final ClassDef currentClass = new ClassDef(name, "");
+		final Stack<ClassDef> classStack = classBuilder.getClassStack();
+
+		classStack.push(currentClass);
+		classBuilder.setCurrentClass(currentClass);
+		classBuilder.getClasses().addFirst(currentClass);
+
+		final ClassWriter cw = currentClass.getClassWriter();
 
 		final String implName = name + "Impl";
 		final String implFactoryName = name + "Impl$Factory";
@@ -266,141 +434,194 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 		}
 
 		// class definition
-		classBuilder.getEmitter().newClass(Opcodes.ACC_PUBLIC, implName, null, "lisp/system/StructureClassImpl", interfaces);
+		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, implName, null, "lisp/system/StructureClassImpl", interfaces);
 		// reference to the Factory and AbstractFactory classes
-		classBuilder.getEmitter().addInnerClass(implFactoryName, implName, "Factory", Opcodes.ACC_STATIC);
-		classBuilder.getEmitter().addInnerClass(abstractFactoryName, name, "AbstractFactory", Opcodes.ACC_STATIC);
+		cw.visitInnerClass(implFactoryName, implName, "Factory", Opcodes.ACC_STATIC);
+		cw.visitInnerClass(abstractFactoryName, name, "AbstractFactory", Opcodes.ACC_STATIC);
 
 		// add the static fields (trueFactory, initialize, slotCount, slotInfo, slotInitForms, and slotNames)
-		classBuilder.getEmitter().newField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "trueFactory", 'L' + implFactoryName + ';', null, null);
-		classBuilder.getEmitter().newField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "initialize", "Z", null, null);
-		classBuilder.getEmitter().newField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "slotCount", "I", null, null);
-		classBuilder.getEmitter().newField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "lispName", "Llisp/common/type/Symbol;", null, null);
-		classBuilder.getEmitter().newField(Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "slotNames", "[Llisp/common/type/Symbol;", null, null);
-		if (printer instanceof SymbolStruct) {
-			classBuilder.getEmitter().newField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "printDefstructFunction", "Llisp/common/type/Symbol;", null, null);
-		} else if (printer instanceof FunctionStruct) { // TODO: Function2
-			classBuilder.getEmitter().newField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "printDefstructFunction", "Llisp/extensions/type/Function2;", null, null);
-		} else if (printer instanceof FunctionStruct) { // TODO: Function3
-			classBuilder.getEmitter().newField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "printDefstructFunction", "Llisp/extensions/type/Function3;", null, null);
-		} else {
-			classBuilder.getEmitter().newField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "printDefstructFunction", "Ljava/lang/Object;", null, null);
+		{
+			final FieldVisitor fv = cw.visitField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "trueFactory", 'L' + implFactoryName + ';', null, null);
+			currentClass.setFieldVisitor(fv);
+			fv.visitEnd();
+		}
+
+		{
+			final FieldVisitor fv = cw.visitField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "initialize", "Z", null, null);
+			currentClass.setFieldVisitor(fv);
+			fv.visitEnd();
+		}
+
+		{
+			final FieldVisitor fv = cw.visitField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "slotCount", "I", null, null);
+			currentClass.setFieldVisitor(fv);
+			fv.visitEnd();
+		}
+
+		{
+			final FieldVisitor fv = cw.visitField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "lispName", "Llisp/common/type/Symbol;", null, null);
+			currentClass.setFieldVisitor(fv);
+			fv.visitEnd();
+		}
+
+		{
+			final FieldVisitor fv = cw.visitField(Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "slotNames", "[Llisp/common/type/Symbol;", null, null);
+			currentClass.setFieldVisitor(fv);
+			fv.visitEnd();
+		}
+
+		{
+			final FieldVisitor fv;
+			if (printer instanceof SymbolStruct) {
+				fv = cw.visitField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "printDefstructFunction", "Llisp/common/type/Symbol;", null, null);
+			} else if (printer instanceof FunctionStruct) { // TODO: Function2
+				fv = cw.visitField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "printDefstructFunction", "Llisp/extensions/type/Function2;", null, null);
+			} else if (printer instanceof FunctionStruct) { // TODO: Function3
+				fv = cw.visitField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "printDefstructFunction", "Llisp/extensions/type/Function3;", null, null);
+			} else {
+				fv = cw.visitField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "printDefstructFunction", "Ljava/lang/Object;", null, null);
+			}
+			currentClass.setFieldVisitor(fv);
+			fv.visitEnd();
 		}
 
 		// add the instance fields: field1, field2...
 		if (includedStructFactory == null) {
 			for (int i = 0; i < fields.length; i++) {
-				classBuilder.getEmitter().newField(0, "field" + (i + 1), "Ljava/lang/Object;", null, null);
+				final FieldVisitor fv = cw.visitField(0, "field" + (i + 1), "Ljava/lang/Object;", null, null);
+				currentClass.setFieldVisitor(fv);
+				fv.visitEnd();
 			}
 		} else {
 			for (int i = 0; i < fields.length; i++) {
-				classBuilder.getEmitter().newField(0, "field" + (i + 1 + includedSlotNumber), "Ljava/lang/Object;", null, null);
+				final FieldVisitor fv = cw.visitField(0, "field" + (i + 1 + includedSlotNumber), "Ljava/lang/Object;", null, null);
+				currentClass.setFieldVisitor(fv);
+				fv.visitEnd();
 			}
 		}
 
 		//<clinit>
-		classBuilder.getEmitter().newMethod(Opcodes.ACC_STATIC, "<clinit>", "()", "V", null, null);
-		classBuilder.getEmitter().emitLdc(1);
-		classBuilder.getEmitter().emitPutstatic(implName, "initialize", "Z");
-		// hold the slot count
-		classBuilder.getEmitter().emitLdc(fields.length);
-		classBuilder.getEmitter().emitPutstatic(implName, "slotCount", "I");
+		{
+			final MethodVisitor mv = currentClass.getClassWriter().visitMethod(Opcodes.ACC_STATIC, "<clinit>", "()V", null, null);
+			currentClass.setMethodVisitor(mv);
+			mv.visitCode();
 
-		// if a print option was passed in, make an instance and store it
-		if (printer instanceof SymbolStruct<?>) {
-			specialVariableCodeGenerator.generate((SymbolStruct<?>) printer, classBuilder);
-			classBuilder.getEmitter().emitPutstatic(implName, "printDefstructFunction", "Llisp/common/type/Symbol;");
-		} else if ((printer instanceof FunctionStruct) || (printer instanceof FunctionStruct)) { // TODO: Function2 || Function3
-			classBuilder.getEmitter().emitNew(printer.getClass().getName());
-			classBuilder.getEmitter().emitDup();
-			classBuilder.getEmitter().emitInvokespecial(printer.getClass().getName(), "<init>", "()", "V", false);
-			if (printer instanceof FunctionStruct) { // TODO: Function2
-				classBuilder.getEmitter().emitPutstatic(implName, "printDefstructFunction", "Llisp/extensions/type/Function2;");
-			} else if (printer instanceof FunctionStruct) { // TODO: Function3
-				classBuilder.getEmitter().emitPutstatic(implName, "printDefstructFunction", "Llisp/extensions/type/Function3;");
+			mv.visitLdcInsn(1);
+			mv.visitFieldInsn(Opcodes.PUTSTATIC, implName, "initialize", "Z");
+			// hold the slot count
+			mv.visitLdcInsn(fields.length);
+			mv.visitFieldInsn(Opcodes.PUTSTATIC, implName, "slotCount", "I");
+
+			// if a print option was passed in, make an instance and store it
+			if (printer instanceof SymbolStruct<?>) {
+				specialVariableCodeGenerator.generate((SymbolStruct<?>) printer, classBuilder);
+				mv.visitFieldInsn(Opcodes.PUTSTATIC, implName, "printDefstructFunction", "Llisp/common/type/Symbol;");
+			} else if ((printer instanceof FunctionStruct) || (printer instanceof FunctionStruct)) { // TODO: Function2 || Function3
+				mv.visitTypeInsn(Opcodes.NEW, printer.getClass().getName());
+				mv.visitInsn(Opcodes.DUP);
+				mv.visitMethodInsn(Opcodes.INVOKESPECIAL, printer.getClass().getName(), "<init>", "()V", false);
+				if (printer instanceof FunctionStruct) { // TODO: Function2
+					mv.visitFieldInsn(Opcodes.PUTSTATIC, implName, "printDefstructFunction", "Llisp/extensions/type/Function2;");
+				} else if (printer instanceof FunctionStruct) { // TODO: Function3
+					mv.visitFieldInsn(Opcodes.PUTSTATIC, implName, "printDefstructFunction", "Llisp/extensions/type/Function3;");
+				}
 			}
+
+			// hold on to the original lispName
+			specialVariableCodeGenerator.generate(lispName, classBuilder);
+			mv.visitFieldInsn(Opcodes.PUTSTATIC, implName, "lispName", "Llisp/common/type/Symbol;");
+
+			// make an instance of the nested Factory class
+			mv.visitTypeInsn(Opcodes.NEW, implFactoryName);
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, implFactoryName, "<init>", "()V", false);
+			// now stow the Factory instance into the trueFactory static final slot
+			mv.visitFieldInsn(Opcodes.PUTSTATIC, implName, "trueFactory", 'L' + implFactoryName + ';');
+
+			// static { FooStruct.factory.trueFactory = trueFactory; }
+			mv.visitFieldInsn(Opcodes.GETSTATIC, name, "factory", 'L' + abstractFactoryName + ';');
+			mv.visitFieldInsn(Opcodes.GETSTATIC, implName, "trueFactory", 'L' + implFactoryName + ';');
+			mv.visitFieldInsn(Opcodes.PUTFIELD, abstractFactoryName, "trueFactory", "Llisp/extensions/type/StructureClassFactory;");
+
+			// initialize the slotNames field with the slot names (inline)
+			mv.visitLdcInsn(fields.length);
+			mv.visitTypeInsn(Opcodes.ANEWARRAY, "lisp/common/type/Symbol");
+			for (int i = 0; i < fields.length; i++) {
+				mv.visitInsn(Opcodes.DUP);
+				mv.visitLdcInsn(i);
+				specialVariableCodeGenerator.generate(fields[i], classBuilder);
+				mv.visitInsn(Opcodes.AASTORE);
+			}
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitFieldInsn(Opcodes.PUTSTATIC, implName, "slotNames", "[Llisp/common/type/Symbol;");
+
+			// put the same array of slot names into the type symbol
+			symbolCodeGenerator.generate(lispName, classBuilder);
+			mv.visitTypeInsn(Opcodes.CHECKCAST, "lisp/system/SymbolImpl");
+			mv.visitInsn(Opcodes.SWAP);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "lisp/system/SymbolImpl", "setDefstructSlotNames", "([Llisp/common/type/Symbol;)V", false);
+			mv.visitInsn(Opcodes.RETURN);
+
+			mv.visitMaxs(-1, -1);
+			mv.visitEnd();
 		}
-
-		// hold on to the original lispName
-		specialVariableCodeGenerator.generate(lispName, classBuilder);
-		classBuilder.getEmitter().emitPutstatic(implName, "lispName", "Llisp/common/type/Symbol;");
-
-		// make an instance of the nested Factory class
-		classBuilder.getEmitter().emitNew(implFactoryName);
-		classBuilder.getEmitter().emitDup();
-		classBuilder.getEmitter().emitInvokespecial(implFactoryName, "<init>", "()", "V", false);
-		// now stow the Factory instance into the trueFactory static final slot
-		classBuilder.getEmitter().emitPutstatic(implName, "trueFactory", 'L' + implFactoryName + ';');
-
-		// static { FooStruct.factory.trueFactory = trueFactory; }
-		classBuilder.getEmitter().emitGetstatic(name, "factory", 'L' + abstractFactoryName + ';');
-		classBuilder.getEmitter().emitGetstatic(implName, "trueFactory", 'L' + implFactoryName + ';');
-		classBuilder.getEmitter().emitPutfield(abstractFactoryName, "trueFactory", "Llisp/extensions/type/StructureClassFactory;");
-
-		// initialize the slotNames field with the slot names (inline)
-		classBuilder.getEmitter().emitLdc(fields.length);
-		classBuilder.getEmitter().emitAnewarray("lisp/common/type/Symbol");
-		for (int i = 0; i < fields.length; i++) {
-			classBuilder.getEmitter().emitDup();
-			classBuilder.getEmitter().emitLdc(i);
-			specialVariableCodeGenerator.generate(fields[i], classBuilder);
-			classBuilder.getEmitter().emitAastore();
-		}
-		classBuilder.getEmitter().emitDup();
-		classBuilder.getEmitter().emitPutstatic(implName, "slotNames", "[Llisp/common/type/Symbol;");
-
-		// put the same array of slot names into the type symbol
-		symbolCodeGenerator.generate(lispName, classBuilder);
-		classBuilder.getEmitter().emitCheckcast("lisp/system/SymbolImpl");
-		classBuilder.getEmitter().emitSwap();
-		classBuilder.getEmitter().emitInvokevirtual("lisp/system/SymbolImpl", "setDefstructSlotNames", "([Llisp/common/type/Symbol;)", "V", false);
-		classBuilder.getEmitter().emitReturn();
-		classBuilder.getEmitter().endMethod();
 		// struct impl class initialized
 
 		//<init> for a non-included instance
-		if (includedStructFactory == null) {
-			//build FooStructImpl constructor here
-			classBuilder.getEmitter().newMethod(Opcodes.ACC_PUBLIC, "<init>", "([Ljava/lang/Object;)", "V", null, null);
-			classBuilder.getEmitter().emitAload(0);
-			classBuilder.getEmitter().emitAconst_null();      // not a Java parent reference
-			classBuilder.getEmitter().emitInvokespecial("lisp/system/StructureClassImpl", "<init>", "(Llisp/system/StructureClassImpl;)", "V", false);
-			for (int i = 0; i < fields.length; i++) {
-				classBuilder.getEmitter().emitAload(0);
-				classBuilder.getEmitter().emitAload(1);
-				classBuilder.getEmitter().emitLdc(i);
-				classBuilder.getEmitter().emitAaload();
-				classBuilder.getEmitter().emitPutfield(implName, "field" + (i + 1), "Ljava/lang/Object;");
-			}
-			classBuilder.getEmitter().emitReturn();
-			classBuilder.getEmitter().endMethod();
+		{
+			if (includedStructFactory == null) {
+				final MethodVisitor mv = currentClass.getClassWriter().visitMethod(Opcodes.ACC_PUBLIC, "<init>", "([Ljava/lang/Object;)V", null, null);
+				currentClass.setMethodVisitor(mv);
+				mv.visitCode();
 
-			// <init> for an included instance
-		} else {
-			//build BarStructImpl constructor here
-			classBuilder.getEmitter().newMethod(Opcodes.ACC_PUBLIC, "<init>", "([Ljava/lang/Object;)", "V", null, null);
-			classBuilder.getEmitter().emitAload(0);     // this
-			classBuilder.getEmitter().emitAload(1);     // args array
-			// make the parent impl
-			classBuilder.getEmitter().emitInvokestatic(includedStructFactory, "newInstance", "([Ljava/lang/Object;)", "Llisp/common/type/StructureClass;", false);
-			// parent struct, this
-			classBuilder.getEmitter().emitCheckcast("lisp/system/StructureClassImpl"); // the parent is ok
-			classBuilder.getEmitter().emitInvokespecial("lisp/system/StructureClassImpl", "<init>", "(Llisp/system/StructureClassImpl;)", "V", false);
-			// the impl has created a parent included impl and stashed it into the instance
+				//build FooStructImpl constructor here
+				mv.visitVarInsn(Opcodes.ALOAD, 0);
+				mv.visitInsn(Opcodes.ACONST_NULL);      // not a Java parent reference
+				mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "lisp/system/StructureClassImpl", "<init>", "(Llisp/system/StructureClassImpl;)V", false);
+				for (int i = 0; i < fields.length; i++) {
+					mv.visitVarInsn(Opcodes.ALOAD, 0);
+					mv.visitVarInsn(Opcodes.ALOAD, 1);
+					mv.visitLdcInsn(i);
+					mv.visitInsn(Opcodes.AALOAD);
+					mv.visitFieldInsn(Opcodes.PUTFIELD, implName, "field" + (i + 1), "Ljava/lang/Object;");
+				}
+				mv.visitInsn(Opcodes.RETURN);
 
-			// Now it gets interesting...
-			// The parent(s) have claimed some of the slots. We have to find out which is now ours.
-			// We do this by asking the parents how many have they used. We just then take the
-			// remaining slots (recursion is involved...).
-			for (int i = 0; i < fields.length; i++) {
-				classBuilder.getEmitter().emitAload(0);
-				classBuilder.getEmitter().emitAload(1);
-				classBuilder.getEmitter().emitLdc(i + includedSlotNumber);
-				classBuilder.getEmitter().emitAaload();
-				classBuilder.getEmitter().emitPutfield(implName, "field" + (i + 1 + includedSlotNumber), "Ljava/lang/Object;");
+				mv.visitMaxs(-1, -1);
+				mv.visitEnd();
+
+				// <init> for an included instance
+			} else {
+				final MethodVisitor mv = currentClass.getClassWriter().visitMethod(Opcodes.ACC_PUBLIC, "<init>", "([Ljava/lang/Object;)V", null, null);
+				currentClass.setMethodVisitor(mv);
+				mv.visitCode();
+
+				//build BarStructImpl constructor here
+				mv.visitVarInsn(Opcodes.ALOAD, 0);     // this
+				mv.visitVarInsn(Opcodes.ALOAD, 1);     // args array
+				// make the parent impl
+				mv.visitMethodInsn(Opcodes.INVOKESTATIC, includedStructFactory, "newInstance", "([Ljava/lang/Object;)Llisp/common/type/StructureClass;", false);
+				// parent struct, this
+				mv.visitTypeInsn(Opcodes.CHECKCAST, "lisp/system/StructureClassImpl"); // the parent is ok
+				mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "lisp/system/StructureClassImpl", "<init>", "(Llisp/system/StructureClassImpl;)V", false);
+				// the impl has created a parent included impl and stashed it into the instance
+
+				// Now it gets interesting...
+				// The parent(s) have claimed some of the slots. We have to find out which is now ours.
+				// We do this by asking the parents how many have they used. We just then take the
+				// remaining slots (recursion is involved...).
+				for (int i = 0; i < fields.length; i++) {
+					mv.visitVarInsn(Opcodes.ALOAD, 0);
+					mv.visitVarInsn(Opcodes.ALOAD, 1);
+					mv.visitLdcInsn(i + includedSlotNumber);
+					mv.visitInsn(Opcodes.AALOAD);
+					mv.visitFieldInsn(Opcodes.PUTFIELD, implName, "field" + (i + 1 + includedSlotNumber), "Ljava/lang/Object;");
+				}
+				mv.visitInsn(Opcodes.RETURN);
+
+				mv.visitMaxs(-1, -1);
+				mv.visitEnd();
 			}
-			classBuilder.getEmitter().emitReturn();
-			classBuilder.getEmitter().endMethod();
 		}
 
 		///////////////////////////
@@ -408,150 +629,168 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 		///////////////////////////
 
 		// getSlot(Symbol sym) method
-		classBuilder.getEmitter().newMethod(Opcodes.ACC_PUBLIC, "getSlot", "(Llisp/common/type/Symbol;)", "Ljava/lang/Object;", null, null);
-		classBuilder.getEmitter().emitAload(0);
-		classBuilder.getEmitter().emitAload(1);
-		classBuilder.getEmitter().emitGetstatic(implName, "slotNames", "[Llisp/common/type/Symbol;");
-		classBuilder.getEmitter().emitInvokevirtual(implName, "getSlotIndex", "(Llisp/common/type/Symbol;[Llisp/common/type/Symbol;)", "I", false);
+		{
+			final MethodVisitor mv = currentClass.getClassWriter().visitMethod(Opcodes.ACC_PUBLIC, "getSlot", "(Llisp/common/type/Symbol;)Ljava/lang/Object;", null, null);
+			currentClass.setMethodVisitor(mv);
+			mv.visitCode();
 
-		// now implement the switch code that gets to the right field
-		final Label getDefLabel = new Label();
-		final Label[] getHandlerBlocks = new Label[fields.length];
-		final int[] getKeys = new int[fields.length + 1];
-		for (int i = 0; i < getKeys.length; i++) {
-			getKeys[i] = i;
-		}
-		for (int i = 0; i < getHandlerBlocks.length; i++) {
-			getHandlerBlocks[i] = new Label();
-		}
-		classBuilder.getEmitter().emitLookupswitch(getDefLabel, getKeys, getHandlerBlocks);
-		if (includedStructFactory == null) {
-			for (int i = 0; i < getHandlerBlocks.length; i++) {
-				classBuilder.getEmitter().visitMethodLabel(getHandlerBlocks[i]);
-				classBuilder.getEmitter().emitAload(0);
-				classBuilder.getEmitter().emitGetfield(implName, "field" + (i + 1), "Ljava/lang/Object;");
-				classBuilder.getEmitter().emitAreturn();
+			mv.visitVarInsn(Opcodes.ALOAD, 0);
+			mv.visitVarInsn(Opcodes.ALOAD, 1);
+			mv.visitFieldInsn(Opcodes.GETSTATIC, implName, "slotNames", "[Llisp/common/type/Symbol;");
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, implName, "getSlotIndex", "(Llisp/common/type/Symbol;[Llisp/common/type/Symbol;)I", false);
+
+			// now implement the switch code that gets to the right field
+			final Label getDefLabel = new Label();
+			final Label[] getHandlerBlocks = new Label[fields.length];
+			final int[] getKeys = new int[fields.length + 1];
+			for (int i = 0; i < getKeys.length; i++) {
+				getKeys[i] = i;
 			}
-		} else {
 			for (int i = 0; i < getHandlerBlocks.length; i++) {
-				classBuilder.getEmitter().visitMethodLabel(getHandlerBlocks[i]);
-				classBuilder.getEmitter().emitAload(0);
-				classBuilder.getEmitter().emitGetfield(implName, "field" + (i + 1 + includedSlotNumber), "Ljava/lang/Object;");
-				classBuilder.getEmitter().emitAreturn();
+				getHandlerBlocks[i] = new Label();
 			}
+			mv.visitLookupSwitchInsn(getDefLabel, getKeys, getHandlerBlocks);
+			if (includedStructFactory == null) {
+				for (int i = 0; i < getHandlerBlocks.length; i++) {
+					mv.visitLabel(getHandlerBlocks[i]);
+					mv.visitVarInsn(Opcodes.ALOAD, 0);
+					mv.visitFieldInsn(Opcodes.GETFIELD, implName, "field" + (i + 1), "Ljava/lang/Object;");
+					mv.visitInsn(Opcodes.ARETURN);
+				}
+			} else {
+				for (int i = 0; i < getHandlerBlocks.length; i++) {
+					mv.visitLabel(getHandlerBlocks[i]);
+					mv.visitVarInsn(Opcodes.ALOAD, 0);
+					mv.visitFieldInsn(Opcodes.GETFIELD, implName, "field" + (i + 1 + includedSlotNumber), "Ljava/lang/Object;");
+					mv.visitInsn(Opcodes.ARETURN);
+				}
+			}
+			mv.visitLabel(getDefLabel);
+
+			// the default choices
+			// If this has an included component, it is delegated to the parent
+			// If this is the top of a chain (or there were an included), it throws an exception
+			final Label excpLabel = new Label();
+
+			// Here is the delegation code
+			mv.visitVarInsn(Opcodes.ALOAD, 0);  // this
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, implName, "getParent", "()Llisp/system/StructureClassImpl;", false);
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitJumpInsn(Opcodes.IFNULL, excpLabel);
+			// call the superclass
+			mv.visitVarInsn(Opcodes.ALOAD, 1);  // the symbol
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "lisp/system/StructureClassImpl", "getSlot", "(Llisp/common/type/Symbol;Ljava/lang/Object;", false);
+			mv.visitInsn(Opcodes.ARETURN);
+
+			// Here is the exception code
+			mv.visitLabel(excpLabel);
+			mv.visitInsn(Opcodes.POP);
+			mv.visitTypeInsn(Opcodes.NEW, "lisp/common/exceptions/FunctionException");
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitTypeInsn(Opcodes.NEW, "java/lang/StringBuilder");
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/StringBuilder", "<init>", "()V", false);
+			mv.visitLdcInsn("Slot  ");
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
+			mv.visitVarInsn(Opcodes.ALOAD, 1);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/Object;)Ljava/lang/StringBuilder;", false);
+			mv.visitLdcInsn(" not Found");
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/StringBuilder", "toString", "()Ljava/lang/String;", false);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "lisp/common/exceptions/FunctionException", "<init>", "(Ljava/lang/String;)V", false);
+			mv.visitInsn(Opcodes.ATHROW);
+
+			mv.visitMaxs(-1, -1);
+			mv.visitEnd();
 		}
-		classBuilder.getEmitter().visitMethodLabel(getDefLabel);
-
-		// the default choices
-		// If this has an included component, it is delegated to the parent
-		// If this is the top of a chain (or there were an included), it throws an exception
-		final Label excpLabel = new Label();
-
-		// Here is the delegation code
-		classBuilder.getEmitter().emitAload(0);  // this
-		classBuilder.getEmitter().emitInvokevirtual(implName, "getParent", "()", "Llisp/system/StructureClassImpl;", false);
-		classBuilder.getEmitter().emitDup();
-		classBuilder.getEmitter().emitIfnull(excpLabel);
-		// call the superclass
-		classBuilder.getEmitter().emitAload(1);  // the symbol
-		classBuilder.getEmitter().emitInvokevirtual("lisp/system/StructureClassImpl", "getSlot", "(Llisp/common/type/Symbol;", "Ljava/lang/Object;", false);
-		classBuilder.getEmitter().emitAreturn();
-
-		// Here is the exception code
-		classBuilder.getEmitter().visitMethodLabel(excpLabel);
-		classBuilder.getEmitter().emitPop();
-		classBuilder.getEmitter().emitNew("lisp/common/exceptions/FunctionException");
-		classBuilder.getEmitter().emitDup();
-		classBuilder.getEmitter().emitNew("java/lang/StringBuilder");
-		classBuilder.getEmitter().emitDup();
-		classBuilder.getEmitter().emitInvokespecial("java/lang/StringBuilder", "<init>", "()", "V", false);
-		classBuilder.getEmitter().emitLdc("Slot  ");
-		classBuilder.getEmitter().emitInvokevirtual("java/lang/StringBuilder", "append", "(Ljava/lang/String;)", "Ljava/lang/StringBuilder;", false);
-		classBuilder.getEmitter().emitAload(1);
-		classBuilder.getEmitter().emitInvokevirtual("java/lang/StringBuilder", "append", "(Ljava/lang/Object;)", "Ljava/lang/StringBuilder;", false);
-		classBuilder.getEmitter().emitLdc(" not Found");
-		classBuilder.getEmitter().emitInvokevirtual("java/lang/StringBuilder", "append", "(Ljava/lang/String;)", "Ljava/lang/StringBuilder;", false);
-		classBuilder.getEmitter().emitInvokevirtual("java/lang/StringBuilder", "toString", "()", "Ljava/lang/String;", false);
-		classBuilder.getEmitter().emitInvokespecial("lisp/common/exceptions/FunctionException", "<init>", "(Ljava/lang/String;)", "V", false);
-		classBuilder.getEmitter().emitAthrow();
-
-		classBuilder.getEmitter().endMethod();
 
 		///////////////////////////
 		// SET-SLOT METHOD CODE ///
 		///////////////////////////
 
 		//setSlot method
-		classBuilder.getEmitter().newMethod(Opcodes.ACC_PUBLIC, "setSlot", "(Llisp/common/type/Symbol;Ljava/lang/Object;)", "V", null, null);
-		classBuilder.getEmitter().emitAload(0);
-		classBuilder.getEmitter().emitAload(1);
-		classBuilder.getEmitter().emitGetstatic(implName, "slotNames", "[Llisp/common/type/Symbol;");
-		classBuilder.getEmitter().emitInvokevirtual(implName, "getSlotIndex", "(Llisp/common/type/Symbol;[Llisp/common/type/Symbol;)", "I", false);
+		{
+			final MethodVisitor mv = currentClass.getClassWriter().visitMethod(Opcodes.ACC_PUBLIC, "setSlot", "(Llisp/common/type/Symbol;Ljava/lang/Object;)V", null, null);
+			currentClass.setMethodVisitor(mv);
+			mv.visitCode();
 
-		final Label setDefLabel = new Label();
-		final Label[] setHandlerBlocks = new Label[fields.length];
-		final int[] setKeys = new int[fields.length + 1];
-		for (int i = 0; i < setKeys.length; i++) {
-			setKeys[i] = i;
-		}
-		for (int i = 0; i < setHandlerBlocks.length; i++) {
-			setHandlerBlocks[i] = new Label();
-		}
-		classBuilder.getEmitter().emitLookupswitch(setDefLabel, setKeys, setHandlerBlocks);
-		if (includedStructFactory == null) {
-			for (int i = 0; i < setHandlerBlocks.length; i++) {
-				classBuilder.getEmitter().visitMethodLabel(setHandlerBlocks[i]);
-				classBuilder.getEmitter().emitAload(0); // this
-				classBuilder.getEmitter().emitAload(2); // the new value
-				classBuilder.getEmitter().emitPutfield(implName, "field" + (i + 1), "Ljava/lang/Object;");
-				classBuilder.getEmitter().emitReturn();
+			mv.visitVarInsn(Opcodes.ALOAD, 0);
+			mv.visitVarInsn(Opcodes.ALOAD, 1);
+			mv.visitFieldInsn(Opcodes.GETSTATIC, implName, "slotNames", "[Llisp/common/type/Symbol;");
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, implName, "getSlotIndex", "(Llisp/common/type/Symbol;[Llisp/common/type/Symbol;)I", false);
+
+			final Label setDefLabel = new Label();
+			final Label[] setHandlerBlocks = new Label[fields.length];
+			final int[] setKeys = new int[fields.length + 1];
+			for (int i = 0; i < setKeys.length; i++) {
+				setKeys[i] = i;
 			}
-		} else {
 			for (int i = 0; i < setHandlerBlocks.length; i++) {
-				classBuilder.getEmitter().visitMethodLabel(setHandlerBlocks[i]);
-				classBuilder.getEmitter().emitAload(0); // this
-				classBuilder.getEmitter().emitAload(2); // the new value
-				classBuilder.getEmitter().emitPutfield(implName, "field" + (i + 1 + includedSlotNumber), "Ljava/lang/Object;");
-				classBuilder.getEmitter().emitReturn();
+				setHandlerBlocks[i] = new Label();
 			}
+			mv.visitLookupSwitchInsn(setDefLabel, setKeys, setHandlerBlocks);
+			if (includedStructFactory == null) {
+				for (int i = 0; i < setHandlerBlocks.length; i++) {
+					mv.visitLabel(setHandlerBlocks[i]);
+					mv.visitVarInsn(Opcodes.ALOAD, 0); // this
+					mv.visitVarInsn(Opcodes.ALOAD, 2); // the new value
+					mv.visitFieldInsn(Opcodes.PUTFIELD, implName, "field" + (i + 1), "Ljava/lang/Object;");
+					mv.visitInsn(Opcodes.RETURN);
+				}
+			} else {
+				for (int i = 0; i < setHandlerBlocks.length; i++) {
+					mv.visitLabel(setHandlerBlocks[i]);
+					mv.visitVarInsn(Opcodes.ALOAD, 0); // this
+					mv.visitVarInsn(Opcodes.ALOAD, 2); // the new value
+					mv.visitFieldInsn(Opcodes.PUTFIELD, implName, "field" + (i + 1 + includedSlotNumber), "Ljava/lang/Object;");
+					mv.visitInsn(Opcodes.RETURN);
+				}
+			}
+			mv.visitLabel(setDefLabel);
+
+			final Label exDefLabel = new Label();
+
+			// Here is the delegation code
+			mv.visitVarInsn(Opcodes.ALOAD, 0);  // this
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, implName, "getParent", "()Llisp/system/StructureClassImpl;", false);
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitJumpInsn(Opcodes.IFNULL, exDefLabel);
+			// call the superclass
+			mv.visitVarInsn(Opcodes.ALOAD, 1);  // the symbol
+			mv.visitVarInsn(Opcodes.ALOAD, 2); // the new value
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "lisp/system/StructureClassImpl", "setSlot", "(Llisp/common/type/Symbol;Ljava/lang/Object;)V", false);
+			mv.visitInsn(Opcodes.RETURN);
+
+			// The exception if it can't find the slot
+			mv.visitLabel(exDefLabel);
+			mv.visitInsn(Opcodes.POP);
+			mv.visitTypeInsn(Opcodes.NEW, "lisp/common/exceptions/FunctionException");
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitTypeInsn(Opcodes.NEW, "java/lang/StringBuilder");
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/StringBuilder", "<init>", "()V", false);
+			mv.visitLdcInsn("Slot  ");
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
+			mv.visitVarInsn(Opcodes.ALOAD, 1);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/Object;)Ljava/lang/StringBuilder;", false);
+			mv.visitLdcInsn(" not Found");
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;", false);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/StringBuilder", "toString", "()Ljava/lang/String;", false);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "lisp/common/exceptions/FunctionException", "<init>", "(Ljava/lang/String;)V", false);
+			mv.visitInsn(Opcodes.ATHROW);
+
+			// End of the method
+			mv.visitMaxs(-1, -1);
+			mv.visitEnd();
 		}
-		classBuilder.getEmitter().visitMethodLabel(setDefLabel);
-
-		final Label exDefLabel = new Label();
-
-		// Here is the delegation code
-		classBuilder.getEmitter().emitAload(0);  // this
-		classBuilder.getEmitter().emitInvokevirtual(implName, "getParent", "()", "Llisp/system/StructureClassImpl;", false);
-		classBuilder.getEmitter().emitDup();
-		classBuilder.getEmitter().emitIfnull(exDefLabel);
-		// call the superclass
-		classBuilder.getEmitter().emitAload(1);  // the symbol
-		classBuilder.getEmitter().emitAload(2); // the new value
-		classBuilder.getEmitter().emitInvokevirtual("lisp/system/StructureClassImpl", "setSlot", "(Llisp/common/type/Symbol;Ljava/lang/Object;)", "V", false);
-		classBuilder.getEmitter().emitReturn();
-
-		// The exception if it can't find the slot
-		classBuilder.getEmitter().visitMethodLabel(exDefLabel);
-		classBuilder.getEmitter().emitPop();
-		classBuilder.getEmitter().emitNew("lisp/common/exceptions/FunctionException");
-		classBuilder.getEmitter().emitDup();
-		classBuilder.getEmitter().emitNew("java/lang/StringBuilder");
-		classBuilder.getEmitter().emitDup();
-		classBuilder.getEmitter().emitInvokespecial("java/lang/StringBuilder", "<init>", "()", "V", false);
-		classBuilder.getEmitter().emitLdc("Slot  ");
-		classBuilder.getEmitter().emitInvokevirtual("java/lang/StringBuilder", "append", "(Ljava/lang/String;)", "Ljava/lang/StringBuilder;", false);
-		classBuilder.getEmitter().emitAload(1);
-		classBuilder.getEmitter().emitInvokevirtual("java/lang/StringBuilder", "append", "(Ljava/lang/Object;)", "Ljava/lang/StringBuilder;", false);
-		classBuilder.getEmitter().emitLdc(" not Found");
-		classBuilder.getEmitter().emitInvokevirtual("java/lang/StringBuilder", "append", "(Ljava/lang/String;)", "Ljava/lang/StringBuilder;", false);
-		classBuilder.getEmitter().emitInvokevirtual("java/lang/StringBuilder", "toString", "()", "Ljava/lang/String;", false);
-		classBuilder.getEmitter().emitInvokespecial("lisp/common/exceptions/FunctionException", "<init>", "(Ljava/lang/String;)", "V", false);
-		classBuilder.getEmitter().emitAthrow();
-
-		// End of the method
-		classBuilder.getEmitter().endMethod();
 
 		// All done here.
-		classBuilder.getEmitter().endClass();
+		cw.visitEnd();
+
+		classStack.pop();
+		if (!classStack.isEmpty()) {
+			final ClassDef previousClassDef = classStack.peek();
+			classBuilder.setCurrentClass(previousClassDef);
+		}
 	}
 }

@@ -3,6 +3,7 @@ package jcl.compiler.real.icg.generator.specialoperator.old.special;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Stack;
 
 import jcl.compiler.real.environment.Closure;
 import jcl.compiler.real.environment.Environment;
@@ -25,7 +26,11 @@ import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.SymbolStruct;
+import org.objectweb.asm.AnnotationVisitor;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Label;
+import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 //@Component
@@ -34,13 +39,13 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	//TODO when checking bindings, in handling the init-forms, start with the just previous
 	// bindings in the lambda list. Differs from how LET handles it
 
-//	@Autowired
+	//	@Autowired
 	private ClosureCodeGenerator closureCodeGenerator;
 
-//	@Autowired
+	//	@Autowired
 	private SpecialVariableCodeGenerator specialVariableCodeGenerator;
 
-//	@Autowired
+	//	@Autowired
 	private FormGenerator formGenerator;
 
 	@Override
@@ -49,8 +54,6 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	}
 
 	private void genCodeLambdaInContext(final LambdaStruct lambdaStruct, final boolean inStaticContext, final JavaClassBuilder classBuilder) {
-
-		final ClassDef currentClass = classBuilder.getCurrentClass();
 
 		ListStruct javaSymbolName = NullStruct.INSTANCE;
 		ListStruct lispSymbolName = NullStruct.INSTANCE;
@@ -71,12 +74,21 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 		final int numRequiredParams = countRequiredParams(bindingSetBody);
 
+		final ClassDef currentClass = new ClassDef(className, "");
+		final Stack<ClassDef> classStack = classBuilder.getClassStack();
+
+		classStack.push(currentClass);
+		classBuilder.setCurrentClass(currentClass);
+		classBuilder.getClasses().addFirst(currentClass);
+
+		final ClassWriter cw = currentClass.getClassWriter();
+
 		// compile the new function class
-		classBuilder.getEmitter().newClass(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL, className, null, "lisp/common/function/FunctionBaseClass", null);
+		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL, className, null, "lisp/common/function/FunctionBaseClass", null);
 
 		// if this is from a compile-file, add the source file name
 		final String fileName = classBuilder.getSourceFile().getRest().getFirst().toString();
-		classBuilder.getEmitter().visitClassSource(fileName, null);
+		cw.visitSource(fileName, null);
 
 		String docString = lambdaStruct.getDocString().getAsJavaString();
 
@@ -85,18 +97,26 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			docString = documentation.getRest().getFirst().toString();
 		}
 
-		classBuilder.getEmitter().newAnnotation("Llisp/extensions/type/SourceFileAnnotation;", true);
-		classBuilder.getEmitter().visitAnnotationValue("dateTime", new Date().toString());
-		if (classBuilder.getSourceFile().equals(NullStruct.INSTANCE)) {
-			classBuilder.getEmitter().visitAnnotationValue("sourceFile", "#<in-memory>");
-		} else {
-			classBuilder.getEmitter().visitAnnotationValue("sourceFile", fileName);
+		{
+			final AnnotationVisitor av = cw.visitAnnotation("Llisp/extensions/type/SourceFileAnnotation;", true);
+			currentClass.setAnnotationVisitor(av);
+			av.visit("dateTime", new Date().toString());
+			if (classBuilder.getSourceFile().equals(NullStruct.INSTANCE)) {
+				av.visit("sourceFile", "#<in-memory>");
+			} else {
+				av.visit("sourceFile", fileName);
+			}
+			av.visitEnd();
 		}
-		classBuilder.getEmitter().endAnnotation();
 
 		// add the static initialization
 		// Need to separate the static init and any static methods and fields in here
-		classBuilder.getEmitter().newField(Opcodes.ACC_PUBLIC + Opcodes.ACC_STATIC + Opcodes.ACC_FINAL, "SYMBOL", "Llisp/common/type/Symbol;", null, null);
+		{
+			final FieldVisitor fv = cw.visitField(Opcodes.ACC_PUBLIC + Opcodes.ACC_STATIC + Opcodes.ACC_FINAL, "SYMBOL", "Llisp/common/type/Symbol;", null, null);
+			currentClass.setFieldVisitor(fv);
+
+			fv.visitEnd();
+		}
 
 		// constructor();
 		doConstructor(lambdaStruct, className, classBuilder);
@@ -110,60 +130,74 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 //            doCheckArguments(numRequiredParams);
 
 			//---------> funcall <-----------
-			// funcall method
 			String funcallParams = "";
 			for (final Binding<?> aBindingSetBody1 : bindingSetBody) {
 				funcallParams += "Ljava/lang/Object;";
 			}
-			classBuilder.getEmitter().newMethod(Opcodes.ACC_PUBLIC, "funcall", '(' + funcallParams + ')', "Ljava/lang/Object;", null, null);
+			// funcall method
+			{
+				final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC, "funcall", '(' + funcallParams + ')' + "Ljava/lang/Object;", null, null);
+				currentClass.setMethodVisitor(mv);
+				mv.visitCode();
 
-			// allocate and fill a closure if there is one defined
-			closureCodeGenerator.generate(classBuilder.getBindingEnvironment(), classBuilder);
+				// allocate and fill a closure if there is one defined
+				closureCodeGenerator.generate(classBuilder.getBindingEnvironment(), classBuilder);
 
-			// set up the free radicals - 1960's!!
-			doFreeVariableSetup(classBuilder);
+				// set up the free radicals - 1960's!!
+				doFreeVariableSetup(classBuilder, mv);
 
-			// Beginning gen code for the body
-			ListStruct funcallList = null;
+				// Beginning gen code for the body
+				ListStruct funcallList = null;
 
-			while (!NullStruct.INSTANCE.equals(funcallList)) {
-				formGenerator.generate(funcallList.getFirst(), classBuilder);
-				funcallList = funcallList.getRest();
-				if (!NullStruct.INSTANCE.equals(funcallList)) {
-					classBuilder.getEmitter().emitPop();
+				while (!NullStruct.INSTANCE.equals(funcallList)) {
+					formGenerator.generate(funcallList.getFirst(), classBuilder);
+					funcallList = funcallList.getRest();
+					if (!NullStruct.INSTANCE.equals(funcallList)) {
+						mv.visitInsn(Opcodes.POP);
+					}
 				}
-			}
-			// pop the closure if there was a new one
-			undoClosureSetup(classBuilder.getBindingEnvironment(), classBuilder);
+				// pop the closure if there was a new one
+				undoClosureSetup(classBuilder.getBindingEnvironment(), mv);
 
-			// now we'return done..
-			classBuilder.getEmitter().emitAreturn();
-			classBuilder.getEmitter().endMethod();
+				// now we'return done..
+				mv.visitInsn(Opcodes.ARETURN);
+
+				mv.visitMaxs(-1, -1);
+				mv.visitEnd();
+			}
 
 			//------> apply <----------
 
 			// Set up the apply(lisp.common.type.ListStruct) method
-			classBuilder.getEmitter().newMethod(Opcodes.ACC_PUBLIC, "apply", "(Llisp/common/type/ListStruct;)", "Ljava/lang/Object;", null, null);
-			// Generate the JVM code to turn the list into an array. Then call the apply(Object[]) method
-			// Local 1 is the list argument
-			classBuilder.getEmitter().emitAload(0); // this
+			{
+				final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC, "apply", "(Llisp/common/type/ListStruct;)Ljava/lang/Object;", null, null);
+				currentClass.setMethodVisitor(mv);
+				mv.visitCode();
 
-			// Now unfurl the arg list onto the stack and call the funcall method
-			//...
-			// Roll out the number of params defined for the fn - numParams
-			for (final Binding<?> aBindingSetBody : bindingSetBody) {
-				classBuilder.getEmitter().emitAload(1); // get the current value of arg list
-				// get the car of the list
-				classBuilder.getEmitter().emitInvokeinterface("lisp/common/type/ListStruct", "getCar", "()", "Ljava/lang/Object;", true);
-				// get the cdr
-				classBuilder.getEmitter().emitAload(1); // get the current value of arg list
-				classBuilder.getEmitter().emitInvokeinterface("lisp/common/type/ListStruct", "rest", "()", "Llisp/common/type/ListStruct;", true);
-				classBuilder.getEmitter().emitAstore(1);
-			}
+				// Generate the JVM code to turn the list into an array. Then call the apply(Object[]) method
+				// Local 1 is the list argument
+				mv.visitVarInsn(Opcodes.ALOAD, 0); // this
+
+				// Now unfurl the arg list onto the stack and call the funcall method
+				//...
+				// Roll out the number of params defined for the fn - numParams
+				for (final Binding<?> aBindingSetBody : bindingSetBody) {
+					mv.visitVarInsn(Opcodes.ALOAD, 1); // get the current value of arg list
+					// get the car of the list
+					mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "lisp/common/type/ListStruct", "getCar", "()Ljava/lang/Object;", true);
+					// get the cdr
+					mv.visitVarInsn(Opcodes.ALOAD, 1); // get the current value of arg list
+					mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "lisp/common/type/ListStruct", "rest", "()Llisp/common/type/ListStruct;", true);
+					mv.visitVarInsn(Opcodes.ASTORE, 1);
+				}
 //*****
-			classBuilder.getEmitter().emitInvokevirtual(className, "funcall", '(' + funcallParams + ')', "Ljava/lang/Object;", false);
-			classBuilder.getEmitter().emitAreturn();
-			classBuilder.getEmitter().endMethod();
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, className, "funcall", '(' + funcallParams + ')' + "Ljava/lang/Object;", false);
+
+				mv.visitInsn(Opcodes.ARETURN);
+
+				mv.visitMaxs(-1, -1);
+				mv.visitEnd();
+			}
 
 			// put the static components into the class definition
 			// putting it here gives us the ability to put the load-time-value forms
@@ -175,31 +209,41 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			// 2b. again
 			doStaticInit(className, lispName, classBuilder);
 
-			classBuilder.getEmitter().endClass();
+			cw.visitEnd();
+
+			classStack.pop();
+			if (!classStack.isEmpty()) {
+				final ClassDef previousClassDef = classStack.peek();
+				classBuilder.setCurrentClass(previousClassDef);
+			}
 		} finally {
 			classBuilder.getBindingStack().pop();
 		}
 
-		// ** finished compiling the new lambda class **
-		// Now make an instance and leave it on the stack
-		if (!classBuilder.getEmitter().isClassStackEmpty()) {
-			// push new function object onto stack
-			classBuilder.getEmitter().emitNew(className);
-			classBuilder.getEmitter().emitDup();
-			// call constructor
-			if (inStaticContext) {
-				// here we have to init the instance but there's no outer context
-				// so we put a null on the stack since the load-time-value runs in the
-				// global environment
-				classBuilder.getEmitter().emitAconst_null();
-			} else {
-				// get whatever is on top of the closure stack
-				// get this
-				classBuilder.getEmitter().emitAload(0);
-				// get the closure stack
-				classBuilder.getEmitter().emitInvokespecial("lisp/common/function/FunctionBaseClass", "getClosure", "()", "Llisp/extensions/type/Closure;", false);
+		{
+			// ** finished compiling the new lambda class **
+			// Now make an instance and leave it on the stack
+			if (!classStack.isEmpty()) {
+				final MethodVisitor mv = currentClass.getMethodVisitor();
+
+				// push new function object onto stack
+				mv.visitTypeInsn(Opcodes.NEW, className);
+				mv.visitInsn(Opcodes.DUP);
+				// call constructor
+				if (inStaticContext) {
+					// here we have to init the instance but there's no outer context
+					// so we put a null on the stack since the load-time-value runs in the
+					// global environment
+					mv.visitInsn(Opcodes.ACONST_NULL);
+				} else {
+					// get whatever is on top of the closure stack
+					// get this
+					mv.visitVarInsn(Opcodes.ALOAD, 0);
+					// get the closure stack
+					mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "lisp/common/function/FunctionBaseClass", "getClosure", "()Llisp/extensions/type/Closure;", false);
+				}
+				mv.visitMethodInsn(Opcodes.INVOKESPECIAL, className, "<init>", "(Llisp/extensions/type/Closure;)V", false);
 			}
-			classBuilder.getEmitter().emitInvokespecial(className, "<init>", "(Llisp/extensions/type/Closure;)", "V", false);
 		}
 
 		// pop off the current class name, we're done with it
@@ -208,19 +252,25 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 	private void doStaticInit(final String className, final SymbolStruct<?> lispName, final JavaClassBuilder classBuilder) {
 		// static init
-		classBuilder.getEmitter().newMethod(Opcodes.ACC_STATIC + Opcodes.ACC_PUBLIC, "<clinit>", "()", "V", null, null);
+		final ClassDef currentClass = classBuilder.getCurrentClass();
+		final ClassWriter cw = currentClass.getClassWriter();
+
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_STATIC + Opcodes.ACC_PUBLIC, "<clinit>", "()V", null, null);
+		currentClass.setMethodVisitor(mv);
+		mv.visitCode();
+
 		// init the SYMBOL field with the LISP name symbol
 		if (lispName.getSymbolPackage() != null) {
 			specialVariableCodeGenerator.generate(lispName, classBuilder);
 		} else {
 			//make the symbol
-			classBuilder.getEmitter().emitLdc(lispName.toString());
+			mv.visitLdcInsn(lispName.toString());
 			// make it into a Lisp string
-			classBuilder.getEmitter().emitInvokestatic("lisp/common/type/String$Factory", "newInstance", "(Ljava/lang/CharSequence;)", "Llisp/common/type/String;", false);
+			mv.visitMethodInsn(Opcodes.INVOKESTATIC, "lisp/common/type/String$Factory", "newInstance", "(Ljava/lang/CharSequence;)Llisp/common/type/String;", false);
 			// now create the symbol
-			classBuilder.getEmitter().emitInvokestatic("lisp/common/type/Symbol$Factory", "newInstance", "(Llisp/common/type/String;)", "Llisp/common/type/Symbol;", false);
+			mv.visitMethodInsn(Opcodes.INVOKESTATIC, "lisp/common/type/Symbol$Factory", "newInstance", "(Llisp/common/type/String;)Llisp/common/type/Symbol;", false);
 		}
-		classBuilder.getEmitter().emitPutstatic(className, "SYMBOL", "Llisp/common/type/Symbol;");
+		mv.visitFieldInsn(Opcodes.PUTSTATIC, className, "SYMBOL", "Llisp/common/type/Symbol;");
 
 		// Creating and initializing any necessary load-time-values
 		final LambdaEnvironment env = (LambdaEnvironment) classBuilder.getBindingEnvironment();
@@ -232,20 +282,23 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			final String uniqueLTVId = loadTimeValue.getUniqueLTVId();
 			final String fldName = "LOAD_TIME_VALUE" + uniqueLTVId;
 			// add the field
-			classBuilder.getEmitter().newField(Opcodes.ACC_PUBLIC + Opcodes.ACC_STATIC + Opcodes.ACC_FINAL,
-					fldName, "Ljava/lang/Object;", null, null);
+			final FieldVisitor fv = cw.visitField(Opcodes.ACC_PUBLIC + Opcodes.ACC_STATIC + Opcodes.ACC_FINAL, fldName, "Ljava/lang/Object;", null, null);
+			currentClass.setFieldVisitor(fv);
 			// now get down to the function
 			// gen code for the function
 
-//			genCodeLambdaInContext(codeGenerator, loadTimeValue.getValue(), true, classBuilder);
+//			genCodeLambdaInContext(loadTimeValue.getValue(), true, classBuilder);
 			// now there's an instance of the function on the stack, call it
-			classBuilder.getEmitter().emitInvokeinterface("lisp/extensions/type/Function0", "funcall", "()", "Ljava/lang/Object;", true);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "lisp/extensions/type/Function0", "funcall", "()Ljava/lang/Object;", true);
 			// now put the value into the static field
-			classBuilder.getEmitter().emitPutstatic(className, fldName, "Ljava/lang/Object;");
+			mv.visitFieldInsn(Opcodes.PUTSTATIC, className, fldName, "Ljava/lang/Object;");
+			fv.visitEnd();
 		}
 		// all done
-		classBuilder.getEmitter().emitReturn();
-		classBuilder.getEmitter().endMethod();
+		mv.visitInsn(Opcodes.RETURN);
+
+		mv.visitMaxs(-1, -1);
+		mv.visitEnd();
 	}
 
 	private static int countRequiredParams(final List<EnvironmentParameterBinding> bindingSetBody) {
@@ -263,41 +316,60 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 	private static void doConstructor(final LambdaStruct lambdaStruct, final String className, final JavaClassBuilder classBuilder) {
 		// The basic constructor used when compiling a top-level lambda
-		classBuilder.getEmitter().newMethod(Opcodes.ACC_PUBLIC, "<init>", "()", "V", null, null);
-		classBuilder.getEmitter().emitAload(0);
-		classBuilder.getEmitter().emitDup();
-		classBuilder.getEmitter().emitAconst_null();
-		classBuilder.getEmitter().emitInvokespecial(className, "<init>", "(Llisp/extensions/type/Closure;)", "V", false);  // this(null);
-		classBuilder.getEmitter().emitReturn();
-		classBuilder.getEmitter().endMethod();
+		final ClassDef currentClass = classBuilder.getCurrentClass();
+		final ClassWriter cw = currentClass.getClassWriter();
+
+		{
+			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC, "<init>", "()V", null, null);
+			currentClass.setMethodVisitor(mv);
+			mv.visitCode();
+
+			mv.visitVarInsn(Opcodes.ALOAD, 0);
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitInsn(Opcodes.ACONST_NULL);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, className, "<init>", "(Llisp/extensions/type/Closure;)V", false);  // this(null);
+
+			mv.visitInsn(Opcodes.RETURN);
+
+			mv.visitMaxs(-1, -1);
+			mv.visitEnd();
+		}
 
 		// This method is called when the compiler thinks there's a closure around
-		classBuilder.getEmitter().newMethod(Opcodes.ACC_PUBLIC, "<init>", "(Llisp/extensions/type/Closure;)", "V", null, null);
-		classBuilder.getEmitter().emitAload(0);
-		classBuilder.getEmitter().emitInvokespecial("lisp/common/function/FunctionBaseClass", "<init>", "()", "V", false);  // super();
-		//store the closure if one is passed in
-		final Label isNull = new Label();
-		classBuilder.getEmitter().emitAload(1);
-		classBuilder.getEmitter().emitIfnull(isNull);
-		classBuilder.getEmitter().emitAload(0);
-		classBuilder.getEmitter().emitAload(1);
+		{
+			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC, "<init>", "(Llisp/extensions/type/Closure;)V", null, null);
+			currentClass.setMethodVisitor(mv);
+			mv.visitCode();
+
+			mv.visitVarInsn(Opcodes.ALOAD, 0);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "lisp/common/function/FunctionBaseClass", "<init>", "()V", false);  // super();
+			//store the closure if one is passed in
+			final Label isNull = new Label();
+			mv.visitVarInsn(Opcodes.ALOAD, 1);
+			mv.visitJumpInsn(Opcodes.IFNULL, isNull);
+			mv.visitVarInsn(Opcodes.ALOAD, 0);
+			mv.visitVarInsn(Opcodes.ALOAD, 1);
 //        emitter.emitInvokevirtual("lisp/common/function/FunctionBaseClass", "addClosure", "(Llisp/extensions/type/Closure;)Llisp/extensions/type/Closure;");
-		classBuilder.getEmitter().emitInvokevirtual(className, "addClosure", "(Llisp/extensions/type/Closure;)", "Llisp/extensions/type/Closure;", false);
-		classBuilder.getEmitter().emitPop();
-		classBuilder.getEmitter().visitMethodLabel(isNull);
-		classBuilder.getEmitter().emitReturn();
-		classBuilder.getEmitter().endMethod();
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, className, "addClosure", "(Llisp/extensions/type/Closure;)Llisp/extensions/type/Closure;", false);
+			mv.visitInsn(Opcodes.POP);
+			mv.visitLabel(isNull);
+
+			mv.visitInsn(Opcodes.RETURN);
+
+			mv.visitMaxs(-1, -1);
+			mv.visitEnd();
+		}
 	}
 
-	private static void undoClosureSetup(final Environment environment, final JavaClassBuilder classBuilder) {
+	private static void undoClosureSetup(final Environment environment, final MethodVisitor mv) {
 		final Closure closureSetBody = environment.getClosure();
 		final int numParams = closureSetBody.getBindings().size() - 1; // remove :closure and (:depth . n) from contention
 		if (numParams > 0) {
 			// keep a copy of the 'this' reference
-			classBuilder.getEmitter().emitAload(0);
+			mv.visitVarInsn(Opcodes.ALOAD, 0);
 			// blow up the current closure
-			classBuilder.getEmitter().emitInvokespecial("lisp/common/function/FunctionBaseClass", "popClosure", "()", "Llisp/extensions/type/Closure;", false);
-			classBuilder.getEmitter().emitPop();
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "lisp/common/function/FunctionBaseClass", "popClosure", "()Llisp/extensions/type/Closure;", false);
+			mv.visitInsn(Opcodes.POP);
 		}
 	}
 
@@ -312,8 +384,10 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	 *
 	 * @param classBuilder
 	 * 		classBuilder
+	 * @param mv
+	 * 		methodVisitor
 	 */
-	private void doFreeVariableSetup(final JavaClassBuilder classBuilder) {
+	private void doFreeVariableSetup(final JavaClassBuilder classBuilder, final MethodVisitor mv) {
 		//-- get the symbol-table
 		final SymbolTable symbolTable = classBuilder.getBindingEnvironment().getSymbolTable();
 		// Now iterate over the entries, looking for ones to allocate
@@ -343,13 +417,13 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			if (symbol.getSymbolPackage() == null) {
 				final String name = symbol.getName();
 				// have to gen a make-symbol
-				classBuilder.getEmitter().emitLdc(name);
-				classBuilder.getEmitter().emitInvokestatic("lisp/common/type/Symbol$Factory", "newInstance", "(Ljava/lang/String;)", "Llisp/common/type/Symbol;", false);
+				mv.visitLdcInsn(name);
+				mv.visitMethodInsn(Opcodes.INVOKESTATIC, "lisp/common/type/Symbol$Factory", "newInstance", "(Ljava/lang/String;)Llisp/common/type/Symbol;", false);
 			} else {
 				specialVariableCodeGenerator.generate(symbol, classBuilder);
 			}
 			// store the symbol in the indicated local variable
-			classBuilder.getEmitter().emitAstore(slot);
+			mv.visitVarInsn(Opcodes.ASTORE, slot);
 		}
 	}
 
@@ -369,36 +443,5 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 				return findNearestClosure(parent);
 			}
 		}
-	}
-
-	private static void doCheckArguments(final int numParams, final JavaClassBuilder classBuilder) {
-		// Create a basic checkArguments method to do some checking.
-		// This will be more complex as the compiler gets smarter
-		//--------> checkArguments <-------------
-		final int checkArgsTestCtr = 0;
-		classBuilder.getEmitter().newMethod(Opcodes.ACC_PUBLIC, "checkArguments", "(Llisp/common/type/ListStruct;)", "Llisp/common/type/Boolean;", null, null);
-		// the most basic check is the number of arguments
-		classBuilder.getEmitter().emitAload(1); // get the list argument
-		classBuilder.getEmitter().emitInvokeinterface("java/util/Collection", "size", "()", "I", true);
-		classBuilder.getEmitter().emitLdc(numParams);
-		final Label label = new Label();
-		classBuilder.getEmitter().emitIf_icmpeq(label);
-		//throw an exception
-		classBuilder.getEmitter().emitNew("lisp/common/exceptions/FunctionException");
-		classBuilder.getEmitter().emitDup();
-		// 1st arg to fn Excp
-		classBuilder.getEmitter().emitLdc("Wrong number of arguments to function. Should be " + numParams);
-		// 2nd arg to fn Excp
-		classBuilder.getEmitter().emitNew("lisp/common/exceptions/WrongNumberOfArgsException");
-		classBuilder.getEmitter().emitDup();
-		classBuilder.getEmitter().emitInvokespecial("lisp/common/exceptions/WrongNumberOfArgsException", "<init>", "()", "V", false);
-		classBuilder.getEmitter().emitInvokespecial("lisp/common/exceptions/FunctionException", "<init>", "(Ljava/lang/String;Ljava/lang/Throwable;)", "V", false);
-		classBuilder.getEmitter().emitAthrow();
-		//done with that test
-		classBuilder.getEmitter().visitMethodLabel(label);
-		// done
-		classBuilder.getEmitter().emitGetstatic("lisp/common/type/T", "T", "Llisp/common/type/Symbol;");
-		classBuilder.getEmitter().emitAreturn();
-		classBuilder.getEmitter().endMethod();
 	}
 }

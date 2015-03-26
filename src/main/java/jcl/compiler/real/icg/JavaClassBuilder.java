@@ -31,8 +31,6 @@ public class JavaClassBuilder {
 	// make a stack of current class names
 	private Stack<String> classNames;
 
-	private NewEmitter emitter;
-
 	private boolean allowMultipleValues;
 
 	private Stack<Set<TagbodyLabel>> tagbodyLabelStack;
@@ -53,7 +51,6 @@ public class JavaClassBuilder {
 
 	public JavaClassBuilder() {
 		MacroLambda = false;
-		emitter = new NewEmitter();
 		bindingEnvironment = Environment.NULL;
 		bindingStack = new Stack<>();
 		bindingStack.push(Environment.NULL);
@@ -62,14 +59,6 @@ public class JavaClassBuilder {
 		allowMultipleValues = false;
 		tagbodyLabelStack = new Stack<>();
 		acceptsMultipleValues = false;
-	}
-
-	public NewEmitter getEmitter() {
-		return emitter;
-	}
-
-	public void setEmitter(final NewEmitter emitter) {
-		this.emitter = emitter;
 	}
 
 	public Environment getBindingEnvironment() {

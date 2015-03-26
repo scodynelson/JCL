@@ -1,5 +1,6 @@
 package jcl.compiler.real.icg.generator.simple;
 
+import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.lists.ListStruct;
@@ -7,6 +8,8 @@ import jcl.numbers.FloatStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.RatioStruct;
 import jcl.numbers.RealStruct;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,6 +32,9 @@ public class ComplexCodeGenerator implements CodeGenerator<ListStruct> {
 		final RealStruct real = (RealStruct) input.getRest().getFirst();
 		final RealStruct imaginary = (RealStruct) input.getRest().getRest().getFirst();
 
+		final ClassDef currentClass = classBuilder.getCurrentClass();
+		final MethodVisitor mv = currentClass.getMethodVisitor();
+
 		if (real instanceof IntegerStruct) {
 			integerCodeGenerator.generate((IntegerStruct) real, classBuilder);
 		} else if (real instanceof FloatStruct) {
@@ -49,6 +55,6 @@ public class ComplexCodeGenerator implements CodeGenerator<ListStruct> {
 			throw new RuntimeException("Only reals are valid for the Complex 'real' part.");
 		}
 
-		classBuilder.getEmitter().emitInvokestatic("jcl/numbers/ComplexStruct", "getInstance", "(Ljcl/numbers/RealStruct;Ljcl/numbers/RealStruct;)", "Ljcl/numbers/ComplexStruc;", false);
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/numbers/ComplexStruct", "getInstance", "(Ljcl/numbers/RealStruct;Ljcl/numbers/RealStruct;)Ljcl/numbers/ComplexStruct;", false);
 	}
 }

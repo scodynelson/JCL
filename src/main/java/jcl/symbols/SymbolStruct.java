@@ -285,7 +285,9 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	}
 
 	public void setLexicalValue(final TYPE value) {
-		if (!lexicalValueStack.isEmpty()) {
+		if (lexicalValueStack.isEmpty()) {
+			lexicalValueStack.push(value);
+		} else {
 			lexicalValueStack.pop();
 			lexicalValueStack.push(value);
 		}
@@ -349,8 +351,12 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 //	 * 		new symbol {@link #function} property value
 //	 */
 	public void setFunction(final FunctionStruct function) {
-		functionStack.pop();
-		functionStack.push(function);
+		if (functionStack.isEmpty()) {
+			functionStack.push(function);
+		} else {
+			functionStack.pop();
+			functionStack.push(function);
+		}
 	}
 
 	public void bindFunction(final FunctionStruct function) {

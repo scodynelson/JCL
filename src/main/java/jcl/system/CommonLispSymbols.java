@@ -19,6 +19,7 @@ import jcl.reader.struct.ReaderVariables;
 import jcl.streams.StreamVariables;
 import jcl.symbols.DeclarationStruct;
 import jcl.symbols.KeywordStruct;
+import jcl.symbols.SetSymbolFunctionFunction;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolConstants;
 import jcl.symbols.SymbolStruct;
@@ -1009,6 +1010,9 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> Y_OR_N_P = null;
 	SymbolStruct<?> YES_OR_NO_P = null;
 	SymbolStruct<?> ZEROP = null;
+
+	// System
+	SymbolStruct<?> SET_SYMBOL_FUNCTION = SetSymbolFunctionFunction.SET_SYMBOL_FUNCTION;
 
 	// Backquote
 	SymbolStruct<?> BQ_COMMA_FLAG = new SymbolStruct<>(",", GlobalPackageStruct.BACKQUOTE);

@@ -2,9 +2,8 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.compiler.real;
+package jcl.lists;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,21 +15,20 @@ import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
-import jcl.compiler.real.struct.ValuesStruct;
 import jcl.functions.FunctionStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.SymbolStruct;
 
-public class ValuesFunction extends FunctionStruct {
+public class ListFunction extends FunctionStruct {
 
-	public static final ValuesFunction INSTANCE = new ValuesFunction();
+	public static final ListFunction INSTANCE = new ListFunction();
 
-	public static final SymbolStruct<?> VALUES = new SymbolStruct<>("VALUES", GlobalPackageStruct.COMMON_LISP, null, INSTANCE);
+	public static final SymbolStruct<?> LIST = new SymbolStruct<>("LIST", GlobalPackageStruct.COMMON_LISP, null, INSTANCE);
 
-	private static final long serialVersionUID = -7869325469764526281L;
+	private static final long serialVersionUID = -4167883057835187873L;
 
-	private ValuesFunction() {
-		super("Returns the objects as multiple values.", getInitLambdaListBindings());
+	private ListFunction() {
+		super("Returns a list containing the supplied objects.", getInitLambdaListBindings());
 	}
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
@@ -51,7 +49,6 @@ public class ValuesFunction extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		final List<LispStruct> valuesList = Arrays.asList(lispStructs);
-		return new ValuesStruct(valuesList);
+		return ListStruct.buildProperList(lispStructs);
 	}
 }

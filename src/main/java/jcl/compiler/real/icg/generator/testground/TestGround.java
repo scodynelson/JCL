@@ -17,6 +17,7 @@ import jcl.compiler.real.icg.generator.specialoperator.exception.ReturnFromExcep
 import jcl.compiler.real.icg.generator.specialoperator.exception.ThrowException;
 import jcl.compiler.real.sa.analyzer.expander.SymbolMacroExpander;
 import jcl.compiler.real.struct.ValuesStruct;
+import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ConsStruct;
 import jcl.lists.NullStruct;
@@ -164,7 +165,6 @@ public class TestGround {
 	private Object goGen() {
 
 		final int tagIndex = 1234413124;
-
 		throw new GoException(tagIndex);
 	}
 
@@ -202,7 +202,7 @@ public class TestGround {
 	private Object quoteListGen() {
 
 		final LispStruct element1 = new CharacterStruct(97);
-		final LispStruct element2 = new CharacterStruct(97);
+		final LispStruct element2 = new CharacterStruct(197);
 		return new ConsStruct(element1, element2);
 	}
 
@@ -303,5 +303,37 @@ public class TestGround {
 
 	private Object ltvGen() {
 		return LTV_1;
+	}
+
+	private Object multipleValueProg1Gen() {
+
+		final LispStruct firstForm = new CharacterStruct(97);
+		final LispStruct forms = new CharacterStruct(197);
+		return firstForm;
+	}
+
+	private Object multipleValueCallGen() {
+
+		final LispStruct firstForm = new CharacterStruct(97);
+		if (!(firstForm instanceof FunctionStruct)) {
+			throw new ProgramErrorException("MULTIPLE-VALUE-CALL: Invalid function form: " + firstForm);
+		}
+
+		final FunctionStruct functionForm = (FunctionStruct) firstForm;
+
+		final List<LispStruct> argsList = new ArrayList<>();
+		final LispStruct form1 = new CharacterStruct(197);
+		if (form1 instanceof ValuesStruct) {
+			final List<LispStruct> valuesList = ((ValuesStruct) form1).getValuesList();
+			for (final LispStruct value : valuesList) {
+				argsList.add(value);
+			}
+		} else {
+			argsList.add(form1);
+		}
+
+		LispStruct[] args = new LispStruct[argsList.size()];
+		args = argsList.toArray(args);
+		return functionForm.apply(args);
 	}
 }

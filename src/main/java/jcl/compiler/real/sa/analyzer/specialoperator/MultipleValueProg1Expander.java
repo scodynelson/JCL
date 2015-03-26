@@ -9,6 +9,7 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.MultipleValueProg1Struct;
+import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperatorStruct;
@@ -56,7 +57,7 @@ public class MultipleValueProg1Expander extends MacroFunctionExpander<MultipleVa
 				     .map(e -> formAnalyzer.analyze(e, environment))
 				     .collect(Collectors.toList());
 
-		return new MultipleValueProg1Struct(firstFormAnalyzed, analyzedForms);
+		return new MultipleValueProg1Struct(firstFormAnalyzed, new PrognStruct(analyzedForms));
 	}
 
 	@Override

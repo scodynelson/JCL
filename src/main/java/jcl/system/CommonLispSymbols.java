@@ -8,6 +8,7 @@ import jcl.compiler.real.ValuesFunction;
 import jcl.functions.Apply;
 import jcl.functions.Funcall;
 import jcl.lists.CarFunction;
+import jcl.lists.ListFunction;
 import jcl.numbers.NumberConstants;
 import jcl.numbers.NumberVariables;
 import jcl.packages.GlobalPackageStruct;
@@ -553,7 +554,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> LET_STAR = null;
 	SymbolStruct<?> LISP_IMPLEMENTATION_TYPE = null;
 	SymbolStruct<?> LISP_IMPLEMENTATION_VERSION = null;
-	SymbolStruct<?> LIST = new SymbolStruct<>("LIST", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct<?> LIST = ListFunction.LIST;
 	SymbolStruct<?> LIST_STAR = new SymbolStruct<>("LIST*", GlobalPackageStruct.COMMON_LISP);
 	SymbolStruct<?> LIST_ALL_PACKAGES = null;
 	SymbolStruct<?> LIST_LENGTH = null;

@@ -4,8 +4,6 @@
 
 package jcl.compiler.real.struct.specialoperator;
 
-import java.util.List;
-
 import jcl.LispStruct;
 import jcl.compiler.real.struct.SpecialOperatorStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -19,9 +17,9 @@ public class MultipleValueProg1Struct extends SpecialOperatorStruct {
 
 	private final LispStruct firstForm;
 
-	private final List<LispStruct> forms;
+	private final PrognStruct forms;
 
-	public MultipleValueProg1Struct(final LispStruct firstForm, final List<LispStruct> forms) {
+	public MultipleValueProg1Struct(final LispStruct firstForm, final PrognStruct forms) {
 		this.firstForm = firstForm;
 		this.forms = forms;
 	}
@@ -30,7 +28,7 @@ public class MultipleValueProg1Struct extends SpecialOperatorStruct {
 		return firstForm;
 	}
 
-	public List<LispStruct> getForms() {
+	public PrognStruct getForms() {
 		return forms;
 	}
 

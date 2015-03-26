@@ -27,6 +27,10 @@ public class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 	public void generate(final QuoteStruct input, final JavaClassBuilder classBuilder) {
 
 		final LispStruct quotedObject = input.getObject();
+		generateQuotedObject(quotedObject, classBuilder);
+	}
+
+	private void generateQuotedObject(final LispStruct quotedObject, final JavaClassBuilder classBuilder) {
 		if (quotedObject instanceof SymbolStruct) {
 			generateQuotedSymbol((SymbolStruct) quotedObject, classBuilder);
 		} else if (quotedObject instanceof ConsStruct) {
@@ -68,13 +72,13 @@ public class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 		final ListIterator<LispStruct> listIterator = lispStructs.listIterator(lispStructs.size());
 
 		LispStruct previousCdr = listIterator.previous();
-		formGenerator.generate(previousCdr, classBuilder);
+		generateQuotedObject(previousCdr, classBuilder);
 		final int lastElementStore = currentClass.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, lastElementStore);
 
 		if (quotedCons.isDotted()) {
 			previousCdr = listIterator.previous();
-			formGenerator.generate(previousCdr, classBuilder);
+			generateQuotedObject(previousCdr, classBuilder);
 			final int secondToLastElementStore = currentClass.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, secondToLastElementStore);
 
@@ -99,7 +103,7 @@ public class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 
 		while (listIterator.hasPrevious()) {
 			previousCdr = listIterator.previous();
-			formGenerator.generate(previousCdr, classBuilder);
+			generateQuotedObject(previousCdr, classBuilder);
 			mv.visitVarInsn(Opcodes.ASTORE, nextElementStore);
 
 			mv.visitTypeInsn(Opcodes.NEW, "jcl/lists/ConsStruct");

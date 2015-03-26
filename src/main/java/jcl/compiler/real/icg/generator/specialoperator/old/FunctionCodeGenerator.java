@@ -39,13 +39,15 @@ public class FunctionCodeGenerator implements CodeGenerator<ListStruct> {
 
 		final ListStruct restOfList = input.getRest();
 		final LispStruct fn = restOfList.getFirst();
+
 		if (fn instanceof SymbolStruct) {
 			symbolFunctionCodeGenerator.generate((SymbolStruct<?>) fn, classBuilder);
 		} else if (fn instanceof ListStruct) {
 			final ListStruct fnList = (ListStruct) fn;
-			if (fnList.getFirst() == SpecialOperatorStruct.LAMBDA) {
-//	            lambdaCodeGenerator.generate(fnList, classBuilder);
-				lambdaCodeGenerator.generate(new LambdaStruct(null, null, null, null), classBuilder);
+			final LispStruct fnListFirst = fnList.getFirst();
+
+			if (fnListFirst == SpecialOperatorStruct.LAMBDA) {
+//	            lambdaCodeGenerator.generate(fnList, classBuilder); TODO
 			} else {
 				// this is a setf function (setf foo)
 				// this is a call to return the setf function in the specified symbol
@@ -56,17 +58,17 @@ public class FunctionCodeGenerator implements CodeGenerator<ListStruct> {
 				// The SETF expander will ensure that there will be a FUNCALL #'(setf foo) with args
 				final SymbolStruct<?> setfSymbol = (SymbolStruct<?>) ((ListStruct) fn).getRest().getFirst();
 				specialVariableCodeGenerator.generate(setfSymbol, classBuilder); // now we have the symbol on the stack
-				// number the invoke
-				final Label label = new Label();
-				mv.visitLabel(label);
+
 				// extract the setf function if there is one
 				mv.visitTypeInsn(Opcodes.CHECKCAST, "lisp/system/SymbolImpl");
 				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "lisp/system/SymbolImpl", "getSetfFunction", "()Llisp/common/type/Function;", false);
-				mv.visitInsn(Opcodes.DUP);      // need to test to see it's there
+				mv.visitInsn(Opcodes.DUP);
+
 				final Label yesSetfFunction = new Label();
-				mv.visitJumpInsn(Opcodes.IFNONNULL, yesSetfFunction); // there is no setf function, return NIL
-				mv.visitInsn(Opcodes.POP);      // balance the stack
+				mv.visitJumpInsn(Opcodes.IFNONNULL, yesSetfFunction);
+				mv.visitInsn(Opcodes.POP);
 				mv.visitFieldInsn(Opcodes.GETSTATIC, "lisp/common/type/Null", "NIL", "Llisp/common/type/Null;");
+
 				mv.visitLabel(yesSetfFunction);
 			}
 		} else {

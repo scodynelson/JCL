@@ -44,7 +44,7 @@ public class ClosureCodeGenerator implements CodeGenerator<Environment> {
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "lisp/common/function/FunctionBaseClass", "addClosure", "(Llisp/extensions/type/Closure;)Llisp/extensions/type/Closure;", false);
 			mv.visitInsn(Opcodes.POP);
 		}
-		// get the :closure information
+
 		final Closure closureStuff = input.getClosure();
 		final List<EnvironmentParameterBinding> bindings = input.getLexicalBindings();
 		// (:closure (:depth . n) (x ....) (y ....) ...)
@@ -65,7 +65,8 @@ public class ClosureCodeGenerator implements CodeGenerator<Environment> {
 					final PositionAllocation allocation = (PositionAllocation) binding.getAllocation();
 					final int param = allocation.getPosition();
 					// now where does it go
-					final int position = closureEntry.get().getPosition();
+					ClosureBinding closureBinding = closureEntry.get();
+					final int position = closureBinding.getPosition();
 					mv.visitLdcInsn(position); // index
 					mv.visitLdcInsn(0);                   // nesting (current one)
 					mv.visitVarInsn(Opcodes.ALOAD, param);      // value from the arg list
@@ -75,7 +76,8 @@ public class ClosureCodeGenerator implements CodeGenerator<Environment> {
 					mv.visitInsn(Opcodes.DUP);
 				}
 			}
-			mv.visitInsn(Opcodes.POP2);  // drop the remaining closure reference from the stack
+			mv.visitInsn(Opcodes.POP2);
+			// drop the remaining closure reference from the stack
 			// for each variable, gen code to get the value and store in the closure
 		}
 	}

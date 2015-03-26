@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Stack;
 
+import jcl.LispStruct;
 import jcl.compiler.real.environment.Closure;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.LambdaEnvironment;
@@ -125,10 +126,6 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		try {
 			classBuilder.getBindingStack().push(lambdaStruct.getLambdaEnvironment());
 
-			// now create the check arguments method that's used when safety > 1
-			//-----------> checkArguments <--------------------
-//            doCheckArguments(numRequiredParams);
-
 			//---------> funcall <-----------
 			String funcallParams = "";
 			for (final Binding<?> aBindingSetBody1 : bindingSetBody) {
@@ -147,10 +144,11 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 				doFreeVariableSetup(classBuilder, mv);
 
 				// Beginning gen code for the body
-				ListStruct funcallList = null;
+				ListStruct funcallList = NullStruct.INSTANCE;
 
 				while (!NullStruct.INSTANCE.equals(funcallList)) {
-					formGenerator.generate(funcallList.getFirst(), classBuilder);
+					final LispStruct funcallListFirst = funcallList.getFirst();
+					formGenerator.generate(funcallListFirst, classBuilder);
 					funcallList = funcallList.getRest();
 					if (!NullStruct.INSTANCE.equals(funcallList)) {
 						mv.visitInsn(Opcodes.POP);
@@ -190,7 +188,6 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 					mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "lisp/common/type/ListStruct", "rest", "()Llisp/common/type/ListStruct;", true);
 					mv.visitVarInsn(Opcodes.ASTORE, 1);
 				}
-//*****
 				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, className, "funcall", '(' + funcallParams + ')' + "Ljava/lang/Object;", false);
 
 				mv.visitInsn(Opcodes.ARETURN);
@@ -287,7 +284,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			// now get down to the function
 			// gen code for the function
 
-//			genCodeLambdaInContext(loadTimeValue.getValue(), true, classBuilder);
+//			genCodeLambdaInContext(loadTimeValue.getValue(), true, classBuilder); TODO
 			// now there's an instance of the function on the stack, call it
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "lisp/extensions/type/Function0", "funcall", "()Ljava/lang/Object;", true);
 			// now put the value into the static field

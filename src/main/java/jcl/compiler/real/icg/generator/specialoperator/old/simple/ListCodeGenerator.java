@@ -5,44 +5,29 @@ import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.icg.generator.specialoperator.FunctionCallCodeGenerator;
-import jcl.compiler.real.icg.generator.specialoperator.LetCodeGenerator;
-import jcl.compiler.real.icg.generator.specialoperator.old.special.LambdaCodeGenerator;
 import jcl.compiler.real.icg.generator.specialoperator.old.special.MacroLambdaCodeGenerator;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.DeclarationStruct;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.Label;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
 public class ListCodeGenerator implements CodeGenerator<ListStruct> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ListCodeGenerator.class);
 
-	@Autowired
-	private SpecialFormCodeGenerator specialFormCodeGenerator;
-
-//	@Autowired
+	//	@Autowired
 	private SymbolFunctionCodeGenerator symbolFunctionCodeGenerator;
 
-	@Autowired
+	//	@Autowired
 	private FunctionCallCodeGenerator functionCallCodeGenerator;
 
-	@Autowired
-	private LambdaCodeGenerator lambdaCodeGenerator;
-
-	@Autowired
+	//	@Autowired
 	private MacroLambdaCodeGenerator macroLambdaCodeGenerator;
 
-	@Autowired
-	private LetCodeGenerator letCodeGenerator;
-
-	@Autowired
+	//	@Autowired
 	private FormGenerator formGenerator;
 
 	@Override
@@ -51,11 +36,7 @@ public class ListCodeGenerator implements CodeGenerator<ListStruct> {
 		final LispStruct firstElement = input.getFirst();
 		if (firstElement instanceof SymbolStruct) {
 			// generally an application (foobar ...)
-			if (firstElement instanceof SpecialOperatorStruct) {
-				specialFormCodeGenerator.generate(input, classBuilder);
-			} else if (firstElement instanceof DeclarationStruct) {
-//                genCodeDeclare(list);
-			} else if (formOptimizable(input)) {
+			if (formOptimizable(input)) {
 				genOptimizedForm(input, classBuilder);
 			} else {
 				symbolFunctionCodeGenerator.generate((SymbolStruct<?>) firstElement, classBuilder);
@@ -81,14 +62,6 @@ public class ListCodeGenerator implements CodeGenerator<ListStruct> {
 //					lambdaCodeGenerator.generate(input, codeGenerator, classBuilder); TODO
 				} else if (first.getFirst().equals(SpecialOperatorStruct.MACRO_MARKER)) {
 					macroLambdaCodeGenerator.generate(input, classBuilder);
-				} else if (first.getFirst().equals(SpecialOperatorStruct.LET)) {
-//					letCodeGenerator.generate(input, classBuilder);
-				} else if (first.getFirst().equals(SpecialOperatorStruct.FLET)) {
-//					fletCodeGenerator.generate(input, classBuilder);
-				} else if (first.getFirst().equals(SpecialOperatorStruct.LABELS)) {
-//					labelsCodeGenerator.generate(input, classBuilder);
-				} else if (first.getFirst().equals(SpecialOperatorStruct.MACROLET)) {
-//					macroletCodeGenerator.generate(input, classBuilder);
 				} else {
 					LOGGER.info("It's something else, {}", first);
 				}

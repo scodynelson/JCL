@@ -15,10 +15,8 @@ import jcl.symbols.DefstructSymbolStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 
 	/**
@@ -36,13 +34,13 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 	 * 4. fieldList - this is the list of all the slot names and their types for this struct
 	 */
 
-	@Autowired
+//	@Autowired
 	private SymbolCodeGenerator symbolCodeGenerator;
 
-	@Autowired
+//	@Autowired
 	private SpecialVariableCodeGenerator specialVariableCodeGenerator;
 
-	@Autowired
+//	@Autowired
 	private FormGenerator formGenerator;
 
 	@Override

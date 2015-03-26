@@ -17,9 +17,7 @@ import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.stereotype.Component;
 
-@Component
 public class ClosureCodeGenerator implements CodeGenerator<Environment> {
 
 	@Override

@@ -3,7 +3,6 @@ package jcl.compiler.real.icg.generator.specialoperator.old.special;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import jcl.compiler.real.environment.Closure;
 import jcl.compiler.real.environment.Environment;
@@ -18,9 +17,9 @@ import jcl.compiler.real.environment.binding.SymbolLocalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
-import jcl.compiler.real.icg.generator.specialoperator.old.simple.ClosureCodeGenerator;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
+import jcl.compiler.real.icg.generator.specialoperator.old.simple.ClosureCodeGenerator;
 import jcl.compiler.real.icg.generator.specialoperator.old.simple.SpecialVariableCodeGenerator;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lists.ListStruct;
@@ -28,22 +27,20 @@ import jcl.lists.NullStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 	//TODO when checking bindings, in handling the init-forms, start with the just previous
 	// bindings in the lambda list. Differs from how LET handles it
 
-	@Autowired
+//	@Autowired
 	private ClosureCodeGenerator closureCodeGenerator;
 
-	@Autowired
+//	@Autowired
 	private SpecialVariableCodeGenerator specialVariableCodeGenerator;
 
-	@Autowired
+//	@Autowired
 	private FormGenerator formGenerator;
 
 	@Override

@@ -6,18 +6,16 @@ import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.icg.generator.specialoperator.FunctionCallCodeGenerator;
 import jcl.lists.ListStruct;
 import jcl.symbols.SymbolStruct;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class TailRecursionCodeGenerator implements CodeGenerator<ListStruct> {
 
 	// the list is of the form (%tail-recursion fn-symbol arg...)
 
-	@Autowired
+//	@Autowired
 	private FunctionCallCodeGenerator functionCallCodeGenerator;
 
-	@Autowired
+//	@Autowired
 	private FormGenerator formGenerator;
 
 	@Override

@@ -5,13 +5,11 @@ import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class MacroletCodeGenerator implements CodeGenerator<ListStruct> {
 
-	@Autowired
+//	@Autowired
 	private FormGenerator formGenerator;
 
 	@Override

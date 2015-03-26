@@ -12,22 +12,20 @@ import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.Label;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class FunctionCodeGenerator implements CodeGenerator<ListStruct> {
 
-	@Autowired
+//	@Autowired
 	private SpecialVariableCodeGenerator specialVariableCodeGenerator;
 
 //	@Autowired
 	private SymbolFunctionCodeGenerator symbolFunctionCodeGenerator;
 
-	@Autowired
+//	@Autowired
 	private LambdaCodeGenerator lambdaCodeGenerator;
 
-	@Autowired
+//	@Autowired
 	private FormGenerator formGenerator;
 
 	@Override

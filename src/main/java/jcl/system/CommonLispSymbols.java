@@ -5,6 +5,7 @@ import jcl.characters.CharacterConstants;
 import jcl.compiler.real.CompilerConstants;
 import jcl.compiler.real.CompilerVariables;
 import jcl.compiler.real.ValuesFunction;
+import jcl.compiler.real.functions.EvalFunction;
 import jcl.functions.functions.ApplyFunction;
 import jcl.functions.functions.FuncallFunction;
 import jcl.lists.functions.CarFunction;
@@ -430,7 +431,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> EQUALP = null;
 	SymbolStruct<?> ERROR = null;
 	SymbolStruct<?> ETYPECASE = null;
-	SymbolStruct<?> EVAL = new SymbolStruct<>("EVAL", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct<?> EVAL = EvalFunction.EVAL;
 	SymbolStruct<?> EVAL_WHEN = null;
 	SymbolStruct<?> EVENP = null;
 	SymbolStruct<?> EVERY = null;

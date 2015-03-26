@@ -4,13 +4,13 @@
 
 package jcl.compiler.real.struct.specialoperator;
 
-import jcl.compiler.real.struct.SpecialOperatorStruct;
+import jcl.compiler.real.struct.CompilerSpecialOperatorStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class ImmutableLoadTimeValueStruct extends SpecialOperatorStruct implements LoadTimeValueStruct {
+public class ImmutableLoadTimeValueStruct extends CompilerSpecialOperatorStruct implements LoadTimeValueStruct {
 
 	private static final long serialVersionUID = 857211495712280441L;
 

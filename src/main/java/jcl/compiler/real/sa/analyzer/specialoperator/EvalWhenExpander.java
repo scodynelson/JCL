@@ -14,7 +14,6 @@ import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.printer.Printer;
-import jcl.symbols.KeywordStruct;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.system.CommonLispSymbols;
@@ -31,12 +30,16 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 
 	private static final long serialVersionUID = -7301369273443154417L;
 
-	private static final Set<KeywordStruct> SITUATION_KEYWORDS = new HashSet<>(3);
+	private static final Set<SymbolStruct<?>> SITUATION_KEYWORDS = new HashSet<>(6);
 
 	static {
 		SITUATION_KEYWORDS.add(CommonLispSymbols.COMPILE_TOPLEVEL);
 		SITUATION_KEYWORDS.add(CommonLispSymbols.LOAD_TOPLEVEL);
 		SITUATION_KEYWORDS.add(CommonLispSymbols.EXECUTE);
+
+		SITUATION_KEYWORDS.add(CommonLispSymbols.COMPILE);
+		SITUATION_KEYWORDS.add(CommonLispSymbols.LOAD);
+		SITUATION_KEYWORDS.add(CommonLispSymbols.EVAL);
 	}
 
 	@Autowired
@@ -76,7 +79,7 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 		final Collection<? extends LispStruct> difference = CollectionUtils.removeAll(situationJavaList, SITUATION_KEYWORDS);
 		if (!difference.isEmpty()) {
 			final String printedSituationList = printer.print(situationList);
-			throw new ProgramErrorException("EVAL-WHEN: Situations must be one of ':COMPILE-TOP-LEVEL', ':LOAD-TIME-LEVEL', or ':EXECUTE'. Got: " + printedSituationList);
+			throw new ProgramErrorException("EVAL-WHEN: Situations must be one of ':COMPILE-TOP-LEVEL', ':LOAD-TIME-LEVEL', ':EXECUTE', 'COMPILE', 'LOAD', or 'EVAL'. Got: " + printedSituationList);
 		}
 
 		final ListStruct forms = formRest.getRest();
@@ -131,15 +134,18 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 	}
 
 	private static boolean isCompileTopLevel(final List<? extends LispStruct> situationList) {
-		return situationList.contains(CommonLispSymbols.COMPILE_TOPLEVEL);
+		return situationList.contains(CommonLispSymbols.COMPILE_TOPLEVEL)
+				|| situationList.contains(CommonLispSymbols.COMPILE);
 	}
 
 	private static boolean isLoadTopLevel(final List<? extends LispStruct> situationList) {
-		return situationList.contains(CommonLispSymbols.LOAD_TOPLEVEL);
+		return situationList.contains(CommonLispSymbols.LOAD_TOPLEVEL)
+				|| situationList.contains(CommonLispSymbols.LOAD);
 	}
 
 	private static boolean isExecute(final List<? extends LispStruct> situationList) {
-		return situationList.contains(CommonLispSymbols.EXECUTE);
+		return situationList.contains(CommonLispSymbols.EXECUTE)
+				|| situationList.contains(CommonLispSymbols.EVAL);
 	}
 
 	@Override

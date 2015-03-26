@@ -7,14 +7,14 @@ package jcl.compiler.real.struct.specialoperator.lambda;
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
-import jcl.compiler.real.struct.SpecialOperatorStruct;
+import jcl.compiler.real.struct.CompilerSpecialOperatorStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class LambdaStruct extends SpecialOperatorStruct {
+public class LambdaStruct extends CompilerSpecialOperatorStruct {
 
 	private static final long serialVersionUID = -3234593852889478530L;
 

@@ -5,14 +5,14 @@
 package jcl.compiler.real.struct.specialoperator;
 
 import jcl.LispStruct;
-import jcl.compiler.real.struct.SpecialOperatorStruct;
+import jcl.compiler.real.struct.CompilerSpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class ReturnFromStruct extends SpecialOperatorStruct {
+public class ReturnFromStruct extends CompilerSpecialOperatorStruct {
 
 	private static final long serialVersionUID = -6095397540807480492L;
 

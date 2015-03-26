@@ -7,13 +7,13 @@ package jcl.compiler.real.struct.specialoperator.declare;
 import java.util.ArrayList;
 import java.util.List;
 
-import jcl.compiler.real.struct.SpecialOperatorStruct;
+import jcl.compiler.real.struct.CompilerSpecialOperatorStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class DeclareStruct extends SpecialOperatorStruct {
+public class DeclareStruct extends CompilerSpecialOperatorStruct {
 
 	private static final long serialVersionUID = -7730761501615283012L;
 

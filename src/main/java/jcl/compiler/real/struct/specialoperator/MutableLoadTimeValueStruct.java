@@ -5,13 +5,13 @@
 package jcl.compiler.real.struct.specialoperator;
 
 import jcl.LispStruct;
-import jcl.compiler.real.struct.SpecialOperatorStruct;
+import jcl.compiler.real.struct.CompilerSpecialOperatorStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class MutableLoadTimeValueStruct extends SpecialOperatorStruct implements LoadTimeValueStruct {
+public class MutableLoadTimeValueStruct extends CompilerSpecialOperatorStruct implements LoadTimeValueStruct {
 
 	private static final long serialVersionUID = 8088799347738800471L;
 

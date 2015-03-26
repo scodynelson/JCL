@@ -9,14 +9,14 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.SymbolMacroletEnvironment;
-import jcl.compiler.real.struct.SpecialOperatorStruct;
+import jcl.compiler.real.struct.CompilerSpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class SymbolMacroletStruct extends SpecialOperatorStruct {
+public class SymbolMacroletStruct extends CompilerSpecialOperatorStruct {
 
 	private static final long serialVersionUID = 2362123144166759037L;
 

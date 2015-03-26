@@ -5,13 +5,13 @@
 package jcl.compiler.real.struct.specialoperator;
 
 import jcl.LispStruct;
-import jcl.compiler.real.struct.SpecialOperatorStruct;
+import jcl.compiler.real.struct.CompilerSpecialOperatorStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class QuoteStruct extends SpecialOperatorStruct {
+public class QuoteStruct extends CompilerSpecialOperatorStruct {
 
 	private static final long serialVersionUID = 2854755653951600124L;
 

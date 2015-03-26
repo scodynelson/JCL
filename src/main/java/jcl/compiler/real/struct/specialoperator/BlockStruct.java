@@ -4,14 +4,14 @@
 
 package jcl.compiler.real.struct.specialoperator;
 
-import jcl.compiler.real.struct.SpecialOperatorStruct;
+import jcl.compiler.real.struct.CompilerSpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class BlockStruct extends SpecialOperatorStruct {
+public class BlockStruct extends CompilerSpecialOperatorStruct {
 
 	private static final long serialVersionUID = -115779602179582479L;
 

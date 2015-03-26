@@ -5,13 +5,13 @@
 package jcl.compiler.real.struct.specialoperator;
 
 import jcl.compiler.real.environment.LocallyEnvironment;
-import jcl.compiler.real.struct.SpecialOperatorStruct;
+import jcl.compiler.real.struct.CompilerSpecialOperatorStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class LocallyStruct extends SpecialOperatorStruct {
+public class LocallyStruct extends CompilerSpecialOperatorStruct {
 
 	private static final long serialVersionUID = 3549306656634788482L;
 

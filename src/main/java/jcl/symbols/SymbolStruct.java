@@ -193,6 +193,10 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		this.symbolPackage = symbolPackage;
 	}
 
+	public boolean hasValue() {
+		return !lexicalValueStack.isEmpty() || !dynamicValueStack.isEmpty();
+	}
+
 //	/**
 //	 * Getter for symbol {@link #value} property.
 //	 *
@@ -316,6 +320,10 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 
 	public void unbindDynamicValue() {
 		dynamicValueStack.pop();
+	}
+
+	public boolean hasFunction() {
+		return !functionStack.isEmpty();
 	}
 
 //	/**

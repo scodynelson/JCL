@@ -3,6 +3,7 @@ package jcl.compiler.real.functions;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
@@ -27,27 +28,26 @@ import jcl.functions.FunctionStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.SymbolStruct;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class EvalFunction extends FunctionStruct {
 
-	public static final EvalFunction INSTANCE = new EvalFunction();
-
-	public static final SymbolStruct<?> EVAL = new SymbolStruct<>("EVAL", GlobalPackageStruct.COMMON_LISP, null, INSTANCE);
+	public static final SymbolStruct<?> EVAL = new SymbolStruct<>("EVAL", GlobalPackageStruct.COMMON_LISP);
 
 	private static final long serialVersionUID = 6775277576397622716L;
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(EvalFunction.class);
 
 	@Autowired
 	private CompileForm compileForm;
 
 	private EvalFunction() {
 		super("Evaluates form in the current dynamic environment and the null lexical environment.", getInitLambdaListBindings());
+	}
+
+	@PostConstruct
+	private void init() {
+		EVAL.setFunction(this);
 	}
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
@@ -99,7 +99,6 @@ public class EvalFunction extends FunctionStruct {
 				final LispStruct form = setqPair.getForm();
 				final LispStruct evaluatedForm = apply(form);
 
-				LOGGER.warn("Declaring {} special.", var);
 				var.setValue(evaluatedForm);
 
 				finalForm = evaluatedForm;

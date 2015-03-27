@@ -2,6 +2,7 @@ package jcl.compiler.real.functions;
 
 import java.util.Collections;
 import java.util.List;
+import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
@@ -12,7 +13,6 @@ import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindin
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
-import jcl.compiler.real.sa.analyzer.LambdaExpander;
 import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
 import jcl.compiler.real.struct.ValuesStruct;
 import jcl.conditions.exceptions.ErrorException;
@@ -27,9 +27,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CompileFunction extends FunctionStruct {
 
-	public static final CompileFunction INSTANCE = new CompileFunction();
-
-	public static final SymbolStruct<?> COMPILE = new SymbolStruct<>("COMPILE", GlobalPackageStruct.COMMON_LISP, null, INSTANCE);
+	public static final SymbolStruct<?> COMPILE = new SymbolStruct<>("COMPILE", GlobalPackageStruct.COMMON_LISP);
 
 	private static final long serialVersionUID = 5339244651961527815L;
 
@@ -38,11 +36,13 @@ public class CompileFunction extends FunctionStruct {
 	@Autowired
 	private CompileForm compileForm;
 
-	@Autowired
-	private LambdaExpander lambdaExpander;
-
-	public CompileFunction() {
+	private CompileFunction() {
 		super("Produces a compiled function from definition.", getInitLambdaListBindings());
+	}
+
+	@PostConstruct
+	private void init() {
+		COMPILE.setFunction(this);
 	}
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {

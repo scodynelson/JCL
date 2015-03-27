@@ -83,6 +83,9 @@ public class CompileFileFunction {
 	@Autowired
 	private NewMacroExpand macroExpand;
 
+	@Autowired
+	private EvalFunction evalFunction;
+
 	public Object apply(final ListStruct args) {
 		final Object input = args.getFirst();
 		final Object output = args.getRest().getFirst();
@@ -396,7 +399,7 @@ public class CompileFileFunction {
 				} else {
 					if (mode == ProcessingMode.COMPILE_TIME_TOO) {
 						final LispStruct formCopy = xcopyTree(theRealForm);
-						EvalFunction.INSTANCE.apply(formCopy);
+						evalFunction.apply(formCopy);
 					}
 				}
 			}
@@ -426,13 +429,13 @@ public class CompileFileFunction {
 					if (processingAction == ProcessingAction.DISCARD) {
 					} else if (processingAction == ProcessingAction.EVALUATE) {
 						// call the EVAL function
-						EvalFunction.INSTANCE.apply(theForm);
+						evalFunction.apply(theForm);
 						// but the form isn't later compiled for loading
 					} else {
 						// handle the 2 forms of Process
 						if (processingMode == ProcessingMode.COMPILE_TIME_TOO) {
 							// have to evaluate the form
-							EvalFunction.INSTANCE.apply(xcopyTree(theForm));
+							evalFunction.apply(xcopyTree(theForm));
 						} else {
 							System.out.println("Oops The mode was " + processingMode + " and action " + processingAction + "...");
 						}

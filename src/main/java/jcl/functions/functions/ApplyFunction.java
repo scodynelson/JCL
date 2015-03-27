@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import jcl.LispStruct;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
@@ -33,6 +35,11 @@ public class ApplyFunction extends FunctionStruct {
 
 	private ApplyFunction() {
 		super("Applies the function to the args.", getInitLambdaListBindings());
+	}
+
+	@PostConstruct
+	private void init() {
+		APPLY.setFunction(this);
 	}
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {

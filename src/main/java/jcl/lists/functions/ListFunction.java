@@ -6,6 +6,7 @@ package jcl.lists.functions;
 
 import java.util.Collections;
 import java.util.List;
+import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
@@ -19,17 +20,22 @@ import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.SymbolStruct;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ListFunction extends FunctionStruct {
 
-	public static final ListFunction INSTANCE = new ListFunction();
-
-	public static final SymbolStruct<?> LIST = new SymbolStruct<>("LIST", GlobalPackageStruct.COMMON_LISP, null, INSTANCE);
+	public static final SymbolStruct<?> LIST = new SymbolStruct<>("LIST", GlobalPackageStruct.COMMON_LISP);
 
 	private static final long serialVersionUID = -4167883057835187873L;
 
 	private ListFunction() {
 		super("Returns a list containing the supplied objects.", getInitLambdaListBindings());
+	}
+
+	@PostConstruct
+	private void init() {
+		LIST.setFunction(this);
 	}
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {

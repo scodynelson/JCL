@@ -28,15 +28,19 @@ import jcl.symbols.TStruct;
 import jcl.system.JCL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class LoadFunction {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(LoadFunction.class);
 
+	@Autowired
+	private EvalFunction evalFunction;
+
 	private LoadFunction() {
 	}
 
-	public static Object funcall(final Object fileSpec, final Object loadVerbose, final Object loadPrint, final Object ifNotExists,
+	public Object funcall(final Object fileSpec, final Object loadVerbose, final Object loadPrint, final Object ifNotExists,
 	                             final Object extFormat) {
 		try {
 			ReaderVariables.READTABLE.bindLexicalValue(ReaderVariables.READTABLE.getValue());
@@ -71,7 +75,7 @@ public class LoadFunction {
 		return fileSpec.toString().endsWith(".lar") || fileSpec.toString().endsWith(".jar");
 	}
 
-	private static Object loadSourceCode(final File loadFile, final Object loadVerbose, final Object loadPrint,
+	private Object loadSourceCode(final File loadFile, final Object loadVerbose, final Object loadPrint,
 	                                     final Object ifNotExists, final Object extFormat) {
 		try {
 			final ListStruct holderList = ListStruct.buildProperList(new StringStruct(loadFile.toString()));
@@ -88,7 +92,7 @@ public class LoadFunction {
 					null //Read.FUNCTION.funcall(file, NILStruct.INSTANCE, eofValue) TODO
 			) != eofValue) {
 				try {
-					final Object item = EvalFunction.INSTANCE.apply(readValue);
+					final Object item = evalFunction.apply(readValue);
 					if (loadPrint != NullStruct.INSTANCE) {
 						LOGGER.info(item.toString());
 					}

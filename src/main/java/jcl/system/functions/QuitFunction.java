@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.lists.functions;
+package jcl.system.functions;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,32 +23,25 @@ import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CarFunction extends FunctionStruct {
+public class QuitFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> CAR = new SymbolStruct<>("CAR", GlobalPackageStruct.COMMON_LISP);
+	public static final SymbolStruct<?> QUIT = new SymbolStruct<>("QUIT", GlobalPackageStruct.COMMON_LISP);
 
-	private static final long serialVersionUID = -4167883057835187873L;
+	private static final long serialVersionUID = -7684846282276245122L;
 
-	private CarFunction() {
-		super("Gets the car of the provided list.", getInitLambdaListBindings());
+	private QuitFunction() {
+		super("Quits the JCL Application.", getInitLambdaListBindings());
 	}
 
 	@PostConstruct
 	private void init() {
-		CAR.setFunction(this);
+		QUIT.setFunction(this);
 	}
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
-
-		final SymbolStruct<?> listArgSymbol = new SymbolStruct<>("LIST", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation listArgAllocation = new ParameterAllocation(0);
-		final RequiredBinding requiredBinding = new RequiredBinding(listArgSymbol, listArgAllocation);
-		final List<RequiredBinding> requiredBindings = Collections.singletonList(requiredBinding);
-
+		final List<RequiredBinding> requiredBindings = Collections.emptyList();
 		final List<OptionalBinding> optionalBindings = Collections.emptyList();
-
 		final RestBinding restBinding = null;
-
 		final List<KeyBinding> keyBindings = Collections.emptyList();
 		final boolean allowOtherKeys = false;
 		final List<AuxBinding> auxBindings = Collections.emptyList();
@@ -56,9 +49,10 @@ public class CarFunction extends FunctionStruct {
 		return new OrdinaryLambdaListBindings(requiredBindings, optionalBindings, restBinding, keyBindings, auxBindings, allowOtherKeys);
 	}
 
+	@SuppressWarnings("all")
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		final ListStruct list = (ListStruct) lispStructs[0];
-		return list.getFirst();
+		System.exit(0);
+		return null;
 	}
 }

@@ -105,6 +105,20 @@ public class PackageStruct extends BuiltInClassStruct {
 	 * @param useList
 	 * 		the packages this package will use/inherit from
 	 */
+	public PackageStruct(final String name, final List<String> nicknames, final PackageStruct... useList) {
+		this(name, nicknames, new HashSet<>(Arrays.asList(useList)));
+	}
+
+	/**
+	 * Public constructor.
+	 *
+	 * @param name
+	 * 		the package name
+	 * @param nicknames
+	 * 		the package nicknames
+	 * @param useList
+	 * 		the packages this package will use/inherit from
+	 */
 	public PackageStruct(final String name, final List<String> nicknames, final Set<PackageStruct> useList) {
 		super(Package.INSTANCE, null, null);
 		this.name = name;

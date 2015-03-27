@@ -80,8 +80,15 @@ public class CompileFunction extends FunctionStruct {
 		}
 
 		if (uncompiledDefinition != null) {
-			final CompileResult compiledDefinition = compileForm.compile(uncompiledDefinition);
-			final FunctionStruct function = compiledDefinition.getFunction();
+			CompileResult compiledDefinition = null;
+
+			final FunctionStruct function;
+			if (uncompiledDefinition instanceof FunctionStruct) {
+				function = (FunctionStruct) uncompiledDefinition;
+			} else {
+				compiledDefinition = compileForm.compile(uncompiledDefinition);
+				function = compiledDefinition.getFunction();
+			}
 
 			if (name instanceof SymbolStruct) {
 				final SymbolStruct<?> nameSymbol = (SymbolStruct<?>) name;
@@ -90,7 +97,11 @@ public class CompileFunction extends FunctionStruct {
 				throw new ErrorException("The value " + name + " is not an acceptable function name.");
 			}
 
-			return new ValuesStruct(function, compiledDefinition.isCompiledWithWarnings(), compiledDefinition.isFailedToCompile());
+			if (compiledDefinition == null) {
+				return new ValuesStruct(function, NILStruct.INSTANCE, NILStruct.INSTANCE);
+			} else {
+				return new ValuesStruct(function, compiledDefinition.isCompiledWithWarnings(), compiledDefinition.isFailedToCompile());
+			}
 		}
 
 		if (!(name instanceof SymbolStruct)) {

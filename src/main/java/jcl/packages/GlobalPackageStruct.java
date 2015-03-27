@@ -22,6 +22,6 @@ public interface GlobalPackageStruct {
 	PackageStruct BACKQUOTE = new PackageStruct("BACKQUOTE");
 	PackageStruct SYSTEM = new PackageStruct("SYSTEM", Collections.emptyList(), COMPILER, BACKQUOTE);
 	PackageStruct JCL_TYPE = new PackageStruct("JCL-TYPE");
-	PackageStruct COMMON_LISP_USER = new PackageStruct("COMMON-LISP-USER", Collections.singletonList("CL-USER"), COMMON_LISP, EXTENSIONS, SYSTEM, JCL_TYPE);
+	PackageStruct COMMON_LISP_USER = new PackageStruct("COMMON-LISP-USER", Collections.singletonList("CL-USER"), COMMON_LISP, EXTENSIONS, SYSTEM);
 	PackageStruct KEYWORD = KeywordPackageStruct.INSTANCE;
 }

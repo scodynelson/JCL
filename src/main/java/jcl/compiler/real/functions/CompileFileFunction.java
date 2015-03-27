@@ -401,32 +401,23 @@ public class CompileFileFunction {
 
 /*
 (defun compile-file (source &key (output-file t)
-							     (error-file nil)
-							     (trace-file nil)
 							     (error-output t)
-							     (load nil)
 							     (external-format :default)
-						         (decoding-error t)
 							     ((:verbose *compile-verbose*) *compile-verbose*)
-							     ((:print *compile-print*) *compile-print*)
-							     ((:progress *compile-progress*) *compile-progress*)
-							     ((:block-compile *block-compile-argument*) *block-compile-default*)
-							     ((:entry-points *entry-points*) nil)
-							     ((:byte-compile *byte-compile*) *byte-compile-default*)
-						         ((:xref *record-xref-info*) *record-xref-info*))
+							     ((:print *compile-print*) *compile-print*))
 
   (let* ((jar-file nil)
-		 (error-file-stream nil)
 		 (output-file-pathname nil)
-		 (*compiler-error-output* *compiler-error-output*)
-		 (*compiler-trace-output* nil)
 		 (compile-won nil)
 		 (error-severity nil)
 		 (source (verify-source-files source))
-		 (source-info (make-file-source-info source external-format decoding-error))
+		 (source-info (make-file-source-info source external-format t))
 		 (default (pathname (first source))))
     (unwind-protect
+
+    ;; PROGN START
 	  (progn
+    ;; FLET START
 		(flet ((frob (file type)
 			     (if (eq file t)
 			         (make-pathname type type :defaults (translate-logical-pathname default))
@@ -436,22 +427,11 @@ public class CompileFileFunction {
 		    (setq output-file-pathname
 			      (translate-logical-pathname (if (eq output-file t)
 												  (compile-file-pathname (first source) :byte-compile *byte-compile*)
-												(compile-file-pathname (first source) :output-file output-file :byte-compile *byte-compile*))))
+												(compile-file-pathname (first source) :output-file output-file
+																					  :byte-compile *byte-compile*))))
 		    (setq jar-file (open-jar-file output-file-pathname (namestring (first source)) (eq *byte-compile* t))))
 
-		  (when trace-file
-		    (setq *compiler-trace-output*
-			      (open (frob trace-file "trace") :if-exists :supersede :direction :output :external-format external-format)))
-
-		  (when error-file
-		    (setq error-file-stream (open (frob error-file "err") :if-exists :supersede :direction :output :external-format external-format))))
-
-		  (setq *compiler-error-output*
-			(apply #'make-broadcast-stream
-			       (remove nil (list (if (eq error-output t)
-										 *error-output*
-									   error-output)
-									 error-file-stream))))
+    ;; FLET END
 
 		(when *compile-verbose*
 		  (start-error-output source-info))
@@ -459,7 +439,9 @@ public class CompileFileFunction {
 			  (let ((*compile-object* jar-file))
 			    (sub-compile-file source-info)))
 		(setq compile-won t))
+    ;; PROGN END
 
+    ;; Unwind-Protect Cleanup Forms START
 	  (close-source-info source-info)
 
 	  (when jar-file
@@ -471,28 +453,10 @@ public class CompileFileFunction {
 	  (when *compile-verbose*
 	    (finish-error-output source-info compile-won))
 
-	  (when error-file-stream
-		(let ((name (pathname error-file-stream)))
-		  ;;
-		  ;; Leave this var pointing to something reasonable in case someone
-		  ;; tries to use it before the LET ends, e.g. during the LOAD.
-		  (setq *compiler-error-output* *error-output*)
-		  (close error-file-stream)
-		  (when (and compile-won (not error-severity))
-		    (delete-file name))))
-
-	  (when *compiler-trace-output*
-		(close *compiler-trace-output*)))
-
-    (when load
-	  (unless output-file
-		(error "Can't :LOAD with no output file."))
-	  (load output-file-pathname :verbose *compile-verbose*))
+    ;; Unwind-Protect Cleanup Forms END
 
 	(values (if output-file
-				;; Hack around filesystem race condition...
-				(or (probe-file output-file-pathname)
-					output-file-pathname)
+				output-file-pathname
 			  nil)
 		    ;; CLHS says the second return value "is false if no
 		    ;; conditions of type error or warning were detected by
@@ -504,64 +468,34 @@ public class CompileFileFunction {
 		        t
 		      nil))))
 
-;;; Sub-Compile-File  --  Internal
+;;; START-ERROR-OUTPUT, FINISH-ERROR-OUTPUT  --  Internal
 ;;;
-;;;    Read all forms from Info and compile them, with output to Object.  We
-;;; return :ERROR, :WARNING, :NOTE or NIL to indicate the most severe kind of
-;;; compiler diagnostic emitted.
+;;;    Print some junk at the beginning and end of compilation.
 ;;;
-(defun sub-compile-file (info &optional d-s-info)
-  (declare (type source-info info))
-  (with-ir1-namespace
-    (let* ((*block-compile* *block-compile-argument*)
-		   (start-errors *compiler-error-count*)
-		   (start-warnings *compiler-warning-count*)
-		   (start-notes *compiler-note-count*)
-		   (*package* *package*)
-		   (*initial-package* *package*)
-		   (*initial-cookie* *default-cookie*)
-		   (*initial-interface-cookie* *default-interface-cookie*)
-		   (*default-cookie* (copy-cookie *initial-cookie*))
-		   (*default-interface-cookie* (copy-cookie *initial-interface-cookie*))
-		   (*lexical-environment* (make-null-environment))
-		   (*converting-for-interpreter* nil)
-		   (*source-info* info)
-		   (*user-source-info* d-s-info)
-		   (*compile-file-pathname* nil)
-		   (*compile-file-truename* nil)
-		   (*top-level-lambdas* ())
-		   (*pending-top-level-lambdas* ())
-		   (*compiler-error-bailout* #'(lambda ()
-										 (compiler-mumble "~2&Fatal error, aborting compilation...~%")
-										 (return-from sub-compile-file :error)))
-		   (*current-path* nil)
-		   (*last-source-context* nil)
-		   (*last-original-source* nil)
-		   (*last-source-form* nil)
-		   (*last-format-string* nil)
-		   (*last-format-args* nil)
-		   (*last-message-count* 0)
-		   (*info-environment* (or (backend-info-environment *backend*)
-								   *info-environment*))
-		   (*gensym-counter* 0)
-		   (intl::*default-domain* intl::*default-domain*))
-	      (with-debug-counters
-			(clear-stuff)
-			(with-compilation-unit ()
-			  (process-sources info)
-
-			  (finish-block-compilation)
-			  (compile-top-level-lambdas () t)
-			  (let ((object *compile-object*))
-			    (etypecase object
-			      (jar-file (jar-dump-source-info info object))
-			      (core-object (fix-core-source-info info object d-s-info))
-			      (null)))
-
-			  (cond ((> *compiler-error-count* start-errors) :error)
-					((> *compiler-warning-count* start-warnings) :warning)
-					((> *compiler-note-count* start-notes) :note)
-					(t nil)))))))
+(defun start-error-output (source-info)
+  (declare (type source-info source-info))
+  (compiler-mumble "~2&; Python version ~A, VM version ~A on ~A.~%"
+		            compiler-version
+		            (backend-version *backend*)
+		            (ext:format-universal-time nil (get-universal-time) :style :iso8601
+																	    :print-weekday nil
+																	    :print-timezone nil))
+  (dolist (x (source-info-files source-info))
+    (compiler-mumble "; Compiling: ~A ~A~%"
+				     (namestring (file-info-name x))
+				     (ext:format-universal-time nil (file-info-write-date x) :style :iso8601
+																			 :print-weekday nil
+																			 :print-timezone nil)))
+  (compiler-mumble "~%")
+  (undefined-value))
+;;;
+(defun finish-error-output (source-info won)
+  (declare (type source-info source-info))
+  (compiler-mumble "~&; Compilation ~:[aborted after~;finished in~] ~A.~&"
+		           won
+		           (elapsed-time-to-string (- (get-universal-time)
+		                                      (source-info-start-time source-info))))
+  (undefined-value))
 
 */
 }

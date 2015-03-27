@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.old.functions.CompileFunction;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
@@ -30,7 +29,10 @@ import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.SymbolStruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class EvalFunction extends FunctionStruct {
 
 	public static final EvalFunction INSTANCE = new EvalFunction();
@@ -41,13 +43,16 @@ public class EvalFunction extends FunctionStruct {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(EvalFunction.class);
 
+	@Autowired
+	private CompileForm compileForm;
+
 	private EvalFunction() {
 		super("Evaluates form in the current dynamic environment and the null lexical environment.", getInitLambdaListBindings());
 	}
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
-		final SymbolStruct<?> listArgSymbol = new SymbolStruct<>("form", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> listArgSymbol = new SymbolStruct<>("FORM", GlobalPackageStruct.COMMON_LISP);
 		final ParameterAllocation listArgAllocation = new ParameterAllocation(0);
 		final RequiredBinding requiredBinding = new RequiredBinding(listArgSymbol, listArgAllocation);
 		final List<RequiredBinding> requiredBindings = Collections.singletonList(requiredBinding);
@@ -124,7 +129,8 @@ public class EvalFunction extends FunctionStruct {
 			final LambdaCompilerFunctionStruct lambdaCompilerFunction = (LambdaCompilerFunctionStruct) exp;
 			final LambdaStruct lambda = lambdaCompilerFunction.getLambdaStruct();
 
-			final FunctionStruct compiledExp = (FunctionStruct) CompileFunction.FUNCTION.funcall(lambda);
+			final CompileResult compileResult = compileForm.compile(lambda);
+			final FunctionStruct compiledExp = compileResult.getFunction();
 			return compiledExp.apply();
 		}
 
@@ -151,7 +157,8 @@ public class EvalFunction extends FunctionStruct {
 		}
 
 		if (exp instanceof CompilerSpecialOperatorStruct) {
-			final FunctionStruct compiledExp = (FunctionStruct) CompileFunction.FUNCTION.funcall(exp);
+			final CompileResult compileResult = compileForm.compile(exp);
+			final FunctionStruct compiledExp = compileResult.getFunction();
 			return compiledExp.apply();
 		}
 

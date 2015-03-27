@@ -36,14 +36,14 @@ public class FuncallFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
-		final SymbolStruct<?> functionArgSymbol = new SymbolStruct<>("function", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> functionArgSymbol = new SymbolStruct<>("FUNCTION", GlobalPackageStruct.COMMON_LISP);
 		final ParameterAllocation functionArgAllocation = new ParameterAllocation(0);
 		final RequiredBinding requiredBinding = new RequiredBinding(functionArgSymbol, functionArgAllocation);
 		final List<RequiredBinding> requiredBindings = Collections.singletonList(requiredBinding);
 
 		final List<OptionalBinding> optionalBindings = Collections.emptyList();
 
-		final SymbolStruct<?> argsArgSymbol = new SymbolStruct<>("args", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> argsArgSymbol = new SymbolStruct<>("ARGS", GlobalPackageStruct.COMMON_LISP);
 		final ParameterAllocation argsArgAllocation = new ParameterAllocation(1);
 		final RestBinding restBinding = new RestBinding(argsArgSymbol, argsArgAllocation);
 

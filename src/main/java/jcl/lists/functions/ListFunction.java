@@ -37,7 +37,7 @@ public class ListFunction extends FunctionStruct {
 		final List<RequiredBinding> requiredBindings = Collections.emptyList();
 		final List<OptionalBinding> optionalBindings = Collections.emptyList();
 
-		final SymbolStruct<?> objectRestArgSymbol = new SymbolStruct<>("objects", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> objectRestArgSymbol = new SymbolStruct<>("OBJECTS", GlobalPackageStruct.COMMON_LISP);
 		final ParameterAllocation objectRestArgArgAllocation = new ParameterAllocation(0);
 		final RestBinding restBinding = new RestBinding(objectRestArgSymbol, objectRestArgArgAllocation);
 

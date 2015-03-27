@@ -4,6 +4,7 @@
 
 package jcl.compiler.real.struct;
 
+import java.util.Arrays;
 import java.util.List;
 
 import jcl.LispStruct;
@@ -18,6 +19,10 @@ public class ValuesStruct implements LispStruct {
 	private static final long serialVersionUID = -1690706709462416782L;
 
 	private final List<LispStruct> valuesList;
+
+	public ValuesStruct(final LispStruct... values) {
+		this(Arrays.asList(values));
+	}
 
 	public ValuesStruct(final List<LispStruct> valuesList) {
 		this.valuesList = valuesList;

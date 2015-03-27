@@ -11,6 +11,8 @@ import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
+import jcl.symbols.BooleanStruct;
+import jcl.symbols.NILStruct;
 import jcl.symbols.VariableStruct;
 
 public interface CompilerVariables {
@@ -43,4 +45,7 @@ public interface CompilerVariables {
 	VariableStruct<?> SLASH = new VariableStruct<>("/", GlobalPackageStruct.COMMON_LISP, null);
 	VariableStruct<?> SLASH_SLASH = new VariableStruct<>("//", GlobalPackageStruct.COMMON_LISP, null);
 	VariableStruct<?> SLASH_SLASH_SLASH = new VariableStruct<>("///", GlobalPackageStruct.COMMON_LISP, null);
+
+	VariableStruct<BooleanStruct> COMPILE_TOP_LEVEL = new VariableStruct<>("*COMPILE-TOP-LEVEL*", GlobalPackageStruct.SYSTEM, NILStruct.INSTANCE);
+	VariableStruct<BooleanStruct> CONVERTING_FOR_INTERPRETER = new VariableStruct<>("*CONVERTING-FOR-INTERPRETER*", GlobalPackageStruct.SYSTEM, NILStruct.INSTANCE);
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
+import jcl.compiler.real.CompilerVariables;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
@@ -27,7 +28,9 @@ import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.functions.FunctionStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
+import jcl.symbols.BooleanStruct;
 import jcl.symbols.SymbolStruct;
+import jcl.symbols.TStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -128,9 +131,16 @@ public class EvalFunction extends FunctionStruct {
 			final LambdaCompilerFunctionStruct lambdaCompilerFunction = (LambdaCompilerFunctionStruct) exp;
 			final LambdaStruct lambda = lambdaCompilerFunction.getLambdaStruct();
 
-			final CompileResult compileResult = compileForm.compile(lambda);
-			final FunctionStruct compiledExp = compileResult.getFunction();
-			return compiledExp.apply();
+			final BooleanStruct oldConvertingForInterpreter = CompilerVariables.CONVERTING_FOR_INTERPRETER.getValue();
+			CompilerVariables.CONVERTING_FOR_INTERPRETER.setValue(TStruct.INSTANCE);
+
+			try {
+				final CompileResult compileResult = compileForm.compile(lambda);
+				final FunctionStruct compiledExp = compileResult.getFunction();
+				return compiledExp.apply();
+			} finally {
+				CompilerVariables.CONVERTING_FOR_INTERPRETER.setValue(oldConvertingForInterpreter);
+			}
 		}
 
 		if (exp instanceof FunctionCallStruct) {
@@ -156,9 +166,17 @@ public class EvalFunction extends FunctionStruct {
 		}
 
 		if (exp instanceof CompilerSpecialOperatorStruct) {
-			final CompileResult compileResult = compileForm.compile(exp);
-			final FunctionStruct compiledExp = compileResult.getFunction();
-			return compiledExp.apply();
+
+			final BooleanStruct oldConvertingForInterpreter = CompilerVariables.CONVERTING_FOR_INTERPRETER.getValue();
+			CompilerVariables.CONVERTING_FOR_INTERPRETER.setValue(TStruct.INSTANCE);
+
+			try {
+				final CompileResult compileResult = compileForm.compile(exp);
+				final FunctionStruct compiledExp = compileResult.getFunction();
+				return compiledExp.apply();
+			} finally {
+				CompilerVariables.CONVERTING_FOR_INTERPRETER.setValue(oldConvertingForInterpreter);
+			}
 		}
 
 		return exp;

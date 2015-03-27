@@ -7,7 +7,9 @@ import java.util.Set;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
+import jcl.compiler.real.CompilerVariables;
 import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.functions.EvalFunction;
 import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ConsStruct;
@@ -43,6 +45,9 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 	}
 
 	@Autowired
+	private EvalFunction evalFunction;
+
+	@Autowired
 	private Printer printer;
 
 	/**
@@ -55,10 +60,6 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 
 	@Override
 	public LispStruct expand(final ListStruct form, final Environment environment) {
-		return expand(form, false, false);
-	}
-
-	public LispStruct expand(final ListStruct form, final boolean isTopLevel, final boolean isCompileOrCompileFile) {
 
 		final int formSize = form.size();
 		if (formSize < 2) {
@@ -79,55 +80,29 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 		final Collection<? extends LispStruct> difference = CollectionUtils.removeAll(situationJavaList, SITUATION_KEYWORDS);
 		if (!difference.isEmpty()) {
 			final String printedSituationList = printer.print(situationList);
-			throw new ProgramErrorException("EVAL-WHEN: Situations must be one of ':COMPILE-TOP-LEVEL', ':LOAD-TIME-LEVEL', ':EXECUTE', 'COMPILE', 'LOAD', or 'EVAL'. Got: " + printedSituationList);
+			throw new ProgramErrorException("EVAL-WHEN: Situations must be one of ':COMPILE-TOPLEVEL', ':LOAD-TIMELEVEL', ':EXECUTE', 'COMPILE', 'LOAD', or 'EVAL'. Got: " + printedSituationList);
 		}
 
 		final ListStruct forms = formRest.getRest();
 
+		final boolean isTopLevel = CompilerVariables.COMPILE_TOP_LEVEL.getValue().booleanValue();
+		final boolean notConvertingForInterpreter = !CompilerVariables.CONVERTING_FOR_INTERPRETER.getValue().booleanValue();
+
 		if (isTopLevel) {
 			if (isCompileTopLevel(situationJavaList)) {
-				// (eval `(progn ,@body)))
 				final ListStruct prognOperatorList = new ConsStruct(SpecialOperatorStruct.PROGN, forms);
-
-				// TODO: what we need to do here is:
-				// TODO: 1.) Get global instance of 'EVAL' function
-				// TODO: 2.) Pass the new 'prognBody' to the 'EVAL' function
-				// TODO: 3.) Forcefully evaluate the 'EVAL' function
+				return evalFunction.apply(prognOperatorList);
 			}
 
-			if (isLoadTopLevel(situationJavaList) || (!isCompileOrCompileFile && isExecute(situationJavaList))) {
-				// (eval (funcall (function (lambda (forms) (progn forms))) body))
-
-				final SymbolStruct<?> formsSymbol = new SymbolStruct<>("FORMS");
-				final ListStruct prognOperatorList = ListStruct.buildProperList(SpecialOperatorStruct.PROGN, formsSymbol);
-
-				final ListStruct lambdaArgumentsList = ListStruct.buildProperList(formsSymbol);
-				final ListStruct lambdaOperatorList = ListStruct.buildProperList(SpecialOperatorStruct.LAMBDA, lambdaArgumentsList, prognOperatorList);
-
-				final ListStruct functionOperatorList = ListStruct.buildProperList(SpecialOperatorStruct.FUNCTION, lambdaOperatorList);
-				final ListStruct funcallList = ListStruct.buildProperList(functionOperatorList, forms);
-
-				// TODO: what we need to do here is:
-				// TODO: 1.) Create a new 'LAMBDA' function
-				// TODO: 2.) Set the body of the lambda as the 'analyzedBodyForms'
-				// TODO: 3.) Forcefully evaluate the created 'LAMBDA' function
+			if (isLoadTopLevel(situationJavaList) || (notConvertingForInterpreter && isExecute(situationJavaList))) {
+				final ListStruct prognOperatorList = new ConsStruct(SpecialOperatorStruct.PROGN, forms);
+				return evalFunction.apply(prognOperatorList);
 			}
-		} else if (isExecute(situationJavaList)) {
-			// (eval (funcall (function (lambda (forms) (progn forms))) body))
+		}
 
-			final SymbolStruct<?> formsSymbol = new SymbolStruct<>("FORMS");
-			final ListStruct prognOperatorList = ListStruct.buildProperList(SpecialOperatorStruct.PROGN, formsSymbol);
-
-			final ListStruct lambdaArgumentsList = ListStruct.buildProperList(formsSymbol);
-			final ListStruct lambdaOperatorList = ListStruct.buildProperList(SpecialOperatorStruct.LAMBDA, lambdaArgumentsList, prognOperatorList);
-
-			final ListStruct functionOperatorList = ListStruct.buildProperList(SpecialOperatorStruct.FUNCTION, lambdaOperatorList);
-			final ListStruct funcallList = ListStruct.buildProperList(functionOperatorList, forms);
-
-			// TODO: what we need to do here is:
-			// TODO: 1.) Create a new 'LAMBDA' function
-			// TODO: 2.) Set the body of the lambda as the 'analyzedBodyForms'
-			// TODO: 3.) Forcefully evaluate the created 'LAMBDA' function
+		if (isExecute(situationJavaList)) {
+			final ListStruct prognOperatorList = new ConsStruct(SpecialOperatorStruct.PROGN, forms);
+			return evalFunction.apply(prognOperatorList);
 		}
 
 		return NullStruct.INSTANCE;
@@ -151,6 +126,7 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(evalFunction)
 		                            .append(printer)
 		                            .toHashCode();
 	}
@@ -168,13 +144,15 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 		}
 		final EvalWhenExpander rhs = (EvalWhenExpander) obj;
 		return new EqualsBuilder().appendSuper(super.equals(obj))
+		                          .append(evalFunction, rhs.evalFunction)
 		                          .append(printer, rhs.printer)
 		                          .isEquals();
 	}
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(printer)
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(evalFunction)
+		                                                                .append(printer)
 		                                                                .toString();
 	}
 }

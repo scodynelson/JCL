@@ -15,8 +15,6 @@ import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
-import jcl.compiler.real.sa.analyzer.expander.NewMacroExpand;
-import jcl.compiler.real.sa.analyzer.expander.NewMacroExpandReturn;
 import jcl.compiler.real.struct.CompilerSpecialOperatorStruct;
 import jcl.compiler.real.struct.specialoperator.FunctionCallStruct;
 import jcl.compiler.real.struct.specialoperator.LambdaCompilerFunctionStruct;
@@ -40,6 +38,9 @@ public class EvalFunction extends FunctionStruct {
 	public static final SymbolStruct<?> EVAL = new SymbolStruct<>("EVAL", GlobalPackageStruct.COMMON_LISP);
 
 	private static final long serialVersionUID = 6775277576397622716L;
+
+	@Autowired
+	private MacroExpandFunction macroExpandFunction;
 
 	@Autowired
 	private CompileForm compileForm;
@@ -77,8 +78,7 @@ public class EvalFunction extends FunctionStruct {
 
 		final Environment nullEnvironment = Environment.NULL;
 
-		final NewMacroExpand newMacroExpand = new NewMacroExpand();
-		final NewMacroExpandReturn macroExpandReturn = newMacroExpand.macroExpand(originalExp, nullEnvironment);
+		final MacroExpandResult macroExpandReturn = macroExpandFunction.macroExpand(originalExp, nullEnvironment);
 		final LispStruct exp = macroExpandReturn.getExpandedForm();
 
 		if (exp instanceof SymbolStruct) {

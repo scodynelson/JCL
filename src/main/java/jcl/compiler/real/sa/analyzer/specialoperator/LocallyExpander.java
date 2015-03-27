@@ -11,7 +11,7 @@ import jcl.compiler.real.environment.LocallyEnvironment;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAnalyzer;
-import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
+import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.LocallyStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;

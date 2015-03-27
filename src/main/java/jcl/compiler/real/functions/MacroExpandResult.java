@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.compiler.real.sa.analyzer.expander;
+package jcl.compiler.real.functions;
 
 import jcl.LispStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -10,13 +10,13 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class NewMacroExpandReturn {
+public class MacroExpandResult {
 
 	private final LispStruct expandedForm;
 
 	private final boolean wasExpanded;
 
-	public NewMacroExpandReturn(final LispStruct expandedForm, final boolean wasExpanded) {
+	public MacroExpandResult(final LispStruct expandedForm, final boolean wasExpanded) {
 		this.expandedForm = expandedForm;
 		this.wasExpanded = wasExpanded;
 	}
@@ -47,7 +47,7 @@ public class NewMacroExpandReturn {
 		if (obj.getClass() != getClass()) {
 			return false;
 		}
-		final NewMacroExpandReturn rhs = (NewMacroExpandReturn) obj;
+		final MacroExpandResult rhs = (MacroExpandResult) obj;
 		return new EqualsBuilder().append(expandedForm, rhs.expandedForm)
 		                          .append(wasExpanded, rhs.wasExpanded)
 		                          .isEquals();

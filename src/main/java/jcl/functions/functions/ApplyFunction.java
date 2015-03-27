@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
@@ -23,8 +22,12 @@ import jcl.conditions.exceptions.ErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
+import jcl.printer.Printer;
 import jcl.symbols.SymbolStruct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ApplyFunction extends FunctionStruct {
 
 	public static final ApplyFunction INSTANCE = new ApplyFunction();
@@ -32,6 +35,9 @@ public class ApplyFunction extends FunctionStruct {
 	public static final SymbolStruct<?> APPLY = new SymbolStruct<>("APPLY", GlobalPackageStruct.COMMON_LISP, null, INSTANCE);
 
 	private static final long serialVersionUID = 1994110477366960170L;
+
+	@Autowired
+	private Printer printer;
 
 	private ApplyFunction() {
 		super("Applies the function to the args.", getInitLambdaListBindings());
@@ -73,8 +79,8 @@ public class ApplyFunction extends FunctionStruct {
 	public LispStruct apply(final LispStruct... lispStructs) {
 		final LispStruct lastArgument = lispStructs[lispStructs.length - 1];
 		if (!(lastArgument instanceof ListStruct)) {
-			// TODO: print this???
-			throw new ErrorException("Can't construct argument list from " + lastArgument + '.');
+			final String printedObject = printer.print(lastArgument);
+			throw new ErrorException("Can't construct argument list from " + printedObject + '.');
 		}
 
 		final List<LispStruct> lispStructsAsList = Arrays.asList(lispStructs);
@@ -92,8 +98,9 @@ public class ApplyFunction extends FunctionStruct {
 		final ListStruct argsAsListStruct = ListStruct.buildDottedList(args);
 
 		if (functionStruct == null) {
-			// TODO: print this???
-			throw new ErrorException("Undefined function " + functionDesignator + " called with arguments " + argsAsListStruct);
+			final String printedFunctionDesignator = printer.print(functionDesignator);
+			final String printedArguments = printer.print(argsAsListStruct);
+			throw new ErrorException("Undefined function " + printedFunctionDesignator + " called with arguments " + printedArguments);
 		}
 
 		final LispStruct[] argsToApply = new LispStruct[argsAsListStruct.size()];

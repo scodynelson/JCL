@@ -15,7 +15,7 @@ import jcl.compiler.real.icg.generator.specialoperator.TagbodyLabel;
 import jcl.compiler.real.icg.generator.specialoperator.exception.GoException;
 import jcl.compiler.real.icg.generator.specialoperator.exception.ReturnFromException;
 import jcl.compiler.real.icg.generator.specialoperator.exception.ThrowException;
-import jcl.compiler.real.sa.analyzer.expander.SymbolMacroExpander;
+import jcl.functions.expanders.SymbolMacroExpander;
 import jcl.compiler.real.struct.ValuesStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.FunctionStruct;

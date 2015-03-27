@@ -10,7 +10,7 @@ import jcl.LispStruct;
 import jcl.compiler.real.CompilerVariables;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.functions.EvalFunction;
-import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
+import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;

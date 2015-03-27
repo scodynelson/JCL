@@ -6,9 +6,9 @@ import java.util.Stack;
 
 import jcl.LispStruct;
 import jcl.classes.BuiltInClassStruct;
-import jcl.compiler.real.sa.analyzer.expander.CompilerMacroFunctionExpander;
-import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
-import jcl.compiler.real.sa.analyzer.expander.SymbolMacroExpander;
+import jcl.functions.expanders.CompilerMacroFunctionExpander;
+import jcl.functions.expanders.MacroFunctionExpander;
+import jcl.functions.expanders.SymbolMacroExpander;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.packages.PackageStruct;

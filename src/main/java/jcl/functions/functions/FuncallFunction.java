@@ -7,7 +7,6 @@ package jcl.functions.functions;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
@@ -22,8 +21,12 @@ import jcl.conditions.exceptions.ErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
+import jcl.printer.Printer;
 import jcl.symbols.SymbolStruct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class FuncallFunction extends FunctionStruct {
 
 	public static final FuncallFunction INSTANCE = new FuncallFunction();
@@ -31,6 +34,9 @@ public class FuncallFunction extends FunctionStruct {
 	public static final SymbolStruct<?> FUNCALL = new SymbolStruct<>("FUNCALL", GlobalPackageStruct.COMMON_LISP, null, INSTANCE);
 
 	private static final long serialVersionUID = -1425587290881971372L;
+
+	@Autowired
+	private Printer printer;
 
 	private FuncallFunction() {
 		super("Applies function to args.", getInitLambdaListBindings());
@@ -77,8 +83,9 @@ public class FuncallFunction extends FunctionStruct {
 		final ListStruct argsAsListStruct = ListStruct.buildProperList(args);
 
 		if (functionStruct == null) {
-			// TODO: print this???
-			throw new ErrorException("Undefined function " + functionDesignator + " called with arguments " + argsAsListStruct);
+			final String printedFunctionDesignator = printer.print(functionDesignator);
+			final String printedArguments = printer.print(argsAsListStruct);
+			throw new ErrorException("Undefined function " + printedFunctionDesignator + " called with arguments " + printedArguments);
 		}
 
 		return ApplyFunction.INSTANCE.apply(functionDesignator, argsAsListStruct);

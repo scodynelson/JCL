@@ -9,7 +9,7 @@ import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 
-public class DefunExpander implements MacroFunctionExpander {
+public class DefunExpander {
 
 	public LispStruct expand(final ListStruct form) {
 

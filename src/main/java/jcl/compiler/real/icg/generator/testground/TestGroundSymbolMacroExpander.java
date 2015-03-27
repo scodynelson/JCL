@@ -7,7 +7,7 @@ package jcl.compiler.real.icg.generator.testground;
 import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.sa.analyzer.expander.SymbolMacroExpander;
+import jcl.functions.expanders.SymbolMacroExpander;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class TestGroundSymbolMacroExpander extends SymbolMacroExpander {

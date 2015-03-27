@@ -13,8 +13,8 @@ import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.sa.FormAnalyzer;
-import jcl.compiler.real.sa.analyzer.expander.NewMacroExpand;
-import jcl.compiler.real.sa.analyzer.expander.NewMacroExpandReturn;
+import jcl.compiler.real.functions.MacroExpandFunction;
+import jcl.compiler.real.functions.MacroExpandResult;
 import jcl.compiler.real.struct.specialoperator.FunctionCallStruct;
 import jcl.compiler.real.struct.specialoperator.LambdaFunctionCallStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
@@ -38,7 +38,7 @@ public class FormAnalyzerImpl implements FormAnalyzer {
 	private static final long serialVersionUID = 7315325926130864447L;
 
 	@Autowired
-	private NewMacroExpand newMacroExpand;
+	private MacroExpandFunction macroExpandFunction;
 
 	@Autowired
 	private SymbolAnalyzer symbolAnalyzer;
@@ -49,7 +49,7 @@ public class FormAnalyzerImpl implements FormAnalyzer {
 	@Override
 	public LispStruct analyze(final LispStruct input, final Environment environment) {
 
-		final NewMacroExpandReturn macroExpandReturn = newMacroExpand.macroExpand(input, environment);
+		final MacroExpandResult macroExpandReturn = macroExpandFunction.macroExpand(input, environment);
 		final LispStruct expandedForm = macroExpandReturn.getExpandedForm();
 
 		if (expandedForm instanceof SymbolStruct) {
@@ -140,7 +140,7 @@ public class FormAnalyzerImpl implements FormAnalyzer {
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder().append(newMacroExpand)
+		return new HashCodeBuilder().append(macroExpandFunction)
 		                            .append(symbolAnalyzer)
 		                            .append(lambdaExpander)
 		                            .toHashCode();
@@ -158,7 +158,7 @@ public class FormAnalyzerImpl implements FormAnalyzer {
 			return false;
 		}
 		final FormAnalyzerImpl rhs = (FormAnalyzerImpl) obj;
-		return new EqualsBuilder().append(newMacroExpand, rhs.newMacroExpand)
+		return new EqualsBuilder().append(macroExpandFunction, rhs.macroExpandFunction)
 		                          .append(symbolAnalyzer, rhs.symbolAnalyzer)
 		                          .append(lambdaExpander, rhs.lambdaExpander)
 		                          .isEquals();
@@ -166,7 +166,7 @@ public class FormAnalyzerImpl implements FormAnalyzer {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(newMacroExpand)
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(macroExpandFunction)
 		                                                                .append(symbolAnalyzer)
 		                                                                .append(lambdaExpander)
 		                                                                .toString();

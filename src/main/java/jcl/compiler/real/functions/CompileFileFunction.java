@@ -29,9 +29,7 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
-import jcl.compiler.real.sa.analyzer.expander.NewMacroExpand;
-import jcl.compiler.real.sa.analyzer.expander.NewMacroExpandReturn;
+import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.compiler.real.struct.ValuesStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lists.ConsStruct;
@@ -81,7 +79,7 @@ public class CompileFileFunction {
 	private ApplicationContext context;
 
 	@Autowired
-	private NewMacroExpand macroExpand;
+	private MacroExpandFunction macroExpand;
 
 	@Autowired
 	private EvalFunction evalFunction;
@@ -374,7 +372,7 @@ public class CompileFileFunction {
 			if (car instanceof SymbolStruct) {
 				// see if that symbol is a macro function and evaluate it if so
 				if (((SymbolStruct) car).getFunction() instanceof MacroFunctionExpander) {
-					final NewMacroExpandReturn macroExpandReturn = macroExpand.macroExpand(form, Environment.NULL);
+					final MacroExpandResult macroExpandReturn = macroExpand.macroExpand(form, Environment.NULL);
 					theRealForm = processTopLevelForm(macroExpandReturn.getExpandedForm());
 				} else if (car == SpecialOperatorStruct.PROGN) {
 					ListStruct resultForms = NullStruct.INSTANCE;

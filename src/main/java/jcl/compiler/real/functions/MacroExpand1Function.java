@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.compiler.real.sa.analyzer.expander;
+package jcl.compiler.real.functions;
 
 import java.io.Serializable;
 import java.util.Optional;
@@ -11,6 +11,8 @@ import jcl.LispStruct;
 import jcl.compiler.real.CompilerVariables;
 import jcl.compiler.real.environment.Environment;
 import jcl.functions.FunctionStruct;
+import jcl.functions.expanders.MacroFunctionExpander;
+import jcl.functions.expanders.SymbolMacroExpander;
 import jcl.lists.ListStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageSymbolStruct;
@@ -18,19 +20,19 @@ import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public class NewMacroExpand implements Serializable {
+public class MacroExpand1Function implements Serializable {
 
 	private static final long serialVersionUID = 5991270831364188635L;
 
-	public NewMacroExpandReturn macroExpand(final LispStruct element, final Environment environment) {
-		NewMacroExpandReturn expansion;
+	public MacroExpandResult macroExpand(final LispStruct element, final Environment environment) {
+		MacroExpandResult expansion;
 
 		if (element instanceof ListStruct) {
 			expansion = macroExpand1((ListStruct) element, environment);
 		} else if (element instanceof SymbolStruct) {
 			expansion = macroExpand1((SymbolStruct<?>) element, environment);
 		} else {
-			expansion = new NewMacroExpandReturn(element, false);
+			expansion = new MacroExpandResult(element, false);
 		}
 
 		LispStruct expandedForm = expansion.getExpandedForm();
@@ -48,7 +50,7 @@ public class NewMacroExpand implements Serializable {
 
 	// MacroExpand1
 
-	public NewMacroExpandReturn macroExpand1(final ListStruct form, final Environment environment) {
+	public MacroExpandResult macroExpand1(final ListStruct form, final Environment environment) {
 
 		final LispStruct first = form.getFirst();
 		if (first instanceof SymbolStruct<?>) {
@@ -63,16 +65,16 @@ public class NewMacroExpand implements Serializable {
 					final FunctionStruct macroExpandHook = CompilerVariables.MACROEXPAND_HOOK.getValue();
 					final LispStruct expansion = macroExpandHook.apply(macroFunctionExpander, form, environment);
 
-					return new NewMacroExpandReturn(expansion, true);
+					return new MacroExpandResult(expansion, true);
 				}
 				// TODO: support compiler-macro-functions
 			}
 		}
 
-		return new NewMacroExpandReturn(form, false);
+		return new MacroExpandResult(form, false);
 	}
 
-	public NewMacroExpandReturn macroExpand1(final SymbolStruct<?> form, final Environment environment) {
+	public MacroExpandResult macroExpand1(final SymbolStruct<?> form, final Environment environment) {
 
 		final Optional<SymbolStruct<?>> symbolStruct = getSymbolStruct(form);
 		if (symbolStruct.isPresent()) {
@@ -84,11 +86,11 @@ public class NewMacroExpand implements Serializable {
 				final FunctionStruct macroExpandHook = CompilerVariables.MACROEXPAND_HOOK.getValue();
 				final LispStruct expansion = macroExpandHook.apply(symbolMacroExpander, form, environment);
 
-				return new NewMacroExpandReturn(expansion, true);
+				return new MacroExpandResult(expansion, true);
 			}
 		}
 
-		return new NewMacroExpandReturn(form, false);
+		return new MacroExpandResult(form, false);
 	}
 
 	private static Optional<SymbolStruct<?>> getSymbolStruct(final SymbolStruct<?> symbolElement) {

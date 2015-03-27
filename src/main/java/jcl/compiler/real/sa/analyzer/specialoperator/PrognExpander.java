@@ -7,7 +7,7 @@ import javax.annotation.PostConstruct;
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.FormAnalyzer;
-import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
+import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperatorStruct;

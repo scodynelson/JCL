@@ -14,7 +14,7 @@ import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.SymbolAnalyzer;
-import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
+import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.ProgvStruct;
 import jcl.conditions.exceptions.ProgramErrorException;

@@ -9,7 +9,7 @@ import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.LoadTimeValue;
 import jcl.compiler.real.sa.FormAnalyzer;
-import jcl.compiler.real.sa.analyzer.expander.MacroFunctionExpander;
+import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.ImmutableLoadTimeValueStruct;
 import jcl.compiler.real.struct.specialoperator.LoadTimeValueStruct;
 import jcl.compiler.real.struct.specialoperator.MutableLoadTimeValueStruct;

@@ -74,6 +74,8 @@ public class EvalFunction extends FunctionStruct {
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public LispStruct apply(final LispStruct... lispStructs) {
+		getFunctionBindings(lispStructs);
+
 		final LispStruct originalExp = lispStructs[0];
 
 		final Environment nullEnvironment = Environment.NULL;

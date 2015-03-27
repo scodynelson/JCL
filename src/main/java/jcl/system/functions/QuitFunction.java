@@ -50,6 +50,8 @@ public class QuitFunction extends FunctionStruct {
 	@SuppressWarnings("all")
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
+		getFunctionBindings(lispStructs);
+
 		System.exit(0);
 		return null;
 	}

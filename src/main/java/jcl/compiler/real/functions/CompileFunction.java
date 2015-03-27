@@ -13,10 +13,10 @@ import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindin
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
-import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.compiler.real.struct.ValuesStruct;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.functions.FunctionStruct;
+import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.NILStruct;
@@ -30,8 +30,6 @@ public class CompileFunction extends FunctionStruct {
 	public static final SymbolStruct<?> COMPILE = new SymbolStruct<>("COMPILE", GlobalPackageStruct.COMMON_LISP);
 
 	private static final long serialVersionUID = 5339244651961527815L;
-
-	private static String definitionSuppliedPName;
 
 	@Autowired
 	private CompileForm compileForm;
@@ -55,9 +53,7 @@ public class CompileFunction extends FunctionStruct {
 		final SymbolStruct<?> definitionArgSymbol = new SymbolStruct<>("DEFINITION", GlobalPackageStruct.COMMON_LISP);
 		final ParameterAllocation definitionArgAllocation = new ParameterAllocation(1);
 
-		definitionSuppliedPName = "DEFINITION-P-" + System.nanoTime();
-		final SymbolStruct<?> definitionSuppliedP = new SymbolStruct<>(definitionSuppliedPName, GlobalPackageStruct.SYSTEM);
-
+		final SymbolStruct<?> definitionSuppliedP = new SymbolStruct<>("DEFINITION-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
 		final ParameterAllocation suppliedPAllocation = new ParameterAllocation(2);
 		final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(definitionSuppliedP, suppliedPAllocation);
 
@@ -75,18 +71,15 @@ public class CompileFunction extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		final LispStruct name = lispStructs[0];
+		getFunctionBindings(lispStructs);
 
-		final SymbolStruct<?> suppliedPSymbol = GlobalPackageStruct.SYSTEM.findSymbol(definitionSuppliedPName).getSymbol();
-		LispStruct suppliedPValue = suppliedPSymbol.getLexicalValue();
-		if (suppliedPValue instanceof ValuesStruct) {
-			final ValuesStruct values = (ValuesStruct) suppliedPValue;
-			suppliedPValue = values.getPrimaryValue();
+		final LispStruct name = lispStructs[0];
+		LispStruct uncompiledDefinition = null;
+		if (lispStructs.length == 2) {
+			uncompiledDefinition = lispStructs[1];
 		}
 
-		if (!suppliedPValue.equals(NullStruct.INSTANCE) && !suppliedPValue.equals(NILStruct.INSTANCE)) {
-			final LispStruct uncompiledDefinition = lispStructs[1];
-
+		if (uncompiledDefinition != null) {
 			final CompileResult compiledDefinition = compileForm.compile(uncompiledDefinition);
 			final FunctionStruct function = compiledDefinition.getFunction();
 

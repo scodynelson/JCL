@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.math.BigInteger;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 import java.util.regex.Pattern;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 
@@ -29,14 +31,13 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.sa.SemanticAnalyzer;
-import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.compiler.real.struct.ValuesStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
+import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.numbers.IntegerStruct;
-import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
 import jcl.pathnames.PathnameStruct;
@@ -52,23 +53,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CompileFileFunction {
 
 	public static final CompileFileFunction FUNCTION = new CompileFileFunction();
-
-	// compilation modes
-	public static final SymbolStruct<?> COMPILE = GlobalPackageStruct.SYSTEM.intern("%COMPILE").getSymbol();
-
-	public static final SymbolStruct<?> LOAD = GlobalPackageStruct.COMMON_LISP.intern("LOAD").getSymbol();
-
-	public static final SymbolStruct<?> EVAL = GlobalPackageStruct.COMMON_LISP.intern("EVAL").getSymbol();
-
-	public static final SymbolStruct<?> COMPILE_TOPLEVEL = GlobalPackageStruct.KEYWORD.intern("COMPILE-TOPLEVEL").getSymbol();
-
-	public static final SymbolStruct<?> LOAD_TOPLEVEL = GlobalPackageStruct.KEYWORD.intern("LOAD-TOPLEVEL").getSymbol();
-
-	public static final SymbolStruct<?> EXECUTE = GlobalPackageStruct.KEYWORD.intern("EXECUTE").getSymbol();
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CompileFileFunction.class);
 
@@ -77,6 +67,12 @@ public class CompileFileFunction {
 
 	@Autowired
 	private ApplicationContext context;
+
+	@Autowired
+	private SemanticAnalyzer semanticAnalyzer;
+
+	@Autowired
+	private IntermediateCodeGenerator intermediateCodeGenerator;
 
 	@Autowired
 	private MacroExpandFunction macroExpand;
@@ -90,12 +86,16 @@ public class CompileFileFunction {
 		final Object verbose = args.getRest().getRest().getFirst();
 		final long duration = System.currentTimeMillis();
 
+
+		PathnameStruct inputFile = null;
+
+		// TODO: next verify the file with the pathname actually exists
+		// if not, throw error: "Can't compile with no source files." or something to that effect
+
+
 		final String inputAsString = input.toString();
 		final boolean correctInputType = inputAsString.endsWith(".lsp") || inputAsString.endsWith(".lisp");
 
-		if (args == NullStruct.INSTANCE) {
-			throw new RuntimeException("too few arguments given to COMPILE-FILE:");
-		}
 		if (!correctInputType) {
 			throw new RuntimeException("file to compile must be of type .lsp or .lisp");
 		}
@@ -145,18 +145,15 @@ public class CompileFileFunction {
 			formList = new ConsStruct(NullStruct.INSTANCE, formList);
 			formList = new ConsStruct(SpecialOperatorStruct.LAMBDA, formList);
 
-			final SemanticAnalyzer sa = context.getBean(SemanticAnalyzer.class);
-			final IntermediateCodeGenerator icg = context.getBean(IntermediateCodeGenerator.class);
-
 			// set up the timers...
 
 			long baseTime = System.currentTimeMillis();
-			final LambdaStruct lambdaForm = sa.analyze(formList);
+			final LambdaStruct lambdaForm = semanticAnalyzer.analyze(formList);
 			final long saTime = System.currentTimeMillis() - baseTime;
 
 			baseTime = System.currentTimeMillis();
 
-			final List<ClassDef> v = new ArrayList<>(icg.generate(lambdaForm));
+			final List<ClassDef> v = new ArrayList<>(intermediateCodeGenerator.generate(lambdaForm));
 			final List<String> oc = new ArrayList<String>(v.size());
 			final List<byte[]> classBytes = new ArrayList<>(v.size());
 
@@ -219,15 +216,15 @@ public class CompileFileFunction {
 			jar.close();
 
 			if (outputFileFile.exists()) {
-				System.out.println("Closing and deleting " + outputFileFile);
+				LOGGER.info("Closing and deleting {}", outputFileFile);
 				new JarFile(outputFileFile).close();
 				outputFileFile.delete();
 			}
 
 			if (!tmpFile.renameTo(outputFileFile)) {
 
-				System.out.println("Warning: Unable to rename temp file: " + tmpFile + ". JAR file not created.");
-				System.out.println("\t Attempting to copy then delete temp file instead...");
+				LOGGER.warn("Warning: Unable to rename temp file: {}. JAR file not created.", tmpFile);
+				LOGGER.warn("\t Attempting to copy then delete temp file instead...");
 
 				// copying file to destination
 				final FileInputStream srcFile = new FileInputStream(tmpFile);
@@ -243,17 +240,13 @@ public class CompileFileFunction {
 
 				// deleting temp jar file
 				if (!tmpFile.delete()) {
-					System.out.println("WARNING: Failed to delete temp jar file.");
+					LOGGER.warn("WARNING: Failed to delete temp jar file.");
 				}
 			}
 
 			final long jarTime = System.currentTimeMillis() - baseTime;
-			System.out.println("; Total compilation time: "
-					+ (System.currentTimeMillis() - duration) + " ms\n");
-			System.out.println("; Details:\n"
-					+ ";  SA: " + saTime + " ms\n"
-					+ ";  ICG: " + icgTime + " ms\n"
-					+ ";  Jar: " + jarTime + " ms\n");
+			LOGGER.info("; Total compilation time: {} ms\n", System.currentTimeMillis() - duration);
+			LOGGER.info("; Details:\n;  SA: {} ms\n;  ICG: {} ms\n;  Jar: {} ms\n", saTime, icgTime, jarTime);
 
 			// returns 3 values
 			final Object[] ret = new Object[3];
@@ -263,101 +256,22 @@ public class CompileFileFunction {
 			return ret;
 
 		} catch (final FileNotFoundException e) {
-			System.out.println(e.getCause());
-			e.printStackTrace();
+			LOGGER.error("FileNotFoundException", e);
 			throw new RuntimeException("File " + input + " does not exist.");
 		} catch (final IOException e) {
-			System.out.println(e.getCause());
-			e.printStackTrace();
+			LOGGER.error("IOException", e);
 			throw new RuntimeException("Unable to view contents of File " + input);
-		} catch (final Exception e) {
-			System.out.println(e.getCause());
-			e.printStackTrace();
-			throw new RuntimeException("Exception caught in COMPILE-FILE:");
+		} catch (final IllegalArgumentException e) {
+			LOGGER.error("IllegalArgumentException", e);
+			throw new RuntimeException(e);
+		} catch (final TransformerConfigurationException e) {
+			LOGGER.error("TransformerConfigurationException", e);
+			throw new RuntimeException(e);
+		} catch (final URISyntaxException e) {
+			LOGGER.error("URISyntaxException", e);
+			throw new RuntimeException(e);
 		} finally {
 			PackageVariables.PACKAGE.setValue(oldPackageVarValue);
-		}
-	}
-
-	public enum ProcessingMode {
-		COMPILE_TIME_TOO, NOT_COMPILE_TIME
-	}
-
-	private ProcessingMode mode = ProcessingMode.NOT_COMPILE_TIME;
-
-	public enum ProcessingAction {
-		PROCESS, EVALUATE, DISCARD
-	}
-
-	/* See Common Lisp The Language, 2nd Edition, Section 5.3.3 */
-	private ListStruct checkSituation(final ListStruct situation) {
-		mode = ProcessingMode.NOT_COMPILE_TIME;
-		// At the end, just return NIL
-		if (situation == NullStruct.INSTANCE) {
-			return NullStruct.INSTANCE;
-		}
-		// perhaps the program used the deprecated names
-		SymbolStruct<?> car = (SymbolStruct) situation.getFirst();
-		if (car == COMPILE) {
-			car = COMPILE_TOPLEVEL;
-		} else if (car == LOAD) {
-			car = LOAD_TOPLEVEL;
-		} else if (car == EVAL) {
-			car = EXECUTE;
-		}
-		// do we have something other than the right symbols?
-		if ((car == COMPILE_TOPLEVEL)
-				|| (car == LOAD_TOPLEVEL)
-				|| (car == EXECUTE)) {
-			// it's ok so far
-			final ListStruct situationResult = checkSituation(situation.getRest());
-			return new ConsStruct(car, situationResult);
-		} else {
-			System.err.println("EVAL-WHEN: improper symbol in the situation place. " + car);
-			return checkSituation(situation.getRest());
-		}
-	}
-
-	private ProcessingAction evalAction(final ListStruct situation, final ProcessingMode currentMode) {
-		if (situation.getAsJavaList().contains(LOAD_TOPLEVEL)) {
-			return ProcessingAction.PROCESS;
-		}
-		if (situation.getAsJavaList().contains(COMPILE_TOPLEVEL)) {
-			return ProcessingAction.EVALUATE;
-		}
-		if (situation.getAsJavaList().contains(EXECUTE)) {
-			if (currentMode == ProcessingMode.COMPILE_TIME_TOO) {
-				return ProcessingAction.EVALUATE;
-			} else if (currentMode == ProcessingMode.NOT_COMPILE_TIME) {
-				return ProcessingAction.DISCARD;
-			}
-		} else {
-			return ProcessingAction.DISCARD;
-		}
-		return null;
-	}
-
-	private ProcessingMode evalMode(final ListStruct situation, final ProcessingMode currentMode) {
-		if (situation.getAsJavaList().contains(LOAD_TOPLEVEL)) {
-			if (situation.getAsJavaList().contains(COMPILE_TOPLEVEL)) {
-				// it's known that LT is present, only one line for CT
-				return ProcessingMode.COMPILE_TIME_TOO;
-			} else {
-				// what's last are CTs being No.
-				if (situation.getAsJavaList().contains(EXECUTE)) {
-					// now we have to look at the current mode
-					// The E is present for 2 lines.
-					// Have to look at the current mode (CTT or NCT)
-					// But the changes are to what they are
-					return currentMode;
-				} else {
-					// no E, change mode to not-compile-time
-					return ProcessingMode.NOT_COMPILE_TIME;
-				}
-			}
-		} else {
-			// No new modes when no LT true
-			return currentMode;
 		}
 	}
 
@@ -392,62 +306,42 @@ public class CompileFileFunction {
 					theRealForm = ListStruct.buildProperList(form);
 				} else if (car == SpecialOperatorStruct.EVAL_WHEN) {
 					// processEvalWhen...
-					final LispStruct evalForm = handleEvalWhen(form);
+					final LispStruct evalForm = evalFunction.apply(form);
+
 					theRealForm = processTopLevelForm(evalForm);
 				} else {
-					if (mode == ProcessingMode.COMPILE_TIME_TOO) {
-						final LispStruct formCopy = xcopyTree(theRealForm);
-						evalFunction.apply(formCopy);
-					}
+					evalFunction.apply(form);
 				}
 			}
 		}
 		return theRealForm;
 	}
 
-	private LispStruct handleEvalWhen(final ListStruct list) {
-		// starts with (eval-when theSituation then-the-rest)
-		ProcessingMode currentMode = mode;
-		try {
-			ListStruct situation = (ListStruct) list.getRest().getFirst();
-			// first check the situation flags
-			situation = checkSituation(situation);
 
-			final ProcessingAction processingAction = evalAction(situation, currentMode);
-			final ProcessingMode processingMode = evalMode(situation, currentMode);
-			currentMode = processingMode;
 
-			ListStruct formsToEval = list.getRest().getRest();
 
-			// now, handle the actions
-			ListStruct resultForms = NullStruct.INSTANCE;
-			while (!formsToEval.getAsJavaList().isEmpty()) {
-				final LispStruct theForm = formsToEval.getFirst();
-				if (theForm instanceof ListStruct) {
-					if (processingAction == ProcessingAction.DISCARD) {
-					} else if (processingAction == ProcessingAction.EVALUATE) {
-						// call the EVAL function
-						evalFunction.apply(theForm);
-						// but the form isn't later compiled for loading
-					} else {
-						// handle the 2 forms of Process
-						if (processingMode == ProcessingMode.COMPILE_TIME_TOO) {
-							// have to evaluate the form
-							evalFunction.apply(xcopyTree(theForm));
-						} else {
-							System.out.println("Oops The mode was " + processingMode + " and action " + processingAction + "...");
-						}
-						// now we just return the form for compilation later
-						resultForms = new ConsStruct(theForm, resultForms);
-					}
-				}
-				formsToEval = formsToEval.getRest();
-			}
-			return reverse(resultForms);
-		} finally {
-			mode = currentMode;
-		}
-	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	private List<List<LispStruct>> readForms(final FileStreamStruct file) {
 		final List<LispStruct> forms = new ArrayList<>();
@@ -466,7 +360,7 @@ public class CompileFileFunction {
 			if (form instanceof ListStruct) {
 				form = processTopLevelForm(form);  // may return list of Object[]
 			} else {
-				System.out.println("Deleted a non-ListStruct form " + form + " found at line " + file.filePosition(null));
+				LOGGER.warn("Deleted a non-ListStruct form {} found at line {}", form, file.filePosition(null));
 				form = NullStruct.INSTANCE;
 			}
 
@@ -490,24 +384,6 @@ public class CompileFileFunction {
 		return value;
 	}
 
-	private static LispStruct xcopyTree(final LispStruct arg1) {
-		if (arg1 instanceof ConsStruct) {
-			final ListStruct orgLst = (ListStruct) arg1;
-			ListStruct cLst;
-			// checks for an empty list
-			if (orgLst == NullStruct.INSTANCE) {
-				return orgLst;
-			} else {
-			    /* loop through the orginial list's elements and create a new list of the elements */
-				cLst = new ConsStruct(xcopyTree(orgLst.getFirst()), xcopyTree(((ConsStruct) arg1).getCdr()));
-				// return the copied list
-				return cLst;
-			}
-		} else {
-			return arg1;
-		}
-	}
-
 	private static ListStruct reverse(final ListStruct arg1) {
 
 		ListStruct theList = arg1;
@@ -520,7 +396,7 @@ public class CompileFileFunction {
 	}
 
 
-
+// TODO: Need: 'translate-logical-pathname' | 'make-pathname' | 'pathname' | 'open'
 
 
 /*
@@ -539,7 +415,7 @@ public class CompileFileFunction {
 							     ((:byte-compile *byte-compile*) *byte-compile-default*)
 						         ((:xref *record-xref-info*) *record-xref-info*))
 
-  (let* ((fasl-file nil)
+  (let* ((jar-file nil)
 		 (error-file-stream nil)
 		 (output-file-pathname nil)
 		 (*compiler-error-output* *compiler-error-output*)
@@ -561,7 +437,7 @@ public class CompileFileFunction {
 			      (translate-logical-pathname (if (eq output-file t)
 												  (compile-file-pathname (first source) :byte-compile *byte-compile*)
 												(compile-file-pathname (first source) :output-file output-file :byte-compile *byte-compile*))))
-		    (setq fasl-file (open-fasl-file output-file-pathname (namestring (first source)) (eq *byte-compile* t))))
+		    (setq jar-file (open-jar-file output-file-pathname (namestring (first source)) (eq *byte-compile* t))))
 
 		  (when trace-file
 		    (setq *compiler-trace-output*
@@ -580,15 +456,15 @@ public class CompileFileFunction {
 		(when *compile-verbose*
 		  (start-error-output source-info))
 		(setq error-severity
-			  (let ((*compile-object* fasl-file))
+			  (let ((*compile-object* jar-file))
 			    (sub-compile-file source-info)))
 		(setq compile-won t))
 
 	  (close-source-info source-info)
 
-	  (when fasl-file
-		(close-fasl-file fasl-file (not compile-won))
-		(setq output-file-pathname (pathname (fasl-file-stream fasl-file)))
+	  (when jar-file
+		(close-jar-file jar-file (not compile-won))
+		(setq output-file-pathname (pathname (jar-file-stream jar-file)))
 		(when (and compile-won *compile-verbose*)
 		  (compiler-mumble "~2&; ~A written.~%" (namestring output-file-pathname))))
 
@@ -610,7 +486,7 @@ public class CompileFileFunction {
 
     (when load
 	  (unless output-file
-		(error (intl:gettext "Can't :LOAD with no output file.")))
+		(error "Can't :LOAD with no output file."))
 	  (load output-file-pathname :verbose *compile-verbose*))
 
 	(values (if output-file
@@ -628,5 +504,64 @@ public class CompileFileFunction {
 		        t
 		      nil))))
 
+;;; Sub-Compile-File  --  Internal
+;;;
+;;;    Read all forms from Info and compile them, with output to Object.  We
+;;; return :ERROR, :WARNING, :NOTE or NIL to indicate the most severe kind of
+;;; compiler diagnostic emitted.
+;;;
+(defun sub-compile-file (info &optional d-s-info)
+  (declare (type source-info info))
+  (with-ir1-namespace
+    (let* ((*block-compile* *block-compile-argument*)
+		   (start-errors *compiler-error-count*)
+		   (start-warnings *compiler-warning-count*)
+		   (start-notes *compiler-note-count*)
+		   (*package* *package*)
+		   (*initial-package* *package*)
+		   (*initial-cookie* *default-cookie*)
+		   (*initial-interface-cookie* *default-interface-cookie*)
+		   (*default-cookie* (copy-cookie *initial-cookie*))
+		   (*default-interface-cookie* (copy-cookie *initial-interface-cookie*))
+		   (*lexical-environment* (make-null-environment))
+		   (*converting-for-interpreter* nil)
+		   (*source-info* info)
+		   (*user-source-info* d-s-info)
+		   (*compile-file-pathname* nil)
+		   (*compile-file-truename* nil)
+		   (*top-level-lambdas* ())
+		   (*pending-top-level-lambdas* ())
+		   (*compiler-error-bailout* #'(lambda ()
+										 (compiler-mumble "~2&Fatal error, aborting compilation...~%")
+										 (return-from sub-compile-file :error)))
+		   (*current-path* nil)
+		   (*last-source-context* nil)
+		   (*last-original-source* nil)
+		   (*last-source-form* nil)
+		   (*last-format-string* nil)
+		   (*last-format-args* nil)
+		   (*last-message-count* 0)
+		   (*info-environment* (or (backend-info-environment *backend*)
+								   *info-environment*))
+		   (*gensym-counter* 0)
+		   (intl::*default-domain* intl::*default-domain*))
+	      (with-debug-counters
+			(clear-stuff)
+			(with-compilation-unit ()
+			  (process-sources info)
+
+			  (finish-block-compilation)
+			  (compile-top-level-lambdas () t)
+			  (let ((object *compile-object*))
+			    (etypecase object
+			      (jar-file (jar-dump-source-info info object))
+			      (core-object (fix-core-source-info info object d-s-info))
+			      (null)))
+
+			  (cond ((> *compiler-error-count* start-errors) :error)
+					((> *compiler-warning-count* start-warnings) :warning)
+					((> *compiler-note-count* start-notes) :note)
+					(t nil)))))))
+
 */
 }

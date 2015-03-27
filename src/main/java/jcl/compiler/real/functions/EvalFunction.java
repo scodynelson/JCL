@@ -27,6 +27,7 @@ import jcl.functions.FunctionStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.BooleanStruct;
+import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,8 +81,16 @@ public class EvalFunction extends FunctionStruct {
 
 		final Environment nullEnvironment = Environment.NULL;
 
-		final MacroExpandResult macroExpandReturn = macroExpandFunction.macroExpand(originalExp, nullEnvironment);
-		final LispStruct exp = macroExpandReturn.getExpandedForm();
+		final BooleanStruct oldCompileTopLevel = CompilerVariables.COMPILE_TOP_LEVEL.getValue();
+		CompilerVariables.COMPILE_TOP_LEVEL.setValue(NILStruct.INSTANCE);
+
+		LispStruct exp;
+		try {
+			final MacroExpandResult macroExpandReturn = macroExpandFunction.macroExpand(originalExp, nullEnvironment);
+			exp = macroExpandReturn.getExpandedForm();
+		} finally {
+			CompilerVariables.COMPILE_TOP_LEVEL.setValue(oldCompileTopLevel);
+		}
 
 		if (exp instanceof SymbolStruct) {
 			final SymbolStruct<?> symbol = (SymbolStruct) exp;
@@ -133,6 +142,8 @@ public class EvalFunction extends FunctionStruct {
 			final LambdaCompilerFunctionStruct lambdaCompilerFunction = (LambdaCompilerFunctionStruct) exp;
 			final LambdaStruct lambda = lambdaCompilerFunction.getLambdaStruct();
 
+			CompilerVariables.COMPILE_TOP_LEVEL.setValue(NILStruct.INSTANCE);
+
 			final BooleanStruct oldConvertingForInterpreter = CompilerVariables.CONVERTING_FOR_INTERPRETER.getValue();
 			CompilerVariables.CONVERTING_FOR_INTERPRETER.setValue(TStruct.INSTANCE);
 
@@ -142,6 +153,7 @@ public class EvalFunction extends FunctionStruct {
 				return compiledExp.apply();
 			} finally {
 				CompilerVariables.CONVERTING_FOR_INTERPRETER.setValue(oldConvertingForInterpreter);
+				CompilerVariables.COMPILE_TOP_LEVEL.setValue(oldCompileTopLevel);
 			}
 		}
 
@@ -169,6 +181,8 @@ public class EvalFunction extends FunctionStruct {
 
 		if (exp instanceof CompilerSpecialOperatorStruct) {
 
+			CompilerVariables.COMPILE_TOP_LEVEL.setValue(NILStruct.INSTANCE);
+
 			final BooleanStruct oldConvertingForInterpreter = CompilerVariables.CONVERTING_FOR_INTERPRETER.getValue();
 			CompilerVariables.CONVERTING_FOR_INTERPRETER.setValue(TStruct.INSTANCE);
 
@@ -178,6 +192,7 @@ public class EvalFunction extends FunctionStruct {
 				return compiledExp.apply();
 			} finally {
 				CompilerVariables.CONVERTING_FOR_INTERPRETER.setValue(oldConvertingForInterpreter);
+				CompilerVariables.COMPILE_TOP_LEVEL.setValue(oldCompileTopLevel);
 			}
 		}
 

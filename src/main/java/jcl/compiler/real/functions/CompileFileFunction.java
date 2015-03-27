@@ -571,11 +571,10 @@ public class CompileFileFunction {
 
 		  (setq *compiler-error-output*
 			(apply #'make-broadcast-stream
-			       (remove nil
-				       (list (if (eq error-output t)
-						 *error-output*
-						 error-output)
-					     error-file-stream))))
+			       (remove nil (list (if (eq error-output t)
+										 *error-output*
+									   error-output)
+									 error-file-stream))))
 
 		(when *compile-verbose*
 		  (start-error-output source-info))
@@ -584,29 +583,29 @@ public class CompileFileFunction {
 			    (sub-compile-file source-info)))
 		(setq compile-won t))
 
-	    (close-source-info source-info)
+	  (close-source-info source-info)
 
-	    (when fasl-file
-		  (close-fasl-file fasl-file (not compile-won))
-		  (setq output-file-pathname (pathname (fasl-file-stream fasl-file)))
-		  (when (and compile-won *compile-verbose*)
-		    (compiler-mumble "~2&; ~A written.~%" (namestring output-file-pathname))))
+	  (when fasl-file
+		(close-fasl-file fasl-file (not compile-won))
+		(setq output-file-pathname (pathname (fasl-file-stream fasl-file)))
+		(when (and compile-won *compile-verbose*)
+		  (compiler-mumble "~2&; ~A written.~%" (namestring output-file-pathname))))
 
-	    (when *compile-verbose*
-		  (finish-error-output source-info compile-won))
+	  (when *compile-verbose*
+	    (finish-error-output source-info compile-won))
 
-	    (when error-file-stream
-		  (let ((name (pathname error-file-stream)))
-		    ;;
-		    ;; Leave this var pointing to something reasonable in case someone
-		    ;; tries to use it before the LET ends, e.g. during the LOAD.
-		    (setq *compiler-error-output* *error-output*)
-		    (close error-file-stream)
-		    (when (and compile-won (not error-severity))
-		      (delete-file name))))
+	  (when error-file-stream
+		(let ((name (pathname error-file-stream)))
+		  ;;
+		  ;; Leave this var pointing to something reasonable in case someone
+		  ;; tries to use it before the LET ends, e.g. during the LOAD.
+		  (setq *compiler-error-output* *error-output*)
+		  (close error-file-stream)
+		  (when (and compile-won (not error-severity))
+		    (delete-file name))))
 
-	    (when *compiler-trace-output*
-		  (close *compiler-trace-output*)))
+	  (when *compiler-trace-output*
+		(close *compiler-trace-output*)))
 
     (when load
 	  (unless output-file

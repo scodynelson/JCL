@@ -160,6 +160,7 @@
       <w>pairlis</w>
       <w>pathnamep</w>
       <w>pathnames</w>
+      <w>pathspec</w>
       <w>plusp</w>
       <w>pprint</w>
       <w>prin</w>
@@ -224,6 +225,7 @@
       <w>unintern</w>
       <w>uninterned</w>
       <w>uninterning</w>
+      <w>unsupplied</w>
       <w>untrace</w>
       <w>unuse</w>
       <w>upcase</w>

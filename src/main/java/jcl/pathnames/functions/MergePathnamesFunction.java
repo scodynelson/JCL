@@ -4,152 +4,194 @@
 
 package jcl.pathnames.functions;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import javax.annotation.PostConstruct;
+
 import jcl.LispStruct;
+import jcl.compiler.real.environment.allocation.ParameterAllocation;
+import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
+import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
+import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
+import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
+import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
+import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
+import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
+import jcl.conditions.exceptions.ErrorException;
 import jcl.functions.FunctionStruct;
+import jcl.lists.NullStruct;
+import jcl.numbers.IntegerStruct;
+import jcl.packages.GlobalPackageStruct;
+import jcl.pathnames.LogicalPathnameStruct;
+import jcl.pathnames.PathnameDevice;
+import jcl.pathnames.PathnameDirectory;
+import jcl.pathnames.PathnameFileStruct;
+import jcl.pathnames.PathnameHost;
+import jcl.pathnames.PathnameName;
 import jcl.pathnames.PathnameStruct;
+import jcl.pathnames.PathnameType;
+import jcl.pathnames.PathnameURIStruct;
+import jcl.pathnames.PathnameVariables;
+import jcl.pathnames.PathnameVersion;
+import jcl.pathnames.PathnameVersionComponentType;
+import jcl.printer.Printer;
+import jcl.symbols.SymbolStruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MergePathnamesFunction extends FunctionStruct {
 
+	public static final SymbolStruct<?> MERGE_PATHNAMES = new SymbolStruct<>("MERGE-PATHNAMES", GlobalPackageStruct.COMMON_LISP);
+
 	private static final long serialVersionUID = 3634903325863235363L;
+
+	@Autowired
+	private PathnameFunction pathnameFunction;
+
+	@Autowired
+	private Printer printer;
+
+	private MergePathnamesFunction() {
+		super("Constructs a pathname from pathname by filling in any unsupplied components with the corresponding values from default-pathname and default-version.", getInitLambdaListBindings());
+	}
+
+	@PostConstruct
+	private void init() {
+		MERGE_PATHNAMES.setFunction(this);
+	}
+
+	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
+
+		final SymbolStruct<?> pathnameArgSymbol = new SymbolStruct<>("PATHNAME", GlobalPackageStruct.COMMON_LISP);
+		final ParameterAllocation pathnameArgAllocation = new ParameterAllocation(0);
+		final RequiredBinding requiredBinding = new RequiredBinding(pathnameArgSymbol, pathnameArgAllocation);
+		final List<RequiredBinding> requiredBindings = Collections.singletonList(requiredBinding);
+
+		final List<OptionalBinding> optionalBindings = new ArrayList<>(2);
+
+		final SymbolStruct<?> defaultPathnameArgSymbol = new SymbolStruct<>("DEFAULT-PATHNAME", GlobalPackageStruct.COMMON_LISP);
+		final ParameterAllocation defaultPathnameArgAllocation = new ParameterAllocation(1);
+
+		final SymbolStruct<?> defaultPathnameSuppliedPSymbol = new SymbolStruct<>("DEFAULT-PATHNAME-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
+		final ParameterAllocation defaultPathnameSuppliedPAllocation = new ParameterAllocation(2);
+		final SuppliedPBinding defaultPathnameSuppliedPBinding = new SuppliedPBinding(defaultPathnameSuppliedPSymbol, defaultPathnameSuppliedPAllocation);
+
+		final OptionalBinding defaultPathnameOptionalBinding = new OptionalBinding(defaultPathnameArgSymbol, defaultPathnameArgAllocation, NullStruct.INSTANCE, defaultPathnameSuppliedPBinding);
+		optionalBindings.add(defaultPathnameOptionalBinding);
+
+		final SymbolStruct<?> defaultVersionArgSymbol = new SymbolStruct<>("DEFAULT-VERSION", GlobalPackageStruct.COMMON_LISP);
+		final ParameterAllocation defaultVersionArgAllocation = new ParameterAllocation(3);
+
+		final SymbolStruct<?> defaultVersionSuppliedPSymbol = new SymbolStruct<>("DEFAULT-VERSION-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
+		final ParameterAllocation defaultVersionSuppliedPAllocation = new ParameterAllocation(4);
+		final SuppliedPBinding defaultVersionSuppliedPBinding = new SuppliedPBinding(defaultVersionSuppliedPSymbol, defaultVersionSuppliedPAllocation);
+
+		final OptionalBinding defaultVersionOptionalBinding = new OptionalBinding(defaultVersionArgSymbol, defaultVersionArgAllocation, NullStruct.INSTANCE, defaultVersionSuppliedPBinding);
+		optionalBindings.add(defaultVersionOptionalBinding);
+
+		final RestBinding restBinding = null;
+
+		final List<KeyBinding> keyBindings = Collections.emptyList();
+		final boolean allowOtherKeys = false;
+		final List<AuxBinding> auxBindings = Collections.emptyList();
+
+		return new OrdinaryLambdaListBindings(requiredBindings, optionalBindings, restBinding, keyBindings, auxBindings, allowOtherKeys);
+	}
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		// TODO
-		return null;
+		getFunctionBindings(lispStructs);
+
+		final LispStruct pathname = lispStructs[0];
+
+		final int length = lispStructs.length;
+		if (length > 1) {
+			final LispStruct defaultPathspec = lispStructs[1];
+			if (length > 2) {
+				final PathnameVersion defaultVersion = getPathnameVersion(lispStructs[2]);
+				return mergePathnames(pathname, defaultPathspec, defaultVersion);
+			} else {
+				return mergePathnames(pathname, defaultPathspec);
+			}
+		} else {
+			return mergePathnames(pathname);
+		}
 	}
 
-	public PathnameStruct mergePathnames(final LispStruct arg1, final LispStruct arg2) {
-		// TODO
-		return (PathnameStruct) arg1;
+	public PathnameStruct mergePathnames(final LispStruct pathSpec) {
+		final PathnameStruct defaultPathspec = PathnameVariables.DEFAULT_PATHNAME_DEFAULTS.getValue();
+		return mergePathnames(pathSpec, defaultPathspec);
 	}
 
-/*
+	public PathnameStruct mergePathnames(final LispStruct pathSpec, final LispStruct defaultPathspec) {
+		final PathnameVersion defaultVersion = new PathnameVersion(PathnameVersionComponentType.NEWEST);
+		return mergePathnames(pathSpec, defaultPathspec, defaultVersion);
+	}
 
-;;; MERGE-PATHNAMES -- Interface
-;;;
-(defun merge-pathnames (pathname &optional (defaults *default-pathname-defaults*)
-										   (default-version :newest))
-  (with-pathname (defaults defaults)
-    (let ((pathname (let ((*default-pathname-defaults* defaults))
-		              (pathname pathname))))
-      (let* ((default-host (%pathname-host defaults))
-		     (pathname-host (%pathname-host pathname))
-		     (diddle-case (and default-host pathname-host
-							   (not (eq (host-customary-case default-host)
-								    (host-customary-case pathname-host))))))
-		(make-pathname :host (or pathname-host default-host)
-					   :device (or (%pathname-device pathname)
-						           (maybe-diddle-case (%pathname-device defaults) diddle-case))
-					   :directory (merge-directories (%pathname-directory pathname)
-									                 (%pathname-directory defaults)
-									                 diddle-case)
-					   :name (or (%pathname-name pathname)
-							     (maybe-diddle-case (%pathname-name defaults)
-									                diddle-case))
-					   :type (or (%pathname-type pathname)
-							     (maybe-diddle-case (%pathname-type defaults)
-									                diddle-case))
-					   :version (or (if (null (%pathname-name pathname))
-										(or (%pathname-version pathname)
-										    (%pathname-version defaults))
-								      (%pathname-version pathname))
-							        default-version))))))
+	public PathnameStruct mergePathnames(final LispStruct pathSpec, final LispStruct defaultPathspec,
+	                                     final PathnameVersion defaultVersion) {
 
+		final PathnameStruct pathname = pathnameFunction.pathname(pathSpec);
+		final PathnameStruct defaultPathname = pathnameFunction.pathname(defaultPathspec);
 
-;;; MERGE-DIRECTORIES -- Internal
-;;;
-(defun merge-directories (dir1 dir2 diddle-case)
-  (if (or (eq (car dir1) :absolute)
-	      (null dir2))
-      dir1
-    (let ((results nil))
-	  (flet ((add (dir)
-			   (if (and (eq dir :back)
-				        (cdr results)
-				        (not (eq (car results) :back)))
-			       (pop results)
-			     (push dir results))))
-	    (dolist (dir (maybe-diddle-case dir2 diddle-case))
-	      (add dir))
-	    (dolist (dir (cdr dir1))
-	      (add dir)))
-	  (reverse results))))
+		PathnameHost mergedPathnameHost = pathname.getPathnameHost();
+		PathnameDevice mergedPathnameDevice = pathname.getPathnameDevice();
+		PathnameDirectory mergedPathnameDirectory = pathname.getPathnameDirectory();
+		PathnameName mergedPathnameName = pathname.getPathnameName();
+		PathnameType mergedPathnameType = pathname.getPathnameType();
+		PathnameVersion mergedPathnameVersion = pathname.getPathnameVersion();
 
+		if (mergedPathnameHost == null) {
+			mergedPathnameHost = defaultPathname.getPathnameHost();
+		}
+		if (mergedPathnameDevice == null) {
+			mergedPathnameDevice = defaultPathname.getPathnameDevice();
+		}
+		if (mergedPathnameDirectory == null) {
+			mergedPathnameDirectory = defaultPathname.getPathnameDirectory();
+		}
+		if (mergedPathnameName == null) {
+			mergedPathnameName = defaultPathname.getPathnameName();
+		}
+		if (mergedPathnameType == null) {
+			mergedPathnameType = defaultPathname.getPathnameType();
+		}
+		if (mergedPathnameVersion == null) {
+			mergedPathnameVersion = defaultPathname.getPathnameVersion();
+		} else if (defaultVersion.getComponentType() != PathnameVersionComponentType.NIL) {
+			mergedPathnameVersion = defaultVersion;
+		}
 
-;;; MAYBE-DIDDLE-CASE  -- Internal
-;;;
-;;;   Change the case of thing if diddle-p T.
-;;;
-(defun maybe-diddle-case (thing diddle-p)
-  (if (and diddle-p (not (or (symbolp thing) (integerp thing))))
-      (labels ((check-for (pred in)
-				 (typecase in
-				   (pattern
-				    (dolist (piece (pattern-pieces in))
-				      (when (typecase piece
-					          (simple-string
-					           (check-for pred piece))
-					          (cons
-					           (case (car in)
-						        (:character-set (check-for pred (cdr in))))))
-						(return t))))
-				   (list
-				    (dolist (x in)
-				      (when (check-for pred x)
-						(return t))))
-				   (simple-base-string
-				    (dotimes (i (length in))
-				      (when (funcall pred (schar in i))
-						(return t))))
-				   (t
-				    nil)))
-	           (diddle-with (fun thing)
-			     (typecase thing
-			       (pattern
-			        (make-pattern (mapcar #'(lambda (piece)
-											  (typecase piece
-											    (simple-base-string
-											     (funcall fun piece))
-											    (cons
-											     (case (car piece)
-											      (:character-set
-											       (cons :character-set (funcall fun (cdr piece))))
-											      (t
-											       piece)))
-											     (t
-											      piece)))
-										  (pattern-pieces thing))))
-				   (list
-				    (mapcar fun thing))
-				   (simple-base-string
-				    (funcall fun thing))
-				   (t
-				    thing))))
-		(let ((any-uppers (check-for #'upper-case-p thing))
-		      (any-lowers (check-for #'lower-case-p thing)))
-		  (cond ((and any-uppers any-lowers)
-			     ;; Mixed case, stays the same.
-			     thing)
-				(any-uppers
-				 ;; All uppercase, becomes all lower case.
-				 (diddle-with #'(lambda (x)
-				                  (if (stringp x)
-									  (string-downcase x)
-								     x))
-						      thing))
-				(any-lowers
-				 ;; All lowercase, becomes all upper case.
-				 (diddle-with #'(lambda (x)
-				                  (if (stringp x)
-									  (string-upcase x)
-									x))
-							  thing))
-				(t
-				 ;; No letters?  I guess just leave it.
-				 thing))))
-      thing))
+		if (pathname instanceof PathnameFileStruct) {
+			return new PathnameFileStruct(mergedPathnameHost, mergedPathnameDevice, mergedPathnameDirectory, mergedPathnameName, mergedPathnameType, mergedPathnameVersion);
+		} else if (pathname instanceof PathnameURIStruct) {
+			return new PathnameURIStruct(mergedPathnameHost, mergedPathnameDevice, mergedPathnameDirectory, mergedPathnameName, mergedPathnameType, mergedPathnameVersion);
+		} else {
+			return new LogicalPathnameStruct(mergedPathnameHost, mergedPathnameDirectory, mergedPathnameName, mergedPathnameType, mergedPathnameVersion);
+		}
+	}
 
-*/
+	private PathnameVersion getPathnameVersion(final LispStruct defaultVersion) {
+
+		final PathnameVersionComponentType componentType = PathnameVersionComponentType.fromValue(defaultVersion);
+		if (componentType == null) {
+			if (defaultVersion instanceof IntegerStruct) {
+				final IntegerStruct integer = (IntegerStruct) defaultVersion;
+				final BigInteger bigInteger = integer.getBigInteger();
+				if (bigInteger.compareTo(BigInteger.ZERO) < 0) {
+					final String printedInteger = printer.print(integer);
+					throw new ErrorException("Integer versions must be non-negative. Got: " + printedInteger);
+				}
+				return new PathnameVersion(bigInteger.intValueExact());
+			} else {
+				final String printedDefaultVersion = printer.print(defaultVersion);
+				throw new ErrorException("Pathname versions must be either a non-negative integer, :WILD, :NEWEST, :UNSPECIFIC, or NIL. Got: " + printedDefaultVersion);
+			}
+		}
+
+		return new PathnameVersion(componentType);
+	}
 }

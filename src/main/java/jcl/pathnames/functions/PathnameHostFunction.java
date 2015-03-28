@@ -22,30 +22,30 @@ import jcl.functions.FunctionStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.pathnames.PathnameComponentType;
+import jcl.pathnames.PathnameHost;
 import jcl.pathnames.PathnameStruct;
-import jcl.pathnames.PathnameType;
 import jcl.symbols.SymbolStruct;
 import jcl.system.CommonLispSymbols;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class PathnameTypeFunction extends FunctionStruct {
+public final class PathnameHostFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> PATHNAME_TYPE = new SymbolStruct<>("PATHNAME-TYPE", GlobalPackageStruct.COMMON_LISP);
+	public static final SymbolStruct<?> PATHNAME_HOST = new SymbolStruct<>("PATHNAME-HOST", GlobalPackageStruct.COMMON_LISP);
 
-	private static final long serialVersionUID = -4494745298812583275L;
+	private static final long serialVersionUID = 5305854243645678052L;
 
 	@Autowired
 	private PathnameFunction pathnameFunction;
 
-	private PathnameTypeFunction() {
-		super("Returns the pathname-type component of the pathname denoted by pathspec.", getInitLambdaListBindings());
+	private PathnameHostFunction() {
+		super("Returns the pathname-host component of the pathname denoted by pathspec.", getInitLambdaListBindings());
 	}
 
 	@PostConstruct
 	private void init() {
-		PATHNAME_TYPE.setFunction(this);
+		PATHNAME_HOST.setFunction(this);
 	}
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
@@ -80,26 +80,26 @@ public final class PathnameTypeFunction extends FunctionStruct {
 		getFunctionBindings(lispStructs);
 
 		final LispStruct pathspec = lispStructs[0];
-		final PathnameType pathnameType = pathnameType(pathspec);
-		if (pathnameType == null) {
+		final PathnameHost pathnameHost = pathnameHost(pathspec);
+		if (pathnameHost == null) {
 			return NullStruct.INSTANCE;
 		}
 
-		final String type = pathnameType.getType();
+		final String host = pathnameHost.getHost();
 		final LispStruct returnValue;
 
-		if (type == null) {
-			final PathnameComponentType componentType = pathnameType.getComponentType();
+		if (host == null) {
+			final PathnameComponentType componentType = pathnameHost.getComponentType();
 			returnValue = componentType.getValue();
 		} else {
-			returnValue = new StringStruct(type);
+			returnValue = new StringStruct(host);
 		}
 
 		return returnValue;
 	}
 
-	public PathnameType pathnameType(final LispStruct pathnameDesignator) {
+	public PathnameHost pathnameHost(final LispStruct pathnameDesignator) {
 		final PathnameStruct pathname = pathnameFunction.pathname(pathnameDesignator);
-		return pathname.getPathnameType();
+		return pathname.getPathnameHost();
 	}
 }

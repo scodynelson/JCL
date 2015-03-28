@@ -4,6 +4,8 @@
 
 package jcl.pathnames;
 
+import jcl.LispStruct;
+import jcl.system.CommonLispSymbols;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -19,22 +21,22 @@ public enum PathnameComponentType {
 	/**
 	 * Unspecific pathname component type.
 	 */
-	UNSPECIFIC(":UNSPECIFIC"),
+	UNSPECIFIC(CommonLispSymbols.UNSPECIFIC),
 
 	/**
 	 * Wild pathname component type.
 	 */
-	WILD(":WILD"),
+	WILD(CommonLispSymbols.WILD),
 
 	/**
 	 * Nil pathname component type.
 	 */
-	NIL("NIL");
+	NIL(CommonLispSymbols.NIL);
 
 	/**
-	 * String value of the pathname component type.
+	 * Value of the pathname component type.
 	 */
-	private final String value;
+	private final LispStruct value;
 
 	/**
 	 * Constructor.
@@ -42,7 +44,7 @@ public enum PathnameComponentType {
 	 * @param value
 	 * 		value of the component type
 	 */
-	PathnameComponentType(final String value) {
+	PathnameComponentType(final LispStruct value) {
 		this.value = value;
 	}
 
@@ -51,8 +53,25 @@ public enum PathnameComponentType {
 	 *
 	 * @return {@link #value} property
 	 */
-	public String getValue() {
+	public LispStruct getValue() {
 		return value;
+	}
+
+	/**
+	 * Gets the matching PathnameComponentType from the provided {@code value} or {@code null} if no match was found.
+	 *
+	 * @param value
+	 * 		the value to find a matching PathnameComponentType
+	 *
+	 * @return the matching PathnameComponentType or {@code null} if no match was found
+	 */
+	public static PathnameComponentType fromValue(final LispStruct value) {
+		for (final PathnameComponentType componentType : values()) {
+			if (componentType.value.equals(value)) {
+				return componentType;
+			}
+		}
+		return null;
 	}
 
 	@Override

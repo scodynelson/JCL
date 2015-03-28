@@ -4,6 +4,8 @@
 
 package jcl.pathnames;
 
+import jcl.LispStruct;
+import jcl.system.CommonLispSymbols;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -16,17 +18,17 @@ public enum PathnameDirectoryType {
 	/**
 	 * Absolute pathname directory type.
 	 */
-	ABSOLUTE(":ABSOLUTE"),
+	ABSOLUTE(CommonLispSymbols.ABSOLUTE),
 
 	/**
 	 * Relative pathname directory type.
 	 */
-	RELATIVE(":RELATIVE");
+	RELATIVE(CommonLispSymbols.RELATIVE);
 
 	/**
-	 * String value of the pathname directory type.
+	 * Value of the pathname directory type.
 	 */
-	private final String value;
+	private final LispStruct value;
 
 	/**
 	 * Constructor.
@@ -34,7 +36,7 @@ public enum PathnameDirectoryType {
 	 * @param value
 	 * 		value of the directory type
 	 */
-	PathnameDirectoryType(final String value) {
+	PathnameDirectoryType(final LispStruct value) {
 		this.value = value;
 	}
 
@@ -43,8 +45,25 @@ public enum PathnameDirectoryType {
 	 *
 	 * @return {@link #value} property
 	 */
-	public String getValue() {
+	public LispStruct getValue() {
 		return value;
+	}
+
+	/**
+	 * Gets the matching PathnameDirectoryType from the provided {@code value} or {@code null} if no match was found.
+	 *
+	 * @param value
+	 * 		the value to find a matching PathnameDirectoryType
+	 *
+	 * @return the matching PathnameDirectoryType or {@code null} if no match was found
+	 */
+	public static PathnameDirectoryType fromValue(final LispStruct value) {
+		for (final PathnameDirectoryType directoryType : values()) {
+			if (directoryType.value.equals(value)) {
+				return directoryType;
+			}
+		}
+		return null;
 	}
 
 	@Override

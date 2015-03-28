@@ -17,35 +17,33 @@ import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
-import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
 import jcl.functions.FunctionStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
-import jcl.pathnames.PathnameComponentType;
 import jcl.pathnames.PathnameStruct;
-import jcl.pathnames.PathnameType;
+import jcl.pathnames.PathnameVersion;
+import jcl.pathnames.PathnameVersionComponentType;
 import jcl.symbols.SymbolStruct;
-import jcl.system.CommonLispSymbols;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class PathnameTypeFunction extends FunctionStruct {
+public final class PathnameVersionFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> PATHNAME_TYPE = new SymbolStruct<>("PATHNAME-TYPE", GlobalPackageStruct.COMMON_LISP);
+	public static final SymbolStruct<?> PATHNAME_VERSION = new SymbolStruct<>("PATHNAME-VERSION", GlobalPackageStruct.COMMON_LISP);
 
-	private static final long serialVersionUID = -4494745298812583275L;
+	private static final long serialVersionUID = -5346065974256023261L;
 
 	@Autowired
 	private PathnameFunction pathnameFunction;
 
-	private PathnameTypeFunction() {
-		super("Returns the pathname-type component of the pathname denoted by pathspec.", getInitLambdaListBindings());
+	private PathnameVersionFunction() {
+		super("Returns the pathname-version component of the pathname denoted by pathspec.", getInitLambdaListBindings());
 	}
 
 	@PostConstruct
 	private void init() {
-		PATHNAME_TYPE.setFunction(this);
+		PATHNAME_VERSION.setFunction(this);
 	}
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
@@ -59,16 +57,7 @@ public final class PathnameTypeFunction extends FunctionStruct {
 
 		final RestBinding restBinding = null;
 
-		final SymbolStruct<?> caseArgSymbol = new SymbolStruct<>("CASE", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation caseArgAllocation = new ParameterAllocation(1);
-
-		final SymbolStruct<?> caseSuppliedPSymbol = new SymbolStruct<>("CASE-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
-		final ParameterAllocation suppliedPAllocation = new ParameterAllocation(2);
-		final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(caseSuppliedPSymbol, suppliedPAllocation);
-
-		final KeyBinding keyBinding = new KeyBinding(caseArgSymbol, caseArgAllocation, NullStruct.INSTANCE, CommonLispSymbols.CASE_KEYWORD, suppliedPBinding);
-		final List<KeyBinding> keyBindings = Collections.singletonList(keyBinding);
-
+		final List<KeyBinding> keyBindings = Collections.emptyList();
 		final boolean allowOtherKeys = false;
 		final List<AuxBinding> auxBindings = Collections.emptyList();
 
@@ -80,26 +69,27 @@ public final class PathnameTypeFunction extends FunctionStruct {
 		getFunctionBindings(lispStructs);
 
 		final LispStruct pathspec = lispStructs[0];
-		final PathnameType pathnameType = pathnameType(pathspec);
-		if (pathnameType == null) {
+		final PathnameVersion pathnameVersion = pathnameVersion(pathspec);
+		if (pathnameVersion == null) {
 			return NullStruct.INSTANCE;
 		}
 
-		final String type = pathnameType.getType();
+		final Integer version = pathnameVersion.getVersion();
 		final LispStruct returnValue;
 
-		if (type == null) {
-			final PathnameComponentType componentType = pathnameType.getComponentType();
+		if (version == null) {
+			final PathnameVersionComponentType componentType = pathnameVersion.getComponentType();
 			returnValue = componentType.getValue();
 		} else {
-			returnValue = new StringStruct(type);
+			final String versionString = version.toString();
+			returnValue = new StringStruct(versionString);
 		}
 
 		return returnValue;
 	}
 
-	public PathnameType pathnameType(final LispStruct pathnameDesignator) {
+	public PathnameVersion pathnameVersion(final LispStruct pathnameDesignator) {
 		final PathnameStruct pathname = pathnameFunction.pathname(pathnameDesignator);
-		return pathname.getPathnameType();
+		return pathname.getPathnameVersion();
 	}
 }

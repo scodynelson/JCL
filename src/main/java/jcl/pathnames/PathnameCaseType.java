@@ -4,6 +4,9 @@
 
 package jcl.pathnames;
 
+import jcl.LispStruct;
+import jcl.symbols.SymbolStruct;
+import jcl.system.CommonLispSymbols;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -13,19 +16,19 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public enum PathnameCaseType {
 
 	/**
-	 * Unspecific pathname case type.
+	 * Common pathname case type.
 	 */
-	COMMON(":COMMON"),
+	COMMON(CommonLispSymbols.COMMON),
 
 	/**
-	 * Unspecific pathname case type.
+	 * Local pathname case type.
 	 */
-	LOCAL(":LOCAL");
+	LOCAL(CommonLispSymbols.LOCAL);
 
 	/**
-	 * String value of the pathname case type.
+	 * Value of the pathname case type.
 	 */
-	private final String value;
+	private final LispStruct value;
 
 	/**
 	 * Constructor.
@@ -33,7 +36,7 @@ public enum PathnameCaseType {
 	 * @param value
 	 * 		value of the case type
 	 */
-	PathnameCaseType(final String value) {
+	PathnameCaseType(final LispStruct value) {
 		this.value = value;
 	}
 
@@ -42,8 +45,25 @@ public enum PathnameCaseType {
 	 *
 	 * @return {@link #value} property
 	 */
-	public String getValue() {
+	public LispStruct getValue() {
 		return value;
+	}
+
+	/**
+	 * Gets the matching PathnameCaseType from the provided {@code value} or {@code null} if no match was found.
+	 *
+	 * @param value
+	 * 		the value to find a matching PathnameCaseType
+	 *
+	 * @return the matching PathnameCaseType or {@code null} if no match was found
+	 */
+	public static PathnameCaseType fromValue(final LispStruct value) {
+		for (final PathnameCaseType caseType : values()) {
+			if (caseType.value.equals(value)) {
+				return caseType;
+			}
+		}
+		return null;
 	}
 
 	@Override

@@ -34,7 +34,7 @@ import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.pathnames.PathnameStruct;
 import jcl.pathnames.PathnameType;
-import jcl.pathnames.functions.TranslateLogicPathnameFunction;
+import jcl.pathnames.functions.TranslateLogicalPathnameFunction;
 import jcl.printer.Printer;
 import jcl.reader.functions.ReadFunction;
 import jcl.streams.FileStreamStruct;
@@ -72,13 +72,13 @@ public class CompileFileFunction {
 	private IntermediateCodeGenerator intermediateCodeGenerator;
 
 	@Autowired
-	private CompileFilePathname compileFilePathname;
+	private CompileFilePathnameFunction compileFilePathnameFunction;
 
 	@Autowired
 	private ReadFunction readFunction;
 
 	@Autowired
-	private TranslateLogicPathnameFunction translateLogicPathnameFunction;
+	private TranslateLogicalPathnameFunction translateLogicalPathnameFunction;
 
 	public Object apply(final ListStruct args) {
 		return null;
@@ -105,11 +105,11 @@ public class CompileFileFunction {
 
 		final PathnameStruct outputCompileFilePathname;
 		if (outputFile == null) {
-			outputCompileFilePathname = compileFilePathname.compileFilePathname(inputFile, null);
+			outputCompileFilePathname = compileFilePathnameFunction.compileFilePathname(inputFile, null);
 		} else {
-			outputCompileFilePathname = compileFilePathname.compileFilePathname(inputFile, outputFile);
+			outputCompileFilePathname = compileFilePathnameFunction.compileFilePathname(inputFile, outputFile);
 		}
-		outputFilePathname = translateLogicPathnameFunction.translateLogicalPathname(outputFilePathname);
+		outputFilePathname = translateLogicalPathnameFunction.translateLogicalPathname(outputFilePathname);
 
 		// TODO: (open-jar-file output-file-pathname (namestring (first source)))
 

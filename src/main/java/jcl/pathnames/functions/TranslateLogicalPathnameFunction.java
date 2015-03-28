@@ -4,12 +4,12 @@
 
 package jcl.pathnames.functions;
 
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.arrays.StringStruct;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
@@ -17,35 +17,38 @@ import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
-import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
 import jcl.functions.FunctionStruct;
-import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
-import jcl.pathnames.PathnameComponentType;
+import jcl.pathnames.LogicalPathnameStruct;
+import jcl.pathnames.PathnameFileStruct;
 import jcl.pathnames.PathnameStruct;
-import jcl.pathnames.PathnameType;
+import jcl.printer.Printer;
+import jcl.streams.StreamStruct;
+import jcl.streams.SynonymStreamStruct;
 import jcl.symbols.SymbolStruct;
-import jcl.system.CommonLispSymbols;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class PathnameTypeFunction extends FunctionStruct {
+public class TranslateLogicalPathnameFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> PATHNAME_TYPE = new SymbolStruct<>("PATHNAME-TYPE", GlobalPackageStruct.COMMON_LISP);
+	public static final SymbolStruct<?> TRANSLATE_LOGICAL_PATHNAME = new SymbolStruct<>("TRANSLATE-LOGICAL-PATHNAME", GlobalPackageStruct.COMMON_LISP);
 
-	private static final long serialVersionUID = -4494745298812583275L;
+	private static final long serialVersionUID = -4200334862391198062L;
+
+	@Autowired
+	private Printer printer;
 
 	@Autowired
 	private PathnameFunction pathnameFunction;
 
-	private PathnameTypeFunction() {
-		super("Returns the pathname-type component of the pathname denoted by pathspec.", getInitLambdaListBindings());
+	private TranslateLogicalPathnameFunction() {
+		super("Translates pathname to a physical pathname, which it returns.", getInitLambdaListBindings());
 	}
 
 	@PostConstruct
 	private void init() {
-		PATHNAME_TYPE.setFunction(this);
+		TRANSLATE_LOGICAL_PATHNAME.setFunction(this);
 	}
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
@@ -59,16 +62,7 @@ public final class PathnameTypeFunction extends FunctionStruct {
 
 		final RestBinding restBinding = null;
 
-		final SymbolStruct<?> caseArgSymbol = new SymbolStruct<>("CASE", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation caseArgAllocation = new ParameterAllocation(1);
-
-		final SymbolStruct<?> caseSuppliedPSymbol = new SymbolStruct<>("CASE-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
-		final ParameterAllocation suppliedPAllocation = new ParameterAllocation(2);
-		final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(caseSuppliedPSymbol, suppliedPAllocation);
-
-		final KeyBinding keyBinding = new KeyBinding(caseArgSymbol, caseArgAllocation, NullStruct.INSTANCE, CommonLispSymbols.CASE_KEYWORD, suppliedPBinding);
-		final List<KeyBinding> keyBindings = Collections.singletonList(keyBinding);
-
+		final List<KeyBinding> keyBindings = Collections.emptyList();
 		final boolean allowOtherKeys = false;
 		final List<AuxBinding> auxBindings = Collections.emptyList();
 
@@ -80,26 +74,25 @@ public final class PathnameTypeFunction extends FunctionStruct {
 		getFunctionBindings(lispStructs);
 
 		final LispStruct pathspec = lispStructs[0];
-		final PathnameType pathnameType = pathnameType(pathspec);
-		if (pathnameType == null) {
-			return NullStruct.INSTANCE;
-		}
-
-		final String type = pathnameType.getType();
-		final LispStruct returnValue;
-
-		if (type == null) {
-			final PathnameComponentType componentType = pathnameType.getComponentType();
-			returnValue = componentType.getValue();
-		} else {
-			returnValue = new StringStruct(type);
-		}
-
-		return returnValue;
+		return translateLogicalPathname(pathspec);
 	}
 
-	public PathnameType pathnameType(final LispStruct pathnameDesignator) {
-		final PathnameStruct pathname = pathnameFunction.pathname(pathnameDesignator);
-		return pathname.getPathnameType();
+	public PathnameStruct translateLogicalPathname(final LispStruct pathnameDesignator) {
+
+		final PathnameStruct pathname;
+		if (pathnameDesignator instanceof LogicalPathnameStruct) {
+			final LogicalPathnameStruct logicalPathname = (LogicalPathnameStruct) pathnameDesignator;
+
+			final Path path = logicalPathname.getPath();
+			pathname = new PathnameFileStruct(path);
+		} else if (pathnameDesignator instanceof SynonymStreamStruct) {
+			final SynonymStreamStruct synonymStream = (SynonymStreamStruct) pathnameDesignator;
+			final SymbolStruct<StreamStruct> streamSymbol = synonymStream.getSymbol();
+			pathname = translateLogicalPathname(streamSymbol.getValue());
+		} else {
+			pathname = pathnameFunction.pathname(pathnameDesignator);
+		}
+
+		return pathname;
 	}
 }

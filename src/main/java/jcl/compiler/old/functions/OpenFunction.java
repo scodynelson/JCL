@@ -1,13 +1,13 @@
 package jcl.compiler.old.functions;
 
-import jcl.compiler.old.symbol.KeywordOld;
+import java.io.File;
+
 import jcl.arrays.StringStruct;
+import jcl.compiler.old.symbol.KeywordOld;
 import jcl.lists.NullStruct;
+import jcl.pathnames.PathnameFileStruct;
 import jcl.pathnames.PathnameStruct;
 import jcl.streams.StreamStruct;
-
-import java.io.File;
-import java.net.URISyntaxException;
 
 /**
  * Implementation of the Common Lisp function OPEN which returns a stream according to the
@@ -204,19 +204,15 @@ public class OpenFunction {
 		}
 
 		PathnameStruct pathname;
-		try {
-			if (pathnameSpec instanceof String) {
-				pathname = PathnameStruct.buildPathname((String) pathnameSpec);
-			} else if (pathnameSpec instanceof StreamStruct) {
-//            pathname = PathnameStruct.buildPathname((StreamStruct)pathnameSpec);
-				pathname = null;
-			} else if (pathnameSpec instanceof StringStruct) {
-				pathname = PathnameStruct.buildPathname(((StringStruct) pathnameSpec).getAsJavaString());
-			} else {
-				pathname = (PathnameStruct) pathnameSpec;
-			}
-		} catch (URISyntaxException e) {
-			throw new RuntimeException(e.getMessage(), e);
+		if (pathnameSpec instanceof String) {
+			pathname = new PathnameFileStruct((String) pathnameSpec);
+		} else if (pathnameSpec instanceof StreamStruct) {
+//          pathname = PathnameStruct.buildPathname((StreamStruct)pathnameSpec);
+			pathname = null;
+		} else if (pathnameSpec instanceof StringStruct) {
+			pathname = new PathnameFileStruct(((StringStruct) pathnameSpec).getAsJavaString());
+		} else {
+			pathname = (PathnameStruct) pathnameSpec;
 		}
 
 		//checking exists error handling; only done for file pathnames

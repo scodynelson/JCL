@@ -7,6 +7,7 @@ package jcl.pathnames;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,7 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * The {@link PathnameURIStruct} is the uri-type object representation of a Lisp 'pathname' type.
  */
-class PathnameURIStruct extends PathnameStruct {
+public class PathnameURIStruct extends PathnameStruct {
 
 	/**
 	 * Serializable Version Unique Identifier.
@@ -32,17 +33,17 @@ class PathnameURIStruct extends PathnameStruct {
 	private static final Pattern PATHNAME_PATTERN = Pattern.compile("/");
 
 	/**
-	 * Package constructor.
+	 * Public constructor.
 	 *
 	 * @param path
 	 * 		the path to parse into the pathname object elements
 	 */
-	PathnameURIStruct(final Path path) {
+	public PathnameURIStruct(final Path path) {
 		this(path.toUri());
 	}
 
 	/**
-	 * Package constructor.
+	 * Public constructor.
 	 *
 	 * @param pathname
 	 * 		the pathname string to parse into the pathname object elements
@@ -50,22 +51,22 @@ class PathnameURIStruct extends PathnameStruct {
 	 * @throws URISyntaxException
 	 * 		if the provided {@code pathname} cannot be parsed as a URI
 	 */
-	PathnameURIStruct(final String pathname) throws URISyntaxException {
+	public PathnameURIStruct(final String pathname) throws URISyntaxException {
 		this(getURI(pathname));
 	}
 
 	/**
-	 * Package constructor.
+	 * Public constructor.
 	 *
 	 * @param uri
 	 * 		the uri to parse into the pathname object elements
 	 */
-	PathnameURIStruct(final URI uri) {
-		this(getHost(uri), getDevice(uri), getDirectory(uri), getName(uri), getType(uri), getVersion());
+	public PathnameURIStruct(final URI uri) {
+		super(getHost(uri), getDevice(uri), getDirectory(uri), getName(uri), getType(uri), getVersion(), Paths.get(uri));
 	}
 
 	/**
-	 * Package constructor.
+	 * Public constructor.
 	 *
 	 * @param host
 	 * 		the pathname host
@@ -80,9 +81,9 @@ class PathnameURIStruct extends PathnameStruct {
 	 * @param version
 	 * 		the pathname version
 	 */
-	PathnameURIStruct(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
-	                  final PathnameName name, final PathnameType type, final PathnameVersion version) {
-		super(host, device, directory, name, type, version);
+	public PathnameURIStruct(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
+	                         final PathnameName name, final PathnameType type, final PathnameVersion version) {
+		super(host, device, directory, name, type, version, getPathFromComponents(host, device, directory, name, type, version));
 	}
 
 	/**
@@ -133,6 +134,10 @@ class PathnameURIStruct extends PathnameStruct {
 			final String[] tokens = PATHNAME_PATTERN.split(directoryPath);
 
 			directoryStrings.addAll(Arrays.asList(tokens));
+		}
+
+		if (directoryStrings.isEmpty()) {
+			return null;
 		}
 
 		final boolean isAbsolute = uri.isAbsolute();
@@ -201,7 +206,7 @@ class PathnameURIStruct extends PathnameStruct {
 	 * @return the pathname version
 	 */
 	private static PathnameVersion getVersion() {
-		return new PathnameVersion(PathnameVersionComponentType.UNSPECIFIC);
+		return null;
 	}
 
 	/**

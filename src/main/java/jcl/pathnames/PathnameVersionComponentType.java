@@ -4,6 +4,8 @@
 
 package jcl.pathnames;
 
+import jcl.LispStruct;
+import jcl.system.CommonLispSymbols;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -16,32 +18,32 @@ public enum PathnameVersionComponentType {
 	/**
 	 * Unspecific pathname version component type.
 	 */
-	UNSPECIFIC(":UNSPECIFIC"),
+	UNSPECIFIC(CommonLispSymbols.UNSPECIFIC),
 
 	/**
 	 * Wild pathname version component type.
 	 */
-	WILD(":WILD"),
+	WILD(CommonLispSymbols.WILD),
 
 	/**
 	 * Nil pathname version component type.
 	 */
-	NIL("NIL"),
+	NIL(CommonLispSymbols.NIL),
 
 	/**
 	 * Newest pathname version component type.
 	 */
-	NEWEST(":NEWEST"),
+	NEWEST(CommonLispSymbols.NEWEST),
 
 	/**
 	 * Oldest pathname version component type.
 	 */
-	OLDEST(":OLDEST");
+	OLDEST(CommonLispSymbols.OLDEST);
 
 	/**
-	 * String value of the pathname version component type.
+	 * Value of the pathname version component type.
 	 */
-	private final String value;
+	private final LispStruct value;
 
 	/**
 	 * Constructor.
@@ -49,7 +51,7 @@ public enum PathnameVersionComponentType {
 	 * @param value
 	 * 		value of the version component type
 	 */
-	PathnameVersionComponentType(final String value) {
+	PathnameVersionComponentType(final LispStruct value) {
 		this.value = value;
 	}
 
@@ -58,8 +60,26 @@ public enum PathnameVersionComponentType {
 	 *
 	 * @return {@link #value} property
 	 */
-	public String getValue() {
+	public LispStruct getValue() {
 		return value;
+	}
+
+	/**
+	 * Gets the matching PathnameVersionComponentType from the provided {@code value} or {@code null} if no match was
+	 * found.
+	 *
+	 * @param value
+	 * 		the value to find a matching PathnameVersionComponentType
+	 *
+	 * @return the matching PathnameVersionComponentType or {@code null} if no match was found
+	 */
+	public static PathnameVersionComponentType fromValue(final LispStruct value) {
+		for (final PathnameVersionComponentType versionComponentType : values()) {
+			if (versionComponentType.value.equals(value)) {
+				return versionComponentType;
+			}
+		}
+		return null;
 	}
 
 	@Override

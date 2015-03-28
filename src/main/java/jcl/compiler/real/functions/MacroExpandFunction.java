@@ -56,13 +56,13 @@ public class MacroExpandFunction extends FunctionStruct {
 		final List<RequiredBinding> requiredBindings = Collections.singletonList(requiredBinding);
 
 		final SymbolStruct<?> envArgSymbol = new SymbolStruct<>("ENV", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation definitionArgAllocation = new ParameterAllocation(1);
+		final ParameterAllocation evnArgAllocation = new ParameterAllocation(1);
 
 		final SymbolStruct<?> envSuppliedPSymbol = new SymbolStruct<>("ENV-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
 		final ParameterAllocation suppliedPAllocation = new ParameterAllocation(2);
 		final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(envSuppliedPSymbol, suppliedPAllocation);
 
-		final OptionalBinding optionalBinding = new OptionalBinding(envArgSymbol, definitionArgAllocation, NullStruct.INSTANCE, suppliedPBinding);
+		final OptionalBinding optionalBinding = new OptionalBinding(envArgSymbol, evnArgAllocation, NullStruct.INSTANCE, suppliedPBinding);
 		final List<OptionalBinding> optionalBindings = Collections.singletonList(optionalBinding);
 
 		final RestBinding restBinding = null;

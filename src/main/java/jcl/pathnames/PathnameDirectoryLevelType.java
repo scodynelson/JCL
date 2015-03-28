@@ -4,6 +4,8 @@
 
 package jcl.pathnames;
 
+import jcl.LispStruct;
+import jcl.system.CommonLispSymbols;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -17,27 +19,27 @@ public enum PathnameDirectoryLevelType {
 	/**
 	 * Wild pathname directory level type.
 	 */
-	WILD(":WILD"),
+	WILD(CommonLispSymbols.WILD),
 
 	/**
 	 * Back pathname directory level type.
 	 */
-	BACK(":BACK"),
+	BACK(CommonLispSymbols.BACK),
 
 	/**
 	 * Up pathname directory level type.
 	 */
-	UP(":UP"),
+	UP(CommonLispSymbols.UP),
 
 	/**
 	 * Null pathname directory level type.
 	 */
-	NULL(null);
+	NULL(CommonLispSymbols.NIL);
 
 	/**
-	 * String value of the pathname directory level type.
+	 * Value of the pathname directory level type.
 	 */
-	private final String value;
+	private final LispStruct value;
 
 	/**
 	 * Constructor.
@@ -45,7 +47,7 @@ public enum PathnameDirectoryLevelType {
 	 * @param value
 	 * 		value of the directory level type
 	 */
-	PathnameDirectoryLevelType(final String value) {
+	PathnameDirectoryLevelType(final LispStruct value) {
 		this.value = value;
 	}
 
@@ -54,8 +56,26 @@ public enum PathnameDirectoryLevelType {
 	 *
 	 * @return {@link #value} property
 	 */
-	public String getValue() {
+	public LispStruct getValue() {
 		return value;
+	}
+
+	/**
+	 * Gets the matching PathnameDirectoryLevelType from the provided {@code value} or {@code null} if no match was
+	 * found.
+	 *
+	 * @param value
+	 * 		the value to find a matching PathnameDirectoryLevelType
+	 *
+	 * @return the matching PathnameDirectoryLevelType or {@code null} if no match was found
+	 */
+	public static PathnameDirectoryLevelType fromValue(final LispStruct value) {
+		for (final PathnameDirectoryLevelType directoryLevelType : values()) {
+			if (directoryLevelType.value.equals(value)) {
+				return directoryLevelType;
+			}
+		}
+		return null;
 	}
 
 	@Override

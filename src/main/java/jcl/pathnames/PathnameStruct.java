@@ -4,21 +4,18 @@
 
 package jcl.pathnames;
 
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.io.File;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 
-import jcl.arrays.StringStruct;
 import jcl.classes.BuiltInClassStruct;
-import jcl.conditions.exceptions.ErrorException;
-import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.types.Pathname;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The {@link PathnameStruct} is the object representation of a Lisp 'pathname' type.
@@ -29,11 +26,6 @@ public class PathnameStruct extends BuiltInClassStruct {
 	 * Serializable Version Unique Identifier.
 	 */
 	private static final long serialVersionUID = -5845491980801761678L;
-
-	/**
-	 * The logger for this class.
-	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(PathnameStruct.class);
 
 	/**
 	 * The {@link PathnameHost} value.
@@ -66,6 +58,11 @@ public class PathnameStruct extends BuiltInClassStruct {
 	protected final PathnameVersion version;
 
 	/**
+	 * The internal {@link Path} representation of the pathname.
+	 */
+	protected final Path path;
+
+	/**
 	 * Protected constructor.
 	 *
 	 * @param host
@@ -80,10 +77,13 @@ public class PathnameStruct extends BuiltInClassStruct {
 	 * 		the pathname type
 	 * @param version
 	 * 		the pathname version
+	 * @param path
+	 * 		the {@link Path} representation of the pathname
 	 */
 	protected PathnameStruct(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
-	                         final PathnameName name, final PathnameType type, final PathnameVersion version) {
-		this(Pathname.INSTANCE, host, device, directory, name, type, version);
+	                         final PathnameName name, final PathnameType type, final PathnameVersion version,
+	                         final Path path) {
+		this(Pathname.INSTANCE, host, device, directory, name, type, version, path);
 	}
 
 	/**
@@ -103,10 +103,13 @@ public class PathnameStruct extends BuiltInClassStruct {
 	 * 		the pathname type
 	 * @param version
 	 * 		the pathname version
+	 * @param path
+	 * 		the {@link Path} representation of the pathname
 	 */
 	protected PathnameStruct(final Pathname pathnameType,
 	                         final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
-	                         final PathnameName name, final PathnameType type, final PathnameVersion version) {
+	                         final PathnameName name, final PathnameType type, final PathnameVersion version,
+	                         final Path path) {
 		super(pathnameType, null, null);
 		this.host = host;
 		this.device = device;
@@ -114,112 +117,7 @@ public class PathnameStruct extends BuiltInClassStruct {
 		this.name = name;
 		this.type = type;
 		this.version = version;
-	}
-
-	/**
-	 * Builds and returns a pathname with the provided {@code pathname} parsed as its elements.
-	 *
-	 * @param pathname
-	 * 		the pathname {@link StringStruct} to parse into the pathname object elements
-	 *
-	 * @return the constructed pathname with constructed elements
-	 */
-	public static PathnameStruct buildPathname(final StringStruct pathname) {
-		final String namestring = pathname.getAsJavaString();
-		try {
-			return buildPathname(namestring);
-		} catch (final URISyntaxException use) {
-			final String msg = "Failed to create pathname with namestring: " + namestring;
-			LOGGER.error(msg, use);
-			throw new ErrorException(msg, use);
-		}
-	}
-
-	/**
-	 * Builds and returns a pathname with the provided {@code path} parsed as its elements.
-	 *
-	 * @param path
-	 * 		the {@link Path} to parse into the pathname object elements
-	 *
-	 * @return the constructed pathname with constructed elements
-	 */
-	public static PathnameStruct buildPathname(final Path path) {
-		return new PathnameFileStruct(path.toAbsolutePath());
-	}
-
-	/**
-	 * Builds and returns a pathname with the provided {@code pathname} parsed as its elements.
-	 *
-	 * @param pathname
-	 * 		the pathname string to parse into the pathname object elements
-	 *
-	 * @return the constructed pathname with constructed elements
-	 *
-	 * @throws URISyntaxException
-	 * 		if the provided pathname is determined to be a URI, but cannot be parsed as one
-	 * 		NOTE: THIS SHOULD NEVER HAPPEN BUT WE THROW THIS FOR SAFETY CASES
-	 */
-	public static PathnameStruct buildPathname(final String pathname) throws URISyntaxException {
-		if (isURI(pathname)) {
-			return new PathnameURIStruct(pathname);
-		} else {
-			return new PathnameFileStruct(pathname);
-		}
-	}
-
-	/**
-	 * Determines if the provided path is a URI.
-	 *
-	 * @param path
-	 * 		the path to test
-	 *
-	 * @return whether or not the provide path is a URI
-	 */
-	private static boolean isURI(final String path) {
-		try {
-			final URI uri = new URI(path);
-			return uri.isAbsolute();
-		} catch (final URISyntaxException use) {
-			if (LOGGER.isWarnEnabled()) {
-				LOGGER.warn("Provided path cannot be parsed as a URI: {}", path, use);
-			}
-			return false;
-		}
-	}
-
-	/**
-	 * Builds and returns a pathname of the {@code structType} with the provided {@code host}, {@code device}, {@code
-	 * directory}, {@code name}, {@code type}, {@code version} as its elements.
-	 *
-	 * @param host
-	 * 		the pathname host
-	 * @param device
-	 * 		the pathname device
-	 * @param directory
-	 * 		the pathname directory
-	 * @param name
-	 * 		the pathname name
-	 * @param type
-	 * 		the pathname type
-	 * @param version
-	 * 		the pathname version
-	 * @param structType
-	 * 		the type of pathname to build
-	 *
-	 * @return the constructed pathname with the provided elements
-	 */
-	public static PathnameStruct buildPathname(final PathnameHost host, final PathnameDevice device,
-	                                           final PathnameDirectory directory, final PathnameName name,
-	                                           final PathnameType type, final PathnameVersion version,
-	                                           final PathnameStructType structType) {
-		switch (structType) {
-			case FILE:
-				return new PathnameFileStruct(host, device, directory, name, type, version);
-			case URI:
-				return new PathnameURIStruct(host, device, directory, name, type, version);
-			default:
-				throw new SimpleErrorException("Unsupported pathname structure cannot be constructed: " + structType + '.');
-		}
+		this.path = path;
 	}
 
 	/**
@@ -276,6 +174,132 @@ public class PathnameStruct extends BuiltInClassStruct {
 		return version;
 	}
 
+	/**
+	 * Getter for pathname {@link #path} property.
+	 *
+	 * @return pathname {@link #path} property
+	 */
+	public Path getPath() {
+		return path;
+	}
+
+	/**
+	 * Gets a {@link Path} from the provided pathname components.
+	 *
+	 * @param pathnameHost
+	 * 		the pathname host
+	 * @param pathnameDevice
+	 * 		the pathname device
+	 * @param pathnameDirectory
+	 * 		the pathname directory
+	 * @param pathnameName
+	 * 		the pathname name
+	 * @param pathnameType
+	 * 		the pathname type
+	 * @param pathnameVersion
+	 * 		the pathname version
+	 *
+	 * @return the {@link Path} constructed from the provided pathname components
+	 */
+	protected static Path getPathFromComponents(final PathnameHost pathnameHost, final PathnameDevice pathnameDevice,
+	                                            final PathnameDirectory pathnameDirectory, final PathnameName pathnameName,
+	                                            final PathnameType pathnameType, final PathnameVersion pathnameVersion) {
+
+		final StringBuilder stringBuilder = new StringBuilder();
+
+		if (pathnameHost != null) {
+			final String host = pathnameHost.getHost();
+			if (host != null) {
+				stringBuilder.append(host);
+				stringBuilder.append("::");
+			}
+		}
+
+		if (pathnameDevice != null) {
+			final String device = pathnameDevice.getDevice();
+			if (device != null) {
+				stringBuilder.append(device);
+				stringBuilder.append(':');
+			}
+		}
+
+		if (pathnameDirectory != null) {
+			final PathnameDirectoryComponent directoryComponent = pathnameDirectory.getDirectoryComponent();
+			if (directoryComponent != null) {
+
+				final PathnameDirectoryType directoryType = directoryComponent.getPathnameDirectoryType();
+				switch (directoryType) {
+					case ABSOLUTE:
+						stringBuilder.append(File.separatorChar);
+						break;
+					case RELATIVE:
+						break;
+				}
+
+				final List<PathnameDirectoryLevel> directoryLevels = directoryComponent.getDirectoryLevels();
+				if (directoryLevels != null) {
+					for (final PathnameDirectoryLevel directoryLevel : directoryLevels) {
+
+						final PathnameDirectoryLevelType levelType = directoryLevel.getDirectoryLevelType();
+						switch (levelType) {
+							case WILD:
+								stringBuilder.append('*');
+								break;
+							case BACK:
+								stringBuilder.append("..");
+								break;
+							case UP:
+								stringBuilder.append("..");
+								break;
+							case NULL:
+								final String level = directoryLevel.getDirectoryLevel();
+								stringBuilder.append(level);
+								break;
+						}
+						stringBuilder.append(File.separatorChar);
+					}
+				}
+			} else {
+				final PathnameComponentType componentType = pathnameDirectory.getComponentType();
+				switch (componentType) {
+					case UNSPECIFIC:
+						break;
+					case WILD:
+						stringBuilder.append('*');
+						break;
+					case NIL:
+						break;
+				}
+			}
+		}
+
+		if (pathnameName != null) {
+			final String name = pathnameName.getName();
+			if (name != null) {
+				stringBuilder.append(name);
+			}
+		}
+
+		if (pathnameType != null) {
+			final String type = pathnameType.getType();
+			if (type != null) {
+				stringBuilder.append(FilenameUtils.EXTENSION_SEPARATOR);
+				stringBuilder.append(type);
+			}
+		}
+
+		if (pathnameVersion != null) {
+			final Integer version = pathnameVersion.getVersion();
+			if (version != null) {
+				stringBuilder.append(FilenameUtils.EXTENSION_SEPARATOR);
+				stringBuilder.append(version);
+			}
+		}
+
+		final String namestring = stringBuilder.toString();
+		return Paths.get(namestring);
+	}
+
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder().appendSuper(super.hashCode())
@@ -285,6 +309,7 @@ public class PathnameStruct extends BuiltInClassStruct {
 		                            .append(name)
 		                            .append(type)
 		                            .append(version)
+		                            .append(path)
 		                            .toHashCode();
 	}
 
@@ -307,6 +332,7 @@ public class PathnameStruct extends BuiltInClassStruct {
 		                          .append(name, rhs.name)
 		                          .append(type, rhs.type)
 		                          .append(version, rhs.version)
+		                          .append(path, rhs.path)
 		                          .isEquals();
 	}
 
@@ -318,6 +344,7 @@ public class PathnameStruct extends BuiltInClassStruct {
 		                                                                .append(name)
 		                                                                .append(type)
 		                                                                .append(version)
+		                                                                .append(path)
 		                                                                .toString();
 	}
 }

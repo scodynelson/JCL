@@ -4,6 +4,7 @@
 
 package jcl.pathnames.functions;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -19,33 +20,38 @@ import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
 import jcl.functions.FunctionStruct;
+import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.pathnames.PathnameComponentType;
+import jcl.pathnames.PathnameDirectory;
+import jcl.pathnames.PathnameDirectoryComponent;
+import jcl.pathnames.PathnameDirectoryLevel;
+import jcl.pathnames.PathnameDirectoryLevelType;
+import jcl.pathnames.PathnameDirectoryType;
 import jcl.pathnames.PathnameStruct;
-import jcl.pathnames.PathnameType;
 import jcl.symbols.SymbolStruct;
 import jcl.system.CommonLispSymbols;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class PathnameTypeFunction extends FunctionStruct {
+public final class PathnameDirectoryFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> PATHNAME_TYPE = new SymbolStruct<>("PATHNAME-TYPE", GlobalPackageStruct.COMMON_LISP);
+	public static final SymbolStruct<?> PATHNAME_DIRECTORY = new SymbolStruct<>("PATHNAME-DIRECTORY", GlobalPackageStruct.COMMON_LISP);
 
-	private static final long serialVersionUID = -4494745298812583275L;
+	private static final long serialVersionUID = 4226158594681993729L;
 
 	@Autowired
 	private PathnameFunction pathnameFunction;
 
-	private PathnameTypeFunction() {
-		super("Returns the pathname-type component of the pathname denoted by pathspec.", getInitLambdaListBindings());
+	private PathnameDirectoryFunction() {
+		super("Returns the pathname-directory component of the pathname denoted by pathspec.", getInitLambdaListBindings());
 	}
 
 	@PostConstruct
 	private void init() {
-		PATHNAME_TYPE.setFunction(this);
+		PATHNAME_DIRECTORY.setFunction(this);
 	}
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
@@ -80,26 +86,56 @@ public final class PathnameTypeFunction extends FunctionStruct {
 		getFunctionBindings(lispStructs);
 
 		final LispStruct pathspec = lispStructs[0];
-		final PathnameType pathnameType = pathnameType(pathspec);
-		if (pathnameType == null) {
+		final PathnameDirectory pathnameDirectory = pathnameDirectory(pathspec);
+		if (pathnameDirectory == null) {
 			return NullStruct.INSTANCE;
 		}
 
-		final String type = pathnameType.getType();
+		final PathnameDirectoryComponent directoryComponent = pathnameDirectory.getDirectoryComponent();
 		final LispStruct returnValue;
 
-		if (type == null) {
-			final PathnameComponentType componentType = pathnameType.getComponentType();
+		if (directoryComponent == null) {
+			final PathnameComponentType componentType = pathnameDirectory.getComponentType();
 			returnValue = componentType.getValue();
 		} else {
-			returnValue = new StringStruct(type);
+			final List<LispStruct> directoryList = new ArrayList<>();
+
+			final PathnameDirectoryType pathnameDirectoryType = directoryComponent.getPathnameDirectoryType();
+			directoryList.add(pathnameDirectoryType.getValue());
+
+			final List<PathnameDirectoryLevel> directoryLevels = directoryComponent.getDirectoryLevels();
+			for (final PathnameDirectoryLevel directoryLevel : directoryLevels) {
+
+				final PathnameDirectoryLevelType directoryLevelType = directoryLevel.getDirectoryLevelType();
+
+				LispStruct directoryLevelValue = null;
+				switch (directoryLevelType) {
+					case WILD:
+						directoryLevelValue = directoryLevelType.getValue();
+						break;
+					case BACK:
+						directoryLevelValue = directoryLevelType.getValue();
+						break;
+					case UP:
+						directoryLevelValue = directoryLevelType.getValue();
+						break;
+					case NULL:
+						final String directoryLevelString = directoryLevel.getDirectoryLevel();
+						directoryLevelValue = new StringStruct(directoryLevelString);
+						break;
+				}
+
+				directoryList.add(directoryLevelValue);
+			}
+
+			returnValue = ListStruct.buildProperList(directoryList);
 		}
 
 		return returnValue;
 	}
 
-	public PathnameType pathnameType(final LispStruct pathnameDesignator) {
+	public PathnameDirectory pathnameDirectory(final LispStruct pathnameDesignator) {
 		final PathnameStruct pathname = pathnameFunction.pathname(pathnameDesignator);
-		return pathname.getPathnameType();
+		return pathname.getPathnameDirectory();
 	}
 }

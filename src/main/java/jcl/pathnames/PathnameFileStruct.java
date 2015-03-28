@@ -19,24 +19,12 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * The {@link PathnameFileStruct} is the file-type object representation of a Lisp 'pathname' type.
  */
-class PathnameFileStruct extends PathnameStruct {
+public class PathnameFileStruct extends PathnameStruct {
 
 	/**
 	 * Serializable Version Unique Identifier.
 	 */
 	private static final long serialVersionUID = -6116704485090857692L;
-
-	/**
-	 * {@link Pattern} used to parse pathname directories.
-	 * <p>
-	 * NOTE: This patterns complexity is due to Windows platforms and their usage of backslashes
-	 */
-	private static final Pattern PATHNAME_PATTERN = Pattern.compile((File.separatorChar == '\\') ? "\\\\" : File.separator);
-
-	/**
-	 * {@link Pattern} used to parse Drive letters for Windows platforms.
-	 */
-	private static final Pattern DRIVE_LETTER_PATTERN = Pattern.compile("([A-Z]|[a-z]):.");
 
 	/**
 	 * Back/Up string for pathname parsing.
@@ -54,42 +42,59 @@ class PathnameFileStruct extends PathnameStruct {
 	private static final String TILDE = "~";
 
 	/**
+	 * {@link Pattern} used to parse pathname directories.
+	 * <p>
+	 * NOTE: This patterns complexity is due to Windows platforms and their usage of backslashes
+	 */
+	private static final Pattern PATHNAME_PATTERN = Pattern.compile((File.separatorChar == '\\') ? "\\\\" : File.separator);
+
+	/**
+	 * {@link Pattern} used to parse Drive letters for Windows platforms.
+	 */
+	private static final Pattern DRIVE_LETTER_PATTERN = Pattern.compile("([A-Z]|[a-z]):.");
+
+	/**
+	 * {@link Pattern} used to parse '~' strings combinations.
+	 */
+	private static final Pattern TILDE_PATTERN = Pattern.compile(TILDE, Pattern.LITERAL);
+
+	/**
 	 * Int constant to note the length of a Drive letter (with backslash) for Windows platforms.
 	 */
 	private static final int DRIVE_LETTER_LENGTH = 2;
 
 	/**
-	 * Package constructor.
+	 * Public constructor.
 	 *
 	 * @param path
 	 * 		the path to parse into the pathname object elements
 	 */
-	PathnameFileStruct(final Path path) {
+	public PathnameFileStruct(final Path path) {
 		this(path.toFile());
 	}
 
 	/**
-	 * Package constructor.
+	 * Public constructor.
 	 *
 	 * @param file
 	 * 		the file to parse into the pathname object elements
 	 */
-	PathnameFileStruct(final File file) {
+	public PathnameFileStruct(final File file) {
 		this(file.getPath());
 	}
 
 	/**
-	 * Package constructor.
+	 * Public constructor.
 	 *
 	 * @param pathname
 	 * 		the pathname string to parse into the pathname object elements
 	 */
-	PathnameFileStruct(final String pathname) {
-		this(getHost(), getDevice(pathname), getDirectory(pathname), getName(pathname), getType(pathname), getVersion());
+	public PathnameFileStruct(final String pathname) {
+		super(getHost(), getDevice(pathname), getDirectory(pathname), getName(pathname), getType(pathname), getVersion(), Paths.get(pathname));
 	}
 
 	/**
-	 * Package constructor.
+	 * Public constructor.
 	 *
 	 * @param host
 	 * 		the pathname host
@@ -104,18 +109,17 @@ class PathnameFileStruct extends PathnameStruct {
 	 * @param version
 	 * 		the pathname version
 	 */
-	PathnameFileStruct(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
-	                   final PathnameName name, final PathnameType type, final PathnameVersion version) {
-		super(host, device, directory, name, type, version);
+	public PathnameFileStruct(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
+	                         final PathnameName name, final PathnameType type, final PathnameVersion version) {
+		super(host, device, directory, name, type, version, getPathFromComponents(host, device, directory, name, type, version));
 	}
-
 	/**
 	 * Gets the pathname host.
 	 *
 	 * @return the pathname host
 	 */
 	private static PathnameHost getHost() {
-		return new PathnameHost();
+		return null;
 	}
 
 	/**
@@ -137,10 +141,10 @@ class PathnameFileStruct extends PathnameStruct {
 
 		// If it is just the file path separator, no device here
 		if (StringUtils.equals(pathPrefix, File.separator)) {
-			pathPrefix = "";
+			return null;
+		} else {
+			return new PathnameDevice(pathPrefix);
 		}
-
-		return new PathnameDevice(pathPrefix);
 	}
 
 	/**
@@ -161,7 +165,7 @@ class PathnameFileStruct extends PathnameStruct {
 		if (TILDE.equals(pathname)) {
 			realPathname = userHome;
 		} else if (pathname.startsWith("~/") || pathname.startsWith("~\\")) {
-			realPathname = pathname.replace(TILDE, userHome);
+			realPathname = TILDE_PATTERN.matcher(pathname).replaceAll(userHome);
 		} else if (pathname.startsWith(TILDE)) {
 			final int lastPathSeparatorIndex = userHome.lastIndexOf(File.separatorChar);
 			final String usersDir = userHome.substring(0, lastPathSeparatorIndex);
@@ -215,6 +219,11 @@ class PathnameFileStruct extends PathnameStruct {
 			directoryStrings.remove("");
 		}
 
+		if (directoryStrings.isEmpty()) {
+			// No directories. Go ahead and return.
+			return null;
+		}
+
 		final Path path = Paths.get(realPathname);
 		final boolean isAbsolute = path.isAbsolute();
 		final PathnameDirectoryType directoryType = isAbsolute ? PathnameDirectoryType.ABSOLUTE : PathnameDirectoryType.RELATIVE;
@@ -264,11 +273,15 @@ class PathnameFileStruct extends PathnameStruct {
 
 		// This tests the case when the pathname is just a drive letter, in which case it should NOT be the name
 		if ((realPathname.length() == DRIVE_LETTER_LENGTH) && (realPathname.charAt(1) == ':')) {
-			return new PathnameName("");
+			return null;
 		}
 
 		final String baseName = FilenameUtils.getBaseName(realPathname);
-		return new PathnameName(baseName);
+		if (StringUtils.isEmpty(baseName)) {
+			return null;
+		} else {
+			return new PathnameName(baseName);
+		}
 	}
 
 	/**
@@ -284,11 +297,15 @@ class PathnameFileStruct extends PathnameStruct {
 
 		final int indexOfExtension = FilenameUtils.indexOfExtension(realPathname);
 		if (indexOfExtension == -1) {
-			return new PathnameType("");
+			return null;
 		}
 
 		final String fileExtension = FilenameUtils.getExtension(realPathname);
-		return new PathnameType(fileExtension);
+		if (StringUtils.isEmpty(fileExtension)) {
+			return null;
+		} else {
+			return new PathnameType(fileExtension);
+		}
 	}
 
 	/**
@@ -297,6 +314,6 @@ class PathnameFileStruct extends PathnameStruct {
 	 * @return the pathname version
 	 */
 	private static PathnameVersion getVersion() {
-		return new PathnameVersion();
+		return null;
 	}
 }

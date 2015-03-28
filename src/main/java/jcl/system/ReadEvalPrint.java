@@ -26,7 +26,6 @@ import jcl.streams.CharacterStreamStruct;
 import jcl.streams.FileStreamStruct;
 import jcl.streams.InputStream;
 import jcl.streams.ReadPeekResult;
-import jcl.symbols.SpecialOperatorStruct;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
@@ -50,8 +49,7 @@ public class ReadEvalPrint {
 	private Printer printer;
 
 	public Object funcall(final String... args) {
-		Object temp = SpecialOperatorStruct.BLOCK;
-		temp = CommonLispSymbols.ABORT;
+		final Class<InitializeVariables> initializeVariablesClass = InitializeVariables.class;
 
 		// get local references to the basic functions
 //		Function1 eval = (Function1) CommonLispFunctions.StdFunctions.Eval;

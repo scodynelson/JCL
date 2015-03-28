@@ -110,16 +110,17 @@ public class PathnameFileStruct extends PathnameStruct {
 	 * 		the pathname version
 	 */
 	public PathnameFileStruct(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
-	                         final PathnameName name, final PathnameType type, final PathnameVersion version) {
+	                          final PathnameName name, final PathnameType type, final PathnameVersion version) {
 		super(host, device, directory, name, type, version, getPathFromComponents(host, device, directory, name, type, version));
 	}
+
 	/**
 	 * Gets the pathname host.
 	 *
 	 * @return the pathname host
 	 */
 	private static PathnameHost getHost() {
-		return null;
+		return new PathnameHost(PathnameComponentType.UNSPECIFIC);
 	}
 
 	/**
@@ -314,6 +315,6 @@ public class PathnameFileStruct extends PathnameStruct {
 	 * @return the pathname version
 	 */
 	private static PathnameVersion getVersion() {
-		return null;
+		return new PathnameVersion(PathnameVersionComponentType.NEWEST);
 	}
 }

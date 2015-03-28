@@ -60,4 +60,8 @@ public class ListFunction extends FunctionStruct {
 
 		return ListStruct.buildProperList(lispStructs);
 	}
+
+	public LispStruct list(final LispStruct... lispStructs) {
+		return ListStruct.buildProperList(lispStructs);
+	}
 }

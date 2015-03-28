@@ -61,6 +61,10 @@ public class CarFunction extends FunctionStruct {
 		getFunctionBindings(lispStructs);
 
 		final ListStruct list = (ListStruct) lispStructs[0];
+		return car(list);
+	}
+
+	public LispStruct car(final ListStruct list) {
 		return list.getFirst();
 	}
 }

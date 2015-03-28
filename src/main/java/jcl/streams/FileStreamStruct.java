@@ -42,6 +42,11 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileStreamStruct.class);
 
 	/**
+	 * The {@link Path} of the file that the {@link #fileChannel} interacts with.
+	 */
+	private final Path path;
+
+	/**
 	 * The {@link FileChannel} to read from and write to.
 	 */
 	private final FileChannel fileChannel;
@@ -72,6 +77,7 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 	public FileStreamStruct(final boolean interactive, final Path path) {
 		super(FileStream.INSTANCE, interactive, getElementType2(path));
 
+		this.path = path;
 		try {
 			fileChannel = FileChannel.open(path, StandardOpenOption.READ, StandardOpenOption.WRITE);
 			bufferSize = BigInteger.valueOf(fileChannel.size()).intValueExact();
@@ -96,6 +102,15 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 		} catch (final IOException ioe) {
 			throw new StreamErrorException("Failed to open provided file.", ioe);
 		}
+	}
+
+	/**
+	 * Getter for the {@link #path} value.
+	 *
+	 * @return the {@link #path} value
+	 */
+	public Path getPath() {
+		return path;
 	}
 
 	@Override

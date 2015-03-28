@@ -29,8 +29,8 @@ public interface CompilerVariables {
 	VariableStruct<?> COMPILE_FILE_TRUENAME = new VariableStruct<>("*COMPILE-FILE-TRUENAME*", GlobalPackageStruct.COMMON_LISP, null);
 	VariableStruct<?> LOAD_PATHNAME = new VariableStruct<>("*LOAD-PATHNAME*", GlobalPackageStruct.COMMON_LISP, null);
 	VariableStruct<?> LOAD_TRUENAME = new VariableStruct<>("*LOAD-TRUENAME*", GlobalPackageStruct.COMMON_LISP, null);
-	VariableStruct<?> COMPILE_PRINT = new VariableStruct<>("*COMPILE-PRINT*", GlobalPackageStruct.COMMON_LISP, null);
-	VariableStruct<?> COMPILE_VERBOSE = new VariableStruct<>("*COMPILE-VERBOSE*", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStruct<BooleanStruct> COMPILE_PRINT = new VariableStruct<>("*COMPILE-PRINT*", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);
+	VariableStruct<BooleanStruct> COMPILE_VERBOSE = new VariableStruct<>("*COMPILE-VERBOSE*", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);
 	VariableStruct<?> LOAD_PRINT = new VariableStruct<>("*LOAD-PRINT*", GlobalPackageStruct.COMMON_LISP, null);
 	VariableStruct<?> LOAD_VERBOSE = new VariableStruct<>("*LOAD-VERBOSE*", GlobalPackageStruct.COMMON_LISP, null);
 	VariableStruct<?> MODULES = new VariableStruct<>("*MODULES*", GlobalPackageStruct.COMMON_LISP, null);

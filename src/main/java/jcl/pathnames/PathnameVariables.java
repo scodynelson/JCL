@@ -4,10 +4,12 @@
 
 package jcl.pathnames;
 
+import java.nio.file.Paths;
+
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.VariableStruct;
 
 public interface PathnameVariables {
 
-	VariableStruct<?> DEFAULT_PATHNAME_DEFAULTS = new VariableStruct<>("*DEFAULT-PATHNAME-DEFAULTS*", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStruct<PathnameStruct> DEFAULT_PATHNAME_DEFAULTS = new VariableStruct<>("*DEFAULT-PATHNAME-DEFAULTS*", GlobalPackageStruct.COMMON_LISP, PathnameStruct.buildPathname(Paths.get("")));
 }

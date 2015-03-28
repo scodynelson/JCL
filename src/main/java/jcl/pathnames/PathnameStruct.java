@@ -6,9 +6,11 @@ package jcl.pathnames;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
 
 import jcl.arrays.StringStruct;
 import jcl.classes.BuiltInClassStruct;
+import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.types.Pathname;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -121,13 +123,28 @@ public class PathnameStruct extends BuiltInClassStruct {
 	 * 		the pathname {@link StringStruct} to parse into the pathname object elements
 	 *
 	 * @return the constructed pathname with constructed elements
-	 *
-	 * @throws URISyntaxException
-	 * 		if the provided pathname is determined to be a URI, but cannot be parsed as one
-	 * 		NOTE: THIS SHOULD NEVER HAPPEN BUT WE THROW THIS FOR SAFETY CASES
 	 */
-	public static PathnameStruct buildPathname(final StringStruct pathname) throws URISyntaxException {
-		return buildPathname(pathname.getAsJavaString());
+	public static PathnameStruct buildPathname(final StringStruct pathname) {
+		final String namestring = pathname.getAsJavaString();
+		try {
+			return buildPathname(namestring);
+		} catch (final URISyntaxException use) {
+			final String msg = "Failed to create pathname with namestring: " + namestring;
+			LOGGER.error(msg, use);
+			throw new ErrorException(msg, use);
+		}
+	}
+
+	/**
+	 * Builds and returns a pathname with the provided {@code path} parsed as its elements.
+	 *
+	 * @param path
+	 * 		the {@link Path} to parse into the pathname object elements
+	 *
+	 * @return the constructed pathname with constructed elements
+	 */
+	public static PathnameStruct buildPathname(final Path path) {
+		return new PathnameFileStruct(path.toAbsolutePath());
 	}
 
 	/**

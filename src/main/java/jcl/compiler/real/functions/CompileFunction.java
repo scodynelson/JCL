@@ -25,7 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CompileFunction extends FunctionStruct {
+public final class CompileFunction extends FunctionStruct {
 
 	public static final SymbolStruct<?> COMPILE = new SymbolStruct<>("COMPILE", GlobalPackageStruct.COMMON_LISP);
 
@@ -78,6 +78,11 @@ public class CompileFunction extends FunctionStruct {
 		if (lispStructs.length == 2) {
 			uncompiledDefinition = lispStructs[1];
 		}
+
+		return compile(name, uncompiledDefinition);
+	}
+
+	public LispStruct compile(final LispStruct name, final LispStruct uncompiledDefinition) {
 
 		if (uncompiledDefinition != null) {
 			CompileResult compiledDefinition = null;

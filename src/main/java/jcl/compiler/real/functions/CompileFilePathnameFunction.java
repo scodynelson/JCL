@@ -33,7 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CompileFilePathnameFunction extends FunctionStruct {
+public final class CompileFilePathnameFunction extends FunctionStruct {
 
 	public static final SymbolStruct<?> COMPILE_FILE_PATHNAME = new SymbolStruct<>("COMPILE-FILE-PATHNAME", GlobalPackageStruct.COMMON_LISP);
 
@@ -95,15 +95,16 @@ public class CompileFilePathnameFunction extends FunctionStruct {
 	}
 
 	public PathnameStruct compileFilePathname(final LispStruct inputFile, final LispStruct outputFile) {
+		// NOTE: 'outputFile' will be null if it is not supplied.
 
 		final PathnameStruct defaultPathnameDefaults = PathnameVariables.DEFAULT_PATHNAME_DEFAULTS.getValue();
 		final PathnameStruct mergedInputFile = mergePathnamesFunction.mergePathnames(inputFile, defaultPathnameDefaults);
 
-		final PathnameType outputPathnameType = new PathnameType(".jar");
+		final PathnameType outputPathnameType = new PathnameType("jar");
 
 		final boolean isLogicalInputFile = mergedInputFile instanceof LogicalPathnameStruct;
 
-		if (NullStruct.INSTANCE.equals(outputFile) && isLogicalInputFile) {
+		if ((outputFile == null) && isLogicalInputFile) {
 			return new PathnameFileStruct(
 					mergedInputFile.getPathnameHost(),
 					mergedInputFile.getPathnameDevice(),

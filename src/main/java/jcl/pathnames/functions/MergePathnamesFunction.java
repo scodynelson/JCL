@@ -42,7 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MergePathnamesFunction extends FunctionStruct {
+public final class MergePathnamesFunction extends FunctionStruct {
 
 	public static final SymbolStruct<?> MERGE_PATHNAMES = new SymbolStruct<>("MERGE-PATHNAMES", GlobalPackageStruct.COMMON_LISP);
 
@@ -107,18 +107,18 @@ public class MergePathnamesFunction extends FunctionStruct {
 
 		final LispStruct pathname = lispStructs[0];
 
+		LispStruct defaultPathspec = PathnameVariables.DEFAULT_PATHNAME_DEFAULTS.getValue();
+		PathnameVersion defaultVersion = new PathnameVersion(PathnameVersionComponentType.NEWEST);
+
 		final int length = lispStructs.length;
-		if (length > 1) {
-			final LispStruct defaultPathspec = lispStructs[1];
-			if (length > 2) {
-				final PathnameVersion defaultVersion = getPathnameVersion(lispStructs[2]);
-				return mergePathnames(pathname, defaultPathspec, defaultVersion);
-			} else {
-				return mergePathnames(pathname, defaultPathspec);
-			}
-		} else {
-			return mergePathnames(pathname);
+		if (length >= 1) {
+			defaultPathspec = lispStructs[1];
 		}
+		if (length >= 2) {
+			defaultVersion = getPathnameVersion(lispStructs[2]);
+		}
+
+		return mergePathnames(pathname, defaultPathspec, defaultVersion);
 	}
 
 	public PathnameStruct mergePathnames(final LispStruct pathSpec) {

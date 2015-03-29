@@ -61,7 +61,7 @@ public class SharpFullStopReaderMacroFunction extends ReaderMacroFunction {
 			throw new ReaderErrorException("Attempt to read #. while *READ-EVAL* is bound to NIL.");
 		}
 
-		return evalFunction.apply(token);
+		return evalFunction.eval(token);
 	}
 
 	@Override

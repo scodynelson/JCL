@@ -23,7 +23,7 @@ import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ListFunction extends FunctionStruct {
+public final class ListFunction extends FunctionStruct {
 
 	public static final SymbolStruct<?> LIST = new SymbolStruct<>("LIST", GlobalPackageStruct.COMMON_LISP);
 

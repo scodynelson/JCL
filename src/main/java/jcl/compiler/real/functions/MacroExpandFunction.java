@@ -30,7 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MacroExpandFunction extends FunctionStruct {
+public final class MacroExpandFunction extends FunctionStruct {
 
 	public static final SymbolStruct<?> MACROEXPAND = new SymbolStruct<>("MACROEXPAND", GlobalPackageStruct.COMMON_LISP);
 

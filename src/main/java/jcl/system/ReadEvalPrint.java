@@ -26,6 +26,7 @@ import jcl.streams.CharacterStreamStruct;
 import jcl.streams.FileStreamStruct;
 import jcl.streams.InputStream;
 import jcl.streams.ReadPeekResult;
+import jcl.system.classloaders.CompilerClassLoader;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
@@ -311,7 +312,7 @@ public class ReadEvalPrint {
 			final CheckClassAdapter cca = new CheckClassAdapter(new ClassWriter(0), false);
 			cr.accept(cca, ClassReader.SKIP_DEBUG + ClassReader.SKIP_FRAMES);
 
-			final CompilerClassLoader cl = CompilerClassLoader.Loader;
+			final CompilerClassLoader cl = CompilerClassLoader.INSTANCE;
 
 			final Class<?> classLoaded = cl.loadClass(byteArray, className);
 			final Constructor<?> constructor = classLoaded.getDeclaredConstructor();

@@ -36,7 +36,7 @@ import jcl.symbols.TStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MacroExpand1Function extends FunctionStruct {
+public final class MacroExpand1Function extends FunctionStruct {
 
 	public static final SymbolStruct<?> MACROEXPAND_1 = new SymbolStruct<>("MACROEXPAND-1", GlobalPackageStruct.COMMON_LISP);
 

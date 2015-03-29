@@ -89,6 +89,8 @@
       <w>fceiling</w>
       <w>fdefinition</w>
       <w>ffloor</w>
+      <w>filespec</w>
+      <w>filespect</w>
       <w>fixnum</w>
       <w>fixnums</w>
       <w>flet</w>
@@ -221,6 +223,7 @@
       <w>typep</w>
       <w>typespec</w>
       <w>typespecs</w>
+      <w>uncompiled</w>
       <w>unexport</w>
       <w>unintern</w>
       <w>uninterned</w>

@@ -34,7 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EvalFunction extends FunctionStruct {
+public final class EvalFunction extends FunctionStruct {
 
 	public static final SymbolStruct<?> EVAL = new SymbolStruct<>("EVAL", GlobalPackageStruct.COMMON_LISP);
 
@@ -73,11 +73,14 @@ public class EvalFunction extends FunctionStruct {
 		return new OrdinaryLambdaListBindings(requiredBindings, optionalBindings, restBinding, keyBindings, auxBindings, allowOtherKeys);
 	}
 
-	@SuppressWarnings({"unchecked", "rawtypes"})
 	public LispStruct apply(final LispStruct... lispStructs) {
 		getFunctionBindings(lispStructs);
 
-		final LispStruct originalExp = lispStructs[0];
+		return eval(lispStructs[0]);
+	}
+
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	public LispStruct eval(final LispStruct originalExp) {
 
 		final Environment nullEnvironment = Environment.NULL;
 

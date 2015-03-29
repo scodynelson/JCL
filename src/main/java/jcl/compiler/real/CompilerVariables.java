@@ -33,8 +33,8 @@ public interface CompilerVariables {
 	VariableStruct<LispStruct> LOAD_TRUENAME = new VariableStruct<>("*LOAD-TRUENAME*", GlobalPackageStruct.COMMON_LISP, NullStruct.INSTANCE);
 	VariableStruct<BooleanStruct> COMPILE_PRINT = new VariableStruct<>("*COMPILE-PRINT*", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);
 	VariableStruct<BooleanStruct> COMPILE_VERBOSE = new VariableStruct<>("*COMPILE-VERBOSE*", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);
-	VariableStruct<?> LOAD_PRINT = new VariableStruct<>("*LOAD-PRINT*", GlobalPackageStruct.COMMON_LISP, null);
-	VariableStruct<?> LOAD_VERBOSE = new VariableStruct<>("*LOAD-VERBOSE*", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStruct<BooleanStruct> LOAD_PRINT = new VariableStruct<>("*LOAD-PRINT*", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);
+	VariableStruct<BooleanStruct> LOAD_VERBOSE = new VariableStruct<>("*LOAD-VERBOSE*", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);
 	VariableStruct<?> MODULES = new VariableStruct<>("*MODULES*", GlobalPackageStruct.COMMON_LISP, null);
 
 	VariableStruct<?> DASH = new VariableStruct<>("-", GlobalPackageStruct.COMMON_LISP, null);

@@ -72,6 +72,8 @@ public class DeclareExpander extends MacroFunctionExpander<DeclareStruct> {
 				//TODO: we don't do anything here yet
 			} else if (declIdentifier.equals(DeclarationStruct.OPTIMIZE)) {
 				//TODO: we don't do anything here yet
+			} else if (declIdentifier.equals(DeclarationStruct.JAVA_CLASS_NAME)) {
+				//TODO: we don't do anything here yet
 			} else if (declIdentifier.equals(DeclarationStruct.SPECIAL)) {
 				final List<SpecialDeclarationStruct> sdes = saSpecialDeclaration(environment, declSpecBody.getAsJavaList());
 				declareElement.getSpecialDeclarationElements().addAll(sdes);

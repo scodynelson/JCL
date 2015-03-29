@@ -18,7 +18,7 @@ import jcl.functions.FunctionStruct;
 import jcl.symbols.BooleanStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.TStruct;
-import jcl.system.CompilerClassLoader;
+import jcl.system.classloaders.CompilerClassLoader;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.util.CheckClassAdapter;
@@ -62,7 +62,7 @@ class CompileForm implements Serializable {
 			final CheckClassAdapter cca = new CheckClassAdapter(new ClassWriter(0), false);
 			cr.accept(cca, ClassReader.SKIP_DEBUG + ClassReader.SKIP_FRAMES);
 
-			final CompilerClassLoader cl = CompilerClassLoader.Loader;
+			final CompilerClassLoader cl = CompilerClassLoader.INSTANCE;
 
 			final Class<?> classLoaded = cl.loadClass(byteArray, className);
 

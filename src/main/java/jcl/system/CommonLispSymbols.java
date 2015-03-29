@@ -5,8 +5,10 @@ import jcl.characters.CharacterConstants;
 import jcl.compiler.real.CompilerConstants;
 import jcl.compiler.real.CompilerVariables;
 import jcl.compiler.real.ValuesFunction;
+import jcl.compiler.real.functions.CompileFileFunction;
 import jcl.compiler.real.functions.CompileFilePathnameFunction;
 import jcl.compiler.real.functions.EvalFunction;
+import jcl.compiler.real.functions.LoadFunction;
 import jcl.compiler.real.functions.MacroExpand1Function;
 import jcl.compiler.real.functions.MacroExpandFunction;
 import jcl.functions.functions.ApplyFunction;
@@ -334,7 +336,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> CODE_CHAR = null;
 	SymbolStruct<?> COERCE = null;
 	SymbolStruct<?> COMPILE = null;
-	SymbolStruct<?> COMPILE_FILE = null;
+	SymbolStruct<?> COMPILE_FILE = CompileFileFunction.COMPILE_FILE;
 	SymbolStruct<?> COMPILE_FILE_PATHNAME = CompileFilePathnameFunction.COMPILE_FILE_PATHNAME;
 	SymbolStruct<?> COMPILED_FUNCTION = null;
 	SymbolStruct<?> COMPILED_FUNCTION_P = null;
@@ -572,7 +574,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> LIST_LENGTH = null;
 	SymbolStruct<?> LISTEN = null;
 	SymbolStruct<?> LISTP = null;
-	SymbolStruct<?> LOAD = null;
+	SymbolStruct<?> LOAD = LoadFunction.LOAD;
 	SymbolStruct<?> LOAD_LOGICAL_PATHNAME_TRANSLATIONS = null;
 	SymbolStruct<?> LOAD_TIME_VALUE = null;
 	SymbolStruct<?> LOCALLY = null;
@@ -1077,4 +1079,11 @@ public interface CommonLispSymbols {
 	KeywordStruct NEWEST = new KeywordStruct("NEWEST");
 	KeywordStruct OLDEST = new KeywordStruct("OLDEST");
 	KeywordStruct CASE_KEYWORD = new KeywordStruct("CASE");
+
+	// Compile-File/Load Keywords
+	KeywordStruct OUTPUT_FILE_KEYWORD = new KeywordStruct("OUTPUT-FILE");
+	KeywordStruct VERBOSE_KEYWORD = new KeywordStruct("VERBOSE");
+	KeywordStruct PRINT_KEYWORD = new KeywordStruct("PRINT");
+	KeywordStruct IF_DOES_NOT_EXIST_KEYWORD = new KeywordStruct("IF-DOES-NOT-EXIST");
+	KeywordStruct EXTERNAL_FORMAT_KEYWORD = new KeywordStruct("EXTERNAL-FORMAT");
 }

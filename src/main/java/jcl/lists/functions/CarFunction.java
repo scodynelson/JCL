@@ -23,7 +23,7 @@ import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CarFunction extends FunctionStruct {
+public final class CarFunction extends FunctionStruct {
 
 	public static final SymbolStruct<?> CAR = new SymbolStruct<>("CAR", GlobalPackageStruct.COMMON_LISP);
 

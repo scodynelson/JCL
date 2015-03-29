@@ -129,7 +129,8 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 	 */
 	private int readChar(final String streamErrorString) {
 		try {
-			final ByteBuffer byteBuffer = ByteBuffer.allocate(bufferSize);
+			// TODO: FIX ME!!!
+			final ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
 			fileChannel.read(byteBuffer);
 
 			final CharBuffer charBuffer = Charset.defaultCharset().decode(byteBuffer);

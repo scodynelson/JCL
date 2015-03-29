@@ -21,7 +21,7 @@ import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public class QuitFunction extends FunctionStruct {
+public final class QuitFunction extends FunctionStruct {
 
 	public static final SymbolStruct<?> QUIT = new SymbolStruct<>("QUIT", GlobalPackageStruct.EXTENSIONS);
 

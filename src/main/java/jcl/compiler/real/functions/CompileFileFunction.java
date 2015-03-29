@@ -1,7 +1,5 @@
 package jcl.compiler.real.functions;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -12,34 +10,53 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
 import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
+import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.CompilerVariables;
+import jcl.compiler.real.environment.allocation.ParameterAllocation;
+import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
+import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
+import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
+import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
+import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
+import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
+import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
 import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.struct.ValuesStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
-import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.conditions.exceptions.FileErrorException;
+import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
+import jcl.packages.GlobalPackageStruct;
+import jcl.packages.PackageStruct;
+import jcl.packages.PackageVariables;
+import jcl.pathnames.PathnameFileStruct;
 import jcl.pathnames.PathnameStruct;
 import jcl.pathnames.functions.PathnameFunction;
 import jcl.printer.Printer;
 import jcl.reader.functions.ReadFunction;
+import jcl.reader.struct.ReaderVariables;
+import jcl.reader.struct.ReadtableStruct;
 import jcl.streams.FileStreamStruct;
 import jcl.symbols.BooleanStruct;
 import jcl.symbols.DeclarationStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SpecialOperatorStruct;
+import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
+import jcl.system.CommonLispSymbols;
 import org.apache.commons.lang3.StringUtils;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -50,17 +67,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CompileFileFunction {
+public final class CompileFileFunction extends FunctionStruct {
 
-	public static final CompileFileFunction FUNCTION = new CompileFileFunction();
+	public static final SymbolStruct<?> COMPILE_FILE = new SymbolStruct<>("COMPILE-FILE", GlobalPackageStruct.COMMON_LISP);
+
+	private static final long serialVersionUID = -3067892826539388846L;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CompileFileFunction.class);
 
-	private CompileFileFunction() {
-	}
-
 	@Autowired
-	private Printer printer;
+	private ReadFunction readFunction;
 
 	@Autowired
 	private SemanticAnalyzer semanticAnalyzer;
@@ -69,34 +85,157 @@ public class CompileFileFunction {
 	private IntermediateCodeGenerator intermediateCodeGenerator;
 
 	@Autowired
+	private PathnameFunction pathnameFunction;
+
+	@Autowired
 	private CompileFilePathnameFunction compileFilePathnameFunction;
 
 	@Autowired
-	private ReadFunction readFunction;
+	private Printer printer;
 
-	@Autowired
-	private PathnameFunction pathnameFunction;
-
-	public Object apply(final ListStruct args) {
-		return null;
+	private CompileFileFunction() {
+		super("Compiles the provided input-file.", getInitLambdaListBindings());
 	}
 
-	public Object compileFile(final LispStruct inputFile, final LispStruct outputFile, final boolean verbose,
-	                          final boolean print, final boolean writeFile) {
+	@PostConstruct
+	private void init() {
+		COMPILE_FILE.setFunction(this);
+	}
 
+	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
+		final SymbolStruct<?> inputFileArgSymbol = new SymbolStruct<>("INPUT-FILE", GlobalPackageStruct.COMMON_LISP);
+		final ParameterAllocation inputFileArgAllocation = new ParameterAllocation(0);
+		final RequiredBinding requiredBinding = new RequiredBinding(inputFileArgSymbol, inputFileArgAllocation);
+		final List<RequiredBinding> requiredBindings = Collections.singletonList(requiredBinding);
+
+		final List<OptionalBinding> optionalBindings = Collections.emptyList();
+
+		final RestBinding restBinding = null;
+
+		final List<KeyBinding> keyBindings = new ArrayList<>();
+
+		final SymbolStruct<?> outputFileArgSymbol = new SymbolStruct<>("OUTPUT-FILE", GlobalPackageStruct.COMMON_LISP);
+		final ParameterAllocation outputFileArgAllocation = new ParameterAllocation(1);
+
+		final SymbolStruct<?> outputFileSuppliedP = new SymbolStruct<>("OUTPUT-FILE-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
+		final ParameterAllocation outputFileSuppliedPAllocation = new ParameterAllocation(2);
+		final SuppliedPBinding outputFileSuppliedPBinding = new SuppliedPBinding(outputFileSuppliedP, outputFileSuppliedPAllocation);
+
+		final KeyBinding outputFileKeyBinding = new KeyBinding(outputFileArgSymbol, outputFileArgAllocation, NullStruct.INSTANCE, CommonLispSymbols.OUTPUT_FILE_KEYWORD, outputFileSuppliedPBinding);
+		keyBindings.add(outputFileKeyBinding);
+
+		final SymbolStruct<?> verboseArgSymbol = new SymbolStruct<>("VERBOSE", GlobalPackageStruct.COMMON_LISP);
+		final ParameterAllocation verboseArgAllocation = new ParameterAllocation(3);
+
+		final SymbolStruct<?> verboseSuppliedP = new SymbolStruct<>("VERBOSE-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
+		final ParameterAllocation verboseSuppliedPAllocation = new ParameterAllocation(4);
+		final SuppliedPBinding verboseSuppliedPBinding = new SuppliedPBinding(verboseSuppliedP, verboseSuppliedPAllocation);
+
+		final KeyBinding verboseKeyBinding = new KeyBinding(verboseArgSymbol, verboseArgAllocation, NullStruct.INSTANCE, CommonLispSymbols.VERBOSE_KEYWORD, verboseSuppliedPBinding);
+		keyBindings.add(verboseKeyBinding);
+
+		final SymbolStruct<?> printArgSymbol = new SymbolStruct<>("PRINT", GlobalPackageStruct.COMMON_LISP);
+		final ParameterAllocation printArgAllocation = new ParameterAllocation(5);
+
+		final SymbolStruct<?> printSuppliedP = new SymbolStruct<>("PRINT-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
+		final ParameterAllocation printSuppliedPAllocation = new ParameterAllocation(6);
+		final SuppliedPBinding printSuppliedPBinding = new SuppliedPBinding(printSuppliedP, printSuppliedPAllocation);
+
+		final KeyBinding printKeyBinding = new KeyBinding(printArgSymbol, printArgAllocation, NullStruct.INSTANCE, CommonLispSymbols.PRINT_KEYWORD, printSuppliedPBinding);
+		keyBindings.add(printKeyBinding);
+
+		final SymbolStruct<?> externalFormatArgSymbol = new SymbolStruct<>("EXTERNAL-FORMAT", GlobalPackageStruct.COMMON_LISP);
+		final ParameterAllocation externalFormatArgAllocation = new ParameterAllocation(7);
+
+		final SymbolStruct<?> externalFormatSuppliedP = new SymbolStruct<>("EXTERNAL-FORMAT-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
+		final ParameterAllocation externalFormatSuppliedPAllocation = new ParameterAllocation(8);
+		final SuppliedPBinding externalFormatSuppliedPBinding = new SuppliedPBinding(externalFormatSuppliedP, externalFormatSuppliedPAllocation);
+
+		final KeyBinding externalFormatKeyBinding = new KeyBinding(externalFormatArgSymbol, externalFormatArgAllocation, NullStruct.INSTANCE, CommonLispSymbols.EXTERNAL_FORMAT_KEYWORD, externalFormatSuppliedPBinding);
+		keyBindings.add(externalFormatKeyBinding);
+
+		final boolean allowOtherKeys = false;
+		final List<AuxBinding> auxBindings = Collections.emptyList();
+
+		return new OrdinaryLambdaListBindings(requiredBindings, optionalBindings, restBinding, keyBindings, auxBindings, allowOtherKeys);
+	}
+
+	@Override
+	public LispStruct apply(final LispStruct... lispStructs) {
+		getFunctionBindings(lispStructs);
+
+		final LispStruct inputFile = lispStructs[0];
+
+		final BooleanStruct currentCompileVerbose = CompilerVariables.COMPILE_VERBOSE.getValue();
+		final BooleanStruct currentCompilePrint = CompilerVariables.COMPILE_PRINT.getValue();
+
+		LispStruct outputFile = null;
+		boolean verbose = currentCompileVerbose.booleanValue();
+		boolean print = currentCompilePrint.booleanValue();
+
+		final int length = lispStructs.length;
+		if (length >= 3) {
+			// 1 keyword
+			final LispStruct firstKeyword = lispStructs[1];
+			if (CommonLispSymbols.OUTPUT_FILE_KEYWORD.equals(firstKeyword)) {
+				outputFile = lispStructs[2];
+			} else if (CommonLispSymbols.VERBOSE_KEYWORD.equals(firstKeyword)) {
+				verbose = ((BooleanStruct) lispStructs[2]).booleanValue();
+			} else if (CommonLispSymbols.PRINT_KEYWORD.equals(firstKeyword)) {
+				print = ((BooleanStruct) lispStructs[2]).booleanValue();
+			}
+		}
+		if (length >= 5) {
+			// 2 keywords
+			final LispStruct secondKeyword = lispStructs[3];
+			if (CommonLispSymbols.OUTPUT_FILE_KEYWORD.equals(secondKeyword)) {
+				outputFile = lispStructs[4];
+			} else if (CommonLispSymbols.VERBOSE_KEYWORD.equals(secondKeyword)) {
+				verbose = ((BooleanStruct) lispStructs[4]).booleanValue();
+			} else if (CommonLispSymbols.PRINT_KEYWORD.equals(secondKeyword)) {
+				print = ((BooleanStruct) lispStructs[4]).booleanValue();
+			}
+		}
+		if (length >= 7) {
+			// 3 keywords
+			final LispStruct thirdKeyword = lispStructs[5];
+			if (CommonLispSymbols.OUTPUT_FILE_KEYWORD.equals(thirdKeyword)) {
+				outputFile = lispStructs[6];
+			} else if (CommonLispSymbols.VERBOSE_KEYWORD.equals(thirdKeyword)) {
+				verbose = ((BooleanStruct) lispStructs[6]).booleanValue();
+			} else if (CommonLispSymbols.PRINT_KEYWORD.equals(thirdKeyword)) {
+				print = ((BooleanStruct) lispStructs[6]).booleanValue();
+			}
+		}
+		if (length >= 9) {
+			// 4 keywords
+			final LispStruct fourthKeyword = lispStructs[7];
+			if (CommonLispSymbols.OUTPUT_FILE_KEYWORD.equals(fourthKeyword)) {
+				outputFile = lispStructs[8];
+			} else if (CommonLispSymbols.VERBOSE_KEYWORD.equals(fourthKeyword)) {
+				verbose = ((BooleanStruct) lispStructs[8]).booleanValue();
+			} else if (CommonLispSymbols.PRINT_KEYWORD.equals(fourthKeyword)) {
+				print = ((BooleanStruct) lispStructs[8]).booleanValue();
+			}
+		}
+		return compileFile(inputFile, outputFile, verbose, print);
+	}
+
+	public LispStruct compileFile(final LispStruct inputFile, final LispStruct outputFile, final boolean verbose, final boolean print) {
+		// NOTE: 'outputFile' will be null if it is not supplied.
 
 		final PathnameStruct inputFilePathname = pathnameFunction.pathname(inputFile);
 		final Path inputFilePath = inputFilePathname.getPath();
 
 		final boolean inputFileNotExists = Files.notExists(inputFilePath);
 		if (inputFileNotExists) {
-			throw new ProgramErrorException("Input file provided to COMPILE-FILE does not exist: " + inputFilePath);
+			throw new FileErrorException("Input file provided to COMPILE-FILE does not exist: " + inputFilePath);
 		}
 
 		final String inputFileNamestring = inputFilePath.toString();
 		if (!StringUtils.endsWithIgnoreCase(inputFileNamestring, ".lsp") && !StringUtils.endsWithIgnoreCase(inputFileNamestring, ".lisp")) {
-			throw new RuntimeException("File to compile must be of type .lsp or .lisp");
+			throw new FileErrorException("Input file provided to COMPILE-FILE must have an extension of '.lsp' or '.lisp'");
 		}
 
 		final Instant startTime = Instant.now();
@@ -110,17 +249,23 @@ public class CompileFileFunction {
 		}
 
 		final PathnameStruct outputFilePathname = compileFilePathnameFunction.compileFilePathname(inputFilePathname, outputFile);
-
-		BooleanStruct compiledWithWarnings = NILStruct.INSTANCE;
-		BooleanStruct failedToCompile = NILStruct.INSTANCE;
+		final Path outputFilePath = outputFilePathname.getPath();
 
 		final LispStruct previousCompileFilePathname = CompilerVariables.COMPILE_FILE_PATHNAME.getValue();
 		final LispStruct previousCompileFileTruename = CompilerVariables.COMPILE_FILE_TRUENAME.getValue();
 
+		CompilerVariables.COMPILE_FILE_PATHNAME.setValue(outputFilePathname);
+		final Path outputFileAbsolutePath = outputFilePath.toAbsolutePath();
+		final PathnameStruct outputFileTruename = new PathnameFileStruct(outputFileAbsolutePath);
+		CompilerVariables.COMPILE_FILE_TRUENAME.setValue(outputFileTruename);
+
+		final ReadtableStruct previousReadtable = ReaderVariables.READTABLE.getValue();
+		final PackageStruct previousPackage = PackageVariables.PACKAGE.getValue();
+
+		BooleanStruct compiledWithWarnings = NILStruct.INSTANCE;
 		boolean compiledSuccessfully = false;
 		try {
 			final FileStreamStruct inputFileStream = new FileStreamStruct(inputFilePath);
-
 			final List<LispStruct> forms = new ArrayList<>();
 
 			LispStruct form;
@@ -129,97 +274,33 @@ public class CompileFileFunction {
 
 				if (form instanceof ListStruct) {
 					forms.add(form);
-				} else {
+				} else if (form != null) {
 					final String printedForm = printer.print(form);
 					final Long currentFilePosition = inputFileStream.filePosition(null);
-					LOGGER.debug("Deleted a non-list form {} found at line {}.", printedForm, currentFilePosition);
+					LOGGER.debug("; Deleted a non-list form {} found at line {}.", printedForm, currentFilePosition);
 					form = NullStruct.INSTANCE;
+
+					compiledWithWarnings = TStruct.INSTANCE;
 				}
 			} while (form != null);
 
-			if (print) {
-				/* TODO: where do we add this information in???
-; Converted FOO.
-; Compiling DEFUN FOO:
-; Converted BAR.
-; Compiling DEFUN BAR:
-; Compiling LAMBDA NIL:
-; Byte Compiling Top-Level Form:
-				 */
-			}
+			final String inputFileName = StringUtils.capitalize(inputFilePath.getFileName().toString());
+			final ListStruct fileLambda = buildFileLambda(forms, inputFileName);
 
-			final String name = StringUtils.capitalize(inputFilePath.getFileName().toString());
-			final StringStruct newJavaClassName = new StringStruct(name);
-			final ListStruct javaClassNameDeclaration = ListStruct.buildProperList(DeclarationStruct.JAVA_CLASS_NAME, newJavaClassName);
-			final ListStruct declareBlock = ListStruct.buildProperList(SpecialOperatorStruct.DECLARE, javaClassNameDeclaration);
-
-			final ListStruct formsToCompile = ListStruct.buildProperList(forms);
-			final ListStruct fileLambdaForm = ListStruct.buildDottedList(SpecialOperatorStruct.LAMBDA, NullStruct.INSTANCE, declareBlock, formsToCompile);
-
-			final LambdaStruct analyzedFileLambda = semanticAnalyzer.analyze(fileLambdaForm);
+			final LambdaStruct analyzedFileLambda = semanticAnalyzer.analyze(fileLambda);
 			final Deque<ClassDef> classDefDeque = intermediateCodeGenerator.generate(analyzedFileLambda);
 
-			final Manifest manifest = new Manifest();
-			final Attributes manifestMainAttributes = manifest.getMainAttributes();
-			manifestMainAttributes.put(Attributes.Name.MANIFEST_VERSION, "1.0");
-
-			final ClassDef mainClassDef = classDefDeque.getFirst();
-			final String mainClassDefName = mainClassDef.getName();
-			manifestMainAttributes.put(Attributes.Name.MAIN_CLASS, mainClassDefName);
-
-			final String tempFileName = "TEMP_" + name + "_JAR_" + System.nanoTime();
-			final Path tempFile = Files.createTempFile(tempFileName, ".jar");
-
-			final Path outputFilePath = outputFilePathname.getPath();
-			final OutputStream outputStream = Files.newOutputStream(outputFilePath, StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-			try (final JarOutputStream jar = new JarOutputStream(outputStream, manifest)) {
-
-				for (final ClassDef classDef : classDefDeque) {
-					final ClassWriter cw = classDef.getClassWriter();
-
-					final byte[] byteArray = cw.toByteArray();
-					final ClassReader cr = new ClassReader(byteArray);
-
-					final CheckClassAdapter cca = new CheckClassAdapter(new ClassWriter(0), false);
-					cr.accept(cca, ClassReader.SKIP_DEBUG + ClassReader.SKIP_FRAMES);
-
-					if (writeFile) {
-						final String className = classDef.getName() + ".class";
-						final JarEntry entry = new JarEntry(className);
-						jar.putNextEntry(entry);
-						jar.write(byteArray);
-						jar.closeEntry();
-					}
-				}
-			}
-
-			if (writeFile) {
-				Files.move(tempFile, outputFilePath, StandardCopyOption.REPLACE_EXISTING);
-			} else {
-				Files.deleteIfExists(tempFile);
-			}
-
-			compiledWithWarnings = TStruct.INSTANCE;
-			failedToCompile = TStruct.INSTANCE;
-
+			writeToJar(classDefDeque, outputFilePath, inputFileName, print);
 			compiledSuccessfully = true;
-		} catch (final FileNotFoundException e) {
-			compiledSuccessfully = false;
 
-			LOGGER.error("FileNotFoundException", e);
-			throw new RuntimeException("File " + inputFilePath + " does not exist.");
+			return new ValuesStruct(outputFileTruename, compiledWithWarnings, NILStruct.INSTANCE);
 		} catch (final IOException e) {
 			compiledSuccessfully = false;
 
-			LOGGER.error("IOException", e);
-			throw new RuntimeException("Unable to view contents of File " + inputFilePath);
-		} catch (final IllegalArgumentException e) {
-			compiledSuccessfully = false;
+			LOGGER.error("Error in COMPILE-FILE for file: {}", inputFilePath, e);
 
-			LOGGER.error("IllegalArgumentException", e);
-			throw new RuntimeException(e);
+			return new ValuesStruct(NullStruct.INSTANCE, compiledWithWarnings, TStruct.INSTANCE);
 		} finally {
-
 			if (compiledSuccessfully && verbose) {
 				final String outputFilePathnameString = "";
 				LOGGER.info("; {} written", outputFilePathnameString);
@@ -234,103 +315,61 @@ public class CompileFileFunction {
 
 			CompilerVariables.COMPILE_FILE_TRUENAME.setValue(previousCompileFileTruename);
 			CompilerVariables.COMPILE_FILE_PATHNAME.setValue(previousCompileFilePathname);
-		}
 
-		final LispStruct valuesFirst = (outputFile == null) ? NullStruct.INSTANCE : outputFilePathname;
-		return new ValuesStruct(valuesFirst, compiledWithWarnings, failedToCompile);
+			PackageVariables.PACKAGE.setValue(previousPackage);
+			ReaderVariables.READTABLE.setValue(previousReadtable);
+		}
 	}
 
-// TODO: Need: 'translate-logical-pathname' | 'make-pathname' | 'pathname' | 'open'
+	private static ListStruct buildFileLambda(final List<LispStruct> forms, final String inputFileName) {
+		final StringStruct newJavaClassName = new StringStruct(inputFileName);
+		final ListStruct javaClassNameDeclaration = ListStruct.buildProperList(DeclarationStruct.JAVA_CLASS_NAME, newJavaClassName);
+		final ListStruct declareBlock = ListStruct.buildProperList(SpecialOperatorStruct.DECLARE, javaClassNameDeclaration);
 
+		final ListStruct formsToCompile = ListStruct.buildProperList(forms);
+		return ListStruct.buildDottedList(SpecialOperatorStruct.LAMBDA, NullStruct.INSTANCE, formsToCompile);
+	}
 
-/*
-(defun compile-file (source &key (output-file t)
-							     (error-output t)
-							     (external-format :default)
-							     ((:verbose *compile-verbose*) *compile-verbose*)
-							     ((:print *compile-print*) *compile-print*))
+	private static void writeToJar(final Deque<ClassDef> classDefDeque, final Path outputFilePath, final String inputFileName,
+	                               final boolean print)
+			throws IOException {
 
-  (let* ((jar-file nil)
-		 (output-file-pathname nil)
-		 (compile-won nil)
-		 (error-severity nil)
-		 (source (verify-source-files source))
-		 (source-info (make-file-source-info source external-format t))
-		 (default (pathname (first source))))
-    (unwind-protect
+		final String tempFileName = "TEMP_" + inputFileName + "_JAR_" + System.nanoTime();
+		final Path tempOutputFilePath = Files.createTempFile(tempFileName, ".jar");
 
-    ;; PROGN START
-	  (progn
-		(when output-file
-		  (setq output-file-pathname
-			    (translate-logical-pathname (if (eq output-file t)
-												(compile-file-pathname (first source))
-											  (compile-file-pathname (first source) :output-file output-file))))
-		  (setq jar-file (open-jar-file output-file-pathname (namestring (first source)))))
+		final Manifest manifest = new Manifest();
+		final Attributes manifestMainAttributes = manifest.getMainAttributes();
+		manifestMainAttributes.put(Attributes.Name.MANIFEST_VERSION, "1.0");
 
-		(when *compile-verbose*
-		  (start-error-output source-info))
-		(setq error-severity
-			  (let ((*compile-object* jar-file))
-			    (sub-compile-file source-info)))
-		(setq compile-won t))
-    ;; PROGN END
+		final ClassDef mainClassDef = classDefDeque.getFirst();
+		final String mainClassDefName = mainClassDef.getName();
+		manifestMainAttributes.put(Attributes.Name.MAIN_CLASS, mainClassDefName);
 
-    ;; Unwind-Protect Cleanup Forms START
-	  (close-source-info source-info)
+		try (final OutputStream outputStream = Files.newOutputStream(tempOutputFilePath, StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+		     final JarOutputStream jar = new JarOutputStream(outputStream, manifest)) {
 
-	  (when jar-file
-		(close-jar-file jar-file (not compile-won))
-		(setq output-file-pathname (pathname (jar-file-stream jar-file)))
-		(when (and compile-won *compile-verbose*)
-		  (compiler-mumble "~2&; ~A written.~%" (namestring output-file-pathname))))
+			for (final ClassDef classDef : classDefDeque) {
+				final ClassWriter cw = classDef.getClassWriter();
 
-	  (when *compile-verbose*
-	    (finish-error-output source-info compile-won))
+				final byte[] byteArray = cw.toByteArray();
+				final ClassReader cr = new ClassReader(byteArray);
 
-    ;; Unwind-Protect Cleanup Forms END
+				final CheckClassAdapter cca = new CheckClassAdapter(new ClassWriter(0), false);
+				cr.accept(cca, ClassReader.SKIP_DEBUG + ClassReader.SKIP_FRAMES);
 
-	(values (if output-file
-				output-file-pathname
-			  nil)
-		    ;; CLHS says the second return value "is false if no
-		    ;; conditions of type error or warning were detected by
-		    ;; the compiler".  This should include style-warnings.
-	        (not (null error-severity))
-	        ;; FIXM in the following we should not return t for a
-	        ;; STYLE-WARNING
-		    (if (member error-severity '(:warning :error))
-		        t
-		      nil))))
-
-;;; START-ERROR-OUTPUT, FINISH-ERROR-OUTPUT  --  Internal
-;;;
-;;;    Print some junk at the beginning and end of compilation.
-;;;
-(defun start-error-output (source-info)
-  (declare (type source-info source-info))
-  (compiler-mumble "~2&; Python version ~A, VM version ~A on ~A.~%"
-		            compiler-version
-		            (backend-version *backend*)
-		            (ext:format-universal-time nil (get-universal-time) :style :iso8601
-																	    :print-weekday nil
-																	    :print-timezone nil))
-  (dolist (x (source-info-files source-info))
-    (compiler-mumble "; Compiling: ~A ~A~%"
-				     (namestring (file-info-name x))
-				     (ext:format-universal-time nil (file-info-write-date x) :style :iso8601
-																			 :print-weekday nil
-																			 :print-timezone nil)))
-  (compiler-mumble "~%")
-  (undefined-value))
-;;;
-(defun finish-error-output (source-info won)
-  (declare (type source-info source-info))
-  (compiler-mumble "~&; Compilation ~:[aborted after~;finished in~] ~A.~&"
-		           won
-		           (elapsed-time-to-string (- (get-universal-time)
-		                                      (source-info-start-time source-info))))
-  (undefined-value))
+				final String className = classDef.getName();
+				if (print) {
+					LOGGER.info("; Compiled {}", className);
+				}
 
-*/
+				final String entryClassName = className + ".class";
+				final JarEntry entry = new JarEntry(entryClassName);
+				jar.putNextEntry(entry);
+				jar.write(byteArray);
+				jar.closeEntry();
+			}
+		}
+
+		Files.move(tempOutputFilePath, outputFilePath, StandardCopyOption.REPLACE_EXISTING);
+	}
 }

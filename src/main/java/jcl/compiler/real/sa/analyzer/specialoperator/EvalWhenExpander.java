@@ -91,18 +91,18 @@ public class EvalWhenExpander extends MacroFunctionExpander<LispStruct> {
 		if (isTopLevel) {
 			if (isCompileTopLevel(situationJavaList)) {
 				final ListStruct prognOperatorList = new ConsStruct(SpecialOperatorStruct.PROGN, forms);
-				return evalFunction.apply(prognOperatorList);
+				return evalFunction.eval(prognOperatorList);
 			}
 
 			if (isLoadTopLevel(situationJavaList) || (notConvertingForInterpreter && isExecute(situationJavaList))) {
 				final ListStruct prognOperatorList = new ConsStruct(SpecialOperatorStruct.PROGN, forms);
-				return evalFunction.apply(prognOperatorList);
+				return evalFunction.eval(prognOperatorList);
 			}
 		}
 
 		if (isExecute(situationJavaList)) {
 			final ListStruct prognOperatorList = new ConsStruct(SpecialOperatorStruct.PROGN, forms);
-			return evalFunction.apply(prognOperatorList);
+			return evalFunction.eval(prognOperatorList);
 		}
 
 		return NullStruct.INSTANCE;

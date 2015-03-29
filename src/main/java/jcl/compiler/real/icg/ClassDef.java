@@ -13,9 +13,9 @@ public class ClassDef {
 
 	private final ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 
-	private final String name;
-
 	private final String fileName;
+
+	private final String className;
 
 	private MethodVisitor methodVisitor;
 
@@ -25,9 +25,9 @@ public class ClassDef {
 
 	private int nextAvailableStore;
 
-	public ClassDef(final String name, final String fileName) {
-		this.name = name;
+	public ClassDef(final String fileName, final String className) {
 		this.fileName = fileName;
+		this.className = className;
 	}
 
 	public ClassWriter getClassWriter() {
@@ -58,12 +58,12 @@ public class ClassDef {
 		this.annotationVisitor = annotationVisitor;
 	}
 
-	public String getName() {
-		return name;
-	}
-
 	public String getFileName() {
 		return fileName;
+	}
+
+	public String getClassName() {
+		return className;
 	}
 
 	public int getCurrentStore() {

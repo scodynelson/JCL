@@ -53,10 +53,10 @@ public class LocallyExpander extends MacroFunctionExpander<LocallyStruct> {
 		final List<LispStruct> forms = formRest.getAsJavaList();
 
 		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(forms, locallyEnvironment);
-		final DeclareStruct declareElement = bodyProcessingResult.getDeclareElement();
+		final DeclareStruct declare = bodyProcessingResult.getDeclareElement();
 
-		final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
-		specialDeclarationElements.forEach(e -> Environments.addDynamicVariableBinding(e, locallyEnvironment));
+		final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
+		specialDeclarations.forEach(specialDeclaration -> Environments.addDynamicVariableBinding(specialDeclaration, locallyEnvironment));
 
 		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 

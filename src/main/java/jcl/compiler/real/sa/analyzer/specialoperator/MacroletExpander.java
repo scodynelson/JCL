@@ -94,15 +94,15 @@ public class MacroletExpander extends MacroFunctionExpander<MacroletStruct> {
 			final List<LispStruct> forms = formRestRest.getAsJavaList();
 
 			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(forms, macroletEnvironment);
-			final DeclareStruct declareElement = bodyProcessingResult.getDeclareElement();
+			final DeclareStruct declare = bodyProcessingResult.getDeclareElement();
 
 			final List<MacroletStruct.MacroletVar> macroletVars
 					= innerFunctionsAsJavaList.stream()
-					                          .map(e -> getMacroletVar(e, declareElement, macroletEnvironment))
+					                          .map(e -> getMacroletVar(e, declare, macroletEnvironment))
 					                          .collect(Collectors.toList());
 
-			final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
-			specialDeclarationElements.forEach(specialDeclarationElement -> Environments.addDynamicVariableBinding(specialDeclarationElement, macroletEnvironment));
+			final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
+			specialDeclarations.forEach(specialDeclaration -> Environments.addDynamicVariableBinding(specialDeclaration, macroletEnvironment));
 
 			final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 			final List<LispStruct> analyzedBodyForms
@@ -141,7 +141,7 @@ public class MacroletExpander extends MacroFunctionExpander<MacroletStruct> {
 		return functionNames;
 	}
 
-	private MacroletStruct.MacroletVar getMacroletVar(final LispStruct functionDefinition, final DeclareStruct declareElement,
+	private MacroletStruct.MacroletVar getMacroletVar(final LispStruct functionDefinition, final DeclareStruct declare,
 	                                                  final MacroletEnvironment macroletEnvironment) {
 
 		final ListStruct functionList = (ListStruct) functionDefinition;
@@ -152,7 +152,7 @@ public class MacroletExpander extends MacroFunctionExpander<MacroletStruct> {
 		final int nextBindingsPosition = currentLambda.getNextParameterNumber();
 		macroletEnvironment.setBindingsPosition(nextBindingsPosition);
 
-		final boolean isSpecial = Environments.isSpecial(declareElement, functionName);
+		final boolean isSpecial = Environments.isSpecial(declare, functionName);
 
 		final ParameterAllocation allocation = new ParameterAllocation(nextBindingsPosition);
 		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(functionName, allocation, T.INSTANCE, functionInitForm);

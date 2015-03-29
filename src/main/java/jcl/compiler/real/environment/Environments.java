@@ -117,14 +117,14 @@ public final class Environments {
 		return hasFunctionBinding;
 	}
 
-	public static void addDynamicVariableBinding(final SpecialDeclarationStruct specialDeclarationElement,
+	public static void addDynamicVariableBinding(final SpecialDeclarationStruct specialDeclaration,
 	                                             final Environment environment) {
 
 		final LambdaEnvironment currentLambda = getEnclosingLambda(environment);
 		final int nextBindingsPosition = currentLambda.getNextParameterNumber();
 		environment.setBindingsPosition(nextBindingsPosition);
 
-		final SymbolStruct<?> var = specialDeclarationElement.getVar();
+		final SymbolStruct<?> var = specialDeclaration.getVar();
 
 		final Environment bindingEnvironment = getDynamicBindingEnvironment(environment, var);
 		final EnvironmentAllocation allocation = new EnvironmentAllocation(bindingEnvironment);
@@ -162,12 +162,12 @@ public final class Environments {
 		return (LambdaEnvironment) currentEnvironment;
 	}
 
-	public static boolean isSpecial(final DeclareStruct declareElement, final SymbolStruct<?> var) {
+	public static boolean isSpecial(final DeclareStruct declare, final SymbolStruct<?> var) {
 		boolean isSpecial = false;
 
-		final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
-		for (final SpecialDeclarationStruct specialDeclarationElement : specialDeclarationElements) {
-			final SymbolStruct<?> specialVar = specialDeclarationElement.getVar();
+		final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
+		for (final SpecialDeclarationStruct specialDeclaration : specialDeclarations) {
+			final SymbolStruct<?> specialVar = specialDeclaration.getVar();
 			if (var.equals(specialVar)) {
 				isSpecial = true;
 				break;

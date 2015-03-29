@@ -60,10 +60,12 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final PrognStruct forms = input.getForms();
 		final LambdaEnvironment lambdaEnvironment = input.getLambdaEnvironment();
 
-		final String fileName = "Lambda" + '_' + System.nanoTime();
-		final String className = "jcl/" + fileName;
+		String fileName = input.getFileName();
+		fileName = fileName.replace('.', '/');
 
-		final ClassDef currentClass = new ClassDef(className, fileName);
+		final String className = fileName.substring(fileName.lastIndexOf('/') + 1, fileName.length());
+
+		final ClassDef currentClass = new ClassDef(fileName, className);
 		final Stack<ClassDef> classStack = classBuilder.getClassStack();
 
 		classStack.push(currentClass);
@@ -72,9 +74,9 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
-		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER, className, null, "jcl/functions/FunctionStruct", null);
+		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER, fileName, null, "jcl/functions/FunctionStruct", null);
 
-		cw.visitSource(fileName + ".java", null);
+		cw.visitSource(className + ".java", null);
 
 		{
 			final Random random = new SecureRandom();
@@ -110,7 +112,7 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/functions/FunctionStruct", "<init>", "(Ljava/lang/String;)V", false);
 
 			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, className, "initLambdaListBindings", "()V", false);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, fileName, "initLambdaListBindings", "()V", false);
 
 			mv.visitInsn(Opcodes.RETURN);
 
@@ -173,7 +175,7 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitVarInsn(Opcodes.ILOAD, allowOtherKeysStore);
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/binding/lambdalist/OrdinaryLambdaListBindings", "<init>", "(Ljava/util/List;Ljava/util/List;Ljcl/compiler/real/environment/binding/lambdalist/RestBinding;Ljava/util/List;Ljava/util/List;Z)V", false);
 
-			mv.visitFieldInsn(Opcodes.PUTFIELD, className, "lambdaListBindings", "Ljcl/compiler/real/environment/binding/lambdalist/OrdinaryLambdaListBindings;");
+			mv.visitFieldInsn(Opcodes.PUTFIELD, fileName, "lambdaListBindings", "Ljcl/compiler/real/environment/binding/lambdalist/OrdinaryLambdaListBindings;");
 
 			mv.visitInsn(Opcodes.RETURN);
 
@@ -197,7 +199,7 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 			mv.visitVarInsn(Opcodes.ALOAD, argsStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, className, "getFunctionBindings", "([Ljcl/LispStruct;)Ljava/util/Map;", false);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, "getFunctionBindings", "([Ljcl/LispStruct;)Ljava/util/Map;", false);
 			final int functionBindingsStore = currentClass.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, functionBindingsStore);
 
@@ -324,7 +326,7 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 				mv.visitLabel(valuesCheckIfEnd);
 
 				mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
-				mv.visitFieldInsn(Opcodes.PUTSTATIC, className, uniqueLTVId, "Ljcl/LispStruct;");
+				mv.visitFieldInsn(Opcodes.PUTSTATIC, fileName, uniqueLTVId, "Ljcl/LispStruct;");
 			}
 
 			mv.visitInsn(Opcodes.RETURN);
@@ -340,9 +342,9 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			classBuilder.setCurrentClass(previousClassDef);
 			final MethodVisitor mv = previousClassDef.getMethodVisitor();
 
-			mv.visitTypeInsn(Opcodes.NEW, className);
+			mv.visitTypeInsn(Opcodes.NEW, fileName);
 			mv.visitInsn(Opcodes.DUP);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, className, "<init>", "()V", false);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, fileName, "<init>", "()V", false);
 		}
 	}
 

@@ -39,28 +39,37 @@ public class BodyWithDeclaresAnalyzer implements Serializable {
 			final List<LispStruct> allDeclarations = new ArrayList<>();
 			allDeclarations.add(SpecialOperatorStruct.DECLARE);
 
-			while (iterator.hasNext() && (next instanceof ListStruct) && ((ListStruct) next).getFirst().equals(SpecialOperatorStruct.DECLARE)) {
-
+			while (isDeclaration(next)) {
 				final ListStruct declareStatement = (ListStruct) next;
 				final List<LispStruct> declarations = declareStatement.getRest().getAsJavaList();
 
 				allDeclarations.addAll(declarations);
-				next = iterator.next();
+
+				if (iterator.hasNext()) {
+					next = iterator.next();
+				} else {
+					next = null;
+					break;
+				}
 			}
 
 			final ListStruct fullDeclaration = ListStruct.buildProperList(allDeclarations);
 			declareElement = declareExpander.expand(fullDeclaration, environment);
 
-			while (iterator.hasNext()) {
+			if (next != null) {
 				bodyForms.add(next);
-				next = iterator.next();
 			}
-
-			// Make sure to add the last form!!
-			bodyForms.add(next);
+			while (iterator.hasNext()) {
+				next = iterator.next();
+				bodyForms.add(next);
+			}
 		}
 
 		return new BodyProcessingResult(declareElement, null, bodyForms);
+	}
+
+	private boolean isDeclaration(final LispStruct next) {
+		return (next instanceof ListStruct) && ((ListStruct) next).getFirst().equals(SpecialOperatorStruct.DECLARE);
 	}
 
 	@Override

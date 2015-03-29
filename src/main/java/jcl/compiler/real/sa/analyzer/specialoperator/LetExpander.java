@@ -80,15 +80,15 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 		final List<LispStruct> forms = formRestRest.getAsJavaList();
 
 		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(forms, letEnvironment);
-		final DeclareStruct declareElement = bodyProcessingResult.getDeclareElement();
+		final DeclareStruct declare = bodyProcessingResult.getDeclareElement();
 
 		final List<LetStruct.LetVar> letVars
 				= parametersAsJavaList.stream()
-				                      .map(e -> getLetVar(e, declareElement, letEnvironment))
+				                      .map(e -> getLetVar(e, declare, letEnvironment))
 				                      .collect(Collectors.toList());
 
-		final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
-		specialDeclarationElements.forEach(e -> Environments.addDynamicVariableBinding(e, letEnvironment));
+		final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
+		specialDeclarations.forEach(specialDeclaration -> Environments.addDynamicVariableBinding(specialDeclaration, letEnvironment));
 
 		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 		final List<LispStruct> analyzedBodyForms
@@ -99,7 +99,7 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 		return new LetStruct(letVars, new PrognStruct(analyzedBodyForms), letEnvironment);
 	}
 
-	private LetStruct.LetVar getLetVar(final LispStruct parameter, final DeclareStruct declareElement,
+	private LetStruct.LetVar getLetVar(final LispStruct parameter, final DeclareStruct declare,
 	                                   final LetEnvironment letEnvironment) {
 
 		if (!(parameter instanceof SymbolStruct) && !(parameter instanceof ListStruct)) {
@@ -123,7 +123,7 @@ public class LetExpander extends MacroFunctionExpander<LetStruct> {
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
 		letEnvironment.setBindingsPosition(newBindingsPosition);
 
-		final boolean isSpecial = Environments.isSpecial(declareElement, var);
+		final boolean isSpecial = Environments.isSpecial(declare, var);
 
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(var, allocation, T.INSTANCE, initForm);

@@ -56,15 +56,15 @@ class CompileForm implements Serializable {
 
 			final ClassReader cr = new ClassReader(byteArray);
 
-			String className = classDef.getName();
-			className = className.replace('/', '.');
+			String fileName = classDef.getFileName();
+			fileName = fileName.replace('/', '.');
 
 			final CheckClassAdapter cca = new CheckClassAdapter(new ClassWriter(0), false);
 			cr.accept(cca, ClassReader.SKIP_DEBUG + ClassReader.SKIP_FRAMES);
 
 			final CompilerClassLoader cl = CompilerClassLoader.INSTANCE;
 
-			final Class<?> classLoaded = cl.loadClass(byteArray, className);
+			final Class<?> classLoaded = cl.loadClass(byteArray, fileName);
 
 			Constructor<?> constructor = null;
 			try {

@@ -23,8 +23,8 @@ public class ImmutableLoadTimeValueCodeGenerator implements CodeGenerator<Immuta
 		final ClassDef currentClass = classBuilder.getCurrentClass();
 		final MethodVisitor mv = currentClass.getMethodVisitor();
 
-		final String className = currentClass.getName();
+		final String fileName = currentClass.getFileName();
 
-		mv.visitFieldInsn(Opcodes.GETSTATIC, className, uniqueLTVId, "Ljcl/LispStruct;");
+		mv.visitFieldInsn(Opcodes.GETSTATIC, fileName, uniqueLTVId, "Ljcl/LispStruct;");
 	}
 }

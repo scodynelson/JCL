@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
+import jcl.arrays.StringStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LabelsEnvironment;
@@ -25,6 +26,7 @@ import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.printer.Printer;
+import jcl.symbols.DeclarationStruct;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.system.StackUtils;
@@ -94,15 +96,15 @@ public class LabelsExpander extends MacroFunctionExpander<LabelsStruct> {
 			final List<LispStruct> forms = formRestRest.getAsJavaList();
 
 			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(forms, labelsEnvironment);
-			final DeclareStruct declareElement = bodyProcessingResult.getDeclareElement();
+			final DeclareStruct declare = bodyProcessingResult.getDeclareElement();
 
 			final List<LabelsStruct.LabelsVar> labelsVars
 					= innerFunctionsAsJavaList.stream()
-					                          .map(e -> getLabelsVar(e, declareElement, labelsEnvironment))
+					                          .map(e -> getLabelsVar(e, declare, labelsEnvironment))
 					                          .collect(Collectors.toList());
 
-			final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
-			specialDeclarationElements.forEach(specialDeclarationElement -> Environments.addDynamicVariableBinding(specialDeclarationElement, labelsEnvironment));
+			final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
+			specialDeclarations.forEach(specialDeclaration -> Environments.addDynamicVariableBinding(specialDeclaration, labelsEnvironment));
 
 			final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 			final List<LispStruct> analyzedBodyForms
@@ -141,7 +143,7 @@ public class LabelsExpander extends MacroFunctionExpander<LabelsStruct> {
 		return functionNames;
 	}
 
-	private LabelsStruct.LabelsVar getLabelsVar(final LispStruct functionDefinition, final DeclareStruct declareElement,
+	private LabelsStruct.LabelsVar getLabelsVar(final LispStruct functionDefinition, final DeclareStruct declare,
 	                                            final LabelsEnvironment labelsEnvironment) {
 
 		final ListStruct functionList = (ListStruct) functionDefinition;
@@ -152,7 +154,7 @@ public class LabelsExpander extends MacroFunctionExpander<LabelsStruct> {
 		final int nextBindingsPosition = currentLambda.getNextParameterNumber();
 		labelsEnvironment.setBindingsPosition(nextBindingsPosition);
 
-		final boolean isSpecial = Environments.isSpecial(declareElement, functionName);
+		final boolean isSpecial = Environments.isSpecial(declare, functionName);
 
 		final ParameterAllocation allocation = new ParameterAllocation(nextBindingsPosition);
 		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(functionName, allocation, T.INSTANCE, functionInitForm);
@@ -177,7 +179,16 @@ public class LabelsExpander extends MacroFunctionExpander<LabelsStruct> {
 
 		// NOTE: Make Dotted list here so the 'contents' of the body get added to the block
 		final ListStruct innerBlockListStruct = ListStruct.buildDottedList(SpecialOperatorStruct.BLOCK, functionName, body);
-		final ListStruct innerLambdaListStruct = ListStruct.buildProperList(SpecialOperatorStruct.LAMBDA, lambdaList, innerBlockListStruct);
+
+		// NOTE: This will be a safe cast since we verify it is a symbol earlier
+		final SymbolStruct<?> functionNameSymbol = (SymbolStruct) functionName;
+
+		final String fletParamName = "jcl.LABELS_"+ functionNameSymbol.getName() + "_Lambda_" + System.nanoTime();
+		final StringStruct fletParamJavaClassName = new StringStruct(fletParamName);
+		final ListStruct fletParamJavaClassNameDeclaration = ListStruct.buildProperList(DeclarationStruct.JAVA_CLASS_NAME, fletParamJavaClassName);
+		final ListStruct innerDeclareListStruct = ListStruct.buildProperList(SpecialOperatorStruct.DECLARE, fletParamJavaClassNameDeclaration);
+
+		final ListStruct innerLambdaListStruct = ListStruct.buildProperList(SpecialOperatorStruct.LAMBDA, lambdaList, innerDeclareListStruct, innerBlockListStruct);
 		final ListStruct innerFunctionListStruct = ListStruct.buildProperList(SpecialOperatorStruct.FUNCTION, innerLambdaListStruct);
 
 		// Evaluate in the 'current' environment. This is one of the differences between Flet and Labels/Macrolet.

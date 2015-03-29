@@ -17,16 +17,27 @@ public class DeclareStruct extends CompilerSpecialOperatorStruct {
 
 	private static final long serialVersionUID = -7730761501615283012L;
 
-	private final List<SpecialDeclarationStruct> specialDeclarationElements = new ArrayList<>();
+	private final List<SpecialDeclarationStruct> specialDeclarations = new ArrayList<>();
 
-	public List<SpecialDeclarationStruct> getSpecialDeclarationElements() {
-		return specialDeclarationElements;
+	private JavaClassNameDeclarationStruct javaClassNameDeclaration;
+
+	public List<SpecialDeclarationStruct> getSpecialDeclarations() {
+		return specialDeclarations;
+	}
+
+	public JavaClassNameDeclarationStruct getJavaClassNameDeclaration() {
+		return javaClassNameDeclaration;
+	}
+
+	public void setJavaClassNameDeclaration(final JavaClassNameDeclarationStruct javaClassNameDeclaration) {
+		this.javaClassNameDeclaration = javaClassNameDeclaration;
 	}
 
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(specialDeclarationElements)
+		                            .append(specialDeclarations)
+		                            .append(javaClassNameDeclaration)
 		                            .toHashCode();
 	}
 
@@ -43,13 +54,15 @@ public class DeclareStruct extends CompilerSpecialOperatorStruct {
 		}
 		final DeclareStruct rhs = (DeclareStruct) obj;
 		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(specialDeclarationElements, rhs.specialDeclarationElements)
+		                          .append(specialDeclarations, rhs.specialDeclarations)
+		                          .append(javaClassNameDeclaration, rhs.javaClassNameDeclaration)
 		                          .isEquals();
 	}
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(specialDeclarationElements)
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(specialDeclarations)
+		                                                                .append(javaClassNameDeclaration)
 		                                                                .toString();
 	}
 }

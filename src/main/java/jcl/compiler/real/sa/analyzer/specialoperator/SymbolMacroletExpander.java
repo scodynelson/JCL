@@ -79,12 +79,12 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 		final List<LispStruct> forms = formRestRest.getAsJavaList();
 
 		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(forms, symbolMacroletEnvironment);
-		final DeclareStruct declareElement = bodyProcessingResult.getDeclareElement();
-		validateDeclares(declareElement);
+		final DeclareStruct declare = bodyProcessingResult.getDeclareElement();
+		validateDeclares(declare);
 
 		final List<SymbolMacroletStruct.SymbolMacroletVar> symbolMacroletVars
 				= parametersAsJavaList.stream()
-				                      .map(e -> getSymbolMacroletElementVar(e, declareElement, symbolMacroletEnvironment))
+				                      .map(e -> getSymbolMacroletElementVar(e, declare, symbolMacroletEnvironment))
 				                      .collect(Collectors.toList());
 
 		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
@@ -96,16 +96,16 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 		return new SymbolMacroletStruct(symbolMacroletVars, new PrognStruct(analyzedBodyForms), symbolMacroletEnvironment);
 	}
 
-	private static void validateDeclares(final DeclareStruct declareElement) {
-		if (declareElement != null) {
-			final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
-			if (!specialDeclarationElements.isEmpty()) {
+	private static void validateDeclares(final DeclareStruct declare) {
+		if (declare != null) {
+			final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
+			if (!specialDeclarations.isEmpty()) {
 				throw new ProgramErrorException("SYMBOL-MACROLET: Special declarations not allowed.");
 			}
 		}
 	}
 
-	private SymbolMacroletStruct.SymbolMacroletVar getSymbolMacroletElementVar(final LispStruct parameter, final DeclareStruct declareElement,
+	private SymbolMacroletStruct.SymbolMacroletVar getSymbolMacroletElementVar(final LispStruct parameter, final DeclareStruct declare,
 	                                                                           final SymbolMacroletEnvironment symbolMacroletEnvironment) {
 
 		if (!(parameter instanceof ListStruct)) {

@@ -327,7 +327,7 @@ public final class CompileFileFunction extends FunctionStruct {
 		final ListStruct declareBlock = ListStruct.buildProperList(SpecialOperatorStruct.DECLARE, javaClassNameDeclaration);
 
 		final ListStruct formsToCompile = ListStruct.buildProperList(forms);
-		return ListStruct.buildDottedList(SpecialOperatorStruct.LAMBDA, NullStruct.INSTANCE, formsToCompile);
+		return ListStruct.buildDottedList(SpecialOperatorStruct.LAMBDA, NullStruct.INSTANCE, declareBlock, formsToCompile);
 	}
 
 	private static void writeToJar(final Deque<ClassDef> classDefDeque, final Path outputFilePath, final String inputFileName,
@@ -342,8 +342,8 @@ public final class CompileFileFunction extends FunctionStruct {
 		manifestMainAttributes.put(Attributes.Name.MANIFEST_VERSION, "1.0");
 
 		final ClassDef mainClassDef = classDefDeque.getFirst();
-		final String mainClassDefName = mainClassDef.getName();
-		manifestMainAttributes.put(Attributes.Name.MAIN_CLASS, mainClassDefName);
+		final String mainClassDefFileName = mainClassDef.getFileName();
+		manifestMainAttributes.put(Attributes.Name.MAIN_CLASS, mainClassDefFileName);
 
 		try (final OutputStream outputStream = Files.newOutputStream(tempOutputFilePath, StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 		     final JarOutputStream jar = new JarOutputStream(outputStream, manifest)) {
@@ -357,13 +357,14 @@ public final class CompileFileFunction extends FunctionStruct {
 				final CheckClassAdapter cca = new CheckClassAdapter(new ClassWriter(0), false);
 				cr.accept(cca, ClassReader.SKIP_DEBUG + ClassReader.SKIP_FRAMES);
 
-				final String className = classDef.getName();
 				if (print) {
+					final String className = classDef.getClassName();
 					LOGGER.info("; Compiled {}", className);
 				}
 
-				final String entryClassName = className + ".class";
-				final JarEntry entry = new JarEntry(entryClassName);
+				final String fileName = classDef.getFileName();
+				final String entryFileName = fileName + ".class";
+				final JarEntry entry = new JarEntry(entryFileName);
 				jar.putNextEntry(entry);
 				jar.write(byteArray);
 				jar.closeEntry();

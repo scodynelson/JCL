@@ -18,12 +18,13 @@ import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAndDocStringAnalyzer;
-import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
+import jcl.compiler.real.struct.specialoperator.declare.JavaClassNameDeclarationStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.printer.Printer;
@@ -85,12 +86,21 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 		final List<LispStruct> forms = formRestRest.getAsJavaList();
 
 		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAndDocStringAnalyzer.analyze(forms, lambdaEnvironment);
-		final DeclareStruct declareElement = bodyProcessingResult.getDeclareElement();
+		final DeclareStruct declare = bodyProcessingResult.getDeclareElement();
 
-		final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
-		specialDeclarationElements.forEach(specialDeclarationElement -> Environments.addDynamicVariableBinding(specialDeclarationElement, lambdaEnvironment));
+		final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
+		specialDeclarations.forEach(specialDeclaration -> Environments.addDynamicVariableBinding(specialDeclaration, lambdaEnvironment));
 
-		final OrdinaryLambdaListBindings parsedLambdaList = lambdaListParser.parseOrdinaryLambdaList(lambdaEnvironment, parameters, declareElement);
+		final JavaClassNameDeclarationStruct javaClassNameDeclaration = declare.getJavaClassNameDeclaration();
+		final String fileName;
+		if (javaClassNameDeclaration == null) {
+			final String className = "Lambda" + '_' + System.nanoTime();
+			fileName = "jcl." + className;
+		} else {
+			fileName = javaClassNameDeclaration.getClassName();
+		}
+
+		final OrdinaryLambdaListBindings parsedLambdaList = lambdaListParser.parseOrdinaryLambdaList(lambdaEnvironment, parameters, declare);
 
 		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 		final List<LispStruct> newLambdaBodyForms = getNewStartingLambdaBody(parsedLambdaList, bodyForms);
@@ -99,7 +109,7 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 				= newLambdaBodyForms.stream()
 				                    .map(e -> formAnalyzer.analyze(e, lambdaEnvironment))
 				                    .collect(Collectors.toList());
-		return new LambdaStruct(parsedLambdaList, bodyProcessingResult.getDocString(), new PrognStruct(analyzedBodyForms), lambdaEnvironment);
+		return new LambdaStruct(fileName, parsedLambdaList, bodyProcessingResult.getDocString(), new PrognStruct(analyzedBodyForms), lambdaEnvironment);
 	}
 
 	private static List<LispStruct> getNewStartingLambdaBody(final OrdinaryLambdaListBindings parsedLambdaList,

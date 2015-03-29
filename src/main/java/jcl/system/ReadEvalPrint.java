@@ -292,8 +292,8 @@ public class ReadEvalPrint {
 
 			final byte[] byteArray = cw.toByteArray();
 
-			final String fileName = classDef.getFileName();
-			try (FileOutputStream outputStream = new FileOutputStream(new File("/Volumes/Dev/repo/JCL/tmp/" + fileName + ".class"))) {
+			final String className = classDef.getClassName();
+			try (FileOutputStream outputStream = new FileOutputStream(new File("/Volumes/Dev/repo/JCL/tmp/" + className + ".class"))) {
 				outputStream.write(byteArray);
 			} catch (final IOException ioe) {
 				LOGGER.info("Error writing class file.", ioe);
@@ -301,8 +301,8 @@ public class ReadEvalPrint {
 
 			final ClassReader cr = new ClassReader(byteArray);
 
-			String className = classDef.getName();
-			className = className.replace('/', '.');
+			String fileName = classDef.getFileName();
+			fileName = fileName.replace('/', '.');
 
 //			LOGGER.info("Printing the class: {}", className);
 //			final PrintWriter pw = new PrintWriter(System.out);
@@ -314,7 +314,7 @@ public class ReadEvalPrint {
 
 			final CompilerClassLoader cl = CompilerClassLoader.INSTANCE;
 
-			final Class<?> classLoaded = cl.loadClass(byteArray, className);
+			final Class<?> classLoaded = cl.loadClass(byteArray, fileName);
 			final Constructor<?> constructor = classLoaded.getDeclaredConstructor();
 			constructor.setAccessible(true);
 

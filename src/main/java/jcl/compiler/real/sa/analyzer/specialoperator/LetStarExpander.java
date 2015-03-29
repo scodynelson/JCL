@@ -80,15 +80,15 @@ public class LetStarExpander extends MacroFunctionExpander<LetStarStruct> {
 		final List<LispStruct> forms = formRestRest.getAsJavaList();
 
 		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(forms, letStarEnvironment);
-		final DeclareStruct declareElement = bodyProcessingResult.getDeclareElement();
+		final DeclareStruct declare = bodyProcessingResult.getDeclareElement();
 
 		final List<LetStarStruct.LetStarVar> letStarVars
 				= parametersAsJavaList.stream()
-				                      .map(e -> getLetStarVar(e, declareElement, letStarEnvironment))
+				                      .map(e -> getLetStarVar(e, declare, letStarEnvironment))
 				                      .collect(Collectors.toList());
 
-		final List<SpecialDeclarationStruct> specialDeclarationElements = declareElement.getSpecialDeclarationElements();
-		specialDeclarationElements.forEach(e -> Environments.addDynamicVariableBinding(e, letStarEnvironment));
+		final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
+		specialDeclarations.forEach(specialDeclaration -> Environments.addDynamicVariableBinding(specialDeclaration, letStarEnvironment));
 
 		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 		final List<LispStruct> analyzedBodyForms
@@ -99,7 +99,7 @@ public class LetStarExpander extends MacroFunctionExpander<LetStarStruct> {
 		return new LetStarStruct(letStarVars, new PrognStruct(analyzedBodyForms), letStarEnvironment);
 	}
 
-	private LetStarStruct.LetStarVar getLetStarVar(final LispStruct parameter, final DeclareStruct declareElement,
+	private LetStarStruct.LetStarVar getLetStarVar(final LispStruct parameter, final DeclareStruct declare,
 	                                               final LetStarEnvironment letStarEnvironment) {
 
 		if (!(parameter instanceof SymbolStruct) && !(parameter instanceof ListStruct)) {
@@ -123,7 +123,7 @@ public class LetStarExpander extends MacroFunctionExpander<LetStarStruct> {
 		final int newBindingsPosition = currentLambda.getNextParameterNumber();
 		letStarEnvironment.setBindingsPosition(newBindingsPosition);
 
-		final boolean isSpecial = Environments.isSpecial(declareElement, var);
+		final boolean isSpecial = Environments.isSpecial(declare, var);
 
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(var, allocation, T.INSTANCE, initForm);

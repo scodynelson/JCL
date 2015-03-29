@@ -6,9 +6,11 @@ package jcl.compiler.real;
 
 import java.math.BigInteger;
 
+import jcl.LispStruct;
 import jcl.functions.functions.FuncallFunction;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
+import jcl.lists.NullStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.BooleanStruct;
@@ -25,10 +27,10 @@ public interface CompilerVariables {
 	VariableStruct<IntegerStruct> GENSYM_COUNTER = new VariableStruct<>("*GENSYM-COUNTER*", GlobalPackageStruct.COMMON_LISP, new IntegerStruct(BigInteger.ONE));
 
 	VariableStruct<ListStruct> FEATURES = new ProperListVariable("*FEATURES*", GlobalPackageStruct.COMMON_LISP);
-	VariableStruct<?> COMPILE_FILE_PATHNAME = new VariableStruct<>("*COMPILE-FILE-PATHNAME*", GlobalPackageStruct.COMMON_LISP, null);
-	VariableStruct<?> COMPILE_FILE_TRUENAME = new VariableStruct<>("*COMPILE-FILE-TRUENAME*", GlobalPackageStruct.COMMON_LISP, null);
-	VariableStruct<?> LOAD_PATHNAME = new VariableStruct<>("*LOAD-PATHNAME*", GlobalPackageStruct.COMMON_LISP, null);
-	VariableStruct<?> LOAD_TRUENAME = new VariableStruct<>("*LOAD-TRUENAME*", GlobalPackageStruct.COMMON_LISP, null);
+	VariableStruct<LispStruct> COMPILE_FILE_PATHNAME = new VariableStruct<>("*COMPILE-FILE-PATHNAME*", GlobalPackageStruct.COMMON_LISP, NullStruct.INSTANCE);
+	VariableStruct<LispStruct> COMPILE_FILE_TRUENAME = new VariableStruct<>("*COMPILE-FILE-TRUENAME*", GlobalPackageStruct.COMMON_LISP, NullStruct.INSTANCE);
+	VariableStruct<LispStruct> LOAD_PATHNAME = new VariableStruct<>("*LOAD-PATHNAME*", GlobalPackageStruct.COMMON_LISP, NullStruct.INSTANCE);
+	VariableStruct<LispStruct> LOAD_TRUENAME = new VariableStruct<>("*LOAD-TRUENAME*", GlobalPackageStruct.COMMON_LISP, NullStruct.INSTANCE);
 	VariableStruct<BooleanStruct> COMPILE_PRINT = new VariableStruct<>("*COMPILE-PRINT*", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);
 	VariableStruct<BooleanStruct> COMPILE_VERBOSE = new VariableStruct<>("*COMPILE-VERBOSE*", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);
 	VariableStruct<?> LOAD_PRINT = new VariableStruct<>("*LOAD-PRINT*", GlobalPackageStruct.COMMON_LISP, null);

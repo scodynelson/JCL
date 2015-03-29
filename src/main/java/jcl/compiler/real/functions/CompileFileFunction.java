@@ -1,40 +1,37 @@
 package jcl.compiler.real.functions;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
-import java.util.Scanner;
 import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
-import java.util.regex.Pattern;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
-import jcl.compiler.old.functions.OpenFunction;
-import jcl.compiler.old.symbol.KeywordOld;
 import jcl.compiler.real.CompilerVariables;
 import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.IntermediateCodeGenerator;
 import jcl.compiler.real.sa.SemanticAnalyzer;
 import jcl.compiler.real.struct.ValuesStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
-import jcl.functions.FunctionStruct;
-import jcl.lists.ConsStruct;
+import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.pathnames.PathnameStruct;
-import jcl.pathnames.PathnameType;
-import jcl.pathnames.functions.TranslateLogicalPathnameFunction;
+import jcl.pathnames.functions.PathnameFunction;
 import jcl.printer.Printer;
 import jcl.reader.functions.ReadFunction;
 import jcl.streams.FileStreamStruct;
@@ -42,8 +39,8 @@ import jcl.symbols.BooleanStruct;
 import jcl.symbols.DeclarationStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SpecialOperatorStruct;
-import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
+import org.apache.commons.lang3.StringUtils;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.util.CheckClassAdapter;
@@ -78,214 +75,169 @@ public class CompileFileFunction {
 	private ReadFunction readFunction;
 
 	@Autowired
-	private TranslateLogicalPathnameFunction translateLogicalPathnameFunction;
+	private PathnameFunction pathnameFunction;
 
 	public Object apply(final ListStruct args) {
 		return null;
 	}
 
-	public Object compileFile(final PathnameStruct inputFile, final PathnameStruct outputFile, final BooleanStruct verbose,
-	                          final BooleanStruct print, final LispStruct externalFormat, final boolean writeFile) {
+	public Object compileFile(final LispStruct inputFile, final LispStruct outputFile, final boolean verbose,
+	                          final boolean print, final boolean writeFile) {
 
 
-		// TODO: next verify the file with the pathname actually exists
-		// if not, throw error: "Can't compile with no source files." or something to that effect
 
-		final PathnameType pathnameType = inputFile.getPathnameType();
-		final String type = pathnameType.getType();
-		final boolean correctInputType = type.endsWith(".lsp") || type.endsWith(".lisp");
+		final PathnameStruct inputFilePathname = pathnameFunction.pathname(inputFile);
+		final Path inputFilePath = inputFilePathname.getPath();
 
-		if (!correctInputType) {
-			throw new RuntimeException("file to compile must be of type .lsp or .lisp");
+		final boolean inputFileNotExists = Files.notExists(inputFilePath);
+		if (inputFileNotExists) {
+			throw new ProgramErrorException("Input file provided to COMPILE-FILE does not exist: " + inputFilePath);
 		}
 
-		PathnameStruct outputFilePathname = null;
-
-		Object jarFile = null;
-
-		final PathnameStruct outputCompileFilePathname;
-		if (outputFile == null) {
-			outputCompileFilePathname = compileFilePathnameFunction.compileFilePathname(inputFile, null);
-		} else {
-			outputCompileFilePathname = compileFilePathnameFunction.compileFilePathname(inputFile, outputFile);
+		final String inputFileNamestring = inputFilePath.toString();
+		if (!StringUtils.endsWithIgnoreCase(inputFileNamestring, ".lsp") && !StringUtils.endsWithIgnoreCase(inputFileNamestring, ".lisp")) {
+			throw new RuntimeException("File to compile must be of type .lsp or .lisp");
 		}
-		outputFilePathname = translateLogicalPathnameFunction.translateLogicalPathname(outputFilePathname);
-
-		// TODO: (open-jar-file output-file-pathname (namestring (first source)))
-
-		final boolean compileVerbose = CompilerVariables.COMPILE_VERBOSE.getValue().booleanValue();
 
 		final Instant startTime = Instant.now();
-		if (compileVerbose) {
+		if (verbose) {
 			final String javaVersion = System.getProperty("java.version");
-			LOGGER.info("Java Compiler Version {}", javaVersion);
+			LOGGER.info("; Java Compiler Version {}", javaVersion);
 
-			final String fileName = inputFile.toString();
 			final LocalDateTime now = LocalDateTime.now();
-			LOGGER.info("Compiling {} on {}", fileName, now);
+			LOGGER.info("; Compiling {} on {}", inputFileNamestring, now);
 			LOGGER.info("");
 		}
+
+		final PathnameStruct outputFilePathname = compileFilePathnameFunction.compileFilePathname(inputFilePathname, outputFile);
 
 		BooleanStruct compiledWithWarnings = NILStruct.INSTANCE;
 		BooleanStruct failedToCompile = NILStruct.INSTANCE;
 
+		final LispStruct previousCompileFilePathname = CompilerVariables.COMPILE_FILE_PATHNAME.getValue();
+		final LispStruct previousCompileFileTruename = CompilerVariables.COMPILE_FILE_TRUENAME.getValue();
+
 		boolean compiledSuccessfully = false;
 		try {
-			compiledSuccessfully = subCompileFile(outputFile, writeFile);
+			final FileStreamStruct inputFileStream = new FileStreamStruct(inputFilePath);
+
+			final List<LispStruct> forms = new ArrayList<>();
+
+			LispStruct form;
+			do {
+				form = readFunction.read(inputFileStream, NILStruct.INSTANCE, null, NILStruct.INSTANCE);
+
+				if (form instanceof ListStruct) {
+					forms.add(form);
+				} else {
+					final String printedForm = printer.print(form);
+					final Long currentFilePosition = inputFileStream.filePosition(null);
+					LOGGER.debug("Deleted a non-list form {} found at line {}.", printedForm, currentFilePosition);
+					form = NullStruct.INSTANCE;
+				}
+			} while (form != null);
+
+			if (print) {
+				/* TODO: where do we add this information in???
+; Converted FOO.
+; Compiling DEFUN FOO:
+; Converted BAR.
+; Compiling DEFUN BAR:
+; Compiling LAMBDA NIL:
+; Byte Compiling Top-Level Form:
+				 */
+			}
+
+			final String name = StringUtils.capitalize(inputFilePath.getFileName().toString());
+			final StringStruct newJavaClassName = new StringStruct(name);
+			final ListStruct javaClassNameDeclaration = ListStruct.buildProperList(DeclarationStruct.JAVA_CLASS_NAME, newJavaClassName);
+			final ListStruct declareBlock = ListStruct.buildProperList(SpecialOperatorStruct.DECLARE, javaClassNameDeclaration);
+
+			final ListStruct formsToCompile = ListStruct.buildProperList(forms);
+			final ListStruct fileLambdaForm = ListStruct.buildDottedList(SpecialOperatorStruct.LAMBDA, NullStruct.INSTANCE, declareBlock, formsToCompile);
+
+			final LambdaStruct analyzedFileLambda = semanticAnalyzer.analyze(fileLambdaForm);
+			final Deque<ClassDef> classDefDeque = intermediateCodeGenerator.generate(analyzedFileLambda);
+
+			final Manifest manifest = new Manifest();
+			final Attributes manifestMainAttributes = manifest.getMainAttributes();
+			manifestMainAttributes.put(Attributes.Name.MANIFEST_VERSION, "1.0");
+
+			final ClassDef mainClassDef = classDefDeque.getFirst();
+			final String mainClassDefName = mainClassDef.getName();
+			manifestMainAttributes.put(Attributes.Name.MAIN_CLASS, mainClassDefName);
+
+			final String tempFileName = "TEMP_" + name + "_JAR_" + System.nanoTime();
+			final Path tempFile = Files.createTempFile(tempFileName, ".jar");
+
+			final Path outputFilePath = outputFilePathname.getPath();
+			final OutputStream outputStream = Files.newOutputStream(outputFilePath, StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+			try (final JarOutputStream jar = new JarOutputStream(outputStream, manifest)) {
+
+				for (final ClassDef classDef : classDefDeque) {
+					final ClassWriter cw = classDef.getClassWriter();
+
+					final byte[] byteArray = cw.toByteArray();
+					final ClassReader cr = new ClassReader(byteArray);
+
+					final CheckClassAdapter cca = new CheckClassAdapter(new ClassWriter(0), false);
+					cr.accept(cca, ClassReader.SKIP_DEBUG + ClassReader.SKIP_FRAMES);
+
+					if (writeFile) {
+						final String className = classDef.getName() + ".class";
+						final JarEntry entry = new JarEntry(className);
+						jar.putNextEntry(entry);
+						jar.write(byteArray);
+						jar.closeEntry();
+					}
+				}
+			}
+
+			if (writeFile) {
+				Files.move(tempFile, outputFilePath, StandardCopyOption.REPLACE_EXISTING);
+			} else {
+				Files.deleteIfExists(tempFile);
+			}
 
 			compiledWithWarnings = TStruct.INSTANCE;
 			failedToCompile = TStruct.INSTANCE;
+
+			compiledSuccessfully = true;
 		} catch (final FileNotFoundException e) {
+			compiledSuccessfully = false;
+
 			LOGGER.error("FileNotFoundException", e);
-			throw new RuntimeException("File " + inputFile + " does not exist.");
+			throw new RuntimeException("File " + inputFilePath + " does not exist.");
 		} catch (final IOException e) {
+			compiledSuccessfully = false;
+
 			LOGGER.error("IOException", e);
-			throw new RuntimeException("Unable to view contents of File " + inputFile);
+			throw new RuntimeException("Unable to view contents of File " + inputFilePath);
 		} catch (final IllegalArgumentException e) {
+			compiledSuccessfully = false;
+
 			LOGGER.error("IllegalArgumentException", e);
 			throw new RuntimeException(e);
 		} finally {
 
-			if (compiledSuccessfully && compileVerbose) {
+			if (compiledSuccessfully && verbose) {
 				final String outputFilePathnameString = "";
-				LOGGER.info("{} written", outputFilePathnameString);
+				LOGGER.info("; {} written", outputFilePathnameString);
 
 				final LocalDateTime now = LocalDateTime.now();
-				LOGGER.info("Compilation finished in {}.", now);
-			} else if (compileVerbose) {
+				LOGGER.info("; Compilation finished in {}.", now);
+			} else if (verbose) {
 				final Instant endTime = Instant.now();
 				final Duration duration = Duration.between(startTime, endTime);
-				LOGGER.info("Compilation aborted after {}.", duration);
+				LOGGER.info("; Compilation aborted after {}.", duration);
 			}
+
+			CompilerVariables.COMPILE_FILE_TRUENAME.setValue(previousCompileFileTruename);
+			CompilerVariables.COMPILE_FILE_PATHNAME.setValue(previousCompileFilePathname);
 		}
 
 		final LispStruct valuesFirst = (outputFile == null) ? NullStruct.INSTANCE : outputFilePathname;
 		return new ValuesStruct(valuesFirst, compiledWithWarnings, failedToCompile);
-	}
-
-	private boolean subCompileFile(final LispStruct outputFile, final boolean writeFile) throws IOException {
-		// get the name and javafy it
-		String name = ""; // TODOfile.getName();
-		String path = ""; // TODOfile.toString();
-		final String nameRegex = "(\\p{Punct}|\\p{Space})+";
-		final Pattern namePattern = Pattern.compile(nameRegex);
-		final Scanner scanner = new Scanner(name).useDelimiter(namePattern);
-		final StringBuilder sb = new StringBuilder();
-		while (scanner.hasNext()) {
-			final String str = scanner.next();
-			sb.append("").append(Character.toUpperCase(str.charAt(0))).append(str.substring(1));
-		}
-		final SymbolStruct<?> newJavaClassName = new SymbolStruct<>(sb.toString());
-
-		final FileStreamStruct stream = (FileStreamStruct) OpenFunction.FUNCTION.funcall(ListStruct.buildProperList(new StringStruct(path), null, null, KeywordOld.NewVersion));
-		final List<LispStruct> formsToCompile = getFormsToCompile(stream);
-
-		// Create the wrap-around lambda expression that encloses all of the forms in the file.
-		// We have to give it a specific name so it can be loaded by name
-		ListStruct formList = ListStruct.buildProperList(formsToCompile);
-
-		final ListStruct nameDeclSpec = ListStruct.buildProperList(DeclarationStruct.JAVA_CLASS_NAME, newJavaClassName);
-		final ListStruct nameDecl = ListStruct.buildProperList(SpecialOperatorStruct.DECLARE, nameDeclSpec);
-		formList = new ConsStruct(nameDecl, formList);
-		formList = new ConsStruct(NullStruct.INSTANCE, formList);
-		formList = new ConsStruct(SpecialOperatorStruct.LAMBDA, formList);
-
-
-		final LambdaStruct analyzedObj = semanticAnalyzer.analyze(formList);
-		final Deque<ClassDef> classDefDeque = intermediateCodeGenerator.generate(analyzedObj);
-		if (classDefDeque.isEmpty()) {
-			// TODO: handle no classes!!!
-			return true;
-		}
-
-		File tmpFile = null;
-		JarOutputStream jar = null;
-		if (writeFile) {
-			final Manifest manifest = new Manifest();
-			manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
-			manifest.getMainAttributes().put(Attributes.Name.MAIN_CLASS, classDefDeque.getFirst());
-
-			tmpFile = File.createTempFile("TMP_JAR_" + System.currentTimeMillis(), ".jar");
-			final FileOutputStream fileStream = new FileOutputStream(tmpFile, false);
-			jar = new JarOutputStream(fileStream, manifest);
-		}
-
-		BooleanStruct compiledWithWarnings = NILStruct.INSTANCE;
-		BooleanStruct failedToCompile = NILStruct.INSTANCE;
-
-		FunctionStruct function = null;
-		for (final ClassDef classDef : classDefDeque) {
-			final ClassWriter cw = classDef.getClassWriter();
-
-			final byte[] byteArray = cw.toByteArray();
-
-			final ClassReader cr = new ClassReader(byteArray);
-
-			final CheckClassAdapter cca = new CheckClassAdapter(new ClassWriter(0), false);
-			cr.accept(cca, ClassReader.SKIP_DEBUG + ClassReader.SKIP_FRAMES);
-
-			if (writeFile) {
-				final String className = classDef.getName() + ".class";
-				final JarEntry entry = new JarEntry(className);
-				jar.putNextEntry(entry);
-				jar.write(byteArray);
-				jar.closeEntry();
-			}
-		}
-
-		if (writeFile) {
-			final File outputFileFile = new File(String.valueOf(outputFile));
-			if (outputFileFile.exists()) {
-				LOGGER.info("Closing and deleting {}", outputFileFile);
-				//				new JarFile(outputFileFile).close();
-				outputFileFile.delete();
-			}
-
-			final boolean renameResult = tmpFile.renameTo(outputFileFile);
-			if (!renameResult) {
-
-				LOGGER.warn("Warning: Unable to rename temp file: {}. JAR file not created.", tmpFile);
-				LOGGER.warn("\t Attempting to copy then delete temp file instead...");
-
-				// copying file to destination
-				final FileInputStream srcFile = new FileInputStream(tmpFile);
-				final FileOutputStream dstFile = new FileOutputStream(outputFileFile);
-				final byte[] buffer = new byte[1024];
-
-				for (int x = srcFile.read(buffer); x != -1; x = srcFile.read(buffer)) {
-					dstFile.write(buffer, 0, x);
-				}
-
-				srcFile.close();
-				dstFile.close();
-
-				// deleting temp jar file
-				if (!tmpFile.delete()) {
-					LOGGER.warn("WARNING: Failed to delete temp jar file.");
-				}
-			}
-		}
-		return false;
-	}
-
-	private List<LispStruct> getFormsToCompile(final FileStreamStruct file) {
-		final List<LispStruct> forms = new ArrayList<>();
-
-		LispStruct form;
-		do {
-			form = readFunction.read(file, NILStruct.INSTANCE, null, NILStruct.INSTANCE);
-
-			if (form instanceof ListStruct) {
-				forms.add(form);
-			} else {
-				final String printedForm = printer.print(form);
-				final Long currentFilePosition = file.filePosition(null);
-				LOGGER.debug("Deleted a non-list form {} found at line {}.", printedForm, currentFilePosition);
-				form = NullStruct.INSTANCE;
-			}
-		} while (form != null);
-
-		return forms;
 	}
 
 // TODO: Need: 'translate-logical-pathname' | 'make-pathname' | 'pathname' | 'open'

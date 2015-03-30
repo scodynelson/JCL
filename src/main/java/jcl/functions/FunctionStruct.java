@@ -41,6 +41,8 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 
 	protected OrdinaryLambdaListBindings lambdaListBindings;
 
+	protected Closure closure;
+
 	/**
 	 * Protected constructor.
 	 */
@@ -156,6 +158,18 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 
 	public void setLambdaListBindings(final OrdinaryLambdaListBindings lambdaListBindings) {
 		this.lambdaListBindings = lambdaListBindings;
+	}
+
+	public Closure getClosure() {
+		return closure;
+	}
+
+	public void setClosure(final Closure closure) {
+		this.closure = closure;
+	}
+
+	public Map<SymbolStruct<?>, LispStruct> getClosureBindings() {
+		return closure.getClosureBindings();
 	}
 
 	protected Map<SymbolStruct<?>, LispStruct> getFunctionBindings(final LispStruct[] lispStructs) {

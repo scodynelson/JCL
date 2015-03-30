@@ -5,6 +5,7 @@
 package jcl.compiler.real.icg.generator.testground;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +19,7 @@ import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindin
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
+import jcl.functions.Closure;
 import jcl.functions.FunctionStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
@@ -33,6 +35,7 @@ public class TestLambdaGenerator extends FunctionStruct {
 	public TestLambdaGenerator() {
 		super("DocumentationString");
 		initLambdaListBindings();
+		initClosure();
 	}
 
 	private void initLambdaListBindings() {
@@ -104,10 +107,25 @@ public class TestLambdaGenerator extends FunctionStruct {
 		lambdaListBindings = new OrdinaryLambdaListBindings(requiredBindings, optionalBindings, restBinding, keyBindings, auxBindings, allowOtherKeys);
 	}
 
+	private void initClosure() {
+
+		final Map<SymbolStruct<?>, LispStruct> closureBindings = new HashMap<>();
+
+		final PackageStruct pkg = PackageStruct.findPackage("COMMON-LISP");
+		final SymbolStruct<?> closureSymbol = pkg.findSymbol("FOO").getSymbol();
+		final LispStruct closureValue = new CharacterStruct(97);
+		closureBindings.put(closureSymbol, closureValue);
+
+		closure = new Closure(null, closureBindings);
+	}
+
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
+		final Map<SymbolStruct<?>, LispStruct> closureBindings = getClosureBindings();
 		final Map<SymbolStruct<?>, LispStruct> symbolsToBind = getFunctionBindings(lispStructs);
+
+		symbolsToBind.putAll(closureBindings);
 
 		for (final Map.Entry<SymbolStruct<?>, LispStruct> symbolToBind : symbolsToBind.entrySet()) {
 			final SymbolStruct symbol = symbolToBind.getKey();

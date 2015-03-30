@@ -47,7 +47,9 @@ public class JavaClassBuilder {
 
 	private boolean acceptsMultipleValues;
 
-	final Map<SymbolStruct<?>, Integer> fletFunctionStoresToBind = new HashMap<>();
+	private final Map<SymbolStruct<?>, Integer> fletFunctionStoresToBind = new HashMap<>();
+
+	private final Stack<Integer> closureStoreStack = new Stack<>();
 
 	public JavaClassBuilder() {
 		MacroLambda = false;
@@ -155,5 +157,9 @@ public class JavaClassBuilder {
 
 	public Map<SymbolStruct<?>, Integer> getFletFunctionStoresToBind() {
 		return fletFunctionStoresToBind;
+	}
+
+	public Stack<Integer> getClosureStoreStack() {
+		return closureStoreStack;
 	}
 }

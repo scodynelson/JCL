@@ -129,7 +129,9 @@ public class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacrolet
 		final String fileName = "SymbolMacrolet" + '_' + System.nanoTime();
 		final String className = "jcl/" + fileName;
 
-		final ClassDef currentClass = new ClassDef(className, fileName);
+		final Stack<Integer> closureStoreStack = classBuilder.getClosureStoreStack();
+
+		final ClassDef currentClass = new ClassDef(className, fileName, closureStoreStack);
 		classBuilder.getClassStack().push(currentClass);
 		classBuilder.setCurrentClass(currentClass);
 		classBuilder.getClasses().addFirst(currentClass);

@@ -7,4 +7,4 @@
 
 100
 
-(set-symbol-function bar (lambda () 20))
+(set-symbol-function 'bar (lambda () 20))

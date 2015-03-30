@@ -279,7 +279,7 @@ public final class CompileFileFunction extends FunctionStruct {
 					final String printedForm = printer.print(form);
 					final Long currentFilePosition = inputFileStream.filePosition(null);
 					// TODO: can we rework this to tell what line we're on???
-					LOGGER.debug("; Deleted a non-list form {} found at position {}.", printedForm, currentFilePosition);
+					LOGGER.debug("; Deleted a non-list form '{}'found at position {}.", printedForm, currentFilePosition);
 					form = NullStruct.INSTANCE;
 
 					compiledWithWarnings = TStruct.INSTANCE;

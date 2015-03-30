@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
+import java.util.Enumeration;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.jar.Attributes;
@@ -34,12 +35,37 @@ public class LoaderClassLoader extends ClassLoader {
 		try {
 			final File file = jarFilePath.toFile();
 			jarFile = new JarFile(file);
-		} catch (final IOException ioe) {
-			throw new ErrorException("Unable to create class loader from jar file: " + jarFilePath, ioe);
+
+			loadJarEntries();
+		} catch (final IOException ex) {
+			throw new ErrorException("Unable to create class loader from jar file: " + jarFilePath, ex);
 		}
 
 		this.verbose = verbose;
 		this.print = print;
+	}
+
+	private void loadJarEntries() throws IOException {
+		final Enumeration<JarEntry> entries = jarFile.entries();
+		while (entries.hasMoreElements()) {
+			final JarEntry jarEntry = entries.nextElement();
+			String fileName = jarEntry.getName().replace('/', '.');
+
+			if (fileName.endsWith(".class")) {
+				if (classes.containsKey(fileName)) {
+					return;
+				}
+				fileName = fileName.substring(0, fileName.length() - 6);
+
+				final InputStream in = jarFile.getInputStream(jarEntry);
+				final byte[] bytes = IOUtils.toByteArray(in);
+				final Class<?> clazz = defineClass(fileName, bytes, 0, bytes.length);
+
+				resolveClass(clazz);
+
+				classes.put(fileName, clazz);
+			}
+		}
 	}
 
 	public Class<?> loadMainClass() {

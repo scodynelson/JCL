@@ -12,8 +12,8 @@ public class CompilerClassLoader extends ClassLoader {
 		super(classLoader);
 	}
 
-	public synchronized Class<?> loadClass(final byte[] bos, final String name) {
-		final Class<?> clazz = defineClass(name.replace('/', '.'), bos, 0, bos.length);
+	public synchronized Class<?> loadClass(final String name, final byte[] byteArray) {
+		final Class<?> clazz = defineClass(name.replace('/', '.'), byteArray, 0, byteArray.length);
 		resolveClass(clazz);
 		return clazz;
 	}

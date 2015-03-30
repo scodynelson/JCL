@@ -265,12 +265,15 @@ public final class LoadFunction extends FunctionStruct {
 	                                  final boolean verbose, final boolean print) {
 
 		if (verbose) {
-			LOGGER.info("; Loading {}", filespecPath);
+			LOGGER.info("; Loading '{}'", filespecPath);
 		}
 
 		LispStruct form;
 		do {
 			form = readFunction.read(filespecFileStream, NILStruct.INSTANCE, null, NILStruct.INSTANCE);
+			if (form == null) {
+			 continue;
+			}
 
 			final LispStruct evaluatedForm = evalFunction.eval(form);
 			if (print) {
@@ -299,7 +302,7 @@ public final class LoadFunction extends FunctionStruct {
 				return function.apply();
 			}
 		} catch (InstantiationException | NoSuchMethodException | InvocationTargetException | IllegalAccessException ex) {
-			LOGGER.error("Error loading main definition for compiled file: {}", filespecPath, ex);
+			LOGGER.error("Error loading main definition for compiled file: '{}'", filespecPath, ex);
 			return NILStruct.INSTANCE;
 		} catch (final FileErrorException fee) {
 			LOGGER.error(fee.getMessage(), fee.getCause());

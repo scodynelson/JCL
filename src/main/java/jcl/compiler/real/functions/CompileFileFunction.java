@@ -245,7 +245,7 @@ public final class CompileFileFunction extends FunctionStruct {
 			LOGGER.info("; Java Compiler Version {}", javaVersion);
 
 			final LocalDateTime now = LocalDateTime.now();
-			LOGGER.info("; Compiling {} on {}", inputFileNamestring, now);
+			LOGGER.info("; Compiling '{}' on {}", inputFileNamestring, now);
 			LOGGER.info("");
 		}
 
@@ -279,12 +279,17 @@ public final class CompileFileFunction extends FunctionStruct {
 					final String printedForm = printer.print(form);
 					final Long currentFilePosition = inputFileStream.filePosition(null);
 					// TODO: can we rework this to tell what line we're on???
-					LOGGER.debug("; Deleted a non-list form '{}'found at position {}.", printedForm, currentFilePosition);
+					LOGGER.info("; Deleted a non-list form '{}' found at position {}.", printedForm, currentFilePosition);
 					form = NullStruct.INSTANCE;
 
 					compiledWithWarnings = TStruct.INSTANCE;
 				}
 			} while (form != null);
+
+			if (print && compiledWithWarnings.booleanValue()) {
+				// If we printed warnings, make sure to print a newline afterwards.
+				LOGGER.info("");
+			}
 
 			final String inputFileName = inputFilePath.getFileName().toString();
 			String inputClassName = FilenameUtils.getBaseName(inputFileName);
@@ -301,13 +306,12 @@ public final class CompileFileFunction extends FunctionStruct {
 		} catch (final IOException e) {
 			compiledSuccessfully = false;
 
-			LOGGER.error("Error in COMPILE-FILE for file: {}", inputFilePath, e);
+			LOGGER.error("Error in COMPILE-FILE for file: '{}'", inputFilePath, e);
 
 			return new ValuesStruct(NullStruct.INSTANCE, compiledWithWarnings, TStruct.INSTANCE);
 		} finally {
 			if (compiledSuccessfully && verbose) {
-				final String outputFilePathnameString = "";
-				LOGGER.info("; {} written", outputFilePathnameString);
+				LOGGER.info("\n; '{}' written", outputFilePath);
 
 				final LocalDateTime now = LocalDateTime.now();
 				LOGGER.info("; Compilation finished in {}.", now);
@@ -316,6 +320,7 @@ public final class CompileFileFunction extends FunctionStruct {
 				final Duration duration = Duration.between(startTime, endTime);
 				LOGGER.info("; Compilation aborted after {}.", duration);
 			}
+			LOGGER.info("");
 
 			CompilerVariables.COMPILE_FILE_TRUENAME.setValue(previousCompileFileTruename);
 			CompilerVariables.COMPILE_FILE_PATHNAME.setValue(previousCompileFilePathname);
@@ -360,7 +365,7 @@ public final class CompileFileFunction extends FunctionStruct {
 
 				if (print) {
 					final String className = classDef.getClassName();
-					LOGGER.info("; Compiled {}", className);
+					LOGGER.info("; Compiled '{}'", className);
 				}
 
 				final String fileName = classDef.getFileName();

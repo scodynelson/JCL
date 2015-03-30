@@ -64,7 +64,7 @@ class CompileForm implements Serializable {
 
 			final CompilerClassLoader cl = CompilerClassLoader.INSTANCE;
 
-			final Class<?> classLoaded = cl.loadClass(byteArray, fileName);
+			final Class<?> classLoaded = cl.loadClass(fileName, byteArray);
 
 			Constructor<?> constructor = null;
 			try {

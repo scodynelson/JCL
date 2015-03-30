@@ -29,9 +29,7 @@ import jcl.streams.ReadPeekResult;
 import jcl.system.classloaders.CompilerClassLoader;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.util.CheckClassAdapter;
-import org.objectweb.asm.util.CheckMethodAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -314,7 +312,7 @@ public class ReadEvalPrint {
 
 			final CompilerClassLoader cl = CompilerClassLoader.INSTANCE;
 
-			final Class<?> classLoaded = cl.loadClass(byteArray, fileName);
+			final Class<?> classLoaded = cl.loadClass(fileName, byteArray);
 			final Constructor<?> constructor = classLoaded.getDeclaredConstructor();
 			constructor.setAccessible(true);
 
@@ -328,17 +326,6 @@ public class ReadEvalPrint {
 			final LispStruct apply = finalLambda.apply();
 			final String printedResult = printer.print(apply);
 			LOGGER.info(printedResult);
-		}
-	}
-
-	class MethodEmptyVisitor extends EmptyVisitor {
-
-		@Override
-		public MethodVisitor visitMethod(int access, String name, String desc,
-		                                 String signature, String[] exceptions) {
-			MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
-			CheckMethodAdapter cma = new CheckMethodAdapter(mv);
-			return cma;
 		}
 	}
 }

@@ -24,6 +24,8 @@ import jcl.compiler.real.struct.specialoperator.SetqStruct;
 import jcl.compiler.real.struct.specialoperator.SymbolCompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.functions.FunctionStruct;
+import jcl.lists.ConsStruct;
+import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.BooleanStruct;

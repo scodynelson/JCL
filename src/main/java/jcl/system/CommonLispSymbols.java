@@ -36,6 +36,7 @@ import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolConstants;
 import jcl.symbols.SymbolStruct;
 import jcl.symbols.functions.SetSymbolFunctionFunction;
+import jcl.symbols.functions.SymbolFunctionFunction;
 
 public interface CommonLispSymbols {
 
@@ -934,7 +935,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> SVREF = null;
 	SymbolStruct<?> SXHASH = null;
 	SymbolStruct<?> SYMBOL = null;
-	SymbolStruct<?> SYMBOL_FUNCTION = null;
+	SymbolStruct<?> SYMBOL_FUNCTION = SymbolFunctionFunction.SYMBOL_FUNCTION;
 	SymbolStruct<?> SYMBOL_MACROLET = null;
 	SymbolStruct<?> SYMBOL_NAME = null;
 	SymbolStruct<?> SYMBOL_PACKAGE = null;

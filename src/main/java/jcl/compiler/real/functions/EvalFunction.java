@@ -15,9 +15,11 @@ import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
+import jcl.compiler.real.sa.analyzer.ConsAnalyzer;
 import jcl.compiler.real.struct.CompilerSpecialOperatorStruct;
 import jcl.compiler.real.struct.specialoperator.FunctionCallStruct;
 import jcl.compiler.real.struct.specialoperator.LambdaCompilerFunctionStruct;
+import jcl.compiler.real.struct.specialoperator.LambdaFunctionCallStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.QuoteStruct;
 import jcl.compiler.real.struct.specialoperator.SetqStruct;
@@ -25,7 +27,6 @@ import jcl.compiler.real.struct.specialoperator.SymbolCompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ConsStruct;
-import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.BooleanStruct;
@@ -47,6 +48,9 @@ public final class EvalFunction extends FunctionStruct {
 
 	@Autowired
 	private CompileForm compileForm;
+
+	@Autowired
+	private ConsAnalyzer consAnalyzer;
 
 	private EvalFunction() {
 		super("Evaluates form in the current dynamic environment and the null lexical environment.", getInitLambdaListBindings());
@@ -116,7 +120,7 @@ public final class EvalFunction extends FunctionStruct {
 			for (final SetqStruct.SetqPair setqPair : setqPairs) {
 				final SymbolStruct var = setqPair.getVar();
 				final LispStruct form = setqPair.getForm();
-				final LispStruct evaluatedForm = apply(form);
+				final LispStruct evaluatedForm = eval(form);
 
 				var.setValue(evaluatedForm);
 
@@ -132,7 +136,7 @@ public final class EvalFunction extends FunctionStruct {
 			LispStruct finalForm = NullStruct.INSTANCE;
 
 			for (final LispStruct form : forms) {
-				finalForm = apply(form);
+				finalForm = eval(form);
 			}
 			return finalForm;
 		}
@@ -162,26 +166,48 @@ public final class EvalFunction extends FunctionStruct {
 			}
 		}
 
+		if (exp instanceof ConsStruct) {
+			// NOTE: This check MUST come before the FunctionCall and LambdaFunctionCall checks.
+			exp = consAnalyzer.analyze((ConsStruct) exp, nullEnvironment);
+		}
+
 		if (exp instanceof FunctionCallStruct) {
 			final FunctionCallStruct functionCall = (FunctionCallStruct) exp;
 			final SymbolStruct<?> functionSymbol = functionCall.getFunctionSymbol();
 
-			final boolean hasFunction = functionSymbol.hasFunction();
-			if (hasFunction) {
-				final FunctionStruct function = functionSymbol.getFunction();
+			final FunctionStruct function = functionSymbol.getFunction();
 
-				final List<LispStruct> arguments = functionCall.getArguments();
-				final List<LispStruct> evaluatedArguments = new ArrayList<>(arguments.size());
-				for (final LispStruct argument : arguments) {
-					final LispStruct evaluatedArgument = apply(argument);
-					evaluatedArguments.add(evaluatedArgument);
-				}
-
-				final LispStruct[] args = new LispStruct[evaluatedArguments.size()];
-				evaluatedArguments.toArray(args);
-
-				return function.apply(args);
+			final List<LispStruct> arguments = functionCall.getArguments();
+			final List<LispStruct> evaluatedArguments = new ArrayList<>(arguments.size());
+			for (final LispStruct argument : arguments) {
+				final LispStruct evaluatedArgument = eval(argument);
+				evaluatedArguments.add(evaluatedArgument);
 			}
+
+			final LispStruct[] args = new LispStruct[evaluatedArguments.size()];
+			evaluatedArguments.toArray(args);
+
+			return function.apply(args);
+		}
+
+		if (exp instanceof LambdaFunctionCallStruct) {
+			final LambdaFunctionCallStruct lambdaFunctionCall = (LambdaFunctionCallStruct) exp;
+			final LambdaStruct lambda = lambdaFunctionCall.getLambdaStruct();
+
+			// NOTE: The following cast SHOULD be safe.
+			final FunctionStruct function = (FunctionStruct) eval(lambda);
+
+			final List<LispStruct> arguments = lambdaFunctionCall.getArguments();
+			final List<LispStruct> evaluatedArguments = new ArrayList<>(arguments.size());
+			for (final LispStruct argument : arguments) {
+				final LispStruct evaluatedArgument = eval(argument);
+				evaluatedArguments.add(evaluatedArgument);
+			}
+
+			final LispStruct[] args = new LispStruct[evaluatedArguments.size()];
+			evaluatedArguments.toArray(args);
+
+			return function.apply(args);
 		}
 
 		if (exp instanceof CompilerSpecialOperatorStruct) {

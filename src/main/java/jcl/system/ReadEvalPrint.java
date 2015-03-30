@@ -66,7 +66,7 @@ public class ReadEvalPrint {
 				final InputStream fileStream = new FileStreamStruct(path);
 				return doStuff(fileStream, true);
 			} catch (final StreamErrorException ex) {
-				LOGGER.error("; WARNING: Exception condition -> {}", ex.getMessage(), ex);
+				LOGGER.error("; WARNING: Exception condition -> ", ex);
 				return null;
 			}
 		} else {
@@ -74,7 +74,7 @@ public class ReadEvalPrint {
 				final InputStream characterStream = new CharacterStreamStruct(System.in, loggerOutputStream);
 				return doStuff(characterStream, false);
 			} catch (final IOException ex) {
-				LOGGER.error("; WARNING: Exception condition -> {}", ex.getMessage(), ex);
+				LOGGER.error("; WARNING: Exception condition -> ", ex);
 				return null;
 			}
 //			catch (StreamErrorException ex) {

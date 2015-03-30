@@ -57,6 +57,7 @@ import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
 import jcl.system.CommonLispSymbols;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -277,20 +278,23 @@ public final class CompileFileFunction extends FunctionStruct {
 				} else if (form != null) {
 					final String printedForm = printer.print(form);
 					final Long currentFilePosition = inputFileStream.filePosition(null);
-					LOGGER.debug("; Deleted a non-list form {} found at line {}.", printedForm, currentFilePosition);
+					// TODO: can we rework this to tell what line we're on???
+					LOGGER.debug("; Deleted a non-list form {} found at position {}.", printedForm, currentFilePosition);
 					form = NullStruct.INSTANCE;
 
 					compiledWithWarnings = TStruct.INSTANCE;
 				}
 			} while (form != null);
 
-			final String inputFileName = StringUtils.capitalize(inputFilePath.getFileName().toString());
-			final ListStruct fileLambda = buildFileLambda(forms, inputFileName);
+			final String inputFileName = inputFilePath.getFileName().toString();
+			String inputClassName = FilenameUtils.getBaseName(inputFileName);
+			inputClassName = StringUtils.capitalize(inputClassName);
+			final ListStruct fileLambda = buildFileLambda(forms, inputClassName);
 
 			final LambdaStruct analyzedFileLambda = semanticAnalyzer.analyze(fileLambda);
 			final Deque<ClassDef> classDefDeque = intermediateCodeGenerator.generate(analyzedFileLambda);
 
-			writeToJar(classDefDeque, outputFilePath, inputFileName, print);
+			writeToJar(classDefDeque, outputFilePath, inputFileName, inputClassName, print);
 			compiledSuccessfully = true;
 
 			return new ValuesStruct(outputFileTruename, compiledWithWarnings, NILStruct.INSTANCE);
@@ -321,8 +325,8 @@ public final class CompileFileFunction extends FunctionStruct {
 		}
 	}
 
-	private static ListStruct buildFileLambda(final List<LispStruct> forms, final String inputFileName) {
-		final StringStruct newJavaClassName = new StringStruct(inputFileName);
+	private static ListStruct buildFileLambda(final List<LispStruct> forms, final String inputClassName) {
+		final StringStruct newJavaClassName = new StringStruct(inputClassName);
 		final ListStruct javaClassNameDeclaration = ListStruct.buildProperList(DeclarationStruct.JAVA_CLASS_NAME, newJavaClassName);
 		final ListStruct declareBlock = ListStruct.buildProperList(SpecialOperatorStruct.DECLARE, javaClassNameDeclaration);
 
@@ -331,7 +335,7 @@ public final class CompileFileFunction extends FunctionStruct {
 	}
 
 	private static void writeToJar(final Deque<ClassDef> classDefDeque, final Path outputFilePath, final String inputFileName,
-	                               final boolean print)
+	                               final String inputClassName, final boolean print)
 			throws IOException {
 
 		final String tempFileName = "TEMP_" + inputFileName + "_JAR_" + System.nanoTime();
@@ -340,10 +344,7 @@ public final class CompileFileFunction extends FunctionStruct {
 		final Manifest manifest = new Manifest();
 		final Attributes manifestMainAttributes = manifest.getMainAttributes();
 		manifestMainAttributes.put(Attributes.Name.MANIFEST_VERSION, "1.0");
-
-		final ClassDef mainClassDef = classDefDeque.getFirst();
-		final String mainClassDefFileName = mainClassDef.getFileName();
-		manifestMainAttributes.put(Attributes.Name.MAIN_CLASS, mainClassDefFileName);
+		manifestMainAttributes.put(Attributes.Name.MAIN_CLASS, inputClassName);
 
 		try (final OutputStream outputStream = Files.newOutputStream(tempOutputFilePath, StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 		     final JarOutputStream jar = new JarOutputStream(outputStream, manifest)) {

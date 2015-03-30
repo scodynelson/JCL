@@ -64,7 +64,7 @@ public class LoaderClassLoader extends ClassLoader {
 
 			return Class.forName(mainClassName, true, this);
 		} catch (final ClassNotFoundException ex) {
-			throw new FileErrorException("Error loading main definition for compiled file: " + jarFileName, ex);
+			throw new FileErrorException("Error loading main definition for compiled file: " + jarFileName + '\n', ex);
 		}
 	}
 
@@ -91,19 +91,20 @@ public class LoaderClassLoader extends ClassLoader {
 			return loadedClass;
 		}
 
-		final JarEntry jarEntry = jarFile.getJarEntry(name.replace('.', '/') + ".class");
+		final String fileName = name.replace('/', '.');
+		final JarEntry jarEntry = jarFile.getJarEntry(fileName + ".class");
 		if (jarEntry == null) {
-			return internalFindClass(name);
+			return internalFindClass(fileName);
 		}
 
 		Class<?> clazz = null;
 		try {
 			final InputStream in = jarFile.getInputStream(jarEntry);
 			final byte[] bytes = IOUtils.toByteArray(in);
-			clazz = defineClass(name, bytes, 0, bytes.length);
+			clazz = defineClass(fileName, bytes, 0, bytes.length);
 		} catch (final IOException ex) {
 			final String jarFileName = jarFile.getName();
-			LOGGER.error("Error reading the class {} from JAR file {}", name, jarFileName, ex);
+			LOGGER.error("Error reading the class {} from JAR file {}", fileName, jarFileName, ex);
 		}
 
 		if (resolve) {

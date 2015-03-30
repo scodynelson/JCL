@@ -15,7 +15,7 @@ import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
-import jcl.compiler.real.sa.analyzer.ConsAnalyzer;
+import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.struct.CompilerSpecialOperatorStruct;
 import jcl.compiler.real.struct.specialoperator.FunctionCallStruct;
 import jcl.compiler.real.struct.specialoperator.LambdaCompilerFunctionStruct;
@@ -24,9 +24,7 @@ import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.QuoteStruct;
 import jcl.compiler.real.struct.specialoperator.SetqStruct;
 import jcl.compiler.real.struct.specialoperator.SymbolCompilerFunctionStruct;
-import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.functions.FunctionStruct;
-import jcl.lists.ConsStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.BooleanStruct;
@@ -44,13 +42,10 @@ public final class EvalFunction extends FunctionStruct {
 	private static final long serialVersionUID = 6775277576397622716L;
 
 	@Autowired
-	private MacroExpandFunction macroExpandFunction;
-
-	@Autowired
 	private CompileForm compileForm;
 
 	@Autowired
-	private ConsAnalyzer consAnalyzer;
+	private FormAnalyzer formAnalyzer;
 
 	private EvalFunction() {
 		super("Evaluates form in the current dynamic environment and the null lexical environment.", getInitLambdaListBindings());
@@ -95,8 +90,7 @@ public final class EvalFunction extends FunctionStruct {
 
 		LispStruct exp;
 		try {
-			final MacroExpandResult macroExpandReturn = macroExpandFunction.macroExpand(originalExp, nullEnvironment);
-			exp = macroExpandReturn.getExpandedForm();
+			exp = formAnalyzer.analyze(originalExp, nullEnvironment);
 		} finally {
 			CompilerVariables.COMPILE_TOP_LEVEL.setValue(oldCompileTopLevel);
 		}
@@ -149,26 +143,10 @@ public final class EvalFunction extends FunctionStruct {
 
 		if (exp instanceof LambdaCompilerFunctionStruct) {
 			final LambdaCompilerFunctionStruct lambdaCompilerFunction = (LambdaCompilerFunctionStruct) exp;
-			final LambdaStruct lambda = lambdaCompilerFunction.getLambdaStruct();
+			final CompilerSpecialOperatorStruct lambda = lambdaCompilerFunction.getLambdaStruct();
 
-			CompilerVariables.COMPILE_TOP_LEVEL.setValue(NILStruct.INSTANCE);
-
-			final BooleanStruct oldConvertingForInterpreter = CompilerVariables.CONVERTING_FOR_INTERPRETER.getValue();
-			CompilerVariables.CONVERTING_FOR_INTERPRETER.setValue(TStruct.INSTANCE);
-
-			try {
-				final CompileResult compileResult = compileForm.compile(lambda);
-				final FunctionStruct compiledExp = compileResult.getFunction();
-				return compiledExp.apply();
-			} finally {
-				CompilerVariables.CONVERTING_FOR_INTERPRETER.setValue(oldConvertingForInterpreter);
-				CompilerVariables.COMPILE_TOP_LEVEL.setValue(oldCompileTopLevel);
-			}
-		}
-
-		if (exp instanceof ConsStruct) {
-			// NOTE: This check MUST come before the FunctionCall and LambdaFunctionCall checks.
-			exp = consAnalyzer.analyze((ConsStruct) exp, nullEnvironment);
+			final FunctionStruct function = getCompiledExpression(oldCompileTopLevel, lambda);
+			return function.apply();
 		}
 
 		if (exp instanceof FunctionCallStruct) {
@@ -192,10 +170,9 @@ public final class EvalFunction extends FunctionStruct {
 
 		if (exp instanceof LambdaFunctionCallStruct) {
 			final LambdaFunctionCallStruct lambdaFunctionCall = (LambdaFunctionCallStruct) exp;
-			final LambdaStruct lambda = lambdaFunctionCall.getLambdaStruct();
+			final CompilerSpecialOperatorStruct lambda = lambdaFunctionCall.getLambdaStruct();
 
-			// NOTE: The following cast SHOULD be safe.
-			final FunctionStruct function = (FunctionStruct) eval(lambda);
+			final FunctionStruct function = getCompiledExpression(oldCompileTopLevel, lambda);
 
 			final List<LispStruct> arguments = lambdaFunctionCall.getArguments();
 			final List<LispStruct> evaluatedArguments = new ArrayList<>(arguments.size());
@@ -211,22 +188,27 @@ public final class EvalFunction extends FunctionStruct {
 		}
 
 		if (exp instanceof CompilerSpecialOperatorStruct) {
-
-			CompilerVariables.COMPILE_TOP_LEVEL.setValue(NILStruct.INSTANCE);
-
-			final BooleanStruct oldConvertingForInterpreter = CompilerVariables.CONVERTING_FOR_INTERPRETER.getValue();
-			CompilerVariables.CONVERTING_FOR_INTERPRETER.setValue(TStruct.INSTANCE);
-
-			try {
-				final CompileResult compileResult = compileForm.compile(exp);
-				final FunctionStruct compiledExp = compileResult.getFunction();
-				return compiledExp.apply();
-			} finally {
-				CompilerVariables.CONVERTING_FOR_INTERPRETER.setValue(oldConvertingForInterpreter);
-				CompilerVariables.COMPILE_TOP_LEVEL.setValue(oldCompileTopLevel);
-			}
+			final FunctionStruct function = getCompiledExpression(oldCompileTopLevel, (CompilerSpecialOperatorStruct) exp);
+			return function.apply();
 		}
 
 		return exp;
+	}
+
+	private FunctionStruct getCompiledExpression(final BooleanStruct oldCompileTopLevel, final CompilerSpecialOperatorStruct exp) {
+		CompilerVariables.COMPILE_TOP_LEVEL.setValue(NILStruct.INSTANCE);
+
+		final BooleanStruct oldConvertingForInterpreter = CompilerVariables.CONVERTING_FOR_INTERPRETER.getValue();
+		CompilerVariables.CONVERTING_FOR_INTERPRETER.setValue(TStruct.INSTANCE);
+
+		final FunctionStruct function;
+		try {
+			final CompileResult compileResult = compileForm.compile(exp);
+			function = compileResult.getFunction();
+		} finally {
+			CompilerVariables.CONVERTING_FOR_INTERPRETER.setValue(oldConvertingForInterpreter);
+			CompilerVariables.COMPILE_TOP_LEVEL.setValue(oldCompileTopLevel);
+		}
+		return function;
 	}
 }

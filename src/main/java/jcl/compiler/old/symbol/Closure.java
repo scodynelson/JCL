@@ -4,14 +4,12 @@ package jcl.compiler.old.symbol;
  * This interface defines the Closure type. This is an extension to the Common Lisp
  * type system. The compiler generates instances of type Closure when there are free
  * variables used in lambda and let forms. A closure is an independent object when there
- * are lambda expresssions that share the closure. When the closure is not shared, it is
+ * are lambda expressions that share the closure. When the closure is not shared, it is
  * coalesced into the appropriate function class.
  * <p>
- * The occurence of a lambda expression with free variables automatically generates a
+ * The occurrence of a lambda expression with free variables automatically generates a
  * closure. This is not optimal with respect to space and time efficiency. That will have to
  * await the next big compiler.
- *
- * @author jboetje
  */
 public interface Closure {
 
@@ -32,10 +30,14 @@ public interface Closure {
 	 * <li>If the reference is to the 2nd bound variable in the current Closure,
 	 * the the call will be {@code getBindingsAt(1, 0)}.</li>
 	 * <li>If the reference is the the first bound variable in the parent of the parent of the
-	 * current Closure, the call witll be {@code getBindingsAt(0, 2)}</li>
+	 * current Closure, the call will be {@code getBindingsAt(0, 2)}</li>
 	 * </ul>
-	 * @param index index
-	 * @param nestingLevel nestingLevel
+	 *
+	 * @param index
+	 * 		index
+	 * @param nestingLevel
+	 * 		nestingLevel
+	 *
 	 * @return object
 	 */
 	Object getBindingAt(int index, int nestingLevel);
@@ -44,9 +46,13 @@ public interface Closure {
 	 * This method sets the bound value of a lexical variable in the context of a binding
 	 * environment. The binding values in a closure are indexed in the lexical order of the bound variables.
 	 * This method does not chain. It is commonly used with the current closure.<p>
-	 * @param index index
-	 * @param nestingLevel nestingLevel
-	 * @param value value
+	 *
+	 * @param index
+	 * 		index
+	 * @param nestingLevel
+	 * 		nestingLevel
+	 * @param value
+	 * 		value
 	 */
 	void setBindingAt(int index, int nestingLevel, Object value);
 }

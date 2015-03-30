@@ -3,45 +3,34 @@ package jcl.compiler.old.symbol;
 public class ClosureImpl implements Closure {
 
 	private Closure parent;
+
 	private Object[] boundValues;
 
-	/**
-	 * Creates a new instance of ClosureImpl.
-	 * @param parent parent
-	 * @param size size
-	 */
-	public ClosureImpl(Closure parent, int size) {
+	public ClosureImpl(final Closure parent, final int size) {
 		this.parent = parent;
-		if ((parent != null) && (!(parent instanceof Closure))) {
-			throw new IllegalArgumentException("parent is not a Closure (constructor): " + parent);
-		}
 		boundValues = new Object[size];
 	}
 
-	public Object getBindingAt(int index, int nestingLevel) {
-		if (nestingLevel == 0) {
-			return boundValues[index];
-		} else {
-			if ((parent != null) && (!(parent instanceof Closure))) {
-				throw new IllegalArgumentException("parent is not a Closure (getbinding): " + parent);
-			}
-			return parent.getBindingAt(index, nestingLevel - 1);
-		}
-	}
-
+	@Override
 	public Closure getParent() {
 		return parent;
 	}
 
-	public void setBindingAt(int index, int nestingLevel, Object value) {
+	@Override
+	public Object getBindingAt(final int index, final int nestingLevel) {
 		if (nestingLevel == 0) {
-			boundValues[index] = value;
+			return boundValues[index];
 		} else {
-			if ((parent != null) && (!(parent instanceof Closure))) {
-				throw new IllegalArgumentException("parent is not a Closure (setbinding): " + parent);
-			}
-			parent.setBindingAt(index, nestingLevel - 1, value);
+			return parent.getBindingAt(index, nestingLevel - 1);
 		}
 	}
 
+	@Override
+	public void setBindingAt(final int index, final int nestingLevel, final Object value) {
+		if (nestingLevel == 0) {
+			boundValues[index] = value;
+		} else {
+			parent.setBindingAt(index, nestingLevel - 1, value);
+		}
+	}
 }

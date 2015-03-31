@@ -25,7 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OrdinaryLambdaListParser extends LambdaListParser {
+public final class OrdinaryLambdaListParser extends LambdaListParser {
 
 	@Autowired
 	private Printer printer;

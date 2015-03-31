@@ -80,7 +80,7 @@ public class DefMacroExpander extends DefunExpander {
 
 	@Override
 	protected SpecialOperatorStruct getLambdaSymbol() {
-		return SpecialOperatorStruct.MACRO_MARKER;
+		return SpecialOperatorStruct.MACRO_LAMBDA;
 	}
 
 	/*

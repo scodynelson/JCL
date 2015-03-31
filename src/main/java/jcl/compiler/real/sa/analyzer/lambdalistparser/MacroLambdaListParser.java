@@ -11,16 +11,24 @@ import java.util.List;
 import jcl.LispStruct;
 import jcl.compiler.real.CompilerConstants;
 import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.Environments;
+import jcl.compiler.real.environment.LambdaEnvironment;
+import jcl.compiler.real.environment.allocation.ParameterAllocation;
+import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
+import jcl.compiler.real.environment.binding.lambdalist.BodyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
+import jcl.compiler.real.environment.binding.lambdalist.MacroLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
+import jcl.lists.NullStruct;
 import jcl.printer.Printer;
+import jcl.symbols.SymbolStruct;
+import jcl.types.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +38,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 	@Autowired
 	private Printer printer;
 
-	public OrdinaryLambdaListBindings parseMacroLambdaList(final Environment environment, final ListStruct lambdaList,
+	public MacroLambdaListBindings parseMacroLambdaList(final Environment environment, final ListStruct lambdaList,
 	                                                       final DeclareStruct declareElement) {
 
 		final List<? extends LispStruct> lambdaListJava = lambdaList.getAsJavaList();
@@ -70,6 +78,20 @@ public final class MacroLambdaListParser extends LambdaListParser {
 			position = restParseResult.getCurrentPosition();
 		}
 
+		BodyBinding bodyBinding = null;
+		if (CompilerConstants.BODY.equals(currentElement)) {
+			if (restBinding != null) {
+				throw new ProgramErrorException("Macro LambdaList &body parameter cannot be supplied alongside &rest parameter.");
+			}
+
+			final BodyParseResult bodyParseResult
+					= parseBodyBinding(environment, iterator, position, declareElement);
+
+			bodyBinding = bodyParseResult.getBodyBinding();
+			currentElement = bodyParseResult.getCurrentElement();
+			position = bodyParseResult.getCurrentPosition();
+		}
+
 		List<KeyBinding> keyBindings = Collections.emptyList();
 		if (CompilerConstants.KEY.equals(currentElement)) {
 			final KeyParseResult keyParseResult
@@ -99,9 +121,52 @@ public final class MacroLambdaListParser extends LambdaListParser {
 		if (iterator.hasNext()) {
 			final LispStruct element = iterator.next();
 			final String printedElement = printer.print(element);
-			throw new ProgramErrorException("Unexpected element at the end of Ordinary Lambda List: " + printedElement);
+			throw new ProgramErrorException("Unexpected element at the end of Macro Lambda List: " + printedElement);
 		}
 
-		return new OrdinaryLambdaListBindings(requiredBindings, optionalBindings, restBinding, keyBindings, auxBindings, allowOtherKeys);
+		return new MacroLambdaListBindings(null, requiredBindings, optionalBindings, restBinding, bodyBinding, keyBindings, auxBindings, allowOtherKeys);
+	}
+
+	private WholeParseResult parseWholeBinding() {
+		return new WholeParseResult(null, 0, null);
+	}
+
+	private BodyParseResult parseBodyBinding(final Environment environment, final Iterator<? extends LispStruct> iterator,
+	                                           final int position, final DeclareStruct declareElement) {
+
+		int currentPosition = position;
+
+		LispStruct currentElement = iterator.next();
+		if (!(currentElement instanceof SymbolStruct)) {
+			final String printedElement = printer.print(currentElement);
+			throw new ProgramErrorException("LambdaList body parameters must be a symbol: " + printedElement);
+		}
+		final SymbolStruct<?> currentParam = (SymbolStruct) currentElement;
+
+		if (iterator.hasNext()) {
+			currentElement = iterator.next();
+			if (!isLambdaListKeyword(currentElement)) {
+				final String printedElement = printer.print(currentElement);
+				throw new ProgramErrorException("LambdaList body parameter must only have 1 parameter: " + printedElement);
+			}
+		}
+
+		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(environment);
+		final int newBindingsPosition = currentLambda.getNextParameterNumber();
+		environment.setBindingsPosition(newBindingsPosition);
+
+		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
+		final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
+
+		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullStruct.INSTANCE);
+		if (isSpecial) {
+			environment.addDynamicBinding(binding);
+		} else {
+			environment.addLexicalBinding(binding);
+		}
+
+		final ParameterAllocation restAllocation = new ParameterAllocation(currentPosition++);
+		final BodyBinding bodyBinding = new BodyBinding(currentParam, restAllocation);
+		return new BodyParseResult(currentElement, currentPosition, bodyBinding);
 	}
 }

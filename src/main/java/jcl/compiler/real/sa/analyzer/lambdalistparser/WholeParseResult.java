@@ -20,7 +20,7 @@ final class WholeParseResult extends ParseResult {
 		this.wholeBinding = wholeBinding;
 	}
 
-	WholeBinding getBodyBinding() {
+	WholeBinding getWholeBinding() {
 		return wholeBinding;
 	}
 

@@ -16,8 +16,8 @@ import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
+import jcl.compiler.real.environment.binding.lambdalist.MacroLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
@@ -27,7 +27,7 @@ import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.JavaClassNameDeclarationStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
-import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
+import jcl.compiler.real.struct.specialoperator.lambda.MacroLambdaStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
@@ -43,7 +43,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MacroLambdaExpander extends MacroFunctionExpander<LambdaStruct> {
+public class MacroLambdaExpander extends MacroFunctionExpander<MacroLambdaStruct> {
 
 	private static final long serialVersionUID = -7592502247452528911L;
 
@@ -60,15 +60,15 @@ public class MacroLambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 	private Printer printer;
 
 	/**
-	 * Initializes the lambda macro function and adds it to the special operator 'lambda'.
+	 * Initializes the macro-lambda macro function and adds it to the special operator 'macro-lambda'.
 	 */
 	@PostConstruct
 	private void init() {
-		SpecialOperatorStruct.LAMBDA.setMacroFunctionExpander(this);
+		SpecialOperatorStruct.MACRO_LAMBDA.setMacroFunctionExpander(this);
 	}
 
 	@Override
-	public LambdaStruct expand(final ListStruct form, final Environment environment) {
+	public MacroLambdaStruct expand(final ListStruct form, final Environment environment) {
 
 		final int formSize = form.size();
 		if (formSize < 2) {
@@ -105,7 +105,7 @@ public class MacroLambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 			fileName = javaClassNameDeclaration.getClassName();
 		}
 
-		final OrdinaryLambdaListBindings parsedLambdaList = macroLambdaListParser.parseMacroLambdaList(lambdaEnvironment, parameters, declare);
+		final MacroLambdaListBindings parsedLambdaList = macroLambdaListParser.parseMacroLambdaList(lambdaEnvironment, parameters, declare);
 
 		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 		final List<LispStruct> newLambdaBodyForms = getNewStartingLambdaBody(parsedLambdaList, bodyForms);
@@ -114,10 +114,10 @@ public class MacroLambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 				= newLambdaBodyForms.stream()
 				                    .map(e -> formAnalyzer.analyze(e, lambdaEnvironment))
 				                    .collect(Collectors.toList());
-		return new LambdaStruct(fileName, parsedLambdaList, bodyProcessingResult.getDocString(), new PrognStruct(analyzedBodyForms), lambdaEnvironment);
+		return new MacroLambdaStruct(fileName, parsedLambdaList, bodyProcessingResult.getDocString(), new PrognStruct(analyzedBodyForms), lambdaEnvironment);
 	}
 
-	private static List<LispStruct> getNewStartingLambdaBody(final OrdinaryLambdaListBindings parsedLambdaList,
+	private static List<LispStruct> getNewStartingLambdaBody(final MacroLambdaListBindings parsedLambdaList,
 	                                                         final List<LispStruct> bodyForms) {
 
 		final List<LispStruct> bodyFormsWithInitFormSetqs = new ArrayList<>();
@@ -150,7 +150,7 @@ public class MacroLambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 		return Collections.singletonList(newLambdaBody);
 	}
 
-	private static List<ListStruct> getInitFormIfSetqs(final OrdinaryLambdaListBindings parsedLambdaList) {
+	private static List<ListStruct> getInitFormIfSetqs(final MacroLambdaListBindings parsedLambdaList) {
 
 		final List<ListStruct> initFormIfSetqs = new ArrayList<>();
 

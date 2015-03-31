@@ -61,19 +61,7 @@ public final class SpecialOperatorStruct extends SymbolStruct<SpecialOperatorStr
 
 	public static final SpecialOperatorStruct DEFSTRUCT = new SpecialOperatorStruct("%DEFSTRUCT", GlobalPackageStruct.COMPILER);
 
-	public static final SpecialOperatorStruct FUNCTION_MARKER = new SpecialOperatorStruct("%FUNCTION-MARKER", GlobalPackageStruct.COMPILER);
-
-	public static final SpecialOperatorStruct LAMBDA_MARKER = new SpecialOperatorStruct("%LAMBDA", GlobalPackageStruct.COMPILER);
-
-	public static final SpecialOperatorStruct FLET_MARKER = new SpecialOperatorStruct("%FLET", GlobalPackageStruct.COMPILER);
-
-	public static final SpecialOperatorStruct LABELS_MARKER = new SpecialOperatorStruct("%LABELS", GlobalPackageStruct.COMPILER);
-
-	public static final SpecialOperatorStruct LET_MARKER = new SpecialOperatorStruct("%LET", GlobalPackageStruct.COMPILER);
-
-	public static final SpecialOperatorStruct MACRO_MARKER = new SpecialOperatorStruct("%MACRO", GlobalPackageStruct.COMPILER);
-
-	public static final SpecialOperatorStruct STATIC_FIELD = new SpecialOperatorStruct("%STATIC-FIELD", GlobalPackageStruct.COMPILER);
+	public static final SpecialOperatorStruct MACRO_LAMBDA = new SpecialOperatorStruct("MACRO-LAMBDA", GlobalPackageStruct.COMPILER);
 
 	public static final SpecialOperatorStruct TAIL_CALL = new SpecialOperatorStruct("%TAIL-CALL", GlobalPackageStruct.COMPILER);
 

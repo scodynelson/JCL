@@ -526,7 +526,7 @@ public class LambdaListParser {
 		return new AuxParseResult(currentElement, currentPosition, auxBindings);
 	}
 
-	private static boolean isLambdaListKeyword(final LispStruct lispStruct) {
+	protected static boolean isLambdaListKeyword(final LispStruct lispStruct) {
 		return lispStruct.equals(CompilerConstants.AUX)
 				|| lispStruct.equals(CompilerConstants.ALLOW_OTHER_KEYS)
 				|| lispStruct.equals(CompilerConstants.KEY)

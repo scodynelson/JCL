@@ -11,7 +11,7 @@ import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
-import jcl.compiler.real.icg.generator.NewLambdaCodeGenerator;
+import jcl.compiler.real.icg.generator.LambdaCodeGenerator;
 import jcl.compiler.real.struct.specialoperator.LambdaFunctionCallStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import org.objectweb.asm.MethodVisitor;
@@ -26,7 +26,7 @@ public class LambdaFunctionCallCodeGenerator implements CodeGenerator<LambdaFunc
 	private FormGenerator formGenerator;
 
 	@Autowired
-	private NewLambdaCodeGenerator lambdaCodeGenerator;
+	private LambdaCodeGenerator lambdaCodeGenerator;
 
 	@Override
 	public void generate(final LambdaFunctionCallStruct input, final JavaClassBuilder classBuilder) {

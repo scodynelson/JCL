@@ -125,7 +125,7 @@
 		<entry key="jcl.compiler.real.struct.specialoperator.go.GoIntegerStruct" value-ref="goCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.go.GoSymbolStruct" value-ref="goCodeGenerator"/>
 
-		<entry key="jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct" value-ref="newLambdaCodeGenerator"/>
+		<entry key="jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct" value-ref="lambdaCodeGenerator"/>
 
 	</util:map>
 

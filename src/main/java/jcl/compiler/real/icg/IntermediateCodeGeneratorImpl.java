@@ -2,7 +2,7 @@ package jcl.compiler.real.icg;
 
 import java.util.Deque;
 
-import jcl.compiler.real.icg.generator.NewLambdaCodeGenerator;
+import jcl.compiler.real.icg.generator.LambdaCodeGenerator;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class IntermediateCodeGeneratorImpl implements IntermediateCodeGenerator {
 
 	@Autowired
-	private NewLambdaCodeGenerator lambdaCodeGenerator;
+	private LambdaCodeGenerator lambdaCodeGenerator;
 
 	@Override
 	public Deque<ClassDef> generate(final LambdaStruct lambdaStruct) {

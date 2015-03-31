@@ -12,7 +12,7 @@ import org.objectweb.asm.Opcodes;
 import org.springframework.stereotype.Component;
 
 @Component
-public class NewSymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
+public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 
 	@Override
 	public void generate(final SymbolStruct<?> input, final JavaClassBuilder classBuilder) {

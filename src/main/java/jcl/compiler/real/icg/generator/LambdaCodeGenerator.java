@@ -39,7 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
+public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 	@Autowired
 	private PrognCodeGenerator prognCodeGenerator;

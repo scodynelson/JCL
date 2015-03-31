@@ -82,7 +82,7 @@ public class SymbolAnalyzerImpl implements SymbolAnalyzer {
 		}
 
 		// There is an Outer Binding Environment. Therefore, we will create a Closure Binding in that Environment.
-		final Closure closure = outerBindingEnvironment.getClosure();
+		final Closure closure = enclosingLambda.getClosure();
 
 		final Optional<ClosureBinding> closureBinding = closure.getBinding(input);
 

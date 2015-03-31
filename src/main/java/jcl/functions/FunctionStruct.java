@@ -2,6 +2,7 @@ package jcl.functions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -53,32 +54,14 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 	/**
 	 * Protected constructor.
 	 *
+	 * @param documentation
+	 * 		instance documentation string
 	 * @param closure
 	 * 		instance function closure
 	 */
-	protected FunctionStruct(final Closure closure) {
-		this(null, Function.INSTANCE, null, null);
+	protected FunctionStruct(final String documentation, final Closure closure) {
+		this(documentation, Function.INSTANCE, null, null);
 		this.closure = closure;
-	}
-
-	/**
-	 * Protected constructor.
-	 *
-	 * @param documentation
-	 * 		instance documentation string
-	 */
-	protected FunctionStruct(final String documentation) {
-		this(documentation, null);
-	}
-
-	/**
-	 * Protected constructor.
-	 *
-	 * @param lambdaListBindings
-	 * 		lambda-list bindings for the function
-	 */
-	protected FunctionStruct(final OrdinaryLambdaListBindings lambdaListBindings) {
-		this(null, lambdaListBindings);
 	}
 
 	/**
@@ -180,6 +163,9 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 	}
 
 	public Map<SymbolStruct<?>, LispStruct> getClosureBindings() {
+		if (closure == null) {
+			return Collections.emptyMap();
+		}
 		return closure.getClosureBindings();
 	}
 
@@ -326,6 +312,7 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 	public int hashCode() {
 		return new HashCodeBuilder().appendSuper(super.hashCode())
 		                            .append(lambdaListBindings)
+		                            .append(closure)
 		                            .toHashCode();
 	}
 
@@ -343,12 +330,14 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 		final FunctionStruct rhs = (FunctionStruct) obj;
 		return new EqualsBuilder().appendSuper(super.equals(obj))
 		                          .append(lambdaListBindings, rhs.lambdaListBindings)
+		                          .append(closure, rhs.closure)
 		                          .isEquals();
 	}
 
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(lambdaListBindings)
+		                                                                .append(closure)
 		                                                                .toString();
 	}
 }

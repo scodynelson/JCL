@@ -103,6 +103,22 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 			}
 		}
 
+		mv.visitVarInsn(Opcodes.ALOAD, 0); // TODO: I know that '0' essentially means 'this'. But can we do better by passing the actual Store value around???
+		final String fileName = currentClass.getFileName();
+		mv.visitFieldInsn(Opcodes.GETFIELD, fileName, "closure", "Ljcl/functions/Closure;");
+		final Integer parentClosureStore = currentClass.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, parentClosureStore);
+
+		mv.visitTypeInsn(Opcodes.NEW, "jcl/functions/Closure");
+		mv.visitInsn(Opcodes.DUP);
+		mv.visitVarInsn(Opcodes.ALOAD, parentClosureStore);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/functions/Closure", "<init>", "(Ljcl/functions/Closure;)V", false);
+		final Integer newClosureStore = currentClass.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, newClosureStore);
+
+		final Stack<Integer> closureStoreStack = classBuilder.getClosureStoreStack();
+		closureStoreStack.push(newClosureStore);
+
 		for (final Map.Entry<Integer, Integer> functionStoreToBind : lexicalSymbolStoresToBind.entrySet()) {
 			final Integer symbolStore = functionStoreToBind.getKey();
 			final Integer initFormStore = functionStoreToBind.getValue();
@@ -110,6 +126,13 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "bindLexicalValue", "(Ljcl/LispStruct;)V", false);
+
+			mv.visitVarInsn(Opcodes.ALOAD, newClosureStore);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/Closure", "getClosureBindings", "()Ljava/util/Map;", false);
+			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
+			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", true);
+			mv.visitInsn(Opcodes.POP);
 		}
 
 		for (final Map.Entry<Integer, Integer> functionStoreToBind : dynamicSymbolStoresToBind.entrySet()) {
@@ -131,6 +154,9 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 
 		final int resultStore = currentClass.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, resultStore);
+
+		// Pop closure store after we get through the body forms
+		closureStoreStack.pop();
 
 		mv.visitLabel(tryBlockEnd);
 		generateFinallyCode(mv, lexicalSymbolStoresToUnbind, dynamicSymbolStoresToUnbind);

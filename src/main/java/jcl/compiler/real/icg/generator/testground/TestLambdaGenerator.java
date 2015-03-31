@@ -5,7 +5,6 @@
 package jcl.compiler.real.icg.generator.testground;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,10 +35,9 @@ public class TestLambdaGenerator extends FunctionStruct {
 		this(null);
 	}
 
-	protected TestLambdaGenerator(final Closure parentClosure) {
-		super("DocumentationString");
+	protected TestLambdaGenerator(final Closure closure) {
+		super("DocumentationString", closure);
 		initLambdaListBindings();
-		initClosure(parentClosure);
 	}
 
 	private void initLambdaListBindings() {
@@ -109,18 +107,6 @@ public class TestLambdaGenerator extends FunctionStruct {
 		// End: Aux
 
 		lambdaListBindings = new OrdinaryLambdaListBindings(requiredBindings, optionalBindings, restBinding, keyBindings, auxBindings, allowOtherKeys);
-	}
-
-	private void initClosure(final Closure parentClosure) {
-
-		final Map<SymbolStruct<?>, LispStruct> closureBindings = new HashMap<>();
-
-		final PackageStruct pkg = PackageStruct.findPackage("COMMON-LISP");
-		final SymbolStruct<?> closureSymbol = pkg.findSymbol("FOO").getSymbol();
-		final LispStruct closureValue = closureSymbol.getValue();
-		closureBindings.put(closureSymbol, closureValue);
-
-		closure = new Closure(parentClosure, closureBindings);
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})

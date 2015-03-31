@@ -50,6 +50,22 @@ public class LetStarCodeGenerator implements CodeGenerator<LetStarStruct> {
 		final Label catchBlockEnd = new Label();
 		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, null);
 
+		mv.visitVarInsn(Opcodes.ALOAD, 0); // TODO: I know that '0' essentially means 'this'. But can we do better by passing the actual Store value around???
+		final String fileName = currentClass.getFileName();
+		mv.visitFieldInsn(Opcodes.GETFIELD, fileName, "closure", "Ljcl/functions/Closure;");
+		final Integer parentClosureStore = currentClass.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, parentClosureStore);
+
+		mv.visitTypeInsn(Opcodes.NEW, "jcl/functions/Closure");
+		mv.visitInsn(Opcodes.DUP);
+		mv.visitVarInsn(Opcodes.ALOAD, parentClosureStore);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/functions/Closure", "<init>", "(Ljcl/functions/Closure;)V", false);
+		final Integer newClosureStore = currentClass.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, newClosureStore);
+
+		final Stack<Integer> closureStoreStack = classBuilder.getClosureStoreStack();
+		closureStoreStack.push(newClosureStore);
+
 		final int packageStore = currentClass.getNextAvailableStore();
 		final int initFormStore = currentClass.getNextAvailableStore();
 
@@ -105,6 +121,13 @@ public class LetStarCodeGenerator implements CodeGenerator<LetStarStruct> {
 			} else {
 				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "bindLexicalValue", "(Ljcl/LispStruct;)V", false);
 				lexicalSymbolStoresToUnbind.add(symbolStore);
+
+				mv.visitVarInsn(Opcodes.ALOAD, newClosureStore);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/Closure", "getClosureBindings", "()Ljava/util/Map;", false);
+				mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
+				mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
+				mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", true);
+				mv.visitInsn(Opcodes.POP);
 			}
 		}
 
@@ -118,6 +141,9 @@ public class LetStarCodeGenerator implements CodeGenerator<LetStarStruct> {
 
 		final int resultStore = currentClass.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, resultStore);
+
+		// Pop closure store after we get through the body forms
+		closureStoreStack.pop();
 
 		mv.visitLabel(tryBlockEnd);
 		generateFinallyCode(mv, lexicalSymbolStoresToUnbind, dynamicSymbolStoresToUnbind);

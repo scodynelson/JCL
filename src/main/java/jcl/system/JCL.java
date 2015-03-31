@@ -22,7 +22,7 @@ public class JCL {
 			final ReadEvalPrint repl = ((ApplicationContext) context).getBean(ReadEvalPrint.class);
 
 			final Object result = repl.funcall(args);
-			LOGGER.debug("JCL returned => {}", result);
+			LOGGER.debug("JCL returned => {}\n", result);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

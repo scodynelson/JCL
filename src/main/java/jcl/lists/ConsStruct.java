@@ -222,15 +222,15 @@ public class ConsStruct extends ListStruct {
 
 	@Override
 	public int hashCode() {
-		// TODO: we should figure out how to handle circularities here... or should we???
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .toHashCode();
 //		if (isCircular()) {
+//		    // TODO: we should figure out how to handle circularities here... or should we???
+//		    return new HashCodeBuilder().appendSuper(super.hashCode())
+//		                                .toHashCode();
 //		} else {
-//			return new HashCodeBuilder().appendSuper(super.hashCode())
-//			                            .append(car)
-//			                            .append(cdr)
-//			                            .toHashCode();
+			return new HashCodeBuilder().appendSuper(super.hashCode())
+			                            .append(car)
+			                            .append(cdr)
+			                            .toHashCode();
 //		}
 	}
 
@@ -247,15 +247,15 @@ public class ConsStruct extends ListStruct {
 		}
 		final ConsStruct rhs = (ConsStruct) obj;
 
-		if (isCircular() || rhs.isCircular()) {
-			// TODO: we should figure out how to handle circularities here... or should we???
-			return false;
-		} else {
+//		if (isCircular() || rhs.isCircular()) {
+//			// TODO: we should figure out how to handle circularities here... or should we???
+//			return false;
+//		} else {
 			return new EqualsBuilder().appendSuper(super.equals(obj))
 			                          .append(car, rhs.car)
 			                          .append(cdr, rhs.cdr)
 			                          .isEquals();
-		}
+//		}
 	}
 
 	@Override

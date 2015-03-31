@@ -13,8 +13,11 @@ import jcl.compiler.real.functions.MacroExpand1Function;
 import jcl.compiler.real.functions.MacroExpandFunction;
 import jcl.functions.functions.ApplyFunction;
 import jcl.functions.functions.FuncallFunction;
+import jcl.lists.functions.AtomFunction;
 import jcl.lists.functions.CarFunction;
+import jcl.lists.functions.CdrFunction;
 import jcl.lists.functions.ListFunction;
+import jcl.lists.functions.NullFunction;
 import jcl.numbers.NumberConstants;
 import jcl.numbers.NumberVariables;
 import jcl.packages.GlobalPackageStruct;
@@ -234,7 +237,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> ASSOC_IF_NOT = null;
 	SymbolStruct<?> ATAN = null;
 	SymbolStruct<?> ATANH = null;
-	SymbolStruct<?> ATOM = null;
+	SymbolStruct<?> ATOM = AtomFunction.ATOM;
 	SymbolStruct<?> BASE_CHAR = null;
 	SymbolStruct<?> BASE_STRING = null;
 	SymbolStruct<?> BIGNUM = null;
@@ -299,7 +302,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> CDDDDR = null;
 	SymbolStruct<?> CDDDR = null;
 	SymbolStruct<?> CDDR = null;
-	SymbolStruct<?> CDR = null;
+	SymbolStruct<?> CDR = CdrFunction.CDR;
 	SymbolStruct<?> CEILING = null;
 	SymbolStruct<?> CELL_ERROR = null;
 	SymbolStruct<?> CELL_ERROR_NAME = null;
@@ -691,7 +694,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> NTH = null;
 	SymbolStruct<?> NTH_VALUE = null;
 	SymbolStruct<?> NTHCDR = null;
-	SymbolStruct<?> NULL = null;
+	SymbolStruct<?> NULL = NullFunction.NULL;
 	SymbolStruct<?> NUMBER = null;
 	SymbolStruct<?> NUMBERP = null;
 	SymbolStruct<?> NUMERATOR = null;

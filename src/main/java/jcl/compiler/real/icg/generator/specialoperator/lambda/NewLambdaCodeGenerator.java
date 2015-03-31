@@ -369,12 +369,16 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			classBuilder.setCurrentClass(previousClassDef);
 			final MethodVisitor mv = previousClassDef.getMethodVisitor();
 
-			final Stack<Integer> closureStoreStack = previousClassDef.getClosureStoreStack();
-			final Integer currentClosureStore = closureStoreStack.peek();
-
 			mv.visitTypeInsn(Opcodes.NEW, fileName);
 			mv.visitInsn(Opcodes.DUP);
-			mv.visitVarInsn(Opcodes.ALOAD, currentClosureStore);
+
+			final Stack<Integer> closureStoreStack = previousClassDef.getClosureStoreStack();
+			if (closureStoreStack.isEmpty()) {
+				mv.visitInsn(Opcodes.ACONST_NULL);
+			} else {
+				final Integer currentClosureStore = closureStoreStack.peek();
+				mv.visitVarInsn(Opcodes.ALOAD, currentClosureStore);
+			}
 
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, fileName, "<init>", "(Ljcl/functions/Closure;)V", false);
 		}

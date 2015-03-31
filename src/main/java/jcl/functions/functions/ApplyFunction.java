@@ -52,9 +52,9 @@ public class ApplyFunction extends FunctionStruct {
 
 		final List<RequiredBinding> requiredBindings = new ArrayList<>(2);
 
-		final SymbolStruct<?> functionArgSymbol = new SymbolStruct<>("FUNCTION", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation functionArgAllocation = new ParameterAllocation(0);
-		final RequiredBinding functionRequiredBinding = new RequiredBinding(functionArgSymbol, functionArgAllocation);
+		final SymbolStruct<?> fnArgSymbol = new SymbolStruct<>("FN", GlobalPackageStruct.COMMON_LISP);
+		final ParameterAllocation fnArgAllocation = new ParameterAllocation(0);
+		final RequiredBinding functionRequiredBinding = new RequiredBinding(fnArgSymbol, fnArgAllocation);
 		requiredBindings.add(functionRequiredBinding);
 
 		final SymbolStruct<?> argArgSymbol = new SymbolStruct<>("ARG", GlobalPackageStruct.COMMON_LISP);

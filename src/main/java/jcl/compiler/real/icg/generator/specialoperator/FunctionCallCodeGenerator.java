@@ -27,34 +27,67 @@ public class FunctionCallCodeGenerator implements CodeGenerator<FunctionCallStru
 	@Override
 	public void generate(final FunctionCallStruct input, final JavaClassBuilder classBuilder) {
 
+		final boolean recursiveCall = input.isRecursiveCall();
 		final SymbolStruct<?> functionSymbol = input.getFunctionSymbol();
 		final List<LispStruct> arguments = input.getArguments();
 
 		final ClassDef currentClass = classBuilder.getCurrentClass();
 		final MethodVisitor mv = currentClass.getMethodVisitor();
 
-		final String packageName = functionSymbol.getSymbolPackage().getName();
-		final String symbolName = functionSymbol.getName();
-
-		mv.visitLdcInsn(packageName);
-		mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
-		final int packageStore = currentClass.getNextAvailableStore();
-		mv.visitVarInsn(Opcodes.ASTORE, packageStore);
-
-		mv.visitVarInsn(Opcodes.ALOAD, packageStore);
-		mv.visitLdcInsn(symbolName);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
-		final int functionSymbolStore = currentClass.getNextAvailableStore();
-		mv.visitVarInsn(Opcodes.ASTORE, functionSymbolStore);
-
-		final Environment currentEnvironment = classBuilder.getBindingEnvironment();
-		if (currentEnvironment instanceof FletEnvironment) {
-			final FletEnvironment fletEnvironment = (FletEnvironment) currentEnvironment;
-			fletGenerate(currentClass, mv, classBuilder, fletEnvironment, functionSymbol, arguments, functionSymbolStore);
+		if (recursiveCall) {
+			tailCallGenerate(currentClass, mv, classBuilder, arguments);
 		} else {
-			nonFletGenerate(currentClass, mv, classBuilder, arguments, functionSymbolStore);
+
+			final String packageName = functionSymbol.getSymbolPackage().getName();
+			final String symbolName = functionSymbol.getName();
+
+			mv.visitLdcInsn(packageName);
+			mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
+			final int packageStore = currentClass.getNextAvailableStore();
+			mv.visitVarInsn(Opcodes.ASTORE, packageStore);
+
+			mv.visitVarInsn(Opcodes.ALOAD, packageStore);
+			mv.visitLdcInsn(symbolName);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
+			final int functionSymbolStore = currentClass.getNextAvailableStore();
+			mv.visitVarInsn(Opcodes.ASTORE, functionSymbolStore);
+
+			final Environment currentEnvironment = classBuilder.getBindingEnvironment();
+			if (currentEnvironment instanceof FletEnvironment) {
+				final FletEnvironment fletEnvironment = (FletEnvironment) currentEnvironment;
+				fletGenerate(currentClass, mv, classBuilder, fletEnvironment, functionSymbol, arguments, functionSymbolStore);
+			} else {
+				nonFletGenerate(currentClass, mv, classBuilder, arguments, functionSymbolStore);
+			}
 		}
+	}
+
+	private void tailCallGenerate(final ClassDef currentClass, final MethodVisitor mv, final JavaClassBuilder classBuilder,
+	                              final List<LispStruct> arguments) {
+
+		final int numberOfArguments = arguments.size();
+		mv.visitLdcInsn(numberOfArguments);
+		mv.visitTypeInsn(Opcodes.ANEWARRAY, "jcl/LispStruct");
+		final int argumentsArrayStore = currentClass.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, argumentsArrayStore);
+
+		final int argumentStore = currentClass.getNextAvailableStore();
+
+		for (int index = 0; index < numberOfArguments; index++) {
+			final LispStruct argument = arguments.get(index);
+			formGenerator.generate(argument, classBuilder);
+			mv.visitVarInsn(Opcodes.ASTORE, argumentStore);
+
+			mv.visitVarInsn(Opcodes.ALOAD, argumentsArrayStore);
+			mv.visitLdcInsn(index);
+			mv.visitVarInsn(Opcodes.ALOAD, argumentStore);
+			mv.visitInsn(Opcodes.AASTORE);
+		}
+
+		mv.visitVarInsn(Opcodes.ALOAD, 0); // TODO: I know that '0' essentially means 'this'. But can we do better by passing the actual Store value around???
+		mv.visitVarInsn(Opcodes.ALOAD, argumentsArrayStore);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/FunctionStruct", "apply", "([Ljcl/LispStruct;)Ljcl/LispStruct;", false);
 	}
 
 	private void nonFletGenerate(final ClassDef currentClass, final MethodVisitor mv, final JavaClassBuilder classBuilder,

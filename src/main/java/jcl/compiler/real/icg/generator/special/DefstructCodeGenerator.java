@@ -1,4 +1,4 @@
-package jcl.compiler.real.icg.generator.specialoperator.old.compiler;
+package jcl.compiler.real.icg.generator.special;
 
 import java.util.Stack;
 
@@ -7,8 +7,6 @@ import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
-import jcl.compiler.real.icg.generator.specialoperator.old.simple.SpecialVariableCodeGenerator;
-import jcl.compiler.real.icg.generator.specialoperator.old.simple.SymbolCodeGenerator;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
@@ -39,12 +37,6 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 	 * the included struct's javaName from the includeName symbol.
 	 * 4. fieldList - this is the list of all the slot names and their types for this struct
 	 */
-
-//	@Autowired
-	private SymbolCodeGenerator symbolCodeGenerator;
-
-	//	@Autowired
-	private SpecialVariableCodeGenerator specialVariableCodeGenerator;
 
 	//	@Autowired
 	private FormGenerator formGenerator;
@@ -132,7 +124,7 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 		mv.visitFieldInsn(Opcodes.GETSTATIC, javaName + "Impl", "initialize", "Z");
 		mv.visitInsn(Opcodes.POP);
 
-		symbolCodeGenerator.generate(javaName, classBuilder);
+//		symbolCodeGenerator.generate(javaName, classBuilder);
 		mv.visitFieldInsn(Opcodes.GETSTATIC, "lisp/common/type/StructureClass", "DEFSTRUCT_INDICATOR", "Llisp/common/type/Symbol;");
 		mv.visitLdcInsn(javaName + "$Factory");
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Class", "forName", "(Ljava/lang/String;)Ljava/lang/Class;", false);
@@ -312,7 +304,7 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 			currentClass.setMethodVisitor(mv);
 			mv.visitCode();
 
-			symbolCodeGenerator.generate(lispName, classBuilder);
+//			symbolCodeGenerator.generate(lispName, classBuilder);
 			mv.visitFieldInsn(Opcodes.PUTSTATIC, name, "typeName", "Llisp/common/type/Symbol;");
 			mv.visitTypeInsn(Opcodes.NEW, name + "$AbstractFactory");
 			mv.visitInsn(Opcodes.DUP);
@@ -514,7 +506,7 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 
 			// if a print option was passed in, make an instance and store it
 			if (printer instanceof SymbolStruct<?>) {
-				specialVariableCodeGenerator.generate((SymbolStruct<?>) printer, classBuilder);
+//				specialVariableCodeGenerator.generate((SymbolStruct<?>) printer, classBuilder);
 				mv.visitFieldInsn(Opcodes.PUTSTATIC, implName, "printDefstructFunction", "Llisp/common/type/Symbol;");
 			} else if ((printer instanceof FunctionStruct) || (printer instanceof FunctionStruct)) { // TODO: Function2 || Function3
 				mv.visitTypeInsn(Opcodes.NEW, printer.getClass().getName());
@@ -528,7 +520,7 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 			}
 
 			// hold on to the original lispName
-			specialVariableCodeGenerator.generate(lispName, classBuilder);
+//			specialVariableCodeGenerator.generate(lispName, classBuilder);
 			mv.visitFieldInsn(Opcodes.PUTSTATIC, implName, "lispName", "Llisp/common/type/Symbol;");
 
 			// make an instance of the nested Factory class
@@ -549,14 +541,14 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 			for (int i = 0; i < fields.length; i++) {
 				mv.visitInsn(Opcodes.DUP);
 				mv.visitLdcInsn(i);
-				specialVariableCodeGenerator.generate(fields[i], classBuilder);
+//				specialVariableCodeGenerator.generate(fields[i], classBuilder);
 				mv.visitInsn(Opcodes.AASTORE);
 			}
 			mv.visitInsn(Opcodes.DUP);
 			mv.visitFieldInsn(Opcodes.PUTSTATIC, implName, "slotNames", "[Llisp/common/type/Symbol;");
 
 			// put the same array of slot names into the type symbol
-			symbolCodeGenerator.generate(lispName, classBuilder);
+//			symbolCodeGenerator.generate(lispName, classBuilder);
 			mv.visitTypeInsn(Opcodes.CHECKCAST, "lisp/system/SymbolImpl");
 			mv.visitInsn(Opcodes.SWAP);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "lisp/system/SymbolImpl", "setDefstructSlotNames", "([Llisp/common/type/Symbol;)V", false);

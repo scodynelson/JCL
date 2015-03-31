@@ -11,7 +11,7 @@ import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
-import jcl.compiler.real.icg.generator.specialoperator.lambda.NewLambdaCodeGenerator;
+import jcl.compiler.real.icg.generator.NewLambdaCodeGenerator;
 import jcl.compiler.real.struct.specialoperator.LambdaFunctionCallStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import org.objectweb.asm.MethodVisitor;

@@ -2,7 +2,7 @@ package jcl.compiler.real.icg;
 
 import java.util.Deque;
 
-import jcl.compiler.real.icg.generator.specialoperator.lambda.NewLambdaCodeGenerator;
+import jcl.compiler.real.icg.generator.NewLambdaCodeGenerator;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

@@ -66,9 +66,7 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 		final String className = fileName.substring(fileName.lastIndexOf('/') + 1, fileName.length());
 
-		final Stack<Integer> closureStoreStack = classBuilder.getClosureStoreStack();
-
-		final ClassDef currentClass = new ClassDef(fileName, className, closureStoreStack);
+		final ClassDef currentClass = new ClassDef(fileName, className);
 		final Stack<ClassDef> classStack = classBuilder.getClassStack();
 
 		classStack.push(currentClass);
@@ -101,9 +99,26 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 		{
 			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC, "<init>", "()V", null, null);
+			mv.visitCode();
+			final int thisStore = currentClass.getNextAvailableStore();
+
+			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
+			mv.visitInsn(Opcodes.ACONST_NULL);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, fileName, "<init>", "(Ljcl/functions/Closure;)V", false);
+
+			mv.visitInsn(Opcodes.RETURN);
+
+			mv.visitMaxs(-1, -1);
+			mv.visitEnd();
+
+			currentClass.resetStores();
+		}
+		{
+			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC, "<init>", "(Ljcl/functions/Closure;)V", null, null);
 			currentClass.setMethodVisitor(mv);
 			mv.visitCode();
 			final int thisStore = currentClass.getNextAvailableStore();
+			final int parentClosureStore = currentClass.getNextAvailableStore();
 
 			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 
@@ -118,7 +133,8 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, fileName, "initLambdaListBindings", "()V", false);
 
 			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, fileName, "initClosure", "()V", false);
+			mv.visitVarInsn(Opcodes.ALOAD, parentClosureStore);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, fileName, "initClosure", "(Ljcl/functions/Closure;)V", false);
 
 			mv.visitInsn(Opcodes.RETURN);
 
@@ -191,10 +207,11 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			currentClass.resetStores();
 		}
 		{
-			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, "initClosure", "()V", null, null);
+			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, "initClosure", "(Ljcl/functions/Closure;)V", null, null);
 			currentClass.setMethodVisitor(mv);
 			mv.visitCode();
 			final int thisStore = currentClass.getNextAvailableStore();
+			final int parentClosureStore = currentClass.getNextAvailableStore();
 
 			mv.visitTypeInsn(Opcodes.NEW, "java/util/HashMap");
 			mv.visitInsn(Opcodes.DUP);
@@ -223,10 +240,8 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
 				mv.visitVarInsn(Opcodes.ASTORE, symbolStore);
 
-				// TODO: use the formGenerator. This should work always due to the fact that all bindings should be
-				// TODO: visible at the creation of the lambda. Or is this a bad assumption??? guess i'll find out later...
-//				formGenerator.generate(null, classBuilder);
-				nullCodeGenerator.generate(NullStruct.INSTANCE, classBuilder);
+				mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "getValue", "()Ljcl/LispStruct;", false);
 				mv.visitVarInsn(Opcodes.ASTORE, valueStore);
 
 				mv.visitVarInsn(Opcodes.ALOAD, closureBindingMapStore);
@@ -240,20 +255,9 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitTypeInsn(Opcodes.NEW, "jcl/functions/Closure");
 			mv.visitInsn(Opcodes.DUP);
 
-			if (closureStoreStack.isEmpty()) {
-				mv.visitInsn(Opcodes.ACONST_NULL);
-			} else {
-				final Integer parentClosureStore = closureStoreStack.peek();
-				mv.visitVarInsn(Opcodes.ALOAD, parentClosureStore);
-			}
+			mv.visitVarInsn(Opcodes.ALOAD, parentClosureStore);
 			mv.visitVarInsn(Opcodes.ALOAD, closureBindingMapStore);
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/functions/Closure", "<init>", "(Ljcl/functions/Closure;Ljava/util/Map;)V", false);
-			final int closureStore = currentClass.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, closureStore);
-
-			closureStoreStack.push(closureStore);
-
-			mv.visitVarInsn(Opcodes.ALOAD, closureStore);
 			mv.visitFieldInsn(Opcodes.PUTFIELD, fileName, "closure", "Ljcl/functions/Closure;");
 
 			mv.visitInsn(Opcodes.RETURN);
@@ -424,16 +428,19 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 		cw.visitEnd();
 
-		closureStoreStack.pop();
 		classStack.pop();
 		if (!classStack.isEmpty()) {
 			final ClassDef previousClassDef = classStack.peek();
 			classBuilder.setCurrentClass(previousClassDef);
 			final MethodVisitor mv = previousClassDef.getMethodVisitor();
 
+			final String previousClassFileName = previousClassDef.getFileName();
+
 			mv.visitTypeInsn(Opcodes.NEW, fileName);
 			mv.visitInsn(Opcodes.DUP);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, fileName, "<init>", "()V", false);
+			mv.visitVarInsn(Opcodes.ALOAD, 0); // TODO: I know that '0' essentially means 'this'. But can we do better by passing the actual Store value around???
+			mv.visitFieldInsn(Opcodes.GETFIELD, previousClassFileName, "closure", "Ljcl/functions/Closure;");
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, fileName, "<init>", "(Ljcl/functions/Closure;)V", false);
 		}
 	}
 

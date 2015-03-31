@@ -75,7 +75,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 		final int numRequiredParams = countRequiredParams(bindingSetBody);
 
-		final ClassDef currentClass = new ClassDef(className, "", new Stack<>());
+		final ClassDef currentClass = new ClassDef(className, "");
 		final Stack<ClassDef> classStack = classBuilder.getClassStack();
 
 		classStack.push(currentClass);

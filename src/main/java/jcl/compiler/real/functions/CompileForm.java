@@ -66,20 +66,13 @@ class CompileForm implements Serializable {
 
 			final Class<?> classLoaded = cl.loadClass(fileName, byteArray);
 
-			Constructor<?> constructor = null;
 			try {
-				constructor = classLoaded.getConstructor();
-				constructor.setAccessible(true);
-
+				final Constructor<?> constructor = classLoaded.getConstructor();
 				function = (FunctionStruct) constructor.newInstance();
 			} catch (InstantiationException | NoSuchMethodException | InvocationTargetException | IllegalAccessException ex) {
 				LOGGER.error("Error compiling definition.", ex);
 				compiledWithWarnings = TStruct.INSTANCE;
 				failedToCompile = TStruct.INSTANCE;
-			} finally {
-				if (constructor != null) {
-					constructor.setAccessible(false);
-				}
 			}
 		}
 

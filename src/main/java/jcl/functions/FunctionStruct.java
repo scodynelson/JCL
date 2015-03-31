@@ -53,6 +53,17 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 	/**
 	 * Protected constructor.
 	 *
+	 * @param closure
+	 * 		instance function closure
+	 */
+	protected FunctionStruct(final Closure closure) {
+		this(null, Function.INSTANCE, null, null);
+		this.closure = closure;
+	}
+
+	/**
+	 * Protected constructor.
+	 *
 	 * @param documentation
 	 * 		instance documentation string
 	 */

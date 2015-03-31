@@ -33,9 +33,13 @@ public class TestLambdaGenerator extends FunctionStruct {
 	private static final LispStruct LTV_1 = new CharacterStruct(1997);
 
 	public TestLambdaGenerator() {
+		this(null);
+	}
+
+	protected TestLambdaGenerator(final Closure parentClosure) {
 		super("DocumentationString");
 		initLambdaListBindings();
-		initClosure();
+		initClosure(parentClosure);
 	}
 
 	private void initLambdaListBindings() {
@@ -107,16 +111,16 @@ public class TestLambdaGenerator extends FunctionStruct {
 		lambdaListBindings = new OrdinaryLambdaListBindings(requiredBindings, optionalBindings, restBinding, keyBindings, auxBindings, allowOtherKeys);
 	}
 
-	private void initClosure() {
+	private void initClosure(final Closure parentClosure) {
 
 		final Map<SymbolStruct<?>, LispStruct> closureBindings = new HashMap<>();
 
 		final PackageStruct pkg = PackageStruct.findPackage("COMMON-LISP");
 		final SymbolStruct<?> closureSymbol = pkg.findSymbol("FOO").getSymbol();
-		final LispStruct closureValue = new CharacterStruct(97);
+		final LispStruct closureValue = closureSymbol.getValue();
 		closureBindings.put(closureSymbol, closureValue);
 
-		closure = new Closure(null, closureBindings);
+		closure = new Closure(parentClosure, closureBindings);
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
@@ -135,7 +139,8 @@ public class TestLambdaGenerator extends FunctionStruct {
 
 		final LispStruct result;
 		try {
-			result = new CharacterStruct(97);
+//			result = new CharacterStruct(97);
+			result = new TestGroundLambdaFunction(closure);
 		} finally {
 			for (final SymbolStruct<?> symbolToUnbind : symbolsToBind.keySet()) {
 				symbolToUnbind.unbindLexicalValue();

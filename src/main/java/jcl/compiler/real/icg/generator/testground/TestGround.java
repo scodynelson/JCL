@@ -15,6 +15,7 @@ import jcl.compiler.real.icg.generator.specialoperator.TagbodyLabel;
 import jcl.compiler.real.icg.generator.specialoperator.exception.GoException;
 import jcl.compiler.real.icg.generator.specialoperator.exception.ReturnFromException;
 import jcl.compiler.real.icg.generator.specialoperator.exception.ThrowException;
+import jcl.functions.Closure;
 import jcl.functions.expanders.SymbolMacroExpander;
 import jcl.compiler.real.struct.ValuesStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
@@ -254,8 +255,9 @@ public class TestGround {
 	}
 
 	private Object lambdaFunctionGen() {
+		final Closure parentClosure = null;
 
-		final FunctionStruct function = new TestGroundLambdaFunction();
+		final FunctionStruct function = new TestGroundLambdaFunction(parentClosure);
 		return function;
 	}
 
@@ -274,8 +276,9 @@ public class TestGround {
 	}
 
 	private Object lambdaFunctionCallGen() {
+		final Closure parentClosure = null;
 
-		final FunctionStruct function = new TestGroundLambdaFunction();
+		final FunctionStruct function = new TestGroundLambdaFunction(parentClosure);
 
 		final LispStruct[] args = new LispStruct[12345678];
 		final CharacterStruct arg1 = new CharacterStruct(97);
@@ -289,7 +292,8 @@ public class TestGround {
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct<?> symbol = pkg.findSymbol("FOO").getSymbol();
 
-		final FunctionStruct initForm = new TestGroundLambdaFunction();
+		final Closure parentClosure = null;
+		final FunctionStruct initForm = new TestGroundLambdaFunction(parentClosure);
 		symbol.bindFunction(initForm);
 
 		final LispStruct result;

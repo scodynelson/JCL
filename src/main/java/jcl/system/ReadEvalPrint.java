@@ -313,11 +313,9 @@ public class ReadEvalPrint {
 			final CompilerClassLoader cl = CompilerClassLoader.INSTANCE;
 
 			final Class<?> classLoaded = cl.loadClass(fileName, byteArray);
-			final Constructor<?> constructor = classLoaded.getDeclaredConstructor();
-			constructor.setAccessible(true);
 
+			final Constructor<?> constructor = classLoaded.getConstructor();
 			finalLambda = (FunctionStruct) constructor.newInstance();
-			constructor.setAccessible(false);
 
 //			LOGGER.info("GENERATED CLASS -> {}", printer.print(lambda));
 		}

@@ -287,7 +287,6 @@ public final class LoadFunction extends FunctionStruct {
 
 	private static LispStruct loadCompiledCode(final Path filespecPath, final boolean verbose, final boolean print) {
 
-		Constructor<?> constructor = null;
 		try {
 			final LoaderClassLoader cl = new LoaderClassLoader(filespecPath, verbose, print);
 			final Class<?> classLoaded = cl.loadMainClass();
@@ -295,9 +294,7 @@ public final class LoadFunction extends FunctionStruct {
 			if (classLoaded == null) {
 				return NILStruct.INSTANCE;
 			} else {
-				constructor = classLoaded.getConstructor();
-				constructor.setAccessible(true);
-
+				final Constructor<?> constructor = classLoaded.getConstructor();
 				final FunctionStruct function = (FunctionStruct) constructor.newInstance();
 				return function.apply();
 			}
@@ -307,10 +304,6 @@ public final class LoadFunction extends FunctionStruct {
 		} catch (final FileErrorException fee) {
 			LOGGER.error(fee.getMessage(), fee.getCause());
 			return NILStruct.INSTANCE;
-		} finally {
-			if (constructor != null) {
-				constructor.setAccessible(false);
-			}
 		}
 	}
 }

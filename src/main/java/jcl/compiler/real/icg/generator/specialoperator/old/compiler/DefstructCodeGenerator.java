@@ -151,7 +151,7 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 	// Making FooStruct$Factory
 	private static void icgCreateDefstructFactory(final String name, final JavaClassBuilder classBuilder) {
 
-		final ClassDef currentClass = new ClassDef(name, "", new Stack<>());
+		final ClassDef currentClass = new ClassDef(name, "");
 		final Stack<ClassDef> classStack = classBuilder.getClassStack();
 
 		classStack.push(currentClass);
@@ -217,7 +217,7 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 	// Making FooStruct$AbstractFactory
 	private static void icgCreateDefstructAbstractFactory(final String name, final JavaClassBuilder classBuilder) {
 
-		final ClassDef currentClass = new ClassDef(name, "", new Stack<>());
+		final ClassDef currentClass = new ClassDef(name, "");
 		final Stack<ClassDef> classStack = classBuilder.getClassStack();
 
 		classStack.push(currentClass);
@@ -282,7 +282,7 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 	// Making FooStruct
 	private void icgCreateDefstruct(final String name, final String[] implementing, final SymbolStruct<?> lispName, final JavaClassBuilder classBuilder) {
 
-		final ClassDef currentClass = new ClassDef(name, "", new Stack<>());
+		final ClassDef currentClass = new ClassDef(name, "");
 		final Stack<ClassDef> classStack = classBuilder.getClassStack();
 
 		classStack.push(currentClass);
@@ -335,7 +335,7 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 	// Making FooStructImpl$Factory
 	private static void icgCreateDefstructImplFactory(final String name, final int length, final JavaClassBuilder classBuilder) {
 
-		final ClassDef currentClass = new ClassDef(name, "", new Stack<>());
+		final ClassDef currentClass = new ClassDef(name, "");
 		final Stack<ClassDef> classStack = classBuilder.getClassStack();
 
 		classStack.push(currentClass);
@@ -413,7 +413,7 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 	                                         final DefstructSymbolStruct includedStruct, final int includedSlotNumber,
 	                                         final JavaClassBuilder classBuilder) {
 
-		final ClassDef currentClass = new ClassDef(name, "", new Stack<>());
+		final ClassDef currentClass = new ClassDef(name, "");
 		final Stack<ClassDef> classStack = classBuilder.getClassStack();
 
 		classStack.push(currentClass);

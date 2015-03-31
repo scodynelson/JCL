@@ -49,8 +49,6 @@ public class JavaClassBuilder {
 
 	private final Map<SymbolStruct<?>, Integer> fletFunctionStoresToBind = new HashMap<>();
 
-	private final Stack<Integer> closureStoreStack = new Stack<>();
-
 	public JavaClassBuilder() {
 		MacroLambda = false;
 		bindingEnvironment = Environment.NULL;
@@ -157,9 +155,5 @@ public class JavaClassBuilder {
 
 	public Map<SymbolStruct<?>, Integer> getFletFunctionStoresToBind() {
 		return fletFunctionStoresToBind;
-	}
-
-	public Stack<Integer> getClosureStoreStack() {
-		return closureStoreStack;
 	}
 }

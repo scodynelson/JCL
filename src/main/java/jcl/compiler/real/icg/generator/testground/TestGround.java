@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
@@ -178,7 +179,10 @@ public class TestGround {
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	private Object setqGen() {
+	private Object setqGen(final FunctionStruct function) {
+
+		final Closure currentClosure = function.getClosure();
+		final Map<SymbolStruct<?>, LispStruct> closureBindings = currentClosure.getClosureBindings();
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
@@ -189,6 +193,8 @@ public class TestGround {
 			value = valuesStruct.getPrimaryValue();
 		}
 		symbol.setValue(value);
+
+		closureBindings.put(symbol, value);
 
 		return value;
 	}

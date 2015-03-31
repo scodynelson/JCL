@@ -369,20 +369,12 @@ public class NewLambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			classBuilder.setCurrentClass(previousClassDef);
 			final MethodVisitor mv = previousClassDef.getMethodVisitor();
 
-			// TODO: why does it work with the parent stack but not with the new one???
-//			final Stack<Integer> closureStoreStack = classBuilder.getClosureStoreStack();
-//			final Integer currentClosureStore = closureStoreStack.peek();
-//
-//			mv.visitTypeInsn(Opcodes.NEW, fileName);
-//			mv.visitInsn(Opcodes.DUP);
-//			mv.visitVarInsn(Opcodes.ALOAD, currentClosureStore);
-
-			final String previousClassFileName = previousClassDef.getFileName();
+			final Stack<Integer> closureStoreStack = previousClassDef.getClosureStoreStack();
+			final Integer currentClosureStore = closureStoreStack.peek();
 
 			mv.visitTypeInsn(Opcodes.NEW, fileName);
 			mv.visitInsn(Opcodes.DUP);
-			mv.visitVarInsn(Opcodes.ALOAD, 0); // TODO: I know that '0' essentially means 'this'. But can we do better by passing the actual Store value around???
-			mv.visitFieldInsn(Opcodes.GETFIELD, previousClassFileName, "closure", "Ljcl/functions/Closure;");
+			mv.visitVarInsn(Opcodes.ALOAD, currentClosureStore);
 
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, fileName, "<init>", "(Ljcl/functions/Closure;)V", false);
 		}

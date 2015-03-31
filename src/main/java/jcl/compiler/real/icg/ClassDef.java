@@ -4,6 +4,8 @@
 
 package jcl.compiler.real.icg;
 
+import java.util.Stack;
+
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.FieldVisitor;
@@ -16,6 +18,8 @@ public class ClassDef {
 	private final String fileName;
 
 	private final String className;
+
+	private final Stack<Integer> closureStoreStack = new Stack<>();
 
 	private MethodVisitor methodVisitor;
 
@@ -76,5 +80,9 @@ public class ClassDef {
 
 	public void resetStores() {
 		nextAvailableStore = 0;
+	}
+
+	public Stack<Integer> getClosureStoreStack() {
+		return closureStoreStack;
 	}
 }

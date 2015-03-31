@@ -34,6 +34,15 @@ public class SetqCodeGenerator implements CodeGenerator<SetqStruct> {
 		final Stack<Environment> bindingStack = classBuilder.getBindingStack();
 		final Environment currentEnvironment = bindingStack.peek();
 
+		mv.visitVarInsn(Opcodes.ALOAD, 0); // TODO: I know that '0' essentially means 'this'. But can we do better by passing the actual Store value around???
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/FunctionStruct", "getClosure", "()Ljcl/functions/Closure;", false);
+		final Integer closureStore = currentClass.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, closureStore);
+		mv.visitVarInsn(Opcodes.ALOAD, closureStore);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/Closure", "getClosureBindings", "()Ljava/util/Map;", false);
+		final Integer closureBindingsStore = currentClass.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, closureBindingsStore);
+
 		final int packageStore = currentClass.getNextAvailableStore();
 		final int symbolStore = currentClass.getNextAvailableStore();
 		final int initFormStore = currentClass.getNextAvailableStore();
@@ -88,6 +97,12 @@ public class SetqCodeGenerator implements CodeGenerator<SetqStruct> {
 			} else {
 				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "setValue", "(Ljcl/LispStruct;)V", false);
 			}
+
+			mv.visitVarInsn(Opcodes.ALOAD, closureBindingsStore);
+			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
+			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", true);
+			mv.visitInsn(Opcodes.POP);
 		}
 
 		mv.visitVarInsn(Opcodes.ALOAD, initFormStore);

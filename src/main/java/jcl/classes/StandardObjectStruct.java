@@ -60,8 +60,7 @@ public abstract class StandardObjectStruct implements LispStruct {
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(documentation)
+		return new HashCodeBuilder().append(documentation)
 		                            .toHashCode();
 	}
 

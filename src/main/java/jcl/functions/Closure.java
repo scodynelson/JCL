@@ -36,34 +36,34 @@ public class Closure {
 		return closureBindings;
 	}
 
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().append(parent)
-		                            .append(closureBindings)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final Closure rhs = (Closure) obj;
-		return new EqualsBuilder().append(parent, rhs.parent)
-		                          .append(closureBindings, rhs.closureBindings)
-		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(parent)
-		                                                                .append(closureBindings)
-		                                                                .toString();
-	}
+//	@Override
+//	public int hashCode() {
+//		return new HashCodeBuilder().append(parent)
+//		                            .append(closureBindings)
+//		                            .toHashCode();
+//	}
+//
+//	@Override
+//	public boolean equals(final Object obj) {
+//		if (obj == null) {
+//			return false;
+//		}
+//		if (obj == this) {
+//			return true;
+//		}
+//		if (obj.getClass() != getClass()) {
+//			return false;
+//		}
+//		final Closure rhs = (Closure) obj;
+//		return new EqualsBuilder().append(parent, rhs.parent)
+//		                          .append(closureBindings, rhs.closureBindings)
+//		                          .isEquals();
+//	}
+//
+//	@Override
+//	public String toString() {
+//		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(parent)
+//		                                                                .append(closureBindings)
+//		                                                                .toString();
+//	}
 }

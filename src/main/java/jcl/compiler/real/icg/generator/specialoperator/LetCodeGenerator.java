@@ -103,11 +103,18 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 			}
 		}
 
-		mv.visitVarInsn(Opcodes.ALOAD, 0); // TODO: I know that '0' essentially means 'this'. But can we do better by passing the actual Store value around???
-		final String fileName = currentClass.getFileName();
-		mv.visitFieldInsn(Opcodes.GETFIELD, fileName, "closure", "Ljcl/functions/Closure;");
-		final Integer parentClosureStore = currentClass.getNextAvailableStore();
-		mv.visitVarInsn(Opcodes.ASTORE, parentClosureStore);
+		final Integer parentClosureStore;
+
+		final Stack<Integer> closureStoreStack = currentClass.getClosureStoreStack();
+		if (closureStoreStack.isEmpty()) {
+			mv.visitVarInsn(Opcodes.ALOAD, 0); // TODO: I know that '0' essentially means 'this'. But can we do better by passing the actual Store value around???
+			final String fileName = currentClass.getFileName();
+			mv.visitFieldInsn(Opcodes.GETFIELD, fileName, "closure", "Ljcl/functions/Closure;");
+			parentClosureStore = currentClass.getNextAvailableStore();
+			mv.visitVarInsn(Opcodes.ASTORE, parentClosureStore);
+		} else {
+			parentClosureStore = closureStoreStack.peek();
+		}
 
 		mv.visitTypeInsn(Opcodes.NEW, "jcl/functions/Closure");
 		mv.visitInsn(Opcodes.DUP);
@@ -116,7 +123,6 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 		final Integer newClosureStore = currentClass.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, newClosureStore);
 
-		final Stack<Integer> closureStoreStack = classBuilder.getClosureStoreStack();
 		closureStoreStack.push(newClosureStore);
 
 		for (final Map.Entry<Integer, Integer> functionStoreToBind : lexicalSymbolStoresToBind.entrySet()) {

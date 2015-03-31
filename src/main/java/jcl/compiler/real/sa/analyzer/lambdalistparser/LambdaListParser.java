@@ -1,7 +1,6 @@
-package jcl.compiler.real.sa.analyzer;
+package jcl.compiler.real.sa.analyzer.lambdalistparser;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -15,7 +14,6 @@ import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
@@ -30,15 +28,9 @@ import jcl.printer.Printer;
 import jcl.symbols.KeywordStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.types.T;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
-final class LambdaListParser {
+public class LambdaListParser {
 
 	@Autowired
 	private FormAnalyzer formAnalyzer;
@@ -46,87 +38,8 @@ final class LambdaListParser {
 	@Autowired
 	private Printer printer;
 
-	public OrdinaryLambdaListBindings parseOrdinaryLambdaList(final Environment environment, final ListStruct lambdaList,
-	                                                          final DeclareStruct declareElement) {
-
-		final List<? extends LispStruct> lambdaListJava = lambdaList.getAsJavaList();
-
-		final Iterator<? extends LispStruct> iterator = lambdaListJava.iterator();
-
-		LispStruct currentElement = null;
-		int position = 0;
-
-		List<RequiredBinding> requiredBindings = Collections.emptyList();
-		if (iterator.hasNext()) {
-			final RequiredParseResult requiredParseResult
-					= parseRequiredBindings(environment, iterator, position, declareElement);
-
-			requiredBindings = requiredParseResult.getRequiredBindings();
-			currentElement = requiredParseResult.getCurrentElement();
-			position = requiredParseResult.getCurrentPosition();
-		}
-
-		List<OptionalBinding> optionalBindings = Collections.emptyList();
-		if (CompilerConstants.OPTIONAL.equals(currentElement)) {
-			final OptionalParseResult optionalParseResult
-					= parseOptionalBindings(environment, iterator, position, declareElement);
-
-			optionalBindings = optionalParseResult.getOptionalBindings();
-			currentElement = optionalParseResult.getCurrentElement();
-			position = optionalParseResult.getCurrentPosition();
-		}
-
-		RestBinding restBinding = null;
-		if (CompilerConstants.REST.equals(currentElement)) {
-			final RestParseResult restParseResult
-					= parseRestBinding(environment, iterator, position, declareElement);
-
-			restBinding = restParseResult.getRestBinding();
-			currentElement = restParseResult.getCurrentElement();
-			position = restParseResult.getCurrentPosition();
-		}
-
-		List<KeyBinding> keyBindings = Collections.emptyList();
-		if (CompilerConstants.KEY.equals(currentElement)) {
-			final KeyParseResult keyParseResult
-					= parseKeyBindings(environment, iterator, position, declareElement);
-
-			keyBindings = keyParseResult.getKeyBindings();
-			currentElement = keyParseResult.getCurrentElement();
-			position = keyParseResult.getCurrentPosition();
-		}
-
-		boolean allowOtherKeys = false;
-		if (CompilerConstants.ALLOW_OTHER_KEYS.equals(currentElement)) {
-			allowOtherKeys = true;
-			if (iterator.hasNext()) {
-				currentElement = iterator.next();
-			}
-		}
-
-		List<AuxBinding> auxBindings = Collections.emptyList();
-		if (CompilerConstants.AUX.equals(currentElement)) {
-			final AuxParseResult auxParseResult
-					= parseAuxBindings(environment, iterator, position, declareElement);
-
-			auxBindings = auxParseResult.getAuxBindings();
-		}
-
-		if (iterator.hasNext()) {
-			final LispStruct element = iterator.next();
-			final String printedElement = printer.print(element);
-			throw new ProgramErrorException("Unexpected element at the end of Ordinary Lambda List: " + printedElement);
-		}
-
-		return new OrdinaryLambdaListBindings(requiredBindings, optionalBindings, restBinding, keyBindings, auxBindings, allowOtherKeys);
-	}
-
-	/*
-	 * BINDING PARSE METHODS
-	 */
-
-	private RequiredParseResult parseRequiredBindings(final Environment environment, final Iterator<? extends LispStruct> iterator,
-	                                                  final int position, final DeclareStruct declareElement) {
+	protected RequiredParseResult parseRequiredBindings(final Environment environment, final Iterator<? extends LispStruct> iterator,
+	                                                    final int position, final DeclareStruct declareElement) {
 
 		final List<RequiredBinding> requiredBindings = new ArrayList<>();
 		int currentPosition = position;
@@ -165,19 +78,8 @@ final class LambdaListParser {
 		return new RequiredParseResult(currentElement, currentPosition, requiredBindings);
 	}
 
-	private static boolean isLambdaListKeyword(final LispStruct lispStruct) {
-		return lispStruct.equals(CompilerConstants.AUX)
-				|| lispStruct.equals(CompilerConstants.ALLOW_OTHER_KEYS)
-				|| lispStruct.equals(CompilerConstants.KEY)
-				|| lispStruct.equals(CompilerConstants.OPTIONAL)
-				|| lispStruct.equals(CompilerConstants.REST)
-				|| lispStruct.equals(CompilerConstants.WHOLE)
-				|| lispStruct.equals(CompilerConstants.ENVIRONMENT)
-				|| lispStruct.equals(CompilerConstants.BODY);
-	}
-
-	private OptionalParseResult parseOptionalBindings(final Environment environment, final Iterator<? extends LispStruct> iterator,
-	                                                  final int position, final DeclareStruct declareElement) {
+	protected OptionalParseResult parseOptionalBindings(final Environment environment, final Iterator<? extends LispStruct> iterator,
+	                                                    final int position, final DeclareStruct declareElement) {
 
 		final List<OptionalBinding> optionalBindings = new ArrayList<>();
 		int currentPosition = position;
@@ -325,8 +227,8 @@ final class LambdaListParser {
 		return new OptionalParseResult(currentElement, currentPosition, optionalBindings);
 	}
 
-	private RestParseResult parseRestBinding(final Environment environment, final Iterator<? extends LispStruct> iterator,
-	                                         final int position, final DeclareStruct declareElement) {
+	protected RestParseResult parseRestBinding(final Environment environment, final Iterator<? extends LispStruct> iterator,
+	                                           final int position, final DeclareStruct declareElement) {
 
 		int currentPosition = position;
 
@@ -364,8 +266,8 @@ final class LambdaListParser {
 		return new RestParseResult(currentElement, currentPosition, restBinding);
 	}
 
-	private KeyParseResult parseKeyBindings(final Environment environment, final Iterator<? extends LispStruct> iterator,
-	                                        final int position, final DeclareStruct declareElement) {
+	protected KeyParseResult parseKeyBindings(final Environment environment, final Iterator<? extends LispStruct> iterator,
+	                                          final int position, final DeclareStruct declareElement) {
 
 		final List<KeyBinding> keyBindings = new ArrayList<>();
 		int currentPosition = position;
@@ -543,19 +445,8 @@ final class LambdaListParser {
 		return new KeyParseResult(currentElement, currentPosition, keyBindings);
 	}
 
-	private static KeywordStruct getKeywordStruct(final String symbolName) {
-
-		final PackageSymbolStruct symbol = GlobalPackageStruct.KEYWORD.findSymbol(symbolName);
-		if (symbol == null) {
-			return new KeywordStruct(symbolName);
-		}
-		// NOTE: This should be a safe cast because we're finding the symbol in the Keyword Package and they are only
-		//       this type of symbol.
-		return (KeywordStruct) symbol.getSymbol();
-	}
-
-	private AuxParseResult parseAuxBindings(final Environment environment, final Iterator<? extends LispStruct> iterator,
-	                                        final int position, final DeclareStruct declareElement) {
+	protected AuxParseResult parseAuxBindings(final Environment environment, final Iterator<? extends LispStruct> iterator,
+	                                          final int position, final DeclareStruct declareElement) {
 
 		final List<AuxBinding> auxBindings = new ArrayList<>();
 		int currentPosition = position;
@@ -635,278 +526,25 @@ final class LambdaListParser {
 		return new AuxParseResult(currentElement, currentPosition, auxBindings);
 	}
 
-	/*
-	 * BINDING PARSE RESULT OBJECTS
-	 */
-
-	private static class ParseResult {
-
-		private final LispStruct currentElement;
-
-		private final int currentPosition;
-
-		ParseResult(final LispStruct currentElement, final int currentPosition) {
-			this.currentElement = currentElement;
-			this.currentPosition = currentPosition;
-		}
-
-		public LispStruct getCurrentElement() {
-			return currentElement;
-		}
-
-		public int getCurrentPosition() {
-			return currentPosition;
-		}
-
-		@Override
-		public int hashCode() {
-			return new HashCodeBuilder().append(currentElement)
-			                            .append(currentPosition)
-			                            .toHashCode();
-		}
-
-		@Override
-		public boolean equals(final Object obj) {
-			if (obj == null) {
-				return false;
-			}
-			if (obj == this) {
-				return true;
-			}
-			if (obj.getClass() != getClass()) {
-				return false;
-			}
-			final ParseResult rhs = (ParseResult) obj;
-			return new EqualsBuilder().append(currentElement, rhs.currentElement)
-			                          .append(currentPosition, rhs.currentPosition)
-			                          .isEquals();
-		}
-
-		@Override
-		public String toString() {
-			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(currentElement)
-			                                                                .append(currentPosition)
-			                                                                .toString();
-		}
+	private static boolean isLambdaListKeyword(final LispStruct lispStruct) {
+		return lispStruct.equals(CompilerConstants.AUX)
+				|| lispStruct.equals(CompilerConstants.ALLOW_OTHER_KEYS)
+				|| lispStruct.equals(CompilerConstants.KEY)
+				|| lispStruct.equals(CompilerConstants.OPTIONAL)
+				|| lispStruct.equals(CompilerConstants.REST)
+				|| lispStruct.equals(CompilerConstants.WHOLE)
+				|| lispStruct.equals(CompilerConstants.ENVIRONMENT)
+				|| lispStruct.equals(CompilerConstants.BODY);
 	}
 
-	private static final class RequiredParseResult extends ParseResult {
+	private static KeywordStruct getKeywordStruct(final String symbolName) {
 
-		private final List<RequiredBinding> requiredBindings;
-
-		private RequiredParseResult(final LispStruct currentElement, final int currentPosition, final List<RequiredBinding> requiredBindings) {
-			super(currentElement, currentPosition);
-			this.requiredBindings = requiredBindings;
+		final PackageSymbolStruct symbol = GlobalPackageStruct.KEYWORD.findSymbol(symbolName);
+		if (symbol == null) {
+			return new KeywordStruct(symbolName);
 		}
-
-		public List<RequiredBinding> getRequiredBindings() {
-			return requiredBindings;
-		}
-
-		@Override
-		public int hashCode() {
-			return new HashCodeBuilder().appendSuper(super.hashCode())
-			                            .append(requiredBindings)
-			                            .toHashCode();
-		}
-
-		@Override
-		public boolean equals(final Object obj) {
-			if (obj == null) {
-				return false;
-			}
-			if (obj == this) {
-				return true;
-			}
-			if (obj.getClass() != getClass()) {
-				return false;
-			}
-			final RequiredParseResult rhs = (RequiredParseResult) obj;
-			return new EqualsBuilder().appendSuper(super.equals(obj))
-			                          .append(requiredBindings, rhs.requiredBindings)
-			                          .isEquals();
-		}
-
-		@Override
-		public String toString() {
-			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(requiredBindings)
-			                                                                .toString();
-		}
-	}
-
-	private static final class OptionalParseResult extends ParseResult {
-
-		private final List<OptionalBinding> optionalBindings;
-
-		private OptionalParseResult(final LispStruct currentElement, final int currentPosition, final List<OptionalBinding> optionalBindings) {
-			super(currentElement, currentPosition);
-			this.optionalBindings = optionalBindings;
-		}
-
-		public List<OptionalBinding> getOptionalBindings() {
-			return optionalBindings;
-		}
-
-		@Override
-		public int hashCode() {
-			return new HashCodeBuilder().appendSuper(super.hashCode())
-			                            .append(optionalBindings)
-			                            .toHashCode();
-		}
-
-		@Override
-		public boolean equals(final Object obj) {
-			if (obj == null) {
-				return false;
-			}
-			if (obj == this) {
-				return true;
-			}
-			if (obj.getClass() != getClass()) {
-				return false;
-			}
-			final OptionalParseResult rhs = (OptionalParseResult) obj;
-			return new EqualsBuilder().appendSuper(super.equals(obj))
-			                          .append(optionalBindings, rhs.optionalBindings)
-			                          .isEquals();
-		}
-
-		@Override
-		public String toString() {
-			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(optionalBindings)
-			                                                                .toString();
-		}
-	}
-
-	private static final class RestParseResult extends ParseResult {
-
-		private final RestBinding restBinding;
-
-		private RestParseResult(final LispStruct currentElement, final int currentPosition, final RestBinding restBinding) {
-			super(currentElement, currentPosition);
-			this.restBinding = restBinding;
-		}
-
-		public RestBinding getRestBinding() {
-			return restBinding;
-		}
-
-		@Override
-		public int hashCode() {
-			return new HashCodeBuilder().appendSuper(super.hashCode())
-			                            .append(restBinding)
-			                            .toHashCode();
-		}
-
-		@Override
-		public boolean equals(final Object obj) {
-			if (obj == null) {
-				return false;
-			}
-			if (obj == this) {
-				return true;
-			}
-			if (obj.getClass() != getClass()) {
-				return false;
-			}
-			final RestParseResult rhs = (RestParseResult) obj;
-			return new EqualsBuilder().appendSuper(super.equals(obj))
-			                          .append(restBinding, rhs.restBinding)
-			                          .isEquals();
-		}
-
-		@Override
-		public String toString() {
-			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(restBinding)
-			                                                                .toString();
-		}
-	}
-
-	private static final class KeyParseResult extends ParseResult {
-
-		private final List<KeyBinding> keyBindings;
-
-		private KeyParseResult(final LispStruct currentElement, final int currentPosition, final List<KeyBinding> keyBindings) {
-			super(currentElement, currentPosition);
-			this.keyBindings = keyBindings;
-		}
-
-		public List<KeyBinding> getKeyBindings() {
-			return keyBindings;
-		}
-
-		@Override
-		public int hashCode() {
-			return new HashCodeBuilder().appendSuper(super.hashCode())
-			                            .append(keyBindings)
-			                            .toHashCode();
-		}
-
-		@Override
-		public boolean equals(final Object obj) {
-			if (obj == null) {
-				return false;
-			}
-			if (obj == this) {
-				return true;
-			}
-			if (obj.getClass() != getClass()) {
-				return false;
-			}
-			final KeyParseResult rhs = (KeyParseResult) obj;
-			return new EqualsBuilder().appendSuper(super.equals(obj))
-			                          .append(keyBindings, rhs.keyBindings)
-			                          .isEquals();
-		}
-
-		@Override
-		public String toString() {
-			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(keyBindings)
-			                                                                .toString();
-		}
-	}
-
-	private static final class AuxParseResult extends ParseResult {
-
-		private final List<AuxBinding> auxBindings;
-
-		private AuxParseResult(final LispStruct currentElement, final int currentPosition, final List<AuxBinding> auxBindings) {
-			super(currentElement, currentPosition);
-			this.auxBindings = auxBindings;
-		}
-
-		public List<AuxBinding> getAuxBindings() {
-			return auxBindings;
-		}
-
-		@Override
-		public int hashCode() {
-			return new HashCodeBuilder().appendSuper(super.hashCode())
-			                            .append(auxBindings)
-			                            .toHashCode();
-		}
-
-		@Override
-		public boolean equals(final Object obj) {
-			if (obj == null) {
-				return false;
-			}
-			if (obj == this) {
-				return true;
-			}
-			if (obj.getClass() != getClass()) {
-				return false;
-			}
-			final AuxParseResult rhs = (AuxParseResult) obj;
-			return new EqualsBuilder().appendSuper(super.equals(obj))
-			                          .append(auxBindings, rhs.auxBindings)
-			                          .isEquals();
-		}
-
-		@Override
-		public String toString() {
-			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(auxBindings)
-			                                                                .toString();
-		}
+		// NOTE: This should be a safe cast because we're finding the symbol in the Keyword Package and they are only
+		//       this type of symbol.
+		return (KeywordStruct) symbol.getSymbol();
 	}
 }

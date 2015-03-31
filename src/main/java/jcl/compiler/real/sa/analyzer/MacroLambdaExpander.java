@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.compiler.real.sa.analyzer;
 
 import java.util.ArrayList;
@@ -18,7 +22,7 @@ import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAndDocStringAnalyzer;
-import jcl.compiler.real.sa.analyzer.lambdalistparser.OrdinaryLambdaListParser;
+import jcl.compiler.real.sa.analyzer.lambdalistparser.MacroLambdaListParser;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.JavaClassNameDeclarationStruct;
@@ -39,12 +43,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
+public class MacroLambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 
 	private static final long serialVersionUID = -7592502247452528911L;
 
 	@Autowired
-	private OrdinaryLambdaListParser ordinaryLambdaListParser;
+	private MacroLambdaListParser macroLambdaListParser;
 
 	@Autowired
 	private FormAnalyzer formAnalyzer;
@@ -101,7 +105,7 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 			fileName = javaClassNameDeclaration.getClassName();
 		}
 
-		final OrdinaryLambdaListBindings parsedLambdaList = ordinaryLambdaListParser.parseOrdinaryLambdaList(lambdaEnvironment, parameters, declare);
+		final OrdinaryLambdaListBindings parsedLambdaList = macroLambdaListParser.parseMacroLambdaList(lambdaEnvironment, parameters, declare);
 
 		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 		final List<LispStruct> newLambdaBodyForms = getNewStartingLambdaBody(parsedLambdaList, bodyForms);
@@ -210,7 +214,7 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 		if (obj.getClass() != getClass()) {
 			return false;
 		}
-		final LambdaExpander rhs = (LambdaExpander) obj;
+		final MacroLambdaExpander rhs = (MacroLambdaExpander) obj;
 		return new EqualsBuilder().appendSuper(super.equals(obj))
 		                          .append(formAnalyzer, rhs.formAnalyzer)
 		                          .append(bodyWithDeclaresAndDocStringAnalyzer, rhs.bodyWithDeclaresAndDocStringAnalyzer)

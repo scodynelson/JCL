@@ -13,10 +13,14 @@ import jcl.compiler.real.functions.MacroExpand1Function;
 import jcl.compiler.real.functions.MacroExpandFunction;
 import jcl.functions.functions.ApplyFunction;
 import jcl.functions.functions.FuncallFunction;
+import jcl.lists.functions.AppendFunction;
 import jcl.lists.functions.AtomFunction;
 import jcl.lists.functions.CarFunction;
 import jcl.lists.functions.CdrFunction;
+import jcl.lists.functions.ConsFunction;
 import jcl.lists.functions.ListFunction;
+import jcl.lists.functions.ListStarFunction;
+import jcl.lists.functions.NconcFunction;
 import jcl.lists.functions.NullFunction;
 import jcl.numbers.NumberConstants;
 import jcl.numbers.NumberVariables;
@@ -209,7 +213,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> ALPHA_CHAR_P = null;
 	SymbolStruct<?> ALPHANUMERICP = null;
 	SymbolStruct<?> AND = null;
-	SymbolStruct<?> APPEND = new SymbolStruct<>("APPEND", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct<?> APPEND = AppendFunction.APPEND;
 	SymbolStruct<?> APPLY = ApplyFunction.APPLY;
 	SymbolStruct<?> APROPOS = null;
 	SymbolStruct<?> APROPOS_LIST = null;
@@ -357,7 +361,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> COND = null;
 	SymbolStruct<?> CONDITION = null;
 	SymbolStruct<?> CONJUGATE = null;
-	SymbolStruct<?> CONS = new SymbolStruct<>("CONS", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct<?> CONS = ConsFunction.CONS;
 	SymbolStruct<?> CONSP = null;
 	SymbolStruct<?> CONSTANTLY = null;
 	SymbolStruct<?> CONSTANTP = null;
@@ -479,7 +483,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> FIND_METHOD = null;
 	SymbolStruct<?> FIND_PACKAGE = null;
 	SymbolStruct<?> FIND_RESTART = null;
-	SymbolStruct<?> FIND_SYMBOL = new SymbolStruct<>("FIND-SYMBOL", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct<?> FIND_SYMBOL = null;
 	SymbolStruct<?> FINISH_OUTPUT = null;
 	SymbolStruct<?> FIRST = null;
 	SymbolStruct<?> FIXNUM = null;
@@ -573,7 +577,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> LISP_IMPLEMENTATION_TYPE = null;
 	SymbolStruct<?> LISP_IMPLEMENTATION_VERSION = null;
 	SymbolStruct<?> LIST = ListFunction.LIST;
-	SymbolStruct<?> LIST_STAR = new SymbolStruct<>("LIST*", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct<?> LIST_STAR = ListStarFunction.LIST_STAR;
 	SymbolStruct<?> LIST_ALL_PACKAGES = null;
 	SymbolStruct<?> LIST_LENGTH = null;
 	SymbolStruct<?> LISTEN = null;
@@ -631,7 +635,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> MAKE_STRING = null;
 	SymbolStruct<?> MAKE_STRING_INPUT_STREAM = null;
 	SymbolStruct<?> MAKE_STRING_OUTPUT_STREAM = null;
-	SymbolStruct<?> MAKE_SYMBOL = new SymbolStruct<>("MAKE-SYMBOL", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct<?> MAKE_SYMBOL = null;
 	SymbolStruct<?> MAKE_SYNONYM_STREAM = null;
 	SymbolStruct<?> MAKE_TWO_WAY_STREAM = null;
 	SymbolStruct<?> MAKUNBOUND = null;
@@ -668,7 +672,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> NAME_CHAR = null;
 	SymbolStruct<?> NAMESTRING = null;
 	SymbolStruct<?> NBUTLAST = null;
-	SymbolStruct<?> NCONC = new SymbolStruct<>("NCONC", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct<?> NCONC = NconcFunction.NCONC;
 	SymbolStruct<?> NEXT_METHOD_P = null;
 	SymbolStruct<?> NINTERSECTION = null;
 	SymbolStruct<?> NINTH = null;

@@ -232,7 +232,9 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 			LispStruct possiblyKeywordNexArgument = nextArgument;
 			if (nextArgument instanceof SymbolStruct) {
 				final SymbolStruct<?> symbolArgument = (SymbolStruct) nextArgument;
-				possiblyKeywordNexArgument = getKeywordStruct(symbolArgument.getName());
+				if (!keysToBindings.isEmpty()) {
+					possiblyKeywordNexArgument = getKeywordStruct(symbolArgument.getName());
+				}
 			}
 
 			if (possiblyKeywordNexArgument instanceof KeywordStruct) {

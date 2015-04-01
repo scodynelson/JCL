@@ -17,40 +17,35 @@ import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindin
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.functions.FunctionStruct;
-import jcl.lists.NullStruct;
+import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.BooleanStruct;
-import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
-import jcl.symbols.TStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class NullFunction extends FunctionStruct {
+public final class ListStarFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> NULL = new SymbolStruct<>("NULL", GlobalPackageStruct.COMMON_LISP);
+	public static final SymbolStruct<?> LIST_STAR = new SymbolStruct<>("LIST*", GlobalPackageStruct.COMMON_LISP);
 
-	private static final long serialVersionUID = 7471817337078296980L;
+	private static final long serialVersionUID = -5968990222195634426L;
 
-	private NullFunction() {
-		super("Returns T if object is the empty list; otherwise, returns NIL.", getInitLambdaListBindings());
+	private ListStarFunction() {
+		super("Returns a list containing the supplied objects where the last argument becomes the cdr of the last cons constructed.", getInitLambdaListBindings());
 	}
 
 	@PostConstruct
 	private void init() {
-		NULL.setFunction(this);
+		LIST_STAR.setFunction(this);
 	}
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
-		final SymbolStruct<?> listArgSymbol = new SymbolStruct<>("OBJECT", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation listArgAllocation = new ParameterAllocation(0);
-		final RequiredBinding requiredBinding = new RequiredBinding(listArgSymbol, listArgAllocation);
-		final List<RequiredBinding> requiredBindings = Collections.singletonList(requiredBinding);
-
+		final List<RequiredBinding> requiredBindings = Collections.emptyList();
 		final List<OptionalBinding> optionalBindings = Collections.emptyList();
 
-		final RestBinding restBinding = null;
+		final SymbolStruct<?> objectRestArgSymbol = new SymbolStruct<>("OBJECTS", GlobalPackageStruct.COMMON_LISP);
+		final ParameterAllocation objectRestArgArgAllocation = new ParameterAllocation(0);
+		final RestBinding restBinding = new RestBinding(objectRestArgSymbol, objectRestArgArgAllocation);
 
 		final List<KeyBinding> keyBindings = Collections.emptyList();
 		final boolean allowOtherKeys = false;
@@ -63,14 +58,13 @@ public final class NullFunction extends FunctionStruct {
 	public LispStruct apply(final LispStruct... lispStructs) {
 		getFunctionBindings(lispStructs);
 
-		return nullFn(lispStructs[0]);
+		return listStar(lispStructs);
 	}
 
-	public BooleanStruct nullFn(final LispStruct object) {
-		return nullFnJavaBoolean(object) ? TStruct.INSTANCE : NILStruct.INSTANCE;
-	}
-
-	public boolean nullFnJavaBoolean(final LispStruct object) {
-		return NullStruct.INSTANCE.equals(object) || NILStruct.INSTANCE.equals(object);
+	public LispStruct listStar(final LispStruct... lispStructs) {
+		if (lispStructs.length == 1) {
+			return lispStructs[0];
+		}
+		return ListStruct.buildDottedList(lispStructs);
 	}
 }

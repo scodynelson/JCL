@@ -4,6 +4,7 @@
 
 package jcl.lists.functions;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -17,36 +18,42 @@ import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindin
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.functions.FunctionStruct;
+import jcl.lists.ConsStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.BooleanStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
-import jcl.symbols.TStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class NullFunction extends FunctionStruct {
+public final class ConsFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> NULL = new SymbolStruct<>("NULL", GlobalPackageStruct.COMMON_LISP);
+	public static final SymbolStruct<?> CONS = new SymbolStruct<>("CONS", GlobalPackageStruct.COMMON_LISP);
 
-	private static final long serialVersionUID = 7471817337078296980L;
+	private static final long serialVersionUID = 1242798660975184815L;
 
-	private NullFunction() {
-		super("Returns T if object is the empty list; otherwise, returns NIL.", getInitLambdaListBindings());
+	private ConsFunction() {
+		super("Creates a fresh cons, the car of which is object-1 and the cdr of which is object-2.", getInitLambdaListBindings());
 	}
 
 	@PostConstruct
 	private void init() {
-		NULL.setFunction(this);
+		CONS.setFunction(this);
 	}
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
-		final SymbolStruct<?> listArgSymbol = new SymbolStruct<>("OBJECT", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation listArgAllocation = new ParameterAllocation(0);
-		final RequiredBinding requiredBinding = new RequiredBinding(listArgSymbol, listArgAllocation);
-		final List<RequiredBinding> requiredBindings = Collections.singletonList(requiredBinding);
+		final List<RequiredBinding> requiredBindings = new ArrayList<>();
+
+		final SymbolStruct<?> object1ArgSymbol = new SymbolStruct<>("OBJECT-1", GlobalPackageStruct.COMMON_LISP);
+		final ParameterAllocation object1ArgAllocation = new ParameterAllocation(0);
+		final RequiredBinding object1RequiredBinding = new RequiredBinding(object1ArgSymbol, object1ArgAllocation);
+		requiredBindings.add(object1RequiredBinding);
+
+		final SymbolStruct<?> object2ArgSymbol = new SymbolStruct<>("OBJECT-2", GlobalPackageStruct.COMMON_LISP);
+		final ParameterAllocation object2ArgAllocation = new ParameterAllocation(1);
+		final RequiredBinding object2RequiredBinding = new RequiredBinding(object2ArgSymbol, object2ArgAllocation);
+		requiredBindings.add(object2RequiredBinding);
 
 		final List<OptionalBinding> optionalBindings = Collections.emptyList();
 
@@ -63,14 +70,13 @@ public final class NullFunction extends FunctionStruct {
 	public LispStruct apply(final LispStruct... lispStructs) {
 		getFunctionBindings(lispStructs);
 
-		return nullFn(lispStructs[0]);
+		return cons(lispStructs[0], lispStructs[1]);
 	}
 
-	public BooleanStruct nullFn(final LispStruct object) {
-		return nullFnJavaBoolean(object) ? TStruct.INSTANCE : NILStruct.INSTANCE;
-	}
-
-	public boolean nullFnJavaBoolean(final LispStruct object) {
-		return NullStruct.INSTANCE.equals(object) || NILStruct.INSTANCE.equals(object);
+	public LispStruct cons(final LispStruct object1, final LispStruct object2) {
+		if (NILStruct.INSTANCE.equals(object2)) {
+			return new ConsStruct(object1, NullStruct.INSTANCE);
+		}
+		return new ConsStruct(object1, object2);
 	}
 }

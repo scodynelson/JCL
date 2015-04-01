@@ -58,7 +58,7 @@ public final class ListFunction extends FunctionStruct {
 	public LispStruct apply(final LispStruct... lispStructs) {
 		getFunctionBindings(lispStructs);
 
-		return ListStruct.buildProperList(lispStructs);
+		return list(lispStructs);
 	}
 
 	public LispStruct list(final LispStruct... lispStructs) {

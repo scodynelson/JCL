@@ -107,7 +107,7 @@ public class ConsStruct extends ListStruct {
 
 	@Override
 	public ListStruct getLast() {
-		return (cdr instanceof ConsStruct) ? ((ConsStruct) cdr).getLast() : new ConsStruct(car, cdr);
+		return (cdr instanceof ConsStruct) ? ((ConsStruct) cdr).getLast() : this;
 	}
 
 	@Override

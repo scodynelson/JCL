@@ -23,6 +23,7 @@ import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ConsStruct;
 import jcl.lists.NullStruct;
+import jcl.numbers.ComplexStruct;
 import jcl.numbers.FloatStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.RatioStruct;
@@ -144,6 +145,12 @@ public class TestGround {
 		valuesList.add(value);
 
 		return new ValuesStruct(valuesList);
+	}
+
+	private Object complexGen() {
+		final IntegerStruct real = new IntegerStruct(BigInteger.ONE);
+		final IntegerStruct imaginary = new IntegerStruct(BigInteger.ZERO);
+		return new ComplexStruct(real, imaginary);
 	}
 
 	private Object consGen() {

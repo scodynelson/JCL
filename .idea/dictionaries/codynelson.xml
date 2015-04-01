@@ -106,6 +106,7 @@
       <w>getf</w>
       <w>gethash</w>
       <w>greaterp</w>
+      <w>hashtables</w>
       <w>homedir</w>
       <w>imagpart</w>
       <w>incf</w>
@@ -128,6 +129,7 @@
       <w>logtest</w>
       <w>logxor</w>
       <w>macroexpand</w>
+      <w>macrofunction</w>
       <w>macrolet</w>
       <w>makunbound</w>
       <w>mapc</w>

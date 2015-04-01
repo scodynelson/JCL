@@ -13,13 +13,13 @@ import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
+import jcl.numbers.ComplexStruct;
 import jcl.numbers.RealStruct;
 import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
-import jcl.system.CommonLispSymbols;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -92,7 +92,7 @@ public class SharpCReaderMacroFunction extends ReaderMacroFunction {
 			throw new ReaderErrorException("Only real numbers are valid tokens for #c. Got: " + printedImaginaryToken);
 		}
 
-		return ListStruct.buildProperList(CommonLispSymbols.COMPLEX, realToken, imaginaryToken);
+		return new ComplexStruct((RealStruct) realToken, (RealStruct) imaginaryToken);
 	}
 
 	@Override

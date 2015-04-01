@@ -82,7 +82,7 @@
 		<entry key="jcl.lists.NullStruct" value-ref="nullCodeGenerator"/>
 		<entry key="jcl.lists.ConsStruct" value-ref="consCodeGenerator"/>
 
-		<!--<entry key="jcl.numbers.ComplexStruct" value-ref="complexCodeGenerator"/>-->
+		<entry key="jcl.numbers.ComplexStruct" value-ref="complexCodeGenerator"/>
 		<entry key="jcl.numbers.FloatStruct" value-ref="floatCodeGenerator"/>
 		<entry key="jcl.numbers.IntegerStruct" value-ref="integerCodeGenerator"/>
 		<entry key="jcl.numbers.RatioStruct" value-ref="ratioCodeGenerator"/>

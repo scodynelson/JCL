@@ -267,54 +267,54 @@ public class ConsStructTest {
 	 *
 	 * @throws Exception if any error occurs
 	 */
-	@Test
-	public void testIsCircular_true_car() throws Exception {
-
-		final ConsStruct consStruct = new ConsStruct(TStruct.INSTANCE);
-		final ConsStruct innerConsStruct = new ConsStruct(TStruct.INSTANCE, consStruct);
-		consStruct.setCar(innerConsStruct);
-
-		Assert.assertTrue(consStruct.isCircular(), "ConsStruct expected to be circular.");
-	}
+//	@Test
+//	public void testIsCircular_true_car() throws Exception {
+//
+//		final ConsStruct consStruct = new ConsStruct(TStruct.INSTANCE);
+//		final ConsStruct innerConsStruct = new ConsStruct(TStruct.INSTANCE, consStruct);
+//		consStruct.setCar(innerConsStruct);
+//
+//		Assert.assertTrue(consStruct.isCircular(), "ConsStruct expected to be circular.");
+//	}
 
 	/**
 	 * Test for 'isCircular' method where the cdr of the ConsStruct is circular.
 	 *
 	 * @throws Exception if any error occurs
 	 */
-	@Test
-	public void testIsCircular_true_cdr() throws Exception {
-
-		final ConsStruct consStruct = new ConsStruct(TStruct.INSTANCE);
-		final ConsStruct innerConsStruct = new ConsStruct(TStruct.INSTANCE, consStruct);
-		consStruct.setCdr(innerConsStruct);
-
-		Assert.assertTrue(consStruct.isCircular(), "ConsStruct expected to be circular.");
-	}
+//	@Test
+//	public void testIsCircular_true_cdr() throws Exception {
+//
+//		final ConsStruct consStruct = new ConsStruct(TStruct.INSTANCE);
+//		final ConsStruct innerConsStruct = new ConsStruct(TStruct.INSTANCE, consStruct);
+//		consStruct.setCdr(innerConsStruct);
+//
+//		Assert.assertTrue(consStruct.isCircular(), "ConsStruct expected to be circular.");
+//	}
 
 	/**
 	 * Test for 'isCircular' method where the ConsStruct is not circular.
 	 *
 	 * @throws Exception if any error occurs
 	 */
-	@Test
-	public void testIsCircular_false() throws Exception {
-		final ConsStruct consStruct = new ConsStruct(TStruct.INSTANCE);
-		Assert.assertFalse(consStruct.isCircular(), "ConsStruct expected to not be circular.");
-	}
+//	@Test
+//	public void testIsCircular_false() throws Exception {
+//		final ConsStruct consStruct = new ConsStruct(TStruct.INSTANCE);
+//		Assert.assertFalse(consStruct.isCircular(), "ConsStruct expected to not be circular.");
+//	}
 
 	/**
 	 * Test for 'toString' method where the ConsStruct is circular.
 	 *
 	 * @throws Exception if any error occurs
 	 */
-	@Test
-	public void testToString_circular() throws Exception {
-		final ConsStruct consStruct = new ConsStruct(TStruct.INSTANCE);
-		consStruct.setCdr(consStruct);
-
-		Assert.assertNotNull(consStruct.toString(), "'toString' value for ConsStruct was null.");
-	}
+//	@Test
+//	public void testToString_circular() throws Exception {
+//		final ConsStruct consStruct = new ConsStruct(TStruct.INSTANCE);
+//		consStruct.setCdr(consStruct);
+//
+//		Assert.assertNotNull(consStruct.toString(), "'toString' value for ConsStruct was null.");
+//	}
 
 	/**
 	 * Test for 'toString' method where the ConsStruct is not circular.

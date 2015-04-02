@@ -18,6 +18,7 @@ import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindin
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
+import jcl.compiler.real.struct.ValuesStruct;
 import jcl.functions.Closure;
 import jcl.functions.FunctionStruct;
 import jcl.packages.GlobalPackageStruct;
@@ -120,7 +121,11 @@ public class TestLambdaGenerator extends FunctionStruct {
 
 		for (final Map.Entry<SymbolStruct<?>, LispStruct> symbolToBind : symbolsToBind.entrySet()) {
 			final SymbolStruct symbol = symbolToBind.getKey();
-			final LispStruct value = symbolToBind.getValue();
+			LispStruct value = symbolToBind.getValue();
+			if (value instanceof ValuesStruct) {
+				final ValuesStruct valuesStruct = (ValuesStruct) value;
+				value = valuesStruct.getPrimaryValue();
+			}
 			symbol.bindLexicalValue(value);
 		}
 

@@ -12,13 +12,11 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class MacroLambdaListBindings implements Serializable {
+public class DestructuringLambdaListBindings implements Serializable {
 
-	private static final long serialVersionUID = 5857625809333286733L;
+	private static final long serialVersionUID = -2835999831080133844L;
 
 	private final WholeBinding wholeBinding;
-
-	private final EnvironmentBinding environmentBinding;
 
 	private final List<RequiredBinding> requiredBindings;
 
@@ -34,13 +32,11 @@ public class MacroLambdaListBindings implements Serializable {
 
 	private final boolean allowOtherKeys;
 
-	public MacroLambdaListBindings(final WholeBinding wholeBinding, final EnvironmentBinding environmentBinding,
-	                               final List<RequiredBinding> requiredBindings, final List<OptionalBinding> optionalBindings,
-	                               final RestBinding restBinding, final BodyBinding bodyBinding,
-	                               final List<KeyBinding> keyBindings, final List<AuxBinding> auxBindings,
-	                               final boolean allowOtherKeys) {
+	public DestructuringLambdaListBindings(final WholeBinding wholeBinding, final List<RequiredBinding> requiredBindings,
+	                                       final List<OptionalBinding> optionalBindings, final RestBinding restBinding,
+	                                       final BodyBinding bodyBinding, final List<KeyBinding> keyBindings,
+	                                       final List<AuxBinding> auxBindings, final boolean allowOtherKeys) {
 		this.wholeBinding = wholeBinding;
-		this.environmentBinding = environmentBinding;
 		this.requiredBindings = requiredBindings;
 		this.optionalBindings = optionalBindings;
 		this.restBinding = restBinding;
@@ -52,10 +48,6 @@ public class MacroLambdaListBindings implements Serializable {
 
 	public WholeBinding getWholeBinding() {
 		return wholeBinding;
-	}
-
-	public EnvironmentBinding getEnvironmentBinding() {
-		return environmentBinding;
 	}
 
 	public List<RequiredBinding> getRequiredBindings() {
@@ -89,7 +81,6 @@ public class MacroLambdaListBindings implements Serializable {
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder().append(wholeBinding)
-		                            .append(environmentBinding)
 		                            .append(requiredBindings)
 		                            .append(optionalBindings)
 		                            .append(restBinding)
@@ -111,9 +102,8 @@ public class MacroLambdaListBindings implements Serializable {
 		if (obj.getClass() != getClass()) {
 			return false;
 		}
-		final MacroLambdaListBindings rhs = (MacroLambdaListBindings) obj;
+		final DestructuringLambdaListBindings rhs = (DestructuringLambdaListBindings) obj;
 		return new EqualsBuilder().append(wholeBinding, rhs.wholeBinding)
-		                          .append(environmentBinding, rhs.environmentBinding)
 		                          .append(requiredBindings, rhs.requiredBindings)
 		                          .append(optionalBindings, rhs.optionalBindings)
 		                          .append(restBinding, rhs.restBinding)
@@ -127,7 +117,6 @@ public class MacroLambdaListBindings implements Serializable {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(wholeBinding)
-		                                                                .append(environmentBinding)
 		                                                                .append(requiredBindings)
 		                                                                .append(optionalBindings)
 		                                                                .append(restBinding)

@@ -9,11 +9,11 @@ import jcl.compiler.real.environment.binding.ParameterBinding;
 import jcl.symbols.SymbolStruct;
 import jcl.types.List;
 
-public class WholeBinding extends ParameterBinding {
+public class EnvironmentBinding extends ParameterBinding {
 
-	private static final long serialVersionUID = 1375721535668777719L;
+	private static final long serialVersionUID = 7762075133466719180L;
 
-	public WholeBinding(final SymbolStruct<?> symbolStruct, final ParameterAllocation allocation) {
+	public EnvironmentBinding(final SymbolStruct<?> symbolStruct, final ParameterAllocation allocation) {
 		super(symbolStruct, allocation, List.INSTANCE, null);
 	}
 }

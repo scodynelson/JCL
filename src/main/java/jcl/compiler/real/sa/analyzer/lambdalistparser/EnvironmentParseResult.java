@@ -5,7 +5,7 @@
 package jcl.compiler.real.sa.analyzer.lambdalistparser;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.Environment;
+import jcl.compiler.real.environment.binding.lambdalist.EnvironmentBinding;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -13,21 +13,21 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 final class EnvironmentParseResult extends ParseResult {
 
-	private final Environment environment;
+	private final EnvironmentBinding environmentBinding;
 
-	EnvironmentParseResult(final LispStruct currentElement, final int currentPosition, final Environment environment) {
+	EnvironmentParseResult(final LispStruct currentElement, final int currentPosition, final EnvironmentBinding environmentBinding) {
 		super(currentElement, currentPosition);
-		this.environment = environment;
+		this.environmentBinding = environmentBinding;
 	}
 
-	Environment getEnvironment() {
-		return environment;
+	EnvironmentBinding getEnvironmentBinding() {
+		return environmentBinding;
 	}
 
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(environment)
+		                            .append(environmentBinding)
 		                            .toHashCode();
 	}
 
@@ -44,13 +44,13 @@ final class EnvironmentParseResult extends ParseResult {
 		}
 		final EnvironmentParseResult rhs = (EnvironmentParseResult) obj;
 		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(environment, rhs.environment)
+		                          .append(environmentBinding, rhs.environmentBinding)
 		                          .isEquals();
 	}
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(environment)
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(environmentBinding)
 		                                                                .toString();
 	}
 }

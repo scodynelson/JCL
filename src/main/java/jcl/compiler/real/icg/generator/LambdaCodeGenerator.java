@@ -224,6 +224,13 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			final int functionBindingsStore = currentClass.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, functionBindingsStore);
 
+			mv.visitVarInsn(Opcodes.ALOAD, closureBindingsStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "keySet", "()Ljava/util/Set;", true);
+			mv.visitVarInsn(Opcodes.ALOAD, functionBindingsStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "keySet", "()Ljava/util/Set;", true);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Set", "removeAll", "(Ljava/util/Collection;)Z", true);
+			mv.visitInsn(Opcodes.POP);
+
 			mv.visitVarInsn(Opcodes.ALOAD, functionBindingsStore);
 			mv.visitVarInsn(Opcodes.ALOAD, closureBindingsStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "putAll", "(Ljava/util/Map;)V", true);

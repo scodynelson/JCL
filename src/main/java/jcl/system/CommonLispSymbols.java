@@ -1094,4 +1094,7 @@ public interface CommonLispSymbols {
 	KeywordStruct PRINT_KEYWORD = new KeywordStruct("PRINT");
 	KeywordStruct IF_DOES_NOT_EXIST_KEYWORD = new KeywordStruct("IF-DOES-NOT-EXIST");
 	KeywordStruct EXTERNAL_FORMAT_KEYWORD = new KeywordStruct("EXTERNAL-FORMAT");
+
+	// Lambda List Keywords
+	KeywordStruct ALLOW_OTHER_KEYS = new KeywordStruct("ALLOW-OTHER-KEYS");
 }

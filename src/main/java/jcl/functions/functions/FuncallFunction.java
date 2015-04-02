@@ -69,6 +69,8 @@ public class FuncallFunction extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
+		getFunctionBindings(lispStructs);
+
 		final List<LispStruct> lispStructsAsList = Arrays.asList(lispStructs);
 
 		final LispStruct functionDesignator = lispStructsAsList.get(0);

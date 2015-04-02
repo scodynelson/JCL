@@ -21,12 +21,14 @@ import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
+import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageSymbolStruct;
 import jcl.symbols.KeywordStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
+import jcl.system.CommonLispSymbols;
 import jcl.types.Function;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -174,7 +176,7 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 		final List<OptionalBinding> optionalBindings = lambdaListBindings.getOptionalBindings();
 		final RestBinding restBinding = lambdaListBindings.getRestBinding();
 		final List<KeyBinding> keyBindings = lambdaListBindings.getKeyBindings();
-		final boolean allowOtherKeys = lambdaListBindings.isAllowOtherKeys();
+		boolean allowOtherKeys = lambdaListBindings.isAllowOtherKeys();
 
 		final Map<SymbolStruct<?>, LispStruct> symbolsToBind = new HashMap<>();
 
@@ -237,11 +239,22 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 				}
 			}
 
-			if (possiblyKeywordNexArgument instanceof KeywordStruct) {
-				restList.add(nextArgument);
+			if (nextArgument instanceof KeywordStruct) {
+				if (CommonLispSymbols.ALLOW_OTHER_KEYS.equals(possiblyKeywordNexArgument)) {
+					restList.add(nextArgument);
+
+					final LispStruct allowOtherKeysValue = functionArgumentsIterator.next();
+					if (!allowOtherKeysValue.equals(NullStruct.INSTANCE) && !allowOtherKeysValue.equals(NILStruct.INSTANCE)) {
+						allowOtherKeys = true;
+					}
+					restList.add(allowOtherKeysValue);
+					continue;
+				}
 
 				final KeywordStruct keywordArgument = (KeywordStruct) possiblyKeywordNexArgument;
 				if (keysToBindings.containsKey(keywordArgument)) {
+					restList.add(nextArgument);
+
 					final KeyBinding keyBinding = keysToBindings.remove(keywordArgument);
 
 					final LispStruct keyInitForm;
@@ -264,8 +277,11 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 
 					restList.add(keyInitForm);
 				} else if (keys.contains(keywordArgument) || allowOtherKeys) {
+					restList.add(nextArgument);
 					final LispStruct keyInitForm = functionArgumentsIterator.next();
 					restList.add(keyInitForm);
+				} else if (keysToBindings.isEmpty()) {
+					restList.add(nextArgument);
 				} else {
 					throw new ProgramErrorException("Keyword argument not found in '" + functionClassName + "' function definition: :" + keywordArgument.getName());
 				}

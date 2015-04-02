@@ -19,9 +19,7 @@ import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ConsStruct;
-import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
-import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
@@ -74,9 +72,6 @@ public final class ConsFunction extends FunctionStruct {
 	}
 
 	public LispStruct cons(final LispStruct object1, final LispStruct object2) {
-		if (NILStruct.INSTANCE.equals(object2)) {
-			return new ConsStruct(object1, NullStruct.INSTANCE);
-		}
 		return new ConsStruct(object1, object2);
 	}
 }

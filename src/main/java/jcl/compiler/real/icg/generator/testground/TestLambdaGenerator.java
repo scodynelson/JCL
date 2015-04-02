@@ -115,6 +115,7 @@ public class TestLambdaGenerator extends FunctionStruct {
 		final Map<SymbolStruct<?>, LispStruct> closureBindings = getClosureBindings();
 		final Map<SymbolStruct<?>, LispStruct> symbolsToBind = getFunctionBindings(lispStructs);
 
+		closureBindings.keySet().removeAll(symbolsToBind.keySet());
 		symbolsToBind.putAll(closureBindings);
 
 		for (final Map.Entry<SymbolStruct<?>, LispStruct> symbolToBind : symbolsToBind.entrySet()) {

@@ -12,11 +12,14 @@ import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
+import jcl.compiler.real.environment.binding.lambdalist.BodyBinding;
+import jcl.compiler.real.environment.binding.lambdalist.EnvironmentBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
+import jcl.compiler.real.environment.binding.lambdalist.WholeBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
@@ -38,8 +41,75 @@ public class LambdaListParser {
 	@Autowired
 	private Printer printer;
 
-	protected RequiredParseResult parseRequiredBindings(final Environment environment, final Iterator<? extends LispStruct> iterator,
-	                                                    final int position, final DeclareStruct declareElement) {
+	protected WholeParseResult parseWholeBinding(final Environment environment, final Iterator<LispStruct> iterator,
+	                                             final int position, final DeclareStruct declareElement) {
+
+		int currentPosition = position;
+
+		final LispStruct currentElement = iterator.next();
+		if (!(currentElement instanceof SymbolStruct)) {
+			final String printedElement = printer.print(currentElement);
+			throw new ProgramErrorException("LambdaList &whole parameters must be a symbol: " + printedElement);
+		}
+		final SymbolStruct<?> currentParam = (SymbolStruct) currentElement;
+
+		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(environment);
+		final int newBindingsPosition = currentLambda.getNextParameterNumber();
+		environment.setBindingsPosition(newBindingsPosition);
+
+		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
+		final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
+
+		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullStruct.INSTANCE);
+		if (isSpecial) {
+			environment.addDynamicBinding(binding);
+		} else {
+			environment.addLexicalBinding(binding);
+		}
+
+		final ParameterAllocation restAllocation = new ParameterAllocation(currentPosition++);
+		final WholeBinding wholeBinding = new WholeBinding(currentParam, restAllocation);
+		return new WholeParseResult(currentPosition, wholeBinding);
+	}
+
+	protected EnvironmentParseResult parseEnvironmentBinding(final Environment environment, final Iterator<LispStruct> iterator,
+	                                                         final int position, final DeclareStruct declareElement,
+	                                                         final boolean isAfterRequired) {
+
+		int currentPosition = position;
+
+		LispStruct currentElement = iterator.next();
+		if (!(currentElement instanceof SymbolStruct)) {
+			final String printedElement = printer.print(currentElement);
+			throw new ProgramErrorException("LambdaList &environment parameters must be a symbol: " + printedElement);
+		}
+		final SymbolStruct<?> currentParam = (SymbolStruct) currentElement;
+
+		if (iterator.hasNext() && isAfterRequired) {
+			currentElement = iterator.next();
+			if (!isLambdaListKeyword(currentElement)) {
+				final String printedElement = printer.print(currentElement);
+				throw new ProgramErrorException("LambdaList &environment parameter must only have 1 parameter: " + printedElement);
+			}
+		}
+
+		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(environment);
+		final int newBindingsPosition = currentLambda.getNextParameterNumber();
+		environment.setBindingsPosition(newBindingsPosition);
+
+		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
+
+		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullStruct.INSTANCE);
+		environment.addDynamicBinding(binding);
+
+		final ParameterAllocation environmentAllocation = new ParameterAllocation(currentPosition++);
+		final EnvironmentBinding environmentBinding = new EnvironmentBinding(currentParam, environmentAllocation);
+		return new EnvironmentParseResult(currentElement, currentPosition, environmentBinding);
+	}
+
+	protected RequiredParseResult parseRequiredBindings(final Environment environment, final Iterator<LispStruct> iterator,
+	                                                    final int position, final DeclareStruct declareElement,
+	                                                    final boolean isDotted) {
 
 		final List<RequiredBinding> requiredBindings = new ArrayList<>();
 		int currentPosition = position;
@@ -47,6 +117,9 @@ public class LambdaListParser {
 		LispStruct currentElement;
 		do {
 			currentElement = iterator.next();
+			if (!iterator.hasNext() && isDotted) {
+				return new RequiredParseResult(currentElement, currentPosition, requiredBindings);
+			}
 			if (isLambdaListKeyword(currentElement)) {
 				return new RequiredParseResult(currentElement, currentPosition, requiredBindings);
 			}
@@ -78,16 +151,24 @@ public class LambdaListParser {
 		return new RequiredParseResult(currentElement, currentPosition, requiredBindings);
 	}
 
-	protected OptionalParseResult parseOptionalBindings(final Environment environment, final Iterator<? extends LispStruct> iterator,
-	                                                    final int position, final DeclareStruct declareElement) {
+	protected OptionalParseResult parseOptionalBindings(final Environment environment, final Iterator<LispStruct> iterator,
+	                                                    final int position, final DeclareStruct declareElement,
+	                                                    final boolean isDotted) {
 
 		final List<OptionalBinding> optionalBindings = new ArrayList<>();
 		int currentPosition = position;
+
+		if (!iterator.hasNext()) {
+			return new OptionalParseResult(null, currentPosition, optionalBindings);
+		}
 
 		LispStruct currentElement;
 		do {
 			currentElement = iterator.next();
 			if (isLambdaListKeyword(currentElement)) {
+				return new OptionalParseResult(currentElement, currentPosition, optionalBindings);
+			}
+			if (!iterator.hasNext() && isDotted) {
 				return new OptionalParseResult(currentElement, currentPosition, optionalBindings);
 			}
 
@@ -135,7 +216,7 @@ public class LambdaListParser {
 				final ListStruct currentParam = (ListStruct) currentElement;
 				if ((currentParam.size() < 1) || (currentParam.size() > 3)) {
 					final String printedElement = printer.print(currentParam);
-					throw new ProgramErrorException("LambdaList optional parameters must have between 1 and 3 parameters: " + printedElement);
+					throw new ProgramErrorException("LambdaList &optional parameters must have between 1 and 3 parameters: " + printedElement);
 				}
 
 				final LispStruct firstInCurrent = currentParam.getFirst();
@@ -144,7 +225,7 @@ public class LambdaListParser {
 
 				if (!(firstInCurrent instanceof SymbolStruct)) {
 					final String printedElement = printer.print(firstInCurrent);
-					throw new ProgramErrorException("LambdaList optional var name parameters must be a symbol: " + printedElement);
+					throw new ProgramErrorException("LambdaList &optional var name parameters must be a symbol: " + printedElement);
 				}
 				final SymbolStruct<?> varNameCurrent = (SymbolStruct) firstInCurrent;
 
@@ -193,7 +274,7 @@ public class LambdaListParser {
 				} else {
 					if (!(thirdInCurrent instanceof SymbolStruct)) {
 						final String printedElement = printer.print(thirdInCurrent);
-						throw new ProgramErrorException("LambdaList optional supplied-p parameters must be a symbol: " + printedElement);
+						throw new ProgramErrorException("LambdaList &optional supplied-p parameters must be a symbol: " + printedElement);
 					}
 
 					final SymbolStruct<?> suppliedPCurrent = (SymbolStruct) thirdInCurrent;
@@ -220,22 +301,26 @@ public class LambdaListParser {
 				optionalBindings.add(optionalBinding);
 			} else {
 				final String printedElement = printer.print(currentElement);
-				throw new ProgramErrorException("LambdaList optional parameters must be a symbol or a list: " + printedElement);
+				throw new ProgramErrorException("LambdaList &optional parameters must be a symbol or a list: " + printedElement);
 			}
 		} while (iterator.hasNext());
 
 		return new OptionalParseResult(currentElement, currentPosition, optionalBindings);
 	}
 
-	protected RestParseResult parseRestBinding(final Environment environment, final Iterator<? extends LispStruct> iterator,
+	protected RestParseResult parseRestBinding(final Environment environment, final Iterator<LispStruct> iterator,
 	                                           final int position, final DeclareStruct declareElement) {
 
 		int currentPosition = position;
 
+		if (!iterator.hasNext()) {
+			throw new ProgramErrorException("LambdaList &rest parameter must be provided.");
+		}
+
 		LispStruct currentElement = iterator.next();
 		if (!(currentElement instanceof SymbolStruct)) {
 			final String printedElement = printer.print(currentElement);
-			throw new ProgramErrorException("LambdaList rest parameters must be a symbol: " + printedElement);
+			throw new ProgramErrorException("LambdaList &rest parameters must be a symbol: " + printedElement);
 		}
 		final SymbolStruct<?> currentParam = (SymbolStruct) currentElement;
 
@@ -243,7 +328,7 @@ public class LambdaListParser {
 			currentElement = iterator.next();
 			if (!isLambdaListKeyword(currentElement)) {
 				final String printedElement = printer.print(currentElement);
-				throw new ProgramErrorException("LambdaList rest parameter must only have 1 parameter: " + printedElement);
+				throw new ProgramErrorException("LambdaList &rest parameter must only have 1 parameter: " + printedElement);
 			}
 		}
 
@@ -266,11 +351,88 @@ public class LambdaListParser {
 		return new RestParseResult(currentElement, currentPosition, restBinding);
 	}
 
-	protected KeyParseResult parseKeyBindings(final Environment environment, final Iterator<? extends LispStruct> iterator,
+	protected RestParseResult parseDottedRestBinding(final Environment environment, final LispStruct dottedRest,
+	                                                 final int position, final DeclareStruct declareElement) {
+
+		int currentPosition = position;
+
+		if (!(dottedRest instanceof SymbolStruct)) {
+			final String printedElement = printer.print(dottedRest);
+			throw new ProgramErrorException("LambdaList &rest parameters must be a symbol: " + printedElement);
+		}
+		final SymbolStruct<?> currentParam = (SymbolStruct) dottedRest;
+
+		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(environment);
+		final int newBindingsPosition = currentLambda.getNextParameterNumber();
+		environment.setBindingsPosition(newBindingsPosition);
+
+		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
+		final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
+
+		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullStruct.INSTANCE);
+		if (isSpecial) {
+			environment.addDynamicBinding(binding);
+		} else {
+			environment.addLexicalBinding(binding);
+		}
+
+		final ParameterAllocation restAllocation = new ParameterAllocation(currentPosition++);
+		final RestBinding restBinding = new RestBinding(currentParam, restAllocation);
+		return new RestParseResult(dottedRest, currentPosition, restBinding);
+	}
+
+	protected BodyParseResult parseBodyBinding(final Environment environment, final Iterator<LispStruct> iterator,
+	                                           final int position, final DeclareStruct declareElement) {
+
+		int currentPosition = position;
+
+		if (!iterator.hasNext()) {
+			throw new ProgramErrorException("LambdaList &body parameter must be provided.");
+		}
+
+		LispStruct currentElement = iterator.next();
+		if (!(currentElement instanceof SymbolStruct)) {
+			final String printedElement = printer.print(currentElement);
+			throw new ProgramErrorException("LambdaList &body parameters must be a symbol: " + printedElement);
+		}
+		final SymbolStruct<?> currentParam = (SymbolStruct) currentElement;
+
+		if (iterator.hasNext()) {
+			currentElement = iterator.next();
+			if (!isLambdaListKeyword(currentElement)) {
+				final String printedElement = printer.print(currentElement);
+				throw new ProgramErrorException("LambdaList &body parameter must only have 1 parameter: " + printedElement);
+			}
+		}
+
+		final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(environment);
+		final int newBindingsPosition = currentLambda.getNextParameterNumber();
+		environment.setBindingsPosition(newBindingsPosition);
+
+		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
+		final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
+
+		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullStruct.INSTANCE);
+		if (isSpecial) {
+			environment.addDynamicBinding(binding);
+		} else {
+			environment.addLexicalBinding(binding);
+		}
+
+		final ParameterAllocation restAllocation = new ParameterAllocation(currentPosition++);
+		final BodyBinding bodyBinding = new BodyBinding(currentParam, restAllocation);
+		return new BodyParseResult(currentElement, currentPosition, bodyBinding);
+	}
+
+	protected KeyParseResult parseKeyBindings(final Environment environment, final Iterator<LispStruct> iterator,
 	                                          final int position, final DeclareStruct declareElement) {
 
 		final List<KeyBinding> keyBindings = new ArrayList<>();
 		int currentPosition = position;
+
+		if (!iterator.hasNext()) {
+			return new KeyParseResult(null, currentPosition, keyBindings);
+		}
 
 		LispStruct currentElement;
 		do {
@@ -324,7 +486,7 @@ public class LambdaListParser {
 				final ListStruct currentParam = (ListStruct) currentElement;
 				if ((currentParam.size() < 1) || (currentParam.size() > 3)) {
 					final String printedElement = printer.print(currentParam);
-					throw new ProgramErrorException("LambdaList key parameters must have between 1 and 3 parameters: " + printedElement);
+					throw new ProgramErrorException("LambdaList &key parameters must have between 1 and 3 parameters: " + printedElement);
 				}
 
 				final LispStruct firstInCurrent = currentParam.getFirst();
@@ -340,7 +502,7 @@ public class LambdaListParser {
 					final ListStruct currentVar = (ListStruct) firstInCurrent;
 					if (currentVar.size() != 2) {
 						final String printedElement = printer.print(currentVar);
-						throw new ProgramErrorException("LambdaList key var name list parameters must have 2 parameters: " + printedElement);
+						throw new ProgramErrorException("LambdaList &key var name list parameters must have 2 parameters: " + printedElement);
 					}
 
 					final LispStruct firstInCurrentVar = currentVar.getFirst();
@@ -351,18 +513,18 @@ public class LambdaListParser {
 						varKeyNameCurrent = getKeywordStruct(keyNameSymbol.getName());
 					} else {
 						final String printedElement = printer.print(firstInCurrentVar);
-						throw new ProgramErrorException("LambdaList key var name list key-name parameters must be a keyword or a symbol: " + printedElement);
+						throw new ProgramErrorException("LambdaList &key var name list key-name parameters must be a keyword or a symbol: " + printedElement);
 					}
 
 					final LispStruct secondInCurrentVar = currentVar.getRest().getFirst();
 					if (!(secondInCurrentVar instanceof SymbolStruct)) {
 						final String printedElement = printer.print(secondInCurrentVar);
-						throw new ProgramErrorException("LambdaList key var name list name parameters must be a symbol: " + printedElement);
+						throw new ProgramErrorException("LambdaList &key var name list name parameters must be a symbol: " + printedElement);
 					}
 					varNameCurrent = (SymbolStruct) secondInCurrentVar;
 				} else {
 					final String printedElement = printer.print(firstInCurrent);
-					throw new ProgramErrorException("LambdaList key var name parameters must be a symbol or a list: " + printedElement);
+					throw new ProgramErrorException("LambdaList &key var name parameters must be a symbol or a list: " + printedElement);
 				}
 
 				LispStruct initForm = NullStruct.INSTANCE;
@@ -410,7 +572,7 @@ public class LambdaListParser {
 				} else {
 					if (!(thirdInCurrent instanceof SymbolStruct)) {
 						final String printedElement = printer.print(thirdInCurrent);
-						throw new ProgramErrorException("LambdaList key supplied-p parameters must be a symbol: " + printedElement);
+						throw new ProgramErrorException("LambdaList &key supplied-p parameters must be a symbol: " + printedElement);
 					}
 
 					final SymbolStruct<?> suppliedPCurrent = (SymbolStruct) thirdInCurrent;
@@ -437,7 +599,7 @@ public class LambdaListParser {
 				keyBindings.add(keyBinding);
 			} else {
 				final String printedElement = printer.print(currentElement);
-				throw new ProgramErrorException("LambdaList key parameters must be a symbol or a list: " + printedElement);
+				throw new ProgramErrorException("LambdaList &key parameters must be a symbol or a list: " + printedElement);
 			}
 
 		} while (iterator.hasNext());
@@ -445,11 +607,15 @@ public class LambdaListParser {
 		return new KeyParseResult(currentElement, currentPosition, keyBindings);
 	}
 
-	protected AuxParseResult parseAuxBindings(final Environment environment, final Iterator<? extends LispStruct> iterator,
+	protected AuxParseResult parseAuxBindings(final Environment environment, final Iterator<LispStruct> iterator,
 	                                          final int position, final DeclareStruct declareElement) {
 
 		final List<AuxBinding> auxBindings = new ArrayList<>();
 		int currentPosition = position;
+
+		if (!iterator.hasNext()) {
+			return new AuxParseResult(null, currentPosition, auxBindings);
+		}
 
 		LispStruct currentElement;
 		do {
@@ -481,7 +647,7 @@ public class LambdaListParser {
 				final ListStruct currentParam = (ListStruct) currentElement;
 				if ((currentParam.size() < 1) || (currentParam.size() > 2)) {
 					final String printedElement = printer.print(currentParam);
-					throw new ProgramErrorException("LambdaList aux parameters must have between 1 and 3 parameters: " + printedElement);
+					throw new ProgramErrorException("LambdaList &aux parameters must have between 1 and 3 parameters: " + printedElement);
 				}
 
 				final LispStruct firstInCurrent = currentParam.getFirst();
@@ -489,7 +655,7 @@ public class LambdaListParser {
 
 				if (!(firstInCurrent instanceof SymbolStruct)) {
 					final String printedElement = printer.print(firstInCurrent);
-					throw new ProgramErrorException("LambdaList aux var name parameters must be a symbol: " + printedElement);
+					throw new ProgramErrorException("LambdaList &aux var name parameters must be a symbol: " + printedElement);
 				}
 				final SymbolStruct<?> varNameCurrent = (SymbolStruct) firstInCurrent;
 
@@ -519,7 +685,7 @@ public class LambdaListParser {
 				}
 			} else {
 				final String printedElement = printer.print(currentElement);
-				throw new ProgramErrorException("LambdaList aux parameters must be a symbol or a list: " + printedElement);
+				throw new ProgramErrorException("LambdaList &aux parameters must be a symbol or a list: " + printedElement);
 			}
 		} while (iterator.hasNext());
 

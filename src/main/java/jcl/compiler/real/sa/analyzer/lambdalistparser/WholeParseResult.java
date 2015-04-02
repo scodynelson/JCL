@@ -4,7 +4,6 @@
 
 package jcl.compiler.real.sa.analyzer.lambdalistparser;
 
-import jcl.LispStruct;
 import jcl.compiler.real.environment.binding.lambdalist.WholeBinding;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -15,8 +14,8 @@ final class WholeParseResult extends ParseResult {
 
 	private final WholeBinding wholeBinding;
 
-	WholeParseResult(final LispStruct currentElement, final int currentPosition, final WholeBinding wholeBinding) {
-		super(currentElement, currentPosition);
+	WholeParseResult(final int currentPosition, final WholeBinding wholeBinding) {
+		super(null, currentPosition);
 		this.wholeBinding = wholeBinding;
 	}
 

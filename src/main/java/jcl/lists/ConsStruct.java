@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import jcl.LispStruct;
+import jcl.symbols.NILStruct;
 import jcl.types.Cons;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -44,7 +45,11 @@ public class ConsStruct extends ListStruct {
 	public ConsStruct(final LispStruct car, final LispStruct cdr) {
 		super(Cons.INSTANCE, null, null);
 		this.car = car;
-		this.cdr = cdr;
+		if (NILStruct.INSTANCE.equals(cdr)) {
+			this.cdr = NullStruct.INSTANCE;
+		} else {
+			this.cdr = cdr;
+		}
 	}
 
 	/**

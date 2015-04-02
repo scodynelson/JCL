@@ -33,9 +33,9 @@ public final class OrdinaryLambdaListParser extends LambdaListParser {
 	public OrdinaryLambdaListBindings parseOrdinaryLambdaList(final Environment environment, final ListStruct lambdaList,
 	                                                          final DeclareStruct declareElement) {
 
-		final List<? extends LispStruct> lambdaListJava = lambdaList.getAsJavaList();
+		final List<LispStruct> lambdaListJava = lambdaList.getAsJavaList();
 
-		final Iterator<? extends LispStruct> iterator = lambdaListJava.iterator();
+		final Iterator<LispStruct> iterator = lambdaListJava.iterator();
 
 		LispStruct currentElement = null;
 		int position = 0;
@@ -43,7 +43,7 @@ public final class OrdinaryLambdaListParser extends LambdaListParser {
 		List<RequiredBinding> requiredBindings = Collections.emptyList();
 		if (iterator.hasNext()) {
 			final RequiredParseResult requiredParseResult
-					= parseRequiredBindings(environment, iterator, position, declareElement);
+					= parseRequiredBindings(environment, iterator, position, declareElement, false);
 
 			requiredBindings = requiredParseResult.getRequiredBindings();
 			currentElement = requiredParseResult.getCurrentElement();
@@ -53,7 +53,7 @@ public final class OrdinaryLambdaListParser extends LambdaListParser {
 		List<OptionalBinding> optionalBindings = Collections.emptyList();
 		if (CompilerConstants.OPTIONAL.equals(currentElement)) {
 			final OptionalParseResult optionalParseResult
-					= parseOptionalBindings(environment, iterator, position, declareElement);
+					= parseOptionalBindings(environment, iterator, position, declareElement, false);
 
 			optionalBindings = optionalParseResult.getOptionalBindings();
 			currentElement = optionalParseResult.getCurrentElement();
@@ -70,6 +70,8 @@ public final class OrdinaryLambdaListParser extends LambdaListParser {
 			position = restParseResult.getCurrentPosition();
 		}
 
+		boolean keyNotProvided = true;
+
 		List<KeyBinding> keyBindings = Collections.emptyList();
 		if (CompilerConstants.KEY.equals(currentElement)) {
 			final KeyParseResult keyParseResult
@@ -78,10 +80,16 @@ public final class OrdinaryLambdaListParser extends LambdaListParser {
 			keyBindings = keyParseResult.getKeyBindings();
 			currentElement = keyParseResult.getCurrentElement();
 			position = keyParseResult.getCurrentPosition();
+
+			keyNotProvided = false;
 		}
 
 		boolean allowOtherKeys = false;
 		if (CompilerConstants.ALLOW_OTHER_KEYS.equals(currentElement)) {
+			if (keyNotProvided) {
+				throw new ProgramErrorException("&allow-other-keys cannot be provided when &key is not provided.");
+			}
+
 			allowOtherKeys = true;
 			if (iterator.hasNext()) {
 				currentElement = iterator.next();

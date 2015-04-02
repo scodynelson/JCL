@@ -13,9 +13,8 @@ import jcl.compiler.real.CompilerConstants;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.BodyBinding;
-import jcl.compiler.real.environment.binding.lambdalist.EnvironmentBinding;
+import jcl.compiler.real.environment.binding.lambdalist.DestructuringLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
-import jcl.compiler.real.environment.binding.lambdalist.MacroLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
@@ -28,16 +27,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class MacroLambdaListParser extends LambdaListParser {
-
-	@Autowired
-	private DestructuringLambdaListParser destructuringLambdaListParser;
+public final class DestructuringLambdaListParser extends LambdaListParser {
 
 	@Autowired
 	private Printer printer;
 
-	public MacroLambdaListBindings parseMacroLambdaList(final Environment environment, final ListStruct lambdaList,
-	                                                    final DeclareStruct declareElement) {
+	public DestructuringLambdaListBindings parseDestructuringLambdaList(final Environment environment, final ListStruct lambdaList,
+	                                                                    final DeclareStruct declareElement) {
 
 		if (lambdaList.isDotted()) {
 			return getDottedLambdaListBindings(environment, lambdaList, declareElement);
@@ -46,8 +42,8 @@ public final class MacroLambdaListParser extends LambdaListParser {
 		}
 	}
 
-	private MacroLambdaListBindings getLambdaListBindings(final Environment environment, final ListStruct lambdaList,
-	                                                      final DeclareStruct declareElement) {
+	private DestructuringLambdaListBindings getLambdaListBindings(final Environment environment, final ListStruct lambdaList,
+	                                                              final DeclareStruct declareElement) {
 
 		final List<LispStruct> lambdaListJava = lambdaList.getAsJavaList();
 
@@ -74,15 +70,6 @@ public final class MacroLambdaListParser extends LambdaListParser {
 			position = wholeParseResult.getCurrentPosition();
 		}
 
-		EnvironmentBinding environmentBinding = null;
-		if (CompilerConstants.ENVIRONMENT.equals(currentElement)) {
-			final EnvironmentParseResult environmentParseResult
-					= parseEnvironmentBinding(environment, iterator, position, declareElement, false);
-
-			environmentBinding = environmentParseResult.getEnvironmentBinding();
-			position = environmentParseResult.getCurrentPosition();
-		}
-
 		List<RequiredBinding> requiredBindings = Collections.emptyList();
 		if (iterator.hasNext()) {
 			final RequiredParseResult requiredParseResult
@@ -93,19 +80,6 @@ public final class MacroLambdaListParser extends LambdaListParser {
 			position = requiredParseResult.getCurrentPosition();
 		}
 
-		if (CompilerConstants.ENVIRONMENT.equals(currentElement)) {
-			if (environment != null) {
-				throw new ProgramErrorException("Macro LambdaList &environment parameter cannot be supplied twice.");
-			}
-
-			final EnvironmentParseResult environmentParseResult
-					= parseEnvironmentBinding(environment, iterator, position, declareElement, true);
-
-			environmentBinding = environmentParseResult.getEnvironmentBinding();
-			currentElement = environmentParseResult.getCurrentElement();
-			position = environmentParseResult.getCurrentPosition();
-		}
-
 		List<OptionalBinding> optionalBindings = Collections.emptyList();
 		if (CompilerConstants.OPTIONAL.equals(currentElement)) {
 			final OptionalParseResult optionalParseResult
@@ -114,19 +88,6 @@ public final class MacroLambdaListParser extends LambdaListParser {
 			optionalBindings = optionalParseResult.getOptionalBindings();
 			currentElement = optionalParseResult.getCurrentElement();
 			position = optionalParseResult.getCurrentPosition();
-		}
-
-		if (CompilerConstants.ENVIRONMENT.equals(currentElement)) {
-			if (environment != null) {
-				throw new ProgramErrorException("Macro LambdaList &environment parameter cannot be supplied twice.");
-			}
-
-			final EnvironmentParseResult environmentParseResult
-					= parseEnvironmentBinding(environment, iterator, position, declareElement, true);
-
-			environmentBinding = environmentParseResult.getEnvironmentBinding();
-			currentElement = environmentParseResult.getCurrentElement();
-			position = environmentParseResult.getCurrentPosition();
 		}
 
 		RestBinding restBinding = null;
@@ -142,7 +103,7 @@ public final class MacroLambdaListParser extends LambdaListParser {
 		BodyBinding bodyBinding = null;
 		if (CompilerConstants.BODY.equals(currentElement)) {
 			if (restBinding != null) {
-				throw new ProgramErrorException("Macro LambdaList &body parameter cannot be supplied alongside &rest parameter.");
+				throw new ProgramErrorException("Destructuring LambdaList &body parameter cannot be supplied alongside &rest parameter.");
 			}
 
 			final BodyParseResult bodyParseResult
@@ -151,19 +112,6 @@ public final class MacroLambdaListParser extends LambdaListParser {
 			bodyBinding = bodyParseResult.getBodyBinding();
 			currentElement = bodyParseResult.getCurrentElement();
 			position = bodyParseResult.getCurrentPosition();
-		}
-
-		if (CompilerConstants.ENVIRONMENT.equals(currentElement)) {
-			if (environment != null) {
-				throw new ProgramErrorException("Macro LambdaList &environment parameter cannot be supplied twice.");
-			}
-
-			final EnvironmentParseResult environmentParseResult
-					= parseEnvironmentBinding(environment, iterator, position, declareElement, true);
-
-			environmentBinding = environmentParseResult.getEnvironmentBinding();
-			currentElement = environmentParseResult.getCurrentElement();
-			position = environmentParseResult.getCurrentPosition();
 		}
 
 		boolean keyNotProvided = true;
@@ -192,51 +140,25 @@ public final class MacroLambdaListParser extends LambdaListParser {
 			}
 		}
 
-		if (CompilerConstants.ENVIRONMENT.equals(currentElement)) {
-			if (environment != null) {
-				throw new ProgramErrorException("Macro LambdaList &environment parameter cannot be supplied twice.");
-			}
-
-			final EnvironmentParseResult environmentParseResult
-					= parseEnvironmentBinding(environment, iterator, position, declareElement, true);
-
-			environmentBinding = environmentParseResult.getEnvironmentBinding();
-			currentElement = environmentParseResult.getCurrentElement();
-			position = environmentParseResult.getCurrentPosition();
-		}
-
 		List<AuxBinding> auxBindings = Collections.emptyList();
 		if (CompilerConstants.AUX.equals(currentElement)) {
 			final AuxParseResult auxParseResult
 					= parseAuxBindings(environment, iterator, position, declareElement);
 
 			auxBindings = auxParseResult.getAuxBindings();
-			currentElement = auxParseResult.getCurrentElement();
-			position = auxParseResult.getCurrentPosition();
-		}
-
-		if (CompilerConstants.ENVIRONMENT.equals(currentElement)) {
-			if (environment != null) {
-				throw new ProgramErrorException("Macro LambdaList &environment parameter cannot be supplied twice.");
-			}
-
-			final EnvironmentParseResult environmentParseResult
-					= parseEnvironmentBinding(environment, iterator, position, declareElement, true);
-
-			environmentBinding = environmentParseResult.getEnvironmentBinding();
 		}
 
 		if (iterator.hasNext()) {
 			final LispStruct element = iterator.next();
 			final String printedElement = printer.print(element);
-			throw new ProgramErrorException("Unexpected element at the end of Macro Lambda List: " + printedElement);
+			throw new ProgramErrorException("Unexpected element at the end of Destructuring Lambda List: " + printedElement);
 		}
 
-		return new MacroLambdaListBindings(wholeBinding, environmentBinding, requiredBindings, optionalBindings, restBinding, bodyBinding, keyBindings, auxBindings, allowOtherKeys);
+		return new DestructuringLambdaListBindings(wholeBinding, requiredBindings, optionalBindings, restBinding, bodyBinding, keyBindings, auxBindings, allowOtherKeys);
 	}
 
-	private MacroLambdaListBindings getDottedLambdaListBindings(final Environment environment, final ListStruct lambdaList,
-	                                                            final DeclareStruct declareElement) {
+	private DestructuringLambdaListBindings getDottedLambdaListBindings(final Environment environment, final ListStruct lambdaList,
+	                                                                    final DeclareStruct declareElement) {
 
 		final List<LispStruct> lambdaListJava = lambdaList.getAsJavaList();
 
@@ -263,15 +185,6 @@ public final class MacroLambdaListParser extends LambdaListParser {
 			position = wholeParseResult.getCurrentPosition();
 		}
 
-		EnvironmentBinding environmentBinding = null;
-		if (CompilerConstants.ENVIRONMENT.equals(currentElement)) {
-			final EnvironmentParseResult environmentParseResult
-					= parseEnvironmentBinding(environment, iterator, position, declareElement, false);
-
-			environmentBinding = environmentParseResult.getEnvironmentBinding();
-			position = environmentParseResult.getCurrentPosition();
-		}
-
 		List<RequiredBinding> requiredBindings = Collections.emptyList();
 		if (iterator.hasNext()) {
 			final RequiredParseResult requiredParseResult
@@ -280,19 +193,6 @@ public final class MacroLambdaListParser extends LambdaListParser {
 			requiredBindings = requiredParseResult.getRequiredBindings();
 			currentElement = requiredParseResult.getCurrentElement();
 			position = requiredParseResult.getCurrentPosition();
-		}
-
-		if (CompilerConstants.ENVIRONMENT.equals(currentElement)) {
-			if (environment != null) {
-				throw new ProgramErrorException("Macro LambdaList &environment parameter cannot be supplied twice.");
-			}
-
-			final EnvironmentParseResult environmentParseResult
-					= parseEnvironmentBinding(environment, iterator, position, declareElement, true);
-
-			environmentBinding = environmentParseResult.getEnvironmentBinding();
-			currentElement = environmentParseResult.getCurrentElement();
-			position = environmentParseResult.getCurrentPosition();
 		}
 
 		List<OptionalBinding> optionalBindings = Collections.emptyList();
@@ -305,19 +205,6 @@ public final class MacroLambdaListParser extends LambdaListParser {
 			position = optionalParseResult.getCurrentPosition();
 		}
 
-		if (CompilerConstants.ENVIRONMENT.equals(currentElement)) {
-			if (environment != null) {
-				throw new ProgramErrorException("Macro LambdaList &environment parameter cannot be supplied twice.");
-			}
-
-			final EnvironmentParseResult environmentParseResult
-					= parseEnvironmentBinding(environment, iterator, position, declareElement, true);
-
-			environmentBinding = environmentParseResult.getEnvironmentBinding();
-			currentElement = environmentParseResult.getCurrentElement();
-			position = environmentParseResult.getCurrentPosition();
-		}
-
 		final RestParseResult restParseResult
 				= parseDottedRestBinding(environment, currentElement, position, declareElement);
 		final RestBinding restBinding = restParseResult.getRestBinding();
@@ -328,6 +215,6 @@ public final class MacroLambdaListParser extends LambdaListParser {
 			throw new ProgramErrorException("Unexpected element at the end of Destructuring Lambda List: " + printedElement);
 		}
 
-		return new MacroLambdaListBindings(wholeBinding, environmentBinding, requiredBindings, optionalBindings, restBinding, null, Collections.emptyList(), Collections.emptyList(), false);
+		return new DestructuringLambdaListBindings(wholeBinding, requiredBindings, optionalBindings, restBinding, null, Collections.emptyList(), Collections.emptyList(), false);
 	}
 }

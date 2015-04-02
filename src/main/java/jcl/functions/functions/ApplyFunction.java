@@ -23,6 +23,7 @@ import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
+import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -77,8 +78,10 @@ public class ApplyFunction extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
+		getFunctionBindings(lispStructs);
+
 		final LispStruct lastArgument = lispStructs[lispStructs.length - 1];
-		if (!(lastArgument instanceof ListStruct)) {
+		if (!(lastArgument instanceof ListStruct) && !NILStruct.INSTANCE.equals(lastArgument)) {
 			final String printedObject = printer.print(lastArgument);
 			throw new ErrorException("Can't construct argument list from " + printedObject + '.');
 		}

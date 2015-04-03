@@ -47,10 +47,11 @@ public class TestGround {
 			result = new CharacterStruct(97);
 		} catch (final ReturnFromException rte) {
 			final SymbolStruct<?> rteName = rte.getName();
-			if (!rteName.equals(name)) {
+			if (rteName.equals(name)) {
+				result = rte.getResult();
+			} else {
 				throw rte;
 			}
-			result = rte.getResult();
 		}
 		return result;
 	}

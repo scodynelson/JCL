@@ -209,9 +209,15 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			final Label tryBlockStart = new Label();
 			final Label tryBlockEnd = new Label();
-			final Label catchBlockStart = new Label();
-			final Label catchBlockEnd = new Label();
-			mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, null);
+			final Label catchErrorExceptionStart = new Label();
+			final Label catchThrowableStart = new Label();
+			final Label catchThrowableEnd = new Label();
+			final Label finallyBlockStart = new Label();
+			final Label finallyBlockEnd = new Label();
+			mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchErrorExceptionStart, "jcl/conditions/exceptions/ErrorException");
+			mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchThrowableStart, "java/lang/Throwable");
+			mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, finallyBlockStart, null);
+			mv.visitTryCatchBlock(catchErrorExceptionStart, catchThrowableEnd, finallyBlockStart, null);
 
 			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, "getClosureBindings", "()Ljava/util/Map;", false);
@@ -238,18 +244,18 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitVarInsn(Opcodes.ALOAD, functionBindingsStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "entrySet", "()Ljava/util/Set;", true);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Set", "iterator", "()Ljava/util/Iterator;", true);
-			final int iteratorStore = currentClass.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, iteratorStore);
+			final int bindingIteratorStore = currentClass.getNextAvailableStore();
+			mv.visitVarInsn(Opcodes.ASTORE, bindingIteratorStore);
 
-			final Label iteratorLoopStart = new Label();
-			final Label iteratorLoopEnd = new Label();
+			final Label bindingIteratorLoopStart = new Label();
+			final Label bindingIteratorLoopEnd = new Label();
 
-			mv.visitLabel(iteratorLoopStart);
-			mv.visitVarInsn(Opcodes.ALOAD, iteratorStore);
+			mv.visitLabel(bindingIteratorLoopStart);
+			mv.visitVarInsn(Opcodes.ALOAD, bindingIteratorStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "hasNext", "()Z", true);
 
-			mv.visitJumpInsn(Opcodes.IFEQ, iteratorLoopEnd);
-			mv.visitVarInsn(Opcodes.ALOAD, iteratorStore);
+			mv.visitJumpInsn(Opcodes.IFEQ, bindingIteratorLoopEnd);
+			mv.visitVarInsn(Opcodes.ALOAD, bindingIteratorStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "next", "()Ljava/lang/Object;", true);
 			mv.visitTypeInsn(Opcodes.CHECKCAST, "java/util/Map$Entry");
 			final int bindingMapEntryStore = currentClass.getNextAvailableStore();
@@ -287,10 +293,9 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitVarInsn(Opcodes.ALOAD, symbolToBindStore);
 			mv.visitVarInsn(Opcodes.ALOAD, lexicalValueStore);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "bindLexicalValue", "(Ljcl/LispStruct;)V", false);
+			mv.visitJumpInsn(Opcodes.GOTO, bindingIteratorLoopStart);
 
-			mv.visitJumpInsn(Opcodes.GOTO, iteratorLoopStart);
-
-			mv.visitLabel(iteratorLoopEnd);
+			mv.visitLabel(bindingIteratorLoopEnd);
 			mv.visitLabel(tryBlockStart);
 
 			final Stack<Environment> bindingStack = classBuilder.getBindingStack();
@@ -303,19 +308,86 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitVarInsn(Opcodes.ASTORE, resultStore);
 
 			mv.visitLabel(tryBlockEnd);
-			generateFinallyCode(currentClass, mv, functionBindingsStore);
-			mv.visitJumpInsn(Opcodes.GOTO, catchBlockEnd);
+			mv.visitVarInsn(Opcodes.ALOAD, functionBindingsStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "keySet", "()Ljava/util/Set;", true);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Set", "iterator", "()Ljava/util/Iterator;", true);
+			final int normalUnbindingIteratorStore = currentClass.getNextAvailableStore();
+			mv.visitVarInsn(Opcodes.ASTORE, normalUnbindingIteratorStore);
 
-			mv.visitLabel(catchBlockStart);
+			final Label normalUnbindingIteratorLoopStart = new Label();
+			final Label normalUnbindingIteratorLoopEnd = new Label();
+
+			mv.visitLabel(normalUnbindingIteratorLoopStart);
+			mv.visitVarInsn(Opcodes.ALOAD, normalUnbindingIteratorStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "hasNext", "()Z", true);
+
+			mv.visitJumpInsn(Opcodes.IFEQ, normalUnbindingIteratorLoopEnd);
+			mv.visitVarInsn(Opcodes.ALOAD, normalUnbindingIteratorStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "next", "()Ljava/lang/Object;", true);
+			mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/symbols/SymbolStruct");
+			final int normalUnbindingMapKeySymbolStore = currentClass.getNextAvailableStore();
+			mv.visitVarInsn(Opcodes.ASTORE, normalUnbindingMapKeySymbolStore);
+
+			mv.visitVarInsn(Opcodes.ALOAD, normalUnbindingMapKeySymbolStore);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindLexicalValue", "()V", false);
+			mv.visitJumpInsn(Opcodes.GOTO, normalUnbindingIteratorLoopStart);
+
+			mv.visitLabel(normalUnbindingIteratorLoopEnd);
+			mv.visitJumpInsn(Opcodes.GOTO, finallyBlockEnd);
+
 			final int exceptionStore = currentClass.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, exceptionStore);
 
-			generateFinallyCode(currentClass, mv, functionBindingsStore);
+			mv.visitLabel(catchErrorExceptionStart);
+			mv.visitVarInsn(Opcodes.ASTORE, exceptionStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, exceptionStore);
 			mv.visitInsn(Opcodes.ATHROW);
 
-			mv.visitLabel(catchBlockEnd);
+			mv.visitLabel(catchThrowableStart);
+			mv.visitVarInsn(Opcodes.ASTORE, exceptionStore);
+
+			mv.visitTypeInsn(Opcodes.NEW, "jcl/conditions/exceptions/ErrorException");
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitLdcInsn("Non-Lisp error found.");
+			mv.visitVarInsn(Opcodes.ALOAD, exceptionStore);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/conditions/exceptions/ErrorException", "<init>", "(Ljava/lang/String;Ljava/lang/Throwable;)V", false);
+			mv.visitInsn(Opcodes.ATHROW);
+
+			mv.visitLabel(finallyBlockStart);
+
+			final int finallyExceptionStore = currentClass.getNextAvailableStore();
+			mv.visitVarInsn(Opcodes.ASTORE, finallyExceptionStore);
+
+			mv.visitLabel(catchThrowableEnd);
+			mv.visitVarInsn(Opcodes.ALOAD, functionBindingsStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "keySet", "()Ljava/util/Set;", true);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Set", "iterator", "()Ljava/util/Iterator;", true);
+			final int exceptionUnbindingIteratorStore = currentClass.getNextAvailableStore();
+			mv.visitVarInsn(Opcodes.ASTORE, exceptionUnbindingIteratorStore);
+
+			final Label exceptionUnbindingIteratorLoopStart = new Label();
+			final Label exceptionUnbindingIteratorLoopEnd = new Label();
+
+			mv.visitLabel(exceptionUnbindingIteratorLoopStart);
+			mv.visitVarInsn(Opcodes.ALOAD, exceptionUnbindingIteratorStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "hasNext", "()Z", true);
+
+			mv.visitJumpInsn(Opcodes.IFEQ, exceptionUnbindingIteratorLoopEnd);
+			mv.visitVarInsn(Opcodes.ALOAD, exceptionUnbindingIteratorStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "next", "()Ljava/lang/Object;", true);
+			mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/symbols/SymbolStruct");
+			final int exceptionUnbindingMapKeySymbolStore = currentClass.getNextAvailableStore();
+			mv.visitVarInsn(Opcodes.ASTORE, exceptionUnbindingMapKeySymbolStore);
+
+			mv.visitVarInsn(Opcodes.ALOAD, exceptionUnbindingMapKeySymbolStore);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindLexicalValue", "()V", false);
+			mv.visitJumpInsn(Opcodes.GOTO, exceptionUnbindingIteratorLoopStart);
+
+			mv.visitLabel(exceptionUnbindingIteratorLoopEnd);
+			mv.visitVarInsn(Opcodes.ALOAD, finallyExceptionStore);
+			mv.visitInsn(Opcodes.ATHROW);
+
+			mv.visitLabel(finallyBlockEnd);
 			mv.visitVarInsn(Opcodes.ALOAD, resultStore);
 
 			mv.visitInsn(Opcodes.ARETURN);
@@ -387,34 +459,6 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, fileName, "<init>", "(Ljcl/functions/Closure;)V", false);
 		}
-	}
-
-	private void generateFinallyCode(final ClassDef currentClass, final MethodVisitor mv, final int functionBindingsStore) {
-		mv.visitVarInsn(Opcodes.ALOAD, functionBindingsStore);
-		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "keySet", "()Ljava/util/Set;", true);
-		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Set", "iterator", "()Ljava/util/Iterator;", true);
-		final int iteratorStore = currentClass.getNextAvailableStore();
-		mv.visitVarInsn(Opcodes.ASTORE, iteratorStore);
-
-		final Label iteratorLoopStart = new Label();
-		final Label iteratorLoopEnd = new Label();
-
-		mv.visitLabel(iteratorLoopStart);
-		mv.visitVarInsn(Opcodes.ALOAD, iteratorStore);
-		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "hasNext", "()Z", true);
-
-		mv.visitJumpInsn(Opcodes.IFEQ, iteratorLoopEnd);
-		mv.visitVarInsn(Opcodes.ALOAD, iteratorStore);
-		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "next", "()Ljava/lang/Object;", true);
-		mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/symbols/SymbolStruct");
-		final int symbolToUnbindStore = currentClass.getNextAvailableStore();
-		mv.visitVarInsn(Opcodes.ASTORE, symbolToUnbindStore);
-
-		mv.visitVarInsn(Opcodes.ALOAD, symbolToUnbindStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindLexicalValue", "()V", false);
-		mv.visitJumpInsn(Opcodes.GOTO, iteratorLoopStart);
-
-		mv.visitLabel(iteratorLoopEnd);
 	}
 
 	private int generateRequiredBindings(final ClassDef currentClass, final OrdinaryLambdaListBindings lambdaListBindings,

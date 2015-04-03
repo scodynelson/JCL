@@ -19,6 +19,7 @@ import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
 import jcl.compiler.real.struct.ValuesStruct;
+import jcl.conditions.exceptions.ErrorException;
 import jcl.functions.Closure;
 import jcl.functions.FunctionStruct;
 import jcl.packages.GlobalPackageStruct;
@@ -133,6 +134,10 @@ public class TestLambdaGenerator extends FunctionStruct {
 		try {
 //			result = new CharacterStruct(97);
 			result = new TestGroundLambdaFunction(closure);
+		} catch (final ErrorException ex) {
+			throw ex;
+		} catch (final Throwable t) {
+			throw new ErrorException("Non-Lisp error found.", t);
 		} finally {
 			for (final SymbolStruct<?> symbolToUnbind : symbolsToBind.keySet()) {
 				symbolToUnbind.unbindLexicalValue();

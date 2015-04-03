@@ -69,16 +69,17 @@ public class BlockCodeGenerator implements CodeGenerator<BlockStruct> {
 		mv.visitVarInsn(Opcodes.ALOAD, nameSymbolStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "equals", "(Ljava/lang/Object;)Z", false);
 
-		final Label setResultValue = new Label();
-		mv.visitJumpInsn(Opcodes.IFNE, setResultValue);
+		final Label rethrowException = new Label();
+		mv.visitJumpInsn(Opcodes.IFEQ, rethrowException);
 
-		mv.visitVarInsn(Opcodes.ALOAD, returnFromExceptionStore);
-		mv.visitInsn(Opcodes.ATHROW);
-
-		mv.visitLabel(setResultValue);
 		mv.visitVarInsn(Opcodes.ALOAD, returnFromExceptionStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/compiler/real/icg/generator/specialoperator/exception/ReturnFromException", "getResult", "()Ljcl/LispStruct;", false);
 		mv.visitVarInsn(Opcodes.ASTORE, resultStore);
+		mv.visitJumpInsn(Opcodes.GOTO, catchBlockEnd);
+
+		mv.visitLabel(rethrowException);
+		mv.visitVarInsn(Opcodes.ALOAD, returnFromExceptionStore);
+		mv.visitInsn(Opcodes.ATHROW);
 
 		mv.visitLabel(catchBlockEnd);
 		mv.visitVarInsn(Opcodes.ALOAD, resultStore);

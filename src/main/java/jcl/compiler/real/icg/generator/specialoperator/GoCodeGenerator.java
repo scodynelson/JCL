@@ -11,6 +11,7 @@ import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.struct.specialoperator.go.GoStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.printer.Printer;
+import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,15 @@ public class GoCodeGenerator implements CodeGenerator<GoStruct<?>> {
 	public void generate(final GoStruct<?> input, final JavaClassBuilder classBuilder) {
 
 		final ClassDef currentClass = classBuilder.getCurrentClass();
-		final MethodVisitor mv = currentClass.getMethodVisitor();
+		final String fileName = currentClass.getFileName();
+
+		final ClassWriter cw = currentClass.getClassWriter();
+		final MethodVisitor previousMv = currentClass.getMethodVisitor();
+
+		final String goMethodName = "go_" + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, goMethodName, "()Ljcl/LispStruct;", null, null);
+		currentClass.setMethodVisitor(mv);
+		mv.visitCode();
 
 		final Stack<Set<TagbodyLabel>> tagbodyLabelStack = classBuilder.getTagbodyLabelStack();
 		final TagbodyLabel tagbodyLabel = getTagbodyLabel(tagbodyLabelStack, input);
@@ -42,6 +51,14 @@ public class GoCodeGenerator implements CodeGenerator<GoStruct<?>> {
 
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/icg/generator/specialoperator/exception/GoException", "<init>", "(I)V", false);
 		mv.visitInsn(Opcodes.ATHROW);
+
+		mv.visitMaxs(-1, -1);
+		mv.visitEnd();
+
+		currentClass.setMethodVisitor(previousMv);
+
+		previousMv.visitVarInsn(Opcodes.ALOAD, 0);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, goMethodName, "()Ljcl/LispStruct;", false);
 	}
 
 	private TagbodyLabel getTagbodyLabel(final Stack<Set<TagbodyLabel>> tagbodyLabelStack, final GoStruct<?> tagToFind) {

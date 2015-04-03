@@ -6,6 +6,7 @@ import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.struct.specialoperator.ThrowStruct;
+import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,15 @@ public class ThrowCodeGenerator implements CodeGenerator<ThrowStruct> {
 		final LispStruct resultForm = input.getResultForm();
 
 		final ClassDef currentClass = classBuilder.getCurrentClass();
-		final MethodVisitor mv = currentClass.getMethodVisitor();
+		final String fileName = currentClass.getFileName();
+
+		final ClassWriter cw = currentClass.getClassWriter();
+		final MethodVisitor previousMv = currentClass.getMethodVisitor();
+
+		final String throwMethodName = "throw_" + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, throwMethodName, "()Ljcl/LispStruct;", null, null);
+		currentClass.setMethodVisitor(mv);
+		mv.visitCode();
 
 		formGenerator.generate(catchTag, classBuilder);
 		final int catchTagStore = currentClass.getNextAvailableStore();
@@ -41,5 +50,13 @@ public class ThrowCodeGenerator implements CodeGenerator<ThrowStruct> {
 
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/icg/generator/specialoperator/exception/ThrowException", "<init>", "(Ljcl/LispStruct;Ljcl/LispStruct;)V", false);
 		mv.visitInsn(Opcodes.ATHROW);
+
+		mv.visitMaxs(-1, -1);
+		mv.visitEnd();
+
+		currentClass.setMethodVisitor(previousMv);
+
+		previousMv.visitVarInsn(Opcodes.ALOAD, 0);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, throwMethodName, "()Ljcl/LispStruct;", false);
 	}
 }

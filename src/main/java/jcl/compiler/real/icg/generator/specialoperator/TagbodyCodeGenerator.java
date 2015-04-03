@@ -14,6 +14,7 @@ import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.TagbodyStruct;
 import jcl.compiler.real.struct.specialoperator.go.GoStruct;
 import jcl.lists.NullStruct;
+import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -35,7 +36,15 @@ public class TagbodyCodeGenerator implements CodeGenerator<TagbodyStruct> {
 		final Map<GoStruct<?>, PrognStruct> tagbodyForms = input.getTagbodyForms();
 
 		final ClassDef currentClass = classBuilder.getCurrentClass();
-		final MethodVisitor mv = currentClass.getMethodVisitor();
+		final String fileName = currentClass.getFileName();
+
+		final ClassWriter cw = currentClass.getClassWriter();
+		final MethodVisitor previousMv = currentClass.getMethodVisitor();
+
+		final String tagbodyMethodName = "tagbody_" + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, tagbodyMethodName, "()Ljcl/LispStruct;", null, null);
+		currentClass.setMethodVisitor(mv);
+		mv.visitCode();
 
 		final Label tryBlockStart = new Label();
 		final Label tryBlockEnd = new Label();
@@ -101,6 +110,16 @@ public class TagbodyCodeGenerator implements CodeGenerator<TagbodyStruct> {
 
 		mv.visitLabel(catchBlockEnd);
 		nullCodeGenerator.generate(NullStruct.INSTANCE, classBuilder);
+
+		mv.visitInsn(Opcodes.ARETURN);
+
+		mv.visitMaxs(-1, -1);
+		mv.visitEnd();
+
+		currentClass.setMethodVisitor(previousMv);
+
+		previousMv.visitVarInsn(Opcodes.ALOAD, 0);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, tagbodyMethodName, "()Ljcl/LispStruct;", false);
 	}
 
 	private Map<TagbodyLabel, PrognStruct> getTagbodyLabeledForms(final Map<GoStruct<?>, PrognStruct> tagbodyForms,

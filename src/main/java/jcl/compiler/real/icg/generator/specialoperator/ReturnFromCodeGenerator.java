@@ -7,6 +7,7 @@ import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.struct.specialoperator.ReturnFromStruct;
 import jcl.symbols.SymbolStruct;
+import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,15 @@ public class ReturnFromCodeGenerator implements CodeGenerator<ReturnFromStruct> 
 		final LispStruct result = input.getResult();
 
 		final ClassDef currentClass = classBuilder.getCurrentClass();
-		final MethodVisitor mv = currentClass.getMethodVisitor();
+		final String fileName = currentClass.getFileName();
+
+		final ClassWriter cw = currentClass.getClassWriter();
+		final MethodVisitor previousMv = currentClass.getMethodVisitor();
+
+		final String returnFromMethodName = "returnFrom_" + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, returnFromMethodName, "()Ljcl/LispStruct;", null, null);
+		currentClass.setMethodVisitor(mv);
+		mv.visitCode();
 
 		final String packageName = name.getSymbolPackage().getName();
 		final String symbolName = name.getName();
@@ -52,5 +61,13 @@ public class ReturnFromCodeGenerator implements CodeGenerator<ReturnFromStruct> 
 		mv.visitVarInsn(Opcodes.ALOAD, resultStore);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/icg/generator/specialoperator/exception/ReturnFromException", "<init>", "(Ljcl/symbols/SymbolStruct;Ljcl/LispStruct;)V", false);
 		mv.visitInsn(Opcodes.ATHROW);
+
+		mv.visitMaxs(-1, -1);
+		mv.visitEnd();
+
+		currentClass.setMethodVisitor(previousMv);
+
+		previousMv.visitVarInsn(Opcodes.ALOAD, 0);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, returnFromMethodName, "()Ljcl/LispStruct;", false);
 	}
 }

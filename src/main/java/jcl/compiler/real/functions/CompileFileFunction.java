@@ -59,6 +59,7 @@ import jcl.symbols.TStruct;
 import jcl.system.CommonLispSymbols;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.util.CheckClassAdapter;
@@ -241,7 +242,7 @@ public final class CompileFileFunction extends FunctionStruct {
 
 		final Instant startTime = Instant.now();
 		if (verbose) {
-			final String javaVersion = System.getProperty("java.version");
+			final String javaVersion = SystemUtils.JAVA_VERSION;
 			LOGGER.info("; Java Compiler Version {}", javaVersion);
 
 			final LocalDateTime now = LocalDateTime.now();

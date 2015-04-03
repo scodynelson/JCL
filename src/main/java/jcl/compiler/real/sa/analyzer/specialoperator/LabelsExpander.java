@@ -17,13 +17,13 @@ import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAnalyzer;
-import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.LabelsStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.printer.Printer;
 import jcl.symbols.DeclarationStruct;
@@ -183,7 +183,13 @@ public class LabelsExpander extends MacroFunctionExpander<LabelsStruct> {
 		// NOTE: This will be a safe cast since we verify it is a symbol earlier
 		final SymbolStruct<?> functionNameSymbol = (SymbolStruct) functionName;
 
-		final String fletParamName = "jcl.LABELS_"+ functionNameSymbol.getName() + "_Lambda_" + System.nanoTime();
+		final String functionNameString = functionNameSymbol.getName();
+		final String properFunctionNameString = functionNameString.codePoints()
+		                                                          .filter(Character::isJavaIdentifierPart)
+		                                                          .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+		                                                          .toString();
+
+		final String fletParamName = "jcl.LABELS_" + properFunctionNameString + "_Lambda_" + System.nanoTime();
 		final StringStruct fletParamJavaClassName = new StringStruct(fletParamName);
 		final ListStruct fletParamJavaClassNameDeclaration = ListStruct.buildProperList(DeclarationStruct.JAVA_CLASS_NAME, fletParamJavaClassName);
 		final ListStruct innerDeclareListStruct = ListStruct.buildProperList(SpecialOperatorStruct.DECLARE, fletParamJavaClassNameDeclaration);

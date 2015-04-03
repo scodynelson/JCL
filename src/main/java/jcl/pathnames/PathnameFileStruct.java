@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.SystemUtils;
 
 /**
  * The {@link PathnameFileStruct} is the file-type object representation of a Lisp 'pathname' type.
@@ -162,7 +163,7 @@ public class PathnameFileStruct extends PathnameStruct {
 		//there are special situations involving tildes in pathname
 		//handle a tilde at start of pathname; expand it to the user's directory
 
-		final String userHome = System.getProperty("user.home");
+		final String userHome = SystemUtils.USER_HOME;
 
 		String realPathname = pathname;
 		if (TILDE.equals(pathname)) {

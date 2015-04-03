@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
+ */
+
 package jcl.compiler.real.icg.generator.specialoperator;
 
 import java.util.HashMap;
@@ -54,7 +58,26 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 		final Label tryBlockEnd = new Label();
 		final Label catchBlockStart = new Label();
 		final Label catchBlockEnd = new Label();
+		final Label finallyBlockStart = new Label();
 		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, null);
+		mv.visitTryCatchBlock(catchBlockStart, finallyBlockStart, catchBlockStart, null);
+
+		mv.visitVarInsn(Opcodes.ALOAD, 0);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/FunctionStruct", "getClosure", "()Ljcl/functions/Closure;", false);
+		final int parentClosureStore = currentClass.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, parentClosureStore);
+
+		mv.visitTypeInsn(Opcodes.NEW, "jcl/functions/Closure");
+		mv.visitInsn(Opcodes.DUP);
+		mv.visitVarInsn(Opcodes.ALOAD, parentClosureStore);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/functions/Closure", "<init>", "(Ljcl/functions/Closure;)V", false);
+		final Integer newClosureStore = currentClass.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, newClosureStore);
+
+		mv.visitVarInsn(Opcodes.ALOAD, newClosureStore);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/Closure", "getClosureBindings", "()Ljava/util/Map;", false);
+		final Integer newClosureBindingsStore = currentClass.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, newClosureBindingsStore);
 
 		final int packageStore = currentClass.getNextAvailableStore();
 
@@ -112,27 +135,6 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 			}
 		}
 
-		final Integer parentClosureStore;
-
-		final Stack<Integer> closureStoreStack = currentClass.getClosureStoreStack();
-		if (closureStoreStack.isEmpty()) {
-			mv.visitVarInsn(Opcodes.ALOAD, 0);
-			mv.visitFieldInsn(Opcodes.GETFIELD, fileName, "closure", "Ljcl/functions/Closure;");
-			parentClosureStore = currentClass.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, parentClosureStore);
-		} else {
-			parentClosureStore = closureStoreStack.peek();
-		}
-
-		mv.visitTypeInsn(Opcodes.NEW, "jcl/functions/Closure");
-		mv.visitInsn(Opcodes.DUP);
-		mv.visitVarInsn(Opcodes.ALOAD, parentClosureStore);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/functions/Closure", "<init>", "(Ljcl/functions/Closure;)V", false);
-		final Integer newClosureStore = currentClass.getNextAvailableStore();
-		mv.visitVarInsn(Opcodes.ASTORE, newClosureStore);
-
-		closureStoreStack.push(newClosureStore);
-
 		for (final Map.Entry<Integer, Integer> functionStoreToBind : lexicalSymbolStoresToBind.entrySet()) {
 			final Integer symbolStore = functionStoreToBind.getKey();
 			final Integer initFormStore = functionStoreToBind.getValue();
@@ -143,6 +145,8 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 
 			mv.visitVarInsn(Opcodes.ALOAD, newClosureStore);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/Closure", "getClosureBindings", "()Ljava/util/Map;", false);
+
+			mv.visitVarInsn(Opcodes.ALOAD, newClosureBindingsStore);
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", true);
@@ -160,27 +164,42 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 
 		mv.visitLabel(tryBlockStart);
 
+		final Stack<Integer> closureStoreStack = currentClass.getClosureStoreStack();
 		final Stack<Environment> bindingStack = classBuilder.getBindingStack();
 
+		closureStoreStack.push(newClosureStore);
 		bindingStack.push(letEnvironment);
 		prognCodeGenerator.generate(forms, classBuilder);
 		bindingStack.pop();
+		closureStoreStack.pop();
 
 		final int resultStore = currentClass.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, resultStore);
 
-		// Pop closure store after we get through the body forms
-		closureStoreStack.pop();
-
 		mv.visitLabel(tryBlockEnd);
-		generateFinallyCode(mv, lexicalSymbolStoresToUnbind, dynamicSymbolStoresToUnbind);
+		for (final Integer symbolStore : dynamicSymbolStoresToUnbind) {
+			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindDynamicValue", "()V", false);
+		}
+		for (final Integer symbolStore : lexicalSymbolStoresToUnbind) {
+			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindLexicalValue", "()V", false);
+		}
 		mv.visitJumpInsn(Opcodes.GOTO, catchBlockEnd);
 
 		mv.visitLabel(catchBlockStart);
 		final int exceptionStore = currentClass.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, exceptionStore);
 
-		generateFinallyCode(mv, lexicalSymbolStoresToUnbind, dynamicSymbolStoresToUnbind);
+		mv.visitLabel(finallyBlockStart);
+		for (final Integer symbolStore : dynamicSymbolStoresToUnbind) {
+			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindDynamicValue", "()V", false);
+		}
+		for (final Integer symbolStore : lexicalSymbolStoresToUnbind) {
+			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindLexicalValue", "()V", false);
+		}
 
 		mv.visitVarInsn(Opcodes.ALOAD, exceptionStore);
 		mv.visitInsn(Opcodes.ATHROW);
@@ -197,18 +216,5 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, 0);
 		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, letMethodName, "()Ljcl/LispStruct;", false);
-	}
-
-	private void generateFinallyCode(final MethodVisitor mv, final Set<Integer> lexicalSymbolStoresToUnbind,
-	                                 final Set<Integer> dynamicSymbolStoresToUnbind) {
-		for (final Integer symbolStore : lexicalSymbolStoresToUnbind) {
-			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindLexicalValue", "()V", false);
-		}
-
-		for (final Integer var : dynamicSymbolStoresToUnbind) {
-			mv.visitVarInsn(Opcodes.ALOAD, var);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindDynamicValue", "()V", false);
-		}
 	}
 }

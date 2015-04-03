@@ -209,15 +209,15 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			final Label tryBlockStart = new Label();
 			final Label tryBlockEnd = new Label();
+			final Label catchBlockStart = new Label();
 			final Label catchErrorExceptionStart = new Label();
 			final Label catchThrowableStart = new Label();
-			final Label catchThrowableEnd = new Label();
 			final Label finallyBlockStart = new Label();
 			final Label finallyBlockEnd = new Label();
 			mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchErrorExceptionStart, "jcl/conditions/exceptions/ErrorException");
 			mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchThrowableStart, "java/lang/Throwable");
-			mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, finallyBlockStart, null);
-			mv.visitTryCatchBlock(catchErrorExceptionStart, catchThrowableEnd, finallyBlockStart, null);
+			mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, null);
+			mv.visitTryCatchBlock(catchErrorExceptionStart, finallyBlockStart, catchBlockStart, null);
 
 			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, "getClosureBindings", "()Ljava/util/Map;", false);
@@ -353,12 +353,12 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/conditions/exceptions/ErrorException", "<init>", "(Ljava/lang/String;Ljava/lang/Throwable;)V", false);
 			mv.visitInsn(Opcodes.ATHROW);
 
-			mv.visitLabel(finallyBlockStart);
+			mv.visitLabel(catchBlockStart);
 
 			final int finallyExceptionStore = currentClass.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, finallyExceptionStore);
 
-			mv.visitLabel(catchThrowableEnd);
+			mv.visitLabel(finallyBlockStart);
 			mv.visitVarInsn(Opcodes.ALOAD, functionBindingsStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "keySet", "()Ljava/util/Set;", true);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Set", "iterator", "()Ljava/util/Iterator;", true);

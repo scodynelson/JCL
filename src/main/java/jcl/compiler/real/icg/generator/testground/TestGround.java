@@ -229,6 +229,10 @@ public class TestGround {
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	private Object letGen(final FunctionStruct function) {
 
+		final Closure parentClosure = function.getClosure();
+		final Closure closure = new Closure(parentClosure);
+		final Map<SymbolStruct<?>, LispStruct> closureBindings = closure.getClosureBindings();
+
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
 
@@ -238,10 +242,7 @@ public class TestGround {
 			initForm = valuesStruct.getPrimaryValue();
 		}
 		symbol.bindLexicalValue(initForm);
-
-		final Closure parentClosure = function.getClosure();
-		final Closure closure = new Closure(parentClosure);
-		closure.getClosureBindings().put(symbol, initForm);
+		closureBindings.put(symbol, initForm);
 
 		final LispStruct result;
 		try {

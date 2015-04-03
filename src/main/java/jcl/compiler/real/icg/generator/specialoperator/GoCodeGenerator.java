@@ -48,7 +48,6 @@ public class GoCodeGenerator implements CodeGenerator<GoStruct<?>> {
 		mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/icg/generator/specialoperator/exception/GoException");
 		mv.visitInsn(Opcodes.DUP);
 		mv.visitVarInsn(Opcodes.ILOAD, tagIndexStore);
-
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/icg/generator/specialoperator/exception/GoException", "<init>", "(I)V", false);
 		mv.visitInsn(Opcodes.ATHROW);
 

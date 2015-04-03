@@ -47,7 +47,6 @@ public class ThrowCodeGenerator implements CodeGenerator<ThrowStruct> {
 		mv.visitInsn(Opcodes.DUP);
 		mv.visitVarInsn(Opcodes.ALOAD, catchTagStore);
 		mv.visitVarInsn(Opcodes.ALOAD, resultFormStore);
-
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/icg/generator/specialoperator/exception/ThrowException", "<init>", "(Ljcl/LispStruct;Ljcl/LispStruct;)V", false);
 		mv.visitInsn(Opcodes.ATHROW);
 

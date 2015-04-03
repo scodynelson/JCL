@@ -11,6 +11,7 @@ import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.struct.specialoperator.SetqStruct;
 import jcl.symbols.SymbolStruct;
+import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -29,23 +30,38 @@ public class SetqCodeGenerator implements CodeGenerator<SetqStruct> {
 		final List<SetqStruct.SetqPair> setqPairs = input.getSetqPairs();
 
 		final ClassDef currentClass = classBuilder.getCurrentClass();
-		final MethodVisitor mv = currentClass.getMethodVisitor();
+		final String fileName = currentClass.getFileName();
+
+		final ClassWriter cw = currentClass.getClassWriter();
+		final MethodVisitor previousMv = currentClass.getMethodVisitor();
+
+		final String setqMethodName = "setq_" + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, setqMethodName, "()Ljcl/LispStruct;", null, null);
+		currentClass.setMethodVisitor(mv);
+		mv.visitCode();
 
 		final Stack<Environment> bindingStack = classBuilder.getBindingStack();
 		final Environment currentEnvironment = bindingStack.peek();
 
 		final Integer closureBindingsStore = currentClass.getNextAvailableStore();
 
-		final Stack<Integer> closureStoreStack = currentClass.getClosureStoreStack();
-		if (!closureStoreStack.isEmpty()) {
-			mv.visitVarInsn(Opcodes.ALOAD, 0); // TODO: I know that '0' essentially means 'this'. But can we do better by passing the actual Store value around???
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/FunctionStruct", "getClosure", "()Ljcl/functions/Closure;", false);
-			final Integer closureStore = currentClass.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, closureStore);
-			mv.visitVarInsn(Opcodes.ALOAD, closureStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/Closure", "getClosureBindings", "()Ljava/util/Map;", false);
-			mv.visitVarInsn(Opcodes.ASTORE, closureBindingsStore);
-		}
+		mv.visitVarInsn(Opcodes.ALOAD, 0);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/FunctionStruct", "getClosure", "()Ljcl/functions/Closure;", false);
+		final Integer closureStore = currentClass.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, closureStore);
+
+		mv.visitInsn(Opcodes.ACONST_NULL);
+		mv.visitVarInsn(Opcodes.ASTORE, closureBindingsStore);
+
+		mv.visitVarInsn(Opcodes.ALOAD, closureStore);
+		final Label closureNullCheckIfEnd = new Label();
+		mv.visitJumpInsn(Opcodes.IFNULL, closureNullCheckIfEnd);
+
+		mv.visitVarInsn(Opcodes.ALOAD, closureStore);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/Closure", "getClosureBindings", "()Ljava/util/Map;", false);
+		mv.visitVarInsn(Opcodes.ASTORE, closureBindingsStore);
+
+		mv.visitLabel(closureNullCheckIfEnd);
 
 		final int packageStore = currentClass.getNextAvailableStore();
 		final int symbolStore = currentClass.getNextAvailableStore();
@@ -102,15 +118,29 @@ public class SetqCodeGenerator implements CodeGenerator<SetqStruct> {
 				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "setValue", "(Ljcl/LispStruct;)V", false);
 			}
 
-			if (!closureStoreStack.isEmpty()) {
-				mv.visitVarInsn(Opcodes.ALOAD, closureBindingsStore);
-				mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
-				mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
-				mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", true);
-				mv.visitInsn(Opcodes.POP);
-			}
+			mv.visitVarInsn(Opcodes.ALOAD, closureBindingsStore);
+			final Label closureBindingsNullCheckIfEnd = new Label();
+			mv.visitJumpInsn(Opcodes.IFNULL, closureBindingsNullCheckIfEnd);
+
+			mv.visitVarInsn(Opcodes.ALOAD, closureBindingsStore);
+			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
+			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", true);
+			mv.visitInsn(Opcodes.POP);
+
+			mv.visitLabel(closureBindingsNullCheckIfEnd);
 		}
 
 		mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
+
+		mv.visitInsn(Opcodes.ARETURN);
+
+		mv.visitMaxs(-1, -1);
+		mv.visitEnd();
+
+		currentClass.setMethodVisitor(previousMv);
+
+		previousMv.visitVarInsn(Opcodes.ALOAD, 0);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, setqMethodName, "()Ljcl/LispStruct;", false);
 	}
 }

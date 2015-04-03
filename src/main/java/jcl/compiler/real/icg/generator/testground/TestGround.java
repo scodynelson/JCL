@@ -16,11 +16,11 @@ import jcl.compiler.real.icg.generator.specialoperator.TagbodyLabel;
 import jcl.compiler.real.icg.generator.specialoperator.exception.GoException;
 import jcl.compiler.real.icg.generator.specialoperator.exception.ReturnFromException;
 import jcl.compiler.real.icg.generator.specialoperator.exception.ThrowException;
-import jcl.functions.Closure;
-import jcl.functions.expanders.SymbolMacroExpander;
 import jcl.compiler.real.struct.ValuesStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.functions.Closure;
 import jcl.functions.FunctionStruct;
+import jcl.functions.expanders.SymbolMacroExpander;
 import jcl.lists.ConsStruct;
 import jcl.lists.NullStruct;
 import jcl.numbers.ComplexStruct;
@@ -92,10 +92,11 @@ public class TestGround {
 			resultForm = new CharacterStruct(197);
 		} catch (final ThrowException te) {
 			final LispStruct teCatchTag = te.getCatchTag();
-			if (!teCatchTag.equals(catchTag)) {
+			if (teCatchTag.equals(catchTag)) {
+				resultForm = te.getResultForm();
+			} else {
 				throw te;
 			}
-			resultForm = te.getResultForm();
 		}
 		return resultForm;
 	}
@@ -190,7 +191,10 @@ public class TestGround {
 	private Object setqGen(final FunctionStruct function) {
 
 		final Closure currentClosure = function.getClosure();
-		final Map<SymbolStruct<?>, LispStruct> closureBindings = currentClosure.getClosureBindings();
+		Map<SymbolStruct<?>, LispStruct> closureBindings = null;
+		if (currentClosure != null) {
+			closureBindings = currentClosure.getClosureBindings();
+		}
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
@@ -201,8 +205,9 @@ public class TestGround {
 			value = valuesStruct.getPrimaryValue();
 		}
 		symbol.setValue(value);
-
-		closureBindings.put(symbol, value);
+		if (closureBindings != null) {
+			closureBindings.put(symbol, value);
+		}
 
 		return value;
 	}

@@ -71,16 +71,17 @@ public class CatchCodeGenerator implements CodeGenerator<CatchStruct> {
 		mv.visitVarInsn(Opcodes.ALOAD, catchTagStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/Object", "equals", "(Ljava/lang/Object;)Z", false);
 
-		final Label setResultValue = new Label();
-		mv.visitJumpInsn(Opcodes.IFNE, setResultValue);
+		final Label rethrowException = new Label();
+		mv.visitJumpInsn(Opcodes.IFEQ, rethrowException);
 
-		mv.visitVarInsn(Opcodes.ALOAD, throwExceptionStore);
-		mv.visitInsn(Opcodes.ATHROW);
-
-		mv.visitLabel(setResultValue);
 		mv.visitVarInsn(Opcodes.ALOAD, throwExceptionStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/compiler/real/icg/generator/specialoperator/exception/ThrowException", "getResultForm", "()Ljcl/LispStruct;", false);
 		mv.visitVarInsn(Opcodes.ASTORE, resultFormStore);
+		mv.visitJumpInsn(Opcodes.GOTO, catchBlockEnd);
+
+		mv.visitLabel(rethrowException);
+		mv.visitVarInsn(Opcodes.ALOAD, throwExceptionStore);
+		mv.visitInsn(Opcodes.ATHROW);
 
 		mv.visitLabel(catchBlockEnd);
 		mv.visitVarInsn(Opcodes.ALOAD, resultFormStore);

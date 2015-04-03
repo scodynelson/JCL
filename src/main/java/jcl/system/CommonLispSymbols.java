@@ -35,6 +35,7 @@ import jcl.pathnames.functions.PathnameNameFunction;
 import jcl.pathnames.functions.PathnameTypeFunction;
 import jcl.pathnames.functions.PathnameVersionFunction;
 import jcl.printer.PrinterVariables;
+import jcl.printer.functions.PrintObjectFunction;
 import jcl.reader.struct.ReaderVariables;
 import jcl.streams.StreamVariables;
 import jcl.symbols.DeclarationStruct;
@@ -756,7 +757,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> PRINT = null;
 	SymbolStruct<?> PRINT_NOT_READABLE = null;
 	SymbolStruct<?> PRINT_NOT_READABLE_OBJECT = null;
-	SymbolStruct<?> PRINT_OBJECT = null;
+	SymbolStruct<?> PRINT_OBJECT = PrintObjectFunction.PRINT_OBJECT;
 	SymbolStruct<?> PRINT_UNREADABLE_OBJECT = null;
 	SymbolStruct<?> PROBE_FILE = null;
 	SymbolStruct<?> PROCLAIM = null;

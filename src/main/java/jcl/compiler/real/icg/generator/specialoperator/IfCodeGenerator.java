@@ -10,6 +10,7 @@ import jcl.compiler.real.icg.generator.simple.NullCodeGenerator;
 import jcl.compiler.real.struct.specialoperator.IfStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.NILStruct;
+import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -36,7 +37,15 @@ public class IfCodeGenerator implements CodeGenerator<IfStruct> {
 		final LispStruct elseForm = input.getElseForm();
 
 		final ClassDef currentClass = classBuilder.getCurrentClass();
-		final MethodVisitor mv = currentClass.getMethodVisitor();
+		final String fileName = currentClass.getFileName();
+
+		final ClassWriter cw = currentClass.getClassWriter();
+		final MethodVisitor previousMv = currentClass.getMethodVisitor();
+
+		final String ifMethodName = "if_" + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, ifMethodName, "()Ljcl/LispStruct;", null, null);
+		currentClass.setMethodVisitor(mv);
+		mv.visitCode();
 
 		formGenerator.generate(testForm, classBuilder);
 		final int testFormStore = currentClass.getNextAvailableStore();
@@ -85,5 +94,15 @@ public class IfCodeGenerator implements CodeGenerator<IfStruct> {
 
 		mv.visitLabel(elseEnd);
 		mv.visitVarInsn(Opcodes.ALOAD, resultFormStore);
+
+		mv.visitInsn(Opcodes.ARETURN);
+
+		mv.visitMaxs(-1, -1);
+		mv.visitEnd();
+
+		currentClass.setMethodVisitor(previousMv);
+
+		previousMv.visitVarInsn(Opcodes.ALOAD, 0);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, ifMethodName, "()Ljcl/LispStruct;", false);
 	}
 }

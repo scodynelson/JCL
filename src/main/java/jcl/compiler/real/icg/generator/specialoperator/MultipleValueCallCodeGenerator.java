@@ -7,7 +7,9 @@ import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
+import jcl.compiler.real.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.MultipleValueCallStruct;
+import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -25,11 +27,19 @@ public class MultipleValueCallCodeGenerator implements CodeGenerator<MultipleVal
 	@Override
 	public void generate(final MultipleValueCallStruct input, final JavaClassBuilder classBuilder) {
 
-		final LispStruct functionForm = input.getFunctionForm();
+		final CompilerFunctionStruct functionForm = input.getFunctionForm();
 		final List<LispStruct> forms = input.getForms();
 
 		final ClassDef currentClass = classBuilder.getCurrentClass();
-		final MethodVisitor mv = currentClass.getMethodVisitor();
+		final String fileName = currentClass.getFileName();
+
+		final ClassWriter cw = currentClass.getClassWriter();
+		final MethodVisitor previousMv = currentClass.getMethodVisitor();
+
+		final String multipleValueCallMethodName = "multipleValueCall_" + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, multipleValueCallMethodName, "()Ljcl/LispStruct;", null, null);
+		currentClass.setMethodVisitor(mv);
+		mv.visitCode();
 
 		formGenerator.generate(functionForm, classBuilder);
 		final int functionFormStore = currentClass.getNextAvailableStore();
@@ -141,5 +151,15 @@ public class MultipleValueCallCodeGenerator implements CodeGenerator<MultipleVal
 		mv.visitVarInsn(Opcodes.ALOAD, realFunctionFormStore);
 		mv.visitVarInsn(Opcodes.ALOAD, argsStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/FunctionStruct", "apply", "([Ljcl/LispStruct;)Ljcl/LispStruct;", false);
+
+		mv.visitInsn(Opcodes.ARETURN);
+
+		mv.visitMaxs(-1, -1);
+		mv.visitEnd();
+
+		currentClass.setMethodVisitor(previousMv);
+
+		previousMv.visitVarInsn(Opcodes.ALOAD, 0);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, multipleValueCallMethodName, "()Ljcl/LispStruct;", false);
 	}
 }

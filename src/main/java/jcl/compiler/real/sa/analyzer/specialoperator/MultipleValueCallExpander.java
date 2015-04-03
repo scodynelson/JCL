@@ -7,10 +7,13 @@ import javax.annotation.PostConstruct;
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.sa.FormAnalyzer;
-import jcl.functions.expanders.MacroFunctionExpander;
+import jcl.compiler.real.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.MultipleValueCallStruct;
+import jcl.compiler.real.struct.specialoperator.QuoteStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
+import jcl.printer.Printer;
 import jcl.symbols.SpecialOperatorStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -26,6 +29,12 @@ public class MultipleValueCallExpander extends MacroFunctionExpander<MultipleVal
 
 	@Autowired
 	private FormAnalyzer formAnalyzer;
+
+	@Autowired
+	private FunctionExpander functionExpander;
+
+	@Autowired
+	private Printer printer;
 
 	/**
 	 * Initializes the multiple-value-call macro function and adds it to the special operator 'multiple-value-call'.
@@ -48,6 +57,18 @@ public class MultipleValueCallExpander extends MacroFunctionExpander<MultipleVal
 		final LispStruct functionForm = formRest.getFirst();
 		final LispStruct functionFormAnalyzed = formAnalyzer.analyze(functionForm, environment);
 
+		final CompilerFunctionStruct functionFormAsCompilerFunction;
+		if (functionFormAnalyzed instanceof CompilerFunctionStruct) {
+			functionFormAsCompilerFunction = (CompilerFunctionStruct) functionFormAnalyzed;
+		} else if (functionFormAnalyzed instanceof QuoteStruct) {
+			final QuoteStruct quotedFunction = (QuoteStruct) functionFormAnalyzed;
+			final ListStruct functionListStruct = ListStruct.buildProperList(SpecialOperatorStruct.FUNCTION, quotedFunction.getObject());
+			functionFormAsCompilerFunction = functionExpander.expand(functionListStruct, environment);
+		} else {
+			final String printedObject = printer.print(functionForm);
+			throw new ProgramErrorException("MULTIPLE-VALUE-CALL: Invalid argument for function argument: " + printedObject);
+		}
+
 		final ListStruct formRestRest = formRest.getRest();
 
 		final List<LispStruct> forms = formRestRest.getAsJavaList();
@@ -56,7 +77,7 @@ public class MultipleValueCallExpander extends MacroFunctionExpander<MultipleVal
 				     .map(e -> formAnalyzer.analyze(e, environment))
 				     .collect(Collectors.toList());
 
-		return new MultipleValueCallStruct(functionFormAnalyzed, analyzedForms);
+		return new MultipleValueCallStruct(functionFormAsCompilerFunction, analyzedForms);
 	}
 
 	@Override

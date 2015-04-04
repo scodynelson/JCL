@@ -230,38 +230,36 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 
 		while (functionArgumentsIterator.hasNext()) {
 			final LispStruct nextArgument = functionArgumentsIterator.next();
+			restList.add(nextArgument);
+		}
+
+		for (final Iterator<LispStruct> iterator = restList.iterator(); iterator.hasNext(); ) {
+			final LispStruct nextArgument = iterator.next();
 
 			LispStruct possiblyKeywordNexArgument = nextArgument;
 			if (nextArgument instanceof SymbolStruct) {
 				final SymbolStruct<?> symbolArgument = (SymbolStruct) nextArgument;
-				if (!keysToBindings.isEmpty()) {
-					possiblyKeywordNexArgument = getKeywordStruct(symbolArgument.getName());
-				}
+				possiblyKeywordNexArgument = getKeywordStruct(symbolArgument.getName());
 			}
 
 			if (nextArgument instanceof KeywordStruct) {
 				if (CommonLispSymbols.ALLOW_OTHER_KEYS.equals(possiblyKeywordNexArgument)) {
-					restList.add(nextArgument);
-
 					final LispStruct allowOtherKeysValue = functionArgumentsIterator.next();
 					if (!allowOtherKeysValue.equals(NullStruct.INSTANCE) && !allowOtherKeysValue.equals(NILStruct.INSTANCE)) {
 						allowOtherKeys = true;
 					}
-					restList.add(allowOtherKeysValue);
 					continue;
 				}
 
 				final KeywordStruct keywordArgument = (KeywordStruct) possiblyKeywordNexArgument;
 				if (keysToBindings.containsKey(keywordArgument)) {
-					restList.add(nextArgument);
-
 					final KeyBinding keyBinding = keysToBindings.remove(keywordArgument);
 
 					final LispStruct keyInitForm;
 					final LispStruct suppliedPInitForm;
 
-					if (functionArgumentsIterator.hasNext()) {
-						keyInitForm = functionArgumentsIterator.next();
+					if (iterator.hasNext()) {
+						keyInitForm = iterator.next();
 						suppliedPInitForm = TStruct.INSTANCE;
 					} else {
 						keyInitForm = keyBinding.getInitForm();
@@ -274,14 +272,11 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 					final SuppliedPBinding suppliedPBinding = keyBinding.getSuppliedPBinding();
 					final SymbolStruct<?> suppliedPSymbol = suppliedPBinding.getSymbolStruct();
 					symbolsToBind.put(suppliedPSymbol, suppliedPInitForm);
-
-					restList.add(keyInitForm);
-				} else if (keys.contains(keywordArgument) || allowOtherKeys) {
-					restList.add(nextArgument);
-					final LispStruct keyInitForm = functionArgumentsIterator.next();
-					restList.add(keyInitForm);
-				} else if (keysToBindings.isEmpty()) {
-					restList.add(nextArgument);
+				} else if (keys.contains(keywordArgument) || allowOtherKeys || keysToBindings.isEmpty()) {
+					if (iterator.hasNext()) {
+						// Consume the next argument
+						iterator.next();
+					}
 				} else {
 					throw new ProgramErrorException("Keyword argument not found in '" + functionClassName + "' function definition: :" + keywordArgument.getName());
 				}
@@ -291,8 +286,6 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 				final int numberOfOptionals = optionalBindings.size();
 				final int maxNumberProvided = numberOfRequired + numberOfOptionals + numberOfKeys;
 				throw new ProgramErrorException("Too many arguments in call to '" + functionClassName + "'. " + numberOfArguments + " arguments provided, at most " + maxNumberProvided + " accepted.");
-			} else {
-				restList.add(nextArgument);
 			}
 		}
 

@@ -534,6 +534,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final List<OptionalBinding> optionalBindings = lambdaListBindings.getOptionalBindings();
 		for (final OptionalBinding optionalBinding : optionalBindings) {
 			final SymbolStruct<?> optionalSymbol = optionalBinding.getSymbolStruct();
+			final LispStruct optionalInitForm = optionalBinding.getInitForm();
 
 			String packageName = optionalSymbol.getSymbolPackage().getName();
 			String symbolName = optionalSymbol.getName();
@@ -554,9 +555,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/allocation/ParameterAllocation", "<init>", "(I)V", false);
 			mv.visitVarInsn(Opcodes.ASTORE, allocationStore);
 
-			// NOTE: Just generate a null value for this initForm here. We take care of the read initForms in the body
-			//       when it is processed
-			nullCodeGenerator.generate(NullStruct.INSTANCE, classBuilder);
+			formGenerator.generate(optionalInitForm, classBuilder);
 			mv.visitVarInsn(Opcodes.ASTORE, optionalInitFormStore);
 
 			// Start: Supplied-P
@@ -678,6 +677,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final List<KeyBinding> keyBindings = lambdaListBindings.getKeyBindings();
 		for (final KeyBinding keyBinding : keyBindings) {
 			final SymbolStruct<?> keySymbol = keyBinding.getSymbolStruct();
+			final LispStruct keyInitForm = keyBinding.getInitForm();
 
 			String packageName = keySymbol.getSymbolPackage().getName();
 			String symbolName = keySymbol.getName();
@@ -698,9 +698,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/allocation/ParameterAllocation", "<init>", "(I)V", false);
 			mv.visitVarInsn(Opcodes.ASTORE, allocationStore);
 
-			// NOTE: Just generate a null value for this initForm here. We take care of the read initForms in the body
-			//       when it is processed
-			nullCodeGenerator.generate(NullStruct.INSTANCE, classBuilder);
+			formGenerator.generate(keyInitForm, classBuilder);
 			mv.visitVarInsn(Opcodes.ASTORE, keyInitFormStore);
 
 			mv.visitFieldInsn(Opcodes.GETSTATIC, "jcl/packages/GlobalPackageStruct", "KEYWORD", "Ljcl/packages/PackageStruct;");
@@ -822,7 +820,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/allocation/ParameterAllocation", "<init>", "(I)V", false);
 			mv.visitVarInsn(Opcodes.ASTORE, allocationStore);
 
-			// NOTE: Just generate a null value for this initForm here. We take care of the read initForms in the body
+			// NOTE: Just generate a null value for this initForm here. We take care of the &aux initForms in the body
 			//       when it is processed
 			nullCodeGenerator.generate(NullStruct.INSTANCE, classBuilder);
 			mv.visitVarInsn(Opcodes.ASTORE, auxInitFormStore);

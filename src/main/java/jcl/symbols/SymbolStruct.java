@@ -518,12 +518,12 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	public int hashCode() {
 		return new HashCodeBuilder().appendSuper(super.hashCode())
 		                            .append(name)
-		                            .append(symbolPackage)
-		                            .append(functionStack)
+//		                            .append(symbolPackage)
+//		                            .append(functionStack)
 		                            .append(properties)
-		                            .append(macroFunctionExpander)
-		                            .append(compilerMacroFunctionExpander)
-		                            .append(symbolMacroExpanderStack)
+//		                            .append(macroFunctionExpander)
+//		                            .append(compilerMacroFunctionExpander)
+//		                            .append(symbolMacroExpanderStack)
 		                            .toHashCode();
 //		                            .append(lexicalValueStack) TODO: why does this cause explosions???
 //		                            .append(dynamicValueStack) TODO: why does this cause explosions???

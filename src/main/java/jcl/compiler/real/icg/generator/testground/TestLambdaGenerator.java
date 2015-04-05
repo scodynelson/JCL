@@ -114,15 +114,21 @@ public class TestLambdaGenerator extends FunctionStruct {
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		final Map<SymbolStruct<?>, LispStruct> closureBindings = getClosureBindings();
-		final Map<SymbolStruct<?>, LispStruct> symbolsToBind = getFunctionBindings(lispStructs);
+		final Map<SymbolStruct<?>, LispStruct> closureSymbolsToBind = getClosureBindings();
+		for (final Map.Entry<SymbolStruct<?>, LispStruct> closureSymbolToBind : closureSymbolsToBind.entrySet()) {
+			final SymbolStruct symbol = closureSymbolToBind.getKey();
+			LispStruct value = closureSymbolToBind.getValue();
+			if (value instanceof ValuesStruct) {
+				final ValuesStruct valuesStruct = (ValuesStruct) value;
+				value = valuesStruct.getPrimaryValue();
+			}
+			symbol.bindLexicalValue(value);
+		}
 
-		closureBindings.keySet().removeAll(symbolsToBind.keySet());
-		symbolsToBind.putAll(closureBindings);
-
-		for (final Map.Entry<SymbolStruct<?>, LispStruct> symbolToBind : symbolsToBind.entrySet()) {
-			final SymbolStruct symbol = symbolToBind.getKey();
-			LispStruct value = symbolToBind.getValue();
+		final Map<SymbolStruct<?>, LispStruct> parameterSymbolsToBind = getFunctionBindings(lispStructs);
+		for (final Map.Entry<SymbolStruct<?>, LispStruct> parameterSymbolToBind : parameterSymbolsToBind.entrySet()) {
+			final SymbolStruct symbol = parameterSymbolToBind.getKey();
+			LispStruct value = parameterSymbolToBind.getValue();
 			if (value instanceof ValuesStruct) {
 				final ValuesStruct valuesStruct = (ValuesStruct) value;
 				value = valuesStruct.getPrimaryValue();
@@ -139,8 +145,11 @@ public class TestLambdaGenerator extends FunctionStruct {
 		} catch (final Throwable t) {
 			throw new ErrorException("Non-Lisp error found.", t);
 		} finally {
-			for (final SymbolStruct<?> symbolToUnbind : symbolsToBind.keySet()) {
-				symbolToUnbind.unbindLexicalValue();
+			for (final SymbolStruct<?> parameterSymbolToBind : parameterSymbolsToBind.keySet()) {
+				parameterSymbolToBind.unbindLexicalValue();
+			}
+			for (final SymbolStruct<?> closureSymbolToUnbind : closureSymbolsToBind.keySet()) {
+				closureSymbolToUnbind.unbindLexicalValue();
 			}
 		}
 		return result;

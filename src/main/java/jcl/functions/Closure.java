@@ -4,21 +4,17 @@
 
 package jcl.functions;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import jcl.LispStruct;
 import jcl.symbols.SymbolStruct;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class Closure {
 
 	private final Closure parent;
 
-	private final Map<SymbolStruct<?>, LispStruct> closureBindings = new HashMap<>();
+	private final Map<SymbolStruct<?>, LispStruct> closureBindings = new LinkedHashMap<>();
 
 	public Closure(final Closure parent) {
 		this.parent = parent;

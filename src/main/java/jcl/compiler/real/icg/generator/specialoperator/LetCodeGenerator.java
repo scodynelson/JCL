@@ -4,7 +4,7 @@
 
 package jcl.compiler.real.icg.generator.specialoperator;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -81,8 +81,8 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 
 		final int packageStore = currentClass.getNextAvailableStore();
 
-		final Map<Integer, Integer> lexicalSymbolStoresToBind = new HashMap<>();
-		final Map<Integer, Integer> dynamicSymbolStoresToBind = new HashMap<>();
+		final Map<Integer, Integer> lexicalSymbolStoresToBind = new LinkedHashMap<>();
+		final Map<Integer, Integer> dynamicSymbolStoresToBind = new LinkedHashMap<>();
 
 		final Set<Integer> lexicalSymbolStoresToUnbind = lexicalSymbolStoresToBind.keySet();
 		final Set<Integer> dynamicSymbolStoresToUnbind = dynamicSymbolStoresToBind.keySet();

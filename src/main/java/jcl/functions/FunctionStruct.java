@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -178,7 +179,7 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 		final List<KeyBinding> keyBindings = lambdaListBindings.getKeyBindings();
 		boolean allowOtherKeys = lambdaListBindings.isAllowOtherKeys();
 
-		final Map<SymbolStruct<?>, LispStruct> symbolsToBind = new HashMap<>();
+		final Map<SymbolStruct<?>, LispStruct> symbolsToBind = new LinkedHashMap<>();
 
 		final List<LispStruct> functionArguments = Arrays.asList(lispStructs);
 		final int numberOfArguments = functionArguments.size();
@@ -197,19 +198,17 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 		}
 
 		for (final OptionalBinding optionalBinding : optionalBindings) {
-			final LispStruct optionalInitForm;
 			final LispStruct suppliedPInitForm;
 
 			if (functionArgumentsIterator.hasNext()) {
-				optionalInitForm = functionArgumentsIterator.next();
+				final LispStruct optionalInitForm = functionArgumentsIterator.next();
 				suppliedPInitForm = TStruct.INSTANCE;
+
+				final SymbolStruct<?> optionalSymbol = optionalBinding.getSymbolStruct();
+				symbolsToBind.put(optionalSymbol, optionalInitForm);
 			} else {
-				optionalInitForm = optionalBinding.getInitForm();
 				suppliedPInitForm = NILStruct.INSTANCE;
 			}
-
-			final SymbolStruct<?> optionalSymbol = optionalBinding.getSymbolStruct();
-			symbolsToBind.put(optionalSymbol, optionalInitForm);
 
 			final SuppliedPBinding suppliedPBinding = optionalBinding.getSuppliedPBinding();
 			final SymbolStruct<?> suppliedPSymbol = suppliedPBinding.getSymbolStruct();
@@ -255,19 +254,17 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 				if (keysToBindings.containsKey(keywordArgument)) {
 					final KeyBinding keyBinding = keysToBindings.remove(keywordArgument);
 
-					final LispStruct keyInitForm;
 					final LispStruct suppliedPInitForm;
 
 					if (iterator.hasNext()) {
-						keyInitForm = iterator.next();
+						final LispStruct keyInitForm = iterator.next();
 						suppliedPInitForm = TStruct.INSTANCE;
+
+						final SymbolStruct<?> keySymbol = keyBinding.getSymbolStruct();
+						symbolsToBind.put(keySymbol, keyInitForm);
 					} else {
-						keyInitForm = keyBinding.getInitForm();
 						suppliedPInitForm = NILStruct.INSTANCE;
 					}
-
-					final SymbolStruct<?> keySymbol = keyBinding.getSymbolStruct();
-					symbolsToBind.put(keySymbol, keyInitForm);
 
 					final SuppliedPBinding suppliedPBinding = keyBinding.getSuppliedPBinding();
 					final SymbolStruct<?> suppliedPSymbol = suppliedPBinding.getSymbolStruct();
@@ -290,10 +287,6 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 		}
 
 		for (final KeyBinding keyBinding : keysToBindings.values()) {
-			final SymbolStruct<?> keySymbol = keyBinding.getSymbolStruct();
-			final LispStruct keyInitForm = keyBinding.getInitForm();
-			symbolsToBind.put(keySymbol, keyInitForm);
-
 			final SuppliedPBinding suppliedPBinding = keyBinding.getSuppliedPBinding();
 			final SymbolStruct<?> suppliedPSymbol = suppliedPBinding.getSymbolStruct();
 			symbolsToBind.put(suppliedPSymbol, NILStruct.INSTANCE);

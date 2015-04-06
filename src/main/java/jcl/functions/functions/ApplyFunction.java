@@ -18,6 +18,7 @@ import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
+import jcl.compiler.real.struct.ValuesStruct;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
@@ -88,7 +89,12 @@ public class ApplyFunction extends FunctionStruct {
 
 		final List<LispStruct> lispStructsAsList = Arrays.asList(lispStructs);
 
-		final LispStruct functionDesignator = lispStructsAsList.get(0);
+		LispStruct functionDesignator = lispStructsAsList.get(0);
+		if (functionDesignator instanceof ValuesStruct) {
+			final ValuesStruct values = (ValuesStruct) functionDesignator;
+			functionDesignator = values.getPrimaryValue();
+		}
+
 		FunctionStruct functionStruct = null;
 		if (functionDesignator instanceof SymbolStruct) {
 			functionStruct = ((SymbolStruct) functionDesignator).getFunction();

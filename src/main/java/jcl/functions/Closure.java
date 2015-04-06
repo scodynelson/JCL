@@ -14,13 +14,16 @@ public class Closure {
 
 	private final Closure parent;
 
-	private final Map<SymbolStruct<?>, LispStruct> closureBindings = new LinkedHashMap<>();
+	private final Map<SymbolStruct<?>, LispStruct> symbolBindings = new LinkedHashMap<>();
+
+	private final Map<SymbolStruct<?>, FunctionStruct> functionBindings = new LinkedHashMap<>();
 
 	public Closure(final Closure parent) {
 		this.parent = parent;
 
 		if (parent != null) {
-			closureBindings.putAll(parent.closureBindings);
+			symbolBindings.putAll(parent.symbolBindings);
+			functionBindings.putAll(parent.functionBindings);
 		}
 	}
 
@@ -28,14 +31,19 @@ public class Closure {
 		return parent;
 	}
 
-	public Map<SymbolStruct<?>, LispStruct> getClosureBindings() {
-		return closureBindings;
+	public Map<SymbolStruct<?>, LispStruct> getSymbolBindings() {
+		return symbolBindings;
+	}
+
+	public Map<SymbolStruct<?>, FunctionStruct> getFunctionBindings() {
+		return functionBindings;
 	}
 
 //	@Override
 //	public int hashCode() {
 //		return new HashCodeBuilder().append(parent)
-//		                            .append(closureBindings)
+//		                            .append(symbolBindings)
+//		                            .append(functionBindings)
 //		                            .toHashCode();
 //	}
 //
@@ -52,14 +60,16 @@ public class Closure {
 //		}
 //		final Closure rhs = (Closure) obj;
 //		return new EqualsBuilder().append(parent, rhs.parent)
-//		                          .append(closureBindings, rhs.closureBindings)
+//		                          .append(symbolBindings, rhs.symbolBindings)
+//		                          .append(functionBindings, rhs.functionBindings)
 //		                          .isEquals();
 //	}
 //
 //	@Override
 //	public String toString() {
 //		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(parent)
-//		                                                                .append(closureBindings)
+//		                                                                .append(symbolBindings)
+//		                                                                .append(functionBindings)
 //		                                                                .toString();
 //	}
 }

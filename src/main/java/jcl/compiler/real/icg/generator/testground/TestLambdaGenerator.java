@@ -114,7 +114,7 @@ public class TestLambdaGenerator extends FunctionStruct {
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		final Map<SymbolStruct<?>, LispStruct> closureSymbolsToBind = getClosureBindings();
+		final Map<SymbolStruct<?>, LispStruct> closureSymbolsToBind = getClosureSymbolBindings();
 		for (final Map.Entry<SymbolStruct<?>, LispStruct> closureSymbolToBind : closureSymbolsToBind.entrySet()) {
 			final SymbolStruct symbol = closureSymbolToBind.getKey();
 			LispStruct value = closureSymbolToBind.getValue();
@@ -123,6 +123,13 @@ public class TestLambdaGenerator extends FunctionStruct {
 				value = valuesStruct.getPrimaryValue();
 			}
 			symbol.bindLexicalValue(value);
+		}
+
+		final Map<SymbolStruct<?>, FunctionStruct> closureFunctionsToBind = getClosureFunctionBindings();
+		for (final Map.Entry<SymbolStruct<?>, FunctionStruct> closureFunctionToBind : closureFunctionsToBind.entrySet()) {
+			final SymbolStruct symbol = closureFunctionToBind.getKey();
+			final FunctionStruct function = closureFunctionToBind.getValue();
+			symbol.bindFunction(function);
 		}
 
 		final Map<SymbolStruct<?>, LispStruct> parameterSymbolsToBind = getFunctionBindings(lispStructs);
@@ -147,6 +154,9 @@ public class TestLambdaGenerator extends FunctionStruct {
 		} finally {
 			for (final SymbolStruct<?> parameterSymbolToBind : parameterSymbolsToBind.keySet()) {
 				parameterSymbolToBind.unbindLexicalValue();
+			}
+			for (final SymbolStruct<?> closureFunctionToUnbind : closureFunctionsToBind.keySet()) {
+				closureFunctionToUnbind.unbindFunction();
 			}
 			for (final SymbolStruct<?> closureSymbolToUnbind : closureSymbolsToBind.keySet()) {
 				closureSymbolToUnbind.unbindLexicalValue();

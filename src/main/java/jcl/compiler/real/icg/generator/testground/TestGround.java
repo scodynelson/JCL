@@ -193,7 +193,7 @@ public class TestGround {
 		final Closure currentClosure = function.getClosure();
 		Map<SymbolStruct<?>, LispStruct> closureBindings = null;
 		if (currentClosure != null) {
-			closureBindings = currentClosure.getClosureBindings();
+			closureBindings = currentClosure.getSymbolBindings();
 		}
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
@@ -231,7 +231,7 @@ public class TestGround {
 
 		final Closure parentClosure = function.getClosure();
 		final Closure closure = new Closure(parentClosure);
-		final Map<SymbolStruct<?>, LispStruct> closureBindings = closure.getClosureBindings();
+		final Map<SymbolStruct<?>, LispStruct> closureBindings = closure.getSymbolBindings();
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();
@@ -311,14 +311,22 @@ public class TestGround {
 		return function.apply(args);
 	}
 
-	private Object fletGen() {
+	private Object fletGen(final FunctionStruct function) {
+
+		final Closure currentClosure = function.getClosure();
+		Map<SymbolStruct<?>, FunctionStruct> closureBindings = null;
+		if (currentClosure != null) {
+			closureBindings = currentClosure.getFunctionBindings();
+		}
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct<?> symbol = pkg.findSymbol("FOO").getSymbol();
 
-		final Closure parentClosure = null;
-		final FunctionStruct initForm = new TestGroundLambdaFunction(parentClosure);
+		final FunctionStruct initForm = new TestGroundLambdaFunction(currentClosure);
 		symbol.bindFunction(initForm);
+		if (closureBindings != null) {
+			closureBindings.put(symbol, initForm);
+		}
 
 		final LispStruct result;
 		try {

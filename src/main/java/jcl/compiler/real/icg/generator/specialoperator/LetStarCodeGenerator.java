@@ -74,7 +74,7 @@ public class LetStarCodeGenerator implements CodeGenerator<LetStarStruct> {
 		mv.visitVarInsn(Opcodes.ASTORE, newClosureStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, newClosureStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/Closure", "getClosureBindings", "()Ljava/util/Map;", false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/Closure", "getSymbolBindings", "()Ljava/util/Map;", false);
 		final Integer newClosureBindingsStore = currentClass.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, newClosureBindingsStore);
 
@@ -137,7 +137,7 @@ public class LetStarCodeGenerator implements CodeGenerator<LetStarStruct> {
 				lexicalSymbolStoresToUnbind.add(symbolStore);
 
 				mv.visitVarInsn(Opcodes.ALOAD, newClosureStore);
-				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/Closure", "getClosureBindings", "()Ljava/util/Map;", false);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/Closure", "getSymbolBindings", "()Ljava/util/Map;", false);
 
 				mv.visitVarInsn(Opcodes.ALOAD, newClosureBindingsStore);
 				mv.visitVarInsn(Opcodes.ALOAD, symbolStore);

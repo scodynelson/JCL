@@ -165,11 +165,18 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 		this.closure = closure;
 	}
 
-	public Map<SymbolStruct<?>, LispStruct> getClosureBindings() {
+	public Map<SymbolStruct<?>, LispStruct> getClosureSymbolBindings() {
 		if (closure == null) {
 			return Collections.emptyMap();
 		}
-		return closure.getClosureBindings();
+		return closure.getSymbolBindings();
+	}
+
+	public Map<SymbolStruct<?>, FunctionStruct> getClosureFunctionBindings() {
+		if (closure == null) {
+			return Collections.emptyMap();
+		}
+		return closure.getFunctionBindings();
 	}
 
 	protected Map<SymbolStruct<?>, LispStruct> getFunctionBindings(final LispStruct[] lispStructs) {

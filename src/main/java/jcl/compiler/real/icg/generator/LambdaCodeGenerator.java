@@ -225,70 +225,116 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, null);
 			mv.visitTryCatchBlock(catchErrorExceptionStart, finallyBlockStart, catchBlockStart, null);
 
-			// START: Init Closure Bindings
+			// START: Bind Closure Symbol values
 			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, "getClosureBindings", "()Ljava/util/Map;", false);
-			final int closureBindingsStore = currentClass.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, closureBindingsStore);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, "getClosureSymbolBindings", "()Ljava/util/Map;", false);
+			final int closureSymbolBindingsStore = currentClass.getNextAvailableStore();
+			mv.visitVarInsn(Opcodes.ASTORE, closureSymbolBindingsStore);
 
-			mv.visitVarInsn(Opcodes.ALOAD, closureBindingsStore);
+			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingsStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "entrySet", "()Ljava/util/Set;", true);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Set", "iterator", "()Ljava/util/Iterator;", true);
-			final int closureBindingIteratorStore = currentClass.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, closureBindingIteratorStore);
+			final int closureSymbolBindingIteratorStore = currentClass.getNextAvailableStore();
+			mv.visitVarInsn(Opcodes.ASTORE, closureSymbolBindingIteratorStore);
 
-			final Label closureBindingIteratorLoopStart = new Label();
-			final Label closureBindingIteratorLoopEnd = new Label();
+			final Label closureSymbolBindingIteratorLoopStart = new Label();
+			final Label closureSymbolBindingIteratorLoopEnd = new Label();
 
-			mv.visitLabel(closureBindingIteratorLoopStart);
-			mv.visitVarInsn(Opcodes.ALOAD, closureBindingIteratorStore);
+			mv.visitLabel(closureSymbolBindingIteratorLoopStart);
+			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingIteratorStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "hasNext", "()Z", true);
 
-			mv.visitJumpInsn(Opcodes.IFEQ, closureBindingIteratorLoopEnd);
-			mv.visitVarInsn(Opcodes.ALOAD, closureBindingIteratorStore);
+			mv.visitJumpInsn(Opcodes.IFEQ, closureSymbolBindingIteratorLoopEnd);
+			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingIteratorStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "next", "()Ljava/lang/Object;", true);
 			mv.visitTypeInsn(Opcodes.CHECKCAST, "java/util/Map$Entry");
-			final int closureBindingMapEntryStore = currentClass.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, closureBindingMapEntryStore);
+			final int closureSymbolBindingMapEntryStore = currentClass.getNextAvailableStore();
+			mv.visitVarInsn(Opcodes.ASTORE, closureSymbolBindingMapEntryStore);
 
-			mv.visitVarInsn(Opcodes.ALOAD, closureBindingMapEntryStore);
+			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingMapEntryStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map$Entry", "getKey", "()Ljava/lang/Object;", true);
 			mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/symbols/SymbolStruct");
 			final int closureSymbolToBindStore = currentClass.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, closureSymbolToBindStore);
 
-			mv.visitVarInsn(Opcodes.ALOAD, closureBindingMapEntryStore);
+			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingMapEntryStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map$Entry", "getValue", "()Ljava/lang/Object;", true);
 			mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/LispStruct");
-			final int closureLexicalValueStore = currentClass.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, closureLexicalValueStore);
+			final int closureSymbolLexicalValueStore = currentClass.getNextAvailableStore();
+			mv.visitVarInsn(Opcodes.ASTORE, closureSymbolLexicalValueStore);
 
-			final Label closureValuesCheckIfEnd = new Label();
+			final Label closureSymbolValuesCheckIfEnd = new Label();
 
-			mv.visitVarInsn(Opcodes.ALOAD, closureLexicalValueStore);
+			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolLexicalValueStore);
 			mv.visitTypeInsn(Opcodes.INSTANCEOF, "jcl/compiler/real/struct/ValuesStruct");
-			mv.visitJumpInsn(Opcodes.IFEQ, closureValuesCheckIfEnd);
+			mv.visitJumpInsn(Opcodes.IFEQ, closureSymbolValuesCheckIfEnd);
 
-			mv.visitVarInsn(Opcodes.ALOAD, closureLexicalValueStore);
+			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolLexicalValueStore);
 			mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/compiler/real/struct/ValuesStruct");
-			final int closureValuesStore = currentClass.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, closureValuesStore);
+			final int closureSymbolValuesStore = currentClass.getNextAvailableStore();
+			mv.visitVarInsn(Opcodes.ASTORE, closureSymbolValuesStore);
 
-			mv.visitVarInsn(Opcodes.ALOAD, closureValuesStore);
+			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolValuesStore);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/compiler/real/struct/ValuesStruct", "getPrimaryValue", "()Ljcl/LispStruct;", false);
-			mv.visitVarInsn(Opcodes.ASTORE, closureLexicalValueStore);
+			mv.visitVarInsn(Opcodes.ASTORE, closureSymbolLexicalValueStore);
 
-			mv.visitLabel(closureValuesCheckIfEnd);
+			mv.visitLabel(closureSymbolValuesCheckIfEnd);
 
 			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolToBindStore);
-			mv.visitVarInsn(Opcodes.ALOAD, closureLexicalValueStore);
+			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolLexicalValueStore);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "bindLexicalValue", "(Ljcl/LispStruct;)V", false);
-			mv.visitJumpInsn(Opcodes.GOTO, closureBindingIteratorLoopStart);
+			mv.visitJumpInsn(Opcodes.GOTO, closureSymbolBindingIteratorLoopStart);
 
-			mv.visitLabel(closureBindingIteratorLoopEnd);
-			// END: Init Closure Bindings
+			mv.visitLabel(closureSymbolBindingIteratorLoopEnd);
+			// END: Bind Closure Symbol values
 
-			// START: Init InitForm Bindings
+			// START: Bind Closure Function values
+			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, "getClosureFunctionBindings", "()Ljava/util/Map;", false);
+			final int closureFunctionBindingsStore = currentClass.getNextAvailableStore();
+			mv.visitVarInsn(Opcodes.ASTORE, closureFunctionBindingsStore);
+
+			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingsStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "entrySet", "()Ljava/util/Set;", true);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Set", "iterator", "()Ljava/util/Iterator;", true);
+			final int closureFunctionBindingIteratorStore = currentClass.getNextAvailableStore();
+			mv.visitVarInsn(Opcodes.ASTORE, closureFunctionBindingIteratorStore);
+
+			final Label closureFunctionBindingIteratorLoopStart = new Label();
+			final Label closureFunctionBindingIteratorLoopEnd = new Label();
+
+			mv.visitLabel(closureFunctionBindingIteratorLoopStart);
+			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingIteratorStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "hasNext", "()Z", true);
+
+			mv.visitJumpInsn(Opcodes.IFEQ, closureFunctionBindingIteratorLoopEnd);
+			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingIteratorStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "next", "()Ljava/lang/Object;", true);
+			mv.visitTypeInsn(Opcodes.CHECKCAST, "java/util/Map$Entry");
+			final int closureFunctionBindingMapEntryStore = currentClass.getNextAvailableStore();
+			mv.visitVarInsn(Opcodes.ASTORE, closureFunctionBindingMapEntryStore);
+
+			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingMapEntryStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map$Entry", "getKey", "()Ljava/lang/Object;", true);
+			mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/symbols/SymbolStruct");
+			final int closureFunctionToBindStore = currentClass.getNextAvailableStore();
+			mv.visitVarInsn(Opcodes.ASTORE, closureFunctionToBindStore);
+
+			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingMapEntryStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map$Entry", "getValue", "()Ljava/lang/Object;", true);
+			mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/functions/FunctionStruct");
+			final int closureFunctionValueStore = currentClass.getNextAvailableStore();
+			mv.visitVarInsn(Opcodes.ASTORE, closureFunctionValueStore);
+
+			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionToBindStore);
+			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionValueStore);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "bindFunction", "(Ljcl/functions/FunctionStruct;)V", false);
+			mv.visitJumpInsn(Opcodes.GOTO, closureFunctionBindingIteratorLoopStart);
+
+			mv.visitLabel(closureFunctionBindingIteratorLoopEnd);
+			// END: Bind Closure Function values
+
+			// START: Bind InitForm values
 
 			final Stack<Environment> bindingStack = classBuilder.getBindingStack();
 
@@ -298,9 +344,9 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			}
 			bindingStack.pop();
 
-			// END: Init InitForm Bindings
+			// END: Bind InitForm values
 
-			// START: Init Parameter Bindings
+			// START: Bind Parameter values
 			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 			mv.visitVarInsn(Opcodes.ALOAD, argsStore);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, "getFunctionBindings", "([Ljcl/LispStruct;)Ljava/util/Map;", false);
@@ -362,7 +408,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitJumpInsn(Opcodes.GOTO, parameterBindingIteratorLoopStart);
 
 			mv.visitLabel(parameterBindingIteratorLoopEnd);
-			// END: Init Parameter Bindings
+			// END: Bind Parameter values
 
 			mv.visitLabel(tryBlockStart);
 
@@ -375,6 +421,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			mv.visitLabel(tryBlockEnd);
 
+			// START: Unbind Parameter values
 			mv.visitVarInsn(Opcodes.ALOAD, functionBindingsStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "keySet", "()Ljava/util/Set;", true);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Set", "iterator", "()Ljava/util/Iterator;", true);
@@ -400,21 +447,51 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitJumpInsn(Opcodes.GOTO, normalParameterUnbindingIteratorLoopStart);
 
 			mv.visitLabel(normalParameterUnbindingIteratorLoopEnd);
+			// END: Unbind Parameter values
 
-			mv.visitVarInsn(Opcodes.ALOAD, closureBindingsStore);
+			// START: Unbind Closure Function values
+			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingsStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "keySet", "()Ljava/util/Set;", true);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Set", "iterator", "()Ljava/util/Iterator;", true);
+			final int normalClosureFunctionUnbindingIteratorStore = currentClass.getNextAvailableStore();
+			mv.visitVarInsn(Opcodes.ASTORE, normalClosureFunctionUnbindingIteratorStore);
+
+			final Label normalClosureFunctionUnbindingIteratorLoopStart = new Label();
+			final Label normalClosureFunctionUnbindingIteratorLoopEnd = new Label();
+
+			mv.visitLabel(normalClosureFunctionUnbindingIteratorLoopStart);
+			mv.visitVarInsn(Opcodes.ALOAD, normalClosureFunctionUnbindingIteratorStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "hasNext", "()Z", true);
+
+			mv.visitJumpInsn(Opcodes.IFEQ, normalClosureFunctionUnbindingIteratorLoopEnd);
+			mv.visitVarInsn(Opcodes.ALOAD, normalClosureFunctionUnbindingIteratorStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "next", "()Ljava/lang/Object;", true);
+			mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/symbols/SymbolStruct");
+			final int normalClosureFunctionUnbindingMapKeySymbolStore = currentClass.getNextAvailableStore();
+			mv.visitVarInsn(Opcodes.ASTORE, normalClosureFunctionUnbindingMapKeySymbolStore);
+
+			mv.visitVarInsn(Opcodes.ALOAD, normalClosureFunctionUnbindingMapKeySymbolStore);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindFunction", "()V", false);
+			mv.visitJumpInsn(Opcodes.GOTO, normalClosureFunctionUnbindingIteratorLoopStart);
+
+			mv.visitLabel(normalClosureFunctionUnbindingIteratorLoopEnd);
+			// END: Unbind Closure Function values
+
+			// START: Unbind Closure Symbol values
+			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingsStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "keySet", "()Ljava/util/Set;", true);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Set", "iterator", "()Ljava/util/Iterator;", true);
 			final int normalClosureUnbindingIteratorStore = currentClass.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, normalClosureUnbindingIteratorStore);
 
-			final Label normalClosureUnbindingIteratorLoopStart = new Label();
-			final Label normalClosureUnbindingIteratorLoopEnd = new Label();
+			final Label normalClosureSymbolUnbindingIteratorLoopStart = new Label();
+			final Label normalClosureSymbolUnbindingIteratorLoopEnd = new Label();
 
-			mv.visitLabel(normalClosureUnbindingIteratorLoopStart);
+			mv.visitLabel(normalClosureSymbolUnbindingIteratorLoopStart);
 			mv.visitVarInsn(Opcodes.ALOAD, normalClosureUnbindingIteratorStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "hasNext", "()Z", true);
 
-			mv.visitJumpInsn(Opcodes.IFEQ, normalClosureUnbindingIteratorLoopEnd);
+			mv.visitJumpInsn(Opcodes.IFEQ, normalClosureSymbolUnbindingIteratorLoopEnd);
 			mv.visitVarInsn(Opcodes.ALOAD, normalClosureUnbindingIteratorStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "next", "()Ljava/lang/Object;", true);
 			mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/symbols/SymbolStruct");
@@ -423,9 +500,10 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			mv.visitVarInsn(Opcodes.ALOAD, normalClosureUnbindingMapKeySymbolStore);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindLexicalValue", "()V", false);
-			mv.visitJumpInsn(Opcodes.GOTO, normalClosureUnbindingIteratorLoopStart);
+			mv.visitJumpInsn(Opcodes.GOTO, normalClosureSymbolUnbindingIteratorLoopStart);
 
-			mv.visitLabel(normalClosureUnbindingIteratorLoopEnd);
+			mv.visitLabel(normalClosureSymbolUnbindingIteratorLoopEnd);
+			// END: Unbind Closure Symbol values
 
 			mv.visitJumpInsn(Opcodes.GOTO, finallyBlockEnd);
 
@@ -454,6 +532,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			mv.visitLabel(finallyBlockStart);
 
+			// START: Unbind Parameter values
 			mv.visitVarInsn(Opcodes.ALOAD, functionBindingsStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "keySet", "()Ljava/util/Set;", true);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Set", "iterator", "()Ljava/util/Iterator;", true);
@@ -479,8 +558,38 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitJumpInsn(Opcodes.GOTO, exceptionParameterUnbindingIteratorLoopStart);
 
 			mv.visitLabel(exceptionParameterUnbindingIteratorLoopEnd);
+			// END: Unbind Parameter values
 
-			mv.visitVarInsn(Opcodes.ALOAD, closureBindingsStore);
+			// START: Unbind Closure Function values
+			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingsStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "keySet", "()Ljava/util/Set;", true);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Set", "iterator", "()Ljava/util/Iterator;", true);
+			final int exceptionClosureFunctionUnbindingIteratorStore = currentClass.getNextAvailableStore();
+			mv.visitVarInsn(Opcodes.ASTORE, exceptionClosureFunctionUnbindingIteratorStore);
+
+			final Label exceptionClosureFunctionUnbindingIteratorLoopStart = new Label();
+			final Label exceptionClosureFunctionUnbindingIteratorLoopEnd = new Label();
+
+			mv.visitLabel(exceptionClosureFunctionUnbindingIteratorLoopStart);
+			mv.visitVarInsn(Opcodes.ALOAD, exceptionClosureFunctionUnbindingIteratorStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "hasNext", "()Z", true);
+
+			mv.visitJumpInsn(Opcodes.IFEQ, exceptionClosureFunctionUnbindingIteratorLoopEnd);
+			mv.visitVarInsn(Opcodes.ALOAD, exceptionClosureFunctionUnbindingIteratorStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "next", "()Ljava/lang/Object;", true);
+			mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/symbols/SymbolStruct");
+			final int exceptionClosureFunctionUnbindingMapKeySymbolStore = currentClass.getNextAvailableStore();
+			mv.visitVarInsn(Opcodes.ASTORE, exceptionClosureFunctionUnbindingMapKeySymbolStore);
+
+			mv.visitVarInsn(Opcodes.ALOAD, exceptionClosureFunctionUnbindingMapKeySymbolStore);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindFunction", "()V", false);
+			mv.visitJumpInsn(Opcodes.GOTO, exceptionClosureFunctionUnbindingIteratorLoopStart);
+
+			mv.visitLabel(exceptionClosureFunctionUnbindingIteratorLoopEnd);
+			// END: Unbind Closure Function values
+
+			// START: Unbind Closure Symbol values
+			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingsStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "keySet", "()Ljava/util/Set;", true);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Set", "iterator", "()Ljava/util/Iterator;", true);
 			final int exceptionClosureUnbindingIteratorStore = currentClass.getNextAvailableStore();
@@ -505,6 +614,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitJumpInsn(Opcodes.GOTO, exceptionClosureUnbindingIteratorLoopStart);
 
 			mv.visitLabel(exceptionClosureUnbindingIteratorLoopEnd);
+			// END: Unbind Closure Symbol values
 
 			mv.visitVarInsn(Opcodes.ALOAD, finallyExceptionStore);
 			mv.visitInsn(Opcodes.ATHROW);

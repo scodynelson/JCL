@@ -58,7 +58,7 @@ public class SetqCodeGenerator implements CodeGenerator<SetqStruct> {
 		mv.visitJumpInsn(Opcodes.IFNULL, closureNullCheckIfEnd);
 
 		mv.visitVarInsn(Opcodes.ALOAD, closureStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/Closure", "getClosureBindings", "()Ljava/util/Map;", false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/Closure", "getSymbolBindings", "()Ljava/util/Map;", false);
 		mv.visitVarInsn(Opcodes.ASTORE, closureBindingsStore);
 
 		mv.visitLabel(closureNullCheckIfEnd);

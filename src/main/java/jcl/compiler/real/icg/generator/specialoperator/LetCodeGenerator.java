@@ -75,7 +75,7 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 		mv.visitVarInsn(Opcodes.ASTORE, newClosureStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, newClosureStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/Closure", "getClosureBindings", "()Ljava/util/Map;", false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/Closure", "getSymbolBindings", "()Ljava/util/Map;", false);
 		final Integer newClosureBindingsStore = currentClass.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, newClosureBindingsStore);
 
@@ -144,7 +144,7 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "bindLexicalValue", "(Ljcl/LispStruct;)V", false);
 
 			mv.visitVarInsn(Opcodes.ALOAD, newClosureStore);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/Closure", "getClosureBindings", "()Ljava/util/Map;", false);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/Closure", "getSymbolBindings", "()Ljava/util/Map;", false);
 
 			mv.visitVarInsn(Opcodes.ALOAD, newClosureBindingsStore);
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);

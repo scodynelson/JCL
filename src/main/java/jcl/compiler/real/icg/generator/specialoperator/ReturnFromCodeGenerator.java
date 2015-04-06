@@ -5,6 +5,7 @@ import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
+import jcl.compiler.real.icg.generator.simple.SymbolCodeGeneratorUtil;
 import jcl.compiler.real.struct.specialoperator.ReturnFromStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.ClassWriter;
@@ -36,20 +37,7 @@ public class ReturnFromCodeGenerator implements CodeGenerator<ReturnFromStruct> 
 		currentClass.setMethodVisitor(mv);
 		mv.visitCode();
 
-		final String packageName = name.getSymbolPackage().getName();
-		final String symbolName = name.getName();
-
-		mv.visitLdcInsn(packageName);
-		mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
-		final int packageStore = currentClass.getNextAvailableStore();
-		mv.visitVarInsn(Opcodes.ASTORE, packageStore);
-
-		mv.visitVarInsn(Opcodes.ALOAD, packageStore);
-		mv.visitLdcInsn(symbolName);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
-		final int nameSymbolStore = currentClass.getNextAvailableStore();
-		mv.visitVarInsn(Opcodes.ASTORE, nameSymbolStore);
+		final int nameSymbolStore = SymbolCodeGeneratorUtil.generate(name, classBuilder);
 
 		formGenerator.generate(result, classBuilder);
 		final int resultStore = currentClass.getNextAvailableStore();

@@ -10,6 +10,7 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
+import jcl.compiler.real.icg.generator.GenerationConstants;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -26,15 +27,27 @@ public class SymbolBindingCodeGenerator implements CodeGenerator<SymbolStruct<?>
 
 		final String packageName = input.getSymbolPackage().getName();
 		mv.visitLdcInsn(packageName);
-		mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+				GenerationConstants.PACKAGE_STRUCT_NAME,
+				GenerationConstants.PACKAGE_STRUCT_FIND_PACKAGE_METHOD_NAME,
+				GenerationConstants.PACKAGE_STRUCT_FIND_PACKAGE_METHOD_DESC,
+				false);
 		final int packageStore = currentClass.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, packageStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, packageStore);
 		final String symbolName = input.getName();
 		mv.visitLdcInsn(symbolName);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.PACKAGE_STRUCT_NAME,
+				GenerationConstants.PACKAGE_STRUCT_FIND_SYMBOL_METHOD_NAME,
+				GenerationConstants.PACKAGE_STRUCT_FIND_SYMBOL_METHOD_DESC,
+				false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.PACKAGE_SYMBOL_STRUCT_NAME,
+				GenerationConstants.PACKAGE_SYMBOL_STRUCT_GET_SYMBOL_METHOD_NAME,
+				GenerationConstants.PACKAGE_SYMBOL_STRUCT_GET_SYMBOL_METHOD_DESC,
+				false);
 		final int symbolStore = currentClass.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, symbolStore);
 
@@ -47,11 +60,11 @@ public class SymbolBindingCodeGenerator implements CodeGenerator<SymbolStruct<?>
 		final boolean hasDynamicBinding = currentEnvironment.hasDynamicBinding(input);
 
 		if (hasLexicalBinding) {
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "getLexicalValue", "()Ljcl/LispStruct;", false);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, GenerationConstants.SYMBOL_STRUCT_NAME, "getLexicalValue", "()Ljcl/LispStruct;", false);
 		} else if (hasDynamicBinding) {
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "getDynamicValue", "()Ljcl/LispStruct;", false);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, GenerationConstants.SYMBOL_STRUCT_NAME, "getDynamicValue", "()Ljcl/LispStruct;", false);
 		} else {
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "getValue", "()Ljcl/LispStruct;", false);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, GenerationConstants.SYMBOL_STRUCT_NAME, "getValue", "()Ljcl/LispStruct;", false);
 		}
 	}
 }

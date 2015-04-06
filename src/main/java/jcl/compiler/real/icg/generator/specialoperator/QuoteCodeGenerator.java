@@ -8,6 +8,7 @@ import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
+import jcl.compiler.real.icg.generator.GenerationConstants;
 import jcl.compiler.real.struct.specialoperator.QuoteStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ConsStruct;
@@ -49,14 +50,26 @@ public class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 		final String symbolName = quotedSymbol.getName();
 
 		mv.visitLdcInsn(packageName);
-		mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
+		mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+				GenerationConstants.PACKAGE_STRUCT_NAME,
+				GenerationConstants.PACKAGE_STRUCT_FIND_PACKAGE_METHOD_NAME,
+				GenerationConstants.PACKAGE_STRUCT_FIND_PACKAGE_METHOD_DESC,
+				false);
 		final int packageStore = currentClass.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, packageStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, packageStore);
 		mv.visitLdcInsn(symbolName);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.PACKAGE_STRUCT_NAME,
+				GenerationConstants.PACKAGE_STRUCT_FIND_SYMBOL_METHOD_NAME,
+				GenerationConstants.PACKAGE_STRUCT_FIND_SYMBOL_METHOD_DESC,
+				false);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+				GenerationConstants.PACKAGE_SYMBOL_STRUCT_NAME,
+				GenerationConstants.PACKAGE_SYMBOL_STRUCT_GET_SYMBOL_METHOD_NAME,
+				GenerationConstants.PACKAGE_SYMBOL_STRUCT_GET_SYMBOL_METHOD_DESC,
+				false);
 	}
 
 	private void generateQuotedCons(final ConsStruct quotedCons, final JavaClassBuilder classBuilder) {

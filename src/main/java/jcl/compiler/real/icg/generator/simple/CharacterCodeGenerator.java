@@ -4,12 +4,18 @@ import jcl.characters.CharacterStruct;
 import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
+import jcl.compiler.real.icg.generator.GenerationConstants;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CharacterCodeGenerator implements CodeGenerator<CharacterStruct> {
+
+	private static final String CHARACTER_STRUCT_NAME = Type.getInternalName(CharacterStruct.class);
+
+	private static final String CHARACTER_STRUCT_INIT_DESC = "(I)V";
 
 	@Override
 	public void generate(final CharacterStruct input, final JavaClassBuilder classBuilder) {
@@ -17,11 +23,11 @@ public class CharacterCodeGenerator implements CodeGenerator<CharacterStruct> {
 		final ClassDef currentClass = classBuilder.getCurrentClass();
 		final MethodVisitor mv = currentClass.getMethodVisitor();
 
-		mv.visitTypeInsn(Opcodes.NEW, "jcl/characters/CharacterStruct");
+		mv.visitTypeInsn(Opcodes.NEW, CHARACTER_STRUCT_NAME);
 		mv.visitInsn(Opcodes.DUP);
 
 		final int codePoint = input.getCodePoint();
 		mv.visitLdcInsn(codePoint);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/characters/CharacterStruct", "<init>", "(I)V", false);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, CHARACTER_STRUCT_NAME, GenerationConstants.INIT_METHOD_NAME, CHARACTER_STRUCT_INIT_DESC, false);
 	}
 }

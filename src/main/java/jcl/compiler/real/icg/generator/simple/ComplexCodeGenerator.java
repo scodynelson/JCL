@@ -4,15 +4,22 @@ import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
+import jcl.compiler.real.icg.generator.GeneratorUtils;
+import jcl.compiler.real.icg.generator.GenerationConstants;
 import jcl.numbers.ComplexStruct;
 import jcl.numbers.RealStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ComplexCodeGenerator implements CodeGenerator<ComplexStruct> {
+
+	private static final String COMPLEX_STRUCT_NAME = Type.getInternalName(ComplexStruct.class);
+
+	private static final String COMPLEX_STRUCT_INIT_DESC = GeneratorUtils.getConstructorDescription(ComplexStruct.class, RealStruct.class, RealStruct.class);
 
 	@Autowired
 	private FormGenerator formGenerator;
@@ -34,11 +41,11 @@ public class ComplexCodeGenerator implements CodeGenerator<ComplexStruct> {
 		final int imaginaryStore = currentClass.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, imaginaryStore);
 
-		mv.visitTypeInsn(Opcodes.NEW, "jcl/numbers/ComplexStruct");
+		mv.visitTypeInsn(Opcodes.NEW, COMPLEX_STRUCT_NAME);
 		mv.visitInsn(Opcodes.DUP);
 
 		mv.visitVarInsn(Opcodes.ALOAD, realStore);
 		mv.visitVarInsn(Opcodes.ALOAD, imaginaryStore);
-		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/numbers/ComplexStruct", "<init>", "(Ljcl/numbers/RealStruct;Ljcl/numbers/RealStruct;)V", false);
+		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, COMPLEX_STRUCT_NAME, GenerationConstants.INIT_METHOD_NAME, COMPLEX_STRUCT_INIT_DESC, false);
 	}
 }

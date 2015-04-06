@@ -12,6 +12,9 @@ import org.objectweb.asm.Opcodes;
 
 public final class SymbolCodeGeneratorUtil {
 
+	private SymbolCodeGeneratorUtil() {
+	}
+
 	public static int generate(final SymbolStruct<?> input, final JavaClassBuilder classBuilder) {
 
 		final String packageName = input.getSymbolPackage().getName();

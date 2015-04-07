@@ -5,8 +5,10 @@
 package jcl.compiler.real.icg.generator;
 
 import java.security.SecureRandom;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.Stack;
 
 import jcl.LispStruct;
@@ -25,9 +27,7 @@ import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.simple.NullCodeGenerator;
 import jcl.compiler.real.icg.generator.specialoperator.PrognCodeGenerator;
-import jcl.compiler.real.icg.generator.specialoperator.SetqCodeGenerator;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
-import jcl.compiler.real.struct.specialoperator.SetqStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.KeywordStruct;
@@ -50,9 +50,6 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 	private FormGenerator formGenerator;
 
 	@Autowired
-	private SetqCodeGenerator setqCodeGenerator;
-
-	@Autowired
 	private NullCodeGenerator nullCodeGenerator;
 
 	@Override
@@ -60,7 +57,6 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 		final OrdinaryLambdaListBindings lambdaListBindings = input.getLambdaListBindings();
 		final StringStruct docString = input.getDocString();
-		final List<SetqStruct> initFormSetqs = input.getInitFormSetqs();
 		final PrognStruct forms = input.getForms();
 		final LambdaEnvironment lambdaEnvironment = input.getLambdaEnvironment();
 
@@ -75,6 +71,8 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		classStack.push(currentClass);
 		classBuilder.setCurrentClass(currentClass);
 		classBuilder.getClasses().addFirst(currentClass);
+
+		final Stack<Environment> bindingStack = classBuilder.getBindingStack();
 
 		final ClassWriter cw = currentClass.getClassWriter();
 
@@ -335,15 +333,72 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			// END: Bind Closure Function values
 
 			// START: Bind InitForm values
-
-			final Stack<Environment> bindingStack = classBuilder.getBindingStack();
-
 			bindingStack.push(lambdaEnvironment);
-			for (final SetqStruct initFormSetq : initFormSetqs) {
-				setqCodeGenerator.generate(initFormSetq, classBuilder);
-			}
-			bindingStack.pop();
 
+			final int initFormVarPackageStore = currentClass.getNextAvailableStore();
+			final int initFormLexicalValueStore = currentClass.getNextAvailableStore();
+
+			final Set<Integer> initFormVarSymbolsToUnbind = new HashSet<>();
+
+			final List<OptionalBinding> optionalBindings = lambdaListBindings.getOptionalBindings();
+			for (final OptionalBinding optionalBinding : optionalBindings) {
+				final SymbolStruct<?> var = optionalBinding.getSymbolStruct();
+				final LispStruct initForm = optionalBinding.getInitForm();
+
+				final String packageName = var.getSymbolPackage().getName();
+				final String symbolName = var.getName();
+
+				mv.visitLdcInsn(packageName);
+				mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
+				mv.visitVarInsn(Opcodes.ASTORE, initFormVarPackageStore);
+
+				mv.visitVarInsn(Opcodes.ALOAD, initFormVarPackageStore);
+				mv.visitLdcInsn(symbolName);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
+				final int initFormVarSymbolStore = currentClass.getNextAvailableStore();
+				mv.visitVarInsn(Opcodes.ASTORE, initFormVarSymbolStore);
+
+				formGenerator.generate(initForm, classBuilder);
+				mv.visitVarInsn(Opcodes.ASTORE, initFormLexicalValueStore);
+
+				mv.visitVarInsn(Opcodes.ALOAD, initFormVarSymbolStore);
+				mv.visitVarInsn(Opcodes.ALOAD, initFormLexicalValueStore);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "bindLexicalValue", "(Ljcl/LispStruct;)V", false);
+
+				initFormVarSymbolsToUnbind.add(initFormVarSymbolStore);
+			}
+
+			final List<KeyBinding> keyBindings = lambdaListBindings.getKeyBindings();
+			for (final KeyBinding keyBinding : keyBindings) {
+				final SymbolStruct<?> var = keyBinding.getSymbolStruct();
+				final LispStruct initForm = keyBinding.getInitForm();
+
+				final String packageName = var.getSymbolPackage().getName();
+				final String symbolName = var.getName();
+
+				mv.visitLdcInsn(packageName);
+				mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
+				mv.visitVarInsn(Opcodes.ASTORE, initFormVarPackageStore);
+
+				mv.visitVarInsn(Opcodes.ALOAD, initFormVarPackageStore);
+				mv.visitLdcInsn(symbolName);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
+				final int initFormVarSymbolStore = currentClass.getNextAvailableStore();
+				mv.visitVarInsn(Opcodes.ASTORE, initFormVarSymbolStore);
+
+				formGenerator.generate(initForm, classBuilder);
+				mv.visitVarInsn(Opcodes.ASTORE, initFormLexicalValueStore);
+
+				mv.visitVarInsn(Opcodes.ALOAD, initFormVarSymbolStore);
+				mv.visitVarInsn(Opcodes.ALOAD, initFormLexicalValueStore);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "bindLexicalValue", "(Ljcl/LispStruct;)V", false);
+
+				initFormVarSymbolsToUnbind.add(initFormVarSymbolStore);
+			}
+
+			bindingStack.pop();
 			// END: Bind InitForm values
 
 			// START: Bind Parameter values
@@ -448,6 +503,13 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			mv.visitLabel(normalParameterUnbindingIteratorLoopEnd);
 			// END: Unbind Parameter values
+
+			// START: Unbind InitForm values
+			for (final Integer initFormVarSymbol : initFormVarSymbolsToUnbind) {
+				mv.visitVarInsn(Opcodes.ALOAD, initFormVarSymbol);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindLexicalValue", "()V", false);
+			}
+			// END: Unbind InitForm values
 
 			// START: Unbind Closure Function values
 			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingsStore);
@@ -559,6 +621,13 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			mv.visitLabel(exceptionParameterUnbindingIteratorLoopEnd);
 			// END: Unbind Parameter values
+
+			// START: Unbind InitForm values
+			for (final Integer initFormVarSymbol : initFormVarSymbolsToUnbind) {
+				mv.visitVarInsn(Opcodes.ALOAD, initFormVarSymbol);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindLexicalValue", "()V", false);
+			}
+			// END: Unbind InitForm values
 
 			// START: Unbind Closure Function values
 			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingsStore);

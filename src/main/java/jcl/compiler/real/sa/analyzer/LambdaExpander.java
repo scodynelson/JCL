@@ -11,8 +11,6 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
-import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
@@ -20,7 +18,6 @@ import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAndDocStringAnalyzer;
 import jcl.compiler.real.sa.analyzer.lambdalistparser.OrdinaryLambdaListParser;
 import jcl.compiler.real.sa.analyzer.specialoperator.SetqExpander;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
-import jcl.compiler.real.struct.specialoperator.SetqStruct;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.JavaClassNameDeclarationStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
@@ -30,7 +27,6 @@ import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.printer.Printer;
 import jcl.symbols.SpecialOperatorStruct;
-import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -105,7 +101,6 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 		}
 
 		final OrdinaryLambdaListBindings parsedLambdaList = ordinaryLambdaListParser.parseOrdinaryLambdaList(lambdaEnvironment, parameters, declare);
-		final List<SetqStruct> initFormSetqs = getInitFormSetqs(parsedLambdaList, lambdaEnvironment);
 
 		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
 		final List<LispStruct> newLambdaBodyForms = getNewStartingLambdaBody(parsedLambdaList, bodyForms);
@@ -114,7 +109,7 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 				= newLambdaBodyForms.stream()
 				                    .map(e -> formAnalyzer.analyze(e, lambdaEnvironment))
 				                    .collect(Collectors.toList());
-		return new LambdaStruct(fileName, parsedLambdaList, bodyProcessingResult.getDocString(), initFormSetqs, new PrognStruct(analyzedBodyForms), lambdaEnvironment);
+		return new LambdaStruct(fileName, parsedLambdaList, bodyProcessingResult.getDocString(), new PrognStruct(analyzedBodyForms), lambdaEnvironment);
 	}
 
 	private static List<LispStruct> getNewStartingLambdaBody(final OrdinaryLambdaListBindings parsedLambdaList,
@@ -142,36 +137,6 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 		// NOTE: We are making sure to wrap this in a list for the processing of the body.
 		//       Yes, it is a body of one element: a let* element
 		return Collections.singletonList(newLambdaBody);
-	}
-
-	private List<SetqStruct> getInitFormSetqs(final OrdinaryLambdaListBindings parsedLambdaList,
-	                                          final LambdaEnvironment lambdaEnvironment) {
-
-		final List<SetqStruct> initFormSetqs = new ArrayList<>();
-
-		final List<OptionalBinding> optionalBindings = parsedLambdaList.getOptionalBindings();
-		for (final OptionalBinding optionalBinding : optionalBindings) {
-			final SymbolStruct<?> optionalVar = optionalBinding.getSymbolStruct();
-			final LispStruct optionalInitForm = optionalBinding.getInitForm();
-			final ListStruct initFormSetqList
-					= ListStruct.buildProperList(SpecialOperatorStruct.SETQ, optionalVar, optionalInitForm);
-
-			final SetqStruct initFormSetq = setqExpander.expand(initFormSetqList, lambdaEnvironment);
-			initFormSetqs.add(initFormSetq);
-		}
-
-		final List<KeyBinding> keyBindings = parsedLambdaList.getKeyBindings();
-		for (final KeyBinding keyBinding : keyBindings) {
-			final SymbolStruct<?> keyVar = keyBinding.getSymbolStruct();
-			final LispStruct keyInitForm = keyBinding.getInitForm();
-			final ListStruct initFormSetqList
-					= ListStruct.buildProperList(SpecialOperatorStruct.SETQ, keyVar, keyInitForm);
-
-			final SetqStruct initFormSetq = setqExpander.expand(initFormSetqList, lambdaEnvironment);
-			initFormSetqs.add(initFormSetq);
-		}
-
-		return initFormSetqs;
 	}
 
 	@Override

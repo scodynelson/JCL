@@ -62,6 +62,26 @@ public class SymbolFunctionCodeGenerator implements CodeGenerator<SymbolCompiler
 			final Map<SymbolStruct<?>, Integer> fletFunctionStoresToBind = classBuilder.getFletFunctionStoresToBind();
 			if (fletFunctionStoresToBind.containsKey(functionSymbol)) {
 				mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, null);
+//
+//				final Integer closureFunctionBindingsStore = currentClass.getNextAvailableStore();
+//
+//				mv.visitVarInsn(Opcodes.ALOAD, 0);
+//				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/FunctionStruct", "getClosure", "()Ljcl/functions/Closure;", false);
+//				final Integer closureStore = currentClass.getNextAvailableStore();
+//				mv.visitVarInsn(Opcodes.ASTORE, closureStore);
+//
+//				mv.visitInsn(Opcodes.ACONST_NULL);
+//				mv.visitVarInsn(Opcodes.ASTORE, closureFunctionBindingsStore);
+//
+//				mv.visitVarInsn(Opcodes.ALOAD, closureStore);
+//				final Label closureNullCheckIfEnd = new Label();
+//				mv.visitJumpInsn(Opcodes.IFNULL, closureNullCheckIfEnd);
+//
+//				mv.visitVarInsn(Opcodes.ALOAD, closureStore);
+//				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/Closure", "getFunctionBindings", "()Ljava/util/Map;", false);
+//				mv.visitVarInsn(Opcodes.ASTORE, closureFunctionBindingsStore);
+//
+//				mv.visitLabel(closureNullCheckIfEnd);
 
 				final Integer initFormStore = fletFunctionStoresToBind.get(functionSymbol);
 
@@ -69,6 +89,18 @@ public class SymbolFunctionCodeGenerator implements CodeGenerator<SymbolCompiler
 				mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "bindFunction", "(Ljcl/functions/FunctionStruct;)V", false);
 
+//				mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingsStore);
+//				final Label closureBindingsNullCheckIfEnd = new Label();
+//				mv.visitJumpInsn(Opcodes.IFNULL, closureBindingsNullCheckIfEnd);
+//
+//				mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingsStore);
+//				mv.visitVarInsn(Opcodes.ALOAD, functionSymbolStore);
+//				mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
+//				mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", true);
+//				mv.visitInsn(Opcodes.POP);
+//
+//				mv.visitLabel(closureBindingsNullCheckIfEnd);
+//
 				mv.visitLabel(tryBlockStart);
 			}
 		}

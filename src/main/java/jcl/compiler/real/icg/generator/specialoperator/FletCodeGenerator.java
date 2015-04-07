@@ -15,6 +15,7 @@ import jcl.compiler.real.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.FletStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.symbols.SymbolStruct;
+import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +40,30 @@ public class FletCodeGenerator implements CodeGenerator<FletStruct> {
 		final ClassDef currentClass = classBuilder.getCurrentClass();
 		final MethodVisitor mv = currentClass.getMethodVisitor();
 
+		final Integer closureFunctionBindingsStore = currentClass.getNextAvailableStore();
+
+		mv.visitVarInsn(Opcodes.ALOAD, 0);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/FunctionStruct", "getClosure", "()Ljcl/functions/Closure;", false);
+		final Integer closureStore = currentClass.getNextAvailableStore();
+		mv.visitVarInsn(Opcodes.ASTORE, closureStore);
+
+		mv.visitInsn(Opcodes.ACONST_NULL);
+		mv.visitVarInsn(Opcodes.ASTORE, closureFunctionBindingsStore);
+
+		mv.visitVarInsn(Opcodes.ALOAD, closureStore);
+		final Label closureNullCheckIfEnd = new Label();
+		mv.visitJumpInsn(Opcodes.IFNULL, closureNullCheckIfEnd);
+
+		mv.visitVarInsn(Opcodes.ALOAD, closureStore);
+		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/Closure", "getFunctionBindings", "()Ljava/util/Map;", false);
+		mv.visitVarInsn(Opcodes.ASTORE, closureFunctionBindingsStore);
+
+		mv.visitLabel(closureNullCheckIfEnd);
+
 		final int packageStore = currentClass.getNextAvailableStore();
 
 		final Map<SymbolStruct<?>, Integer> functionStoresToBind = new HashMap<>();
+		final Map<Integer, Integer> functionStoresToBind2 = new HashMap<>();
 
 		for (final FletStruct.FletVar var : vars) {
 			final SymbolStruct<?> functionSymbolVar = var.getVar();
@@ -67,6 +89,24 @@ public class FletCodeGenerator implements CodeGenerator<FletStruct> {
 			mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
 
 			functionStoresToBind.put(functionSymbolVar, initFormStore);
+			functionStoresToBind2.put(functionSymbolStore, initFormStore);
+		}
+
+		for (final Map.Entry<Integer, Integer> functionStoreToBind : functionStoresToBind2.entrySet()) {
+			final Integer functionSymbolStore = functionStoreToBind.getKey();
+			final Integer initFormStore = functionStoreToBind.getValue();
+
+			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingsStore);
+			final Label closureBindingsNullCheckIfEnd = new Label();
+			mv.visitJumpInsn(Opcodes.IFNULL, closureBindingsNullCheckIfEnd);
+
+			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingsStore);
+			mv.visitVarInsn(Opcodes.ALOAD, functionSymbolStore);
+			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", true);
+			mv.visitInsn(Opcodes.POP);
+
+			mv.visitLabel(closureBindingsNullCheckIfEnd);
 		}
 
 		final Map<SymbolStruct<?>, Integer> fletFunctionStoresToBind = classBuilder.getFletFunctionStoresToBind();

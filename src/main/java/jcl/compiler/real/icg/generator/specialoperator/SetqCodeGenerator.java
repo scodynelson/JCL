@@ -43,7 +43,7 @@ public class SetqCodeGenerator implements CodeGenerator<SetqStruct> {
 		final Stack<Environment> bindingStack = classBuilder.getBindingStack();
 		final Environment currentEnvironment = bindingStack.peek();
 
-		final Integer closureBindingsStore = currentClass.getNextAvailableStore();
+		final Integer closureSymbolBindingsStore = currentClass.getNextAvailableStore();
 
 		mv.visitVarInsn(Opcodes.ALOAD, 0);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/FunctionStruct", "getClosure", "()Ljcl/functions/Closure;", false);
@@ -51,7 +51,7 @@ public class SetqCodeGenerator implements CodeGenerator<SetqStruct> {
 		mv.visitVarInsn(Opcodes.ASTORE, closureStore);
 
 		mv.visitInsn(Opcodes.ACONST_NULL);
-		mv.visitVarInsn(Opcodes.ASTORE, closureBindingsStore);
+		mv.visitVarInsn(Opcodes.ASTORE, closureSymbolBindingsStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, closureStore);
 		final Label closureNullCheckIfEnd = new Label();
@@ -59,7 +59,7 @@ public class SetqCodeGenerator implements CodeGenerator<SetqStruct> {
 
 		mv.visitVarInsn(Opcodes.ALOAD, closureStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/Closure", "getSymbolBindings", "()Ljava/util/Map;", false);
-		mv.visitVarInsn(Opcodes.ASTORE, closureBindingsStore);
+		mv.visitVarInsn(Opcodes.ASTORE, closureSymbolBindingsStore);
 
 		mv.visitLabel(closureNullCheckIfEnd);
 
@@ -118,11 +118,11 @@ public class SetqCodeGenerator implements CodeGenerator<SetqStruct> {
 				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "setValue", "(Ljcl/LispStruct;)V", false);
 			}
 
-			mv.visitVarInsn(Opcodes.ALOAD, closureBindingsStore);
+			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingsStore);
 			final Label closureBindingsNullCheckIfEnd = new Label();
 			mv.visitJumpInsn(Opcodes.IFNULL, closureBindingsNullCheckIfEnd);
 
-			mv.visitVarInsn(Opcodes.ALOAD, closureBindingsStore);
+			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingsStore);
 			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", true);

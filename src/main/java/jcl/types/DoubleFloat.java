@@ -158,7 +158,8 @@ public interface DoubleFloat extends Float {
 					return (intervalDesignator == null) || intervalDesignator.equals(doubleFloatImpl.intervalDesignator);
 				}
 
-				return false;
+				// This means it is a subtype, and thus is equal.
+				return true;
 			}
 
 			@Override

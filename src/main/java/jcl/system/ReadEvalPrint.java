@@ -145,6 +145,8 @@ public class ReadEvalPrint {
 						}
 
 						LOGGER.warn("; WARNING: Reader Exception condition during Read -> ", ex);
+					} catch (final ConditionException ex) {
+						LOGGER.warn("; WARNING: Condition Exception condition during Read -> ", ex);
 					} catch (final Exception ex) {
 						LOGGER.warn("; WARNING: Exception condition during Read -> ", ex);
 						break;

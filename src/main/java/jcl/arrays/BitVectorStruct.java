@@ -39,6 +39,16 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 	/**
 	 * Public constructor.
 	 *
+	 * @param contents
+	 * 		the bit-vector contents
+	 */
+	public BitVectorStruct(final List<IntegerStruct> contents) {
+		this(contents.size(), contents, false, null);
+	}
+
+	/**
+	 * Public constructor.
+	 *
 	 * @param size
 	 * 		the bit-vector size
 	 * @param contents
@@ -75,7 +85,7 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 	 * @return a list of {@link IntegerStruct}s from the provided {@link String} value
 	 */
 	private static List<IntegerStruct> getBitList(final String bitString) {
-		if (!BIT_PATTERN.matcher(bitString).matches()) {
+		if (!bitString.isEmpty() && !BIT_PATTERN.matcher(bitString).matches()) {
 			throw new TypeErrorException("Input contains characters not of type " + Bit.INSTANCE + ": " + bitString + '.');
 		}
 

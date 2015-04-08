@@ -5,22 +5,17 @@
 package jcl.reader.macrofunction;
 
 import java.math.BigInteger;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.arrays.BitVectorStruct;
 import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
-import jcl.numbers.IntegerStruct;
 import jcl.reader.Reader;
 import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
-import jcl.system.CommonLispSymbols;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -66,7 +61,7 @@ public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunction {
 		}
 
 		if (!numberArgument.isPresent()) {
-			return createBitVector(tokenString);
+			return new BitVectorStruct(tokenString);
 		}
 
 		final BigInteger numberArgumentValue = numberArgument.get();
@@ -84,7 +79,7 @@ public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunction {
 	 *
 	 * @return the properly created {@link BitVectorStruct} taking care of the proper bit-vector length
 	 */
-	private static ListStruct handleNumberArgument(final String tokenString, final BigInteger numberArgument) {
+	private static BitVectorStruct handleNumberArgument(final String tokenString, final BigInteger numberArgument) {
 
 		if (StringUtils.isEmpty(tokenString) && (numberArgument.compareTo(BigInteger.ZERO) > 0)) {
 			throw new ReaderErrorException("At least one bit must be supplied for non-zero #* bit-vectors.");
@@ -109,49 +104,7 @@ public class SharpAsteriskReaderMacroFunction extends ReaderMacroFunction {
 		}
 
 		final String bitString = bitStringBuilder.toString();
-		return createBitVector(bitString);
-	}
-
-	/**
-	 * Creates creates the {@link ListStruct} calling the appropriate function needed to produce the {@link
-	 * BitVectorStruct} from the provided {@code token}.
-	 *
-	 * @param tokenString
-	 * 		the bit-vector contents used to create the {@link BitVectorStruct}
-	 *
-	 * @return the {@link ListStruct} calling the appropriate function needed to produce the {@link BitVectorStruct}
-	 */
-	private static ListStruct createBitVector(final String tokenString) {
-		final BigInteger numberOfTokens = BigInteger.valueOf(tokenString.length());
-
-		final List<LispStruct> bits = convertBitStringToBits(tokenString);
-
-		final IntegerStruct dimensions = new IntegerStruct(numberOfTokens);
-		final ListStruct elementType = ListStruct.buildProperList(CommonLispSymbols.QUOTE, CommonLispSymbols.BIT);
-		final ListStruct initialContents = ListStruct.buildProperList(CommonLispSymbols.QUOTE, ListStruct.buildProperList(bits));
-
-		return ListStruct.buildProperList(CommonLispSymbols.MAKE_ARRAY,
-				dimensions,
-				CommonLispSymbols.ELEMENT_TYPE_KEYWORD,
-				elementType,
-				CommonLispSymbols.INITIAL_CONTENTS_KEYWORD,
-				initialContents);
-	}
-
-	/**
-	 * Converts the provided {@code token} string into a list of {@link IntegerStruct} bits.
-	 *
-	 * @param tokenString
-	 * 		the bit-vector contents to convert into a list of {@link IntegerStruct} bits
-	 *
-	 * @return the list of {@link IntegerStruct} bits comprising the provided {@code token}
-	 */
-	private static List<LispStruct> convertBitStringToBits(final String tokenString) {
-		return tokenString.chars()
-		                  .map(e -> Character.getNumericValue((char) e))
-		                  .mapToObj(BigInteger::valueOf)
-		                  .map(IntegerStruct::new)
-		                  .collect(Collectors.toList());
+		return new BitVectorStruct(bitString);
 	}
 
 	/**

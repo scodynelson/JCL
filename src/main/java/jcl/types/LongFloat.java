@@ -158,7 +158,8 @@ public interface LongFloat extends Float {
 					return (intervalDesignator == null) || intervalDesignator.equals(longFloatImpl.intervalDesignator);
 				}
 
-				return false;
+				// This means it is a subtype, and thus is equal.
+				return true;
 			}
 
 			@Override

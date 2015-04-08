@@ -158,7 +158,8 @@ public interface SingleFloat extends Float {
 					return (intervalDesignator == null) || intervalDesignator.equals(singleFloatImpl.intervalDesignator);
 				}
 
-				return false;
+				// This means it is a subtype, and thus is equal.
+				return true;
 			}
 
 			@Override

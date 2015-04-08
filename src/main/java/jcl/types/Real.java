@@ -236,7 +236,18 @@ public interface Real extends Number {
 				}
 
 				final Real real = (Real) obj;
-				return (real == INSTANCE) || ((real instanceof RealImpl) && checkRealImplEquality((RealImpl) real));
+				if (real == INSTANCE) {
+					return true;
+				}
+
+				if (real instanceof RealImpl) {
+					final RealImpl realImpl = (RealImpl) real;
+
+					return checkRealImplEquality(realImpl);
+				}
+
+				// This means it is a subtype, and thus is equal.
+				return true;
 			}
 
 			/**

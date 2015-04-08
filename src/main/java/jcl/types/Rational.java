@@ -161,7 +161,8 @@ public interface Rational extends Real {
 					return (intervalDesignator == null) || intervalDesignator.equals(rationalImpl.intervalDesignator);
 				}
 
-				return false;
+				// This means it is a subtype, and thus is equal.
+				return true;
 			}
 
 			@Override

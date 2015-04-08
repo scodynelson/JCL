@@ -178,9 +178,6 @@ LAMBDA:
   ((lambda (x y) (declare (ignore x)) "foo" (declare (ignore y)) "bar") 1 2)
   "bar")
 
-NOTE: The following is messed up because we are not properly unbinding the optional initForms. keywords are probably in the same boat.
-((lambda (x &optional y z) (list x y z)) 1 2)
-
 (deftest lambda.15
   ((lambda (y &optional (x (1+ y))) (list y x)) 10)
   (10 11))

@@ -6,11 +6,16 @@ package jcl.compiler.real.icg.generator.testground;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import jcl.LispStruct;
+import jcl.arrays.ArrayStruct;
+import jcl.arrays.BitVectorStruct;
+import jcl.arrays.VectorStruct;
 import jcl.characters.CharacterStruct;
 import jcl.compiler.real.icg.generator.specialoperator.TagbodyLabel;
 import jcl.compiler.real.icg.generator.specialoperator.exception.GoException;
@@ -28,6 +33,8 @@ import jcl.numbers.FloatStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.RatioStruct;
 import jcl.packages.PackageStruct;
+import jcl.pathnames.PathnameFileStruct;
+import jcl.pathnames.PathnameURIStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
@@ -161,6 +168,41 @@ public class TestGround {
 		final LispStruct cdr = new CharacterStruct(197);
 
 		return new ConsStruct(car, cdr);
+	}
+
+	private Object pathnameGen() {
+		final Path path = Paths.get("");
+
+		new PathnameURIStruct(path);
+		return new PathnameFileStruct(path);
+	}
+
+	private Object bitVectorGen() {
+		final List<IntegerStruct> contents = new ArrayList<>();
+		final IntegerStruct content = new IntegerStruct(BigInteger.ZERO);
+		contents.add(content);
+
+		return new BitVectorStruct(contents);
+	}
+
+	private Object vectorGen() {
+		final List<LispStruct> contents = new ArrayList<>();
+		final IntegerStruct content = new IntegerStruct(BigInteger.ZERO);
+		contents.add(content);
+
+		return new VectorStruct<>(contents);
+	}
+
+	private Object arrayGen() {
+		final List<Integer> dimensions = new ArrayList<>();
+		final int dimension = 1234123412;
+		dimensions.add(dimension);
+
+		final List<LispStruct> contents = new ArrayList<>();
+		final IntegerStruct content = new IntegerStruct(BigInteger.ZERO);
+		contents.add(content);
+
+		return new ArrayStruct<>(dimensions, contents);
 	}
 
 	private Object unwindProtectGen() {

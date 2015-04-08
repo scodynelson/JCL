@@ -41,7 +41,7 @@ public class ArrayStructPrinter<TYPE extends LispStruct> implements LispPrinter<
 
 			final int rank = object.getRank();
 			stringBuilder.append(rank);
-			stringBuilder.append("#(");
+			stringBuilder.append("A(");
 
 			final int totalSize = object.getTotalSize();
 			final List<TYPE> contents = object.getContents();

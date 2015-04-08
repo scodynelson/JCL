@@ -168,7 +168,8 @@ public interface Integer extends Rational {
 					return (intervalDesignator == null) || intervalDesignator.equals(integerImpl.intervalDesignator);
 				}
 
-				return false;
+				// This means it is a subtype, and thus is equal.
+				return true;
 			}
 
 			@Override

@@ -4,6 +4,9 @@
 
 package jcl.compiler.real.icg.generator;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageSymbolStruct;
 import jcl.symbols.SymbolStruct;
@@ -14,6 +17,24 @@ public interface GenerationConstants {
 	String SINGLETON_INSTANCE = "INSTANCE";
 
 	String INIT_METHOD_NAME = "<init>";
+
+	String JAVA_STRING_NAME = Type.getInternalName(String.class);
+
+	String JAVA_LIST_NAME = Type.getInternalName(List.class);
+
+	String JAVA_LIST_ADD_METHOD_NAME = "add";
+
+	String JAVA_LIST_ADD_METHOD_DESC = GeneratorUtils.getMethodDescription(List.class, JAVA_LIST_ADD_METHOD_NAME, Object.class);
+
+	String ARRAY_LIST_NAME = Type.getInternalName(ArrayList.class);
+
+	String ARRAY_LIST_INIT_DESC = GeneratorUtils.getConstructorDescription(ArrayList.class);
+
+	String JAVA_INTEGER_NAME = Type.getInternalName(Integer.class);
+
+	String JAVA_INTEGER_VALUE_OF_METHOD_NAME = "valueOf";
+
+	String JAVA_INTEGER_VALUE_OF_METHOD_DESC = GeneratorUtils.getMethodDescription(Integer.class, JAVA_INTEGER_VALUE_OF_METHOD_NAME, int.class);
 
 	String SYMBOL_STRUCT_NAME = Type.getInternalName(SymbolStruct.class);
 

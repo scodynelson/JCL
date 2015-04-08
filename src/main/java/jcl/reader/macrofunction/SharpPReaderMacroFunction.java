@@ -12,14 +12,14 @@ import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
+import jcl.pathnames.PathnameStruct;
+import jcl.pathnames.functions.PathnameFunction;
 import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
-import jcl.system.CommonLispSymbols;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -45,6 +45,13 @@ public class SharpPReaderMacroFunction extends ReaderMacroFunction {
 	private Printer printer;
 
 	/**
+	 * {@link Autowired} {@link PathnameFunction} used for getting a new {@link PathnameStruct} instance from the read
+	 * in pathname namestring.
+	 */
+	@Autowired
+	private PathnameFunction pathnameFunction;
+
+	/**
 	 * Initializes the reader macro function and adds it to the global readtable.
 	 */
 	@PostConstruct
@@ -65,8 +72,7 @@ public class SharpPReaderMacroFunction extends ReaderMacroFunction {
 
 		if (token instanceof StringStruct) {
 			final StringStruct pathnameString = (StringStruct) token;
-
-			return ListStruct.buildProperList(CommonLispSymbols.PATHNAME, pathnameString);
+			return pathnameFunction.pathname(pathnameString);
 		} else {
 			final String printedToken = printer.print(token);
 			throw new ReaderErrorException("The value " + printedToken + " is not of expected type STRING in argument to #P.");
@@ -77,6 +83,7 @@ public class SharpPReaderMacroFunction extends ReaderMacroFunction {
 	public int hashCode() {
 		return new HashCodeBuilder().appendSuper(super.hashCode())
 		                            .append(printer)
+		                            .append(pathnameFunction)
 		                            .toHashCode();
 	}
 
@@ -94,12 +101,14 @@ public class SharpPReaderMacroFunction extends ReaderMacroFunction {
 		final SharpPReaderMacroFunction rhs = (SharpPReaderMacroFunction) obj;
 		return new EqualsBuilder().appendSuper(super.equals(obj))
 		                          .append(printer, rhs.printer)
+		                          .append(pathnameFunction, rhs.pathnameFunction)
 		                          .isEquals();
 	}
 
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(printer)
+		                                                                .append(pathnameFunction)
 		                                                                .toString();
 	}
 }

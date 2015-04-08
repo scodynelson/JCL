@@ -164,7 +164,8 @@ public interface Float extends Real {
 					return (intervalDesignator == null) || intervalDesignator.equals(aFloatImpl.intervalDesignator);
 				}
 
-				return false;
+				// This means it is a subtype, and thus is equal.
+				return true;
 			}
 
 			@Override

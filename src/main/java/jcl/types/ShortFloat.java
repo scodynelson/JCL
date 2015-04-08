@@ -158,7 +158,8 @@ public interface ShortFloat extends Float {
 					return (intervalDesignator == null) || intervalDesignator.equals(shortFloatImpl.intervalDesignator);
 				}
 
-				return false;
+				// This means it is a subtype, and thus is equal.
+				return true;
 			}
 
 			@Override

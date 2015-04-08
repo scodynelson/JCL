@@ -126,7 +126,10 @@ public class PathnameURIStruct extends PathnameStruct {
 	 * @return the pathname directory
 	 */
 	private static PathnameDirectory getDirectory(final URI uri) {
-		final String uriPath = uri.getPath();
+		String uriPath = uri.getPath();
+		if (uriPath.startsWith("/")) {
+			uriPath = uriPath.substring(1);
+		}
 
 		final List<String> directoryStrings = new ArrayList<>();
 		if (StringUtils.isNotEmpty(uriPath)) {

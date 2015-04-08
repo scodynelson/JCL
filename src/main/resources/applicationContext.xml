@@ -90,7 +90,8 @@
 		<entry key="jcl.numbers.IntegerStruct" value-ref="integerCodeGenerator"/>
 		<entry key="jcl.numbers.RatioStruct" value-ref="ratioCodeGenerator"/>
 
-		<entry key="jcl.pathnames.PathnameStruct" value-ref="pathnameCodeGenerator"/>
+		<entry key="jcl.pathnames.PathnameFileStruct" value-ref="pathnameFileCodeGenerator"/>
+		<entry key="jcl.pathnames.PathnameURIStruct" value-ref="pathnameURICodeGenerator"/>
 
 		<entry key="jcl.symbols.KeywordStruct" value-ref="keywordStructCodeGenerator"/>
 		<entry key="jcl.symbols.NILStruct" value-ref="NILCodeGenerator"/>

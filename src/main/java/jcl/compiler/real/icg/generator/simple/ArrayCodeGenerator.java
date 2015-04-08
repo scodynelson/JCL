@@ -36,12 +36,12 @@ public class ArrayCodeGenerator implements CodeGenerator<ArrayStruct<LispStruct>
 		final ClassDef currentClass = classBuilder.getCurrentClass();
 		final MethodVisitor mv = currentClass.getMethodVisitor();
 
-		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.ARRAY_LIST_NAME);
+		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_ARRAY_LIST_NAME);
 		mv.visitInsn(Opcodes.DUP);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				GenerationConstants.ARRAY_LIST_NAME,
+				GenerationConstants.JAVA_ARRAY_LIST_NAME,
 				GenerationConstants.INIT_METHOD_NAME,
-				GenerationConstants.ARRAY_LIST_INIT_DESC,
+				GenerationConstants.JAVA_ARRAY_LIST_INIT_DESC,
 				false);
 		final int dimensionsStore = currentClass.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, dimensionsStore);
@@ -63,12 +63,12 @@ public class ArrayCodeGenerator implements CodeGenerator<ArrayStruct<LispStruct>
 			mv.visitInsn(Opcodes.POP);
 		}
 
-		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.ARRAY_LIST_NAME);
+		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_ARRAY_LIST_NAME);
 		mv.visitInsn(Opcodes.DUP);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL,
-				GenerationConstants.ARRAY_LIST_NAME,
+				GenerationConstants.JAVA_ARRAY_LIST_NAME,
 				GenerationConstants.INIT_METHOD_NAME,
-				GenerationConstants.ARRAY_LIST_INIT_DESC,
+				GenerationConstants.JAVA_ARRAY_LIST_INIT_DESC,
 				false);
 		final int contentsStore = currentClass.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, contentsStore);

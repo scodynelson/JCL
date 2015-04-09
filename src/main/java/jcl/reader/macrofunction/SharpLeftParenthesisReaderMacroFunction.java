@@ -13,11 +13,13 @@ import jcl.LispStruct;
 import jcl.arrays.VectorStruct;
 import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
 import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
+import jcl.system.CommonLispSymbols;
 import jcl.types.Null;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -77,13 +79,18 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 			throw new ReaderErrorException("Ill-formed vector: #" + printedToken);
 		}
 
-		if (!numberArgument.isPresent()) {
-			final List<LispStruct> tokensAsJavaList = listToken.getAsJavaList();
-			return new VectorStruct<>(tokensAsJavaList);
+		final int backquoteLevel = reader.getBackquoteLevel();
+		if (backquoteLevel == 0) {
+			if (!numberArgument.isPresent()) {
+				final List<LispStruct> tokensAsJavaList = listToken.getAsJavaList();
+				return new VectorStruct<>(tokensAsJavaList);
+			}
+
+			final BigInteger numberArgumentValue = numberArgument.get();
+			return handleNumberArgument(listToken, numberArgumentValue);
 		}
 
-		final BigInteger numberArgumentValue = numberArgument.get();
-		return handleNumberArgument(listToken, numberArgumentValue);
+		return new ConsStruct(CommonLispSymbols.BQ_VECTOR_FLAG, listToken);
 	}
 
 	/**

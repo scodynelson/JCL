@@ -40,7 +40,7 @@ public final class CarFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
-		final SymbolStruct<?> listArgSymbol = new SymbolStruct<>("LIST", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> listArgSymbol = new SymbolStruct<>("LIST-ARG", GlobalPackageStruct.COMMON_LISP);
 		final ParameterAllocation listArgAllocation = new ParameterAllocation(0);
 		final RequiredBinding requiredBinding = new RequiredBinding(listArgSymbol, listArgAllocation);
 		final List<RequiredBinding> requiredBindings = Collections.singletonList(requiredBinding);

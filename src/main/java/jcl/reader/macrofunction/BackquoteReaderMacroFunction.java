@@ -9,6 +9,7 @@ import java.util.Optional;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
+import jcl.arrays.functions.ListToVectorFunction;
 import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ConsStruct;
@@ -109,6 +110,16 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 
 			if (CommonLispSymbols.BQ_COMMA_FLAG.equals(carConsCode)) {
 				return comma(cdrConsCode);
+			}
+
+			if (CommonLispSymbols.BQ_VECTOR_FLAG.equals(carConsCode)) {
+				final BackquoteReturn cdrBqtify = backquotify(cdrConsCode);
+
+				final SymbolStruct<?> cdrBqtifyFlag = cdrBqtify.getFlag();
+				final LispStruct cdrBqtifyThing = cdrBqtify.getThing();
+
+				final LispStruct cdrBqtify_1 = backquotify_1(cdrBqtifyFlag, cdrBqtifyThing);
+				return new BackquoteReturn(ListToVectorFunction.LIST_TO_VECTOR, cdrBqtify_1);
 			}
 
 			final BackquoteReturn carBqtify = backquotify(carConsCode);
@@ -336,6 +347,10 @@ public class BackquoteReaderMacroFunction extends ReaderMacroFunction {
 			}
 
 			return new ConsStruct(CommonLispSymbols.LIST_STAR, thing);
+		}
+
+		if (ListToVectorFunction.LIST_TO_VECTOR.equals(flag)) {
+			return ListStruct.buildProperList(ListToVectorFunction.LIST_TO_VECTOR, thing);
 		}
 
 		return new ConsStruct(flag, thing);

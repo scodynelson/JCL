@@ -1,6 +1,7 @@
 package jcl.system;
 
 import jcl.arrays.ArrayConstants;
+import jcl.arrays.functions.VectorFunction;
 import jcl.characters.CharacterConstants;
 import jcl.compiler.real.CompilerConstants;
 import jcl.compiler.real.CompilerVariables;
@@ -246,7 +247,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> BASE_CHAR = null;
 	SymbolStruct<?> BASE_STRING = null;
 	SymbolStruct<?> BIGNUM = null;
-	SymbolStruct<?> BIT = new SymbolStruct<>("BIT", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct<?> BIT = null;
 	SymbolStruct<?> BIT_AND = null;
 	SymbolStruct<?> BIT_ANDC_1 = null;
 	SymbolStruct<?> BIT_ANDC_2 = null;
@@ -352,7 +353,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> COMPILER_MACRO = null;
 	SymbolStruct<?> COMPILER_MACRO_FUNCTION = null;
 	SymbolStruct<?> COMPLEMENT = null;
-	SymbolStruct<?> COMPLEX = new SymbolStruct<>("COMPLEX", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct<?> COMPLEX = null;
 	SymbolStruct<?> COMPLEXP = null;
 	SymbolStruct<?> COMPUTE_APPLICABLE_METHODS = null;
 	SymbolStruct<?> COMPUTE_RESTARTS = null;
@@ -616,7 +617,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> MACROEXPAND = MacroExpandFunction.MACROEXPAND;
 	SymbolStruct<?> MACROEXPAND_1 = MacroExpand1Function.MACROEXPAND_1;
 	SymbolStruct<?> MACROLET = null;
-	SymbolStruct<?> MAKE_ARRAY = new SymbolStruct<>("MAKE-ARRAY", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct<?> MAKE_ARRAY = null;
 	SymbolStruct<?> MAKE_BROADCAST_STREAM = null;
 	SymbolStruct<?> MAKE_CONCATENATED_STREAM = null;
 	SymbolStruct<?> MAKE_CONDITION = null;
@@ -710,7 +711,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> OR = null;
 	SymbolStruct<?> OTHERWISE = null;
 	SymbolStruct<?> OUTPUT_STREAM_P = null;
-	SymbolStruct<?> PACKAGE = new SymbolStruct<>("PACKAGE", GlobalPackageStruct.COMMON_LISP);
+	SymbolStruct<?> PACKAGE = null;
 	SymbolStruct<?> PACKAGE_ERROR = null;
 	SymbolStruct<?> PACKAGE_ERROR_PACKAGE = null;
 	SymbolStruct<?> PACKAGE_NAME = null;
@@ -1001,7 +1002,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> VALUES = ValuesFunction.VALUES;
 	SymbolStruct<?> VALUES_LIST = null;
 	SymbolStruct<?> VARIABLE = null;
-	SymbolStruct<?> VECTOR = null;
+	SymbolStruct<?> VECTOR = VectorFunction.VECTOR;
 	SymbolStruct<?> VECTOR_POP = null;
 	SymbolStruct<?> VECTOR_PUSH = null;
 	SymbolStruct<?> VECTOR_PUSH_EXTEND = null;
@@ -1040,6 +1041,7 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> BQ_COMMA_FLAG = new SymbolStruct<>(",", GlobalPackageStruct.BACKQUOTE);
 	SymbolStruct<?> BQ_AT_FLAG = new SymbolStruct<>(",@", GlobalPackageStruct.BACKQUOTE);
 	SymbolStruct<?> BQ_DOT_FLAG = new SymbolStruct<>(",.", GlobalPackageStruct.BACKQUOTE);
+	SymbolStruct<?> BQ_VECTOR_FLAG = new SymbolStruct<>("bqv", GlobalPackageStruct.BACKQUOTE);
 
 	// Standard Keywords
 	KeywordStruct ELEMENT_TYPE_KEYWORD = new KeywordStruct("ELEMENT-TYPE");

@@ -2,13 +2,15 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.compiler.real;
+package jcl.arrays.functions;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
+import jcl.arrays.VectorStruct;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
@@ -16,21 +18,25 @@ import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
-import jcl.compiler.real.struct.ValuesStruct;
 import jcl.functions.FunctionStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.SymbolStruct;
+import org.springframework.stereotype.Component;
 
-public class ValuesFunction extends FunctionStruct {
+@Component
+public final class VectorFunction extends FunctionStruct {
 
-	public static final ValuesFunction INSTANCE = new ValuesFunction();
+	public static final SymbolStruct<?> VECTOR = new SymbolStruct<>("VECTOR", GlobalPackageStruct.COMMON_LISP);
 
-	public static final SymbolStruct<?> VALUES = new SymbolStruct<>("VALUES", GlobalPackageStruct.COMMON_LISP, null, INSTANCE);
+	private static final long serialVersionUID = -2957696649653550853L;
 
-	private static final long serialVersionUID = -7869325469764526281L;
+	private VectorFunction() {
+		super("Creates a fresh simple general vector whose size corresponds to the number of objects.", getInitLambdaListBindings());
+	}
 
-	private ValuesFunction() {
-		super("Returns the objects as multiple values.", getInitLambdaListBindings());
+	@PostConstruct
+	private void init() {
+		VECTOR.setFunction(this);
 	}
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
@@ -51,7 +57,12 @@ public class ValuesFunction extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
-		final List<LispStruct> valuesList = Arrays.asList(lispStructs);
-		return new ValuesStruct(valuesList);
+		getFunctionBindings(lispStructs);
+
+		return vector(lispStructs);
+	}
+
+	public LispStruct vector(final LispStruct... lispStructs) {
+		return new VectorStruct<>(Arrays.asList(lispStructs));
 	}
 }

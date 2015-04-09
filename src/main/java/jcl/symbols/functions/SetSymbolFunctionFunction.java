@@ -42,12 +42,12 @@ public class SetSymbolFunctionFunction extends FunctionStruct {
 
 		final List<RequiredBinding> requiredBindings = new ArrayList<>(2);
 
-		final SymbolStruct<?> symbolArgSymbol = new SymbolStruct<>("symbol", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> symbolArgSymbol = new SymbolStruct<>("SYM", GlobalPackageStruct.COMMON_LISP);
 		final ParameterAllocation symbolArgAllocation = new ParameterAllocation(0);
 		final RequiredBinding symbolArgRequiredBinding = new RequiredBinding(symbolArgSymbol, symbolArgAllocation);
 		requiredBindings.add(symbolArgRequiredBinding);
 
-		final SymbolStruct<?> functionArgSymbol = new SymbolStruct<>("function", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> functionArgSymbol = new SymbolStruct<>("FN", GlobalPackageStruct.COMMON_LISP);
 		final ParameterAllocation functionArgAllocation = new ParameterAllocation(0);
 		final RequiredBinding functionArgRequiredBinding = new RequiredBinding(functionArgSymbol, functionArgAllocation);
 		requiredBindings.add(functionArgRequiredBinding);

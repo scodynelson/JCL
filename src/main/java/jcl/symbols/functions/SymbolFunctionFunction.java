@@ -39,7 +39,7 @@ public class SymbolFunctionFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
-		final SymbolStruct<?> symbolArgSymbol = new SymbolStruct<>("symbol", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> symbolArgSymbol = new SymbolStruct<>("SYM", GlobalPackageStruct.COMMON_LISP);
 		final ParameterAllocation symbolArgAllocation = new ParameterAllocation(0);
 		final RequiredBinding symbolArgRequiredBinding = new RequiredBinding(symbolArgSymbol, symbolArgAllocation);
 		final List<RequiredBinding> requiredBindings = Collections.singletonList(symbolArgRequiredBinding);

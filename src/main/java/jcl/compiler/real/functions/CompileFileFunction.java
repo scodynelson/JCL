@@ -1,11 +1,11 @@
 package jcl.compiler.real.functions;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.time.Duration;
@@ -230,7 +230,8 @@ public final class CompileFileFunction extends FunctionStruct {
 
 		final PathnameStruct inputFilePathname = pathnameFunction.pathname(inputFile);
 		final URI inputFilePathnameURI = inputFilePathname.getUri();
-		final Path inputFilePath = Paths.get(inputFilePathnameURI);
+		final File inputFilePathnameFile = new File(inputFilePathnameURI.toString());
+		final Path inputFilePath = inputFilePathnameFile.toPath();
 
 		final boolean inputFileNotExists = Files.notExists(inputFilePath);
 		if (inputFileNotExists) {
@@ -254,7 +255,8 @@ public final class CompileFileFunction extends FunctionStruct {
 
 		final PathnameStruct outputFilePathname = compileFilePathnameFunction.compileFilePathname(inputFilePathname, outputFile);
 		final URI outputFilePathnameURI = outputFilePathname.getUri();
-		final Path outputFilePath = Paths.get(outputFilePathnameURI);
+		final File outputFilePathnameFile = new File(outputFilePathnameURI.toString());
+		final Path outputFilePath = outputFilePathnameFile.toPath();
 
 		final LispStruct previousCompileFilePathname = CompilerVariables.COMPILE_FILE_PATHNAME.getValue();
 		final LispStruct previousCompileFileTruename = CompilerVariables.COMPILE_FILE_TRUENAME.getValue();

@@ -282,8 +282,12 @@ public class PathnameStruct extends BuiltInClassStruct {
 			}
 		}
 
-		final boolean isAbsolute = uri.isAbsolute();
-		final PathnameDirectoryType directoryType = isAbsolute ? PathnameDirectoryType.ABSOLUTE : PathnameDirectoryType.RELATIVE;
+		final boolean isURIAbsolute = uri.isAbsolute();
+
+		final File uriAsFile = new File(uri.toString());
+		final boolean isFileAbsolute = uriAsFile.isAbsolute();
+
+		final PathnameDirectoryType directoryType = (isURIAbsolute || isFileAbsolute) ? PathnameDirectoryType.ABSOLUTE : PathnameDirectoryType.RELATIVE;
 
 		final List<PathnameDirectoryLevel> directoryLevels = new ArrayList<>(directoryStrings.size());
 

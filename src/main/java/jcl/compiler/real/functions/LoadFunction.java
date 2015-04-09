@@ -4,12 +4,12 @@
 
 package jcl.compiler.real.functions;
 
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -220,7 +220,8 @@ public final class LoadFunction extends FunctionStruct {
 			final PathnameVersion nilVersion = new PathnameVersion(PathnameVersionComponentType.NIL);
 			filespecPathname = mergePathnamesFunction.mergePathnames(filespec, defaultPathspec, nilVersion);
 			final URI pathnameURI = filespecPathname.getUri();
-			filespecPath = Paths.get(pathnameURI);
+			final File pathnameFile = new File(pathnameURI.toString());
+			filespecPath = pathnameFile.toPath();
 		}
 
 		final boolean filespecNotExists = Files.notExists(filespecPath);

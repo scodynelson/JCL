@@ -2,8 +2,10 @@ package jcl.compiler.real.functions;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.time.Duration;
@@ -42,7 +44,6 @@ import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
-import jcl.pathnames.PathnameFileStruct;
 import jcl.pathnames.PathnameStruct;
 import jcl.pathnames.functions.PathnameFunction;
 import jcl.printer.Printer;
@@ -228,7 +229,8 @@ public final class CompileFileFunction extends FunctionStruct {
 		// NOTE: 'outputFile' will be null if it is not supplied.
 
 		final PathnameStruct inputFilePathname = pathnameFunction.pathname(inputFile);
-		final Path inputFilePath = inputFilePathname.getPath();
+		final URI inputFilePathnameURI = inputFilePathname.getUri();
+		final Path inputFilePath = Paths.get(inputFilePathnameURI);
 
 		final boolean inputFileNotExists = Files.notExists(inputFilePath);
 		if (inputFileNotExists) {
@@ -251,14 +253,15 @@ public final class CompileFileFunction extends FunctionStruct {
 		}
 
 		final PathnameStruct outputFilePathname = compileFilePathnameFunction.compileFilePathname(inputFilePathname, outputFile);
-		final Path outputFilePath = outputFilePathname.getPath();
+		final URI outputFilePathnameURI = outputFilePathname.getUri();
+		final Path outputFilePath = Paths.get(outputFilePathnameURI);
 
 		final LispStruct previousCompileFilePathname = CompilerVariables.COMPILE_FILE_PATHNAME.getValue();
 		final LispStruct previousCompileFileTruename = CompilerVariables.COMPILE_FILE_TRUENAME.getValue();
 
 		CompilerVariables.COMPILE_FILE_PATHNAME.setValue(outputFilePathname);
 		final Path outputFileAbsolutePath = outputFilePath.toAbsolutePath();
-		final PathnameStruct outputFileTruename = new PathnameFileStruct(outputFileAbsolutePath);
+		final PathnameStruct outputFileTruename = new PathnameStruct(outputFileAbsolutePath);
 		CompilerVariables.COMPILE_FILE_TRUENAME.setValue(outputFileTruename);
 
 		final ReadtableStruct previousReadtable = ReaderVariables.READTABLE.getValue();

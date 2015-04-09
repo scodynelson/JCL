@@ -4,7 +4,7 @@
 
 package jcl.pathnames.functions;
 
-import java.nio.file.Path;
+import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -20,7 +20,6 @@ import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.functions.FunctionStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.pathnames.LogicalPathnameStruct;
-import jcl.pathnames.PathnameFileStruct;
 import jcl.pathnames.PathnameStruct;
 import jcl.streams.StreamStruct;
 import jcl.streams.SynonymStreamStruct;
@@ -79,8 +78,8 @@ public final class TranslateLogicalPathnameFunction extends FunctionStruct {
 		if (pathnameDesignator instanceof LogicalPathnameStruct) {
 			final LogicalPathnameStruct logicalPathname = (LogicalPathnameStruct) pathnameDesignator;
 
-			final Path path = logicalPathname.getPath();
-			pathname = new PathnameFileStruct(path);
+			final URI uri = logicalPathname.getUri();
+			pathname = new PathnameStruct(uri);
 		} else if (pathnameDesignator instanceof SynonymStreamStruct) {
 			final SynonymStreamStruct synonymStream = (SynonymStreamStruct) pathnameDesignator;
 			final SymbolStruct<StreamStruct> streamSymbol = synonymStream.getSymbol();

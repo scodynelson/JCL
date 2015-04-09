@@ -4,8 +4,6 @@
 
 package jcl.pathnames;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -39,22 +37,22 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	/**
 	 * Host marker character.
 	 */
-	private static final char HOST_MARKER = ':' ;
+	private static final char HOST_MARKER = ':';
 
 	/**
 	 * Directory marker character.
 	 */
-	private static final char DIRECTORY_MARKER = ';' ;
+	private static final char DIRECTORY_MARKER = ';';
 
 	/**
 	 * Type marker character.
 	 */
-	private static final char TYPE_MARKER = '.' ;
+	private static final char TYPE_MARKER = '.';
 
 	/**
 	 * Version marker character.
 	 */
-	private static final char VERSION_MARKER = '.' ;
+	private static final char VERSION_MARKER = '.';
 
 	/**
 	 * Valid wildcard string.
@@ -83,7 +81,7 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	 * 		the pathname string to parse into the logical-pathname object elements
 	 */
 	public LogicalPathnameStruct(final String pathname) {
-		this(getHost(pathname), getDirectory(pathname), getName(pathname), getType(pathname), getVersion(pathname), Paths.get(pathname));
+		this(getHost(pathname), getDirectory(pathname), getName(pathname), getType(pathname), getVersion(pathname));
 	}
 
 	/**
@@ -102,28 +100,7 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	 */
 	public LogicalPathnameStruct(final PathnameHost host, final PathnameDirectory directory, final PathnameName name,
 	                             final PathnameType type, final PathnameVersion version) {
-		super(LogicalPathname.INSTANCE, host, null, directory, name, type, version, getPathFromComponents(host, null, directory, name, type, version));
-	}
-
-	/**
-	 * Public constructor.
-	 *
-	 * @param host
-	 * 		the logical-pathname host
-	 * @param directory
-	 * 		the logical-pathname directory
-	 * @param name
-	 * 		the logical-pathname name
-	 * @param type
-	 * 		the logical-pathname type
-	 * @param version
-	 * 		the logical-pathname version
-	 * @param path
-	 * 		the {@link Path} representation of the pathname
-	 */
-	public LogicalPathnameStruct(final PathnameHost host, final PathnameDirectory directory, final PathnameName name,
-	                             final PathnameType type, final PathnameVersion version, final Path path) {
-		super(LogicalPathname.INSTANCE, host, null, directory, name, type, version, path);
+		super(LogicalPathname.INSTANCE, host, null, directory, name, type, version, getURIFromComponents(host, null, directory, name, type, version));
 	}
 
 	/**

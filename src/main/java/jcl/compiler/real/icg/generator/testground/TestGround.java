@@ -6,8 +6,7 @@ package jcl.compiler.real.icg.generator.testground;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +32,7 @@ import jcl.numbers.FloatStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.RatioStruct;
 import jcl.packages.PackageStruct;
-import jcl.pathnames.PathnameFileStruct;
-import jcl.pathnames.PathnameURIStruct;
+import jcl.pathnames.PathnameStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
@@ -171,10 +169,9 @@ public class TestGround {
 	}
 
 	private Object pathnameGen() {
-		final Path path = Paths.get("");
+		final URI uri = URI.create("");
 
-		new PathnameURIStruct(path);
-		return new PathnameFileStruct(path);
+		return new PathnameStruct(uri);
 	}
 
 	private Object bitVectorGen() {

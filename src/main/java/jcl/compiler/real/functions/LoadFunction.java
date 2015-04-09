@@ -6,8 +6,10 @@ package jcl.compiler.real.functions;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,7 +31,6 @@ import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
-import jcl.pathnames.PathnameFileStruct;
 import jcl.pathnames.PathnameStruct;
 import jcl.pathnames.PathnameVariables;
 import jcl.pathnames.PathnameVersion;
@@ -213,12 +214,13 @@ public final class LoadFunction extends FunctionStruct {
 		if (filespec instanceof FileStreamStruct) {
 			filespecFileStream = (FileStreamStruct) filespec;
 			filespecPath = filespecFileStream.getPath();
-			filespecPathname = new PathnameFileStruct(filespecPath);
+			filespecPathname = new PathnameStruct(filespecPath);
 		} else {
 			final PathnameStruct defaultPathspec = PathnameVariables.DEFAULT_PATHNAME_DEFAULTS.getValue();
 			final PathnameVersion nilVersion = new PathnameVersion(PathnameVersionComponentType.NIL);
 			filespecPathname = mergePathnamesFunction.mergePathnames(filespec, defaultPathspec, nilVersion);
-			filespecPath = filespecPathname.getPath();
+			final URI pathnameURI = filespecPathname.getUri();
+			filespecPath = Paths.get(pathnameURI);
 		}
 
 		final boolean filespecNotExists = Files.notExists(filespecPath);
@@ -234,7 +236,7 @@ public final class LoadFunction extends FunctionStruct {
 
 		CompilerVariables.COMPILE_FILE_PATHNAME.setValue(filespecPathname);
 		final Path filespecAbsolutePath = filespecPath.toAbsolutePath();
-		final PathnameStruct filespecTruename = new PathnameFileStruct(filespecAbsolutePath);
+		final PathnameStruct filespecTruename = new PathnameStruct(filespecAbsolutePath);
 		CompilerVariables.COMPILE_FILE_TRUENAME.setValue(filespecTruename);
 
 		final ReadtableStruct previousReadtable = ReaderVariables.READTABLE.getValue();
@@ -272,7 +274,7 @@ public final class LoadFunction extends FunctionStruct {
 		do {
 			form = readFunction.read(filespecFileStream, NILStruct.INSTANCE, null, NILStruct.INSTANCE);
 			if (form == null) {
-			 continue;
+				continue;
 			}
 
 			final LispStruct evaluatedForm = evalFunction.eval(form);

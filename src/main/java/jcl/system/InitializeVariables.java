@@ -4,12 +4,12 @@
 
 package jcl.system;
 
-import jcl.pathnames.PathnameFileStruct;
+import jcl.pathnames.PathnameStruct;
 import jcl.pathnames.PathnameVariables;
 
 public class InitializeVariables {
 
 	static {
-		PathnameVariables.DEFAULT_PATHNAME_DEFAULTS.setValue(new PathnameFileStruct(""));
+		PathnameVariables.DEFAULT_PATHNAME_DEFAULTS.setValue(new PathnameStruct(""));
 	}
 }

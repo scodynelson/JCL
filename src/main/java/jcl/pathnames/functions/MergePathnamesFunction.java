@@ -27,12 +27,10 @@ import jcl.packages.GlobalPackageStruct;
 import jcl.pathnames.LogicalPathnameStruct;
 import jcl.pathnames.PathnameDevice;
 import jcl.pathnames.PathnameDirectory;
-import jcl.pathnames.PathnameFileStruct;
 import jcl.pathnames.PathnameHost;
 import jcl.pathnames.PathnameName;
 import jcl.pathnames.PathnameStruct;
 import jcl.pathnames.PathnameType;
-import jcl.pathnames.PathnameURIStruct;
 import jcl.pathnames.PathnameVariables;
 import jcl.pathnames.PathnameVersion;
 import jcl.pathnames.PathnameVersionComponentType;
@@ -165,12 +163,10 @@ public final class MergePathnamesFunction extends FunctionStruct {
 			mergedPathnameVersion = defaultVersion;
 		}
 
-		if (pathname instanceof PathnameFileStruct) {
-			return new PathnameFileStruct(mergedPathnameHost, mergedPathnameDevice, mergedPathnameDirectory, mergedPathnameName, mergedPathnameType, mergedPathnameVersion);
-		} else if (pathname instanceof PathnameURIStruct) {
-			return new PathnameURIStruct(mergedPathnameHost, mergedPathnameDevice, mergedPathnameDirectory, mergedPathnameName, mergedPathnameType, mergedPathnameVersion);
-		} else {
+		if (pathname instanceof LogicalPathnameStruct) {
 			return new LogicalPathnameStruct(mergedPathnameHost, mergedPathnameDirectory, mergedPathnameName, mergedPathnameType, mergedPathnameVersion);
+		} else {
+			return new PathnameStruct(mergedPathnameHost, mergedPathnameDevice, mergedPathnameDirectory, mergedPathnameName, mergedPathnameType, mergedPathnameVersion);
 		}
 	}
 

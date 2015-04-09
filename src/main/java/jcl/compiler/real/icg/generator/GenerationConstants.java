@@ -4,7 +4,7 @@
 
 package jcl.compiler.real.icg.generator;
 
-import java.nio.file.Paths;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,11 +37,11 @@ public interface GenerationConstants {
 
 	String JAVA_INTEGER_VALUE_OF_METHOD_DESC = GeneratorUtils.getMethodDescription(Integer.class, JAVA_INTEGER_VALUE_OF_METHOD_NAME, int.class);
 
-	String JAVA_PATHS_NAME = Type.getInternalName(Paths.class);
+	String JAVA_URI_NAME = Type.getInternalName(URI.class);
 
-	String JAVA_PATHS_GET_METHOD_NAME = "get";
+	String JAVA_URI_CREATE_METHOD_NAME = "create";
 
-	String JAVA_PATHS_GET_METHOD_DESC = GeneratorUtils.getMethodDescription(Paths.class, JAVA_PATHS_GET_METHOD_NAME, String.class, String[].class);
+	String JAVA_URI_CREATE_METHOD_DESC = GeneratorUtils.getMethodDescription(URI.class, JAVA_URI_CREATE_METHOD_NAME, String.class);
 
 	String SYMBOL_STRUCT_NAME = Type.getInternalName(SymbolStruct.class);
 

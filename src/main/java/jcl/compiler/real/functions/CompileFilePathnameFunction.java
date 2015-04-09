@@ -21,7 +21,6 @@ import jcl.functions.FunctionStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.pathnames.LogicalPathnameStruct;
-import jcl.pathnames.PathnameFileStruct;
 import jcl.pathnames.PathnameStruct;
 import jcl.pathnames.PathnameType;
 import jcl.pathnames.PathnameVariables;
@@ -105,7 +104,7 @@ public final class CompileFilePathnameFunction extends FunctionStruct {
 		final boolean isLogicalInputFile = mergedInputFile instanceof LogicalPathnameStruct;
 
 		if ((outputFile == null) && isLogicalInputFile) {
-			return new PathnameFileStruct(
+			return new PathnameStruct(
 					mergedInputFile.getPathnameHost(),
 					mergedInputFile.getPathnameDevice(),
 					mergedInputFile.getPathnameDirectory(),
@@ -114,11 +113,11 @@ public final class CompileFilePathnameFunction extends FunctionStruct {
 					mergedInputFile.getPathnameVersion()
 			);
 		} else if (isLogicalInputFile) {
-			final PathnameStruct outputFilePathname = new PathnameFileStruct(null, null, null, null, outputPathnameType, null);
+			final PathnameStruct outputFilePathname = new PathnameStruct(null, null, null, null, outputPathnameType, null);
 			final PathnameStruct translatedMergedInputFile = translateLogicalPathnameFunction.translateLogicalPathname(mergedInputFile);
 			final PathnameStruct mergedOutputFile = mergePathnamesFunction.mergePathnames(outputFilePathname, translatedMergedInputFile);
 
-			return new PathnameFileStruct(
+			return new PathnameStruct(
 					mergedOutputFile.getPathnameHost(),
 					mergedOutputFile.getPathnameDevice(),
 					mergedOutputFile.getPathnameDirectory(),
@@ -127,10 +126,10 @@ public final class CompileFilePathnameFunction extends FunctionStruct {
 					mergedOutputFile.getPathnameVersion()
 			);
 		} else {
-			final PathnameStruct outputFilePathname = new PathnameFileStruct(null, null, null, null, outputPathnameType, null);
+			final PathnameStruct outputFilePathname = new PathnameStruct(null, null, null, null, outputPathnameType, null);
 			final PathnameStruct mergedOutputFile = mergePathnamesFunction.mergePathnames(outputFilePathname, mergedInputFile);
 
-			return new PathnameFileStruct(
+			return new PathnameStruct(
 					mergedOutputFile.getPathnameHost(),
 					mergedOutputFile.getPathnameDevice(),
 					mergedOutputFile.getPathnameDirectory(),

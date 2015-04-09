@@ -11,9 +11,9 @@ import jcl.arrays.ArrayStruct;
 import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
-import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.icg.generator.GenerationConstants;
 import jcl.compiler.real.icg.generator.GeneratorUtils;
+import jcl.compiler.real.icg.generator.specialoperator.QuoteCodeGenerator;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -28,7 +28,7 @@ public class ArrayCodeGenerator implements CodeGenerator<ArrayStruct<LispStruct>
 	private static final String ARRAY_STRUCT_INIT_DESC = GeneratorUtils.getConstructorDescription(ArrayStruct.class, List.class, List.class);
 
 	@Autowired
-	private FormGenerator formGenerator;
+	private QuoteCodeGenerator quoteCodeGenerator;
 
 	@Override
 	public void generate(final ArrayStruct<LispStruct> input, final JavaClassBuilder classBuilder) {
@@ -77,7 +77,7 @@ public class ArrayCodeGenerator implements CodeGenerator<ArrayStruct<LispStruct>
 
 		final List<LispStruct> contents = input.getContents();
 		for (final LispStruct content : contents) {
-			formGenerator.generate(content, classBuilder);
+			quoteCodeGenerator.generateQuotedObject(content, classBuilder);
 			mv.visitVarInsn(Opcodes.ASTORE, contentStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, contentsStore);

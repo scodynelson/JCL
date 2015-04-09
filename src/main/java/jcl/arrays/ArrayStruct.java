@@ -1,6 +1,7 @@
 package jcl.arrays;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import jcl.LispStruct;
@@ -8,6 +9,7 @@ import jcl.LispType;
 import jcl.classes.BuiltInClassStruct;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
+import jcl.sequences.SequenceStruct;
 import jcl.types.Array;
 import jcl.types.SimpleArray;
 import jcl.types.T;
@@ -120,20 +122,34 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 * @param contentsToCheck
 	 * 		the array contents to check
 	 */
-	private void areContentsValidForDimensionsAndElementType(final List<Integer> dimensionsToCheck, final LispType elementTypeToCheck,
-	                                                         final List<TYPE> contentsToCheck) {
+	private static void areContentsValidForDimensionsAndElementType(final List<Integer> dimensionsToCheck,
+	                                                                final LispType elementTypeToCheck,
+	                                                                final List<? extends LispStruct> contentsToCheck) {
 
-		int totalNumberOfElements = 0;
-		for (final int dimension : dimensionsToCheck) {
-			totalNumberOfElements += dimension;
+		if (dimensionsToCheck.isEmpty()) {
+			return;
 		}
 
-		final int contentsSize = contentsToCheck.size();
-		if (contentsSize != totalNumberOfElements) {
-			throw new SimpleErrorException(contentsToCheck + " doesn't match array dimensions of #<" + elementTypeToCheck + ' ' + contentsSize + ">.");
+		final Integer dimension = dimensionsToCheck.get(0);
+		if (contentsToCheck.size() == dimension) {
+			final List<Integer> subDimensionToCheck = dimensionsToCheck.subList(1, dimensionsToCheck.size());
+			for (final LispStruct contentToCheck : contentsToCheck) {
+
+				final List<LispStruct> subContentsToCheck;
+
+				if (contentToCheck instanceof SequenceStruct) {
+					final SequenceStruct sequenceToken = (SequenceStruct) contentToCheck;
+					subContentsToCheck = sequenceToken.getAsJavaList();
+				} else {
+					subContentsToCheck = Collections.singletonList(contentToCheck);
+				}
+				areContentsValidForDimensionsAndElementType(subDimensionToCheck, elementTypeToCheck, subContentsToCheck);
+			}
+		} else {
+			throw new SimpleErrorException(contentsToCheck + " doesn't match array dimensions of #<" + elementTypeToCheck + ' ' + dimension + ">.");
 		}
 
-		for (final TYPE current : contentsToCheck) {
+		for (final LispStruct current : contentsToCheck) {
 			if (!current.getType().equals(elementTypeToCheck) && !elementTypeToCheck.equals(current.getType())) {
 				throw new TypeErrorException("Provided element " + current + " is not a subtype of the provided elementType " + elementTypeToCheck + '.');
 			}
@@ -141,8 +157,7 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	}
 
 	/**
-	 * Calculates and updates the {@link #totalSize} of the array based on the {@link
-	 * #dimensions} property.
+	 * Calculates and updates the {@link #totalSize} of the array based on the {@link #dimensions} property.
 	 */
 	private void updateTotalSize() {
 		totalSize = 0;

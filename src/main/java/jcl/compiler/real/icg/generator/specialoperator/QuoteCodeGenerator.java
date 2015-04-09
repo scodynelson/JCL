@@ -31,7 +31,7 @@ public class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 		generateQuotedObject(quotedObject, classBuilder);
 	}
 
-	private void generateQuotedObject(final LispStruct quotedObject, final JavaClassBuilder classBuilder) {
+	public void generateQuotedObject(final LispStruct quotedObject, final JavaClassBuilder classBuilder) {
 		if (quotedObject instanceof SymbolStruct) {
 			generateQuotedSymbol((SymbolStruct) quotedObject, classBuilder);
 		} else if (quotedObject instanceof ConsStruct) {

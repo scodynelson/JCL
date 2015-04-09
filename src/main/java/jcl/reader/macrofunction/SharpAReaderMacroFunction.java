@@ -6,6 +6,7 @@ package jcl.reader.macrofunction;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
@@ -69,17 +70,19 @@ public class SharpAReaderMacroFunction extends ReaderMacroFunction {
 		}
 		final BigInteger numberArgumentValue = numberArgument.get();
 
-		if (BigInteger.ZERO.compareTo(numberArgumentValue) > 0) {
+		if (BigInteger.ZERO.compareTo(numberArgumentValue) < 0) {
 			if (!(token instanceof SequenceStruct)) {
 				final String printedToken = printer.print(token);
 				throw new ReaderErrorException("The form following a #" + numberArgumentValue + "A reader macro should have been a sequence, but it was: " + printedToken);
 			}
-		}
 
-		final SequenceStruct contents = (SequenceStruct) token;
-		final List<Integer> dimensions = getDimensions(numberArgumentValue, contents);
-		final List<LispStruct> initialContents = contents.getAsJavaList();
-		return new ArrayStruct<>(dimensions, initialContents);
+			final SequenceStruct contents = (SequenceStruct) token;
+			final List<Integer> dimensions = getDimensions(numberArgumentValue, contents);
+			final List<LispStruct> initialContents = contents.getAsJavaList();
+			return new ArrayStruct<>(dimensions, initialContents);
+		} else {
+			return new ArrayStruct<>(Collections.emptyList(), Collections.singletonList(token));
+		}
 	}
 
 	/**

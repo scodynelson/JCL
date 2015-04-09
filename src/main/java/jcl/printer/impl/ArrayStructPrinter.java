@@ -41,23 +41,28 @@ public class ArrayStructPrinter<TYPE extends LispStruct> implements LispPrinter<
 
 			final int rank = object.getRank();
 			stringBuilder.append(rank);
-			stringBuilder.append("A(");
+			stringBuilder.append('A');
+			if (rank > 0) {
+				stringBuilder.append('(');
+			}
 
-			final int totalSize = object.getTotalSize();
 			final List<TYPE> contents = object.getContents();
 
-			for (int i = 0; i < totalSize; i++) {
+			final int contentsSize = contents.size();
+			for (int i = 0; i < contentsSize; i++) {
 				final TYPE lispStruct = contents.get(i);
 				final String printedLispStruct = printer.print(lispStruct);
 
 				stringBuilder.append(printedLispStruct);
 
-				if (i < (totalSize - 1)) {
+				if (i < (contentsSize - 1)) {
 					stringBuilder.append(' ');
 				}
 			}
 
-			stringBuilder.append(')');
+			if (rank > 0) {
+				stringBuilder.append(')');
+			}
 		} else {
 			final String typeClassName = object.getType().getClass().getName().toUpperCase();
 

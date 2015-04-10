@@ -11,7 +11,7 @@ import jcl.compiler.real.environment.binding.EnvironmentEnvironmentBinding;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.symbols.SymbolStruct;
-import jcl.types.T;
+import jcl.types.TType;
 
 public final class Environments {
 
@@ -129,7 +129,7 @@ public final class Environments {
 		final Environment bindingEnvironment = getDynamicBindingEnvironment(environment, var);
 		final EnvironmentAllocation allocation = new EnvironmentAllocation(bindingEnvironment);
 
-		final EnvironmentEnvironmentBinding binding = new EnvironmentEnvironmentBinding(var, allocation, T.INSTANCE, bindingEnvironment);
+		final EnvironmentEnvironmentBinding binding = new EnvironmentEnvironmentBinding(var, allocation, TType.INSTANCE, bindingEnvironment);
 		environment.addDynamicBinding(binding);
 	}
 

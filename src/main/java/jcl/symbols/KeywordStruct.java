@@ -1,7 +1,7 @@
 package jcl.symbols;
 
 import jcl.packages.GlobalPackageStruct;
-import jcl.types.Keyword;
+import jcl.types.KeywordType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -21,7 +21,7 @@ public class KeywordStruct extends ConstantStruct<KeywordStruct> {
 	 * 		the symbol name
 	 */
 	public KeywordStruct(final String name) {
-		super(Keyword.INSTANCE, name, GlobalPackageStruct.KEYWORD, null, null);
+		super(KeywordType.INSTANCE, name, GlobalPackageStruct.KEYWORD, null, null);
 		init();
 	}
 

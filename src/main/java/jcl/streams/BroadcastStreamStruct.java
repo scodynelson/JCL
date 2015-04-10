@@ -9,8 +9,8 @@ import java.util.Deque;
 
 import jcl.LispType;
 import jcl.conditions.exceptions.StreamErrorException;
-import jcl.types.BroadcastStream;
-import jcl.types.T;
+import jcl.types.BroadcastStreamType;
+import jcl.types.TType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -50,7 +50,7 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 	 * 		the {@link OutputStream}s to create a BroadcastStreamStruct from
 	 */
 	public BroadcastStreamStruct(final boolean interactive, final Deque<OutputStream> outputStreams) {
-		super(BroadcastStream.INSTANCE, null, null, interactive, getElementType2(outputStreams));
+		super(BroadcastStreamType.INSTANCE, null, null, interactive, getElementType2(outputStreams));
 		this.outputStreams = new ArrayDeque<>(outputStreams);
 	}
 
@@ -79,16 +79,11 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 	 */
 	private static LispType getElementType3(final Deque<OutputStream> outputStreams) {
 		if (outputStreams.isEmpty()) {
-			return T.INSTANCE;
+			return TType.INSTANCE;
 		}
 
 		final OutputStream last = outputStreams.getLast();
 		return last.getElementType();
-	}
-
-	@Override
-	public LispType getType() {
-		return BroadcastStream.INSTANCE;
 	}
 
 	@Override

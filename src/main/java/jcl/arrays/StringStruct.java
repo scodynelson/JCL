@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jcl.characters.CharacterStruct;
-import jcl.types.BaseChar;
-import jcl.types.BaseString;
-import jcl.types.Character;
-import jcl.types.SimpleBaseString;
-import jcl.types.SimpleString;
-import jcl.types.String;
+import jcl.types.BaseCharType;
+import jcl.types.BaseStringType;
+import jcl.types.CharacterType;
+import jcl.types.SimpleBaseStringType;
+import jcl.types.SimpleStringType;
+import jcl.types.StringType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -26,8 +26,8 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 	 * @param stringValue
 	 * 		a Java string used for the string contents
 	 */
-	public StringStruct(final java.lang.String stringValue) {
-		this(stringValue.length(), getCharList(stringValue), Character.INSTANCE, false, null);
+	public StringStruct(final String stringValue) {
+		this(stringValue.length(), getCharList(stringValue), CharacterType.INSTANCE, false, null);
 	}
 
 	/**
@@ -44,7 +44,7 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 	 * @param fillPointer
 	 * 		the string fillPointer
 	 */
-	public StringStruct(final int size, final List<CharacterStruct> contents, final Character elementType,
+	public StringStruct(final int size, final List<CharacterStruct> contents, final CharacterType elementType,
 	                    final boolean isAdjustable, final Integer fillPointer) {
 		super(getStringType(isAdjustable, fillPointer, elementType), size, contents, elementType, isAdjustable, fillPointer);
 	}
@@ -61,23 +61,23 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 	 *
 	 * @return the matching string type for the provided isAdjustable, fillPointer, and elementType values
 	 */
-	private static String getStringType(final boolean isAdjustable, final Integer fillPointer, final Character elementType) {
+	private static StringType getStringType(final boolean isAdjustable, final Integer fillPointer, final CharacterType elementType) {
 		if (isAdjustable || (fillPointer != null)) {
-			return (elementType instanceof BaseChar) ? BaseString.INSTANCE : String.INSTANCE;
+			return (elementType instanceof BaseCharType) ? BaseStringType.INSTANCE : StringType.INSTANCE;
 		} else {
-			return (elementType instanceof BaseChar) ? SimpleBaseString.INSTANCE : SimpleString.INSTANCE;
+			return (elementType instanceof BaseCharType) ? SimpleBaseStringType.INSTANCE : SimpleStringType.INSTANCE;
 		}
 	}
 
 	/**
-	 * Gets a list of {@link CharacterStruct}s from the provided {@link java.lang.String} value.
+	 * Gets a list of {@link CharacterStruct}s from the provided {@link String} value.
 	 *
 	 * @param stringValue
 	 * 		the Java string to convert to a list of {@link CharacterStruct}s
 	 *
-	 * @return a list of {@link CharacterStruct}s from the provided {@link java.lang.String} value
+	 * @return a list of {@link CharacterStruct}s from the provided {@link String} value
 	 */
-	private static List<CharacterStruct> getCharList(final java.lang.String stringValue) {
+	private static List<CharacterStruct> getCharList(final String stringValue) {
 		final List<CharacterStruct> charList = new ArrayList<>(stringValue.length());
 		for (final char character : stringValue.toCharArray()) {
 			final CharacterStruct characterStruct = new CharacterStruct(character);
@@ -87,11 +87,11 @@ public class StringStruct extends VectorStruct<CharacterStruct> {
 	}
 
 	/**
-	 * Returns the {@link java.lang.String} representation of the StringStruct.
+	 * Returns the {@link String} representation of the StringStruct.
 	 *
-	 * @return a {@link java.lang.String} representation of the StringStruct
+	 * @return a {@link String} representation of the StringStruct
 	 */
-	public java.lang.String getAsJavaString() {
+	public String getAsJavaString() {
 		final StringBuilder stringBuilder = new StringBuilder(contents.size());
 
 		for (final CharacterStruct characterStruct : contents) {

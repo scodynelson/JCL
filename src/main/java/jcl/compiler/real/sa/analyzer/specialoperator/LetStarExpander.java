@@ -25,7 +25,7 @@ import jcl.lists.NullStruct;
 import jcl.printer.Printer;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
-import jcl.types.T;
+import jcl.types.TType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -126,7 +126,7 @@ public class LetStarExpander extends MacroFunctionExpander<LetStarStruct> {
 		final boolean isSpecial = Environments.isSpecial(declare, var);
 
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
-		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(var, allocation, T.INSTANCE, initForm);
+		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(var, allocation, TType.INSTANCE, initForm);
 		if (isSpecial) {
 			letStarEnvironment.addDynamicBinding(binding);
 		} else {

@@ -15,7 +15,7 @@ import jcl.LispType;
 import jcl.classes.BuiltInClassStruct;
 import jcl.functions.EquatorFunctionStruct;
 import jcl.functions.FunctionStruct;
-import jcl.types.HashTable;
+import jcl.types.HashTableType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -60,7 +60,7 @@ public class HashTableStruct extends BuiltInClassStruct {
 	 * 		the threshold amount when resizing the table
 	 */
 	public HashTableStruct(final EquatorFunctionStruct<LispStruct> test, final BigInteger size, final BigDecimal rehashThreshold) {
-		super(HashTable.INSTANCE, null, null);
+		super(HashTableType.INSTANCE, null, null);
 		this.test = test;
 		this.rehashThreshold = rehashThreshold;
 

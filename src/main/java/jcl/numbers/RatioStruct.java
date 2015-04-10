@@ -6,7 +6,7 @@ package jcl.numbers;
 
 import java.math.BigInteger;
 
-import jcl.types.Ratio;
+import jcl.types.RatioType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -47,7 +47,7 @@ public class RatioStruct extends RationalStruct {
 	 * 		the value of the RatioStruct
 	 */
 	public RatioStruct(final BigFraction bigFraction) {
-		super(Ratio.INSTANCE, null, null);
+		super(RatioType.INSTANCE, null, null);
 		this.bigFraction = bigFraction;
 	}
 

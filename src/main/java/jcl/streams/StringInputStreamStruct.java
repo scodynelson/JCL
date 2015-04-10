@@ -7,8 +7,8 @@ package jcl.streams;
 import jcl.LispStruct;
 import jcl.conditions.exceptions.EndOfFileException;
 import jcl.conditions.exceptions.StreamErrorException;
-import jcl.types.BaseChar;
-import jcl.types.StringStream;
+import jcl.types.BaseCharType;
+import jcl.types.StringStreamType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -58,7 +58,7 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 	 * 		the input to create a StringInputStreamStruct from
 	 */
 	public StringInputStreamStruct(final boolean interactive, final String inputString) {
-		super(StringStream.INSTANCE, null, null, interactive, BaseChar.INSTANCE);
+		super(StringStreamType.INSTANCE, null, null, interactive, BaseCharType.INSTANCE);
 
 		if (inputString == null) {
 			throw new StreamErrorException("Provided Input String must not be null.");

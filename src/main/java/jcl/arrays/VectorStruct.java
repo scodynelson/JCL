@@ -8,9 +8,9 @@ import jcl.LispType;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.sequences.SequenceStruct;
-import jcl.types.SimpleVector;
-import jcl.types.T;
-import jcl.types.Vector;
+import jcl.types.SimpleVectorType;
+import jcl.types.TType;
+import jcl.types.VectorType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -35,7 +35,7 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	 * 		the vector contents
 	 */
 	public VectorStruct(final List<TYPE> contents) {
-		this(contents.size(), contents, T.INSTANCE, false, null);
+		this(contents.size(), contents, TType.INSTANCE, false, null);
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	 * @param fillPointer
 	 * 		the vector fillPointer
 	 */
-	protected VectorStruct(final Vector vectorType,
+	protected VectorStruct(final VectorType vectorType,
 	                       final int size, final List<TYPE> contents, final LispType elementType,
 	                       final boolean isAdjustable, final Integer fillPointer) {
 		super(vectorType, Collections.singletonList(size), contents, elementType, isAdjustable);
@@ -91,8 +91,8 @@ public class VectorStruct<TYPE extends LispStruct> extends ArrayStruct<TYPE> imp
 	 *
 	 * @return the matching vector type for the provided isAdjustable and fillPointer values
 	 */
-	private static Vector getVectorType(final boolean isAdjustable, final Integer fillPointer) {
-		return (isAdjustable || (fillPointer != null)) ? Vector.INSTANCE : SimpleVector.INSTANCE;
+	private static VectorType getVectorType(final boolean isAdjustable, final Integer fillPointer) {
+		return (isAdjustable || (fillPointer != null)) ? VectorType.INSTANCE : SimpleVectorType.INSTANCE;
 	}
 
 	// TODO: FIX THIS!!!

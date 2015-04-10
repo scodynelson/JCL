@@ -8,7 +8,7 @@ import jcl.LispStruct;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.ParameterBinding;
 import jcl.symbols.SymbolStruct;
-import jcl.types.T;
+import jcl.types.TType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -22,7 +22,7 @@ public class OptionalBinding extends ParameterBinding {
 
 	public OptionalBinding(final SymbolStruct<?> symbolStruct, final ParameterAllocation allocation, final LispStruct initForm,
 	                       final SuppliedPBinding suppliedPBinding) {
-		super(symbolStruct, allocation, T.INSTANCE, initForm);
+		super(symbolStruct, allocation, TType.INSTANCE, initForm);
 		this.suppliedPBinding = suppliedPBinding;
 	}
 

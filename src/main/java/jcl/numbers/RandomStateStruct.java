@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jcl.classes.BuiltInClassStruct;
-import jcl.types.RandomState;
+import jcl.types.RandomStateType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -111,7 +111,7 @@ public class RandomStateStruct extends BuiltInClassStruct {
 	 * Public constructor.
 	 */
 	public RandomStateStruct() {
-		super(RandomState.INSTANCE, null, null);
+		super(RandomStateType.INSTANCE, null, null);
 		seed = new ArrayList<>(RANDOM_MAX.intValue());
 
 		BigInteger randSeed = BigInteger.ONE;

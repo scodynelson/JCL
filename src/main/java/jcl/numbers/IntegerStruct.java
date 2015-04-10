@@ -6,6 +6,7 @@ package jcl.numbers;
 
 import java.math.BigInteger;
 
+import jcl.types.IntegerType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -33,19 +34,19 @@ public class IntegerStruct extends RationalStruct {
 	 * 		the value of the IntegerStruct
 	 */
 	public IntegerStruct(final BigInteger bigInteger) {
-		this(jcl.types.Integer.INSTANCE, bigInteger);
+		this(IntegerType.INSTANCE, bigInteger);
 	}
 
 	/**
 	 * Public constructor.
 	 *
-	 * @param integerFormat
-	 * 		a {@link jcl.types.Integer} that represents the type of {@link jcl.types.Integer}
+	 * @param integerType
+	 * 		a {@link IntegerType} that represents the type of {@link IntegerType}
 	 * @param bigInteger
 	 * 		the value of the IntegerStruct
 	 */
-	public IntegerStruct(final jcl.types.Integer integerFormat, final BigInteger bigInteger) {
-		super(integerFormat, null, null);
+	public IntegerStruct(final IntegerType integerType, final BigInteger bigInteger) {
+		super(integerType, null, null);
 		this.bigInteger = bigInteger;
 	}
 

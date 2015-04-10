@@ -15,8 +15,8 @@ import java.nio.file.StandardOpenOption;
 import jcl.LispStruct;
 import jcl.LispType;
 import jcl.conditions.exceptions.StreamErrorException;
-import jcl.types.FileStream;
-import jcl.types.SignedByte;
+import jcl.types.FileStreamType;
+import jcl.types.SignedByteType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -75,7 +75,7 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 	 * 		the {@link Path} to create a FileStreamStruct from
 	 */
 	public FileStreamStruct(final boolean interactive, final Path path) {
-		super(FileStream.INSTANCE, interactive, getElementType2(path));
+		super(FileStreamType.INSTANCE, interactive, getElementType2(path));
 
 		this.path = path;
 		try {
@@ -99,7 +99,7 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 		try (FileChannel fileChannel = FileChannel.open(path, StandardOpenOption.READ)) {
 			final long bufferSize = fileChannel.size();
 			final BigInteger bits = BigInteger.valueOf(bufferSize);
-			return SignedByte.Factory.getInstance(bits);
+			return SignedByteType.Factory.getInstance(bits);
 		} catch (final IOException ioe) {
 			throw new StreamErrorException("Failed to open provided file.", ioe);
 		}

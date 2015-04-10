@@ -10,9 +10,9 @@ import jcl.classes.BuiltInClassStruct;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.sequences.SequenceStruct;
-import jcl.types.Array;
-import jcl.types.SimpleArray;
-import jcl.types.T;
+import jcl.types.ArrayType;
+import jcl.types.SimpleArrayType;
+import jcl.types.TType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -49,7 +49,7 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 * 		the array contents
 	 */
 	public ArrayStruct(final List<Integer> dimensions, final List<TYPE> contents) {
-		this(SimpleArray.INSTANCE, dimensions, contents, T.INSTANCE, false);
+		this(SimpleArrayType.INSTANCE, dimensions, contents, TType.INSTANCE, false);
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 * @param isAdjustable
 	 * 		whether or not the array is adjustable
 	 */
-	protected ArrayStruct(final Array arrayType,
+	protected ArrayStruct(final ArrayType arrayType,
 	                      final List<Integer> dimensions, final List<TYPE> contents, final LispType elementType, final boolean isAdjustable) {
 		super(arrayType, null, null);
 
@@ -107,8 +107,8 @@ public class ArrayStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 *
 	 * @return the matching array type for the provided {@link #isAdjustable} value
 	 */
-	private static Array getArrayType(final boolean isAdjustable) {
-		return isAdjustable ? Array.INSTANCE : SimpleArray.INSTANCE;
+	private static ArrayType getArrayType(final boolean isAdjustable) {
+		return isAdjustable ? ArrayType.INSTANCE : SimpleArrayType.INSTANCE;
 	}
 
 	/**

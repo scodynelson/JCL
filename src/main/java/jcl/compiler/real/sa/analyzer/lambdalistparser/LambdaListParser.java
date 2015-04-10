@@ -30,7 +30,7 @@ import jcl.packages.PackageSymbolStruct;
 import jcl.printer.Printer;
 import jcl.symbols.KeywordStruct;
 import jcl.symbols.SymbolStruct;
-import jcl.types.T;
+import jcl.types.TType;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class LambdaListParser {
@@ -60,7 +60,7 @@ public class LambdaListParser {
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 		final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
 
-		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullStruct.INSTANCE);
+		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, TType.INSTANCE, NullStruct.INSTANCE);
 		if (isSpecial) {
 			environment.addDynamicBinding(binding);
 		} else {
@@ -99,7 +99,7 @@ public class LambdaListParser {
 
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 
-		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullStruct.INSTANCE);
+		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, TType.INSTANCE, NullStruct.INSTANCE);
 		environment.addDynamicBinding(binding);
 
 		final ParameterAllocation environmentAllocation = new ParameterAllocation(currentPosition++);
@@ -140,7 +140,7 @@ public class LambdaListParser {
 			final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 			final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
 
-			final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullStruct.INSTANCE);
+			final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, TType.INSTANCE, NullStruct.INSTANCE);
 			if (isSpecial) {
 				environment.addDynamicBinding(binding);
 			} else {
@@ -183,7 +183,7 @@ public class LambdaListParser {
 				ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 				boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
 
-				EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullStruct.INSTANCE);
+				EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, TType.INSTANCE, NullStruct.INSTANCE);
 				if (isSpecial) {
 					environment.addDynamicBinding(binding);
 				} else {
@@ -203,7 +203,7 @@ public class LambdaListParser {
 				allocation = new ParameterAllocation(newBindingsPosition);
 				isSpecial = Environments.isSpecial(declareElement, customSuppliedPCurrent);
 
-				binding = new EnvironmentParameterBinding(customSuppliedPCurrent, allocation, T.INSTANCE, NullStruct.INSTANCE);
+				binding = new EnvironmentParameterBinding(customSuppliedPCurrent, allocation, TType.INSTANCE, NullStruct.INSTANCE);
 				if (isSpecial) {
 					environment.addDynamicBinding(binding);
 				} else {
@@ -243,7 +243,7 @@ public class LambdaListParser {
 				ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 				boolean isSpecial = Environments.isSpecial(declareElement, varNameCurrent);
 
-				EnvironmentParameterBinding binding = new EnvironmentParameterBinding(varNameCurrent, allocation, T.INSTANCE, parameterValueInitForm);
+				EnvironmentParameterBinding binding = new EnvironmentParameterBinding(varNameCurrent, allocation, TType.INSTANCE, parameterValueInitForm);
 				if (isSpecial) {
 					environment.addDynamicBinding(binding);
 				} else {
@@ -265,7 +265,7 @@ public class LambdaListParser {
 					allocation = new ParameterAllocation(newBindingsPosition);
 					isSpecial = Environments.isSpecial(declareElement, customSuppliedPCurrent);
 
-					binding = new EnvironmentParameterBinding(customSuppliedPCurrent, allocation, T.INSTANCE, NullStruct.INSTANCE);
+					binding = new EnvironmentParameterBinding(customSuppliedPCurrent, allocation, TType.INSTANCE, NullStruct.INSTANCE);
 					if (isSpecial) {
 						environment.addDynamicBinding(binding);
 					} else {
@@ -288,7 +288,7 @@ public class LambdaListParser {
 					allocation = new ParameterAllocation(newBindingsPosition);
 					isSpecial = Environments.isSpecial(declareElement, suppliedPCurrent);
 
-					binding = new EnvironmentParameterBinding(suppliedPCurrent, allocation, T.INSTANCE, NullStruct.INSTANCE);
+					binding = new EnvironmentParameterBinding(suppliedPCurrent, allocation, TType.INSTANCE, NullStruct.INSTANCE);
 					if (isSpecial) {
 						environment.addDynamicBinding(binding);
 					} else {
@@ -339,7 +339,7 @@ public class LambdaListParser {
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 		final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
 
-		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullStruct.INSTANCE);
+		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, TType.INSTANCE, NullStruct.INSTANCE);
 		if (isSpecial) {
 			environment.addDynamicBinding(binding);
 		} else {
@@ -369,7 +369,7 @@ public class LambdaListParser {
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 		final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
 
-		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullStruct.INSTANCE);
+		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, TType.INSTANCE, NullStruct.INSTANCE);
 		if (isSpecial) {
 			environment.addDynamicBinding(binding);
 		} else {
@@ -412,7 +412,7 @@ public class LambdaListParser {
 		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 		final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
 
-		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullStruct.INSTANCE);
+		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, TType.INSTANCE, NullStruct.INSTANCE);
 		if (isSpecial) {
 			environment.addDynamicBinding(binding);
 		} else {
@@ -453,7 +453,7 @@ public class LambdaListParser {
 				ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 				boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
 
-				EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullStruct.INSTANCE);
+				EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, TType.INSTANCE, NullStruct.INSTANCE);
 				if (isSpecial) {
 					environment.addDynamicBinding(binding);
 				} else {
@@ -473,7 +473,7 @@ public class LambdaListParser {
 				allocation = new ParameterAllocation(newBindingsPosition);
 				isSpecial = Environments.isSpecial(declareElement, customSuppliedPCurrent);
 
-				binding = new EnvironmentParameterBinding(customSuppliedPCurrent, allocation, T.INSTANCE, NullStruct.INSTANCE);
+				binding = new EnvironmentParameterBinding(customSuppliedPCurrent, allocation, TType.INSTANCE, NullStruct.INSTANCE);
 				if (isSpecial) {
 					environment.addDynamicBinding(binding);
 				} else {
@@ -541,7 +541,7 @@ public class LambdaListParser {
 				ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 				boolean isSpecial = Environments.isSpecial(declareElement, varNameCurrent);
 
-				EnvironmentParameterBinding binding = new EnvironmentParameterBinding(varNameCurrent, allocation, T.INSTANCE, parameterValueInitForm);
+				EnvironmentParameterBinding binding = new EnvironmentParameterBinding(varNameCurrent, allocation, TType.INSTANCE, parameterValueInitForm);
 				if (isSpecial) {
 					environment.addDynamicBinding(binding);
 				} else {
@@ -563,7 +563,7 @@ public class LambdaListParser {
 					allocation = new ParameterAllocation(newBindingsPosition);
 					isSpecial = Environments.isSpecial(declareElement, customSuppliedPCurrent);
 
-					binding = new EnvironmentParameterBinding(customSuppliedPCurrent, allocation, T.INSTANCE, NullStruct.INSTANCE);
+					binding = new EnvironmentParameterBinding(customSuppliedPCurrent, allocation, TType.INSTANCE, NullStruct.INSTANCE);
 					if (isSpecial) {
 						environment.addDynamicBinding(binding);
 					} else {
@@ -586,7 +586,7 @@ public class LambdaListParser {
 					allocation = new ParameterAllocation(newBindingsPosition);
 					isSpecial = Environments.isSpecial(declareElement, suppliedPCurrent);
 
-					binding = new EnvironmentParameterBinding(suppliedPCurrent, allocation, T.INSTANCE, NullStruct.INSTANCE);
+					binding = new EnvironmentParameterBinding(suppliedPCurrent, allocation, TType.INSTANCE, NullStruct.INSTANCE);
 					if (isSpecial) {
 						environment.addDynamicBinding(binding);
 					} else {
@@ -637,7 +637,7 @@ public class LambdaListParser {
 				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 				final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
 
-				final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, T.INSTANCE, NullStruct.INSTANCE);
+				final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, allocation, TType.INSTANCE, NullStruct.INSTANCE);
 				if (isSpecial) {
 					environment.addDynamicBinding(binding);
 				} else {
@@ -677,7 +677,7 @@ public class LambdaListParser {
 				final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
 				final boolean isSpecial = Environments.isSpecial(declareElement, varNameCurrent);
 
-				final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(varNameCurrent, allocation, T.INSTANCE, parameterValueInitForm);
+				final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(varNameCurrent, allocation, TType.INSTANCE, parameterValueInitForm);
 				if (isSpecial) {
 					environment.addDynamicBinding(binding);
 				} else {

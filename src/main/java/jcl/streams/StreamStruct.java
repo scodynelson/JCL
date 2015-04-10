@@ -9,7 +9,7 @@ import java.util.List;
 import jcl.LispStruct;
 import jcl.LispType;
 import jcl.classes.BuiltInClassStruct;
-import jcl.types.Stream;
+import jcl.types.StreamType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -54,7 +54,7 @@ public abstract class StreamStruct extends BuiltInClassStruct implements LispStr
 	 */
 	protected StreamStruct(final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses,
 	                       final boolean interactive, final LispType elementType) {
-		super(Stream.INSTANCE, directSuperClasses, subClasses);
+		super(StreamType.INSTANCE, directSuperClasses, subClasses);
 		this.interactive = interactive;
 		this.elementType = elementType;
 	}
@@ -73,7 +73,7 @@ public abstract class StreamStruct extends BuiltInClassStruct implements LispStr
 	 * @param elementType
 	 * 		the stream elementType
 	 */
-	StreamStruct(final Stream type,
+	StreamStruct(final StreamType type,
 	             final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses,
 	             final boolean interactive, final LispType elementType) {
 		super(type, directSuperClasses, subClasses);

@@ -7,7 +7,7 @@ package jcl.streams;
 import jcl.LispType;
 import jcl.conditions.exceptions.EndOfFileException;
 import jcl.conditions.exceptions.StreamErrorException;
-import jcl.types.Stream;
+import jcl.types.StreamType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +36,7 @@ abstract class AbstractNativeStreamStruct extends StreamStruct implements InputS
 	 * @param elementType
 	 * 		the stream elementType
 	 */
-	AbstractNativeStreamStruct(final Stream type,
+	AbstractNativeStreamStruct(final StreamType type,
 	                           final boolean interactive, final LispType elementType) {
 		super(type, null, null, interactive, elementType);
 	}

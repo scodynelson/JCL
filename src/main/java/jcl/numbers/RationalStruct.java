@@ -7,7 +7,7 @@ package jcl.numbers;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.types.Rational;
+import jcl.types.RationalType;
 
 /**
  * The {@link RationalStruct} is the object representation of a Lisp 'rational' type.
@@ -28,7 +28,7 @@ public class RationalStruct extends RealStruct {
 	 * 		the subclasses
 	 */
 	protected RationalStruct(final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
-		super(Rational.INSTANCE, directSuperClasses, subClasses);
+		super(RationalType.INSTANCE, directSuperClasses, subClasses);
 	}
 
 	/**
@@ -41,7 +41,7 @@ public class RationalStruct extends RealStruct {
 	 * @param subClasses
 	 * 		the subclasses
 	 */
-	RationalStruct(final Rational type,
+	RationalStruct(final RationalType type,
 	               final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
 		super(type, directSuperClasses, subClasses);
 	}

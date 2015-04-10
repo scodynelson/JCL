@@ -4,7 +4,7 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.LispType;
-import jcl.types.GenericFunction;
+import jcl.types.GenericFunctionType;
 
 /**
  * The {@link GenericFunctionStruct} is the object representation of a Lisp 'generic-function' type.
@@ -29,7 +29,7 @@ public abstract class GenericFunctionStruct extends FunctionStruct {
 	 * 		the subclasses
 	 */
 	protected GenericFunctionStruct(final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
-		this(GenericFunction.INSTANCE, directSuperClasses, subClasses);
+		this(GenericFunctionType.INSTANCE, directSuperClasses, subClasses);
 	}
 
 	/**

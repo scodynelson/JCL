@@ -5,7 +5,6 @@
 package jcl.types;
 
 import jcl.LispType;
-import jcl.types.typespecifiers.designator.DimensionsDesignator;
 
 /**
  * A Utility class for handling common utilities for lisp types.
@@ -19,28 +18,28 @@ public final class TypeUtils {
 	}
 
 	/**
-	 * This method tests to see if two {@link Array}s are equivalent.
+	 * This method tests to see if two {@link ArrayType}s are equivalent.
 	 *
-	 * @param array1
-	 * 		the first type to test
-	 * @param array2
-	 * 		the second type to test
+	 * @param arrayType1
+	 * 		the first {@link ArrayType} to test
+	 * @param arrayType2
+	 * 		the second {@link ArrayType} to test
 	 *
-	 * @return true if the types are equivalent; false otherwise
+	 * @return true if the {@link ArrayType}s are equivalent; false otherwise
 	 */
-	static boolean isArrayLispTypeEqual(final Array array1, final Array array2) {
+	static boolean isArrayTypeEqual(final ArrayType arrayType1, final ArrayType arrayType2) {
 
-		final DimensionsDesignator dimensions1 = array1.getDimensions();
+		final DimensionsDesignator dimensions1 = arrayType1.getDimensions();
 		if (dimensions1 != null) {
-			final DimensionsDesignator dimensions2 = array2.getDimensions();
+			final DimensionsDesignator dimensions2 = arrayType2.getDimensions();
 			if (!dimensions1.equals(dimensions2)) {
 				return false;
 			}
 		}
 
-		final LispType elementType1 = array1.getElementType();
+		final LispType elementType1 = arrayType1.getElementType();
 		if (elementType1 != null) {
-			final LispType elementType2 = array2.getElementType();
+			final LispType elementType2 = arrayType2.getElementType();
 			if (!elementType1.equals(elementType2)) {
 				return false;
 			}

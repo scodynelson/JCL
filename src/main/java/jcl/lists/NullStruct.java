@@ -5,7 +5,7 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.conditions.exceptions.SimpleErrorException;
-import jcl.types.Null;
+import jcl.types.NullType;
 
 /**
  * The {@link NullStruct} is the object representation of a Lisp 'null' type.
@@ -20,7 +20,7 @@ public final class NullStruct extends ListStruct {
 	 * Private constructor.
 	 */
 	private NullStruct() {
-		super(Null.INSTANCE, null, null);
+		super(NullType.INSTANCE, null, null);
 	}
 
 	@Override

@@ -7,7 +7,7 @@ import java.util.Set;
 
 import jcl.LispStruct;
 import jcl.symbols.NILStruct;
-import jcl.types.Cons;
+import jcl.types.ConsType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -43,7 +43,7 @@ public class ConsStruct extends ListStruct {
 	 * 		the cdr of the binary cons structure
 	 */
 	public ConsStruct(final LispStruct car, final LispStruct cdr) {
-		super(Cons.INSTANCE, null, null);
+		super(ConsType.INSTANCE, null, null);
 		this.car = car;
 		if (NILStruct.INSTANCE.equals(cdr)) {
 			this.cdr = NullStruct.INSTANCE;

@@ -14,6 +14,7 @@ import jcl.numbers.NumberStruct;
 import jcl.reader.AttributeType;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
+import jcl.types.FloatType;
 import org.springframework.stereotype.Component;
 
 /**
@@ -80,7 +81,7 @@ public class RationalFloatTokenAccumulatedReaderState extends FloatTokenAccumula
 			bigDecimal = bigDecimal.setScale(1, RoundingMode.HALF_UP);
 		}
 
-		final jcl.types.Float floatType = getFloatType(exponentTokenCodePoint);
+		final FloatType floatType = getFloatType(exponentTokenCodePoint);
 		return new FloatStruct(floatType, bigDecimal);
 	}
 }

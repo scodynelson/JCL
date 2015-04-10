@@ -30,7 +30,7 @@ import jcl.symbols.DeclarationStruct;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.system.StackUtils;
-import jcl.types.T;
+import jcl.types.TType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -157,7 +157,7 @@ public class LabelsExpander extends MacroFunctionExpander<LabelsStruct> {
 		final boolean isSpecial = Environments.isSpecial(declare, functionName);
 
 		final ParameterAllocation allocation = new ParameterAllocation(nextBindingsPosition);
-		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(functionName, allocation, T.INSTANCE, functionInitForm);
+		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(functionName, allocation, TType.INSTANCE, functionInitForm);
 		labelsEnvironment.addFunctionBinding(binding);
 
 		return new LabelsStruct.LabelsVar(functionName, functionInitForm, isSpecial);

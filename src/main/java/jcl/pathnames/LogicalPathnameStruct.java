@@ -10,7 +10,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import jcl.conditions.exceptions.TypeErrorException;
-import jcl.types.LogicalPathname;
+import jcl.types.LogicalPathnameType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -100,7 +100,7 @@ public class LogicalPathnameStruct extends PathnameStruct {
 	 */
 	public LogicalPathnameStruct(final PathnameHost host, final PathnameDirectory directory, final PathnameName name,
 	                             final PathnameType type, final PathnameVersion version) {
-		super(LogicalPathname.INSTANCE, host, null, directory, name, type, version, getURIFromComponents(host, null, directory, name, type, version));
+		super(LogicalPathnameType.INSTANCE, host, null, directory, name, type, version, getURIFromComponents(host, null, directory, name, type, version));
 	}
 
 	/**

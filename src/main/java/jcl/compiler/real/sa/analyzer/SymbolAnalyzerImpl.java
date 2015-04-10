@@ -16,7 +16,7 @@ import jcl.compiler.real.environment.binding.SymbolClosureBinding;
 import jcl.compiler.real.environment.binding.SymbolEnvironmentBinding;
 import jcl.compiler.real.environment.binding.SymbolLocalBinding;
 import jcl.symbols.SymbolStruct;
-import jcl.types.T;
+import jcl.types.TType;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -57,7 +57,7 @@ public class SymbolAnalyzerImpl implements SymbolAnalyzer {
 			// Create a new SymbolBinding and reference it to the 'bindingEnvironment' with allocation to the 'bindingEnclosingLambda'
 			final EnvironmentAllocation allocation = new EnvironmentAllocation(bindingEnclosingLambda);
 			final SymbolEnvironmentBinding symbolBinding
-					= new SymbolEnvironmentBinding(input, allocation, T.INSTANCE, bindingEnvironment);
+					= new SymbolEnvironmentBinding(input, allocation, TType.INSTANCE, bindingEnvironment);
 
 			// Now add that new symbol to the SymbolTable of the 'environment'
 			symbolTable.addLexicalEnvironmentBinding(symbolBinding);
@@ -74,7 +74,7 @@ public class SymbolAnalyzerImpl implements SymbolAnalyzer {
 			// Create a new SymbolBinding and reference it to the 'bindingEnvironment', with allocation to the NULL Environment
 			final EnvironmentAllocation allocation = new EnvironmentAllocation(Environment.NULL);
 			final SymbolEnvironmentBinding symbolBinding
-					= new SymbolEnvironmentBinding(input, allocation, T.INSTANCE, bindingEnvironment);
+					= new SymbolEnvironmentBinding(input, allocation, TType.INSTANCE, bindingEnvironment);
 
 			// Now add that new symbol to the SymbolTable of the 'currentEnvironment'
 			symbolTable.addLexicalEnvironmentBinding(symbolBinding);
@@ -102,7 +102,7 @@ public class SymbolAnalyzerImpl implements SymbolAnalyzer {
 		// Create a new SymbolBinding and reference it to the 'outerBindingEnvironment', with allocation to the Closure
 		final ClosureAllocation allocation = new ClosureAllocation(closure);
 		final SymbolClosureBinding symbolBinding
-				= new SymbolClosureBinding(input, allocation, T.INSTANCE, outerBindingEnvironment);
+				= new SymbolClosureBinding(input, allocation, TType.INSTANCE, outerBindingEnvironment);
 
 		symbolTable.addClosureBinding(symbolBinding);
 
@@ -128,7 +128,7 @@ public class SymbolAnalyzerImpl implements SymbolAnalyzer {
 			final LocalAllocation allocation = new LocalAllocation(position);
 
 			final SymbolLocalBinding symbolBinding
-					= new SymbolLocalBinding(input, allocation, T.INSTANCE, enclosingLambda);
+					= new SymbolLocalBinding(input, allocation, TType.INSTANCE, enclosingLambda);
 			enclosingLambdaSymbolTable.addDynamicLocalBinding(symbolBinding);
 
 			return input;
@@ -137,7 +137,7 @@ public class SymbolAnalyzerImpl implements SymbolAnalyzer {
 		// Add Binding to SymbolTable in the environment
 		final EnvironmentAllocation environmentAllocation = new EnvironmentAllocation(enclosingLambda);
 		final SymbolEnvironmentBinding environmentSymbolBinding
-				= new SymbolEnvironmentBinding(input, environmentAllocation, T.INSTANCE, enclosingLambda);
+				= new SymbolEnvironmentBinding(input, environmentAllocation, TType.INSTANCE, enclosingLambda);
 		symbolTable.addDynamicEnvironmentBinding(environmentSymbolBinding);
 
 		final boolean enclosingLambdaHasSymbolBinding = enclosingLambdaSymbolTable.hasBinding(input);
@@ -152,7 +152,7 @@ public class SymbolAnalyzerImpl implements SymbolAnalyzer {
 		final LocalAllocation allocation = new LocalAllocation(position);
 
 		final SymbolLocalBinding symbolBinding
-				= new SymbolLocalBinding(input, allocation, T.INSTANCE, enclosingLambda);
+				= new SymbolLocalBinding(input, allocation, TType.INSTANCE, enclosingLambda);
 		enclosingLambdaSymbolTable.addDynamicLocalBinding(symbolBinding);
 
 		return input;

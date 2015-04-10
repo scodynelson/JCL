@@ -7,13 +7,13 @@ import jcl.functions.expanders.SymbolMacroExpander;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.packages.PackageStruct;
-import jcl.types.Symbol;
+import jcl.types.SymbolType;
 
 public class ConstantStruct<TYPE extends LispStruct> extends SymbolStruct<TYPE> {
 
 	private static final long serialVersionUID = -2257699556001691329L;
 
-	protected ConstantStruct(final Symbol symbolType,
+	protected ConstantStruct(final SymbolType symbolType,
 	                         final String name, final PackageStruct symbolPackage, final TYPE value, final FunctionStruct function) {
 		super(symbolType, name, symbolPackage, value, function);
 	}

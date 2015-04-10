@@ -22,7 +22,7 @@ import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
-import jcl.types.T;
+import jcl.types.TType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -141,7 +141,7 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 			progvEnvironment.setBindingsPosition(nextParameterNumber);
 
 			final ParameterAllocation allocation = new ParameterAllocation(nextParameterNumber);
-			final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(var, allocation, T.INSTANCE, analyzedVal);
+			final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(var, allocation, TType.INSTANCE, analyzedVal);
 			progvEnvironment.addDynamicBinding(binding);
 
 			progvVars.add(progvVar);

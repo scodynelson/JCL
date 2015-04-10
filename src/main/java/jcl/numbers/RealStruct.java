@@ -7,7 +7,7 @@ package jcl.numbers;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.types.Real;
+import jcl.types.RealType;
 
 /**
  * The {@link RealStruct} is the object representation of a Lisp 'real' type.
@@ -28,7 +28,7 @@ public class RealStruct extends NumberStruct {
 	 * 		the subclasses
 	 */
 	protected RealStruct(final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
-		super(Real.INSTANCE, directSuperClasses, subClasses);
+		super(RealType.INSTANCE, directSuperClasses, subClasses);
 	}
 
 	/**
@@ -41,7 +41,7 @@ public class RealStruct extends NumberStruct {
 	 * @param subClasses
 	 * 		the subclasses
 	 */
-	RealStruct(final Real type,
+	RealStruct(final RealType type,
 	           final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
 		super(type, directSuperClasses, subClasses);
 	}

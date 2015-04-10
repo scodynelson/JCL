@@ -18,7 +18,7 @@ import jcl.conditions.exceptions.PackageErrorException;
 import jcl.symbols.KeywordStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.system.CommonLispSymbols;
-import jcl.types.Package;
+import jcl.types.PackageType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -120,7 +120,7 @@ public class PackageStruct extends BuiltInClassStruct {
 	 * 		the packages this package will use/inherit from
 	 */
 	public PackageStruct(final String name, final List<String> nicknames, final Set<PackageStruct> useList) {
-		super(Package.INSTANCE, null, null);
+		super(PackageType.INSTANCE, null, null);
 		this.name = name;
 		this.nicknames = nicknames;
 

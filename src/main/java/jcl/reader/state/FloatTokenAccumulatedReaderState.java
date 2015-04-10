@@ -15,10 +15,11 @@ import jcl.reader.AttributeType;
 import jcl.reader.TokenAttribute;
 import jcl.reader.TokenBuilder;
 import jcl.reader.struct.ReaderVariables;
-import jcl.types.DoubleFloat;
-import jcl.types.LongFloat;
-import jcl.types.ShortFloat;
-import jcl.types.SingleFloat;
+import jcl.types.DoubleFloatType;
+import jcl.types.FloatType;
+import jcl.types.LongFloatType;
+import jcl.types.ShortFloatType;
+import jcl.types.SingleFloatType;
 import org.springframework.stereotype.Component;
 
 /**
@@ -55,7 +56,7 @@ public class FloatTokenAccumulatedReaderState implements ReaderState {
 			bigDecimal = bigDecimal.setScale(1, RoundingMode.HALF_UP);
 		}
 
-		final jcl.types.Float floatType = getFloatType(exponentTokenCodePoint);
+		final FloatType floatType = getFloatType(exponentTokenCodePoint);
 		return new FloatStruct(floatType, bigDecimal);
 	}
 
@@ -87,19 +88,19 @@ public class FloatTokenAccumulatedReaderState implements ReaderState {
 	 *
 	 * @return the proper float type
 	 */
-	static jcl.types.Float getFloatType(final Integer exponentTokenCodePoint) {
-		jcl.types.Float floatType = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getValue();
+	static FloatType getFloatType(final Integer exponentTokenCodePoint) {
+		FloatType floatType = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getValue();
 
 		if (exponentTokenCodePoint != null) {
 			final int exponentTokenInt = exponentTokenCodePoint;
 			if ((exponentTokenInt == CharacterConstants.LATIN_SMALL_LETTER_S) || (exponentTokenInt == CharacterConstants.LATIN_CAPITAL_LETTER_S)) {
-				floatType = ShortFloat.INSTANCE;
+				floatType = ShortFloatType.INSTANCE;
 			} else if ((exponentTokenInt == CharacterConstants.LATIN_SMALL_LETTER_F) || (exponentTokenInt == CharacterConstants.LATIN_CAPITAL_LETTER_F)) {
-				floatType = SingleFloat.INSTANCE;
+				floatType = SingleFloatType.INSTANCE;
 			} else if ((exponentTokenInt == CharacterConstants.LATIN_SMALL_LETTER_D) || (exponentTokenInt == CharacterConstants.LATIN_CAPITAL_LETTER_D)) {
-				floatType = DoubleFloat.INSTANCE;
+				floatType = DoubleFloatType.INSTANCE;
 			} else if ((exponentTokenInt == CharacterConstants.LATIN_SMALL_LETTER_L) || (exponentTokenInt == CharacterConstants.LATIN_CAPITAL_LETTER_L)) {
-				floatType = LongFloat.INSTANCE;
+				floatType = LongFloatType.INSTANCE;
 			} else if ((exponentTokenInt == CharacterConstants.LATIN_SMALL_LETTER_E) || (exponentTokenInt == CharacterConstants.LATIN_CAPITAL_LETTER_E)) {
 				floatType = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getValue();
 			}

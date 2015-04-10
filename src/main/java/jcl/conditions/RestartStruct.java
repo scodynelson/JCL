@@ -2,7 +2,7 @@ package jcl.conditions;
 
 import jcl.LispStruct;
 import jcl.LispType;
-import jcl.types.Restart;
+import jcl.types.RestartType;
 
 public abstract class RestartStruct implements LispStruct {
 
@@ -19,6 +19,6 @@ public abstract class RestartStruct implements LispStruct {
 
 	@Override
 	public LispType getType() {
-		return Restart.INSTANCE;
+		return RestartType.INSTANCE;
 	}
 }

@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import jcl.classes.BuiltInClassStruct;
-import jcl.types.Pathname;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
@@ -143,7 +142,7 @@ public class PathnameStruct extends BuiltInClassStruct {
 	 * 		the {@link URI} to parse into the pathname object elements
 	 */
 	public PathnameStruct(final URI uri) {
-		this(Pathname.INSTANCE, getHost(uri), getDevice(uri), getDirectory(uri), getName(uri), getType(uri), getVersion(), uri);
+		this(jcl.types.PathnameType.INSTANCE, getHost(uri), getDevice(uri), getDirectory(uri), getName(uri), getType(uri), getVersion(), uri);
 	}
 
 	/**
@@ -164,7 +163,7 @@ public class PathnameStruct extends BuiltInClassStruct {
 	 */
 	public PathnameStruct(final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
 	                      final PathnameName name, final PathnameType type, final PathnameVersion version) {
-		this(Pathname.INSTANCE, host, device, directory, name, type, version, getURIFromComponents(host, device, directory, name, type, version));
+		this(jcl.types.PathnameType.INSTANCE, host, device, directory, name, type, version, getURIFromComponents(host, device, directory, name, type, version));
 	}
 
 	/**
@@ -187,7 +186,7 @@ public class PathnameStruct extends BuiltInClassStruct {
 	 * @param uri
 	 * 		the {@link URI} to parse into the pathname object elements
 	 */
-	protected PathnameStruct(final Pathname pathnameType,
+	protected PathnameStruct(final jcl.types.PathnameType pathnameType,
 	                         final PathnameHost host, final PathnameDevice device, final PathnameDirectory directory,
 	                         final PathnameName name, final PathnameType type, final PathnameVersion version,
 	                         final URI uri) {

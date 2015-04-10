@@ -15,12 +15,12 @@ import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
+import jcl.lists.NullStruct;
 import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
 import jcl.system.CommonLispSymbols;
-import jcl.types.Null;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -67,7 +67,7 @@ public class SharpLeftParenthesisReaderMacroFunction extends ReaderMacroFunction
 		final ListStruct listToken = listReaderMacroFunction.readList(reader);
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
-			return Null.INSTANCE;
+			return NullStruct.INSTANCE;
 		}
 
 		if (listToken == null) {

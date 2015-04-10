@@ -5,9 +5,10 @@
 package jcl.characters;
 
 import jcl.classes.BuiltInClassStruct;
-import jcl.types.BaseChar;
-import jcl.types.ExtendedChar;
-import jcl.types.StandardChar;
+import jcl.types.BaseCharType;
+import jcl.types.CharacterType;
+import jcl.types.ExtendedCharType;
+import jcl.types.StandardCharType;
 import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -48,17 +49,17 @@ public class CharacterStruct extends BuiltInClassStruct {
 	 *
 	 * @return the matching character type for the provided character {@code codePoint}
 	 */
-	private static jcl.types.Character getCharacterType(final int codePoint) {
-		final jcl.types.Character characterType;
+	private static CharacterType getCharacterType(final int codePoint) {
+		final CharacterType characterType;
 
 		if (CharUtils.isAsciiControl((char) codePoint) && (codePoint != CharUtils.LF)) {
-			characterType = BaseChar.INSTANCE;
+			characterType = BaseCharType.INSTANCE;
 		} else if (CharUtils.isAscii((char) codePoint)) {
-			characterType = StandardChar.INSTANCE;
+			characterType = StandardCharType.INSTANCE;
 		} else if (Character.isDefined(codePoint)) {
-			characterType = ExtendedChar.INSTANCE;
+			characterType = ExtendedCharType.INSTANCE;
 		} else {
-			characterType = jcl.types.Character.INSTANCE;
+			characterType = CharacterType.INSTANCE;
 		}
 
 		return characterType;

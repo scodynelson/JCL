@@ -4,7 +4,7 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.LispType;
-import jcl.types.BuiltInClass;
+import jcl.types.BuiltInClassType;
 
 /**
  * The {@link BuiltInClassStruct} is the object representation of a Lisp 'built-in-class' type.
@@ -22,7 +22,7 @@ public abstract class BuiltInClassStruct extends ClassStruct {
 	 * 		the subclasses
 	 */
 	protected BuiltInClassStruct(final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
-		this(null, BuiltInClass.INSTANCE, directSuperClasses, subClasses);
+		this(null, BuiltInClassType.INSTANCE, directSuperClasses, subClasses);
 	}
 
 	/**
@@ -37,7 +37,7 @@ public abstract class BuiltInClassStruct extends ClassStruct {
 	 */
 	protected BuiltInClassStruct(final String documentation,
 	                             final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
-		this(documentation, BuiltInClass.INSTANCE, directSuperClasses, subClasses);
+		this(documentation, BuiltInClassType.INSTANCE, directSuperClasses, subClasses);
 	}
 
 	/**

@@ -4,7 +4,7 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.LispType;
-import jcl.types.StructureClass;
+import jcl.types.StructureClassType;
 
 /**
  * The {@link StructureClassStruct} is the object representation of a Lisp 'structure-class' type.
@@ -22,7 +22,7 @@ public abstract class StructureClassStruct extends ClassStruct {
 	 * 		the subclasses
 	 */
 	protected StructureClassStruct(final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
-		this(StructureClass.INSTANCE, directSuperClasses, subClasses);
+		this(StructureClassType.INSTANCE, directSuperClasses, subClasses);
 	}
 
 	/**

@@ -12,10 +12,10 @@ import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.characters.CharacterStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.lists.NullStruct;
 import jcl.reader.Reader;
 import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
-import jcl.types.Null;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -46,7 +46,7 @@ public class SharpBackslashReaderMacroFunction extends ReaderMacroFunction {
 		final String tokenString = extendedToken.getTokenString();
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
-			return Null.INSTANCE;
+			return NullStruct.INSTANCE;
 		}
 
 		final int maxTokenStringLength = 1;

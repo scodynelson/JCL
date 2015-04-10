@@ -9,7 +9,7 @@ import java.util.Deque;
 
 import jcl.LispStruct;
 import jcl.conditions.exceptions.EndOfFileException;
-import jcl.types.EchoStream;
+import jcl.types.EchoStreamType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -53,7 +53,7 @@ public class EchoStreamStruct extends AbstractDualStreamStruct {
 	 * 		the {@link OutputStream} to create a EchoStreamStruct from
 	 */
 	public EchoStreamStruct(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
-		super(EchoStream.INSTANCE, interactive, inputStream, outputStream);
+		super(EchoStreamType.INSTANCE, interactive, inputStream, outputStream);
 	}
 
 	@Override

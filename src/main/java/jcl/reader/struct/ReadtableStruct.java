@@ -18,7 +18,7 @@ import jcl.reader.AttributeType;
 import jcl.reader.Reader;
 import jcl.reader.ReaderMacroFunction;
 import jcl.streams.ReadPeekResult;
-import jcl.types.Readtable;
+import jcl.types.ReadtableType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -74,7 +74,7 @@ public class ReadtableStruct extends BuiltInClassStruct {
 	 * 		the readtable case
 	 */
 	public ReadtableStruct(final ReadtableCase readtableCase) {
-		super(Readtable.INSTANCE, null, null);
+		super(ReadtableType.INSTANCE, null, null);
 		this.readtableCase = readtableCase;
 
 		init();

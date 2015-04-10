@@ -5,8 +5,8 @@
 package jcl.streams;
 
 import jcl.conditions.exceptions.StreamErrorException;
-import jcl.types.BaseChar;
-import jcl.types.StringStream;
+import jcl.types.BaseCharType;
+import jcl.types.StringStreamType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -41,7 +41,7 @@ public class StringOutputStreamStruct extends StreamStruct implements OutputStre
 	 * 		whether or not the struct created is 'interactive'
 	 */
 	public StringOutputStreamStruct(final boolean interactive) {
-		super(StringStream.INSTANCE, null, null, interactive, BaseChar.INSTANCE);
+		super(StringStreamType.INSTANCE, null, null, interactive, BaseCharType.INSTANCE);
 	}
 
 	@Override

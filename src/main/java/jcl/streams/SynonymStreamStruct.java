@@ -8,7 +8,7 @@ import jcl.LispStruct;
 import jcl.LispType;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.symbols.SymbolStruct;
-import jcl.types.SynonymStream;
+import jcl.types.SynonymStreamType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -48,7 +48,7 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	 * 		the symbol to create a SynonymStreamStruct from
 	 */
 	public SynonymStreamStruct(final boolean interactive, final SymbolStruct<StreamStruct> symbol) {
-		super(SynonymStream.INSTANCE, null, null, interactive, getElementType(symbol));
+		super(SynonymStreamType.INSTANCE, null, null, interactive, getElementType(symbol));
 		this.symbol = symbol;
 	}
 

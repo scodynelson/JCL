@@ -6,15 +6,15 @@ import java.util.Stack;
 
 import jcl.LispStruct;
 import jcl.classes.BuiltInClassStruct;
+import jcl.conditions.exceptions.ErrorException;
+import jcl.functions.FunctionStruct;
 import jcl.functions.expanders.CompilerMacroFunctionExpander;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.functions.expanders.SymbolMacroExpander;
-import jcl.conditions.exceptions.ErrorException;
-import jcl.functions.FunctionStruct;
+import jcl.lists.NullStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
-import jcl.types.NIL;
-import jcl.types.Symbol;
+import jcl.types.SymbolType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -105,7 +105,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 * 		the symbol value
 	 */
 	public SymbolStruct(final String name, final PackageStruct symbolPackage, final TYPE value) {
-		this(Symbol.INSTANCE, name, symbolPackage, value, null);
+		this(SymbolType.INSTANCE, name, symbolPackage, value, null);
 	}
 
 	/**
@@ -121,7 +121,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 * 		the symbol function
 	 */
 	public SymbolStruct(final String name, final PackageStruct symbolPackage, final TYPE value, final FunctionStruct function) {
-		this(Symbol.INSTANCE, name, symbolPackage, value, function);
+		this(SymbolType.INSTANCE, name, symbolPackage, value, function);
 	}
 
 	/**
@@ -138,7 +138,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 * @param function
 	 * 		the symbol function
 	 */
-	protected SymbolStruct(final Symbol symbolType,
+	protected SymbolStruct(final SymbolType symbolType,
 	                       final String name, final PackageStruct symbolPackage, final TYPE value, final FunctionStruct function) {
 		super(symbolType, null, null);
 		this.name = name;
@@ -455,12 +455,13 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 
 	/**
 	 * Retrieves the property from the symbol {@link #properties} associated with the provided {@code key}. If the
-	 * property is not found, {@link NIL#INSTANCE} is returned.
+	 * property is not found, {@link NullStruct#INSTANCE} is returned.
 	 *
 	 * @param key
 	 * 		the key for the property to retrieve
 	 *
-	 * @return the property from the symbol {@link #properties} or {@link NIL#INSTANCE} if the property cannot be found.
+	 * @return the property from the symbol {@link #properties} or {@link NullStruct#INSTANCE} if the property cannot be
+	 * found.
 	 */
 	public LispStruct getProperty(final LispStruct key) {
 		for (int i = 0; i < properties.size(); i += 2) {
@@ -470,7 +471,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 				return properties.get(valueIndex);
 			}
 		}
-		return NIL.INSTANCE;
+		return NullStruct.INSTANCE;
 	}
 
 	/**

@@ -1,7 +1,7 @@
 package jcl.classes;
 
 import jcl.LispType;
-import jcl.types.StandardMethod;
+import jcl.types.StandardMethodType;
 
 /**
  * The {@link StandardMethodStruct} is the object representation of a Lisp 'standard-method' type.
@@ -13,6 +13,6 @@ public abstract class StandardMethodStruct extends MethodStruct {
 
 	@Override
 	public LispType getType() {
-		return StandardMethod.INSTANCE;
+		return StandardMethodType.INSTANCE;
 	}
 }

@@ -1,11 +1,12 @@
 package jcl.lists;
 
 import java.util.Arrays;
+import java.util.List;
 
 import jcl.LispStruct;
 import jcl.classes.BuiltInClassStruct;
 import jcl.sequences.SequenceStruct;
-import jcl.types.List;
+import jcl.types.ListType;
 import org.apache.commons.collections4.CollectionUtils;
 
 /**
@@ -23,8 +24,8 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 	 * @param subClasses
 	 * 		the subclasses
 	 */
-	protected ListStruct(final java.util.List<Class<LispStruct>> directSuperClasses, final java.util.List<Class<LispStruct>> subClasses) {
-		this(List.INSTANCE, directSuperClasses, subClasses);
+	protected ListStruct(final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+		this(ListType.INSTANCE, directSuperClasses, subClasses);
 	}
 
 	/**
@@ -37,8 +38,8 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 	 * @param subClasses
 	 * 		the subclasses
 	 */
-	protected ListStruct(final List type,
-	                     final java.util.List<Class<LispStruct>> directSuperClasses, final java.util.List<Class<LispStruct>> subClasses) {
+	protected ListStruct(final ListType type,
+	                     final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
 		super(type, directSuperClasses, subClasses);
 	}
 
@@ -144,7 +145,7 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 	 *
 	 * @return a proper list with the provided {@code lispStructs} as the elements
 	 */
-	public static ListStruct buildProperList(final java.util.List<LispStruct> lispStructs) {
+	public static ListStruct buildProperList(final List<LispStruct> lispStructs) {
 		return CollectionUtils.isEmpty(lispStructs) ? NullStruct.INSTANCE : getProperList(lispStructs);
 	}
 
@@ -156,9 +157,9 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 	 *
 	 * @return a proper list with the provided {@code lispStructs} as the elements
 	 */
-	private static ListStruct getProperList(final java.util.List<LispStruct> lispStructs) {
+	private static ListStruct getProperList(final List<LispStruct> lispStructs) {
 		final LispStruct car = lispStructs.get(0);
-		final java.util.List<LispStruct> rest = lispStructs.subList(1, lispStructs.size());
+		final List<LispStruct> rest = lispStructs.subList(1, lispStructs.size());
 
 		final LispStruct cdr = CollectionUtils.isEmpty(rest) ? NullStruct.INSTANCE : getProperList(rest);
 		return new ConsStruct(car, cdr);
@@ -194,7 +195,7 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 	 *
 	 * @return a dotted list with the provided {@code lispStructs} as the elements
 	 */
-	public static ListStruct buildDottedList(final java.util.List<LispStruct> lispStructs) {
+	public static ListStruct buildDottedList(final List<LispStruct> lispStructs) {
 		if (CollectionUtils.isEmpty(lispStructs)) {
 			return NullStruct.INSTANCE;
 		} else if (lispStructs.size() == 1) {
@@ -216,9 +217,9 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 	 *
 	 * @return a dotted list with the provided {@code lispStructs} as the elements
 	 */
-	private static ListStruct getDottedList(final java.util.List<LispStruct> lispStructs) {
+	private static ListStruct getDottedList(final List<LispStruct> lispStructs) {
 		final LispStruct car = lispStructs.get(0);
-		final java.util.List<LispStruct> rest = lispStructs.subList(1, lispStructs.size());
+		final List<LispStruct> rest = lispStructs.subList(1, lispStructs.size());
 
 		final LispStruct cdr = (rest.size() == 1) ? lispStructs.get(1) : getDottedList(rest);
 		return new ConsStruct(car, cdr);

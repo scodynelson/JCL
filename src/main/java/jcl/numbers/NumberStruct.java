@@ -8,7 +8,7 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.classes.BuiltInClassStruct;
-import jcl.types.Number;
+import jcl.types.NumberType;
 
 /**
  * The {@link NumberStruct} is the object representation of a Lisp 'number' type.
@@ -29,7 +29,7 @@ public class NumberStruct extends BuiltInClassStruct {
 	 * 		the subclasses
 	 */
 	protected NumberStruct(final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
-		super(Number.INSTANCE, directSuperClasses, subClasses);
+		super(NumberType.INSTANCE, directSuperClasses, subClasses);
 	}
 
 	/**
@@ -42,7 +42,7 @@ public class NumberStruct extends BuiltInClassStruct {
 	 * @param subClasses
 	 * 		the subclasses
 	 */
-	NumberStruct(final Number type,
+	NumberStruct(final NumberType type,
 	             final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
 		super(type, directSuperClasses, subClasses);
 	}

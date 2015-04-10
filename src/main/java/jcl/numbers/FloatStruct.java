@@ -6,8 +6,8 @@ package jcl.numbers;
 
 import java.math.BigDecimal;
 
-import jcl.types.Float;
-import jcl.types.SingleFloat;
+import jcl.types.FloatType;
+import jcl.types.SingleFloatType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -35,19 +35,19 @@ public class FloatStruct extends RealStruct {
 	 * 		the value of the FloatStruct
 	 */
 	public FloatStruct(final BigDecimal bigDecimal) {
-		this(SingleFloat.INSTANCE, bigDecimal);
+		this(SingleFloatType.INSTANCE, bigDecimal);
 	}
 
 	/**
 	 * Public constructor.
 	 *
-	 * @param floatFormat
-	 * 		a {@link Float} that represents the type of {@link Float}
+	 * @param floatType
+	 * 		a {@link FloatType} that represents the type of {@link FloatType}
 	 * @param bigDecimal
 	 * 		the value of the FloatStruct
 	 */
-	public FloatStruct(final Float floatFormat, final BigDecimal bigDecimal) {
-		super(floatFormat, null, null);
+	public FloatStruct(final FloatType floatType, final BigDecimal bigDecimal) {
+		super(floatType, null, null);
 		this.bigDecimal = bigDecimal;
 	}
 

@@ -9,10 +9,11 @@ import java.math.BigDecimal;
 import jcl.numbers.FloatStruct;
 import jcl.printer.LispPrinter;
 import jcl.reader.struct.ReaderVariables;
-import jcl.types.DoubleFloat;
-import jcl.types.LongFloat;
-import jcl.types.ShortFloat;
-import jcl.types.SingleFloat;
+import jcl.types.DoubleFloatType;
+import jcl.types.FloatType;
+import jcl.types.LongFloatType;
+import jcl.types.ShortFloatType;
+import jcl.types.SingleFloatType;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -22,19 +23,19 @@ public class FloatStructPrinter implements LispPrinter<FloatStruct> {
 
 	@Override
 	public String print(final FloatStruct object) {
-		final jcl.types.Float floatFormat = (jcl.types.Float) object.getType();
-		final jcl.types.Float defaultFloatFormat = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getValue();
+		final FloatType floatType = (FloatType) object.getType();
+		final FloatType defaultFloatFormat = ReaderVariables.READ_DEFAULT_FLOAT_FORMAT.getValue();
 
 		final BigDecimal bigDecimal = object.getBigDecimal();
 		String bigDecimalString = bigDecimal.toString();
-		if (!floatFormat.equals(defaultFloatFormat)) {
-			if (floatFormat.equals(ShortFloat.INSTANCE)) {
+		if (!floatType.equals(defaultFloatFormat)) {
+			if (floatType.equals(ShortFloatType.INSTANCE)) {
 				bigDecimalString = bigDecimalString.replace('E', 'S');
-			} else if (floatFormat.equals(SingleFloat.INSTANCE)) {
+			} else if (floatType.equals(SingleFloatType.INSTANCE)) {
 				bigDecimalString = bigDecimalString.replace('E', 'F');
-			} else if (floatFormat.equals(DoubleFloat.INSTANCE)) {
+			} else if (floatType.equals(DoubleFloatType.INSTANCE)) {
 				bigDecimalString = bigDecimalString.replace('E', 'D');
-			} else if (floatFormat.equals(LongFloat.INSTANCE)) {
+			} else if (floatType.equals(LongFloatType.INSTANCE)) {
 				bigDecimalString = bigDecimalString.replace('E', 'L');
 			}
 		}

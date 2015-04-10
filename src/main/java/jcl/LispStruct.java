@@ -6,7 +6,7 @@ package jcl;
 
 import java.io.Serializable;
 
-import jcl.types.T;
+import jcl.types.TType;
 
 /**
  * The {@link LispStruct} is the representation for all Lisp types.
@@ -24,6 +24,6 @@ public interface LispStruct extends Serializable {
 	 * @return the type of the struct
 	 */
 	default LispType getType() {
-		return T.INSTANCE;
+		return TType.INSTANCE;
 	}
 }

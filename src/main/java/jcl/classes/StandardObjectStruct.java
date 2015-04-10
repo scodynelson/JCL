@@ -2,7 +2,7 @@ package jcl.classes;
 
 import jcl.LispStruct;
 import jcl.LispType;
-import jcl.types.StandardObject;
+import jcl.types.StandardObjectType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -55,7 +55,7 @@ public abstract class StandardObjectStruct implements LispStruct {
 
 	@Override
 	public LispType getType() {
-		return StandardObject.INSTANCE;
+		return StandardObjectType.INSTANCE;
 	}
 
 	@Override

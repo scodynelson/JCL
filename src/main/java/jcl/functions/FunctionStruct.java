@@ -30,7 +30,7 @@ import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.symbols.TStruct;
 import jcl.system.CommonLispSymbols;
-import jcl.types.Function;
+import jcl.types.FunctionType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -51,7 +51,7 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 	 * Protected constructor.
 	 */
 	protected FunctionStruct() {
-		this(null, Function.INSTANCE, null, null);
+		this(null, FunctionType.INSTANCE, null, null);
 	}
 
 	/**
@@ -63,7 +63,7 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 	 * 		instance function closure
 	 */
 	protected FunctionStruct(final String documentation, final Closure closure) {
-		this(documentation, Function.INSTANCE, null, null);
+		this(documentation, FunctionType.INSTANCE, null, null);
 		this.closure = closure;
 	}
 
@@ -76,7 +76,7 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 	 * 		lambda-list bindings for the function
 	 */
 	protected FunctionStruct(final String documentation, final OrdinaryLambdaListBindings lambdaListBindings) {
-		this(documentation, Function.INSTANCE, null, null);
+		this(documentation, FunctionType.INSTANCE, null, null);
 		this.lambdaListBindings = lambdaListBindings;
 	}
 
@@ -89,7 +89,7 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 	 * 		the subclasses
 	 */
 	protected FunctionStruct(final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
-		this(null, Function.INSTANCE, directSuperClasses, subClasses);
+		this(null, FunctionType.INSTANCE, directSuperClasses, subClasses);
 	}
 
 	/**
@@ -104,7 +104,7 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 	 */
 	protected FunctionStruct(final String documentation,
 	                         final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
-		this(documentation, Function.INSTANCE, directSuperClasses, subClasses);
+		this(documentation, FunctionType.INSTANCE, directSuperClasses, subClasses);
 	}
 
 	/**

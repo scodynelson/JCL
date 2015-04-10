@@ -24,7 +24,7 @@ import jcl.lists.ListStruct;
 import jcl.printer.Printer;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
-import jcl.types.T;
+import jcl.types.TType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -122,7 +122,7 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 		symbolMacroletEnvironment.setBindingsPosition(nextBindingsPosition);
 
 		final ParameterAllocation allocation = new ParameterAllocation(nextBindingsPosition);
-		final SymbolMacroBinding binding = new SymbolMacroBinding(var, allocation, T.INSTANCE, expansion);
+		final SymbolMacroBinding binding = new SymbolMacroBinding(var, allocation, TType.INSTANCE, expansion);
 		symbolMacroletEnvironment.addSymbolMacroBinding(binding);
 
 		return new SymbolMacroletStruct.SymbolMacroletVar(var, expansion);

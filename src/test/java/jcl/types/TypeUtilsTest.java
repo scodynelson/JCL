@@ -9,11 +9,11 @@ import org.testng.annotations.Test;
 public class TypeUtilsTest {
 
 	/**
-	 * Test for "isArrayLispTypeEqual" method.
+	 * Test for "isArrayTypeEqual" method.
 	 */
 	@Test
 	public void testIsArrayLispTypeEqual() {
-		final boolean result = TypeUtils.isArrayLispTypeEqual(Array.INSTANCE, Array.INSTANCE);
+		final boolean result = TypeUtils.isArrayTypeEqual(ArrayType.INSTANCE, ArrayType.INSTANCE);
 		Assert.assertTrue(result);
 	}
 }

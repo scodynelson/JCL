@@ -15,8 +15,8 @@ import java.nio.charset.Charset;
 
 import jcl.LispStruct;
 import jcl.conditions.exceptions.StreamErrorException;
-import jcl.types.Character;
-import jcl.types.Stream;
+import jcl.types.CharacterType;
+import jcl.types.StreamType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -72,7 +72,7 @@ public class CharacterStreamStruct extends AbstractNativeStreamStruct {
 	 * 		the {@link java.io.OutputStream} to create a CharacterStreamStruct from
 	 */
 	public CharacterStreamStruct(final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
-		super(Stream.INSTANCE, interactive, Character.INSTANCE);
+		super(StreamType.INSTANCE, interactive, CharacterType.INSTANCE);
 
 		final Charset defaultCharset = Charset.defaultCharset();
 		this.inputStream = new LineNumberReader(new InputStreamReader(inputStream, defaultCharset));
@@ -145,7 +145,7 @@ public class CharacterStreamStruct extends AbstractNativeStreamStruct {
 
 			// Initialize to whitespace, since we are attempting to skip it anyways
 			int nextChar = ' ';
-			while (java.lang.Character.isWhitespace(nextChar)) {
+			while (Character.isWhitespace(nextChar)) {
 				nextChar = inputStream.read();
 			}
 			inputStream.reset();

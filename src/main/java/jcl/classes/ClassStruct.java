@@ -5,6 +5,7 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.LispType;
+import jcl.types.ClassType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -37,7 +38,7 @@ public abstract class ClassStruct extends StandardObjectStruct {
 	 * 		instance documentation string
 	 */
 	protected ClassStruct(final String documentation) {
-		this(documentation, jcl.types.Class.INSTANCE, null, null);
+		this(documentation, ClassType.INSTANCE, null, null);
 	}
 
 	/**

@@ -7,7 +7,7 @@ package jcl.numbers;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import jcl.types.Complex;
+import jcl.types.ComplexType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -43,7 +43,7 @@ public class ComplexStruct extends NumberStruct {
 	 * 		a {@link RealStruct} that represents the value of imaginary part ComplexStruct
 	 */
 	public ComplexStruct(final RealStruct real, final RealStruct imaginary) {
-		super(Complex.INSTANCE, null, null);
+		super(ComplexType.INSTANCE, null, null);
 		this.real = real;
 		this.imaginary = imaginary;
 	}
@@ -57,7 +57,7 @@ public class ComplexStruct extends NumberStruct {
 	 * 		a {@link BigInteger} that represents the value of imaginary part ComplexStruct
 	 */
 	public ComplexStruct(final IntegerStruct real, final IntegerStruct imaginary) {
-		super(Complex.INSTANCE, null, null);
+		super(ComplexType.INSTANCE, null, null);
 		this.real = real;
 		this.imaginary = imaginary;
 	}
@@ -71,7 +71,7 @@ public class ComplexStruct extends NumberStruct {
 	 * 		a {@link BigDecimal} that represents the value of imaginary part ComplexStruct
 	 */
 	public ComplexStruct(final IntegerStruct real, final FloatStruct imaginary) {
-		super(Complex.INSTANCE, null, null);
+		super(ComplexType.INSTANCE, null, null);
 		this.imaginary = imaginary;
 
 		final BigInteger realWithScale = real.getBigInteger().multiply(BigInteger.TEN);
@@ -87,7 +87,7 @@ public class ComplexStruct extends NumberStruct {
 	 * 		a {@link BigFraction} that represents the value of imaginary part ComplexStruct
 	 */
 	public ComplexStruct(final IntegerStruct real, final RatioStruct imaginary) {
-		super(Complex.INSTANCE, null, null);
+		super(ComplexType.INSTANCE, null, null);
 		this.real = real;
 		this.imaginary = imaginary;
 	}
@@ -101,7 +101,7 @@ public class ComplexStruct extends NumberStruct {
 	 * 		a {@link BigInteger} that represents the value of imaginary part ComplexStruct
 	 */
 	public ComplexStruct(final FloatStruct real, final IntegerStruct imaginary) {
-		super(Complex.INSTANCE, null, null);
+		super(ComplexType.INSTANCE, null, null);
 		this.real = real;
 
 		final BigInteger imaginaryWithScale = imaginary.getBigInteger().multiply(BigInteger.TEN);
@@ -117,7 +117,7 @@ public class ComplexStruct extends NumberStruct {
 	 * 		a {@link BigDecimal} that represents the value of imaginary part ComplexStruct
 	 */
 	public ComplexStruct(final FloatStruct real, final FloatStruct imaginary) {
-		super(Complex.INSTANCE, null, null);
+		super(ComplexType.INSTANCE, null, null);
 		this.real = real;
 		this.imaginary = imaginary;
 	}
@@ -131,7 +131,7 @@ public class ComplexStruct extends NumberStruct {
 	 * 		a {@link BigFraction} that represents the value of imaginary part ComplexStruct
 	 */
 	public ComplexStruct(final FloatStruct real, final RatioStruct imaginary) {
-		super(Complex.INSTANCE, null, null);
+		super(ComplexType.INSTANCE, null, null);
 		this.real = real;
 		this.imaginary = new FloatStruct(imaginary.getBigFraction().bigDecimalValue());
 	}
@@ -145,7 +145,7 @@ public class ComplexStruct extends NumberStruct {
 	 * 		a {@link BigInteger} that represents the value of imaginary part ComplexStruct
 	 */
 	public ComplexStruct(final RatioStruct real, final IntegerStruct imaginary) {
-		super(Complex.INSTANCE, null, null);
+		super(ComplexType.INSTANCE, null, null);
 		this.real = real;
 		this.imaginary = imaginary;
 	}
@@ -159,7 +159,7 @@ public class ComplexStruct extends NumberStruct {
 	 * 		a {@link BigDecimal} that represents the value of imaginary part ComplexStruct
 	 */
 	public ComplexStruct(final RatioStruct real, final FloatStruct imaginary) {
-		super(Complex.INSTANCE, null, null);
+		super(ComplexType.INSTANCE, null, null);
 		this.real = new FloatStruct(real.getBigFraction().bigDecimalValue());
 		this.imaginary = imaginary;
 	}
@@ -173,7 +173,7 @@ public class ComplexStruct extends NumberStruct {
 	 * 		a {@link BigFraction} that represents the value of imaginary part ComplexStruct
 	 */
 	public ComplexStruct(final RatioStruct real, final RatioStruct imaginary) {
-		super(Complex.INSTANCE, null, null);
+		super(ComplexType.INSTANCE, null, null);
 		this.real = real;
 		this.imaginary = imaginary;
 	}

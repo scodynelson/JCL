@@ -7,9 +7,9 @@ import java.util.regex.Pattern;
 
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.numbers.IntegerStruct;
-import jcl.types.Bit;
-import jcl.types.BitVector;
-import jcl.types.SimpleBitVector;
+import jcl.types.BitType;
+import jcl.types.BitVectorType;
+import jcl.types.SimpleBitVectorType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -59,7 +59,7 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 	 * 		the bit-vector fillPointer
 	 */
 	public BitVectorStruct(final int size, final List<IntegerStruct> contents, final boolean isAdjustable, final Integer fillPointer) {
-		super(getBitVectorType(isAdjustable, fillPointer), size, contents, Bit.INSTANCE, isAdjustable, fillPointer);
+		super(getBitVectorType(isAdjustable, fillPointer), size, contents, BitType.INSTANCE, isAdjustable, fillPointer);
 	}
 
 	/**
@@ -72,8 +72,8 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 	 *
 	 * @return the matching bit-vector type for the provided isAdjustable and fillPointer values
 	 */
-	private static BitVector getBitVectorType(final boolean isAdjustable, final Integer fillPointer) {
-		return (isAdjustable || (fillPointer != null)) ? BitVector.INSTANCE : SimpleBitVector.INSTANCE;
+	private static BitVectorType getBitVectorType(final boolean isAdjustable, final Integer fillPointer) {
+		return (isAdjustable || (fillPointer != null)) ? BitVectorType.INSTANCE : SimpleBitVectorType.INSTANCE;
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class BitVectorStruct extends VectorStruct<IntegerStruct> {
 	 */
 	private static List<IntegerStruct> getBitList(final String bitString) {
 		if (!bitString.isEmpty() && !BIT_PATTERN.matcher(bitString).matches()) {
-			throw new TypeErrorException("Input contains characters not of type " + Bit.INSTANCE + ": " + bitString + '.');
+			throw new TypeErrorException("Input contains characters not of type " + BitType.INSTANCE + ": " + bitString + '.');
 		}
 
 		final List<IntegerStruct> bitList = new ArrayList<>(bitString.length());

@@ -11,8 +11,8 @@ import jcl.LispStruct;
 import jcl.LispType;
 import jcl.conditions.exceptions.EndOfFileException;
 import jcl.conditions.exceptions.StreamErrorException;
-import jcl.types.ConcatenatedStream;
-import jcl.types.T;
+import jcl.types.ConcatenatedStreamType;
+import jcl.types.TType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -52,7 +52,7 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 	 * 		the {@link InputStream}s to create a ConcatenatedStreamStruct from
 	 */
 	public ConcatenatedStreamStruct(final boolean interactive, final Deque<InputStream> inputStreams) {
-		super(ConcatenatedStream.INSTANCE, null, null, interactive, getElementType2(inputStreams));
+		super(ConcatenatedStreamType.INSTANCE, null, null, interactive, getElementType2(inputStreams));
 		this.inputStreams = new ArrayDeque<>(inputStreams);
 	}
 
@@ -81,7 +81,7 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 	 */
 	private static LispType getElementType3(final Deque<InputStream> inputStreams) {
 		if (inputStreams.isEmpty()) {
-			return T.INSTANCE;
+			return TType.INSTANCE;
 		}
 
 		final InputStream last = inputStreams.getLast();

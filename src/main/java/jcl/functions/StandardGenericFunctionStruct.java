@@ -3,7 +3,7 @@ package jcl.functions;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.types.StandardGenericFunction;
+import jcl.types.StandardGenericFunctionType;
 
 /**
  * The {@link StandardGenericFunctionStruct} is the object representation of a Lisp 'standard-generic-function' type.
@@ -28,6 +28,6 @@ public abstract class StandardGenericFunctionStruct extends GenericFunctionStruc
 	 * 		the subclasses
 	 */
 	protected StandardGenericFunctionStruct(final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
-		super(StandardGenericFunction.INSTANCE, directSuperClasses, subClasses);
+		super(StandardGenericFunctionType.INSTANCE, directSuperClasses, subClasses);
 	}
 }

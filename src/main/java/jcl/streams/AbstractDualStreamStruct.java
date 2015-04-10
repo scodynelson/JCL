@@ -6,7 +6,7 @@ package jcl.streams;
 
 import jcl.LispType;
 import jcl.conditions.exceptions.StreamErrorException;
-import jcl.types.Stream;
+import jcl.types.StreamType;
 import jcl.types.typespecifiers.AndTypeSpecifier;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -45,7 +45,7 @@ abstract class AbstractDualStreamStruct extends StreamStruct implements InputStr
 	 * @param outputStream
 	 * 		the {@link OutputStream} to create an AbstractDualStreamStruct from
 	 */
-	AbstractDualStreamStruct(final Stream type,
+	AbstractDualStreamStruct(final StreamType type,
 	                         final boolean interactive, final InputStream inputStream, final OutputStream outputStream) {
 		super(type, null, null, interactive, getElementType(inputStream, outputStream));
 		this.inputStream = inputStream;

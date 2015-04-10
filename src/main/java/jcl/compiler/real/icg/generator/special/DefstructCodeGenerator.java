@@ -3,6 +3,7 @@ package jcl.compiler.real.icg.generator.special;
 import java.util.Stack;
 
 import jcl.LispStruct;
+import jcl.compiler.real.functions.CompileFunction;
 import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
@@ -41,6 +42,9 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 	//	@Autowired
 	private FormGenerator formGenerator;
 
+	//	@Autowired
+	private CompileFunction compileFunction;
+
 	@Override
 	public void generate(final ListStruct input, final JavaClassBuilder classBuilder) {
 
@@ -58,10 +62,9 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 		classStuff = classStuff.getRest();
 		//now classStuff ~= (BAR FOO) or just (BAR) if no include struct
 
-//		final DefstructSymbolStruct lispName = (DefstructSymbolStruct) classStuff.getFirst(); // TODO fix
-		final SymbolStruct<?> lispName = (SymbolStruct<?>) classStuff.getFirst();
+		final DefstructSymbolStruct lispName = (DefstructSymbolStruct) classStuff.getFirst();
 		//cache the javaName with the lispName
-//		lispName.setJavaName(javaName.toString()); TODO: fix
+		lispName.setJavaName(javaName.toString());
 
 		classStuff = classStuff.getRest();
 		//now classStuff ~= (FOO) or NIL
@@ -69,13 +72,11 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 
 		final LispStruct printer = arguments.getRest().getFirst();
 
-		final Object printerFunction;
+		Object printerFunction = null;
 		if ((printer instanceof SymbolStruct) && !printer.equals(NullStruct.INSTANCE)) {
 			printerFunction = printer;
 		} else if ((printer instanceof ListStruct) && !printer.equals(NullStruct.INSTANCE)) {
-			printerFunction = null; //CompileFunction.FUNCTION.funcall(printer);
-		} else {
-			printerFunction = null;
+			printerFunction = compileFunction.compile(null, printer);
 		}
 
 		//Get field list.
@@ -115,7 +116,7 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 		icgCreateDefstructFactory(javaName.toString(), classBuilder);
 		icgCreateDefstructAbstractFactory(javaName.toString(), classBuilder);
 		icgCreateDefstruct(javaName.toString(), ifaceImplementing, lispName, classBuilder);
-		icgCreateDefstructImplFactory(javaName.toString(), fields.length, classBuilder);
+		icgCreateDefstructImplFactory(javaName.toString(), classBuilder);
 		icgCreateDefstructImplClass(javaName.toString(), implImplementing, lispName, fields, printerFunction, includeName, includedSlotNumberAsInt, classBuilder);
 
 		// initializing code in the enclosing lambda
@@ -124,7 +125,7 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 		mv.visitFieldInsn(Opcodes.GETSTATIC, javaName + "Impl", "initialize", "Z");
 		mv.visitInsn(Opcodes.POP);
 
-//		symbolCodeGenerator.generate(javaName, classBuilder);
+		formGenerator.generate(javaName, classBuilder);
 		mv.visitFieldInsn(Opcodes.GETSTATIC, "lisp/common/type/StructureClass", "DEFSTRUCT_INDICATOR", "Llisp/common/type/Symbol;");
 		mv.visitLdcInsn(javaName + "$Factory");
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Class", "forName", "(Ljava/lang/String;)Ljava/lang/Class;", false);
@@ -304,7 +305,7 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 			currentClass.setMethodVisitor(mv);
 			mv.visitCode();
 
-//			symbolCodeGenerator.generate(lispName, classBuilder);
+			formGenerator.generate(lispName, classBuilder);
 			mv.visitFieldInsn(Opcodes.PUTSTATIC, name, "typeName", "Llisp/common/type/Symbol;");
 			mv.visitTypeInsn(Opcodes.NEW, name + "$AbstractFactory");
 			mv.visitInsn(Opcodes.DUP);
@@ -325,7 +326,7 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 	}
 
 	// Making FooStructImpl$Factory
-	private static void icgCreateDefstructImplFactory(final String name, final int length, final JavaClassBuilder classBuilder) {
+	private static void icgCreateDefstructImplFactory(final String name, final JavaClassBuilder classBuilder) {
 
 		final ClassDef currentClass = new ClassDef(name, "");
 		final Stack<ClassDef> classStack = classBuilder.getClassStack();
@@ -400,8 +401,8 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 	}
 
 	// Making FooStructImpl$Class.
-	private void icgCreateDefstructImplClass(final String name, final String[] interfaces,
-	                                         final SymbolStruct<?> lispName, final SymbolStruct<?>[] fields, final Object printer,
+	private void icgCreateDefstructImplClass(final String name, final String[] interfaces, final SymbolStruct<?> lispName,
+	                                         final SymbolStruct<?>[] fields, final Object printer,
 	                                         final DefstructSymbolStruct includedStruct, final int includedSlotNumber,
 	                                         final JavaClassBuilder classBuilder) {
 
@@ -418,11 +419,9 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 		final String implFactoryName = name + "Impl$Factory";
 		final String abstractFactoryName = name + "$AbstractFactory";
 
-		final String includedStructFactory;
+		String includedStructFactory = null;
 		if (includedStruct != null) { // TODO: null or NIL
 			includedStructFactory = includedStruct.getJavaName() + "$Factory";
-		} else {
-			includedStructFactory = null;
 		}
 
 		// class definition
@@ -462,17 +461,12 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 			fv.visitEnd();
 		}
 
-		{
-			final FieldVisitor fv;
-			if (printer instanceof SymbolStruct) {
-				fv = cw.visitField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "printDefstructFunction", "Llisp/common/type/Symbol;", null, null);
-			} else if (printer instanceof FunctionStruct) { // TODO: Function2
-				fv = cw.visitField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "printDefstructFunction", "Llisp/extensions/type/Function2;", null, null);
-			} else if (printer instanceof FunctionStruct) { // TODO: Function3
-				fv = cw.visitField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "printDefstructFunction", "Llisp/extensions/type/Function3;", null, null);
-			} else {
-				fv = cw.visitField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "printDefstructFunction", "Ljava/lang/Object;", null, null);
-			}
+		if (printer instanceof SymbolStruct) {
+			final FieldVisitor fv = cw.visitField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "printDefstructFunction", "Llisp/common/type/Symbol;", null, null);
+			currentClass.setFieldVisitor(fv);
+			fv.visitEnd();
+		} else if (printer instanceof FunctionStruct) {
+			final FieldVisitor fv = cw.visitField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "printDefstructFunction", "Llisp/extensions/type/Function;", null, null);
 			currentClass.setFieldVisitor(fv);
 			fv.visitEnd();
 		}
@@ -506,21 +500,17 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 
 			// if a print option was passed in, make an instance and store it
 			if (printer instanceof SymbolStruct<?>) {
-//				specialVariableCodeGenerator.generate((SymbolStruct<?>) printer, classBuilder);
+				formGenerator.generate((SymbolStruct<?>) printer, classBuilder);
 				mv.visitFieldInsn(Opcodes.PUTSTATIC, implName, "printDefstructFunction", "Llisp/common/type/Symbol;");
-			} else if ((printer instanceof FunctionStruct) || (printer instanceof FunctionStruct)) { // TODO: Function2 || Function3
+			} else if (printer instanceof FunctionStruct) {
 				mv.visitTypeInsn(Opcodes.NEW, printer.getClass().getName());
 				mv.visitInsn(Opcodes.DUP);
 				mv.visitMethodInsn(Opcodes.INVOKESPECIAL, printer.getClass().getName(), "<init>", "()V", false);
-				if (printer instanceof FunctionStruct) { // TODO: Function2
-					mv.visitFieldInsn(Opcodes.PUTSTATIC, implName, "printDefstructFunction", "Llisp/extensions/type/Function2;");
-				} else if (printer instanceof FunctionStruct) { // TODO: Function3
-					mv.visitFieldInsn(Opcodes.PUTSTATIC, implName, "printDefstructFunction", "Llisp/extensions/type/Function3;");
-				}
+				mv.visitFieldInsn(Opcodes.PUTSTATIC, implName, "printDefstructFunction", "Llisp/extensions/type/Function;");
 			}
 
 			// hold on to the original lispName
-//			specialVariableCodeGenerator.generate(lispName, classBuilder);
+			formGenerator.generate(lispName, classBuilder);
 			mv.visitFieldInsn(Opcodes.PUTSTATIC, implName, "lispName", "Llisp/common/type/Symbol;");
 
 			// make an instance of the nested Factory class
@@ -541,14 +531,14 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 			for (int i = 0; i < fields.length; i++) {
 				mv.visitInsn(Opcodes.DUP);
 				mv.visitLdcInsn(i);
-//				specialVariableCodeGenerator.generate(fields[i], classBuilder);
+				formGenerator.generate(fields[i], classBuilder);
 				mv.visitInsn(Opcodes.AASTORE);
 			}
 			mv.visitInsn(Opcodes.DUP);
 			mv.visitFieldInsn(Opcodes.PUTSTATIC, implName, "slotNames", "[Llisp/common/type/Symbol;");
 
 			// put the same array of slot names into the type symbol
-//			symbolCodeGenerator.generate(lispName, classBuilder);
+			formGenerator.generate(lispName, classBuilder);
 			mv.visitTypeInsn(Opcodes.CHECKCAST, "lisp/system/SymbolImpl");
 			mv.visitInsn(Opcodes.SWAP);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "lisp/system/SymbolImpl", "setDefstructSlotNames", "([Llisp/common/type/Symbol;)V", false);
@@ -559,15 +549,16 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 		}
 		// struct impl class initialized
 
-		//<init> for a non-included instance
+		//<init>
 		{
+			final MethodVisitor mv = currentClass.getClassWriter().visitMethod(Opcodes.ACC_PUBLIC, "<init>", "([Ljava/lang/Object;)V", null, null);
+			currentClass.setMethodVisitor(mv);
+			mv.visitCode();
+			mv.visitVarInsn(Opcodes.ALOAD, 0);
+
 			if (includedStructFactory == null) {
-				final MethodVisitor mv = currentClass.getClassWriter().visitMethod(Opcodes.ACC_PUBLIC, "<init>", "([Ljava/lang/Object;)V", null, null);
-				currentClass.setMethodVisitor(mv);
-				mv.visitCode();
 
 				//build FooStructImpl constructor here
-				mv.visitVarInsn(Opcodes.ALOAD, 0);
 				mv.visitInsn(Opcodes.ACONST_NULL);      // not a Java parent reference
 				mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "lisp/system/StructureClassImpl", "<init>", "(Llisp/system/StructureClassImpl;)V", false);
 				for (int i = 0; i < fields.length; i++) {
@@ -577,19 +568,9 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 					mv.visitInsn(Opcodes.AALOAD);
 					mv.visitFieldInsn(Opcodes.PUTFIELD, implName, "field" + (i + 1), "Ljava/lang/Object;");
 				}
-				mv.visitInsn(Opcodes.RETURN);
-
-				mv.visitMaxs(-1, -1);
-				mv.visitEnd();
-
-				// <init> for an included instance
 			} else {
-				final MethodVisitor mv = currentClass.getClassWriter().visitMethod(Opcodes.ACC_PUBLIC, "<init>", "([Ljava/lang/Object;)V", null, null);
-				currentClass.setMethodVisitor(mv);
-				mv.visitCode();
 
 				//build BarStructImpl constructor here
-				mv.visitVarInsn(Opcodes.ALOAD, 0);     // this
 				mv.visitVarInsn(Opcodes.ALOAD, 1);     // args array
 				// make the parent impl
 				mv.visitMethodInsn(Opcodes.INVOKESTATIC, includedStructFactory, "newInstance", "([Ljava/lang/Object;)Llisp/common/type/StructureClass;", false);
@@ -609,11 +590,11 @@ public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
 					mv.visitInsn(Opcodes.AALOAD);
 					mv.visitFieldInsn(Opcodes.PUTFIELD, implName, "field" + (i + 1 + includedSlotNumber), "Ljava/lang/Object;");
 				}
-				mv.visitInsn(Opcodes.RETURN);
-
-				mv.visitMaxs(-1, -1);
-				mv.visitEnd();
 			}
+			mv.visitInsn(Opcodes.RETURN);
+
+			mv.visitMaxs(-1, -1);
+			mv.visitEnd();
 		}
 
 		///////////////////////////

@@ -13,7 +13,7 @@ import jcl.LispType;
  * 		the type to get an instance of
  */
 @FunctionalInterface
-interface TypeFactory<TYPE extends LispType> {
+public interface TypeFactory<TYPE extends LispType> {
 
 	/**
 	 * This is a factory method to return an instance of the TYPE.

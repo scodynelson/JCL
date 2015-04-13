@@ -5,12 +5,15 @@
 package jcl.reader.macrofunction;
 
 import java.math.BigInteger;
+import java.util.List;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
+import jcl.classes.StructureObjectStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.reader.Reader;
@@ -82,19 +85,23 @@ public class SharpSReaderMacroFunction extends ReaderMacroFunction {
 			throw new ReaderErrorException("Structure type is not a symbol: " + structureType);
 		}
 
-		// TODO: Find class object from structureType value
-//		if (!(classObj instanceof StructureClass)) {
-//			throw new ReaderErrorException(structureType + " is not a defined structure type.");
-//		}
+		final SymbolStruct<?> structureSymbol = (SymbolStruct<?>) structureType;
+		final StructureObjectStruct structureObject = structureSymbol.getStructureObject();
+		if (structureObject == null) {
+			throw new ReaderErrorException(structureType + " is not a defined structure type for symbol: " + structureSymbol);
+		}
 
-		// TODO: Get default constructor for the structure
-//		if (defCon == null) {
-//			throw new ReaderErrorException("The " + structureType + " structure does not have a default constructor.");
-//		}
+		final FunctionStruct defaultConstructor = structureObject.getDefaultConstructor();
+		if (defaultConstructor == null) {
+			throw new ReaderErrorException("The " + structureType + " structure does not have a default constructor.");
+		}
 
-		// TODO: Call constructor to create Structure object
+		final ListStruct arguments = listToken.getRest();
+		final List<LispStruct> argumentsAsJavaList = arguments.getAsJavaList();
 
-		return null;
+		LispStruct[] argumentsArray = new LispStruct[argumentsAsJavaList.size()];
+		argumentsArray = argumentsAsJavaList.toArray(argumentsArray);
+		return defaultConstructor.apply(argumentsArray);
 	}
 
 	@Override

@@ -26,6 +26,8 @@ String ASM_ALL_VERSION = '5.0.3';
 
 String EHCACHE_VERSION = '2.9.0';
 
+String JAVA_HELP = '2.0.05';
+
 String SLF4J_VERSION = '1.7.10';
 String LOGBACK_VERSION = '1.1.2';
 
@@ -49,6 +51,8 @@ dependencies {
 	compile group: 'org.slf4j', name: 'osgi-over-slf4j', version: "$SLF4J_VERSION"
 
 	compile group: 'net.sf.ehcache', name: 'ehcache', version: "$EHCACHE_VERSION"
+
+	compile group: 'javax.help', name: 'javahelp', version: "$JAVA_HELP"
 
 	compile group: 'ch.qos.logback', name: 'logback-core', version: "$LOGBACK_VERSION"
 	compile group: 'ch.qos.logback', name: 'logback-classic', version: "$LOGBACK_VERSION"

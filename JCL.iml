@@ -48,5 +48,6 @@
     <orderEntry type="library" exported="" name="Gradle: org.springframework:spring-core:4.1.5.RELEASE" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.springframework:spring-expression:4.1.5.RELEASE" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.testng:testng:6.8.21" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: javax.help:javahelp:2.0.05" level="project" />
   </component>
 </module>

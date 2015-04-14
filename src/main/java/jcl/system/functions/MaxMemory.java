@@ -28,7 +28,7 @@ import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MaxMemory extends FunctionStruct {
+public final class MaxMemory extends FunctionStruct {
 
 	public static final SymbolStruct<?> MAX_MEMORY = new SymbolStruct<>("MAX-MEMORY", GlobalPackageStruct.EXTENSIONS);
 

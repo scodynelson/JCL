@@ -27,7 +27,7 @@ public class RealStruct extends NumberStruct {
 	 * @param subClasses
 	 * 		the subclasses
 	 */
-	protected RealStruct(final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+	protected RealStruct(final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		super(RealType.INSTANCE, directSuperClasses, subClasses);
 	}
 
@@ -42,7 +42,7 @@ public class RealStruct extends NumberStruct {
 	 * 		the subclasses
 	 */
 	RealStruct(final RealType type,
-	           final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+	           final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		super(type, directSuperClasses, subClasses);
 	}
 }

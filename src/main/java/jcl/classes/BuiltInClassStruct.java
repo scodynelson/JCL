@@ -21,7 +21,7 @@ public abstract class BuiltInClassStruct extends ClassStruct {
 	 * @param subClasses
 	 * 		the subclasses
 	 */
-	protected BuiltInClassStruct(final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+	protected BuiltInClassStruct(final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		this(null, BuiltInClassType.INSTANCE, directSuperClasses, subClasses);
 	}
 
@@ -36,7 +36,7 @@ public abstract class BuiltInClassStruct extends ClassStruct {
 	 * 		the subclasses
 	 */
 	protected BuiltInClassStruct(final String documentation,
-	                             final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+	                             final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		this(documentation, BuiltInClassType.INSTANCE, directSuperClasses, subClasses);
 	}
 
@@ -51,7 +51,7 @@ public abstract class BuiltInClassStruct extends ClassStruct {
 	 * 		the subclasses
 	 */
 	protected BuiltInClassStruct(final LispType type,
-	                             final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+	                             final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		this(null, type, directSuperClasses, subClasses);
 	}
 
@@ -68,7 +68,7 @@ public abstract class BuiltInClassStruct extends ClassStruct {
 	 * 		the subclasses
 	 */
 	protected BuiltInClassStruct(final String documentation, final LispType type,
-	                             final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+	                             final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		super(documentation, type, directSuperClasses, subClasses);
 	}
 }

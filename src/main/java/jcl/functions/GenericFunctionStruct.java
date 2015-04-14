@@ -28,7 +28,7 @@ public abstract class GenericFunctionStruct extends FunctionStruct {
 	 * @param subClasses
 	 * 		the subclasses
 	 */
-	protected GenericFunctionStruct(final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+	protected GenericFunctionStruct(final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		this(GenericFunctionType.INSTANCE, directSuperClasses, subClasses);
 	}
 
@@ -43,7 +43,7 @@ public abstract class GenericFunctionStruct extends FunctionStruct {
 	 * 		the subclasses
 	 */
 	protected GenericFunctionStruct(final LispType type,
-	                                final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+	                                final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		super(type, directSuperClasses, subClasses);
 	}
 }

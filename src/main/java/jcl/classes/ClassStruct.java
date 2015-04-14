@@ -20,9 +20,9 @@ public abstract class ClassStruct extends StandardObjectStruct {
 
 	private final LispType type;
 
-	private final List<Class<LispStruct>> directSuperClasses;
+	private final List<Class<? extends LispStruct>> directSuperClasses;
 
-	private final List<Class<LispStruct>> subClasses;
+	private final List<Class<? extends LispStruct>> subClasses;
 
 	/**
 	 * Protected constructor.
@@ -52,7 +52,7 @@ public abstract class ClassStruct extends StandardObjectStruct {
 	 * 		the subclasses
 	 */
 	protected ClassStruct(final LispType type,
-	                      final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+	                      final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		this(null, type, directSuperClasses, subClasses);
 	}
 
@@ -69,7 +69,7 @@ public abstract class ClassStruct extends StandardObjectStruct {
 	 * 		the subclasses
 	 */
 	protected ClassStruct(final String documentation, final LispType type,
-	                      final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+	                      final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		super(documentation);
 		this.type = type;
 		this.directSuperClasses = (directSuperClasses == null) ? Collections.emptyList() : directSuperClasses;
@@ -86,7 +86,7 @@ public abstract class ClassStruct extends StandardObjectStruct {
 	 *
 	 * @return class {@link #directSuperClasses} property
 	 */
-	public List<Class<LispStruct>> getDirectSuperClasses() {
+	public List<Class<? extends LispStruct>> getDirectSuperClasses() {
 		return directSuperClasses;
 	}
 
@@ -95,7 +95,7 @@ public abstract class ClassStruct extends StandardObjectStruct {
 	 *
 	 * @return standard object {@link #subClasses} property
 	 */
-	public List<Class<LispStruct>> getSubClasses() {
+	public List<Class<? extends LispStruct>> getSubClasses() {
 		return subClasses;
 	}
 

@@ -6,7 +6,7 @@ import java.util.Stack;
 
 import jcl.LispStruct;
 import jcl.classes.BuiltInClassStruct;
-import jcl.classes.StructureObjectStruct;
+import jcl.classes.StructureClassStruct;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.functions.expanders.CompilerMacroFunctionExpander;
@@ -49,7 +49,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 
 	protected Stack<SymbolMacroExpander<?>> symbolMacroExpanderStack = new Stack<>();
 
-	protected StructureObjectStruct structureObject;
+	protected StructureClassStruct structureClass;
 
 	/**
 	 * Public constructor.
@@ -457,22 +457,22 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	}
 
 	/**
-	 * Getter for symbol {@link #structureObject} property.
+	 * Getter for symbol {@link #structureClass} property.
 	 *
-	 * @return symbol {@link #structureObject} property
+	 * @return symbol {@link #structureClass} property
 	 */
-	public StructureObjectStruct getStructureObject() {
-		return structureObject;
+	public StructureClassStruct getStructureClass() {
+		return structureClass;
 	}
 
 	/**
-	 * Setter for symbol {@link #structureObject} property.
+	 * Setter for symbol {@link #structureClass} property.
 	 *
-	 * @param structureObject
-	 * 		new symbol {@link #structureObject} property value
+	 * @param structureClass
+	 * 		new symbol {@link #structureClass} property value
 	 */
-	public void setStructureObject(final StructureObjectStruct structureObject) {
-		this.structureObject = structureObject;
+	public void setStructureClass(final StructureClassStruct structureClass) {
+		this.structureClass = structureClass;
 	}
 
 	/**

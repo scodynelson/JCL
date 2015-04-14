@@ -52,7 +52,7 @@ public abstract class StreamStruct extends BuiltInClassStruct implements LispStr
 	 * @param elementType
 	 * 		the stream elementType
 	 */
-	protected StreamStruct(final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses,
+	protected StreamStruct(final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses,
 	                       final boolean interactive, final LispType elementType) {
 		super(StreamType.INSTANCE, directSuperClasses, subClasses);
 		this.interactive = interactive;
@@ -74,7 +74,7 @@ public abstract class StreamStruct extends BuiltInClassStruct implements LispStr
 	 * 		the stream elementType
 	 */
 	StreamStruct(final StreamType type,
-	             final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses,
+	             final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses,
 	             final boolean interactive, final LispType elementType) {
 		super(type, directSuperClasses, subClasses);
 		this.interactive = interactive;

@@ -28,7 +28,7 @@ public class NumberStruct extends BuiltInClassStruct {
 	 * @param subClasses
 	 * 		the subclasses
 	 */
-	protected NumberStruct(final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+	protected NumberStruct(final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		super(NumberType.INSTANCE, directSuperClasses, subClasses);
 	}
 
@@ -43,7 +43,7 @@ public class NumberStruct extends BuiltInClassStruct {
 	 * 		the subclasses
 	 */
 	NumberStruct(final NumberType type,
-	             final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+	             final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		super(type, directSuperClasses, subClasses);
 	}
 }

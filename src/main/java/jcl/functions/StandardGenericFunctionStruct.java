@@ -27,7 +27,7 @@ public abstract class StandardGenericFunctionStruct extends GenericFunctionStruc
 	 * @param subClasses
 	 * 		the subclasses
 	 */
-	protected StandardGenericFunctionStruct(final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+	protected StandardGenericFunctionStruct(final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		super(StandardGenericFunctionType.INSTANCE, directSuperClasses, subClasses);
 	}
 }

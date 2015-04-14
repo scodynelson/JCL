@@ -24,7 +24,7 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 	 * @param subClasses
 	 * 		the subclasses
 	 */
-	protected ListStruct(final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+	protected ListStruct(final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		this(ListType.INSTANCE, directSuperClasses, subClasses);
 	}
 
@@ -39,7 +39,7 @@ public abstract class ListStruct extends BuiltInClassStruct implements SequenceS
 	 * 		the subclasses
 	 */
 	protected ListStruct(final ListType type,
-	                     final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+	                     final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		super(type, directSuperClasses, subClasses);
 	}
 

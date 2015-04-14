@@ -88,7 +88,7 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 	 * @param subClasses
 	 * 		the subclasses
 	 */
-	protected FunctionStruct(final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+	protected FunctionStruct(final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		this(null, FunctionType.INSTANCE, directSuperClasses, subClasses);
 	}
 
@@ -103,7 +103,7 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 	 * 		the subclasses
 	 */
 	protected FunctionStruct(final String documentation,
-	                         final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+	                         final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		this(documentation, FunctionType.INSTANCE, directSuperClasses, subClasses);
 	}
 
@@ -118,7 +118,7 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 	 * 		the subclasses
 	 */
 	protected FunctionStruct(final LispType type,
-	                         final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+	                         final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		this(null, type, directSuperClasses, subClasses);
 	}
 
@@ -135,7 +135,7 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 	 * 		the subclasses
 	 */
 	protected FunctionStruct(final String documentation, final LispType type,
-	                         final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+	                         final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		super(documentation, type, directSuperClasses, subClasses);
 	}
 

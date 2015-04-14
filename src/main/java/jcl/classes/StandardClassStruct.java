@@ -21,7 +21,7 @@ public abstract class StandardClassStruct extends ClassStruct {
 	 * @param subClasses
 	 * 		the subclasses
 	 */
-	protected StandardClassStruct(final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+	protected StandardClassStruct(final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		this(StandardClassType.INSTANCE, directSuperClasses, subClasses);
 	}
 
@@ -36,7 +36,7 @@ public abstract class StandardClassStruct extends ClassStruct {
 	 * 		the subclasses
 	 */
 	protected StandardClassStruct(final LispType type,
-	                              final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+	                              final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		super(type, directSuperClasses, subClasses);
 	}
 }

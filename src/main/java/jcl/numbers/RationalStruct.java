@@ -27,7 +27,7 @@ public class RationalStruct extends RealStruct {
 	 * @param subClasses
 	 * 		the subclasses
 	 */
-	protected RationalStruct(final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+	protected RationalStruct(final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		super(RationalType.INSTANCE, directSuperClasses, subClasses);
 	}
 
@@ -42,7 +42,7 @@ public class RationalStruct extends RealStruct {
 	 * 		the subclasses
 	 */
 	RationalStruct(final RationalType type,
-	               final List<Class<LispStruct>> directSuperClasses, final List<Class<LispStruct>> subClasses) {
+	               final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		super(type, directSuperClasses, subClasses);
 	}
 }

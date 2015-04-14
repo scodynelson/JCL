@@ -1,9 +1,11 @@
 package jcl.classes;
 
+import java.util.Map;
+
 import jcl.LispStruct;
 import jcl.LispType;
 import jcl.functions.FunctionStruct;
-import jcl.types.StructureObjectType;
+import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -16,51 +18,37 @@ public class StructureObjectStruct implements LispStruct {
 
 	private static final long serialVersionUID = 5766790087319221572L;
 
-	protected String documentation;
+	protected final StructureClassStruct structureClass;
 
-	protected final FunctionStruct defaultConstructor;
+	protected final Map<SymbolStruct<?>, LispStruct> slots;
 
 	protected final FunctionStruct printer;
 
-	public StructureObjectStruct() {
-		documentation = null;
-		defaultConstructor = null;
-		printer = null;
+	public StructureObjectStruct(final StructureClassStruct structureClass, final Map<SymbolStruct<?>, LispStruct> slots) {
+		this(structureClass, slots, null);
 	}
 
-	public StructureObjectStruct(final FunctionStruct defaultConstructor) {
-		documentation = null;
-		this.defaultConstructor = defaultConstructor;
-		printer = null;
-	}
-
-	public StructureObjectStruct(final String documentation, final FunctionStruct defaultConstructor, final FunctionStruct printer) {
-		this.documentation = documentation;
-		this.defaultConstructor = defaultConstructor;
+	public StructureObjectStruct(final StructureClassStruct structureClass, final Map<SymbolStruct<?>, LispStruct> slots,
+	                             final FunctionStruct printer) {
+		this.structureClass = structureClass;
+		this.slots = slots;
 		this.printer = printer;
 	}
 
-	/**
-	 * Getter for structure object {@link #documentation} property.
-	 *
-	 * @return structure object {@link #documentation} property
-	 */
-	public String getDocumentation() {
-		return documentation;
+	public StructureClassStruct getStructureClass() {
+		return structureClass;
 	}
 
-	/**
-	 * Setter for structure object {@link #documentation} property.
-	 *
-	 * @param documentation
-	 * 		new structure object {@link #documentation} property value
-	 */
-	public void setDocumentation(final String documentation) {
-		this.documentation = documentation;
+	public Map<SymbolStruct<?>, LispStruct> getSlots() {
+		return slots;
 	}
 
-	public FunctionStruct getDefaultConstructor() {
-		return defaultConstructor;
+	public LispStruct getSlot(final SymbolStruct<?> slotName) {
+		return slots.get(slotName);
+	}
+
+	public void setSlot(final SymbolStruct<?> slotName, final LispStruct newSlotValue) {
+		slots.put(slotName, newSlotValue);
 	}
 
 	public FunctionStruct getPrinter() {
@@ -69,13 +57,13 @@ public class StructureObjectStruct implements LispStruct {
 
 	@Override
 	public LispType getType() {
-		return StructureObjectType.INSTANCE;
+		return structureClass.getType();
 	}
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder().append(documentation)
-		                            .append(defaultConstructor)
+		return new HashCodeBuilder().append(structureClass)
+		                            .append(slots)
 		                            .append(printer)
 		                            .toHashCode();
 	}
@@ -92,16 +80,16 @@ public class StructureObjectStruct implements LispStruct {
 			return false;
 		}
 		final StructureObjectStruct rhs = (StructureObjectStruct) obj;
-		return new EqualsBuilder().append(documentation, rhs.documentation)
-		                          .append(defaultConstructor, rhs.defaultConstructor)
+		return new EqualsBuilder().append(structureClass, rhs.structureClass)
+		                          .append(slots, rhs.slots)
 		                          .append(printer, rhs.printer)
 		                          .isEquals();
 	}
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(documentation)
-		                                                                .append(defaultConstructor)
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(structureClass)
+		                                                                .append(slots)
 		                                                                .append(printer)
 		                                                                .toString();
 	}

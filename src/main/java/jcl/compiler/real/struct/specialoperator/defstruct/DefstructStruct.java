@@ -7,6 +7,7 @@ package jcl.compiler.real.struct.specialoperator.defstruct;
 import java.util.List;
 
 import jcl.compiler.real.struct.CompilerSpecialOperatorStruct;
+import jcl.structures.StructureClassStruct;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -19,7 +20,7 @@ public class DefstructStruct extends CompilerSpecialOperatorStruct {
 
 	private final SymbolStruct<?> structureSymbol;
 
-	private final SymbolStruct<?> includeStructureSymbol;
+	private final StructureClassStruct includeStructureClass;
 
 	private final SymbolStruct<?> defaultConstructorSymbol;
 
@@ -27,11 +28,11 @@ public class DefstructStruct extends CompilerSpecialOperatorStruct {
 
 	private final List<SymbolStruct<?>> slots;
 
-	public DefstructStruct(final SymbolStruct<?> structureSymbol, final SymbolStruct<?> includeStructureSymbol,
+	public DefstructStruct(final SymbolStruct<?> structureSymbol, final StructureClassStruct includeStructureClass,
 	                       final SymbolStruct<?> defaultConstructorSymbol, final SymbolStruct<?> printerSymbol,
 	                       final List<SymbolStruct<?>> slots) {
 		this.structureSymbol = structureSymbol;
-		this.includeStructureSymbol = includeStructureSymbol;
+		this.includeStructureClass = includeStructureClass;
 		this.defaultConstructorSymbol = defaultConstructorSymbol;
 		this.printerSymbol = printerSymbol;
 		this.slots = slots;
@@ -41,8 +42,8 @@ public class DefstructStruct extends CompilerSpecialOperatorStruct {
 		return structureSymbol;
 	}
 
-	public SymbolStruct<?> getIncludeStructureSymbol() {
-		return includeStructureSymbol;
+	public StructureClassStruct getIncludeStructureClass() {
+		return includeStructureClass;
 	}
 
 	public SymbolStruct<?> getDefaultConstructorSymbol() {
@@ -61,7 +62,7 @@ public class DefstructStruct extends CompilerSpecialOperatorStruct {
 	public int hashCode() {
 		return new HashCodeBuilder().appendSuper(super.hashCode())
 		                            .append(structureSymbol)
-		                            .append(includeStructureSymbol)
+		                            .append(includeStructureClass)
 		                            .append(defaultConstructorSymbol)
 		                            .append(printerSymbol)
 		                            .append(slots)
@@ -82,7 +83,7 @@ public class DefstructStruct extends CompilerSpecialOperatorStruct {
 		final DefstructStruct rhs = (DefstructStruct) obj;
 		return new EqualsBuilder().appendSuper(super.equals(obj))
 		                          .append(structureSymbol, rhs.structureSymbol)
-		                          .append(includeStructureSymbol, rhs.includeStructureSymbol)
+		                          .append(includeStructureClass, rhs.includeStructureClass)
 		                          .append(defaultConstructorSymbol, rhs.defaultConstructorSymbol)
 		                          .append(printerSymbol, rhs.printerSymbol)
 		                          .append(slots, rhs.slots)
@@ -92,7 +93,7 @@ public class DefstructStruct extends CompilerSpecialOperatorStruct {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(structureSymbol)
-		                                                                .append(includeStructureSymbol)
+		                                                                .append(includeStructureClass)
 		                                                                .append(defaultConstructorSymbol)
 		                                                                .append(printerSymbol)
 		                                                                .append(slots)

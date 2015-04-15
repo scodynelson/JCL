@@ -3,26 +3,359 @@ package jcl.compiler.real.icg.generator.defstruct;
 import java.util.Stack;
 
 import jcl.LispStruct;
+import jcl.LispType;
 import jcl.compiler.real.functions.CompileFunction;
 import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
+import jcl.compiler.real.struct.specialoperator.defstruct.DefstructStruct;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.numbers.IntegerStruct;
 import jcl.numbers.NumberStruct;
+import jcl.structures.StructureClassStruct;
 import jcl.symbols.DefstructSymbolStruct;
 import jcl.symbols.SymbolStruct;
+import jcl.types.StructureObjectType;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
 //@Component
 public class DefstructCodeGenerator implements CodeGenerator<ListStruct> {
+
+	public static void generateStructureType(final DefstructStruct defstructStruct) {
+
+		final SymbolStruct<?> structureSymbol = defstructStruct.getStructureSymbol();
+		final String structureName = structureSymbol.getName();
+
+		final String structureTypeFileName = "jcl/structures/" + structureName + "StructureType";
+
+		final String structureTypeInnerClassName = structureTypeFileName + "$1";
+		final String structureTypeInnerClassFactoryName = structureTypeFileName + "$Factory";
+
+		final String structureTypeImplClassName = structureName + "StructureTypeImpl";
+		final String structureTypeInnerClassTypeImplName = structureTypeInnerClassFactoryName + '$' + structureTypeImplClassName;
+
+		final String className = structureTypeFileName.substring(structureTypeFileName.lastIndexOf('/') + 1, structureTypeFileName.length());
+
+		ClassWriter cw = new ClassWriter(0);
+
+		final StructureClassStruct includeStructureClass = defstructStruct.getIncludeStructureClass();
+
+		final String[] interfaces = new String[1];
+		if (includeStructureClass == null) {
+			interfaces[0] = Type.getInternalName(StructureObjectType.class);
+		} else {
+			final LispType includeStructureClassType = includeStructureClass.getType();
+			final String includeStructureClassTypeName = Type.getInternalName(includeStructureClassType.getClass());
+
+			interfaces[0] = includeStructureClassTypeName;
+		}
+
+		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC + Opcodes.ACC_ABSTRACT + Opcodes.ACC_INTERFACE, structureTypeFileName, null, "java/lang/Object", interfaces);
+
+		cw.visitInnerClass(structureTypeInnerClassName, null, null, Opcodes.ACC_STATIC + Opcodes.ACC_SYNTHETIC);
+		cw.visitInnerClass(structureTypeInnerClassFactoryName, structureTypeFileName, "Factory", Opcodes.ACC_PUBLIC + Opcodes.ACC_STATIC);
+		cw.visitInnerClass(structureTypeInnerClassTypeImplName, structureTypeInnerClassFactoryName, structureTypeImplClassName, Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC);
+
+		cw.visitSource(className + ".java", null);
+
+		{
+			final FieldVisitor fv = cw.visitField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "INSTANCE", 'L' + structureTypeFileName + ';', null, null);
+			fv.visitEnd();
+		}
+		{
+			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_STATIC, "<clinit>", "()V", null, null);
+			mv.visitCode();
+
+			mv.visitTypeInsn(Opcodes.NEW, structureTypeInnerClassTypeImplName);
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitInsn(Opcodes.ACONST_NULL);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, structureTypeInnerClassTypeImplName, "<init>", "(L" + structureTypeInnerClassName + ";)V", false);
+			mv.visitFieldInsn(Opcodes.PUTSTATIC, structureTypeFileName, "INSTANCE", 'L' + structureTypeFileName + ';');
+
+			mv.visitInsn(Opcodes.RETURN);
+
+			mv.visitMaxs(-1, -1);
+			mv.visitEnd();
+		}
+
+		cw.visitEnd();
+	}
+
+	public static void fooStructureClassDump() {
+
+		ClassWriter cw = new ClassWriter(0);
+
+		cw.visit(52, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER, "jcl/compiler/real/icg/generator/testground/structures/FooStructureClass", null, "jcl/structures/StructureClassStruct", null);
+
+		{
+			final FieldVisitor fv = cw.visitField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "INSTANCE", "Ljcl/compiler/real/icg/generator/testground/structures/FooStructureClass;", null, null);
+			fv.visitEnd();
+		}
+		{
+			final FieldVisitor fv = cw.visitField(Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "serialVersionUID", "J", null, new Long(-7548921709400992640L));
+			fv.visitEnd();
+		}
+		{
+			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PROTECTED, "<init>", "(Ljcl/symbols/SymbolStruct;Ljcl/symbols/SymbolStruct;Ljava/util/List;Ljava/util/List;)V", "(Ljcl/symbols/SymbolStruct<*>;Ljcl/symbols/SymbolStruct<*>;Ljava/util/List<Ljava/lang/Class<+Ljcl/LispStruct;>;>;Ljava/util/List<Ljava/lang/Class<+Ljcl/LispStruct;>;>;)V", null);
+			mv.visitCode();
+			mv.visitVarInsn(Opcodes.ALOAD, 0);
+			mv.visitFieldInsn(Opcodes.GETSTATIC, "jcl/compiler/real/icg/generator/testground/structures/FooStructureType", "INSTANCE", "Ljcl/compiler/real/icg/generator/testground/structures/FooStructureType;");
+			mv.visitVarInsn(Opcodes.ALOAD, 1);
+			mv.visitVarInsn(Opcodes.ALOAD, 2);
+			mv.visitVarInsn(Opcodes.ALOAD, 3);
+			mv.visitVarInsn(Opcodes.ALOAD, 4);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/icg/generator/testground/structures/FooStructureClass", "<init>", "(Ljcl/LispType;Ljcl/symbols/SymbolStruct;Ljcl/symbols/SymbolStruct;Ljava/util/List;Ljava/util/List;)V", false);
+			mv.visitInsn(Opcodes.RETURN);
+			mv.visitMaxs(6, 5);
+			mv.visitEnd();
+		}
+		{
+			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PROTECTED, "<init>", "(Ljcl/LispType;Ljcl/symbols/SymbolStruct;Ljcl/symbols/SymbolStruct;Ljava/util/List;Ljava/util/List;)V", "(Ljcl/LispType;Ljcl/symbols/SymbolStruct<*>;Ljcl/symbols/SymbolStruct<*>;Ljava/util/List<Ljava/lang/Class<+Ljcl/LispStruct;>;>;Ljava/util/List<Ljava/lang/Class<+Ljcl/LispStruct;>;>;)V", null);
+			mv.visitCode();
+			mv.visitVarInsn(Opcodes.ALOAD, 0);
+			mv.visitVarInsn(Opcodes.ALOAD, 1);
+			mv.visitVarInsn(Opcodes.ALOAD, 2);
+			mv.visitVarInsn(Opcodes.ALOAD, 3);
+			mv.visitVarInsn(Opcodes.ALOAD, 4);
+			mv.visitVarInsn(Opcodes.ALOAD, 5);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/structures/StructureClassStruct", "<init>", "(Ljcl/LispType;Ljcl/symbols/SymbolStruct;Ljcl/symbols/SymbolStruct;Ljava/util/List;Ljava/util/List;)V", false);
+			mv.visitInsn(Opcodes.RETURN);
+			mv.visitMaxs(6, 6);
+			mv.visitEnd();
+		}
+		{
+			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC, "newInstance", "()Ljcl/structures/StructureObjectStruct;", null, null);
+			mv.visitCode();
+			mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/icg/generator/testground/structures/FooStructureObject");
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/icg/generator/testground/structures/FooStructureObject", "<init>", "()V", false);
+			mv.visitInsn(Opcodes.ARETURN);
+			mv.visitMaxs(2, 1);
+			mv.visitEnd();
+		}
+		{
+			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_STATIC, "<clinit>", "()V", null, null);
+			mv.visitCode();
+			mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/icg/generator/testground/structures/FooStructureClass");
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitTypeInsn(Opcodes.NEW, "jcl/symbols/SymbolStruct");
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitLdcInsn("MAKE-FOO");
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/symbols/SymbolStruct", "<init>", "(Ljava/lang/String;)V", false);
+			mv.visitInsn(Opcodes.ACONST_NULL);
+			mv.visitInsn(Opcodes.ACONST_NULL);
+			mv.visitInsn(Opcodes.ACONST_NULL);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/icg/generator/testground/structures/FooStructureClass", "<init>", "(Ljcl/symbols/SymbolStruct;Ljcl/symbols/SymbolStruct;Ljava/util/List;Ljava/util/List;)V", false);
+			mv.visitFieldInsn(Opcodes.PUTSTATIC, "jcl/compiler/real/icg/generator/testground/structures/FooStructureClass", "INSTANCE", "Ljcl/compiler/real/icg/generator/testground/structures/FooStructureClass;");
+			mv.visitInsn(Opcodes.RETURN);
+			mv.visitMaxs(6, 0);
+			mv.visitEnd();
+		}
+		cw.visitEnd();
+	}
+
+	public static void barStructureClassDump() {
+
+		ClassWriter cw = new ClassWriter(0);
+
+		cw.visit(52, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER, "jcl/compiler/real/icg/generator/testground/structures/BarStructureClass", null, "jcl/compiler/real/icg/generator/testground/structures/FooStructureClass", null);
+
+		{
+			final FieldVisitor fv = cw.visitField(Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "INSTANCE", "Ljcl/compiler/real/icg/generator/testground/structures/BarStructureClass;", null, null);
+			fv.visitEnd();
+		}
+		{
+			final FieldVisitor fv = cw.visitField(Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "serialVersionUID", "J", null, new Long(-3178191979068838368L));
+			fv.visitEnd();
+		}
+		{
+			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PROTECTED, "<init>", "(Ljcl/symbols/SymbolStruct;Ljcl/symbols/SymbolStruct;Ljava/util/List;Ljava/util/List;)V", "(Ljcl/symbols/SymbolStruct<*>;Ljcl/symbols/SymbolStruct<*>;Ljava/util/List<Ljava/lang/Class<+Ljcl/LispStruct;>;>;Ljava/util/List<Ljava/lang/Class<+Ljcl/LispStruct;>;>;)V", null);
+			mv.visitCode();
+			mv.visitVarInsn(Opcodes.ALOAD, 0);
+			mv.visitFieldInsn(Opcodes.GETSTATIC, "jcl/compiler/real/icg/generator/testground/structures/BarStructureType", "INSTANCE", "Ljcl/compiler/real/icg/generator/testground/structures/BarStructureType;");
+			mv.visitVarInsn(Opcodes.ALOAD, 1);
+			mv.visitVarInsn(Opcodes.ALOAD, 2);
+			mv.visitVarInsn(Opcodes.ALOAD, 3);
+			mv.visitVarInsn(Opcodes.ALOAD, 4);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/icg/generator/testground/structures/BarStructureClass", "<init>", "(Ljcl/LispType;Ljcl/symbols/SymbolStruct;Ljcl/symbols/SymbolStruct;Ljava/util/List;Ljava/util/List;)V", false);
+			mv.visitInsn(Opcodes.RETURN);
+			mv.visitMaxs(6, 5);
+			mv.visitEnd();
+		}
+		{
+			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PROTECTED, "<init>", "(Ljcl/LispType;Ljcl/symbols/SymbolStruct;Ljcl/symbols/SymbolStruct;Ljava/util/List;Ljava/util/List;)V", "(Ljcl/LispType;Ljcl/symbols/SymbolStruct<*>;Ljcl/symbols/SymbolStruct<*>;Ljava/util/List<Ljava/lang/Class<+Ljcl/LispStruct;>;>;Ljava/util/List<Ljava/lang/Class<+Ljcl/LispStruct;>;>;)V", null);
+			mv.visitCode();
+			mv.visitVarInsn(Opcodes.ALOAD, 0);
+			mv.visitVarInsn(Opcodes.ALOAD, 1);
+			mv.visitVarInsn(Opcodes.ALOAD, 2);
+			mv.visitVarInsn(Opcodes.ALOAD, 3);
+			mv.visitVarInsn(Opcodes.ALOAD, 4);
+			mv.visitVarInsn(Opcodes.ALOAD, 5);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/icg/generator/testground/structures/FooStructureClass", "<init>", "(Ljcl/LispType;Ljcl/symbols/SymbolStruct;Ljcl/symbols/SymbolStruct;Ljava/util/List;Ljava/util/List;)V", false);
+			mv.visitInsn(Opcodes.RETURN);
+			mv.visitMaxs(6, 6);
+			mv.visitEnd();
+		}
+		{
+			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC, "newInstance", "()Ljcl/structures/StructureObjectStruct;", null, null);
+			mv.visitCode();
+			mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/icg/generator/testground/structures/BarStructureObject");
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/icg/generator/testground/structures/BarStructureObject", "<init>", "()V", false);
+			mv.visitInsn(Opcodes.ARETURN);
+			mv.visitMaxs(2, 1);
+			mv.visitEnd();
+		}
+		{
+			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_STATIC, "<clinit>", "()V", null, null);
+			mv.visitCode();
+			mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/icg/generator/testground/structures/BarStructureClass");
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitTypeInsn(Opcodes.NEW, "jcl/symbols/SymbolStruct");
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitLdcInsn("MAKE-BAR");
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/symbols/SymbolStruct", "<init>", "(Ljava/lang/String;)V", false);
+			mv.visitInsn(Opcodes.ACONST_NULL);
+			mv.visitInsn(Opcodes.ACONST_NULL);
+			mv.visitInsn(Opcodes.ACONST_NULL);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/icg/generator/testground/structures/BarStructureClass", "<init>", "(Ljcl/symbols/SymbolStruct;Ljcl/symbols/SymbolStruct;Ljava/util/List;Ljava/util/List;)V", false);
+			mv.visitFieldInsn(Opcodes.PUTSTATIC, "jcl/compiler/real/icg/generator/testground/structures/BarStructureClass", "INSTANCE", "Ljcl/compiler/real/icg/generator/testground/structures/BarStructureClass;");
+			mv.visitInsn(Opcodes.RETURN);
+			mv.visitMaxs(6, 0);
+			mv.visitEnd();
+		}
+		cw.visitEnd();
+	}
+
+	public static void fooStructureObjectDump() {
+
+		ClassWriter cw = new ClassWriter(0);
+
+		cw.visit(52, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER, "jcl/compiler/real/icg/generator/testground/structures/FooStructureObject", null, "jcl/structures/StructureObjectStruct", null);
+
+		{
+			final FieldVisitor fv = cw.visitField(Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "serialVersionUID", "J", null, new Long(-5612579845485020663L));
+			fv.visitEnd();
+		}
+		{
+			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC, "<init>", "()V", null, null);
+			mv.visitCode();
+			mv.visitVarInsn(Opcodes.ALOAD, 0);
+			mv.visitFieldInsn(Opcodes.GETSTATIC, "jcl/compiler/real/icg/generator/testground/structures/FooStructureClass", "INSTANCE", "Ljcl/compiler/real/icg/generator/testground/structures/FooStructureClass;");
+			mv.visitInsn(Opcodes.ACONST_NULL);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/structures/StructureObjectStruct", "<init>", "(Ljcl/structures/StructureClassStruct;Ljcl/structures/StructureObjectStruct;)V", false);
+			mv.visitVarInsn(Opcodes.ALOAD, 0);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/icg/generator/testground/structures/FooStructureObject", "initSlotsMap", "()V", false);
+			mv.visitInsn(Opcodes.RETURN);
+			mv.visitMaxs(3, 1);
+			mv.visitEnd();
+		}
+		{
+			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, "initSlotsMap", "()V", null, null);
+			mv.visitCode();
+			mv.visitVarInsn(Opcodes.ALOAD, 0);
+			mv.visitFieldInsn(Opcodes.GETFIELD, "jcl/compiler/real/icg/generator/testground/structures/FooStructureObject", "slots", "Ljava/util/Map;");
+			mv.visitTypeInsn(Opcodes.NEW, "jcl/symbols/SymbolStruct");
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitLdcInsn("A");
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/symbols/SymbolStruct", "<init>", "(Ljava/lang/String;)V", false);
+			mv.visitInsn(Opcodes.ACONST_NULL);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", true);
+			mv.visitInsn(Opcodes.POP);
+			mv.visitVarInsn(Opcodes.ALOAD, 0);
+			mv.visitFieldInsn(Opcodes.GETFIELD, "jcl/compiler/real/icg/generator/testground/structures/FooStructureObject", "slots", "Ljava/util/Map;");
+			mv.visitTypeInsn(Opcodes.NEW, "jcl/symbols/SymbolStruct");
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitLdcInsn("B");
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/symbols/SymbolStruct", "<init>", "(Ljava/lang/String;)V", false);
+			mv.visitInsn(Opcodes.ACONST_NULL);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", true);
+			mv.visitInsn(Opcodes.POP);
+			mv.visitVarInsn(Opcodes.ALOAD, 0);
+			mv.visitFieldInsn(Opcodes.GETFIELD, "jcl/compiler/real/icg/generator/testground/structures/FooStructureObject", "slots", "Ljava/util/Map;");
+			mv.visitTypeInsn(Opcodes.NEW, "jcl/symbols/SymbolStruct");
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitLdcInsn("C");
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/symbols/SymbolStruct", "<init>", "(Ljava/lang/String;)V", false);
+			mv.visitInsn(Opcodes.ACONST_NULL);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", true);
+			mv.visitInsn(Opcodes.POP);
+			mv.visitInsn(Opcodes.RETURN);
+			mv.visitMaxs(4, 1);
+			mv.visitEnd();
+		}
+		cw.visitEnd();
+	}
+
+	public static void barStructureObjectDump() {
+
+		ClassWriter cw = new ClassWriter(0);
+
+		cw.visit(52, Opcodes.ACC_PUBLIC + Opcodes.ACC_SUPER, "jcl/compiler/real/icg/generator/testground/structures/BarStructureObject", null, "jcl/structures/StructureObjectStruct", null);
+
+		{
+			final FieldVisitor fv = cw.visitField(Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "serialVersionUID", "J", null, new Long(-8377552736219667545L));
+			fv.visitEnd();
+		}
+		{
+			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC, "<init>", "()V", null, null);
+			mv.visitCode();
+			mv.visitVarInsn(Opcodes.ALOAD, 0);
+			mv.visitFieldInsn(Opcodes.GETSTATIC, "jcl/compiler/real/icg/generator/testground/structures/BarStructureClass", "INSTANCE", "Ljcl/compiler/real/icg/generator/testground/structures/BarStructureClass;");
+			mv.visitFieldInsn(Opcodes.GETSTATIC, "jcl/compiler/real/icg/generator/testground/structures/FooStructureClass", "INSTANCE", "Ljcl/compiler/real/icg/generator/testground/structures/FooStructureClass;");
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/compiler/real/icg/generator/testground/structures/FooStructureClass", "newInstance", "()Ljcl/structures/StructureObjectStruct;", false);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/structures/StructureObjectStruct", "<init>", "(Ljcl/structures/StructureClassStruct;Ljcl/structures/StructureObjectStruct;)V", false);
+			mv.visitVarInsn(Opcodes.ALOAD, 0);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/icg/generator/testground/structures/BarStructureObject", "initSlotsMap", "()V", false);
+			mv.visitInsn(Opcodes.RETURN);
+			mv.visitMaxs(3, 1);
+			mv.visitEnd();
+		}
+		{
+			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, "initSlotsMap", "()V", null, null);
+			mv.visitCode();
+			mv.visitVarInsn(Opcodes.ALOAD, 0);
+			mv.visitFieldInsn(Opcodes.GETFIELD, "jcl/compiler/real/icg/generator/testground/structures/BarStructureObject", "slots", "Ljava/util/Map;");
+			mv.visitTypeInsn(Opcodes.NEW, "jcl/symbols/SymbolStruct");
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitLdcInsn("C");
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/symbols/SymbolStruct", "<init>", "(Ljava/lang/String;)V", false);
+			mv.visitInsn(Opcodes.ACONST_NULL);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", true);
+			mv.visitInsn(Opcodes.POP);
+			mv.visitVarInsn(Opcodes.ALOAD, 0);
+			mv.visitFieldInsn(Opcodes.GETFIELD, "jcl/compiler/real/icg/generator/testground/structures/BarStructureObject", "slots", "Ljava/util/Map;");
+			mv.visitTypeInsn(Opcodes.NEW, "jcl/symbols/SymbolStruct");
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitLdcInsn("D");
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/symbols/SymbolStruct", "<init>", "(Ljava/lang/String;)V", false);
+			mv.visitInsn(Opcodes.ACONST_NULL);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", true);
+			mv.visitInsn(Opcodes.POP);
+			mv.visitVarInsn(Opcodes.ALOAD, 0);
+			mv.visitFieldInsn(Opcodes.GETFIELD, "jcl/compiler/real/icg/generator/testground/structures/BarStructureObject", "slots", "Ljava/util/Map;");
+			mv.visitTypeInsn(Opcodes.NEW, "jcl/symbols/SymbolStruct");
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitLdcInsn("E");
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/symbols/SymbolStruct", "<init>", "(Ljava/lang/String;)V", false);
+			mv.visitInsn(Opcodes.ACONST_NULL);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", true);
+			mv.visitInsn(Opcodes.POP);
+			mv.visitInsn(Opcodes.RETURN);
+			mv.visitMaxs(4, 1);
+			mv.visitEnd();
+		}
+		cw.visitEnd();
+	}
+
 
 	/**
 	 * This method processes all the info needed to create a new definition of struct.

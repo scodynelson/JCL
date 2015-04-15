@@ -12,6 +12,7 @@ import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.printer.Printer;
+import jcl.structures.StructureClassStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
@@ -67,6 +68,15 @@ public class DefstructExpander extends MacroFunctionExpander<LispStruct> {
 			throw new ProgramErrorException("%DEFSTRUCT: Include structure name must be a symbol or NIL. Got: " + printedObject);
 		}
 
+		StructureClassStruct includeStructureClass = null;
+		if (includeStructureSymbol != null) {
+			includeStructureClass = includeStructureSymbol.getStructureClass();
+			if (includeStructureClass == null) {
+				final String printedObject = printer.print(third);
+				throw new ProgramErrorException("%DEFSTRUCT: Include structure name '" + printedObject + "' must have an already defined structure class.");
+			}
+		}
+
 		final ListStruct formRestRestRest = formRestRest.getRest();
 
 		final LispStruct fourth = formRestRestRest.getFirst();
@@ -106,7 +116,7 @@ public class DefstructExpander extends MacroFunctionExpander<LispStruct> {
 			slots.add(slotSymbol);
 		}
 
-		return new DefstructStruct(structureSymbol, includeStructureSymbol, defaultConstructorSymbol, printerSymbol, slots);
+		return new DefstructStruct(structureSymbol, includeStructureClass, defaultConstructorSymbol, printerSymbol, slots);
 	}
 
 	@Override

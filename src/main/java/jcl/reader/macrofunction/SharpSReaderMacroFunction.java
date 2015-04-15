@@ -11,7 +11,6 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
-import jcl.classes.StructureClassStruct;
 import jcl.conditions.exceptions.ReaderErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ListStruct;
@@ -21,6 +20,7 @@ import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
 import jcl.reader.struct.ReadtableStruct;
 import jcl.streams.ReadPeekResult;
+import jcl.structures.StructureClassStruct;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;

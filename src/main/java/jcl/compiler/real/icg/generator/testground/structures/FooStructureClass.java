@@ -8,10 +8,10 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.LispType;
-import jcl.classes.StructureClassStruct;
-import jcl.classes.StructureObjectStruct;
 import jcl.compiler.real.icg.generator.testground.TestGroundLambdaFunction;
 import jcl.functions.FunctionStruct;
+import jcl.structures.StructureClassStruct;
+import jcl.structures.StructureObjectStruct;
 
 public class FooStructureClass extends StructureClassStruct {
 

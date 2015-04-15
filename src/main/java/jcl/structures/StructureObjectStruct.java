@@ -1,4 +1,4 @@
-package jcl.classes;
+package jcl.structures;
 
 import java.util.HashMap;
 import java.util.Map;

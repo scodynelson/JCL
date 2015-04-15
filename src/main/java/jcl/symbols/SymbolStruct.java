@@ -6,7 +6,6 @@ import java.util.Stack;
 
 import jcl.LispStruct;
 import jcl.classes.BuiltInClassStruct;
-import jcl.classes.StructureClassStruct;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.functions.expanders.CompilerMacroFunctionExpander;
@@ -15,6 +14,7 @@ import jcl.functions.expanders.SymbolMacroExpander;
 import jcl.lists.NullStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
+import jcl.structures.StructureClassStruct;
 import jcl.types.SymbolType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -200,7 +200,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		return !lexicalValueStack.isEmpty() || !dynamicValueStack.isEmpty();
 	}
 
-//	/**
+	//	/**
 //	 * Getter for symbol {@link #value} property.
 //	 *
 //	 * @return symbol {@link #value} property
@@ -271,7 +271,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		return dynamicValueStack.peek();
 	}
 
-//	/**
+	//	/**
 //	 * Setter for symbol {@link #value} property.
 //	 *
 //	 * @param value
@@ -329,7 +329,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		return !functionStack.isEmpty();
 	}
 
-//	/**
+	//	/**
 //	 * Getter for symbol {@link #function} property.
 //	 *
 //	 * @return symbol {@link #function} property
@@ -355,7 +355,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		return functionStack.peek();
 	}
 
-//	/**
+	//	/**
 //	 * Setter for symbol {@link #function} property.
 //	 *
 //	 * @param function
@@ -416,7 +416,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		this.compilerMacroFunctionExpander = compilerMacroFunctionExpander;
 	}
 
-//	/**
+	//	/**
 //	 * Getter for symbol {@link #symbolMacroExpander} property.
 //	 *
 //	 * @return symbol {@link #symbolMacroExpander} property
@@ -428,7 +428,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 		return symbolMacroExpanderStack.peek();
 	}
 
-//	/**
+	//	/**
 //	 * Setter for symbol {@link #symbolMacroExpander} property.
 //	 *
 //	 * @param symbolMacroExpander
@@ -540,14 +540,14 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(name)
+				.append(name)
 //		                            .append(symbolPackage)
 //		                            .append(functionStack)
-		                            .append(properties)
+				.append(properties)
 //		                            .append(macroFunctionExpander)
 //		                            .append(compilerMacroFunctionExpander)
 //		                            .append(symbolMacroExpanderStack)
-		                            .toHashCode();
+				.toHashCode();
 //		                            .append(lexicalValueStack) TODO: why does this cause explosions???
 //		                            .append(dynamicValueStack) TODO: why does this cause explosions???
 	}

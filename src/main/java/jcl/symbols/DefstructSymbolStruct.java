@@ -1,7 +1,7 @@
 package jcl.symbols;
 
-import jcl.classes.StructureObjectStruct;
 import jcl.packages.PackageStruct;
+import jcl.structures.StructureObjectStruct;
 
 public class DefstructSymbolStruct extends SymbolStruct<StructureObjectStruct> {
 

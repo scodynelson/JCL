@@ -9,8 +9,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.classes.StructureClassStruct;
-import jcl.classes.StructureObjectStruct;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
@@ -21,6 +19,8 @@ import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.packages.GlobalPackageStruct;
+import jcl.structures.StructureClassStruct;
+import jcl.structures.StructureObjectStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.stereotype.Component;
 

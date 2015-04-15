@@ -4,8 +4,8 @@
 
 package jcl.compiler.real.icg.generator.testground.structures;
 
-import jcl.classes.StructureObjectStruct;
 import jcl.compiler.real.icg.generator.testground.TestGroundLambdaFunction;
+import jcl.structures.StructureObjectStruct;
 import jcl.symbols.SymbolStruct;
 
 public class FooStructureObject extends StructureObjectStruct {

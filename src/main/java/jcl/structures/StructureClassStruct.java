@@ -1,9 +1,10 @@
-package jcl.classes;
+package jcl.structures;
 
 import java.util.List;
 
 import jcl.LispStruct;
 import jcl.LispType;
+import jcl.classes.ClassStruct;
 import jcl.functions.FunctionStruct;
 import jcl.types.StructureClassType;
 import org.apache.commons.lang3.builder.EqualsBuilder;

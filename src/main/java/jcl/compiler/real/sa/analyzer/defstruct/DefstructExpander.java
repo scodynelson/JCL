@@ -1,4 +1,4 @@
-package jcl.compiler.real.sa.analyzer;
+package jcl.compiler.real.sa.analyzer.defstruct;
 
 import java.util.ArrayList;
 import java.util.List;

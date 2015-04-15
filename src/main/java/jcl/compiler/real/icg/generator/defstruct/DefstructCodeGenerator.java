@@ -1,4 +1,4 @@
-package jcl.compiler.real.icg.generator.special;
+package jcl.compiler.real.icg.generator.defstruct;
 
 import java.util.Stack;
 

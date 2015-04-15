@@ -127,6 +127,8 @@
 
 		<!--<entry key="jcl.compiler.real.struct.specialoperator.declare.DeclareStruct" value-ref=""/>-->
 
+		<!--<entry key="jcl.compiler.real.struct.specialoperator.defstruct.DefstructStruct" value-ref="defstructCodeGenerator"/>-->
+
 		<entry key="jcl.compiler.real.struct.specialoperator.go.GoIntegerStruct" value-ref="goCodeGenerator"/>
 		<entry key="jcl.compiler.real.struct.specialoperator.go.GoSymbolStruct" value-ref="goCodeGenerator"/>
 

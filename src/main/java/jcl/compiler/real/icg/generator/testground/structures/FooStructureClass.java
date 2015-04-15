@@ -8,26 +8,25 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.LispType;
-import jcl.compiler.real.icg.generator.testground.TestGroundLambdaFunction;
-import jcl.functions.FunctionStruct;
 import jcl.structures.StructureClassStruct;
 import jcl.structures.StructureObjectStruct;
+import jcl.symbols.SymbolStruct;
 
 public class FooStructureClass extends StructureClassStruct {
 
 	public static final FooStructureClass INSTANCE
-			= new FooStructureClass(new TestGroundLambdaFunction(null), null, null);
+			= new FooStructureClass(new SymbolStruct<>("MAKE-FOO"), null, null, null);
 
 	private static final long serialVersionUID = -7548921709400992640L;
 
-	protected FooStructureClass(final FunctionStruct defaultConstructor,
+	protected FooStructureClass(final SymbolStruct<?> defaultConstructorSymbol, final SymbolStruct<?> printerSymbol,
 	                            final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
-		this(FooStructureType.INSTANCE, defaultConstructor, directSuperClasses, subClasses);
+		this(FooStructureType.INSTANCE, defaultConstructorSymbol, printerSymbol, directSuperClasses, subClasses);
 	}
 
-	protected FooStructureClass(final LispType type, final FunctionStruct defaultConstructor,
+	protected FooStructureClass(final LispType type, final SymbolStruct<?> defaultConstructorSymbol, final SymbolStruct<?> printerSymbol,
 	                            final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
-		super(type, defaultConstructor, directSuperClasses, subClasses);
+		super(type, defaultConstructorSymbol, printerSymbol, directSuperClasses, subClasses);
 	}
 
 	@Override

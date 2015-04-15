@@ -91,9 +91,14 @@ public class SharpSReaderMacroFunction extends ReaderMacroFunction {
 			throw new ReaderErrorException(structureType + " is not a defined structure type for symbol: " + structureSymbol);
 		}
 
-		final FunctionStruct defaultConstructor = structureClass.getDefaultConstructor();
-		if (defaultConstructor == null) {
+		final SymbolStruct<?> defaultConstructorSymbol = structureClass.getDefaultConstructorSymbol();
+		if (defaultConstructorSymbol == null) {
 			throw new ReaderErrorException("The " + structureType + " structure does not have a default constructor.");
+		}
+
+		final FunctionStruct defaultConstructor = defaultConstructorSymbol.getFunction();
+		if (defaultConstructor == null) {
+			throw new ReaderErrorException("The " + structureType + " structure default constructor is undefined.");
 		}
 
 		final ListStruct arguments = listToken.getRest();

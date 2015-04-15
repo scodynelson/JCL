@@ -4,7 +4,6 @@
 
 package jcl.compiler.real.icg.generator.testground.structures;
 
-import jcl.compiler.real.icg.generator.testground.TestGroundLambdaFunction;
 import jcl.structures.StructureObjectStruct;
 import jcl.symbols.SymbolStruct;
 
@@ -13,7 +12,7 @@ public class FooStructureObject extends StructureObjectStruct {
 	private static final long serialVersionUID = -5612579845485020663L;
 
 	public FooStructureObject() {
-		super(FooStructureClass.INSTANCE, new TestGroundLambdaFunction(null), null);
+		super(FooStructureClass.INSTANCE, null);
 		initSlotsMap();
 	}
 

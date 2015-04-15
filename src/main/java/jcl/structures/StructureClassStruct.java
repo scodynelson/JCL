@@ -5,7 +5,7 @@ import java.util.List;
 import jcl.LispStruct;
 import jcl.LispType;
 import jcl.classes.ClassStruct;
-import jcl.functions.FunctionStruct;
+import jcl.symbols.SymbolStruct;
 import jcl.types.StructureClassType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -19,21 +19,25 @@ public abstract class StructureClassStruct extends ClassStruct {
 
 	private static final long serialVersionUID = 8418743690243529133L;
 
-	protected final FunctionStruct defaultConstructor;
+	protected final SymbolStruct<?> defaultConstructorSymbol;
+
+	protected final SymbolStruct<?> printerSymbol;
 
 	/**
 	 * Protected constructor.
 	 *
-	 * @param defaultConstructor
-	 * 		the default constructor function for this structure class
+	 * @param defaultConstructorSymbol
+	 * 		the default constructor function symbol for this structure class
+	 * @param printerSymbol
+	 * 		the printer function symbol for this structure class
 	 * @param directSuperClasses
 	 * 		the direct super classes
 	 * @param subClasses
 	 * 		the subclasses
 	 */
-	protected StructureClassStruct(final FunctionStruct defaultConstructor,
+	protected StructureClassStruct(final SymbolStruct<?> defaultConstructorSymbol, final SymbolStruct<?> printerSymbol,
 	                               final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
-		this(StructureClassType.INSTANCE, defaultConstructor, directSuperClasses, subClasses);
+		this(StructureClassType.INSTANCE, defaultConstructorSymbol, printerSymbol, directSuperClasses, subClasses);
 	}
 
 	/**
@@ -41,21 +45,24 @@ public abstract class StructureClassStruct extends ClassStruct {
 	 *
 	 * @param type
 	 * 		the type of the structure class object
-	 * @param defaultConstructor
-	 * 		the default constructor function for this structure class
+	 * @param defaultConstructorSymbol
+	 * 		the default constructor function symbol for this structure class
+	 * @param printerSymbol
+	 * 		the printer function symbol for this structure class
 	 * @param directSuperClasses
 	 * 		the direct super classes
 	 * @param subClasses
 	 * 		the subclasses
 	 */
-	protected StructureClassStruct(final LispType type, final FunctionStruct defaultConstructor,
+	protected StructureClassStruct(final LispType type, final SymbolStruct<?> defaultConstructorSymbol, final SymbolStruct<?> printerSymbol,
 	                               final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		super(type, directSuperClasses, subClasses);
-		this.defaultConstructor = defaultConstructor;
+		this.defaultConstructorSymbol = defaultConstructorSymbol;
+		this.printerSymbol = printerSymbol;
 	}
 
-	public FunctionStruct getDefaultConstructor() {
-		return defaultConstructor;
+	public SymbolStruct<?> getDefaultConstructorSymbol() {
+		return defaultConstructorSymbol;
 	}
 
 	public abstract StructureObjectStruct newInstance();
@@ -63,7 +70,8 @@ public abstract class StructureClassStruct extends ClassStruct {
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(defaultConstructor)
+		                            .append(defaultConstructorSymbol)
+		                            .append(printerSymbol)
 		                            .toHashCode();
 	}
 
@@ -80,13 +88,15 @@ public abstract class StructureClassStruct extends ClassStruct {
 		}
 		final StructureClassStruct rhs = (StructureClassStruct) obj;
 		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(defaultConstructor, rhs.defaultConstructor)
+		                          .append(defaultConstructorSymbol, rhs.defaultConstructorSymbol)
+		                          .append(printerSymbol, rhs.printerSymbol)
 		                          .isEquals();
 	}
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(defaultConstructor)
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(defaultConstructorSymbol)
+		                                                                .append(printerSymbol)
 		                                                                .toString();
 	}
 }

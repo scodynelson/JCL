@@ -4,11 +4,9 @@
 
 package jcl.compiler.real.struct.specialoperator.defstruct;
 
-import java.util.Map;
+import java.util.List;
 
-import jcl.LispStruct;
 import jcl.compiler.real.struct.CompilerSpecialOperatorStruct;
-import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -19,53 +17,53 @@ public class DefstructStruct extends CompilerSpecialOperatorStruct {
 
 	private static final long serialVersionUID = -7747095883491636502L;
 
-	private final SymbolStruct<?> symbol;
+	private final SymbolStruct<?> structureSymbol;
 
-	private final SymbolStruct<?> includeSymbol;
+	private final SymbolStruct<?> includeStructureSymbol;
 
-	private final LambdaStruct defaultConstructor;
+	private final SymbolStruct<?> defaultConstructorSymbol;
 
-	private final LambdaStruct printer;
+	private final SymbolStruct<?> printerSymbol;
 
-	private final Map<SymbolStruct<?>, LispStruct> slots;
+	private final List<SymbolStruct<?>> slots;
 
-	public DefstructStruct(final SymbolStruct<?> symbol, final SymbolStruct<?> includeSymbol,
-	                       final LambdaStruct defaultConstructor, final LambdaStruct printer,
-	                       final Map<SymbolStruct<?>, LispStruct> slots) {
-		this.symbol = symbol;
-		this.includeSymbol = includeSymbol;
-		this.defaultConstructor = defaultConstructor;
-		this.printer = printer;
+	public DefstructStruct(final SymbolStruct<?> structureSymbol, final SymbolStruct<?> includeStructureSymbol,
+	                       final SymbolStruct<?> defaultConstructorSymbol, final SymbolStruct<?> printerSymbol,
+	                       final List<SymbolStruct<?>> slots) {
+		this.structureSymbol = structureSymbol;
+		this.includeStructureSymbol = includeStructureSymbol;
+		this.defaultConstructorSymbol = defaultConstructorSymbol;
+		this.printerSymbol = printerSymbol;
 		this.slots = slots;
 	}
 
-	public SymbolStruct<?> getSymbol() {
-		return symbol;
+	public SymbolStruct<?> getStructureSymbol() {
+		return structureSymbol;
 	}
 
-	public SymbolStruct<?> getIncludeSymbol() {
-		return includeSymbol;
+	public SymbolStruct<?> getIncludeStructureSymbol() {
+		return includeStructureSymbol;
 	}
 
-	public LambdaStruct getDefaultConstructor() {
-		return defaultConstructor;
+	public SymbolStruct<?> getDefaultConstructorSymbol() {
+		return defaultConstructorSymbol;
 	}
 
-	public LambdaStruct getPrinter() {
-		return printer;
+	public SymbolStruct<?> getPrinterSymbol() {
+		return printerSymbol;
 	}
 
-	public Map<SymbolStruct<?>, LispStruct> getSlots() {
+	public List<SymbolStruct<?>> getSlots() {
 		return slots;
 	}
 
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(symbol)
-		                            .append(includeSymbol)
-		                            .append(defaultConstructor)
-		                            .append(printer)
+		                            .append(structureSymbol)
+		                            .append(includeStructureSymbol)
+		                            .append(defaultConstructorSymbol)
+		                            .append(printerSymbol)
 		                            .append(slots)
 		                            .toHashCode();
 	}
@@ -83,20 +81,20 @@ public class DefstructStruct extends CompilerSpecialOperatorStruct {
 		}
 		final DefstructStruct rhs = (DefstructStruct) obj;
 		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(symbol, rhs.symbol)
-		                          .append(includeSymbol, rhs.includeSymbol)
-		                          .append(defaultConstructor, rhs.defaultConstructor)
-		                          .append(printer, rhs.printer)
+		                          .append(structureSymbol, rhs.structureSymbol)
+		                          .append(includeStructureSymbol, rhs.includeStructureSymbol)
+		                          .append(defaultConstructorSymbol, rhs.defaultConstructorSymbol)
+		                          .append(printerSymbol, rhs.printerSymbol)
 		                          .append(slots, rhs.slots)
 		                          .isEquals();
 	}
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(symbol)
-		                                                                .append(includeSymbol)
-		                                                                .append(defaultConstructor)
-		                                                                .append(printer)
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(structureSymbol)
+		                                                                .append(includeStructureSymbol)
+		                                                                .append(defaultConstructorSymbol)
+		                                                                .append(printerSymbol)
 		                                                                .append(slots)
 		                                                                .toString();
 	}

@@ -8,25 +8,24 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.LispType;
-import jcl.compiler.real.icg.generator.testground.TestGroundLambdaFunction;
-import jcl.functions.FunctionStruct;
 import jcl.structures.StructureObjectStruct;
+import jcl.symbols.SymbolStruct;
 
 public class BarStructureClass extends FooStructureClass {
 
 	public static final BarStructureClass INSTANCE
-			= new BarStructureClass(new TestGroundLambdaFunction(null), null, null);
+			= new BarStructureClass(new SymbolStruct<>("MAKE-BAR"), null, null, null);
 
 	private static final long serialVersionUID = -3178191979068838368L;
 
-	protected BarStructureClass(final FunctionStruct defaultConstructor,
+	protected BarStructureClass(final SymbolStruct<?> defaultConstructorSymbol, final SymbolStruct<?> printerSymbol,
 	                            final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
-		this(BarStructureType.INSTANCE, defaultConstructor, directSuperClasses, subClasses);
+		this(BarStructureType.INSTANCE, defaultConstructorSymbol, printerSymbol, directSuperClasses, subClasses);
 	}
 
-	protected BarStructureClass(final LispType type, final FunctionStruct defaultConstructor,
+	protected BarStructureClass(final LispType type, final SymbolStruct<?> defaultConstructorSymbol, final SymbolStruct<?> printerSymbol,
 	                            final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
-		super(type, defaultConstructor, directSuperClasses, subClasses);
+		super(type, defaultConstructorSymbol, printerSymbol, directSuperClasses, subClasses);
 	}
 
 	@Override

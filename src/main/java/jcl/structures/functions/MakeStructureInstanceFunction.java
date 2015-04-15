@@ -4,7 +4,6 @@
 
 package jcl.structures.functions;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -43,16 +42,14 @@ public final class MakeStructureInstanceFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
-		final SymbolStruct<?> symbolArgSymbol = new SymbolStruct<>("SYM", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation symbolArgAllocation = new ParameterAllocation(0);
-		final RequiredBinding symbolArgRequiredBinding = new RequiredBinding(symbolArgSymbol, symbolArgAllocation);
-		final List<RequiredBinding> requiredBindings = Collections.singletonList(symbolArgRequiredBinding);
+		final SymbolStruct<?> structSymArgSymbol = new SymbolStruct<>("STRUCT-SYM", GlobalPackageStruct.COMMON_LISP);
+		final ParameterAllocation structSymArgAllocation = new ParameterAllocation(0);
+		final RequiredBinding structSymArgRequiredBinding = new RequiredBinding(structSymArgSymbol, structSymArgAllocation);
+		final List<RequiredBinding> requiredBindings = Collections.singletonList(structSymArgRequiredBinding);
 
 		final List<OptionalBinding> optionalBindings = Collections.emptyList();
 
-		final SymbolStruct<?> argsRestArgSymbol = new SymbolStruct<>("ARGS", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation argsRestArgArgAllocation = new ParameterAllocation(0);
-		final RestBinding restBinding = new RestBinding(argsRestArgSymbol, argsRestArgArgAllocation);
+		final RestBinding restBinding = null;
 
 		final List<KeyBinding> keyBindings = Collections.emptyList();
 		final boolean allowOtherKeys = false;
@@ -65,19 +62,17 @@ public final class MakeStructureInstanceFunction extends FunctionStruct {
 	public LispStruct apply(final LispStruct... lispStructs) {
 		getFunctionBindings(lispStructs);
 
-		final SymbolStruct<?> symbol = (SymbolStruct) lispStructs[0];
-		final LispStruct[] arguments = Arrays.copyOfRange(lispStructs, 1, lispStructs.length);
-		return makeStructureInstance(symbol, arguments);
+		final SymbolStruct<?> structSymbol = (SymbolStruct) lispStructs[0];
+		return makeStructureInstance(structSymbol);
 	}
 
-	public StructureObjectStruct makeStructureInstance(final SymbolStruct<?> symbol, final LispStruct... args) {
+	public StructureObjectStruct makeStructureInstance(final SymbolStruct<?> structSymbol) {
 
-		final StructureClassStruct structureClass = symbol.getStructureClass();
+		final StructureClassStruct structureClass = structSymbol.getStructureClass();
 		if (structureClass == null) {
-			throw new ProgramErrorException("Provided symbol '" + symbol + "' does not have a defined structure-class.");
+			throw new ProgramErrorException("Provided symbol '" + structSymbol + "' does not have a defined structure-class.");
 		}
 
-		// TODO
-		return structureClass.newInstance(null);
+		return structureClass.newInstance();
 	}
 }

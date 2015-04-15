@@ -1,12 +1,10 @@
 package jcl.classes;
 
 import java.util.List;
-import java.util.Map;
 
 import jcl.LispStruct;
 import jcl.LispType;
 import jcl.functions.FunctionStruct;
-import jcl.symbols.SymbolStruct;
 import jcl.types.StructureClassType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -22,23 +20,19 @@ public abstract class StructureClassStruct extends ClassStruct {
 
 	protected final FunctionStruct defaultConstructor;
 
-	protected final FunctionStruct printer;
-
 	/**
 	 * Protected constructor.
 	 *
 	 * @param defaultConstructor
 	 * 		the default constructor function for this structure class
-	 * @param printer
-	 * 		the printer function for this structure class
 	 * @param directSuperClasses
 	 * 		the direct super classes
 	 * @param subClasses
 	 * 		the subclasses
 	 */
-	protected StructureClassStruct(final FunctionStruct defaultConstructor, final FunctionStruct printer,
+	protected StructureClassStruct(final FunctionStruct defaultConstructor,
 	                               final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
-		this(StructureClassType.INSTANCE, defaultConstructor, printer, directSuperClasses, subClasses);
+		this(StructureClassType.INSTANCE, defaultConstructor, directSuperClasses, subClasses);
 	}
 
 	/**
@@ -48,36 +42,27 @@ public abstract class StructureClassStruct extends ClassStruct {
 	 * 		the type of the structure class object
 	 * @param defaultConstructor
 	 * 		the default constructor function for this structure class
-	 * @param printer
-	 * 		the printer function for this structure class
 	 * @param directSuperClasses
 	 * 		the direct super classes
 	 * @param subClasses
 	 * 		the subclasses
 	 */
-	protected StructureClassStruct(final LispType type, final FunctionStruct defaultConstructor, final FunctionStruct printer,
+	protected StructureClassStruct(final LispType type, final FunctionStruct defaultConstructor,
 	                               final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		super(type, directSuperClasses, subClasses);
 		this.defaultConstructor = defaultConstructor;
-		this.printer = printer;
 	}
 
 	public FunctionStruct getDefaultConstructor() {
 		return defaultConstructor;
 	}
 
-	public FunctionStruct getPrinter() {
-		return printer;
-	}
-
-	// TODO: validation on slots? are they actually stored on the instance? Probably not...
-	public abstract StructureObjectStruct newInstance(final Map<SymbolStruct<?>, LispStruct> slots);
+	public abstract StructureObjectStruct newInstance();
 
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder().appendSuper(super.hashCode())
 		                            .append(defaultConstructor)
-		                            .append(printer)
 		                            .toHashCode();
 	}
 
@@ -95,14 +80,12 @@ public abstract class StructureClassStruct extends ClassStruct {
 		final StructureClassStruct rhs = (StructureClassStruct) obj;
 		return new EqualsBuilder().appendSuper(super.equals(obj))
 		                          .append(defaultConstructor, rhs.defaultConstructor)
-		                          .append(printer, rhs.printer)
 		                          .isEquals();
 	}
 
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(defaultConstructor)
-		                                                                .append(printer)
 		                                                                .toString();
 	}
 }

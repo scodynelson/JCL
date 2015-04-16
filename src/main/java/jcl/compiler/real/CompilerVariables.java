@@ -7,8 +7,8 @@ package jcl.compiler.real;
 import java.math.BigInteger;
 
 import jcl.LispStruct;
-import jcl.functions.functions.FuncallFunction;
 import jcl.functions.FunctionStruct;
+import jcl.functions.functions.FuncallFunction;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.numbers.IntegerStruct;
@@ -36,17 +36,6 @@ public interface CompilerVariables {
 	VariableStruct<BooleanStruct> LOAD_PRINT = new VariableStruct<>("*LOAD-PRINT*", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);
 	VariableStruct<BooleanStruct> LOAD_VERBOSE = new VariableStruct<>("*LOAD-VERBOSE*", GlobalPackageStruct.COMMON_LISP, NILStruct.INSTANCE);
 	VariableStruct<?> MODULES = new VariableStruct<>("*MODULES*", GlobalPackageStruct.COMMON_LISP, null);
-
-	VariableStruct<?> DASH = new VariableStruct<>("-", GlobalPackageStruct.COMMON_LISP, null);
-	VariableStruct<?> PLUS = new VariableStruct<>("+", GlobalPackageStruct.COMMON_LISP, null);
-	VariableStruct<?> PLUS_PLUS = new VariableStruct<>("++", GlobalPackageStruct.COMMON_LISP, null);
-	VariableStruct<?> PLUS_PLUS_PLUS = new VariableStruct<>("+++", GlobalPackageStruct.COMMON_LISP, null);
-	VariableStruct<?> STAR = new VariableStruct<>("*", GlobalPackageStruct.COMMON_LISP, null);
-	VariableStruct<?> STAR_STAR = new VariableStruct<>("**", GlobalPackageStruct.COMMON_LISP, null);
-	VariableStruct<?> STAR_STAR_STAR = new VariableStruct<>("***", GlobalPackageStruct.COMMON_LISP, null);
-	VariableStruct<?> SLASH = new VariableStruct<>("/", GlobalPackageStruct.COMMON_LISP, null);
-	VariableStruct<?> SLASH_SLASH = new VariableStruct<>("//", GlobalPackageStruct.COMMON_LISP, null);
-	VariableStruct<?> SLASH_SLASH_SLASH = new VariableStruct<>("///", GlobalPackageStruct.COMMON_LISP, null);
 
 	VariableStruct<BooleanStruct> COMPILE_TOP_LEVEL = new VariableStruct<>("*COMPILE-TOP-LEVEL*", GlobalPackageStruct.SYSTEM, NILStruct.INSTANCE);
 	VariableStruct<BooleanStruct> CONVERTING_FOR_INTERPRETER = new VariableStruct<>("*CONVERTING-FOR-INTERPRETER*", GlobalPackageStruct.SYSTEM, NILStruct.INSTANCE);

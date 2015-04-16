@@ -46,6 +46,7 @@ import jcl.symbols.SymbolConstants;
 import jcl.symbols.SymbolStruct;
 import jcl.symbols.functions.SetSymbolFunctionFunction;
 import jcl.symbols.functions.SymbolFunctionFunction;
+import jcl.system.repl.REPLVariables;
 
 public interface CommonLispSymbols {
 
@@ -182,16 +183,16 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> TERMINAL_IO_VAR = StreamVariables.TERMINAL_IO;
 	SymbolStruct<?> TRACE_OUTPUT_VAR = StreamVariables.TRACE_OUTPUT;
 
-	SymbolStruct<?> STAR = CompilerVariables.STAR;
-	SymbolStruct<?> STAR_STAR = CompilerVariables.STAR_STAR;
-	SymbolStruct<?> STAR_STAR_STAR = CompilerVariables.STAR_STAR_STAR;
-	SymbolStruct<?> PLUS = CompilerVariables.PLUS;
-	SymbolStruct<?> PLUS_PLUS = CompilerVariables.PLUS_PLUS;
-	SymbolStruct<?> PLUS_PLUS_PLUS = CompilerVariables.PLUS_PLUS_PLUS;
-	SymbolStruct<?> DASH = CompilerVariables.DASH;
-	SymbolStruct<?> SLASH = CompilerVariables.SLASH;
-	SymbolStruct<?> SLASH_SLASH = CompilerVariables.SLASH_SLASH;
-	SymbolStruct<?> SLASH_SLASH_SLASH = CompilerVariables.SLASH_SLASH_SLASH;
+	SymbolStruct<?> STAR = REPLVariables.STAR;
+	SymbolStruct<?> STAR_STAR = REPLVariables.STAR_STAR;
+	SymbolStruct<?> STAR_STAR_STAR = REPLVariables.STAR_STAR_STAR;
+	SymbolStruct<?> PLUS = REPLVariables.PLUS;
+	SymbolStruct<?> PLUS_PLUS = REPLVariables.PLUS_PLUS;
+	SymbolStruct<?> PLUS_PLUS_PLUS = REPLVariables.PLUS_PLUS_PLUS;
+	SymbolStruct<?> DASH = REPLVariables.DASH;
+	SymbolStruct<?> SLASH = REPLVariables.SLASH;
+	SymbolStruct<?> SLASH_SLASH = REPLVariables.SLASH_SLASH;
+	SymbolStruct<?> SLASH_SLASH_SLASH = REPLVariables.SLASH_SLASH_SLASH;
 
 	SymbolStruct<?> NOT_EQUAL_SIGN = null;
 	SymbolStruct<?> ONE_PLUS = null;

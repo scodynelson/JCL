@@ -26,6 +26,7 @@ import jcl.streams.CharacterStreamStruct;
 import jcl.streams.FileStreamStruct;
 import jcl.streams.InputStream;
 import jcl.streams.ReadPeekResult;
+import jcl.structures.StructureObjectStruct;
 import jcl.system.classloaders.CompilerClassLoader;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -164,21 +165,27 @@ public class ReadEvalPrint {
 					if (whatRead != null) {
 //						generatorTest();
 
-						try {
-							final SemanticAnalyzer sa = context.getBean(SemanticAnalyzer.class);
-							whatAnalyzed = sa.analyze(whatRead);
-//
-							if (whatAnalyzed != null) {
-//								LOGGER.debug("ANALYZED:");
-//								LOGGER.debug("{}", whatAnalyzed);
-							} else {
-								LOGGER.warn("; WARNING: Null response from analyzer");
+						if (whatRead instanceof StructureObjectStruct) {
+							final String printedResult = printer.print(whatRead);
+							LOGGER.info(printedResult);
+						} else {
+
+							try {
+								final SemanticAnalyzer sa = context.getBean(SemanticAnalyzer.class);
+								whatAnalyzed = sa.analyze(whatRead);
+								//
+								if (whatAnalyzed != null) {
+									//								LOGGER.debug("ANALYZED:");
+									//								LOGGER.debug("{}", whatAnalyzed);
+								} else {
+									LOGGER.warn("; WARNING: Null response from analyzer");
+								}
+							} catch (final ConditionException ex) {
+								LOGGER.warn("; WARNING: Condition Exception condition during Generation -> ", ex);
+							} catch (final Exception ex) {
+								LOGGER.warn("; WARNING: Exception condition during Analysis -> ", ex);
+								break;
 							}
-						} catch (final ConditionException ex) {
-							LOGGER.warn("; WARNING: Condition Exception condition during Generation -> ", ex);
-						} catch (final Exception ex) {
-							LOGGER.warn("; WARNING: Exception condition during Analysis -> ", ex);
-							break;
 						}
 					}
 					if (whatAnalyzed != null) {

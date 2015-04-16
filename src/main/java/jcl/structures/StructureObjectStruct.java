@@ -1,6 +1,6 @@
 package jcl.structures;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import jcl.LispStruct;
@@ -21,12 +21,16 @@ public class StructureObjectStruct implements LispStruct {
 
 	protected final StructureClassStruct structureClass;
 
+	protected final SymbolStruct<?> structureSymbol;
+
 	protected final StructureObjectStruct parentStructure;
 
-	protected final Map<SymbolStruct<?>, LispStruct> slots = new HashMap<>();
+	protected final Map<SymbolStruct<?>, LispStruct> slots = new LinkedHashMap<>();
 
-	protected StructureObjectStruct(final StructureClassStruct structureClass, final StructureObjectStruct parentStructure) {
+	protected StructureObjectStruct(final StructureClassStruct structureClass, final SymbolStruct<?> structureSymbol,
+	                                final StructureObjectStruct parentStructure) {
 		this.structureClass = structureClass;
+		this.structureSymbol = structureSymbol;
 		this.parentStructure = parentStructure;
 	}
 
@@ -34,12 +38,16 @@ public class StructureObjectStruct implements LispStruct {
 		return structureClass;
 	}
 
+	public SymbolStruct<?> getStructureSymbol() {
+		return structureSymbol;
+	}
+
 	public StructureObjectStruct getParentStructure() {
 		return parentStructure;
 	}
 
 	public Map<SymbolStruct<?>, LispStruct> getSlots() {
-		final Map<SymbolStruct<?>, LispStruct> allSlots = new HashMap<>();
+		final Map<SymbolStruct<?>, LispStruct> allSlots = new LinkedHashMap<>();
 
 		if (parentStructure != null) {
 			final Map<SymbolStruct<?>, LispStruct> parentAllSlots = parentStructure.getSlots();
@@ -74,6 +82,7 @@ public class StructureObjectStruct implements LispStruct {
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder().append(structureClass)
+		                            .append(structureSymbol)
 		                            .append(parentStructure)
 		                            .append(slots)
 		                            .toHashCode();
@@ -92,6 +101,7 @@ public class StructureObjectStruct implements LispStruct {
 		}
 		final StructureObjectStruct rhs = (StructureObjectStruct) obj;
 		return new EqualsBuilder().append(structureClass, rhs.structureClass)
+		                          .append(structureSymbol, rhs.structureSymbol)
 		                          .append(parentStructure, rhs.parentStructure)
 		                          .append(slots, rhs.slots)
 		                          .isEquals();
@@ -100,6 +110,7 @@ public class StructureObjectStruct implements LispStruct {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(structureClass)
+		                                                                .append(structureSymbol)
 		                                                                .append(parentStructure)
 		                                                                .append(slots)
 		                                                                .toString();

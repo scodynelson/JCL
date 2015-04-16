@@ -12,7 +12,7 @@ public class FooStructureObject extends StructureObjectStruct {
 	private static final long serialVersionUID = -5612579845485020663L;
 
 	public FooStructureObject() {
-		super(FooStructureClass.INSTANCE, null);
+		super(FooStructureClass.INSTANCE, new SymbolStruct<>("FOO"), null);
 		initSlotsMap();
 	}
 

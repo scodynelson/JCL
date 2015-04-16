@@ -20,14 +20,29 @@ public class PrinterImpl implements Printer {
 	private static final long serialVersionUID = -3051919400352866531L;
 
 	@Resource
-	private Map<Class<? extends LispStruct>, LispPrinter<LispStruct>> printerStrategies;
+	private Map<Class<?>, LispPrinter<LispStruct>> printerStrategies;
 
 	@Override
 	public String print(final LispStruct object) {
 
-		final LispPrinter<LispStruct> printer = printerStrategies.get(object.getClass());
+		final Class<?> objectClass = object.getClass();
+
+		LispPrinter<LispStruct> printer = printerStrategies.get(objectClass);
 		if (printer == null) {
-			final String typeClassName = object.getClass().getSimpleName();
+			Class<?> superclass = objectClass.getSuperclass();
+			while (superclass != null) {
+
+				final LispPrinter<LispStruct> possiblePrinter = printerStrategies.get(superclass);
+				if (possiblePrinter != null) {
+					printer = possiblePrinter;
+					break;
+				}
+				superclass = superclass.getSuperclass();
+			}
+		}
+
+		if (printer == null) {
+			final String typeClassName = objectClass.getSimpleName();
 			return "#<" + typeClassName + '>';
 		}
 

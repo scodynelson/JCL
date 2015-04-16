@@ -100,6 +100,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 		{
 			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC, "<init>", "()V", null, null);
+			currentClass.setMethodVisitor(mv);
 			mv.visitCode();
 			final int thisStore = currentClass.getNextAvailableStore();
 

@@ -477,6 +477,20 @@ public class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 					"(Ljcl/LispType;Ljcl/symbols/SymbolStruct;Ljcl/symbols/SymbolStruct;Ljava/util/List;Ljava/util/List;)V",
 					false);
 
+			final SymbolStruct<?> structureSymbol = defstructStruct.getStructureSymbol();
+			final String packageName = structureSymbol.getSymbolPackage().getName();
+			final String symbolName = structureSymbol.getName();
+
+			mv.visitLdcInsn(packageName);
+			mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
+
+			mv.visitLdcInsn(symbolName);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
+
+			mv.visitFieldInsn(Opcodes.GETSTATIC, structureClassFileName, "INSTANCE", 'L' + structureClassFileName + ';');
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "setStructureClass", "(Ljcl/structures/StructureClassStruct;)V", false);
+
 			mv.visitInsn(Opcodes.RETURN);
 
 			mv.visitMaxs(-1, -1);

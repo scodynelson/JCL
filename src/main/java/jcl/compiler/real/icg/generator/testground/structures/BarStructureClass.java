@@ -26,6 +26,7 @@ public class BarStructureClass extends FooStructureClass {
 	protected BarStructureClass(final LispType type, final SymbolStruct<?> defaultConstructorSymbol, final SymbolStruct<?> printerSymbol,
 	                            final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		super(type, defaultConstructorSymbol, printerSymbol, directSuperClasses, subClasses);
+		new SymbolStruct<>("BAR").setStructureClass(INSTANCE);
 	}
 
 	@Override

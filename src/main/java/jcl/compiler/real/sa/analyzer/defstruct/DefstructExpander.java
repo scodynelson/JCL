@@ -60,10 +60,12 @@ public class DefstructExpander extends MacroFunctionExpander<LispStruct> {
 
 		final LispStruct third = formRestRest.getFirst();
 
-		SymbolStruct<?> includeStructureSymbol = null;
-		if (third instanceof SymbolStruct) {
+		final SymbolStruct<?> includeStructureSymbol;
+		if (NILStruct.INSTANCE.equals(third) || NullStruct.INSTANCE.equals(third)) {
+			includeStructureSymbol = null;
+		} else if (third instanceof SymbolStruct) {
 			includeStructureSymbol = (SymbolStruct) third;
-		} else if (!NILStruct.INSTANCE.equals(third) && !NullStruct.INSTANCE.equals(third)) {
+		} else {
 			final String printedObject = printer.print(third);
 			throw new ProgramErrorException("%DEFSTRUCT: Include structure name must be a symbol or NIL. Got: " + printedObject);
 		}
@@ -81,10 +83,12 @@ public class DefstructExpander extends MacroFunctionExpander<LispStruct> {
 
 		final LispStruct fourth = formRestRestRest.getFirst();
 
-		SymbolStruct<?> defaultConstructorSymbol = null;
-		if (fourth instanceof SymbolStruct) {
+		final SymbolStruct<?> defaultConstructorSymbol;
+		if (NILStruct.INSTANCE.equals(fourth) || NullStruct.INSTANCE.equals(fourth)) {
+			defaultConstructorSymbol = null;
+		} else if (fourth instanceof SymbolStruct) {
 			defaultConstructorSymbol = (SymbolStruct) fourth;
-		} else if (!NILStruct.INSTANCE.equals(fourth) && !NullStruct.INSTANCE.equals(fourth)) {
+		} else {
 			final String printedObject = printer.print(fourth);
 			throw new ProgramErrorException("%DEFSTRUCT: Include structure name must be a symbol or NIL. Got: " + printedObject);
 		}
@@ -93,10 +97,12 @@ public class DefstructExpander extends MacroFunctionExpander<LispStruct> {
 
 		final LispStruct fifth = formRestRestRestRest.getFirst();
 
-		SymbolStruct<?> printerSymbol = null;
-		if (fifth instanceof SymbolStruct) {
+		final SymbolStruct<?> printerSymbol;
+		if (NILStruct.INSTANCE.equals(fifth) || NullStruct.INSTANCE.equals(fifth)) {
+			printerSymbol = null;
+		} else if (fifth instanceof SymbolStruct) {
 			printerSymbol = (SymbolStruct) fifth;
-		} else if (!NILStruct.INSTANCE.equals(fifth) && !NullStruct.INSTANCE.equals(fifth)) {
+		} else {
 			final String printedObject = printer.print(fifth);
 			throw new ProgramErrorException("%DEFSTRUCT: Printer name must be a symbol or NIL. Got: " + printedObject);
 		}

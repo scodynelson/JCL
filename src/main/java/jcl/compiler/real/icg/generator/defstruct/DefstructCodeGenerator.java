@@ -30,9 +30,9 @@ public class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		final SymbolStruct<?> structureSymbol = input.getStructureSymbol();
 		final String structureName = structureSymbol.getName();
 
-		final String structureTypeFileName = "jcl/structures/struct/type/" + structureName + "StructureType";
-		final String structureClassFileName = "jcl/structures/struct/class/" + structureName + "StructureClass";
-		final String structureObjectFileName = "jcl/structures/struct/object/" + structureName + "StructureObject";
+		final String structureTypeFileName = "jcl/structures/struct/types/" + structureName + "StructureType";
+		final String structureClassFileName = "jcl/structures/struct/classes/" + structureName + "StructureClass";
+		final String structureObjectFileName = "jcl/structures/struct/objects/" + structureName + "StructureObject";
 
 		final String structureTypeSyntheticInnerClass = structureTypeFileName + "$1";
 		final String structureTypeFactoryInnerClass = structureTypeFileName + "$Factory";
@@ -40,7 +40,15 @@ public class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		final String structureTypeImplClassName = structureName + "StructureTypeImpl";
 		final String structureTypeImplInnerClass = structureTypeFactoryInnerClass + '$' + structureTypeImplClassName;
 
-		generateStructureType(input, classBuilder,
+		generateStructureObject(input, classBuilder,
+				structureClassFileName,
+				structureObjectFileName);
+		generateStructureClass(input, classBuilder,
+				structureTypeFileName,
+				structureClassFileName,
+				structureObjectFileName);
+		generateStructureTypeImpl(classBuilder,
+				structureName,
 				structureTypeFileName,
 				structureTypeSyntheticInnerClass,
 				structureTypeFactoryInnerClass,
@@ -51,20 +59,12 @@ public class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 				structureTypeFactoryInnerClass,
 				structureTypeImplClassName,
 				structureTypeImplInnerClass);
-		generateStructureTypeImpl(classBuilder,
-				structureName,
+		generateStructureType(input, classBuilder,
 				structureTypeFileName,
 				structureTypeSyntheticInnerClass,
 				structureTypeFactoryInnerClass,
 				structureTypeImplClassName,
 				structureTypeImplInnerClass);
-		generateStructureClass(input, classBuilder,
-				structureTypeFileName,
-				structureClassFileName,
-				structureObjectFileName);
-		generateStructureObject(input, classBuilder,
-				structureClassFileName,
-				structureObjectFileName);
 
 		final Stack<ClassDef> classStack = classBuilder.getClassStack();
 

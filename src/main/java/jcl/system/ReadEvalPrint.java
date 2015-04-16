@@ -316,8 +316,11 @@ public class ReadEvalPrint {
 
 			final Class<?> classLoaded = cl.loadClass(fileName, byteArray);
 
-			final Constructor<?> constructor = classLoaded.getConstructor();
-			finalLambda = (FunctionStruct) constructor.newInstance();
+			final boolean isFunctionStruct = FunctionStruct.class.isAssignableFrom(classLoaded);
+			if (isFunctionStruct) {
+				final Constructor<?> constructor = classLoaded.getConstructor();
+				finalLambda = (FunctionStruct) constructor.newInstance();
+			}
 
 //			LOGGER.info("GENERATED CLASS -> {}", printer.print(lambda));
 		}

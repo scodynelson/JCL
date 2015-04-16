@@ -30,14 +30,16 @@ public class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 		final SymbolStruct<?> structureSymbol = input.getStructureSymbol();
 		final String structureName = structureSymbol.getName();
 
-		final String structureTypeFileName = "jcl/structures/struct/types/" + structureName + "StructureType";
-		final String structureClassFileName = "jcl/structures/struct/classes/" + structureName + "StructureClass";
-		final String structureObjectFileName = "jcl/structures/struct/objects/" + structureName + "StructureObject";
+		final String systemTimePostfix = "_" + System.nanoTime();
 
-		final String structureTypeSyntheticInnerClass = structureTypeFileName + "$1";
-		final String structureTypeFactoryInnerClass = structureTypeFileName + "$Factory";
+		final String structureTypeFileName = "jcl/structures/struct/types/" + structureName + "StructureType" + systemTimePostfix;
+		final String structureClassFileName = "jcl/structures/struct/classes/" + structureName + "StructureClass" + systemTimePostfix;
+		final String structureObjectFileName = "jcl/structures/struct/objects/" + structureName + "StructureObject" + systemTimePostfix;
 
-		final String structureTypeImplClassName = structureName + "StructureTypeImpl";
+		final String structureTypeSyntheticInnerClass = structureTypeFileName + "$1" + systemTimePostfix;
+		final String structureTypeFactoryInnerClass = structureTypeFileName + "$Factory" + systemTimePostfix;
+
+		final String structureTypeImplClassName = structureName + "StructureTypeImpl" + systemTimePostfix;
 		final String structureTypeImplInnerClass = structureTypeFactoryInnerClass + '$' + structureTypeImplClassName;
 
 		generateStructureObject(input, classBuilder,
@@ -114,9 +116,17 @@ public class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 			interfaces[0] = Type.getInternalName(StructureObjectType.class);
 		} else {
 			final LispType includeStructureClassType = includeStructureClass.getType();
-			final String includeStructureClassTypeName = Type.getInternalName(includeStructureClassType.getClass());
+			final Class<?> includeStructureClassTypeClass = includeStructureClassType.getClass();
+			final Class<?>[] includeStructureClassTypeInterfaces = includeStructureClassTypeClass.getInterfaces();
+			if (includeStructureClassTypeInterfaces.length == 0) {
+				interfaces[0] = Type.getInternalName(StructureObjectType.class);
+			} else {
+				// NOTE: Because of the way we build these structure types, the first interface will be the one we want.
+				final Class<?> includeStructureClassTypeInterface = includeStructureClassTypeInterfaces[0];
+				final String includeStructureClassTypeName = Type.getInternalName(includeStructureClassTypeInterface);
 
-			interfaces[0] = includeStructureClassTypeName;
+				interfaces[0] = includeStructureClassTypeName;
+			}
 		}
 
 		cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC + Opcodes.ACC_ABSTRACT + Opcodes.ACC_INTERFACE, structureTypeFileName, null, "java/lang/Object", interfaces);

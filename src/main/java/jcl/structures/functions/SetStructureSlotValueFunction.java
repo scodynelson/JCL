@@ -31,17 +31,17 @@ import org.springframework.stereotype.Component;
 @Component
 public final class SetStructureSlotValueFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> GET_STRUCTURE_SLOT_VALUE = new SymbolStruct<>("GET-STRUCTURE-SLOT-VALUE", GlobalPackageStruct.COMMON_LISP);
+	public static final SymbolStruct<?> SET_STRUCTURE_SLOT_VALUE = new SymbolStruct<>("SET-STRUCTURE-SLOT-VALUE", GlobalPackageStruct.COMMON_LISP);
 
 	private static final long serialVersionUID = -5380342029205088545L;
 
 	private SetStructureSlotValueFunction() {
-		super("Gets the slot value matching the provided symbol for the provided structure-object.", getInitLambdaListBindings());
+		super("Sets the slot value matching the provided symbol for the provided structure-object to the provided value.", getInitLambdaListBindings());
 	}
 
 	@PostConstruct
 	private void init() {
-		GET_STRUCTURE_SLOT_VALUE.setFunction(this);
+		SET_STRUCTURE_SLOT_VALUE.setFunction(this);
 	}
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {

@@ -4,7 +4,7 @@
 
 package jcl.printer.impl;
 
-import java.util.Map;
+import java.util.List;
 
 import jcl.LispStruct;
 import jcl.printer.LispPrinter;
@@ -15,6 +15,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -36,10 +37,10 @@ public class StructureObjectStructPrinter<TYPE extends StructureObjectStruct> im
 		final String printedStructureSymbol = printer.print(structureSymbol);
 		stringBuilder.append(printedStructureSymbol);
 
-		final Map<SymbolStruct<?>, LispStruct> slots = object.getSlots();
-		for (final Map.Entry<SymbolStruct<?>, LispStruct> slot : slots.entrySet()) {
-			final SymbolStruct<?> slotSymbol = slot.getKey();
-			final LispStruct slotValue = slot.getValue();
+		final List<Pair<SymbolStruct<?>, LispStruct>> slots = object.getSlots();
+		for (final Pair<SymbolStruct<?>, LispStruct> slot : slots) {
+			final SymbolStruct<?> slotSymbol = slot.getLeft();
+			final LispStruct slotValue = slot.getRight();
 
 			stringBuilder.append(" :");
 			final String printedSlotSymbol = printer.print(slotSymbol);

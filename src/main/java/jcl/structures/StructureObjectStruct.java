@@ -1,6 +1,8 @@
 package jcl.structures;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import jcl.LispStruct;
@@ -11,6 +13,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * The {@link StructureObjectStruct} is the object representation of a Lisp 'structure-object' type.
@@ -46,15 +50,21 @@ public class StructureObjectStruct implements LispStruct {
 		return parentStructure;
 	}
 
-	public Map<SymbolStruct<?>, LispStruct> getSlots() {
-		final Map<SymbolStruct<?>, LispStruct> allSlots = new LinkedHashMap<>();
+	public List<Pair<SymbolStruct<?>, LispStruct>> getSlots() {
+		final List<Pair<SymbolStruct<?>, LispStruct>> allSlots = new ArrayList<>();
 
 		if (parentStructure != null) {
-			final Map<SymbolStruct<?>, LispStruct> parentAllSlots = parentStructure.getSlots();
-			allSlots.putAll(parentAllSlots);
+			final List<Pair<SymbolStruct<?>, LispStruct>> parentAllSlots = parentStructure.getSlots();
+			allSlots.addAll(parentAllSlots);
 		}
 
-		allSlots.putAll(slots);
+		for (final Map.Entry<SymbolStruct<?>, LispStruct> slot : slots.entrySet()) {
+			final SymbolStruct<?> slotSymbol = slot.getKey();
+			final LispStruct slotValue = slot.getValue();
+			final Pair<SymbolStruct<?>, LispStruct> pair = ImmutablePair.of(slotSymbol, slotValue);
+			allSlots.add(pair);
+		}
+
 		return allSlots;
 	}
 
@@ -69,6 +79,7 @@ public class StructureObjectStruct implements LispStruct {
 	public void setSlot(final SymbolStruct<?> slotName, final LispStruct newSlotValue) {
 		if (slots.containsKey(slotName)) {
 			slots.put(slotName, newSlotValue);
+			return;
 		}
 
 		throw new SimpleErrorException("Slot " + slotName + " is not present for structure " + this);

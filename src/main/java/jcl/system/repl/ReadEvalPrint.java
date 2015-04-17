@@ -1,30 +1,21 @@
 package jcl.system.repl;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-
 import jcl.LispStruct;
 import jcl.compiler.real.functions.EvalFunction;
 import jcl.compiler.real.struct.ValuesStruct;
 import jcl.conditions.exceptions.ConditionException;
 import jcl.conditions.exceptions.ReaderErrorException;
-import jcl.conditions.exceptions.StreamErrorException;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
 import jcl.printer.Printer;
 import jcl.reader.Reader;
-import jcl.streams.functions.ReadCharFunction;
 import jcl.reader.functions.ReadFunction;
-import jcl.streams.CharacterStreamStruct;
-import jcl.streams.FileStreamStruct;
-import jcl.streams.InputStream;
 import jcl.streams.ReadPeekResult;
+import jcl.streams.StreamVariables;
+import jcl.streams.functions.ReadCharFunction;
 import jcl.symbols.VariableStruct;
-import jcl.system.InitializeVariables;
-import jcl.system.LoggerOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,32 +43,6 @@ public class ReadEvalPrint {
 	private Printer printer;
 
 	public void funcall(final String... args) {
-		final Class<InitializeVariables> initializeVariablesClass = InitializeVariables.class;
-
-		if (args.length == 1) {
-			final String fileName = args[0];
-			final Path path = new File(fileName).toPath();
-
-			try {
-				final InputStream fileStream = new FileStreamStruct(path);
-				doStuff(fileStream, true);
-			} catch (final StreamErrorException ex) {
-				LOGGER.error("; WARNING: Exception condition -> ", ex);
-			}
-		} else {
-			try (LoggerOutputStream loggerOutputStream = new LoggerOutputStream(LOGGER)) {
-				final InputStream characterStream = new CharacterStreamStruct(System.in, loggerOutputStream);
-				doStuff(characterStream, false);
-			} catch (final IOException ex) {
-				LOGGER.error("; WARNING: Exception condition -> ", ex);
-			} catch (final StreamErrorException ex) {
-				LOGGER.error("; WARNING: Exception condition -> {}", ex.getMessage(), ex);
-			}
-		}
-	}
-
-	private void doStuff(final InputStream inputStream, final boolean isFile) {
-
 		try {
 			REPLVariables.DASH.bindDynamicValue(NullStruct.INSTANCE);
 
@@ -93,8 +58,7 @@ public class ReadEvalPrint {
 			REPLVariables.STAR_STAR.bindDynamicValue(NullStruct.INSTANCE);
 			REPLVariables.STAR_STAR_STAR.bindDynamicValue(NullStruct.INSTANCE);
 
-//			final Reader reader = context.getBean(Reader.class, StreamVariables.STANDARD_INPUT);
-			final Reader reader = context.getBean(Reader.class, inputStream);
+			final Reader reader = context.getBean(Reader.class, StreamVariables.STANDARD_INPUT.getValue());
 
 			int counter = 1;
 			while (true) {

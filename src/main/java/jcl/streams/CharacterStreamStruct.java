@@ -25,7 +25,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The {@link CharacterStreamStruct} is the object representation of a character reading system level Lisp stream.
+ * The {@link CharacterStreamStruct} is the object representation of a character reading and writing system level Lisp
+ * stream.
  */
 public class CharacterStreamStruct extends AbstractNativeStreamStruct {
 

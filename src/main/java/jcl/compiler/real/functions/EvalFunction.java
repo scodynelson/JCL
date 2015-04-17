@@ -24,6 +24,7 @@ import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.QuoteStruct;
 import jcl.compiler.real.struct.specialoperator.SetqStruct;
 import jcl.compiler.real.struct.specialoperator.SymbolCompilerFunctionStruct;
+import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.functions.FunctionStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
@@ -143,7 +144,7 @@ public final class EvalFunction extends FunctionStruct {
 
 		if (exp instanceof LambdaCompilerFunctionStruct) {
 			final LambdaCompilerFunctionStruct lambdaCompilerFunction = (LambdaCompilerFunctionStruct) exp;
-			final CompilerSpecialOperatorStruct lambda = lambdaCompilerFunction.getLambdaStruct();
+			final LambdaStruct lambda = lambdaCompilerFunction.getLambdaStruct();
 
 			final FunctionStruct function = getCompiledExpression(oldCompileTopLevel, lambda);
 			return function.apply();
@@ -170,7 +171,7 @@ public final class EvalFunction extends FunctionStruct {
 
 		if (exp instanceof LambdaFunctionCallStruct) {
 			final LambdaFunctionCallStruct lambdaFunctionCall = (LambdaFunctionCallStruct) exp;
-			final CompilerSpecialOperatorStruct lambda = lambdaFunctionCall.getLambdaStruct();
+			final LambdaStruct lambda = lambdaFunctionCall.getLambdaStruct();
 
 			final FunctionStruct function = getCompiledExpression(oldCompileTopLevel, lambda);
 
@@ -184,7 +185,9 @@ public final class EvalFunction extends FunctionStruct {
 			final LispStruct[] args = new LispStruct[evaluatedArguments.size()];
 			evaluatedArguments.toArray(args);
 
-			return function.apply(args);
+			// NOTE: This cast should be safe since we're compiling a lambda form. If it doesn't cast, we have a bigger problem somewhere.
+			final FunctionStruct compiledLambda = (FunctionStruct) function.apply();
+			return compiledLambda.apply(args);
 		}
 
 		if (exp instanceof CompilerSpecialOperatorStruct) {

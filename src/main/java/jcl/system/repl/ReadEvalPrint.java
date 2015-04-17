@@ -16,6 +16,8 @@ import jcl.packages.PackageStruct;
 import jcl.packages.PackageVariables;
 import jcl.printer.Printer;
 import jcl.reader.Reader;
+import jcl.streams.functions.ReadCharFunction;
+import jcl.reader.functions.ReadFunction;
 import jcl.streams.CharacterStreamStruct;
 import jcl.streams.FileStreamStruct;
 import jcl.streams.InputStream;
@@ -36,6 +38,12 @@ public class ReadEvalPrint {
 
 	@Autowired
 	private ApplicationContext context;
+
+	@Autowired
+	private ReadFunction readFunction;
+
+	@Autowired
+	private ReadCharFunction readCharFunction;
 
 	@Autowired
 	private EvalFunction evalFunction;
@@ -85,6 +93,7 @@ public class ReadEvalPrint {
 			REPLVariables.STAR_STAR.bindDynamicValue(NullStruct.INSTANCE);
 			REPLVariables.STAR_STAR_STAR.bindDynamicValue(NullStruct.INSTANCE);
 
+//			final Reader reader = context.getBean(Reader.class, StreamVariables.STANDARD_INPUT);
 			final Reader reader = context.getBean(Reader.class, inputStream);
 
 			int counter = 1;
@@ -96,12 +105,7 @@ public class ReadEvalPrint {
 					LOGGER.info("{}: {}> ", currentPackageName, counter++);
 
 					// READ --------------
-					final LispStruct whatRead;
-					if (isFile) {
-						whatRead = reader.read(false, null, false);
-					} else {
-						whatRead = reader.read(true, NullStruct.INSTANCE, false);
-					}
+					final LispStruct whatRead = readFunction.read(reader, true, NullStruct.INSTANCE, false);
 
 					// bind '-' to the form just read
 					REPLVariables.DASH.setDynamicValue(whatRead);
@@ -150,7 +154,7 @@ public class ReadEvalPrint {
 					// Consume the rest of the input so we don't attempt to parse the rest of the input when an error occurs.
 					Integer readChar;
 					do {
-						final ReadPeekResult readResult = reader.readChar(false, null, true);
+						final ReadPeekResult readResult = readCharFunction.readChar(reader, false, null, true);
 						readChar = readResult.getResult();
 					} while ((readChar != null) && (readChar != -1) && (readChar != 10));
 

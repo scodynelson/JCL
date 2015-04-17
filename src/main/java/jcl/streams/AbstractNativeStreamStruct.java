@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The {@link AbstractNativeStreamStruct} is an abstraction for native stream types.
  */
-abstract class AbstractNativeStreamStruct extends StreamStruct implements InputStream, OutputStream {
+abstract class AbstractNativeStreamStruct extends StreamStruct implements IOStream {
 
 	/**
 	 * Serializable Version Unique Identifier.

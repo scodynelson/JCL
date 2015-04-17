@@ -16,7 +16,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 /**
  * The {@link AbstractDualStreamStruct} is an abstraction for dual stream types.
  */
-abstract class AbstractDualStreamStruct extends StreamStruct implements InputStream, OutputStream {
+abstract class AbstractDualStreamStruct extends StreamStruct implements IOStream {
 
 	/**
 	 * Serializable Version Unique Identifier.

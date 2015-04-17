@@ -35,9 +35,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class ReadFunction extends FunctionStruct {
+public final class ReadPreservingWhitespaceFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> READ = new SymbolStruct<>("READ", GlobalPackageStruct.COMMON_LISP);
+	public static final SymbolStruct<?> READ_PRESERVING_WHITESPACE = new SymbolStruct<>("READ-PRESERVING-WHITESPACE", GlobalPackageStruct.COMMON_LISP);
 
 	private static final long serialVersionUID = 907539293814708746L;
 
@@ -47,13 +47,13 @@ public final class ReadFunction extends FunctionStruct {
 	@Autowired
 	private Printer printer;
 
-	private ReadFunction() {
-		super("Parses the printed representation of an object from input-stream and builds such an object.", getInitLambdaListBindings());
+	private ReadPreservingWhitespaceFunction() {
+		super("Parses the printed representation of an object from input-stream and builds such an object preserving any whitespace character that delimits the printed representation of the object.", getInitLambdaListBindings());
 	}
 
 	@PostConstruct
 	private void init() {
-		READ.setFunction(this);
+		READ_PRESERVING_WHITESPACE.setFunction(this);
 	}
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
@@ -158,25 +158,25 @@ public final class ReadFunction extends FunctionStruct {
 			}
 		}
 
-		return read(inputStream, eofErrorP, eofValue, recursiveP);
+		return readPreservingWhitespace(inputStream, eofErrorP, eofValue, recursiveP);
 	}
 
-	public LispStruct read(final InputStream inputStream, final BooleanStruct eofErrorP, final LispStruct eofValue,
-	                       final BooleanStruct recursiveP) {
+	public LispStruct readPreservingWhitespace(final InputStream inputStream, final BooleanStruct eofErrorP, final LispStruct eofValue,
+	                                           final BooleanStruct recursiveP) {
 
-		return read(inputStream, eofErrorP.booleanValue(), eofValue, recursiveP.booleanValue());
+		return readPreservingWhitespace(inputStream, eofErrorP.booleanValue(), eofValue, recursiveP.booleanValue());
 	}
 
-	public LispStruct read(final InputStream inputStream, final boolean eofErrorP, final LispStruct eofValue,
-	                       final boolean recursiveP) {
+	public LispStruct readPreservingWhitespace(final InputStream inputStream, final boolean eofErrorP, final LispStruct eofValue,
+	                                           final boolean recursiveP) {
 
 		final Reader reader = context.getBean(Reader.class, inputStream);
-		return reader.read(eofErrorP, eofValue, recursiveP);
+		return reader.readPreservingWhitespace(eofErrorP, eofValue, recursiveP);
 	}
 
-	public LispStruct read(final Reader reader, final boolean eofErrorP, final LispStruct eofValue,
-	                       final boolean recursiveP) {
+	public LispStruct readPreservingWhitespace(final Reader reader, final boolean eofErrorP, final LispStruct eofValue,
+	                                           final boolean recursiveP) {
 
-		return reader.read(eofErrorP, eofValue, recursiveP);
+		return reader.readPreservingWhitespace(eofErrorP, eofValue, recursiveP);
 	}
 }

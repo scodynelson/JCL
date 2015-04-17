@@ -8,6 +8,7 @@ import jcl.LispStruct;
 import jcl.LispType;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.symbols.SymbolStruct;
+import jcl.symbols.VariableStruct;
 import jcl.types.SynonymStreamType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -17,7 +18,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 /**
  * The {@link SynonymStreamStruct} is the object representation of a Lisp 'synonym-stream' type.
  */
-public class SynonymStreamStruct extends StreamStruct implements InputStream, OutputStream {
+public class SynonymStreamStruct extends StreamStruct implements IOStream {
 
 	/**
 	 * Serializable Version Unique Identifier.
@@ -27,7 +28,17 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	/**
 	 * The {@link SymbolStruct} that contains the value for the {@link StreamStruct} to use.
 	 */
-	private final SymbolStruct<StreamStruct> symbol;
+	private final SymbolStruct<? extends StreamStruct> symbol;
+
+	/**
+	 * Public constructor.
+	 *
+	 * @param variable
+	 * 		the variable to create a SynonymStreamStruct from
+	 */
+	public SynonymStreamStruct(final VariableStruct<? extends StreamStruct> variable) {
+		this(false, variable);
+	}
 
 	/**
 	 * Public constructor.
@@ -35,7 +46,7 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	 * @param symbol
 	 * 		the symbol to create a SynonymStreamStruct from
 	 */
-	public SynonymStreamStruct(final SymbolStruct<StreamStruct> symbol) {
+	public SynonymStreamStruct(final SymbolStruct<? extends StreamStruct> symbol) {
 		this(false, symbol);
 	}
 
@@ -47,7 +58,7 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	 * @param symbol
 	 * 		the symbol to create a SynonymStreamStruct from
 	 */
-	public SynonymStreamStruct(final boolean interactive, final SymbolStruct<StreamStruct> symbol) {
+	public SynonymStreamStruct(final boolean interactive, final SymbolStruct<? extends StreamStruct> symbol) {
 		super(SynonymStreamType.INSTANCE, null, null, interactive, getElementType(symbol));
 		this.symbol = symbol;
 	}
@@ -60,7 +71,7 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	 *
 	 * @return the element type for object construction
 	 */
-	private static LispType getElementType(final SymbolStruct<StreamStruct> symbol) {
+	private static LispType getElementType(final SymbolStruct<? extends StreamStruct> symbol) {
 		if (symbol == null) {
 			throw new StreamErrorException("Provided Symbol must not be null.");
 		}
@@ -72,7 +83,7 @@ public class SynonymStreamStruct extends StreamStruct implements InputStream, Ou
 	 *
 	 * @return synonym-stream {@link #symbol} property
 	 */
-	public SymbolStruct<StreamStruct> getSymbol() {
+	public SymbolStruct<? extends StreamStruct> getSymbol() {
 		return symbol;
 	}
 

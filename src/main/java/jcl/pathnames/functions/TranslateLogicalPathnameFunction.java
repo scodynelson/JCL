@@ -82,7 +82,7 @@ public final class TranslateLogicalPathnameFunction extends FunctionStruct {
 			pathname = new PathnameStruct(uri);
 		} else if (pathnameDesignator instanceof SynonymStreamStruct) {
 			final SynonymStreamStruct synonymStream = (SynonymStreamStruct) pathnameDesignator;
-			final SymbolStruct<StreamStruct> streamSymbol = synonymStream.getSymbol();
+			final SymbolStruct<? extends StreamStruct> streamSymbol = synonymStream.getSymbol();
 			pathname = translateLogicalPathname(streamSymbol.getValue());
 		} else {
 			pathname = pathnameFunction.pathname(pathnameDesignator);

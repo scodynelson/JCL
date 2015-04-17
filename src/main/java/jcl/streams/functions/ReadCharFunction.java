@@ -2,7 +2,7 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.reader.functions;
+package jcl.streams.functions;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,6 +10,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
+import jcl.characters.CharacterStruct;
 import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
@@ -25,6 +26,7 @@ import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
 import jcl.reader.Reader;
 import jcl.streams.InputStream;
+import jcl.streams.ReadPeekResult;
 import jcl.streams.StreamVariables;
 import jcl.symbols.BooleanStruct;
 import jcl.symbols.NILStruct;
@@ -35,11 +37,11 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class ReadFunction extends FunctionStruct {
+public final class ReadCharFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> READ = new SymbolStruct<>("READ", GlobalPackageStruct.COMMON_LISP);
+	public static final SymbolStruct<?> READ_CHAR = new SymbolStruct<>("READ-CHAR", GlobalPackageStruct.COMMON_LISP);
 
-	private static final long serialVersionUID = 907539293814708746L;
+	private static final long serialVersionUID = -4477847470997236613L;
 
 	@Autowired
 	private ApplicationContext context;
@@ -47,13 +49,13 @@ public final class ReadFunction extends FunctionStruct {
 	@Autowired
 	private Printer printer;
 
-	private ReadFunction() {
-		super("Parses the printed representation of an object from input-stream and builds such an object.", getInitLambdaListBindings());
+	private ReadCharFunction() {
+		super("Returns the next character from input-stream.", getInitLambdaListBindings());
 	}
 
 	@PostConstruct
 	private void init() {
-		READ.setFunction(this);
+		READ_CHAR.setFunction(this);
 	}
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
@@ -158,25 +160,31 @@ public final class ReadFunction extends FunctionStruct {
 			}
 		}
 
-		return read(inputStream, eofErrorP, eofValue, recursiveP);
+		final ReadPeekResult readPeekResult = readChar(inputStream, eofErrorP, eofValue, recursiveP);
+		if (readPeekResult.isEof()) {
+			return readPeekResult.getEofValue();
+		} else {
+			final int codePoint = readPeekResult.getResult();
+			return new CharacterStruct(codePoint);
+		}
 	}
 
-	public LispStruct read(final InputStream inputStream, final BooleanStruct eofErrorP, final LispStruct eofValue,
-	                       final BooleanStruct recursiveP) {
+	public ReadPeekResult readChar(final InputStream inputStream, final BooleanStruct eofErrorP, final LispStruct eofValue,
+	                               final BooleanStruct recursiveP) {
 
-		return read(inputStream, eofErrorP.booleanValue(), eofValue, recursiveP.booleanValue());
+		return readChar(inputStream, eofErrorP.booleanValue(), eofValue, recursiveP.booleanValue());
 	}
 
-	public LispStruct read(final InputStream inputStream, final boolean eofErrorP, final LispStruct eofValue,
-	                       final boolean recursiveP) {
+	public ReadPeekResult readChar(final InputStream inputStream, final boolean eofErrorP, final LispStruct eofValue,
+	                               final boolean recursiveP) {
 
 		final Reader reader = context.getBean(Reader.class, inputStream);
-		return reader.read(eofErrorP, eofValue, recursiveP);
+		return reader.readChar(eofErrorP, eofValue, recursiveP);
 	}
 
-	public LispStruct read(final Reader reader, final boolean eofErrorP, final LispStruct eofValue,
-	                       final boolean recursiveP) {
+	public ReadPeekResult readChar(final Reader reader, final boolean eofErrorP, final LispStruct eofValue,
+	                               final boolean recursiveP) {
 
-		return reader.read(eofErrorP, eofValue, recursiveP);
+		return reader.readChar(eofErrorP, eofValue, recursiveP);
 	}
 }

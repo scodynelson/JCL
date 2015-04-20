@@ -6,15 +6,14 @@ package jcl.compiler.real.environment.binding;
 
 import jcl.LispType;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.allocation.ClosureAllocation;
 import jcl.symbols.SymbolStruct;
 
-public class SymbolClosureBinding extends SymbolBinding<ClosureAllocation> {
+public class SymbolClosureBinding extends SymbolBinding {
 
 	private static final long serialVersionUID = -5306882046173256938L;
 
-	public SymbolClosureBinding(final SymbolStruct<?> symbolStruct, final ClosureAllocation allocation, final LispType type,
+	public SymbolClosureBinding(final SymbolStruct<?> symbolStruct, final LispType type,
 	                            final Environment binding) {
-		super(symbolStruct, allocation, type, binding);
+		super(symbolStruct, type, binding);
 	}
 }

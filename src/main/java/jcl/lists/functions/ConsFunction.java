@@ -10,7 +10,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
@@ -44,13 +43,11 @@ public final class ConsFunction extends FunctionStruct {
 		final List<RequiredBinding> requiredBindings = new ArrayList<>();
 
 		final SymbolStruct<?> object1ArgSymbol = new SymbolStruct<>("OBJECT-1", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation object1ArgAllocation = new ParameterAllocation(0);
-		final RequiredBinding object1RequiredBinding = new RequiredBinding(object1ArgSymbol, object1ArgAllocation);
+		final RequiredBinding object1RequiredBinding = new RequiredBinding(object1ArgSymbol);
 		requiredBindings.add(object1RequiredBinding);
 
 		final SymbolStruct<?> object2ArgSymbol = new SymbolStruct<>("OBJECT-2", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation object2ArgAllocation = new ParameterAllocation(1);
-		final RequiredBinding object2RequiredBinding = new RequiredBinding(object2ArgSymbol, object2ArgAllocation);
+		final RequiredBinding object2RequiredBinding = new RequiredBinding(object2ArgSymbol);
 		requiredBindings.add(object2RequiredBinding);
 
 		final List<OptionalBinding> optionalBindings = Collections.emptyList();

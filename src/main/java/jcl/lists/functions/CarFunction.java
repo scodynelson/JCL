@@ -9,7 +9,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
@@ -41,8 +40,7 @@ public final class CarFunction extends FunctionStruct {
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
 		final SymbolStruct<?> listArgSymbol = new SymbolStruct<>("LIST-ARG", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation listArgAllocation = new ParameterAllocation(0);
-		final RequiredBinding requiredBinding = new RequiredBinding(listArgSymbol, listArgAllocation);
+		final RequiredBinding requiredBinding = new RequiredBinding(listArgSymbol);
 		final List<RequiredBinding> requiredBindings = Collections.singletonList(requiredBinding);
 
 		final List<OptionalBinding> optionalBindings = Collections.emptyList();

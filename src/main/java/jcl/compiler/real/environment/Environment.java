@@ -33,7 +33,7 @@ public class Environment extends StandardObjectStruct {
 
 	private final List<EnvironmentParameterBinding> lexicalBindings = new ArrayList<>();
 
-	private final List<EnvironmentBinding<?>> dynamicBindings = new ArrayList<>();
+	private final List<EnvironmentBinding> dynamicBindings = new ArrayList<>();
 
 	private final List<SymbolMacroBinding> symbolMacroBindings = new ArrayList<>();
 
@@ -138,7 +138,7 @@ public class Environment extends StandardObjectStruct {
 		lexicalBindings.add(environmentBinding);
 	}
 
-	public List<EnvironmentBinding<?>> getDynamicBindings() {
+	public List<EnvironmentBinding> getDynamicBindings() {
 		return dynamicBindings;
 	}
 
@@ -147,13 +147,13 @@ public class Environment extends StandardObjectStruct {
 		                      .anyMatch(e -> e.getSymbolStruct().equals(symbolStruct));
 	}
 
-	public Optional<EnvironmentBinding<?>> getDynamicBinding(final SymbolStruct<?> symbolStruct) {
+	public Optional<EnvironmentBinding> getDynamicBinding(final SymbolStruct<?> symbolStruct) {
 		return dynamicBindings.stream()
 		                      .filter(e -> e.getSymbolStruct().equals(symbolStruct))
 		                      .findFirst();
 	}
 
-	public void addDynamicBinding(final EnvironmentBinding<?> environmentBinding) {
+	public void addDynamicBinding(final EnvironmentBinding environmentBinding) {
 		dynamicBindings.add(environmentBinding);
 	}
 

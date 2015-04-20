@@ -10,7 +10,6 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
@@ -51,18 +50,15 @@ public final class MacroExpandFunction extends FunctionStruct {
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
 		final SymbolStruct<?> formArgSymbol = new SymbolStruct<>("FORM", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation formArgAllocation = new ParameterAllocation(0);
-		final RequiredBinding requiredBinding = new RequiredBinding(formArgSymbol, formArgAllocation);
+		final RequiredBinding requiredBinding = new RequiredBinding(formArgSymbol);
 		final List<RequiredBinding> requiredBindings = Collections.singletonList(requiredBinding);
 
 		final SymbolStruct<?> envArgSymbol = new SymbolStruct<>("ENV", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation evnArgAllocation = new ParameterAllocation(1);
 
 		final SymbolStruct<?> envSuppliedPSymbol = new SymbolStruct<>("ENV-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
-		final ParameterAllocation suppliedPAllocation = new ParameterAllocation(2);
-		final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(envSuppliedPSymbol, suppliedPAllocation);
+		final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(envSuppliedPSymbol);
 
-		final OptionalBinding optionalBinding = new OptionalBinding(envArgSymbol, evnArgAllocation, NullStruct.INSTANCE, suppliedPBinding);
+		final OptionalBinding optionalBinding = new OptionalBinding(envArgSymbol, NullStruct.INSTANCE, suppliedPBinding);
 		final List<OptionalBinding> optionalBindings = Collections.singletonList(optionalBinding);
 
 		final RestBinding restBinding = null;

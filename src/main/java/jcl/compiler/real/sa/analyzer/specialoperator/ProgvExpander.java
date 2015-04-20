@@ -10,14 +10,13 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.ProgvEnvironment;
-import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.SymbolAnalyzer;
-import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.ProgvStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.symbols.SpecialOperatorStruct;
@@ -140,8 +139,7 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 			final int nextParameterNumber = currentLambda.getNextParameterNumber();
 			progvEnvironment.setBindingsPosition(nextParameterNumber);
 
-			final ParameterAllocation allocation = new ParameterAllocation(nextParameterNumber);
-			final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(var, allocation, TType.INSTANCE, analyzedVal);
+			final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(var, TType.INSTANCE, analyzedVal);
 			progvEnvironment.addDynamicBinding(binding);
 
 			progvVars.add(progvVar);

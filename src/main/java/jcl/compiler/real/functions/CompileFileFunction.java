@@ -24,7 +24,6 @@ import javax.annotation.PostConstruct;
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.compiler.real.CompilerVariables;
-import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
@@ -108,8 +107,7 @@ public final class CompileFileFunction extends FunctionStruct {
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
 		final SymbolStruct<?> inputFileArgSymbol = new SymbolStruct<>("INPUT-FILE", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation inputFileArgAllocation = new ParameterAllocation(0);
-		final RequiredBinding requiredBinding = new RequiredBinding(inputFileArgSymbol, inputFileArgAllocation);
+		final RequiredBinding requiredBinding = new RequiredBinding(inputFileArgSymbol);
 		final List<RequiredBinding> requiredBindings = Collections.singletonList(requiredBinding);
 
 		final List<OptionalBinding> optionalBindings = Collections.emptyList();
@@ -119,43 +117,35 @@ public final class CompileFileFunction extends FunctionStruct {
 		final List<KeyBinding> keyBindings = new ArrayList<>();
 
 		final SymbolStruct<?> outputFileArgSymbol = new SymbolStruct<>("OUTPUT-FILE", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation outputFileArgAllocation = new ParameterAllocation(1);
 
 		final SymbolStruct<?> outputFileSuppliedP = new SymbolStruct<>("OUTPUT-FILE-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
-		final ParameterAllocation outputFileSuppliedPAllocation = new ParameterAllocation(2);
-		final SuppliedPBinding outputFileSuppliedPBinding = new SuppliedPBinding(outputFileSuppliedP, outputFileSuppliedPAllocation);
+		final SuppliedPBinding outputFileSuppliedPBinding = new SuppliedPBinding(outputFileSuppliedP);
 
-		final KeyBinding outputFileKeyBinding = new KeyBinding(outputFileArgSymbol, outputFileArgAllocation, NullStruct.INSTANCE, CommonLispSymbols.OUTPUT_FILE_KEYWORD, outputFileSuppliedPBinding);
+		final KeyBinding outputFileKeyBinding = new KeyBinding(outputFileArgSymbol, NullStruct.INSTANCE, CommonLispSymbols.OUTPUT_FILE_KEYWORD, outputFileSuppliedPBinding);
 		keyBindings.add(outputFileKeyBinding);
 
 		final SymbolStruct<?> verboseArgSymbol = new SymbolStruct<>("VERBOSE", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation verboseArgAllocation = new ParameterAllocation(3);
 
 		final SymbolStruct<?> verboseSuppliedP = new SymbolStruct<>("VERBOSE-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
-		final ParameterAllocation verboseSuppliedPAllocation = new ParameterAllocation(4);
-		final SuppliedPBinding verboseSuppliedPBinding = new SuppliedPBinding(verboseSuppliedP, verboseSuppliedPAllocation);
+		final SuppliedPBinding verboseSuppliedPBinding = new SuppliedPBinding(verboseSuppliedP);
 
-		final KeyBinding verboseKeyBinding = new KeyBinding(verboseArgSymbol, verboseArgAllocation, NullStruct.INSTANCE, CommonLispSymbols.VERBOSE_KEYWORD, verboseSuppliedPBinding);
+		final KeyBinding verboseKeyBinding = new KeyBinding(verboseArgSymbol, NullStruct.INSTANCE, CommonLispSymbols.VERBOSE_KEYWORD, verboseSuppliedPBinding);
 		keyBindings.add(verboseKeyBinding);
 
 		final SymbolStruct<?> printArgSymbol = new SymbolStruct<>("PRINT", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation printArgAllocation = new ParameterAllocation(5);
 
 		final SymbolStruct<?> printSuppliedP = new SymbolStruct<>("PRINT-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
-		final ParameterAllocation printSuppliedPAllocation = new ParameterAllocation(6);
-		final SuppliedPBinding printSuppliedPBinding = new SuppliedPBinding(printSuppliedP, printSuppliedPAllocation);
+		final SuppliedPBinding printSuppliedPBinding = new SuppliedPBinding(printSuppliedP);
 
-		final KeyBinding printKeyBinding = new KeyBinding(printArgSymbol, printArgAllocation, NullStruct.INSTANCE, CommonLispSymbols.PRINT_KEYWORD, printSuppliedPBinding);
+		final KeyBinding printKeyBinding = new KeyBinding(printArgSymbol, NullStruct.INSTANCE, CommonLispSymbols.PRINT_KEYWORD, printSuppliedPBinding);
 		keyBindings.add(printKeyBinding);
 
 		final SymbolStruct<?> externalFormatArgSymbol = new SymbolStruct<>("EXTERNAL-FORMAT", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation externalFormatArgAllocation = new ParameterAllocation(7);
 
 		final SymbolStruct<?> externalFormatSuppliedP = new SymbolStruct<>("EXTERNAL-FORMAT-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
-		final ParameterAllocation externalFormatSuppliedPAllocation = new ParameterAllocation(8);
-		final SuppliedPBinding externalFormatSuppliedPBinding = new SuppliedPBinding(externalFormatSuppliedP, externalFormatSuppliedPAllocation);
+		final SuppliedPBinding externalFormatSuppliedPBinding = new SuppliedPBinding(externalFormatSuppliedP);
 
-		final KeyBinding externalFormatKeyBinding = new KeyBinding(externalFormatArgSymbol, externalFormatArgAllocation, NullStruct.INSTANCE, CommonLispSymbols.EXTERNAL_FORMAT_KEYWORD, externalFormatSuppliedPBinding);
+		final KeyBinding externalFormatKeyBinding = new KeyBinding(externalFormatArgSymbol, NullStruct.INSTANCE, CommonLispSymbols.EXTERNAL_FORMAT_KEYWORD, externalFormatSuppliedPBinding);
 		keyBindings.add(externalFormatKeyBinding);
 
 		final boolean allowOtherKeys = false;

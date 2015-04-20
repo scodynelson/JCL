@@ -10,7 +10,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
@@ -63,43 +62,35 @@ public final class ReadPreservingWhitespaceFunction extends FunctionStruct {
 		final List<OptionalBinding> optionalBindings = new ArrayList<>();
 
 		final SymbolStruct<?> inputStreamArgSymbol = new SymbolStruct<>("INPUT-STREAM", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation inputStreamArgAllocation = new ParameterAllocation(0);
 
 		final SymbolStruct<?> inputStreamSuppliedP = new SymbolStruct<>("INPUT-STREAM-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
-		final ParameterAllocation inputStreamSuppliedPAllocation = new ParameterAllocation(1);
-		final SuppliedPBinding inputStreamSuppliedPBinding = new SuppliedPBinding(inputStreamSuppliedP, inputStreamSuppliedPAllocation);
+		final SuppliedPBinding inputStreamSuppliedPBinding = new SuppliedPBinding(inputStreamSuppliedP);
 
-		final OptionalBinding inputStreamOptionalBinding = new OptionalBinding(inputStreamArgSymbol, inputStreamArgAllocation, NullStruct.INSTANCE, inputStreamSuppliedPBinding);
+		final OptionalBinding inputStreamOptionalBinding = new OptionalBinding(inputStreamArgSymbol, NullStruct.INSTANCE, inputStreamSuppliedPBinding);
 		optionalBindings.add(inputStreamOptionalBinding);
 
 		final SymbolStruct<?> eofErrorPArgSymbol = new SymbolStruct<>("EOF-ERROR", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation eofErrorPArgAllocation = new ParameterAllocation(2);
 
 		final SymbolStruct<?> eofErrorPSuppliedP = new SymbolStruct<>("EOF-ERROR-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
-		final ParameterAllocation eofErrorPSuppliedPAllocation = new ParameterAllocation(3);
-		final SuppliedPBinding eofErrorPSuppliedPBinding = new SuppliedPBinding(eofErrorPSuppliedP, eofErrorPSuppliedPAllocation);
+		final SuppliedPBinding eofErrorPSuppliedPBinding = new SuppliedPBinding(eofErrorPSuppliedP);
 
-		final OptionalBinding eofErrorPOptionalBinding = new OptionalBinding(eofErrorPArgSymbol, eofErrorPArgAllocation, NullStruct.INSTANCE, eofErrorPSuppliedPBinding);
+		final OptionalBinding eofErrorPOptionalBinding = new OptionalBinding(eofErrorPArgSymbol, NullStruct.INSTANCE, eofErrorPSuppliedPBinding);
 		optionalBindings.add(eofErrorPOptionalBinding);
 
 		final SymbolStruct<?> eofValueArgSymbol = new SymbolStruct<>("EOF-VALUE", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation eofValueArgAllocation = new ParameterAllocation(4);
 
 		final SymbolStruct<?> eofValueSuppliedP = new SymbolStruct<>("EOF-VALUE-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
-		final ParameterAllocation eofValueSuppliedPAllocation = new ParameterAllocation(5);
-		final SuppliedPBinding eofValueSuppliedPBinding = new SuppliedPBinding(eofValueSuppliedP, eofValueSuppliedPAllocation);
+		final SuppliedPBinding eofValueSuppliedPBinding = new SuppliedPBinding(eofValueSuppliedP);
 
-		final OptionalBinding eofValueOptionalBinding = new OptionalBinding(eofValueArgSymbol, eofValueArgAllocation, NullStruct.INSTANCE, eofValueSuppliedPBinding);
+		final OptionalBinding eofValueOptionalBinding = new OptionalBinding(eofValueArgSymbol, NullStruct.INSTANCE, eofValueSuppliedPBinding);
 		optionalBindings.add(eofValueOptionalBinding);
 
 		final SymbolStruct<?> recursivePArgSymbol = new SymbolStruct<>("RECURSIVE-P", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation recursivePArgAllocation = new ParameterAllocation(6);
 
 		final SymbolStruct<?> recursivePSuppliedP = new SymbolStruct<>("RECURSIVE-P-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
-		final ParameterAllocation recursivePSuppliedPAllocation = new ParameterAllocation(7);
-		final SuppliedPBinding recursivePSuppliedPBinding = new SuppliedPBinding(recursivePSuppliedP, recursivePSuppliedPAllocation);
+		final SuppliedPBinding recursivePSuppliedPBinding = new SuppliedPBinding(recursivePSuppliedP);
 
-		final OptionalBinding recursivePOptionalBinding = new OptionalBinding(recursivePArgSymbol, recursivePArgAllocation, NullStruct.INSTANCE, recursivePSuppliedPBinding);
+		final OptionalBinding recursivePOptionalBinding = new OptionalBinding(recursivePArgSymbol, NullStruct.INSTANCE, recursivePSuppliedPBinding);
 		optionalBindings.add(recursivePOptionalBinding);
 
 		final RestBinding restBinding = null;

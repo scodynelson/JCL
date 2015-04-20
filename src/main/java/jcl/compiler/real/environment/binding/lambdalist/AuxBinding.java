@@ -5,7 +5,6 @@
 package jcl.compiler.real.environment.binding.lambdalist;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.ParameterBinding;
 import jcl.symbols.SymbolStruct;
 import jcl.types.TType;
@@ -14,7 +13,7 @@ public class AuxBinding extends ParameterBinding {
 
 	private static final long serialVersionUID = 6424631350711831345L;
 
-	public AuxBinding(final SymbolStruct<?> symbolStruct, final ParameterAllocation allocation, final LispStruct initForm) {
-		super(symbolStruct, allocation, TType.INSTANCE, initForm);
+	public AuxBinding(final SymbolStruct<?> symbolStruct, final LispStruct initForm) {
+		super(symbolStruct, TType.INSTANCE, initForm);
 	}
 }

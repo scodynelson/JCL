@@ -9,7 +9,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
@@ -40,8 +39,7 @@ public class SymbolFunctionFunction extends FunctionStruct {
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
 		final SymbolStruct<?> symbolArgSymbol = new SymbolStruct<>("SYM", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation symbolArgAllocation = new ParameterAllocation(0);
-		final RequiredBinding symbolArgRequiredBinding = new RequiredBinding(symbolArgSymbol, symbolArgAllocation);
+		final RequiredBinding symbolArgRequiredBinding = new RequiredBinding(symbolArgSymbol);
 		final List<RequiredBinding> requiredBindings = Collections.singletonList(symbolArgRequiredBinding);
 
 		final List<OptionalBinding> optionalBindings = Collections.emptyList();

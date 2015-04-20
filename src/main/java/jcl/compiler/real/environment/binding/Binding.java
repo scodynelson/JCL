@@ -7,35 +7,27 @@ package jcl.compiler.real.environment.binding;
 import java.io.Serializable;
 
 import jcl.LispType;
-import jcl.compiler.real.environment.allocation.Allocation;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public abstract class Binding<A extends Allocation> implements Serializable {
+public abstract class Binding implements Serializable {
 
 	private static final long serialVersionUID = 5776546981120800982L;
 
 	private final SymbolStruct<?> symbolStruct;
 
-	private final A allocation;
-
 	private final LispType type;
 
-	protected Binding(final SymbolStruct<?> symbolStruct, final A allocation, final LispType type) {
+	protected Binding(final SymbolStruct<?> symbolStruct, final LispType type) {
 		this.symbolStruct = symbolStruct;
-		this.allocation = allocation;
 		this.type = type;
 	}
 
 	public SymbolStruct<?> getSymbolStruct() {
 		return symbolStruct;
-	}
-
-	public A getAllocation() {
-		return allocation;
 	}
 
 	public LispType getType() {
@@ -45,7 +37,6 @@ public abstract class Binding<A extends Allocation> implements Serializable {
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder().append(symbolStruct)
-		                            .append(allocation)
 		                            .append(type)
 		                            .toHashCode();
 	}
@@ -61,9 +52,8 @@ public abstract class Binding<A extends Allocation> implements Serializable {
 		if (obj.getClass() != getClass()) {
 			return false;
 		}
-		final Binding<?> rhs = (Binding) obj;
+		final Binding rhs = (Binding) obj;
 		return new EqualsBuilder().append(symbolStruct, rhs.symbolStruct)
-		                          .append(allocation, rhs.allocation)
 		                          .append(type, rhs.type)
 		                          .isEquals();
 	}
@@ -71,7 +61,6 @@ public abstract class Binding<A extends Allocation> implements Serializable {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(symbolStruct)
-		                                                                .append(allocation)
 		                                                                .append(type)
 		                                                                .toString();
 	}

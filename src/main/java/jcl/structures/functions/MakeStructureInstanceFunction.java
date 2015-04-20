@@ -9,7 +9,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
@@ -43,8 +42,7 @@ public final class MakeStructureInstanceFunction extends FunctionStruct {
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
 		final SymbolStruct<?> structSymArgSymbol = new SymbolStruct<>("STRUCT-SYM", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation structSymArgAllocation = new ParameterAllocation(0);
-		final RequiredBinding structSymArgRequiredBinding = new RequiredBinding(structSymArgSymbol, structSymArgAllocation);
+		final RequiredBinding structSymArgRequiredBinding = new RequiredBinding(structSymArgSymbol);
 		final List<RequiredBinding> requiredBindings = Collections.singletonList(structSymArgRequiredBinding);
 
 		final List<OptionalBinding> optionalBindings = Collections.emptyList();

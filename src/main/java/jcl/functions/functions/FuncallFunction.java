@@ -10,7 +10,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
@@ -51,15 +50,13 @@ public class FuncallFunction extends FunctionStruct {
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
 		final SymbolStruct<?> fnArgSymbol = new SymbolStruct<>("FN", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation fnArgAllocation = new ParameterAllocation(0);
-		final RequiredBinding requiredBinding = new RequiredBinding(fnArgSymbol, fnArgAllocation);
+		final RequiredBinding requiredBinding = new RequiredBinding(fnArgSymbol);
 		final List<RequiredBinding> requiredBindings = Collections.singletonList(requiredBinding);
 
 		final List<OptionalBinding> optionalBindings = Collections.emptyList();
 
 		final SymbolStruct<?> argsArgSymbol = new SymbolStruct<>("ARGS", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation argsArgAllocation = new ParameterAllocation(1);
-		final RestBinding restBinding = new RestBinding(argsArgSymbol, argsArgAllocation);
+		final RestBinding restBinding = new RestBinding(argsArgSymbol);
 
 		final List<KeyBinding> keyBindings = Collections.emptyList();
 		final boolean allowOtherKeys = false;

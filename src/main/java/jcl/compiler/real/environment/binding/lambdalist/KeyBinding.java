@@ -5,7 +5,6 @@
 package jcl.compiler.real.environment.binding.lambdalist;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.ParameterBinding;
 import jcl.symbols.KeywordStruct;
 import jcl.symbols.SymbolStruct;
@@ -23,9 +22,9 @@ public class KeyBinding extends ParameterBinding {
 
 	private final SuppliedPBinding suppliedPBinding;
 
-	public KeyBinding(final SymbolStruct<?> symbolStruct, final ParameterAllocation allocation, final LispStruct initForm,
+	public KeyBinding(final SymbolStruct<?> symbolStruct, final LispStruct initForm,
 	                  final KeywordStruct keyName, final SuppliedPBinding suppliedPBinding) {
-		super(symbolStruct, allocation, TType.INSTANCE, initForm);
+		super(symbolStruct, TType.INSTANCE, initForm);
 		this.keyName = keyName;
 		this.suppliedPBinding = suppliedPBinding;
 	}

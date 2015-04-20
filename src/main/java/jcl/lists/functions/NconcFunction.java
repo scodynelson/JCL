@@ -9,7 +9,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
@@ -56,8 +55,7 @@ public final class NconcFunction extends FunctionStruct {
 		final List<OptionalBinding> optionalBindings = Collections.emptyList();
 
 		final SymbolStruct<?> listRestArgSymbol = new SymbolStruct<>("LISTS", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation listRestArgArgAllocation = new ParameterAllocation(0);
-		final RestBinding restBinding = new RestBinding(listRestArgSymbol, listRestArgArgAllocation);
+		final RestBinding restBinding = new RestBinding(listRestArgSymbol);
 
 		final List<KeyBinding> keyBindings = Collections.emptyList();
 		final boolean allowOtherKeys = false;

@@ -9,7 +9,6 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.LetStarEnvironment;
-import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
@@ -125,8 +124,7 @@ public class LetStarExpander extends MacroFunctionExpander<LetStarStruct> {
 
 		final boolean isSpecial = Environments.isSpecial(declare, var);
 
-		final ParameterAllocation allocation = new ParameterAllocation(newBindingsPosition);
-		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(var, allocation, TType.INSTANCE, initForm);
+		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(var, TType.INSTANCE, initForm);
 		if (isSpecial) {
 			letStarEnvironment.addDynamicBinding(binding);
 		} else {

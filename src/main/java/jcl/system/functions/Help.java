@@ -16,7 +16,6 @@ import javax.help.HelpSetException;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
-import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
@@ -54,13 +53,11 @@ public final class Help extends FunctionStruct {
 		final List<RequiredBinding> requiredBindings = Collections.emptyList();
 
 		final SymbolStruct<?> searchTermArgSymbol = new SymbolStruct<>("SEARCH-TERM", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation searchTermArgAllocation = new ParameterAllocation(0);
 
 		final SymbolStruct<?> searchTermSuppliedPSymbol = new SymbolStruct<>("SEARCH-TERM-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
-		final ParameterAllocation searchTermSuppliedPAllocation = new ParameterAllocation(1);
-		final SuppliedPBinding searchTermSuppliedPBinding = new SuppliedPBinding(searchTermSuppliedPSymbol, searchTermSuppliedPAllocation);
+		final SuppliedPBinding searchTermSuppliedPBinding = new SuppliedPBinding(searchTermSuppliedPSymbol);
 
-		final OptionalBinding defaultPathnameOptionalBinding = new OptionalBinding(searchTermArgSymbol, searchTermArgAllocation, NullStruct.INSTANCE, searchTermSuppliedPBinding);
+		final OptionalBinding defaultPathnameOptionalBinding = new OptionalBinding(searchTermArgSymbol, NullStruct.INSTANCE, searchTermSuppliedPBinding);
 		final List<OptionalBinding> optionalBindings = Collections.singletonList(defaultPathnameOptionalBinding);
 
 		final RestBinding restBinding = null;

@@ -10,7 +10,6 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
-import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
@@ -51,8 +50,7 @@ public final class PathnameTypeFunction extends FunctionStruct {
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
 		final SymbolStruct<?> pathspecArgSymbol = new SymbolStruct<>("PATHSPEC", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation pathspecArgAllocation = new ParameterAllocation(0);
-		final RequiredBinding requiredBinding = new RequiredBinding(pathspecArgSymbol, pathspecArgAllocation);
+		final RequiredBinding requiredBinding = new RequiredBinding(pathspecArgSymbol);
 		final List<RequiredBinding> requiredBindings = Collections.singletonList(requiredBinding);
 
 		final List<OptionalBinding> optionalBindings = Collections.emptyList();
@@ -60,13 +58,11 @@ public final class PathnameTypeFunction extends FunctionStruct {
 		final RestBinding restBinding = null;
 
 		final SymbolStruct<?> caseArgSymbol = new SymbolStruct<>("CASE", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation caseArgAllocation = new ParameterAllocation(1);
 
 		final SymbolStruct<?> caseSuppliedPSymbol = new SymbolStruct<>("CASE-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
-		final ParameterAllocation suppliedPAllocation = new ParameterAllocation(2);
-		final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(caseSuppliedPSymbol, suppliedPAllocation);
+		final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(caseSuppliedPSymbol);
 
-		final KeyBinding keyBinding = new KeyBinding(caseArgSymbol, caseArgAllocation, NullStruct.INSTANCE, CommonLispSymbols.CASE_KEYWORD, suppliedPBinding);
+		final KeyBinding keyBinding = new KeyBinding(caseArgSymbol, NullStruct.INSTANCE, CommonLispSymbols.CASE_KEYWORD, suppliedPBinding);
 		final List<KeyBinding> keyBindings = Collections.singletonList(keyBinding);
 
 		final boolean allowOtherKeys = false;

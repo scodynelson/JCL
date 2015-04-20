@@ -11,18 +11,17 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.MacroletEnvironment;
-import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAnalyzer;
-import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.MacroletStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.printer.Printer;
 import jcl.symbols.SpecialOperatorStruct;
@@ -154,8 +153,7 @@ public class MacroletExpander extends MacroFunctionExpander<MacroletStruct> {
 
 		final boolean isSpecial = Environments.isSpecial(declare, functionName);
 
-		final ParameterAllocation allocation = new ParameterAllocation(nextBindingsPosition);
-		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(functionName, allocation, TType.INSTANCE, functionInitForm);
+		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(functionName, TType.INSTANCE, functionInitForm);
 		if (isSpecial) {
 			macroletEnvironment.addDynamicBinding(binding);
 		} else {

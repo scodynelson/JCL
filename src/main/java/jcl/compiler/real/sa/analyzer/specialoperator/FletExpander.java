@@ -12,7 +12,6 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.FletEnvironment;
 import jcl.compiler.real.environment.LambdaEnvironment;
-import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
@@ -156,8 +155,7 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 
 		final boolean isSpecial = Environments.isSpecial(declare, functionName);
 
-		final ParameterAllocation allocation = new ParameterAllocation(nextBindingsPosition);
-		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(functionName, allocation, TType.INSTANCE, functionInitForm);
+		final EnvironmentParameterBinding binding = new EnvironmentParameterBinding(functionName, TType.INSTANCE, functionInitForm);
 		fletEnvironment.addFunctionBinding(binding);
 
 		return new FletStruct.FletVar(functionName, functionInitForm, isSpecial);

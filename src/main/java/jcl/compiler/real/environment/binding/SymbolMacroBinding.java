@@ -6,22 +6,21 @@ package jcl.compiler.real.environment.binding;
 
 import jcl.LispStruct;
 import jcl.LispType;
-import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class SymbolMacroBinding extends Binding<ParameterAllocation> {
+public class SymbolMacroBinding extends Binding {
 
 	private static final long serialVersionUID = -7630096026388828215L;
 
 	private final LispStruct expansion;
 
-	public SymbolMacroBinding(final SymbolStruct<?> symbolStruct, final ParameterAllocation allocation, final LispType type,
+	public SymbolMacroBinding(final SymbolStruct<?> symbolStruct, final LispType type,
 	                          final LispStruct expansion) {
-		super(symbolStruct, allocation, type);
+		super(symbolStruct, type);
 		this.expansion = expansion;
 	}
 

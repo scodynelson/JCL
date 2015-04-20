@@ -11,7 +11,6 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.LispType;
-import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
@@ -49,18 +48,15 @@ public final class GetStructureSlotValueFunction extends FunctionStruct {
 		final List<RequiredBinding> requiredBindings = new ArrayList<>();
 
 		final SymbolStruct<?> structureClassArgSymbol = new SymbolStruct<>("STRUCTURE-CLASS", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation structureClassArgAllocation = new ParameterAllocation(0);
-		final RequiredBinding structureClassArgRequiredBinding = new RequiredBinding(structureClassArgSymbol, structureClassArgAllocation);
+		final RequiredBinding structureClassArgRequiredBinding = new RequiredBinding(structureClassArgSymbol);
 		requiredBindings.add(structureClassArgRequiredBinding);
 
 		final SymbolStruct<?> structureInstanceArgSymbol = new SymbolStruct<>("STRUCTURE-INSTANCE", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation structureInstanceArgAllocation = new ParameterAllocation(1);
-		final RequiredBinding structureInstanceArgRequiredBinding = new RequiredBinding(structureInstanceArgSymbol, structureInstanceArgAllocation);
+		final RequiredBinding structureInstanceArgRequiredBinding = new RequiredBinding(structureInstanceArgSymbol);
 		requiredBindings.add(structureInstanceArgRequiredBinding);
 
 		final SymbolStruct<?> slotNameArgSymbol = new SymbolStruct<>("SLOT-NAME", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation slotNameArgAllocation = new ParameterAllocation(2);
-		final RequiredBinding slotNameArgRequiredBinding = new RequiredBinding(slotNameArgSymbol, slotNameArgAllocation);
+		final RequiredBinding slotNameArgRequiredBinding = new RequiredBinding(slotNameArgSymbol);
 		requiredBindings.add(slotNameArgRequiredBinding);
 
 		final List<OptionalBinding> optionalBindings = Collections.emptyList();

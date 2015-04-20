@@ -6,22 +6,21 @@ package jcl.compiler.real.environment.binding;
 
 import jcl.LispStruct;
 import jcl.LispType;
-import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class EnvironmentParameterBinding extends EnvironmentBinding<ParameterAllocation> {
+public class EnvironmentParameterBinding extends EnvironmentBinding {
 
 	private static final long serialVersionUID = -4911545990664188285L;
 
 	private final LispStruct initForm;
 
-	public EnvironmentParameterBinding(final SymbolStruct<?> symbolStruct, final ParameterAllocation allocation, final LispType type,
+	public EnvironmentParameterBinding(final SymbolStruct<?> symbolStruct, final LispType type,
 	                                   final LispStruct initForm) {
-		super(symbolStruct, allocation, type);
+		super(symbolStruct, type);
 		this.initForm = initForm;
 	}
 

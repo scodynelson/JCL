@@ -10,7 +10,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
@@ -43,13 +42,11 @@ public class SetSymbolFunctionFunction extends FunctionStruct {
 		final List<RequiredBinding> requiredBindings = new ArrayList<>(2);
 
 		final SymbolStruct<?> symbolArgSymbol = new SymbolStruct<>("SYM", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation symbolArgAllocation = new ParameterAllocation(0);
-		final RequiredBinding symbolArgRequiredBinding = new RequiredBinding(symbolArgSymbol, symbolArgAllocation);
+		final RequiredBinding symbolArgRequiredBinding = new RequiredBinding(symbolArgSymbol);
 		requiredBindings.add(symbolArgRequiredBinding);
 
 		final SymbolStruct<?> functionArgSymbol = new SymbolStruct<>("FN", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation functionArgAllocation = new ParameterAllocation(0);
-		final RequiredBinding functionArgRequiredBinding = new RequiredBinding(functionArgSymbol, functionArgAllocation);
+		final RequiredBinding functionArgRequiredBinding = new RequiredBinding(functionArgSymbol);
 		requiredBindings.add(functionArgRequiredBinding);
 
 		final List<OptionalBinding> optionalBindings = Collections.emptyList();

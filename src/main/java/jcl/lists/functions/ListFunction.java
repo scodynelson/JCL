@@ -9,7 +9,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
@@ -44,8 +43,7 @@ public final class ListFunction extends FunctionStruct {
 		final List<OptionalBinding> optionalBindings = Collections.emptyList();
 
 		final SymbolStruct<?> objectRestArgSymbol = new SymbolStruct<>("OBJECTS", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation objectRestArgArgAllocation = new ParameterAllocation(0);
-		final RestBinding restBinding = new RestBinding(objectRestArgSymbol, objectRestArgArgAllocation);
+		final RestBinding restBinding = new RestBinding(objectRestArgSymbol);
 
 		final List<KeyBinding> keyBindings = Collections.emptyList();
 		final boolean allowOtherKeys = false;

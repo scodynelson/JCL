@@ -6,22 +6,21 @@ package jcl.compiler.real.environment.binding;
 
 import jcl.LispType;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.allocation.Allocation;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class SymbolBinding<A extends Allocation> extends Binding<A> {
+public class SymbolBinding extends Binding {
 
 	private static final long serialVersionUID = -3462756070576114237L;
 
 	private final Environment binding;
 
-	protected SymbolBinding(final SymbolStruct<?> symbolStruct, final A allocation, final LispType type,
+	protected SymbolBinding(final SymbolStruct<?> symbolStruct, final LispType type,
 	                        final Environment binding) {
-		super(symbolStruct, allocation, type);
+		super(symbolStruct, type);
 		this.binding = binding;
 	}
 
@@ -47,7 +46,7 @@ public class SymbolBinding<A extends Allocation> extends Binding<A> {
 		if (obj.getClass() != getClass()) {
 			return false;
 		}
-		final SymbolBinding<?> rhs = (SymbolBinding) obj;
+		final SymbolBinding rhs = (SymbolBinding) obj;
 		return new EqualsBuilder().appendSuper(super.equals(obj))
 		                          .append(binding, rhs.binding)
 		                          .isEquals();

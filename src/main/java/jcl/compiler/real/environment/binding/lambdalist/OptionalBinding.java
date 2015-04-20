@@ -5,7 +5,6 @@
 package jcl.compiler.real.environment.binding.lambdalist;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.ParameterBinding;
 import jcl.symbols.SymbolStruct;
 import jcl.types.TType;
@@ -20,9 +19,9 @@ public class OptionalBinding extends ParameterBinding {
 
 	private final SuppliedPBinding suppliedPBinding;
 
-	public OptionalBinding(final SymbolStruct<?> symbolStruct, final ParameterAllocation allocation, final LispStruct initForm,
+	public OptionalBinding(final SymbolStruct<?> symbolStruct, final LispStruct initForm,
 	                       final SuppliedPBinding suppliedPBinding) {
-		super(symbolStruct, allocation, TType.INSTANCE, initForm);
+		super(symbolStruct, TType.INSTANCE, initForm);
 		this.suppliedPBinding = suppliedPBinding;
 	}
 

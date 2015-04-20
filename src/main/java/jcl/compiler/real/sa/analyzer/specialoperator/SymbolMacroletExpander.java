@@ -9,17 +9,16 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.SymbolMacroletEnvironment;
-import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.SymbolMacroBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAnalyzer;
-import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.SymbolMacroletStruct;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
+import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.printer.Printer;
 import jcl.symbols.SpecialOperatorStruct;
@@ -121,8 +120,7 @@ public class SymbolMacroletExpander extends MacroFunctionExpander<SymbolMacrolet
 		final int nextBindingsPosition = currentLambda.getNextParameterNumber();
 		symbolMacroletEnvironment.setBindingsPosition(nextBindingsPosition);
 
-		final ParameterAllocation allocation = new ParameterAllocation(nextBindingsPosition);
-		final SymbolMacroBinding binding = new SymbolMacroBinding(var, allocation, TType.INSTANCE, expansion);
+		final SymbolMacroBinding binding = new SymbolMacroBinding(var, TType.INSTANCE, expansion);
 		symbolMacroletEnvironment.addSymbolMacroBinding(binding);
 
 		return new SymbolMacroletStruct.SymbolMacroletVar(var, expansion);

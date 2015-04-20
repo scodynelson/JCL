@@ -11,7 +11,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
@@ -64,30 +63,25 @@ public final class MergePathnamesFunction extends FunctionStruct {
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
 		final SymbolStruct<?> pathnameArgSymbol = new SymbolStruct<>("PATHNAME", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation pathnameArgAllocation = new ParameterAllocation(0);
-		final RequiredBinding requiredBinding = new RequiredBinding(pathnameArgSymbol, pathnameArgAllocation);
+		final RequiredBinding requiredBinding = new RequiredBinding(pathnameArgSymbol);
 		final List<RequiredBinding> requiredBindings = Collections.singletonList(requiredBinding);
 
 		final List<OptionalBinding> optionalBindings = new ArrayList<>(2);
 
 		final SymbolStruct<?> defaultPathnameArgSymbol = new SymbolStruct<>("DEFAULT-PATHNAME", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation defaultPathnameArgAllocation = new ParameterAllocation(1);
 
 		final SymbolStruct<?> defaultPathnameSuppliedPSymbol = new SymbolStruct<>("DEFAULT-PATHNAME-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
-		final ParameterAllocation defaultPathnameSuppliedPAllocation = new ParameterAllocation(2);
-		final SuppliedPBinding defaultPathnameSuppliedPBinding = new SuppliedPBinding(defaultPathnameSuppliedPSymbol, defaultPathnameSuppliedPAllocation);
+		final SuppliedPBinding defaultPathnameSuppliedPBinding = new SuppliedPBinding(defaultPathnameSuppliedPSymbol);
 
-		final OptionalBinding defaultPathnameOptionalBinding = new OptionalBinding(defaultPathnameArgSymbol, defaultPathnameArgAllocation, NullStruct.INSTANCE, defaultPathnameSuppliedPBinding);
+		final OptionalBinding defaultPathnameOptionalBinding = new OptionalBinding(defaultPathnameArgSymbol, NullStruct.INSTANCE, defaultPathnameSuppliedPBinding);
 		optionalBindings.add(defaultPathnameOptionalBinding);
 
 		final SymbolStruct<?> defaultVersionArgSymbol = new SymbolStruct<>("DEFAULT-VERSION", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation defaultVersionArgAllocation = new ParameterAllocation(3);
 
 		final SymbolStruct<?> defaultVersionSuppliedPSymbol = new SymbolStruct<>("DEFAULT-VERSION-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
-		final ParameterAllocation defaultVersionSuppliedPAllocation = new ParameterAllocation(4);
-		final SuppliedPBinding defaultVersionSuppliedPBinding = new SuppliedPBinding(defaultVersionSuppliedPSymbol, defaultVersionSuppliedPAllocation);
+		final SuppliedPBinding defaultVersionSuppliedPBinding = new SuppliedPBinding(defaultVersionSuppliedPSymbol);
 
-		final OptionalBinding defaultVersionOptionalBinding = new OptionalBinding(defaultVersionArgSymbol, defaultVersionArgAllocation, NullStruct.INSTANCE, defaultVersionSuppliedPBinding);
+		final OptionalBinding defaultVersionOptionalBinding = new OptionalBinding(defaultVersionArgSymbol, NullStruct.INSTANCE, defaultVersionSuppliedPBinding);
 		optionalBindings.add(defaultVersionOptionalBinding);
 
 		final RestBinding restBinding = null;

@@ -10,7 +10,6 @@ import java.util.Map;
 
 import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
-import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
@@ -49,8 +48,7 @@ public class TestLambdaGenerator extends FunctionStruct {
 
 		// Start: Required
 		final SymbolStruct<?> requiredSymbol = pkg.findSymbol("REQUIRED-SYMBOL").getSymbol();
-		ParameterAllocation allocation = new ParameterAllocation(0);
-		final RequiredBinding requiredBinding = new RequiredBinding(requiredSymbol, allocation);
+		final RequiredBinding requiredBinding = new RequiredBinding(requiredSymbol);
 		requiredBindings.add(requiredBinding);
 		// End: Required
 
@@ -58,38 +56,33 @@ public class TestLambdaGenerator extends FunctionStruct {
 		final List<OptionalBinding> optionalBindings = new ArrayList<>();
 
 		final SymbolStruct<?> optionalSuppliedPSymbol = pkg.findSymbol("OPTIONAL-SUPPLIED-P-SYMBOL").getSymbol();
-		allocation = new ParameterAllocation(2);
-		final SuppliedPBinding optionalSuppliedPBinding = new SuppliedPBinding(optionalSuppliedPSymbol, allocation);
+		final SuppliedPBinding optionalSuppliedPBinding = new SuppliedPBinding(optionalSuppliedPSymbol);
 
 		final SymbolStruct<?> optionalSymbol = pkg.findSymbol("OPTIONAL-SYMBOL").getSymbol();
-		allocation = new ParameterAllocation(1);
 		final LispStruct optionalInitForm = new CharacterStruct(100);
 
-		final OptionalBinding optionalBinding = new OptionalBinding(optionalSymbol, allocation, optionalInitForm, optionalSuppliedPBinding);
+		final OptionalBinding optionalBinding = new OptionalBinding(optionalSymbol, optionalInitForm, optionalSuppliedPBinding);
 		optionalBindings.add(optionalBinding);
 		// End: Optional
 
 		// Start: Rest
 		final SymbolStruct<?> restSymbol = pkg.findSymbol("REST-SYMBOL").getSymbol();
-		allocation = new ParameterAllocation(3);
-		final RestBinding restBinding = new RestBinding(restSymbol, allocation);
+		final RestBinding restBinding = new RestBinding(restSymbol);
 		// End: Rest
 
 		// Start: Keys
 		final List<KeyBinding> keyBindings = new ArrayList<>();
 
 		final SymbolStruct<?> keySuppliedPSymbol = pkg.findSymbol("KEY-SUPPLIED-P-SYMBOL").getSymbol();
-		allocation = new ParameterAllocation(5);
-		final SuppliedPBinding keySuppliedPBinding = new SuppliedPBinding(keySuppliedPSymbol, allocation);
+		final SuppliedPBinding keySuppliedPBinding = new SuppliedPBinding(keySuppliedPSymbol);
 
 		final SymbolStruct<?> keySymbol = pkg.findSymbol("KEY-SYMBOL").getSymbol();
-		allocation = new ParameterAllocation(4);
 		final LispStruct keyInitForm = new CharacterStruct(200);
 
 		final PackageStruct keywordPkg = GlobalPackageStruct.KEYWORD;
 		final KeywordStruct keyName = (KeywordStruct) keywordPkg.findSymbol("KEY-NAME").getSymbol();
 
-		final KeyBinding keyBinding = new KeyBinding(keySymbol, allocation, keyInitForm, keyName, keySuppliedPBinding);
+		final KeyBinding keyBinding = new KeyBinding(keySymbol, keyInitForm, keyName, keySuppliedPBinding);
 		keyBindings.add(keyBinding);
 		// End: Keys
 
@@ -101,10 +94,9 @@ public class TestLambdaGenerator extends FunctionStruct {
 		final List<AuxBinding> auxBindings = new ArrayList<>();
 
 		final SymbolStruct<?> auxSymbol = pkg.findSymbol("AUX-SYMBOL").getSymbol();
-		allocation = new ParameterAllocation(4);
 		final LispStruct auxInitForm = new CharacterStruct(300);
 
-		final AuxBinding auxBinding = new AuxBinding(auxSymbol, allocation, auxInitForm);
+		final AuxBinding auxBinding = new AuxBinding(auxSymbol, auxInitForm);
 		auxBindings.add(auxBinding);
 		// End: Aux
 

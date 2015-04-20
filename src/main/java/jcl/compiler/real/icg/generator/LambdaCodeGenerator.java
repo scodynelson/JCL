@@ -149,29 +149,25 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			final int thisStore = currentClass.getNextAvailableStore();
 
 			final int packageStore = currentClass.getNextAvailableStore();
-			final int allocationStore = currentClass.getNextAvailableStore();
-			final int suppliedPAllocationStore = currentClass.getNextAvailableStore();
-
-			int parameterCounter = 0;
 
 			// End: Required
 			final int requiredBindingsStore = currentClass.getNextAvailableStore();
-			parameterCounter = generateRequiredBindings(currentClass, lambdaListBindings, mv, packageStore, allocationStore, parameterCounter, requiredBindingsStore);
+			generateRequiredBindings(currentClass, lambdaListBindings, mv, packageStore, requiredBindingsStore);
 			// End: Required
 
 			// Start: Optional
 			final int optionalBindingsStore = currentClass.getNextAvailableStore();
-			parameterCounter = generateOptionalBindings(classBuilder, currentClass, lambdaListBindings, mv, packageStore, allocationStore, suppliedPAllocationStore, parameterCounter, optionalBindingsStore);
+			generateOptionalBindings(classBuilder, currentClass, lambdaListBindings, mv, packageStore, optionalBindingsStore);
 			// End: Optional
 
 			// Start: Rest
 			final int restBindingStore = currentClass.getNextAvailableStore();
-			parameterCounter = generateRestBinding(currentClass, lambdaListBindings, mv, packageStore, allocationStore, parameterCounter, restBindingStore);
+			generateRestBinding(currentClass, lambdaListBindings, mv, packageStore, restBindingStore);
 			// End: Rest
 
 			// Start: Key
 			final int keyBindingsStore = currentClass.getNextAvailableStore();
-			parameterCounter = generateKeyBindings(classBuilder, currentClass, lambdaListBindings, mv, packageStore, allocationStore, suppliedPAllocationStore, parameterCounter, keyBindingsStore);
+			generateKeyBindings(classBuilder, currentClass, lambdaListBindings, mv, packageStore, keyBindingsStore);
 			// End: Key
 
 			// Start: Allow-Other-Keys
@@ -181,7 +177,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			// Start: Aux
 			final int auxBindingsStore = currentClass.getNextAvailableStore();
-			generateAuxBindings(classBuilder, currentClass, lambdaListBindings, mv, packageStore, allocationStore, parameterCounter, auxBindingsStore);
+			generateAuxBindings(classBuilder, currentClass, lambdaListBindings, mv, packageStore, auxBindingsStore);
 			// Start: End
 
 			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
@@ -763,9 +759,8 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 	}
 
-	private int generateRequiredBindings(final ClassDef currentClass, final OrdinaryLambdaListBindings lambdaListBindings,
-	                                     final MethodVisitor mv, final int packageStore, final int allocationStore,
-	                                     final int currentParameterCounter, final int requiredBindingsStore) {
+	private void generateRequiredBindings(final ClassDef currentClass, final OrdinaryLambdaListBindings lambdaListBindings,
+	                                      final MethodVisitor mv, final int packageStore, final int requiredBindingsStore) {
 
 		mv.visitTypeInsn(Opcodes.NEW, "java/util/ArrayList");
 		mv.visitInsn(Opcodes.DUP);
@@ -774,8 +769,6 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 		final int requiredSymbolStore = currentClass.getNextAvailableStore();
 		final int requiredBindingStore = currentClass.getNextAvailableStore();
-
-		int parameterCounter = currentParameterCounter;
 
 		final List<RequiredBinding> requiredBindings = lambdaListBindings.getRequiredBindings();
 		for (final RequiredBinding requiredBinding : requiredBindings) {
@@ -794,17 +787,10 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
 			mv.visitVarInsn(Opcodes.ASTORE, requiredSymbolStore);
 
-			mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/environment/allocation/ParameterAllocation");
-			mv.visitInsn(Opcodes.DUP);
-			mv.visitLdcInsn(parameterCounter++);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/allocation/ParameterAllocation", "<init>", "(I)V", false);
-			mv.visitVarInsn(Opcodes.ASTORE, allocationStore);
-
 			mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/environment/binding/lambdalist/RequiredBinding");
 			mv.visitInsn(Opcodes.DUP);
 			mv.visitVarInsn(Opcodes.ALOAD, requiredSymbolStore);
-			mv.visitVarInsn(Opcodes.ALOAD, allocationStore);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/binding/lambdalist/RequiredBinding", "<init>", "(Ljcl/symbols/SymbolStruct;Ljcl/compiler/real/environment/allocation/ParameterAllocation;)V", false);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/binding/lambdalist/RequiredBinding", "<init>", "(Ljcl/symbols/SymbolStruct;)V", false);
 			mv.visitVarInsn(Opcodes.ASTORE, requiredBindingStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, requiredBindingsStore);
@@ -812,13 +798,11 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/List", "add", "(Ljava/lang/Object;)Z", true);
 			mv.visitInsn(Opcodes.POP);
 		}
-		return parameterCounter;
 	}
 
-	private int generateOptionalBindings(final JavaClassBuilder classBuilder, final ClassDef currentClass,
-	                                     final OrdinaryLambdaListBindings lambdaListBindings, final MethodVisitor mv,
-	                                     final int packageStore, final int allocationStore, final int suppliedPAllocationStore,
-	                                     final int currentParameterCounter, final int optionalBindingsStore) {
+	private void generateOptionalBindings(final JavaClassBuilder classBuilder, final ClassDef currentClass,
+	                                      final OrdinaryLambdaListBindings lambdaListBindings, final MethodVisitor mv,
+	                                      final int packageStore, final int optionalBindingsStore) {
 
 		mv.visitTypeInsn(Opcodes.NEW, "java/util/ArrayList");
 		mv.visitInsn(Opcodes.DUP);
@@ -830,8 +814,6 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final int optionalSuppliedPSymbolStore = currentClass.getNextAvailableStore();
 		final int optionalSuppliedPStore = currentClass.getNextAvailableStore();
 		final int optionalBindingStore = currentClass.getNextAvailableStore();
-
-		int parameterCounter = currentParameterCounter;
 
 		final List<OptionalBinding> optionalBindings = lambdaListBindings.getOptionalBindings();
 		for (final OptionalBinding optionalBinding : optionalBindings) {
@@ -850,12 +832,6 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
 			mv.visitVarInsn(Opcodes.ASTORE, optionalSymbolStore);
-
-			mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/environment/allocation/ParameterAllocation");
-			mv.visitInsn(Opcodes.DUP);
-			mv.visitLdcInsn(parameterCounter++);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/allocation/ParameterAllocation", "<init>", "(I)V", false);
-			mv.visitVarInsn(Opcodes.ASTORE, allocationStore);
 
 			nullCodeGenerator.generate(NullStruct.INSTANCE, classBuilder);
 			mv.visitVarInsn(Opcodes.ASTORE, optionalInitFormStore);
@@ -881,17 +857,10 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
 				mv.visitVarInsn(Opcodes.ASTORE, optionalSuppliedPSymbolStore);
 
-				mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/environment/allocation/ParameterAllocation");
-				mv.visitInsn(Opcodes.DUP);
-				mv.visitLdcInsn(parameterCounter++);
-				mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/allocation/ParameterAllocation", "<init>", "(I)V", false);
-				mv.visitVarInsn(Opcodes.ASTORE, suppliedPAllocationStore);
-
 				mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/environment/binding/lambdalist/SuppliedPBinding");
 				mv.visitInsn(Opcodes.DUP);
 				mv.visitVarInsn(Opcodes.ALOAD, optionalSuppliedPSymbolStore);
-				mv.visitVarInsn(Opcodes.ALOAD, suppliedPAllocationStore);
-				mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/binding/lambdalist/SuppliedPBinding", "<init>", "(Ljcl/symbols/SymbolStruct;Ljcl/compiler/real/environment/allocation/ParameterAllocation;)V", false);
+				mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/binding/lambdalist/SuppliedPBinding", "<init>", "(Ljcl/symbols/SymbolStruct;)V", false);
 				mv.visitVarInsn(Opcodes.ASTORE, optionalSuppliedPStore);
 			}
 			// End: Supplied-P
@@ -899,10 +868,9 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/environment/binding/lambdalist/OptionalBinding");
 			mv.visitInsn(Opcodes.DUP);
 			mv.visitVarInsn(Opcodes.ALOAD, optionalSymbolStore);
-			mv.visitVarInsn(Opcodes.ALOAD, allocationStore);
 			mv.visitVarInsn(Opcodes.ALOAD, optionalInitFormStore);
 			mv.visitVarInsn(Opcodes.ALOAD, optionalSuppliedPStore);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/binding/lambdalist/OptionalBinding", "<init>", "(Ljcl/symbols/SymbolStruct;Ljcl/compiler/real/environment/allocation/ParameterAllocation;Ljcl/LispStruct;Ljcl/compiler/real/environment/binding/lambdalist/SuppliedPBinding;)V", false);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/binding/lambdalist/OptionalBinding", "<init>", "(Ljcl/symbols/SymbolStruct;Ljcl/LispStruct;Ljcl/compiler/real/environment/binding/lambdalist/SuppliedPBinding;)V", false);
 			mv.visitVarInsn(Opcodes.ASTORE, optionalBindingStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, optionalBindingsStore);
@@ -910,16 +878,12 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/List", "add", "(Ljava/lang/Object;)Z", true);
 			mv.visitInsn(Opcodes.POP);
 		}
-		return parameterCounter;
 	}
 
-	private int generateRestBinding(final ClassDef currentClass, final OrdinaryLambdaListBindings lambdaListBindings,
-	                                final MethodVisitor mv, final int packageStore, final int allocationStore,
-	                                final int currentParameterCounter, final int restBindingStore) {
+	private void generateRestBinding(final ClassDef currentClass, final OrdinaryLambdaListBindings lambdaListBindings,
+	                                 final MethodVisitor mv, final int packageStore, final int restBindingStore) {
 
 		final int restSymbolStore = currentClass.getNextAvailableStore();
-
-		int parameterCounter = currentParameterCounter;
 
 		final RestBinding restBinding = lambdaListBindings.getRestBinding();
 		if (restBinding == null) {
@@ -941,26 +905,17 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
 			mv.visitVarInsn(Opcodes.ASTORE, restSymbolStore);
 
-			mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/environment/allocation/ParameterAllocation");
-			mv.visitInsn(Opcodes.DUP);
-			mv.visitLdcInsn(parameterCounter++);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/allocation/ParameterAllocation", "<init>", "(I)V", false);
-			mv.visitVarInsn(Opcodes.ASTORE, allocationStore);
-
 			mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/environment/binding/lambdalist/RestBinding");
 			mv.visitInsn(Opcodes.DUP);
 			mv.visitVarInsn(Opcodes.ALOAD, restSymbolStore);
-			mv.visitVarInsn(Opcodes.ALOAD, allocationStore);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/binding/lambdalist/RestBinding", "<init>", "(Ljcl/symbols/SymbolStruct;Ljcl/compiler/real/environment/allocation/ParameterAllocation;)V", false);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/binding/lambdalist/RestBinding", "<init>", "(Ljcl/symbols/SymbolStruct;)V", false);
 			mv.visitVarInsn(Opcodes.ASTORE, restBindingStore);
 		}
-		return parameterCounter;
 	}
 
-	private int generateKeyBindings(final JavaClassBuilder classBuilder, final ClassDef currentClass,
-	                                final OrdinaryLambdaListBindings lambdaListBindings, final MethodVisitor mv,
-	                                final int packageStore, final int allocationStore, final int suppliedPAllocationStore,
-	                                final int currentParameterCounter, final int keyBindingsStore) {
+	private void generateKeyBindings(final JavaClassBuilder classBuilder, final ClassDef currentClass,
+	                                 final OrdinaryLambdaListBindings lambdaListBindings, final MethodVisitor mv,
+	                                 final int packageStore, final int keyBindingsStore) {
 
 		mv.visitTypeInsn(Opcodes.NEW, "java/util/ArrayList");
 		mv.visitInsn(Opcodes.DUP);
@@ -973,8 +928,6 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final int keySuppliedPSymbolStore = currentClass.getNextAvailableStore();
 		final int keySuppliedPStore = currentClass.getNextAvailableStore();
 		final int keyBindingStore = currentClass.getNextAvailableStore();
-
-		int parameterCounter = currentParameterCounter;
 
 		final List<KeyBinding> keyBindings = lambdaListBindings.getKeyBindings();
 		for (final KeyBinding keyBinding : keyBindings) {
@@ -993,12 +946,6 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
 			mv.visitVarInsn(Opcodes.ASTORE, keySymbolStore);
-
-			mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/environment/allocation/ParameterAllocation");
-			mv.visitInsn(Opcodes.DUP);
-			mv.visitLdcInsn(parameterCounter++);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/allocation/ParameterAllocation", "<init>", "(I)V", false);
-			mv.visitVarInsn(Opcodes.ASTORE, allocationStore);
 
 			nullCodeGenerator.generate(NullStruct.INSTANCE, classBuilder);
 			mv.visitVarInsn(Opcodes.ASTORE, keyInitFormStore);
@@ -1037,17 +984,10 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
 				mv.visitVarInsn(Opcodes.ASTORE, keySuppliedPSymbolStore);
 
-				mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/environment/allocation/ParameterAllocation");
-				mv.visitInsn(Opcodes.DUP);
-				mv.visitLdcInsn(parameterCounter++);
-				mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/allocation/ParameterAllocation", "<init>", "(I)V", false);
-				mv.visitVarInsn(Opcodes.ASTORE, suppliedPAllocationStore);
-
 				mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/environment/binding/lambdalist/SuppliedPBinding");
 				mv.visitInsn(Opcodes.DUP);
 				mv.visitVarInsn(Opcodes.ALOAD, keySuppliedPSymbolStore);
-				mv.visitVarInsn(Opcodes.ALOAD, suppliedPAllocationStore);
-				mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/binding/lambdalist/SuppliedPBinding", "<init>", "(Ljcl/symbols/SymbolStruct;Ljcl/compiler/real/environment/allocation/ParameterAllocation;)V", false);
+				mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/binding/lambdalist/SuppliedPBinding", "<init>", "(Ljcl/symbols/SymbolStruct;)V", false);
 				mv.visitVarInsn(Opcodes.ASTORE, keySuppliedPStore);
 			}
 			// End: Supplied-P
@@ -1055,11 +995,10 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/environment/binding/lambdalist/KeyBinding");
 			mv.visitInsn(Opcodes.DUP);
 			mv.visitVarInsn(Opcodes.ALOAD, keySymbolStore);
-			mv.visitVarInsn(Opcodes.ALOAD, allocationStore);
 			mv.visitVarInsn(Opcodes.ALOAD, keyInitFormStore);
 			mv.visitVarInsn(Opcodes.ALOAD, keyNameStore);
 			mv.visitVarInsn(Opcodes.ALOAD, keySuppliedPStore);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/binding/lambdalist/KeyBinding", "<init>", "(Ljcl/symbols/SymbolStruct;Ljcl/compiler/real/environment/allocation/ParameterAllocation;Ljcl/LispStruct;Ljcl/symbols/KeywordStruct;Ljcl/compiler/real/environment/binding/lambdalist/SuppliedPBinding;)V", false);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/binding/lambdalist/KeyBinding", "<init>", "(Ljcl/symbols/SymbolStruct;Ljcl/LispStruct;Ljcl/symbols/KeywordStruct;Ljcl/compiler/real/environment/binding/lambdalist/SuppliedPBinding;)V", false);
 			mv.visitVarInsn(Opcodes.ASTORE, keyBindingStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, keyBindingsStore);
@@ -1067,7 +1006,6 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/List", "add", "(Ljava/lang/Object;)Z", true);
 			mv.visitInsn(Opcodes.POP);
 		}
-		return parameterCounter;
 	}
 
 	private void generateAllowOtherKeys(final OrdinaryLambdaListBindings lambdaListBindings, final MethodVisitor mv,
@@ -1083,10 +1021,9 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 	}
 
-	private int generateAuxBindings(final JavaClassBuilder classBuilder, final ClassDef currentClass,
-	                                final OrdinaryLambdaListBindings lambdaListBindings, final MethodVisitor mv,
-	                                final int packageStore, final int allocationStore,
-	                                final int currentParameterCounter, final int auxBindingsStore) {
+	private void generateAuxBindings(final JavaClassBuilder classBuilder, final ClassDef currentClass,
+	                                 final OrdinaryLambdaListBindings lambdaListBindings, final MethodVisitor mv,
+	                                 final int packageStore, final int auxBindingsStore) {
 
 		mv.visitTypeInsn(Opcodes.NEW, "java/util/ArrayList");
 		mv.visitInsn(Opcodes.DUP);
@@ -1096,8 +1033,6 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final int auxSymbolStore = currentClass.getNextAvailableStore();
 		final int auxInitFormStore = currentClass.getNextAvailableStore();
 		final int auxBindingStore = currentClass.getNextAvailableStore();
-
-		int parameterCounter = currentParameterCounter;
 
 		final List<AuxBinding> auxBindings = lambdaListBindings.getAuxBindings();
 		for (final AuxBinding auxBinding : auxBindings) {
@@ -1116,12 +1051,6 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
 			mv.visitVarInsn(Opcodes.ASTORE, auxSymbolStore);
 
-			mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/environment/allocation/ParameterAllocation");
-			mv.visitInsn(Opcodes.DUP);
-			mv.visitLdcInsn(parameterCounter++);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/allocation/ParameterAllocation", "<init>", "(I)V", false);
-			mv.visitVarInsn(Opcodes.ASTORE, allocationStore);
-
 			// NOTE: Just generate a null value for this initForm here. We take care of the &aux initForms in the body
 			//       when it is processed
 			nullCodeGenerator.generate(NullStruct.INSTANCE, classBuilder);
@@ -1130,9 +1059,8 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/environment/binding/lambdalist/AuxBinding");
 			mv.visitInsn(Opcodes.DUP);
 			mv.visitVarInsn(Opcodes.ALOAD, auxSymbolStore);
-			mv.visitVarInsn(Opcodes.ALOAD, allocationStore);
 			mv.visitVarInsn(Opcodes.ALOAD, auxInitFormStore);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/binding/lambdalist/AuxBinding", "<init>", "(Ljcl/symbols/SymbolStruct;Ljcl/compiler/real/environment/allocation/ParameterAllocation;Ljcl/LispStruct;)V", false);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/binding/lambdalist/AuxBinding", "<init>", "(Ljcl/symbols/SymbolStruct;Ljcl/LispStruct;)V", false);
 			mv.visitVarInsn(Opcodes.ASTORE, auxBindingStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, auxBindingsStore);
@@ -1140,6 +1068,5 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/List", "add", "(Ljava/lang/Object;)Z", true);
 			mv.visitInsn(Opcodes.POP);
 		}
-		return parameterCounter;
 	}
 }

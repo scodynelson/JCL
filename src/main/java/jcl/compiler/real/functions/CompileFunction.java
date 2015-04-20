@@ -5,7 +5,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
@@ -46,18 +45,15 @@ public final class CompileFunction extends FunctionStruct {
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
 		final SymbolStruct<?> nameArgSymbol = new SymbolStruct<>("NAME", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation nameArgAllocation = new ParameterAllocation(0);
-		final RequiredBinding requiredBinding = new RequiredBinding(nameArgSymbol, nameArgAllocation);
+		final RequiredBinding requiredBinding = new RequiredBinding(nameArgSymbol);
 		final List<RequiredBinding> requiredBindings = Collections.singletonList(requiredBinding);
 
 		final SymbolStruct<?> definitionArgSymbol = new SymbolStruct<>("DEFINITION", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation definitionArgAllocation = new ParameterAllocation(1);
 
 		final SymbolStruct<?> definitionSuppliedP = new SymbolStruct<>("DEFINITION-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
-		final ParameterAllocation suppliedPAllocation = new ParameterAllocation(2);
-		final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(definitionSuppliedP, suppliedPAllocation);
+		final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(definitionSuppliedP);
 
-		final OptionalBinding optionalBinding = new OptionalBinding(definitionArgSymbol, definitionArgAllocation, NullStruct.INSTANCE, suppliedPBinding);
+		final OptionalBinding optionalBinding = new OptionalBinding(definitionArgSymbol, NullStruct.INSTANCE, suppliedPBinding);
 		final List<OptionalBinding> optionalBindings = Collections.singletonList(optionalBinding);
 
 		final RestBinding restBinding = null;

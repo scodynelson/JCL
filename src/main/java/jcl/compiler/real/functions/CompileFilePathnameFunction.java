@@ -9,7 +9,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.allocation.ParameterAllocation;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
@@ -56,8 +55,7 @@ public final class CompileFilePathnameFunction extends FunctionStruct {
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
 		final SymbolStruct<?> inputFileArgSymbol = new SymbolStruct<>("INPUT-FILE", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation inputFileArgAllocation = new ParameterAllocation(0);
-		final RequiredBinding requiredBinding = new RequiredBinding(inputFileArgSymbol, inputFileArgAllocation);
+		final RequiredBinding requiredBinding = new RequiredBinding(inputFileArgSymbol);
 		final List<RequiredBinding> requiredBindings = Collections.singletonList(requiredBinding);
 
 		final List<OptionalBinding> optionalBindings = Collections.emptyList();
@@ -65,13 +63,11 @@ public final class CompileFilePathnameFunction extends FunctionStruct {
 		final RestBinding restBinding = null;
 
 		final SymbolStruct<?> outputFileArgSymbol = new SymbolStruct<>("OUTPUT-FILE", GlobalPackageStruct.COMMON_LISP);
-		final ParameterAllocation outputFileArgAllocation = new ParameterAllocation(1);
 
 		final SymbolStruct<?> outputSuppliedPSymbol = new SymbolStruct<>("OUTPUT-FILE-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
-		final ParameterAllocation suppliedPAllocation = new ParameterAllocation(2);
-		final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(outputSuppliedPSymbol, suppliedPAllocation);
+		final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(outputSuppliedPSymbol);
 
-		final KeyBinding keyBinding = new KeyBinding(outputFileArgSymbol, outputFileArgAllocation, NullStruct.INSTANCE, CommonLispSymbols.CASE_KEYWORD, suppliedPBinding);
+		final KeyBinding keyBinding = new KeyBinding(outputFileArgSymbol, NullStruct.INSTANCE, CommonLispSymbols.CASE_KEYWORD, suppliedPBinding);
 		final List<KeyBinding> keyBindings = Collections.singletonList(keyBinding);
 
 		final boolean allowOtherKeys = false;

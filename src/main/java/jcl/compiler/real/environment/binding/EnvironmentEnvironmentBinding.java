@@ -6,22 +6,21 @@ package jcl.compiler.real.environment.binding;
 
 import jcl.LispType;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.allocation.EnvironmentAllocation;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class EnvironmentEnvironmentBinding extends EnvironmentBinding<EnvironmentAllocation> {
+public class EnvironmentEnvironmentBinding extends EnvironmentBinding {
 
 	private static final long serialVersionUID = 1487409353000374736L;
 
 	private Environment environment;
 
-	public EnvironmentEnvironmentBinding(final SymbolStruct<?> symbolStruct, final EnvironmentAllocation allocation, final LispType type,
+	public EnvironmentEnvironmentBinding(final SymbolStruct<?> symbolStruct, final LispType type,
 	                                     final Environment environment) {
-		super(symbolStruct, allocation, type);
+		super(symbolStruct, type);
 		this.environment = environment;
 	}
 

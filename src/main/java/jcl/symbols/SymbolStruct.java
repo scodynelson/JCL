@@ -81,7 +81,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 * @param value
 	 * 		the symbol value
 	 */
-	public SymbolStruct(final String name, final TYPE value) {
+	protected SymbolStruct(final String name, final TYPE value) {
 		this(name, null, value, null);
 	}
 
@@ -93,7 +93,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 * @param function
 	 * 		the symbol function
 	 */
-	public SymbolStruct(final String name, final FunctionStruct function) {
+	protected SymbolStruct(final String name, final FunctionStruct function) {
 		this(name, null, null, function);
 	}
 
@@ -107,7 +107,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 * @param value
 	 * 		the symbol value
 	 */
-	public SymbolStruct(final String name, final PackageStruct symbolPackage, final TYPE value) {
+	protected SymbolStruct(final String name, final PackageStruct symbolPackage, final TYPE value) {
 		this(SymbolType.INSTANCE, name, symbolPackage, value, null);
 	}
 
@@ -123,7 +123,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 * @param function
 	 * 		the symbol function
 	 */
-	public SymbolStruct(final String name, final PackageStruct symbolPackage, final TYPE value, final FunctionStruct function) {
+	protected SymbolStruct(final String name, final PackageStruct symbolPackage, final TYPE value, final FunctionStruct function) {
 		this(SymbolType.INSTANCE, name, symbolPackage, value, function);
 	}
 

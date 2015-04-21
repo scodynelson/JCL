@@ -453,11 +453,13 @@ public class PackageStruct extends BuiltInClassStruct {
 		for (final String symbolName : symbolNames) {
 			final PackageSymbolStruct nonInheritedPackageSymbol = findNonInheritedSymbol(symbolName);
 
-			SymbolStruct<?> nonInheritedSymbol = nonInheritedPackageSymbol.getSymbol();
-			if (nonInheritedSymbol == null) {
+			final SymbolStruct<?> nonInheritedSymbol;
+			if (nonInheritedPackageSymbol == null) {
 				nonInheritedSymbol = new SymbolStruct<>(symbolName);
 				internalSymbols.put(symbolName, nonInheritedSymbol);
 				nonInheritedSymbol.setSymbolPackage(this);
+			} else {
+				nonInheritedSymbol = nonInheritedPackageSymbol.getSymbol();
 			}
 			shadowingSymbols.put(symbolName, nonInheritedSymbol);
 		}

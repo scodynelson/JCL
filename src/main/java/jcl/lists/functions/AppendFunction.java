@@ -4,16 +4,10 @@
 
 package jcl.lists.functions;
 
-import java.util.Collections;
-import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
-import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
-import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
@@ -30,7 +24,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class AppendFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> APPEND = new SymbolStruct<>("APPEND", GlobalPackageStruct.COMMON_LISP);
+	public static final SymbolStruct<?> APPEND = GlobalPackageStruct.COMMON_LISP.intern("APPEND").getSymbol();
 
 	private static final long serialVersionUID = -6347931755033347733L;
 
@@ -47,21 +41,16 @@ public final class AppendFunction extends FunctionStruct {
 	@PostConstruct
 	private void init() {
 		APPEND.setFunction(this);
+		GlobalPackageStruct.COMMON_LISP.export(APPEND);
 	}
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
-		final List<RequiredBinding> requiredBindings = Collections.emptyList();
-		final List<OptionalBinding> optionalBindings = Collections.emptyList();
-
-		final SymbolStruct<?> listRestArgSymbol = new SymbolStruct<>("LISTS", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> listRestArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("LISTS").getSymbol();
 		final RestBinding restBinding = new RestBinding(listRestArgSymbol);
 
-		final List<KeyBinding> keyBindings = Collections.emptyList();
-		final boolean allowOtherKeys = false;
-		final List<AuxBinding> auxBindings = Collections.emptyList();
-
-		return new OrdinaryLambdaListBindings(requiredBindings, optionalBindings, restBinding, keyBindings, auxBindings, allowOtherKeys);
+		return new OrdinaryLambdaListBindings.Builder().restBinding(restBinding)
+		                                               .build();
 	}
 
 	@Override

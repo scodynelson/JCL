@@ -29,11 +29,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ApplyFunction extends FunctionStruct {
+public final class ApplyFunction extends FunctionStruct {
 
 	public static final ApplyFunction INSTANCE = new ApplyFunction();
 
-	public static final SymbolStruct<?> APPLY = new SymbolStruct<>("APPLY", GlobalPackageStruct.COMMON_LISP, null, INSTANCE);
+	public static final SymbolStruct<?> APPLY = new SymbolStruct<>("APPLY", GlobalPackageStruct.COMMON_LISP);
 
 	private static final long serialVersionUID = 1994110477366960170L;
 

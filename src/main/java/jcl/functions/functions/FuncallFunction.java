@@ -27,11 +27,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class FuncallFunction extends FunctionStruct {
+public final class FuncallFunction extends FunctionStruct {
 
 	public static final FuncallFunction INSTANCE = new FuncallFunction();
 
-	public static final SymbolStruct<?> FUNCALL = new SymbolStruct<>("FUNCALL", GlobalPackageStruct.COMMON_LISP, null, INSTANCE);
+	public static final SymbolStruct<?> FUNCALL = new SymbolStruct<>("FUNCALL", GlobalPackageStruct.COMMON_LISP);
 
 	private static final long serialVersionUID = -1425587290881971372L;
 

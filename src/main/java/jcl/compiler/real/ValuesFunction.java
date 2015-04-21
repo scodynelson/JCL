@@ -7,6 +7,7 @@ package jcl.compiler.real;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
@@ -19,17 +20,22 @@ import jcl.compiler.real.struct.ValuesStruct;
 import jcl.functions.FunctionStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.SymbolStruct;
+import org.springframework.stereotype.Component;
 
-public class ValuesFunction extends FunctionStruct {
+@Component
+public final class ValuesFunction extends FunctionStruct {
 
-	public static final ValuesFunction INSTANCE = new ValuesFunction();
-
-	public static final SymbolStruct<?> VALUES = new SymbolStruct<>("VALUES", GlobalPackageStruct.COMMON_LISP, null, INSTANCE);
+	public static final SymbolStruct<?> VALUES = new SymbolStruct<>("VALUES", GlobalPackageStruct.COMMON_LISP);
 
 	private static final long serialVersionUID = -7869325469764526281L;
 
 	private ValuesFunction() {
 		super("Returns the objects as multiple values.", getInitLambdaListBindings());
+	}
+
+	@PostConstruct
+	private void init() {
+		VALUES.setFunction(this);
 	}
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
@@ -49,6 +55,10 @@ public class ValuesFunction extends FunctionStruct {
 
 	@Override
 	public LispStruct apply(final LispStruct... lispStructs) {
+		return values(lispStructs);
+	}
+
+	public ValuesStruct values(final LispStruct... lispStructs) {
 		final List<LispStruct> valuesList = Arrays.asList(lispStructs);
 		return new ValuesStruct(valuesList);
 	}

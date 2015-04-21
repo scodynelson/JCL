@@ -5,17 +5,12 @@
 package jcl.lists.functions;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
-import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
-import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.functions.FunctionStruct;
 import jcl.lists.ConsStruct;
 import jcl.packages.GlobalPackageStruct;
@@ -25,7 +20,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class ConsFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> CONS = new SymbolStruct<>("CONS", GlobalPackageStruct.COMMON_LISP);
+	public static final SymbolStruct<?> CONS = GlobalPackageStruct.COMMON_LISP.intern("CONS").getSymbol();
 
 	private static final long serialVersionUID = 1242798660975184815L;
 
@@ -36,11 +31,12 @@ public final class ConsFunction extends FunctionStruct {
 	@PostConstruct
 	private void init() {
 		CONS.setFunction(this);
+		GlobalPackageStruct.COMMON_LISP.export(CONS);
 	}
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
-		final List<RequiredBinding> requiredBindings = new ArrayList<>();
+		final List<RequiredBinding> requiredBindings = new ArrayList<>(2);
 
 		final SymbolStruct<?> object1ArgSymbol = new SymbolStruct<>("OBJECT-1", GlobalPackageStruct.COMMON_LISP);
 		final RequiredBinding object1RequiredBinding = new RequiredBinding(object1ArgSymbol);
@@ -50,15 +46,8 @@ public final class ConsFunction extends FunctionStruct {
 		final RequiredBinding object2RequiredBinding = new RequiredBinding(object2ArgSymbol);
 		requiredBindings.add(object2RequiredBinding);
 
-		final List<OptionalBinding> optionalBindings = Collections.emptyList();
-
-		final RestBinding restBinding = null;
-
-		final List<KeyBinding> keyBindings = Collections.emptyList();
-		final boolean allowOtherKeys = false;
-		final List<AuxBinding> auxBindings = Collections.emptyList();
-
-		return new OrdinaryLambdaListBindings(requiredBindings, optionalBindings, restBinding, keyBindings, auxBindings, allowOtherKeys);
+		return new OrdinaryLambdaListBindings.Builder().requiredBindings(requiredBindings)
+		                                               .build();
 	}
 
 	@Override

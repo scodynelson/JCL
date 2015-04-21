@@ -529,7 +529,11 @@ public class PackageStruct extends BuiltInClassStruct {
 	 * @return the located package for the provided {@code packageName}
 	 */
 	public static PackageStruct findPackage(final String packageName) {
-		return GlobalPackageStruct.ALL_PACKAGES.get(packageName);
+		final PackageStruct foundPackage = GlobalPackageStruct.ALL_PACKAGES.get(packageName);
+		if (foundPackage == null) {
+			throw new PackageErrorException("There is no package named " + packageName);
+		}
+		return foundPackage;
 	}
 
 	/**

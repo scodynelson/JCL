@@ -14,19 +14,18 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.struct.specialoperator.FunctionCallStruct;
+import jcl.compiler.real.struct.specialoperator.JavaMethodCallStruct;
 import jcl.compiler.real.struct.specialoperator.LambdaFunctionCallStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.FunctionStruct;
+import jcl.java.JavaNameStruct;
 import jcl.lists.ConsStruct;
 import jcl.lists.ListStruct;
+import jcl.printer.Printer;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -41,6 +40,9 @@ public class ConsAnalyzerImpl implements ConsAnalyzer {
 	@Autowired
 	private LambdaExpander lambdaExpander;
 
+	@Autowired
+	private Printer printer;
+
 	@Override
 	public LispStruct analyze(final ConsStruct input, final Environment environment) {
 
@@ -48,10 +50,13 @@ public class ConsAnalyzerImpl implements ConsAnalyzer {
 
 		if (first instanceof SymbolStruct) {
 			return analyzeSymbolFunctionCall(input, environment);
+		} else if (first instanceof JavaNameStruct) {
+			return analyzeJavaMethodCall(input, environment);
 		} else if (first instanceof ConsStruct) {
 			return analyzeLambdaFunctionCall(input, environment);
 		} else {
-			throw new ProgramErrorException("SA LIST: First element must be of type SymbolStruct or ListStruct. Got: " + first);
+			final String printedObject = printer.print(first);
+			throw new ProgramErrorException("SA LIST: First element must be a symbol, a Java method name, or a lambda list. Got: " + printedObject);
 		}
 	}
 
@@ -93,6 +98,25 @@ public class ConsAnalyzerImpl implements ConsAnalyzer {
 		final boolean hasFunctionBinding = Environments.hasFunctionBinding(environment, functionSymbol);
 
 		return new FunctionCallStruct(hasFunctionBinding, functionSymbol, analyzedFunctionArguments);
+	}
+
+	private JavaMethodCallStruct analyzeJavaMethodCall(final ListStruct input, final Environment environment) {
+
+		final JavaNameStruct methodName = (JavaNameStruct) input.getFirst();
+
+		final ListStruct inputRest = input.getRest();
+		final LispStruct second = inputRest.getFirst();
+		final LispStruct javaObject = formAnalyzer.analyze(second, environment);
+
+		final List<LispStruct> methodArguments = inputRest.getRest().getAsJavaList();
+
+		final List<LispStruct> analyzedMethodArguments = new ArrayList<>(methodArguments.size());
+		for (final LispStruct methodArgument : methodArguments) {
+			final LispStruct analyzedMethodArgument = formAnalyzer.analyze(methodArgument, environment);
+			analyzedMethodArguments.add(analyzedMethodArgument);
+		}
+
+		return new JavaMethodCallStruct(methodName, javaObject, analyzedMethodArguments);
 	}
 
 	private LambdaFunctionCallStruct analyzeLambdaFunctionCall(final ListStruct input, final Environment environment) {

@@ -8,6 +8,7 @@ import java.math.BigInteger;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
 
+import jcl.LispStruct;
 import jcl.arrays.StringStruct;
 import jcl.characters.CharacterConstants;
 import jcl.lists.NullStruct;
@@ -37,7 +38,7 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunction {
 	}
 
 	@Override
-	public StringStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
+	public LispStruct readMacro(final int codePoint, final Reader reader, final Optional<BigInteger> numberArgument) {
 		assert codePoint == CharacterConstants.QUOTATION_MARK;
 
 		final StringBuilder stringBuilder = new StringBuilder();
@@ -59,7 +60,7 @@ public class QuotationMarkReaderMacroFunction extends ReaderMacroFunction {
 		}
 
 		if (ReaderVariables.READ_SUPPRESS.getValue().booleanValue()) {
-			return null;
+			return NullStruct.INSTANCE;
 		}
 
 		final String stringValue = stringBuilder.toString();

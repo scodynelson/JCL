@@ -7,6 +7,7 @@ package jcl.reader.state;
 import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
 import jcl.conditions.exceptions.ReaderErrorException;
+import jcl.lists.NullStruct;
 import jcl.reader.TokenBuilder;
 import jcl.streams.ReadPeekResult;
 import org.springframework.stereotype.Component;
@@ -47,6 +48,6 @@ class IllegalCharacterReaderState implements ReaderState {
 			throw new ReaderErrorException("Illegal Character was encountered: " + codePoint);
 		}
 
-		return null;
+		return NullStruct.INSTANCE;
 	}
 }

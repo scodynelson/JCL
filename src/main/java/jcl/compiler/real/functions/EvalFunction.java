@@ -1,5 +1,6 @@
 package jcl.compiler.real.functions;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,6 +14,7 @@ import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.struct.CompilerSpecialOperatorStruct;
 import jcl.compiler.real.struct.specialoperator.FunctionCallStruct;
+import jcl.compiler.real.struct.specialoperator.JavaMethodCallStruct;
 import jcl.compiler.real.struct.specialoperator.LambdaCompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.LambdaFunctionCallStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
@@ -20,9 +22,16 @@ import jcl.compiler.real.struct.specialoperator.QuoteStruct;
 import jcl.compiler.real.struct.specialoperator.SetqStruct;
 import jcl.compiler.real.struct.specialoperator.SymbolCompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
+import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.FunctionStruct;
+import jcl.java.JavaMethodStruct;
+import jcl.java.JavaNameStruct;
+import jcl.java.JavaObjectStruct;
+import jcl.java.functions.JInvoke;
+import jcl.java.functions.JMethod;
 import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
+import jcl.printer.Printer;
 import jcl.symbols.BooleanStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
@@ -42,6 +51,15 @@ public final class EvalFunction extends FunctionStruct {
 
 	@Autowired
 	private FormAnalyzer formAnalyzer;
+
+	@Autowired
+	private JMethod jMethod;
+
+	@Autowired
+	private JInvoke jInvoke;
+
+	@Autowired
+	private Printer printer;
 
 	private EvalFunction() {
 		super("Evaluates form in the current dynamic environment and the null lexical environment.", getInitLambdaListBindings());
@@ -155,6 +173,39 @@ public final class EvalFunction extends FunctionStruct {
 			evaluatedArguments.toArray(args);
 
 			return function.apply(args);
+		}
+
+		if (exp instanceof JavaMethodCallStruct) {
+			final JavaMethodCallStruct javaMethodCall = (JavaMethodCallStruct) exp;
+
+			final JavaNameStruct methodName = javaMethodCall.getMethodName();
+
+			final LispStruct javaObject = javaMethodCall.getJavaObject();
+			final LispStruct evaluatedJavaObject = eval(javaObject);
+			if (!(evaluatedJavaObject instanceof JavaObjectStruct)) {
+				final String printedObject = printer.print(evaluatedJavaObject);
+				throw new ProgramErrorException("EVAL: Second argument to Java method call must be a Java object. Got: " + printedObject);
+			}
+
+			final JavaObjectStruct javaObjectStruct = (JavaObjectStruct) evaluatedJavaObject;
+			final Object actualJavaObject = javaObjectStruct.getJavaObject();
+
+			final List<LispStruct> arguments = javaMethodCall.getArguments();
+
+			final LispStruct[] methodEvaluatedArgs = new LispStruct[arguments.size()];
+			final Class<?>[] methodParamTypes = new Class[arguments.size()];
+			for (int i = 0; i < arguments.size(); i++) {
+				final LispStruct currentArg = arguments.get(i);
+				final LispStruct evaluatedArgument = eval(currentArg);
+				methodEvaluatedArgs[i] = evaluatedArgument;
+				// TODO: can we dynamically determine the types???
+				methodParamTypes[i] = Object.class;
+			}
+
+			final JavaMethodStruct javaMethodStruct = jMethod.jMethod(methodName.getJavaName(), actualJavaObject.getClass(), methodParamTypes);
+			final Method javaMethod = javaMethodStruct.getJavaMethod();
+
+			return jInvoke.jInvoke(javaMethod, actualJavaObject, methodEvaluatedArgs);
 		}
 
 		if (exp instanceof LambdaFunctionCallStruct) {

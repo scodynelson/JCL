@@ -79,7 +79,7 @@ class SyntaxTable implements Serializable {
 		syntaxTypeMap.put(33, SyntaxType.CONSTITUENT);                // !
 		syntaxTypeMap.put(34, SyntaxType.TERMINATING);                // "
 		syntaxTypeMap.put(35, SyntaxType.NON_TERMINATING);            // #
-		syntaxTypeMap.put(36, SyntaxType.CONSTITUENT);                // $
+		syntaxTypeMap.put(36, SyntaxType.TERMINATING);                // $
 		syntaxTypeMap.put(37, SyntaxType.CONSTITUENT);                // %
 		syntaxTypeMap.put(38, SyntaxType.CONSTITUENT);                // &
 		syntaxTypeMap.put(39, SyntaxType.TERMINATING);                // '
@@ -107,7 +107,7 @@ class SyntaxTable implements Serializable {
 		syntaxTypeMap.put(61, SyntaxType.CONSTITUENT);                // =
 		syntaxTypeMap.put(62, SyntaxType.CONSTITUENT);                // >
 		syntaxTypeMap.put(63, SyntaxType.CONSTITUENT);                // ?
-		syntaxTypeMap.put(64, SyntaxType.CONSTITUENT);                // @
+		syntaxTypeMap.put(64, SyntaxType.TERMINATING);                // @
 		syntaxTypeMap.put(65, SyntaxType.CONSTITUENT);                // A
 		syntaxTypeMap.put(66, SyntaxType.CONSTITUENT);                // B
 		syntaxTypeMap.put(67, SyntaxType.CONSTITUENT);                // C

@@ -27,6 +27,10 @@
 		<entry key="jcl.hashtables.HashTableStruct" value-ref="hashTableStructPrinter"/>
 		<entry key="jcl.hashtables.HashTableStruct.KeyWrapper" value-ref="hashTableKeyWrapperPrinter"/>
 
+		<entry key="jcl.java.JavaClassStruct" value-ref="javaClassStructPrinter"/>
+		<entry key="jcl.java.JavaMethodStruct" value-ref="javaMethodStructPrinter"/>
+		<entry key="jcl.java.JavaObjectStruct" value-ref="javaObjectStructPrinter"/>
+
 		<entry key="jcl.lists.ConsStruct" value-ref="consStructPrinter"/>
 		<entry key="jcl.lists.NullStruct" value-ref="nullStructPrinter"/>
 

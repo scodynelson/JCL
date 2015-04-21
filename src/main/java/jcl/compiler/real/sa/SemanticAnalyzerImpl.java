@@ -48,10 +48,13 @@ class SemanticAnalyzerImpl implements SemanticAnalyzer {
 		final ListStruct lambdaForm = wrapFormInLambda(form);
 
 		final Environment nullEnvironment = Environment.NULL;
+
+		final Set<SymbolStruct<?>> undefinedFunctions = nullEnvironment.getUndefinedFunctions();
+		undefinedFunctions.clear();
+
 		final LambdaStruct analyzedForm = lambdaExpander.expand(lambdaForm, nullEnvironment);
 
 		// now see if we have any functions still undefined
-		final Set<SymbolStruct<?>> undefinedFunctions = nullEnvironment.getUndefinedFunctions();
 		undefinedFunctions.stream()
 		                  .forEach(this::unknownFunctionWarning);
 		undefinedFunctions.clear();

@@ -11,12 +11,9 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
-import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
-import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.functions.FunctionStruct;
@@ -41,7 +38,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class MergePathnamesFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> MERGE_PATHNAMES = new SymbolStruct<>("MERGE-PATHNAMES", GlobalPackageStruct.COMMON_LISP);
+	public static final SymbolStruct<?> MERGE_PATHNAMES = GlobalPackageStruct.COMMON_LISP.intern("MERGE-PATHNAMES").getSymbol();
 
 	private static final long serialVersionUID = 3634903325863235363L;
 
@@ -58,39 +55,36 @@ public final class MergePathnamesFunction extends FunctionStruct {
 	@PostConstruct
 	private void init() {
 		MERGE_PATHNAMES.setFunction(this);
+		GlobalPackageStruct.COMMON_LISP.export(MERGE_PATHNAMES);
 	}
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
-		final SymbolStruct<?> pathnameArgSymbol = new SymbolStruct<>("PATHNAME", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> pathnameArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("PATHNAME").getSymbol();
 		final RequiredBinding requiredBinding = new RequiredBinding(pathnameArgSymbol);
 		final List<RequiredBinding> requiredBindings = Collections.singletonList(requiredBinding);
 
 		final List<OptionalBinding> optionalBindings = new ArrayList<>(2);
 
-		final SymbolStruct<?> defaultPathnameArgSymbol = new SymbolStruct<>("DEFAULT-PATHNAME", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> defaultPathnameArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("DEFAULT-PATHNAME").getSymbol();
 
-		final SymbolStruct<?> defaultPathnameSuppliedPSymbol = new SymbolStruct<>("DEFAULT-PATHNAME-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
+		final SymbolStruct<?> defaultPathnameSuppliedPSymbol = GlobalPackageStruct.COMMON_LISP.intern("DEFAULT-PATHNAME-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPBinding defaultPathnameSuppliedPBinding = new SuppliedPBinding(defaultPathnameSuppliedPSymbol);
 
 		final OptionalBinding defaultPathnameOptionalBinding = new OptionalBinding(defaultPathnameArgSymbol, NullStruct.INSTANCE, defaultPathnameSuppliedPBinding);
 		optionalBindings.add(defaultPathnameOptionalBinding);
 
-		final SymbolStruct<?> defaultVersionArgSymbol = new SymbolStruct<>("DEFAULT-VERSION", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> defaultVersionArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("DEFAULT-VERSION").getSymbol();
 
-		final SymbolStruct<?> defaultVersionSuppliedPSymbol = new SymbolStruct<>("DEFAULT-VERSION-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
+		final SymbolStruct<?> defaultVersionSuppliedPSymbol = GlobalPackageStruct.COMMON_LISP.intern("DEFAULT-VERSION-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPBinding defaultVersionSuppliedPBinding = new SuppliedPBinding(defaultVersionSuppliedPSymbol);
 
 		final OptionalBinding defaultVersionOptionalBinding = new OptionalBinding(defaultVersionArgSymbol, NullStruct.INSTANCE, defaultVersionSuppliedPBinding);
 		optionalBindings.add(defaultVersionOptionalBinding);
 
-		final RestBinding restBinding = null;
-
-		final List<KeyBinding> keyBindings = Collections.emptyList();
-		final boolean allowOtherKeys = false;
-		final List<AuxBinding> auxBindings = Collections.emptyList();
-
-		return new OrdinaryLambdaListBindings(requiredBindings, optionalBindings, restBinding, keyBindings, auxBindings, allowOtherKeys);
+		return new OrdinaryLambdaListBindings.Builder().requiredBindings(requiredBindings)
+		                                               .optionalBindings(optionalBindings)
+		                                               .build();
 	}
 
 	@Override

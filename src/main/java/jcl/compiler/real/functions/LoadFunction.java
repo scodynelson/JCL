@@ -17,12 +17,9 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.CompilerVariables;
-import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
-import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
 import jcl.conditions.exceptions.FileErrorException;
 import jcl.functions.FunctionStruct;
@@ -55,7 +52,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class LoadFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> LOAD = new SymbolStruct<>("LOAD", GlobalPackageStruct.COMMON_LISP);
+	public static final SymbolStruct<?> LOAD = GlobalPackageStruct.COMMON_LISP.intern("LOAD").getSymbol();
 
 	private static final long serialVersionUID = 348551085956831789L;
 
@@ -80,56 +77,52 @@ public final class LoadFunction extends FunctionStruct {
 	@PostConstruct
 	private void init() {
 		LOAD.setFunction(this);
+		GlobalPackageStruct.COMMON_LISP.export(LOAD);
 	}
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
-		final SymbolStruct<?> filespecArgSymbol = new SymbolStruct<>("FILESPEC", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> filespecArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("FILESPEC").getSymbol();
 		final RequiredBinding requiredBinding = new RequiredBinding(filespecArgSymbol);
 		final List<RequiredBinding> requiredBindings = Collections.singletonList(requiredBinding);
 
-		final List<OptionalBinding> optionalBindings = Collections.emptyList();
+		final List<KeyBinding> keyBindings = new ArrayList<>(4);
 
-		final RestBinding restBinding = null;
+		final SymbolStruct<?> verboseArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("VERBOSE").getSymbol();
 
-		final List<KeyBinding> keyBindings = new ArrayList<>();
-
-		final SymbolStruct<?> verboseArgSymbol = new SymbolStruct<>("VERBOSE", GlobalPackageStruct.COMMON_LISP);
-
-		final SymbolStruct<?> verboseSuppliedP = new SymbolStruct<>("VERBOSE-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
+		final SymbolStruct<?> verboseSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("VERBOSE-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPBinding verboseSuppliedPBinding = new SuppliedPBinding(verboseSuppliedP);
 
 		final KeyBinding verboseKeyBinding = new KeyBinding(verboseArgSymbol, NullStruct.INSTANCE, CommonLispSymbols.VERBOSE_KEYWORD, verboseSuppliedPBinding);
 		keyBindings.add(verboseKeyBinding);
 
-		final SymbolStruct<?> printArgSymbol = new SymbolStruct<>("PRINT", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> printArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("PRINT").getSymbol();
 
-		final SymbolStruct<?> printSuppliedP = new SymbolStruct<>("PRINT-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
+		final SymbolStruct<?> printSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("PRINT-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPBinding printSuppliedPBinding = new SuppliedPBinding(printSuppliedP);
 
 		final KeyBinding printKeyBinding = new KeyBinding(printArgSymbol, NullStruct.INSTANCE, CommonLispSymbols.PRINT_KEYWORD, printSuppliedPBinding);
 		keyBindings.add(printKeyBinding);
 
-		final SymbolStruct<?> ifDoesNotExistArgSymbol = new SymbolStruct<>("IF-DOES-NOT-EXIST", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> ifDoesNotExistArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("IF-DOES-NOT-EXIST").getSymbol();
 
-		final SymbolStruct<?> ifDoesNotExistSuppliedP = new SymbolStruct<>("IF-DOES-NOT-EXIST-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
-		final SuppliedPBinding ifDoesNotExisteSuppliedPBinding = new SuppliedPBinding(ifDoesNotExistSuppliedP);
+		final SymbolStruct<?> ifDoesNotExistSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("IF-DOES-NOT-EXIST-P-" + System.nanoTime()).getSymbol();
+		final SuppliedPBinding ifDoesNotExistSuppliedPBinding = new SuppliedPBinding(ifDoesNotExistSuppliedP);
 
-		final KeyBinding ifDoesNotExistKeyBinding = new KeyBinding(ifDoesNotExistArgSymbol, NullStruct.INSTANCE, CommonLispSymbols.IF_DOES_NOT_EXIST_KEYWORD, ifDoesNotExisteSuppliedPBinding);
+		final KeyBinding ifDoesNotExistKeyBinding = new KeyBinding(ifDoesNotExistArgSymbol, NullStruct.INSTANCE, CommonLispSymbols.IF_DOES_NOT_EXIST_KEYWORD, ifDoesNotExistSuppliedPBinding);
 		keyBindings.add(ifDoesNotExistKeyBinding);
 
-		final SymbolStruct<?> externalFormatArgSymbol = new SymbolStruct<>("EXTERNAL-FORMAT", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> externalFormatArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("EXTERNAL-FORMAT").getSymbol();
 
-		final SymbolStruct<?> externalFormatSuppliedP = new SymbolStruct<>("EXTERNAL-FORMAT-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
+		final SymbolStruct<?> externalFormatSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("EXTERNAL-FORMAT-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPBinding externalFormatSuppliedPBinding = new SuppliedPBinding(externalFormatSuppliedP);
 
 		final KeyBinding externalFormatKeyBinding = new KeyBinding(externalFormatArgSymbol, NullStruct.INSTANCE, CommonLispSymbols.EXTERNAL_FORMAT_KEYWORD, externalFormatSuppliedPBinding);
 		keyBindings.add(externalFormatKeyBinding);
 
-		final boolean allowOtherKeys = false;
-		final List<AuxBinding> auxBindings = Collections.emptyList();
-
-		return new OrdinaryLambdaListBindings(requiredBindings, optionalBindings, restBinding, keyBindings, auxBindings, allowOtherKeys);
+		return new OrdinaryLambdaListBindings.Builder().requiredBindings(requiredBindings)
+		                                               .keyBindings(keyBindings)
+		                                               .build();
 	}
 
 	@Override

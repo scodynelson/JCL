@@ -39,7 +39,7 @@ public final class NullFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
-		final SymbolStruct<?> listArgSymbol = new SymbolStruct<>("OBJECT", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> listArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECT").getSymbol();
 		final RequiredBinding requiredBinding = new RequiredBinding(listArgSymbol);
 		final List<RequiredBinding> requiredBindings = Collections.singletonList(requiredBinding);
 

@@ -25,6 +25,7 @@ import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
+import jcl.packages.PackageStruct;
 import jcl.packages.PackageSymbolStruct;
 import jcl.printer.Printer;
 import jcl.symbols.KeywordStruct;
@@ -182,7 +183,9 @@ public class LambdaListParser {
 
 				final String paramName = currentParam.getName();
 				final String customSuppliedPName = paramName + "-P-" + System.nanoTime();
-				final SymbolStruct<?> customSuppliedPCurrent = new SymbolStruct<>(customSuppliedPName, GlobalPackageStruct.SYSTEM);
+				final PackageStruct currentParamPackage = currentParam.getSymbolPackage();
+
+				final SymbolStruct<?> customSuppliedPCurrent = currentParamPackage.intern(customSuppliedPName).getSymbol();
 
 				final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(customSuppliedPCurrent);
 
@@ -241,7 +244,9 @@ public class LambdaListParser {
 				if (thirdInCurrent.equals(NullStruct.INSTANCE)) {
 					final String paramName = varNameCurrent.getName();
 					final String customSuppliedPName = paramName + "-P-" + System.nanoTime();
-					final SymbolStruct<?> customSuppliedPCurrent = new SymbolStruct<>(customSuppliedPName, GlobalPackageStruct.SYSTEM);
+					final PackageStruct currentParamPackage = varNameCurrent.getSymbolPackage();
+
+					final SymbolStruct<?> customSuppliedPCurrent = currentParamPackage.intern(customSuppliedPName).getSymbol();
 
 					suppliedPBinding = new SuppliedPBinding(customSuppliedPCurrent);
 
@@ -436,7 +441,9 @@ public class LambdaListParser {
 
 				final String paramName = currentParam.getName();
 				final String customSuppliedPName = paramName + "-P-" + System.nanoTime();
-				final SymbolStruct<?> customSuppliedPCurrent = new SymbolStruct<>(customSuppliedPName, GlobalPackageStruct.SYSTEM);
+				final PackageStruct currentParamPackage = currentParam.getSymbolPackage();
+
+				final SymbolStruct<?> customSuppliedPCurrent = currentParamPackage.intern(customSuppliedPName).getSymbol();
 
 				final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(customSuppliedPCurrent);
 
@@ -523,7 +530,9 @@ public class LambdaListParser {
 				if (thirdInCurrent.equals(NullStruct.INSTANCE)) {
 					final String paramName = varNameCurrent.getName();
 					final String customSuppliedPName = paramName + "-P-" + System.nanoTime();
-					final SymbolStruct<?> customSuppliedPCurrent = new SymbolStruct<>(customSuppliedPName, GlobalPackageStruct.SYSTEM);
+					final PackageStruct currentParamPackage = varNameCurrent.getSymbolPackage();
+
+					final SymbolStruct<?> customSuppliedPCurrent = currentParamPackage.intern(customSuppliedPName).getSymbol();
 
 					suppliedPBinding = new SuppliedPBinding(customSuppliedPCurrent);
 

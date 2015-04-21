@@ -12,12 +12,8 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
-import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
-import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
-import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.packages.GlobalPackageStruct;
@@ -25,22 +21,15 @@ import jcl.pathnames.PathnameStruct;
 import jcl.printer.Printer;
 import jcl.streams.FileStreamStruct;
 import jcl.symbols.SymbolStruct;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public final class PathnameFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> PATHNAME = new SymbolStruct<>("PATHNAME", GlobalPackageStruct.COMMON_LISP);
+	public static final SymbolStruct<?> PATHNAME = GlobalPackageStruct.COMMON_LISP.intern("PATHNAME").getSymbol();
 
 	private static final long serialVersionUID = -353874315108380742L;
-
-	/**
-	 * The logger for this class.
-	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(PathnameFunction.class);
 
 	@Autowired
 	private Printer printer;
@@ -52,23 +41,17 @@ public final class PathnameFunction extends FunctionStruct {
 	@PostConstruct
 	private void init() {
 		PATHNAME.setFunction(this);
+		GlobalPackageStruct.COMMON_LISP.export(PATHNAME);
 	}
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
-		final SymbolStruct<?> pathspecArgSymbol = new SymbolStruct<>("PATHSPEC", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> pathspecArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("PATHSPEC").getSymbol();
 		final RequiredBinding requiredBinding = new RequiredBinding(pathspecArgSymbol);
 		final List<RequiredBinding> requiredBindings = Collections.singletonList(requiredBinding);
 
-		final List<OptionalBinding> optionalBindings = Collections.emptyList();
-
-		final RestBinding restBinding = null;
-
-		final List<KeyBinding> keyBindings = Collections.emptyList();
-		final boolean allowOtherKeys = false;
-		final List<AuxBinding> auxBindings = Collections.emptyList();
-
-		return new OrdinaryLambdaListBindings(requiredBindings, optionalBindings, restBinding, keyBindings, auxBindings, allowOtherKeys);
+		return new OrdinaryLambdaListBindings.Builder().requiredBindings(requiredBindings)
+		                                               .build();
 	}
 
 	@Override

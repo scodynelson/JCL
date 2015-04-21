@@ -34,7 +34,7 @@ public final class ListStarFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
-		final SymbolStruct<?> objectRestArgSymbol = new SymbolStruct<>("OBJECTS", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> objectRestArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECTS").getSymbol();
 		final RestBinding restBinding = new RestBinding(objectRestArgSymbol);
 
 		return new OrdinaryLambdaListBindings.Builder().restBinding(restBinding)

@@ -5,18 +5,13 @@
 package jcl.streams.functions;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.characters.CharacterStruct;
-import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
-import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
-import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
-import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.FunctionStruct;
@@ -38,7 +33,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class ReadCharFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> READ_CHAR = new SymbolStruct<>("READ-CHAR", GlobalPackageStruct.COMMON_LISP);
+	public static final SymbolStruct<?> READ_CHAR = GlobalPackageStruct.COMMON_LISP.intern("READ-CHAR").getSymbol();
 
 	private static final long serialVersionUID = -4477847470997236613L;
 
@@ -55,53 +50,47 @@ public final class ReadCharFunction extends FunctionStruct {
 	@PostConstruct
 	private void init() {
 		READ_CHAR.setFunction(this);
+		GlobalPackageStruct.COMMON_LISP.export(READ_CHAR);
 	}
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
-		final List<RequiredBinding> requiredBindings = Collections.emptyList();
+		final List<OptionalBinding> optionalBindings = new ArrayList<>(4);
 
-		final List<OptionalBinding> optionalBindings = new ArrayList<>();
+		final SymbolStruct<?> inputStreamArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("INPUT-STREAM").getSymbol();
 
-		final SymbolStruct<?> inputStreamArgSymbol = new SymbolStruct<>("INPUT-STREAM", GlobalPackageStruct.COMMON_LISP);
-
-		final SymbolStruct<?> inputStreamSuppliedP = new SymbolStruct<>("INPUT-STREAM-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
+		final SymbolStruct<?> inputStreamSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("INPUT-STREAM-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPBinding inputStreamSuppliedPBinding = new SuppliedPBinding(inputStreamSuppliedP);
 
 		final OptionalBinding inputStreamOptionalBinding = new OptionalBinding(inputStreamArgSymbol, NullStruct.INSTANCE, inputStreamSuppliedPBinding);
 		optionalBindings.add(inputStreamOptionalBinding);
 
-		final SymbolStruct<?> eofErrorPArgSymbol = new SymbolStruct<>("EOF-ERROR", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> eofErrorPArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("EOF-ERROR").getSymbol();
 
-		final SymbolStruct<?> eofErrorPSuppliedP = new SymbolStruct<>("EOF-ERROR-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
+		final SymbolStruct<?> eofErrorPSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("EOF-ERROR-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPBinding eofErrorPSuppliedPBinding = new SuppliedPBinding(eofErrorPSuppliedP);
 
 		final OptionalBinding eofErrorPOptionalBinding = new OptionalBinding(eofErrorPArgSymbol, NullStruct.INSTANCE, eofErrorPSuppliedPBinding);
 		optionalBindings.add(eofErrorPOptionalBinding);
 
-		final SymbolStruct<?> eofValueArgSymbol = new SymbolStruct<>("EOF-VALUE", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> eofValueArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("EOF-VALUE").getSymbol();
 
-		final SymbolStruct<?> eofValueSuppliedP = new SymbolStruct<>("EOF-VALUE-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
+		final SymbolStruct<?> eofValueSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("EOF-VALUE-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPBinding eofValueSuppliedPBinding = new SuppliedPBinding(eofValueSuppliedP);
 
 		final OptionalBinding eofValueOptionalBinding = new OptionalBinding(eofValueArgSymbol, NullStruct.INSTANCE, eofValueSuppliedPBinding);
 		optionalBindings.add(eofValueOptionalBinding);
 
-		final SymbolStruct<?> recursivePArgSymbol = new SymbolStruct<>("RECURSIVE-P", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> recursivePArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("RECURSIVE-P").getSymbol();
 
-		final SymbolStruct<?> recursivePSuppliedP = new SymbolStruct<>("RECURSIVE-P-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
+		final SymbolStruct<?> recursivePSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("RECURSIVE-P-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPBinding recursivePSuppliedPBinding = new SuppliedPBinding(recursivePSuppliedP);
 
 		final OptionalBinding recursivePOptionalBinding = new OptionalBinding(recursivePArgSymbol, NullStruct.INSTANCE, recursivePSuppliedPBinding);
 		optionalBindings.add(recursivePOptionalBinding);
 
-		final RestBinding restBinding = null;
-
-		final List<KeyBinding> keyBindings = Collections.emptyList();
-		final boolean allowOtherKeys = false;
-		final List<AuxBinding> auxBindings = Collections.emptyList();
-
-		return new OrdinaryLambdaListBindings(requiredBindings, optionalBindings, restBinding, keyBindings, auxBindings, allowOtherKeys);
+		return new OrdinaryLambdaListBindings.Builder().optionalBindings(optionalBindings)
+		                                               .build();
 	}
 
 	@Override

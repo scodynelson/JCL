@@ -10,12 +10,9 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
-import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
-import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
 import jcl.functions.FunctionStruct;
 import jcl.lists.NullStruct;
@@ -31,7 +28,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class PathnameHostFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> PATHNAME_HOST = new SymbolStruct<>("PATHNAME-HOST", GlobalPackageStruct.COMMON_LISP);
+	public static final SymbolStruct<?> PATHNAME_HOST = GlobalPackageStruct.COMMON_LISP.intern("PATHNAME-HOST").getSymbol();
 
 	private static final long serialVersionUID = 5305854243645678052L;
 
@@ -45,30 +42,26 @@ public final class PathnameHostFunction extends FunctionStruct {
 	@PostConstruct
 	private void init() {
 		PATHNAME_HOST.setFunction(this);
+		GlobalPackageStruct.COMMON_LISP.export(PATHNAME_HOST);
 	}
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
-		final SymbolStruct<?> pathspecArgSymbol = new SymbolStruct<>("PATHSPEC", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> pathspecArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("PATHSPEC").getSymbol();
 		final RequiredBinding requiredBinding = new RequiredBinding(pathspecArgSymbol);
 		final List<RequiredBinding> requiredBindings = Collections.singletonList(requiredBinding);
 
-		final List<OptionalBinding> optionalBindings = Collections.emptyList();
+		final SymbolStruct<?> caseArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("CASE").getSymbol();
 
-		final RestBinding restBinding = null;
-
-		final SymbolStruct<?> caseArgSymbol = new SymbolStruct<>("CASE", GlobalPackageStruct.COMMON_LISP);
-
-		final SymbolStruct<?> caseSuppliedPSymbol = new SymbolStruct<>("CASE-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
+		final SymbolStruct<?> caseSuppliedPSymbol = GlobalPackageStruct.COMMON_LISP.intern("CASE-P-").getSymbol();
 		final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(caseSuppliedPSymbol);
 
 		final KeyBinding keyBinding = new KeyBinding(caseArgSymbol, NullStruct.INSTANCE, CommonLispSymbols.CASE_KEYWORD, suppliedPBinding);
 		final List<KeyBinding> keyBindings = Collections.singletonList(keyBinding);
 
-		final boolean allowOtherKeys = false;
-		final List<AuxBinding> auxBindings = Collections.emptyList();
-
-		return new OrdinaryLambdaListBindings(requiredBindings, optionalBindings, restBinding, keyBindings, auxBindings, allowOtherKeys);
+		return new OrdinaryLambdaListBindings.Builder().requiredBindings(requiredBindings)
+		                                               .keyBindings(keyBindings)
+		                                               .build();
 	}
 
 	@Override

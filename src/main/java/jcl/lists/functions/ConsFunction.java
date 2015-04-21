@@ -38,11 +38,11 @@ public final class ConsFunction extends FunctionStruct {
 
 		final List<RequiredBinding> requiredBindings = new ArrayList<>(2);
 
-		final SymbolStruct<?> object1ArgSymbol = new SymbolStruct<>("OBJECT-1", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> object1ArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECT-1").getSymbol();
 		final RequiredBinding object1RequiredBinding = new RequiredBinding(object1ArgSymbol);
 		requiredBindings.add(object1RequiredBinding);
 
-		final SymbolStruct<?> object2ArgSymbol = new SymbolStruct<>("OBJECT-2", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> object2ArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECT-2").getSymbol();
 		final RequiredBinding object2RequiredBinding = new RequiredBinding(object2ArgSymbol);
 		requiredBindings.add(object2RequiredBinding);
 

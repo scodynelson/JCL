@@ -5,12 +5,9 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
-import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
-import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
 import jcl.compiler.real.struct.ValuesStruct;
 import jcl.conditions.exceptions.ErrorException;
@@ -26,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class CompileFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> COMPILE = new SymbolStruct<>("COMPILE", GlobalPackageStruct.COMMON_LISP);
+	public static final SymbolStruct<?> COMPILE = GlobalPackageStruct.COMMON_LISP.intern("COMPILE").getSymbol();
 
 	private static final long serialVersionUID = 5339244651961527815L;
 
@@ -40,29 +37,26 @@ public final class CompileFunction extends FunctionStruct {
 	@PostConstruct
 	private void init() {
 		COMPILE.setFunction(this);
+		GlobalPackageStruct.COMMON_LISP.export(COMPILE);
 	}
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
-		final SymbolStruct<?> nameArgSymbol = new SymbolStruct<>("NAME", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> nameArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("NAME").getSymbol();
 		final RequiredBinding requiredBinding = new RequiredBinding(nameArgSymbol);
 		final List<RequiredBinding> requiredBindings = Collections.singletonList(requiredBinding);
 
-		final SymbolStruct<?> definitionArgSymbol = new SymbolStruct<>("DEFINITION", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> definitionArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("DEFINITION").getSymbol();
 
-		final SymbolStruct<?> definitionSuppliedP = new SymbolStruct<>("DEFINITION-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
+		final SymbolStruct<?> definitionSuppliedP = GlobalPackageStruct.COMMON_LISP.intern("DEFINITION-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(definitionSuppliedP);
 
 		final OptionalBinding optionalBinding = new OptionalBinding(definitionArgSymbol, NullStruct.INSTANCE, suppliedPBinding);
 		final List<OptionalBinding> optionalBindings = Collections.singletonList(optionalBinding);
 
-		final RestBinding restBinding = null;
-
-		final List<KeyBinding> keyBindings = Collections.emptyList();
-		final boolean allowOtherKeys = false;
-		final List<AuxBinding> auxBindings = Collections.emptyList();
-
-		return new OrdinaryLambdaListBindings(requiredBindings, optionalBindings, restBinding, keyBindings, auxBindings, allowOtherKeys);
+		return new OrdinaryLambdaListBindings.Builder().requiredBindings(requiredBindings)
+		                                               .optionalBindings(optionalBindings)
+		                                               .build();
 	}
 
 	@Override

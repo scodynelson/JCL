@@ -10,12 +10,8 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
-import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
-import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
-import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.functions.FunctionStruct;
 import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
@@ -29,7 +25,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class PathnameVersionFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> PATHNAME_VERSION = new SymbolStruct<>("PATHNAME-VERSION", GlobalPackageStruct.COMMON_LISP);
+	public static final SymbolStruct<?> PATHNAME_VERSION = GlobalPackageStruct.COMMON_LISP.intern("PATHNAME-VERSION").getSymbol();
 
 	private static final long serialVersionUID = -5346065974256023261L;
 
@@ -43,23 +39,17 @@ public final class PathnameVersionFunction extends FunctionStruct {
 	@PostConstruct
 	private void init() {
 		PATHNAME_VERSION.setFunction(this);
+		GlobalPackageStruct.COMMON_LISP.export(PATHNAME_VERSION);
 	}
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
-		final SymbolStruct<?> pathspecArgSymbol = new SymbolStruct<>("PATHSPEC", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> pathspecArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("PATHSPEC").getSymbol();
 		final RequiredBinding requiredBinding = new RequiredBinding(pathspecArgSymbol);
 		final List<RequiredBinding> requiredBindings = Collections.singletonList(requiredBinding);
 
-		final List<OptionalBinding> optionalBindings = Collections.emptyList();
-
-		final RestBinding restBinding = null;
-
-		final List<KeyBinding> keyBindings = Collections.emptyList();
-		final boolean allowOtherKeys = false;
-		final List<AuxBinding> auxBindings = Collections.emptyList();
-
-		return new OrdinaryLambdaListBindings(requiredBindings, optionalBindings, restBinding, keyBindings, auxBindings, allowOtherKeys);
+		return new OrdinaryLambdaListBindings.Builder().requiredBindings(requiredBindings)
+		                                               .build();
 	}
 
 	@Override

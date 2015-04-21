@@ -16,12 +16,8 @@ import javax.help.HelpSetException;
 
 import jcl.LispStruct;
 import jcl.arrays.StringStruct;
-import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
-import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
-import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
-import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.FunctionStruct;
@@ -35,7 +31,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class Help extends FunctionStruct {
 
-	public static final SymbolStruct<?> HELP = new SymbolStruct<>("HELP", GlobalPackageStruct.EXTENSIONS);
+	public static final SymbolStruct<?> HELP = GlobalPackageStruct.EXTENSIONS.intern("HELP").getSymbol();
 
 	private static final long serialVersionUID = -2903697700427964980L;
 
@@ -46,26 +42,21 @@ public final class Help extends FunctionStruct {
 	@PostConstruct
 	private void init() {
 		HELP.setFunction(this);
+		GlobalPackageStruct.EXTENSIONS.export(HELP);
 	}
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
-		final List<RequiredBinding> requiredBindings = Collections.emptyList();
+		final SymbolStruct<?> searchTermArgSymbol = GlobalPackageStruct.EXTENSIONS.intern("SEARCH-TERM").getSymbol();
 
-		final SymbolStruct<?> searchTermArgSymbol = new SymbolStruct<>("SEARCH-TERM", GlobalPackageStruct.COMMON_LISP);
-
-		final SymbolStruct<?> searchTermSuppliedPSymbol = new SymbolStruct<>("SEARCH-TERM-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
+		final SymbolStruct<?> searchTermSuppliedPSymbol = GlobalPackageStruct.EXTENSIONS.intern("SEARCH-TERM-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPBinding searchTermSuppliedPBinding = new SuppliedPBinding(searchTermSuppliedPSymbol);
 
-		final OptionalBinding defaultPathnameOptionalBinding = new OptionalBinding(searchTermArgSymbol, NullStruct.INSTANCE, searchTermSuppliedPBinding);
-		final List<OptionalBinding> optionalBindings = Collections.singletonList(defaultPathnameOptionalBinding);
+		final OptionalBinding searchTermOptionalBinding = new OptionalBinding(searchTermArgSymbol, NullStruct.INSTANCE, searchTermSuppliedPBinding);
+		final List<OptionalBinding> optionalBindings = Collections.singletonList(searchTermOptionalBinding);
 
-		final RestBinding restBinding = null;
-		final List<KeyBinding> keyBindings = Collections.emptyList();
-		final boolean allowOtherKeys = false;
-		final List<AuxBinding> auxBindings = Collections.emptyList();
-
-		return new OrdinaryLambdaListBindings(requiredBindings, optionalBindings, restBinding, keyBindings, auxBindings, allowOtherKeys);
+		return new OrdinaryLambdaListBindings.Builder().optionalBindings(optionalBindings)
+		                                               .build();
 	}
 
 	@Override

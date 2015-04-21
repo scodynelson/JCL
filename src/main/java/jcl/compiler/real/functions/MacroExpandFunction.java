@@ -10,12 +10,9 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
-import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
-import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
 import jcl.compiler.real.struct.ValuesStruct;
 import jcl.functions.FunctionStruct;
@@ -31,7 +28,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class MacroExpandFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> MACROEXPAND = new SymbolStruct<>("MACROEXPAND", GlobalPackageStruct.COMMON_LISP);
+	public static final SymbolStruct<?> MACROEXPAND = GlobalPackageStruct.COMMON_LISP.intern("MACROEXPAND").getSymbol();
 
 	private static final long serialVersionUID = 5991270831364188635L;
 
@@ -45,29 +42,26 @@ public final class MacroExpandFunction extends FunctionStruct {
 	@PostConstruct
 	private void init() {
 		MACROEXPAND.setFunction(this);
+		GlobalPackageStruct.COMMON_LISP.export(MACROEXPAND);
 	}
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
-		final SymbolStruct<?> formArgSymbol = new SymbolStruct<>("FORM", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> formArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("FORM").getSymbol();
 		final RequiredBinding requiredBinding = new RequiredBinding(formArgSymbol);
 		final List<RequiredBinding> requiredBindings = Collections.singletonList(requiredBinding);
 
-		final SymbolStruct<?> envArgSymbol = new SymbolStruct<>("ENV", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> envArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("ENV").getSymbol();
 
-		final SymbolStruct<?> envSuppliedPSymbol = new SymbolStruct<>("ENV-P-" + System.nanoTime(), GlobalPackageStruct.SYSTEM);
+		final SymbolStruct<?> envSuppliedPSymbol = GlobalPackageStruct.COMMON_LISP.intern("ENV-P-" + System.nanoTime()).getSymbol();
 		final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(envSuppliedPSymbol);
 
 		final OptionalBinding optionalBinding = new OptionalBinding(envArgSymbol, NullStruct.INSTANCE, suppliedPBinding);
 		final List<OptionalBinding> optionalBindings = Collections.singletonList(optionalBinding);
 
-		final RestBinding restBinding = null;
-
-		final List<KeyBinding> keyBindings = Collections.emptyList();
-		final boolean allowOtherKeys = false;
-		final List<AuxBinding> auxBindings = Collections.emptyList();
-
-		return new OrdinaryLambdaListBindings(requiredBindings, optionalBindings, restBinding, keyBindings, auxBindings, allowOtherKeys);
+		return new OrdinaryLambdaListBindings.Builder().requiredBindings(requiredBindings)
+		                                               .optionalBindings(optionalBindings)
+		                                               .build();
 	}
 
 	@Override

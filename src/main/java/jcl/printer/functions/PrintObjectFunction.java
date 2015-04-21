@@ -9,12 +9,8 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
-import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
-import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.functions.FunctionStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
@@ -27,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class PrintObjectFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> PRINT_OBJECT = new SymbolStruct<>("PRINT-OBJECT", GlobalPackageStruct.COMMON_LISP);
+	public static final SymbolStruct<?> PRINT_OBJECT = GlobalPackageStruct.COMMON_LISP.intern("PRINT-OBJECT").getSymbol();
 
 	private static final long serialVersionUID = -3100296760084297420L;
 
@@ -43,23 +39,17 @@ public final class PrintObjectFunction extends FunctionStruct {
 	@PostConstruct
 	private void init() {
 		PRINT_OBJECT.setFunction(this);
+		GlobalPackageStruct.COMMON_LISP.export(PRINT_OBJECT);
 	}
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
-		final SymbolStruct<?> listArgSymbol = new SymbolStruct<>("OBJECT", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> listArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("OBJECT").getSymbol();
 		final RequiredBinding requiredBinding = new RequiredBinding(listArgSymbol);
 		final List<RequiredBinding> requiredBindings = Collections.singletonList(requiredBinding);
 
-		final List<OptionalBinding> optionalBindings = Collections.emptyList();
-
-		final RestBinding restBinding = null;
-
-		final List<KeyBinding> keyBindings = Collections.emptyList();
-		final boolean allowOtherKeys = false;
-		final List<AuxBinding> auxBindings = Collections.emptyList();
-
-		return new OrdinaryLambdaListBindings(requiredBindings, optionalBindings, restBinding, keyBindings, auxBindings, allowOtherKeys);
+		return new OrdinaryLambdaListBindings.Builder().requiredBindings(requiredBindings)
+		                                               .build();
 	}
 
 	@Override

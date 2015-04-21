@@ -69,7 +69,7 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 	 * @param symbolPackage
 	 * 		the symbol package
 	 */
-	public SymbolStruct(final String name, final PackageStruct symbolPackage) {
+	protected SymbolStruct(final String name, final PackageStruct symbolPackage) {
 		this(name, symbolPackage, null, null);
 	}
 

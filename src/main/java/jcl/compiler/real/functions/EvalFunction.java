@@ -8,12 +8,8 @@ import javax.annotation.PostConstruct;
 import jcl.LispStruct;
 import jcl.compiler.real.CompilerVariables;
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
-import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
-import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.struct.CompilerSpecialOperatorStruct;
 import jcl.compiler.real.struct.specialoperator.FunctionCallStruct;
@@ -37,7 +33,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class EvalFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> EVAL = new SymbolStruct<>("EVAL", GlobalPackageStruct.COMMON_LISP);
+	public static final SymbolStruct<?> EVAL = GlobalPackageStruct.COMMON_LISP.intern("EVAL").getSymbol();
 
 	private static final long serialVersionUID = 6775277576397622716L;
 
@@ -54,23 +50,17 @@ public final class EvalFunction extends FunctionStruct {
 	@PostConstruct
 	private void init() {
 		EVAL.setFunction(this);
+		GlobalPackageStruct.COMMON_LISP.export(EVAL);
 	}
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
-		final SymbolStruct<?> listArgSymbol = new SymbolStruct<>("FORM", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> listArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("FORM").getSymbol();
 		final RequiredBinding requiredBinding = new RequiredBinding(listArgSymbol);
 		final List<RequiredBinding> requiredBindings = Collections.singletonList(requiredBinding);
 
-		final List<OptionalBinding> optionalBindings = Collections.emptyList();
-
-		final RestBinding restBinding = null;
-
-		final List<KeyBinding> keyBindings = Collections.emptyList();
-		final boolean allowOtherKeys = false;
-		final List<AuxBinding> auxBindings = Collections.emptyList();
-
-		return new OrdinaryLambdaListBindings(requiredBindings, optionalBindings, restBinding, keyBindings, auxBindings, allowOtherKeys);
+		return new OrdinaryLambdaListBindings.Builder().requiredBindings(requiredBindings)
+		                                               .build();
 	}
 
 	public LispStruct apply(final LispStruct... lispStructs) {

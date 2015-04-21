@@ -5,18 +5,13 @@
 package jcl.structures.functions;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.LispType;
-import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
-import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
-import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.conditions.exceptions.SimpleErrorException;
 import jcl.conditions.exceptions.TypeErrorException;
@@ -30,7 +25,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class SetStructureSlotValueFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> SET_STRUCTURE_SLOT_VALUE = new SymbolStruct<>("SET-STRUCTURE-SLOT-VALUE", GlobalPackageStruct.COMMON_LISP);
+	public static final SymbolStruct<?> SET_STRUCTURE_SLOT_VALUE = GlobalPackageStruct.SYSTEM.intern("SET-STRUCTURE-SLOT-VALUE").getSymbol();
 
 	private static final long serialVersionUID = -5380342029205088545L;
 
@@ -41,37 +36,31 @@ public final class SetStructureSlotValueFunction extends FunctionStruct {
 	@PostConstruct
 	private void init() {
 		SET_STRUCTURE_SLOT_VALUE.setFunction(this);
+		GlobalPackageStruct.SYSTEM.export(SET_STRUCTURE_SLOT_VALUE);
 	}
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
 		final List<RequiredBinding> requiredBindings = new ArrayList<>();
 
-		final SymbolStruct<?> structureClassArgSymbol = new SymbolStruct<>("STRUCTURE-CLASS", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> structureClassArgSymbol = GlobalPackageStruct.SYSTEM.intern("STRUCTURE-CLASS").getSymbol();
 		final RequiredBinding structureClassArgRequiredBinding = new RequiredBinding(structureClassArgSymbol);
 		requiredBindings.add(structureClassArgRequiredBinding);
 
-		final SymbolStruct<?> structureInstanceArgSymbol = new SymbolStruct<>("STRUCTURE-INSTANCE", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> structureInstanceArgSymbol = GlobalPackageStruct.SYSTEM.intern("STRUCTURE-INSTANCE").getSymbol();
 		final RequiredBinding structureInstanceArgRequiredBinding = new RequiredBinding(structureInstanceArgSymbol);
 		requiredBindings.add(structureInstanceArgRequiredBinding);
 
-		final SymbolStruct<?> slotNameArgSymbol = new SymbolStruct<>("SLOT-NAME", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> slotNameArgSymbol = GlobalPackageStruct.SYSTEM.intern("SLOT-NAME").getSymbol();
 		final RequiredBinding slotNameArgRequiredBinding = new RequiredBinding(slotNameArgSymbol);
 		requiredBindings.add(slotNameArgRequiredBinding);
 
-		final SymbolStruct<?> slotValueArgSymbol = new SymbolStruct<>("SLOT-VALUE", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> slotValueArgSymbol = GlobalPackageStruct.SYSTEM.intern("SLOT-VALUE").getSymbol();
 		final RequiredBinding slotValueArgRequiredBinding = new RequiredBinding(slotValueArgSymbol);
 		requiredBindings.add(slotValueArgRequiredBinding);
 
-		final List<OptionalBinding> optionalBindings = Collections.emptyList();
-
-		final RestBinding restBinding = null;
-
-		final List<KeyBinding> keyBindings = Collections.emptyList();
-		final boolean allowOtherKeys = false;
-		final List<AuxBinding> auxBindings = Collections.emptyList();
-
-		return new OrdinaryLambdaListBindings(requiredBindings, optionalBindings, restBinding, keyBindings, auxBindings, allowOtherKeys);
+		return new OrdinaryLambdaListBindings.Builder().requiredBindings(requiredBindings)
+		                                               .build();
 	}
 
 	@Override

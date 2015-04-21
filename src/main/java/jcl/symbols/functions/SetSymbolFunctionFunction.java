@@ -5,17 +5,12 @@
 package jcl.symbols.functions;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
-import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
-import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
-import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
-import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.functions.FunctionStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.SymbolStruct;
@@ -24,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SetSymbolFunctionFunction extends FunctionStruct {
 
-	public static final SymbolStruct<?> SET_SYMBOL_FUNCTION = new SymbolStruct<>("SET-SYMBOL-FUNCTION", GlobalPackageStruct.COMMON_LISP);
+	public static final SymbolStruct<?> SET_SYMBOL_FUNCTION = GlobalPackageStruct.SYSTEM.intern("SET-SYMBOL-FUNCTION").getSymbol();
 
 	private static final long serialVersionUID = 1025657474175401906L;
 
@@ -35,29 +30,23 @@ public class SetSymbolFunctionFunction extends FunctionStruct {
 	@PostConstruct
 	private void init() {
 		SET_SYMBOL_FUNCTION.setFunction(this);
+		GlobalPackageStruct.SYSTEM.export(SET_SYMBOL_FUNCTION);
 	}
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
 		final List<RequiredBinding> requiredBindings = new ArrayList<>(2);
 
-		final SymbolStruct<?> symbolArgSymbol = new SymbolStruct<>("SYM", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> symbolArgSymbol = GlobalPackageStruct.SYSTEM.intern("SYM").getSymbol();
 		final RequiredBinding symbolArgRequiredBinding = new RequiredBinding(symbolArgSymbol);
 		requiredBindings.add(symbolArgRequiredBinding);
 
-		final SymbolStruct<?> functionArgSymbol = new SymbolStruct<>("FN", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> functionArgSymbol = GlobalPackageStruct.SYSTEM.intern("FN").getSymbol();
 		final RequiredBinding functionArgRequiredBinding = new RequiredBinding(functionArgSymbol);
 		requiredBindings.add(functionArgRequiredBinding);
 
-		final List<OptionalBinding> optionalBindings = Collections.emptyList();
-
-		final RestBinding restBinding = null;
-
-		final List<KeyBinding> keyBindings = Collections.emptyList();
-		final boolean allowOtherKeys = false;
-		final List<AuxBinding> auxBindings = Collections.emptyList();
-
-		return new OrdinaryLambdaListBindings(requiredBindings, optionalBindings, restBinding, keyBindings, auxBindings, allowOtherKeys);
+		return new OrdinaryLambdaListBindings.Builder().requiredBindings(requiredBindings)
+		                                               .build();
 	}
 
 	@Override

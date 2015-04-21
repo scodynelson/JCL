@@ -46,7 +46,7 @@ public final class NconcFunction extends FunctionStruct {
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 
-		final SymbolStruct<?> listRestArgSymbol = new SymbolStruct<>("LISTS", GlobalPackageStruct.COMMON_LISP);
+		final SymbolStruct<?> listRestArgSymbol = GlobalPackageStruct.COMMON_LISP.intern("LISTS").getSymbol();
 		final RestBinding restBinding = new RestBinding(listRestArgSymbol);
 
 		return new OrdinaryLambdaListBindings.Builder().restBinding(restBinding)

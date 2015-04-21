@@ -1039,10 +1039,10 @@ public interface CommonLispSymbols {
 	SymbolStruct<?> SET_SYMBOL_FUNCTION = SetSymbolFunctionFunction.SET_SYMBOL_FUNCTION;
 
 	// Backquote
-	SymbolStruct<?> BQ_COMMA_FLAG = new SymbolStruct<>(",", GlobalPackageStruct.BACKQUOTE);
-	SymbolStruct<?> BQ_AT_FLAG = new SymbolStruct<>(",@", GlobalPackageStruct.BACKQUOTE);
-	SymbolStruct<?> BQ_DOT_FLAG = new SymbolStruct<>(",.", GlobalPackageStruct.BACKQUOTE);
-	SymbolStruct<?> BQ_VECTOR_FLAG = new SymbolStruct<>("bqv", GlobalPackageStruct.BACKQUOTE);
+	SymbolStruct<?> BQ_COMMA_FLAG = GlobalPackageStruct.BACKQUOTE.intern(",").getSymbol();
+	SymbolStruct<?> BQ_AT_FLAG = GlobalPackageStruct.BACKQUOTE.intern(",@").getSymbol();
+	SymbolStruct<?> BQ_DOT_FLAG = GlobalPackageStruct.BACKQUOTE.intern(",.").getSymbol();
+	SymbolStruct<?> BQ_VECTOR_FLAG = GlobalPackageStruct.BACKQUOTE.intern("bqv").getSymbol();
 
 	// Standard Keywords
 	KeywordStruct ELEMENT_TYPE_KEYWORD = new KeywordStruct("ELEMENT-TYPE");

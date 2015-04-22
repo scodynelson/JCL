@@ -55,13 +55,27 @@ public class BodyWithDeclaresAndDocStringAnalyzer implements Serializable {
 				}
 			}
 
-			final ListStruct fullDeclaration = ListStruct.buildProperList(allDeclarations);
-			declareElement = declareExpander.expand(fullDeclaration, environment);
-
 			if ((next instanceof StringStruct) && iterator.hasNext()) {
 				docString = (StringStruct) next; // No need to analyze this
 				next = iterator.next();
 			}
+
+			while (isDeclaration(next)) {
+				final ListStruct declareStatement = (ListStruct) next;
+				final List<LispStruct> declarations = declareStatement.getRest().getAsJavaList();
+
+				allDeclarations.addAll(declarations);
+
+				if (iterator.hasNext()) {
+					next = iterator.next();
+				} else {
+					next = null;
+					break;
+				}
+			}
+
+			final ListStruct fullDeclaration = ListStruct.buildProperList(allDeclarations);
+			declareElement = declareExpander.expand(fullDeclaration, environment);
 
 			if (next != null) {
 				bodyForms.add(next);

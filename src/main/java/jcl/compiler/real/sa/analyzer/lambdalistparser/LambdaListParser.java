@@ -284,7 +284,7 @@ public class LambdaListParser {
 					}
 				}
 
-				final OptionalBinding optionalBinding = new OptionalBinding(varNameCurrent, initForm, suppliedPBinding);
+				final OptionalBinding optionalBinding = new OptionalBinding(varNameCurrent, parameterValueInitForm, suppliedPBinding);
 				optionalBindings.add(optionalBinding);
 			} else {
 				final String printedElement = printer.print(currentElement);
@@ -570,7 +570,7 @@ public class LambdaListParser {
 					}
 				}
 
-				final KeyBinding keyBinding = new KeyBinding(varNameCurrent, initForm, varKeyNameCurrent, suppliedPBinding);
+				final KeyBinding keyBinding = new KeyBinding(varNameCurrent, parameterValueInitForm, varKeyNameCurrent, suppliedPBinding);
 				keyBindings.add(keyBinding);
 			} else {
 				final String printedElement = printer.print(currentElement);

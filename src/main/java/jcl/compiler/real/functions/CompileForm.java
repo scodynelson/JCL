@@ -4,6 +4,9 @@
 
 package jcl.compiler.real.functions;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -53,6 +56,14 @@ class CompileForm implements Serializable {
 			final ClassWriter cw = classDef.getClassWriter();
 
 			final byte[] byteArray = cw.toByteArray();
+
+			// TODO: Maybe set this up as a super debugging variable that we can control or something???
+			final String className = classDef.getClassName();
+			try (FileOutputStream outputStream = new FileOutputStream(new File("/Volumes/Dev/repo/JCL/tmp/" + className + ".class"))) {
+				outputStream.write(byteArray);
+			} catch (final IOException ioe) {
+				LOGGER.info("Error writing class file.", ioe);
+			}
 
 			final ClassReader cr = new ClassReader(byteArray);
 

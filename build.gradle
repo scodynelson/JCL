@@ -15,21 +15,19 @@ compileJava {
 	options.compilerArgs << "-Xlint"
 }
 
-String COMMONS_LANG_VERSION = '3.3.2';
-String COMMONS_MATH_VERSION = '3.4.1';
+String COMMONS_LANG_VERSION = '3.4';
+String COMMONS_MATH_VERSION = '3.5';
 String COMMONS_COLLECTIONS_VERSION = '4.0';
 String COMMONS_IO_VERSION = '2.4';
 
-String SPRING_VERSION = '4.1.5.RELEASE';
+String SPRING_VERSION = '4.1.6.RELEASE';
 
 String ASM_ALL_VERSION = '5.0.3';
 
-String EHCACHE_VERSION = '2.9.0';
-
 String JAVA_HELP = '2.0.05';
 
-String SLF4J_VERSION = '1.7.10';
-String LOGBACK_VERSION = '1.1.2';
+String SLF4J_VERSION = '1.7.12';
+String LOGBACK_VERSION = '1.1.3';
 
 String TESTNG_VERSION = '6.8.21';
 
@@ -44,15 +42,13 @@ dependencies {
 	compile group: 'org.springframework', name: 'spring-context', version: "$SPRING_VERSION"
 	compile group: 'org.springframework', name: 'spring-context-support', version: "$SPRING_VERSION"
 
+	compile group: 'javax.help', name: 'javahelp', version: "$JAVA_HELP"
+
 	compile group: 'org.slf4j', name: 'slf4j-api', version: "$SLF4J_VERSION"
 	compile group: 'org.slf4j', name: 'jcl-over-slf4j', version: "$SLF4J_VERSION"
 	compile group: 'org.slf4j', name: 'jul-to-slf4j', version: "$SLF4J_VERSION"
 	compile group: 'org.slf4j', name: 'log4j-over-slf4j', version: "$SLF4J_VERSION"
 	compile group: 'org.slf4j', name: 'osgi-over-slf4j', version: "$SLF4J_VERSION"
-
-	compile group: 'net.sf.ehcache', name: 'ehcache', version: "$EHCACHE_VERSION"
-
-	compile group: 'javax.help', name: 'javahelp', version: "$JAVA_HELP"
 
 	compile group: 'ch.qos.logback', name: 'logback-core', version: "$LOGBACK_VERSION"
 	compile group: 'ch.qos.logback', name: 'logback-classic', version: "$LOGBACK_VERSION"

@@ -192,7 +192,7 @@ LAMBDA:
   (3 4))
 
 (deftest lambda.21
-  (flet ((%f () (locally (declare (special *x*)) (incf *x*))))
+  (flet ((%f () (locally (declare (special *x*)) (1+ *x*))))
     ((lambda (*x*)
        (declare (special *x*))
        (%f)

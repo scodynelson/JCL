@@ -329,75 +329,6 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitLabel(closureFunctionBindingIteratorLoopEnd);
 			// END: Bind Closure Function values
 
-			// START: Bind InitForm values
-			bindingStack.push(lambdaEnvironment);
-
-			final int initFormVarPackageStore = currentClass.getNextAvailableStore();
-			final int initFormLexicalValueStore = currentClass.getNextAvailableStore();
-
-			final Set<Integer> initFormVarSymbolsToUnbind = new HashSet<>();
-
-			final List<OptionalBinding> optionalBindings = lambdaListBindings.getOptionalBindings();
-			for (final OptionalBinding optionalBinding : optionalBindings) {
-				final SymbolStruct<?> var = optionalBinding.getSymbolStruct();
-				final LispStruct initForm = optionalBinding.getInitForm();
-
-				final String packageName = var.getSymbolPackage().getName();
-				final String symbolName = var.getName();
-
-				mv.visitLdcInsn(packageName);
-				mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
-				mv.visitVarInsn(Opcodes.ASTORE, initFormVarPackageStore);
-
-				mv.visitVarInsn(Opcodes.ALOAD, initFormVarPackageStore);
-				mv.visitLdcInsn(symbolName);
-				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
-				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
-				final int initFormVarSymbolStore = currentClass.getNextAvailableStore();
-				mv.visitVarInsn(Opcodes.ASTORE, initFormVarSymbolStore);
-
-				formGenerator.generate(initForm, classBuilder);
-				mv.visitVarInsn(Opcodes.ASTORE, initFormLexicalValueStore);
-
-				mv.visitVarInsn(Opcodes.ALOAD, initFormVarSymbolStore);
-				mv.visitVarInsn(Opcodes.ALOAD, initFormLexicalValueStore);
-				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "bindLexicalValue", "(Ljcl/LispStruct;)V", false);
-
-				initFormVarSymbolsToUnbind.add(initFormVarSymbolStore);
-			}
-
-			final List<KeyBinding> keyBindings = lambdaListBindings.getKeyBindings();
-			for (final KeyBinding keyBinding : keyBindings) {
-				final SymbolStruct<?> var = keyBinding.getSymbolStruct();
-				final LispStruct initForm = keyBinding.getInitForm();
-
-				final String packageName = var.getSymbolPackage().getName();
-				final String symbolName = var.getName();
-
-				mv.visitLdcInsn(packageName);
-				mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
-				mv.visitVarInsn(Opcodes.ASTORE, initFormVarPackageStore);
-
-				mv.visitVarInsn(Opcodes.ALOAD, initFormVarPackageStore);
-				mv.visitLdcInsn(symbolName);
-				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
-				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
-				final int initFormVarSymbolStore = currentClass.getNextAvailableStore();
-				mv.visitVarInsn(Opcodes.ASTORE, initFormVarSymbolStore);
-
-				formGenerator.generate(initForm, classBuilder);
-				mv.visitVarInsn(Opcodes.ASTORE, initFormLexicalValueStore);
-
-				mv.visitVarInsn(Opcodes.ALOAD, initFormVarSymbolStore);
-				mv.visitVarInsn(Opcodes.ALOAD, initFormLexicalValueStore);
-				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "bindLexicalValue", "(Ljcl/LispStruct;)V", false);
-
-				initFormVarSymbolsToUnbind.add(initFormVarSymbolStore);
-			}
-
-			bindingStack.pop();
-			// END: Bind InitForm values
-
 			// START: Bind Parameter values
 			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 			mv.visitVarInsn(Opcodes.ALOAD, argsStore);
@@ -456,11 +387,154 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			mv.visitVarInsn(Opcodes.ALOAD, parameterSymbolToBindStore);
 			mv.visitVarInsn(Opcodes.ALOAD, parameterLexicalValueStore);
+			// TODO: dynamic binding???
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "bindLexicalValue", "(Ljcl/LispStruct;)V", false);
 			mv.visitJumpInsn(Opcodes.GOTO, parameterBindingIteratorLoopStart);
 
 			mv.visitLabel(parameterBindingIteratorLoopEnd);
 			// END: Bind Parameter values
+
+			// START: Bind InitForm values
+			mv.visitTypeInsn(Opcodes.NEW, "java/util/ArrayList");
+			mv.visitInsn(Opcodes.DUP);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/util/ArrayList", "<init>", "()V", false);
+			final int initFormsStore = currentClass.getNextAvailableStore();
+			mv.visitVarInsn(Opcodes.ASTORE, initFormsStore);
+
+			bindingStack.push(lambdaEnvironment);
+
+			final int suppliedPVarPackageStore = currentClass.getNextAvailableStore();
+			final int suppliedPVarSymbolStore = currentClass.getNextAvailableStore();
+			final int suppliedPVarValueStore = currentClass.getNextAvailableStore();
+			final int initFormVarPackageStore = currentClass.getNextAvailableStore();
+			final int initFormLexicalValueStore = currentClass.getNextAvailableStore();
+
+			final List<OptionalBinding> optionalBindings = lambdaListBindings.getOptionalBindings();
+			for (final OptionalBinding optionalBinding : optionalBindings) {
+				final SuppliedPBinding suppliedPBinding = optionalBinding.getSuppliedPBinding();
+				final SymbolStruct<?> suppliedPVar = suppliedPBinding.getSymbolStruct();
+
+				final String suppliedPPackageName = suppliedPVar.getSymbolPackage().getName();
+				final String suppliedPSymbolName = suppliedPVar.getName();
+
+				final SymbolStruct<?> var = optionalBinding.getSymbolStruct();
+				final LispStruct initForm = optionalBinding.getInitForm();
+
+				final String packageName = var.getSymbolPackage().getName();
+				final String symbolName = var.getName();
+
+				final Label suppliedPCheckIfEnd = new Label();
+
+				mv.visitLdcInsn(suppliedPPackageName);
+				mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
+				mv.visitVarInsn(Opcodes.ASTORE, suppliedPVarPackageStore);
+
+				mv.visitVarInsn(Opcodes.ALOAD, suppliedPVarPackageStore);
+				mv.visitLdcInsn(suppliedPSymbolName);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
+				mv.visitVarInsn(Opcodes.ASTORE, suppliedPVarSymbolStore);
+
+				mv.visitVarInsn(Opcodes.ALOAD, suppliedPVarSymbolStore);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "getValue", "()Ljcl/LispStruct;", false);
+				mv.visitVarInsn(Opcodes.ASTORE, suppliedPVarValueStore);
+
+				mv.visitVarInsn(Opcodes.ALOAD, suppliedPVarValueStore);
+				mv.visitFieldInsn(Opcodes.GETSTATIC, "jcl/symbols/NILStruct", "INSTANCE", "Ljcl/symbols/NILStruct;");
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/Object", "equals", "(Ljava/lang/Object;)Z", false);
+				mv.visitJumpInsn(Opcodes.IFEQ, suppliedPCheckIfEnd);
+
+				mv.visitLdcInsn(packageName);
+				mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
+				mv.visitVarInsn(Opcodes.ASTORE, initFormVarPackageStore);
+
+				mv.visitVarInsn(Opcodes.ALOAD, initFormVarPackageStore);
+				mv.visitLdcInsn(symbolName);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
+				final int initFormVarSymbolStore = currentClass.getNextAvailableStore();
+				mv.visitVarInsn(Opcodes.ASTORE, initFormVarSymbolStore);
+
+				formGenerator.generate(initForm, classBuilder);
+				mv.visitVarInsn(Opcodes.ASTORE, initFormLexicalValueStore);
+
+				mv.visitVarInsn(Opcodes.ALOAD, initFormVarSymbolStore);
+				mv.visitVarInsn(Opcodes.ALOAD, initFormLexicalValueStore);
+				// TODO: dynamic binding???
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "bindLexicalValue", "(Ljcl/LispStruct;)V", false);
+
+				mv.visitVarInsn(Opcodes.ALOAD, initFormsStore);
+				mv.visitVarInsn(Opcodes.ALOAD, initFormVarSymbolStore);
+				mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/List", "add", "(Ljava/lang/Object;)Z", true);
+				mv.visitInsn(Opcodes.POP);
+
+				mv.visitLabel(suppliedPCheckIfEnd);
+			}
+
+			final List<KeyBinding> keyBindings = lambdaListBindings.getKeyBindings();
+			for (final KeyBinding keyBinding : keyBindings) {
+				final SuppliedPBinding suppliedPBinding = keyBinding.getSuppliedPBinding();
+				final SymbolStruct<?> suppliedPVar = suppliedPBinding.getSymbolStruct();
+
+				final String suppliedPPackageName = suppliedPVar.getSymbolPackage().getName();
+				final String suppliedPSymbolName = suppliedPVar.getName();
+
+				final SymbolStruct<?> var = keyBinding.getSymbolStruct();
+				final LispStruct initForm = keyBinding.getInitForm();
+
+				final String packageName = var.getSymbolPackage().getName();
+				final String symbolName = var.getName();
+
+				final Label suppliedPCheckIfEnd = new Label();
+
+				mv.visitLdcInsn(suppliedPPackageName);
+				mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
+				mv.visitVarInsn(Opcodes.ASTORE, suppliedPVarPackageStore);
+
+				mv.visitVarInsn(Opcodes.ALOAD, suppliedPVarPackageStore);
+				mv.visitLdcInsn(suppliedPSymbolName);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
+				mv.visitVarInsn(Opcodes.ASTORE, suppliedPVarSymbolStore);
+
+				mv.visitVarInsn(Opcodes.ALOAD, suppliedPVarSymbolStore);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "getValue", "()Ljcl/LispStruct;", false);
+				mv.visitVarInsn(Opcodes.ASTORE, suppliedPVarValueStore);
+
+				mv.visitVarInsn(Opcodes.ALOAD, suppliedPVarValueStore);
+				mv.visitFieldInsn(Opcodes.GETSTATIC, "jcl/symbols/NILStruct", "INSTANCE", "Ljcl/symbols/NILStruct;");
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/Object", "equals", "(Ljava/lang/Object;)Z", false);
+				mv.visitJumpInsn(Opcodes.IFEQ, suppliedPCheckIfEnd);
+
+				mv.visitLdcInsn(packageName);
+				mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
+				mv.visitVarInsn(Opcodes.ASTORE, initFormVarPackageStore);
+
+				mv.visitVarInsn(Opcodes.ALOAD, initFormVarPackageStore);
+				mv.visitLdcInsn(symbolName);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
+				final int initFormVarSymbolStore = currentClass.getNextAvailableStore();
+				mv.visitVarInsn(Opcodes.ASTORE, initFormVarSymbolStore);
+
+				formGenerator.generate(initForm, classBuilder);
+				mv.visitVarInsn(Opcodes.ASTORE, initFormLexicalValueStore);
+
+				mv.visitVarInsn(Opcodes.ALOAD, initFormVarSymbolStore);
+				mv.visitVarInsn(Opcodes.ALOAD, initFormLexicalValueStore);
+				// TODO: dynamic binding???
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "bindLexicalValue", "(Ljcl/LispStruct;)V", false);
+
+				mv.visitVarInsn(Opcodes.ALOAD, initFormsStore);
+				mv.visitVarInsn(Opcodes.ALOAD, initFormVarSymbolStore);
+				mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/List", "add", "(Ljava/lang/Object;)Z", true);
+				mv.visitInsn(Opcodes.POP);
+
+				mv.visitLabel(suppliedPCheckIfEnd);
+			}
+
+			bindingStack.pop();
+			// END: Bind InitForm values
 
 			mv.visitLabel(tryBlockStart);
 
@@ -472,6 +546,34 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitVarInsn(Opcodes.ASTORE, resultStore);
 
 			mv.visitLabel(tryBlockEnd);
+
+			// START: Unbind InitForm values
+			mv.visitVarInsn(Opcodes.ALOAD, initFormsStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/List", "iterator", "()Ljava/util/Iterator;", true);
+			final int normalInitFormUnbindingIteratorStore = currentClass.getNextAvailableStore();
+			mv.visitVarInsn(Opcodes.ASTORE, normalInitFormUnbindingIteratorStore);
+
+			final Label normalInitFormUnbindingIteratorLoopStart = new Label();
+			final Label normalInitFormUnbindingIteratorLoopEnd = new Label();
+
+			mv.visitLabel(normalInitFormUnbindingIteratorLoopStart);
+			mv.visitVarInsn(Opcodes.ALOAD, normalInitFormUnbindingIteratorStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "hasNext", "()Z", true);
+
+			mv.visitJumpInsn(Opcodes.IFEQ, normalInitFormUnbindingIteratorLoopEnd);
+			mv.visitVarInsn(Opcodes.ALOAD, normalInitFormUnbindingIteratorStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "next", "()Ljava/lang/Object;", true);
+			mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/symbols/SymbolStruct");
+			final int normalInitFormUnbindingSymbolStore = currentClass.getNextAvailableStore();
+			mv.visitVarInsn(Opcodes.ASTORE, normalInitFormUnbindingSymbolStore);
+
+			mv.visitVarInsn(Opcodes.ALOAD, normalInitFormUnbindingSymbolStore);
+			// TODO: dynamic binding???
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindLexicalValue", "()V", false);
+			mv.visitJumpInsn(Opcodes.GOTO, normalInitFormUnbindingIteratorLoopStart);
+
+			mv.visitLabel(normalInitFormUnbindingIteratorLoopEnd);
+			// END: Unbind InitForm values
 
 			// START: Unbind Parameter values
 			mv.visitVarInsn(Opcodes.ALOAD, functionBindingsStore);
@@ -495,18 +597,12 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitVarInsn(Opcodes.ASTORE, normalParameterUnbindingMapKeySymbolStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, normalParameterUnbindingMapKeySymbolStore);
+			// TODO: dynamic binding???
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindLexicalValue", "()V", false);
 			mv.visitJumpInsn(Opcodes.GOTO, normalParameterUnbindingIteratorLoopStart);
 
 			mv.visitLabel(normalParameterUnbindingIteratorLoopEnd);
 			// END: Unbind Parameter values
-
-			// START: Unbind InitForm values
-			for (final Integer initFormVarSymbol : initFormVarSymbolsToUnbind) {
-				mv.visitVarInsn(Opcodes.ALOAD, initFormVarSymbol);
-				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindLexicalValue", "()V", false);
-			}
-			// END: Unbind InitForm values
 
 			// START: Unbind Closure Function values
 			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingsStore);
@@ -591,6 +687,34 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			mv.visitLabel(finallyBlockStart);
 
+			// START: Unbind InitForm values
+			mv.visitVarInsn(Opcodes.ALOAD, initFormsStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/List", "iterator", "()Ljava/util/Iterator;", true);
+			final int exceptionInitFormUnbindingIteratorStore = currentClass.getNextAvailableStore();
+			mv.visitVarInsn(Opcodes.ASTORE, exceptionInitFormUnbindingIteratorStore);
+
+			final Label exceptionInitFormUnbindingIteratorLoopStart = new Label();
+			final Label exceptionInitFormUnbindingIteratorLoopEnd = new Label();
+
+			mv.visitLabel(exceptionInitFormUnbindingIteratorLoopStart);
+			mv.visitVarInsn(Opcodes.ALOAD, exceptionInitFormUnbindingIteratorStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "hasNext", "()Z", true);
+
+			mv.visitJumpInsn(Opcodes.IFEQ, exceptionInitFormUnbindingIteratorLoopEnd);
+			mv.visitVarInsn(Opcodes.ALOAD, exceptionInitFormUnbindingIteratorStore);
+			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "next", "()Ljava/lang/Object;", true);
+			mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/symbols/SymbolStruct");
+			final int exceptionInitFormUnbindingSymbolStore = currentClass.getNextAvailableStore();
+			mv.visitVarInsn(Opcodes.ASTORE, exceptionInitFormUnbindingSymbolStore);
+
+			mv.visitVarInsn(Opcodes.ALOAD, exceptionInitFormUnbindingSymbolStore);
+			// TODO: dynamic binding???
+			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindLexicalValue", "()V", false);
+			mv.visitJumpInsn(Opcodes.GOTO, exceptionInitFormUnbindingIteratorLoopStart);
+
+			mv.visitLabel(exceptionInitFormUnbindingIteratorLoopEnd);
+			// END: Unbind InitForm values
+
 			// START: Unbind Parameter values
 			mv.visitVarInsn(Opcodes.ALOAD, functionBindingsStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "keySet", "()Ljava/util/Set;", true);
@@ -613,18 +737,12 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitVarInsn(Opcodes.ASTORE, exceptionParameterUnbindingMapKeySymbolStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, exceptionParameterUnbindingMapKeySymbolStore);
+			// TODO: dynamic binding???
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindLexicalValue", "()V", false);
 			mv.visitJumpInsn(Opcodes.GOTO, exceptionParameterUnbindingIteratorLoopStart);
 
 			mv.visitLabel(exceptionParameterUnbindingIteratorLoopEnd);
 			// END: Unbind Parameter values
-
-			// START: Unbind InitForm values
-			for (final Integer initFormVarSymbol : initFormVarSymbolsToUnbind) {
-				mv.visitVarInsn(Opcodes.ALOAD, initFormVarSymbol);
-				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "unbindLexicalValue", "()V", false);
-			}
-			// END: Unbind InitForm values
 
 			// START: Unbind Closure Function values
 			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingsStore);

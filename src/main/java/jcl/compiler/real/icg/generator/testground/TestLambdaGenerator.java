@@ -24,6 +24,7 @@ import jcl.functions.FunctionStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
 import jcl.symbols.KeywordStruct;
+import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 
 public class TestLambdaGenerator extends FunctionStruct {
@@ -135,6 +136,20 @@ public class TestLambdaGenerator extends FunctionStruct {
 			symbol.bindLexicalValue(value);
 		}
 
+		final List<SymbolStruct<?>> initFormsToUnbind = new ArrayList<>();
+
+		final PackageStruct suppliedPSymbolPkg = PackageStruct.findPackage("SYSTEM");
+		final SymbolStruct<?> suppliedPSymbol = suppliedPSymbolPkg.findSymbol("SUPPLIED-P-SYMBOL").getSymbol();
+		final LispStruct suppliedPSymbolValue = suppliedPSymbol.getValue();
+		if (suppliedPSymbolValue.equals(NILStruct.INSTANCE)) {
+			final PackageStruct initFormSymbolPkg = PackageStruct.findPackage("SYSTEM");
+			final SymbolStruct initFormSymbol = initFormSymbolPkg.findSymbol("INIT-FORM-SYMBOL").getSymbol();
+			final LispStruct initForm = new CharacterStruct(97);
+			initFormSymbol.bindLexicalValue(initForm);
+
+			initFormsToUnbind.add(initFormSymbol);
+		}
+
 		final LispStruct result;
 		try {
 //			result = new CharacterStruct(97);
@@ -144,8 +159,11 @@ public class TestLambdaGenerator extends FunctionStruct {
 		} catch (final Throwable t) {
 			throw new ErrorException("Non-Lisp error found.", t);
 		} finally {
-			for (final SymbolStruct<?> parameterSymbolToBind : parameterSymbolsToBind.keySet()) {
-				parameterSymbolToBind.unbindLexicalValue();
+			for (final SymbolStruct<?> initFormSymbolToUnbind : initFormsToUnbind) {
+				initFormSymbolToUnbind.unbindLexicalValue();
+			}
+			for (final SymbolStruct<?> parameterSymbolToUnbind : parameterSymbolsToBind.keySet()) {
+				parameterSymbolToUnbind.unbindLexicalValue();
 			}
 			for (final SymbolStruct<?> closureFunctionToUnbind : closureFunctionsToBind.keySet()) {
 				closureFunctionToUnbind.unbindFunction();

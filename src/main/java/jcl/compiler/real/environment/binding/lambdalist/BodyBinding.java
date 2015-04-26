@@ -13,6 +13,10 @@ public class BodyBinding extends ParameterBinding {
 	private static final long serialVersionUID = 491035484834969841L;
 
 	public BodyBinding(final SymbolStruct<?> symbolStruct) {
-		super(symbolStruct, ListType.INSTANCE, null);
+		this(symbolStruct, false);
+	}
+
+	public BodyBinding(final SymbolStruct<?> symbolStruct, final boolean isSpecial) {
+		super(symbolStruct, ListType.INSTANCE, null, isSpecial);
 	}
 }

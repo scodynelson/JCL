@@ -23,8 +23,13 @@ public class KeyBinding extends ParameterBinding {
 	private final SuppliedPBinding suppliedPBinding;
 
 	public KeyBinding(final SymbolStruct<?> symbolStruct, final LispStruct initForm,
+	                       final KeywordStruct keyName, final SuppliedPBinding suppliedPBinding) {
+		this(symbolStruct, initForm, false, keyName, suppliedPBinding);
+	}
+
+	public KeyBinding(final SymbolStruct<?> symbolStruct, final LispStruct initForm, final boolean isSpecial,
 	                  final KeywordStruct keyName, final SuppliedPBinding suppliedPBinding) {
-		super(symbolStruct, TType.INSTANCE, initForm);
+		super(symbolStruct, TType.INSTANCE, initForm, isSpecial);
 		this.keyName = keyName;
 		this.suppliedPBinding = suppliedPBinding;
 	}

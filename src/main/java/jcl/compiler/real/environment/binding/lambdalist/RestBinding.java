@@ -13,6 +13,10 @@ public class RestBinding extends ParameterBinding {
 	private static final long serialVersionUID = 5070599837585531277L;
 
 	public RestBinding(final SymbolStruct<?> symbolStruct) {
-		super(symbolStruct, ListType.INSTANCE, null);
+		this(symbolStruct, false);
+	}
+
+	public RestBinding(final SymbolStruct<?> symbolStruct, final boolean isSpecial) {
+		super(symbolStruct, ListType.INSTANCE, null, isSpecial);
 	}
 }

@@ -66,7 +66,7 @@ public class LambdaListParser {
 			environment.addLexicalBinding(binding);
 		}
 
-		final WholeBinding wholeBinding = new WholeBinding(currentParam);
+		final WholeBinding wholeBinding = new WholeBinding(currentParam, isSpecial);
 		return new WholeParseResult(currentPosition, wholeBinding);
 	}
 
@@ -124,8 +124,6 @@ public class LambdaListParser {
 				throw new ProgramErrorException("LambdaList required parameters must be a symbol: " + printedElement);
 			}
 			final SymbolStruct<?> currentParam = (SymbolStruct) currentElement;
-			final RequiredBinding requiredBinding = new RequiredBinding(currentParam);
-			requiredBindings.add(requiredBinding);
 
 			final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(environment);
 			final int newBindingsPosition = currentLambda.getNextParameterNumber();
@@ -139,6 +137,9 @@ public class LambdaListParser {
 			} else {
 				environment.addLexicalBinding(binding);
 			}
+
+			final RequiredBinding requiredBinding = new RequiredBinding(currentParam, isSpecial);
+			requiredBindings.add(requiredBinding);
 		} while (iterator.hasNext());
 
 		return new RequiredParseResult(currentElement, currentPosition, requiredBindings);
@@ -172,7 +173,7 @@ public class LambdaListParser {
 				int newBindingsPosition = currentLambda.getNextParameterNumber();
 				environment.setBindingsPosition(newBindingsPosition);
 
-				boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
+				final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
 
 				EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, TType.INSTANCE, NullStruct.INSTANCE);
 				if (isSpecial) {
@@ -187,21 +188,21 @@ public class LambdaListParser {
 
 				final SymbolStruct<?> customSuppliedPCurrent = currentParamPackage.intern(customSuppliedPName).getSymbol();
 
-				final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(customSuppliedPCurrent);
-
 				newBindingsPosition = currentLambda.getNextParameterNumber();
 				environment.setBindingsPosition(newBindingsPosition);
 
-				isSpecial = Environments.isSpecial(declareElement, customSuppliedPCurrent);
+				final boolean isSuppliedPSpecial = Environments.isSpecial(declareElement, customSuppliedPCurrent);
 
 				binding = new EnvironmentParameterBinding(customSuppliedPCurrent, TType.INSTANCE, NullStruct.INSTANCE);
-				if (isSpecial) {
+				if (isSuppliedPSpecial) {
 					environment.addDynamicBinding(binding);
 				} else {
 					environment.addLexicalBinding(binding);
 				}
 
-				final OptionalBinding optionalBinding = new OptionalBinding(currentParam, NullStruct.INSTANCE, suppliedPBinding);
+				final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(customSuppliedPCurrent, isSuppliedPSpecial);
+
+				final OptionalBinding optionalBinding = new OptionalBinding(currentParam, NullStruct.INSTANCE, isSpecial, suppliedPBinding);
 				optionalBindings.add(optionalBinding);
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
@@ -231,7 +232,7 @@ public class LambdaListParser {
 				int newBindingsPosition = currentLambda.getNextParameterNumber();
 				environment.setBindingsPosition(newBindingsPosition);
 
-				boolean isSpecial = Environments.isSpecial(declareElement, varNameCurrent);
+				final boolean isSpecial = Environments.isSpecial(declareElement, varNameCurrent);
 
 				EnvironmentParameterBinding binding = new EnvironmentParameterBinding(varNameCurrent, TType.INSTANCE, parameterValueInitForm);
 				if (isSpecial) {
@@ -248,19 +249,19 @@ public class LambdaListParser {
 
 					final SymbolStruct<?> customSuppliedPCurrent = currentParamPackage.intern(customSuppliedPName).getSymbol();
 
-					suppliedPBinding = new SuppliedPBinding(customSuppliedPCurrent);
-
 					newBindingsPosition = currentLambda.getNextParameterNumber();
 					environment.setBindingsPosition(newBindingsPosition);
 
-					isSpecial = Environments.isSpecial(declareElement, customSuppliedPCurrent);
+					final boolean isSuppliedPSpecial = Environments.isSpecial(declareElement, customSuppliedPCurrent);
 
 					binding = new EnvironmentParameterBinding(customSuppliedPCurrent, TType.INSTANCE, NullStruct.INSTANCE);
-					if (isSpecial) {
+					if (isSuppliedPSpecial) {
 						environment.addDynamicBinding(binding);
 					} else {
 						environment.addLexicalBinding(binding);
 					}
+
+					suppliedPBinding = new SuppliedPBinding(customSuppliedPCurrent, isSuppliedPSpecial);
 				} else {
 					if (!(thirdInCurrent instanceof SymbolStruct)) {
 						final String printedElement = printer.print(thirdInCurrent);
@@ -268,23 +269,24 @@ public class LambdaListParser {
 					}
 
 					final SymbolStruct<?> suppliedPCurrent = (SymbolStruct) thirdInCurrent;
-					suppliedPBinding = new SuppliedPBinding(suppliedPCurrent);
 
 					currentLambda = Environments.getEnclosingLambda(environment);
 					newBindingsPosition = currentLambda.getNextParameterNumber();
 					environment.setBindingsPosition(newBindingsPosition);
 
-					isSpecial = Environments.isSpecial(declareElement, suppliedPCurrent);
+					final boolean isSuppliedPSpecial = Environments.isSpecial(declareElement, suppliedPCurrent);
 
 					binding = new EnvironmentParameterBinding(suppliedPCurrent, TType.INSTANCE, NullStruct.INSTANCE);
-					if (isSpecial) {
+					if (isSuppliedPSpecial) {
 						environment.addDynamicBinding(binding);
 					} else {
 						environment.addLexicalBinding(binding);
 					}
+
+					suppliedPBinding = new SuppliedPBinding(suppliedPCurrent, isSuppliedPSpecial);
 				}
 
-				final OptionalBinding optionalBinding = new OptionalBinding(varNameCurrent, parameterValueInitForm, suppliedPBinding);
+				final OptionalBinding optionalBinding = new OptionalBinding(varNameCurrent, parameterValueInitForm, isSpecial, suppliedPBinding);
 				optionalBindings.add(optionalBinding);
 			} else {
 				final String printedElement = printer.print(currentElement);
@@ -332,7 +334,7 @@ public class LambdaListParser {
 			environment.addLexicalBinding(binding);
 		}
 
-		final RestBinding restBinding = new RestBinding(currentParam);
+		final RestBinding restBinding = new RestBinding(currentParam, isSpecial);
 		return new RestParseResult(currentElement, currentPosition, restBinding);
 	}
 
@@ -360,7 +362,7 @@ public class LambdaListParser {
 			environment.addLexicalBinding(binding);
 		}
 
-		final RestBinding restBinding = new RestBinding(currentParam);
+		final RestBinding restBinding = new RestBinding(currentParam, isSpecial);
 		return new RestParseResult(dottedRest, currentPosition, restBinding);
 	}
 
@@ -401,7 +403,7 @@ public class LambdaListParser {
 			environment.addLexicalBinding(binding);
 		}
 
-		final BodyBinding bodyBinding = new BodyBinding(currentParam);
+		final BodyBinding bodyBinding = new BodyBinding(currentParam, isSpecial);
 		return new BodyParseResult(currentElement, currentPosition, bodyBinding);
 	}
 
@@ -430,7 +432,7 @@ public class LambdaListParser {
 				int newBindingsPosition = currentLambda.getNextParameterNumber();
 				environment.setBindingsPosition(newBindingsPosition);
 
-				boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
+				final boolean isSpecial = Environments.isSpecial(declareElement, currentParam);
 
 				EnvironmentParameterBinding binding = new EnvironmentParameterBinding(currentParam, TType.INSTANCE, NullStruct.INSTANCE);
 				if (isSpecial) {
@@ -445,21 +447,21 @@ public class LambdaListParser {
 
 				final SymbolStruct<?> customSuppliedPCurrent = currentParamPackage.intern(customSuppliedPName).getSymbol();
 
-				final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(customSuppliedPCurrent);
-
 				newBindingsPosition = currentLambda.getNextParameterNumber();
 				environment.setBindingsPosition(newBindingsPosition);
 
-				isSpecial = Environments.isSpecial(declareElement, customSuppliedPCurrent);
+				final boolean isSuppliedPSpecial = Environments.isSpecial(declareElement, customSuppliedPCurrent);
 
 				binding = new EnvironmentParameterBinding(customSuppliedPCurrent, TType.INSTANCE, NullStruct.INSTANCE);
-				if (isSpecial) {
+				if (isSuppliedPSpecial) {
 					environment.addDynamicBinding(binding);
 				} else {
 					environment.addLexicalBinding(binding);
 				}
 
-				final KeyBinding keyBinding = new KeyBinding(currentParam, NullStruct.INSTANCE, keyName, suppliedPBinding);
+				final SuppliedPBinding suppliedPBinding = new SuppliedPBinding(customSuppliedPCurrent, isSuppliedPSpecial);
+
+				final KeyBinding keyBinding = new KeyBinding(currentParam, NullStruct.INSTANCE, isSpecial, keyName, suppliedPBinding);
 				keyBindings.add(keyBinding);
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
@@ -517,7 +519,7 @@ public class LambdaListParser {
 				int newBindingsPosition = currentLambda.getNextParameterNumber();
 				environment.setBindingsPosition(newBindingsPosition);
 
-				boolean isSpecial = Environments.isSpecial(declareElement, varNameCurrent);
+				final boolean isSpecial = Environments.isSpecial(declareElement, varNameCurrent);
 
 				EnvironmentParameterBinding binding = new EnvironmentParameterBinding(varNameCurrent, TType.INSTANCE, parameterValueInitForm);
 				if (isSpecial) {
@@ -534,19 +536,19 @@ public class LambdaListParser {
 
 					final SymbolStruct<?> customSuppliedPCurrent = currentParamPackage.intern(customSuppliedPName).getSymbol();
 
-					suppliedPBinding = new SuppliedPBinding(customSuppliedPCurrent);
-
 					newBindingsPosition = currentLambda.getNextParameterNumber();
 					environment.setBindingsPosition(newBindingsPosition);
 
-					isSpecial = Environments.isSpecial(declareElement, customSuppliedPCurrent);
+					final boolean isSuppliedPSpecial = Environments.isSpecial(declareElement, customSuppliedPCurrent);
 
 					binding = new EnvironmentParameterBinding(customSuppliedPCurrent, TType.INSTANCE, NullStruct.INSTANCE);
-					if (isSpecial) {
+					if (isSuppliedPSpecial) {
 						environment.addDynamicBinding(binding);
 					} else {
 						environment.addLexicalBinding(binding);
 					}
+
+					suppliedPBinding = new SuppliedPBinding(customSuppliedPCurrent, isSuppliedPSpecial);
 				} else {
 					if (!(thirdInCurrent instanceof SymbolStruct)) {
 						final String printedElement = printer.print(thirdInCurrent);
@@ -554,23 +556,24 @@ public class LambdaListParser {
 					}
 
 					final SymbolStruct<?> suppliedPCurrent = (SymbolStruct) thirdInCurrent;
-					suppliedPBinding = new SuppliedPBinding(suppliedPCurrent);
 
 					currentLambda = Environments.getEnclosingLambda(environment);
 					newBindingsPosition = currentLambda.getNextParameterNumber();
 					environment.setBindingsPosition(newBindingsPosition);
 
-					isSpecial = Environments.isSpecial(declareElement, suppliedPCurrent);
+					final boolean isSuppliedPSpecial = Environments.isSpecial(declareElement, suppliedPCurrent);
 
 					binding = new EnvironmentParameterBinding(suppliedPCurrent, TType.INSTANCE, NullStruct.INSTANCE);
-					if (isSpecial) {
+					if (isSuppliedPSpecial) {
 						environment.addDynamicBinding(binding);
 					} else {
 						environment.addLexicalBinding(binding);
 					}
+
+					suppliedPBinding = new SuppliedPBinding(suppliedPCurrent, isSuppliedPSpecial);
 				}
 
-				final KeyBinding keyBinding = new KeyBinding(varNameCurrent, parameterValueInitForm, varKeyNameCurrent, suppliedPBinding);
+				final KeyBinding keyBinding = new KeyBinding(varNameCurrent, parameterValueInitForm, isSpecial, varKeyNameCurrent, suppliedPBinding);
 				keyBindings.add(keyBinding);
 			} else {
 				final String printedElement = printer.print(currentElement);
@@ -601,8 +604,6 @@ public class LambdaListParser {
 
 			if (currentElement instanceof SymbolStruct) {
 				final SymbolStruct<?> currentParam = (SymbolStruct) currentElement;
-				final AuxBinding auxBinding = new AuxBinding(currentParam, NullStruct.INSTANCE);
-				auxBindings.add(auxBinding);
 
 				final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(environment);
 				final int newBindingsPosition = currentLambda.getNextParameterNumber();
@@ -616,6 +617,9 @@ public class LambdaListParser {
 				} else {
 					environment.addLexicalBinding(binding);
 				}
+
+				final AuxBinding auxBinding = new AuxBinding(currentParam, NullStruct.INSTANCE, isSpecial);
+				auxBindings.add(auxBinding);
 			} else if (currentElement instanceof ListStruct) {
 				final ListStruct currentParam = (ListStruct) currentElement;
 				if ((currentParam.size() < 1) || (currentParam.size() > 2)) {
@@ -637,9 +641,6 @@ public class LambdaListParser {
 					initForm = secondInCurrent;
 				}
 
-				final AuxBinding auxBinding = new AuxBinding(varNameCurrent, initForm);
-				auxBindings.add(auxBinding);
-
 				final LispStruct parameterValueInitForm = formAnalyzer.analyze(initForm, environment);
 
 				final LambdaEnvironment currentLambda = Environments.getEnclosingLambda(environment);
@@ -654,6 +655,9 @@ public class LambdaListParser {
 				} else {
 					environment.addLexicalBinding(binding);
 				}
+
+				final AuxBinding auxBinding = new AuxBinding(varNameCurrent, initForm, isSpecial);
+				auxBindings.add(auxBinding);
 			} else {
 				final String printedElement = printer.print(currentElement);
 				throw new ProgramErrorException("LambdaList &aux parameters must be a symbol or a list: " + printedElement);

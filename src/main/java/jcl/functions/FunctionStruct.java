@@ -179,14 +179,14 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 		return closure.getFunctionBindings();
 	}
 
-	protected Map<SymbolStruct<?>, LispStruct> getFunctionBindings(final LispStruct[] lispStructs) {
+	protected List<FunctionParameterBinding> getFunctionBindings(final LispStruct[] lispStructs) {
 		final List<RequiredBinding> requiredBindings = lambdaListBindings.getRequiredBindings();
 		final List<OptionalBinding> optionalBindings = lambdaListBindings.getOptionalBindings();
 		final RestBinding restBinding = lambdaListBindings.getRestBinding();
 		final List<KeyBinding> keyBindings = lambdaListBindings.getKeyBindings();
 		boolean allowOtherKeys = lambdaListBindings.isAllowOtherKeys();
 
-		final Map<SymbolStruct<?>, LispStruct> symbolsToBind = new LinkedHashMap<>();
+		final List<FunctionParameterBinding> functionParametersToBind = new ArrayList<>();
 
 		final List<LispStruct> functionArguments = Arrays.asList(lispStructs);
 		final int numberOfArguments = functionArguments.size();
@@ -201,7 +201,9 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 
 			final SymbolStruct<?> requiredSymbol = requiredBinding.getSymbolStruct();
 			final LispStruct requiredInitForm = functionArgumentsIterator.next();
-			symbolsToBind.put(requiredSymbol, requiredInitForm);
+
+			final FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(requiredSymbol, requiredInitForm, requiredBinding.isSpecial());
+			functionParametersToBind.add(functionParameterBinding);
 		}
 
 		for (final OptionalBinding optionalBinding : optionalBindings) {
@@ -212,14 +214,18 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 				suppliedPInitForm = TStruct.INSTANCE;
 
 				final SymbolStruct<?> optionalSymbol = optionalBinding.getSymbolStruct();
-				symbolsToBind.put(optionalSymbol, optionalInitForm);
+
+				final FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(optionalSymbol, optionalInitForm, optionalBinding.isSpecial());
+				functionParametersToBind.add(functionParameterBinding);
 			} else {
 				suppliedPInitForm = NILStruct.INSTANCE;
 			}
 
 			final SuppliedPBinding suppliedPBinding = optionalBinding.getSuppliedPBinding();
 			final SymbolStruct<?> suppliedPSymbol = suppliedPBinding.getSymbolStruct();
-			symbolsToBind.put(suppliedPSymbol, suppliedPInitForm);
+
+			final FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(suppliedPSymbol, suppliedPInitForm, suppliedPBinding.isSpecial());
+			functionParametersToBind.add(functionParameterBinding);
 		}
 
 		final int numberOfKeys = keyBindings.size();
@@ -268,14 +274,18 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 						suppliedPInitForm = TStruct.INSTANCE;
 
 						final SymbolStruct<?> keySymbol = keyBinding.getSymbolStruct();
-						symbolsToBind.put(keySymbol, keyInitForm);
+
+						final FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(keySymbol, keyInitForm, keyBinding.isSpecial());
+						functionParametersToBind.add(functionParameterBinding);
 					} else {
 						suppliedPInitForm = NILStruct.INSTANCE;
 					}
 
 					final SuppliedPBinding suppliedPBinding = keyBinding.getSuppliedPBinding();
 					final SymbolStruct<?> suppliedPSymbol = suppliedPBinding.getSymbolStruct();
-					symbolsToBind.put(suppliedPSymbol, suppliedPInitForm);
+
+					final FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(suppliedPSymbol, suppliedPInitForm, suppliedPBinding.isSpecial());
+					functionParametersToBind.add(functionParameterBinding);
 				} else if (keys.contains(keywordArgument) || allowOtherKeys || keysToBindings.isEmpty()) {
 					if (iterator.hasNext()) {
 						// Consume the next argument
@@ -296,16 +306,20 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 		for (final KeyBinding keyBinding : keysToBindings.values()) {
 			final SuppliedPBinding suppliedPBinding = keyBinding.getSuppliedPBinding();
 			final SymbolStruct<?> suppliedPSymbol = suppliedPBinding.getSymbolStruct();
-			symbolsToBind.put(suppliedPSymbol, NILStruct.INSTANCE);
+
+			final FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(suppliedPSymbol, NILStruct.INSTANCE, suppliedPBinding.isSpecial());
+			functionParametersToBind.add(functionParameterBinding);
 		}
 
 		if (restBinding != null) {
 			final SymbolStruct<?> restSymbol = restBinding.getSymbolStruct();
 			final LispStruct restListStruct = ListStruct.buildProperList(restList);
-			symbolsToBind.put(restSymbol, restListStruct);
+
+			final FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(restSymbol, restListStruct, restBinding.isSpecial());
+			functionParametersToBind.add(functionParameterBinding);
 		}
 
-		return symbolsToBind;
+		return functionParametersToBind;
 	}
 
 	private static KeywordStruct getKeywordStruct(final String symbolName) {

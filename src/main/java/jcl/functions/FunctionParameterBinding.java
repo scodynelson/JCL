@@ -2,33 +2,36 @@
  * Copyright (C) 2011-2014 Cody Nelson - All rights reserved.
  */
 
-package jcl.compiler.real.environment.binding;
+package jcl.functions;
 
 import jcl.LispStruct;
-import jcl.LispType;
 import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class ParameterBinding extends Binding {
+public class FunctionParameterBinding {
 
-	private static final long serialVersionUID = 4128878993186537174L;
+	private SymbolStruct<?> parameterSymbol;
 
-	private final LispStruct initForm;
+	private LispStruct parameterValue;
 
-	private final boolean isSpecial;
+	private boolean isSpecial;
 
-	protected ParameterBinding(final SymbolStruct<?> symbolStruct, final LispType type,
-	                           final LispStruct initForm, final boolean isSpecial) {
-		super(symbolStruct, type);
-		this.initForm = initForm;
+	public FunctionParameterBinding(final SymbolStruct<?> parameterSymbol, final LispStruct parameterValue,
+	                                final boolean isSpecial) {
+		this.parameterSymbol = parameterSymbol;
+		this.parameterValue = parameterValue;
 		this.isSpecial = isSpecial;
 	}
 
-	public LispStruct getInitForm() {
-		return initForm;
+	public SymbolStruct<?> getParameterSymbol() {
+		return parameterSymbol;
+	}
+
+	public LispStruct getParameterValue() {
+		return parameterValue;
 	}
 
 	public boolean isSpecial() {
@@ -37,8 +40,8 @@ public class ParameterBinding extends Binding {
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(initForm)
+		return new HashCodeBuilder().append(parameterSymbol)
+		                            .append(parameterValue)
 		                            .append(isSpecial)
 		                            .toHashCode();
 	}
@@ -54,16 +57,17 @@ public class ParameterBinding extends Binding {
 		if (obj.getClass() != getClass()) {
 			return false;
 		}
-		final ParameterBinding rhs = (ParameterBinding) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(initForm, rhs.initForm)
+		final FunctionParameterBinding rhs = (FunctionParameterBinding) obj;
+		return new EqualsBuilder().append(parameterSymbol, rhs.parameterSymbol)
+		                          .append(parameterValue, rhs.parameterValue)
 		                          .append(isSpecial, rhs.isSpecial)
 		                          .isEquals();
 	}
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(initForm)
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(parameterSymbol)
+		                                                                .append(parameterValue)
 		                                                                .append(isSpecial)
 		                                                                .toString();
 	}

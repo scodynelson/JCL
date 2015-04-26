@@ -20,6 +20,7 @@ import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
 import jcl.compiler.real.struct.ValuesStruct;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.functions.Closure;
+import jcl.functions.FunctionParameterBinding;
 import jcl.functions.FunctionStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
@@ -49,7 +50,7 @@ public class TestLambdaGenerator extends FunctionStruct {
 
 		// Start: Required
 		final SymbolStruct<?> requiredSymbol = pkg.findSymbol("REQUIRED-SYMBOL").getSymbol();
-		final RequiredBinding requiredBinding = new RequiredBinding(requiredSymbol);
+		final RequiredBinding requiredBinding = new RequiredBinding(requiredSymbol, true);
 		requiredBindings.add(requiredBinding);
 		// End: Required
 
@@ -57,25 +58,25 @@ public class TestLambdaGenerator extends FunctionStruct {
 		final List<OptionalBinding> optionalBindings = new ArrayList<>();
 
 		final SymbolStruct<?> optionalSuppliedPSymbol = pkg.findSymbol("OPTIONAL-SUPPLIED-P-SYMBOL").getSymbol();
-		final SuppliedPBinding optionalSuppliedPBinding = new SuppliedPBinding(optionalSuppliedPSymbol);
+		final SuppliedPBinding optionalSuppliedPBinding = new SuppliedPBinding(optionalSuppliedPSymbol, false);
 
 		final SymbolStruct<?> optionalSymbol = pkg.findSymbol("OPTIONAL-SYMBOL").getSymbol();
 		final LispStruct optionalInitForm = new CharacterStruct(100);
 
-		final OptionalBinding optionalBinding = new OptionalBinding(optionalSymbol, optionalInitForm, optionalSuppliedPBinding);
+		final OptionalBinding optionalBinding = new OptionalBinding(optionalSymbol, optionalInitForm, false, optionalSuppliedPBinding);
 		optionalBindings.add(optionalBinding);
 		// End: Optional
 
 		// Start: Rest
 		final SymbolStruct<?> restSymbol = pkg.findSymbol("REST-SYMBOL").getSymbol();
-		final RestBinding restBinding = new RestBinding(restSymbol);
+		final RestBinding restBinding = new RestBinding(restSymbol, true);
 		// End: Rest
 
 		// Start: Keys
 		final List<KeyBinding> keyBindings = new ArrayList<>();
 
 		final SymbolStruct<?> keySuppliedPSymbol = pkg.findSymbol("KEY-SUPPLIED-P-SYMBOL").getSymbol();
-		final SuppliedPBinding keySuppliedPBinding = new SuppliedPBinding(keySuppliedPSymbol);
+		final SuppliedPBinding keySuppliedPBinding = new SuppliedPBinding(keySuppliedPSymbol, false);
 
 		final SymbolStruct<?> keySymbol = pkg.findSymbol("KEY-SYMBOL").getSymbol();
 		final LispStruct keyInitForm = new CharacterStruct(200);
@@ -83,7 +84,7 @@ public class TestLambdaGenerator extends FunctionStruct {
 		final PackageStruct keywordPkg = GlobalPackageStruct.KEYWORD;
 		final KeywordStruct keyName = (KeywordStruct) keywordPkg.findSymbol("KEY-NAME").getSymbol();
 
-		final KeyBinding keyBinding = new KeyBinding(keySymbol, keyInitForm, keyName, keySuppliedPBinding);
+		final KeyBinding keyBinding = new KeyBinding(keySymbol, keyInitForm, false, keyName, keySuppliedPBinding);
 		keyBindings.add(keyBinding);
 		// End: Keys
 
@@ -97,7 +98,7 @@ public class TestLambdaGenerator extends FunctionStruct {
 		final SymbolStruct<?> auxSymbol = pkg.findSymbol("AUX-SYMBOL").getSymbol();
 		final LispStruct auxInitForm = new CharacterStruct(300);
 
-		final AuxBinding auxBinding = new AuxBinding(auxSymbol, auxInitForm);
+		final AuxBinding auxBinding = new AuxBinding(auxSymbol, auxInitForm, false);
 		auxBindings.add(auxBinding);
 		// End: Aux
 
@@ -125,18 +126,21 @@ public class TestLambdaGenerator extends FunctionStruct {
 			symbol.bindFunction(function);
 		}
 
-		final Map<SymbolStruct<?>, LispStruct> parameterSymbolsToBind = getFunctionBindings(lispStructs);
-		for (final Map.Entry<SymbolStruct<?>, LispStruct> parameterSymbolToBind : parameterSymbolsToBind.entrySet()) {
-			final SymbolStruct symbol = parameterSymbolToBind.getKey();
-			LispStruct value = parameterSymbolToBind.getValue();
+		final List<FunctionParameterBinding> parameterSymbolsToBind = getFunctionBindings(lispStructs);
+		for (final FunctionParameterBinding parameterSymbolToBind : parameterSymbolsToBind) {
+			final SymbolStruct symbol = parameterSymbolToBind.getParameterSymbol();
+			LispStruct value = parameterSymbolToBind.getParameterValue();
 			if (value instanceof ValuesStruct) {
 				final ValuesStruct valuesStruct = (ValuesStruct) value;
 				value = valuesStruct.getPrimaryValue();
 			}
-			symbol.bindLexicalValue(value);
+			final boolean isSpecial = parameterSymbolToBind.isSpecial();
+			if (isSpecial) {
+				symbol.bindDynamicValue(value);
+			} else {
+				symbol.bindLexicalValue(value);
+			}
 		}
-
-		final List<SymbolStruct<?>> initFormsToUnbind = new ArrayList<>();
 
 		final PackageStruct suppliedPSymbolPkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct<?> suppliedPSymbol = suppliedPSymbolPkg.findSymbol("SUPPLIED-P-SYMBOL").getSymbol();
@@ -146,8 +150,6 @@ public class TestLambdaGenerator extends FunctionStruct {
 			final SymbolStruct initFormSymbol = initFormSymbolPkg.findSymbol("INIT-FORM-SYMBOL").getSymbol();
 			final LispStruct initForm = new CharacterStruct(97);
 			initFormSymbol.bindLexicalValue(initForm);
-
-			initFormsToUnbind.add(initFormSymbol);
 		}
 
 		final LispStruct result;
@@ -159,11 +161,23 @@ public class TestLambdaGenerator extends FunctionStruct {
 		} catch (final Throwable t) {
 			throw new ErrorException("Non-Lisp error found.", t);
 		} finally {
-			for (final SymbolStruct<?> initFormSymbolToUnbind : initFormsToUnbind) {
-				initFormSymbolToUnbind.unbindLexicalValue();
+			final PackageStruct suppliedPSymbolPkg1 = PackageStruct.findPackage("SYSTEM");
+			final SymbolStruct<?> suppliedPSymbol1 = suppliedPSymbolPkg1.findSymbol("SUPPLIED-P-SYMBOL").getSymbol();
+			final LispStruct suppliedPSymbolValue1 = suppliedPSymbol1.getValue();
+			if (suppliedPSymbolValue1.equals(NILStruct.INSTANCE)) {
+				final PackageStruct initFormSymbolPkg1 = PackageStruct.findPackage("SYSTEM");
+				final SymbolStruct initFormSymbol1 = initFormSymbolPkg1.findSymbol("INIT-FORM-SYMBOL").getSymbol();
+				initFormSymbol1.unbindLexicalValue();
 			}
-			for (final SymbolStruct<?> parameterSymbolToUnbind : parameterSymbolsToBind.keySet()) {
-				parameterSymbolToUnbind.unbindLexicalValue();
+
+			for (final FunctionParameterBinding parameterSymbolToUnbind : parameterSymbolsToBind) {
+				final SymbolStruct<?> parameterSymbol = parameterSymbolToUnbind.getParameterSymbol();
+				final boolean isSpecial = parameterSymbolToUnbind.isSpecial();
+				if (isSpecial) {
+					parameterSymbol.unbindDynamicValue();
+				} else {
+					parameterSymbol.unbindLexicalValue();
+				}
 			}
 			for (final SymbolStruct<?> closureFunctionToUnbind : closureFunctionsToBind.keySet()) {
 				closureFunctionToUnbind.unbindFunction();

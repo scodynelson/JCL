@@ -13,6 +13,6 @@ public class EnvironmentBinding extends ParameterBinding {
 	private static final long serialVersionUID = 7762075133466719180L;
 
 	public EnvironmentBinding(final SymbolStruct<?> symbolStruct) {
-		super(symbolStruct, ListType.INSTANCE, null);
+		super(symbolStruct, ListType.INSTANCE, null, true);
 	}
 }

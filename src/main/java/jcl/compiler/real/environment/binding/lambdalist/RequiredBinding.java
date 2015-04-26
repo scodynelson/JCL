@@ -13,6 +13,10 @@ public class RequiredBinding extends ParameterBinding {
 	private static final long serialVersionUID = 2544143727820268303L;
 
 	public RequiredBinding(final SymbolStruct<?> symbolStruct) {
-		super(symbolStruct, TType.INSTANCE, null);
+		this(symbolStruct, false);
+	}
+
+	public RequiredBinding(final SymbolStruct<?> symbolStruct, final boolean isSpecial) {
+		super(symbolStruct, TType.INSTANCE, null, isSpecial);
 	}
 }

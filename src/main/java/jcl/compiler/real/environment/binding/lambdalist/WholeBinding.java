@@ -13,6 +13,10 @@ public class WholeBinding extends ParameterBinding {
 	private static final long serialVersionUID = 1375721535668777719L;
 
 	public WholeBinding(final SymbolStruct<?> symbolStruct) {
-		super(symbolStruct, ListType.INSTANCE, null);
+		this(symbolStruct, false);
+	}
+
+	public WholeBinding(final SymbolStruct<?> symbolStruct, final boolean isSpecial) {
+		super(symbolStruct, ListType.INSTANCE, null, isSpecial);
 	}
 }

@@ -19,9 +19,13 @@ public class OptionalBinding extends ParameterBinding {
 
 	private final SuppliedPBinding suppliedPBinding;
 
-	public OptionalBinding(final SymbolStruct<?> symbolStruct, final LispStruct initForm,
+	public OptionalBinding(final SymbolStruct<?> symbolStruct, final LispStruct initForm, final SuppliedPBinding suppliedPBinding) {
+		this(symbolStruct, initForm, false, suppliedPBinding);
+	}
+
+	public OptionalBinding(final SymbolStruct<?> symbolStruct, final LispStruct initForm, final boolean isSpecial,
 	                       final SuppliedPBinding suppliedPBinding) {
-		super(symbolStruct, TType.INSTANCE, initForm);
+		super(symbolStruct, TType.INSTANCE, initForm, isSpecial);
 		this.suppliedPBinding = suppliedPBinding;
 	}
 

@@ -48,5 +48,6 @@
     <orderEntry type="library" exported="" name="Gradle: org.springframework:spring-beans:4.1.6.RELEASE" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.springframework:spring-core:4.1.6.RELEASE" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.springframework:spring-expression:4.1.6.RELEASE" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: commons-primitives:commons-primitives:1.0" level="project" />
   </component>
 </module>

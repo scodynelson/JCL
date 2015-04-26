@@ -19,6 +19,7 @@ String COMMONS_LANG_VERSION = '3.4';
 String COMMONS_MATH_VERSION = '3.5';
 String COMMONS_COLLECTIONS_VERSION = '4.0';
 String COMMONS_IO_VERSION = '2.4';
+String COMMONS_PRIMITIVES_VERSION = '1.0';
 
 String SPRING_VERSION = '4.1.6.RELEASE';
 
@@ -36,6 +37,7 @@ dependencies {
 	compile group: 'org.apache.commons', name: 'commons-math3', version: "$COMMONS_MATH_VERSION"
 	compile group: 'org.apache.commons', name: 'commons-collections4', version: "$COMMONS_COLLECTIONS_VERSION"
 	compile group: 'commons-io', name: 'commons-io', version: "$COMMONS_IO_VERSION"
+	compile group: 'commons-primitives', name: 'commons-primitives', version: "$COMMONS_PRIMITIVES_VERSION"
 
 	compile group: 'org.ow2.asm', name: 'asm-all', version: "$ASM_ALL_VERSION"
 

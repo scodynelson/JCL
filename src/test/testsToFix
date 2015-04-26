@@ -208,23 +208,6 @@ LAMBDA:
      15))
   16)
 
-(deftest lambda.27
-  ((lambda (&key) 'good) :allow-other-keys nil)
-  good)
-
-(deftest lambda.28
-  ((lambda (&key) 'good) :allow-other-keys t :foo t)
-  good)
-
-(deftest lambda.29
-  ((lambda (&key) 'good) :allow-other-keys t :allow-other-keys nil :foo t)
-  good)
-
-(deftest lambda.30
-  ((lambda (&key x) x) :allow-other-keys t :x 10
-   :allow-other-keys nil :foo t)
-  10)
-
 (deftest lambda.32
   ((lambda (&rest x &key) x) :allow-other-keys nil)
   (:allow-other-keys nil))

@@ -7,15 +7,24 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public abstract class BooleanStruct extends SymbolStruct<BooleanType> {
+public abstract class BooleanStruct extends ConstantStruct<BooleanStruct> {
 
 	private static final long serialVersionUID = 2558133019376289518L;
 
 	private final boolean booleanValue;
 
 	protected BooleanStruct(final String name, final boolean booleanValue) {
-		super(name, GlobalPackageStruct.COMMON_LISP, BooleanType.INSTANCE);
+		super(BooleanType.INSTANCE, name, GlobalPackageStruct.COMMON_LISP, null, null);
 		this.booleanValue = booleanValue;
+
+		init();
+	}
+
+	/**
+	 * Post construction method.
+	 */
+	private void init() {
+		dynamicValueStack.push(this);
 	}
 
 	public boolean booleanValue() {

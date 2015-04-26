@@ -256,7 +256,7 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 
 			if (nextArgument instanceof KeywordStruct) {
 				if (CommonLispSymbols.ALLOW_OTHER_KEYS.equals(possiblyKeywordNexArgument)) {
-					final LispStruct allowOtherKeysValue = functionArgumentsIterator.next();
+					final LispStruct allowOtherKeysValue = iterator.next();
 					if (!allowOtherKeysValue.equals(NullStruct.INSTANCE) && !allowOtherKeysValue.equals(NILStruct.INSTANCE)) {
 						allowOtherKeys = true;
 					}

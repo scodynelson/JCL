@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -42,6 +43,16 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 	protected OrdinaryLambdaListBindings lambdaListBindings;
 
 	protected Closure closure;
+
+	protected static final LispStruct INIT_FORM_PLACEHOLDER = new LispStruct() {
+
+		private static final long serialVersionUID = 8747573493160199571L;
+
+		@Override
+		public LispType getType() {
+			return null;
+		}
+	};
 
 	/**
 	 * Protected constructor.
@@ -203,24 +214,25 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 		}
 
 		for (final OptionalBinding optionalBinding : optionalBindings) {
+			final LispStruct optionalInitForm;
 			final LispStruct suppliedPInitForm;
 
 			if (functionArgumentsIterator.hasNext()) {
-				final LispStruct optionalInitForm = functionArgumentsIterator.next();
+				optionalInitForm = functionArgumentsIterator.next();
 				suppliedPInitForm = TStruct.INSTANCE;
-
-				final SymbolStruct<?> optionalSymbol = optionalBinding.getSymbolStruct();
-
-				final FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(optionalSymbol, optionalInitForm, optionalBinding.isSpecial());
-				functionParametersToBind.add(functionParameterBinding);
 			} else {
+				optionalInitForm = INIT_FORM_PLACEHOLDER;
 				suppliedPInitForm = NILStruct.INSTANCE;
 			}
+			final SymbolStruct<?> optionalSymbol = optionalBinding.getSymbolStruct();
+
+			FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(optionalSymbol, optionalInitForm, optionalBinding.isSpecial());
+			functionParametersToBind.add(functionParameterBinding);
 
 			final SuppliedPBinding suppliedPBinding = optionalBinding.getSuppliedPBinding();
 			final SymbolStruct<?> suppliedPSymbol = suppliedPBinding.getSymbolStruct();
 
-			final FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(suppliedPSymbol, suppliedPInitForm, suppliedPBinding.isSpecial());
+			functionParameterBinding = new FunctionParameterBinding(suppliedPSymbol, suppliedPInitForm, suppliedPBinding.isSpecial());
 			functionParametersToBind.add(functionParameterBinding);
 		}
 
@@ -243,6 +255,20 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 
 		final List<SymbolStruct<?>> otherKeys = new ArrayList<>();
 
+		final Map<SymbolStruct<?>, FunctionParameterBinding> keywordFunctionParametersToBind = new LinkedHashMap<>(keyBindings.size());
+		for (final KeyBinding keyBinding : keyBindings) {
+			final SymbolStruct<?> keySymbol = keyBinding.getSymbolStruct();
+
+			FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(keySymbol, INIT_FORM_PLACEHOLDER, keyBinding.isSpecial());
+			keywordFunctionParametersToBind.put(keySymbol, functionParameterBinding);
+
+			final SuppliedPBinding suppliedPBinding = keyBinding.getSuppliedPBinding();
+			final SymbolStruct<?> suppliedPSymbol = suppliedPBinding.getSymbolStruct();
+
+			functionParameterBinding = new FunctionParameterBinding(suppliedPSymbol, NILStruct.INSTANCE, suppliedPBinding.isSpecial());
+			keywordFunctionParametersToBind.put(suppliedPSymbol, functionParameterBinding);
+		}
+
 		for (final Iterator<LispStruct> iterator = restList.iterator(); iterator.hasNext(); ) {
 			final LispStruct nextArgument = iterator.next();
 
@@ -251,9 +277,8 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 				if (keysToBindings.containsKey(keywordArgument)) {
 					final KeyBinding keyBinding = keysToBindings.remove(keywordArgument);
 
-					final LispStruct suppliedPInitForm;
-
 					if (iterator.hasNext()) {
+						final SymbolStruct<?> keySymbol = keyBinding.getSymbolStruct();
 						final LispStruct keyInitForm = iterator.next();
 						if (CommonLispSymbols.ALLOW_OTHER_KEYS.equals(nextArgument)) {
 							if (!keyInitForm.equals(NullStruct.INSTANCE) && !keyInitForm.equals(NILStruct.INSTANCE)) {
@@ -261,21 +286,18 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 							}
 						}
 
-						suppliedPInitForm = TStruct.INSTANCE;
+						FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(keySymbol, keyInitForm, keyBinding.isSpecial());
+						keywordFunctionParametersToBind.put(keySymbol, functionParameterBinding);
 
-						final SymbolStruct<?> keySymbol = keyBinding.getSymbolStruct();
+						final SuppliedPBinding suppliedPBinding = keyBinding.getSuppliedPBinding();
+						final SymbolStruct<?> suppliedPSymbol = suppliedPBinding.getSymbolStruct();
+						final LispStruct suppliedPInitForm = TStruct.INSTANCE;
 
-						final FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(keySymbol, keyInitForm, keyBinding.isSpecial());
-						functionParametersToBind.add(functionParameterBinding);
+						functionParameterBinding = new FunctionParameterBinding(suppliedPSymbol, suppliedPInitForm, suppliedPBinding.isSpecial());
+						keywordFunctionParametersToBind.put(suppliedPSymbol, functionParameterBinding);
 					} else {
-						suppliedPInitForm = NILStruct.INSTANCE;
+						throw new ProgramErrorException("Expected argument to follow keyword name argument for call to '" + functionClassName + " with key name: " + keywordArgument);
 					}
-
-					final SuppliedPBinding suppliedPBinding = keyBinding.getSuppliedPBinding();
-					final SymbolStruct<?> suppliedPSymbol = suppliedPBinding.getSymbolStruct();
-
-					final FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(suppliedPSymbol, suppliedPInitForm, suppliedPBinding.isSpecial());
-					functionParametersToBind.add(functionParameterBinding);
 				} else if (CommonLispSymbols.ALLOW_OTHER_KEYS.equals(nextArgument)) {
 					final LispStruct allowOtherKeysValue = iterator.next();
 					if (!allowOtherKeysValue.equals(NullStruct.INSTANCE) && !allowOtherKeysValue.equals(NILStruct.INSTANCE)) {
@@ -304,14 +326,6 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 			throw new ProgramErrorException("Keyword arguments not found in '" + functionClassName + "' function definition: " + otherKeys);
 		}
 
-		for (final KeyBinding keyBinding : keysToBindings.values()) {
-			final SuppliedPBinding suppliedPBinding = keyBinding.getSuppliedPBinding();
-			final SymbolStruct<?> suppliedPSymbol = suppliedPBinding.getSymbolStruct();
-
-			final FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(suppliedPSymbol, NILStruct.INSTANCE, suppliedPBinding.isSpecial());
-			functionParametersToBind.add(functionParameterBinding);
-		}
-
 		if (restBinding != null) {
 			final SymbolStruct<?> restSymbol = restBinding.getSymbolStruct();
 			final LispStruct restListStruct = ListStruct.buildProperList(restList);
@@ -319,6 +333,8 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 			final FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(restSymbol, restListStruct, restBinding.isSpecial());
 			functionParametersToBind.add(functionParameterBinding);
 		}
+
+		functionParametersToBind.addAll(keywordFunctionParametersToBind.values());
 
 		return functionParametersToBind;
 	}

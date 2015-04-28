@@ -22,8 +22,8 @@ import jcl.conditions.exceptions.ErrorException;
 import jcl.functions.Closure;
 import jcl.functions.FunctionParameterBinding;
 import jcl.functions.FunctionStruct;
+import jcl.lists.NullStruct;
 import jcl.packages.PackageStruct;
-import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 
 public class TestLambdaGenerator extends FunctionStruct {
@@ -130,6 +130,8 @@ public class TestLambdaGenerator extends FunctionStruct {
 			if (value instanceof ValuesStruct) {
 				final ValuesStruct valuesStruct = (ValuesStruct) value;
 				value = valuesStruct.getPrimaryValue();
+			} else if (INIT_FORM_PLACEHOLDER.equals(value)) {
+				value = getInitForm(symbol);
 			}
 			final boolean isSpecial = parameterSymbolToBind.isSpecial();
 			if (isSpecial) {
@@ -137,16 +139,6 @@ public class TestLambdaGenerator extends FunctionStruct {
 			} else {
 				symbol.bindLexicalValue(value);
 			}
-		}
-
-		final PackageStruct suppliedPSymbolPkg = PackageStruct.findPackage("SYSTEM");
-		final SymbolStruct<?> suppliedPSymbol = suppliedPSymbolPkg.findSymbol("SUPPLIED-P-SYMBOL").getSymbol();
-		final LispStruct suppliedPSymbolValue = suppliedPSymbol.getValue();
-		if (suppliedPSymbolValue.equals(NILStruct.INSTANCE)) {
-			final PackageStruct initFormSymbolPkg = PackageStruct.findPackage("SYSTEM");
-			final SymbolStruct initFormSymbol = initFormSymbolPkg.findSymbol("INIT-FORM-SYMBOL").getSymbol();
-			final LispStruct initForm = new CharacterStruct(97);
-			initFormSymbol.bindLexicalValue(initForm);
 		}
 
 		final LispStruct result;
@@ -158,15 +150,6 @@ public class TestLambdaGenerator extends FunctionStruct {
 		} catch (final Throwable t) {
 			throw new ErrorException("Non-Lisp error found.", t);
 		} finally {
-			final PackageStruct suppliedPSymbolPkg1 = PackageStruct.findPackage("SYSTEM");
-			final SymbolStruct<?> suppliedPSymbol1 = suppliedPSymbolPkg1.findSymbol("SUPPLIED-P-SYMBOL").getSymbol();
-			final LispStruct suppliedPSymbolValue1 = suppliedPSymbol1.getValue();
-			if (suppliedPSymbolValue1.equals(NILStruct.INSTANCE)) {
-				final PackageStruct initFormSymbolPkg1 = PackageStruct.findPackage("SYSTEM");
-				final SymbolStruct initFormSymbol1 = initFormSymbolPkg1.findSymbol("INIT-FORM-SYMBOL").getSymbol();
-				initFormSymbol1.unbindLexicalValue();
-			}
-
 			for (final FunctionParameterBinding parameterSymbolToUnbind : parameterSymbolsToBind) {
 				final SymbolStruct<?> parameterSymbol = parameterSymbolToUnbind.getParameterSymbol();
 				final boolean isSpecial = parameterSymbolToUnbind.isSpecial();
@@ -184,5 +167,22 @@ public class TestLambdaGenerator extends FunctionStruct {
 			}
 		}
 		return result;
+	}
+
+	private LispStruct getInitForm(final SymbolStruct<?> symbolBinding) {
+
+		final PackageStruct pkg1 = PackageStruct.findPackage("SYSTEM");
+		final SymbolStruct<?> symbol1 = pkg1.findSymbol("SYMBOL1").getSymbol();
+		if (symbolBinding.equals(symbol1)) {
+			return new CharacterStruct(100);
+		}
+
+		final PackageStruct pkg2 = PackageStruct.findPackage("SYSTEM");
+		final SymbolStruct<?> symbol2 = pkg2.findSymbol("SYMBOL2").getSymbol();
+		if (symbolBinding.equals(symbol2)) {
+			return new CharacterStruct(200);
+		}
+
+		return NullStruct.INSTANCE;
 	}
 }

@@ -164,11 +164,6 @@ NOTE: This works fine, but we need to strip out CommentStructs at some point in 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 LAMBDA:
 
-(deftest lambda.37
-  (let ((b 1))
-    ((lambda (&key (a b) b) (list a b)) :b 'x))
-  (1 x))
-
 (deftest lambda.52
   (let ((x :bad))
     (declare (special x))

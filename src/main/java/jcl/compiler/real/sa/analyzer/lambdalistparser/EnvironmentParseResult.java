@@ -15,8 +15,8 @@ final class EnvironmentParseResult extends ParseResult {
 
 	private final EnvironmentBinding environmentBinding;
 
-	EnvironmentParseResult(final LispStruct currentElement, final int currentPosition, final EnvironmentBinding environmentBinding) {
-		super(currentElement, currentPosition);
+	EnvironmentParseResult(final LispStruct currentElement, final EnvironmentBinding environmentBinding) {
+		super(currentElement);
 		this.environmentBinding = environmentBinding;
 	}
 

@@ -17,8 +17,8 @@ final class AuxParseResult extends ParseResult {
 
 	private final List<AuxBinding> auxBindings;
 
-	AuxParseResult(final LispStruct currentElement, final int currentPosition, final List<AuxBinding> auxBindings) {
-		super(currentElement, currentPosition);
+	AuxParseResult(final LispStruct currentElement, final List<AuxBinding> auxBindings) {
+		super(currentElement);
 		this.auxBindings = auxBindings;
 	}
 

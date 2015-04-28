@@ -42,9 +42,7 @@ public class LambdaListParser {
 	private Printer printer;
 
 	protected WholeParseResult parseWholeBinding(final Environment environment, final Iterator<LispStruct> iterator,
-	                                             final int position, final DeclareStruct declareElement) {
-
-		int currentPosition = position;
+	                                             final DeclareStruct declareElement) {
 
 		final LispStruct currentElement = iterator.next();
 		if (!(currentElement instanceof SymbolStruct)) {
@@ -67,14 +65,11 @@ public class LambdaListParser {
 		}
 
 		final WholeBinding wholeBinding = new WholeBinding(currentParam, isSpecial);
-		return new WholeParseResult(currentPosition, wholeBinding);
+		return new WholeParseResult(wholeBinding);
 	}
 
 	protected EnvironmentParseResult parseEnvironmentBinding(final Environment environment, final Iterator<LispStruct> iterator,
-	                                                         final int position, final DeclareStruct declareElement,
 	                                                         final boolean isAfterRequired) {
-
-		int currentPosition = position;
 
 		LispStruct currentElement = iterator.next();
 		if (!(currentElement instanceof SymbolStruct)) {
@@ -99,24 +94,22 @@ public class LambdaListParser {
 		environment.addDynamicBinding(binding);
 
 		final EnvironmentBinding environmentBinding = new EnvironmentBinding(currentParam);
-		return new EnvironmentParseResult(currentElement, currentPosition, environmentBinding);
+		return new EnvironmentParseResult(currentElement, environmentBinding);
 	}
 
 	protected RequiredParseResult parseRequiredBindings(final Environment environment, final Iterator<LispStruct> iterator,
-	                                                    final int position, final DeclareStruct declareElement,
-	                                                    final boolean isDotted) {
+	                                                    final DeclareStruct declareElement, final boolean isDotted) {
 
 		final List<RequiredBinding> requiredBindings = new ArrayList<>();
-		int currentPosition = position;
 
 		LispStruct currentElement;
 		do {
 			currentElement = iterator.next();
 			if (!iterator.hasNext() && isDotted) {
-				return new RequiredParseResult(currentElement, currentPosition, requiredBindings);
+				return new RequiredParseResult(currentElement, requiredBindings);
 			}
 			if (isLambdaListKeyword(currentElement)) {
-				return new RequiredParseResult(currentElement, currentPosition, requiredBindings);
+				return new RequiredParseResult(currentElement, requiredBindings);
 			}
 
 			if (!(currentElement instanceof SymbolStruct)) {
@@ -142,28 +135,26 @@ public class LambdaListParser {
 			requiredBindings.add(requiredBinding);
 		} while (iterator.hasNext());
 
-		return new RequiredParseResult(currentElement, currentPosition, requiredBindings);
+		return new RequiredParseResult(currentElement, requiredBindings);
 	}
 
 	protected OptionalParseResult parseOptionalBindings(final Environment environment, final Iterator<LispStruct> iterator,
-	                                                    final int position, final DeclareStruct declareElement,
-	                                                    final boolean isDotted) {
+	                                                    final DeclareStruct declareElement, final boolean isDotted) {
 
 		final List<OptionalBinding> optionalBindings = new ArrayList<>();
-		int currentPosition = position;
 
 		if (!iterator.hasNext()) {
-			return new OptionalParseResult(null, currentPosition, optionalBindings);
+			return new OptionalParseResult(null, optionalBindings);
 		}
 
 		LispStruct currentElement;
 		do {
 			currentElement = iterator.next();
 			if (isLambdaListKeyword(currentElement)) {
-				return new OptionalParseResult(currentElement, currentPosition, optionalBindings);
+				return new OptionalParseResult(currentElement, optionalBindings);
 			}
 			if (!iterator.hasNext() && isDotted) {
-				return new OptionalParseResult(currentElement, currentPosition, optionalBindings);
+				return new OptionalParseResult(currentElement, optionalBindings);
 			}
 
 			if (currentElement instanceof SymbolStruct) {
@@ -294,13 +285,11 @@ public class LambdaListParser {
 			}
 		} while (iterator.hasNext());
 
-		return new OptionalParseResult(currentElement, currentPosition, optionalBindings);
+		return new OptionalParseResult(currentElement, optionalBindings);
 	}
 
 	protected RestParseResult parseRestBinding(final Environment environment, final Iterator<LispStruct> iterator,
-	                                           final int position, final DeclareStruct declareElement) {
-
-		int currentPosition = position;
+	                                           final DeclareStruct declareElement) {
 
 		if (!iterator.hasNext()) {
 			throw new ProgramErrorException("LambdaList &rest parameter must be provided.");
@@ -335,13 +324,11 @@ public class LambdaListParser {
 		}
 
 		final RestBinding restBinding = new RestBinding(currentParam, isSpecial);
-		return new RestParseResult(currentElement, currentPosition, restBinding);
+		return new RestParseResult(currentElement, restBinding);
 	}
 
 	protected RestParseResult parseDottedRestBinding(final Environment environment, final LispStruct dottedRest,
-	                                                 final int position, final DeclareStruct declareElement) {
-
-		int currentPosition = position;
+	                                                 final DeclareStruct declareElement) {
 
 		if (!(dottedRest instanceof SymbolStruct)) {
 			final String printedElement = printer.print(dottedRest);
@@ -363,13 +350,11 @@ public class LambdaListParser {
 		}
 
 		final RestBinding restBinding = new RestBinding(currentParam, isSpecial);
-		return new RestParseResult(dottedRest, currentPosition, restBinding);
+		return new RestParseResult(dottedRest, restBinding);
 	}
 
 	protected BodyParseResult parseBodyBinding(final Environment environment, final Iterator<LispStruct> iterator,
-	                                           final int position, final DeclareStruct declareElement) {
-
-		int currentPosition = position;
+	                                           final DeclareStruct declareElement) {
 
 		if (!iterator.hasNext()) {
 			throw new ProgramErrorException("LambdaList &body parameter must be provided.");
@@ -404,24 +389,23 @@ public class LambdaListParser {
 		}
 
 		final BodyBinding bodyBinding = new BodyBinding(currentParam, isSpecial);
-		return new BodyParseResult(currentElement, currentPosition, bodyBinding);
+		return new BodyParseResult(currentElement, bodyBinding);
 	}
 
 	protected KeyParseResult parseKeyBindings(final Environment environment, final Iterator<LispStruct> iterator,
-	                                          final int position, final DeclareStruct declareElement) {
+	                                          final DeclareStruct declareElement) {
 
 		final List<KeyBinding> keyBindings = new ArrayList<>();
-		int currentPosition = position;
 
 		if (!iterator.hasNext()) {
-			return new KeyParseResult(null, currentPosition, keyBindings);
+			return new KeyParseResult(null, keyBindings);
 		}
 
 		LispStruct currentElement;
 		do {
 			currentElement = iterator.next();
 			if (isLambdaListKeyword(currentElement)) {
-				return new KeyParseResult(currentElement, currentPosition, keyBindings);
+				return new KeyParseResult(currentElement, keyBindings);
 			}
 
 			if (currentElement instanceof SymbolStruct) {
@@ -475,7 +459,7 @@ public class LambdaListParser {
 				final LispStruct thirdInCurrent = currentParam.getRest().getRest().getFirst();
 
 				final SymbolStruct<?> varNameCurrent;
-				final KeywordStruct varKeyNameCurrent;
+				final SymbolStruct<?> varKeyNameCurrent;
 				if (firstInCurrent instanceof SymbolStruct) {
 					varNameCurrent = (SymbolStruct) firstInCurrent;
 					varKeyNameCurrent = getKeywordStruct(varNameCurrent.getName());
@@ -487,14 +471,11 @@ public class LambdaListParser {
 					}
 
 					final LispStruct firstInCurrentVar = currentVar.getFirst();
-					if (firstInCurrentVar instanceof KeywordStruct) {
-						varKeyNameCurrent = (KeywordStruct) firstInCurrentVar;
-					} else if (firstInCurrentVar instanceof SymbolStruct) {
-						final SymbolStruct<?> keyNameSymbol = (SymbolStruct) firstInCurrentVar;
-						varKeyNameCurrent = getKeywordStruct(keyNameSymbol.getName());
+					if (firstInCurrentVar instanceof SymbolStruct) {
+						varKeyNameCurrent = (SymbolStruct) firstInCurrentVar;
 					} else {
 						final String printedElement = printer.print(firstInCurrentVar);
-						throw new ProgramErrorException("LambdaList &key var name list key-name parameters must be a keyword or a symbol: " + printedElement);
+						throw new ProgramErrorException("LambdaList &key var name list key-name parameters must be a symbol: " + printedElement);
 					}
 
 					final LispStruct secondInCurrentVar = currentVar.getRest().getFirst();
@@ -582,24 +563,23 @@ public class LambdaListParser {
 
 		} while (iterator.hasNext());
 
-		return new KeyParseResult(currentElement, currentPosition, keyBindings);
+		return new KeyParseResult(currentElement, keyBindings);
 	}
 
 	protected AuxParseResult parseAuxBindings(final Environment environment, final Iterator<LispStruct> iterator,
-	                                          final int position, final DeclareStruct declareElement) {
+	                                          final DeclareStruct declareElement) {
 
 		final List<AuxBinding> auxBindings = new ArrayList<>();
-		int currentPosition = position;
 
 		if (!iterator.hasNext()) {
-			return new AuxParseResult(null, currentPosition, auxBindings);
+			return new AuxParseResult(null, auxBindings);
 		}
 
 		LispStruct currentElement;
 		do {
 			currentElement = iterator.next();
 			if (isLambdaListKeyword(currentElement)) {
-				return new AuxParseResult(currentElement, currentPosition, auxBindings);
+				return new AuxParseResult(currentElement, auxBindings);
 			}
 
 			if (currentElement instanceof SymbolStruct) {
@@ -664,7 +644,7 @@ public class LambdaListParser {
 			}
 		} while (iterator.hasNext());
 
-		return new AuxParseResult(currentElement, currentPosition, auxBindings);
+		return new AuxParseResult(currentElement, auxBindings);
 	}
 
 	protected static boolean isLambdaListKeyword(final LispStruct lispStruct) {

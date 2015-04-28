@@ -22,9 +22,7 @@ import jcl.conditions.exceptions.ErrorException;
 import jcl.functions.Closure;
 import jcl.functions.FunctionParameterBinding;
 import jcl.functions.FunctionStruct;
-import jcl.packages.GlobalPackageStruct;
 import jcl.packages.PackageStruct;
-import jcl.symbols.KeywordStruct;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 
@@ -81,8 +79,7 @@ public class TestLambdaGenerator extends FunctionStruct {
 		final SymbolStruct<?> keySymbol = pkg.findSymbol("KEY-SYMBOL").getSymbol();
 		final LispStruct keyInitForm = new CharacterStruct(200);
 
-		final PackageStruct keywordPkg = GlobalPackageStruct.KEYWORD;
-		final KeywordStruct keyName = (KeywordStruct) keywordPkg.findSymbol("KEY-NAME").getSymbol();
+		final SymbolStruct<?> keyName = pkg.findSymbol("KEY-NAME").getSymbol();
 
 		final KeyBinding keyBinding = new KeyBinding(keySymbol, keyInitForm, false, keyName, keySuppliedPBinding);
 		keyBindings.add(keyBinding);

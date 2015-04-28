@@ -14,25 +14,17 @@ class ParseResult {
 
 	private final LispStruct currentElement;
 
-	private final int currentPosition;
-
-	ParseResult(final LispStruct currentElement, final int currentPosition) {
+	ParseResult(final LispStruct currentElement) {
 		this.currentElement = currentElement;
-		this.currentPosition = currentPosition;
 	}
 
 	LispStruct getCurrentElement() {
 		return currentElement;
 	}
 
-	int getCurrentPosition() {
-		return currentPosition;
-	}
-
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder().append(currentElement)
-		                            .append(currentPosition)
 		                            .toHashCode();
 	}
 
@@ -49,14 +41,12 @@ class ParseResult {
 		}
 		final ParseResult rhs = (ParseResult) obj;
 		return new EqualsBuilder().append(currentElement, rhs.currentElement)
-		                          .append(currentPosition, rhs.currentPosition)
 		                          .isEquals();
 	}
 
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(currentElement)
-		                                                                .append(currentPosition)
 		                                                                .toString();
 	}
 }

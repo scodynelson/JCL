@@ -6,7 +6,6 @@ package jcl.compiler.real.environment.binding.lambdalist;
 
 import jcl.LispStruct;
 import jcl.compiler.real.environment.binding.ParameterBinding;
-import jcl.symbols.KeywordStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.types.TType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -18,23 +17,23 @@ public class KeyBinding extends ParameterBinding {
 
 	private static final long serialVersionUID = -8247621420473541525L;
 
-	private final KeywordStruct keyName;
+	private final SymbolStruct<?> keyName;
 
 	private final SuppliedPBinding suppliedPBinding;
 
 	public KeyBinding(final SymbolStruct<?> symbolStruct, final LispStruct initForm,
-	                       final KeywordStruct keyName, final SuppliedPBinding suppliedPBinding) {
+	                  final SymbolStruct<?> keyName, final SuppliedPBinding suppliedPBinding) {
 		this(symbolStruct, initForm, false, keyName, suppliedPBinding);
 	}
 
 	public KeyBinding(final SymbolStruct<?> symbolStruct, final LispStruct initForm, final boolean isSpecial,
-	                  final KeywordStruct keyName, final SuppliedPBinding suppliedPBinding) {
+	                  final SymbolStruct<?> keyName, final SuppliedPBinding suppliedPBinding) {
 		super(symbolStruct, TType.INSTANCE, initForm, isSpecial);
 		this.keyName = keyName;
 		this.suppliedPBinding = suppliedPBinding;
 	}
 
-	public KeywordStruct getKeyName() {
+	public SymbolStruct<?> getKeyName() {
 		return keyName;
 	}
 

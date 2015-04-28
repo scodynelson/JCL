@@ -17,8 +17,8 @@ final class KeyParseResult extends ParseResult {
 
 	private final List<KeyBinding> keyBindings;
 
-	KeyParseResult(final LispStruct currentElement, final int currentPosition, final List<KeyBinding> keyBindings) {
-		super(currentElement, currentPosition);
+	KeyParseResult(final LispStruct currentElement, final List<KeyBinding> keyBindings) {
+		super(currentElement);
 		this.keyBindings = keyBindings;
 	}
 

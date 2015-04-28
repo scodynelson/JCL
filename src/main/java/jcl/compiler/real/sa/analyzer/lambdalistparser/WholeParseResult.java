@@ -14,8 +14,8 @@ final class WholeParseResult extends ParseResult {
 
 	private final WholeBinding wholeBinding;
 
-	WholeParseResult(final int currentPosition, final WholeBinding wholeBinding) {
-		super(null, currentPosition);
+	WholeParseResult(final WholeBinding wholeBinding) {
+		super(null);
 		this.wholeBinding = wholeBinding;
 	}
 

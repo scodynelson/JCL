@@ -17,8 +17,8 @@ final class RequiredParseResult extends ParseResult {
 
 	private final List<RequiredBinding> requiredBindings;
 
-	RequiredParseResult(final LispStruct currentElement, final int currentPosition, final List<RequiredBinding> requiredBindings) {
-		super(currentElement, currentPosition);
+	RequiredParseResult(final LispStruct currentElement, final List<RequiredBinding> requiredBindings) {
+		super(currentElement);
 		this.requiredBindings = requiredBindings;
 	}
 

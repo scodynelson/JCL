@@ -15,8 +15,8 @@ final class BodyParseResult extends ParseResult {
 
 	private final BodyBinding bodyBinding;
 
-	BodyParseResult(final LispStruct currentElement, final int currentPosition, final BodyBinding bodyBinding) {
-		super(currentElement, currentPosition);
+	BodyParseResult(final LispStruct currentElement, final BodyBinding bodyBinding) {
+		super(currentElement);
 		this.bodyBinding = bodyBinding;
 	}
 

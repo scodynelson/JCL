@@ -1297,17 +1297,18 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			nullCodeGenerator.generate(NullStruct.INSTANCE, classBuilder);
 			mv.visitVarInsn(Opcodes.ASTORE, keyInitFormStore);
 
-			mv.visitFieldInsn(Opcodes.GETSTATIC, "jcl/packages/GlobalPackageStruct", "KEYWORD", "Ljcl/packages/PackageStruct;");
-			mv.visitVarInsn(Opcodes.ASTORE, packageStore);
-
-			final KeywordStruct keyName = keyBinding.getKeyName();
+			final SymbolStruct<?> keyName = keyBinding.getKeyName();
+			final String keyNamePackageName = keyName.getSymbolPackage().getName();
 			final String keyNameName = keyName.getName();
+
+			mv.visitLdcInsn(keyNamePackageName);
+			mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
+			mv.visitVarInsn(Opcodes.ASTORE, packageStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, packageStore);
 			mv.visitLdcInsn(keyNameName);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
-			mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/symbols/KeywordStruct");
 			mv.visitVarInsn(Opcodes.ASTORE, keyNameStore);
 
 			// Start: Supplied-P
@@ -1355,7 +1356,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			}
 			mv.visitVarInsn(Opcodes.ALOAD, keyNameStore);
 			mv.visitVarInsn(Opcodes.ALOAD, keySuppliedPStore);
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/binding/lambdalist/KeyBinding", "<init>", "(Ljcl/symbols/SymbolStruct;Ljcl/LispStruct;ZLjcl/symbols/KeywordStruct;Ljcl/compiler/real/environment/binding/lambdalist/SuppliedPBinding;)V", false);
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/binding/lambdalist/KeyBinding", "<init>", "(Ljcl/symbols/SymbolStruct;Ljcl/LispStruct;ZLjcl/symbols/SymbolStruct;Ljcl/compiler/real/environment/binding/lambdalist/SuppliedPBinding;)V", false);
 			mv.visitVarInsn(Opcodes.ASTORE, keyBindingStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, keyBindingsStore);
@@ -1416,12 +1417,12 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/environment/binding/lambdalist/AuxBinding");
 			mv.visitInsn(Opcodes.DUP);
 			mv.visitVarInsn(Opcodes.ALOAD, auxSymbolStore);
+			mv.visitVarInsn(Opcodes.ALOAD, auxInitFormStore);
 			if (auxBinding.isSpecial()) {
 				mv.visitInsn(Opcodes.ICONST_1);
 			} else {
 				mv.visitInsn(Opcodes.ICONST_0);
 			}
-			mv.visitVarInsn(Opcodes.ALOAD, auxInitFormStore);
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/environment/binding/lambdalist/AuxBinding", "<init>", "(Ljcl/symbols/SymbolStruct;Ljcl/LispStruct;Z)V", false);
 			mv.visitVarInsn(Opcodes.ASTORE, auxBindingStore);
 

@@ -38,36 +38,32 @@ public final class OrdinaryLambdaListParser extends LambdaListParser {
 		final Iterator<LispStruct> iterator = lambdaListJava.iterator();
 
 		LispStruct currentElement = null;
-		int position = 0;
 
 		List<RequiredBinding> requiredBindings = Collections.emptyList();
 		if (iterator.hasNext()) {
 			final RequiredParseResult requiredParseResult
-					= parseRequiredBindings(environment, iterator, position, declareElement, false);
+					= parseRequiredBindings(environment, iterator, declareElement, false);
 
 			requiredBindings = requiredParseResult.getRequiredBindings();
 			currentElement = requiredParseResult.getCurrentElement();
-			position = requiredParseResult.getCurrentPosition();
 		}
 
 		List<OptionalBinding> optionalBindings = Collections.emptyList();
 		if (CompilerConstants.OPTIONAL.equals(currentElement)) {
 			final OptionalParseResult optionalParseResult
-					= parseOptionalBindings(environment, iterator, position, declareElement, false);
+					= parseOptionalBindings(environment, iterator, declareElement, false);
 
 			optionalBindings = optionalParseResult.getOptionalBindings();
 			currentElement = optionalParseResult.getCurrentElement();
-			position = optionalParseResult.getCurrentPosition();
 		}
 
 		RestBinding restBinding = null;
 		if (CompilerConstants.REST.equals(currentElement)) {
 			final RestParseResult restParseResult
-					= parseRestBinding(environment, iterator, position, declareElement);
+					= parseRestBinding(environment, iterator, declareElement);
 
 			restBinding = restParseResult.getRestBinding();
 			currentElement = restParseResult.getCurrentElement();
-			position = restParseResult.getCurrentPosition();
 		}
 
 		boolean keyNotProvided = true;
@@ -75,11 +71,10 @@ public final class OrdinaryLambdaListParser extends LambdaListParser {
 		List<KeyBinding> keyBindings = Collections.emptyList();
 		if (CompilerConstants.KEY.equals(currentElement)) {
 			final KeyParseResult keyParseResult
-					= parseKeyBindings(environment, iterator, position, declareElement);
+					= parseKeyBindings(environment, iterator, declareElement);
 
 			keyBindings = keyParseResult.getKeyBindings();
 			currentElement = keyParseResult.getCurrentElement();
-			position = keyParseResult.getCurrentPosition();
 
 			keyNotProvided = false;
 		}
@@ -99,7 +94,7 @@ public final class OrdinaryLambdaListParser extends LambdaListParser {
 		List<AuxBinding> auxBindings = Collections.emptyList();
 		if (CompilerConstants.AUX.equals(currentElement)) {
 			final AuxParseResult auxParseResult
-					= parseAuxBindings(environment, iterator, position, declareElement);
+					= parseAuxBindings(environment, iterator, declareElement);
 
 			auxBindings = auxParseResult.getAuxBindings();
 		}

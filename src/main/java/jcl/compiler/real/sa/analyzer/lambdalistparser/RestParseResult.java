@@ -15,8 +15,8 @@ final class RestParseResult extends ParseResult {
 
 	private final RestBinding restBinding;
 
-	RestParseResult(final LispStruct currentElement, final int currentPosition, final RestBinding restBinding) {
-		super(currentElement, currentPosition);
+	RestParseResult(final LispStruct currentElement, final RestBinding restBinding) {
+		super(currentElement);
 		this.restBinding = restBinding;
 	}
 

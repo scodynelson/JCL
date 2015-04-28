@@ -17,8 +17,8 @@ final class OptionalParseResult extends ParseResult {
 
 	private final List<OptionalBinding> optionalBindings;
 
-	OptionalParseResult(final LispStruct currentElement, final int currentPosition, final List<OptionalBinding> optionalBindings) {
-		super(currentElement, currentPosition);
+	OptionalParseResult(final LispStruct currentElement, final List<OptionalBinding> optionalBindings) {
+		super(currentElement);
 		this.optionalBindings = optionalBindings;
 	}
 

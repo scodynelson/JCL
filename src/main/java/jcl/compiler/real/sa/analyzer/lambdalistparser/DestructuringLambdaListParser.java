@@ -56,7 +56,6 @@ public final class DestructuringLambdaListParser extends LambdaListParser {
 		}
 
 		LispStruct currentElement = null;
-		int position = 0;
 
 		WholeBinding wholeBinding = null;
 		if (CompilerConstants.WHOLE.equals(firstElement)) {
@@ -64,40 +63,36 @@ public final class DestructuringLambdaListParser extends LambdaListParser {
 			currentElement = iterator.next();
 
 			final WholeParseResult wholeParseResult
-					= parseWholeBinding(environment, iterator, position, declareElement);
+					= parseWholeBinding(environment, iterator, declareElement);
 
 			wholeBinding = wholeParseResult.getWholeBinding();
-			position = wholeParseResult.getCurrentPosition();
 		}
 
 		List<RequiredBinding> requiredBindings = Collections.emptyList();
 		if (iterator.hasNext()) {
 			final RequiredParseResult requiredParseResult
-					= parseRequiredBindings(environment, iterator, position, declareElement, false);
+					= parseRequiredBindings(environment, iterator, declareElement, false);
 
 			requiredBindings = requiredParseResult.getRequiredBindings();
 			currentElement = requiredParseResult.getCurrentElement();
-			position = requiredParseResult.getCurrentPosition();
 		}
 
 		List<OptionalBinding> optionalBindings = Collections.emptyList();
 		if (CompilerConstants.OPTIONAL.equals(currentElement)) {
 			final OptionalParseResult optionalParseResult
-					= parseOptionalBindings(environment, iterator, position, declareElement, false);
+					= parseOptionalBindings(environment, iterator, declareElement, false);
 
 			optionalBindings = optionalParseResult.getOptionalBindings();
 			currentElement = optionalParseResult.getCurrentElement();
-			position = optionalParseResult.getCurrentPosition();
 		}
 
 		RestBinding restBinding = null;
 		if (CompilerConstants.REST.equals(currentElement)) {
 			final RestParseResult restParseResult
-					= parseRestBinding(environment, iterator, position, declareElement);
+					= parseRestBinding(environment, iterator, declareElement);
 
 			restBinding = restParseResult.getRestBinding();
 			currentElement = restParseResult.getCurrentElement();
-			position = restParseResult.getCurrentPosition();
 		}
 
 		BodyBinding bodyBinding = null;
@@ -107,11 +102,10 @@ public final class DestructuringLambdaListParser extends LambdaListParser {
 			}
 
 			final BodyParseResult bodyParseResult
-					= parseBodyBinding(environment, iterator, position, declareElement);
+					= parseBodyBinding(environment, iterator, declareElement);
 
 			bodyBinding = bodyParseResult.getBodyBinding();
 			currentElement = bodyParseResult.getCurrentElement();
-			position = bodyParseResult.getCurrentPosition();
 		}
 
 		boolean keyNotProvided = true;
@@ -119,11 +113,10 @@ public final class DestructuringLambdaListParser extends LambdaListParser {
 		List<KeyBinding> keyBindings = Collections.emptyList();
 		if (CompilerConstants.KEY.equals(currentElement)) {
 			final KeyParseResult keyParseResult
-					= parseKeyBindings(environment, iterator, position, declareElement);
+					= parseKeyBindings(environment, iterator, declareElement);
 
 			keyBindings = keyParseResult.getKeyBindings();
 			currentElement = keyParseResult.getCurrentElement();
-			position = keyParseResult.getCurrentPosition();
 
 			keyNotProvided = false;
 		}
@@ -143,7 +136,7 @@ public final class DestructuringLambdaListParser extends LambdaListParser {
 		List<AuxBinding> auxBindings = Collections.emptyList();
 		if (CompilerConstants.AUX.equals(currentElement)) {
 			final AuxParseResult auxParseResult
-					= parseAuxBindings(environment, iterator, position, declareElement);
+					= parseAuxBindings(environment, iterator, declareElement);
 
 			auxBindings = auxParseResult.getAuxBindings();
 		}
@@ -171,7 +164,6 @@ public final class DestructuringLambdaListParser extends LambdaListParser {
 		}
 
 		LispStruct currentElement = null;
-		int position = 0;
 
 		WholeBinding wholeBinding = null;
 		if (CompilerConstants.WHOLE.equals(firstElement)) {
@@ -179,34 +171,31 @@ public final class DestructuringLambdaListParser extends LambdaListParser {
 			currentElement = iterator.next();
 
 			final WholeParseResult wholeParseResult
-					= parseWholeBinding(environment, iterator, position, declareElement);
+					= parseWholeBinding(environment, iterator, declareElement);
 
 			wholeBinding = wholeParseResult.getWholeBinding();
-			position = wholeParseResult.getCurrentPosition();
 		}
 
 		List<RequiredBinding> requiredBindings = Collections.emptyList();
 		if (iterator.hasNext()) {
 			final RequiredParseResult requiredParseResult
-					= parseRequiredBindings(environment, iterator, position, declareElement, true);
+					= parseRequiredBindings(environment, iterator, declareElement, true);
 
 			requiredBindings = requiredParseResult.getRequiredBindings();
 			currentElement = requiredParseResult.getCurrentElement();
-			position = requiredParseResult.getCurrentPosition();
 		}
 
 		List<OptionalBinding> optionalBindings = Collections.emptyList();
 		if (CompilerConstants.OPTIONAL.equals(currentElement)) {
 			final OptionalParseResult optionalParseResult
-					= parseOptionalBindings(environment, iterator, position, declareElement, true);
+					= parseOptionalBindings(environment, iterator, declareElement, true);
 
 			optionalBindings = optionalParseResult.getOptionalBindings();
 			currentElement = optionalParseResult.getCurrentElement();
-			position = optionalParseResult.getCurrentPosition();
 		}
 
 		final RestParseResult restParseResult
-				= parseDottedRestBinding(environment, currentElement, position, declareElement);
+				= parseDottedRestBinding(environment, currentElement, declareElement);
 		final RestBinding restBinding = restParseResult.getRestBinding();
 
 		if (iterator.hasNext()) {

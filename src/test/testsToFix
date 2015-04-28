@@ -164,33 +164,10 @@ NOTE: This works fine, but we need to strip out CommentStructs at some point in 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 LAMBDA:
 
-(deftest lambda.36
-  ((lambda (&key (a 1 a-p) (b 2 b-p) (c 3 c-p)) (list a a-p
-                                                      b b-p
-                                                      c c-p))
-   :c 5 :a 0 :allow-other-keys t 'b 100)
-  (0 t 2 nil 5 t))
-
-(deftest lambda.44
-  ((lambda (&key a b &allow-other-keys) (list a b)) :z 10 :b 2 :b nil :a 1
-   :a 2 'x 100)
-  (1 2))
-
-(deftest lambda.45
-  ((lambda (&key a b &allow-other-keys) (list a b)) :allow-other-keys nil
-   :z 10 :b 2 :b nil :a 1 :a 2 'x 100)
-  (1 2))
-
-(deftest lambda.47
-  ((lambda (&key a b allow-other-keys) (list allow-other-keys a b))
-   :c 10 :allow-other-keys t :a 1 :b 2 :d 20)
-  (t 1 2))
-
-(deftest lambda.50
-  ((lambda (&key a b ((:allow-other-keys aok)))
-     (list aok a b))
-   :d 40 :a 1 :allow-other-keys t :b 2 :c 20)
-  (t 1 2))
+(deftest lambda.37
+  (let ((b 1))
+    ((lambda (&key (a b) b) (list a b)) :b 'x))
+  (1 x))
 
 (deftest lambda.52
   (let ((x :bad))

@@ -763,6 +763,37 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 				mv.visitLabel(symbolCheckIfEnd);
 			}
 
+			final List<AuxBinding> auxBindings = lambdaListBindings.getAuxBindings();
+			for (final AuxBinding auxBinding : auxBindings) {
+				final SymbolStruct<?> var = auxBinding.getSymbolStruct();
+				final LispStruct initForm = auxBinding.getInitForm();
+
+				final String packageName = var.getSymbolPackage().getName();
+				final String symbolName = var.getName();
+
+				final Label symbolCheckIfEnd = new Label();
+
+				mv.visitLdcInsn(packageName);
+				mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
+				mv.visitVarInsn(Opcodes.ASTORE, initFormVarPackageStore);
+
+				mv.visitVarInsn(Opcodes.ALOAD, initFormVarPackageStore);
+				mv.visitLdcInsn(symbolName);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
+				mv.visitVarInsn(Opcodes.ASTORE, initFormVarSymbolStore);
+
+				mv.visitVarInsn(Opcodes.ALOAD, symbolArgStore);
+				mv.visitVarInsn(Opcodes.ALOAD, initFormVarSymbolStore);
+				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "equals", "(Ljava/lang/Object;)Z", false);
+				mv.visitJumpInsn(Opcodes.IFEQ, symbolCheckIfEnd);
+
+				formGenerator.generate(initForm, classBuilder);
+				mv.visitInsn(Opcodes.ARETURN);
+
+				mv.visitLabel(symbolCheckIfEnd);
+			}
+
 //			bindingStack.pop();
 
 			nullCodeGenerator.generate(NullStruct.INSTANCE, classBuilder);

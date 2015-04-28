@@ -14,6 +14,7 @@ import java.util.Set;
 import jcl.LispStruct;
 import jcl.LispType;
 import jcl.classes.BuiltInClassStruct;
+import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.KeyBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OptionalBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
@@ -192,6 +193,7 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 		final RestBinding restBinding = lambdaListBindings.getRestBinding();
 		final List<KeyBinding> keyBindings = lambdaListBindings.getKeyBindings();
 		boolean allowOtherKeys = lambdaListBindings.isAllowOtherKeys();
+		final List<AuxBinding> auxBindings = lambdaListBindings.getAuxBindings();
 
 		final List<FunctionParameterBinding> functionParametersToBind = new ArrayList<>();
 
@@ -335,6 +337,13 @@ public abstract class FunctionStruct extends BuiltInClassStruct {
 		}
 
 		functionParametersToBind.addAll(keywordFunctionParametersToBind.values());
+
+		for (final AuxBinding auxBinding : auxBindings) {
+			final SymbolStruct<?> auxSymbol = auxBinding.getSymbolStruct();
+
+			final FunctionParameterBinding functionParameterBinding = new FunctionParameterBinding(auxSymbol, INIT_FORM_PLACEHOLDER, auxBinding.isSpecial());
+			functionParametersToBind.add(functionParameterBinding);
+		}
 
 		return functionParametersToBind;
 	}

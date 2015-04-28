@@ -1,7 +1,5 @@
 package jcl.compiler.real.sa.analyzer;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
@@ -10,7 +8,6 @@ import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LambdaEnvironment;
-import jcl.compiler.real.environment.binding.lambdalist.AuxBinding;
 import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindings;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
@@ -103,40 +100,11 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 		final OrdinaryLambdaListBindings parsedLambdaList = ordinaryLambdaListParser.parseOrdinaryLambdaList(lambdaEnvironment, parameters, declare);
 
 		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
-		final List<LispStruct> newLambdaBodyForms = getNewStartingLambdaBody(parsedLambdaList, bodyForms);
-
 		final List<LispStruct> analyzedBodyForms
-				= newLambdaBodyForms.stream()
-				                    .map(e -> formAnalyzer.analyze(e, lambdaEnvironment))
-				                    .collect(Collectors.toList());
+				= bodyForms.stream()
+				           .map(e -> formAnalyzer.analyze(e, lambdaEnvironment))
+				           .collect(Collectors.toList());
 		return new LambdaStruct(fileName, parsedLambdaList, bodyProcessingResult.getDocString(), new PrognStruct(analyzedBodyForms), lambdaEnvironment);
-	}
-
-	private static List<LispStruct> getNewStartingLambdaBody(final OrdinaryLambdaListBindings parsedLambdaList,
-	                                                         final List<LispStruct> bodyForms) {
-
-		final List<AuxBinding> auxBindings = parsedLambdaList.getAuxBindings();
-		if (auxBindings.isEmpty()) {
-			return bodyForms;
-		}
-
-		final List<LispStruct> bodyWithAuxBindings = new ArrayList<>();
-		bodyWithAuxBindings.add(SpecialOperatorStruct.LET_STAR);
-
-		final List<LispStruct> auxLetStarVars
-				= auxBindings.stream()
-				             .map(e -> ListStruct.buildProperList(e.getSymbolStruct(), e.getInitForm()))
-				             .collect(Collectors.toList());
-
-		final ListStruct auxLetStarParams = ListStruct.buildProperList(auxLetStarVars);
-		bodyWithAuxBindings.add(auxLetStarParams);
-
-		bodyWithAuxBindings.addAll(bodyForms);
-
-		final ListStruct newLambdaBody = ListStruct.buildProperList(bodyWithAuxBindings);
-		// NOTE: We are making sure to wrap this in a list for the processing of the body.
-		//       Yes, it is a body of one element: a let* element
-		return Collections.singletonList(newLambdaBody);
 	}
 
 	@Override

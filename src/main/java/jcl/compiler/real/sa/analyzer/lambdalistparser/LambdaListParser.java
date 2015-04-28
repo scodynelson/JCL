@@ -636,7 +636,7 @@ public class LambdaListParser {
 					environment.addLexicalBinding(binding);
 				}
 
-				final AuxBinding auxBinding = new AuxBinding(varNameCurrent, initForm, isSpecial);
+				final AuxBinding auxBinding = new AuxBinding(varNameCurrent, parameterValueInitForm, isSpecial);
 				auxBindings.add(auxBinding);
 			} else {
 				final String printedElement = printer.print(currentElement);

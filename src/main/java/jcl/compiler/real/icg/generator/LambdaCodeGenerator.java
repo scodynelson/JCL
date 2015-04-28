@@ -695,7 +695,8 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			final int thisStore = currentClass.getNextAvailableStore();
 			final int symbolArgStore = currentClass.getNextAvailableStore();
 
-			bindingStack.push(lambdaEnvironment);
+			// NOTE: commented out to allow proper scoping of dynamic variables. I think we just don't worry about the binding stack here.
+//			bindingStack.push(lambdaEnvironment);
 
 			final int initFormVarPackageStore = currentClass.getNextAvailableStore();
 			final int initFormVarSymbolStore = currentClass.getNextAvailableStore();
@@ -762,7 +763,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 				mv.visitLabel(symbolCheckIfEnd);
 			}
 
-			bindingStack.pop();
+//			bindingStack.pop();
 
 			nullCodeGenerator.generate(NullStruct.INSTANCE, classBuilder);
 			mv.visitInsn(Opcodes.ARETURN);

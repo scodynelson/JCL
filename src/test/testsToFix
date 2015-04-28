@@ -164,20 +164,6 @@ NOTE: This works fine, but we need to strip out CommentStructs at some point in 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 LAMBDA:
 
-(deftest lambda.52
-  (let ((x :bad))
-    (declare (special x))
-    (let ((x :good))
-      ((lambda (&optional (y x)) (declare (special x)) y))))
-  :good)
-
-(deftest lambda.53
-  (let ((x :bad))
-    (declare (special x))
-    (let ((x :good))
-      ((lambda (&key (y x)) (declare (special x)) y))))
-  :good)
-
 (deftest lambda.54
   (let ((x :bad))
     (declare (special x))
@@ -208,28 +194,6 @@ LAMBDA:
 (deftest lambda.62
   ((lambda (&key #1=#:foo) #1#) :foo 12)
   12)
-
-(deftest lambda.63
-  (let ((y :bad1))
-    (declare (ignore y))
-    (let ((y :bad2))
-      (declare (special y))
-      (flet ((%f () y))
-        ((lambda (x &aux (y :good))
-           (declare (special y) (ignore x))
-           (%f))
-         nil))))
-  :good)
-
-(deftest lambda.64
-  (let ((x :bad))
-    (declare (special x))
-    (flet ((%f () x))
-      ((lambda (x &aux (y (%f)))
-         (declare (type t y) (special x))
-         y)
-       :good)))
-  :good)
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 FLET:

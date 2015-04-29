@@ -12,8 +12,8 @@ import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindin
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAndDocStringAnalyzer;
+import jcl.compiler.real.sa.analyzer.declare.DeclareExpander;
 import jcl.compiler.real.sa.analyzer.lambdalistparser.OrdinaryLambdaListParser;
-import jcl.compiler.real.sa.analyzer.specialoperator.SetqExpander;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.JavaClassNameDeclarationStruct;
@@ -43,7 +43,7 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 	private FormAnalyzer formAnalyzer;
 
 	@Autowired
-	private SetqExpander setqExpander;
+	private DeclareExpander declareExpander;
 
 	@Autowired
 	private BodyWithDeclaresAndDocStringAnalyzer bodyWithDeclaresAndDocStringAnalyzer;
@@ -82,8 +82,10 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 		final ListStruct formRestRest = formRest.getRest();
 		final List<LispStruct> forms = formRestRest.getAsJavaList();
 
-		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAndDocStringAnalyzer.analyze(forms, lambdaEnvironment);
-		final DeclareStruct declare = bodyProcessingResult.getDeclareElement();
+		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAndDocStringAnalyzer.analyze(forms);
+
+		final ListStruct fullDeclaration = ListStruct.buildProperList(bodyProcessingResult.getDeclares());
+		final DeclareStruct declare = declareExpander.expand(fullDeclaration, lambdaEnvironment);
 
 		final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
 		specialDeclarations.forEach(specialDeclaration -> Environments.addDynamicVariableBinding(specialDeclaration, lambdaEnvironment));
@@ -111,6 +113,7 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 	public int hashCode() {
 		return new HashCodeBuilder().appendSuper(super.hashCode())
 		                            .append(formAnalyzer)
+		                            .append(declareExpander)
 		                            .append(bodyWithDeclaresAndDocStringAnalyzer)
 		                            .append(printer)
 		                            .toHashCode();
@@ -130,6 +133,7 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 		final LambdaExpander rhs = (LambdaExpander) obj;
 		return new EqualsBuilder().appendSuper(super.equals(obj))
 		                          .append(formAnalyzer, rhs.formAnalyzer)
+		                          .append(declareExpander, rhs.declareExpander)
 		                          .append(bodyWithDeclaresAndDocStringAnalyzer, rhs.bodyWithDeclaresAndDocStringAnalyzer)
 		                          .append(printer, rhs.printer)
 		                          .isEquals();
@@ -138,6 +142,7 @@ public class LambdaExpander extends MacroFunctionExpander<LambdaStruct> {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(formAnalyzer)
+		                                                                .append(declareExpander)
 		                                                                .append(bodyWithDeclaresAndDocStringAnalyzer)
 		                                                                .append(printer)
 		                                                                .toString();

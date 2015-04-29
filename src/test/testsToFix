@@ -108,6 +108,7 @@ LET:
       x))
   0)
 
+// TODO: strip out comment structs in the evaluator!!!
 (deftest let.17a
   (funcall
    (compile
@@ -129,14 +130,6 @@ LET*:
     (let* ((#:x 1))
       x))
   0)
-
-(deftest let*.13
-  (flet ((%f () (declare (special x)) x))
-    (let* ((x 1)
-           (x (1+ (%f))))
-      (declare (special x))
-      x))
-  2)
 
 NOTE: This works fine, but we need to strip out CommentStructs at some point in the mix.
 (deftest let*.17
@@ -176,6 +169,19 @@ LAMBDA:
          nil))))
   :good)
 
+// The below works. Why should the above one work??? Hmm...
+(deftest lambda.63
+  (let ((y :bad1))
+    (declare (ignore y))
+    (let ((y :bad2))
+      (declare (special y))
+      (flet ((%f () (declare (special y)) y))
+        ((lambda (x &aux (y :good))
+           (declare (special y) (ignore x))
+           (%f))
+         nil))))
+  :good)
+
 (deftest lambda.57
   ((lambda (#1=#:foo) #1#) 17)
   17)
@@ -209,11 +215,10 @@ FLET:
       (%f 15)))
   20)
 
-;;; Odd # of keyword args should throw a program-error in safe code
-;;; (section 3.5.1.6)
+NOTE: The below works, but can we print the error better???
 (deftest flet.13
   (signals-error
-   (flet ((%f (&key a (b 0 b-p)) (values a b (not (not b-p))))) (%f :a))
+   (flet ((%f (&key a (b 0 b-p)) (values a b b-p))) (%f :a))
    program-error)
   t)
 
@@ -229,189 +234,17 @@ NOTE: The below works, but can we print the error better???
       z))
   (a 2))
 
-(deftest flet.21
-  (flet ((%f (x)
-             (declare (type fixnum x))
-             "Add one to the fixnum x."
-             (1+ x)))
-    (declare (ftype (function (fixnum) integer) %f))
-    (%f 10))
-  11)
-
-(deftest flet.26
-  (flet ((%f (x &optional (y 1 y-p) (z 2 z-p) &rest r &key foo bar)
-             (list x y y-p z z-p r foo bar)))
-    (values (%f 10) (%f 20 40) (%f 'a 'b 'c)
-            (%f 'd 'e 'f :foo 'h :whatever nil :allow-other-keys t)
-            (%f 'd 'e 'f :bar 'i :illegal t :foo 'z :allow-other-keys t) ))
-  (10 1 nil 2 nil nil nil nil)
-  (20 40 t 2 nil nil nil nil)
-  (a b t c t nil nil nil)
-  (d e t f t (:foo h :whatever nil :allow-other-keys t) h nil)
-  (d e t f t (:bar i :illegal t :foo z :allow-other-keys t) z i))
-
-(deftest flet.28
-  (flet ((%f (x &optional (y 1 y-p) (z 2 z-p) &rest r
-                &key foo bar allow-other-keys)
-             (list x y y-p z z-p allow-other-keys
-                   r foo bar)))
-    (values (%f 10) (%f 20 40) (%f 'a 'b 'c)
-            (%f 'd 'e 'f :foo 'h :whatever nil :allow-other-keys 100)
-            (%f 'd 'e 'f :bar 'i :illegal t :foo 'z :allow-other-keys 200) ))
-  (10 1 nil 2 nil nil nil nil nil)
-  (20 40 t 2 nil nil nil nil nil)
-  (a b t c t nil nil nil nil)
-  (d e t f t 100 (:foo h :whatever nil :allow-other-keys 100) h nil)
-  (d e t f t 200 (:bar i :illegal t :foo z :allow-other-keys 200) z i))
-
-;;; Tests of non-keyword keywords (see section 3.4.1.4, paragrph 2).
-(deftest flet.30
-  (flet ((%f (&key ((foo bar) nil)) bar))
-    (values (%f) (%f 'foo 10)))
-  nil 10)
-
-;;; Binding of formal parameters that are also special variables
-(deftest flet.35
-  (let ((x 'bad))
-    (declare (special x))
-    (flet ((%f () x))
-      (flet ((%g (x)
-                 (declare (special x))
-                 (%f)))
-        (%g 'good))))
-  good)
-
-(deftest flet.36
-  (let ((x 'bad))
-    (declare (special x))
-    (flet ((%f () x))
-      (flet ((%g (&aux (x 'good))
-                 (declare (special x))
-                 (%f)))
-         (%g))))
-  good)
-
-(deftest flet.37
-  (let ((x 'bad))
-    (declare (special x))
-    (flet ((%f () x))
-      (flet ((%g (&rest x)
-                 (declare (special x))
-                 (%f)))
-         (%g 'good))))
-  (good))
-
-(deftest flet.38
-  (let ((x 'bad))
-    (declare (special x))
-    (flet ((%f () x))
-      (flet ((%g (&key (x 'good))
-                 (declare (special x))
-                 (%f)))
-         (%g))))
-  good)
-
-(deftest flet.39
-  (let ((x 'bad))
-    (declare (special x))
-    (flet ((%f () x))
-      (flet ((%g (&key (x 'bad))
-                 (declare (special x))
-                 (%f)))
-         (%g :x 'good))))
-  good)
-
-;;; Keywords can be function names
-(deftest flet.47
-  (flet ((:foo () 'bar)) (:foo))
-  bar)
-
-(deftest flet.48
-  (flet ((:foo () 'bar)) (funcall #':foo))
-  bar)
-
-;;; Check that nil keyword arguments do not enable the default values
-
-(deftest flet.54
-  (flet ((%f (&key (a 'wrong a-p)) (list a (not a-p)))) (%f :a nil))
-  (nil nil))
-
-(deftest flet.56
-  (flet ((%f (&key ((:a b) 'wrong present?)) (list b (not present?)))) (%f :a nil))
-  (nil nil))
-
-(deftest flet.57
-  (flet ((%f (&key) 'good))
-    (%f :allow-other-keys nil))
-  good)
-
-(deftest flet.58
-  (flet ((%f (&key) 'good))
-    (%f :allow-other-keys t))
-  good)
-
-(deftest flet.59
-  (flet ((%f (&key) 'good))
-    (%f :allow-other-keys t :a 1 :b 2))
-  good)
-
-(deftest flet.62
-  (let ((x :bad))
-    (declare (special x))
-    (let ((x :good))
-      (flet ((%f (&optional (y x))
-                 (declare (special x))
-                 y))
-        (%f))))
-  :good)
-
-(deftest flet.63
-  (let ((x :bad))
-    (declare (special x))
-    (let ((x :good))
-      (flet ((%f (&key (y x))
-                 (declare (special x))
-                 y))
-        (%f))))
-  :good)
-
-(deftest flet.65
-  (let ((x :bad))
-    (declare (special x))
-    (let ((x :good))
-      (flet ((%f () (declare (special x)))))
-      x))
-  :good)
-
-(deftest flet.66
-  (let ((x :bad))
-    (declare (special x))
-    (let ((x :good))
-      (flet ((%f () (declare (special x))))
-        x)))
-  :good)
-
-(deftest flet.67
-  (let ((x :bad))
-    (declare (special x))
-    (let ((x :good))
-      (flet ((%f (&aux (y x))
-                 (declare (special x))
-                 y))
-        (%f))))
-  :good)
-
 (deftest flet.69
   (let ((*x* 0))
     (declare (special *x*))
     (flet ((%f (i)
                #'(lambda (arg)
                    (declare (ignore arg))
-                   (setq *x* i))))
+                   (setq *x* (1+ i)))))
       (values
-       (funcall (%f 1) '(a b c))
-       (funcall (%f 2) '(a b c))))))
-  1 2)
+       (funcall (%f 1) nil)
+       (funcall (%f 2) nil))))
+  2 3)
 
 // TODO: These next two need to be tested when we support macro-lambdas and compiler-macros.
 (defmacro flet.73 () :bad)
@@ -437,27 +270,10 @@ LABELS:
     (%f 0 10))
   55)
 
-// NOTE: for the next 2, &AUX works fine, but these don't. Use of LET for &AUX the reason why? Should we be using a LET for all init forms instead of SETQ'ing them? hmm....
-
-;;; Scope of defined function names includes &OPTIONAL parameters
-(deftest labels.7c
-  (labels ((%f (x &optional (b (%g x))) b)
-           (%g (y) (+ y y)))
-    (%f 10))
-  20)
-
-;;; Scope of defined function names includes &KEY parameters
-(deftest labels.7d
-  (labels ((%f (x &key (b (%g x))) b)
-           (%g (y) (+ y y)))
-    (%f 10))
-  20)
-
-;;; Odd # of keyword args should throw a program-error in safe code
-;;; (section 3.5.1.6)
+// NOTE: the following works, but can we print the message better???
 (deftest labels.13
   (signals-error
-   (labels ((%f (&key a (b 0 b-p)) (values a b (not (not b-p))))) (%f :a))
+   (labels ((%f (&key a (b 0 b-p)) (values a b b-p))) (%f :a))
    program-error)
   t)
 
@@ -474,101 +290,6 @@ LABELS:
       (setf (%f z) 'a)
       z))
   (a 2))
-
-;;; Declarations and documentation strings are ok
-(deftest labels.21
-  (labels ((%f (x)
-             (declare (type fixnum x))
-             "Add one to the fixnum x."
-             (1+ x)))
-    (declare (ftype (function (fixnum) integer) %f))
-    (%f 10))
-  11)
-
-;;; Keywords can be function names
-(deftest labels.22
-  (labels ((:foo () 10)
-           (:bar () (1+ (:foo))))
-    (:bar))
-  11)
-
-(deftest labels.23
-  (labels ((:foo () 10)
-           (:bar () (1+ (funcall #':foo))))
-    (funcall #':bar))
-  11)
-
-(deftest labels.29
-  (labels ((%f (&key (a 'wrong a-p)) (list a (not a-p)))) (%f :a nil))
-  (nil nil))
-
-(deftest labels.31
-  (labels ((%f (&key ((:a b) 'wrong present?)) (list b (not present?))))
-    (%f :a nil))
-  (nil nil))
-
-(deftest labels.32
-  (labels ((%f (&key) 'good))
-    (%f :allow-other-keys nil))
-  good)
-
-(deftest labels.33
-  (labels ((%f (&key) 'good))
-    (%f :allow-other-keys t))
-  good)
-
-(deftest labels.34
-  (labels ((%f (&key) 'good))
-    (%f :allow-other-keys t :a 1 :b 2))
-  good)
-
-;;; Test that free declarations do not affect argument forms
-
-(deftest labels.41
-  (let ((x :bad))
-    (declare (special x))
-    (let ((x :good))
-      (labels ((%f (&optional (y x))
-                   (declare (special x))
-                   y))
-        (%f))))
-  :good)
-
-(deftest labels.42
-  (let ((x :bad))
-    (declare (special x))
-    (let ((x :good))
-      (labels ((%f (&key (y x))
-                   (declare (special x))
-                   y))
-        (%f))))
-  :good)
-
-(deftest labels.44
-  (let ((x :bad))
-    (declare (special x))
-    (let ((x :good))
-      (labels ((%f () (declare (special x)))))
-      x))
-  :good)
-
-(deftest labels.45
-  (let ((x :bad))
-    (declare (special x))
-    (let ((x :good))
-      (labels ((%f () (declare (special x))))
-        x)))
-  :good)
-
-(deftest labels.46
-  (let ((x :bad))
-    (declare (special x))
-    (let ((x :good))
-      (labels ((%f (&aux (y x))
-                   (declare (special x))
-                   y))
-        (%f))))
-  :good)
 
 // TODO: These next two need to be tested when we support macro-lambdas and compiler-macros.
 (defmacro labels.51 () :bad)

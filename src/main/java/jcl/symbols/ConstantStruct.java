@@ -53,31 +53,6 @@ public class ConstantStruct<TYPE extends LispStruct> extends SymbolStruct<TYPE> 
 	}
 
 	@Override
-	public void setFunction(final FunctionStruct function) {
-		throw new ProgramErrorException("Can't set function for constant " + name + '.');
-	}
-
-	@Override
-	public void bindFunction(final FunctionStruct function) {
-		throw new ProgramErrorException("Can't bind function for constant " + name + '.');
-	}
-
-	@Override
-	public void unbindFunction() {
-		throw new ProgramErrorException("Can't unbind function for constant " + name + '.');
-	}
-
-	@Override
-	public void setMacroFunctionExpander(final MacroFunctionExpander<?> macroFunctionExpander) {
-		throw new ProgramErrorException("Can't set macro function expansion for constant " + name + '.');
-	}
-
-	@Override
-	public void setCompilerMacroFunctionExpander(final CompilerMacroFunctionExpander<?> compilerMacroFunctionExpander) {
-		throw new ProgramErrorException("Can't set compiler macro function expansion for constant " + name + '.');
-	}
-
-	@Override
 	public void setSymbolMacroExpander(final SymbolMacroExpander<?> symbolMacroExpander) {
 		throw new ProgramErrorException("Can't set symbol macro expansion for constant " + name + '.');
 	}

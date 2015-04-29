@@ -16,6 +16,8 @@ import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAnalyzer;
+import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAndDocStringAnalyzer;
+import jcl.compiler.real.sa.analyzer.declare.DeclareExpander;
 import jcl.compiler.real.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.FletStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
@@ -46,7 +48,13 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 	private FormAnalyzer formAnalyzer;
 
 	@Autowired
+	private DeclareExpander declareExpander;
+
+	@Autowired
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
+
+	@Autowired
+	private BodyWithDeclaresAndDocStringAnalyzer bodyWithDeclaresAndDocStringAnalyzer;
 
 	@Autowired
 	private FunctionExpander functionExpander;
@@ -91,8 +99,10 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 			final ListStruct formRestRest = formRest.getRest();
 			final List<LispStruct> forms = formRestRest.getAsJavaList();
 
-			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(forms, fletEnvironment);
-			final DeclareStruct declare = bodyProcessingResult.getDeclareElement();
+			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(forms);
+
+			final ListStruct fullDeclaration = ListStruct.buildProperList(bodyProcessingResult.getDeclares());
+			final DeclareStruct declare = declareExpander.expand(fullDeclaration, fletEnvironment);
 
 			final List<FletStruct.FletVar> fletVars
 					= innerFunctionsAsJavaList.stream()
@@ -174,8 +184,16 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 		final LispStruct lambdaList = functionListParameterRest.getFirst();
 		final ListStruct body = functionListParameterRest.getRest();
 
+		final List<LispStruct> forms = body.getAsJavaList();
+		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAndDocStringAnalyzer.analyze(forms);
+
+		final List<LispStruct> declares = bodyProcessingResult.getDeclares();
+		final StringStruct docString = bodyProcessingResult.getDocString();
+		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
+
 		// NOTE: Make Dotted list here so the 'contents' of the body get added to the block
-		final ListStruct innerBlockListStruct = ListStruct.buildDottedList(SpecialOperatorStruct.BLOCK, functionName, body);
+		final ListStruct blockBody = ListStruct.buildProperList(bodyForms);
+		final ListStruct innerBlockListStruct = ListStruct.buildDottedList(SpecialOperatorStruct.BLOCK, functionName, blockBody);
 
 		// NOTE: This will be a safe cast since we verify it is a symbol earlier
 		final SymbolStruct<?> functionNameSymbol = (SymbolStruct) functionName;
@@ -189,9 +207,11 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 		final String fletParamName = "jcl.FLET_" + properFunctionNameString + "_Lambda_" + System.nanoTime();
 		final StringStruct fletParamJavaClassName = new StringStruct(fletParamName);
 		final ListStruct fletParamJavaClassNameDeclaration = ListStruct.buildProperList(DeclarationStruct.JAVA_CLASS_NAME, fletParamJavaClassName);
-		final ListStruct innerDeclareListStruct = ListStruct.buildProperList(SpecialOperatorStruct.DECLARE, fletParamJavaClassNameDeclaration);
+		declares.add(fletParamJavaClassNameDeclaration);
 
-		final ListStruct innerLambdaListStruct = ListStruct.buildProperList(SpecialOperatorStruct.LAMBDA, lambdaList, innerDeclareListStruct, innerBlockListStruct);
+		final ListStruct fullDeclaration = ListStruct.buildProperList(declares);
+
+		final ListStruct innerLambdaListStruct = ListStruct.buildProperList(SpecialOperatorStruct.LAMBDA, lambdaList, fullDeclaration, docString, innerBlockListStruct);
 		final ListStruct innerFunctionListStruct = ListStruct.buildProperList(SpecialOperatorStruct.FUNCTION, innerLambdaListStruct);
 
 		// Evaluate in the 'outer' environment. This is one of the differences between Flet and Labels/Macrolet.
@@ -203,7 +223,9 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 	public int hashCode() {
 		return new HashCodeBuilder().appendSuper(super.hashCode())
 		                            .append(formAnalyzer)
+		                            .append(declareExpander)
 		                            .append(bodyWithDeclaresAnalyzer)
+		                            .append(bodyWithDeclaresAndDocStringAnalyzer)
 		                            .append(functionExpander)
 		                            .append(printer)
 		                            .toHashCode();
@@ -223,7 +245,9 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 		final FletExpander rhs = (FletExpander) obj;
 		return new EqualsBuilder().appendSuper(super.equals(obj))
 		                          .append(formAnalyzer, rhs.formAnalyzer)
+		                          .append(declareExpander, rhs.declareExpander)
 		                          .append(bodyWithDeclaresAnalyzer, rhs.bodyWithDeclaresAnalyzer)
+		                          .append(bodyWithDeclaresAndDocStringAnalyzer, rhs.bodyWithDeclaresAndDocStringAnalyzer)
 		                          .append(functionExpander, rhs.functionExpander)
 		                          .append(printer, rhs.printer)
 		                          .isEquals();
@@ -232,7 +256,9 @@ public class FletExpander extends MacroFunctionExpander<FletStruct> {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(formAnalyzer)
+		                                                                .append(declareExpander)
 		                                                                .append(bodyWithDeclaresAnalyzer)
+		                                                                .append(bodyWithDeclaresAndDocStringAnalyzer)
 		                                                                .append(functionExpander)
 		                                                                .append(printer)
 		                                                                .toString();

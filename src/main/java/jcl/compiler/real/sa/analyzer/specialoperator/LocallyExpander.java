@@ -11,11 +11,12 @@ import jcl.compiler.real.environment.LocallyEnvironment;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAnalyzer;
-import jcl.functions.expanders.MacroFunctionExpander;
+import jcl.compiler.real.sa.analyzer.declare.DeclareExpander;
 import jcl.compiler.real.struct.specialoperator.LocallyStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.declare.DeclareStruct;
 import jcl.compiler.real.struct.specialoperator.declare.SpecialDeclarationStruct;
+import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.symbols.SpecialOperatorStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -32,6 +33,9 @@ public class LocallyExpander extends MacroFunctionExpander<LocallyStruct> {
 
 	@Autowired
 	private FormAnalyzer formAnalyzer;
+
+	@Autowired
+	private DeclareExpander declareExpander;
 
 	@Autowired
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
@@ -52,8 +56,10 @@ public class LocallyExpander extends MacroFunctionExpander<LocallyStruct> {
 		final ListStruct formRest = form.getRest();
 		final List<LispStruct> forms = formRest.getAsJavaList();
 
-		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(forms, locallyEnvironment);
-		final DeclareStruct declare = bodyProcessingResult.getDeclareElement();
+		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(forms);
+
+		final ListStruct fullDeclaration = ListStruct.buildProperList(bodyProcessingResult.getDeclares());
+		final DeclareStruct declare = declareExpander.expand(fullDeclaration, locallyEnvironment);
 
 		final List<SpecialDeclarationStruct> specialDeclarations = declare.getSpecialDeclarations();
 		specialDeclarations.forEach(specialDeclaration -> Environments.addDynamicVariableBinding(specialDeclaration, locallyEnvironment));
@@ -72,6 +78,7 @@ public class LocallyExpander extends MacroFunctionExpander<LocallyStruct> {
 	public int hashCode() {
 		return new HashCodeBuilder().appendSuper(super.hashCode())
 		                            .append(formAnalyzer)
+		                            .append(declareExpander)
 		                            .append(bodyWithDeclaresAnalyzer)
 		                            .toHashCode();
 	}
@@ -90,6 +97,7 @@ public class LocallyExpander extends MacroFunctionExpander<LocallyStruct> {
 		final LocallyExpander rhs = (LocallyExpander) obj;
 		return new EqualsBuilder().appendSuper(super.equals(obj))
 		                          .append(formAnalyzer, rhs.formAnalyzer)
+		                          .append(declareExpander, rhs.declareExpander)
 		                          .append(bodyWithDeclaresAnalyzer, rhs.bodyWithDeclaresAnalyzer)
 		                          .isEquals();
 	}
@@ -97,6 +105,7 @@ public class LocallyExpander extends MacroFunctionExpander<LocallyStruct> {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(formAnalyzer)
+		                                                                .append(declareExpander)
 		                                                                .append(bodyWithDeclaresAnalyzer)
 		                                                                .toString();
 	}

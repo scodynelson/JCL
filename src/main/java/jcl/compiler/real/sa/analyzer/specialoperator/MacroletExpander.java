@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
+import jcl.arrays.StringStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LambdaEnvironment;
@@ -15,6 +16,8 @@ import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.body.BodyProcessingResult;
 import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAnalyzer;
+import jcl.compiler.real.sa.analyzer.body.BodyWithDeclaresAndDocStringAnalyzer;
+import jcl.compiler.real.sa.analyzer.declare.DeclareExpander;
 import jcl.compiler.real.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.MacroletStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
@@ -24,6 +27,7 @@ import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.printer.Printer;
+import jcl.symbols.DeclarationStruct;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.system.StackUtils;
@@ -44,7 +48,13 @@ public class MacroletExpander extends MacroFunctionExpander<MacroletStruct> {
 	private FormAnalyzer formAnalyzer;
 
 	@Autowired
+	private DeclareExpander declareExpander;
+
+	@Autowired
 	private BodyWithDeclaresAnalyzer bodyWithDeclaresAnalyzer;
+
+	@Autowired
+	private BodyWithDeclaresAndDocStringAnalyzer bodyWithDeclaresAndDocStringAnalyzer;
 
 	@Autowired
 	private FunctionExpander functionExpander;
@@ -92,8 +102,10 @@ public class MacroletExpander extends MacroFunctionExpander<MacroletStruct> {
 			final ListStruct formRestRest = formRest.getRest();
 			final List<LispStruct> forms = formRestRest.getAsJavaList();
 
-			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(forms, macroletEnvironment);
-			final DeclareStruct declare = bodyProcessingResult.getDeclareElement();
+			final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAnalyzer.analyze(forms);
+
+			final ListStruct fullDeclaration = ListStruct.buildProperList(bodyProcessingResult.getDeclares());
+			final DeclareStruct declare = declareExpander.expand(fullDeclaration, macroletEnvironment);
 
 			final List<MacroletStruct.MacroletVar> macroletVars
 					= innerFunctionsAsJavaList.stream()
@@ -179,9 +191,34 @@ public class MacroletExpander extends MacroFunctionExpander<MacroletStruct> {
 		final LispStruct lambdaList = functionListParameterRest.getFirst();
 		final ListStruct body = functionListParameterRest.getRest();
 
+		final List<LispStruct> forms = body.getAsJavaList();
+		final BodyProcessingResult bodyProcessingResult = bodyWithDeclaresAndDocStringAnalyzer.analyze(forms);
+
+		final List<LispStruct> declares = bodyProcessingResult.getDeclares();
+		final StringStruct docString = bodyProcessingResult.getDocString();
+		final List<LispStruct> bodyForms = bodyProcessingResult.getBodyForms();
+
 		// NOTE: Make Dotted list here so the 'contents' of the body get added to the block
-		final ListStruct innerBlockListStruct = ListStruct.buildDottedList(SpecialOperatorStruct.BLOCK, functionName, body);
-		final ListStruct innerLambdaListStruct = ListStruct.buildProperList(SpecialOperatorStruct.LAMBDA, lambdaList, innerBlockListStruct);
+		final ListStruct blockBody = ListStruct.buildProperList(bodyForms);
+		final ListStruct innerBlockListStruct = ListStruct.buildDottedList(SpecialOperatorStruct.BLOCK, functionName, blockBody);
+
+		// NOTE: This will be a safe cast since we verify it is a symbol earlier
+		final SymbolStruct<?> functionNameSymbol = (SymbolStruct) functionName;
+
+		final String functionNameString = functionNameSymbol.getName();
+		final String properFunctionNameString = functionNameString.codePoints()
+		                                                          .filter(Character::isJavaIdentifierPart)
+		                                                          .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+		                                                          .toString();
+
+		final String macroletParamName = "jcl.MACROLET_" + properFunctionNameString + "_MacroLambda_" + System.nanoTime();
+		final StringStruct macroletParamJavaClassName = new StringStruct(macroletParamName);
+		final ListStruct macroletParamJavaClassNameDeclaration = ListStruct.buildProperList(DeclarationStruct.JAVA_CLASS_NAME, macroletParamJavaClassName);
+		declares.add(macroletParamJavaClassNameDeclaration);
+
+		final ListStruct fullDeclaration = ListStruct.buildProperList(declares);
+
+		final ListStruct innerLambdaListStruct = ListStruct.buildProperList(SpecialOperatorStruct.LAMBDA, lambdaList, fullDeclaration, docString, innerBlockListStruct);
 		final ListStruct innerFunctionListStruct = ListStruct.buildProperList(SpecialOperatorStruct.FUNCTION, innerLambdaListStruct);
 
 		// Evaluate in the 'current' environment. This is one of the differences between Flet and Labels/Macrolet.
@@ -192,7 +229,9 @@ public class MacroletExpander extends MacroFunctionExpander<MacroletStruct> {
 	public int hashCode() {
 		return new HashCodeBuilder().appendSuper(super.hashCode())
 		                            .append(formAnalyzer)
+		                            .append(declareExpander)
 		                            .append(bodyWithDeclaresAnalyzer)
+		                            .append(bodyWithDeclaresAndDocStringAnalyzer)
 		                            .append(functionExpander)
 		                            .append(printer)
 		                            .toHashCode();
@@ -212,7 +251,9 @@ public class MacroletExpander extends MacroFunctionExpander<MacroletStruct> {
 		final MacroletExpander rhs = (MacroletExpander) obj;
 		return new EqualsBuilder().appendSuper(super.equals(obj))
 		                          .append(formAnalyzer, rhs.formAnalyzer)
+		                          .append(declareExpander, rhs.declareExpander)
 		                          .append(bodyWithDeclaresAnalyzer, rhs.bodyWithDeclaresAnalyzer)
+		                          .append(bodyWithDeclaresAndDocStringAnalyzer, rhs.bodyWithDeclaresAndDocStringAnalyzer)
 		                          .append(functionExpander, rhs.functionExpander)
 		                          .append(printer, rhs.printer)
 		                          .isEquals();
@@ -221,7 +262,9 @@ public class MacroletExpander extends MacroFunctionExpander<MacroletStruct> {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(formAnalyzer)
+		                                                                .append(declareExpander)
 		                                                                .append(bodyWithDeclaresAnalyzer)
+		                                                                .append(bodyWithDeclaresAndDocStringAnalyzer)
 		                                                                .append(functionExpander)
 		                                                                .append(printer)
 		                                                                .toString();

@@ -9,6 +9,21 @@ UNWIND-PROTECT:
     x)
   (a))
 
+(deftest unwind-protect.6
+  (let ((x nil))
+    (block nil
+          (flet ((%f () nil))
+            nil))
+    x)
+  (a))
+
+(deftest unwind-protect.6
+  (let ((x nil))
+    (flet ((%f () nil))
+            nil)
+    x)
+  (a))
+
 (deftest unwind-protect.7
   (let ((x nil))
     (block done

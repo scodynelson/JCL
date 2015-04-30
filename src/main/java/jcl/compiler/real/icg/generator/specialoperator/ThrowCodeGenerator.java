@@ -1,8 +1,11 @@
 package jcl.compiler.real.icg.generator.specialoperator;
 
+import java.util.Stack;
+
 import jcl.LispStruct;
 import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.struct.specialoperator.ThrowStruct;
@@ -28,19 +31,23 @@ public class ThrowCodeGenerator implements CodeGenerator<ThrowStruct> {
 		final String fileName = currentClass.getFileName();
 
 		final ClassWriter cw = currentClass.getClassWriter();
-		final MethodVisitor previousMv = currentClass.getMethodVisitor();
 
 		final String throwMethodName = "throw_" + System.nanoTime();
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, throwMethodName, "()Ljcl/LispStruct;", null, null);
-		currentClass.setMethodVisitor(mv);
+
+		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+		methodBuilderStack.push(methodBuilder);
+
 		mv.visitCode();
+		final int thisStore = methodBuilder.getNextAvailableStore();
 
 		formGenerator.generate(catchTag, classBuilder);
-		final int catchTagStore = currentClass.getNextAvailableStore();
+		final int catchTagStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, catchTagStore);
 
 		formGenerator.generate(resultForm, classBuilder);
-		final int resultFormStore = currentClass.getNextAvailableStore();
+		final int resultFormStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, resultFormStore);
 
 		mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/icg/generator/specialoperator/exception/ThrowException");
@@ -53,7 +60,10 @@ public class ThrowCodeGenerator implements CodeGenerator<ThrowStruct> {
 		mv.visitMaxs(-1, -1);
 		mv.visitEnd();
 
-		currentClass.setMethodVisitor(previousMv);
+		methodBuilderStack.pop();
+
+		final JavaMethodBuilder previousMethodBuilder = methodBuilderStack.peek();
+		final MethodVisitor previousMv = previousMethodBuilder.getMethodVisitor();
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, 0);
 		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, throwMethodName, "()Ljcl/LispStruct;", false);

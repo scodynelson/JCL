@@ -12,6 +12,7 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.SymbolMacroletEnvironment;
 import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
@@ -41,8 +42,8 @@ public class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacrolet
 		final PrognStruct forms = input.getForms();
 		final SymbolMacroletEnvironment symbolMacroletEnvironment = input.getSymbolMacroletEnvironment();
 
-		final ClassDef currentClass = classBuilder.getCurrentClass();
-		final MethodVisitor mv = currentClass.getMethodVisitor();
+		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		final Label tryBlockStart = new Label();
 		final Label tryBlockEnd = new Label();
@@ -52,8 +53,8 @@ public class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacrolet
 
 		final Set<Integer> symbolVarStores = new HashSet<>(vars.size());
 
-		final int packageStore = currentClass.getNextAvailableStore();
-		final int expansionStore = currentClass.getNextAvailableStore();
+		final int packageStore = methodBuilder.getNextAvailableStore();
+		final int expansionStore = methodBuilder.getNextAvailableStore();
 
 		for (final SymbolMacroletStruct.SymbolMacroletVar var : vars) {
 			final SymbolStruct<?> symbolVar = var.getVar();
@@ -71,7 +72,7 @@ public class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacrolet
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
 			// NOTE: we have to get a new 'symbolStore' for each var so we can properly unbind the expansions later
-			final int symbolStore = currentClass.getNextAvailableStore();
+			final int symbolStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, symbolStore);
 
 			// Add the symbolStore here so we can unbind the expansions later
@@ -97,7 +98,7 @@ public class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacrolet
 		prognCodeGenerator.generate(forms, classBuilder);
 		bindingStack.pop();
 
-		final int resultStore = currentClass.getNextAvailableStore();
+		final int resultStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, resultStore);
 
 		mv.visitLabel(tryBlockEnd);
@@ -105,7 +106,7 @@ public class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacrolet
 		mv.visitJumpInsn(Opcodes.GOTO, catchBlockEnd);
 
 		mv.visitLabel(catchBlockStart);
-		final int exceptionStore = currentClass.getNextAvailableStore();
+		final int exceptionStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, exceptionStore);
 
 		generateFinallyCode(mv, symbolVarStores);
@@ -130,7 +131,9 @@ public class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacrolet
 		final String className = "jcl/" + fileName;
 
 		final ClassDef currentClass = new ClassDef(className, fileName);
-		classBuilder.getClassStack().push(currentClass);
+		final Stack<ClassDef> classStack = classBuilder.getClassStack();
+
+		classStack.push(currentClass);
 		classBuilder.setCurrentClass(currentClass);
 		classBuilder.getClasses().addFirst(currentClass);
 
@@ -139,20 +142,23 @@ public class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacrolet
 
 		cw.visitSource(fileName + ".java", null);
 
-		final int thisStore = currentClass.getNextAvailableStore();
 		{
 			final Random random = new SecureRandom();
 			final long serialVersionUID = random.nextLong();
 
 			final FieldVisitor fv = cw.visitField(Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "serialVersionUID", "J", null, serialVersionUID);
-			currentClass.setFieldVisitor(fv);
 
 			fv.visitEnd();
 		}
 		{
 			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC, "<init>", "()V", null, null);
-			currentClass.setMethodVisitor(mv);
+
+			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+			methodBuilderStack.push(methodBuilder);
+
 			mv.visitCode();
+			final int thisStore = methodBuilder.getNextAvailableStore();
 
 			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/compiler/real/sa/analyzer/expander/SymbolMacroExpander", "<init>", "()V", false);
@@ -161,11 +167,20 @@ public class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacrolet
 
 			mv.visitMaxs(-1, -1);
 			mv.visitEnd();
+
+			methodBuilderStack.pop();
 		}
 		{
 			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC, "expand", "(Ljcl/LispStruct;Ljcl/compiler/real/environment/Environment;)Ljcl/LispStruct;", null, null);
-			currentClass.setMethodVisitor(mv);
+
+			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+			methodBuilderStack.push(methodBuilder);
+
 			mv.visitCode();
+			final int thisStore = methodBuilder.getNextAvailableStore();
+			final int expressionStore = methodBuilder.getNextAvailableStore();
+			final int environmentStore = methodBuilder.getNextAvailableStore();
 
 			formGenerator.generate(expansion, classBuilder);
 
@@ -173,11 +188,12 @@ public class SymbolMacroletCodeGenerator implements CodeGenerator<SymbolMacrolet
 
 			mv.visitMaxs(-1, -1);
 			mv.visitEnd();
+
+			methodBuilderStack.pop();
 		}
 		cw.visitEnd();
 
-		classBuilder.getClassStack().pop();
-		classBuilder.setCurrentClass(classBuilder.getClassStack().peek());
+		classStack.pop();
 
 		return className;
 	}

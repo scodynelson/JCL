@@ -8,8 +8,8 @@ import java.util.Stack;
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.ProgvEnvironment;
-import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
@@ -37,8 +37,8 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 		final PrognStruct forms = input.getForms();
 		final ProgvEnvironment progvEnvironment = input.getProgvEnvironment();
 
-		final ClassDef currentClass = classBuilder.getCurrentClass();
-		final MethodVisitor mv = currentClass.getMethodVisitor();
+		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		final Label tryBlockStart = new Label();
 		final Label tryBlockEnd = new Label();
@@ -48,8 +48,8 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 
 		final Set<Integer> symbolVarStores = new HashSet<>(vars.size());
 
-		final int packageStore = currentClass.getNextAvailableStore();
-		final int valStore = currentClass.getNextAvailableStore();
+		final int packageStore = methodBuilder.getNextAvailableStore();
+		final int valStore = methodBuilder.getNextAvailableStore();
 
 		for (final ProgvStruct.ProgvVar var : vars) {
 			final SymbolStruct<?> symbolVar = var.getVar();
@@ -67,7 +67,7 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
 			// NOTE: we have to get a new 'symbolStore' for each var so we can properly unbind the vals later
-			final int symbolStore = currentClass.getNextAvailableStore();
+			final int symbolStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, symbolStore);
 
 			// Add the symbolStore here so we can unbind the vals later
@@ -84,7 +84,7 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 
 			mv.visitVarInsn(Opcodes.ALOAD, valStore);
 			mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/compiler/real/struct/ValuesStruct");
-			final int valuesStore = currentClass.getNextAvailableStore();
+			final int valuesStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, valuesStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, valuesStore);
@@ -107,7 +107,7 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 		prognCodeGenerator.generate(forms, classBuilder);
 		bindingStack.pop();
 
-		final int resultStore = currentClass.getNextAvailableStore();
+		final int resultStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, resultStore);
 
 		mv.visitLabel(tryBlockEnd);
@@ -115,7 +115,7 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 		mv.visitJumpInsn(Opcodes.GOTO, catchBlockEnd);
 
 		mv.visitLabel(catchBlockStart);
-		final int exceptionStore = currentClass.getNextAvailableStore();
+		final int exceptionStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, exceptionStore);
 
 		generateFinallyCode(mv, symbolVarStores);

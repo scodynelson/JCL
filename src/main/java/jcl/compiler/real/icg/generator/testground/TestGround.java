@@ -42,7 +42,7 @@ public class TestGround {
 
 	private static final LispStruct LTV_1 = new CharacterStruct(1997);
 
-	private Object blockGen() {
+	private Object blockGen(final Closure currentClosure) {
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct<?> name = pkg.findSymbol("FOO").getSymbol();
@@ -61,7 +61,7 @@ public class TestGround {
 		return result;
 	}
 
-	private Object returnFromGen() {
+	private Object returnFromGen(final Closure currentClosure) {
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct<?> name = pkg.findSymbol("FOO").getSymbol();
@@ -71,7 +71,7 @@ public class TestGround {
 		throw new ReturnFromException(name, result);
 	}
 
-	private Object ifGen() {
+	private Object ifGen(final Closure currentClosure) {
 
 		LispStruct testObj = new CharacterStruct(97);
 		if (testObj instanceof ValuesStruct) {
@@ -88,7 +88,7 @@ public class TestGround {
 		return result;
 	}
 
-	private Object catchGen() {
+	private Object catchGen(final Closure currentClosure) {
 
 		final LispStruct catchTag = new CharacterStruct(97);
 
@@ -106,7 +106,7 @@ public class TestGround {
 		return resultForm;
 	}
 
-	private Object throwGen() {
+	private Object throwGen(final Closure currentClosure) {
 
 		final LispStruct catchTag = new CharacterStruct(97);
 		final LispStruct resultForm = new CharacterStruct(197);
@@ -161,16 +161,13 @@ public class TestGround {
 	}
 
 	private Object consGen() {
-
 		final LispStruct car = new CharacterStruct(97);
 		final LispStruct cdr = new CharacterStruct(197);
-
 		return new ConsStruct(car, cdr);
 	}
 
 	private Object pathnameGen() {
 		final URI uri = URI.create("");
-
 		return new PathnameStruct(uri);
 	}
 
@@ -202,7 +199,7 @@ public class TestGround {
 		return new ArrayStruct<>(dimensions, contents);
 	}
 
-	private Object unwindProtectGen() {
+	private Object unwindProtectGen(final Closure currentClosure) {
 		final LispStruct result;
 		try {
 			result = new CharacterStruct(97);
@@ -212,7 +209,7 @@ public class TestGround {
 		return result;
 	}
 
-	private Object goGen() {
+	private Object goGen(final Closure currentClosure) {
 
 		final int tagIndex = 1234413124;
 		throw new GoException(tagIndex);
@@ -227,9 +224,8 @@ public class TestGround {
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	private Object setqGen(final FunctionStruct function) {
+	private Object setqGen(final Closure currentClosure) {
 
-		final Closure currentClosure = function.getClosure();
 		Map<SymbolStruct<?>, LispStruct> closureBindings = null;
 		if (currentClosure != null) {
 			closureBindings = currentClosure.getSymbolBindings();
@@ -251,7 +247,7 @@ public class TestGround {
 		return value;
 	}
 
-	private int tagbodyGen() {
+	private int tagbodyGen(final Closure currentClosure) {
 
 		final TagbodyLabel tagbodyLabel = new TagbodyLabel(null, 20, new Label());
 		final int index = tagbodyLabel.getIndex();
@@ -266,10 +262,9 @@ public class TestGround {
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	private Object letGen(final FunctionStruct function) {
+	private Object letGen(final Closure currentClosure) {
 
-		final Closure parentClosure = function.getClosure();
-		final Closure closure = new Closure(parentClosure);
+		final Closure closure = new Closure(currentClosure);
 		final Map<SymbolStruct<?>, LispStruct> closureBindings = closure.getSymbolBindings();
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
@@ -292,7 +287,7 @@ public class TestGround {
 		return result;
 	}
 
-	private Object symbolMacroletGen() {
+	private Object symbolMacroletGen(final Closure currentClosure) {
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct<?> symbol = pkg.findSymbol("FOO").getSymbol();
@@ -317,14 +312,13 @@ public class TestGround {
 		return symbol.getFunction();
 	}
 
-	private Object lambdaFunctionGen() {
-		final Closure parentClosure = null;
+	private Object lambdaFunctionGen(final Closure currentClosure) {
 
-		final FunctionStruct function = new TestGroundLambdaFunction(parentClosure);
+		final FunctionStruct function = new TestGroundLambdaFunction(currentClosure);
 		return function;
 	}
 
-	private Object functionCallGen() {
+	private Object functionCallGen(final Closure currentClosure) {
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct<?> symbol = pkg.findSymbol("FOO").getSymbol();
@@ -338,10 +332,9 @@ public class TestGround {
 		return function.apply(args);
 	}
 
-	private Object lambdaFunctionCallGen() {
-		final Closure parentClosure = null;
+	private Object lambdaFunctionCallGen(final Closure currentClosure) {
 
-		final FunctionStruct function = new TestGroundLambdaFunction(parentClosure);
+		final FunctionStruct function = new TestGroundLambdaFunction(currentClosure);
 
 		final LispStruct[] args = new LispStruct[12345678];
 		final CharacterStruct arg1 = new CharacterStruct(97);
@@ -350,9 +343,8 @@ public class TestGround {
 		return function.apply(args);
 	}
 
-	private Object fletGen(final FunctionStruct function) {
+	private Object fletGen(final Closure currentClosure) {
 
-		final Closure currentClosure = function.getClosure();
 		Map<SymbolStruct<?>, FunctionStruct> closureBindings = null;
 		if (currentClosure != null) {
 			closureBindings = currentClosure.getFunctionBindings();
@@ -380,14 +372,14 @@ public class TestGround {
 		return LTV_1;
 	}
 
-	private Object multipleValueProg1Gen() {
+	private Object multipleValueProg1Gen(final Closure currentClosure) {
 
 		final LispStruct firstForm = new CharacterStruct(97);
 		final LispStruct forms = new CharacterStruct(197);
 		return firstForm;
 	}
 
-	private Object multipleValueCallGen() {
+	private Object multipleValueCallGen(final Closure currentClosure) {
 
 		final LispStruct firstForm = new CharacterStruct(97);
 		if (!(firstForm instanceof FunctionStruct)) {

@@ -5,8 +5,8 @@
 package jcl.compiler.real.icg.generator.specialoperator;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.struct.specialoperator.MutableLoadTimeValueStruct;
@@ -27,11 +27,11 @@ public class MutableLoadTimeValueCodeGenerator implements CodeGenerator<MutableL
 
 		final LispStruct form = input.getForm();
 
-		final ClassDef currentClass = classBuilder.getCurrentClass();
-		final MethodVisitor mv = currentClass.getMethodVisitor();
+		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		formGenerator.generate(form, classBuilder);
-		final int initFormStore = currentClass.getNextAvailableStore();
+		final int initFormStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
 
 		final Label valuesCheckIfEnd = new Label();
@@ -42,7 +42,7 @@ public class MutableLoadTimeValueCodeGenerator implements CodeGenerator<MutableL
 
 		mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 		mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/compiler/real/struct/ValuesStruct");
-		final int valuesStore = currentClass.getNextAvailableStore();
+		final int valuesStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, valuesStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, valuesStore);

@@ -7,8 +7,8 @@ package jcl.compiler.real.icg.generator.simple;
 import java.util.Stack;
 
 import jcl.compiler.real.environment.Environment;
-import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.GenerationConstants;
 import jcl.symbols.SymbolStruct;
@@ -22,8 +22,8 @@ public class SymbolBindingCodeGenerator implements CodeGenerator<SymbolStruct<?>
 	@Override
 	public void generate(final SymbolStruct<?> input, final JavaClassBuilder classBuilder) {
 
-		final ClassDef currentClass = classBuilder.getCurrentClass();
-		final MethodVisitor mv = currentClass.getMethodVisitor();
+		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		final String packageName = input.getSymbolPackage().getName();
 		mv.visitLdcInsn(packageName);
@@ -32,7 +32,7 @@ public class SymbolBindingCodeGenerator implements CodeGenerator<SymbolStruct<?>
 				GenerationConstants.PACKAGE_STRUCT_FIND_PACKAGE_METHOD_NAME,
 				GenerationConstants.PACKAGE_STRUCT_FIND_PACKAGE_METHOD_DESC,
 				false);
-		final int packageStore = currentClass.getNextAvailableStore();
+		final int packageStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, packageStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, packageStore);
@@ -48,7 +48,7 @@ public class SymbolBindingCodeGenerator implements CodeGenerator<SymbolStruct<?>
 				GenerationConstants.PACKAGE_SYMBOL_STRUCT_GET_SYMBOL_METHOD_NAME,
 				GenerationConstants.PACKAGE_SYMBOL_STRUCT_GET_SYMBOL_METHOD_DESC,
 				false);
-		final int symbolStore = currentClass.getNextAvailableStore();
+		final int symbolStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, symbolStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, symbolStore);

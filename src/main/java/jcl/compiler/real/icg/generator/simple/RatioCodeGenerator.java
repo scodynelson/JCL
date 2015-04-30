@@ -2,11 +2,11 @@ package jcl.compiler.real.icg.generator.simple;
 
 import java.math.BigInteger;
 
-import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
-import jcl.compiler.real.icg.generator.GeneratorUtils;
 import jcl.compiler.real.icg.generator.GenerationConstants;
+import jcl.compiler.real.icg.generator.GeneratorUtils;
 import jcl.numbers.RatioStruct;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.objectweb.asm.MethodVisitor;
@@ -28,8 +28,8 @@ public class RatioCodeGenerator implements CodeGenerator<RatioStruct> {
 	@Override
 	public void generate(final RatioStruct input, final JavaClassBuilder classBuilder) {
 
-		final ClassDef currentClass = classBuilder.getCurrentClass();
-		final MethodVisitor mv = currentClass.getMethodVisitor();
+		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		final BigFraction bigFraction = input.getBigFraction();
 
@@ -40,7 +40,7 @@ public class RatioCodeGenerator implements CodeGenerator<RatioStruct> {
 		final String numeratorString = numerator.toString();
 		mv.visitLdcInsn(numeratorString);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, BIG_INTEGER_NAME, GenerationConstants.INIT_METHOD_NAME, BIG_INTEGER_INIT_DESC, false);
-		final int numeratorStore = currentClass.getNextAvailableStore();
+		final int numeratorStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, numeratorStore);
 
 		mv.visitTypeInsn(Opcodes.NEW, BIG_INTEGER_NAME);
@@ -50,7 +50,7 @@ public class RatioCodeGenerator implements CodeGenerator<RatioStruct> {
 		final String denominatorString = denominator.toString();
 		mv.visitLdcInsn(denominatorString);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, BIG_INTEGER_NAME, GenerationConstants.INIT_METHOD_NAME, BIG_INTEGER_INIT_DESC, false);
-		final int denominatorStore = currentClass.getNextAvailableStore();
+		final int denominatorStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, denominatorStore);
 
 		mv.visitTypeInsn(Opcodes.NEW, RATIO_STRUCT_NAME);

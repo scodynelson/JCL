@@ -1,7 +1,10 @@
 package jcl.compiler.real.icg.generator.specialoperator;
 
+import java.util.Stack;
+
 import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.simple.SymbolCodeGeneratorUtil;
 import jcl.compiler.real.struct.specialoperator.BlockStruct;
@@ -30,12 +33,16 @@ public class BlockCodeGenerator implements CodeGenerator<BlockStruct> {
 		final String fileName = currentClass.getFileName();
 
 		final ClassWriter cw = currentClass.getClassWriter();
-		final MethodVisitor previousMv = currentClass.getMethodVisitor();
 
 		final String blockMethodName = "block_" + System.nanoTime();
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, blockMethodName, "()Ljcl/LispStruct;", null, null);
-		currentClass.setMethodVisitor(mv);
+
+		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+		methodBuilderStack.push(methodBuilder);
+
 		mv.visitCode();
+		final int thisStore = methodBuilder.getNextAvailableStore();
 
 		final Label tryBlockStart = new Label();
 		final Label tryBlockEnd = new Label();
@@ -47,19 +54,19 @@ public class BlockCodeGenerator implements CodeGenerator<BlockStruct> {
 
 		mv.visitLabel(tryBlockStart);
 		prognCodeGenerator.generate(forms, classBuilder);
-		final int resultStore = currentClass.getNextAvailableStore();
+		final int resultStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, resultStore);
 
 		mv.visitLabel(tryBlockEnd);
 		mv.visitJumpInsn(Opcodes.GOTO, catchBlockEnd);
 
 		mv.visitLabel(catchBlockStart);
-		final int returnFromExceptionStore = currentClass.getNextAvailableStore();
+		final int returnFromExceptionStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, returnFromExceptionStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, returnFromExceptionStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/compiler/real/icg/generator/specialoperator/exception/ReturnFromException", "getName", "()Ljcl/symbols/SymbolStruct;", false);
-		final int returnFromExceptionNameStore = currentClass.getNextAvailableStore();
+		final int returnFromExceptionNameStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, returnFromExceptionNameStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, returnFromExceptionNameStore);
@@ -86,7 +93,10 @@ public class BlockCodeGenerator implements CodeGenerator<BlockStruct> {
 		mv.visitMaxs(-1, -1);
 		mv.visitEnd();
 
-		currentClass.setMethodVisitor(previousMv);
+		methodBuilderStack.pop();
+
+		final JavaMethodBuilder previousMethodBuilder = methodBuilderStack.peek();
+		final MethodVisitor previousMv = previousMethodBuilder.getMethodVisitor();
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, 0);
 		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, blockMethodName, "()Ljcl/LispStruct;", false);

@@ -6,8 +6,8 @@ package jcl.compiler.real.icg.generator.simple;
 
 import java.net.URI;
 
-import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.GenerationConstants;
 import jcl.compiler.real.icg.generator.GeneratorUtils;
@@ -27,8 +27,8 @@ public class PathnameCodeGenerator implements CodeGenerator<PathnameStruct> {
 	@Override
 	public void generate(final PathnameStruct input, final JavaClassBuilder classBuilder) {
 
-		final ClassDef currentClass = classBuilder.getCurrentClass();
-		final MethodVisitor mv = currentClass.getMethodVisitor();
+		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		final URI uri = input.getUri();
 		final String filePath = uri.toString();
@@ -39,7 +39,7 @@ public class PathnameCodeGenerator implements CodeGenerator<PathnameStruct> {
 				GenerationConstants.JAVA_URI_CREATE_METHOD_NAME,
 				GenerationConstants.JAVA_URI_CREATE_METHOD_DESC,
 				false);
-		final int uriStore = currentClass.getNextAvailableStore();
+		final int uriStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, uriStore);
 
 		mv.visitTypeInsn(Opcodes.NEW, PATHNAME_STRUCT_NAME);

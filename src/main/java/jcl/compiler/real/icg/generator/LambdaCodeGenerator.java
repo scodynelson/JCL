@@ -23,6 +23,7 @@ import jcl.compiler.real.environment.binding.lambdalist.RestBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
 import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.simple.NullCodeGenerator;
 import jcl.compiler.real.icg.generator.specialoperator.PrognCodeGenerator;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
@@ -82,7 +83,6 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			final long serialVersionUID = random.nextLong();
 
 			final FieldVisitor fv = cw.visitField(Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL + Opcodes.ACC_STATIC, "serialVersionUID", "J", null, serialVersionUID);
-			currentClass.setFieldVisitor(fv);
 
 			fv.visitEnd();
 		}
@@ -97,9 +97,13 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 		{
 			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC, "<init>", "()V", null, null);
-			currentClass.setMethodVisitor(mv);
+
+			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+			methodBuilderStack.push(methodBuilder);
+
 			mv.visitCode();
-			final int thisStore = currentClass.getNextAvailableStore();
+			final int thisStore = methodBuilder.getNextAvailableStore();
 
 			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 			mv.visitInsn(Opcodes.ACONST_NULL);
@@ -110,14 +114,18 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitMaxs(-1, -1);
 			mv.visitEnd();
 
-			currentClass.resetStores();
+			methodBuilderStack.pop();
 		}
 		{
 			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC, "<init>", "(Ljcl/functions/Closure;)V", null, null);
-			currentClass.setMethodVisitor(mv);
+
+			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+			methodBuilderStack.push(methodBuilder);
+
 			mv.visitCode();
-			final int thisStore = currentClass.getNextAvailableStore();
-			final int closureStore = currentClass.getNextAvailableStore();
+			final int thisStore = methodBuilder.getNextAvailableStore();
+			final int closureStore = methodBuilder.getNextAvailableStore();
 
 			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 
@@ -137,44 +145,48 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitMaxs(-1, -1);
 			mv.visitEnd();
 
-			currentClass.resetStores();
+			methodBuilderStack.pop();
 		}
 		{
 			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, "initLambdaListBindings", "()V", null, null);
-			currentClass.setMethodVisitor(mv);
-			mv.visitCode();
-			final int thisStore = currentClass.getNextAvailableStore();
 
-			final int packageStore = currentClass.getNextAvailableStore();
+			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+			methodBuilderStack.push(methodBuilder);
+
+			mv.visitCode();
+			final int thisStore = methodBuilder.getNextAvailableStore();
+
+			final int packageStore = methodBuilder.getNextAvailableStore();
 
 			// End: Required
-			final int requiredBindingsStore = currentClass.getNextAvailableStore();
-			generateRequiredBindings(currentClass, lambdaListBindings, mv, packageStore, requiredBindingsStore);
+			final int requiredBindingsStore = methodBuilder.getNextAvailableStore();
+			generateRequiredBindings(methodBuilder, lambdaListBindings, mv, packageStore, requiredBindingsStore);
 			// End: Required
 
 			// Start: Optional
-			final int optionalBindingsStore = currentClass.getNextAvailableStore();
-			generateOptionalBindings(classBuilder, currentClass, lambdaListBindings, mv, packageStore, optionalBindingsStore);
+			final int optionalBindingsStore = methodBuilder.getNextAvailableStore();
+			generateOptionalBindings(classBuilder, methodBuilder, lambdaListBindings, mv, packageStore, optionalBindingsStore);
 			// End: Optional
 
 			// Start: Rest
-			final int restBindingStore = currentClass.getNextAvailableStore();
-			generateRestBinding(currentClass, lambdaListBindings, mv, packageStore, restBindingStore);
+			final int restBindingStore = methodBuilder.getNextAvailableStore();
+			generateRestBinding(methodBuilder, lambdaListBindings, mv, packageStore, restBindingStore);
 			// End: Rest
 
 			// Start: Key
-			final int keyBindingsStore = currentClass.getNextAvailableStore();
-			generateKeyBindings(classBuilder, currentClass, lambdaListBindings, mv, packageStore, keyBindingsStore);
+			final int keyBindingsStore = methodBuilder.getNextAvailableStore();
+			generateKeyBindings(classBuilder, methodBuilder, lambdaListBindings, mv, packageStore, keyBindingsStore);
 			// End: Key
 
 			// Start: Allow-Other-Keys
-			final int allowOtherKeysStore = currentClass.getNextAvailableStore();
+			final int allowOtherKeysStore = methodBuilder.getNextAvailableStore();
 			generateAllowOtherKeys(lambdaListBindings, mv, allowOtherKeysStore);
 			// End: Allow-Other-Keys
 
 			// Start: Aux
-			final int auxBindingsStore = currentClass.getNextAvailableStore();
-			generateAuxBindings(classBuilder, currentClass, lambdaListBindings, mv, packageStore, auxBindingsStore);
+			final int auxBindingsStore = methodBuilder.getNextAvailableStore();
+			generateAuxBindings(classBuilder, methodBuilder, lambdaListBindings, mv, packageStore, auxBindingsStore);
 			// Start: End
 
 			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
@@ -196,14 +208,18 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitMaxs(-1, -1);
 			mv.visitEnd();
 
-			currentClass.resetStores();
+			methodBuilderStack.pop();
 		}
 		{
 			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC + Opcodes.ACC_VARARGS, "apply", "([Ljcl/LispStruct;)Ljcl/LispStruct;", null, null);
-			currentClass.setMethodVisitor(mv);
+
+			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+			methodBuilderStack.push(methodBuilder);
+
 			mv.visitCode();
-			final int thisStore = currentClass.getNextAvailableStore();
-			final int argsStore = currentClass.getNextAvailableStore();
+			final int thisStore = methodBuilder.getNextAvailableStore();
+			final int argsStore = methodBuilder.getNextAvailableStore();
 
 			final Label tryBlockStart = new Label();
 			final Label tryBlockEnd = new Label();
@@ -220,13 +236,13 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			// START: Bind Closure Symbol values
 			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, "getClosureSymbolBindings", "()Ljava/util/Map;", false);
-			final int closureSymbolBindingsStore = currentClass.getNextAvailableStore();
+			final int closureSymbolBindingsStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, closureSymbolBindingsStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingsStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "entrySet", "()Ljava/util/Set;", true);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Set", "iterator", "()Ljava/util/Iterator;", true);
-			final int closureSymbolBindingIteratorStore = currentClass.getNextAvailableStore();
+			final int closureSymbolBindingIteratorStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, closureSymbolBindingIteratorStore);
 
 			final Label closureSymbolBindingIteratorLoopStart = new Label();
@@ -240,19 +256,19 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingIteratorStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "next", "()Ljava/lang/Object;", true);
 			mv.visitTypeInsn(Opcodes.CHECKCAST, "java/util/Map$Entry");
-			final int closureSymbolBindingMapEntryStore = currentClass.getNextAvailableStore();
+			final int closureSymbolBindingMapEntryStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, closureSymbolBindingMapEntryStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingMapEntryStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map$Entry", "getKey", "()Ljava/lang/Object;", true);
 			mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/symbols/SymbolStruct");
-			final int closureSymbolToBindStore = currentClass.getNextAvailableStore();
+			final int closureSymbolToBindStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, closureSymbolToBindStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingMapEntryStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map$Entry", "getValue", "()Ljava/lang/Object;", true);
 			mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/LispStruct");
-			final int closureSymbolLexicalValueStore = currentClass.getNextAvailableStore();
+			final int closureSymbolLexicalValueStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, closureSymbolLexicalValueStore);
 
 			final Label closureSymbolValuesCheckIfEnd = new Label();
@@ -263,7 +279,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolLexicalValueStore);
 			mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/compiler/real/struct/ValuesStruct");
-			final int closureSymbolValuesStore = currentClass.getNextAvailableStore();
+			final int closureSymbolValuesStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, closureSymbolValuesStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolValuesStore);
@@ -283,13 +299,13 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			// START: Bind Closure Function values
 			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, "getClosureFunctionBindings", "()Ljava/util/Map;", false);
-			final int closureFunctionBindingsStore = currentClass.getNextAvailableStore();
+			final int closureFunctionBindingsStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, closureFunctionBindingsStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingsStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "entrySet", "()Ljava/util/Set;", true);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Set", "iterator", "()Ljava/util/Iterator;", true);
-			final int closureFunctionBindingIteratorStore = currentClass.getNextAvailableStore();
+			final int closureFunctionBindingIteratorStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, closureFunctionBindingIteratorStore);
 
 			final Label closureFunctionBindingIteratorLoopStart = new Label();
@@ -303,19 +319,19 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingIteratorStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "next", "()Ljava/lang/Object;", true);
 			mv.visitTypeInsn(Opcodes.CHECKCAST, "java/util/Map$Entry");
-			final int closureFunctionBindingMapEntryStore = currentClass.getNextAvailableStore();
+			final int closureFunctionBindingMapEntryStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, closureFunctionBindingMapEntryStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingMapEntryStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map$Entry", "getKey", "()Ljava/lang/Object;", true);
 			mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/symbols/SymbolStruct");
-			final int closureFunctionToBindStore = currentClass.getNextAvailableStore();
+			final int closureFunctionToBindStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, closureFunctionToBindStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingMapEntryStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map$Entry", "getValue", "()Ljava/lang/Object;", true);
 			mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/functions/FunctionStruct");
-			final int closureFunctionValueStore = currentClass.getNextAvailableStore();
+			final int closureFunctionValueStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, closureFunctionValueStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionToBindStore);
@@ -330,12 +346,12 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 			mv.visitVarInsn(Opcodes.ALOAD, argsStore);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, "getFunctionBindings", "([Ljcl/LispStruct;)Ljava/util/List;", false);
-			final int functionBindingsStore = currentClass.getNextAvailableStore();
+			final int functionBindingsStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, functionBindingsStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, functionBindingsStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/List", "iterator", "()Ljava/util/Iterator;", true);
-			final int parameterBindingIteratorStore = currentClass.getNextAvailableStore();
+			final int parameterBindingIteratorStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, parameterBindingIteratorStore);
 
 			final Label parameterBindingIteratorLoopStart = new Label();
@@ -349,17 +365,17 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitVarInsn(Opcodes.ALOAD, parameterBindingIteratorStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "next", "()Ljava/lang/Object;", true);
 			mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/functions/FunctionParameterBinding");
-			final int functionParameterBindingStore = currentClass.getNextAvailableStore();
+			final int functionParameterBindingStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, functionParameterBindingStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, functionParameterBindingStore);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/FunctionParameterBinding", "getParameterSymbol", "()Ljcl/symbols/SymbolStruct;", false);
-			final int parameterSymbolToBindStore = currentClass.getNextAvailableStore();
+			final int parameterSymbolToBindStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, parameterSymbolToBindStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, functionParameterBindingStore);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/FunctionParameterBinding", "getParameterValue", "()Ljcl/LispStruct;", false);
-			final int parameterValueStore = currentClass.getNextAvailableStore();
+			final int parameterValueStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, parameterValueStore);
 
 			final Label parameterValuesCheckIfEnd = new Label();
@@ -371,7 +387,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			mv.visitVarInsn(Opcodes.ALOAD, parameterValueStore);
 			mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/compiler/real/struct/ValuesStruct");
-			final int parameterValuesStore = currentClass.getNextAvailableStore();
+			final int parameterValuesStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, parameterValuesStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, parameterValuesStore);
@@ -394,7 +410,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			mv.visitVarInsn(Opcodes.ALOAD, functionParameterBindingStore);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/FunctionParameterBinding", "isSpecial", "()Z", false);
-			final int parameterIsSpecialStore = currentClass.getNextAvailableStore();
+			final int parameterIsSpecialStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ISTORE, parameterIsSpecialStore);
 
 			final Label parameterIsSpecialCheckElse = new Label();
@@ -427,7 +443,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			prognCodeGenerator.generate(forms, classBuilder);
 			bindingStack.pop();
 
-			final int resultStore = currentClass.getNextAvailableStore();
+			final int resultStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, resultStore);
 
 			mv.visitLabel(tryBlockEnd);
@@ -435,7 +451,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			// START: Unbind Parameter values
 			mv.visitVarInsn(Opcodes.ALOAD, functionBindingsStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/List", "iterator", "()Ljava/util/Iterator;", true);
-			final int normalParameterUnbindingIteratorStore = currentClass.getNextAvailableStore();
+			final int normalParameterUnbindingIteratorStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, normalParameterUnbindingIteratorStore);
 
 			final Label normalParameterUnbindingIteratorLoopStart = new Label();
@@ -449,17 +465,17 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitVarInsn(Opcodes.ALOAD, normalParameterUnbindingIteratorStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "next", "()Ljava/lang/Object;", true);
 			mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/functions/FunctionParameterBinding");
-			final int normalParameterUnbindingStore = currentClass.getNextAvailableStore();
+			final int normalParameterUnbindingStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, normalParameterUnbindingStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, normalParameterUnbindingStore);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/FunctionParameterBinding", "getParameterSymbol", "()Ljcl/symbols/SymbolStruct;", false);
-			final int normalParameterSymbolToUnbindStore = currentClass.getNextAvailableStore();
+			final int normalParameterSymbolToUnbindStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, normalParameterSymbolToUnbindStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, normalParameterUnbindingStore);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/FunctionParameterBinding", "isSpecial", "()Z", false);
-			final int normalParameterUnbindingIsSpecialStore = currentClass.getNextAvailableStore();
+			final int normalParameterUnbindingIsSpecialStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ISTORE, normalParameterUnbindingIsSpecialStore);
 
 			final Label normalParameterUnbindingIsSpecialCheckElse = new Label();
@@ -488,7 +504,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingsStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "keySet", "()Ljava/util/Set;", true);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Set", "iterator", "()Ljava/util/Iterator;", true);
-			final int normalClosureFunctionUnbindingIteratorStore = currentClass.getNextAvailableStore();
+			final int normalClosureFunctionUnbindingIteratorStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, normalClosureFunctionUnbindingIteratorStore);
 
 			final Label normalClosureFunctionUnbindingIteratorLoopStart = new Label();
@@ -502,7 +518,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitVarInsn(Opcodes.ALOAD, normalClosureFunctionUnbindingIteratorStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "next", "()Ljava/lang/Object;", true);
 			mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/symbols/SymbolStruct");
-			final int normalClosureFunctionUnbindingMapKeySymbolStore = currentClass.getNextAvailableStore();
+			final int normalClosureFunctionUnbindingMapKeySymbolStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, normalClosureFunctionUnbindingMapKeySymbolStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, normalClosureFunctionUnbindingMapKeySymbolStore);
@@ -516,7 +532,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingsStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "keySet", "()Ljava/util/Set;", true);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Set", "iterator", "()Ljava/util/Iterator;", true);
-			final int normalClosureUnbindingIteratorStore = currentClass.getNextAvailableStore();
+			final int normalClosureUnbindingIteratorStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, normalClosureUnbindingIteratorStore);
 
 			final Label normalClosureSymbolUnbindingIteratorLoopStart = new Label();
@@ -530,7 +546,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitVarInsn(Opcodes.ALOAD, normalClosureUnbindingIteratorStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "next", "()Ljava/lang/Object;", true);
 			mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/symbols/SymbolStruct");
-			final int normalClosureUnbindingMapKeySymbolStore = currentClass.getNextAvailableStore();
+			final int normalClosureUnbindingMapKeySymbolStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, normalClosureUnbindingMapKeySymbolStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, normalClosureUnbindingMapKeySymbolStore);
@@ -542,7 +558,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			mv.visitJumpInsn(Opcodes.GOTO, finallyBlockEnd);
 
-			final int exceptionStore = currentClass.getNextAvailableStore();
+			final int exceptionStore = methodBuilder.getNextAvailableStore();
 
 			mv.visitLabel(catchErrorExceptionStart);
 			mv.visitVarInsn(Opcodes.ASTORE, exceptionStore);
@@ -562,7 +578,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			mv.visitLabel(catchBlockStart);
 
-			final int finallyExceptionStore = currentClass.getNextAvailableStore();
+			final int finallyExceptionStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, finallyExceptionStore);
 
 			mv.visitLabel(finallyBlockStart);
@@ -570,7 +586,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			// START: Unbind Parameter values
 			mv.visitVarInsn(Opcodes.ALOAD, functionBindingsStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/List", "iterator", "()Ljava/util/Iterator;", true);
-			final int exceptionParameterUnbindingIteratorStore = currentClass.getNextAvailableStore();
+			final int exceptionParameterUnbindingIteratorStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, exceptionParameterUnbindingIteratorStore);
 
 			final Label exceptionParameterUnbindingIteratorLoopStart = new Label();
@@ -584,17 +600,17 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitVarInsn(Opcodes.ALOAD, exceptionParameterUnbindingIteratorStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "next", "()Ljava/lang/Object;", true);
 			mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/functions/FunctionParameterBinding");
-			final int exceptionParameterUnbindingStore = currentClass.getNextAvailableStore();
+			final int exceptionParameterUnbindingStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, exceptionParameterUnbindingStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, exceptionParameterUnbindingStore);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/FunctionParameterBinding", "getParameterSymbol", "()Ljcl/symbols/SymbolStruct;", false);
-			final int exceptionParameterSymbolToUnbindStore = currentClass.getNextAvailableStore();
+			final int exceptionParameterSymbolToUnbindStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, exceptionParameterSymbolToUnbindStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, exceptionParameterUnbindingStore);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/FunctionParameterBinding", "isSpecial", "()Z", false);
-			final int exceptionParameterUnbindingIsSpecialStore = currentClass.getNextAvailableStore();
+			final int exceptionParameterUnbindingIsSpecialStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ISTORE, exceptionParameterUnbindingIsSpecialStore);
 
 			final Label exceptionParameterUnbindingIsSpecialCheckElse = new Label();
@@ -623,7 +639,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitVarInsn(Opcodes.ALOAD, closureFunctionBindingsStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "keySet", "()Ljava/util/Set;", true);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Set", "iterator", "()Ljava/util/Iterator;", true);
-			final int exceptionClosureFunctionUnbindingIteratorStore = currentClass.getNextAvailableStore();
+			final int exceptionClosureFunctionUnbindingIteratorStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, exceptionClosureFunctionUnbindingIteratorStore);
 
 			final Label exceptionClosureFunctionUnbindingIteratorLoopStart = new Label();
@@ -637,7 +653,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitVarInsn(Opcodes.ALOAD, exceptionClosureFunctionUnbindingIteratorStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "next", "()Ljava/lang/Object;", true);
 			mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/symbols/SymbolStruct");
-			final int exceptionClosureFunctionUnbindingMapKeySymbolStore = currentClass.getNextAvailableStore();
+			final int exceptionClosureFunctionUnbindingMapKeySymbolStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, exceptionClosureFunctionUnbindingMapKeySymbolStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, exceptionClosureFunctionUnbindingMapKeySymbolStore);
@@ -651,7 +667,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitVarInsn(Opcodes.ALOAD, closureSymbolBindingsStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "keySet", "()Ljava/util/Set;", true);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Set", "iterator", "()Ljava/util/Iterator;", true);
-			final int exceptionClosureUnbindingIteratorStore = currentClass.getNextAvailableStore();
+			final int exceptionClosureUnbindingIteratorStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, exceptionClosureUnbindingIteratorStore);
 
 			final Label exceptionClosureUnbindingIteratorLoopStart = new Label();
@@ -665,7 +681,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitVarInsn(Opcodes.ALOAD, exceptionClosureUnbindingIteratorStore);
 			mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Iterator", "next", "()Ljava/lang/Object;", true);
 			mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/symbols/SymbolStruct");
-			final int exceptionClosureUnbindingMapKeySymbolStore = currentClass.getNextAvailableStore();
+			final int exceptionClosureUnbindingMapKeySymbolStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, exceptionClosureUnbindingMapKeySymbolStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, exceptionClosureUnbindingMapKeySymbolStore);
@@ -686,20 +702,24 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitMaxs(-1, -1);
 			mv.visitEnd();
 
-			currentClass.resetStores();
+			methodBuilderStack.pop();
 		}
 		{
 			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, "getInitForm", "(Ljcl/symbols/SymbolStruct;)Ljcl/LispStruct;", "(Ljcl/symbols/SymbolStruct<*>;)Ljcl/LispStruct;", null);
-			currentClass.setMethodVisitor(mv);
+
+			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+			methodBuilderStack.push(methodBuilder);
+
 			mv.visitCode();
-			final int thisStore = currentClass.getNextAvailableStore();
-			final int symbolArgStore = currentClass.getNextAvailableStore();
+			final int thisStore = methodBuilder.getNextAvailableStore();
+			final int symbolArgStore = methodBuilder.getNextAvailableStore();
 
 			// NOTE: commented out to allow proper scoping of dynamic variables. I think we just don't worry about the binding stack here.
 //			bindingStack.push(lambdaEnvironment);
 
-			final int initFormVarPackageStore = currentClass.getNextAvailableStore();
-			final int initFormVarSymbolStore = currentClass.getNextAvailableStore();
+			final int initFormVarPackageStore = methodBuilder.getNextAvailableStore();
+			final int initFormVarSymbolStore = methodBuilder.getNextAvailableStore();
 
 			final List<OptionalBinding> optionalBindings = lambdaListBindings.getOptionalBindings();
 			for (final OptionalBinding optionalBinding : optionalBindings) {
@@ -802,14 +822,19 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitMaxs(-1, -1);
 			mv.visitEnd();
 
-			currentClass.resetStores();
+			methodBuilderStack.pop();
 		}
 		{
 			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_STATIC, "<clinit>", "()V", null, null);
-			currentClass.setMethodVisitor(mv);
-			mv.visitCode();
 
-			final int initFormStore = currentClass.getNextAvailableStore();
+			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+			methodBuilderStack.push(methodBuilder);
+
+			mv.visitCode();
+			final int thisStore = methodBuilder.getNextAvailableStore();
+
+			final int initFormStore = methodBuilder.getNextAvailableStore();
 
 			final List<LoadTimeValue> loadTimeValues = lambdaEnvironment.getLoadTimeValues();
 			for (final LoadTimeValue loadTimeValue : loadTimeValues) {
@@ -827,7 +852,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 				mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 				mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/compiler/real/struct/ValuesStruct");
-				final int valuesStore = currentClass.getNextAvailableStore();
+				final int valuesStore = methodBuilder.getNextAvailableStore();
 				mv.visitVarInsn(Opcodes.ASTORE, valuesStore);
 
 				mv.visitVarInsn(Opcodes.ALOAD, valuesStore);
@@ -844,6 +869,8 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			mv.visitMaxs(-1, -1);
 			mv.visitEnd();
+
+			methodBuilderStack.pop();
 		}
 		cw.visitEnd();
 
@@ -851,24 +878,27 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		if (!classStack.isEmpty()) {
 			final ClassDef previousClassDef = classStack.peek();
 			classBuilder.setCurrentClass(previousClassDef);
-			final MethodVisitor mv = previousClassDef.getMethodVisitor();
 
-			mv.visitTypeInsn(Opcodes.NEW, fileName);
-			mv.visitInsn(Opcodes.DUP);
+			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+			final JavaMethodBuilder previousMethodBuilder = methodBuilderStack.peek();
+			final MethodVisitor previousMv = previousMethodBuilder.getMethodVisitor();
+
+			previousMv.visitTypeInsn(Opcodes.NEW, fileName);
+			previousMv.visitInsn(Opcodes.DUP);
 
 			final Stack<Integer> closureStoreStack = previousClassDef.getClosureStoreStack();
 			if (closureStoreStack.isEmpty()) {
-				mv.visitInsn(Opcodes.ACONST_NULL);
+				previousMv.visitInsn(Opcodes.ACONST_NULL);
 			} else {
 				final Integer currentClosureStore = closureStoreStack.peek();
-				mv.visitVarInsn(Opcodes.ALOAD, currentClosureStore);
+				previousMv.visitVarInsn(Opcodes.ALOAD, currentClosureStore);
 			}
 
-			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, fileName, "<init>", "(Ljcl/functions/Closure;)V", false);
+			previousMv.visitMethodInsn(Opcodes.INVOKESPECIAL, fileName, "<init>", "(Ljcl/functions/Closure;)V", false);
 		}
 	}
 
-	private void generateRequiredBindings(final ClassDef currentClass, final OrdinaryLambdaListBindings lambdaListBindings,
+	private void generateRequiredBindings(final JavaMethodBuilder methodBuilder, final OrdinaryLambdaListBindings lambdaListBindings,
 	                                      final MethodVisitor mv, final int packageStore, final int requiredBindingsStore) {
 
 		mv.visitTypeInsn(Opcodes.NEW, "java/util/ArrayList");
@@ -876,8 +906,8 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/util/ArrayList", "<init>", "()V", false);
 		mv.visitVarInsn(Opcodes.ASTORE, requiredBindingsStore);
 
-		final int requiredSymbolStore = currentClass.getNextAvailableStore();
-		final int requiredBindingStore = currentClass.getNextAvailableStore();
+		final int requiredSymbolStore = methodBuilder.getNextAvailableStore();
+		final int requiredBindingStore = methodBuilder.getNextAvailableStore();
 
 		final List<RequiredBinding> requiredBindings = lambdaListBindings.getRequiredBindings();
 		for (final RequiredBinding requiredBinding : requiredBindings) {
@@ -914,7 +944,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 	}
 
-	private void generateOptionalBindings(final JavaClassBuilder classBuilder, final ClassDef currentClass,
+	private void generateOptionalBindings(final JavaClassBuilder classBuilder, final JavaMethodBuilder methodBuilder,
 	                                      final OrdinaryLambdaListBindings lambdaListBindings, final MethodVisitor mv,
 	                                      final int packageStore, final int optionalBindingsStore) {
 
@@ -923,11 +953,11 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/util/ArrayList", "<init>", "()V", false);
 		mv.visitVarInsn(Opcodes.ASTORE, optionalBindingsStore);
 
-		final int optionalSymbolStore = currentClass.getNextAvailableStore();
-		final int optionalInitFormStore = currentClass.getNextAvailableStore();
-		final int optionalSuppliedPSymbolStore = currentClass.getNextAvailableStore();
-		final int optionalSuppliedPStore = currentClass.getNextAvailableStore();
-		final int optionalBindingStore = currentClass.getNextAvailableStore();
+		final int optionalSymbolStore = methodBuilder.getNextAvailableStore();
+		final int optionalInitFormStore = methodBuilder.getNextAvailableStore();
+		final int optionalSuppliedPSymbolStore = methodBuilder.getNextAvailableStore();
+		final int optionalSuppliedPStore = methodBuilder.getNextAvailableStore();
+		final int optionalBindingStore = methodBuilder.getNextAvailableStore();
 
 		final List<OptionalBinding> optionalBindings = lambdaListBindings.getOptionalBindings();
 		for (final OptionalBinding optionalBinding : optionalBindings) {
@@ -1003,10 +1033,10 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 	}
 
-	private void generateRestBinding(final ClassDef currentClass, final OrdinaryLambdaListBindings lambdaListBindings,
+	private void generateRestBinding(final JavaMethodBuilder methodBuilder, final OrdinaryLambdaListBindings lambdaListBindings,
 	                                 final MethodVisitor mv, final int packageStore, final int restBindingStore) {
 
-		final int restSymbolStore = currentClass.getNextAvailableStore();
+		final int restSymbolStore = methodBuilder.getNextAvailableStore();
 
 		final RestBinding restBinding = lambdaListBindings.getRestBinding();
 		if (restBinding == null) {
@@ -1041,7 +1071,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 	}
 
-	private void generateKeyBindings(final JavaClassBuilder classBuilder, final ClassDef currentClass,
+	private void generateKeyBindings(final JavaClassBuilder classBuilder, final JavaMethodBuilder methodBuilder,
 	                                 final OrdinaryLambdaListBindings lambdaListBindings, final MethodVisitor mv,
 	                                 final int packageStore, final int keyBindingsStore) {
 
@@ -1050,12 +1080,12 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/util/ArrayList", "<init>", "()V", false);
 		mv.visitVarInsn(Opcodes.ASTORE, keyBindingsStore);
 
-		final int keySymbolStore = currentClass.getNextAvailableStore();
-		final int keyInitFormStore = currentClass.getNextAvailableStore();
-		final int keyNameStore = currentClass.getNextAvailableStore();
-		final int keySuppliedPSymbolStore = currentClass.getNextAvailableStore();
-		final int keySuppliedPStore = currentClass.getNextAvailableStore();
-		final int keyBindingStore = currentClass.getNextAvailableStore();
+		final int keySymbolStore = methodBuilder.getNextAvailableStore();
+		final int keyInitFormStore = methodBuilder.getNextAvailableStore();
+		final int keyNameStore = methodBuilder.getNextAvailableStore();
+		final int keySuppliedPSymbolStore = methodBuilder.getNextAvailableStore();
+		final int keySuppliedPStore = methodBuilder.getNextAvailableStore();
+		final int keyBindingStore = methodBuilder.getNextAvailableStore();
 
 		final List<KeyBinding> keyBindings = lambdaListBindings.getKeyBindings();
 		for (final KeyBinding keyBinding : keyBindings) {
@@ -1159,7 +1189,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 	}
 
-	private void generateAuxBindings(final JavaClassBuilder classBuilder, final ClassDef currentClass,
+	private void generateAuxBindings(final JavaClassBuilder classBuilder, final JavaMethodBuilder methodBuilder,
 	                                 final OrdinaryLambdaListBindings lambdaListBindings, final MethodVisitor mv,
 	                                 final int packageStore, final int auxBindingsStore) {
 
@@ -1168,9 +1198,9 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/util/ArrayList", "<init>", "()V", false);
 		mv.visitVarInsn(Opcodes.ASTORE, auxBindingsStore);
 
-		final int auxSymbolStore = currentClass.getNextAvailableStore();
-		final int auxInitFormStore = currentClass.getNextAvailableStore();
-		final int auxBindingStore = currentClass.getNextAvailableStore();
+		final int auxSymbolStore = methodBuilder.getNextAvailableStore();
+		final int auxInitFormStore = methodBuilder.getNextAvailableStore();
+		final int auxBindingStore = methodBuilder.getNextAvailableStore();
 
 		final List<AuxBinding> auxBindings = lambdaListBindings.getAuxBindings();
 		for (final AuxBinding auxBinding : auxBindings) {

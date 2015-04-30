@@ -1,8 +1,11 @@
 package jcl.compiler.real.icg.generator.specialoperator;
 
+import java.util.Stack;
+
 import jcl.LispStruct;
 import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
@@ -33,12 +36,16 @@ public class UnwindProtectCodeGenerator implements CodeGenerator<UnwindProtectSt
 		final String fileName = currentClass.getFileName();
 
 		final ClassWriter cw = currentClass.getClassWriter();
-		final MethodVisitor previousMv = currentClass.getMethodVisitor();
 
 		final String unwindProtectMethodName = "unwindProtect_" + System.nanoTime();
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, unwindProtectMethodName, "()Ljcl/LispStruct;", null, null);
-		currentClass.setMethodVisitor(mv);
+
+		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+		methodBuilderStack.push(methodBuilder);
+
 		mv.visitCode();
+		final int thisStore = methodBuilder.getNextAvailableStore();
 
 		final Label tryBlockStart = new Label();
 		final Label tryBlockEnd = new Label();
@@ -48,7 +55,7 @@ public class UnwindProtectCodeGenerator implements CodeGenerator<UnwindProtectSt
 
 		mv.visitLabel(tryBlockStart);
 		formGenerator.generate(protectedForm, classBuilder);
-		final int protectedFormStore = currentClass.getNextAvailableStore();
+		final int protectedFormStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, protectedFormStore);
 
 		mv.visitLabel(tryBlockEnd);
@@ -57,7 +64,7 @@ public class UnwindProtectCodeGenerator implements CodeGenerator<UnwindProtectSt
 		mv.visitJumpInsn(Opcodes.GOTO, catchBlockEnd);
 
 		mv.visitLabel(catchBlockStart);
-		final int exceptionStore = currentClass.getNextAvailableStore();
+		final int exceptionStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, exceptionStore);
 
 		prognCodeGenerator.generate(cleanupForms, classBuilder);
@@ -74,7 +81,10 @@ public class UnwindProtectCodeGenerator implements CodeGenerator<UnwindProtectSt
 		mv.visitMaxs(-1, -1);
 		mv.visitEnd();
 
-		currentClass.setMethodVisitor(previousMv);
+		methodBuilderStack.pop();
+
+		final JavaMethodBuilder previousMethodBuilder = methodBuilderStack.peek();
+		final MethodVisitor previousMv = previousMethodBuilder.getMethodVisitor();
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, 0);
 		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, unwindProtectMethodName, "()Ljcl/LispStruct;", false);

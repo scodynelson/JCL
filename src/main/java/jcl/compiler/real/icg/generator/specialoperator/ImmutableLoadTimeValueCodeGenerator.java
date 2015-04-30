@@ -6,6 +6,7 @@ package jcl.compiler.real.icg.generator.specialoperator;
 
 import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.struct.specialoperator.ImmutableLoadTimeValueStruct;
 import org.objectweb.asm.MethodVisitor;
@@ -21,7 +22,9 @@ public class ImmutableLoadTimeValueCodeGenerator implements CodeGenerator<Immuta
 		final String uniqueLTVId = input.getUniqueLTVId();
 
 		final ClassDef currentClass = classBuilder.getCurrentClass();
-		final MethodVisitor mv = currentClass.getMethodVisitor();
+
+		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		final String fileName = currentClass.getFileName();
 

@@ -4,8 +4,8 @@
 
 package jcl.compiler.real.icg.generator.specialoperator;
 
-import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.simple.SymbolCodeGeneratorUtil;
 import jcl.compiler.real.struct.specialoperator.SymbolCompilerFunctionStruct;
@@ -22,8 +22,8 @@ public class SymbolFunctionCodeGenerator implements CodeGenerator<SymbolCompiler
 
 		final SymbolStruct<?> functionSymbol = input.getFunctionSymbol();
 
-		final ClassDef currentClass = classBuilder.getCurrentClass();
-		final MethodVisitor mv = currentClass.getMethodVisitor();
+		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		final int functionSymbolStore = SymbolCodeGeneratorUtil.generate(functionSymbol, classBuilder);
 

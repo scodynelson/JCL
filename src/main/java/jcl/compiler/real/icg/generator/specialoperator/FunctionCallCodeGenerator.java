@@ -3,8 +3,8 @@ package jcl.compiler.real.icg.generator.specialoperator;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.icg.generator.simple.SymbolCodeGeneratorUtil;
@@ -28,11 +28,11 @@ public class FunctionCallCodeGenerator implements CodeGenerator<FunctionCallStru
 		final SymbolStruct<?> functionSymbol = input.getFunctionSymbol();
 		final List<LispStruct> arguments = input.getArguments();
 
-		final ClassDef currentClass = classBuilder.getCurrentClass();
-		final MethodVisitor mv = currentClass.getMethodVisitor();
+		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		if (recursiveCall) {
-			tailCallGenerate(currentClass, mv, classBuilder, arguments);
+			tailCallGenerate(methodBuilder, mv, classBuilder, arguments);
 		} else {
 			final int functionSymbolStore = SymbolCodeGeneratorUtil.generate(functionSymbol, classBuilder);
 
@@ -41,21 +41,21 @@ public class FunctionCallCodeGenerator implements CodeGenerator<FunctionCallStru
 //				final FletEnvironment fletEnvironment = (FletEnvironment) currentEnvironment;
 //				fletGenerate(currentClass, mv, classBuilder, fletEnvironment, functionSymbol, arguments, functionSymbolStore);
 //			} else {
-				nonFletGenerate(currentClass, mv, classBuilder, arguments, functionSymbolStore);
+				nonFletGenerate(methodBuilder, mv, classBuilder, arguments, functionSymbolStore);
 //			}
 		}
 	}
 
-	private void tailCallGenerate(final ClassDef currentClass, final MethodVisitor mv, final JavaClassBuilder classBuilder,
+	private void tailCallGenerate(final JavaMethodBuilder methodBuilder, final MethodVisitor mv, final JavaClassBuilder classBuilder,
 	                              final List<LispStruct> arguments) {
 
 		final int numberOfArguments = arguments.size();
 		mv.visitLdcInsn(numberOfArguments);
 		mv.visitTypeInsn(Opcodes.ANEWARRAY, "jcl/LispStruct");
-		final int argumentsArrayStore = currentClass.getNextAvailableStore();
+		final int argumentsArrayStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, argumentsArrayStore);
 
-		final int argumentStore = currentClass.getNextAvailableStore();
+		final int argumentStore = methodBuilder.getNextAvailableStore();
 
 		for (int index = 0; index < numberOfArguments; index++) {
 			final LispStruct argument = arguments.get(index);
@@ -73,21 +73,21 @@ public class FunctionCallCodeGenerator implements CodeGenerator<FunctionCallStru
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/FunctionStruct", "apply", "([Ljcl/LispStruct;)Ljcl/LispStruct;", false);
 	}
 
-	private void nonFletGenerate(final ClassDef currentClass, final MethodVisitor mv, final JavaClassBuilder classBuilder,
+	private void nonFletGenerate(final JavaMethodBuilder methodBuilder, final MethodVisitor mv, final JavaClassBuilder classBuilder,
 	                             final List<LispStruct> arguments, final int functionSymbolStore) {
 
 		mv.visitVarInsn(Opcodes.ALOAD, functionSymbolStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "getFunction", "()Ljcl/functions/FunctionStruct;", false);
-		final int functionStore = currentClass.getNextAvailableStore();
+		final int functionStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, functionStore);
 
 		final int numberOfArguments = arguments.size();
 		mv.visitLdcInsn(numberOfArguments);
 		mv.visitTypeInsn(Opcodes.ANEWARRAY, "jcl/LispStruct");
-		final int argumentsArrayStore = currentClass.getNextAvailableStore();
+		final int argumentsArrayStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, argumentsArrayStore);
 
-		final int argumentStore = currentClass.getNextAvailableStore();
+		final int argumentStore = methodBuilder.getNextAvailableStore();
 
 		for (int index = 0; index < numberOfArguments; index++) {
 			final LispStruct argument = arguments.get(index);

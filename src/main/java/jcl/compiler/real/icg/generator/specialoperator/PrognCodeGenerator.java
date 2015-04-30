@@ -4,8 +4,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.icg.generator.simple.NullCodeGenerator;
@@ -28,8 +28,8 @@ public class PrognCodeGenerator implements CodeGenerator<PrognStruct> {
 	@Override
 	public void generate(final PrognStruct input, final JavaClassBuilder classBuilder) {
 
-		final ClassDef currentClass = classBuilder.getCurrentClass();
-		final MethodVisitor mv = currentClass.getMethodVisitor();
+		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		final List<LispStruct> forms = input.getForms();
 		if (forms.isEmpty()) {

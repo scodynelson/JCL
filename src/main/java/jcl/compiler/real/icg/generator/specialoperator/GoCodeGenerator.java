@@ -7,6 +7,7 @@ import java.util.Stack;
 import jcl.LispStruct;
 import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.struct.specialoperator.go.GoStruct;
 import jcl.conditions.exceptions.ProgramErrorException;
@@ -30,19 +31,23 @@ public class GoCodeGenerator implements CodeGenerator<GoStruct<?>> {
 		final String fileName = currentClass.getFileName();
 
 		final ClassWriter cw = currentClass.getClassWriter();
-		final MethodVisitor previousMv = currentClass.getMethodVisitor();
 
 		final String goMethodName = "go_" + System.nanoTime();
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, goMethodName, "()Ljcl/LispStruct;", null, null);
-		currentClass.setMethodVisitor(mv);
+
+		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+		methodBuilderStack.push(methodBuilder);
+
 		mv.visitCode();
+		final int thisStore = methodBuilder.getNextAvailableStore();
 
 		final Stack<Set<TagbodyLabel>> tagbodyLabelStack = classBuilder.getTagbodyLabelStack();
 		final TagbodyLabel tagbodyLabel = getTagbodyLabel(tagbodyLabelStack, input);
 
 		final int index = tagbodyLabel.getIndex();
 		mv.visitLdcInsn(index);
-		final int tagIndexStore = currentClass.getNextAvailableStore();
+		final int tagIndexStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ISTORE, tagIndexStore);
 
 		mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/icg/generator/specialoperator/exception/GoException");
@@ -54,7 +59,10 @@ public class GoCodeGenerator implements CodeGenerator<GoStruct<?>> {
 		mv.visitMaxs(-1, -1);
 		mv.visitEnd();
 
-		currentClass.setMethodVisitor(previousMv);
+		methodBuilderStack.pop();
+
+		final JavaMethodBuilder previousMethodBuilder = methodBuilderStack.peek();
+		final MethodVisitor previousMv = previousMethodBuilder.getMethodVisitor();
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, 0);
 		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, goMethodName, "()Ljcl/LispStruct;", false);

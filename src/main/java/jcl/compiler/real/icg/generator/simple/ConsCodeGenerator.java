@@ -5,12 +5,12 @@
 package jcl.compiler.real.icg.generator.simple;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
-import jcl.compiler.real.icg.generator.GeneratorUtils;
 import jcl.compiler.real.icg.generator.GenerationConstants;
+import jcl.compiler.real.icg.generator.GeneratorUtils;
 import jcl.lists.ConsStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -34,15 +34,15 @@ public class ConsCodeGenerator implements CodeGenerator<ConsStruct> {
 		final LispStruct car = input.getCar();
 		final LispStruct cdr = input.getCdr();
 
-		final ClassDef currentClass = classBuilder.getCurrentClass();
-		final MethodVisitor mv = currentClass.getMethodVisitor();
+		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		formGenerator.generate(car, classBuilder);
-		final int carStore = currentClass.getNextAvailableStore();
+		final int carStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, carStore);
 
 		formGenerator.generate(cdr, classBuilder);
-		final int cdrStore = currentClass.getNextAvailableStore();
+		final int cdrStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, cdrStore);
 
 		mv.visitTypeInsn(Opcodes.NEW, CONS_STRUCT_NAME);

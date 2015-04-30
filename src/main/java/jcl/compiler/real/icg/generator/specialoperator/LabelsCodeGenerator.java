@@ -10,6 +10,7 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.LabelsEnvironment;
 import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.struct.specialoperator.CompilerFunctionStruct;
@@ -43,12 +44,16 @@ public class LabelsCodeGenerator implements CodeGenerator<LabelsStruct> {
 		final String fileName = currentClass.getFileName();
 
 		final ClassWriter cw = currentClass.getClassWriter();
-		final MethodVisitor previousMv = currentClass.getMethodVisitor();
 
 		final String labelsMethodName = "labels_" + System.nanoTime();
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, labelsMethodName, "()Ljcl/LispStruct;", null, null);
-		currentClass.setMethodVisitor(mv);
+
+		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+		methodBuilderStack.push(methodBuilder);
+
 		mv.visitCode();
+		final int thisStore = methodBuilder.getNextAvailableStore();
 
 		final Label tryBlockStart = new Label();
 		final Label tryBlockEnd = new Label();
@@ -56,11 +61,11 @@ public class LabelsCodeGenerator implements CodeGenerator<LabelsStruct> {
 		final Label catchBlockEnd = new Label();
 		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, null);
 
-		final Integer closureFunctionBindingsStore = currentClass.getNextAvailableStore();
+		final Integer closureFunctionBindingsStore = methodBuilder.getNextAvailableStore();
 
 		mv.visitVarInsn(Opcodes.ALOAD, 0);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/FunctionStruct", "getClosure", "()Ljcl/functions/Closure;", false);
-		final Integer closureStore = currentClass.getNextAvailableStore();
+		final Integer closureStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, closureStore);
 
 		mv.visitInsn(Opcodes.ACONST_NULL);
@@ -76,7 +81,7 @@ public class LabelsCodeGenerator implements CodeGenerator<LabelsStruct> {
 
 		mv.visitLabel(closureNullCheckIfEnd);
 
-		final int packageStore = currentClass.getNextAvailableStore();
+		final int packageStore = methodBuilder.getNextAvailableStore();
 
 		final Map<Integer, Integer> functionStoresToBind = new HashMap<>();
 
@@ -96,11 +101,11 @@ public class LabelsCodeGenerator implements CodeGenerator<LabelsStruct> {
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
 			// NOTE: we have to get a new 'functionSymbolStore' for each var so we can properly unbind the expansions later
-			final int functionSymbolStore = currentClass.getNextAvailableStore();
+			final int functionSymbolStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, functionSymbolStore);
 
 			formGenerator.generate(initForm, classBuilder);
-			final int initFormStore = currentClass.getNextAvailableStore();
+			final int initFormStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
 
 			functionStoresToBind.put(functionSymbolStore, initFormStore);
@@ -135,7 +140,7 @@ public class LabelsCodeGenerator implements CodeGenerator<LabelsStruct> {
 		prognCodeGenerator.generate(forms, classBuilder);
 		bindingStack.pop();
 
-		final int resultStore = currentClass.getNextAvailableStore();
+		final int resultStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, resultStore);
 
 		final Set<Integer> varSymbolStores = functionStoresToBind.keySet();
@@ -145,7 +150,7 @@ public class LabelsCodeGenerator implements CodeGenerator<LabelsStruct> {
 		mv.visitJumpInsn(Opcodes.GOTO, catchBlockEnd);
 
 		mv.visitLabel(catchBlockStart);
-		final int exceptionStore = currentClass.getNextAvailableStore();
+		final int exceptionStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, exceptionStore);
 
 		generateFinallyCode(mv, varSymbolStores);
@@ -161,7 +166,10 @@ public class LabelsCodeGenerator implements CodeGenerator<LabelsStruct> {
 		mv.visitMaxs(-1, -1);
 		mv.visitEnd();
 
-		currentClass.setMethodVisitor(previousMv);
+		methodBuilderStack.pop();
+
+		final JavaMethodBuilder previousMethodBuilder = methodBuilderStack.peek();
+		final MethodVisitor previousMv = previousMethodBuilder.getMethodVisitor();
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, 0);
 		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, labelsMethodName, "()Ljcl/LispStruct;", false);

@@ -1,10 +1,12 @@
 package jcl.compiler.real.icg.generator.specialoperator;
 
 import java.util.List;
+import java.util.Stack;
 
 import jcl.LispStruct;
 import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.struct.specialoperator.CompilerFunctionStruct;
@@ -34,15 +36,19 @@ public class MultipleValueCallCodeGenerator implements CodeGenerator<MultipleVal
 		final String fileName = currentClass.getFileName();
 
 		final ClassWriter cw = currentClass.getClassWriter();
-		final MethodVisitor previousMv = currentClass.getMethodVisitor();
 
 		final String multipleValueCallMethodName = "multipleValueCall_" + System.nanoTime();
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, multipleValueCallMethodName, "()Ljcl/LispStruct;", null, null);
-		currentClass.setMethodVisitor(mv);
+
+		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+		methodBuilderStack.push(methodBuilder);
+
 		mv.visitCode();
+		final int thisStore = methodBuilder.getNextAvailableStore();
 
 		formGenerator.generate(functionForm, classBuilder);
-		final int functionFormStore = currentClass.getNextAvailableStore();
+		final int functionFormStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, functionFormStore);
 
 		final Label functionCheckIfEnd = new Label();
@@ -70,19 +76,19 @@ public class MultipleValueCallCodeGenerator implements CodeGenerator<MultipleVal
 
 		mv.visitVarInsn(Opcodes.ALOAD, functionFormStore);
 		mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/functions/FunctionStruct");
-		final int realFunctionFormStore = currentClass.getNextAvailableStore();
+		final int realFunctionFormStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, realFunctionFormStore);
 
 		mv.visitTypeInsn(Opcodes.NEW, "java/util/ArrayList");
 		mv.visitInsn(Opcodes.DUP);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/util/ArrayList", "<init>", "()V", false);
-		final int argsListStore = currentClass.getNextAvailableStore();
+		final int argsListStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, argsListStore);
 
-		final int formStore = currentClass.getNextAvailableStore();
-		final int valuesListStore = currentClass.getNextAvailableStore();
-		final int iteratorStore = currentClass.getNextAvailableStore();
-		final int valueStore = currentClass.getNextAvailableStore();
+		final int formStore = methodBuilder.getNextAvailableStore();
+		final int valuesListStore = methodBuilder.getNextAvailableStore();
+		final int iteratorStore = methodBuilder.getNextAvailableStore();
+		final int valueStore = methodBuilder.getNextAvailableStore();
 
 		for (final LispStruct form : forms) {
 			final Label elseStart = new Label();
@@ -139,7 +145,7 @@ public class MultipleValueCallCodeGenerator implements CodeGenerator<MultipleVal
 		mv.visitVarInsn(Opcodes.ALOAD, argsListStore);
 		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/List", "size", "()I", true);
 		mv.visitTypeInsn(Opcodes.ANEWARRAY, "jcl/LispStruct");
-		final int argsStore = currentClass.getNextAvailableStore();
+		final int argsStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, argsStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, argsListStore);
@@ -157,7 +163,10 @@ public class MultipleValueCallCodeGenerator implements CodeGenerator<MultipleVal
 		mv.visitMaxs(-1, -1);
 		mv.visitEnd();
 
-		currentClass.setMethodVisitor(previousMv);
+		methodBuilderStack.pop();
+
+		final JavaMethodBuilder previousMethodBuilder = methodBuilderStack.peek();
+		final MethodVisitor previousMv = previousMethodBuilder.getMethodVisitor();
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, 0);
 		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, multipleValueCallMethodName, "()Ljcl/LispStruct;", false);

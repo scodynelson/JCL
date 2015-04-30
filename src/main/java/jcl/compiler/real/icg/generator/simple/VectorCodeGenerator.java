@@ -8,8 +8,8 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.arrays.VectorStruct;
-import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.GenerationConstants;
 import jcl.compiler.real.icg.generator.GeneratorUtils;
@@ -33,8 +33,8 @@ public class VectorCodeGenerator implements CodeGenerator<VectorStruct<LispStruc
 	@Override
 	public void generate(final VectorStruct<LispStruct> input, final JavaClassBuilder classBuilder) {
 
-		final ClassDef currentClass = classBuilder.getCurrentClass();
-		final MethodVisitor mv = currentClass.getMethodVisitor();
+		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		mv.visitTypeInsn(Opcodes.NEW, GenerationConstants.JAVA_ARRAY_LIST_NAME);
 		mv.visitInsn(Opcodes.DUP);
@@ -43,10 +43,10 @@ public class VectorCodeGenerator implements CodeGenerator<VectorStruct<LispStruc
 				GenerationConstants.INIT_METHOD_NAME,
 				GenerationConstants.JAVA_ARRAY_LIST_INIT_DESC,
 				false);
-		final int contentsStore = currentClass.getNextAvailableStore();
+		final int contentsStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, contentsStore);
 
-		final int contentStore = currentClass.getNextAvailableStore();
+		final int contentStore = methodBuilder.getNextAvailableStore();
 
 		final List<LispStruct> contents = input.getContents();
 		for (final LispStruct content : contents) {

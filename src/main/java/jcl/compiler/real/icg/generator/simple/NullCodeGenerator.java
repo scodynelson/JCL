@@ -4,8 +4,8 @@
 
 package jcl.compiler.real.icg.generator.simple;
 
-import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.GenerationConstants;
 import jcl.lists.NullStruct;
@@ -24,8 +24,8 @@ public class NullCodeGenerator implements CodeGenerator<NullStruct> {
 	@Override
 	public void generate(final NullStruct input, final JavaClassBuilder classBuilder) {
 
-		final ClassDef currentClass = classBuilder.getCurrentClass();
-		final MethodVisitor mv = currentClass.getMethodVisitor();
+		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		mv.visitFieldInsn(Opcodes.GETSTATIC, NULL_STRUCT_NAME, GenerationConstants.SINGLETON_INSTANCE, NULL_STRUCT_DESC);
 	}

@@ -2,11 +2,11 @@ package jcl.compiler.real.icg.generator.simple;
 
 import java.math.BigInteger;
 
-import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
-import jcl.compiler.real.icg.generator.GeneratorUtils;
 import jcl.compiler.real.icg.generator.GenerationConstants;
+import jcl.compiler.real.icg.generator.GeneratorUtils;
 import jcl.numbers.IntegerStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -27,8 +27,8 @@ public class IntegerCodeGenerator implements CodeGenerator<IntegerStruct> {
 	@Override
 	public void generate(final IntegerStruct input, final JavaClassBuilder classBuilder) {
 
-		final ClassDef currentClass = classBuilder.getCurrentClass();
-		final MethodVisitor mv = currentClass.getMethodVisitor();
+		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		mv.visitTypeInsn(Opcodes.NEW, BIG_INTEGER_NAME);
 		mv.visitInsn(Opcodes.DUP);
@@ -37,7 +37,7 @@ public class IntegerCodeGenerator implements CodeGenerator<IntegerStruct> {
 		final String integerString = bigInteger.toString();
 		mv.visitLdcInsn(integerString);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, BIG_INTEGER_NAME, GenerationConstants.INIT_METHOD_NAME, BIG_INTEGER_INIT_DESC, false);
-		final int bigIntegerStore = currentClass.getNextAvailableStore();
+		final int bigIntegerStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, bigIntegerStore);
 
 		mv.visitTypeInsn(Opcodes.NEW, INTEGER_STRUCT_NAME);

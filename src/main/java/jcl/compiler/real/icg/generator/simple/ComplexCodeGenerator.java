@@ -1,11 +1,11 @@
 package jcl.compiler.real.icg.generator.simple;
 
-import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
-import jcl.compiler.real.icg.generator.GeneratorUtils;
 import jcl.compiler.real.icg.generator.GenerationConstants;
+import jcl.compiler.real.icg.generator.GeneratorUtils;
 import jcl.numbers.ComplexStruct;
 import jcl.numbers.RealStruct;
 import org.objectweb.asm.MethodVisitor;
@@ -30,15 +30,15 @@ public class ComplexCodeGenerator implements CodeGenerator<ComplexStruct> {
 		final RealStruct real = input.getReal();
 		final RealStruct imaginary = input.getImaginary();
 
-		final ClassDef currentClass = classBuilder.getCurrentClass();
-		final MethodVisitor mv = currentClass.getMethodVisitor();
+		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		formGenerator.generate(real, classBuilder);
-		final int realStore = currentClass.getNextAvailableStore();
+		final int realStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, realStore);
 
 		formGenerator.generate(imaginary, classBuilder);
-		final int imaginaryStore = currentClass.getNextAvailableStore();
+		final int imaginaryStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, imaginaryStore);
 
 		mv.visitTypeInsn(Opcodes.NEW, COMPLEX_STRUCT_NAME);

@@ -7,6 +7,7 @@ import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.struct.specialoperator.SetqStruct;
@@ -33,21 +34,25 @@ public class SetqCodeGenerator implements CodeGenerator<SetqStruct> {
 		final String fileName = currentClass.getFileName();
 
 		final ClassWriter cw = currentClass.getClassWriter();
-		final MethodVisitor previousMv = currentClass.getMethodVisitor();
 
 		final String setqMethodName = "setq_" + System.nanoTime();
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, setqMethodName, "()Ljcl/LispStruct;", null, null);
-		currentClass.setMethodVisitor(mv);
+
+		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+		methodBuilderStack.push(methodBuilder);
+
 		mv.visitCode();
+		final int thisStore = methodBuilder.getNextAvailableStore();
 
 		final Stack<Environment> bindingStack = classBuilder.getBindingStack();
 		final Environment currentEnvironment = bindingStack.peek();
 
-		final Integer closureSymbolBindingsStore = currentClass.getNextAvailableStore();
+		final Integer closureSymbolBindingsStore = methodBuilder.getNextAvailableStore();
 
 		mv.visitVarInsn(Opcodes.ALOAD, 0);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/FunctionStruct", "getClosure", "()Ljcl/functions/Closure;", false);
-		final Integer closureStore = currentClass.getNextAvailableStore();
+		final Integer closureStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, closureStore);
 
 		mv.visitInsn(Opcodes.ACONST_NULL);
@@ -63,9 +68,9 @@ public class SetqCodeGenerator implements CodeGenerator<SetqStruct> {
 
 		mv.visitLabel(closureNullCheckIfEnd);
 
-		final int packageStore = currentClass.getNextAvailableStore();
-		final int symbolStore = currentClass.getNextAvailableStore();
-		final int initFormStore = currentClass.getNextAvailableStore();
+		final int packageStore = methodBuilder.getNextAvailableStore();
+		final int symbolStore = methodBuilder.getNextAvailableStore();
+		final int initFormStore = methodBuilder.getNextAvailableStore();
 
 		for (final SetqStruct.SetqPair setqPair : setqPairs) {
 			final SymbolStruct<?> var = setqPair.getVar();
@@ -95,7 +100,7 @@ public class SetqCodeGenerator implements CodeGenerator<SetqStruct> {
 
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 			mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/compiler/real/struct/ValuesStruct");
-			final int valuesStore = currentClass.getNextAvailableStore();
+			final int valuesStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, valuesStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, valuesStore);
@@ -138,7 +143,10 @@ public class SetqCodeGenerator implements CodeGenerator<SetqStruct> {
 		mv.visitMaxs(-1, -1);
 		mv.visitEnd();
 
-		currentClass.setMethodVisitor(previousMv);
+		methodBuilderStack.pop();
+
+		final JavaMethodBuilder previousMethodBuilder = methodBuilderStack.peek();
+		final MethodVisitor previousMv = previousMethodBuilder.getMethodVisitor();
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, 0);
 		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, setqMethodName, "()Ljcl/LispStruct;", false);

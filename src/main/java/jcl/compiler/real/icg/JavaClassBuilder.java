@@ -9,7 +9,6 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.icg.generator.specialoperator.TagbodyLabel;
-import jcl.lists.ListStruct;
 import jcl.symbols.SymbolStruct;
 
 public class JavaClassBuilder {
@@ -18,9 +17,7 @@ public class JavaClassBuilder {
 
 	private final Stack<ClassDef> classStack = new Stack<>();
 
-	// this is the current binding environment. It always matches the value
-	// on top of the binding stack
-	private Environment bindingEnvironment;
+	private final Stack<JavaMethodBuilder> methodBuilderStack = new Stack<>();
 
 	// Whenever a binding environment is encountered, it is pushed on the stack and
 	// bindingEnvironment is set to the new environment. When that binding is no
@@ -28,37 +25,19 @@ public class JavaClassBuilder {
 	// set to the new top of stack
 	private Stack<Environment> bindingStack;
 
-	// make a stack of current class names
-	private Stack<String> classNames;
-
-	private boolean allowMultipleValues;
-
 	private Stack<Set<TagbodyLabel>> tagbodyLabelStack;
-
-	private ListStruct sourceFile;
-
-	private int LineNumber;
 
 	private int tagCounter;
 
-	private boolean MacroLambda;
-
 	private ClassDef currentClass;
-
-	private boolean acceptsMultipleValues;
 
 	private final Map<SymbolStruct<?>, Integer> fletFunctionStoresToBind = new HashMap<>();
 
 	public JavaClassBuilder() {
-		MacroLambda = false;
-		bindingEnvironment = Environment.NULL;
 		bindingStack = new Stack<>();
 		bindingStack.push(Environment.NULL);
-		classNames = new Stack<>();
 		tagCounter = 0;
-		allowMultipleValues = false;
 		tagbodyLabelStack = new Stack<>();
-		acceptsMultipleValues = false;
 	}
 
 	public Environment getBindingEnvironment() {
@@ -73,22 +52,6 @@ public class JavaClassBuilder {
 		this.bindingStack = bindingStack;
 	}
 
-	public Stack<String> getClassNames() {
-		return classNames;
-	}
-
-	public void setClassNames(final Stack<String> classNames) {
-		this.classNames = classNames;
-	}
-
-	public boolean isAllowMultipleValues() {
-		return allowMultipleValues;
-	}
-
-	public void setAllowMultipleValues(final boolean allowMultipleValues) {
-		this.allowMultipleValues = allowMultipleValues;
-	}
-
 	public Stack<Set<TagbodyLabel>> getTagbodyLabelStack() {
 		return tagbodyLabelStack;
 	}
@@ -97,32 +60,8 @@ public class JavaClassBuilder {
 		this.tagbodyLabelStack = tagbodyLabelStack;
 	}
 
-	public ListStruct getSourceFile() {
-		return sourceFile;
-	}
-
-	public void setSourceFile(final ListStruct sourceFile) {
-		this.sourceFile = sourceFile;
-	}
-
-	public int getLineNumber() {
-		return LineNumber;
-	}
-
-	public void setLineNumber(final int lineNumber) {
-		LineNumber = lineNumber;
-	}
-
 	public int getNextTagbodyTagIndex() {
 		return tagCounter++;
-	}
-
-	public boolean isMacroLambda() {
-		return MacroLambda;
-	}
-
-	public void setMacroLambda(final boolean macroLambda) {
-		MacroLambda = macroLambda;
 	}
 
 	public Deque<ClassDef> getClasses() {
@@ -133,20 +72,23 @@ public class JavaClassBuilder {
 		return classStack;
 	}
 
+	public Stack<JavaMethodBuilder> getMethodBuilderStack() {
+		return methodBuilderStack;
+	}
+
+	public JavaMethodBuilder getCurrentMethodBuilder() {
+		if (methodBuilderStack.empty()) {
+			return null;
+		}
+		return methodBuilderStack.peek();
+	}
+
 	public ClassDef getCurrentClass() {
 		return currentClass;
 	}
 
 	public void setCurrentClass(final ClassDef currentClass) {
 		this.currentClass = currentClass;
-	}
-
-	public boolean isAcceptsMultipleValues() {
-		return acceptsMultipleValues;
-	}
-
-	public void setAcceptsMultipleValues(final boolean acceptsMultipleValues) {
-		this.acceptsMultipleValues = acceptsMultipleValues;
 	}
 
 	public int getTagCounter() {

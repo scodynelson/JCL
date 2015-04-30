@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.ListIterator;
 
 import jcl.LispStruct;
-import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.icg.generator.GenerationConstants;
@@ -43,8 +43,8 @@ public class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 
 	private void generateQuotedSymbol(final SymbolStruct<?> quotedSymbol, final JavaClassBuilder classBuilder) {
 
-		final ClassDef currentClass = classBuilder.getCurrentClass();
-		final MethodVisitor mv = currentClass.getMethodVisitor();
+		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		final String packageName = quotedSymbol.getSymbolPackage().getName();
 		final String symbolName = quotedSymbol.getName();
@@ -55,7 +55,7 @@ public class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 				GenerationConstants.PACKAGE_STRUCT_FIND_PACKAGE_METHOD_NAME,
 				GenerationConstants.PACKAGE_STRUCT_FIND_PACKAGE_METHOD_DESC,
 				false);
-		final int packageStore = currentClass.getNextAvailableStore();
+		final int packageStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, packageStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, packageStore);
@@ -74,8 +74,8 @@ public class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 
 	private void generateQuotedCons(final ConsStruct quotedCons, final JavaClassBuilder classBuilder) {
 
-		final ClassDef currentClass = classBuilder.getCurrentClass();
-		final MethodVisitor mv = currentClass.getMethodVisitor();
+		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		if (quotedCons.isCircular()) {
 			throw new ProgramErrorException("Generation of circular lists is not yet supported.");
@@ -86,13 +86,13 @@ public class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 
 		LispStruct previousCdr = listIterator.previous();
 		generateQuotedObject(previousCdr, classBuilder);
-		final int lastElementStore = currentClass.getNextAvailableStore();
+		final int lastElementStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, lastElementStore);
 
 		if (quotedCons.isDotted()) {
 			previousCdr = listIterator.previous();
 			generateQuotedObject(previousCdr, classBuilder);
-			final int secondToLastElementStore = currentClass.getNextAvailableStore();
+			final int secondToLastElementStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, secondToLastElementStore);
 
 			mv.visitTypeInsn(Opcodes.NEW, "jcl/lists/ConsStruct");
@@ -109,10 +109,10 @@ public class QuoteCodeGenerator implements CodeGenerator<QuoteStruct> {
 			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/lists/ConsStruct", "<init>", "(Ljcl/LispStruct;)V", false);
 		}
 
-		final int previousConsStore = currentClass.getNextAvailableStore();
+		final int previousConsStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, previousConsStore);
 
-		final int nextElementStore = currentClass.getNextAvailableStore();
+		final int nextElementStore = methodBuilder.getNextAvailableStore();
 
 		while (listIterator.hasPrevious()) {
 			previousCdr = listIterator.previous();

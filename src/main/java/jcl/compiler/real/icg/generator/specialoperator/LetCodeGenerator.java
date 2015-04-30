@@ -15,6 +15,7 @@ import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.LetEnvironment;
 import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.struct.specialoperator.LetStruct;
@@ -47,12 +48,16 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 		final String fileName = currentClass.getFileName();
 
 		final ClassWriter cw = currentClass.getClassWriter();
-		final MethodVisitor previousMv = currentClass.getMethodVisitor();
 
 		final String letMethodName = "let_" + System.nanoTime();
 		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, letMethodName, "()Ljcl/LispStruct;", null, null);
-		currentClass.setMethodVisitor(mv);
+
+		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+		methodBuilderStack.push(methodBuilder);
+
 		mv.visitCode();
+		final int thisStore = methodBuilder.getNextAvailableStore();
 
 		final Label tryBlockStart = new Label();
 		final Label tryBlockEnd = new Label();
@@ -64,22 +69,22 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 
 		mv.visitVarInsn(Opcodes.ALOAD, 0);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/FunctionStruct", "getClosure", "()Ljcl/functions/Closure;", false);
-		final int parentClosureStore = currentClass.getNextAvailableStore();
+		final int parentClosureStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, parentClosureStore);
 
 		mv.visitTypeInsn(Opcodes.NEW, "jcl/functions/Closure");
 		mv.visitInsn(Opcodes.DUP);
 		mv.visitVarInsn(Opcodes.ALOAD, parentClosureStore);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/functions/Closure", "<init>", "(Ljcl/functions/Closure;)V", false);
-		final Integer newClosureStore = currentClass.getNextAvailableStore();
+		final Integer newClosureStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, newClosureStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, newClosureStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/Closure", "getSymbolBindings", "()Ljava/util/Map;", false);
-		final Integer newClosureBindingsStore = currentClass.getNextAvailableStore();
+		final Integer newClosureBindingsStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, newClosureBindingsStore);
 
-		final int packageStore = currentClass.getNextAvailableStore();
+		final int packageStore = methodBuilder.getNextAvailableStore();
 
 		final Map<Integer, Integer> lexicalSymbolStoresToBind = new LinkedHashMap<>();
 		final Map<Integer, Integer> dynamicSymbolStoresToBind = new LinkedHashMap<>();
@@ -104,11 +109,11 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
 			// NOTE: we have to get a new 'symbolStore' for each var so we can properly unbind the initForms later
-			final int symbolStore = currentClass.getNextAvailableStore();
+			final int symbolStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, symbolStore);
 
 			formGenerator.generate(initForm, classBuilder);
-			final int initFormStore = currentClass.getNextAvailableStore();
+			final int initFormStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
 
 			final Label valuesCheckIfEnd = new Label();
@@ -119,7 +124,7 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 			mv.visitTypeInsn(Opcodes.CHECKCAST, "jcl/compiler/real/struct/ValuesStruct");
-			final int valuesStore = currentClass.getNextAvailableStore();
+			final int valuesStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, valuesStore);
 
 			mv.visitVarInsn(Opcodes.ALOAD, valuesStore);
@@ -173,7 +178,7 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 		bindingStack.pop();
 		closureStoreStack.pop();
 
-		final int resultStore = currentClass.getNextAvailableStore();
+		final int resultStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, resultStore);
 
 		mv.visitLabel(tryBlockEnd);
@@ -188,7 +193,7 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 		mv.visitJumpInsn(Opcodes.GOTO, catchBlockEnd);
 
 		mv.visitLabel(catchBlockStart);
-		final int exceptionStore = currentClass.getNextAvailableStore();
+		final int exceptionStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, exceptionStore);
 
 		mv.visitLabel(finallyBlockStart);
@@ -212,7 +217,10 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 		mv.visitMaxs(-1, -1);
 		mv.visitEnd();
 
-		currentClass.setMethodVisitor(previousMv);
+		methodBuilderStack.pop();
+
+		final JavaMethodBuilder previousMethodBuilder = methodBuilderStack.peek();
+		final MethodVisitor previousMv = previousMethodBuilder.getMethodVisitor();
 
 		previousMv.visitVarInsn(Opcodes.ALOAD, 0);
 		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, letMethodName, "()Ljcl/LispStruct;", false);

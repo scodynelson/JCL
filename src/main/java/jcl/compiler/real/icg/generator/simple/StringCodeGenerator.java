@@ -5,11 +5,11 @@
 package jcl.compiler.real.icg.generator.simple;
 
 import jcl.arrays.StringStruct;
-import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
+import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
-import jcl.compiler.real.icg.generator.GeneratorUtils;
 import jcl.compiler.real.icg.generator.GenerationConstants;
+import jcl.compiler.real.icg.generator.GeneratorUtils;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -25,8 +25,8 @@ public class StringCodeGenerator implements CodeGenerator<StringStruct> {
 	@Override
 	public void generate(final StringStruct input, final JavaClassBuilder classBuilder) {
 
-		final ClassDef currentClass = classBuilder.getCurrentClass();
-		final MethodVisitor mv = currentClass.getMethodVisitor();
+		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
+		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
 		mv.visitTypeInsn(Opcodes.NEW, STRING_STRUCT_NAME);
 		mv.visitInsn(Opcodes.DUP);

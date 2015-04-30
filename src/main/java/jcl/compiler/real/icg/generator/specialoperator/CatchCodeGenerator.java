@@ -38,7 +38,7 @@ public class CatchCodeGenerator implements CodeGenerator<CatchStruct> {
 		final ClassWriter cw = currentClass.getClassWriter();
 
 		final String catchMethodName = "catch_" + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, catchMethodName, "()Ljcl/LispStruct;", null, null);
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, catchMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
@@ -46,6 +46,7 @@ public class CatchCodeGenerator implements CodeGenerator<CatchStruct> {
 
 		mv.visitCode();
 		final int thisStore = methodBuilder.getNextAvailableStore();
+		final int closureArgStore = methodBuilder.getNextAvailableStore();
 
 		final Label tryBlockStart = new Label();
 		final Label tryBlockEnd = new Label();
@@ -103,7 +104,8 @@ public class CatchCodeGenerator implements CodeGenerator<CatchStruct> {
 		final JavaMethodBuilder previousMethodBuilder = methodBuilderStack.peek();
 		final MethodVisitor previousMv = previousMethodBuilder.getMethodVisitor();
 
-		previousMv.visitVarInsn(Opcodes.ALOAD, 0);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, catchMethodName, "()Ljcl/LispStruct;", false);
+		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
+		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, catchMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", false);
 	}
 }

@@ -439,9 +439,10 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			mv.visitLabel(tryBlockStart);
 
-			bindingStack.push(lambdaEnvironment);
-			prognCodeGenerator.generate(forms, classBuilder);
-			bindingStack.pop();
+			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
+			mv.visitVarInsn(Opcodes.ALOAD, thisStore);
+			mv.visitFieldInsn(Opcodes.GETFIELD, fileName, "closure", "Ljcl/functions/Closure;");
+			mv.visitMethodInsn(Opcodes.INVOKESPECIAL, fileName, "internalApply", "(Ljcl/functions/Closure;)Ljcl/LispStruct;", false);
 
 			final int resultStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, resultStore);
@@ -705,6 +706,28 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			methodBuilderStack.pop();
 		}
 		{
+			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, "internalApply", "(Ljcl/functions/Closure;)Ljcl/LispStruct;", null, null);
+
+			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+			final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+			methodBuilderStack.push(methodBuilder);
+
+			mv.visitCode();
+			final int thisStore = methodBuilder.getNextAvailableStore();
+			final int closureArgStore = methodBuilder.getNextAvailableStore();
+
+			bindingStack.push(lambdaEnvironment);
+			prognCodeGenerator.generate(forms, classBuilder);
+			bindingStack.pop();
+
+			mv.visitInsn(Opcodes.ARETURN);
+
+			mv.visitMaxs(-1, -1);
+			mv.visitEnd();
+
+			methodBuilderStack.pop();
+		}
+		{
 			final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, "getInitForm", "(Ljcl/symbols/SymbolStruct;)Ljcl/LispStruct;", "(Ljcl/symbols/SymbolStruct<*>;)Ljcl/LispStruct;", null);
 
 			final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
@@ -886,14 +909,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			previousMv.visitTypeInsn(Opcodes.NEW, fileName);
 			previousMv.visitInsn(Opcodes.DUP);
 
-			final Stack<Integer> closureStoreStack = previousClassDef.getClosureStoreStack();
-			if (closureStoreStack.isEmpty()) {
-				previousMv.visitInsn(Opcodes.ACONST_NULL);
-			} else {
-				final Integer currentClosureStore = closureStoreStack.peek();
-				previousMv.visitVarInsn(Opcodes.ALOAD, currentClosureStore);
-			}
-
+			previousMv.visitVarInsn(Opcodes.ALOAD, 1); // Load the Closure Argument. NOTE: This should ALWAYS be 1 on the Store Stack
 			previousMv.visitMethodInsn(Opcodes.INVOKESPECIAL, fileName, "<init>", "(Ljcl/functions/Closure;)V", false);
 		}
 	}

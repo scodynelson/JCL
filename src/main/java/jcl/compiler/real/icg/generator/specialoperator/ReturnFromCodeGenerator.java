@@ -35,7 +35,7 @@ public class ReturnFromCodeGenerator implements CodeGenerator<ReturnFromStruct> 
 		final ClassWriter cw = currentClass.getClassWriter();
 
 		final String returnFromMethodName = "returnFrom_" + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, returnFromMethodName, "()Ljcl/LispStruct;", null, null);
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, returnFromMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
@@ -43,6 +43,7 @@ public class ReturnFromCodeGenerator implements CodeGenerator<ReturnFromStruct> 
 
 		mv.visitCode();
 		final int thisStore = methodBuilder.getNextAvailableStore();
+		final int closureArgStore = methodBuilder.getNextAvailableStore();
 
 		final int nameSymbolStore = SymbolCodeGeneratorUtil.generate(name, classBuilder);
 
@@ -65,7 +66,8 @@ public class ReturnFromCodeGenerator implements CodeGenerator<ReturnFromStruct> 
 		final JavaMethodBuilder previousMethodBuilder = methodBuilderStack.peek();
 		final MethodVisitor previousMv = previousMethodBuilder.getMethodVisitor();
 
-		previousMv.visitVarInsn(Opcodes.ALOAD, 0);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, returnFromMethodName, "()Ljcl/LispStruct;", false);
+		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
+		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, returnFromMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", false);
 	}
 }

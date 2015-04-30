@@ -262,10 +262,10 @@ public class TestGround {
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	private Object letGen(final Closure currentClosure) {
+	private Object letGen(Closure currentClosure) {
 
-		final Closure closure = new Closure(currentClosure);
-		final Map<SymbolStruct<?>, LispStruct> closureBindings = closure.getSymbolBindings();
+		currentClosure = new Closure(currentClosure);
+		final Map<SymbolStruct<?>, LispStruct> closureBindings = currentClosure.getSymbolBindings();
 
 		final PackageStruct pkg = PackageStruct.findPackage("SYSTEM");
 		final SymbolStruct symbol = pkg.findSymbol("FOO").getSymbol();

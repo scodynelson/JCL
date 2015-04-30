@@ -50,7 +50,7 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 		final ClassWriter cw = currentClass.getClassWriter();
 
 		final String letMethodName = "let_" + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, letMethodName, "()Ljcl/LispStruct;", null, null);
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, letMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
@@ -58,6 +58,7 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 
 		mv.visitCode();
 		final int thisStore = methodBuilder.getNextAvailableStore();
+		final int closureArgStore = methodBuilder.getNextAvailableStore();
 
 		final Label tryBlockStart = new Label();
 		final Label tryBlockEnd = new Label();
@@ -67,19 +68,13 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, null);
 		mv.visitTryCatchBlock(catchBlockStart, finallyBlockStart, catchBlockStart, null);
 
-		mv.visitVarInsn(Opcodes.ALOAD, 0);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/FunctionStruct", "getClosure", "()Ljcl/functions/Closure;", false);
-		final int parentClosureStore = methodBuilder.getNextAvailableStore();
-		mv.visitVarInsn(Opcodes.ASTORE, parentClosureStore);
-
 		mv.visitTypeInsn(Opcodes.NEW, "jcl/functions/Closure");
 		mv.visitInsn(Opcodes.DUP);
-		mv.visitVarInsn(Opcodes.ALOAD, parentClosureStore);
+		mv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
 		mv.visitMethodInsn(Opcodes.INVOKESPECIAL, "jcl/functions/Closure", "<init>", "(Ljcl/functions/Closure;)V", false);
-		final Integer newClosureStore = methodBuilder.getNextAvailableStore();
-		mv.visitVarInsn(Opcodes.ASTORE, newClosureStore);
+		mv.visitVarInsn(Opcodes.ASTORE, closureArgStore);
 
-		mv.visitVarInsn(Opcodes.ALOAD, newClosureStore);
+		mv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/Closure", "getSymbolBindings", "()Ljava/util/Map;", false);
 		final Integer newClosureBindingsStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, newClosureBindingsStore);
@@ -148,7 +143,7 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 			mv.visitVarInsn(Opcodes.ALOAD, initFormStore);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "bindLexicalValue", "(Ljcl/LispStruct;)V", false);
 
-			mv.visitVarInsn(Opcodes.ALOAD, newClosureStore);
+			mv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
 			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/Closure", "getSymbolBindings", "()Ljava/util/Map;", false);
 
 			mv.visitVarInsn(Opcodes.ALOAD, newClosureBindingsStore);
@@ -169,14 +164,11 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 
 		mv.visitLabel(tryBlockStart);
 
-		final Stack<Integer> closureStoreStack = currentClass.getClosureStoreStack();
 		final Stack<Environment> bindingStack = classBuilder.getBindingStack();
 
-		closureStoreStack.push(newClosureStore);
 		bindingStack.push(letEnvironment);
 		prognCodeGenerator.generate(forms, classBuilder);
 		bindingStack.pop();
-		closureStoreStack.pop();
 
 		final int resultStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, resultStore);
@@ -222,7 +214,8 @@ public class LetCodeGenerator implements CodeGenerator<LetStruct> {
 		final JavaMethodBuilder previousMethodBuilder = methodBuilderStack.peek();
 		final MethodVisitor previousMv = previousMethodBuilder.getMethodVisitor();
 
-		previousMv.visitVarInsn(Opcodes.ALOAD, 0);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, letMethodName, "()Ljcl/LispStruct;", false);
+		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
+		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, letMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", false);
 	}
 }

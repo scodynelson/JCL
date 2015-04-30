@@ -46,7 +46,7 @@ public class LabelsCodeGenerator implements CodeGenerator<LabelsStruct> {
 		final ClassWriter cw = currentClass.getClassWriter();
 
 		final String labelsMethodName = "labels_" + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, labelsMethodName, "()Ljcl/LispStruct;", null, null);
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, labelsMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
@@ -54,6 +54,7 @@ public class LabelsCodeGenerator implements CodeGenerator<LabelsStruct> {
 
 		mv.visitCode();
 		final int thisStore = methodBuilder.getNextAvailableStore();
+		final int closureArgStore = methodBuilder.getNextAvailableStore();
 
 		final Label tryBlockStart = new Label();
 		final Label tryBlockEnd = new Label();
@@ -171,8 +172,9 @@ public class LabelsCodeGenerator implements CodeGenerator<LabelsStruct> {
 		final JavaMethodBuilder previousMethodBuilder = methodBuilderStack.peek();
 		final MethodVisitor previousMv = previousMethodBuilder.getMethodVisitor();
 
-		previousMv.visitVarInsn(Opcodes.ALOAD, 0);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, labelsMethodName, "()Ljcl/LispStruct;", false);
+		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
+		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, labelsMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", false);
 	}
 
 	private void generateFinallyCode(final MethodVisitor mv, final Set<Integer> varSymbolStores) {

@@ -43,7 +43,7 @@ public class TagbodyCodeGenerator implements CodeGenerator<TagbodyStruct> {
 		final ClassWriter cw = currentClass.getClassWriter();
 
 		final String tagbodyMethodName = "tagbody_" + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, tagbodyMethodName, "()Ljcl/LispStruct;", null, null);
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, tagbodyMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
@@ -51,6 +51,7 @@ public class TagbodyCodeGenerator implements CodeGenerator<TagbodyStruct> {
 
 		mv.visitCode();
 		final int thisStore = methodBuilder.getNextAvailableStore();
+		final int closureArgStore = methodBuilder.getNextAvailableStore();
 
 		final Label tryBlockStart = new Label();
 		final Label tryBlockEnd = new Label();
@@ -127,8 +128,9 @@ public class TagbodyCodeGenerator implements CodeGenerator<TagbodyStruct> {
 		final JavaMethodBuilder previousMethodBuilder = methodBuilderStack.peek();
 		final MethodVisitor previousMv = previousMethodBuilder.getMethodVisitor();
 
-		previousMv.visitVarInsn(Opcodes.ALOAD, 0);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, tagbodyMethodName, "()Ljcl/LispStruct;", false);
+		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
+		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, tagbodyMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", false);
 	}
 
 	private Map<TagbodyLabel, PrognStruct> getTagbodyLabeledForms(final Map<GoStruct<?>, PrognStruct> tagbodyForms,

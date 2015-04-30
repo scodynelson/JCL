@@ -33,7 +33,7 @@ public class ThrowCodeGenerator implements CodeGenerator<ThrowStruct> {
 		final ClassWriter cw = currentClass.getClassWriter();
 
 		final String throwMethodName = "throw_" + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, throwMethodName, "()Ljcl/LispStruct;", null, null);
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, throwMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
@@ -41,6 +41,7 @@ public class ThrowCodeGenerator implements CodeGenerator<ThrowStruct> {
 
 		mv.visitCode();
 		final int thisStore = methodBuilder.getNextAvailableStore();
+		final int closureArgStore = methodBuilder.getNextAvailableStore();
 
 		formGenerator.generate(catchTag, classBuilder);
 		final int catchTagStore = methodBuilder.getNextAvailableStore();
@@ -65,7 +66,8 @@ public class ThrowCodeGenerator implements CodeGenerator<ThrowStruct> {
 		final JavaMethodBuilder previousMethodBuilder = methodBuilderStack.peek();
 		final MethodVisitor previousMv = previousMethodBuilder.getMethodVisitor();
 
-		previousMv.visitVarInsn(Opcodes.ALOAD, 0);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, throwMethodName, "()Ljcl/LispStruct;", false);
+		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
+		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, throwMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", false);
 	}
 }

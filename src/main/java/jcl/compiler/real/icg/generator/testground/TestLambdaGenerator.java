@@ -143,8 +143,7 @@ public class TestLambdaGenerator extends FunctionStruct {
 
 		final LispStruct result;
 		try {
-//			result = new CharacterStruct(97);
-			result = new TestGroundLambdaFunction(closure);
+			result = internalApply(closure);
 		} catch (final ErrorException ex) {
 			throw ex;
 		} catch (final Throwable t) {
@@ -167,6 +166,11 @@ public class TestLambdaGenerator extends FunctionStruct {
 			}
 		}
 		return result;
+	}
+
+	private LispStruct internalApply(final Closure currentClosure) {
+//		result = new CharacterStruct(97);
+		return new TestGroundLambdaFunction(currentClosure);
 	}
 
 	private LispStruct getInitForm(final SymbolStruct<?> symbolBinding) {

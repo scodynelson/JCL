@@ -33,7 +33,7 @@ public class GoCodeGenerator implements CodeGenerator<GoStruct<?>> {
 		final ClassWriter cw = currentClass.getClassWriter();
 
 		final String goMethodName = "go_" + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, goMethodName, "()Ljcl/LispStruct;", null, null);
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, goMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
@@ -41,6 +41,7 @@ public class GoCodeGenerator implements CodeGenerator<GoStruct<?>> {
 
 		mv.visitCode();
 		final int thisStore = methodBuilder.getNextAvailableStore();
+		final int closureArgStore = methodBuilder.getNextAvailableStore();
 
 		final Stack<Set<TagbodyLabel>> tagbodyLabelStack = classBuilder.getTagbodyLabelStack();
 		final TagbodyLabel tagbodyLabel = getTagbodyLabel(tagbodyLabelStack, input);
@@ -64,8 +65,9 @@ public class GoCodeGenerator implements CodeGenerator<GoStruct<?>> {
 		final JavaMethodBuilder previousMethodBuilder = methodBuilderStack.peek();
 		final MethodVisitor previousMv = previousMethodBuilder.getMethodVisitor();
 
-		previousMv.visitVarInsn(Opcodes.ALOAD, 0);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, goMethodName, "()Ljcl/LispStruct;", false);
+		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
+		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, goMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", false);
 	}
 
 	private TagbodyLabel getTagbodyLabel(final Stack<Set<TagbodyLabel>> tagbodyLabelStack, final GoStruct<?> tagToFind) {

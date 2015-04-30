@@ -1,53 +1,5 @@
 UNWIND-PROTECT:
 
-(deftest unwind-protect.6
-  (let ((x nil))
-    (block done
-      (flet ((%f () (return-from done nil)))
-        (unwind-protect (%f)
-          (setq x '(a)))))
-    x)
-  (a))
-
-(deftest unwind-protect.6
-  (let ((x nil))
-    (block nil
-          (flet ((%f () nil))
-            nil))
-    x)
-  (a))
-
-(deftest unwind-protect.6
-  (let ((x nil))
-    (flet ((%f () nil))
-            nil)
-    x)
-  (a))
-
-(deftest unwind-protect.7
-  (let ((x nil))
-    (block done
-      (flet ((%f () (return-from done nil)))
-        (unwind-protect
-            (unwind-protect (%f)
-              (setq x '(b)))
-          (setq x '(a)))))
-    x)
-  (a b))
-
-(deftest unwind-protect.8
-  (let ((x nil))
-    (block done
-      (unwind-protect
-          (flet ((%f () (return-from done nil)))
-            (unwind-protect
-                (unwind-protect (%f)
-                  (setq x '(b)))
-              (setq x '(a))))
-        (setq x '(c))))
-    x)
-  (c a b))
-
 (deftest unwind-protect.9
   (let ((x nil))
     (handler-case
@@ -68,16 +20,6 @@ TAGBODY:
      (setq x 1)
      a)
     x)
-  10)
-
-(deftest tagbody.9
-  (let (result)
-    (tagbody
-     (flet ((a (x) x))
-       (setq result (a 10))
-       (go a))
-     a)
-    result)
   10)
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$

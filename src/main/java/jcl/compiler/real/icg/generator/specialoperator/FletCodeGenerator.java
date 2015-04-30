@@ -46,7 +46,7 @@ public class FletCodeGenerator implements CodeGenerator<FletStruct> {
 		final ClassWriter cw = currentClass.getClassWriter();
 
 		final String fletMethodName = "flet_" + System.nanoTime();
-		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, fletMethodName, "()Ljcl/LispStruct;", null, null);
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, fletMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", null, null);
 
 		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
 		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
@@ -54,6 +54,7 @@ public class FletCodeGenerator implements CodeGenerator<FletStruct> {
 
 		mv.visitCode();
 		final int thisStore = methodBuilder.getNextAvailableStore();
+		final int closureArgStore = methodBuilder.getNextAvailableStore();
 
 		final Label tryBlockStart = new Label();
 		final Label tryBlockEnd = new Label();
@@ -61,11 +62,11 @@ public class FletCodeGenerator implements CodeGenerator<FletStruct> {
 		final Label catchBlockEnd = new Label();
 		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, null);
 
-		final Integer closureFunctionBindingsStore = methodBuilder.getNextAvailableStore();
+		final int closureFunctionBindingsStore = methodBuilder.getNextAvailableStore();
 
-		mv.visitVarInsn(Opcodes.ALOAD, 0);
+		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/FunctionStruct", "getClosure", "()Ljcl/functions/Closure;", false);
-		final Integer closureStore = methodBuilder.getNextAvailableStore();
+		final int closureStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, closureStore);
 
 		mv.visitInsn(Opcodes.ACONST_NULL);
@@ -171,8 +172,9 @@ public class FletCodeGenerator implements CodeGenerator<FletStruct> {
 		final JavaMethodBuilder previousMethodBuilder = methodBuilderStack.peek();
 		final MethodVisitor previousMv = previousMethodBuilder.getMethodVisitor();
 
-		previousMv.visitVarInsn(Opcodes.ALOAD, 0);
-		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, fletMethodName, "()Ljcl/LispStruct;", false);
+		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
+		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, fletMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", false);
 	}
 
 	private void generateFinallyCode(final MethodVisitor mv, final Set<Integer> varSymbolStores) {

@@ -4,8 +4,6 @@
 
 package jcl.compiler.real.icg;
 
-import java.util.Stack;
-
 import org.objectweb.asm.ClassWriter;
 
 public class ClassDef {
@@ -15,8 +13,6 @@ public class ClassDef {
 	private final String fileName;
 
 	private final String className;
-
-	private final Stack<Integer> closureStoreStack = new Stack<>();
 
 	public ClassDef(final String fileName, final String className) {
 		this.fileName = fileName;
@@ -33,9 +29,5 @@ public class ClassDef {
 
 	public String getClassName() {
 		return className;
-	}
-
-	public Stack<Integer> getClosureStoreStack() {
-		return closureStoreStack;
 	}
 }

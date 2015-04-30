@@ -8,6 +8,7 @@ import java.util.Stack;
 import jcl.LispStruct;
 import jcl.compiler.real.environment.Environment;
 import jcl.compiler.real.environment.ProgvEnvironment;
+import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
@@ -15,6 +16,7 @@ import jcl.compiler.real.icg.generator.FormGenerator;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.ProgvStruct;
 import jcl.symbols.SymbolStruct;
+import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -37,8 +39,21 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 		final PrognStruct forms = input.getForms();
 		final ProgvEnvironment progvEnvironment = input.getProgvEnvironment();
 
-		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
-		final MethodVisitor mv = methodBuilder.getMethodVisitor();
+		final ClassDef currentClass = classBuilder.getCurrentClass();
+		final String fileName = currentClass.getFileName();
+
+		final ClassWriter cw = currentClass.getClassWriter();
+
+		final String progvMethodName = "progv_" + System.nanoTime();
+		final MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PRIVATE, progvMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", null, null);
+
+		final JavaMethodBuilder methodBuilder = new JavaMethodBuilder(mv);
+		final Stack<JavaMethodBuilder> methodBuilderStack = classBuilder.getMethodBuilderStack();
+		methodBuilderStack.push(methodBuilder);
+
+		mv.visitCode();
+		final int thisStore = methodBuilder.getNextAvailableStore();
+		final int closureArgStore = methodBuilder.getNextAvailableStore();
 
 		final Label tryBlockStart = new Label();
 		final Label tryBlockEnd = new Label();
@@ -125,6 +140,20 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 
 		mv.visitLabel(catchBlockEnd);
 		mv.visitVarInsn(Opcodes.ALOAD, resultStore);
+
+		mv.visitInsn(Opcodes.ARETURN);
+
+		mv.visitMaxs(-1, -1);
+		mv.visitEnd();
+
+		methodBuilderStack.pop();
+
+		final JavaMethodBuilder previousMethodBuilder = methodBuilderStack.peek();
+		final MethodVisitor previousMv = previousMethodBuilder.getMethodVisitor();
+
+		previousMv.visitVarInsn(Opcodes.ALOAD, thisStore);
+		previousMv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
+		previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, fileName, progvMethodName, "(Ljcl/functions/Closure;)Ljcl/LispStruct;", false);
 	}
 
 	private void generateFinallyCode(final MethodVisitor mv, final Set<Integer> varSymbolStores) {

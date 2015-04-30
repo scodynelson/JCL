@@ -87,17 +87,21 @@ public final class EvalFunction extends FunctionStruct {
 		return eval(lispStructs[0]);
 	}
 
-	@SuppressWarnings({"unchecked", "rawtypes"})
 	public LispStruct eval(final LispStruct originalExp) {
 
 		final Environment nullEnvironment = Environment.NULL;
+		return eval(originalExp, nullEnvironment);
+	}
+
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	public LispStruct eval(final LispStruct originalExp, final Environment environment) {
 
 		final BooleanStruct oldCompileTopLevel = CompilerVariables.COMPILE_TOP_LEVEL.getValue();
 		CompilerVariables.COMPILE_TOP_LEVEL.setValue(NILStruct.INSTANCE);
 
 		LispStruct exp;
 		try {
-			exp = formAnalyzer.analyze(originalExp, nullEnvironment);
+			exp = formAnalyzer.analyze(originalExp, environment);
 		} finally {
 			CompilerVariables.COMPILE_TOP_LEVEL.setValue(oldCompileTopLevel);
 		}

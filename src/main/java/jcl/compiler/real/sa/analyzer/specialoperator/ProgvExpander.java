@@ -11,6 +11,7 @@ import jcl.compiler.real.environment.Environments;
 import jcl.compiler.real.environment.LambdaEnvironment;
 import jcl.compiler.real.environment.ProgvEnvironment;
 import jcl.compiler.real.environment.binding.EnvironmentParameterBinding;
+import jcl.compiler.real.functions.EvalFunction;
 import jcl.compiler.real.sa.FormAnalyzer;
 import jcl.compiler.real.sa.analyzer.SymbolAnalyzer;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
@@ -19,6 +20,7 @@ import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
+import jcl.printer.Printer;
 import jcl.symbols.SpecialOperatorStruct;
 import jcl.symbols.SymbolStruct;
 import jcl.types.TType;
@@ -40,6 +42,12 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 	@Autowired
 	private SymbolAnalyzer symbolAnalyzer;
 
+	@Autowired
+	private EvalFunction evalFunction;
+
+	@Autowired
+	private Printer printer;
+
 	/**
 	 * Initializes the progv macro function and adds it to the special operator 'progv'.
 	 */
@@ -60,30 +68,19 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 		final ListStruct formRest = form.getRest();
 
 		final LispStruct second = formRest.getFirst();
-		if (!(second instanceof ListStruct)) {
-			throw new ProgramErrorException("PROGV: Symbols list must be a quoted list. Got: " + second);
+		// TODO: This eval needs to happen dynamically and let the CG take care of it.
+		final LispStruct vars = evalFunction.eval(second, environment);
+		if (!(vars instanceof ListStruct)) {
+			final String printedObject = printer.print(vars);
+			throw new ProgramErrorException("PROGV: Symbols list must be a list. Got: " + printedObject);
 		}
 
-		final ListStruct secondAsList = (ListStruct) second;
-		if (secondAsList.size() != 2) {
-			throw new ProgramErrorException("PROGV: Symbols list must be properly quoted: " + second);
-		}
-		final LispStruct secondAsListFirst = secondAsList.getFirst();
-		if (!SpecialOperatorStruct.QUOTE.equals(secondAsListFirst)) {
-			throw new ProgramErrorException("PROGV: Symbols list must be quoted: " + second);
-		}
-
-		final ListStruct secondAsListRest = secondAsList.getRest();
-		final LispStruct actualVars = secondAsListRest.getFirst();
-		if (!(actualVars instanceof ListStruct)) {
-			throw new ProgramErrorException("PROGV: TODO: Symbols list must be a list. Got: " + actualVars);
-		}
-
-		final ListStruct actualVarsAsList = (ListStruct) actualVars;
-		final List<LispStruct> actualVarsAsJavaList = actualVarsAsList.getAsJavaList();
-		for (final LispStruct currentVar : actualVarsAsJavaList) {
+		final ListStruct varsAsList = (ListStruct) vars;
+		final List<LispStruct> varsAsJavaList = varsAsList.getAsJavaList();
+		for (final LispStruct currentVar : varsAsJavaList) {
 			if (!(currentVar instanceof SymbolStruct)) {
-				throw new ProgramErrorException("PROGV: Elements in symbols list must be symbols. Got: " + currentVar);
+				final String printedObject = printer.print(currentVar);
+				throw new ProgramErrorException("PROGV: Elements in symbols list must be symbols. Got: " + printedObject);
 			}
 		}
 
@@ -91,43 +88,32 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 		final ListStruct formRestRest = formRest.getRest();
 
 		final LispStruct third = formRestRest.getFirst();
-		if (!(third instanceof ListStruct)) {
-			throw new ProgramErrorException("PROGV: Values list must be a quoted list. Got: " + third);
+		// TODO: This eval needs to happen dynamically and let the CG take care of it.
+		final LispStruct vals = evalFunction.eval(third, environment);
+		if (!(vals instanceof ListStruct)) {
+			final String printedObject = printer.print(vals);
+			throw new ProgramErrorException("PROGV: Values list must be a list. Got: " + printedObject);
 		}
 
-		final ListStruct thirdAsList = (ListStruct) third;
-		if (thirdAsList.size() != 2) {
-			throw new ProgramErrorException("PROGV: Values list must be properly quoted: " + second);
-		}
-		final LispStruct thirdAsListFirst = thirdAsList.getFirst();
-		if (!SpecialOperatorStruct.QUOTE.equals(thirdAsListFirst)) {
-			throw new ProgramErrorException("PROGV: Values list must be quoted: " + second);
-		}
-
-		final ListStruct thirdAsListRest = thirdAsList.getRest();
-		final LispStruct actualVals = thirdAsListRest.getFirst();
-		if (!(actualVals instanceof ListStruct)) {
-			throw new ProgramErrorException("PROGV: Values list must be a list. Got: " + actualVals);
-		}
-
-		final ListStruct actualValsAsList = (ListStruct) actualVals;
-		final List<LispStruct> actualValsAsJavaList = actualValsAsList.getAsJavaList();
+		final ListStruct valsAsList = (ListStruct) vals;
+		final List<LispStruct> valsAsJavaList = valsAsList.getAsJavaList();
 
 		// Handle Progn Environment processing
 		final ProgvEnvironment progvEnvironment = new ProgvEnvironment(environment);
 
-		final int numberOfProgvVars = actualVarsAsJavaList.size();
+		final int numberOfProgvVars = varsAsJavaList.size();
 		final List<ProgvStruct.ProgvVar> progvVars = new ArrayList<>(numberOfProgvVars);
 
 		for (int i = 0; i < numberOfProgvVars; i++) {
 
 			// NOTE: We can safely cast here since we checked the type earlier
-			final SymbolStruct<?> var = (SymbolStruct) actualVarsAsJavaList.get(i);
+			final SymbolStruct<?> var = (SymbolStruct) varsAsJavaList.get(i);
 
 			final LispStruct val;
-			if (i < actualValsAsJavaList.size()) {
-				val = actualValsAsJavaList.get(i);
+			if (i < valsAsJavaList.size()) {
+				val = valsAsJavaList.get(i);
 			} else {
+				// TODO: These need to be bound to "no value". Hmm....
 				val = NullStruct.INSTANCE;
 			}
 
@@ -161,6 +147,8 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 		return new HashCodeBuilder().appendSuper(super.hashCode())
 		                            .append(formAnalyzer)
 		                            .append(symbolAnalyzer)
+		                            .append(evalFunction)
+		                            .append(printer)
 		                            .toHashCode();
 	}
 
@@ -179,6 +167,8 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 		return new EqualsBuilder().appendSuper(super.equals(obj))
 		                          .append(formAnalyzer, rhs.formAnalyzer)
 		                          .append(symbolAnalyzer, rhs.symbolAnalyzer)
+		                          .append(evalFunction, rhs.evalFunction)
+		                          .append(printer, rhs.printer)
 		                          .isEquals();
 	}
 
@@ -186,6 +176,8 @@ public class ProgvExpander extends MacroFunctionExpander<ProgvStruct> {
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(formAnalyzer)
 		                                                                .append(symbolAnalyzer)
+		                                                                .append(evalFunction)
+		                                                                .append(printer)
 		                                                                .toString();
 	}
 }

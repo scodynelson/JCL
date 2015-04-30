@@ -42,19 +42,29 @@ THROW:
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 PROGV:
 
-(deftest progv.1
-  (progv () () t)
-  t)
+(deftest progv.6
+  (let ((x 0))
+    (declare (special x))
+    (progv '(x) ()
+      x))
+  #{error Unbound Variable})
 
-(progv (x) (1) x)
-> Error: While compiling an anonymous function :
->        In the form (1), 1 is not a symbol or lambda expression., in process Listener(4).
+(deftest progv.6a
+  (let ((x 0))
+    (declare (special x))
+    (progv '(x) () (setq x 1))
+    x)
+  0)
 
-(let ((x 0) (y 0) (c 0))
+;; forms are evaluated in order
+
+(deftest progv.10
+  (let ((x 0) (y 0) (c 0))
     (progv
-        (progn (setq x (setq c 1)) nil)
-        (progn (setq y (setq c 2)) nil)
+        (progn (setq x (1+ c)) nil)
+        (progn (setq y (1+ c)) nil)
       (values x y c)))
+  1 2 2)
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 LET:

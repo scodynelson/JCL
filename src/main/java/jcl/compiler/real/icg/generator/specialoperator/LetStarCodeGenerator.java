@@ -17,6 +17,7 @@ import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
+import jcl.compiler.real.icg.generator.simple.SymbolCodeGeneratorUtil;
 import jcl.compiler.real.struct.specialoperator.LetStarStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.symbols.SymbolStruct;
@@ -75,7 +76,7 @@ public class LetStarCodeGenerator implements CodeGenerator<LetStarStruct> {
 
 		mv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/Closure", "getSymbolBindings", "()Ljava/util/Map;", false);
-		final Integer newClosureBindingsStore = methodBuilder.getNextAvailableStore();
+		final int newClosureBindingsStore = methodBuilder.getNextAvailableStore();
 		mv.visitVarInsn(Opcodes.ASTORE, newClosureBindingsStore);
 
 		final int packageStore = methodBuilder.getNextAvailableStore();
@@ -88,20 +89,10 @@ public class LetStarCodeGenerator implements CodeGenerator<LetStarStruct> {
 			final LispStruct initForm = var.getInitForm();
 			final boolean isSpecial = var.isSpecial();
 
-			final String packageName = symbolVar.getSymbolPackage().getName();
-			final String symbolName = symbolVar.getName();
-
-			mv.visitLdcInsn(packageName);
-			mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
-			mv.visitVarInsn(Opcodes.ASTORE, packageStore);
-
-			mv.visitVarInsn(Opcodes.ALOAD, packageStore);
-			mv.visitLdcInsn(symbolName);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
-			// NOTE: we have to get a new 'symbolStore' for each var so we can properly unbind the initForms later
 			final int symbolStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, symbolStore);
+			// NOTE: we have to get a new 'symbolStore' for each var so we can properly unbind the initForms later
+
+			SymbolCodeGeneratorUtil.generate(symbolVar, classBuilder, packageStore, symbolStore);
 
 			formGenerator.generate(initForm, classBuilder);
 			final int initFormStore = methodBuilder.getNextAvailableStore();

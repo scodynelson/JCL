@@ -223,6 +223,12 @@ public class TestGround {
 		return symbol.getValue();
 	}
 
+	private Object uninternedSymbolGen() {
+
+		final SymbolStruct<?> symbol = new SymbolStruct<>("FOO");
+		return symbol;
+	}
+
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	private Object setqGen(final Closure currentClosure) {
 

@@ -206,69 +206,64 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 //	 * @return symbol {@link #value} property
 //	 */
 	public TYPE getValue() {
+		final TYPE value;
 		if (lexicalValueStack.isEmpty()) {
-			if (dynamicValueStack.isEmpty()) {
-
-				String variableName = name;
-				final PackageStruct currentPackage = PackageVariables.PACKAGE.getValue();
-
-				if (!currentPackage.equals(symbolPackage)) {
-					final String packageName = symbolPackage.getName();
-
-					if (currentPackage.getExternalSymbols().containsKey(name)) {
-						variableName = packageName + ':' + name;
-					} else {
-						variableName = packageName + "::" + name;
-					}
-				}
-
-				throw new ErrorException("Unbound variable: " + variableName);
-			}
-			return dynamicValueStack.peek();
+			value = getDynamicValue();
+		} else {
+			value = getLexicalValue();
 		}
-		return lexicalValueStack.peek();
+
+		if (value == null) {
+			return handleUnboundValue();
+		}
+
+		return value;
 	}
 
 	public TYPE getLexicalValue() {
 		if (lexicalValueStack.isEmpty()) {
-
-			String variableName = name;
-			final PackageStruct currentPackage = PackageVariables.PACKAGE.getValue();
-
-			if (!currentPackage.equals(symbolPackage)) {
-				final String packageName = symbolPackage.getName();
-
-				if (currentPackage.getExternalSymbols().containsKey(name)) {
-					variableName = packageName + ':' + name;
-				} else {
-					variableName = packageName + "::" + name;
-				}
-			}
-
-			throw new ErrorException("Unbound variable: " + variableName);
+			return handleUnboundValue();
 		}
-		return lexicalValueStack.peek();
+
+		final TYPE value = lexicalValueStack.peek();
+		if (value == null) {
+			return handleUnboundValue();
+		}
+
+		return value;
 	}
 
 	public TYPE getDynamicValue() {
 		if (dynamicValueStack.isEmpty()) {
+			handleUnboundValue();
+		}
 
-			String variableName = name;
-			final PackageStruct currentPackage = PackageVariables.PACKAGE.getValue();
+		final TYPE value = dynamicValueStack.peek();
+		if (value == null) {
+			return handleUnboundValue();
+		}
 
-			if (!currentPackage.equals(symbolPackage)) {
+		return value;
+	}
+
+	private TYPE handleUnboundValue() {
+		String variableName = name;
+		final PackageStruct currentPackage = PackageVariables.PACKAGE.getValue();
+
+		if (!currentPackage.equals(symbolPackage)) {
+			if (symbolPackage == null) {
+				variableName = "#:" + name;
+			} else {
 				final String packageName = symbolPackage.getName();
-
 				if (currentPackage.getExternalSymbols().containsKey(name)) {
 					variableName = packageName + ':' + name;
 				} else {
 					variableName = packageName + "::" + name;
 				}
 			}
-
-			throw new ErrorException("Unbound variable: " + variableName);
 		}
-		return dynamicValueStack.peek();
+
+		throw new ErrorException("Unbound variable: " + variableName);
 	}
 
 	//	/**
@@ -336,23 +331,29 @@ public class SymbolStruct<TYPE extends LispStruct> extends BuiltInClassStruct {
 //	 */
 	public FunctionStruct getFunction() {
 		if (functionStack.isEmpty()) {
+			return handleUnboundFunction();
+		}
+		return functionStack.peek();
+	}
 
-			String variableName = name;
-			final PackageStruct currentPackage = PackageVariables.PACKAGE.getValue();
+	private FunctionStruct handleUnboundFunction() {
+		String variableName = name;
+		final PackageStruct currentPackage = PackageVariables.PACKAGE.getValue();
 
-			if (!currentPackage.equals(symbolPackage)) {
+		if (!currentPackage.equals(symbolPackage)) {
+			if (symbolPackage == null) {
+				variableName = "#:" + name;
+			} else {
 				final String packageName = symbolPackage.getName();
-
 				if (currentPackage.getExternalSymbols().containsKey(name)) {
 					variableName = packageName + ':' + name;
 				} else {
 					variableName = packageName + "::" + name;
 				}
 			}
-
-			throw new ErrorException("Undefined function: " + variableName);
 		}
-		return functionStack.peek();
+
+		throw new ErrorException("Undefined function: " + variableName);
 	}
 
 	//	/**

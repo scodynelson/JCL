@@ -25,7 +25,9 @@ public class SymbolFunctionCodeGenerator implements CodeGenerator<SymbolCompiler
 		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		final int functionSymbolStore = SymbolCodeGeneratorUtil.generate(functionSymbol, classBuilder);
+		final int functionPackageStore = methodBuilder.getNextAvailableStore();
+		final int functionSymbolStore = methodBuilder.getNextAvailableStore();
+		SymbolCodeGeneratorUtil.generate(functionSymbol, classBuilder, functionPackageStore, functionSymbolStore);
 
 		mv.visitVarInsn(Opcodes.ALOAD, functionSymbolStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "getFunction", "()Ljcl/functions/FunctionStruct;", false);

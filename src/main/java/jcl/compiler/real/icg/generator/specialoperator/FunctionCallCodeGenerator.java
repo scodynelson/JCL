@@ -34,8 +34,11 @@ public class FunctionCallCodeGenerator implements CodeGenerator<FunctionCallStru
 		if (recursiveCall) {
 			tailCallGenerate(methodBuilder, mv, classBuilder, arguments);
 		} else {
-			final int functionSymbolStore = SymbolCodeGeneratorUtil.generate(functionSymbol, classBuilder);
-			nonFletGenerate(methodBuilder, mv, classBuilder, arguments, functionSymbolStore);
+			final int functionPackageStore = methodBuilder.getNextAvailableStore();
+			final int functionSymbolStore = methodBuilder.getNextAvailableStore();
+			SymbolCodeGeneratorUtil.generate(functionSymbol, classBuilder, functionSymbolStore, functionPackageStore);
+
+			nonTailCallGenerate(methodBuilder, mv, classBuilder, arguments, functionSymbolStore);
 		}
 	}
 
@@ -66,8 +69,8 @@ public class FunctionCallCodeGenerator implements CodeGenerator<FunctionCallStru
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/FunctionStruct", "apply", "([Ljcl/LispStruct;)Ljcl/LispStruct;", false);
 	}
 
-	private void nonFletGenerate(final JavaMethodBuilder methodBuilder, final MethodVisitor mv, final JavaClassBuilder classBuilder,
-	                             final List<LispStruct> arguments, final int functionSymbolStore) {
+	private void nonTailCallGenerate(final JavaMethodBuilder methodBuilder, final MethodVisitor mv, final JavaClassBuilder classBuilder,
+	                                 final List<LispStruct> arguments, final int functionSymbolStore) {
 
 		mv.visitVarInsn(Opcodes.ALOAD, functionSymbolStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/symbols/SymbolStruct", "getFunction", "()Ljcl/functions/FunctionStruct;", false);

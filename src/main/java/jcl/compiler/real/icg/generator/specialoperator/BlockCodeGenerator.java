@@ -51,7 +51,9 @@ public class BlockCodeGenerator implements CodeGenerator<BlockStruct> {
 		final Label catchBlockEnd = new Label();
 		mv.visitTryCatchBlock(tryBlockStart, tryBlockEnd, catchBlockStart, "jcl/compiler/real/icg/generator/specialoperator/exception/ReturnFromException");
 
-		final int nameSymbolStore = SymbolCodeGeneratorUtil.generate(name, classBuilder);
+		final int namePackageStore = methodBuilder.getNextAvailableStore();
+		final int nameSymbolStore = methodBuilder.getNextAvailableStore();
+		SymbolCodeGeneratorUtil.generate(name, classBuilder, namePackageStore, nameSymbolStore);
 
 		mv.visitLabel(tryBlockStart);
 		prognCodeGenerator.generate(forms, classBuilder);

@@ -45,7 +45,9 @@ public class ReturnFromCodeGenerator implements CodeGenerator<ReturnFromStruct> 
 		final int thisStore = methodBuilder.getNextAvailableStore();
 		final int closureArgStore = methodBuilder.getNextAvailableStore();
 
-		final int nameSymbolStore = SymbolCodeGeneratorUtil.generate(name, classBuilder);
+		final int namePackageStore = methodBuilder.getNextAvailableStore();
+		final int nameSymbolStore = methodBuilder.getNextAvailableStore();
+		SymbolCodeGeneratorUtil.generate(name, classBuilder, namePackageStore, nameSymbolStore);
 
 		formGenerator.generate(result, classBuilder);
 		final int resultStore = methodBuilder.getNextAvailableStore();

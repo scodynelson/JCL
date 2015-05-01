@@ -25,6 +25,7 @@ import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.simple.NullCodeGenerator;
+import jcl.compiler.real.icg.generator.simple.SymbolCodeGeneratorUtil;
 import jcl.compiler.real.icg.generator.specialoperator.PrognCodeGenerator;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.lambda.LambdaStruct;
@@ -161,7 +162,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			// End: Required
 			final int requiredBindingsStore = methodBuilder.getNextAvailableStore();
-			generateRequiredBindings(methodBuilder, lambdaListBindings, mv, packageStore, requiredBindingsStore);
+			generateRequiredBindings(classBuilder, methodBuilder, lambdaListBindings, mv, packageStore, requiredBindingsStore);
 			// End: Required
 
 			// Start: Optional
@@ -171,7 +172,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 
 			// Start: Rest
 			final int restBindingStore = methodBuilder.getNextAvailableStore();
-			generateRestBinding(methodBuilder, lambdaListBindings, mv, packageStore, restBindingStore);
+			generateRestBinding(classBuilder, methodBuilder, lambdaListBindings, mv, packageStore, restBindingStore);
 			// End: Rest
 
 			// Start: Key
@@ -914,8 +915,9 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 	}
 
-	private void generateRequiredBindings(final JavaMethodBuilder methodBuilder, final OrdinaryLambdaListBindings lambdaListBindings,
-	                                      final MethodVisitor mv, final int packageStore, final int requiredBindingsStore) {
+	private void generateRequiredBindings(final JavaClassBuilder classBuilder, final JavaMethodBuilder methodBuilder,
+	                                      final OrdinaryLambdaListBindings lambdaListBindings, final MethodVisitor mv,
+	                                      final int packageStore, final int requiredBindingsStore) {
 
 		mv.visitTypeInsn(Opcodes.NEW, "java/util/ArrayList");
 		mv.visitInsn(Opcodes.DUP);
@@ -928,19 +930,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final List<RequiredBinding> requiredBindings = lambdaListBindings.getRequiredBindings();
 		for (final RequiredBinding requiredBinding : requiredBindings) {
 			final SymbolStruct<?> requiredSymbol = requiredBinding.getSymbolStruct();
-
-			final String packageName = requiredSymbol.getSymbolPackage().getName();
-			final String symbolName = requiredSymbol.getName();
-
-			mv.visitLdcInsn(packageName);
-			mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
-			mv.visitVarInsn(Opcodes.ASTORE, packageStore);
-
-			mv.visitVarInsn(Opcodes.ALOAD, packageStore);
-			mv.visitLdcInsn(symbolName);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
-			mv.visitVarInsn(Opcodes.ASTORE, requiredSymbolStore);
+			SymbolCodeGeneratorUtil.generate(requiredSymbol, classBuilder, packageStore, requiredSymbolStore);
 
 			mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/environment/binding/lambdalist/RequiredBinding");
 			mv.visitInsn(Opcodes.DUP);
@@ -978,19 +968,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final List<OptionalBinding> optionalBindings = lambdaListBindings.getOptionalBindings();
 		for (final OptionalBinding optionalBinding : optionalBindings) {
 			final SymbolStruct<?> optionalSymbol = optionalBinding.getSymbolStruct();
-
-			String packageName = optionalSymbol.getSymbolPackage().getName();
-			String symbolName = optionalSymbol.getName();
-
-			mv.visitLdcInsn(packageName);
-			mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
-			mv.visitVarInsn(Opcodes.ASTORE, packageStore);
-
-			mv.visitVarInsn(Opcodes.ALOAD, packageStore);
-			mv.visitLdcInsn(symbolName);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
-			mv.visitVarInsn(Opcodes.ASTORE, optionalSymbolStore);
+			SymbolCodeGeneratorUtil.generate(optionalSymbol, classBuilder, packageStore, optionalSymbolStore);
 
 			nullCodeGenerator.generate(NullStruct.INSTANCE, classBuilder);
 			mv.visitVarInsn(Opcodes.ASTORE, optionalInitFormStore);
@@ -1002,19 +980,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 				mv.visitVarInsn(Opcodes.ASTORE, optionalSuppliedPStore);
 			} else {
 				final SymbolStruct<?> optionalSuppliedPSymbol = suppliedPBinding.getSymbolStruct();
-
-				packageName = optionalSuppliedPSymbol.getSymbolPackage().getName();
-				symbolName = optionalSuppliedPSymbol.getName();
-
-				mv.visitLdcInsn(packageName);
-				mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
-				mv.visitVarInsn(Opcodes.ASTORE, packageStore);
-
-				mv.visitVarInsn(Opcodes.ALOAD, packageStore);
-				mv.visitLdcInsn(symbolName);
-				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
-				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
-				mv.visitVarInsn(Opcodes.ASTORE, optionalSuppliedPSymbolStore);
+				SymbolCodeGeneratorUtil.generate(optionalSuppliedPSymbol, classBuilder, packageStore, optionalSuppliedPSymbolStore);
 
 				mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/environment/binding/lambdalist/SuppliedPBinding");
 				mv.visitInsn(Opcodes.DUP);
@@ -1049,8 +1015,9 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		}
 	}
 
-	private void generateRestBinding(final JavaMethodBuilder methodBuilder, final OrdinaryLambdaListBindings lambdaListBindings,
-	                                 final MethodVisitor mv, final int packageStore, final int restBindingStore) {
+	private void generateRestBinding(final JavaClassBuilder classBuilder, final JavaMethodBuilder methodBuilder,
+	                                 final OrdinaryLambdaListBindings lambdaListBindings, final MethodVisitor mv,
+	                                 final int packageStore, final int restBindingStore) {
 
 		final int restSymbolStore = methodBuilder.getNextAvailableStore();
 
@@ -1060,19 +1027,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 			mv.visitVarInsn(Opcodes.ASTORE, restBindingStore);
 		} else {
 			final SymbolStruct<?> restSymbol = restBinding.getSymbolStruct();
-
-			final String packageName = restSymbol.getSymbolPackage().getName();
-			final String symbolName = restSymbol.getName();
-
-			mv.visitLdcInsn(packageName);
-			mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
-			mv.visitVarInsn(Opcodes.ASTORE, packageStore);
-
-			mv.visitVarInsn(Opcodes.ALOAD, packageStore);
-			mv.visitLdcInsn(symbolName);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
-			mv.visitVarInsn(Opcodes.ASTORE, restSymbolStore);
+			SymbolCodeGeneratorUtil.generate(restSymbol, classBuilder, packageStore, restSymbolStore);
 
 			mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/environment/binding/lambdalist/RestBinding");
 			mv.visitInsn(Opcodes.DUP);
@@ -1106,19 +1061,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final List<KeyBinding> keyBindings = lambdaListBindings.getKeyBindings();
 		for (final KeyBinding keyBinding : keyBindings) {
 			final SymbolStruct<?> keySymbol = keyBinding.getSymbolStruct();
-
-			String packageName = keySymbol.getSymbolPackage().getName();
-			String symbolName = keySymbol.getName();
-
-			mv.visitLdcInsn(packageName);
-			mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
-			mv.visitVarInsn(Opcodes.ASTORE, packageStore);
-
-			mv.visitVarInsn(Opcodes.ALOAD, packageStore);
-			mv.visitLdcInsn(symbolName);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
-			mv.visitVarInsn(Opcodes.ASTORE, keySymbolStore);
+			SymbolCodeGeneratorUtil.generate(keySymbol, classBuilder, packageStore, keySymbolStore);
 
 			nullCodeGenerator.generate(NullStruct.INSTANCE, classBuilder);
 			mv.visitVarInsn(Opcodes.ASTORE, keyInitFormStore);
@@ -1144,19 +1087,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 				mv.visitVarInsn(Opcodes.ASTORE, keySuppliedPStore);
 			} else {
 				final SymbolStruct<?> keySuppliedPSymbol = suppliedPBinding.getSymbolStruct();
-
-				packageName = keySuppliedPSymbol.getSymbolPackage().getName();
-				symbolName = keySuppliedPSymbol.getName();
-
-				mv.visitLdcInsn(packageName);
-				mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
-				mv.visitVarInsn(Opcodes.ASTORE, packageStore);
-
-				mv.visitVarInsn(Opcodes.ALOAD, packageStore);
-				mv.visitLdcInsn(symbolName);
-				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
-				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
-				mv.visitVarInsn(Opcodes.ASTORE, keySuppliedPSymbolStore);
+				SymbolCodeGeneratorUtil.generate(keySuppliedPSymbol, classBuilder, packageStore, keySuppliedPSymbolStore);
 
 				mv.visitTypeInsn(Opcodes.NEW, "jcl/compiler/real/environment/binding/lambdalist/SuppliedPBinding");
 				mv.visitInsn(Opcodes.DUP);
@@ -1221,19 +1152,7 @@ public class LambdaCodeGenerator implements CodeGenerator<LambdaStruct> {
 		final List<AuxBinding> auxBindings = lambdaListBindings.getAuxBindings();
 		for (final AuxBinding auxBinding : auxBindings) {
 			final SymbolStruct<?> auxSymbol = auxBinding.getSymbolStruct();
-
-			final String packageName = auxSymbol.getSymbolPackage().getName();
-			final String symbolName = auxSymbol.getName();
-
-			mv.visitLdcInsn(packageName);
-			mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
-			mv.visitVarInsn(Opcodes.ASTORE, packageStore);
-
-			mv.visitVarInsn(Opcodes.ALOAD, packageStore);
-			mv.visitLdcInsn(symbolName);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
-			mv.visitVarInsn(Opcodes.ASTORE, auxSymbolStore);
+			SymbolCodeGeneratorUtil.generate(auxSymbol, classBuilder, packageStore, auxSymbolStore);
 
 			// NOTE: Just generate a null value for this initForm here. We take care of the &aux initForms in the body
 			//       when it is processed

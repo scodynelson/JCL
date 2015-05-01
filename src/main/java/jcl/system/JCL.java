@@ -8,9 +8,10 @@ import jcl.streams.TwoWayStreamStruct;
 import jcl.system.repl.ReadEvalPrint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
@@ -18,9 +19,13 @@ import org.springframework.context.annotation.ImportResource;
 @Configuration
 @ImportResource("applicationContext.xml")
 @ComponentScan("jcl")
-public class JCL {
+@SpringBootApplication
+public class JCL implements CommandLineRunner {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(JCL.class);
+
+	@Autowired
+	private ReadEvalPrint readEvalPrint;
 
 	public JCL() throws IOException {
 		try (LoggerOutputStream loggerOutputStream = new LoggerOutputStream(LOGGER)) {
@@ -31,17 +36,12 @@ public class JCL {
 		}
 	}
 
+	@Override
+	public void run(final String... args) {
+		readEvalPrint.funcall(args);
+	}
+
 	public static void main(final String... args) {
-
-		try (final AutoCloseable context = new AnnotationConfigApplicationContext(JCL.class)) {
-			final ReadEvalPrint repl = ((ApplicationContext) context).getBean(ReadEvalPrint.class);
-
-			repl.funcall(args);
-		} catch (final BeansException e) {
-			e.printStackTrace();
-		} catch (final Exception e) {
-			e.printStackTrace();
-		}
-		System.exit(0);
+		SpringApplication.run(JCL.class, args);
 	}
 }

@@ -119,6 +119,7 @@
       <w>listp</w>
       <w>logand</w>
       <w>logandc</w>
+      <w>logback</w>
       <w>logbitp</w>
       <w>logcount</w>
       <w>logeqv</w>

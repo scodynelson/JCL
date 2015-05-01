@@ -11,6 +11,9 @@ import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindin
 import jcl.functions.FunctionStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.symbols.SymbolStruct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,6 +22,9 @@ public final class QuitFunction extends FunctionStruct {
 	public static final SymbolStruct<?> QUIT = GlobalPackageStruct.EXTENSIONS.intern("QUIT").getSymbol();
 
 	private static final long serialVersionUID = -7684846282276245122L;
+
+	@Autowired
+	private ApplicationContext context;
 
 	private QuitFunction() {
 		super("Quits the JCL Application.", getInitLambdaListBindings());
@@ -39,7 +45,7 @@ public final class QuitFunction extends FunctionStruct {
 	public LispStruct apply(final LispStruct... lispStructs) {
 		getFunctionBindings(lispStructs);
 
-		System.exit(0);
+		System.exit(SpringApplication.exit(context));
 		return null;
 	}
 }

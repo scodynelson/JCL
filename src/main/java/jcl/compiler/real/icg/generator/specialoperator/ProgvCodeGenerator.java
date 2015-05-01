@@ -13,6 +13,7 @@ import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
+import jcl.compiler.real.icg.generator.simple.SymbolCodeGeneratorUtil;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
 import jcl.compiler.real.struct.specialoperator.ProgvStruct;
 import jcl.symbols.SymbolStruct;
@@ -68,26 +69,14 @@ public class ProgvCodeGenerator implements CodeGenerator<ProgvStruct> {
 
 		for (final ProgvStruct.ProgvVar var : vars) {
 			final SymbolStruct<?> symbolVar = var.getVar();
-			final LispStruct symbolVal = var.getVal();
-
-			final String packageName = symbolVar.getSymbolPackage().getName();
-			final String symbolName = symbolVar.getName();
-
-			mv.visitLdcInsn(packageName);
-			mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
-			mv.visitVarInsn(Opcodes.ASTORE, packageStore);
-
-			mv.visitVarInsn(Opcodes.ALOAD, packageStore);
-			mv.visitLdcInsn(symbolName);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
 			// NOTE: we have to get a new 'symbolStore' for each var so we can properly unbind the vals later
 			final int symbolStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, symbolStore);
+			SymbolCodeGeneratorUtil.generate(symbolVar, classBuilder, packageStore, symbolStore);
 
 			// Add the symbolStore here so we can unbind the vals later
 			symbolVarStores.add(symbolStore);
 
+			final LispStruct symbolVal = var.getVal();
 			formGenerator.generate(symbolVal, classBuilder);
 			mv.visitVarInsn(Opcodes.ASTORE, valStore);
 

@@ -36,7 +36,7 @@ public class FunctionCallCodeGenerator implements CodeGenerator<FunctionCallStru
 		} else {
 			final int functionPackageStore = methodBuilder.getNextAvailableStore();
 			final int functionSymbolStore = methodBuilder.getNextAvailableStore();
-			SymbolCodeGeneratorUtil.generate(functionSymbol, classBuilder, functionSymbolStore, functionPackageStore);
+			SymbolCodeGeneratorUtil.generate(functionSymbol, classBuilder, functionPackageStore, functionSymbolStore);
 
 			nonTailCallGenerate(methodBuilder, mv, classBuilder, arguments, functionSymbolStore);
 		}

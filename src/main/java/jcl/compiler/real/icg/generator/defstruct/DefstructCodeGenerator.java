@@ -10,6 +10,7 @@ import jcl.compiler.real.icg.ClassDef;
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
+import jcl.compiler.real.icg.generator.simple.SymbolCodeGeneratorUtil;
 import jcl.compiler.real.struct.specialoperator.defstruct.DefstructStruct;
 import jcl.structures.StructureClassStruct;
 import jcl.symbols.SymbolStruct;
@@ -79,15 +80,11 @@ public class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 			final JavaMethodBuilder previousMethodBuilder = methodBuilderStack.peek();
 			final MethodVisitor previousMv = previousMethodBuilder.getMethodVisitor();
 
-			final String packageName = structureSymbol.getSymbolPackage().getName();
-			final String symbolName = structureSymbol.getName();
+			final int packageStore = previousMethodBuilder.getNextAvailableStore();
+			final int symbolStore = previousMethodBuilder.getNextAvailableStore();
+			SymbolCodeGeneratorUtil.generate(structureSymbol, classBuilder, packageStore, symbolStore);
 
-			previousMv.visitLdcInsn(packageName);
-			previousMv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
-
-			previousMv.visitLdcInsn(symbolName);
-			previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
-			previousMv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
+			previousMv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 			previousMv.visitInsn(Opcodes.DUP); // DUP the symbol so it will still be on the stack after we set the structure class.
 
 			previousMv.visitFieldInsn(Opcodes.GETSTATIC, structureClassFileName, "INSTANCE", 'L' + structureClassFileName + ';');
@@ -578,30 +575,22 @@ public class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 			if (defaultConstructorSymbol == null) {
 				mv.visitInsn(Opcodes.ACONST_NULL);
 			} else {
-				final String packageName = defaultConstructorSymbol.getSymbolPackage().getName();
-				final String symbolName = defaultConstructorSymbol.getName();
+				final int packageStore = methodBuilder.getNextAvailableStore();
+				final int symbolStore = methodBuilder.getNextAvailableStore();
+				SymbolCodeGeneratorUtil.generate(defaultConstructorSymbol, classBuilder, packageStore, symbolStore);
 
-				mv.visitLdcInsn(packageName);
-				mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
-
-				mv.visitLdcInsn(symbolName);
-				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
-				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
+				mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 			}
 
 			final SymbolStruct<?> printerSymbol = defstructStruct.getPrinterSymbol();
 			if (printerSymbol == null) {
 				mv.visitInsn(Opcodes.ACONST_NULL);
 			} else {
-				final String packageName = printerSymbol.getSymbolPackage().getName();
-				final String symbolName = printerSymbol.getName();
+				final int packageStore = methodBuilder.getNextAvailableStore();
+				final int symbolStore = methodBuilder.getNextAvailableStore();
+				SymbolCodeGeneratorUtil.generate(printerSymbol, classBuilder, packageStore, symbolStore);
 
-				mv.visitLdcInsn(packageName);
-				mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
-
-				mv.visitLdcInsn(symbolName);
-				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
-				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
+				mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 			}
 
 			mv.visitInsn(Opcodes.ACONST_NULL);
@@ -674,15 +663,11 @@ public class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 			mv.visitFieldInsn(Opcodes.GETSTATIC, structureClassFileName, "INSTANCE", 'L' + structureClassFileName + ';');
 
 			final SymbolStruct<?> structureSymbol = defstructStruct.getStructureSymbol();
-			final String packageName = structureSymbol.getSymbolPackage().getName();
-			final String symbolName = structureSymbol.getName();
+			final int packageStore = methodBuilder.getNextAvailableStore();
+			final int symbolStore = methodBuilder.getNextAvailableStore();
+			SymbolCodeGeneratorUtil.generate(structureSymbol, classBuilder, packageStore, symbolStore);
 
-			mv.visitLdcInsn(packageName);
-			mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
-
-			mv.visitLdcInsn(symbolName);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
+			mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 
 			if (includeStructureClassFileName == null) {
 				mv.visitInsn(Opcodes.ACONST_NULL);
@@ -717,20 +702,12 @@ public class DefstructCodeGenerator implements CodeGenerator<DefstructStruct> {
 			final int slotsFieldStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, slotsFieldStore);
 
+			final int packageStore = methodBuilder.getNextAvailableStore();
 			final int slotStore = methodBuilder.getNextAvailableStore();
 
 			final List<SymbolStruct<?>> slots = defstructStruct.getSlots();
 			for (final SymbolStruct<?> slot : slots) {
-				final String packageName = slot.getSymbolPackage().getName();
-				final String symbolName = slot.getName();
-
-				mv.visitLdcInsn(packageName);
-				mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
-
-				mv.visitLdcInsn(symbolName);
-				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
-				mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
-				mv.visitVarInsn(Opcodes.ASTORE, slotStore);
+				SymbolCodeGeneratorUtil.generate(slot, classBuilder, packageStore, slotStore);
 
 				mv.visitVarInsn(Opcodes.ALOAD, slotsFieldStore);
 				mv.visitVarInsn(Opcodes.ALOAD, slotStore);

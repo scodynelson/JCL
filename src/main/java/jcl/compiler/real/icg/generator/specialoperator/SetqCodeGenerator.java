@@ -10,6 +10,7 @@ import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
+import jcl.compiler.real.icg.generator.simple.SymbolCodeGeneratorUtil;
 import jcl.compiler.real.struct.specialoperator.SetqStruct;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.ClassWriter;
@@ -75,21 +76,9 @@ public class SetqCodeGenerator implements CodeGenerator<SetqStruct> {
 
 		for (final SetqStruct.SetqPair setqPair : setqPairs) {
 			final SymbolStruct<?> var = setqPair.getVar();
+			SymbolCodeGeneratorUtil.generate(var, classBuilder, packageStore, symbolStore);
+
 			final LispStruct form = setqPair.getForm();
-
-			final String packageName = var.getSymbolPackage().getName();
-			final String symbolName = var.getName();
-
-			mv.visitLdcInsn(packageName);
-			mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
-			mv.visitVarInsn(Opcodes.ASTORE, packageStore);
-
-			mv.visitVarInsn(Opcodes.ALOAD, packageStore);
-			mv.visitLdcInsn(symbolName);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
-			mv.visitVarInsn(Opcodes.ASTORE, symbolStore);
-
 			formGenerator.generate(form, classBuilder);
 			mv.visitVarInsn(Opcodes.ASTORE, initFormStore);
 

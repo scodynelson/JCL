@@ -5,7 +5,6 @@
 package jcl.streams;
 
 import jcl.LispStruct;
-import jcl.conditions.exceptions.EndOfFileException;
 import jcl.conditions.exceptions.StreamErrorException;
 import jcl.types.BaseCharType;
 import jcl.types.StringStreamType;
@@ -73,14 +72,14 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 	public ReadPeekResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		if (current == end) {
 			if (eofErrorP) {
-				throw new EndOfFileException(StreamUtils.END_OF_FILE_REACHED);
+				return new ReadPeekResult(10);
 			} else {
 				return new ReadPeekResult(eofValue);
 			}
 		}
 
-		current++;
 		final int readChar = inputString.charAt(current);
+		current++;
 		return new ReadPeekResult(readChar);
 	}
 
@@ -93,7 +92,7 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 	public ReadPeekResult peekChar(final PeekType peekType, final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		if ((current + 1) == end) {
 			if (eofErrorP) {
-				throw new EndOfFileException(StreamUtils.END_OF_FILE_REACHED);
+				return new ReadPeekResult(10);
 			} else {
 				return new ReadPeekResult(eofValue);
 			}

@@ -13,6 +13,7 @@ import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
 import jcl.compiler.real.icg.generator.CodeGenerator;
 import jcl.compiler.real.icg.generator.FormGenerator;
+import jcl.compiler.real.icg.generator.simple.SymbolCodeGeneratorUtil;
 import jcl.compiler.real.struct.specialoperator.CompilerFunctionStruct;
 import jcl.compiler.real.struct.specialoperator.LabelsStruct;
 import jcl.compiler.real.struct.specialoperator.PrognStruct;
@@ -88,23 +89,11 @@ public class LabelsCodeGenerator implements CodeGenerator<LabelsStruct> {
 
 		for (final LabelsStruct.LabelsVar var : vars) {
 			final SymbolStruct<?> functionSymbolVar = var.getVar();
-			final CompilerFunctionStruct initForm = var.getInitForm();
-
-			final String packageName = functionSymbolVar.getSymbolPackage().getName();
-			final String symbolName = functionSymbolVar.getName();
-
-			mv.visitLdcInsn(packageName);
-			mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
-			mv.visitVarInsn(Opcodes.ASTORE, packageStore);
-
-			mv.visitVarInsn(Opcodes.ALOAD, packageStore);
-			mv.visitLdcInsn(symbolName);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
-			mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
 			// NOTE: we have to get a new 'functionSymbolStore' for each var so we can properly unbind the expansions later
 			final int functionSymbolStore = methodBuilder.getNextAvailableStore();
-			mv.visitVarInsn(Opcodes.ASTORE, functionSymbolStore);
+			SymbolCodeGeneratorUtil.generate(functionSymbolVar, classBuilder, packageStore, functionSymbolStore);
 
+			final CompilerFunctionStruct initForm = var.getInitForm();
 			formGenerator.generate(initForm, classBuilder);
 			final int initFormStore = methodBuilder.getNextAvailableStore();
 			mv.visitVarInsn(Opcodes.ASTORE, initFormStore);

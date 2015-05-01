@@ -6,6 +6,7 @@ package jcl.compiler.real.icg.generator;
 
 import jcl.compiler.real.icg.JavaClassBuilder;
 import jcl.compiler.real.icg.JavaMethodBuilder;
+import jcl.compiler.real.icg.generator.simple.SymbolCodeGeneratorUtil;
 import jcl.symbols.SymbolStruct;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -20,16 +21,10 @@ public class SymbolCodeGenerator implements CodeGenerator<SymbolStruct<?>> {
 		final JavaMethodBuilder methodBuilder = classBuilder.getCurrentMethodBuilder();
 		final MethodVisitor mv = methodBuilder.getMethodVisitor();
 
-		final String packageName = input.getSymbolPackage().getName();
-		mv.visitLdcInsn(packageName);
-		mv.visitMethodInsn(Opcodes.INVOKESTATIC, "jcl/packages/PackageStruct", "findPackage", "(Ljava/lang/String;)Ljcl/packages/PackageStruct;", false);
 		final int packageStore = methodBuilder.getNextAvailableStore();
-		mv.visitVarInsn(Opcodes.ASTORE, packageStore);
+		final int symbolStore = methodBuilder.getNextAvailableStore();
+		SymbolCodeGeneratorUtil.generate(input, classBuilder, packageStore, symbolStore);
 
-		mv.visitVarInsn(Opcodes.ALOAD, packageStore);
-		final String symbolName = input.getName();
-		mv.visitLdcInsn(symbolName);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageStruct", "findSymbol", "(Ljava/lang/String;)Ljcl/packages/PackageSymbolStruct;", false);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/packages/PackageSymbolStruct", "getSymbol", "()Ljcl/symbols/SymbolStruct;", false);
+		mv.visitVarInsn(Opcodes.ALOAD, symbolStore);
 	}
 }

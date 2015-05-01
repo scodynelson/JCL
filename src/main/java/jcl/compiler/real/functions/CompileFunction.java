@@ -11,10 +11,12 @@ import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.compiler.real.environment.binding.lambdalist.SuppliedPBinding;
 import jcl.compiler.real.struct.ValuesStruct;
 import jcl.conditions.exceptions.ErrorException;
+import jcl.conditions.exceptions.ProgramErrorException;
 import jcl.functions.FunctionStruct;
 import jcl.functions.expanders.MacroFunctionExpander;
 import jcl.lists.NullStruct;
 import jcl.packages.GlobalPackageStruct;
+import jcl.printer.Printer;
 import jcl.symbols.NILStruct;
 import jcl.symbols.SymbolStruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,9 @@ public final class CompileFunction extends FunctionStruct {
 
 	@Autowired
 	private CompileForm compileForm;
+
+	@Autowired
+	private Printer printer;
 
 	private CompileFunction() {
 		super("Produces a compiled function from definition.", getInitLambdaListBindings());
@@ -82,7 +87,14 @@ public final class CompileFunction extends FunctionStruct {
 				function = (FunctionStruct) uncompiledDefinition;
 			} else {
 				compiledDefinition = compileForm.compile(uncompiledDefinition);
-				function = compiledDefinition.getFunction();
+				final FunctionStruct compiledDefinitionFunction = compiledDefinition.getFunction();
+				final LispStruct compiledDefinitionResult = compiledDefinitionFunction.apply();
+
+				if (!(compiledDefinitionResult instanceof FunctionStruct)) {
+					final String printedObject = printer.print(uncompiledDefinition);
+					throw new ProgramErrorException("Error compiling anonymous function : " + printedObject + " is not a valid lambda expression.");
+				}
+				function = (FunctionStruct) compiledDefinitionResult;
 			}
 
 			if (name instanceof SymbolStruct) {

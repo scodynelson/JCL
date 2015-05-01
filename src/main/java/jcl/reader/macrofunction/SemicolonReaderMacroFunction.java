@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 
 import jcl.LispStruct;
 import jcl.characters.CharacterConstants;
+import jcl.lists.NullStruct;
 import jcl.reader.Reader;
 import jcl.reader.ReaderMacroFunction;
 import jcl.reader.struct.ReaderVariables;
@@ -50,7 +51,8 @@ public class SemicolonReaderMacroFunction extends ReaderMacroFunction {
 			nextCodePoint = readResult.getResult();
 		}
 
-		final String stringValue = stringBuilder.toString();
-		return new CommentStruct(stringValue);
+//		final String stringValue = stringBuilder.toString();
+//		return new CommentStruct(stringValue);
+		return NullStruct.INSTANCE;
 	}
 }

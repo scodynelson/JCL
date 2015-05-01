@@ -1,14 +1,3 @@
-UNWIND-PROTECT:
-
-(deftest unwind-protect.9
-  (let ((x nil))
-    (handler-case
-      (flet ((%f () (error 'type-error :datum 'foo :expected-type nil)))
-        (unwind-protect (handler-case (%f))
-          (setq x '(a))))
-      (type-error () x)))
-  (a))
-
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 TAGBODY:
 
@@ -21,23 +10,6 @@ TAGBODY:
      a)
     x)
   10)
-
-$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-BLOCK:
-
-(deftest block.10
-  (block done
-    (flet ((%f (x) (return-from done x)))
-      (block done (mapcar #'%f '(good bad bad))))
-    'bad)
-  good)
-
-$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-THROW:
-
-(deftest throw-error
-  (signals-error (throw (gensym) nil) control-error)
-  t)
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 PROGV:
@@ -65,61 +37,6 @@ PROGV:
         (progn (setq y (1+ c)) nil)
       (values x y c)))
   1 2 2)
-
-$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-LET:
-
-(deftest let.5
-  (let ((x 0))
-    (let ((#:x 1))
-      x))
-  0)
-
-// TODO: strip out comment structs in the evaluator!!!
-(deftest let.17a
-  (funcall
-   (compile
-    nil
-    '(lambda ()
-       (let ((x :bad))
-         (declare (special x))
-         (let ((x :good)) ;; lexical binding
-           (let ((y x))
-             (declare (special x)) ;; free declaration
-             y))))))
-  :good)
-
-$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-LET*:
-
-(deftest let*.5
-  (let* ((x 0))
-    (let* ((#:x 1))
-      x))
-  0)
-
-NOTE: This works fine, but we need to strip out CommentStructs at some point in the mix.
-(deftest let*.17
-  (let ((x :bad))
-    (declare (special x))
-    (let ((x :good)) ;; lexical binding
-      (let* ((y x))
-        (declare (special x)) ;; free declaration
-        y)))
-  :good)
-
-(deftest let*.17a
-  (funcall
-   (compile
-    nil
-    '(lambda ()
-       (let ((x :bad))
-         (declare (special x))
-         (let ((x :good)) ;; lexical binding
-           (let* ((y x))
-             (declare (special x)) ;; free declaration
-             y))))))
-  :good)
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 LAMBDA:
@@ -182,18 +99,6 @@ FLET:
       (%f 15)))
   20)
 
-NOTE: The below works, but can we print the error better???
-(deftest flet.13
-  (signals-error
-   (flet ((%f (&key a (b 0 b-p)) (values a b b-p))) (%f :a))
-   program-error)
-  t)
-
-NOTE: The below works, but can we print the error better???
-(deftest flet.16
-  (signals-error (flet ((%f (&key a) a)) (%f '(foo))) program-error)
-  t)
-
 (deftest flet.17
   (flet (((setf %f) (x y) (setf (car y) x)))
     (let ((z (list 1 2)))
@@ -236,20 +141,6 @@ LABELS:
                            (t (%f (+ x n) (1- n))))))
     (%f 0 10))
   55)
-
-// NOTE: the following works, but can we print the message better???
-(deftest labels.13
-  (signals-error
-   (labels ((%f (&key a (b 0 b-p)) (values a b b-p))) (%f :a))
-   program-error)
-  t)
-
-// NOTE: the following works, but can we print the message better???
-;;; Invalid keyword argument (section 3.5.1.5)
-(deftest labels.16
-  (signals-error (labels ((%f (&key a) a)) (%f '(foo)))
-                 program-error)
-  t)
 
 (deftest labels.17
   (labels (((setf %f) (x y) (setf (car y) x)))

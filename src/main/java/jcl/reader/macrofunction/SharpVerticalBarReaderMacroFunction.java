@@ -75,7 +75,8 @@ public class SharpVerticalBarReaderMacroFunction extends ReaderMacroFunction {
 			nextReadResult = reader.readChar(true, NullStruct.INSTANCE, false);
 		}
 
-		final String stringValue = stringBuilder.toString();
-		return new CommentStruct(stringValue);
+//		final String stringValue = stringBuilder.toString();
+//		return new CommentStruct(stringValue);
+		return NullStruct.INSTANCE;
 	}
 }

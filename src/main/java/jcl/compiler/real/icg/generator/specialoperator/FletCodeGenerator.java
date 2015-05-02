@@ -65,19 +65,14 @@ public class FletCodeGenerator implements CodeGenerator<FletStruct> {
 
 		final int closureFunctionBindingsStore = methodBuilder.getNextAvailableStore();
 
-		mv.visitVarInsn(Opcodes.ALOAD, thisStore);
-		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/FunctionStruct", "getClosure", "()Ljcl/functions/Closure;", false);
-		final int closureStore = methodBuilder.getNextAvailableStore();
-		mv.visitVarInsn(Opcodes.ASTORE, closureStore);
-
 		mv.visitInsn(Opcodes.ACONST_NULL);
 		mv.visitVarInsn(Opcodes.ASTORE, closureFunctionBindingsStore);
 
-		mv.visitVarInsn(Opcodes.ALOAD, closureStore);
+		mv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
 		final Label closureNullCheckIfEnd = new Label();
 		mv.visitJumpInsn(Opcodes.IFNULL, closureNullCheckIfEnd);
 
-		mv.visitVarInsn(Opcodes.ALOAD, closureStore);
+		mv.visitVarInsn(Opcodes.ALOAD, closureArgStore);
 		mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "jcl/functions/Closure", "getFunctionBindings", "()Ljava/util/Map;", false);
 		mv.visitVarInsn(Opcodes.ASTORE, closureFunctionBindingsStore);
 

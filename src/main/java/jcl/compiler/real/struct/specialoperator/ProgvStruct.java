@@ -4,13 +4,9 @@
 
 package jcl.compiler.real.struct.specialoperator;
 
-import java.io.Serializable;
-import java.util.List;
-
 import jcl.LispStruct;
 import jcl.compiler.real.environment.ProgvEnvironment;
 import jcl.compiler.real.struct.CompilerSpecialOperatorStruct;
-import jcl.symbols.SymbolStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -20,20 +16,27 @@ public class ProgvStruct extends CompilerSpecialOperatorStruct {
 
 	private static final long serialVersionUID = 6286708668973616872L;
 
-	private final List<ProgvVar> vars;
+	private final LispStruct vars;
+
+	private final LispStruct vals;
 
 	private final PrognStruct forms;
 
 	private final ProgvEnvironment progvEnvironment;
 
-	public ProgvStruct(final List<ProgvVar> vars, final PrognStruct forms, final ProgvEnvironment progvEnvironment) {
+	public ProgvStruct(final LispStruct vars, final LispStruct vals, final PrognStruct forms, final ProgvEnvironment progvEnvironment) {
 		this.vars = vars;
+		this.vals = vals;
 		this.forms = forms;
 		this.progvEnvironment = progvEnvironment;
 	}
 
-	public List<ProgvVar> getVars() {
+	public LispStruct getVars() {
 		return vars;
+	}
+
+	public LispStruct getVals() {
+		return vals;
 	}
 
 	public PrognStruct getForms() {
@@ -48,6 +51,7 @@ public class ProgvStruct extends CompilerSpecialOperatorStruct {
 	public int hashCode() {
 		return new HashCodeBuilder().appendSuper(super.hashCode())
 		                            .append(vars)
+		                            .append(vals)
 		                            .append(forms)
 		                            .append(progvEnvironment)
 		                            .toHashCode();
@@ -67,6 +71,7 @@ public class ProgvStruct extends CompilerSpecialOperatorStruct {
 		final ProgvStruct rhs = (ProgvStruct) obj;
 		return new EqualsBuilder().appendSuper(super.equals(obj))
 		                          .append(vars, rhs.vars)
+		                          .append(vals, rhs.vals)
 		                          .append(forms, rhs.forms)
 		                          .append(progvEnvironment, rhs.progvEnvironment)
 		                          .isEquals();
@@ -75,61 +80,9 @@ public class ProgvStruct extends CompilerSpecialOperatorStruct {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(vars)
+		                                                                .append(vals)
 		                                                                .append(forms)
 		                                                                .append(progvEnvironment)
 		                                                                .toString();
-	}
-
-	public static class ProgvVar implements Serializable {
-
-		private static final long serialVersionUID = -5131005121770228469L;
-
-		private final SymbolStruct<?> var;
-
-		private final LispStruct val;
-
-		public ProgvVar(final SymbolStruct<?> var, final LispStruct val) {
-			this.var = var;
-			this.val = val;
-		}
-
-		public SymbolStruct<?> getVar() {
-			return var;
-		}
-
-		public LispStruct getVal() {
-			return val;
-		}
-
-		@Override
-		public int hashCode() {
-			return new HashCodeBuilder().append(var)
-			                            .append(val)
-			                            .toHashCode();
-		}
-
-		@Override
-		public boolean equals(final Object obj) {
-			if (obj == null) {
-				return false;
-			}
-			if (obj == this) {
-				return true;
-			}
-			if (obj.getClass() != getClass()) {
-				return false;
-			}
-			final ProgvVar rhs = (ProgvVar) obj;
-			return new EqualsBuilder().append(var, rhs.var)
-			                          .append(val, rhs.val)
-			                          .isEquals();
-		}
-
-		@Override
-		public String toString() {
-			return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(var)
-			                                                                .append(val)
-			                                                                .toString();
-		}
 	}
 }

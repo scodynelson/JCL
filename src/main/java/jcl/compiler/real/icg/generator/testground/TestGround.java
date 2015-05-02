@@ -26,6 +26,7 @@ import jcl.functions.Closure;
 import jcl.functions.FunctionStruct;
 import jcl.functions.expanders.SymbolMacroExpander;
 import jcl.lists.ConsStruct;
+import jcl.lists.ListStruct;
 import jcl.lists.NullStruct;
 import jcl.numbers.ComplexStruct;
 import jcl.numbers.FloatStruct;
@@ -408,5 +409,61 @@ public class TestGround {
 		LispStruct[] args = new LispStruct[argsList.size()];
 		args = argsList.toArray(args);
 		return functionForm.apply(args);
+	}
+
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	private Object progvGen(Closure currentClosure) {
+
+		final LispStruct vars = null;
+		if (!(vars instanceof ListStruct)) {
+			throw new ProgramErrorException("PROGV: Symbols list must be a list. Got: " + vars);
+		}
+
+		final ListStruct varsAsList = (ListStruct) vars;
+		final List<LispStruct> varsAsJavaList = varsAsList.getAsJavaList();
+		for (final LispStruct currentVar : varsAsJavaList) {
+			if (!(currentVar instanceof SymbolStruct)) {
+				throw new ProgramErrorException("PROGV: Elements in symbols list must be symbols. Got: " + currentVar);
+			}
+		}
+
+		final LispStruct vals = null;
+		if (!(vals instanceof ListStruct)) {
+			throw new ProgramErrorException("PROGV: Values list must be a list. Got: " + vals);
+		}
+
+		final ListStruct valsAsList = (ListStruct) vals;
+		final List<LispStruct> valsAsJavaList = valsAsList.getAsJavaList();
+
+		final int numberOfProgvVars = varsAsJavaList.size();
+		final int numberOfProgvVals = valsAsJavaList.size();
+		for (int i = 0; i < numberOfProgvVars; i++) {
+
+			// NOTE: We can safely cast here since we checked the type earlier
+			final SymbolStruct var = (SymbolStruct) varsAsJavaList.get(i);
+
+			LispStruct val = null;
+			if (i < numberOfProgvVals) {
+				val = valsAsJavaList.get(i);
+			}
+			if (val instanceof ValuesStruct) {
+				final ValuesStruct valuesStruct = (ValuesStruct) val;
+				val = valuesStruct.getPrimaryValue();
+			}
+
+			var.bindDynamicValue(val);
+		}
+
+		final LispStruct result;
+		try {
+			result = new CharacterStruct(197);
+		} finally {
+			for (final LispStruct var : varsAsJavaList) {
+				// NOTE: We can safely cast here since we checked the type earlier
+				final SymbolStruct varSymbol = (SymbolStruct) var;
+				varSymbol.unbindDynamicValue();
+			}
+		}
+		return result;
 	}
 }

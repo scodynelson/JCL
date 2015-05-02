@@ -12,33 +12,6 @@ TAGBODY:
   10)
 
 $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-PROGV:
-
-(deftest progv.6
-  (let ((x 0))
-    (declare (special x))
-    (progv '(x) ()
-      x))
-  #{error Unbound Variable})
-
-(deftest progv.6a
-  (let ((x 0))
-    (declare (special x))
-    (progv '(x) () (setq x 1))
-    x)
-  0)
-
-;; forms are evaluated in order
-
-(deftest progv.10
-  (let ((x 0) (y 0) (c 0))
-    (progv
-        (progn (setq x (1+ c)) nil)
-        (progn (setq y (1+ c)) nil)
-      (values x y c)))
-  1 2 2)
-
-$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 LAMBDA:
 
 (deftest lambda.63

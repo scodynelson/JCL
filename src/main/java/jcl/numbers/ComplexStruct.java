@@ -7,6 +7,8 @@ package jcl.numbers;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import jcl.LispStruct;
+import jcl.conditions.exceptions.TypeErrorException;
 import jcl.types.ComplexType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -194,6 +196,139 @@ public class ComplexStruct extends NumberStruct {
 	 */
 	public RealStruct getImaginary() {
 		return imaginary;
+	}
+
+	public boolean eql(final LispStruct lispStruct) {
+		return equals(lispStruct);
+	}
+
+	public boolean equal(final LispStruct lispStruct) {
+		return equals(lispStruct);
+	}
+
+	public boolean equalp(final LispStruct lispStruct) {
+		return isEqualTo(lispStruct);
+	}
+
+	@Override
+	public RealStruct ABS() {
+		if (real.zerop()) {
+			return imaginary.ABS();
+		}
+
+		final BigDecimal bdReal;
+		if (real instanceof IntegerStruct) {
+			bdReal = new BigDecimal(((IntegerStruct) real).getBigInteger());
+		} else if (real instanceof FloatStruct) {
+			bdReal = ((FloatStruct) real).getBigDecimal();
+		} else if (real instanceof RatioStruct) {
+			bdReal = ((RatioStruct) real).getBigFraction().bigDecimalValue();
+		} else {
+			throw new TypeErrorException("Not of type REAL");
+		}
+
+		final BigDecimal bdImag;
+		if (imaginary instanceof IntegerStruct) {
+			bdImag = new BigDecimal(((IntegerStruct) imaginary).getBigInteger());
+		} else if (imaginary instanceof FloatStruct) {
+			bdImag = ((FloatStruct) imaginary).getBigDecimal();
+		} else if (imaginary instanceof RatioStruct) {
+			bdImag = ((RatioStruct) imaginary).getBigFraction().bigDecimalValue();
+		} else {
+			throw new TypeErrorException("Not of type REAL");
+		}
+
+		// TODO: can we avoid possible precision loss here???
+		final double dblReal = bdReal.doubleValue();
+		final double dblImag = bdImag.doubleValue();
+		return new FloatStruct(BigDecimal.valueOf(StrictMath.hypot(dblReal, dblImag)));
+	}
+
+	@Override
+	public boolean zerop() {
+		return real.zerop() && imaginary.zerop();
+	}
+
+	@Override
+	public NumberStruct add(final NumberStruct numberStruct) {
+		if (numberStruct instanceof ComplexStruct) {
+			final ComplexStruct c = (ComplexStruct) numberStruct;
+			return new ComplexStruct((RealStruct) real.add(c.real), (RealStruct) imaginary.add(c.imaginary));
+		}
+		return new ComplexStruct((RealStruct) real.add(numberStruct), imaginary);
+	}
+
+	@Override
+	public NumberStruct subtract(final NumberStruct numberStruct) {
+		if (numberStruct instanceof ComplexStruct) {
+			final ComplexStruct c = (ComplexStruct) numberStruct;
+			return new ComplexStruct((RealStruct) real.subtract(c.real), (RealStruct) imaginary.subtract(c.imaginary));
+		}
+		return new ComplexStruct((RealStruct) real.subtract(numberStruct), imaginary);
+	}
+
+	@Override
+	public NumberStruct multiply(final NumberStruct numberStruct) {
+		if (numberStruct instanceof ComplexStruct) {
+			final NumberStruct a = real;
+			final NumberStruct b = imaginary;
+			final NumberStruct c = ((ComplexStruct) numberStruct).real;
+			final NumberStruct d = ((ComplexStruct) numberStruct).imaginary;
+			// xy = (ac - bd) + i(ad + bc)
+			// real part = ac - bd
+			// imag part = ad + bc
+			final NumberStruct ac = a.multiply(c);
+			final NumberStruct bd = b.multiply(d);
+			final NumberStruct ad = a.multiply(d);
+			final NumberStruct bc = b.multiply(c);
+			return new ComplexStruct((RealStruct) ac.subtract(bd), (RealStruct) ad.add(bc));
+		}
+		return new ComplexStruct((RealStruct) real.multiply(numberStruct), (RealStruct) imaginary.multiply(numberStruct));
+	}
+
+	@Override
+	public NumberStruct divide(final NumberStruct numberStruct) {
+		if (numberStruct instanceof ComplexStruct) {
+			final NumberStruct a = real;
+			final NumberStruct b = imaginary;
+			final NumberStruct c = ((ComplexStruct) numberStruct).real;
+			final NumberStruct d = ((ComplexStruct) numberStruct).imaginary;
+			final NumberStruct ac = a.multiply(c);
+			final NumberStruct bd = b.multiply(d);
+			final NumberStruct bc = b.multiply(c);
+			final NumberStruct ad = a.multiply(d);
+			final NumberStruct denominator = c.multiply(c).add(d.multiply(d));
+			return new ComplexStruct((RealStruct) ac.add(bd).divide(denominator), (RealStruct) bc.subtract(ad).divide(denominator));
+		}
+		return new ComplexStruct((RealStruct) real.divide(numberStruct), (RealStruct) imaginary.divide(numberStruct));
+	}
+
+	@Override
+	public boolean isEqualTo(final LispStruct obj) {
+		if (obj instanceof ComplexStruct) {
+			final ComplexStruct c = (ComplexStruct) obj;
+			return real.isEqualTo(c.real) && imaginary.isEqualTo(c.imaginary);
+		}
+		if (obj instanceof NumberStruct) {
+			// obj is a number, but not complex.
+			if (imaginary instanceof FloatStruct) {
+				if (((FloatStruct) imaginary).getBigDecimal().compareTo(BigDecimal.ZERO) == 0) {
+					if (obj instanceof IntegerStruct) {
+						return new BigDecimal(((IntegerStruct) obj).getBigInteger()).compareTo(((FloatStruct) real).getBigDecimal()) == 0;
+					}
+					if (obj instanceof FloatStruct) {
+						return ((FloatStruct) obj).getBigDecimal().compareTo(((FloatStruct) real).getBigDecimal()) == 0;
+					}
+				}
+			}
+			return false;
+		}
+		throw new TypeErrorException("Not of type NUMBER");
+	}
+
+	@Override
+	public boolean isNotEqualTo(final LispStruct obj) {
+		return !isEqualTo(obj);
 	}
 
 	@Override

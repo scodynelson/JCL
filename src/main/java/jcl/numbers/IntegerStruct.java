@@ -77,9 +77,10 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	@Override
-	public IntegerStruct ABS() {
-		if (bigInteger.signum() >= 0)
+	public RealStruct ABS() {
+		if (bigInteger.signum() >= 0) {
 			return this;
+		}
 		return new IntegerStruct(bigInteger.negate());
 	}
 
@@ -137,7 +138,7 @@ public class IntegerStruct extends RationalStruct {
 		throw new TypeErrorException("Not of type NUMBER");
 	}
 
-	public static NumberStruct number(BigInteger numerator, BigInteger denominator) {
+	public static RationalStruct number(BigInteger numerator, BigInteger denominator) {
 
 		if (denominator.signum() == 0) {
 			throw new RuntimeException("division by zero");
@@ -233,16 +234,7 @@ public class IntegerStruct extends RationalStruct {
 
 	@Override
 	public boolean isNotEqualTo(final LispStruct obj) {
-		if (obj instanceof IntegerStruct) {
-			return !bigInteger.equals(((IntegerStruct) obj).bigInteger);
-		}
-		if (obj instanceof FloatStruct) {
-			return isNotEqualTo(((FloatStruct) obj).rational());
-		}
-		if (obj instanceof NumberStruct) {
-			return true;
-		}
-		throw new TypeErrorException("Not of type NUMBER");
+		return !isEqualTo(obj);
 	}
 
 	@Override
@@ -328,14 +320,14 @@ public class IntegerStruct extends RationalStruct {
 			} else {
 				throw new TypeErrorException("Not of type REAL");
 			}
-		} catch (ArithmeticException e) {
+		} catch (final ArithmeticException e) {
 			if (obj.zerop()) {
 				throw new RuntimeException("division by zero");
-			} else {
-				throw new RuntimeException("arithmetic error", e);
 			}
+			throw new RuntimeException("arithmetic error", e);
 		}
 		return value1;
+//		return value2;
 	}
 
 	public IntegerStruct ash(final IntegerStruct obj) {

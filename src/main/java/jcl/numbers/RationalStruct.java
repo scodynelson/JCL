@@ -45,4 +45,12 @@ public class RationalStruct extends RealStruct {
 	               final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		super(type, directSuperClasses, subClasses);
 	}
+
+	public IntegerStruct numerator() {
+		return null;
+	}
+
+	public IntegerStruct denominator() {
+		return null;
+	}
 }

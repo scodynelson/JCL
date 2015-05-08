@@ -46,4 +46,52 @@ public class NumberStruct extends BuiltInClassStruct {
 	             final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		super(type, directSuperClasses, subClasses);
 	}
+
+	public RealStruct ABS() {
+		return null;
+	}
+
+	public NumberStruct add(final NumberStruct numberStruct) {
+		return null;
+	}
+
+	public NumberStruct subtract(final NumberStruct numberStruct) {
+		return null;
+	}
+
+	public NumberStruct multiply(final NumberStruct numberStruct) {
+		return null;
+	}
+
+	public NumberStruct divide(final NumberStruct numberStruct) {
+		return null;
+	}
+
+	public boolean zerop() {
+		return false;
+	}
+
+	public boolean isEqualTo(final LispStruct obj) {
+		return false;
+	}
+
+	public boolean isNotEqualTo(final LispStruct obj) {
+		return false;
+	}
+
+	public boolean isLessThan(final LispStruct obj) {
+		return false;
+	}
+
+	public boolean isGreaterThan(final LispStruct obj) {
+		return false;
+	}
+
+	public boolean isLessThanOrEqualTo(final LispStruct obj) {
+		return false;
+	}
+
+	public boolean isGreaterThanOrEqualTo(final LispStruct obj) {
+		return false;
+	}
 }

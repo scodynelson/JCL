@@ -45,4 +45,41 @@ public class RealStruct extends NumberStruct {
 	           final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		super(type, directSuperClasses, subClasses);
 	}
+
+	public boolean plusp() {
+		return false;
+	}
+
+	public boolean minusp() {
+		return false;
+	}
+
+	public RationalStruct rational() {
+		return null;
+	}
+
+	public RationalStruct rationalize() {
+		return null;
+	}
+
+	public RealStruct MOD(final RealStruct divisor) {
+		final RealStruct result = truncate(divisor);
+		// TODO: this doesn't return both values...
+		if (!result.zerop()) {
+			if (divisor.minusp()) {
+				if (plusp()) {
+					return (RealStruct) result.add(divisor);
+				}
+			} else {
+				if (minusp()) {
+					return (RealStruct) result.add(divisor);
+				}
+			}
+		}
+		return result;
+	}
+
+	public RealStruct truncate(final RealStruct obj) {
+		return null;
+	}
 }

@@ -4,6 +4,8 @@
 
 package jcl.numbers;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 
 import jcl.LispStruct;
@@ -79,7 +81,41 @@ public class RealStruct extends NumberStruct {
 		return result;
 	}
 
-	public RealStruct truncate(final RealStruct obj) {
+	public RealStruct truncate() {
+		return truncate(new IntegerStruct(BigInteger.ONE));
+	}
+
+	public RealStruct truncate(final RealStruct divisor) {
 		return null;
+	}
+
+	public RealStruct ftruncate() {
+		return ftruncate(new IntegerStruct(BigInteger.ONE));
+	}
+
+	public RealStruct ftruncate(final RealStruct second) {
+		if (zerop()) {
+			RealStruct q = this;
+			NumberStruct r = new FloatStruct(BigDecimal.ZERO);
+			return q;
+		}
+
+		RealStruct q = truncate(second); // an integer
+		if (q.zerop()) {
+			if (minusp()) {
+				if (second.minusp()) {
+					q = new FloatStruct(new BigDecimal("0.0"));
+				} else {
+					q = new FloatStruct(new BigDecimal("-0.0"));
+				}
+			} else if (second.minusp()) {
+				q = new FloatStruct(new BigDecimal("-0.0"));
+			} else {
+				q = new FloatStruct(new BigDecimal("0.0"));
+			}
+		} else {
+			q = new FloatStruct(new BigDecimal(((IntegerStruct) q).getBigInteger()));
+		}
+		return q;
 	}
 }

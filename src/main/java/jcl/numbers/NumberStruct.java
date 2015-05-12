@@ -65,6 +65,13 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 
 	public abstract boolean isNotEqualTo(final LispStruct obj);
 
+	public abstract NumberStruct exp();
+
+	public abstract NumberStruct sqrt();
+
+	// TODO: handle 'log' with base parameter!!!
+	public abstract NumberStruct log();
+
 	public abstract NumberStruct sin();
 
 	public abstract NumberStruct cos();

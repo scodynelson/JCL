@@ -15,6 +15,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.math3.fraction.BigFraction;
+import org.apache.commons.math3.util.FastMath;
 
 /**
  * The {@link ComplexStruct} is the object representation of a Lisp 'complex' type.
@@ -332,63 +333,175 @@ public class ComplexStruct extends NumberStruct {
 	}
 
 	@Override
+	public NumberStruct exp() {
+		return real.exp().multiply(imaginary.cis());
+	}
+
+	@Override
+	public NumberStruct sqrt() {
+		RealStruct imagpart = imaginary;
+		if (imagpart.zerop()) {
+			RealStruct realpart = real;
+			if (realpart.minusp()) {
+				return new ComplexStruct(imagpart, (RealStruct) new IntegerStruct(BigInteger.ZERO).subtract(realpart).sqrt());
+			} else {
+				return new ComplexStruct((RealStruct) realpart.sqrt(), imagpart);
+			}
+		}
+		return log().divide(new IntegerStruct(BigInteger.valueOf(2))).exp();
+	}
+
+	@Override
+	public NumberStruct log() {
+		// TODO: check complex results when item is not complex!!!
+		// TODO: no casting!!!
+		FloatStruct re = (FloatStruct) real;
+		FloatStruct im = (FloatStruct) imaginary;
+		FloatStruct phase = new FloatStruct(BigDecimal.valueOf(FastMath.atan2(im.getBigDecimal().doubleValue(), re.getBigDecimal().doubleValue())));  // atan(y/x)
+		FloatStruct abs = (FloatStruct) ABS();
+		return new ComplexStruct(new FloatStruct(BigDecimal.valueOf(FastMath.log(abs.getBigDecimal().doubleValue()))), phase);
+	}
+
+	@Override
 	public NumberStruct sin() {
-		return null;
+		NumberStruct n = multiply(new ComplexStruct(new IntegerStruct(BigInteger.ZERO), new IntegerStruct(BigInteger.ONE)));
+		NumberStruct result = n.exp();
+		result = result.subtract(n.multiply(new IntegerStruct(BigInteger.valueOf(-1))).exp());
+		return result.divide(new IntegerStruct(BigInteger.valueOf(2)).multiply(new ComplexStruct(new IntegerStruct(BigInteger.ZERO), new IntegerStruct(BigInteger.ONE))));
 	}
 
 	@Override
 	public NumberStruct cos() {
-		return null;
+		NumberStruct n = multiply(new ComplexStruct(new IntegerStruct(BigInteger.ZERO), new IntegerStruct(BigInteger.ONE)));
+		NumberStruct result = n.exp();
+		result = result.add(n.multiply(new IntegerStruct(BigInteger.valueOf(-1))).exp());
+		return result.divide(new IntegerStruct(BigInteger.valueOf(2)));
 	}
 
 	@Override
 	public NumberStruct tan() {
-		return null;
+		return sin().divide(cos());
 	}
 
 	@Override
 	public NumberStruct asin() {
-		return null;
+		NumberStruct result = multiply(this);
+		result = new IntegerStruct(BigInteger.ONE).subtract(result);
+		result = result.sqrt();
+		NumberStruct n = new ComplexStruct(new IntegerStruct(BigInteger.ZERO), new IntegerStruct(BigInteger.ONE));
+		n = n.multiply(this);
+		result = n.add(result);
+		result = result.log();
+		result = result.multiply(new ComplexStruct(new IntegerStruct(BigInteger.ZERO), new IntegerStruct(BigInteger.valueOf(-1))));
+
+		return result;
 	}
 
 	@Override
 	public NumberStruct acos() {
-		return null;
+		NumberStruct result = new FloatStruct(new BigDecimal(Math.PI / 2));
+		result = result.subtract(asin());
+
+		return result;
 	}
 
 	@Override
 	public NumberStruct atan() {
-		return null;
+		RealStruct im = imaginary;
+		if (im.zerop()) {
+			return new ComplexStruct((RealStruct) real.atan(), im);
+		}
+		NumberStruct result = multiply(this);
+		result = result.add(new IntegerStruct(BigInteger.ONE));
+		result = new IntegerStruct(BigInteger.ONE).divide(result);
+		result = result.sqrt();
+		NumberStruct n = new ComplexStruct(new IntegerStruct(BigInteger.ZERO), new IntegerStruct(BigInteger.ONE));
+		n = n.multiply(this);
+		n = n.add(new IntegerStruct(BigInteger.ONE));
+		result = n.multiply(result);
+		result = result.log();
+		result = result.multiply(new ComplexStruct(new IntegerStruct(BigInteger.ZERO), new IntegerStruct(BigInteger.valueOf(-1))));
+		return result;
 	}
 
 	@Override
 	public NumberStruct sinh() {
-		return null;
+		RealStruct im = imaginary;
+		if (im.zerop()) {
+			return new ComplexStruct((RealStruct) real.sinh(), im);
+		}
+		NumberStruct result = exp();
+		result = result.subtract(multiply(new IntegerStruct(BigInteger.valueOf(-1))).exp());
+		result = result.divide(new IntegerStruct(BigInteger.valueOf(2)));
+
+		return result;
 	}
 
 	@Override
 	public NumberStruct cosh() {
-		return null;
+		RealStruct im = imaginary;
+		if (im.zerop()) {
+			return new ComplexStruct((RealStruct) real.cosh(), im);
+		}
+		NumberStruct result = exp();
+		result = result.add(multiply(new IntegerStruct(BigInteger.valueOf(-1))).exp());
+		result = result.divide(new IntegerStruct(BigInteger.valueOf(2)));
+
+		return result;
 	}
 
 	@Override
 	public NumberStruct tanh() {
-		return null;
+		return sinh().divide(cosh());
 	}
 
 	@Override
 	public NumberStruct asinh() {
-		return null;
+		RealStruct im = imaginary;
+		if (im.zerop()) {
+			return new ComplexStruct((RealStruct) real.asinh(), im);
+		}
+		NumberStruct result = multiply(this);
+		result = new IntegerStruct(BigInteger.ONE).add(result);
+		result = result.sqrt();
+		result = result.add(this);
+		result = result.log();
+
+		return result;
 	}
 
 	@Override
 	public NumberStruct acosh() {
-		return null;
+		RealStruct im = imaginary;
+		if (im.zerop()) {
+			return new ComplexStruct((RealStruct) real.acosh(), im);
+		}
+		NumberStruct n1 = add(new IntegerStruct(BigInteger.ONE));
+		n1 = n1.divide(new IntegerStruct(BigInteger.valueOf(2)));
+		n1 = n1.sqrt();
+		NumberStruct n2 = subtract(new IntegerStruct(BigInteger.ONE));
+		n2 = n2.divide(new IntegerStruct(BigInteger.valueOf(2)));
+		n2 = n2.sqrt();
+		NumberStruct result = n1.add(n2);
+		result = result.log();
+		result = result.multiply(new IntegerStruct(BigInteger.valueOf(2)));
+
+		return result;
 	}
 
 	@Override
 	public NumberStruct atanh() {
-		return null;
+		RealStruct im = imaginary;
+		if (im.zerop()) {
+			return new ComplexStruct((RealStruct) real.atanh(), im);
+		}
+
+		NumberStruct n1 = new IntegerStruct(BigInteger.ONE).add(this).log();
+		NumberStruct n2 = new IntegerStruct(BigInteger.ONE).subtract(this).log();
+		NumberStruct result = n1.subtract(n2);
+		result = result.divide(new IntegerStruct(BigInteger.valueOf(2)));
+
+		return result;
 	}
 
 	@Override

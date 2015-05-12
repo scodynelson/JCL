@@ -365,6 +365,27 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	@Override
+	public NumberStruct exp() {
+		final double doubleValue = bigInteger.doubleValue();
+		final double exp = FastMath.exp(doubleValue);
+		return new FloatStruct(new BigDecimal(exp));
+	}
+
+	@Override
+	public NumberStruct sqrt() {
+		final double doubleValue = bigInteger.doubleValue();
+		final double sqrt = FastMath.sqrt(doubleValue);
+		return new FloatStruct(new BigDecimal(sqrt));
+	}
+
+	@Override
+	public NumberStruct log() {
+		final double doubleValue = bigInteger.doubleValue();
+		final double log = FastMath.log(doubleValue);
+		return new FloatStruct(new BigDecimal(log));
+	}
+
+	@Override
 	public NumberStruct sin() {
 		final double doubleValue = bigInteger.doubleValue();
 		final double sin = FastMath.sin(doubleValue);

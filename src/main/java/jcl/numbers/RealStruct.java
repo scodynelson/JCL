@@ -83,6 +83,10 @@ public abstract class RealStruct extends NumberStruct {
 
 	public abstract RealStruct min(final RealStruct real);
 
+	public ComplexStruct cis() {
+		return new ComplexStruct((RealStruct) cos(), (RealStruct) sin());
+	}
+
 	public abstract RealStruct atan(final RealStruct real);
 
 	public RealStruct truncate() {

@@ -27,6 +27,10 @@ public class ComplexStruct extends NumberStruct {
 	 */
 	private static final long serialVersionUID = 7848008215064899579L;
 
+	public static final ComplexStruct ZERO = new ComplexStruct(IntegerStruct.ZERO, IntegerStruct.ZERO);
+
+	public static final ComplexStruct ONE = new ComplexStruct(IntegerStruct.ONE, IntegerStruct.ZERO);
+
 	/**
 	 * The {@link RealStruct} that comprises the real value of the complex.
 	 */
@@ -251,30 +255,30 @@ public class ComplexStruct extends NumberStruct {
 	}
 
 	@Override
-	public NumberStruct add(final NumberStruct numberStruct) {
-		if (numberStruct instanceof ComplexStruct) {
-			final ComplexStruct c = (ComplexStruct) numberStruct;
+	public NumberStruct add(final NumberStruct number) {
+		if (number instanceof ComplexStruct) {
+			final ComplexStruct c = (ComplexStruct) number;
 			return new ComplexStruct((RealStruct) real.add(c.real), (RealStruct) imaginary.add(c.imaginary));
 		}
-		return new ComplexStruct((RealStruct) real.add(numberStruct), imaginary);
+		return new ComplexStruct((RealStruct) real.add(number), imaginary);
 	}
 
 	@Override
-	public NumberStruct subtract(final NumberStruct numberStruct) {
-		if (numberStruct instanceof ComplexStruct) {
-			final ComplexStruct c = (ComplexStruct) numberStruct;
+	public NumberStruct subtract(final NumberStruct number) {
+		if (number instanceof ComplexStruct) {
+			final ComplexStruct c = (ComplexStruct) number;
 			return new ComplexStruct((RealStruct) real.subtract(c.real), (RealStruct) imaginary.subtract(c.imaginary));
 		}
-		return new ComplexStruct((RealStruct) real.subtract(numberStruct), imaginary);
+		return new ComplexStruct((RealStruct) real.subtract(number), imaginary);
 	}
 
 	@Override
-	public NumberStruct multiply(final NumberStruct numberStruct) {
-		if (numberStruct instanceof ComplexStruct) {
+	public NumberStruct multiply(final NumberStruct number) {
+		if (number instanceof ComplexStruct) {
 			final NumberStruct a = real;
 			final NumberStruct b = imaginary;
-			final NumberStruct c = ((ComplexStruct) numberStruct).real;
-			final NumberStruct d = ((ComplexStruct) numberStruct).imaginary;
+			final NumberStruct c = ((ComplexStruct) number).real;
+			final NumberStruct d = ((ComplexStruct) number).imaginary;
 			// xy = (ac - bd) + i(ad + bc)
 			// real part = ac - bd
 			// imag part = ad + bc
@@ -284,16 +288,16 @@ public class ComplexStruct extends NumberStruct {
 			final NumberStruct bc = b.multiply(c);
 			return new ComplexStruct((RealStruct) ac.subtract(bd), (RealStruct) ad.add(bc));
 		}
-		return new ComplexStruct((RealStruct) real.multiply(numberStruct), (RealStruct) imaginary.multiply(numberStruct));
+		return new ComplexStruct((RealStruct) real.multiply(number), (RealStruct) imaginary.multiply(number));
 	}
 
 	@Override
-	public NumberStruct divide(final NumberStruct numberStruct) {
-		if (numberStruct instanceof ComplexStruct) {
+	public NumberStruct divide(final NumberStruct number) {
+		if (number instanceof ComplexStruct) {
 			final NumberStruct a = real;
 			final NumberStruct b = imaginary;
-			final NumberStruct c = ((ComplexStruct) numberStruct).real;
-			final NumberStruct d = ((ComplexStruct) numberStruct).imaginary;
+			final NumberStruct c = ((ComplexStruct) number).real;
+			final NumberStruct d = ((ComplexStruct) number).imaginary;
 			final NumberStruct ac = a.multiply(c);
 			final NumberStruct bd = b.multiply(d);
 			final NumberStruct bc = b.multiply(c);
@@ -301,7 +305,7 @@ public class ComplexStruct extends NumberStruct {
 			final NumberStruct denominator = c.multiply(c).add(d.multiply(d));
 			return new ComplexStruct((RealStruct) ac.add(bd).divide(denominator), (RealStruct) bc.subtract(ad).divide(denominator));
 		}
-		return new ComplexStruct((RealStruct) real.divide(numberStruct), (RealStruct) imaginary.divide(numberStruct));
+		return new ComplexStruct((RealStruct) real.divide(number), (RealStruct) imaginary.divide(number));
 	}
 
 	@Override
@@ -338,44 +342,98 @@ public class ComplexStruct extends NumberStruct {
 	}
 
 	@Override
+	public NumberStruct expt(final NumberStruct power) {
+		if (power.zerop()) {
+			if (power instanceof IntegerStruct) {
+				if (real instanceof FloatStruct) {
+					return ONE;
+				}
+				return IntegerStruct.ONE;
+			}
+			return FloatStruct.ONE;
+		}
+		if (zerop()) {
+			return this;
+		}
+		if (isEqualTo(ONE)) {
+			return this;
+		}
+
+		if ((power instanceof IntegerStruct) && (real instanceof RationalStruct)) {
+			// exact math version
+			return intexp(this, (IntegerStruct) power);
+		}
+		// for anything not a rational or complex rational, use
+		// float approximation.
+		boolean wantDoubleFloat = false;
+		if ((power instanceof FloatStruct)
+				|| ((real instanceof FloatStruct) || (imaginary instanceof FloatStruct))
+				|| ((power instanceof ComplexStruct)
+				&& ((((ComplexStruct) power).real instanceof FloatStruct)
+				|| (((ComplexStruct) power).imaginary instanceof FloatStruct)))) {
+			wantDoubleFloat = true;
+		}
+
+		final NumberStruct base;
+		NumberStruct newPower = power;
+		if (wantDoubleFloat) {
+			if (newPower instanceof ComplexStruct) {
+				final ComplexStruct powerComplex = (ComplexStruct) newPower;
+				newPower = new ComplexStruct(
+						new FloatStruct(BigDecimal.valueOf(powerComplex.real.doubleValue())),
+						new FloatStruct(BigDecimal.valueOf(powerComplex.imaginary.doubleValue())));
+			} else {
+				final RealStruct powerReal = (RealStruct) newPower;
+				newPower = new FloatStruct(BigDecimal.valueOf(powerReal.doubleValue()));
+			}
+
+			base = this;
+		} else {
+			base = this;
+		}
+
+		return newPower.multiply(base.log()).exp();
+	}
+
+	@Override
 	public NumberStruct sqrt() {
-		RealStruct imagpart = imaginary;
+		final RealStruct imagpart = imaginary;
 		if (imagpart.zerop()) {
-			RealStruct realpart = real;
+			final RealStruct realpart = real;
 			if (realpart.minusp()) {
-				return new ComplexStruct(imagpart, (RealStruct) new IntegerStruct(BigInteger.ZERO).subtract(realpart).sqrt());
+				return new ComplexStruct(imagpart, (RealStruct) IntegerStruct.ZERO.subtract(realpart).sqrt());
 			} else {
 				return new ComplexStruct((RealStruct) realpart.sqrt(), imagpart);
 			}
 		}
-		return log().divide(new IntegerStruct(BigInteger.valueOf(2))).exp();
+		return log().divide(IntegerStruct.TWO).exp();
 	}
 
 	@Override
 	public NumberStruct log() {
 		// TODO: check complex results when item is not complex!!!
 		// TODO: no casting!!!
-		FloatStruct re = (FloatStruct) real;
-		FloatStruct im = (FloatStruct) imaginary;
-		FloatStruct phase = new FloatStruct(BigDecimal.valueOf(FastMath.atan2(im.getBigDecimal().doubleValue(), re.getBigDecimal().doubleValue())));  // atan(y/x)
-		FloatStruct abs = (FloatStruct) ABS();
+		final FloatStruct re = (FloatStruct) real;
+		final FloatStruct im = (FloatStruct) imaginary;
+		final FloatStruct phase = new FloatStruct(BigDecimal.valueOf(FastMath.atan2(im.getBigDecimal().doubleValue(), re.getBigDecimal().doubleValue())));  // atan(y/x)
+		final FloatStruct abs = (FloatStruct) ABS();
 		return new ComplexStruct(new FloatStruct(BigDecimal.valueOf(FastMath.log(abs.getBigDecimal().doubleValue()))), phase);
 	}
 
 	@Override
 	public NumberStruct sin() {
-		NumberStruct n = multiply(new ComplexStruct(new IntegerStruct(BigInteger.ZERO), new IntegerStruct(BigInteger.ONE)));
+		final NumberStruct n = multiply(new ComplexStruct(IntegerStruct.ZERO, IntegerStruct.ONE));
 		NumberStruct result = n.exp();
-		result = result.subtract(n.multiply(new IntegerStruct(BigInteger.valueOf(-1))).exp());
-		return result.divide(new IntegerStruct(BigInteger.valueOf(2)).multiply(new ComplexStruct(new IntegerStruct(BigInteger.ZERO), new IntegerStruct(BigInteger.ONE))));
+		result = result.subtract(n.multiply(IntegerStruct.MINUS_ONE).exp());
+		return result.divide(IntegerStruct.TWO.multiply(new ComplexStruct(IntegerStruct.ZERO, IntegerStruct.ONE)));
 	}
 
 	@Override
 	public NumberStruct cos() {
-		NumberStruct n = multiply(new ComplexStruct(new IntegerStruct(BigInteger.ZERO), new IntegerStruct(BigInteger.ONE)));
+		final NumberStruct n = multiply(new ComplexStruct(IntegerStruct.ZERO, IntegerStruct.ONE));
 		NumberStruct result = n.exp();
-		result = result.add(n.multiply(new IntegerStruct(BigInteger.valueOf(-1))).exp());
-		return result.divide(new IntegerStruct(BigInteger.valueOf(2)));
+		result = result.add(n.multiply(IntegerStruct.MINUS_ONE).exp());
+		return result.divide(IntegerStruct.TWO);
 	}
 
 	@Override
@@ -386,13 +444,13 @@ public class ComplexStruct extends NumberStruct {
 	@Override
 	public NumberStruct asin() {
 		NumberStruct result = multiply(this);
-		result = new IntegerStruct(BigInteger.ONE).subtract(result);
+		result = IntegerStruct.ONE.subtract(result);
 		result = result.sqrt();
-		NumberStruct n = new ComplexStruct(new IntegerStruct(BigInteger.ZERO), new IntegerStruct(BigInteger.ONE));
+		NumberStruct n = new ComplexStruct(IntegerStruct.ZERO, IntegerStruct.ONE);
 		n = n.multiply(this);
 		result = n.add(result);
 		result = result.log();
-		result = result.multiply(new ComplexStruct(new IntegerStruct(BigInteger.ZERO), new IntegerStruct(BigInteger.valueOf(-1))));
+		result = result.multiply(new ComplexStruct(IntegerStruct.ZERO, IntegerStruct.MINUS_ONE));
 
 		return result;
 	}
@@ -407,45 +465,45 @@ public class ComplexStruct extends NumberStruct {
 
 	@Override
 	public NumberStruct atan() {
-		RealStruct im = imaginary;
+		final RealStruct im = imaginary;
 		if (im.zerop()) {
 			return new ComplexStruct((RealStruct) real.atan(), im);
 		}
 		NumberStruct result = multiply(this);
-		result = result.add(new IntegerStruct(BigInteger.ONE));
-		result = new IntegerStruct(BigInteger.ONE).divide(result);
+		result = result.add(IntegerStruct.ONE);
+		result = IntegerStruct.ONE.divide(result);
 		result = result.sqrt();
-		NumberStruct n = new ComplexStruct(new IntegerStruct(BigInteger.ZERO), new IntegerStruct(BigInteger.ONE));
+		NumberStruct n = new ComplexStruct(IntegerStruct.ZERO, IntegerStruct.ONE);
 		n = n.multiply(this);
-		n = n.add(new IntegerStruct(BigInteger.ONE));
+		n = n.add(IntegerStruct.ONE);
 		result = n.multiply(result);
 		result = result.log();
-		result = result.multiply(new ComplexStruct(new IntegerStruct(BigInteger.ZERO), new IntegerStruct(BigInteger.valueOf(-1))));
+		result = result.multiply(new ComplexStruct(IntegerStruct.ZERO, IntegerStruct.MINUS_ONE));
 		return result;
 	}
 
 	@Override
 	public NumberStruct sinh() {
-		RealStruct im = imaginary;
+		final RealStruct im = imaginary;
 		if (im.zerop()) {
 			return new ComplexStruct((RealStruct) real.sinh(), im);
 		}
 		NumberStruct result = exp();
-		result = result.subtract(multiply(new IntegerStruct(BigInteger.valueOf(-1))).exp());
-		result = result.divide(new IntegerStruct(BigInteger.valueOf(2)));
+		result = result.subtract(multiply(IntegerStruct.MINUS_ONE).exp());
+		result = result.divide(IntegerStruct.TWO);
 
 		return result;
 	}
 
 	@Override
 	public NumberStruct cosh() {
-		RealStruct im = imaginary;
+		final RealStruct im = imaginary;
 		if (im.zerop()) {
 			return new ComplexStruct((RealStruct) real.cosh(), im);
 		}
 		NumberStruct result = exp();
-		result = result.add(multiply(new IntegerStruct(BigInteger.valueOf(-1))).exp());
-		result = result.divide(new IntegerStruct(BigInteger.valueOf(2)));
+		result = result.add(multiply(IntegerStruct.MINUS_ONE).exp());
+		result = result.divide(IntegerStruct.TWO);
 
 		return result;
 	}
@@ -457,12 +515,12 @@ public class ComplexStruct extends NumberStruct {
 
 	@Override
 	public NumberStruct asinh() {
-		RealStruct im = imaginary;
+		final RealStruct im = imaginary;
 		if (im.zerop()) {
 			return new ComplexStruct((RealStruct) real.asinh(), im);
 		}
 		NumberStruct result = multiply(this);
-		result = new IntegerStruct(BigInteger.ONE).add(result);
+		result = IntegerStruct.ONE.add(result);
 		result = result.sqrt();
 		result = result.add(this);
 		result = result.log();
@@ -472,34 +530,34 @@ public class ComplexStruct extends NumberStruct {
 
 	@Override
 	public NumberStruct acosh() {
-		RealStruct im = imaginary;
+		final RealStruct im = imaginary;
 		if (im.zerop()) {
 			return new ComplexStruct((RealStruct) real.acosh(), im);
 		}
-		NumberStruct n1 = add(new IntegerStruct(BigInteger.ONE));
-		n1 = n1.divide(new IntegerStruct(BigInteger.valueOf(2)));
+		NumberStruct n1 = add(IntegerStruct.ONE);
+		n1 = n1.divide(IntegerStruct.TWO);
 		n1 = n1.sqrt();
-		NumberStruct n2 = subtract(new IntegerStruct(BigInteger.ONE));
-		n2 = n2.divide(new IntegerStruct(BigInteger.valueOf(2)));
+		NumberStruct n2 = subtract(IntegerStruct.ONE);
+		n2 = n2.divide(IntegerStruct.TWO);
 		n2 = n2.sqrt();
 		NumberStruct result = n1.add(n2);
 		result = result.log();
-		result = result.multiply(new IntegerStruct(BigInteger.valueOf(2)));
+		result = result.multiply(IntegerStruct.TWO);
 
 		return result;
 	}
 
 	@Override
 	public NumberStruct atanh() {
-		RealStruct im = imaginary;
+		final RealStruct im = imaginary;
 		if (im.zerop()) {
 			return new ComplexStruct((RealStruct) real.atanh(), im);
 		}
 
-		NumberStruct n1 = new IntegerStruct(BigInteger.ONE).add(this).log();
-		NumberStruct n2 = new IntegerStruct(BigInteger.ONE).subtract(this).log();
+		final NumberStruct n1 = IntegerStruct.ONE.add(this).log();
+		final NumberStruct n2 = IntegerStruct.ONE.subtract(this).log();
 		NumberStruct result = n1.subtract(n2);
-		result = result.divide(new IntegerStruct(BigInteger.valueOf(2)));
+		result = result.divide(IntegerStruct.TWO);
 
 		return result;
 	}

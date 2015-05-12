@@ -41,8 +41,8 @@ public abstract class RationalStruct extends RealStruct {
 	 * @param subClasses
 	 * 		the subclasses
 	 */
-	RationalStruct(final RationalType type,
-	               final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
+	protected RationalStruct(final RationalType type,
+	                         final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		super(type, directSuperClasses, subClasses);
 	}
 

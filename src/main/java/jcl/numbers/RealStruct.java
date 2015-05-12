@@ -5,11 +5,11 @@
 package jcl.numbers;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.List;
 
 import jcl.LispStruct;
 import jcl.types.RealType;
+import org.apache.commons.math3.util.FastMath;
 
 /**
  * The {@link RealStruct} is the object representation of a Lisp 'real' type.
@@ -43,27 +43,40 @@ public abstract class RealStruct extends NumberStruct {
 	 * @param subClasses
 	 * 		the subclasses
 	 */
-	RealStruct(final RealType type,
-	           final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
+	protected RealStruct(final RealType type,
+	                     final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		super(type, directSuperClasses, subClasses);
 	}
+
+	@Override
+	public NumberStruct log(final NumberStruct base) {
+		if (base instanceof RealStruct) {
+			final double number = doubleValue();
+			final double baseVal = ((RealStruct) base).doubleValue();
+			final double log = FastMath.log(baseVal, number);
+			return new FloatStruct(new BigDecimal(log));
+		}
+		return super.log(base);
+	}
+
+	public abstract double doubleValue();
 
 	public abstract boolean plusp();
 
 	public abstract boolean minusp();
 
-	public abstract boolean isLessThan(final LispStruct obj);
+	public abstract boolean isLessThan(LispStruct obj);
 
-	public abstract boolean isGreaterThan(final LispStruct obj);
+	public abstract boolean isGreaterThan(LispStruct obj);
 
-	public abstract boolean isLessThanOrEqualTo(final LispStruct obj);
+	public abstract boolean isLessThanOrEqualTo(LispStruct obj);
 
-	public abstract boolean isGreaterThanOrEqualTo(final LispStruct obj);
+	public abstract boolean isGreaterThanOrEqualTo(LispStruct obj);
 
 	public abstract RationalStruct rational();
 
 	public RealStruct MOD(final RealStruct divisor) {
-		final RealStruct result = truncate(divisor);
+		final RealStruct result = truncate(divisor).getQuotient();
 		// TODO: this doesn't return both values...
 		if (!result.zerop()) {
 			if (divisor.minusp()) {
@@ -79,36 +92,33 @@ public abstract class RealStruct extends NumberStruct {
 		return result;
 	}
 
-	public abstract RealStruct max(final RealStruct real);
+	public abstract RealStruct max(RealStruct real);
 
-	public abstract RealStruct min(final RealStruct real);
+	public abstract RealStruct min(RealStruct real);
 
 	public ComplexStruct cis() {
 		return new ComplexStruct((RealStruct) cos(), (RealStruct) sin());
 	}
 
-	public abstract RealStruct atan(final RealStruct real);
+	public abstract RealStruct atan(RealStruct real);
 
-	public RealStruct truncate() {
-		return truncate(new IntegerStruct(BigInteger.ONE));
+	public TruncateResult truncate() {
+		return truncate(IntegerStruct.ONE);
 	}
 
-	public RealStruct truncate(final RealStruct divisor) {
-		return null;
+	public abstract TruncateResult truncate(RealStruct divisor);
+
+	public TruncateResult ftruncate() {
+		return ftruncate(IntegerStruct.ONE);
 	}
 
-	public RealStruct ftruncate() {
-		return ftruncate(new IntegerStruct(BigInteger.ONE));
-	}
-
-	public RealStruct ftruncate(final RealStruct second) {
+	public TruncateResult ftruncate(final RealStruct second) {
 		if (zerop()) {
-			RealStruct q = this;
-			NumberStruct r = new FloatStruct(BigDecimal.ZERO);
-			return q;
+			return new TruncateResult(this, FloatStruct.ZERO);
 		}
 
-		RealStruct q = truncate(second); // an integer
+		final TruncateResult truncateResult = truncate(second);
+		RealStruct q = truncateResult.getQuotient(); // an integer
 		if (q.zerop()) {
 			if (minusp()) {
 				if (second.minusp()) {
@@ -124,6 +134,6 @@ public abstract class RealStruct extends NumberStruct {
 		} else {
 			q = new FloatStruct(new BigDecimal(((IntegerStruct) q).getBigInteger()));
 		}
-		return q;
+		return new TruncateResult(q, truncateResult.getRemainder());
 	}
 }

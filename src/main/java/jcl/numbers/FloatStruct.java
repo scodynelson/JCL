@@ -31,6 +31,10 @@ public class FloatStruct extends RealStruct {
 	 */
 	private static final long serialVersionUID = 4803312076840516559L;
 
+	public static final FloatStruct ZERO = new FloatStruct(BigDecimal.ZERO);
+
+	public static final FloatStruct ONE = new FloatStruct(BigDecimal.ONE);
+
 	/**
 	 * The internal {@link BigDecimal} containing the float contents.
 	 */
@@ -68,14 +72,17 @@ public class FloatStruct extends RealStruct {
 		return bigDecimal;
 	}
 
+	@Override
 	public boolean eql(final LispStruct lispStruct) {
 		return equals(lispStruct);
 	}
 
+	@Override
 	public boolean equal(final LispStruct lispStruct) {
 		return equals(lispStruct);
 	}
 
+	@Override
 	public boolean equalp(final LispStruct lispStruct) {
 		return isEqualTo(lispStruct);
 	}
@@ -148,6 +155,11 @@ public class FloatStruct extends RealStruct {
 				return real;
 			}
 		}
+	}
+
+	@Override
+	public double doubleValue() {
+		return bigDecimal.doubleValue();
 	}
 
 	@Override
@@ -328,6 +340,52 @@ public class FloatStruct extends RealStruct {
 	}
 
 	@Override
+	public NumberStruct expt(final NumberStruct power) {
+		if (power.zerop()) {
+			return ONE;
+		}
+		if (zerop()) {
+			return this;
+		}
+		if (isEqualTo(ONE)) {
+			return this;
+		}
+
+		NumberStruct newPower = power;
+		if (newPower instanceof ComplexStruct) {
+			final ComplexStruct powerComplex = (ComplexStruct) newPower;
+			newPower = new ComplexStruct(
+					new FloatStruct(BigDecimal.valueOf(powerComplex.getReal().doubleValue())),
+					new FloatStruct(BigDecimal.valueOf(powerComplex.getImaginary().doubleValue())));
+		} else {
+			final RealStruct powerReal = (RealStruct) newPower;
+			newPower = new FloatStruct(BigDecimal.valueOf(powerReal.doubleValue()));
+		}
+
+		final NumberStruct base = new FloatStruct(BigDecimal.valueOf(doubleValue()));
+
+		if (newPower instanceof ComplexStruct) {
+			return newPower.multiply(base.log()).exp();
+		}
+
+		final double x = ((FloatStruct) base).doubleValue(); // base
+		final double y = ((FloatStruct) newPower).doubleValue(); // power
+
+		double r = FastMath.pow(x, y);
+		if (Double.isNaN(r)) {
+			if (x < 0) {
+				r = FastMath.pow(-x, y);
+				final double realPart = r * FastMath.cos(y * Math.PI);
+				final double imagPart = r * FastMath.sin(y * Math.PI);
+				return new ComplexStruct
+						(new FloatStruct(BigDecimal.valueOf(realPart)),
+								new FloatStruct(BigDecimal.valueOf(imagPart)));
+			}
+		}
+		return new FloatStruct(BigDecimal.valueOf(r));
+	}
+
+	@Override
 	public NumberStruct sqrt() {
 		final double doubleValue = bigDecimal.doubleValue();
 		final double sqrt = FastMath.sqrt(doubleValue);
@@ -443,33 +501,32 @@ public class FloatStruct extends RealStruct {
 	}
 
 	@Override
-	public RealStruct truncate(final RealStruct obj) {
-		if (obj instanceof IntegerStruct) {
-			return truncate(new FloatStruct(new BigDecimal(((IntegerStruct) obj).getBigInteger())));
+	public TruncateResult truncate(final RealStruct divisor) {
+		if (divisor instanceof IntegerStruct) {
+			return truncate(new FloatStruct(new BigDecimal(((IntegerStruct) divisor).getBigInteger())));
 		}
-		if (obj instanceof RatioStruct) {
-			return truncate(new FloatStruct(((RatioStruct) obj).getBigFraction().bigDecimalValue()));
+		if (divisor instanceof RatioStruct) {
+			return truncate(new FloatStruct(((RatioStruct) divisor).getBigFraction().bigDecimalValue()));
 		}
-		if (obj instanceof FloatStruct) {
+		if (divisor instanceof FloatStruct) {
 
 			final BigDecimal dividend = bigDecimal;
-			final BigDecimal divisor = ((FloatStruct) obj).bigDecimal;
+			final BigDecimal divisor1 = ((FloatStruct) divisor).bigDecimal;
 
 			final BigDecimal quotient;
 
-			final BigDecimal dividendDivisorMultiply = dividend.multiply(divisor);
+			final BigDecimal dividendDivisorMultiply = dividend.multiply(divisor1);
 			if (dividendDivisorMultiply.compareTo(BigDecimal.ZERO) >= 0) {
-				quotient = dividend.divide(divisor, RoundingMode.FLOOR);
+				quotient = dividend.divide(divisor1, RoundingMode.FLOOR);
 			} else {
-				quotient = dividend.divide(divisor, RoundingMode.CEILING);
+				quotient = dividend.divide(divisor1, RoundingMode.CEILING);
 			}
 
 			final RealStruct value1 = new FloatStruct(quotient);
-			final BigDecimal remainder = dividend.remainder(divisor, MathContext.DECIMAL128);
+			final BigDecimal remainder = dividend.remainder(divisor1, MathContext.DECIMAL128);
 			final RealStruct value2 = new FloatStruct(remainder);
 
-			return value1;
-//			return value2;
+			return new TruncateResult(value1, value2);
 		}
 		throw new TypeErrorException("Not of type REAL");
 	}

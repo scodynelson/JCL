@@ -29,6 +29,14 @@ public class IntegerStruct extends RationalStruct {
 	 */
 	private static final long serialVersionUID = -4665072618932472349L;
 
+	public static final IntegerStruct ZERO = new IntegerStruct(BigInteger.ZERO);
+
+	public static final IntegerStruct ONE = new IntegerStruct(BigInteger.ONE);
+
+	public static final IntegerStruct TWO = new IntegerStruct(BigInteger.valueOf(2));
+
+	public static final IntegerStruct MINUS_ONE = new IntegerStruct(BigInteger.valueOf(-1));
+
 	/**
 	 * The internal {@link BigInteger} containing the float contents.
 	 */
@@ -66,14 +74,17 @@ public class IntegerStruct extends RationalStruct {
 		return bigInteger;
 	}
 
+	@Override
 	public boolean eql(final LispStruct lispStruct) {
 		return equals(lispStruct);
 	}
 
+	@Override
 	public boolean equal(final LispStruct lispStruct) {
 		return equals(lispStruct);
 	}
 
+	@Override
 	public boolean equalp(final LispStruct lispStruct) {
 		return isEqualTo(lispStruct);
 	}
@@ -102,6 +113,11 @@ public class IntegerStruct extends RationalStruct {
 
 	public boolean oddp() {
 		return bigInteger.testBit(0);
+	}
+
+	@Override
+	public double doubleValue() {
+		return bigInteger.doubleValue();
 	}
 
 	@Override
@@ -202,24 +218,26 @@ public class IntegerStruct extends RationalStruct {
 		throw new TypeErrorException("Not of type NUMBER");
 	}
 
-	public static RationalStruct number(BigInteger numerator, BigInteger denominator) {
+	public static RationalStruct number(final BigInteger numerator, final BigInteger denominator) {
 
 		if (denominator.signum() == 0) {
 			throw new RuntimeException("division by zero");
 		}
-		if (denominator.signum() < 0) {
-			numerator = numerator.negate();
-			denominator = denominator.negate();
+		BigInteger realNumerator = numerator;
+		BigInteger realDenominator = denominator;
+		if (realDenominator.signum() < 0) {
+			realNumerator = realNumerator.negate();
+			realDenominator = realDenominator.negate();
 		}
-		final BigInteger gcd = numerator.gcd(denominator);
+		final BigInteger gcd = realNumerator.gcd(realDenominator);
 		if (!gcd.equals(BigInteger.ONE)) {
-			numerator = numerator.divide(gcd);
-			denominator = denominator.divide(gcd);
+			realNumerator = realNumerator.divide(gcd);
+			realDenominator = realDenominator.divide(gcd);
 		}
-		if (denominator.equals(BigInteger.ONE)) {
-			return new IntegerStruct(numerator);
+		if (realDenominator.equals(BigInteger.ONE)) {
+			return new IntegerStruct(realNumerator);
 		} else {
-			return new RatioStruct(numerator, denominator);
+			return new RatioStruct(realNumerator, realDenominator);
 		}
 	}
 
@@ -238,7 +256,7 @@ public class IntegerStruct extends RationalStruct {
 			return new FloatStruct(new BigDecimal(bigInteger).subtract(((FloatStruct) number).getBigDecimal()));
 		}
 		if (number instanceof ComplexStruct) {
-			ComplexStruct c = (ComplexStruct) number;
+			final ComplexStruct c = (ComplexStruct) number;
 			return new ComplexStruct((RealStruct) subtract(c.getReal()), (RealStruct) new IntegerStruct(BigInteger.ZERO).subtract(c.getImaginary()));
 		}
 		throw new TypeErrorException("Not of type NUMBER");
@@ -292,6 +310,11 @@ public class IntegerStruct extends RationalStruct {
 		}
 		if (obj instanceof FloatStruct) {
 			return isEqualTo(((FloatStruct) obj).rational());
+		}
+		if (obj instanceof RatioStruct) {
+			final RatioStruct ratioStruct = (RatioStruct) obj;
+			final BigFraction bigFraction = ratioStruct.getBigFraction().reduce();
+			return bigFraction.getDenominator().equals(BigInteger.ONE) && bigInteger.equals(bigFraction.getNumerator());
 		}
 		if (obj instanceof NumberStruct) {
 			return false;
@@ -369,6 +392,87 @@ public class IntegerStruct extends RationalStruct {
 		final double doubleValue = bigInteger.doubleValue();
 		final double exp = FastMath.exp(doubleValue);
 		return new FloatStruct(new BigDecimal(exp));
+	}
+
+	@Override
+	public NumberStruct expt(final NumberStruct power) {
+		if (power.zerop()) {
+			if (power instanceof IntegerStruct) {
+				return ONE;
+			}
+			return FloatStruct.ONE;
+		}
+		if (zerop()) {
+			return this;
+		}
+		if (isEqualTo(ONE)) {
+			return this;
+		}
+
+		if (power instanceof IntegerStruct) {
+			// exact math version
+			return intexp(this, (IntegerStruct) power);
+		}
+
+		// for anything not a rational or complex rational, use
+		// float approximation.
+		boolean wantDoubleFloat = false;
+		if ((power instanceof FloatStruct) || ((power instanceof ComplexStruct)
+				&& ((((ComplexStruct) power).getReal() instanceof FloatStruct)
+				|| (((ComplexStruct) power).getImaginary() instanceof FloatStruct)))) {
+			wantDoubleFloat = true;
+		}
+
+		final NumberStruct base;
+		NumberStruct newPower = power;
+		if (wantDoubleFloat) {
+			if (newPower instanceof ComplexStruct) {
+				final ComplexStruct powerComplex = (ComplexStruct) newPower;
+				newPower = new ComplexStruct(
+						new FloatStruct(BigDecimal.valueOf(powerComplex.getReal().doubleValue())),
+						new FloatStruct(BigDecimal.valueOf(powerComplex.getImaginary().doubleValue())));
+			} else {
+				final RealStruct powerReal = (RealStruct) newPower;
+				newPower = new FloatStruct(BigDecimal.valueOf(powerReal.doubleValue()));
+			}
+
+			base = new FloatStruct(BigDecimal.valueOf(doubleValue()));
+		} else {
+			base = this;
+		}
+
+		if (newPower instanceof ComplexStruct) {
+			return newPower.multiply(base.log()).exp();
+		}
+
+		final double x; // base
+		if (base instanceof IntegerStruct) {
+			x = ((IntegerStruct) base).doubleValue();
+		} else {
+			x = ((FloatStruct) base).doubleValue();
+		}
+
+		final double y; // power
+		if (newPower instanceof RatioStruct) {
+			y = ((RatioStruct) newPower).doubleValue();
+		} else if (newPower instanceof FloatStruct) {
+			y = ((FloatStruct) newPower).doubleValue();
+		} else {
+			throw new RuntimeException("EXPT: unsupported case: power is of type " + newPower.getType());
+		}
+
+		double r = FastMath.pow(x, y);
+		if (Double.isNaN(r)) {
+			if (x < 0) {
+				r = FastMath.pow(-x, y);
+				final double realPart = r * FastMath.cos(y * Math.PI);
+				final double imagPart = r * FastMath.sin(y * Math.PI);
+				return new ComplexStruct
+						(new FloatStruct(BigDecimal.valueOf(realPart)),
+								new FloatStruct(BigDecimal.valueOf(imagPart)));
+			}
+		}
+		return new FloatStruct(BigDecimal.valueOf(r));
 	}
 
 	@Override
@@ -487,36 +591,35 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	@Override
-	public RealStruct truncate(final RealStruct obj) {
+	public TruncateResult truncate(final RealStruct divisor) {
 		final RealStruct value1;
 		final RealStruct value2;
 		try {
-			if (obj instanceof IntegerStruct) {
-				final BigInteger divisor = ((IntegerStruct) obj).bigInteger;
-				final BigInteger[] results = bigInteger.divideAndRemainder(divisor);
+			if (divisor instanceof IntegerStruct) {
+				final BigInteger divisor1 = ((IntegerStruct) divisor).bigInteger;
+				final BigInteger[] results = bigInteger.divideAndRemainder(divisor1);
 				final BigInteger quotient = results[0];
 				final BigInteger remainder = results[1];
 				value1 = new IntegerStruct(quotient);
 				value2 = (remainder.signum() == 0) ? new IntegerStruct(BigInteger.ZERO) : new IntegerStruct(remainder);
-			} else if (obj instanceof RatioStruct) {
-				final RatioStruct divisor = (RatioStruct) obj;
-				final RealStruct quotient = ((RealStruct) multiply(new IntegerStruct(divisor.getBigFraction().getDenominator()))).truncate(new IntegerStruct(divisor.getBigFraction().getNumerator()));
-				final RealStruct remainder = (RealStruct) subtract(quotient.multiply(divisor));
+			} else if (divisor instanceof RatioStruct) {
+				final RatioStruct divisor1 = (RatioStruct) divisor;
+				final RealStruct quotient = ((RealStruct) multiply(new IntegerStruct(divisor1.getBigFraction().getDenominator()))).truncate(new IntegerStruct(divisor1.getBigFraction().getNumerator())).getQuotient();
+				final RealStruct remainder = (RealStruct) subtract(quotient.multiply(divisor1));
 				value1 = quotient;
 				value2 = remainder;
-			} else if (obj instanceof FloatStruct) {
-				return new FloatStruct(new BigDecimal(bigInteger)).truncate(obj);
+			} else if (divisor instanceof FloatStruct) {
+				return new FloatStruct(new BigDecimal(bigInteger)).truncate(divisor);
 			} else {
 				throw new TypeErrorException("Not of type REAL");
 			}
 		} catch (final ArithmeticException e) {
-			if (obj.zerop()) {
+			if (divisor.zerop()) {
 				throw new RuntimeException("division by zero");
 			}
 			throw new RuntimeException("arithmetic error", e);
 		}
-		return value1;
-//		return value2;
+		return new TruncateResult(value1, value2);
 	}
 
 	public IntegerStruct ash(final IntegerStruct obj) {

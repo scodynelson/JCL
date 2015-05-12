@@ -29,6 +29,10 @@ public class RatioStruct extends RationalStruct {
 	 */
 	private static final long serialVersionUID = -2468768422160538347L;
 
+	public static final RatioStruct ZERO = new RatioStruct(BigFraction.ZERO);
+
+	public static final RatioStruct ONE = new RatioStruct(BigFraction.ONE);
+
 	/**
 	 * The internal {@link BigFraction} containing the ratio contents.
 	 */
@@ -66,14 +70,17 @@ public class RatioStruct extends RationalStruct {
 		return bigFraction;
 	}
 
+	@Override
 	public boolean eql(final LispStruct lispStruct) {
 		return equals(lispStruct);
 	}
 
+	@Override
 	public boolean equal(final LispStruct lispStruct) {
 		return equals(lispStruct);
 	}
 
+	@Override
 	public boolean equalp(final LispStruct lispStruct) {
 		return isEqualTo(lispStruct);
 	}
@@ -85,6 +92,11 @@ public class RatioStruct extends RationalStruct {
 			return this;
 		}
 		return new RatioStruct(abs);
+	}
+
+	@Override
+	public double doubleValue() {
+		return bigFraction.doubleValue();
 	}
 
 	@Override
@@ -275,6 +287,9 @@ public class RatioStruct extends RationalStruct {
 		if (obj instanceof FloatStruct) {
 			return isEqualTo(((FloatStruct) obj).rational());
 		}
+		if (obj instanceof IntegerStruct) {
+			return bigFraction.equals(new BigFraction(((IntegerStruct) obj).getBigInteger()));
+		}
 		if (obj instanceof NumberStruct) {
 			return false;
 		}
@@ -351,6 +366,86 @@ public class RatioStruct extends RationalStruct {
 		final double doubleValue = bigFraction.doubleValue();
 		final double exp = FastMath.exp(doubleValue);
 		return new FloatStruct(new BigDecimal(exp));
+	}
+
+	@Override
+	public NumberStruct expt(final NumberStruct power) {
+		if (power.zerop()) {
+			if (power instanceof IntegerStruct) {
+				return IntegerStruct.ONE;
+			}
+			return FloatStruct.ONE;
+		}
+		if (zerop()) {
+			return this;
+		}
+		if (isEqualTo(ONE)) {
+			return this;
+		}
+
+		if (power instanceof IntegerStruct) {
+			// exact math version
+			return intexp(this, (IntegerStruct) power);
+		}
+
+		// for anything not a rational or complex rational, use
+		// float approximation.
+		boolean wantDoubleFloat = false;
+		if ((power instanceof FloatStruct) || ((power instanceof ComplexStruct)
+				&& ((((ComplexStruct) power).getReal() instanceof FloatStruct)
+				|| (((ComplexStruct) power).getImaginary() instanceof FloatStruct)))) {
+			wantDoubleFloat = true;
+		}
+
+		final NumberStruct base;
+		NumberStruct newPower = power;
+		if (wantDoubleFloat) {
+			if (newPower instanceof ComplexStruct) {
+				final ComplexStruct powerComplex = (ComplexStruct) newPower;
+				newPower = new ComplexStruct(
+						new FloatStruct(BigDecimal.valueOf(powerComplex.getReal().doubleValue())),
+						new FloatStruct(BigDecimal.valueOf(powerComplex.getImaginary().doubleValue())));
+			} else {
+				final RealStruct powerReal = (RealStruct) newPower;
+				newPower = new FloatStruct(BigDecimal.valueOf(powerReal.doubleValue()));
+			}
+
+			base = new FloatStruct(BigDecimal.valueOf(doubleValue()));
+		} else {
+			base = this;
+		}
+
+		if (newPower instanceof ComplexStruct) {
+			return newPower.multiply(base.log()).exp();
+		}
+		final double x; // base
+		if (base instanceof RatioStruct) {
+			x = ((RatioStruct) base).doubleValue();
+		} else {
+			x = ((FloatStruct) base).doubleValue();
+		}
+
+		final double y; // power
+		if (newPower instanceof RatioStruct) {
+			y = ((RatioStruct) newPower).doubleValue();
+		} else if (newPower instanceof FloatStruct) {
+			y = ((FloatStruct) newPower).doubleValue();
+		} else {
+			throw new RuntimeException("EXPT: unsupported case: power is of type " + newPower.getType());
+		}
+
+		double r = FastMath.pow(x, y);
+		if (Double.isNaN(r)) {
+			if (x < 0) {
+				r = FastMath.pow(-x, y);
+				final double realPart = r * FastMath.cos(y * Math.PI);
+				final double imagPart = r * FastMath.sin(y * Math.PI);
+				return new ComplexStruct
+						(new FloatStruct(BigDecimal.valueOf(realPart)),
+								new FloatStruct(BigDecimal.valueOf(imagPart)));
+			}
+		}
+		return new FloatStruct(BigDecimal.valueOf(r));
 	}
 
 	@Override
@@ -469,23 +564,20 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	@Override
-	public RealStruct truncate(final RealStruct obj) {
-		// "When rationals and floats are combined by a numerical function,
-		// the rational is first converted to a float of the same format."
-		// 12.1.4.1
-		if (obj instanceof FloatStruct) {
-			return new FloatStruct(bigFraction.bigDecimalValue()).truncate(obj);
+	public TruncateResult truncate(final RealStruct divisor) {
+		if (divisor instanceof FloatStruct) {
+			return new FloatStruct(bigFraction.bigDecimalValue()).truncate(divisor);
 		}
 
 		try {
 			final BigInteger n;
 			final BigInteger d;
-			if (obj instanceof IntegerStruct) {
-				n = ((IntegerStruct) obj).getBigInteger();
+			if (divisor instanceof IntegerStruct) {
+				n = ((IntegerStruct) divisor).getBigInteger();
 				d = BigInteger.ONE;
-			} else if (obj instanceof RatioStruct) {
-				n = ((RatioStruct) obj).bigFraction.getNumerator();
-				d = ((RatioStruct) obj).bigFraction.getDenominator();
+			} else if (divisor instanceof RatioStruct) {
+				n = ((RatioStruct) divisor).bigFraction.getNumerator();
+				d = ((RatioStruct) divisor).bigFraction.getDenominator();
 			} else {
 				throw new TypeErrorException("Not of type NUMBER");
 			}
@@ -496,12 +588,11 @@ public class RatioStruct extends RationalStruct {
 			// Multiply quotient by divisor.
 			final RationalStruct product = IntegerStruct.number(quotient.multiply(n), d);
 			// Subtract to get remainder.
-			final LispStruct remainder = subtract(product);
+			final RealStruct remainder = (RealStruct) subtract(product);
 
-			return new IntegerStruct(quotient);
-//			return remainder;
+			return new TruncateResult(new IntegerStruct(quotient), remainder);
 		} catch (final ArithmeticException e) {
-			if (obj.zerop()) {
+			if (divisor.zerop()) {
 				throw new RuntimeException("division by zero");
 			}
 			throw new RuntimeException("arithmetic error", e);

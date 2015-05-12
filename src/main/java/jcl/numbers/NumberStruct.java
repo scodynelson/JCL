@@ -42,35 +42,89 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 	 * @param subClasses
 	 * 		the subclasses
 	 */
-	NumberStruct(final NumberType type,
-	             final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
+	protected NumberStruct(final NumberType type,
+	                       final List<Class<? extends LispStruct>> directSuperClasses, final List<Class<? extends LispStruct>> subClasses) {
 		super(type, directSuperClasses, subClasses);
 	}
+
+	// TODO: move the following 3 up
+	public abstract boolean eql(LispStruct lispStruct);
+
+	public abstract boolean equal(LispStruct lispStruct);
+
+	public abstract boolean equalp(LispStruct lispStruct);
 
 	public RealStruct ABS() {
 		return null;
 	}
 
-	public abstract NumberStruct add(final NumberStruct number);
+	public abstract NumberStruct add(NumberStruct number);
 
-	public abstract NumberStruct subtract(final NumberStruct number);
+	public abstract NumberStruct subtract(NumberStruct number);
 
-	public abstract NumberStruct multiply(final NumberStruct number);
+	public abstract NumberStruct multiply(NumberStruct number);
 
-	public abstract NumberStruct divide(final NumberStruct number);
+	public abstract NumberStruct divide(NumberStruct number);
 
 	public abstract boolean zerop();
 
-	public abstract boolean isEqualTo(final LispStruct obj);
+	public abstract boolean isEqualTo(LispStruct obj);
 
-	public abstract boolean isNotEqualTo(final LispStruct obj);
+	public abstract boolean isNotEqualTo(LispStruct obj);
 
 	public abstract NumberStruct exp();
 
+	public abstract NumberStruct expt(NumberStruct power);
+
+	protected static NumberStruct intexp(final NumberStruct base, final IntegerStruct power) {
+		if (power.isEqualTo(IntegerStruct.ZERO)) {
+			return IntegerStruct.ONE;
+		}
+		if (base.isEqualTo(IntegerStruct.ONE)) {
+			return base;
+		}
+		if (base.isEqualTo(IntegerStruct.ZERO)) {
+			return base;
+		}
+
+		IntegerStruct realPower = power;
+		if (realPower.minusp()) {
+			realPower = (IntegerStruct) IntegerStruct.ZERO.subtract(realPower);
+			return IntegerStruct.ONE.divide(intexp(base, realPower));
+		}
+		if (base.eql(IntegerStruct.TWO)) {
+			return IntegerStruct.ONE.ash(realPower);
+		}
+
+		IntegerStruct nextn = realPower.ash(IntegerStruct.MINUS_ONE);
+		NumberStruct total;
+		if (realPower.oddp()) {
+			total = base;
+		} else {
+			total = IntegerStruct.ONE;
+		}
+
+		NumberStruct realBase = base;
+		while (true) {
+			if (nextn.zerop()) {
+				return total;
+			}
+			realBase = realBase.multiply(realBase);
+
+			if (nextn.oddp()) {
+				total = realBase.multiply(total);
+			}
+			nextn = nextn.ash(IntegerStruct.MINUS_ONE);
+		}
+	}
+
 	public abstract NumberStruct sqrt();
 
-	// TODO: handle 'log' with base parameter!!!
 	public abstract NumberStruct log();
+
+	public NumberStruct log(final NumberStruct base) {
+		return log().divide(base.log());
+	}
 
 	public abstract NumberStruct sin();
 

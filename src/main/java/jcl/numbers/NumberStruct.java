@@ -13,7 +13,7 @@ import jcl.types.NumberType;
 /**
  * The {@link NumberStruct} is the object representation of a Lisp 'number' type.
  */
-public class NumberStruct extends BuiltInClassStruct {
+public abstract class NumberStruct extends BuiltInClassStruct {
 
 	/**
 	 * Serializable Version Unique Identifier.
@@ -51,47 +51,41 @@ public class NumberStruct extends BuiltInClassStruct {
 		return null;
 	}
 
-	public NumberStruct add(final NumberStruct numberStruct) {
-		return null;
-	}
+	public abstract NumberStruct add(final NumberStruct number);
 
-	public NumberStruct subtract(final NumberStruct numberStruct) {
-		return null;
-	}
+	public abstract NumberStruct subtract(final NumberStruct number);
 
-	public NumberStruct multiply(final NumberStruct numberStruct) {
-		return null;
-	}
+	public abstract NumberStruct multiply(final NumberStruct number);
 
-	public NumberStruct divide(final NumberStruct numberStruct) {
-		return null;
-	}
+	public abstract NumberStruct divide(final NumberStruct number);
 
-	public boolean zerop() {
-		return false;
-	}
+	public abstract boolean zerop();
 
-	public boolean isEqualTo(final LispStruct obj) {
-		return false;
-	}
+	public abstract boolean isEqualTo(final LispStruct obj);
 
-	public boolean isNotEqualTo(final LispStruct obj) {
-		return false;
-	}
+	public abstract boolean isNotEqualTo(final LispStruct obj);
 
-	public boolean isLessThan(final LispStruct obj) {
-		return false;
-	}
+	public abstract NumberStruct sin();
 
-	public boolean isGreaterThan(final LispStruct obj) {
-		return false;
-	}
+	public abstract NumberStruct cos();
 
-	public boolean isLessThanOrEqualTo(final LispStruct obj) {
-		return false;
-	}
+	public abstract NumberStruct tan();
 
-	public boolean isGreaterThanOrEqualTo(final LispStruct obj) {
-		return false;
-	}
+	public abstract NumberStruct asin();
+
+	public abstract NumberStruct acos();
+
+	public abstract NumberStruct atan();
+
+	public abstract NumberStruct sinh();
+
+	public abstract NumberStruct cosh();
+
+	public abstract NumberStruct tanh();
+
+	public abstract NumberStruct asinh();
+
+	public abstract NumberStruct acosh();
+
+	public abstract NumberStruct atanh();
 }

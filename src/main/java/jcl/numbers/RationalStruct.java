@@ -12,7 +12,7 @@ import jcl.types.RationalType;
 /**
  * The {@link RationalStruct} is the object representation of a Lisp 'rational' type.
  */
-public class RationalStruct extends RealStruct {
+public abstract class RationalStruct extends RealStruct {
 
 	/**
 	 * Serializable Version Unique Identifier.
@@ -46,11 +46,7 @@ public class RationalStruct extends RealStruct {
 		super(type, directSuperClasses, subClasses);
 	}
 
-	public IntegerStruct numerator() {
-		return null;
-	}
+	public abstract IntegerStruct numerator();
 
-	public IntegerStruct denominator() {
-		return null;
-	}
+	public abstract IntegerStruct denominator();
 }

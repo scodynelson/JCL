@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.util.Objects;
 
 import jcl.LispStruct;
 import jcl.conditions.exceptions.TypeErrorException;
@@ -18,6 +19,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.math3.fraction.BigFraction;
+import org.apache.commons.math3.util.FastMath;
 
 /**
  * The {@link FloatStruct} is the object representation of a Lisp 'float' type.
@@ -87,6 +89,68 @@ public class FloatStruct extends RealStruct {
 	}
 
 	@Override
+	public RationalStruct rational() {
+
+		final BigFraction bigFraction = BigFractionUtil.getBigFraction(bigDecimal);
+		if (bigFraction.getDenominator().equals(BigInteger.ONE)) {
+			return new IntegerStruct(bigFraction.getNumerator());
+		}
+		return new RatioStruct(bigFraction);
+	}
+
+	@Override
+	public RealStruct max(final RealStruct real) {
+		if (real instanceof IntegerStruct) {
+			final BigDecimal max = bigDecimal.max(new BigDecimal(((IntegerStruct) real).getBigInteger()));
+			if (Objects.equals(bigDecimal, max)) {
+				return this;
+			} else {
+				return real;
+			}
+		} else if (real instanceof RatioStruct) {
+			final BigDecimal max = bigDecimal.max(((RatioStruct) real).getBigFraction().bigDecimalValue());
+			if (Objects.equals(bigDecimal, max)) {
+				return this;
+			} else {
+				return real;
+			}
+		} else {
+			final BigDecimal max = bigDecimal.max(((FloatStruct) real).bigDecimal);
+			if (Objects.equals(bigDecimal, max)) {
+				return this;
+			} else {
+				return real;
+			}
+		}
+	}
+
+	@Override
+	public RealStruct min(final RealStruct real) {
+		if (real instanceof IntegerStruct) {
+			final BigDecimal min = bigDecimal.min(new BigDecimal(((IntegerStruct) real).getBigInteger()));
+			if (Objects.equals(bigDecimal, min)) {
+				return this;
+			} else {
+				return real;
+			}
+		} else if (real instanceof RatioStruct) {
+			final BigDecimal min = bigDecimal.min(((RatioStruct) real).getBigFraction().bigDecimalValue());
+			if (Objects.equals(bigDecimal, min)) {
+				return this;
+			} else {
+				return real;
+			}
+		} else {
+			final BigDecimal min = bigDecimal.min(((FloatStruct) real).bigDecimal);
+			if (Objects.equals(bigDecimal, min)) {
+				return this;
+			} else {
+				return real;
+			}
+		}
+	}
+
+	@Override
 	public boolean plusp() {
 		return bigDecimal.signum() > 0;
 	}
@@ -102,72 +166,72 @@ public class FloatStruct extends RealStruct {
 	}
 
 	@Override
-	public NumberStruct add(final NumberStruct numberStruct) {
-		if (numberStruct instanceof IntegerStruct) {
-			return new FloatStruct(bigDecimal.add(new BigDecimal(((IntegerStruct) numberStruct).getBigInteger())));
+	public NumberStruct add(final NumberStruct number) {
+		if (number instanceof IntegerStruct) {
+			return new FloatStruct(bigDecimal.add(new BigDecimal(((IntegerStruct) number).getBigInteger())));
 		}
-		if (numberStruct instanceof FloatStruct) {
-			return new FloatStruct(bigDecimal.add(((FloatStruct) numberStruct).bigDecimal));
+		if (number instanceof FloatStruct) {
+			return new FloatStruct(bigDecimal.add(((FloatStruct) number).bigDecimal));
 		}
-		if (numberStruct instanceof RatioStruct) {
-			return new FloatStruct(bigDecimal.add(((RatioStruct) numberStruct).getBigFraction().bigDecimalValue()));
+		if (number instanceof RatioStruct) {
+			return new FloatStruct(bigDecimal.add(((RatioStruct) number).getBigFraction().bigDecimalValue()));
 		}
-		if (numberStruct instanceof ComplexStruct) {
-			final ComplexStruct c = (ComplexStruct) numberStruct;
+		if (number instanceof ComplexStruct) {
+			final ComplexStruct c = (ComplexStruct) number;
 			return new ComplexStruct((RealStruct) add(c.getReal()), c.getImaginary());
 		}
 		throw new TypeErrorException("Not of type NUMBER");
 	}
 
 	@Override
-	public NumberStruct subtract(final NumberStruct numberStruct) {
-		if (numberStruct instanceof IntegerStruct) {
-			return new FloatStruct(bigDecimal.subtract(new BigDecimal(((IntegerStruct) numberStruct).getBigInteger())));
+	public NumberStruct subtract(final NumberStruct number) {
+		if (number instanceof IntegerStruct) {
+			return new FloatStruct(bigDecimal.subtract(new BigDecimal(((IntegerStruct) number).getBigInteger())));
 		}
-		if (numberStruct instanceof FloatStruct) {
-			return new FloatStruct(bigDecimal.subtract(((FloatStruct) numberStruct).bigDecimal));
+		if (number instanceof FloatStruct) {
+			return new FloatStruct(bigDecimal.subtract(((FloatStruct) number).bigDecimal));
 		}
-		if (numberStruct instanceof RatioStruct) {
-			return new FloatStruct(bigDecimal.subtract(((RatioStruct) numberStruct).getBigFraction().bigDecimalValue()));
+		if (number instanceof RatioStruct) {
+			return new FloatStruct(bigDecimal.subtract(((RatioStruct) number).getBigFraction().bigDecimalValue()));
 		}
-		if (numberStruct instanceof ComplexStruct) {
-			final ComplexStruct c = (ComplexStruct) numberStruct;
+		if (number instanceof ComplexStruct) {
+			final ComplexStruct c = (ComplexStruct) number;
 			return new ComplexStruct((RealStruct) subtract(c.getReal()), (RealStruct) new IntegerStruct(BigInteger.ZERO).subtract(c.getImaginary()));
 		}
 		throw new TypeErrorException("Not of type NUMBER");
 	}
 
 	@Override
-	public NumberStruct multiply(final NumberStruct numberStruct) {
-		if (numberStruct instanceof IntegerStruct) {
-			return new FloatStruct(bigDecimal.multiply(new BigDecimal(((IntegerStruct) numberStruct).getBigInteger())));
+	public NumberStruct multiply(final NumberStruct number) {
+		if (number instanceof IntegerStruct) {
+			return new FloatStruct(bigDecimal.multiply(new BigDecimal(((IntegerStruct) number).getBigInteger())));
 		}
-		if (numberStruct instanceof FloatStruct) {
-			return new FloatStruct(bigDecimal.multiply(((FloatStruct) numberStruct).bigDecimal));
+		if (number instanceof FloatStruct) {
+			return new FloatStruct(bigDecimal.multiply(((FloatStruct) number).bigDecimal));
 		}
-		if (numberStruct instanceof RatioStruct) {
-			return new FloatStruct(bigDecimal.multiply(((RatioStruct) numberStruct).getBigFraction().bigDecimalValue()));
+		if (number instanceof RatioStruct) {
+			return new FloatStruct(bigDecimal.multiply(((RatioStruct) number).getBigFraction().bigDecimalValue()));
 		}
-		if (numberStruct instanceof ComplexStruct) {
-			final ComplexStruct c = (ComplexStruct) numberStruct;
+		if (number instanceof ComplexStruct) {
+			final ComplexStruct c = (ComplexStruct) number;
 			return new ComplexStruct((RealStruct) multiply(c.getReal()), (RealStruct) multiply(c.getImaginary()));
 		}
 		throw new TypeErrorException("Not of type NUMBER");
 	}
 
 	@Override
-	public NumberStruct divide(final NumberStruct numberStruct) {
-		if (numberStruct instanceof IntegerStruct) {
-			return new FloatStruct(bigDecimal.divide(new BigDecimal(((IntegerStruct) numberStruct).getBigInteger()), MathContext.DECIMAL128));
+	public NumberStruct divide(final NumberStruct number) {
+		if (number instanceof IntegerStruct) {
+			return new FloatStruct(bigDecimal.divide(new BigDecimal(((IntegerStruct) number).getBigInteger()), MathContext.DECIMAL128));
 		}
-		if (numberStruct instanceof FloatStruct) {
-			return new FloatStruct(bigDecimal.divide(((FloatStruct) numberStruct).bigDecimal, MathContext.DECIMAL128));
+		if (number instanceof FloatStruct) {
+			return new FloatStruct(bigDecimal.divide(((FloatStruct) number).bigDecimal, MathContext.DECIMAL128));
 		}
-		if (numberStruct instanceof RatioStruct) {
-			return new FloatStruct(bigDecimal.divide(((RatioStruct) numberStruct).getBigFraction().bigDecimalValue(), MathContext.DECIMAL128));
+		if (number instanceof RatioStruct) {
+			return new FloatStruct(bigDecimal.divide(((RatioStruct) number).getBigFraction().bigDecimalValue(), MathContext.DECIMAL128));
 		}
-		if (numberStruct instanceof ComplexStruct) {
-			final ComplexStruct c = (ComplexStruct) numberStruct;
+		if (number instanceof ComplexStruct) {
+			final ComplexStruct c = (ComplexStruct) number;
 			final NumberStruct re = c.getReal();
 			final NumberStruct im = c.getImaginary();
 			final NumberStruct denom = re.multiply(re).add(im.multiply(im));
@@ -257,6 +321,107 @@ public class FloatStruct extends RealStruct {
 	}
 
 	@Override
+	public NumberStruct sin() {
+		final double doubleValue = bigDecimal.doubleValue();
+		final double sin = FastMath.sin(doubleValue);
+		return new FloatStruct(new BigDecimal(sin));
+	}
+
+	@Override
+	public NumberStruct cos() {
+		final double doubleValue = bigDecimal.doubleValue();
+		final double cos = FastMath.cos(doubleValue);
+		return new FloatStruct(new BigDecimal(cos));
+	}
+
+	@Override
+	public NumberStruct tan() {
+		final double doubleValue = bigDecimal.doubleValue();
+		final double tan = FastMath.tan(doubleValue);
+		return new FloatStruct(new BigDecimal(tan));
+	}
+
+	@Override
+	public NumberStruct asin() {
+		final double doubleValue = bigDecimal.doubleValue();
+		final double asin = FastMath.asin(doubleValue);
+		return new FloatStruct(new BigDecimal(asin));
+	}
+
+	@Override
+	public NumberStruct acos() {
+		final double doubleValue = bigDecimal.doubleValue();
+		final double acos = FastMath.acos(doubleValue);
+		return new FloatStruct(new BigDecimal(acos));
+	}
+
+	@Override
+	public NumberStruct atan() {
+		final double doubleValue = bigDecimal.doubleValue();
+		final double atan = FastMath.atan(doubleValue);
+		return new FloatStruct(new BigDecimal(atan));
+	}
+
+	@Override
+	public RealStruct atan(final RealStruct real) {
+		final double doubleValue = bigDecimal.doubleValue();
+
+		final double doubleValue2;
+		if (real instanceof FloatStruct) {
+			doubleValue2 = ((FloatStruct) real).bigDecimal.doubleValue();
+		} else if (real instanceof RatioStruct) {
+			doubleValue2 = ((RatioStruct) real).getBigFraction().doubleValue();
+		} else {
+			doubleValue2 = ((IntegerStruct) real).getBigInteger().doubleValue();
+		}
+
+		final double atan = FastMath.atan2(doubleValue, doubleValue2);
+		return new FloatStruct(new BigDecimal(atan));
+	}
+
+	@Override
+	public NumberStruct sinh() {
+		final double doubleValue = bigDecimal.doubleValue();
+		final double sinh = FastMath.sinh(doubleValue);
+		return new FloatStruct(new BigDecimal(sinh));
+	}
+
+	@Override
+	public NumberStruct cosh() {
+		final double doubleValue = bigDecimal.doubleValue();
+		final double cosh = FastMath.cosh(doubleValue);
+		return new FloatStruct(new BigDecimal(cosh));
+	}
+
+	@Override
+	public NumberStruct tanh() {
+		final double doubleValue = bigDecimal.doubleValue();
+		final double tanh = FastMath.tanh(doubleValue);
+		return new FloatStruct(new BigDecimal(tanh));
+	}
+
+	@Override
+	public NumberStruct asinh() {
+		final double doubleValue = bigDecimal.doubleValue();
+		final double asinh = FastMath.asinh(doubleValue);
+		return new FloatStruct(new BigDecimal(asinh));
+	}
+
+	@Override
+	public NumberStruct acosh() {
+		final double doubleValue = bigDecimal.doubleValue();
+		final double acosh = FastMath.acosh(doubleValue);
+		return new FloatStruct(new BigDecimal(acosh));
+	}
+
+	@Override
+	public NumberStruct atanh() {
+		final double doubleValue = bigDecimal.doubleValue();
+		final double atanh = FastMath.atanh(doubleValue);
+		return new FloatStruct(new BigDecimal(atanh));
+	}
+
+	@Override
 	public RealStruct truncate(final RealStruct obj) {
 		if (obj instanceof IntegerStruct) {
 			return truncate(new FloatStruct(new BigDecimal(((IntegerStruct) obj).getBigInteger())));
@@ -286,15 +451,6 @@ public class FloatStruct extends RealStruct {
 //			return value2;
 		}
 		throw new TypeErrorException("Not of type REAL");
-	}
-
-	public RationalStruct rational() {
-
-		final BigFraction bigFraction = BigFractionUtil.getBigFraction(bigDecimal);
-		if (bigFraction.getDenominator().equals(BigInteger.ONE)) {
-			return new IntegerStruct(bigFraction.getNumerator());
-		}
-		return new RatioStruct(bigFraction);
 	}
 
 	@Override

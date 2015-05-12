@@ -332,6 +332,66 @@ public class ComplexStruct extends NumberStruct {
 	}
 
 	@Override
+	public NumberStruct sin() {
+		return null;
+	}
+
+	@Override
+	public NumberStruct cos() {
+		return null;
+	}
+
+	@Override
+	public NumberStruct tan() {
+		return null;
+	}
+
+	@Override
+	public NumberStruct asin() {
+		return null;
+	}
+
+	@Override
+	public NumberStruct acos() {
+		return null;
+	}
+
+	@Override
+	public NumberStruct atan() {
+		return null;
+	}
+
+	@Override
+	public NumberStruct sinh() {
+		return null;
+	}
+
+	@Override
+	public NumberStruct cosh() {
+		return null;
+	}
+
+	@Override
+	public NumberStruct tanh() {
+		return null;
+	}
+
+	@Override
+	public NumberStruct asinh() {
+		return null;
+	}
+
+	@Override
+	public NumberStruct acosh() {
+		return null;
+	}
+
+	@Override
+	public NumberStruct atanh() {
+		return null;
+	}
+
+	@Override
 	public int hashCode() {
 		return new HashCodeBuilder().appendSuper(super.hashCode())
 		                            .append(real)

@@ -14,7 +14,7 @@ import jcl.types.RealType;
 /**
  * The {@link RealStruct} is the object representation of a Lisp 'real' type.
  */
-public class RealStruct extends NumberStruct {
+public abstract class RealStruct extends NumberStruct {
 
 	/**
 	 * Serializable Version Unique Identifier.
@@ -48,21 +48,19 @@ public class RealStruct extends NumberStruct {
 		super(type, directSuperClasses, subClasses);
 	}
 
-	public boolean plusp() {
-		return false;
-	}
+	public abstract boolean plusp();
 
-	public boolean minusp() {
-		return false;
-	}
+	public abstract boolean minusp();
 
-	public RationalStruct rational() {
-		return null;
-	}
+	public abstract boolean isLessThan(final LispStruct obj);
 
-	public RationalStruct rationalize() {
-		return null;
-	}
+	public abstract boolean isGreaterThan(final LispStruct obj);
+
+	public abstract boolean isLessThanOrEqualTo(final LispStruct obj);
+
+	public abstract boolean isGreaterThanOrEqualTo(final LispStruct obj);
+
+	public abstract RationalStruct rational();
 
 	public RealStruct MOD(final RealStruct divisor) {
 		final RealStruct result = truncate(divisor);
@@ -80,6 +78,12 @@ public class RealStruct extends NumberStruct {
 		}
 		return result;
 	}
+
+	public abstract RealStruct max(final RealStruct real);
+
+	public abstract RealStruct min(final RealStruct real);
+
+	public abstract RealStruct atan(final RealStruct real);
 
 	public RealStruct truncate() {
 		return truncate(new IntegerStruct(BigInteger.ONE));

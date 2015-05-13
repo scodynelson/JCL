@@ -223,27 +223,8 @@ public class ComplexStruct extends NumberStruct {
 			return imaginary.ABS();
 		}
 
-		final BigDecimal bdReal;
-		if (real instanceof IntegerStruct) {
-			bdReal = new BigDecimal(((IntegerStruct) real).getBigInteger());
-		} else if (real instanceof FloatStruct) {
-			bdReal = ((FloatStruct) real).getBigDecimal();
-		} else if (real instanceof RatioStruct) {
-			bdReal = ((RatioStruct) real).getBigFraction().bigDecimalValue();
-		} else {
-			throw new TypeErrorException("Not of type REAL");
-		}
-
-		final BigDecimal bdImag;
-		if (imaginary instanceof IntegerStruct) {
-			bdImag = new BigDecimal(((IntegerStruct) imaginary).getBigInteger());
-		} else if (imaginary instanceof FloatStruct) {
-			bdImag = ((FloatStruct) imaginary).getBigDecimal();
-		} else if (imaginary instanceof RatioStruct) {
-			bdImag = ((RatioStruct) imaginary).getBigFraction().bigDecimalValue();
-		} else {
-			throw new TypeErrorException("Not of type REAL");
-		}
+		final BigDecimal bdReal = real.bigDecimalValue();
+		final BigDecimal bdImag = imaginary.bigDecimalValue();
 
 		// TODO: can we avoid possible precision loss here???
 		final double dblReal = bdReal.doubleValue();
@@ -340,6 +321,10 @@ public class ComplexStruct extends NumberStruct {
 
 	@Override
 	public NumberStruct exp() {
+
+//		double expReal = FastMath.exp(real);
+//		return createComplex(expReal *  FastMath.cos(imaginary),
+//				expReal * FastMath.sin(imaginary));
 		return real.exp().multiply(imaginary.cis());
 	}
 
@@ -408,6 +393,18 @@ public class ComplexStruct extends NumberStruct {
 				return new ComplexStruct((RealStruct) realpart.sqrt(), imagpart);
 			}
 		}
+
+//		if (real == 0.0 && imaginary == 0.0) {
+//			return createComplex(0.0, 0.0);
+//		}
+//
+//		double t = FastMath.sqrt((FastMath.abs(real) + abs()) / 2.0);
+//		if (real >= 0.0) {
+//			return createComplex(t, imaginary / (2.0 * t));
+//		} else {
+//			return createComplex(FastMath.abs(imaginary) / (2.0 * t),
+//					FastMath.copySign(1d, imaginary) * t);
+//		}
 		return log().divide(IntegerStruct.TWO).exp();
 	}
 
@@ -419,6 +416,9 @@ public class ComplexStruct extends NumberStruct {
 		final FloatStruct im = (FloatStruct) imaginary;
 		final FloatStruct phase = new FloatStruct(BigDecimal.valueOf(FastMath.atan2(im.getBigDecimal().doubleValue(), re.getBigDecimal().doubleValue())));  // atan(y/x)
 		final FloatStruct abs = (FloatStruct) ABS();
+
+//		return createComplex(FastMath.log(abs()),
+//				FastMath.atan2(imaginary, real));
 		return new ComplexStruct(new FloatStruct(BigDecimal.valueOf(FastMath.log(abs.getBigDecimal().doubleValue()))), phase);
 	}
 
@@ -427,6 +427,9 @@ public class ComplexStruct extends NumberStruct {
 		final NumberStruct n = multiply(new ComplexStruct(IntegerStruct.ZERO, IntegerStruct.ONE));
 		NumberStruct result = n.exp();
 		result = result.subtract(n.multiply(IntegerStruct.MINUS_ONE).exp());
+
+//		return createComplex(FastMath.sin(real) * FastMath.cosh(imaginary),
+//				FastMath.cos(real) * FastMath.sinh(imaginary));
 		return result.divide(IntegerStruct.TWO.multiply(new ComplexStruct(IntegerStruct.ZERO, IntegerStruct.ONE)));
 	}
 
@@ -435,11 +438,21 @@ public class ComplexStruct extends NumberStruct {
 		final NumberStruct n = multiply(new ComplexStruct(IntegerStruct.ZERO, IntegerStruct.ONE));
 		NumberStruct result = n.exp();
 		result = result.add(n.multiply(IntegerStruct.MINUS_ONE).exp());
+
+//		return createComplex(FastMath.cos(real) * FastMath.cosh(imaginary),
+//				-FastMath.sin(real) * FastMath.sinh(imaginary));
 		return result.divide(IntegerStruct.TWO);
 	}
 
 	@Override
 	public NumberStruct tan() {
+
+//		double real2 = 2.0 * real;
+//		double imaginary2 = 2.0 * imaginary;
+//		double d = FastMath.cos(real2) + FastMath.cosh(imaginary2);
+//
+//		return createComplex(FastMath.sin(real2) / d,
+//				FastMath.sinh(imaginary2) / d);
 		return sin().divide(cos());
 	}
 
@@ -454,6 +467,7 @@ public class ComplexStruct extends NumberStruct {
 		result = result.log();
 		result = result.multiply(new ComplexStruct(IntegerStruct.ZERO, IntegerStruct.MINUS_ONE));
 
+//		return sqrt1z().add(this.multiply(I)).log().multiply(I.negate());
 		return result;
 	}
 
@@ -462,8 +476,13 @@ public class ComplexStruct extends NumberStruct {
 		NumberStruct result = new FloatStruct(new BigDecimal(Math.PI / 2));
 		result = result.subtract(asin());
 
+//		return this.add(this.sqrt1z().multiply(I)).log().multiply(I.negate());
 		return result;
 	}
+
+//	public Complex sqrt1z() {
+//		return createComplex(1.0, 0.0).subtract(this.multiply(this)).sqrt();
+//	}
 
 	@Override
 	public NumberStruct atan() {
@@ -481,6 +500,9 @@ public class ComplexStruct extends NumberStruct {
 		result = n.multiply(result);
 		result = result.log();
 		result = result.multiply(new ComplexStruct(IntegerStruct.ZERO, IntegerStruct.MINUS_ONE));
+
+//		return this.add(I).divide(I.subtract(this)).log()
+//		           .multiply(I.divide(createComplex(2.0, 0.0)));
 		return result;
 	}
 
@@ -494,6 +516,8 @@ public class ComplexStruct extends NumberStruct {
 		result = result.subtract(multiply(IntegerStruct.MINUS_ONE).exp());
 		result = result.divide(IntegerStruct.TWO);
 
+//		return createComplex(FastMath.sinh(real) * FastMath.cos(imaginary),
+//				FastMath.cosh(real) * FastMath.sin(imaginary));
 		return result;
 	}
 
@@ -507,11 +531,20 @@ public class ComplexStruct extends NumberStruct {
 		result = result.add(multiply(IntegerStruct.MINUS_ONE).exp());
 		result = result.divide(IntegerStruct.TWO);
 
+//		return createComplex(FastMath.cosh(real) * FastMath.cos(imaginary),
+//				FastMath.sinh(real) * FastMath.sin(imaginary));
 		return result;
 	}
 
 	@Override
 	public NumberStruct tanh() {
+
+//		double real2 = 2.0 * real;
+//		double imaginary2 = 2.0 * imaginary;
+//		double d = FastMath.cosh(real2) + FastMath.cos(imaginary2);
+//
+//		return createComplex(FastMath.sinh(real2) / d,
+//				FastMath.sin(imaginary2) / d);
 		return sinh().divide(cosh());
 	}
 
@@ -527,6 +560,26 @@ public class ComplexStruct extends NumberStruct {
 		result = result.add(this);
 		result = result.log();
 
+		// asinh(z) = i*asin(-i*z)
+//		ComplexStruct miz = new ComplexStruct(this.imaginary, -this.real);
+//		ComplexStruct result = asin(miz);
+//		double rx = result.imaginary;
+//		result.imaginary = result.real;
+//		result.real = -rx;
+//		return result;
+
+		//public static final ComplexStruct MINUS_I=new ComplexStruct(0.0,-1.0);
+		//public static final ComplexStruct PI_2_I=new ComplexStruct(0.0,Math.PI/2.0);
+		//public static final ComplexStruct MINUS_PI_2_I=new ComplexStruct(0.0,-Math.PI/2.0);
+//		if(this.equals(I))
+//			return PI_2_I;
+//		else if(this.equals(MINUS_I))
+//			return MINUS_PI_2_I;
+//		else {
+//			// log(z+sqrt(z*z+1))
+//			final ComplexStruct root=sqrt(this.real*this.real-this.imaginary*this.imaginary+1.0,2.0*this.real*this.imaginary);
+//			return log(this.real+root.real,this.imaginary+root.imaginary);
+//		}
 		return result;
 	}
 
@@ -546,6 +599,29 @@ public class ComplexStruct extends NumberStruct {
 		result = result.log();
 		result = result.multiply(IntegerStruct.TWO);
 
+		// private final static long negZeroBits = 0x8000000000000000L;
+//		ComplexStruct result = acos(this);
+//		double rx = -result.imaginary;
+//		result.imaginary = result.real;
+//		result.real = rx;
+//		boolean isNegZero = (Double.doubleToLongBits(result.real) == negZeroBits);
+//		if (result.real < 0.0 || isNegZero) {
+//			result.real = -result.real;
+//			result.imaginary = -result.imaginary;
+//		}
+//		return result;
+
+		//public static final ComplexStruct MINUS_ONE=new ComplexStruct(-1.0,0.0);
+		//public static final ComplexStruct PI_I=new ComplexStruct(0.0,Math.PI);
+//		if(this.equals(ONE))
+//			return ZERO;
+//		else if(this.equals(MINUS_ONE))
+//			return PI_I;
+//		else {
+//			// log(z+sqrt(z*z-1))
+//			final ComplexStruct root=sqrt(this.real*this.real-this.imaginary*this.imaginary-1.0,2.0*this.real*this.imaginary);
+//			return log(this.real+root.real,this.imaginary+root.imaginary);
+//		}
 		return result;
 	}
 
@@ -561,8 +637,44 @@ public class ComplexStruct extends NumberStruct {
 		NumberStruct result = n1.subtract(n2);
 		result = result.divide(IntegerStruct.TWO);
 
+		// atanh(z) = i*atan(-i*z)
+//		ComplexStruct miz = new ComplexStruct(this.imaginary, -this.real);
+//		ComplexStruct result = atan(miz);
+//		double rx = result.imaginary;
+//		result.imaginary = result.real;
+//		result.real = -rx;
+//		return result;
+
+		// 1/2 log((1+z)/(1-z))
+//		final double modSqr=this.modSqr();
+//		final double denom=1.0+modSqr-2.0*this.real;
+//		return log_2((1.0-modSqr)/denom,2.0*this.imaginary/denom);
 		return result;
 	}
+
+//	public double modSqr() {
+//		return real*real+imaginary*imaginary;
+//	}
+//	private final static ComplexStruct log_2(final double real,final double imag) {
+//		return new ComplexStruct(Math.log(mod(real,imag))/2.0,arg(real,imag)/2.0);
+//	}
+//	private static double arg(final double real,final double imag) {
+//		return Math.atan2(imag,real);
+//	}
+//	private static double mod(final double real,final double imag) {
+//		final double reAbs=Math.abs(real);
+//		final double imAbs=Math.abs(imag);
+//		if(reAbs==0.0 && imAbs==0.0)
+//			return 0.0;
+//		else if(reAbs<imAbs)
+//			return imAbs*Math.sqrt(1.0+(real/imag)*(real/imag));
+//		else
+//			return reAbs*Math.sqrt(1.0+(imag/real)*(imag/real));
+//	}
+
+//	public Complex negate() {
+//		return createComplex(-real, -imaginary);
+//	}
 
 	@Override
 	public int hashCode() {

@@ -126,6 +126,8 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 		return log().divide(base.log());
 	}
 
+//	public abstract NumberStruct negate();
+
 	public abstract NumberStruct sin();
 
 	public abstract NumberStruct cos();

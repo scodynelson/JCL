@@ -5,6 +5,8 @@
 package jcl.numbers;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.List;
 
 import jcl.LispStruct;
@@ -59,6 +61,8 @@ public abstract class RealStruct extends NumberStruct {
 		return super.log(base);
 	}
 
+	public abstract BigDecimal bigDecimalValue();
+
 	public abstract double doubleValue();
 
 	public abstract boolean plusp();
@@ -102,38 +106,168 @@ public abstract class RealStruct extends NumberStruct {
 
 	public abstract RealStruct atan(RealStruct real);
 
-	public TruncateResult truncate() {
+	public QuotientRemainderResult floor() {
 		return truncate(IntegerStruct.ONE);
 	}
 
-	public abstract TruncateResult truncate(RealStruct divisor);
+	public QuotientRemainderResult floor(final RealStruct divisor) {
 
-	public TruncateResult ftruncate() {
+		final BigDecimal numberBigDecimal = bigDecimalValue();
+		final BigDecimal quotient = numberBigDecimal.setScale(0, RoundingMode.FLOOR);
+
+		final BigDecimal divisorBigDecimal = divisor.bigDecimalValue();
+		final BigDecimal remainder = numberBigDecimal.remainder(divisorBigDecimal, MathContext.DECIMAL128);
+
+		final IntegerStruct integerQuotient = new IntegerStruct(quotient.toBigInteger());
+		return new QuotientRemainderResult(integerQuotient, new FloatStruct(remainder));
+	}
+
+	public QuotientRemainderResult ffloor() {
 		return ftruncate(IntegerStruct.ONE);
 	}
 
-	public TruncateResult ftruncate(final RealStruct second) {
-		if (zerop()) {
-			return new TruncateResult(this, FloatStruct.ZERO);
-		}
+	public QuotientRemainderResult ffloor(final RealStruct divisor) {
 
-		final TruncateResult truncateResult = truncate(second);
-		RealStruct q = truncateResult.getQuotient(); // an integer
-		if (q.zerop()) {
+		final BigDecimal numberBigDecimal = bigDecimalValue();
+		final BigDecimal quotient = numberBigDecimal.setScale(0, RoundingMode.FLOOR);
+
+		final BigDecimal divisorBigDecimal = divisor.bigDecimalValue();
+		final BigDecimal remainder = numberBigDecimal.remainder(divisorBigDecimal, MathContext.DECIMAL128);
+
+		final FloatStruct floatQuotient;
+		if (BigDecimal.ZERO.compareTo(quotient) == 0) {
 			if (minusp()) {
-				if (second.minusp()) {
-					q = new FloatStruct(new BigDecimal("0.0"));
+				if (divisor.minusp()) {
+					floatQuotient = FloatStruct.ZERO;
 				} else {
-					q = new FloatStruct(new BigDecimal("-0.0"));
+					floatQuotient = FloatStruct.MINUS_ZERO;
 				}
-			} else if (second.minusp()) {
-				q = new FloatStruct(new BigDecimal("-0.0"));
+			} else if (divisor.minusp()) {
+				floatQuotient = FloatStruct.MINUS_ZERO;
 			} else {
-				q = new FloatStruct(new BigDecimal("0.0"));
+				floatQuotient = FloatStruct.ZERO;
 			}
 		} else {
-			q = new FloatStruct(new BigDecimal(((IntegerStruct) q).getBigInteger()));
+			floatQuotient = new FloatStruct(quotient);
 		}
-		return new TruncateResult(q, truncateResult.getRemainder());
+		return new QuotientRemainderResult(floatQuotient, new FloatStruct(remainder));
+	}
+
+	public QuotientRemainderResult ceiling() {
+		return truncate(IntegerStruct.ONE);
+	}
+
+	public QuotientRemainderResult ceiling(final RealStruct divisor) {
+
+		final BigDecimal numberBigDecimal = bigDecimalValue();
+		final BigDecimal quotient = numberBigDecimal.setScale(0, RoundingMode.CEILING);
+
+		final BigDecimal divisorBigDecimal = divisor.bigDecimalValue();
+		final BigDecimal remainder = numberBigDecimal.remainder(divisorBigDecimal, MathContext.DECIMAL128);
+
+		final IntegerStruct integerQuotient = new IntegerStruct(quotient.toBigInteger());
+		return new QuotientRemainderResult(integerQuotient, new FloatStruct(remainder));
+	}
+
+	public QuotientRemainderResult fceiling() {
+		return ftruncate(IntegerStruct.ONE);
+	}
+
+	public QuotientRemainderResult fceiling(final RealStruct divisor) {
+
+		final BigDecimal numberBigDecimal = bigDecimalValue();
+		final BigDecimal quotient = numberBigDecimal.setScale(0, RoundingMode.CEILING);
+
+		final BigDecimal divisorBigDecimal = divisor.bigDecimalValue();
+		final BigDecimal remainder = numberBigDecimal.remainder(divisorBigDecimal, MathContext.DECIMAL128);
+
+		final FloatStruct floatQuotient;
+		if (BigDecimal.ZERO.compareTo(quotient) == 0) {
+			if (minusp()) {
+				if (divisor.minusp()) {
+					floatQuotient = FloatStruct.ZERO;
+				} else {
+					floatQuotient = FloatStruct.MINUS_ZERO;
+				}
+			} else if (divisor.minusp()) {
+				floatQuotient = FloatStruct.MINUS_ZERO;
+			} else {
+				floatQuotient = FloatStruct.ZERO;
+			}
+		} else {
+			floatQuotient = new FloatStruct(quotient);
+		}
+		return new QuotientRemainderResult(floatQuotient, new FloatStruct(remainder));
+	}
+
+	public QuotientRemainderResult truncate() {
+		return truncate(IntegerStruct.ONE);
+	}
+
+	public QuotientRemainderResult truncate(final RealStruct divisor) {
+		if (plusp()) {
+			return floor(divisor);
+		} else {
+			return ceiling(divisor);
+		}
+	}
+
+	public QuotientRemainderResult ftruncate() {
+		return ftruncate(IntegerStruct.ONE);
+	}
+
+	public QuotientRemainderResult ftruncate(final RealStruct divisor) {
+		if (plusp()) {
+			return ffloor(divisor);
+		} else {
+			return fceiling(divisor);
+		}
+	}
+
+	public QuotientRemainderResult round() {
+		return truncate(IntegerStruct.ONE);
+	}
+
+	public QuotientRemainderResult round(final RealStruct divisor) {
+
+		final BigDecimal numberBigDecimal = bigDecimalValue();
+		final BigDecimal quotient = numberBigDecimal.setScale(0, RoundingMode.HALF_EVEN);
+
+		final BigDecimal divisorBigDecimal = divisor.bigDecimalValue();
+		final BigDecimal remainder = numberBigDecimal.remainder(divisorBigDecimal, MathContext.DECIMAL128);
+
+		final IntegerStruct integerQuotient = new IntegerStruct(quotient.toBigInteger());
+		return new QuotientRemainderResult(integerQuotient, new FloatStruct(remainder));
+	}
+
+	public QuotientRemainderResult fround() {
+		return ftruncate(IntegerStruct.ONE);
+	}
+
+	public QuotientRemainderResult fround(final RealStruct divisor) {
+
+		final BigDecimal numberBigDecimal = bigDecimalValue();
+		final BigDecimal quotient = numberBigDecimal.setScale(0, RoundingMode.HALF_EVEN);
+
+		final BigDecimal divisorBigDecimal = divisor.bigDecimalValue();
+		final BigDecimal remainder = numberBigDecimal.remainder(divisorBigDecimal, MathContext.DECIMAL128);
+
+		final FloatStruct floatQuotient;
+		if (BigDecimal.ZERO.compareTo(quotient) == 0) {
+			if (minusp()) {
+				if (divisor.minusp()) {
+					floatQuotient = FloatStruct.ZERO;
+				} else {
+					floatQuotient = FloatStruct.MINUS_ZERO;
+				}
+			} else if (divisor.minusp()) {
+				floatQuotient = FloatStruct.MINUS_ZERO;
+			} else {
+				floatQuotient = FloatStruct.ZERO;
+			}
+		} else {
+			floatQuotient = new FloatStruct(quotient);
+		}
+		return new QuotientRemainderResult(floatQuotient, new FloatStruct(remainder));
 	}
 }

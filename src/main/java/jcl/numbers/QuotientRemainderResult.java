@@ -4,13 +4,13 @@
 
 package jcl.numbers;
 
-public class TruncateResult {
+public class QuotientRemainderResult {
 
 	private final RealStruct quotient;
 
 	private final RealStruct remainder;
 
-	public TruncateResult(final RealStruct quotient, final RealStruct remainder) {
+	public QuotientRemainderResult(final RealStruct quotient, final RealStruct remainder) {
 		this.quotient = quotient;
 		this.remainder = remainder;
 	}

@@ -121,6 +121,11 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	@Override
+	public BigDecimal bigDecimalValue() {
+		return new BigDecimal(bigInteger);
+	}
+
+	@Override
 	public boolean plusp() {
 		return bigInteger.signum() > 0;
 	}
@@ -534,15 +539,7 @@ public class IntegerStruct extends RationalStruct {
 	@Override
 	public RealStruct atan(final RealStruct real) {
 		final double doubleValue = bigInteger.doubleValue();
-
-		final double doubleValue2;
-		if (real instanceof FloatStruct) {
-			doubleValue2 = ((FloatStruct) real).getBigDecimal().doubleValue();
-		} else if (real instanceof RatioStruct) {
-			doubleValue2 = ((RatioStruct) real).getBigFraction().doubleValue();
-		} else {
-			doubleValue2 = ((IntegerStruct) real).bigInteger.doubleValue();
-		}
+		final double doubleValue2 = real.doubleValue();
 
 		final double atan = FastMath.atan2(doubleValue, doubleValue2);
 		return new FloatStruct(new BigDecimal(atan));
@@ -588,38 +585,6 @@ public class IntegerStruct extends RationalStruct {
 		final double doubleValue = bigInteger.doubleValue();
 		final double atanh = FastMath.atanh(doubleValue);
 		return new FloatStruct(new BigDecimal(atanh));
-	}
-
-	@Override
-	public TruncateResult truncate(final RealStruct divisor) {
-		final RealStruct value1;
-		final RealStruct value2;
-		try {
-			if (divisor instanceof IntegerStruct) {
-				final BigInteger divisor1 = ((IntegerStruct) divisor).bigInteger;
-				final BigInteger[] results = bigInteger.divideAndRemainder(divisor1);
-				final BigInteger quotient = results[0];
-				final BigInteger remainder = results[1];
-				value1 = new IntegerStruct(quotient);
-				value2 = (remainder.signum() == 0) ? new IntegerStruct(BigInteger.ZERO) : new IntegerStruct(remainder);
-			} else if (divisor instanceof RatioStruct) {
-				final RatioStruct divisor1 = (RatioStruct) divisor;
-				final RealStruct quotient = ((RealStruct) multiply(new IntegerStruct(divisor1.getBigFraction().getDenominator()))).truncate(new IntegerStruct(divisor1.getBigFraction().getNumerator())).getQuotient();
-				final RealStruct remainder = (RealStruct) subtract(quotient.multiply(divisor1));
-				value1 = quotient;
-				value2 = remainder;
-			} else if (divisor instanceof FloatStruct) {
-				return new FloatStruct(new BigDecimal(bigInteger)).truncate(divisor);
-			} else {
-				throw new TypeErrorException("Not of type REAL");
-			}
-		} catch (final ArithmeticException e) {
-			if (divisor.zerop()) {
-				throw new RuntimeException("division by zero");
-			}
-			throw new RuntimeException("arithmetic error", e);
-		}
-		return new TruncateResult(value1, value2);
 	}
 
 	public IntegerStruct ash(final IntegerStruct obj) {

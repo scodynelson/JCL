@@ -7,7 +7,6 @@ package jcl.numbers;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
-import java.math.RoundingMode;
 import java.util.Objects;
 
 import jcl.LispStruct;
@@ -32,6 +31,8 @@ public class FloatStruct extends RealStruct {
 	private static final long serialVersionUID = 4803312076840516559L;
 
 	public static final FloatStruct ZERO = new FloatStruct(BigDecimal.ZERO);
+
+	public static final FloatStruct MINUS_ZERO = new FloatStruct(BigDecimal.valueOf(-0.0));
 
 	public static final FloatStruct ONE = new FloatStruct(BigDecimal.ONE);
 
@@ -160,6 +161,11 @@ public class FloatStruct extends RealStruct {
 	@Override
 	public double doubleValue() {
 		return bigDecimal.doubleValue();
+	}
+
+	@Override
+	public BigDecimal bigDecimalValue() {
+		return bigDecimal;
 	}
 
 	@Override
@@ -444,15 +450,7 @@ public class FloatStruct extends RealStruct {
 	@Override
 	public RealStruct atan(final RealStruct real) {
 		final double doubleValue = bigDecimal.doubleValue();
-
-		final double doubleValue2;
-		if (real instanceof FloatStruct) {
-			doubleValue2 = ((FloatStruct) real).bigDecimal.doubleValue();
-		} else if (real instanceof RatioStruct) {
-			doubleValue2 = ((RatioStruct) real).getBigFraction().doubleValue();
-		} else {
-			doubleValue2 = ((IntegerStruct) real).getBigInteger().doubleValue();
-		}
+		final double doubleValue2 = real.doubleValue();
 
 		final double atan = FastMath.atan2(doubleValue, doubleValue2);
 		return new FloatStruct(new BigDecimal(atan));
@@ -498,37 +496,6 @@ public class FloatStruct extends RealStruct {
 		final double doubleValue = bigDecimal.doubleValue();
 		final double atanh = FastMath.atanh(doubleValue);
 		return new FloatStruct(new BigDecimal(atanh));
-	}
-
-	@Override
-	public TruncateResult truncate(final RealStruct divisor) {
-		if (divisor instanceof IntegerStruct) {
-			return truncate(new FloatStruct(new BigDecimal(((IntegerStruct) divisor).getBigInteger())));
-		}
-		if (divisor instanceof RatioStruct) {
-			return truncate(new FloatStruct(((RatioStruct) divisor).getBigFraction().bigDecimalValue()));
-		}
-		if (divisor instanceof FloatStruct) {
-
-			final BigDecimal dividend = bigDecimal;
-			final BigDecimal divisor1 = ((FloatStruct) divisor).bigDecimal;
-
-			final BigDecimal quotient;
-
-			final BigDecimal dividendDivisorMultiply = dividend.multiply(divisor1);
-			if (dividendDivisorMultiply.compareTo(BigDecimal.ZERO) >= 0) {
-				quotient = dividend.divide(divisor1, RoundingMode.FLOOR);
-			} else {
-				quotient = dividend.divide(divisor1, RoundingMode.CEILING);
-			}
-
-			final RealStruct value1 = new FloatStruct(quotient);
-			final BigDecimal remainder = dividend.remainder(divisor1, MathContext.DECIMAL128);
-			final RealStruct value2 = new FloatStruct(remainder);
-
-			return new TruncateResult(value1, value2);
-		}
-		throw new TypeErrorException("Not of type REAL");
 	}
 
 	@Override

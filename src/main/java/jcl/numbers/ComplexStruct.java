@@ -27,6 +27,8 @@ public class ComplexStruct extends NumberStruct {
 	 */
 	private static final long serialVersionUID = 7848008215064899579L;
 
+	public static final ComplexStruct I = new ComplexStruct(IntegerStruct.ZERO, IntegerStruct.ONE);
+
 	public static final ComplexStruct ZERO = new ComplexStruct(IntegerStruct.ZERO, IntegerStruct.ZERO);
 
 	public static final ComplexStruct ONE = new ComplexStruct(IntegerStruct.ONE, IntegerStruct.ZERO);

@@ -100,6 +100,11 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	@Override
+	public BigDecimal bigDecimalValue() {
+		return bigFraction.bigDecimalValue();
+	}
+
+	@Override
 	public boolean plusp() {
 		final BigFraction abs = bigFraction.abs();
 		return abs.equals(bigFraction);
@@ -507,15 +512,7 @@ public class RatioStruct extends RationalStruct {
 	@Override
 	public RealStruct atan(final RealStruct real) {
 		final double doubleValue = bigFraction.doubleValue();
-
-		final double doubleValue2;
-		if (real instanceof FloatStruct) {
-			doubleValue2 = ((FloatStruct) real).getBigDecimal().doubleValue();
-		} else if (real instanceof RatioStruct) {
-			doubleValue2 = ((RatioStruct) real).bigFraction.doubleValue();
-		} else {
-			doubleValue2 = ((IntegerStruct) real).getBigInteger().doubleValue();
-		}
+		final double doubleValue2 = real.doubleValue();
 
 		final double atan = FastMath.atan2(doubleValue, doubleValue2);
 		return new FloatStruct(new BigDecimal(atan));
@@ -561,42 +558,6 @@ public class RatioStruct extends RationalStruct {
 		final double doubleValue = bigFraction.doubleValue();
 		final double atanh = FastMath.atanh(doubleValue);
 		return new FloatStruct(new BigDecimal(atanh));
-	}
-
-	@Override
-	public TruncateResult truncate(final RealStruct divisor) {
-		if (divisor instanceof FloatStruct) {
-			return new FloatStruct(bigFraction.bigDecimalValue()).truncate(divisor);
-		}
-
-		try {
-			final BigInteger n;
-			final BigInteger d;
-			if (divisor instanceof IntegerStruct) {
-				n = ((IntegerStruct) divisor).getBigInteger();
-				d = BigInteger.ONE;
-			} else if (divisor instanceof RatioStruct) {
-				n = ((RatioStruct) divisor).bigFraction.getNumerator();
-				d = ((RatioStruct) divisor).bigFraction.getDenominator();
-			} else {
-				throw new TypeErrorException("Not of type NUMBER");
-			}
-			// Invert and multiply.
-			final BigInteger num = bigFraction.getNumerator().multiply(d);
-			final BigInteger den = bigFraction.getDenominator().multiply(n);
-			final BigInteger quotient = num.divide(den);
-			// Multiply quotient by divisor.
-			final RationalStruct product = IntegerStruct.number(quotient.multiply(n), d);
-			// Subtract to get remainder.
-			final RealStruct remainder = (RealStruct) subtract(product);
-
-			return new TruncateResult(new IntegerStruct(quotient), remainder);
-		} catch (final ArithmeticException e) {
-			if (divisor.zerop()) {
-				throw new RuntimeException("division by zero");
-			}
-			throw new RuntimeException("arithmetic error", e);
-		}
 	}
 
 	@Override

@@ -54,7 +54,7 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 
 	public abstract boolean equalp(LispStruct lispStruct);
 
-	public RealStruct ABS() {
+	public RealStruct abs() {
 		return null;
 	}
 
@@ -67,6 +67,8 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 	public abstract NumberStruct divide(NumberStruct number);
 
 	public abstract boolean zerop();
+
+	public abstract NumberStruct signum();
 
 	public abstract boolean isEqualTo(LispStruct obj);
 

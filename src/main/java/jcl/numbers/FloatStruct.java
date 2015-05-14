@@ -89,7 +89,7 @@ public class FloatStruct extends RealStruct {
 	}
 
 	@Override
-	public RealStruct ABS() {
+	public RealStruct abs() {
 		if (bigDecimal.signum() >= 0) {
 			return this;
 		}
@@ -181,6 +181,16 @@ public class FloatStruct extends RealStruct {
 	@Override
 	public boolean zerop() {
 		return bigDecimal.signum() == 0;
+	}
+
+	@Override
+	public NumberStruct signum() {
+		if (zerop()) {
+			return this;
+		}
+
+		final RealStruct abs = abs();
+		return divide(abs);
 	}
 
 	@Override

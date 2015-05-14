@@ -33,6 +33,8 @@ public class RatioStruct extends RationalStruct {
 
 	public static final RatioStruct ONE = new RatioStruct(BigFraction.ONE);
 
+	public static final RatioStruct MINUS_ONE = new RatioStruct(BigFraction.MINUS_ONE);
+
 	/**
 	 * The internal {@link BigFraction} containing the ratio contents.
 	 */
@@ -86,7 +88,7 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	@Override
-	public RealStruct ABS() {
+	public RealStruct abs() {
 		final BigFraction abs = bigFraction.abs();
 		if (abs.equals(bigFraction)) {
 			return this;
@@ -192,6 +194,17 @@ public class RatioStruct extends RationalStruct {
 	@Override
 	public boolean zerop() {
 		return BigFraction.ZERO.equals(bigFraction);
+	}
+
+	@Override
+	public NumberStruct signum() {
+		if (zerop()) {
+			return this;
+		} else if (plusp()) {
+			return ONE;
+		} else {
+			return MINUS_ONE;
+		}
 	}
 
 	@Override

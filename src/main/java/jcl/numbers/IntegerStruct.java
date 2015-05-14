@@ -91,7 +91,7 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	@Override
-	public RealStruct ABS() {
+	public RealStruct abs() {
 		if (bigInteger.signum() >= 0) {
 			return this;
 		}
@@ -116,6 +116,24 @@ public class IntegerStruct extends RationalStruct {
 		return bigInteger.testBit(0);
 	}
 
+	public IntegerStruct gcd(final IntegerStruct integer) {
+		final BigInteger gcd = bigInteger.gcd(integer.bigInteger);
+		return new IntegerStruct(gcd);
+	}
+
+	public IntegerStruct lcm(final IntegerStruct integer) {
+		if (equals(ZERO) || integer.equals(ZERO)) {
+			return ZERO;
+		}
+
+		final BigInteger multiply = bigInteger.multiply(integer.bigInteger);
+		final BigInteger abs = multiply.abs();
+		final BigInteger gcd = bigInteger.gcd(integer.bigInteger);
+		final BigInteger divide = abs.divide(gcd);
+
+		return new IntegerStruct(divide);
+	}
+
 	@Override
 	public double doubleValue() {
 		return bigInteger.doubleValue();
@@ -134,6 +152,17 @@ public class IntegerStruct extends RationalStruct {
 	@Override
 	public boolean minusp() {
 		return bigInteger.signum() < 0;
+	}
+
+	@Override
+	public NumberStruct signum() {
+		if (zerop()) {
+			return this;
+		} else if (plusp()) {
+			return ONE;
+		} else {
+			return MINUS_ONE;
+		}
 	}
 
 	@Override
@@ -224,7 +253,7 @@ public class IntegerStruct extends RationalStruct {
 		throw new TypeErrorException("Not of type NUMBER");
 	}
 
-	public static RationalStruct number(final BigInteger numerator, final BigInteger denominator) {
+	private static RationalStruct number(final BigInteger numerator, final BigInteger denominator) {
 
 		if (denominator.signum() == 0) {
 			throw new RuntimeException("division by zero");

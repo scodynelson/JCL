@@ -218,9 +218,9 @@ public class ComplexStruct extends NumberStruct {
 	}
 
 	@Override
-	public RealStruct ABS() {
+	public RealStruct abs() {
 		if (real.zerop()) {
-			return imaginary.ABS();
+			return imaginary.abs();
 		}
 
 		final BigDecimal bdReal = real.bigDecimalValue();
@@ -235,6 +235,16 @@ public class ComplexStruct extends NumberStruct {
 	@Override
 	public boolean zerop() {
 		return real.zerop() && imaginary.zerop();
+	}
+
+	@Override
+	public NumberStruct signum() {
+		if (zerop()) {
+			return this;
+		}
+
+		final RealStruct abs = abs();
+		return divide(abs);
 	}
 
 	@Override
@@ -415,7 +425,7 @@ public class ComplexStruct extends NumberStruct {
 		final FloatStruct re = (FloatStruct) real;
 		final FloatStruct im = (FloatStruct) imaginary;
 		final FloatStruct phase = new FloatStruct(BigDecimal.valueOf(FastMath.atan2(im.getBigDecimal().doubleValue(), re.getBigDecimal().doubleValue())));  // atan(y/x)
-		final FloatStruct abs = (FloatStruct) ABS();
+		final FloatStruct abs = (FloatStruct) abs();
 
 //		return createComplex(FastMath.log(abs()),
 //				FastMath.atan2(imaginary, real));

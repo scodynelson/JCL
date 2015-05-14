@@ -69,6 +69,16 @@ public abstract class RealStruct extends NumberStruct {
 
 	public abstract boolean minusp();
 
+	public RealStruct mod(final RealStruct divisor) {
+		final QuotientRemainderResult floor = floor(divisor);
+		return floor.getRemainder();
+	}
+
+	public RealStruct rem(final RealStruct divisor) {
+		final QuotientRemainderResult truncate = truncate(divisor);
+		return truncate.getRemainder();
+	}
+
 	public abstract boolean isLessThan(LispStruct obj);
 
 	public abstract boolean isGreaterThan(LispStruct obj);

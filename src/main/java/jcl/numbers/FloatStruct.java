@@ -339,163 +339,45 @@ public class FloatStruct extends RealStruct {
 	}
 
 	@Override
-	public NumberStruct exp() {
-		final double doubleValue = bigDecimal.doubleValue();
-		final double exp = FastMath.exp(doubleValue);
-		return new FloatStruct(new BigDecimal(exp));
-	}
-
-	@Override
 	public NumberStruct expt(final NumberStruct power) {
 		if (power.zerop()) {
 			return ONE;
 		}
-		if (zerop()) {
-			return this;
-		}
-		if (isEqualTo(ONE)) {
+
+		if (zerop() || isEqualTo(ONE)) {
 			return this;
 		}
 
-		NumberStruct newPower = power;
-		if (newPower instanceof ComplexStruct) {
-			final ComplexStruct powerComplex = (ComplexStruct) newPower;
-			newPower = new ComplexStruct(
-					new FloatStruct(BigDecimal.valueOf(powerComplex.getReal().doubleValue())),
-					new FloatStruct(BigDecimal.valueOf(powerComplex.getImaginary().doubleValue())));
+		if (power instanceof IntegerStruct) {
+			// exact math version
+			return intexp(this, (IntegerStruct) power);
+		} else if (power instanceof ComplexStruct) {
+			final ComplexStruct powerComplex = (ComplexStruct) power;
+
+			final FloatStruct real = new FloatStruct(powerComplex.getReal().bigDecimalValue());
+			final FloatStruct imaginary = new FloatStruct(powerComplex.getImaginary().bigDecimalValue());
+			final ComplexStruct newPowerComplex = new ComplexStruct(real, imaginary);
+
+			final RealStruct base = new FloatStruct(bigDecimalValue());
+			return newPowerComplex.multiply(base.log()).exp();
 		} else {
-			final RealStruct powerReal = (RealStruct) newPower;
-			newPower = new FloatStruct(BigDecimal.valueOf(powerReal.doubleValue()));
-		}
+			final double x = doubleValue();
+			final double y = ((RealStruct) power).doubleValue();
 
-		final NumberStruct base = new FloatStruct(BigDecimal.valueOf(doubleValue()));
+			double r = FastMath.pow(x, y);
+			if (Double.isNaN(r)) {
+				if (x < 0) {
+					r = FastMath.pow(-x, y);
+					final double realPart = r * FastMath.cos(y * Math.PI);
+					final double imagPart = r * FastMath.sin(y * Math.PI);
 
-		if (newPower instanceof ComplexStruct) {
-			return newPower.multiply(base.log()).exp();
-		}
-
-		final double x = ((FloatStruct) base).doubleValue(); // base
-		final double y = ((FloatStruct) newPower).doubleValue(); // power
-
-		double r = FastMath.pow(x, y);
-		if (Double.isNaN(r)) {
-			if (x < 0) {
-				r = FastMath.pow(-x, y);
-				final double realPart = r * FastMath.cos(y * Math.PI);
-				final double imagPart = r * FastMath.sin(y * Math.PI);
-				return new ComplexStruct
-						(new FloatStruct(BigDecimal.valueOf(realPart)),
-								new FloatStruct(BigDecimal.valueOf(imagPart)));
+					final FloatStruct real = new FloatStruct(BigDecimal.valueOf(realPart));
+					final FloatStruct imaginary = new FloatStruct(BigDecimal.valueOf(imagPart));
+					return new ComplexStruct(real, imaginary);
+				}
 			}
+			return new FloatStruct(BigDecimal.valueOf(r));
 		}
-		return new FloatStruct(BigDecimal.valueOf(r));
-	}
-
-	@Override
-	public NumberStruct sqrt() {
-		final double doubleValue = bigDecimal.doubleValue();
-		final double sqrt = FastMath.sqrt(doubleValue);
-		return new FloatStruct(new BigDecimal(sqrt));
-	}
-
-	@Override
-	public NumberStruct log() {
-		final double doubleValue = bigDecimal.doubleValue();
-		final double log = FastMath.log(doubleValue);
-		return new FloatStruct(new BigDecimal(log));
-	}
-
-	@Override
-	public NumberStruct sin() {
-		final double doubleValue = bigDecimal.doubleValue();
-		final double sin = FastMath.sin(doubleValue);
-		return new FloatStruct(new BigDecimal(sin));
-	}
-
-	@Override
-	public NumberStruct cos() {
-		final double doubleValue = bigDecimal.doubleValue();
-		final double cos = FastMath.cos(doubleValue);
-		return new FloatStruct(new BigDecimal(cos));
-	}
-
-	@Override
-	public NumberStruct tan() {
-		final double doubleValue = bigDecimal.doubleValue();
-		final double tan = FastMath.tan(doubleValue);
-		return new FloatStruct(new BigDecimal(tan));
-	}
-
-	@Override
-	public NumberStruct asin() {
-		final double doubleValue = bigDecimal.doubleValue();
-		final double asin = FastMath.asin(doubleValue);
-		return new FloatStruct(new BigDecimal(asin));
-	}
-
-	@Override
-	public NumberStruct acos() {
-		final double doubleValue = bigDecimal.doubleValue();
-		final double acos = FastMath.acos(doubleValue);
-		return new FloatStruct(new BigDecimal(acos));
-	}
-
-	@Override
-	public NumberStruct atan() {
-		final double doubleValue = bigDecimal.doubleValue();
-		final double atan = FastMath.atan(doubleValue);
-		return new FloatStruct(new BigDecimal(atan));
-	}
-
-	@Override
-	public RealStruct atan(final RealStruct real) {
-		final double doubleValue = bigDecimal.doubleValue();
-		final double doubleValue2 = real.doubleValue();
-
-		final double atan = FastMath.atan2(doubleValue, doubleValue2);
-		return new FloatStruct(new BigDecimal(atan));
-	}
-
-	@Override
-	public NumberStruct sinh() {
-		final double doubleValue = bigDecimal.doubleValue();
-		final double sinh = FastMath.sinh(doubleValue);
-		return new FloatStruct(new BigDecimal(sinh));
-	}
-
-	@Override
-	public NumberStruct cosh() {
-		final double doubleValue = bigDecimal.doubleValue();
-		final double cosh = FastMath.cosh(doubleValue);
-		return new FloatStruct(new BigDecimal(cosh));
-	}
-
-	@Override
-	public NumberStruct tanh() {
-		final double doubleValue = bigDecimal.doubleValue();
-		final double tanh = FastMath.tanh(doubleValue);
-		return new FloatStruct(new BigDecimal(tanh));
-	}
-
-	@Override
-	public NumberStruct asinh() {
-		final double doubleValue = bigDecimal.doubleValue();
-		final double asinh = FastMath.asinh(doubleValue);
-		return new FloatStruct(new BigDecimal(asinh));
-	}
-
-	@Override
-	public NumberStruct acosh() {
-		final double doubleValue = bigDecimal.doubleValue();
-		final double acosh = FastMath.acosh(doubleValue);
-		return new FloatStruct(new BigDecimal(acosh));
-	}
-
-	@Override
-	public NumberStruct atanh() {
-		final double doubleValue = bigDecimal.doubleValue();
-		final double atanh = FastMath.atanh(doubleValue);
-		return new FloatStruct(new BigDecimal(atanh));
 	}
 
 	@Override

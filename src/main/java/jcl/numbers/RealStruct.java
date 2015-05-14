@@ -104,7 +104,118 @@ public abstract class RealStruct extends NumberStruct {
 		return new ComplexStruct((RealStruct) cos(), (RealStruct) sin());
 	}
 
-	public abstract RealStruct atan(RealStruct real);
+	@Override
+	public NumberStruct exp() {
+		final double doubleValue = doubleValue();
+		final double exp = FastMath.exp(doubleValue);
+		return new FloatStruct(new BigDecimal(exp));
+	}
+
+	@Override
+	public NumberStruct sqrt() {
+		final double doubleValue = doubleValue();
+		final double sqrt = FastMath.sqrt(doubleValue);
+		return new FloatStruct(new BigDecimal(sqrt));
+	}
+
+	@Override
+	public NumberStruct log() {
+		final double doubleValue = doubleValue();
+		final double log = FastMath.log(doubleValue);
+		return new FloatStruct(new BigDecimal(log));
+	}
+
+	@Override
+	public NumberStruct sin() {
+		final double doubleValue = doubleValue();
+		final double sin = FastMath.sin(doubleValue);
+		return new FloatStruct(new BigDecimal(sin));
+	}
+
+	@Override
+	public NumberStruct cos() {
+		final double doubleValue = doubleValue();
+		final double cos = FastMath.cos(doubleValue);
+		return new FloatStruct(new BigDecimal(cos));
+	}
+
+	@Override
+	public NumberStruct tan() {
+		final double doubleValue = doubleValue();
+		final double tan = FastMath.tan(doubleValue);
+		return new FloatStruct(new BigDecimal(tan));
+	}
+
+	@Override
+	public NumberStruct asin() {
+		final double doubleValue = doubleValue();
+		final double asin = FastMath.asin(doubleValue);
+		return new FloatStruct(new BigDecimal(asin));
+	}
+
+	@Override
+	public NumberStruct acos() {
+		final double doubleValue = doubleValue();
+		final double acos = FastMath.acos(doubleValue);
+		return new FloatStruct(new BigDecimal(acos));
+	}
+
+	@Override
+	public NumberStruct atan() {
+		final double doubleValue = doubleValue();
+		final double atan = FastMath.atan(doubleValue);
+		return new FloatStruct(new BigDecimal(atan));
+	}
+
+	public RealStruct atan(final RealStruct real) {
+		final double doubleValue = doubleValue();
+		final double doubleValue2 = real.doubleValue();
+
+		final double atan = FastMath.atan2(doubleValue, doubleValue2);
+		return new FloatStruct(new BigDecimal(atan));
+	}
+
+	@Override
+	public NumberStruct sinh() {
+		final double doubleValue = doubleValue();
+		final double sinh = FastMath.sinh(doubleValue);
+		return new FloatStruct(new BigDecimal(sinh));
+	}
+
+	@Override
+	public NumberStruct cosh() {
+		final double doubleValue = doubleValue();
+		final double cosh = FastMath.cosh(doubleValue);
+		return new FloatStruct(new BigDecimal(cosh));
+	}
+
+	@Override
+	public NumberStruct tanh() {
+		final double doubleValue = doubleValue();
+		final double tanh = FastMath.tanh(doubleValue);
+		return new FloatStruct(new BigDecimal(tanh));
+	}
+
+	@Override
+	public NumberStruct asinh() {
+		final double doubleValue = doubleValue();
+		final double asinh = FastMath.asinh(doubleValue);
+		return new FloatStruct(new BigDecimal(asinh));
+	}
+
+	@Override
+	public NumberStruct acosh() {
+		final double doubleValue = doubleValue();
+		final double acosh = FastMath.acosh(doubleValue);
+		return new FloatStruct(new BigDecimal(acosh));
+	}
+
+	@Override
+	public NumberStruct atanh() {
+		final double doubleValue = doubleValue();
+		final double atanh = FastMath.atanh(doubleValue);
+		return new FloatStruct(new BigDecimal(atanh));
+	}
 
 	public QuotientRemainderResult floor() {
 		return truncate(IntegerStruct.ONE);

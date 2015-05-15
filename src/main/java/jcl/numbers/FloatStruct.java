@@ -36,6 +36,8 @@ public class FloatStruct extends RealStruct {
 
 	public static final FloatStruct ONE = new FloatStruct(BigDecimal.ONE);
 
+	public static final FloatStruct MINUS_ONE = new FloatStruct(BigDecimal.valueOf(-1.0));
+
 	/**
 	 * The internal {@link BigDecimal} containing the float contents.
 	 */

@@ -29,9 +29,13 @@ public class ComplexStruct extends NumberStruct {
 
 	public static final ComplexStruct I = new ComplexStruct(IntegerStruct.ZERO, IntegerStruct.ONE);
 
+	public static final ComplexStruct NEGATE_I = new ComplexStruct(FloatStruct.MINUS_ZERO, FloatStruct.MINUS_ONE);
+
 	public static final ComplexStruct ZERO = new ComplexStruct(IntegerStruct.ZERO, IntegerStruct.ZERO);
 
 	public static final ComplexStruct ONE = new ComplexStruct(IntegerStruct.ONE, IntegerStruct.ZERO);
+
+	public static final ComplexStruct TWO = new ComplexStruct(IntegerStruct.TWO, IntegerStruct.ZERO);
 
 	/**
 	 * The {@link RealStruct} that comprises the real value of the complex.
@@ -331,11 +335,16 @@ public class ComplexStruct extends NumberStruct {
 
 	@Override
 	public NumberStruct exp() {
+		final double realDoubleValue = real.doubleValue();
+		final double imaginaryDoubleValue = imaginary.doubleValue();
 
-//		double expReal = FastMath.exp(real);
-//		return createComplex(expReal *  FastMath.cos(imaginary),
-//				expReal * FastMath.sin(imaginary));
-		return real.exp().multiply(imaginary.cis());
+		final double expReal = FastMath.exp(realDoubleValue);
+		final double newReal = expReal * FastMath.cos(imaginaryDoubleValue);
+		final double newImaginary = expReal * FastMath.sin(imaginaryDoubleValue);
+
+		final FloatStruct newRealFloat = new FloatStruct(BigDecimal.valueOf(newReal));
+		final FloatStruct newImaginaryFloat = new FloatStruct(BigDecimal.valueOf(newImaginary));
+		return new ComplexStruct(newRealFloat, newImaginaryFloat);
 	}
 
 	@Override
@@ -394,168 +403,158 @@ public class ComplexStruct extends NumberStruct {
 
 	@Override
 	public NumberStruct sqrt() {
-		final RealStruct imagpart = imaginary;
-		if (imagpart.zerop()) {
-			final RealStruct realpart = real;
-			if (realpart.minusp()) {
-				return new ComplexStruct(imagpart, (RealStruct) IntegerStruct.ZERO.subtract(realpart).sqrt());
-			} else {
-				return new ComplexStruct((RealStruct) realpart.sqrt(), imagpart);
-			}
+		if (FloatStruct.ZERO.equals(real) && FloatStruct.ZERO.equals(imaginary)) {
+			return ZERO;
 		}
 
-//		if (real == 0.0 && imaginary == 0.0) {
-//			return createComplex(0.0, 0.0);
-//		}
-//
-//		double t = FastMath.sqrt((FastMath.abs(real) + abs()) / 2.0);
-//		if (real >= 0.0) {
-//			return createComplex(t, imaginary / (2.0 * t));
-//		} else {
-//			return createComplex(FastMath.abs(imaginary) / (2.0 * t),
-//					FastMath.copySign(1d, imaginary) * t);
-//		}
-		return log().divide(IntegerStruct.TWO).exp();
+		final double realDoubleValue = real.doubleValue();
+		final double imaginaryDoubleValue = imaginary.doubleValue();
+
+		final double realAbs = FastMath.abs(realDoubleValue);
+		final double thisAbs = abs().doubleValue();
+		final double root = FastMath.sqrt((realAbs + thisAbs) / 2.0D);
+		if (realDoubleValue >= 0.0) {
+			final double newImaginary = imaginaryDoubleValue / (2.0D * root);
+
+			final FloatStruct newRealFloat = new FloatStruct(BigDecimal.valueOf(root));
+			final FloatStruct newImaginaryFloat = new FloatStruct(BigDecimal.valueOf(newImaginary));
+			return new ComplexStruct(newRealFloat, newImaginaryFloat);
+		} else {
+			final double newReal = FastMath.abs(imaginaryDoubleValue) / (2.0D * root);
+			final double newImaginary = FastMath.copySign(1.0D, imaginaryDoubleValue) * root;
+
+			final FloatStruct newRealFloat = new FloatStruct(BigDecimal.valueOf(newReal));
+			final FloatStruct newImaginaryFloat = new FloatStruct(BigDecimal.valueOf(newImaginary));
+			return new ComplexStruct(newRealFloat, newImaginaryFloat);
+		}
 	}
 
 	@Override
 	public NumberStruct log() {
 		// TODO: check complex results when item is not complex!!!
 		// TODO: no casting!!!
-		final FloatStruct re = (FloatStruct) real;
-		final FloatStruct im = (FloatStruct) imaginary;
-		final FloatStruct phase = new FloatStruct(BigDecimal.valueOf(FastMath.atan2(im.getBigDecimal().doubleValue(), re.getBigDecimal().doubleValue())));  // atan(y/x)
-		final FloatStruct abs = (FloatStruct) abs();
+		final RealStruct newReal = (RealStruct) abs().log();
+		final RealStruct newImaginary = imaginary.atan(real);
 
-//		return createComplex(FastMath.log(abs()),
-//				FastMath.atan2(imaginary, real));
-		return new ComplexStruct(new FloatStruct(BigDecimal.valueOf(FastMath.log(abs.getBigDecimal().doubleValue()))), phase);
+		return new ComplexStruct(newReal, newImaginary);
 	}
 
 	@Override
 	public NumberStruct sin() {
-		final NumberStruct n = multiply(new ComplexStruct(IntegerStruct.ZERO, IntegerStruct.ONE));
-		NumberStruct result = n.exp();
-		result = result.subtract(n.multiply(IntegerStruct.MINUS_ONE).exp());
+		final double realDoubleValue = real.doubleValue();
+		final double imaginaryDoubleValue = imaginary.doubleValue();
 
-//		return createComplex(FastMath.sin(real) * FastMath.cosh(imaginary),
-//				FastMath.cos(real) * FastMath.sinh(imaginary));
-		return result.divide(IntegerStruct.TWO.multiply(new ComplexStruct(IntegerStruct.ZERO, IntegerStruct.ONE)));
+		final double newReal = FastMath.sin(realDoubleValue) * FastMath.cosh(imaginaryDoubleValue);
+		final double newImaginary = FastMath.cos(realDoubleValue) * FastMath.sinh(imaginaryDoubleValue);
+
+		final FloatStruct newRealFloat = new FloatStruct(BigDecimal.valueOf(newReal));
+		final FloatStruct newImaginaryFloat = new FloatStruct(BigDecimal.valueOf(newImaginary));
+		return new ComplexStruct(newRealFloat, newImaginaryFloat);
 	}
 
 	@Override
 	public NumberStruct cos() {
-		final NumberStruct n = multiply(new ComplexStruct(IntegerStruct.ZERO, IntegerStruct.ONE));
-		NumberStruct result = n.exp();
-		result = result.add(n.multiply(IntegerStruct.MINUS_ONE).exp());
+		final double realDoubleValue = real.doubleValue();
+		final double imaginaryDoubleValue = imaginary.doubleValue();
 
-//		return createComplex(FastMath.cos(real) * FastMath.cosh(imaginary),
-//				-FastMath.sin(real) * FastMath.sinh(imaginary));
-		return result.divide(IntegerStruct.TWO);
+		final double newReal = FastMath.cos(realDoubleValue) * FastMath.cosh(imaginaryDoubleValue);
+		final double newImaginary = -FastMath.sin(realDoubleValue) * FastMath.sinh(imaginaryDoubleValue);
+
+		final FloatStruct newRealFloat = new FloatStruct(BigDecimal.valueOf(newReal));
+		final FloatStruct newImaginaryFloat = new FloatStruct(BigDecimal.valueOf(newImaginary));
+		return new ComplexStruct(newRealFloat, newImaginaryFloat);
 	}
 
 	@Override
 	public NumberStruct tan() {
+		final double realDoubleValue = real.doubleValue();
+		final double imaginaryDoubleValue = imaginary.doubleValue();
 
-//		double real2 = 2.0 * real;
-//		double imaginary2 = 2.0 * imaginary;
-//		double d = FastMath.cos(real2) + FastMath.cosh(imaginary2);
-//
-//		return createComplex(FastMath.sin(real2) / d,
-//				FastMath.sinh(imaginary2) / d);
-		return sin().divide(cos());
+		final double real2 = 2.0D * realDoubleValue;
+		final double imaginary2 = 2.0D * imaginaryDoubleValue;
+		final double divisor = FastMath.cos(real2) + FastMath.cosh(imaginary2);
+
+		final double newReal = FastMath.sin(real2) / divisor;
+		final double newImaginary = FastMath.sinh(imaginary2) / divisor;
+
+		final FloatStruct newRealFloat = new FloatStruct(BigDecimal.valueOf(newReal));
+		final FloatStruct newImaginaryFloat = new FloatStruct(BigDecimal.valueOf(newImaginary));
+		return new ComplexStruct(newRealFloat, newImaginaryFloat);
 	}
 
 	@Override
 	public NumberStruct asin() {
-		NumberStruct result = multiply(this);
-		result = IntegerStruct.ONE.subtract(result);
-		result = result.sqrt();
-		NumberStruct n = new ComplexStruct(IntegerStruct.ZERO, IntegerStruct.ONE);
-		n = n.multiply(this);
-		result = n.add(result);
-		result = result.log();
-		result = result.multiply(new ComplexStruct(IntegerStruct.ZERO, IntegerStruct.MINUS_ONE));
-
-//		return sqrt1z().add(this.multiply(I)).log().multiply(I.negate());
-		return result;
+		final NumberStruct thisSquared = multiply(this);
+		final NumberStruct thisMultiplyByI = multiply(I);
+		return ONE.subtract(thisSquared)
+		          .sqrt()
+		          .add(thisMultiplyByI)
+		          .log()
+		          .multiply(NEGATE_I);
 	}
 
 	@Override
 	public NumberStruct acos() {
-		NumberStruct result = new FloatStruct(new BigDecimal(Math.PI / 2));
-		result = result.subtract(asin());
-
-//		return this.add(this.sqrt1z().multiply(I)).log().multiply(I.negate());
-		return result;
+		final NumberStruct thisSquared = multiply(this);
+		final NumberStruct pieceToAdd = ONE.subtract(thisSquared)
+		                                   .sqrt()
+		                                   .multiply(I);
+		return add(pieceToAdd)
+				.log()
+				.multiply(NEGATE_I);
 	}
-
-//	public Complex sqrt1z() {
-//		return createComplex(1.0, 0.0).subtract(this.multiply(this)).sqrt();
-//	}
 
 	@Override
 	public NumberStruct atan() {
-		final RealStruct im = imaginary;
-		if (im.zerop()) {
-			return new ComplexStruct((RealStruct) real.atan(), im);
-		}
-		NumberStruct result = multiply(this);
-		result = result.add(IntegerStruct.ONE);
-		result = IntegerStruct.ONE.divide(result);
-		result = result.sqrt();
-		NumberStruct n = new ComplexStruct(IntegerStruct.ZERO, IntegerStruct.ONE);
-		n = n.multiply(this);
-		n = n.add(IntegerStruct.ONE);
-		result = n.multiply(result);
-		result = result.log();
-		result = result.multiply(new ComplexStruct(IntegerStruct.ZERO, IntegerStruct.MINUS_ONE));
-
-//		return this.add(I).divide(I.subtract(this)).log()
-//		           .multiply(I.divide(createComplex(2.0, 0.0)));
-		return result;
+		final NumberStruct iMinusThis = I.subtract(this);
+		final NumberStruct iDivideByTwo = I.divide(TWO);
+		return add(I)
+				.divide(iMinusThis)
+				.log()
+				.multiply(iDivideByTwo);
 	}
 
 	@Override
 	public NumberStruct sinh() {
-		final RealStruct im = imaginary;
-		if (im.zerop()) {
-			return new ComplexStruct((RealStruct) real.sinh(), im);
-		}
-		NumberStruct result = exp();
-		result = result.subtract(multiply(IntegerStruct.MINUS_ONE).exp());
-		result = result.divide(IntegerStruct.TWO);
+		final double realDoubleValue = real.doubleValue();
+		final double imaginaryDoubleValue = imaginary.doubleValue();
 
-//		return createComplex(FastMath.sinh(real) * FastMath.cos(imaginary),
-//				FastMath.cosh(real) * FastMath.sin(imaginary));
-		return result;
+		final double newReal = FastMath.sinh(realDoubleValue) * FastMath.cos(imaginaryDoubleValue);
+		final double newImaginary = FastMath.cosh(realDoubleValue) * FastMath.sin(imaginaryDoubleValue);
+
+		final FloatStruct newRealFloat = new FloatStruct(BigDecimal.valueOf(newReal));
+		final FloatStruct newImaginaryFloat = new FloatStruct(BigDecimal.valueOf(newImaginary));
+		return new ComplexStruct(newRealFloat, newImaginaryFloat);
 	}
 
 	@Override
 	public NumberStruct cosh() {
-		final RealStruct im = imaginary;
-		if (im.zerop()) {
-			return new ComplexStruct((RealStruct) real.cosh(), im);
-		}
-		NumberStruct result = exp();
-		result = result.add(multiply(IntegerStruct.MINUS_ONE).exp());
-		result = result.divide(IntegerStruct.TWO);
+		final double realDoubleValue = real.doubleValue();
+		final double imaginaryDoubleValue = imaginary.doubleValue();
 
-//		return createComplex(FastMath.cosh(real) * FastMath.cos(imaginary),
-//				FastMath.sinh(real) * FastMath.sin(imaginary));
-		return result;
+		final double newReal = FastMath.cosh(realDoubleValue) * FastMath.cos(imaginaryDoubleValue);
+		final double newImaginary = FastMath.sinh(realDoubleValue) * FastMath.sin(imaginaryDoubleValue);
+
+		final FloatStruct newRealFloat = new FloatStruct(BigDecimal.valueOf(newReal));
+		final FloatStruct newImaginaryFloat = new FloatStruct(BigDecimal.valueOf(newImaginary));
+		return new ComplexStruct(newRealFloat, newImaginaryFloat);
 	}
 
 	@Override
 	public NumberStruct tanh() {
+		final double realDoubleValue = real.doubleValue();
+		final double imaginaryDoubleValue = imaginary.doubleValue();
 
-//		double real2 = 2.0 * real;
-//		double imaginary2 = 2.0 * imaginary;
-//		double d = FastMath.cosh(real2) + FastMath.cos(imaginary2);
-//
-//		return createComplex(FastMath.sinh(real2) / d,
-//				FastMath.sin(imaginary2) / d);
-		return sinh().divide(cosh());
+		final double real2 = 2.0D * realDoubleValue;
+		final double imaginary2 = 2.0D * imaginaryDoubleValue;
+		final double divisor = FastMath.cosh(real2) + FastMath.cos(imaginary2);
+
+		final double newReal = FastMath.sinh(real2) / divisor;
+		final double newImaginary = FastMath.sin(imaginary2) / divisor;
+
+		final FloatStruct newRealFloat = new FloatStruct(BigDecimal.valueOf(newReal));
+		final FloatStruct newImaginaryFloat = new FloatStruct(BigDecimal.valueOf(newImaginary));
+		return new ComplexStruct(newRealFloat, newImaginaryFloat);
 	}
 
 	@Override

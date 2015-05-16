@@ -54,9 +54,7 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 
 	public abstract boolean equalp(LispStruct lispStruct);
 
-	public RealStruct abs() {
-		return null;
-	}
+	public abstract RealStruct abs();
 
 	public abstract NumberStruct add(NumberStruct number);
 
@@ -132,8 +130,6 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 		return log().divide(base.log());
 	}
 
-//	public abstract NumberStruct negate();
-
 	public abstract NumberStruct sin();
 
 	public abstract NumberStruct cos();
@@ -158,7 +154,7 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 
 	public abstract NumberStruct atanh();
 
-	public abstract RealStruct realPart();
+	public abstract NumberStruct realPart();
 
-	public abstract RealStruct imagPart();
+	public abstract NumberStruct imagPart();
 }

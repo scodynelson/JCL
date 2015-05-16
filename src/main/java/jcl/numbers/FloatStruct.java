@@ -47,6 +47,16 @@ public class FloatStruct extends RealStruct {
 	/**
 	 * Public constructor.
 	 *
+	 * @param doubleValue
+	 * 		the value of the FloatStruct
+	 */
+	FloatStruct(final double doubleValue) {
+		this(SingleFloatType.INSTANCE, BigDecimal.valueOf(doubleValue));
+	}
+
+	/**
+	 * Public constructor.
+	 *
 	 * @param bigDecimal
 	 * 		the value of the FloatStruct
 	 */

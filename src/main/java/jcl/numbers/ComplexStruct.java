@@ -373,7 +373,7 @@ public class ComplexStruct extends NumberStruct {
 		// float approximation.
 		boolean wantDoubleFloat = false;
 		if ((power instanceof FloatStruct)
-				|| ((real instanceof FloatStruct) || (imaginary instanceof FloatStruct))
+				|| (real instanceof FloatStruct) || (imaginary instanceof FloatStruct)
 				|| ((power instanceof ComplexStruct)
 				&& ((((ComplexStruct) power).real instanceof FloatStruct)
 				|| (((ComplexStruct) power).imaginary instanceof FloatStruct)))) {
@@ -433,7 +433,7 @@ public class ComplexStruct extends NumberStruct {
 	public NumberStruct log() {
 		// TODO: check complex results when item is not complex!!!
 		// TODO: no casting!!!
-		final RealStruct newReal = (RealStruct) abs().log();
+		final RealStruct newReal = abs().log();
 		final RealStruct newImaginary = imaginary.atan(real);
 
 		return new ComplexStruct(newReal, newImaginary);
@@ -561,7 +561,7 @@ public class ComplexStruct extends NumberStruct {
 	public NumberStruct asinh() {
 		final RealStruct im = imaginary;
 		if (im.zerop()) {
-			return new ComplexStruct((RealStruct) real.asinh(), im);
+			return new ComplexStruct(real.asinh(), im);
 		}
 		NumberStruct result = multiply(this);
 		result = IntegerStruct.ONE.add(result);
@@ -596,7 +596,7 @@ public class ComplexStruct extends NumberStruct {
 	public NumberStruct acosh() {
 		final RealStruct im = imaginary;
 		if (im.zerop()) {
-			return new ComplexStruct((RealStruct) real.acosh(), im);
+			return new ComplexStruct(real.acosh(), im);
 		}
 		NumberStruct n1 = add(IntegerStruct.ONE);
 		n1 = n1.divide(IntegerStruct.TWO);
@@ -638,7 +638,7 @@ public class ComplexStruct extends NumberStruct {
 	public NumberStruct atanh() {
 		final RealStruct im = imaginary;
 		if (im.zerop()) {
-			return new ComplexStruct((RealStruct) real.atanh(), im);
+			return new ComplexStruct(real.atanh(), im);
 		}
 
 		final NumberStruct n1 = IntegerStruct.ONE.add(this).log();

@@ -46,7 +46,7 @@ public abstract class RationalStruct extends RealStruct {
 		super(type, directSuperClasses, subClasses);
 	}
 
-	public abstract IntegerStruct numerator();
+	public abstract RationalStruct numerator();
 
-	public abstract IntegerStruct denominator();
+	public abstract RationalStruct denominator();
 }

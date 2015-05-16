@@ -105,7 +105,7 @@ public class IntegerStruct extends RationalStruct {
 
 	@Override
 	public IntegerStruct denominator() {
-		return new IntegerStruct(BigInteger.ONE);
+		return ONE;
 	}
 
 	public boolean evenp() {
@@ -292,7 +292,7 @@ public class IntegerStruct extends RationalStruct {
 		}
 		if (number instanceof ComplexStruct) {
 			final ComplexStruct c = (ComplexStruct) number;
-			return new ComplexStruct((RealStruct) subtract(c.getReal()), (RealStruct) new IntegerStruct(BigInteger.ZERO).subtract(c.getImaginary()));
+			return new ComplexStruct((RealStruct) subtract(c.getReal()), (RealStruct) ZERO.subtract(c.getImaginary()));
 		}
 		throw new TypeErrorException("Not of type NUMBER");
 	}
@@ -333,7 +333,7 @@ public class IntegerStruct extends RationalStruct {
 			final NumberStruct realPart = c.getReal();
 			final NumberStruct imagPart = c.getImaginary();
 			final NumberStruct denominator = realPart.multiply(realPart).add(imagPart.multiply(imagPart));
-			return new ComplexStruct((RealStruct) multiply(realPart).divide(denominator), (RealStruct) new IntegerStruct(BigInteger.ZERO).subtract(multiply(imagPart).divide(denominator)));
+			return new ComplexStruct((RealStruct) multiply(realPart).divide(denominator), (RealStruct) ZERO.subtract(multiply(imagPart).divide(denominator)));
 		}
 		throw new TypeErrorException("Not of type NUMBER");
 	}
@@ -468,15 +468,20 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	public IntegerStruct ash(final IntegerStruct obj) {
-		final BigInteger count = obj.bigInteger;
-		if (count.signum() > 0) {
-			throw new RuntimeException("Can't represent result of left shift.");
-		}
-		if (count.signum() < 0) {
-			return (bigInteger.signum() >= 0) ? ZERO : MINUS_ONE;
-		} else {
+		if (obj.zerop()) {
 			return this;
 		}
+
+		final BigInteger count = obj.bigInteger;
+		final int countInt = count.intValue();
+
+		final BigInteger shiftedBigInteger;
+		if (obj.plusp()) {
+			shiftedBigInteger = bigInteger.shiftLeft(countInt);
+		} else {
+			shiftedBigInteger = bigInteger.shiftRight(countInt);
+		}
+		return new IntegerStruct(shiftedBigInteger);
 	}
 
 	public IntegerStruct LOGNOT() {
@@ -493,6 +498,40 @@ public class IntegerStruct extends RationalStruct {
 
 	public IntegerStruct LOGXOR(final IntegerStruct obj) {
 		return new IntegerStruct(bigInteger.xor(obj.bigInteger));
+	}
+
+	@Override
+	public NumberStruct negate() {
+		return new IntegerStruct(bigInteger.negate());
+	}
+
+	public IntegerStruct integerLength() {
+		return new IntegerStruct(BigInteger.valueOf(bigInteger.bitLength()));
+	}
+
+	public boolean logBitP(final IntegerStruct index) {
+		final BigInteger indexBigInteger = index.bigInteger;
+		final int indexInt = indexBigInteger.intValue();
+		return bigInteger.testBit(indexInt);
+	}
+
+	public IntegerStruct logCount() {
+		return new IntegerStruct(BigInteger.valueOf(bigInteger.bitCount()));
+	}
+
+	public boolean logTest(final IntegerStruct integer) {
+		return bigInteger.and(integer.bigInteger).signum() == 0;
+	}
+
+	@Override
+	public RealStruct imagPart() {
+		return ZERO;
+	}
+
+	public IntegerStruct isqrt() {
+		final double doubleValue = doubleValue();
+		final double isqrt = FastMath.floor(FastMath.sqrt(doubleValue));
+		return new IntegerStruct(BigInteger.valueOf((long) isqrt));
 	}
 
 	@Override

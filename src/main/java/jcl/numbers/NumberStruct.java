@@ -120,6 +120,10 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 		}
 	}
 
+	public abstract NumberStruct conjugate();
+
+	public abstract NumberStruct negate();
+
 	public abstract NumberStruct sqrt();
 
 	public abstract NumberStruct log();
@@ -153,4 +157,8 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 	public abstract NumberStruct acosh();
 
 	public abstract NumberStruct atanh();
+
+	public abstract RealStruct realPart();
+
+	public abstract RealStruct imagPart();
 }

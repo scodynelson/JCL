@@ -425,6 +425,16 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	@Override
+	public NumberStruct negate() {
+		return new RatioStruct(bigFraction.negate());
+	}
+
+	@Override
+	public RealStruct imagPart() {
+		return ZERO;
+	}
+
+	@Override
 	public int hashCode() {
 		return new HashCodeBuilder().appendSuper(super.hashCode())
 		                            .append(bigFraction)

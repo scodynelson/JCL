@@ -115,6 +115,11 @@ public abstract class RealStruct extends NumberStruct {
 	}
 
 	@Override
+	public NumberStruct conjugate() {
+		return this;
+	}
+
+	@Override
 	public NumberStruct exp() {
 		final double doubleValue = doubleValue();
 		final double exp = FastMath.exp(doubleValue);
@@ -390,5 +395,10 @@ public abstract class RealStruct extends NumberStruct {
 			floatQuotient = new FloatStruct(quotient);
 		}
 		return new QuotientRemainderResult(floatQuotient, new FloatStruct(remainder));
+	}
+
+	@Override
+	public RealStruct realPart() {
+		return this;
 	}
 }

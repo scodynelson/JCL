@@ -18,6 +18,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.math3.fraction.BigFraction;
+import org.apache.commons.math3.util.ArithmeticUtils;
 import org.apache.commons.math3.util.FastMath;
 
 /**
@@ -389,6 +390,38 @@ public class FloatStruct extends RealStruct {
 				}
 			}
 			return new FloatStruct(BigDecimal.valueOf(r));
+		}
+	}
+
+	@Override
+	public NumberStruct negate() {
+		return new FloatStruct(bigDecimal.negate());
+	}
+
+	@Override
+	public RealStruct imagPart() {
+		return ZERO;
+	}
+
+	public FloatStruct scaleFloat(final IntegerStruct scale) {
+		final BigInteger pow = ArithmeticUtils.pow(BigInteger.valueOf(2), scale.getBigInteger());
+		final BigDecimal multiply = bigDecimal.multiply(new BigDecimal(pow));
+		return new FloatStruct(multiply);
+	}
+
+	public FloatStruct floatSign() {
+		return floatSign(ONE);
+	}
+
+	public FloatStruct floatSign(final FloatStruct float2) {
+		if (minusp()) {
+			if (float2.minusp()) {
+				return float2;
+			} else {
+				return new FloatStruct(BigDecimal.ZERO.subtract(float2.bigDecimal));
+			}
+		} else {
+			return (FloatStruct) float2.abs();
 		}
 	}
 

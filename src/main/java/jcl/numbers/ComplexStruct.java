@@ -661,6 +661,16 @@ public class ComplexStruct extends NumberStruct {
 		return result;
 	}
 
+	@Override
+	public RealStruct realPart() {
+		return real;
+	}
+
+	@Override
+	public RealStruct imagPart() {
+		return imaginary;
+	}
+
 //	public double modSqr() {
 //		return real*real+imaginary*imaginary;
 //	}
@@ -684,6 +694,16 @@ public class ComplexStruct extends NumberStruct {
 //	public Complex negate() {
 //		return createComplex(-real, -imaginary);
 //	}
+
+	@Override
+	public NumberStruct conjugate() {
+		return new ComplexStruct(real, (RealStruct) imaginary.negate());
+	}
+
+	@Override
+	public NumberStruct negate() {
+		return new ComplexStruct((RealStruct) real.negate(), imaginary);
+	}
 
 	@Override
 	public int hashCode() {

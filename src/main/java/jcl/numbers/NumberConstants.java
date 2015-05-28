@@ -12,9 +12,9 @@ import jcl.symbols.ConstantStruct;
 
 public interface NumberConstants {
 
-	ConstantStruct<IntegerStruct> BOOLE_1 = new ConstantStruct<>("BOOLE-1", GlobalPackageStruct.COMMON_LISP, new IntegerStruct(BigInteger.ZERO));
-	ConstantStruct<IntegerStruct> BOOLE_2 = new ConstantStruct<>("BOOLE-2", GlobalPackageStruct.COMMON_LISP, new IntegerStruct(BigInteger.ONE));
-	ConstantStruct<IntegerStruct> BOOLE_AND = new ConstantStruct<>("BOOLE-AND", GlobalPackageStruct.COMMON_LISP, new IntegerStruct(BigInteger.valueOf(2)));
+	ConstantStruct<IntegerStruct> BOOLE_1 = new ConstantStruct<>("BOOLE-1", GlobalPackageStruct.COMMON_LISP, IntegerStruct.ZERO);
+	ConstantStruct<IntegerStruct> BOOLE_2 = new ConstantStruct<>("BOOLE-2", GlobalPackageStruct.COMMON_LISP, IntegerStruct.ONE);
+	ConstantStruct<IntegerStruct> BOOLE_AND = new ConstantStruct<>("BOOLE-AND", GlobalPackageStruct.COMMON_LISP, IntegerStruct.TWO);
 	ConstantStruct<IntegerStruct> BOOLE_ANDC1 = new ConstantStruct<>("BOOLE-ANDC1", GlobalPackageStruct.COMMON_LISP, new IntegerStruct(BigInteger.valueOf(3)));
 	ConstantStruct<IntegerStruct> BOOLE_ANDC2 = new ConstantStruct<>("BOOLE-ANDC2", GlobalPackageStruct.COMMON_LISP, new IntegerStruct(BigInteger.valueOf(4)));
 	ConstantStruct<IntegerStruct> BOOLE_C1 = new ConstantStruct<>("BOOLE-C1", GlobalPackageStruct.COMMON_LISP, new IntegerStruct(BigInteger.valueOf(5)));
@@ -32,21 +32,21 @@ public interface NumberConstants {
 	ConstantStruct<IntegerStruct> MOST_POSITIVE_FIXNUM = new ConstantStruct<>("MOST-POSITIVE-FIXNUM", GlobalPackageStruct.COMMON_LISP, new IntegerStruct(BigInteger.valueOf(Integer.MAX_VALUE)));
 	ConstantStruct<IntegerStruct> MOST_NEGATIVE_FIXNUM = new ConstantStruct<>("MOST-NEGATIVE-FIXNUM", GlobalPackageStruct.COMMON_LISP, new IntegerStruct(BigInteger.valueOf(Integer.MIN_VALUE)));
 
-	ConstantStruct<FloatStruct> MOST_POSITIVE_SHORT_FLOAT = new ConstantStruct<>("MOST-POSITIVE-SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP, new FloatStruct(BigDecimal.valueOf(Float.MAX_VALUE)));
-	ConstantStruct<FloatStruct> LEAST_POSITIVE_SHORT_FLOAT = new ConstantStruct<>("LEAST-POSITIVE-SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP, new FloatStruct(BigDecimal.valueOf(0)));
-	ConstantStruct<FloatStruct> LEAST_POSITIVE_NORMALIZED_SHORT_FLOAT = new ConstantStruct<>("LEAST-POSITIVE-NORMALIZED-SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP, new FloatStruct(BigDecimal.valueOf(Float.MIN_NORMAL)));
-	ConstantStruct<FloatStruct> MOST_NEGATIVE_SHORT_FLOAT = new ConstantStruct<>("MOST-NEGATIVE-SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP, new FloatStruct(BigDecimal.valueOf(Float.MIN_VALUE)));
-	ConstantStruct<FloatStruct> LEAST_NEGATIVE_SHORT_FLOAT = new ConstantStruct<>("LEAST-NEGATIVE-SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP, new FloatStruct(BigDecimal.valueOf(0)));
-	ConstantStruct<FloatStruct> LEAST_NEGATIVE_NORMALIZED_SHORT_FLOAT = new ConstantStruct<>("LEAST-NEGATIVE-NORMALIZED-SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP, new FloatStruct(BigDecimal.valueOf(-Float.MIN_NORMAL)));
-	ConstantStruct<FloatStruct> SHORT_FLOAT_EPSILON = new ConstantStruct<>("SHORT-FLOAT-EPSILON", GlobalPackageStruct.COMMON_LISP, new FloatStruct(BigDecimal.valueOf(0)));
-	ConstantStruct<FloatStruct> SHORT_FLOAT_NEGATIVE_EPSILON = new ConstantStruct<>("SHORT-FLOAT-NEGATIVE-EPSILON", GlobalPackageStruct.COMMON_LISP, new FloatStruct(BigDecimal.valueOf(0)));
+	ConstantStruct<FloatStruct> MOST_POSITIVE_SHORT_FLOAT = new ConstantStruct<>("MOST-POSITIVE-SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP, new FloatStruct(BigDecimal.valueOf(Double.MAX_VALUE)));
+	ConstantStruct<FloatStruct> LEAST_POSITIVE_SHORT_FLOAT = new ConstantStruct<>("LEAST-POSITIVE-SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP, new FloatStruct(BigDecimal.valueOf(Double.MIN_VALUE)));
+	ConstantStruct<FloatStruct> LEAST_POSITIVE_NORMALIZED_SHORT_FLOAT = new ConstantStruct<>("LEAST-POSITIVE-NORMALIZED-SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP, new FloatStruct(BigDecimal.valueOf(Double.MIN_NORMAL)));
+	ConstantStruct<FloatStruct> MOST_NEGATIVE_SHORT_FLOAT = new ConstantStruct<>("MOST-NEGATIVE-SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP, new FloatStruct(BigDecimal.valueOf(-Double.MAX_VALUE)));
+	ConstantStruct<FloatStruct> LEAST_NEGATIVE_SHORT_FLOAT = new ConstantStruct<>("LEAST-NEGATIVE-SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP, new FloatStruct(BigDecimal.valueOf(-Double.MIN_VALUE)));
+	ConstantStruct<FloatStruct> LEAST_NEGATIVE_NORMALIZED_SHORT_FLOAT = new ConstantStruct<>("LEAST-NEGATIVE-NORMALIZED-SHORT-FLOAT", GlobalPackageStruct.COMMON_LISP, new FloatStruct(BigDecimal.valueOf(-Double.MIN_NORMAL)));
+	ConstantStruct<FloatStruct> SHORT_FLOAT_EPSILON = new ConstantStruct<>("SHORT-FLOAT-EPSILON", GlobalPackageStruct.COMMON_LISP, new FloatStruct(BigDecimal.valueOf(1.1102230246251568E-16)));
+	ConstantStruct<FloatStruct> SHORT_FLOAT_NEGATIVE_EPSILON = new ConstantStruct<>("SHORT-FLOAT-NEGATIVE-EPSILON", GlobalPackageStruct.COMMON_LISP, new FloatStruct(BigDecimal.valueOf(5.551115123125784E-17)));
 
-	ConstantStruct<FloatStruct> MOST_POSITIVE_SINGLE_FLOAT = new ConstantStruct<>("MOST-POSITIVE-SINGLE-FLOAT", GlobalPackageStruct.COMMON_LISP, new FloatStruct(BigDecimal.valueOf(Float.MAX_VALUE)));
+	ConstantStruct<FloatStruct> MOST_POSITIVE_SINGLE_FLOAT = new ConstantStruct<>("MOST-POSITIVE-SINGLE-FLOAT", GlobalPackageStruct.COMMON_LISP, new FloatStruct(BigDecimal.valueOf(Double.MAX_VALUE)));
 	ConstantStruct<FloatStruct> LEAST_POSITIVE_SINGLE_FLOAT = new ConstantStruct<>("LEAST-POSITIVE-SINGLE-FLOAT", GlobalPackageStruct.COMMON_LISP, new FloatStruct(BigDecimal.valueOf(0)));
-	ConstantStruct<FloatStruct> LEAST_POSITIVE_NORMALIZED_SINGLE_FLOAT = new ConstantStruct<>("LEAST-POSITIVE-NORMALIZED-SINGLE-FLOAT", GlobalPackageStruct.COMMON_LISP, new FloatStruct(BigDecimal.valueOf(Float.MIN_NORMAL)));
-	ConstantStruct<FloatStruct> MOST_NEGATIVE_SINGLE_FLOAT = new ConstantStruct<>("MOST-NEGATIVE-SINGLE-FLOAT", GlobalPackageStruct.COMMON_LISP, new FloatStruct(BigDecimal.valueOf(Float.MIN_VALUE)));
+	ConstantStruct<FloatStruct> LEAST_POSITIVE_NORMALIZED_SINGLE_FLOAT = new ConstantStruct<>("LEAST-POSITIVE-NORMALIZED-SINGLE-FLOAT", GlobalPackageStruct.COMMON_LISP, new FloatStruct(BigDecimal.valueOf(Double.MIN_NORMAL)));
+	ConstantStruct<FloatStruct> MOST_NEGATIVE_SINGLE_FLOAT = new ConstantStruct<>("MOST-NEGATIVE-SINGLE-FLOAT", GlobalPackageStruct.COMMON_LISP, new FloatStruct(BigDecimal.valueOf(Double.MIN_VALUE)));
 	ConstantStruct<FloatStruct> LEAST_NEGATIVE_SINGLE_FLOAT = new ConstantStruct<>("LEAST-NEGATIVE-SINGLE-FLOAT", GlobalPackageStruct.COMMON_LISP, new FloatStruct(BigDecimal.valueOf(0)));
-	ConstantStruct<FloatStruct> LEAST_NEGATIVE_NORMALIZED_SINGLE_FLOAT = new ConstantStruct<>("LEAST-NEGATIVE-NORMALIZED-SINGLE-FLOAT", GlobalPackageStruct.COMMON_LISP, new FloatStruct(BigDecimal.valueOf(-Float.MIN_NORMAL)));
+	ConstantStruct<FloatStruct> LEAST_NEGATIVE_NORMALIZED_SINGLE_FLOAT = new ConstantStruct<>("LEAST-NEGATIVE-NORMALIZED-SINGLE-FLOAT", GlobalPackageStruct.COMMON_LISP, new FloatStruct(BigDecimal.valueOf(-Double.MIN_NORMAL)));
 	ConstantStruct<FloatStruct> SINGLE_FLOAT_EPSILON = new ConstantStruct<>("SINGLE-FLOAT-EPSILON", GlobalPackageStruct.COMMON_LISP, new FloatStruct(BigDecimal.valueOf(0)));
 	ConstantStruct<FloatStruct> SINGLE_FLOAT_NEGATIVE_EPSILON = new ConstantStruct<>("SINGLE-FLOAT-NEGATIVE-EPSILON", GlobalPackageStruct.COMMON_LISP, new FloatStruct(BigDecimal.valueOf(0)));
 

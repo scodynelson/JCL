@@ -484,20 +484,48 @@ public class IntegerStruct extends RationalStruct {
 		return new IntegerStruct(shiftedBigInteger);
 	}
 
-	public IntegerStruct LOGNOT() {
+	public IntegerStruct logAnd(final IntegerStruct integer) {
+		return new IntegerStruct(bigInteger.and(integer.bigInteger));
+	}
+
+	public IntegerStruct logAndC1(final IntegerStruct integer) {
+		return new IntegerStruct(bigInteger.not().and(integer.bigInteger));
+	}
+
+	public IntegerStruct logAndC2(final IntegerStruct integer) {
+		return new IntegerStruct(bigInteger.and(integer.bigInteger.not()));
+	}
+
+	public IntegerStruct logEqv(final IntegerStruct integer) {
+		return new IntegerStruct(bigInteger.xor(integer.bigInteger).not());
+	}
+
+	public IntegerStruct logIor(final IntegerStruct integer) {
+		return new IntegerStruct(bigInteger.or(integer.bigInteger));
+	}
+
+	public IntegerStruct logNand(final IntegerStruct integer) {
+		return new IntegerStruct(bigInteger.and(integer.bigInteger).not());
+	}
+
+	public IntegerStruct logNor(final IntegerStruct integer) {
+		return new IntegerStruct(bigInteger.or(integer.bigInteger).not());
+	}
+
+	public IntegerStruct logNot() {
 		return new IntegerStruct(bigInteger.not());
 	}
 
-	public IntegerStruct LOGAND(final IntegerStruct obj) {
-		return new IntegerStruct(bigInteger.and(obj.bigInteger));
+	public IntegerStruct logOrC1(final IntegerStruct integer) {
+		return new IntegerStruct(bigInteger.not().or(integer.bigInteger));
 	}
 
-	public IntegerStruct LOGIOR(final IntegerStruct obj) {
-		return new IntegerStruct(bigInteger.or(obj.bigInteger));
+	public IntegerStruct logOrC2(final IntegerStruct integer) {
+		return new IntegerStruct(bigInteger.or(integer.bigInteger.not()));
 	}
 
-	public IntegerStruct LOGXOR(final IntegerStruct obj) {
-		return new IntegerStruct(bigInteger.xor(obj.bigInteger));
+	public IntegerStruct logXor(final IntegerStruct integer) {
+		return new IntegerStruct(bigInteger.xor(integer.bigInteger));
 	}
 
 	@Override

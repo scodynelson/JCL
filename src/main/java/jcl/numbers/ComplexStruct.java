@@ -373,10 +373,9 @@ public class ComplexStruct extends NumberStruct {
 		// float approximation.
 		boolean wantDoubleFloat = false;
 		if ((power instanceof FloatStruct)
-				|| (real instanceof FloatStruct) || (imaginary instanceof FloatStruct)
+				|| isComplexFloat(this)
 				|| ((power instanceof ComplexStruct)
-				&& ((((ComplexStruct) power).real instanceof FloatStruct)
-				|| (((ComplexStruct) power).imaginary instanceof FloatStruct)))) {
+				&& isComplexFloat((ComplexStruct) power))) {
 			wantDoubleFloat = true;
 		}
 
@@ -399,6 +398,10 @@ public class ComplexStruct extends NumberStruct {
 		}
 
 		return newPower.multiply(base.log()).exp();
+	}
+
+	private boolean isComplexFloat(final ComplexStruct power) {
+		return (power.real instanceof FloatStruct) || (power.imaginary instanceof FloatStruct);
 	}
 
 	@Override

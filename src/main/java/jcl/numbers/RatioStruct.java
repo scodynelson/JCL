@@ -6,18 +6,14 @@ package jcl.numbers;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.MathContext;
-import java.util.Objects;
 
 import jcl.LispStruct;
-import jcl.conditions.exceptions.TypeErrorException;
 import jcl.types.RatioType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.math3.fraction.BigFraction;
-import org.apache.commons.math3.util.FastMath;
 
 /**
  * The {@link RatioStruct} is the object representation of a Lisp 'ratio' type.
@@ -84,7 +80,7 @@ public class RatioStruct extends RationalStruct {
 
 	@Override
 	public boolean equalp(final LispStruct lispStruct) {
-		return isEqualTo(lispStruct);
+		return (lispStruct instanceof NumberStruct) && isEqualTo((NumberStruct) lispStruct);
 	}
 
 	@Override
@@ -97,103 +93,63 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	@Override
-	public double doubleValue() {
-		return bigFraction.doubleValue();
-	}
-
-	@Override
-	public BigDecimal bigDecimalValue() {
-		return bigFraction.bigDecimalValue();
+	public boolean zerop() {
+		return bigFraction.compareTo(BigFraction.ZERO) == 0;
 	}
 
 	@Override
 	public boolean plusp() {
-		final BigFraction abs = bigFraction.abs();
-		return abs.equals(bigFraction);
+		return bigFraction.compareTo(BigFraction.ZERO) > 0;
 	}
 
 	@Override
 	public boolean minusp() {
-		final BigFraction abs = bigFraction.abs();
-		return !abs.equals(bigFraction);
+		return bigFraction.compareTo(BigFraction.ZERO) < 0;
 	}
 
 	@Override
-	public RationalStruct rational() {
-		return this;
+	public NumberStruct add(final NumberStruct number) {
+		return RatioAddStrategy.INSTANCE.add(this, number);
 	}
 
 	@Override
-	public RealStruct max(final RealStruct real) {
-		if (real instanceof IntegerStruct) {
-			final BigDecimal asBigDecimal = bigFraction.bigDecimalValue();
-			final BigDecimal max = asBigDecimal.max(new BigDecimal(((IntegerStruct) real).getBigInteger()));
-			if (Objects.equals(asBigDecimal, max)) {
-				return this;
-			} else {
-				return real;
-			}
-		} else if (real instanceof FloatStruct) {
-			final BigDecimal asBigDecimal = bigFraction.bigDecimalValue();
-			final BigDecimal max = asBigDecimal.max(((FloatStruct) real).getBigDecimal());
-			if (Objects.equals(asBigDecimal, max)) {
-				return this;
-			} else {
-				return real;
-			}
-		} else {
-			final BigDecimal asBigDecimal = bigFraction.bigDecimalValue();
-			final BigDecimal max = asBigDecimal.max(((RatioStruct) real).bigFraction.bigDecimalValue());
-			if (Objects.equals(asBigDecimal, max)) {
-				return this;
-			} else {
-				return real;
-			}
-		}
+	public NumberStruct subtract(final NumberStruct number) {
+		return RatioSubtractStrategy.INSTANCE.subtract(this, number);
 	}
 
 	@Override
-	public RealStruct min(final RealStruct real) {
-		if (real instanceof IntegerStruct) {
-			final BigDecimal asBigDecimal = bigFraction.bigDecimalValue();
-			final BigDecimal min = asBigDecimal.min(new BigDecimal(((IntegerStruct) real).getBigInteger()));
-			if (Objects.equals(asBigDecimal, min)) {
-				return this;
-			} else {
-				return real;
-			}
-		} else if (real instanceof FloatStruct) {
-			final BigDecimal asBigDecimal = bigFraction.bigDecimalValue();
-			final BigDecimal min = asBigDecimal.min(((FloatStruct) real).getBigDecimal());
-			if (Objects.equals(asBigDecimal, min)) {
-				return this;
-			} else {
-				return real;
-			}
-		} else {
-			final BigDecimal asBigDecimal = bigFraction.bigDecimalValue();
-			final BigDecimal min = asBigDecimal.min(((RatioStruct) real).bigFraction.bigDecimalValue());
-			if (Objects.equals(asBigDecimal, min)) {
-				return this;
-			} else {
-				return real;
-			}
-		}
+	public NumberStruct multiply(final NumberStruct number) {
+		return RatioMultiplyStrategy.INSTANCE.multiply(this, number);
 	}
 
 	@Override
-	public IntegerStruct numerator() {
-		return new IntegerStruct(bigFraction.getNumerator());
+	public NumberStruct divide(final NumberStruct number) {
+		return RatioDivideStrategy.INSTANCE.divide(this, number);
 	}
 
 	@Override
-	public IntegerStruct denominator() {
-		return new IntegerStruct(bigFraction.getDenominator());
+	public boolean isEqualTo(final NumberStruct number) {
+		return RatioEqualToStrategy.INSTANCE.equalTo(this, number);
 	}
 
 	@Override
-	public boolean zerop() {
-		return BigFraction.ZERO.equals(bigFraction);
+	public boolean isLessThan(final RealStruct real) {
+		return RatioLessThanStrategy.INSTANCE.lessThan(this, real);
+	}
+
+	@Override
+	public boolean isGreaterThan(final RealStruct real) {
+		return RatioGreaterThanStrategy.INSTANCE.greaterThan(this, real);
+	}
+
+	@Override
+	public boolean isLessThanOrEqualTo(final RealStruct real) {
+		return RatioLessThanOrEqualToStrategy.INSTANCE.lessThanOrEqualTo(this, real);
+	}
+
+	@Override
+	public boolean isGreaterThanOrEqualTo(final RealStruct real) {
+		return RatioGreaterThanOrEqualToStrategy.INSTANCE.greaterThanOrEqualTo(this, real);
 	}
 
 	@Override
@@ -208,175 +164,14 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	@Override
-	public NumberStruct add(final NumberStruct number) {
-		if (number instanceof IntegerStruct) {
-			final BigFraction n = bigFraction.add(((IntegerStruct) number).getBigInteger());
-			return new RatioStruct(n);
-		}
-		if (number instanceof RatioStruct) {
-			final BigFraction n = bigFraction.add(((RatioStruct) number).bigFraction);
-			return new RatioStruct(n);
-		}
-		if (number instanceof FloatStruct) {
-			return new FloatStruct(bigFraction.bigDecimalValue().add(((FloatStruct) number).getBigDecimal()));
-		}
-		if (number instanceof ComplexStruct) {
-			final ComplexStruct c = (ComplexStruct) number;
-			return new ComplexStruct((RealStruct) add(c.getReal()), c.getImaginary());
-		}
-		throw new TypeErrorException("Not of type NUMBER");
+	public RealStruct imagPart() {
+		return ZERO;
 	}
 
 	@Override
-	public NumberStruct subtract(final NumberStruct number) {
-		if (number instanceof IntegerStruct) {
-			final BigFraction n = bigFraction.subtract(((IntegerStruct) number).getBigInteger());
-			return new RatioStruct(n);
-		}
-		if (number instanceof RatioStruct) {
-			final BigFraction n = bigFraction.subtract(((RatioStruct) number).bigFraction);
-			return new RatioStruct(n);
-		}
-		if (number instanceof FloatStruct) {
-			return new FloatStruct(bigFraction.bigDecimalValue().subtract(((FloatStruct) number).getBigDecimal()));
-		}
-		if (number instanceof ComplexStruct) {
-			final ComplexStruct c = (ComplexStruct) number;
-			return new ComplexStruct((RealStruct) subtract(c.getReal()),
-					(RealStruct) new IntegerStruct(BigInteger.ZERO).subtract(c.getImaginary()));
-		}
-		throw new TypeErrorException("Not of type NUMBER");
-	}
-
-	@Override
-	public NumberStruct multiply(final NumberStruct number) {
-		if (number instanceof IntegerStruct) {
-			final BigFraction n = bigFraction.multiply(((IntegerStruct) number).getBigInteger());
-			return new RatioStruct(n);
-		}
-		if (number instanceof RatioStruct) {
-			final BigFraction n = bigFraction.multiply(((RatioStruct) number).bigFraction);
-			return new RatioStruct(n);
-		}
-		if (number instanceof FloatStruct) {
-			return new FloatStruct(bigFraction.bigDecimalValue().multiply(((FloatStruct) number).getBigDecimal()));
-		}
-		if (number instanceof ComplexStruct) {
-			final ComplexStruct c = (ComplexStruct) number;
-			return new ComplexStruct((RealStruct) multiply(c.getReal()), (RealStruct) multiply(c.getImaginary()));
-		}
-		throw new TypeErrorException("Not of type NUMBER");
-	}
-
-	@Override
-	public NumberStruct divide(final NumberStruct number) {
-		if (number instanceof IntegerStruct) {
-			final BigFraction n = bigFraction.divide(((IntegerStruct) number).getBigInteger());
-			return new RatioStruct(n);
-		}
-		if (number instanceof RatioStruct) {
-			final BigFraction n = bigFraction.divide(((RatioStruct) number).bigFraction);
-			return new RatioStruct(n);
-		}
-		if (number instanceof FloatStruct) {
-			if (number.zerop()) {
-				throw new RuntimeException("division by zero");
-			}
-			return new FloatStruct(bigFraction.bigDecimalValue().divide(((FloatStruct) number).getBigDecimal(), MathContext.DECIMAL128));
-		}
-		if (number instanceof ComplexStruct) {
-			final ComplexStruct c = (ComplexStruct) number;
-			// numerator
-			final NumberStruct realPart = multiply(c.getReal());
-			final NumberStruct imagPart = new IntegerStruct(BigInteger.ZERO).subtract(this).multiply(c.getImaginary());
-			// denominator
-			NumberStruct d = c.getReal().multiply(c.getReal());
-			d = d.add(c.getImaginary().multiply(c.getImaginary()));
-			return new ComplexStruct((RealStruct) realPart.divide(d), (RealStruct) imagPart.divide(d));
-		}
-		throw new TypeErrorException("Not of type NUMBER");
-	}
-
-	@Override
-	public boolean isEqualTo(final LispStruct obj) {
-		if (obj instanceof RatioStruct) {
-			return bigFraction.equals(((RatioStruct) obj).bigFraction);
-		}
-		if (obj instanceof FloatStruct) {
-			return isEqualTo(((FloatStruct) obj).rational());
-		}
-		if (obj instanceof IntegerStruct) {
-			return bigFraction.equals(new BigFraction(((IntegerStruct) obj).getBigInteger()));
-		}
-		if (obj instanceof NumberStruct) {
-			return false;
-		}
-		throw new TypeErrorException("Not of type NUMBER");
-	}
-
-	@Override
-	public boolean isNotEqualTo(final LispStruct obj) {
-		return !isEqualTo(obj);
-	}
-
-	@Override
-	public boolean isLessThan(final LispStruct obj) {
-		if (obj instanceof IntegerStruct) {
-			final BigFraction n = new BigFraction(((IntegerStruct) obj).getBigInteger());
-			return bigFraction.compareTo(n) < 0;
-		}
-		if (obj instanceof RatioStruct) {
-			return bigFraction.compareTo(((RatioStruct) obj).bigFraction) < 0;
-		}
-		if (obj instanceof FloatStruct) {
-			return isLessThan(((FloatStruct) obj).rational());
-		}
-		throw new TypeErrorException("Not of type REAL");
-	}
-
-	@Override
-	public boolean isGreaterThan(final LispStruct obj) {
-		if (obj instanceof IntegerStruct) {
-			final BigFraction n = new BigFraction(((IntegerStruct) obj).getBigInteger());
-			return bigFraction.compareTo(n) > 0;
-		}
-		if (obj instanceof RatioStruct) {
-			return bigFraction.compareTo(((RatioStruct) obj).bigFraction) > 0;
-		}
-		if (obj instanceof FloatStruct) {
-			return isGreaterThan(((FloatStruct) obj).rational());
-		}
-		throw new TypeErrorException("Not of type REAL");
-	}
-
-	@Override
-	public boolean isLessThanOrEqualTo(final LispStruct obj) {
-		if (obj instanceof IntegerStruct) {
-			final BigFraction n = new BigFraction(((IntegerStruct) obj).getBigInteger());
-			return bigFraction.compareTo(n) <= 0;
-		}
-		if (obj instanceof RatioStruct) {
-			return bigFraction.compareTo(((RatioStruct) obj).bigFraction) <= 0;
-		}
-		if (obj instanceof FloatStruct) {
-			return isLessThanOrEqualTo(((FloatStruct) obj).rational());
-		}
-		throw new TypeErrorException("Not of type REAL");
-	}
-
-	@Override
-	public boolean isGreaterThanOrEqualTo(final LispStruct obj) {
-		if (obj instanceof IntegerStruct) {
-			final BigFraction n = new BigFraction(((IntegerStruct) obj).getBigInteger());
-			return bigFraction.compareTo(n) >= 0;
-		}
-		if (obj instanceof RatioStruct) {
-			return bigFraction.compareTo(((RatioStruct) obj).bigFraction) >= 0;
-		}
-		if (obj instanceof FloatStruct) {
-			return isGreaterThanOrEqualTo(((FloatStruct) obj).rational());
-		}
-		throw new TypeErrorException("Not of type REAL");
+	public NumberStruct negate() {
+		final BigFraction negate = bigFraction.negate();
+		return new RatioStruct(negate);
 	}
 
 	@Override
@@ -392,47 +187,271 @@ public class RatioStruct extends RationalStruct {
 			return this;
 		}
 
-		if (power instanceof IntegerStruct) {
-			// exact math version
-			return intexp(this, (IntegerStruct) power);
-		} else if (power instanceof ComplexStruct) {
-			final ComplexStruct powerComplex = (ComplexStruct) power;
+		return RealExptStrategy.INSTANCE.expt(this, power);
+	}
 
-			final FloatStruct real = new FloatStruct(powerComplex.getReal().bigDecimalValue());
-			final FloatStruct imaginary = new FloatStruct(powerComplex.getImaginary().bigDecimalValue());
-			final ComplexStruct newPowerComplex = new ComplexStruct(real, imaginary);
+	@Override
+	public double doubleValue() {
+		return bigFraction.doubleValue();
+	}
 
-			final RealStruct base = new FloatStruct(bigDecimalValue());
-			return newPowerComplex.multiply(base.log()).exp();
-		} else {
-			final double x = doubleValue();
-			final double y = ((RealStruct) power).doubleValue();
+	@Override
+	public BigDecimal bigDecimalValue() {
+		return bigFraction.bigDecimalValue();
+	}
 
-			double r = FastMath.pow(x, y);
-			if (Double.isNaN(r)) {
-				if (x < 0) {
-					r = FastMath.pow(-x, y);
-					final double realPart = r * FastMath.cos(y * Math.PI);
-					final double imagPart = r * FastMath.sin(y * Math.PI);
+	@Override
+	public RealStruct zeroValue() {
+		return ZERO;
+	}
 
-					final FloatStruct real = new FloatStruct(BigDecimal.valueOf(realPart));
-					final FloatStruct imaginary = new FloatStruct(BigDecimal.valueOf(imagPart));
-					return new ComplexStruct(real, imaginary);
-				}
-			}
-			return new FloatStruct(BigDecimal.valueOf(r));
+	@Override
+	public RationalStruct rational() {
+		return this;
+	}
+
+	@Override
+	public IntegerStruct numerator() {
+		return new IntegerStruct(bigFraction.getNumerator());
+	}
+
+	@Override
+	public IntegerStruct denominator() {
+		return new IntegerStruct(bigFraction.getDenominator());
+	}
+
+	// Strategy Implementations
+
+	private static class RatioAddStrategy extends RealAddStrategy<RatioStruct> {
+
+		private static final RatioAddStrategy INSTANCE = new RatioAddStrategy();
+
+		@Override
+		public RealStruct add(final RatioStruct number1, final IntegerStruct number2) {
+			final BigFraction bigFraction1 = number1.getBigFraction();
+			final BigInteger bigInteger2 = number2.getBigInteger();
+			final BigFraction add = bigFraction1.add(bigInteger2);
+			return makeRational(add);
+		}
+
+		@Override
+		public RealStruct add(final RatioStruct number1, final RatioStruct number2) {
+			final BigFraction bigFraction1 = number1.getBigFraction();
+			final BigFraction bigFraction2 = number2.getBigFraction();
+			final BigFraction add = bigFraction1.add(bigFraction2);
+			return makeRational(add);
 		}
 	}
 
-	@Override
-	public NumberStruct negate() {
-		return new RatioStruct(bigFraction.negate());
+	private static class RatioSubtractStrategy extends RealSubtractStrategy<RatioStruct> {
+
+		private static final RatioSubtractStrategy INSTANCE = new RatioSubtractStrategy();
+
+		@Override
+		public RealStruct subtract(final RatioStruct number1, final IntegerStruct number2) {
+			final BigFraction bigFraction1 = number1.getBigFraction();
+			final BigInteger bigInteger2 = number2.getBigInteger();
+			final BigFraction subtract = bigFraction1.subtract(bigInteger2);
+			return makeRational(subtract);
+		}
+
+		@Override
+		public RealStruct subtract(final RatioStruct number1, final RatioStruct number2) {
+			final BigFraction bigFraction1 = number1.getBigFraction();
+			final BigFraction bigFraction2 = number2.getBigFraction();
+			final BigFraction subtract = bigFraction1.subtract(bigFraction2);
+			return makeRational(subtract);
+		}
 	}
 
-	@Override
-	public RealStruct imagPart() {
-		return ZERO;
+	private static class RatioMultiplyStrategy extends RealMultiplyStrategy<RatioStruct> {
+
+		private static final RatioMultiplyStrategy INSTANCE = new RatioMultiplyStrategy();
+
+		@Override
+		public RealStruct multiply(final RatioStruct number1, final IntegerStruct number2) {
+			final BigFraction bigFraction1 = number1.getBigFraction();
+			final BigInteger bigInteger2 = number2.getBigInteger();
+			final BigFraction multiply = bigFraction1.multiply(bigInteger2);
+			return makeRational(multiply);
+		}
+
+		@Override
+		public RealStruct multiply(final RatioStruct number1, final RatioStruct number2) {
+			final BigFraction bigFraction1 = number1.getBigFraction();
+			final BigFraction bigFraction2 = number2.getBigFraction();
+			final BigFraction multiply = bigFraction1.multiply(bigFraction2);
+			return makeRational(multiply);
+		}
 	}
+
+	private static class RatioDivideStrategy extends RealDivideStrategy<RatioStruct> {
+
+		private static final RatioDivideStrategy INSTANCE = new RatioDivideStrategy();
+
+		@Override
+		public RealStruct divide(final RatioStruct number1, final IntegerStruct number2) {
+			final BigFraction bigFraction1 = number1.getBigFraction();
+			final BigInteger bigInteger2 = number2.getBigInteger();
+			final BigFraction divide = bigFraction1.divide(bigInteger2);
+			return makeRational(divide);
+		}
+
+		@Override
+		public RealStruct divide(final RatioStruct number1, final RatioStruct number2) {
+			final BigFraction bigFraction1 = number1.getBigFraction();
+			final BigFraction bigFraction2 = number2.getBigFraction();
+			final BigFraction divide = bigFraction1.divide(bigFraction2);
+			return makeRational(divide);
+		}
+	}
+
+	private static class RatioEqualToStrategy extends EqualToStrategy<RatioStruct> {
+
+		private static final RatioEqualToStrategy INSTANCE = new RatioEqualToStrategy();
+
+		@Override
+		public boolean equalTo(final RatioStruct number1, final IntegerStruct number2) {
+			final BigFraction bigFraction1 = number1.getBigFraction();
+
+			final BigInteger bigInteger2 = number2.getBigInteger();
+			final BigFraction bigFraction2 = new BigFraction(bigInteger2);
+
+			return bigFraction1.equals(bigFraction2);
+		}
+
+		@Override
+		public boolean equalTo(final RatioStruct number1, final FloatStruct number2) {
+			final RationalStruct rational2 = number2.rational();
+			return number1.isEqualTo(rational2);
+		}
+
+		@Override
+		public boolean equalTo(final RatioStruct number1, final RatioStruct number2) {
+			final BigFraction bigFraction1 = number1.getBigFraction();
+			final BigFraction bigFraction2 = number2.getBigFraction();
+			return bigFraction1.equals(bigFraction2);
+		}
+
+		@Override
+		public boolean equalTo(final RatioStruct number1, final ComplexStruct number2) {
+			return false;
+		}
+	}
+
+	private static class RatioLessThanStrategy extends LessThanStrategy<RatioStruct> {
+
+		private static final RatioLessThanStrategy INSTANCE = new RatioLessThanStrategy();
+
+		@Override
+		public boolean lessThan(final RatioStruct real1, final IntegerStruct real2) {
+			final BigFraction bigFraction1 = real1.getBigFraction();
+
+			final BigInteger bigInteger2 = real2.getBigInteger();
+			final BigFraction bigFraction2 = new BigFraction(bigInteger2);
+
+			return bigFraction1.compareTo(bigFraction2) < 0;
+		}
+
+		@Override
+		public boolean lessThan(final RatioStruct real1, final FloatStruct real2) {
+			final RationalStruct rational2 = real2.rational();
+			return real1.isLessThan(rational2);
+		}
+
+		@Override
+		public boolean lessThan(final RatioStruct real1, final RatioStruct real2) {
+			final BigFraction bigFraction1 = real1.getBigFraction();
+			final BigFraction bigFraction2 = real2.getBigFraction();
+			return bigFraction1.compareTo(bigFraction2) < 0;
+		}
+	}
+
+	private static class RatioGreaterThanStrategy extends GreaterThanStrategy<RatioStruct> {
+
+		private static final RatioGreaterThanStrategy INSTANCE = new RatioGreaterThanStrategy();
+
+		@Override
+		public boolean greaterThan(final RatioStruct real1, final IntegerStruct real2) {
+			final BigFraction bigFraction1 = real1.getBigFraction();
+
+			final BigInteger bigInteger2 = real2.getBigInteger();
+			final BigFraction bigFraction2 = new BigFraction(bigInteger2);
+
+			return bigFraction1.compareTo(bigFraction2) > 0;
+		}
+
+		@Override
+		public boolean greaterThan(final RatioStruct real1, final FloatStruct real2) {
+			final RationalStruct rational2 = real2.rational();
+			return real1.isGreaterThan(rational2);
+		}
+
+		@Override
+		public boolean greaterThan(final RatioStruct real1, final RatioStruct real2) {
+			final BigFraction bigFraction1 = real1.getBigFraction();
+			final BigFraction bigFraction2 = real2.getBigFraction();
+			return bigFraction1.compareTo(bigFraction2) > 0;
+		}
+	}
+
+	private static class RatioLessThanOrEqualToStrategy extends LessThanOrEqualToStrategy<RatioStruct> {
+
+		private static final RatioLessThanOrEqualToStrategy INSTANCE = new RatioLessThanOrEqualToStrategy();
+
+		@Override
+		public boolean lessThanOrEqualTo(final RatioStruct real1, final IntegerStruct real2) {
+			final BigFraction bigFraction1 = real1.getBigFraction();
+
+			final BigInteger bigInteger2 = real2.getBigInteger();
+			final BigFraction bigFraction2 = new BigFraction(bigInteger2);
+
+			return bigFraction1.compareTo(bigFraction2) <= 0;
+		}
+
+		@Override
+		public boolean lessThanOrEqualTo(final RatioStruct real1, final FloatStruct real2) {
+			final RationalStruct rational2 = real2.rational();
+			return real1.isLessThanOrEqualTo(rational2);
+		}
+
+		@Override
+		public boolean lessThanOrEqualTo(final RatioStruct real1, final RatioStruct real2) {
+			final BigFraction bigFraction1 = real1.getBigFraction();
+			final BigFraction bigFraction2 = real2.getBigFraction();
+			return bigFraction1.compareTo(bigFraction2) <= 0;
+		}
+	}
+
+	private static class RatioGreaterThanOrEqualToStrategy extends GreaterThanOrEqualToStrategy<RatioStruct> {
+
+		private static final RatioGreaterThanOrEqualToStrategy INSTANCE = new RatioGreaterThanOrEqualToStrategy();
+
+		@Override
+		public boolean greaterThanOrEqualTo(final RatioStruct real1, final IntegerStruct real2) {
+			final BigFraction bigFraction1 = real1.getBigFraction();
+
+			final BigInteger bigInteger2 = real2.getBigInteger();
+			final BigFraction bigFraction2 = new BigFraction(bigInteger2);
+
+			return bigFraction1.compareTo(bigFraction2) >= 0;
+		}
+
+		@Override
+		public boolean greaterThanOrEqualTo(final RatioStruct real1, final FloatStruct real2) {
+			final RationalStruct rational2 = real2.rational();
+			return real1.isGreaterThanOrEqualTo(rational2);
+		}
+
+		@Override
+		public boolean greaterThanOrEqualTo(final RatioStruct real1, final RatioStruct real2) {
+			final BigFraction bigFraction1 = real1.getBigFraction();
+			final BigFraction bigFraction2 = real2.getBigFraction();
+			return bigFraction1.compareTo(bigFraction2) >= 0;
+		}
+	}
+
+	// HashCode / Equals / ToString
 
 	@Override
 	public int hashCode() {

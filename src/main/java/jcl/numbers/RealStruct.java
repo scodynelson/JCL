@@ -9,6 +9,7 @@ import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.List;
+import java.util.Objects;
 
 import jcl.LispStruct;
 import jcl.types.RealType;
@@ -51,29 +52,33 @@ public abstract class RealStruct extends NumberStruct {
 		super(type, directSuperClasses, subClasses);
 	}
 
-	@Override
-	public NumberStruct log(final NumberStruct base) {
-		if (base instanceof RealStruct) {
-			final double number = doubleValue();
-			final double baseVal = ((RealStruct) base).doubleValue();
-			final double log = FastMath.log(baseVal, number);
-			return new FloatStruct(log);
-		}
-		return super.log(base);
-	}
+	public abstract double doubleValue();
 
 	public abstract BigDecimal bigDecimalValue();
 
-	public abstract double doubleValue();
+	public abstract RealStruct zeroValue();
 
 	public abstract boolean plusp();
 
 	public abstract boolean minusp();
 
-	@Override
-	public RealStruct realPart() {
-		return this;
+	public abstract boolean isLessThan(final RealStruct real);
+
+	public abstract boolean isGreaterThan(final RealStruct real);
+
+	public abstract boolean isLessThanOrEqualTo(final RealStruct real);
+
+	public abstract boolean isGreaterThanOrEqualTo(final RealStruct real);
+
+	public RealStruct max(final RealStruct real) {
+		return MaxStrategy.INSTANCE.max(this, real);
 	}
+
+	public RealStruct min(final RealStruct real) {
+		return MinStrategy.INSTANCE.min(this, real);
+	}
+
+	public abstract RealStruct rational();
 
 	public RealStruct mod(final RealStruct divisor) {
 		final QuotientRemainderResult floor = floor(divisor);
@@ -85,22 +90,152 @@ public abstract class RealStruct extends NumberStruct {
 		return truncate.getRemainder();
 	}
 
-	public abstract boolean isLessThan(LispStruct obj);
-
-	public abstract boolean isGreaterThan(LispStruct obj);
-
-	public abstract boolean isLessThanOrEqualTo(LispStruct obj);
-
-	public abstract boolean isGreaterThanOrEqualTo(LispStruct obj);
-
-	public abstract RealStruct rational();
-
-	public abstract RealStruct max(RealStruct real);
-
-	public abstract RealStruct min(RealStruct real);
-
 	public ComplexStruct cis() {
 		return new ComplexStruct(cos(), sin());
+	}
+
+	public QuotientRemainderResult floor() {
+		return floor(IntegerStruct.ONE);
+	}
+
+	public QuotientRemainderResult floor(final RealStruct divisor) {
+
+		final BigDecimal numberBigDecimal = bigDecimalValue();
+		final BigDecimal quotient = numberBigDecimal.setScale(0, RoundingMode.FLOOR);
+
+		final BigDecimal divisorBigDecimal = divisor.bigDecimalValue();
+		final BigDecimal remainder = numberBigDecimal.remainder(divisorBigDecimal, MathContext.DECIMAL128);
+
+		final BigInteger quotientBigInteger = quotient.toBigInteger();
+		final RealStruct quotientInteger = new IntegerStruct(quotientBigInteger);
+		return new QuotientRemainderResult(quotientInteger, new FloatStruct(remainder));
+	}
+
+	public QuotientRemainderResult ffloor() {
+		return ffloor(IntegerStruct.ONE);
+	}
+
+	public QuotientRemainderResult ffloor(final RealStruct divisor) {
+
+		final BigDecimal numberBigDecimal = bigDecimalValue();
+		final BigDecimal quotient = numberBigDecimal.setScale(0, RoundingMode.FLOOR);
+
+		final BigDecimal divisorBigDecimal = divisor.bigDecimalValue();
+		final BigDecimal remainder = numberBigDecimal.remainder(divisorBigDecimal, MathContext.DECIMAL128);
+
+		final RealStruct floatQuotient = getFloatQuotient(divisor, quotient);
+		return new QuotientRemainderResult(floatQuotient, new FloatStruct(remainder));
+	}
+
+	public QuotientRemainderResult ceiling() {
+		return ceiling(IntegerStruct.ONE);
+	}
+
+	public QuotientRemainderResult ceiling(final RealStruct divisor) {
+		final BigDecimal numberBigDecimal = bigDecimalValue();
+		final BigDecimal quotient = numberBigDecimal.setScale(0, RoundingMode.CEILING);
+
+		final BigDecimal divisorBigDecimal = divisor.bigDecimalValue();
+		final BigDecimal remainder = numberBigDecimal.remainder(divisorBigDecimal, MathContext.DECIMAL128);
+
+		final BigInteger quotientBigInteger = quotient.toBigInteger();
+		final RealStruct quotientInteger = new IntegerStruct(quotientBigInteger);
+		return new QuotientRemainderResult(quotientInteger, new FloatStruct(remainder));
+	}
+
+	public QuotientRemainderResult fceiling() {
+		return fceiling(IntegerStruct.ONE);
+	}
+
+	public QuotientRemainderResult fceiling(final RealStruct divisor) {
+		final BigDecimal numberBigDecimal = bigDecimalValue();
+		final BigDecimal quotient = numberBigDecimal.setScale(0, RoundingMode.CEILING);
+
+		final BigDecimal divisorBigDecimal = divisor.bigDecimalValue();
+		final BigDecimal remainder = numberBigDecimal.remainder(divisorBigDecimal, MathContext.DECIMAL128);
+
+		final RealStruct floatQuotient = getFloatQuotient(divisor, quotient);
+		return new QuotientRemainderResult(floatQuotient, new FloatStruct(remainder));
+	}
+
+	public QuotientRemainderResult truncate() {
+		return truncate(IntegerStruct.ONE);
+	}
+
+	public QuotientRemainderResult truncate(final RealStruct divisor) {
+		if (plusp()) {
+			return floor(divisor);
+		} else {
+			return ceiling(divisor);
+		}
+	}
+
+	public QuotientRemainderResult ftruncate() {
+		return ftruncate(IntegerStruct.ONE);
+	}
+
+	public QuotientRemainderResult ftruncate(final RealStruct divisor) {
+		if (plusp()) {
+			return ffloor(divisor);
+		} else {
+			return fceiling(divisor);
+		}
+	}
+
+	public QuotientRemainderResult round() {
+		return round(IntegerStruct.ONE);
+	}
+
+	public QuotientRemainderResult round(final RealStruct divisor) {
+		final BigDecimal numberBigDecimal = bigDecimalValue();
+		final BigDecimal quotient = numberBigDecimal.setScale(0, RoundingMode.HALF_EVEN);
+
+		final BigDecimal divisorBigDecimal = divisor.bigDecimalValue();
+		final BigDecimal remainder = numberBigDecimal.remainder(divisorBigDecimal, MathContext.DECIMAL128);
+
+		final BigInteger quotientBigInteger = quotient.toBigInteger();
+		final RealStruct quotientInteger = new IntegerStruct(quotientBigInteger);
+		return new QuotientRemainderResult(quotientInteger, new FloatStruct(remainder));
+	}
+
+	public QuotientRemainderResult fround() {
+		return fround(IntegerStruct.ONE);
+	}
+
+	public QuotientRemainderResult fround(final RealStruct divisor) {
+		final BigDecimal numberBigDecimal = bigDecimalValue();
+		final BigDecimal quotient = numberBigDecimal.setScale(0, RoundingMode.HALF_EVEN);
+
+		final BigDecimal divisorBigDecimal = divisor.bigDecimalValue();
+		final BigDecimal remainder = numberBigDecimal.remainder(divisorBigDecimal, MathContext.DECIMAL128);
+
+		final RealStruct floatQuotient = getFloatQuotient(divisor, quotient);
+		return new QuotientRemainderResult(floatQuotient, new FloatStruct(remainder));
+	}
+
+	private RealStruct getFloatQuotient(final RealStruct divisor, final BigDecimal quotient) {
+		final RealStruct floatQuotient;
+		if (BigDecimal.ZERO.compareTo(quotient) == 0) {
+			if (minusp()) {
+				if (divisor.minusp()) {
+					floatQuotient = FloatStruct.ZERO;
+				} else {
+					floatQuotient = FloatStruct.MINUS_ZERO;
+				}
+			} else if (divisor.minusp()) {
+				floatQuotient = FloatStruct.MINUS_ZERO;
+			} else {
+				floatQuotient = FloatStruct.ZERO;
+			}
+		} else {
+			floatQuotient = new FloatStruct(quotient);
+		}
+		return floatQuotient;
+	}
+
+	@Override
+	public RealStruct realPart() {
+		return this;
 	}
 
 	@Override
@@ -116,17 +251,28 @@ public abstract class RealStruct extends NumberStruct {
 	}
 
 	@Override
-	public RealStruct sqrt() {
-		final double doubleValue = doubleValue();
-		final double sqrt = FastMath.sqrt(doubleValue);
-		return new FloatStruct(sqrt);
-	}
-
-	@Override
 	public RealStruct log() {
 		final double doubleValue = doubleValue();
 		final double log = FastMath.log(doubleValue);
 		return new FloatStruct(log);
+	}
+
+	@Override
+	public NumberStruct log(final NumberStruct base) {
+		if (base instanceof RealStruct) {
+			final double number = doubleValue();
+			final double baseVal = ((RealStruct) base).doubleValue();
+			final double log = FastMath.log(baseVal, number);
+			return new FloatStruct(log);
+		}
+		return super.log(base);
+	}
+
+	@Override
+	public RealStruct sqrt() {
+		final double doubleValue = doubleValue();
+		final double sqrt = FastMath.sqrt(doubleValue);
+		return new FloatStruct(sqrt);
 	}
 
 	@Override
@@ -221,142 +367,440 @@ public abstract class RealStruct extends NumberStruct {
 		return new FloatStruct(atanh);
 	}
 
-	public QuotientRemainderResult floor() {
-		return truncate(IntegerStruct.ONE);
-	}
+	public abstract static class RealAddStrategy<S extends RealStruct> extends AddStrategy<S> {
 
-	public QuotientRemainderResult floor(final RealStruct divisor) {
-
-		final BigDecimal numberBigDecimal = bigDecimalValue();
-		final BigDecimal quotient = numberBigDecimal.setScale(0, RoundingMode.FLOOR);
-
-		final BigDecimal divisorBigDecimal = divisor.bigDecimalValue();
-		final BigDecimal remainder = numberBigDecimal.remainder(divisorBigDecimal, MathContext.DECIMAL128);
-
-		final BigInteger quotientBigInteger = quotient.toBigInteger();
-		final RealStruct quotientInteger = new IntegerStruct(quotientBigInteger);
-		return new QuotientRemainderResult(quotientInteger, new FloatStruct(remainder));
-	}
-
-	public QuotientRemainderResult ffloor() {
-		return ftruncate(IntegerStruct.ONE);
-	}
-
-	public QuotientRemainderResult ffloor(final RealStruct divisor) {
-
-		final BigDecimal numberBigDecimal = bigDecimalValue();
-		final BigDecimal quotient = numberBigDecimal.setScale(0, RoundingMode.FLOOR);
-
-		final BigDecimal divisorBigDecimal = divisor.bigDecimalValue();
-		final BigDecimal remainder = numberBigDecimal.remainder(divisorBigDecimal, MathContext.DECIMAL128);
-
-		final RealStruct floatQuotient = getFloatQuotient(divisor, quotient);
-		return new QuotientRemainderResult(floatQuotient, new FloatStruct(remainder));
-	}
-
-	public QuotientRemainderResult ceiling() {
-		return truncate(IntegerStruct.ONE);
-	}
-
-	public QuotientRemainderResult ceiling(final RealStruct divisor) {
-		final BigDecimal numberBigDecimal = bigDecimalValue();
-		final BigDecimal quotient = numberBigDecimal.setScale(0, RoundingMode.CEILING);
-
-		final BigDecimal divisorBigDecimal = divisor.bigDecimalValue();
-		final BigDecimal remainder = numberBigDecimal.remainder(divisorBigDecimal, MathContext.DECIMAL128);
-
-		final BigInteger quotientBigInteger = quotient.toBigInteger();
-		final RealStruct quotientInteger = new IntegerStruct(quotientBigInteger);
-		return new QuotientRemainderResult(quotientInteger, new FloatStruct(remainder));
-	}
-
-	public QuotientRemainderResult fceiling() {
-		return ftruncate(IntegerStruct.ONE);
-	}
-
-	public QuotientRemainderResult fceiling(final RealStruct divisor) {
-		final BigDecimal numberBigDecimal = bigDecimalValue();
-		final BigDecimal quotient = numberBigDecimal.setScale(0, RoundingMode.CEILING);
-
-		final BigDecimal divisorBigDecimal = divisor.bigDecimalValue();
-		final BigDecimal remainder = numberBigDecimal.remainder(divisorBigDecimal, MathContext.DECIMAL128);
-
-		final RealStruct floatQuotient = getFloatQuotient(divisor, quotient);
-		return new QuotientRemainderResult(floatQuotient, new FloatStruct(remainder));
-	}
-
-	public QuotientRemainderResult truncate() {
-		return truncate(IntegerStruct.ONE);
-	}
-
-	public QuotientRemainderResult truncate(final RealStruct divisor) {
-		if (plusp()) {
-			return floor(divisor);
-		} else {
-			return ceiling(divisor);
-		}
-	}
-
-	public QuotientRemainderResult ftruncate() {
-		return ftruncate(IntegerStruct.ONE);
-	}
-
-	public QuotientRemainderResult ftruncate(final RealStruct divisor) {
-		if (plusp()) {
-			return ffloor(divisor);
-		} else {
-			return fceiling(divisor);
-		}
-	}
-
-	public QuotientRemainderResult round() {
-		return truncate(IntegerStruct.ONE);
-	}
-
-	public QuotientRemainderResult round(final RealStruct divisor) {
-		final BigDecimal numberBigDecimal = bigDecimalValue();
-		final BigDecimal quotient = numberBigDecimal.setScale(0, RoundingMode.HALF_EVEN);
-
-		final BigDecimal divisorBigDecimal = divisor.bigDecimalValue();
-		final BigDecimal remainder = numberBigDecimal.remainder(divisorBigDecimal, MathContext.DECIMAL128);
-
-		final BigInteger quotientBigInteger = quotient.toBigInteger();
-		final RealStruct quotientInteger = new IntegerStruct(quotientBigInteger);
-		return new QuotientRemainderResult(quotientInteger, new FloatStruct(remainder));
-	}
-
-	public QuotientRemainderResult fround() {
-		return ftruncate(IntegerStruct.ONE);
-	}
-
-	public QuotientRemainderResult fround(final RealStruct divisor) {
-		final BigDecimal numberBigDecimal = bigDecimalValue();
-		final BigDecimal quotient = numberBigDecimal.setScale(0, RoundingMode.HALF_EVEN);
-
-		final BigDecimal divisorBigDecimal = divisor.bigDecimalValue();
-		final BigDecimal remainder = numberBigDecimal.remainder(divisorBigDecimal, MathContext.DECIMAL128);
-
-		final RealStruct floatQuotient = getFloatQuotient(divisor, quotient);
-		return new QuotientRemainderResult(floatQuotient, new FloatStruct(remainder));
-	}
-
-	private RealStruct getFloatQuotient(final RealStruct divisor, final BigDecimal quotient) {
-		final RealStruct floatQuotient;
-		if (BigDecimal.ZERO.compareTo(quotient) == 0) {
-			if (minusp()) {
-				if (divisor.minusp()) {
-					floatQuotient = FloatStruct.ZERO;
-				} else {
-					floatQuotient = FloatStruct.MINUS_ZERO;
-				}
-			} else if (divisor.minusp()) {
-				floatQuotient = FloatStruct.MINUS_ZERO;
+		public RealStruct add(final S number1, final RealStruct number2) {
+			if (number2 instanceof IntegerStruct) {
+				return add(number1, (IntegerStruct) number2);
+			} else if (number2 instanceof FloatStruct) {
+				return add(number1, (FloatStruct) number2);
+			} else if (number2 instanceof RatioStruct) {
+				return add(number1, (RatioStruct) number2);
 			} else {
-				floatQuotient = FloatStruct.ZERO;
+				throw new RuntimeException("Unsupported Number Type for Add Operation.");
 			}
-		} else {
-			floatQuotient = new FloatStruct(quotient);
 		}
-		return floatQuotient;
+
+		@Override
+		public abstract RealStruct add(final S number1, final IntegerStruct number2);
+
+		@Override
+		public RealStruct add(final S number1, final FloatStruct number2) {
+			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
+			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
+			final BigDecimal add = bigDecimal1.add(bigDecimal2);
+			return new FloatStruct(add);
+		}
+
+		@Override
+		public abstract RealStruct add(final S number1, final RatioStruct number2);
+
+		@Override
+		public NumberStruct add(final S number1, final ComplexStruct number2) {
+			final RealStruct real = number2.getReal();
+			final RealStruct imaginary = number2.getImaginary();
+
+			final NumberStruct add = number1.add(real);
+			return new ComplexStruct((RealStruct) add, imaginary);
+		}
+	}
+
+	public abstract static class RealSubtractStrategy<S extends RealStruct> extends SubtractStrategy<S> {
+
+		public RealStruct subtract(final S number1, final RealStruct number2) {
+			if (number2 instanceof IntegerStruct) {
+				return subtract(number1, (IntegerStruct) number2);
+			} else if (number2 instanceof FloatStruct) {
+				return subtract(number1, (FloatStruct) number2);
+			} else if (number2 instanceof RatioStruct) {
+				return subtract(number1, (RatioStruct) number2);
+			} else {
+				throw new RuntimeException("Unsupported Number Type for Subtract Operation.");
+			}
+		}
+
+		@Override
+		public abstract RealStruct subtract(final S number1, final IntegerStruct number2);
+
+		@Override
+		public RealStruct subtract(final S number1, final FloatStruct number2) {
+			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
+			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
+			final BigDecimal subtract = bigDecimal1.subtract(bigDecimal2);
+			return new FloatStruct(subtract);
+		}
+
+		@Override
+		public abstract RealStruct subtract(final S number1, final RatioStruct number2);
+
+		@Override
+		public NumberStruct subtract(final S number1, final ComplexStruct number2) {
+			final RealStruct real = number2.getReal();
+			final RealStruct imaginary = number2.getImaginary();
+
+			final RealStruct zeroValue = number1.zeroValue();
+			final NumberStruct subtractReal = number1.subtract(real);
+			final NumberStruct subtractImag = zeroValue.subtract(imaginary);
+			return new ComplexStruct((RealStruct) subtractReal, (RealStruct) subtractImag);
+		}
+	}
+
+	public abstract static class RealMultiplyStrategy<S extends RealStruct> extends MultiplyStrategy<S> {
+
+		public RealStruct multiply(final S number1, final RealStruct number2) {
+			if (number2 instanceof IntegerStruct) {
+				return multiply(number1, (IntegerStruct) number2);
+			} else if (number2 instanceof FloatStruct) {
+				return multiply(number1, (FloatStruct) number2);
+			} else if (number2 instanceof RatioStruct) {
+				return multiply(number1, (RatioStruct) number2);
+			} else {
+				throw new RuntimeException("Unsupported Number Type for Multiply Operation.");
+			}
+		}
+
+		@Override
+		public abstract RealStruct multiply(final S number1, final IntegerStruct number2);
+
+		@Override
+		public RealStruct multiply(final S number1, final FloatStruct number2) {
+			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
+			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
+			final BigDecimal multiply = bigDecimal1.multiply(bigDecimal2);
+			return new FloatStruct(multiply);
+		}
+
+		@Override
+		public abstract RealStruct multiply(final S number1, final RatioStruct number2);
+
+		@Override
+		public NumberStruct multiply(final S number1, final ComplexStruct number2) {
+			final RealStruct real = number2.getReal();
+			final RealStruct imaginary = number2.getImaginary();
+
+			final NumberStruct multiplyReal = number1.multiply(real);
+			final NumberStruct multiplyImag = number1.multiply(imaginary);
+			return new ComplexStruct((RealStruct) multiplyReal, (RealStruct) multiplyImag);
+		}
+	}
+
+	public abstract static class RealDivideStrategy<S extends RealStruct> extends DivideStrategy<S> {
+
+		public RealStruct divide(final S number1, final RealStruct number2) {
+			if (number2 instanceof IntegerStruct) {
+				return divide(number1, (IntegerStruct) number2);
+			} else if (number2 instanceof FloatStruct) {
+				return divide(number1, (FloatStruct) number2);
+			} else if (number2 instanceof RatioStruct) {
+				return divide(number1, (RatioStruct) number2);
+			} else {
+				throw new RuntimeException("Unsupported Number Type for Divide Operation.");
+			}
+		}
+
+		@Override
+		public abstract RealStruct divide(final S number1, final IntegerStruct number2);
+
+		@Override
+		public RealStruct divide(final S number1, final FloatStruct number2) {
+			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
+			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
+			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, MathContext.DECIMAL128);
+			return new FloatStruct(divide);
+		}
+
+		@Override
+		public abstract RealStruct divide(final S number1, final RatioStruct number2);
+
+		@Override
+		public NumberStruct divide(final S number1, final ComplexStruct number2) {
+			final RealStruct real = number2.getReal();
+			final RealStruct imaginary = number2.getImaginary();
+			final NumberStruct squareReal = real.multiply(real);
+			final NumberStruct squareImag = imaginary.multiply(imaginary);
+
+			final NumberStruct squareRealSquareImagSum = squareReal.add(squareImag);
+
+			final NumberStruct multiplyReal = number1.multiply(real);
+			final NumberStruct divideRealProductBySquareSum = multiplyReal.divide(squareRealSquareImagSum);
+
+			final RealStruct zeroValue = number1.zeroValue();
+			final NumberStruct subtractNum1FromZero = zeroValue.subtract(number1);
+			final NumberStruct multiplyImag = subtractNum1FromZero.multiply(imaginary);
+			final NumberStruct divideImagProductBySquareSum = multiplyImag.divide(squareRealSquareImagSum);
+
+			// NOTE: The casting here should be safe as we are dealing with only 'real numbers' above anyways
+			return new ComplexStruct((RealStruct) divideRealProductBySquareSum, (RealStruct) divideImagProductBySquareSum);
+		}
+	}
+
+	public abstract static class LessThanStrategy<S extends RealStruct> {
+
+		public boolean lessThan(final S real1, final RealStruct real2) {
+			if (real2 instanceof IntegerStruct) {
+				return lessThan(real1, (IntegerStruct) real2);
+			} else if (real2 instanceof FloatStruct) {
+				return lessThan(real1, (FloatStruct) real2);
+			} else if (real2 instanceof RatioStruct) {
+				return lessThan(real1, (RatioStruct) real2);
+			} else {
+				throw new RuntimeException("Unsupported Real Type for LessThan Operation.");
+			}
+		}
+
+		public abstract boolean lessThan(S real1, IntegerStruct real2);
+
+		public abstract boolean lessThan(S real1, FloatStruct real2);
+
+		public abstract boolean lessThan(S real1, RatioStruct real2);
+	}
+
+	public abstract static class GreaterThanStrategy<S extends RealStruct> {
+
+		public boolean greaterThan(final S real1, final RealStruct real2) {
+			if (real2 instanceof IntegerStruct) {
+				return greaterThan(real1, (IntegerStruct) real2);
+			} else if (real2 instanceof FloatStruct) {
+				return greaterThan(real1, (FloatStruct) real2);
+			} else if (real2 instanceof RatioStruct) {
+				return greaterThan(real1, (RatioStruct) real2);
+			} else {
+				throw new RuntimeException("Unsupported Real Type for GreaterThan Operation.");
+			}
+		}
+
+		public abstract boolean greaterThan(S real1, IntegerStruct real2);
+
+		public abstract boolean greaterThan(S real1, FloatStruct real2);
+
+		public abstract boolean greaterThan(S real1, RatioStruct real2);
+	}
+
+	public abstract static class LessThanOrEqualToStrategy<S extends RealStruct> {
+
+		public boolean lessThanOrEqualTo(final S real1, final RealStruct real2) {
+			if (real2 instanceof IntegerStruct) {
+				return lessThanOrEqualTo(real1, (IntegerStruct) real2);
+			} else if (real2 instanceof FloatStruct) {
+				return lessThanOrEqualTo(real1, (FloatStruct) real2);
+			} else if (real2 instanceof RatioStruct) {
+				return lessThanOrEqualTo(real1, (RatioStruct) real2);
+			} else {
+				throw new RuntimeException("Unsupported Real Type for LessThanOrEqualTo Operation.");
+			}
+		}
+
+		public abstract boolean lessThanOrEqualTo(S real1, IntegerStruct real2);
+
+		public abstract boolean lessThanOrEqualTo(S real1, FloatStruct real2);
+
+		public abstract boolean lessThanOrEqualTo(S real1, RatioStruct real2);
+	}
+
+	public abstract static class GreaterThanOrEqualToStrategy<S extends RealStruct> {
+
+		public boolean greaterThanOrEqualTo(final S real1, final RealStruct real2) {
+			if (real2 instanceof IntegerStruct) {
+				return greaterThanOrEqualTo(real1, (IntegerStruct) real2);
+			} else if (real2 instanceof FloatStruct) {
+				return greaterThanOrEqualTo(real1, (FloatStruct) real2);
+			} else if (real2 instanceof RatioStruct) {
+				return greaterThanOrEqualTo(real1, (RatioStruct) real2);
+			} else {
+				throw new RuntimeException("Unsupported Real Type for GreaterThanOrEqualTo Operation.");
+			}
+		}
+
+		public abstract boolean greaterThanOrEqualTo(S real1, IntegerStruct real2);
+
+		public abstract boolean greaterThanOrEqualTo(S real1, FloatStruct real2);
+
+		public abstract boolean greaterThanOrEqualTo(S real1, RatioStruct real2);
+	}
+
+	public static class MaxStrategy<S extends RealStruct> {
+
+		protected static final MaxStrategy<RealStruct> INSTANCE = new MaxStrategy<>();
+
+		public RealStruct max(final S real1, final RealStruct real2) {
+			if (real2 instanceof IntegerStruct) {
+				return max(real1, (IntegerStruct) real2);
+			} else if (real2 instanceof FloatStruct) {
+				return max(real1, (FloatStruct) real2);
+			} else if (real2 instanceof RatioStruct) {
+				return max(real1, (RatioStruct) real2);
+			} else {
+				throw new RuntimeException("Unsupported Real Type for Max Operation.");
+			}
+		}
+
+		public RealStruct max(final S real1, final IntegerStruct real2) {
+			final BigDecimal bigDecimal1 = real1.bigDecimalValue();
+			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
+
+			final BigDecimal max = bigDecimal1.max(bigDecimal2);
+			return Objects.equals(bigDecimal1, max) ? real1 : real2;
+		}
+
+		public RealStruct max(final S real1, final FloatStruct real2) {
+			final BigDecimal bigDecimal1 = real1.bigDecimalValue();
+			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
+
+			final BigDecimal max = bigDecimal1.max(bigDecimal2);
+			return Objects.equals(bigDecimal1, max) ? real1 : real2;
+		}
+
+		public RealStruct max(final S real1, final RatioStruct real2) {
+			final BigDecimal bigDecimal1 = real1.bigDecimalValue();
+			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
+
+			final BigDecimal max = bigDecimal1.max(bigDecimal2);
+			return Objects.equals(bigDecimal1, max) ? real1 : real2;
+		}
+	}
+
+	public static class MinStrategy<S extends RealStruct> {
+
+		protected static final MinStrategy<RealStruct> INSTANCE = new MinStrategy<>();
+
+		public RealStruct min(final S real1, final RealStruct real2) {
+			if (real2 instanceof IntegerStruct) {
+				return min(real1, (IntegerStruct) real2);
+			} else if (real2 instanceof FloatStruct) {
+				return min(real1, (FloatStruct) real2);
+			} else if (real2 instanceof RatioStruct) {
+				return min(real1, (RatioStruct) real2);
+			} else {
+				throw new RuntimeException("Unsupported Real Type for Min Operation.");
+			}
+		}
+
+		public RealStruct min(final S real1, final IntegerStruct real2) {
+			final BigDecimal bigDecimal1 = real1.bigDecimalValue();
+			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
+
+			final BigDecimal min = bigDecimal1.min(bigDecimal2);
+			return Objects.equals(bigDecimal1, min) ? real1 : real2;
+		}
+
+		public RealStruct min(final S real1, final FloatStruct real2) {
+			final BigDecimal bigDecimal1 = real1.bigDecimalValue();
+			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
+
+			final BigDecimal min = bigDecimal1.min(bigDecimal2);
+			return Objects.equals(bigDecimal1, min) ? real1 : real2;
+		}
+
+		public RealStruct min(final S real1, final RatioStruct real2) {
+			final BigDecimal bigDecimal1 = real1.bigDecimalValue();
+			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
+
+			final BigDecimal min = bigDecimal1.min(bigDecimal2);
+			return Objects.equals(bigDecimal1, min) ? real1 : real2;
+		}
+	}
+
+	public static class RealExptStrategy<S extends RealStruct> extends ExptStrategy<S> {
+
+		protected static final RealExptStrategy<RealStruct> INSTANCE = new RealExptStrategy<>();
+
+		@Override
+		public NumberStruct expt(final S number1, final IntegerStruct number2) {
+			return exptInteger(number1, number2);
+		}
+
+		@Override
+		public NumberStruct expt(final S number1, final FloatStruct number2) {
+			return exptFloatRatio(number1, number2);
+		}
+
+		@Override
+		public NumberStruct expt(final S number1, final RatioStruct number2) {
+			return exptFloatRatio(number1, number2);
+		}
+
+		private static NumberStruct exptInteger(final RealStruct base, final IntegerStruct power) {
+			// TODO: simplify this!!!
+			if (power.isEqualTo(IntegerStruct.ZERO)) {
+				return IntegerStruct.ONE;
+			}
+			if (base.isEqualTo(IntegerStruct.ONE)) {
+				return base;
+			}
+			if (base.isEqualTo(IntegerStruct.ZERO)) {
+				return base;
+			}
+
+			IntegerStruct realPower = power;
+			if (realPower.minusp()) {
+				realPower = (IntegerStruct) IntegerStruct.ZERO.subtract(realPower);
+				return IntegerStruct.ONE.divide(exptInteger(base, realPower));
+			}
+			if (base.eql(IntegerStruct.TWO)) {
+				return IntegerStruct.ONE.ash(realPower);
+			}
+
+			IntegerStruct nextn = realPower.ash(IntegerStruct.MINUS_ONE);
+			NumberStruct total;
+			if (realPower.oddp()) {
+				total = base;
+			} else {
+				total = IntegerStruct.ONE;
+			}
+
+			NumberStruct realBase = base;
+			while (true) {
+				if (nextn.zerop()) {
+					return total;
+				}
+				realBase = realBase.multiply(realBase);
+
+				if (nextn.oddp()) {
+					total = realBase.multiply(total);
+				}
+				nextn = nextn.ash(IntegerStruct.MINUS_ONE);
+			}
+		}
+
+		private static NumberStruct exptFloatRatio(final RealStruct real1, final RealStruct real2) {
+			final double x = real1.doubleValue();
+			final double y = real2.doubleValue();
+
+			double result = FastMath.pow(x, y);
+			if (Double.isNaN(result)) {
+				if (x < 0) {
+					result = FastMath.pow(-x, y);
+					final double realPart = result * FastMath.cos(y * Math.PI);
+					final double imagPart = result * FastMath.sin(y * Math.PI);
+
+					final BigDecimal realBigDecimal = BigDecimal.valueOf(realPart);
+					final FloatStruct real = new FloatStruct(realBigDecimal);
+					final BigDecimal imagBigDecimal = BigDecimal.valueOf(imagPart);
+					final FloatStruct imaginary = new FloatStruct(imagBigDecimal);
+					return new ComplexStruct(real, imaginary);
+				}
+			}
+			final BigDecimal resultBigDecimal = BigDecimal.valueOf(result);
+			return new FloatStruct(resultBigDecimal);
+		}
+
+		@Override
+		public NumberStruct expt(final S number1, final ComplexStruct number2) {
+			final RealStruct powerComplexReal = number2.getReal();
+			final BigDecimal powerComplexRealBigDecimal = powerComplexReal.bigDecimalValue();
+			final FloatStruct real = new FloatStruct(powerComplexRealBigDecimal);
+
+			final RealStruct powerComplexImaginary = number2.getImaginary();
+			final BigDecimal powerComplexImaginaryBigDecimal = powerComplexImaginary.bigDecimalValue();
+			final FloatStruct imaginary = new FloatStruct(powerComplexImaginaryBigDecimal);
+
+			final ComplexStruct newPowerComplex = new ComplexStruct(real, imaginary);
+
+			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
+			final RealStruct base = new FloatStruct(bigDecimal1);
+			final RealStruct logOfBase = base.log();
+			final NumberStruct powerComplexLogOfBaseProduct = newPowerComplex.multiply(logOfBase);
+			return powerComplexLogOfBaseProduct.exp();
+		}
 	}
 }

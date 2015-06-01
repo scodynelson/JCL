@@ -702,6 +702,70 @@ public class IntegerStruct extends RationalStruct {
 		return result;
 	}
 
+	public static IntegerStruct logAnd(final IntegerStruct... integers) {
+		if (integers.length == 0) {
+			return MINUS_ONE;
+		}
+		if (integers.length == 1) {
+			return integers[0];
+		}
+
+		IntegerStruct result = integers[0];
+		for (int i = 1; i < integers.length; i++) {
+			final IntegerStruct currentInteger = integers[i];
+			result = result.logAnd(currentInteger);
+		}
+		return result;
+	}
+
+	public static IntegerStruct logEqv(final IntegerStruct... integers) {
+		if (integers.length == 0) {
+			return MINUS_ONE;
+		}
+		if (integers.length == 1) {
+			return integers[0];
+		}
+
+		IntegerStruct result = integers[0];
+		for (int i = 1; i < integers.length; i++) {
+			final IntegerStruct currentInteger = integers[i];
+			result = result.logEqv(currentInteger);
+		}
+		return result;
+	}
+
+	public static IntegerStruct logIor(final IntegerStruct... integers) {
+		if (integers.length == 0) {
+			return ZERO;
+		}
+		if (integers.length == 1) {
+			return integers[0];
+		}
+
+		IntegerStruct result = integers[0];
+		for (int i = 1; i < integers.length; i++) {
+			final IntegerStruct currentInteger = integers[i];
+			result = result.logIor(currentInteger);
+		}
+		return result;
+	}
+
+	public static IntegerStruct logXor(final IntegerStruct... integers) {
+		if (integers.length == 0) {
+			return ZERO;
+		}
+		if (integers.length == 1) {
+			return integers[0];
+		}
+
+		IntegerStruct result = integers[0];
+		for (int i = 1; i < integers.length; i++) {
+			final IntegerStruct currentInteger = integers[i];
+			result = result.logXor(currentInteger);
+		}
+		return result;
+	}
+
 	// HashCode / Equals / ToString
 
 	@Override

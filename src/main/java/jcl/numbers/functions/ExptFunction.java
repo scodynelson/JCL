@@ -66,7 +66,7 @@ public final class ExptFunction extends FunctionStruct {
 		}
 		final NumberStruct baseNumber = (NumberStruct) lispStruct1;
 
-		final LispStruct lispStruct2 = lispStructs[0];
+		final LispStruct lispStruct2 = lispStructs[1];
 		if (!(lispStruct2 instanceof NumberStruct)) {
 			final String printedObject = printer.print(lispStruct2);
 			throw new TypeErrorException("Argument not of type Number: " + printedObject);

@@ -13,7 +13,7 @@ import jcl.compiler.real.environment.binding.lambdalist.OrdinaryLambdaListBindin
 import jcl.compiler.real.environment.binding.lambdalist.RequiredBinding;
 import jcl.conditions.exceptions.TypeErrorException;
 import jcl.functions.FunctionStruct;
-import jcl.numbers.RealStruct;
+import jcl.numbers.IntegerStruct;
 import jcl.packages.GlobalPackageStruct;
 import jcl.printer.Printer;
 import jcl.symbols.SymbolStruct;
@@ -21,34 +21,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class ModFunction extends FunctionStruct {
+public final class LogAndC1Function extends FunctionStruct {
 
-	public static final SymbolStruct<?> MOD = GlobalPackageStruct.COMMON_LISP.intern("MOD").getSymbol();
+	public static final SymbolStruct<?> LOGANDC1 = GlobalPackageStruct.COMMON_LISP.intern("LOGANDC1").getSymbol();
 
-	private static final long serialVersionUID = 5684887328457930680L;
+	private static final long serialVersionUID = -2828613108956817532L;
 
 	@Autowired
 	private Printer printer;
 
-	private ModFunction() {
+	private LogAndC1Function() {
 		super("", getInitLambdaListBindings());
 	}
 
 	@PostConstruct
 	private void init() {
-		MOD.setFunction(this);
-		GlobalPackageStruct.COMMON_LISP.export(MOD);
+		LOGANDC1.setFunction(this);
+		GlobalPackageStruct.COMMON_LISP.export(LOGANDC1);
 	}
 
 	private static OrdinaryLambdaListBindings getInitLambdaListBindings() {
 		final List<RequiredBinding> requiredBindings = new ArrayList<>(2);
 
-		final SymbolStruct<?> realSymbol = GlobalPackageStruct.COMMON_LISP.intern("REAL").getSymbol();
-		final RequiredBinding requiredBinding1 = new RequiredBinding(realSymbol);
+		final SymbolStruct<?> integer1Symbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGER-1").getSymbol();
+		final RequiredBinding requiredBinding1 = new RequiredBinding(integer1Symbol);
 		requiredBindings.add(requiredBinding1);
 
-		final SymbolStruct<?> divisorSymbol = GlobalPackageStruct.COMMON_LISP.intern("DIVISOR").getSymbol();
-		final RequiredBinding requiredBinding2 = new RequiredBinding(divisorSymbol);
+		final SymbolStruct<?> integer2Symbol = GlobalPackageStruct.COMMON_LISP.intern("INTEGER-2").getSymbol();
+		final RequiredBinding requiredBinding2 = new RequiredBinding(integer2Symbol);
 		requiredBindings.add(requiredBinding2);
 
 		return new OrdinaryLambdaListBindings.Builder().requiredBindings(requiredBindings)
@@ -60,19 +60,19 @@ public final class ModFunction extends FunctionStruct {
 		getFunctionBindings(lispStructs);
 
 		final LispStruct lispStruct1 = lispStructs[0];
-		if (!(lispStruct1 instanceof RealStruct)) {
+		if (!(lispStruct1 instanceof IntegerStruct)) {
 			final String printedObject = printer.print(lispStruct1);
-			throw new TypeErrorException("Argument not of type Real: " + printedObject);
+			throw new TypeErrorException("Argument not of type Integer: " + printedObject);
 		}
-		final RealStruct real = (RealStruct) lispStruct1;
+		final IntegerStruct integer1 = (IntegerStruct) lispStruct1;
 
 		final LispStruct lispStruct2 = lispStructs[1];
-		if (!(lispStruct2 instanceof RealStruct)) {
+		if (!(lispStruct2 instanceof IntegerStruct)) {
 			final String printedObject = printer.print(lispStruct2);
-			throw new TypeErrorException("Argument not of type Real: " + printedObject);
+			throw new TypeErrorException("Argument not of type Integer: " + printedObject);
 		}
-		final RealStruct divisor = (RealStruct) lispStruct2;
+		final IntegerStruct integer2 = (IntegerStruct) lispStruct2;
 
-		return real.mod(divisor);
+		return integer1.logAndC1(integer2);
 	}
 }

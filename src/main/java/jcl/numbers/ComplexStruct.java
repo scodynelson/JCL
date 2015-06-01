@@ -287,13 +287,18 @@ public class ComplexStruct extends NumberStruct {
 
 	@Override
 	public NumberStruct conjugate() {
-		final NumberStruct negateImag = imaginary.negate();
+		final NumberStruct negateImag = imaginary.negation();
 		return new ComplexStruct(real, (RealStruct) negateImag);
 	}
 
 	@Override
-	public NumberStruct negate() {
-		return new ComplexStruct((RealStruct) real.negate(), imaginary);
+	public NumberStruct negation() {
+		return new ComplexStruct((RealStruct) real.negation(), imaginary);
+	}
+
+	@Override
+	public NumberStruct reciprocal() {
+		return ONE.divide(this);
 	}
 
 	@Override
@@ -607,7 +612,7 @@ public class ComplexStruct extends NumberStruct {
 //			return reAbs*Math.sqrt(1.0+(imag/real)*(imag/real));
 //	}
 
-//	public Complex negate() {
+//	public Complex negation() {
 //		return createComplex(-real, -imaginary);
 //	}
 

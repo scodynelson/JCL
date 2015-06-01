@@ -182,9 +182,14 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	@Override
-	public NumberStruct negate() {
+	public NumberStruct negation() {
 		final BigInteger negate = bigInteger.negate();
 		return new IntegerStruct(negate);
+	}
+
+	@Override
+	public NumberStruct reciprocal() {
+		return new RatioStruct(BigInteger.ONE, bigInteger);
 	}
 
 	@Override

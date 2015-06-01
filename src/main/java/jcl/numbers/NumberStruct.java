@@ -8,6 +8,7 @@ import java.util.List;
 
 import jcl.LispStruct;
 import jcl.classes.BuiltInClassStruct;
+import jcl.conditions.exceptions.ErrorException;
 import jcl.types.NumberType;
 
 /**
@@ -80,7 +81,9 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 
 	public abstract NumberStruct conjugate();
 
-	public abstract NumberStruct negate();
+	public abstract NumberStruct negation();
+
+	public abstract NumberStruct reciprocal();
 
 	public abstract NumberStruct exp();
 
@@ -266,5 +269,101 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 		public abstract NumberStruct expt(S number1, RatioStruct number2);
 
 		public abstract NumberStruct expt(S number1, ComplexStruct number2);
+	}
+
+	public static NumberStruct add(final NumberStruct... numbers) {
+		if (numbers.length == 0) {
+			return IntegerStruct.ZERO;
+		}
+
+		NumberStruct result = numbers[0];
+		for (int i = 1; i < numbers.length; i++) {
+			final NumberStruct currentNumber = numbers[i];
+			result = result.add(currentNumber);
+		}
+		return result;
+	}
+
+	public static NumberStruct subtract(final NumberStruct... numbers) {
+		if (numbers.length == 0) {
+			throw new ErrorException("At least one number required perform subtraction.");
+		}
+		if (numbers.length == 1) {
+			return numbers[0].negation();
+		}
+
+		NumberStruct result = numbers[0];
+		for (int i = 1; i < numbers.length; i++) {
+			final NumberStruct currentNumber = numbers[i];
+			result = result.subtract(currentNumber);
+		}
+		return result;
+	}
+
+	public static NumberStruct multiply(final NumberStruct... numbers) {
+		if (numbers.length == 0) {
+			return IntegerStruct.ONE;
+		}
+
+		NumberStruct result = numbers[0];
+		for (int i = 1; i < numbers.length; i++) {
+			final NumberStruct currentNumber = numbers[i];
+			result = result.multiply(currentNumber);
+		}
+		return result;
+	}
+
+	public static NumberStruct divide(final NumberStruct... numbers) {
+		if (numbers.length == 0) {
+			throw new ErrorException("At least one number required to perform division.");
+		}
+		if (numbers.length == 1) {
+			return numbers[0].reciprocal();
+		}
+
+		NumberStruct result = numbers[0];
+		for (int i = 1; i < numbers.length; i++) {
+			final NumberStruct currentNumber = numbers[i];
+			result = result.divide(currentNumber);
+		}
+		return result;
+	}
+
+	public static boolean isEqualTo(final NumberStruct... numbers) {
+		if (numbers.length == 0) {
+			throw new ErrorException("At least one number required to test equality.");
+		}
+
+		NumberStruct previousNumber = numbers[0];
+
+		boolean result = true;
+		for (int i = 1; i < numbers.length; i++) {
+			final NumberStruct currentNumber = numbers[i];
+			result = previousNumber.isEqualTo(currentNumber);
+			if (!result) {
+				break;
+			}
+			previousNumber = currentNumber;
+		}
+		return result;
+	}
+
+	public static boolean isNotEqualTo(final NumberStruct... numbers) {
+		if (numbers.length == 0) {
+			throw new ErrorException("At least one number required to test equality.");
+		}
+
+		NumberStruct previousNumber = numbers[0];
+
+		boolean result = true;
+		for (int i = 1; i < numbers.length; i++) {
+			final NumberStruct currentNumber = numbers[i];
+			result = previousNumber.isNotEqualTo(currentNumber);
+			if (!result) {
+				break;
+			}
+			previousNumber = currentNumber;
+		}
+		return result;
 	}
 }

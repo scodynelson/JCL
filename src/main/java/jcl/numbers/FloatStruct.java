@@ -184,8 +184,13 @@ public class FloatStruct extends RealStruct {
 	}
 
 	@Override
-	public NumberStruct negate() {
+	public NumberStruct negation() {
 		return new FloatStruct(bigDecimal.negate());
+	}
+
+	@Override
+	public NumberStruct reciprocal() {
+		return ONE.divide(this);
 	}
 
 	@Override

@@ -169,9 +169,16 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	@Override
-	public NumberStruct negate() {
+	public NumberStruct negation() {
 		final BigFraction negate = bigFraction.negate();
 		return new RatioStruct(negate);
+	}
+
+	@Override
+	public NumberStruct reciprocal() {
+		final BigInteger numerator = bigFraction.getNumerator();
+		final BigInteger denominator = bigFraction.getDenominator();
+		return makeRational(denominator, numerator);
 	}
 
 	@Override

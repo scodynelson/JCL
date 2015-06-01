@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Objects;
 
 import jcl.LispStruct;
+import jcl.conditions.exceptions.ErrorException;
 import jcl.types.RealType;
 import org.apache.commons.math3.util.FastMath;
 
@@ -802,5 +803,91 @@ public abstract class RealStruct extends NumberStruct {
 			final NumberStruct powerComplexLogOfBaseProduct = newPowerComplex.multiply(logOfBase);
 			return powerComplexLogOfBaseProduct.exp();
 		}
+	}
+
+	public static boolean isLessThan(final RealStruct... reals) {
+		if (reals.length == 0) {
+			throw new ErrorException("At least one real required to test equality.");
+		}
+
+		RealStruct previousReal = reals[0];
+
+		boolean result = true;
+		for (int i = 1; i < reals.length; i++) {
+			final RealStruct currentReal = reals[i];
+			result = previousReal.isLessThan(currentReal);
+			if (!result) {
+				break;
+			}
+			previousReal = currentReal;
+		}
+		return result;
+	}
+
+	public static boolean isGreaterThan(final RealStruct... reals) {
+		if (reals.length == 0) {
+			throw new ErrorException("At least one real required to test equality.");
+		}
+
+		RealStruct previousReal = reals[0];
+
+		boolean result = true;
+		for (int i = 1; i < reals.length; i++) {
+			final RealStruct currentReal = reals[i];
+			result = previousReal.isGreaterThan(currentReal);
+			if (!result) {
+				break;
+			}
+			previousReal = currentReal;
+		}
+		return result;
+	}
+
+	public static boolean isLessThanOrEqualTo(final RealStruct... reals) {
+		if (reals.length == 0) {
+			throw new ErrorException("At least one real required to test equality.");
+		}
+
+		RealStruct previousReal = reals[0];
+
+		boolean result = true;
+		for (int i = 1; i < reals.length; i++) {
+			final RealStruct currentReal = reals[i];
+			result = previousReal.isLessThanOrEqualTo(currentReal);
+			if (!result) {
+				break;
+			}
+			previousReal = currentReal;
+		}
+		return result;
+	}
+
+	public static RealStruct max(final RealStruct... reals) {
+		if (reals.length == 0) {
+			throw new ErrorException("At least one real required to find max.");
+		}
+
+		RealStruct result = reals[0];
+		for (int i = 1; i < reals.length; i++) {
+			final RealStruct currentReal = reals[i];
+			result = result.max(currentReal);
+		}
+		return result;
+	}
+
+	public static RealStruct min(final RealStruct... reals) {
+		if (reals.length == 0) {
+			throw new ErrorException("At least one real required to find min.");
+		}
+		if (reals.length == 1) {
+			return reals[0];
+		}
+
+		RealStruct result = reals[0];
+		for (int i = 1; i < reals.length; i++) {
+			final RealStruct currentReal = reals[i];
+			result = result.min(currentReal);
+		}
+		return result;
 	}
 }

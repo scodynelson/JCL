@@ -121,6 +121,8 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 
 	public abstract NumberStruct atanh();
 
+	// Strategy Implementations
+
 	public abstract static class AddStrategy<S extends NumberStruct> {
 
 		public NumberStruct add(final S number1, final NumberStruct number2) {
@@ -270,6 +272,8 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 
 		public abstract NumberStruct expt(S number1, ComplexStruct number2);
 	}
+
+	// Static Multi-Arg Methods
 
 	public static NumberStruct add(final NumberStruct... numbers) {
 		if (numbers.length == 0) {

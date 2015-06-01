@@ -368,6 +368,8 @@ public abstract class RealStruct extends NumberStruct {
 		return new FloatStruct(atanh);
 	}
 
+	// Strategy Implementations
+
 	public abstract static class RealAddStrategy<S extends RealStruct> extends AddStrategy<S> {
 
 		public RealStruct add(final S number1, final RealStruct number2) {
@@ -805,6 +807,8 @@ public abstract class RealStruct extends NumberStruct {
 		}
 	}
 
+	// Static Multi-Arg Methods
+
 	public static boolean isLessThan(final RealStruct... reals) {
 		if (reals.length == 0) {
 			throw new ErrorException("At least one real required to test equality.");
@@ -854,6 +858,25 @@ public abstract class RealStruct extends NumberStruct {
 		for (int i = 1; i < reals.length; i++) {
 			final RealStruct currentReal = reals[i];
 			result = previousReal.isLessThanOrEqualTo(currentReal);
+			if (!result) {
+				break;
+			}
+			previousReal = currentReal;
+		}
+		return result;
+	}
+
+	public static boolean isGreaterThanOrEqualTo(final RealStruct... reals) {
+		if (reals.length == 0) {
+			throw new ErrorException("At least one real required to test equality.");
+		}
+
+		RealStruct previousReal = reals[0];
+
+		boolean result = true;
+		for (int i = 1; i < reals.length; i++) {
+			final RealStruct currentReal = reals[i];
+			result = previousReal.isGreaterThanOrEqualTo(currentReal);
 			if (!result) {
 				break;
 			}

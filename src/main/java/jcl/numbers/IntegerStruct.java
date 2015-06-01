@@ -668,6 +668,40 @@ public class IntegerStruct extends RationalStruct {
 		}
 	}
 
+	// Static Multi-Arg Methods
+
+	public static IntegerStruct gcd(final IntegerStruct... integers) {
+		if (integers.length == 0) {
+			return ZERO;
+		}
+		if (integers.length == 1) {
+			return integers[0];
+		}
+
+		IntegerStruct result = integers[0];
+		for (int i = 1; i < integers.length; i++) {
+			final IntegerStruct currentInteger = integers[i];
+			result = result.gcd(currentInteger);
+		}
+		return result;
+	}
+
+	public static IntegerStruct lcm(final IntegerStruct... integers) {
+		if (integers.length == 0) {
+			return ONE;
+		}
+		if (integers.length == 1) {
+			return integers[0];
+		}
+
+		IntegerStruct result = integers[0];
+		for (int i = 1; i < integers.length; i++) {
+			final IntegerStruct currentInteger = integers[i];
+			result = result.lcm(currentInteger);
+		}
+		return result;
+	}
+
 	// HashCode / Equals / ToString
 
 	@Override

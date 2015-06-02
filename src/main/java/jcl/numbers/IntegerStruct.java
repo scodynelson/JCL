@@ -189,7 +189,7 @@ public class IntegerStruct extends RationalStruct {
 
 	@Override
 	public NumberStruct reciprocal() {
-		return new RatioStruct(BigInteger.ONE, bigInteger);
+		return makeRational(BigInteger.ONE, bigInteger);
 	}
 
 	@Override

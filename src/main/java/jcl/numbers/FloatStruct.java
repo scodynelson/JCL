@@ -28,11 +28,11 @@ public class FloatStruct extends RealStruct {
 	 */
 	private static final long serialVersionUID = 4803312076840516559L;
 
-	public static final FloatStruct ZERO = new FloatStruct(BigDecimal.ZERO);
+	public static final FloatStruct ZERO = new FloatStruct(BigDecimal.valueOf(0.0));
 
 	public static final FloatStruct MINUS_ZERO = new FloatStruct(BigDecimal.valueOf(-0.0));
 
-	public static final FloatStruct ONE = new FloatStruct(BigDecimal.ONE);
+	public static final FloatStruct ONE = new FloatStruct(BigDecimal.valueOf(1.0));
 
 	public static final FloatStruct MINUS_ONE = new FloatStruct(BigDecimal.valueOf(-1.0));
 
@@ -185,6 +185,12 @@ public class FloatStruct extends RealStruct {
 
 	@Override
 	public NumberStruct negation() {
+		if (equals(ZERO)) {
+			return MINUS_ZERO;
+		}
+		if (equals(MINUS_ZERO)) {
+			return ZERO;
+		}
 		return new FloatStruct(bigDecimal.negate());
 	}
 

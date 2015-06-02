@@ -293,7 +293,7 @@ public class ComplexStruct extends NumberStruct {
 
 	@Override
 	public NumberStruct negation() {
-		return new ComplexStruct((RealStruct) real.negation(), imaginary);
+		return new ComplexStruct((RealStruct) real.negation(), (RealStruct) imaginary.negation());
 	}
 
 	@Override
@@ -612,10 +612,6 @@ public class ComplexStruct extends NumberStruct {
 //			return reAbs*Math.sqrt(1.0+(imag/real)*(imag/real));
 //	}
 
-//	public Complex negation() {
-//		return createComplex(-real, -imaginary);
-//	}
-
 	// Strategy Implementations
 
 	private static class ComplexAddStrategy extends AddStrategy<ComplexStruct> {
@@ -659,6 +655,10 @@ public class ComplexStruct extends NumberStruct {
 
 			final NumberStruct addReal = realVal1.add(realVal2);
 			final NumberStruct addImag = imaginaryVal1.add(imaginaryVal2);
+
+			if (addImag.zerop()) {
+				return addReal;
+			}
 
 			return new ComplexStruct((RealStruct) addReal, (RealStruct) addImag);
 		}
@@ -705,6 +705,10 @@ public class ComplexStruct extends NumberStruct {
 
 			final NumberStruct subtractReal = realVal1.subtract(realVal2);
 			final NumberStruct subtractImag = imaginaryVal1.subtract(imaginaryVal2);
+
+			if (subtractImag.zerop()) {
+				return subtractReal;
+			}
 
 			return new ComplexStruct((RealStruct) subtractReal, (RealStruct) subtractImag);
 		}
@@ -762,6 +766,11 @@ public class ComplexStruct extends NumberStruct {
 
 			final NumberStruct acSubtractBd = ac.subtract(bd);
 			final NumberStruct adAddBc = ad.add(bc);
+
+			if (adAddBc.zerop()) {
+				return acSubtractBd;
+			}
+
 			return new ComplexStruct((RealStruct) acSubtractBd, (RealStruct) adAddBc);
 		}
 	}
@@ -826,6 +835,11 @@ public class ComplexStruct extends NumberStruct {
 
 			final NumberStruct acAddBdDivideBySumOfSquares = acAddBd.divide(squareRealSquareImagSum);
 			final NumberStruct bcSubtractAdDivideBySumOfSquares = bcSubtractAd.divide(squareRealSquareImagSum);
+
+			if (bcSubtractAdDivideBySumOfSquares.zerop()) {
+				return acAddBdDivideBySumOfSquares;
+			}
+
 			return new ComplexStruct((RealStruct) acAddBdDivideBySumOfSquares, (RealStruct) bcSubtractAdDivideBySumOfSquares);
 		}
 	}

@@ -157,9 +157,9 @@ public class RatioStruct extends RationalStruct {
 		if (zerop()) {
 			return this;
 		} else if (plusp()) {
-			return ONE;
+			return IntegerStruct.ONE;
 		} else {
-			return MINUS_ONE;
+			return IntegerStruct.MINUS_ONE;
 		}
 	}
 

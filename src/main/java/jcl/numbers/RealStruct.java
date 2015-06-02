@@ -99,18 +99,20 @@ public abstract class RealStruct extends NumberStruct {
 		return floor(IntegerStruct.ONE);
 	}
 
-	public QuotientRemainderResult floor(final RealStruct divisor) {
+	public abstract QuotientRemainderResult floor(final RealStruct divisor);
 
-		final BigDecimal numberBigDecimal = bigDecimalValue();
-		final BigDecimal quotient = numberBigDecimal.setScale(0, RoundingMode.FLOOR);
-
-		final BigDecimal divisorBigDecimal = divisor.bigDecimalValue();
-		final BigDecimal remainder = numberBigDecimal.remainder(divisorBigDecimal, MathContext.DECIMAL128);
-
-		final BigInteger quotientBigInteger = quotient.toBigInteger();
-		final RealStruct quotientInteger = new IntegerStruct(quotientBigInteger);
-		return new QuotientRemainderResult(quotientInteger, new FloatStruct(remainder));
-	}
+//	public QuotientRemainderResult floor(final RealStruct divisor) {
+//
+//		final BigDecimal numberBigDecimal = bigDecimalValue();
+//		final BigDecimal quotient = numberBigDecimal.setScale(0, RoundingMode.FLOOR);
+//
+//		final BigDecimal divisorBigDecimal = divisor.bigDecimalValue();
+//		final BigDecimal remainder = numberBigDecimal.remainder(divisorBigDecimal, MathContext.DECIMAL128);
+//
+//		final BigInteger quotientBigInteger = quotient.toBigInteger();
+//		final RealStruct quotientInteger = new IntegerStruct(quotientBigInteger);
+//		return new QuotientRemainderResult(quotientInteger, new FloatStruct(remainder));
+//	}
 
 	public QuotientRemainderResult ffloor() {
 		return ffloor(IntegerStruct.ONE);
@@ -370,7 +372,7 @@ public abstract class RealStruct extends NumberStruct {
 
 	// Strategy Implementations
 
-	public abstract static class RealAddStrategy<S extends RealStruct> extends AddStrategy<S> {
+	protected abstract static class RealAddStrategy<S extends RealStruct> extends AddStrategy<S> {
 
 		public RealStruct add(final S number1, final RealStruct number2) {
 			if (number2 instanceof IntegerStruct) {
@@ -408,7 +410,7 @@ public abstract class RealStruct extends NumberStruct {
 		}
 	}
 
-	public abstract static class RealSubtractStrategy<S extends RealStruct> extends SubtractStrategy<S> {
+	protected abstract static class RealSubtractStrategy<S extends RealStruct> extends SubtractStrategy<S> {
 
 		public RealStruct subtract(final S number1, final RealStruct number2) {
 			if (number2 instanceof IntegerStruct) {
@@ -448,7 +450,7 @@ public abstract class RealStruct extends NumberStruct {
 		}
 	}
 
-	public abstract static class RealMultiplyStrategy<S extends RealStruct> extends MultiplyStrategy<S> {
+	protected abstract static class RealMultiplyStrategy<S extends RealStruct> extends MultiplyStrategy<S> {
 
 		public RealStruct multiply(final S number1, final RealStruct number2) {
 			if (number2 instanceof IntegerStruct) {
@@ -487,7 +489,7 @@ public abstract class RealStruct extends NumberStruct {
 		}
 	}
 
-	public abstract static class RealDivideStrategy<S extends RealStruct> extends DivideStrategy<S> {
+	protected abstract static class RealDivideStrategy<S extends RealStruct> extends DivideStrategy<S> {
 
 		public RealStruct divide(final S number1, final RealStruct number2) {
 			if (number2 instanceof IntegerStruct) {
@@ -537,7 +539,7 @@ public abstract class RealStruct extends NumberStruct {
 		}
 	}
 
-	public abstract static class LessThanStrategy<S extends RealStruct> {
+	protected abstract static class LessThanStrategy<S extends RealStruct> {
 
 		public boolean lessThan(final S real1, final RealStruct real2) {
 			if (real2 instanceof IntegerStruct) {
@@ -558,7 +560,7 @@ public abstract class RealStruct extends NumberStruct {
 		public abstract boolean lessThan(S real1, RatioStruct real2);
 	}
 
-	public abstract static class GreaterThanStrategy<S extends RealStruct> {
+	protected abstract static class GreaterThanStrategy<S extends RealStruct> {
 
 		public boolean greaterThan(final S real1, final RealStruct real2) {
 			if (real2 instanceof IntegerStruct) {
@@ -579,7 +581,7 @@ public abstract class RealStruct extends NumberStruct {
 		public abstract boolean greaterThan(S real1, RatioStruct real2);
 	}
 
-	public abstract static class LessThanOrEqualToStrategy<S extends RealStruct> {
+	protected abstract static class LessThanOrEqualToStrategy<S extends RealStruct> {
 
 		public boolean lessThanOrEqualTo(final S real1, final RealStruct real2) {
 			if (real2 instanceof IntegerStruct) {
@@ -600,7 +602,7 @@ public abstract class RealStruct extends NumberStruct {
 		public abstract boolean lessThanOrEqualTo(S real1, RatioStruct real2);
 	}
 
-	public abstract static class GreaterThanOrEqualToStrategy<S extends RealStruct> {
+	protected abstract static class GreaterThanOrEqualToStrategy<S extends RealStruct> {
 
 		public boolean greaterThanOrEqualTo(final S real1, final RealStruct real2) {
 			if (real2 instanceof IntegerStruct) {
@@ -621,7 +623,7 @@ public abstract class RealStruct extends NumberStruct {
 		public abstract boolean greaterThanOrEqualTo(S real1, RatioStruct real2);
 	}
 
-	public static class MaxStrategy<S extends RealStruct> {
+	protected static class MaxStrategy<S extends RealStruct> {
 
 		protected static final MaxStrategy<RealStruct> INSTANCE = new MaxStrategy<>();
 
@@ -662,7 +664,7 @@ public abstract class RealStruct extends NumberStruct {
 		}
 	}
 
-	public static class MinStrategy<S extends RealStruct> {
+	protected static class MinStrategy<S extends RealStruct> {
 
 		protected static final MinStrategy<RealStruct> INSTANCE = new MinStrategy<>();
 
@@ -703,7 +705,44 @@ public abstract class RealStruct extends NumberStruct {
 		}
 	}
 
-	public static class RealExptStrategy<S extends RealStruct> extends ExptStrategy<S> {
+	protected abstract static class FloorStrategy<S extends RealStruct> {
+
+		public QuotientRemainderResult floor(final S real, final RealStruct divisor) {
+			if (divisor instanceof IntegerStruct) {
+				return floor(real, (IntegerStruct) divisor);
+			} else if (divisor instanceof FloatStruct) {
+				return floor(real, (FloatStruct) divisor);
+			} else if (divisor instanceof RatioStruct) {
+				return floor(real, (RatioStruct) divisor);
+			} else {
+				throw new RuntimeException("Unsupported Real Type for Floor Operation.");
+			}
+		}
+
+		public abstract QuotientRemainderResult floor(final S real, final IntegerStruct divisor);
+
+		public QuotientRemainderResult floor(final S real, final FloatStruct divisor) {
+			return floatFloor(real, divisor);
+		}
+
+		protected QuotientRemainderResult floatFloor(final RealStruct real, final RealStruct divisor) {
+			final BigDecimal realBigDecimal = real.bigDecimalValue();
+			final BigDecimal divisorBigDecimal = divisor.bigDecimalValue();
+
+			final BigDecimal quotient = realBigDecimal.divide(divisorBigDecimal, RoundingMode.FLOOR);
+			final BigDecimal remainder = realBigDecimal.remainder(divisorBigDecimal, MathContext.DECIMAL128);
+
+			final BigInteger quotientBigInteger = quotient.toBigInteger();
+			final RealStruct quotientInteger = new IntegerStruct(quotientBigInteger);
+
+			final FloatStruct remainderFloat = new FloatStruct(remainder);
+			return new QuotientRemainderResult(quotientInteger, remainderFloat);
+		}
+
+		public abstract QuotientRemainderResult floor(final S real, final RatioStruct divisor);
+	}
+
+	protected static class RealExptStrategy<S extends RealStruct> extends ExptStrategy<S> {
 
 		protected static final RealExptStrategy<RealStruct> INSTANCE = new RealExptStrategy<>();
 

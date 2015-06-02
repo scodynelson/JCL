@@ -82,7 +82,7 @@ public final class FFloorFunction extends FunctionStruct {
 				final String printedObject = printer.print(divisor);
 				throw new TypeErrorException("Argument not of type Real: " + printedObject);
 			}
-			final RealStruct divisorReal = (RealStruct) lispStruct;
+			final RealStruct divisorReal = (RealStruct) divisor;
 
 			ffloor = real.ffloor(divisorReal);
 		} else {

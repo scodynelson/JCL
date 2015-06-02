@@ -6,6 +6,8 @@ package jcl.numbers;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.Objects;
 
 import jcl.LispStruct;
@@ -245,6 +247,11 @@ public class IntegerStruct extends RationalStruct {
 	@Override
 	public RationalStruct rational() {
 		return this;
+	}
+
+	@Override
+	public QuotientRemainderResult floor(final RealStruct divisor) {
+		return IntegerFloorStrategy.INSTANCE.floor(this, divisor);
 	}
 
 	@Override
@@ -652,6 +659,28 @@ public class IntegerStruct extends RationalStruct {
 
 			final BigInteger min = bigInteger1.min(bigInteger2);
 			return Objects.equals(bigInteger1, min) ? real1 : real2;
+		}
+	}
+
+	private static class IntegerFloorStrategy extends RationalFloorStrategy<IntegerStruct> {
+
+		private static final IntegerFloorStrategy INSTANCE = new IntegerFloorStrategy();
+
+		@Override
+		public QuotientRemainderResult floor(final IntegerStruct real, final IntegerStruct divisor) {
+			final BigDecimal realBigDecimal = real.bigDecimalValue();
+			final BigDecimal divisorBigDecimal = divisor.bigDecimalValue();
+
+			final BigDecimal quotient = realBigDecimal.divide(divisorBigDecimal, RoundingMode.FLOOR);
+			final BigDecimal remainder = realBigDecimal.remainder(divisorBigDecimal, MathContext.DECIMAL128);
+
+			final BigInteger quotientBigInteger = quotient.toBigInteger();
+			final RealStruct quotientInteger = new IntegerStruct(quotientBigInteger);
+
+			final BigInteger remainderBigInteger = remainder.toBigInteger();
+			final RealStruct remainderInteger = new IntegerStruct(remainderBigInteger);
+
+			return new QuotientRemainderResult(quotientInteger, remainderInteger);
 		}
 	}
 

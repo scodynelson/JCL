@@ -6,6 +6,7 @@ package jcl.numbers;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 
 import jcl.LispStruct;
 import jcl.types.RatioType;
@@ -204,7 +205,7 @@ public class RatioStruct extends RationalStruct {
 
 	@Override
 	public BigDecimal bigDecimalValue() {
-		return bigFraction.bigDecimalValue();
+		return bigFraction.bigDecimalValue(RoundingMode.HALF_EVEN.ordinal());
 	}
 
 	@Override
@@ -215,6 +216,11 @@ public class RatioStruct extends RationalStruct {
 	@Override
 	public RationalStruct rational() {
 		return this;
+	}
+
+	@Override
+	public QuotientRemainderResult floor(final RealStruct divisor) {
+		return RatioFloorStrategy.INSTANCE.floor(this, divisor);
 	}
 
 	@Override
@@ -455,6 +461,16 @@ public class RatioStruct extends RationalStruct {
 			final BigFraction bigFraction1 = real1.getBigFraction();
 			final BigFraction bigFraction2 = real2.getBigFraction();
 			return bigFraction1.compareTo(bigFraction2) >= 0;
+		}
+	}
+
+	private static class RatioFloorStrategy extends RationalFloorStrategy<RatioStruct> {
+
+		private static final RatioFloorStrategy INSTANCE = new RatioFloorStrategy();
+
+		@Override
+		public QuotientRemainderResult floor(final RatioStruct real, final IntegerStruct divisor) {
+			return ratioFloor(real, divisor);
 		}
 	}
 

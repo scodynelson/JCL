@@ -237,6 +237,11 @@ public class FloatStruct extends RealStruct {
 		return new RatioStruct(bigFraction);
 	}
 
+	@Override
+	public QuotientRemainderResult floor(final RealStruct divisor) {
+		return FloatFloorStrategy.INSTANCE.floor(this, divisor);
+	}
+
 	public FloatStruct scaleFloat(final IntegerStruct scale) {
 		final BigInteger scaleBigInteger = scale.getBigInteger();
 		final BigInteger twoBigInteger = BigInteger.valueOf(2);
@@ -477,6 +482,21 @@ public class FloatStruct extends RealStruct {
 		public boolean greaterThanOrEqualTo(final FloatStruct real1, final RatioStruct real2) {
 			final RationalStruct rational1 = real1.rational();
 			return rational1.isGreaterThanOrEqualTo(real2);
+		}
+	}
+
+	private static class FloatFloorStrategy extends FloorStrategy<FloatStruct> {
+
+		private static final FloatFloorStrategy INSTANCE = new FloatFloorStrategy();
+
+		@Override
+		public QuotientRemainderResult floor(final FloatStruct real, final IntegerStruct divisor) {
+			return floatFloor(real, divisor);
+		}
+
+		@Override
+		public QuotientRemainderResult floor(final FloatStruct real, final RatioStruct divisor) {
+			return floatFloor(real, divisor);
 		}
 	}
 

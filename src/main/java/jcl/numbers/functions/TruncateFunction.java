@@ -82,7 +82,7 @@ public final class TruncateFunction extends FunctionStruct {
 				final String printedObject = printer.print(divisor);
 				throw new TypeErrorException("Argument not of type Real: " + printedObject);
 			}
-			final RealStruct divisorReal = (RealStruct) lispStruct;
+			final RealStruct divisorReal = (RealStruct) divisor;
 
 			truncate = real.truncate(divisorReal);
 		} else {

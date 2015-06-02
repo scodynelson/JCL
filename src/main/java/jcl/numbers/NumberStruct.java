@@ -123,7 +123,7 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 
 	// Strategy Implementations
 
-	public abstract static class AddStrategy<S extends NumberStruct> {
+	protected abstract static class AddStrategy<S extends NumberStruct> {
 
 		public NumberStruct add(final S number1, final NumberStruct number2) {
 			if (number2 instanceof IntegerStruct) {
@@ -148,7 +148,7 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 		public abstract NumberStruct add(S number1, ComplexStruct number2);
 	}
 
-	public abstract static class SubtractStrategy<S extends NumberStruct> {
+	protected abstract static class SubtractStrategy<S extends NumberStruct> {
 
 		public NumberStruct subtract(final S number1, final NumberStruct number2) {
 			if (number2 instanceof IntegerStruct) {
@@ -173,7 +173,7 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 		public abstract NumberStruct subtract(S number1, ComplexStruct number2);
 	}
 
-	public abstract static class MultiplyStrategy<S extends NumberStruct> {
+	protected abstract static class MultiplyStrategy<S extends NumberStruct> {
 
 		public NumberStruct multiply(final S number1, final NumberStruct number2) {
 			if (number2 instanceof IntegerStruct) {
@@ -198,7 +198,7 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 		public abstract NumberStruct multiply(S number1, ComplexStruct number2);
 	}
 
-	public abstract static class DivideStrategy<S extends NumberStruct> {
+	protected abstract static class DivideStrategy<S extends NumberStruct> {
 
 		public NumberStruct divide(final S number1, final NumberStruct number2) {
 			if (number2 instanceof IntegerStruct) {
@@ -223,7 +223,7 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 		public abstract NumberStruct divide(S number1, ComplexStruct number2);
 	}
 
-	public abstract static class EqualToStrategy<S extends NumberStruct> {
+	protected abstract static class EqualToStrategy<S extends NumberStruct> {
 
 		public boolean equalTo(final S number1, final NumberStruct number2) {
 			if (number2 instanceof IntegerStruct) {
@@ -248,7 +248,7 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 		public abstract boolean equalTo(S number1, ComplexStruct number2);
 	}
 
-	public abstract static class ExptStrategy<S extends NumberStruct> {
+	protected abstract static class ExptStrategy<S extends NumberStruct> {
 
 		public NumberStruct expt(final S number1, final NumberStruct number2) {
 			if (number2 instanceof IntegerStruct) {

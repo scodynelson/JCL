@@ -7,11 +7,13 @@ package jcl.streams;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.LineNumberReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.PushbackReader;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 import jcl.LispStruct;
 import jcl.conditions.exceptions.StreamErrorException;
@@ -21,8 +23,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The {@link CharacterStreamStruct} is the object representation of a character reading and writing system level Lisp
@@ -36,14 +36,14 @@ public class CharacterStreamStruct extends AbstractNativeStreamStruct {
 	private static final long serialVersionUID = 3029213066284401689L;
 
 	/**
-	 * The logger for this class.
+	 * The maximum size of internal buffer array to allocate in the {@link PushbackReader} {@link #inputStream}.
 	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(CharacterStreamStruct.class);
+	private static final int PUSHBACK_BUFFER_SIZE = Short.MAX_VALUE;
 
 	/**
-	 * The {@link LineNumberReader} for reading input.
+	 * The {@link PushbackReader} for reading input.
 	 */
-	private final LineNumberReader inputStream;
+	private final PushbackReader inputStream;
 
 	/**
 	 * The {@link PrintWriter} for writing output.
@@ -76,14 +76,13 @@ public class CharacterStreamStruct extends AbstractNativeStreamStruct {
 		super(StreamType.INSTANCE, interactive, CharacterType.INSTANCE);
 
 		final Charset defaultCharset = Charset.defaultCharset();
-		this.inputStream = new LineNumberReader(new InputStreamReader(inputStream, defaultCharset));
+		this.inputStream = new PushbackReader(new InputStreamReader(inputStream, defaultCharset), PUSHBACK_BUFFER_SIZE);
 		this.outputStream = new PrintWriter(new OutputStreamWriter(outputStream, defaultCharset));
 	}
 
 	@Override
 	public ReadPeekResult readChar(final boolean eofErrorP, final LispStruct eofValue, final boolean recursiveP) {
 		try {
-			inputStream.mark(1);
 			final int readChar = inputStream.read();
 			return StreamUtils.getReadPeekResult(readChar, eofErrorP, eofValue);
 		} catch (final IOException ioe) {
@@ -125,10 +124,8 @@ public class CharacterStreamStruct extends AbstractNativeStreamStruct {
 	 */
 	private int nilPeekCharCSS() {
 		try {
-			inputStream.mark(1);
-
 			final int nextChar = inputStream.read();
-			inputStream.reset();
+			inputStream.unread(nextChar);
 			return nextChar;
 		} catch (final IOException ioe) {
 			throw new StreamErrorException(StreamUtils.FAILED_TO_PEEK_CHAR, ioe);
@@ -142,14 +139,18 @@ public class CharacterStreamStruct extends AbstractNativeStreamStruct {
 	 */
 	private int tPeekCharCSS() {
 		try {
-			inputStream.mark(1);
+			final List<Integer> charsToUnread = new ArrayList<>();
 
 			// Initialize to whitespace, since we are attempting to skip it anyways
 			int nextChar = ' ';
 			while (Character.isWhitespace(nextChar)) {
 				nextChar = inputStream.read();
+				charsToUnread.add(nextChar);
 			}
-			inputStream.reset();
+			for (final Integer charToUnread : charsToUnread) {
+				// This will insert back in the correct order.
+				inputStream.unread(charToUnread);
+			}
 			return nextChar;
 		} catch (final IOException ioe) {
 			throw new StreamErrorException(StreamUtils.FAILED_TO_PEEK_CHAR, ioe);
@@ -166,14 +167,18 @@ public class CharacterStreamStruct extends AbstractNativeStreamStruct {
 	 */
 	private int characterPeekCharCSS(final Integer codePoint) {
 		try {
-			inputStream.mark(1);
+			final List<Integer> charsToUnread = new ArrayList<>();
 
 			// Initialize to -1 value, since this is essentially EOF
 			int nextChar = -1;
 			while (nextChar != codePoint) {
 				nextChar = inputStream.read();
+				charsToUnread.add(nextChar);
 			}
-			inputStream.reset();
+			for (final Integer charToUnread : charsToUnread) {
+				// This will insert back in the correct order.
+				inputStream.unread(charToUnread);
+			}
 			return nextChar;
 		} catch (final IOException ioe) {
 			throw new StreamErrorException(StreamUtils.FAILED_TO_PEEK_CHAR, ioe);
@@ -183,7 +188,7 @@ public class CharacterStreamStruct extends AbstractNativeStreamStruct {
 	@Override
 	public Integer unreadChar(final Integer codePoint) {
 		try {
-			inputStream.reset();
+			inputStream.unread(codePoint);
 			return codePoint;
 		} catch (final IOException ioe) {
 			throw new StreamErrorException(StreamUtils.FAILED_TO_UNREAD_CHAR, ioe);
@@ -192,14 +197,7 @@ public class CharacterStreamStruct extends AbstractNativeStreamStruct {
 
 	@Override
 	public void clearInput() {
-		try {
-			inputStream.mark(0);
-			inputStream.reset();
-		} catch (final IOException ioe) {
-			if (LOGGER.isWarnEnabled()) {
-				LOGGER.warn("IO exception occurred.", ioe);
-			}
-		}
+		// Do nothing.
 	}
 
 	@Override

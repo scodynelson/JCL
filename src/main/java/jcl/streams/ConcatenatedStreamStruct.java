@@ -15,8 +15,6 @@ import jcl.types.ConcatenatedStreamType;
 import jcl.types.TType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link ConcatenatedStreamStruct} is the object representation of a Lisp 'concatenated-stream' type.
@@ -231,11 +229,5 @@ public class ConcatenatedStreamStruct extends StreamStruct implements InputStrea
 		return new EqualsBuilder().appendSuper(super.equals(obj))
 		                          .append(inputStreams, rhs.inputStreams)
 		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(inputStreams)
-		                                                                .toString();
 	}
 }

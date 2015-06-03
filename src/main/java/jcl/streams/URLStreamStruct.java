@@ -16,8 +16,6 @@ import jcl.types.CharacterType;
 import jcl.types.FileStreamType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -298,13 +296,5 @@ public class URLStreamStruct extends AbstractNativeStreamStruct {
 		                          .append(inputStream, rhs.inputStream)
 		                          .append(urlConnection, rhs.urlConnection)
 		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(url)
-		                                                                .append(inputStream)
-		                                                                .append(urlConnection)
-		                                                                .toString();
 	}
 }

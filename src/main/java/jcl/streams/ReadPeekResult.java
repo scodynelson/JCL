@@ -7,8 +7,6 @@ package jcl.streams;
 import jcl.LispStruct;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * Result object from a 'read' or 'peek' operation performed via 'read-char', 'peek-char', or 'read-byte' from an
@@ -112,13 +110,5 @@ public class ReadPeekResult {
 		                          .append(eofValue, rhs.eofValue)
 		                          .append(eof, rhs.eof)
 		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(result)
-		                                                                .append(eofValue)
-		                                                                .append(eof)
-		                                                                .toString();
 	}
 }

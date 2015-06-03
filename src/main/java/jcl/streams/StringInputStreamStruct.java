@@ -10,8 +10,6 @@ import jcl.types.BaseCharType;
 import jcl.types.StringStreamType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link StringInputStreamStruct} is the object representation of a Lisp 'string-stream' input type.
@@ -220,13 +218,5 @@ public class StringInputStreamStruct extends StreamStruct implements InputStream
 		                          .append(end, rhs.end)
 		                          .append(current, rhs.current)
 		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(inputString)
-		                                                                .append(end)
-		                                                                .append(current)
-		                                                                .toString();
 	}
 }

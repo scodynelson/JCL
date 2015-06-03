@@ -13,8 +13,6 @@ import jcl.types.BroadcastStreamType;
 import jcl.types.TType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link BroadcastStreamStruct} is the object representation of a Lisp 'broadcast-stream' type.
@@ -163,11 +161,5 @@ public class BroadcastStreamStruct extends StreamStruct implements OutputStream 
 		return new EqualsBuilder().appendSuper(super.equals(obj))
 		                          .append(outputStreams, rhs.outputStreams)
 		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(outputStreams)
-		                                                                .toString();
 	}
 }

@@ -9,8 +9,6 @@ import jcl.types.BaseCharType;
 import jcl.types.StringStreamType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link StringOutputStreamStruct} is the object representation of a Lisp 'string-stream' output type.
@@ -110,11 +108,5 @@ public class StringOutputStreamStruct extends StreamStruct implements OutputStre
 		return new EqualsBuilder().appendSuper(super.equals(obj))
 		                          .append(stringBuffer, rhs.stringBuffer)
 		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(stringBuffer)
-		                                                                .toString();
 	}
 }

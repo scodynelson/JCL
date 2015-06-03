@@ -21,8 +21,6 @@ import jcl.types.CharacterType;
 import jcl.types.StreamType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link CharacterStreamStruct} is the object representation of a character reading and writing system level Lisp
@@ -275,12 +273,5 @@ public class CharacterStreamStruct extends AbstractNativeStreamStruct {
 		                          .append(inputStream, rhs.inputStream)
 		                          .append(outputStream, rhs.outputStream)
 		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(inputStream)
-		                                                                .append(outputStream)
-		                                                                .toString();
 	}
 }

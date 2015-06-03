@@ -10,8 +10,6 @@ import jcl.types.StreamType;
 import jcl.types.typespecifiers.AndTypeSpecifier;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link AbstractDualStreamStruct} is an abstraction for dual stream types.
@@ -163,12 +161,5 @@ abstract class AbstractDualStreamStruct extends StreamStruct implements IOStream
 		                          .append(inputStream, rhs.inputStream)
 		                          .append(outputStream, rhs.outputStream)
 		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(inputStream)
-		                                                                .append(outputStream)
-		                                                                .toString();
 	}
 }

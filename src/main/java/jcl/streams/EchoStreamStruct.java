@@ -12,8 +12,6 @@ import jcl.conditions.exceptions.EndOfFileException;
 import jcl.types.EchoStreamType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link EchoStreamStruct} is the object representation of a Lisp 'echo-stream' type.
@@ -151,11 +149,5 @@ public class EchoStreamStruct extends AbstractDualStreamStruct {
 		return new EqualsBuilder().appendSuper(super.equals(obj))
 		                          .append(unreadTokens, rhs.unreadTokens)
 		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(unreadTokens)
-		                                                                .toString();
 	}
 }

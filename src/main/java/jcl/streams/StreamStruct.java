@@ -12,8 +12,6 @@ import jcl.classes.BuiltInClassStruct;
 import jcl.types.StreamType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * The {@link StreamStruct} is the object representation of a Lisp 'stream' type.
@@ -127,13 +125,5 @@ public abstract class StreamStruct extends BuiltInClassStruct implements LispStr
 		                          .append(elementType, rhs.elementType)
 		                          .append(closed, rhs.closed)
 		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(interactive)
-		                                                                .append(elementType)
-		                                                                .append(closed)
-		                                                                .toString();
 	}
 }

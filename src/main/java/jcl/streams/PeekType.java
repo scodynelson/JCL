@@ -6,8 +6,6 @@ package jcl.streams;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * Special object denoting a peek type in how the 'peek-char' should operate. There are 3 categories of PeekTypes:
@@ -92,13 +90,6 @@ final class PeekType {
 		return new EqualsBuilder().append(type, rhs.type)
 		                          .append(codePoint, rhs.codePoint)
 		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(type)
-		                                                                .append(codePoint)
-		                                                                .toString();
 	}
 
 	/**

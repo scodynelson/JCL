@@ -19,8 +19,6 @@ import jcl.types.FileStreamType;
 import jcl.types.SignedByteType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -423,12 +421,5 @@ public class FileStreamStruct extends AbstractNativeStreamStruct {
 		                          .append(fileChannel, rhs.fileChannel)
 		                          .append(bufferSize, rhs.bufferSize)
 		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(fileChannel)
-		                                                                .append(bufferSize)
-		                                                                .toString();
 	}
 }

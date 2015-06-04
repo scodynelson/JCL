@@ -17,7 +17,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.math3.fraction.BigFraction;
-import org.apache.commons.math3.util.ArithmeticUtils;
+import org.apache.commons.math3.util.FastMath;
 
 /**
  * The {@link FloatStruct} is the object representation of a Lisp 'float' type.
@@ -269,10 +269,11 @@ public class FloatStruct extends RealStruct {
 	}
 
 	public FloatStruct scaleFloat(final IntegerStruct scale) {
-		final BigInteger scaleBigInteger = scale.getBigInteger();
-		final BigInteger twoBigInteger = BigInteger.valueOf(2);
-		final BigInteger pow = ArithmeticUtils.pow(twoBigInteger, scaleBigInteger);
+		final double twoScaleBase = 2.0D;
+		final double scaleDouble = scale.doubleValue();
+		final double pow = FastMath.pow(twoScaleBase, scaleDouble);
 
+		// NOTE: don't use 'valueOf' here. It will add extra leading zeros.
 		final BigDecimal multiplicand = new BigDecimal(pow);
 		final BigDecimal multiply = bigDecimal.multiply(multiplicand);
 		return new FloatStruct(multiply);

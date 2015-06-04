@@ -69,22 +69,22 @@ public final class ComplexFunction extends FunctionStruct {
 	public LispStruct apply(final LispStruct... lispStructs) {
 		getFunctionBindings(lispStructs);
 
-		final LispStruct lispStruct = lispStructs[0];
-		if (!(lispStruct instanceof RealStruct)) {
-			final String printedObject = printer.print(lispStruct);
+		final LispStruct lispStruct1 = lispStructs[0];
+		if (!(lispStruct1 instanceof RealStruct)) {
+			final String printedObject = printer.print(lispStruct1);
 			throw new TypeErrorException("Argument not of type Real: " + printedObject);
 		}
-		final RealStruct real = (RealStruct) lispStruct;
+		final RealStruct real = (RealStruct) lispStruct1;
 
 		if (lispStructs.length > 1) {
-			final LispStruct imaginary = lispStructs[1];
-			if (!(imaginary instanceof RealStruct)) {
-				final String printedObject = printer.print(imaginary);
+			final LispStruct lispStruct2 = lispStructs[1];
+			if (!(lispStruct2 instanceof RealStruct)) {
+				final String printedObject = printer.print(lispStruct2);
 				throw new TypeErrorException("Argument not of type Real: " + printedObject);
 			}
-			final RealStruct imaginaryReal = (RealStruct) imaginary;
+			final RealStruct imaginary = (RealStruct) lispStruct2;
 
-			return new ComplexStruct(real, imaginaryReal);
+			return new ComplexStruct(real, imaginary);
 		} else if (real instanceof RationalStruct) {
 			return real;
 		} else {

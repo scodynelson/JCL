@@ -271,6 +271,49 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 		public abstract NumberStruct expt(S number1, RatioStruct number2);
 
 		public abstract NumberStruct expt(S number1, ComplexStruct number2);
+
+		protected static NumberStruct exptInteger(final NumberStruct base, final IntegerStruct power) {
+			// TODO: simplify this!!!
+			if (power.isEqualTo(IntegerStruct.ZERO)) {
+				return IntegerStruct.ONE;
+			}
+			if (base.isEqualTo(IntegerStruct.ONE)) {
+				return base;
+			}
+			if (base.isEqualTo(IntegerStruct.ZERO)) {
+				return base;
+			}
+
+			IntegerStruct realPower = power;
+			if (realPower.minusp()) {
+				realPower = (IntegerStruct) IntegerStruct.ZERO.subtract(realPower);
+				return IntegerStruct.ONE.divide(exptInteger(base, realPower));
+			}
+			if (base.eql(IntegerStruct.TWO)) {
+				return IntegerStruct.ONE.ash(realPower);
+			}
+
+			IntegerStruct nextn = realPower.ash(IntegerStruct.MINUS_ONE);
+			NumberStruct total;
+			if (realPower.oddp()) {
+				total = base;
+			} else {
+				total = IntegerStruct.ONE;
+			}
+
+			NumberStruct realBase = base;
+			while (true) {
+				if (nextn.zerop()) {
+					return total;
+				}
+				realBase = realBase.multiply(realBase);
+
+				if (nextn.oddp()) {
+					total = realBase.multiply(total);
+				}
+				nextn = nextn.ash(IntegerStruct.MINUS_ONE);
+			}
+		}
 	}
 
 	// Static Multi-Arg Methods

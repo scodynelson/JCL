@@ -6,6 +6,7 @@ package jcl.numbers;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 
 import jcl.LispStruct;
 import jcl.types.ComplexType;
@@ -33,6 +34,8 @@ public class ComplexStruct extends NumberStruct {
 	public static final ComplexStruct ZERO = new ComplexStruct(IntegerStruct.ZERO, IntegerStruct.ZERO);
 
 	public static final ComplexStruct ONE = new ComplexStruct(IntegerStruct.ONE, IntegerStruct.ZERO);
+
+	public static final ComplexStruct ONE_FLOAT = new ComplexStruct(FloatStruct.ONE, FloatStruct.ZERO);
 
 	public static final ComplexStruct TWO = new ComplexStruct(IntegerStruct.TWO, IntegerStruct.ZERO);
 
@@ -237,13 +240,26 @@ public class ComplexStruct extends NumberStruct {
 			return imaginary.abs();
 		}
 
-		final BigDecimal bdReal = real.bigDecimalValue();
-		final BigDecimal bdImag = imaginary.bigDecimalValue();
+		final NumberStruct realSquare = real.multiply(real);
+		final NumberStruct imaginarySquare = imaginary.multiply(imaginary);
+		final NumberStruct realSquareImaginarySquareSum = realSquare.add(imaginarySquare);
 
-		// TODO: can we avoid possible precision loss here???
-		final double dblReal = bdReal.doubleValue();
-		final double dblImag = bdImag.doubleValue();
-		return new FloatStruct(BigDecimal.valueOf(StrictMath.hypot(dblReal, dblImag)));
+		// Real multiplication and addition will always product another Real so this cast is safe.
+		final double sumBigDecimal  = ((RealStruct) realSquareImaginarySquareSum).doubleValue();
+		final double sqrtOfSquareSum = FastMath.sqrt(sumBigDecimal);
+
+		if (real instanceof RationalStruct) {
+			final BigDecimal bigDecimal = new BigDecimal(sqrtOfSquareSum);
+			if (isWholeNumber(bigDecimal)) {
+				return new IntegerStruct(bigDecimal.toBigInteger());
+			}
+			return new FloatStruct(bigDecimal);
+		}
+		return new FloatStruct(sqrtOfSquareSum);
+	}
+
+	private static boolean isWholeNumber(final BigDecimal bigDecimal) {
+		return bigDecimal.setScale(0, RoundingMode.HALF_UP).compareTo(bigDecimal) == 0;
 	}
 
 	@Override
@@ -331,7 +347,7 @@ public class ComplexStruct extends NumberStruct {
 		if (power.zerop()) {
 			if (power instanceof IntegerStruct) {
 				if (real instanceof FloatStruct) {
-					return ONE;
+					return ONE_FLOAT;
 				}
 				return IntegerStruct.ONE;
 			}
@@ -341,9 +357,7 @@ public class ComplexStruct extends NumberStruct {
 			return this;
 		}
 
-		final NumberStruct logOfBase = log();
-		final NumberStruct powerComplexLogOfBaseProduct = power.multiply(logOfBase);
-		return powerComplexLogOfBaseProduct.exp();
+		return ComplexExptStrategy.INSTANCE.expt(this, power);
 	}
 
 	@Override
@@ -903,6 +917,42 @@ public class ComplexStruct extends NumberStruct {
 			final RealStruct imaginaryVal2 = number2.getImaginary();
 
 			return realVal1.isEqualTo(realVal2) && imaginaryVal1.isEqualTo(imaginaryVal2);
+		}
+	}
+
+	private static class ComplexExptStrategy extends ExptStrategy<ComplexStruct> {
+
+		protected static final ComplexExptStrategy INSTANCE = new ComplexExptStrategy();
+
+		@Override
+		public NumberStruct expt(final ComplexStruct number1, final IntegerStruct number2) {
+			if (number1.getReal() instanceof RationalStruct) {
+				return exptInteger(number1, number2);
+			}
+			final NumberStruct logOfBase = number1.log();
+			final NumberStruct powerComplexLogOfBaseProduct = number2.multiply(logOfBase);
+			return powerComplexLogOfBaseProduct.exp();
+		}
+
+		@Override
+		public NumberStruct expt(final ComplexStruct number1, final FloatStruct number2) {
+			return exptComplex(number1, number2);
+		}
+
+		@Override
+		public NumberStruct expt(final ComplexStruct number1, final RatioStruct number2) {
+			return exptComplex(number1, number2);
+		}
+
+		@Override
+		public NumberStruct expt(final ComplexStruct number1, final ComplexStruct number2) {
+			return exptComplex(number1, number2);
+		}
+
+		protected static NumberStruct exptComplex(final ComplexStruct base, final NumberStruct power) {
+			final NumberStruct logOfBase = base.log();
+			final NumberStruct powerLogOfBaseProduct = power.multiply(logOfBase);
+			return powerLogOfBaseProduct.exp();
 		}
 	}
 

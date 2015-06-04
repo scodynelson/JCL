@@ -74,12 +74,12 @@ public final class FloatSignFunction extends FunctionStruct {
 		final FloatStruct float1 = (FloatStruct) lispStruct;
 
 		if (lispStructs.length > 1) {
-			final LispStruct imaginary = lispStructs[1];
-			if (!(imaginary instanceof FloatStruct)) {
-				final String printedObject = printer.print(imaginary);
+			final LispStruct lispStruct2 = lispStructs[1];
+			if (!(lispStruct2 instanceof FloatStruct)) {
+				final String printedObject = printer.print(lispStruct2);
 				throw new TypeErrorException("Argument not of type Float: " + printedObject);
 			}
-			final FloatStruct float2 = (FloatStruct) lispStruct;
+			final FloatStruct float2 = (FloatStruct) lispStruct2;
 
 			return float1.floatSign(float2);
 		} else {

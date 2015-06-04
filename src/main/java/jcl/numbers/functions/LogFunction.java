@@ -79,7 +79,7 @@ public final class LogFunction extends FunctionStruct {
 				final String printedObject = printer.print(base);
 				throw new TypeErrorException("Argument not of type Number: " + printedObject);
 			}
-			final NumberStruct baseNumber = (NumberStruct) lispStruct;
+			final NumberStruct baseNumber = (NumberStruct) base;
 
 			return number.log(baseNumber);
 		} else {

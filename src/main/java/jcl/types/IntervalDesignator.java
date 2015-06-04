@@ -7,6 +7,8 @@ package jcl.types;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.MathContext;
+import java.math.RoundingMode;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.math3.fraction.BigFraction;
@@ -133,11 +135,11 @@ public class IntervalDesignator<N extends Number> implements Serializable {
 		} else if ((num1 instanceof BigDecimal) && (num2 instanceof BigDecimal)) {
 			return ((BigDecimal) num1).compareTo((BigDecimal) num2);
 		} else if ((num1 instanceof BigDecimal) && (num2 instanceof BigFraction)) {
-			return ((BigDecimal) num1).compareTo(((BigFraction) num2).bigDecimalValue());
+			return ((BigDecimal) num1).compareTo(((BigFraction) num2).bigDecimalValue(MathContext.DECIMAL128.getPrecision(), RoundingMode.HALF_EVEN.ordinal()));
 		} else if ((num1 instanceof BigFraction) && (num2 instanceof BigInteger)) {
 			return ((BigFraction) num1).compareTo(new BigFraction((BigInteger) num2));
 		} else if ((num1 instanceof BigFraction) && (num2 instanceof BigDecimal)) {
-			return ((BigFraction) num1).bigDecimalValue().compareTo((BigDecimal) num2);
+			return ((BigFraction) num1).bigDecimalValue(MathContext.DECIMAL128.getPrecision(), RoundingMode.HALF_EVEN.ordinal()).compareTo((BigDecimal) num2);
 		} else if ((num1 instanceof BigFraction) && (num2 instanceof BigFraction)) {
 			return ((BigFraction) num1).compareTo((BigFraction) num2);
 		} else {

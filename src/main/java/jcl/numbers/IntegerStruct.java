@@ -6,7 +6,6 @@ package jcl.numbers;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.Objects;
 
@@ -251,7 +250,32 @@ public class IntegerStruct extends RationalStruct {
 
 	@Override
 	public QuotientRemainderResult floor(final RealStruct divisor) {
-		return IntegerFloorStrategy.INSTANCE.floor(this, divisor);
+		return IntegerQuotientRemainderStrategy.INSTANCE.floor(this, divisor);
+	}
+
+	@Override
+	public QuotientRemainderResult ffloor(final RealStruct divisor) {
+		return IntegerQuotientRemainderStrategy.INSTANCE.ffloor(this, divisor);
+	}
+
+	@Override
+	public QuotientRemainderResult ceiling(final RealStruct divisor) {
+		return IntegerQuotientRemainderStrategy.INSTANCE.ceiling(this, divisor);
+	}
+
+	@Override
+	public QuotientRemainderResult fceiling(final RealStruct divisor) {
+		return IntegerQuotientRemainderStrategy.INSTANCE.fceiling(this, divisor);
+	}
+
+	@Override
+	public QuotientRemainderResult round(final RealStruct divisor) {
+		return IntegerQuotientRemainderStrategy.INSTANCE.round(this, divisor);
+	}
+
+	@Override
+	public QuotientRemainderResult fround(final RealStruct divisor) {
+		return IntegerQuotientRemainderStrategy.INSTANCE.fround(this, divisor);
 	}
 
 	@Override
@@ -662,25 +686,31 @@ public class IntegerStruct extends RationalStruct {
 		}
 	}
 
-	private static class IntegerFloorStrategy extends RationalFloorStrategy<IntegerStruct> {
+	private static class IntegerQuotientRemainderStrategy extends RationalQuotientRemainderStrategy<IntegerStruct> {
 
-		private static final IntegerFloorStrategy INSTANCE = new IntegerFloorStrategy();
+		private static final IntegerQuotientRemainderStrategy INSTANCE = new IntegerQuotientRemainderStrategy();
 
 		@Override
-		public QuotientRemainderResult floor(final IntegerStruct real, final IntegerStruct divisor) {
+		public QuotientRemainderResult quotientRemainder(final IntegerStruct real, final IntegerStruct divisor,
+		                                                 final RoundingMode roundingMode, final boolean isFloatResult) {
 			final BigDecimal realBigDecimal = real.bigDecimalValue();
 			final BigDecimal divisorBigDecimal = divisor.bigDecimalValue();
 
-			final BigDecimal quotient = realBigDecimal.divide(divisorBigDecimal, RoundingMode.FLOOR);
-			final BigDecimal remainder = realBigDecimal.remainder(divisorBigDecimal, MathContext.DECIMAL128);
+			final BigDecimal quotient = realBigDecimal.divide(divisorBigDecimal, 0, roundingMode);
+			final BigDecimal remainder = realBigDecimal.subtract(divisorBigDecimal.multiply(quotient));
 
-			final BigInteger quotientBigInteger = quotient.toBigInteger();
-			final RealStruct quotientInteger = new IntegerStruct(quotientBigInteger);
+			final RealStruct quotientReal;
+			if (isFloatResult) {
+				quotientReal = new FloatStruct(quotient);
+			} else {
+				final BigInteger quotientBigInteger = quotient.toBigInteger();
+				quotientReal = new IntegerStruct(quotientBigInteger);
+			}
 
 			final BigInteger remainderBigInteger = remainder.toBigInteger();
-			final RealStruct remainderInteger = new IntegerStruct(remainderBigInteger);
+			final IntegerStruct remainderInteger = new IntegerStruct(remainderBigInteger);
 
-			return new QuotientRemainderResult(quotientInteger, remainderInteger);
+			return new QuotientRemainderResult(quotientReal, remainderInteger);
 		}
 	}
 

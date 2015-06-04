@@ -6,7 +6,6 @@ package jcl.numbers;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.List;
 
@@ -94,15 +93,17 @@ public abstract class RationalStruct extends RealStruct {
 
 	// Strategy Implementations
 
-	protected abstract static class RationalFloorStrategy<S extends RationalStruct> extends FloorStrategy<S> {
+	protected abstract static class RationalQuotientRemainderStrategy<S extends RationalStruct> extends QuotientRemainderStrategy<S> {
 
 		@Override
-		public QuotientRemainderResult floor(final S real, final RatioStruct divisor) {
-			return ratioFloor(real, divisor);
+		public QuotientRemainderResult quotientRemainder(final S real, final RatioStruct divisor,
+		                                                 final RoundingMode roundingMode,
+		                                                 final boolean isFloatResult) {
+			return ratioQuotientRemainder(real, divisor, roundingMode, isFloatResult);
 		}
 
-		public QuotientRemainderResult ratioFloor(final RationalStruct rational, final RationalStruct divisor) {
-
+		protected static QuotientRemainderResult ratioQuotientRemainder(final RationalStruct rational, final RationalStruct divisor,
+		                                                                final RoundingMode roundingMode, final boolean isFloatResult) {
 			final IntegerStruct rationalNumerator = rational.numerator();
 			final BigInteger rationalNumeratorBigInteger = rationalNumerator.getBigInteger();
 			final IntegerStruct rationalDenominator = rational.denominator();
@@ -113,21 +114,31 @@ public abstract class RationalStruct extends RealStruct {
 			final IntegerStruct divisorDenominator = divisor.denominator();
 			final BigInteger divisorDenominatorBigInteger = divisorDenominator.getBigInteger();
 
-			// Invert and multiply.
-			final BigInteger num = rationalNumeratorBigInteger.multiply(divisorDenominatorBigInteger);
-			final BigInteger den = rationalDenominatorBigInteger.multiply(divisorNumeratorBigInteger);
+			// Invert and multiply
+			final BigInteger multipliedNumerator = rationalNumeratorBigInteger.multiply(divisorDenominatorBigInteger);
+			final BigInteger multipliedDenominator = rationalDenominatorBigInteger.multiply(divisorNumeratorBigInteger);
 
-			final BigInteger quotient = num.divide(den);
-			final IntegerStruct quotientInteger = new IntegerStruct(quotient);
+			// Divide to get quotient
+			final BigDecimal multipliedNumeratorBigDecimal = new BigDecimal(multipliedNumerator);
+			final BigDecimal multipliedDenominatorBigDecimal = new BigDecimal(multipliedDenominator);
+			final BigDecimal quotient = multipliedNumeratorBigDecimal.divide(multipliedDenominatorBigDecimal, 0, roundingMode);
+			final BigInteger quotientBigInteger = quotient.toBigInteger();
 
-			// Multiply quotient by divisor.
-			final BigInteger multiply = quotient.multiply(divisorNumeratorBigInteger);
+			final RealStruct quotientReal;
+			if (isFloatResult) {
+				quotientReal = new FloatStruct(quotient);
+			} else {
+				quotientReal = new IntegerStruct(quotientBigInteger);
+			}
+
+			// Multiply divisor by quotient
+			final BigInteger multiply = divisorNumeratorBigInteger.multiply(quotientBigInteger);
 			final RationalStruct product = makeRational(multiply, divisorDenominatorBigInteger);
 
-			// Subtract to get remainder. (Rational - Rational) produces a Rational
+			// Subtract to get remainder: (Rational - Rational) produces Rational
 			final NumberStruct remainder = rational.subtract(product);
 
-			return new QuotientRemainderResult(quotientInteger, (RealStruct) remainder);
+			return new QuotientRemainderResult(quotientReal, (RealStruct) remainder);
 		}
 	}
 }

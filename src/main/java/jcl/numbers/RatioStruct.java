@@ -6,6 +6,7 @@ package jcl.numbers;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.MathContext;
 import java.math.RoundingMode;
 
 import jcl.LispStruct;
@@ -205,7 +206,7 @@ public class RatioStruct extends RationalStruct {
 
 	@Override
 	public BigDecimal bigDecimalValue() {
-		return bigFraction.bigDecimalValue(RoundingMode.HALF_EVEN.ordinal());
+		return bigFraction.bigDecimalValue(MathContext.DECIMAL128.getPrecision(), RoundingMode.HALF_EVEN.ordinal());
 	}
 
 	@Override
@@ -220,7 +221,32 @@ public class RatioStruct extends RationalStruct {
 
 	@Override
 	public QuotientRemainderResult floor(final RealStruct divisor) {
-		return RatioFloorStrategy.INSTANCE.floor(this, divisor);
+		return RatioQuotientRemainderStrategy.INSTANCE.floor(this, divisor);
+	}
+
+	@Override
+	public QuotientRemainderResult ffloor(final RealStruct divisor) {
+		return RatioQuotientRemainderStrategy.INSTANCE.ffloor(this, divisor);
+	}
+
+	@Override
+	public QuotientRemainderResult ceiling(final RealStruct divisor) {
+		return RatioQuotientRemainderStrategy.INSTANCE.ceiling(this, divisor);
+	}
+
+	@Override
+	public QuotientRemainderResult fceiling(final RealStruct divisor) {
+		return RatioQuotientRemainderStrategy.INSTANCE.fceiling(this, divisor);
+	}
+
+	@Override
+	public QuotientRemainderResult round(final RealStruct divisor) {
+		return RatioQuotientRemainderStrategy.INSTANCE.round(this, divisor);
+	}
+
+	@Override
+	public QuotientRemainderResult fround(final RealStruct divisor) {
+		return RatioQuotientRemainderStrategy.INSTANCE.fround(this, divisor);
 	}
 
 	@Override
@@ -464,13 +490,15 @@ public class RatioStruct extends RationalStruct {
 		}
 	}
 
-	private static class RatioFloorStrategy extends RationalFloorStrategy<RatioStruct> {
+	private static class RatioQuotientRemainderStrategy extends RationalQuotientRemainderStrategy<RatioStruct> {
 
-		private static final RatioFloorStrategy INSTANCE = new RatioFloorStrategy();
+		private static final RatioQuotientRemainderStrategy INSTANCE = new RatioQuotientRemainderStrategy();
 
 		@Override
-		public QuotientRemainderResult floor(final RatioStruct real, final IntegerStruct divisor) {
-			return ratioFloor(real, divisor);
+		public QuotientRemainderResult quotientRemainder(final RatioStruct real, final IntegerStruct divisor,
+		                                                 final RoundingMode roundingMode,
+		                                                 final boolean isFloatResult) {
+			return ratioQuotientRemainder(real, divisor, roundingMode, isFloatResult);
 		}
 	}
 

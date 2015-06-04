@@ -7,6 +7,7 @@ package jcl.numbers;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
+import java.math.RoundingMode;
 
 import jcl.LispStruct;
 import jcl.types.FloatType;
@@ -239,7 +240,32 @@ public class FloatStruct extends RealStruct {
 
 	@Override
 	public QuotientRemainderResult floor(final RealStruct divisor) {
-		return FloatFloorStrategy.INSTANCE.floor(this, divisor);
+		return FloatQuotientRemainderStrategy.INSTANCE.floor(this, divisor);
+	}
+
+	@Override
+	public QuotientRemainderResult ffloor(final RealStruct divisor) {
+		return FloatQuotientRemainderStrategy.INSTANCE.ffloor(this, divisor);
+	}
+
+	@Override
+	public QuotientRemainderResult ceiling(final RealStruct divisor) {
+		return FloatQuotientRemainderStrategy.INSTANCE.ceiling(this, divisor);
+	}
+
+	@Override
+	public QuotientRemainderResult fceiling(final RealStruct divisor) {
+		return FloatQuotientRemainderStrategy.INSTANCE.fceiling(this, divisor);
+	}
+
+	@Override
+	public QuotientRemainderResult round(final RealStruct divisor) {
+		return FloatQuotientRemainderStrategy.INSTANCE.round(this, divisor);
+	}
+
+	@Override
+	public QuotientRemainderResult fround(final RealStruct divisor) {
+		return FloatQuotientRemainderStrategy.INSTANCE.fround(this, divisor);
 	}
 
 	public FloatStruct scaleFloat(final IntegerStruct scale) {
@@ -485,18 +511,22 @@ public class FloatStruct extends RealStruct {
 		}
 	}
 
-	private static class FloatFloorStrategy extends FloorStrategy<FloatStruct> {
+	private static class FloatQuotientRemainderStrategy extends QuotientRemainderStrategy<FloatStruct> {
 
-		private static final FloatFloorStrategy INSTANCE = new FloatFloorStrategy();
+		private static final FloatQuotientRemainderStrategy INSTANCE = new FloatQuotientRemainderStrategy();
 
 		@Override
-		public QuotientRemainderResult floor(final FloatStruct real, final IntegerStruct divisor) {
-			return floatFloor(real, divisor);
+		public QuotientRemainderResult quotientRemainder(final FloatStruct real, final IntegerStruct divisor,
+		                                                 final RoundingMode roundingMode,
+		                                                 final boolean isFloatResult) {
+			return floatQuotientRemainder(real, divisor, roundingMode, isFloatResult);
 		}
 
 		@Override
-		public QuotientRemainderResult floor(final FloatStruct real, final RatioStruct divisor) {
-			return floatFloor(real, divisor);
+		public QuotientRemainderResult quotientRemainder(final FloatStruct real, final RatioStruct divisor,
+		                                                 final RoundingMode roundingMode,
+		                                                 final boolean isFloatResult) {
+			return floatQuotientRemainder(real, divisor, roundingMode, isFloatResult);
 		}
 	}
 

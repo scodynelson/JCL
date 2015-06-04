@@ -145,7 +145,7 @@ public class ComplexStruct extends NumberStruct {
 	public ComplexStruct(final FloatStruct real, final RatioStruct imaginary) {
 		super(ComplexType.INSTANCE, null, null);
 		this.real = real;
-		this.imaginary = new FloatStruct(imaginary.getBigFraction().bigDecimalValue());
+		this.imaginary = new FloatStruct(imaginary.bigDecimalValue());
 	}
 
 	/**
@@ -172,7 +172,7 @@ public class ComplexStruct extends NumberStruct {
 	 */
 	public ComplexStruct(final RatioStruct real, final FloatStruct imaginary) {
 		super(ComplexType.INSTANCE, null, null);
-		this.real = new FloatStruct(real.getBigFraction().bigDecimalValue());
+		this.real = new FloatStruct(real.bigDecimalValue());
 		this.imaginary = imaginary;
 	}
 

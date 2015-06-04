@@ -56,8 +56,15 @@ public class ComplexStruct extends NumberStruct {
 	 */
 	public ComplexStruct(final RealStruct real, final RealStruct imaginary) {
 		super(ComplexType.INSTANCE, null, null);
-		this.real = real;
-		this.imaginary = imaginary;
+
+		RealStruct coercedReal = real;
+		RealStruct coercedImaginary = imaginary;
+		if ((real instanceof FloatStruct) || (imaginary instanceof FloatStruct)) {
+			coercedReal = coerceRealToFloat(real);
+			coercedImaginary = coerceRealToFloat(coercedImaginary);
+		}
+		this.real = coercedReal;
+		this.imaginary = coercedImaginary;
 	}
 
 	/**
@@ -84,10 +91,8 @@ public class ComplexStruct extends NumberStruct {
 	 */
 	public ComplexStruct(final IntegerStruct real, final FloatStruct imaginary) {
 		super(ComplexType.INSTANCE, null, null);
+		this.real = coerceRealToFloat(real);
 		this.imaginary = imaginary;
-
-		final BigInteger realWithScale = real.getBigInteger().multiply(BigInteger.TEN);
-		this.real = new FloatStruct(new BigDecimal(realWithScale, 1));
 	}
 
 	/**
@@ -115,9 +120,7 @@ public class ComplexStruct extends NumberStruct {
 	public ComplexStruct(final FloatStruct real, final IntegerStruct imaginary) {
 		super(ComplexType.INSTANCE, null, null);
 		this.real = real;
-
-		final BigInteger imaginaryWithScale = imaginary.getBigInteger().multiply(BigInteger.TEN);
-		this.imaginary = new FloatStruct(new BigDecimal(imaginaryWithScale, 1));
+		this.imaginary = coerceRealToFloat(imaginary);
 	}
 
 	/**
@@ -145,7 +148,7 @@ public class ComplexStruct extends NumberStruct {
 	public ComplexStruct(final FloatStruct real, final RatioStruct imaginary) {
 		super(ComplexType.INSTANCE, null, null);
 		this.real = real;
-		this.imaginary = new FloatStruct(imaginary.bigDecimalValue());
+		this.imaginary = coerceRealToFloat(imaginary);
 	}
 
 	/**
@@ -172,7 +175,7 @@ public class ComplexStruct extends NumberStruct {
 	 */
 	public ComplexStruct(final RatioStruct real, final FloatStruct imaginary) {
 		super(ComplexType.INSTANCE, null, null);
-		this.real = new FloatStruct(real.bigDecimalValue());
+		this.real = coerceRealToFloat(real);
 		this.imaginary = imaginary;
 	}
 
@@ -188,6 +191,14 @@ public class ComplexStruct extends NumberStruct {
 		super(ComplexType.INSTANCE, null, null);
 		this.real = real;
 		this.imaginary = imaginary;
+	}
+
+	private static FloatStruct coerceRealToFloat(final RealStruct realVal) {
+		if (realVal instanceof FloatStruct) {
+			return (FloatStruct) realVal;
+		}
+		final BigDecimal bigDecimal = realVal.bigDecimalValue();
+		return new FloatStruct(bigDecimal);
 	}
 
 	/**

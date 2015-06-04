@@ -225,7 +225,7 @@ public class IntegerStruct extends RationalStruct {
 
 	@Override
 	public BigDecimal bigDecimalValue() {
-		return new BigDecimal(bigInteger);
+		return new BigDecimal(bigInteger, 1).multiply(BigDecimal.TEN);
 	}
 
 	@Override
@@ -314,12 +314,7 @@ public class IntegerStruct extends RationalStruct {
 		final BigInteger count = integer.bigInteger;
 		final int countInt = count.intValue();
 
-		final BigInteger shiftedBigInteger;
-		if (integer.plusp()) {
-			shiftedBigInteger = bigInteger.shiftLeft(countInt);
-		} else {
-			shiftedBigInteger = bigInteger.shiftRight(countInt);
-		}
+		final BigInteger shiftedBigInteger = bigInteger.shiftLeft(countInt);
 		return new IntegerStruct(shiftedBigInteger);
 	}
 
@@ -397,7 +392,7 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	public boolean logTest(final IntegerStruct integer) {
-		return bigInteger.and(integer.bigInteger).signum() == 0;
+		return bigInteger.and(integer.bigInteger).signum() != 0;
 	}
 
 	// Strategy Implementations

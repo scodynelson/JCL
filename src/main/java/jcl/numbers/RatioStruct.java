@@ -206,7 +206,12 @@ public class RatioStruct extends RationalStruct {
 
 	@Override
 	public BigDecimal bigDecimalValue() {
-		return bigFraction.bigDecimalValue(MathContext.DECIMAL128.getPrecision(), RoundingMode.HALF_EVEN.ordinal());
+		try {
+			return bigFraction.bigDecimalValue();
+		} catch (final ArithmeticException ignore) {
+			// This means that we have to round the fraction.
+			return bigFraction.bigDecimalValue(MathContext.DECIMAL128.getPrecision(), RoundingMode.HALF_EVEN.ordinal());
+		}
 	}
 
 	@Override

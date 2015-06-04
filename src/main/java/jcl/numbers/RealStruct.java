@@ -124,7 +124,7 @@ public abstract class RealStruct extends NumberStruct {
 	}
 
 	public QuotientRemainderResult truncate(final RealStruct divisor) {
-		if (plusp()) {
+		if ((plusp() && divisor.plusp()) || (minusp() && divisor.minusp())) {
 			return floor(divisor);
 		} else {
 			return ceiling(divisor);
@@ -154,26 +154,6 @@ public abstract class RealStruct extends NumberStruct {
 	}
 
 	public abstract QuotientRemainderResult fround(final RealStruct divisor);
-
-	private RealStruct getFloatQuotient(final RealStruct divisor, final BigDecimal quotient) {
-		final RealStruct floatQuotient;
-		if (BigDecimal.ZERO.compareTo(quotient) == 0) {
-			if (minusp()) {
-				if (divisor.minusp()) {
-					floatQuotient = FloatStruct.ZERO;
-				} else {
-					floatQuotient = FloatStruct.MINUS_ZERO;
-				}
-			} else if (divisor.minusp()) {
-				floatQuotient = FloatStruct.MINUS_ZERO;
-			} else {
-				floatQuotient = FloatStruct.ZERO;
-			}
-		} else {
-			floatQuotient = new FloatStruct(quotient);
-		}
-		return floatQuotient;
-	}
 
 	@Override
 	public RealStruct realPart() {
@@ -211,7 +191,10 @@ public abstract class RealStruct extends NumberStruct {
 	}
 
 	@Override
-	public RealStruct sqrt() {
+	public NumberStruct sqrt() {
+		if (minusp()) {
+			return new ComplexStruct(FloatStruct.ZERO, (RealStruct) negation().sqrt());
+		}
 		final double doubleValue = doubleValue();
 		final double sqrt = FastMath.sqrt(doubleValue);
 		return new FloatStruct(sqrt);
@@ -705,7 +688,7 @@ public abstract class RealStruct extends NumberStruct {
 
 			final RealStruct quotientReal;
 			if (isFloatResult) {
-				quotientReal = new FloatStruct(quotient);
+				quotientReal = getFloatQuotient(real, divisor, quotient);
 			} else {
 				final BigInteger quotientBigInteger = quotient.toBigInteger();
 				quotientReal = new IntegerStruct(quotientBigInteger);
@@ -714,6 +697,28 @@ public abstract class RealStruct extends NumberStruct {
 			final FloatStruct remainderFloat = new FloatStruct(remainder);
 			return new QuotientRemainderResult(quotientReal, remainderFloat);
 		}
+
+		private static RealStruct getFloatQuotient(final RealStruct real, final RealStruct divisor,
+		                                           final BigDecimal quotient) {
+			final RealStruct floatQuotient;
+			if (BigDecimal.ZERO.compareTo(quotient) == 0) {
+				if (real.minusp()) {
+					if (divisor.minusp()) {
+						floatQuotient = FloatStruct.ZERO;
+					} else {
+						floatQuotient = FloatStruct.MINUS_ZERO;
+					}
+				} else if (divisor.minusp()) {
+					floatQuotient = FloatStruct.MINUS_ZERO;
+				} else {
+					floatQuotient = FloatStruct.ZERO;
+				}
+			} else {
+				floatQuotient = new FloatStruct(quotient);
+			}
+			return floatQuotient;
+		}
+
 
 		public abstract QuotientRemainderResult quotientRemainder(final S real, final RatioStruct divisor,
 		                                                          final RoundingMode roundingMode,

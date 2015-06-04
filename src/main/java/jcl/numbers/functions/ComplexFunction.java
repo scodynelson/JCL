@@ -82,7 +82,7 @@ public final class ComplexFunction extends FunctionStruct {
 				final String printedObject = printer.print(imaginary);
 				throw new TypeErrorException("Argument not of type Real: " + printedObject);
 			}
-			final RealStruct imaginaryReal = (RealStruct) lispStruct;
+			final RealStruct imaginaryReal = (RealStruct) imaginary;
 
 			return new ComplexStruct(real, imaginaryReal);
 		} else if (real instanceof RationalStruct) {

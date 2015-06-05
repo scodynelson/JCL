@@ -99,15 +99,6 @@ public abstract class RationalStruct extends RealStruct {
 
 	// Strategy Implementations
 
-	protected abstract static class RationalEqualToStrategy<S extends RationalStruct> extends RealEqualToStrategy<S> {
-
-		@Override
-		public boolean equalTo(final S number1, final FloatStruct number2) {
-			final RationalStruct rational2 = number2.rational();
-			return number1.isEqualTo(rational2);
-		}
-	}
-
 	protected abstract static class RationalQuotientRemainderStrategy<S extends RationalStruct> extends QuotientRemainderStrategy<S> {
 
 		@Override

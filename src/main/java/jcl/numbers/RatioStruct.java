@@ -376,10 +376,28 @@ public class RatioStruct extends RationalStruct {
 		}
 	}
 
+	private static int getComparisonResult(final RatioStruct number1, final RatioStruct number2) {
+		final BigFraction bigFraction1 = number1.bigFraction;
+		final BigFraction bigFraction2 = number2.bigFraction;
+		return bigFraction1.compareTo(bigFraction2);
+	}
+
+	private static int getComparisonResult(final RatioStruct number1, final IntegerStruct number2) {
+
+		final BigFraction bigFraction1 = number1.bigFraction;
+		final BigFraction bigFraction1Reduced = bigFraction1.reduce();
+		final BigInteger numerator = bigFraction1Reduced.getNumerator();
+		final BigInteger denominator = bigFraction1Reduced.getDenominator();
+
+		final BigInteger bigInteger2 = number2.getBigInteger();
+		final BigInteger multiply = bigInteger2.multiply(denominator);
+		return numerator.compareTo(multiply);
+	}
+
 	/**
-	 * {@link RationalEqualToStrategy} for computing numeric '=' equality results for {@link RatioStruct}s.
+	 * {@link RealEqualToStrategy} for computing numeric '=' equality results for {@link RatioStruct}s.
 	 */
-	private static class RatioEqualToStrategy extends RationalEqualToStrategy<RatioStruct> {
+	private static class RatioEqualToStrategy extends RealEqualToStrategy<RatioStruct> {
 
 		/**
 		 * Singleton instance of the {@link RatioEqualToStrategy} type.
@@ -388,24 +406,12 @@ public class RatioStruct extends RationalStruct {
 
 		@Override
 		public boolean equalTo(final RatioStruct number1, final IntegerStruct number2) {
-			final BigFraction bigFraction1 = number1.getBigFraction();
-			final BigFraction bigFraction1Reduced = bigFraction1.reduce();
-			final BigInteger denominator = bigFraction1Reduced.getDenominator();
-			if (!denominator.equals(BigInteger.ONE)) {
-				return false;
-			}
-
-			final BigInteger numerator = bigFraction1Reduced.getNumerator();
-			final BigInteger bigInteger2 = number2.getBigInteger();
-
-			return numerator.compareTo(bigInteger2) == 0;
+			return getComparisonResult(number1, number2) == 0;
 		}
 
 		@Override
 		public boolean equalTo(final RatioStruct number1, final RatioStruct number2) {
-			final BigFraction bigFraction1 = number1.getBigFraction();
-			final BigFraction bigFraction2 = number2.getBigFraction();
-			return bigFraction1.equals(bigFraction2);
+			return getComparisonResult(number1, number2) == 0;
 		}
 	}
 
@@ -421,31 +427,12 @@ public class RatioStruct extends RationalStruct {
 
 		@Override
 		public boolean lessThan(final RatioStruct real1, final IntegerStruct real2) {
-			final BigFraction bigFraction1 = real1.getBigFraction();
-			final BigFraction bigFraction1Reduced = bigFraction1.reduce();
-			final BigInteger denominator = bigFraction1Reduced.getDenominator();
-			if (!denominator.equals(BigInteger.ONE)) {
-				return false;
-			}
-
-			final BigInteger numerator = bigFraction1Reduced.getNumerator();
-			final BigInteger bigInteger2 = real2.getBigInteger();
-
-			return numerator.compareTo(bigInteger2) < 0;
-		}
-
-		@Override
-		public boolean lessThan(final RatioStruct real1, final FloatStruct real2) {
-			final BigDecimal bigDecimal1 = real1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
-			return bigDecimal1.compareTo(bigDecimal2) < 0;
+			return getComparisonResult(real1, real2) < 0;
 		}
 
 		@Override
 		public boolean lessThan(final RatioStruct real1, final RatioStruct real2) {
-			final BigFraction bigFraction1 = real1.getBigFraction();
-			final BigFraction bigFraction2 = real2.getBigFraction();
-			return bigFraction1.compareTo(bigFraction2) < 0;
+			return getComparisonResult(real1, real2) < 0;
 		}
 	}
 
@@ -461,31 +448,12 @@ public class RatioStruct extends RationalStruct {
 
 		@Override
 		public boolean greaterThan(final RatioStruct real1, final IntegerStruct real2) {
-			final BigFraction bigFraction1 = real1.getBigFraction();
-			final BigFraction bigFraction1Reduced = bigFraction1.reduce();
-			final BigInteger denominator = bigFraction1Reduced.getDenominator();
-			if (!denominator.equals(BigInteger.ONE)) {
-				return false;
-			}
-
-			final BigInteger numerator = bigFraction1Reduced.getNumerator();
-			final BigInteger bigInteger2 = real2.getBigInteger();
-
-			return numerator.compareTo(bigInteger2) > 0;
-		}
-
-		@Override
-		public boolean greaterThan(final RatioStruct real1, final FloatStruct real2) {
-			final BigDecimal bigDecimal1 = real1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
-			return bigDecimal1.compareTo(bigDecimal2) > 0;
+			return getComparisonResult(real1, real2) > 0;
 		}
 
 		@Override
 		public boolean greaterThan(final RatioStruct real1, final RatioStruct real2) {
-			final BigFraction bigFraction1 = real1.getBigFraction();
-			final BigFraction bigFraction2 = real2.getBigFraction();
-			return bigFraction1.compareTo(bigFraction2) > 0;
+			return getComparisonResult(real1, real2) > 0;
 		}
 	}
 
@@ -501,31 +469,12 @@ public class RatioStruct extends RationalStruct {
 
 		@Override
 		public boolean lessThanOrEqualTo(final RatioStruct real1, final IntegerStruct real2) {
-			final BigFraction bigFraction1 = real1.getBigFraction();
-			final BigFraction bigFraction1Reduced = bigFraction1.reduce();
-			final BigInteger denominator = bigFraction1Reduced.getDenominator();
-			if (!denominator.equals(BigInteger.ONE)) {
-				return false;
-			}
-
-			final BigInteger numerator = bigFraction1Reduced.getNumerator();
-			final BigInteger bigInteger2 = real2.getBigInteger();
-
-			return numerator.compareTo(bigInteger2) <= 0;
-		}
-
-		@Override
-		public boolean lessThanOrEqualTo(final RatioStruct real1, final FloatStruct real2) {
-			final BigDecimal bigDecimal1 = real1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
-			return bigDecimal1.compareTo(bigDecimal2) <= 0;
+			return getComparisonResult(real1, real2) <= 0;
 		}
 
 		@Override
 		public boolean lessThanOrEqualTo(final RatioStruct real1, final RatioStruct real2) {
-			final BigFraction bigFraction1 = real1.getBigFraction();
-			final BigFraction bigFraction2 = real2.getBigFraction();
-			return bigFraction1.compareTo(bigFraction2) <= 0;
+			return getComparisonResult(real1, real2) <= 0;
 		}
 	}
 
@@ -541,31 +490,12 @@ public class RatioStruct extends RationalStruct {
 
 		@Override
 		public boolean greaterThanOrEqualTo(final RatioStruct real1, final IntegerStruct real2) {
-			final BigFraction bigFraction1 = real1.getBigFraction();
-			final BigFraction bigFraction1Reduced = bigFraction1.reduce();
-			final BigInteger denominator = bigFraction1Reduced.getDenominator();
-			if (!denominator.equals(BigInteger.ONE)) {
-				return false;
-			}
-
-			final BigInteger numerator = bigFraction1Reduced.getNumerator();
-			final BigInteger bigInteger2 = real2.getBigInteger();
-
-			return numerator.compareTo(bigInteger2) >= 0;
-		}
-
-		@Override
-		public boolean greaterThanOrEqualTo(final RatioStruct real1, final FloatStruct real2) {
-			final BigDecimal bigDecimal1 = real1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
-			return bigDecimal1.compareTo(bigDecimal2) >= 0;
+			return getComparisonResult(real1, real2) >= 0;
 		}
 
 		@Override
 		public boolean greaterThanOrEqualTo(final RatioStruct real1, final RatioStruct real2) {
-			final BigFraction bigFraction1 = real1.getBigFraction();
-			final BigFraction bigFraction2 = real2.getBigFraction();
-			return bigFraction1.compareTo(bigFraction2) >= 0;
+			return getComparisonResult(real1, real2) >= 0;
 		}
 	}
 

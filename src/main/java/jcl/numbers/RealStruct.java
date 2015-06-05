@@ -463,7 +463,18 @@ public abstract class RealStruct extends NumberStruct {
 		}
 	}
 
+	protected static int getComparisonResult(final RealStruct real1, final RealStruct real2) {
+		final BigDecimal bigDecimal1 = real1.bigDecimalValue();
+		final BigDecimal bigDecimal2 = real2.bigDecimalValue();
+		return bigDecimal1.compareTo(bigDecimal2);
+	}
+
 	protected abstract static class RealEqualToStrategy<S extends RealStruct> extends EqualToStrategy<S> {
+
+		@Override
+		public boolean equalTo(final S number1, final FloatStruct number2) {
+			return getComparisonResult(number1, number2) == 0;
+		}
 
 		@Override
 		public boolean equalTo(final S number1, final ComplexStruct number2) {
@@ -487,7 +498,9 @@ public abstract class RealStruct extends NumberStruct {
 
 		public abstract boolean lessThan(S real1, IntegerStruct real2);
 
-		public abstract boolean lessThan(S real1, FloatStruct real2);
+		public boolean lessThan(final S real1, final FloatStruct real2) {
+			return getComparisonResult(real1, real2) < 0;
+		}
 
 		public abstract boolean lessThan(S real1, RatioStruct real2);
 	}
@@ -508,7 +521,9 @@ public abstract class RealStruct extends NumberStruct {
 
 		public abstract boolean greaterThan(S real1, IntegerStruct real2);
 
-		public abstract boolean greaterThan(S real1, FloatStruct real2);
+		public boolean greaterThan(final S real1, final FloatStruct real2) {
+			return getComparisonResult(real1, real2) > 0;
+		}
 
 		public abstract boolean greaterThan(S real1, RatioStruct real2);
 	}
@@ -529,7 +544,9 @@ public abstract class RealStruct extends NumberStruct {
 
 		public abstract boolean lessThanOrEqualTo(S real1, IntegerStruct real2);
 
-		public abstract boolean lessThanOrEqualTo(S real1, FloatStruct real2);
+		public boolean lessThanOrEqualTo(final S real1, final FloatStruct real2) {
+			return getComparisonResult(real1, real2) <= 0;
+		}
 
 		public abstract boolean lessThanOrEqualTo(S real1, RatioStruct real2);
 	}
@@ -550,7 +567,9 @@ public abstract class RealStruct extends NumberStruct {
 
 		public abstract boolean greaterThanOrEqualTo(S real1, IntegerStruct real2);
 
-		public abstract boolean greaterThanOrEqualTo(S real1, FloatStruct real2);
+		public boolean greaterThanOrEqualTo(final S real1, final FloatStruct real2) {
+			return getComparisonResult(real1, real2) >= 0;
+		}
 
 		public abstract boolean greaterThanOrEqualTo(S real1, RatioStruct real2);
 	}

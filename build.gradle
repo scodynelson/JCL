@@ -45,11 +45,11 @@ String commonsCollectionsVersion = '4.0'
 String commonsIoVersion = '2.4'
 String commonsPrimitivesVersion = '1.0'
 
-String asmAllVersion = '5.0.3'
+String asmAllVersion = '5.0.4'
 
 String javaHelpVersion = '2.0.05'
 
-String testngVersion = '6.8.21'
+String testngVersion = '6.9.4'
 
 dependencies {
 	compile("org.apache.commons:commons-lang3:${commonsLangVersion}")
@@ -79,7 +79,7 @@ build.dependsOn(copyToLib)
 
 apply plugin: 'jacoco'
 jacoco {
-	toolVersion = '0.7.4.201502262128'
+	toolVersion = '0.7.5.201505241946'
 }
 test {
 	useTestNG()

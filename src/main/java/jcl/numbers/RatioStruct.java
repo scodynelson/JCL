@@ -376,12 +376,32 @@ public class RatioStruct extends RationalStruct {
 		}
 	}
 
+	/**
+	 * Determines numeric comparison result between the provided RatioStructs.
+	 *
+	 * @param number1
+	 * 		the first RatioStruct in the comparison operation
+	 * @param number2
+	 * 		the second RatioStruct in the comparison operation
+	 *
+	 * @return numeric comparison result between the provided RatioStructs
+	 */
 	private static int getComparisonResult(final RatioStruct number1, final RatioStruct number2) {
 		final BigFraction bigFraction1 = number1.bigFraction;
 		final BigFraction bigFraction2 = number2.bigFraction;
 		return bigFraction1.compareTo(bigFraction2);
 	}
 
+	/**
+	 * Determines numeric comparison result between the provided RatioStruct and {@link IntegerStruct}.
+	 *
+	 * @param number1
+	 * 		the RatioStruct in the comparison operation
+	 * @param number2
+	 * 		the {@link IntegerStruct} in the comparison operation
+	 *
+	 * @return numeric comparison result between the provided RatioStruct and {@link IntegerStruct}
+	 */
 	private static int getComparisonResult(final RatioStruct number1, final IntegerStruct number2) {
 
 		final BigFraction bigFraction1 = number1.bigFraction;

@@ -269,7 +269,7 @@ public class FloatStruct extends RealStruct {
 	}
 
 	/**
-	 * See {@link https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html} for details.
+	 * See {@code https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html} for details.
 	 *
 	 * @return
 	 */
@@ -343,7 +343,7 @@ public class FloatStruct extends RealStruct {
 	}
 
 	/**
-	 * See {@link https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html} for details.
+	 * See {@code https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html} for details.
 	 *
 	 * @return
 	 */

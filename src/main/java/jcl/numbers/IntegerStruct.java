@@ -13,8 +13,6 @@ import jcl.LispStruct;
 import jcl.types.IntegerType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.apache.commons.math3.util.ArithmeticUtils;
 import org.apache.commons.math3.util.FastMath;
@@ -820,7 +818,7 @@ public class IntegerStruct extends RationalStruct {
 		return result;
 	}
 
-	// HashCode / Equals / ToString
+	// HashCode / Equals
 
 	@Override
 	public int hashCode() {
@@ -844,11 +842,5 @@ public class IntegerStruct extends RationalStruct {
 		return new EqualsBuilder().appendSuper(super.equals(obj))
 		                          .append(bigInteger, rhs.bigInteger)
 		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(bigInteger)
-		                                                                .toString();
 	}
 }

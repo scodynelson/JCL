@@ -13,8 +13,6 @@ import jcl.LispStruct;
 import jcl.types.RatioType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.math3.fraction.BigFraction;
 
 /**
@@ -507,7 +505,7 @@ public class RatioStruct extends RationalStruct {
 		}
 	}
 
-	// HashCode / Equals / ToString
+	// HashCode / Equals
 
 	@Override
 	public int hashCode() {
@@ -531,11 +529,5 @@ public class RatioStruct extends RationalStruct {
 		return new EqualsBuilder().appendSuper(super.equals(obj))
 		                          .append(bigFraction, rhs.bigFraction)
 		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(bigFraction)
-		                                                                .toString();
 	}
 }

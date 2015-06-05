@@ -14,8 +14,6 @@ import jcl.types.FloatType;
 import jcl.types.SingleFloatType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.apache.commons.math3.util.FastMath;
 
@@ -224,6 +222,11 @@ public class FloatStruct extends RealStruct {
 	}
 
 	@Override
+	public FloatStruct coerceRealToFloat() {
+		return this;
+	}
+
+	@Override
 	public RealStruct zeroValue() {
 		return ZERO;
 	}
@@ -371,7 +374,7 @@ public class FloatStruct extends RealStruct {
 
 	/**
 	 * See {@link https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html} for details.
-	 *
+	 * <p>
 	 * The following is per the JVM spec section 4.4.5
 	 *
 	 * @return
@@ -651,7 +654,7 @@ public class FloatStruct extends RealStruct {
 		}
 	}
 
-	// HashCode / Equals / ToString
+	// HashCode / Equals
 
 	@Override
 	public int hashCode() {
@@ -675,11 +678,5 @@ public class FloatStruct extends RealStruct {
 		return new EqualsBuilder().appendSuper(super.equals(obj))
 		                          .append(bigDecimal, rhs.bigDecimal)
 		                          .isEquals();
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(bigDecimal)
-		                                                                .toString();
 	}
 }

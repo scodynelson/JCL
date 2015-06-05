@@ -57,6 +57,8 @@ public abstract class RealStruct extends NumberStruct {
 
 	public abstract BigDecimal bigDecimalValue();
 
+	public abstract FloatStruct coerceRealToFloat();
+
 	public abstract RealStruct zeroValue();
 
 	public abstract boolean plusp();

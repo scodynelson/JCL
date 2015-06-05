@@ -55,6 +55,12 @@ public abstract class RationalStruct extends RealStruct {
 
 	public abstract IntegerStruct denominator();
 
+	@Override
+	public FloatStruct coerceRealToFloat() {
+		final BigDecimal bigDecimal = bigDecimalValue();
+		return new FloatStruct(bigDecimal);
+	}
+
 	protected static RationalStruct makeRational(final BigFraction bigFraction) {
 		final BigInteger numerator = bigFraction.getNumerator();
 		final BigInteger denominator = bigFraction.getDenominator();

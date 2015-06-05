@@ -21,15 +21,19 @@ import org.apache.commons.math3.fraction.BigFraction;
 public class RatioStruct extends RationalStruct {
 
 	/**
+	 * {@link RatioStruct} constant representing 0.
+	 */
+	public static final RatioStruct ZERO = new RatioStruct(BigFraction.ZERO);
+
+	/**
+	 * {@link RatioStruct} constant representing 1.
+	 */
+	public static final RatioStruct ONE = new RatioStruct(BigFraction.ONE);
+
+	/**
 	 * Serializable Version Unique Identifier.
 	 */
 	private static final long serialVersionUID = -2468768422160538347L;
-
-	public static final RatioStruct ZERO = new RatioStruct(BigFraction.ZERO);
-
-	public static final RatioStruct ONE = new RatioStruct(BigFraction.ONE);
-
-	public static final RatioStruct MINUS_ONE = new RatioStruct(BigFraction.MINUS_ONE);
 
 	/**
 	 * The internal {@link BigFraction} containing the ratio contents.
@@ -69,17 +73,17 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	@Override
-	public boolean eql(final LispStruct lispStruct) {
+	public boolean lispEql(final LispStruct lispStruct) {
 		return equals(lispStruct);
 	}
 
 	@Override
-	public boolean equal(final LispStruct lispStruct) {
+	public boolean lispEqual(final LispStruct lispStruct) {
 		return equals(lispStruct);
 	}
 
 	@Override
-	public boolean equalp(final LispStruct lispStruct) {
+	public boolean lispEqualp(final LispStruct lispStruct) {
 		return (lispStruct instanceof NumberStruct) && isEqualTo((NumberStruct) lispStruct);
 	}
 
@@ -170,8 +174,8 @@ public class RatioStruct extends RationalStruct {
 
 	@Override
 	public NumberStruct negation() {
-		final BigFraction negate = bigFraction.negate();
-		return new RatioStruct(negate);
+		final BigFraction negation = bigFraction.negate();
+		return new RatioStruct(negation);
 	}
 
 	@Override
@@ -264,8 +268,14 @@ public class RatioStruct extends RationalStruct {
 
 	// Strategy Implementations
 
+	/**
+	 * {@link AddStrategy} for computing addition results for {@link RatioStruct}s.
+	 */
 	private static class RatioAddStrategy extends RealAddStrategy<RatioStruct> {
 
+		/**
+		 * Singleton instance of the {@link RatioAddStrategy} type.
+		 */
 		private static final RatioAddStrategy INSTANCE = new RatioAddStrategy();
 
 		@Override
@@ -285,8 +295,14 @@ public class RatioStruct extends RationalStruct {
 		}
 	}
 
+	/**
+	 * {@link SubtractStrategy} for computing subtraction function results for {@link RatioStruct}s.
+	 */
 	private static class RatioSubtractStrategy extends RealSubtractStrategy<RatioStruct> {
 
+		/**
+		 * Singleton instance of the {@link RatioSubtractStrategy} type.
+		 */
 		private static final RatioSubtractStrategy INSTANCE = new RatioSubtractStrategy();
 
 		@Override
@@ -306,8 +322,14 @@ public class RatioStruct extends RationalStruct {
 		}
 	}
 
+	/**
+	 * {@link MultiplyStrategy} for computing multiplication function results for {@link RatioStruct}s.
+	 */
 	private static class RatioMultiplyStrategy extends RealMultiplyStrategy<RatioStruct> {
 
+		/**
+		 * Singleton instance of the {@link RatioMultiplyStrategy} type.
+		 */
 		private static final RatioMultiplyStrategy INSTANCE = new RatioMultiplyStrategy();
 
 		@Override
@@ -327,8 +349,14 @@ public class RatioStruct extends RationalStruct {
 		}
 	}
 
+	/**
+	 * {@link DivideStrategy} for computing division function results for {@link RatioStruct}s.
+	 */
 	private static class RatioDivideStrategy extends RealDivideStrategy<RatioStruct> {
 
+		/**
+		 * Singleton instance of the {@link RatioDivideStrategy} type.
+		 */
 		private static final RatioDivideStrategy INSTANCE = new RatioDivideStrategy();
 
 		@Override
@@ -348,24 +376,29 @@ public class RatioStruct extends RationalStruct {
 		}
 	}
 
-	private static class RatioEqualToStrategy extends EqualToStrategy<RatioStruct> {
+	/**
+	 * {@link RationalEqualToStrategy} for computing numeric '=' equality results for {@link RatioStruct}s.
+	 */
+	private static class RatioEqualToStrategy extends RationalEqualToStrategy<RatioStruct> {
 
+		/**
+		 * Singleton instance of the {@link RatioEqualToStrategy} type.
+		 */
 		private static final RatioEqualToStrategy INSTANCE = new RatioEqualToStrategy();
 
 		@Override
 		public boolean equalTo(final RatioStruct number1, final IntegerStruct number2) {
 			final BigFraction bigFraction1 = number1.getBigFraction();
+			final BigFraction bigFraction1Reduced = bigFraction1.reduce();
+			final BigInteger denominator = bigFraction1Reduced.getDenominator();
+			if (!denominator.equals(BigInteger.ONE)) {
+				return false;
+			}
 
+			final BigInteger numerator = bigFraction1Reduced.getNumerator();
 			final BigInteger bigInteger2 = number2.getBigInteger();
-			final BigFraction bigFraction2 = new BigFraction(bigInteger2);
 
-			return bigFraction1.equals(bigFraction2);
-		}
-
-		@Override
-		public boolean equalTo(final RatioStruct number1, final FloatStruct number2) {
-			final RationalStruct rational2 = number2.rational();
-			return number1.isEqualTo(rational2);
+			return numerator.compareTo(bigInteger2) == 0;
 		}
 
 		@Override
@@ -374,31 +407,38 @@ public class RatioStruct extends RationalStruct {
 			final BigFraction bigFraction2 = number2.getBigFraction();
 			return bigFraction1.equals(bigFraction2);
 		}
-
-		@Override
-		public boolean equalTo(final RatioStruct number1, final ComplexStruct number2) {
-			return false;
-		}
 	}
 
+	/**
+	 * {@link LessThanStrategy} for computing numeric '<' equality results for {@link RatioStruct}s.
+	 */
 	private static class RatioLessThanStrategy extends LessThanStrategy<RatioStruct> {
 
+		/**
+		 * Singleton instance of the {@link RatioLessThanStrategy} type.
+		 */
 		private static final RatioLessThanStrategy INSTANCE = new RatioLessThanStrategy();
 
 		@Override
 		public boolean lessThan(final RatioStruct real1, final IntegerStruct real2) {
 			final BigFraction bigFraction1 = real1.getBigFraction();
+			final BigFraction bigFraction1Reduced = bigFraction1.reduce();
+			final BigInteger denominator = bigFraction1Reduced.getDenominator();
+			if (!denominator.equals(BigInteger.ONE)) {
+				return false;
+			}
 
+			final BigInteger numerator = bigFraction1Reduced.getNumerator();
 			final BigInteger bigInteger2 = real2.getBigInteger();
-			final BigFraction bigFraction2 = new BigFraction(bigInteger2);
 
-			return bigFraction1.compareTo(bigFraction2) < 0;
+			return numerator.compareTo(bigInteger2) < 0;
 		}
 
 		@Override
 		public boolean lessThan(final RatioStruct real1, final FloatStruct real2) {
-			final RationalStruct rational2 = real2.rational();
-			return real1.isLessThan(rational2);
+			final BigDecimal bigDecimal1 = real1.bigDecimalValue();
+			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
+			return bigDecimal1.compareTo(bigDecimal2) < 0;
 		}
 
 		@Override
@@ -409,24 +449,36 @@ public class RatioStruct extends RationalStruct {
 		}
 	}
 
+	/**
+	 * {@link GreaterThanStrategy} for computing numeric '>' equality results for {@link RatioStruct}s.
+	 */
 	private static class RatioGreaterThanStrategy extends GreaterThanStrategy<RatioStruct> {
 
+		/**
+		 * Singleton instance of the {@link RatioGreaterThanStrategy} type.
+		 */
 		private static final RatioGreaterThanStrategy INSTANCE = new RatioGreaterThanStrategy();
 
 		@Override
 		public boolean greaterThan(final RatioStruct real1, final IntegerStruct real2) {
 			final BigFraction bigFraction1 = real1.getBigFraction();
+			final BigFraction bigFraction1Reduced = bigFraction1.reduce();
+			final BigInteger denominator = bigFraction1Reduced.getDenominator();
+			if (!denominator.equals(BigInteger.ONE)) {
+				return false;
+			}
 
+			final BigInteger numerator = bigFraction1Reduced.getNumerator();
 			final BigInteger bigInteger2 = real2.getBigInteger();
-			final BigFraction bigFraction2 = new BigFraction(bigInteger2);
 
-			return bigFraction1.compareTo(bigFraction2) > 0;
+			return numerator.compareTo(bigInteger2) > 0;
 		}
 
 		@Override
 		public boolean greaterThan(final RatioStruct real1, final FloatStruct real2) {
-			final RationalStruct rational2 = real2.rational();
-			return real1.isGreaterThan(rational2);
+			final BigDecimal bigDecimal1 = real1.bigDecimalValue();
+			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
+			return bigDecimal1.compareTo(bigDecimal2) > 0;
 		}
 
 		@Override
@@ -437,24 +489,36 @@ public class RatioStruct extends RationalStruct {
 		}
 	}
 
+	/**
+	 * {@link LessThanOrEqualToStrategy} for computing numeric '<=' equality results for {@link RatioStruct}s.
+	 */
 	private static class RatioLessThanOrEqualToStrategy extends LessThanOrEqualToStrategy<RatioStruct> {
 
+		/**
+		 * Singleton instance of the {@link RatioLessThanOrEqualToStrategy} type.
+		 */
 		private static final RatioLessThanOrEqualToStrategy INSTANCE = new RatioLessThanOrEqualToStrategy();
 
 		@Override
 		public boolean lessThanOrEqualTo(final RatioStruct real1, final IntegerStruct real2) {
 			final BigFraction bigFraction1 = real1.getBigFraction();
+			final BigFraction bigFraction1Reduced = bigFraction1.reduce();
+			final BigInteger denominator = bigFraction1Reduced.getDenominator();
+			if (!denominator.equals(BigInteger.ONE)) {
+				return false;
+			}
 
+			final BigInteger numerator = bigFraction1Reduced.getNumerator();
 			final BigInteger bigInteger2 = real2.getBigInteger();
-			final BigFraction bigFraction2 = new BigFraction(bigInteger2);
 
-			return bigFraction1.compareTo(bigFraction2) <= 0;
+			return numerator.compareTo(bigInteger2) <= 0;
 		}
 
 		@Override
 		public boolean lessThanOrEqualTo(final RatioStruct real1, final FloatStruct real2) {
-			final RationalStruct rational2 = real2.rational();
-			return real1.isLessThanOrEqualTo(rational2);
+			final BigDecimal bigDecimal1 = real1.bigDecimalValue();
+			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
+			return bigDecimal1.compareTo(bigDecimal2) <= 0;
 		}
 
 		@Override
@@ -465,24 +529,36 @@ public class RatioStruct extends RationalStruct {
 		}
 	}
 
+	/**
+	 * {@link GreaterThanOrEqualToStrategy} for computing numeric '>=' equality results for {@link RatioStruct}s.
+	 */
 	private static class RatioGreaterThanOrEqualToStrategy extends GreaterThanOrEqualToStrategy<RatioStruct> {
 
+		/**
+		 * Singleton instance of the {@link RatioGreaterThanOrEqualToStrategy} type.
+		 */
 		private static final RatioGreaterThanOrEqualToStrategy INSTANCE = new RatioGreaterThanOrEqualToStrategy();
 
 		@Override
 		public boolean greaterThanOrEqualTo(final RatioStruct real1, final IntegerStruct real2) {
 			final BigFraction bigFraction1 = real1.getBigFraction();
+			final BigFraction bigFraction1Reduced = bigFraction1.reduce();
+			final BigInteger denominator = bigFraction1Reduced.getDenominator();
+			if (!denominator.equals(BigInteger.ONE)) {
+				return false;
+			}
 
+			final BigInteger numerator = bigFraction1Reduced.getNumerator();
 			final BigInteger bigInteger2 = real2.getBigInteger();
-			final BigFraction bigFraction2 = new BigFraction(bigInteger2);
 
-			return bigFraction1.compareTo(bigFraction2) >= 0;
+			return numerator.compareTo(bigInteger2) >= 0;
 		}
 
 		@Override
 		public boolean greaterThanOrEqualTo(final RatioStruct real1, final FloatStruct real2) {
-			final RationalStruct rational2 = real2.rational();
-			return real1.isGreaterThanOrEqualTo(rational2);
+			final BigDecimal bigDecimal1 = real1.bigDecimalValue();
+			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
+			return bigDecimal1.compareTo(bigDecimal2) >= 0;
 		}
 
 		@Override
@@ -493,8 +569,14 @@ public class RatioStruct extends RationalStruct {
 		}
 	}
 
+	/**
+	 * {@link RationalQuotientRemainderStrategy} for computing quotient and remainder results for {@link RatioStruct}s.
+	 */
 	private static class RatioQuotientRemainderStrategy extends RationalQuotientRemainderStrategy<RatioStruct> {
 
+		/**
+		 * Singleton instance of the {@link RatioQuotientRemainderStrategy} type.
+		 */
 		private static final RatioQuotientRemainderStrategy INSTANCE = new RatioQuotientRemainderStrategy();
 
 		@Override

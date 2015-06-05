@@ -83,17 +83,17 @@ public class FloatStruct extends RealStruct {
 	}
 
 	@Override
-	public boolean eql(final LispStruct lispStruct) {
+	public boolean lispEql(final LispStruct lispStruct) {
 		return equals(lispStruct);
 	}
 
 	@Override
-	public boolean equal(final LispStruct lispStruct) {
+	public boolean lispEqual(final LispStruct lispStruct) {
 		return equals(lispStruct);
 	}
 
 	@Override
-	public boolean equalp(final LispStruct lispStruct) {
+	public boolean lispEqualp(final LispStruct lispStruct) {
 		return (lispStruct instanceof NumberStruct) && isEqualTo((NumberStruct) lispStruct);
 	}
 
@@ -505,7 +505,7 @@ public class FloatStruct extends RealStruct {
 		}
 	}
 
-	private static class FloatEqualToStrategy extends EqualToStrategy<FloatStruct> {
+	private static class FloatEqualToStrategy extends RealEqualToStrategy<FloatStruct> {
 
 		private static final FloatEqualToStrategy INSTANCE = new FloatEqualToStrategy();
 
@@ -525,13 +525,9 @@ public class FloatStruct extends RealStruct {
 
 		@Override
 		public boolean equalTo(final FloatStruct number1, final RatioStruct number2) {
-			final RationalStruct rational1 = number1.rational();
-			return rational1.isEqualTo(number2);
-		}
-
-		@Override
-		public boolean equalTo(final FloatStruct number1, final ComplexStruct number2) {
-			return number2.isEqualTo(number1);
+			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
+			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
+			return bigDecimal1.compareTo(bigDecimal2) == 0;
 		}
 	}
 
@@ -555,8 +551,9 @@ public class FloatStruct extends RealStruct {
 
 		@Override
 		public boolean lessThan(final FloatStruct real1, final RatioStruct real2) {
-			final RationalStruct rational1 = real1.rational();
-			return rational1.isLessThan(real2);
+			final BigDecimal bigDecimal1 = real1.bigDecimalValue();
+			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
+			return bigDecimal1.compareTo(bigDecimal2) < 0;
 		}
 	}
 
@@ -580,8 +577,9 @@ public class FloatStruct extends RealStruct {
 
 		@Override
 		public boolean greaterThan(final FloatStruct real1, final RatioStruct real2) {
-			final RationalStruct rational1 = real1.rational();
-			return rational1.isGreaterThan(real2);
+			final BigDecimal bigDecimal1 = real1.bigDecimalValue();
+			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
+			return bigDecimal1.compareTo(bigDecimal2) > 0;
 		}
 	}
 
@@ -605,8 +603,9 @@ public class FloatStruct extends RealStruct {
 
 		@Override
 		public boolean lessThanOrEqualTo(final FloatStruct real1, final RatioStruct real2) {
-			final RationalStruct rational1 = real1.rational();
-			return rational1.isLessThanOrEqualTo(real2);
+			final BigDecimal bigDecimal1 = real1.bigDecimalValue();
+			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
+			return bigDecimal1.compareTo(bigDecimal2) <= 0;
 		}
 	}
 
@@ -630,8 +629,9 @@ public class FloatStruct extends RealStruct {
 
 		@Override
 		public boolean greaterThanOrEqualTo(final FloatStruct real1, final RatioStruct real2) {
-			final RationalStruct rational1 = real1.rational();
-			return rational1.isGreaterThanOrEqualTo(real2);
+			final BigDecimal bigDecimal1 = real1.bigDecimalValue();
+			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
+			return bigDecimal1.compareTo(bigDecimal2) >= 0;
 		}
 	}
 

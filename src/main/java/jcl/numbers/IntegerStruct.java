@@ -73,17 +73,17 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	@Override
-	public boolean eql(final LispStruct lispStruct) {
+	public boolean lispEql(final LispStruct lispStruct) {
 		return equals(lispStruct);
 	}
 
 	@Override
-	public boolean equal(final LispStruct lispStruct) {
+	public boolean lispEqual(final LispStruct lispStruct) {
 		return equals(lispStruct);
 	}
 
 	@Override
-	public boolean equalp(final LispStruct lispStruct) {
+	public boolean lispEqualp(final LispStruct lispStruct) {
 		return (lispStruct instanceof NumberStruct) && isEqualTo((NumberStruct) lispStruct);
 	}
 
@@ -496,7 +496,7 @@ public class IntegerStruct extends RationalStruct {
 		}
 	}
 
-	private static class IntegerEqualToStrategy extends EqualToStrategy<IntegerStruct> {
+	private static class IntegerEqualToStrategy extends RationalEqualToStrategy<IntegerStruct> {
 
 		private static final IntegerEqualToStrategy INSTANCE = new IntegerEqualToStrategy();
 
@@ -505,12 +505,6 @@ public class IntegerStruct extends RationalStruct {
 			final BigInteger bigInteger1 = number1.getBigInteger();
 			final BigInteger bigInteger2 = number2.getBigInteger();
 			return bigInteger1.equals(bigInteger2);
-		}
-
-		@Override
-		public boolean equalTo(final IntegerStruct number1, final FloatStruct number2) {
-			final RationalStruct rational = number2.rational();
-			return INSTANCE.equalTo(number1, rational);
 		}
 
 		@Override
@@ -523,11 +517,6 @@ public class IntegerStruct extends RationalStruct {
 			final BigInteger denominator = bigFraction2Reduced.getDenominator();
 
 			return denominator.equals(BigInteger.ONE) && bigInteger1.equals(numerator);
-		}
-
-		@Override
-		public boolean equalTo(final IntegerStruct number1, final ComplexStruct number2) {
-			return false;
 		}
 	}
 

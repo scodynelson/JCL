@@ -463,6 +463,14 @@ public abstract class RealStruct extends NumberStruct {
 		}
 	}
 
+	protected abstract static class RealEqualToStrategy<S extends RealStruct> extends EqualToStrategy<S> {
+
+		@Override
+		public boolean equalTo(final S number1, final ComplexStruct number2) {
+			return number2.isEqualTo(number1);
+		}
+	}
+
 	protected abstract static class LessThanStrategy<S extends RealStruct> {
 
 		public boolean lessThan(final S real1, final RealStruct real2) {

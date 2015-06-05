@@ -230,15 +230,18 @@ public class ComplexStruct extends NumberStruct {
 		return imaginary;
 	}
 
-	public boolean eql(final LispStruct lispStruct) {
+	@Override
+	public boolean lispEql(final LispStruct lispStruct) {
 		return equals(lispStruct);
 	}
 
-	public boolean equal(final LispStruct lispStruct) {
+	@Override
+	public boolean lispEqual(final LispStruct lispStruct) {
 		return equals(lispStruct);
 	}
 
-	public boolean equalp(final LispStruct lispStruct) {
+	@Override
+	public boolean lispEqualp(final LispStruct lispStruct) {
 		return (lispStruct instanceof NumberStruct) && isEqualTo((NumberStruct) lispStruct);
 	}
 
@@ -862,7 +865,7 @@ public class ComplexStruct extends NumberStruct {
 	}
 
 	/**
-	 * {@link EqualToStrategy} for computing numeric equality results for {@link ComplexStruct}s.
+	 * {@link EqualToStrategy} for computing numeric '=' equality results for {@link ComplexStruct}s.
 	 */
 	private static class ComplexEqualToStrategy extends EqualToStrategy<ComplexStruct> {
 
@@ -901,7 +904,7 @@ public class ComplexStruct extends NumberStruct {
 		private static boolean equalToReal(final ComplexStruct complex, final RealStruct real) {
 			final RealStruct realVal1 = complex.getReal();
 			final RealStruct imaginaryVal1 = complex.getImaginary();
-			return imaginaryVal1.zerop() && realVal1.equal(real);
+			return imaginaryVal1.zerop() && realVal1.isEqualTo(real);
 		}
 
 		@Override

@@ -49,11 +49,11 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 	}
 
 	// TODO: move the following 3 up
-	public abstract boolean eql(LispStruct lispStruct);
+	public abstract boolean lispEql(LispStruct lispStruct);
 
-	public abstract boolean equal(LispStruct lispStruct);
+	public abstract boolean lispEqual(LispStruct lispStruct);
 
-	public abstract boolean equalp(LispStruct lispStruct);
+	public abstract boolean lispEqualp(LispStruct lispStruct);
 
 	public abstract RealStruct abs();
 
@@ -289,7 +289,7 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 				realPower = (IntegerStruct) IntegerStruct.ZERO.subtract(realPower);
 				return IntegerStruct.ONE.divide(exptInteger(base, realPower));
 			}
-			if (base.eql(IntegerStruct.TWO)) {
+			if (base.lispEql(IntegerStruct.TWO)) {
 				return IntegerStruct.ONE.ash(realPower);
 			}
 

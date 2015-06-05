@@ -268,71 +268,36 @@ public class FloatStruct extends RealStruct {
 		return FloatQuotientRemainderStrategy.INSTANCE.fround(this, divisor);
 	}
 
-/*
-// NOTE: custom functions: 'single-float-bits'
-
-(defconstant single-float-bias 126)	; Intel says 127
-(defconstant single-float-exponent-byte (byte 8 23))
-(defconstant single-float-significand-byte (byte 23 0))
-(defconstant single-float-normal-exponent-min 1)
-(defconstant single-float-normal-exponent-max 254)
-
-(defconstant single-float-digits
-  (+ (byte-size single-float-significand-byte) 1))
-
-;;; DECODE-SINGLE-DENORM  --  Internal
-;;;
-;;;    Handle the denormalized case of DECODE-SINGLE-FLOAT.  We call
-;;; INTEGER-DECODE-SINGLE-DENORM and then make the result into a float.
-;;;
-(defun decode-single-denorm (x)
-  (multiple-value-bind (sig exp sign)
-		               (integer-decode-single-denorm x)
-    (values (make-single-float
-	          (dpb sig
-	               vm:single-float-significand-byte
-		           (dpb vm:single-float-bias
-		                vm:single-float-exponent-byte
-		                0)))
-	        (truly-the fixnum (+ exp vm:single-float-digits))
-	        (float sign x))))
-
-;;; DECODE-SINGLE-FLOAT  --  Internal
-;;;
-;;;    Handle the single-float case of DECODE-FLOAT.  If an infinity or NAN,
-;;; error.  If a denorm, call d-s-DENORM to handle it.
-;;;
-(defun decode-single-float (x)
-  (let* ((bits (single-float-bits (abs x)))
-		 (exp (ldb vm:single-float-exponent-byte bits))
-	     (sign (float-sign x))
-	     (biased (truly-the single-float-exponent
-			                (- exp vm:single-float-bias))))
-    (unless (<= exp vm:single-float-normal-exponent-max)
-      (error (intl:gettext "Can't decode NAN or infinity: ~S.") x))
-    (cond ((zerop x)
-	       (values 0.0f0 biased sign))
-		  ((< exp vm:single-float-normal-exponent-min)
-		   (decode-single-denorm x))
-		  (t
-		   (values (make-single-float
-			         (dpb vm:single-float-bias
-				          vm:single-float-exponent-byte
-				          bits))
-			       biased
-			       sign)))))
- */
-
+	/**
+	 * See {@link https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html} for details.
+	 *
+	 * @return
+	 */
 	public DecodeFloatResult decodeFloat() {
-		final DecodeFloatResult decodeFloatResult = integerDecodeFloat();
-		final RealStruct significand = decodeFloatResult.getSignificand();
-		final RealStruct exponent = decodeFloatResult.getExponent();
-		final RealStruct sign = decodeFloatResult.getSign();
-		return new DecodeFloatResult(
-				new FloatStruct(significand.bigDecimalValue()),
-				(RealStruct) exponent.add(new IntegerStruct(BigInteger.valueOf(53L))),
-				sign.minusp() ? MINUS_ONE : ONE
-				);
+		final int decodedExponentDiffer = 1075;
+
+		final long bits = Double.doubleToRawLongBits(doubleValue());
+		final DecodedDoubleRaw decodedDoubleRaw = getDecodedDoubleRaw(bits);
+
+		final long mantissa = decodedDoubleRaw.getMantissa();
+		final BigDecimal mantissaBigDecimal = new BigDecimal(mantissa);
+
+		final double expt = FastMath.pow(2, 53);
+		final BigDecimal exptBigDecimal = new BigDecimal(expt);
+
+		final BigDecimal significand = mantissaBigDecimal.divide(exptBigDecimal, MathContext.DECIMAL128);
+		final FloatStruct significandFloat = new FloatStruct(significand);
+
+		final long storedExponent = decodedDoubleRaw.getStoredExponent();
+		final long exponentDifference = (storedExponent - decodedExponentDiffer) + 53; // TODO: why plus 53??
+		final BigInteger exponentBigInteger = BigInteger.valueOf(exponentDifference);
+		final IntegerStruct exponent = new IntegerStruct(exponentBigInteger);
+
+		final long sign = decodedDoubleRaw.getSign();
+		final BigDecimal signBigDecimal = new BigDecimal(sign);
+		final FloatStruct signFloat = new FloatStruct(signBigDecimal);
+
+		return new DecodeFloatResult(significandFloat, exponent, signFloat);
 	}
 
 	public FloatStruct scaleFloat(final IntegerStruct scale) {
@@ -377,72 +342,78 @@ public class FloatStruct extends RealStruct {
 		return new IntegerStruct(bigInteger);
 	}
 
-	/*
-// NOTE: custom functions: 'single-float-bits'
-
-(defconstant single-float-bias 126)	; Intel says 127
-(defconstant single-float-exponent-byte (byte 8 23))
-(defconstant single-float-significand-byte (byte 23 0))
-(defconstant single-float-normal-exponent-min 1)
-(defconstant single-float-normal-exponent-max 254)
-(defconstant single-float-hidden-bit (ash 1 23))
-(defconstant single-float-trapping-nan-bit (ash 1 22))
-
-(defconstant single-float-digits
-  (+ (byte-size single-float-significand-byte) 1))
-
-;;; INTEGER-DECODE-SINGLE-DENORM  --  Internal
-;;;
-;;;    Handle the denormalized case of INTEGER-DECODE-FLOAT for SINGLE-FLOAT.
-;;;
-(defun integer-decode-single-denorm (x)
-  (let* ((bits (single-float-bits (abs x)))
-		 (sig (ash (ldb vm:single-float-significand-byte bits) 1))
-		 (extra-bias 0))
-    (loop
-      (unless (zerop (logand sig vm:single-float-hidden-bit))
-		(return))
-      (setq sig (ash sig 1))
-      (incf extra-bias))
-    (values sig
-	        (- (- vm:single-float-bias) vm:single-float-digits extra-bias)
-	        (if (minusp (float-sign x)) -1 1))))
-
-;;; INTEGER-DECODE-SINGLE-FLOAT  --  Internal
-;;;
-;;;    Handle the single-float case of INTEGER-DECODE-FLOAT.  If an infinity or
-;;; NAN, error.  If a denorm, call i-d-s-DENORM to handle it.
-;;;
-(defun integer-decode-single-float (x)
-  (let* ((bits (single-float-bits (abs x)))
-		 (exp (ldb vm:single-float-exponent-byte bits))
-		 (sig (ldb vm:single-float-significand-byte bits))
-		 (sign (if (minusp (float-sign x)) -1 1))
-		 (biased (- exp vm:single-float-bias vm:single-float-digits)))
-    (unless (<= exp vm:single-float-normal-exponent-max)
-      (error (intl:gettext "Can't decode NAN or infinity: ~S.") x))
-    (cond ((and (zerop exp) (zerop sig))
-		   (values 0 biased sign))
-		  ((< exp vm:single-float-normal-exponent-min)
-		   (integer-decode-single-denorm x))
-		  (t
-		   (values (logior sig vm:single-float-hidden-bit) biased sign)))))
+	/**
+	 * See {@link https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html} for details.
+	 *
+	 * @return
 	 */
 	public DecodeFloatResult integerDecodeFloat() {
+		final int decodedExponentDiffer = 1075;
 
 		final long bits = Double.doubleToRawLongBits(doubleValue());
-		final int signInt = ((bits >> 63) == 0) ? 1 : -1;
-		final int exponentInt = (int) ((bits >> 52) & 0x7ffL);
-		final long m;
-		if (exponentInt == 0) {
-			m = (bits & 0xfffffffffffffL) << 1;
+		final DecodedDoubleRaw decodedDoubleRaw = getDecodedDoubleRaw(bits);
+
+		final long mantissa = decodedDoubleRaw.getMantissa();
+		final BigInteger mantissaBigInteger = BigInteger.valueOf(mantissa);
+		final IntegerStruct significandInteger = new IntegerStruct(mantissaBigInteger);
+
+		final long storedExponent = decodedDoubleRaw.getStoredExponent();
+		final long exponentDifference = storedExponent - decodedExponentDiffer;
+		final BigInteger exponentBigInteger = BigInteger.valueOf(exponentDifference);
+		final IntegerStruct exponent = new IntegerStruct(exponentBigInteger);
+
+		final long sign = decodedDoubleRaw.getSign();
+		final BigInteger signBigInteger = BigInteger.valueOf(sign);
+		final IntegerStruct signInteger = new IntegerStruct(signBigInteger);
+
+		return new DecodeFloatResult(significandInteger, exponent, signInteger);
+	}
+
+	/**
+	 * See {@link https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html} for details.
+	 *
+	 * The following is per the JVM spec section 4.4.5
+	 *
+	 * @return
+	 */
+	@SuppressWarnings("all")
+	private static DecodedDoubleRaw getDecodedDoubleRaw(final long bits) {
+		final long sign = ((bits >> 63) == 0) ? 1 : -1;
+		final long storedExponent = (bits >> 52) & 0x7ffL;
+		final long mantissa;
+		if (storedExponent == 0) {
+			mantissa = (bits & 0xfffffffffffffL) << 1;
 		} else {
-			m = (bits & 0xfffffffffffffL) | 0x10000000000000L;
+			mantissa = (bits & 0xfffffffffffffL) | 0x10000000000000L;
 		}
-		IntegerStruct significand = new IntegerStruct(BigInteger.valueOf(m));
-		IntegerStruct exponent = new IntegerStruct(BigInteger.valueOf(exponentInt - 1075));
-		IntegerStruct sign = new IntegerStruct(BigInteger.valueOf(signInt));
-		return new DecodeFloatResult(significand, exponent, sign);
+		return new DecodedDoubleRaw(mantissa, storedExponent, sign);
+	}
+
+	private static class DecodedDoubleRaw {
+
+		private final long mantissa;
+
+		private final long storedExponent;
+
+		private final long sign;
+
+		private DecodedDoubleRaw(final long mantissa, final long storedExponent, final long sign) {
+			this.mantissa = mantissa;
+			this.storedExponent = storedExponent;
+			this.sign = sign;
+		}
+
+		private long getMantissa() {
+			return mantissa;
+		}
+
+		private long getStoredExponent() {
+			return storedExponent;
+		}
+
+		private long getSign() {
+			return sign;
+		}
 	}
 
 	// Strategy Implementations

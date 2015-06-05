@@ -755,14 +755,14 @@ public abstract class RealStruct extends NumberStruct {
 					final double realPart = result * FastMath.cos(y * Math.PI);
 					final double imagPart = result * FastMath.sin(y * Math.PI);
 
-					final BigDecimal realBigDecimal = BigDecimal.valueOf(realPart);
+					final BigDecimal realBigDecimal = new BigDecimal(realPart);
 					final FloatStruct real = new FloatStruct(realBigDecimal);
-					final BigDecimal imagBigDecimal = BigDecimal.valueOf(imagPart);
+					final BigDecimal imagBigDecimal = new BigDecimal(imagPart);
 					final FloatStruct imaginary = new FloatStruct(imagBigDecimal);
 					return new ComplexStruct(real, imaginary);
 				}
 			}
-			final BigDecimal resultBigDecimal = BigDecimal.valueOf(result);
+			final BigDecimal resultBigDecimal = new BigDecimal(result);
 			return new FloatStruct(resultBigDecimal);
 		}
 

@@ -337,8 +337,8 @@ public class ComplexStruct extends NumberStruct {
 		final double newReal = expReal * FastMath.cos(imaginaryDoubleValue);
 		final double newImaginary = expReal * FastMath.sin(imaginaryDoubleValue);
 
-		final FloatStruct newRealFloat = new FloatStruct(BigDecimal.valueOf(newReal));
-		final FloatStruct newImaginaryFloat = new FloatStruct(BigDecimal.valueOf(newImaginary));
+		final FloatStruct newRealFloat = new FloatStruct(new BigDecimal(newReal));
+		final FloatStruct newImaginaryFloat = new FloatStruct(new BigDecimal(newImaginary));
 		return new ComplexStruct(newRealFloat, newImaginaryFloat);
 	}
 
@@ -382,15 +382,15 @@ public class ComplexStruct extends NumberStruct {
 		if (realDoubleValue >= 0.0) {
 			final double newImaginary = imaginaryDoubleValue / (2.0D * root);
 
-			final FloatStruct newRealFloat = new FloatStruct(BigDecimal.valueOf(root));
-			final FloatStruct newImaginaryFloat = new FloatStruct(BigDecimal.valueOf(newImaginary));
+			final FloatStruct newRealFloat = new FloatStruct(new BigDecimal(root));
+			final FloatStruct newImaginaryFloat = new FloatStruct(new BigDecimal(newImaginary));
 			return new ComplexStruct(newRealFloat, newImaginaryFloat);
 		} else {
 			final double newReal = FastMath.abs(imaginaryDoubleValue) / (2.0D * root);
 			final double newImaginary = FastMath.copySign(1.0D, imaginaryDoubleValue) * root;
 
-			final FloatStruct newRealFloat = new FloatStruct(BigDecimal.valueOf(newReal));
-			final FloatStruct newImaginaryFloat = new FloatStruct(BigDecimal.valueOf(newImaginary));
+			final FloatStruct newRealFloat = new FloatStruct(new BigDecimal(newReal));
+			final FloatStruct newImaginaryFloat = new FloatStruct(new BigDecimal(newImaginary));
 			return new ComplexStruct(newRealFloat, newImaginaryFloat);
 		}
 	}
@@ -403,8 +403,8 @@ public class ComplexStruct extends NumberStruct {
 		final double newReal = FastMath.sin(realDoubleValue) * FastMath.cosh(imaginaryDoubleValue);
 		final double newImaginary = FastMath.cos(realDoubleValue) * FastMath.sinh(imaginaryDoubleValue);
 
-		final FloatStruct newRealFloat = new FloatStruct(BigDecimal.valueOf(newReal));
-		final FloatStruct newImaginaryFloat = new FloatStruct(BigDecimal.valueOf(newImaginary));
+		final FloatStruct newRealFloat = new FloatStruct(new BigDecimal(newReal));
+		final FloatStruct newImaginaryFloat = new FloatStruct(new BigDecimal(newImaginary));
 		return new ComplexStruct(newRealFloat, newImaginaryFloat);
 	}
 
@@ -416,8 +416,8 @@ public class ComplexStruct extends NumberStruct {
 		final double newReal = FastMath.cos(realDoubleValue) * FastMath.cosh(imaginaryDoubleValue);
 		final double newImaginary = -FastMath.sin(realDoubleValue) * FastMath.sinh(imaginaryDoubleValue);
 
-		final FloatStruct newRealFloat = new FloatStruct(BigDecimal.valueOf(newReal));
-		final FloatStruct newImaginaryFloat = new FloatStruct(BigDecimal.valueOf(newImaginary));
+		final FloatStruct newRealFloat = new FloatStruct(new BigDecimal(newReal));
+		final FloatStruct newImaginaryFloat = new FloatStruct(new BigDecimal(newImaginary));
 		return new ComplexStruct(newRealFloat, newImaginaryFloat);
 	}
 
@@ -433,8 +433,8 @@ public class ComplexStruct extends NumberStruct {
 		final double newReal = FastMath.sin(real2) / divisor;
 		final double newImaginary = FastMath.sinh(imaginary2) / divisor;
 
-		final FloatStruct newRealFloat = new FloatStruct(BigDecimal.valueOf(newReal));
-		final FloatStruct newImaginaryFloat = new FloatStruct(BigDecimal.valueOf(newImaginary));
+		final FloatStruct newRealFloat = new FloatStruct(new BigDecimal(newReal));
+		final FloatStruct newImaginaryFloat = new FloatStruct(new BigDecimal(newImaginary));
 		return new ComplexStruct(newRealFloat, newImaginaryFloat);
 	}
 
@@ -478,8 +478,8 @@ public class ComplexStruct extends NumberStruct {
 		final double newReal = FastMath.sinh(realDoubleValue) * FastMath.cos(imaginaryDoubleValue);
 		final double newImaginary = FastMath.cosh(realDoubleValue) * FastMath.sin(imaginaryDoubleValue);
 
-		final FloatStruct newRealFloat = new FloatStruct(BigDecimal.valueOf(newReal));
-		final FloatStruct newImaginaryFloat = new FloatStruct(BigDecimal.valueOf(newImaginary));
+		final FloatStruct newRealFloat = new FloatStruct(new BigDecimal(newReal));
+		final FloatStruct newImaginaryFloat = new FloatStruct(new BigDecimal(newImaginary));
 		return new ComplexStruct(newRealFloat, newImaginaryFloat);
 	}
 
@@ -491,8 +491,8 @@ public class ComplexStruct extends NumberStruct {
 		final double newReal = FastMath.cosh(realDoubleValue) * FastMath.cos(imaginaryDoubleValue);
 		final double newImaginary = FastMath.sinh(realDoubleValue) * FastMath.sin(imaginaryDoubleValue);
 
-		final FloatStruct newRealFloat = new FloatStruct(BigDecimal.valueOf(newReal));
-		final FloatStruct newImaginaryFloat = new FloatStruct(BigDecimal.valueOf(newImaginary));
+		final FloatStruct newRealFloat = new FloatStruct(new BigDecimal(newReal));
+		final FloatStruct newImaginaryFloat = new FloatStruct(new BigDecimal(newImaginary));
 		return new ComplexStruct(newRealFloat, newImaginaryFloat);
 	}
 
@@ -508,8 +508,8 @@ public class ComplexStruct extends NumberStruct {
 		final double newReal = FastMath.sinh(real2) / divisor;
 		final double newImaginary = FastMath.sin(imaginary2) / divisor;
 
-		final FloatStruct newRealFloat = new FloatStruct(BigDecimal.valueOf(newReal));
-		final FloatStruct newImaginaryFloat = new FloatStruct(BigDecimal.valueOf(newImaginary));
+		final FloatStruct newRealFloat = new FloatStruct(new BigDecimal(newReal));
+		final FloatStruct newImaginaryFloat = new FloatStruct(new BigDecimal(newImaginary));
 		return new ComplexStruct(newRealFloat, newImaginaryFloat);
 	}
 

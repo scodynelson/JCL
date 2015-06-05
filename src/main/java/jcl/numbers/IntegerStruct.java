@@ -213,7 +213,7 @@ public class IntegerStruct extends RationalStruct {
 		final double doubleValue = doubleValue();
 		final double sqrt = FastMath.sqrt(doubleValue);
 		final double isqrt = FastMath.floor(sqrt);
-		final BigDecimal isqrtBigDecimal = BigDecimal.valueOf(isqrt);
+		final BigDecimal isqrtBigDecimal = new BigDecimal(isqrt);
 		final BigInteger isqrtBigInteger = isqrtBigDecimal.toBigInteger();
 		return new IntegerStruct(isqrtBigInteger);
 	}

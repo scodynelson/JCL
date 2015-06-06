@@ -109,6 +109,11 @@ public class FloatStruct extends RealStruct {
 		return (lispStruct instanceof NumberStruct) && isEqualTo((NumberStruct) lispStruct);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Determines the absolute value of this FloatStruct.
+	 */
 	@Override
 	public RealStruct abs() {
 		if (bigDecimal.signum() >= 0) {
@@ -117,66 +122,132 @@ public class FloatStruct extends RealStruct {
 		return new FloatStruct(bigDecimal.negate());
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Determines whether or not this FloatStruct is zero using {@link #bigDecimal#signum}.
+	 */
 	@Override
 	public boolean zerop() {
 		return bigDecimal.signum() == 0;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Determines whether or not this FloatStruct is positive using {@link #bigDecimal#signum}.
+	 */
 	@Override
 	public boolean plusp() {
 		return bigDecimal.signum() > 0;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Determines whether or not this FloatStruct is negative using {@link #bigDecimal#signum}.
+	 */
 	@Override
 	public boolean minusp() {
 		return bigDecimal.signum() < 0;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the addition function result for this FloatStruct and the provided {@code number}.
+	 */
 	@Override
 	public NumberStruct add(final NumberStruct number) {
 		return FloatAddStrategy.INSTANCE.add(this, number);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the subtraction function result for this FloatStruct and the provided {@code number}.
+	 */
 	@Override
 	public NumberStruct subtract(final NumberStruct number) {
 		return FloatSubtractStrategy.INSTANCE.subtract(this, number);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the multiplication function result for this FloatStruct and the provided {@code number}.
+	 */
 	@Override
 	public NumberStruct multiply(final NumberStruct number) {
 		return FloatMultiplyStrategy.INSTANCE.multiply(this, number);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the division function result for this FloatStruct and the provided {@code number}.
+	 */
 	@Override
 	public NumberStruct divide(final NumberStruct number) {
 		return FloatDivideStrategy.INSTANCE.divide(this, number);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the numeric '=' equality result for this FloatStruct and the provided {@code number}.
+	 */
 	@Override
 	public boolean isEqualTo(final NumberStruct number) {
 		return FloatEqualToStrategy.INSTANCE.equalTo(this, number);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the numeric '<' equality result for this FloatStruct and the provided {@code real}.
+	 */
 	@Override
 	public boolean isLessThan(final RealStruct real) {
 		return FloatLessThanStrategy.INSTANCE.lessThan(this, real);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the numeric '>' equality result for this FloatStruct and the provided {@code real}.
+	 */
 	@Override
 	public boolean isGreaterThan(final RealStruct real) {
 		return FloatGreaterThanStrategy.INSTANCE.greaterThan(this, real);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the numeric '<=' equality result for this FloatStruct and the provided {@code real}.
+	 */
 	@Override
 	public boolean isLessThanOrEqualTo(final RealStruct real) {
 		return FloatLessThanOrEqualToStrategy.INSTANCE.lessThanOrEqualTo(this, real);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the numeric '>=' equality result for this FloatStruct and the provided {@code real}.
+	 */
 	@Override
 	public boolean isGreaterThanOrEqualTo(final RealStruct real) {
 		return FloatGreaterThanOrEqualToStrategy.INSTANCE.greaterThanOrEqualTo(this, real);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Determines the whether or not the numerical value of this FloatStruct is zero, positive, or negative,
+	 * returning {@code this}, {@link #ONE}, or {@link #MINUS_ONE} respectively.
+	 */
 	@Override
 	public NumberStruct signum() {
 		if (zerop()) {
@@ -188,11 +259,23 @@ public class FloatStruct extends RealStruct {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Returns {@link #ZERO} as the imaginary part of FloatStruct is always '0'.
+	 */
 	@Override
 	public RealStruct imagPart() {
 		return ZERO;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the negation with {@link #bigDecimal#negation} and the creating a new FloatStruct to wrap it. If this
+	 * FloatStruct is numerically equivalent to {@link #ZERO}, {@link #MINUS_ZERO} is returned. If this FloatStruct is
+	 * numerically equivalent to {@link #MINUS_ZERO}, {@link #ZERO} is returned.
+	 */
 	@Override
 	public NumberStruct negation() {
 		if (isEqualTo(ZERO)) {
@@ -204,11 +287,23 @@ public class FloatStruct extends RealStruct {
 		return new FloatStruct(bigDecimal.negate());
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the reciprocal of this FloatStruct by dividing {@link #ONE} by this FloatStruct.
+	 */
 	@Override
 	public NumberStruct reciprocal() {
 		return ONE.divide(this);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the exponential function result for this FloatStruct as this {@code base} and the provided {@link
+	 * NumberStruct} as the {@code power}. If {@code power} is '0', {@link #ONE} is returned. If this FloatStruct is
+	 * either '0' or '1', {@code this} is returned.
+	 */
 	@Override
 	public NumberStruct expt(final NumberStruct power) {
 		if (power.zerop()) {
@@ -222,21 +317,41 @@ public class FloatStruct extends RealStruct {
 		return RealExptStrategy.INSTANCE.expt(this, power);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Returns {@link #bigDecimal#doubleValue()}.
+	 */
 	@Override
 	public double doubleValue() {
 		return bigDecimal.doubleValue();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Returns {@link #bigDecimal}.
+	 */
 	@Override
 	public BigDecimal bigDecimalValue() {
 		return bigDecimal;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Returns {@link this} as it is already a FloatStruct.
+	 */
 	@Override
 	public FloatStruct coerceRealToFloat() {
 		return this;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Returns {@link #ZERO} as a '0' FloatStruct value.
+	 */
 	@Override
 	public RealStruct zeroValue() {
 		return ZERO;
@@ -252,31 +367,64 @@ public class FloatStruct extends RealStruct {
 		return new RatioStruct(bigFraction);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the floor of the result of this FloatStruct with the provided {@code divisor}.
+	 */
 	@Override
 	public QuotientRemainderResult floor(final RealStruct divisor) {
 		return FloatQuotientRemainderStrategy.INSTANCE.floor(this, divisor);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the floor of the result of this FloatStruct with the provided {@code divisor}, returning the quotient
+	 * as a FloatStruct.
+	 */
 	@Override
 	public QuotientRemainderResult ffloor(final RealStruct divisor) {
 		return FloatQuotientRemainderStrategy.INSTANCE.ffloor(this, divisor);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the ceiling of the result of this FloatStruct with the provided {@code divisor}.
+	 */
 	@Override
 	public QuotientRemainderResult ceiling(final RealStruct divisor) {
 		return FloatQuotientRemainderStrategy.INSTANCE.ceiling(this, divisor);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the ceiling of the result of this FloatStruct with the provided {@code divisor}, returning the
+	 * quotient as a FloatStruct.
+	 */
 	@Override
 	public QuotientRemainderResult fceiling(final RealStruct divisor) {
 		return FloatQuotientRemainderStrategy.INSTANCE.fceiling(this, divisor);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the rounded result of this FloatStruct with the provided {@code divisor}.
+	 */
 	@Override
 	public QuotientRemainderResult round(final RealStruct divisor) {
 		return FloatQuotientRemainderStrategy.INSTANCE.round(this, divisor);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the rounded result of this FloatStruct with the provided {@code divisor}, returning the quotient as a
+	 * FloatStruct.
+	 */
 	@Override
 	public QuotientRemainderResult fround(final RealStruct divisor) {
 		return FloatQuotientRemainderStrategy.INSTANCE.fround(this, divisor);
@@ -430,20 +578,47 @@ public class FloatStruct extends RealStruct {
 
 	// Strategy Implementations
 
+	/**
+	 * {@link RealAddStrategy} for computing addition results for {@link FloatStruct}s.
+	 */
 	private static class FloatAddStrategy extends RealAddStrategy<FloatStruct> {
 
+		/**
+		 * Singleton instance of the {@link FloatAddStrategy} type.
+		 */
 		private static final FloatAddStrategy INSTANCE = new FloatAddStrategy();
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the addition function result for an {@link FloatStruct} and a {@link IntegerStruct}.
+		 */
 		@Override
 		public RealStruct add(final FloatStruct number1, final IntegerStruct number2) {
 			return addFloat(number1, number2);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the addition function result for an {@link FloatStruct} and a {@link RatioStruct}.
+		 */
 		@Override
 		public RealStruct add(final FloatStruct number1, final RatioStruct number2) {
 			return addFloat(number1, number2);
 		}
 
+		/**
+		 * Computes the addition for the provided {@link FloatStruct} and {@link RealStruct} using {@link
+		 * BigDecimal#add(BigDecimal)} with the {@link RealStruct#bigDecimalValue()} values.
+		 *
+		 * @param number1
+		 * 		the {@link FloatStruct} as the first argument of the addition operation
+		 * @param number2
+		 * 		the {@link RealStruct} as the second argument of the addition operation
+		 *
+		 * @return a new {@link FloatStruct} as the result of the addition operation
+		 */
 		private static RealStruct addFloat(final FloatStruct number1, final RealStruct number2) {
 			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
 			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
@@ -452,20 +627,47 @@ public class FloatStruct extends RealStruct {
 		}
 	}
 
+	/**
+	 * {@link RealSubtractStrategy} for computing subtraction function results for {@link FloatStruct}s.
+	 */
 	private static class FloatSubtractStrategy extends RealSubtractStrategy<FloatStruct> {
 
+		/**
+		 * Singleton instance of the {@link FloatSubtractStrategy} type.
+		 */
 		private static final FloatSubtractStrategy INSTANCE = new FloatSubtractStrategy();
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the subtraction function result for an {@link FloatStruct} and a {@link IntegerStruct}.
+		 */
 		@Override
 		public RealStruct subtract(final FloatStruct number1, final IntegerStruct number2) {
 			return subtractFloat(number1, number2);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the subtraction function result for an {@link FloatStruct} and a {@link RatioStruct}.
+		 */
 		@Override
 		public RealStruct subtract(final FloatStruct number1, final RatioStruct number2) {
 			return subtractFloat(number1, number2);
 		}
 
+		/**
+		 * Computes the subtraction for the provided {@link FloatStruct} and {@link RealStruct} using {@link
+		 * BigDecimal#subtract(BigDecimal)} with the {@link RealStruct#bigDecimalValue()} values.
+		 *
+		 * @param number1
+		 * 		the {@link FloatStruct} as the first argument of the subtraction operation
+		 * @param number2
+		 * 		the {@link RealStruct} as the second argument of the subtraction operation
+		 *
+		 * @return a new {@link FloatStruct} as the result of the subtraction operation
+		 */
 		private static RealStruct subtractFloat(final FloatStruct number1, final RealStruct number2) {
 			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
 			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
@@ -474,20 +676,47 @@ public class FloatStruct extends RealStruct {
 		}
 	}
 
+	/**
+	 * {@link RealMultiplyStrategy} for computing multiplication function results for {@link FloatStruct}s.
+	 */
 	private static class FloatMultiplyStrategy extends RealMultiplyStrategy<FloatStruct> {
 
+		/**
+		 * Singleton instance of the {@link FloatMultiplyStrategy} type.
+		 */
 		private static final FloatMultiplyStrategy INSTANCE = new FloatMultiplyStrategy();
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the multiplication function result for an {@link FloatStruct} and a {@link IntegerStruct}.
+		 */
 		@Override
 		public RealStruct multiply(final FloatStruct number1, final IntegerStruct number2) {
 			return multiplyFloat(number1, number2);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the multiplication function result for an {@link FloatStruct} and a {@link RatioStruct}.
+		 */
 		@Override
 		public RealStruct multiply(final FloatStruct number1, final RatioStruct number2) {
 			return multiplyFloat(number1, number2);
 		}
 
+		/**
+		 * Computes the multiplication for the provided {@link FloatStruct} and {@link RealStruct} using {@link
+		 * BigDecimal#multiply(BigDecimal)} with the {@link RealStruct#bigDecimalValue()} values.
+		 *
+		 * @param number1
+		 * 		the {@link FloatStruct} as the first argument of the multiplication operation
+		 * @param number2
+		 * 		the {@link RealStruct} as the second argument of the multiplication operation
+		 *
+		 * @return a new {@link FloatStruct} as the result of the multiplication operation
+		 */
 		private static RealStruct multiplyFloat(final FloatStruct number1, final RealStruct number2) {
 			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
 			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
@@ -496,20 +725,47 @@ public class FloatStruct extends RealStruct {
 		}
 	}
 
+	/**
+	 * {@link RealDivideStrategy} for computing division function results for {@link FloatStruct}s.
+	 */
 	private static class FloatDivideStrategy extends RealDivideStrategy<FloatStruct> {
 
+		/**
+		 * Singleton instance of the {@link FloatDivideStrategy} type.
+		 */
 		private static final FloatDivideStrategy INSTANCE = new FloatDivideStrategy();
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the division function result for an {@link FloatStruct} and a {@link IntegerStruct}.
+		 */
 		@Override
 		public RealStruct divide(final FloatStruct number1, final IntegerStruct number2) {
 			return divideFloat(number1, number2);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the division function result for an {@link FloatStruct} and a {@link RatioStruct}.
+		 */
 		@Override
 		public RealStruct divide(final FloatStruct number1, final RatioStruct number2) {
 			return divideFloat(number1, number2);
 		}
 
+		/**
+		 * Computes the division for the provided {@link FloatStruct} and {@link RealStruct} using {@link
+		 * BigDecimal#divide(BigDecimal, MathContext)} with the {@link RealStruct#bigDecimalValue()} values.
+		 *
+		 * @param number1
+		 * 		the {@link FloatStruct} as the first argument of the division operation
+		 * @param number2
+		 * 		the {@link RealStruct} as the second argument of the division operation
+		 *
+		 * @return a new {@link FloatStruct} as the result of the division operation
+		 */
 		private static RealStruct divideFloat(final FloatStruct number1, final RealStruct number2) {
 			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
 			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
@@ -518,85 +774,178 @@ public class FloatStruct extends RealStruct {
 		}
 	}
 
+	/**
+	 * {@link RealEqualToStrategy} for computing numeric '=' equality results for {@link FloatStruct}s.
+	 */
 	private static class FloatEqualToStrategy extends RealEqualToStrategy<FloatStruct> {
 
+		/**
+		 * Singleton instance of the {@link FloatEqualToStrategy} type.
+		 */
 		private static final FloatEqualToStrategy INSTANCE = new FloatEqualToStrategy();
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric '=' equality result for an {@link FloatStruct} and a {@link IntegerStruct}.
+		 */
 		@Override
 		public boolean equalTo(final FloatStruct number1, final IntegerStruct number2) {
 			return getComparisonResult(number1, number2) == 0;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric '=' equality result for an {@link FloatStruct} and a {@link RatioStruct}.
+		 */
 		@Override
 		public boolean equalTo(final FloatStruct number1, final RatioStruct number2) {
 			return getComparisonResult(number1, number2) == 0;
 		}
 	}
 
+	/**
+	 * {@link LessThanStrategy} for computing numeric '<' equality results for {@link FloatStruct}s.
+	 */
 	private static class FloatLessThanStrategy extends LessThanStrategy<FloatStruct> {
 
+		/**
+		 * Singleton instance of the {@link FloatLessThanStrategy} type.
+		 */
 		private static final FloatLessThanStrategy INSTANCE = new FloatLessThanStrategy();
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric '<' equality result for an {@link FloatStruct} and a {@link IntegerStruct}.
+		 */
 		@Override
 		public boolean lessThan(final FloatStruct real1, final IntegerStruct real2) {
 			return getComparisonResult(real1, real2) < 0;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric '<' equality result for an {@link FloatStruct} and a {@link RatioStruct}.
+		 */
 		@Override
 		public boolean lessThan(final FloatStruct real1, final RatioStruct real2) {
 			return getComparisonResult(real1, real2) < 0;
 		}
 	}
 
+	/**
+	 * {@link GreaterThanStrategy} for computing numeric '>' equality results for {@link FloatStruct}s.
+	 */
 	private static class FloatGreaterThanStrategy extends GreaterThanStrategy<FloatStruct> {
 
+		/**
+		 * Singleton instance of the {@link FloatGreaterThanStrategy} type.
+		 */
 		private static final FloatGreaterThanStrategy INSTANCE = new FloatGreaterThanStrategy();
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric '>' equality result for an {@link FloatStruct} and a {@link IntegerStruct}.
+		 */
 		@Override
 		public boolean greaterThan(final FloatStruct real1, final IntegerStruct real2) {
 			return getComparisonResult(real1, real2) > 0;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric '>' equality result for an {@link FloatStruct} and a {@link RatioStruct}.
+		 */
 		@Override
 		public boolean greaterThan(final FloatStruct real1, final RatioStruct real2) {
 			return getComparisonResult(real1, real2) > 0;
 		}
 	}
 
+	/**
+	 * {@link LessThanOrEqualToStrategy} for computing numeric '<=' equality results for {@link FloatStruct}s.
+	 */
 	private static class FloatLessThanOrEqualToStrategy extends LessThanOrEqualToStrategy<FloatStruct> {
 
+		/**
+		 * Singleton instance of the {@link FloatLessThanOrEqualToStrategy} type.
+		 */
 		private static final FloatLessThanOrEqualToStrategy INSTANCE = new FloatLessThanOrEqualToStrategy();
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric '<=' equality result for an {@link FloatStruct} and a {@link IntegerStruct}.
+		 */
 		@Override
 		public boolean lessThanOrEqualTo(final FloatStruct real1, final IntegerStruct real2) {
 			return getComparisonResult(real1, real2) <= 0;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric '<=' equality result for an {@link FloatStruct} and a {@link RatioStruct}.
+		 */
 		@Override
 		public boolean lessThanOrEqualTo(final FloatStruct real1, final RatioStruct real2) {
 			return getComparisonResult(real1, real2) <= 0;
 		}
 	}
 
+	/**
+	 * {@link GreaterThanOrEqualToStrategy} for computing numeric '>=' equality results for {@link FloatStruct}s.
+	 */
 	private static class FloatGreaterThanOrEqualToStrategy extends GreaterThanOrEqualToStrategy<FloatStruct> {
 
+		/**
+		 * Singleton instance of the {@link FloatGreaterThanOrEqualToStrategy} type.
+		 */
 		private static final FloatGreaterThanOrEqualToStrategy INSTANCE = new FloatGreaterThanOrEqualToStrategy();
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric '>=' equality result for an {@link FloatStruct} and a {@link IntegerStruct}.
+		 */
 		@Override
 		public boolean greaterThanOrEqualTo(final FloatStruct real1, final IntegerStruct real2) {
 			return getComparisonResult(real1, real2) >= 0;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric '>=' equality result for an {@link FloatStruct} and a {@link RatioStruct}.
+		 */
 		@Override
 		public boolean greaterThanOrEqualTo(final FloatStruct real1, final RatioStruct real2) {
 			return getComparisonResult(real1, real2) >= 0;
 		}
 	}
 
+	/**
+	 * {@link FloatQuotientRemainderStrategy} for computing quotient and remainder results for {@link
+	 * FloatStruct}s.
+	 */
 	private static class FloatQuotientRemainderStrategy extends QuotientRemainderStrategy<FloatStruct> {
 
+		/**
+		 * Singleton instance of the {@link FloatQuotientRemainderStrategy} type.
+		 */
 		private static final FloatQuotientRemainderStrategy INSTANCE = new FloatQuotientRemainderStrategy();
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the quotient and remainder results for a {@link FloatStruct} as the {@code real} and an {@link
+		 * IntegerStruct} as the {@code divisor}.
+		 */
 		@Override
 		public QuotientRemainderResult quotientRemainder(final FloatStruct real, final IntegerStruct divisor,
 		                                                 final RoundingMode roundingMode,
@@ -604,6 +953,12 @@ public class FloatStruct extends RealStruct {
 			return floatQuotientRemainder(real, divisor, roundingMode, isFloatResult);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the quotient and remainder results for a {@link FloatStruct} as the {@code real} and an {@link
+		 * RatioStruct} as the {@code divisor}.
+		 */
 		@Override
 		public QuotientRemainderResult quotientRemainder(final FloatStruct real, final RatioStruct divisor,
 		                                                 final RoundingMode roundingMode,

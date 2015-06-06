@@ -227,9 +227,8 @@ public class RatioStruct extends RationalStruct {
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Determines the numerical value of zero, positive, or negative, returning {@code this}, {@link
-	 * IntegerStruct#ONE},
-	 * or {@link IntegerStruct#MINUS_ONE} respectively.
+	 * Determines the whether or not the numerical value of this RatioStruct is zero, positive, or negative,
+	 * returning {@code this}, {@link IntegerStruct#ONE}, or {@link IntegerStruct#MINUS_ONE} respectively.
 	 */
 	@Override
 	public NumberStruct signum() {
@@ -443,7 +442,7 @@ public class RatioStruct extends RationalStruct {
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Computes the addition function result for an RatioStruct and a {@link IntegerStruct}.
+		 * Computes the addition function result for an {@link RatioStruct} and a {@link IntegerStruct}.
 		 */
 		@Override
 		public RealStruct add(final RatioStruct number1, final IntegerStruct number2) {
@@ -456,7 +455,7 @@ public class RatioStruct extends RationalStruct {
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Computes the addition function result for RatioStructs.
+		 * Computes the addition function result for {@link RatioStruct}s.
 		 */
 		@Override
 		public RealStruct add(final RatioStruct number1, final RatioStruct number2) {
@@ -480,7 +479,7 @@ public class RatioStruct extends RationalStruct {
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Computes the subtraction function result for an RatioStruct and a {@link IntegerStruct}.
+		 * Computes the subtraction function result for an {@link RatioStruct} and a {@link IntegerStruct}.
 		 */
 		@Override
 		public RealStruct subtract(final RatioStruct number1, final IntegerStruct number2) {
@@ -493,7 +492,7 @@ public class RatioStruct extends RationalStruct {
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Computes the subtraction function result for RatioStructs.
+		 * Computes the subtraction function result for {@link RatioStruct}s.
 		 */
 		@Override
 		public RealStruct subtract(final RatioStruct number1, final RatioStruct number2) {
@@ -517,7 +516,7 @@ public class RatioStruct extends RationalStruct {
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Computes the multiplication function result for an RatioStruct and a {@link IntegerStruct}.
+		 * Computes the multiplication function result for an {@link RatioStruct} and a {@link IntegerStruct}.
 		 */
 		@Override
 		public RealStruct multiply(final RatioStruct number1, final IntegerStruct number2) {
@@ -530,7 +529,7 @@ public class RatioStruct extends RationalStruct {
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Computes the multiplication function result for RatioStructs.
+		 * Computes the multiplication function result for {@link RatioStruct}s.
 		 */
 		@Override
 		public RealStruct multiply(final RatioStruct number1, final RatioStruct number2) {
@@ -554,7 +553,7 @@ public class RatioStruct extends RationalStruct {
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Computes the division function result for an RatioStruct and a {@link IntegerStruct}.
+		 * Computes the division function result for an {@link RatioStruct} and a {@link IntegerStruct}.
 		 */
 		@Override
 		public RealStruct divide(final RatioStruct number1, final IntegerStruct number2) {
@@ -567,7 +566,7 @@ public class RatioStruct extends RationalStruct {
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Computes the division function result for RatioStructs.
+		 * Computes the division function result for {@link RatioStruct}s.
 		 */
 		@Override
 		public RealStruct divide(final RatioStruct number1, final RatioStruct number2) {
@@ -629,7 +628,7 @@ public class RatioStruct extends RationalStruct {
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Computes the numeric '=' equality result for an RatioStruct and a {@link IntegerStruct}.
+		 * Computes the numeric '=' equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
 		 */
 		@Override
 		public boolean equalTo(final RatioStruct number1, final IntegerStruct number2) {
@@ -639,7 +638,7 @@ public class RatioStruct extends RationalStruct {
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Computes the numeric '=' equality result for RatioStructs.
+		 * Computes the numeric '=' equality result for {@link RatioStruct}s.
 		 */
 		@Override
 		public boolean equalTo(final RatioStruct number1, final RatioStruct number2) {
@@ -660,7 +659,7 @@ public class RatioStruct extends RationalStruct {
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Computes the numeric '<' equality result for an RatioStruct and a {@link IntegerStruct}.
+		 * Computes the numeric '<' equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
 		 */
 		@Override
 		public boolean lessThan(final RatioStruct real1, final IntegerStruct real2) {
@@ -670,7 +669,7 @@ public class RatioStruct extends RationalStruct {
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Computes the numeric '<' equality result for RatioStructs.
+		 * Computes the numeric '<' equality result for {@link RatioStruct}s.
 		 */
 		@Override
 		public boolean lessThan(final RatioStruct real1, final RatioStruct real2) {
@@ -691,7 +690,7 @@ public class RatioStruct extends RationalStruct {
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Computes the numeric '>' equality result for an RatioStruct and a {@link IntegerStruct}.
+		 * Computes the numeric '>' equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
 		 */
 		@Override
 		public boolean greaterThan(final RatioStruct real1, final IntegerStruct real2) {
@@ -701,7 +700,7 @@ public class RatioStruct extends RationalStruct {
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Computes the numeric '>' equality result for RatioStructs.
+		 * Computes the numeric '>' equality result for {@link RatioStruct}s.
 		 */
 		@Override
 		public boolean greaterThan(final RatioStruct real1, final RatioStruct real2) {
@@ -722,7 +721,7 @@ public class RatioStruct extends RationalStruct {
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Computes the numeric '<=' equality result for an RatioStruct and a {@link IntegerStruct}.
+		 * Computes the numeric '<=' equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
 		 */
 		@Override
 		public boolean lessThanOrEqualTo(final RatioStruct real1, final IntegerStruct real2) {
@@ -732,7 +731,7 @@ public class RatioStruct extends RationalStruct {
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Computes the numeric '<=' equality result for RatioStructs.
+		 * Computes the numeric '<=' equality result for {@link RatioStruct}s.
 		 */
 		@Override
 		public boolean lessThanOrEqualTo(final RatioStruct real1, final RatioStruct real2) {
@@ -753,7 +752,7 @@ public class RatioStruct extends RationalStruct {
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Computes the numeric '>=' equality result for an RatioStruct and a {@link IntegerStruct}.
+		 * Computes the numeric '>=' equality result for an {@link RatioStruct} and a {@link IntegerStruct}.
 		 */
 		@Override
 		public boolean greaterThanOrEqualTo(final RatioStruct real1, final IntegerStruct real2) {
@@ -763,7 +762,7 @@ public class RatioStruct extends RationalStruct {
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Computes the numeric '>=' equality result for RatioStructs.
+		 * Computes the numeric '>=' equality result for {@link RatioStruct}s.
 		 */
 		@Override
 		public boolean greaterThanOrEqualTo(final RatioStruct real1, final RatioStruct real2) {
@@ -784,7 +783,7 @@ public class RatioStruct extends RationalStruct {
 		/**
 		 * {@inheritDoc}
 		 * <p>
-		 * Computes the quotient and remainder results for a RatioStruct as the {@code real} and an {@link
+		 * Computes the quotient and remainder results for a {@link RatioStruct} as the {@code real} and an {@link
 		 * IntegerStruct} as the {@code divisor}.
 		 */
 		@Override

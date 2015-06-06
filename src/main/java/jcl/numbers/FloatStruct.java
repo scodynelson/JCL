@@ -23,17 +23,29 @@ import org.apache.commons.math3.util.FastMath;
 public class FloatStruct extends RealStruct {
 
 	/**
+	 * {@link FloatStruct} constant representing 0.0.
+	 */
+	public static final FloatStruct ZERO = new FloatStruct(BigDecimal.valueOf(0.0));
+
+	/**
+	 * {@link FloatStruct} constant representing -0.0.
+	 */
+	public static final FloatStruct MINUS_ZERO = new FloatStruct(BigDecimal.valueOf(-0.0));
+
+	/**
+	 * {@link FloatStruct} constant representing 1.0.
+	 */
+	public static final FloatStruct ONE = new FloatStruct(BigDecimal.valueOf(1.0));
+
+	/**
+	 * {@link FloatStruct} constant representing -1.0.
+	 */
+	public static final FloatStruct MINUS_ONE = new FloatStruct(BigDecimal.valueOf(-1.0));
+
+	/**
 	 * Serializable Version Unique Identifier.
 	 */
 	private static final long serialVersionUID = 4803312076840516559L;
-
-	public static final FloatStruct ZERO = new FloatStruct(BigDecimal.valueOf(0.0));
-
-	public static final FloatStruct MINUS_ZERO = new FloatStruct(BigDecimal.valueOf(-0.0));
-
-	public static final FloatStruct ONE = new FloatStruct(BigDecimal.valueOf(1.0));
-
-	public static final FloatStruct MINUS_ONE = new FloatStruct(BigDecimal.valueOf(-1.0));
 
 	/**
 	 * The internal {@link BigDecimal} containing the float contents.
@@ -46,7 +58,7 @@ public class FloatStruct extends RealStruct {
 	 * @param doubleValue
 	 * 		the value of the FloatStruct
 	 */
-	FloatStruct(final double doubleValue) {
+	public FloatStruct(final double doubleValue) {
 		this(SingleFloatType.INSTANCE, new BigDecimal(doubleValue));
 	}
 
@@ -102,8 +114,7 @@ public class FloatStruct extends RealStruct {
 		if (bigDecimal.signum() >= 0) {
 			return this;
 		}
-		final BigDecimal negate = bigDecimal.negate();
-		return new FloatStruct(negate);
+		return new FloatStruct(bigDecimal.negate());
 	}
 
 	@Override
@@ -340,9 +351,7 @@ public class FloatStruct extends RealStruct {
 	}
 
 	public IntegerStruct floatPrecision() {
-		final int precision = bigDecimal.precision();
-		final BigInteger bigInteger = BigInteger.valueOf(precision);
-		return new IntegerStruct(bigInteger);
+		return new IntegerStruct(BigInteger.valueOf(bigDecimal.precision()));
 	}
 
 	/**
@@ -427,14 +436,15 @@ public class FloatStruct extends RealStruct {
 
 		@Override
 		public RealStruct add(final FloatStruct number1, final IntegerStruct number2) {
-			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
-			final BigDecimal add = bigDecimal1.add(bigDecimal2);
-			return new FloatStruct(add);
+			return addFloat(number1, number2);
 		}
 
 		@Override
 		public RealStruct add(final FloatStruct number1, final RatioStruct number2) {
+			return addFloat(number1, number2);
+		}
+
+		private static RealStruct addFloat(final FloatStruct number1, final RealStruct number2) {
 			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
 			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
 			final BigDecimal add = bigDecimal1.add(bigDecimal2);
@@ -448,14 +458,15 @@ public class FloatStruct extends RealStruct {
 
 		@Override
 		public RealStruct subtract(final FloatStruct number1, final IntegerStruct number2) {
-			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
-			final BigDecimal subtract = bigDecimal1.subtract(bigDecimal2);
-			return new FloatStruct(subtract);
+			return subtractFloat(number1, number2);
 		}
 
 		@Override
 		public RealStruct subtract(final FloatStruct number1, final RatioStruct number2) {
+			return subtractFloat(number1, number2);
+		}
+
+		private static RealStruct subtractFloat(final FloatStruct number1, final RealStruct number2) {
 			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
 			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
 			final BigDecimal subtract = bigDecimal1.subtract(bigDecimal2);
@@ -469,14 +480,15 @@ public class FloatStruct extends RealStruct {
 
 		@Override
 		public RealStruct multiply(final FloatStruct number1, final IntegerStruct number2) {
-			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
-			final BigDecimal multiply = bigDecimal1.multiply(bigDecimal2);
-			return new FloatStruct(multiply);
+			return multiplyFloat(number1, number2);
 		}
 
 		@Override
 		public RealStruct multiply(final FloatStruct number1, final RatioStruct number2) {
+			return multiplyFloat(number1, number2);
+		}
+
+		private static RealStruct multiplyFloat(final FloatStruct number1, final RealStruct number2) {
 			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
 			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
 			final BigDecimal multiply = bigDecimal1.multiply(bigDecimal2);
@@ -490,14 +502,15 @@ public class FloatStruct extends RealStruct {
 
 		@Override
 		public RealStruct divide(final FloatStruct number1, final IntegerStruct number2) {
-			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
-			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, MathContext.DECIMAL128);
-			return new FloatStruct(divide);
+			return divideFloat(number1, number2);
 		}
 
 		@Override
 		public RealStruct divide(final FloatStruct number1, final RatioStruct number2) {
+			return divideFloat(number1, number2);
+		}
+
+		private static RealStruct divideFloat(final FloatStruct number1, final RealStruct number2) {
 			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
 			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
 			final BigDecimal divide = bigDecimal1.divide(bigDecimal2, MathContext.DECIMAL128);

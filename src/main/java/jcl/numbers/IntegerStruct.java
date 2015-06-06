@@ -104,8 +104,7 @@ public class IntegerStruct extends RationalStruct {
 		if (bigInteger.signum() >= 0) {
 			return this;
 		}
-		final BigInteger negate = bigInteger.negate();
-		return new IntegerStruct(negate);
+		return new IntegerStruct(bigInteger.negate());
 	}
 
 	@Override

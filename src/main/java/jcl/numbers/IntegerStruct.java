@@ -23,17 +23,29 @@ import org.apache.commons.math3.util.FastMath;
 public class IntegerStruct extends RationalStruct {
 
 	/**
+	 * {@link IntegerStruct} constant representing 0.
+	 */
+	public static final IntegerStruct ZERO = new IntegerStruct(BigInteger.ZERO);
+
+	/**
+	 * {@link IntegerStruct} constant representing 1.
+	 */
+	public static final IntegerStruct ONE = new IntegerStruct(BigInteger.ONE);
+
+	/**
+	 * {@link IntegerStruct} constant representing 2.
+	 */
+	public static final IntegerStruct TWO = new IntegerStruct(BigInteger.valueOf(2));
+
+	/**
+	 * {@link IntegerStruct} constant representing -1.
+	 */
+	public static final IntegerStruct MINUS_ONE = new IntegerStruct(BigInteger.valueOf(-1));
+
+	/**
 	 * Serializable Version Unique Identifier.
 	 */
 	private static final long serialVersionUID = -4665072618932472349L;
-
-	public static final IntegerStruct ZERO = new IntegerStruct(BigInteger.ZERO);
-
-	public static final IntegerStruct ONE = new IntegerStruct(BigInteger.ONE);
-
-	public static final IntegerStruct TWO = new IntegerStruct(BigInteger.valueOf(2));
-
-	public static final IntegerStruct MINUS_ONE = new IntegerStruct(BigInteger.valueOf(-1));
 
 	/**
 	 * The internal {@link BigInteger} containing the float contents.
@@ -111,10 +123,20 @@ public class IntegerStruct extends RationalStruct {
 		return bigInteger.signum() < 0;
 	}
 
+	/**
+	 * Returns true if this IntegerStruct is even (divisible by two); otherwise, returns false.
+	 *
+	 * @return true if this IntegerStruct is even (divisible by two); otherwise, false
+	 */
 	public boolean evenp() {
 		return !bigInteger.testBit(0);
 	}
 
+	/**
+	 * Returns true if this IntegerStruct is odd (not divisible by two); otherwise, returns false.
+	 *
+	 * @return true if this IntegerStruct is odd (not divisible by two); otherwise, false
+	 */
 	public boolean oddp() {
 		return bigInteger.testBit(0);
 	}
@@ -182,8 +204,7 @@ public class IntegerStruct extends RationalStruct {
 
 	@Override
 	public NumberStruct negation() {
-		final BigInteger negate = bigInteger.negate();
-		return new IntegerStruct(negate);
+		return new IntegerStruct(bigInteger.negate());
 	}
 
 	@Override
@@ -207,6 +228,11 @@ public class IntegerStruct extends RationalStruct {
 		return IntegerExptStrategy.INSTANCE.expt(this, power);
 	}
 
+	/**
+	 * Returns the greatest IntegerStruct less than or equal to this IntegerStructs exact positive square root.
+	 *
+	 * @return the greatest IntegerStruct less than or equal to this IntegerStructs exact positive square root
+	 */
 	public IntegerStruct isqrt() {
 		final double doubleValue = doubleValue();
 		final double sqrt = FastMath.sqrt(doubleValue);
@@ -286,16 +312,60 @@ public class IntegerStruct extends RationalStruct {
 		return ONE;
 	}
 
+	/**
+	 * Returns the greatest common divisor between this IntegerStruct and the provided IntegerStruct.
+	 *
+	 * @param integer
+	 * 		the IntegerStruct in comparison to this IntegerStruct to determine the greatest common divisor
+	 *
+	 * @return the greatest common divisor between this IntegerStruct and the provided IntegerStruct
+	 */
 	public IntegerStruct gcd(final IntegerStruct integer) {
 		final BigInteger gcd = bigInteger.gcd(integer.bigInteger);
 		return new IntegerStruct(gcd);
 	}
 
+	/**
+	 * Returns the greatest common divisor of the provided IntegerStructs. If the number of IntegerStructs provided is
+	 * 0, {@link #ZERO} is returned. If the number of IntegerStructs provided is 1, that single IntegerStruct is
+	 * returned.
+	 *
+	 * @param integers
+	 * 		the IntegerStructs used to determine the greatest common divisor
+	 *
+	 * @return the greatest common divisor of the provided IntegerStructs
+	 */
+	public static IntegerStruct gcd(final IntegerStruct... integers) {
+		if (integers.length == 0) {
+			return ZERO;
+		}
+		if (integers.length == 1) {
+			return integers[0];
+		}
+
+		IntegerStruct result = integers[0];
+		for (int i = 1; i < integers.length; i++) {
+			final IntegerStruct currentInteger = integers[i];
+			result = result.gcd(currentInteger);
+		}
+		return result;
+	}
+
+	/**
+	 * Returns the least common multiple between this IntegerStruct and the provided IntegerStruct. If this or the
+	 * provided IntegerStruct are '0', the result is {@link #ZERO}.
+	 *
+	 * @param integer
+	 * 		the IntegerStruct in comparison to this IntegerStruct to determine the least common multiple
+	 *
+	 * @return the least common multiple between this IntegerStruct and the provided IntegerStruct
+	 */
 	public IntegerStruct lcm(final IntegerStruct integer) {
-		if (equals(ZERO) || integer.equals(ZERO)) {
+		if (zerop() || integer.zerop()) {
 			return ZERO;
 		}
 
+		// lcm(x y) = abs(x * y) / gcd(x y)
 		final BigInteger multiply = bigInteger.multiply(integer.bigInteger);
 		final BigInteger abs = multiply.abs();
 		final BigInteger gcd = bigInteger.gcd(integer.bigInteger);
@@ -304,99 +374,349 @@ public class IntegerStruct extends RationalStruct {
 		return new IntegerStruct(divide);
 	}
 
-	public IntegerStruct ash(final IntegerStruct integer) {
-		if (integer.equals(ZERO)) {
+	/**
+	 * Returns the least common multiple of the provided IntegerStructs. If the number of IntegerStructs provided is 0,
+	 * {@link #ONE} is returned. If the number of IntegerStructs provided is 1, that single IntegerStruct is returned.
+	 *
+	 * @param integers
+	 * 		the IntegerStructs used to determine the least common multiple
+	 *
+	 * @return the least common multiple of the provided IntegerStructs
+	 */
+	public static IntegerStruct lcm(final IntegerStruct... integers) {
+		if (integers.length == 0) {
+			return ONE;
+		}
+		if (integers.length == 1) {
+			return integers[0];
+		}
+
+		IntegerStruct result = integers[0];
+		for (int i = 1; i < integers.length; i++) {
+			final IntegerStruct currentInteger = integers[i];
+			result = result.lcm(currentInteger);
+		}
+		return result;
+	}
+
+	/**
+	 * Performs the arithmetic shift operation on the binary representation of this IntegerStruct, shifting the bits
+	 * left or right by the provided {@code count} IntegerStruct based on its sign. If the {@code count} value is '0',
+	 * the result is {@code this}.
+	 *
+	 * @param count
+	 * 		the bit positions to shift this IntegerStruct left or right.
+	 *
+	 * @return the arithmetic shift operation on the binary representation of this IntegerStruct
+	 */
+	public IntegerStruct ash(final IntegerStruct count) {
+		if (count.zerop()) {
 			return this;
 		}
 
-		final BigInteger count = integer.bigInteger;
-		final int countInt = count.intValue();
+		final int countInt = count.bigInteger.intValue();
 
-		final BigInteger shiftedBigInteger = bigInteger.shiftLeft(countInt);
-		return new IntegerStruct(shiftedBigInteger);
+		// NOTE: shiftLeft will automatically take care of shiftRight based on the sign of countInt
+		return new IntegerStruct(bigInteger.shiftLeft(countInt));
 	}
 
+	/**
+	 * Returns the bit-wise logical 'and' of this IntegerStruct and the provided IntegerStruct.
+	 *
+	 * @param integer
+	 * 		the IntegerStruct used in performing the bit-wise logical operation
+	 *
+	 * @return the bit-wise logical 'and' of this IntegerStruct and the provided IntegerStruct
+	 */
 	public IntegerStruct logAnd(final IntegerStruct integer) {
-		final BigInteger and = bigInteger.and(integer.bigInteger);
-		return new IntegerStruct(and);
+		return new IntegerStruct(bigInteger.and(integer.bigInteger));
 	}
 
+	/**
+	 * Returns the bit-wise logical 'and' of the provided IntegerStructs. If the number of IntegerStructs provided is
+	 * 0, {@link #MINUS_ONE} is returned. If the number of IntegerStructs provided is 1, that single IntegerStruct is
+	 * returned.
+	 *
+	 * @param integers
+	 * 		the IntegerStructs used in performing the bit-wise logical operation
+	 *
+	 * @return the bit-wise logical 'and' of the provided IntegerStructs
+	 */
+	public static IntegerStruct logAnd(final IntegerStruct... integers) {
+		if (integers.length == 0) {
+			return MINUS_ONE;
+		}
+		if (integers.length == 1) {
+			return integers[0];
+		}
+
+		IntegerStruct result = integers[0];
+		for (int i = 1; i < integers.length; i++) {
+			final IntegerStruct currentInteger = integers[i];
+			result = result.logAnd(currentInteger);
+		}
+		return result;
+	}
+
+	/**
+	 * Returns the bit-wise logical 'and' of the compliment of this IntegerStruct and the provided IntegerStruct.
+	 *
+	 * @param integer
+	 * 		the IntegerStruct used in performing the bit-wise logical operation
+	 *
+	 * @return the bit-wise logical 'and' of this IntegerStruct and the provided IntegerStruct
+	 */
 	public IntegerStruct logAndC1(final IntegerStruct integer) {
-		final BigInteger andC1 = bigInteger.not().and(integer.bigInteger);
-		return new IntegerStruct(andC1);
+		return new IntegerStruct(bigInteger.not().and(integer.bigInteger));
 	}
 
+	/**
+	 * Returns the bit-wise logical 'and' of this IntegerStruct and the compliment of provided IntegerStruct.
+	 *
+	 * @param integer
+	 * 		the IntegerStruct used in performing the bit-wise logical operation
+	 *
+	 * @return the bit-wise logical 'and' of this IntegerStruct and the provided IntegerStruct
+	 */
 	public IntegerStruct logAndC2(final IntegerStruct integer) {
-		final BigInteger andC2 = bigInteger.and(integer.bigInteger.not());
-		return new IntegerStruct(andC2);
+		return new IntegerStruct(bigInteger.and(integer.bigInteger.not()));
 	}
 
+	/**
+	 * Returns the bit-wise logical 'equivalence', or 'exclusive-nor' of this IntegerStruct and the provided
+	 * IntegerStruct.
+	 *
+	 * @param integer
+	 * 		the IntegerStruct used in performing the bit-wise logical operation
+	 *
+	 * @return the bit-wise logical 'equivalence', or 'exclusive-nor' of this IntegerStruct and the provided
+	 * IntegerStruct
+	 */
 	public IntegerStruct logEqv(final IntegerStruct integer) {
-		final BigInteger eqv = bigInteger.xor(integer.bigInteger).not();
-		return new IntegerStruct(eqv);
+		return new IntegerStruct(bigInteger.xor(integer.bigInteger).not());
 	}
 
+	/**
+	 * Returns the bit-wise logical 'equivalence', or 'exclusive-nor' of the provided IntegerStructs. If the number
+	 * of IntegerStructs provided is 0, {@link #MINUS_ONE} is returned. If the number of IntegerStructs provided is 1,
+	 * that single IntegerStruct is returned.
+	 *
+	 * @param integers
+	 * 		the IntegerStructs used in performing the bit-wise logical operation
+	 *
+	 * @return the bit-wise logical 'equivalence', or 'exclusive-nor' of the provided IntegerStructs
+	 */
+	public static IntegerStruct logEqv(final IntegerStruct... integers) {
+		if (integers.length == 0) {
+			return MINUS_ONE;
+		}
+		if (integers.length == 1) {
+			return integers[0];
+		}
+
+		IntegerStruct result = integers[0];
+		for (int i = 1; i < integers.length; i++) {
+			final IntegerStruct currentInteger = integers[i];
+			result = result.logEqv(currentInteger);
+		}
+		return result;
+	}
+
+	/**
+	 * Returns the bit-wise logical 'inclusive-or' of this IntegerStruct and the provided IntegerStruct.
+	 *
+	 * @param integer
+	 * 		the IntegerStruct used in performing the bit-wise logical operation
+	 *
+	 * @return the bit-wise logical 'inclusive-or' of this IntegerStruct and the provided IntegerStruct
+	 */
 	public IntegerStruct logIor(final IntegerStruct integer) {
-		final BigInteger ior = bigInteger.or(integer.bigInteger);
-		return new IntegerStruct(ior);
+		return new IntegerStruct(bigInteger.or(integer.bigInteger));
 	}
 
+	/**
+	 * Returns the bit-wise logical 'inclusive-or' of the provided IntegerStructs. If the number of IntegerStructs
+	 * provided is 0, {@link #ZERO} is returned. If the number of IntegerStructs provided is 1, that single
+	 * IntegerStruct is returned.
+	 *
+	 * @param integers
+	 * 		the IntegerStructs used in performing the bit-wise logical operation
+	 *
+	 * @return the bit-wise logical 'inclusive-or' of the provided IntegerStructs
+	 */
+	public static IntegerStruct logIor(final IntegerStruct... integers) {
+		if (integers.length == 0) {
+			return ZERO;
+		}
+		if (integers.length == 1) {
+			return integers[0];
+		}
+
+		IntegerStruct result = integers[0];
+		for (int i = 1; i < integers.length; i++) {
+			final IntegerStruct currentInteger = integers[i];
+			result = result.logIor(currentInteger);
+		}
+		return result;
+	}
+
+	/**
+	 * Returns the bit-wise logical compliment 'and' of this IntegerStruct and the provided IntegerStruct.
+	 *
+	 * @param integer
+	 * 		the IntegerStruct used in performing the bit-wise logical operation
+	 *
+	 * @return the bit-wise logical compliment 'and' of this IntegerStruct and the provided IntegerStruct
+	 */
 	public IntegerStruct logNand(final IntegerStruct integer) {
-		final BigInteger nand = bigInteger.and(integer.bigInteger).not();
-		return new IntegerStruct(nand);
+		return new IntegerStruct(bigInteger.and(integer.bigInteger).not());
 	}
 
+	/**
+	 * Returns the bit-wise logical compliment 'or' of this IntegerStruct and the provided IntegerStruct.
+	 *
+	 * @param integer
+	 * 		the IntegerStruct used in performing the bit-wise logical operation
+	 *
+	 * @return the bit-wise logical compliment 'or' of this IntegerStruct and the provided IntegerStruct
+	 */
 	public IntegerStruct logNor(final IntegerStruct integer) {
-		final BigInteger nor = bigInteger.or(integer.bigInteger).not();
-		return new IntegerStruct(nor);
+		return new IntegerStruct(bigInteger.or(integer.bigInteger).not());
 	}
 
+	/**
+	 * Returns the bit-wise logical 'not' of this IntegerStruct.
+	 *
+	 * @return the bit-wise logical 'not' of this IntegerStruct
+	 */
 	public IntegerStruct logNot() {
-		final BigInteger not = bigInteger.not();
-		return new IntegerStruct(not);
+		return new IntegerStruct(bigInteger.not());
 	}
 
+	/**
+	 * Returns the bit-wise logical 'or' of the compliment of this IntegerStruct and the provided IntegerStruct.
+	 *
+	 * @param integer
+	 * 		the IntegerStruct used in performing the bit-wise logical operation
+	 *
+	 * @return the bit-wise logical 'or' of the compliment of this IntegerStruct and the provided IntegerStruct
+	 */
 	public IntegerStruct logOrC1(final IntegerStruct integer) {
-		final BigInteger orC1 = bigInteger.not().or(integer.bigInteger);
-		return new IntegerStruct(orC1);
+		return new IntegerStruct(bigInteger.not().or(integer.bigInteger));
 	}
 
+	/**
+	 * Returns the bit-wise logical 'or' of this IntegerStruct and the compliment of provided IntegerStruct.
+	 *
+	 * @param integer
+	 * 		the IntegerStruct used in performing the bit-wise logical operation
+	 *
+	 * @return the bit-wise logical 'or' of this IntegerStruct and the compliment of provided IntegerStruct
+	 */
 	public IntegerStruct logOrC2(final IntegerStruct integer) {
-		final BigInteger orC2 = bigInteger.or(integer.bigInteger.not());
-		return new IntegerStruct(orC2);
+		return new IntegerStruct(bigInteger.or(integer.bigInteger.not()));
 	}
 
+	/**
+	 * Returns the bit-wise logical 'exclusive-or' of this IntegerStruct and the provided IntegerStruct.
+	 *
+	 * @param integer
+	 * 		the IntegerStruct used in performing the bit-wise logical operation
+	 *
+	 * @return the bit-wise logical 'exclusive-or' of this IntegerStruct and the provided IntegerStruct
+	 */
 	public IntegerStruct logXor(final IntegerStruct integer) {
-		final BigInteger xor = bigInteger.xor(integer.bigInteger);
-		return new IntegerStruct(xor);
+		return new IntegerStruct(bigInteger.xor(integer.bigInteger));
 	}
 
+	/**
+	 * Returns the bit-wise logical 'exclusive-or' of the provided IntegerStructs. If the number of IntegerStructs
+	 * provided is 0, {@link #ZERO} is returned. If the number of IntegerStructs provided is 1, that single
+	 * IntegerStruct is returned.
+	 *
+	 * @param integers
+	 * 		the IntegerStructs used in performing the bit-wise logical operation
+	 *
+	 * @return the bit-wise logical 'exclusive-or' of the provided IntegerStructs
+	 */
+	public static IntegerStruct logXor(final IntegerStruct... integers) {
+		if (integers.length == 0) {
+			return ZERO;
+		}
+		if (integers.length == 1) {
+			return integers[0];
+		}
+
+		IntegerStruct result = integers[0];
+		for (int i = 1; i < integers.length; i++) {
+			final IntegerStruct currentInteger = integers[i];
+			result = result.logXor(currentInteger);
+		}
+		return result;
+	}
+
+	/**
+	 * Returns the number of bits needed to represent this IntegerStruct in binary two's-complement format.
+	 *
+	 * @return the number of bits needed to represent this IntegerStruct in binary two's-complement format
+	 */
 	public IntegerStruct integerLength() {
 		final int bitLength = bigInteger.bitLength();
 		final BigInteger bitLengthBigInteger = BigInteger.valueOf(bitLength);
 		return new IntegerStruct(bitLengthBigInteger);
 	}
 
+	/**
+	 * Returns true if the bit in this IntegerStruct whose index is {@code index} is a one-bit; otherwise, returns
+	 * false.
+	 *
+	 * @param index
+	 * 		the index value to test this IntegerStruct for a one-bit
+	 *
+	 * @return true if the bit in this IntegerStruct whose index is {@code index} is a one-bit; otherwise, false
+	 */
 	public boolean logBitP(final IntegerStruct index) {
-		final BigInteger indexBigInteger = index.bigInteger;
-		final int indexInt = indexBigInteger.intValue();
+		final int indexInt = index.bigInteger.intValue();
 		return bigInteger.testBit(indexInt);
 	}
 
+	/**
+	 * Computes and returns the number of bits in the two's-complement binary representation of this IntegerStruct that
+	 * are 'on' or 'set'. If this IntegerStruct is negative, the 0 bits are counted; otherwise, the 1 bits are counted.
+	 *
+	 * @return Computes and returns the number of bits in the two's-complement binary representation of this
+	 * IntegerStruct that are 'on' or 'set'
+	 */
 	public IntegerStruct logCount() {
 		final int bitCount = bigInteger.bitCount();
 		final BigInteger bitCountBigInteger = BigInteger.valueOf(bitCount);
 		return new IntegerStruct(bitCountBigInteger);
 	}
 
+	/**
+	 * Returns true if any of the bits designated by the 1's in this IntegerStruct are 1 in the provided IntegerStruct;
+	 * otherwise, returns false.
+	 *
+	 * @param integer
+	 * 		the IntegerStruct used in the test comparison to this IntegerStruct
+	 *
+	 * @return true if any of the bits designated by the 1's in this IntegerStruct are 1 in the provided IntegerStruct;
+	 * otherwise, false.
+	 */
 	public boolean logTest(final IntegerStruct integer) {
 		return bigInteger.and(integer.bigInteger).signum() != 0;
 	}
 
 	// Strategy Implementations
 
+	/**
+	 * {@link RealAddStrategy} for computing addition results for {@link IntegerStruct}s.
+	 */
 	private static class IntegerAddStrategy extends RealAddStrategy<IntegerStruct> {
 
+		/**
+		 * Singleton instance of the {@link IntegerAddStrategy} type.
+		 */
 		private static final IntegerAddStrategy INSTANCE = new IntegerAddStrategy();
 
 		@Override
@@ -421,8 +741,14 @@ public class IntegerStruct extends RationalStruct {
 		}
 	}
 
+	/**
+	 * {@link RealSubtractStrategy} for computing subtraction function results for {@link IntegerStruct}s.
+	 */
 	private static class IntegerSubtractStrategy extends RealSubtractStrategy<IntegerStruct> {
 
+		/**
+		 * Singleton instance of the {@link IntegerSubtractStrategy} type.
+		 */
 		private static final IntegerSubtractStrategy INSTANCE = new IntegerSubtractStrategy();
 
 		@Override
@@ -447,8 +773,14 @@ public class IntegerStruct extends RationalStruct {
 		}
 	}
 
+	/**
+	 * {@link RealMultiplyStrategy} for computing multiplication function results for {@link IntegerStruct}s.
+	 */
 	private static class IntegerMultiplyStrategy extends RealMultiplyStrategy<IntegerStruct> {
 
+		/**
+		 * Singleton instance of the {@link IntegerMultiplyStrategy} type.
+		 */
 		private static final IntegerMultiplyStrategy INSTANCE = new IntegerMultiplyStrategy();
 
 		@Override
@@ -472,8 +804,14 @@ public class IntegerStruct extends RationalStruct {
 		}
 	}
 
+	/**
+	 * {@link RealDivideStrategy} for computing division function results for {@link IntegerStruct}s.
+	 */
 	private static class IntegerDivideStrategy extends RealDivideStrategy<IntegerStruct> {
 
+		/**
+		 * Singleton instance of the {@link IntegerDivideStrategy} type.
+		 */
 		private static final IntegerDivideStrategy INSTANCE = new IntegerDivideStrategy();
 
 		@Override
@@ -496,12 +834,32 @@ public class IntegerStruct extends RationalStruct {
 		}
 	}
 
+	/**
+	 * Determines numeric comparison result between the provided IntegerStructs.
+	 *
+	 * @param number1
+	 * 		the first IntegerStruct in the comparison operation
+	 * @param number2
+	 * 		the second IntegerStruct in the comparison operation
+	 *
+	 * @return numeric comparison result between the provided IntegerStructs
+	 */
 	private static int getComparisonResult(final IntegerStruct number1, final IntegerStruct number2) {
 		final BigInteger bigInteger1 = number1.bigInteger;
 		final BigInteger bigInteger2 = number2.bigInteger;
 		return bigInteger1.compareTo(bigInteger2);
 	}
 
+	/**
+	 * Determines numeric comparison result between the provided IntegerStruct and {@link RatioStruct}.
+	 *
+	 * @param number1
+	 * 		the IntegerStruct in the comparison operation
+	 * @param number2
+	 * 		the {@link RatioStruct} in the comparison operation
+	 *
+	 * @return numeric comparison result between the provided IntegerStruct and {@link RatioStruct}
+	 */
 	private static int getComparisonResult(final IntegerStruct number1, final RatioStruct number2) {
 		final BigInteger bigInteger1 = number1.bigInteger;
 
@@ -514,8 +872,14 @@ public class IntegerStruct extends RationalStruct {
 		return multiply.compareTo(numerator);
 	}
 
+	/**
+	 * {@link RealEqualToStrategy} for computing numeric '=' equality results for {@link IntegerStruct}s.
+	 */
 	private static class IntegerEqualToStrategy extends RealEqualToStrategy<IntegerStruct> {
 
+		/**
+		 * Singleton instance of the {@link IntegerEqualToStrategy} type.
+		 */
 		private static final IntegerEqualToStrategy INSTANCE = new IntegerEqualToStrategy();
 
 		@Override
@@ -531,8 +895,14 @@ public class IntegerStruct extends RationalStruct {
 		}
 	}
 
+	/**
+	 * {@link LessThanStrategy} for computing numeric '<' equality results for {@link IntegerStruct}s.
+	 */
 	private static class IntegerLessThanStrategy extends LessThanStrategy<IntegerStruct> {
 
+		/**
+		 * Singleton instance of the {@link IntegerLessThanStrategy} type.
+		 */
 		private static final IntegerLessThanStrategy INSTANCE = new IntegerLessThanStrategy();
 
 		@Override
@@ -546,8 +916,14 @@ public class IntegerStruct extends RationalStruct {
 		}
 	}
 
+	/**
+	 * {@link GreaterThanStrategy} for computing numeric '>' equality results for {@link IntegerStruct}s.
+	 */
 	private static class IntegerGreaterThanStrategy extends GreaterThanStrategy<IntegerStruct> {
 
+		/**
+		 * Singleton instance of the {@link IntegerGreaterThanStrategy} type.
+		 */
 		private static final IntegerGreaterThanStrategy INSTANCE = new IntegerGreaterThanStrategy();
 
 		@Override
@@ -561,8 +937,14 @@ public class IntegerStruct extends RationalStruct {
 		}
 	}
 
+	/**
+	 * {@link LessThanOrEqualToStrategy} for computing numeric '<=' equality results for {@link IntegerStruct}s.
+	 */
 	private static class IntegerLessThanOrEqualToStrategy extends LessThanOrEqualToStrategy<IntegerStruct> {
 
+		/**
+		 * Singleton instance of the {@link IntegerLessThanOrEqualToStrategy} type.
+		 */
 		private static final IntegerLessThanOrEqualToStrategy INSTANCE = new IntegerLessThanOrEqualToStrategy();
 
 		@Override
@@ -576,8 +958,14 @@ public class IntegerStruct extends RationalStruct {
 		}
 	}
 
+	/**
+	 * {@link GreaterThanOrEqualToStrategy} for computing numeric '>=' equality results for {@link IntegerStruct}s.
+	 */
 	private static class IntegerGreaterThanOrEqualToStrategy extends GreaterThanOrEqualToStrategy<IntegerStruct> {
 
+		/**
+		 * Singleton instance of the {@link IntegerGreaterThanOrEqualToStrategy} type.
+		 */
 		private static final IntegerGreaterThanOrEqualToStrategy INSTANCE = new IntegerGreaterThanOrEqualToStrategy();
 
 		@Override
@@ -591,8 +979,14 @@ public class IntegerStruct extends RationalStruct {
 		}
 	}
 
+	/**
+	 * {@link MaxStrategy} for computing the comparable maximum numerical results for {@link IntegerStruct}s.
+	 */
 	private static class IntegerMaxStrategy extends MaxStrategy<IntegerStruct> {
 
+		/**
+		 * Singleton instance of the {@link IntegerMaxStrategy} type.
+		 */
 		private static final IntegerMaxStrategy INSTANCE = new IntegerMaxStrategy();
 
 		@Override
@@ -605,8 +999,14 @@ public class IntegerStruct extends RationalStruct {
 		}
 	}
 
+	/**
+	 * {@link MinStrategy} for computing the comparable minimum numerical results for {@link IntegerStruct}s.
+	 */
 	private static class IntegerMinStrategy extends MinStrategy<IntegerStruct> {
 
+		/**
+		 * Singleton instance of the {@link IntegerMinStrategy} type.
+		 */
 		private static final IntegerMinStrategy INSTANCE = new IntegerMinStrategy();
 
 		@Override
@@ -619,8 +1019,15 @@ public class IntegerStruct extends RationalStruct {
 		}
 	}
 
+	/**
+	 * {@link IntegerQuotientRemainderStrategy} for computing quotient and remainder results for {@link
+	 * IntegerStruct}s.
+	 */
 	private static class IntegerQuotientRemainderStrategy extends RationalQuotientRemainderStrategy<IntegerStruct> {
 
+		/**
+		 * Singleton instance of the {@link IntegerQuotientRemainderStrategy} type.
+		 */
 		private static final IntegerQuotientRemainderStrategy INSTANCE = new IntegerQuotientRemainderStrategy();
 
 		@Override
@@ -647,8 +1054,14 @@ public class IntegerStruct extends RationalStruct {
 		}
 	}
 
+	/**
+	 * {@link RealExptStrategy} for computing exponential function results for {@link IntegerStruct}s.
+	 */
 	private static class IntegerExptStrategy extends RealExptStrategy<IntegerStruct> {
 
+		/**
+		 * Singleton instance of the {@link IntegerExptStrategy} type.
+		 */
 		private static final IntegerExptStrategy INSTANCE = new IntegerExptStrategy();
 
 		@Override
@@ -658,104 +1071,6 @@ public class IntegerStruct extends RationalStruct {
 			final BigInteger pow = ArithmeticUtils.pow(bigInteger1, powerBigInteger);
 			return new IntegerStruct(pow);
 		}
-	}
-
-	// Static Multi-Arg Methods
-
-	public static IntegerStruct gcd(final IntegerStruct... integers) {
-		if (integers.length == 0) {
-			return ZERO;
-		}
-		if (integers.length == 1) {
-			return integers[0];
-		}
-
-		IntegerStruct result = integers[0];
-		for (int i = 1; i < integers.length; i++) {
-			final IntegerStruct currentInteger = integers[i];
-			result = result.gcd(currentInteger);
-		}
-		return result;
-	}
-
-	public static IntegerStruct lcm(final IntegerStruct... integers) {
-		if (integers.length == 0) {
-			return ONE;
-		}
-		if (integers.length == 1) {
-			return integers[0];
-		}
-
-		IntegerStruct result = integers[0];
-		for (int i = 1; i < integers.length; i++) {
-			final IntegerStruct currentInteger = integers[i];
-			result = result.lcm(currentInteger);
-		}
-		return result;
-	}
-
-	public static IntegerStruct logAnd(final IntegerStruct... integers) {
-		if (integers.length == 0) {
-			return MINUS_ONE;
-		}
-		if (integers.length == 1) {
-			return integers[0];
-		}
-
-		IntegerStruct result = integers[0];
-		for (int i = 1; i < integers.length; i++) {
-			final IntegerStruct currentInteger = integers[i];
-			result = result.logAnd(currentInteger);
-		}
-		return result;
-	}
-
-	public static IntegerStruct logEqv(final IntegerStruct... integers) {
-		if (integers.length == 0) {
-			return MINUS_ONE;
-		}
-		if (integers.length == 1) {
-			return integers[0];
-		}
-
-		IntegerStruct result = integers[0];
-		for (int i = 1; i < integers.length; i++) {
-			final IntegerStruct currentInteger = integers[i];
-			result = result.logEqv(currentInteger);
-		}
-		return result;
-	}
-
-	public static IntegerStruct logIor(final IntegerStruct... integers) {
-		if (integers.length == 0) {
-			return ZERO;
-		}
-		if (integers.length == 1) {
-			return integers[0];
-		}
-
-		IntegerStruct result = integers[0];
-		for (int i = 1; i < integers.length; i++) {
-			final IntegerStruct currentInteger = integers[i];
-			result = result.logIor(currentInteger);
-		}
-		return result;
-	}
-
-	public static IntegerStruct logXor(final IntegerStruct... integers) {
-		if (integers.length == 0) {
-			return ZERO;
-		}
-		if (integers.length == 1) {
-			return integers[0];
-		}
-
-		IntegerStruct result = integers[0];
-		for (int i = 1; i < integers.length; i++) {
-			final IntegerStruct currentInteger = integers[i];
-			result = result.logXor(currentInteger);
-		}
-		return result;
 	}
 
 	// HashCode / Equals

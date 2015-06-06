@@ -174,15 +174,12 @@ public class RatioStruct extends RationalStruct {
 
 	@Override
 	public NumberStruct negation() {
-		final BigFraction negation = bigFraction.negate();
-		return new RatioStruct(negation);
+		return new RatioStruct(bigFraction.negate());
 	}
 
 	@Override
 	public NumberStruct reciprocal() {
-		final BigInteger numerator = bigFraction.getNumerator();
-		final BigInteger denominator = bigFraction.getDenominator();
-		return makeRational(denominator, numerator);
+		return makeRational(bigFraction.getNumerator(), bigFraction.getDenominator());
 	}
 
 	@Override
@@ -269,7 +266,7 @@ public class RatioStruct extends RationalStruct {
 	// Strategy Implementations
 
 	/**
-	 * {@link AddStrategy} for computing addition results for {@link RatioStruct}s.
+	 * {@link RealAddStrategy} for computing addition results for {@link RatioStruct}s.
 	 */
 	private static class RatioAddStrategy extends RealAddStrategy<RatioStruct> {
 
@@ -296,7 +293,7 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link SubtractStrategy} for computing subtraction function results for {@link RatioStruct}s.
+	 * {@link RealSubtractStrategy} for computing subtraction function results for {@link RatioStruct}s.
 	 */
 	private static class RatioSubtractStrategy extends RealSubtractStrategy<RatioStruct> {
 
@@ -323,7 +320,7 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link MultiplyStrategy} for computing multiplication function results for {@link RatioStruct}s.
+	 * {@link RealMultiplyStrategy} for computing multiplication function results for {@link RatioStruct}s.
 	 */
 	private static class RatioMultiplyStrategy extends RealMultiplyStrategy<RatioStruct> {
 
@@ -350,7 +347,7 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link DivideStrategy} for computing division function results for {@link RatioStruct}s.
+	 * {@link RealDivideStrategy} for computing division function results for {@link RatioStruct}s.
 	 */
 	private static class RatioDivideStrategy extends RealDivideStrategy<RatioStruct> {
 

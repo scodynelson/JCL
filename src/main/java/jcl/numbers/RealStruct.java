@@ -576,7 +576,7 @@ public abstract class RealStruct extends NumberStruct {
 
 	protected static class MaxStrategy<S extends RealStruct> {
 
-		protected static final MaxStrategy<RealStruct> INSTANCE = new MaxStrategy<>();
+		private static final MaxStrategy<RealStruct> INSTANCE = new MaxStrategy<>();
 
 		public RealStruct max(final S real1, final RealStruct real2) {
 			if (real2 instanceof IntegerStruct) {
@@ -617,7 +617,7 @@ public abstract class RealStruct extends NumberStruct {
 
 	protected static class MinStrategy<S extends RealStruct> {
 
-		protected static final MinStrategy<RealStruct> INSTANCE = new MinStrategy<>();
+		private static final MinStrategy<RealStruct> INSTANCE = new MinStrategy<>();
 
 		public RealStruct min(final S real1, final RealStruct real2) {
 			if (real2 instanceof IntegerStruct) {

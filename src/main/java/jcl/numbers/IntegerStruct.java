@@ -995,7 +995,7 @@ public class IntegerStruct extends RationalStruct {
 			final BigInteger bigInteger2 = real2.getBigInteger();
 
 			final BigInteger max = bigInteger1.max(bigInteger2);
-			return Objects.equals(bigInteger1, max) ? real1 : real2;
+			return (bigInteger1.compareTo(max) == 0) ? real1 : real2;
 		}
 	}
 
@@ -1015,7 +1015,7 @@ public class IntegerStruct extends RationalStruct {
 			final BigInteger bigInteger2 = real2.getBigInteger();
 
 			final BigInteger min = bigInteger1.min(bigInteger2);
-			return Objects.equals(bigInteger1, min) ? real1 : real2;
+			return (bigInteger1.compareTo(min) == 0) ? real1 : real2;
 		}
 	}
 

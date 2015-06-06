@@ -90,7 +90,7 @@ public class RatioStruct extends RationalStruct {
 	@Override
 	public RealStruct abs() {
 		final BigFraction abs = bigFraction.abs();
-		if (abs.equals(bigFraction)) {
+		if (abs.compareTo(bigFraction) == 0) {
 			return this;
 		}
 		return new RatioStruct(abs);

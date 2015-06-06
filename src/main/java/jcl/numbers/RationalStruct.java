@@ -84,13 +84,13 @@ public abstract class RationalStruct extends RealStruct {
 
 		// Reduce Numerator and Denominator
 		final BigInteger gcd = realNumerator.gcd(realDenominator);
-		if (!gcd.equals(BigInteger.ONE)) {
+		if (gcd.compareTo(BigInteger.ONE) != 0) {
 			realNumerator = realNumerator.divide(gcd);
 			realDenominator = realDenominator.divide(gcd);
 		}
 
 		// If reduced Denominator is '1', return an Integer; otherwise, return the Ratio with the Numerator and Denominator
-		if (realDenominator.equals(BigInteger.ONE)) {
+		if (realDenominator.compareTo(BigInteger.ONE) == 0) {
 			return new IntegerStruct(realNumerator);
 		} else {
 			return new RatioStruct(realNumerator, realDenominator);

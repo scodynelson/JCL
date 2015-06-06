@@ -595,7 +595,7 @@ public abstract class RealStruct extends NumberStruct {
 			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
 
 			final BigDecimal max = bigDecimal1.max(bigDecimal2);
-			return Objects.equals(bigDecimal1, max) ? real1 : real2;
+			return (bigDecimal1.compareTo(max) == 0) ? real1 : real2;
 		}
 
 		public RealStruct max(final S real1, final FloatStruct real2) {
@@ -603,7 +603,7 @@ public abstract class RealStruct extends NumberStruct {
 			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
 
 			final BigDecimal max = bigDecimal1.max(bigDecimal2);
-			return Objects.equals(bigDecimal1, max) ? real1 : real2;
+			return (bigDecimal1.compareTo(max) == 0) ? real1 : real2;
 		}
 
 		public RealStruct max(final S real1, final RatioStruct real2) {
@@ -611,7 +611,7 @@ public abstract class RealStruct extends NumberStruct {
 			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
 
 			final BigDecimal max = bigDecimal1.max(bigDecimal2);
-			return Objects.equals(bigDecimal1, max) ? real1 : real2;
+			return (bigDecimal1.compareTo(max) == 0) ? real1 : real2;
 		}
 	}
 
@@ -636,7 +636,7 @@ public abstract class RealStruct extends NumberStruct {
 			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
 
 			final BigDecimal min = bigDecimal1.min(bigDecimal2);
-			return Objects.equals(bigDecimal1, min) ? real1 : real2;
+			return (bigDecimal1.compareTo(min) == 0) ? real1 : real2;
 		}
 
 		public RealStruct min(final S real1, final FloatStruct real2) {
@@ -644,7 +644,7 @@ public abstract class RealStruct extends NumberStruct {
 			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
 
 			final BigDecimal min = bigDecimal1.min(bigDecimal2);
-			return Objects.equals(bigDecimal1, min) ? real1 : real2;
+			return (bigDecimal1.compareTo(min) == 0) ? real1 : real2;
 		}
 
 		public RealStruct min(final S real1, final RatioStruct real2) {
@@ -652,7 +652,7 @@ public abstract class RealStruct extends NumberStruct {
 			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
 
 			final BigDecimal min = bigDecimal1.min(bigDecimal2);
-			return Objects.equals(bigDecimal1, min) ? real1 : real2;
+			return (bigDecimal1.compareTo(min) == 0) ? real1 : real2;
 		}
 	}
 

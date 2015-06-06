@@ -184,10 +184,10 @@ public class FloatStruct extends RealStruct {
 
 	@Override
 	public NumberStruct negation() {
-		if (equals(ZERO)) {
+		if (isEqualTo(ZERO)) {
 			return MINUS_ZERO;
 		}
-		if (equals(MINUS_ZERO)) {
+		if (isEqualTo(MINUS_ZERO)) {
 			return ZERO;
 		}
 		return new FloatStruct(bigDecimal.negate());
@@ -235,7 +235,7 @@ public class FloatStruct extends RealStruct {
 	public RationalStruct rational() {
 		// TODO: can we get rid of using the BigFractionUtil???
 		final BigFraction bigFraction = BigFractionUtil.getBigFraction(bigDecimal);
-		if (bigFraction.getDenominator().equals(BigInteger.ONE)) {
+		if (bigFraction.getDenominator().compareTo(BigInteger.ONE) == 0) {
 			return new IntegerStruct(bigFraction.getNumerator());
 		}
 		return new RatioStruct(bigFraction);

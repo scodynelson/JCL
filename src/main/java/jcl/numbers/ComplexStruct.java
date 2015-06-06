@@ -381,7 +381,7 @@ public class ComplexStruct extends NumberStruct {
 
 	@Override
 	public NumberStruct sqrt() {
-		if (FloatStruct.ZERO.equals(real) && FloatStruct.ZERO.equals(imaginary)) {
+		if (FloatStruct.ZERO.isEqualTo(real) && FloatStruct.ZERO.isEqualTo(imaginary)) {
 			return ZERO;
 		}
 		final double twoValue = 2.0D;

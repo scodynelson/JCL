@@ -271,31 +271,61 @@ public class ComplexStruct extends NumberStruct {
 		return new FloatStruct(sqrtOfSquareSum);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Determines whether or not this ComplexStruct is zero using {@link #real#zerop} and {@link #imaginary#zerop()}.
+	 */
 	@Override
 	public boolean zerop() {
 		return real.zerop() && imaginary.zerop();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the addition function result for this ComplexStruct and the provided {@code number}.
+	 */
 	@Override
 	public NumberStruct add(final NumberStruct number) {
 		return ComplexAddStrategy.INSTANCE.add(this, number);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the subtraction function result for this ComplexStruct and the provided {@code number}.
+	 */
 	@Override
 	public NumberStruct subtract(final NumberStruct number) {
 		return ComplexSubtractStrategy.INSTANCE.subtract(this, number);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the multiplication function result for this ComplexStruct and the provided {@code number}.
+	 */
 	@Override
 	public NumberStruct multiply(final NumberStruct number) {
 		return ComplexMultiplyStrategy.INSTANCE.multiply(this, number);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the division function result for this ComplexStruct and the provided {@code number}.
+	 */
 	@Override
 	public NumberStruct divide(final NumberStruct number) {
 		return ComplexDivideStrategy.INSTANCE.divide(this, number);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the numeric '=' equality result for this ComplexStruct and the provided {@code number}.
+	 */
 	@Override
 	public boolean isEqualTo(final NumberStruct number) {
 		return ComplexEqualToStrategy.INSTANCE.equalTo(this, number);
@@ -930,28 +960,28 @@ public class ComplexStruct extends NumberStruct {
 		protected static final ComplexExptStrategy INSTANCE = new ComplexExptStrategy();
 
 		@Override
-		public NumberStruct expt(final ComplexStruct number1, final IntegerStruct number2) {
-			if (number1.getReal() instanceof RationalStruct) {
-				return exptInteger(number1, number2);
+		public NumberStruct expt(final ComplexStruct base, final IntegerStruct power) {
+			if (base.getReal() instanceof RationalStruct) {
+				return exptInteger(base, power);
 			}
-			final NumberStruct logOfBase = number1.log();
-			final NumberStruct powerComplexLogOfBaseProduct = number2.multiply(logOfBase);
+			final NumberStruct logOfBase = base.log();
+			final NumberStruct powerComplexLogOfBaseProduct = power.multiply(logOfBase);
 			return powerComplexLogOfBaseProduct.exp();
 		}
 
 		@Override
-		public NumberStruct expt(final ComplexStruct number1, final FloatStruct number2) {
-			return exptComplex(number1, number2);
+		public NumberStruct expt(final ComplexStruct base, final FloatStruct power) {
+			return exptComplex(base, power);
 		}
 
 		@Override
-		public NumberStruct expt(final ComplexStruct number1, final RatioStruct number2) {
-			return exptComplex(number1, number2);
+		public NumberStruct expt(final ComplexStruct base, final RatioStruct power) {
+			return exptComplex(base, power);
 		}
 
 		@Override
-		public NumberStruct expt(final ComplexStruct number1, final ComplexStruct number2) {
-			return exptComplex(number1, number2);
+		public NumberStruct expt(final ComplexStruct base, final ComplexStruct power) {
+			return exptComplex(base, power);
 		}
 
 		/**

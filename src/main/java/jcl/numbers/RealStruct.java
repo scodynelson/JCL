@@ -9,7 +9,6 @@ import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.List;
-import java.util.Objects;
 
 import jcl.LispStruct;
 import jcl.conditions.exceptions.ErrorException;
@@ -759,23 +758,23 @@ public abstract class RealStruct extends NumberStruct {
 		protected static final RealExptStrategy<RealStruct> INSTANCE = new RealExptStrategy<>();
 
 		@Override
-		public NumberStruct expt(final S number1, final IntegerStruct number2) {
-			return exptInteger(number1, number2);
+		public NumberStruct expt(final S base, final IntegerStruct power) {
+			return exptInteger(base, power);
 		}
 
 		@Override
-		public NumberStruct expt(final S number1, final FloatStruct number2) {
-			return exptFloatRatio(number1, number2);
+		public NumberStruct expt(final S base, final FloatStruct power) {
+			return exptFloatRatio(base, power);
 		}
 
 		@Override
-		public NumberStruct expt(final S number1, final RatioStruct number2) {
-			return exptFloatRatio(number1, number2);
+		public NumberStruct expt(final S base, final RatioStruct power) {
+			return exptFloatRatio(base, power);
 		}
 
-		private static NumberStruct exptFloatRatio(final RealStruct real1, final RealStruct real2) {
-			final double x = real1.doubleValue();
-			final double y = real2.doubleValue();
+		private static NumberStruct exptFloatRatio(final RealStruct base, final RealStruct power) {
+			final double x = base.doubleValue();
+			final double y = power.doubleValue();
 
 			double result = FastMath.pow(x, y);
 			if (Double.isNaN(result)) {
@@ -796,22 +795,22 @@ public abstract class RealStruct extends NumberStruct {
 		}
 
 		@Override
-		public NumberStruct expt(final S number1, final ComplexStruct number2) {
-			final RealStruct powerComplexReal = number2.getReal();
+		public NumberStruct expt(final S base, final ComplexStruct power) {
+			final RealStruct powerComplexReal = power.getReal();
 			final BigDecimal powerComplexRealBigDecimal = powerComplexReal.bigDecimalValue();
 			final FloatStruct real = new FloatStruct(powerComplexRealBigDecimal);
 
-			final RealStruct powerComplexImaginary = number2.getImaginary();
+			final RealStruct powerComplexImaginary = power.getImaginary();
 			final BigDecimal powerComplexImaginaryBigDecimal = powerComplexImaginary.bigDecimalValue();
 			final FloatStruct imaginary = new FloatStruct(powerComplexImaginaryBigDecimal);
 
 			final ComplexStruct newPowerComplex = new ComplexStruct(real, imaginary);
 
-			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
-			final RealStruct base = new FloatStruct(bigDecimal1);
-			final RealStruct logOfBase = base.log();
-			final NumberStruct powerComplexLogOfBaseProduct = newPowerComplex.multiply(logOfBase);
-			return powerComplexLogOfBaseProduct.exp();
+			final BigDecimal bigDecimal1 = base.bigDecimalValue();
+			final RealStruct newBase = new FloatStruct(bigDecimal1);
+			final RealStruct logOfNewBase = newBase.log();
+			final NumberStruct powerComplexLogOfNewBaseProduct = newPowerComplex.multiply(logOfNewBase);
+			return powerComplexLogOfNewBaseProduct.exp();
 		}
 	}
 

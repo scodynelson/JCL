@@ -7,7 +7,6 @@ package jcl.numbers;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
-import java.util.Objects;
 
 import jcl.LispStruct;
 import jcl.types.IntegerType;
@@ -99,6 +98,11 @@ public class IntegerStruct extends RationalStruct {
 		return (lispStruct instanceof NumberStruct) && isEqualTo((NumberStruct) lispStruct);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Determines the absolute value of this IntegerStruct.
+	 */
 	@Override
 	public RealStruct abs() {
 		if (bigInteger.signum() >= 0) {
@@ -107,16 +111,31 @@ public class IntegerStruct extends RationalStruct {
 		return new IntegerStruct(bigInteger.negate());
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Determines whether or not this IntegerStruct is zero using {@link #bigInteger#signum}.
+	 */
 	@Override
 	public boolean zerop() {
 		return bigInteger.signum() == 0;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Determines whether or not this IntegerStruct is positive using {@link #bigInteger#signum}.
+	 */
 	@Override
 	public boolean plusp() {
 		return bigInteger.signum() > 0;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Determines whether or not this IntegerStruct is negative using {@link #bigInteger#signum}.
+	 */
 	@Override
 	public boolean minusp() {
 		return bigInteger.signum() < 0;
@@ -140,51 +159,102 @@ public class IntegerStruct extends RationalStruct {
 		return bigInteger.testBit(0);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the addition function result for this IntegerStruct and the provided {@code number}.
+	 */
 	@Override
 	public NumberStruct add(final NumberStruct number) {
 		return IntegerAddStrategy.INSTANCE.add(this, number);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the subtraction function result for this IntegerStruct and the provided {@code number}.
+	 */
 	@Override
 	public NumberStruct subtract(final NumberStruct number) {
 		return IntegerSubtractStrategy.INSTANCE.subtract(this, number);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the multiplication function result for this IntegerStruct and the provided {@code number}.
+	 */
 	@Override
 	public NumberStruct multiply(final NumberStruct number) {
 		return IntegerMultiplyStrategy.INSTANCE.multiply(this, number);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the division function result for this IntegerStruct and the provided {@code number}.
+	 */
 	@Override
 	public NumberStruct divide(final NumberStruct number) {
 		return IntegerDivideStrategy.INSTANCE.divide(this, number);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the numeric '=' equality result for this IntegerStruct and the provided {@code number}.
+	 */
 	@Override
 	public boolean isEqualTo(final NumberStruct number) {
 		return IntegerEqualToStrategy.INSTANCE.equalTo(this, number);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the numeric '<' equality result for this IntegerStruct and the provided {@code real}.
+	 */
 	@Override
 	public boolean isLessThan(final RealStruct real) {
 		return IntegerLessThanStrategy.INSTANCE.lessThan(this, real);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the numeric '>' equality result for this IntegerStruct and the provided {@code real}.
+	 */
 	@Override
 	public boolean isGreaterThan(final RealStruct real) {
 		return IntegerGreaterThanStrategy.INSTANCE.greaterThan(this, real);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the numeric '<=' equality result for this IntegerStruct and the provided {@code real}.
+	 */
 	@Override
 	public boolean isLessThanOrEqualTo(final RealStruct real) {
 		return IntegerLessThanOrEqualToStrategy.INSTANCE.lessThanOrEqualTo(this, real);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the numeric '>=' equality result for this IntegerStruct and the provided {@code real}.
+	 */
 	@Override
 	public boolean isGreaterThanOrEqualTo(final RealStruct real) {
 		return IntegerGreaterThanOrEqualToStrategy.INSTANCE.greaterThanOrEqualTo(this, real);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Determines the numerical value of zero, positive, or negative, returning {@code this}, {@link #ONE}, or {@link
+	 * #MINUS_ONE} respectively.
+	 */
 	@Override
 	public NumberStruct signum() {
 		if (zerop()) {
@@ -196,21 +266,45 @@ public class IntegerStruct extends RationalStruct {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Returns {@link #ZERO} as the imaginary part of IntegerStructs is always '0'.
+	 */
 	@Override
 	public RealStruct imagPart() {
 		return ZERO;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the negation with {@link #bigInteger#negation} and the creating a new IntegerStruct to wrap it.
+	 */
 	@Override
 	public NumberStruct negation() {
 		return new IntegerStruct(bigInteger.negate());
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Creates a new {@link RationalStruct} with {@link BigInteger#ONE} as the numerator and {@link #bigInteger} as the
+	 * denominator.
+	 */
 	@Override
 	public NumberStruct reciprocal() {
 		return makeRational(BigInteger.ONE, bigInteger);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the exponential function result for this IntegerStruct as this {@code base} and the provided {@link
+	 * NumberStruct} as the {@code power}. If {@code power} is '0' and power is an IntegerStruct, {@link #ONE} is
+	 * returned. If {@code power} is '0' and power is not an IntegerStruct, {@link FloatStruct#ONE} is returned. If
+	 * this IntegerStruct is either '0' or '1', {@code this} is returned.
+	 */
 	@Override
 	public NumberStruct expt(final NumberStruct power) {
 		if (power.zerop()) {
@@ -241,71 +335,145 @@ public class IntegerStruct extends RationalStruct {
 		return new IntegerStruct(isqrtBigInteger);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Returns {@link #bigInteger#doubleValue()}.
+	 */
 	@Override
 	public double doubleValue() {
 		return bigInteger.doubleValue();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes a {@link BigDecimal} value from the {@link #bigInteger} by altering its scale when creating a new
+	 * {@link BigDecimal} and then further multiplying it by {@link BigDecimal#TEN}.
+	 */
 	@Override
 	public BigDecimal bigDecimalValue() {
 		return new BigDecimal(bigInteger, 1).multiply(BigDecimal.TEN);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Returns {@link #ZERO} as a '0' IntegerStruct value.
+	 */
 	@Override
 	public RealStruct zeroValue() {
 		return ZERO;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the maximum numerical result for this IntegerStruct and the provided {@code real}.
+	 */
 	@Override
 	public RealStruct max(final RealStruct real) {
 		return IntegerMaxStrategy.INSTANCE.max(this, real);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the minimum numerical result for this IntegerStruct and the provided {@code real}.
+	 */
 	@Override
 	public RealStruct min(final RealStruct real) {
 		return IntegerMinStrategy.INSTANCE.min(this, real);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Returns {@code this} as any IntegerStruct is already in rational form.
+	 */
 	@Override
 	public RationalStruct rational() {
 		return this;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the floor of the result of this IntegerStruct with the provided {@code divisor}.
+	 */
 	@Override
 	public QuotientRemainderResult floor(final RealStruct divisor) {
 		return IntegerQuotientRemainderStrategy.INSTANCE.floor(this, divisor);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the floor of the result of this IntegerStruct with the provided {@code divisor}, returning the quotient
+	 * as a {@link FloatStruct}.
+	 */
 	@Override
 	public QuotientRemainderResult ffloor(final RealStruct divisor) {
 		return IntegerQuotientRemainderStrategy.INSTANCE.ffloor(this, divisor);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the ceiling of the result of this IntegerStruct with the provided {@code divisor}.
+	 */
 	@Override
 	public QuotientRemainderResult ceiling(final RealStruct divisor) {
 		return IntegerQuotientRemainderStrategy.INSTANCE.ceiling(this, divisor);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the ceiling of the result of this IntegerStruct with the provided {@code divisor}, returning the
+	 * quotient as a {@link FloatStruct}.
+	 */
 	@Override
 	public QuotientRemainderResult fceiling(final RealStruct divisor) {
 		return IntegerQuotientRemainderStrategy.INSTANCE.fceiling(this, divisor);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the rounded result of this IntegerStruct with the provided {@code divisor}.
+	 */
 	@Override
 	public QuotientRemainderResult round(final RealStruct divisor) {
 		return IntegerQuotientRemainderStrategy.INSTANCE.round(this, divisor);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Computes the rounded result of this IntegerStruct with the provided {@code divisor}, returning the quotient as a
+	 * {@link FloatStruct}.
+	 */
 	@Override
 	public QuotientRemainderResult fround(final RealStruct divisor) {
 		return IntegerQuotientRemainderStrategy.INSTANCE.fround(this, divisor);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Returns {@code this} as the numerator.
+	 */
 	@Override
 	public IntegerStruct numerator() {
 		return this;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Returns {@link #ONE} as the denominator of IntegerStructs is always '1'.
+	 */
 	@Override
 	public IntegerStruct denominator() {
 		return ONE;
@@ -718,6 +886,11 @@ public class IntegerStruct extends RationalStruct {
 		 */
 		private static final IntegerAddStrategy INSTANCE = new IntegerAddStrategy();
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the addition function result for IntegerStructs.
+		 */
 		@Override
 		public RealStruct add(final IntegerStruct number1, final IntegerStruct number2) {
 			final BigInteger bigInteger1 = number1.getBigInteger();
@@ -726,6 +899,11 @@ public class IntegerStruct extends RationalStruct {
 			return new IntegerStruct(add);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the addition function result for an IntegerStruct and a {@link RatioStruct}.
+		 */
 		@Override
 		public RealStruct add(final IntegerStruct number1, final RatioStruct number2) {
 			final BigInteger bigInteger1 = number1.getBigInteger();
@@ -750,6 +928,11 @@ public class IntegerStruct extends RationalStruct {
 		 */
 		private static final IntegerSubtractStrategy INSTANCE = new IntegerSubtractStrategy();
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the subtraction function result for IntegerStructs.
+		 */
 		@Override
 		public RealStruct subtract(final IntegerStruct number1, final IntegerStruct number2) {
 			final BigInteger bigInteger1 = number1.getBigInteger();
@@ -758,6 +941,11 @@ public class IntegerStruct extends RationalStruct {
 			return new IntegerStruct(subtract);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the subtraction function result for an IntegerStruct and a {@link RatioStruct}.
+		 */
 		@Override
 		public RealStruct subtract(final IntegerStruct number1, final RatioStruct number2) {
 			final BigInteger bigInteger1 = number1.getBigInteger();
@@ -782,6 +970,11 @@ public class IntegerStruct extends RationalStruct {
 		 */
 		private static final IntegerMultiplyStrategy INSTANCE = new IntegerMultiplyStrategy();
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the multiplication function result for IntegerStructs.
+		 */
 		@Override
 		public RealStruct multiply(final IntegerStruct number1, final IntegerStruct number2) {
 			final BigInteger bigInteger1 = number1.getBigInteger();
@@ -790,6 +983,11 @@ public class IntegerStruct extends RationalStruct {
 			return new IntegerStruct(multiply);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the multiplication function result for an IntegerStruct and a {@link RatioStruct}.
+		 */
 		@Override
 		public RealStruct multiply(final IntegerStruct number1, final RatioStruct number2) {
 			final BigInteger bigInteger1 = number1.getBigInteger();
@@ -813,6 +1011,11 @@ public class IntegerStruct extends RationalStruct {
 		 */
 		private static final IntegerDivideStrategy INSTANCE = new IntegerDivideStrategy();
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the division function result for IntegerStructs.
+		 */
 		@Override
 		public RealStruct divide(final IntegerStruct number1, final IntegerStruct number2) {
 			final BigInteger bigInteger1 = number1.getBigInteger();
@@ -820,6 +1023,11 @@ public class IntegerStruct extends RationalStruct {
 			return makeRational(bigInteger1, bigInteger2);
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the division function result for an IntegerStruct and a {@link RatioStruct}.
+		 */
 		@Override
 		public RealStruct divide(final IntegerStruct number1, final RatioStruct number2) {
 			final BigInteger bigInteger1 = number1.getBigInteger();
@@ -881,12 +1089,22 @@ public class IntegerStruct extends RationalStruct {
 		 */
 		private static final IntegerEqualToStrategy INSTANCE = new IntegerEqualToStrategy();
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric '=' equality result for IntegerStructs.
+		 */
 		@Override
 		public boolean equalTo(final IntegerStruct number1, final IntegerStruct number2) {
 			final int comparisonResult = getComparisonResult(number1, number2);
 			return comparisonResult == 0;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric '=' equality result for an IntegerStruct and a {@link RatioStruct}.
+		 */
 		@Override
 		public boolean equalTo(final IntegerStruct number1, final RatioStruct number2) {
 			final int comparisonResult = getComparisonResult(number1, number2);
@@ -904,11 +1122,21 @@ public class IntegerStruct extends RationalStruct {
 		 */
 		private static final IntegerLessThanStrategy INSTANCE = new IntegerLessThanStrategy();
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric '<' equality result for IntegerStructs.
+		 */
 		@Override
 		public boolean lessThan(final IntegerStruct real1, final IntegerStruct real2) {
 			return getComparisonResult(real1, real2) < 0;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric '<' equality result for an IntegerStruct and a {@link RatioStruct}.
+		 */
 		@Override
 		public boolean lessThan(final IntegerStruct real1, final RatioStruct real2) {
 			return getComparisonResult(real1, real2) < 0;
@@ -925,11 +1153,21 @@ public class IntegerStruct extends RationalStruct {
 		 */
 		private static final IntegerGreaterThanStrategy INSTANCE = new IntegerGreaterThanStrategy();
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric '>' equality result for IntegerStructs.
+		 */
 		@Override
 		public boolean greaterThan(final IntegerStruct real1, final IntegerStruct real2) {
 			return getComparisonResult(real1, real2) > 0;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric '>' equality result for an IntegerStruct and a {@link RatioStruct}.
+		 */
 		@Override
 		public boolean greaterThan(final IntegerStruct real1, final RatioStruct real2) {
 			return getComparisonResult(real1, real2) > 0;
@@ -946,11 +1184,21 @@ public class IntegerStruct extends RationalStruct {
 		 */
 		private static final IntegerLessThanOrEqualToStrategy INSTANCE = new IntegerLessThanOrEqualToStrategy();
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric '<=' equality result for IntegerStructs.
+		 */
 		@Override
 		public boolean lessThanOrEqualTo(final IntegerStruct real1, final IntegerStruct real2) {
 			return getComparisonResult(real1, real2) <= 0;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric '<=' equality result for an IntegerStruct and a {@link RatioStruct}.
+		 */
 		@Override
 		public boolean lessThanOrEqualTo(final IntegerStruct real1, final RatioStruct real2) {
 			return getComparisonResult(real1, real2) <= 0;
@@ -967,11 +1215,21 @@ public class IntegerStruct extends RationalStruct {
 		 */
 		private static final IntegerGreaterThanOrEqualToStrategy INSTANCE = new IntegerGreaterThanOrEqualToStrategy();
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric '>=' equality result for IntegerStructs.
+		 */
 		@Override
 		public boolean greaterThanOrEqualTo(final IntegerStruct real1, final IntegerStruct real2) {
 			return getComparisonResult(real1, real2) >= 0;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric '>=' equality result for an IntegerStruct and a {@link RatioStruct}.
+		 */
 		@Override
 		public boolean greaterThanOrEqualTo(final IntegerStruct real1, final RatioStruct real2) {
 			return getComparisonResult(real1, real2) >= 0;
@@ -988,6 +1246,11 @@ public class IntegerStruct extends RationalStruct {
 		 */
 		private static final IntegerMaxStrategy INSTANCE = new IntegerMaxStrategy();
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the maximum numerical result for IntegerStructs.
+		 */
 		@Override
 		public RealStruct max(final IntegerStruct real1, final IntegerStruct real2) {
 			final BigInteger bigInteger1 = real1.getBigInteger();
@@ -1008,6 +1271,11 @@ public class IntegerStruct extends RationalStruct {
 		 */
 		private static final IntegerMinStrategy INSTANCE = new IntegerMinStrategy();
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the minimum numerical result for IntegerStructs.
+		 */
 		@Override
 		public RealStruct min(final IntegerStruct real1, final IntegerStruct real2) {
 			final BigInteger bigInteger1 = real1.getBigInteger();
@@ -1029,6 +1297,11 @@ public class IntegerStruct extends RationalStruct {
 		 */
 		private static final IntegerQuotientRemainderStrategy INSTANCE = new IntegerQuotientRemainderStrategy();
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the quotient and remainder results for IntegerStructs as the {@code real} and {@code divisor}.
+		 */
 		@Override
 		public QuotientRemainderResult quotientRemainder(final IntegerStruct real, final IntegerStruct divisor,
 		                                                 final RoundingMode roundingMode, final boolean isFloatResult) {
@@ -1063,10 +1336,15 @@ public class IntegerStruct extends RationalStruct {
 		 */
 		private static final IntegerExptStrategy INSTANCE = new IntegerExptStrategy();
 
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the exponential function result for IntegerStructs as the {@code base} and {@code power}.
+		 */
 		@Override
-		public NumberStruct expt(final IntegerStruct number1, final IntegerStruct number2) {
-			final BigInteger bigInteger1 = number1.getBigInteger();
-			final BigInteger powerBigInteger = number2.getBigInteger();
+		public NumberStruct expt(final IntegerStruct base, final IntegerStruct power) {
+			final BigInteger bigInteger1 = base.getBigInteger();
+			final BigInteger powerBigInteger = power.getBigInteger();
 			final BigInteger pow = ArithmeticUtils.pow(bigInteger1, powerBigInteger);
 			return new IntegerStruct(pow);
 		}

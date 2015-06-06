@@ -250,27 +250,27 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 
 	protected abstract static class ExptStrategy<S extends NumberStruct> {
 
-		public NumberStruct expt(final S number1, final NumberStruct number2) {
-			if (number2 instanceof IntegerStruct) {
-				return expt(number1, (IntegerStruct) number2);
-			} else if (number2 instanceof FloatStruct) {
-				return expt(number1, (FloatStruct) number2);
-			} else if (number2 instanceof RatioStruct) {
-				return expt(number1, (RatioStruct) number2);
-			} else if (number2 instanceof ComplexStruct) {
-				return expt(number1, (ComplexStruct) number2);
+		public NumberStruct expt(final S base, final NumberStruct power) {
+			if (power instanceof IntegerStruct) {
+				return expt(base, (IntegerStruct) power);
+			} else if (power instanceof FloatStruct) {
+				return expt(base, (FloatStruct) power);
+			} else if (power instanceof RatioStruct) {
+				return expt(base, (RatioStruct) power);
+			} else if (power instanceof ComplexStruct) {
+				return expt(base, (ComplexStruct) power);
 			} else {
 				throw new RuntimeException("Unsupported Number Type for Expt Operation.");
 			}
 		}
 
-		public abstract NumberStruct expt(S number1, IntegerStruct number2);
+		public abstract NumberStruct expt(S base, IntegerStruct power);
 
-		public abstract NumberStruct expt(S number1, FloatStruct number2);
+		public abstract NumberStruct expt(S base, FloatStruct power);
 
-		public abstract NumberStruct expt(S number1, RatioStruct number2);
+		public abstract NumberStruct expt(S base, RatioStruct power);
 
-		public abstract NumberStruct expt(S number1, ComplexStruct number2);
+		public abstract NumberStruct expt(S base, ComplexStruct power);
 
 		protected static NumberStruct exptInteger(final NumberStruct base, final IntegerStruct power) {
 			// TODO: simplify this!!!

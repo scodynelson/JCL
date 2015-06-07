@@ -359,12 +359,22 @@ public class FloatStruct extends RealStruct {
 
 	@Override
 	public RationalStruct rational() {
-		// TODO: can we get rid of using the BigFractionUtil???
-		final BigFraction bigFraction = BigFractionUtil.getBigFraction(bigDecimal);
-		if (bigFraction.getDenominator().compareTo(BigInteger.ONE) == 0) {
-			return new IntegerStruct(bigFraction.getNumerator());
+		final String floatAsString = bigDecimal.stripTrailingZeros().toPlainString();
+
+		final int indexOfDecimalPoint = floatAsString.indexOf('.');
+		final int numberOfDigitsAfterDecimalPoint = (indexOfDecimalPoint < 0) ? 0 : (floatAsString.length() - indexOfDecimalPoint - 1);
+
+		final BigDecimal movedDecimalPlace = bigDecimal.scaleByPowerOfTen(numberOfDigitsAfterDecimalPoint);
+		final BigInteger movedDecimalPlaceBigInteger = movedDecimalPlace.toBigInteger();
+
+		final BigFraction bigFraction = new BigFraction(movedDecimalPlaceBigInteger, BigInteger.TEN.pow(numberOfDigitsAfterDecimalPoint));
+		final BigFraction bigFractionReduced = bigFraction.reduce();
+
+		if (bigFractionReduced.getDenominator().compareTo(BigInteger.ONE) == 0) {
+			return new IntegerStruct(bigFractionReduced.getNumerator());
 		}
-		return new RatioStruct(bigFraction);
+
+		return new RatioStruct(bigFractionReduced);
 	}
 
 	/**

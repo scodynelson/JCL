@@ -330,7 +330,7 @@ public class IntegerStruct extends RationalStruct {
 		final double doubleValue = doubleValue();
 		final double sqrt = FastMath.sqrt(doubleValue);
 		final double isqrt = FastMath.floor(sqrt);
-		final BigDecimal isqrtBigDecimal = new BigDecimal(isqrt);
+		final BigDecimal isqrtBigDecimal = BigDecimal.valueOf(isqrt);
 		final BigInteger isqrtBigInteger = isqrtBigDecimal.toBigInteger();
 		return new IntegerStruct(isqrtBigInteger);
 	}
@@ -1344,10 +1344,14 @@ public class IntegerStruct extends RationalStruct {
 		 */
 		@Override
 		public NumberStruct expt(final IntegerStruct base, final IntegerStruct power) {
-			final BigInteger bigInteger1 = base.getBigInteger();
-			final BigInteger powerBigInteger = power.getBigInteger();
-			final BigInteger pow = ArithmeticUtils.pow(bigInteger1, powerBigInteger);
-			return new IntegerStruct(pow);
+			if (power.minusp()) {
+				return exptInteger(base, power);
+			} else {
+				final BigInteger baseBigInteger = base.getBigInteger();
+				final BigInteger powerBigInteger = power.getBigInteger();
+				final BigInteger pow = ArithmeticUtils.pow(baseBigInteger, powerBigInteger);
+				return new IntegerStruct(pow);
+			}
 		}
 	}
 

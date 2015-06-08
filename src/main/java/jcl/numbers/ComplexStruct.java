@@ -260,7 +260,7 @@ public class ComplexStruct extends NumberStruct {
 		final double sqrtOfSquareSum = FastMath.sqrt(sumBigDecimal);
 
 		if (real instanceof RationalStruct) {
-			final BigDecimal bigDecimal = new BigDecimal(sqrtOfSquareSum);
+			final BigDecimal bigDecimal = BigDecimal.valueOf(sqrtOfSquareSum);
 
 			final boolean isWholeNumber = bigDecimal.setScale(0, RoundingMode.HALF_UP).compareTo(bigDecimal) == 0;
 			if (isWholeNumber) {
@@ -376,8 +376,8 @@ public class ComplexStruct extends NumberStruct {
 		final double newReal = expReal * FastMath.cos(imagDoubleValue);
 		final double newImag = expReal * FastMath.sin(imagDoubleValue);
 
-		final BigDecimal newRealBigDecimal = new BigDecimal(newReal);
-		final BigDecimal newImagBigDecimal = new BigDecimal(newImag);
+		final BigDecimal newRealBigDecimal = BigDecimal.valueOf(newReal);
+		final BigDecimal newImagBigDecimal = BigDecimal.valueOf(newImag);
 
 		final FloatStruct newRealFloat = new FloatStruct(newRealBigDecimal);
 		final FloatStruct newImaginaryFloat = new FloatStruct(newImagBigDecimal);
@@ -433,8 +433,8 @@ public class ComplexStruct extends NumberStruct {
 			newImag = FastMath.copySign(1.0D, imagDoubleValue) * root;
 		}
 
-		final BigDecimal newRealBigDecimal = new BigDecimal(newReal);
-		final BigDecimal newImagBigDecimal = new BigDecimal(newImag);
+		final BigDecimal newRealBigDecimal = BigDecimal.valueOf(newReal);
+		final BigDecimal newImagBigDecimal = BigDecimal.valueOf(newImag);
 
 		final FloatStruct newRealFloat = new FloatStruct(newRealBigDecimal);
 		final FloatStruct newImagFloat = new FloatStruct(newImagBigDecimal);
@@ -449,8 +449,8 @@ public class ComplexStruct extends NumberStruct {
 		final double newReal = FastMath.sin(realDoubleValue) * FastMath.cosh(imagDoubleValue);
 		final double newImag = FastMath.cos(realDoubleValue) * FastMath.sinh(imagDoubleValue);
 
-		final BigDecimal newRealBigDecimal = new BigDecimal(newReal);
-		final BigDecimal newImagBigDecimal = new BigDecimal(newImag);
+		final BigDecimal newRealBigDecimal = BigDecimal.valueOf(newReal);
+		final BigDecimal newImagBigDecimal = BigDecimal.valueOf(newImag);
 
 		final FloatStruct newRealFloat = new FloatStruct(newRealBigDecimal);
 		final FloatStruct newImagFloat = new FloatStruct(newImagBigDecimal);
@@ -465,8 +465,8 @@ public class ComplexStruct extends NumberStruct {
 		final double newReal = FastMath.cos(realDoubleValue) * FastMath.cosh(imagDoubleValue);
 		final double newImag = -FastMath.sin(realDoubleValue) * FastMath.sinh(imagDoubleValue);
 
-		final BigDecimal newRealBigDecimal = new BigDecimal(newReal);
-		final BigDecimal newImagBigDecimal = new BigDecimal(newImag);
+		final BigDecimal newRealBigDecimal = BigDecimal.valueOf(newReal);
+		final BigDecimal newImagBigDecimal = BigDecimal.valueOf(newImag);
 
 		final FloatStruct newRealFloat = new FloatStruct(newRealBigDecimal);
 		final FloatStruct newImagFloat = new FloatStruct(newImagBigDecimal);
@@ -487,8 +487,8 @@ public class ComplexStruct extends NumberStruct {
 		final double newReal = FastMath.sin(twoAndRealProduct) / divisor;
 		final double newImag = FastMath.sinh(twoAndImagProduct) / divisor;
 
-		final BigDecimal newRealBigDecimal = new BigDecimal(newReal);
-		final BigDecimal newImagBigDecimal = new BigDecimal(newImag);
+		final BigDecimal newRealBigDecimal = BigDecimal.valueOf(newReal);
+		final BigDecimal newImagBigDecimal = BigDecimal.valueOf(newImag);
 
 		final FloatStruct newRealFloat = new FloatStruct(newRealBigDecimal);
 		final FloatStruct newImagFloat = new FloatStruct(newImagBigDecimal);
@@ -542,8 +542,8 @@ public class ComplexStruct extends NumberStruct {
 		final double newReal = FastMath.sinh(realDoubleValue) * FastMath.cos(imagDoubleValue);
 		final double newImag = FastMath.cosh(realDoubleValue) * FastMath.sin(imagDoubleValue);
 
-		final BigDecimal newRealBigDecimal = new BigDecimal(newReal);
-		final BigDecimal newImagBigDecimal = new BigDecimal(newImag);
+		final BigDecimal newRealBigDecimal = BigDecimal.valueOf(newReal);
+		final BigDecimal newImagBigDecimal = BigDecimal.valueOf(newImag);
 
 		final FloatStruct newRealFloat = new FloatStruct(newRealBigDecimal);
 		final FloatStruct newImagFloat = new FloatStruct(newImagBigDecimal);
@@ -558,8 +558,8 @@ public class ComplexStruct extends NumberStruct {
 		final double newReal = FastMath.cosh(realDoubleValue) * FastMath.cos(imagDoubleValue);
 		final double newImag = FastMath.sinh(realDoubleValue) * FastMath.sin(imagDoubleValue);
 
-		final BigDecimal newRealBigDecimal = new BigDecimal(newReal);
-		final BigDecimal newImagBigDecimal = new BigDecimal(newImag);
+		final BigDecimal newRealBigDecimal = BigDecimal.valueOf(newReal);
+		final BigDecimal newImagBigDecimal = BigDecimal.valueOf(newImag);
 
 		final FloatStruct newRealFloat = new FloatStruct(newRealBigDecimal);
 		final FloatStruct newImagFloat = new FloatStruct(newImagBigDecimal);
@@ -580,8 +580,8 @@ public class ComplexStruct extends NumberStruct {
 		final double newReal = FastMath.sinh(twoAndRealProduct) / divisor;
 		final double newImag = FastMath.sin(twoAndImagProduct) / divisor;
 
-		final BigDecimal newRealBigDecimal = new BigDecimal(newReal);
-		final BigDecimal newImagBigDecimal = new BigDecimal(newImag);
+		final BigDecimal newRealBigDecimal = BigDecimal.valueOf(newReal);
+		final BigDecimal newImagBigDecimal = BigDecimal.valueOf(newImag);
 
 		final FloatStruct newRealFloat = new FloatStruct(newRealBigDecimal);
 		final FloatStruct newImagFloat = new FloatStruct(newImagBigDecimal);

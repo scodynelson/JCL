@@ -59,7 +59,7 @@ public class FloatStruct extends RealStruct {
 	 * 		the value of the FloatStruct
 	 */
 	public FloatStruct(final double doubleValue) {
-		this(SingleFloatType.INSTANCE, new BigDecimal(doubleValue));
+		this(SingleFloatType.INSTANCE, BigDecimal.valueOf(doubleValue));
 	}
 
 	/**
@@ -447,42 +447,46 @@ public class FloatStruct extends RealStruct {
 	 */
 	public DecodeFloatResult decodeFloat() {
 		final int decodedExponentDiffer = 1075;
+		final int fiftyThree = 53;
 
 		final long bits = Double.doubleToRawLongBits(doubleValue());
 		final DecodedDoubleRaw decodedDoubleRaw = getDecodedDoubleRaw(bits);
 
 		final long mantissa = decodedDoubleRaw.getMantissa();
-		final BigDecimal mantissaBigDecimal = new BigDecimal(mantissa);
+		final BigDecimal mantissaBigDecimal = BigDecimal.valueOf(mantissa);
 
-		final double expt = FastMath.pow(2, 53);
-		final BigDecimal exptBigDecimal = new BigDecimal(expt);
+		final double expt = FastMath.pow(2, fiftyThree); // TODO: why pow 53??
+		final BigDecimal exptBigDecimal = BigDecimal.valueOf(expt);
 
 		final BigDecimal significand = mantissaBigDecimal.divide(exptBigDecimal, MathContext.DECIMAL128);
 		final FloatStruct significandFloat = new FloatStruct(significand);
 
 		final long storedExponent = decodedDoubleRaw.getStoredExponent();
-		final long exponentDifference = (storedExponent - decodedExponentDiffer) + 53; // TODO: why plus 53??
+		final long exponentDifference = (storedExponent - decodedExponentDiffer) + fiftyThree; // TODO: why plus 53??
 		final BigInteger exponentBigInteger = BigInteger.valueOf(exponentDifference);
 		final IntegerStruct exponent = new IntegerStruct(exponentBigInteger);
 
 		final long sign = decodedDoubleRaw.getSign();
-		final BigDecimal signBigDecimal = new BigDecimal(sign);
+		final BigDecimal signBigDecimal = BigDecimal.valueOf(sign);
 		final FloatStruct signFloat = new FloatStruct(signBigDecimal);
 
 		return new DecodeFloatResult(significandFloat, exponent, signFloat);
 	}
 
-	public FloatStruct scaleFloat(final IntegerStruct scale) {
-		final double twoScaleBase = 2.0D;
-		final double scaleDouble = scale.doubleValue();
-		final double pow = FastMath.pow(twoScaleBase, scaleDouble);
-
-		// NOTE: don't use 'valueOf' here. It will add extra leading zeros.
-		final BigDecimal multiplicand = new BigDecimal(pow);
-		final BigDecimal multiply = bigDecimal.multiply(multiplicand);
-		return new FloatStruct(multiply);
+	/**
+	 * @param scale
+	 *
+	 * @return
+	 */
+	public NumberStruct scaleFloat(final IntegerStruct scale) {
+		final IntegerStruct radix = floatRadix();
+		final NumberStruct expt = radix.expt(scale);
+		return multiply(expt);
 	}
 
+	/**
+	 * @return
+	 */
 	public IntegerStruct floatRadix() {
 		return IntegerStruct.TWO;
 	}

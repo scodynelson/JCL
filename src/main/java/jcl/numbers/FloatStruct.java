@@ -359,19 +359,18 @@ public class FloatStruct extends RealStruct {
 
 	@Override
 	public RationalStruct rational() {
-		final String floatAsString = bigDecimal.stripTrailingZeros().toPlainString();
+		final int scale = bigDecimal.scale();
 
-		final int indexOfDecimalPoint = floatAsString.indexOf('.');
-		final int numberOfDigitsAfterDecimalPoint = (indexOfDecimalPoint < 0) ? 0 : (floatAsString.length() - indexOfDecimalPoint - 1);
-
-		final BigDecimal movedDecimalPlace = bigDecimal.scaleByPowerOfTen(numberOfDigitsAfterDecimalPoint);
+		final BigDecimal movedDecimalPlace = bigDecimal.scaleByPowerOfTen(scale);
 		final BigInteger movedDecimalPlaceBigInteger = movedDecimalPlace.toBigInteger();
 
-		final BigFraction bigFraction = new BigFraction(movedDecimalPlaceBigInteger, BigInteger.TEN.pow(numberOfDigitsAfterDecimalPoint));
+		final BigFraction bigFraction = new BigFraction(movedDecimalPlaceBigInteger, BigInteger.TEN.pow(scale));
 		final BigFraction bigFractionReduced = bigFraction.reduce();
 
-		if (bigFractionReduced.getDenominator().compareTo(BigInteger.ONE) == 0) {
-			return new IntegerStruct(bigFractionReduced.getNumerator());
+		final BigInteger denominator = bigFractionReduced.getDenominator();
+		if (BigInteger.ONE.compareTo(denominator) == 0) {
+			final BigInteger numerator = bigFractionReduced.getNumerator();
+			return new IntegerStruct(numerator);
 		}
 
 		return new RatioStruct(bigFractionReduced);
@@ -512,8 +511,14 @@ public class FloatStruct extends RealStruct {
 		return floatPrecision();
 	}
 
+	/**
+	 * http://en.wikipedia.org/wiki/Quadruple-precision_floating-point_format
+	 *
+	 * @return
+	 */
 	public IntegerStruct floatPrecision() {
-		return new IntegerStruct(BigInteger.valueOf(bigDecimal.precision()));
+		final int binary128Precision = 113;
+		return new IntegerStruct(BigInteger.valueOf(binary128Precision));
 	}
 
 	/**
@@ -735,7 +740,14 @@ public class FloatStruct extends RealStruct {
 			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
 			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
 			final BigDecimal multiply = bigDecimal1.multiply(bigDecimal2);
-			return new FloatStruct(multiply);
+
+			// NOTE: We must both strip the trailing zeros and possibly reset the scale to 1 if there were only trailing zeros
+			BigDecimal preppedBigDecimal = multiply.stripTrailingZeros();
+			if (preppedBigDecimal.scale() == 0) {
+				preppedBigDecimal = preppedBigDecimal.setScale(1, RoundingMode.UNNECESSARY);
+			}
+
+			return new FloatStruct(preppedBigDecimal);
 		}
 	}
 

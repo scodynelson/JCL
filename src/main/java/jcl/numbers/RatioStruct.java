@@ -109,7 +109,7 @@ public class RatioStruct extends RationalStruct {
 	 */
 	@Override
 	public boolean zerop() {
-		return bigFraction.compareTo(BigFraction.ZERO) == 0;
+		return BigFraction.ZERO.compareTo(bigFraction) == 0;
 	}
 
 	/**
@@ -120,7 +120,7 @@ public class RatioStruct extends RationalStruct {
 	 */
 	@Override
 	public boolean plusp() {
-		return bigFraction.compareTo(BigFraction.ZERO) > 0;
+		return BigFraction.ZERO.compareTo(bigFraction) > 0;
 	}
 
 	/**
@@ -131,7 +131,7 @@ public class RatioStruct extends RationalStruct {
 	 */
 	@Override
 	public boolean minusp() {
-		return bigFraction.compareTo(BigFraction.ZERO) < 0;
+		return BigFraction.ZERO.compareTo(bigFraction) < 0;
 	}
 
 	/**
@@ -320,7 +320,9 @@ public class RatioStruct extends RationalStruct {
 			return bigFraction.bigDecimalValue();
 		} catch (final ArithmeticException ignore) {
 			// This means that we have to round the fraction.
-			return bigFraction.bigDecimalValue(MathContext.DECIMAL128.getPrecision(), RoundingMode.HALF_EVEN.ordinal());
+			final int scale = MathContext.DECIMAL128.getPrecision();
+			final int roundingMode = RoundingMode.HALF_EVEN.ordinal();
+			return bigFraction.bigDecimalValue(scale, roundingMode);
 		}
 	}
 

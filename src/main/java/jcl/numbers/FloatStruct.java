@@ -440,13 +440,22 @@ public class FloatStruct extends RealStruct {
 	}
 
 	/**
-	 * See {@code https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html} for details.
+	 * Computes the three main values that characterize this FloatStruct: the significand, exponent, and sign. The
+	 * calculation for these values are based on the decoding for Java {@link Double} values from the algorithm defined
+	 * in {@link Double#longBitsToDouble}.
 	 *
-	 * @return
+	 * @return a {@link DecodeFloatResult} containing the decoded significand, exponent, and sign for this FloatStruct
 	 */
 	public DecodeFloatResult decodeFloat() {
+//		if (ZERO.isEqualTo(this)) {
+//			return new DecodeFloatResult(ZERO, IntegerStruct.ZERO, ONE);
+//		}
+//		if (MINUS_ZERO.isEqualTo(this)) {
+//			return new DecodeFloatResult(ZERO, IntegerStruct.ZERO, MINUS_ONE);
+//		}
+
 		final int decodedExponentDiffer = 1075;
-		final int fiftyThree = 53;
+		final int doubleFloatingPointPrecision = 53;
 
 		final long bits = Double.doubleToRawLongBits(doubleValue());
 		final DecodedDoubleRaw decodedDoubleRaw = getDecodedDoubleRaw(bits);
@@ -454,22 +463,22 @@ public class FloatStruct extends RealStruct {
 		final long mantissa = decodedDoubleRaw.getMantissa();
 		final BigDecimal mantissaBigDecimal = BigDecimal.valueOf(mantissa);
 
-		final double expt = FastMath.pow(2, fiftyThree); // TODO: why pow 53??
+		final double expt = FastMath.pow(2, doubleFloatingPointPrecision);
 		final BigDecimal exptBigDecimal = BigDecimal.valueOf(expt);
 
 		final BigDecimal significand = mantissaBigDecimal.divide(exptBigDecimal, MathContext.DECIMAL128);
 		final FloatStruct significandFloat = new FloatStruct(significand);
 
 		final long storedExponent = decodedDoubleRaw.getStoredExponent();
-		final long exponentDifference = (storedExponent - decodedExponentDiffer) + fiftyThree; // TODO: why plus 53??
-		final BigInteger exponentBigInteger = BigInteger.valueOf(exponentDifference);
-		final IntegerStruct exponent = new IntegerStruct(exponentBigInteger);
+		final long exponent = (storedExponent - decodedExponentDiffer) + doubleFloatingPointPrecision;
+		final BigInteger exponentBigInteger = BigInteger.valueOf(exponent);
+		final IntegerStruct exponentInteger = new IntegerStruct(exponentBigInteger);
 
 		final long sign = decodedDoubleRaw.getSign();
 		final BigDecimal signBigDecimal = BigDecimal.valueOf(sign);
 		final FloatStruct signFloat = new FloatStruct(signBigDecimal);
 
-		return new DecodeFloatResult(significandFloat, exponent, signFloat);
+		return new DecodeFloatResult(significandFloat, exponentInteger, signFloat);
 	}
 
 	/**
@@ -512,6 +521,8 @@ public class FloatStruct extends RealStruct {
 	}
 
 	/**
+	 *
+	 *
 	 * http://en.wikipedia.org/wiki/Quadruple-precision_floating-point_format
 	 *
 	 * @return
@@ -522,11 +533,22 @@ public class FloatStruct extends RealStruct {
 	}
 
 	/**
-	 * See {@code https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html} for details.
+	 * Computes the three main values that characterize this FloatStruct: the significand, exponent, and sign. The
+	 * calculation for these values are based on the decoding for Java {@link Double} values from the algorithm defined
+	 * in {@link Double#longBitsToDouble}. The difference between this method an {@link #decodeFloat()} is that the
+	 * significand and sign will both be {@link IntegerStruct}s with a special weighting between the significand and
+	 * exponent based on the scaling needed for the significand to produce an {@link IntegerStruct}.
 	 *
-	 * @return
+	 * @return a {@link DecodeFloatResult} containing the decoded significand, exponent, and sign for this FloatStruct
 	 */
 	public DecodeFloatResult integerDecodeFloat() {
+//		if (ZERO.isEqualTo(this)) {
+//			return new DecodeFloatResult(IntegerStruct.ZERO, IntegerStruct.ZERO, IntegerStruct.ONE);
+//		}
+//		if (MINUS_ZERO.isEqualTo(this)) {
+//			return new DecodeFloatResult(IntegerStruct.ZERO, IntegerStruct.ZERO, IntegerStruct.MINUS_ONE);
+//		}
+
 		final int decodedExponentDiffer = 1075;
 
 		final long bits = Double.doubleToRawLongBits(doubleValue());
@@ -537,15 +559,15 @@ public class FloatStruct extends RealStruct {
 		final IntegerStruct significandInteger = new IntegerStruct(mantissaBigInteger);
 
 		final long storedExponent = decodedDoubleRaw.getStoredExponent();
-		final long exponentDifference = storedExponent - decodedExponentDiffer;
-		final BigInteger exponentBigInteger = BigInteger.valueOf(exponentDifference);
-		final IntegerStruct exponent = new IntegerStruct(exponentBigInteger);
+		final long exponent = storedExponent - decodedExponentDiffer;
+		final BigInteger exponentBigInteger = BigInteger.valueOf(exponent);
+		final IntegerStruct exponentInteger = new IntegerStruct(exponentBigInteger);
 
 		final long sign = decodedDoubleRaw.getSign();
 		final BigInteger signBigInteger = BigInteger.valueOf(sign);
 		final IntegerStruct signInteger = new IntegerStruct(signBigInteger);
 
-		return new DecodeFloatResult(significandInteger, exponent, signInteger);
+		return new DecodeFloatResult(significandInteger, exponentInteger, signInteger);
 	}
 
 	/**
@@ -558,14 +580,14 @@ public class FloatStruct extends RealStruct {
 	@SuppressWarnings("all")
 	private static DecodedDoubleRaw getDecodedDoubleRaw(final long bits) {
 		final long sign = ((bits >> 63) == 0) ? 1 : -1;
-		final long storedExponent = (bits >> 52) & 0x7ffL;
+		final long exponent = (bits >> 52) & 0x7ffL;
 		final long mantissa;
-		if (storedExponent == 0) {
+		if (exponent == 0) {
 			mantissa = (bits & 0xfffffffffffffL) << 1;
 		} else {
 			mantissa = (bits & 0xfffffffffffffL) | 0x10000000000000L;
 		}
-		return new DecodedDoubleRaw(mantissa, storedExponent, sign);
+		return new DecodedDoubleRaw(mantissa, exponent, sign);
 	}
 
 	private static class DecodedDoubleRaw {

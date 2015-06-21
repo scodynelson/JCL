@@ -14,6 +14,7 @@ import jcl.types.RatioType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.math3.fraction.BigFraction;
+import org.apfloat.Apfloat;
 
 /**
  * The {@link RatioStruct} is the object representation of a Lisp 'ratio' type.
@@ -258,7 +259,8 @@ public class RatioStruct extends RationalStruct {
 	 */
 	@Override
 	public NumberStruct negation() {
-		return new RatioStruct(bigFraction.negate());
+		final BigFraction negate = bigFraction.negate();
+		return new RatioStruct(negate);
 	}
 
 	/**
@@ -299,16 +301,6 @@ public class RatioStruct extends RationalStruct {
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Returns {@link #bigFraction#doubleValue()}.
-	 */
-	@Override
-	public double doubleValue() {
-		return bigFraction.doubleValue();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
 	 * Computes a {@link BigDecimal} value from the {@link #bigFraction} by first attempting {@link
 	 * #bigFraction#bigDecimalValue()}. If that fails with an {@link ArithmeticException}, the {@link BigDecimal} is
 	 * then attempted to be computed with {@link #bigFraction#bigDecimalValue(int, int)} passing {@link
@@ -324,6 +316,12 @@ public class RatioStruct extends RationalStruct {
 			final int roundingMode = RoundingMode.HALF_EVEN.ordinal();
 			return bigFraction.bigDecimalValue(scale, roundingMode);
 		}
+	}
+
+	@Override
+	public Apfloat apfloatValue() {
+		// TODO: implement this!!!
+		return null;
 	}
 
 	/**
@@ -580,22 +578,6 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	/**
-	 * Determines numeric comparison result between the provided RatioStructs.
-	 *
-	 * @param number1
-	 * 		the first RatioStruct in the comparison operation
-	 * @param number2
-	 * 		the second RatioStruct in the comparison operation
-	 *
-	 * @return numeric comparison result between the provided RatioStructs
-	 */
-	private static int getComparisonResult(final RatioStruct number1, final RatioStruct number2) {
-		final BigFraction bigFraction1 = number1.bigFraction;
-		final BigFraction bigFraction2 = number2.bigFraction;
-		return bigFraction1.compareTo(bigFraction2);
-	}
-
-	/**
 	 * Determines numeric comparison result between the provided RatioStruct and {@link IntegerStruct}.
 	 *
 	 * @param number1
@@ -615,6 +597,22 @@ public class RatioStruct extends RationalStruct {
 		final BigInteger bigInteger2 = number2.getBigInteger();
 		final BigInteger multiply = bigInteger2.multiply(denominator);
 		return numerator.compareTo(multiply);
+	}
+
+	/**
+	 * Determines numeric comparison result between the provided RatioStructs.
+	 *
+	 * @param number1
+	 * 		the first RatioStruct in the comparison operation
+	 * @param number2
+	 * 		the second RatioStruct in the comparison operation
+	 *
+	 * @return numeric comparison result between the provided RatioStructs
+	 */
+	private static int getComparisonResult(final RatioStruct number1, final RatioStruct number2) {
+		final BigFraction bigFraction1 = number1.bigFraction;
+		final BigFraction bigFraction2 = number2.bigFraction;
+		return bigFraction1.compareTo(bigFraction2);
 	}
 
 	/**
@@ -791,8 +789,8 @@ public class RatioStruct extends RationalStruct {
 		@Override
 		public QuotientRemainderResult quotientRemainder(final RatioStruct real, final IntegerStruct divisor,
 		                                                 final RoundingMode roundingMode,
-		                                                 final boolean isFloatResult) {
-			return ratioQuotientRemainder(real, divisor, roundingMode, isFloatResult);
+		                                                 final boolean isQuotientFloat) {
+			return ratioQuotientRemainder(real, divisor, roundingMode, isQuotientFloat);
 		}
 	}
 

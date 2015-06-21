@@ -84,6 +84,9 @@ public final class ComplexFunction extends FunctionStruct {
 			}
 			final RealStruct imaginary = (RealStruct) lispStruct2;
 
+			if (real instanceof RationalStruct) {
+				return ComplexStruct.makeComplexOrReal(real, imaginary);
+			}
 			return new ComplexStruct(real, imaginary);
 		} else if (real instanceof RationalStruct) {
 			return real;

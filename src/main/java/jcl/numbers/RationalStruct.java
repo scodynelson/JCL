@@ -104,8 +104,8 @@ public abstract class RationalStruct extends RealStruct {
 		@Override
 		public QuotientRemainderResult quotientRemainder(final S real, final RatioStruct divisor,
 		                                                 final RoundingMode roundingMode,
-		                                                 final boolean isFloatResult) {
-			return ratioQuotientRemainder(real, divisor, roundingMode, isFloatResult);
+		                                                 final boolean isQuotientFloat) {
+			return ratioQuotientRemainder(real, divisor, roundingMode, isQuotientFloat);
 		}
 
 		protected static QuotientRemainderResult ratioQuotientRemainder(final RationalStruct rational, final RationalStruct divisor,

@@ -14,6 +14,11 @@ import jcl.LispStruct;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.types.RealType;
 import org.apache.commons.math3.util.FastMath;
+import org.apfloat.Apcomplex;
+import org.apfloat.ApcomplexMath;
+import org.apfloat.Apfloat;
+import org.apfloat.ApfloatMath;
+import org.apfloat.Apint;
 
 /**
  * The {@link RealStruct} is the object representation of a Lisp 'real' type.
@@ -52,9 +57,9 @@ public abstract class RealStruct extends NumberStruct {
 		super(type, directSuperClasses, subClasses);
 	}
 
-	public abstract double doubleValue();
-
 	public abstract BigDecimal bigDecimalValue();
+
+	public abstract Apfloat apfloatValue();
 
 	public abstract FloatStruct coerceRealToFloat();
 
@@ -64,20 +69,33 @@ public abstract class RealStruct extends NumberStruct {
 
 	public abstract boolean minusp();
 
-	public abstract boolean isLessThan(final RealStruct real);
+	@Override
+	public boolean isEqualTo(final NumberStruct number) {
+		return RealEqualToStrategy.INSTANCE.equalTo(this, number);
+	}
 
-	public abstract boolean isGreaterThan(final RealStruct real);
+	public boolean isLessThan(final RealStruct real) {
+		return LessThanStrategy.INSTANCE.lessThan(this, real);
+	}
 
-	public abstract boolean isLessThanOrEqualTo(final RealStruct real);
+	public boolean isGreaterThan(final RealStruct real) {
+		return GreaterThanStrategy.INSTANCE.greaterThan(this, real);
+	}
 
-	public abstract boolean isGreaterThanOrEqualTo(final RealStruct real);
+	public boolean isLessThanOrEqualTo(final RealStruct real) {
+		return LessThanOrEqualToStrategy.INSTANCE.lessThanOrEqualTo(this, real);
+	}
+
+	public boolean isGreaterThanOrEqualTo(final RealStruct real) {
+		return GreaterThanOrEqualToStrategy.INSTANCE.greaterThanOrEqualTo(this, real);
+	}
 
 	public RealStruct max(final RealStruct real) {
-		return MaxStrategy.INSTANCE.max(this, real);
+		return isGreaterThanOrEqualTo(real) ? this : real;
 	}
 
 	public RealStruct min(final RealStruct real) {
-		return MinStrategy.INSTANCE.min(this, real);
+		return isLessThanOrEqualTo(real) ? this : real;
 	}
 
 	public abstract RealStruct rational();
@@ -157,6 +175,11 @@ public abstract class RealStruct extends NumberStruct {
 	public abstract QuotientRemainderResult fround(final RealStruct divisor);
 
 	@Override
+	public Apcomplex apcomplexValue() {
+		return apfloatValue();
+	}
+
+	@Override
 	public RealStruct realPart() {
 		return this;
 	}
@@ -168,128 +191,135 @@ public abstract class RealStruct extends NumberStruct {
 
 	@Override
 	public RealStruct exp() {
-		final double doubleValue = doubleValue();
-		final double exp = FastMath.exp(doubleValue);
+		final Apfloat apfloat = apfloatValue();
+		final Apfloat exp = ApfloatMath.exp(apfloat);
 		return new FloatStruct(exp);
 	}
 
 	@Override
-	public RealStruct log() {
-		final double doubleValue = doubleValue();
-		final double log = FastMath.log(doubleValue);
+	public NumberStruct log() {
+		final Apfloat apfloat = apfloatValue();
+		if (apfloat.signum() < 0) {
+			final Apcomplex log = ApcomplexMath.log(apfloat);
+			return ComplexStruct.makeComplexOrReal(log);
+		}
+		final Apfloat log = ApfloatMath.log(apfloat);
 		return new FloatStruct(log);
 	}
 
 	@Override
 	public NumberStruct log(final NumberStruct base) {
-		if (base instanceof RealStruct) {
-			final double number = doubleValue();
-			final double baseVal = ((RealStruct) base).doubleValue();
-			final double log = FastMath.log(baseVal, number);
-			return new FloatStruct(log);
+		final Apfloat apfloat = apfloatValue();
+		if ((apfloat.signum() < 0) || (base instanceof ComplexStruct)) {
+			final Apcomplex baseVal = base.apcomplexValue();
+			final Apcomplex log = ApcomplexMath.log(apfloat, baseVal);
+			return ComplexStruct.makeComplexOrReal(log);
 		}
-		return super.log(base);
+		final Apfloat baseVal = ((RealStruct) base).apfloatValue();
+		final Apfloat log = ApfloatMath.log(apfloat, baseVal);
+		return new FloatStruct(log);
 	}
 
 	@Override
 	public NumberStruct sqrt() {
-		if (minusp()) {
-			return new ComplexStruct(FloatStruct.ZERO, (RealStruct) negation().sqrt());
+		final Apfloat apfloat = apfloatValue();
+		if (apfloat.signum() < 0) {
+			final Apcomplex sqrt = ApcomplexMath.sqrt(apfloat);
+			return ComplexStruct.makeComplexOrReal(sqrt);
 		}
-		final double doubleValue = doubleValue();
-		final double sqrt = FastMath.sqrt(doubleValue);
+		final Apfloat sqrt = ApfloatMath.sqrt(apfloat);
 		return new FloatStruct(sqrt);
 	}
 
 	@Override
 	public RealStruct sin() {
-		final double doubleValue = doubleValue();
-		final double sin = FastMath.sin(doubleValue);
+		final Apfloat apfloat = apfloatValue();
+		final Apfloat sin = ApfloatMath.sin(apfloat);
 		return new FloatStruct(sin);
 	}
 
 	@Override
 	public RealStruct cos() {
-		final double doubleValue = doubleValue();
-		final double cos = FastMath.cos(doubleValue);
+		final Apfloat apfloat = apfloatValue();
+		final Apfloat cos = ApfloatMath.cos(apfloat);
 		return new FloatStruct(cos);
 	}
 
 	@Override
 	public RealStruct tan() {
-		final double doubleValue = doubleValue();
-		final double tan = FastMath.tan(doubleValue);
+		final Apfloat apfloat = apfloatValue();
+		final Apfloat tan = ApfloatMath.tan(apfloat);
 		return new FloatStruct(tan);
 	}
 
 	@Override
 	public RealStruct asin() {
-		final double doubleValue = doubleValue();
-		final double asin = FastMath.asin(doubleValue);
+		final Apfloat apfloat = apfloatValue();
+		final Apfloat asin = ApfloatMath.asin(apfloat);
 		return new FloatStruct(asin);
 	}
 
 	@Override
 	public RealStruct acos() {
-		final double doubleValue = doubleValue();
-		final double acos = FastMath.acos(doubleValue);
+		final Apfloat apfloat = apfloatValue();
+		final Apfloat acos = ApfloatMath.acos(apfloat);
 		return new FloatStruct(acos);
 	}
 
 	@Override
 	public RealStruct atan() {
-		final double doubleValue = doubleValue();
-		final double atan = FastMath.atan(doubleValue);
+		final Apfloat apfloat = apfloatValue();
+		final Apfloat atan = ApfloatMath.atan(apfloat);
 		return new FloatStruct(atan);
 	}
 
 	public RealStruct atan(final RealStruct real) {
-		final double doubleValue = doubleValue();
-		final double doubleValue2 = real.doubleValue();
+		final Apfloat apfloat1 = apfloatValue();
+		final Apfloat apfloat2 = real.apfloatValue();
 
-		final double atan = FastMath.atan2(doubleValue, doubleValue2);
+		final Apfloat atan = ApfloatMath.atan2(apfloat1, apfloat2);
 		return new FloatStruct(atan);
 	}
 
 	@Override
 	public RealStruct sinh() {
-		final double doubleValue = doubleValue();
-		final double sinh = FastMath.sinh(doubleValue);
+		final Apfloat apfloat = apfloatValue();
+		final Apfloat sinh = ApfloatMath.sinh(apfloat);
 		return new FloatStruct(sinh);
 	}
 
 	@Override
 	public RealStruct cosh() {
-		final double doubleValue = doubleValue();
-		final double cosh = FastMath.cosh(doubleValue);
+		final Apfloat apfloat = apfloatValue();
+		final Apfloat cosh = ApfloatMath.cosh(apfloat);
 		return new FloatStruct(cosh);
 	}
 
 	@Override
 	public RealStruct tanh() {
-		final double doubleValue = doubleValue();
-		final double tanh = FastMath.tanh(doubleValue);
+		final Apfloat apfloat = apfloatValue();
+		final Apfloat tanh = ApfloatMath.tanh(apfloat);
 		return new FloatStruct(tanh);
 	}
 
 	@Override
 	public RealStruct asinh() {
-		final double doubleValue = doubleValue();
-		final double asinh = FastMath.asinh(doubleValue);
+		final Apfloat apfloat = apfloatValue();
+		final Apfloat asinh = ApfloatMath.asinh(apfloat);
 		return new FloatStruct(asinh);
 	}
 
 	@Override
 	public RealStruct acosh() {
-		final double doubleValue = doubleValue();
-		final double acosh = FastMath.acosh(doubleValue);
+		final Apfloat apfloat = apfloatValue();
+		final Apfloat acosh = ApfloatMath.acosh(apfloat);
 		return new FloatStruct(acosh);
 	}
 
 	@Override
 	public RealStruct atanh() {
-		final double doubleValue = doubleValue();
-		final double atanh = FastMath.atanh(doubleValue);
+		final Apfloat apfloat = apfloatValue();
+		final Apfloat atanh = ApfloatMath.atanh(apfloat);
 		return new FloatStruct(atanh);
 	}
 
@@ -314,10 +344,7 @@ public abstract class RealStruct extends NumberStruct {
 
 		@Override
 		public RealStruct add(final S number1, final FloatStruct number2) {
-			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
-			final BigDecimal add = bigDecimal1.add(bigDecimal2);
-			return new FloatStruct(add);
+			return addFloat(number2, number1);
 		}
 
 		@Override
@@ -325,11 +352,29 @@ public abstract class RealStruct extends NumberStruct {
 
 		@Override
 		public NumberStruct add(final S number1, final ComplexStruct number2) {
-			final RealStruct real = number2.getReal();
-			final RealStruct imaginary = number2.getImaginary();
+			final Apcomplex apfloat1 = number1.apfloatValue();
+			final Apcomplex apcomplex2 = number2.apcomplexValue();
 
-			final NumberStruct add = number1.add(real);
-			return new ComplexStruct((RealStruct) add, imaginary);
+			final Apcomplex add = apfloat1.add(apcomplex2);
+			return ComplexStruct.makeComplexOrReal(add);
+		}
+
+		/**
+		 * Computes the addition for the provided {@link FloatStruct} and {@link RealStruct} using {@link
+		 * BigDecimal#add(BigDecimal)} with the {@link RealStruct#bigDecimalValue()} values.
+		 *
+		 * @param number1
+		 * 		the {@link FloatStruct} as the first argument of the addition operation
+		 * @param number2
+		 * 		the {@link RealStruct} as the second argument of the addition operation
+		 *
+		 * @return a new {@link FloatStruct} as the result of the addition operation
+		 */
+		protected static RealStruct addFloat(final FloatStruct number1, final RealStruct number2) {
+			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
+			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
+			final BigDecimal add = bigDecimal1.add(bigDecimal2);
+			return new FloatStruct(add);
 		}
 	}
 
@@ -363,13 +408,11 @@ public abstract class RealStruct extends NumberStruct {
 
 		@Override
 		public NumberStruct subtract(final S number1, final ComplexStruct number2) {
-			final RealStruct real = number2.getReal();
-			final RealStruct imaginary = number2.getImaginary();
+			final Apcomplex apfloat1 = number1.apfloatValue();
+			final Apcomplex apcomplex2 = number2.apcomplexValue();
 
-			final RealStruct zeroValue = number1.zeroValue();
-			final NumberStruct subtractReal = number1.subtract(real);
-			final NumberStruct subtractImag = zeroValue.subtract(imaginary);
-			return new ComplexStruct((RealStruct) subtractReal, (RealStruct) subtractImag);
+			final Apcomplex subtract = apfloat1.subtract(apcomplex2);
+			return ComplexStruct.makeComplexOrReal(subtract);
 		}
 	}
 
@@ -392,10 +435,7 @@ public abstract class RealStruct extends NumberStruct {
 
 		@Override
 		public RealStruct multiply(final S number1, final FloatStruct number2) {
-			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
-			final BigDecimal multiply = bigDecimal1.multiply(bigDecimal2);
-			return new FloatStruct(multiply);
+			return multiplyFloat(number2, number1);
 		}
 
 		@Override
@@ -403,12 +443,36 @@ public abstract class RealStruct extends NumberStruct {
 
 		@Override
 		public NumberStruct multiply(final S number1, final ComplexStruct number2) {
-			final RealStruct real = number2.getReal();
-			final RealStruct imaginary = number2.getImaginary();
+			final Apcomplex apfloat1 = number1.apfloatValue();
+			final Apcomplex apcomplex2 = number2.apcomplexValue();
 
-			final NumberStruct multiplyReal = number1.multiply(real);
-			final NumberStruct multiplyImag = number1.multiply(imaginary);
-			return new ComplexStruct((RealStruct) multiplyReal, (RealStruct) multiplyImag);
+			final Apcomplex multiply = apfloat1.multiply(apcomplex2);
+			return ComplexStruct.makeComplexOrReal(multiply);
+		}
+
+		/**
+		 * Computes the multiplication for the provided {@link FloatStruct} and {@link RealStruct} using {@link
+		 * BigDecimal#multiply(BigDecimal)} with the {@link RealStruct#bigDecimalValue()} values.
+		 *
+		 * @param number1
+		 * 		the {@link FloatStruct} as the first argument of the multiplication operation
+		 * @param number2
+		 * 		the {@link RealStruct} as the second argument of the multiplication operation
+		 *
+		 * @return a new {@link FloatStruct} as the result of the multiplication operation
+		 */
+		protected static RealStruct multiplyFloat(final FloatStruct number1, final RealStruct number2) {
+			final BigDecimal bigDecimal1 = number1.bigDecimalValue();
+			final BigDecimal bigDecimal2 = number2.bigDecimalValue();
+			final BigDecimal multiply = bigDecimal1.multiply(bigDecimal2);
+
+			// NOTE: We must both strip the trailing zeros and possibly reset the scale to 1 if there were only trailing zeros
+			BigDecimal preppedBigDecimal = multiply.stripTrailingZeros();
+			if (preppedBigDecimal.scale() == 0) {
+				preppedBigDecimal = preppedBigDecimal.setScale(1, RoundingMode.UNNECESSARY);
+			}
+
+			return new FloatStruct(preppedBigDecimal);
 		}
 	}
 
@@ -442,23 +506,11 @@ public abstract class RealStruct extends NumberStruct {
 
 		@Override
 		public NumberStruct divide(final S number1, final ComplexStruct number2) {
-			final RealStruct real = number2.getReal();
-			final RealStruct imaginary = number2.getImaginary();
-			final NumberStruct squareReal = real.multiply(real);
-			final NumberStruct squareImag = imaginary.multiply(imaginary);
+			final Apcomplex apfloat1 = number1.apfloatValue();
+			final Apcomplex apcomplex2 = number2.apcomplexValue();
 
-			final NumberStruct squareRealSquareImagSum = squareReal.add(squareImag);
-
-			final NumberStruct multiplyReal = number1.multiply(real);
-			final NumberStruct divideRealProductBySquareSum = multiplyReal.divide(squareRealSquareImagSum);
-
-			final RealStruct zeroValue = number1.zeroValue();
-			final NumberStruct subtractNum1FromZero = zeroValue.subtract(number1);
-			final NumberStruct multiplyImag = subtractNum1FromZero.multiply(imaginary);
-			final NumberStruct divideImagProductBySquareSum = multiplyImag.divide(squareRealSquareImagSum);
-
-			// NOTE: The casting here should be safe as we are dealing with only 'real numbers' above anyways
-			return new ComplexStruct((RealStruct) divideRealProductBySquareSum, (RealStruct) divideImagProductBySquareSum);
+			final Apcomplex divide = apfloat1.divide(apcomplex2);
+			return ComplexStruct.makeComplexOrReal(divide);
 		}
 	}
 
@@ -468,10 +520,32 @@ public abstract class RealStruct extends NumberStruct {
 		return bigDecimal1.compareTo(bigDecimal2);
 	}
 
-	protected abstract static class RealEqualToStrategy<S extends RealStruct> extends EqualToStrategy<S> {
+	protected static class RealEqualToStrategy<S extends RealStruct> extends EqualToStrategy<S> {
+
+		private static final RealEqualToStrategy<RealStruct> INSTANCE = new RealEqualToStrategy<>();
+
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric '=' equality result for an {@link FloatStruct} and a {@link IntegerStruct}.
+		 */
+		@Override
+		public boolean equalTo(final S number1, final IntegerStruct number2) {
+			return getComparisonResult(number1, number2) == 0;
+		}
 
 		@Override
 		public boolean equalTo(final S number1, final FloatStruct number2) {
+			return getComparisonResult(number1, number2) == 0;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * <p>
+		 * Computes the numeric '=' equality result for an {@link FloatStruct} and a {@link RatioStruct}.
+		 */
+		@Override
+		public boolean equalTo(final S number1, final RatioStruct number2) {
 			return getComparisonResult(number1, number2) == 0;
 		}
 
@@ -481,7 +555,9 @@ public abstract class RealStruct extends NumberStruct {
 		}
 	}
 
-	protected abstract static class LessThanStrategy<S extends RealStruct> {
+	protected static class LessThanStrategy<S extends RealStruct> {
+
+		private static final LessThanStrategy<RealStruct> INSTANCE = new LessThanStrategy<>();
 
 		public boolean lessThan(final S real1, final RealStruct real2) {
 			if (real2 instanceof IntegerStruct) {
@@ -495,16 +571,22 @@ public abstract class RealStruct extends NumberStruct {
 			}
 		}
 
-		public abstract boolean lessThan(S real1, IntegerStruct real2);
+		public boolean lessThan(final S real1, final IntegerStruct real2) {
+			return getComparisonResult(real1, real2) < 0;
+		}
 
 		public boolean lessThan(final S real1, final FloatStruct real2) {
 			return getComparisonResult(real1, real2) < 0;
 		}
 
-		public abstract boolean lessThan(S real1, RatioStruct real2);
+		public boolean lessThan(final S real1, final RatioStruct real2) {
+			return getComparisonResult(real1, real2) < 0;
+		}
 	}
 
-	protected abstract static class GreaterThanStrategy<S extends RealStruct> {
+	protected static class GreaterThanStrategy<S extends RealStruct> {
+
+		private static final GreaterThanStrategy<RealStruct> INSTANCE = new GreaterThanStrategy<>();
 
 		public boolean greaterThan(final S real1, final RealStruct real2) {
 			if (real2 instanceof IntegerStruct) {
@@ -518,16 +600,22 @@ public abstract class RealStruct extends NumberStruct {
 			}
 		}
 
-		public abstract boolean greaterThan(S real1, IntegerStruct real2);
+		public boolean greaterThan(final S real1, final IntegerStruct real2) {
+			return getComparisonResult(real1, real2) > 0;
+		}
 
 		public boolean greaterThan(final S real1, final FloatStruct real2) {
 			return getComparisonResult(real1, real2) > 0;
 		}
 
-		public abstract boolean greaterThan(S real1, RatioStruct real2);
+		public boolean greaterThan(final S real1, final RatioStruct real2) {
+			return getComparisonResult(real1, real2) > 0;
+		}
 	}
 
-	protected abstract static class LessThanOrEqualToStrategy<S extends RealStruct> {
+	protected static class LessThanOrEqualToStrategy<S extends RealStruct> {
+
+		private static final LessThanOrEqualToStrategy<RealStruct> INSTANCE = new LessThanOrEqualToStrategy<>();
 
 		public boolean lessThanOrEqualTo(final S real1, final RealStruct real2) {
 			if (real2 instanceof IntegerStruct) {
@@ -541,16 +629,22 @@ public abstract class RealStruct extends NumberStruct {
 			}
 		}
 
-		public abstract boolean lessThanOrEqualTo(S real1, IntegerStruct real2);
+		public boolean lessThanOrEqualTo(final S real1, final IntegerStruct real2) {
+			return getComparisonResult(real1, real2) <= 0;
+		}
 
 		public boolean lessThanOrEqualTo(final S real1, final FloatStruct real2) {
 			return getComparisonResult(real1, real2) <= 0;
 		}
 
-		public abstract boolean lessThanOrEqualTo(S real1, RatioStruct real2);
+		public boolean lessThanOrEqualTo(final S real1, final RatioStruct real2) {
+			return getComparisonResult(real1, real2) <= 0;
+		}
 	}
 
-	protected abstract static class GreaterThanOrEqualToStrategy<S extends RealStruct> {
+	protected static class GreaterThanOrEqualToStrategy<S extends RealStruct> {
+
+		private static final GreaterThanOrEqualToStrategy<RealStruct> INSTANCE = new GreaterThanOrEqualToStrategy<>();
 
 		public boolean greaterThanOrEqualTo(final S real1, final RealStruct real2) {
 			if (real2 instanceof IntegerStruct) {
@@ -564,94 +658,16 @@ public abstract class RealStruct extends NumberStruct {
 			}
 		}
 
-		public abstract boolean greaterThanOrEqualTo(S real1, IntegerStruct real2);
+		public boolean greaterThanOrEqualTo(final S real1, final IntegerStruct real2) {
+			return getComparisonResult(real1, real2) >= 0;
+		}
 
 		public boolean greaterThanOrEqualTo(final S real1, final FloatStruct real2) {
 			return getComparisonResult(real1, real2) >= 0;
 		}
 
-		public abstract boolean greaterThanOrEqualTo(S real1, RatioStruct real2);
-	}
-
-	protected static class MaxStrategy<S extends RealStruct> {
-
-		private static final MaxStrategy<RealStruct> INSTANCE = new MaxStrategy<>();
-
-		public RealStruct max(final S real1, final RealStruct real2) {
-			if (real2 instanceof IntegerStruct) {
-				return max(real1, (IntegerStruct) real2);
-			} else if (real2 instanceof FloatStruct) {
-				return max(real1, (FloatStruct) real2);
-			} else if (real2 instanceof RatioStruct) {
-				return max(real1, (RatioStruct) real2);
-			} else {
-				throw new RuntimeException("Unsupported Real Type for Max Operation.");
-			}
-		}
-
-		public RealStruct max(final S real1, final IntegerStruct real2) {
-			final BigDecimal bigDecimal1 = real1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
-
-			final BigDecimal max = bigDecimal1.max(bigDecimal2);
-			return (bigDecimal1.compareTo(max) == 0) ? real1 : real2;
-		}
-
-		public RealStruct max(final S real1, final FloatStruct real2) {
-			final BigDecimal bigDecimal1 = real1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
-
-			final BigDecimal max = bigDecimal1.max(bigDecimal2);
-			return (bigDecimal1.compareTo(max) == 0) ? real1 : real2;
-		}
-
-		public RealStruct max(final S real1, final RatioStruct real2) {
-			final BigDecimal bigDecimal1 = real1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
-
-			final BigDecimal max = bigDecimal1.max(bigDecimal2);
-			return (bigDecimal1.compareTo(max) == 0) ? real1 : real2;
-		}
-	}
-
-	protected static class MinStrategy<S extends RealStruct> {
-
-		private static final MinStrategy<RealStruct> INSTANCE = new MinStrategy<>();
-
-		public RealStruct min(final S real1, final RealStruct real2) {
-			if (real2 instanceof IntegerStruct) {
-				return min(real1, (IntegerStruct) real2);
-			} else if (real2 instanceof FloatStruct) {
-				return min(real1, (FloatStruct) real2);
-			} else if (real2 instanceof RatioStruct) {
-				return min(real1, (RatioStruct) real2);
-			} else {
-				throw new RuntimeException("Unsupported Real Type for Min Operation.");
-			}
-		}
-
-		public RealStruct min(final S real1, final IntegerStruct real2) {
-			final BigDecimal bigDecimal1 = real1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
-
-			final BigDecimal min = bigDecimal1.min(bigDecimal2);
-			return (bigDecimal1.compareTo(min) == 0) ? real1 : real2;
-		}
-
-		public RealStruct min(final S real1, final FloatStruct real2) {
-			final BigDecimal bigDecimal1 = real1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
-
-			final BigDecimal min = bigDecimal1.min(bigDecimal2);
-			return (bigDecimal1.compareTo(min) == 0) ? real1 : real2;
-		}
-
-		public RealStruct min(final S real1, final RatioStruct real2) {
-			final BigDecimal bigDecimal1 = real1.bigDecimalValue();
-			final BigDecimal bigDecimal2 = real2.bigDecimalValue();
-
-			final BigDecimal min = bigDecimal1.min(bigDecimal2);
-			return (bigDecimal1.compareTo(min) == 0) ? real1 : real2;
+		public boolean greaterThanOrEqualTo(final S real1, final RatioStruct real2) {
+			return getComparisonResult(real1, real2) >= 0;
 		}
 	}
 
@@ -683,13 +699,13 @@ public abstract class RealStruct extends NumberStruct {
 
 		public QuotientRemainderResult quotientRemainder(final S real, final RealStruct divisor,
 		                                                 final RoundingMode roundingMode,
-		                                                 final boolean isFloatResult) {
+		                                                 final boolean isQuotientFloat) {
 			if (divisor instanceof IntegerStruct) {
-				return quotientRemainder(real, (IntegerStruct) divisor, roundingMode, isFloatResult);
+				return quotientRemainder(real, (IntegerStruct) divisor, roundingMode, isQuotientFloat);
 			} else if (divisor instanceof FloatStruct) {
-				return quotientRemainder(real, (FloatStruct) divisor, roundingMode, isFloatResult);
+				return quotientRemainder(real, (FloatStruct) divisor, roundingMode, isQuotientFloat);
 			} else if (divisor instanceof RatioStruct) {
-				return quotientRemainder(real, (RatioStruct) divisor, roundingMode, isFloatResult);
+				return quotientRemainder(real, (RatioStruct) divisor, roundingMode, isQuotientFloat);
 			} else {
 				throw new RuntimeException("Unsupported Real Type for Quotient/Remainder Operation.");
 			}
@@ -697,17 +713,17 @@ public abstract class RealStruct extends NumberStruct {
 
 		public abstract QuotientRemainderResult quotientRemainder(final S real, final IntegerStruct divisor,
 		                                                          final RoundingMode roundingMode,
-		                                                          final boolean isFloatResult);
+		                                                          final boolean isQuotientFloat);
 
 		public QuotientRemainderResult quotientRemainder(final S real, final FloatStruct divisor,
 		                                                 final RoundingMode roundingMode,
-		                                                 final boolean isFloatResult) {
-			return floatQuotientRemainder(real, divisor, roundingMode, isFloatResult);
+		                                                 final boolean isQuotientFloat) {
+			return floatQuotientRemainder(real, divisor, roundingMode, isQuotientFloat);
 		}
 
 		protected static QuotientRemainderResult floatQuotientRemainder(final RealStruct real, final RealStruct divisor,
 		                                                                final RoundingMode roundingMode,
-		                                                                final boolean isFloatResult) {
+		                                                                final boolean isQuotientFloat) {
 			final BigDecimal realBigDecimal = real.bigDecimalValue();
 			final BigDecimal divisorBigDecimal = divisor.bigDecimalValue();
 
@@ -715,7 +731,7 @@ public abstract class RealStruct extends NumberStruct {
 			final BigDecimal remainder = realBigDecimal.subtract(divisorBigDecimal.multiply(quotient));
 
 			final RealStruct quotientReal;
-			if (isFloatResult) {
+			if (isQuotientFloat) {
 				quotientReal = getFloatQuotient(real, divisor, quotient);
 			} else {
 				final BigInteger quotientBigInteger = quotient.toBigInteger();
@@ -750,7 +766,7 @@ public abstract class RealStruct extends NumberStruct {
 
 		public abstract QuotientRemainderResult quotientRemainder(final S real, final RatioStruct divisor,
 		                                                          final RoundingMode roundingMode,
-		                                                          final boolean isFloatResult);
+		                                                          final boolean isQuotientFloat);
 	}
 
 	protected static class RealExptStrategy<S extends RealStruct> extends ExptStrategy<S> {
@@ -773,8 +789,8 @@ public abstract class RealStruct extends NumberStruct {
 		}
 
 		private static NumberStruct exptFloatRatio(final RealStruct base, final RealStruct power) {
-			final double x = base.doubleValue();
-			final double y = power.doubleValue();
+			final double x = base.apfloatValue().doubleValue();
+			final double y = power.apfloatValue().doubleValue();
 
 			double result = FastMath.pow(x, y);
 			if (Double.isNaN(result)) {
@@ -787,7 +803,7 @@ public abstract class RealStruct extends NumberStruct {
 					final FloatStruct real = new FloatStruct(realBigDecimal);
 					final BigDecimal imagBigDecimal = BigDecimal.valueOf(imagPart);
 					final FloatStruct imaginary = new FloatStruct(imagBigDecimal);
-					return new ComplexStruct(real, imaginary);
+					return ComplexStruct.makeComplexOrReal(real, imaginary);
 				}
 			}
 			final BigDecimal resultBigDecimal = BigDecimal.valueOf(result);
@@ -804,11 +820,11 @@ public abstract class RealStruct extends NumberStruct {
 			final BigDecimal powerComplexImaginaryBigDecimal = powerComplexImaginary.bigDecimalValue();
 			final FloatStruct imaginary = new FloatStruct(powerComplexImaginaryBigDecimal);
 
-			final ComplexStruct newPowerComplex = new ComplexStruct(real, imaginary);
+			final NumberStruct newPowerComplex = ComplexStruct.makeComplexOrReal(real, imaginary);
 
 			final BigDecimal bigDecimal1 = base.bigDecimalValue();
 			final RealStruct newBase = new FloatStruct(bigDecimal1);
-			final RealStruct logOfNewBase = newBase.log();
+			final NumberStruct logOfNewBase = newBase.log();
 			final NumberStruct powerComplexLogOfNewBaseProduct = newPowerComplex.multiply(logOfNewBase);
 			return powerComplexLogOfNewBaseProduct.exp();
 		}
@@ -919,5 +935,9 @@ public abstract class RealStruct extends NumberStruct {
 			result = result.min(currentReal);
 		}
 		return result;
+	}
+
+	public static RealStruct toRealStruct(final Apfloat apfloat) {
+		return (apfloat instanceof Apint) ? new IntegerStruct(apfloat) : new FloatStruct(apfloat);
 	}
 }

@@ -14,7 +14,9 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.math3.fraction.BigFraction;
 import org.apache.commons.math3.util.ArithmeticUtils;
-import org.apache.commons.math3.util.FastMath;
+import org.apfloat.Apfloat;
+import org.apfloat.ApfloatMath;
+import org.apfloat.Apint;
 
 /**
  * The {@link IntegerStruct} is the object representation of a Lisp 'integer' type.
@@ -50,6 +52,36 @@ public class IntegerStruct extends RationalStruct {
 	 * The internal {@link BigInteger} containing the float contents.
 	 */
 	private final BigInteger bigInteger;
+
+	/**
+	 * Public constructor.
+	 *
+	 * @param bigInteger
+	 * 		the value of the IntegerStruct
+	 */
+	public IntegerStruct(final Apint apint) {
+		this(apint.toBigInteger());
+	}
+
+	/**
+	 * Public constructor.
+	 *
+	 * @param bigInteger
+	 * 		the value of the IntegerStruct
+	 */
+	public IntegerStruct(final Apfloat apfloat) {
+		this(apfloat.longValue());
+	}
+
+	/**
+	 * Public constructor.
+	 *
+	 * @param bigInteger
+	 * 		the value of the IntegerStruct
+	 */
+	public IntegerStruct(final long longValue) {
+		this(BigInteger.valueOf(longValue));
+	}
 
 	/**
 	 * Public constructor.
@@ -108,7 +140,8 @@ public class IntegerStruct extends RationalStruct {
 		if (bigInteger.signum() >= 0) {
 			return this;
 		}
-		return new IntegerStruct(bigInteger.negate());
+		final BigInteger negate = bigInteger.negate();
+		return new IntegerStruct(negate);
 	}
 
 	/**
@@ -283,7 +316,8 @@ public class IntegerStruct extends RationalStruct {
 	 */
 	@Override
 	public NumberStruct negation() {
-		return new IntegerStruct(bigInteger.negate());
+		final BigInteger negate = bigInteger.negate();
+		return new IntegerStruct(negate);
 	}
 
 	/**
@@ -327,22 +361,11 @@ public class IntegerStruct extends RationalStruct {
 	 * @return the greatest IntegerStruct less than or equal to this IntegerStructs exact positive square root
 	 */
 	public IntegerStruct isqrt() {
-		final double doubleValue = doubleValue();
-		final double sqrt = FastMath.sqrt(doubleValue);
-		final double isqrt = FastMath.floor(sqrt);
-		final BigDecimal isqrtBigDecimal = BigDecimal.valueOf(isqrt);
-		final BigInteger isqrtBigInteger = isqrtBigDecimal.toBigInteger();
-		return new IntegerStruct(isqrtBigInteger);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Returns {@link #bigInteger#doubleValue()}.
-	 */
-	@Override
-	public double doubleValue() {
-		return bigInteger.doubleValue();
+		final Apfloat apfloat = apfloatValue();
+		final Apfloat sqrt = ApfloatMath.sqrt(apfloat);
+		final Apint floor = sqrt.floor();
+		final BigInteger floorBigInteger = floor.toBigInteger();
+		return new IntegerStruct(floorBigInteger);
 	}
 
 	/**
@@ -356,6 +379,11 @@ public class IntegerStruct extends RationalStruct {
 		return new BigDecimal(bigInteger, 1).multiply(BigDecimal.TEN);
 	}
 
+	@Override
+	public Apfloat apfloatValue() {
+		return new Apfloat(bigDecimalValue());
+	}
+
 	/**
 	 * {@inheritDoc}
 	 * <p>
@@ -364,26 +392,6 @@ public class IntegerStruct extends RationalStruct {
 	@Override
 	public RealStruct zeroValue() {
 		return ZERO;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Computes the maximum numerical result for this IntegerStruct and the provided {@code real}.
-	 */
-	@Override
-	public RealStruct max(final RealStruct real) {
-		return IntegerMaxStrategy.INSTANCE.max(this, real);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Computes the minimum numerical result for this IntegerStruct and the provided {@code real}.
-	 */
-	@Override
-	public RealStruct min(final RealStruct real) {
-		return IntegerMinStrategy.INSTANCE.min(this, real);
 	}
 
 	/**
@@ -584,7 +592,8 @@ public class IntegerStruct extends RationalStruct {
 		final int countInt = count.bigInteger.intValue();
 
 		// NOTE: shiftLeft will automatically take care of shiftRight based on the sign of countInt
-		return new IntegerStruct(bigInteger.shiftLeft(countInt));
+		final BigInteger shiftLeft = bigInteger.shiftLeft(countInt);
+		return new IntegerStruct(shiftLeft);
 	}
 
 	/**
@@ -596,7 +605,8 @@ public class IntegerStruct extends RationalStruct {
 	 * @return the bit-wise logical 'and' of this IntegerStruct and the provided IntegerStruct
 	 */
 	public IntegerStruct logAnd(final IntegerStruct integer) {
-		return new IntegerStruct(bigInteger.and(integer.bigInteger));
+		final BigInteger and = bigInteger.and(integer.bigInteger);
+		return new IntegerStruct(and);
 	}
 
 	/**
@@ -634,7 +644,9 @@ public class IntegerStruct extends RationalStruct {
 	 * @return the bit-wise logical 'and' of this IntegerStruct and the provided IntegerStruct
 	 */
 	public IntegerStruct logAndC1(final IntegerStruct integer) {
-		return new IntegerStruct(bigInteger.not().and(integer.bigInteger));
+		final BigInteger not = bigInteger.not();
+		final BigInteger and = not.and(integer.bigInteger);
+		return new IntegerStruct(and);
 	}
 
 	/**
@@ -646,7 +658,9 @@ public class IntegerStruct extends RationalStruct {
 	 * @return the bit-wise logical 'and' of this IntegerStruct and the provided IntegerStruct
 	 */
 	public IntegerStruct logAndC2(final IntegerStruct integer) {
-		return new IntegerStruct(bigInteger.and(integer.bigInteger.not()));
+		final BigInteger not = integer.bigInteger.not();
+		final BigInteger and = bigInteger.and(not);
+		return new IntegerStruct(and);
 	}
 
 	/**
@@ -660,7 +674,9 @@ public class IntegerStruct extends RationalStruct {
 	 * IntegerStruct
 	 */
 	public IntegerStruct logEqv(final IntegerStruct integer) {
-		return new IntegerStruct(bigInteger.xor(integer.bigInteger).not());
+		final BigInteger xor = bigInteger.xor(integer.bigInteger);
+		final BigInteger not = xor.not();
+		return new IntegerStruct(not);
 	}
 
 	/**
@@ -698,7 +714,8 @@ public class IntegerStruct extends RationalStruct {
 	 * @return the bit-wise logical 'inclusive-or' of this IntegerStruct and the provided IntegerStruct
 	 */
 	public IntegerStruct logIor(final IntegerStruct integer) {
-		return new IntegerStruct(bigInteger.or(integer.bigInteger));
+		final BigInteger or = bigInteger.or(integer.bigInteger);
+		return new IntegerStruct(or);
 	}
 
 	/**
@@ -736,7 +753,9 @@ public class IntegerStruct extends RationalStruct {
 	 * @return the bit-wise logical compliment 'and' of this IntegerStruct and the provided IntegerStruct
 	 */
 	public IntegerStruct logNand(final IntegerStruct integer) {
-		return new IntegerStruct(bigInteger.and(integer.bigInteger).not());
+		final BigInteger and = bigInteger.and(integer.bigInteger);
+		final BigInteger not = and.not();
+		return new IntegerStruct(not);
 	}
 
 	/**
@@ -748,7 +767,9 @@ public class IntegerStruct extends RationalStruct {
 	 * @return the bit-wise logical compliment 'or' of this IntegerStruct and the provided IntegerStruct
 	 */
 	public IntegerStruct logNor(final IntegerStruct integer) {
-		return new IntegerStruct(bigInteger.or(integer.bigInteger).not());
+		final BigInteger or = bigInteger.or(integer.bigInteger);
+		final BigInteger not = or.not();
+		return new IntegerStruct(not);
 	}
 
 	/**
@@ -757,7 +778,8 @@ public class IntegerStruct extends RationalStruct {
 	 * @return the bit-wise logical 'not' of this IntegerStruct
 	 */
 	public IntegerStruct logNot() {
-		return new IntegerStruct(bigInteger.not());
+		final BigInteger not = bigInteger.not();
+		return new IntegerStruct(not);
 	}
 
 	/**
@@ -769,7 +791,9 @@ public class IntegerStruct extends RationalStruct {
 	 * @return the bit-wise logical 'or' of the compliment of this IntegerStruct and the provided IntegerStruct
 	 */
 	public IntegerStruct logOrC1(final IntegerStruct integer) {
-		return new IntegerStruct(bigInteger.not().or(integer.bigInteger));
+		final BigInteger not = bigInteger.not();
+		final BigInteger or = not.or(integer.bigInteger);
+		return new IntegerStruct(or);
 	}
 
 	/**
@@ -781,7 +805,9 @@ public class IntegerStruct extends RationalStruct {
 	 * @return the bit-wise logical 'or' of this IntegerStruct and the compliment of provided IntegerStruct
 	 */
 	public IntegerStruct logOrC2(final IntegerStruct integer) {
-		return new IntegerStruct(bigInteger.or(integer.bigInteger.not()));
+		final BigInteger not = integer.bigInteger.not();
+		final BigInteger or = bigInteger.or(not);
+		return new IntegerStruct(or);
 	}
 
 	/**
@@ -793,7 +819,8 @@ public class IntegerStruct extends RationalStruct {
 	 * @return the bit-wise logical 'exclusive-or' of this IntegerStruct and the provided IntegerStruct
 	 */
 	public IntegerStruct logXor(final IntegerStruct integer) {
-		return new IntegerStruct(bigInteger.xor(integer.bigInteger));
+		final BigInteger xor = bigInteger.xor(integer.bigInteger);
+		return new IntegerStruct(xor);
 	}
 
 	/**
@@ -871,7 +898,8 @@ public class IntegerStruct extends RationalStruct {
 	 * otherwise, false.
 	 */
 	public boolean logTest(final IntegerStruct integer) {
-		return bigInteger.and(integer.bigInteger).signum() != 0;
+		final BigInteger and = bigInteger.and(integer.bigInteger);
+		return and.signum() != 0;
 	}
 
 	// Strategy Implementations
@@ -1096,8 +1124,7 @@ public class IntegerStruct extends RationalStruct {
 		 */
 		@Override
 		public boolean equalTo(final IntegerStruct number1, final IntegerStruct number2) {
-			final int comparisonResult = getComparisonResult(number1, number2);
-			return comparisonResult == 0;
+			return getComparisonResult(number1, number2) == 0;
 		}
 
 		/**
@@ -1107,8 +1134,7 @@ public class IntegerStruct extends RationalStruct {
 		 */
 		@Override
 		public boolean equalTo(final IntegerStruct number1, final RatioStruct number2) {
-			final int comparisonResult = getComparisonResult(number1, number2);
-			return comparisonResult == 0;
+			return getComparisonResult(number1, number2) == 0;
 		}
 	}
 
@@ -1237,56 +1263,6 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link MaxStrategy} for computing the comparable maximum numerical results for {@link IntegerStruct}s.
-	 */
-	private static class IntegerMaxStrategy extends MaxStrategy<IntegerStruct> {
-
-		/**
-		 * Singleton instance of the {@link IntegerMaxStrategy} type.
-		 */
-		private static final IntegerMaxStrategy INSTANCE = new IntegerMaxStrategy();
-
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the maximum numerical result for {@link IntegerStruct}s.
-		 */
-		@Override
-		public RealStruct max(final IntegerStruct real1, final IntegerStruct real2) {
-			final BigInteger bigInteger1 = real1.getBigInteger();
-			final BigInteger bigInteger2 = real2.getBigInteger();
-
-			final BigInteger max = bigInteger1.max(bigInteger2);
-			return (bigInteger1.compareTo(max) == 0) ? real1 : real2;
-		}
-	}
-
-	/**
-	 * {@link MinStrategy} for computing the comparable minimum numerical results for {@link IntegerStruct}s.
-	 */
-	private static class IntegerMinStrategy extends MinStrategy<IntegerStruct> {
-
-		/**
-		 * Singleton instance of the {@link IntegerMinStrategy} type.
-		 */
-		private static final IntegerMinStrategy INSTANCE = new IntegerMinStrategy();
-
-		/**
-		 * {@inheritDoc}
-		 * <p>
-		 * Computes the minimum numerical result for {@link IntegerStruct}s.
-		 */
-		@Override
-		public RealStruct min(final IntegerStruct real1, final IntegerStruct real2) {
-			final BigInteger bigInteger1 = real1.getBigInteger();
-			final BigInteger bigInteger2 = real2.getBigInteger();
-
-			final BigInteger min = bigInteger1.min(bigInteger2);
-			return (bigInteger1.compareTo(min) == 0) ? real1 : real2;
-		}
-	}
-
-	/**
 	 * {@link IntegerQuotientRemainderStrategy} for computing quotient and remainder results for {@link
 	 * IntegerStruct}s.
 	 */
@@ -1305,7 +1281,8 @@ public class IntegerStruct extends RationalStruct {
 		 */
 		@Override
 		public QuotientRemainderResult quotientRemainder(final IntegerStruct real, final IntegerStruct divisor,
-		                                                 final RoundingMode roundingMode, final boolean isFloatResult) {
+		                                                 final RoundingMode roundingMode, final boolean isQuotientFloat) {
+
 			final BigDecimal realBigDecimal = real.bigDecimalValue();
 			final BigDecimal divisorBigDecimal = divisor.bigDecimalValue();
 
@@ -1313,7 +1290,7 @@ public class IntegerStruct extends RationalStruct {
 			final BigDecimal remainder = realBigDecimal.subtract(divisorBigDecimal.multiply(quotient));
 
 			final RealStruct quotientReal;
-			if (isFloatResult) {
+			if (isQuotientFloat) {
 				quotientReal = new FloatStruct(quotient);
 			} else {
 				final BigInteger quotientBigInteger = quotient.toBigInteger();

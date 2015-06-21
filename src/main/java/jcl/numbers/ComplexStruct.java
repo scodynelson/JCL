@@ -6,14 +6,15 @@ package jcl.numbers;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.RoundingMode;
 
 import jcl.LispStruct;
 import jcl.types.ComplexType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.math3.fraction.BigFraction;
-import org.apache.commons.math3.util.FastMath;
+import org.apfloat.Apcomplex;
+import org.apfloat.ApcomplexMath;
+import org.apfloat.Apfloat;
 
 /**
  * The {@link ComplexStruct} is the object representation of a Lisp 'complex' type.
@@ -64,6 +65,30 @@ public class ComplexStruct extends NumberStruct {
 	 * The {@link RealStruct} that comprises the imaginary value of the complex.
 	 */
 	private final RealStruct imaginary;
+
+	/**
+	 * Public constructor.
+	 *
+	 * @param real
+	 * 		a {@link RealStruct} that represents the value of real part of the ComplexStruct
+	 * @param imaginary
+	 * 		a {@link RealStruct} that represents the value of imaginary part ComplexStruct
+	 */
+	ComplexStruct(final Apcomplex apcomplex) {
+		this(apcomplex.real(), apcomplex.imag());
+	}
+
+	/**
+	 * Public constructor.
+	 *
+	 * @param real1
+	 * 		a {@link RealStruct} that represents the value of real part of the ComplexStruct
+	 * @param imaginary2
+	 * 		a {@link RealStruct} that represents the value of imaginary part ComplexStruct
+	 */
+	ComplexStruct(final Apfloat real, final Apfloat imaginary) {
+		this(RealStruct.toRealStruct(real), RealStruct.toRealStruct(imaginary));
+	}
 
 	/**
 	 * Public constructor.
@@ -246,29 +271,21 @@ public class ComplexStruct extends NumberStruct {
 	}
 
 	@Override
+	public Apcomplex apcomplexValue() {
+		final Apfloat apfloatReal = real.apfloatValue();
+		final Apfloat apfloatImag = imaginary.apfloatValue();
+		return new Apcomplex(apfloatReal, apfloatImag);
+	}
+
+	@Override
 	public RealStruct abs() {
 		if (real.zerop()) {
 			return imaginary.abs();
 		}
 
-		final NumberStruct realSquare = real.multiply(real);
-		final NumberStruct imagSquare = imaginary.multiply(imaginary);
-		final NumberStruct realSquareImagSquareSum = realSquare.add(imagSquare);
-
-		// Real multiplication and addition will always product another Real so this cast is safe.
-		final double sumBigDecimal = ((RealStruct) realSquareImagSquareSum).doubleValue();
-		final double sqrtOfSquareSum = FastMath.sqrt(sumBigDecimal);
-
-		if (real instanceof RationalStruct) {
-			final BigDecimal bigDecimal = BigDecimal.valueOf(sqrtOfSquareSum);
-
-			final boolean isWholeNumber = bigDecimal.setScale(0, RoundingMode.HALF_UP).compareTo(bigDecimal) == 0;
-			if (isWholeNumber) {
-				return new IntegerStruct(bigDecimal.toBigInteger());
-			}
-			return new FloatStruct(bigDecimal);
-		}
-		return new FloatStruct(sqrtOfSquareSum);
+		final Apcomplex apcomplex = apcomplexValue();
+		final Apfloat abs = ApcomplexMath.abs(apcomplex);
+		return RealStruct.toRealStruct(abs);
 	}
 
 	/**
@@ -354,12 +371,12 @@ public class ComplexStruct extends NumberStruct {
 	@Override
 	public NumberStruct conjugate() {
 		final NumberStruct imagNegation = imaginary.negation();
-		return new ComplexStruct(real, (RealStruct) imagNegation);
+		return makeComplexOrReal(real, (RealStruct) imagNegation);
 	}
 
 	@Override
 	public NumberStruct negation() {
-		return new ComplexStruct((RealStruct) real.negation(), (RealStruct) imaginary.negation());
+		return makeComplexOrReal((RealStruct) real.negation(), (RealStruct) imaginary.negation());
 	}
 
 	@Override
@@ -369,19 +386,13 @@ public class ComplexStruct extends NumberStruct {
 
 	@Override
 	public NumberStruct exp() {
-		final double realDoubleValue = real.doubleValue();
-		final double imagDoubleValue = imaginary.doubleValue();
+		if (real.zerop() && imaginary.zerop()) {
+			return FloatStruct.ONE;
+		}
 
-		final double expReal = FastMath.exp(realDoubleValue);
-		final double newReal = expReal * FastMath.cos(imagDoubleValue);
-		final double newImag = expReal * FastMath.sin(imagDoubleValue);
-
-		final BigDecimal newRealBigDecimal = BigDecimal.valueOf(newReal);
-		final BigDecimal newImagBigDecimal = BigDecimal.valueOf(newImag);
-
-		final FloatStruct newRealFloat = new FloatStruct(newRealBigDecimal);
-		final FloatStruct newImaginaryFloat = new FloatStruct(newImagBigDecimal);
-		return new ComplexStruct(newRealFloat, newImaginaryFloat);
+		final Apcomplex apcomplex = apcomplexValue();
+		final Apcomplex exp = ApcomplexMath.exp(apcomplex);
+		return makeComplexOrReal(exp);
 	}
 
 	@Override
@@ -404,238 +415,138 @@ public class ComplexStruct extends NumberStruct {
 
 	@Override
 	public NumberStruct log() {
-		final RealStruct newReal = abs().log();
-		final RealStruct newImag = imaginary.atan(real);
-		return new ComplexStruct(newReal, newImag);
+		if (isEqualTo(ONE) || isEqualTo(ONE_FLOAT)) {
+			return FloatStruct.ZERO;
+		}
+
+		final Apcomplex apcomplex = apcomplexValue();
+		final Apcomplex log = ApcomplexMath.log(apcomplex);
+		return makeComplexOrReal(log);
+	}
+
+	@Override
+	public NumberStruct log(final NumberStruct base) {
+		final Apcomplex apcomplex = apcomplexValue();
+		final Apcomplex baseVal = base.apcomplexValue();
+		final Apcomplex log = ApcomplexMath.log(apcomplex, baseVal);
+		return makeComplexOrReal(log);
 	}
 
 	@Override
 	public NumberStruct sqrt() {
-		if (FloatStruct.ZERO.isEqualTo(real) && FloatStruct.ZERO.isEqualTo(imaginary)) {
-			return ZERO;
-		}
-		final double twoValue = 2.0D;
-
-		final double realDoubleValue = real.doubleValue();
-		final double imagDoubleValue = imaginary.doubleValue();
-
-		final double realAbs = FastMath.abs(realDoubleValue);
-		final double thisAbs = abs().doubleValue();
-		final double root = FastMath.sqrt((realAbs + thisAbs) / twoValue);
-
-		final double newReal;
-		final double newImag;
-		if (realDoubleValue >= 0.0D) {
-			newReal = root;
-			newImag = imagDoubleValue / (twoValue * root);
-		} else {
-			newReal = FastMath.abs(imagDoubleValue) / (twoValue * root);
-			newImag = FastMath.copySign(1.0D, imagDoubleValue) * root;
+		if (real.zerop() && imaginary.zerop()) {
+			return IntegerStruct.ZERO;
 		}
 
-		final BigDecimal newRealBigDecimal = BigDecimal.valueOf(newReal);
-		final BigDecimal newImagBigDecimal = BigDecimal.valueOf(newImag);
-
-		final FloatStruct newRealFloat = new FloatStruct(newRealBigDecimal);
-		final FloatStruct newImagFloat = new FloatStruct(newImagBigDecimal);
-		return new ComplexStruct(newRealFloat, newImagFloat);
+		final Apcomplex apcomplex = apcomplexValue();
+		final Apcomplex sqrt = ApcomplexMath.sqrt(apcomplex);
+		return makeComplexOrReal(sqrt);
 	}
 
 	@Override
 	public NumberStruct sin() {
-		final double realDoubleValue = real.doubleValue();
-		final double imagDoubleValue = imaginary.doubleValue();
-
-		final double newReal = FastMath.sin(realDoubleValue) * FastMath.cosh(imagDoubleValue);
-		final double newImag = FastMath.cos(realDoubleValue) * FastMath.sinh(imagDoubleValue);
-
-		final BigDecimal newRealBigDecimal = BigDecimal.valueOf(newReal);
-		final BigDecimal newImagBigDecimal = BigDecimal.valueOf(newImag);
-
-		final FloatStruct newRealFloat = new FloatStruct(newRealBigDecimal);
-		final FloatStruct newImagFloat = new FloatStruct(newImagBigDecimal);
-		return new ComplexStruct(newRealFloat, newImagFloat);
+		final Apcomplex apcomplex = apcomplexValue();
+		final Apcomplex sin = ApcomplexMath.sin(apcomplex);
+		return makeComplexOrReal(sin);
 	}
 
 	@Override
 	public NumberStruct cos() {
-		final double realDoubleValue = real.doubleValue();
-		final double imagDoubleValue = imaginary.doubleValue();
-
-		final double newReal = FastMath.cos(realDoubleValue) * FastMath.cosh(imagDoubleValue);
-		final double newImag = -FastMath.sin(realDoubleValue) * FastMath.sinh(imagDoubleValue);
-
-		final BigDecimal newRealBigDecimal = BigDecimal.valueOf(newReal);
-		final BigDecimal newImagBigDecimal = BigDecimal.valueOf(newImag);
-
-		final FloatStruct newRealFloat = new FloatStruct(newRealBigDecimal);
-		final FloatStruct newImagFloat = new FloatStruct(newImagBigDecimal);
-		return new ComplexStruct(newRealFloat, newImagFloat);
+		final Apcomplex apcomplex = apcomplexValue();
+		final Apcomplex cos = ApcomplexMath.cos(apcomplex);
+		return makeComplexOrReal(cos);
 	}
 
 	@Override
 	public NumberStruct tan() {
-		final double twoValue = 2.0D;
-
-		final double realDoubleValue = real.doubleValue();
-		final double imagDoubleValue = imaginary.doubleValue();
-
-		final double twoAndRealProduct = twoValue * realDoubleValue;
-		final double twoAndImagProduct = twoValue * imagDoubleValue;
-		final double divisor = FastMath.cos(twoAndRealProduct) + FastMath.cosh(twoAndImagProduct);
-
-		final double newReal = FastMath.sin(twoAndRealProduct) / divisor;
-		final double newImag = FastMath.sinh(twoAndImagProduct) / divisor;
-
-		final BigDecimal newRealBigDecimal = BigDecimal.valueOf(newReal);
-		final BigDecimal newImagBigDecimal = BigDecimal.valueOf(newImag);
-
-		final FloatStruct newRealFloat = new FloatStruct(newRealBigDecimal);
-		final FloatStruct newImagFloat = new FloatStruct(newImagBigDecimal);
-		return new ComplexStruct(newRealFloat, newImagFloat);
+		final Apcomplex apcomplex = apcomplexValue();
+		final Apcomplex tan = ApcomplexMath.tan(apcomplex);
+		return makeComplexOrReal(tan);
 	}
 
 	@Override
 	public NumberStruct asin() {
-		// asin(z) = -i (log(sqrt(1 - z<sup>2</sup>) + iz))
-
-		final NumberStruct thisSquared = multiply(this);
-		final NumberStruct thisMultiplyByI = multiply(I);
-		return ONE.subtract(thisSquared)
-		          .sqrt()
-		          .add(thisMultiplyByI)
-		          .log()
-		          .multiply(NEGATE_I);
+		final Apcomplex apcomplex = apcomplexValue();
+		final Apcomplex asin = ApcomplexMath.asin(apcomplex);
+		return makeComplexOrReal(asin);
 	}
 
 	@Override
 	public NumberStruct acos() {
-		// acos(z) = -i (log(z + i (sqrt(1 - z<sup>2</sup>))))
-
-		final NumberStruct thisSquared = multiply(this);
-		final NumberStruct pieceToAdd = ONE.subtract(thisSquared)
-		                                   .sqrt()
-		                                   .multiply(I);
-		return add(pieceToAdd)
-				.log()
-				.multiply(NEGATE_I);
+		final Apcomplex apcomplex = apcomplexValue();
+		final Apcomplex acos = ApcomplexMath.acos(apcomplex);
+		return makeComplexOrReal(acos);
 	}
 
 	@Override
 	public NumberStruct atan() {
-		// atan(z) = (i / 2) log((i + z) / (i - z))
-
-		final NumberStruct iMinusThis = I.subtract(this);
-		final NumberStruct iPlusThis = I.add(this);
-		final NumberStruct iDivideByTwo = I.divide(IntegerStruct.TWO);
-		return iPlusThis
-				.divide(iMinusThis)
-				.log()
-				.multiply(iDivideByTwo);
+		final Apcomplex apcomplex = apcomplexValue();
+		final Apcomplex atan = ApcomplexMath.atan(apcomplex);
+		return makeComplexOrReal(atan);
 	}
 
 	@Override
 	public NumberStruct sinh() {
-		final double realDoubleValue = real.doubleValue();
-		final double imagDoubleValue = imaginary.doubleValue();
-
-		final double newReal = FastMath.sinh(realDoubleValue) * FastMath.cos(imagDoubleValue);
-		final double newImag = FastMath.cosh(realDoubleValue) * FastMath.sin(imagDoubleValue);
-
-		final BigDecimal newRealBigDecimal = BigDecimal.valueOf(newReal);
-		final BigDecimal newImagBigDecimal = BigDecimal.valueOf(newImag);
-
-		final FloatStruct newRealFloat = new FloatStruct(newRealBigDecimal);
-		final FloatStruct newImagFloat = new FloatStruct(newImagBigDecimal);
-		return new ComplexStruct(newRealFloat, newImagFloat);
+		final Apcomplex apcomplex = apcomplexValue();
+		final Apcomplex sinh = ApcomplexMath.sinh(apcomplex);
+		return makeComplexOrReal(sinh);
 	}
 
 	@Override
 	public NumberStruct cosh() {
-		final double realDoubleValue = real.doubleValue();
-		final double imagDoubleValue = imaginary.doubleValue();
-
-		final double newReal = FastMath.cosh(realDoubleValue) * FastMath.cos(imagDoubleValue);
-		final double newImag = FastMath.sinh(realDoubleValue) * FastMath.sin(imagDoubleValue);
-
-		final BigDecimal newRealBigDecimal = BigDecimal.valueOf(newReal);
-		final BigDecimal newImagBigDecimal = BigDecimal.valueOf(newImag);
-
-		final FloatStruct newRealFloat = new FloatStruct(newRealBigDecimal);
-		final FloatStruct newImagFloat = new FloatStruct(newImagBigDecimal);
-		return new ComplexStruct(newRealFloat, newImagFloat);
+		final Apcomplex apcomplex = apcomplexValue();
+		final Apcomplex cosh = ApcomplexMath.cosh(apcomplex);
+		return makeComplexOrReal(cosh);
 	}
 
 	@Override
 	public NumberStruct tanh() {
-		final double twoValue = 2.0D;
-
-		final double realDoubleValue = real.doubleValue();
-		final double imagDoubleValue = imaginary.doubleValue();
-
-		final double twoAndRealProduct = twoValue * realDoubleValue;
-		final double twoAndImagProduct = twoValue * imagDoubleValue;
-		final double divisor = FastMath.cosh(twoAndRealProduct) + FastMath.cos(twoAndImagProduct);
-
-		final double newReal = FastMath.sinh(twoAndRealProduct) / divisor;
-		final double newImag = FastMath.sin(twoAndImagProduct) / divisor;
-
-		final BigDecimal newRealBigDecimal = BigDecimal.valueOf(newReal);
-		final BigDecimal newImagBigDecimal = BigDecimal.valueOf(newImag);
-
-		final FloatStruct newRealFloat = new FloatStruct(newRealBigDecimal);
-		final FloatStruct newImagFloat = new FloatStruct(newImagBigDecimal);
-		return new ComplexStruct(newRealFloat, newImagFloat);
+		final Apcomplex apcomplex = apcomplexValue();
+		final Apcomplex tanh = ApcomplexMath.tanh(apcomplex);
+		return makeComplexOrReal(tanh);
 	}
 
 	@Override
 	public NumberStruct asinh() {
-		if (imaginary.zerop()) {
-			return new ComplexStruct(real.asinh(), imaginary);
-		}
-
-		// asin(x) = log(x + sqrt(1 + x<sup>2</sup>))
-		final NumberStruct thisSquared = multiply(this);
-		final NumberStruct onePlusThisSquared = IntegerStruct.ONE.add(thisSquared);
-		final NumberStruct squareRootOfPreviousSum = onePlusThisSquared.sqrt();
-		final NumberStruct thisPlusSquareRoot = add(squareRootOfPreviousSum);
-		return thisPlusSquareRoot.log();
+		final Apcomplex apcomplex = apcomplexValue();
+		final Apcomplex asinh = ApcomplexMath.asinh(apcomplex);
+		return makeComplexOrReal(asinh);
 	}
 
 	@Override
 	public NumberStruct acosh() {
-		if (imaginary.zerop()) {
-			return new ComplexStruct(real.acosh(), imaginary);
-		}
-
-		// acosh(x) = 2 * (log (sqrt((x + 1) / 2) + sqrt((x - 1) / 2)))
-		final NumberStruct thisPlusOne = add(IntegerStruct.ONE);
-		final NumberStruct thisPlusOneOverTwo = thisPlusOne.divide(IntegerStruct.TWO);
-		final NumberStruct squareRootOfThisPlusOneOverTwo = thisPlusOneOverTwo.sqrt();
-
-		final NumberStruct thisMinusOne = subtract(IntegerStruct.ONE);
-		final NumberStruct thisMinusOneOverTwo = thisMinusOne.divide(IntegerStruct.TWO);
-		final NumberStruct squareRootOfThisMinusOneOverTwo = thisMinusOneOverTwo.sqrt();
-
-		final NumberStruct sumOfRoots = squareRootOfThisPlusOneOverTwo.add(squareRootOfThisMinusOneOverTwo);
-		final NumberStruct logOfSumOfRoots = sumOfRoots.log();
-
-		return IntegerStruct.TWO.multiply(logOfSumOfRoots);
+		final Apcomplex apcomplex = apcomplexValue();
+		final Apcomplex acosh = ApcomplexMath.acosh(apcomplex);
+		return makeComplexOrReal(acosh);
 	}
 
 	@Override
 	public NumberStruct atanh() {
-		if (imaginary.zerop()) {
-			return new ComplexStruct(real.atanh(), imaginary);
+		final Apcomplex apcomplex = apcomplexValue();
+		final Apcomplex atanh = ApcomplexMath.atanh(apcomplex);
+		return makeComplexOrReal(atanh);
+	}
+
+	public static NumberStruct makeComplexOrReal(final ComplexStruct complexStruct) {
+		if (complexStruct.imaginary.zerop()) {
+			return complexStruct.real;
 		}
+		return complexStruct;
+	}
 
-		// atanh(x) = (log(1 + x) - log(1 - x))/2
-		final NumberStruct logOnePlusThis = IntegerStruct.ONE.add(this).log();
-		final NumberStruct logOneMinusThis = IntegerStruct.ONE.subtract(this).log();
+	public static NumberStruct makeComplexOrReal(final RealStruct real, final RealStruct imaginary) {
+		if (imaginary.zerop()) {
+			return real;
+		}
+		return new ComplexStruct(real, imaginary);
+	}
 
-		final NumberStruct logResultsDifference = logOnePlusThis.subtract(logOneMinusThis);
-
-		return logResultsDifference.divide(IntegerStruct.TWO);
+	public static NumberStruct makeComplexOrReal(final Apcomplex apcomplex) {
+		final Apfloat real = apcomplex.real();
+		if (real.signum() == 0) {
+			return RealStruct.toRealStruct(real);
+		}
+		return new ComplexStruct(apcomplex);
 	}
 
 	// Strategy Implementations
@@ -652,47 +563,38 @@ public class ComplexStruct extends NumberStruct {
 
 		@Override
 		public NumberStruct add(final ComplexStruct number1, final IntegerStruct number2) {
-			final RealStruct realVal = number1.getReal();
-			final RealStruct imaginaryVal = number1.getImaginary();
+			final Apcomplex apcomplex1 = number1.apcomplexValue();
+			final Apcomplex apfloat2 = number2.apfloatValue();
 
-			final NumberStruct add = realVal.add(number2);
-			return new ComplexStruct((RealStruct) add, imaginaryVal);
+			final Apcomplex add = apcomplex1.add(apfloat2);
+			return makeComplexOrReal(add);
 		}
 
 		@Override
 		public NumberStruct add(final ComplexStruct number1, final FloatStruct number2) {
-			final RealStruct realVal = number1.getReal();
-			final RealStruct imaginaryVal = number1.getImaginary();
+			final Apcomplex apcomplex1 = number1.apcomplexValue();
+			final Apcomplex apfloat2 = number2.apfloatValue();
 
-			final NumberStruct add = realVal.add(number2);
-			return new ComplexStruct((RealStruct) add, imaginaryVal);
+			final Apcomplex add = apcomplex1.add(apfloat2);
+			return makeComplexOrReal(add);
 		}
 
 		@Override
 		public NumberStruct add(final ComplexStruct number1, final RatioStruct number2) {
-			final RealStruct realVal = number1.getReal();
-			final RealStruct imaginaryVal = number1.getImaginary();
+			final Apcomplex apcomplex1 = number1.apcomplexValue();
+			final Apcomplex apfloat2 = number2.apfloatValue();
 
-			final NumberStruct add = realVal.add(number2);
-			return new ComplexStruct((RealStruct) add, imaginaryVal);
+			final Apcomplex add = apcomplex1.add(apfloat2);
+			return makeComplexOrReal(add);
 		}
 
 		@Override
 		public NumberStruct add(final ComplexStruct number1, final ComplexStruct number2) {
-			final RealStruct realVal1 = number1.getReal();
-			final RealStruct imaginaryVal1 = number1.getImaginary();
+			final Apcomplex apcomplex1 = number1.apcomplexValue();
+			final Apcomplex apcomplex2 = number2.apcomplexValue();
 
-			final RealStruct realVal2 = number2.getReal();
-			final RealStruct imaginaryVal2 = number2.getImaginary();
-
-			final NumberStruct addReal = realVal1.add(realVal2);
-			final NumberStruct addImag = imaginaryVal1.add(imaginaryVal2);
-
-			if (addImag.zerop()) {
-				return addReal;
-			}
-
-			return new ComplexStruct((RealStruct) addReal, (RealStruct) addImag);
+			final Apcomplex add = apcomplex1.add(apcomplex2);
+			return makeComplexOrReal(add);
 		}
 	}
 
@@ -708,47 +610,38 @@ public class ComplexStruct extends NumberStruct {
 
 		@Override
 		public NumberStruct subtract(final ComplexStruct number1, final IntegerStruct number2) {
-			final RealStruct realVal = number1.getReal();
-			final RealStruct imaginaryVal = number1.getImaginary();
+			final Apcomplex apcomplex1 = number1.apcomplexValue();
+			final Apcomplex apfloat2 = number2.apfloatValue();
 
-			final NumberStruct subtract = realVal.subtract(number2);
-			return new ComplexStruct((RealStruct) subtract, imaginaryVal);
+			final Apcomplex subtract = apcomplex1.subtract(apfloat2);
+			return makeComplexOrReal(subtract);
 		}
 
 		@Override
 		public NumberStruct subtract(final ComplexStruct number1, final FloatStruct number2) {
-			final RealStruct realVal = number1.getReal();
-			final RealStruct imaginaryVal = number1.getImaginary();
+			final Apcomplex apcomplex1 = number1.apcomplexValue();
+			final Apcomplex apfloat2 = number2.apfloatValue();
 
-			final NumberStruct subtract = realVal.subtract(number2);
-			return new ComplexStruct((RealStruct) subtract, imaginaryVal);
+			final Apcomplex subtract = apcomplex1.subtract(apfloat2);
+			return makeComplexOrReal(subtract);
 		}
 
 		@Override
 		public NumberStruct subtract(final ComplexStruct number1, final RatioStruct number2) {
-			final RealStruct realVal = number1.getReal();
-			final RealStruct imaginaryVal = number1.getImaginary();
+			final Apcomplex apcomplex1 = number1.apcomplexValue();
+			final Apcomplex apfloat2 = number2.apfloatValue();
 
-			final NumberStruct subtract = realVal.subtract(number2);
-			return new ComplexStruct((RealStruct) subtract, imaginaryVal);
+			final Apcomplex subtract = apcomplex1.subtract(apfloat2);
+			return makeComplexOrReal(subtract);
 		}
 
 		@Override
 		public NumberStruct subtract(final ComplexStruct number1, final ComplexStruct number2) {
-			final RealStruct realVal1 = number1.getReal();
-			final RealStruct imaginaryVal1 = number1.getImaginary();
+			final Apcomplex apcomplex1 = number1.apcomplexValue();
+			final Apcomplex apcomplex2 = number2.apcomplexValue();
 
-			final RealStruct realVal2 = number2.getReal();
-			final RealStruct imaginaryVal2 = number2.getImaginary();
-
-			final NumberStruct subtractReal = realVal1.subtract(realVal2);
-			final NumberStruct subtractImag = imaginaryVal1.subtract(imaginaryVal2);
-
-			if (subtractImag.zerop()) {
-				return subtractReal;
-			}
-
-			return new ComplexStruct((RealStruct) subtractReal, (RealStruct) subtractImag);
+			final Apcomplex subtract = apcomplex1.subtract(apcomplex2);
+			return makeComplexOrReal(subtract);
 		}
 	}
 
@@ -764,58 +657,38 @@ public class ComplexStruct extends NumberStruct {
 
 		@Override
 		public NumberStruct multiply(final ComplexStruct number1, final IntegerStruct number2) {
-			final RealStruct realVal = number1.getReal();
-			final RealStruct imaginaryVal = number1.getImaginary();
+			final Apcomplex apcomplex1 = number1.apcomplexValue();
+			final Apcomplex apfloat2 = number2.apfloatValue();
 
-			final NumberStruct multiplyReal = realVal.multiply(number2);
-			final NumberStruct multiplyImag = imaginaryVal.multiply(number2);
-			return new ComplexStruct((RealStruct) multiplyReal, (RealStruct) multiplyImag);
+			final Apcomplex multiply = apcomplex1.multiply(apfloat2);
+			return makeComplexOrReal(multiply);
 		}
 
 		@Override
 		public NumberStruct multiply(final ComplexStruct number1, final FloatStruct number2) {
-			final RealStruct realVal = number1.getReal();
-			final RealStruct imaginaryVal = number1.getImaginary();
+			final Apcomplex apcomplex1 = number1.apcomplexValue();
+			final Apcomplex apfloat2 = number2.apfloatValue();
 
-			final NumberStruct multiplyReal = realVal.multiply(number2);
-			final NumberStruct multiplyImag = imaginaryVal.multiply(number2);
-			return new ComplexStruct((RealStruct) multiplyReal, (RealStruct) multiplyImag);
+			final Apcomplex multiply = apcomplex1.multiply(apfloat2);
+			return makeComplexOrReal(multiply);
 		}
 
 		@Override
 		public NumberStruct multiply(final ComplexStruct number1, final RatioStruct number2) {
-			final RealStruct realVal = number1.getReal();
-			final RealStruct imaginaryVal = number1.getImaginary();
+			final Apcomplex apcomplex1 = number1.apcomplexValue();
+			final Apcomplex apfloat2 = number2.apfloatValue();
 
-			final NumberStruct multiplyReal = realVal.multiply(number2);
-			final NumberStruct multiplyImag = imaginaryVal.multiply(number2);
-			return new ComplexStruct((RealStruct) multiplyReal, (RealStruct) multiplyImag);
+			final Apcomplex multiply = apcomplex1.multiply(apfloat2);
+			return makeComplexOrReal(multiply);
 		}
 
 		@Override
 		public NumberStruct multiply(final ComplexStruct number1, final ComplexStruct number2) {
-			final NumberStruct realVal1 = number1.getReal();
-			final NumberStruct imaginaryVal1 = number1.getImaginary();
+			final Apcomplex apcomplex1 = number1.apcomplexValue();
+			final Apcomplex apcomplex2 = number2.apcomplexValue();
 
-			final NumberStruct realVal2 = number2.getReal();
-			final NumberStruct imaginaryVal2 = number2.getImaginary();
-
-			// Algorithm:
-			// real part = ac - bd
-			// imag part = i(ad + bc)
-			final NumberStruct ac = realVal1.multiply(realVal2);
-			final NumberStruct bd = imaginaryVal1.multiply(imaginaryVal2);
-			final NumberStruct ad = realVal1.multiply(imaginaryVal2);
-			final NumberStruct bc = imaginaryVal1.multiply(realVal2);
-
-			final NumberStruct acSubtractBd = ac.subtract(bd);
-			final NumberStruct adAddBc = ad.add(bc);
-
-			if (adAddBc.zerop()) {
-				return acSubtractBd;
-			}
-
-			return new ComplexStruct((RealStruct) acSubtractBd, (RealStruct) adAddBc);
+			final Apcomplex multiply = apcomplex1.multiply(apcomplex2);
+			return makeComplexOrReal(multiply);
 		}
 	}
 
@@ -831,66 +704,38 @@ public class ComplexStruct extends NumberStruct {
 
 		@Override
 		public NumberStruct divide(final ComplexStruct number1, final IntegerStruct number2) {
-			final RealStruct realVal = number1.getReal();
-			final RealStruct imaginaryVal = number1.getImaginary();
+			final Apcomplex apcomplex1 = number1.apcomplexValue();
+			final Apcomplex apfloat2 = number2.apfloatValue();
 
-			final NumberStruct divideReal = realVal.divide(number2);
-			final NumberStruct divideImag = imaginaryVal.divide(number2);
-			return new ComplexStruct((RealStruct) divideReal, (RealStruct) divideImag);
+			final Apcomplex divide = apcomplex1.divide(apfloat2);
+			return makeComplexOrReal(divide);
 		}
 
 		@Override
 		public NumberStruct divide(final ComplexStruct number1, final FloatStruct number2) {
-			final RealStruct realVal = number1.getReal();
-			final RealStruct imaginaryVal = number1.getImaginary();
+			final Apcomplex apcomplex1 = number1.apcomplexValue();
+			final Apcomplex apfloat2 = number2.apfloatValue();
 
-			final NumberStruct divideReal = realVal.divide(number2);
-			final NumberStruct divideImag = imaginaryVal.divide(number2);
-			return new ComplexStruct((RealStruct) divideReal, (RealStruct) divideImag);
+			final Apcomplex divide = apcomplex1.divide(apfloat2);
+			return makeComplexOrReal(divide);
 		}
 
 		@Override
 		public NumberStruct divide(final ComplexStruct number1, final RatioStruct number2) {
-			final RealStruct realVal = number1.getReal();
-			final RealStruct imaginaryVal = number1.getImaginary();
+			final Apcomplex apcomplex1 = number1.apcomplexValue();
+			final Apcomplex apfloat2 = number2.apfloatValue();
 
-			final NumberStruct divideReal = realVal.divide(number2);
-			final NumberStruct divideImag = imaginaryVal.divide(number2);
-			return new ComplexStruct((RealStruct) divideReal, (RealStruct) divideImag);
+			final Apcomplex divide = apcomplex1.divide(apfloat2);
+			return makeComplexOrReal(divide);
 		}
 
 		@Override
 		public NumberStruct divide(final ComplexStruct number1, final ComplexStruct number2) {
-			final NumberStruct realVal1 = number1.getReal();
-			final NumberStruct imaginaryVal1 = number1.getImaginary();
+			final Apcomplex apcomplex1 = number1.apcomplexValue();
+			final Apcomplex apcomplex2 = number2.apcomplexValue();
 
-			final NumberStruct realVal2 = number2.getReal();
-			final NumberStruct imaginaryVal2 = number2.getImaginary();
-
-			// Algorithm:
-			// sum = (cc + dd)
-			// real part = (ac + bd) / sum
-			// imag part = i(bc - ad) / sum
-			final NumberStruct ac = realVal1.multiply(realVal2);
-			final NumberStruct bd = imaginaryVal1.multiply(imaginaryVal2);
-			final NumberStruct bc = imaginaryVal1.multiply(realVal2);
-			final NumberStruct ad = realVal1.multiply(imaginaryVal2);
-
-			final NumberStruct squareRealVal2 = realVal2.multiply(realVal2);
-			final NumberStruct squareImagVal2 = imaginaryVal2.multiply(imaginaryVal2);
-			final NumberStruct squareRealSquareImagSum = squareRealVal2.add(squareImagVal2);
-
-			final NumberStruct acAddBd = ac.add(bd);
-			final NumberStruct bcSubtractAd = bc.subtract(ad);
-
-			final NumberStruct acAddBdDivideBySumOfSquares = acAddBd.divide(squareRealSquareImagSum);
-			final NumberStruct bcSubtractAdDivideBySumOfSquares = bcSubtractAd.divide(squareRealSquareImagSum);
-
-			if (bcSubtractAdDivideBySumOfSquares.zerop()) {
-				return acAddBdDivideBySumOfSquares;
-			}
-
-			return new ComplexStruct((RealStruct) acAddBdDivideBySumOfSquares, (RealStruct) bcSubtractAdDivideBySumOfSquares);
+			final Apcomplex divide = apcomplex1.divide(apcomplex2);
+			return makeComplexOrReal(divide);
 		}
 	}
 

@@ -10,6 +10,7 @@ import jcl.LispStruct;
 import jcl.classes.BuiltInClassStruct;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.types.NumberType;
+import org.apfloat.Apcomplex;
 
 /**
  * The {@link NumberStruct} is the object representation of a Lisp 'number' type.
@@ -54,6 +55,8 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 	public abstract boolean lispEqual(LispStruct lispStruct);
 
 	public abstract boolean lispEqualp(LispStruct lispStruct);
+
+	public abstract Apcomplex apcomplexValue();
 
 	public abstract RealStruct abs();
 

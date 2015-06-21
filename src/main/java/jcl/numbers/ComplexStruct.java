@@ -298,14 +298,14 @@ public class ComplexStruct extends NumberStruct {
 		return real.zerop() && imaginary.zerop();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Computes the addition function result for this ComplexStruct and the provided {@code number}.
-	 */
 	@Override
-	public NumberStruct add(final NumberStruct number) {
-		return ComplexAddStrategy.INSTANCE.add(this, number);
+	protected NumberStruct add(final AddStrategy<?> addStrategy) {
+		return addStrategy.add(this);
+	}
+
+	@Override
+	protected AddStrategy<?> getAddStrategy() {
+		return new ComplexAddStrategy(this);
 	}
 
 	/**
@@ -543,6 +543,7 @@ public class ComplexStruct extends NumberStruct {
 
 	public static NumberStruct makeComplexOrReal(final Apcomplex apcomplex) {
 		final Apfloat real = apcomplex.real();
+		// TODO: the following DOESN'T work correctly. Need to have a real way to determine whether or not the real is a whole number!!!
 		if (real.signum() == 0) {
 			return RealStruct.toRealStruct(real);
 		}
@@ -554,15 +555,14 @@ public class ComplexStruct extends NumberStruct {
 	/**
 	 * {@link AddStrategy} for computing addition results for {@link ComplexStruct}s.
 	 */
-	private static class ComplexAddStrategy extends AddStrategy<ComplexStruct> {
+	private static final class ComplexAddStrategy extends AddStrategy<ComplexStruct> {
 
-		/**
-		 * Singleton instance of the {@link ComplexAddStrategy} type.
-		 */
-		private static final ComplexAddStrategy INSTANCE = new ComplexAddStrategy();
+		private ComplexAddStrategy(final ComplexStruct number1) {
+			super(number1);
+		}
 
 		@Override
-		public NumberStruct add(final ComplexStruct number1, final IntegerStruct number2) {
+		public NumberStruct add(final IntegerStruct number2) {
 			final Apcomplex apcomplex1 = number1.apcomplexValue();
 			final Apcomplex apfloat2 = number2.apfloatValue();
 
@@ -571,7 +571,7 @@ public class ComplexStruct extends NumberStruct {
 		}
 
 		@Override
-		public NumberStruct add(final ComplexStruct number1, final FloatStruct number2) {
+		public NumberStruct add(final FloatStruct number2) {
 			final Apcomplex apcomplex1 = number1.apcomplexValue();
 			final Apcomplex apfloat2 = number2.apfloatValue();
 
@@ -580,7 +580,7 @@ public class ComplexStruct extends NumberStruct {
 		}
 
 		@Override
-		public NumberStruct add(final ComplexStruct number1, final RatioStruct number2) {
+		public NumberStruct add(final RatioStruct number2) {
 			final Apcomplex apcomplex1 = number1.apcomplexValue();
 			final Apcomplex apfloat2 = number2.apfloatValue();
 
@@ -589,7 +589,7 @@ public class ComplexStruct extends NumberStruct {
 		}
 
 		@Override
-		public NumberStruct add(final ComplexStruct number1, final ComplexStruct number2) {
+		public NumberStruct add(final ComplexStruct number2) {
 			final Apcomplex apcomplex1 = number1.apcomplexValue();
 			final Apcomplex apcomplex2 = number2.apcomplexValue();
 

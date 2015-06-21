@@ -327,31 +327,23 @@ public abstract class RealStruct extends NumberStruct {
 
 	protected abstract static class RealAddStrategy<S extends RealStruct> extends AddStrategy<S> {
 
-		public RealStruct add(final S number1, final RealStruct number2) {
-			if (number2 instanceof IntegerStruct) {
-				return add(number1, (IntegerStruct) number2);
-			} else if (number2 instanceof FloatStruct) {
-				return add(number1, (FloatStruct) number2);
-			} else if (number2 instanceof RatioStruct) {
-				return add(number1, (RatioStruct) number2);
-			} else {
-				throw new RuntimeException("Unsupported Number Type for Add Operation.");
-			}
+		protected RealAddStrategy(final S number1) {
+			super(number1);
 		}
 
 		@Override
-		public abstract RealStruct add(final S number1, final IntegerStruct number2);
+		public abstract RealStruct add(final IntegerStruct number2);
 
 		@Override
-		public RealStruct add(final S number1, final FloatStruct number2) {
+		public RealStruct add(final FloatStruct number2) {
 			return addFloat(number2, number1);
 		}
 
 		@Override
-		public abstract RealStruct add(final S number1, final RatioStruct number2);
+		public abstract RealStruct add(final RatioStruct number2);
 
 		@Override
-		public NumberStruct add(final S number1, final ComplexStruct number2) {
+		public NumberStruct add(final ComplexStruct number2) {
 			final Apcomplex apfloat1 = number1.apfloatValue();
 			final Apcomplex apcomplex2 = number2.apcomplexValue();
 

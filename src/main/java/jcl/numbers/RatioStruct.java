@@ -135,14 +135,14 @@ public class RatioStruct extends RationalStruct {
 		return BigFraction.ZERO.compareTo(bigFraction) < 0;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Computes the addition function result for this RatioStruct and the provided {@code number}.
-	 */
 	@Override
-	public NumberStruct add(final NumberStruct number) {
-		return RatioAddStrategy.INSTANCE.add(this, number);
+	protected NumberStruct add(final AddStrategy<?> addStrategy) {
+		return addStrategy.add(this);
+	}
+
+	@Override
+	protected AddStrategy<?> getAddStrategy() {
+		return new RatioAddStrategy(this);
 	}
 
 	/**
@@ -432,12 +432,11 @@ public class RatioStruct extends RationalStruct {
 	/**
 	 * {@link RealAddStrategy} for computing addition results for {@link RatioStruct}s.
 	 */
-	private static class RatioAddStrategy extends RealAddStrategy<RatioStruct> {
+	private static final class RatioAddStrategy extends RealAddStrategy<RatioStruct> {
 
-		/**
-		 * Singleton instance of the {@link RatioAddStrategy} type.
-		 */
-		private static final RatioAddStrategy INSTANCE = new RatioAddStrategy();
+		private RatioAddStrategy(final RatioStruct number1) {
+			super(number1);
+		}
 
 		/**
 		 * {@inheritDoc}
@@ -445,7 +444,7 @@ public class RatioStruct extends RationalStruct {
 		 * Computes the addition function result for an {@link RatioStruct} and a {@link IntegerStruct}.
 		 */
 		@Override
-		public RealStruct add(final RatioStruct number1, final IntegerStruct number2) {
+		public RealStruct add(final IntegerStruct number2) {
 			final BigFraction bigFraction1 = number1.getBigFraction();
 			final BigInteger bigInteger2 = number2.getBigInteger();
 			final BigFraction add = bigFraction1.add(bigInteger2);
@@ -458,7 +457,7 @@ public class RatioStruct extends RationalStruct {
 		 * Computes the addition function result for {@link RatioStruct}s.
 		 */
 		@Override
-		public RealStruct add(final RatioStruct number1, final RatioStruct number2) {
+		public RealStruct add(final RatioStruct number2) {
 			final BigFraction bigFraction1 = number1.getBigFraction();
 			final BigFraction bigFraction2 = number2.getBigFraction();
 			final BigFraction add = bigFraction1.add(bigFraction2);

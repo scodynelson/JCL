@@ -62,7 +62,14 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 
 	public abstract boolean zerop();
 
-	public abstract NumberStruct add(final NumberStruct number);
+	public NumberStruct add(final NumberStruct number) {
+		final AddStrategy<?> addStrategy = getAddStrategy();
+		return number.add(addStrategy);
+	}
+
+	protected abstract NumberStruct add(final AddStrategy<?> addStrategy);
+
+	protected abstract AddStrategy<?> getAddStrategy();
 
 	public abstract NumberStruct subtract(final NumberStruct number);
 
@@ -128,27 +135,19 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 
 	protected abstract static class AddStrategy<S extends NumberStruct> {
 
-		public NumberStruct add(final S number1, final NumberStruct number2) {
-			if (number2 instanceof IntegerStruct) {
-				return add(number1, (IntegerStruct) number2);
-			} else if (number2 instanceof FloatStruct) {
-				return add(number1, (FloatStruct) number2);
-			} else if (number2 instanceof RatioStruct) {
-				return add(number1, (RatioStruct) number2);
-			} else if (number2 instanceof ComplexStruct) {
-				return add(number1, (ComplexStruct) number2);
-			} else {
-				throw new RuntimeException("Unsupported Number Type for Add Operation.");
-			}
+		protected final S number1;
+
+		protected AddStrategy(final S number1) {
+			this.number1 = number1;
 		}
 
-		public abstract NumberStruct add(S number1, IntegerStruct number2);
+		public abstract NumberStruct add(IntegerStruct number2);
 
-		public abstract NumberStruct add(S number1, FloatStruct number2);
+		public abstract NumberStruct add(FloatStruct number2);
 
-		public abstract NumberStruct add(S number1, RatioStruct number2);
+		public abstract NumberStruct add(RatioStruct number2);
 
-		public abstract NumberStruct add(S number1, ComplexStruct number2);
+		public abstract NumberStruct add(ComplexStruct number2);
 	}
 
 	protected abstract static class SubtractStrategy<S extends NumberStruct> {

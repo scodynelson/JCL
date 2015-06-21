@@ -192,14 +192,14 @@ public class IntegerStruct extends RationalStruct {
 		return bigInteger.testBit(0);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Computes the addition function result for this IntegerStruct and the provided {@code number}.
-	 */
 	@Override
-	public NumberStruct add(final NumberStruct number) {
-		return IntegerAddStrategy.INSTANCE.add(this, number);
+	protected NumberStruct add(final AddStrategy<?> addStrategy) {
+		return addStrategy.add(this);
+	}
+
+	@Override
+	protected AddStrategy<?> getAddStrategy() {
+		return new IntegerAddStrategy(this);
 	}
 
 	/**
@@ -907,12 +907,11 @@ public class IntegerStruct extends RationalStruct {
 	/**
 	 * {@link RealAddStrategy} for computing addition results for {@link IntegerStruct}s.
 	 */
-	private static class IntegerAddStrategy extends RealAddStrategy<IntegerStruct> {
+	private static final class IntegerAddStrategy extends RealAddStrategy<IntegerStruct> {
 
-		/**
-		 * Singleton instance of the {@link IntegerAddStrategy} type.
-		 */
-		private static final IntegerAddStrategy INSTANCE = new IntegerAddStrategy();
+		private IntegerAddStrategy(final IntegerStruct number1) {
+			super(number1);
+		}
 
 		/**
 		 * {@inheritDoc}
@@ -920,7 +919,7 @@ public class IntegerStruct extends RationalStruct {
 		 * Computes the addition function result for {@link IntegerStruct}s.
 		 */
 		@Override
-		public RealStruct add(final IntegerStruct number1, final IntegerStruct number2) {
+		public RealStruct add(final IntegerStruct number2) {
 			final BigInteger bigInteger1 = number1.getBigInteger();
 			final BigInteger bigInteger2 = number2.getBigInteger();
 			final BigInteger add = bigInteger1.add(bigInteger2);
@@ -933,7 +932,7 @@ public class IntegerStruct extends RationalStruct {
 		 * Computes the addition function result for an {@link IntegerStruct} and a {@link RatioStruct}.
 		 */
 		@Override
-		public RealStruct add(final IntegerStruct number1, final RatioStruct number2) {
+		public RealStruct add(final RatioStruct number2) {
 			final BigInteger bigInteger1 = number1.getBigInteger();
 
 			final BigFraction bigFraction2 = number2.getBigFraction();

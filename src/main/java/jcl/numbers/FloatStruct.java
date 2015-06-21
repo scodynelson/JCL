@@ -164,14 +164,14 @@ public class FloatStruct extends RealStruct {
 		return bigDecimal.signum() < 0;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Computes the addition function result for this FloatStruct and the provided {@code number}.
-	 */
 	@Override
-	public NumberStruct add(final NumberStruct number) {
-		return FloatAddStrategy.INSTANCE.add(this, number);
+	protected NumberStruct add(final AddStrategy<?> addStrategy) {
+		return addStrategy.add(this);
+	}
+
+	@Override
+	protected AddStrategy<?> getAddStrategy() {
+		return new FloatAddStrategy(this);
 	}
 
 	/**
@@ -578,12 +578,11 @@ public class FloatStruct extends RealStruct {
 	/**
 	 * {@link RealAddStrategy} for computing addition results for {@link FloatStruct}s.
 	 */
-	private static class FloatAddStrategy extends RealAddStrategy<FloatStruct> {
+	private static final class FloatAddStrategy extends RealAddStrategy<FloatStruct> {
 
-		/**
-		 * Singleton instance of the {@link FloatAddStrategy} type.
-		 */
-		private static final FloatAddStrategy INSTANCE = new FloatAddStrategy();
+		private FloatAddStrategy(final FloatStruct number1) {
+			super(number1);
+		}
 
 		/**
 		 * {@inheritDoc}
@@ -591,7 +590,7 @@ public class FloatStruct extends RealStruct {
 		 * Computes the addition function result for an {@link FloatStruct} and a {@link IntegerStruct}.
 		 */
 		@Override
-		public RealStruct add(final FloatStruct number1, final IntegerStruct number2) {
+		public RealStruct add(final IntegerStruct number2) {
 			return addFloat(number1, number2);
 		}
 
@@ -601,7 +600,7 @@ public class FloatStruct extends RealStruct {
 		 * Computes the addition function result for an {@link FloatStruct} and a {@link RatioStruct}.
 		 */
 		@Override
-		public RealStruct add(final FloatStruct number1, final RatioStruct number2) {
+		public RealStruct add(final RatioStruct number2) {
 			return addFloat(number1, number2);
 		}
 	}

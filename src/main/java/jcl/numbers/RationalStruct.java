@@ -61,13 +61,13 @@ public abstract class RationalStruct extends RealStruct {
 		return new FloatStruct(bigDecimal);
 	}
 
-	protected static RationalStruct makeRational(final BigFraction bigFraction) {
+	public static RationalStruct makeRational(final BigFraction bigFraction) {
 		final BigInteger numerator = bigFraction.getNumerator();
 		final BigInteger denominator = bigFraction.getDenominator();
 		return makeRational(numerator, denominator);
 	}
 
-	protected static RationalStruct makeRational(final BigInteger numerator, final BigInteger denominator) {
+	public static RationalStruct makeRational(final BigInteger numerator, final BigInteger denominator) {
 		if (BigInteger.ZERO.compareTo(denominator) == 0) {
 			// TODO: what do we pass to this exception???
 			throw new DivisionByZeroException("Division By Zero");

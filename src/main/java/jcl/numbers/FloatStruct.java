@@ -354,14 +354,7 @@ public class FloatStruct extends RealStruct {
 
 		final BigFraction bigFraction = new BigFraction(movedDecimalPlaceBigInteger, BigInteger.TEN.pow(scale));
 		final BigFraction bigFractionReduced = bigFraction.reduce();
-
-		final BigInteger denominator = bigFractionReduced.getDenominator();
-		if (BigInteger.ONE.compareTo(denominator) == 0) {
-			final BigInteger numerator = bigFractionReduced.getNumerator();
-			return new IntegerStruct(numerator);
-		}
-
-		return new RatioStruct(bigFractionReduced);
+		return RationalStruct.makeRational(bigFractionReduced);
 	}
 
 	@Override

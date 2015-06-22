@@ -101,18 +101,21 @@ public abstract class RationalStruct extends RealStruct {
 
 	protected abstract static class RationalQuotientRemainderStrategy<S extends RationalStruct> extends QuotientRemainderStrategy<S> {
 
-		@Override
-		public QuotientRemainderResult quotientRemainder(final S real, final RatioStruct divisor,
-		                                                 final RoundingMode roundingMode,
-		                                                 final boolean isQuotientFloat) {
-			return ratioQuotientRemainder(real, divisor, roundingMode, isQuotientFloat);
+		protected RationalQuotientRemainderStrategy(final S real) {
+			super(real);
 		}
 
-		protected static QuotientRemainderResult ratioQuotientRemainder(final RationalStruct rational, final RationalStruct divisor,
-		                                                                final RoundingMode roundingMode, final boolean isFloatResult) {
-			final IntegerStruct rationalNumerator = rational.numerator();
+		@Override
+		public QuotientRemainderResult quotientRemainder(final RatioStruct divisor, final RoundingMode roundingMode,
+		                                                 final boolean isQuotientFloat) {
+			return ratioQuotientRemainder(divisor, roundingMode, isQuotientFloat);
+		}
+
+		protected QuotientRemainderResult ratioQuotientRemainder(final RationalStruct divisor, final RoundingMode roundingMode,
+		                                                         final boolean isFloatResult) {
+			final IntegerStruct rationalNumerator = real.numerator();
 			final BigInteger rationalNumeratorBigInteger = rationalNumerator.getBigInteger();
-			final IntegerStruct rationalDenominator = rational.denominator();
+			final IntegerStruct rationalDenominator = real.denominator();
 			final BigInteger rationalDenominatorBigInteger = rationalDenominator.getBigInteger();
 
 			final IntegerStruct divisorNumerator = divisor.numerator();
@@ -142,7 +145,7 @@ public abstract class RationalStruct extends RealStruct {
 			final RationalStruct product = makeRational(multiply, divisorDenominatorBigInteger);
 
 			// Subtract to get remainder: (Rational - Rational) produces Rational
-			final NumberStruct remainder = rational.subtract(product);
+			final NumberStruct remainder = real.subtract(product);
 
 			return new QuotientRemainderResult(quotientReal, (RealStruct) remainder);
 		}

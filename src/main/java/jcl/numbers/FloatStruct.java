@@ -59,7 +59,7 @@ public class FloatStruct extends RealStruct {
 	 * @param bigDecimal
 	 * 		the value of the FloatStruct
 	 */
-	public FloatStruct(final Apfloat apfloat) {
+	FloatStruct(final Apfloat apfloat) {
 		this(apfloat.doubleValue());
 	}
 
@@ -174,34 +174,59 @@ public class FloatStruct extends RealStruct {
 		return new FloatAddStrategy(this);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Computes the subtraction function result for this FloatStruct and the provided {@code number}.
-	 */
 	@Override
-	public NumberStruct subtract(final NumberStruct number) {
-		return FloatSubtractStrategy.INSTANCE.subtract(this, number);
+	protected NumberStruct subtract(final SubtractStrategy<?> subtractStrategy) {
+		return subtractStrategy.subtract(this);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Computes the multiplication function result for this FloatStruct and the provided {@code number}.
-	 */
 	@Override
-	public NumberStruct multiply(final NumberStruct number) {
-		return FloatMultiplyStrategy.INSTANCE.multiply(this, number);
+	protected SubtractStrategy<?> getSubtractStrategy() {
+		return new FloatSubtractStrategy(this);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Computes the division function result for this FloatStruct and the provided {@code number}.
-	 */
 	@Override
-	public NumberStruct divide(final NumberStruct number) {
-		return FloatDivideStrategy.INSTANCE.divide(this, number);
+	protected NumberStruct multiply(final MultiplyStrategy<?> multiplyStrategy) {
+		return multiplyStrategy.multiply(this);
+	}
+
+	@Override
+	protected MultiplyStrategy<?> getMultiplyStrategy() {
+		return new FloatMultiplyStrategy(this);
+	}
+
+	@Override
+	protected NumberStruct divide(final DivideStrategy<?> divideStrategy) {
+		return divideStrategy.divide(this);
+	}
+
+	@Override
+	protected DivideStrategy<?> getDivideStrategy() {
+		return new FloatDivideStrategy(this);
+	}
+
+	@Override
+	protected boolean isEqualTo(final EqualToStrategy<?> equalToStrategy) {
+		return equalToStrategy.equalTo(this);
+	}
+
+	@Override
+	protected boolean isLessThan(final LessThanStrategy<?> lessThanStrategy) {
+		return lessThanStrategy.lessThan(this);
+	}
+
+	@Override
+	protected boolean isGreaterThan(final GreaterThanStrategy<?> greaterThanStrategy) {
+		return greaterThanStrategy.greaterThan(this);
+	}
+
+	@Override
+	protected boolean isLessThanOrEqualTo(final LessThanOrEqualToStrategy<?> lessThanOrEqualToStrategy) {
+		return lessThanOrEqualToStrategy.lessThanOrEqualTo(this);
+	}
+
+	@Override
+	protected boolean isGreaterThanOrEqualTo(final GreaterThanOrEqualToStrategy<?> greaterThanOrEqualToStrategy) {
+		return greaterThanOrEqualToStrategy.greaterThanOrEqualTo(this);
 	}
 
 	/**
@@ -277,7 +302,12 @@ public class FloatStruct extends RealStruct {
 			return this;
 		}
 
-		return RealExptStrategy.INSTANCE.expt(this, power);
+		return super.expt(power);
+	}
+
+	@Override
+	protected NumberStruct expt(final ExptStrategy<?> exptStrategy) {
+		return exptStrategy.expt(this);
 	}
 
 	/**
@@ -334,67 +364,39 @@ public class FloatStruct extends RealStruct {
 		return new RatioStruct(bigFractionReduced);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Computes the floor of the result of this FloatStruct with the provided {@code divisor}.
-	 */
 	@Override
-	public QuotientRemainderResult floor(final RealStruct divisor) {
-		return FloatQuotientRemainderStrategy.INSTANCE.floor(this, divisor);
+	protected QuotientRemainderResult floor(final QuotientRemainderStrategy<?> floorStrategy) {
+		return floorStrategy.floor(this);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Computes the floor of the result of this FloatStruct with the provided {@code divisor}, returning the quotient
-	 * as a FloatStruct.
-	 */
 	@Override
-	public QuotientRemainderResult ffloor(final RealStruct divisor) {
-		return FloatQuotientRemainderStrategy.INSTANCE.ffloor(this, divisor);
+	protected QuotientRemainderResult ffloor(final QuotientRemainderStrategy<?> ffloorStrategy) {
+		return ffloorStrategy.ffloor(this);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Computes the ceiling of the result of this FloatStruct with the provided {@code divisor}.
-	 */
 	@Override
-	public QuotientRemainderResult ceiling(final RealStruct divisor) {
-		return FloatQuotientRemainderStrategy.INSTANCE.ceiling(this, divisor);
+	protected QuotientRemainderResult ceiling(final QuotientRemainderStrategy<?> ceilingStrategy) {
+		return ceilingStrategy.ceiling(this);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Computes the ceiling of the result of this FloatStruct with the provided {@code divisor}, returning the
-	 * quotient as a FloatStruct.
-	 */
 	@Override
-	public QuotientRemainderResult fceiling(final RealStruct divisor) {
-		return FloatQuotientRemainderStrategy.INSTANCE.fceiling(this, divisor);
+	protected QuotientRemainderResult fceiling(final QuotientRemainderStrategy<?> fceilingStrategy) {
+		return fceilingStrategy.fceiling(this);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Computes the rounded result of this FloatStruct with the provided {@code divisor}.
-	 */
 	@Override
-	public QuotientRemainderResult round(final RealStruct divisor) {
-		return FloatQuotientRemainderStrategy.INSTANCE.round(this, divisor);
+	protected QuotientRemainderResult round(final QuotientRemainderStrategy<?> roundStrategy) {
+		return roundStrategy.round(this);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Computes the rounded result of this FloatStruct with the provided {@code divisor}, returning the quotient as a
-	 * FloatStruct.
-	 */
 	@Override
-	public QuotientRemainderResult fround(final RealStruct divisor) {
-		return FloatQuotientRemainderStrategy.INSTANCE.fround(this, divisor);
+	protected QuotientRemainderResult fround(final QuotientRemainderStrategy<?> froundStrategy) {
+		return froundStrategy.fround(this);
+	}
+
+	@Override
+	protected QuotientRemainderStrategy<?> getQuotientRemainderStrategy() {
+		return new FloatQuotientRemainderStrategy(this);
 	}
 
 	/**
@@ -608,12 +610,11 @@ public class FloatStruct extends RealStruct {
 	/**
 	 * {@link RealSubtractStrategy} for computing subtraction function results for {@link FloatStruct}s.
 	 */
-	private static class FloatSubtractStrategy extends RealSubtractStrategy<FloatStruct> {
+	private static final class FloatSubtractStrategy extends RealSubtractStrategy<FloatStruct> {
 
-		/**
-		 * Singleton instance of the {@link FloatSubtractStrategy} type.
-		 */
-		private static final FloatSubtractStrategy INSTANCE = new FloatSubtractStrategy();
+		private FloatSubtractStrategy(final FloatStruct number1) {
+			super(number1);
+		}
 
 		/**
 		 * {@inheritDoc}
@@ -621,7 +622,7 @@ public class FloatStruct extends RealStruct {
 		 * Computes the subtraction function result for an {@link FloatStruct} and a {@link IntegerStruct}.
 		 */
 		@Override
-		public RealStruct subtract(final FloatStruct number1, final IntegerStruct number2) {
+		public RealStruct subtract(final IntegerStruct number2) {
 			return subtractFloat(number1, number2);
 		}
 
@@ -631,7 +632,7 @@ public class FloatStruct extends RealStruct {
 		 * Computes the subtraction function result for an {@link FloatStruct} and a {@link RatioStruct}.
 		 */
 		@Override
-		public RealStruct subtract(final FloatStruct number1, final RatioStruct number2) {
+		public RealStruct subtract(final RatioStruct number2) {
 			return subtractFloat(number1, number2);
 		}
 
@@ -657,12 +658,11 @@ public class FloatStruct extends RealStruct {
 	/**
 	 * {@link RealMultiplyStrategy} for computing multiplication function results for {@link FloatStruct}s.
 	 */
-	private static class FloatMultiplyStrategy extends RealMultiplyStrategy<FloatStruct> {
+	private static final class FloatMultiplyStrategy extends RealMultiplyStrategy<FloatStruct> {
 
-		/**
-		 * Singleton instance of the {@link FloatMultiplyStrategy} type.
-		 */
-		private static final FloatMultiplyStrategy INSTANCE = new FloatMultiplyStrategy();
+		private FloatMultiplyStrategy(final FloatStruct number1) {
+			super(number1);
+		}
 
 		/**
 		 * {@inheritDoc}
@@ -670,7 +670,7 @@ public class FloatStruct extends RealStruct {
 		 * Computes the multiplication function result for an {@link FloatStruct} and a {@link IntegerStruct}.
 		 */
 		@Override
-		public RealStruct multiply(final FloatStruct number1, final IntegerStruct number2) {
+		public RealStruct multiply(final IntegerStruct number2) {
 			return multiplyFloat(number1, number2);
 		}
 
@@ -680,7 +680,7 @@ public class FloatStruct extends RealStruct {
 		 * Computes the multiplication function result for an {@link FloatStruct} and a {@link RatioStruct}.
 		 */
 		@Override
-		public RealStruct multiply(final FloatStruct number1, final RatioStruct number2) {
+		public RealStruct multiply(final RatioStruct number2) {
 			return multiplyFloat(number1, number2);
 		}
 	}
@@ -688,12 +688,11 @@ public class FloatStruct extends RealStruct {
 	/**
 	 * {@link RealDivideStrategy} for computing division function results for {@link FloatStruct}s.
 	 */
-	private static class FloatDivideStrategy extends RealDivideStrategy<FloatStruct> {
+	private static final class FloatDivideStrategy extends RealDivideStrategy<FloatStruct> {
 
-		/**
-		 * Singleton instance of the {@link FloatDivideStrategy} type.
-		 */
-		private static final FloatDivideStrategy INSTANCE = new FloatDivideStrategy();
+		private FloatDivideStrategy(final FloatStruct number1) {
+			super(number1);
+		}
 
 		/**
 		 * {@inheritDoc}
@@ -701,7 +700,7 @@ public class FloatStruct extends RealStruct {
 		 * Computes the division function result for an {@link FloatStruct} and a {@link IntegerStruct}.
 		 */
 		@Override
-		public RealStruct divide(final FloatStruct number1, final IntegerStruct number2) {
+		public RealStruct divide(final IntegerStruct number2) {
 			return divideFloat(number1, number2);
 		}
 
@@ -711,7 +710,7 @@ public class FloatStruct extends RealStruct {
 		 * Computes the division function result for an {@link FloatStruct} and a {@link RatioStruct}.
 		 */
 		@Override
-		public RealStruct divide(final FloatStruct number1, final RatioStruct number2) {
+		public RealStruct divide(final RatioStruct number2) {
 			return divideFloat(number1, number2);
 		}
 
@@ -738,12 +737,11 @@ public class FloatStruct extends RealStruct {
 	 * {@link FloatQuotientRemainderStrategy} for computing quotient and remainder results for {@link
 	 * FloatStruct}s.
 	 */
-	private static class FloatQuotientRemainderStrategy extends QuotientRemainderStrategy<FloatStruct> {
+	private static final class FloatQuotientRemainderStrategy extends QuotientRemainderStrategy<FloatStruct> {
 
-		/**
-		 * Singleton instance of the {@link FloatQuotientRemainderStrategy} type.
-		 */
-		private static final FloatQuotientRemainderStrategy INSTANCE = new FloatQuotientRemainderStrategy();
+		private FloatQuotientRemainderStrategy(final FloatStruct real) {
+			super(real);
+		}
 
 		/**
 		 * {@inheritDoc}
@@ -752,10 +750,9 @@ public class FloatStruct extends RealStruct {
 		 * IntegerStruct} as the {@code divisor}.
 		 */
 		@Override
-		public QuotientRemainderResult quotientRemainder(final FloatStruct real, final IntegerStruct divisor,
-		                                                 final RoundingMode roundingMode,
+		public QuotientRemainderResult quotientRemainder(final IntegerStruct divisor, final RoundingMode roundingMode,
 		                                                 final boolean isQuotientFloat) {
-			return floatQuotientRemainder(real, divisor, roundingMode, isQuotientFloat);
+			return floatQuotientRemainder(divisor, roundingMode, isQuotientFloat);
 		}
 
 		/**
@@ -765,10 +762,9 @@ public class FloatStruct extends RealStruct {
 		 * RatioStruct} as the {@code divisor}.
 		 */
 		@Override
-		public QuotientRemainderResult quotientRemainder(final FloatStruct real, final RatioStruct divisor,
-		                                                 final RoundingMode roundingMode,
+		public QuotientRemainderResult quotientRemainder(final RatioStruct divisor, final RoundingMode roundingMode,
 		                                                 final boolean isQuotientFloat) {
-			return floatQuotientRemainder(real, divisor, roundingMode, isQuotientFloat);
+			return floatQuotientRemainder(divisor, roundingMode, isQuotientFloat);
 		}
 	}
 

@@ -71,13 +71,41 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 
 	protected abstract AddStrategy<?> getAddStrategy();
 
-	public abstract NumberStruct subtract(final NumberStruct number);
+	public NumberStruct subtract(final NumberStruct number) {
+		final SubtractStrategy<?> subtractStrategy = getSubtractStrategy();
+		return number.subtract(subtractStrategy);
+	}
 
-	public abstract NumberStruct multiply(final NumberStruct number);
+	protected abstract NumberStruct subtract(final SubtractStrategy<?> subtractStrategy);
 
-	public abstract NumberStruct divide(final NumberStruct number);
+	protected abstract SubtractStrategy<?> getSubtractStrategy();
 
-	public abstract boolean isEqualTo(final NumberStruct number);
+	public NumberStruct multiply(final NumberStruct number) {
+		final MultiplyStrategy<?> multiplyStrategy = getMultiplyStrategy();
+		return number.multiply(multiplyStrategy);
+	}
+
+	protected abstract NumberStruct multiply(final MultiplyStrategy<?> multiplyStrategy);
+
+	protected abstract MultiplyStrategy<?> getMultiplyStrategy();
+
+	public NumberStruct divide(final NumberStruct number) {
+		final DivideStrategy<?> divideStrategy = getDivideStrategy();
+		return number.divide(divideStrategy);
+	}
+
+	protected abstract NumberStruct divide(final DivideStrategy<?> divideStrategy);
+
+	protected abstract DivideStrategy<?> getDivideStrategy();
+
+	public boolean isEqualTo(final NumberStruct number) {
+		final EqualToStrategy<?> equalToStrategy = getEqualToStrategy();
+		return number.isEqualTo(equalToStrategy);
+	}
+
+	protected abstract boolean isEqualTo(final EqualToStrategy<?> equalToStrategy);
+
+	protected abstract EqualToStrategy<?> getEqualToStrategy();
 
 	public boolean isNotEqualTo(final NumberStruct number) {
 		return !isEqualTo(number);
@@ -97,7 +125,14 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 
 	public abstract NumberStruct exp();
 
-	public abstract NumberStruct expt(NumberStruct power);
+	public NumberStruct expt(final NumberStruct power) {
+		final ExptStrategy<?> exptStrategy = getExptStrategy();
+		return power.expt(exptStrategy);
+	}
+
+	protected abstract NumberStruct expt(final ExptStrategy<?> exptStrategy);
+
+	protected abstract ExptStrategy<?> getExptStrategy();
 
 	public abstract NumberStruct log();
 
@@ -152,127 +187,87 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 
 	protected abstract static class SubtractStrategy<S extends NumberStruct> {
 
-		public NumberStruct subtract(final S number1, final NumberStruct number2) {
-			if (number2 instanceof IntegerStruct) {
-				return subtract(number1, (IntegerStruct) number2);
-			} else if (number2 instanceof FloatStruct) {
-				return subtract(number1, (FloatStruct) number2);
-			} else if (number2 instanceof RatioStruct) {
-				return subtract(number1, (RatioStruct) number2);
-			} else if (number2 instanceof ComplexStruct) {
-				return subtract(number1, (ComplexStruct) number2);
-			} else {
-				throw new RuntimeException("Unsupported Number Type for Subtract Operation.");
-			}
+		protected final S number1;
+
+		protected SubtractStrategy(final S number1) {
+			this.number1 = number1;
 		}
 
-		public abstract NumberStruct subtract(S number1, IntegerStruct number2);
+		public abstract NumberStruct subtract(IntegerStruct number2);
 
-		public abstract NumberStruct subtract(S number1, FloatStruct number2);
+		public abstract NumberStruct subtract(FloatStruct number2);
 
-		public abstract NumberStruct subtract(S number1, RatioStruct number2);
+		public abstract NumberStruct subtract(RatioStruct number2);
 
-		public abstract NumberStruct subtract(S number1, ComplexStruct number2);
+		public abstract NumberStruct subtract(ComplexStruct number2);
 	}
 
 	protected abstract static class MultiplyStrategy<S extends NumberStruct> {
 
-		public NumberStruct multiply(final S number1, final NumberStruct number2) {
-			if (number2 instanceof IntegerStruct) {
-				return multiply(number1, (IntegerStruct) number2);
-			} else if (number2 instanceof FloatStruct) {
-				return multiply(number1, (FloatStruct) number2);
-			} else if (number2 instanceof RatioStruct) {
-				return multiply(number1, (RatioStruct) number2);
-			} else if (number2 instanceof ComplexStruct) {
-				return multiply(number1, (ComplexStruct) number2);
-			} else {
-				throw new RuntimeException("Unsupported Number Type for Multiply Operation.");
-			}
+		protected final S number1;
+
+		protected MultiplyStrategy(final S number1) {
+			this.number1 = number1;
 		}
 
-		public abstract NumberStruct multiply(S number1, IntegerStruct number2);
+		public abstract NumberStruct multiply(IntegerStruct number2);
 
-		public abstract NumberStruct multiply(S number1, FloatStruct number2);
+		public abstract NumberStruct multiply(FloatStruct number2);
 
-		public abstract NumberStruct multiply(S number1, RatioStruct number2);
+		public abstract NumberStruct multiply(RatioStruct number2);
 
-		public abstract NumberStruct multiply(S number1, ComplexStruct number2);
+		public abstract NumberStruct multiply(ComplexStruct number2);
 	}
 
 	protected abstract static class DivideStrategy<S extends NumberStruct> {
 
-		public NumberStruct divide(final S number1, final NumberStruct number2) {
-			if (number2 instanceof IntegerStruct) {
-				return divide(number1, (IntegerStruct) number2);
-			} else if (number2 instanceof FloatStruct) {
-				return divide(number1, (FloatStruct) number2);
-			} else if (number2 instanceof RatioStruct) {
-				return divide(number1, (RatioStruct) number2);
-			} else if (number2 instanceof ComplexStruct) {
-				return divide(number1, (ComplexStruct) number2);
-			} else {
-				throw new RuntimeException("Unsupported Number Type for Divide Operation.");
-			}
+		protected final S number1;
+
+		protected DivideStrategy(final S number1) {
+			this.number1 = number1;
 		}
 
-		public abstract NumberStruct divide(S number1, IntegerStruct number2);
+		public abstract NumberStruct divide(IntegerStruct number2);
 
-		public abstract NumberStruct divide(S number1, FloatStruct number2);
+		public abstract NumberStruct divide(FloatStruct number2);
 
-		public abstract NumberStruct divide(S number1, RatioStruct number2);
+		public abstract NumberStruct divide(RatioStruct number2);
 
-		public abstract NumberStruct divide(S number1, ComplexStruct number2);
+		public abstract NumberStruct divide(ComplexStruct number2);
 	}
 
 	protected abstract static class EqualToStrategy<S extends NumberStruct> {
 
-		public boolean equalTo(final S number1, final NumberStruct number2) {
-			if (number2 instanceof IntegerStruct) {
-				return equalTo(number1, (IntegerStruct) number2);
-			} else if (number2 instanceof FloatStruct) {
-				return equalTo(number1, (FloatStruct) number2);
-			} else if (number2 instanceof RatioStruct) {
-				return equalTo(number1, (RatioStruct) number2);
-			} else if (number2 instanceof ComplexStruct) {
-				return equalTo(number1, (ComplexStruct) number2);
-			} else {
-				throw new RuntimeException("Unsupported Number Type for EqualTo Operation.");
-			}
+		protected final S number1;
+
+		protected EqualToStrategy(final S number1) {
+			this.number1 = number1;
 		}
 
-		public abstract boolean equalTo(S number1, IntegerStruct number2);
+		public abstract boolean equalTo(IntegerStruct number2);
 
-		public abstract boolean equalTo(S number1, FloatStruct number2);
+		public abstract boolean equalTo(FloatStruct number2);
 
-		public abstract boolean equalTo(S number1, RatioStruct number2);
+		public abstract boolean equalTo(RatioStruct number2);
 
-		public abstract boolean equalTo(S number1, ComplexStruct number2);
+		public abstract boolean equalTo(ComplexStruct number2);
 	}
 
 	protected abstract static class ExptStrategy<S extends NumberStruct> {
 
-		public NumberStruct expt(final S base, final NumberStruct power) {
-			if (power instanceof IntegerStruct) {
-				return expt(base, (IntegerStruct) power);
-			} else if (power instanceof FloatStruct) {
-				return expt(base, (FloatStruct) power);
-			} else if (power instanceof RatioStruct) {
-				return expt(base, (RatioStruct) power);
-			} else if (power instanceof ComplexStruct) {
-				return expt(base, (ComplexStruct) power);
-			} else {
-				throw new RuntimeException("Unsupported Number Type for Expt Operation.");
-			}
+		protected final S base;
+
+		protected ExptStrategy(final S base) {
+			this.base = base;
 		}
 
-		public abstract NumberStruct expt(S base, IntegerStruct power);
+		public abstract NumberStruct expt(IntegerStruct power);
 
-		public abstract NumberStruct expt(S base, FloatStruct power);
+		public abstract NumberStruct expt(FloatStruct power);
 
-		public abstract NumberStruct expt(S base, RatioStruct power);
+		public abstract NumberStruct expt(RatioStruct power);
 
-		public abstract NumberStruct expt(S base, ComplexStruct power);
+		public abstract NumberStruct expt(ComplexStruct power);
 
 		protected static NumberStruct exptInteger(final NumberStruct base, final IntegerStruct power) {
 			// TODO: simplify this!!!

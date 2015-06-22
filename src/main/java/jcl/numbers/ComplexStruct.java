@@ -308,44 +308,44 @@ public class ComplexStruct extends NumberStruct {
 		return new ComplexAddStrategy(this);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Computes the subtraction function result for this ComplexStruct and the provided {@code number}.
-	 */
 	@Override
-	public NumberStruct subtract(final NumberStruct number) {
-		return ComplexSubtractStrategy.INSTANCE.subtract(this, number);
+	protected NumberStruct subtract(final SubtractStrategy<?> subtractStrategy) {
+		return subtractStrategy.subtract(this);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Computes the multiplication function result for this ComplexStruct and the provided {@code number}.
-	 */
 	@Override
-	public NumberStruct multiply(final NumberStruct number) {
-		return ComplexMultiplyStrategy.INSTANCE.multiply(this, number);
+	protected SubtractStrategy<?> getSubtractStrategy() {
+		return new ComplexSubtractStrategy(this);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Computes the division function result for this ComplexStruct and the provided {@code number}.
-	 */
 	@Override
-	public NumberStruct divide(final NumberStruct number) {
-		return ComplexDivideStrategy.INSTANCE.divide(this, number);
+	protected NumberStruct multiply(final MultiplyStrategy<?> multiplyStrategy) {
+		return multiplyStrategy.multiply(this);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Computes the numeric '=' equality result for this ComplexStruct and the provided {@code number}.
-	 */
 	@Override
-	public boolean isEqualTo(final NumberStruct number) {
-		return ComplexEqualToStrategy.INSTANCE.equalTo(this, number);
+	protected MultiplyStrategy<?> getMultiplyStrategy() {
+		return new ComplexMultiplyStrategy(this);
+	}
+
+	@Override
+	protected NumberStruct divide(final DivideStrategy<?> divideStrategy) {
+		return divideStrategy.divide(this);
+	}
+
+	@Override
+	protected DivideStrategy<?> getDivideStrategy() {
+		return new ComplexDivideStrategy(this);
+	}
+
+	@Override
+	protected boolean isEqualTo(final EqualToStrategy<?> equalToStrategy) {
+		return equalToStrategy.equalTo(this);
+	}
+
+	@Override
+	protected EqualToStrategy<?> getEqualToStrategy() {
+		return new ComplexEqualToStrategy(this);
 	}
 
 	@Override
@@ -410,7 +410,17 @@ public class ComplexStruct extends NumberStruct {
 			return this;
 		}
 
-		return ComplexExptStrategy.INSTANCE.expt(this, power);
+		return super.expt(power);
+	}
+
+	@Override
+	protected NumberStruct expt(final ExptStrategy<?> exptStrategy) {
+		return exptStrategy.expt(this);
+	}
+
+	@Override
+	protected ExptStrategy<?> getExptStrategy() {
+		return new ComplexExptStrategy(this);
 	}
 
 	@Override
@@ -601,15 +611,14 @@ public class ComplexStruct extends NumberStruct {
 	/**
 	 * {@link SubtractStrategy} for computing subtraction function results for {@link ComplexStruct}s.
 	 */
-	private static class ComplexSubtractStrategy extends SubtractStrategy<ComplexStruct> {
+	private static final class ComplexSubtractStrategy extends SubtractStrategy<ComplexStruct> {
 
-		/**
-		 * Singleton instance of the {@link ComplexSubtractStrategy} type.
-		 */
-		private static final ComplexSubtractStrategy INSTANCE = new ComplexSubtractStrategy();
+		private ComplexSubtractStrategy(final ComplexStruct number1) {
+			super(number1);
+		}
 
 		@Override
-		public NumberStruct subtract(final ComplexStruct number1, final IntegerStruct number2) {
+		public NumberStruct subtract(final IntegerStruct number2) {
 			final Apcomplex apcomplex1 = number1.apcomplexValue();
 			final Apcomplex apfloat2 = number2.apfloatValue();
 
@@ -618,7 +627,7 @@ public class ComplexStruct extends NumberStruct {
 		}
 
 		@Override
-		public NumberStruct subtract(final ComplexStruct number1, final FloatStruct number2) {
+		public NumberStruct subtract(final FloatStruct number2) {
 			final Apcomplex apcomplex1 = number1.apcomplexValue();
 			final Apcomplex apfloat2 = number2.apfloatValue();
 
@@ -627,7 +636,7 @@ public class ComplexStruct extends NumberStruct {
 		}
 
 		@Override
-		public NumberStruct subtract(final ComplexStruct number1, final RatioStruct number2) {
+		public NumberStruct subtract(final RatioStruct number2) {
 			final Apcomplex apcomplex1 = number1.apcomplexValue();
 			final Apcomplex apfloat2 = number2.apfloatValue();
 
@@ -636,7 +645,7 @@ public class ComplexStruct extends NumberStruct {
 		}
 
 		@Override
-		public NumberStruct subtract(final ComplexStruct number1, final ComplexStruct number2) {
+		public NumberStruct subtract(final ComplexStruct number2) {
 			final Apcomplex apcomplex1 = number1.apcomplexValue();
 			final Apcomplex apcomplex2 = number2.apcomplexValue();
 
@@ -648,15 +657,14 @@ public class ComplexStruct extends NumberStruct {
 	/**
 	 * {@link MultiplyStrategy} for computing multiplication function results for {@link ComplexStruct}s.
 	 */
-	private static class ComplexMultiplyStrategy extends MultiplyStrategy<ComplexStruct> {
+	private static final class ComplexMultiplyStrategy extends MultiplyStrategy<ComplexStruct> {
 
-		/**
-		 * Singleton instance of the {@link ComplexMultiplyStrategy} type.
-		 */
-		private static final ComplexMultiplyStrategy INSTANCE = new ComplexMultiplyStrategy();
+		private ComplexMultiplyStrategy(final ComplexStruct number1) {
+			super(number1);
+		}
 
 		@Override
-		public NumberStruct multiply(final ComplexStruct number1, final IntegerStruct number2) {
+		public NumberStruct multiply(final IntegerStruct number2) {
 			final Apcomplex apcomplex1 = number1.apcomplexValue();
 			final Apcomplex apfloat2 = number2.apfloatValue();
 
@@ -665,7 +673,7 @@ public class ComplexStruct extends NumberStruct {
 		}
 
 		@Override
-		public NumberStruct multiply(final ComplexStruct number1, final FloatStruct number2) {
+		public NumberStruct multiply(final FloatStruct number2) {
 			final Apcomplex apcomplex1 = number1.apcomplexValue();
 			final Apcomplex apfloat2 = number2.apfloatValue();
 
@@ -674,7 +682,7 @@ public class ComplexStruct extends NumberStruct {
 		}
 
 		@Override
-		public NumberStruct multiply(final ComplexStruct number1, final RatioStruct number2) {
+		public NumberStruct multiply(final RatioStruct number2) {
 			final Apcomplex apcomplex1 = number1.apcomplexValue();
 			final Apcomplex apfloat2 = number2.apfloatValue();
 
@@ -683,7 +691,7 @@ public class ComplexStruct extends NumberStruct {
 		}
 
 		@Override
-		public NumberStruct multiply(final ComplexStruct number1, final ComplexStruct number2) {
+		public NumberStruct multiply(final ComplexStruct number2) {
 			final Apcomplex apcomplex1 = number1.apcomplexValue();
 			final Apcomplex apcomplex2 = number2.apcomplexValue();
 
@@ -695,15 +703,14 @@ public class ComplexStruct extends NumberStruct {
 	/**
 	 * {@link DivideStrategy} for computing division function results for {@link ComplexStruct}s.
 	 */
-	private static class ComplexDivideStrategy extends DivideStrategy<ComplexStruct> {
+	private static final class ComplexDivideStrategy extends DivideStrategy<ComplexStruct> {
 
-		/**
-		 * Singleton instance of the {@link ComplexDivideStrategy} type.
-		 */
-		private static final ComplexDivideStrategy INSTANCE = new ComplexDivideStrategy();
+		private ComplexDivideStrategy(final ComplexStruct number1) {
+			super(number1);
+		}
 
 		@Override
-		public NumberStruct divide(final ComplexStruct number1, final IntegerStruct number2) {
+		public NumberStruct divide(final IntegerStruct number2) {
 			final Apcomplex apcomplex1 = number1.apcomplexValue();
 			final Apcomplex apfloat2 = number2.apfloatValue();
 
@@ -712,7 +719,7 @@ public class ComplexStruct extends NumberStruct {
 		}
 
 		@Override
-		public NumberStruct divide(final ComplexStruct number1, final FloatStruct number2) {
+		public NumberStruct divide(final FloatStruct number2) {
 			final Apcomplex apcomplex1 = number1.apcomplexValue();
 			final Apcomplex apfloat2 = number2.apfloatValue();
 
@@ -721,7 +728,7 @@ public class ComplexStruct extends NumberStruct {
 		}
 
 		@Override
-		public NumberStruct divide(final ComplexStruct number1, final RatioStruct number2) {
+		public NumberStruct divide(final RatioStruct number2) {
 			final Apcomplex apcomplex1 = number1.apcomplexValue();
 			final Apcomplex apfloat2 = number2.apfloatValue();
 
@@ -730,7 +737,7 @@ public class ComplexStruct extends NumberStruct {
 		}
 
 		@Override
-		public NumberStruct divide(final ComplexStruct number1, final ComplexStruct number2) {
+		public NumberStruct divide(final ComplexStruct number2) {
 			final Apcomplex apcomplex1 = number1.apcomplexValue();
 			final Apcomplex apcomplex2 = number2.apcomplexValue();
 
@@ -742,25 +749,24 @@ public class ComplexStruct extends NumberStruct {
 	/**
 	 * {@link EqualToStrategy} for computing numeric '=' equality results for {@link ComplexStruct}s.
 	 */
-	private static class ComplexEqualToStrategy extends EqualToStrategy<ComplexStruct> {
+	private static final class ComplexEqualToStrategy extends EqualToStrategy<ComplexStruct> {
 
-		/**
-		 * Singleton instance of the {@link ComplexEqualToStrategy} type.
-		 */
-		private static final ComplexEqualToStrategy INSTANCE = new ComplexEqualToStrategy();
+		private ComplexEqualToStrategy(final ComplexStruct number1) {
+			super(number1);
+		}
 
 		@Override
-		public boolean equalTo(final ComplexStruct number1, final IntegerStruct number2) {
+		public boolean equalTo(final IntegerStruct number2) {
 			return equalToReal(number1, number2);
 		}
 
 		@Override
-		public boolean equalTo(final ComplexStruct number1, final FloatStruct number2) {
+		public boolean equalTo(final FloatStruct number2) {
 			return equalToReal(number1, number2);
 		}
 
 		@Override
-		public boolean equalTo(final ComplexStruct number1, final RatioStruct number2) {
+		public boolean equalTo(final RatioStruct number2) {
 			return equalToReal(number1, number2);
 		}
 
@@ -783,7 +789,7 @@ public class ComplexStruct extends NumberStruct {
 		}
 
 		@Override
-		public boolean equalTo(final ComplexStruct number1, final ComplexStruct number2) {
+		public boolean equalTo(final ComplexStruct number2) {
 			final RealStruct realVal1 = number1.getReal();
 			final RealStruct imaginaryVal1 = number1.getImaginary();
 
@@ -797,15 +803,14 @@ public class ComplexStruct extends NumberStruct {
 	/**
 	 * {@link ExptStrategy} for computing exponential function results for {@link ComplexStruct}s.
 	 */
-	private static class ComplexExptStrategy extends ExptStrategy<ComplexStruct> {
+	private static final class ComplexExptStrategy extends ExptStrategy<ComplexStruct> {
 
-		/**
-		 * Singleton instance of the {@link ComplexExptStrategy} type.
-		 */
-		protected static final ComplexExptStrategy INSTANCE = new ComplexExptStrategy();
+		private ComplexExptStrategy(final ComplexStruct number1) {
+			super(number1);
+		}
 
 		@Override
-		public NumberStruct expt(final ComplexStruct base, final IntegerStruct power) {
+		public NumberStruct expt(final IntegerStruct power) {
 			if (base.getReal() instanceof RationalStruct) {
 				return exptInteger(base, power);
 			}
@@ -815,17 +820,17 @@ public class ComplexStruct extends NumberStruct {
 		}
 
 		@Override
-		public NumberStruct expt(final ComplexStruct base, final FloatStruct power) {
+		public NumberStruct expt(final FloatStruct power) {
 			return exptComplex(base, power);
 		}
 
 		@Override
-		public NumberStruct expt(final ComplexStruct base, final RatioStruct power) {
+		public NumberStruct expt(final RatioStruct power) {
 			return exptComplex(base, power);
 		}
 
 		@Override
-		public NumberStruct expt(final ComplexStruct base, final ComplexStruct power) {
+		public NumberStruct expt(final ComplexStruct power) {
 			return exptComplex(base, power);
 		}
 
@@ -841,7 +846,7 @@ public class ComplexStruct extends NumberStruct {
 		 * @return exponential result from applying the provided {@link NumberStruct} power to the provided {@link
 		 * ComplexStruct} base value
 		 */
-		protected static NumberStruct exptComplex(final ComplexStruct base, final NumberStruct power) {
+		private static NumberStruct exptComplex(final ComplexStruct base, final NumberStruct power) {
 			final NumberStruct logOfBase = base.log();
 			final NumberStruct powerLogOfBaseProduct = power.multiply(logOfBase);
 			return powerLogOfBaseProduct.exp();

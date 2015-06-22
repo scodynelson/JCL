@@ -79,7 +79,7 @@ public class IntegerStruct extends RationalStruct {
 	 * @param bigInteger
 	 * 		the value of the IntegerStruct
 	 */
-	public IntegerStruct(final long longValue) {
+	IntegerStruct(final long longValue) {
 		this(BigInteger.valueOf(longValue));
 	}
 
@@ -891,6 +891,12 @@ public class IntegerStruct extends RationalStruct {
 	 */
 	private static final class IntegerAddVisitor extends RealAddVisitor<IntegerStruct> {
 
+		/**
+		 * Private constructor to make a new instance of an IntegerAddVisitor with the provided {@link IntegerStruct}.
+		 *
+		 * @param number1
+		 * 		the first argument in the addition operation
+		 */
 		private IntegerAddVisitor(final IntegerStruct number1) {
 			super(number1);
 		}
@@ -932,6 +938,13 @@ public class IntegerStruct extends RationalStruct {
 	 */
 	private static final class IntegerSubtractVisitor extends RealSubtractVisitor<IntegerStruct> {
 
+		/**
+		 * Private constructor to make a new instance of an IntegerSubtractVisitor with the provided {@link
+		 * IntegerStruct}.
+		 *
+		 * @param number1
+		 * 		the first argument in the subtraction operation
+		 */
 		private IntegerSubtractVisitor(final IntegerStruct number1) {
 			super(number1);
 		}
@@ -973,6 +986,13 @@ public class IntegerStruct extends RationalStruct {
 	 */
 	private static final class IntegerMultiplyVisitor extends RealMultiplyVisitor<IntegerStruct> {
 
+		/**
+		 * Private constructor to make a new instance of an IntegerMultiplyVisitor with the provided {@link
+		 * IntegerStruct}.
+		 *
+		 * @param number1
+		 * 		the first argument in the multiplication operation
+		 */
 		private IntegerMultiplyVisitor(final IntegerStruct number1) {
 			super(number1);
 		}
@@ -1013,6 +1033,13 @@ public class IntegerStruct extends RationalStruct {
 	 */
 	private static final class IntegerDivideVisitor extends RealDivideVisitor<IntegerStruct> {
 
+		/**
+		 * Private constructor to make a new instance of an IntegerDivideVisitor with the provided {@link
+		 * IntegerStruct}.
+		 *
+		 * @param number1
+		 * 		the first argument in the division operation
+		 */
 		private IntegerDivideVisitor(final IntegerStruct number1) {
 			super(number1);
 		}
@@ -1090,6 +1117,13 @@ public class IntegerStruct extends RationalStruct {
 	 */
 	private static final class IntegerEqualToVisitor extends RealEqualToVisitor<IntegerStruct> {
 
+		/**
+		 * Private constructor to make a new instance of an IntegerEqualToVisitor with the provided {@link
+		 * IntegerStruct}.
+		 *
+		 * @param number1
+		 * 		the first argument in the numeric '=' equality operation
+		 */
 		private IntegerEqualToVisitor(final IntegerStruct number1) {
 			super(number1);
 		}
@@ -1120,6 +1154,13 @@ public class IntegerStruct extends RationalStruct {
 	 */
 	private static final class IntegerLessThanVisitor extends LessThanVisitor<IntegerStruct> {
 
+		/**
+		 * Private constructor to make a new instance of an IntegerLessThanVisitor with the provided {@link
+		 * IntegerStruct}.
+		 *
+		 * @param real1
+		 * 		the first argument in the numeric '<' equality operation
+		 */
 		private IntegerLessThanVisitor(final IntegerStruct real1) {
 			super(real1);
 		}
@@ -1150,6 +1191,13 @@ public class IntegerStruct extends RationalStruct {
 	 */
 	private static final class IntegerGreaterThanVisitor extends GreaterThanVisitor<IntegerStruct> {
 
+		/**
+		 * Private constructor to make a new instance of an IntegerGreaterThanVisitor with the provided {@link
+		 * IntegerStruct}.
+		 *
+		 * @param real1
+		 * 		the first argument in the numeric '>' equality operation
+		 */
 		private IntegerGreaterThanVisitor(final IntegerStruct real1) {
 			super(real1);
 		}
@@ -1180,6 +1228,13 @@ public class IntegerStruct extends RationalStruct {
 	 */
 	private static final class IntegerLessThanOrEqualToVisitor extends LessThanOrEqualToVisitor<IntegerStruct> {
 
+		/**
+		 * Private constructor to make a new instance of an IntegerLessThanOrEqualToVisitor with the provided {@link
+		 * IntegerStruct}.
+		 *
+		 * @param real1
+		 * 		the first argument in the numeric '<=' equality operation
+		 */
 		private IntegerLessThanOrEqualToVisitor(final IntegerStruct real1) {
 			super(real1);
 		}
@@ -1210,6 +1265,13 @@ public class IntegerStruct extends RationalStruct {
 	 */
 	private static final class IntegerGreaterThanOrEqualToVisitor extends GreaterThanOrEqualToVisitor<IntegerStruct> {
 
+		/**
+		 * Private constructor to make a new instance of an IntegerGreaterThanOrEqualToVisitor with the provided {@link
+		 * IntegerStruct}.
+		 *
+		 * @param real1
+		 * 		the first argument in the numeric '>=' equality operation
+		 */
 		private IntegerGreaterThanOrEqualToVisitor(final IntegerStruct real1) {
 			super(real1);
 		}
@@ -1241,6 +1303,13 @@ public class IntegerStruct extends RationalStruct {
 	 */
 	private static final class IntegerQuotientRemainderVisitor extends RationalQuotientRemainderVisitor<IntegerStruct> {
 
+		/**
+		 * Private constructor to make a new instance of an IntegerQuotientRemainderVisitor with the provided {@link
+		 * IntegerStruct}.
+		 *
+		 * @param real
+		 * 		the real argument in the computational quotient and remainder operation
+		 */
 		private IntegerQuotientRemainderVisitor(final IntegerStruct real) {
 			super(real);
 		}
@@ -1281,6 +1350,12 @@ public class IntegerStruct extends RationalStruct {
 	 */
 	private static final class IntegerExptVisitor extends RealExptVisitor<IntegerStruct> {
 
+		/**
+		 * Private constructor to make a new instance of an IntegerExptVisitor with the provided {@link IntegerStruct}.
+		 *
+		 * @param base
+		 * 		the base argument in the exponential operation
+		 */
 		private IntegerExptVisitor(final IntegerStruct base) {
 			super(base);
 		}

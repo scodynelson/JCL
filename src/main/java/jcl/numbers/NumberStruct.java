@@ -11,6 +11,9 @@ import jcl.classes.BuiltInClassStruct;
 import jcl.conditions.exceptions.ErrorException;
 import jcl.types.NumberType;
 import org.apfloat.Apcomplex;
+import org.apfloat.ApcomplexMath;
+import org.apfloat.Apfloat;
+import org.apfloat.Apint;
 
 /**
  * The {@link NumberStruct} is the object representation of a Lisp 'number' type.
@@ -222,6 +225,17 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 	public abstract NumberStruct exp();
 
 	public NumberStruct expt(final NumberStruct power) {
+//		final Apcomplex baseApcomplex = apcomplexValue();
+//		final Apcomplex powerApcomplex = power.apcomplexValue();
+//		final Apcomplex pow = ApcomplexMath.pow(baseApcomplex, powerApcomplex);
+//
+//		if (pow instanceof Apint) {
+//			return new IntegerStruct((Apint) pow);
+//		} else if (pow instanceof Apfloat) {
+//			return new FloatStruct((Apfloat) pow);
+//		} else {
+//			return new ComplexStruct(pow);
+//		}
 		final ExptVisitor<?> exptVisitor = exptVisitor();
 		return power.expt(exptVisitor);
 	}

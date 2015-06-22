@@ -136,93 +136,93 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	@Override
-	protected NumberStruct add(final AddStrategy<?> addStrategy) {
-		return addStrategy.add(this);
+	protected NumberStruct add(final AddVisitor<?> addVisitor) {
+		return addVisitor.add(this);
 	}
 
 	@Override
-	protected AddStrategy<?> getAddStrategy() {
-		return new RatioAddStrategy(this);
+	protected AddVisitor<?> addVisitor() {
+		return new RatioAddVisitor(this);
 	}
 
 	@Override
-	protected NumberStruct subtract(final SubtractStrategy<?> subtractStrategy) {
-		return subtractStrategy.subtract(this);
+	protected NumberStruct subtract(final SubtractVisitor<?> subtractVisitor) {
+		return subtractVisitor.subtract(this);
 	}
 
 	@Override
-	protected SubtractStrategy<?> getSubtractStrategy() {
-		return new RatioSubtractStrategy(this);
+	protected SubtractVisitor<?> subtractVisitor() {
+		return new RatioSubtractVisitor(this);
 	}
 
 	@Override
-	protected NumberStruct multiply(final MultiplyStrategy<?> multiplyStrategy) {
-		return multiplyStrategy.multiply(this);
+	protected NumberStruct multiply(final MultiplyVisitor<?> multiplyVisitor) {
+		return multiplyVisitor.multiply(this);
 	}
 
 	@Override
-	protected MultiplyStrategy<?> getMultiplyStrategy() {
-		return new RatioMultiplyStrategy(this);
+	protected MultiplyVisitor<?> multiplyVisitor() {
+		return new RatioMultiplyVisitor(this);
 	}
 
 	@Override
-	protected NumberStruct divide(final DivideStrategy<?> divideStrategy) {
-		return divideStrategy.divide(this);
+	protected NumberStruct divide(final DivideVisitor<?> divideVisitor) {
+		return divideVisitor.divide(this);
 	}
 
 	@Override
-	protected DivideStrategy<?> getDivideStrategy() {
-		return new RatioDivideStrategy(this);
+	protected DivideVisitor<?> divideVisitor() {
+		return new RatioDivideVisitor(this);
 	}
 
 	@Override
-	protected boolean isEqualTo(final EqualToStrategy<?> equalToStrategy) {
-		return equalToStrategy.equalTo(this);
+	protected boolean isEqualTo(final EqualToVisitor<?> equalToVisitor) {
+		return equalToVisitor.equalTo(this);
 	}
 
 	@Override
-	protected EqualToStrategy<?> getEqualToStrategy() {
-		return new RatioEqualToStrategy(this);
+	protected EqualToVisitor<?> equalToVisitor() {
+		return new RatioEqualToVisitor(this);
 	}
 
 	@Override
-	protected boolean isLessThan(final LessThanStrategy<?> lessThanStrategy) {
-		return lessThanStrategy.lessThan(this);
+	protected boolean isLessThan(final LessThanVisitor<?> lessThanVisitor) {
+		return lessThanVisitor.lessThan(this);
 	}
 
 	@Override
-	protected LessThanStrategy<?> getLessThanStrategy() {
-		return new RatioLessThanStrategy(this);
+	protected LessThanVisitor<?> lessThanVisitor() {
+		return new RatioLessThanVisitor(this);
 	}
 
 	@Override
-	protected boolean isGreaterThan(final GreaterThanStrategy<?> greaterThanStrategy) {
-		return greaterThanStrategy.greaterThan(this);
+	protected boolean isGreaterThan(final GreaterThanVisitor<?> greaterThanVisitor) {
+		return greaterThanVisitor.greaterThan(this);
 	}
 
 	@Override
-	protected GreaterThanStrategy<?> getGreaterThanStrategy() {
-		return new RatioGreaterThanStrategy(this);
+	protected GreaterThanVisitor<?> greaterThanVisitor() {
+		return new RatioGreaterThanVisitor(this);
 	}
 
 	@Override
-	protected boolean isLessThanOrEqualTo(final LessThanOrEqualToStrategy<?> lessThanOrEqualToStrategy) {
-		return lessThanOrEqualToStrategy.lessThanOrEqualTo(this);
+	protected boolean isLessThanOrEqualTo(final LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor) {
+		return lessThanOrEqualToVisitor.lessThanOrEqualTo(this);
 	}
 
 	@Override
-	protected LessThanOrEqualToStrategy<?> getLessThanOrEqualToStrategy() {
-		return new RatioLessThanOrEqualToStrategy(this);
+	protected LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor() {
+		return new RatioLessThanOrEqualToVisitor(this);
 	}
 
 	@Override
-	protected boolean isGreaterThanOrEqualTo(final GreaterThanOrEqualToStrategy<?> greaterThanOrEqualToStrategy) {
-		return greaterThanOrEqualToStrategy.greaterThanOrEqualTo(this);
+	protected boolean isGreaterThanOrEqualTo(final GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor) {
+		return greaterThanOrEqualToVisitor.greaterThanOrEqualTo(this);
 	}
 
 	@Override
-	protected GreaterThanOrEqualToStrategy<?> getGreaterThanOrEqualToStrategy() {
-		return new RatioGreaterThanOrEqualToStrategy(this);
+	protected GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor() {
+		return new RatioGreaterThanOrEqualToVisitor(this);
 	}
 
 	/**
@@ -299,8 +299,8 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	@Override
-	protected NumberStruct expt(final ExptStrategy<?> exptStrategy) {
-		return exptStrategy.expt(this);
+	protected NumberStruct expt(final ExptVisitor<?> exptVisitor) {
+		return exptVisitor.expt(this);
 	}
 
 	/**
@@ -350,38 +350,38 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	@Override
-	protected QuotientRemainderResult floor(final QuotientRemainderStrategy<?> floorStrategy) {
-		return floorStrategy.floor(this);
+	protected QuotientRemainderResult floor(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.floor(this);
 	}
 
 	@Override
-	protected QuotientRemainderResult ffloor(final QuotientRemainderStrategy<?> ffloorStrategy) {
-		return ffloorStrategy.ffloor(this);
+	protected QuotientRemainderResult ffloor(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.ffloor(this);
 	}
 
 	@Override
-	protected QuotientRemainderResult ceiling(final QuotientRemainderStrategy<?> ceilingStrategy) {
-		return ceilingStrategy.ceiling(this);
+	protected QuotientRemainderResult ceiling(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.ceiling(this);
 	}
 
 	@Override
-	protected QuotientRemainderResult fceiling(final QuotientRemainderStrategy<?> fceilingStrategy) {
-		return fceilingStrategy.fceiling(this);
+	protected QuotientRemainderResult fceiling(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.fceiling(this);
 	}
 
 	@Override
-	protected QuotientRemainderResult round(final QuotientRemainderStrategy<?> roundStrategy) {
-		return roundStrategy.round(this);
+	protected QuotientRemainderResult round(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.round(this);
 	}
 
 	@Override
-	protected QuotientRemainderResult fround(final QuotientRemainderStrategy<?> froundStrategy) {
-		return froundStrategy.fround(this);
+	protected QuotientRemainderResult fround(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.fround(this);
 	}
 
 	@Override
-	protected QuotientRemainderStrategy<?> getQuotientRemainderStrategy() {
-		return new RatioQuotientRemainderStrategy(this);
+	protected QuotientRemainderVisitor<?> quotientRemainderVisitor() {
+		return new RatioQuotientRemainderVisitor(this);
 	}
 
 	/**
@@ -404,14 +404,14 @@ public class RatioStruct extends RationalStruct {
 		return new IntegerStruct(bigFraction.getDenominator());
 	}
 
-	// Strategy Implementations
+	// Visitor Implementations
 
 	/**
-	 * {@link RealAddStrategy} for computing addition results for {@link RatioStruct}s.
+	 * {@link RealAddVisitor} for computing addition results for {@link RatioStruct}s.
 	 */
-	private static final class RatioAddStrategy extends RealAddStrategy<RatioStruct> {
+	private static final class RatioAddVisitor extends RealAddVisitor<RatioStruct> {
 
-		private RatioAddStrategy(final RatioStruct number1) {
+		private RatioAddVisitor(final RatioStruct number1) {
 			super(number1);
 		}
 
@@ -443,11 +443,11 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link RealSubtractStrategy} for computing subtraction function results for {@link RatioStruct}s.
+	 * {@link RealSubtractVisitor} for computing subtraction function results for {@link RatioStruct}s.
 	 */
-	private static final class RatioSubtractStrategy extends RealSubtractStrategy<RatioStruct> {
+	private static final class RatioSubtractVisitor extends RealSubtractVisitor<RatioStruct> {
 
-		private RatioSubtractStrategy(final RatioStruct number1) {
+		private RatioSubtractVisitor(final RatioStruct number1) {
 			super(number1);
 		}
 
@@ -479,11 +479,11 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link RealMultiplyStrategy} for computing multiplication function results for {@link RatioStruct}s.
+	 * {@link RealMultiplyVisitor} for computing multiplication function results for {@link RatioStruct}s.
 	 */
-	private static final class RatioMultiplyStrategy extends RealMultiplyStrategy<RatioStruct> {
+	private static final class RatioMultiplyVisitor extends RealMultiplyVisitor<RatioStruct> {
 
-		private RatioMultiplyStrategy(final RatioStruct number1) {
+		private RatioMultiplyVisitor(final RatioStruct number1) {
 			super(number1);
 		}
 
@@ -515,11 +515,11 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link RealDivideStrategy} for computing division function results for {@link RatioStruct}s.
+	 * {@link RealDivideVisitor} for computing division function results for {@link RatioStruct}s.
 	 */
-	private static final class RatioDivideStrategy extends RealDivideStrategy<RatioStruct> {
+	private static final class RatioDivideVisitor extends RealDivideVisitor<RatioStruct> {
 
-		private RatioDivideStrategy(final RatioStruct number1) {
+		private RatioDivideVisitor(final RatioStruct number1) {
 			super(number1);
 		}
 
@@ -589,11 +589,11 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link RealEqualToStrategy} for computing numeric '=' equality results for {@link RatioStruct}s.
+	 * {@link RealEqualToVisitor} for computing numeric '=' equality results for {@link RatioStruct}s.
 	 */
-	private static final class RatioEqualToStrategy extends RealEqualToStrategy<RatioStruct> {
+	private static final class RatioEqualToVisitor extends RealEqualToVisitor<RatioStruct> {
 
-		private RatioEqualToStrategy(final RatioStruct number1) {
+		private RatioEqualToVisitor(final RatioStruct number1) {
 			super(number1);
 		}
 
@@ -619,11 +619,11 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link LessThanStrategy} for computing numeric '<' equality results for {@link RatioStruct}s.
+	 * {@link LessThanVisitor} for computing numeric '<' equality results for {@link RatioStruct}s.
 	 */
-	private static final class RatioLessThanStrategy extends LessThanStrategy<RatioStruct> {
+	private static final class RatioLessThanVisitor extends LessThanVisitor<RatioStruct> {
 
-		private RatioLessThanStrategy(final RatioStruct number1) {
+		private RatioLessThanVisitor(final RatioStruct number1) {
 			super(number1);
 		}
 
@@ -649,11 +649,11 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link GreaterThanStrategy} for computing numeric '>' equality results for {@link RatioStruct}s.
+	 * {@link GreaterThanVisitor} for computing numeric '>' equality results for {@link RatioStruct}s.
 	 */
-	private static final class RatioGreaterThanStrategy extends GreaterThanStrategy<RatioStruct> {
+	private static final class RatioGreaterThanVisitor extends GreaterThanVisitor<RatioStruct> {
 
-		private RatioGreaterThanStrategy(final RatioStruct number1) {
+		private RatioGreaterThanVisitor(final RatioStruct number1) {
 			super(number1);
 		}
 
@@ -679,11 +679,11 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link LessThanOrEqualToStrategy} for computing numeric '<=' equality results for {@link RatioStruct}s.
+	 * {@link LessThanOrEqualToVisitor} for computing numeric '<=' equality results for {@link RatioStruct}s.
 	 */
-	private static final class RatioLessThanOrEqualToStrategy extends LessThanOrEqualToStrategy<RatioStruct> {
+	private static final class RatioLessThanOrEqualToVisitor extends LessThanOrEqualToVisitor<RatioStruct> {
 
-		private RatioLessThanOrEqualToStrategy(final RatioStruct number1) {
+		private RatioLessThanOrEqualToVisitor(final RatioStruct number1) {
 			super(number1);
 		}
 
@@ -709,11 +709,11 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link GreaterThanOrEqualToStrategy} for computing numeric '>=' equality results for {@link RatioStruct}s.
+	 * {@link GreaterThanOrEqualToVisitor} for computing numeric '>=' equality results for {@link RatioStruct}s.
 	 */
-	private static final class RatioGreaterThanOrEqualToStrategy extends GreaterThanOrEqualToStrategy<RatioStruct> {
+	private static final class RatioGreaterThanOrEqualToVisitor extends GreaterThanOrEqualToVisitor<RatioStruct> {
 
-		private RatioGreaterThanOrEqualToStrategy(final RatioStruct number1) {
+		private RatioGreaterThanOrEqualToVisitor(final RatioStruct number1) {
 			super(number1);
 		}
 
@@ -739,11 +739,11 @@ public class RatioStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link RationalQuotientRemainderStrategy} for computing quotient and remainder results for {@link RatioStruct}s.
+	 * {@link RationalQuotientRemainderVisitor} for computing quotient and remainder results for {@link RatioStruct}s.
 	 */
-	private static final class RatioQuotientRemainderStrategy extends RationalQuotientRemainderStrategy<RatioStruct> {
+	private static final class RatioQuotientRemainderVisitor extends RationalQuotientRemainderVisitor<RatioStruct> {
 
-		private RatioQuotientRemainderStrategy(final RatioStruct real) {
+		private RatioQuotientRemainderVisitor(final RatioStruct real) {
 			super(real);
 		}
 

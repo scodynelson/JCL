@@ -97,11 +97,11 @@ public abstract class RationalStruct extends RealStruct {
 		}
 	}
 
-	// Strategy Implementations
+	// Visitor Implementations
 
-	protected abstract static class RationalQuotientRemainderStrategy<S extends RationalStruct> extends QuotientRemainderStrategy<S> {
+	protected abstract static class RationalQuotientRemainderVisitor<S extends RationalStruct> extends QuotientRemainderVisitor<S> {
 
-		protected RationalQuotientRemainderStrategy(final S real) {
+		protected RationalQuotientRemainderVisitor(final S real) {
 			super(real);
 		}
 

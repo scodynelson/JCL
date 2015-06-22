@@ -193,93 +193,93 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	@Override
-	protected NumberStruct add(final AddStrategy<?> addStrategy) {
-		return addStrategy.add(this);
+	protected NumberStruct add(final AddVisitor<?> addVisitor) {
+		return addVisitor.add(this);
 	}
 
 	@Override
-	protected AddStrategy<?> getAddStrategy() {
-		return new IntegerAddStrategy(this);
+	protected AddVisitor<?> addVisitor() {
+		return new IntegerAddVisitor(this);
 	}
 
 	@Override
-	protected NumberStruct subtract(final SubtractStrategy<?> subtractStrategy) {
-		return subtractStrategy.subtract(this);
+	protected NumberStruct subtract(final SubtractVisitor<?> subtractVisitor) {
+		return subtractVisitor.subtract(this);
 	}
 
 	@Override
-	protected SubtractStrategy<?> getSubtractStrategy() {
-		return new IntegerSubtractStrategy(this);
+	protected SubtractVisitor<?> subtractVisitor() {
+		return new IntegerSubtractVisitor(this);
 	}
 
 	@Override
-	protected NumberStruct multiply(final MultiplyStrategy<?> multiplyStrategy) {
-		return multiplyStrategy.multiply(this);
+	protected NumberStruct multiply(final MultiplyVisitor<?> multiplyVisitor) {
+		return multiplyVisitor.multiply(this);
 	}
 
 	@Override
-	protected MultiplyStrategy<?> getMultiplyStrategy() {
-		return new IntegerMultiplyStrategy(this);
+	protected MultiplyVisitor<?> multiplyVisitor() {
+		return new IntegerMultiplyVisitor(this);
 	}
 
 	@Override
-	protected NumberStruct divide(final DivideStrategy<?> divideStrategy) {
-		return divideStrategy.divide(this);
+	protected NumberStruct divide(final DivideVisitor<?> divideVisitor) {
+		return divideVisitor.divide(this);
 	}
 
 	@Override
-	protected DivideStrategy<?> getDivideStrategy() {
-		return new IntegerDivideStrategy(this);
+	protected DivideVisitor<?> divideVisitor() {
+		return new IntegerDivideVisitor(this);
 	}
 
 	@Override
-	protected boolean isEqualTo(final EqualToStrategy<?> equalToStrategy) {
-		return equalToStrategy.equalTo(this);
+	protected boolean isEqualTo(final EqualToVisitor<?> equalToVisitor) {
+		return equalToVisitor.equalTo(this);
 	}
 
 	@Override
-	protected EqualToStrategy<?> getEqualToStrategy() {
-		return new IntegerEqualToStrategy(this);
+	protected EqualToVisitor<?> equalToVisitor() {
+		return new IntegerEqualToVisitor(this);
 	}
 
 	@Override
-	protected boolean isLessThan(final LessThanStrategy<?> lessThanStrategy) {
-		return lessThanStrategy.lessThan(this);
+	protected boolean isLessThan(final LessThanVisitor<?> lessThanVisitor) {
+		return lessThanVisitor.lessThan(this);
 	}
 
 	@Override
-	protected LessThanStrategy<?> getLessThanStrategy() {
-		return new IntegerLessThanStrategy(this);
+	protected LessThanVisitor<?> lessThanVisitor() {
+		return new IntegerLessThanVisitor(this);
 	}
 
 	@Override
-	protected boolean isGreaterThan(final GreaterThanStrategy<?> greaterThanStrategy) {
-		return greaterThanStrategy.greaterThan(this);
+	protected boolean isGreaterThan(final GreaterThanVisitor<?> greaterThanVisitor) {
+		return greaterThanVisitor.greaterThan(this);
 	}
 
 	@Override
-	protected GreaterThanStrategy<?> getGreaterThanStrategy() {
-		return new IntegerGreaterThanStrategy(this);
+	protected GreaterThanVisitor<?> greaterThanVisitor() {
+		return new IntegerGreaterThanVisitor(this);
 	}
 
 	@Override
-	protected boolean isLessThanOrEqualTo(final LessThanOrEqualToStrategy<?> lessThanOrEqualToStrategy) {
-		return lessThanOrEqualToStrategy.lessThanOrEqualTo(this);
+	protected boolean isLessThanOrEqualTo(final LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor) {
+		return lessThanOrEqualToVisitor.lessThanOrEqualTo(this);
 	}
 
 	@Override
-	protected LessThanOrEqualToStrategy<?> getLessThanOrEqualToStrategy() {
-		return new IntegerLessThanOrEqualToStrategy(this);
+	protected LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor() {
+		return new IntegerLessThanOrEqualToVisitor(this);
 	}
 
 	@Override
-	protected boolean isGreaterThanOrEqualTo(final GreaterThanOrEqualToStrategy<?> greaterThanOrEqualToStrategy) {
-		return greaterThanOrEqualToStrategy.greaterThanOrEqualTo(this);
+	protected boolean isGreaterThanOrEqualTo(final GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor) {
+		return greaterThanOrEqualToVisitor.greaterThanOrEqualTo(this);
 	}
 
 	@Override
-	protected GreaterThanOrEqualToStrategy<?> getGreaterThanOrEqualToStrategy() {
-		return new IntegerGreaterThanOrEqualToStrategy(this);
+	protected GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor() {
+		return new IntegerGreaterThanOrEqualToVisitor(this);
 	}
 
 	/**
@@ -356,13 +356,13 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	@Override
-	protected NumberStruct expt(final ExptStrategy<?> exptStrategy) {
-		return exptStrategy.expt(this);
+	protected NumberStruct expt(final ExptVisitor<?> exptVisitor) {
+		return exptVisitor.expt(this);
 	}
 
 	@Override
-	protected ExptStrategy<?> getExptStrategy() {
-		return new IntegerExptStrategy(this);
+	protected ExptVisitor<?> exptVisitor() {
+		return new IntegerExptVisitor(this);
 	}
 
 	/**
@@ -415,38 +415,38 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	@Override
-	protected QuotientRemainderResult floor(final QuotientRemainderStrategy<?> floorStrategy) {
-		return floorStrategy.floor(this);
+	protected QuotientRemainderResult floor(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.floor(this);
 	}
 
 	@Override
-	protected QuotientRemainderResult ffloor(final QuotientRemainderStrategy<?> ffloorStrategy) {
-		return ffloorStrategy.ffloor(this);
+	protected QuotientRemainderResult ffloor(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.ffloor(this);
 	}
 
 	@Override
-	protected QuotientRemainderResult ceiling(final QuotientRemainderStrategy<?> ceilingStrategy) {
-		return ceilingStrategy.ceiling(this);
+	protected QuotientRemainderResult ceiling(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.ceiling(this);
 	}
 
 	@Override
-	protected QuotientRemainderResult fceiling(final QuotientRemainderStrategy<?> fceilingStrategy) {
-		return fceilingStrategy.fceiling(this);
+	protected QuotientRemainderResult fceiling(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.fceiling(this);
 	}
 
 	@Override
-	protected QuotientRemainderResult round(final QuotientRemainderStrategy<?> roundStrategy) {
-		return roundStrategy.round(this);
+	protected QuotientRemainderResult round(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.round(this);
 	}
 
 	@Override
-	protected QuotientRemainderResult fround(final QuotientRemainderStrategy<?> froundStrategy) {
-		return froundStrategy.fround(this);
+	protected QuotientRemainderResult fround(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.fround(this);
 	}
 
 	@Override
-	protected QuotientRemainderStrategy<?> getQuotientRemainderStrategy() {
-		return new IntegerQuotientRemainderStrategy(this);
+	protected QuotientRemainderVisitor<?> quotientRemainderVisitor() {
+		return new IntegerQuotientRemainderVisitor(this);
 	}
 
 	/**
@@ -884,14 +884,14 @@ public class IntegerStruct extends RationalStruct {
 		return and.signum() != 0;
 	}
 
-	// Strategy Implementations
+	// Visitor Implementations
 
 	/**
-	 * {@link RealAddStrategy} for computing addition results for {@link IntegerStruct}s.
+	 * {@link RealAddVisitor} for computing addition results for {@link IntegerStruct}s.
 	 */
-	private static final class IntegerAddStrategy extends RealAddStrategy<IntegerStruct> {
+	private static final class IntegerAddVisitor extends RealAddVisitor<IntegerStruct> {
 
-		private IntegerAddStrategy(final IntegerStruct number1) {
+		private IntegerAddVisitor(final IntegerStruct number1) {
 			super(number1);
 		}
 
@@ -928,11 +928,11 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link RealSubtractStrategy} for computing subtraction function results for {@link IntegerStruct}s.
+	 * {@link RealSubtractVisitor} for computing subtraction function results for {@link IntegerStruct}s.
 	 */
-	private static final class IntegerSubtractStrategy extends RealSubtractStrategy<IntegerStruct> {
+	private static final class IntegerSubtractVisitor extends RealSubtractVisitor<IntegerStruct> {
 
-		private IntegerSubtractStrategy(final IntegerStruct number1) {
+		private IntegerSubtractVisitor(final IntegerStruct number1) {
 			super(number1);
 		}
 
@@ -969,11 +969,11 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link RealMultiplyStrategy} for computing multiplication function results for {@link IntegerStruct}s.
+	 * {@link RealMultiplyVisitor} for computing multiplication function results for {@link IntegerStruct}s.
 	 */
-	private static final class IntegerMultiplyStrategy extends RealMultiplyStrategy<IntegerStruct> {
+	private static final class IntegerMultiplyVisitor extends RealMultiplyVisitor<IntegerStruct> {
 
-		private IntegerMultiplyStrategy(final IntegerStruct number1) {
+		private IntegerMultiplyVisitor(final IntegerStruct number1) {
 			super(number1);
 		}
 
@@ -1009,11 +1009,11 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link RealDivideStrategy} for computing division function results for {@link IntegerStruct}s.
+	 * {@link RealDivideVisitor} for computing division function results for {@link IntegerStruct}s.
 	 */
-	private static final class IntegerDivideStrategy extends RealDivideStrategy<IntegerStruct> {
+	private static final class IntegerDivideVisitor extends RealDivideVisitor<IntegerStruct> {
 
-		private IntegerDivideStrategy(final IntegerStruct number1) {
+		private IntegerDivideVisitor(final IntegerStruct number1) {
 			super(number1);
 		}
 
@@ -1086,11 +1086,11 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link RealEqualToStrategy} for computing numeric '=' equality results for {@link IntegerStruct}s.
+	 * {@link RealEqualToVisitor} for computing numeric '=' equality results for {@link IntegerStruct}s.
 	 */
-	private static final class IntegerEqualToStrategy extends RealEqualToStrategy<IntegerStruct> {
+	private static final class IntegerEqualToVisitor extends RealEqualToVisitor<IntegerStruct> {
 
-		private IntegerEqualToStrategy(final IntegerStruct number1) {
+		private IntegerEqualToVisitor(final IntegerStruct number1) {
 			super(number1);
 		}
 
@@ -1116,11 +1116,11 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link LessThanStrategy} for computing numeric '<' equality results for {@link IntegerStruct}s.
+	 * {@link LessThanVisitor} for computing numeric '<' equality results for {@link IntegerStruct}s.
 	 */
-	private static final class IntegerLessThanStrategy extends LessThanStrategy<IntegerStruct> {
+	private static final class IntegerLessThanVisitor extends LessThanVisitor<IntegerStruct> {
 
-		private IntegerLessThanStrategy(final IntegerStruct real1) {
+		private IntegerLessThanVisitor(final IntegerStruct real1) {
 			super(real1);
 		}
 
@@ -1146,11 +1146,11 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link GreaterThanStrategy} for computing numeric '>' equality results for {@link IntegerStruct}s.
+	 * {@link GreaterThanVisitor} for computing numeric '>' equality results for {@link IntegerStruct}s.
 	 */
-	private static final class IntegerGreaterThanStrategy extends GreaterThanStrategy<IntegerStruct> {
+	private static final class IntegerGreaterThanVisitor extends GreaterThanVisitor<IntegerStruct> {
 
-		private IntegerGreaterThanStrategy(final IntegerStruct real1) {
+		private IntegerGreaterThanVisitor(final IntegerStruct real1) {
 			super(real1);
 		}
 
@@ -1176,11 +1176,11 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link LessThanOrEqualToStrategy} for computing numeric '<=' equality results for {@link IntegerStruct}s.
+	 * {@link LessThanOrEqualToVisitor} for computing numeric '<=' equality results for {@link IntegerStruct}s.
 	 */
-	private static final class IntegerLessThanOrEqualToStrategy extends LessThanOrEqualToStrategy<IntegerStruct> {
+	private static final class IntegerLessThanOrEqualToVisitor extends LessThanOrEqualToVisitor<IntegerStruct> {
 
-		private IntegerLessThanOrEqualToStrategy(final IntegerStruct real1) {
+		private IntegerLessThanOrEqualToVisitor(final IntegerStruct real1) {
 			super(real1);
 		}
 
@@ -1206,11 +1206,11 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link GreaterThanOrEqualToStrategy} for computing numeric '>=' equality results for {@link IntegerStruct}s.
+	 * {@link GreaterThanOrEqualToVisitor} for computing numeric '>=' equality results for {@link IntegerStruct}s.
 	 */
-	private static final class IntegerGreaterThanOrEqualToStrategy extends GreaterThanOrEqualToStrategy<IntegerStruct> {
+	private static final class IntegerGreaterThanOrEqualToVisitor extends GreaterThanOrEqualToVisitor<IntegerStruct> {
 
-		private IntegerGreaterThanOrEqualToStrategy(final IntegerStruct real1) {
+		private IntegerGreaterThanOrEqualToVisitor(final IntegerStruct real1) {
 			super(real1);
 		}
 
@@ -1236,12 +1236,12 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link IntegerQuotientRemainderStrategy} for computing quotient and remainder results for {@link
+	 * {@link IntegerQuotientRemainderVisitor} for computing quotient and remainder results for {@link
 	 * IntegerStruct}s.
 	 */
-	private static final class IntegerQuotientRemainderStrategy extends RationalQuotientRemainderStrategy<IntegerStruct> {
+	private static final class IntegerQuotientRemainderVisitor extends RationalQuotientRemainderVisitor<IntegerStruct> {
 
-		private IntegerQuotientRemainderStrategy(final IntegerStruct real) {
+		private IntegerQuotientRemainderVisitor(final IntegerStruct real) {
 			super(real);
 		}
 
@@ -1277,11 +1277,11 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * {@link RealExptStrategy} for computing exponential function results for {@link IntegerStruct}s.
+	 * {@link RealExptVisitor} for computing exponential function results for {@link IntegerStruct}s.
 	 */
-	private static final class IntegerExptStrategy extends RealExptStrategy<IntegerStruct> {
+	private static final class IntegerExptVisitor extends RealExptVisitor<IntegerStruct> {
 
-		private IntegerExptStrategy(final IntegerStruct base) {
+		private IntegerExptVisitor(final IntegerStruct base) {
 			super(base);
 		}
 

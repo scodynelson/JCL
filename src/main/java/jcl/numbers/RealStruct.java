@@ -70,60 +70,165 @@ public abstract class RealStruct extends NumberStruct {
 	public abstract boolean minusp();
 
 	@Override
-	protected EqualToStrategy<?> getEqualToStrategy() {
-		return new RealEqualToStrategy<>(this);
+	protected EqualToVisitor<?> equalToVisitor() {
+		return new RealEqualToVisitor<>(this);
 	}
 
 	public boolean isLessThan(final RealStruct real) {
-		final LessThanStrategy<?> lessThanStrategy = getLessThanStrategy();
-		return real.isLessThan(lessThanStrategy);
+		final LessThanVisitor<?> lessThanVisitor = lessThanVisitor();
+		return real.isLessThan(lessThanVisitor);
 	}
 
-	protected abstract boolean isLessThan(final LessThanStrategy<?> lessThanStrategy);
+	protected abstract boolean isLessThan(final LessThanVisitor<?> lessThanVisitor);
 
-	protected LessThanStrategy<?> getLessThanStrategy() {
-		return new LessThanStrategy<>(this);
+	public static boolean isLessThan(final RealStruct... reals) {
+		if (reals.length == 0) {
+			throw new ErrorException("At least one real required to test equality.");
+		}
+
+		RealStruct previousReal = reals[0];
+
+		boolean result = true;
+		for (int i = 1; i < reals.length; i++) {
+			final RealStruct currentReal = reals[i];
+			result = previousReal.isLessThan(currentReal);
+			if (!result) {
+				break;
+			}
+			previousReal = currentReal;
+		}
+		return result;
+	}
+
+	protected LessThanVisitor<?> lessThanVisitor() {
+		return new LessThanVisitor<>(this);
 	}
 
 	public boolean isGreaterThan(final RealStruct real) {
-		final GreaterThanStrategy<?> greaterThanStrategy = getGreaterThanStrategy();
-		return real.isGreaterThan(greaterThanStrategy);
+		final GreaterThanVisitor<?> greaterThanVisitor = greaterThanVisitor();
+		return real.isGreaterThan(greaterThanVisitor);
 	}
 
-	protected abstract boolean isGreaterThan(final GreaterThanStrategy<?> greaterThanStrategy);
+	protected abstract boolean isGreaterThan(final GreaterThanVisitor<?> greaterThanVisitor);
 
-	protected GreaterThanStrategy<?> getGreaterThanStrategy() {
-		return new GreaterThanStrategy<>(this);
+	protected GreaterThanVisitor<?> greaterThanVisitor() {
+		return new GreaterThanVisitor<>(this);
+	}
+
+	public static boolean isGreaterThan(final RealStruct... reals) {
+		if (reals.length == 0) {
+			throw new ErrorException("At least one real required to test equality.");
+		}
+
+		RealStruct previousReal = reals[0];
+
+		boolean result = true;
+		for (int i = 1; i < reals.length; i++) {
+			final RealStruct currentReal = reals[i];
+			result = previousReal.isGreaterThan(currentReal);
+			if (!result) {
+				break;
+			}
+			previousReal = currentReal;
+		}
+		return result;
 	}
 
 	public boolean isLessThanOrEqualTo(final RealStruct real) {
-		final LessThanOrEqualToStrategy<?> lessThanOrEqualToStrategy = getLessThanOrEqualToStrategy();
-		return real.isLessThanOrEqualTo(lessThanOrEqualToStrategy);
+		final LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor = lessThanOrEqualToVisitor();
+		return real.isLessThanOrEqualTo(lessThanOrEqualToVisitor);
 	}
 
-	protected abstract boolean isLessThanOrEqualTo(final LessThanOrEqualToStrategy<?> lessThanOrEqualToStrategy);
+	protected abstract boolean isLessThanOrEqualTo(final LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor);
 
-	protected LessThanOrEqualToStrategy<?> getLessThanOrEqualToStrategy() {
-		return new LessThanOrEqualToStrategy<>(this);
+	protected LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor() {
+		return new LessThanOrEqualToVisitor<>(this);
+	}
+
+	public static boolean isLessThanOrEqualTo(final RealStruct... reals) {
+		if (reals.length == 0) {
+			throw new ErrorException("At least one real required to test equality.");
+		}
+
+		RealStruct previousReal = reals[0];
+
+		boolean result = true;
+		for (int i = 1; i < reals.length; i++) {
+			final RealStruct currentReal = reals[i];
+			result = previousReal.isLessThanOrEqualTo(currentReal);
+			if (!result) {
+				break;
+			}
+			previousReal = currentReal;
+		}
+		return result;
 	}
 
 	public boolean isGreaterThanOrEqualTo(final RealStruct real) {
-		final GreaterThanOrEqualToStrategy<?> greaterThanOrEqualToStrategy = getGreaterThanOrEqualToStrategy();
-		return real.isGreaterThanOrEqualTo(greaterThanOrEqualToStrategy);
+		final GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor = greaterThanOrEqualToVisitor();
+		return real.isGreaterThanOrEqualTo(greaterThanOrEqualToVisitor);
 	}
 
-	protected abstract boolean isGreaterThanOrEqualTo(final GreaterThanOrEqualToStrategy<?> greaterThanOrEqualToStrategy);
+	protected abstract boolean isGreaterThanOrEqualTo(final GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor);
 
-	protected GreaterThanOrEqualToStrategy<?> getGreaterThanOrEqualToStrategy() {
-		return new GreaterThanOrEqualToStrategy<>(this);
+	protected GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor() {
+		return new GreaterThanOrEqualToVisitor<>(this);
+	}
+
+	public static boolean isGreaterThanOrEqualTo(final RealStruct... reals) {
+		if (reals.length == 0) {
+			throw new ErrorException("At least one real required to test equality.");
+		}
+
+		RealStruct previousReal = reals[0];
+
+		boolean result = true;
+		for (int i = 1; i < reals.length; i++) {
+			final RealStruct currentReal = reals[i];
+			result = previousReal.isGreaterThanOrEqualTo(currentReal);
+			if (!result) {
+				break;
+			}
+			previousReal = currentReal;
+		}
+		return result;
 	}
 
 	public RealStruct max(final RealStruct real) {
 		return isGreaterThanOrEqualTo(real) ? this : real;
 	}
 
+	public static RealStruct max(final RealStruct... reals) {
+		if (reals.length == 0) {
+			throw new ErrorException("At least one real required to find max.");
+		}
+
+		RealStruct result = reals[0];
+		for (int i = 1; i < reals.length; i++) {
+			final RealStruct currentReal = reals[i];
+			result = result.max(currentReal);
+		}
+		return result;
+	}
+
 	public RealStruct min(final RealStruct real) {
 		return isLessThanOrEqualTo(real) ? this : real;
+	}
+
+	public static RealStruct min(final RealStruct... reals) {
+		if (reals.length == 0) {
+			throw new ErrorException("At least one real required to find min.");
+		}
+		if (reals.length == 1) {
+			return reals[0];
+		}
+
+		RealStruct result = reals[0];
+		for (int i = 1; i < reals.length; i++) {
+			final RealStruct currentReal = reals[i];
+			result = result.min(currentReal);
+		}
+		return result;
 	}
 
 	public abstract RealStruct rational();
@@ -147,44 +252,44 @@ public abstract class RealStruct extends NumberStruct {
 	}
 
 	public QuotientRemainderResult floor(final RealStruct divisor) {
-		final QuotientRemainderStrategy<?> floorStrategy = getQuotientRemainderStrategy();
-		return divisor.floor(floorStrategy);
+		final QuotientRemainderVisitor<?> quotientRemainderVisitor = quotientRemainderVisitor();
+		return divisor.floor(quotientRemainderVisitor);
 	}
 
-	protected abstract QuotientRemainderResult floor(final QuotientRemainderStrategy<?> floorStrategy);
+	protected abstract QuotientRemainderResult floor(final QuotientRemainderVisitor<?> quotientRemainderVisitor);
 
 	public QuotientRemainderResult ffloor() {
 		return ffloor(IntegerStruct.ONE);
 	}
 
 	public QuotientRemainderResult ffloor(final RealStruct divisor) {
-		final QuotientRemainderStrategy<?> ffloorStrategy = getQuotientRemainderStrategy();
-		return divisor.ffloor(ffloorStrategy);
+		final QuotientRemainderVisitor<?> quotientRemainderVisitor = quotientRemainderVisitor();
+		return divisor.ffloor(quotientRemainderVisitor);
 	}
 
-	protected abstract QuotientRemainderResult ffloor(final QuotientRemainderStrategy<?> ffloorStrategy);
+	protected abstract QuotientRemainderResult ffloor(final QuotientRemainderVisitor<?> quotientRemainderVisitor);
 
 	public QuotientRemainderResult ceiling() {
 		return ceiling(IntegerStruct.ONE);
 	}
 
 	public QuotientRemainderResult ceiling(final RealStruct divisor) {
-		final QuotientRemainderStrategy<?> ceilingStrategy = getQuotientRemainderStrategy();
-		return divisor.ceiling(ceilingStrategy);
+		final QuotientRemainderVisitor<?> quotientRemainderVisitor = quotientRemainderVisitor();
+		return divisor.ceiling(quotientRemainderVisitor);
 	}
 
-	protected abstract QuotientRemainderResult ceiling(final QuotientRemainderStrategy<?> ceilingStrategy);
+	protected abstract QuotientRemainderResult ceiling(final QuotientRemainderVisitor<?> quotientRemainderVisitor);
 
 	public QuotientRemainderResult fceiling() {
 		return fceiling(IntegerStruct.ONE);
 	}
 
 	public QuotientRemainderResult fceiling(final RealStruct divisor) {
-		final QuotientRemainderStrategy<?> fceilingStrategy = getQuotientRemainderStrategy();
-		return divisor.fceiling(fceilingStrategy);
+		final QuotientRemainderVisitor<?> quotientRemainderVisitor = quotientRemainderVisitor();
+		return divisor.fceiling(quotientRemainderVisitor);
 	}
 
-	protected abstract QuotientRemainderResult fceiling(final QuotientRemainderStrategy<?> fceilingStrategy);
+	protected abstract QuotientRemainderResult fceiling(final QuotientRemainderVisitor<?> quotientRemainderVisitor);
 
 	public QuotientRemainderResult truncate() {
 		return truncate(IntegerStruct.ONE);
@@ -215,24 +320,24 @@ public abstract class RealStruct extends NumberStruct {
 	}
 
 	public QuotientRemainderResult round(final RealStruct divisor) {
-		final QuotientRemainderStrategy<?> roundStrategy = getQuotientRemainderStrategy();
-		return divisor.round(roundStrategy);
+		final QuotientRemainderVisitor<?> quotientRemainderVisitor = quotientRemainderVisitor();
+		return divisor.round(quotientRemainderVisitor);
 	}
 
-	protected abstract QuotientRemainderResult round(final QuotientRemainderStrategy<?> roundStrategy);
+	protected abstract QuotientRemainderResult round(final QuotientRemainderVisitor<?> quotientRemainderVisitor);
 
 	public QuotientRemainderResult fround() {
 		return fround(IntegerStruct.ONE);
 	}
 
 	public QuotientRemainderResult fround(final RealStruct divisor) {
-		final QuotientRemainderStrategy<?> froundStrategy = getQuotientRemainderStrategy();
-		return divisor.fround(froundStrategy);
+		final QuotientRemainderVisitor<?> quotientRemainderVisitor = quotientRemainderVisitor();
+		return divisor.fround(quotientRemainderVisitor);
 	}
 
-	protected abstract QuotientRemainderResult fround(final QuotientRemainderStrategy<?> froundStrategy);
+	protected abstract QuotientRemainderResult fround(final QuotientRemainderVisitor<?> quotientRemainderVisitor);
 
-	protected abstract QuotientRemainderStrategy<?> getQuotientRemainderStrategy();
+	protected abstract QuotientRemainderVisitor<?> quotientRemainderVisitor();
 
 	@Override
 	public Apcomplex apcomplexValue() {
@@ -257,8 +362,8 @@ public abstract class RealStruct extends NumberStruct {
 	}
 
 	@Override
-	protected ExptStrategy<?> getExptStrategy() {
-		return new RealExptStrategy<>(this);
+	protected ExptVisitor<?> exptVisitor() {
+		return new RealExptVisitor<>(this);
 	}
 
 	@Override
@@ -388,11 +493,15 @@ public abstract class RealStruct extends NumberStruct {
 		return new FloatStruct(atanh);
 	}
 
-	// Strategy Implementations
+	public static RealStruct toRealStruct(final Apfloat apfloat) {
+		return (apfloat instanceof Apint) ? new IntegerStruct(apfloat) : new FloatStruct(apfloat);
+	}
 
-	protected abstract static class RealAddStrategy<S extends RealStruct> extends AddStrategy<S> {
+	// Visitor Implementations
 
-		protected RealAddStrategy(final S number1) {
+	protected abstract static class RealAddVisitor<S extends RealStruct> extends AddVisitor<S> {
+
+		protected RealAddVisitor(final S number1) {
 			super(number1);
 		}
 
@@ -435,9 +544,9 @@ public abstract class RealStruct extends NumberStruct {
 		}
 	}
 
-	protected abstract static class RealSubtractStrategy<S extends RealStruct> extends SubtractStrategy<S> {
+	protected abstract static class RealSubtractVisitor<S extends RealStruct> extends SubtractVisitor<S> {
 
-		protected RealSubtractStrategy(final S number1) {
+		protected RealSubtractVisitor(final S number1) {
 			super(number1);
 		}
 
@@ -465,9 +574,9 @@ public abstract class RealStruct extends NumberStruct {
 		}
 	}
 
-	protected abstract static class RealMultiplyStrategy<S extends RealStruct> extends MultiplyStrategy<S> {
+	protected abstract static class RealMultiplyVisitor<S extends RealStruct> extends MultiplyVisitor<S> {
 
-		protected RealMultiplyStrategy(final S number1) {
+		protected RealMultiplyVisitor(final S number1) {
 			super(number1);
 		}
 
@@ -517,9 +626,9 @@ public abstract class RealStruct extends NumberStruct {
 		}
 	}
 
-	protected abstract static class RealDivideStrategy<S extends RealStruct> extends DivideStrategy<S> {
+	protected abstract static class RealDivideVisitor<S extends RealStruct> extends DivideVisitor<S> {
 
-		protected RealDivideStrategy(final S number1) {
+		protected RealDivideVisitor(final S number1) {
 			super(number1);
 		}
 
@@ -553,9 +662,9 @@ public abstract class RealStruct extends NumberStruct {
 		return bigDecimal1.compareTo(bigDecimal2);
 	}
 
-	protected static class RealEqualToStrategy<S extends RealStruct> extends EqualToStrategy<S> {
+	protected static class RealEqualToVisitor<S extends RealStruct> extends EqualToVisitor<S> {
 
-		protected RealEqualToStrategy(final S number1) {
+		protected RealEqualToVisitor(final S number1) {
 			super(number1);
 		}
 
@@ -590,11 +699,11 @@ public abstract class RealStruct extends NumberStruct {
 		}
 	}
 
-	protected static class LessThanStrategy<S extends RealStruct> {
+	protected static class LessThanVisitor<S extends RealStruct> {
 
 		protected final S real1;
 
-		protected LessThanStrategy(final S real1) {
+		protected LessThanVisitor(final S real1) {
 			this.real1 = real1;
 		}
 
@@ -611,11 +720,11 @@ public abstract class RealStruct extends NumberStruct {
 		}
 	}
 
-	protected static class GreaterThanStrategy<S extends RealStruct> {
+	protected static class GreaterThanVisitor<S extends RealStruct> {
 
 		protected final S real1;
 
-		protected GreaterThanStrategy(final S real1) {
+		protected GreaterThanVisitor(final S real1) {
 			this.real1 = real1;
 		}
 
@@ -632,11 +741,11 @@ public abstract class RealStruct extends NumberStruct {
 		}
 	}
 
-	protected static class LessThanOrEqualToStrategy<S extends RealStruct> {
+	protected static class LessThanOrEqualToVisitor<S extends RealStruct> {
 
 		protected final S real1;
 
-		protected LessThanOrEqualToStrategy(final S real1) {
+		protected LessThanOrEqualToVisitor(final S real1) {
 			this.real1 = real1;
 		}
 
@@ -653,11 +762,11 @@ public abstract class RealStruct extends NumberStruct {
 		}
 	}
 
-	protected static class GreaterThanOrEqualToStrategy<S extends RealStruct> {
+	protected static class GreaterThanOrEqualToVisitor<S extends RealStruct> {
 
 		protected final S real1;
 
-		protected GreaterThanOrEqualToStrategy(final S real1) {
+		protected GreaterThanOrEqualToVisitor(final S real1) {
 			this.real1 = real1;
 		}
 
@@ -674,11 +783,11 @@ public abstract class RealStruct extends NumberStruct {
 		}
 	}
 
-	protected abstract static class QuotientRemainderStrategy<S extends RealStruct> {
+	protected abstract static class QuotientRemainderVisitor<S extends RealStruct> {
 
 		protected final S real;
 
-		protected QuotientRemainderStrategy(final S real) {
+		protected QuotientRemainderVisitor(final S real) {
 			this.real = real;
 		}
 
@@ -807,9 +916,9 @@ public abstract class RealStruct extends NumberStruct {
 		                                                          final boolean isQuotientFloat);
 	}
 
-	protected static class RealExptStrategy<S extends RealStruct> extends ExptStrategy<S> {
+	protected static class RealExptVisitor<S extends RealStruct> extends ExptVisitor<S> {
 
-		protected RealExptStrategy(final S base) {
+		protected RealExptVisitor(final S base) {
 			super(base);
 		}
 
@@ -868,116 +977,5 @@ public abstract class RealStruct extends NumberStruct {
 			final NumberStruct powerComplexLogOfNewBaseProduct = newPowerComplex.multiply(logOfNewBase);
 			return powerComplexLogOfNewBaseProduct.exp();
 		}
-	}
-
-	// Static Multi-Arg Methods
-
-	public static boolean isLessThan(final RealStruct... reals) {
-		if (reals.length == 0) {
-			throw new ErrorException("At least one real required to test equality.");
-		}
-
-		RealStruct previousReal = reals[0];
-
-		boolean result = true;
-		for (int i = 1; i < reals.length; i++) {
-			final RealStruct currentReal = reals[i];
-			result = previousReal.isLessThan(currentReal);
-			if (!result) {
-				break;
-			}
-			previousReal = currentReal;
-		}
-		return result;
-	}
-
-	public static boolean isGreaterThan(final RealStruct... reals) {
-		if (reals.length == 0) {
-			throw new ErrorException("At least one real required to test equality.");
-		}
-
-		RealStruct previousReal = reals[0];
-
-		boolean result = true;
-		for (int i = 1; i < reals.length; i++) {
-			final RealStruct currentReal = reals[i];
-			result = previousReal.isGreaterThan(currentReal);
-			if (!result) {
-				break;
-			}
-			previousReal = currentReal;
-		}
-		return result;
-	}
-
-	public static boolean isLessThanOrEqualTo(final RealStruct... reals) {
-		if (reals.length == 0) {
-			throw new ErrorException("At least one real required to test equality.");
-		}
-
-		RealStruct previousReal = reals[0];
-
-		boolean result = true;
-		for (int i = 1; i < reals.length; i++) {
-			final RealStruct currentReal = reals[i];
-			result = previousReal.isLessThanOrEqualTo(currentReal);
-			if (!result) {
-				break;
-			}
-			previousReal = currentReal;
-		}
-		return result;
-	}
-
-	public static boolean isGreaterThanOrEqualTo(final RealStruct... reals) {
-		if (reals.length == 0) {
-			throw new ErrorException("At least one real required to test equality.");
-		}
-
-		RealStruct previousReal = reals[0];
-
-		boolean result = true;
-		for (int i = 1; i < reals.length; i++) {
-			final RealStruct currentReal = reals[i];
-			result = previousReal.isGreaterThanOrEqualTo(currentReal);
-			if (!result) {
-				break;
-			}
-			previousReal = currentReal;
-		}
-		return result;
-	}
-
-	public static RealStruct max(final RealStruct... reals) {
-		if (reals.length == 0) {
-			throw new ErrorException("At least one real required to find max.");
-		}
-
-		RealStruct result = reals[0];
-		for (int i = 1; i < reals.length; i++) {
-			final RealStruct currentReal = reals[i];
-			result = result.max(currentReal);
-		}
-		return result;
-	}
-
-	public static RealStruct min(final RealStruct... reals) {
-		if (reals.length == 0) {
-			throw new ErrorException("At least one real required to find min.");
-		}
-		if (reals.length == 1) {
-			return reals[0];
-		}
-
-		RealStruct result = reals[0];
-		for (int i = 1; i < reals.length; i++) {
-			final RealStruct currentReal = reals[i];
-			result = result.min(currentReal);
-		}
-		return result;
-	}
-
-	public static RealStruct toRealStruct(final Apfloat apfloat) {
-		return (apfloat instanceof Apint) ? new IntegerStruct(apfloat) : new FloatStruct(apfloat);
 	}
 }

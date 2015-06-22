@@ -165,68 +165,68 @@ public class FloatStruct extends RealStruct {
 	}
 
 	@Override
-	protected NumberStruct add(final AddStrategy<?> addStrategy) {
-		return addStrategy.add(this);
+	protected NumberStruct add(final AddVisitor<?> addVisitor) {
+		return addVisitor.add(this);
 	}
 
 	@Override
-	protected AddStrategy<?> getAddStrategy() {
-		return new FloatAddStrategy(this);
+	protected AddVisitor<?> addVisitor() {
+		return new FloatAddVisitor(this);
 	}
 
 	@Override
-	protected NumberStruct subtract(final SubtractStrategy<?> subtractStrategy) {
-		return subtractStrategy.subtract(this);
+	protected NumberStruct subtract(final SubtractVisitor<?> subtractVisitor) {
+		return subtractVisitor.subtract(this);
 	}
 
 	@Override
-	protected SubtractStrategy<?> getSubtractStrategy() {
-		return new FloatSubtractStrategy(this);
+	protected SubtractVisitor<?> subtractVisitor() {
+		return new FloatSubtractVisitor(this);
 	}
 
 	@Override
-	protected NumberStruct multiply(final MultiplyStrategy<?> multiplyStrategy) {
-		return multiplyStrategy.multiply(this);
+	protected NumberStruct multiply(final MultiplyVisitor<?> multiplyVisitor) {
+		return multiplyVisitor.multiply(this);
 	}
 
 	@Override
-	protected MultiplyStrategy<?> getMultiplyStrategy() {
-		return new FloatMultiplyStrategy(this);
+	protected MultiplyVisitor<?> multiplyVisitor() {
+		return new FloatMultiplyVisitor(this);
 	}
 
 	@Override
-	protected NumberStruct divide(final DivideStrategy<?> divideStrategy) {
-		return divideStrategy.divide(this);
+	protected NumberStruct divide(final DivideVisitor<?> divideVisitor) {
+		return divideVisitor.divide(this);
 	}
 
 	@Override
-	protected DivideStrategy<?> getDivideStrategy() {
-		return new FloatDivideStrategy(this);
+	protected DivideVisitor<?> divideVisitor() {
+		return new FloatDivideVisitor(this);
 	}
 
 	@Override
-	protected boolean isEqualTo(final EqualToStrategy<?> equalToStrategy) {
-		return equalToStrategy.equalTo(this);
+	protected boolean isEqualTo(final EqualToVisitor<?> equalToVisitor) {
+		return equalToVisitor.equalTo(this);
 	}
 
 	@Override
-	protected boolean isLessThan(final LessThanStrategy<?> lessThanStrategy) {
-		return lessThanStrategy.lessThan(this);
+	protected boolean isLessThan(final LessThanVisitor<?> lessThanVisitor) {
+		return lessThanVisitor.lessThan(this);
 	}
 
 	@Override
-	protected boolean isGreaterThan(final GreaterThanStrategy<?> greaterThanStrategy) {
-		return greaterThanStrategy.greaterThan(this);
+	protected boolean isGreaterThan(final GreaterThanVisitor<?> greaterThanVisitor) {
+		return greaterThanVisitor.greaterThan(this);
 	}
 
 	@Override
-	protected boolean isLessThanOrEqualTo(final LessThanOrEqualToStrategy<?> lessThanOrEqualToStrategy) {
-		return lessThanOrEqualToStrategy.lessThanOrEqualTo(this);
+	protected boolean isLessThanOrEqualTo(final LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor) {
+		return lessThanOrEqualToVisitor.lessThanOrEqualTo(this);
 	}
 
 	@Override
-	protected boolean isGreaterThanOrEqualTo(final GreaterThanOrEqualToStrategy<?> greaterThanOrEqualToStrategy) {
-		return greaterThanOrEqualToStrategy.greaterThanOrEqualTo(this);
+	protected boolean isGreaterThanOrEqualTo(final GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor) {
+		return greaterThanOrEqualToVisitor.greaterThanOrEqualTo(this);
 	}
 
 	/**
@@ -306,8 +306,8 @@ public class FloatStruct extends RealStruct {
 	}
 
 	@Override
-	protected NumberStruct expt(final ExptStrategy<?> exptStrategy) {
-		return exptStrategy.expt(this);
+	protected NumberStruct expt(final ExptVisitor<?> exptVisitor) {
+		return exptVisitor.expt(this);
 	}
 
 	/**
@@ -365,38 +365,38 @@ public class FloatStruct extends RealStruct {
 	}
 
 	@Override
-	protected QuotientRemainderResult floor(final QuotientRemainderStrategy<?> floorStrategy) {
-		return floorStrategy.floor(this);
+	protected QuotientRemainderResult floor(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.floor(this);
 	}
 
 	@Override
-	protected QuotientRemainderResult ffloor(final QuotientRemainderStrategy<?> ffloorStrategy) {
-		return ffloorStrategy.ffloor(this);
+	protected QuotientRemainderResult ffloor(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.ffloor(this);
 	}
 
 	@Override
-	protected QuotientRemainderResult ceiling(final QuotientRemainderStrategy<?> ceilingStrategy) {
-		return ceilingStrategy.ceiling(this);
+	protected QuotientRemainderResult ceiling(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.ceiling(this);
 	}
 
 	@Override
-	protected QuotientRemainderResult fceiling(final QuotientRemainderStrategy<?> fceilingStrategy) {
-		return fceilingStrategy.fceiling(this);
+	protected QuotientRemainderResult fceiling(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.fceiling(this);
 	}
 
 	@Override
-	protected QuotientRemainderResult round(final QuotientRemainderStrategy<?> roundStrategy) {
-		return roundStrategy.round(this);
+	protected QuotientRemainderResult round(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.round(this);
 	}
 
 	@Override
-	protected QuotientRemainderResult fround(final QuotientRemainderStrategy<?> froundStrategy) {
-		return froundStrategy.fround(this);
+	protected QuotientRemainderResult fround(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
+		return quotientRemainderVisitor.fround(this);
 	}
 
 	@Override
-	protected QuotientRemainderStrategy<?> getQuotientRemainderStrategy() {
-		return new FloatQuotientRemainderStrategy(this);
+	protected QuotientRemainderVisitor<?> quotientRemainderVisitor() {
+		return new FloatQuotientRemainderVisitor(this);
 	}
 
 	/**
@@ -575,14 +575,14 @@ public class FloatStruct extends RealStruct {
 		}
 	}
 
-	// Strategy Implementations
+	// Visitor Implementations
 
 	/**
-	 * {@link RealAddStrategy} for computing addition results for {@link FloatStruct}s.
+	 * {@link RealAddVisitor} for computing addition results for {@link FloatStruct}s.
 	 */
-	private static final class FloatAddStrategy extends RealAddStrategy<FloatStruct> {
+	private static final class FloatAddVisitor extends RealAddVisitor<FloatStruct> {
 
-		private FloatAddStrategy(final FloatStruct number1) {
+		private FloatAddVisitor(final FloatStruct number1) {
 			super(number1);
 		}
 
@@ -608,11 +608,11 @@ public class FloatStruct extends RealStruct {
 	}
 
 	/**
-	 * {@link RealSubtractStrategy} for computing subtraction function results for {@link FloatStruct}s.
+	 * {@link RealSubtractVisitor} for computing subtraction function results for {@link FloatStruct}s.
 	 */
-	private static final class FloatSubtractStrategy extends RealSubtractStrategy<FloatStruct> {
+	private static final class FloatSubtractVisitor extends RealSubtractVisitor<FloatStruct> {
 
-		private FloatSubtractStrategy(final FloatStruct number1) {
+		private FloatSubtractVisitor(final FloatStruct number1) {
 			super(number1);
 		}
 
@@ -656,11 +656,11 @@ public class FloatStruct extends RealStruct {
 	}
 
 	/**
-	 * {@link RealMultiplyStrategy} for computing multiplication function results for {@link FloatStruct}s.
+	 * {@link RealMultiplyVisitor} for computing multiplication function results for {@link FloatStruct}s.
 	 */
-	private static final class FloatMultiplyStrategy extends RealMultiplyStrategy<FloatStruct> {
+	private static final class FloatMultiplyVisitor extends RealMultiplyVisitor<FloatStruct> {
 
-		private FloatMultiplyStrategy(final FloatStruct number1) {
+		private FloatMultiplyVisitor(final FloatStruct number1) {
 			super(number1);
 		}
 
@@ -686,11 +686,11 @@ public class FloatStruct extends RealStruct {
 	}
 
 	/**
-	 * {@link RealDivideStrategy} for computing division function results for {@link FloatStruct}s.
+	 * {@link RealDivideVisitor} for computing division function results for {@link FloatStruct}s.
 	 */
-	private static final class FloatDivideStrategy extends RealDivideStrategy<FloatStruct> {
+	private static final class FloatDivideVisitor extends RealDivideVisitor<FloatStruct> {
 
-		private FloatDivideStrategy(final FloatStruct number1) {
+		private FloatDivideVisitor(final FloatStruct number1) {
 			super(number1);
 		}
 
@@ -734,12 +734,12 @@ public class FloatStruct extends RealStruct {
 	}
 
 	/**
-	 * {@link FloatQuotientRemainderStrategy} for computing quotient and remainder results for {@link
+	 * {@link FloatQuotientRemainderVisitor} for computing quotient and remainder results for {@link
 	 * FloatStruct}s.
 	 */
-	private static final class FloatQuotientRemainderStrategy extends QuotientRemainderStrategy<FloatStruct> {
+	private static final class FloatQuotientRemainderVisitor extends QuotientRemainderVisitor<FloatStruct> {
 
-		private FloatQuotientRemainderStrategy(final FloatStruct real) {
+		private FloatQuotientRemainderVisitor(final FloatStruct real) {
 			super(real);
 		}
 

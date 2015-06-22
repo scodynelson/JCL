@@ -63,52 +63,148 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 	public abstract boolean zerop();
 
 	public NumberStruct add(final NumberStruct number) {
-		final AddStrategy<?> addStrategy = getAddStrategy();
-		return number.add(addStrategy);
+		final AddVisitor<?> addVisitor = addVisitor();
+		return number.add(addVisitor);
 	}
 
-	protected abstract NumberStruct add(final AddStrategy<?> addStrategy);
+	protected abstract NumberStruct add(final AddVisitor<?> addVisitor);
 
-	protected abstract AddStrategy<?> getAddStrategy();
+	protected abstract AddVisitor<?> addVisitor();
+
+	public static NumberStruct add(final NumberStruct... numbers) {
+		if (numbers.length == 0) {
+			return IntegerStruct.ZERO;
+		}
+
+		NumberStruct result = numbers[0];
+		for (int i = 1; i < numbers.length; i++) {
+			final NumberStruct currentNumber = numbers[i];
+			result = result.add(currentNumber);
+		}
+		return result;
+	}
 
 	public NumberStruct subtract(final NumberStruct number) {
-		final SubtractStrategy<?> subtractStrategy = getSubtractStrategy();
-		return number.subtract(subtractStrategy);
+		final SubtractVisitor<?> subtractVisitor = subtractVisitor();
+		return number.subtract(subtractVisitor);
 	}
 
-	protected abstract NumberStruct subtract(final SubtractStrategy<?> subtractStrategy);
+	protected abstract NumberStruct subtract(final SubtractVisitor<?> subtractVisitor);
 
-	protected abstract SubtractStrategy<?> getSubtractStrategy();
+	protected abstract SubtractVisitor<?> subtractVisitor();
+
+	public static NumberStruct subtract(final NumberStruct... numbers) {
+		if (numbers.length == 0) {
+			throw new ErrorException("At least one number required perform subtraction.");
+		}
+		if (numbers.length == 1) {
+			return numbers[0].negation();
+		}
+
+		NumberStruct result = numbers[0];
+		for (int i = 1; i < numbers.length; i++) {
+			final NumberStruct currentNumber = numbers[i];
+			result = result.subtract(currentNumber);
+		}
+		return result;
+	}
 
 	public NumberStruct multiply(final NumberStruct number) {
-		final MultiplyStrategy<?> multiplyStrategy = getMultiplyStrategy();
-		return number.multiply(multiplyStrategy);
+		final MultiplyVisitor<?> multiplyVisitor = multiplyVisitor();
+		return number.multiply(multiplyVisitor);
 	}
 
-	protected abstract NumberStruct multiply(final MultiplyStrategy<?> multiplyStrategy);
+	protected abstract NumberStruct multiply(final MultiplyVisitor<?> multiplyVisitor);
 
-	protected abstract MultiplyStrategy<?> getMultiplyStrategy();
+	protected abstract MultiplyVisitor<?> multiplyVisitor();
+
+	public static NumberStruct multiply(final NumberStruct... numbers) {
+		if (numbers.length == 0) {
+			return IntegerStruct.ONE;
+		}
+
+		NumberStruct result = numbers[0];
+		for (int i = 1; i < numbers.length; i++) {
+			final NumberStruct currentNumber = numbers[i];
+			result = result.multiply(currentNumber);
+		}
+		return result;
+	}
 
 	public NumberStruct divide(final NumberStruct number) {
-		final DivideStrategy<?> divideStrategy = getDivideStrategy();
-		return number.divide(divideStrategy);
+		final DivideVisitor<?> divideVisitor = divideVisitor();
+		return number.divide(divideVisitor);
 	}
 
-	protected abstract NumberStruct divide(final DivideStrategy<?> divideStrategy);
+	protected abstract NumberStruct divide(final DivideVisitor<?> divideVisitor);
 
-	protected abstract DivideStrategy<?> getDivideStrategy();
+	protected abstract DivideVisitor<?> divideVisitor();
+
+	public static NumberStruct divide(final NumberStruct... numbers) {
+		if (numbers.length == 0) {
+			throw new ErrorException("At least one number required to perform division.");
+		}
+		if (numbers.length == 1) {
+			return numbers[0].reciprocal();
+		}
+
+		NumberStruct result = numbers[0];
+		for (int i = 1; i < numbers.length; i++) {
+			final NumberStruct currentNumber = numbers[i];
+			result = result.divide(currentNumber);
+		}
+		return result;
+	}
 
 	public boolean isEqualTo(final NumberStruct number) {
-		final EqualToStrategy<?> equalToStrategy = getEqualToStrategy();
-		return number.isEqualTo(equalToStrategy);
+		final EqualToVisitor<?> equalToVisitor = equalToVisitor();
+		return number.isEqualTo(equalToVisitor);
 	}
 
-	protected abstract boolean isEqualTo(final EqualToStrategy<?> equalToStrategy);
+	protected abstract boolean isEqualTo(final EqualToVisitor<?> equalToVisitor);
 
-	protected abstract EqualToStrategy<?> getEqualToStrategy();
+	protected abstract EqualToVisitor<?> equalToVisitor();
+
+	public static boolean isEqualTo(final NumberStruct... numbers) {
+		if (numbers.length == 0) {
+			throw new ErrorException("At least one number required to test equality.");
+		}
+
+		NumberStruct previousNumber = numbers[0];
+
+		boolean result = true;
+		for (int i = 1; i < numbers.length; i++) {
+			final NumberStruct currentNumber = numbers[i];
+			result = previousNumber.isEqualTo(currentNumber);
+			if (!result) {
+				break;
+			}
+			previousNumber = currentNumber;
+		}
+		return result;
+	}
 
 	public boolean isNotEqualTo(final NumberStruct number) {
 		return !isEqualTo(number);
+	}
+
+	public static boolean isNotEqualTo(final NumberStruct... numbers) {
+		if (numbers.length == 0) {
+			throw new ErrorException("At least one number required to test equality.");
+		}
+
+		NumberStruct previousNumber = numbers[0];
+
+		boolean result = true;
+		for (int i = 1; i < numbers.length; i++) {
+			final NumberStruct currentNumber = numbers[i];
+			result = previousNumber.isNotEqualTo(currentNumber);
+			if (!result) {
+				break;
+			}
+			previousNumber = currentNumber;
+		}
+		return result;
 	}
 
 	public abstract NumberStruct signum();
@@ -126,13 +222,13 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 	public abstract NumberStruct exp();
 
 	public NumberStruct expt(final NumberStruct power) {
-		final ExptStrategy<?> exptStrategy = getExptStrategy();
-		return power.expt(exptStrategy);
+		final ExptVisitor<?> exptVisitor = exptVisitor();
+		return power.expt(exptVisitor);
 	}
 
-	protected abstract NumberStruct expt(final ExptStrategy<?> exptStrategy);
+	protected abstract NumberStruct expt(final ExptVisitor<?> exptVisitor);
 
-	protected abstract ExptStrategy<?> getExptStrategy();
+	protected abstract ExptVisitor<?> exptVisitor();
 
 	public abstract NumberStruct log();
 
@@ -166,13 +262,13 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 
 	public abstract NumberStruct atanh();
 
-	// Strategy Implementations
+	// Visitor Implementations
 
-	protected abstract static class AddStrategy<S extends NumberStruct> {
+	protected abstract static class AddVisitor<S extends NumberStruct> {
 
 		protected final S number1;
 
-		protected AddStrategy(final S number1) {
+		protected AddVisitor(final S number1) {
 			this.number1 = number1;
 		}
 
@@ -185,11 +281,11 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 		public abstract NumberStruct add(ComplexStruct number2);
 	}
 
-	protected abstract static class SubtractStrategy<S extends NumberStruct> {
+	protected abstract static class SubtractVisitor<S extends NumberStruct> {
 
 		protected final S number1;
 
-		protected SubtractStrategy(final S number1) {
+		protected SubtractVisitor(final S number1) {
 			this.number1 = number1;
 		}
 
@@ -202,11 +298,11 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 		public abstract NumberStruct subtract(ComplexStruct number2);
 	}
 
-	protected abstract static class MultiplyStrategy<S extends NumberStruct> {
+	protected abstract static class MultiplyVisitor<S extends NumberStruct> {
 
 		protected final S number1;
 
-		protected MultiplyStrategy(final S number1) {
+		protected MultiplyVisitor(final S number1) {
 			this.number1 = number1;
 		}
 
@@ -219,11 +315,11 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 		public abstract NumberStruct multiply(ComplexStruct number2);
 	}
 
-	protected abstract static class DivideStrategy<S extends NumberStruct> {
+	protected abstract static class DivideVisitor<S extends NumberStruct> {
 
 		protected final S number1;
 
-		protected DivideStrategy(final S number1) {
+		protected DivideVisitor(final S number1) {
 			this.number1 = number1;
 		}
 
@@ -236,11 +332,11 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 		public abstract NumberStruct divide(ComplexStruct number2);
 	}
 
-	protected abstract static class EqualToStrategy<S extends NumberStruct> {
+	protected abstract static class EqualToVisitor<S extends NumberStruct> {
 
 		protected final S number1;
 
-		protected EqualToStrategy(final S number1) {
+		protected EqualToVisitor(final S number1) {
 			this.number1 = number1;
 		}
 
@@ -253,11 +349,11 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 		public abstract boolean equalTo(ComplexStruct number2);
 	}
 
-	protected abstract static class ExptStrategy<S extends NumberStruct> {
+	protected abstract static class ExptVisitor<S extends NumberStruct> {
 
 		protected final S base;
 
-		protected ExptStrategy(final S base) {
+		protected ExptVisitor(final S base) {
 			this.base = base;
 		}
 
@@ -311,103 +407,5 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 				nextn = nextn.ash(IntegerStruct.MINUS_ONE);
 			}
 		}
-	}
-
-	// Static Multi-Arg Methods
-
-	public static NumberStruct add(final NumberStruct... numbers) {
-		if (numbers.length == 0) {
-			return IntegerStruct.ZERO;
-		}
-
-		NumberStruct result = numbers[0];
-		for (int i = 1; i < numbers.length; i++) {
-			final NumberStruct currentNumber = numbers[i];
-			result = result.add(currentNumber);
-		}
-		return result;
-	}
-
-	public static NumberStruct subtract(final NumberStruct... numbers) {
-		if (numbers.length == 0) {
-			throw new ErrorException("At least one number required perform subtraction.");
-		}
-		if (numbers.length == 1) {
-			return numbers[0].negation();
-		}
-
-		NumberStruct result = numbers[0];
-		for (int i = 1; i < numbers.length; i++) {
-			final NumberStruct currentNumber = numbers[i];
-			result = result.subtract(currentNumber);
-		}
-		return result;
-	}
-
-	public static NumberStruct multiply(final NumberStruct... numbers) {
-		if (numbers.length == 0) {
-			return IntegerStruct.ONE;
-		}
-
-		NumberStruct result = numbers[0];
-		for (int i = 1; i < numbers.length; i++) {
-			final NumberStruct currentNumber = numbers[i];
-			result = result.multiply(currentNumber);
-		}
-		return result;
-	}
-
-	public static NumberStruct divide(final NumberStruct... numbers) {
-		if (numbers.length == 0) {
-			throw new ErrorException("At least one number required to perform division.");
-		}
-		if (numbers.length == 1) {
-			return numbers[0].reciprocal();
-		}
-
-		NumberStruct result = numbers[0];
-		for (int i = 1; i < numbers.length; i++) {
-			final NumberStruct currentNumber = numbers[i];
-			result = result.divide(currentNumber);
-		}
-		return result;
-	}
-
-	public static boolean isEqualTo(final NumberStruct... numbers) {
-		if (numbers.length == 0) {
-			throw new ErrorException("At least one number required to test equality.");
-		}
-
-		NumberStruct previousNumber = numbers[0];
-
-		boolean result = true;
-		for (int i = 1; i < numbers.length; i++) {
-			final NumberStruct currentNumber = numbers[i];
-			result = previousNumber.isEqualTo(currentNumber);
-			if (!result) {
-				break;
-			}
-			previousNumber = currentNumber;
-		}
-		return result;
-	}
-
-	public static boolean isNotEqualTo(final NumberStruct... numbers) {
-		if (numbers.length == 0) {
-			throw new ErrorException("At least one number required to test equality.");
-		}
-
-		NumberStruct previousNumber = numbers[0];
-
-		boolean result = true;
-		for (int i = 1; i < numbers.length; i++) {
-			final NumberStruct currentNumber = numbers[i];
-			result = previousNumber.isNotEqualTo(currentNumber);
-			if (!result) {
-				break;
-			}
-			previousNumber = currentNumber;
-		}
-		return result;
 	}
 }

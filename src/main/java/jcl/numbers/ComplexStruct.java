@@ -299,53 +299,53 @@ public class ComplexStruct extends NumberStruct {
 	}
 
 	@Override
-	protected NumberStruct add(final AddStrategy<?> addStrategy) {
-		return addStrategy.add(this);
+	protected NumberStruct add(final AddVisitor<?> addVisitor) {
+		return addVisitor.add(this);
 	}
 
 	@Override
-	protected AddStrategy<?> getAddStrategy() {
-		return new ComplexAddStrategy(this);
+	protected AddVisitor<?> addVisitor() {
+		return new ComplexAddVisitor(this);
 	}
 
 	@Override
-	protected NumberStruct subtract(final SubtractStrategy<?> subtractStrategy) {
-		return subtractStrategy.subtract(this);
+	protected NumberStruct subtract(final SubtractVisitor<?> subtractVisitor) {
+		return subtractVisitor.subtract(this);
 	}
 
 	@Override
-	protected SubtractStrategy<?> getSubtractStrategy() {
-		return new ComplexSubtractStrategy(this);
+	protected SubtractVisitor<?> subtractVisitor() {
+		return new ComplexSubtractVisitor(this);
 	}
 
 	@Override
-	protected NumberStruct multiply(final MultiplyStrategy<?> multiplyStrategy) {
-		return multiplyStrategy.multiply(this);
+	protected NumberStruct multiply(final MultiplyVisitor<?> multiplyVisitor) {
+		return multiplyVisitor.multiply(this);
 	}
 
 	@Override
-	protected MultiplyStrategy<?> getMultiplyStrategy() {
-		return new ComplexMultiplyStrategy(this);
+	protected MultiplyVisitor<?> multiplyVisitor() {
+		return new ComplexMultiplyVisitor(this);
 	}
 
 	@Override
-	protected NumberStruct divide(final DivideStrategy<?> divideStrategy) {
-		return divideStrategy.divide(this);
+	protected NumberStruct divide(final DivideVisitor<?> divideVisitor) {
+		return divideVisitor.divide(this);
 	}
 
 	@Override
-	protected DivideStrategy<?> getDivideStrategy() {
-		return new ComplexDivideStrategy(this);
+	protected DivideVisitor<?> divideVisitor() {
+		return new ComplexDivideVisitor(this);
 	}
 
 	@Override
-	protected boolean isEqualTo(final EqualToStrategy<?> equalToStrategy) {
-		return equalToStrategy.equalTo(this);
+	protected boolean isEqualTo(final EqualToVisitor<?> equalToVisitor) {
+		return equalToVisitor.equalTo(this);
 	}
 
 	@Override
-	protected EqualToStrategy<?> getEqualToStrategy() {
-		return new ComplexEqualToStrategy(this);
+	protected EqualToVisitor<?> equalToVisitor() {
+		return new ComplexEqualToVisitor(this);
 	}
 
 	@Override
@@ -414,13 +414,13 @@ public class ComplexStruct extends NumberStruct {
 	}
 
 	@Override
-	protected NumberStruct expt(final ExptStrategy<?> exptStrategy) {
-		return exptStrategy.expt(this);
+	protected NumberStruct expt(final ExptVisitor<?> exptVisitor) {
+		return exptVisitor.expt(this);
 	}
 
 	@Override
-	protected ExptStrategy<?> getExptStrategy() {
-		return new ComplexExptStrategy(this);
+	protected ExptVisitor<?> exptVisitor() {
+		return new ComplexExptVisitor(this);
 	}
 
 	@Override
@@ -560,14 +560,14 @@ public class ComplexStruct extends NumberStruct {
 		return new ComplexStruct(apcomplex);
 	}
 
-	// Strategy Implementations
+	// Visitor Implementations
 
 	/**
-	 * {@link AddStrategy} for computing addition results for {@link ComplexStruct}s.
+	 * {@link AddVisitor} for computing addition results for {@link ComplexStruct}s.
 	 */
-	private static final class ComplexAddStrategy extends AddStrategy<ComplexStruct> {
+	private static final class ComplexAddVisitor extends AddVisitor<ComplexStruct> {
 
-		private ComplexAddStrategy(final ComplexStruct number1) {
+		private ComplexAddVisitor(final ComplexStruct number1) {
 			super(number1);
 		}
 
@@ -609,11 +609,11 @@ public class ComplexStruct extends NumberStruct {
 	}
 
 	/**
-	 * {@link SubtractStrategy} for computing subtraction function results for {@link ComplexStruct}s.
+	 * {@link SubtractVisitor} for computing subtraction function results for {@link ComplexStruct}s.
 	 */
-	private static final class ComplexSubtractStrategy extends SubtractStrategy<ComplexStruct> {
+	private static final class ComplexSubtractVisitor extends SubtractVisitor<ComplexStruct> {
 
-		private ComplexSubtractStrategy(final ComplexStruct number1) {
+		private ComplexSubtractVisitor(final ComplexStruct number1) {
 			super(number1);
 		}
 
@@ -655,11 +655,11 @@ public class ComplexStruct extends NumberStruct {
 	}
 
 	/**
-	 * {@link MultiplyStrategy} for computing multiplication function results for {@link ComplexStruct}s.
+	 * {@link MultiplyVisitor} for computing multiplication function results for {@link ComplexStruct}s.
 	 */
-	private static final class ComplexMultiplyStrategy extends MultiplyStrategy<ComplexStruct> {
+	private static final class ComplexMultiplyVisitor extends MultiplyVisitor<ComplexStruct> {
 
-		private ComplexMultiplyStrategy(final ComplexStruct number1) {
+		private ComplexMultiplyVisitor(final ComplexStruct number1) {
 			super(number1);
 		}
 
@@ -701,11 +701,11 @@ public class ComplexStruct extends NumberStruct {
 	}
 
 	/**
-	 * {@link DivideStrategy} for computing division function results for {@link ComplexStruct}s.
+	 * {@link DivideVisitor} for computing division function results for {@link ComplexStruct}s.
 	 */
-	private static final class ComplexDivideStrategy extends DivideStrategy<ComplexStruct> {
+	private static final class ComplexDivideVisitor extends DivideVisitor<ComplexStruct> {
 
-		private ComplexDivideStrategy(final ComplexStruct number1) {
+		private ComplexDivideVisitor(final ComplexStruct number1) {
 			super(number1);
 		}
 
@@ -747,11 +747,11 @@ public class ComplexStruct extends NumberStruct {
 	}
 
 	/**
-	 * {@link EqualToStrategy} for computing numeric '=' equality results for {@link ComplexStruct}s.
+	 * {@link EqualToVisitor} for computing numeric '=' equality results for {@link ComplexStruct}s.
 	 */
-	private static final class ComplexEqualToStrategy extends EqualToStrategy<ComplexStruct> {
+	private static final class ComplexEqualToVisitor extends EqualToVisitor<ComplexStruct> {
 
-		private ComplexEqualToStrategy(final ComplexStruct number1) {
+		private ComplexEqualToVisitor(final ComplexStruct number1) {
 			super(number1);
 		}
 
@@ -801,11 +801,11 @@ public class ComplexStruct extends NumberStruct {
 	}
 
 	/**
-	 * {@link ExptStrategy} for computing exponential function results for {@link ComplexStruct}s.
+	 * {@link ExptVisitor} for computing exponential function results for {@link ComplexStruct}s.
 	 */
-	private static final class ComplexExptStrategy extends ExptStrategy<ComplexStruct> {
+	private static final class ComplexExptVisitor extends ExptVisitor<ComplexStruct> {
 
-		private ComplexExptStrategy(final ComplexStruct number1) {
+		private ComplexExptVisitor(final ComplexStruct number1) {
 			super(number1);
 		}
 

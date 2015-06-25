@@ -743,7 +743,7 @@ public class IntegerStruct extends RationalStruct {
 	 *
 	 * @return the greatest common divisor between this IntegerStruct and the provided IntegerStruct
 	 */
-	public IntegerStruct gcd(final IntegerStruct integer) {
+	private IntegerStruct gcd(final IntegerStruct integer) {
 		final BigInteger gcd = bigInteger.gcd(integer.bigInteger);
 		return new IntegerStruct(gcd);
 	}
@@ -772,7 +772,7 @@ public class IntegerStruct extends RationalStruct {
 	 *
 	 * @return the least common multiple between this IntegerStruct and the provided IntegerStruct
 	 */
-	public IntegerStruct lcm(final IntegerStruct integer) {
+	private IntegerStruct lcm(final IntegerStruct integer) {
 		if (zerop() || integer.zerop()) {
 			return ZERO;
 		}
@@ -831,7 +831,7 @@ public class IntegerStruct extends RationalStruct {
 	 *
 	 * @return the bit-wise logical 'and' of this IntegerStruct and the provided IntegerStruct
 	 */
-	public IntegerStruct logAnd(final IntegerStruct integer) {
+	private IntegerStruct logAnd(final IntegerStruct integer) {
 		final BigInteger and = bigInteger.and(integer.bigInteger);
 		return new IntegerStruct(and);
 	}
@@ -889,7 +889,7 @@ public class IntegerStruct extends RationalStruct {
 	 * @return the bit-wise logical 'equivalence', or 'exclusive-nor' of this IntegerStruct and the provided
 	 * IntegerStruct
 	 */
-	public IntegerStruct logEqv(final IntegerStruct integer) {
+	private IntegerStruct logEqv(final IntegerStruct integer) {
 		final BigInteger xor = bigInteger.xor(integer.bigInteger);
 		final BigInteger not = xor.not();
 		return new IntegerStruct(not);
@@ -918,7 +918,7 @@ public class IntegerStruct extends RationalStruct {
 	 *
 	 * @return the bit-wise logical 'inclusive-or' of this IntegerStruct and the provided IntegerStruct
 	 */
-	public IntegerStruct logIor(final IntegerStruct integer) {
+	private IntegerStruct logIor(final IntegerStruct integer) {
 		final BigInteger or = bigInteger.or(integer.bigInteger);
 		return new IntegerStruct(or);
 	}
@@ -1012,7 +1012,7 @@ public class IntegerStruct extends RationalStruct {
 	 *
 	 * @return the bit-wise logical 'exclusive-or' of this IntegerStruct and the provided IntegerStruct
 	 */
-	public IntegerStruct logXor(final IntegerStruct integer) {
+	private IntegerStruct logXor(final IntegerStruct integer) {
 		final BigInteger xor = bigInteger.xor(integer.bigInteger);
 		return new IntegerStruct(xor);
 	}

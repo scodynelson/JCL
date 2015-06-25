@@ -7,6 +7,8 @@ package jcl.numbers;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.util.Arrays;
+import java.util.List;
 
 import jcl.LispStruct;
 import jcl.types.IntegerType;
@@ -748,8 +750,7 @@ public class IntegerStruct extends RationalStruct {
 
 	/**
 	 * Returns the greatest common divisor of the provided IntegerStructs. If the number of IntegerStructs provided is
-	 * 0, {@link #ZERO} is returned. If the number of IntegerStructs provided is 1, that single IntegerStruct is
-	 * returned.
+	 * 0, {@link #ZERO} is returned.
 	 *
 	 * @param integers
 	 * 		the IntegerStructs used to determine the greatest common divisor
@@ -757,19 +758,9 @@ public class IntegerStruct extends RationalStruct {
 	 * @return the greatest common divisor of the provided IntegerStructs
 	 */
 	public static IntegerStruct gcd(final IntegerStruct... integers) {
-		if (integers.length == 0) {
-			return ZERO;
-		}
-		if (integers.length == 1) {
-			return integers[0];
-		}
-
-		IntegerStruct result = integers[0];
-		for (int i = 1; i < integers.length; i++) {
-			final IntegerStruct currentInteger = integers[i];
-			result = result.gcd(currentInteger);
-		}
-		return result;
+		final List<IntegerStruct> asList = Arrays.asList(integers);
+		return asList.stream()
+		             .reduce(ZERO, (x, y) -> x.gcd(y));
 	}
 
 	/**
@@ -797,7 +788,7 @@ public class IntegerStruct extends RationalStruct {
 
 	/**
 	 * Returns the least common multiple of the provided IntegerStructs. If the number of IntegerStructs provided is 0,
-	 * {@link #ONE} is returned. If the number of IntegerStructs provided is 1, that single IntegerStruct is returned.
+	 * {@link #ONE} is returned.
 	 *
 	 * @param integers
 	 * 		the IntegerStructs used to determine the least common multiple
@@ -805,19 +796,9 @@ public class IntegerStruct extends RationalStruct {
 	 * @return the least common multiple of the provided IntegerStructs
 	 */
 	public static IntegerStruct lcm(final IntegerStruct... integers) {
-		if (integers.length == 0) {
-			return ONE;
-		}
-		if (integers.length == 1) {
-			return integers[0];
-		}
-
-		IntegerStruct result = integers[0];
-		for (int i = 1; i < integers.length; i++) {
-			final IntegerStruct currentInteger = integers[i];
-			result = result.lcm(currentInteger);
-		}
-		return result;
+		final List<IntegerStruct> asList = Arrays.asList(integers);
+		return asList.stream()
+		             .reduce(ONE, (x, y) -> x.lcm(y));
 	}
 
 	/**
@@ -857,8 +838,7 @@ public class IntegerStruct extends RationalStruct {
 
 	/**
 	 * Returns the bit-wise logical 'and' of the provided IntegerStructs. If the number of IntegerStructs provided is
-	 * 0, {@link #MINUS_ONE} is returned. If the number of IntegerStructs provided is 1, that single IntegerStruct is
-	 * returned.
+	 * 0, {@link #MINUS_ONE} is returned.
 	 *
 	 * @param integers
 	 * 		the IntegerStructs used in performing the bit-wise logical operation
@@ -866,19 +846,9 @@ public class IntegerStruct extends RationalStruct {
 	 * @return the bit-wise logical 'and' of the provided IntegerStructs
 	 */
 	public static IntegerStruct logAnd(final IntegerStruct... integers) {
-		if (integers.length == 0) {
-			return MINUS_ONE;
-		}
-		if (integers.length == 1) {
-			return integers[0];
-		}
-
-		IntegerStruct result = integers[0];
-		for (int i = 1; i < integers.length; i++) {
-			final IntegerStruct currentInteger = integers[i];
-			result = result.logAnd(currentInteger);
-		}
-		return result;
+		final List<IntegerStruct> asList = Arrays.asList(integers);
+		return asList.stream()
+		             .reduce(MINUS_ONE, (x, y) -> x.logAnd(y));
 	}
 
 	/**
@@ -927,8 +897,7 @@ public class IntegerStruct extends RationalStruct {
 
 	/**
 	 * Returns the bit-wise logical 'equivalence', or 'exclusive-nor' of the provided IntegerStructs. If the number
-	 * of IntegerStructs provided is 0, {@link #MINUS_ONE} is returned. If the number of IntegerStructs provided is 1,
-	 * that single IntegerStruct is returned.
+	 * of IntegerStructs provided is 0, {@link #MINUS_ONE} is returned.
 	 *
 	 * @param integers
 	 * 		the IntegerStructs used in performing the bit-wise logical operation
@@ -936,19 +905,9 @@ public class IntegerStruct extends RationalStruct {
 	 * @return the bit-wise logical 'equivalence', or 'exclusive-nor' of the provided IntegerStructs
 	 */
 	public static IntegerStruct logEqv(final IntegerStruct... integers) {
-		if (integers.length == 0) {
-			return MINUS_ONE;
-		}
-		if (integers.length == 1) {
-			return integers[0];
-		}
-
-		IntegerStruct result = integers[0];
-		for (int i = 1; i < integers.length; i++) {
-			final IntegerStruct currentInteger = integers[i];
-			result = result.logEqv(currentInteger);
-		}
-		return result;
+		final List<IntegerStruct> asList = Arrays.asList(integers);
+		return asList.stream()
+		             .reduce(MINUS_ONE, (x, y) -> x.logEqv(y));
 	}
 
 	/**
@@ -966,8 +925,7 @@ public class IntegerStruct extends RationalStruct {
 
 	/**
 	 * Returns the bit-wise logical 'inclusive-or' of the provided IntegerStructs. If the number of IntegerStructs
-	 * provided is 0, {@link #ZERO} is returned. If the number of IntegerStructs provided is 1, that single
-	 * IntegerStruct is returned.
+	 * provided is 0, {@link #ZERO} is returned.
 	 *
 	 * @param integers
 	 * 		the IntegerStructs used in performing the bit-wise logical operation
@@ -975,19 +933,9 @@ public class IntegerStruct extends RationalStruct {
 	 * @return the bit-wise logical 'inclusive-or' of the provided IntegerStructs
 	 */
 	public static IntegerStruct logIor(final IntegerStruct... integers) {
-		if (integers.length == 0) {
-			return ZERO;
-		}
-		if (integers.length == 1) {
-			return integers[0];
-		}
-
-		IntegerStruct result = integers[0];
-		for (int i = 1; i < integers.length; i++) {
-			final IntegerStruct currentInteger = integers[i];
-			result = result.logIor(currentInteger);
-		}
-		return result;
+		final List<IntegerStruct> asList = Arrays.asList(integers);
+		return asList.stream()
+		             .reduce(ZERO, (x, y) -> x.logIor(y));
 	}
 
 	/**
@@ -1071,8 +1019,7 @@ public class IntegerStruct extends RationalStruct {
 
 	/**
 	 * Returns the bit-wise logical 'exclusive-or' of the provided IntegerStructs. If the number of IntegerStructs
-	 * provided is 0, {@link #ZERO} is returned. If the number of IntegerStructs provided is 1, that single
-	 * IntegerStruct is returned.
+	 * provided is 0, {@link #ZERO} is returned.
 	 *
 	 * @param integers
 	 * 		the IntegerStructs used in performing the bit-wise logical operation
@@ -1080,19 +1027,9 @@ public class IntegerStruct extends RationalStruct {
 	 * @return the bit-wise logical 'exclusive-or' of the provided IntegerStructs
 	 */
 	public static IntegerStruct logXor(final IntegerStruct... integers) {
-		if (integers.length == 0) {
-			return ZERO;
-		}
-		if (integers.length == 1) {
-			return integers[0];
-		}
-
-		IntegerStruct result = integers[0];
-		for (int i = 1; i < integers.length; i++) {
-			final IntegerStruct currentInteger = integers[i];
-			result = result.logXor(currentInteger);
-		}
-		return result;
+		final List<IntegerStruct> asList = Arrays.asList(integers);
+		return asList.stream()
+		             .reduce(ZERO, (x, y) -> x.logXor(y));
 	}
 
 	/**
@@ -1148,6 +1085,87 @@ public class IntegerStruct extends RationalStruct {
 		return and.signum() != 0;
 	}
 
+	// Comparison Visitor Helpers
+
+	/**
+	 * Determines numeric comparison result between the provided IntegerStructs.
+	 *
+	 * @param number1
+	 * 		the first IntegerStruct in the comparison operation
+	 * @param number2
+	 * 		the second IntegerStruct in the comparison operation
+	 *
+	 * @return numeric comparison result between the provided IntegerStructs
+	 */
+	private static int getComparisonResult(final IntegerStruct number1, final IntegerStruct number2) {
+		final BigInteger bigInteger1 = number1.bigInteger;
+		final BigInteger bigInteger2 = number2.bigInteger;
+		return bigInteger1.compareTo(bigInteger2);
+	}
+
+	/**
+	 * Determines numeric comparison result between the provided IntegerStruct and {@link RatioStruct}.
+	 *
+	 * @param number1
+	 * 		the IntegerStruct in the comparison operation
+	 * @param number2
+	 * 		the {@link RatioStruct} in the comparison operation
+	 *
+	 * @return numeric comparison result between the provided IntegerStruct and {@link RatioStruct}
+	 */
+	private static int getComparisonResult(final IntegerStruct number1, final RatioStruct number2) {
+		final BigInteger bigInteger1 = number1.bigInteger;
+
+		final BigFraction bigFraction2 = number2.getBigFraction();
+		final BigFraction bigFraction2Reduced = bigFraction2.reduce();
+		final BigInteger numerator = bigFraction2Reduced.getNumerator();
+		final BigInteger denominator = bigFraction2Reduced.getDenominator();
+
+		final BigInteger multiply = bigInteger1.multiply(denominator);
+		return multiply.compareTo(numerator);
+	}
+
+	// HashCode / Equals
+
+	/**
+	 * Returns a hash code for this object using a {@link HashCodeBuilder}.
+	 *
+	 * @return a hash code for this object
+	 */
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().appendSuper(super.hashCode())
+		                            .append(bigInteger)
+		                            .toHashCode();
+	}
+
+	/**
+	 * Returns the Java object equality of this object using an {@link EqualsBuilder}. If the provided {@code obj} is
+	 * null, it is not equal. If the provided {@code obj} is '==' to {@code this}, it is equal. If the {@link Class} of
+	 * the provided {@code obj} is not equal to {@link #getClass()}, it is not equal.
+	 *
+	 * @param obj
+	 * 		the {@link Object} to tests for Java object equality
+	 *
+	 * @return true if the objects are equal; false otherwise
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		final IntegerStruct rhs = (IntegerStruct) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj))
+		                          .append(bigInteger, rhs.bigInteger)
+		                          .isEquals();
+	}
+
 	// Visitor Implementations
 
 	/**
@@ -1156,12 +1174,13 @@ public class IntegerStruct extends RationalStruct {
 	private static final class IntegerAddVisitor extends RealAddVisitor<IntegerStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an IntegerAddVisitor with the provided {@link IntegerStruct}.
+		 * Package private constructor to make a new instance of an IntegerAddVisitor with the provided {@link
+		 * IntegerStruct}.
 		 *
 		 * @param number1
 		 * 		the first argument in the addition operation
 		 */
-		private IntegerAddVisitor(final IntegerStruct number1) {
+		IntegerAddVisitor(final IntegerStruct number1) {
 			super(number1);
 		}
 
@@ -1203,13 +1222,13 @@ public class IntegerStruct extends RationalStruct {
 	private static final class IntegerSubtractVisitor extends RealSubtractVisitor<IntegerStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an IntegerSubtractVisitor with the provided {@link
+		 * Package private constructor to make a new instance of an IntegerSubtractVisitor with the provided {@link
 		 * IntegerStruct}.
 		 *
 		 * @param number1
 		 * 		the first argument in the subtraction operation
 		 */
-		private IntegerSubtractVisitor(final IntegerStruct number1) {
+		IntegerSubtractVisitor(final IntegerStruct number1) {
 			super(number1);
 		}
 
@@ -1251,13 +1270,13 @@ public class IntegerStruct extends RationalStruct {
 	private static final class IntegerMultiplyVisitor extends RealMultiplyVisitor<IntegerStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an IntegerMultiplyVisitor with the provided {@link
+		 * Package private constructor to make a new instance of an IntegerMultiplyVisitor with the provided {@link
 		 * IntegerStruct}.
 		 *
 		 * @param number1
 		 * 		the first argument in the multiplication operation
 		 */
-		private IntegerMultiplyVisitor(final IntegerStruct number1) {
+		IntegerMultiplyVisitor(final IntegerStruct number1) {
 			super(number1);
 		}
 
@@ -1298,13 +1317,13 @@ public class IntegerStruct extends RationalStruct {
 	private static final class IntegerDivideVisitor extends RealDivideVisitor<IntegerStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an IntegerDivideVisitor with the provided {@link
+		 * Package private constructor to make a new instance of an IntegerDivideVisitor with the provided {@link
 		 * IntegerStruct}.
 		 *
 		 * @param number1
 		 * 		the first argument in the division operation
 		 */
-		private IntegerDivideVisitor(final IntegerStruct number1) {
+		IntegerDivideVisitor(final IntegerStruct number1) {
 			super(number1);
 		}
 
@@ -1339,56 +1358,18 @@ public class IntegerStruct extends RationalStruct {
 	}
 
 	/**
-	 * Determines numeric comparison result between the provided IntegerStructs.
-	 *
-	 * @param number1
-	 * 		the first IntegerStruct in the comparison operation
-	 * @param number2
-	 * 		the second IntegerStruct in the comparison operation
-	 *
-	 * @return numeric comparison result between the provided IntegerStructs
-	 */
-	private static int getComparisonResult(final IntegerStruct number1, final IntegerStruct number2) {
-		final BigInteger bigInteger1 = number1.bigInteger;
-		final BigInteger bigInteger2 = number2.bigInteger;
-		return bigInteger1.compareTo(bigInteger2);
-	}
-
-	/**
-	 * Determines numeric comparison result between the provided IntegerStruct and {@link RatioStruct}.
-	 *
-	 * @param number1
-	 * 		the IntegerStruct in the comparison operation
-	 * @param number2
-	 * 		the {@link RatioStruct} in the comparison operation
-	 *
-	 * @return numeric comparison result between the provided IntegerStruct and {@link RatioStruct}
-	 */
-	private static int getComparisonResult(final IntegerStruct number1, final RatioStruct number2) {
-		final BigInteger bigInteger1 = number1.bigInteger;
-
-		final BigFraction bigFraction2 = number2.getBigFraction();
-		final BigFraction bigFraction2Reduced = bigFraction2.reduce();
-		final BigInteger numerator = bigFraction2Reduced.getNumerator();
-		final BigInteger denominator = bigFraction2Reduced.getDenominator();
-
-		final BigInteger multiply = bigInteger1.multiply(denominator);
-		return multiply.compareTo(numerator);
-	}
-
-	/**
 	 * {@link RealEqualToVisitor} for computing numeric '=' equality results for {@link IntegerStruct}s.
 	 */
 	private static final class IntegerEqualToVisitor extends RealEqualToVisitor<IntegerStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an IntegerEqualToVisitor with the provided {@link
+		 * Package private constructor to make a new instance of an IntegerEqualToVisitor with the provided {@link
 		 * IntegerStruct}.
 		 *
 		 * @param number1
 		 * 		the first argument in the numeric '=' equality operation
 		 */
-		private IntegerEqualToVisitor(final IntegerStruct number1) {
+		IntegerEqualToVisitor(final IntegerStruct number1) {
 			super(number1);
 		}
 
@@ -1419,13 +1400,13 @@ public class IntegerStruct extends RationalStruct {
 	private static final class IntegerLessThanVisitor extends LessThanVisitor<IntegerStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an IntegerLessThanVisitor with the provided {@link
+		 * Package private constructor to make a new instance of an IntegerLessThanVisitor with the provided {@link
 		 * IntegerStruct}.
 		 *
 		 * @param real1
 		 * 		the first argument in the numeric '<' equality operation
 		 */
-		private IntegerLessThanVisitor(final IntegerStruct real1) {
+		IntegerLessThanVisitor(final IntegerStruct real1) {
 			super(real1);
 		}
 
@@ -1456,13 +1437,13 @@ public class IntegerStruct extends RationalStruct {
 	private static final class IntegerGreaterThanVisitor extends GreaterThanVisitor<IntegerStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an IntegerGreaterThanVisitor with the provided {@link
+		 * Package private constructor to make a new instance of an IntegerGreaterThanVisitor with the provided {@link
 		 * IntegerStruct}.
 		 *
 		 * @param real1
 		 * 		the first argument in the numeric '>' equality operation
 		 */
-		private IntegerGreaterThanVisitor(final IntegerStruct real1) {
+		IntegerGreaterThanVisitor(final IntegerStruct real1) {
 			super(real1);
 		}
 
@@ -1493,13 +1474,13 @@ public class IntegerStruct extends RationalStruct {
 	private static final class IntegerLessThanOrEqualToVisitor extends LessThanOrEqualToVisitor<IntegerStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an IntegerLessThanOrEqualToVisitor with the provided {@link
-		 * IntegerStruct}.
+		 * Package private constructor to make a new instance of an IntegerLessThanOrEqualToVisitor with the provided
+		 * {@link IntegerStruct}.
 		 *
 		 * @param real1
 		 * 		the first argument in the numeric '<=' equality operation
 		 */
-		private IntegerLessThanOrEqualToVisitor(final IntegerStruct real1) {
+		IntegerLessThanOrEqualToVisitor(final IntegerStruct real1) {
 			super(real1);
 		}
 
@@ -1530,13 +1511,13 @@ public class IntegerStruct extends RationalStruct {
 	private static final class IntegerGreaterThanOrEqualToVisitor extends GreaterThanOrEqualToVisitor<IntegerStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an IntegerGreaterThanOrEqualToVisitor with the provided {@link
-		 * IntegerStruct}.
+		 * Package private constructor to make a new instance of an IntegerGreaterThanOrEqualToVisitor with the
+		 * provided {@link IntegerStruct}.
 		 *
 		 * @param real1
 		 * 		the first argument in the numeric '>=' equality operation
 		 */
-		private IntegerGreaterThanOrEqualToVisitor(final IntegerStruct real1) {
+		IntegerGreaterThanOrEqualToVisitor(final IntegerStruct real1) {
 			super(real1);
 		}
 
@@ -1568,13 +1549,13 @@ public class IntegerStruct extends RationalStruct {
 	private static final class IntegerQuotientRemainderVisitor extends RationalQuotientRemainderVisitor<IntegerStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an IntegerQuotientRemainderVisitor with the provided {@link
-		 * IntegerStruct}.
+		 * Package private constructor to make a new instance of an IntegerQuotientRemainderVisitor with the provided
+		 * {@link IntegerStruct}.
 		 *
 		 * @param real
 		 * 		the real argument in the computational quotient and remainder operation
 		 */
-		private IntegerQuotientRemainderVisitor(final IntegerStruct real) {
+		IntegerQuotientRemainderVisitor(final IntegerStruct real) {
 			super(real);
 		}
 
@@ -1615,12 +1596,13 @@ public class IntegerStruct extends RationalStruct {
 	private static final class IntegerExptVisitor extends RealExptVisitor<IntegerStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an IntegerExptVisitor with the provided {@link IntegerStruct}.
+		 * Package private constructor to make a new instance of an IntegerExptVisitor with the provided {@link
+		 * IntegerStruct}.
 		 *
 		 * @param base
 		 * 		the base argument in the exponential operation
 		 */
-		private IntegerExptVisitor(final IntegerStruct base) {
+		IntegerExptVisitor(final IntegerStruct base) {
 			super(base);
 		}
 
@@ -1640,31 +1622,5 @@ public class IntegerStruct extends RationalStruct {
 				return new IntegerStruct(pow);
 			}
 		}
-	}
-
-	// HashCode / Equals
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode())
-		                            .append(bigInteger)
-		                            .toHashCode();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final IntegerStruct rhs = (IntegerStruct) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj))
-		                          .append(bigInteger, rhs.bigInteger)
-		                          .isEquals();
 	}
 }

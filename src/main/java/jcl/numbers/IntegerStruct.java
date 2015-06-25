@@ -56,7 +56,7 @@ public class IntegerStruct extends RationalStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param bigInteger
+	 * @param apint
 	 * 		the value of the IntegerStruct
 	 */
 	IntegerStruct(final Apint apint) {
@@ -66,7 +66,7 @@ public class IntegerStruct extends RationalStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param bigInteger
+	 * @param apfloat
 	 * 		the value of the IntegerStruct
 	 */
 	IntegerStruct(final Apfloat apfloat) {
@@ -76,7 +76,7 @@ public class IntegerStruct extends RationalStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param bigInteger
+	 * @param longValue
 	 * 		the value of the IntegerStruct
 	 */
 	IntegerStruct(final long longValue) {
@@ -115,16 +115,35 @@ public class IntegerStruct extends RationalStruct {
 		return bigInteger;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Determines the object equality of this IntegerStruct with the provided {@link LispStruct}. 'EQL' rules state
+	 * that
+	 * if 'x' and 'y' are both numbers of the same type and the same value, then they are equal.
+	 */
 	@Override
 	public boolean lispEql(final LispStruct lispStruct) {
 		return equals(lispStruct);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Determines the object equality of this IntegerStruct with the provided {@link LispStruct}. 'EQUAL' rules state
+	 * that if 'x' and 'y' are 'EQL', then they are equal.
+	 */
 	@Override
 	public boolean lispEqual(final LispStruct lispStruct) {
 		return equals(lispStruct);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Determines the object equality of this IntegerStruct with the provided {@link LispStruct}. 'EQUALP' rules state
+	 * that if 'x' and 'y' are 'EQL', then they are equal.
+	 */
 	@Override
 	public boolean lispEqualp(final LispStruct lispStruct) {
 		return (lispStruct instanceof NumberStruct) && isEqualTo((NumberStruct) lispStruct);
@@ -192,91 +211,232 @@ public class IntegerStruct extends RationalStruct {
 		return bigInteger.testBit(0);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Adds this IntegerStruct to a {@link NumberStruct} using the provided {@link AddVisitor}.
+	 *
+	 * @param addVisitor
+	 * 		the {@link AddVisitor} to be used in the addition operation
+	 *
+	 * @return the addition of {@link NumberStruct} using the provided {@link AddVisitor} and this IntegerStruct
+	 */
 	@Override
 	protected NumberStruct add(final AddVisitor<?> addVisitor) {
 		return addVisitor.add(this);
 	}
 
+	/**
+	 * Returns a new {@link AddVisitor} with this IntegerStruct to be used in an addition operation.
+	 *
+	 * @return a new {@link AddVisitor} with this IntegerStruct to be used in an addition operation
+	 */
 	@Override
 	protected AddVisitor<?> addVisitor() {
 		return new IntegerAddVisitor(this);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Adds this IntegerStruct to a {@link NumberStruct} using the provided {@link SubtractVisitor}.
+	 *
+	 * @param subtractVisitor
+	 * 		the {@link SubtractVisitor} to be used in the subtraction operation
+	 *
+	 * @return the subtraction of {@link NumberStruct} using the provided {@link SubtractVisitor} and this IntegerStruct
+	 */
 	@Override
 	protected NumberStruct subtract(final SubtractVisitor<?> subtractVisitor) {
 		return subtractVisitor.subtract(this);
 	}
 
+	/**
+	 * Returns a new {@link SubtractVisitor} with this IntegerStruct to be used in a subtraction operation.
+	 *
+	 * @return a new {@link SubtractVisitor} with this IntegerStruct to be used in a subtraction operation
+	 */
 	@Override
 	protected SubtractVisitor<?> subtractVisitor() {
 		return new IntegerSubtractVisitor(this);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Adds this IntegerStruct to a {@link NumberStruct} using the provided {@link MultiplyVisitor}.
+	 *
+	 * @param multiplyVisitor
+	 * 		the {@link MultiplyVisitor} to be used in the multiplication operation
+	 *
+	 * @return the multiplication of {@link NumberStruct} using the provided {@link MultiplyVisitor} and this
+	 * IntegerStruct
+	 */
 	@Override
 	protected NumberStruct multiply(final MultiplyVisitor<?> multiplyVisitor) {
 		return multiplyVisitor.multiply(this);
 	}
 
+	/**
+	 * Returns a new {@link MultiplyVisitor} with this IntegerStruct to be used in a multiplication operation.
+	 *
+	 * @return a new {@link MultiplyVisitor} with this IntegerStruct to be used in a multiplication operation
+	 */
 	@Override
 	protected MultiplyVisitor<?> multiplyVisitor() {
 		return new IntegerMultiplyVisitor(this);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Adds this IntegerStruct to a {@link NumberStruct} using the provided {@link DivideVisitor}.
+	 *
+	 * @param divideVisitor
+	 * 		the {@link DivideVisitor} to be used in the division operation
+	 *
+	 * @return the division of {@link NumberStruct} using the provided {@link DivideVisitor} and this IntegerStruct
+	 */
 	@Override
 	protected NumberStruct divide(final DivideVisitor<?> divideVisitor) {
 		return divideVisitor.divide(this);
 	}
 
+	/**
+	 * Returns a new {@link DivideVisitor} with this IntegerStruct to be used in a division operation.
+	 *
+	 * @return a new {@link DivideVisitor} with this IntegerStruct to be used in a division operation
+	 */
 	@Override
 	protected DivideVisitor<?> divideVisitor() {
 		return new IntegerDivideVisitor(this);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Compares this IntegerStruct to a {@link NumberStruct} using the provided {@link EqualToVisitor}.
+	 *
+	 * @param equalToVisitor
+	 * 		the {@link EqualToVisitor} to be used in the '=' operation
+	 *
+	 * @return the '=' comparison of {@link NumberStruct} using the provided {@link EqualToVisitor} and this
+	 * IntegerStruct
+	 */
 	@Override
 	protected boolean isEqualTo(final EqualToVisitor<?> equalToVisitor) {
 		return equalToVisitor.equalTo(this);
 	}
 
+	/**
+	 * Returns a new {@link EqualToVisitor} with this IntegerStruct to be used in an '=' operation.
+	 *
+	 * @return a new {@link EqualToVisitor} with this IntegerStruct to be used in an '=' operation
+	 */
 	@Override
 	protected EqualToVisitor<?> equalToVisitor() {
 		return new IntegerEqualToVisitor(this);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Compares this IntegerStruct to a {@link NumberStruct} using the provided {@link LessThanVisitor}.
+	 *
+	 * @param lessThanVisitor
+	 * 		the {@link LessThanVisitor} to be used in the '<' operation
+	 *
+	 * @return the '<' comparison of {@link NumberStruct} using the provided {@link LessThanVisitor} and this
+	 * IntegerStruct
+	 */
 	@Override
 	protected boolean isLessThan(final LessThanVisitor<?> lessThanVisitor) {
 		return lessThanVisitor.lessThan(this);
 	}
 
+	/**
+	 * Returns a new {@link LessThanVisitor} with this IntegerStruct to be used in a '<' operation.
+	 *
+	 * @return a new {@link LessThanVisitor} with this IntegerStruct to be used in a '<' operation
+	 */
 	@Override
 	protected LessThanVisitor<?> lessThanVisitor() {
 		return new IntegerLessThanVisitor(this);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Compares this IntegerStruct to a {@link NumberStruct} using the provided {@link GreaterThanVisitor}.
+	 *
+	 * @param greaterThanVisitor
+	 * 		the {@link GreaterThanVisitor} to be used in the '>' operation
+	 *
+	 * @return the '>' comparison of {@link NumberStruct} using the provided {@link GreaterThanVisitor} and this
+	 * IntegerStruct
+	 */
 	@Override
 	protected boolean isGreaterThan(final GreaterThanVisitor<?> greaterThanVisitor) {
 		return greaterThanVisitor.greaterThan(this);
 	}
 
+	/**
+	 * Returns a new {@link GreaterThanVisitor} with this IntegerStruct to be used in a '>' operation.
+	 *
+	 * @return a new {@link GreaterThanVisitor} with this IntegerStruct to be used in a '>' operation
+	 */
 	@Override
 	protected GreaterThanVisitor<?> greaterThanVisitor() {
 		return new IntegerGreaterThanVisitor(this);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Compares this IntegerStruct to a {@link NumberStruct} using the provided {@link LessThanOrEqualToVisitor}.
+	 *
+	 * @param lessThanOrEqualToVisitor
+	 * 		the {@link LessThanOrEqualToVisitor} to be used in the '<=' operation
+	 *
+	 * @return the '<=' comparison of {@link NumberStruct} using the provided {@link LessThanOrEqualToVisitor} and this
+	 * IntegerStruct
+	 */
 	@Override
 	protected boolean isLessThanOrEqualTo(final LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor) {
 		return lessThanOrEqualToVisitor.lessThanOrEqualTo(this);
 	}
 
+	/**
+	 * Returns a new {@link LessThanOrEqualToVisitor} with this IntegerStruct to be used in a '<=' operation.
+	 *
+	 * @return a new {@link LessThanOrEqualToVisitor} with this IntegerStruct to be used in a '<=' operation
+	 */
 	@Override
 	protected LessThanOrEqualToVisitor<?> lessThanOrEqualToVisitor() {
 		return new IntegerLessThanOrEqualToVisitor(this);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Compares this IntegerStruct to a {@link NumberStruct} using the provided {@link GreaterThanOrEqualToVisitor}.
+	 *
+	 * @param greaterThanOrEqualToVisitor
+	 * 		the {@link GreaterThanOrEqualToVisitor} to be used in the '>=' operation
+	 *
+	 * @return the '>=' comparison of {@link NumberStruct} using the provided {@link GreaterThanOrEqualToVisitor} and
+	 * this IntegerStruct
+	 */
 	@Override
 	protected boolean isGreaterThanOrEqualTo(final GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor) {
 		return greaterThanOrEqualToVisitor.greaterThanOrEqualTo(this);
 	}
 
+	/**
+	 * Returns a new {@link GreaterThanOrEqualToVisitor} with this IntegerStruct to be used in a '>=' operation.
+	 *
+	 * @return a new {@link GreaterThanOrEqualToVisitor} with this IntegerStruct to be used in a '>=' operation
+	 */
 	@Override
 	protected GreaterThanOrEqualToVisitor<?> greaterThanOrEqualToVisitor() {
 		return new IntegerGreaterThanOrEqualToVisitor(this);
@@ -355,11 +515,28 @@ public class IntegerStruct extends RationalStruct {
 		return super.expt(power);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Performs the exponential operation with this IntegerStruct as the power value using the provided {@link
+	 * ExptVisitor}.
+	 *
+	 * @param exptVisitor
+	 * 		the {@link ExptVisitor} to be used in the exponential operation
+	 *
+	 * @return the result of the exponential operation with this IntegerStruct as the power value using the provided
+	 * {@link ExptVisitor}
+	 */
 	@Override
 	protected NumberStruct expt(final ExptVisitor<?> exptVisitor) {
 		return exptVisitor.expt(this);
 	}
 
+	/**
+	 * Returns a new {@link GreaterThanOrEqualToVisitor} with this IntegerStruct to be used in a '>=' operation.
+	 *
+	 * @return a new {@link GreaterThanOrEqualToVisitor} with this IntegerStruct to be used in a '>=' operation
+	 */
 	@Override
 	protected ExptVisitor<?> exptVisitor() {
 		return new IntegerExptVisitor(this);
@@ -389,6 +566,12 @@ public class IntegerStruct extends RationalStruct {
 		return new BigDecimal(bigInteger, 1).multiply(BigDecimal.TEN);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Creates a new {@link Apfloat} with the resulting {@link BigDecimal} produced from the {@link #bigDecimalValue()}
+	 * operation.
+	 */
 	@Override
 	public Apfloat apfloatValue() {
 		return new Apfloat(bigDecimalValue());
@@ -414,36 +597,117 @@ public class IntegerStruct extends RationalStruct {
 		return this;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Calculates the {@link QuotientRemainderResult} for a 'FLOOR' operation with this IntegerStruct as the 'divisor'
+	 * using the provided {@link QuotientRemainderVisitor}.
+	 *
+	 * @param quotientRemainderVisitor
+	 * 		the {@link QuotientRemainderVisitor} to be used in the 'FLOOR' operation
+	 *
+	 * @return the {@link QuotientRemainderResult} for a 'FLOOR' operation with this IntegerStruct as the 'divisor'
+	 * using the provided {@link QuotientRemainderVisitor}
+	 */
 	@Override
 	protected QuotientRemainderResult floor(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.floor(this);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Calculates the {@link QuotientRemainderResult} for a 'FLOOR' operation with this IntegerStruct as the 'divisor'
+	 * using the provided {@link QuotientRemainderVisitor}. The resulting 'quotient' will be a {@link FloatStruct}.
+	 *
+	 * @param quotientRemainderVisitor
+	 * 		the {@link QuotientRemainderVisitor} to be used in the 'FLOOR' operation
+	 *
+	 * @return the {@link QuotientRemainderResult} for a 'FLOOR' operation with this IntegerStruct as the 'divisor'
+	 * using the provided {@link QuotientRemainderVisitor}
+	 */
 	@Override
 	protected QuotientRemainderResult ffloor(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.ffloor(this);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Calculates the {@link QuotientRemainderResult} for a 'CEILING' operation with this IntegerStruct as the
+	 * 'divisor' using the provided {@link QuotientRemainderVisitor}.
+	 *
+	 * @param quotientRemainderVisitor
+	 * 		the {@link QuotientRemainderVisitor} to be used in the 'CEILING' operation
+	 *
+	 * @return the {@link QuotientRemainderResult} for a 'CEILING' operation with this IntegerStruct as the 'divisor'
+	 * using the provided {@link QuotientRemainderVisitor}
+	 */
 	@Override
 	protected QuotientRemainderResult ceiling(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.ceiling(this);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Calculates the {@link QuotientRemainderResult} for a 'CEILING' operation with this IntegerStruct as the
+	 * 'divisor' using the provided {@link QuotientRemainderVisitor}. The resulting 'quotient' will be a {@link
+	 * FloatStruct}.
+	 *
+	 * @param quotientRemainderVisitor
+	 * 		the {@link QuotientRemainderVisitor} to be used in the 'CEILING' operation
+	 *
+	 * @return the {@link QuotientRemainderResult} for a 'CEILING' operation with this IntegerStruct as the 'divisor'
+	 * using the provided {@link QuotientRemainderVisitor}
+	 */
 	@Override
 	protected QuotientRemainderResult fceiling(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.fceiling(this);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Calculates the {@link QuotientRemainderResult} for a 'ROUND' operation with this IntegerStruct as the 'divisor'
+	 * using the provided {@link QuotientRemainderVisitor}.
+	 *
+	 * @param quotientRemainderVisitor
+	 * 		the {@link QuotientRemainderVisitor} to be used in the 'ROUND' operation
+	 *
+	 * @return the {@link QuotientRemainderResult} for a 'ROUND' operation with this IntegerStruct as the 'divisor'
+	 * using the provided {@link QuotientRemainderVisitor}
+	 */
 	@Override
 	protected QuotientRemainderResult round(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.round(this);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Calculates the {@link QuotientRemainderResult} for a 'ROUND' operation with this IntegerStruct as the 'divisor'
+	 * using the provided {@link QuotientRemainderVisitor}. The resulting 'quotient' will be a {@link FloatStruct}.
+	 *
+	 * @param quotientRemainderVisitor
+	 * 		the {@link QuotientRemainderVisitor} to be used in the 'ROUND' operation
+	 *
+	 * @return the {@link QuotientRemainderResult} for a 'ROUND' operation with this IntegerStruct as the 'divisor'
+	 * using the provided {@link QuotientRemainderVisitor}
+	 */
 	@Override
 	protected QuotientRemainderResult fround(final QuotientRemainderVisitor<?> quotientRemainderVisitor) {
 		return quotientRemainderVisitor.fround(this);
 	}
 
+	/**
+	 * Returns a new {@link QuotientRemainderVisitor} with this IntegerStruct to be used in a 'quotient' and
+	 * 'remainder'
+	 * calculation operation.
+	 *
+	 * @return a new {@link QuotientRemainderVisitor} with this IntegerStruct to be used in a 'quotient' and 'remainder'
+	 * calculation operation
+	 */
 	@Override
 	protected QuotientRemainderVisitor<?> quotientRemainderVisitor() {
 		return new IntegerQuotientRemainderVisitor(this);

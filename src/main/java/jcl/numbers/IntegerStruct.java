@@ -7,8 +7,7 @@ package jcl.numbers;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
-import java.util.Arrays;
-import java.util.List;
+import java.util.stream.Stream;
 
 import jcl.LispStruct;
 import jcl.types.IntegerType;
@@ -121,8 +120,7 @@ public class IntegerStruct extends RationalStruct {
 	 * {@inheritDoc}
 	 * <p>
 	 * Determines the object equality of this IntegerStruct with the provided {@link LispStruct}. 'EQL' rules state
-	 * that
-	 * if 'x' and 'y' are both numbers of the same type and the same value, then they are equal.
+	 * that if 'x' and 'y' are both numbers of the same type and the same value, then they are equal.
 	 */
 	@Override
 	public boolean lispEql(final LispStruct lispStruct) {
@@ -704,8 +702,7 @@ public class IntegerStruct extends RationalStruct {
 
 	/**
 	 * Returns a new {@link QuotientRemainderVisitor} with this IntegerStruct to be used in a 'quotient' and
-	 * 'remainder'
-	 * calculation operation.
+	 * 'remainder' calculation operation.
 	 *
 	 * @return a new {@link QuotientRemainderVisitor} with this IntegerStruct to be used in a 'quotient' and 'remainder'
 	 * calculation operation
@@ -758,8 +755,7 @@ public class IntegerStruct extends RationalStruct {
 	 * @return the greatest common divisor of the provided IntegerStructs
 	 */
 	public static IntegerStruct gcd(final IntegerStruct... integers) {
-		final List<IntegerStruct> asList = Arrays.asList(integers);
-		return asList.stream()
+		return Stream.of(integers)
 		             .reduce(ZERO, (x, y) -> x.gcd(y));
 	}
 
@@ -796,8 +792,7 @@ public class IntegerStruct extends RationalStruct {
 	 * @return the least common multiple of the provided IntegerStructs
 	 */
 	public static IntegerStruct lcm(final IntegerStruct... integers) {
-		final List<IntegerStruct> asList = Arrays.asList(integers);
-		return asList.stream()
+		return Stream.of(integers)
 		             .reduce(ONE, (x, y) -> x.lcm(y));
 	}
 
@@ -846,8 +841,7 @@ public class IntegerStruct extends RationalStruct {
 	 * @return the bit-wise logical 'and' of the provided IntegerStructs
 	 */
 	public static IntegerStruct logAnd(final IntegerStruct... integers) {
-		final List<IntegerStruct> asList = Arrays.asList(integers);
-		return asList.stream()
+		return Stream.of(integers)
 		             .reduce(MINUS_ONE, (x, y) -> x.logAnd(y));
 	}
 
@@ -905,8 +899,7 @@ public class IntegerStruct extends RationalStruct {
 	 * @return the bit-wise logical 'equivalence', or 'exclusive-nor' of the provided IntegerStructs
 	 */
 	public static IntegerStruct logEqv(final IntegerStruct... integers) {
-		final List<IntegerStruct> asList = Arrays.asList(integers);
-		return asList.stream()
+		return Stream.of(integers)
 		             .reduce(MINUS_ONE, (x, y) -> x.logEqv(y));
 	}
 
@@ -933,8 +926,7 @@ public class IntegerStruct extends RationalStruct {
 	 * @return the bit-wise logical 'inclusive-or' of the provided IntegerStructs
 	 */
 	public static IntegerStruct logIor(final IntegerStruct... integers) {
-		final List<IntegerStruct> asList = Arrays.asList(integers);
-		return asList.stream()
+		return Stream.of(integers)
 		             .reduce(ZERO, (x, y) -> x.logIor(y));
 	}
 
@@ -1027,8 +1019,7 @@ public class IntegerStruct extends RationalStruct {
 	 * @return the bit-wise logical 'exclusive-or' of the provided IntegerStructs
 	 */
 	public static IntegerStruct logXor(final IntegerStruct... integers) {
-		final List<IntegerStruct> asList = Arrays.asList(integers);
-		return asList.stream()
+		return Stream.of(integers)
 		             .reduce(ZERO, (x, y) -> x.logXor(y));
 	}
 

@@ -14,7 +14,6 @@ import jcl.types.RatioType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.math3.fraction.BigFraction;
-import org.apfloat.Apfloat;
 
 /**
  * The {@link RatioStruct} is the object representation of a Lisp 'ratio' type.
@@ -492,18 +491,6 @@ public class RatioStruct extends RationalStruct {
 			final int roundingMode = RoundingMode.HALF_EVEN.ordinal();
 			return bigFraction.bigDecimalValue(scale, roundingMode);
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Creates a new {@link Apfloat} with the resulting {@link BigDecimal} produced from the {@link #bigDecimalValue()}
-	 * operation.
-	 */
-	@Override
-	public Apfloat apfloatValue() {
-		final BigDecimal bigDecimal = bigDecimalValue();
-		return new Apfloat(bigDecimal);
 	}
 
 	/**

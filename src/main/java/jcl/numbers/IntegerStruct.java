@@ -569,17 +569,6 @@ public class IntegerStruct extends RationalStruct {
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Creates a new {@link Apfloat} with the resulting {@link BigDecimal} produced from the {@link #bigDecimalValue()}
-	 * operation.
-	 */
-	@Override
-	public Apfloat apfloatValue() {
-		return new Apfloat(bigDecimalValue());
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
 	 * Returns {@link #ZERO} as a '0' IntegerStruct value.
 	 */
 	@Override

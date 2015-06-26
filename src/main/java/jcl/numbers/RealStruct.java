@@ -59,7 +59,9 @@ public abstract class RealStruct extends NumberStruct {
 
 	public abstract BigDecimal bigDecimalValue();
 
-	public abstract Apfloat apfloatValue();
+	public Apfloat apfloatValue() {
+		return new Apfloat(bigDecimalValue());
+	}
 
 	public abstract FloatStruct coerceRealToFloat();
 

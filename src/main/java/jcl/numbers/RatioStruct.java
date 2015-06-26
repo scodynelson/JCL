@@ -14,6 +14,8 @@ import jcl.types.RatioType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.math3.fraction.BigFraction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The {@link RatioStruct} is the object representation of a Lisp 'ratio' type.
@@ -485,7 +487,11 @@ public class RatioStruct extends RationalStruct {
 	public BigDecimal bigDecimalValue() {
 		try {
 			return bigFraction.bigDecimalValue();
-		} catch (final ArithmeticException ignore) {
+		} catch (final ArithmeticException ae) {
+			final Logger logger = LoggerFactory.getLogger(RatioStruct.class);
+			if (logger.isTraceEnabled()) {
+				logger.trace(ae.getMessage(), ae);
+			}
 			// This means that we have to round the fraction.
 			final int scale = MathContext.DECIMAL128.getPrecision();
 			final int roundingMode = RoundingMode.HALF_EVEN.ordinal();
@@ -737,12 +743,13 @@ public class RatioStruct extends RationalStruct {
 	private static final class RatioAddVisitor extends RealAddVisitor<RatioStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an RatioAddVisitor with the provided {@link RatioStruct}.
+		 * Package private constructor to make a new instance of an RatioAddVisitor with the provided {@link
+		 * RatioStruct}.
 		 *
 		 * @param number1
 		 * 		the first argument in the addition operation
 		 */
-		private RatioAddVisitor(final RatioStruct number1) {
+		RatioAddVisitor(final RatioStruct number1) {
 			super(number1);
 		}
 
@@ -779,12 +786,13 @@ public class RatioStruct extends RationalStruct {
 	private static final class RatioSubtractVisitor extends RealSubtractVisitor<RatioStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an RatioSubtractVisitor with the provided {@link RatioStruct}.
+		 * Package private constructor to make a new instance of an RatioSubtractVisitor with the provided {@link
+		 * RatioStruct}.
 		 *
 		 * @param number1
 		 * 		the first argument in the subtraction operation
 		 */
-		private RatioSubtractVisitor(final RatioStruct number1) {
+		RatioSubtractVisitor(final RatioStruct number1) {
 			super(number1);
 		}
 
@@ -821,12 +829,13 @@ public class RatioStruct extends RationalStruct {
 	private static final class RatioMultiplyVisitor extends RealMultiplyVisitor<RatioStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an RatioMultiplyVisitor with the provided {@link RatioStruct}.
+		 * Package private constructor to make a new instance of an RatioMultiplyVisitor with the provided {@link
+		 * RatioStruct}.
 		 *
 		 * @param number1
 		 * 		the first argument in the multiplication operation
 		 */
-		private RatioMultiplyVisitor(final RatioStruct number1) {
+		RatioMultiplyVisitor(final RatioStruct number1) {
 			super(number1);
 		}
 
@@ -863,12 +872,13 @@ public class RatioStruct extends RationalStruct {
 	private static final class RatioDivideVisitor extends RealDivideVisitor<RatioStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an RatioDivideVisitor with the provided {@link RatioStruct}.
+		 * Package private constructor to make a new instance of an RatioDivideVisitor with the provided {@link
+		 * RatioStruct}.
 		 *
 		 * @param number1
 		 * 		the first argument in the division operation
 		 */
-		private RatioDivideVisitor(final RatioStruct number1) {
+		RatioDivideVisitor(final RatioStruct number1) {
 			super(number1);
 		}
 
@@ -905,12 +915,13 @@ public class RatioStruct extends RationalStruct {
 	private static final class RatioEqualToVisitor extends RealEqualToVisitor<RatioStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an RatioEqualToVisitor with the provided {@link RatioStruct}.
+		 * Package private constructor to make a new instance of an RatioEqualToVisitor with the provided {@link
+		 * RatioStruct}.
 		 *
 		 * @param number1
 		 * 		the first argument in the numeric '=' equality operation
 		 */
-		private RatioEqualToVisitor(final RatioStruct number1) {
+		RatioEqualToVisitor(final RatioStruct number1) {
 			super(number1);
 		}
 
@@ -941,12 +952,13 @@ public class RatioStruct extends RationalStruct {
 	private static final class RatioLessThanVisitor extends LessThanVisitor<RatioStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an RatioLessThanVisitor with the provided {@link RatioStruct}.
+		 * Package private constructor to make a new instance of an RatioLessThanVisitor with the provided {@link
+		 * RatioStruct}.
 		 *
 		 * @param real1
 		 * 		the first argument in the numeric '<' equality operation
 		 */
-		private RatioLessThanVisitor(final RatioStruct real1) {
+		RatioLessThanVisitor(final RatioStruct real1) {
 			super(real1);
 		}
 
@@ -977,13 +989,13 @@ public class RatioStruct extends RationalStruct {
 	private static final class RatioGreaterThanVisitor extends GreaterThanVisitor<RatioStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an RatioGreaterThanVisitor with the provided {@link
+		 * Package private constructor to make a new instance of an RatioGreaterThanVisitor with the provided {@link
 		 * RatioStruct}.
 		 *
 		 * @param real1
 		 * 		the first argument in the numeric '>' equality operation
 		 */
-		private RatioGreaterThanVisitor(final RatioStruct real1) {
+		RatioGreaterThanVisitor(final RatioStruct real1) {
 			super(real1);
 		}
 
@@ -1014,13 +1026,13 @@ public class RatioStruct extends RationalStruct {
 	private static final class RatioLessThanOrEqualToVisitor extends LessThanOrEqualToVisitor<RatioStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an RatioLessThanOrEqualToVisitor with the provided {@link
-		 * RatioStruct}.
+		 * Package private constructor to make a new instance of an RatioLessThanOrEqualToVisitor with the provided
+		 * {@link RatioStruct}.
 		 *
 		 * @param real1
 		 * 		the first argument in the numeric '<=' equality operation
 		 */
-		private RatioLessThanOrEqualToVisitor(final RatioStruct real1) {
+		RatioLessThanOrEqualToVisitor(final RatioStruct real1) {
 			super(real1);
 		}
 
@@ -1051,13 +1063,13 @@ public class RatioStruct extends RationalStruct {
 	private static final class RatioGreaterThanOrEqualToVisitor extends GreaterThanOrEqualToVisitor<RatioStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an RatioGreaterThanOrEqualToVisitor with the provided {@link
-		 * RatioStruct}.
+		 * Package private constructor to make a new instance of an RatioGreaterThanOrEqualToVisitor with the provided
+		 * {@link RatioStruct}.
 		 *
 		 * @param real1
 		 * 		the first argument in the numeric '>=' equality operation
 		 */
-		private RatioGreaterThanOrEqualToVisitor(final RatioStruct real1) {
+		RatioGreaterThanOrEqualToVisitor(final RatioStruct real1) {
 			super(real1);
 		}
 
@@ -1088,13 +1100,13 @@ public class RatioStruct extends RationalStruct {
 	private static final class RatioQuotientRemainderVisitor extends RationalQuotientRemainderVisitor<RatioStruct> {
 
 		/**
-		 * Private constructor to make a new instance of an RatioQuotientRemainderVisitor with the provided {@link
-		 * RatioStruct}.
+		 * Package private constructor to make a new instance of an RatioQuotientRemainderVisitor with the provided
+		 * {@link RatioStruct}.
 		 *
 		 * @param real
 		 * 		the real argument in the computational quotient and remainder operation
 		 */
-		private RatioQuotientRemainderVisitor(final RatioStruct real) {
+		RatioQuotientRemainderVisitor(final RatioStruct real) {
 			super(real);
 		}
 

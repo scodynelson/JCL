@@ -57,6 +57,29 @@ public class IntegerStruct extends RationalStruct {
 	/**
 	 * Public constructor.
 	 *
+	 * @param bigInteger
+	 * 		the value of the IntegerStruct
+	 */
+	public IntegerStruct(final BigInteger bigInteger) {
+		this(IntegerType.INSTANCE, bigInteger);
+	}
+
+	/**
+	 * Public constructor.
+	 *
+	 * @param integerType
+	 * 		a {@link IntegerType} that represents the type of {@link IntegerType}
+	 * @param bigInteger
+	 * 		the value of the IntegerStruct
+	 */
+	public IntegerStruct(final IntegerType integerType, final BigInteger bigInteger) {
+		super(integerType, null, null);
+		this.bigInteger = bigInteger;
+	}
+
+	/**
+	 * Public constructor.
+	 *
 	 * @param apint
 	 * 		the value of the IntegerStruct
 	 */
@@ -80,31 +103,8 @@ public class IntegerStruct extends RationalStruct {
 	 * @param longValue
 	 * 		the value of the IntegerStruct
 	 */
-	IntegerStruct(final long longValue) {
+	private IntegerStruct(final long longValue) {
 		this(BigInteger.valueOf(longValue));
-	}
-
-	/**
-	 * Public constructor.
-	 *
-	 * @param bigInteger
-	 * 		the value of the IntegerStruct
-	 */
-	public IntegerStruct(final BigInteger bigInteger) {
-		this(IntegerType.INSTANCE, bigInteger);
-	}
-
-	/**
-	 * Public constructor.
-	 *
-	 * @param integerType
-	 * 		a {@link IntegerType} that represents the type of {@link IntegerType}
-	 * @param bigInteger
-	 * 		the value of the IntegerStruct
-	 */
-	public IntegerStruct(final IntegerType integerType, final BigInteger bigInteger) {
-		super(integerType, null, null);
-		this.bigInteger = bigInteger;
 	}
 
 	/**
@@ -564,6 +564,11 @@ public class IntegerStruct extends RationalStruct {
 	@Override
 	public BigDecimal bigDecimalValue() {
 		return new BigDecimal(bigInteger, 1).multiply(BigDecimal.TEN);
+	}
+
+	@Override
+	public Apfloat apfloatValue() {
+		return new Apint(bigInteger);
 	}
 
 	/**

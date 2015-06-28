@@ -56,26 +56,6 @@ public class FloatStruct extends RealStruct {
 	/**
 	 * Public constructor.
 	 *
-	 * @param apfloat
-	 * 		the value of the FloatStruct
-	 */
-	FloatStruct(final Apfloat apfloat) {
-		this(apfloat.doubleValue());
-	}
-
-	/**
-	 * Public constructor.
-	 *
-	 * @param doubleValue
-	 * 		the value of the FloatStruct
-	 */
-	FloatStruct(final double doubleValue) {
-		this(BigDecimal.valueOf(doubleValue));
-	}
-
-	/**
-	 * Public constructor.
-	 *
 	 * @param bigDecimal
 	 * 		the value of the FloatStruct
 	 */
@@ -94,6 +74,26 @@ public class FloatStruct extends RealStruct {
 	public FloatStruct(final FloatType floatType, final BigDecimal bigDecimal) {
 		super(floatType, null, null);
 		this.bigDecimal = bigDecimal;
+	}
+
+	/**
+	 * Public constructor.
+	 *
+	 * @param apfloat
+	 * 		the value of the FloatStruct
+	 */
+	FloatStruct(final Apfloat apfloat) {
+		this(apfloat.doubleValue());
+	}
+
+	/**
+	 * Public constructor.
+	 *
+	 * @param doubleValue
+	 * 		the value of the FloatStruct
+	 */
+	private FloatStruct(final double doubleValue) {
+		this(BigDecimal.valueOf(doubleValue));
 	}
 
 	/**

@@ -553,8 +553,8 @@ public class ComplexStruct extends NumberStruct {
 
 	public static NumberStruct makeComplexOrReal(final Apcomplex apcomplex) {
 		final Apfloat real = apcomplex.real();
-		// TODO: the following DOESN'T work correctly. Need to have a real way to determine whether or not the real is a whole number!!!
-		if (real.signum() == 0) {
+		final Apfloat imag = apcomplex.imag();
+		if (Apcomplex.ZERO.equals(imag)) {
 			return RealStruct.toRealStruct(real);
 		}
 		return new ComplexStruct(apcomplex);

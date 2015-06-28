@@ -496,7 +496,8 @@ public abstract class RealStruct extends NumberStruct {
 	}
 
 	public static RealStruct toRealStruct(final Apfloat apfloat) {
-		return (apfloat instanceof Apint) ? new IntegerStruct(apfloat) : new FloatStruct(apfloat);
+		// TODO: Not quite right here either!!!
+		return (apfloat.doubleValue() == apfloat.intValue()) ? new IntegerStruct(apfloat) : new FloatStruct(apfloat);
 	}
 
 	// Visitor Implementations

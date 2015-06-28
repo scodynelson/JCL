@@ -14,6 +14,9 @@ import jcl.types.RatioType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.math3.fraction.BigFraction;
+import org.apfloat.Apfloat;
+import org.apfloat.Apint;
+import org.apfloat.Aprational;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -497,6 +500,13 @@ public class RatioStruct extends RationalStruct {
 			final int roundingMode = RoundingMode.HALF_EVEN.ordinal();
 			return bigFraction.bigDecimalValue(scale, roundingMode);
 		}
+	}
+
+	@Override
+	public Apfloat apfloatValue() {
+		final Apint apintNumerator = new Apint(bigFraction.getNumerator());
+		final Apint apintDenominator = new Apint(bigFraction.getDenominator());
+		return new Aprational(apintNumerator, apintDenominator);
 	}
 
 	/**

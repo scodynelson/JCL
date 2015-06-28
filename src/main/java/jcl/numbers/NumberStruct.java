@@ -53,11 +53,38 @@ public abstract class NumberStruct extends BuiltInClassStruct {
 	}
 
 	// TODO: move the following 3 up
-	public abstract boolean lispEql(LispStruct lispStruct);
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Determines the object equality of this NumberStruct with the provided {@link LispStruct}. 'EQL' rules state
+	 * that if 'x' and 'y' are both numbers of the same type and the same value, then they are equal.
+	 */
+//	@Override
+	public boolean lispEql(final LispStruct lispStruct) {
+		return equals(lispStruct);
+	}
 
-	public abstract boolean lispEqual(LispStruct lispStruct);
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Determines the object equality of this NumberStruct with the provided {@link LispStruct}. 'EQUAL' rules state
+	 * that if 'x' and 'y' are 'EQL', then they are equal.
+	 */
+//	@Override
+	public boolean lispEqual(final LispStruct lispStruct) {
+		return equals(lispStruct);
+	}
 
-	public abstract boolean lispEqualp(LispStruct lispStruct);
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Determines the object equality of this NumberStruct with the provided {@link LispStruct}. 'EQUALP' rules state
+	 * that if 'x' and 'y' are 'EQL', then they are equal.
+	 */
+//	@Override
+	public boolean lispEqualp(final LispStruct lispStruct) {
+		return (lispStruct instanceof NumberStruct) && isEqualTo((NumberStruct) lispStruct);
+	}
 
 	public abstract Apcomplex apcomplexValue();
 

@@ -9,7 +9,6 @@ import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
 
-import jcl.LispStruct;
 import jcl.types.RatioType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -75,39 +74,6 @@ public class RatioStruct extends RationalStruct {
 	 */
 	public BigFraction getBigFraction() {
 		return bigFraction;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Determines the object equality of this RatioStruct with the provided {@link LispStruct}. 'EQL' rules state that
-	 * if 'x' and 'y' are both numbers of the same type and the same value, then they are equal.
-	 */
-	@Override
-	public boolean lispEql(final LispStruct lispStruct) {
-		return equals(lispStruct);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Determines the object equality of this RatioStruct with the provided {@link LispStruct}. 'EQUAL' rules state
-	 * that if 'x' and 'y' are 'EQL', then they are equal.
-	 */
-	@Override
-	public boolean lispEqual(final LispStruct lispStruct) {
-		return equals(lispStruct);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * Determines the object equality of this RatioStruct with the provided {@link LispStruct}. 'EQUALP' rules state
-	 * that if 'x' and 'y' are 'EQL', then they are equal.
-	 */
-	@Override
-	public boolean lispEqualp(final LispStruct lispStruct) {
-		return (lispStruct instanceof NumberStruct) && isEqualTo((NumberStruct) lispStruct);
 	}
 
 	/**

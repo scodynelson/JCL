@@ -7,7 +7,6 @@ package jcl.numbers;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import jcl.LispStruct;
 import jcl.types.ComplexType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -253,21 +252,6 @@ public class ComplexStruct extends NumberStruct {
 	 */
 	public RealStruct getImaginary() {
 		return imaginary;
-	}
-
-	@Override
-	public boolean lispEql(final LispStruct lispStruct) {
-		return equals(lispStruct);
-	}
-
-	@Override
-	public boolean lispEqual(final LispStruct lispStruct) {
-		return equals(lispStruct);
-	}
-
-	@Override
-	public boolean lispEqualp(final LispStruct lispStruct) {
-		return (lispStruct instanceof NumberStruct) && isEqualTo((NumberStruct) lispStruct);
 	}
 
 	@Override

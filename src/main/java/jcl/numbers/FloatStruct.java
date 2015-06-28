@@ -708,6 +708,30 @@ public class FloatStruct extends RealStruct {
 	}
 
 	/**
+	 * See {@link https://docs.oracle.com/javase/8/docs/api/java/lang/Float.html} for details.
+	 * <p>
+	 * The following is per the JVM spec section 4.4.5
+	 *
+	 * @return
+	 */
+	@SuppressWarnings("all")
+	private static DecodedDoubleRaw getDecodedFloatRaw(final int bits) {
+		final int sign = ((bits >> 31) == 0) ? 1 : -1;
+		// 0xff == 255 == exponent max
+		final int exponent = (bits >> 23) & 0xff;
+		final int mantissa;
+		if (exponent == 0) {
+			// 0x7fffff == 8388607 == 2^23 - 1
+			mantissa = (bits & 0x7fffff) << 1;
+		} else {
+			// 0x7fffff == 8388607 == 2^23 - 1
+			// 0x800000 == 8388608 == 2^23
+			mantissa = (bits & 0x7fffff) | 0x800000;
+		}
+		return new DecodedDoubleRaw(mantissa, exponent, sign);
+	}
+
+	/**
 	 * See {@link https://docs.oracle.com/javase/8/docs/api/java/lang/Double.html} for details.
 	 * <p>
 	 * The following is per the JVM spec section 4.4.5
@@ -717,14 +741,43 @@ public class FloatStruct extends RealStruct {
 	@SuppressWarnings("all")
 	private static DecodedDoubleRaw getDecodedDoubleRaw(final long bits) {
 		final long sign = ((bits >> 63) == 0) ? 1 : -1;
+		// 0x7ff == 2047 == exponent max
 		final long exponent = (bits >> 52) & 0x7ffL;
 		final long mantissa;
 		if (exponent == 0) {
+			// 0xfffffffffffff == 4503599627370495 == 2^52 - 1
 			mantissa = (bits & 0xfffffffffffffL) << 1;
 		} else {
+			// 0xfffffffffffff == 4503599627370495 == 2^52 - 1
+			// 0x10000000000000 == 4503599627370496 == 2^52
 			mantissa = (bits & 0xfffffffffffffL) | 0x10000000000000L;
 		}
 		return new DecodedDoubleRaw(mantissa, exponent, sign);
+	}
+
+	/**
+	 * See {@link https://docs.oracle.com/javase/8/docs/api/java/lang/Quadruple.html} for details.
+	 * <p>
+	 * The following is per the JVM spec section 4.4.5
+	 *
+	 * @return
+	 */
+	@SuppressWarnings("all")
+	private static DecodedDoubleRaw getDecodedQuadrupleRaw(final BigInteger bits) {
+		final BigInteger sign = BigInteger.ZERO.equals(bits.shiftRight(127)) ? BigInteger.ONE : BigInteger.valueOf(-1);
+//		 16382 == exponent max
+		final BigInteger exponent = bits.shiftRight(112).and(BigInteger.valueOf(16382));
+		final BigInteger mantissa;
+		if (BigInteger.ZERO.equals(exponent)) {
+			BigInteger twoToOneTwelveMinusOne = new BigInteger("5192296858534827628530496329220095");
+			mantissa = (bits.and(twoToOneTwelveMinusOne)).shiftLeft(1);
+		} else {
+			BigInteger twoToOneTwelveMinusOne = new BigInteger("5192296858534827628530496329220095");
+			BigInteger twoToOneTwelve = new BigInteger("5192296858534827628530496329220096");
+			mantissa = (bits.and(twoToOneTwelveMinusOne)).or(twoToOneTwelve);
+		}
+		return null;
+//		return new DecodedDoubleRaw(mantissa, exponent, sign);
 	}
 
 	private static class DecodedDoubleRaw {

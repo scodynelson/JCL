@@ -488,16 +488,6 @@ public class RatioStruct extends RationalStruct {
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Returns {@code this} as any RatioStruct is already in rational form.
-	 */
-	@Override
-	public RationalStruct rational() {
-		return this;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
 	 * Calculates the {@link QuotientRemainderResult} for a 'FLOOR' operation with this RatioStruct as the 'divisor'
 	 * using the provided {@link QuotientRemainderVisitor}.
 	 *

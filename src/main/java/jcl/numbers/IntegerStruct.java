@@ -550,16 +550,6 @@ public class IntegerStruct extends RationalStruct {
 	/**
 	 * {@inheritDoc}
 	 * <p>
-	 * Returns {@code this} as any IntegerStruct is already in rational form.
-	 */
-	@Override
-	public RationalStruct rational() {
-		return this;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <p>
 	 * Calculates the {@link QuotientRemainderResult} for a 'FLOOR' operation with this IntegerStruct as the 'divisor'
 	 * using the provided {@link QuotientRemainderVisitor}.
 	 *

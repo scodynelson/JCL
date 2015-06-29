@@ -55,6 +55,16 @@ public abstract class RationalStruct extends RealStruct {
 
 	public abstract IntegerStruct denominator();
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * Returns {@code this} as any RationalStruct is already in rational form.
+	 */
+	@Override
+	public RationalStruct rational() {
+		return this;
+	}
+
 	@Override
 	public FloatStruct coerceRealToFloat() {
 		final BigDecimal bigDecimal = bigDecimalValue();
